@@ -7,15 +7,13 @@
 // $Id$
 //
 
-#include "HepRep.idl"
-
 interface HepEventServer {
     string attach(in string clientDesc);
     oneway void release();
     string setEvent(in string eventID);
     long getNumberOfEvents();
     string getEventTitle();
-    HepRep getEventData(in string dataFormat);
+    any getEventData(in string dataFormat);
 };
 
 #endif

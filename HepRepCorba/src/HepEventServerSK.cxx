@@ -338,7 +338,7 @@ char* _objref_HepEventServer::getEventTitle()
 
 }
 // Proxy call descriptor class. Mangled signature:
-//  _cHepRep_i_cstring
+//  _cany_i_cstring
 class _0RL_cd_DDA6AD98B427082D_90000000
   : public omniCallDescriptor
 {
@@ -355,7 +355,7 @@ public:
   
   CORBA::String_var arg_0_;
   const char* arg_0;
-  HepRep_var result;
+  CORBA::Any_var result;
 };
 
 void _0RL_cd_DDA6AD98B427082D_90000000::marshalArguments(cdrStream& _n)
@@ -373,13 +373,14 @@ void _0RL_cd_DDA6AD98B427082D_90000000::unmarshalArguments(cdrStream& _n)
 
 void _0RL_cd_DDA6AD98B427082D_90000000::marshalReturnedValues(cdrStream& _n)
 {
-  HepRep::_marshalObjRef(result,_n);
+  (const CORBA::Any&) result >>= _n;
 
 }
 
 void _0RL_cd_DDA6AD98B427082D_90000000::unmarshalReturnedValues(cdrStream& _n)
 {
-  result = HepRep::_unmarshalObjRef(_n);
+  result = new CORBA::Any;
+  (CORBA::Any&)result <<= _n;
 
 }
 
@@ -394,7 +395,7 @@ _0RL_lcfn_DDA6AD98B427082D_a0000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-HepRep_ptr _objref_HepEventServer::getEventData(const char* dataFormat)
+CORBA::Any* _objref_HepEventServer::getEventData(const char* dataFormat)
 {
   _0RL_cd_DDA6AD98B427082D_90000000 _call_desc(_0RL_lcfn_DDA6AD98B427082D_a0000000, "getEventData", 13);
   _call_desc.arg_0 = dataFormat;

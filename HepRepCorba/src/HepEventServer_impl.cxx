@@ -9,6 +9,7 @@
 
 #include <sstream>
 
+
 HepEventServer_impl::HepEventServer_impl (ISvcAdapter* sa, IRegistry* r)
 {
   m_svcAdapter = sa;
@@ -27,6 +28,7 @@ HepEventServer_impl::~HepEventServer_impl ()
 }
 
 
+// Initialize the server
 void HepEventServer_impl::initHepRep()
 {
 
@@ -51,12 +53,9 @@ char* HepEventServer_impl::attach(const char* clientDesc)
 
     int descLength = 96;
 
-    //    char* serverDesc = new char[descLength];
     std::string serverDesc;
-//    serverDesc = 
-//      "GlastServer version=0.1\ndataFormat=HepRep\nsetEventCommand=next,fluxes,source\n";
     serverDesc = 
-      "GlastServer version=0.1\ndataFormat=HepRep\nsetEventCommand=" + m_svcAdapter->getCommands();
+      "GlastServer version=0.1;dataFormat=heprep2;setEventCommand=" + m_svcAdapter->getCommands();
     
     std::cout << "Wow, I've been requested by " 
               << _clientDesc << std::endl;
@@ -89,10 +88,7 @@ char* HepEventServer_impl::setEvent(const char* command)
   std::stringstream sName;
   static int temp = 0;
   std::string cmd(command);
-  
-  // std::cout << "I've received from " << _clientDesc << ", setEvent to " 
-  //           << cmd << std::endl;
-  
+    
   static unsigned int i = 0;
   
   std::string nextEventMsg; 
@@ -107,11 +103,11 @@ char* HepEventServer_impl::setEvent(const char* command)
 	      temp++;
 
 		    m_eventID = sName.str();
-			  nextEventMsg = "Event set to next";   
+			  nextEventMsg = "ok:" + m_eventID;   
 			} 
 			else
 			{
-				nextEventMsg = "No more event";
+				nextEventMsg = "error";
 			}
     }
   else if (cmd == "commands")
@@ -130,7 +126,7 @@ char* HepEventServer_impl::setEvent(const char* command)
   else if (cmd.substr(0,9) == "eventIdx:")
   {
     int idx;
-    sscanf(cmd.c_str(), "eventIdx:%d-%d", &idx);
+    sscanf(cmd.c_str(), "eventIdx:%d", &idx);
     if (m_svcAdapter->setEventIndex(idx))
       nextEventMsg = "Event set to the requested index";
     else
@@ -166,24 +162,39 @@ char* HepEventServer_impl::setEvent(const char* command)
 }
 
 
-/// Return the number of events (if known); disabled for now
+// Return the number of events (if known); disabled for now
 CORBA::Long HepEventServer_impl::getNumberOfEvents()
 {
-
   return 0;
 }
 
 
-/// Return the title of the current event
+// Return the title of the current event
 char* HepEventServer_impl::getEventTitle()
 {
     return CORBA::string_dup(m_eventID.c_str());
 }
 
-/// Return the HepRep object
-HepRep_ptr HepEventServer_impl::getEventData (const char* dataFormat)
+
+
+
+CORBA::Any* HepEventServer_impl::getEventData (const char* dataFormat)
 {
   std::cout << "I've just given to " << _clientDesc << " an HepRep object" << std::endl;
 
-  return HepRep::_duplicate (_hepRep_var);
+  CORBA::Any* _dupEventData_var = new CORBA::Any();
+
+  if (dataFormat = "HepRep")
+    *_dupEventData_var <<= HepRep::_duplicate (_hepRep_var);
+  else
+    *_dupEventData_var <<= "error: unsupported data format";
+  return _dupEventData_var;
 }
+
+/// Return the HepRep object
+//HepRep_ptr HepEventServer_impl::getEventData (const char* dataFormat)
+//{
+//  std::cout << "I've just given to " << _clientDesc << " an HepRep object" << std::endl;
+//
+//  return HepRep::_duplicate (_hepRep_var);
+//}

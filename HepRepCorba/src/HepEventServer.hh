@@ -19,10 +19,6 @@
 
 
 
-#ifndef __HepRep_hh_EXTERNAL_GUARD__
-#define __HepRep_hh_EXTERNAL_GUARD__
-#include "HepRep.hh"
-#endif
 
 
 #ifdef USE_stub_in_nt_dll
@@ -121,7 +117,7 @@ public:
   char* setEvent(const char* eventID);
   CORBA::Long getNumberOfEvents();
   char* getEventTitle();
-  HepRep_ptr getEventData(const char* dataFormat);
+  CORBA::Any* getEventData(const char* dataFormat);
 
   inline _objref_HepEventServer()  { _PR_setobj(0); }  // nil
   _objref_HepEventServer(omniIOR*, omniIdentity*);
@@ -158,7 +154,7 @@ public:
   virtual char* setEvent(const char* eventID) = 0;
   virtual CORBA::Long getNumberOfEvents() = 0;
   virtual char* getEventTitle() = 0;
-  virtual HepRep_ptr getEventData(const char* dataFormat) = 0;
+  virtual CORBA::Any* getEventData(const char* dataFormat) = 0;
   
 public:  // Really protected, workaround for xlC
   virtual _CORBA_Boolean _dispatch(omniCallHandle&);

@@ -26,11 +26,9 @@ public:
 
   char* getEventTitle();
 
-  /*  
   CORBA::Any* getEventData(const char* dataFormat);
-  */
   
-  HepRep_ptr getEventData(const char* dataFormat);
+//  HepRep_ptr getEventData(const char* dataFormat);
 
   void initHepRep();
 
