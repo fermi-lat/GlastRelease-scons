@@ -4,6 +4,7 @@ package GlastSvc
 package manager:T.Burnett
 
 
+17-mar-02: THB tag v4r1
 08-mar-02: THB remove instrument, tag v4r0
 23-nov-01: THB start Reco service
 22-nov-01: THB add dm folder with detModel interface classes.
