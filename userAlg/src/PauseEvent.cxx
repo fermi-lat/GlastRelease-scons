@@ -1,4 +1,3 @@
-// Include files
 // Gaudi system includes
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -6,14 +5,11 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
-
 // if use the gui
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
 #include "gui/DisplayControl.h"
 
-// TDS class declarations: input data, and McParticle tree
-#include "GlastEvent/data/TdGlastData.h"
 #include "GlastEvent/MonteCarlo/McVertex.h"
 #include "GlastEvent/MonteCarlo/McParticle.h"
 #include "GlastEvent/TopLevel/Event.h"
@@ -30,12 +26,10 @@
 #include <iostream>
 
 
-// Define the class here instead of in a header file: not needed anywhere but here!
-//------------------------------------------------------------------------------
-/** 
-A simple algorithm.
-
-  
+/** @class PauseEvent
+ * @brief Algorithm to pause execution to all user to examine an event more closely. 
+ *
+ * $Header$
 */
 class PauseEvent : public Algorithm {
 public:
@@ -63,7 +57,6 @@ private:
     bool m_runNumFlag;
 	
 };
-//------------------------------------------------------------------------
 
 // necessary to define a Factory for this algorithm
 // expect that the xxx_load.cxx file contains a call     
@@ -72,18 +65,15 @@ private:
 static const AlgFactory<PauseEvent>  Factory;
 const IAlgFactory& PauseEventFactory = Factory;
 
-//------------------------------------------------------------------------
-//! ctor
 PauseEvent::PauseEvent(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 ,m_count(0), m_ini(0), m_runNumFlag(true)
 {
-    /// List of strings, of the form:  {"runNum_eventId", "runNum_eventId"...}
+    // List of strings, of the form:  {"runNum_eventId", "runNum_eventId"...}
     declareProperty("eventList", m_eventList);
 	
 }
-//------------------------------------------------------------------------
-//! set parameters and attach to various perhaps useful services.
+
 StatusCode PauseEvent::initialize()
 {
     StatusCode  sc = StatusCode::SUCCESS;
@@ -104,8 +94,6 @@ StatusCode PauseEvent::initialize()
     return sc;
 }
 
-//------------------------------------------------------------------------
-//! process an event
 StatusCode PauseEvent::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
@@ -136,8 +124,6 @@ StatusCode PauseEvent::execute()
 	return sc;
 }
 
-//------------------------------------------------------------------------
-//! clean up, summarize
 StatusCode PauseEvent::finalize(){
 	StatusCode  sc = StatusCode::SUCCESS;
 	MsgStream log(msgSvc(), name());
