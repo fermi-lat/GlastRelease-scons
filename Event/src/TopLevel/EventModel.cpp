@@ -51,4 +51,8 @@ public:
     const CLID& CLID_MCCalorimeterHit   = 2011;
     const CLID& CLID_MCEvent            = 2012;
     const CLID& CLID_MCSiLayer          = 2013;
+
+    //! Raw event definitions
+    const CLID& CLID_CsIData            = 2051;
+    const CLID& CLID_Xtal               = 2052;
         
