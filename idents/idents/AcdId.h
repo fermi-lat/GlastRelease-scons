@@ -1,14 +1,13 @@
-//
-// Interface for the AcdId class.
-
 #ifndef _H_Acd_Id
 #define _H_Acd_Id
 
 #include "facilities/bitmanip.h"
-/*!
-\class AcdId 
-\brief encapsulate the id for an ACD tile.
+#include "idents/VolumeIdentifier.h"
 
+/** @class AcdId 
+@brief Encapsulate the id for an ACD tile.
+
+@verbatim
  ACD tile numbering
  Layer 0 or 1, where 0 corresponds to the inner layer
  Face 0 - 4 
@@ -18,10 +17,11 @@
           Face 3 == +X side
           Face 4 == +Y side
  Row 0 - 9
-          On Face 0 (top) rows are numbering along +x (or +y) axis
+          On Face 0 (top) rows are numbering along +x axis
           On the sides, the rows are numbered from the front of the instrument (closest to the top)
 
  Column 0 - 9
+          On Face 0 (top), columns are numbered along the +y axis
           On the sides, columns are numbered along +x (or +y) axis
 
  One could imagine that an ACD id could be represented by 12 bits.
@@ -29,6 +29,11 @@
   __ __       __ __ __     __ __ __ __      __ __ __ __
   LAYER         FACE           ROW            COLUMN
  where the layer is the most significant bit
+ This is the internal represenation of the AcdId in this class.
+ @endverbatim
+
+  @author Heather Kelly based on initial version by Sawyer Gillespie
+  $Header$
 */
 
 namespace idents {
@@ -36,11 +41,12 @@ class   AcdId {
 public:
     AcdId ();
     AcdId ( const AcdId& );
+    AcdId ( const idents::VolumeIdentifier &volId );
     AcdId ( unsigned int id ) : m_id (id) { }
     AcdId (short l, short f, short r, short c);
     virtual ~AcdId ();
 
-    // access
+    /// access the internal representation of the AcdId
     operator const unsigned int& () const { return m_id; }
 
     void write (std::ostream& out) const
@@ -53,7 +59,6 @@ public:
         in >> m_id;
     }
 
-    // all tile access methods
     /// access the id in matrix format LayerFaceRowColumn
     inline unsigned int id () const;
     /// is this a top tile?
@@ -87,7 +92,8 @@ private:
         layerShift = 11
     };
 
-    unsigned int    m_id;   // id value (4 byte word)
+    /// internal representation of the id, 4 byte word
+    unsigned int    m_id;
 
 };
 
@@ -95,6 +101,18 @@ private:
 
 inline AcdId::AcdId () : m_id (0) {}
 inline AcdId::AcdId ( const AcdId& r ) : m_id (r.m_id) {}
+inline AcdId::AcdId (const idents::VolumeIdentifier &volId) {
+    m_id = 0;
+    layer(0);
+    face(volId[1]);
+    if (face() == 0) {
+        column(volId[2]);
+        row(volId[3]);
+    } else {
+        column(volId[3]);
+        row(volId[2]);
+    }
+}
 inline AcdId::AcdId (short l, short f, short r, short c)  {
     m_id = 0;
     layer(l);

@@ -60,6 +60,9 @@ public:
     /// access single ids which constitute the volume identifier
     unsigned int operator[](unsigned int);
     
+    /// access single ids which constitute the volume identifier
+    unsigned int operator[](unsigned int) const;
+    
     /// overload the < operator for correct sorting of volume identifiers
     bool operator<(const VolumeIdentifier& id)const
       {
