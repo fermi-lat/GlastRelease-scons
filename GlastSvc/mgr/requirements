@@ -8,7 +8,7 @@ use Gaudi v7
 
 # these only needed for the test executable: comment out otherwise
 use GlastEvent v1
-use GaudiSvc v3
+use GaudiSvc v3r1
 
 
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \

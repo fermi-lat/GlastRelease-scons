@@ -12,10 +12,10 @@
 #include "instrument/Instrument.h"
 
 // define the class-id (unique) for the GlastDetSvc
-//const IID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
+const IID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
 
 // define the class-id (unique) for the GlastIRFSvc
-//const IID&  IID_IGlastIRFLoadSvc  =  402;   // Unique to GLAST
+const IID&  IID_IGlastIRFLoadSvc  =  402;   // Unique to GLAST
 
 
 // declare the service factories for the GlastDetSvc
