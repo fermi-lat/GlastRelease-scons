@@ -23,11 +23,11 @@
 
     <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
-    <!ENTITY CALDimPrim     SYSTEM "../flight/flightCALDimPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "../em/emCALDimPrim.xml">
     <!ENTITY CALResponse    SYSTEM "../flight/flightCALResponse.xml">
     <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCalSegVols.xml">
 
-    <!ENTITY TKRMatPrim     SYSTEM "../flight/flightTKRMatPrim.xml">
+    <!ENTITY TKRMatPrim     SYSTEM "../em/emTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "../em/emTKRCountPrim.xml">
     <!ENTITY TKRDimPrim     SYSTEM "../em/emTKRDimPrim.xml">
     <!ENTITY TKRResponse    SYSTEM "../flight/flightTKRResponse.xml">
@@ -42,8 +42,8 @@
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
 
-    <!ENTITY oneTower       SYSTEM "../flight/flightOneTower.xml">
-    <!ENTITY section        SYSTEM "../em/emSection.xml">
+    <!ENTITY oneTower         SYSTEM "../flight/flightOneTower.xml">
+    <!ENTITY section         SYSTEM "../em/emSection.xml">
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
@@ -56,7 +56,7 @@
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
 
-    <!ENTITY Materials      SYSTEM "../em/emMaterials.xml">
+    <!ENTITY Materials         SYSTEM "../emMaterials.xml">
   ]
 >
 <gdd CVSid="$Id$" 

@@ -18,9 +18,9 @@ Wafers for a layer
        ** will entail changes to the definition of the 
        ** tracker volumes.
  -->
-  <prim name="numTrays" value="4" uType="count" type="int">
+  <prim name="numTrays" value="5" uType="count" type="int">
 number of trays (one more than number of x-y planes)</prim>
-  <prim name="numNoCnvTrays" value="0" uType="count" type="int">
+  <prim name="numNoCnvTrays" value="1" uType="count" type="int">
 number of trays 
     with no converter.  These trays have the lowest tray number</prim>
   <prim name="numSuperGlast" value="0" uType="count" type="int">
