@@ -25,41 +25,10 @@ FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
 FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
 
 // ask for a source that is in the user_library
-FluxTestAlg.source_name="TimeCandle";
-//FluxTestAlg.source_name="totaldiffuse";
-//FluxTestAlg.source_name="gal10020";
-
-//selecting the kind of exposure GLAST gets,
-//to be appropriate for exposure maps or sky maps.
-//0: sources only expose EXACTLY where they are
-//1: exposure of GLAST has an angular size to the aperture, given above
-//2: exposure is not only cut at an angular radius,
-// but also falls off with a gaussian profile.
-//3: cutoff "radius" is equal-area, that is,
-// representing an azimuthal angle from glast.
-//4:  "real" exposure, with defined functions based on zenith angle, energy, etc.
-FluxTestAlg.exposureFunction = 0;
-
-// point spread characteristic size (in degrees) to
-//approximate uncertainty from GLAST. (0 = none)
-FluxTestAlg.pointSpread = 2;
-
-//the angular size of GLAST's exposure, if needed (see below)
-FluxTestAlg.glastExposureAngle = 35.;
-
-// type of map projection to use
-//0: none - l and b are cartesian
-//1: hammer-aitoff equal-area projection
-FluxTestAlg.projectionType = 0;
-
-//rocking angle mode
-//0: none - no rocking
-//1: up for an orbit, down for an orbit
-//2: up for half an orbit, down for half an orbit
-FluxTestAlg.rockingMode = 0;
+FluxTestAlg.source_name="default";
 
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 10000;
+ApplicationMgr.EvtMax = 100;
 
 //==============================================================
 //
