@@ -3,6 +3,7 @@
 package calibUtil
 version v0r0
 
+use facilities v2r*
 use xml v4r* 
 use MYSQLEXT v0r*
 # use ROOT   -- someday
@@ -24,7 +25,7 @@ library calibUtil -no_share $(calibUtil_headers) *.cxx *.c
 
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 ##application test_strips test/test_strips.cxx 
-application test_meta test/test_meta.cxx  Metadata.cxx Timestamp.cxx
+application test_meta test/test_meta.cxx  Metadata.cxx
 
 
 
