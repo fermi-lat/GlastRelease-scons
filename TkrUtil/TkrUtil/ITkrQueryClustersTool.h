@@ -86,6 +86,9 @@ public:
     virtual int numberOfHitsNear( int layer, double dX, double dY, const Point& x0) = 0;
     /// Finds the number of clusters within "inDistance" of a point 
     /// and within one tower.
+    virtual int numberOfUUHitsNear( int layer, double dX, double dY, const Point& x0) = 0;
+    /// Finds the number of clusters within "inDistance" of a point 
+    /// and within one tower.
     virtual int numberOfHitsNear( Event::TkrCluster::view v, int layer, 
         double inDistance, const Point& x0) = 0;
 
