@@ -10,6 +10,8 @@
 
   @author J. Bogart
 */
+#include <string>
+#include <vector>
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/CnvFactory.h"
 #include <xercesc/dom/DOM_Element.hpp>
@@ -23,7 +25,9 @@ class ITime;
 namespace CalibData {
   class CalibTime;
   class CalibBase;
-  class DacCol;
+  class DacCol; // for now used only by calorimeter intNonLin calibration
+  class Xpos;   // only of interest for some calorimeter calibrations
+  class ValSig;
 }
 
 class  XmlBaseCnv : public Converter {
@@ -118,6 +122,19 @@ protected:
   DOM_Element findNextDacCol(const DOM_Element& rangeElt);
 
   CalibData::DacCol* processDacCol(DOM_Element dacColElt, unsigned* range);
+
+  DOM_Element findXpos(const DOM_Element& docElt);
+
+  CalibData::Xpos* processXpos(DOM_Element xposElt);
+
+  /// Read in what will become a CalibData::ValSig
+  CalibData::ValSig* processValSig(DOM_Element elt, 
+                                   std::string valName, std::string sigName);
+
+  /// Read in what will become a vector of CalibData::ValSig
+  std::vector<CalibData::ValSig>*  processValSigs(DOM_Element elt, 
+                                                  std::string valName, 
+                                                  std::string sigName);
 
   /// Another convenience for derived classes: sets information belonging
   /// to the calibration base class, namely validity interval and serial

@@ -14,6 +14,10 @@
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 #include "CalibData/CalibTime.h"
 #include "CalibData/CalibBase.h"
+#include "CalibData/Cal/Xpos.h"
+
+// Needed for ValSig
+#include "CalibData/RangeBase.h"
 #include "xml/Dom.h"
 
 // A little ugly to include this here.  It's needed for 
@@ -250,4 +254,57 @@ CalibData::DacCol* XmlBaseCnv::processDacCol(DOM_Element dacColElt,
   CalibData::DacCol* pDacCol = new CalibData::DacCol(&vals);
   return pDacCol;
 
+}
+
+DOM_Element XmlBaseCnv::findXpos(const DOM_Element& docElt) {
+  return  xml::Dom::findFirstChildByName(docElt, "xpos");
+}
+
+CalibData::Xpos* XmlBaseCnv::processXpos(DOM_Element xposElt) {
+  using xml::Dom;
+
+  std::vector<float> vals;
+
+  Dom::getFloatsAttribute(xposElt, "values", vals);
+  CalibData::Xpos* pXpos = new CalibData::Xpos(&vals);
+  
+  return pXpos;
+}
+
+/// Read in what will become a CalibData::ValSig
+CalibData::ValSig* XmlBaseCnv::processValSig(DOM_Element elt, 
+                                             std::string valName, 
+                                             std::string sigName) {
+  if (elt == DOM_Element() ) return 0;
+  CalibData::ValSig *pValSig = new CalibData::ValSig;
+  pValSig->m_val = xml::Dom::getDoubleAttribute(elt, valName);
+  pValSig->m_sig = xml::Dom::getDoubleAttribute(elt, sigName);
+  return pValSig;
+}
+
+std::vector<CalibData::ValSig>* 
+XmlBaseCnv::processValSigs(DOM_Element elt, std::string valName, 
+                           std::string sigName) {
+
+  // creates a msg stream for debug purposes
+  MsgStream log( msgSvc(), "XmlBaseCnv" );
+
+  if (elt == DOM_Element() ) return 0;
+  std::vector<float> vals;
+  std::vector<float> sigs;
+
+  xml::Dom::getFloatsAttribute(elt, valName, vals);
+  xml::Dom::getFloatsAttribute(elt, sigName, sigs);
+  if (vals.size() != sigs.size() ) {
+    log << MSG::ERROR << "#values <> #sigmas " << endreq;
+    return 0;
+  }
+  unsigned n = vals.size();
+  std::vector<CalibData::ValSig>* pValSigs = 
+    new std::vector<CalibData::ValSig>(n);
+  for (unsigned i = 0; i++; i < n) {
+    (*pValSigs)[i].m_val = vals[i];
+    (*pValSigs)[i].m_sig = sigs[i];
+  }
+  return pValSigs;
 }

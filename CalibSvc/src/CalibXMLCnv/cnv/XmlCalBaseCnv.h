@@ -47,7 +47,8 @@ public:
                            unsigned& nLayer,
                            unsigned& nXtal, unsigned& nFace,
                            unsigned& nRange,
-                           unsigned* nDacCol=0);
+                           unsigned* nDacCol=0,
+                           unsigned* nXpos=0);
 
   /// Another one to find first range element
   DOM_Element findFirstRange(const DOM_Element& docElt);

@@ -46,7 +46,7 @@ const CLID& XmlCalIntNonlinCnv::classID() {
 
 namespace {
   /// Local utility which knows how to get the information out of a
-  /// <calLightAsym> element and make a CalibData::LightAsym with it
+  /// <calLightAsym> element and make a CalibData::IntNonlin with it
   CalibData::IntNonlin* processRange(DOM_Element intNonlinElt) {
     using xml::Dom;
 
