@@ -27,12 +27,11 @@ void FluxSvc_load() {
   // these are the spectra that we want to make available
   DLL_DECL_SPECTRUM( CHIMESpectrum);
   DLL_DECL_SPECTRUM( HeSpectrum);
-  DLL_DECL_SPECTRUM( TrappedProtonSpectrum);
 
   DLL_DECL_SPECTRUM( CrElectron);
   DLL_DECL_SPECTRUM( CrProton);
 
-	DLL_DECL_SPECTRUM( AlbedoPSpectrum);
+  DLL_DECL_SPECTRUM( AlbedoPSpectrum);
   DLL_DECL_SPECTRUM( GalElSpectrum);
   // DLL_DECL_SPECTRUM( ProtonSpectrum);
 
