@@ -125,12 +125,11 @@ void TreeMaker::CreateTree(Int_t numEvents)
     digiTree->SetBranchStatus("m_tkr*", 1);
     digiTree->SetBranchStatus("m_eventId", 1); 
     digiTree->SetBranchStatus("m_runId", 1);
-    if(DIAGN)
-      {
+    if ( DIAGN ) {
 	digiTree->SetBranchStatus("m_levelOneTrigger", 1);
 	digiTree->SetBranchStatus("m_ebfTime*", 1);
 	digiTree->SetBranchStatus("m_numTkrDiagnostics", 1);
-      }
+    }
     for(int i=0;i<MaxNumLayers;i++)
       {
 	TString TS="Layer";
@@ -143,11 +142,10 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	TTree *Layer = new TTree(TS,TS);
 	Layer->Branch("ToT0",&ToT0,"ToT0/I");
 	Layer->Branch("ToT1",&ToT1,"ToT1/I");
-	if(DIAGN)
-	  {
+	if ( DIAGN ) {
 	    Layer->Branch("TriggerReq0",&TriggerReq0,"TriggerReq0/B");
 	    Layer->Branch("TriggerReq1",&TriggerReq1,"TriggerReq1/B");
-	  }
+        }
 	Layer->Branch("TkrNumHits",&TkrNumHits,"TkrNumHits/I");
 	Layer->Branch("TkrHits",TkrHits,"TkrHits[TkrNumHits]/I");
 	TreeCollection->Add((TObject*) Layer);
@@ -156,15 +154,14 @@ void TreeMaker::CreateTree(Int_t numEvents)
     Header->Branch("EventId",&EventId,"EventId/I");
     Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
     Header->Branch("RunId",&RunId,"RunId/I");
-    if(DIAGN)
-      {
+    if ( DIAGN ) {
 	Header->Branch("LevelOneTrigger",&LevelOneTrigger,"LevelOneTrigger/I");
 	TString tag("TkrDiagnostics[");
 	tag += NumGTCC * NumGTRC;
 	tag += "]/I";
 	Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
 	Header->Branch("EbfTime",&EbfTime,"EbfTime/D");
-      }
+    }
     TreeCollection->Add(Header);
     
   }
@@ -280,34 +277,51 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  RunId   = digiRunNum;
           if ( DEBUG ) std::cout << "run number: " << RunId << "  event id: " << EventId << std::endl;
 
-	  if(DIAGN)
-	    {
-	      LevelOneTrigger = evt->getL1T().getTriggerWord() & 0x1f; // there are more bits set, but why?
-	      if ( DEBUG ) std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
+	  if ( DIAGN ) { // we shouldn't go here if the digi is generated from mc
+	      L1T l1t = evt->getL1T();
+	      LevelOneTrigger = l1t.getTriggerWord() & 0x1f; // there are more bits set, but why?
+              bool tkrTrigger = l1t.getTkr3InARow(); // indicates that 3-in-a-row occurred in the TKR
+              // ***************************************************************
+              // it is not clear if the files taken at Pisa in August and
+              // September 2004 contain a correct L1T.  E.g., 040826180009.ldf
+              // should have been taken with internal trigger (00100), but the
+              // trigger word is 10010.
+              // ***************************************************************
+              // print some info about the trigger
+              static bool tkrTriggerWarning = true;
+              if ( DEBUG || tkrTriggerWarning ) { // print at least once
+                  if ( !tkrTrigger )
+                      std::cerr << "Trigger primitive:  External trigger!" << std::endl;
+                  std::cout << "LevelOneTrigger: " << LevelOneTrigger << std::endl;
+              }
+              tkrTriggerWarning = false;
+
+              // Ebf time
 	      static Double_t EbfTimeStart = evt->getEbfTimeSec();
 	      EbfTime = ( evt->getEbfTimeSec() - EbfTimeStart ) + evt->getEbfTimeNanoSec() * 1E-9;
 	      if ( DEBUG ) std::cout << "EbfTime: " << EbfTime << std::endl;
+
 	      // and now, for the TkrDiagnostics
-	      
-	      
-	      if ( NumGTCC != evt->getTkrDiagnosticCol()->GetEntries() )
-		{
-		  if ( DEBUG ) std::cerr << "NumGTCC=" << NumGTCC << " != evt->getTkrDiagnosticCol()->GetEntries()=" << evt->getTkrDiagnosticCol()->GetEntries() << std::endl;
-		}
-	      for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) 
-		{ 
-		  UInt_t dataWord=0;
-		  if ( NumGTCC == evt->getTkrDiagnosticCol()->GetEntries())
-		    dataWord = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
-		  std::bitset<NumGTRC> word = dataWord;
-		  if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
+              int numGTCCentries = evt->getTkrDiagnosticCol()->GetEntries();
+              if ( NumGTCC != numGTCCentries ) {
+                  static bool NumGTCCwarning = true;
+		  if ( DEBUG || NumGTCCwarning ) // print at least once
+                      std::cerr << "NumGTCC=" << NumGTCC
+                                << " != evt->getTkrDiagnosticCol()->GetEntries()=" << numGTCCentries << std::endl;
+                  NumGTCCwarning = false;
+              }
+	      for ( int GTCC=0; GTCC<NumGTCC; ++GTCC ) { 
+                  std::bitset<NumGTRC> word = 0;
+                  if ( tkrTrigger )
+                      word = evt->getTkrDiagnostic(indexToGTCC(GTCC))->getDataWord();
+                  if ( DEBUG ) std::cout << "TkrDiagnosticData[" << GTCC << "] " << word << ' ';
 		  for ( int GTRC=NumGTRC-1; GTRC>=0; --GTRC ) {
-		    TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
-		    if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
+                      TkrDiagnostics[getIndex(GTCC,GTRC)] = word[GTRC];
+                      if ( DEBUG ) std::cout << ( TkrDiagnostics[getIndex(GTCC,GTRC)] > 0 ) ? 1 : 0;
 		  }
 		  if ( DEBUG ) std::cout << std::endl;
-		}
-	    }
+              }
+          }
      	  //////////////////////////////////////////////////
 	  // digitkr:
 	  const TObjArray* tkrDigiCol = 0;
