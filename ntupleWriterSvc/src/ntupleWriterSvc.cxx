@@ -20,12 +20,12 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
+#include "facilities/Util.h"
+
 #include "ntupleWriterSvc/ntupleWriterSvc.h"
 
 #include <string>
 #include <vector>
-#include <sstream>
-#include <iostream>
 
 #ifdef WIN32
 #include <float.h> // used to check for NaN
@@ -95,10 +95,10 @@ StatusCode ntupleWriterSvc::initialize ()
     if (status.isFailure()) return status;
     
     // setup the title
-    std::ostringstream locStrStream;
     std::string title("gen(");
-    locStrStream << evtMax;
-    title += locStrStream.str();
+    std::string numEvents;
+    facilities::Util::itoa(evtMax, numEvents);
+    title += numEvents;
     title += ")";
 
     // Setup the ntuples asked for in the job options file
@@ -108,9 +108,9 @@ StatusCode ntupleWriterSvc::initialize ()
         // store the id for this ntuple
         m_TDS_tuple_name.push_back("/");
         // convert the id number into a string and append to the path name
-        locStrStream.str("");
-        locStrStream << m_tupleCounter;
-        m_TDS_tuple_name[index] += locStrStream.str();
+        std::string tdsName;
+        facilities::Util::itoa(m_tupleCounter, tdsName);
+        m_TDS_tuple_name[index] += tdsName;
 
         // Try to book the ntuple
         if( !m_tuple_name[index].empty() ) {

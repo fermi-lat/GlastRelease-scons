@@ -2,7 +2,7 @@
  * Coordinator: H. Kelly
  *
  * v2     08-Apr-2002 HMK : setup to load IncidentSvc and NTupleSvc on 
- *   demand.
+ *   demand and use itoa defined in facilties package.
  * v1r6p1 13-Feb-2002 HMK : replace itoa with ostringstream\n
  *        27-Jun-2001 HMK : create new interface routine to save all
  *   ntuples to disk \n
