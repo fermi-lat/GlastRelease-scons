@@ -56,7 +56,8 @@ StatusCode CalRecoAlg::initialize() {
 
 #else //this is the new way in v6, 
     StatusCode sc = service("GlastDetSvc", m_detSvc);
-#endif    
+#endif
+
 
     if (!sc.isSuccess ()){
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
@@ -69,10 +70,15 @@ StatusCode CalRecoAlg::initialize() {
     m_recon=new CalRecon;
 
     // define the tuple
-    m_summary = new  SummaryData<GlastTuple>(*new GlastTuple("test cal tuple")) ;
-    m_recon->accept(*m_summary);
+//    m_summary = new  SummaryData<GlastTuple>(*new GlastTuple("test cal tuple")) ;
+//    m_recon->accept(*m_summary);
+    //testout new Tuple
 
-    m_summary->tuple()->writeHeader(std::cout);
+    m_gsummary = new SummaryData<GaudiGlastTuple>(*new GaudiGlastTuple("Gaudi Test Tuple", ntupleSvc()));
+    m_recon->accept(*m_gsummary);
+
+//    m_summary->tuple()->writeHeader(std::cout);
+
     return sc;
 }
 
@@ -98,9 +104,17 @@ StatusCode CalRecoAlg::execute() {
     // print out the  tuple
     m_recon->accept(PrintReconData(std::cout));
 
+   
+
     // fill the tuple and print the line
-    m_summary->tuple()->fill();
-    std::cout << *(m_summary->tuple());
+//    m_summary->tuple()->fill();
+//    std::cout << *(m_summary->tuple());
+    m_gsummary->tuple()->fill();
+    
+    // Here we check a value in the New NTuple
+    sc = printNewNTuple();
+
+    sc = ntupleSvc()->writeRecord("/NTUPLES/FILE1/1");
 
     return sc;
 }
@@ -112,11 +126,37 @@ StatusCode CalRecoAlg::finalize() {
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "finalize" << endreq;
     delete m_recon;
-    delete m_summary;
+//    delete m_summary;
     
     return StatusCode::SUCCESS;
 }
 
+/*! Can be used to check to see if the newstyle NTuple was written properly.
+*/
+StatusCode CalRecoAlg::printNewNTuple() {
+    StatusCode status;
+    MsgStream log(msgSvc(), name());
+
+    NTuplePtr nt = m_gsummary->tuple()->getNTuple();
+    if(nt)
+    {
+        NTuple::Item<float> data;
+        status = nt->item("CsI_eLayer1" ,data);
+    
+        if(status.isSuccess())
+        {
+            log << MSG::INFO << "Test Value of New Ntuple :\n"  
+                << "CsI_eLayer1: " << data << "\n" << endreq;
+            return StatusCode::SUCCESS;
+        } else {
+            log << MSG::ERROR << "Didn't load the Item!" << endreq;
+            return StatusCode::FAILURE;
+        }
+    } else {
+        log << MSG::ERROR << "Dead NTuple !" << endreq;
+        return StatusCode::FAILURE;
+    }
+}
 
 
 

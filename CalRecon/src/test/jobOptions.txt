@@ -7,12 +7,12 @@
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
 
 // List of DLLs required
-ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv" };
+ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv"};
 
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
-GlastDetSvc.IRFFile = "/packages/reconstruction_v3/instrument/v2/src/test/muontest.irf";
+GlastDetSvc.IRFFile = "/Gaudi2/instrument/v2r3/src/test/muontest.irf";
 
 ApplicationMgr.TopAlg = { "CalRecoAlg" };
 
@@ -35,7 +35,9 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 // Input IRF file
 // May need to change the path....
-EventSelector.Input = "IRFFILE /packages/reconstruction_v2/instrument/v2/src/test/muontest.irf";
+EventSelector.Input = "IRFFILE /Gaudi2/instrument/v2r3/src/test/muontest.irf";
+
+NTupleSvc.Output = {"FILE1 DATAFILE='/NTUPLES/tuples.root'"};
 
 // Selection file - must be included - or else Gaudi will search for its file by default
 //ApplicationMgr.EvtSel = "NONE";

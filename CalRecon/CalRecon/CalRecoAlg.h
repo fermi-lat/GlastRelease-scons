@@ -6,6 +6,7 @@
 #include "Gaudi/Algorithm/Algorithm.h"
 
 #include "reconstruction/SummaryData.h"
+#include "CalRecon/GaudiGlastTuple.h"
 
 // forward declarations
 class IGlastDetSvc;
@@ -32,6 +33,8 @@ public:
   //! mandatory
   StatusCode finalize();
 
+  StatusCode printNewNTuple();
+
 private:
     // the GlastDetSvc used for access to detector info
     IGlastDetSvc*    m_detSvc;
@@ -42,7 +45,10 @@ private:
     xml::IFile * m_ini;
     
     // sumamry object from glastsim creates a n-tuple
-    SummaryData<GlastTuple>* m_summary; 
+//    SummaryData<GlastTuple>* m_summary;
+    SummaryData<GaudiGlastTuple>* m_gsummary;
+
+
 };
 
 

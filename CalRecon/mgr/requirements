@@ -35,6 +35,11 @@ macro CalRecon_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)"\
 
 # build this for testing 
 
-application test test/*.cxx
-# test/*.h test/*.txt
+
+macro WinJobOption  "" \
+      VisualC       "test/*.txt"
+
+
+
+application test test/*.cxx test/*.h ${WinJobOption}
 
