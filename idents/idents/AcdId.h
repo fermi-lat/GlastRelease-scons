@@ -97,6 +97,7 @@ public:
     inline short ribbonOrientation() const;
 
 private:
+    void constructorGuts(const idents::VolumeIdentifier &volid);
     /// set layer
     inline void layer( unsigned int val );
     /// set the face number
@@ -134,25 +135,6 @@ private:
 
 inline AcdId::AcdId () : m_id (0) {}
 inline AcdId::AcdId ( const AcdId& r ) : m_id (r.m_id) {}
-inline AcdId::AcdId (const idents::VolumeIdentifier &volId) {
-    m_id = 0;
-    layer(0);
-    if (!checkVolId(volId)) return;
-    if (volId[0] != 1) return;
-    if (volId[2] == tileVolId) {
-        face(volId[1]);
-        /* as of revised ACD geometry (nov ?? 2002) row and column
-        are always in the right order, but there is an intervening
-        field which has to be thrown away. For now it should always
-        have value 40 (tile).  When ribbons are sensitive, will also see
-        41 if volume refers to a ribbon.  */
-        row(volId[3]);
-        column(volId[4]);
-    } else if (volId[2] == ribbonVolId) {
-        ribbonNum(volId[4]);
-        ribbonOrientation(6-volId[3]);
-    }
-}
 inline AcdId::AcdId (short l, short f, short r, short c)  {
     m_id = 0;
     layer(l);
@@ -170,7 +152,7 @@ inline AcdId::~AcdId () {}
 
 inline bool AcdId::checkVolId(const idents::VolumeIdentifier &volId) {
     if (volId[0] != 1) return false;
-    if ((volId[2] != tileVolId) || (volId[2] != ribbonVolId)) return false;
+    if ((volId[2] != tileVolId) && (volId[2] != ribbonVolId)) return false;
     return true;
 }
 
