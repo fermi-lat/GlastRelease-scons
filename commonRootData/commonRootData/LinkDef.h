@@ -10,6 +10,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ namespace commonRootData;
 #pragma link C++ class RelTable+;
 #pragma link C++ class Relation+;
 #pragma link C++ class BaseException;
@@ -17,6 +18,7 @@
 #pragma link C++ class AcdId+;
 #pragma link C++ class CalXtalId+;
 #pragma link C++ class TowerId+;
+#pragma link C++ class commonRootData::TkrId+;
 #pragma link C++ class VolumeIdentifier+;
 //#pragma link C++ class BadPointerException;
 
