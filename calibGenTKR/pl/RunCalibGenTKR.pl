@@ -36,6 +36,10 @@ while(<JOBFILE>) {
     print OPTIONFILE qq{<ifile  cvs_Header="\$Header$" cvs_Revision="\$Revision$"> \n};
     print OPTIONFILE qq{  <section name="parameters"> input parameters for TKR bad strips calibration \n};
     
+    print OPTIONFILE qq{    <item name="detectorType" value="EM1"> valid types are EM1, EM2, LAT_2Towers and LAT_Full</item> \n};
+
+    print OPTIONFILE qq{    <item name="maxOccupancy" value = "0.01"> occupancy above ambient to qualify as hot</item> \n};
+
     print OPTIONFILE qq{    <item name="sourceFilePath" value= "$digiRootDir" >  common part of the path to the digi.root files (may be blank) </item> \n};
     print OPTIONFILE qq{    <item name="sourceFileList" value= "$digiRootFile" > blank-delimited list of input files, including any part of the path not specified above </item> \n}; 
 
