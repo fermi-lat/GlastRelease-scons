@@ -23,6 +23,9 @@
 #pragma link C++ class TkrDiagnosticData+; //class name different from filename!
 #pragma link C++ class CalDiagnosticData+; //class name different from filename!
 #pragma link C++ class EventSummaryData+;
+#pragma link C++ class GemTileList+;
+#pragma link C++ class GemOnePpsTime+;
+#pragma link C++ class Gem+;
 
 #endif
 
