@@ -1,64 +1,94 @@
 #include "digiRootData/CalDigi.h"
 ClassImp(CalDigi)
 
-/*!
-//------------------------------------------------------------------------------
 //
-// \class   CalDigi        
-//  
-// \brief Digitizations for Cal                                
+// Class:  CalDigi        
+// Description: Digitizations for Cal
+// Based on the CalDigi TDS class in GlastEvent written by J. Eric Grove.
 //              
-// Author:  J. Eric Grove, 23 Feb 2001
+// Author:  Heather Kelly
 //
-//------------------------------------------------------------------------------
-*/
 
+CalDigi::CalDigi() {
+    m_readoutCol = 0;
+    Clear();
+}
 
-CalDigi::CalDigi() {}
+CalDigi::~CalDigi() { 
+    Clear();
+    if(m_readoutCol) {
+        m_readoutCol->Delete();
+        delete m_readoutCol;
+        m_readoutCol = 0;
+    }
+}
 
+void CalDigi::initialize(CalXtalId::CalTrigMode m, const CalXtalId &id) {
+    m_mode = m;
+    m_xtalId = id;
+    m_readoutCol = new TClonesArray("CalXtalReadout", 1);
+}
 
-CalDigi::~CalDigi() { }
+void CalDigi::Clear(Option_t *option) {
+    m_numXtals = 0;
+    m_xtalId.Clear();
+    if (m_readoutCol) m_readoutCol->Clear();
+    m_mode = CalXtalId::BESTRANGE;
+}
 
+void CalDigi::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Id: " << endl;
+    m_xtalId.Print();
+    cout << "Num Readouts: " << m_readoutCol->GetEntries() << endl;
+}
 
-/// Retrieve readout mode
-const CalXtalId::CalTrigMode CalDigi::getMode() const { return m_mode; };
-void CalDigi::setMode(CalXtalId::CalTrigMode m) { m_mode = m; };
+const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM) 
+{ 
+    // Add a new CalXtalReadout entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    ++m_numXtals;
+    TClonesArray &xtals = *m_readoutCol;
+    new(xtals[m_numXtals]) CalXtalReadout(rangeP, adcP, rangeM, adcM);
+    return ((CalXtalReadout*)(xtals[m_numXtals]));
+} 
 
-/// Retrieve log identifier
-const CalXtalId CalDigi::getPackedId() const { return m_xtalId; };
-void CalDigi::setPackedId(CalXtalId id) { m_xtalId = id; };
-
-void CalDigi::addReadout(CalXtalReadout r) 
-{ m_readout.push_back(r); } 
-
-/// Retrieve energy range for selected face and readout
 Char_t CalDigi::getRange(short readoutIndex, CalXtalId::XtalFace face) const
 {
-    return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getRange(face) : (Char_t)-1;
+    return (readoutIndex < m_readoutCol->GetEntries()) 
+        ? ((CalXtalReadout*)m_readoutCol->At(readoutIndex))->getRange(face) : (Char_t)-1;
 }
 
-/// Retrieve pulse height for selected face and readout
 Short_t CalDigi::getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const
 {
-    return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getAdc(face) : (Short_t)-1;
+    return (readoutIndex < m_readoutCol->GetEntries()) 
+        ? ((CalXtalReadout*)m_readoutCol->At(readoutIndex))->getAdc(face) : (Short_t)-1;
 }
 
-/// Retrieve ranges and pulse heights from both ends of selected readout
-const CalXtalReadout* CalDigi::getLogReadout(Short_t readoutIndex)
+const CalXtalReadout* CalDigi::getXtalReadout(Short_t readoutIndex)
 {
-    if ( readoutIndex < m_readout.size() )
-        return &(m_readout[readoutIndex]);
+    if ( readoutIndex < m_readoutCol->GetEntries() )
+        return ((CalXtalReadout*)m_readoutCol->At(readoutIndex));
     else
         return 0;
     
 }
 
-/// Retrieve pulse height from selected range
 Short_t CalDigi::getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const
 {
-    Char_t nRanges = (Char_t)m_readout.size();
-    if (nRanges == 1)
-        return (range == ((m_readout[0])).getRange(face)) ? ((m_readout[0])).getAdc(face) : (Short_t)-1;
-    else
-        return ((m_readout[(nRanges + range - ((m_readout[0])).getRange(face)) % nRanges])).getAdc(face);
+    Char_t nRanges = (Char_t)m_readoutCol->GetEntries();
+    if (nRanges <= 0) return (Short_t)-1;
+    CalXtalReadout* firstXtal = (CalXtalReadout*)m_readoutCol->At(0);
+
+    if (nRanges == 1) {
+        return (range == firstXtal->getRange(face)) 
+        ? firstXtal->getAdc(face) : (Short_t)-1;
+    } else {
+        UInt_t index = (nRanges + range - firstXtal->getRange(face)) % nRanges;
+        CalXtalReadout* xtal = (CalXtalReadout*) m_readoutCol->At(index);
+        return xtal->getAdc(face);
+    }
 }

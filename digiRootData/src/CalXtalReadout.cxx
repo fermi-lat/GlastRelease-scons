@@ -3,9 +3,11 @@
 ClassImp(CalXtalReadout)
 
 // Class   CalXtalReadout        
-// Description Pulse heights and energy range for both faces of log for Cal   
+// Description Pulse heights and energy range for both faces of log for Cal.
+// Based on the CalXtalReadout TDS class defined in GlastEvent 
+// written by J. Eric Grove.
 //              
-// Author:  J. Eric Grove, 23 Feb 2001
+// Author: Heather Kelly
 //
 
 CalXtalReadout::CalXtalReadout() {
@@ -21,7 +23,7 @@ m_rangeP(rangeP), m_adcP(adcP), m_rangeM(adcM), m_adcM(adcM)
 CalXtalReadout::~CalXtalReadout() {
 }
 
-void CalXtalReadout::init(Char_t rangeP, UShort_t adcP, Char_t rangeM, 
+void CalXtalReadout::initialize(Char_t rangeP, UShort_t adcP, Char_t rangeM, 
                           UShort_t adcM) {
     Clear();
     m_rangeP = rangeP;
@@ -38,11 +40,15 @@ void CalXtalReadout::Clear(Option_t *option) {
 }
 
 void CalXtalReadout::Print(Option_t *option) const {
-
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "POS range, adc " << m_rangeP << " " << m_adcP << endl;
+    cout << "NEG range, adc " << m_rangeM << " " << m_adcM << endl;
 }
 
 
-Short_t CalXtalReadout::getAdc(CalXtalId::XtalFace face) const {
+UShort_t CalXtalReadout::getAdc(CalXtalId::XtalFace face) const {
     return face == CalXtalId::POS ? m_adcP : m_adcM;
 }
 

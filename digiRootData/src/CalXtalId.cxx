@@ -10,24 +10,16 @@ using namespace std;
 //
 // ClassName:   CalXtalId        
 //  
-// Description: ID class for CAL logs                                
+// Description: ID class for CAL logs based on CalXtalId in the idents package                               
 //		Supports both packed log ID = (tower*8 + layer)*16 + column and
 //			unpacked ID, i.e. tower, layer, and column.
-//		Serialize methods give i/o for packed ID.
-//		Extractor/inserter give i/o for unpacked ID.
-//		Input methods ensure that packed and unpacked IDs stay in sync.
 //
-//    Retrieve packed ID or unpacked tower, layer, and column 
-//        inline int getPackedId() const 
-//        void getUnpackedId(short& tower, short& layer, short& column); 
-// 
-//    Retrieve tower, layer, and column numbers individually from packed ID 
-//        inline short getTower() const 
-//        inline short getLayer() const 
-//        inline short getColumn() const 
 //              
-// Author:  J. Eric Grove	22 Mar 2001                      
+// Author:  Heather Kelly - based on idents::CalXtalId written by J. Eric Grove
 
+CalXtalId::CalXtalId() {
+    Clear();
+}
 
 CalXtalId::CalXtalId(UInt_t packedId)
 : m_packedId(packedId)
@@ -48,7 +40,12 @@ void CalXtalId::Clear(Option_t *option) {
 }
 
 void CalXtalId::Print(Option_t *option) const {
-
+    using namespace std;
+    TObject::Print(option);
+    cout.precision(2);
+    cout << "Packed Id: " << m_packedId << endl;
+    cout << "(Tower, Layer, Col): " << "(" << getTower() 
+        << "," << getLayer() << "," << getColumn() << ")" << endl;
 }
 
 void CalXtalId::init(Short_t tower, Short_t layer, Short_t column)

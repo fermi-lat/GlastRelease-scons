@@ -8,10 +8,19 @@
 ClassImp(DigiEvent)
 
 // Allocate the TClonesArrays and TObjArray just once
-TClonesArray *DigiEvent::m_staticAcdDigiVec = 0;
-TObjArray *DigiEvent::m_staticTkrDigiVec = 0;
+//TClonesArray *DigiEvent::m_staticAcdDigiVec = 0;
+//TObjArray *DigiEvent::m_staticTkrDigiVec = 0;
+
+TObjArray *DigiEvent::s_calDigiStaticCol = 0;
 
 DigiEvent::DigiEvent() {
+
+    if (!s_calDigiStaticCol) s_calDigiStaticCol = new TObjArray();
+    m_calDigiCol = s_calDigiStaticCol;
+
+    Clear();
+
+    /*
     // Assign default values to members
     if (!m_staticAcdDigiVec) m_staticAcdDigiVec = new TClonesArray("AcdTile", 24);
     m_AcdDigiVec = m_staticAcdDigiVec;
@@ -20,12 +29,11 @@ DigiEvent::DigiEvent() {
     if (!m_staticTkrDigiVec) m_staticTkrDigiVec = new TObjArray();
     m_TkrDigiVec = m_staticTkrDigiVec;
     m_numLayers = -1;
-
-    m_eventId = 0;
-    m_run = 0;
+*/
 }
 
 DigiEvent::~DigiEvent() {
+  /*
     if(m_AcdDigiVec == m_staticAcdDigiVec) m_staticAcdDigiVec = 0;
     m_AcdDigiVec->Delete();
     delete m_AcdDigiVec;
@@ -35,10 +43,25 @@ DigiEvent::~DigiEvent() {
     m_TkrDigiVec->Delete();
     delete m_TkrDigiVec;
     m_TkrDigiVec = 0;
-    
+    */
+
+    if (m_calDigiCol == s_calDigiStaticCol) s_calDigiStaticCol = 0;
+    m_calDigiCol->Delete();
+    delete m_calDigiCol;
+    m_calDigiCol = 0;
+}
+
+void DigiEvent::initialize(UInt_t eventId, UInt_t runId) {
+    m_eventId = eventId;
+    m_runId = runId;
 }
 
 void DigiEvent::Clear(Option_t *option) {
+    m_eventId = 0;
+    m_runId = 0;
+    m_calDigiCol->Delete();
+
+    /*
     m_AcdHeader.Clean();
     m_AcdDigiVec->Clear();
     m_numTiles = -1;
@@ -52,12 +75,14 @@ void DigiEvent::Clear(Option_t *option) {
     m_L1T.Clean();
 
     m_liveTime.Clean();
+    */
 }
 
 void DigiEvent::Print(Option_t *option) {
 
 }
 
+/*
 AcdTile* DigiEvent::addAcdTile(UInt_t id, short base, short used) {
     // Add a new AcdTile entry, note that
     // TClonesArrays can only be filled via
@@ -115,4 +140,9 @@ const TkrLayer* DigiEvent::getTkrLayer(unsigned int layerNum) {
     int index = m_TkrDigiVec->BinarySearch(&tempLayer);
     if (index >= 0) return ((TkrLayer*)m_TkrDigiVec->At(index));
     return 0;
+}
+*/
+
+void DigiEvent::addCalDigi(CalDigi *cal) {
+    m_calDigiCol->Add(cal);
 }
