@@ -44,3 +44,5 @@ macro GlastEvent_stamps   "${EventDir)/Event.stamp"
 application test_Event test/testmain.cxx
 
 application test_Tables test/test_RelTabs.cxx
+
+application test_TkrRecon test/test_TkrRecon.cxx
