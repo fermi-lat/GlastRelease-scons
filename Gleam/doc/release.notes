@@ -2,6 +2,12 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v2r1p2 21-may-02 THB
+     use FluxSvc             v5r6p2
+     use GlastDigi           v4r1p1
+     use Recon               v2r2p1
+     use CalRecon            v5r2       
+
  * v2r1p1 16-may-02 THB consequence of McParticle change
      use Event               v8r5
      use FluxSvc             v5r6p1

@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r1p1
+version  v2r1p2
 
 # This is a checkout package
 # $Id$
@@ -45,7 +45,7 @@ use GlastSvc    v8r0
 
 # simulation
 
-use FluxSvc     v5r6p1
+use FluxSvc             v5r6p2
 use FluxDisplay v2r0p1
 use G4Generator v4r1p1
 
@@ -64,6 +64,8 @@ use CalRecon            v5r2
 #ROOT persistence
 use mcRootData     v2r2
 use digiRootData   v3r1p1
+#use reconRootData 
+
 use RootIo         v3r1
 
 
