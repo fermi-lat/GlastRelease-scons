@@ -18,20 +18,20 @@
     </inputSample>
   </generic>
 
-  <tower row="0" col="0"  nTrig="true" nData="true" />
+  <tower row="0" col="0"  nOnbdTrig="true" nOnbdData="true" />
 
   <tower row="0" col="1">
-    <uniplane tray="3" which="top" nTrig="true">
+    <uniplane tray="3" which="top" nOnbdTrig="true">
       <stripList strips="8 17 401" />
     </uniplane>
-    <uniplane tray="5" which="top" nData="true" allBad="true" />
+    <uniplane tray="5" which="top" nOnbdData="true" allBad="true" />
 
-    <uniplane tray="15" which="bot" nTrig="true">
+    <uniplane tray="15" which="bot" nOnbdTrig="true">
       <stripList strips="1 2 3 9" />
       <stripSpan first="100" last="123" />
     </uniplane>
   </tower>
 
-  <tower row="2" col="3" nECalib="true" />
+  <tower row="2" col="3" nOnbdCalib="true" />
 
 </badStrips>

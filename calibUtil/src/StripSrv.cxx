@@ -67,17 +67,17 @@ namespace calibUtil {
       tower.m_howBad = 0;
       tower.m_allBad = 0;
 
-      std::string attValue = Dom::getAttribute(towerElt, "nECalib");
+      std::string attValue = Dom::getAttribute(towerElt, "nOnbdCalib");
       if (attValue.compare("true") == 0) {
-        tower.m_howBad |= vCALIBUTIL_nECalib;
+        tower.m_howBad |= vCALIBUTIL_nOnbdCalib;
       }
-      attValue = Dom::getAttribute(towerElt, "nTrig");
+      attValue = Dom::getAttribute(towerElt, "nOnbdTrig");
       if (attValue.compare("true") == 0) {
-        tower.m_howBad |= vCALIBUTIL_nTrig;
+        tower.m_howBad |= vCALIBUTIL_nOnbdTrig;
       }
-      attValue = Dom::getAttribute(towerElt, "nData");
+      attValue = Dom::getAttribute(towerElt, "nOnbdData");
       if (attValue.compare("true") == 0) {
-        tower.m_howBad |= vCALIBUTIL_nData;
+        tower.m_howBad |= vCALIBUTIL_nOnbdData;
       }
       if (tower.m_howBad) {
         tower.m_allBad = 1;
@@ -195,17 +195,17 @@ namespace calibUtil {
     attValue = Dom::getAttribute(uniElt, "allBad");
     uni->m_allBad = (attValue.compare("true") == 0);
 
-    attValue = Dom::getAttribute(uniElt, "nECalib");
+    attValue = Dom::getAttribute(uniElt, "nOnbdCalib");
     if (attValue.compare("true") == 0) {
-      uni->m_howBad |= vCALIBUTIL_nECalib;
+      uni->m_howBad |= vCALIBUTIL_nOnbdCalib;
     }
-    attValue = Dom::getAttribute(uniElt, "nTrig");
+    attValue = Dom::getAttribute(uniElt, "nOnbdTrig");
     if (attValue.compare("true") == 0) {
-      uni->m_howBad |= vCALIBUTIL_nTrig;
+      uni->m_howBad |= vCALIBUTIL_nOnbdTrig;
       }
-    attValue = Dom::getAttribute(uniElt, "nData");
+    attValue = Dom::getAttribute(uniElt, "nOnbdData");
     if (attValue.compare("true") == 0) {
-      uni->m_howBad |= vCALIBUTIL_nData;
+      uni->m_howBad |= vCALIBUTIL_nOnbdData;
     }
     
     attValue = Dom::getAttribute(uniElt, "tray");

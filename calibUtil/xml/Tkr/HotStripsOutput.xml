@@ -78,22 +78,24 @@
      tray with bad strips
 
      To mark all strips in a tower as bad in the same way, set
-     one or more of the attributes nECalib, nTrig, nData to "true".
+     one or more of the attributes nOnbdCalib, nOnbdTrig, nOnbdData 
+     to "true".  These are meant to correspond to similarly named
+     bits in the hardware.
 
      See also <uniplane>, which has the same collection of attributes
 
      Meanings are:
-           nECalib   - not usable for charge injection calibration
-           nTrig     - not usable by trigger
-           nData     - not usable for recon, data analysis 
+           nOnbdCalib   - not usable for charge injection calibration
+           nOnbdTrig    - not usable by trigger
+           nOnbdData    - not usable for recon, data analysis 
 
 -->
 <!ELEMENT tower (uniplane*) >
 <!ATTLIST tower row NMTOKEN #REQUIRED 
                 col NMTOKEN #REQUIRED 
-                nECalib  (true | false) "false"
-                nTrig    (true | false) "false"
-                nData    (true | false) "false"  >
+                nOnbdCalib  (true | false) "false"
+                nOnbdTrig   (true | false) "false"
+                nOnbdData   (true | false) "false"  >
 
 <!-- Each uniplane is identified by a tray # (zero based, back-most tray
       is tray 0, according to Steve Ritz convention) and top/bottom
@@ -104,11 +106,11 @@
   -->
 <!ELEMENT uniplane (stripList?, stripSpan*) >
 <!ATTLIST uniplane tray      NMTOKEN #REQUIRED
-                   which    (top | bot) #REQUIRED
-                   nECalib  (true | false) "false"
-                   nTrig    (true | false) "false"
-                   nData    (true | false) "false"  
-                   allBad   (true | false) "false" >
+                   which       (top | bot) #REQUIRED
+                   nOnbdCalib  (true | false) "false"
+                   nOnbdTrig   (true | false) "false"
+                   nOnbdData   (true | false) "false"  
+                   allBad      (true | false) "false" >
 
 
 <!-- For each plane containing bad strips of a particular badness,
@@ -131,14 +133,14 @@
       </inputSample>
    </generic>
    <tower row="0" col="0">
-      <uniplane tray="1" which="top" nData="true" >
+      <uniplane tray="1" which="top" nOnbdData="true" >
          <stripList strips= " 1473 1474 1475 1476 1477 1478 1479 1480 1481 1482 
                     1483 1484 1485 1486 1487 1489 1490 1491 1492 1493 
                     1494 1495 1496 1500 1501 1502 1505 1506 1507 1508 
                     1509 1510 1516 1517 1518 1519 1520 1521 1522 1523 
                     1524 1526 1527 1528 1530 1531 1532 1533 1534 " />
       </uniplane>
-      <uniplane tray="3" which="bot" nData="true" >
+      <uniplane tray="3" which="bot" nOnbdData="true" >
          <stripList strips= " 60 " />
       </uniplane>
    </tower>
