@@ -34,6 +34,41 @@ int main(int argc, char* argv[]) {
                Metadata::INSTBtem);
   ret = lookup(Metadata::CTYPE_TKRBadChan, t_none, Metadata::LEVELDev,
                Metadata::INSTBtem);
+
+  // Try to insert a record
+  ret = meta.openRecord(Metadata::INSTEm, Metadata::CTYPE_TKRBadChan,
+                   Metadata::FMTXml, "1.0",
+                   "$CALIBUTILROOT/xml/test/testHot-2002-05-02.xml",
+                   Metadata::CMPLOk);
+  if (ret) {
+    std::cerr << "openRecord failed with return value " << ret << std::endl;
+    return ret;
+  }
+  ret = 
+    meta.addInputDesc("This is the standard invented hot strips file");
+  if (ret) {
+    std::cerr << "Bad return from addInputDesc: " << ret << std::endl;
+    return ret;
+  }
+  ret = meta.addNotes("Fake record, added from test_meta");
+  if (ret) {
+    std::cerr << "Bad return from addNotes: " << ret << std::endl;
+    return ret;
+  }
+  ret = meta.addValidInterval(Timestamp(2000, 8, 2), Timestamp());
+  if (ret) {
+    std::cerr << "Bad return from addValidInterval: " << ret << std::endl;
+    return ret;
+  }
+  unsigned int newSerial;
+  ret = meta.insertRecord(&newSerial);
+  if (ret) {
+    std::cerr << "Bad return from insertRecord: " << ret << std::endl;
+  }
+  else {
+    std::cout << "Successfully inserted new record, serial number " 
+              << newSerial << std::endl;
+  }
   return(ret);
 
 }
