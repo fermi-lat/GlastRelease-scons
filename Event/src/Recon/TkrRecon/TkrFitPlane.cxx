@@ -4,7 +4,8 @@
 //               TkrFitPlane
 //
 //      Original due to Jose Hernando-Angel circa 1997-1999
-//      Re-written to combine both X and Y projections (2001) 
+//      Re-written to combine both X and Y projections
+//      W.B. Atwood, SCIPP/UCSC, Nov. 2001 
 //      
 //-----------------------------------------------------------------------
 
@@ -96,14 +97,18 @@ Point TkrFitPlane::getPoint(TkrFitHit::TYPE type)const
 
 double TkrFitPlane::getDeltaChiEne(TkrFitHit::TYPE type)const
 {
-    TkrFitHit hit=getHit(type);
-    double delparX=m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
-    double delparY=m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
-    double sigma2X=m_hitmeas.getCov().getcovX0X0();
-    double sigma2Y=m_hitmeas.getCov().getcovY0Y0();
+// NOTE: THIS MEMBER FUNCTION IS IDENTICAL TO getDeltaChiSq ?????
+//    TkrFitHit hit=getHit(type);
+//    double delparX=m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
+//    double delparY=m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
+//    double sigma2X=m_hitmeas.getCov().getcovX0X0();
+//    double sigma2Y=m_hitmeas.getCov().getcovY0Y0();
     
-    double variance=(delparX*delparX)/sigma2X + (delparY*delparY)/sigma2Y;
-    return variance;
+//    double variance=(delparX*delparX)/sigma2X + (delparY*delparY)/sigma2Y;
+//    return variance;
+
+      double variance = getDeltaChiSq(type);
+      return variance;
 }
 
 void TkrFitPlane::setDeltaEne(double ene)
@@ -117,26 +122,37 @@ void TkrFitPlane::setDeltaEne(double ene)
 
 double TkrFitPlane::getSigma(TkrFitHit::TYPE type) const
 {
-    double sigma = 1e6;
-    TkrFitHit hit=getHit(type);
-    TkrFitHit hitmeas = getHit(TkrFitHit::MEAS);
-    double delX=hit.getPar().getXPosition()-hitmeas.getPar().getXPosition();
-    double delY=hit.getPar().getYPosition()-hitmeas.getPar().getYPosition();
-    double sigma2X=hit.getCov().getcovX0X0();
-    double sigma2Y=hit.getCov().getcovY0Y0();
+// NOTE: THIS MEMBER FUNCTION IS IDENTICAL TO getDeltaChiSq ?????
+//    double sigma = 1e6;
+//    TkrFitHit hit=getHit(type);
+//    double delX=hit.getPar().getXPosition()-hitmeas.getPar().getXPosition();
+//    double delY=hit.getPar().getYPosition()-hitmeas.getPar().getYPosition();
+//    double sigma2X=hit.getCov().getcovX0X0();
+//    double sigma2Y=hit.getCov().getcovY0Y0();
     
-    sigma=(delX*delX)/sigma2X + (delY*delY)/sigma2Y;
-    return sigma;
+//    sigma=(delX*delX)/sigma2X + (delY*delY)/sigma2Y;
+//    return sigma;
+      double sigma = getDeltaChiSq(type);
+      return sigma;
 }
 
 double TkrFitPlane::getDeltaChiSq(TkrFitHit::TYPE type) const
 {  
     TkrFitHit hit=getHit(type);
-    double delparX=m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
-    double delparY=m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
-    double sigma2X=m_hitmeas.getCov().getcovX0X0();
-    double sigma2Y=m_hitmeas.getCov().getcovY0Y0();
-    
-    double chi2=(delparX*delparX)/sigma2X + (delparY*delparY)/sigma2Y;
+
+    double delpar = 0.;
+    double sigma2 = 0.; 
+    if(m_projection == TkrCluster::X ) {
+        delpar=m_hitmeas.getPar().getXPosition()-hit.getPar().getXPosition();
+        sigma2=m_hitmeas.getCov().getcovX0X0() - hit.getCov().getcovX0X0();
+    }
+    else {
+        delpar=m_hitmeas.getPar().getYPosition()-hit.getPar().getYPosition();
+        sigma2=m_hitmeas.getCov().getcovY0Y0() - hit.getCov().getcovY0Y0();
+    }
+
+    double chi2 = 1e6;
+    if(sigma2 > 0) chi2=(delpar*delpar)/sigma2;
+
     return chi2;
 }

@@ -3,7 +3,8 @@
 //      Contains fit track information for a given plane
 //
 //      Original due to Jose Hernando-Angle circa 1997-1999
-//      Re-written to combine both X and Y projections (2001) 
+//      Re-written to combine both X and Y projections
+//      W.B. Atwood, SCIPP/UCSC, Nov. 2001   
 //      
 //----------------------------------------
 
@@ -37,16 +38,19 @@ public:
     typedef TkrCluster::view AXIS;
     
     TkrFitPlane() 
-        : m_IDHit (0), m_IDTower(0), m_IDPlane(0), m_zplane(0), m_eneplane(0)
+        : m_IDHit (0), m_IDTower(0), m_IDPlane(0), m_zplane(0), m_eneplane(0),
+          m_radLen(0), m_activeDist(0)
     {}
 
     TkrFitPlane(unsigned id, int kplane, double ene, double z, const TkrFitHit& hit, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_projection(prj)  
+        : m_IDHit(id), m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_projection(prj),
+          m_radLen(0), m_activeDist(0)  
     { 
 	    setHit(hit); 
     }
     TkrFitPlane(unsigned id, int kplane, double ene, double z, AXIS prj)
-        : m_IDHit(id), m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_projection(prj) 
+        : m_IDHit(id), m_IDPlane(kplane), m_zplane(z), m_eneplane(ene), m_projection(prj),
+          m_radLen(0), m_activeDist(0)
     {}
 
     // Access Information
@@ -58,13 +62,13 @@ public:
     inline AXIS     getProjection()                      const {return m_projection;}
     inline AXIS     getNextProj()                        const {return m_projPlus;}
     inline double   getRadLen()                          const {return m_radLen;}
-
     TkrFitHit       getHit(TkrFitHit::TYPE type)         const;
     Point           getPoint(TkrFitHit::TYPE type)       const;
     double          getDeltaChiSq(TkrFitHit::TYPE type)  const;
     double          getDeltaChiEne(TkrFitHit::TYPE type) const; 
     double          getSigma(TkrFitHit::TYPE type)       const;
     TkrFitMatrix    getQmaterial()                       const {return m_Qmaterial;} 
+    inline double   getActiveDist()                      const {return m_activeDist;}
 
     /// Classes allowed access for filling the information
     friend class KalFitTrack;
@@ -81,6 +85,8 @@ private:
     inline void     setIDPlane(int id)                         {m_IDPlane = id;}
     inline void     setZPlane(double z)                        {m_zplane = z;}
     inline void     setRadLen(double rl)                       {m_radLen = rl;}
+
+    inline void     setActiveDist(double d)                    {m_activeDist = d;}
     inline void     setNextProj(AXIS nextProj)                 {m_projPlus = nextProj;}
     inline void     setQmaterial(const TkrFitMatrix& Q)        {m_Qmaterial = Q;}
 
@@ -96,11 +102,11 @@ private:
     int          m_IDPlane;    // Plane number
     AXIS         m_projection; // X or Y measuring SSD plane
     AXIS         m_projPlus;   // X or Y measuring SSD plane+1
-
-    double       m_zplane;
-    double       m_eneplane;
-    double       m_radLen; 
-    
+    double       m_zplane;     // Z location of plane
+    double       m_eneplane;   // Energy of track at this plane
+    double       m_radLen;     // Rad. Len. associated with this palne
+    double       m_activeDist; // The distance inside (positive) hit SSD (neg. if outside)
+        
     TkrFitHit    m_hitmeas;
     TkrFitHit    m_hitpred;
     TkrFitHit    m_hitfit;
