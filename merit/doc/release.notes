@@ -2,6 +2,7 @@
 /*   Package merit
  *
  *
+ *  v5r12p1THB 27-oct-02 gcc 3.x mods
  *  v5r12  14-oct-02 skirt now ok; check for NAN in PSFAnalysis
  *  v5r11  03-oct-02 change in Acdrecon interface
  *  v5r10  30-sep-02 new calculation of surplus hit ratio
