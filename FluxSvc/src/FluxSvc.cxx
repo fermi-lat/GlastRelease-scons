@@ -223,13 +223,13 @@ std::string FluxSvc::uniqueIDString()const{
 }
 
 
-void FluxSvc::setOrientation(std::pair<double,double> ang){
-    m_fluxMgr->setOrientation(ang);
+void FluxSvc::setExplicitRockingAngles(double ang1, double ang2){
+    m_fluxMgr->setExplicitRockingAngles(std::make_pair<double,double>(ang1,ang2));
 }
 
 /// get the angular values of the satellite
-std::pair<double,double> FluxSvc::getOrientation(){
-    return m_fluxMgr->getOrientation();
+std::pair<double,double> FluxSvc::getExplicitRockingAngles(){
+    return m_fluxMgr->getExplicitRockingAngles();
 }
 
 HepRotation FluxSvc::transformGlastToGalactic(double time)const{

@@ -65,10 +65,10 @@ public:
     virtual std::string fluxName()const=0;
     
     /// set the glast tilt angles.
-    virtual void setOrientation(std::pair<double,double> ang)=0;
+    virtual void setExplicitRockingAngles(double ang1,double ang2)=0;
 
     /// get the angular values of the satellite
-    virtual std::pair<double,double> getOrientation()=0;
+    virtual std::pair<double,double> getExplicitRockingAngles()=0;
     
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors

@@ -309,11 +309,11 @@ void FluxMgr::addFactory(std::string name, const ISpectrumFactory* factory ) {
     SpectrumFactoryTable::instance()->addFactory(name,factory);
 }
 
-void FluxMgr::setOrientation(std::pair<double,double> ang){
+void FluxMgr::setExplicitRockingAngles(std::pair<double,double> ang){
     GPS::instance()->rotateAngles(ang);
 }
 
-std::pair<double,double> FluxMgr::getOrientation(){
+std::pair<double,double> FluxMgr::getExplicitRockingAngles(){
     return GPS::instance()->rotateAngles();
 }
 

@@ -157,6 +157,7 @@ std::pair<double,double> GPS::rotateAngles(){
 //set m_rotangles
 void GPS::rotateAngles(std::pair<double,double> coords){
     m_rotangles=coords;
+    m_rockType = EXPLICIT;
 }
 
 
@@ -199,10 +200,18 @@ Rotation GPS::rockingAngleTransform(double seconds){
     }else if(m_rockType == ONEPERORBIT){
         while(orbitPhase >2.*M_2PI){ orbitPhase -= 2.*M_2PI;}
         if(orbitPhase <= M_2PI) rockNorth *= -1.;
+    }else{
+        //for safety and EXPLICIT
+        rockNorth = 0.;
     }
     // now, we want to find the proper transformation for the rocking angles:
     HepRotation rockRot;
+    if(m_rockType == EXPLICIT){
+        rockRot.rotateX(m_rotangles.first).rotateZ(m_rotangles.second);
+    }else{
+        //just rock north or south by the desired amount.
     rockRot./*rotateZ(inclination*cos(orbitPhase)).*/rotateX(rockNorth);
+    }
 
     return rockRot;
 }
@@ -326,4 +335,5 @@ void GPS::setRockType(int rockType){
     if(rockType == 1) m_rockType = UPDOWN;
     if(rockType == 2) m_rockType = SLEWING;
     if(rockType == 3) m_rockType = ONEPERORBIT;
+    if(rockType == 4) m_rockType = EXPLICIT;
 }

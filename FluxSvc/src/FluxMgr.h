@@ -51,10 +51,10 @@ public:
     void test(std::ostream& out, std::string source_name, int count);
     
     /// set the angular (off-zenith) values of the GLAST satellite
-    void setOrientation(std::pair<double,double> ang);
+    void setExplicitRockingAngles(std::pair<double,double> ang);
 
     /// get the angular values of the satellite
-    std::pair<double,double> getOrientation();
+    std::pair<double,double> getExplicitRockingAngles();
 
     ///this should return the source file names, along with the contained sources.
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;

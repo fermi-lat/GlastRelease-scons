@@ -65,11 +65,12 @@ public:
     /// name of the flux
     std::string fluxName()const;
     
-    /// set the glast tilt angles.
-    void setOrientation(std::pair<double,double> ang);
+    /// set the glast tilt angles for explicit, static rocking
+    /// the angles correspond to a rotation about the x axis followed by the z.
+    void setExplicitRockingAngles(double ang1, double ang2);
 
     /// get the angular values of the satellite
-    std::pair<double,double> getOrientation();
+    std::pair<double,double> getExplicitRockingAngles();
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     HepRotation transformGlastToGalactic(double time)const;
@@ -80,7 +81,11 @@ public:
     /// return a string which uniquely identifies the source
     std::string uniqueIDString()const;
 
-    ///0=NONE, 1=UPDOWN, 2=SLEWING, 3=ONEPERORBIT
+    /// Set the satellite rocking mode:
+    ///0=NONE, 1=UPDOWN(up in the northern hemisphere, down in the southern,
+    ///2=SLEWING(like updown, but not discontinuous at the equator),
+    ///3=ONEPERORBIT (rock norh one orbit, south the next,
+    ///4=EXPLICIT (use the internal rotangles rotation angles (this should be set through setOrientation)).
     void setRockType(int rockType);
 
     ///this should return the source file names, along with the contained sources.
