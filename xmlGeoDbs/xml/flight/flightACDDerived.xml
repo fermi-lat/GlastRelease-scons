@@ -1,69 +1,231 @@
 <!--  $Header$ -->
       <derCategory name="derACD" save="true" >
         <overview>Derived constants specific to the ACD</overview>
-        <const name="ACDTopTotalX">
-          <notes>Total X width to be covered by top tiles</notes>
+
+        <const name="ACDSideSupportThick">
+          <notes>Thickness of core + face sheets for side support</notes>
           <add>
-            <refer refTo="towersTotalX" />
-            <mul>
-              <const value="2" uType="count" />
-              <refer refTo="ACDTKRStayClear" />
-            </mul>
+            <refer refTo="ACDSideCoreThickness" />
+            <refer refTo="ACDFaceThickness" />
+            <refer refTo="ACDFaceThickness" />
+          </add>
+        </const>
+
+        <const name="ACDTopSupportThick">
+          <notes>Thickness of core + face sheets for top support</notes>
+          <add>
+            <refer refTo="ACDTopCoreThickness" />
+            <refer refTo="ACDFaceThickness" />
+            <refer refTo="ACDFaceThickness" />
           </add>
         </const>
 
 
-        <const name="ACDTotalXSide" >
-          <notes>total length (in x direction) to be covered by a 
-                row of side tiles</notes>
-          <add>
-<!--            <refer refTo="towersTotalX" /> -->
-            <refer refTo="ACDTopTotalX" />
+        <const name="ACDSidesGap">
+          <notes>Min. distance between tiles of the two sides || to x-axis
+                or equivalently of the two sides || to y-axis. Compute 
+               as max {(distance encompassing top tiles + side ribbons
+               + ribbon gaps), (towers, gaps to support structure, thickness
+               of support structure and PMT fiber gaps)} </notes>
+          <max>
+            <add>
+              <refer refTo="towersTotalX" />
+              <mul>
+                <add>
+                  <refer refTo="ACDTKRStayClear" />
+                  <refer refTo="ACDSideSupportThick" />
+                  <refer refTo="PMTFiberGap" />
+                </add>
+                <const value="2" uType="count" />
+              </mul>
+            </add>
+            <refer refTo="topTileYCentral_l" />
             <mul>
+              <add>
+                <refer refTo="topTileYMid_l" />
+                <refer refTo="topTileYEdge_l" />
+                <refer refTo="ribbonGap" />
+                <refer refTo="ribbonThickness" />
+                <refer refTo="topTileGap" />
+                <refer refTo="topTileGap" />
+              </add>
               <const value="2" uType="count" />
-              <refer refTo="ACDSideSupToTile" />
             </mul>
+          </max>
+        </const>
+
+        <const name="topTileXEdgeExtra_l">
+          <notes>Compute extra extension of top tiles in columns 0 and 4
+                 which is substituting for unsimulated curved pieces
+                 by adding up length taken by real tiles (taking overlap
+                 into account) and by width of two side ribbons and gaps
+                 between ribbon and tiles, subtracting
+                 it from space between tile sides, and dividing by 1.
+          </notes>
+          <quo>
+            <minus>
+              <add>
+                <refer refTo="ACDSidesGap" />
+                <mul>
+                  <refer refTo="topOverlap" />
+                  <const value="4" uType="count" />
+                </mul>
+              </add>
+              <add>
+                <refer refTo="topTileXCentral_l" />
+                <mul>
+                  <add>
+                    <refer refTo="topTileXMid_l" />
+                    <refer refTo="topTileXEdge_l" />
+                    <refer refTo="ribbonThickness" />
+                    <refer refTo="ribbonGap" />
+                  </add>
+                  <const value="2" uType="count" />                  
+                </mul>
+              </add>
+            </minus>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="topTileXEdgeTotal_l">
+          <add>
+            <refer refTo="topTileXEdge_l" />
+            <refer refTo="topTileXEdgeExtra_l" />
+          </add>
+        </const>
+ 
+
+        <const name="ACDTopTransverse" >
+          <notes>Transverse dimension of envelope which will contain
+          ACD top tiles and ribbons (1 nov 2002)</notes>
+          <minus>
+            <refer refTo="ACDSidesGap" />
+            <mul>
+              <add>
+                <refer refTo="ribbonThickness" />
+                <refer refTo="ribbonGap" />
+              </add>
+              <const value="2" uType="count" />                  
+            </mul>
+          </minus>          
+        </const>
+
+        <const name="ACDTop_z" >
+          <notes>Z dimension of envelope which will contain
+          ACD top tiles and ribbons (1 nov 2002)</notes>
+          <add>
             <refer refTo="tileThickness" />
+            <refer refTo="tileThickness" />
+            <refer refTo="tileCenterThickness" />
+            <refer refTo="topTileSupportStandoff" />
+          </add>
+        </const>
+
+        <const name="ACDSideThickness">
+          <notes>This isn't really correct.  If overlapping and
+            slant are taken into account, ACDSideThickness is
+            at least twice this value. (1 nov 2002)</notes>
+          <refer refTo="tileThickness" />
+        </const>
+
+        <const name="ACDTotalX">
+          <notes>Total extent in X of entire collection of ACD pieces,
+                 plus a millimeter for good luck (4 nov 2002) </notes>
+          <add>
+            <refer refTo="ACDSidesGap" />
+            <refer refTo="ACDSideThickness" />
+            <refer refTo="ACDSideThickness" />
+            <const value="1.0" />
+          </add>
+        </const>
+
+        <const name="ACDTotalY">
+          <notes>Total extent in Y of entire collection of ACD pieces</notes>
+          <refer refTo="ACDTotalX" />
+        </const>
+
+        <const name="ACDTotalTransSide" >
+          <notes>transverse length of collection of ACD side tiles,
+              e.g those alone -X side of instrument. Could be
+              used for envelope volume. Is also equal to transverse
+              dimension of the single tile in the bottom  row.
+              (1 nov 2002)</notes>
+          <add>
+            <refer refTo="ACDSidesGap" />
+            <refer refTo="ACDSideThickness" />
             <uminus>
-               <refer refTo="topTileGap" />
+               <refer refTo="dovetailGap" />
             </uminus>
           </add>
         </const>
 
-        <const name="ACDTotalX">
-          <notes>max extent in x of all of ACD (not just top)</notes>
+ <!-- Ribbon dimensions.   An xRibbon is one more or less contained in
+      a plane of constant x (perp. to x axis) and similarly for yRibbon. 
+      In current (nov 2002) model yRibbons are divided into 5 segments
+      along top; xRibbons have only a single top segment
+-->
+         
+        <const name="xRibbonTop_l">
+          <notes>These ribbons run the full distance between
+          paralell sides except for ribbonGap and ribbonThickness
+                on either side</notes>
+          <minus>
+            <refer refTo="ACDSidesGap" />
+            <add>
+              <refer refTo="ribbonGap" />
+              <refer refTo="ribbonGap" />
+              <refer refTo="ribbonThickness" />
+              <refer refTo="ribbonThickness" />
+            </add>
+          </minus>
+        </const>
+
+        <!-- There are 3 different possible lengths for bits of X ribbon:
+             one for ribbon segments under the central tiles, one for 
+             ribbon segments under "mid" tiles (columns 1 and 3) and one
+             for ribbon segments under the outer columns (0 and 4).     -->
+        <const name="yRibbonTopCent_l">
+          <notes>length of ribbon segments running under the central column
+            of tiles</notes>
           <add>
-            <refer refTo="ACDTotalXSide" />
-            <refer refTo="tileThickness" />
-            <refer refTo="topTileGap" />
-            <mul>
-              <const value="2" uType="count" />
-              <add>
-                <refer refTo="tapeThickness" />
-                <refer refTo="tapeGap" />
-              </add>
-            </mul>
+            <refer refTo="topTileXCentral_l" />
+            <refer refTo="ribbonOverlap" />
+            <refer refTo="ribbonOverlap" />
           </add>
         </const>
 
-<!--
-        <const name="ACDTotalX">
-          <notes>max extent in x of all of ACD (not just top)</notes>
-          <add>
-            <refer refTo="ACDTopTotalX" />
-            <mul>
-              <const value="2" uType="count" />
-              <add>
-                <refer refTo="tileThickness" />
-                <refer refTo="tapeThickness" />
-                <refer refTo="tapeGap" />
-                <refer refTo="ACDSideStandoff" />
-              </add>
-            </mul>
-          </add>
+        <const name="yRibbonTopMid_l">
+          <notes>length of ribbon segments running under columns 1,3
+            of top tiles</notes>
+          <minus>
+            <add>
+              <refer refTo="topTileXMid_l" />
+              <refer refTo="ribbonOverlap" />
+            </add>
+            <add>
+              <refer refTo="topOverlap" />
+              <refer refTo="ribbonGap" />
+            </add>
+          </minus>
         </const>
- -->
 
+        <const name="yRibbonTopEdge_l">
+          <notes>length of ribbon segments running under columns 0,4
+            of top tiles</notes>
+          <minus>
+            <refer refTo="topTileXEdgeTotal_l" />
+            <add>
+              <refer refTo="topOverlap" />
+              <refer refTo="ribbonGap" />
+            </add>
+          </minus>
+        </const>            
+
+
+
+        <!-- Old stuff having to do with counts, ranges of id fields
+             is probably still useful -->
         <const name="XTopTileMax" uType="count" type="int">
           <notes>Convenience for idField definitons</notes>
           <minus>
@@ -113,173 +275,9 @@
           </minus>
         </const>
 
-        <const name="ACDTopXWidth">
-          <notes>X dimension for a top tile. Must be derived from total width top and other things.  Tiles overlap in X.</notes>
-          <quo>
-            <add>
-              <refer refTo="ACDTopTotalX"/>
-              <mul>
-                <refer refTo="XTopTileMax" />
-                <refer refTo="topOverlap" />
-              </mul>
-            </add>
-            <refer refTo="numXTopTiles" />
-          </quo>
-        </const>
-
-        <const name="ACDTopYWidth">
-          <notes>Y dimension for a top tile.  Derived from total width, size of gaps.</notes>
-          <quo>
-            <add>
-              <refer refTo="ACDTopTotalY"/>
-              <uminus>
-                <mul>
-                  <add>
-                    <const value="1" uType="count" />
-                    <refer refTo="numYTopTiles" />
-                  </add>
-                  <refer refTo="topTileGap" />
-                </mul>
-              </uminus>
-
-            </add>
-            <refer refTo="numYTopTiles" />
-          </quo>
-        </const>
-
-<!-- Compute Z for the smallest box containing the top tiles + tape.
-     From Heather's first diagram, this is
-
-      3*tileThickness + tapeGap + tapeThickness
-
-     May have to do this over for a box containing support as well,
-     but so far have no information for support                   -->
-        <const name="ACDTopZwidth" >
-          <notes>Z for smallest box containing top tiles + tape (does
-            not currently include support)</notes>
-          <add>
-            <mul>
-              <const value="3" uType="count" /> <!-- (nRow+1)/2 -->
-              <refer refTo="tileThickness" />
-            </mul>
-            <refer refTo="tapeGap" />
-            <refer refTo="tapeThickness" />
-          </add>
-        </const>
-
-<!-- following are convenient to have.. -->
-        <const name = "sideOverlapToTopTape" >
-          <notes>Distance from top of side tile to top of top tape</notes>
-          <minus>
-            <refer refTo="sideOverlap" />
-            <add>
-              <refer refTo="tapeThickness" />
-              <refer refTo="tapeGap" />
-            </add>
-          </minus>
-        </const>
-
-        <const name="ACDTopZHalfWidth" >
-          <notes>for convenience</notes>
-          <quo>
-            <refer refTo="ACDTopZwidth" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
-
-        <const name="tapeHalfThickness" >
-          <notes>for convenience</notes>
-          <quo>
-            <refer refTo="tapeThickness" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
-<!-- thickness of side tiles + tape -->
-        <const name="ACDSideThick">
-          <notes>Tile thickness + tape thickness + gap (ACD sides)</notes>
-          <add>
-            <refer refTo="tileThickness" />
-            <refer refTo="tapeThickness" />
-            <refer refTo="tapeGap" />
-          </add>
-        </const>
-
-        <const name="sideTileWidthShortXRow">
-        <notes>to get width of an individual tile, take account of
-              number of tiles in a row (and number of gaps)."Short"
-              refers to the fact that the row has only 5 tiles</notes>
-          <quo>
-            <minus>
-              <refer refTo="ACDTotalXSide" />
-              <mul>
-                <refer refTo="numPerSideRowShort" />
-                <refer refTo="sideHorizontalGap" />
-              </mul>
-            </minus>
-            <refer refTo="numPerSideRowShort" />
-          </quo>
-        </const>
-
-        <const name="sideTileWidthLongXRow">
-          <notes>Same as above for a long (10-tile) row</notes>
-          <quo>
-            <minus>
-              <refer refTo="ACDTotalXSide" />
-              <mul>
-                <refer refTo="numPerSideRowLong" />
-                <refer refTo="sideHorizontalGap" />
-              </mul>
-            </minus>
-            <refer refTo="numPerSideRowLong" />
-          </quo>
-        </const>
-
-<!-- Now do same for Y-direction -->
-        <const name="ACDTopTotalY">
-          <notes>Total Y width to be covered by top tiles</notes>
-          <add>
-            <refer refTo="towersTotalY" />
-            <mul>
-              <const value="2" uType="count" />
-              <refer refTo="ACDTKRStayClear" />
-            </mul>
-          </add>
-        </const>
-
-        <const name="ACDTotalYSide" >
-          <notes>Same as above but for Y sides (tiles)</notes>
-          <add>
-            <refer refTo="ACDTopTotalY" />
-            <mul>
-              <const value="2" uType="count" />
-              <refer refTo="ACDSideSupToTile" />
-            </mul>
-            <refer refTo="tileThickness" />
-            <uminus>
-              <refer refTo="topTileGap"/>
-            </uminus>
-          </add>
-        </const>
-
-        <const name="ACDTotalY">
-          <notes>max extent in y of all of ACD (not just top)</notes>
-          <add>
-            <refer refTo="ACDTotalYSide" />
-            <refer refTo="tileThickness" />
-            <refer refTo="topTileGap" />
-            <mul>
-              <const value="2" uType="count" />
-              <add>
-                <refer refTo="tapeThickness" />
-                <refer refTo="tapeGap" />
-              </add>
-            </mul>
-          </add>
-        </const>
-
-
-        <const name="ACDSideHeight" >
-          <notes>Total height of an ACD side: tiles plus gaps</notes>
+        <const name="ACDSide_z" >
+          <notes>Total height of an ACD side of tiles 
+              (tiles plus gaps)</notes>
           <add>
             <refer refTo="sideTileHeight0" />
             <refer refTo="sideTileHeight1" />
@@ -295,42 +293,50 @@
           </add>
         </const>
 
-        <const name="sideTileWidthShortYRow">
-          <notes>Same idea as for ACD X-side tiles</notes>
+        <const name="sideRibbon_l">
+          <notes>Length of side piece of ribbon</notes>
+          <minus>
+            <refer refTo="ACDSide_z" />
+            <add>
+              <refer refTo="sideOverlap" />
+              <refer refTo="tileThickness" />
+              <refer refTo="ribbonGap" />
+            </add>
+          </minus>
+        </const> 
+
+
+        <const name="ACDTopZHalf" >
+          <notes>for convenience</notes>
           <quo>
-            <minus>
-              <refer refTo="ACDTotalYSide" />
-              <mul>
-                <refer refTo="numPerSideRowShort" />
-                <refer refTo="sideHorizontalGap" />
-              </mul>
-            </minus>
-            <refer refTo="numPerSideRowShort" />
+            <refer refTo="ACDTop_z" />
+            <const value="2" uType="count" />
           </quo>
         </const>
 
-        <const name="sideTileWidthLongYRow">
-          <notes>Same idea as for ACD X-side tiles</notes>
+        <const name="ribbonHalfThickness" >
+          <notes>for convenience</notes>
           <quo>
-            <minus>
-              <refer refTo="ACDTotalYSide" />
-              <mul>
-                <refer refTo="numPerSideRowLong" />
-                <refer refTo="sideHorizontalGap" />
-              </mul>
-            </minus>
-            <refer refTo="numPerSideRowLong" />
+            <refer refTo="ribbonThickness" />
+            <const value="2" uType="count" />
           </quo>
         </const>
-<!-- end Y side tile calculations -->
 
+        <const name="tileHalfThickness" >
+          <notes>for convenience</notes>
+          <quo>
+            <refer refTo="tileThickness" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+ 
 <!-- heights of tiles on both X and Y sides are the same: -->
         <const name="sideTileRow0_d">
           <notes>Z-Displacement for top row (row 0) of side tiles (X and Y),
                 relative to the center of a box containing the side</notes>
           <quo>
             <minus>
-              <refer refTo="ACDSideHeight" />
+              <refer refTo="ACDSide_z" />
               <refer refTo="sideTileHeight0" />
             </minus>
             <const value="2" />
@@ -388,210 +394,312 @@
           </minus>
         </const>
 
-<!-- Now some stuff involving the ACD tape -->
-        <const name="tapeSideLength">
-          <notes>length of scintillating tape on a side (assume a single 
-          piece going from top to bottom for now.  May want to shorten
-          now that bottom tile "row" is just a single tile.</notes>
+
+<!-- Additionally need to compute bunch of displacements to be used
+     in constructing ACD top:
+
+     For tiles, 
+          need 3 different Z displacements,
+                    topTileCent_dz
+                    topTileMid_dz
+                    topTileEdge_dz
+-->
+        <const name="topTileEdge_dz">
+          <notes>Displacement w.r.t. center of ACD top envelope of
+                highest tiles, those in col. 0 and 4</notes>
           <minus>
-            <refer refTo="ACDSideHeight" />
-            <refer refTo="sideOverlapToTopTape" />
+            <refer refTo="ACDTopZHalf" />
+            <refer refTo="tileHalfThickness" />
           </minus>
         </const>
 
-        <const name="topTapeLenLong" >
-          <notes>lengths of tape convering gaps in the top.  There are
-            3 different lengths to deal with the fact that tiles in
-            different top rows are obscured differeng amounts by 
-            overlap.  The longest tape goes over the outermost tiles,
-            the shortest across the central row.  See Heather's 
-            first diagram</notes>
-          <add>
-            <refer refTo="ACDTopXWidth" />
-            <refer refTo="tapeTopExt" />
-          </add>
-        </const>
-        <const name="topTapeLenMedium" >
-          <notes>Length of top tapes for rows 1 and 3</notes>
+        <const name="topTileMid_dz">
+          <notes>Displacement w.r.t. center of ACD top envelope of
+                tiles in cols 1 and 3</notes>
           <minus>
-            <refer refTo="topTapeLenLong" />
-            <refer refTo="topOverlap" />
+            <refer refTo="topTileEdge_dz" />
+            <refer refTo="tileThickness" />
           </minus>
         </const>
-        <const name="topTapeLenShort">
-          <notes>Length of top tape for central row: row 2</notes>
+
+        <const name="topTileCent_dz">
+          <notes>Displacement w.r.t. center of ACD top envelope of
+                tiles in col 2</notes>
           <minus>
-            <refer refTo="ACDTopXWidth" />
-            <mul>
+            <refer refTo="topTileMid_dz" />
+            <quo>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="tileCenterThickness" />
+              </add>
               <const value="2" uType="count" />
-               <add>
-                 <refer refTo="topOverlap" />
-                 <refer refTo="tapeTopExt" /> 
-               </add>
-            </mul>
+            </quo>
           </minus>
         </const>
 
-        <const name="topTapesPerRow" uType="count" type="int">
-          <notes> Tapes on top come in columns, similar to tiles, except there
-     is one less piece of tape than there are tiles in a row</notes>
-          <minus>
-            <refer refTo="numYTopTiles" />
-            <const value="1" uType="count" />
-          </minus>
-        </const>
-
-        <const name="topTapeGap" >
-          <notes>gap between adjacent pieces of (top)tape in the 
-          same row</notes>
-          <add>
-            <refer refTo="ACDTopYWidth" />
-            <refer refTo="topTileGap" />
-            <uminus>
-              <refer refTo="tapeWidth" />
-            </uminus>
-          </add>
-        </const>
-
-<!-- Need to compute a bunch of displacements of top tapes relative to
-     the "top ACD" envelope.  First do X, then Z.  Y displacements are
-     all zero.  -->
-        <const name="topTapeX4_d">
-          <notes>x-displacement for a top tape in row 4
-          relative to the "top ACD" envelope</notes>
-          <mul>
-            <const value="0.5" uType="count" />
+<!--          2 X displacements and their negatives
+                    topTileEdge_dx, _dxn
+                    topTileMid_dx, _dxn      -->
+        <const name="topTileEdge_dx" >
+          <notes>X displacement of top tiles in column 4 </notes>
+          <quo>
             <minus>
-              <refer refTo="ACDTopTotalX" />
-              <refer refTo="topTapeLenLong" />
+              <refer refTo="ACDTopTransverse" />
+              <refer refTo="topTileXEdgeTotal_l" />
             </minus>
-          </mul>
+            <const value="2" uType="count" />
+          </quo>
         </const>
-        <const name="topTapeX3_d" >
-          <notes>x-displacement for a top tape in  row 3</notes>
-          <mul>
-            <const value="0.5" uType="count" />
-            <add>
-              <refer refTo="topTapeLenShort" />
-              <refer refTo="topTapeLenMedium" />
-            </add>
-          </mul>
-        </const>
-        <const name="topTapeX2_d" value="0.0">
-          <notes>x-displacement for a top tape in  row 2</notes>
-        </const>
-        <const name="topTapeX1_d">
-          <notes>x-displacement for a top tape in  row 1</notes>
+
+        <const name="topTileEdge_dxn" >
+          <notes>X displacement of top tiles in column 0 </notes>
           <uminus>
-            <refer refTo="topTapeX3_d" />
-          </uminus>
-        </const>
-        <const name="topTapeX0_d">
-          <notes>x-displacement for a top tape in  row 0</notes>
-          <uminus>
-            <refer refTo="topTapeX4_d" />
+            <refer refTo="topTileEdge_dx" />
           </uminus>
         </const>
 
-        <const name="topTapeZLong_d" >
-          <notes>Z displacement for a long (row 0 or 4) top tape</notes>
+        <const name="topTileMid_dx" >
+          <notes>X displacement of top tiles in column 3 </notes>
           <minus>
-            <refer refTo="ACDTopZHalfWidth" />
-            <refer refTo="tapeHalfThickness" />
-          </minus>
-        </const>
-
-        <const name="topTapeZMedium_d" >
-          <notes>Z displacement for a medium (row 1 or 3) top tape</notes>
-          <minus>
-            <refer refTo="topTapeZLong_d" />
-            <refer refTo="tileThickness" />
-          </minus>
-        </const>
-
-        <const name="topTapeZShort_d" >
-          <notes>Z displacement for a top tape in row 2</notes>
-          <minus>
-            <refer refTo="topTapeZMedium_d" />
-            <refer refTo="tileThickness" />
-          </minus>
-        </const>
-
-        <const name="topTileZEdge_d" >
-          <notes>Z displacement for a top tile in rows 0 or 4</notes>
-          <minus>
-            <mul>
-              <const value="2.5" uType="count"  />
-              <refer refTo="tileThickness" />
-            </mul>
-            <refer refTo="ACDTopZHalfWidth" />
-          </minus>
-        </const>
-
-        <const name="topTileZMedium_d" >
-          <notes>Z displacement for a top tile in rows 1 or 3</notes>
-          <minus>
-            <refer refTo="topTileZEdge_d" />
-            <refer refTo="tileThickness" />
-          </minus>
-        </const>
-
-        <const name="topTileZCenter_d" >
-          <notes>Z displacement for a top tile in row 2</notes>
-          <minus>
-            <refer refTo="topTileZMedium_d" />
-            <refer refTo="tileThickness" />
-          </minus>
-        </const>
-
-        <const name="topTileX2_d"  value="0">
-          <notes> middle row is centered in X</notes>
-        </const>
-
-        <const name="topTileX3_d" >
-          <notes>X-displacement for a top tile in row 3</notes>
-          <minus>
-            <refer refTo="ACDTopXWidth" />
+            <quo>
+              <add>
+                <refer refTo="topTileXCentral_l" />
+                <refer refTo="topTileXMid_l" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
             <refer refTo="topOverlap" />
           </minus>
         </const>
-
-        <const name="topTileX4_d" >
-          <notes>X-displacement for a top tile in row 4</notes>
-          <mul>
-            <const value="2" uType="count"  />
-            <refer refTo="topTileX3_d" />
-          </mul>
-        </const>
-
-        <const name="topTileX0_d" >
-          <notes>X-displacement for a top tile in row 0</notes>
+          
+        <const name="topTileMid_dxn" >
+          <notes>X displacement of top tiles in column 1 </notes>
           <uminus>
-            <refer refTo="topTileX4_d" />
+            <refer refTo="topTileMid_dx" />
           </uminus>
         </const>
 
-        <const name="topTileX1_d" >
-          <notes>X-displacement for a top tile in row 1</notes>
+<!--          2 Y displacements and their negatives
+                    topTileEdge_dy, _dyn
+                    topTileMid_dy, _dyn   -->
+ 
+        <const name="topTileMid_dy" >
+          <notes>Y displacement of tiles in row 3</notes>
+          <add>
+            <quo>
+               <add>
+                 <refer refTo="topTileYCentral_l" />
+                 <refer refTo="topTileYMid_l" />
+               </add>
+               <const value="2" uType="count" />
+            </quo>
+            <refer refTo="topTileGap" />
+          </add>
+        </const>
+
+        <const name="topTileMid_dyn" >
+          <notes>Y displacement of tiles in row 1</notes>
           <uminus>
-            <refer refTo="topTileX3_d" />
+            <refer refTo="topTileMid_dy" />
           </uminus>
         </const>
 
-        <const name="betweenSideTapesX" >
-          <notes>gap between two tapes on an ACD X-side</notes>
+        <const name="topTileEdge_dy" >
+          <notes>Y displacement of tiles in row 4</notes>
+          <add>
+            <refer refTo="topTileMid_dy" />
+            <quo>
+               <add>
+                 <refer refTo="topTileYEdge_l" />
+                 <refer refTo="topTileYMid_l" />
+               </add>
+               <const value="2" uType="count" />
+            </quo>
+            <refer refTo="topTileGap" />
+          </add>
+        </const>
+          
+        <const name="topTileEdge_dyn" >
+          <notes>Y displacement of tiles in row 0</notes>
+          <uminus>
+            <refer refTo="topTileEdge_dy" />
+          </uminus>
+        </const>
+
+<!--
+     For the 4 Y ribbons (ribbons in plane || to Y axis)
+          one Z displacement
+               topXRibbon_dz
+          2 X displacements and their negatives
+               topXRibbonOuter_dx, _dxn
+               topXRibbonInner_dx, _dxn
+         The Z and X displacements aren't very important since the Y ribbons
+         are only on top to connect the side pieces, not to detect 
+         anything.  For simplicity, and until we hear otherwise, 
+         put Y ribbons along bottom of envelope volume for now with
+         displacements in X equal to the ones used for top tiles. -->
+
+         <const name="topXRibbon_dz" >
+           <notes>Z displacement for long ribbon segments running || to
+                 Y-axis along top.</notes>
+           <minus>
+             <refer refTo="ribbonHalfThickness" />
+             <refer refTo="ACDTopZHalf" />
+           </minus>
+         </const>
+
+         <const name="topXRibbonOuter_dxn" >
+           <notes> nominal x displacement of top Y ribbon #0 </notes>
+           <refer refTo="topTileEdge_dxn" />
+         </const>
+
+         <const name="topXRibbonInner_dxn" >
+           <notes> nominal x displacement of top Y ribbon #1 </notes>
+           <refer refTo="topTileMid_dxn" />
+         </const>
+
+         <const name="topXRibbonInner_dx" >
+           <notes> nominal x displacement of top Y ribbon #2 </notes>
+           <refer refTo="topTileMid_dx" />
+         </const>
+
+         <const name="topXRibbonOuter_dx" >
+           <notes> nominal x displacement of top Y ribbon #3 </notes>
+           <refer refTo="topTileEdge_dx" />
+         </const>
+
+<!--
+     For the 20 X ribbon segments
+          3 Z displacements
+               topYRibbonCent_dz
+               topYRibbonMid_dz
+               topYRibbonEdge_dz
+          2 X displacements and their negatives
+               topYRibbonMid_dx, _dxn
+               topYRibbonEdge_dx, _dxn
+          2 Y displacements and their negatives
+               topYRibbonInner_dy, _dyn
+               topYRibbonOuter_dy, _dyn
+ -->
+<!-- compute Z-displacements from the ones for top tiles -->
+        <const name="topYRibbonEdge_dz">
+          <notes>Z displacement for outer segments (1 and 5) of 
+                 top ribbons || to x-axis </notes>
           <minus>
-            <refer refTo="sideTileWidthLongXRow" />
-            <refer refTo="tapeWidth" />
+            <refer refTo="topTileEdge_dz" />
+            <add>
+              <refer refTo="tileHalfThickness" />
+              <refer refTo="ribbonHalfThickness" />
+              <refer refTo="ribbonGap" />
+            </add>
           </minus>
         </const>
 
-        <const name="betweenSideTapesY" >
-          <notes>gap between two tapes on an ACD Y-side</notes>
+        <const name="topYRibbonMid_dz">
+          <notes>Z displacement for mid segments (2 and 4) of 
+                 top ribbons || to x-axis </notes>
           <minus>
-            <refer refTo="sideTileWidthLongYRow" />
-            <refer refTo="tapeWidth" />
+            <refer refTo="topYRibbonEdge_dz" />
+            <refer refTo="tileThickness" />
           </minus>
+        </const>
+
+        <const name="topYRibbonCent_dz">
+          <notes>Z displacement for central segment (3) of 
+                 top ribbons || to x-axis </notes>
+          <minus>
+            <refer refTo="topYRibbonMid_dz" />
+            <quo>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="tileCenterThickness" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+          </minus>
+        </const>
+
+        <!-- go to edge of central tile, add ribbon gap and half our length -->
+        <const name="topYRibbonMid_dx" >
+          <notes>x-displacement of segment 4 </notes>
+          <add>
+            <refer refTo="ribbonGap" />
+            <quo>
+              <add>
+                <refer refTo="topTileXCentral_l" />
+                <refer refTo="yRibbonTopMid_l" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+          </add>
+        </const>
+
+        <const name="topYRibbonMid_dxn" >
+          <notes>x-displacement of segment 2 </notes>
+          <uminus>
+            <refer refTo="topYRibbonMid_dx" />
+          </uminus>
+        </const>
+
+
+        <!-- go to center of mid tile, add half tile length (to get
+           to edge) half our length and finally ribbon gap -->
+        <const name="topYRibbonEdge_dx" >
+          <notes>x-displacement of segment 5 </notes>
+          <add>
+            <refer refTo="topTileMid_dx" />
+            <quo>
+              <add>
+                <refer refTo="topTileXMid_l" />
+                <refer refTo="yRibbonTopEdge_l" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+            <refer refTo="ribbonGap" />
+          </add>
+        </const>
+
+        <const name="topYRibbonEdge_dxn" >  
+          <notes>x-displacement of segment 1 </notes>
+          <uminus>
+            <refer refTo="topYRibbonEdge_dx" />
+          </uminus>
+        </const>
+
+        <const name="topYRibbonInner_dy" >
+          <notes> Y displacement for segments belonging to Y-ribbon 2</notes>
+          <quo>
+            <add>
+              <refer refTo="topTileYCentral_l" />
+              <refer refTo="topTileGap" />
+            </add>
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="topYRibbonInner_dyn" >
+          <notes> Y displacement for segments belonging to Y-ribbon 1</notes>
+          <uminus>
+            <refer refTo="topYRibbonInner_dy" />
+          </uminus>
+        </const>
+
+        <const name="topYRibbonOuter_dy" >
+          <notes>Y displacement for segments belonging to last Y-ribbon (3) 
+          </notes>
+          <add>
+            <refer refTo="topYRibbonInner_dy" />
+            <refer refTo="topTileYMid_l" />
+            <refer refTo="topTileGap" />
+          </add>
+        </const>
+
+        <const name="topYRibbonOuter_dyn" >
+          <notes>Y displacement for segments belonging to first Y-ribbon (0)
+          </notes>
+          <uminus>
+            <refer refTo="topYRibbonOuter_dy" />
+          </uminus>
         </const>
 
         <const name="ACDSideDovetail_d" >
@@ -615,4 +723,145 @@
             <refer refTo="ACDSideDovetail_d" />
           </uminus>
         </const>
+
+<!-- Define two different side-ribbon gaps: one between central-most
+     ribbons, one between central and outer ribbon -->
+        <const name="ribbonSideCentralGap" >
+          <notes>Gap between two central-most ribbon segments running along
+            an ACD side.</notes>
+          <add>
+            <refer refTo="sideTileTransCentral" />
+            <refer refTo="sideHorizontalGap" />
+          </add>
+        </const>
+
+        <const name="ribbonSideOuterGap" >
+          <notes>Gap between central-most and outer ribbon segments 
+             running along an ACD side.</notes>
+          <add>
+            <refer refTo="sideTileTransMid" />
+            <refer refTo="sideHorizontalGap" />
+          </add>
+        </const>
+
+<!-- constants used for strucutural pieces -->
+        <const name="ACDTopSupportTran" >
+          <notes>Transverse dimension of ACD top support.  It covers
+            side pieces.</notes>
+          <add>
+            <refer refTo="towersTotalX" />
+            <refer refTo="ACDTKRStayClear" />
+            <refer refTo="ACDTKRStayClear" />
+            <refer refTo="ACDSideSupportThick" />
+            <refer refTo="ACDSideSupportThick" />
+          </add>
+        </const>
+
+<!-- Length of side supports. Nest pieces || to Y-axis inside pieces
+     || to X, hence X pieces of length = ACDTopSupportTran -->
+        <const name="ACDYSideSupport_l" >
+          <notes>Long transverse dimension for supports || to X axis
+                 (so at a fixed Y, hence a "YSide") </notes>
+          <refer refTo="ACDTopSupportTran" />
+        </const>
+
+        <const name="ACDXSideSupport_l" >
+          <notes>Long transverse dimension for supports || to Y axis</notes>
+          <minus>
+            <refer refTo="ACDTopSupportTran" />
+            <mul>
+              <refer refTo="ACDSideSupportThick" />
+              <const value="2" uType="count" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="ACDSideSupport_z" >
+          <notes>Height of ACD side support pieces</notes>
+          <minus>
+            <refer refTo="ACDSide_z" />
+            <add>
+              <refer refTo="sideOverlap" />
+              <refer refTo="ACDTop_z" />
+              <refer refTo="ACDTopSupportThick" />
+            </add>
+          </minus>
+        </const>
+
+        <const name="ACDTop_d" >
+          <notes>Z displacement of top ACD relative to Ritz origin</notes>
+          <add>
+            <refer refTo="TKRVertStayClear" />
+            <refer refTo="calTrackerGap" />
+            <refer refTo="TKRACDSupportGap" />
+            <refer refTo="ACDTopSupportThick" />
+            <refer refTo="ACDTopZHalf" />
+          </add>
+        </const>
+
+<!-- displacements for ACD support pieces -->
+        <const name="ACDTopSupport_dz" >
+          <notes>Z relative to Ritz origin for top support piece.  It
+             is immediately below ACDTop envelope</notes>
+          <minus>
+            <refer refTo="ACDTop_d" />
+            <quo>
+              <add>
+                <refer refTo="ACDTopSupportThick" />
+                <refer refTo="ACDTop_z" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+          </minus>
+        </const>
+
+        <const name="ACDSideSupport_dz">
+          <notes>Z relative to Ritz origin for side support pieces. 
+              Compute from ACDTopSupport_dz
+          </notes>
+          <minus>
+            <minus>
+              <refer refTo="ACDTopSupport_dz" />
+              <quo>
+                <refer refTo="ACDTopSupportThick" />
+                <const value="2" uType="count" />
+              </quo>
+            </minus>
+            <quo>
+              <refer refTo="ACDSideSupport_z" />
+              <const value="2" uType="count" />
+            </quo>
+          </minus>
+        </const>
+
+        <const name="ACDSideSupport_dt">
+          <notes>Transverse (x or y) distance of support side from 
+                 Ritz origin.  Move in from tile displ.</notes>
+          <minus>
+            <refer refTo="tileXSide_dx" />
+            <add>
+              <refer refTo="PMTFiberGap" />
+              <quo>
+                <add>
+                  <refer refTo="tileThickness" />
+                  <refer refTo="ACDSideSupportThick" />
+                </add>
+                <const value="2" uType="count" />
+              </quo>
+            </add>
+          </minus>
+        </const>
+          
+        <const name="ACDSideSupport_dtn">
+          <notes>Transverse (x or y) distance of support side from 
+                 Ritz origin, negative</notes>
+          <uminus>
+            <refer refTo="ACDSideSupport_dt" />
+          </uminus>
+        </const>
+
+
       </derCategory>
+
+<!-- All of above has been reviewed as of 2 nov 2002 -->
+

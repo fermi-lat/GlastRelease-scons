@@ -1,17 +1,18 @@
 <!-- $Header$ -->
 <!-- Define boxes, etc. not belonging to any detector -->
 
-<!-- Define boxes for blanket:  top, X-side and Y-side -->
+<!-- Define boxes for blanket:  top, X-side and Y-side 
+     X-sides (Y-sides) are perp. to x-axis (y-axis) -->
     <box name="blanketTop" 
          XREF="NADBlanketTopX" YREF="NADBlanketTopY" 
          ZREF="NADBlanketThick" materialREF="blanketMat" />
       
-    <box name="blanketXSide" 
-         XREF="NADBlanketSideX" YREF="NADBlanketThick" 
+    <box name="blanketYSide" 
+         XREF="NADBlanketSideY_l" YREF="NADBlanketThick" 
          ZREF="NADBlanketSideZ" materialREF="blanketMat" />
       
-    <box name="blanketYSide" 
-         XREF="NADBlanketThick" YREF="NADBlanketSideY" 
+    <box name="blanketXSide" 
+         XREF="NADBlanketThick" YREF="NADBlanketSideX_l" 
          ZREF="NADBlanketSideZ" materialREF="blanketMat" />
       
 <!-- define cylinder for spacecraft -->

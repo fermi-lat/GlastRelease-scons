@@ -32,24 +32,24 @@
         </const>
 
 
-<!-- These might not be quite right.  Check that frame is
-     accounted for. -->
+<!-- Essentially stay-clear for full array of trackers.  Grid may
+     be wider. -->
 	<const name="towersTotalX">
-          <notes>Meant to be X width of the array of towers, but doesn't 
-(yet) include grid</notes>
-          <mul>
-            <refer refTo="xNum" />
-            <refer refTo="towerPitch" />
-          </mul>
+          <notes>Meant to be X width of the array of tracker towers;
+           doesn't include grid</notes>
+          <add>
+            <mul>
+              <refer refTo="xNumM1" />
+              <refer refTo="towerPitch" />
+            </mul>
+            <refer refTo="TKRTransverseStayClear" />
+          </add>
         </const>
 
 	<const name="towersTotalY">
-          <notes>Meant to be Y width of the array of towers, but doesn't 
-(yet) include grid</notes>
-          <mul>
-            <refer refTo="yNum" />
-            <refer refTo="towerPitch" />
-          </mul>
+          <notes>Meant to be Y width of the array of tracker towers;
+           doesn't include grid</notes>
+          <refer refTo="towersTotalX" />
         </const>
 
 <!-- Compute total Z by adding up
@@ -224,11 +224,14 @@
           <notes>Z-dimension of an envelope for the LAT,
                  not including thermal blanket</notes>
           <max>
-            <refer refTo="ACDSideHeight" />
+            <refer refTo="ACDSide_z" />
             <add>
+              <refer refTo="sideOverlap" />
+              <refer refTo="ACDTop_z" />
+              <refer refTo="ACDTopSupportThick" />
+                 <!-- Guess at standoff value  -->
+              <refer refTo="ACDTKRStayClear" />
               <refer refTo="towersTotalZ" />
-              <refer refTo="sideOverlapToTopTape" />
-              <refer refTo="ACDTopZwidth" />
             </add>
           </max>
         </const>
@@ -245,7 +248,7 @@
                 <refer refTo = "towersTotalZ" />
                 <refer refTo = "NADSpacecraftZ" />
               </add>
-              <refer refTo = "ACDTotalXSide" />
+              <refer refTo = "ACDTotalX" />
             </max>
           </mul>
         </const>
@@ -367,16 +370,6 @@
           </minus>
         </const>
 
-        <const name="ACDTop_d" >
-          <notes>Z displacement of top ACD relative to Ritz origin</notes>
-          <add>
-            <refer refTo="TKRVertStayClear" />
-            <refer refTo="calTrackerGap" />
-            <refer refTo="topStandoff" />
-            <refer refTo="ACDTopZHalfWidth" />
-          </add>
-        </const>
-
         <const name="spacecraft_dz">
           <notes>Z displacement of spacecraft relative to Ritz origin.
                 It goes immediately under the LAT</notes>
@@ -396,118 +389,125 @@
 <!-- have to do analogous 5 constants for side tile locations -->
 
         <const name="tileSide_dz">
-          <notes>displacement in z of side tiles rel. to Ritz origin</notes>
-          <quo>
-            <refer refTo="ACDSideHeight" />
-            <const value="2" uType="count" />
-          </quo>
+          <notes>displacement in z of side tiles rel. to Ritz origin.
+            Compute relative to ACDTop_d.  Find coordinate of top of
+            ACD side, then subtract half side height.
+          </notes>
+          <minus>
+            <add>
+              <refer refTo="ACDTop_d" />
+              <refer refTo="sideOverlap"/>
+              <quo>
+                <refer refTo="ACDTop_z"/>
+                <const value="2" uType="count" />
+              </quo>
+            </add>               
+            <quo>
+               <refer refTo="ACDSide_z" />
+               <const value="2" uType="count" />
+            </quo>
+          </minus>
         </const>
 
-
-        <const name="tileXSide_dy" >
-          <notes>Displacement in y of tiles along a side || to X axis,
-                relative to center of LATenv</notes>
+        <const name="tileXSide_dx" >
+          <notes>Displacement in x of tiles along a side || to Y axis
+               (so of constant X), relative to center of LATenv</notes>
           <add>
-            <refer refTo="ACDSideSupToTile" />
+            <refer refTo="ribbonThickness" />
+            <refer refTo="ribbonGap" />
             <quo>
-              <add>
-                <refer refTo="ACDTopTotalY" />
+              <add> 
                 <refer refTo="tileThickness" />
+                <refer refTo="ACDTopTransverse" />
               </add>
               <const value="2" uType="count" />
             </quo>
           </add>
         </const>
 
-        <const name="tileXSide_dyN" >
-          <notes>Displacement in y of tiles along a side || to X axis,
-                neg direction, relative to center of LATenv</notes>
+        <const name="tileXSide_dxn" >
+          <notes>Displacement in x of tiles along a side at fixed -x
+                relative to center of LATenv</notes>
           <uminus>
-            <refer refTo="tileXSide_dy" />
+            <refer refTo="tileXSide_dx" />
           </uminus>
         </const>
 
-        <const name="tileYSide_dx" >
-          <notes>Displacement in x of tiles along a side || to Y axis,
+        <const name="tileYSide_dy" >
+          <notes>Displacement in y of tiles at fixed +y
                 relative to center of LATenv</notes>
-          <add>
-            <refer refTo="ACDSideSupToTile" />
+          <refer refTo="tileXSide_dx" />
+        </const>
+
+        <const name="tileYSide_dyn" >
+          <notes>Displacement in y of tiles at fixed -y
+                relative to center of LATenv</notes>
+          <uminus>
+            <refer refTo="tileYSide_dy" />
+          </uminus>
+        </const>
+
+        <const name="ribbonSide_dz">
+          <notes>displacement in z of side ribbons rel. to Ritz origin.
+           Ribbons go down as far as tile sides but don't go up quite as
+           high.</notes>
+          <minus>
+            <refer refTo="tileSide_dz" />
             <quo>
               <add>
-                <refer refTo="ACDTopTotalX" />
+                <refer refTo="sideOverlap" />
                 <refer refTo="tileThickness" />
+                <refer refTo="ribbonGap" />
               </add>
               <const value="2" uType="count" />
             </quo>
-          </add>
-        </const>
-
-        <const name="tileYSide_dxN" >
-          <notes>Displacement in x of tiles along a side || to Y axis,
-                neg direction, relative to center of LATenv</notes>
-          <uminus>
-            <refer refTo="tileYSide_dx" />
-          </uminus>
-        </const>
-
-        <const name="tapeSide_dz">
-          <notes>displacement in z of side tapes rel. to Ritz origin</notes>
-          <quo>
-             <refer refTo="tapeSideLength" />
-            <const value="2" uType="count" />
-          </quo>
+          </minus>
         </const>
 
 
-        <const name="tapeXSide_dy" >
-          <notes>Displacement in y of tapes along a side || to X axis,
+        <const name="ribbonYSide_dy" >
+          <notes>Displacement in y of tapes along a side at fixed +y
                 relative to center of LATenv.  Compute from displacement
-                of tile sides (as of 5 dec.)</notes>
-          <add>
-            <refer refTo="tileXSide_dy" />
-            <refer refTo="tapeGap" />
-            <quo>
-              <add>
-                <refer refTo="tapeThickness" />
-                <refer refTo="tileThickness" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
-          </add>
+                of tile sides (as 4 Nov 2002)</notes>
+          <minus>
+            <refer refTo="tileYSide_dy" />
+            <add>
+              <refer refTo="ribbonGap" />
+              <quo>
+                <add>
+                  <refer refTo="ribbonThickness" />
+                  <refer refTo="tileThickness" />
+                </add>
+                <const value="2" uType="count" />
+              </quo>
+            </add>
+          </minus>
         </const>
 
-        <const name="tapeXSide_dyN" >
-          <notes>Displacement in y of tapes along a side || to X axis,
-                neg direction, relative to center of LATenv</notes>
+        <const name="ribbonYSide_dyn" >
+          <notes>Displacement in y of ribbons along a side at fixed -y
+                 relative to center of LATenv</notes>
           <uminus>
-            <refer refTo="tapeXSide_dy" />
+            <refer refTo="ribbonYSide_dy" />
           </uminus>
         </const>
 
-        <const name="tapeYSide_dx" >
-          <notes>Displacement in x of tapes along a side || to Y axis,
-                relative to center of LATenv   Compute from displacement
-                of tile sides (as of 5 dec.)</notes>
-          <add>
-            <refer refTo="tileYSide_dx" />
-            <refer refTo="tapeGap" />
-            <quo>
-              <add>
-                <refer refTo="tapeThickness" />
-                <refer refTo="tileThickness" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
-          </add>
+        <const name="ribbonXSide_dx" >
+          <notes>Displacement in x of ribbons at fixed +x
+                relative to center of LATenv.  Same as for perp. sides
+                (Nove 4 2002)</notes>
+          <refer refTo="ribbonYSide_dy" />
         </const>
 
-        <const name="tapeYSide_dxN" >
-          <notes>Displacement in x of tapes along a side || to Y axis,
-                neg direction, relative to center of LATenv</notes>
+        <const name="ribbonXSide_dxn" >
+          <notes>Displacement in x of ribbons at fixed -x
+                relative to center of LATenv</notes>
           <uminus>
-            <refer refTo="tapeYSide_dx" />
+            <refer refTo="ribbonXSide_dx" />
           </uminus>
         </const>
+
+
       </derCategory>
 
       <derCategory name="derNAD" save="true">
@@ -706,14 +706,14 @@
           </add>
         </const>
 
-        <const name="NADBlanketSideX" >
-          <notes>length in long dimension of X-sides of blanket</notes>
+        <const name="NADBlanketSideY_l" >
+          <notes>length in long (x) dimension of Y-sides of blanket</notes>
           <refer refTo="NADBlanketTopX" />
         </const>
 
-        <const name="NADBlanketSideY" >
-          <notes>length in long dimension of Y-sides of blanket, shorter
-            than X-sides because X-sides cover corners</notes>
+        <const name="NADBlanketSideX_l" >
+          <notes>length in long (Y) dimension of X-sides of blanket, shorter
+            than Y-sides because Y-sides cover corners</notes>
           <refer refTo="ACDTotalY" />
         </const>
 
@@ -721,7 +721,7 @@
           <notes>height of a side piece of the blanket:  approx.
              height of ACD side tiles + height of cal</notes>
           <add>
-            <refer refTo="ACDSideHeight" />
+            <refer refTo="ACDSide_z" />
             <refer refTo="CALVertStayClear"/>
           </add>
         </const>
@@ -767,24 +767,42 @@
         <const name="NADBlanketTop_dz">
           <notes>z displacement of top of blanket</notes>
           <add>
-            <refer refTo="ACDSideHeight" />
+            <refer refTo="tileSide_dz" />
             <quo> 
-              <refer refTo="NADBlanketThick" />
+              <add>
+                <refer refTo="NADBlanketThick" />
+                <refer refTo="ACDSide_z" />
+              </add>
               <const value="2" uType="count" />
             </quo>
           </add>
         </const>
 
         <const name="NADBlanketSides_dz">
-          <notes>z displacement of sides of blanket</notes>
+          <notes>z displacement of sides of blanket.  Sits
+                  just under blanket top.</notes>
             <minus>
+              <refer refTo="NADBlanketTop_dz" />
               <quo>
-                <refer refTo="NADBlanketSideZ" />
+                <add>
+                  <refer refTo="NADBlanketSideZ" />
+                  <refer refTo="NADBlanketThick" />
+                </add>
                 <const value="2" uType="count" />
               </quo>
-              <refer refTo="CALVertStayClear" />
             </minus>
           </const>
               
       </derCategory>
-    </derived>
+   </derived>
+
+
+
+
+
+
+
+
+
+
+

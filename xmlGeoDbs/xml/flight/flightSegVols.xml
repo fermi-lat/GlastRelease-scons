@@ -44,7 +44,7 @@
 
     <!ENTITY Derived        SYSTEM "flightDerivedConstants.xml">
     <!ENTITY TKRDerived     SYSTEM "flightTKRDerived.xml">
-    <!ENTITY CALDerived     SYSTEM "flightCALDerSegVols.xml">
+    <!ENTITY CALDerived     SYSTEM "flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "flightNADDerived.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">

@@ -66,7 +66,7 @@
       <vMinMax min="0" maxREF="maxLog" />
     </field>
 
-    <field name="fCALSeg" >
+    <field name="fCALSeg">
       <vMinMax min="0" maxREF="nCsISegM1" />
     </field>
 
@@ -97,10 +97,29 @@
       <vMinMax minREF="eACDTopFace" maxREF="eACDYPosFace" /> 
     </field>
 
-<!-- constraints for these depend on which side we're in -->
-    <field name="fRow" />
+    <field name="fACDCmp" >
+      <vList>
+        <vEnumVal valueREF="eACDTile" />
+        <vEnumVal valueREF="eACDRibbon" />
+        <vEnumVal valueREF="eACDSupport" />
+      </vList>
+    </field>
 
-    <field name="fCol" />
+    <field name="fRibbon" >
+      <vMinMax min="0" max="3" />
+    </field>
+
+    <field name="fRibbonSegment" >
+      <vMinMax min="0" max="6" />
+    </field>
+
+    <field name="fRow" >
+      <vMinMax min="0" maxREF="XTopTileMax" />
+    </field>
+
+    <field name="fCol" >
+      <vMinMax min="0" maxREF="YTopTileMax" />
+    </field>
 
     <field name="fTKRTray" >
       <vMinMax min="0" maxREF="maxTray" />
@@ -120,7 +139,8 @@
     </field>
 
     <!-- field for subcomponents of anything which consists of
-         a subset of 4 border pieces and a center.  Used for
+         a subset of 4 border pieces and a center, possibly
+         also extra components to left and right.  Used for
          Core/closeout. Note in case the
          orientation is in the XY plane, "bottom" is to be
          interpreted as negative Y; otherwise "bottom"
@@ -154,7 +174,7 @@
               <vMinMax min="0" maxREF="CALMaxLayer" />
               <dictNode fieldName="fMeasure" >
                   <dictNode fieldName="fCALLog" >
-                    <dictNode fieldName="fCALCellCmp">
+                    <dictNode fieldName="fCALCellCmp" >
                       <dictNode fieldName="fCALSeg" />
                     </dictNode>
                 </dictNode>
@@ -214,40 +234,37 @@
         <pValues>
           <vEnumVal valueREF="eLATACD" />
         </pValues>
+   
+        <dictNode fieldName="fACDCmp" >
 
-        <!-- top face sequences -->
-        <dictNode fieldName="fRow" >
-          <pValues>
-            <vEnumVal valueREF="eACDTopFace" />
-          </pValues>
-          <vMinMax min="0" maxREF="YTopTileMax" />
-          <dictNode fieldName="fCol" >
+ <!-- including ribbons and supports makes it impossible to set limits
+      on row, col values on a per-face basis.
+      Just put coarser limits on all faces -->
+
+          <dictNode fieldName="fRow" >
+            <pValues>
+              <vEnumVal valueREF="eACDTile" />
+            </pValues>
             <vMinMax min="0" maxREF="YTopTileMax" />
+            <dictNode fieldName="fCol" >
+              <vMinMax min="0" maxREF="YTopTileMax" />
+            </dictNode>
           </dictNode>
-        </dictNode>
 
-        <!-- side faces -->
-        <dictNode fieldName="fRow" >
-          <pValues>
-            <vMinMax  minREF="eACDXNegFace" maxREF="eACDYPosFace" />
-          </pValues>
-
-          <!-- describe columns for first two rows, i.e, the short ones -->
-          <dictNode fieldName="fCol" >
+<!-- ribbons ids have orientation field, then ribbon #, then segment # -->
+          <dictNode fieldName="fMeasure" >
             <pValues>
-              <vMinMax minREF="ACDShortRowMin" maxREF="ACDShortRowMax" />
+              <vEnumVal valueREF="eACDRibbon" />
             </pValues>
-            <vMinMax min="0" maxREF="ACDShortMaxCol" />
+            <dictNode fieldName="fRibbon" >
+              <dictNode fieldName="fRibbonSegment" />
+            </dictNode>
           </dictNode>
 
-          <!-- ..now do long side rows -->
-          <dictNode fieldName="fCol" >
-            <pValues>
-              <vMinMax minREF="ACDLongRowMin" maxREF="ACDLongRowMax" />
-            </pValues>
-            <vMinMax min="0" maxREF="ACDLongMaxCol" />
-          </dictNode>
-        </dictNode>          <!-- end of defs for side faces -->
+<!-- For now don't have to describe eACDSupport case because we aren't
+     assigning ids to pieces of supports -->
+        </dictNode>          <!-- end of fACDCmp -->
+
 
       </dictNode>            <!-- end of fACDFace -->
 

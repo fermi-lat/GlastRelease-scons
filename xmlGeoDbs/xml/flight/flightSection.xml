@@ -60,19 +60,42 @@
 &ACDAcd;
 
 
-<!-- Make a LAT.  Still need an idField for tape components -->
+<!-- Make a LAT. 
+     Missing id fields for various non-sensitive components.  
+     Do we care? -->
     <composition name="LAT" envelope="LATenv" >
       <posXYZ volume="ACDTop"
               ZREF="ACDTop_d" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDTopFace" />
       </posXYZ>
+
+      <posXYZ volume="ACDTopSupport"
+              ZREF="ACDTopSupport_dz" />
+
       <!--posXYZ volume="allTowers" 
               ZREF="allTowers_d" -->
       <posXYZ volume="allTowers" 
               ZREF="towers_dz" >
         <idField name="fLATObjects" valueREF="eLATTowers" />
       </posXYZ>
+
+      <posXYZ volume="ACDYSideSupport" 
+              ZREF="ACDSideSupport_dz" 
+              YREF="ACDSideSupport_dt" />
+
+      <posXYZ volume="ACDYSideSupport" 
+              ZREF="ACDSideSupport_dz" 
+              YREF="ACDSideSupport_dtn" />
+
+      <posXYZ volume="ACDXSideSupport" 
+              ZREF="ACDSideSupport_dz" 
+              XREF="ACDSideSupport_dt" />
+
+      <posXYZ volume="ACDXSideSupport" 
+              ZREF="ACDSideSupport_dz" 
+              XREF="ACDSideSupport_dtn" />
+
 
 <!-- Add in the rest of the grid web and flange (outside the towers) -->
       <posXYZ volume="LATGridFlangeLong" 
@@ -137,50 +160,80 @@
       </posXYZ>
 
 
-      <posXYZ volume="TileXSide"
+      <posXYZ volume="TileYSide"
               XREF="ACDSideDovetail_d"
-              YREF="tileXSide_dy"
+              YREF="tileYSide_dy"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDYPosFace" />
+        <idField name="fACDCmp" valueREF="eACDTile" />
       </posXYZ>
-      <posXYZ volume="TileXSide" 
+      <posXYZ volume="TileYSide" 
               XREF="ACDSideDovetail_dn"
-              YREF="tileXSide_dyN"
+              YREF="tileYSide_dyn"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDYNegFace" />
+        <idField name="fACDCmp" valueREF="eACDTile" />
       </posXYZ>
-      <posXYZ volume="TileYSide" 
-              XREF="tileYSide_dx"
+      <posXYZ volume="TileXSide" 
+              XREF="tileXSide_dx"
               YREF="ACDSideDovetail_dn"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDXPosFace" />
+        <idField name="fACDCmp" valueREF="eACDTile" />
       </posXYZ>
-      <posXYZ volume="TileYSide" 
-              XREF="tileYSide_dxN"
+      <posXYZ volume="TileXSide" 
+              XREF="tileXSide_dxn"
               YREF="ACDSideDovetail_d"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDXNegFace" />
+        <idField name="fACDCmp" valueREF="eACDTile" />
       </posXYZ>
-      <posXYZ volume="sideTapeRowX" 
+
+
+      <posXYZ volume="sideRibbonsY" 
               XREF="ACDSideDovetail_d"
-              YREF="tapeXSide_dy"
-              ZREF="tapeSide_dz" />
-      <posXYZ volume="sideTapeRowX"
+              YREF="ribbonYSide_dy"
+              ZREF="ribbonSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDYPosFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />
+
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonsY"
               XREF="ACDSideDovetail_dn"
-              YREF="tapeXSide_dyN"
-              ZREF="tapeSide_dz" />
-      <posXYZ volume="sideTapeRowY"
-              XREF="tapeYSide_dx"
+              YREF="ribbonYSide_dyn"
+              ZREF="ribbonSide_dz" >
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDYNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonsX"
+              XREF="ribbonXSide_dx"
               YREF="ACDSideDovetail_dn"
-              ZREF="tapeSide_dz" />
-      <posXYZ volume="sideTapeRowY"
-              XREF="tapeYSide_dxN"
+              ZREF="ribbonSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXPosFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureX" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonsX"
+              XREF="ribbonXSide_dxn"
               YREF="ACDSideDovetail_d"
-              ZREF="tapeSide_dz" />
+              ZREF="ribbonSide_dz">
+         <idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureX" />
+      </posXYZ>
 
       <!-- Finally position blanket pieces -->
       <posXYZ volume="blanketTop"
@@ -189,26 +242,26 @@
         <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
 
-      <posXYZ volume="blanketXSide"
+      <posXYZ volume="blanketYSide"
               YREF="NADBlanket_dy"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
-      <posXYZ volume="blanketXSide"
+      <posXYZ volume="blanketYSide"
               YREF="NADBlanket_dyn"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
 
-      <posXYZ volume="blanketYSide"
+      <posXYZ volume="blanketXSide"
               XREF="NADBlanket_dx"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
-      <posXYZ volume="blanketYSide"
+      <posXYZ volume="blanketXSide"
               XREF="NADBlanket_dxn"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />

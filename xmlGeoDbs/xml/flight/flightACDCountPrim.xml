@@ -36,4 +36,11 @@ Neg. y face</prim>
 Pos. x face</prim>
   <prim name="eACDYPosFace"  value="4" uType="count" type="int">
 Pos. y face</prim>
+  <prim name="eACDTile" value="40" uType="count" type="int">
+Value for id field fACDCmp used to distinguish tiles, ribbons and support</prim>
+  <prim name="eACDRibbon" value="41" uType="count" type="int">
+Value for id field fACDCmp used to distinguish tiles, ribbons and support</prim>
+  <prim name="eACDSupport" value="42" uType="count" type="int">
+Value for id field fACDCmp used to distinguish support from tiles, ribbons
+  </prim>
 </primCategory>

@@ -3,8 +3,11 @@
   <overview>Materials used in the ACD description</overview>
   <prim name="tileMat" value="Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
-  <prim name="ACDSupportMat" value="Vacuum" type="string" uType="mat">
-Material of ACD support.  Still need input from engineers about this.</prim>
-  <prim name="tapeMat" value="Polystyrene" type="string" uType="mat">
-Material for scintillating tape</prim>
+  <prim name="ACDSupportCoreMat" value="Vacuum" type="string" uType="mat">
+Material used in support.  Still need input from engineers about this.</prim>
+  <prim name="ACDSupportFaceMat" value="Vacuum" type="string" uType="mat">
+Material used in ACD support.  Still need input from engineers about this.
+  </prim>
+  <prim name="ribbonMat" value="Polystyrene" type="string" uType="mat">
+Material for scintillating ribbon</prim>
 </primCategory>
