@@ -39,20 +39,20 @@ use Geant4      v1r1p0
 public
 # Gaudi component packages follow
 
-use GuiSvc      v3r1p2
+use GuiSvc                v3r1p3
 
 use Event       v8r14
 use GlastSvc    v8r1p2
 
 # simulation
 
-use FluxSvc     v5r8
+use FluxSvc               v5r10
 use FluxDisplay v2r1
 use G4Generator v4r2
 
 #digitization
 use CalDigi     v1r1p2 
-use TkrDigi               v1r5p3
+use TkrDigi     v1r5p2
 use AcdDigi     v1r2
 
 
