@@ -14,6 +14,8 @@
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "Event/TopLevel/EventModel.h"
+
 // This is the singleton static pointer
 McParticleManager* McParticleManager::m_pointer = 0;
 
@@ -44,18 +46,19 @@ void McParticleManager::save()
 
   // if running FluxAlg, collection will already have parent 
   Event::McParticleCol*  pcol=  
-    SmartDataPtr<Event::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
+    SmartDataPtr<Event::McParticleCol>(m_esv, EventModel::MC::McParticleCol);
 
   if( pcol==0) {
     // create the TDS stuff
     pcol = new Event::McParticleCol;
-    m_esv->registerObject("/Event/MC/McParticleCol", pcol);
+    m_esv->registerObject(EventModel::MC::McParticleCol, pcol);
   }
   
   // fill the McParticleCol with McParticles
   std::map <unsigned int, Event::McParticle*>::iterator it;
   
-  for(it=m_particles.begin();it != m_particles.end(); it++)
+  // note limit on size, temporarily wired in
+  for(it=m_particles.begin();it != m_particles.end() && pcol->size()<10 ; it++)
     pcol->push_back(it->second);
 }
 
