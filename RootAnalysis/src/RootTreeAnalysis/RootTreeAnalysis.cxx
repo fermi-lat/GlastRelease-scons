@@ -61,6 +61,8 @@ void RootTreeAnalysis::DigiHistDefine() {
     TH1F *NUMTKRDIGI = new TH1F("NUMTKRDIGI", "Number of Tkr Digis",
         200, 0, 200);
 
+    TH1F *TKRSTRIPSLYR5 = new TH1F("TKRSTRIPSLYR5", "Hit Tkr Strips BiLayer 5", 800, 0, 1600);
+
     TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "Cal Digi multiplicity",
         50, 0, 50);
     
@@ -269,6 +271,7 @@ void RootTreeAnalysis::DigiTkr() {
       for (ihit = 0; ihit < numHits; ihit++) {
         // Retrieve the strip number
         Int_t stripNum = tkr->getStrip(ihit);
+        if (layer == 5) ((TH1F*)GetObjectPtr("TKRSTRIPSLYR5"))->Fill(stripNum);
       }
     }
 
