@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "../../tmp/Debug/geomrep"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "_DEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /GZ @fincludes /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GR /GX /ZI /Od /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "_DEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ /GZ @fincludes /c
+# ADD CPP /nologo /G6 /W3 /Gm /GR /GX /ZI /Od /I "../" /I "../src" /D "WIN32" /D "_MBCS" /D "_DEBUG" /D "_LIB" /YX /FD /FI../mgr/nt_config.h /I../ /GZ @fincludes /c
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
 BSC32=bscmake.exe
