@@ -6,11 +6,17 @@
 <ifile cvs_Header="$Header$"
        cvs_Revision="$Revision$" >
   <section name="parameters"> input parameters for TKR bad strips calibration
-    <item name="sourceDirectory" value="/nfs/farm/g/glast/u03/EM2003/rootFiles/em_v1r030302p5/digi/"> 
+    
+    <item name="sourceFilePath" 
+       value= "/nfs/farm/g/glast/u03/EM2003/rootFiles/em_v1r030302p5/digi/" > 
           directory containing digi files </item>
-    <item name="sourceFile"      value="ebf031006235353_digi.root"> name of digi file </item>
-    <item name="outputString"    value="ebf031006235353">  prefix for output files </item>
-    <item name="numEvents"       value="500000"> max number of events to read </item>
+    <item name="sourceFileList"      
+        value= " ebf031006235353_digi.root
+                 ebf031007213829_digi.root  
+               " > blank-delimited list of input files 
+    </item>   
+    <item name="outputString"    value= "ebf031006235353" >  prefix for output files </item>   
+    <item name="numEvents"       value= "500000" > max number of events to read </item>
   </section>
 </ifile>
 
