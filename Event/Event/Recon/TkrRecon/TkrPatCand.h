@@ -60,7 +60,8 @@ public:
 
     //Provide access to the vector of hit candidates
     int              numPatCandHits()    {return m_hits.size();}
-    TkrPatCandHit*   getCandHit(int idx) {return &m_hits[idx];}
+    ////TkrPatCandHit*   getCandHit(int idx) {return &m_hits[idx];}
+    TkrPatCandHit*   getCandHit(int idx) {return m_hits[idx];}
     TkrPatCandHit*   getFoLPlane(TrackEnd end = Start);
 
     //Provide access to a vector iterator (do we want this?)

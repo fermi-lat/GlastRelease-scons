@@ -31,7 +31,8 @@ TkrPatCand::~TkrPatCand()
 
 void TkrPatCand::addCandHit(TkrCluster* pCluster)
 {
-    m_hits.push_back(TkrPatCandHit(pCluster));
+    ////m_hits.push_back(TkrPatCandHit(pCluster));
+    m_hits.push_back(new TkrPatCandHit(pCluster));
     std::sort(m_hits.begin(),m_hits.end());
 
     return;
@@ -39,7 +40,8 @@ void TkrPatCand::addCandHit(TkrCluster* pCluster)
 
 void TkrPatCand::addCandHit(TkrPatCandHit CandHit)
 {
-    m_hits.push_back(CandHit);
+    ////m_hits.push_back(CandHit);
+    m_hits.push_back(&CandHit);
     std::sort(m_hits.begin(),m_hits.end());
 
     return;
@@ -65,8 +67,10 @@ TkrPatCandHit* TkrPatCand::getFoLPlane(TrackEnd end)
     }
     else
     {
-        if (end == TkrRecInfo::Start) return &m_hits.front();
-        else                          return &m_hits.back();
+        ////if (end == TkrRecInfo::Start) return &m_hits.front();
+        ////else                          return &m_hits.back();
+        if (end == TkrRecInfo::Start) return m_hits.front();
+        else                          return m_hits.back();
     }
 }
 
