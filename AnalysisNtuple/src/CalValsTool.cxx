@@ -248,7 +248,7 @@ namespace {
 	  double CAL_LRms_Ratio;
 
 	  double CAL_MIP_Diff; 
-
+	  double CAL_MIP_Ratio;
       
       //Calimeter items with Recon - Tracks
       double CAL_Track_DOCA;
@@ -381,6 +381,7 @@ namespace {
 	  addItem("CalTransRms",   &CAL_Trans_Rms);
 
 	  addItem("CalMIPDiff",   &CAL_MIP_Diff);
+	  addItem("CalMIPRatio",  &CAL_MIP_Ratio);
 
       addItem("CalXEcntr",     &CAL_xEcntr);
       addItem("CalYEcntr",     &CAL_yEcntr);
@@ -764,6 +765,7 @@ StatusCode CalValsTool::calculate()
     //CAL_Total_Corr  = CAL_Energy_Corr/CAL_EnergySum; 
 	CAL_CsI_RLn     = radLen_CsI;
 	CAL_MIP_Diff    = CAL_EnergySum - 12.07*radLen_CsI;
+	CAL_MIP_Ratio   = CAL_EnergySum /(12.07*radLen_CsI);
     CAL_Tot_RLn     = t_total;
     CAL_Cnt_RLn     = t;
     CAL_DeadTot_Rat = radLen_Stuff/t_total;
