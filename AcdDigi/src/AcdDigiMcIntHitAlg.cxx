@@ -1,6 +1,6 @@
-#define AcdDigi_AcdDigiAlg_CPP 
+#define AcdDigi_AcdDigiMcIntHitAlg_CPP 
 
-#include "AcdDigiAlg.h"
+#include "AcdDigiMcIntHitAlg.h"
 
 // Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
@@ -13,6 +13,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/AcdDigi.h"
+#include "Event/MonteCarlo/McIntegratingHit.h"
 
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandGauss.h"
@@ -22,7 +23,6 @@
 #include <cmath>
 
 #include <utility>
-#include <map>
 
 // to access an XML containing Digi parameters file
 #include "xml/IFile.h"
@@ -30,32 +30,24 @@
 
 
 // Define the factory for this algorithm
-static const AlgFactory<AcdDigiAlg>  Factory;
-const IAlgFactory& AcdDigiAlgFactory = Factory;
+static const AlgFactory<AcdDigiMcIntHitAlg>  Factory;
+const IAlgFactory& AcdDigiMcIntHitAlgFactory = Factory;
 
 
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor.
-AcdDigiAlg::AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
+AcdDigiMcIntHitAlg::AcdDigiMcIntHitAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
     
     // Declare the properties that may be set in the job options file
     declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
-
-    declareProperty("autoCalibrate", m_auto_calibrate=true);
-
-    declareProperty("applyPoisson", m_apply_poisson=true);
-
-    declareProperty("applyGaussianNoise", m_apply_noise=false);
-
-    declareProperty("edgeEffect", m_edge_effect=true);
 }
 
 
-StatusCode AcdDigiAlg::initialize() {
+StatusCode AcdDigiMcIntHitAlg::initialize() {
     
     MsgStream log(msgSvc(), name());
-    StatusCode  sc = StatusCode::SUCCESS;
+    log << MSG::INFO << "initialize" << endreq;
     
     // Use the Job options service to set the Algorithm's parameters
     // This will retrieve parameters set in the job options file
@@ -64,27 +56,15 @@ StatusCode AcdDigiAlg::initialize() {
     getParameters();
 
     util.getParameters(m_xmlFile);
-
-    m_glastDetSvc = 0;
-    sc = service("GlastDetSvc", m_glastDetSvc, true);
-    if (sc.isSuccess() ) {
-        sc = m_glastDetSvc->queryInterface(IID_IGlastDetSvc, (void**)&m_glastDetSvc);
-    }
-   
-    if( sc.isFailure() ) {
-        log << MSG::ERROR << "AcdDigiAlg failed to get the GlastDetSvc" << endreq;
-        return sc;
-    }
-
-
+    
     return StatusCode::SUCCESS;
 }
 
 
-StatusCode AcdDigiAlg::execute() {
-    // Purpose and Method:  Using the McPositionHits that hit the ACD tiles
+StatusCode AcdDigiMcIntHitAlg::execute() {
+    // Purpose and Method:  Using the McIntegratingHits that hit the ACD tiles
     //   construct the AcdDigi collection.
-    // TDS Input:  EventModel::MC::McPositionHitCol
+    // TDS Input:  EventModel::MC::McIntegratingHitCol
     // TDS Output: EventModel::Digi::AcdDigiCol
 
     StatusCode  sc = StatusCode::SUCCESS;
@@ -92,7 +72,7 @@ StatusCode AcdDigiAlg::execute() {
     
     using namespace Event;
     
-    SmartDataPtr<Event::McPositionHitCol> allhits(eventSvc(),EventModel::MC::McPositionHitCol );
+    SmartDataPtr<Event::McIntegratingHitCol> allhits(eventSvc(),EventModel::MC::McIntegratingHitCol );
     
     //Take care of insuring that data area has been created
     DataObject* pNode = 0;
@@ -105,45 +85,23 @@ StatusCode AcdDigiAlg::execute() {
             return sc;
         }
     }
-
-    std::map<idents::VolumeIdentifier, double> energyVolIdMap;
     
     // Create the new AcdDigi collection for the TDS
     Event::AcdDigiCol* digiCol = new Event::AcdDigiCol;
     
     // loop over hits, skip if hit is not in ACD
-    // Accumulate the deposited energies, applying edge effects if requested
-    for (Event::McPositionHitVector::const_iterator it = allhits->begin(); it != allhits->end(); it++) {
+    // if below low threshold, skip
+    for (Event::McIntegratingHitVector::const_iterator it = allhits->begin(); it != allhits->end(); it++) {
         
         idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
         // Check to see if this is an ACD volume
         if(volId[0] != 1 ) continue; 
-
-        double energy;
-        if (m_edge_effect) {
-            energy = edgeEffect(*it);
-        } else {
-            energy = (*it)->depositedEnergy();
-        }
-
-        if (energyVolIdMap.find(volId) != energyVolIdMap.end()) {
-            energyVolIdMap[volId] += energy;
-        } else {
-            energyVolIdMap[volId] = energy;
-        }
-    }
-
-
-    // Now loop over the map of ACD VolId and their corresponding energies deposited
-    std::map<idents::VolumeIdentifier, double>::const_iterator acdIt;
-    for (acdIt = energyVolIdMap.begin(); acdIt != energyVolIdMap.end(); acdIt++) {
-
-        idents::VolumeIdentifier volId = acdIt->first;
+        
         // unpack from volume id
         int layer=0, face=volId[1], column=volId[2], row=volId[3];
         idents::AcdId id(layer, face, row, column);
         
-        double energyMevDeposited = acdIt->second;
+        double energyMevDeposited = (*it)->totalEnergy();
         log << MSG::DEBUG << "tile volId found: " << volId.name() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
         
@@ -190,18 +148,12 @@ StatusCode AcdDigiAlg::execute() {
         
         if (m_apply_noise) {
             pmtA_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
-            if (pmtA_observedMips_pha < 0.) pmtA_observedMips_pha = 0.;
             pmtA_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
-            if (pmtA_observedMips_veto < 0.) pmtA_observedMips_veto = 0.;
             pmtA_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
-            if (pmtA_observedMips_cno < 0.) pmtA_observedMips_cno = 0.;
             
             pmtB_observedMips_pha += util.calcGaussianNoise(m_noise_std_dev_pha);
-            if (pmtB_observedMips_pha < 0.) pmtB_observedMips_pha = 0.;
             pmtB_observedMips_veto += util.calcGaussianNoise(m_noise_std_dev_veto);
-            if (pmtB_observedMips_veto < 0.) pmtB_observedMips_veto = 0.;
             pmtB_observedMips_cno += util.calcGaussianNoise(m_noise_std_dev_cno);
-            if (pmtB_observedMips_cno < 0.) pmtB_observedMips_cno = 0.;
         }
         
         // Now convert MIPs into PHA values for each PMT
@@ -238,20 +190,20 @@ StatusCode AcdDigiAlg::execute() {
 }
 
 
-StatusCode AcdDigiAlg::finalize() {
+StatusCode AcdDigiMcIntHitAlg::finalize() {
     
     MsgStream log(msgSvc(), name());    
     return StatusCode::SUCCESS;
 }
 
 
-void AcdDigiAlg::getParameters() {    
+void AcdDigiMcIntHitAlg::getParameters() {    
     // Purpose and Method:  Read in the parameters from the XML file using IFile
     
     xml::IFile ifile(m_xmlFile.c_str());
     
     m_low_threshold_mips = ifile.getDouble("thresholds", "low_threshold_mips");
-    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_threshold_mips");
+    m_veto_threshold_mips = ifile.getDouble("thresholds", "veto_theshold_mips");
     m_high_threshold_mips = ifile.getDouble("thresholds", "high_threshold_mips");
     
     m_mean_pe_per_mip = ifile.getInt("global_constants", "mean_pe_per_mip");
@@ -264,6 +216,9 @@ void AcdDigiAlg::getParameters() {
     
     m_mips_full_scale = ifile.getDouble("global_constants", "mips_full_scale");
     
+    m_auto_calibrate = ifile.getBool("processing", "auto_calibrate");
+    
+    m_apply_poisson = ifile.getBool("processing", "apply_poisson");
     
     m_mev_per_mip = ifile.getDouble("global_constants", "mev_per_mip");
     
@@ -271,51 +226,3 @@ void AcdDigiAlg::getParameters() {
 }
 
 
-double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
-    MsgStream log(msgSvc(), name());
-    StatusCode  sc = StatusCode::SUCCESS;
-
-    std::string str;
-    std::vector<double> dim;
-
-    idents::VolumeIdentifier volId = hit->volumeID();
-    int iFace = volId[1];
-
-    sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
-    if ( sc.isFailure() ) {
-        log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
-        return sc;
-    }
-    
-    // In local coordinates the box should be centered at (0,0,0)
-    const HepPoint3D local_x0 = hit->entryPoint();
-
-    double dX = dim[0];
-    double dY = dim[1];
-    double dZ = dim[2];
-    
-    double dist;
-    
-    if(iFace == 0) { // Top Tile
-        double dist_x = dX/2. - fabs(local_x0.x());
-        double dist_y = dY/2. - fabs(local_x0.y());	                
-        dist = (dist_x < dist_y) ? dist_x : dist_y;
-    }
-    else if(iFace == 1 || iFace == 3) { // X Side Tile
-        double dist_z = dZ/2. - fabs(local_x0.z());
-        double dist_y = dY/2. - fabs(local_x0.y());	                
-        dist = (dist_z < dist_y) ? dist_z : dist_y;
-    }
-    else if(iFace == 2 || iFace == 4) { // Y Side Tile
-        double dist_z = dZ/2. - fabs(local_x0.z());
-        double dist_x = dY/2. - fabs(local_x0.x());	                
-        dist = (dist_z < dist_x) ? dist_z : dist_x;
-    }
-    
-    // Apply edge correction if within 20 mm of the edge
-    if (dist < 20.0) {
-        return ( (0.1*dist + 0.8) * hit->depositedEnergy() );   
-    } else {
-        return hit->depositedEnergy();
-    }
-}

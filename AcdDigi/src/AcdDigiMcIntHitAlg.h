@@ -1,5 +1,5 @@
-#ifndef _AcdDigi_AcdDigiAlg_H
-#define _AcdDigi_AcdDigiAlg_H 1
+#ifndef _AcdDigi_AcdDigiMcIntHitAlg_H
+#define _AcdDigi_AcdDigiMcIntHitAlg_H 1
 
 // Gaudi specific include files
 #include "GaudiKernel/Algorithm.h"
@@ -10,15 +10,13 @@
 #include "AcdDigiUtil.h"
 
 #include "idents/AcdId.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/MonteCarlo/McPositionHit.h"
 
 // to access an XML containing Digi parameters file
 #include "xml/IFile.h"
 #include "facilities/Util.h"
 
 
-/** @class AcdDigiAlg
+/** @class AcdDigiMcIntHitAlg
 * @brief Algorithm to convert from hit data into digitization data 
 * for the ACD.
 * 
@@ -28,11 +26,11 @@
 * $Header$
 */
 
-class AcdDigiAlg : public Algorithm {
+class AcdDigiMcIntHitAlg : public Algorithm {
     
 public:
     
-    AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    AcdDigiMcIntHitAlg(const std::string& name, ISvcLocator* pSvcLocator); 
     
     StatusCode initialize();
     StatusCode execute();
@@ -41,8 +39,6 @@ public:
 private:
     /// Read data from the input XML file
     void getParameters();
-
-    double edgeEffect(const Event::McPositionHit *hit);
     
     /// Low discrim threshold which activates PHA
     double m_low_threshold_mips;  
@@ -56,9 +52,6 @@ private:
 
     /// Access the methods in the AcdDigiUtil class
     AcdDigiUtil util;
-
-    /// access to the Glast Detector Service to read in geometry constants from XML files
-    IGlastDetSvc *m_glastDetSvc;
     
     /// standard deviation for gaussian noise for PHA, veto and CNO discriminators
     double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;
@@ -81,14 +74,9 @@ private:
     
     /// Input parameter denoting whether or not to apply Poisson fluctuations
     bool m_apply_poisson;
-
     /// Input parameter denoting whether or not to apply Gaussian noise before 
     /// determining PHA and discriminators
     bool m_apply_noise;
-
-    /// Input parameter denoting whether or not to apply edge effects according to
-    /// the position of MC hits.
-    bool m_edge_effect;
 };
 
 #endif
