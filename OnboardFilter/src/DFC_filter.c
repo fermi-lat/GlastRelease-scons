@@ -1533,7 +1533,7 @@ static unsigned int latFilter  (TFC_latRecord *tlr,
                                        acd_xz,
                                        acd_yz);
 #ifdef GLEAM
-           TDS_variables.acdStatus=acdStatus;
+           TDS_variables.acdStatus[tower]=acdStatus;
 #endif
            
            
