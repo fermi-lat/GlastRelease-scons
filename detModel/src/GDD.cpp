@@ -231,34 +231,37 @@ void GDD::buildConstantsMap()
 
   typedef map<string, double> M1;
   typedef map<string, string> M2;
+  typedef map<string, GDDconst *> M3;
 
   for(k=0;k<constants->getConstantCategories().size();k++){
     GDDconstCategory* tmp=constants->getConstantCategories()[k];
     for(j=0;j<tmp->getConsts().size();j++){
       GDDconst* temp = tmp->getConsts()[j];
 
+      constMap.insert(M3::value_type(temp->getName(),temp));
+
       switch(temp->getConstType()){
       case i:{
 	GDDintConst* tmp1=static_cast<GDDintConst*>(temp);
 	double val=(double)tmp1->getValue();
-	constMap.insert(M1::value_type(temp->getName(),val));
+	constNumMap.insert(M1::value_type(temp->getName(),val));
 	break;
       }
       case f:{
 	GDDfloatConst* tmp1=static_cast<GDDfloatConst*>(temp);
 	double val=(double)tmp1->getValue();
-	constMap.insert(M1::value_type(temp->getName(),val));
+	constNumMap.insert(M1::value_type(temp->getName(),val));
 	break;
       }
       case d:{
 	GDDdoubleConst* tmp1=static_cast<GDDdoubleConst*>(temp);
 	double val=(double)tmp1->getValue();
-	constMap.insert(M1::value_type(temp->getName(),val));
+	constNumMap.insert(M1::value_type(temp->getName(),val));
 	break;
       }
       case s:{
 	GDDstringConst* tmp1=static_cast<GDDstringConst*>(temp);
-	materialMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
+	constCharMap.insert(M2::value_type(temp->getName(),tmp1->getValue()));
 	break;
       }
       }//end switch
@@ -302,14 +305,14 @@ void GDD::AcceptNotRec(GDDvisitor* v){
 void GDD::visitMap(){
   typedef map<string,string>M;
   M::const_iterator i;
-  std::cout<<"Material List"<<std::endl;
-  for (i=materialMap.begin(); i!=materialMap.end(); i++){
+  std::cout<<"Char constants List"<<std::endl;
+  for (i=constCharMap.begin(); i!=constCharMap.end(); i++){
     std::cout<<"constant "<<i->first<<" value: "<<i->second<<std::endl;
   };
   typedef map<string,double>M1;
   M1::const_iterator j;
   std::cout<<"Numeric constants list"<<std::endl;
-  for (j=constMap.begin(); j!=constMap.end(); j++){
+  for (j=constNumMap.begin(); j!=constNumMap.end(); j++){
     std::cout<<"constant "<<j->first<<" value: "<<j->second<<std::endl;
   }
 }
