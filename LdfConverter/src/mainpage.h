@@ -8,6 +8,7 @@ xx/** @mainpage package LdfConverter
   @section jobOptions jobOptions
   @param StorageType
   REQUIRED. String which must be one of supported types, currently 
+  "LDFFILE for raw ldf or  "LDFFITS" for FITSified ldf or
   "EBFFILE" for raw ebf or "EBFFITS" for (slightly) FITSified ebf or
   "NONE" for no real input at all.
   @param InputList
