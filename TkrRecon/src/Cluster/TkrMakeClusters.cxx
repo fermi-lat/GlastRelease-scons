@@ -10,7 +10,7 @@
 
 
 
-#include "TkrRecon/Cluster/TkrMakeClusters.h"
+#include "src/Cluster/TkrMakeClusters.h"
 
 TkrMakeClusters::TkrMakeClusters(TkrClusters* pClus,
 								 ITkrGeometrySvc* pTkrGeoSvc, ITkrBadStripsSvc* pBadStripsSvc, 
