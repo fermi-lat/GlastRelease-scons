@@ -263,9 +263,9 @@ namespace calibUtil {
     void disconnectWrite();
 
   private:
-    // may change MYSQL structures to not be static
-    MYSQL* readCxt;
-    MYSQL* writeCxt;
+
+    MYSQL* m_readCxt;
+    MYSQL* m_writeCxt;
 
     bool addLevel(std::string& q, unsigned int *levelMask);
 
@@ -294,11 +294,11 @@ namespace calibUtil {
       eCreator = 0x10 };
 
     /// Constant bit mask indicating all necessary fields have been set
-    static const unsigned int rowReady;
+    static const unsigned int s_rowReady;
 
-    std::string row;     // place to keep row as it's being built
-    unsigned int rowStatus;
-    std::string  table;
+    std::string m_row;     // place to keep row as it's being built
+    unsigned int m_rowStatus;
+    std::string  m_table;
   };
 }
 
