@@ -104,6 +104,8 @@
       means that enduser is expected to supply a value, but  
       MySQL will use NULL (which for datetime translates to current
       time) in case no value is supplied
+
+      Correction:  NULL is just NULL. 
      -->
     <src  null="true" > 
       <from agent="enduser" />
