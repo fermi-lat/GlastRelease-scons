@@ -1,25 +1,26 @@
 package irfAnalysis
 
+# $Id$
+
+branches data
+
 use RootPolicy *
 use GlastPolicy *
 
-macro irfAnalysis_cppflags  "" Linux "-I ../src -g -pedantic " WIN32 " /wd4800 /wd4305"
+macro irfAnalysis_cppflags  ""\
+  Linux "-I ../src -g -pedantic "\
+  WIN32 " /I ..\src /wd4800 /wd4305"
 
-macro_append ROOT_libs "" Linux " -lTreePlayer -lProof -lGX11 " WIN32 " libTreePlayer.lib libProof.lib " WIN32 "/libpath:"$(ROOT_PATH)/lib"\
- libCore.lib libTree.lib libMatrix.lib libPhysics.lib libHist.lib libGraf.lib libGpad.lib"
-
-#macro ROOT_libs "L$(ROOT_PATH)/lib  -lCore -lTree -lMatrix -lPhysics -lHist -lGraf -lGpad"\
-#  WIN32 '/libpath:"$(ROOT_PATH)/lib" libCore.lib libTree.lib libMatrix.lib libPhysics.lib libHist.lib libGraf.lib libGpad.lib'
+macro_append ROOT_libs ""\
+  Linux " -lTreePlayer -lProof -lGX11 "\
+  WIN32 "  libHist.lib libGraf.lib libGpad.lib"
 
 macro source "*.cxx" WIN32 "*.cxx *.h"
-macro_prepend includes "-I ../src " WIN32 "/I ..\src"
 
 application energy $(source) -s=energy $(source) 
 application psf    $(source) -s=psf $(source)
 application rewrite -s=newbranches $(source)
 
 # where to save/get all files
-#set file_root "/common/IRF/" 
-set file_root "/u1/jchiang/SciTools/dev/irfAnalysis/v1/data/"
 
-set output "$(IRFANALYSISROOT)/data"
+set file_root "$(IRFANALYSISROOT)/data"
