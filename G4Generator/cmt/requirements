@@ -1,5 +1,5 @@
 package G4Generator
-version v4r0
+version v4r1
 #$Header$
 
 use GlastPolicy v4r*
@@ -15,7 +15,7 @@ apply_pattern packageShr
 # this version has Geant4 library path
 use EXTLIB v2r*
 
-use Geant4   v1r*
+
 
 use facilities v2r*
 use XMLEXT   v2r*
@@ -40,6 +40,10 @@ use geomrep  v4r*
 
 #=============================================================
 private
+
+#if this if private, maybe all those libs are not passed on!
+use Geant4   v1r*
+
 
 # get flags to build shared library
 
