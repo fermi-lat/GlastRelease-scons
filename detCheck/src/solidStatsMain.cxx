@@ -51,7 +51,11 @@ int main(int argc, char* argv[]) {
   manager->setMode(choiceMode);
 
   // Build the full hierarchy (sections, constants, materials)
-  manager->build(detModel::Manager::all);
+  if (!manager->build(detModel::Manager::all)) {
+    std::cerr << "Unable to build geometry" << std::endl;
+    return -1;
+  }
+
 
   detCheck::SolidStats* sStats = 
     new detCheck::SolidStats(std::string(topVolume));
