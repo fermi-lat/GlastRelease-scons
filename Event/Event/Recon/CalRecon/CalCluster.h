@@ -19,7 +19,7 @@ namespace Event
 *  @class CalCluster
 *
 *
-*  This class stores the results of the reconstruction performed
+*  @brief This class stores the results of the reconstruction performed
 *  in CalClustersAlg. It contains the reconstructed data for one
 *  cluster in the calorimeter. 
 *  
@@ -220,8 +220,10 @@ namespace Event
     /*! 
     * @class CalClusterCol
     *
-    *  TDS class  to store the results of the reconstruction performed
-    *  in CalClustersAlg. It inherits from DataObject
+    *  @brief TDS class  to store the results of the reconstruction performed
+    *  in CalClustersAlg. 
+    *  
+    * It inherits from DataObject
     * (to be a part of Gaudi TDS) and from std::vector of pointers
     * to CalCluster objects. Some methods just rename the std::vector
     * methods with the same functionality for backward compartibility.
