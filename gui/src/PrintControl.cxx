@@ -47,7 +47,6 @@ PrintCommand::~PrintCommand()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PrintControl::setup()
 {
-    s_instance = this;
     disable();
     // create Print pull-down menu
     m_sub_menu = &m_menu.subMenu("Print");
@@ -107,13 +106,5 @@ void PrintControl::clear(){m_print->clear();}
 void PrintControl::flush(){m_print->flush();}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   stuff for singleton 
-PrintControl* PrintControl::s_instance = 0;
-
-PrintControl* PrintControl::instance()
-{
-    assert( s_instance!=0)	;
-    return s_instance;
-}
 
 } // namespace gui

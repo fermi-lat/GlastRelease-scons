@@ -287,7 +287,7 @@ DisplayControl::finishSetup()
 	new SimpleCommand<DisplayControl>(this,&DisplayControl::postScript));
     system->addButton("Dump to vrml",new VRML_command(this));
     system->addButton("Print instructions",
-			   new PrintInstructions(m_control,PrintControl::instance()->out()));
+        new PrintInstructions(m_control,&std::cout));
 
     m_running = true;
     m_scene->update();

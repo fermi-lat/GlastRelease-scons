@@ -2,6 +2,7 @@
  * Package gui
  * Coordinator: T.Burnett
  *
+ * v3r3  THB 28-aug-2002: remove statics from PrintControl.
  * v3r2  THB 01-jul-2002: make unique filenames.
  * v3r1  THB 06-may-2002: Allow setting initial state for DisplayMenu objects.
  * v3    THB 06-apr-2002: change GraphicsVector to accept HepPoint3D.
