@@ -158,8 +158,9 @@ StatusCode FhDemoGetAlg::finalize_common(
     TObjString * tagName ;
     while (( tagName = (TObjString *)(iter->Next()) )) {
         log<<MSG::INFO<<prefix<<" "
-          <<"ChronoStatTable."<<tagName->String()<<": "
-          <<chronoStatTable.getStringTime(*tagName)
+          <<"ChronoStatTable."<<tagName->String()
+// DavidC: I do not display the time so to make the output stable for diff
+//          <<": "<<chronoStatTable.getStringTime(*tagName)
           <<endreq ;
     }
     delete iter ;
