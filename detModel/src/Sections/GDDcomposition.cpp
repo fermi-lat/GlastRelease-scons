@@ -1,7 +1,7 @@
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Sections/GDDcomposition.h"
-#include "detModel/Sections/GDDposition.h"
 #include "detModel/Sections/GDDshape.h"
+#include "detModel/Sections/GDDsinglePos.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDboundingBox.h"
 
@@ -32,5 +32,9 @@ void GDDcomposition::buildBB(){
   getBBox()->merge(b,0,0,0);
 }
 
-
+bool GDDcomposition::checkPosition(GDDposition* p){
+  if (dynamic_cast<GDDsinglePos*>(p))
+    return 1;
+  else return 0;
+}
 

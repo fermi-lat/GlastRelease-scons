@@ -1,6 +1,7 @@
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Utilities/GDDmatrix.h"
 #include "detModel/Sections/GDDstack.h"
+#include "detModel/Sections/GDDstackedPos.h"
 #include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 
@@ -126,3 +127,11 @@ void GDDstack::buildBB(){
 
 
 
+bool GDDstack::checkPosition(GDDposition* p){
+  if (GDDstackedPos* pos = dynamic_cast<GDDstackedPos*>(p))
+    {
+      pos->setAxisDir(getAxisDir());
+      return 1;
+    }
+  else return 0;
+}

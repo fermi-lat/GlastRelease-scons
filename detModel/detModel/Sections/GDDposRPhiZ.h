@@ -1,7 +1,6 @@
 #ifndef GDDRPHIZ_H
 #define GDDRPHIZ_H
-#include "detModel/Sections/GDDanySinglePosition.h"
-#include "GDDsinglePos.h"
+#include "detModel/Sections/GDDsinglePos.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani

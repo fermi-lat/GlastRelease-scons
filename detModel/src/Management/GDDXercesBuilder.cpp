@@ -476,11 +476,23 @@ GDDstackedPos* GDDXercesBuilder::buildRelativePosition(DOM_Node* e){
   std::string posType = std::string(xml::Dom::transToChar(e->getNodeName()));
   //AxisPos,AxisMpos
   if (posType=="axisPos"){
-      GDDaxisPos* pos=new GDDaxisPos();
-      
-      setAttributeRelativePosition(pos, e);
+    //   GDDaxisPos* pos=new GDDaxisPos();
+    //   setAttributeRelativePosition(pos, e);
        
+    GDDaxisMPos* pos=new GDDaxisMPos();
+
+    setAttributeRelativePosition(pos, e);
+       
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+
+    if(el.getAttribute("shift") != "0")
+      pos->setShift0(atof(xml::Dom::transToChar(el.getAttribute("shift"))));
+    if(el.getAttribute("gap") != "0")
+      pos->setGap0(atof(xml::Dom::transToChar(el.getAttribute("gap"))));
+
+    pos->setNcopy(1);
     
+
       return pos;
       
   }

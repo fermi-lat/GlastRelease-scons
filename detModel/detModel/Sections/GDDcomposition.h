@@ -36,6 +36,9 @@ public:
    *
    */
   virtual void buildBB();
+
+  /// Composition use this Template Method to put a check on position to be added
+  bool checkPosition(GDDposition* p);
   
  private:
 

@@ -74,6 +74,7 @@ void  GDDprinterSectionsVisitor::visitEnsemble(GDDensemble* ensemble)
 void  GDDprinterSectionsVisitor::visitBox(GDDbox* box)
 {
   std::cout << "\t\t Visiting the box " << box->getName() << std::endl;  
+  std::cout << "\t\t whose material is " << box->getMaterial() << std::endl;  
   std::cout << "\t\t whose dimensions are   X: " 
 	    << box->getX() << "  Y: " << box->getY() << "  Z: " << box->getZ() << std::endl;  
   std::cout << "\t\t --------------------------------------------------------" << std::endl;
@@ -90,6 +91,7 @@ void  GDDprinterSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 void  GDDprinterSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 {
   std::cout << "\t\t\t Visiting the AxisPos of " << pos->getVolume()->getName() << std::endl;    
+  std::cout << "\t\t\t displaced along the axis by " << pos->getDisp() << std::endl;    
   std::cout << "\t\t\t -----------------------------------" << std::endl;
 }
 
@@ -97,6 +99,9 @@ void  GDDprinterSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 {
   std::cout << "\t\t\t Visiting the AxisMPos of " << pos->getVolume()->getName() << std::endl;    
   std::cout << "\t\t\t that is replicated " << pos->getNcopy() << " times" << std::endl;
+  std::cout << "\t\t\t with displacements along the axis by " << std::endl;
+  for(unsigned int i = 0; i<pos->getNcopy();i++)
+    std::cout << "\t\t\t\t  " << pos->getDisp(i) << std::endl;
   std::cout << "\t\t\t -----------------------------------" << std::endl;
 }
 

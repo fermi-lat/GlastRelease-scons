@@ -21,9 +21,16 @@ class GDDensemble : public GDDvolume {
   virtual void Accept(GDDsectionsVisitor*);
   /// This method is the non recursive Accept for the visitor pattern
   virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitEnsemble(this);};
+
+  /** 
+   *  This is a Template Method used in the addPosition method; it can be
+   *  reimplemented by ensemble subclasses in order to provide check mechanisms 
+   *  before adding a position.
+   */
+  bool checkPosition(GDDposition*){return 1;};
   
   /// This method add a new position to the positions vector 
-  void addPosition(GDDposition* ppos){positions.push_back(ppos);}
+  void addPosition(GDDposition* ppos){if(checkPosition(ppos)) positions.push_back(ppos);}
   /// This methods return the total number of positions
   int getNumPos(){return positions.size();}
   /// This method returns the vector of positions of the ensamble

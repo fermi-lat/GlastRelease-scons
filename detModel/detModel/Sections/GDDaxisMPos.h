@@ -5,11 +5,13 @@
 #include "detModel/Management/GDDsectionsVisitor.h"
 
 /**
+ * This is a multiple axis position
  * @author D.Favretto & R.Giannitrapani 
  */
 class GDDaxisMPos : public GDDstackedPos {
 public:
 
+  
   GDDaxisMPos(GDDstack::axisDir dir):GDDstackedPos(dir),shift0(0),gap0(0),ncopy(0){};
   GDDaxisMPos():GDDstackedPos(),shift0(0),gap0(0),ncopy(0){};
 

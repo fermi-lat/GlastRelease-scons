@@ -30,6 +30,9 @@ class GDDstack :public GDDensemble {
   /// This method build the displacement list of its positioning
   void buildDisp();
 
+  /// Stack uses this Template Method to put a check on position to be added
+  bool checkPosition(GDDposition* p);
+
  private:
   axisDir aDir;
   stackOrigin origin; ///default atStart
