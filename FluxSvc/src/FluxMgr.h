@@ -93,8 +93,8 @@ public:
     HepRotation FluxMgr::transformGlastToGalactic(double time);
 
     ///this sets the rocking mode in GPS.
-    void setRockType(GPS::RockType rockType, double rockAngle);
-    void setRockType(int rockType, double rockAngle);
+    std::vector<double> setRockType(GPS::RockType rockType, double rockAngle);
+    std::vector<double> setRockType(int rockType, double rockAngle);
 private:
     
     /// source library lookup.  Each source is uniquely identified

@@ -119,11 +119,12 @@ public:
 
     HepRotation GPS::transformCelToGlast(double seconds);
 
-    void rockingDegrees(double rockDegrees){m_rockDegrees = rockDegrees;}
+    double rockingDegrees(double rockDegrees){double ret=m_rockDegrees;
+                                              m_rockDegrees = rockDegrees;
+                                              return ret;}
     
-
-    void setRockType(RockType rockType){m_rockType = rockType;}
-    void setRockType(int rockType);//{m_rockType = rockType;}
+    int setRockType(RockType rockType);//{m_rockType = rockType;}
+    int setRockType(int rockType);//{m_rockType = rockType;}
 
     double RAX()const{return m_RAX;}
     double RAZ()const{return m_RAZ;}

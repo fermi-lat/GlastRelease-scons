@@ -81,7 +81,7 @@ public:
     ///2 = SLEWING : (experimental) like UPDOWN, except that rotation at equator happens gradually.
     ///3 = ONEPERORBIT : (needs work) LAT rocked northward for one orbit, southward for the next.
     ///4 = EXPLICIT :  Explicit angles given - this should be used only through the setExplicit... function.
-    virtual void setRockType(int rockType, double rockAngle)=0;
+    virtual std::vector<double> setRockType(int rockType, double rockAngle)=0;
 
     ///this should return the source file names, along with the contained sources.
     virtual std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const=0;
