@@ -48,12 +48,12 @@ CalibDataSvc.CalibFlavorList     = {"ideal"};
 
 // use modular default options (as gleam will, so's good to test!)
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
-XtalADCTool.SuperVerbose = true;
-CalCalibSvc.SuperVerbose = true;
+//XtalADCTool.SuperVerbose = true;
+//CalCalibSvc.SuperVerbose = true;
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 1;
-ApplicationMgr.EvtMax = 1;
+MessageSvc.OutputLevel = 2;
+ApplicationMgr.EvtMax  = 2;
 
 //==============================================================
 //

@@ -29,7 +29,7 @@ CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc)
   declareProperty("CalibDataSvc",      m_calibDataSvcName = 
                   "CalibDataSvc");
   declareProperty("idealCalibXMLPath", m_idealCalibXMLPath = 
-                  "$(CALXTALRESPONSEROOT)/xml/idealCalib.xml");
+                  "$(CALXTALRESPONSEROOT)/xml/idealCalib_flight.xml");
   declareProperty("SuperVerbose", m_superVerbose    = false);
   
   declareProperty("DefaultFlavor", m_defaultFlavor    
