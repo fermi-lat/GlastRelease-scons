@@ -1,5 +1,12 @@
+/** @file release.notes
+ * Package gui
+ * Coordinator: T.Burnett
+ *
+ * v3    THB 06-apr-2002: change GraphicsVector to accept HepPoint3D.
 22-mar-2002: tweaks for display control
 14-aug-2001: improved clipping; tag v2r6
 07-may-2001: tag as v2r1
 07-may-2001: mods to allow clean separation between shareables and executables
 Initial version, released as v1.
+
+*/
