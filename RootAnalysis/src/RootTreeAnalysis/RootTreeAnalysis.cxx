@@ -55,6 +55,12 @@ void RootTreeAnalysis::DigiHistDefine() {
     // this histogram ROOT file
     histFile->cd();
     
+    TNtuple *tkrDigiTup= new TNtuple("tkrDigiTup", "example Ntuple", "TkrDigiCount:TotalHits");
+    TNtuple *calDigiTup= new TNtuple("calDigiTup", "example Ntuple", "CalDigiCount:CalEAveTotal");
+
+    TH1F *NUMTKRDIGI = new TH1F("NUMTKRDIGI", "Number of Tkr Digis",
+        200, 0, 200);
+
     TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "Cal Digi multiplicity",
         50, 0, 50);
     
@@ -123,6 +129,10 @@ void RootTreeAnalysis::ReconHistDefine() {
     // Must cd into the histFile to be sure these new histograms are created
     // within this histogram ROOT file.
     histFile->cd();
+
+    TNtuple *tkrReconTup = new TNtuple("tkrReconTup", "example Ntuple", "TkrNumFitTracks:TkrNumClusters");
+
+    TNtuple *calReconTup = new TNtuple("calReconTup", "example Ntuple", "NumClusters:NumXtalRec");
 
     TH1F *TKRNUMFITTRACKS = new TH1F("TKRNUMFITTRACKS", "Number of Fit Tracks",
         30, 0, 30);
@@ -208,6 +218,7 @@ void RootTreeAnalysis::DigiTkr() {
 
     // Total number of TkrDigis for this event
     Int_t numTkrDigi = tkrDigiCol->GetEntries();
+    Int_t totalHits = 0;
 
     // Loop over all TkrDigis
     TIter tkrIter(tkrDigiCol);
@@ -227,6 +238,7 @@ void RootTreeAnalysis::DigiTkr() {
       GlastAxis::axis view = tkr->getView();
 
       UInt_t numHits = tkr->getNumHits();
+      totalHits += numHits;
       // Loop through collection of hit strips for this TkrDigi
       UInt_t ihit;
       for (ihit = 0; ihit < numHits; ihit++) {
@@ -234,6 +246,12 @@ void RootTreeAnalysis::DigiTkr() {
         Int_t stripNum = tkr->getStrip(ihit);
       }
     }
+
+    ((TH1F*)GetObjectPtr("NUMTKRDIGI"))->Fill((Float_t)numTkrDigi);
+
+    // example of filling a simple tree
+    Float_t digiArr[2] = { (Float_t)numTkrDigi, (Float_t)totalHits };
+    ((TNtuple*)GetObjectPtr("tkrDigiTup"))->Fill(digiArr);
 
     return;
 }
@@ -310,6 +328,9 @@ void RootTreeAnalysis::DigiCal() {
     ((TH1F*)GetObjectPtr("CALNLYR6"))->Fill(nLayer[6]);
     ((TH1F*)GetObjectPtr("CALNLYR7"))->Fill(nLayer[7]);
     
+    // example of filling a simple tree
+    Float_t digiArr[2] = { (Float_t)nCalDigi, eTotal };
+    ((TNtuple*)GetObjectPtr("calDigiTup"))->Fill(digiArr);
 }
 
 void RootTreeAnalysis::DigiAcd() {
@@ -397,6 +418,9 @@ void RootTreeAnalysis::ReconTkr() {
         }
 
     }
+
+    Float_t recArr[2] = {trackCol->GetEntries(), clusterCol->GetEntries()};
+    ((TNtuple*)GetObjectPtr("tkrReconTup"))->Fill(recArr);
 }
 
 void RootTreeAnalysis::ReconCal() {
@@ -423,6 +447,9 @@ void RootTreeAnalysis::ReconCal() {
 
     }
     
+    Float_t recArr[2] = {clusterCol->GetEntries(), xtalRecCol->GetEntries()};
+    ((TNtuple*)GetObjectPtr("calReconTup"))->Fill(recArr);
+
     return;
 }
 
