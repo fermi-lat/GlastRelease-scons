@@ -3,10 +3,14 @@
   <prim name="tileThickness" value="10.0">Thickness of ACD tiles</prim>
 
   <prim name="ACDSupportThickness" value="20.0">This is just a figment
-of my imagination.  I have no real number yet.</prim>
+of my imagination.  I have no real number yet. Should be unused</prim>
   <prim name="ACDSideStandoff" value="35.75">This one is right if
 side_standoff is another name for side_tile_standoff, the distance
-between the side of the tracker and the ACD tiles</prim>
+between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
+  <prim name="ACDSideSupToTile" value = "35.75"> Distance from inside edge of
+side support structure to inside edge of side tiles.  This is temporary, to
+be replaced probably with a derived ACD constant which is the sum of the
+support thickness and gap between support and side tile.</prim>
   <prim name="totalTopAvail" value="91.9">This is the total amount of space
     available to top section of the ACD, includes tiles and support structure
 (Heather).</prim>

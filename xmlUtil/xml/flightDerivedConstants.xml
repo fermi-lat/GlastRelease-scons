@@ -777,49 +777,62 @@ grid, etc. (may be superseded by info from Eric)</notes>
             <refer refTo="towersTotalX" />
             <mul>
               <const value="2" uType="count" />
-              <refer refTo="ACDSideStandoff" />
+              <refer refTo="ACDTKRStayClear" />
             </mul>
           </add>
         </const>
 
+
+        <const name="ACDTotalXSide" >
+          <notes>total length (in x direction) to be covered by a 
+                row of side tiles</notes>
+          <add>
+<!--            <refer refTo="towersTotalX" /> -->
+            <refer refTo="ACDTopTotalX" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="ACDSideSupToTile" />
+            </mul>
+            <refer refTo="tileThickness" />
+            <uminus>
+               <refer refTo="topTileGap" />
+            </uminus>
+          </add>
+        </const>
+
         <const name="ACDTotalX">
-          <notes>max extent in x of all of ACD</notes>
+          <notes>max extent in x of all of ACD (not just top)</notes>
+          <add>
+            <refer refTo="ACDTotalXSide" />
+            <refer refTo="tileThickness" />
+            <refer refTo="topTileGap" />
+            <mul>
+              <const value="2" uType="count" />
+              <add>
+                <refer refTo="tapeThickness" />
+                <refer refTo="tapeGap" />
+              </add>
+            </mul>
+          </add>
+        </const>
+
+<!--
+        <const name="ACDTotalX">
+          <notes>max extent in x of all of ACD (not just top)</notes>
           <add>
             <refer refTo="ACDTopTotalX" />
             <mul>
               <const value="2" uType="count" />
               <add>
                 <refer refTo="tileThickness" />
-                <refer refTo="topTileGap" />
+                <refer refTo="tapeThickness" />
+                <refer refTo="tapeGap" />
+                <refer refTo="ACDSideStandoff" />
               </add>
             </mul>
           </add>
         </const>
-
-        <const name="ACDTopTotalY">
-          <notes>Total Y width to be covered by top tiles</notes>
-          <add>
-            <refer refTo="towersTotalY" />
-            <mul>
-              <const value="2" uType="count" />
-              <refer refTo="ACDSideStandoff" />
-            </mul>
-          </add>
-        </const>
-
-        <const name="ACDTotalY">
-          <notes>max extent in y of all of ACD</notes>
-          <add>
-            <refer refTo="ACDTopTotalY" />
-            <mul>
-              <const value="2" uType="count" />
-              <add>
-                <refer refTo="tileThickness" />
-                <refer refTo="topTileGap" />
-              </add>
-            </mul>
-          </add>
-        </const>
+ -->
 
         <const name="XTopTileMax" uType="count">
           <notes>Convenience for idField definitons</notes>
@@ -878,13 +891,6 @@ grid, etc. (may be superseded by info from Eric)</notes>
               <mul>
                 <refer refTo="XTopTileMax" />
                 <refer refTo="topOverlap" />
-              </mul>
-              <mul>
-                <const value="2" uType="count" />
-                <minus>
-                  <refer refTo="ACDSupportThickness" />
-                  <refer refTo="topTileGap" />
-                </minus>
               </mul>
             </add>
             <refer refTo="numXTopTiles" />
@@ -966,22 +972,6 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
-        <const name="ACDTotalXSide" >
-          <notes>total length (in x direction) to be covered by a 
-row of side tiles</notes>
-          <add>
-            <refer refTo="towersTotalX" />
-            <mul>
-              <const value="2" uType="count" />
-              <add>
-                <refer refTo="ACDSideStandoff" />
-                <refer refTo="ACDSupportThickness" />
-              </add>
-            </mul>
-            <refer refTo="tileThickness" />
-          </add>
-        </const>
-
         <const name="sideTileWidthShortXRow">
         <notes>to get width of an individual tile, take account of
               number of tiles in a row (and number of gaps)."Short"
@@ -1013,20 +1003,48 @@ row of side tiles</notes>
         </const>
 
 <!-- Now do same for Y-direction -->
-        <const name="ACDTotalYSide" >
-          <notes>Same as above but for Y sides</notes>
+        <const name="ACDTopTotalY">
+          <notes>Total Y width to be covered by top tiles</notes>
           <add>
             <refer refTo="towersTotalY" />
             <mul>
               <const value="2" uType="count" />
-              <add>
-                <refer refTo="ACDSideStandoff" />
-                <refer refTo="ACDSupportThickness" />
-              </add>
+              <refer refTo="ACDTKRStayClear" />
             </mul>
-            <refer refTo="tileThickness" />
           </add>
         </const>
+
+        <const name="ACDTotalYSide" >
+          <notes>Same as above but for Y sides (tiles)</notes>
+          <add>
+            <refer refTo="ACDTopTotalY" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="ACDSideSupToTile" />
+            </mul>
+            <refer refTo="tileThickness" />
+            <uminus>
+              <refer refTo="topTileGap"/>
+            </uminus>
+          </add>
+        </const>
+
+        <const name="ACDTotalY">
+          <notes>max extent in y of all of ACD (not just top)</notes>
+          <add>
+            <refer refTo="ACDTotalYSide" />
+            <refer refTo="tileThickness" />
+            <refer refTo="topTileGap" />
+            <mul>
+              <const value="2" uType="count" />
+              <add>
+                <refer refTo="tapeThickness" />
+                <refer refTo="tapeGap" />
+              </add>
+            </mul>
+          </add>
+        </const>
+
 
         <const name="ACDSideHeight" >
           <notes>Total height of an ACD side: tiles plus gaps</notes>
@@ -1173,7 +1191,10 @@ row of side tiles</notes>
             <refer refTo="ACDTopXWidth" />
             <mul>
               <const value="2" uType="count" />
-              <refer refTo="topOverlap" />
+               <add>
+                 <refer refTo="topOverlap" />
+                 <refer refTo="tapeTopExt" /> 
+               </add>
             </mul>
           </minus>
         </const>
@@ -1354,7 +1375,15 @@ row of side tiles</notes>
             </quo>
           </uminus>
         </const>
+
+        <const name="ACDSideDovetail_dn" >
+          <notes>Dovetail displacement for "negative" ACD sides</notes>
+          <uminus>
+            <refer refTo="ACDSideDovetail_d" />
+          </uminus>
+        </const>
       </derCategory>
+
 
       <derCategory name="derGlobal" save="true" >
         <overview>A few more constants needed for the outermost 
@@ -1432,7 +1461,7 @@ row of side tiles</notes>
           <notes>Displacement in y of tiles along a side || to X axis,
                 relative to center of LATenv</notes>
           <add>
-            <refer refTo="topTileGap" />
+            <refer refTo="ACDSideSupToTile" />
             <quo>
               <add>
                 <refer refTo="ACDTopTotalY" />
@@ -1455,7 +1484,7 @@ row of side tiles</notes>
           <notes>Displacement in x of tiles along a side || to Y axis,
                 relative to center of LATenv</notes>
           <add>
-            <refer refTo="topTileGap" />
+            <refer refTo="ACDSideSupToTile" />
             <quo>
               <add>
                 <refer refTo="ACDTopTotalX" />
@@ -1475,7 +1504,6 @@ row of side tiles</notes>
         </const>
 
 
-<!--    edit above -->
         <const name="tapeSide_dz">
           <notes>displacement in z of side tapes rel. to LATenv</notes>
           <minus>
@@ -1492,14 +1520,19 @@ row of side tiles</notes>
 
         <const name="tapeXSide_dy" >
           <notes>Displacement in y of tapes along a side || to X axis,
-                relative to center of LATenv</notes>
-          <quo>
-            <add>
-              <refer refTo="ACDTopTotalY" />
-              <refer refTo="tapeThickness" />
-            </add>
-            <const value="2" uType="count" />
-          </quo>
+                relative to center of LATenv.  Compute from displacement
+                of tile sides (as of 5 dec.)</notes>
+          <add>
+            <refer refTo="tileXSide_dy" />
+            <refer refTo="tapeGap" />
+            <quo>
+              <add>
+                <refer refTo="tapeThickness" />
+                <refer refTo="tileThickness" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+          </add>
         </const>
 
         <const name="tapeXSide_dyN" >
@@ -1512,14 +1545,19 @@ row of side tiles</notes>
 
         <const name="tapeYSide_dx" >
           <notes>Displacement in x of tapes along a side || to Y axis,
-                relative to center of LATenv</notes>
-          <quo>
-            <add>
-              <refer refTo="ACDTopTotalX" />
-              <refer refTo="tapeThickness" />
-            </add>
-            <const value="2" uType="count" />
-          </quo>
+                relative to center of LATenv   Compute from displacement
+                of tile sides (as of 5 dec.)</notes>
+          <add>
+            <refer refTo="tileYSide_dx" />
+            <refer refTo="tapeGap" />
+            <quo>
+              <add>
+                <refer refTo="tapeThickness" />
+                <refer refTo="tileThickness" />
+              </add>
+              <const value="2" uType="count" />
+            </quo>
+          </add>
         </const>
 
         <const name="tapeYSide_dxN" >

@@ -6,6 +6,8 @@ associated with any single subsystem.</overview>
 THIS IS TOO BIG.  NEED NEW CAL NUMBERS</prim>  -->
   <prim name="calTrackerGap" value="26.9">Spacing between tracker 
            and calorimeter stay-clear envelopes</prim>
+  <prim name="ACDTKRStayClear" value="25.8">Space between ACD side
+support walls and towers</prim>
   <prim name="wallGap" value="1.5">gap between modules</prim>
   <prim name="wallThickness"  value="1.5">   Wall thickness</prim>
   <prim name="wallWidth"  value="371.5">width of tower, including

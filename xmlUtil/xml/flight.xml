@@ -355,7 +355,7 @@
         <idField name="fACDFace" valueREF="eACDXPosFace" />
       </posXYZ>
       <posXYZ volume="TileXSide" 
-              XREF="ACDSideDovetail_d"
+              XREF="ACDSideDovetail_dn"
               YREF="tileXSide_dyN"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
@@ -363,7 +363,7 @@
       </posXYZ>
       <posXYZ volume="TileYSide" 
               XREF="tileYSide_dx"
-              YREF="ACDSideDovetail_d"
+              YREF="ACDSideDovetail_dn"
               ZREF="tileSide_dz" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDYPosFace" />
@@ -380,12 +380,12 @@
               YREF="tapeXSide_dy"
               ZREF="tapeSide_dz" />
       <posXYZ volume="sideTapeRowX"
-              XREF="ACDSideDovetail_d"
+              XREF="ACDSideDovetail_dn"
               YREF="tapeXSide_dyN"
               ZREF="tapeSide_dz" />
       <posXYZ volume="sideTapeRowY"
               XREF="tapeYSide_dx"
-              YREF="ACDSideDovetail_d"
+              YREF="ACDSideDovetail_dn"
               ZREF="tapeSide_dz" />
       <posXYZ volume="sideTapeRowY"
               XREF="tapeYSide_dxN"
