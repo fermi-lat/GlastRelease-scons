@@ -27,6 +27,9 @@
 #include "commonData.h"
 #include "RootIo/IRootIoSvc.h"
 
+// ADDED FOR THE FILE HEADERS DEMO
+#include "src/FileHeadersTool.h"
+
 #include <map>
 #include <string>
 
@@ -100,6 +103,9 @@ private:
 
     IRootIoSvc*   m_rootIoSvc;
   
+
+    // ADDED FOR THE FILE HEADERS DEMO
+    IFileHeadersTool * m_headersTool ;
 };
 
 static const AlgFactory<mcRootReaderAlg>  Factory;
@@ -132,6 +138,12 @@ StatusCode mcRootReaderAlg::initialize()
     
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    
+    // ADDED FOR THE FILE HEADERS DEMO
+    StatusCode headersSc = toolSvc()->retrieveTool("FileHeadersTool",m_headersTool) ;
+    if (headersSc.isFailure()) {
+        log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
+    }
     
     // Use the Job options service to set the Algorithm's parameters
     // This will retrieve parameters set in the job options file
@@ -229,7 +241,14 @@ StatusCode mcRootReaderAlg::execute()
             log << MSG::WARNING << "Requested index is out of bounds - no MC data loaded" << endreq;
             return StatusCode::SUCCESS;
 	}
+	else {
+		log << MSG::INFO << "Requested index: " << readInd << endreq;
+	}
 
+    // ADDED FOR THE FILE HEADERS DEMO
+    m_mcTree->LoadTree(readInd);
+    m_headersTool->readConstMcHeader(m_mcTree->GetFile()) ;
+    
 	numBytes = m_mcTree->GetEntry(readInd); 
 	if ((numBytes <= 0) || (!m_mcEvt)) {
             log << MSG::WARNING << "Failed to Load Mc Event" << endreq;

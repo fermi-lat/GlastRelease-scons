@@ -1,3 +1,4 @@
+
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -31,6 +32,10 @@
 #include "commonData.h"
 
 #include "RootIo/IRootIoSvc.h"
+
+// ADDED FOR THE FILE HEADERS DEMO
+#include "src/FileHeadersTool.h"
+#include <cstdlib>
 
 /** @class digiRootWriterAlg
  * @brief Writes Digi TDS data to a persistent ROOT file.
@@ -106,6 +111,8 @@ private:
     commonData m_common;
     IRootIoSvc* m_rootIoSvc;
 
+    // ADDED FOR THE FILE HEADERS DEMO
+    IFileHeadersTool * m_headersTool ;
 };
 
 
@@ -124,7 +131,9 @@ Algorithm(name, pSvcLocator)
     declareProperty("compressionLevel", m_compressionLevel=1);
     declareProperty("treeName", m_treeName="Digi");
     declareProperty("autoSave", m_autoSaveEvents=1000);
-
+    
+    // ADDED FOR THE FILE HEADERS DEMO
+    m_headersTool = 0 ;
 }
 
 StatusCode digiRootWriterAlg::initialize()
@@ -134,6 +143,16 @@ StatusCode digiRootWriterAlg::initialize()
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    
+    // ADDED FOR THE FILE HEADERS DEMO
+    StatusCode headersSc = toolSvc()->retrieveTool("FileHeadersTool",m_headersTool) ;
+    if (headersSc.isFailure()) {
+        log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
+    }
+    headersSc = m_headersTool->newDigiHeader() ;
+    if (headersSc.isFailure()) {
+        log<<MSG::WARNING << "Failed to create a new Digi FileHeader" << endreq;
+    }
     
     // Use the Job options service to set the Algorithm's parameters
     // This will retrieve parameters set in the job options file
@@ -158,6 +177,8 @@ StatusCode digiRootWriterAlg::initialize()
     }
     m_digiFile->cd();
     m_digiFile->SetCompressionLevel(m_compressionLevel);
+    
+    // tree of events
     m_digiTree = new TTree(m_treeName.c_str(), "GLAST Digitization Data");
     m_digiEvt = new DigiEvent();
     m_common.m_digiEvt = m_digiEvt;
@@ -174,6 +195,7 @@ StatusCode digiRootWriterAlg::execute()
     //   the appropriate methods to read data from the TDS and write data
     //   to the ROOT file.
 
+    
     MsgStream log(msgSvc(), name());
 
     StatusCode sc = StatusCode::SUCCESS;
@@ -488,6 +510,9 @@ void digiRootWriterAlg::close()
 
 StatusCode digiRootWriterAlg::finalize()
 {
+    // ADDED FOR THE FILE HEADERS DEMO
+    m_headersTool->writeDigiHeader(m_digiTree->GetCurrentFile()) ;
+    
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
