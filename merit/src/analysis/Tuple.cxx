@@ -6,7 +6,9 @@
 #include <cassert>
 #include <cmath>
 #include <cfloat>
+#ifndef DEFECT_NO_STRINGSTREAM
 #include <sstream>
+#endif
 
 
 static inline void WARNING(const char* text){ std::cerr << text;}

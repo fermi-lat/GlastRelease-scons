@@ -85,7 +85,7 @@ StatusCode meritAlg::initialize() {
 #else
     std::strstream title;
     title <<  "TDS: gen(" << m_generated <<  ")";
-    m_tuple = new Tuple(title.c_str());
+    m_tuple = new Tuple(title.str());
 #endif
     // define tuple items
     new TupleItem("MC_Energy",      &m_mce);
