@@ -52,6 +52,15 @@ public:
 	  m_rangeM(rangeM),
 	  m_status(status)
           {};
+
+        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, 
+		       unsigned short adcM) :
+	  m_adcP(adcP), 
+	  m_adcM(adcM),
+          m_rangeP(rangeP), 
+	  m_rangeM(rangeM){
+	m_status = 0;
+	};
           
           ~CalXtalReadout() {};
           
