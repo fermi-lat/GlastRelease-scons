@@ -16,7 +16,7 @@
 #include "Event/Recon/CalRecon/CalCluster.h"   
 #include "Event/Recon/CalRecon/CalXtalRecData.h"   
   
-#include "Event/Recon/AcdRecon.h"
+#include "Event/Recon/AcdRecon/AcdRecon.h"
 
 #include "idents/CalXtalId.h"
 
@@ -638,7 +638,7 @@ StatusCode reconRootWriterAlg::writeAcdRecon() {
     AcdId acdIdRoot(acdIdTds.layer(), acdIdTds.face(), acdIdTds.row(), acdIdTds.column());
     acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getTileCount(),
         acdRecTds->getGammaDoca(), acdRecTds->getDoca(), acdRecTds->getActiveDist(), acdIdRoot, 
-        acdRecTds->getRowDocaCol());
+        acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol());
 
     return sc;
 }
