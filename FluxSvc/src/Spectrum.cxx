@@ -11,6 +11,7 @@
 #include "CLHEP/Random/RandExponential.h"
 #include "CLHEP/Random/RandFlat.h"
 
+#include "FluxSvc/EventSource.h"
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -71,7 +72,7 @@ void Spectrum::parseParamList(std::string input, std::vector<float>& output) con
 
 double Spectrum::interval (double time)
 {
-    double  r = (solidAngle()*flux(time)*6.);
+    double  r = (solidAngle()*flux(time)* /*6.*/ EventSource::totalArea());
     
     if (r == 0){ return -1.;
     }else{  

@@ -76,18 +76,6 @@
      </source>
 
 
-	
-	<!-- the CHIME spectrum at minimum flux. angular dependence and rate are from the CHIME spectrum object -->
-    <source name="chimemin" >
-        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="10.00, 144.37"/> <use_spectrum/> </spectrum>
-    </source>
-
-
-	<!-- the CHIME spectrum above Palestine, TX. angular dependence and rate are from the CHIME spectrum object -->
-    <source name="chimepal" >
-        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="31.8, 264.14"/> <use_spectrum/> </spectrum>
-    </source>
-
 	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton_min">
          <spectrum escale="GeV"> <SpectrumClass name="AlbedoPSpectrum" params="-20.923,185.25"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
@@ -102,18 +90,6 @@
     </source>
 
 
-    <!-- background mixture 3 - at Palestine-->
-    <source name="backgndpal">
-        <nestedSource sourceRef="chimepal"/>
-        <nestedSource sourceRef="albedo_proton_pal"/>
-    </source>
-
-
-	<!-- background mixture 5 - minimums-->
-    <source name="backgndmin">
-        <nestedSource sourceRef="chimemin"/>
-        <nestedSource sourceRef="albedo_proton_min"/>
-    </source>
 
     <source name="albedo_electronpositronlow" flux="146.">
         <spectrum escale="GeV">
@@ -137,15 +113,6 @@
         <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
     </source>
 
-	<!-- the CHIME spectrum at Maximum flux. angular dependence and rate are from the CHIME spectrum object -->
-    <source name="chimemax" >
-        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
-    </source>
-
-	<!-- the CHIME spectrum at average flux. angular dependence and rate are from the CHIME spectrum object -->
-    <source name="chimeavg" >
-        <spectrum escale="GeV"> <SpectrumClass name="CHIMESpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
-    </source>
 
 	<!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton_max">

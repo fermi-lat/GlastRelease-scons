@@ -73,7 +73,7 @@ public:
     static void	totalArea ( double value );
     
     ///    makeOrbit - creates an orbit appropriate for this source       
-    virtual Orbit*    makeOrbit () const;
+    //virtual Orbit*    makeOrbit () const;
     
     /// virtual event number: should be filled in by subclass
     virtual int eventNumber()const{return -1;} 

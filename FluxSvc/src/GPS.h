@@ -156,8 +156,8 @@ public:
         virtual ~GPS();
         
         // only class/subclasses have access
-        void    lat ( double );         // set latitude
-        void    lon ( double );         // set longitude
+        //void    lat ( double );         // set latitude
+        //void    lon ( double );         // set longitude
         void    time ( GPStime );       // set time
         GPStime orbittime () const;     // access to orbit time
         void    orbittime ( GPStime );  // set orbit time

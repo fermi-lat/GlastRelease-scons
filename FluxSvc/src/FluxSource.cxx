@@ -42,7 +42,6 @@ m_launch(NONE), illumBox(0), m_energyscale(GeV) ,m_degreespread(0)
     spectrum(aSpec);
     useSpectrumDirection(); // and will use its direction generation
     setAcceptance();
-    //  transformDirection();
 }
 
 
@@ -62,7 +61,6 @@ m_launch(NONE), illumBox(0),m_gall(l),m_galb(b),m_degreespread(0)
     
     m_launch=GALACTIC;
     setAcceptance();
-    //  transformDirection();
 }
 
 
@@ -1087,7 +1085,7 @@ double FluxSource::calculateInterval (double time){
 
 double FluxSource::explicitInterval (double time)
 {
-    double  r = (solidAngle()*flux(time)*6.);
+    double  r = (solidAngle()*flux(time)* /*6.*/ totalArea());
     
     if (r == 0){ return -1.;// - m_extime; //the minus is for ensuring that interval() returns a -1 flag.
     }else{  

@@ -151,15 +151,15 @@ void GPS::expansion ( double e )
     m_expansion = e; 
 }
 
-void GPS::lat ( double l )
-{
-    m_orbit->setLatitude(l);
-}
+//void GPS::lat ( double l )
+//{
+//    m_orbit->setLatitude(l);
+//}
 
-void GPS::lon ( double l )
-{
-    m_orbit->setLongitude(l);
-}
+//void GPS::lon ( double l )
+//{
+//    m_orbit->setLongitude(l);
+//}
 
 void GPS::time ( GPStime t )
 {

@@ -37,8 +37,8 @@ public:
     /// calculate the flux, particles/m^2/sr. (default zero)
     virtual double    flux (double time ) const=0;
     
-    /// calcualte effective solid angle  (default zero)
-    virtual double solidAngle()const{return 6.;}
+    /// calcualte effective solid angle 
+    virtual double solidAngle()const{return /*6.*/ 1.0;} //flag that doesen't calculate.
     
     /// return a title describing the spectrum	
     virtual std::string title()const=0;

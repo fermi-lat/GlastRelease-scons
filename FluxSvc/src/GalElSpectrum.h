@@ -36,9 +36,9 @@ is something else.  Can someone look it up?
 
 
 #include "Spectrum.h"
-#include "CHIMESpectrum.h"
 #include "facilities/Observer.h"
 #include <string>
+#include "CHIMESpectrum.h"
 
 class GalElSpectrum : public Spectrum
 {

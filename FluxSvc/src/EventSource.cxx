@@ -5,7 +5,7 @@
 #include "dom/DOM_Element.hpp"
 #include "xml/Dom.h"
 #include "GPS.h"
-#include "Orbit.h"
+//#include "Orbit.h"
 #include "CLHEP/Random/RandExponential.h"
 
 #include <strstream>
@@ -84,10 +84,10 @@ void    EventSource::setRate ( double rate )
     setFlux(  rate/(m_solid_angle*s_total_area) );
 }
 
-Orbit*  EventSource::makeOrbit () const
-{
-    return new Orbit;
-}
+//Orbit*  EventSource::makeOrbit () const
+//{
+//    return new Orbit;
+//}
 
 
 // UI titles
