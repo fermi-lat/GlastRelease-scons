@@ -20,21 +20,14 @@ EventSelector.Input = "NONE";
 
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 
-
 // ----------------------------
 //  a structure for the topalg, using sequencer steps
-//
-//ApplicationMgr.TopAlg = {
-//    "Sequencer/Generator",
-//    "Sequencer/Digitization",
-//    "Sequencer/EventDisplay",
-//    "Sequencer/Triggered" };
 
 ApplicationMgr.TopAlg = {
       "Sequencer/Top" };
 
-	//the top sequence loop
-	Top.Members={
+//the top sequence loop
+Top.Members={
     "Sequencer/Generator",
     "Sequencer/Digitization",
     "Sequencer/EventDisplay",
@@ -148,6 +141,8 @@ Output.Members += {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"}
 mcRootWriterAlg.OutputLevel=3;
 digiRootWriterAlg.OutputLevel=3;
 reconRootWriterAlg.OutputLevel=3;
+CalDigiAlg.OutputLevel=3;
+ToolSvc.OnePlusExpTaper.OutputLevel=4;
  
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
