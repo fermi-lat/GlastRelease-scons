@@ -3,6 +3,8 @@
 
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
+ * 27-aug-03         thb tag
+ * 26-aug-03         thb fix time set
  * 29-jul=03  v6r6   thb split out flux to separate package (Brian)
  * 17-jul=03  v6r5p3 thb extend allgamma source to 56 GeV
  * 15-may-03  v6r5p2 thb various fixes required by vc8.
