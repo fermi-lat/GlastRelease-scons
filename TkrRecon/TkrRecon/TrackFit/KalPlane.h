@@ -42,7 +42,7 @@ public:
     // Adding Hits, energy and other variables
     void setHit(const KalHit& hit);
     inline void setEnergy(double const e) {
-                m_eneplane = (e < 0.03? 0.03:e);}
+		m_eneplane = (e < 30.0? 30.0:e);} //MeV
     inline void setIDHit(unsigned id) {
 		m_IDHit = id;
 		m_IDTower = (int) id/1000000;
