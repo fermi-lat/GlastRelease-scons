@@ -28,6 +28,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
 
+#include "TkrUtil/ITkrFailureModeSvc.h"
+
 #include "idents/VolumeIdentifier.h"
 #include "idents/TowerId.h"
 #include <map>
@@ -91,6 +93,8 @@ private:
     
     void clear();
     IGlastDetSvc * m_gsv;
+
+    ITkrFailureModeSvc * m_fsv;
     
     SiLayerList m_layers;
     
@@ -145,7 +149,14 @@ StatusCode TkrSimpleDigiAlg::initialize(){
         log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
         return StatusCode::FAILURE;
     }
-    
+
+    // Get the failure mode service 
+    m_fsv=0;
+    if( service( "TkrFailureModeSvc", m_fsv).isFailure() ) {
+        log << MSG::INFO << "Couldn't set up TkrFailureModeSvc" << endreq;
+        log << MSG::INFO << "Will assume it is not required"    << endreq;
+    }
+
     // pass the GlastDetSvc pointer to the SiStripList static functions
     if (SiStripList::initialize(m_gsv).isFailure() ) {
         log << MSG::ERROR << "Couldn't initialize SIStripList" << endreq;
@@ -267,8 +278,10 @@ StatusCode TkrSimpleDigiAlg::execute()
             botTop=id[6], layer = tray+botTop-1;
         int ToT[2]={0,0};
         
-        idents::TowerId tower = idents::TowerId(towerx, towery).id();
+        idents::TowerId tower = idents::TowerId(towerx, towery);
         idents::GlastAxis::axis iview = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
+
+        if (m_fsv->isFailed(tower.id(), layer, view)) continue;
         
         TkrDigi* pDigi  = new TkrDigi(layer, iview, tower, ToT);
         
