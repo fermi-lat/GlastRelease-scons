@@ -57,6 +57,7 @@ library  reconRootData \
       TkrParams.cxx TkrTrack.cxx TkrVertex.cxx \
       CalRecon.cxx CalRangeRecData.cxx CalCluster.cxx CalXtalRecData.cxx \
       AcdRecon.cxx \
+      ../reconRootData/*.cxx \
        ${reconRootData_headers}
 
 macro test_reconRootDatalinkopts ${reconRootData_shlibflags}
