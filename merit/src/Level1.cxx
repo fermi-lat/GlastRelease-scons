@@ -24,17 +24,17 @@ bool Level1::apply ()
     int bits = static_cast<unsigned>(item());
     m_counts[bits] = m_counts[bits]+1;
 
-    int trigger =  bits & (4|32|64);
+// modified 18 Oct S. Ritz to use updated Trig_Bits definition
+    int trigger =  bits & (4|8|16);
     if( trigger & 4) m_track++;
-    if( trigger & 64) m_cal++;
-    if( trigger & 32) m_hi_cal++;
-    if( (trigger &(4|64))==(4|64)) m_both++;
-    
+    if( trigger & 8) m_cal++;
+    if( trigger & 16) m_hi_cal++;
+    if( (trigger &(4|8))==(4|8)) m_both++;
     if( !m_useACD) return (trigger!=0);
 
     // basic ACD
-     return ((bits & 32)!=0 )  // always if HICAL
-       || (bits &(4+64))!=0  // track or low cal
+     return ((bits & 16)!=0 )  // always if HICAL
+       || (bits &(4+8))!=0  // track or low cal
           && (bits&(2+16))==0;   // but not if nACD>2 or ACD track veto
 } 
 
