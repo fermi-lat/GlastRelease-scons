@@ -78,8 +78,8 @@ RunManager::RunManager(std::ostream& log, double defaultCutValue, std::string& p
   fRunManager = this;
 
   // This dummy session is needed later to silent G4
-  //  session = new UIsession;
-
+  session = new UIsession;
+  
   // The event manager of G4
   eventManager = new G4EventManager();
   // The timer of G4
@@ -103,7 +103,7 @@ RunManager::~RunManager()
   G4StateManager* pStateManager = G4StateManager::GetStateManager();
   pStateManager->SetNewState(G4State_Quit);
 
-  //delete session;
+  delete session;
 
   delete timer;
 
@@ -262,8 +262,8 @@ void RunManager::Initialize()
 
   /// Set a dummy session to silent G4 intitialization messages on screen
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
-  // pUImanager->SetCoutDestination(session);
-  pUImanager->SetCoutDestination(new G4UIsession);
+  pUImanager->SetCoutDestination(session);
+  
   stateManager->SetNewState(G4State_Init);
   if(!geometryInitialized) InitializeGeometry();
   if(!physicsInitialized) InitializePhysics();
@@ -271,7 +271,7 @@ void RunManager::Initialize()
   stateManager->SetNewState(G4State_Idle);
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
 
-  //  pUImanager->SetCoutDestination(new G4UIsession);
+  pUImanager->SetCoutDestination(new G4UIsession);
 }
 
 void RunManager::InitializeGeometry()
@@ -294,9 +294,7 @@ void RunManager::InitializePhysics()
 {
   if(physicsList)
     {
-      std::cout << "sono qui FISICA" << std::endl;
-      //      if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
-      std::cout << "physicsList->Construct() start." << std::endl;
+      if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
       physicsList->SetVerboseLevel(0);
       physicsList->Construct();
     }
@@ -311,12 +309,8 @@ void RunManager::InitializeCutOff()
 {
   if(physicsList)
     {
-      std::cout <<"physicsList->setCut() start."  << std::endl;
-      //      if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
-      //    physicsList->SetCuts();
-      physicsList->SetPhysicsTableRetrieved(".");
-      if(physicsList->StorePhysicsTable("."))
-	{std::cout << "FATTO FISICA" << std::endl;}
+      if(verboseLevel>1) G4cout << "physicsList->setCut() start." << G4endl;
+      physicsList->SetCuts();
     }
   cutoffInitialized = true;
 }
