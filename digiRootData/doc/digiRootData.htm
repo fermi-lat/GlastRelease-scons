@@ -2,7 +2,7 @@
 <HEAD>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
 <META NAME="Generator" CONTENT="Microsoft FrontPage 4.0">
-<TITLE>ROOTWriter HowTo</TITLE>
+<TITLE>digiRootData documentation</TITLE>
 <META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
 </HEAD>
 <BODY LINK="#0000ff" VLINK="#800080" BGCOLOR="#FFFFCC">
@@ -33,16 +33,21 @@ contains the data for one event.&nbsp; The detector data for each subsystems is 
 separate data collection..&nbsp; The ACD data is stored in collection of <i>AcdDigi</i>
 objects.&nbsp; The CAL data is stored as an collection of <i>CalDigi</i>
 objects.&nbsp; The TKR data is stored as a collection of <i>TkrDigi</i> objects -
-where each <i>TkrDigi</i> contains a list of hit <i>StripId</i>s.&nbsp; The
+where each <i>TkrDigi</i> contains a list of hit strips for a particular layer
+in the TKR.&nbsp; The
 Level One Trigger data is stored in a class called <i>L1T</i>.</P>
 <h3>Digi Tree</h3>
 <p>The Digi tree has one main branch, <a href="#DigiEvent">DigiEvent</a>.&nbsp; All of the Digitization data is
 contained within this branch.</p>
-<P ALIGN="JUSTIFY"><img border="0" src="digitree.gif" width="720" height="540"></P>
+<P ALIGN="JUSTIFY"><img border="0" src="images/digiTree.jpg" width="621" height="436"></P>
 <P ALIGN="JUSTIFY">&nbsp;</P>
         <h3><a name="Method">Method </a>Definitions</h3>
 <p><b><a name="DigiEvent">DigiEvent</a></b></p>
 <table border="1" width="100%">
+  <tr>
+    <td width="100%" colspan="3">
+      <p align="center">Summary Data</td>
+  </tr>
   <tr>
     <td width="33%">getEventId( )</td>
     <td width="33%">Returns the Event Id</td>
@@ -54,56 +59,244 @@ contained within this branch.</p>
     <td width="34%">UInt_t</td>
   </tr>
   <tr>
+    <td width="33%">getL1T( )</td>
+    <td width="33%">Returns the Level One Trigger</td>
+    <td width="34%">const <a href="#L1T">L1T</a>&amp;</td>
+  </tr>
+  <tr>
+    <td width="33%">getTimeStamp( )</td>
+    <td width="33%">Time in seconds.&nbsp; This is the time that is reported
+      when doing simulations.&nbsp;</td>
+    <td width="34%">Double_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEbfTimeSec( )</td>
+    <td width="33%">Returns the number of seconds, used in conjunction with
+      getEbfTimeNanoSec for a measure of absolute time.&nbsp; This data is only
+      available when processing LDF data from real tests.</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEbfTimeNanoSec( )</td>
+    <td width="33%">Returns the number of nano-seconds, used in conjunction with
+      getEbfTimeSec for a measure of absolute time.&nbsp; This data is only
+      available when processing LDF data from real tests.</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEbfUpperPpcTimeBase( )</td>
+    <td width="33%">Returns the UpperPpcTimeBase word as stored in the LDF from
+      real tests.&nbsp; Used in conjunction with getEbfLowerPpcTimeBase, these
+      words can be used to determine the spacing of real test events.&nbsp; Also
+      see getEbfPpcTimeSeconds( )</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEbfLowerPpcTimeBase( )</td>
+    <td width="33%">Returns the LowerPpcTimeBase word stored in the LDF from
+      real tests, used in conjunction with getEbfUpperPpcTimeBase, these words
+      can be used to determine the spacing of real test events.&nbsp; Also see
+      getEbfPpcTimeSeconds( )</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEbfPpcTimeSeconds( )</td>
+    <td width="33%">Uses the data words stored in the UpperPpcTimeBase and
+      LowerPpcTimeBase to calculate seconds since power on.&nbsp; This time is
+      used to determine the spacing of events - NOT as an absolute time.&nbsp;
+      This is only available when processing LDF data from real tests.</td>
+    <td width="34%">Double_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getEventSummaryData( )</td>
+    <td width="33%">Returns the full EventSummaryData object.&nbsp; This is only
+      available when processing LDF data from real tests.</td>
+    <td width="34%">const <a href="#EventSummaryData">EventSummaryData</a>&amp;</td>
+  </tr>
+  <tr>
     <td width="33%">getFromMc( )</td>
     <td width="33%">Returns a flag denoting whether or not this data originated
       from Monte Carlo simulation (kTRUE) or not (kFALSE)</td>
     <td width="34%">Bool_t</td>
   </tr>
   <tr>
-    <td width="33%">getAcdDigiCol( )</td>
-    <td width="33%">Returns the full collection of AcdDigi objects</td>
-    <td width="34%">const TClonesArray*</td>
+    <td width="100%" colspan="3" bordercolordark="#008000">
+      <p align="center">ACD</td>
   </tr>
   <tr>
-    <td width="33%">getAcdDigi(UShort layer, UShort face, UShort row, UShort col
+    <td width="33%" bordercolordark="#008000">getAcdDigiCol( )</td>
+    <td width="33%" bordercolordark="#008000">Returns the full collection of AcdDigi objects</td>
+    <td width="34%" bordercolordark="#008000">const TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="33%" bordercolordark="#008000">getAcdDigi(UShort layer, UShort face, UShort row, UShort col
       )</td>
-    <td width="33%">Returns a specific AcdDigi object identified by layer, face,
+    <td width="33%" bordercolordark="#008000">Returns a specific AcdDigi object identified by layer, face,
       row, column</td>
-    <td width="34%">const <a href="#AcdDigi">AcdDigi</a>*</td>
+    <td width="34%" bordercolordark="#008000">const <a href="#AcdDigi">AcdDigi</a>*</td>
   </tr>
   <tr>
-    <td width="33%">getAcdDigi(const AcdId&amp; )</td>
-    <td width="33%">Returns a specific AcdDigi object identified by its AcdId</td>
-    <td width="34%">const <a href="#AcdDigi">AcdDigi</a>*</td>
+    <td width="33%" bordercolordark="#008000">getAcdDigi(const AcdId&amp; )</td>
+    <td width="33%" bordercolordark="#008000">Returns a specific AcdDigi object identified by its AcdId</td>
+    <td width="34%" bordercolordark="#008000">const <a href="#AcdDigi">AcdDigi</a>*</td>
   </tr>
   <tr>
-    <td width="33%">getCalDigiCol( )</td>
-    <td width="33%">Returns the complete CalDigi collection</td>
-    <td width="34%">const TObjArray*</td>
+    <td width="100%" bordercolordark="#800000" colspan="3">
+      <p align="center">CAL</td>
   </tr>
   <tr>
-    <td width="33%">getCalDigi(UInt_t i)</td>
-    <td width="33%">Returns a specific CalDigi object identified by its index in
+    <td width="33%" bordercolordark="#800000">getCalDigiCol( )</td>
+    <td width="33%" bordercolordark="#800000">Returns the complete CalDigi collection</td>
+    <td width="34%" bordercolordark="#800000">const TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="33%" bordercolordark="#800000">getCalDigi(UInt_t i)</td>
+    <td width="33%" bordercolordark="#800000">Returns a specific CalDigi object identified by its index in
       the TObjArray</td>
-    <td width="34%">const <a href="#CalDigi">CalDigi</a>*</td>
+    <td width="34%" bordercolordark="#800000">const <a href="#CalDigi">CalDigi</a>*</td>
   </tr>
   <tr>
-    <td width="33%">getTkrDigiCol( )</td>
-    <td width="33%">Returns the complete TkrDigi collection</td>
-    <td width="34%">const TObjArray*</td>
+    <td width="33%" bordercolordark="#800000">getCalDiagnosticCol( )</td>
+    <td width="33%" bordercolordark="#800000">Returns the full collection of CAL
+      Diagnostic data - only available when processing LDF files storing real
+      test data.</td>
+    <td width="34%" bordercolordark="#800000">const TClonesArray*</td>
   </tr>
   <tr>
-    <td width="33%">getTkrDigi( )</td>
-    <td width="33%">Returns a specific TkrDigi object identified by its index in
+    <td width="33%" bordercolordark="#800000">getCalDiagnostic(UInt_t i )</td>
+    <td width="33%" bordercolordark="#800000">Returns the ith CalDiagnostic
+      object.&nbsp; Only available when processing LDF files storing real test
+      data.</td>
+    <td width="34%" bordercolordark="#800000">const <a href="#CalDiagnostic">CalDiagnosticData</a>*</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="3" bordercolordark="#0000FF">
+      <p align="center">TKR</td>
+  </tr>
+  <tr>
+    <td width="33%" bordercolordark="#0000FF">getTkrDigiCol( )</td>
+    <td width="33%" bordercolordark="#0000FF">Returns the complete TkrDigi collection</td>
+    <td width="34%" bordercolordark="#0000FF">const TObjArray*</td>
+  </tr>
+  <tr>
+    <td width="33%" bordercolordark="#0000FF">getTkrDigi( )</td>
+    <td width="33%" bordercolordark="#0000FF">Returns a specific TkrDigi object identified by its index in
       the TObjArray</td>
-    <td width="34%">const <a href="#TkrDigi">TkrDigi</a>*</td>
+    <td width="34%" bordercolordark="#0000FF">const <a href="#TkrDigi">TkrDigi</a>*</td>
   </tr>
   <tr>
-    <td width="33%">getL1T( )</td>
-    <td width="33%">Returns the Level One Trigger</td>
-    <td width="34%">const <a href="#L1T">L1T</a>&amp;</td>
+    <td width="33%" bordercolordark="#0000FF">getTkrDiagnosticCol( )</td>
+    <td width="33%" bordercolordark="#0000FF">Returns the full collection of
+      TkrDiagnostic objects.&nbsp; This collection is only available when
+      processing LDF file from real test data.</td>
+    <td width="34%" bordercolordark="#0000FF">const TClonesArray*</td>
+  </tr>
+  <tr>
+    <td width="33%" bordercolordark="#0000FF">getTkrDiagnostic(UInt_t i)</td>
+    <td width="33%" bordercolordark="#0000FF">Returns the ith TkrDiagnostic
+      object in the collection.&nbsp; This collection is populated only when
+      processing LDF files storing real test data</td>
+    <td width="34%" bordercolordark="#0000FF">const <a href="#TkrDiagnosticData">TkrDiagnosticData</a>*</td>
   </tr>
 </table>
+<p>&nbsp;</p>
+<p><b><a name="EventSummaryData">EventSummaryData<br>
+</a></b>This class is just an interface to the LDF Online's EventSummary
+class.&nbsp; All of the methods use the Online's methods to unpack the summary
+data.&nbsp; For a full description of the EventSummary data please see:</p>
+<p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf">http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/LATcom.pdf</a></p>
+<table border="1" width="100%">
+  <tr>
+    <td width="33%">summary( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">calStrobe( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">tag( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">TACK( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">readout4( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">zeroSuppress( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">marker( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">error( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">diagnostic( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">eventNumber( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">trgParityError( )</td>
+    <td width="33%">&nbsp;</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+</table>
+<p><b><a name="L1T">L1T</a></b></p>
+<table border="1" width="100%" height="100">
+  <tr>
+    <td width="33%" height="19">getTriggerWord( )</td>
+    <td width="33%" height="19">Returns the full trigger word</td>
+    <td width="34%" height="19">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">getAcdLow( )</td>
+    <td width="33%" height="19">Returns kTRUE if ACD LOW</td>
+    <td width="34%" height="19">Bool_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">getAcdHigh( )</td>
+    <td width="33%" height="19">Returns kTRUE is ACD HIGH</td>
+    <td width="34%" height="19">Bool_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">getTkr3InARow( )</td>
+    <td width="33%" height="19">Returns kTRUE if 3-in-a-row in the TKR has
+      occurred</td>
+    <td width="34%" height="19">Bool_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">getCalLow( )</td>
+    <td width="33%" height="19">Returns kTRUE if CAL LOW</td>
+    <td width="34%" height="19">Bool_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">getCalHigh( )</td>
+    <td width="33%" height="19">Returns kTRUE if CAL HIGH</td>
+    <td width="34%" height="19">Bool_t</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <p><b><a name="AcdDigi">AcdDigi</a></b></p>
 <table border="1" width="100%">
   <tr>
@@ -261,6 +454,35 @@ contained within this branch.</p>
     <td width="34%">Char_t</td>
   </tr>
 </table>
+<p><b><a name="CalDiagnostic">CalDiagnosticData<br>
+</a></b>This class is just an interface to the Online's LDF CALdiagnostic class.</p>
+<p><a href="http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf">http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf</a></p>
+<table border="1" width="100%" height="94">
+  <tr>
+    <td width="33%" height="19">getDataWord( )</td>
+    <td width="33%" height="19">Returns the full data word for this
+      CALdiagnostic</td>
+    <td width="34%" height="19">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="13">high(UInt_t sign )</td>
+    <td width="33%" height="13">Returns high energy trigger request value for
+      the specified layer end:&nbsp; 0-Positiive, 1-Negative</td>
+    <td width="34%" height="13">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">low( UInt_t sign)</td>
+    <td width="33%" height="19">Returns low energy trigger request value for
+      specified layer end:&nbsp; 0-Positive, 1-Negative</td>
+    <td width="34%" height="19">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%" height="19">logAccepts(UInt_t sign )</td>
+    <td width="33%" height="19">Returns status of logaccepts lines for the
+      specified layer end:&nbsp; 0-Positive, 1-Negative</td>
+    <td width="34%" height="19">UInt_t</td>
+  </tr>
+</table>
 <p><b><a name="GlastAxis">GlastAxis</a></b></p>
 <table border="1" width="100%">
   <tr>
@@ -270,40 +492,6 @@ contained within this branch.</p>
   </tr>
 </table>
 <p>&nbsp;</p>
-<p><b><a name="L1T">L1T</a></b></p>
-<table border="1" width="100%" height="100">
-  <tr>
-    <td width="33%" height="19">getTriggerWord( )</td>
-    <td width="33%" height="19">Returns the full trigger word</td>
-    <td width="34%" height="19">UInt_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getAcdLow( )</td>
-    <td width="33%" height="19">Returns kTRUE if ACD LOW</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getAcdHigh( )</td>
-    <td width="33%" height="19">Returns kTRUE is ACD HIGH</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getTkr3InARow( )</td>
-    <td width="33%" height="19">Returns kTRUE if 3-in-a-row in the TKR has
-      occurred</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getCalLow( )</td>
-    <td width="33%" height="19">Returns kTRUE if CAL LOW</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-  <tr>
-    <td width="33%" height="19">getCalHigh( )</td>
-    <td width="33%" height="19">Returns kTRUE if CAL HIGH</td>
-    <td width="34%" height="19">Bool_t</td>
-  </tr>
-</table>
 <p><b><a name="TkrDigi">TkrDigi</a></b></p>
 <table border="1" width="100%">
   <tr>
@@ -356,6 +544,22 @@ contained within this branch.</p>
     <td width="33%">getHitCol( )</td>
     <td width="33%">Returns the full collection of hit strips</td>
     <td width="34%">std::vector&lt;UInt_t&gt;</td>
+  </tr>
+</table>
+<p><b><a name="TkrDiagnosticData">TkrDiagnosticData</a></b></p>
+<p>This class is just an interface to the Online's LDF TKRdiagnostic
+class.&nbsp; We use the TKRdiagnostic class to unpack the data.</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="33%">dataWord( )</td>
+    <td width="33%">returns full data word associated with this TKRdiagnostic</td>
+    <td width="34%">UInt_t</td>
+  </tr>
+  <tr>
+    <td width="33%">getGTRC( int gtrc )</td>
+    <td width="33%">Returns the state of the trigger request line for the given
+      GTRC</td>
+    <td width="34%">UInt_t</td>
   </tr>
 </table>
 <p><b><a name="TowerId">TowerId</a></b></p>
