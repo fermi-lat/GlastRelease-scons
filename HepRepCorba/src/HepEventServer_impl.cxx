@@ -103,7 +103,7 @@ char* HepEventServer_impl::setEvent(const char* command)
       m_eventID = sName.str();
       nextEventMsg = "Event set to next";      
     }
-)
+	else if (cmd == "fluxes")
     {
       nextEventMsg = m_svcAdapter->getSources();
     }
@@ -113,7 +113,7 @@ char* HepEventServer_impl::setEvent(const char* command)
       std::cout << "Set the source to " << source << std::endl;
 
       m_svcAdapter->setSource(source);
-      nextEventMsg = "Surce changed";      
+      nextEventMsg = "Source changed";      
     }
   else if (cmd == "eventName")
     {
