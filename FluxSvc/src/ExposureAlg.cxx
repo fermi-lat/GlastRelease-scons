@@ -281,7 +281,7 @@ StatusCode ExposureAlg::execute()
 
 //WRITEOUT------------------------------------------------------------------------------------------------
 
-    setFilterPassed( false );
+        setFilterPassed( false );
     log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
 
     

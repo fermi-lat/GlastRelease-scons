@@ -106,7 +106,8 @@ StatusCode FluxAlg::execute()
     //if it's a "timeTick, then ExposureAlg should take care of it, and no othe algorithms should care about it.
     if(particleName == "TimeTick"){
         log << MSG::DEBUG << particleName << " particle found, will exit particle creation/reconstruction loops" << endreq;
-        particleName = "gamma"; //no need to return - we want the time record on the TDS.  the ExposureAlg will handle the rest.
+        particleName = "gamma"; 
+        setFilterPassed( false );//no need to return - we want the time record on the TDS.  the ExposureAlg will handle the rest.
     }
     
     
