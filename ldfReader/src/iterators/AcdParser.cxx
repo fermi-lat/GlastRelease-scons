@@ -57,7 +57,7 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
   const ACDtileSide *pmt = map()->lookup(id, cable, channel);
   // A or B
   char      side = pmt->a() ? 'A' : 'B'; //map()->side(id, cable, channel) ? 'B' : 'A';
-  AcdDigi::PmtSide digiSide = pmt->a() ? AcdDigi::PmtSide::A : AcdDigi::PmtSide::B;
+  AcdDigi::PmtSide digiSide = pmt->a() ? AcdDigi::A : AcdDigi::B;
 
   //printf("%s       %2d   %4s     %c    %d   0x%03x = %4d    %d     %d\n",
   //       m_prefix, channel, map()->tileName(id, tile), side,
