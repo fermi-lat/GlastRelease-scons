@@ -16,7 +16,6 @@ $Header$
 #include "Event/TopLevel/Event.h"
 
 #include <algorithm>
-#include <cmath>
 
 int ValBase::m_calcCount = 0;
 

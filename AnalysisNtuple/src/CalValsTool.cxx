@@ -428,13 +428,16 @@ StatusCode CalValsTool::calculate()
     
     CAL_EnergySum   = calCluster->getEnergySum();
 	for(int i = 0; i<8; i++) CAL_eLayer[i] = calCluster->getEneLayer(i);
-	CAL_Lyr0_Ratio  = CAL_eLayer[0]/CAL_EnergySum;
-	CAL_Lyr7_Ratio  = CAL_eLayer[7]/CAL_EnergySum;
-	CAL_BkHalf_Ratio = (CAL_eLayer[4]+CAL_eLayer[5]+CAL_eLayer[6]+CAL_eLayer[7])/CAL_EnergySum;
-
-	CAL_Long_Rms      = calCluster->getRmsLong();
+    CAL_Long_Rms      = calCluster->getRmsLong();
 	CAL_Trans_Rms     = calCluster->getRmsTrans();
-	CAL_LRms_Ratio    = CAL_Long_Rms / CAL_EnergySum;
+
+    if(CAL_EnergySum>0.0) {
+        CAL_Lyr0_Ratio  = CAL_eLayer[0]/CAL_EnergySum;
+        CAL_Lyr7_Ratio  = CAL_eLayer[7]/CAL_EnergySum;
+        CAL_BkHalf_Ratio = (CAL_eLayer[4]+CAL_eLayer[5]+
+            CAL_eLayer[6]+CAL_eLayer[7])/CAL_EnergySum;
+        CAL_LRms_Ratio    = CAL_Long_Rms / CAL_EnergySum;
+    }
 	
 	CAL_Energy_LLCorr = calCluster->getEnergyLeak();
 

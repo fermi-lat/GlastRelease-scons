@@ -15,6 +15,7 @@ $Header$
 #include <string>
 #include <vector>
 #include <map>
+#include <cmath>
 
 class IIncidentSvc;
 class IDataProviderSvc;
@@ -28,7 +29,7 @@ class IDataProviderSvc;
 
 namespace {
     // for general use among the ValsTools
-    double M_PI = 3.14159265358979323846;
+    //double M_PI = 3.14159265358979323846;
 }
 
 class ValBase : public IValsTool,  public AlgTool,  virtual public IIncidentListener
