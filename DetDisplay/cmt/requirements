@@ -9,6 +9,8 @@ use GuiSvc
 
 set   DetDisplayShr           "${DETDISPLAYROOT}/${DEBUGDIR}/libDetDisplay"
 
+path_append LD_LIBRARY_PATH "${DETDISPLAYROOT}/${DEBUGDIR}/"
+
 private
 
 library DetDisplay  *.cxx *.h  Dll/*.cxx
@@ -21,5 +23,5 @@ macro DetDisplay_linkopts   " "\
 include_path $(DETDISPLAYROOT)
 
 
-macro DetDisplay_shlibflags "$(componentshr_linkopts) $(use_linkopts) "\
+macro DetDisplay_shlibflags "$(libraryshr_linkopts) $(use_linkopts) "\
        VisualC "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
