@@ -2,8 +2,8 @@ package geomrep
 
 version v1r1
 
-use geometry v1
-use graphics v1r1
+use geometry 
+use graphics
 
 include_path "${GEOMREPROOT}"
 
