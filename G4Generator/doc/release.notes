@@ -2,6 +2,8 @@
     @brief package G4Generator <pre>
     $Id$
 *
+ * v4r6   17-jan-03 LSR Add 2 new methods for separate edge distances in X and Y
+ * ....
  * v4r4p2 02-dec-02 THB Display primary track independently
  * v4r4p1 06-nov-02 THB Refactoring of primary particle generation; support for ions
  * v4r4   10-oct-02 THB Fix to prune; random control
