@@ -3,6 +3,10 @@
 
 //#include "arve/config.h" // Need CLHEP_MIN_MAX_DEFINED
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "geometry/Cone.h"
 
 #include "geometry/Conic.h"

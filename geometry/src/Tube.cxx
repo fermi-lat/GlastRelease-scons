@@ -2,6 +2,10 @@
 //
 
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "geometry/Tube.h"
 
 #include "geometry/Cylinder.h"
