@@ -184,7 +184,8 @@ class SiStripList {
  public:
     ///
     static const int sepSentinel=100000;
-    void getToT(int* ToT, const int sep=sepSentinel) const;
+    void getToT(int* ToT, const int tower, const int layer, const int view,
+        const ITkrToTSvc* pToTSvc, const int sep=sepSentinel) const;
 
     /**
      * noise member functions.  The parameters denote:
