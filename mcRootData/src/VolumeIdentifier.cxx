@@ -7,13 +7,14 @@ ClassImp(VolumeIdentifier)
 //      $Header$
 //
 // Description:
-//      The class VolumeIdentifier encapsulates volume identifiers defined in the xml
-//      file describing the detector geometry. It represent the identifier through
-//      a 64 integer to enable an efficient sorting of objects which use this identifier.
-//      Every single identifier which constitute the volume identifier is code into a 
-//      binary string of 6 bits and these bit strings are packed into a 64 bit integer.
-//      So, every single id can be an integer beteween 0 and 63 and each volume identifier
-//      can be built by a maximum number of 10 ids.  
+//      The class VolumeIdentifier encapsulates volume identifiers defined in
+//      the xml file describing the detector geometry. It represents the 
+//      identifier through a 64 integer to enable an efficient sorting of 
+//      objects which use this identifier.
+//      Every single identifier which constitute the volume identifier is code
+//      into a binary string of 6 bits and these bit strings are packed into a
+//      64 bit integer.  So, every single id can be an integer beteween 0 and 
+//      63 and each volume identifier can be built by a maximum number of 10 ids.  
 //
 
 
@@ -24,7 +25,10 @@ ClassImp(VolumeIdentifier)
 #endif
 
 
-VolumeIdentifier::VolumeIdentifier():  m_bits0to31(0), m_bits32to63(0), m_size(0){}
+VolumeIdentifier::VolumeIdentifier() :  
+m_bits0to31(0), m_bits32to63(0), m_size(0)
+{
+}
 
 void VolumeIdentifier::initialize(UInt_t bits0to31, UInt_t bits32to63, UInt_t size)
 {
@@ -33,10 +37,10 @@ void VolumeIdentifier::initialize(UInt_t bits0to31, UInt_t bits32to63, UInt_t si
     m_size = size;
 }
 
-// Return the equivalent string of the volume identifier, that is the single
-// ids separated by a '/' character
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
+    // Purpose and Method:  Return the equivalent string of the volume 
+    //    identifier, that is the single ids separated by a '/' character
 #ifndef WIN32    
     std::strstream s;
 #else
@@ -46,7 +50,8 @@ std::string VolumeIdentifier::name(const char* delimiter) const
     UInt_t bufIds = 0;
     
     static UInt_t mask_bits0to31 = 0xfc000000;
-    // this is a 64 bit mask with the 6 bits (positions 54-59) set to 1 and the others to 0
+    // this is a 64 bit mask with the 6 bits (positions 54-59) set to 1 and the
+    // others to 0
     static UInt_t mask_bits32to63 = 0x0fc00000;
     
     UInt_t copy_bits0to31 = m_bits0to31;

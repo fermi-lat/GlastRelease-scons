@@ -3,31 +3,34 @@
 ClassImp(McIntegratingHit)
 
 
-McIntegratingHit::McIntegratingHit()
+McIntegratingHit::McIntegratingHit() :
+m_packedFlags(0), m_totalEnergy(0.0)
 {
-    
+    Clear();
 }
 
 McIntegratingHit::~McIntegratingHit() {
     
-    Clear();
-    
+    Clear();    
 }
 
 
 void McIntegratingHit::initialize(VolumeIdentifier id, Double_t e,
                             const TVector3 &moment1, const TVector3 &moment2) {
     
-    m_volumeId = id;
+    m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
     m_totalEnergy = e;
-    m_moment1Seed = moment1;
-    m_moment2Seed = moment2;
+    m_moment1Seed.SetXYZ(moment1.X(), moment1.Y(), moment1.Z());
+    m_moment2Seed.SetXYZ(moment2.X(), moment2.Y(), moment2.Z());
 }
 
 
 void McIntegratingHit::Clear(Option_t *option)
 {
-    clearEnergyItems();
+    m_energyItem.clear();
+    m_totalEnergy = 0.0;
+    m_moment1Seed = TVector3(0., 0., 0.);
+    m_moment2Seed = TVector3(0., 0., 0.);
 }
 
 const McIntegratingHit::energyDepositMap& McIntegratingHit::getItemizedEnergy() const
@@ -36,55 +39,25 @@ const McIntegratingHit::energyDepositMap& McIntegratingHit::getItemizedEnergy() 
 }
 
 
-void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t, const TVector3& position)
+void McIntegratingHit::addEnergyItem(const Double_t& energy, McParticle* t)
 {
-    m_energyItem[t] += energy;
-    
-    TVector3 position2 = TVector3(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
-    m_totalEnergy += energy;
-    m_moment1Seed += energy * position;
-    m_moment2Seed += energy * position2;
-}
-
-void McIntegratingHit::setEnergyItems( const energyDepositMap& value )
-{
-    m_energyItem = value;
-    m_totalEnergy = 0.;
-    m_moment1Seed = TVector3(0., 0., 0.);
-    m_moment2Seed = TVector3(0., 0., 0.);
-    typedef energyDepositMap::const_iterator CI;
-    for (CI it = m_energyItem.begin(); it != m_energyItem.end(); it++){
-        const Double_t&     energy    = it->second;
-        const TVector3& position  = it->first->getFinalPosition();
-        TVector3 position2 = TVector3(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
-        m_totalEnergy += energy;
-        m_moment1Seed += energy * position;
-        m_moment2Seed += energy * position2;
-    }
+    m_energyItem[t] += energy;    
 }
 
 
-/// Remove all energyInfos
-void McIntegratingHit::clearEnergyItems()
-{
-    m_energyItem.clear();
-    m_totalEnergy = 0.;
-    m_moment1Seed = TVector3(0., 0., 0.);
-    m_moment2Seed = TVector3(0., 0., 0.);
-}
 
-
-/// Retrieve the energy-weighted first moments of the position
 const TVector3 McIntegratingHit::getMoment1 () const
 {
+    // Purpose and Method:  Retrieve the energy-weighted first moments of the
+    //    position.
     return m_moment1Seed * (1./m_totalEnergy);
 }
 
 
-/// Retrieve the energy-weighted second moments of the position
 const TVector3 McIntegratingHit::getMoment2 () const
 {
+    // Purpose and Method:  Retrieve the energy-weighted second moments of the
+    //    position
     return m_moment2Seed * (1./m_totalEnergy);
 }
-
 

@@ -50,7 +50,7 @@ McEvent::~McEvent() {
     
 }
 
-void McEvent::initialize(Int_t nEvent, Int_t nRun) {
+void McEvent::initialize(UInt_t nEvent, UInt_t nRun) {
     m_eventId = nEvent;
     m_runId = nRun;
     return;
@@ -73,7 +73,7 @@ void McEvent::addMcParticle(McParticle *part) {
     return;
 }
 
-McParticle* McEvent::getMcParticle(Int_t index) const {
+McParticle* McEvent::getMcParticle(UInt_t index) const {
     return ((McParticle*)m_particleCol->At(index));
 }
 
@@ -82,7 +82,7 @@ void McEvent::addMcPositionHit(McPositionHit *hit) {
     return;
 }
 
-McPositionHit* McEvent::getMcPositionHit(Int_t index) const {
+McPositionHit* McEvent::getMcPositionHit(UInt_t index) const {
 
     return ((McPositionHit*)m_positionHitCol->At(index));
 }
@@ -92,6 +92,6 @@ void McEvent::addMcIntegratingHit(McIntegratingHit *hit) {
     return;
 }
 
-McIntegratingHit* McEvent::getMcIntegratingHit(Int_t index) const {
+McIntegratingHit* McEvent::getMcIntegratingHit(UInt_t index) const {
     return ((McIntegratingHit*)m_integratingHitCol->At(index));
 }

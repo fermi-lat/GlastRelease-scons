@@ -2,8 +2,9 @@
 
 ClassImp(McPositionHit)
 
-McPositionHit::McPositionHit()
-: m_depositedEnergy(0.), m_particleEnergy(0.), m_timeOfFlight(0.), m_statusFlags(0)
+McPositionHit::McPositionHit() :
+m_statusFlags(0), m_depositedEnergy(0.), 
+m_particleEnergy(0.), m_timeOfFlight(0.)
 {
 }
 
@@ -18,6 +19,9 @@ void McPositionHit::Clear(Option_t *option)
     m_particleEnergy = 0;
     m_timeOfFlight = 0.;
     m_statusFlags = 0;
+    m_entry = TVector3(0., 0., 0.);
+    m_exit = TVector3(0., 0., 0.);
+
 }
 
 
@@ -36,9 +40,9 @@ void McPositionHit::initialize(Double_t edep, VolumeIdentifier id,
                          McParticle *origin, Double_t pE, Double_t tof, UInt_t flags)
 {
     m_depositedEnergy = edep;
-    m_volumeId = id;
-    m_entry = entry;
-    m_exit = exit;
+    m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
+    m_entry.SetXYZ(entry.X(), entry.Y(), entry.Z());
+    m_exit.SetXYZ(exit.X(), exit.Y(), exit.Z());
     m_mcParticle = mc;
     m_originMcParticle = origin;
     m_particleEnergy = pE;
