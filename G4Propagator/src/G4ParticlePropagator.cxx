@@ -133,7 +133,7 @@ Point G4ParticlePropagator::position() const
 
   if (getNumberSteps() > 0)
     {
-      G4ThreeVector  stopPoint = getLastStep()->GetCoords();
+      G4ThreeVector  stopPoint = getLastStep().GetCoords();
 
       final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
     }
@@ -158,9 +158,10 @@ double G4ParticlePropagator::arcLength() const
   // add
   while(stepPtr < getStepEnd())
     {
-      TransportStepInfo* curStep = *stepPtr++;
+//      TransportStepInfo* curStep = *stepPtr++;
 
-      totArcLen += curStep->GetArcLen();
+//      totArcLen += curStep->GetArcLen();
+      totArcLen += (*stepPtr++).GetArcLen();
     }
 
   return totArcLen;
@@ -195,15 +196,15 @@ double G4ParticlePropagator::radLength(double arcLen) const
 
   while(stepPtr < getStepEnd())
     {
-      TransportStepInfo* curStep = *stepPtr++;
+      TransportStepInfo  curStep = *stepPtr++;
 
-      G4VPhysicalVolume* pCurVolume = curStep->GetVolume();
+      G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
       G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
 
       double matRadLen = pMaterial->GetRadlen();
       double x0s       = 0.;
-      double s_dist    = curStep->GetArcLen();
+      double s_dist    = curStep.GetArcLen();
 
       if (matRadLen > 0.) x0s = s_dist / matRadLen;
 
@@ -276,7 +277,7 @@ bool G4ParticlePropagator::isXPlane() const
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  G4VPhysicalVolume* pCurVolume = getLastStep()->GetVolume();
+  G4VPhysicalVolume* pCurVolume = getLastStep().GetVolume();
 
   idents::VolumeIdentifier id = constructId(pCurVolume);
 
@@ -313,14 +314,14 @@ HepMatrix G4ParticlePropagator::mScat_Covr(double momentum, double arcLen) const
 
   while(stepPtr < getStepEnd())
     {
-      TransportStepInfo* curStep = *stepPtr++;
+      TransportStepInfo  curStep = *stepPtr++;
 
-      G4VPhysicalVolume* pCurVolume = curStep->GetVolume();
+      G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
       G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
       float radLengths = pMaterial->GetRadlen();
       float x0s        = 10000000.;
-      float s_dist     = curStep->GetArcLen();
+      float s_dist     = curStep.GetArcLen();
       float s_distp    = s_dist;
 
       if (radLengths > 0.) x0s = s_dist / radLengths;

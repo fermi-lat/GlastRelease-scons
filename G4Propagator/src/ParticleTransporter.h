@@ -43,24 +43,22 @@ public:
     * distance step @param start - the initial starting point @param dir - the
     * initial direction @param step - the initial step length to take
     */
-    void  setInitStep(const Point& start, const Vector& dir, 
-                      const double step);
+    void  setInitStep(const Point& start, const Vector& dir); 
 
     /// Performs the actual stepping
-    bool               transport();
+    bool               transport(const double step = -1.);
 
     /// Methods for retrieving information after tracking
     int                getNumberSteps()   const {return stepInfo.size();}
     ConstStepPtr       getStepStart()     const {return stepInfo.begin();}
     ConstStepPtr       getStepEnd()       const {return stepInfo.end();}
 
-    TransportStepInfo* getLastStep()      const {return stepInfo.back();}
+    TransportStepInfo  getLastStep()      const {return stepInfo.back();}
     //for now
-    TransportStepInfo* getPrevBoundary()  const {return stepInfo.back();} 
+    TransportStepInfo  getPrevBoundary()  const {return stepInfo.back();} 
 
     Point              getStartPoint()    const {return startPoint;}
     Vector             getStartDir()      const {return startDir;}
-    double             getMaxArcLen()     const {return maxArcLen;}
     double             insideActiveArea() const;
     double             insideActiveLocalX() const;
     double             insideActiveLocalY() const;
@@ -73,13 +71,13 @@ private:
     //Make sure list is cleared when tracking started
     void               clearStepInfo();
     //This function will step a given arc length
-    bool               StepAnArcLength();
+    bool               StepAnArcLength(const double arcLen);
     //This function will step to the next "sensitive" plane
     bool               StepToNextPlane();
     //Use this to in printStepInfo to print volume list name
     G4String           printVolName(const G4VPhysicalVolume* pCurVolume) const;
     //This is used to find an "SiLadders" volume in the nested heirarchy
-    G4VPhysicalVolume* findSiLadders(const G4TouchableHistory* pHistory) const;
+    G4VPhysicalVolume* findSiLadders(G4VPhysicalVolume* pCurVolume) const;
     //This used to find the distance to nearest edge in a given direction
     double             distanceToEdge(const Vector& dir) const;
     //Gives the distance to the closest edge in a given and opposite direction
@@ -93,8 +91,6 @@ private:
     //Initial start point, direction and desired step size
     Point      startPoint;
     Vector     startDir;
-    double     maxArcLen;
-    double     minimumStep;
 	
 	/// Here we maintain a pointer to the G4 Transportation Manager
 	const G4TransportationManager* m_TransportationManager;

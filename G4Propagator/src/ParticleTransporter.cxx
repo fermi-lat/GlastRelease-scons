@@ -32,13 +32,11 @@ ParticleTransporter::~ParticleTransporter()
   return;
 }
 
-void ParticleTransporter::setInitStep(const Point& start, 
-                                      const Vector& dir, const double step)
+void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
 {
-  // Purpose and Method: Initializes to the starting point and direction and
-  //                     takes initial step
-  // Inputs: The starting point and direction and the initial step length to
-  //         take
+  // Purpose and Method: Initializes to the starting point and direction. This
+  //                     will serve to set the initial volume at the start point
+  // Inputs: The starting point and direction 
   // Outputs:  None
   // Dependencies: None
   // Restrictions and Caveats: None
@@ -49,33 +47,20 @@ void ParticleTransporter::setInitStep(const Point& start,
   //Initialize our starting condtions
   startPoint  = start;
   startDir    = dir;
-  maxArcLen   = step;
 
   //Set the start point at the beginning of our list of volumes
-  G4Navigator*          navigator = m_TransportationManager->GetNavigatorForTracking();
-  G4TouchableHistory    touchHist;
-  
-  navigator->LocateGlobalPointAndUpdateTouchable(startPoint, &touchHist, true);
+  G4Navigator*       navigator = m_TransportationManager->GetNavigatorForTracking();
+  G4VPhysicalVolume* pVolume   = navigator->LocateGlobalPointAndSetup(startPoint, 0, false);
 
   //Record our starting point
-  stepInfo.push_back(new TransportStepInfo(startPoint, 0., touchHist.GetVolume()));
-
-  //If step >= 0 then stepping through arc length (and doing it now)
-  if (step > 0.) transport();
-
-  //Set the minimum step
-  double fudge = 0.00001; // 0.01 um
-  minimumStep = minStepSize(start, dir) + fudge;
-
-  //Leave in a state to step to the next sensitive plane
-  maxArcLen   = -1.;
+  stepInfo.push_back(TransportStepInfo(startPoint, 0., pVolume));
 
   return;
 }
 
 //This method does the track either to the next sensitive plane or to some arc
 //length
-bool ParticleTransporter::transport()
+bool ParticleTransporter::transport(const double step)
 {
   // Purpose and Method: Uses Geant4 to do the transport of the particle from
   //                     initial to final points
@@ -84,8 +69,8 @@ bool ParticleTransporter::transport()
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  if (maxArcLen >= 0.) return StepAnArcLength();
-  else                 return StepToNextPlane();
+  if (step >= 0.) return StepAnArcLength(step);
+  else            return StepToNextPlane();
 }
 
 
@@ -100,101 +85,90 @@ bool ParticleTransporter::StepToNextPlane()
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  G4Navigator*  navigator   = m_TransportationManager->GetNavigatorForTracking();
-  bool          success     = false;
-  G4ThreeVector curPoint    = startPoint;
-  G4ThreeVector curDir      = startDir;
-  G4double      arcLen      = 0.;
+  G4Navigator*  navigator      = m_TransportationManager->GetNavigatorForTracking();
+  G4bool        RelativeSearch = false;
+  bool          success        = false;
+  G4ThreeVector curPoint       = startPoint;
+  G4ThreeVector curDir         = startDir;
+  G4double      arcLen         = 0.;
 
-  G4VPhysicalVolume* pCurVolume;
-  G4TouchableHistory newTouch;
+  //Set the minimum step
+  double fudge       = 0.00001; // 0.01 um
+  double minimumStep = minStepSize(startPoint, startDir) + fudge;
 
   //If we have already taken a step, start at the last point
-  if (stepInfo.size() > 0) curPoint = stepInfo.back()->GetCoords();
+  if (stepInfo.size() > 0) curPoint = stepInfo.back().GetCoords();
 
-  //If maxArcLen is not less than zero then we are done
-  if (maxArcLen < 0.)
-  {
-    bool trackStatus = true;
+  bool trackStatus = true;
 
-    //Continue stepping until the track is no longer "alive"
-    while(trackStatus)
+  //Continue stepping until the track is no longer "alive"
+  while(trackStatus)
+    {
+      //Use the G4 navigator to locate the current point, then compute the distance
+      //to the current volume boundary
+      double maxStep = 1000.;
+      double safeStep;
+
+      G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
+      double             trackLen   = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+
+      //If we are right on the boundary then jump over and recalculate
+      if (trackLen == 0.)
       {
-        //Use the G4 navigator to locate the current point, then compute the distance
-        //to the current volume boundary
-        double maxStep = 1000.;
-        double safeStep;
-        navigator->LocateGlobalPointAndUpdateTouchable(curPoint, &newTouch, true);
-        double trackLen = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+        double        fudge      = 0.01; // 10 um over the edge
+        G4ThreeVector fudgePoint = curPoint + fudge*curDir;
 
-        //If we are right on the boundary then jump over and recalculate
-        if (trackLen == 0.)
-        {
-          double        fudge      = 0.01; // 10 um over the edge
-          G4ThreeVector fudgePoint = curPoint + fudge*curDir;
+        pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+        trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+      }
 
-          navigator->LocateGlobalPointAndUpdateTouchable(fudgePoint, &newTouch, true);
-          trackLen = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
-        }
+      //If infinite trackLen then we have stepped outside of GLAST
+      if (trackLen > 10000000.) 
+      {
+        break;
+      }
 
-        //If infinite trackLen then we have stepped outside of GLAST
-        if (trackLen > 10000000.) 
-        {
-          break;
-        }
+      //Which volume are we currently in?
+      G4VPhysicalVolume* pSiVolume  = findSiLadders(pCurVolume);
 
-        //Which volume are we currently in?
-        G4VPhysicalVolume* pNewVolume = newTouch.GetVolume();
-        G4VPhysicalVolume* pSiVolume  = findSiLadders(&newTouch);
+      // If we found the SiLadders volume, compute the distance to leave
+      if (pSiVolume)
+      {
+          // this transforms it to local coordinates
+          G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
+          G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
 
-        // If we found the SiLadders volume, compute the distance to leave
-        if (pSiVolume)
-        {
-            // this transforms it to local coordinates
-            HepTransform3D global(*(newTouch.GetRotation()), 
-                                    newTouch.GetTranslation());
+          trackLen   = pSiVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+          pCurVolume = pSiVolume;
+      }
 
-            HepTransform3D local = global.inverse();
+      //Where did we end up?
+      G4ThreeVector newPoint = curPoint + trackLen * curDir;
 
-            //G4ThreeVector  startPos = track->GetPosition() - 
-            //touchable->GetTranslation();
-            G4ThreeVector  trackPos = curPoint;
-            G4ThreeVector  trackDir = curDir;
-            trackPos   = local * (HepPoint3D)trackPos;
-            trackDir   = local * (HepVector3D)trackDir;
-            trackLen   = pSiVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
-            pNewVolume = pSiVolume;
-        }
+      stepInfo.push_back(TransportStepInfo(newPoint, trackLen, pCurVolume));
 
-        //Where did we end up?
-        G4ThreeVector newPoint = curPoint + trackLen * curDir;
-
-        stepInfo.push_back(new TransportStepInfo(newPoint, trackLen, pNewVolume));
-
-        arcLen     += trackLen;
-        curPoint    = newPoint;
-        pCurVolume  = pNewVolume;
+      arcLen     += trackLen;
+      curPoint    = newPoint;
         
-        //Stop if we have found a new layer
-        if (arcLen > minimumStep && pCurVolume->GetName().contains("SiLadders"))
-        {
-            success = true;
-            break;
-        }
-      }
-
-    //If ending in a sensitive layer then stop in the middle of that volume
-    if (success)
+      //Stop if we have found a new layer
+      if (arcLen > minimumStep && pCurVolume->GetName().contains("SiLadders"))
       {
-        G4ThreeVector hitPos = stepInfo.back()->GetCoords();
-        G4double      corLen = stepInfo.back()->GetArcLen() * 0.5;
-
-        hitPos -= corLen * startDir;
-
-        stepInfo.back()->SetCoords(hitPos);
-        stepInfo.back()->SetArcLen(corLen);
+          success = true;
+          break;
       }
-  }
+    }
+
+  //If ending in a sensitive layer then stop in the middle of that volume
+  if (success)
+    {
+      G4ThreeVector hitPos = stepInfo.back().GetCoords();
+      G4double      corLen = stepInfo.back().GetArcLen() * 0.5;
+
+      hitPos -= corLen * startDir;
+
+      stepInfo.back().SetCoords(hitPos);
+      stepInfo.back().SetArcLen(corLen);
+    }
 
   //Stepping complete
   return success;
@@ -203,7 +177,7 @@ bool ParticleTransporter::StepToNextPlane()
 
 //This method does the track either to the next sensitive plane or to some arc
 //length
-bool ParticleTransporter::StepAnArcLength()
+bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
 {
   // Purpose and Method: Uses Geant4 to do the transport of the particle from
   //                     initial to final points
@@ -218,35 +192,35 @@ bool ParticleTransporter::StepAnArcLength()
   G4ThreeVector curDir      = startDir;
   G4double      arcLen      = 0.;
 
-  G4VPhysicalVolume* pCurVolume;
-  G4TouchableHistory newTouch;
-
   //If we have already taken a step, start at the last point
-  if (stepInfo.size() > 0) curPoint = stepInfo.back()->GetCoords();
+  if (stepInfo.size() > 0) curPoint = stepInfo.back().GetCoords();
 
   //If maxArcLen is zero then we are done, otherwise we need to track the particle
   if (maxArcLen > 0.)
   {
-    bool trackStatus = true;
+    bool          trackStatus = true;
+    double        fudge       = 0.0;
+    G4ThreeVector fudgePoint  = curPoint;
 
     //Continue stepping until the track is no longer "alive"
     while(trackStatus)
       {
-        //Use the G4 navigator to locate the current point, then compute the distance
-        //to the volume boundary
         double maxStep = 1000.;
         double safeStep;
-        navigator->LocateGlobalPointAndUpdateTouchable(curPoint, &newTouch, true);
-        double trackLen = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+
+        //Use the G4 navigator to locate the current point, then compute the distance
+        //to the volume boundary
+        G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+        double             trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
 
         //If we are right on the boundary then jump over and recalculate
         if (trackLen == 0.)
         {
-          double        fudge      = 0.01; // 10 um over the edge
-          G4ThreeVector fudgePoint = curPoint + fudge*curDir;
+          fudge       = 0.01; // 10 um
+          fudgePoint += fudge*curDir;
 
-          navigator->LocateGlobalPointAndUpdateTouchable(fudgePoint, &newTouch, true);
-          trackLen = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+          pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+          trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
         }
 
         //If infinite trackLen then we have stepped outside of GLAST
@@ -255,7 +229,7 @@ bool ParticleTransporter::StepAnArcLength()
         //Update arc length, point and volume
         arcLen     += trackLen;
         curPoint   += trackLen * curDir;
-        pCurVolume  = newTouch.GetVolume();
+        fudgePoint  = curPoint + fudge * curDir;
         
         //Stop condition is that we have reached or overrun our arclength
         if (arcLen >= maxArcLen)
@@ -274,7 +248,7 @@ bool ParticleTransporter::StepAnArcLength()
         }
 
         //Store current step info
-        stepInfo.push_back(new TransportStepInfo(curPoint, trackLen, pCurVolume));
+        stepInfo.push_back(TransportStepInfo(curPoint, trackLen, pCurVolume));
       }
   }
 
@@ -282,30 +256,17 @@ bool ParticleTransporter::StepAnArcLength()
   return success;
 }
 
-G4VPhysicalVolume* ParticleTransporter::findSiLadders(const G4TouchableHistory* pHistory) const
+G4VPhysicalVolume* ParticleTransporter::findSiLadders(G4VPhysicalVolume* pVolume) const
 {
-    G4VPhysicalVolume* volume     = 0;
-    int                touchDepth = pHistory->GetHistoryDepth();
+    G4VPhysicalVolume* volume = pVolume;
 
-
-    //Ok, ugliness to actually be stepping in an SiLadders volume
-    //Only going to be in something like this if we have a deep enough history
-    if (touchDepth > 5)
+    while(volume)
     {
-        G4String SiLadders("SiLadders");
+        G4String volName = volume->GetName();
 
-        // Search for an enclosing SiLadders volume, could be 4 up from active wafer
-        for(int idx = 0; idx < 5; idx++)
-        {
-            G4VPhysicalVolume* testVol = pHistory->GetVolume(idx);
-            G4String           volName = testVol->GetName();
+        if (volName.contains("SiLadders"))break;
 
-            if (volName.contains("SiLadders"))
-            {
-                volume = testVol;
-                break;
-            }
-        }
+        volume = volume->GetMother();
     }
 
     return volume;
@@ -313,45 +274,49 @@ G4VPhysicalVolume* ParticleTransporter::findSiLadders(const G4TouchableHistory* 
 
 double ParticleTransporter::minStepSize(const Point& start, const Vector& dir) const
 {
-  // Purpose and Method: Determine a minimum step size to take. If starting in a
-  // sensitive volume and wanting to stop at the next sensitive volume, then we
-  // need to declare a minimum step size which will take us out of the current
-  // volume before stopping
-  // Inputs:  A pointer to the Geant4 stepping manager
-  // Outputs:  a double giving the minimum step length to take
+  // Purpose and Method: This function determines the distance from the current point
+  //                     (given by start), in the direction dir, to exit an SiLadders
+  //                     volume, assuming that the current volume is contained within
+  //                     an SiLadders volume. 
+  //                     Active silicon is in a volume called SiWaferActive which are
+  //                     ultimately contained within volumes whose name contains the
+  //                     substring SiLadders. So, this routine will give the distance,
+  //                     along direction dir, to step out of a current active volume.
+  // Inputs:  The current point and direction
+  // Outputs:  a double giving the distance to exit the current volume in the 
+  //           direction given by dir
   // Dependencies: None
   // Restrictions and Caveats: None
 
-  G4String waferNest("SiWaferNest");
   double   minStep = 0.;
 
-  G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
-  G4TouchableHistory touchable;
-  
-  navigator->LocateGlobalPointAndUpdateTouchable(start, &touchable, true);
-  G4VPhysicalVolume*    pCurVolume = findSiLadders(&touchable);
+  G4Navigator*         navigator  = m_TransportationManager->GetNavigatorForTracking();
+  G4VPhysicalVolume*   pCurVolume = navigator->LocateGlobalPointAndSetup(start, 0, true, true);
+  G4TouchableHistory*  pTouchHis  = navigator->CreateTouchableHistory();
 
-  //If we are already in an "SiLadders" layer then calculate the minimum step to
-  //get out of this volume and search for the next
-  if (pCurVolume)
-    {
-      // this transforms it to local coordinates
-      HepTransform3D global(*(touchable.GetRotation()), 
-                              touchable.GetTranslation());
+  const G4NavigationHistory* pNavHis    = pTouchHis->GetHistory();
 
-      HepTransform3D local = global.inverse();
+  const G4ThreeVector testPoint = navigator->GetCurrentLocalCoordinate();
 
-      //G4ThreeVector  startPos = track->GetPosition() - 
-      //touchable->GetTranslation();
-      G4ThreeVector  trackPos = start;
-      G4ThreeVector  trackDir = dir;
-      trackPos = local * (HepPoint3D)trackPos;
-      trackDir = local * (HepVector3D)trackDir;
+  for (int depth = pNavHis->GetDepth(); depth > 0; depth--)
+  {
+      pCurVolume = pNavHis->GetVolume(depth);
 
-      //This calculates the distance along the direction of the track to the 
-      //boundary of the current volume
-      minStep  = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+      if (pCurVolume->GetName().contains("SiLadders"))
+      {
+          const G4AffineTransform& transform = pNavHis->GetTransform(depth);
+          G4ThreeVector            trackPos = transform.TransformPoint(start);
+          G4ThreeVector            trackDir = transform.IsRotated() 
+                                            ? transform.TransformAxis(dir) : dir ;
+
+          minStep = pCurVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+
+          break;
+      }
   }
+
+  // Clean up the temporary history we made
+  delete pTouchHis;
 
   return minStep;
 }
@@ -459,31 +424,19 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
   if (stepInfo.size() > 0)
   {
     G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
-    G4ThreeVector stopPoint = stepInfo.back()->GetCoords();
+    G4ThreeVector stopPoint = (stepInfo.back()).GetCoords();
     Point         curPoint  = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
     G4double      arcLen    = 0.;
     Vector        curDir    = dir;
 
-    G4VPhysicalVolume* pCurVolume;
-    G4TouchableHistory newTouch;
-
-    navigator->LocateGlobalPointAndUpdateTouchable(curPoint, &newTouch, true);
-
-    pCurVolume = newTouch.GetVolume();
+    G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
 
     //If we are already in a sensitive volume then simple calculation for distance
     if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
     {
       // this transforms it to local coordinates
-      HepTransform3D global(*(newTouch.GetRotation()), 
-                              newTouch.GetTranslation());
-
-      HepTransform3D local = global.inverse();
-
-      G4ThreeVector  trackPos = stopPoint;
-      G4ThreeVector  trackDir = curDir;
-      trackPos = local * (HepPoint3D)trackPos;
-      trackDir = local * (HepVector3D)trackDir;
+      G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
+      G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
 
       //This calculates the distance along the direction of the track to the 
       //boundary of the current volume
@@ -492,26 +445,29 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
     //Otherwise, we need to search for the nearest active volume
     else
     {
-        double arcLen  = 0.;
-        double maxStep = minStepSize(curPoint, curDir);
-        double safeStep;
-        bool   trackStatus = true;
+        G4ThreeVector fudgePoint  = curPoint;
+        double        arcLen      = 0.;
+        double        maxStep     = minStepSize(curPoint, curDir);
+        double        fudge       = 0.;
+        bool          trackStatus = maxStep > 0.;
 
         while(trackStatus)
         {
+            double safeStep;
+
             //Use the G4 navigator to locate the current point, then compute the distance
             //to the current volume boundary
-            navigator->LocateGlobalPointAndUpdateTouchable(curPoint, &newTouch, true);
-            double trackLen = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+            G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+            double             trackLen   = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
 
             //If we are right on the boundary then jump over and recalculate
             if (trackLen == 0.)
             {
-                double        fudge      = 0.01; // 10 um over the edge
-                G4ThreeVector fudgePoint = curPoint + fudge*curDir;
+                fudge       = 0.01;           // 10 um
+                fudgePoint += fudge * curDir;
 
-                navigator->LocateGlobalPointAndUpdateTouchable(fudgePoint, &newTouch, true);
-                trackLen = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+                pCurVolume  = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, true);
+                trackLen    = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
             }
 
             //If we have reached the max step then we're not finding anything
@@ -521,18 +477,16 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                 break;
             }
 
-            //Which volume are we currently in?
-            G4VPhysicalVolume* pNewVolume = newTouch.GetVolume();
-
             // If we found the SiLadders volume, compute the distance to leave
-            if (pNewVolume->GetLogicalVolume()->GetSensitiveDetector())
+            if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
             {
                 break;
             }
 
             //Update distance stepped
-            arcLen   += trackLen;
-            curPoint  = curPoint + trackLen * curDir;
+            arcLen     += trackLen;
+            curPoint    = curPoint + trackLen * curDir;
+            fudgePoint  = curPoint + fudge * curDir;
         }
 
         distToActArea = -arcLen;
@@ -555,7 +509,7 @@ void ParticleTransporter::clearStepInfo()
 
   StepPtr stepPtr = stepInfo.begin();
 
-  while(stepPtr < stepInfo.end()) delete *stepPtr++;
+//  while(stepPtr < stepInfo.end()) delete *stepPtr++;
 
   stepInfo.clear();
 
@@ -579,13 +533,13 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
 
   while(iter < getStepEnd())
   {
-      TransportStepInfo* stepInfo   = *iter++;
-      G4VPhysicalVolume* pCurVolume = stepInfo->GetVolume();
-      G4ThreeVector      position   = stepInfo->GetCoords();
+      TransportStepInfo  stepInfo   = *iter++;
+      G4VPhysicalVolume* pCurVolume = stepInfo.GetVolume();
+      G4ThreeVector      position   = stepInfo.GetCoords();
       G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
       double             matRadLen  = pMaterial->GetRadlen();
       double             x0s        = 0.;
-      double             stepDist   = stepInfo->GetArcLen();
+      double             stepDist   = stepInfo.GetArcLen();
 
       if (matRadLen > 0.) x0s = stepDist / matRadLen;
 

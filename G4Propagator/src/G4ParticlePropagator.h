@@ -41,7 +41,7 @@ public:
     virtual void      setStepStart(const Point& start, 
                                    const Vector& dir, 
                                    const double step) 
-      {setInitStep(start,dir,step);}
+      {setInitStep(start,dir);transport(step);}
     virtual bool      trackToNextPlane();
     virtual bool      trackToNextSamePlane();
     virtual int       numberPlanesCrossed() const;

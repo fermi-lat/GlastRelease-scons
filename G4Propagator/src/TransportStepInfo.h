@@ -24,9 +24,9 @@ public:
       position(coords),arcLen(step),pCurVolume(pVolume) {};
    ~TransportStepInfo() {};
 
-    G4ThreeVector       GetCoords() {return position;}
-    G4double            GetArcLen() {return arcLen;}
-    G4VPhysicalVolume*  GetVolume() {return pCurVolume;}
+    G4ThreeVector       GetCoords() const {return position;}
+    G4double            GetArcLen() const {return arcLen;}
+    G4VPhysicalVolume*  GetVolume() const {return pCurVolume;}
 
     void SetCoords(const G4ThreeVector& coords) {position   = coords;}
     void SetArcLen(const G4double newArcLen)    {arcLen     = newArcLen;}
@@ -38,9 +38,9 @@ private:
     G4VPhysicalVolume* pCurVolume;
 };
 
-typedef std::vector<TransportStepInfo*>                 StepVector;
-typedef std::vector<TransportStepInfo*>::iterator       StepPtr;
-typedef std::vector<TransportStepInfo*>::const_iterator ConstStepPtr;
+typedef std::vector<TransportStepInfo>                 StepVector;
+typedef std::vector<TransportStepInfo>::iterator       StepPtr;
+typedef std::vector<TransportStepInfo>::const_iterator ConstStepPtr;
 
 #endif
 
