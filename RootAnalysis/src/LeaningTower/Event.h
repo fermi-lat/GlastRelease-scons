@@ -44,6 +44,8 @@ class Event {
     TGraph GetTGraphClusters(TString view);
     TGraph GetTGraphClusters(int view);
 
+    UInt_t GetTkr3RowBits() { return Tkr3RowBits;}
+
     // Recon
 
     Recon* GetRecon() {
@@ -63,6 +65,8 @@ class Event {
     TFile* myFile;
     TList*  myGeometry;
     Recon* myRecon;
+
+    UInt_t Tkr3RowBits;
   
     // last line of class def
     ClassDef(Event, 1)

@@ -41,7 +41,7 @@ void Recon::TkrAlignmentSvc(const TList *myGeometry) {
   
     for ( int i=0; i<TkrNumClus; ++i ) {
         Layer* plane = (Layer*)myGeometry->FindObject(
-                        GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
+		          GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
         // translation
         TVector3 v(TkrClusX[i]+plane->GetX(), TkrClusY[i]+plane->GetY(),
                    plane->GetZ());
@@ -144,8 +144,11 @@ TGraph Recon::GetTrk1ClustersGraph(const TString view, const int notLayer)const{
 
 TGraph Recon::GetTrk1ClustersGraph(const int view, const int notLayer) const {
     TGraph clusters;
+    std::cout<<"test: view and notlayer requested"<< view<<" "<<notLayer<<std::endl;
+    std::cout<<"test: GetTkrTrk1NumClus"<<GetTkrTrk1NumClus()<<std::endl;
     for ( int j=0; j<GetTkrTrk1NumClus(); ++j ) {
         int i = TkrTrk1Clusters[j];
+	std::cout<<"test: j i view layer"<<j<<" "<<i<<" "<<TkrClusView[i]<<" "<<TkrClusLayer[i]<<std::endl;
         if ( TkrClusView[i] == view && TkrClusLayer[i] != notLayer ) {
             double pos;
             switch ( view ) {

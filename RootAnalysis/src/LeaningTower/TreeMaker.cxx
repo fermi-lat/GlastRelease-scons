@@ -90,6 +90,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     Float_t TkrVtx1X, TkrVtx1Y, TkrVtx1Z;
     Float_t TkrVtx1Theta, TkrVtx1Phi, TkrVtx1ThetaXZ, TkrVtx1ThetaYZ;
 
+    UInt_t Tkr3RowBits;
+
     TreeCollection = new TObjArray();
   
     // mc branches:
@@ -141,6 +143,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         tag += NumGTCC * NumGTRC;
         tag += "]/I";
         Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
+	Header->Branch("Tkr3RowBits",&Tkr3RowBits,"Tkr3RowBits/I");
+
 #endif
         TreeCollection->Add(Header);
     }
@@ -300,9 +304,14 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 #ifdef DIAGN
             // we shouldn't do this if the digi is generated from mc
             L1T l1t = evt->getL1T();
+	    l1t.Print();
             LevelOneTrigger = l1t.getTriggerWord() & 0x1f;
             // there are more bits set, but why?
             bool tkrTrigger = l1t.getTkr3InARow();
+	    Tkr3RowBits = l1t.getTriRowBits(0);
+
+	    std::cout << "bool 3in a row: "<< tkrTrigger <<" and tower 0 3 in a row " <<Tkr3RowBits <<std::endl;
+
             // indicates that 3-in-a-row occurred in the TKR
 
             // ***************************************************************
@@ -417,17 +426,30 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             std::cout << "skipping recon tree: " << EventId << ' ' << mcEventId
                       << ' ' << digiEventId << ' ' << reconEventId << std::endl;
         else if ( rec ) {  // if we have recon data proccess it
-            ++evtCounterRecon;
+	    ++evtCounterRecon;
             reconRunNum = rec->getRunId();
             TkrRecon* tkrRec = rec->getTkrRecon();
             if ( tkrRec ) {
-                ////////////////// TKR CLUSTER: ////////////////////////////////
+                ////////////////// TKR TRACKS: ////////////////////////////////
+                const TObjArray *tkrCol = tkrRec->getTrackCol();
+                TkrNumTracks = tkrCol->GetEntries();
+		const TkrTrack* track1 = 0;
+		int flag = 1;
+		int count = 0;
+                if ( TkrNumTracks > 0 ) {
+		  track1 = (TkrTrack*)tkrCol->First();
+		  TkrTrk1NumClus = track1->GetEntries();
+		  std::cout<<"track1 with  " << TkrTrk1NumClus <<"hits"<<std::endl;
+ 		}
+		////////////////// TKR CLUSTER: ////////////////////////////////
                 const TObjArray* clusCol = tkrRec->getClusterCol();
                 TkrNumClus = clusCol->GetEntries();
-
+		std::cout<<"event with  " << TkrNumClus <<" clusters"<<std::endl;
                 TIter tkrClusIter(clusCol);
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
+		int trk1Idx = 0;
+		float eps = 0.0001;
                 while ( ( pTkrClus = (TkrCluster*)tkrClusIter.Next() ) ) {
                     // filling the arrays of TkrClus.
                     // Don't fill more than MaxNumTkrClusters!
@@ -442,32 +464,82 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                     TkrClusZ[clusIdx]     = pTkrClus->getPosition().Z();
                     // getPlane()! doesn't return the plane but the
                     // layer index (number 0 - 17)
-                    TkrClusLayer[clusIdx] = pTkrClus->getPlane();
-                    TkrClusView[clusIdx]  = pTkrClus->getView();
-                    ++clusIdx;
-                }
-                ////////////////// TKR TRACKS: ////////////////////////////////
-                const TObjArray *tkrCol = tkrRec->getTrackCol();
-                TkrNumTracks = tkrCol->GetEntries();
+                    TkrClusLayer[clusIdx] = pTkrClus->getLayer();
+                    TkrClusView[clusIdx]  = pTkrClus->getTkrId().getView();
 
-                if ( TkrNumTracks > 0 ) {
-                    const TkrKalFitTrack* track1 =
-                        (TkrKalFitTrack*)tkrCol->First();
-                    TkrTrk1NumClus = track1->getNumHits();
-                    for ( int i=0; i<TkrTrk1NumClus; ++i ) {
-                        // filling the TkrTrk1Clusters array.
-                        //Don't fill more than MaxNumTkrClusters!
-                        // Should a track have always <=36 clusters?
-                        if ( i >= MaxNumTkrClusters ) {
-                            std::cerr << "Event " << EventId
-                                      << " has a first track with "
-                                      << TkrTrk1NumClus<<" clusters"<<std::endl;
-                            break;
-                        }
-                        TkrTrk1Clusters[i] = track1->getHitPlane(i)->getIdHit();
-                    }
+		    //now map the cluster to the best track:
+		    if( TkrNumTracks > 0){
+		      TIter trk1HitsItr(track1);
+		      TkrTrackHit* pTrk1Hit = 0;
+		      int nCount =-1;
+		      while( (pTrk1Hit = (TkrTrackHit*)trk1HitsItr.Next()) )
+			{
+			  nCount++;
+			  const TkrCluster* pTrk1Clus = pTrk1Hit->getClusterPtr();
+			  if(pTrk1Clus)
+			    {
+			      //                              std::cout<<pTrk1Clus->getPosition().X() - pTkrClus->getPosition().X()<<std::endl;
+			      //                              std::cout<<pTrk1Clus->getPosition().Y() - pTkrClus->getPosition().Y()<<std::endl;
+			      //                              std::cout<<pTrk1Clus->getPosition().Z() - pTkrClus->getPosition().Z()<<std::endl;
+			      //                              std::cout<<pTrk1Clus->getLayer()        - TkrClusLayer[clusIdx]<<std::endl;
+			      //			      std::cout<<pTrk1Clus->getTkrId().getView() -  TkrClusView[clusIdx]<<std::endl;
+			      if(
+				 ( pTrk1Clus->getPosition().X()       ==  pTkrClus->getPosition().X() )
+				 && ( pTrk1Clus->getPosition().Y()    ==  pTkrClus->getPosition().Y() )
+				 && ( pTrk1Clus->getPosition().Z()    ==  pTkrClus->getPosition().Z() )
+				 && ( pTrk1Clus->getLayer()           == pTkrClus->getLayer() )
+				 && ( pTrk1Clus->getTkrId().getView() == pTkrClus->getTkrId().getView() )
+				 )
+				{
+				  TkrTrk1Clusters[trk1Idx] = clusIdx;
+				  //                                  std::cout<<"track hit "<< nCount <<" matches cluster " <<clusIdx <<std::endl;
+				  trk1Idx++;
+				  break;
+				}
+			      else
+ 				{
+				  continue;
+				  // 				  std::cout<<"cluster "<<clusIdx <<" does not match track hit " <<nCount<<std::endl;
+ 				}
+			    }
+ 			  else
+ 			    {
+			      //			      std::cout<<"Track hit "<<nCount << "is a gap"<<std::endl;
+			      if(flag==1)count++;
+			      // 			      TkrTrk1Clusters[trk1Idx] = -1;
+			      // 			      trk1Idx++;
+ 			    }
+			}
+		    }
+		    flag = 0;
+                    ++clusIdx;    
                 }
-	    
+		TkrTrk1NumClus -=count;
+                ////////////////// TKR TRACKS: ////////////////////////////////
+//                 const TObjArray *tkrCol = tkrRec->getTrackCol();
+//                 TkrNumTracks = tkrCol->GetEntries();
+
+//                 if ( TkrNumTracks > 0 ) {
+//                     const TkrTrack* track1 = (TkrTrack*)tkrCol->First();
+//                     TkrTrk1NumClus = track1->Size();
+//                     for ( int i=0; i<TkrTrk1NumClus; ++i ) {
+//                         if ( i >= MaxNumTkrClusters ) {
+//                             std::cerr << "Event " << EventId
+//                                       << " has a first track with "
+//                                       << TkrTrk1NumClus<<" clusters"<<std::endl;
+//                             break;
+//                         }
+// 			TIter trk1HitsItr(track1);
+// 			TkrTrackHit* pTrk1Hit = 0;
+// 			while( (pTrk1Hit = (TkrTrackHit*)trk1HitsIter.Next()) )
+// 			  {
+			    
+// 			  }
+// 			//                        TkrTrk1Clusters[i] = track1->getHitPlane(i)->getIdHit();
+//                     }
+//                 }
+		
+
                 ////////////////// TKR VERTEX: ////////////////////////////////
                 const TObjArray *vtxCol = tkrRec->getVertexCol();
                 TkrNumVtx = vtxCol->GetEntries();

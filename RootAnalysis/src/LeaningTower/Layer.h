@@ -42,7 +42,7 @@ class Layer : public TNamed {
     bool IsY() const { return fName(0,1) == "Y"; }
     int GetLayer() const { return atoi(fName(1,fName.Length()-1).Data()); }
     // digi counts up, recon down
-    int GetReconLayer() const { return 17 - GetLayer(); }
+    int GetReconLayer() const { return GetLayer(); }
     int GetView() const {
         if ( IsX() ) return 0;
         if ( IsY() ) return 1;
@@ -105,7 +105,8 @@ inline int GetView(const TString name) {
     return -1;
 }
 inline int GetLayer(const TString s) { return atoi(s(1,s.Length()-1).Data()); }
-inline int GetReconLayer(const TString name) { return 17 - GetLayer(name); }
+//JCT inline int GetReconLayer(const TString name) { return GetLayer(name); }
+inline int GetReconLayer(const TString name) { return GetLayer(name); }
 
 inline int GetTray(const int l, const int v) { return l + ( l + v + 1 ) % 2; }
 inline int GetTray(const TString s) { return GetTray(GetLayer(s), GetView(s)); }
@@ -116,7 +117,7 @@ inline TString GetPlaneName(const int layer, const int view) {
 }
 
 inline TString GetPlaneNameFromRecon(const int l, const int v) {
-    return GetPlaneName(17-l, v); }
+    return GetPlaneName(l, v); }
 
 /// finds the name of the other plane on the same tray
 inline TString GetTrayTwinPlaneName(const int layer, const int view) {
