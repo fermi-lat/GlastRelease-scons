@@ -374,31 +374,15 @@ Point TkrClusters::position(const int plane, TkrCluster::view v, const double st
     // Outputs:  position
     // Dependencies: None
     // Restrictions and Caveats:  None
-	
-    int iladder = strip / pTkrGeo->ladderNStrips();
-    double stripInLadder = strip - iladder*pTkrGeo->ladderNStrips();
-    
-    tkrDetGeo::axis a = (v==TkrCluster::X) ? tkrDetGeo::X : tkrDetGeo::Y;
-    
+
+
     // note the differences between layers and planes - ordering!
     int layer = pTkrGeo->ilayer(plane);
-    
-    tkrDetGeo ladder = pTkrGeo->getSiLadder(layer, a, iladder, tower);
-    
-    double Dstrip = (v==TkrCluster::X) ? 
-        ladder.position().x()-ladder.size().x() :
-	ladder.position().y()-ladder.size().y();
-    
-    Dstrip += pTkrGeo->siDeadDistance();
-    Dstrip += (stripInLadder+0.5)*pTkrGeo->siStripPitch();
-    
-    Point P = ladder.position();
-    double x = (v==TkrCluster::X) ? Dstrip : P.x();
-    double y = (v==TkrCluster::Y) ? Dstrip : P.y();
-    double z = P.z();
 	
-    P = Point(x,y,z);
-    return P;
+	HepPoint3D p = pTkrGeo->getStripPosition(tower, layer, (int) v, (int) strip);
+	Point p1(p.x(), p.y(), p.z());
+	return p1;
+	
 }
 
 bool TkrClusters::isGapBetween(const int lowStrip, const int highStrip) 

@@ -174,7 +174,7 @@ KalHit KalPlane::predicted(KalHit::TYPE typ, int &nlayers, int klayer, double &z
     double down = -1.;
     if (nsteps <0 ) down = +1.; // going up;
 
-    double arc_len = nlayers * 32.7/fabs(dir_ini.z()); //mm
+    double arc_len = nlayers * 32.6/fabs(dir_ini.z()); //mm
     std::auto_ptr<IKalmanParticle> 
             kalPart(TkrReconAlg::m_gismoSvc->kalmanParticle(x_ini, dir_ini, arc_min));
     if(kalPart->trackToNextPlane()) {

@@ -163,7 +163,7 @@ private:
 	
     /// Keep pointer to the bad strip service
     ITkrBadStripsSvc* pBadStrips;
-	
+		
 	// from the geometry service
 	int numViews;
 	// from the geometry service
