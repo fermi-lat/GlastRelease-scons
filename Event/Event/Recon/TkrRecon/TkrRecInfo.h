@@ -71,6 +71,9 @@ public:
 
     /// Utility function to tell us a valid track/vertex exists
     virtual bool         empty(int numHits)                 const = 0;
+
+    /// seems to need a virtual destructor
+    virtual ~TkrRecInfo() {}
 }; 
 
 }; // Namespace
