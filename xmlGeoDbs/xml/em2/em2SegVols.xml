@@ -38,14 +38,14 @@
 
     <!ENTITY ACDMatPrim     SYSTEM "../flight/flightACDMatPrim.xml">
     <!ENTITY ACDCountPrim   SYSTEM "../flight/flightACDCountPrim.xml">
-    <!ENTITY ACDDimPrim     SYSTEM "../flight/flightACDDimPrim.xml">
+    <!ENTITY ACDDimPrim     SYSTEM "../em2/em2ACDDimPrim.xml">
     <!ENTITY ACDResponse    SYSTEM "../flight/flightACDResponse.xml">
-    <!ENTITY ACDAcd         SYSTEM "../flight/flightACDAcd.xml">
+    <!ENTITY ACDAcd         SYSTEM "../em2/em2ACDAcd.xml">
 
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
 
-    <!ENTITY oneTower         SYSTEM "../em/emOneTower.xml">
+    <!ENTITY oneTower         SYSTEM "../em2/em2OneTower.xml">
     <!ENTITY section         SYSTEM "../em/emSection.xml">
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
