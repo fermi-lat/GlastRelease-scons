@@ -11,7 +11,6 @@
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Vector/ThreeVector.h"
 #include "globals.hh"
-#include "g4std/vector"
 
 #include <string>
 #include <algorithm>
@@ -127,8 +126,8 @@ bool ParticleTransporter::StepToNextPlane()
       double maxStep = 1000.;
       double safeStep;
 
-      G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
-      double             trackLen   = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+      const G4VPhysicalVolume* pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
+      double                   trackLen   = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
 
       //If we are right on the boundary then jump over and recalculate
       if (trackLen == 0.)
@@ -147,14 +146,19 @@ bool ParticleTransporter::StepToNextPlane()
       }
 
       //Which volume are we currently in?
-      G4VPhysicalVolume* pSiVolume  = findSiLadders(pCurVolume);
+      G4TouchableHistory*      touchable = navigator->CreateTouchableHistory(); 
+      const G4VPhysicalVolume* pSiVolume = findSiLadders(touchable);
+      delete touchable;
 
       // If we found the SiLadders volume, compute the distance to leave
       if (pSiVolume)
       {
           // this transforms it to local coordinates
-          G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
-          G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
+          //**G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
+          //**G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
+          const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
+          G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
+          G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
 
           trackLen   = pSiVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
           pCurVolume = pSiVolume;
@@ -274,7 +278,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
   return success;
 }
 
-G4VPhysicalVolume* ParticleTransporter::findSiLadders(G4VPhysicalVolume* pVolume) const
+const G4VPhysicalVolume* ParticleTransporter::findSiLadders(G4TouchableHistory* theTouchable) const
 {
   // Purpose and Method: Search the volume tree to see if we are inside an "SiLadders" volume
   // Inputs:  Pointer to the starting G4VPhysicalVolume 
@@ -282,16 +286,17 @@ G4VPhysicalVolume* ParticleTransporter::findSiLadders(G4VPhysicalVolume* pVolume
   // Dependencies: Requires initialization via SetInitStep
   // Restrictions and Caveats: None
 
-    G4VPhysicalVolume* volume = pVolume;
+    const G4VPhysicalVolume* volume = 0;
 
-    while(volume)
-    {
-        G4String volName = volume->GetName();
-
-        if (volName.contains("SiLadders"))break;
-
-        volume = volume->GetMother();
-    }
+    if (theTouchable)
+	{
+	    for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
+        {
+	        volume = theTouchable->GetVolume(i); 
+            G4String volName = volume->GetName();
+            if (volName.contains("SiLadders"))break;
+	    }
+	}
 
     return volume;
 }
@@ -320,7 +325,8 @@ double ParticleTransporter::minStepSize(const Point& start, const Vector& dir) c
 
   const G4NavigationHistory* pNavHis    = pTouchHis->GetHistory();
 
-  const G4ThreeVector testPoint = navigator->GetCurrentLocalCoordinate();
+  G4ThreeVector testPoint = navigator->GetGlobalToLocalTransform().TransformPoint(start);
+  //**const G4ThreeVector testPoint = navigator->GetCurrentLocalCoordinate();
 
   for (int depth = pNavHis->GetDepth(); depth > 0; depth--)
   {
@@ -483,8 +489,11 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
     if (pCurVolume->GetLogicalVolume()->GetSensitiveDetector())
     {
       // this transforms it to local coordinates
-      G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
-      G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
+      //**G4ThreeVector trackPos = navigator->ComputeLocalPoint(curPoint);
+      //**G4ThreeVector trackDir = navigator->ComputeLocalAxis(curDir);
+      const G4AffineTransform& globalToLocal = navigator->GetGlobalToLocalTransform();
+      G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
+      G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
 
       //This calculates the distance along the direction of the track to the 
       //boundary of the current volume
@@ -598,7 +607,41 @@ void ParticleTransporter::clearStepInfo()
 
 //Starting the the current volume, this builds the complete volume identifier
 //string needed to specify where we are in the GLAST world
-idents::VolumeIdentifier ParticleTransporter::constructId(G4VPhysicalVolume* pVolume) const
+idents::VolumeIdentifier ParticleTransporter::constructId(const Hep3Vector& position, bool fudge) const
+{
+    // Purpose and Method: Constructs the complete volume indentifier from current
+    //                     volume
+    // Inputs: A pointer to a G4VPhysicalVolume object giving the current
+    //         (starting) volume
+    // Outputs:  a VolumeIdentifier
+    // Dependencies: Requires that the volume - idents map has been found
+    // Restrictions and Caveats: None
+
+    G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
+    G4ThreeVector curPoint  = position;
+
+    // If known to be on a boundary then back up to be sure to be inside the volume
+    if (fudge)
+    {
+      G4ThreeVector displacement = -0.001 * startDir;
+      curPoint += displacement; 
+    }
+
+    // Look up current volume and set tree above it
+    G4VPhysicalVolume*  pCurVolume = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, true);
+    G4TouchableHistory* touchable  = navigator->CreateTouchableHistory();
+
+    using  idents::VolumeIdentifier;
+    VolumeIdentifier ret = constructId(touchable);
+
+    delete touchable;
+
+    return ret;
+}
+
+//Starting the the current volume, this builds the complete volume identifier
+//string needed to specify where we are in the GLAST world
+idents::VolumeIdentifier ParticleTransporter::constructId(G4TouchableHistory* theTouchable) const
 {
     // Purpose and Method: Constructs the complete volume indentifier from current
     //                     volume
@@ -612,18 +655,20 @@ idents::VolumeIdentifier ParticleTransporter::constructId(G4VPhysicalVolume* pVo
     VolumeIdentifier ret;
 
     // Loop through volumes until there is no longer a mother volume
-    while(pVolume->GetMother())
-    {
-        // Look up the identifier for this volume
-        //VolumeIdentifier id = (*m_IdMap)[pVolume];
-        VolumeIdentifier id = m_geometrySvc->getVolumeIdent(pVolume);
+    if (theTouchable)
+	{
+	    for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
+        {
+	        const G4VPhysicalVolume* pVolume = theTouchable->GetVolume(i); 
 
-        // Add this volume's identifier to our total id
-        ret.prepend(id);
+            // Look up the identifier for this volume
+            //VolumeIdentifier id = (*m_IdMap)[pVolume];
+            VolumeIdentifier id = m_geometrySvc->getVolumeIdent(pVolume);
 
-        // Get next higher volume
-        pVolume = pVolume->GetMother();
-    }
+            // Add this volume's identifier to our total id
+            ret.prepend(id);
+	    }
+	}
 
     return ret;
 }
@@ -666,7 +711,7 @@ void ParticleTransporter::printStepInfo(std::ostream& str) const
       //str << "   Step " << ++stepCnt << ", Volume: " << volName << "\n" 
       //    << ", position: " << position << ", step: " << stepDist << ", radlens: " << x0s << "\n";
 
-      idents::VolumeIdentifier volId = constructId(pCurVolume);
+      idents::VolumeIdentifier volId = constructId(position);
 
       str << "   Step " << ++stepCnt << ", Volume: " << pCurVolume->GetName() << ":" << volId.name() 
           << ", entry position: " << entryPoint << "\n   step length: " << stepDist << ", radlens: " 
@@ -699,7 +744,7 @@ G4String ParticleTransporter::printVolName(const G4VPhysicalVolume* pCurVolume) 
 
     if (pCurVolume)
     {
-        return "(" + pCurVolume->GetName() + printVolName(pCurVolume->GetMother()) + ")";
+//**        return "(" + pCurVolume->GetName() + printVolName(pCurVolume->GetMother()) + ")";
     }
     else return " ";
 }

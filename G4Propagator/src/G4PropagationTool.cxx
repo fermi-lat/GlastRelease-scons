@@ -360,6 +360,8 @@ Event::TkrFitMatrix G4PropagationTool::getMscatCov(double momentum, double arcLe
     double dist       = 0.;
     double arcLen     = arcLenIn;
 
+    double x0sTotal   = 0.;    /// New stuff!
+
     if (arcLen < 0) arcLen = getTotalArcLen();
 
     ConstStepPtr stepPtr = getStepStart();
@@ -384,10 +386,13 @@ Event::TkrFitMatrix G4PropagationTool::getMscatCov(double momentum, double arcLe
         }
 
         if(x0s != 0) {
-            double ms_Angle = 14.0*sqrt(x0s)*(1+0.038*log(x0s))/momentum; //MeV
+            ///double ms_Angle = 14.0*sqrt(x0s)*(1+0.038*log(x0s))/momentum; //MeV
+            double ms_Angle = 13.6*sqrt(x0s)/momentum; //MeV  /// New Stuff!!
             double ms_Dst  = (arcLen - dist - s_distp)*ms_Angle; // Disp. over remaining traj
             double ms_sDst = s_distp*ms_Angle/1.7320508; // Disp. within step
             double ms_Dist = ms_Dst*ms_Dst + ms_sDst*ms_sDst;
+
+            x0sTotal += x0s;   /// New Stuff!
 
             scat_dist  += ms_Dist;
             scat_angle += ms_Angle*ms_Angle;
@@ -395,6 +400,17 @@ Event::TkrFitMatrix G4PropagationTool::getMscatCov(double momentum, double arcLe
         }
         dist += s_dist;
         if(dist >= arcLen ) break;
+    }
+
+    /// New Stuff!!!!!
+    if (x0sTotal > 0.)
+    {
+        double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  //// New Stuff!!
+        scat_angle = ms_Angle*ms_Angle;
+    }
+    else
+    {
+        scat_angle = 0.;
     }
 
     Vector startDir = getStartDir();
@@ -564,9 +580,9 @@ bool   G4PropagationTool::isTkrPlane(int& view)        const
     // Dependencies: None
     // Restrictions and Caveats: None
 
-    G4VPhysicalVolume* pCurVolume = getVolume(getLastStep().GetCoords(), true);
+//**    G4VPhysicalVolume* pCurVolume = getVolume(getLastStep().GetCoords(), true);
 
-    idents::VolumeIdentifier id = constructId(pCurVolume);
+    idents::VolumeIdentifier id = constructId(getLastStep().GetCoords());
 
     // This test is specifically for the tracker.
     // Return "false" otherwise
@@ -627,9 +643,9 @@ idents::VolumeIdentifier G4PropagationTool::getVolumeId(double arcLen) const
 
     ConstStepPtr stepPtr = getStepAtArcLen(arcLen);
 
-    G4VPhysicalVolume* pCurVolume = getVolume(stepPtr->GetCoords(), true);
+//    G4VPhysicalVolume* pCurVolume = getVolume(stepPtr->GetCoords(), true);
 
-    return constructId(pCurVolume);
+    return constructId(stepPtr->GetCoords());
 }
 
 //! Return volume identifer after stepping
@@ -645,9 +661,9 @@ idents::VolumeIdentifier G4PropagationTool::getStepVolumeId(int stepIdx) const
 
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
-    G4VPhysicalVolume* pCurVolume = getVolume(getStep(stepIdx).GetCoords(), true);
+//    G4VPhysicalVolume* pCurVolume = getVolume(getStep(stepIdx).GetCoords(), true);
 
-    return constructId(pCurVolume);
+    return constructId(getStep(stepIdx).GetCoords());
 }
 
 

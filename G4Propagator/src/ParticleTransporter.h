@@ -68,62 +68,64 @@ public:
     void  setInitStep(const Point& start, const Vector& dir);
 
     /// @brief Transports (steps) the track through an arclength @param step
-    bool               transport(const double step = -1.);
+    bool                     transport(const double step = -1.);
 
     /// @brief Methods for returning information on the stepping through the volumes
-    int                getNumberSteps()               const {return stepInfo.size();}
+    int                      getNumberSteps()               const {return stepInfo.size();}
     /// Iterators
-    ConstStepPtr       getStepStart()                 const {return stepInfo.begin();}
-    ConstStepPtr       getStepEnd()                   const {return stepInfo.end();}
-    ConstStepPtr       getStepAtArcLen(double arcLen) const;
+    ConstStepPtr             getStepStart()                 const {return stepInfo.begin();}
+    ConstStepPtr             getStepEnd()                   const {return stepInfo.end();}
+    ConstStepPtr             getStepAtArcLen(double arcLen) const;
     /// Objects
-    TransportStepInfo  getStep(int stepIdx)           const {return stepInfo[stepIdx];}
-    TransportStepInfo  getLastStep()                  const {return stepInfo.back();}
-    TransportStepInfo  getPrevBoundary()              const {return stepInfo.back();} 
+    TransportStepInfo        getStep(int stepIdx)           const {return stepInfo[stepIdx];}
+    TransportStepInfo        getLastStep()                  const {return stepInfo.back();}
+    TransportStepInfo        getPrevBoundary()              const {return stepInfo.back();} 
 
     /// @brief Returns the current volume (include tree above it) at given position. 
     /// If position is on a volume boundary, @param fudge = true will cause it to be
     /// moved slightly off the boundary.
-    G4VPhysicalVolume* getVolume(const Hep3Vector& position, bool fudge=false) const;
+    G4VPhysicalVolume*       getVolume(const Hep3Vector& position, bool fudge=false) const;
 
     /// @brief Given a volume, construct the associated volume id
-    idents::VolumeIdentifier constructId(G4VPhysicalVolume* pVolume) const;
+    idents::VolumeIdentifier constructId(const Hep3Vector& position, bool fudge=false) const;
 
     /// @brief Return starting point information
-    Point              getStartPoint()                const {return startPoint;}
-    Vector             getStartDir()                  const {return startDir;}
+    Point                    getStartPoint()                const {return startPoint;}
+    Vector                   getStartDir()                  const {return startDir;}
 
     /// @brief Methods to return information after the last step taken
-    double             getTotalArcLen()               const;
-    double             insideActiveArea()             const;
-    double             insideActiveLocalX()           const;
-    double             insideActiveLocalY()           const;
+    double                   getTotalArcLen()               const;
+    double                   insideActiveArea()             const;
+    double                   insideActiveLocalX()           const;
+    double                   insideActiveLocalY()           const;
 
     /// @brief Provide ability to print out information from each volume
-    void               printStepInfo(std::ostream& str=std::cout ) const;    
+    void                     printStepInfo(std::ostream& str=std::cout ) const;    
 
     /// @brief Methods to intialize the class
-    void               setTransportationManager(const G4TransportationManager* TransportationManager)
-                       {m_TransportationManager = TransportationManager;}
-    void               setGeometrySvc(IG4GeometrySvc* geoSvc) {m_geometrySvc = geoSvc;}
+    void                     setTransportationManager(const G4TransportationManager* TransportationManager)
+                             {m_TransportationManager = TransportationManager;}
+    void                     setGeometrySvc(IG4GeometrySvc* geoSvc) {m_geometrySvc = geoSvc;}
 private:
     //Private methods
     //Determines the distance along the track to the edge of start volume
-    double             minStepSize(const Point& start, const Vector& dir) const;
+    double                   minStepSize(const Point& start, const Vector& dir) const;
     //Make sure list is cleared when tracking started
-    void               clearStepInfo();
+    void                     clearStepInfo();
     //This function will step a given arc length
-    bool               StepAnArcLength(const double arcLen);
+    bool                     StepAnArcLength(const double arcLen);
     //This function will step to the next "sensitive" plane
-    bool               StepToNextPlane();
+    bool                     StepToNextPlane();
     //Use this to in printStepInfo to print volume list name
-    G4String           printVolName(const G4VPhysicalVolume* pCurVolume) const;
+    G4String                 printVolName(const G4VPhysicalVolume* pCurVolume) const;
     //This is used to find an "SiLadders" volume in the nested heirarchy
-    G4VPhysicalVolume* findSiLadders(G4VPhysicalVolume* pCurVolume) const;
+    const G4VPhysicalVolume* findSiLadders(G4TouchableHistory* theTouchable) const;
     //This used to find the distance to nearest edge in a given direction
-    double             distanceToEdge(const Vector& dir) const;
+    double                   distanceToEdge(const Vector& dir) const;
     //Gives the distance to the closest edge in a given and opposite direction
-    double             distanceToClosestEdge(const Vector& dir) const;
+    double                   distanceToClosestEdge(const Vector& dir) const;
+    /// brief Given a volume, construct the associated volume id
+    idents::VolumeIdentifier constructId(G4TouchableHistory* theTouchable) const;
 
 
     //Private Data
