@@ -66,50 +66,62 @@ namespace xmlUtil {
     DOM_NamedNodeMap attMap = elt.getAttributes();
     int   nAtt = attMap.getLength();
     int   iAtt;
-    std::vector<DOM_Node> toDelete;
+    std::vector<DOMString> toProcess;
+    std::vector<unsigned> toProcessPos;
+    //    std::vector<DOM_Node> toDelete;
 
     for (iAtt = 0; iAtt <nAtt; iAtt++) {
       DOM_Node att = attMap.item(iAtt);
       //      if (att != DOM_Node()) { // probably not necessary
-        DOMString  attString = att.getNodeName();
-        std::string attName = std::string(xml::Dom::transToChar(attString));
+      DOMString  attString = att.getNodeName();
+      std::string attName = std::string(xml::Dom::transToChar(attString));
       
         // Look for suffix
-        unsigned pos = attName.find(m_suffix, attName.size() - m_suffixLen);
-        if  (pos < attName.size())  { // found
-          // Save reference to this node for later deletion
-          toDelete.push_back(att);
-          DOM_Element constElt = m_doc.getElementById(att.getNodeValue());
-
-          if (constElt == DOM_Element() ) {  // shouldn't happen
-
-            m_notFound++;
-            continue;
-          }
-
-          // Build the new attribute
-          DOMString val = constElt.getAttribute(DOMString("value"));
-          // If the element referred to is a <prim>, we should be done
-          // because it always has a value.  If it's a <const>
-          // we may have to evaluate it.
-          if (val == DOMString()) { // try evaluating it
-            Arith curArith(constElt);
-            double evalValue = curArith.evaluate();
-            curArith.saveValue();
-            val = constElt.getAttribute(DOMString("value"));
-          }
-
-          std::string newAttName = attName.erase(pos, attName.size()  );
-          elt.setAttribute(DOMString(newAttName.c_str()), val);
-          m_count++;
-        }
-        //      }
+      unsigned pos = attName.find(m_suffix, attName.size() - m_suffixLen);
+      if  (pos < attName.size())  { // found
+        toProcess.push_back(attString);
+        toProcessPos.push_back(pos);
+      }
     }
+
+    // Now process by name
+    while (toProcess.size() > 0) {
+      DOMString oldAttString = toProcess.back();
+      std::string oldAttName = 
+        std::string(xml::Dom::transToChar(oldAttString));
+      unsigned  pos = toProcessPos.back();
+      toProcess.pop_back();
+      toProcessPos.pop_back();
+      DOM_Element constElt =
+        m_doc.getElementById(elt.getAttribute(oldAttString));
+      if (constElt == DOM_Element() ) { // shouldn't happen
+        m_notFound++;
+        continue;
+      }
+      // Build the new attribute
+      DOMString val = constElt.getAttribute(DOMString("value"));
+
+      // If the element referred to is a <prim>, we should be done
+      // because it always has a value.  If it's a <const>
+      // we may have to evaluate it.
+      if (val == DOMString()) { // try evaluating it
+        Arith curArith(constElt);
+        double evalValue = curArith.evaluate();
+        curArith.saveValue();
+        val = constElt.getAttribute(DOMString("value"));
+      }
+
+      std::string newAttName = oldAttName.erase(pos, oldAttName.size()  );
+      elt.setAttribute(DOMString(newAttName.c_str()), val);
+      elt.removeAttribute(oldAttString);
+      m_count++;
+    }
+
     // Now delete each saved attribute node 
-    while (toDelete.size() > 0) {
-      DOM_Node att = toDelete.back();
-      toDelete.pop_back();
-      elt.removeAttributeNode(static_cast <DOM_Attr &>(att));
-    }
+    // while (toDelete.size() > 0) {
+    //      DOM_Node att = toDelete.back();
+    //      toDelete.pop_back();
+    //      elt.removeAttributeNode(static_cast <DOM_Attr &>(att));
+    //    }
   }
 }

@@ -91,6 +91,12 @@ int main(int argc, char* argv[]) {
 
   xmlUtil::Substitute* sub = new xmlUtil::Substitute(doc);
 
+  DOM_Node dict = (docElt.getElementsByTagName(DOMString("idDict"))).item(0);
+  DOM_Element& dictElt = static_cast<DOM_Element &> (dict);
+  int nDictSub = sub->execute(dictElt);
+    std::cout << "#elements substituted for id dictionary:  " << nDictSub
+              << std::endl;
+
   for (iSec = 0; iSec < nSec; iSec++) {
     int nSub;
     DOM_Node  secNode = sections.item(iSec);

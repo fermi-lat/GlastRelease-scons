@@ -156,7 +156,7 @@ namespace xmlUtil {
 
     while (curConst != DOM_Element()) {
       Arith curArith(curConst);
-      //      double evalValue = curArith.evaluate();
+      double evalValue = curArith.evaluate();
       curArith.saveValue();
       
       curConst = xml::Dom::getSiblingElement(curConst);

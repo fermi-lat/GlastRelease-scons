@@ -918,10 +918,10 @@
  -->
 <!ELEMENT vConstraints (fValREF* | fVal*) >
 <!ATTLIST vConstraints  mustbe      NMTOKEN #IMPLIED
-                        mustbeREF   IDREF   #IMPLIED
                         min       NMTOKEN "0"
-                        minREF    IDREF   #IMPLIED
                         max       NMTOKEN #IMPLIED
+                        mustbeREF   IDREF   #IMPLIED
+                        minREF    IDREF   #IMPLIED
                         maxREF    IDREF   #IMPLIED >
 
 <!ELEMENT fVal EMPTY >

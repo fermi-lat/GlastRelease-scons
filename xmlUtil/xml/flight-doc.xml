@@ -18,7 +18,7 @@
     <!ENTITY ACDDimPrim SYSTEM "ACDDimPrim.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: flight.xml,v 1.5 2001/03/20 23:51:22 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.3 2001/03/27 00:18:15 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.1.1.1 2001/03/30 00:03:31 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.1.1.1 2001/03/30 00:03:31 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -565,12 +565,30 @@ ACD tile        </prim>
           <notes>
             Convenience number          </notes>
         </const>
-        <const name="CALMaxLayer" uType="count" value="7" unitAngle="deg" unitLength="mm" />
-        <const name="nLadderM1" uType="count" value="3" unitAngle="deg" unitLength="mm" />
-        <const name="maxLog" uType="count" value="11" unitAngle="deg" unitLength="mm" />
-        <const name="maxTray" uType="count" value="18" unitAngle="deg" unitLength="mm" />
-        <const name="maxTrayM1" uType="count" value="17" unitAngle="deg" unitLength="mm" />
-        <const name="maxWaferStripNum" uType="count" value="383" unitAngle="deg" unitLength="mm" />
+        <const name="CALMaxLayer" uType="count" value="7" unitAngle="deg" unitLength="mm">
+          <notes>
+            upper limit on Cal layer idfield value          </notes>
+        </const>
+        <const name="nLadderM1" uType="count" value="3" unitAngle="deg" unitLength="mm">
+          <notes>
+            Upper limit on ladder idField values          </notes>
+        </const>
+        <const name="maxLog" uType="count" value="11" unitAngle="deg" unitLength="mm">
+          <notes>
+            Upper limit on CsI log idField values          </notes>
+        </const>
+        <const name="maxTray" uType="count" value="18" unitAngle="deg" unitLength="mm">
+          <notes>
+            Upper limit on tray idField values          </notes>
+        </const>
+        <const name="maxTrayM1" uType="count" value="17" unitAngle="deg" unitLength="mm">
+          <notes>
+            max tray number of tray with bottom Si wafers          </notes>
+        </const>
+        <const name="maxWaferStripNum" uType="count" value="383" unitAngle="deg" unitLength="mm">
+          <notes>
+            Upper limit on strip number within a wafer          </notes>
+        </const>
         <!--  These might not be quite right.  Check that frame is
      accounted for. -->
         <const name="towersTotalX" uType="length" value="1567.8" unitAngle="deg" unitLength="mm">

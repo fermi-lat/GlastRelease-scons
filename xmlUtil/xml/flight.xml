@@ -331,6 +331,7 @@
         </const>
 
         <const name="CALMaxLayer" uType="count" >
+          <notes>upper limit on Cal layer idfield value</notes>
           <minus>
             <refer refTo="CALnLayer" />
             <const value="1" uType="count" />
@@ -338,6 +339,7 @@
         </const>
 
         <const name="nLadderM1" uType="count" >
+          <notes>Upper limit on ladder idField values</notes>
           <minus>
             <refer refTo="nWaferAcross" />
             <const value="1" uType="count" />
@@ -345,6 +347,7 @@
         </const>
 
         <const name="maxLog" uType="count" >
+          <notes>Upper limit on CsI log idField values</notes>
           <minus>
             <refer refTo="nLogPerLayer" />
             <const value="1" uType="count" />
@@ -352,6 +355,7 @@
         </const>
 
         <const name="maxTray" uType="count" >
+          <notes>Upper limit on tray idField values</notes>
           <minus>
             <refer refTo="numTrays" />
             <const value="1" uType="count" />
@@ -359,6 +363,7 @@
         </const>
 
         <const name="maxTrayM1" uType="count" >
+          <notes>max tray number of tray with bottom Si wafers</notes>
           <minus>
             <refer refTo="numTrays" />
             <const value="2" uType="count" />
@@ -366,6 +371,7 @@
         </const>
 
         <const name="maxWaferStripNum" uType="count" >
+          <notes>Upper limit on strip number within a wafer</notes>
           <minus>
             <refer refTo="stripPerWafer" />
             <const value="1" uType="count" />
