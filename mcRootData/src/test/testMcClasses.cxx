@@ -134,7 +134,8 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, Int_t ievent)
 int checkMcIntegratingHit(McIntegratingHit* mcIntHit, Int_t ipart, Int_t ievent) {
     
     Float_t f = Float_t(ipart);
-    
+    Float_t fr = f*randNum;
+
     VolumeIdentifier id = mcIntHit->getVolumeId();
     std::cout << "McIntHit volumeId: " << id.name() << std::endl;
     if ( (id.size() != 1) || (id.getBits0to31() != 0) || (id.getBits32to63() != 0) ) {
@@ -244,7 +245,8 @@ int write(char* fileName, int numEvents) {
             id.Clear();
             id.append(0);
             intHit->initialize(id);
-            intHit->addEnergyItem(1.5, mcPart, TVector3(randNum, randNum, randNum));
+            TVector3 pos = mcPart->getFinalPosition();
+            intHit->addEnergyItem(1.5, mcPart, pos);
             ev->addMcIntegratingHit(intHit);
         }
         t->Fill();

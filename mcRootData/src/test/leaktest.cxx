@@ -55,7 +55,8 @@
                 McIntegratingHit *intHit = new McIntegratingHit();
                 id.initialize(0, 0, 0);
                 intHit->initialize(id);
-                intHit->addEnergyItem(1.5, mcPart, TVector3(0.5, 0.5, 0.5));
+                TVector3 pos = mcPart->getFinalPosition();
+                intHit->addEnergyItem(1.5, mcPart, pos);
                 ev->addMcIntegratingHit(intHit);
             }
         }
