@@ -291,7 +291,7 @@
        </spectrum>
      </source>
 
-    <source name="muon_pencil_300MeV_center_acdtop">
+    <source name="muon_patch_300MeV_centerTile0022_acdtop">
        <spectrum escale="MeV">
          <particle name="mu+"><energy e="300"/> </particle>
            <solid_angle mincos="0.25" maxcos="1.0" />
