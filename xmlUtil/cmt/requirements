@@ -26,7 +26,8 @@ library xmlUtil -no_share \
      id/DictField.cxx        \
      id/DictFieldMan.cxx     \
      id/DictNode.cxx         \
-     id/IdDict.cxx            \
+     id/IdDict.cxx           \
+     id/NamedId.cxx          \
      id/DictValidVisitor.cxx \
      id/testId.cxx        \
      ../xml/*.xml         \
