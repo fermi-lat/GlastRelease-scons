@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 06-nov-2002: jrb - tag v1r8p0 - Fix identifier field for ACD side to
+ *                                 conform with convention 
  * 30-oct-2002: jrb - tag v1r8   - (jrb)slightly modify a couple ACD primary
  *                                 constants; (Xin Chen) add em subdirectory 
  *                                 containing description of EM instrument
