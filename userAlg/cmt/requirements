@@ -1,13 +1,18 @@
 package userAlg
-version v2
+version v3
 
 # --------------------------
-# run a pdr job with a user algorithm
+# run a job with a user algorithm
 # --------------------------
 
 # get everything we need from here
-use pdrApp 
+use Gleam
 
 apply_pattern userjobopts
 
-application userApp ${GuiMain}  *.cxx $(jobOptions) $(Win32Resource)
+macro jobOptions "" WIN32 "jobOptions.txt"
+
+macro userApplinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui_linkopts} -u GuiSvc_loadRef -ldl" \
+      WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"
+
+application userApp ${GuiMain} *.cxx ${jobOptions} ${Win32Resource}
