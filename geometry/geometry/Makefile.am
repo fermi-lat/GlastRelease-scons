@@ -41,6 +41,5 @@ geometry_HEADERS =				\
 noinst_HEADERS =				\
 	Cylinder.h				\
 	Hyperbolic.h				\
-	RootFinder.h				\
 	Sphere.h				\
 	Trap.h Trd1.h Trd2.h Tubs.h
