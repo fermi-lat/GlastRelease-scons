@@ -100,9 +100,10 @@ void EventDisplay::Go(int numEvent) {
 
     myEvent->Go(entry);
 
-    int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
+    const int eventId         = myEvent->GetEventId();
+    const int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
 
-    std::cout << "EventId         = " << myEvent->GetEventId() << std::endl;
+    std::cout << "EventId         = " << eventId << std::endl;
     std::cout << "RunId           = " << myEvent->GetRunId() << std::endl;
     std::cout << "EbfTime         = " << myEvent->GetEbfTime() << std::endl;
     std::cout << "TkrTotalNumHits = " << TkrTotalNumHits << std::endl;
@@ -129,7 +130,7 @@ void EventDisplay::Go(int numEvent) {
         const double height = aPlane->GetHeight();
         const int planeNumHits = myEvent->GetPlaneNumHits(aPlane->GetName());
 
-        if(aPlane->IsX()) 
+        if ( aPlane->IsX() ) 
             myEventDisplay->cd(1);      
         else
             myEventDisplay->cd(2);
@@ -203,6 +204,7 @@ void EventDisplay::Go(int numEvent) {
   
     myEventDisplay->cd(2);
     TGraphYhits->Draw("P");
+    myEventDisplay->SetTitle((TString("#")+=eventId));
     /*
       if ( TGraphYclusters->GetN() > 0 )
       TGraphYclusters->Draw("P");

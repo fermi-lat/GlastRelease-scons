@@ -165,19 +165,19 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualSize) const {
         c = new TCanvas(canvasName, canvasName, 800, 800);
     gPad->SetTicks(1,1);
     gStyle->SetOptTitle(0);
+    gStyle->SetOptStat(0);
+    c->DrawFrame(-20, -20, 375, 375);
 
     TFile f(myEffFileName);
     TTree* t = (TTree*)f.Get("efficiencyTree");
     t->SetMarkerStyle(1);
     t->SetMarkerColor(1);
 
-    TCut fakeAxis("-20<xExt&&xExt<375&&-20<yExt&&yExt<375");
     TCut inActiveArea("siDist<0");
     TCut residualCut((TString("res>")+=residualSize).Data());
 
-    // draw all interceptions which are not in an active area
+   // draw all interceptions which are not in an active area
     t->SetMarkerColor(2);
-    t->Draw("yExt:xExt", cut+!inActiveArea+fakeAxis);
     t->Draw("yExt:xExt", cut+!inActiveArea, "same");
 
     // draw all interceptions with the active area (should be hits)

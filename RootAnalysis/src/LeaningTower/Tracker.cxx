@@ -90,55 +90,58 @@ std::vector<TString> Tracker::GetPlaneNameCol(const int view) const {
 }
 
 void Tracker::Display(TCanvas* ed) {
-    double x[2] = { -40, 400};
-    double y[2]; 
-    if ( TOWER ) {
-        y[0] = 0;
-        y[1] = 700;
+    const double h[2] = { -49, 449 };
+    double v[2] = { -10, 699 }; 
+    if ( !TOWER ) {
+        v[0] = -1100;
+        v[1] = 1100;
     }
-    else {
-        y[0] = -1100;
-        y[1] = 1100;
-    }
-    //  double y[2] = { -0, 6500}; //TOWER
-    //  double y[2] = { -1100, 1000}; //STACK
-
-    TGraph *Border = new TGraph(2, x, y);
-    Border->GetXaxis()->SetTitle("position/mm");
-    Border->GetYaxis()->SetTitle("position in stack/mm");
 
     TText* xz = new TText();
     xz->SetTextAlign(22);
     xz->SetTextSize(0.1);
-    xz->SetText(178, 700, "xz");
+    xz->SetNDC();
+    xz->SetText(0.5, 0.95, "xz");
+
     TText* yz = new TText();
     yz->SetTextAlign(22);
     yz->SetTextSize(0.1);
-    yz->SetText(178, 700, "yz");
+    yz->SetNDC();
+    yz->SetText(0.5, 0.95, "yz");
 
     ed->Divide(2,1);
+    TH1* hframe;
+
     ed->cd(1);
-    Border->Draw("AP");
+    ed->DrawFrame(h[0], v[0], h[1], v[1]);
+    hframe = (TH1*)gROOT->FindObject("hframe");
+    hframe->GetXaxis()->SetTitle("x/mm");
+    hframe->GetYaxis()->SetTitle("z/mm");
     xz->Draw();
+
     ed->cd(2);
-    Border->Draw("AP");
+    ed->DrawFrame(h[0], v[0], h[1], v[1]);
+    hframe = (TH1*)gROOT->FindObject("hframe");
+    hframe->GetXaxis()->SetTitle("y/mm");
+    hframe->GetYaxis()->SetTitle("z/mm");
     yz->Draw();
 
     TIter next(myGeometry);
-    while ( Layer* aLayer = (Layer*)next() ) {
-        if ( aLayer->IsX() ) {
+    while ( Layer* plane = (Layer*)next() ) {
+        if ( plane->IsX() ) {
             ed->cd(1);
-            aLayer->DrawLayer();	      
+            plane->DrawLayer();	      
             ed->cd(2);
-            aLayer->DrawGhostLayer();	
+            plane->DrawGhostLayer();	
 	}
         else {
             ed->cd(2);
-            aLayer->DrawLayer();	      
+            plane->DrawLayer();	      
             ed->cd(1);
-            aLayer->DrawGhostLayer();
+            plane->DrawGhostLayer();
 	}
     }
+
     if ( !TOWER ) {
         TLine *ScintillatorT  = new TLine(-20,    895,  380,     895);
         TLine *ScintillatorM  = new TLine(-20,      0,  380,       0);
