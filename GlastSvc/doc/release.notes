@@ -5,6 +5,7 @@
  package manager:T.Burnett
 
 
+ 15-jun-03  THB tag v9r8p1 clear trigger bits as flag for TriggerAlg
  15-jun-03  THB tag v9r8   set event number in GlastRandomSvc.
  07-apr-03  LSR tag v9r7p3 consolidate layer-to-tray methods into TkrGeometrySvc
                            Requires rebuild of clients, because IGlastDetSvc has changed
