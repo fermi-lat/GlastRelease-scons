@@ -1,9 +1,12 @@
 /** @file release.notes
 Package commonRootData
 Coordinator:H.Kelly
+@verbatim
 
-v0r2p2  05-feb-2002 HMK Apply vsnet_rootcint pattern\n
-v0r2p1  15-jan-2003 THB vsnet implementation, header file fix\n
+v0r2p3  15-jan-2004 HMK reorder headers - seems to affect rootcint processing
+v0r2p2  05-feb-2003 HMK Apply vsnet_rootcint pattern
+v0r2p1  15-jan-2003 THB vsnet implementation, header file fix
 v0r2    new GlastRelease
-v0      april-2001 HMK initial import \n
+v0      april-2001 HMK initial import 
+@endverbatim
 */
