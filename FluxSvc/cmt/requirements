@@ -17,7 +17,7 @@ library FluxSvc  *.cxx \
 
 apply_pattern packageShr
 
-apply_pattern ld_library_path
+apply_pattern ld_library_path 
 
 #=============================================================
 private
@@ -31,5 +31,8 @@ apply_pattern package_Cshlibflags
 
 macro JobOptions  "src/test/jobOptions.txt"
 set JOBOPTIONS ${FLUXSVCROOT}/$(jobOptions)
+
+# BAD - Had to include GaudiSvc library to define RndmEngine !!! TL - July 19
+macro_append GaudiSvc_linkopts "-L${GaudiSvcDir} -lGaudiSvc" WIN32 ""
 
 application testFluxSvc test/TestMain.cxx test/FluxTestAlg.cxx ${jobOptions} 
