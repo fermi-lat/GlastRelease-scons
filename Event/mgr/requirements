@@ -11,6 +11,7 @@ library GlastEvent \
         ../GlastEvent/*.h \ 
         ../GlastEvent/TopLevel/*.h \
         ../GlastEvent/MonteCarlo/*.h \
+        ../GlastEvent/Irf/*.h \
         ../GlastEvent/Raw/*.h Raw/*.cpp \
         TopLevel/*.cpp
 
