@@ -20,7 +20,9 @@
 
   <tower row="0" col="0">
     <uniplane tray="2" which="top" nOnbdTrig="true">
+      <stripSpan first="2" last="5" />
       <stripList strips="8 17 401" />
+      <stripList strips="407 409 411" />
     </uniplane>
     <uniplane tray="2" which="top" nOnbdData="true" allBad="true" />
 
