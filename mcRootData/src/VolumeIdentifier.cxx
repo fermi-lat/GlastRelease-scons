@@ -30,6 +30,12 @@ m_bits0to31(0), m_bits32to63(0), m_size(0)
 {
 }
 
+VolumeIdentifier::VolumeIdentifier(const VolumeIdentifier& id) {
+    m_bits0to31 = id.m_bits0to31;
+    m_bits32to63 = id.m_bits32to63;
+    m_size = id.m_size;
+}
+
 void VolumeIdentifier::initialize(UInt_t bits0to31, UInt_t bits32to63, UInt_t size)
 {
     m_bits0to31 = bits0to31;

@@ -51,7 +51,7 @@ public:
 
     void  Clear(Option_t *option ="");
 
-    void initialize(VolumeIdentifier id, Double_t e, const TVector3& moment1, const TVector3& moment2);
+    void initialize(const VolumeIdentifier& id, Double_t e, const TVector3& moment1, const TVector3& moment2);
     
     const VolumeIdentifier getVolumeId() const { return m_volumeId; };
     

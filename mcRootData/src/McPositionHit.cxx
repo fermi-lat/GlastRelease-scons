@@ -21,7 +21,7 @@ void McPositionHit::Clear(Option_t *option)
     m_statusFlags = 0;
     m_entry = TVector3(0., 0., 0.);
     m_exit = TVector3(0., 0., 0.);
-
+    m_volumeId.Clear();
 }
 
 
@@ -34,13 +34,13 @@ Double_t McPositionHit::getDirectionCosine() const
 }
 
 
-void McPositionHit::initialize(Double_t edep, VolumeIdentifier id, 
+void McPositionHit::initialize(Double_t edep, const VolumeIdentifier &id, 
                          const TVector3& entry, const TVector3& exit,
                          McParticle *mc, 
                          McParticle *origin, Double_t pE, Double_t tof, UInt_t flags)
 {
     m_depositedEnergy = edep;
-    m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
+    m_volumeId = id;
     m_entry.SetXYZ(entry.X(), entry.Y(), entry.Z());
     m_exit.SetXYZ(exit.X(), exit.Y(), exit.Z());
     m_mcParticle = mc;

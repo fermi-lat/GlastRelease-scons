@@ -15,10 +15,11 @@ McIntegratingHit::~McIntegratingHit() {
 }
 
 
-void McIntegratingHit::initialize(VolumeIdentifier id, Double_t e,
+void McIntegratingHit::initialize(const VolumeIdentifier& id, Double_t e,
                             const TVector3 &moment1, const TVector3 &moment2) {
     
-    m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
+    //m_volumeId.initialize(id.getBits0to31(), id.getBits32to63(), id.size());
+    m_volumeId = id;
     m_totalEnergy = e;
     m_moment1Seed.SetXYZ(moment1.X(), moment1.Y(), moment1.Z());
     m_moment2Seed.SetXYZ(moment2.X(), moment2.Y(), moment2.Z());
@@ -31,6 +32,7 @@ void McIntegratingHit::Clear(Option_t *option)
     m_totalEnergy = 0.0;
     m_moment1Seed = TVector3(0., 0., 0.);
     m_moment2Seed = TVector3(0., 0., 0.);
+    m_volumeId.Clear();
 }
 
 const McIntegratingHit::energyDepositMap& McIntegratingHit::getItemizedEnergy() const

@@ -26,7 +26,7 @@ public:
 
     void  Clear(Option_t *option ="");
     
-    void initialize(Double_t edep, VolumeIdentifier id, const TVector3& entry,
+    void initialize(Double_t edep, const VolumeIdentifier& id, const TVector3& entry,
         const TVector3& exit, McParticle *mc, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
     

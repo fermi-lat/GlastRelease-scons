@@ -21,6 +21,8 @@ class VolumeIdentifier: public TObject {
 public:
     
     VolumeIdentifier();
+
+    VolumeIdentifier(const VolumeIdentifier &id);
     
     virtual ~VolumeIdentifier() { };
 

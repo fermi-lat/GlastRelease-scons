@@ -62,9 +62,9 @@ void McEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     
-    m_particleCol->Clear();
-    m_positionHitCol->Clear();
-    m_integratingHitCol->Clear();
+    m_particleCol->Delete();
+    m_positionHitCol->Delete();
+    m_integratingHitCol->Delete();
 }
 
 
