@@ -88,7 +88,7 @@ StatusCode UseAsym::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_Asym/vanilla";
+  std::string fullPath = "/Calib/CAL_Asym/test";
   DataObject *pObject;
   
 

@@ -49,7 +49,7 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-CalibDataSvc.CalibFlavorList = {"ideal"};
+CalibDataSvc.CalibFlavorList = {"test"};
 // not used yet
 // CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 //			   "Test_1/mocha"};
