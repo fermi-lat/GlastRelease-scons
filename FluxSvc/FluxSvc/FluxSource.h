@@ -133,8 +133,6 @@ class FluxSource : public EventSource
       } m_frametype;
 
 
-
-
       virtual int eventNumber()const;
 
       double energy()const { return m_energy;}

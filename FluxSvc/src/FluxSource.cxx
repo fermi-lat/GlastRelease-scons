@@ -35,7 +35,7 @@ FluxSource::FluxSource(ISpectrum* aSpec, double aFlux)
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE),m_frametype(EARTH), illumBox(0)
+m_launch(NONE),m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
 {
     s_backoff = 0.;
     spectrum(aSpec);
@@ -48,7 +48,8 @@ FluxSource::FluxSource(const DOM_Element& xelem )
 : EventSource (xelem), m_spectrum(0),
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
-m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(NONE),m_frametype(EARTH), illumBox(0)
+m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(NONE),
+m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
 {
     static double d2r = M_PI/180.;
     
@@ -82,12 +83,18 @@ m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT), m_launch(N
         DOMString   typeTagName = specType.getTagName();
         std::string spectrum_name = spec.getAttribute("name").transcode();
         std::string spectrum_frametype = spec.getAttribute("frame").transcode();
+        std::string spectrum_energyscale = spec.getAttribute("escale").transcode();
         
         if(spectrum_frametype == "galactic"){ m_frametype=GALAXY;
         }else if(spectrum_frametype == "glast"){ m_frametype=GLAST;
         }else if(spectrum_frametype == "earth"){ m_frametype=EARTH;
         }
         
+        if(spectrum_energyscale == "GeV"){ m_energyscale=GeV;
+        }else if(spectrum_energyscale == "MeV"){ m_energyscale=MeV;
+        }else{m_energyscale=MeV;} //this line "just in case"
+
+
         if (typeTagName.equals("particle")) s = new SimpleSpectrum(specType);
         else if (typeTagName.equals("SpectrumClass")) {
             // attribute "name" is the class name
@@ -395,8 +402,12 @@ void FluxSource::computeLaunch (double time)
         
     } // switch m_launch
     
-    m_energy = kinetic_energy;
-    
+    // the service needs to return energy in MeV, so do a conversion if necessary:
+    if(m_energyscale==MeV){
+        m_energy = kinetic_energy;
+    }else if(m_energyscale==GeV){
+        m_energy = kinetic_energy*1000.;
+    }
     
     
     switch (m_pointtype) {
