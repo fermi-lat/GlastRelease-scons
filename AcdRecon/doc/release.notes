@@ -2,6 +2,9 @@
 package AcdRecon
 package manager:H.Kelly
 
+v0r5p2    04-Sep-2002 HMK Replace use of Point and Vector with HepPoint3D and HepVector3D\n
+v0r5p1    02-Sep-2002 THB Insert test for row obtained from VolId to be sure it is inbounds
+          of doca vector
 v0r5      27-Aug-2002 HMK add row active distance and update paths to Event/Recon/AcdRecon \n
 v0r4p1    20-Jun-2002 HMK set maxDoca to 2000, since we are in mm now\n
 v0r4      19-Jun-2002 THB get AcdDisplay to work\n
