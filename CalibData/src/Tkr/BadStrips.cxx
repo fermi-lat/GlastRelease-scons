@@ -178,11 +178,12 @@ namespace CalibData {
   }
 
   BadStrips::Tower* BadStrips::findTower(unsigned row, unsigned col) {
-    std::vector<Tower>::const_iterator iTower = m_towers->begin();
+    std::vector<Tower>::iterator iTower = m_towers->begin();
 
     while (iTower != m_towers->end() ) {
       if ((iTower->m_col == col) && (iTower->m_row == row)) {
-        Tower* pTower = const_cast<Tower*>(iTower);
+        //        Tower* pTower = const_cast<Tower*>(iTower);
+        Tower* pTower = &(*iTower);
         return pTower;
       }
       iTower++;
