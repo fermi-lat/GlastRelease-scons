@@ -354,9 +354,7 @@ StatusCode ExposureAlg::execute()
         m_rootTupleSvc->storeRowFlag(true);
     }
     //----------------------------------------------
-    setFilterPassed( false );
-    log << MSG::DEBUG << "ExposureAlg found a TimeTick particle, ended this execution after making a record, filterpassed = " << filterPassed() << endreq;
-
+    
     m_tickCount++;
     return sc;
 }
