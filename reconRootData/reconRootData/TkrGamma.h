@@ -53,7 +53,7 @@ public:
     // allow the caller to modify the TObjArray
     TObjArray *getLocator() { return m_locator; };
 
-    ClassDef(TkrGamma,1)
+    ClassDef(TkrGamma,2)
 };
 
 #endif
