@@ -10,7 +10,8 @@ public:
     void draw(std::string ps_filename, double ymax, std::string title="PSF");
     void drawError(std::string ps_filename);
     void drawAsymmetry(std::string ps_filename);
-    void drawAeff(std::string ps_filename, std::string page_title="", std::string hist_title="Effective area vs energy");
+    void drawAeff(std::string ps_filename, std::string page_title="", 
+                  std::string hist_title="Effective area vs energy");
 
     bool fileExists();
     
@@ -20,7 +21,7 @@ public:
     void open_input_file(); // override from base class
 
     //! the scaling factor to use for projecting scaled psf
-    double psf_scale(double energy, double costh,  bool thin);
+    double psf_scale(double energy, bool thin);
     
     static double probSum[2]; // for defining quantiles
 

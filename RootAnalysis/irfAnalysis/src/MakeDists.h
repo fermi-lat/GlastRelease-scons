@@ -37,10 +37,11 @@ public:
                 double xmin, double xmax, int nbins=50,
                 Fitter *fitter=0);
 
-   void draw(const std::string &ps_filename,  bool logy=false, Fitter* fit=0);
+   void draw(const std::string &ps_filename, bool logy=false, Fitter* fit=0);
 
    void setEnergyScaling(std::string scalingFunction,
-                         const std::vector<double> &params);
+                         const std::vector<double> &params,
+                         bool isThin=true);
 
    void addEnergyScaling(const std::string &rootFile, 
                          const std::string &treeName);
@@ -58,6 +59,7 @@ private:
 
    std::string m_scalingFunction;
    std::vector<double> m_params;
+   bool m_isThin;
 
    TF1 * m_energyScale;
 

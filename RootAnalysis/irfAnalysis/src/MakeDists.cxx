@@ -224,12 +224,17 @@ void MakeDists::addEnergyGrid(const std::string &rootFile) {
 }   
 
 void MakeDists::setEnergyScaling(std::string scalingFunction,
-                                 const std::vector<double> &params) {
+                                 const std::vector<double> &params,
+                                 bool isThin) {
    m_scalingFunction = scalingFunction;
-   m_params = params;
-   replace_substring(scalingFunction, "McEnergy", "x");
-   m_energyScale = new TF1("energyScale", scalingFunction.c_str());
-   m_energyScale->SetParameters(&params[0]);
+   if (m_scalingFunction != "") {
+      m_params = params;
+      replace_substring(scalingFunction, "McEnergy", "x");
+      m_energyScale = new TF1("energyScale", scalingFunction.c_str());
+      m_energyScale->SetParameters(&params[0]);
+   } else {
+      m_isThin = isThin;
+   }
 }
 
 void MakeDists::addEnergyScaling(const std::string &rootFile,
@@ -253,7 +258,11 @@ void MakeDists::addEnergyScaling(const std::string &rootFile,
       double estep = log(emax/emin)/(npts-1);
       for (int i = 0; i < npts; i++) {
          energy = emin*exp(estep*i);
-         scaleFactor = m_energyScale->Eval(energy);
+         if (m_scalingFunction != "") {
+            scaleFactor = m_energyScale->Eval(energy);
+         } else {
+            scaleFactor = psf_scale(energy, m_isThin);
+         }
          tree.Fill();
       }
       tree.Write();

@@ -25,11 +25,11 @@ bool PSF::fileExists()
         return f.IsOpen() && r.IsOpen();
     }
 
-double PSF::psf_scale(double energy, double zdir,  bool thin)
+double PSF::psf_scale(double energy, bool thin)
 {
     // the scaling function: note cutoff at 10 GeV
-    double t = 0.05*pow(std::min(energy, 1e4)/100., -0.66);
-    if( !thin) t*= 2.5;
+    double t = 0.08*pow(std::min(energy, 1e4)/100., -0.8);
+    if (!thin) t *= 0.14/0.08;
     return t;
 }
 std::string PSF::friend_filename()
@@ -91,7 +91,7 @@ void PSF::open_input_file()
         int count=m_tree->GetEntries();
         for(int k=0; k<count; ++k){
             m_tree->GetEntry(k);
-            psf_scale_factor= psf_scale(mc_energy, mc_zdir, Tkr1FirstLayer<12);
+            psf_scale_factor= psf_scale(mc_energy, Tkr1FirstLayer<12);
             if (IMvertexProb<0.5||VtxAngle==0.0){
                 dir_err=McTkr1DirErr;
             }else{
