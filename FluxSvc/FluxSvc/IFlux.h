@@ -11,7 +11,7 @@
 
 class ParticleProperty;
 class EventSource;
-class FluxSource;
+
 class ISpectrumFactory;
 
 /** 
@@ -89,8 +89,7 @@ public:
     virtual HepRotation transformGlastToGalactic(double time)const=0;
     
     virtual EventSource* currentEvent()=0;
-    
-    virtual FluxSource* currentFlux()=0;
+    virtual EventSource* currentFlux()=0;
 
     /// write the characteristics of the current source distribution to a stream
     virtual void writeSourceCharacteristic(std::ostream& out)=0;

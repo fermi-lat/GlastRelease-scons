@@ -26,8 +26,6 @@
 // forward declarations
 class FluxMgr;
 class EventSource;
-class FluxSource;
-
 
 class Flux : public IFlux {
 public:
@@ -102,9 +100,7 @@ public:
     //    insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
     
     EventSource* currentEvent(){return m_event;}
-    
-    FluxSource* currentFlux(){return m_flux;}
-
+    EventSource* currentFlux(){return m_flux;}
     /// write the characteristics of the current source distribution to a stream
     void writeSourceCharacteristic(std::ostream& out);
     
@@ -112,8 +108,8 @@ private:
     
     EventSource* m_event;  
     double m_time;  // elapsed time: here for now.
-    FluxSource* m_flux; // actual FluxSource used 
-    
+    EventSource* m_flux; // actual FluxSource used 
+
     static FluxMgr* s_mgr;
     
 };

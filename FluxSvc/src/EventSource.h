@@ -6,6 +6,9 @@
 
 #ifndef EventSource_h
 #define EventSource_h 1
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+
 
 /** 
 * \class EventSource
@@ -19,9 +22,6 @@ This the abstract base class for source, (FluxSource) or a list of sources (Comp
 
 
 #include <string>
-
-class FluxSource;
-
 
 class EventSource
 {
@@ -38,15 +38,15 @@ public:
     virtual double  rate (double time)const;
 
     ///    abstract method - create an event
-    virtual FluxSource* event (double) = 0;	  
-    
+    virtual EventSource* event (double) = 0;	
+
     ///    UI titles - used for tuple header (verbose) or window title (display)
     virtual std::string fullTitle () const;
     virtual std::string displayTitle () const;
     
     ///    flux for this source in (p/(m^2*sr*sec))
     virtual double	flux (double time) const;
-   // virtual void      setFlux (double value);
+    virtual void      setFlux (double value);
     
     ///    disable/enable, test this particular source 
     void      disable (){m_enabled=false;}
@@ -91,6 +91,13 @@ public:
         out << fullTitle() << std::endl;
         out<< "default message - no sources" << std::endl;
     }
+    /// the current particle:: expect to be overridden by FluxSource
+    virtual std::string particleName() { return std::string("unknown");}
+
+    virtual double energy()const { return 0;}
+    virtual const HepVector3D& launchDir()const { static HepVector3D dummy; return dummy;}
+    virtual const HepPoint3D&  launchPoint()const { static HepPoint3D dummy; return dummy;}
+
     
 private:
     double m_time;    // elapsed time, really only needed for EventSource
@@ -105,16 +112,5 @@ private:
     double m_solid_angle;
 };
 
-// inline function declarations:
-
-
-inline const std::string& EventSource::name () const	{   return m_name;  }
-inline void EventSource::name (const std::string& value)    { m_name = value;   }
-
-inline double    EventSource::totalArea () { return s_total_area; }
-inline void    EventSource::totalArea (double value) { s_total_area = value; }
-
-inline unsigned EventSource::code () const { return m_code; }
-inline void EventSource::code ( unsigned c ) { m_code = c; }
 
 #endif

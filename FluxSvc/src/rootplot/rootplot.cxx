@@ -243,7 +243,7 @@ void rootplot::init(std::vector<const char*> argv)
         
         for(j = 0; j < loop; j++) 
         {
-            FluxSource *f = e->event(time);
+            EventSource *f = e->event(time);
             //increment the time
             double timeadd = e->interval(time);
             time += timeadd;

@@ -5,9 +5,6 @@
 #define FluxSource_h 1
 
 #include "EventSource.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-
 // forward declarations
 class DOM_Element;
 class ISpectrum;
@@ -31,8 +28,7 @@ public:
     virtual ~FluxSource();
 
     ///    generate an event 
-    virtual FluxSource* event(double time);
-
+    virtual EventSource* event(double time);
     ///    full-length title description of this EventSource.
     virtual std::string fullTitle () const;
 
@@ -65,9 +61,11 @@ public:
 
     virtual int eventNumber()const;
 
-    double energy()const { return m_energy;}
-    const HepVector3D& launchDir()const {return m_correctedDir;}
-    const HepPoint3D&  launchPoint()const { return m_launchPoint;}
+    virtual double energy()const { return m_energy;}
+    virtual const HepVector3D& launchDir()const {return m_correctedDir;}
+    virtual const HepPoint3D&  launchPoint()const { return m_launchPoint;}
+    virtual std::string particleName();
+
 
 private:
 

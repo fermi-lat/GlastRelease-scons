@@ -382,6 +382,9 @@ FluxSource::FluxSource(const DOM_Element& xelem )
     ISpectrum*   s = 0;
     std::string class_name;
     std::string source_params; 
+    // this is a default flux, from the flux="123" in the source element
+    setFlux(atof (xml::Dom::getAttribute(xelem, "flux").c_str()));
+
     
     DOM_Element   spec = xml::Dom::findFirstChildByName(xelem, "spectrum");
     
@@ -547,7 +550,7 @@ void FluxSource::spectrum(ISpectrum* s, double emax)
     //const char* name = s->particleName();
 }
 
-FluxSource* FluxSource::event(double time)
+EventSource* FluxSource::event(double time)
 {
     // Purpose and Method: generate a new incoming particle
     // Inputs  - current time
@@ -637,3 +640,7 @@ std::string FluxSource::title () const
         +  m_launch_dir->title();
 }
 
+std::string FluxSource::particleName()
+{
+    return spectrum()->particleName();
+}

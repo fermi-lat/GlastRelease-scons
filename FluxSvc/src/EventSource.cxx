@@ -54,3 +54,17 @@ double	EventSource::solidAngle () const{
 std::string EventSource::fullTitle () const 
 { return std::string("EventSource");   }
 std::string EventSource::displayTitle () const  {  return m_name; }
+
+// inline function declarations:
+
+
+const std::string& EventSource::name () const	{   return m_name;  }
+void EventSource::name (const std::string& value)    { m_name = value;   }
+
+double    EventSource::totalArea () { return s_total_area; }
+void    EventSource::totalArea (double value) { s_total_area = value; }
+
+unsigned EventSource::code () const { return m_code; }
+void EventSource::code ( unsigned c ) { m_code = c; }
+
+void EventSource::setFlux(double value){ m_flux=value; }

@@ -6,12 +6,9 @@
   Original author: T. Burnett
 */
 #include "Flux.h"
-
-#include "FluxSource.h"
 #include "EventSource.h"
 #include "FluxMgr.h"
 #include "SpectrumFactory.h"
-#include "GPS.h"
 
 Flux::Flux(std::string name) 
 : m_time(0)
@@ -53,7 +50,7 @@ void Flux::generate()
 
 // the particle generated 
 std::string Flux::particleName()const{
-    return std::string(m_flux->spectrum()->particleName());
+    return std::string(m_flux->particleName());
 }
 
 // its kinetic energy
@@ -80,8 +77,8 @@ void Flux::pass ( double t){
 }
 
 /// Get the time as held by GPS    
-/*GPStime*//*int*/double Flux::gpsTime () const{
-return s_mgr->time();
+double Flux::gpsTime () const{
+    return s_mgr->time();
 }
 
 

@@ -20,8 +20,6 @@
 #include "EventSource.h"
 #include <vector>
 
-class FluxSource;
-
 class CompositeSource : public EventSource { 
 public:
     ///    constructor/destructor
@@ -34,7 +32,7 @@ public:
     
     /// generate an event from from one of the sources 
     /// which make up the composite, and return a pointer to it
-    virtual FluxSource* event (double time);
+    virtual EventSource* event (double time);
     
     /// rate - compute overall rate...
     virtual double rate (double time)const;
@@ -85,7 +83,8 @@ protected:
     
     //private: 
     std::vector< EventSource* > m_sourceList;
-    std::vector< FluxSource* > m_eventList;
+    std::vector< EventSource* > m_eventList;
+
     //vector of flags, holds whether or not the current source has a remaining unused particle.
     std::vector<int> m_unusedSource;
     //vector of recorded arrival times of held sources.
