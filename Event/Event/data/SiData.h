@@ -11,6 +11,14 @@
 #include <iostream>
 #include <vector>
 
+#include "Gaudi/Kernel/Kernel.h"
+#include "Gaudi/Kernel/DataObject.h"
+#include "Gaudi/Kernel/SmartRefVector.h"
+#include "GlastEvent/TopLevel/Definitions.h"
+#include "GlastEvent/Utilities/CellID.h"
+#include "instrument/SiIDetector.h"
+
+
 class GPStime;
 class GlastEvent;
 class SiController;
@@ -47,10 +55,12 @@ bool operator<(const SiData_Hit&, const SiData_Hit&);
 bool operator==(const SiData_Hit&, const SiData_Hit&);
 #endif
 
-class SiData
+class CsIData : virtual public DataObject
 {
 public:
-
+    virtual const CLID& clID() const   { return SiData::classID(); }
+    static const  CLID& classID()       { return CLID_SiData; }
+    
     enum Axis{X,Y};
 
   public:
