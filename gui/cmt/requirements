@@ -1,5 +1,5 @@
 package gui
-version v3r4
+version v3r5
 
 use GlastPolicy v5*
 use CLHEP v2* IExternal
