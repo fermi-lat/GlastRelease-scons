@@ -2,10 +2,10 @@
 #ifndef ROOT_AcdDigi_H
 #define ROOT_AcdDigi_H
 
-#include "AcdId.h"
+#include "commonRootData/idents/AcdId.h"
 #include "TObject.h"
 #include "TString.h"
-#include "mcRootData/VolumeIdentifier.h"
+#include "commonRootData/idents/VolumeIdentifier.h"
 
 /** @class AcdDigi
  * @brief The digitization for a single ACD entity.  

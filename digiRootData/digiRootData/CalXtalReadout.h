@@ -4,7 +4,7 @@
 
 #include "TObject.h"
 
-#include "CalXtalId.h"
+#include "commonRootData/idents/CalXtalId.h"
 
 /** @class CalXtalReadout        
 * @brief Pulse heights and energy range for both faces of log for Cal.

@@ -11,7 +11,7 @@ using namespace std;
 #endif
 #endif
 
-#include "TowerId.h"
+#include "commonRootData/idents/TowerId.h"
 #include "GlastAxis.h"
 
 /**

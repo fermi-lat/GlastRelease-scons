@@ -3,6 +3,7 @@ Package digiRootData
 Coordinator:H.Kelly
 @verbatim
 
+v7r4      22-Jul-2004 HMK Moved all idents classes to commonRootData
 v7r3      28-Jun-2004 HMK Add new members to AcdDigi
 v7r2      16-Jun-2004 THB convert to use comprehensive pattern
 v7r1      16-Jun-2004 THB Use new RootPolicy scheme for building rootcint files

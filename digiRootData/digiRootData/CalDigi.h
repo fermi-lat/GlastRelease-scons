@@ -4,7 +4,7 @@
 
 #include "TObject.h"
 #include "TClonesArray.h"
-#include "CalXtalId.h"
+#include "commonRootData/idents/CalXtalId.h"
 #include "CalXtalReadout.h"
 
 /** @class CalDigi

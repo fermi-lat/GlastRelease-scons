@@ -1,5 +1,5 @@
 package digiRootData
-version v7r3
+version v7r4
 # $Id$
 
 use RootPolicy v4r*
