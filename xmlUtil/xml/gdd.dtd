@@ -324,9 +324,11 @@
 -->
 
 <!-- new element types "choice" and "case" to enclose alternative
-     volume definitions.
+     volume definitions.  Default volume is used if client
+     has not identified itself with any of the modes of 
+     the <case> children
 
-          <choice name = "SiLayer" >
+          <choice name = "SiLayer" default="SiBox">
              <case mode="propagate" volume="SiBox" />
              <case mode="digi" volume="SiComp" />
           </choice>
@@ -683,7 +685,8 @@
            envelope   IDREF   #REQUIRED>
 
 <!ELEMENT  choice (case)+ >
-<!ATTLIST  choice name ID #REQUIRED>
+<!ATTLIST  choice name ID #REQUIRED
+                  default IDREF #REQUIRED >
 
 <!ELEMENT  case EMPTY >
 <!ATTLIST  case mode NMTOKENS #IMPLIED 

@@ -262,11 +262,11 @@
 
 <!-- Should we even bother with a choice here?  All clients
      probably want the more detailed SiLayerComp structure -->
-    <choice name="SiLayer" >  
+    <choice name="SiLayer" default="SiLayerBox">  
       <case mode="fastmc" volume="SiLayerBox" />
       <case mode="digi" volume="SiLadders" />
       <case mode="recon" volume="SiLadders" />
-      <case mode="propagate" volume="SiLadders" />
+      <case mode="propagate" volume="SiLayerBox" />
     </choice>
 
 <!-- actually includes all inactive materials except core, conv -->
