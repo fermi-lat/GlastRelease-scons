@@ -12,8 +12,6 @@
 #include "TkrRecon/ITkrGeometrySvc.h"
 #include "TkrRecon/ITkrBadStripsSvc.h"
 
-/// large number, used as a sentinel in the strip list
-enum {bigStripNum = 0x7FFFFF};
 
 /** 
 * @class TkrMakeClusters
@@ -47,6 +45,9 @@ public:
 	* If so, the cluster is added, if not, it is dropped. 
 	* There may be other criteria for dropping a cluster, such as too many hits.      
 	*/
+
+    /// large number, used as a sentinel in the strip list
+    enum {bigStripNum = 0x7FFFFF};
 
 	/// This constructor actually makes the clusters
 	/// the pointers to services and data are passed through the constructor
