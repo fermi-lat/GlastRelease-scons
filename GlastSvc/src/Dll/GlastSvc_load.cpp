@@ -38,7 +38,7 @@ void GlastSvc_load() {
     // DLL_DECL_CONVERTER( MCSiLayerCnv );
     //DLL_DECL_CONVERTER( MCCalorimeterHitCnv );
 
-    DLL_DECL_CONVERTER( LdGlastDataCnv );
+ //   DLL_DECL_CONVERTER( LdGlastDataCnv );
 
 } 
 

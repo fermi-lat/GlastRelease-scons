@@ -47,6 +47,7 @@ public:
     
     /// kill off the detector hierarchy if it exists
     StatusCode finalize ();
+#if 0
     
     /// return the root detector for this service (implements IGlastDetSvc)
     GlastDetector*  getRootDetector ();
@@ -73,7 +74,7 @@ public:
   
     //! set new root detector
     void setDetector(GlastDetector* d);
-
+#endif
     //! new detModel interface, will call back. 
     virtual void accept(IMedia& media);
 

@@ -29,7 +29,7 @@ public:
 
     //! new detModel interface, will call back. 
     virtual void accept(IMedia& media)=0;
-
+#if 0
     //! open an IRF file
     virtual StatusCode openIRF(std::string filename)=0;
     
@@ -48,7 +48,7 @@ public:
 
     //! set new root detector
     virtual void setDetector(GlastDetector* d)=0;
-
+#endif
 	    /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IGlastDetSvc; }
 

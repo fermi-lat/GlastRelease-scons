@@ -62,15 +62,9 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
         
         material = comp->getEnvelope()->getMaterial();
     }
-#if 0
-    pushTransform();
-    pushId();
-    m_geom.shape(IGeometry::Box,ensemble->getName(),material, params, type);
-#else
     m_geom.pushShape(IGeometry::Box, m_idvec, ensemble->getName(), material, m_params,  type);
     m_params.clear();
     m_idvec.clear();
-#endif
     PosVector p = ensemble->getPositions();
     for(PosVector::iterator i=p.begin(); i!=p.end();i++)
         (*i)->AcceptNotRec(this);
@@ -83,18 +77,11 @@ void  GeometryVisitor::visitBox(detModel::Box* b)
     m_params.push_back(b->getX());
     m_params.push_back(b->getY());
     m_params.push_back(b->getZ());
-#if 0
-    pushTransform();
-    pushId();
-    m_geom.shape(IGeometry::Box, b->getName(), b->getMaterial(), params,
-        b->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
-#else
     m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), m_params, 
         b->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
     m_params.clear();
     m_idvec.clear();
 
-#endif
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void  GeometryVisitor::visitTube(detModel::Tube* t)
@@ -103,17 +90,10 @@ void  GeometryVisitor::visitTube(detModel::Tube* t)
     m_params.push_back(t->getZ());
     m_params.push_back(t->getRin());
     m_params.push_back(t->getRout());
-#if 1
     m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(), m_params,
         t->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
     m_params.clear();
     m_idvec.clear();
-#else
-    pushTransform();
-    pushId();
-    m_geom.shape(IGeometry::Tube, t->getName(), t->getMaterial(), params,
-        t->getSensitive()? IGeometry::Sensitive : IGeometry::Simple);
-#endif    
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void  GeometryVisitor::visitPosXYZ(detModel::PosXYZ* pos)
@@ -179,25 +159,4 @@ void GeometryVisitor::cacheTransform(double x, double y, double z, double rx, do
     m_params.push_back(rx);
     m_params.push_back(ry);
     m_params.push_back(rz);
-}
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void GeometryVisitor::pushTransform()
-{
-#if 0
-    assert(!m_params.empty());
-    m_geom.push(
-        m_params[0], m_params[1],m_params[2],
-        m_params[3],m_params[4], m_params[5] );
-    m_params.clear();
-#endif
-}
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void GeometryVisitor::pushId()
-{
-#if 0
-    //    assert(! m_idvec.empty());
-    for(std::vector<unsigned int>::const_iterator i = m_idvec.begin(); i!=m_idvec.end(); ++i)
-        m_geom.id("",*i);
-    m_idvec.clear();
-#endif
 }
