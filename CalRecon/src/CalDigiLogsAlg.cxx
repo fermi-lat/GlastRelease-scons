@@ -107,7 +107,7 @@ StatusCode CalDigiLogsAlg::execute()
 	   computePosition(recLog,&geoLog, calibLog);
 	   //		std::cout << " ilayer = " << ilayer << " view=" << view << " icol=" << icol << std::endl;
 	}
-	m_CalRecLogs->writeOut();
+//	m_CalRecLogs->writeOut();
 
 	return sc;
 }
