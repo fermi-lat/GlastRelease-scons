@@ -22,7 +22,9 @@
 
 * Constains 2 local classes for CAL and TKR trigger primitives
 */
-extern const CLID& CLID_LdfDiagnosticData;
+
+static const CLID& CLID_LdfDiagnosticData = InterfaceID("LdfDiagnosticData", 1, 0);
+
 namespace LdfEvent {
     class CalDiagnosticData {
     public:

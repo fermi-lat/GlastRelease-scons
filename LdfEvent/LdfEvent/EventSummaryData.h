@@ -18,7 +18,10 @@
 * @class EventSummaryData
 * @brief TDS for storing the event summary data 
 */
-extern const CLID& CLID_LdfEventSummaryData;
+
+static const CLID& CLID_LdfEventSummaryData = InterfaceID("LdfEventSummaryData", 1, 0);
+
+
 namespace LdfEvent{
 
     class EventSummaryData : public DataObject {

@@ -16,7 +16,8 @@
 * @class Gem
 * @brief TDS for GEM data
 */
-extern const CLID& CLID_LdfGem;
+static const CLID& CLID_LdfGem = InterfaceID("LdfGem", 1, 0);
+
 namespace LdfEvent {
 
 class GemTileList

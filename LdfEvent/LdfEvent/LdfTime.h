@@ -16,7 +16,9 @@
 * @class EbfTime
 * @brief TDS for time
 */
-extern const CLID& CLID_LdfTime;
+
+static const CLID& CLID_LdfTime = InterfaceID("LdfTime", 1, 0);
+
 namespace LdfEvent {
     class LdfTime : public DataObject{
     public:
