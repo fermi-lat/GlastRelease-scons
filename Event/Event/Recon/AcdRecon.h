@@ -7,7 +7,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
 
-#include "GlastEvent/TopLevel/Definitions.h"
+#include "Event/TopLevel/Definitions.h"
 
 #include <vector>
 #include <map>
@@ -31,13 +31,14 @@ namespace Event {
             m_doca(-99999.0)
         {};
         
-        AcdRecon(double e, int count, double gDoca, double doca,
+        AcdRecon(double e, int count, double gDoca, double doca, double actDist,
             idents::AcdId &minDocaId, std::vector<double> &rowDoca, 
             std::map<idents::AcdId,double> &energies)       
             : m_totEnergy(e),
             m_tileCount(count),
             m_gammaDoca(gDoca),
             m_doca(doca),
+            m_actDist(actDist),
             m_minDocaId(minDocaId),
             m_rowDocaCol(rowDoca),
             m_energyCol(energies)
@@ -46,13 +47,14 @@ namespace Event {
         
         virtual ~AcdRecon() { };
 
-        void initialize (double e, int count, double gDoca, double doca,
+        void initialize (double e, int count, double gDoca, double doca, double actDist,
             idents::AcdId minDocaId, std::vector<double> &rowDoca,
             std::map<idents::AcdId, double> &energyCol) {
             m_totEnergy = e;
             m_tileCount = count;
             m_gammaDoca = gDoca;
             m_doca = doca;
+            m_actDist = actDist;
             m_minDocaId = minDocaId;
             m_rowDocaCol = rowDoca;
             m_energyCol = energyCol;
@@ -66,8 +68,9 @@ namespace Event {
         inline const int getTileCount() const { return m_tileCount; };
         inline const double getGammaDoca() const { return m_gammaDoca; };
         inline const double getDoca() const { return m_doca; };
+        inline const double getActiveDist() const { return m_actDist; };
         inline const idents::AcdId& getMinDocaId() const { return m_minDocaId; };
-        inline const std::vector<double>& getRowDoca() const { return m_rowDocaCol; };
+        inline const std::vector<double>& getRowDocaCol() const { return m_rowDocaCol; };
         inline const std::map<idents::AcdId, double>& getEnergyCol() const { return m_energyCol; };
         
         /// Serialize the object for writing
@@ -95,6 +98,8 @@ namespace Event {
         double m_gammaDoca;
         /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
         double m_doca;
+        /// New Bill Atwood DOCA calculation using edge of tiles
+        double m_actDist;
         /// Collection of distance of closest approach calculations
         /// for each side row of the ACD
         std::vector<double> m_rowDocaCol;
@@ -140,15 +145,15 @@ namespace Event {
         return s
             << "    base class AcdRecon :"
             << "\n        total energy      = "
-            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << EventFloatFormat( EventFormat::width, EventFormat::precision )
             << m_totEnergy << ", "
             << "\n        tile Count              = "
-            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << EventFloatFormat( EventFormat::width, EventFormat::precision )
             << m_tileCount   << " )"
             << "\n        gamma DOCA     = "
             << m_gammaDoca << " )"
             << "\n        DOCA     = "
-            << EventFloatFormat( GlastEvent::width, GlastEvent::precision )
+            << EventFloatFormat( EventFormat::width, EventFormat::precision )
             << m_doca << " )";
     }
     
