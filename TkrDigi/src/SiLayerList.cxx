@@ -36,7 +36,7 @@ void SiLayerList::popShape()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 idents::VolumeIdentifier SiLayerList::getId()const
 {
-    idents::VolumeIdentifier id;
+    idents::VolumeIdentifier id(m_prefix);
     for(UintVector::const_iterator i=m_idValues.begin(); i!=m_idValues.end(); ++i) id.append(*i);
     return id;
 

@@ -41,6 +41,7 @@ public:
     idents::VolumeIdentifier getId()const; 
 
 
+    void setPrefix(idents::VolumeIdentifier prefix){m_prefix=prefix;}
 private:
     typedef std::vector<unsigned int> UintVector;
     typedef std::vector<std::string> StringVector;
@@ -55,6 +56,9 @@ private:
     UintVector m_idcount;
 
     std::vector<idents::VolumeIdentifier> m_idlist;
+
+    // the prefix to prepend
+    idents::VolumeIdentifier m_prefix;
 
 };
 #endif
