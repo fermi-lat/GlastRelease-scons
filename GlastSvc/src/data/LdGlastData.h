@@ -59,7 +59,7 @@ public:
     const IVetoData*  getVetoData() const  { return m_vetoData; }
 
     const MCTruth*    getMCTruth()const { return m_truth;}
-    virtual void printOn(std::ostream)const;
+    virtual void printOn(std::ostream&)const;
 
 
     void setMCTruth(const MCTruth* t){ m_truth =t;}
@@ -70,7 +70,7 @@ private:
     const MCTruth*  m_truth;
 };
 
-void LdGlastData::printOn(std::ostream out)const {
+void LdGlastData::printOn(std::ostream& out)const {
     getVetoData()->printOn(out);
     getSiData()->printOn(out);
     getCsIData()->printOn(out);
