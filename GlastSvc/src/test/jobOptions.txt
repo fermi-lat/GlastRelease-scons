@@ -18,7 +18,10 @@ MessageSvc.OutputLevel      = 2;
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
-    
+// Uncomment to check out non-LAT top volume:
+// GlastDetSvc.topVolume = "oneTKR";    
+// GlastDetSvc.topVolume = "trayTop";    
+
 ApplicationMgr.EvtMax = 20;
 
 //==============================================================

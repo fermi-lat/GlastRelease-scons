@@ -15,6 +15,8 @@
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
+#include "idents/VolumeIdentifier.h"
+#include "CLHEP/Geometry/Transform3D.h"
 //#include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 
@@ -62,6 +64,23 @@ StatusCode CreateEvent::initialize() {
         sc = m_detSvc->getNumericConstByName("diodeX", &test);
         if( sc.isFailure ()) log << MSG::INFO << "diodeX not found!" << endreq;
         else log << MSG::INFO << "found constant diodeX = " << test << endreq;
+        // Try out integer constant version
+        int  myInt;
+        sc = m_detSvc->getNumericConstByName("diodeX", &myInt);
+        if( sc.isFailure ()) log << MSG::INFO << "proper failure!" << endreq;
+        sc = m_detSvc->getNumericConstByName("xNum", &myInt);
+        if (sc.isFailure()) log << MSG::INFO << "xNum not found!" << endreq;
+        else log << MSG::INFO << "found constant xNum = " << myInt << endreq;
+
+        // IDmap stuff
+        idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
+        log << "Size of id prefix is " << prefix.size() << endreq;
+
+        const HepTransform3D trans = m_detSvc->getTransform3DPrefix();
+        const Hep3Vector vec = trans.getTranslation();
+        log << "Prefix translation (x, y, z) is" << endreq;
+        log << " (" << vec.x() << ", "
+            << vec.y() << ", " << vec.z() << ")" << endreq;
             
     }else {
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
