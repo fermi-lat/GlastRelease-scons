@@ -109,6 +109,10 @@ public:
                                               CLID_Calib_CAL_MuSlope));
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_LightAtt,
                                               CLID_Calib_CAL_LightAtt));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_LightAsym,
+                                              CLID_Calib_CAL_LightAsym));
+    CalibData::pairs.push_back(std::make_pair(CalibData::CAL_IntNonlin,
+                                              CLID_Calib_CAL_IntNonlin));
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
 
