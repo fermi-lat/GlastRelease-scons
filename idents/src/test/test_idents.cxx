@@ -4,6 +4,7 @@
 #include "idents/VolumeIdentifier.h"
 #include <map>
 #include <vector>
+#include <iostream>
 #include <algorithm>
 
 int main() 
@@ -21,12 +22,12 @@ int main()
   std::sort(idVect.begin(), idVect.end());
   
   std::vector< idents::VolumeIdentifier >::iterator i;
-  std::cout << "Sorted vector of volume identifiers: "<< endl;
+  std::cout << "Sorted vector of volume identifiers: "<< std::endl;
   for (i=idVect.begin(); i != idVect.end(); i++)
     {
-      std::cout << i->name() << endl;
+    std::cout << i->name() << std::endl;
     }
-  std::cout << endl;
+  std::cout << std::endl;
 
   std::map<idents::VolumeIdentifier,double> idMap;
   idMap[id1] = 1.5;
@@ -34,11 +35,11 @@ int main()
   idMap[id3] = 3.5;
 
   std::map<idents::VolumeIdentifier,double>::iterator m;
-  std::cout << "Map elements: " << endl;
+  std::cout << "Map elements: " << std::endl;
   for (m = idMap.begin(); m != idMap.end();m++)
     {
       std::cout << "Id = " << (*m).first.name();
-      std::cout << "   Value = " << (*m).second << endl;
+      std::cout << "   Value = " << (*m).second << std::endl;
     }
   
   return 0;
