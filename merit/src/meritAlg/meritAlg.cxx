@@ -369,12 +369,12 @@ void meritAlg::copyFT1info(){
 	  SmartDataPtr<Event::TkrVertexCol>(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
 	if(!pVtxCol)
 	  {
-	    log << MSG::ERROR << "Vertex Col not found in TDS" << endreq;
+	    log << MSG::DEBUG << "Vertex Col not found in TDS" << endreq;
 	    return;
 	  }
 	if(pVtxCol->size()==0) 
 	  {
-	    log << MSG::ERROR << "Vertex Col found in TDS BUT empty" << endreq;
+	    log << MSG::DEBUG << "Vertex Col found in TDS BUT empty" << endreq;
 	    return;
 	  }
 	//Assuming the best vertex comes always first.....    
