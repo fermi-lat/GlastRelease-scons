@@ -63,6 +63,24 @@
           </minus>
         </const>
 
+        <const name="ACDTopZHalf" >
+          <notes>for convenience</notes>
+          <half>
+            <refer refTo="ACDTop_z" />
+          </half>
+        </const>
+
+
+        <const name="ACDTop_d" >
+          <notes>Z displacement of top ACD relative to Ritz origin.
+                As of July, 2003, get frontmost tile position from
+                3-d model version 6-23-03; compute from there.</notes>
+          <minus>
+            <refer refTo="ACDTileMaxZ" />
+            <refer refTo="ACDTopZHalf" />
+          </minus>
+        </const>
+
         <const name="ACDSideThickness">
           <notes>This isn't really correct.  If overlapping and
             slant are taken into account, ACDSideThickness is
@@ -272,12 +290,6 @@
         </const> 
 -->
 
-        <const name="ACDTopZHalf" >
-          <notes>for convenience</notes>
-          <half>
-            <refer refTo="ACDTop_z" />
-          </half>
-        </const>
 
         <const name="ribbonHalfThickness" >
           <notes>for convenience</notes>
@@ -720,36 +732,11 @@
         </const>
  -->
 
-<!-- constants used for strucutural pieces -->
-<!--  obsolete as of July 03.  Get primary dimension from
-   3-d model.  Turns out acd top support doesn not cover sides;
-   it nests between them. 
-        <const name="ACDTopSupportTran" >
-          <notes>Transverse dimension of ACD top support.  It covers
-            side pieces.</notes>
-          <add>
-            <refer refTo="towersTotalX" />
-            <refer refTo="ACDTKRStayClear" />
-            <refer refTo="ACDTKRStayClear" />
-            <refer refTo="ACDSideSupportThick" />
-            <refer refTo="ACDSideSupportThick" />
-          </add>
-        </const>
--->
-
-
-        <const name="ACDTop_d" >
-          <notes>Z displacement of top ACD relative to Ritz origin</notes>
-          <add>
-            <refer refTo="TKRVertStayClear" />
-            <refer refTo="calTrackerGap" />
-            <refer refTo="TKRACDSupportGap" />
-            <refer refTo="ACDTopSupportThick" />
-            <refer refTo="ACDTopZHalf" />
-          </add>
-        </const>
-
 <!-- displacements for ACD support pieces in their negative incarnations -->
+<!-- constants used for strucutural pieces -->
+<!--  Old method obsolete as of July 03.  Instead get primary dimension from
+   3-d model.  Turns out acd top support doesn not cover sides;
+   it nests between them. -->
 
 
         <const name="ACDSideSupport_dtn">
@@ -771,7 +758,7 @@
 
       </derCategory>
 
-<!-- All of above has been reviewed as of 25 July 2003 -->
+<!-- All of above has been reviewed as of 31 July 2003 -->
 
 
 
