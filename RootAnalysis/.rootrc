@@ -1,0 +1,38 @@
+# This is the standard GLAST rootrc file
+# Created August 19, 2001
+
+# ROOT Environment settings are handled via the class TEnv. To see
+# which values are active do: gEnv->Print().
+
+# Path used by dynamic loader to find shared libraries and macros
+# Paths are different for Unix and Windows. The example shows the defaults
+# for all ROOT applications for either Unix or Windows.
+Unix.*.Root.DynamicPath:    $(ROOTANALYSIS)/lib
+Unix.*.Root.MacroPath:      $(ROOTANALYSIS)/common:$(ROOTANALYSIS)/utilityMacros:$(ROOTANALYSIS)/plotMacros:$(ROOTANALYSIS)/NtupleAnalysis
+#WinNT.*.Root.DynamicPath:   $(ROOTANALYSIS)/lib
+WinNT.*.Root.MacroPath:     $(ROOTANALYSIS)/common;$(ROOTANALYSIS)/utilityMacros;$(ROOTANALYSIS)/plotMacros;$(ROOTANALYSIS)/NtupleAnalysis
+
+# Activate memory statistics (size and cnt is used to trap allocation of
+# blocks of a certain size after cnt times)
+Root.MemStat:            0
+Root.MemStat.size:      -1
+Root.MemStat.cnt:       -1
+Root.ObjectStat:         0
+
+# Global debug mode. When >0 turns on progressively more details debugging.
+# When >4 X11 runs in synchronous mode.
+Root.Debug:              0
+
+# Default editor
+Unix.*.Editor:           vi
+WinNT.*.Editor:          notepad
+
+
+# Rint (interactive ROOT executable) specific alias, logon and logoff macros
+Rint.Load:               $(ROOTANALYSIS)/setup/rootalias.C
+Rint.Logon:              $(ROOTANALYSIS)/setup/rootlogon.C
+Rint.Logoff:             $(ROOTANALYSIS)/setup/rootlogoff.C
+# Record session commands, set to "-" to turn off command recording
+#Rint.History:            $(ROOTANALYSIS)/.root_hist
+
+
