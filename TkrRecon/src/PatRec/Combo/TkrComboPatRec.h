@@ -28,6 +28,8 @@
 #include "src/TrackFit/KalFitTrack/KalFitTrack.h"
 #include "geometry/Ray.h"
 
+#include <iostream>
+
 #include <vector>
 
 using namespace Event;
