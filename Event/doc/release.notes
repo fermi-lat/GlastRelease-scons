@@ -1,7 +1,8 @@
 /** @file release.notes
- * package Event\n
+ * @brief package Event<pre>
  * package manager:T.Burnett
  *
+ * v9r5    21-nov-02 THB fixes to TrkFitPlane and CalDigi
  * v9r4    09-oct-02 LSR mods to RelTable, TkrPatCand, other Tkr stuff for new reltables 
  * v9r3    01-Oct-02 HMK Update AcdRecon to store energy collection in vectors\n
  * v9r2    25-sep-02 THB "Small changes to the McParticle interface"\n
@@ -49,5 +50,5 @@
  *       08-Aug-2000 THB many things copied from LHCbEvent, all of \n
  *       the TopLevel directory!\n
  *       Start fixing source comments to be picked up by doxygen. \n
- *       Put in reference to Traudl's Raw data definition.\n
+ *       Put in reference to Traudl's Raw data definition.,</PRE>
 */

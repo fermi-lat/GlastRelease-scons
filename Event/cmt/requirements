@@ -1,10 +1,10 @@
 package Event
-version v9r4
+version v9r5
 
 branches Event cmt doc src
 use idents v2r*
 
-use GaudiKernel v11r*
+use GaudiKernel v*
 use geometry    v3*
 use CLHEP       *
 
