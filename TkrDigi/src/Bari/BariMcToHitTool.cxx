@@ -176,7 +176,6 @@ StatusCode BariMcToHitTool::execute()
             // now generate the plane coordinates
             // Since we know how the ladders and wafers are laid out
             //    we just translate the wafer coordinates
-            const TkrVolumeIdentifier planeId = volId.getPlaneId();
 
             const int ladder = volId.getLadder();
             const int wafer  = volId.getWafer();
