@@ -94,18 +94,9 @@ private:
     int m_view;
     int m_tower;
     int m_tot[2];
-    Hitlist  m_hits;
+	HitList m_hits;
 };
 
-//! Typedefs to make iterators available (to be added)
-
-// It's something like this:
-
-//typedef std::vector<int> HitList;
-//typedef HitList::const_iterator const_iterator;
-
-//virtual TkrDigi::const_iterator begin() const = 0;
-//virtual TkrDigi::const_iterator end() const = 0;
 
 //! Serialize the object for writing
 inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
@@ -116,15 +107,11 @@ inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s ) const {
         << m_tot[0]
         << m_tot[1]
         << m_hits.size();
-    std::vector<int>::const_iterator ih;
+	std::vector<int>::const_iterator ih;
     for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
         s << *ih;
     }
     
-//  for (int i=0;i<m_hits.size();i++) {
-//      s << m_hits[i];
-//  }
-
     return s;
 }
 
@@ -140,14 +127,11 @@ inline StreamBuffer& TkrDigi::serialize( StreamBuffer& s )       {
         >> size;
 
     m_hits.resize( size, 0);
-    std::vector<int>::iterator ih;
+	std::vector<int>::iterator ih;
     for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
         s >> *ih;
     }
 
-//  for (int i=0; i<size;i++) {
-//      s >> m_hits[i];
-//  }
     return s;
 }
 
@@ -163,8 +147,8 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
         << " ToT: " << m_tot[0] << " " << m_tot[1] << std::endl
         << "Number of hits strips: " << size << std::endl;
 
-    std::vector<int>::const_iterator ih;
-    for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
+	std::vector<int>::const_iterator ih;
+	for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
         if (j==10) {j = 0; s << std::endl;}
         s << *ih << " ";
     }
@@ -177,9 +161,7 @@ inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
 */
     
     template <class TYPE> class ObjectVector;
-   // typedef ObjectVector<TkrDigi>     TkrDigiVec;
     template <class TYPE> class ObjectList;
-    // typedef ObjectList<TkrDigi>       TkrDigiList;
      
     typedef ObjectVector<TkrDigi> TkrDigiCol;
     
