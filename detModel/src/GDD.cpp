@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "detModel/GDD.h"
-#include "detModel/Sections/GDDensamble.h"
+#include "detModel/Sections/GDDensemble.h"
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDsection.h"
@@ -45,7 +45,7 @@ void GDD::ResolveReferences(){
   for(i=volumeMap.begin();i!=volumeMap.end();i++){
     actualVolume=i->second;
 
-    if (GDDensamble* actualEns = dynamic_cast<GDDensamble*>(actualVolume))
+    if (GDDensemble* actualEns = dynamic_cast<GDDensemble*>(actualVolume))
       {
 	///number of positions of the current composition
 	int numPosition;

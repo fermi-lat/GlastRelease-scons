@@ -10,22 +10,28 @@
 #include "detModel/GDD.h"
 #include "detModel/Sections/GDDbox.h"
 #include "detModel/Sections/GDDcomposition.h"
-#include "detModel/Sections/GDDensamble.h"
+#include "detModel/Sections/GDDensemble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDposition.h"
+#include "detModel/Utilities/GDDcolorCreator.h"
+#include "detModel/Utilities/GDDcolor.h"
 
+/// This is the main constructor
 GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
 {
-  typedef std::map<std::string,float>M1;
+  // Some variables
+  int i;
+  typedef std::map<std::string,GDDcolor*>M1;
   typedef std::map<std::string,int>M2;
   typedef std::map<std::string,GDDvolume*>M3;
   M3::const_iterator j;
   std::vector <std::string>::const_iterator n;
 
+  /// This visitor is not recursive
   setRecursive(0);
   actualVolume = nvol;
   depth = 0;
@@ -37,10 +43,11 @@ GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
   GDDmanager* manager = GDDmanager::getPointer();
   GDD* g = manager->getGDD();
   
-  /// We initialize the opacity map
+  /// We initialize the colors map for the material
   std::vector <std::string> names = g->getMaterialNames();
-  for(n=names.begin();n!=names.end();n++)
-    opacityMap.insert(M1::value_type(*n,0.0));  
+  GDDcolorCreator* cColor = new GDDcolorCreator(names.size());
+  for(i=0;i<names.size();i++)
+    colorsMap.insert(M1::value_type(names[i],cColor->getColor(i)));  
   
   /// We initialize the depth map
   M3 m = g->getVolumesMap();
@@ -67,10 +74,6 @@ void GDDVRMLSectionsVisitor::visitGDD(GDD* gdd)
     (*i)->AcceptNotRec(this);
 }
 
-/**
- * with a far away camera and a small field of view. \todo To be 
- * corrected; some views are not properly performed
- */  
 void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 {
   float dimX, dimY, dimZ;
@@ -82,7 +85,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
       std::vector<GDDvolume*> volumes = section->getVolumes();
       
       for(v=volumes.begin(); v!=volumes.end(); v++){
-	if(GDDensamble* ens = dynamic_cast<GDDensamble*>(*v))
+	if(GDDensemble* ens = dynamic_cast<GDDensemble*>(*v))
 	  {
 	    if (ens == section->getTopVolume())
 	      vol = ens;
@@ -106,6 +109,8 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
   /** 
    * We setup three standard view on the three coordinates planes;
    * since in VRML97 there is no orthographic camera, we simulate it
+   * with a far away camera and a small field of view. \todo To be 
+   * corrected; some views are not properly performed
    */
   
   out << "Viewpoint {" << std::endl;
@@ -134,7 +139,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 }
 
 
-void  GDDVRMLSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
+void  GDDVRMLSectionsVisitor::visitEnsemble(GDDensemble* ensemble)
 {
   std::vector <GDDposition*>::iterator i;
   typedef std::vector<GDDposition*> pos;
@@ -142,22 +147,22 @@ void  GDDVRMLSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
   typedef std::map<std::string, int> M;
   M::const_iterator j; 
 
-  j = depthMap.find(ensamble->getName());
+  j = depthMap.find(ensemble->getName());
   
   /// If we have not reached the depth limit we draw the full ensamble
   if(j->second > depth) 
     {
       depth++;
       
-      out << "# " << ensamble->getName() << std::endl;
+      out << "# " << ensemble->getName() << std::endl;
       
       /// Here the positioned volumes are visited
-      pos p = ensamble->getPositions();
+      pos p = ensemble->getPositions();
       for(i=p.begin(); i!=p.end();i++)
 	(*i)->AcceptNotRec(this);
       
       /// Here the envelope is visited if the ensamble is a composition
-      if (GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensamble))
+      if (GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensemble))
 	comp->getEnvelope()->AcceptNotRec(this);
       
       /// The depth level is decreased
@@ -165,12 +170,12 @@ void  GDDVRMLSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
     }
   else /// Else we draw only the bounding box
     {
-      out << "Shape {   #" << ensamble->getName() << std::endl;
+      out << "Shape {   #" << ensemble->getName() << std::endl;
       out << "  geometry Box { " << std::endl;
       out << "                     size " 
-	  << ensamble->getBBox()->getXDim() << " " 
-	  << ensamble->getBBox()->getXDim() << " " 
-	  << ensamble->getBBox()->getXDim() << std::endl; 
+	  << ensemble->getBBox()->getXDim() << " "
+	  << ensemble->getBBox()->getXDim() << " "
+	  << ensemble->getBBox()->getXDim() << std::endl;
       out << "                    }" << std::endl;  
       out << "   }" << std::endl;
     }
@@ -203,24 +208,21 @@ void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 }
 
 
-/** \todo The visitAxisPos mechanism is undergoing a big redesign .. 
- *too much duplicated code in different visitors
- */
 void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 {
   out << "Transform { " << std::endl;
   switch(pos->getAxisDir()){
-  case (GDDaxisPos::xDir):
+  case (GDDstack::xDir):
     out << "rotation " << " 1 0 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
     out << "translation " << 
       pos->getDx()+pos->getDisp() << " " << pos->getDy() << " " << pos->getDz() << std::endl;
     break;
-  case (GDDaxisPos::yDir):
+  case (GDDstack::yDir):
     out << "rotation " << " 0 1 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
     out << "translation " << 
       pos->getDx() << " " << pos->getDy()+pos->getDisp() << " " << pos->getDz() << std::endl;
     break;
-  case (GDDaxisPos::zDir):
+  case (GDDstack::zDir):
     out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180  << std::endl;  
     out << "translation " << 
       pos->getDx() << " " << pos->getDy() << " " << pos->getDz()+pos->getDisp() << std::endl;
@@ -233,9 +235,6 @@ void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 
 }
 
-/** \todo The visitAxisMPos mechanism is undergoing a big redesign .. 
- *too much duplicated code in different visitors
- */
 void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 {
   int i;
@@ -246,17 +245,17 @@ void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
   for(i=0;i<n;i++){
     out << "Transform { " << std::endl;
     switch(pos->getAxisDir()){
-    case (GDDaxisMPos::xDir):
+    case (GDDstack::xDir):
       out << "rotation " << " 1 0 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
       out << "translation " << 
 	pos->getDx()+pos->getDisp(i) << " " << pos->getDy() << " " << pos->getDz() << std::endl;
       break;
-    case (GDDaxisMPos::yDir):
+    case (GDDstack::yDir):
       out << "rotation " << " 0 1 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
       out << "translation " << 
 	pos->getDx() << " " << pos->getDy()+pos->getDisp(i) << " " << pos->getDz() << std::endl;
       break;
-    case (GDDaxisMPos::zDir):
+    case (GDDstack::zDir):
       out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180 << std::endl;  
       out << "translation " << 
 	pos->getDx() << " " << pos->getDy() << " " << pos->getDz()+pos->getDisp(i) << std::endl;
@@ -277,7 +276,6 @@ void  GDDVRMLSectionsVisitor::visitIdField(GDDidField*)
 }
 
 
-/// \todo Still not implemented the subdivision in seg of a box
 void  GDDVRMLSectionsVisitor::visitSeg(GDDseg*)
 {
 }
@@ -298,84 +296,36 @@ void GDDVRMLSectionsVisitor::setDepth(std::string name, int d)
 
 void GDDVRMLSectionsVisitor::setOpacity(std::string name, float op)
 {
-  typedef std::map<std::string, float> M;
-  M::const_iterator j; 
+  typedef std::map<std::string, GDDcolor*> M;
+  M::iterator j; 
   
-  j = opacityMap.find(name);
-  if (j == opacityMap.end()) return;
+  j = colorsMap.find(name);
+  if (j == colorsMap.end()) return;
   else 
-    {
-      opacityMap.erase(name);
-      opacityMap.insert(M::value_type(name,op));
-    }  
+    j->second->setTra(op);
 }
 
-/** This function convert from the HSV to the RGB colours spaces \todo
-    To bring outside the visitor and inside detModel */
-void HSVtoRGB(double *r, double *g, double *b, double h, double s, double v)
-{
-  double f,p,q,t;
-  int i;
-  
-  if (h==360.0)
-    h = 0.0;
-  
-  h /= 60.0;
-  i = (int)h;
-  f = h - i;
-  p = v*(1.0-s);
-  q = v*(1.0 - (s*f));
-  t = v*(1.0 - (s*(1.0-f)));
-
-  switch(i){
-  case 0: *r = v; *g = t; *b = p; break;
-  case 1: *r = q; *g = v; *b = p; break;
-  case 2: *r = p; *g = v; *b = t; break;
-  case 3: *r = p; *g = q; *b = v; break;
-  case 4: *r = t; *g = p; *b = v; break;
-  case 5: *r = v; *g = p; *b = q; break;
-  }
-}
-
-/** This function generates enought colors for the GDD partitioning
-    the HSV space uniformly.  \todo To bring outside the visitor and
-    inside detModel */
 void GDDVRMLSectionsVisitor::makeColor()
 {
-  unsigned int i;
-  unsigned int ncol;
-  double r, g, b;
-
-  typedef std::map<std::string, float> M;
+  typedef std::map<std::string, GDDcolor*> M;
   M::const_iterator j; 
-  GDDmanager* manager = GDDmanager::getPointer();
-  GDD* gdd = manager->getGDD();
-
-  ncol = gdd->getMaterialNames().size();
-
-  for(i=0;i<ncol;i++)
+  
+  for(j=colorsMap.begin();j!=colorsMap.end();j++)
     {
-      j = opacityMap.find(gdd->getMaterialNames()[i]);
-      out << " DEF " << gdd->getMaterialNames()[i] << std::endl;
+      out << " DEF " << j->first << std::endl;
       out << " Appearance { " <<  std::endl;
       out << " material Material { " <<  std::endl;
 
-      /// Automatic coloring scheme \todo To be done better
-      HSVtoRGB(&r, &g, &b, 360.0*(ncol-i)/ncol, 1.0, 1.0);
       out << "       diffuseColor  " 
-	  << r << " " 
-	  << g << " "
-	  << b <<  std::endl;
+	  << j->second->getRed() << " " 
+	  << j->second->getGreen() << " " 
+	  << j->second->getBlue() 
+	  << std::endl;
+      out << "     transparency    " << j->second->getTra() << std::endl;          
 
-      if (j == opacityMap.end())
-	out << "     transparency    0.0" << std::endl;          
-      else
-	out << "     transparency    " << j->second << std::endl;          
       out << "     }" <<  std::endl;
       out << " }" <<  std::endl;
     }
 }
-
-
 
 

@@ -1,27 +1,26 @@
 #ifndef GDDSTACKEDPOS_H
 #define GDDSTACKEDPOS_H
+#include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDposition.h"
 
 /**
  * @author R.Giannitrapani
  */
 class GDDstackedPos :public GDDposition {
- public:
-  enum axisDir{xDir, yDir, zDir};
 
  public:
-  GDDstackedPos(axisDir dir):
+  GDDstackedPos(GDDstack::axisDir dir):
     GDDposition(),aDir(dir),
     dx(0),dy(0),dz(0),
     rotation(0),shift(0),gap(0){;}
 
   GDDstackedPos():
-    GDDposition(),aDir(xDir),
+    GDDposition(),aDir(GDDstack::xDir),
     dx(0),dy(0),dz(0),
     rotation(0),shift(0),gap(0){;}
   
-  axisDir getAxisDir(){return aDir;};
-  void setAxisDir(axisDir dir){aDir = dir;};
+  GDDstack::axisDir getAxisDir(){return aDir;};
+  void setAxisDir(GDDstack::axisDir dir){aDir = dir;};
 
   void setDx(double pdx){dx=pdx;}
   void setDy(double pdy){dy=pdy;}
@@ -41,7 +40,7 @@ class GDDstackedPos :public GDDposition {
 
  private:
   /// The direction of the stacked positioning
-  axisDir aDir;
+  GDDstack::axisDir aDir;
 
   double dx; 
   double dy; 

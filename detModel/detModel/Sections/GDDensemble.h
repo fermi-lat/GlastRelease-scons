@@ -1,5 +1,5 @@
-#ifndef GDDENSAMBLE_H
-#define GDDENSAMBLE_H
+#ifndef GDDENSEMBLE_H
+#define GDDENSEMBLE_H
 #include <vector>
 #include "detModel/Sections/GDDvolume.h"
 #include "detModel/Utilities/GDDpurge.h"
@@ -9,18 +9,18 @@
 /**
  * @author R.Giannitrapani
  */
-class GDDensamble : public GDDvolume {
+class GDDensemble : public GDDvolume {
 
  public:
-  GDDensamble(std::string pName):GDDvolume(pName){;};
-  GDDensamble():GDDvolume(){;};
+  GDDensemble(std::string pName):GDDvolume(pName){;};
+  GDDensemble():GDDvolume(){;};
 
-  virtual ~GDDensamble(){purge(positions);};
+  virtual ~GDDensemble(){purge(positions);};
 
   /// This method is the recursive Accept for the visitor pattern
   virtual void Accept(GDDsectionsVisitor*);
   /// This method is the non recursive Accept for the visitor pattern
-  virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitEnsamble(this);};
+  virtual void AcceptNotRec(GDDsectionsVisitor* v){v->visitEnsemble(this);};
   
   /// This method add a new position to the positions vector 
   void addPosition(GDDposition* ppos){positions.push_back(ppos);}
@@ -34,6 +34,6 @@ class GDDensamble : public GDDvolume {
    *  @supplierCardinality 1..n */
   std::vector < GDDposition * > positions;
 };
-#endif //GDDENSAMBLE_H
+#endif //GDDENSEMBLE_H
 
 

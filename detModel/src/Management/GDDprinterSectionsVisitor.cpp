@@ -6,7 +6,7 @@
 #include "detModel/Sections/GDDsection.h"
 #include "detModel/Sections/GDDbox.h"
 #include "detModel/Sections/GDDcomposition.h"
-#include "detModel/Sections/GDDensamble.h"
+#include "detModel/Sections/GDDensemble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDaxisPos.h"
@@ -42,15 +42,15 @@ void  GDDprinterSectionsVisitor::visitSection(GDDsection* section)
   std::cout << " " << std::endl;
 }
 
-void  GDDprinterSectionsVisitor::visitEnsamble(GDDensamble* ensamble)
+void  GDDprinterSectionsVisitor::visitEnsemble(GDDensemble* ensemble)
 {
-  if(GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensamble))
+  if(GDDcomposition* comp = dynamic_cast<GDDcomposition*>(ensemble))
     {
       std::cout << "\t\t Starting the visit of composition " << comp->getName() << std::endl;  
       std::cout << "\t\t whose envelope is " << comp->getEnvelope()->getName() << std::endl;  
       std::cout << "\t\t -----------------------------------" << std::endl;
     }
-  else if(GDDstack* st = dynamic_cast<GDDstack*>(ensamble))
+  else if(GDDstack* st = dynamic_cast<GDDstack*>(ensemble))
     {
       std::cout << "\t\t Starting the visit of stack " << st->getName() << std::endl;  
       std::cout << "\t\t that is oriented along ";

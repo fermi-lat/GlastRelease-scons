@@ -1,6 +1,6 @@
 #ifndef GDDLOGICALOP_H
 #define GDDLOGICALOP_H
-#include "detModel/Sections/GDDensamble.h"
+#include "GDDensemble.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani 

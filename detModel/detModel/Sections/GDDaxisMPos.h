@@ -10,7 +10,7 @@
 class GDDaxisMPos : public GDDstackedPos {
 public:
 
-  GDDaxisMPos(axisDir dir):GDDstackedPos(dir),shift0(0),gap0(0),ncopy(0){};
+  GDDaxisMPos(GDDstack::axisDir dir):GDDstackedPos(dir),shift0(0),gap0(0),ncopy(0){};
   GDDaxisMPos():GDDstackedPos(),shift0(0),gap0(0),ncopy(0){};
 
   virtual void Accept(GDDsectionsVisitor* v);  

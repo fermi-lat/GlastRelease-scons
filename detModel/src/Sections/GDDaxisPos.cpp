@@ -25,13 +25,13 @@ void GDDaxisPos::buildBB(){
       getBBox()->setZDim(b->getZDim()); 
       
       switch(getAxisDir()){
-      case xDir:
+      case (GDDstack::xDir):
 	getBBox()->rotate(getRotation(),0,0);
 	break;
-      case yDir:
+      case (GDDstack::yDir):
 	getBBox()->rotate(0,getRotation(),0);
 	break;
-      case zDir:
+      case (GDDstack::zDir):
 	getBBox()->rotate(0,0,getRotation());
 	break;
       }

@@ -4,7 +4,6 @@
 #include "detModel/Sections/GDDboundingBox.h"
 
 
-
 void GDDaxisMPos::Accept(GDDsectionsVisitor* v){
   unsigned int i;
     
@@ -30,7 +29,7 @@ void GDDaxisMPos::buildBB(){
 	getVolume()->buildBB();
       
       switch(getAxisDir()){
-      case xDir:
+      case (GDDstack::xDir):
 	for(i=0;i<getNcopy();i++)
 	  addDisp(b->getXDim()/2 + (b->getXDim()+getGap())*i);
 	
@@ -41,7 +40,7 @@ void GDDaxisMPos::buildBB(){
 	
 	translateDisp(-(getBBox()->getXDim())/2);
 	break;
-      case yDir:
+      case (GDDstack::yDir):
 	for(i=0;i<getNcopy();i++)
 	  addDisp(b->getYDim()/2 + (b->getYDim()+getGap())*i);
 
@@ -52,7 +51,7 @@ void GDDaxisMPos::buildBB(){
 
 	translateDisp(- getBBox()->getYDim()/2);
 	break;
-      case zDir:
+      case (GDDstack::zDir):
 	for(i=0;i<getNcopy();i++)
 	  addDisp(b->getZDim()/2 + (b->getZDim()+getGap())*i);
 

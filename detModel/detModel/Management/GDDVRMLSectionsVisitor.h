@@ -4,8 +4,10 @@
 #include <fstream>
 #include <vector>
 #include <map>
+class GDDensemble;
 
 class GDD;
+class GDDcolor;
 
 /*
  * This is a concrete implementation of a sectionsVisitor that produces
@@ -37,7 +39,7 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
   /**
    * This is the visitor for the GDDensamble 
    */
-  virtual void visitEnsamble(GDDensamble*);
+  virtual void visitEnsemble(GDDensemble*);
 
   /**
    * This is the visitor for the GDDbox 
@@ -83,8 +85,8 @@ class GDDVRMLSectionsVisitor : public GDDsectionsVisitor {
   /** This variables keep the actual depth or recursivness of the
       visit in the hierarchy */
   int depth;
-  /// This map holds the opacity information of the material colors
-  std::map <std::string, float> opacityMap;
+  /// This map holds the colors for the material
+  std::map <std::string, GDDcolor*> colorsMap;
   /// This map holds information on the recursion depth of volumes
   std::map <std::string, int> depthMap;
 };

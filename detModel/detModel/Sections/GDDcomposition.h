@@ -1,17 +1,18 @@
 #ifndef GDDCOMPOSITION_H
 #define GDDCOMPOSITION_H
 #include <vector>
-#include "detModel/Sections/GDDensamble.h"
+#include "GDDensemble.h"
+#include "GDDensemble.h"
 
 class GDDshape;
 
 /**
  * @author R.Giannitrapani & D.Favretto
  */
-class GDDcomposition : public GDDensamble {
+class GDDcomposition : public GDDensemble {
 public:
-  GDDcomposition(std::string pName):GDDensamble(pName),envelope(0){;}
-  GDDcomposition():GDDensamble(),envelope(0){;}
+  GDDcomposition(std::string pName):GDDensemble(pName),envelope(0){;}
+  GDDcomposition():GDDensemble(),envelope(0){;}
   ~GDDcomposition();
 
   /**

@@ -2,20 +2,21 @@
 #define GDDSTACK_H
 #include <vector>
 
-#include "detModel/Sections/GDDensamble.h"
+#include "GDDensemble.h"
+#include "GDDensemble.h"
 
 /**
  * @author D.Favretto & R.Giannitrapani
  */
 
-class GDDstack :public GDDensamble {
+class GDDstack :public GDDensemble {
  public:
   enum stackOrigin{atStart,atCentre};
   enum axisDir{xDir, yDir, zDir};
   
  public:
-  GDDstack(std::string pName,axisDir dir):GDDensamble(pName),aDir(dir),origin(atStart){;}
-  GDDstack(axisDir dir):GDDensamble(),aDir(dir),origin(atStart){;}
+  GDDstack(std::string pName,axisDir dir):GDDensemble(pName),aDir(dir),origin(atStart){;}
+  GDDstack(axisDir dir):GDDensemble(),aDir(dir),origin(atStart){;}
   virtual ~GDDstack(){;}
 
   void setOrigin(stackOrigin porigin){origin=porigin;}

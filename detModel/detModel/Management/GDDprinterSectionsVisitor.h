@@ -1,6 +1,7 @@
 #ifndef GDDPRINTERSECTIONSVISITOR_H
 #define GDDPRINTERSECTIONSVISITOR_H
 #include "detModel/Management/GDDsectionsVisitor.h"
+class GDDensemble;
 class GDD;
 
 /*
@@ -28,7 +29,7 @@ class GDDprinterSectionsVisitor : public GDDsectionsVisitor {
   /**
    * This is the visitor for the GDDensamble 
    */
-  virtual void visitEnsamble(GDDensamble*);
+  virtual void visitEnsemble(GDDensemble*);
 
   /**
    * This is the visitor for the GDDbox 

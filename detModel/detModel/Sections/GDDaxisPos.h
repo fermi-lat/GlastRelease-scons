@@ -9,7 +9,7 @@
 class GDDaxisPos :public GDDstackedPos {
  public:
 
-  GDDaxisPos(axisDir dir):GDDstackedPos(dir),disp(0){};
+  GDDaxisPos(GDDstack::axisDir dir):GDDstackedPos(dir),disp(0){};
   GDDaxisPos():disp(0){};
   
   virtual ~GDDaxisPos(){};

@@ -1,7 +1,7 @@
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Management/GDDsectionsVisitor.h"
 #include "detModel/Sections/GDDvolume.h"
-#include "detModel/Sections/GDDensamble.h"
+#include "detModel/Sections/GDDensemble.h"
 #include "detModel/Sections/GDDshape.h"
 #include "detModel/Sections/GDDchoice.h"
 #include "detModel/Sections/GDDsection.h"
@@ -28,7 +28,7 @@ GDDsection::~GDDsection(){
   
   for(i=v.begin();i!=v.end();i++)
     {
-      if(GDDensamble* ens = dynamic_cast<GDDensamble*>(*i))
+      if(GDDensemble* ens = dynamic_cast<GDDensemble*>(*i))
 	delete ens;
       else if(GDDshape* sha = dynamic_cast<GDDshape*>(*i))
 	delete sha;

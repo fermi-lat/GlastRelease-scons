@@ -5,7 +5,7 @@
 class GDD;
 class GDDsection;
 class GDDbox;
-class GDDensamble;
+class GDDensemble;
 class GDDposXYZ;
 class GDDaxisPos;
 class GDDaxisMPos;
@@ -30,7 +30,7 @@ class GDDsectionsVisitor : public GDDvisitor {
   /**
    * This is the visitor for a generic GDDensamble
    */
-  virtual void visitEnsamble(GDDensamble*) = 0;
+  virtual void visitEnsemble(GDDensemble*) = 0;
   /**
    * This is the visitor for the GDDbox 
    */

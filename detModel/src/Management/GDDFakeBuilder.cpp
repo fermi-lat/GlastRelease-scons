@@ -176,14 +176,14 @@ void GDDFakeBuilder::buildSections()
   GDDstack* st2 = new GDDstack(GDDstack::xDir);  
   st2->setName("Stack2");
 
-  GDDaxisMPos* ampos1 = new GDDaxisMPos(GDDaxisPos::zDir);
+  GDDaxisMPos* ampos1 = new GDDaxisMPos(GDDstack::zDir);
   ampos1->setVolume(b1);
   ampos1->setNcopy(3);
   ampos1->setGap(20);
 
   st->addPosition(ampos1);
 
-  GDDaxisMPos* ampos2 = new GDDaxisMPos(GDDaxisPos::xDir);
+  GDDaxisMPos* ampos2 = new GDDaxisMPos(GDDstack::xDir);
   ampos2->setVolume(st);
   ampos2->setNcopy(3);
   ampos2->setGap(40);
