@@ -188,6 +188,7 @@ inline std::ostream& McIntegratingHit::fillStream( std::ostream& s ) const
 // Definition of all container types of McIntegratingHit
 //template <class TYPE> class ObjectVector;
 typedef ObjectVector<McIntegratingHit>     McIntegratingHitVector;
+typedef ObjectVector<McIntegratingHit>     McIntegratingHitCol;
 //template <class TYPE> class ObjectList;
 typedef ObjectList<McIntegratingHit>       McIntegratingHitList;
 
