@@ -31,7 +31,9 @@ public:
     virtual int numberPlanesCrossed()const=0; 
 
     /// is the current point inside the Act Area? 
-    virtual float insideActArea()const=0;
+    virtual double insideActArea() const=0;
+    virtual double insideActLocalX() const = 0;
+    virtual double insideActLocalY() const = 0;
     virtual bool isXPlane() const=0;
 
     /// is the current point at a live strip?
