@@ -22,6 +22,7 @@ class IServer;
 class IAppMgrUI;
 class SvcAdapter;
 class IFluxSvc;
+class IRootIoSvc;
 
 class HepRepSvc : virtual public Service,  
                   virtual public IIncidentListener, 
@@ -67,7 +68,13 @@ class HepRepSvc : virtual public Service,
 
   /// Set the flux
   void setSource(std::string);
-  
+
+  /// sent the valid setEvent command accepted by this server
+  std::string getCommands();  
+
+  /// This method set the Event ID to a pair Run/Event
+  bool setEventId(int run, int event);
+
 protected: 
     
     /// Standard Constructor
@@ -113,6 +120,10 @@ private:
 
     /// The FluxSvc, used to set fluxes from inside clients
     IFluxSvc* m_fluxSvc;
+
+    /// The RootIoSvc used to set event Run/Event for random access from Root
+    ///files
+    IRootIoSvc* m_rootIoSvc;
 };
 
 
