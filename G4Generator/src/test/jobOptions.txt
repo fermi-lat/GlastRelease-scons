@@ -26,7 +26,7 @@ GlastDetSvc.PersistencyFile="(none)";
 MessageSvc.OutputLevel      = 2;
 
 // Append to a list of source library documents
-FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources08:32 11/30/2001.xml"};
+FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
 // ask for a source that is in the user_library
 G4Generator.source_name="muon_pencil";
