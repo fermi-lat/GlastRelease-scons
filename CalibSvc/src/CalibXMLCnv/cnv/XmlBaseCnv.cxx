@@ -224,7 +224,9 @@ DOM_Element XmlBaseCnv::findFirstDacCol(const DOM_Element& docElt) {
 }
 
 DOM_Element XmlBaseCnv::findNextDacCol(const DOM_Element& dacElt) {
-  return xml::Dom::getSiblingElement(dacElt);
+  DOM_Element next = xml::Dom::getSiblingElement(dacElt);
+  if (xml::Dom::checkTagName(next, "dac")) return next;
+  else return DOM_Element();
 }
 
 CalibData::DacCol* XmlBaseCnv::processDacCol(DOM_Element dacColElt,
