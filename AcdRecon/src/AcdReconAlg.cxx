@@ -140,6 +140,7 @@ void AcdReconAlg::clear() {
     // one for each side, plus one for the top
     m_rowActDistCol.resize(s_numSideRows+1, maxDoca);
     m_energyCol.clear();
+	m_idCol.clear();
     m_act_dist = -maxDoca;
 }
 
@@ -173,7 +174,8 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         idents::AcdId id = (*acdDigiIt)->getId();
 		
 		// Temporarily populate reconstructed energy collection with digi energy
-		m_energyCol[id] = tileEnergy;
+		m_idCol.push_back(id);
+		m_energyCol.push_back(tileEnergy);
     }
 	
     log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
@@ -187,7 +189,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 	
 	// create the TDS location for the AcdRecon
     m_acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_energyCol);
+        m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
 	
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
     if (sc.isFailure()) {

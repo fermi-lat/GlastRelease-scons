@@ -94,7 +94,9 @@ class AcdReconAlg : public Algorithm
       /// list of active distance values for top and each side row
       std::vector<double> m_rowActDistCol;
       /// map of AcdId and their corresponding energies
-      std::map<idents::AcdId, double> m_energyCol;
+      //std::map<idents::AcdId, double> m_energyCol;
+	  std::vector<idents::AcdId> m_idCol;
+	  std::vector<double> m_energyCol;
 };
 
 #endif
