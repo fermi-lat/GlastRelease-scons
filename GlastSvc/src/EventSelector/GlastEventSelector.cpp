@@ -136,10 +136,9 @@ StatusCode GlastEventSelector::setCriteria( const std::string& criteria ) {
     return sc;
 }
 
-
-// Parse criteria string: Fill in the list of input files or Job Id's
-// Also parse out an environment variable and sustitute for it.
-
+/*! Parse criteria string: Fill in the list of input files or Job Id's
+    Also parse out an environment variable and sustitute for it.
+*/
 StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, ListName* inputDataList ) {
 
     if(m_criteriaType != NONE)
@@ -182,13 +181,13 @@ StatusCode GlastEventSelector::parseStringInList( const std::string& namelist, L
     }
 }
 
-// IEvtSelector::setCriteria
+//! IEvtSelector::setCriteria
 StatusCode GlastEventSelector::setCriteria( const SelectionCriteria& criteria ) {
     return StatusCode::SUCCESS;
 }
 
 
-//  Find out the name of the file from list of files or Jobs.
+//!  Find out the name of the file from list of files or Jobs.
 StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const {
     MsgStream log(messageService(), name());
 
@@ -205,10 +204,10 @@ StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, st
     return StatusCode::SUCCESS;
 }
 
-
-// IEvtSelector::begin()
-// Event Selector Iterator begin
-// Called by the ApplicationMgr::intialize() method
+/*! IEvtSelector::begin()
+    Event Selector Iterator begin 
+    Called by the ApplicationMgr::intialize() method
+*/
 IEvtSelector::Iterator* GlastEventSelector::begin() const {
     MsgStream log(messageService(), name());
     StatusCode sc;
@@ -249,9 +248,9 @@ IEvtSelector::Iterator* GlastEventSelector::begin() const {
 }
 
 
-
-// IEvtSelector::next
-// Event Selector iterator next(it)
+/*! IEvtSelector::next
+    Event Selector iterator next(it)
+*/
 IEvtSelector::Iterator& GlastEventSelector::next(IEvtSelector::Iterator& it) const {
     MsgStream log(messageService(), name());
 
@@ -303,15 +302,16 @@ IEvtSelector::Iterator& GlastEventSelector::next(IEvtSelector::Iterator& it) con
     }
 }
 
-// IEvtSelector::end()
-// Event Selector Iterator end() function
+/*! IEvtSelector::end()
+    Event Selector Iterator end() function
+*/ 
 IEvtSelector::Iterator* GlastEventSelector::end() const {
     IEvtSelector::Iterator* it = (IEvtSelector::Iterator*)(&m_evtEnd);
     return it;
 
 }
 
-// IEvtSelector::previous
+//! IEvtSelector::previous
 IEvtSelector::Iterator& GlastEventSelector::previous(IEvtSelector::Iterator& it) const {
     MsgStream log(msgSvc(), name());
     log << MSG::FATAL << " GlastEventSelector Iterator, operator -- not supported " << endreq;
@@ -346,7 +346,7 @@ IOpaqueAddress* GlastEventSelector::reference(const IEvtSelector::Iterator& it) 
 }
 
 
-// IInterface::queryInterface
+//! IInterface::queryInterface
 StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterface)  {
     if ( riid == IID_IEvtSelector )  {
         *ppvInterface = (IEvtSelector*)this;
@@ -362,7 +362,8 @@ StatusCode GlastEventSelector::queryInterface(const IID& riid, void** ppvInterfa
 }
 
 
-
+/*! C
+*/
 StatusCode GlastEventSelector::getMaxEvent()
 {
     IProperty* appPropMgr=0;

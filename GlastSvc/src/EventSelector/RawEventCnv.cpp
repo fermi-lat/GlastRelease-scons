@@ -28,7 +28,7 @@ StatusCode RawEventCnv::updateObj(int* iarray, RawEvent* pEvent)          {
 RawEventCnv::RawEventCnv(ISvcLocator* svc)
 : ItemCnv<RawEvent>(svc)               
 {
-  declareObject("/Event/Raw", objType(), "PASS");
+  declareObject("/Event/Data", objType(), "PASS");
   //m_sourceDef = SicbObjBank("PASS");
 }
 

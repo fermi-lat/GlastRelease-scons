@@ -14,8 +14,9 @@
 #include "GlastEvent/Irf/IrfAcdHit.h"
 #include "GlastEvent/Irf/IrfCalHit.h"
 #include "GlastEvent/Irf/IrfTkrLayer.h"
-#include "src/Raw/LdSiData.h"
-#include "src/Raw/LdCsIData.h"
+#include "src/data/TdSiData.h"
+#include "src/data/TdCsIData.h"
+#include "src/data/TdVetoData.h"
 
 /*! 
 Derived from DetectorConverter, this class
@@ -55,6 +56,8 @@ public:
 
     TdSiData* getTdSiData();
 
+    TdVetoData* getTdVetoData();
+
     //! provide access to the list of Acd hits
     IrfAcdHitVector* getIrfAcdHits();
     //! provide access to the list of Cal hits
@@ -66,8 +69,9 @@ private:
     idents::ModuleId m_towerId;
 
     // one of Gaudi's ObjectContainers
-        LdCsIData* allcsiData;
-        LdSiData* allsiData;
+        TdCsIData* allcsiData;
+        TdSiData* allsiData;
+        TdVetoData* allvetoData;
 
 
         IrfAcdHitVector* IrfAcdHitContainer;

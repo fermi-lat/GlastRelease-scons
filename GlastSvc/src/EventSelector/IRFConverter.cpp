@@ -9,16 +9,18 @@
 #include "instrument/Tower.h"
 
 
-#include "GlastEvent/data/TdCsIData.h"
-#include "GlastEvent/data/TdSiData.h"
+#include "src/data/TdCsIData.h"
+#include "src/data/TdSiData.h"
+#include "src/data/TdVetoData.h"
 
 
 //! constructor - create all object containers
 IRFConverter::IRFConverter() {
     // Added because not sure as of yet how to make the
     // converter without using object vectors
-    allcsiData =  new LdCsIData(9);
-    allsiData = new LdSiData(18); //TODO: Change hardcode.
+    allcsiData =  new TdCsIData(9);
+    allsiData = new TdSiData(18); //TODO: Change hardcode.
+    allvetoData = new TdVetoData();
 
     IrfAcdHitContainer = new IrfAcdHitVector;
     IrfCalHitContainer = new IrfCalHitVector;
@@ -41,7 +43,9 @@ void IRFConverter::forward (const Scintillator& s) {
         newTile->setEnergy(s.energy());
         newTile->setId(s.id());
         IrfAcdHitContainer->push_back(newTile);
-    } 
+    }
+
+    allvetoData->load(s);
 }
 
 // just grab the ID to pass onto subsequent visits
@@ -120,6 +124,8 @@ void IRFConverter::forward ( const SiDetector& si) {
 TdCsIData* IRFConverter::getTdCsIData() { return allcsiData; }
 
 TdSiData* IRFConverter::getTdSiData() { return allsiData; }
+
+TdVetoData* IRFConverter::getTdVetoData() { return allvetoData;}
 //! Provide access to the IRF ACD data
 IrfAcdHitVector* IRFConverter::getIrfAcdHits() {return IrfAcdHitContainer; }
 //! Provide access to the IRF Cal data
