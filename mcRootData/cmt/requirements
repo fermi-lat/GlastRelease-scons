@@ -1,7 +1,8 @@
 package mcRootData
 version v2
-use GlastPolicy
-use ROOT
+
+use GlastPolicy v4r3*
+use ROOT v3r2p*
 
 ignore_pattern include_none
 apply_pattern package_include
