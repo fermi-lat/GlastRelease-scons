@@ -85,8 +85,10 @@ StatusCode FluxSvc::initialize ()
     setProperties ();
     
     //set a default source library, which the user can add to or change
+    if(m_source_lib.begin()==m_source_lib.end()){
     m_source_lib.push_back("$(FLUXROOT)/xml/source_library.xml");
-    
+    }
+
     // open the message log
     MsgStream log( msgSvc(), name() );
      
