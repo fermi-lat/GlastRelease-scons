@@ -268,7 +268,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut, const fl
     cut.Print();
     std::cout << " Object   Plane Ladder  Wafer  Efficiency  Inefficiency     Hits  Missing hits" << std::endl;
 
-    const bool makeSummary = planeName == "all" || planeName == "layer";
+    const bool makeSummary = planeName == "all" || planeName == "plane";
     int totalHits = 0;
     int totalMissing = 0;
     const TList* myGeometry = myTracker->GetGeometry();
@@ -279,7 +279,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut, const fl
             TString name(thePlaneName);
             for ( ; name.Length()<7; )
                 name.Prepend(' ');
-            if ( planeName != "layer" ) {
+            if ( planeName != "plane" ) {
                 TString ladderPar = thePlane->GetView() ? "yExt" : "xExt";
                 TString waferPar  = thePlane->GetView() ? "xExt" : "yExt";
                 for ( int ladder=0; ladder<4; ++ladder ) {
