@@ -3,17 +3,16 @@
 #define _GlastEvent_EventModel_CPP_
 
 
-// Include files
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ClassID.h"
 
     
-/*! \class EvModel
- *  \brief Event Model: Definition of logical paths and class identifiers
+/** @class EvModel
+ *  @brief Event Model: Definition of logical paths and class identifiers
  *
+ * $Header$
  */
-  
 class EvModel {
         
 public:
@@ -35,11 +34,6 @@ public:
         EventModel::Digi::AcdDigis          = EventModel::Digi::Event + "/AcdDigis";
         EventModel::Digi::TkrDigis          = EventModel::Digi::Event + "/TkrDigis";
 
-        // Irf event
-        EventModel::Irf::Event              = EventModel::Event + "/Irf";
-        EventModel::Irf::IrfTkrHits         = EventModel::Irf::Event + "/IrfTkrHits";
-        EventModel::Irf::IrfCalHits         = EventModel::Irf::Event + "/IrfCalHits";
-        EventModel::Irf::IrfAcdHits         = EventModel::Irf::Event + "/IrfAcdHits";
 
         // Data Data
         EventModel::Data::Event             = EventModel::Event + "/Data";
@@ -116,7 +110,8 @@ public:
     // Declaration of Identifiers
     // The order is: General, Tracker, Calorimeter, ACD
  
-    //const CLID& CLID_Event            =  110;  // defined in Gaudi/Kernel/Kernel.cpp
+    // HMK No longer defined in Gaudi - it is left to the user to define
+    const CLID& CLID_Event            =  110;
 
     //! Monte Carlo class IDs
     const CLID& CLID_McEvent            = 1100;
@@ -124,13 +119,6 @@ public:
     const CLID& CLID_McParticle         = 1102;
     const CLID& CLID_McPositionHit      = 1103;
     const CLID& CLID_McIntegratingHit   = 1104;
-
-    //! Irf class IDs
-    const CLID& CLID_IrfEvent           = 1200;
-    const CLID& CLID_IrfTkrHit          = 1210;
-    const CLID& CLID_IrfTkrLayer        = 1211;
-    const CLID& CLID_IrfCalHit          = 1220;
-    const CLID& CLID_IrfAcdHit          = 1230;
 
     //! Raw event and Digi IDs
     const CLID& CLID_DigiEvent          = 1300; 
@@ -172,8 +160,7 @@ public:
     //! Analysis
     const CLID& CLID_AnalEvent          = 4000;
         
-    //! Classes adapted by Sasha Chekhtman from tb calorimeter reconstruction
-    
+    //! Classes adapted by Sasha Chekhtman from tb calorimeter reconstruction    
     const CLID& CLID_CalADCLogs         = 2601;
     const CLID& CLID_CalRecLogs         = 2602;
     const CLID& CLID_CalClusterList     = 2603;
