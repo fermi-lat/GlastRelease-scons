@@ -362,9 +362,10 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     }
     unsigned int iTower = 0;
     for (iTower = 0; iTower < 16; iTower++) {
-        rowbits->setTriRowBits(iTower, m_digiEvt->getL1T().getTriRowBits(iTower));
+        rowbits->setDigiTriRowBits(iTower, m_digiEvt->getL1T().getDigiTriRowBits(iTower));
+        rowbits->setTrgReqTriRowBits(iTower, m_digiEvt->getL1T().getTrgReqTriRowBits(iTower));
     }
-
+    
     LdfEvent::LdfTime *ldfTimeTds = new LdfEvent::LdfTime();
     if (ldfTimeTds) {
         ldfTimeTds->initialize(m_digiEvt->getEbfTimeSec(), m_digiEvt->getEbfTimeNanoSec(), m_digiEvt->getEbfUpperPpcTimeBase(), m_digiEvt->getEbfLowerPpcTimeBase());

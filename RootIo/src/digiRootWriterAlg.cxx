@@ -287,17 +287,22 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
 
 
     SmartDataPtr<TriRowBitsTds::TriRowBits> triRowBitsTds(eventSvc(), "/Event/TriRowBits");
-    UInt_t rowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    UInt_t digiRowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    UInt_t trgReqRowBits[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
     if (triRowBitsTds) {
         unsigned int iTower;
         for(iTower = 0; iTower < 16; iTower++)
-            rowBits[iTower] = triRowBitsTds->getTriRowBits(iTower);
+	  {
+	    digiRowBits[iTower] = triRowBitsTds->getDigiTriRowBits(iTower);
+	    trgReqRowBits[iTower] = triRowBitsTds->getTrgReqTriRowBits(iTower);
+	  }
     }
 
-    L1T levelOne(evtTds->trigger(), rowBits);
+    L1T levelOne(evtTds->trigger(), digiRowBits, trgReqRowBits);
 
     m_digiEvt->initialize(evtId, runId, timeObj.time(), liveTime, levelOne, fromMc);
-
+    
     SmartDataPtr<LdfEvent::LdfTime> timeTds(eventSvc(), "/Event/Time");
     if (timeTds) {
         m_digiEvt->setEbfTime(timeTds->timeSec(), timeTds->timeNanoSec(),
