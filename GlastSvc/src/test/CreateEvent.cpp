@@ -2,6 +2,9 @@
 #define GlastApps_CreateEvent_CPP 
 
 
+#define GlastApps_CreateEvent_CPP 
+
+
 // Include files
 #include "CreateEvent.h"
 #include "Gaudi/MessageSvc/MsgStream.h"
@@ -12,8 +15,8 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GlastEvent/TopLevel/EventModel.h"
 #include "GlastEvent/TopLevel/Event.h"
-#include "GlastEvent/Hits/ACDhit.h"
-#include "GlastEvent/Hits/MCCalorimeterHit.h"
+#include "GlastEvent/MonteCarlo/MCACDHit.h"
+#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
 
 //--------------------------------------------------------------------
@@ -91,17 +94,17 @@ StatusCode CreateEvent::execute() {
     sc = eventSvc()->retrieveObject("/Event/MC/MCACDHits", pObject);
     if( sc.isFailure() ) return sc;                                                             
     
-	log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
+        log << MSG::INFO << "Successfully retrieved ACD Container!!!" << endreq;
 
-    ObjectVector<ACDhit>* acdList;
+    ObjectVector<MCACDHit>* acdList;
     try {
-        acdList  = dynamic_cast<ObjectVector<ACDhit>*>(pObject);
+        acdList  = dynamic_cast<ObjectVector<MCACDHit>*>(pObject);
     } catch(...) {
-        log << MSG::INFO << "Failed to convert object to ACDhitVector" << endreq;
+        log << MSG::INFO << "Failed to convert object to MCACDHitVector" << endreq;
         return StatusCode::FAILURE;
     }
     
-    for (ObjectVector<ACDhit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
+    for (ObjectVector<MCACDHit>::const_iterator it = acdList->begin(); it != acdList->end(); it++) {
         log << MSG::INFO << " tile Energy = " << (*it)->energy() << " Id = " << (*it)->id() << endreq;
       }
 
