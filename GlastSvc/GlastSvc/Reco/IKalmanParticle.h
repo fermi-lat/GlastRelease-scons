@@ -20,7 +20,8 @@
 class  IKalmanParticle
 {
 public:
-
+    /// Set the starting point, direction and step length
+    virtual void setStepStart(const Point& startPos, const Vector& startDir, const double stepLen)=0;
 
     /// move from starting point to next plane: return false if failed
     virtual bool trackToNextPlane()=0;
