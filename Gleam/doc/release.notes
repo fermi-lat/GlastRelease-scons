@@ -3,7 +3,22 @@
  * package manager:T.Burnett
  * $Id$
 
-* v2r3    Thb 16-sep-03 (changes since v2r2p10)
+* v2r3p1 THB 27-sep-02
+      use facilities      v2r6
+      use xmlUtil         v2r8p3
+      use astro           v0r2
+      use detModel        v2r13p0
+      use xmlGeoDbs       v1r7p2
+      use Event            v9r2
+      use GlastSvc         v9r2p1
+      use FluxSvc          v5r12
+      use G4Generator      v4r3p4
+      use CalDigi          v1r2p6
+      use Trigger         v3r3p5
+      use Recon           v2r3p5
+      use CalRecon        v5r7p5 
+
+* v2r3    Thb 16-sep-02 (changes since v2r2p10)
        use GlastPolicy  v4r8 
        use Event        v9r1
        use GlastSvc     v9r1
