@@ -38,6 +38,7 @@ Top.source_name="surface_vertical_muons";
 //Top.source_name="testpatch";
 Top.source_name="TestSpectrum";
 
+
 ApplicationMgr.EvtMax = 10;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
