@@ -31,10 +31,14 @@ public:
 
     virtual Long64_t index() = 0;
     virtual bool setIndex(Long64_t i) = 0;
+    virtual void setActualIndex(Long64_t i) = 0;
 
     virtual void registerRootTree(TChain *ch) = 0;
     virtual bool setRunEventPair(std::pair<int,int> ids) = 0;
     virtual std::pair<int,int> runEventPair() = 0;
+
+    virtual bool useIndex() = 0;
+    virtual bool useRunEventPair() = 0;
 
     virtual int getAutoSaveInterval() = 0;
 
