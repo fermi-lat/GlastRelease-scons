@@ -152,7 +152,7 @@ public:
     UShort_t getCalHeVector() const { return m_cal_He_Vector;};
     UShort_t getCnoVector() const { return m_cno_Vector;};
     UShort_t getConditionSummary() const { return m_conditionSummary;};
-    const GemTileList& tileList() const { return m_tileList; };
+    const GemTileList& getTileList() const { return m_tileList; };
     UInt_t getLiveTime() const {return m_liveTime; };
     UInt_t getPrescaled() const { return m_prescaled;};
     UInt_t getDiscarded() const { return m_discarded;};

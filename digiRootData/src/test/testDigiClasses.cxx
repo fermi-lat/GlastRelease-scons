@@ -265,7 +265,7 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
 }
 
 int checkGem(const Gem &gem) {
-   GemTileList list = gem.tileList();
+   GemTileList list = gem.getTileList();
    if (list.getXzm() != 20) return -1;
    if (list.getXzp() != 21) return -1;
    if (list.getYzm() != 22) return -1;
