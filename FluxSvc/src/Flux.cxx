@@ -139,3 +139,8 @@ return s_mgr->CELTransform(time);
 Rotation Flux::orientTransform(double time)const{
 return s_mgr->orientTransform(time);
 }
+
+Rotation Flux::transformGlastToGalactic(double time)const{
+
+    return s_mgr->transformGlastToGalactic(time);
+}

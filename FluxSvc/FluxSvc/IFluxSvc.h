@@ -11,6 +11,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include "geometry/CoordTransform.h"
 //#include "flux/SpectrumFactoryTable.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
@@ -56,6 +57,9 @@ public:
 
     /// set the glast tilt angles.
     virtual void setOrientation(std::pair<double,double> ang)=0;
+
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    virtual Rotation transformGlastToGalactic(double time)const=0;
 
 
 

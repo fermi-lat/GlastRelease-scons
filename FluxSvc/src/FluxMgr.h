@@ -78,6 +78,8 @@ public:
      ///get the transformation matrix due to orientation of the spacecraft.
     Rotation orientTransform(double time);
     
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    Rotation FluxMgr::transformGlastToGalactic(double time);
 private:
     
     // source library lookup.  Each source is uniquely identified

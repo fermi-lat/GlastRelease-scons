@@ -332,6 +332,11 @@ Rotation FluxMgr::orientTransform(double time){
     return GPS::instance()->rockingAngleTransform(time);
 }
 
+///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+Rotation FluxMgr::transformGlastToGalactic(double time){
+    return GPS::instance()->transformGlastToGalactic(time);
+}
+
 
 /** creates a document of the form
 

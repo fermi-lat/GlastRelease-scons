@@ -50,6 +50,9 @@ public:
     /// set the glast tilt angles.
     void setOrientation(std::pair<double,double> ang);
 
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    Rotation transformGlastToGalactic(double time)const;
+
     
     //------------------------------------------------------------------
     //  stuff required by a Service

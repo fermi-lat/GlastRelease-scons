@@ -77,6 +77,9 @@ public:
 
     virtual /*int*/double gpsTime()const=0;
 
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    virtual Rotation transformGlastToGalactic(double time)const=0;
+
 #if 0
     // get a description of the parameters that can be modified, and reference to a list of them
     virtual std::string paramlist(std::vector<double>& params)=0; 

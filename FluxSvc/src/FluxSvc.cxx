@@ -170,5 +170,10 @@ void FluxSvc::setOrientation(std::pair<double,double> ang){
     m_fluxMgr->setOrientation(ang);
 }
 
+Rotation FluxSvc::transformGlastToGalactic(double time)const{
+    return m_fluxMgr->transformGlastToGalactic(time);
+}
+
+
 void WARNING (const char * text ){  std::cerr << "WARNING: " << text << '\n';}
 void FATAL(const char* s){std::cerr << "\nERROR: "<< s;}

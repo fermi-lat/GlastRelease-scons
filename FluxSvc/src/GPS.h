@@ -115,12 +115,16 @@ public:
 
     ///return galactic-pointing coordinates of the GLAST satellite
     std::pair<double,double> GPS::galPositionOfGlast();
+
     /// transform functions using galPositionOfGlast.  This infrastructure is no longer used.
     Vector earthToGlast(Vector launchDir);
     Vector galaxyToGlast(Vector launchDir);
 
     /// return the rotation for compensation for the rocking angles.
     Rotation rockingAngleTransform(double time);
+
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    Rotation GPS::transformGlastToGalactic(double time);
 
 
         

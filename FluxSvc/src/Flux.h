@@ -82,6 +82,9 @@ public:
 
     ///get the transformation matrix due to orientation of the spacecraft.
     virtual Rotation orientTransform(double time)const;
+
+    ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
+    Rotation Flux::transformGlastToGalactic(double time)const;
                                                                                   
 //    insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
 
