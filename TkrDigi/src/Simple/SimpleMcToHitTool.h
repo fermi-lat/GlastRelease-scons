@@ -54,6 +54,8 @@ class SimpleMcToHitTool : public AlgTool, virtual public IMcToHitTool {
     ITkrGeometrySvc*    m_tkrGeom;
     /// Pointer to the tracker alignment service
     ITkrAlignmentSvc*   m_taSvc;
+    /// flag to turn on test mode, deposits 0.155 MeV for every hit
+    bool m_test;
 
 };
 

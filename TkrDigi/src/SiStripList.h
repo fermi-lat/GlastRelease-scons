@@ -143,7 +143,7 @@ class SiStripList {
      * @param 2   exit point in local coordinates
      * @param 3   pointer to a McPositionHit
      */
-    void score(const HepPoint3D&,const HepPoint3D&,const Event::McPositionHit*);
+    void score(const HepPoint3D&,const HepPoint3D&,const Event::McPositionHit*, bool test);
 
     //#define TEMPLATE
 #ifdef TEMPLATE
