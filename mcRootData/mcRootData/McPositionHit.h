@@ -37,7 +37,8 @@ public:
 
     void Print(Option_t *option="") const;
 
-    void initialize(Double_t edep, const VolumeIdentifier& id, const TVector3& entry,
+    void initialize(Int_t particleId, Double_t edep, 
+        const VolumeIdentifier& volId, const TVector3& entry,
         const TVector3& exit, McParticle *mc, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
     
@@ -47,6 +48,8 @@ public:
     
     const TVector3& getExitPosition() const { return m_exit; };
     
+    Int_t getMcParticleId() const { return m_mcParticleId; };
+
     Double_t getDepositedEnergy() const { return m_depositedEnergy; }
     
     Double_t getParticleEnergy() const { return m_particleEnergy; }
@@ -70,7 +73,9 @@ private:
    
     /// Packed flags for the internal use.
     UInt_t m_statusFlags;
-   
+    /// ID of the McParticle causing the hit
+    Int_t m_mcParticleId;
+
     TVector3 m_entry;
     TVector3 m_exit;
     
@@ -79,7 +84,7 @@ private:
     
     VolumeIdentifier m_volumeId;
     
-    ClassDef(McPositionHit,1)  // Monte Carlo PositionHit class
+    ClassDef(McPositionHit,2)  // Monte Carlo PositionHit class
 };
 
 #endif

@@ -37,7 +37,9 @@ void McPositionHit::Print(Option_t *option) const {
     cout << "Entry: (" << m_entry.X() << ","
         << m_entry.Y() << "," << m_entry.Z() << ")"
         << "   Exit: (" << m_exit.X() << "," 
-        << m_exit.Y() << "," << m_exit.Z() << ")" << endl;
+        << m_exit.Y() << "," << m_exit.Z() << ") Direction Cosine: " 
+        << getDirectionCosine() << endl;
+    cout << "McParticleId " << m_mcParticleId << endl;
     cout << "McParticle Ref" << endl;
     if (getMcParticle()!= 0) getMcParticle()->Print();
     cout << "Origin Particle Ref" << endl;
@@ -46,21 +48,25 @@ void McPositionHit::Print(Option_t *option) const {
 }
 
 Double_t McPositionHit::getDirectionCosine() const
-{
-    Double_t dx = m_exit.x()-m_entry.x();
-    Double_t dy = m_exit.y()-m_entry.y();
-    Double_t dz = m_exit.z()-m_entry.z();
-    return (dz / sqrt(dx * dx + dy * dy));
+{ 
+    TVector3 dir = (m_exit - m_entry).Unit();
+    return dir.Z();
+    //Double_t dx = m_exit.x()-m_entry.x();
+    //Double_t dy = m_exit.y()-m_entry.y();
+    //Double_t dz = m_exit.z()-m_entry.z();
+    //return (dz / sqrt(dx * dx + dy * dy));
 }
 
 
-void McPositionHit::initialize(Double_t edep, const VolumeIdentifier &id, 
-                         const TVector3& entry, const TVector3& exit,
-                         McParticle *mc, 
-                         McParticle *origin, Double_t pE, Double_t tof, UInt_t flags)
+void McPositionHit::initialize(Int_t particleId, Double_t edep, 
+                               const VolumeIdentifier &volId,
+                               const TVector3& entry, const TVector3& exit,
+                               McParticle *mc, McParticle *origin, Double_t pE, 
+                               Double_t tof, UInt_t flags)
 {
+    m_mcParticleId = particleId;
     m_depositedEnergy = edep;
-    m_volumeId = id;
+    m_volumeId = volId;
     m_entry.SetXYZ(entry.X(), entry.Y(), entry.Z());
     m_exit.SetXYZ(exit.X(), exit.Y(), exit.Z());
     m_mcParticle = mc;

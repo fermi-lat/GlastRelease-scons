@@ -110,6 +110,11 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
     Float_t f = Float_t(ipart);
     Float_t fr = f*randNum;
     
+    if (mcPosHit->getMcParticleId() != 7) {
+        std::cout << "MC Particle Id is wrong: " << mcPosHit->getMcParticleId() << std::endl;
+        return -1;
+    }
+
     VolumeIdentifier id = mcPosHit->getVolumeId();
     std::cout << "McPosHit Id = " << id.name() << std::endl;
     if ( (id.getBits0to31() != 0) || (id.getBits32to63() != 16777216) || (id.size() != 1) ) {
@@ -273,7 +278,9 @@ int write(char* fileName, UInt_t numEvents) {
             Double_t tof = randNum*0.4;
             UInt_t flags = 0;
             McParticle *originMcPart = 0;
-            posHit->initialize(depE, id, entry, exit, mcPart, originMcPart, partE, tof, flags);
+            Int_t particleId = 7;
+            posHit->initialize(particleId, depE, id, entry, exit, mcPart, 
+                originMcPart, partE, tof, flags);
             ev->addMcPositionHit(posHit);
             
             McIntegratingHit *intHit = new McIntegratingHit();
