@@ -75,6 +75,8 @@ public:
     /// returns true if the given strip is found in the vector pointed 
     /// to by stripCol
     bool isBadStrip(const stripCol* v, int strip) const;
+
+    bool empty() const;
     
     /// queryInterface - required for a service
     StatusCode queryInterface(const IID& riid, void** ppvUnknown);
@@ -100,6 +102,8 @@ private:
     
     /// array to hold bad strips vectors  [ max needed: 576 = 16*18*2 ]   
     stripCol m_stripsCol[NELEMENTS];
+
+    bool m_empty;
 };
 
     
