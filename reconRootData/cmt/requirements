@@ -7,6 +7,10 @@ use ROOT
 
 apply_pattern packageShr
 
+# temporarily re-introduce this pattern to be sure bfemApp runs on linux
+apply_pattern ld_library_path
+# put this back in for glastRootIO
+apply_pattern package_linkopts
 
 #--------------------------------------------------------------
 private
