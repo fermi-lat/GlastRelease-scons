@@ -13,7 +13,7 @@ Statistic::Statistic(const Tuple&t, std::string::const_iterator& it, std::string
     std::string name;
     for(;   it != end && *it!=','; ++it) name += *it;
     set_tuple_item(t,name);
-    set_name(std::string(begin,it-begin));
+    set_name(std::string(begin,it));
     if( *it==',')++it;
 }
 

@@ -43,4 +43,4 @@ private:
 };
 
 #endif // !defined(AFX_ANALYSISCUT_H__CD2E7DD1_F406_11D2_83A8_000000000000__INCLUDED_)
-;
+

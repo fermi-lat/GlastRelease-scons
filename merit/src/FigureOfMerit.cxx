@@ -294,7 +294,7 @@ void	FigureOfMerit::setCuts ( string istr )
             
         case 'G': // Gnn, -- override number generated
         {
-            s_generated= ::atoi(it);
+            s_generated= ::atoi(&*it);
             while( it !=istr.end() && (*it++)!=',');
             cerr << "Overriding generated number to " << s_generated << endl;
             break;
