@@ -72,6 +72,7 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string SiLayers;
             _EXTERN_ std::string TkrClusters;
+            _EXTERN_ std::string TkrCandidates;
             _EXTERN_ std::string SiRecObjs;
         }
 

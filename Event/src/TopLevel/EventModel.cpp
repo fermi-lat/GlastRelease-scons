@@ -20,43 +20,44 @@ public:
     
     EvModel() {
         // Access to GLAST event
-        EventModel::Event                 = "/Event";
+        EventModel::Event                   = "/Event";
             
         // Monte Carlo 
-        EventModel::MC::Event             = EventModel::Event + "/MC";
-        EventModel::MC::McVertexCol        = EventModel::MC::Event  + "/McVertexCol";
+        EventModel::MC::Event               = EventModel::Event + "/MC";
+        EventModel::MC::McVertexCol         = EventModel::MC::Event  + "/McVertexCol";
         EventModel::MC::McParticleCol       = EventModel::MC::Event  + "/McParticleCol";
 
-        EventModel::MC::McPositionHits    = EventModel::MC::Event  + "/McPositionHits";
-        EventModel::MC::McIntegratingHits = EventModel::MC::Event  + "/McIntegratingHits";
+        EventModel::MC::McPositionHits      = EventModel::MC::Event  + "/McPositionHits";
+        EventModel::MC::McIntegratingHits   = EventModel::MC::Event  + "/McIntegratingHits";
 
         // Digi event
-        EventModel::Digi::Event           = EventModel::Event + "/Digi";
-        EventModel::Digi::AcdDigis        = EventModel::Digi::Event + "/AcdDigis";
-        EventModel::Digi::TkrDigis        = EventModel::Digi::Event + "/TkrDigis";
+        EventModel::Digi::Event             = EventModel::Event + "/Digi";
+        EventModel::Digi::AcdDigis          = EventModel::Digi::Event + "/AcdDigis";
+        EventModel::Digi::TkrDigis          = EventModel::Digi::Event + "/TkrDigis";
 
         // Irf event
-        EventModel::Irf::Event            = EventModel::Event + "/Irf";
-        EventModel::Irf::IrfTkrHits       = EventModel::Irf::Event + "/IrfTkrHits";
-        EventModel::Irf::IrfCalHits       = EventModel::Irf::Event + "/IrfCalHits";
-        EventModel::Irf::IrfAcdHits       = EventModel::Irf::Event + "/IrfAcdHits";
+        EventModel::Irf::Event              = EventModel::Event + "/Irf";
+        EventModel::Irf::IrfTkrHits         = EventModel::Irf::Event + "/IrfTkrHits";
+        EventModel::Irf::IrfCalHits         = EventModel::Irf::Event + "/IrfCalHits";
+        EventModel::Irf::IrfAcdHits         = EventModel::Irf::Event + "/IrfAcdHits";
 
         // Data Data
-        EventModel::Data::Event           = EventModel::Event + "/Data";
-        EventModel::Data::TdGlastData     = EventModel::Data::Event + "/TdGlastData";
-        EventModel::Data::TdSiData        = EventModel::Data::Event + "/TdSiData";
-        EventModel::Data::TdCsIData       = EventModel::Data::Event + "/TdCsIData";
-        EventModel::Data::TdVetoData      = EventModel::Data::Event + "/TdVetoData";
+        EventModel::Data::Event             = EventModel::Event + "/Data";
+        EventModel::Data::TdGlastData       = EventModel::Data::Event + "/TdGlastData";
+        EventModel::Data::TdSiData          = EventModel::Data::Event + "/TdSiData";
+        EventModel::Data::TdCsIData         = EventModel::Data::Event + "/TdCsIData";
+        EventModel::Data::TdVetoData        = EventModel::Data::Event + "/TdVetoData";
         
 
         // reconstructed data (Tracker)
-        EventModel::TkrRecon::Event       = EventModel::Event + "/TkrRecon";
-        EventModel::TkrRecon::SiLayers    = EventModel::TkrRecon::Event + "/SiLayers";
-        EventModel::TkrRecon::TkrClusters = EventModel::TkrRecon::Event + "/TkrClusters";
-        EventModel::TkrRecon::SiRecObjs   = EventModel::TkrRecon::Event + "/SiRecObjs";
+        EventModel::TkrRecon::Event         = EventModel::Event + "/TkrRecon";
+        EventModel::TkrRecon::SiLayers      = EventModel::TkrRecon::Event + "/SiLayers";
+        EventModel::TkrRecon::TkrClusters   = EventModel::TkrRecon::Event + "/TkrClusters";
+        EventModel::TkrRecon::TkrCandidates = EventModel::TkrRecon::Event + "/TkrCandidates";
+        EventModel::TkrRecon::SiRecObjs     = EventModel::TkrRecon::Event + "/SiRecObjs";
 
         // reconstructed ACD data
-        EventModel::AcdRecon::Event       = EventModel::Event + "/AcdRecon";
+        EventModel::AcdRecon::Event         = EventModel::Event + "/AcdRecon";
     }
 };
     
@@ -154,7 +155,8 @@ public:
     const CLID& CLID_TkrRecon           = 3100;
     const CLID& CLID_SiLayers           = 3101;  // Use Tkr instead of Si ?
     const CLID& CLID_TkrClusters        = 3102;  // Is this really Layers, Clusters, RecObjs
-    const CLID& CLID_SiRecObjs          = 3103;  // or rather Layer, Cluster, RecObj objects?
+    const CLID& CLID_TkrCandidates      = 3103;  // Is this really Layers, Clusters, RecObjs
+    const CLID& CLID_SiRecObjs          = 3104;  // or rather Layer, Cluster, RecObj objects?
 
     //! Reconstruction: Tkr class IDs
     const CLID& CLID_CalRecon           = 3200;
