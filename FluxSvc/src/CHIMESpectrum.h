@@ -137,28 +137,5 @@ private:
     
 };
 
-class CHIMEMax : public CHIMESpectrum
-{
-public:
-    CHIMEMax();
-    ~CHIMEMax(){}
-};
-
-class CHIMEMin : public CHIMESpectrum
-{
-public:
-    CHIMEMin();
-    ~CHIMEMin(){}
-};
-
-
-class CHIMEAvg : public CHIMESpectrum
-{
-public:
-    CHIMEAvg();
-    ~CHIMEAvg(){}
-};
-
-
 #endif // CHIME_SPECTRUM_H
 

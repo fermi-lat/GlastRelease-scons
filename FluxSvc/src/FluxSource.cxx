@@ -384,13 +384,13 @@ void FluxSource::computeLaunch (double time)
         }        
     case SPECGAL:
         {
-            //note: the direction is in te form (l,b) here.
+            //note: the direction is in the form (l,b) here.
             std::pair<float,float> direction = spectrum()->dir(kinetic_energy,HepRandom::getTheEngine());
             double l = direction.first;
             double b = direction.second;
-            
             //then set up this direction:
             getGalacticDir(l,b);
+            m_launch = SPECGAL;
             break;
         }
     case GALACTIC:

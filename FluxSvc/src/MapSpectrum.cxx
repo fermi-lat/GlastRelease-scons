@@ -95,6 +95,7 @@ std::pair<double,double> MapSpectrum::dir(double energy, HepRandomEngine* engine
     
     //and the energy index of this particle:
     m_index = m_catalog[std::make_pair<int,int>(l,b)].index;
+    //std::cout << "l=" << l << ",b=" << b << std::endl;
     
     return std::make_pair<double,double>(l,b);    
 }
