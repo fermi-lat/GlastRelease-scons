@@ -15,7 +15,7 @@ use facilities v2r*
 use calibUtil v0r*
 
 use GaudiPolicy v5r4p*
-use GaudiAlg    v5r*
+## use GaudiAlg    v5r*  not using yet
 use GaudiAud    v5r*
 use GaudiKernel v11r*
 use GaudiSvc    v7r*
@@ -23,9 +23,21 @@ use GlastPolicy v4r*
 
 apply_pattern package_include
 apply_pattern package_headers
-## apply_pattern package_linkopts
-apply_pattern packageShr
-apply_pattern packag_Cshlibflags
 
-## uncomment following when ready
-library CalibData *.cxx Dll/*.cxx ${CalibData_headers}
+## 
+library CalibData *.cxx Cal/*.cxx ${CalibData_headers}
+
+
+# For a "linker library" could try new pattern available in GaudiPolicy
+# once we convert to gaudi 11.
+##apply pattern linker_library
+
+# Alternatively  GaudiKernel method would be
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern ld_library_path
+#
+private
+apply_pattern package_shlibflags
+
+
