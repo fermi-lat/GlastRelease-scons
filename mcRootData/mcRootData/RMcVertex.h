@@ -38,11 +38,11 @@ private:
     TLorentzVector *m_pPosI, *m_pPosF;
 	
 	Double_t m_timeOfFlight;
-	
+	//!Array of Daughter particles
 	TObjArray* m_mcDaughterParticles;
-	
+	//! Mother particles
 	RMcParticle* m_motherParticle;
-
+    //!Particle associated with this Vertex
     RMcParticle* m_mainParticle;
 	
 public:
@@ -72,29 +72,32 @@ public:
     //! get final momentum/energy 4-vector
     const TLorentzVector *getMomFinal()   const { return m_pMomF; };
 	
+    //! set the Initial Position
 	void setPosInitial(TLorentzVector* pPosI) { m_pPosI = pPosI; };
-	
+
+	//! set the Final Position
 	void setPosFinal(TLorentzVector* pPosF) { m_pPosF = pPosF; };
-	
+
+	//! set the Initial Momentum
 	void setMomInitial(TLorentzVector* pMomI) {m_pMomI = pMomI; };
-	
+
+	//! set the Final Momentum
 	void setMomFinal(TLorentzVector* pMomF) { m_pMomF = pMomF; };
 	
 	
 	/// retrieve time of flight
     Double_t timeOfFlight () const { return m_timeOfFlight;};
+
     /// update time of flight
     void setTimeOfFlight (double value) {m_timeOfFlight = value;};
 	
-    /// Retrieve pointer to the pair particle (const or non-const)
-    //const RMcParticle* mcParticle() const;
+    /// Retrieve pointer to the pair particle 
 	RMcParticle* mcParticle();
-    /// Update pointer to the pair particle (by a C++ pointer or a smart reference)
+    /// Update pointer to the pair particle (by a C++ pointer)
     void setMcParticle( RMcParticle* value );
 	
-    /// Retrieve pointer to mother particle (const or non-const)
+    /// Retrieve pointer to mother particle (const )
     RMcParticle* motherMcParticle();
-    //const RMcParticle* motherMcParticle() const;
 	
     /// Update pointer to mother particle (by a C++ pointer or a smart reference)
     void setMotherMcParticle( RMcParticle* value );
@@ -102,7 +105,7 @@ public:
     /// Retrieve pointer to vector of daughter particles (const or non-const)
     const TObjArray* daughterMcParticles() const;
 	
-    ///   (by a C++ pointer or a smart reference)
+    /// add Paticles to the TObjArray
     void addDaughterMcParticle( RMcParticle* particle );
 	
 	

@@ -25,15 +25,19 @@ class RMcVertex;
  *  - 14 May 2001   Daniel Flath    DOxygen style comments added
  *  - 06 Jun 2001   Daniel Flath    Final rewrite for integration with ROOTWriter
  *  - 14 Jun 2001   Daniel Flath    DOxygen style comments updated for checkin with ROOTWriter
+ *  - 23 Aug 2001   Ian Gable       Rehacked to work with the TDS classes
  */
 class RMcParticle: public TObject {
 
 private:
     //! particle id number
-    Int_t m_nPDGId;
+    Int_t m_particleId;
 
     //! initial position
     RMcVertex *m_mcVertex;
+
+    //! Pramary particle indicator
+    Bool_t m_primary;
 
 
 public:
@@ -51,23 +55,21 @@ public:
     //////////////////////   data access functions:  ///////////////////////
 
     //! get particle id number
-    inline Int_t getPDGId()         const { return m_nPDGId; };
-
-    /// Retrieve particle property
-    //StdHepId particleProperty() const;
+    Int_t particleId();
 
     /// Update particle identification
-    //void setParticleProperty( StdHepId value );
+    void setParticleId( Int_t value );
 
     /// Retrieve whether this is a primary particle
-    //Bool_t primaryParticle() const;
-    /// Set whether this is a primary particle
-    //void setPrimaryParticleFlag( Bool_t value );
+    Bool_t primaryParticle();
+
+    // Set whether this is a primary particle
+    void setPrimaryParticleFlag( Bool_t value );
 
 
-	    /// Retrieve pointer to the vertex (const or non-const)
-    //const RMcVertex* mcVertex() const;
-          RMcVertex* mcVertex();
+	 /// Retrieve pointer to the vertex
+    RMcVertex* mcVertex();
+
     /// Update pointer to origin vertex (by a C++ pointer or a smart reference)
     void setMcVertex( RMcVertex* value );
 

@@ -24,7 +24,6 @@ RMcVertex::RMcVertex(TLorentzVector *pPosI, TLorentzVector *pPosF,
 m_pPosI(pPosI), m_pPosF(pPosF), m_pMomI(pMomI), m_pMomF(pMomF)
 {
 	m_mcDaughterParticles = new TObjArray();
-    //m_mcDaughterParticles->SetOwner();
 }
 //________________________________________________________________________
 RMcVertex::~RMcVertex() {

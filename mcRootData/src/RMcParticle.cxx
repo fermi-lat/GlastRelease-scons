@@ -15,12 +15,12 @@ ClassImp(RMcParticle)
  *  initialization is performed.
  */
 RMcParticle::RMcParticle() :
-    m_nPDGId(0),  m_mcVertex(0) 
+    m_particleId(0),  m_mcVertex(0) 
 {
 }
 //________________________________________________________________________
 RMcParticle::RMcParticle(Int_t id, RMcVertex *pVertex) :
-  m_nPDGId(id), m_mcVertex(pVertex)    
+  m_particleId(id), m_mcVertex(pVertex)    
 {
 }
 //________________________________________________________________________
@@ -37,4 +37,24 @@ RMcVertex* RMcParticle::mcVertex() {
 
 void RMcParticle::setMcVertex(RMcVertex* value){
 	m_mcVertex = value;
+}
+
+void RMcParticle::setParticleId(Int_t id)
+{
+    m_particleId = id;
+}
+
+Int_t RMcParticle::particleId()
+{
+    return m_particleId;
+}
+
+void RMcParticle::setPrimaryParticleFlag(Bool_t isPrimary)
+{
+    m_primary = isPrimary;
+}
+
+Bool_t RMcParticle::primaryParticle()
+{
+    return m_primary;
 }
