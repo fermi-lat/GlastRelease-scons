@@ -216,7 +216,7 @@ StatusCode ntupleWriterSvc::addValue(const char *tupleName, const char *item, do
         return sc;
     }
     if (!isFinite(val)) {
-        log << MSG::INFO << "Attempt to add a non-finite value, inserting -99 instead" << endreq;
+        log << MSG::INFO << "Attempt to add a non-finite value into " << item << ", inserting -99999.0 instead." << endreq;
         ntItem = badValue;
     } else {
         ntItem = val;
@@ -241,7 +241,7 @@ StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, dou
             log << MSG::INFO << "Adding a new item to the ntuple " << item << endreq;
             m_nt->addItem(item, ntItem);
             if (!isFinite(val)) {
-                log << MSG::INFO << "Attempt to add a non-finite value, inserting -99 instead" << endreq;
+                log << MSG::INFO << "Attempt to add a non-finite value into " << item << ", inserting -99999.0 instead" << endreq;
                 ntItem = badValue;
             } else {
                 ntItem = val;
