@@ -2,6 +2,9 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 30-oct-2002: jrb - tag v2r8p6 Another change for g++3: get rid of use of
+ *              hash_map, more trouble than it's worth.  Use map on both
+ *              platforms
  * 30-oct-2002: jrb - tag v2r8p5 Additional little fix for g++3 compiler
  * 14-oct-2002: jrb - tag v2r8p4 Get rid of unneeded cast which was
  *              causing complaint from g++3 compiler.
