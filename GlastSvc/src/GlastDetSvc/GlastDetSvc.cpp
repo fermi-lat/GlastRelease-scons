@@ -163,13 +163,13 @@ const xml::IFile* GlastDetSvc::iniFile()const{
 }
 
 ///! satisfy external. Need to make it really fatal!
-extern void __cdecl FATAL ( const char* msg )
+extern void FATAL ( const char* msg )
 {
     (*s_log) << MSG::FATAL <<  msg << endreq;
 }
 
 //! Satisfy external
-extern void __cdecl WARNING ( const char* msg )
+extern void WARNING ( const char* msg )
 {
     (*s_log) << MSG::WARNING << msg << endreq;
 }
