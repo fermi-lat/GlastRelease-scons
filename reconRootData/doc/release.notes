@@ -2,6 +2,7 @@
  package reconRootData
  package manager:H.Kelly
 @verbatim
+v4r3p1    17-nov-03  : HMK update digiRootData Tag - not a real change - only incremented version to allow branch for EM
 v4r3p0    25-mar-03  : HMK Update to use new digiRootData tag
 v4r3      26-feb-03  : HMK Update to CalCluster for energyCorrected
 v4r2      11-feb-03  : TU  Update to Tkr classes for vsnet 
