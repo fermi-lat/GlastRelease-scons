@@ -2,6 +2,7 @@
  * package Event
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v8r3  13-may-02 THB TkrRecon classes updated by Tracy
  * v8r2  11-may-02 THB fixes to namespaces and EventModel
  * v8r1  10-may-02 THB First post-name chage release
  * v7r3  08-may-02 THB Ready for name change: new Tkr and Cal included
