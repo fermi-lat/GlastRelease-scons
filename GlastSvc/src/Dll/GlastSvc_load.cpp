@@ -17,10 +17,9 @@ DECLARE_FACTORY_ENTRIES(GlastSvc) {
     DECLARE_SERVICE( GlastRandomSvc);
     DECLARE_SERVICE( GlastEventSelector );
     DECLARE_SERVICE( EventCnvSvc );
-
-//    DLL_DECL_TOOL( RandomAccess );
-    
     DECLARE_CONVERTER( EventCnv );
     DECLARE_CONVERTER( MCEventCnv );
-   //THB DECLARE_CONVERTER( DigiEventCnv );
+
+       DECLARE_ALGORITHM( SetSeeds );    
+
 } 

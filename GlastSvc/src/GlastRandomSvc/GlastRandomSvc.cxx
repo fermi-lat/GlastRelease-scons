@@ -49,6 +49,9 @@
 static SvcFactory<GlastRandomSvc> a_factory;
 const ISvcFactory& GlastRandomSvcFactory = a_factory; 
 
+GlastRandomSvc* GlastRandomSvc::instance(){ return s_instance; }
+GlastRandomSvc* GlastRandomSvc::s_instance;
+
 GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Service(name,svc)
 {
     // Purpose and Method: Constructor - Declares and sets default properties
@@ -65,6 +68,8 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     declareProperty("InitialSequenceNumber", m_InitialSequenceNumber=0);
     declareProperty("SeedFile", m_seedFile="");
     declareProperty("EndSeedFile", m_endSeedFile="");
+    declareProperty("autoSeed", m_autoSeed=true); // allow turn off
+    s_instance=this; // for access local to GlastSvc
 }
 
 GlastRandomSvc::~GlastRandomSvc()  
@@ -147,6 +152,16 @@ StatusCode GlastRandomSvc::initialize ()
 
     // Call super-class
     Service::initialize ();
+
+        if( serviceLocator() ) {
+            status = serviceLocator()->service("EventDataSvc", m_eventSvc, true );
+        }
+        if(status.isFailure())
+        {
+            log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+            return status;
+        }
+
 
     // Bind all of the properties for this service
     if ( (status = setProperties()).isFailure() ) {
@@ -271,22 +286,15 @@ void GlastRandomSvc::handle(const Incident &inc)
 
     MsgStream log( msgSvc(), name() );
 
-    if( inc.type()=="BeginEvent") {
-        IDataProviderSvc* eventSvc;
-        StatusCode status;
-        if( serviceLocator() ) {
-            status = serviceLocator()->service("EventDataSvc", eventSvc, true );
-        }
-        if(status.isFailure())
-        {
-            log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-        }
+    if( inc.type()=="BeginEvent" && m_autoSeed) {
+
         // See if MCEvent was set up properly
-        SmartDataPtr<Event::MCEvent> mcevt(eventSvc, EventModel::MC::Event);
+        SmartDataPtr<Event::MCEvent> mcevt(m_eventSvc, EventModel::MC::Event);
         if (mcevt == 0) {
             log << MSG::ERROR << "Error accessing MCEvent" << endreq;
             return;
         }
+
 
         int runNo, seqNo;
 
@@ -311,7 +319,7 @@ void GlastRandomSvc::handle(const Incident &inc)
 
         // Set run number in EventHeader for consistency with
         // with run number in MCEvent
-        SmartDataPtr<Event::EventHeader> header(eventSvc, 
+        SmartDataPtr<Event::EventHeader> header(m_eventSvc, 
             EventModel::EventHeader);
         if (header == 0) {
             log << MSG::ERROR << "Error accessing Event Header: not setting seed" << endreq;
@@ -322,21 +330,8 @@ void GlastRandomSvc::handle(const Incident &inc)
         header->setEvent(seqNo);
         header->setTrigger(0); // flag that not set yet
 
-        int multiplier = 1; 
-        int dummy = 0; // for 2nd argument to setSeed
-        EngineMap::const_iterator dllEngine;
-        for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
-            long theSeed = multiplier * 100000 * ((runNo+1) % 20000) + 2*seqNo+1;
+        applySeeds(runNo, seqNo);
 
-            log << MSG::DEBUG;
-            if(log.isActive() ){
-                log << "Setting seed for " <<  dllEngine->first << " to " <<  theSeed ;
-            }
-            log << endreq;
-            
-            dllEngine->second->setSeed(theSeed,dummy);
-            ++multiplier;
-        }
     }
 
     if(inc.type()=="EndEvent" && m_endSeedFile.value() != "") {
@@ -354,6 +349,29 @@ void GlastRandomSvc::handle(const Incident &inc)
 
       m_output << std::endl;
     }
+
+}
+
+void GlastRandomSvc::applySeeds(int runNo, int seqNo)
+{
+         MsgStream log( msgSvc(), name() );
+
+
+        int multiplier = 1; 
+        int dummy = 0; // for 2nd argument to setSeed
+        EngineMap::const_iterator dllEngine;
+        for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
+            long theSeed = multiplier * 100000 * ((runNo+1) % 20000) + 2*seqNo+1;
+
+            log << MSG::DEBUG;
+            if(log.isActive() ){
+                log << "Setting seed for " <<  dllEngine->first << " to " <<  theSeed ;
+            }
+            log << endreq;
+            
+            dllEngine->second->setSeed(theSeed,dummy);
+            ++multiplier;
+        }
 
 }
 

@@ -12,6 +12,8 @@
 #include "CLHEP/Random/Random.h"
 #include "GlastRandomSeed.h"
 
+class IDataProviderSvc;;
+
 /** @class GlastRandomSvc
  *
 * @brief Gaudi Service for setting the random engines and seeds
@@ -55,7 +57,18 @@ public:
   /// required for Gaudi service
   StatusCode finalize ();
   
+  /// action function that can be called by a (local) client-- will set all appropriate seeds
+  /** @param run the current run number
+       @param seq the sequence number
+       */
+  void applySeeds(int run, int seq); 
+
+  /// singleton interface for local access
+    static GlastRandomSvc * instance();
+
  private:  
+     static GlastRandomSvc* s_instance;
+
      HepRandomEngine* createEngine(std::string  engineName) ;
 
   /// Data members
@@ -76,8 +89,13 @@ public:
   StringProperty m_endSeedFile;
   std::ofstream m_output;
 
+  BooleanProperty m_autoSeed; 
+
   // seeds read from the file
   std::vector<GlastRandomSeed> m_seeds;
+
+          IDataProviderSvc* m_eventSvc;
+
 };
 
 #endif // _GlastRandomSvc_H
