@@ -24,12 +24,15 @@
 #include <vector>
 #include "GaudiKernel/ParticleProperty.h"
 
+
+#include "GalacticHist.h"
+
 //#include "FluxAlg.h"
 /*! \class FluxTestAlg
 \brief 
 
 */
-    //class ParticleProperty;
+//class ParticleProperty;
 
 class FluxTestAlg : public Algorithm {
     
@@ -41,20 +44,22 @@ public:
     StatusCode execute();
     StatusCode finalize();
     
-
+    
 private:
-
+    
     typedef struct{
         int x;
         int y;
         double amount;
     }exposureSet;
-
+    
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
     double m_exposedArea[180][90];
-    std::vector<exposureSet> findExposed(double l,double b);
+    double m_currentTime;
+    double m_passedTime;  //time passed during this event
+    std::vector<exposureSet> findExposed(double l,double b, double deltat);
     void addToTotalExposure(std::vector<exposureSet>);
     void displayExposure();
 };
@@ -145,7 +150,7 @@ StatusCode FluxTestAlg::execute() {
         Event::McParticleCol::iterator elem = (*pcol).begin();
         d = (*elem)->initialFourMomentum().v()*10;
         p = (*elem)->finalPosition();
-
+        
         energy = (*elem)->initialFourMomentum().e();
         /*StdHepId*/int pID = (*elem)->particleProperty();
         if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
@@ -155,15 +160,15 @@ StatusCode FluxTestAlg::execute() {
         partName = m_partSvc->findByStdHepID(pID)->particle();
     }
     
-   /*
+    /*
     log << MSG::INFO << partName
-        << "(" << energy
-        << " GeV), Launch: " 
-        << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
-        << " Dir " 
-        << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
-        // << ",  Elapsed Time = " << m_flux->time()
-        << endreq;   */
+    << "(" << energy
+    << " GeV), Launch: " 
+    << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
+    << " Dir " 
+    << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")"
+    // << ",  Elapsed Time = " << m_flux->time()
+    << endreq;   */
     
     // get the pointer to the flux Service 
     IFluxSvc* fsvc;
@@ -173,34 +178,37 @@ StatusCode FluxTestAlg::execute() {
         log << MSG::ERROR << "Could not find FluxSvc" << endreq;
         return sc;
     }
-
+    
     HepVector3D pointingin(0,0,1);
     pointingin = (fsvc->transformGlastToGalactic(m_flux->time()))*pointingin;
-
-//log << MSG::INFO
-//        << "(" << pointingin.x() <<", "<< pointingin.y() <<", "<<pointingin.z()<<")" 
-//        << endreq;
     
-//we want to make this into l and b now.
-double l,b;
-l = atan(pointingin.x()/pointingin.z());
-b = atan(pointingin.y()/pointingin.z());
-
-l *= 360./M_2PI;
-b *= 360./M_2PI;
-
-l+= 180;
-b+= 90;
-
-log << MSG::INFO
+    //log << MSG::INFO
+    //        << "(" << pointingin.x() <<", "<< pointingin.y() <<", "<<pointingin.z()<<")" 
+    //        << endreq;
+    
+    //we want to make this into l and b now.
+    double l,b;
+    l = atan(pointingin.x()/pointingin.z());
+    b = atan(pointingin.y()/pointingin.z());
+    
+    l *= 360./M_2PI;
+    b *= 360./M_2PI;
+    
+    l+= 180;
+    b+= 90;
+    
+    log << MSG::INFO
         << "(" << "l = " << l << ", b = " << b <<")" 
         << endreq;
 
-std::vector<exposureSet> exposed;
-exposed = findExposed(l,b);
-addToTotalExposure(exposed);
+    m_passedTime = (m_flux->time())-m_currentTime;
+    m_currentTime = m_flux->time();
 
-
+    std::vector<exposureSet> exposed;
+    exposed = findExposed(l,b,m_passedTime);
+    addToTotalExposure(exposed);
+    
+    
     //m_flux->pass(10.);
     return sc;
 }
@@ -214,19 +222,19 @@ StatusCode FluxTestAlg::finalize() {
 
 
 
-std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b){
+std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){
     std::vector<exposureSet> returned;
     double angularRadius = 30;
-    for(int i= l-angularRadius ; i<=l+angularRadius ; i+=8){
-        for(int j= b-angularRadius ; j<=b+angularRadius ; j+=8){
-    
+    for(int i= l-angularRadius ; i<=l+angularRadius ; i+=2){
+        for(int j= b-angularRadius ; j<=b+angularRadius ; j+=2){
+            
             if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
-    //set up the point, and stick it into the vector
-    exposureSet point;
-    point.x = l/8; //yes, this is doing an implicit cast.
-    point.y = b/8;  //these should be divided by two, but they're being shrunk for the current display.
-    point.amount = 1; //this should scale with the time the satellite is there.
-    returned.push_back(point);
+                //set up the point, and stick it into the vector
+                exposureSet point;
+                point.x = i/2; //yes, this is doing an implicit cast.
+                point.y = j/2;  //these should be divided by two, but they're being shrunk for the current display.
+                point.amount = deltat;
+                returned.push_back(point);
             }
         }
     }
@@ -238,30 +246,38 @@ void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeA
     int x,y;
     double amount;
     if(toBeAdded.size()){
-    for( ; iter!=toBeAdded.end() ; iter++){
-        x = (*iter).x;
-        y = (*iter).y;
-        amount = (*iter).amount;
-        m_exposedArea[x][y] += amount;
-
-    }
+        for( ; iter!=toBeAdded.end() ; iter++){
+            x = (*iter).x;
+            y = (*iter).y;
+            amount = (*iter).amount;
+            m_exposedArea[x][y] += amount;
+            
+        }
     }else{
-
+        
         std::cout << "error in addToTotalExposure - null vector input" <<std::endl;
     }
 }
 
-    void FluxTestAlg::displayExposure(){
+void FluxTestAlg::displayExposure(){
+    //make the file
+    std::ofstream out_file("data.dat", std::ios::app);
+
     int i,j;
-    for(i=0 ; i<180/4 ; i++){
+    for(i=0 ; i<180 ; i++){
         std::strstream out;
-        for(j=0 ; j<90/4 ; j++){
+        for(j=0 ; j<90 ; j++){
             out << m_exposedArea[i][j] << " ";
+            out_file << i << "  " << j << "  " << m_exposedArea[i][j] << std::endl;
         }
         out << std::endl;
         std::cout << out.str();
     }
-    }
+    out_file.close();
+    //then use galacticHist to display the stuf in the file
+    galacticHist abc;
+    abc.test();
+}
 
 
 
