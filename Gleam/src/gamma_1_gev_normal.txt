@@ -1,0 +1,30 @@
+//##############################################################
+//
+// Job options file for Gleam 1 GeV test
+// $Header$
+
+#include "$GLEAMROOT/src/basicOptions.txt"
+MeritAlg.cuts="LnA"; 
+
+// override the default source
+FluxSvc.source_lib += {"$FLUXSVCROOT/xml/user_library.xml"};
+FluxAlg.source_name="gamma_1_gev_normal";
+
+TkrReconAlg.PropagatorType=1; // gismo prop.
+
+// limit to 4K incident, due to memory leak
+ApplicationMgr.EvtMax = 4000;
+MeritAlg.generated = 4000; 
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+CalClustersAlg.OutputLevel=4; // too much info
+
+MessageSvc.OutputLevel      =3;
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+

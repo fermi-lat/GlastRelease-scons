@@ -2,7 +2,8 @@
  * package Gleam
  * package manager:T.Burnett
 
-* v2r1p14 THB 13-jun-02
+* v2r2 THB 13-jun-02
+     use idents               v2r8p2
      use Event                 v8r9
      use AcdDigi               v1r2
      use TkrRecon              v6r3p5

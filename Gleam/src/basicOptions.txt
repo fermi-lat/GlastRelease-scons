@@ -95,7 +95,8 @@ ApplicationMgr.DLLs +={
 Reconstruction.Members={ 
       "Sequencer/Cal1", 
       "Sequencer/Tkr",
-      "Sequencer/Cal2"
+      "Sequencer/Cal2",
+      "Sequencer/Acd"
       };
          
 ApplicationMgr.ExtSvc += {"RecoSvc"};
@@ -127,7 +128,7 @@ Cal2.Members = {
 //   ACD recon
 //
 ApplicationMgr.DLLs += {"AcdRecon"};
-Reconstruction.Members += {"AcdReconAlg"};
+Acd.Members = {"AcdReconAlg"};
 
 // ----------------------------
 //   Output
