@@ -3,7 +3,10 @@
    @verbatim	   
 
    Coordinators: M. Frailis and R. Giannitrapani
- 
+
+   v1r4    30-Dec-2004  frailis  Minor change to trim column and attribute
+                                 values before they are inserted into the
+                                 database 
    v1r3     4-Aug-2004  jrb      (for M & R) Fill in uid, creator automatically
                                  for insert & update; more expressive insert
                                  dialog
