@@ -29,7 +29,7 @@ using namespace idents;
 
 VolumeIdentifier::VolumeIdentifier():  m_value(0), m_size(0){}
 
-VolumeIdentifier::init(int64 value, unsigned int size)
+void VolumeIdentifier::init(int64 value, unsigned int size)
 {
     m_value = value;
     m_size = size;

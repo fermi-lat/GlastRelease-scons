@@ -38,7 +38,7 @@ public:
      * and is used by the overloaded operator<< to build an identifier reading from
      * a persistent data store
      */
-    init(int64 , unsigned int); 
+    void init(int64 , unsigned int); 
 
     /// prepend, in front, another id
     void prepend( const VolumeIdentifier& id);
