@@ -91,16 +91,28 @@ int main(int argc, char* argv[]) {
               << std::endl;
   }
 
-  // Get rid of the whole <derived> part of <constants>.  No longer needed.
-  DOM_Element derived = xml::Dom::findFirstChildByName(docElt, "constants");
-  if (derived != DOM_Element() ) {
-    derived = xml::Dom::findFirstChildByName(derived, "derived");
+  // In case there were no sections to substitute, do eval here
+  constants->evalConstants();
 
-    if (derived != DOM_Element()) {
-      xml::Dom::prune(derived);
-      (derived.getParentNode()).removeChild(derived);
+  // Get rid of the whole <derived> part of <constants>.  No longer needed.
+  /*
+  DOM_Element derived;
+  if (docElt.getTagName().equals(DOMString("constants"))) {
+    derived = xml::Dom::findFirstChildByName(docElt, "derived");
+  }
+  else {  
+    derived = xml::Dom::findFirstChildByName(docElt, "constants");
+    if (derived != DOM_Element() ) {
+      derived = xml::Dom::findFirstChildByName(derived, "derived");
     }
   }
+
+
+  if (derived != DOM_Element()) {
+    xml::Dom::prune(derived);
+    (derived.getParentNode()).removeChild(derived);
+  }
+  */
 
   // Add a <source> child to the outer gdd element
   xmlUtil::Source *source = 

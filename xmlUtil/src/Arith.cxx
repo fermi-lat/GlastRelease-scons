@@ -205,6 +205,21 @@ namespace xmlUtil {
 
     if (!m_evaluated) evaluate();
 
+    // Check if we're supposed to be an int.  If so, coerce
+    // m_number to be nearby int in case of round-off error 
+    if (DOMString("int").equals(m_elt.getAttribute("type"))) {
+      // If we're not already a perfect int, attempt to fix
+      // so that we round the right way.
+      // Otherwise, leave well enough alone
+      long int intValue = m_number;
+      double   intified = intValue;
+      if (intified != m_number) {
+        double fixup = 0.49;
+        if (m_number < 0.0) fixup = -fixup;
+        long int  intValue = (m_number + fixup);  
+        m_number = intValue;
+      }
+    }
     // Answer will always be returned in mm for length-type
     // constants, so, just in case, this attribute should be
     // set to "mm".  If we're not a length-type constant,
