@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r10
+version  v5r11
 
 # $Id$
 
@@ -29,6 +29,7 @@ use Trigger     v*
 use DetDisplay  v*
 use TkrRecon    v*
 use CalRecon    v* 
+
 use AcdRecon    v*       
 
 #level 1 filter
@@ -44,6 +45,7 @@ use merit       v*
 use AnalysisNtuple v*
 
 # Allow FRED option -- see fredOptions.txt
+use  Fred * IExternal
 use  HepRepSvc *
 use  HepRepXml *
 use  HepRepCorba *
