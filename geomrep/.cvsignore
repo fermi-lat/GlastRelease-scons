@@ -1,6 +1,14 @@
 i686
 Win32Debug
 Win32
-VisualC
 msdev
 Linux
+aclocal.m4
+config
+config.*
+configure
+libtool
+Makefile
+Makefile.in
+stamp-h*
+
