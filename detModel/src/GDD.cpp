@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "detModel/GDD.h"
 #include "detModel/Utilities/GDDpurge.h"
@@ -27,7 +28,7 @@ GDD::~GDD(){
 
 /// This method resolve the volumes references in the XML file
 void GDD::ResolveReferences(){
-  typedef map<string, GDDvolume*> M;
+  typedef std::map<std::string, GDDvolume*> M;
   M::const_iterator i;
   typeVolume voltype;
   GDDvolume* actualVolume;
@@ -113,7 +114,7 @@ void GDD::ResolveReferences(){
 int GDD::getVolumesNumber()
 {
   int n=0;
-  typedef map<string, GDDvolume*> M;
+  typedef std::map<std::string, GDDvolume*> M;
   M::const_iterator i; 
 
   for(i=volumeMap.begin();i!=volumeMap.end();i++)
@@ -131,9 +132,9 @@ int GDD::getSectionsNumber()
 /* This method gives back a GDDchoice* given a name
  * If it does not exist, it returns a null pointer
  */
-GDDchoice* GDD::getChoiceByName(string cname)
+GDDchoice* GDD::getChoiceByName(std::string cname)
 {
-  typedef map<string, GDDchoice*> M;
+  typedef std::map<std::string, GDDchoice*> M;
   M::const_iterator i; 
 
   i = choiceMap.find(cname);
@@ -144,9 +145,9 @@ GDDchoice* GDD::getChoiceByName(string cname)
 /* This method gives back a GDDvolume* given a name
  * If it does not exist, it returns a null pointer
  */
-GDDvolume* GDD::getVolumeByName(string vname)
+GDDvolume* GDD::getVolumeByName(std::string vname)
 {
-  typedef map<string, GDDvolume*> M;
+  typedef std::map<std::string, GDDvolume*> M;
   M::const_iterator i; 
 
   i = volumeMap.find(vname);
@@ -159,7 +160,7 @@ GDDvolume* GDD::getVolumeByName(string vname)
      */
     if(choice)
       {
-	string mode = GDDmanager::getPointer()->getMode();
+	std::string mode = GDDmanager::getPointer()->getMode();
 	return getVolumeByName(choice->getVolumeNameByMode(mode));
       }
     else return 0;
@@ -170,7 +171,7 @@ GDDvolume* GDD::getVolumeByName(string vname)
 /* This method gives back a GDDvolume* given a name
  * If it does not exist, it returns a null pointer
  */
-GDDshape* GDD::getShapeByName(string vname)
+GDDshape* GDD::getShapeByName(std::string vname)
 {
   if( getVolumeByName(vname)  && (getVolumeByName(vname)->getVolumeType() == shape) )
     return static_cast<GDDshape*>(getVolumeByName(vname));
@@ -184,7 +185,7 @@ void GDD::buildVolumeMap()
 {
   unsigned int j;
   int i;
-  typedef map<string, GDDvolume*> M;
+  typedef std::map<std::string, GDDvolume*> M;
 
   for(i=0;i<getSectionsNumber();i++)
     for(j=0;j<sections[i]->getVolumes().size();j++)
@@ -208,7 +209,7 @@ void GDD::buildBoundingBoxes()
 void GDD::buildChoiceMap()
 {
   unsigned int i,j;
-  typedef map<string, GDDchoice*> M;
+  typedef std::map<std::string, GDDchoice*> M;
 
   for(i=0;i<sections.size();i++)
     for(j=0;j<sections[i]->getChoices().size();j++)
@@ -224,9 +225,9 @@ void GDD::buildChoiceMap()
 /* This method gives back a GDDconst* given a name
  * If it does not exist, it returns a null pointer
  */
-GDDconst* GDD::getConstByName(string cname)
+GDDconst* GDD::getConstByName(std::string cname)
 {
-  typedef map<string, GDDconst*> M;
+  typedef std::map<std::string, GDDconst*> M;
   M::const_iterator i; 
 
   i = constMap.find(cname);
@@ -237,9 +238,9 @@ GDDconst* GDD::getConstByName(string cname)
 /* This method gives back a double given a name
  * If it does not exist, it returns a null pointer
  */
-double GDD::getNumConstByName(string cname)
+double GDD::getNumConstByName(std::string cname)
 {
-  typedef map<string, double> M;
+  typedef std::map<std::string, double> M;
   M::const_iterator i; 
 
   i = constNumMap.find(cname);
@@ -250,9 +251,9 @@ double GDD::getNumConstByName(string cname)
 /* This method gives back a string given a name
  * If it does not exist, it returns a null pointer
  */
-string GDD::getCharConstByName(string cname)
+std::string GDD::getCharConstByName(std::string cname)
 {
-  typedef map<string, string> M;
+  typedef std::map<std::string, std::string> M;
   M::const_iterator i; 
   
   i = constCharMap.find(cname);
@@ -267,9 +268,9 @@ void GDD::buildConstantsMap()
 {
   unsigned int k,j,m;
 
-  typedef map<string, double> M1;
-  typedef map<string, string> M2;
-  typedef map<string, GDDconst *> M3;
+  typedef std::map<std::string, double> M1;
+  typedef std::map<std::string, std::string> M2;
+  typedef std::map<std::string, GDDconst *> M3;
 
   for(k=0;k<constants->getCategories().size();k++){
     GDDconstCategory* tmp=constants->getCategories()[k];
@@ -352,17 +353,17 @@ void GDD::AcceptNotRec(GDDvisitor* v){
 
 
 void GDD::visitMap(){
-  typedef map<string,string>M;
+  typedef std::map<std::string,std::string>M;
   M::const_iterator i;
-  std::cout<<"Char constants List"<<std::endl;
+  std::cout << "Char constants List"<<std::endl;
   for (i=constCharMap.begin(); i!=constCharMap.end(); i++){
-    std::cout<<"constant "<<i->first<<" value: "<<i->second<<std::endl;
+    std::cout << "constant "<<i->first<<" value: "<<i->second<<std::endl;
   };
-  typedef map<string,double>M1;
+  typedef std::map<std::string,double>M1;
   M1::const_iterator j;
-  std::cout<<"Numeric constants list"<<std::endl;
+  std::cout << "Numeric constants list"<<std::endl;
   for (j=constNumMap.begin(); j!=constNumMap.end(); j++){
-    std::cout<<"constant "<<j->first<<" value: "<<j->second<<std::endl;
+    std::cout << "constant "<<j->first<<" value: "<<j->second<<std::endl;
   }
 }
 

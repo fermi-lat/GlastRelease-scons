@@ -120,7 +120,7 @@ public:
   positiontype getPosType(){return typePosition;};
 
   /** @link aggregation */
-  vector <GDDidField*> idFields;
+  std::vector <GDDidField*> idFields;
 
  protected:
   GDDanyPosition(positiontype ptypePosition):

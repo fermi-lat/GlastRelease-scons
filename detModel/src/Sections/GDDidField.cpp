@@ -2,10 +2,10 @@
 #include "detModel/Sections/GDDidField.h"
 
 
-void GDDidField::setName(string pname){
+void GDDidField::setName(std::string pname){
   name = pname;
 }
 
-string GDDidField::getName(){
+std::string GDDidField::getName(){
   return name;
 }

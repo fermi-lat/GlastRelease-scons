@@ -5,6 +5,8 @@
 #include "detModel/Sections/GDDanyPosition.h"
 #include "detModel/Sections/GDDposXYZ.h"
 
+#include <math.h>
+
 GDDcomposition::~GDDcomposition(){
   purge(anyPosition);
 }

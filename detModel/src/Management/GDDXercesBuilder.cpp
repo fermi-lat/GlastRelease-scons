@@ -96,16 +96,16 @@ void GDDXercesBuilder::parseFile(char* nameFile){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
 
-  string name;
-  string typeOfConst;
-  string ut;
+  std::string name;
+  std::string typeOfConst;
+  std::string ut;
   
   DOM_NamedNodeMap attr = e->getAttributes();
 
   name=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("name")).getNodeValue() ));
   ut=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("uType")).getNodeValue() ));
 
-  string elementName=std::string(xml::Dom::transToChar(e->getNodeName()));
+  std::string elementName=std::string(xml::Dom::transToChar(e->getNodeName()));
   if (elementName=="prim"){
     typeOfConst=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("type")).getNodeValue()));
     if (typeOfConst=="int"){
@@ -140,7 +140,7 @@ GDDconst* GDDXercesBuilder::buildConst(DOM_Node* e){
     }
     else if (typeOfConst=="string"){
       GDDstringConst* c=new GDDstringConst;
-      string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
+      std::string val=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("value")).getNodeValue()));
       c->setName(name);
       c->setConstMeaning(ut);
       c->setConstType(s);
@@ -185,7 +185,7 @@ void GDDXercesBuilder::buildConstants(){
 	{
 	  std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
 	  if(str == "version"){
-	    string s1,s2;
+	    std::string s1,s2;
 	    DOM_NamedNodeMap attr=childs.item(i).getAttributes ();
 	    s1=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("major")).getNodeValue()));
 	    s2=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("minor")).getNodeValue()));
@@ -196,12 +196,12 @@ void GDDXercesBuilder::buildConstants(){
 	    if (child.getLength()!=0){
 	      for(j=0;j<child.getLength();j++){
 		GDDconstCategory* cat= new GDDconstCategory;
-		string s1;
+		std::string s1;
 		DOM_NamedNodeMap attrCat=child.item(j).getAttributes();
 		s1=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("name")).getNodeValue()));
 		cat->setName(s1);
 		if(attrCat.getLength()>1){ //if the actual category has more than one attribute it is derived
-		  string s2;
+		  std::string s2;
 		  s2=std::string(xml::Dom::transToChar(attrCat.getNamedItem(DOMString("save")).getNodeValue()));
 		  if (s2=="true")
 		    cat->setSave(true);
@@ -235,7 +235,7 @@ void GDDXercesBuilder::buildConstants(){
 
 void GDDXercesBuilder::buildSections()
 {
-  unsigned int i, j;
+  unsigned int i;
   DOM_Element docElt = domfile.getDocumentElement();
   DOM_NodeList childs = docElt.getChildNodes();
 
@@ -390,7 +390,7 @@ GDDcomposition* GDDXercesBuilder::buildComposition(DOM_Node* e){
 
   DOM_NodeList childs = e->getChildNodes();
 
-  for(unsigned int i=0;i<childs.getLength();i++){
+  for(i=0;i<childs.getLength();i++){
       if (childs.item(i).getNodeType()!=Comment)
 	b->addPosition(buildPosition( &(childs.item(i)) ));
       
@@ -493,8 +493,8 @@ GDDstack* GDDXercesBuilder::buildStack(DOM_Node* e){
   DOM_NodeList childs = e->getChildNodes();
 
 
-  for(unsigned int i=0;i<childs.getLength();i++){
-    if (childs.item(i).getNodeType()!=Comment){
+  for(i=0;i<childs.getLength();i++){
+    if ( (childs.item(i)).getNodeType()!=Comment){
       GDDanyRelativePosition* p = buildRelativePosition( &(childs.item(i)));
       p->setPosDir(st);
       b->addPosition(p);

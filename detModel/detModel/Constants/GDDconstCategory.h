@@ -1,8 +1,8 @@
 #ifndef GDDDERCATEGORY_H
 #define GDDDERCATEGORY_H
 
-#include<vector.h>
-#include<string.h>
+#include<vector>
+#include<string>
 
 #include "detModel/Utilities/GDDpurge.h"
 #include "detModel/Constants/GDDconst.h"

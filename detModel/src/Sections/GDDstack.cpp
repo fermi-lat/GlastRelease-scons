@@ -4,6 +4,8 @@
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDanyRelativePosition.h"
 
+#include <math.h>
+
 GDDstack::~GDDstack(){
   purge(anyRelativePosition);
 }

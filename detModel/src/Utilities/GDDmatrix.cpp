@@ -1,4 +1,5 @@
 #include "detModel/Utilities/GDDmatrix.h"
+#include <math.h>
 
 void GDDtranslate(GDDvector* t, GDDvector* v)
 {
