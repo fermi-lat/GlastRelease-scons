@@ -116,19 +116,19 @@ HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName)
     // Restrictions and Caveats:  None
 
     static RanGenFactoryBase*  factories[] = { 
-        {new RanGenFactory<DRand48Engine>("DRand48Engine")   },
-        {new RanGenFactory<DualRand>("DualRand")             },
-        {new RanGenFactory<TripleRand>("TripleRand")         },
-        {new RanGenFactory<RandEngine>("RandEngine")         },
-        {new RanGenFactory<HepJamesRandom>("HepJamesRandom") },
-        {new RanGenFactory<HepJamesRandom>("JamesRandom")    },
-        {new RanGenFactory<Hurd160Engine>("Hurd160Engine")   },
-        {new RanGenFactory<Hurd288Engine>("Hurd288Engine")   },
-        {new RanGenFactory<MTwistEngine>("MTwistEngine")     },
-        {new RanGenFactory<RanecuEngine>("RanecuEngine")     },
-        {new RanGenFactory<RanshiEngine>("RanshiEngine")     },
-        {new RanGenFactory<RanluxEngine>("RanluxEngine")     },
-        {new RanGenFactory<Ranlux64Engine>("Ranlux64Engine") }
+        new RanGenFactory<DRand48Engine>("DRand48Engine")   ,
+        new RanGenFactory<DualRand>("DualRand")             ,
+        new RanGenFactory<TripleRand>("TripleRand")         ,
+        new RanGenFactory<RandEngine>("RandEngine")         ,
+        new RanGenFactory<HepJamesRandom>("HepJamesRandom") ,
+        new RanGenFactory<HepJamesRandom>("JamesRandom")    ,
+        new RanGenFactory<Hurd160Engine>("Hurd160Engine")   ,
+        new RanGenFactory<Hurd288Engine>("Hurd288Engine")   ,
+        new RanGenFactory<MTwistEngine>("MTwistEngine")     ,
+        new RanGenFactory<RanecuEngine>("RanecuEngine")     ,
+        new RanGenFactory<RanshiEngine>("RanshiEngine")     ,
+        new RanGenFactory<RanluxEngine>("RanluxEngine")     ,
+        new RanGenFactory<Ranlux64Engine>("Ranlux64Engine") 
     };
 
     for(unsigned int i=0; i< sizeof(factories)/sizeof(void*); ++i){
