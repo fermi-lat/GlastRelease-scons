@@ -22,6 +22,12 @@ namespace CalibData {
     const std::vector<CalibPair>& getPairs() const;
 
     CLID getCLIDNodeCLID() const;
+
+    /// Return flavor string, extracted from full path name in TCDS
+    static std::string getFlavor(const std::string& fullpath);
+
+    /// Return calibration type name, extracted from full path name in TCDS
+    static std::string getCalibType(const std::string& fullpath);
   };
 }
 
