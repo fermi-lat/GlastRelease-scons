@@ -52,7 +52,7 @@ public:
         // reconstructed data (Tracker)
         EventModel::TkrRecon::Event       = EventModel::Event + "/TkrRecon";
         EventModel::TkrRecon::SiLayers    = EventModel::TkrRecon::Event + "/SiLayers";
-        EventModel::TkrRecon::SiClusters  = EventModel::TkrRecon::Event + "/SiClusters";
+        EventModel::TkrRecon::TkrClusters = EventModel::TkrRecon::Event + "/TkrClusters";
         EventModel::TkrRecon::SiRecObjs   = EventModel::TkrRecon::Event + "/SiRecObjs";
 
         // reconstructed ACD data
@@ -153,7 +153,7 @@ public:
     //! Reconstruction: Tkr class IDs
     const CLID& CLID_TkrRecon           = 3100;
     const CLID& CLID_SiLayers           = 3101;  // Use Tkr instead of Si ?
-    const CLID& CLID_SiClusters         = 3102;  // Is this really Layers, Clusters, RecObjs
+    const CLID& CLID_TkrClusters        = 3102;  // Is this really Layers, Clusters, RecObjs
     const CLID& CLID_SiRecObjs          = 3103;  // or rather Layer, Cluster, RecObj objects?
 
     //! Reconstruction: Tkr class IDs
