@@ -26,6 +26,7 @@ McParticle::McParticle(const McParticle &p) {
     m_initialFourMomentum = p.m_initialFourMomentum;
     m_finalFourMomentum = p.m_finalFourMomentum;
     m_mother = p.m_mother;
+    m_process = p.m_process;
     // TRefArrayIter::Next does not seem to be implemented in Root 3.02.03
     // or ROOT 3.03.04 - just iterating over the entries for now.
     //TRefArrayIter daughterIter(&p.m_daughters);
@@ -58,6 +59,7 @@ void McParticle::Print(Option_t *option) const {
     cout.precision(2);
     cout << "ParticleId: " << m_particleId;
     cout << " StatusFlag: " << m_statusFlags << endl;
+    cout << "Process: " << m_process.Data() << endl;
     cout << "InitialPos: (" << m_initialPosition.X() << "," << m_initialPosition.Y()
         << "," << m_initialPosition.Z() << ") ";
     cout << "FinalPos: (" << m_finalPosition.X() << "," << m_finalPosition.Y()
@@ -77,7 +79,7 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
                       const TLorentzVector& finalMom,
                       const TVector3& initPos,
                       const TVector3& finalPos,
-                      const std::string& process)
+                      const char* process)
 {
     m_mother = mother;
     m_particleId = id;
@@ -86,7 +88,7 @@ void McParticle::initialize( McParticle* mother, Int_t id, UInt_t statusBits,
     m_finalFourMomentum = finalMom;
     m_initialPosition = initPos;
     m_finalPosition = finalPos;
-    m_process = process;
+    m_process = TString(process);
     if ( mother == 0 ) return;
     if( mother != this) mother->m_daughters.Add(this);
 }
@@ -127,6 +129,7 @@ const TLorentzVector& McParticle::getFinalFourMomentum() const {
     return m_finalFourMomentum;
 };
 
-const std::string& McParticle::getProcess() const {
+const TString& McParticle::getProcess() const {
     return m_process;
 }
+

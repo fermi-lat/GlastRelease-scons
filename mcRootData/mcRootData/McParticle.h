@@ -6,8 +6,7 @@
 #include "TLorentzVector.h"
 #include "TRef.h"
 #include "TRefArray.h"
-
-#include <string>
+#include "TString.h"
 
 /** @class McParticle
 * @brief GLAST Monte Carlo particle class.  This class mirrors the TDS 
@@ -70,7 +69,7 @@ public:
         const TLorentzVector& finalMomentum,
         const TVector3& initialPosition,
         const TVector3& finalPosition,
-        const std::string& process = "");
+        const char* process = "");
     
     Int_t getParticleId() const { return m_particleId;};    
     
@@ -103,7 +102,7 @@ public:
 
     const TLorentzVector& getFinalFourMomentum() const;
     
-    const std::string& getProcess() const;
+    const TString& getProcess() const;
     
 private:
     
@@ -124,9 +123,9 @@ private:
     /// Reference array of daughter particles
     TRefArray m_daughters;
     /// String with the process name that produced this particle
-    std::string m_process;
+    TString m_process; // || do not split this member
 
-    ClassDef(McParticle,3) // Monte Carlo Particle Class
+    ClassDef(McParticle,4) // Monte Carlo Particle Class
 };
 
 #endif
