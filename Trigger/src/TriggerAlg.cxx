@@ -243,9 +243,9 @@ StatusCode TriggerAlg::execute()
     // set bits in the trigger word
 
     unsigned int trigger_bits = 
-        (  tkr==0? tracker(tkr) : 0 )
-        | (cal==0? calorimeter(cal) : 0 )
-        | (acd==0? anticoincidence(acd) : 0);
+        (  tkr!=0? tracker(tkr) : 0 )
+        | (cal!=0? calorimeter(cal) : 0 )
+        | (acd!=0? anticoincidence(acd) : 0);
 
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
 
