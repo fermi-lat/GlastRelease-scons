@@ -320,6 +320,7 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
                                                  clusterTds->firstStrip(), 
                                                  clusterTds->lastStrip(), 
                                                  posRoot, 
+                                                 clusterTds->getRawToT(),
                                                  clusterTds->getMips(), 
                                                  clusterTds->getStatusWord(),
                                                  clusterTds->getNBad()

@@ -429,6 +429,7 @@ StatusCode reconRootReaderAlg::storeTkrClusterCol(TkrRecon *tkrRecRoot) {
             clusterRoot->getFirstStrip(),
             clusterRoot->getLastStrip(),
             posTds,
+            clusterRoot->getRawToT(),
             clusterRoot->getMips(),
             clusterRoot->getStatusWord(),
             clusterRoot->getNBad()
