@@ -9,12 +9,18 @@ class G4VPhysicalVolume;
 #include <vector>
 #include <map>
 #include "G4VUserDetectorConstruction.hh"
+#include "G4ThreeVector.hh"
 #include "idents/VolumeIdentifier.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "G4UniformMagField.hh"
 
 class PosDetectorManager;
 class IntDetectorManager;
+
+class G4FieldManager;
+
+class LocalMagneticFieldDes;
 
 /** 
  * @class DetectorConstruction
@@ -55,7 +61,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
    *  @param log the G4Generator log file for summary output
    */
   DetectorConstruction(IGlastDetSvc* gds, IDataProviderSvc* esv, 
-      std::string geometry_mode, std::ostream& log);
+		       std::string geometry_mode, std::ostream& log, 
+		       const LocalMagneticFieldDes& magFieldDes);
 
   ~DetectorConstruction();
   
@@ -71,7 +78,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
   //! Return the name of the volume used as mother
   const std::string & topVolumeName()const {return m_topvol;}
-  
+
+  G4FieldManager* getFieldManager() const { return m_fieldManager; }
+
+  const LocalMagneticFieldDes& getFieldDes() const { return m_magFieldDes; }
+
 private:
   /// A pointer to the GlastDetSvc
   IGlastDetSvc* m_gsv;
@@ -93,6 +104,17 @@ private:
 
   //! log
   std::ostream& m_log;
+
+  const LocalMagneticFieldDes& m_magFieldDes;
+
+  // magnetic field
+  G4UniformMagField* m_magField;
+
+  G4FieldManager* m_fieldManager;
+
+  // global magnetic field
+  G4UniformMagField* m_gMagField;
+
 };
 
 #endif

@@ -26,9 +26,15 @@
 #include "PosDetectorManager.h"
 #include "IntDetectorManager.h"
 
+#include "G4UniformMagField.hh"
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
+
 // visitors interfaces
 #include "G4Geometry.h"
 #include "G4Media.h"
+
+#include "LocalMagneticFieldDes.h"
 
 #include <iomanip>
 #include <cassert>
@@ -36,10 +42,13 @@
 DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
                                            IDataProviderSvc* esv,
                                            std::string geometry_mode,
-                                           std::ostream& log)
+                                           std::ostream& log,
+					   const LocalMagneticFieldDes& 
+					   magFieldDes)
                                            :m_gsv(gsv), 
                                            m_geometryMode(geometry_mode),
-                                           m_log(log)
+  m_log(log), m_magFieldDes(magFieldDes), m_magField(0), m_fieldManager(0),
+  m_gMagField(0)
 {
   // Purpose and Method: the constructor needs the GlastDetSvc and
   // DataProviderSvc; the first one is used to start the visitor mechanism using
@@ -50,12 +59,39 @@ DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
   // now create the GlastDetector managers
   m_posDet = new PosDetectorManager(this, esv, gsv);
   m_intDet = new IntDetectorManager(this, esv, gsv);
+
+  // construt local magnetic field. It seems we need to build a global magnetic
+  // field first (even when it is 0) in order for the local field to work
+  if(m_magFieldDes.m_magFieldVol != "") {
+    m_gMagField = new G4UniformMagField(G4ThreeVector(0., 0., 0.));
+    G4FieldManager* temp = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+    temp->SetDetectorField(m_gMagField);
+    temp->CreateChordFinder(m_gMagField);
+    temp->GetChordFinder()->SetDeltaChord(0.1*mm);
+  
+    G4double x = 1*tesla;
+    G4double y = 1*tesla;
+    G4double z = 1*tesla;
+
+    x *= m_magFieldDes.m_magFieldX;
+    y *= m_magFieldDes.m_magFieldY;
+    z *= m_magFieldDes.m_magFieldZ;
+
+    m_magField = new G4UniformMagField(G4ThreeVector(x, y, z));
+    m_fieldManager = new G4FieldManager(m_magField);
+    m_fieldManager->CreateChordFinder(m_magField);
+    m_fieldManager->GetChordFinder()->SetDeltaChord(0.1*mm);
+  }
 }
 
 DetectorConstruction::~DetectorConstruction()
 { 
   delete m_posDet;
   delete m_intDet;
+
+  if(m_magField) delete m_magField;
+  if(m_fieldManager) delete m_fieldManager;
+  if(m_gMagField) delete m_gMagField;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -65,7 +101,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Outputs: a pointer to the world physical volume
 
   G4Geometry geom(m_posDet, m_intDet, &m_idMap, 
-                                    m_geometryMode);
+		  m_geometryMode, this);
   G4Media media;
   m_gsv->accept(media);
   m_gsv->accept(geom);

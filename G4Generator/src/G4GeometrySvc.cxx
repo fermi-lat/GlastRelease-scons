@@ -20,9 +20,8 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "G4TransportationManager.hh"
 
-
-
 #include "DetectorConstruction.h"
+#include "LocalMagneticFieldDes.h"
 
 //#include <cassert>
 
@@ -67,6 +66,8 @@ class G4GeometrySvc : public Service, virtual public IG4GeometrySvc
   /// the geometry level of details
   std::string m_geometryMode;
 
+  LocalMagneticFieldDes m_magFieldDes;
+
   // Allow SvcFactory to instantiate the service.
   friend class SvcFactory<G4GeometrySvc>;
 };
@@ -79,7 +80,10 @@ G4GeometrySvc::G4GeometrySvc(const std::string& name, ISvcLocator* pSvcLocator) 
   Service(name, pSvcLocator), m_UserDetector(0), m_TransportationManager(0), m_idmap(0)
 {
   declareProperty("geometryMode", m_geometryMode="recon");
-
+  declareProperty("magneticFieldVolumn", m_magFieldDes.m_magFieldVol="");
+  declareProperty("magneticFieldX", m_magFieldDes.m_magFieldX=0);
+  declareProperty("magneticFieldY", m_magFieldDes.m_magFieldY=0);
+  declareProperty("magneticFieldZ", m_magFieldDes.m_magFieldZ=0);
   return;
 }
 
@@ -128,7 +132,7 @@ StatusCode G4GeometrySvc::initialize()
       return StatusCode::FAILURE;
     }
 
-  DetectorConstruction* UserDetectorConstruction = new DetectorConstruction(gsv, eventSvc, m_geometryMode, std::cout);
+  DetectorConstruction* UserDetectorConstruction = new DetectorConstruction(gsv, eventSvc, m_geometryMode, std::cout, m_magFieldDes);
 
   m_TransportationManager = G4TransportationManager::GetTransportationManager();
 

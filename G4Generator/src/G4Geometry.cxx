@@ -29,6 +29,12 @@
 #include "G4Transform3D.hh"
 #include "G4RotationMatrix.hh"
 
+#include "G4FieldManager.hh"
+#include "G4UniformMagField.hh"
+
+#include "DetectorConstruction.h"
+#include "LocalMagneticFieldDes.h"
+
 // for the display
 #include "gui/GuiMgr.h"
 #include "gui/DisplayControl.h"
@@ -81,9 +87,9 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       if( s==Box) {
         double dx=params[6], dy=params[7], dz=params[8];
         // if there is no actualMother, it means this is the world volume
-        // we use at the moment a box of 30m*30m*30m
+        // we use at the moment a box of 60m*60m*60m
         if (!actualMother())
-          { dx = 30000; dy = 30000; dz = 30000;}
+          { dx = 60000; dy = 60000; dz = 60000;}
         shape = new G4Box(name,
                           dx*mm/2,
                           dy*mm/2,
@@ -100,6 +106,12 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       logical = new G4LogicalVolume(shape,ptMaterial,name,0,0,0);
       m_logicals[name] = logical; 
     }
+
+  // produce local magnetic field 
+  if(logical && m_det && m_det->getFieldDes().m_magFieldVol == name) {
+	logical->SetFieldManager(m_det->getFieldManager(), true);
+  }
+
 
   /*
    * In order to avoid duplication of physical volumes in 
