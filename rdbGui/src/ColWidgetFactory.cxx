@@ -84,4 +84,6 @@ ColWidget* ColWidgetFactory::createColWidget(FXComposite* parent, rdbModel::Colu
 
   if ((source == rdbModel::Column::FROMdefault)) 
     colWidget->setValue(column->getDefault());
+
+  return colWidget;
 }

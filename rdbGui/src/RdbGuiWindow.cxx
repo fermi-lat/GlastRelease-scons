@@ -315,6 +315,7 @@ void RdbGUIWindow::closeConnection()
 long RdbGUIWindow::onQueryFrameUpdate(FXObject *, FXSelector, void*)
 {
   searchFrame->updateColumnSelection(uiTblColList->getColList());
+  return 1; 
 }
 
 
