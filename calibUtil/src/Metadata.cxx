@@ -17,6 +17,8 @@
 #include "rdbModel/Rdb.h"
 #include "rdbModel/RdbException.h"
 #include "rdbModel/Tables/Assertion.h"
+#include "rdbModel/Tables/Table.h"
+#include "rdbModel/Tables/Column.h"
 #include <iostream>
 #include <cstdio>
 
@@ -29,7 +31,8 @@ namespace calibUtil {
   Metadata::Metadata(const std::string& host, const std::string& table,
                      const std::string& dbName)  
     : m_readCxt(0), m_writeCxt(0), //  m_row(""), m_rowStatus(0), 
-      m_host(host), m_table(table), m_dbName(dbName) {
+      m_host(host), m_table(table), m_dbName(dbName), m_man(0), m_rdb(0),
+      m_match(false) {
     if (table.compare("*") == 0) m_table = std::string("$(MYSQL_METATABLE)");
     if (host.compare("*") == 0) m_host = std::string("$(MYSQL_HOST)");
 
@@ -41,6 +44,7 @@ namespace calibUtil {
   Metadata::~Metadata() {
     disconnectRead();
     disconnectWrite();
+    if (m_man) delete m_man;
   }
 
 
@@ -96,6 +100,10 @@ namespace calibUtil {
       if (!ok) {
         delete m_readCxt;
         m_readCxt = 0;
+      }  else { // look for compatible schema
+        std::string schema = 
+          std::string("$(RDBMODELROOT)/xml/")+ m_dbName + ".xml"; 
+        err = compareSchema(m_readCxt, schema);
       }
       return ok;
     }
@@ -117,7 +125,12 @@ namespace calibUtil {
       if (!ok) {
         delete m_readCxt;
         m_readCxt = 0;
+      }     else { // look for compatible schema
+        std::string schema = 
+          std::string("$(RDBMODELROOT)/xml/")+ m_dbName + ".xml"; 
+        err = compareSchema(m_writeCxt, schema);
       }
+
       return ok;
     }
     else return true;
@@ -477,6 +490,12 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
 
     eRet ret;
 
+    if (vend < vstart) {
+      std::cout << 
+        "Metadata::registerCalib: Error in metadata. vend < vstart " <<
+        std::endl;
+      return 0;
+    }
     if (!m_writeCxt) {
       connectWrite(ret);
       if (ret != RETOk) return 0; // we or connectWrite should throw exception
@@ -537,6 +556,12 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     facilities::Timestamp curTime;
     cols.push_back("enter_time");vals.push_back(curTime.getString());
 
+    if (m_rdb) {
+      bool ok = checkValues(cols, vals);
+      if (ok) checkNulls(nullCols);
+      if (!ok) return 0;
+    }
+
     // update_time and ser_no get set automatically by MySQL
     int ser_no;
     if (!(m_writeCxt->insertRow(m_table, cols, vals, &ser_no, &nullCols)) ) {
@@ -544,28 +569,21 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     }    else return ser_no;
   }
 
-  Metadata::eRet Metadata::compareSchema(const std::string& file) {
+  Metadata::eRet Metadata::compareSchema(rdbModel::Connection* conn,
+                                         const std::string& schema) {
     using namespace rdbModel;
 
-    eRet ret;
-    if (!m_readCxt) {
-      connectRead(ret);
-      if (ret != RETOk) return ret;
+
+    if (m_man) { // already did this
+      return (m_match) ? RETOk : RETNoSchemaMatch;
     }
+    m_man = rdbModel::Manager::getManager();
 
-    std::string schema = file;
-    if (schema == std::string("") ) {
-      // construct file name from dbname
-      schema = std::string("$(RDBMODELROOT)/xml/")+ m_dbName + ".xml"; 
-    }
-
-    rdbModel::Manager* man = rdbModel::Manager::getManager();
-
-    man->setBuilder(new rdbModel::XercesBuilder);
-    man->setInputSource(schema);
+    m_man->setBuilder(new rdbModel::XercesBuilder);
+    m_man->setInputSource(schema);
 
     // good errcode is 0
-    int errcode = man->build();
+    int errcode = m_man->build();
 
     if (errcode) {
       std::cerr << "Error in database description file " << schema 
@@ -573,13 +591,14 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
       std::cerr << "Parse failed with error " << errcode << std::endl;
       return RETBadCnfFile;
     }
-    Rdb* rdb = man->getRdb();
+    m_rdb = m_man->getRdb();
 
-    rdbModel::MATCH match = m_readCxt->matchSchema(rdb, false);
+    rdbModel::MATCH match = conn->matchSchema(m_rdb, false);
 
     switch (match) {
     case rdbModel::MATCHequivalent:
     case rdbModel::MATCHcompatible:
+      m_match = true;
       return RETOk;
     case rdbModel::MATCHfail:
       std::cout << "XML schema and MySQL database are NOT compatible" 
@@ -589,8 +608,56 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
       std::cout << "Connection failed while attempting match" << std::endl;
       return RETNoConnect;
     }
-
+    return RETBadValue;
   }
+
+  bool Metadata::checkValues(const rdbModel::StringVector& cols,
+                             const rdbModel::StringVector& vals) const {
+    unsigned nCol = cols.size();
+    rdbModel::Table* table = m_rdb->getTable(m_table);
+
     
+    for (unsigned iCol = 0; iCol < nCol; iCol++) {
+      rdbModel::Column* col = table->getColumnByName(cols[iCol]);
+      if (!col->okValue(vals[iCol])) {
+        std::cerr << "Value " << vals[iCol] << " not allowed for column "
+                  << cols[iCol] << " in table " << m_table << std::endl;
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool Metadata::checkNulls(const rdbModel::StringVector& cols) const {
+    unsigned nCol = cols.size();
+    rdbModel::Table* table = m_rdb->getTable(m_table);
+
+    
+    for (unsigned iCol = 0; iCol < nCol; iCol++) {
+      rdbModel::Column* col = table->getColumnByName(cols[iCol]);
+      if (!col->nullAllowed()) {
+        std::cerr << "Column "
+                  << cols[iCol] << " in table " << m_table
+                  << " is not nullable" << std::endl;
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  //  int Metadata::adjustVend(int newSer) {
+    // Fetch information for new row: vstart, vend, flavor, completion,
+    // proc_level, calib_type, flavor
+    // If (completion != "OK") return 0
+    // select ser_no where ((flavor="f") && (calib_type = "c") &&
+    //                 (completion= "OK") && (instrument = "i") &&
+    //                 (proc_level = "p") && (vend > "new-vstart") );
+
+    // For each such ser_no, do an update:
+    //   update vend = "new-vstart" where ser_no = [ser_no from list]
+
+    // Return #rows updated
+  //  }
 
 }
