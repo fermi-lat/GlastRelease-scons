@@ -1,24 +1,20 @@
 package reconRootData
 version v0
 
-use glast_settings
+use GlastPolicy
 use digiRootData
-use ROOT v3r0p6
-
-include_path ${RECONROOTDATAROOT}
-
-macro   reconRoot_linkopts "-L${RECONROOTDATAROOT}/${CMTCONFIG} -lreconRootData"\
-        VisualC         ""
+use ROOT v3r0p7
 
 
-macro_append Win32Debug " ${RECONROOTDATAROOT}/${DebugDir}/reconRootDatalib.lib"
-macro_append Win32Release " ${RECONROOTDATAROOT}/${ReleaseDir}/reconRootDatalib.lib"
+ignore_pattern include_none
+apply_pattern package_include
 
-path_append LD_LIBRARY_PATH "${RECONROOTDATAROOT}/${CMTCONFIG}"
+apply_pattern package_linkopts
+
+apply_pattern ld_library_path
+
 
 private
-
-# makes a dll or lib that can be used by root
 
 #define the list of header files to be used in rootcint
 macro root_headers "CalCluster.h CalLogEne.h CalRecon.h Recon.h ReconHeader.h TkrGamma.h TkrHit.h TkrLocator.h TkrRecon.h TkrSiCluster.h TkrTrack.h ReconLinkDef.h"
@@ -35,6 +31,10 @@ document recon_dorootcint ReconRootDataCint CINTFILE=../reconRootData/ReconCint.
 # add the ROOT Physics library to the list for linking
 macro_append ROOT_linkopts " ${ROOT_PATH}/lib/libPhysics.so " \
              VisualC       " ${ROOT_PATH}/lib/libPhysics.lib "
+
+macro reconRootData_shlibflags "" \
+      VisualC            " ${use_linkopts} "
+
 
 library  reconRootData *.cxx \
      ../reconRootData/ReconCint.cxx\
