@@ -213,6 +213,10 @@ namespace calibUtil {
     const std::string* const getDataFmtStr(eDataFmt fmt);
     const std::string* const getInstrumentStr(eInstrument inst);
 
+    /// Get validity interval for a particular calibration
+    eRet getInterval(unsigned int serialNo,
+                     facilities::Timestamp*& since,
+                     facilities::Timestamp*& till);
 
     // Might also want a "findAll" which would just return a list
     // of serial numbers, and a "getRecord" which would either
