@@ -286,7 +286,7 @@ StatusCode meritAlg::initialize() {
     addItem( "GltFilterStatusHI",   &m_statusHi );
     addItem( "GltFilterStatusLO",   &m_statusLo );
     addItem( "GltFilterAlgStatus",  &m_filterAlgStatus );
-    addItem( "GltFilterAngSep",     &m_filterAlgStatus );
+    addItem( "GltFilterAngSep",     &m_separation );
 
     //FT1 INFO:
     addItem( "FT1EventId",          &m_ft1eventid);
