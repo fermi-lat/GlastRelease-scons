@@ -179,6 +179,12 @@ StatusCode RootTupleSvc::initialize ()
 
     // -- set up the tuple ---
     m_tf   = new TFile( m_filename.value().c_str(), "RECREATE");
+    if (!m_tf->IsOpen()) {
+        log << MSG::ERROR 
+            << "cannot open ROOT file: " << m_filename.value() << endreq;
+        delete m_tf;
+        return StatusCode::FAILURE;
+    }
     // with the default treename, and default title
     //TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
     //m_tree[m_treename.value().c_str()] = t;
