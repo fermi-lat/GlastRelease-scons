@@ -58,37 +58,35 @@ class ICalibMetaCnvSvc : virtual public IInterface
   /// This method does not register DataObject in the transient data store,
   /// The string storage type is discovered at runtime in the MySQL metadata
   /// database.
- virtual StatusCode createCalibMetadata(DataObject*& refpObject,
-                                        const std::string& calibType,
-                                        const std::string& flavor,
-                                        const ITime&       time,
-                                        const std::string& instrumentName,
-                                        const CLID&        classID,
-                                        IRegistry*         entry=0) = 0;
+ virtual StatusCode createCalib(DataObject*& refpObject,
+                                const std::string& calibType,
+                                const std::string& flavor,
+                                const ITime&       time,
+                                const std::string& instrumentName,
+                                const CLID&        classID,
+                                IRegistry*         entry=0) = 0;
 
   /// Update a condition DataObject by type, flavor, time (& instrument?).
   /// This method does not register DataObject in the transient data store,
   /// but may register TDS addresses for its children if needed (e.g. Catalog).
   /// The string storage type is discovered at runtime in the MySQL metadata
   /// database.
-  virtual StatusCode updateCalibData(DataObject*         pObject,
-                                     const std::string& calibType,
-                                     const std::string& flavor,
-                                     const ITime&       time,
-                                     const std::string& instrumentName,
-                                     const CLID&        classID,
-                                     IRegistry*         entry=0) = 0;
+  virtual StatusCode updateCalib(DataObject*         pObject,
+                                 const std::string& calibType,
+                                 const std::string& flavor,
+                                 const ITime&       time,
+                                 const std::string& instrumentName,
+                                 const CLID&        classID,
+                                 IRegistry*         entry=0) = 0;
 
   
-  // The stuff below is maybe replaced by an abstract version of
-  //   Metadata::getReadInfo
-  /// Decode the string storage type from the folder description string
-  /*
+   /*
+   Will have a version of decodeDescription, at least, in CalibMetaCnvSvc,
+   but so far see no reason why it needs to be public.  
+   Not yet sure whether even getMeta() needs to be public.
+
   virtual StatusCode decodeDescription(const std::string&  description,
                                        unsigned char&      type) = 0;
-  */
-  /// Encode the string storage type into the folder description string
-  /*
   virtual StatusCode encodeDescription(const unsigned char& type,
                                        std::string&         description ) = 0;
   */
@@ -97,10 +95,13 @@ class ICalibMetaCnvSvc : virtual public IInterface
   // Get handle for metadata access from calibUtil.
   virtual calibUtil::Metadata* getMeta() = 0;
 
+  // Might want to add a method which will return certain metadata
+  // in a convenient form, given a serial number.  Would be used
+  // by the bulk data conversion services to get some standard set
+  // of information which would go in every calib data object --
+  // except a "bad channel" list composed from dead + hot doesn't
+  // correspond to any single metadata row.
 };
 
 #endif
-
-
-
 

@@ -10,7 +10,7 @@
 
      Intention is to implement in CalibDataSvc.
 */
-static const InterfaceID IID_IInstrumentName(??, 1, 0);
+static const InterfaceID IID_IInstrumentName("IInstrumentName", 1, 0);
 class IInstrumentName {
 public:
 
