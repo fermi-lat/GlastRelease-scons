@@ -14,7 +14,6 @@
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IToolFactory.h"
@@ -129,15 +128,7 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR << "Unable to locate ObjectManager Service" << endreq;
         return status;
     }
-    
-    
-    IToolSvc* tsvc  =0;
-    status = service( "ToolSvc", tsvc, true );
-    if( status.isFailure() ) {
-        log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
-        return status;
-    }
-    
+       
     IToolFactory* toolfactory = 0;
     
     // search throught all objects (factories?)
@@ -151,14 +142,14 @@ StatusCode FluxSvc::initialize ()
         if( status.isSuccess() ) {
 
             IAlgTool* itool;
-			std::string fullname = "ToolSvc."+tooltype;
-			itool = toolfactory->instantiate(fullname,  tsvc );
-			status =itool->queryInterface( IRegisterSource::interfaceID(), (void**)&itool);
-			if( status.isSuccess() ){
-				log << MSG::INFO << "Registering sources in " << tooltype << endreq;
-				dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
-			}
-			itool->release();
+            std::string fullname = this->name()+"."+tooltype;
+            itool = toolfactory->instantiate(fullname,  this );
+            status =itool->queryInterface( IRegisterSource::interfaceID(), (void**)&itool);
+            if( status.isSuccess() ){
+                log << MSG::INFO << "Registering sources in " << tooltype << endreq;
+                dynamic_cast<IRegisterSource*>(itool)->registerMe(this);
+            }
+            itool->release();
         }
         
     }
