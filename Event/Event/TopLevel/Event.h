@@ -21,7 +21,9 @@ extern const CLID& CLID_Event;
 *
 * $Header$
 */
-namespace Event{
+//THB: temporarily disable this: not possible to have class, and namespace the same name? 
+//  namespace Event{
+
 class Event : public DataObject                                                {
     
 public:
@@ -111,5 +113,5 @@ inline std::ostream& Event::fillStream( std::ostream& s ) const                {
         << m_run
         << "\n    Time         = " << m_time;
 }
-} // namespace Event
+//} // namespace Event
 #endif    // Event_EVENT_H
