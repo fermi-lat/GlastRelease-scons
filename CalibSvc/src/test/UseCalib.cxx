@@ -1,11 +1,8 @@
 //$Header$
 #include <stdio.h>
-
-// #include "CalibData/CalibTime.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-// #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -74,21 +71,6 @@ StatusCode UseCalib::initialize() {
 
   // Get properties from the JobOptionsSvc
   sc = setProperties();
-  /*
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
-    return sc;
-  }
-  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::INFO << "Time of first event: (seconds since 1970) "
-      << m_startTime 
-      << std::dec << ")" 
-      << endreq; 
-  log << MSG::INFO << "Time between events (seconds): "
-      << m_delayTime 
-      << endreq;
-
-  */
   return StatusCode::SUCCESS;
 
 }
@@ -104,11 +86,13 @@ StatusCode UseCalib::execute( ) {
   //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
   
   
-  std::string fullPath = CalibData::Test_1 + "/vanilla";
+  //  std::string fullPath = CalibData::Test_1 + "/vanilla";
+  // Cheat for now since Windows is having trouble finding definition
+  // of Calibdata::Test_t
+  std::string fullPath = "/Calib/Test_1/vanilla";
   DataObject *pObject;
 
   m_pCalibDataSvc->retrieveObject(fullPath, pObject);
-  //  m_pCalibDataSvc->retrieveObject(CalibData::Test_1, test1Copy);
 
   CalibData::CalibTest1* test1Copy = 0;
   try {
