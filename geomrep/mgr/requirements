@@ -17,4 +17,4 @@ library geomrep -no_share *.cxx\
     ../geomrep/*.h
 
 application testgeom  -windows ../test/testgeom.cxx\
-        $(GRAPHICSROOT)/windows/wingui.rc
+        ../../../graphics/v1/windows/wingui.rc
