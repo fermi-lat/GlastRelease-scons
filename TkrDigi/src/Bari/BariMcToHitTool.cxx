@@ -201,10 +201,12 @@ StatusCode BariMcToHitTool::execute()
     log << endreq;
 
     // Take care of insuring that the data area has been created
+    log << MSG::DEBUG << "we should create /Event/tmp" << endreq;
     DataObject* pNode = 0;
     sc = m_edSvc->retrieveObject("/Event/tmp", pNode);
     if ( sc.isFailure() ) {
         sc = m_edSvc->registerObject("/Event/tmp", new DataObject);
+        log << MSG::DEBUG << "registering /Event/tmp" << endreq;
         if( sc.isFailure() ) {
             log << MSG::ERROR << "could not register /Event/tmp" << endreq;
             return sc;
