@@ -200,8 +200,10 @@ namespace calibUtil {
                         
     /** Write a record to the metadata database. Any required columns
      *  not specified by caller will be set to default values.
+     @param serialNo   serial number of new record if insert succeeds [output]
+     @return           See eRet enumerated type for possible values
      */
-    eRet insertRecord();
+    eRet insertRecord(unsigned int* serialNo = 0);
 
     /** Start a new metadata record by supplying all absolutely
         required information as arguments:
