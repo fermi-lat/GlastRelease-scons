@@ -74,6 +74,7 @@
             _EXTERN_ std::string TkrClusters;
             _EXTERN_ std::string TkrCandidates;
             _EXTERN_ std::string SiRecObjs;
+            _EXTERN_ std::string TkrTracks;
         }
 
         namespace AcdRecon {
