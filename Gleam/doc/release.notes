@@ -3,6 +3,11 @@
  * package manager:T.Burnett
  * $Id$
 
+* v3r2  HMK 17-nov-02
+     use idents            v2r9
+     use Recon             v2r3p7
+     use xmlGeoDbs         v1r9
+
 * v3r1  THB 06-nov-02
      use gui               v3r3p2
      use xmlGeoDbs         v1r8p0
