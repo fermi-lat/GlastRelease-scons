@@ -126,7 +126,7 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
            tower->m_tots[2*ilayer]   = digi.getToT (0);
            tower->m_tots[2*ilayer+1] = digi.getToT (1);
            
-
+           bool reported=false;
            /* Loop through all the hits on this bi_layer */
            for (unsigned int iHit = 0; iHit < numHits; iHit++)
            {
@@ -154,6 +154,12 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                  tower->m_data[ilayerEnd][ihits] = stripId;
                  tower->m_maps[xy][loHi]        |= (1 << bilayer);
                }
+			   else{
+				   if(!reported){
+					   std::cout << "Initiated large number of hits workaround. Please fix."<<std::endl;
+					   reported=true;
+				   }
+			   }
            }
        }
 
