@@ -37,5 +37,5 @@ macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
 
 
 library  digiRootData *.cxx \
-      ../digiRootData/*.h \
-      ../digiRootData/*.cxx
+      ../digiRootData/*.cxx \
+      ${digiRootData_headers}
