@@ -14,14 +14,19 @@
      X-dimension (substituting for curved sections).  It can be read
      off of 3-d model as "x-extent", so all
      tile dimensions are primary constants.
+
+     Tiles in rows 0 and 4 have a different Y dimension from
+     those in 1,2,3.
  -->
-    <box name="topTileRdefCedge"
+    <box name="topTileRedgeCedge"
          XREF="topTileXEdge_l"
          YREF="topTileYEdge_l"
          ZREF="tileThickness"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
+
+
 
     <box name="topTileRcentCedge"
          XREF="topTileXEdge_l"
@@ -31,7 +36,7 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="topTileRdefCmid"
+    <box name="topTileRedgeCmid"
          XREF="topTileXMid_l"
          YREF="topTileYEdge_l"
          ZREF="tileThickness"
@@ -47,7 +52,7 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <box name="topTileRdefCcent"
+    <box name="topTileRedgeCcent"
          XREF="topTileXCentral_l"
          YREF="topTileYEdge_l"
          ZREF="tileCenterThickness"
@@ -133,7 +138,7 @@
     <composition name="ACDTop" 
                  envelope="ACDTopEnv">
 <!-- Row 0. Has largest negative y displacement -->
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRedgeCedge"
               XREF="topTileEdge_dxn"
               YREF="topTileEdge_dyn"
               ZREF="topTileEdge_dz" >
@@ -142,7 +147,7 @@
         <idField name="fCol" value="0" />
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRedgeCmid"
               XREF="topTileMid_dxn"
               YREF="topTileEdge_dyn"
               ZREF="topTileMid_dz" >
@@ -151,7 +156,7 @@
         <idField name="fCol" value="1" />
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCcent"
+      <posXYZ volume="topTileRedgeCcent"
               YREF="topTileEdge_dyn"
               ZREF="topTileCent_dz" >
         <idField name="fACDCmp" valueREF="eACDTile" /> 
@@ -161,7 +166,7 @@
 
 
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRedgeCmid"
               XREF="topTileMid_dx"
               YREF="topTileEdge_dyn"
               ZREF="topTileMid_dz" >
@@ -170,7 +175,7 @@
         <idField name="fCol" value="3"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRedgeCedge"
               XREF="topTileEdge_dx"
               YREF="topTileEdge_dyn"
               ZREF="topTileEdge_dz" >
@@ -180,7 +185,7 @@
       </posXYZ>
 
 <!-- row 1. Y displacement is topTileMid_dyn   child #5 -->
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRcentCedge"
               XREF="topTileEdge_dxn"
               YREF="topTileMid_dyn"
               ZREF="topTileEdge_dz" >
@@ -189,7 +194,7 @@
         <idField name="fCol" value="0"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRcentCmid"
               XREF="topTileMid_dxn"
               YREF="topTileMid_dyn"
               ZREF="topTileMid_dz" >
@@ -198,7 +203,7 @@
         <idField name="fCol" value="1"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCcent"
+      <posXYZ volume="topTileRcentCcent"
               YREF="topTileMid_dyn"
               ZREF="topTileCent_dz" >
         <idField name="fACDCmp" valueREF="eACDTile"/> 
@@ -206,7 +211,7 @@
         <idField name="fCol" value="2"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRcentCmid"
               XREF="topTileMid_dx"
               YREF="topTileMid_dyn"
               ZREF="topTileMid_dz" >
@@ -215,7 +220,7 @@
         <idField name="fCol" value="3"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRcentCedge"
               XREF="topTileEdge_dx"
               YREF="topTileMid_dyn"
               ZREF="topTileEdge_dz" >
@@ -266,7 +271,7 @@
       </posXYZ>
 
 <!-- row 3. Y displacement is topTileMid_dy -->
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRcentCedge"
               XREF="topTileEdge_dxn"
               YREF="topTileMid_dy"
               ZREF="topTileEdge_dz" >
@@ -275,7 +280,7 @@
         <idField name="fCol" value="0"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRcentCmid"
               XREF="topTileMid_dxn"
               YREF="topTileMid_dy"
               ZREF="topTileMid_dz" >
@@ -284,7 +289,7 @@
         <idField name="fCol" value="1"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCcent"
+      <posXYZ volume="topTileRcentCcent"
               YREF="topTileMid_dy"
               ZREF="topTileCent_dz" >
         <idField name="fACDCmp" valueREF="eACDTile"/> 
@@ -292,7 +297,7 @@
         <idField name="fCol" value="2"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRcentCmid"
               XREF="topTileMid_dx"
               YREF="topTileMid_dy"
               ZREF="topTileMid_dz" >
@@ -301,7 +306,7 @@
         <idField name="fCol" value="3"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRcentCedge"
               XREF="topTileEdge_dx"
               YREF="topTileMid_dy"
               ZREF="topTileEdge_dz" >
@@ -311,7 +316,7 @@
       </posXYZ>
 
      <!-- Row 4.  y displacement is topTileEdge_dy -->
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRedgeCedge"
               XREF="topTileEdge_dxn"
               YREF="topTileEdge_dy"
               ZREF="topTileEdge_dz" >
@@ -320,7 +325,7 @@
         <idField name="fCol" value="0"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRedgeCmid"
               XREF="topTileMid_dxn"
               YREF="topTileEdge_dy"
               ZREF="topTileMid_dz" >
@@ -329,7 +334,7 @@
         <idField name="fCol" value="1"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCcent"
+      <posXYZ volume="topTileRedgeCcent"
               YREF="topTileEdge_dy"
               ZREF="topTileCent_dz" >
         <idField name="fACDCmp" valueREF="eACDTile"/> 
@@ -337,7 +342,7 @@
         <idField name="fCol" value="2"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCmid"
+      <posXYZ volume="topTileRedgeCmid"
               XREF="topTileMid_dx"
               YREF="topTileEdge_dy"
               ZREF="topTileMid_dz" >
@@ -346,7 +351,7 @@
         <idField name="fCol" value="3"/>
       </posXYZ>
 
-      <posXYZ volume="topTileRdefCedge"
+      <posXYZ volume="topTileRedgeCedge"
               XREF="topTileEdge_dx"
               YREF="topTileEdge_dy"
               ZREF="topTileEdge_dz" >

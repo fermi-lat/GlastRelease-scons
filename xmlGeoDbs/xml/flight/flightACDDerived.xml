@@ -432,22 +432,23 @@
         </const>
 
 <!--
-     For the 4 Y ribbons (ribbons in plane || to Y axis)
+     For the 4 X ribbons (ribbons in plane || to Y axis)
           one Z displacement
                topXRibbon_dz
           2 X displacements and their negatives
                topXRibbonOuter_dx, _dxn
                topXRibbonInner_dx, _dxn
-         The Z and X displacements aren't very important since the Y ribbons
+         The Z and X displacements aren't very important since the X ribbons
          are only on top to connect the side pieces, not to detect 
          anything.  Originally, for simplicity,
-         put Y ribbons along bottom of envelope volume with
+         put X ribbons along bottom of envelope volume with
          displacements in X equal to the ones used for top tiles. 
 
          3-d model bears out the Z guess.  X displacements should
-         be the same for top segments as for the same ribbons
-         running down the sides; that is, they're governed by
-         spacing of side tiles.
+         be the same for top segments as Y displacements are for
+         Y-segments, and this defines displacements for the
+         side segments as well.
+
 -->
 
          <const name="topXRibbon_dz" >
@@ -465,33 +466,24 @@
      tiles are still placed symmetrically w.r.t. origin. Dovetailing
      is handled by different widths of tiles in columns 0 and 4. -->
          <const name="xRibbonInner_dx" >
-           <notes> x displacement of  Y ribbon #2 </notes>
-           <half>
-             <add>
-               <refer refTo="ribbonThickness" />
-               <refer refTo="sideTileTransMid" />
-             </add>
-           </half>
+           <notes> x displacement of  X ribbon #2 </notes>
+           <refer refTo="topYRibbonInner_dy" />
          </const>
 
          <const name="xRibbonOuter_dx" >
-           <notes> x displacement of Y ribbon #3 </notes>
-           <add>
-             <refer refTo="xRibbonInner_dx" />
-             <refer refTo="sideTileTransMid" />
-             <refer refTo="ribbonThickness" />
-           </add>
+           <notes> x displacement of X ribbon #3 </notes>
+           <refer refTo="topYRibbonOuter_dy" />
          </const>
 
          <const name="xRibbonOuter_dxn" >
-           <notes>  x displacement of Y ribbon #0 </notes>
+           <notes>  x displacement of X ribbon #0 </notes>
            <uminus>
              <refer refTo="xRibbonOuter_dx" />
            </uminus>
          </const>
 
          <const name="xRibbonInner_dxn" >
-           <notes> x displacement of Y ribbon #1 </notes>
+           <notes> x displacement of X ribbon #1 </notes>
            <uminus>
              <refer refTo="xRibbonInner_dx" />
            </uminus>
@@ -526,7 +518,7 @@
           </const>
                 
 <!--
-     For the 20 X ribbon segments
+     For the 20 Y top ribbon segments
           3 Z displacements
                topYRibbonCent_dz
                topYRibbonMid_dz
@@ -670,18 +662,19 @@
 
 
         <const name="ACDSideDovetail_d" >
-          <notes>Side tiles and tapes on sides parallel to X-axis
-                 have a displacement in X of this amount. Those
-                 on sides || to Y are displaced in Y the same amount</notes>
-          <uminus>
-            <quo>
-              <add>
-                <refer refTo="tileThickness" />
-                <refer refTo="topTileGap" />
-              </add>
-              <const value="2" uType="count" />
-            </quo>
-          </uminus>
+          <notes>Side tiles  on sides parallel to X-axis (sides 2 and 4)
+                 have a displacement in X of this amount, positive
+                 for side 2 and negative for side 4.  Similarly side 3
+                 is displaced positively in Y by this amount, side 1 
+                 negatively.
+          </notes>
+          <quo>
+            <add>
+              <refer refTo="tileThickness" />
+              <refer refTo="topTileGap" />
+            </add>
+            <const value="2" uType="count" />
+          </quo>
         </const>
 
         <const name="ACDSideDovetail_dn" >
