@@ -46,7 +46,7 @@ namespace Event {
         AcdDigi(const idents::AcdId &id, const idents::VolumeIdentifier &volId,
             double energy, unsigned short *pha, 
             bool *veto, bool *lowThresh, bool *highThresh) 
-            : m_id(id), m_energy(energy)
+            : m_id(id), m_volId(volId), m_energy(energy)
         {  
             m_pulseHeight[0] = pha[0]; m_pulseHeight[1] = pha[1];
             m_veto[0] = veto[0]; m_veto[1] = veto[1];
