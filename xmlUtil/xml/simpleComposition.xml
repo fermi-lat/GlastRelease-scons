@@ -6,7 +6,7 @@
        All volumes are boxes or compositions
   -->
 
-<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<!DOCTYPE gdd SYSTEM "$(XMLGEODBSROOT)/xml/flight/gdd.dtd" >
 
 <gdd CVSid="$Id not yet archived, test version $" DTDversion="2.0"
      substituted="false" >
