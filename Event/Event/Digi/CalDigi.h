@@ -44,11 +44,13 @@ public:
     class CalXtalReadout {  // : virtual public ContainedObject  { 
         
     public:
-        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM) :
+        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM,
+			unsigned short status) :
 	  m_adcP(adcP), 
 	  m_adcM(adcM),
           m_rangeP(rangeP), 
-	  m_rangeM(rangeM) 
+	  m_rangeM(rangeM),
+	  m_status(status)
           {};
           
           ~CalXtalReadout() {};
@@ -59,8 +61,19 @@ public:
           
           /// retrieve energy range from specified face
           inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
-          
-          
+ 
+		  /// retrieve status word
+		  inline const unsigned short getStatus() const {return m_status;}
+
+		  enum StatusBits{  
+			  OK_P =1 ,    //! channel ok
+			  NOISY_P=1<<1,  //! channel noisy
+			  DEAD_P=  1<<2,  //! channel dead
+			  OK_N =1<<8 ,    //! channel ok
+			  NOISY_N=1<<9,  //! channel noisy
+			  DEAD_N=  1<<10,  //! channel dead
+		  };
+
     private:
         
         /// ADC value from POSitive face
@@ -71,6 +84,8 @@ public:
         char m_rangeP;
         /// gain range from NEGative face
         char m_rangeM;
+        /// status bits for readouts
+        unsigned short m_status;
         
     };
 
