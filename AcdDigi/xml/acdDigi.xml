@@ -18,11 +18,20 @@
 <acdDigi cvs_Header="$Header$"
          cvs_Revision="$Revision$">
 
-    <section name="acd">  ACD properties
-	<item name="lowThreshold"     value="0.2"> MeV enables PHA</item>
-        <item name="vetoThreshold"      value="0.4"> MeV nominal veto </item>
-        <item name="highThreshold" value="20.0"> MeV CNO </item>
-        <item name="adcChannelsPerMeV" value = "203.0793"> conversion from energy to ADC channels </item>
+    <section name="thresholds">  ACD thresholds
+	<item name="low_threshold_mips"     value="0.1"> MIP threshold enables PHA</item>
+        <item name="veto_threshold_mips"      value="0.3"> MIP nominal veto </item>
+        <item name="high_threshold_mips" value="10.5"> MIP threshold CNO </item>
+    </section>
+
+    <section name="global_constants"> 
+        <item name="mean_pe_per_mip"   value="18"> number of photoelectrons per mip </item>
+        <item name="noise_std_dev_pha" value="1.0"> std deviation for pha gaussian noise </item>
+        <item name="noise_std_dev_veto" value="0.5"> std deviation for veto gaussian noise </item>
+        <item name="noise_std_dev_cno" value="0.5"> std deviation for cno gaussian noise </item>
+        <item name="full_scale" value="4095"> full scale for PHA </item>
+        <item name="mips_full_scale" value="20.0"> number of MIPs at full scale </item>
+        <item name="mev_per_mip" value="1.9"> Mev per MIP </item>
     </section>
 
 </acdDigi>
