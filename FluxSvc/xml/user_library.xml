@@ -244,8 +244,8 @@
         </spectrum>
     </source>
 
-<!-- 0.000000001-->
-    <source name="truediffusebackground" flux="0.01">
+<!-- 0.01-->
+    <source name="truediffusebackground" flux="0.000000000001">
         <spectrum escale="GeV">
             <particle name="gamma" >
                 <power_law emin="0.010" emax="0.1" gamma="1.0"/>

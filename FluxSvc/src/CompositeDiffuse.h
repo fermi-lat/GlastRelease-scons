@@ -6,6 +6,19 @@
 * CompositeDiffuse takes not only a list of initial sources, but also a total flux 
 * over the whole sky.  It then attempts to fill in the remaining flux by generating point sources according
 * to a logN/logS characteristic.
+* First:  the constructor calls the functions to read in the logN/logS characteristic
+* from the xml datatable.  Note:  this characteristic is assumed to be in non-differential format
+* (i.e. N is the number of sources with flux equal to or higher than S).
+* Second:  the Differential logN/logS curve is obtained and integrated over to find the total unresolved flux.
+* m_currentremainingFlux holds (flux, sources in bin) information.
+* Third:  each time a particle is needed, event() searches through the catalog of known sources
+* to determine if a new source is more likely to appear first.
+* Fourth:  if a new source is needed, we integrate over flux in m_currentRemainingFlux to find the 
+* total, then integrate to a random number between 0 and that.  When the desired bin is reached, we subtract a single source from 
+* m_currentRemainingFlux in the bin and declare a new source of that flux with addnewSource().
+* Note:  it is possible, with this method, to have a fractional remaining source left in a bin.  When this source is called, the 
+* program tries to compensate for it by removing a source from the adjacent lower bin as well.  This should be
+* examined further.
 * \author Sean Robinson, University of Washington, 2002
 * 
 * $Header $
@@ -22,12 +35,7 @@
 #include "xml/XmlParser.h"
 #include <string>
 #include <typeinfo>
-
-//#include <cmath>
-//#include <algorithm>
-//#include <functional>
 #include <fstream>
-//#include <iostream>
 
 class FluxSource;
 
@@ -80,14 +88,22 @@ public:
 
       /// write the characteristics of the current source distribution to a stream
       void writeSourceCharacteristic(std::ostream& out);
+
+      ///remove a source from the list at the desired flux.
+      void subtractFluxFromRemaining(double currentFlux);
+
+      ///find the total remaining unresolved flux.
+      void setFluxCharacteristics();
       
 private:
     double m_totalFlux; // The total flux from the entire sky, particles/sec/m^2/steradian.
     double m_unclaimedFlux; // The amount of the flux "unaccounted for" by the known sources
+    ///get a random flux from the remaining table of sources.
     double getRandomFlux();
-    //long double pofi(long double intensity);
+    //the interpolated logN/logS characteristic
     long double logNlogS(long double flux);
     std::vector<std::pair<double,double> > m_logNLogS; // inputted logN.logS graph, to be used for finding random fluxes.
+    std::vector<std::pair<double,double> > m_currentRemainingFlux;//remaining binned sources in the form (flux, number of sources)
     std::vector<PointSourceData> m_listOfDiffuseSources; //information on the sources which got added randomly.
     double m_minFlux; //the minimum flux to be considered in the spectrum
     double m_maxFlux; //the maximum flux to be considered.

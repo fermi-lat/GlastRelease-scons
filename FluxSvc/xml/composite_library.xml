@@ -20,17 +20,19 @@
         <nestedSource sourceRef="albedo_proton_max"/>
 		<nestedSource sourceRef="albedo_gamma"/>
 		<nestedSource sourceRef="electronmax"/>
-		<nestedSource sourceRef="albedo_electronpositron_total"/>
+		<nestedSource sourceRef="albedo_electronpositronlow"/>
+        <nestedSource sourceRef="albedo_electronpositronhi"/>
     </source>
 
 
 	<!--average flux for pdr studies -->
-	<source name="backgndavgpdr" flux="1.0">
+	<source name="backgndavgpdr">
 		<nestedSource sourceRef="cremeavg" /> 
 		<nestedSource sourceRef="albedo_proton_avg" /> 
 		<nestedSource sourceRef="albedo_gamma" /> 
 		<nestedSource sourceRef="electronavg" /> 
-		<nestedSource sourceRef="albedo_electronpositronavg_total" /> 
+		<nestedSource sourceRef="albedo_electronpositronavglow"/>
+        <nestedSource sourceRef="albedo_electronpositronavghi"/> 
 	</source>
 
 	<!-- 'standard' background mixture -->

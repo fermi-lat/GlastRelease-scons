@@ -77,9 +77,12 @@ FluxSource* CompositeDiffuse::event (double time)
 
 
 void CompositeDiffuse::addNewSource(){
-    //here, set the flux in a random fashion, determined by the log N/ log S characteristic graph
+    //Purpose: Set the flux in a random fashion, determined by the log N/ log S characteristic graph
     double flux=1.0;
+
+    //here's the part where we find the new source's flux:
     flux = getRandomFlux();
+
     //Set up the spectrum with the appropriate power spectrum
     Spectrum * spec=new SimpleSpectrum("gamma", 100.0);
     
@@ -114,7 +117,6 @@ double CompositeDiffuse::remainingFluxInterval(){
         double p = RandFlat::shoot(1.);
         return (-1.)*(log(1.-p))/r;
     }
-    
 }
 
 long double CompositeDiffuse::logNlogS(long double flux){
@@ -135,65 +137,123 @@ long double CompositeDiffuse::logNlogS(long double flux){
     double logLowSources = m_logNLogS[i-1].second;
     
     double logNumSources = logLowSources + ((logHighSources-logLowSources)*(log10(flux)-logLowFlux));
+
+    //for debug purposes.
+    //std::cout << "flux = " << flux << std::endl;
+    //std::cout << "i = " << i << std::endl;
     //std::cout << "loglowsources = " << logLowSources << std::endl;
-    
-    return pow(10,logNumSources);
+    return logNumSources;
 }
 
+
+void CompositeDiffuse::subtractFluxFromRemaining(double currentFlux){
+    int i = 0;
+    //find the bin the flux is in
+    while( (pow(10,m_currentRemainingFlux[i].first) <= currentFlux) ){
+        i++;
+    }
+    
+    if(m_currentRemainingFlux[i-1].second > 0){
+        //there is at least one source left in this bin.  remove it.
+    m_currentRemainingFlux[i-1].second = log10(pow(10.0,m_currentRemainingFlux[i-1].second) - /*pow(10,m_currentRemainingFlux[i-1].first)*/1.);
+    m_totalIntegratedFlux -= pow(10,m_currentRemainingFlux[i-1].first);
+    }else{
+        //deplete this bin.
+        m_totalIntegratedFlux -= pow(10.0,m_currentRemainingFlux[i-1].first)*m_currentRemainingFlux[i-1].second;
+        m_currentRemainingFlux[i-1].second = -10;
+        //and subtract the remaining "extra" flux from the bin below..
+        subtractFluxFromRemaining(pow(10,m_currentRemainingFlux[i-2].first));
+    }
+    //for debug purposes.
+    //std::cout << "remaining sources in bin: " << pow(10,m_currentRemainingFlux[i-1].second) << std::endl;
+    //std::cout << "i-1 is " << i-1 << std::endl;
+    //std::cout << "size of vector " << m_currentRemainingFlux.size() << std::endl;
+    //std::cout << "minflux " << m_minFlux << std::endl;
+    //std::cout << "maxflux " << m_maxFlux << std::endl;
+    
+}
+
+//this is for easy recreation of the logN/logS characteristic from 
+//the created source catalog.
 double sizeOfFifthDecade(double currentFlux){
     return currentFlux*(pow(10,0.2)-1.);
 }
 
-double CompositeDiffuse::getRandomFlux(){
-    //NEED TO SET TOTAL INTEGRATED FLUX!!!!
-    long double prob=RandFlat::shoot(m_totalIntegratedFlux);
-    //long double dx=0.0000000000001;
-    long double dx=1E-4;
-    std::cout << "prob=" << prob << std::endl;
-    
-    double currentFlux = m_minFlux;
-    while(prob > 0 && currentFlux<m_maxFlux){
-        //dx=0.01*pow(10.0,log10(i));
-        double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
-        //std::cout << "currentFlux= " << currentFlux << ", logNlogS(currentFlux) = " << logNlogS(currentFlux) << std::endl;
-        prob-=(dx)* sourcesPerFlux * currentFlux;
-        currentFlux+=(dx)/** sourcesPerFlux*/ * currentFlux;
-        //std::cout << currentFlux << std::endl;
-        //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
+void CompositeDiffuse::setFileFlux(){
+    //this needs to be done once, to get the characteristic from the file.
+    //ALSO - SET THE BEGINNING DYNAMIC FLUX CHARACTERISTIC
+    m_currentRemainingFlux;
+    double currentFlux = m_minFlux ;
+    m_totalIntegratedFlux = 0.;  //to initialize 
+    long double dx=1E-1;
+    while(currentFlux < m_maxFlux){
+        //double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
+        m_currentRemainingFlux.push_back(std::make_pair<double,double>(log10(currentFlux) ,logNlogS(currentFlux)/* (dx)* sourcesPerFlux * currentFlux*/));
+        currentFlux+=(dx) * currentFlux;
+        //std::cout << "logNlogs(flux) = " << logNlogS(currentFlux) << std::endl;
+        
     }
-    std::cout << "New Source created in CompositeDiffuse, with flux = " << currentFlux << std::endl;
+
+    //now we want to make the "currentremainingflux" a histogram - holding how much is left in each bin.
+    std::vector<std::pair<double,double> >::iterator iter1;
+    std::vector<std::pair<double,double> >::iterator iter2;
+    for(iter1 = m_currentRemainingFlux.begin() ; iter1 != m_currentRemainingFlux.end() ; iter1++){
+        iter2 = iter1; iter2++;
+        if(iter2 != m_currentRemainingFlux.end()){ (*iter1).second = log10( pow(10, (*iter1).second) - pow(10, (*iter2).second) );
+        }else{
+        //so the end isn't enormous
+        (*iter1).second = (*iter1).second = log10( pow(10, (*iter1).second) - 85 );
+        }
+    }
+
+    //std::cout << "m_integratedFlux = " << m_totalIntegratedFlux << std::endl;
+    setFluxCharacteristics();
+    m_totalFlux = (m_totalIntegratedFlux);
+}
+
+void CompositeDiffuse::setFluxCharacteristics(){
+    //Puropse: integrate to find the total flux remaining.
+    double  currentFlux = m_minFlux;
+    m_totalIntegratedFlux = 0.;  //to initialize 
+    double countTheSources = 0;
+
+    int i = 0;
+    while( i+1 < m_currentRemainingFlux.size() ){
+        double sourcesPerFlux = pow(10., m_currentRemainingFlux[i].second);
+        m_totalIntegratedFlux+= sourcesPerFlux * pow(10., m_currentRemainingFlux[i].first);
+        //currentFlux=(dx)* currentFlux;
+        countTheSources += sourcesPerFlux;
+        i++;
+    }
+
+    //std::cout << "m_integratedFlux = " << m_totalIntegratedFlux << std::endl;
+    //std::cout << "total sources = " << countTheSources << std::endl;
+    //fogret the xml inputs - the logN/logS characteristic tells us how much flux we have.
+    m_unclaimedFlux = (m_totalIntegratedFlux);
+}
+
+double CompositeDiffuse::getRandomFlux(){
+    //set the total integrated flux.
+    setFluxCharacteristics();
+
+    long double prob=RandFlat::shoot(m_totalIntegratedFlux); //units of flux
+    //std::cout << "prob=" << prob << std::endl;
+    int i = 0;
+    while(prob > 0 &&  i< m_currentRemainingFlux.size() ){
+        double sourcesPerFlux = pow(10., m_currentRemainingFlux[i].second);
+        prob-= sourcesPerFlux * pow(10., m_currentRemainingFlux[i].first);
+        //currentFlux=(dx)* currentFlux;
+        i++;
+    }
+    double currentFlux = pow(10,m_currentRemainingFlux[i].first );
+
+    //std::cout << "New Source created in CompositeDiffuse, with flux = " << currentFlux << std::endl;
+    subtractFluxFromRemaining(currentFlux);
     return currentFlux;
 }
 
-void CompositeDiffuse::setFileFlux(){
-    double  currentFlux = m_minFlux ;
-    m_totalIntegratedFlux = 0.;  //to initialize
-    //long double dx=0.0000000000001; 
-    long double dx=1E-4;
-    while(currentFlux < m_maxFlux){
-        double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
-        m_totalIntegratedFlux+=(dx)* sourcesPerFlux * currentFlux;
-        currentFlux+=(dx)/** sourcesPerFlux*/ * currentFlux;
-        //std::cout << "m_currentFlux = " << currentFlux << std::endl;
-        
-    }
-    std::cout << "m_integratedFlux = " << m_totalIntegratedFlux << std::endl;
-    
-}
-
 std::string CompositeDiffuse::writeXmlFile(const std::vector<std::string>& fileList) {
-/** purpose: creates a document of the form
-
-  <?xml version='1.0' ?>
-  <!DOCTYPE data_library SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source.dtd" [
-  <!ENTITY librarya SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/user_library.xml" >
-  <!ENTITY libraryb SYSTEM "d:\users\burnett\pdr_v7r1c\flux\v5r3/xml/source_library.xml" >
-  ]>
-  <data_library>
-  &librarya;
-  &libraryb;
-  </data_library>
-  
+/** purpose: creates an xml document using the available file.
     */
     std::strstream fileString;
     // Unique tag to add to ENTITY elements in the DTD.
@@ -241,6 +301,8 @@ std::string CompositeDiffuse::writeXmlFile(const std::vector<std::string>& fileL
 }
 
 void CompositeDiffuse::fillTable(){
+//purpose: this fills the internal logN/logS characteristic curve from the 
+//declared xml table.
     
     m_dtd = "$(FLUXSVCROOT)/xml/FluxSvcParams.dtd";
     std::string xmlFile = "$(FLUXSVCROOT)/xml/FluxSvcParams.xml";
@@ -329,7 +391,7 @@ char* CompositeDiffuse::writeLogHistogram(){
     
     std::vector<std::pair<double,double> > currentHistPoints;
     //the histogram starts at minFlux, ends at maxFlux, and holds number of events.
-    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=/*curFlux**/sizeOfFifthDecade(curFlux) ){
+    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=sizeOfFifthDecade(curFlux) ){
         currentHistPoints.push_back(std::make_pair<double,double>(curFlux,0.));  
     }
     
@@ -342,7 +404,12 @@ char* CompositeDiffuse::writeLogHistogram(){
     }
     //then we want to change the histogram bins to be centered in their ranges, and log everything
     std::vector<std::pair<double,double> >::iterator iter;
+    std::vector<std::pair<double,double> >::iterator iter2;
     for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
+        iter2=iter;
+        for(iter2++ ; iter2!=currentHistPoints.end() ; iter2++){
+            (*iter).second += (*iter2).second;
+        }
         (*iter).first = log10((*iter).first);
         (*iter).second = log10((*iter).second);
         (*iter).first += 1/10.;
@@ -352,7 +419,7 @@ char* CompositeDiffuse::writeLogHistogram(){
     for(iter=currentHistPoints.begin() ; iter!=currentHistPoints.end() ; iter++){
         out2 << (*iter).first << '\t' << (*iter).second << std::endl;
     }
-    std::cout << out2.str(); //WHY IS THERE JUNK ON THE END OF IT?
+    //std::cout << out2.str(); //WHY IS THERE JUNK ON THE END OF IT?
     return out2.str();
     
 }
