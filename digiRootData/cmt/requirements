@@ -1,9 +1,9 @@
 package digiRootData
-version v6r0p0
+version v7r0
 
 use mcRootData v2r*
-use GlastPolicy v6r*
-use ebfExt  v2r*  IExternal
+use GlastPolicy v*
+use ldfExt  v0r*  IExternal
 
 apply_pattern package_include
 
