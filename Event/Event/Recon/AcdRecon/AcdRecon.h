@@ -44,8 +44,8 @@ namespace Event {
         AcdRecon(double e, int count, double gDoca, double doca, double actDist,
             const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
-			const std::vector<idents::AcdId>& idCol, 
-			const std::vector<double>& energyCol)
+            const std::vector<idents::AcdId>& idCol, 
+            const std::vector<double>& energyCol)
             : m_totEnergy(e),
             m_tileCount(count),
             m_gammaDoca(gDoca),
@@ -60,6 +60,14 @@ namespace Event {
         {};
         
         virtual ~AcdRecon() { };
+
+        void init(double e, int count, double gDoca, double doca, double actDist,
+            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+            const std::vector<double> &rowActDist,
+            const std::vector<idents::AcdId>& idCol, 
+            const std::vector<double>& energyCol);
+
+        void clear();
 
         //! Retrieve reference to class definition structure
         virtual const CLID& clID() const   { return AcdRecon::classID(); }
@@ -117,11 +125,36 @@ namespace Event {
         
         /// Stores reconstructed energy per ACD digi
         //std::map<idents::AcdId, double> m_energyCol;
-		std::vector<idents::AcdId> m_idCol;
-		std::vector<double> m_energyCol;
+        std::vector<idents::AcdId> m_idCol;
+        std::vector<double> m_energyCol;
         
     };
-    
+
+    inline void AcdRecon::clear() {
+        m_rowDocaCol.clear();
+        m_rowActDistCol.clear();
+        m_idCol.clear();
+        m_energyCol.clear();
+    }
+
+    inline void AcdRecon::init(double e, int count, double gDoca, double doca, double actDist,
+            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+            const std::vector<double> &rowActDist,
+            const std::vector<idents::AcdId>& idCol, 
+            const std::vector<double>& energyCol)
+    {
+        m_totEnergy = e;
+        m_tileCount = count;
+        m_gammaDoca = gDoca;
+        m_doca = doca;
+        m_actDist = actDist;
+        m_minDocaId = minDocaId;
+        m_rowDocaCol = rowDoca;
+        m_rowActDistCol = rowActDist;
+        m_idCol = idCol;
+        m_energyCol = energyCol;
+    }
+
     
     /// Serialize the object for writing
     inline StreamBuffer& AcdRecon::serialize( StreamBuffer& s ) const
