@@ -163,8 +163,8 @@ StatusCode ExposureAlg::execute()
     //..and reset the time of this event to be the "last time" for next time.
     m_lasttime = intrvalend;
 
-    intrvalstart = orb.dateFromSeconds(intrvalstart);
-    intrvalend = orb.dateFromSeconds(intrvalend);
+    //intrvalstart = orb.dateFromSeconds(intrvalstart);
+    //intrvalend = orb.dateFromSeconds(intrvalend);
 
     //and here the pointing characteristics of the LAT.
     GPS::instance()->getPointingCharacteristics(currentTime);

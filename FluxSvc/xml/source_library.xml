@@ -175,6 +175,18 @@
     </source>
 
 
+	<!-- galactic electron spectrum evaluated at the CHIME  average . angular dependence and rate are from the CHIME spectrum object -->
+    <source name="electronavg" >
+        <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum" params="13.8, 24.9"/> <use_spectrum/> </spectrum>
+    </source>
+
+ 
+    <!-- galactic electron spectrum orbit max-->
+    <source name="electronmax">
+        <spectrum escale="GeV"> <SpectrumClass name="GalElSpectrum" params="-28.5,110"/> <use_spectrum/> </spectrum>
+    </source>
+
+
     <!-- the albedo proton spectrum, measured by AMS, implemented by AlbedoPSpectrum. isotropic for now  -->
     <source name="albedo_proton_max">
          <spectrum escale="GeV"> <SpectrumClass name="AlbedoPSpectrum" params="4.78,8.18"/>  <solid_angle mincos="-1.0" maxcos="1.0"/>
