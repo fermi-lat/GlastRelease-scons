@@ -47,6 +47,11 @@
             _EXTERN_ std::string McIntegratingHits;
         }
 
+        namespace Digi {
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string AcdDigis;
+        }
+
         namespace Irf {
             _EXTERN_ std::string Event;
             _EXTERN_ std::string IrfTkrHits;
@@ -58,7 +63,6 @@
             _EXTERN_ std::string Event;
             _EXTERN_ std::string TdSiDatas;
             _EXTERN_ std::string TdCsIDatas;
-            _EXTERN_ std::string AcdDigis;
         }
 
         namespace TkrRecon {
