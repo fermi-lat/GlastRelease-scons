@@ -198,6 +198,10 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     if (eventIdTds != eventIdRoot) evt->setEvent(eventIdRoot);
     if (runIdTds != runIdRoot) evt->setRun(runIdRoot);
 
+    TimeStamp timeObj(m_digiEvt->getTimeStamp());
+    evt->setTime(timeObj);
+    evt->setTrigger(m_digiEvt->getL1T().getTriggerWord());
+
     Event::DigiEvent* digiEventTds = 
         SmartDataPtr<Event::DigiEvent>(eventSvc(), EventModel::Digi::Event);
     if (!digiEventTds) {

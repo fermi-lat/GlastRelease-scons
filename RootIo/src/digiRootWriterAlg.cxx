@@ -200,6 +200,7 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
 
     UInt_t evtId = evtTds->event();
     UInt_t runId = evtTds->run();
+    TimeStamp timeObj = evtTds->time();
 
     Bool_t fromMc = true;
 
@@ -207,7 +208,8 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
     evtTds->fillStream(log.stream());
     log << endreq;
 
-    m_digiEvt->initialize(evtId, runId, fromMc);
+    L1T levelOne(evtTds->trigger());
+    m_digiEvt->initialize(evtId, runId, timeObj.time(), levelOne, fromMc);
 
     return sc;
 }
