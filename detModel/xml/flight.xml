@@ -17,6 +17,8 @@
     <version major="0" minor="0" />
     <primary>
       <primCategory name="global">
+        <overview>These parameters don't belong to any single subdetector
+of the LAT.</overview>
         <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
 </prim>
         <prim name="xNum" value="4" uType="count">Number of towers in x.</prim>
@@ -30,6 +32,12 @@
         <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)</prim>
       </primCategory>
       <primCategory name="CALprim" >
+<overview><![CDATA[CAL people need to put something real here.  If
+this works the way I think it should, any standard html markup like
+this use of <strong>strong</strong> can
+go here.  Just avoid two right square brackets (]) followed by a
+less-than (>) because that will be interpreted as the end of the
+CDATA section, which is XML's way to say "take this literally". ]]></overview>  
 	<prim name="crystalMat" value="CsI" type="string" uType="mat">Crystal Material
 </prim>
 	<prim name="diodeMat" value="Si" type="string" uType="mat">Diode Material
@@ -97,6 +105,12 @@ Material for CAL flange
 </prim>
       </primCategory>
       <primCategory name="TKRprim" >
+<overview><![CDATA[TKR people need to put something real here.  If
+this works the way I think it should, any standard html markup like
+this use of <strong>strong</strong> can
+go here.  Just avoid two right square brackets (]) followed by a
+less-than (>) because that will be interpreted as the end of the
+CDATA section. ]]></overview> 
         <prim name="convMat" value="Pb" type="string" uType="mat">material used in tracker conversion
 </prim>
         <prim name="coreMat" value="FOAM05" type="string" uType="mat">material used in tracker tray core</prim>
@@ -153,6 +167,8 @@ form a square array of this dimension</prim>
 
     <derived>
       <derCategory name="derAll">
+<overview>It's OK to add some overview information for derived categories,
+too, but not required.</overview>
         <const name="vacuumMat" value="Vacuum" />
 
     <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->

@@ -24,13 +24,22 @@
 <xsl:template match="primCategory">
 <h2>Category <font color="#f08000"><xsl:value-of select="@name" />
 </font> </h2>
+   <xsl:call-template name="overview" />
      <table border="1" cellpadding="3">
      <tr align="left" bgcolor="#c0ffc0">
          <th>Name</th><th>Value</th><th>Description</th>
      </tr>
       <xsl:apply-templates select="prim" />
      </table>
+<br /><xsl:text> &#xa0;</xsl:text><br />
 
+</xsl:template>
+
+<xsl:template name="overview">
+  <strong><font color="#208020">Overview:</font></strong>
+<xsl:text> &#xa0;</xsl:text>
+  <xsl:value-of select="overview" disable-output-escaping="yes" />
+<br /><xsl:text> &#xa0;</xsl:text><br />
 </xsl:template>
 
 <xsl:template match="prim">
@@ -46,4 +55,13 @@
   <td><xsl:value-of select="." /></td>
   </tr>
 </xsl:template>
+<xsl:template match="derCategory/overview" ></xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
+
+
+

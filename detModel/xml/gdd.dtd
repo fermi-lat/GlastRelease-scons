@@ -736,9 +736,11 @@ with corresponding field names.
 <!ATTLIST  version major NMTOKEN #REQUIRED >
 <!ATTLIST  version minor NMTOKEN #REQUIRED >
 
+<!ELEMENT overview (#PCDATA) >
+
 <!ELEMENT primary (primCategory*) >
 
-<!ELEMENT primCategory ((prim*)) >
+<!ELEMENT primCategory (overview, prim*) >
 <!ATTLIST primCategory name ID #REQUIRED>
 
 <!ELEMENT prim (#PCDATA) >  <!-- Should be text describing the constant -->
@@ -749,7 +751,7 @@ with corresponding field names.
                %units; >
 
 <!ELEMENT derived (derCategory*) >
-<!ELEMENT derCategory ((const*)) >
+<!ELEMENT derCategory (overview,const*) >
 <!ATTLIST derCategory name ID #REQUIRED>
 
 <!ENTITY  % operator "mul | quo | add | minus | uminus | max" >
