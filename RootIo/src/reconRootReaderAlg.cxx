@@ -339,6 +339,13 @@ StatusCode reconRootReaderAlg::storeTkrClusterCol(TkrRecon *tkrRecRoot) {
 		clusterTdsCol->addCluster(clusterTds);
 	}
 
+	sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrClusterCol, clusterTdsCol);
+    if (sc.isFailure()) {
+        log << MSG::DEBUG << "Failed to register TkrClusterCol" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+
 	return sc;
 }
 
