@@ -1,0 +1,201 @@
+<html>
+    <head>
+        <title>Workbook : mcRootData</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            Workbook : mcRootData
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Oct 13, 2004 by <font color="#0050B2">heather</font>.
+				    </div>
+
+				    <p class="paragraph"><a name="mcRootData-top"></a>All Gleam output is in ROOT format. To read and analyze these files you will need to use an application capable of reading in ROOT files. The easiest path is to use the ROOT analysis environment. For more general information about ROOT and how we use it in GLAST, please see the GLAST ROOT home page: <a href="http://www-glast.slac.stanford.edu/software/root" title="Visit page outside Confluence">&#104;ttp://www-glast.slac.stanford.edu/software/root</a></p>To read the Monte Carlo files, use ROOT version &gt;= 3.02.07.<p class="paragraph">The top-level class is McEvent and contains the data for one event:</p><ul class="star">
+<li> Event ID and Run ID</li>
+</ul>
+<ul class="star">
+<li> TimeStamp</li>
+</ul>
+<ul class="star">
+<li> Source ID</li>
+</ul>
+<ul class="star">
+<li> Sequence number corresponding to source</li>
+</ul>
+<ul class="star">
+<li> Collection of McParticles</li>
+</ul>
+<ul class="star">
+<li> Collection of McIntegratingHits</li>
+</ul>
+<ul class="star">
+<li> Collection of McPositionHits</li>
+</ul>
+<h2 class="heading2"><a name="mcRootData-Mc+Tree%3A++McEvent+Branch"> Mc Tree:  McEvent Branch</a></h2><p class="paragraph">The Mc tree has <em class="emphasis">one</em> branch, <a href="mcRootData.html#WB-mcRootData-McEvent" title="McEvent on mcRootData">McEvent</a>.  All of the Monte Carlo data is contained within this single branch.</p><div align="center"><img src="images/mcTree.gif" border="0"  /></div><p class="paragraph"><h3 class="heading3"><a name="mcRootData-McEvent+%3Ca+name%3D%22mcRootDataMcEvent%22%3E%3C%2Fa%3E"> McEvent <a name="mcRootData-McEvent"></a></a></h3></p><table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>getEventId( )</td><td>Provides the Event number</td><td>UInt_t</td>
+</tr><tr>
+<td>getRunId( )</td><td>Provides the Run number</td><td>UInt_t</td>
+</tr><tr>
+<td>getTimeStamp( )</td><td>Returns the timestamp since mission start 1/1/2001 in seconds</td><td>Double_t</td>
+</tr><tr>
+<td>getSourceId( )</td><td>Provides source Id</td><td>Int_t</td>
+</tr><tr>
+<td>getSequence( )</td><td>Provides sequence number associated with source</td><td>UInt_t</td>
+</tr><tr>
+<td>getMcParticleCount( )</td><td>Number of McParticles in the collection</td><td>UInt_t</td>
+</tr><tr>
+<td>getMcParticle(UInt_t index )</td><td>Returns one McParticle corresponding to index</td><td>const <a href="mcRootData.html#WB-mcRootData-McParticle" title="McParticle on mcRootData">McParticle</a>*</td>
+</tr><tr>
+<td>TObjArray* getMcParticleCol( )</td><td>Returns the full McParticle collection in the form of a TObjArray</td><td>TObjArray*</td>
+</tr><tr>
+<td>UInt_t getMcPositionHitCount( )</td><td>Returns the number of McPositionHits in the collection</td><td>UInt_t</td>
+</tr><tr>
+<td>const McPositionHit* getMcPositionHit(UInt_t index)</td><td>Returns the McPositionHit from the collection corresponding to index.</td><td>const <a href="mcRootData.html#WB-mcRootData-McPositionHit" title="McPositionHit on mcRootData">McPositionHit</a>*</td>
+</tr><tr>
+<td>TObjArray* getMcPositionHitCol( )</td><td>Returns the full McPositionHit collection in the form of a TObjArray</td><td>TObjArray*</td>
+</tr><tr>
+<td>UInt_tgetMcIntegratingHitCount( )</td><td>Returns the number of McIntegratingHits in the collection</td><td>UInt_t</td>
+</tr><tr>
+<td>const McIntegratingHit* getMcIntegratingHit(UInt_t index)</td><td>Returns the McIntegratingHit from the collection corresponding to index.</td><td>const <a href="mcRootData.html#WB-mcRootData-McIntegratingHit" title="McIntegratingHit on mcRootData">McIntegratingHit</a>*</td>
+</tr><tr>
+<td>TObjArray* getMcIntegratingHitCol( )</td><td>Returns the full McIntegratingHit collection in the form of a TObjArray</td><td>TObjArray*</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="mcRootData-McParticle+%3Ca+name%3D%22mcRootDataMcParticle%22%3E%3C%2Fa%3E"> McParticle <a name="mcRootData-McParticle"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>Int_t getParticleId( )</td><td>Returns the particle id</td><td>Int_t</td>
+</tr><tr>
+<td>Int_t getParticleProperty( )</td><td>Returns the status flags</td><td>Int_t</td>
+</tr><tr>
+<td>UInt_t getStatusFlags( )</td><td>Returns the status flags</td><td>UInt_t</td>
+</tr><tr>
+<td>Bool_t primaryParticle( )</td><td>Flag denoting if this is a primary particle (true) or not (false)</td><td>Bool_t</td>
+</tr><tr>
+<td>std::string&amp; getProcess( )</td><td>Returns name of process that produced this McParticle</td><td>std::string&amp;</td>
+</tr><tr>
+<td>const TVector3&amp; getInitialPosition( )</td><td>Initial position</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TVector3 getFinalPosition( )</td><td>Final position</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TLorentzVector&amp; getInitialFourMomentum( )</td><td>Initial momentum</td><td>const TLorentzVector&amp;</td>
+</tr><tr>
+<td>const TLorentzVector&amp; getFinalFourMomentum( )</td><td>Final momentum</td><td>const TLorentzVector&amp;</td>
+</tr><tr>
+<td>const McParticle* getMother( )</td><td>Returns a pointer to the mother McParticle</td><td>const <a href="mcRootData.html#WB-mcRootData-McParticle" title="McParticle on mcRootData">McParticle</a> *</td>
+</tr><tr>
+<td>const McParticle* getDaughter(UInt_tindex)</td><td>Returns a pointer to the daughter McParticle corresponding to index</td><td>const <a href="mcRootData.html#WB-mcRootData-McParticle" title="McParticle on mcRootData">McParticle</a> *</td>
+</tr><tr>
+<td>const TRefArray&amp; getDaughterList( )</td><td>Returns the full array of daughter particles</td><td>const TRefArray&amp;</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="mcRootData-McPositionHit+%3Ca+name%3D%22mcRootDataMcPositionHit%22%3E%3C%2Fa%3E"> McPositionHit <a name="mcRootData-McPositionHit"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>const VolumeIdentifier&amp; getVolumeId( )</td><td>Returns the identifier for the volume</td><td>const <a href="mcRootData.html#WB-mcRootData-VolumeIdentifier" title="VolumeIdentifier on mcRootData">VolumeIdentifier</a>&amp;</td>
+</tr><tr>
+<td>Int_t getMcParticleId( )</td><td>Id of McParticle associated with hit</td><td>Int_t</td>
+</tr><tr>
+<td>Int_t getOriginMcParticleId( )</td><td>Id of origin McParticle</td><td>Int_t</td>
+</tr><tr>
+<td>const TVector3&amp; getEntryPosition( )</td><td>Entry position in local coordinates</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TVector3&amp; getGlobalEntryPosition( )</td><td>Entry position in global coordinates</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TVector3&amp; getExitPosition( )</td><td>Exit position in local coordinates</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>const TVector3&amp; getGlobalExitPosition( )</td><td>Exit position in global coordinates</td><td>const TVector3&amp;</td>
+</tr><tr>
+<td>Double_t getDepositedEnergy( )</td><td>Energy deposited</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getParticleEnergy( )</td><td>Energy of the particle</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getTimeOfFlight( )</td><td>Time of Flight</td><td>Double_t</td>
+</tr><tr>
+<td>Double_t getDirectionCosine( )</td><td>Direction Cosine</td><td>Double_t</td>
+</tr><tr>
+<td>const McParticle* getMcParticle( )</td><td>Returns the McParticle that made the hit</td><td>const <a href="mcRootData.html#WB-mcRootData-McParticle" title="McParticle on mcRootData">McParticle</a>*</td>
+</tr><tr>
+<td>const McParticle* getOriginMcParticle( )</td><td>Returns the origin McParticle</td><td>const <a href="mcRootData.html#WB-mcRootData-McParticle" title="McParticle on mcRootData">McParticle</a>*</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="mcRootData-McIntegratingHit+%3Ca+name%3D%22mcRootDataMcIntegratingHit%22%3E%3C%2Fa%3E"> McIntegratingHit <a name="mcRootData-McIntegratingHit"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>const VolumeIdentifier getVolumeId( )</td><td>Returns the identifier for the volume</td><td>const <a href="mcRootData.html#WB-mcRootData-VolumeIdentifier" title="VolumeIdentifier on mcRootData">VolumeIdentifier</a></td>
+</tr><tr>
+<td>Double_t getTotalEnergy( )</td><td>Returns the total energy deposited in the volume</td><td>Double_t</td>
+</tr><tr>
+<td>const TVector3 getMoment1( )</td><td>First moment</td><td>const TVector3</td>
+</tr><tr>
+<td>const TVector3 getMoment2( )</td><td>Second moment</td><td>const TVector3</td>
+</tr><tr>
+<td>Double_t getMcParticleEnergy(Particle p)</td><th></th><td>Double_t</td>
+</tr>
+</table>
+<h3 class="heading3"><a name="mcRootData-VolumeIdentifier+%3Ca+name%3D%22mcRootDataVolumeIdentifier%22%3E%3C%2Fa%3E"> VolumeIdentifier <a name="mcRootData-VolumeIdentifier"></a></a></h3>
+
+<table class="wikitable">
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr><tr>
+<td>UInt_t operator[](unsigned int)</td><td>Returns one single element of the VolumeIdentifier</td><td>UInt_t</td>
+</tr><tr>
+<td>Int_t size( )</td><td>Returns number of elements in the volId</td><td>Int_t</td>
+</tr><tr>
+<td>std::string name( )</td><td>Returns full string of ids separated by &#039;/&#039;</td><td>std::string</td>
+</tr><tr>
+<td>UInt_t getBits0to31( )</td><td>Returns the least significant 32 bits in the volumeId</td><td>UInt_t</td>
+</tr><tr>
+<td>UInt_t getBits32to63( )</td><td>Returns the more significant 32 bits in the volumeId</td><td>UInt_t</td>
+</tr>
+</table><br/>
+<a href="mcRootData.html#WB-mcRootData-top" title="top on mcRootData">Back to Top</a>&#160;<p class="paragraph">H. Kelly Last Modified: 2003-03-07 08:16:56 -0800</p>
+
+				    					    <br/>
+                        <div class="tabletitle">
+                            <a name="attachments">Attachments:</a>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="mcRootData_attachments/mcRootTree.gif">mcRootTree.gif</a> (image/gif)
+                                <br/>
+                                                            <img src="icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="mcRootData_attachments/wkbk-confluence.css">wkbk-confluence.css</a> (text/css)
+                                <br/>
+                                                    </div>
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Oct 13, 2004 21:38</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>
