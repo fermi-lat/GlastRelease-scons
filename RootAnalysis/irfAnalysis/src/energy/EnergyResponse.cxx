@@ -1,12 +1,12 @@
 /*  
 Create a set of histograms to allow analysis of the energy  response
 */
-#include "IRF.h"
+#include "PSF.h"
 
 #include <fstream>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class EnergyResponse : public IRF {
+class EnergyResponse : public PSF {
 public:
     EnergyResponse();
     void define();

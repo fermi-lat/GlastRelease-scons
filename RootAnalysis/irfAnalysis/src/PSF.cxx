@@ -35,25 +35,25 @@ void PSF::open_input_file()
         // stuff to get from the input tuple
         double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;
         double TkrNumTracks, GltWord, IMcoreProb, EvtEnergySumOpt, AcdTotalEnergy, EvtTkrComptonRatio;
-	double CalMIPDiff, CalLRmsRatio, IMgammaProb, AcdTileCount, EvtTkrEComptonRatio;
-	m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
+        double CalMIPDiff, CalLRmsRatio, IMgammaProb, AcdTileCount, EvtTkrEComptonRatio;
+        m_tree->SetBranchAddress("Tkr1FirstLayer",&Tkr1FirstLayer);
         m_tree->SetBranchAddress("Tkr1ThetaErr",  &Tkr1ThetaErr);
         m_tree->SetBranchAddress("Tkr1PhiErr",    &Tkr1PhiErr);
         m_tree->SetBranchAddress("IMvertexProb",  &IMvertexProb);
         m_tree->SetBranchAddress("VtxAngle",      &VtxAngle);
         m_tree->SetBranchAddress("McTkr1DirErr",  &McTkr1DirErr);
         m_tree->SetBranchAddress("McDirErr",      &McDirErr);
-	m_tree->SetBranchAddress("TkrNumTracks", &TkrNumTracks);
-	m_tree->SetBranchAddress("GltWord", &GltWord);
-	m_tree->SetBranchAddress("IMcoreProb", &IMcoreProb);
-	m_tree->SetBranchAddress("EvtEnergySumOpt", &EvtEnergySumOpt);
-	m_tree->SetBranchAddress("AcdTotalEnergy", &AcdTotalEnergy);
-	m_tree->SetBranchAddress("EvtTkrComptonRatio", &EvtTkrComptonRatio);
-	m_tree->SetBranchAddress("CalMIPDiff", &CalMIPDiff);
-	m_tree->SetBranchAddress("CalLRmsRatio", &CalLRmsRatio);
-	m_tree->SetBranchAddress("IMgammaProb", &IMgammaProb);
-	m_tree->SetBranchAddress("AcdTileCount", &AcdTileCount);
-	m_tree->SetBranchAddress("EvtTkrEComptonRatio", &EvtTkrEComptonRatio);
+        m_tree->SetBranchAddress("TkrNumTracks", &TkrNumTracks);
+        m_tree->SetBranchAddress("GltWord", &GltWord);
+        m_tree->SetBranchAddress("IMcoreProb", &IMcoreProb);
+        m_tree->SetBranchAddress("EvtEnergySumOpt", &EvtEnergySumOpt);
+        m_tree->SetBranchAddress("AcdTotalEnergy", &AcdTotalEnergy);
+        m_tree->SetBranchAddress("EvtTkrComptonRatio", &EvtTkrComptonRatio);
+        m_tree->SetBranchAddress("CalMIPDiff", &CalMIPDiff);
+        m_tree->SetBranchAddress("CalLRmsRatio", &CalLRmsRatio);
+        m_tree->SetBranchAddress("IMgammaProb", &IMgammaProb);
+        m_tree->SetBranchAddress("AcdTileCount", &AcdTileCount);
+        m_tree->SetBranchAddress("EvtTkrEComptonRatio", &EvtTkrEComptonRatio);
 
 
         // make a new file, with a tree and branches
@@ -72,22 +72,27 @@ void PSF::open_input_file()
                 dir_err=McTkr1DirErr;
             }else{
                 dir_err=McDirErr;
-            veto=1.0;
-	    if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
-	      if(IMvertexProb<0.5||VtxAngle==0.0){
-	        if(EvtEnergySumOpt>450.0&&AcdTotalEnergy<6.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
-		  veto=0.0;
-                if(EvtEnergySumOpt<=450.0&&AcdTileCount==0.0&&EvtTkrComptonRatio>1.0&&CalLRmsRatio>5.0&&Tkr1FirstLayer!=0.0&&Tkr1FirstLayer<15.0&&IMgammaProb>0.9)
-		  veto=0.0;
-                }
-		else{
-		  if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
-		    veto=0.0;
-		  if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&CalLRmsRatio<20.0&&IMgammaProb>0.9)
-		    veto=0.0;
-		  }
-               }
             }
+#if 1
+            // background veto calculation, from Luis 
+            veto=1.0;
+            if(TkrNumTracks>0.0&&GltWord>3.0&&IMcoreProb>0.2){
+                if(IMvertexProb<0.5||VtxAngle==0.0){
+                    if(EvtEnergySumOpt>450.0&&AcdTotalEnergy<6.0&&EvtTkrComptonRatio>0.7&&CalMIPDiff>80.0&&CalLRmsRatio<20.0&&IMgammaProb>0.5)
+                        veto=0.0;
+                    if(EvtEnergySumOpt<=450.0&&AcdTileCount==0.0&&EvtTkrComptonRatio>1.0&&CalLRmsRatio>5.0&&Tkr1FirstLayer!=0.0&&Tkr1FirstLayer<15.0&&IMgammaProb>0.9)
+                        veto=0.0;
+                }
+                else{
+                    if(EvtEnergySumOpt>350.0&&EvtTkrEComptonRatio>0.6&&CalMIPDiff>60.0&&IMgammaProb>0.5)
+                        veto=0.0;
+                    if(EvtEnergySumOpt<=350.0&&AcdTileCount==0.0&&CalMIPDiff>-125.0&&CalLRmsRatio<20.0&&IMgammaProb>0.9)
+                        veto=0.0;
+                }
+            }
+#else
+            veto=0.;
+#endif
             friend_tree->Fill();
         }
         fr.cd();
@@ -186,7 +191,7 @@ void PSF::draw(std::string ps_filename, double ymax, std::string title)
         for( int i=0; i<angle_bins; ++i){
             TH1F* h = (TH1F*)psf_file.Get(hist_name(i,j));
             if( h==0) { std::cerr << "could not find hist " << hist_name(i,j) << std::endl;
-                return;
+            return;
             }
             // now add overflow to last bin
             int nbins=h->GetNbinsX();
@@ -260,7 +265,7 @@ void PSF::drawAsymmetry(std::string ps)
     if( ! psf_file.IsOpen()) { return;}
 
     TCanvas c;
-     c.SetFillColor(10);
+    c.SetFillColor(10);
     TLegend* leg=new TLegend(0.13,0.7, 0.35,0.89);
     leg->SetHeader("Angle ranges  ");
 
@@ -268,7 +273,7 @@ void PSF::drawAsymmetry(std::string ps)
 
         TProfile * h = (TProfile*)psf_file.Get(hist_name(i,10));
         if( h==0) { std::cerr << "Could not find hist " << hist_name(i,10) << std::endl;
-            return;
+        return;
         }
         h->SetMaximum(0.5);
         h->SetLineColor(i+1);
@@ -294,18 +299,18 @@ void PSF::drawAeff(std::string ps)
 {
     TFile hist_file(summary_filename().c_str() ); // for the histograms
     TCanvas c;
-     c.SetFillColor(10);
+    c.SetFillColor(10);
 
     TLegend* leg=new TLegend(0.13,0.7, 0.30,0.89);
     leg->SetHeader("Angle ranges");
-     leg->SetTextSize(0.04);
+    leg->SetTextSize(0.04);
 
     for(int i=0; i<4; ++i){
-            TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ;
-            if(h==0){
-                std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
-                return;
-            }
+        TH1F* h =(TH1F*)hist_file.Get(hist_name(i,8)) ;
+        if(h==0){
+            std::cerr << "could not find "<< hist_name(i,8) << " in summary file " << hist_file.GetName() <<std::endl;
+            return;
+        }
         printf("Drawing %s\n", h->GetTitle());
         h->SetLineColor(i+1);
         h->SetStats(false);
