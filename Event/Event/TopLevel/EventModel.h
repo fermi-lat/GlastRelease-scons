@@ -57,6 +57,12 @@
             _EXTERN_ std::string TkrVertexCol;
         }
 
+        namespace CalRecon {
+            _EXTERN_ std::string Event;
+            _EXTERN_ std::string CalXtalRecCol;
+            _EXTERN_ std::string CalClusterCol;
+		}
+
         namespace AcdRecon {
             _EXTERN_ std::string Event;
         }

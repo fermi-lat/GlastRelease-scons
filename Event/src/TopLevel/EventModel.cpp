@@ -45,7 +45,16 @@ public:
         EventModel::TkrRecon::TkrFitTrackCol = EventModel::TkrRecon::Event + "/TkrFitTrackCol";
         EventModel::TkrRecon::TkrVertexCol   = EventModel::TkrRecon::Event + "/TkrVertexCol";
 
-        // reconstructed ACD data
+
+        //reconstructed Cal data
+
+		EventModel::CalRecon::Event          = EventModel::EventHeader + "/CalRecon";
+		EventModel::CalRecon::CalXtalRecCol  = EventModel::CalRecon::Event + "/CalXtalRecCol";
+		EventModel::CalRecon::CalClusterCol  = EventModel::CalRecon::Event + "/CalClusterCol";
+
+		
+		
+		// reconstructed ACD data
         EventModel::AcdRecon::Event          = EventModel::EventHeader + "/AcdRecon";
     }
 };
