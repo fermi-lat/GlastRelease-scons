@@ -45,10 +45,10 @@ public:
         
     public:
         CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM) :
+	  m_adcP(adcP), 
+	  m_adcM(adcM),
           m_rangeP(rangeP), 
-              m_adcP(adcP), 
-              m_rangeM(rangeM), 
-              m_adcM(adcM)
+	  m_rangeM(rangeM) 
           {};
           
           ~CalXtalReadout() {};
@@ -105,19 +105,19 @@ public:
     /// Retrieve energy range for selected face and readout
     inline char getRange(short readoutIndex, idents::CalXtalId::XtalFace face) const
     {
-        return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getRange(face) : (char)-1;
+        return (readoutIndex < (short)m_readout.size()) ? ((m_readout[readoutIndex])).getRange(face) : (char)-1;
     }
     
     /// Retrieve pulse height for selected face and readout
     inline short getAdc(short readoutIndex, idents::CalXtalId::XtalFace face) const
     {
-        return (readoutIndex < m_readout.size()) ? ((m_readout[readoutIndex])).getAdc(face) : (short)-1;
+        return (readoutIndex < (short)m_readout.size()) ? ((m_readout[readoutIndex])).getAdc(face) : (short)-1;
     }
     
     /// Retrieve ranges and pulse heights from both ends of selected readout
     inline const CalXtalReadout* getXtalReadout(short readoutIndex)
     {
-        if ( readoutIndex < m_readout.size() )
+        if ( readoutIndex < (short)m_readout.size() )
             return &(m_readout[readoutIndex]);
         else
             return 0;
