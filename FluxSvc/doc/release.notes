@@ -2,7 +2,7 @@
  * Package detModel
  * Coordinator: T.Burnett, S. Robinson
  *
- * v5r10p5  THB  * 
+ * v5r10p6  THB  * 
  * v5r10  THB  * Fix search for IRegisterSource objects
  * v5r8   THB  * Implement scheme using new IRegisterSource to find external Spectrum objects
  *        SR   * Start of 
