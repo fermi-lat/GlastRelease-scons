@@ -1,0 +1,27 @@
+package userAlg
+version v0
+
+# --------------------------
+# run a pdr job with a user algorithm
+# --------------------------
+
+# get everything we need from here
+use pdrApp
+
+include_path none
+
+#
+# add this spec to the link options obtained from pdrApp
+macro userAlg_linkopts ""\
+        VisualC "/include:_userAlg_loadRef"
+
+
+#specify code to compile into the application: pull in standard Main, all .cxx files, 
+#  jobOptions, etc.
+macro jobOptions "" VisualC "jobOptions.txt"
+
+application userApp ${GuiMain}  *.cxx $(jobOptions) $(Win32Resource)
+
+
+# set default joboption to use for this job
+set JOBOPTIONS ${USERALGROOT}/src/jobOptions.txt
