@@ -4,12 +4,14 @@ ClassImp(ReconHeader)
 
 ReconHeader::ReconHeader() {
     m_flags = 0;
-    m_eventID = 0;
+    m_eventId = 0;
+    m_runId = 0;
 }
 
 int ReconHeader::Clear() {
     m_flags = 0;
-    m_eventID = 0;
+    m_eventId = 0;
+    m_runId = 0;
     return 0;
 }
 
