@@ -11,6 +11,8 @@
 #include "G4Box.hh"
 #include "G4SDManager.hh"
 
+#include <algorithm>
+
 
 
 PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
@@ -69,6 +71,8 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,G4TouchableHistory* ROhist)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void PosDetectorManager::EndOfEvent(G4HCofThisEvent* HCE)
 {
+    // Let's sort the hits
+    std::sort(m_posHit->begin(),m_posHit->end(), ComparePosHits());
     // store the hits in the TDS
     m_esv->registerObject("/Event/MC/PositionHitsCol", m_posHit);    
 
