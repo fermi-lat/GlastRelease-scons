@@ -9,7 +9,7 @@
     
 	<!-- standard particle generater used as a default -->
     <source name="default" flux="1.0">
-          <spectrum escale="MeV">
+          <spectrum escale="GeV">
               <particle name="gamma"> <energy e="0.1"/> </particle>
                <direction/>
           </spectrum>
