@@ -1,5 +1,5 @@
 package GuiSvc
-version v1
+version v1r2
 
 branches GuiSvc mgr doc
 
@@ -19,18 +19,24 @@ include_path $(GUISVCROOT)
 macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
     VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib "
 
-macro GuiSvc_linkopts " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
-    VisualC "Service.obj ${GUISVCROOT}/${BINDIR}/libGuiSvc.lib /include:_GuiSvc_loadRef"
+# *No* linkopts.
 
 private
+
+# This following is a pattern to use on any Gui application. A main is not necessary since the lib has 
+# a generic one that looks for $JOBOPTIONS.
 # note redefinition of the macro to *not* include any other dependent libs
 # and to force inclusion of the loadRef
-macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) "\
-                   VisualC " $(Gaudi_linkopts) $(GuiSvc_linkopts) $(gui_linkopts) "
+
+
+macro use_linkopts " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) -u GuiSvc_loadRef"\
+                   VisualC " $(Gaudi_linkopts) $(GuiSvc_lib) $(gui_linkopts) /include:_GuiSvc_loadRef "
 
 macro WinJobOptions ""  VisualC  test/jobOptions.txt
 
-set JOBOPTIONS ${GUISVCROOT}/src/test/jobOptions.txt
 
 application GuiTest test/*.cxx ${WinJobOptions} ${Win32Resource}
 
+# this has to be public, even for the local test app. could mess up clients
+public
+set JOBOPTIONS ${GUISVCROOT}/src/test/jobOptions.txt

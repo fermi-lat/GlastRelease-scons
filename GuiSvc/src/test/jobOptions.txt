@@ -25,7 +25,7 @@ MessageSvc.OutputLevel      = 2;
 
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 100;
-// ??does not work??? GuiSvc.size = 500;
+GuiSvc.size = 500;
 
 //==============================================================
 //
