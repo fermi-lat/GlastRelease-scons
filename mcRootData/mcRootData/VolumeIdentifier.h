@@ -56,7 +56,7 @@ private:
     UInt_t m_bits32to63;
     
     /// number of single ids which constitute the volume identifier
-    Int_t m_size;
+    UInt_t m_size;
     
     ClassDef(VolumeIdentifier,1)
 };

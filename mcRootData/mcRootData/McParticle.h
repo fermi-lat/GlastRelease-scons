@@ -19,7 +19,7 @@ class McParticle: public TObject {
     
 public:
     //! status bits modeled on successful SLD scheme
-    enum StatusBits{  
+    typedef enum StatusBits{  
         DECAYED =1 ,    //! Decayed by generator
             DECAYFLT=1<<1,  //! Decayed in flight by swimmer
             MISSED=  1<<2,  //! Does not hit detector
