@@ -39,6 +39,10 @@ namespace CalibData {
       m_stripId(id), m_slope(slope), m_intercept(intercept), m_quad(quad), 
       m_chi2(chi2), m_df(df) {}
     TkrTotStrip(const TkrTotStrip& other);
+    void clear() {
+      m_stripId = -1; 
+      m_slope = m_intercept = m_quad = m_chi2 = m_df = 0.0;
+    }
     int getStripId() const {return m_stripId;}
     float getSlope() const {return m_slope;}
     float getIntercept() const {return m_intercept;}
@@ -61,7 +65,7 @@ namespace CalibData {
   */
   class TkrTotUni : public UniBase {
   public:
-    TkrTotUni(const idents::TkrId& id, int nStrips=1536);
+    TkrTotUni(const idents::TkrId& id, int nStrips=0);
     TkrTotUni() : UniBase(), m_strips(0), m_nStrips(0) {}
 
     ~TkrTotUni() {if (m_strips) delete [] m_strips;};
@@ -73,6 +77,13 @@ namespace CalibData {
       return &m_strips[i];
     }
 
+    // TODO -- implement clearStrips, resize or decide they're
+    // not needed.  Is there a possibility that calibration files
+    // will have "holes":  No data for stripId x but data for x+1 ? 
+    void clearStrips();
+
+    /// Resize array of strips, or just clear if sizes match
+    void resize(unsigned n);
     /**
        Use strip id field to decide where to put strip. Success iff
        the id is in range

@@ -70,7 +70,7 @@ namespace CalibData {
     unsigned getNUnilayer() const;
 
     /// Get reference to vector of uni for specified tower.
-    const std::vector<UniBase*>& getUnis(int iTow) const 
+    std::vector<UniBase*>& getUnis(int iTow) 
       // or maybe RootTkrBaseCnv should provide this service
     {return m_towers[iTow]->m_unis; }
 

@@ -72,6 +72,21 @@ namespace CalibData {
     m_strips[iStrip].copy(strip);
     return true;
   }
+
+  void TkrTotUni::clearStrips() {
+    for (unsigned ix=0; ix < m_nStrips; ix++) {
+      (m_strips + ix)->clear();
+    }
+  }
+
+  void TkrTotUni::resize(unsigned n) {
+    if (n == m_nStrips) clearStrips();
+    else {
+      delete [] m_strips;
+      m_strips = new TkrTotStrip[n];
+      m_nStrips = n;
+    }
+  }
   //  TkrTotCol
 
   TkrTotCol::TkrTotCol(unsigned nTowerRow, unsigned nTowerCol, unsigned nTray) 
