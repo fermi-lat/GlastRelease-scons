@@ -54,6 +54,8 @@ wall below bottom layer. New constant, first defined 18 June 2003.</prim>
 of side compartment with electronics. Changed from 11.6 mm as of 
 18 June, 2003.</prim>
 
+  <prim name="CALGridFrameGap"  value="1.5">Minimum gap between
+top of CAL (frame) and bottom of grid flange.  3 Sept. 2003</prim>
   <prim name="CALSideWallInnerThick" value="1.0">Horizontal thickness
 of inner wall within (largely hollow) side wall</prim>
   <prim name="CALSideWallOuterThick" value="0.8"> Horizontal thickness
@@ -82,8 +84,8 @@ cells between adjacent (in the same layer) cylindrical supports</prim>
 
   <prim name= "CALTopFrameZ" value= "16.0">Thickness of top of
 CAL frame (Al) </prim>
-  <prim name= "CALBottomFrameZ" value= "16.0">Thickness of bottom of 
-CAL frame (Al) </prim>
+  <prim name= "CALBottomFrameZ" value= "14.0">Thickness of bottom of 
+CAL frame (Al) Changed 4 Sept. 2003 from 16.0 (ref: Sasha)</prim>
   <prim name="CALTopFrameWidth" value="16.7">Width of top picture
 frame.  Changed from 22 to 16.7 19 June 2003.(Al)</prim>
   <prim name="CALBottomFrameWidth" value="35.0">Width of bottom picture

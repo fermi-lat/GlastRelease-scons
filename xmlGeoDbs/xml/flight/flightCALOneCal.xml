@@ -375,7 +375,8 @@
 
 <!-- As of 30 April, CALLayers at the top of the stay clear envelope (used
      to be centered)                                           -->
-
+<!-- As of Sept. 2003:  bottom of CALLayers are aligned with bottom
+     of grid web -->
     <!-- Calorimeter for a tower consists of layers plus frame pieces
          plus side walls -->
     

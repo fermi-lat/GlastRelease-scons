@@ -60,11 +60,13 @@
               (which is the same as Z of a single outer tray)
 -->
 	<const name="towersTotalZ">  
-<notes>Height of cal (stay clear) + height of tracker (S-C) + gap between
+<notes>Height of cal (stay clear) + height of tracker (S-C) + gap between.
+Also add gap between CAL and
 </notes>
           <add>
             <refer refTo="CALVertStayClear" />
-            <refer refTo="calTrackerGap" />
+            <refer refTo="NADGridFlangeZ" />
+            <refer refTo="CALGridFrameGap" />
             <refer refTo="TKRVertStayClear" />
           </add>                               
         </const>
@@ -76,13 +78,13 @@
             <const value="2" uType = "count" />
           </quo>
         </const>
-
+<!--
         <const name="calFlangeGap" value="1.0" >
           <notes>Gap between grid flange (back) and CAL top frame (front).
           Just approximate until true number is confirmed.
           </notes>
         </const>
-    
+    -->
 <!-- use the following instead if calTrackerGap can be believed
           <minus>
             <refer refTo="calTrackerGap" />
@@ -92,16 +94,35 @@
 
 
         <const name="CAL_dz" >
-          <notes>Offset of CAL within single-tower volume</notes>
-          <add>
-            <uminus>
-              <refer refTo="towersTotalHalfZ" />
-            </uminus>
-            <half>
-              <refer refTo="CALVertStayClear" />
-            </half>
-          </add>
+          <notes>Offset of CAL stay-cleaar within single-tower volume.
+                It's just below flange and min. 1.5 mm gap.
+                </notes>
+          <minus>
+            <refer refTo="towersTotalHalfZ" />
+            <add>
+              <refer refTo="TKRVertStayClear" />
+              <refer refTo="CALGridFrameGap" />
+              <refer refTo="NADGridFlangeZ" />
+              <half>
+                <refer refTo="CALVertStayClear" />
+              </half>
+            </add>
+          </minus>
         </const>
+
+<!--
+          <minus>
+            <refer refTo="CALVertStayClear" />
+            <add>
+              <refer refTo="towersTotalHalfZ" />
+              <refer refTo="CALGridFrameGap" />
+              <refer refTo="NADGridFlangeZ" />
+              <half>
+                <refer refTo="CALFramedLayersZ" />
+              </half>
+            </add>
+          </minus>
+-->
 
         <const name="TKR_dz" >
           <notes>Offset of TKR within single-tower volume</notes>
@@ -415,7 +436,8 @@
             <refer refTo="towersTotalHalfZ" />
             <add>
               <refer refTo="CALVertStayClear" />
-              <refer refTo="calTrackerGap" />
+              <refer refTo="NADGridFlangeZ" />
+              <refer refTo="CALGridFrameGap" />
             </add>
           </minus>
         </const>
@@ -425,13 +447,13 @@
                 It goes immediately under the LAT</notes>
           <uminus>
             <add>
-              <refer refTo="calTrackerGap" />
+              <refer refTo="NADGridFlangeZ" />
+              <refer refTo="CALGridFrameGap" />
               <refer refTo="CALVertStayClear" />
               <refer refTo="NADSpacecraftGap" />
-              <quo> 
+              <half> 
                  <refer refTo="NADSpacecraftZ" />
-                 <const value="2" uType="count" />
-              </quo>
+              </half>
             </add>
           </uminus>
         </const>

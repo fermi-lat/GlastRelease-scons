@@ -391,18 +391,92 @@
           </add>
         </const>
 
+
+
+<!-- As of Sept. 2003, align bottom of cal frame with bottom of 
+     grid web; compute placement of layers and top frame 
+     from that  -->
+
+<!-- method:  Go to top of stay-clear box, then up by amount
+     of flange/frame gap, then down by height of web, then 
+     up half of frame height. -->
+
+        <const name="CALBottomFrame_dz">
+          <notes>Offset of bottom frame relative to stay-clear box.
+              Later will probably have to locate different frame
+              pieces separately.</notes>
+          <minus>
+            <add>
+              <half>
+                <refer refTo="CALVertStayClear" />
+              </half>
+              <refer refTo="CALGridFrameGap" />
+              <half>   
+                <refer refTo="CALBottomFrameZ" />
+              </half>
+            </add>
+            <refer refTo="NADGridWebZ" />
+          </minus>
+        </const>
+
+        <const name="CALLayers_dz" >
+          <notes>Offset of vol. containing layers relative to 
+                 stay-clear box.  Upper frame is at top of box,
+                 followed by CALLayers.
+                 Constant instituted 30 April 2003.
+                 Modified 20 June when CALLayers was redefined to
+                 exclude frame. Modified 3 Sept 2003 to align
+                 CAL bottom frame with bottom of grid web</notes>
+          <add>
+            <refer refTo="CALBottomFrame_dz" />
+            <half>
+              <refer refTo="CALBottomFrameZ" />
+            </half>
+            <half>
+              <refer refTo="CALLayersTotalZ" />     
+            </half>
+          </add>
+        </const>
+
+        <const name="CALTopFrameLower_dz" >
+          <notes>Displacement for lower of 2 top frame pieces
+                 within stay-clear</notes>
+          <add>
+            <refer refTo="CALLayers_dz" />
+            <half>
+              <refer refTo="CALLayersTotalZ" />     
+            </half>
+            <half>
+              <refer refTo="CALTopFrameLowerZ" />
+            </half>
+          </add>
+        </const>
+  
         <const name="CALTopFrameUpper_dz" >
           <notes>Displacement for upper of 2 top frame pieces
                  within stay-clear</notes>
-          <minus>
+          <add>
+            <refer refTo="CALTopFrameLower_dz" />
             <half>
-              <minus>
-                <refer refTo="CALVertStayClear" />
-                <refer refTo="CALTopFrameUpperZ" />
-              </minus>
+              <refer refTo="CALTopFrameUpperZ" />
             </half>
-            <refer refTo="calFlangeGap" />
-           </minus>
+            <half>
+              <refer refTo="CALTopFrameLowerZ" />
+            </half>
+          </add>
+        </const>
+
+
+<!--
+        <const name="CALTopFrameUpper_dz" >
+          <notes>Displacement for upper of 2 top frame pieces
+                 within stay-clear</notes>
+          <half>
+            <minus>
+              <refer refTo="CALVertStayClear" />
+              <refer refTo="CALTopFrameUpperZ" />
+            </minus>
+          </half>
         </const>            
 
         <const name="CALTopFrameLower_dz" >
@@ -419,8 +493,8 @@
           </minus> 
         </const>
 
-<!-- Define constant for offset needed to get CALLayers at top of 
-     stay-clear box -->
+
+
         <const name="CALLayers_dz" >
           <notes>Offset of vol. containing layers relative to 
                  stay-clear box.  Upper frame is at top of box,
@@ -439,6 +513,9 @@
           </minus>
         </const>
 
+
+      
+
         <const name="CALBottomFrame_dz">
           <notes>Offset of bottom frame relative to stay-clear box.
               Later will probably have to locate different frame
@@ -453,7 +530,8 @@
             </half>
           </minus>
         </const>
-          
+
+-->          
 <!-- derived stuff for side walls -->
         <const name="CALOuterWallPCBGap" >
           <notes>Gap between CAL outer side wall Al component and PCB
