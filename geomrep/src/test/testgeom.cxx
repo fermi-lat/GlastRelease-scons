@@ -92,7 +92,7 @@ private:
 //----------------------------------------------------------------------------
 //              main
 
-int main(int argc, char* argv[])
+int main(int , char* )
 {
     
     // get pointer to the GuiMgr instance 
