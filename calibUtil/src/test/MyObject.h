@@ -6,22 +6,19 @@
 
 #include "calibUtil/ClientObject.h"
 
-  class MyObject : public calibUtil::ClientObject {
-  public: 
+// Used by test_strips.cxx test program.  See that file for implementation.
+class MyObject : public calibUtil::ClientObject {
+public: 
     
-    /// Performs client specified function on the data
-    unsigned int readData(calibUtil::StripSrv::towerRC towerId, 
-                          unsigned int trayNum, 
-                          calibUtil::StripSrv::eUnilayer uni, 
-                          std::vector<unsigned int> v){
-      
-      // Any function on the stripList v can be written here
-      cout << "IN READ DATA" << endl;
-      
-    }
-
-  };
-  
-
+  MyObject() {};
+  virtual ~MyObject() {};
+  /// Performs client specified function on the data, one list at a time
+  calibUtil::StripSrv::eRet 
+  readData(calibUtil::StripSrv::towerRC towerId, 
+           unsigned int trayNum, 
+           calibUtil::StripSrv::eUnilayer uni, 
+           calibUtil::StripSrv::eBadness howBad,
+           const calibUtil::StripSrv::StripCol* const strips);
+};
 #endif
   

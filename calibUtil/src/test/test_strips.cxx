@@ -16,24 +16,33 @@ int main(int argc, char* argv[]) {
   
   StripSrv ssObj(name);
 
-  std::vector<StripSrv::towerRC> tv1;
-  ssObj.getBadTowers(tv1);   
-  cout << "ROW IS" << tv1[0].row;
-  cout << "COL IS" << tv1[0].col;
+  std::vector<StripSrv::towerRC> trc;
+  ssObj.getBadTowers(trc);   
+  for (unsigned int i = 0; i < trc.size(); i++ ) {
+    std::cout << "Tower id is (" << trc[i].row << ", " << trc[i].col;
+    std::cout << ")" << std::endl;
+    std::cout << "# very bad is " << ssObj.nVeryBad(trc[i]) << std::endl;
+    std::cout << "# bad is " << ssObj.nBad(trc[i]) << std::endl;
+  }
+  std::cout << std::endl;
 
-  StripSrv::towerRC trc;
-  trc.row = 3;
-  trc.col = 2; 
+  std::cout << "For first tower, # very bad for each tray: " << std::endl;
+  for (unsigned int iTray = 0; iTray <= 18; iTray++)  {
+    std::cout << "  Tray " << iTray <<  " #very bad   " 
+              << ssObj.nVeryBad(trc[0], iTray)  << " #bad, TOP  " 
+              << ssObj.nBad(trc[0], iTray, StripSrv::TOP) << std::endl;
+  }
 
-  cout << "bad is" <<  ssObj.nBad(trc,2,StripSrv::TOP) << endl;
+  
+  StripSrv::StripCol  strips;
+  unsigned int        trayNum = 0;
+  
+  ssObj.getBad(trc[0], trayNum ,StripSrv::TOP, strips);
 
-  std::vector<unsigned int> stripList;
-  ssObj.getBad(trc,0,StripSrv::TOP,stripList);
-  cout << "strip number is" << stripList[0];
 
-  cout<< "BAD TYPE IS" << ssObj.getBadType() << std::endl;
+  std::cout<< "BAD TYPE IS" << ssObj.getBadType() << std::endl;
 
-  cout << "instrument name is" << ssObj.getCalType() << endl;
+  std::cout << "instrument name is" << ssObj.getCalType() << endl;
 
   MyObject cli;
   ssObj.traverseInfo(&cli);
@@ -43,6 +52,28 @@ int main(int argc, char* argv[]) {
 } /* end of main */
 
 
+calibUtil::StripSrv::eRet
+ MyObject::readData(calibUtil::StripSrv::towerRC towerId, 
+                   unsigned int trayNum, 
+                   calibUtil::StripSrv::eUnilayer uni, 
+                   calibUtil::StripSrv::eBadness howBad,
+                   const calibUtil::StripSrv::StripCol* const strips) {
+  using calibUtil::StripSrv;
+
+  std::cout << "In readData for tower (" << towerId.row << ", " << towerId.col;
+  std::cout << ") tray #" << trayNum << "  unilayer ";
+  if (uni == StripSrv::TOP) std::cout << "TOP ";
+  if (uni == StripSrv::BOT) std::cout << "BOT ";
+  std::cout << "  Badness: ";
+  if (howBad == StripSrv::VERYBAD) std::cout << " VERYBAD";
+  if (howBad == StripSrv::BAD) std::cout << " JUST BAD";
+
+  std::cout << std::endl;
+  std::cout << "Bad strip count:  " << strips->size() << std::endl;
+  std::cout << std::endl;
+  
+  return StripSrv::CONT;
+}
 
 
 
