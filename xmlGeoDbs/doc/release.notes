@@ -2,6 +2,7 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ * 17-oct-2003: jrb v1r13p3  Make ribbons sensitive (integrating hit style)
  *  7-oct-2003: jrb v1r13p2  Fix bug in assigning ids to bottom side tiles
  *  4-sep-2003: jrb v1r13p1  Some small adjustments in Z to CAL components
  * 12-Aug-2003: jrb v1r13p0  Add remaining ACD ribbons back into model.
