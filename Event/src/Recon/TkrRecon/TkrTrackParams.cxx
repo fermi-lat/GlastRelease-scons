@@ -60,7 +60,7 @@ void Event::TkrTrackParams::initDataMembers()
 
 double& Event::TkrTrackParams::operator()(const int &i)
 {
-    if (i < ParamIndex::xPosIdx || i > ParamIndex::ySlpIdx) 
+    if (i < xPosIdx || i > ySlpIdx) 
           throw std::invalid_argument("Invalid index for TkrTrackParams");
 
     switch(i)
@@ -75,7 +75,7 @@ double& Event::TkrTrackParams::operator()(const int &i)
 
 const double& Event::TkrTrackParams::operator()(const int &i) const
 {
-    if (i < ParamIndex::xPosIdx || i > ParamIndex::ySlpIdx) 
+    if (i < xPosIdx || i > ySlpIdx) 
           throw std::invalid_argument("Invalid index for TkrTrackParams");
 
     switch(i)
@@ -90,8 +90,7 @@ const double& Event::TkrTrackParams::operator()(const int &i) const
 
 double& Event::TkrTrackParams::operator()(const int &i, const int &j)
 {
-    if (i < ParamIndex::xPosIdx || j < ParamIndex::xPosIdx ||
-        i > ParamIndex::ySlpIdx || j > ParamIndex::ySlpIdx) 
+    if (i < xPosIdx || j < xPosIdx || i > ySlpIdx || j > ySlpIdx) 
           throw std::invalid_argument("Invalid index for TkrTrackParams");
 
     // yuk...
@@ -110,8 +109,7 @@ double& Event::TkrTrackParams::operator()(const int &i, const int &j)
 
 const double& Event::TkrTrackParams::operator()(const int &i, const int &j) const
 {
-    if (i < ParamIndex::xPosIdx || j < ParamIndex::xPosIdx ||
-        i > ParamIndex::ySlpIdx || j > ParamIndex::ySlpIdx) 
+    if (i < xPosIdx || j < xPosIdx || i > ySlpIdx || j > ySlpIdx) 
           throw std::invalid_argument("Invalid index for TkrTrackParams");
 
     // yuk...
