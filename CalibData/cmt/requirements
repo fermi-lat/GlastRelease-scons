@@ -2,7 +2,7 @@ package CalibData
 
 # $Header$
 
-version v0r9p2
+version v0r9p3
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -18,7 +18,7 @@ apply_pattern shared_library
 ##     apply_pattern use_CalibData_symbols
 pattern use_CalibData_symbols \
   macro_append CalibData_linkopts " "\
-      WIN32  "${CalibData_root}/${BINDIR}/CalibData/CalibModel.obj"
+      WIN32  " ${CalibData_root}/${BINDIR}/CalibData/CalibModel.obj "
 
 private
 #_______________________________________________________________
