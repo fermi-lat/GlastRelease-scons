@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package detModel <pre>
  * Coordinator: T.Burnett, S. Robinson
+ * v5r18p1 THB  * simplify tool setup for external package sources
+ * v5r18   THB  * fix fluxes
  * v5r17p2 THB  * release the tool
  * ---------------- GlastRelease --------------------------------
  * v5r16p1 THB  * fix vsnet problem with include files
