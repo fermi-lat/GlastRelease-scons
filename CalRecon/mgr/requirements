@@ -6,7 +6,6 @@ branches src mgr doc
 use GuiSvc
 use GlastEvent
 use GlastSvc
-use ntupleWriterSvc
 use GlastDigi
 use geometry
 
@@ -15,9 +14,7 @@ apply_pattern package_include
 
 
 # have a seperate library to export the calorimeter recon data classes 
-library CalReconData -no_share CalLogID.cpp CalGeometrySvc.cpp\
-                     CalBase.cpp CalADCLogs.cpp CalRecLogs.cpp \
-                     CsIClusters.cpp CalDisplay.cxx
+library CalReconData -no_share CsIClusters.cpp 
 
 macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
       VisualC             "$(CalReconDir)/CalReconData.lib  " 
