@@ -22,7 +22,7 @@
 
 #include "GaudiKernel/ObjectVector.h"
 
-extern const CLID CLID_Event;
+//THB: old style extern const CLID CLID_Event;
 
 // Glast address factory
 extern unsigned char GLAST_StorageType;
