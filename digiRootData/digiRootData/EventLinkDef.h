@@ -14,6 +14,8 @@
 #pragma link C++ class CalDigi+;
 #pragma link C++ class CalXtalReadout+;
 #pragma link C++ class CalXtalId+;
-
+#pragma link C++ class TkrDiagnosticData+; //class name different from filename!
+#pragma link C++ class CalDiagnosticData+; //class name different from filename!
+#pragma link C++ class EventSummaryData+;
 
 #endif
