@@ -26,8 +26,8 @@ public:
         EventModel::MC::McVertexCol         = EventModel::MC::Event  + "/McVertexCol";
         EventModel::MC::McParticleCol       = EventModel::MC::Event  + "/McParticleCol";
 
-        EventModel::MC::McPositionHitCol      = EventModel::MC::Event  + "/PositionHitCol";
-        EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitCol";
+        EventModel::MC::McPositionHitCol      = EventModel::MC::Event  + "/PositionHitsCol";
+        EventModel::MC::McIntegratingHitCol   = EventModel::MC::Event  + "/IntegratingHitsCol";
 
         // Digi event
         EventModel::Digi::Event             = EventModel::Event + "/Digi";
