@@ -12,7 +12,6 @@
 #include <list>
 #include <vector>
 #include "geometry/CoordTransform.h"
-//#include "flux/SpectrumFactoryTable.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IFluxSvc(910, 1 , 0); 

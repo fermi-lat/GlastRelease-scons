@@ -129,16 +129,6 @@ public:
             GeV         //! GeV
     } m_energyscale;
     
-    /*
-    //! Denotes what coordinate system the coordinates
-    //! of incoming particles are in
-    enum FrameType { 
-    EARTH,        //! relative to the earth (default)
-    GLAST,        //! relative to the glast satellite(differs from EARTH by the angle GLAST is rotated off zenith)
-    GALAXY      //! relative to the galactic origin
-    } m_frametype;
-    */
-    
     
     //! whether or not the current particle is occluded by the earth
     bool occluded();

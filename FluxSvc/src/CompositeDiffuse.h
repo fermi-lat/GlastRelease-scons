@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 #include "FluxSvc/EventSource.h"
 #include "CompositeSource.h"
-//#include <vector>
 #include <vector>
 
 class FluxSource;
@@ -18,9 +17,6 @@ public:
       
       ~CompositeDiffuse(){}
       
-      ///    add a source to the list
-      //void addSource (EventSource* aSource);
-      //void rmvSource (EventSource* aSource);
       
       /// generate an event from from one of the sources 
       /// which make up the composite, and return a pointer to it
@@ -40,6 +36,5 @@ private:
     double getRandomFlux();
     long double pofi(long double intensity);
     long double logNlogS(long double flux);
-    
-    
+        
 };

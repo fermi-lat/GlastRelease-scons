@@ -30,7 +30,6 @@ public:
     
     /// flux into 1 m^2 integrated over angles
     virtual double flux(double time)const{
-        //m_time=time; 
         return rate(time)/totalArea();}
     
     ///    full-length title description of this EventSource.

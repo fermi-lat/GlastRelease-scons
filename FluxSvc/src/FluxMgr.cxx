@@ -45,10 +45,7 @@ void FluxMgr::init(const std::vector<std::string>& fileList){
     std::string fileName;
     
     xml::XmlParser parser;
-    
-    //DOES THIS NEED TO BE HERE AT ALL?
-    //std::vector<std::string>::const_iterator iter = fileList.begin();
-    
+        
     std::string xmlFileIn = writeXmlFile( fileList);
     
     // a quick way of displaying what goes to the parser
@@ -233,10 +230,6 @@ void FluxMgr::test(std::ostream& cout, std::string source_name, int count)
     FluxSource* f;
     double totalinterval;
     for( int i = 0; i< count; ++i) {
-        
-        //testing - pass time
-        //pass(0.01);
-        //time+=0.01;
         
         f = e->event(time);
         //TESTING THE lat, lon FUNCTIONS

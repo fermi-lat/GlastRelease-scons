@@ -25,12 +25,10 @@ MapSpectrum::MapSpectrum(const std::string& params)
     }
     //now get the second element from params to be the filename
     std::string input = params.c_str();
-    //output.push_back(f);
     int i=params.find_first_of(",");
     input = input.substr(i+1);  
     
     m_particle_name = "gamma";
-    //std::cout << "here" << std::endl;
     if(input.empty())
         initialization_document = "doc/test.txt";
     else
@@ -42,7 +40,6 @@ MapSpectrum::MapSpectrum(const std::string& params)
     std::string doc_path= (flux_root? std::string(flux_root)+"/" : "");
     fileName = doc_path+initialization_document;
     std::ifstream input_file;
-    //std::cout << "opening file " << fileName.c_str() << " for reading" << std::endl;
     input_file.open(fileName.c_str());
     
     if(false == input_file.is_open())
@@ -80,22 +77,17 @@ std::pair<double,double> MapSpectrum::dir(double energy, HepRandomEngine* engine
     double sizeof1by1 = 1.;
     double l=-180;
     double b=-90;
-    //while(remainingFlux>=0){
     while(remainingFlux>=0){
-        //std::cout << remainingFlux << std::endl;
         remainingFlux -= m_catalog[std::make_pair<int,int>(l,b)].intensity*sizeof1by1;
-        //std::cout << "l=" << l << ",b=" << b << std::endl;
         b++;
         if(b==90){b=-90; l++;}
     }
-    //}
     
     //now set the flux:
     m_flux = m_netFlux;
     
     //and the energy index of this particle:
     m_index = m_catalog[std::make_pair<int,int>(l,b)].index;
-    //std::cout << "l=" << l << ",b=" << b << std::endl;
     
     return std::make_pair<double,double>(l,b);    
 }
@@ -132,7 +124,6 @@ void MapSpectrum::setNetFlux(){
             m_netFlux+=m_catalog[std::make_pair<int,int>(l,b)].intensity*sizeof1by1;
         }
     }
-    //std::cout << m_netFlux << std::endl;
     return;
 }
 

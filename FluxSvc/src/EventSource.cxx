@@ -67,21 +67,6 @@ void   EventSource::setFlux (double value) {
     m_flux = value;
 }
 
-/*
-double EventSource::interval (double)
-{
-return -1.; //flag that there is no proper function working
-}*/
-
-/*double  EventSource::rate ( double solid_angle, double fluxval )
-{
-double  r = solid_angle*fluxval*s_total_area;   
-// integral of the flux*cross-sectional-area over
-// the solid angle (which is passed in as an integral)
-m_solid_angle = solid_angle;
-flux( fluxval );
-return  r;
-}*/
 
 double  EventSource::rate (double time )const
 {
@@ -97,7 +82,6 @@ Orbit*  EventSource::makeOrbit () const
 {
     return new Orbit;
 }
-
 
 
 // UI titles

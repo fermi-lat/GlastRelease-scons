@@ -61,9 +61,7 @@ StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
         //flux =  new Flux(name);
         return StatusCode::FAILURE;
     flux =  new Flux(name);
-    m_currentFlux = flux;
-    //std::cout << "currentFluxPointer = " << flux << std::endl;
-    
+    m_currentFlux = flux;    
     return StatusCode::SUCCESS;
 }
 
@@ -75,9 +73,7 @@ FluxSvc::~FluxSvc()
 
 // initialize
 StatusCode FluxSvc::initialize () 
-{
-    //std::vector<std::string> fileList;
-    
+{   
     StatusCode  status =  Service::initialize ();
     
     // bind all of the properties for this service

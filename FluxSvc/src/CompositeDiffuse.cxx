@@ -81,20 +81,9 @@ void CompositeDiffuse::addNewSource(){
     double  sinth = sqrt(1.-costh*costh);
     double  l = RandFlat::shoot(-180, 180);       
     double b = (acos(costh)*180/M_PI)-90.;
-    
-    //Vector launchDir = Vector(cos(phi)*sinth, sin(phi)*sinth, costh);
-    
-    //double l = RandFlat::shoot(-180.,180.);
-    //double b = RandFlat::shoot(-90.,90.);
-    
-    //std::cout << "z was " << costh <<std::endl;
-    //Then call the FluxSource Constructor to use the galactic direction specified by launchDir.
-    //    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
     EventSource* aSource=new FluxSource(flux,spec,l,b);
     
-    //std::cout << "l = " << l << ",b = " << b << std::endl;
     FluxSource* abc = (FluxSource*)aSource;
-    //std::cout << "z is " << abc->launchDir().z() << std::endl;
     //then add it into the list of sources..
     addSource(aSource);
     //..and subtract the total flux from what remains...
@@ -113,7 +102,6 @@ double CompositeDiffuse::remainingFluxInterval(){
     }
     
 }
-
 
 
 double CompositeDiffuse::getRandomFlux(){
@@ -136,13 +124,11 @@ double CompositeDiffuse::getRandomFlux(){
 
 long double CompositeDiffuse::pofi(long double intensity){  //this function gives P(I).  see documentation.
     long double p;
-    //printf("\nabout to calculate pofi...");
     if(intensity>=pow(10.0,-7)){
         p=2.49555*pow(10.0,-13)*pow(intensity,-2.5);//egret range value for pofi
     }else{
         p=2.49555*pow(10.0,-13)*pow(intensity,-2.5-0.05*(7.0+(log(intensity)/log(10.0))));	
     }	//glast range value for pofi
-    //printf("\np=%12.10e, intensity=%12.10e",p,intensity);
     return p;
 }
 
@@ -150,6 +136,3 @@ long double CompositeDiffuse::logNlogS(long double flux){
     
     return 0.;
 }
-
-
-

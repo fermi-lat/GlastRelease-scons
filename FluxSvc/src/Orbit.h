@@ -45,12 +45,18 @@ public:
     
     ///returns position as a pair using  specified time
     std::pair<double,double> coords(double time) const;
-    
+
+    /*! 
+    \param latitude Latitude is in the range (-180,180)
+    */
     /// latitude as a function of time (in minutes)    
     virtual double latitude(double time) const;
     
+    /*! 
+    \param longitude Longitude is in the range (0,360)
+    */
     /// longitude as a function of time, taking into account the starting
-    /// longitude and the eastward rotation of the earth    
+    /// longitude and the eastward rotation of the earth
     virtual double longitude(double time) const;
     
     /// pitch of the spacecraft (rotation around E-W axis)

@@ -50,7 +50,7 @@ double Orbit::latitude(double time) const {
 double Orbit::longitude(double time) const {
     // longitude as a function of time, taking into account the starting
     // longitude and the eastward rotation of the earth
-    
+
     double phase = M_2PI * time / m_period + startphase();
     double lon = (360./M_2PI) * atan2(m_cosi*sin(phase), cos(phase)) -
         360.* time /1440. + m_ascendingLon; // orbital motion - earth rotation
@@ -95,14 +95,12 @@ Rotation Orbit::CELTransform(double time){
     gal.rotateZ(-282.25/m_degsPerRad).rotateX(-62.6/m_degsPerRad).rotateZ(33./m_degsPerRad);
     
     //cel is the matrix which rotates (cartesian)local coordinates into (cartesian)celestial ones
-    //cel.rotateY((time/m_precessPeriod)*M_2PI).rotateZ(m_inclination*M_2PI/360.).rotateY(phase(time));
     cel1.rotateZ(makeXeast);
     cel2.rotateY(phase(time));
     cel3.rotateZ(-m_inclination*M_2PI/360.);
     cel4.rotateY((time/m_precessPeriod)*M_2PI);
     
     //so gal*cel should be the matrix that makes local coordiates into galactic ones.
-    //Rotation glstToGal = gal*cel1*cel2*cel3*cel4;
     Rotation glstToGal = gal*cel4*cel3*cel2*cel1;
     
     //displayRotation(glstToGal);
