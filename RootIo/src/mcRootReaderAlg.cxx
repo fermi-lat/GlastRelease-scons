@@ -300,7 +300,7 @@ StatusCode mcRootReaderAlg::readMcEvent() {
     
     SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
     if (!mcEvt) return sc;
-    mcEvt->initialize(runIdTds, sourceIdRoot, sequenceRoot);
+    mcEvt->initialize(runIdTds, sourceIdRoot, sequenceRoot,0); // do we care if this has the right time
     
     return sc;
 }

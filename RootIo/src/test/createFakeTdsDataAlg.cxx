@@ -126,7 +126,7 @@ StatusCode createFakeTdsDataAlg::storeMcData() {
 	unsigned int run = 4;
 	int sourceId = 7;
 	unsigned int sequence = 3;
-	mcEvt->initialize(run, sourceId, sequence);
+	mcEvt->initialize(run, sourceId, sequence, 99.0);
 
     // create the TDS location for the McParticle Collection
     Event::McParticleCol* mcParticleTdsCol = new Event::McParticleCol;
