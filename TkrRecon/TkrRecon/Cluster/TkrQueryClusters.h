@@ -59,7 +59,7 @@ public:
     void setNumLayers(int num)    { s_numLayers = num;}
 
     /// Checks that a layer number is in the correct range
-    bool validLayer(int layer) {return (layer>=0 && layer < s_numLayers-1);};
+    bool validLayer(int layer) {return (layer>=0 && layer < s_numLayers);};
 
     
 
