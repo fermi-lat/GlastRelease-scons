@@ -80,7 +80,7 @@
     const CLID& CLID_CalorimeterHits      = 2006;   // Calorimeter hits
     const CLID& CLID_CalorimeterLogHits   = 2007;   // Calorimeter log hits
     const CLID& CLID_TrackerHits          = 2008;   // Tracker hits
-    const CLID& CLID_MCACDhit             = 2009;
+    const CLID& CLID_MCACDHit             = 2009;
     const CLID& CLID_MCTrack              = 2010; //Ian Mod
 	const CLID& CLID_MCCalorimeterHit     = 2011;
     const CLID& CLID_MCEvent              = 2012;
