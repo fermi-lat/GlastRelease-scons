@@ -55,8 +55,8 @@ public:
     int numberOfHitsNear( Event::TkrCluster::view v, int layer, 
         double inDistance, const Point& x0) const;
 
-    void setTowerPitch(int pitch) { s_towerPitch = pitch;}
-    void setNumLayers(int num)    { s_numLayers = num;}
+    void setTowerPitch(double pitch) { s_towerPitch = pitch;}
+    void setNumLayers (int num)      { s_numLayers = num;}
 
     /// Checks that a layer number is in the correct range
     bool validLayer(int layer) const {return (layer>=0 && layer < s_numLayers);};
