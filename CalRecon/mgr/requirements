@@ -3,21 +3,15 @@ version v3
 
 branches src mgr doc
 
-use GuiSvc
-use GlastEvent
-use GlastSvc
-use GlastDigi
-use geometry
-
+use GuiSvc v3*
+use GlastEvent v7*
+use GlastSvc v7*
+use GlastDigi v2*
+use geometry v3*
 
 apply_pattern package_include
 
 
-# have a seperate library to export the calorimeter recon data classes 
-library CalReconData -no_share CsIClusters.cpp 
-
-macro CalRecon_linkopts   "$(CalReconDir)/libCalReconData.a  " \
-      VisualC             "$(CalReconDir)/CalReconData.lib  " 
 
 apply_pattern package_headers
 
