@@ -7,7 +7,6 @@ namespace rdbModel {
 
   Column::~Column() {
     delete m_type;
-    delete m_source;
   }
 
   Enum* Column::getEnum() const {return m_type->getEnum();}
@@ -15,8 +14,9 @@ namespace rdbModel {
   bool Column::okValue(const std::string& val, bool set) const {
     // auto increment and datetime values are established by rdbms
     if (set) {
-      if ((m_source->m_from == ColumnSource::FROMautoIncrement) || 
-          (m_source->m_from == ColumnSource::FROMnow)) return false;
+
+      if ( (m_from == FROMautoIncrement) || 
+           (m_from == FROMnow)) return false;
     }
 
     return m_type->okValue(val);
@@ -27,7 +27,7 @@ namespace rdbModel {
   }
 
   bool Column::isAutoIncrement() const {
-    return (getSource()->m_from == ColumnSource::FROMautoIncrement);
+    return (m_from == FROMautoIncrement);
   }
 
   Visitor::VisitorState Column::accept(Visitor* v) {

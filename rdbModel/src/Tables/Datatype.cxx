@@ -28,7 +28,7 @@ namespace {
   }
   int findType(std::string aType) {
     if (!initDone) init();
-    for (int i = 0; i < N_SUPPORTED_TYPES; i++) {
+    for (unsigned int i = 0; i < N_SUPPORTED_TYPES; i++) {
       if (aType == typenames[i]) return i;
     }
     return (int) Datatype::TYPEnotFound;
