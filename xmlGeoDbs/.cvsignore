@@ -5,3 +5,4 @@ Win32*
 Visual
 setup.*
 *.mak*
+rh*gcc*
