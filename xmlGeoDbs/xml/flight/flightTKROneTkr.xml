@@ -858,16 +858,21 @@
     </stackZ>
 
     <composition name="oneTKR" envelope="TKRStayClearBox">
-      <posXYZ volume="oneTKRStack" />
+      <posXYZ volume="oneTKRStack" 
+              ZREF="TKRFudge_dz" />
       <posXYZ volume="TKRWallLong"
-              YREF="TKRWall_dt"  />
+              YREF="TKRWall_dt"  
+              ZREF="TKRFudge_dz" />
       <posXYZ volume="TKRWallLong"
-              YREF="TKRWall_dtn" />
+              YREF="TKRWall_dtn" 
+              ZREF="TKRFudge_dz" />
       <posXYZ volume="TKRWallShort" 
               zrot="90"
-              XREF="TKRWall_dt"  /> 
+              XREF="TKRWall_dt" 
+              ZREF="TKRFudge_dz" /> 
      <posXYZ volume="TKRWallShort" 
               zrot="90"
-              XREF="TKRWall_dtn" />
+              XREF="TKRWall_dtn" 
+              ZREF="TKRFudge_dz" />
     </composition>
 
