@@ -41,7 +41,10 @@ GuiSvc::GuiSvc(const std::string& name,ISvcLocator* svc)
 
 
 
-
+void GuiSvc::pause()
+{
+    m_guiMgr->pause();
+}
 
 
 // initialize

@@ -5,7 +5,7 @@
 #include "GaudiKernel/IInterface.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IGuiSvc(900, 1 , 0); 
+static const InterfaceID IID_IGuiSvc(900, 1 , 1); 
 
 //forward declarations
 namespace gui { class GuiMgr; }
@@ -17,6 +17,9 @@ class IGuiSvc : virtual public IInterface
 
 public:
     virtual gui::GuiMgr* guiMgr()=0;
+
+    /// set flag to pause a run
+    virtual void pause()=0;
 
     virtual void quit()=0;
     virtual void finishSetup()=0;  // dummy

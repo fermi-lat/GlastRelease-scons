@@ -25,6 +25,8 @@ public:
     /// only thing this wrapper class does: provide access to the wrapped class
     gui::GuiMgr* guiMgr() {return m_guiMgr;}
 
+    void pause();
+
     // these needed to implement gui::MenuClient interface in order to schedule a quit call.
     void quit();
     void finishSetup(){};  // dummy
