@@ -198,7 +198,7 @@ StatusCode AnalysisNtupleAlg::execute()
         double answer;
         
         //do a browse
-        m_toolvec[0]->browse();
+        m_toolvec[4]->browse();
                 
         std::string varnames[nTools] = {"McXErr", "GltType", "TkrEnergyCorr", 
             "VtxZDir", "CalEneSumCorr", "AcdTileCount"};

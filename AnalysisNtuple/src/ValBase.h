@@ -74,7 +74,7 @@ protected:
     IDataProviderSvc* m_pEventSvc;
     /// flag to signal new event
     bool m_newEvent;
-    /// flag to signal that handle is set
-    bool m_handleSet;
+    // flag to signal that handle is set
+    //bool m_handleSet;
 };
 #endif

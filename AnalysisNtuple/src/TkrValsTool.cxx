@@ -214,32 +214,13 @@ StatusCode TkrValsTool::initialize()
         }
         
         
-        // this doesn't seem quite ready, or I don't know how to use it
+        // pick up the chosen propagator
         if (service("GlastPropagatorSvc", m_propSvc).isFailure()) {
         log << MSG::ERROR << "Couldn't find the GlastPropagatorSvc!" << endreq;
         return StatusCode::FAILURE;
         }
         
           pKalParticle = m_propSvc->getPropagator();
-        
-        /*
-        // Which propagator to use?
-        int m_PropagatorType = 1; 
-        IPropagatorTool* propTool = 0;
-        if (m_PropagatorType == 0)
-        {
-            // Look for the G4PropagatorSvc service
-            sc = toolSvc()->retrieveTool("G4PropagatorTool", propTool);
-            log << MSG::INFO << "Using Geant4 Particle Propagator" << endreq;
-        }
-        else
-        {
-            // Look for GismoGenerator Service
-            sc = toolSvc()->retrieveTool("RecoTool", propTool);
-            log << MSG::INFO << "Using Gismo Particle Propagator" << endreq;
-        }
-        pKalParticle = propTool->getPropagator();   
-        */
         
     } else {
         return StatusCode::FAILURE;
