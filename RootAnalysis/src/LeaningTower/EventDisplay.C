@@ -220,7 +220,7 @@ void EventDisplay(TString filename, int firstEvent, int lastEvent)
 	  double pos = getGeometry(VL);
 	  TString LayerName = "Layer";
 	  LayerName+=VL;
-	  layer = (TTree*)myFile->Get(LayerName);
+	  layer = (TTree*)gDirectory->Get(LayerName);
 	  Int_t TkrNumHits;
 	  Int_t TkrHits[128];
 	  layer->SetBranchAddress("TkrNumHits",&TkrNumHits);
