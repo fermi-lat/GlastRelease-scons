@@ -1,31 +1,8 @@
-#include "IRF.h"
-#include "TProfile.h"
+#include "SumOfGaussians.h"
+#include "MakeDists.h"
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/* 
-plots to study PSF
+#include "PSF.h"
 
-*/
-class PSF : public IRF {
-public:
-    PSF();
-    void project();
-    void draw(std::string ps_filename);
-    void drawError(std::string ps_filename);
-    void drawAsymmetry(std::string ps_filename);
-    void drawAeff(std::string ps_filename);
-
-    bool fileExists(){
-        TFile f(summary_filename().c_str());
-        return f.IsOpen();
-    }
-
-    static double probSum[2]; // for defining quantiles
-    // histogram and display
-    int nbins; 
-    double xmin,xmax, ymax;
-
-};
 double PSF::probSum[2]={0.68, 0.95}; // for defining quantiles
 
 PSF::PSF()
@@ -260,6 +237,25 @@ int main()
     p.drawAeff(ps);
     p.drawError(ps);
     p.drawAsymmetry(ps+")");
+    
+// Fit the angle ErrDists with a sum of two Gaussian functions.
+    Fitter * twoGauss = new SumOfGaussians();
+
+// Set bounds on fit parameters.
+    double lower[] = {0., -3.5, 0., 0., -3.5, 0.};
+    double upper[] = {1e3, -0.5, 3., 1e3, -0.5, 3.};
+    std::vector<double> lower_bounds(lower, lower+6);
+    std::vector<double> upper_bounds(upper, upper+6);
+    twoGauss->setBounds(lower_bounds, upper_bounds);
+
+// Create the distributions.
+    MakeDists thetaErrDist("Tkr1ThetaErr.root");
+    thetaErrDist.project("log10(Tkr1ThetaErr)", -3.5, -0.5, 50, twoGauss);
+    thetaErrDist.draw("Tkr1ThetaErr.ps", 0.3);
+
+    MakeDists phiErrDist("Tkr1PhiErr.root");
+    phiErrDist.project("log10(Tkr1PhiErr)", -3.5, -0.5, 50, twoGauss);
+    phiErrDist.draw("Tkr1PhiErr.ps", 0.3);
 
     std::cout << "done" << std::endl;
     return 0;
