@@ -152,6 +152,7 @@ StatusCode digiRootReaderAlg::initialize()
     // This will retrieve parameters set in the job options file
     setProperties();
    
+    m_rootIoSvc = 0 ;
     if ( service("RootIoSvc", m_rootIoSvc, true).isFailure() ){
         log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
         log << MSG::INFO << "Event loop will not terminate gracefully" << endreq;
