@@ -2,6 +2,7 @@
 /*   Package merit
  *
  *
+ *  v5r11  03-oct-02 change in Acdrecon interface
  *  v5r10  30-sep-02 new calculation of surplus hit ratio
  *  v5r9   13-sep-02 fill event number and source id
  *  v5r8p3 10-sep-02 adjust for new versions of Event and GlastSvc

@@ -500,8 +500,16 @@ void meritAlg::tileReco(const Event::AcdRecon& acd)
 
     const std::vector<double> & doca = acd.getRowDocaCol();
     
-    // get the map of energy vs tile id
-    const std::map<idents::AcdId, double>& emap = acd.getEnergyCol();
+    // get the map of energy vs tile id: have to construct from two parallel vectors
+    const std::vector<double> energies = acd.getEnergyCol();
+    const std::vector<idents::AcdId>& ids = acd.getIdCol();
+    std::vector<double>::const_iterator eit = energies.begin();
+
+    std::map<idents::AcdId, double> emap;
+    for( std::vector<idents::AcdId>::const_iterator idit = ids.begin(); 
+    idit != ids.end() && eit !=energies.end(); ++idit, ++ eit){
+        emap[*idit]=*eit;
+    }
 
 
     // use acd_row predicate to count number of tiles per side row
