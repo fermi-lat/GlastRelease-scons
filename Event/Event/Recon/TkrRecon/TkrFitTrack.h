@@ -25,6 +25,9 @@
 *
 * $Header$
 */
+
+extern const CLID& CLID_TkrFitTrack;
+
 namespace Event {  // NameSpace
 
 //  class TkrFitTrack: public TkrRecInfo, virtual public ContainedObject
@@ -34,6 +37,10 @@ public:
     /// Constructor/destructor for the class
     TkrFitTrack();
    ~TkrFitTrack();
+
+   //! Retrieve pointer to class defininition structure
+   virtual const CLID& clID() const   { return TkrFitTrack::classID(); }
+   static const CLID& classID()       { return CLID_TkrFitTrack; }
 
     void     initializeInfo(unsigned int xgaps, unsigned int ygaps, 
         unsigned int x1st, unsigned int y1st);

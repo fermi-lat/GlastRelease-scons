@@ -25,6 +25,8 @@
 * $Header$
 */
 
+extern const CLID& CLID_TkrCluster;
+
 namespace Event { //Namespace
 
     class TkrCluster : virtual public ContainedObject
@@ -58,7 +60,12 @@ public:
     TkrCluster(int id, int ilayer, int v, 
         int istrip0, int istripf, Point position, double ToT, int tower = 0);
     virtual ~TkrCluster() {}
-    
+
+    //! Retrieve pointer to class defininition structure
+   virtual const CLID& clID() const   { return TkrCluster::classID(); }
+   static const CLID& classID()       { return CLID_TkrCluster; }
+
+
     
     // set methods
     /// sets the flag of a cluster

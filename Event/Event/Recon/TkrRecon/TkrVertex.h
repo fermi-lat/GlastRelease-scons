@@ -30,6 +30,7 @@
 *
 * $Header$
 */
+extern const CLID& CLID_TkrVertex;
 
 namespace Event { //Namespace
   
@@ -39,6 +40,11 @@ public:
     
     TkrVertex( int layer, int tower, double energy, double quality, const Ray& testRay);
    ~TkrVertex() {}
+
+   //! Retrieve pointer to class defininition structure
+   virtual const CLID& clID() const   { return TkrVertex::classID(); }
+   static const CLID& classID()       { return CLID_TkrVertex; }
+
 
     /// Define the TkrBase routines
     double        getQuality() const;                    

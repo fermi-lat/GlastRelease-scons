@@ -18,6 +18,8 @@
 #include "Event/Recon/TkrRecon/TkrRecInfo.h"
 #include "Event/Recon/TkrRecon/TkrPatCandHit.h"
 
+extern const CLID& CLID_TkrPatCand;
+
 namespace Event { //Namespace
 
 class TkrPatCand: public TkrRecInfo, virtual public ContainedObject
@@ -28,6 +30,10 @@ public:
     TkrPatCand(int layer, int tower, double energy, double quality, const Ray& testRay) 
                     {TkrPatCand(layer,tower,energy,1.,quality,testRay);}
     ~TkrPatCand();
+
+   //! Retrieve pointer to class defininition structure
+   virtual const CLID& clID() const   { return TkrPatCand::classID(); }
+   static const CLID& classID()       { return CLID_TkrPatCand; }
 
     /// Define the TkrRecInfo routines
 

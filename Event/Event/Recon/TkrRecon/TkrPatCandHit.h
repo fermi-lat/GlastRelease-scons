@@ -17,6 +17,8 @@
 * $Header$
 */
 
+extern const CLID& CLID_TkrPatCandHit;
+
 namespace Event { //Namespace
 
 class TkrPatCandHit : virtual public ContainedObject
@@ -27,6 +29,11 @@ public:
     TkrPatCandHit(unsigned int hitId, const Point& pos, unsigned int tower, 
         unsigned int layer, TkrCluster::view v);
    ~TkrPatCandHit() {}
+
+   //! Retrieve pointer to class defininition structure
+   virtual const CLID& clID() const   { return TkrPatCandHit::classID(); }
+   static const CLID& classID()       { return CLID_TkrPatCandHit; }
+
 
     //Output method to write out the contents of the class
     void writeOut(MsgStream& log) const; 
