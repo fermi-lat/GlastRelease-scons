@@ -187,6 +187,10 @@ StatusCode mcRootReaderAlg::execute()
     m_mcTree->GetEvent(evtId);
 
     sc = readMcEvent();
+    if (sc.isFailure()) {
+        log << MSG::ERROR << "Failed to read top level McEvent" << endreq;
+        return sc;
+    }
 
     m_particleMap.clear();
 
