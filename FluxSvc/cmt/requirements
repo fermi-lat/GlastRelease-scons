@@ -54,7 +54,7 @@ library flux -no_share\
  Spectrum.cxx\
  SpectrumFactoryTable.cxx\
  SurfaceMuons.cxx\
- TimeCandle.cxx*.cxx \
+ TimeCandle.cxx \
  -s=rootplot $(headers) *.cxx\
  $(xml_files) 
 
