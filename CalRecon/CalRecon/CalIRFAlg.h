@@ -3,7 +3,7 @@
 #define CalIRFAlg_H
 
 // Include files
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/Algorithm.h"
 #include "CalGeometrySvc.h"
 class IGlastDetSvc;
 
@@ -31,7 +31,7 @@ private:
     // the GlastDetSvc used for access to detector info
     IGlastDetSvc*    m_detSvc;
 
-	CalGeometrySvc* m_CalGeo;
+	ICalGeometrySvc* m_CalGeo;
 
 };
 

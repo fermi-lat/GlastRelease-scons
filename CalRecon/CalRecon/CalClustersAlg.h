@@ -2,7 +2,7 @@
 #ifndef __CALCLUSTERSALG_H
 #define __CALCLUSTERSALG_H 1
 
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/Algorithm.h"
 #include "CalGeometrySvc.h"
 
 class CalRecLogs;

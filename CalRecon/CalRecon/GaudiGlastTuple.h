@@ -7,11 +7,11 @@
 
 #include <vector>
 
-#include "Gaudi/Interfaces/INTupleSvc.h"
-#include "Gaudi/Interfaces/INTuple.h"
-#include "Gaudi/NTupleSvc/NTuple.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
-#include "Gaudi/Kernel/StatusCode.h"
+#include "GaudiKernel/INTupleSvc.h"
+#include "GaudiKernel/INTuple.h"
+#include "GaudiKernel/NTuple.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/StatusCode.h"
 #include "reconstruction/analysis/Tuple.h"
 
 

@@ -8,7 +8,7 @@ ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , 
 
 // List of DLLs required
 // ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv"};
-ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "TkrRecon", "RootHistCnv"};
+ApplicationMgr.DLLs   = { "GlastSvc", "CalRecon", "RootHistCnv"};
                           
 
 ApplicationMgr.TopAlg = { "CalIRFAlg", "CalClustersAlg"};

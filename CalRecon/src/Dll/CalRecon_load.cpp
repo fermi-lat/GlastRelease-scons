@@ -11,9 +11,9 @@
 //
 //====================================================================
 
-#include "Gaudi/Interfaces/ICnvFactory.h"
-#include "Gaudi/Interfaces/ISvcFactory.h"
-#include "Gaudi/Interfaces/IAlgFactory.h"
+#include "GaudiKernel/ICnvFactory.h"
+#include "GaudiKernel/ISvcFactory.h"
+#include "GaudiKernel/IAlgFactory.h"
 
 
 #define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
@@ -23,7 +23,12 @@
 
 //! Load all  services: 
 void CalRecon_load() {
+
+	DLL_DECL_SERVICE( CalGeometrySvc );
+
     DLL_DECL_ALGORITHM( CalRecLogsAlg );
+	DLL_DECL_ALGORITHM( CalIRFAlg );
+	DLL_DECL_ALGORITHM( CalClustersAlg );
 } 
 
 extern "C" void CalRecon_loadRef()    {

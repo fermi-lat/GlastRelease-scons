@@ -4,10 +4,10 @@
 #include "CalRecon/CalIRFAlg.h"
 #include "CalRecon/CalRecLogs.h"
 #include "CalRecon/CalDetGeo.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
@@ -21,6 +21,7 @@
 
 static const AlgFactory<CalIRFAlg>  Factory;
 const IAlgFactory& CalIRFAlgFactory = Factory;
+
 
 //------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.

@@ -4,7 +4,7 @@
 
 #include "CalRecon/CalBase.h"
 #include "CalRecon/CalLogID.h"
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 extern const CLID& CLID_CalADCLogs;
 

@@ -2,10 +2,9 @@
 #ifndef CALGEOMETRYSVC_H
 #define CALGEOMETRYSVC_H 1
 
-#include "Gaudi/Kernel/Service.h"
+#include "GaudiKernel/Service.h"
+#include "CalRecon/ICalGeometrySvc.h"
 
-#include "CalRecon/CalDetGeo.h"
-#include "idents/ModuleId.h"
 
 //----------------------------------------------
 //
@@ -16,8 +15,14 @@
 //   A.Chekhtman, NRL, 3/30/01 
 //  
 //
+
+
+
+
+
+
 //##########################################################
-class CalGeometrySvc : public Service 
+class CalGeometrySvc : public Service , virtual public ICalGeometrySvc
 //##########################################################
 {
 public:
@@ -29,6 +34,8 @@ public:
     
     StatusCode initialize();
     StatusCode finalize();
+
+
 
 	 int numModulesX()    {return m_nmodx;}
 	 int numModulesY()    {return m_nmody;}
@@ -48,7 +55,15 @@ public:
 
 	 CalDetGeo getLayer(int ilayer, CalDetGeo::axis a);
 	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog); 
-	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog, idents::ModuleId mod); 
+	 CalDetGeo getLog(int ilayer, CalDetGeo::axis a, int ilog, idents::ModuleId mod);
+
+	     /// queryInterface - for implementing a Service this is necessary
+    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+
+	    /// return the service type
+    const IID& type() const;
+
+	static const InterfaceID& interfaceID() { return ICalGeometrySvc::interfaceID(); }
 
 
 

@@ -6,7 +6,7 @@
 #include "CalRecon/CalDetGeo.h"
 #include "CalRecon/CalADCLogs.h"
 #include "CalRecon/CalBase.h"
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 #include "gui/DisplayRep.h"
 
 extern const CLID& CLID_CalRecLogs;

@@ -1,6 +1,6 @@
 
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/SvcFactory.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
 
 #include "CalRecon/CalGeometrySvc.h"
 
@@ -149,3 +149,21 @@ CalDetGeo CalGeometrySvc::getLog(int ilayer, CalDetGeo::axis a, int ilog)
 
 	return log;
 }
+
+// queryInterface
+StatusCode  CalGeometrySvc::queryInterface (const IID& riid, void **ppvIF)
+{
+    if (IID_ICalGeometrySvc == riid) {
+        *ppvIF = dynamic_cast<ICalGeometrySvc*> (this);
+        return StatusCode::SUCCESS;
+    }
+    else {
+        return Service::queryInterface (riid, ppvIF);
+    }
+}
+
+// access the type of this service
+const IID&  CalGeometrySvc::type () const {
+    return IID_ICalGeometrySvc;
+}
+

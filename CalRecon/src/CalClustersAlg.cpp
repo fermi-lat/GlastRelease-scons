@@ -6,14 +6,13 @@
 #include "CalRecon/CalRecLogs.h"
 #include "CalRecon/gamma.h"
 #include "CalRecon/Midnight.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
-static const AlgFactory<CalClustersAlg>  Factory;
-const IAlgFactory& CalClustersFactory = Factory;
+
 
 int nbins;  //!< Number of bins used for the fit
 std::vector<double> g_elayer;  //!< Energy per layer in GeV
@@ -22,6 +21,10 @@ double slope;   //!< slope of the shower direction
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function: gamma(double,double) implemented in gamma.cxx
 */ 
+
+static const AlgFactory<CalClustersAlg>  Factory;
+const IAlgFactory& CalClustersAlgFactory = Factory;
+
 static double gam_prof(double *par, int i)
 {
 	double result =0; 

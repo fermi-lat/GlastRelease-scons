@@ -3,7 +3,7 @@
 #ifndef __CALRECLOGSALG_H
 #define __CALRECLOGSALG_H 1
 
-#include "Gaudi/Algorithm/Algorithm.h"
+#include "GaudiKernel/Algorithm.h"
 #include "CalGeometrySvc.h"
 class CalPedCalib;
 class CalCalibLogs;

@@ -7,10 +7,10 @@
 #include "CalRecon/CalRecLogsAlg.h"
 #include "CalRecon/CalADCLogs.h"
 #include "CalRecon/CalRecLogs.h"
-#include "Gaudi/MessageSvc/MsgStream.h"
-#include "Gaudi/Kernel/AlgFactory.h"
-#include "Gaudi/Interfaces/IDataProviderSvc.h"
-#include "Gaudi/DataSvc/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 static const AlgFactory<CalRecLogsAlg>  Factory;

@@ -5,7 +5,7 @@
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 // #include "Event/trsDataVI.h"
-#include "Gaudi/Kernel/DataObject.h"
+#include "GaudiKernel/DataObject.h"
 
 extern const CLID& CLID_CalClusterList;
 
