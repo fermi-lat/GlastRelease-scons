@@ -28,9 +28,6 @@
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/DisplayControl.h"
 #include "gui/GuiMgr.h"
-#include "geometry/CoordTransform.h"
-#include "geomrep/BoxRep.h"
-#include "geometry/Point.h"
 #include "GuiSvc/IGuiTool.h"
 
 #include <cassert>
@@ -142,7 +139,7 @@ StripDisplay::StripDisplay(const std::string& type,
 class   StripDisplay::StripRep : public gui::DisplayRep {
 public:
     StripRep(bool noise):m_count(0), m_noise(noise){}
-    void   accept ( const SiDetector& d, const CoordTransform& T_plane )
+    void   accept ( const SiDetector& d, const HepTransform3D& T_plane )
     {
         // static variable implmentation
         static float pScale = 50.f;
@@ -157,10 +154,14 @@ public:
                 float h = strip->energy() * pScale;
                 float x0 = _detSvc->stripLocalX(strip->index()) + strip->getDeltaX();
                 float y0 = _tkrGeoSvc->trayWidth()/2 + strip->getDeltaY();
-                Point from(x0,y0,0), to(x0,y0,h);
+                HepPoint3D from(x0,y0,0), to(x0,y0,h);
                 from.transform(T_plane); to.transform(T_plane);
                 moveTo(from);
                 lineTo(to);
+                // also draw a line perpendicular to the strips, to show the pitch
+                HepVector3D pitchvec(0.49*_tkrGeoSvc->siStripPitch(), 0,0);
+                pitchvec.transform(T_plane);
+                moveTo(from+pitchvec); lineTo(from-pitchvec);
             }
         }
 
@@ -278,7 +279,7 @@ void StripDisplay::displayStrips(const Event::McTkrStripCol& strips)
         _detSvc->getTransform3DByID(waferMin_id, &TMin);
         _detSvc->getTransform3DByID(waferMax_id, &TMax);
         Hep3Vector offset = 0.5*(TMin.getTranslation() + TMax.getTranslation());
-        CoordTransform  T_plane(TMin.getRotation(), offset);
+        HepTransform3D  T_plane(TMin.getRotation(), offset);
 
         // pass the strip list and transformation to the two instances of the rep
         m_stripRep->accept(strips, T_plane);
