@@ -19,8 +19,6 @@
     namespace EventModel {
         _EXTERN_ std::string   Event;
 
-        _EXTERN_ std::string ACDTilesName;
-
         namespace MC {
             _EXTERN_ std::string Event;
             _EXTERN_ std::string MCTKRHits;
@@ -28,15 +26,6 @@
             _EXTERN_ std::string MCACDHits;
         };
 
-        namespace Hits  {
-            _EXTERN_ std::string Event;
-            _EXTERN_ std::string Glast;
-            //_EXTERN_ std::string TowerName;
-            //_EXTERN_ std::string SiLayersName;
-            _EXTERN_ std::string ACDTilesName;
-            //_EXTERN_ std::string CalorimeterName;
-        
-        };
     };
 #undef _EXTERN_
 
