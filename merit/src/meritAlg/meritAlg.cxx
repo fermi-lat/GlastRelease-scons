@@ -278,12 +278,18 @@ StatusCode meritAlg::initialize() {
   m_tuple = new Tuple(title.str());
 
   // define tuple items
-  new TupleItem("EvtRun",            &m_run);
-  new TupleItem("EvtEventID",        &m_event);
-  new TupleItem("McSrcId",           &m_mc_src_id);
-  new TupleItem("EvtTime",           &m_time);
-  new TupleItem("GltFilterStatusHI", &m_statusHi);
-  new TupleItem("GltFilterStatusLO", &m_statusLo);
+  //  new TupleItem("EvtRun",            &m_run);
+  new TupleItem("Run",            &m_run);
+  //  new TupleItem("EvtEventID",        &m_event);
+  new TupleItem("Event_ID",        &m_event);
+  //  new TupleItem("McSrcId",           &m_mc_src_id);
+  new TupleItem("MC_src_Id",           &m_mc_src_id);
+  //  new TupleItem("EvtTime",           &m_time);
+  new TupleItem("elapsed_time",           &m_time);
+  //  new TupleItem("GltFilterStatusHI", &m_statusHi);
+  new TupleItem("FilterStatus_HI", &m_statusHi);
+  //  new TupleItem("GltFilterStatusLO", &m_statusLo);
+  new TupleItem("FilterStatus_LO", &m_statusLo);
 
   //FT1 INFO:
   new TupleItem("FT1EventId",           &m_ft1eventid);
@@ -374,7 +380,8 @@ void meritAlg::setupPointingInfo(){
   if( treeName.empty()) return;
 
   std::vector<const char* > names;
-  const char * point_info_name[] = {"PtTime","PtLat","PtLon","PtAlt","PtPosx","PtPosy","PtPosz","PtRax","PtDecx","PtRaz","PtDecz"};
+  //  const char * point_info_name[] = {"PtTime","PtLat","PtLon","PtAlt","PtPosx","PtPosy","PtPosz","PtRax","PtDecx","PtRaz","PtDecz"};
+  const char * point_info_name[] = {"elapsed_time","lat","lon","alt","posx","posy","posz","rax","decx","raz","decz"};
   for( int i = 0; i< (int)(sizeof(point_info_name)/sizeof(void*)); ++i){ 
     names.push_back(point_info_name[i]); }
     
