@@ -79,7 +79,7 @@ StatusCode TkrDigiNoiseAlg::execute() {
         // don't run a noise tool
         return sc;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute" << endreq;
+    log << MSG::DEBUG << "execute" << endreq;
 
     sc = m_tool->execute();
 

@@ -89,7 +89,7 @@ StatusCode TkrDigiAlg::execute() {
     // Restrictions and Caveats: none
 
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute" << endreq;
+    log << MSG::DEBUG << "execute" << endreq;
 
     // loading the sub algorithms
 

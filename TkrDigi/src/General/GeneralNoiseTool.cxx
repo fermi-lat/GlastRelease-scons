@@ -55,7 +55,7 @@ StatusCode GeneralNoiseTool::initialize() {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize " << name() << endreq;
+    log << MSG::INFO << "initialize " << endreq;
 
     // Get the Glast detector service 
     sc = service("GlastDetSvc", m_gdSvc);
@@ -94,7 +94,7 @@ StatusCode GeneralNoiseTool::execute() {
     
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute " << name() << endreq;
+    log << MSG::DEBUG << "execute " << endreq;
 
     // retrieve the pointer to the SiPlaneMapContainer from TDS
     SmartDataPtr<SiPlaneMapContainer> pObject(m_edSvc,

@@ -71,7 +71,7 @@ StatusCode TkrDigiMcToHitAlg::execute() {
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute" << endreq;
+    log << MSG::DEBUG << "execute" << endreq;
 
     sc = m_tool->execute();
 
