@@ -46,8 +46,9 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties and set defaults
     
     //declareProperty ("size", m_default_name);
-	
-	HepRandom::setTheEngine(new RanluxEngine);
+    declareProperty("source_library" , m_source_library);
+    
+    HepRandom::setTheEngine(new RanluxEngine);
 }
 
 std::list<std::string> FluxSvc::fluxNames()const{
@@ -55,10 +56,10 @@ std::list<std::string> FluxSvc::fluxNames()const{
 }
 
 StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
-
+    
     std::list<std::string> source_list( fluxNames() );
     std::list<std::string> source_list2( SpectrumFactoryTable::instance()->spectrumList() );
-
+    
     if( std::find(source_list.begin(), source_list.end(), name) == source_list.end() 
         &&(std::find(source_list2.begin(), source_list2.end(), name) == source_list2.end()))
         //flux =  new Flux(name);
@@ -79,60 +80,24 @@ FluxSvc::~FluxSvc()
 StatusCode FluxSvc::initialize () 
 {
     StatusCode  status =  Service::initialize ();
-        
+    
     // bind all of the properties for this service
     setProperties ();
     
     // open the message log
     MsgStream log( msgSvc(), name() );
- 
+    
     // create a FluxMgr object which will then be available.
-    m_fluxMgr = new FluxMgr();
-
+    m_fluxMgr = new FluxMgr(m_source_library);
+    
     Flux::mgr(m_fluxMgr); // tell our Flux object
-
+    
     // check that it was made properly
     if( m_fluxMgr->sourceList().empty()) {
         log << MSG::ERROR  << "Did not initialize properly: no sources detected" << endreq;
         status = StatusCode::FAILURE;
     }
-
-#if 0
-    // set up the random number service to use Gaudi's default (in progress )
-    IRndmGenSvc* randSvc = 0;
-    StatusCode sc = service( "RndmGenSvc", randSvc, true );
-    if( sc.isFailure() ) { log << MSG::ERROR << "Failed to get random service " << endreq; return sc; }
-
-    IRndmEngine* engine = 0;
-    if( (engine=randSvc->engine())==0 ) {
-        log << MSG::ERROR << "Failed to get the IRndmEngine" << endreq;
-    }
-   
-
-    // cast to the base type so that we can actually get access to the 
-    // HepRandomEngine.
-    HepRndm::BaseEngine* baseEngine = dynamic_cast<HepRndm::BaseEngine*>(engine);
     
-    if(!baseEngine)
-    {
-        log << MSG::ERROR << "Failed to cast IRndmEngine to BaseEngine" <<endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    
-    HepRandomEngine* hepengine = baseEngine->hepEngine();
-    
-    if(!hepengine)
-    {
-        log << MSG::ERROR << "No HepRandomEngine available from gaudi!" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    HepRandom* gen = HepRandom::getTheGenerator(); 
-    gen->setTheEngine(hepengine);
-   
-#endif
-
     return status;
 }
 
@@ -140,30 +105,31 @@ StatusCode FluxSvc::initialize ()
 StatusCode FluxSvc::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
-       
+    
     delete m_fluxMgr;
     return status;
 }
 
 /// Query interface
 StatusCode FluxSvc::queryInterface(const IID& riid, void** ppvInterface)  {
-  if ( IID_IFluxSvc.versionMatch(riid) )  {
-    *ppvInterface = (IFluxSvc*)this;
-  }
-  else  {
-    return Service::queryInterface(riid, ppvInterface);
-  }
-  addRef();
-  return SUCCESS;
+    if ( IID_IFluxSvc.versionMatch(riid) )  {
+        *ppvInterface = (IFluxSvc*)this;
+    }
+    else  {
+        return Service::queryInterface(riid, ppvInterface);
+    }
+    addRef();
+    return SUCCESS;
 }
 
 
 /// add a new source
 void FluxSvc::addFactory(std::string name, const ISpectrumFactory* factory ){
-m_fluxMgr->addFactory(name, factory);
+    m_fluxMgr->addFactory(name, factory);
 }
 
+/// access to the local HepRandomEngine, to allow synchronization
 HepRandomEngine* FluxSvc::getEngine()
 {
-	return HepRandom::getTheEngine();
+    return HepRandom::getTheEngine();
 }

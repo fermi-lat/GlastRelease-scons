@@ -16,25 +16,25 @@ template <class TYPE> class SvcFactory;
 class IFlux;  // interface
 class FluxMgr;  // actual manager
 
-/*! Service that implements the IFluxSvc interface, to return an IFlux object  
+                /*! Service that implements the IFluxSvc interface, to return an IFlux object  
 */
 class FluxSvc : virtual public Service, virtual public IFluxSvc
 {  
 public:
-
+    
     /// return pointer to a flux object
     StatusCode source(std::string name, IFlux*&);
-
+    
     /// return a list of possible names
     std::list<std::string> fluxNames()const;
-
+    
     /// add a new source
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );
-
-	/// access to the local random engine (testing)
-	virtual HepRandomEngine* getEngine();
-
-
+    
+    /// access to the local random engine (testing)
+    virtual HepRandomEngine* getEngine();
+    
+    
     //------------------------------------------------------------------
     //  stuff required by a Service
     
@@ -43,24 +43,25 @@ public:
     
     /// 
     virtual StatusCode finalize ();
-
-      
-   /// Query interface
-   virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
-
+    
+    
+    /// Query interface
+    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+    
 protected: 
-
+    
     /// Standard Constructor
     FluxSvc ( const std::string& name, ISvcLocator* al );
     
     /// destructor
     virtual ~FluxSvc ();
-
+    
 private:
     // Allow SvcFactory to instantiate the service.
     friend class SvcFactory<FluxSvc>;
-
+    
     FluxMgr * m_fluxMgr;
+    std::string m_source_library;
 };
 
 
