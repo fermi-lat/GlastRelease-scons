@@ -563,7 +563,7 @@ StatusCode meritAlg::execute() {
     }
  
     m_gemCondition = gem==0? -1 : gem->conditionSummary();
-    // does not yet compile m_eventFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
+    m_eventFlags = eventSummary==0 ? 0 : eventSummary->eventFlags();
 
     m_ctree->execute();
     m_fm->execute();
