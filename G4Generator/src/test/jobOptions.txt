@@ -29,7 +29,7 @@ MessageSvc.OutputLevel      = 6;
 G4Generator.source_name="default";
 
 
-ApplicationMgr.EvtMax = 2;
+ApplicationMgr.EvtMax = 5;
 
 
 //==============================================================

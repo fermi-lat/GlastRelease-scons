@@ -94,13 +94,12 @@ StatusCode G4Generator::execute()
     
     p = 10*p;
     ke = ke*1000;
-    std::cout << p << std::endl;
     
     // Set a verbose level for geant4 just to see something ...
-    G4UImanager* UI = G4UImanager::GetUIpointer();
-    UI->ApplyCommand("/event/verbose 1");
-    UI->ApplyCommand("/run/verbose 1");
-    UI->ApplyCommand("/tracking/verbose 1");
+    // G4UImanager* UI = G4UImanager::GetUIpointer();
+    // UI->ApplyCommand("/event/verbose 3");
+    // UI->ApplyCommand("/run/verbose 3");
+    // UI->ApplyCommand("/tracking/verbose 3");
 
     // Set the G4 primary generator
     m_primaryGenerator->setParticle(name);
