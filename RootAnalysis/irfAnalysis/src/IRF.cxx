@@ -64,20 +64,20 @@ void IRF::open_input_file()
     }
 
     // define basic cuts
-    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.2";
+    goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.2"; // note it *Is* CalTotRLn
     goodPSF ="IMcoreProb>0.2&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
     TCut zdir_cut("Tkr1ZDir<-0.2"); 
-    TCut bk_cut("BkVeto==0.0");
+    TCut bk_cut("BkVeto==0.0"); // new variable by Luis from Atwood post-Rome background cut
     goodEvent=goodCal && goodPSF && zdir_cut;
+
+    // add the backgrouind cut to goodEvent!
+    goodEvent = goodEvent && bk_cut;
 
     if( m_user_cut != "") { 
         goodEvent = goodEvent&&m_user_cut;
     }
 
     std::cout << "good event definition: " << goodEvent.GetTitle() << std::endl;
-
-
-
 }
 
 IRF::~IRF(){
