@@ -99,6 +99,7 @@ void EventDisplay::Go(int numEvent) {
     }
 
     myEvent->Go(entry);
+    myEventDisplay->cd();
 
     const int eventId         = myEvent->GetEventId();
     const int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();

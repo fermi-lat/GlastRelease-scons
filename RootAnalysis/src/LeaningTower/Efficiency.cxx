@@ -26,18 +26,25 @@ public:
         delete myEvent;
         delete myTracker;
     }
+    // structure to save the ntuple values before filling the tree
+    struct Ntuple {
+        Int_t eventId;
+        Char_t charPlaneName[4];
+        Float_t xExt, yExt, siDist, res;
+        Float_t siDistOther, resOther;
+    };
 
     void Go(int lastEntry=-1);
 
     void Draw2D(TString plane="All", TCut="", float residualDist=1,
                 float borderWidth=1) const;
-    void GetEfficiency(TString plane="All", TCut="", float residualDist=1,
-                       float borderWidth=1, bool draw=false) const;
+    void GetEfficiency(const TString plane="All", const TCut="", const float residualDist=1,
+                       const float borderWidth=1, const bool draw=false) const;
     void DrawEfficiency(TString plane, TCut="", float residualDist=1,
                         float borderWidth=1, bool draw=true)
         const;
 private:
-    void PrintEfficiency(TString plane, float ineff, int missing) const;
+    void PrintEfficiency(TString plane, float ineff, int hits, int missing) const;
 };
 
 Efficiency::Efficiency(TString filename, TString effFileName) {
@@ -57,15 +64,15 @@ void Efficiency::Go(int lastEntry) {
 
     TFile f(myEffFileName, "recreate");
     TTree effTree("efficiencyTree", "efficiencyTree");
-    Int_t eventId;
-    Char_t charPlaneName[4];
-    Float_t xExt, yExt, siDist, res;
-    effTree.Branch("eventId", &eventId, "event id/I");
-    effTree.Branch("plane", charPlaneName, "name of plane[4]/C");
-    effTree.Branch("xExt", &xExt, "extrapolated x position of hit/F");
-    effTree.Branch("yExt", &yExt, "extrapolated y position of hit/F");
-    effTree.Branch("siDist", &siDist, "distance to active area/F");
-    effTree.Branch("res", &res, "res (ext - data) to the closest cluster/F");
+    struct Ntuple ntuple0;
+    effTree.Branch("eventId", &ntuple0.eventId, "event id/I");
+    effTree.Branch("plane", ntuple0.charPlaneName, "name of plane[4]/C");
+    effTree.Branch("xExt", &ntuple0.xExt, "extrapolated x position of hit/F");
+    effTree.Branch("yExt", &ntuple0.yExt, "extrapolated y position of hit/F");
+    effTree.Branch("siDist", &ntuple0.siDist, "distance to active area/F");
+    effTree.Branch("res", &ntuple0.res, "res (ext - data) to the closest cluster/F");
+    effTree.Branch("siDistOther", &ntuple0.siDistOther, "distance to active area in the other view/F");
+    effTree.Branch("resOther", &ntuple0.resOther, "res (ext - data) to the closest cluster in the other view/F");
 
     const TList* myGeometry = myTracker->GetGeometry();
     const std::vector<TString> planeCols[2] = {
@@ -80,7 +87,7 @@ void Efficiency::Go(int lastEntry) {
 
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
-        eventId = myEvent->GetEventId();
+        const Int_t eventId = myEvent->GetEventId();
 
         progress.Go(entry, lastEntry);
 
@@ -113,39 +120,62 @@ void Efficiency::Go(int lastEntry) {
         ++usedTrack[0];
         ++usedTrack[1];
 
+        // I have to require that we have layers, i.e. pairs of xy planes
+        // I use the event id as a flag
+        Ntuple ntuple[18][2];
+        for ( int l=0; l<18; ++l )
+            for ( int v=0; v<2; ++v )
+                ntuple[l][v].eventId = -1;
         // now, loop over all planes
         TIter next(myGeometry);
         while ( Layer* plane = (Layer*)next() ) {
             const TString planeName = plane->GetName();
-
-            strncpy(charPlaneName, planeName.Data(), 4);
+            const int ll = plane->GetLayer();
+            const int vv = plane->GetView();
+            ntuple[ll][vv].eventId = eventId;
+            strncpy(ntuple[ll][vv].charPlaneName, planeName.Data(), 4);
             const float posZ = plane->GetHeight();
             // x and y here are absolute, not in the system of the plane
-            xExt = ExtrapolateCoordinate(TLtracks[0], posZ);
-            yExt = ExtrapolateCoordinate(TLtracks[1], posZ);
+            ntuple[ll][vv].xExt = ExtrapolateCoordinate(TLtracks[0], posZ);
+            ntuple[ll][vv].yExt = ExtrapolateCoordinate(TLtracks[1], posZ);
             float absExt, ordExt;
             if ( plane->GetView() ) { // Y
-                absExt = yExt;
-                ordExt = xExt;
+                absExt = ntuple[ll][vv].yExt;
+                ordExt = ntuple[ll][vv].xExt;
             }
             else { // X
-                absExt = xExt;
-                ordExt = yExt;
+                absExt = ntuple[ll][vv].xExt;
+                ordExt = ntuple[ll][vv].yExt;
             }
 
-            siDist = plane->activeAreaDist(absExt, ordExt);
+            ntuple[ll][vv].siDist = plane->activeAreaDist(absExt, ordExt);
 
-            res = 400;
+            ntuple[ll][vv].res = 400;
             TGraph clusters = recon->GetClusterGraph(planeName);
             for ( int i=0; i<clusters.GetN(); ++i ) {
                 Double_t h, v;
                 clusters.GetPoint(i, h, v);
                 const float newRes = absExt - h;
-                if ( std::abs(newRes) < std::abs(res) )
-                     res = newRes;
+                if ( std::abs(newRes) < std::abs(ntuple[ll][vv].res) )
+                     ntuple[ll][vv].res = newRes;
             }
-            effTree.Fill();
+            //            effTree.Fill();
         }
+        // it shouldn't happen, so lets check first if all ntuple were filled
+        for ( int l=0; l<18; ++l )
+            for ( int v=0; v<2; ++v )
+                if ( ntuple[l][v].eventId < 0 )
+                    std::cerr << "in layer " << l << " view " << v
+                              << ": event id less than 0: "
+                              << ntuple[l][v].eventId << std::endl;
+        for ( int l=0; l<18; ++l )
+            for ( int v=0; v<2; ++v ) {
+                ntuple0 = ntuple[l][v];
+                const int ov = v ? 0 : 1;
+                ntuple0.siDistOther = ntuple[l][ov].siDist;
+                ntuple0.resOther = ntuple[l][ov].res;
+                effTree.Fill();
+            }
     }
 
     std::cout << "used " << usedEvent << " of " << lastEntry << std::endl;
@@ -167,6 +197,7 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
     if ( !c )
         c = new TCanvas(canvasName, canvasName, 800, 800);
+    c->cd();
     gPad->SetTicks(1,1);
     //    gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
@@ -177,42 +208,58 @@ void Efficiency::Draw2D(TString plane, TCut cut, float residualDist,
 
     TFile f(myEffFileName, "READ");
     TTree* t = (TTree*)f.Get("efficiencyTree");
-    t->SetMarkerStyle(1);
-    t->SetMarkerColor(1);
+    t->SetMarkerSize(0.7);
 
     TCut inActiveArea("siDist<0");
-    TCut inBorder(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
+    TCut closeToEdge(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
     TCut hitFound((TString("res<")+=residualDist).Data());
+    // cuts in the other view
+    //    TCut inActiveAreaOther("siDistOther<0");
+    //    TCut closeToEdgeOther(inActiveAreaOther+(TString("siDistOther>-")+=borderWidth).Data());
+    TCut hitFoundOther((TString("resOther<")+=residualDist).Data());
+    // missingHit is != !hitFound
+    // a hit is missing, if:
+    //   1) we don't find a hit in the plane within hitFound
+    //   2) we find a hit in the other plane of the same layer within hitFoundOther.
+    // If also in the other plane the hit is missing, it is very probable that the particle got stopped,
+    // but we continue tracing the track through the tower.  Hopefully, we don't get screwed by noise hits.
+    TCut missingHit = !hitFound && hitFoundOther;
 
    // draw all interceptions which are not in an active area
     t->SetMarkerColor(2);
-    t->Draw("yExt:xExt", cut+!inActiveArea, "same");
+    t->SetMarkerStyle(1);
+    t->Draw("yExt:xExt", cut&&!inActiveArea, "same");
 
-    // draw all interceptions with the active area (should be hits)
-    t->SetMarkerColor(8);
-    t->Draw("yExt:xExt", cut+inActiveArea+!inBorder, "same");
-
-    // draw all interceptions with the active area but close to the border
+    // draw all hits in the active area close to the edge
     t->SetMarkerColor(6);
-    t->Draw("yExt:xExt", cut+inBorder, "same");
+    t->Draw("yExt:xExt", cut&&closeToEdge&&hitFound, "same");
 
-    // draw all missing hits in the active area
-    t->SetMarkerColor(1);
-    t->SetMarkerStyle(28);
-    t->Draw("yExt:xExt", cut+inActiveArea+!inBorder+!hitFound, "same");
+    // draw all hits in the active area not close to the edge
+    t->SetMarkerColor(8);
+    t->Draw("yExt:xExt", cut&&inActiveArea&&!closeToEdge&&hitFound, "same");
 
-    // draw all missing hits in the active area but close to the border
+    // draw all interceptions with the active area which are not hits and not missing hits
+    t->SetMarkerColor(16);
+    t->SetMarkerStyle(5);
+    t->Draw("yExt:xExt", cut&&inActiveArea&&!hitFound&&!missingHit, "same");
+
+    // draw all missing hits in the active area but close to the edge
     t->SetMarkerColor(16);
     t->SetMarkerStyle(28);
-    t->Draw("yExt:xExt", cut+inBorder+!hitFound, "same");
+    t->Draw("yExt:xExt", cut&&closeToEdge&&missingHit, "same");
+
+    // draw all missing hits in the active area not close to the edge
+    t->SetMarkerColor(1);
+    t->SetMarkerStyle(28);
+    t->Draw("yExt:xExt", cut&&inActiveArea&&!closeToEdge&&missingHit, "same");
 
     f.Close();
 }
 
-void Efficiency::GetEfficiency(TString planeName, TCut cut, float residualDist,
-                               float borderWidth, bool draw) const {
+void Efficiency::GetEfficiency(const TString planeName, const TCut cut, const float residualDist,
+                               const float borderWidth, const bool draw) const {
     cut.Print();
-    std::cout << "Plane  Efficiency  Inefficiency  Missing hits" << std::endl;
+    std::cout << " Object   Plane Ladder  Wafer  Efficiency  Inefficiency     Hits  Missing hits" << std::endl;
 
     int totalHits = 0;
     int totalMissing = 0;
@@ -221,23 +268,64 @@ void Efficiency::GetEfficiency(TString planeName, TCut cut, float residualDist,
     while ( Layer* thePlane = (Layer*)next() ) {
         const TString thePlaneName = thePlane->GetName();
         if ( planeName == "All" || thePlaneName == planeName ) {
+            TString name(thePlaneName);
+            for ( ; name.Length()<7; )
+                name.Prepend(' ');
+            for ( int ladder=0; ladder<4; ++ladder ) {
+                TString ladderName(TString()+=ladder);
+                for ( ; ladderName.Length()<7; )
+                    ladderName.Prepend(' ');
+                // the cuts should come from geometry in class Layer
+                // dirty hack, as always preliminary
+                TCut xmin((TString("xExt>=")+=ladder*89.5).Data());
+                TCut xmax((TString("xExt<=")+=(ladder+1)*89.5).Data());
+                TCut ladderCut = cut && xmin && xmax;
+                for ( int wafer=0; wafer<4; ++wafer ) {
+                    TString waferName(TString()+=wafer);
+                    for ( ; waferName.Length()<7; )
+                        waferName.Prepend(' ');
+                    TCut ymin((TString("yExt>=")+=wafer*89.5).Data());
+                    TCut ymax((TString("yExt<=")+=(wafer+1)*89.5).Data());
+                    TCut waferCut = ladderCut && ymin && ymax;
+                    DrawEfficiency(thePlaneName, waferCut, residualDist, borderWidth, draw);
+                    PrintEfficiency(name+ladderName+waferName, 100.*thePlane->GetInefficiency(),
+                                    thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
+                }
+                DrawEfficiency(thePlaneName, ladderCut, residualDist, borderWidth, draw);
+                PrintEfficiency(name+ladderName+"       ", 100.*thePlane->GetInefficiency(),
+                                thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
+            }
             DrawEfficiency(thePlaneName, cut, residualDist, borderWidth, draw);
-            PrintEfficiency(thePlaneName, 100.*thePlane->GetInefficiency(),
-                            thePlane->GetMissingHits());
-            totalHits += thePlane->GetHitsInActiveArea();
-            totalMissing += thePlane->GetMissingHits();
+            PrintEfficiency(name+"              ", 100.*thePlane->GetInefficiency(),
+                            thePlane->GetHitsInActiveArea(), thePlane->GetMissingHits());
+            if ( planeName == "All" ) {
+                totalHits += thePlane->GetHitsInActiveArea();
+                totalMissing += thePlane->GetMissingHits();
+            }
         }
     }
-    PrintEfficiency("total", 100.*totalMissing/totalHits, totalMissing);
+    if ( planeName == "All" )
+        PrintEfficiency("                     ", 100.*totalMissing/totalHits, totalHits, totalMissing);
 }
 
-void Efficiency::PrintEfficiency(TString planeName, float ineff, int missing)
+void Efficiency::PrintEfficiency(TString planeName, float ineff, int hits, int missing)
     const {
-    std::cout << std::setw(5) << planeName << ' '
+    TString object;
+    if ( planeName(20) != ' ' )
+        object = "  wafer";
+    else if ( planeName(13) != ' ' )
+        object = " ladder";
+    else if ( planeName(6) != ' ' )
+        object = "  plane";
+    else
+        object = "  tower";
+    std::cout << std::setw(7) << object << ' '
+              << std::setw(21) << planeName << ' '
               << std::setiosflags(std::ios::fixed)
               << std::setw(9) << std::setprecision(1) << 100. - ineff << " % "
               << std::setw(11) << std::setprecision(1) << ineff << " % "
-              << std::setw(13) << missing
+              << std::setw(8) << hits
+              << std::setw(14) << missing
               << std::endl;
 }
 
@@ -262,31 +350,34 @@ void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualDist,
         var = "xExt";
 
     TCut inActiveArea("siDist<0");
-    TCut inBorder(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
+    TCut closeToEdge(inActiveArea+(TString("siDist>-")+=borderWidth).Data());
     TCut hitFound((TString("res<")+=residualDist).Data());
+    TCut hitFoundOther((TString("resOther<")+=residualDist).Data());
+    TCut missingHit(!hitFound&&hitFoundOther);
+    TCut allHits = hitFound || missingHit;
 
     const Int_t nBins = 100;
     const Double_t xmin = -20.;
     const Double_t xmax = 380.;
-    const TString goodName("activeHits"+planeName);
-    TH1F* hAll = (TH1F*)gROOT->FindObject(goodName);
+    const TString allhitsName("allHits"+planeName);
+    TH1F* hAll = (TH1F*)gROOT->FindObject(allhitsName);
     if ( !hAll ) {
-        hAll = new TH1F(goodName, goodName, nBins, xmin, xmax);
+        hAll = new TH1F(allhitsName, allhitsName, nBins, xmin, xmax);
         hAll->Sumw2();
     }
     hAll->GetXaxis()->SetTitle("pos/mm");
     hAll->GetYaxis()->SetTitle("num");
-    t->Project(goodName, var, cut+inActiveArea+!inBorder);
+    t->Project(allhitsName, var, cut&&inActiveArea&&!closeToEdge&&allHits);
 
-    const TString badName("missingHits"+planeName);
-    TH1F* hBad = (TH1F*)gROOT->FindObject(badName);
+    const TString missName("missingHits"+planeName);
+    TH1F* hBad = (TH1F*)gROOT->FindObject(missName);
     if ( !hBad ) {
-        hBad = new TH1F(badName, badName, nBins, xmin, xmax);
+        hBad = new TH1F(missName, missName, nBins, xmin, xmax);
         hBad->Sumw2();
     }
     hBad->GetXaxis()->SetTitle("pos/mm");
     hBad->GetYaxis()->SetTitle("num");
-    t->Project(badName, var, cut+inActiveArea+!inBorder+!hitFound, "hist");
+    t->Project(missName, var, cut&&inActiveArea&&!closeToEdge&&missingHit, "hist");
 
     const TString ineffName("inefficiency"+planeName);
     TH1F* hIneff = (TH1F*)gROOT->FindObject(ineffName);
@@ -310,6 +401,7 @@ void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualDist,
         c = new TCanvas(canvasName, canvasName, 600, 800);
         c->Divide(1,3);
     }
+    c->cd();
 
     c->cd(1);
     gPad->SetTicks(1,1);
@@ -321,7 +413,7 @@ void Efficiency::DrawEfficiency(TString planeName, TCut cut, float residualDist,
 
     c->cd(3);
     gPad->SetTicks(1,1);
-    hIneff->Draw();
+    hIneff->Draw("e0");
 
     c->cd();
 }
