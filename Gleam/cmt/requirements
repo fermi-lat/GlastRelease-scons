@@ -47,7 +47,7 @@ use Geant4Runtime v1r0
 use GuiSvc      v3r1p3
 
 use Event       v9r1
-use GlastSvc    v9r1
+use GlastSvc               v9r2
 
 # simulation
 
