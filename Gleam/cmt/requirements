@@ -55,9 +55,9 @@ use FluxDisplay v2r1
 use G4Generator         v4r3p1
 
 #digitization
-use CalDigi             v1r2
+use CalDigi             v1r2p1
 use TkrDigi             v1r5p6
-use AcdDigi     v1r3
+use AcdDigi             v1r3p1
 
 
 
