@@ -66,7 +66,6 @@ private:
     void endEvent();
     //
     void queryEvtMax();
-    void queryPause();
     void queryOutputLevel();
 
 

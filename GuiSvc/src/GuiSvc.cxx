@@ -94,17 +94,32 @@ StatusCode GuiSvc::initialize ()
     sub_menu.addButton("Quit Loop",
         new SimpleCommand<GuiSvc>(this, &GuiSvc::quit));
 
+    sub_menu.addButton("Set Pause interval...", 
+        new SimpleCommand<GuiMgr>(m_guiMgr, &GuiMgr::queryPause));
+
     m_guiMgr->menu().add(new MenuClient<GuiSvc>(this)); // schedule callback if exit button pressed
 
 
 
     sc = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+
     // get property from application manager
     if ( m_evtMax == (int)0xFEEDBABE )   {
-      SmartIF<IProperty> props(IID_IProperty, serviceLocator());
-      setProperty(props->getProperty("EvtMax"));
+        IProperty* propMgr=0;
+        status = serviceLocator()->service("ApplicationMgr", propMgr );
+        if( status.isFailure()) {
+            log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
+            return status;
+        }
+                
+        IntegerProperty evtMax("EvtMax",0);
+        status = propMgr->getProperty( &evtMax );
+        if (status.isFailure()) return status;
+        int max_event = evtMax.value();
+        
+        setProperty(evtMax);
     }
-
+    
     //----------------------------------------------------------------
     // most of  the following cribbed from ToolSvc and ObjManager
 
@@ -157,13 +172,9 @@ StatusCode GuiSvc::initialize ()
 }
 
 
-void GuiSvc::queryPause()
-{
-    m_guiMgr->menu().query("Enter new pause interval in ms (0: no pause, -1 infinite)", 
-        &m_pause_interval);	
-}
 void GuiSvc::queryEvtMax()
 {
+
     m_guiMgr->menu().query("Enter new max event",& m_evtMax);
 }
 
