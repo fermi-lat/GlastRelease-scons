@@ -3,6 +3,7 @@
 
 #include "facilities/bitmanip.h"
 #include "idents/VolumeIdentifier.h"
+#include <iostream>
 
 /** @class AcdId 
 @brief Encapsulate the id for an ACD tile.
