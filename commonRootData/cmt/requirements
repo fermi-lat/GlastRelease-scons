@@ -16,5 +16,5 @@ apply_pattern root_package headers="\
  ../commonRootData/idents/CalXtalId.h\
  ../commonRootData/idents/TowerId.h"\
  includes="-I${COMMONROOTDATAROOT}"\
- extra_source="idents/*.cxx" WIN32 "-s=../commonRootData idents/*.h -s=../src idents/*.cxx"
+ extra_source="idents/*.cxx" 
 
