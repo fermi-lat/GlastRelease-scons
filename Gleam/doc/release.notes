@@ -2,6 +2,16 @@
  * package Gleam
  * package manager:T.Burnett
 
+ * v2r1p1 16-may-02 THB consequence of McParticle change
+     use Event               v8r5
+     use FluxSvc             v5r6p1
+     use FluxDisplay         v2r0p1
+     use G4Generator         v4r1p1
+     use GlastDigi           v4r1
+     use CalDigi             v1r0p1
+     use mcRootData          v2r2
+
+
  * v2r1 14-may-02 THB now serious.
      use GlastPolicy          v4r4 
      use idents               v2r8

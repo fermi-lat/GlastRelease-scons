@@ -1,6 +1,6 @@
 package Gleam
 
-version  v2r2
+version  v2r1p1
 
 # This is a checkout package
 # $Id$
@@ -62,7 +62,7 @@ use CalRecon    v5r1
 
 
 #ROOT persistence
-use mcRootData  v2r1p3
+use mcRootData          v2r2
 use RootIo      v2r0p1
 
 
