@@ -7,6 +7,7 @@
 
 class DetectorConstruction;
 class IDataProviderSvc;
+class IGlastDetSvc;
 
 /** 
  * @class PosDetectorManager
@@ -26,7 +27,8 @@ public:
   /// @param det the DetectorConstruction pointer to retrive the map of volume
   ///        ids for all sensitive detectors 
   /// @param esv the data provider service for TDS access 
-  PosDetectorManager( DetectorConstruction* det, IDataProviderSvc* esv);
+  /// @param gsv the interface to the GlastDetSvc service
+  PosDetectorManager( DetectorConstruction* det, IDataProviderSvc* esv, IGlastDetSvc* gsv);
     
   /// Clears things; this implement a pure abstract method in the
   /// hierarchy ancestor of this class (geant4 name convention)

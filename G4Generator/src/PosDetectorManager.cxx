@@ -30,8 +30,8 @@
 
 
 PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
-                                       IDataProviderSvc* esv)
-  :DetectorManager(det->idMap(), esv,"PositionDetectorManager")
+                                       IDataProviderSvc* esv, IGlastDetSvc* gsv)
+  :DetectorManager(det->idMap(), esv, gsv, "PositionDetectorManager")
 {
   // See the father class DetectorManager
 }
@@ -42,6 +42,10 @@ void PosDetectorManager::Initialize(G4HCofThisEvent*)
   // Inputs: the G4HCofThisEvent is hinerited from the Geant4 structure and is
   // of no use for our actual implementation of G4Generator (but must be there
   // for Geant4 internal working) 
+
+  // get thr prefix from the GlastDetSvc; if the topvolume is equal to LAT this
+  // prefix is empty
+  m_prefix = m_gsv->getIDPrefix();
 
   // clear the list of hited detectors
   m_detectorList.clear();
@@ -78,6 +82,10 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   // determine the ID by studying the history, then call appropriate 
   idents::VolumeIdentifier id = constructId(aStep);
 
+  // If the topvolume is not LAT, prepend a prefix in order to obtain a complete ID
+  if (m_prefix.size() != 0)
+    id.prepend(m_prefix);
+
   // Filling of the hits container
   Event::McPositionHit *hit = new Event::McPositionHit;
 
@@ -85,9 +93,18 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   HepRotation local(*(theTouchable->GetRotation()));
   HepPoint3D center=theTouchable->GetTranslation();
 
+  // this is the global transformation from world to the topVolume; it is the
+  // identity if topVolume is equal to LAT
+  HepTransform3D global = m_gsv->getTransform3DPrefix();
+
   McParticleManager* partMan =  McParticleManager::getPointer();
   
-  hit->init(edep, id, local*(prePos-center), local*(postPos-center), prePos, postPos );
+  hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
+
+  // Track energy at this point
+  G4double trkEnergy = aStep->GetTrack()->GetTotalEnergy();
+  hit->setParticleEnergy(trkEnergy);
+
   // Retrieve the particle causing the hit and the ancestor and set the corresponding
   // attributes of the McPositionHit
   if (partMan->getMode() == 1)

@@ -48,8 +48,8 @@ DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
   // will be able to save hits in the TDS
   
   // now create the GlastDetector managers
-  m_posDet = new PosDetectorManager(this, esv);
-  m_intDet = new IntDetectorManager(this, esv);
+  m_posDet = new PosDetectorManager(this, esv, gsv);
+  m_intDet = new IntDetectorManager(this, esv, gsv);
 }
 
 DetectorConstruction::~DetectorConstruction()

@@ -29,8 +29,8 @@
 #include <algorithm>
 
 IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
-                                       IDataProviderSvc* esv)
-  :DetectorManager(det->idMap(), esv,"IntegratingDetectorManager")
+                                       IDataProviderSvc* esv, IGlastDetSvc* gsv)
+  :DetectorManager(det->idMap(), esv, gsv, "IntegratingDetectorManager")
 {
   // See the father class DetectorManager
 }
@@ -41,6 +41,10 @@ void IntDetectorManager::Initialize(G4HCofThisEvent*)
   // Inputs: the G4HCofThisEvent is hinerited from the Geant4 structure and is
   // of no use for our actual implementation of G4Generator (but must be there
   // for Geant4 internal working) 
+
+  // get thr prefix from the GlastDetSvc; if the topvolume is equal to LAT this
+  // prefix is empty
+  m_prefix = m_gsv->getIDPrefix();
 
   // clear the list of hited detectors
   m_detectorList.clear();
@@ -78,6 +82,10 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
     
   // determine the ID by studying the history, then call appropriate 
   idents::VolumeIdentifier id = constructId(aStep);
+
+  // If the topvolume is not LAT, prepend a prefix in order to obtain a complete ID
+  if (m_prefix.size() != 0)
+    id.prepend(m_prefix);
 
   // We want to fill an integrating hit
   Event::McIntegratingHit *hit; 

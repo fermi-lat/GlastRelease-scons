@@ -21,8 +21,8 @@
 #include "G4SDManager.hh"
 
 DetectorManager::DetectorManager(DetectorConstruction::IdMap *map,
-                                 IDataProviderSvc* esv, std::string name)
-  :m_idMap(map), m_esv(esv),G4VSensitiveDetector(name)
+                                 IDataProviderSvc* esv, IGlastDetSvc* gsv, std::string name)
+  :m_idMap(map), m_esv(esv), m_gsv(gsv), G4VSensitiveDetector(name)
 {
   // Inputs: the IdMap, coming from the DetectorConstruction and actually built
   // from the GlastDetSvc calls to detModel functionalities, provide a mapping
