@@ -6,8 +6,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
-
-v7r4      10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
+v7r5      12-aug-2004 HMK Add Gem 
+v7r4p1    10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
 v7r4      22-Jul-2004 HMK Moved all idents classes to commonRootData
 
 v7r3      28-Jun-2004 HMK Add new members to AcdDigi
