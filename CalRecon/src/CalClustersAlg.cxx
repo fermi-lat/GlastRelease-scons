@@ -9,6 +9,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/TkrRecon/TkrVertexCol.h"
+
 
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
@@ -525,11 +527,11 @@ StatusCode CalClustersAlg::execute()
 	const Point p0(0.,0.,0.);
 
 	int rectkr=0;  //is tracker recon OK?
-        int ngammas;
-        Point gammaVertex;
-		Vector gammaDirection;
+        int ntracks;
+		Vector trackDirection;
+		Point trackVertex;
 
-    SmartDataPtr<ISiRecObjs> tkrRecData(eventSvc(),"/Event/TkrRecon/SiRecObjs");
+		SmartDataPtr<TkrVertexCol> tkrRecData(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
     if (tkrRecData == 0) {
         log << MSG::INFO << "No TKR Reconstruction available " << endreq;
        // return sc;
@@ -537,19 +539,19 @@ StatusCode CalClustersAlg::execute()
 	else
 	{
 		// First get reconstructed direction from tracker
-		ngammas = tkrRecData->numGammas();
-		log << MSG::INFO << "number of gammas = " << ngammas << endreq;
+		ntracks = tkrRecData->getNumVertices();
+		log << MSG::INFO << "number of tracks = " << ntracks << endreq;
 	
   
-		 if (ngammas > 0) {
+		 if (ntracks > 0) {
 			rectkr++;
-            gammaVertex = tkrRecData->getGammaVertex(0);
-            gammaDirection = tkrRecData->getGammaDirection(0);
-			slope = fabs(gammaDirection.z());
-	     	log << MSG::DEBUG << "gamma direction = " << slope << endreq;
+            trackDirection = tkrRecData->getVertex(0)->getDirection();
+            trackVertex = tkrRecData->getVertex(0)->getPosition();
+			slope = fabs(trackDirection.z());
+	     	log << MSG::DEBUG << "track direction = " << slope << endreq;
 
 		  } else {
-		  log << MSG::INFO << "No reconstructed gammas " << endreq;
+		  log << MSG::INFO << "No reconstructed tracks " << endreq;
 		 }	
 	}
 	double ene = 0;
@@ -679,9 +681,9 @@ StatusCode CalClustersAlg::execute()
 	// Do profile fitting
 	Profile(ene,cl);
 	double calTransvOffset = 0.;
-    if(ngammas>0){
-        Vector calOffset = (p0+pCluster) - gammaVertex;
-        double calLongOffset = gammaDirection*calOffset;
+    if(ntracks>0){
+        Vector calOffset = (p0+pCluster) - trackVertex;
+        double calLongOffset = trackDirection*calOffset;
         calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
 
     }
