@@ -28,7 +28,7 @@ use gui         v3
 use geomrep     v4r1
 
 # the geometry data base
-use idents      v2r5 
+use idents           v2r6 
 use detModel    v2r10
 use xmlGeoDbs   v1r4
 
@@ -38,12 +38,12 @@ use Geant4           v1r1p0
 # Gaudi component packages follow
 
 use GuiSvc      v3
-use GlastEvent  v7r1
+use GlastEvent       v7r2
 use GlastSvc    v7r1
 
 # simulation
 use FluxSvc     v5r4
-use G4Generator v3r4
+use G4Generator      v3r5
 
 #digitization
 use GlastDigi   v2r5
@@ -51,7 +51,9 @@ use GlastDigi   v2r5
 #reconstruction
 use Recon       v1r1
 use TkrRecon          v5r4
+use CalRecon          v4       
 
-# this well go here when it does not need ntupleWriteSvc
-#use CalRecon          v3r2       
 
+#ROOT persistence
+mcRootData            v2r1
+RootIo                v1r0
