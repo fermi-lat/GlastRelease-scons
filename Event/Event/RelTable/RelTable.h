@@ -8,6 +8,7 @@
 #include "Relation.h"
 #include <vector>
 #include <algorithm>
+#include <iterator>
 
 /** 
 * @class RelTable
@@ -47,8 +48,7 @@ public:
   /**
   * The following method add a Relation to the table if it doesn't contain
   * a relation between the same two objects, otherwise it appends the info
-  * vector to the exsisting relation (if this info vector is different from
-  * the exsisting one)
+  * vector to the exsisting relation
   */
   void addNoDupRel(Relation<T1,T2>* rel);
   
@@ -140,8 +140,7 @@ private:
     void RelTable<T1,T2>::addNoDupRel(Relation<T1,T2>* rel) {
     // Purpose and Method:  This routine add a relation to the table if it doesn't 
     // contain a relation between the same two objects, otherwise it appends the info
-    // vector to the exsisting relation (if this info vector is different from
-    // the exsisting one)
+    // vector to the exsisting relation
     // Inputs:  rel is a pointer to the relation to be added.
     
     if (bindRelationNoDup(rel))
@@ -393,7 +392,7 @@ private:
 	  }
 	else
 	  {
-	    std::copy(rel->m_infos.begin(),rel->m_infos.end(),back_inserter(temp->m_infos));
+	    std::copy(rel->m_infos.begin(),rel->m_infos.end(),std::back_inserter(temp->m_infos));
 	    return false;
 	  }
       }
