@@ -89,12 +89,11 @@
   <dt> UseEventTime</dt>         <dd>defaults to "true", corresponding
        to modes 1 and 2 above. If set to "false", 
        must also set CalibMySQLCnvSvc.UseEventTime to "false"</dd>
-  <dt> CalibTimeSource</dt> <dd> Use value "data" for actual instrument
-       data, "mc"  for Monte Carlo (hits only) data, "digi" for simulated 
-       digis, "clock" for fake event time. (Old method of using fake 
-       clock via algorithm EvtClock is still available, but deprecated.)  
-       Default is "none", also the correct value for mode 3 (use enter_time 
-       of calibration rather than validity interval).       </dd>
+  <dt> CalibTimeSource</dt> <dd> Use default value ("data") for actual 
+       instrument data or Monte Carlo data; "clock" for fake event time. 
+       Old values "mc" and "digi" are deprecated; they behave the same
+       as "data". "none" is the correct value for mode 3 (use enter_time 
+       of calibration rather than validity interval to select).  </dd>
   <dt> startTime </dt> <dd> Only relevant if CalibTimeSource="clock". 
        Start time for the fake clock, in format "yyyy-mm-dd hh:ss".
        Hours and seconds may be omitted. Defaults to "2003-1-10 00:20"  </dd>

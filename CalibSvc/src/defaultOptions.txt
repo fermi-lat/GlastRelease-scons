@@ -1,0 +1,55 @@
+// Job options needed specifically to load calibrations into Calibration TDS
+
+ApplicationMgr.DLLs   += {"CalibSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibDataSvc", "CalibMySQLCnvSvc"};
+ApplicationMgr.ExtSvc += {"CalibRootCnvSvc", "CalibXmlCnvSvc"};
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
+
+// Remaining lines set parameters for the services.  They may be omitted
+// or overridden, as needed
+// Flavor "vanilla" is always available; it does not need to be specified
+// in the CalibFlavorList.  Many jobs will also want "ideal"
+CalibDataSvc.CalibFlavorList = {"ideal"};
+
+// CalibDataSvc properties in the commented lines below are set to the
+// default values as established in CalibDataSvc.cxx.  
+//  CalibInstrumentName is the only one a typical user might need to override 
+// CalibDataSvc.CalibInstrumentName = "LAT";
+// CalibDataSvc.CalibStorageType = 14;
+// CalibDataSvc.CalibRootName = "Calib";
+
+// Value of "*" means 'use default MySQL host', so currently (March, 2005)
+// equivalent to value of "centaurusa.slac.stanford.edu".
+// For local MySQL server, use value "localhost"
+// CalibMySQLCnvSvc.Host = "*";
+
+// By default, use production database "calib", but user may override.
+//  calib_user is a development database for use of, e.g., calibration
+//  algorithm developers
+// CalibMySQLCnvSvc.DbName = "calib";
+
+// By default, use timestamp in the event:
+// CalibDataSvc.CalibTimeSource = "data";
+
+// The following can be used to tell CalibDataSvc to use a fake clock
+// to generate event times (for its own purposes only; does not write
+// them to the event)
+// CalibDataSvc.CalibTimeSource = "clock";
+// CalibDataSvc.startTime = "2003-2-25 00:20";
+// CalibDataSvc.delayTime = 900;
+
+// In order to circumvent normal calibration-fetching mechanism, which
+// relies on event timestamp, you *must* include the first two lines
+// below.  The third and fourth lines have defaults of 
+//   "2003-09-01" (calibration must have been entered sept. 1 2003 or later)
+//          and 
+//   forever
+// CalibDataSvc.UseEventTime = false;
+// CalibMySQLCnvSvc.UseEventTime = false;
+
+// CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
+// CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
