@@ -29,6 +29,9 @@ library CalibSvc *.cxx  CalibDataSvc/*.cxx      \
 
 private
 macro WinInclude "" WIN32 "test/*.h test/*.txt"
+use GlastSvc v9r*
+use RootIo   v4r*
+
 
 public
 set JOBOPTIONS "${CALIBSVCROOT}/src/test/jobOptions.txt"
