@@ -10,11 +10,11 @@ apply_pattern package_linkopts
 
 private
 
-macro headers "" WIN32\
+macro headers "" WIN32 "\
      ../detModel/Management/*.h \
      ../detModel/Sections/*.h \
      ../detModel/Constants/*.h \
-     ../detModel/Utilities/*.h ../detModel/GDD.h
+     ../detModel/Utilities/*.h ../detModel/GDD.h"
 
 library detModel -no_share $(headers) \
      Management/*.cpp \
