@@ -117,7 +117,7 @@ StatusCode G4PropagatorSvc::initialize()
         }
 
         // The geant4 run manager
-        m_RunManager = new RunManager(gsv,eventSvc);
+        m_RunManager = new RunManager(gsv,eventSvc, "recon");
 
         // Initialize Geant4
         m_RunManager->Initialize();

@@ -1,9 +1,14 @@
 #ifndef ParticleTransporter_h
 #define ParticleTransporter_h 1
 
+#ifdef WIN32 // please leave here; THB 
+#include <float.h>
+#endif
+
 #include "G4SteppingManager.hh"
 #include "DetectorConstruction.h"
 #include "TransportStepInfo.h"
+
 
 #include "globals.hh"
 #include "g4std/vector"

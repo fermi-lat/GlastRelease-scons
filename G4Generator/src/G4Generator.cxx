@@ -58,11 +58,12 @@ static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;
 
 G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator) 
-  :Algorithm(name, pSvcLocator) , m_guiMgr(0)
+  :Algorithm(name, pSvcLocator) 
 {
   // set defined properties
   declareProperty("source_name",  m_source_name);
   declareProperty("UIcommands", m_uiCommands);
+  declareProperty("geometryMode", m_geometryMode="propagate");
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -121,7 +122,7 @@ StatusCode G4Generator::initialize()
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
-      m_runManager = new RunManager(gsv,eventSvc());
+      m_runManager = new RunManager(gsv,eventSvc(), m_geometryMode);
 
       // Initialize Geant4
       m_runManager->Initialize();
@@ -149,29 +150,8 @@ void G4Generator::setupGui()
     log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
     return;
   } 
-  m_guiMgr= guiSvc->guiMgr();
-  new DisplayManager(&m_guiMgr->display());
-
-
-  // now get the filemenu and add a source button to it.
-  gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
-    
-  gui::SubMenu& source_menu = filemenu.subMenu("Set source");
-    
-  //   ----------------------------------
-  //  loop over sources in source_library
-  class SetSource : public gui::Command { public:
-  SetSource(G4Generator* gg, std::string sn):m_gg(gg),m_name(sn){}
-  void execute(){m_gg->setSource(m_name);}
-  std::string m_name;
-  G4Generator* m_gg;
-  };
-  std::list<std::string> names = m_fluxSvc->fluxNames();
-  for( std::list<std::string>::iterator it = names.begin(); 
-       it!=names.end(); ++it){
-    source_menu.addButton(*it, new SetSource(this, *it));
-  }
-    
+  new DisplayManager(&(guiSvc->guiMgr()->display()));
+   
 }
 
 StatusCode G4Generator::execute() 
@@ -320,17 +300,6 @@ StatusCode G4Generator::finalize()
   return StatusCode::SUCCESS;
 }
 
-void G4Generator::setSource(std::string source_name)
-{
-  // Purpose and Method: This method is used to set the source of the simulation  // from the GUI
-  // Inputs:  The name of the source from the xml database of sources
-
-  m_source_name=source_name;
-  StatusCode sc = m_fluxSvc->source(m_source_name, m_flux);
-  if( sc.isFailure() ) {
-    gui::GUI::instance()->inform("Could not find the source!");
-  }
-}
 
 
 

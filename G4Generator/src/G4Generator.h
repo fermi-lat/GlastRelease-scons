@@ -9,7 +9,6 @@ class IFluxSvc;
 class IFlux;
 class IParticlePropertySvc;
 class RunManager;
-namespace gui{class GuiMgr;}
 
 /** 
  * @class G4Generator
@@ -30,11 +29,6 @@ class G4Generator : public Algorithm {
   StatusCode execute();
   StatusCode finalize();
  
-  /// This method is used to setup the link with the FluxSvc to retrive the
-  /// primary particle 
-  /// @param source_name The name of the source in the XML sources 
-  /// definition file
-  void setSource(std::string source_name);
   
  private:
   /// a pointer to the flux service main classes
@@ -52,9 +46,10 @@ class G4Generator : public Algorithm {
   /// This is the G4 manager that handles the simulation
   RunManager* m_runManager;
 
-  /// access to the GuiManager
-  gui::GuiMgr* m_guiMgr;
+  /// internal routine to set up gui stuff  
   void setupGui();
+
+  std::string m_geometryMode;
 };
 
 #endif

@@ -59,7 +59,8 @@ RunManager* RunManager::fRunManager = NULL;
 RunManager* RunManager::GetRunManager()
 { return fRunManager; }
 
-RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv)
+RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv,
+                       std::string geometryMode)
   :userDetector(NULL),physicsList(NULL),
    userPrimaryGeneratorAction(NULL),
    currentRun(NULL),currentEvent(NULL),
@@ -92,7 +93,7 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv)
   randomNumberStatusDir = "./";
 
   // The user stuff
-  userDetector = new DetectorConstruction(gds,esv);
+  userDetector = new DetectorConstruction(gds,esv, geometryMode);
   physicsList = new PhysicsList;
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 }

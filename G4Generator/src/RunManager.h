@@ -67,7 +67,7 @@ class RunManager
      The constructor needs a pointer to the abstract interface of
      the GlastDetSvc and to the DataProviderSvc
   */
-  RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv);
+     RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv, std::string geometryMode);
   virtual ~RunManager();
 
  public: 
