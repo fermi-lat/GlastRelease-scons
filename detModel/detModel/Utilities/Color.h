@@ -17,6 +17,9 @@ namespace detModel{
     void setGreen(float g){green = g;};
     float getRed(){return red;};
     void setRed(float r){red = r;};
+
+    void setColor(float r, float g, float b, float t)
+      {red = r; green = g; blue = b; tra = t;}
     
   private:
     

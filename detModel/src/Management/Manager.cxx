@@ -6,6 +6,7 @@
 #include "detModel/Management/Visitor.h"
 #include "detModel/Management/SectionsVisitor.h"
 #include "detModel/Management/ConstantsVisitor.h"
+#include "detModel/Management/MaterialsVisitor.h"
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/Builder.h"
 #include "detModel/Gdd.h"
@@ -48,6 +49,7 @@ namespace detModel{
       case all:
 	manBuilder->buildSections(); 
 	manBuilder->buildConstants(); 
+	manBuilder->buildMaterials();
 	break;
       case constants:
 	manBuilder->buildConstants(); 
@@ -55,15 +57,14 @@ namespace detModel{
       case sections:
 	manBuilder->buildSections(); 
 	break;
+      case materials:
+	manBuilder->buildMaterials();
+	break;
       }
   }
 
   void Manager::startVisitor(Visitor* v)
   {
-    /*
-      switch(v->getType()){
-      case SectionsVisitor:
-    */
     if (SectionsVisitor* sv = dynamic_cast<SectionsVisitor*>(v))
       {
       
@@ -78,6 +79,13 @@ namespace detModel{
 	  manGdd->Accept(cv);
 	else
 	  manGdd->AcceptNotRec(cv);
+      }
+    else if(MaterialsVisitor* mv = dynamic_cast<MaterialsVisitor*>(v))
+      {
+	if (v->getRecursive())
+	  manGdd->Accept(mv);
+	else
+	  manGdd->AcceptNotRec(mv);
       }
   }
 

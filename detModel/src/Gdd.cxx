@@ -12,13 +12,15 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/SectionsVisitor.h"
 #include "detModel/Management/ConstantsVisitor.h"
+#include "detModel/Management/MaterialsVisitor.h"
 #include "detModel/Constants/Constants.h"
 #include "detModel/Constants/IntConst.h"
 #include "detModel/Constants/FloatConst.h"
 #include "detModel/Constants/DoubleConst.h"
 #include "detModel/Constants/StringConst.h"
 #include "detModel/Constants/ConstCategory.h"
-
+#include "detModel/Materials/MatCollection.h"
+#include "detModel/Materials/Material.h"
 
 namespace detModel{
 
@@ -76,8 +78,14 @@ namespace detModel{
     }
   }
 
+  /// This method gives back the total number of materials in all the sections 
+  unsigned int Gdd::getMaterialsNumber()
+  {
+    return getMaterials()->getMaterialsNumber();
+  }
+
   /// This method gives back the total number of volumes in all the sections 
-  int Gdd::getVolumesNumber()
+  unsigned int Gdd::getVolumesNumber()
   {
     int n=0;
     typedef std::map<std::string, Volume*> M;
@@ -89,7 +97,7 @@ namespace detModel{
   }
 
   /// This method gives back the total number of constants  
-  int Gdd::getConstantsNumber()
+  unsigned int Gdd::getConstantsNumber()
   {
     int n=0;
     typedef std::map<std::string, Const*> M;
@@ -128,7 +136,7 @@ namespace detModel{
   }
 
   /// This method gives back the total number of sections  
-  int Gdd::getSectionsNumber()
+  unsigned int Gdd::getSectionsNumber()
   {
     return sections.size();
   }
@@ -143,6 +151,32 @@ namespace detModel{
 
     i = choiceMap.find(cname);
     if(i == choiceMap.end()) return 0;
+    else return i->second;
+  }
+
+  /* This method gives back a Material* given a name
+   * If it does not exist, it returns a null pointer
+   */
+  Material* Gdd::getMaterialByName(std::string cname)
+  {
+    typedef std::map<std::string, Material*> M;
+    M::const_iterator i; 
+    
+    i = (materials->getMaterials()).find(cname);
+    if(i == (materials->getMaterials()).end()) return 0;
+    else return i->second;
+  }
+
+  /* This method gives back a Material* given a name
+   * If it does not exist, it returns a null pointer
+   */
+  Color* Gdd::getMaterialColorByName(std::string cname)
+  {
+    typedef std::map<std::string, Color*> M;
+    M::const_iterator i; 
+    
+    i = (materials->getMaterialColors()).find(cname);
+    if(i == (materials->getMaterialColors()).end()) return 0;
     else return i->second;
   }
 
@@ -189,7 +223,7 @@ namespace detModel{
   void Gdd::buildVolumeMap()
   {
     unsigned int j;
-    int i;
+    unsigned int i;
     typedef std::map<std::string, Volume*> M;
 
     for(i=0;i<getSectionsNumber();i++)
@@ -202,7 +236,7 @@ namespace detModel{
   void Gdd::buildBoundingBoxes()
   {
     unsigned int j;
-    int i;
+    unsigned int i;
 
     for(i=0;i<getSectionsNumber();i++)
       for(j=0;j<sections[i]->getVolumes().size();j++)
@@ -284,7 +318,7 @@ namespace detModel{
    */
   void Gdd::buildConstantsMap()
   {
-    unsigned int k,j,m;
+    unsigned int k,j;
 
     typedef std::map<std::string, double> M1;
     typedef std::map<std::string, std::string> M2;
@@ -314,19 +348,16 @@ namespace detModel{
 	  /// Here we fill the materialNames vector
 	  if (temp->getConstMeaning() == Const::mat)
 	    {
-	      bool flag=1;
-	      for(m=0;m<materialNames.size();m++)
-		if (materialNames[m]==tmp1->getValue()) flag = 0;
-	      if (flag) materialNames.push_back(tmp1->getValue());
+	      materials->addMaterialName(tmp1->getValue());
 	    }
 	}
       }
     }
   }
 
-  /* This is the recursive Accept function for the sections visitor
+  /* This is the recursive Accept function for the visitor
    * This method start the visit on the Gdd and than recursively
-   * start the visit of all the sections it contains
+   * start the visit of all the sections, constants or materials it contains
    */
   void Gdd::Accept(Visitor* v){
     unsigned int i;
@@ -342,6 +373,11 @@ namespace detModel{
       {
 	vcon->visitGdd(this);
 	constants->Accept(vcon);
+      }
+    else if(MaterialsVisitor* vmat = dynamic_cast<MaterialsVisitor*>(v))
+      {
+	vmat->visitGdd(this);
+	materials->Accept(vmat);
       }
   }
 

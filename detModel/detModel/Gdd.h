@@ -15,6 +15,9 @@ namespace detModel{
   class Section;
   class Choice;
   class Shape;
+  class MatCollection;
+  class Material;
+  class Color;
 
   /**
    * This is the main container of all the geometry.
@@ -49,6 +52,10 @@ namespace detModel{
     std::vector <Section*>  getSections(){return sections;};  
     /// This method adds a section to the sections vector
     void addSection(Section* s){sections.push_back(s);};
+    ///This method sets the materials collection
+    void setMaterials(MatCollection* m){materials=m;}
+    ///This method gives back the materials collection
+    MatCollection* getMaterials(){return materials;}
 
     ///This method gives back the Gddvolume map  
     std::map < std::string, Volume * > getVolumesMap(){return volumeMap;};
@@ -58,20 +65,18 @@ namespace detModel{
     /// This is the non recursive accept for the visitor pattern
     void AcceptNotRec(Visitor* v);
 
-    /// This method build a global choices map for all the sections 
+    /// This method builds a global choices map for all the sections 
     void buildChoiceMap();
-    /// This method build a global volumes map for all the sections 
+    /// This method builds a global volumes map for all the sections 
     void buildVolumeMap();
-    /// This method build the global constants maps for all the constants
+    /// This method builds the global constants maps for all the constants
     void buildConstantsMap();
-
+    
     /// This method builds the bounding boxes of all the boundable objects
     void buildBoundingBoxes(); 
-
+    
     /// This method gives back the modes names vector
     std::vector <std::string> getModeNames(){return modeNames;};
-    /// This method gives back the materials names vector
-    std::vector <std::string> getMaterialNames(){return materialNames;};
 
     /**
      * This method search the volumes map with the name string and return 
@@ -100,6 +105,19 @@ namespace detModel{
      * a pointer to the Gddconst object if it exists, otherwise it returns 0
      */
     Const* getConstByName(std::string cname);
+
+    /**
+     * This method search the materials map with the name string and return
+     * a pointer to the Material object if it exists, otherwise it returns 0
+     */
+    Material* getMaterialByName(std::string cname);
+
+    /**
+     * This method search the materials map with the name string and return
+     * a pointer to a Color object if it exists, otherwise it returns 0
+     */
+    Color* getMaterialColorByName(std::string cname);
+
     /**
      * This method search the numerical constant values map with the
      * name string and return the value if it exists,otherwhise it
@@ -119,11 +137,13 @@ namespace detModel{
 
     /** This method return the total number of sections contained 
 	in the XML file */
-    int getSectionsNumber();
+    unsigned int getSectionsNumber();
     /** This method return the total number of volumes in the XML file */
-    int getVolumesNumber();
+    unsigned int getVolumesNumber();
     /** This method return the total number of constants in the XML file */
-    int getConstantsNumber();
+    unsigned int getConstantsNumber();
+    /** This method return the total number of constants in the XML file */
+    unsigned int getMaterialsNumber();
 
     /// This methods return the ith constant in the constants map
     Const* getOrderedConst(int i);
@@ -144,6 +164,9 @@ namespace detModel{
 	the entry point to all the generic model hierarchy of constants*/
     Constants * constants;
 
+    /// This is the collection of materials
+    MatCollection* materials;
+
     /** This is a private Gddchoice map indicized by names */
     std::map < std::string, Choice * > choiceMap;  
     /** This is a private Gddvolume map indicized by names */
@@ -156,8 +179,6 @@ namespace detModel{
     std::map < std::string, std::string > constCharMap;
     /// This is a vector of strings containing the possible modes
     std::vector <std::string> modeNames;
-    /// This is a vector of strings containing the material names
-    std::vector <std::string> materialNames;
 
     /// This is the DTDversion
     std::string DTDversion;

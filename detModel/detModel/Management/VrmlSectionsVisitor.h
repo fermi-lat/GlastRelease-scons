@@ -71,10 +71,6 @@ namespace detModel{
     /// This method build the colors for the VRML file
     void makeColor();
 
-    void setOpacity(std::string, float);
-
-    void setAllOpacity(float);
-
     void setDepth(std::string, int);
 
     std::string actualVolume;

@@ -14,6 +14,7 @@ macro headers "" WIN32 "\
      ../detModel/Management/*.h \
      ../detModel/Sections/*.h \
      ../detModel/Constants/*.h \
+     ../detModel/Materials/*.h \
      ../detModel/Utilities/*.h ../detModel/GDD.h"
 
 library detModel -no_share $(headers) \
@@ -21,12 +22,11 @@ library detModel -no_share $(headers) \
       Sections/*.cxx \
       Constants/*.cxx \
       Utilities/*.cxx \
+      Materials/*.cxx \
       Gdd.cxx
 	
     
-
-
- application test main.cxx 
+application test main.cxx 
 
 
 

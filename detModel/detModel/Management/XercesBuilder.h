@@ -5,6 +5,8 @@
 
 namespace detModel{
 
+  class Element;
+  class Composite;
   class Section;
   class Box;
   class Composition;
@@ -29,6 +31,9 @@ namespace detModel{
      * them in the sections. It accepts a string for the name of the file  to open
      */
     XercesBuilder();
+
+
+    virtual ~XercesBuilder(){};
   
     /** This method initialize the parser 
      */
@@ -43,6 +48,13 @@ namespace detModel{
      * the hierarchy.
      */
     virtual void  buildConstants();
+    /**
+     * This method implement the virtual method of Builder and buil the constant part of
+     * the hierarchy.
+     */
+    virtual void  buildMaterials();
+
+
 
   private:
     /**
@@ -52,7 +64,11 @@ namespace detModel{
     /**
      * This method build the Const object and return a pointer to it
      */
-    Const* buildConst(DOM_Node* e);
+    Const* buildConst(DOM_Node e);
+    /// This method builds the Element object and return a pointer to it
+    Element* buildElement(DOM_Node* e);
+    /// This method builds the Composite object and return a pointer to it
+    Composite* buildComposite(DOM_Node* e);
     /**
      * This method build a Choice object and return a pointer to it
      */

@@ -8,11 +8,14 @@
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/VrmlSectionsVisitor.h"
+#include "detModel/Management/DawnSectionsVisitor.h"
 #include "detModel/Management/PrinterSectionsVisitor.h"
 #include "detModel/Management/HtmlConstantsVisitor.h"
+#include "detModel/Management/PrinterMaterialsVisitor.h"
 #include "detModel/Management/XercesBuilder.h"
-// #include "detModel/Management/FakeBuilder.h"
-
+#include "detModel/Materials/MatCollection.h"
+#include "detModel/Materials/Material.h"
+#include "detModel/Utilities/Color.h"
 #include "detModel/Sections/Volume.h"
 #include "detModel/Sections/Shape.h"
 #include "detModel/Sections/Box.h"
@@ -40,24 +43,15 @@ int main(int argc, char* argv[]) {
   // to create it in the usual way)
   detModel::Manager* manager = detModel::Manager::getPointer();
 
- 
-  // We set the builder; the XercesBuilder needs the name of the XML file
-  // in the constructor
-
-  // manager->setBuilder(new GDDFakeBuilder);
-  
+  // Set the builder and the file name
   manager->setBuilder(new detModel::XercesBuilder);
   manager->setNameFile(argv[1]);
   
-
   // We set the mode for the choice elements in the XML file
   manager->setMode("digi");
 
-  // only get to set one mode
-  //  manager->setMode("digi recon"); 
-
   // We build the hierarchy; in that case we build all, i.e. both the constants
-  // and the sections
+  // the sections and the materials
   manager->build(detModel::Manager::all);
 
   // We start the VRMLSectionsVisitor to build the vrml file
@@ -71,30 +65,35 @@ int main(int argc, char* argv[]) {
   else
     visitor = new detModel::VrmlSectionsVisitor(argv[2]);  
 
-  //  visitor->setOpacity("FOAM05",0.5);
-
-  visitor->setAllOpacity(0.4);
-
-  // (Joanne) Added following line to make vacuum especially
-  // transparent
-  visitor->setOpacity("Vacuum",0.7);
-
-
-  // Put these back if you want to keep down size of .wrl files, 
-  // visitor->setDepth("oneTKR", 0);
-  // visitor->setDepth("oneCAL", 0);
-  manager->startVisitor(visitor);
-  
-  // We start the HTMLConstantsVisitor to build the html file with the
-  // constants tables. Colors and layout are stolen from Joanne ones.
-  manager->startVisitor(new detModel::HtmlConstantsVisitor());
+  // The same for a DAWN visitor to produce PostScript drawings
+  detModel::DawnSectionsVisitor* visitor2;
+  if (argc == 2)
+    visitor2 = new detModel::DawnSectionsVisitor("");  
+  else
+    visitor2 = new detModel::DawnSectionsVisitor(argv[2]);  
 
   // We retrive the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
   
-  // An example; we retrive the total number of volumes contained in the xml file
+  // An example; we retrive some info from the xml file
   std::cout << "XML file contains " << g->getVolumesNumber() << " volumes." << std::endl;
+  std::cout << "XML file contains " << g->getMaterialsNumber() << " materials." << std::endl;
+  std::cout << "XML file contains " << g->getConstantsNumber() << " constants." << std::endl;
+
+  // Retrive the materials, generate the colors and set some transparency values
+  detModel::MatCollection* mats = g->getMaterials();  
+  mats->generateColor();
+  mats->setMaterialTransparency("Vacuum",0.7);
+
+  // We start the HTMLConstantsVisitor to build the html file with the
+  // constants tables. Colors and layout are stolen from Joanne ones.
+  manager->startVisitor(new detModel::HtmlConstantsVisitor);
+  // We start the dawn visitor
+  manager->startVisitor(visitor2);  
+  // We start the vrml visitor
+  manager->startVisitor(visitor);
+  
   delete manager;
   return(0);
 }

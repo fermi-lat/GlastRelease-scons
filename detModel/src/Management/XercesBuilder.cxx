@@ -27,6 +27,9 @@
 #include "detModel/Constants/FloatConst.h"
 #include "detModel/Constants/DoubleConst.h"
 #include "detModel/Constants/StringConst.h"
+#include "detModel/Materials/MatCollection.h"
+#include "detModel/Materials/Element.h"
+#include "detModel/Materials/Composite.h"
 
 namespace detModel{
 
@@ -102,17 +105,17 @@ namespace detModel{
   /*
    *  This method build a constant
    */
-  Const* XercesBuilder::buildConst(DOM_Node* e){
+  Const* XercesBuilder::buildConst(DOM_Node e){
     std::string name;
     std::string typeOfConst;
     std::string ut;
   
-    DOM_NamedNodeMap attr = e->getAttributes();
+    DOM_NamedNodeMap attr = e.getAttributes();
 
     name=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("name")).getNodeValue() ));
     ut=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("uType")).getNodeValue() ));
 
-    std::string elementName=std::string(xml::Dom::transToChar(e->getNodeName()));
+    std::string elementName=std::string(xml::Dom::transToChar(e.getNodeName()));
     if (elementName=="prim"){
       typeOfConst=std::string(xml::Dom::transToChar(attr.getNamedItem(DOMString("type")).getNodeValue()));
       Const* c;
@@ -139,7 +142,7 @@ namespace detModel{
       else return 0;
       c->setName(name);
       c->setConstMeaning(ut);
-      c->setNote(std::string(xml::Dom::transToChar(e->getFirstChild().getNodeValue())));
+      c->setNote(std::string(xml::Dom::transToChar(e.getFirstChild().getNodeValue())));
       return c;
     }//end if
     else{
@@ -153,7 +156,7 @@ namespace detModel{
       c->setConstMeaning(ut);
       c->setValue(val);
     
-      n = static_cast<DOM_Element&>(*e);
+      n = static_cast<DOM_Element&>(e);
       DOM_NodeList nodelist = n.getElementsByTagName(DOMString("notes"));
 
       if (nodelist.getLength())
@@ -209,7 +212,7 @@ namespace detModel{
 		  unsigned int k;
 		  for(k=0;k<elt.getLength();k++){
 		    if (elt.item(k).getNodeType()!=Comment){
-		      cat->addConstant(buildConst(&elt.item(k)));
+		      cat->addConstant(buildConst(elt.item(k)));
 		    }//end if 
 		  }//end for 
 		  //Insert a new category in Constast object
@@ -221,9 +224,144 @@ namespace detModel{
 	  }
       }//end for                                           
       currentGdd->setConstants(ConstantsBranch);
+      MatCollection* materials = new MatCollection();
+      currentGdd->setMaterials(materials);
       currentGdd->buildConstantsMap();
     }//end if
   }
+
+
+  void XercesBuilder::buildMaterials(){
+    unsigned int i,j;
+    DOM_Element docElt = domfile.getDocumentElement();
+    DOM_NodeList child = docElt.getElementsByTagName(DOMString("materials"));
+    if (child.getLength()){
+      MatCollection* materials = currentGdd->getMaterials();
+
+      DOM_NamedNodeMap attrCol=child.item(0).getAttributes();
+
+      materials->setVersion(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("version")).getNodeValue())));
+      materials->setDate(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("date")).getNodeValue())));
+      materials->setAuthor(std::string(xml::Dom::transToChar(attrCol.getNamedItem(DOMString("author")).getNodeValue())));
+
+      DOM_NodeList childs = child.item(0).getChildNodes();
+      for(i=0;i<childs.getLength();i++){
+	if(childs.item(i).getNodeType() != Comment)
+	  {
+	    std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
+	    if(str == "element")
+	      {
+		materials->addMaterial(buildElement(&(childs.item(i))));
+	      }
+	    if(str == "composite")
+	      {
+		materials->addMaterial(buildComposite(&(childs.item(i))));
+	      }
+	  }
+      }
+      
+    }//end if
+  }
+
+  Element* XercesBuilder::buildElement(DOM_Node* e)
+  {
+    Element* element = new Element();
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    
+    element->setName(std::string(xml::Dom::transToChar(el.getAttribute("name"))));
+
+    if(el.getAttribute("symbol") != "")
+      element->setSymbol(std::string(xml::Dom::transToChar(el.getAttribute("symbol"))));
+
+
+    if(el.getAttribute("RGB") != "")
+      {
+	float r, g, b;
+	std::string temp = std::string(xml::Dom::transToChar(el.getAttribute("RGB")));
+	
+      }
+
+    element->setZ(atof(xml::Dom::transToChar(el.getAttribute("z"))));
+    element->setAweight(atof(xml::Dom::transToChar(el.getAttribute("aweight"))));
+
+    if(el.getAttribute("density") != "")
+      element->setDensity(atof(xml::Dom::transToChar(el.getAttribute("density"))));
+
+
+    return element;
+  }
+
+
+  /// Method that build a composite from the relative DOM node
+  Composite* XercesBuilder::buildComposite(DOM_Node* e){
+    unsigned int i, j;
+    unsigned int n = 0;
+
+    /// The childs of the node
+    DOM_NodeList childs = e->getChildNodes();
+
+    /// Counts the number of addmaterial; we need this loop to avoid comments
+    for(i=0;i<childs.getLength();i++)
+      {
+	if (childs.item(i).getNodeType()!=Comment)
+	  n++;
+      }
+
+    /// Create a new composite material with n components
+    Composite* comp = new Composite(n);
+
+    /// Cast to an element the node
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    
+
+    /// Set the name of the composite
+    comp->setName(std::string(xml::Dom::transToChar(el.getAttribute("name"))));
+    /// Set its desnsity
+    comp->setDensity(atof(xml::Dom::transToChar(el.getAttribute("density"))));
+
+    /// Start to cylce on the addmaterial elements
+    for(i=0;i<childs.getLength();i++)
+      {
+	/// Avoid comments
+	if (childs.item(i).getNodeType()!=Comment)
+	  {
+	    DOM_Element elCh = DOM_Element(static_cast<DOM_Element &>(childs.item(i)));
+	    
+	    /// Get the name of the material to add to the compostite
+	    std::string name = std::string(xml::Dom::transToChar(elCh.getAttribute("material")));
+	    
+	    /// Prepare a material	    
+	    Material* mat;
+	    
+	    /// Search the material in the MatCollection
+	    MatCollection* mats = currentGdd->getMaterials();
+	    std::map<std::string, Material*> matMap;
+	    typedef std::map<std::string, Material*> M;
+	    M::iterator mIt;
+	    matMap = mats->getMaterials();
+
+	    /// If the material is not yet defined issue an error and abort
+	    mIt = matMap.find(name);
+	    if(mIt == matMap.end())
+	      detAbort("Error in materials: composite uses a not defined material");
+	    else mat = mIt->second; 
+	    
+	    /// Get the child of addmaterial, i.e. a fractionmass or an natoms
+	    DOM_Node chi = elCh.getFirstChild();
+	    DOM_Element elChi = DOM_Element(static_cast<DOM_Element &>(chi));
+
+	    std::string type = std::string(xml::Dom::transToChar(chi.getNodeName()));
+	    /// Add the component using the overloaded addComponent of composite
+	    if(type == "fractionmass")
+	      comp->addComponent(mat,atof(xml::Dom::transToChar(elChi.getAttribute("fraction"))));
+	    else if(type == "natoms")
+	      comp->addComponent(mat,(unsigned int)atoi(xml::Dom::transToChar(elChi.getAttribute("n"))));
+	    
+	  }
+      }
+    return comp;
+  }
+
 
 
   void XercesBuilder::buildSections()

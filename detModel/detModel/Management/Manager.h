@@ -17,7 +17,7 @@ namespace detModel{
    */
   class Manager {
   public:
-    enum buildType{all,constants,sections};
+    enum buildType{all,constants,sections,materials};
 
   public:
   
@@ -51,6 +51,8 @@ namespace detModel{
 	used by expert clients to access information without the need of
 	a visitor */
     Gdd* getGdd(){return manGdd;};
+
+    MatCollection* getMatCollection(){return manGdd->getMaterials();};
 
     void setNameFile(char* pname){nameFile = pname;};
     char* getNameFile(){return nameFile;};
