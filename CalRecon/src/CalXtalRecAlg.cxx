@@ -9,7 +9,7 @@
 
 
 
-#include "CalRecon/CalXtalRecAlg.h"
+#include "CalXtalRecAlg.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"

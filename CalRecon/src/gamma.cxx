@@ -6,7 +6,7 @@
  *  -  05/00    RT    first implementation
  */
 
-#include "CalRecon/gamma.h"
+#include "gamma.h"
 
 
 #include <cmath>

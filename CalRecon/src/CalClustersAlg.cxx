@@ -1,8 +1,8 @@
 
-#include "CalRecon/CalClustersAlg.h"
+#include "CalClustersAlg.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "CalRecon/gamma.h"
-#include "CalRecon/Midnight.h"
+#include "gamma.h"
+#include "Midnight.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"

@@ -2,6 +2,7 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
+  v5r7   13-jun-2002 AC  headers moved to src folder, requirements moved to cmt folder
   v5r6   13-jun-2002 AC  documentation updated before the code review
   v5r5p2 05-jun-2002 THB make RootIo use private, try to break dependency loop
   v5r5p1 31-may-2002 THB fix to use TkrVertexCol 

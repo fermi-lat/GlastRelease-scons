@@ -112,7 +112,7 @@
 
 
 
-#include "CalRecon/Midnight.h"
+#include "Midnight.h"
 
 
 

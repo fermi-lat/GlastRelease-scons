@@ -9,7 +9,7 @@
 // gui, display includes
 #include "GuiSvc/IGuiSvc.h"
 #include "gui/GuiMgr.h"
-#include "CalRecon/CalDisplay.h"
+#include "CalDisplay.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
