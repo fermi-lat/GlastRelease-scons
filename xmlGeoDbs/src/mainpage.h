@@ -24,6 +24,10 @@
         versions: flight.xml and flightSegVols.xml.  The only difference
         is that CsI crystals are built up as a stack of smaller CsI 
         volumes in the latter case </li>
+   <li><b>latAssembly</b> has descriptions of the different missing-tower
+          configurations as the LAT is being assembled.  Since there is
+          only one configuration with a particular number of towers,
+          the top-level files have names like <b>2TowerSegVols.xml</li>
    <li><b>em</b> is for the complete Engineering Model instrument,
        calorimeter + tracker </li>
    <li><b>minitower</b> is for the Engineering Model, tracker only </li>
