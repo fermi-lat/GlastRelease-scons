@@ -421,8 +421,8 @@
      
     <box name="SiLayerBox"
          sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
-	 XREF="TKRCloseoutWidth" 
-	 YREF="TKRCloseoutWidth"
+	 XREF="faceWidth" 
+	 YREF="faceWidth"
 	 ZREF="SiThick" materialREF="TKRDetMat" />
 
 <!--  Just a single sheet. For convenience make a box the thickness of
