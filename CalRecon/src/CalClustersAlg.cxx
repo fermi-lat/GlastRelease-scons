@@ -89,7 +89,7 @@ static double gam_prof(double *par, int i)
 \f$ \chi^2= \sum_{i=1}^{8}\frac{(\bar{E}-E_i)^2}{\sigma_i}\f$
 */
 
-static void fcn(int &npar, double *gin, double &f, double *par, int iflag)
+static void fcn(int & , double *, double &f, double *par, int )
 
 // Purpose: calculates the weighted sum of quadratic deviations
 //          of energy depositioins in layers from predicted by shower
@@ -501,7 +501,7 @@ StatusCode CalClustersAlg::initialize()
         log << MSG::ERROR << " constant " << " CALnLayer "
             <<" not defined" << endreq;
         return StatusCode::FAILURE;
-    } else m_CalnLayers = value;
+    } else m_CalnLayers = int(value);
     
     if(!detSvc->getNumericConstByName(std::string("CsIWidth"),&m_CsIWidth))
     {
