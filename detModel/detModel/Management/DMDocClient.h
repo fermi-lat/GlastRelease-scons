@@ -24,9 +24,12 @@ namespace detModel{
     
     void handleChild(DOM_Node node);
     
-    const DOM_Node* getConstants() {return &m_constants;}
-    const DOM_Node* getSections() {return &m_sections;}
-    const DOM_Node* getMaterials() {return &m_materials;}
+    //    const DOM_Node* getConstants() {return &m_constants;}
+    //    const DOM_Node* getSections() {return &m_sections;}
+    //    const DOM_Node* getMaterials() {return &m_materials;}
+    const DOM_Node getConstants() {return m_constants;}
+    const DOM_Node getSections() {return m_sections;}
+    const DOM_Node getMaterials() {return m_materials;}
 
     ~DMDocClient() {};
 

@@ -61,43 +61,43 @@ namespace detModel{
     /**
      * This method build the Section object and return a pointer to it
      */
-    Section* buildSection(DOM_Node* e);
+    Section* buildSection(DOM_Node e);
     /**
      * This method build the Const object and return a pointer to it
      */
     Const* buildConst(DOM_Node e);
     /// This method builds the Element object and return a pointer to it
-    Element* buildElement(DOM_Node* e);
+    Element* buildElement(DOM_Node e);
     /// This method builds the Composite object and return a pointer to it
-    Composite* buildComposite(DOM_Node* e);
+    Composite* buildComposite(DOM_Node e);
     /**
      * This method build a Choice object and return a pointer to it
      */
-    Choice* buildChoice(DOM_Node* e);
+    Choice* buildChoice(DOM_Node e);
     /**
      * This method build a Composition object and return a pointer to it
      */
-    Composition* buildComposition(DOM_Node* e);
+    Composition* buildComposition(DOM_Node e);
     /**
      * This method build a Stack object and return a pointer to it
      */
-    Stack* buildStack(DOM_Node* e);
+    Stack* buildStack(DOM_Node e);
     /**
      * This method build a Box object and return a pointer to it
      */
-    Box* buildBox(DOM_Node* e);
+    Box* buildBox(DOM_Node e);
     /**
      * This method build a Box object and return a pointer to it
      */
-    Tube* buildTube(DOM_Node* e);
+    Tube* buildTube(DOM_Node e);
     /**
      * This method build a Position object and return a pointer to it
      */
-    SinglePos* buildPosition(DOM_Node* e);
-    StackedPos* buildRelativePosition(DOM_Node* e);
+    SinglePos* buildPosition(DOM_Node e);
+    StackedPos* buildRelativePosition(DOM_Node e);
 
-    void setAttributePosition(SinglePos* pos, DOM_Node* e);
-    void setAttributeRelativePosition(StackedPos* pos, DOM_Node* e);
+    void setAttributePosition(SinglePos* pos, DOM_Node e);
+    void setAttributeRelativePosition(StackedPos* pos, DOM_Node e);
 
   private:
     DMDocClient* m_docClient;
