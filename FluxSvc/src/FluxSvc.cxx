@@ -4,6 +4,8 @@
 //
 
 #include "FluxSvc.h"
+#include "FluxSvc/IRegisterSource.h"
+
 
 #include "./test/flux/rootplot.h"
 
@@ -14,9 +16,12 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IObjManager.h"
+#include "GaudiKernel/IToolFactory.h"
 
 #include "GaudiKernel/IParticlePropertySvc.h"
-
 #include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RanluxEngine.h"
 
@@ -104,9 +109,58 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
     }
+
+    //----------------------------------------------------------------
+    // most of  the following cribbed from ToolSvc and ObjManager
+
+    // look for a factory of an AlgTool that implements the IRegisterSource interface:
+    // if found, make one and call the special method 
+
+    // Manager of the AlgTool Objects
+    IObjManager* objManager=0;             
+
+    // locate Object Manager to locate later the tools 
+    status = serviceLocator()->service("ApplicationMgr", objManager );
+    if( status.isFailure()) {
+        log << MSG::ERROR << "Unable to locate ObjectManager Service" << endreq;
+        return status;
+    }
+
+    
+    IToolSvc* tsvc  =0;
+    status = service( "ToolSvc", tsvc, true );
+    if( status.isFailure() ) {
+         log << MSG::ERROR << "Unable to locate Tool Service" << endreq;
+        return status;
+    }
+
+    IToolFactory* toolfactory = 0;
+    
+    // search throught all objects (factories?)
+    for(IObjManager::ObjIterator it = objManager->objBegin(); it !=objManager->objEnd(); ++ it){
+        
+        std::string tooltype= (*it)->ident();
+        // is it a tool factory?
+        const IFactory* factory = objManager->objFactory( tooltype );
+        IFactory* fact = const_cast<IFactory*>(factory);
+        status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
+        if( status.isSuccess() ) {
+
+            // yes: now see if the tool implements the IRegisterSource interface
+            IRegisterSource* ireg;
+            status = tsvc->retrieveTool(tooltype, ireg);
+            if( status.isSuccess() ){
+                log << MSG::DEBUG << "Registering sources in " << tooltype << endreq;
+                ireg->registerMe(this);
+                tsvc->releaseTool(ireg);
+            }
+            
+        }
+
+    }
     
     
-    return status;
+    return StatusCode::SUCCESS;
 }
 
 // finalize
