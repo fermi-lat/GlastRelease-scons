@@ -1,6 +1,7 @@
 /** @file release.notes
  package reconRootData
  package manager:H.Kelly
+v4r2      11-feb-03  : TU  Update to Tkr classes for vsnet \n
 v4r1p1    15-jan-03  : THB vsnet enable \n
 v4r1   --------------------- GlastRelease--------------------------   \n
 v4r0p0    31-Dec-2002: HMK Fix up TkrKalFitTrack to compile on Linux\n
