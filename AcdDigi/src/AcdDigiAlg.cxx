@@ -110,14 +110,12 @@ StatusCode AcdDigiAlg::execute() {
         digiCol->push_back(
             new AcdDigi(
                 idents::AcdId(layer, face, row, column), 
-                phaArr, 
-                vetoArr, lowArr, highArr
-            ) 
-        );   
+                energyDeposited, phaArr, 
+                vetoArr, lowArr, highArr) );   
         
     }
+
     return eventSvc()->registerObject(EventModel::Digi::AcdDigiCol, digiCol);
-    
     
 }
 

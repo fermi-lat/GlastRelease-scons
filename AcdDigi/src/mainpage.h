@@ -2,6 +2,10 @@
 * @author Heather Kelly
 *
 * @section intro Introduction
+* This package contains all ACD digitization algorithms.
+* The digitization takes as input the Monte Carlo data pertaining
+* to the ACD volumes and determines the detector response of each
+* PMT.
 *
 * <hr>
 * @section jobOptions jobOptions
@@ -12,5 +16,6 @@
 * @section requirements requirements
 * @include requirements
 *
+* @todo Fix up test program
 */
 

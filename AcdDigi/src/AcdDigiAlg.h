@@ -25,11 +25,11 @@ public:
 
 private:
 
-    /// activates PHA
+    /// Low discrim threshold which activates PHA
     double m_lowThreshold;  
-    /// CNO
+    /// High discrim threshold for CNO
     double m_highThreshold;
-    /// nominal veto signal
+    /// Veto discrim threshold for nominal veto signal
     double m_vetoThreshold; 
     /// conversion from energy to ADC channels
     double m_adcChannelsPerMeV;
