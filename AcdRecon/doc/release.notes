@@ -3,6 +3,7 @@ package AcdRecon\n
 package manager:H.Kelly
 @verbatim
 
+v1r7p2    15-Jun-2004 HMK Use any GlastPolicy version
 v1r7p1    27-Apr-2004 HMK Update GlastPolicy version
 v1r7p0    21-Oct-2003 HMK make that a real active distance calculation for ribbons
 v1r7      17-Oct-2003 HMK Handle the ribbons in recon

@@ -3,7 +3,8 @@
  package manager:H.Kelly
  @verbatim
 
-v2r11p11   27-Apr-2004 HMK update version of GlastPolicy
+v2r11p12  15-Jun-2004 HMK Use any GlastPolicy
+v2r11p11  27-Apr-2004 HMK update version of GlastPolicy
 v2r11p8   16-Jan-2004 HMK add std::vector namespace for Linux
 v2r11p7   14-Jan-2004 HMK Remove std from std::vector in McIntegratingHit -seems to cause odd behavior
 v2r11p6   16-Dec-2003 HMK increase limit again for position hits to 75k
