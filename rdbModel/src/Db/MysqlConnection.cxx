@@ -288,7 +288,7 @@ namespace rdbModel {
                                         const Assertion* where,
                                         int   rowLimit,
                                         int   rowOffset) {
-    std::string sqlString = "SELECT";
+    std::string sqlString = "SELECT ";
     unsigned nGet = getCols.size();
     unsigned nOrder = orderCols.size();
 
