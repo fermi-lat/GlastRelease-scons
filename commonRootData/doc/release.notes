@@ -6,7 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
-
+v1r0p2  16-aug-2004 HMK Fix up use of rootcint pattern..can't supply Win32 option
 v1r0p1  10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
 v1r0p0  26-jul-2004 HMK Decrement version of CalXtalId - no need to increment,
 
