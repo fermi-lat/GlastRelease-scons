@@ -17,6 +17,12 @@ galacticHist::~galacticHist(void)
 void galacticHist::test(){
 
     std::ofstream out_file("graph.cxx", std::ios::app);
+
+    out_file.clear();
+    //out_file << 
+           // "{\n"
+      //      "   gROOT->Reset();\n";
+
       out_file << 
 "{\n"
 //"#include <iostream.h>\n"

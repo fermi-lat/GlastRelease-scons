@@ -45,17 +45,19 @@ m_launch(NONE),m_frametype(EARTH), illumBox(0), m_energyscale(GeV)
 }
 
 
-FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  Vector* direction)
+FluxSource::FluxSource(double aFlux, ISpectrum* aSpec,  double l, double b)
 : EventSource(aFlux),  m_spectrum(0),
 m_maxEnergy(100.),  // note defualt maximum kinetic energy
 _minCos(-0.4f), _maxCos(1.0f), _minPhi(0.0f), _maxPhi(2*M_PI),
 m_rmin(0), m_rmax(1), _phi(0.0f), _theta(0.0f), m_pointtype(NOPOINT),
-m_launch(NONE),m_frametype(EARTH), illumBox(0)
+m_launch(NONE),m_frametype(EARTH), illumBox(0),m_gall(l),m_galb(b)
 {
     s_backoff = 0.;
     spectrum(aSpec);
     //useSpectrumDirection();  // and will use its direction generation
-    setLaunch(*direction);
+    //setLaunch(*direction);
+
+    getGalacticDir(l,b);        
 
     m_launch=GALACTIC;
     setAcceptance();
@@ -950,8 +952,10 @@ void FluxSource::getGalacticDir(double l,double b){
     //get the transformation matrix..
     Rotation galtoglast=GPS::instance()->orbit()->CELtransform(GPS::instance()->time() + m_extime);
     
+
     //and do the transform:
     setLaunch(galtoglast*gamgal);
+    
     
     /*  old way to do it - the galToGlast function is depreciated
     std::pair<double,double> v;
@@ -963,6 +967,7 @@ void FluxSource::getGalacticDir(double l,double b){
       setLaunch(theta,phi);
     */
     m_launch = GALACTIC;
+    correctForTiltAngle();
 }
 
 

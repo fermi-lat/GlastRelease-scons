@@ -90,14 +90,22 @@ void CompositeDiffuse::addNewSource(){
     Spectrum * spec=new SimpleSpectrum("gamma", 100.0);
     
     // Now make the random vector correesponding to random galactic direction
-    double  costh = -RandFlat::shoot(-1.,1./*_minCos, _maxCos*/);
-    double  sinth = sqrt(1.-costh*costh);
-    double  phi = RandFlat::shoot(0.0, 2*M_PI);
+    //double  costh = -RandFlat::shoot(-1.,1./*_minCos, _maxCos*/);
+    //double  sinth = sqrt(1.-costh*costh);
+    //double  phi = RandFlat::shoot(0.0, 2*M_PI);
     
-    Vector launchDir = Vector(cos(phi)*sinth, sin(phi)*sinth, costh);
+    //Vector launchDir = Vector(cos(phi)*sinth, sin(phi)*sinth, costh);
     
+    double l = RandFlat::shoot(-180.,180.);
+    double b = RandFlat::shoot(-90.,90.);
+    //std::cout << "z was " << costh <<std::endl;
     //Then call the FluxSource Constructor to use the galactic direction specified by launchDir.
-    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
+//    EventSource* aSource=new FluxSource(flux,spec,&launchDir);
+    EventSource* aSource=new FluxSource(flux,spec,l,b);
+
+    //std::cout << "l = " << l << ",b = " << b << std::endl;
+    FluxSource* abc = (FluxSource*)aSource;
+    //std::cout << "z is " << abc->launchDir().z() << std::endl;
     //then add it into the list of sources..
     addSource(aSource);
     //..and subtract the total flux from what remains...

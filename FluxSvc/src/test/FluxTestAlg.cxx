@@ -179,7 +179,7 @@ StatusCode FluxTestAlg::execute() {
         return sc;
     }
     
-    HepVector3D pointingin(0,0,1);
+    HepVector3D pointingin = d;//(0,0,1);
     pointingin = (fsvc->transformGlastToGalactic(m_flux->time()))*pointingin;
     
     //log << MSG::INFO
@@ -224,7 +224,7 @@ StatusCode FluxTestAlg::finalize() {
 
 std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){
     std::vector<exposureSet> returned;
-    double angularRadius = 30;
+    double angularRadius = 10;
     for(int i= l-angularRadius ; i<=l+angularRadius ; i+=2){
         for(int j= b-angularRadius ; j<=b+angularRadius ; j+=2){
             
