@@ -64,8 +64,11 @@ namespace xmlUtil {
     }
   }
   
-  // If 0 or 1 child, we're done.  Else all children must
-  // have parent constraints, and they must define sets
+  // If 0 or 1 child, we're done.  Else 
+  // *no* children have parent constraints
+  //        or
+  // *all* children must have parent constraints, 
+  // and they must define sets
   // such that for any pair, the sets are disjoint or
   // they are identical.  Now collect all nodes with identical
   // parent constraints and check their "personal" value constraints.
@@ -75,7 +78,7 @@ namespace xmlUtil {
     
     // Either all children must have parent-value constraints or
     // none can.
-    NodeIterator it = m_children.begin();
+    ConstNodeIterator it = m_children.begin();
     bool childMode = ((*it)->m_parConstraints != 0);
     ++it;
     for (; it < m_children.end(); ++it) {
@@ -94,20 +97,15 @@ namespace xmlUtil {
       DictConstraints *par1 = (*it)->m_parConstraints;
       DictConstraints *par2 = (*(it + 1))->m_parConstraints;
       
-      // if mins are equal, maxs must be also 
-      if ((par1->getMin() == par2->getMin()) ) {
-        if (par1->getMax() != par2->getMax())  return false;
-      }  // else min of next must be > max of current
-      else {
-        if (par2->getMin() <= par1->getMax())  return false;
-      }
+      if (  (!par1->equals(*par2)) &&
+            (!par1->disjoint(*par2))  ) return false;
     }
     
     // Finally need to check that child values are disjoint
     // within subcollection of nodes with same parent constraints
     it = m_children.begin();
     while (it  != m_children.end() ) {
-      NodeIterator follow = it + 1;
+      ConstNodeIterator follow = it + 1;
       unsigned   ourMin = (*it)->m_parConstraints->getMin();
       
       while (follow != m_children.end()) {
@@ -130,10 +128,11 @@ namespace xmlUtil {
   }
 
   
-  bool DictNode::valuesDisjoint(NodeIterator start, NodeIterator last) {
+  bool DictNode::valuesDisjoint(ConstNodeIterator start, 
+                                ConstNodeIterator last) {
     if (*start == *last) return true;
     
-    NodeIterator pCurrentNode = start;
+    ConstNodeIterator pCurrentNode = start;
     std::set<unsigned> values;
     (*start)->insertValues(values);
 
@@ -165,7 +164,7 @@ namespace xmlUtil {
     return m_myConstraints->allowed(value);
   }
   
-  void DictNode::insertValues(std::set<unsigned>& aSet) {
+  void DictNode::insertValues(std::set<unsigned>& aSet) const {
     if (!m_myConstraints->m_valList) {
       for (unsigned i = m_myConstraints->m_minVal; 
            i <= m_myConstraints->m_maxVal;
@@ -179,5 +178,62 @@ namespace xmlUtil {
     }
     return;
   }
+
+  bool  DictNode::allowedChild(std::string childField, unsigned childValue, 
+                               unsigned myValue) const {
+    if (!allowed(myValue)) return false;
+
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         ++it) {
+      if (  ((*it)->getField()).getName() == childField) {
+        return allowedChild(*it, childValue, myValue);
+      }
+    }
+    // Never found child with correct field name
+    return false;
+  }
+          
+  bool  DictNode::allowedChild(unsigned childValue, 
+                               unsigned myValue) const {
+
+    if (!allowed(myValue)) return false;
+    for (ConstNodeIterator it = m_children.begin(); it != m_children.end();
+         ++it) {
+      if  (allowedChild(*it, childValue, myValue)) return true;
+    }
+    return false;
+  }
+
+  bool DictNode::allowedChild(const DictNode* const child, unsigned childValue,
+                              unsigned myValue) const {
+    if (child->m_parConstraints) {
+      if (!(child->m_parConstraints)->allowed(myValue)) return false;
+    }
+    return child->allowed(childValue);
+  }
+  //             -----------------------
+    
+  bool  DictNode::addChild(DictNode* child) {
+    return true;}            /* TO DO */
+
+
+  //             -----------------------
+
+
+  DictNode::~DictNode() {
+    if (m_parConstraints != 0) {
+      delete m_parConstraints;
+      m_parConstraints = 0;
+    }
+    if (m_myConstraints != 0) {
+      delete m_myConstraints;
+      m_myConstraints = 0;
+    }
+    for (NodeIterator it = m_children.begin(); 
+         it != m_children.end(); ++it) {
+      delete *it;
+    }
+  }
 }                  // end namespace
+
 

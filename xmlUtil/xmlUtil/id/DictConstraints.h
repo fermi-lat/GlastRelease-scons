@@ -13,6 +13,7 @@ namespace xmlUtil {
   public: 
     //! Build constraints object from xml representation
     DictConstraints(DOM_Element elt);
+    bool equals(const DictConstraints& other);
     ~DictConstraints(){if (m_valList) delete m_valList;}
   public:    
     //! Does the specified value satisfy the constraints?

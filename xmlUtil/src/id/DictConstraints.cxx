@@ -127,6 +127,17 @@ namespace xmlUtil {
     return *this;
   }
 
+  bool DictConstraints::equals(const DictConstraints& other) {
+    if ((m_style != other.m_style) ||
+        (m_minVal != other.m_minVal) ||
+        (m_maxVal != other.m_maxVal) ) return false;
+
+    if (m_style == ESTYLE_list) {
+      return (*m_valList == *(other.m_valList));
+    }
+    else return true;
+  }
+
   bool DictConstraints::allowed(const unsigned value) const {
     switch(m_style) {
     case ESTYLE_single: return (value == m_minVal);

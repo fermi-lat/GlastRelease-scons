@@ -41,6 +41,7 @@ namespace xmlUtil {
     // child DictNodes
     typedef std::vector<DictNode*> Nodes;
     typedef std::vector<DictNode*>::iterator NodeIterator;
+    typedef std::vector<DictNode*>::const_iterator ConstNodeIterator;
 
     // Nested class allowing sorting of child nodes by m_minValue of
     // parent constraint
@@ -57,12 +58,24 @@ namespace xmlUtil {
     DictNode(DictField& field, DictConstraints& parConstraints);  TO DO
     DictNode(DictField& field, DictConstraints& parConstraints,   TO DO
              DictConstraints& myConstraints);                     TO DO */
-    bool  allowed(const unsigned value) const;            
+    bool  allowed(const unsigned value) const;  
+    //! Are the given child field name, child field value, and 
+    //! value this node compatible with defn of node and children?
     bool  allowedChild(std::string childField, unsigned childValue, 
-                       unsigned value) const {return true;}         /* TO DO */
-    bool  allowedChild(unsigned childValue, unsigned value) const {
-      return true;  }  /* TO DO */
-    bool  addChild(DictNode* child)    {return true;}            /* TO DO */
+                       unsigned myValue) const;
+    //! Are the given child field value, and value this node compatible 
+    //! with defn of node and children?
+    bool  allowedChild(unsigned childValue, unsigned myValue) const;
+
+    //! Is the particular child node compatible with the given
+    //! childValue and value for this?
+    /*! Assume we've already checked that this node may take
+        on myValue; still need to check that for the child indicated
+        myValue is allowed.
+    */
+    bool  allowedChild(const DictNode* const thisChild, unsigned childValue,
+                       unsigned myValue) const;
+    bool  addChild(DictNode* child);
 
 
     //! Check that collection of children define appropriately disjoint
@@ -72,17 +85,18 @@ namespace xmlUtil {
 
     //! Insert allowed values for this DictNode into a set so we
     //! can use set operations to look for overlap
-    void insertValues(std::set<unsigned>& aSet);
+    void insertValues(std::set<unsigned>& aSet) const;
 
     //! Check that for nodes in the interval demarcated by [first, last]
     //! value constraints give pairwise-disjoint sets
-    bool  valuesDisjoint(NodeIterator start, NodeIterator last);  /* TO DO */
+    bool  valuesDisjoint(ConstNodeIterator start, 
+                         ConstNodeIterator last); 
 
 
     DictNode() {};                    /*< don't allow uninitialized node */
     Nodes            m_children;      /*< collection of child nodes */
-    DictField       *m_field;         /*< id field for this node */
-    DictNode        *m_parent;        /*< parent dictnode */
+    const DictField *m_field;         /*< id field for this node */
+    const DictNode  *m_parent;        /*< parent dictnode */
     DictConstraints *m_parConstraints;/*< Constraints on values of parent */
     DictConstraints *m_myConstraints; /*< Constraints on values for this node*/
 
