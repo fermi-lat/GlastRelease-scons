@@ -53,7 +53,7 @@ public:
     virtual void pass ( double t);
     
     /// create a set of display windows using rootplot.
-    void rootDisplay(std::vector<char*> arguments);
+    void rootDisplay(std::vector<const char*> arguments);
     
     ///return the pointer to the current IFlux object
     IFlux* currentFlux();

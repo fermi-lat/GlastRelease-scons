@@ -203,8 +203,8 @@ void FluxSvc::pass ( double t){
     m_fluxMgr->pass(t);
 }
 
-void FluxSvc::rootDisplay(std::vector<char*> arguments){
-    rootplot abc(arguments);
+void FluxSvc::rootDisplay(std::vector<const char*> arguments){
+    rootplot abc(arguments, m_fluxMgr);
 }
 
 ///return the pointer to the current IFlux object
