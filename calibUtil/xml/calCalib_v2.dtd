@@ -120,10 +120,13 @@
 <!ELEMENT face (calPed* | calGain*) >
 <!ATTLIST face end (NEG | POS | NA) #REQUIRED >
 
+<!ENTITY  % ranges  'range (LEX8 | LEX1 | HEX8 | HEX1) #REQUIRED ' >
 
 <!ELEMENT calPed  EMPTY>
-<!ATTLIST calPed  avg NMTOKEN #REQUIRED
+<!ATTLIST calPed  %ranges;
+                  avg NMTOKEN #REQUIRED
                   sig NMTOKEN #REQUIRED>
 
 <!ELEMENT calGain EMPTY>
-<!ATTLIST calGain gain NMTOKEN #REQUIRED>
+<!ATTLIST calGain %ranges;
+                  gain NMTOKEN #REQUIRED>
