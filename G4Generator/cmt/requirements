@@ -1,5 +1,5 @@
 package G4Generator
-version v4r3p2
+version v4r3p3
 #$Id$
 
 use GlastPolicy v4r*
@@ -9,9 +9,9 @@ apply_pattern packageShr
 
 use EXTLIB v2r*
 
-use Event v8*
+use Event *
 
-use GlastSvc  v8*
+use GlastSvc  *
 # following for test
 use FluxSvc  v5r*
 
