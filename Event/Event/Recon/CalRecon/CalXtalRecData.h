@@ -104,14 +104,37 @@ namespace Event
                 +getEnergy(0,idents::CalXtalId::NEG))/2;
         }
         
+        /// Retrieve average energy of two faces for the best range (for const objects)
+        inline double getEnergy() const
+        {
+            return (getEnergy(0,idents::CalXtalId::POS)
+                +getEnergy(0,idents::CalXtalId::NEG))/2;
+        }
+
         /// Retrieve the position for the best range
         inline Point getPosition()
         {
             return getRangeRecData(0)->getPosition();
         }
         
+        /// Retrieve the position for the best range (for const objects)
+        inline Point getPosition() const
+        {
+            return getRangeRecData(0)->getPosition();
+        }
+        
         /// Retrieve reconstructed data from both ends of selected readout
         inline CalRangeRecData* getRangeRecData(short readoutIndex)
+        {
+            //return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
+            if ( readoutIndex < m_RecData.size() )
+                return &(m_RecData[readoutIndex]);
+            else
+                return 0;
+            
+        }
+        /// Retrieve reconstructed data from both ends of selected readout (for const objects)
+        inline const CalRangeRecData* getRangeRecData(short readoutIndex) const
         {
             //return ((readoutIndex < m_readout.size()) ? m_readout[readoutIndex] : 0);
             if ( readoutIndex < m_RecData.size() )
