@@ -3,7 +3,6 @@
 
 #include "rdbModel/Db/ResultHandle.h"
 
-
 #include <vector>
 
 // Message Map RdbGUIWindow class
@@ -37,7 +36,6 @@ FXIMPLEMENT(RdbGUIWindow,FXMainWindow,RdbGUIWindowMap,ARRAYNUMBER(RdbGUIWindowMa
 // Construct a RdbGUIWindow
 RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL,0,0,800,600)
 {
-
   // Main window set itself as the target
   setTarget(this);
   setSelector(ID_TITLE);
@@ -399,12 +397,16 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
     return 1;
 
   int index = uiTblColList->getTableList()->getCurrentItem(); 
-  /// TODO This is an hard coded table name; to be removed
   m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
-  m_dgInsert->create();
+  m_rdbManager->startVisitor(m_dgInsert);
+
   m_dgInsert->show(PLACEMENT_OWNER);
   m_dgInsert->setUiLog(uiLog);
-  m_rdbManager->startVisitor(m_dgInsert);
+
+  m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();
+  
+  // TODO this does not work: the insert dialog does not start properly.
 
   
   return 1;

@@ -25,14 +25,13 @@ FXIMPLEMENT(InsertDialog,FXDialogBox,InsertDialogMap,ARRAYNUMBER(InsertDialogMap
 
 
 InsertDialog::InsertDialog(FXApp *owner):
-  FXDialogBox(owner, "Insert", DECOR_TITLE|DECOR_BORDER)
+  FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER)
 { 
   m_matrix = 0;
   
   m_uiRpanel = new FXVerticalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
   // Bottom part
-  FXHorizontalFrame *uiClosebox = new FXHorizontalFrame(m_uiRpanel, LAYOUT_BOTTOM
-      |LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
+  FXHorizontalFrame *uiClosebox = new FXHorizontalFrame(m_uiRpanel,LAYOUT_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH);
   new FXButton(uiClosebox, "&Cancel", NULL, this, FXDialogBox::ID_CANCEL,
       LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
   new FXButton(uiClosebox, "&Send", NULL, this, ID_GO,
@@ -180,8 +179,6 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     m_widgets.push_back(colWidget);
   } 
 
-  m_matrix->recalc();
-  m_matrix->repaint();
   return rdbModel::Visitor::VCONTINUE;
 }
 
