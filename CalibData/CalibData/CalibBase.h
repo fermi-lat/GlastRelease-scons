@@ -28,7 +28,7 @@ namespace CalibData {
     CalibBase();
     CalibBase(const ITime& since, const ITime& till, int serNo = -1);
     
-    CalibBase(CalibBase& obj);
+    CalibBase(const CalibBase& obj);
     
     /// Following is intended for deep copy
     virtual void update(CalibBase& obj);
@@ -87,6 +87,8 @@ namespace CalibData {
 
     /// Serial number of corresponding metadata row. 
     int m_serNo;
+
+    // Other possible things to keep here:  flavor, calibration type
     
   };
 

@@ -59,7 +59,7 @@
 
       //   ... simple type whose "data" just come from MySQL metadata row
       //       for testing
-      _EXTERN_ std::string   TestMetadataInfo;
+      _EXTERN_ std::string   Test_Gen;
 
       typedef  std::vector<std::pair <std::string, CLID> > CalibPairCol;
       typedef  CalibPairCol::const_iterator PairIt;

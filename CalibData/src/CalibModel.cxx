@@ -62,7 +62,25 @@ const CLID& CLID_Calib_TKR_TOTSignal      = 6103;
 const CLID& CLID_Calib_TKR_TOTDist      = 6104;
 const CLID& CLID_Calib_TKR_MIPEff       = 6105;
 
-const CLID& CLID_Calib_MetadataInfo       = 6500;
+const CLID& CLID_Calib_CAL_LightAtt   = 6200;
+const CLID& CLID_Calib_CAL_LightAsym  = 6201;
+const CLID& CLID_Calib_CAL_LightYield = 6202;
+const CLID& CLID_Calib_CAL_Ped        = 6203;
+const CLID& CLID_Calib_CAL_ElecGain   = 6204;
+const CLID& CLID_Calib_CAL_IntNonlin  = 6205;
+const CLID& CLID_Calib_CAL_DiffNonlin = 6206;
+const CLID& CLID_Calib_CAL_HotChan    = 6207;
+const CLID& CLID_Calib_CAL_DeadChan   = 6208;
+const CLID& CLID_Calib_CAL_DiscrLO    = 6209;
+const CLID& CLID_Calib_CAL_DiscrHI    = 6210;
+
+const CLID& CLID_Calib_ACD_Eff        = 6300;
+const CLID& CLID_Calib_ACD_ThreshHigh = 6301;
+const CLID& CLID_Calib_ACD_ThreshVeto = 6302;
+const CLID& CLID_Calib_ACD_Ped        = 6304;
+const CLID& CLID_Calib_ACD_ElecGain   = 6305;
+
+const CLID& CLID_Calib_CalibTest1       = 6500;
 
 
 class CalibModel {
@@ -99,19 +117,19 @@ public:
 
     CalibData::TKR_MIPEff = tkr + "_MIPEff";
 
-    CalibData::CAL_LightAtt = cal + "LightAtt";
-    CalibData::CAL_LightAsym = cal + "LightAsym";
-    CalibData::CAL_LightYield = cal + "LightYield";
-    CalibData::CAL_Ped = cal + "Ped";
-    CalibData::CAL_ElecGain = cal + "ElectGain";
-    CalibData::CAL_IntNonlin = cal + "IntNonlin";
-    CalibData::CAL_DiffNonlin = cal + "DiffNonlin";
-    CalibData::CAL_HotChan = cal + "HotChan";
-    CalibData::CAL_DeadChan = cal + "DeadChan";
-    CalibData::CAL_DiscrLO = cal + "DiscrLO";
-    CalibData::CAL_DiscrHI = cal + "DiscrHI";
+    CalibData::CAL_LightAtt = cal + "_LightAtt";
+    CalibData::CAL_LightAsym = cal + "_LightAsym";
+    CalibData::CAL_LightYield = cal + "_LightYield";
+    CalibData::CAL_Ped = cal + "_Ped";
+    CalibData::CAL_ElecGain = cal + "_ElectGain";
+    CalibData::CAL_IntNonlin = cal + "_IntNonlin";
+    CalibData::CAL_DiffNonlin = cal + "_DiffNonlin";
+    CalibData::CAL_HotChan = cal + "_HotChan";
+    CalibData::CAL_DeadChan = cal + "_DeadChan";
+    CalibData::CAL_DiscrLO = cal + "_DiscrLO";
+    CalibData::CAL_DiscrHI = cal + "_DiscrHI";
 
-    CalibData::TestMetadataInfo = test + "_MetadataInfo";
+    CalibData::Test_Gen = test + "_Gen";
 
 
     // Use same class for hot strips, dead strips or (merged) bad strips,

@@ -19,6 +19,13 @@ namespace CalibData {
     m_validTill = new CalibTime::CalibTime(till);
   }
 
+  CalibBase::CalibBase(const CalibBase& other) : 
+    DataObject( (DataObject&) other) {
+    m_validSince = other.m_validSince;
+    m_validTill = other.m_validTill;
+    m_serNo     = other.m_serNo;
+  }
+
   // Should be overridden by derived classes
   void CalibBase::update(CalibBase& obj) {
     delete m_validSince;
