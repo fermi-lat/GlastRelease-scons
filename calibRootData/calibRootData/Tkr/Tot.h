@@ -54,14 +54,17 @@ namespace calibRootData {
   class TotUnilayer : public TObject {
   private:
     commonRootData::TkrId m_unilayerId; 
+    UInt_t m_nStrips;
     TClonesArray* m_strips;
   public:
     TotUnilayer(const commonRootData::TkrId& id, UInt_t nStrips=1536);
-    TotUnilayer() : m_unilayerId(), m_strips(0) {};   
+    TotUnilayer() : m_unilayerId(), m_nStrips(0), m_strips(0) {};   
     void setId(const commonRootData::TkrId& id) {m_unilayerId = id;}
     const commonRootData::TkrId& getId() const {return m_unilayerId;}
     TClonesArray* getStrips() {return m_strips;}
-    Int_t getNStrips() {return (m_strips->LastIndex() + 1); }
+    Int_t getNAlloc() const {return (m_strips->LastIndex() + 1); }
+    Int_t getNStrips() const {return m_nStrips; }
+    bool  consistent() const {return (getNStrips() == getNAlloc());} 
     const TotStrip* getStrip(Int_t n) const {
       return (TotStrip*)(m_strips->At(n));
     }

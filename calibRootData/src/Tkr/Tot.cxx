@@ -39,7 +39,8 @@ ClassImp(calibRootData::TotUnilayer)
 
 namespace calibRootData {
   using commonRootData::TkrId;
-  TotUnilayer::TotUnilayer(const TkrId& id, UInt_t nStrips) : m_strips(0) {
+  TotUnilayer::TotUnilayer(const TkrId& id, UInt_t nStrips) : 
+    m_nStrips(nStrips), m_strips(0) {
     m_unilayerId = id;
     if (nStrips > 0) {
       m_strips = new TClonesArray("calibRootData::TotStrip", nStrips);
@@ -47,8 +48,15 @@ namespace calibRootData {
   }
 
   void TotUnilayer::resize(unsigned nStrips) {
-    if (m_strips) delete m_strips;
+    if (nStrips == m_nStrips) return;
+    //    if (m_strips) delete m_strips;
+    if (m_strips) m_strips->Delete();
+    m_nStrips = 0;
+    if (nStrips == 0) return;
     m_strips = new TClonesArray("calibRootData::TotStrip", nStrips);
+    if (m_strips) {
+      m_nStrips = nStrips;
+    }
   }
 
   Bool_t TotUnilayer::setStrip(const TotStrip& strip) {
@@ -57,9 +65,9 @@ namespace calibRootData {
     if (id > lastIx ) return false;
     //    TotStrip* pStrip = (TotStrip*) m_strips->At(id);
     //    pStrip->copy(strip);
-    if (m_strips->At(id) != 0) {  // delete old
-      delete (*m_strips)[id];
-    }
+    //    if (m_strips->At(id) != 0) {  // delete old
+      //      delete (*m_strips)[id];
+    //    }
     // extra argument to new is location where pointer to new memory
     // is to be stored
     new((*m_strips)[id]) TotStrip(strip);
