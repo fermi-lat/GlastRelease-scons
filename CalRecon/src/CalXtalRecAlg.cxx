@@ -133,12 +133,21 @@ StatusCode CalXtalRecAlg::initialize()
 //    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
 	
         m_pedMap = new CALPEDMAP();
-        unsigned int nranges = 4, ntowers=16,nlayers=8,ncols=12;
-        m_pedMap->generateCalib(ntowers,nlayers,ncols,nranges);
+        m_gainMap = new CALGAINMAP();
+        const unsigned int nranges = 4, ntowers=m_xNum*m_yNum;
+        m_pedMap->generateCalib(ntowers,m_CALnLayer,m_nCsIPerLayer,nranges);
+        m_gainMap->generateCalib(ntowers,m_CALnLayer,m_nCsIPerLayer,nranges);
         
-//        std::ofstream ofile("CalPedCalib.txt");
-//        m_pedMap->writeFile(file);
-//        ofile.close();
+        std::ofstream opedfile("CalPedCalib.txt");
+        m_pedMap->writeFile(opedfile);
+        opedfile.close();
+
+        std::ofstream ogainfile("CalGainCalib.txt");
+        m_gainMap->writeFile(ogainfile);
+        ogainfile.close();
+        
+        
+        
 //        std::ifstream ifile("CalPedCalib.txt");
 //        m_pedMap->readFile(ifile);
 //        ifile.close();
@@ -283,7 +292,8 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
 
 
         idents::CalXtalId xtalId = digi->getPackedId();
-        const XTALCALIB *xtalCalib = m_pedMap->getXtalCalib(xtalId);
+        const XTALPEDCALIB *xtalPedCalib = m_pedMap->getXtalCalib(xtalId);
+        const XTALGAINCALIB *xtalGainCalib = m_gainMap->getXtalCalib(xtalId);
 
         const Event::CalDigi::CalXtalReadoutCol& readoutCol = digi->getReadoutCol();
 		
@@ -296,19 +306,23 @@ void CalXtalRecAlg::computeEnergy(CalXtalRecData* recData, const Event::CalDigi*
             int rangeM = it->getRange(idents::CalXtalId::NEG); 
 
 
-            const CalPedCalib* pedCalibP = xtalCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
-                float pedPos=pedCalibP->getAvr();
-            const CalPedCalib* pedCalibM = xtalCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
-                float pedNeg =    pedCalibM   ->getAvr();
+            const CalPedCalib* pedCalibP = xtalPedCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
+                float pedP = pedCalibP -> getAvr();
+            const CalPedCalib* pedCalibM = xtalPedCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
+                float pedM = pedCalibM -> getAvr();
 
+            const CalGainCalib* gainCalibP = xtalGainCalib->getRangeCalib(rangeP,idents::CalXtalId::POS);
+            float gainP = gainCalibP -> getGain();
+            const CalGainCalib* gainCalibM = xtalGainCalib->getRangeCalib(rangeM,idents::CalXtalId::NEG);
+            float gainM = gainCalibM -> getGain();
 
             // get adc values 
             double adcP = it->getAdc(idents::CalXtalId::POS);	
             double adcM = it->getAdc(idents::CalXtalId::NEG);	
 
             // convert adc values into energy
-            double eneP = m_maxEnergy[rangeP]*(adcP-pedPos)/(m_maxAdc-pedPos);
-            double eneM = m_maxEnergy[rangeM]*(adcM-pedNeg)/(m_maxAdc-pedNeg);
+            double eneP = gainP*(adcP-pedP);
+            double eneM = gainM*(adcM-pedM);
 				
 
             // create output object
