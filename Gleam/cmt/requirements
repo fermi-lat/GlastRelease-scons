@@ -49,14 +49,14 @@ use FluxDisplay          v2r0
 use G4Generator          v4r1
 
 #digitization
-use GlastDigi            v4r0
+use GlastDigi            v4r0p1
 
 #reconstruction
-use Trigger              v3r0
+use Trigger              v3r1
 use Recon                v2r1
 
 # commented out temporarily
-#use TkrRecon    v6r0
+use TkrRecon             v6r1
 #use CalRecon    v5r0       
 
 
