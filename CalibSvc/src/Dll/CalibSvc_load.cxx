@@ -27,6 +27,9 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_CONVERTER(XmlCalLightAsymCnv);
   DECLARE_CONVERTER(XmlCalIntNonlinCnv);
 
+  DECLARE_CONVERTER(XmlAcdPedCnv);
+  DECLARE_CONVERTER(XmlAcdGainCnv);
+
 
   // Following doesn't exist yet.
   //  DECLARE_SERVICE(CalibRootCnvSvc);
