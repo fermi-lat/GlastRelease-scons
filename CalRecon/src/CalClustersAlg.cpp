@@ -595,7 +595,7 @@ StatusCode CalClustersAlg::execute()
 	// if no tracker rec then fill slope
 	if(!rectkr) slope = caldir.z();
 
-    slope=1;  // Temporary whilst the algorith appplies to slope=1 showers only.
+    //slope=1;  // Temporary whilst the algorith appplies to slope=1 showers only.
 
 	// Take square roots of RMS
 	rms_trans = sqrt(rms_trans);
