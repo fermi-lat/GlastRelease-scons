@@ -1,7 +1,8 @@
+package CalibData
+
 # $Header$
 
-package CalibData
-version v0r2p6
+version v0r2p7
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -9,22 +10,13 @@ use facilities v2r*
 use idents     v2r*
 use GaudiInterface * IExternal
 
-apply_pattern package_include
+apply_pattern shared_library
+
+private
+#_______________________________________________________________
+
 apply_pattern package_headers
 
 library CalibData *.cxx Cal/*.cxx Tkr/*.cxx ${CalibData_headers}
-
-
-# For a "linker library" could try new pattern available in GaudiPolicy
-# once we convert to gaudi 11.
-##apply pattern linker_library
-
-# Alternatively  GaudiKernel method would be
-apply_pattern package_linkopts
-apply_pattern package_stamps
-apply_pattern ld_library_path
-#
-private
-apply_pattern package_shlibflags
 
 

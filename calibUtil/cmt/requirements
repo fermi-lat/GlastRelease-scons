@@ -1,37 +1,34 @@
+package calibUtil
+
 #  $Header$
 
-package calibUtil
-version v0r3p0
+version v0r3p1
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use facilities v2r*
-use xml v4r* 
+use xml        v4r* 
 
 use MYSQLEXT * IExternal
 # use ROOT   -- someday, maybe
 
-set MYSQL_HOST centaurusa.slac.stanford.edu
-set MYSQL_METATABLE metadata_v2r1
+set MYSQL_HOST       centaurusa.slac.stanford.edu
+set MYSQL_METATABLE  metadata_v2r1
 
-apply_pattern package_include
-apply_pattern package_headers
-
-## Try shareable..
-library calibUtil  $(calibUtil_headers) *.cxx *.c
-
-apply_pattern package_linkopts
-apply_pattern package_stamps
-apply_pattern ld_library_path
-
+apply_pattern shared_library
 
 private
-apply_pattern package_Lshlibflags
+# ___________________________________________________________
+
+apply_pattern package_headers
+
+library calibUtil  $(calibUtil_headers) *.cxx *.c
+
 
 application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
-##application test_strips test/test_strips.cxx 
-application test_meta test/test_meta.cxx  Metadata.cxx
-application add_meta  test/add_meta.cxx 
+
+application test_meta   test/test_meta.cxx  Metadata.cxx
+application add_meta    test/add_meta.cxx 
 
 
 

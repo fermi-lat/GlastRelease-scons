@@ -1,6 +1,8 @@
-# $Header$
 package xmlUtil
-version v2r10p1
+
+# $Header$
+
+version v2r10p2
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -10,7 +12,10 @@ use facilities   v2r*
 use xml          v4r*
 use xmlGeoDbs    v1r*
 
-include_dirs "${XMLUTILROOT}"
+apply_pattern shared_library
+
+private
+# _____________________________________________________________________
 
 apply_pattern package_headers
 apply_pattern package_xmlfiles
@@ -32,26 +37,19 @@ library xmlUtil ${xmlUtil_headers}  \
      id/Identifier.cxx       \
      id/IdOpCompress.cxx     \
      id/IdOpTruncate.cxx     \
-     id/IdOperation.cxx       \
+     id/IdOperation.cxx      \
      id/NamedId.cxx          \
      id/IdKey.cxx            \
      docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
-
-apply_pattern package_linkopts
-apply_pattern package_stamps
-apply_pattern ld_library_path
-
-private
-apply_pattern package_Lshlibflags
 
 
 application eval eval.cxx 
 
 application forProg makeXmlForProg.cxx 
 
-application forDoc makeXmlForDoc.cxx 
-application testId id/testId.cxx
+application forDoc     makeXmlForDoc.cxx 
+application testId     id/testId.cxx
 application testDocMan docMan/*.cxx
-application testKey id/testKey.cxx id/IdKey.cxx
+application testKey    id/testKey.cxx id/IdKey.cxx
 

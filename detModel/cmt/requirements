@@ -1,14 +1,17 @@
 package detModel
-# $Header$
-version v2r14p1
 
-use CLHEP v2* IExternal
+# $Header$
+version v2r14p2
+
+use CLHEP   v2* IExternal
 use xmlUtil
 use idents
 
-include_dirs "${DETMODELROOT}"
-apply_pattern package_linkopts
+apply_pattern shared_library
 
+
+private
+#__________________________________________________________
 
 macro headers "" WIN32 "\
      ../detModel/Management/*.h \
@@ -25,9 +28,6 @@ library detModel -no_share  $(headers) \
       Materials/*.cxx \
       Gdd.cxx
 	
-private
-apply_pattern package_Lshlibflags
-    
 application test main.cxx 
 
 
