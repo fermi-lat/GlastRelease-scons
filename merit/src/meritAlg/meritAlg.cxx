@@ -22,6 +22,7 @@
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/Exposure.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrFitTrack.h"
 
 
 #include "AnalysisNtuple/IValsTool.h"
@@ -383,26 +384,55 @@ void meritAlg::copyFT1info(){
       }
     else if(m_primaryType.value() == "RECO")
       {
-	// Retrieve Vertex to get summary info from reco
-	Event::TkrVertexCol* pVtxCol = 
-	  SmartDataPtr<Event::TkrVertexCol>(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
-	if(!pVtxCol)
+	//the following variable is used in Classification tree to devide whether 
+	//the reconstructed direction should be based on vertex or best track result.
+	// direction
+	double vtxAngle = m_tuple->tupleItem("VtxAngle")->value();
+	double vertexProb = m_tuple->tupleItem("IMvertexProb")->value();
+	if((vtxAngle == 0.0) || vertexProb < 0.5 )
 	  {
-	    log << MSG::DEBUG << "Vertex Col not found in TDS" << endreq;
-	    return;
+	    Event::TkrFitTrackCol* pTkrCol =
+	      SmartDataPtr<Event::TkrFitTrackCol>(eventSvc(), EventModel::TkrRecon::TkrFitTrackCol);
+	    if(!pTkrCol)
+	      {
+		log << MSG::ERROR << "TkrFitTrack Col not found in TDS" << endreq;
+		return;
+	      }
+	    if(pTkrCol->size()==0) 
+	      {
+		log << MSG::DEBUG << "TkrFitTrack Col found in TDS BUT empty" << endreq;
+		return;
+	      }
+	    //Assuming the best vertex comes always first.....    
+	    Event::TkrFitTrackBase* pTheBestTkr = pTkrCol->front();
+	    energy    = pTheBestTkr->getEnergy();
+	    glastDir  = - pTheBestTkr->getDirection().unit();
+	    convPoint = pTheBestTkr->getPosition();
+	    convLayer = pTheBestTkr->getLayer();
 	  }
-	if(pVtxCol->size()==0) 
+	else
 	  {
-	    log << MSG::DEBUG << "Vertex Col found in TDS BUT empty" << endreq;
-	    return;
+	    // Retrieve Vertex to get summary info from reco
+	    Event::TkrVertexCol* pVtxCol = 
+	      SmartDataPtr<Event::TkrVertexCol>(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
+	    if(!pVtxCol)
+	      {
+		log << MSG::ERROR << "Vertex Col not found in TDS" << endreq;
+		return;
+	      }
+	    if(pVtxCol->size()==0) 
+	      {
+		log << MSG::DEBUG << "Vertex Col found in TDS BUT empty" << endreq;
+		return;
+	      }
+	    //Assuming the best vertex comes always first.....    
+	    Event::TkrVertex* pTheBestVtx = pVtxCol->front();
+	    
+	    energy    = pTheBestVtx->getEnergy();
+	    glastDir  = - pTheBestVtx->getDirection().unit();
+	    convPoint = pTheBestVtx->getPosition();
+	    convLayer = pTheBestVtx->getLayer();
 	  }
-	//Assuming the best vertex comes always first.....    
-	Event::TkrVertex* pTheBestVtx = pVtxCol->front();
-	
-	energy    = pTheBestVtx->getEnergy();
-	glastDir  = - pTheBestVtx->getDirection().unit();
-	convPoint = pTheBestVtx->getPosition();
-	convLayer = pTheBestVtx->getLayer();
       }
 
 
