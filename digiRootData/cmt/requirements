@@ -15,20 +15,25 @@ apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
+use RootPolicy
 
-# For Windows, use a setup script to run rootcint automatically
-# Still using document generator for UNIX
-setup_script dorootcint
+macro root_headers "\
+ ../digiRootData/AcdDigi.h\
+ ../digiRootData/AcdId.h\
+ ../digiRootData/CalDigi.h\
+ ../digiRootData/CalXtalId.h\
+ ../digiRootData/CalXtalReadout.h\
+ ../digiRootData/DigiEvent.h\
+ ../digiRootData/GlastAxis.h\
+ ../digiRootData/L1T.h\
+ ../digiRootData/TkrDigi.h\
+ ../digiRootData/TowerId.h\
+ ../digiRootData/EventLinkDef.h"
 
-# Create the Root Cint classes on UNIX
-#macro root_headers "AcdHeader.h AcdId.h AcdTile.h CalDigi.h CalHeader.h CalXtalId.h CalXtalReadout.h DigiEvent.h L1T.h LiveTime.h StripId.h SubSystemHeader.h TkrHeader.h TkrLayer.h EventLinkDef.h"
-macro root_headers "AcdDigi.h AcdId.h CalDigi.h CalXtalId.h CalXtalReadout.h DigiEvent.h GlastAxis.h L1T.h TkrDigi.h TowerId.h EventLinkDef.h"
+macro root_linkdef "../digiRootData/EventLinkDef.h"
+macro root_includes "-I${MCROOTDATAROOT}"
 
-# on unix use a document to make rootcint part of the build process
-make_fragment event_dorootcint_header
-make_fragment event_dorootcint -header=event_dorootcint_header
-document event_dorootcint EventRootCint CINTFILE=../digiRootData/digiRootDataCint.cxx
-
+apply_pattern root_package
 
 macro digiRootData_shlibflags " " \
       VisualC            " ${use_linkopts} "
