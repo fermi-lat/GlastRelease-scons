@@ -100,7 +100,6 @@ private:
     int         m_maxEvtSize;
     
     EbfCalConstants m_calConstants;
-    std::ofstream output;
 };
 
 
