@@ -364,9 +364,9 @@ void meritAlg::processTDS(const Event::EventHeader& header,
         double tkr_skirtX = -9999.;
         double tkr_skirtY = -9999.;
 
-        if( (sc = itool->get("REC_Surplus_Hit_Ratio", surplus_hit_ratio)).isFailure()
-            || (sc = itool->get("REC_Tkr_SkirtX", tkr_skirtX)).isFailure()
-            || (sc = itool->get("REC_Tkr_SkirtY", tkr_skirtY)).isFailure() ) 
+        if( (itool->get("REC_Surplus_Hit_Ratio", surplus_hit_ratio)).isFailure()
+            || (itool->get("REC_Tkr_SkirtX", tkr_skirtX)).isFailure()
+            || (itool->get("REC_Tkr_SkirtY", tkr_skirtY)).isFailure() ) 
         {
             log << MSG::ERROR << 
                 "Unable to retrieve TkrMeritTool variables" << endreq;
