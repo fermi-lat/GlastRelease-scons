@@ -10,6 +10,7 @@
 #include "detModel/Sections/Volume.h"
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
+#include "detModel/Sections/Tube.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -199,6 +200,23 @@ namespace detModel{
 	<< box->getX() << " " << box->getY() << " " << box->getZ() << std::endl; 
     out << "                    }" << std::endl;  
     out << "   }" << std::endl;
+    numVol++;
+  }
+
+  void  VrmlSectionsVisitor::visitTube(Tube* tube)
+  {
+    out << "Transform { " << std::endl;
+    out << "rotation " << " 1 0 0 " <<  3.141927/2 << std::endl;  
+    out << "children [ " << std::endl;
+    out << "Shape {   #" << tube->getName() << std::endl;
+    out << "appearance USE " << tube->getMaterial() << std::endl;
+    out << "  geometry Cylinder { " << std::endl;
+    out << "                     height " << tube->getZ() << std::endl; 
+    out << "                     radius " << tube->getRout() << std::endl; 
+    out << "                    }" << std::endl;  
+    out << "   }" << std::endl;
+    out << "] " << std::endl; 
+    out << "} " << std::endl;
     numVol++;
   }
 

@@ -18,6 +18,7 @@
 #include "detModel/Management/DMDocClient.h"
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
+#include "detModel/Sections/Tube.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -48,9 +49,6 @@ namespace detModel{
   
   XercesBuilder::~XercesBuilder()
   {
-    //xmlUtil::GDDDocMan* pGDDMan = xmlUtil::GDDDocMan::getPointer();
-    //pGDDMan->remove(m_docClient);
-
     delete m_docClient;
   }
 
@@ -364,6 +362,8 @@ namespace detModel{
 	  std::string str = std::string(xml::Dom::transToChar(childs.item(i).getNodeName()));
 	  if(str == "box")
 	    s->addVolume(buildBox(&(childs.item(i))));
+	  if(str == "tubs")
+	    s->addVolume(buildTube(&(childs.item(i))));
 	  else if(str == "choice")
 	    {
 	      Choice* t = buildChoice(&(childs.item(i)));
@@ -449,6 +449,33 @@ namespace detModel{
       b->setSeg(s); 
     }
     return b;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// \doit Add parameters
+  Tube* XercesBuilder::buildTube(DOM_Node* e)
+  {
+
+    DOM_Element el = DOM_Element(static_cast<DOM_Element &>(*e));
+    Tube* t = new Tube(xml::Dom::getAttribute(el, "name"));
+
+
+    // t->setUnitLength(xml::Dom::transToChar(el.getAttribute("unitLength")));
+    // t->setUnitAngle(xml::Dom::transToChar(el.getAttribute("unitAngle")));
+    if(el.getAttribute("RIn") != "0")
+      t->setRin(atof(xml::Dom::transToChar(el.getAttribute("RIn"))));
+    if(el.getAttribute("ROut") != "0")
+      t->setRout(atof(xml::Dom::transToChar(el.getAttribute("ROut"))));
+    if(el.getAttribute("Z") != "0")
+      t->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
+    t->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
+
+    if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "true")
+      t->setSensitive(1);
+    else 
+      t->setSensitive(0);
+    
+    return t;
   }
 
   ////////////////////////////////////////////////////////////////////////

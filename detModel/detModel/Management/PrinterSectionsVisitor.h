@@ -37,6 +37,11 @@ namespace detModel{
     virtual void visitBox(Box*);
 
     /**
+     * This is the visitor for the Tube 
+     */
+    virtual void visitTube(Tube*);
+
+    /**
      * This is the visitor for the PosXYZ 
      */
     virtual void visitPosXYZ(PosXYZ*);

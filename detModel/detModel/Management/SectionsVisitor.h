@@ -7,6 +7,7 @@ namespace detModel{
   class Gdd;
   class Section;
   class Box;
+  class Tube;
   class Ensemble;
   class PosXYZ;
   class AxisMPos;
@@ -36,6 +37,10 @@ namespace detModel{
      * This is the visitor for the Box 
      */
     virtual void visitBox(Box*) = 0;
+    /**
+     * This is the visitor for the Tube 
+     */
+    virtual void visitTube(Tube*) = 0;
     /**
      * This is the visitor for the PosXYZ 
      */

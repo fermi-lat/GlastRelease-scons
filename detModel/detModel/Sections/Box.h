@@ -7,8 +7,6 @@
 
 namespace detModel{
 
-  class BoundingBox;
-
   /**
    * This class represent a simple box
    * @author D.Favretto & R.Giannitrapani 

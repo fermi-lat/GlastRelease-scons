@@ -9,6 +9,7 @@ namespace detModel{
   class Composite;
   class Section;
   class Box;
+  class Tube;
   class Composition;
   class SinglePos;
   class StackedPos;
@@ -85,6 +86,10 @@ namespace detModel{
      * This method build a Box object and return a pointer to it
      */
     Box* buildBox(DOM_Node* e);
+    /**
+     * This method build a Box object and return a pointer to it
+     */
+    Tube* buildTube(DOM_Node* e);
     /**
      * This method build a Position object and return a pointer to it
      */
