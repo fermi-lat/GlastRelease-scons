@@ -16,11 +16,13 @@ namespace calibUtil {
   */
   class Metadata {
   public:
-    enum eError {
-      ERRok = 0,
-      ERRbadCnfFile = 1,
-      ERRbadHost = 2,
-      ERRnoConnect = 3
+    enum eRet {
+      RETOk = 0,
+      RETBadCnfFile = 1,
+      RETBadHost = 2,
+      RETNoConnect = 3,
+      RETWrongState = 4,
+      RETMySQLError = 5
     };
     /// Used to form bit masks for dbs queries
     enum eDisposition {
@@ -61,17 +63,18 @@ namespace calibUtil {
            to current time)
 
     */
-    static bool openRecord(const std::string& instr, 
-                           const std::string& calibType,
-                           const std::string& dataFormat, 
-                           const std::string& fmtVersion,
-                           const std::string& filename, 
-                           const std::string& calibStatus);
+    static eRet openRecord(const std::string& instr, 
+                             const std::string& calibType,
+                             const std::string& dataFormat, 
+                             const std::string& fmtVersion,
+                             const std::string& filename, 
+                             const std::string& calibStatus,
+                             const std::string& procLevel = "TEST");
 
     /** Write a record to the metadata database. Any required columns
      *  not specified by caller will be set to default values.
      */
-    static bool insertRecord(eError& err);
+    static eRet insertRecord();
 
     /** Explicit clear of record.  Must have a call to either insertRecord
      *  (to actually write the record to the database) or clearRecord 
@@ -79,16 +82,19 @@ namespace calibUtil {
      */
     static void clearRecord();
 
-    static void addField(const std::string& fieldName, 
-                         const std::string& fieldValue);
+    //    static void addField(const std::string& fieldName, 
+    //                         const std::string& fieldValue);
 
-    /** Convenience routines for setting validity interval.
+    /** Routine for setting validity interval.
      */
-    static void addValidInterval(Timestamp startTime,
+    static eRet addValidInterval(Timestamp startTime,
                                  Timestamp endTime);
 
-    static void addValidInterval(std::string startTime,
-                                 std::string endTIme);
+    static eRet addComment(std::string comment);
+
+    static eRet addInputDesc(std::string desc);
+
+    static eRet addCreator(std::string creator);
 
     /** Return serial number for calibration which is best match to
         criteria
@@ -124,8 +130,8 @@ namespace calibUtil {
                         
 
     // Might make these private
-    static bool connectRead(eError& err);
-    static bool connectWrite(eError& err);
+    static bool connectRead(eRet& err);
+    static bool connectWrite(eRet& err);
     static void disconnectRead();
     static void disconnectWrite();
 
@@ -133,7 +139,17 @@ namespace calibUtil {
     static MYSQL* readCxt;
     static MYSQL* writeCxt;
     static std::string row;     // place to keep row as it's being built
-    static bool connect(MYSQL* cxt, std::string group, eError& err);
+    static bool connect(MYSQL* cxt, const std::string& group, eRet& err);
+    /** Keep track of which columns in row have been initialized 
+        with bit mask */
+    enum eRow {
+      eOpened = 1,
+      eValid = 2,
+      eInputDesc = 4,
+      eComment = 8,
+      eCreator = 0x10 };
+    static const unsigned int rowReady;
+    static unsigned int rowStatus;
   };
 }
 
