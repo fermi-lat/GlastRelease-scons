@@ -1,6 +1,7 @@
 /*
 package manager:T.Burnett 
 
+ *        30-dec-02  HMK Modify AcdId.h to handle ribbons as well as tiles.\n
  * v2r9   11-nov-02  jrb Modify AcdId.h to handle new volId field
  *                       in acd tiles.  Requires xmlGeoDbs v1r9 or later.
  * v2r8p4 04-sept-02 HMK add AcdId ctor to unpack volId\n
