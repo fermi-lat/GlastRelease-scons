@@ -43,19 +43,28 @@ public:
     class TransportStepInfo
     {
     public:
-        TransportStepInfo(const G4ThreeVector& coords, G4double step) :
-                          position(coords),arcLen(step) {};
+        TransportStepInfo(const G4ThreeVector&     coords, 
+                          const G4ThreeVector&     dir,
+                          G4double                 step, 
+                          const G4VPhysicalVolume* vol) :
+                          position(coords), direction(dir), arcLen(step), stepVolume(vol) {};
        ~TransportStepInfo() {};
 
-        G4ThreeVector       GetCoords() const {return position;}
-        G4double            GetArcLen() const {return arcLen;}
+        G4ThreeVector            GetCoords()    const {return position;}
+        G4ThreeVector            GetDirection() const {return direction;}
+        G4double                 GetArcLen()    const {return arcLen;}
+        const G4VPhysicalVolume* getVolume()    const {return stepVolume;}
 
-        void SetCoords(const G4ThreeVector& coords) {position   = coords;}
-        void SetArcLen(const G4double newArcLen)    {arcLen     = newArcLen;}
+        void SetCoords(const G4ThreeVector& coords)  {position   = coords;}
+        void SetDirection(const G4ThreeVector& dir)  {direction  = dir;}
+        void SetArcLen(const G4double newArcLen)     {arcLen     = newArcLen;}
+        void SetVolume(const G4VPhysicalVolume* vol) {stepVolume = vol;}
     
     private:
-        G4ThreeVector      position;
-        G4double           arcLen;
+        G4ThreeVector            position;    // The position at the start of this step 
+        G4ThreeVector            direction;   // The direction at the start of this step
+        G4double                 arcLen;      // The arc length of this step
+        const G4VPhysicalVolume* stepVolume;  // Pointer to the G4 Logical Volume step taken in
     };
 
     /// Useful typedefs for using the above internal class
@@ -84,14 +93,14 @@ public:
     /// @brief Returns the current volume (include tree above it) at given position. 
     /// If position is on a volume boundary, @param fudge = true will cause it to be
     /// moved slightly off the boundary.
-    G4VPhysicalVolume*       getVolume(const Hep3Vector& position, bool fudge=false) const;
+    G4VPhysicalVolume*       getVolume(const Hep3Vector& position, const Hep3Vector& direction, bool fudge=false) const;
 
     /// @brief Given a volume, construct the associated volume id
-    idents::VolumeIdentifier constructId(const Hep3Vector& position, bool fudge=false) const;
+    idents::VolumeIdentifier constructId(const Hep3Vector& position, const Hep3Vector& direction, bool fudge=false) const;
 
     /// @brief Return starting point information
-    Point                    getStartPoint()                const {return startPoint;}
-    Vector                   getStartDir()                  const {return startDir;}
+    Point                    getStartPoint()                const;
+    Vector                   getStartDir()                  const;
 
     /// @brief Methods to return information after the last step taken
     double                   getTotalArcLen()               const;
@@ -109,7 +118,7 @@ public:
 private:
     //Private methods
     //Determines the distance along the track to the edge of start volume
-    double                   minStepSize(const Point& start, const Vector& dir) const;
+    double                   minStepSize(const G4ThreeVector& start, const G4ThreeVector& dir) const;
     //Make sure list is cleared when tracking started
     void                     clearStepInfo();
     //This function will step a given arc length
@@ -133,8 +142,8 @@ private:
     StepVector stepInfo;
 
     //Initial start point, direction and desired step size
-    Point      startPoint;
-    Vector     startDir;
+    //Point      startPoint;
+    //Vector     startDir;
 
     /// This is needed for associating Geant4 volumes to Glast identifiers
     IG4GeometrySvc* m_geometrySvc;

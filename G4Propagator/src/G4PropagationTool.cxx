@@ -254,7 +254,7 @@ Point G4PropagationTool::getPosition(double arcLen) const
         {
                 G4ThreeVector  startPoint = getStepStart()->GetCoords();
                 G4ThreeVector  lastPoint  = getLastStep().GetCoords();
-                G4ThreeVector  startDir   = getStartDir();
+                G4ThreeVector  startDir   = getLastStep().GetDirection();
                 G4ThreeVector  stopPoint  = startPoint + arcLen * startDir;
 
                 final = Point(stopPoint.x(),stopPoint.y(),stopPoint.z());
@@ -278,7 +278,7 @@ Point G4PropagationTool::getStepPosition(int stepIdx) const
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
     G4ThreeVector stepPoint = getStep(stepIdx).GetCoords();
-    G4ThreeVector dir       = getStartDir();
+    G4ThreeVector dir       = getStep(stepIdx).GetDirection();
     double        arclen    = getStep(idx).GetArcLen();
 
     stepPoint = stepPoint - 0.5*arclen*dir;
@@ -447,7 +447,8 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool 
     {
         TransportStepInfo  curStep = *stepPtr++;
 
-        G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
+        const G4VPhysicalVolume* pCurVolume = curStep.getVolume();
+        //G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
         G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
         double radLengths = pMaterial->GetRadlen();
@@ -532,7 +533,8 @@ double G4PropagationTool::getStepRadLength(int stepIdx) const
 
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
-    G4VPhysicalVolume* pCurVolume = getVolume(getStep(idx).GetCoords(), true);
+    const G4VPhysicalVolume* pCurVolume = getStep(idx).getVolume();
+    //G4VPhysicalVolume* pCurVolume = getVolume(getStep(idx).GetCoords(), true);
     G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
     double matRadLen = pMaterial->GetRadlen();
@@ -567,7 +569,8 @@ double G4PropagationTool::getRadLength(double arcLenIn) const
     {
         TransportStepInfo  curStep = *stepPtr++;
 
-        G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
+        const G4VPhysicalVolume* pCurVolume = curStep.getVolume();
+        //G4VPhysicalVolume* pCurVolume = getVolume(curStep.GetCoords(), true);
         G4Material*        pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
 
 
@@ -659,7 +662,7 @@ bool   G4PropagationTool::isTkrPlane(int& view)        const
 
 //**    G4VPhysicalVolume* pCurVolume = getVolume(getLastStep().GetCoords(), true);
 
-    idents::VolumeIdentifier id = constructId(getLastStep().GetCoords());
+    idents::VolumeIdentifier id = constructId(getLastStep().GetCoords(), getLastStep().GetDirection());
 
     // This test is specifically for the tracker.
     // Return "false" otherwise
