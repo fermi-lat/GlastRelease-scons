@@ -2,10 +2,12 @@
 Create a set of histograms to allow analysis of the effective area
 */
 #include "PSF.h"
+#include "TH2.h"
 
 #include <fstream>
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//_________________________________________________________________________________
+
 class Aeff : public PSF {
 public:
     Aeff(std::string filename, std::string ps_filename): PSF(filename)
@@ -13,8 +15,8 @@ public:
         , m_binsize(0.125)
         , m_emin(0.016), m_emax(160.0)
         , m_ngen(4.66e6)
-        , m_zdir_bins(20)
         , m_target_area(6.0)
+        , m_zdir_bins(20)
     {}
 
     // override this to project only the summary plots of energy for each angle range
@@ -23,7 +25,7 @@ public:
         open_input_file();
         TFile  hist_file(summary_filename().c_str(), "recreate"); // for the histograms
         std::cout << " writing aeff plots to " << summary_filename() << std::endl;
-        int nbins=40; double xmin=0, xmax=2.0, ymax=0.15;
+        // int nbins=40; double xmin=0, xmax=2.0, ymax=0.15;
 
         for(int i=0; i<angle_bins; ++i){
             // loop over angle ranges
@@ -45,9 +47,52 @@ public:
             h->SetDirectory(&hist_file);  // move to the summary file
         }
 
+        // determine normalization factor for Aeff
+        double  dcosT       = 1.0/m_zdir_bins;
+        double  dlogE       = m_binsize;
+        double  ngenPerBin  = m_ngen * (dcosT*dlogE)/((5.5-1)*1.0);
+        double  norm_factor = m_target_area/ngenPerBin ;
+
+        std::cout << "Applying normalization factor for Aeff Table assuming " 
+            << m_ngen 
+            << " events generated uniformly over:"
+            << "\n\t cos theta from -1 to 0"
+            << "\n\t log E with E from "<< m_emin << " to " << m_emax 
+	    << "\n\t dcosTheta " << dcosT
+	    << "\n\t dlogE     " << dlogE
+	    << "\n\t generated per bin    " << ngenPerBin
+	    << "\n\t Normalization factor " << norm_factor
+            << std::endl;
+
+        // Plot logE versus cosTheta
+        TCut front("Tkr1FirstLayer<12" );
+        TCut back( "Tkr1FirstLayer>=12");
+        
+	char title[256];  
+        sprintf(title, "logE vs cosTheta, front Tkr" );
+        TH2F *hf = new TH2F( "lectf", title, 
+		            (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+	m_tree->Project( hf->GetName(),"McZDir:McLogEnergy", goodEvent && front );
+        hf->Scale(norm_factor);        
+        
+	sprintf(title, "logE vs cosTheta, back  Tkr" );
+        TH2F *hb = new TH2F( "lectb", title, 
+			    (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+	m_tree->Project( hb->GetName(),"McZDir:McLogEnergy", goodEvent && back );
+        hb->Scale(norm_factor);
+
+ 	sprintf(title, "logE vs cosTheta, front & back" );
+        TH2F *ha = new TH2F( "lecta", title, 
+			    (5.5-1.0)/m_binsize, 1.0, 5.5,   m_zdir_bins, -1.0, 0.0 );
+	m_tree->Project( ha->GetName(),"McZDir:McLogEnergy", goodEvent );
+        ha->Scale(norm_factor);
+       
         hist_file.Write();
     }
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ //__________________________________________________________________________
+
+
     void draw(std::string ps, std::string page_title, std::string hist_title)
     {
         TFile hist_file(summary_filename().c_str() ); // for the histograms
@@ -62,21 +107,23 @@ public:
         leg->SetTextSize(0.04);
 
         // determine normalization factor to Aeff
-        int ngen=4.66e6; 
-        double anglebin=0.2, 
-            target_area=6., 
-            emax=160., emin=0.016;
-        double norm_factor=target_area/m_ngen/anglebin/(m_binsize/log10(m_emax/m_emin));;
-        std::cout << "Applying normailzation factor assuming " << m_ngen 
+        // int ngen= (int)4.66e6; 
+        double  anglebin    = 0.2; 
+	// double  target_area = 6.0; 
+	//double    emax=160., emin=0.016;
+        double norm_factor = m_target_area/m_ngen/anglebin/(m_binsize/log10(m_emax/m_emin));
+        std::cout << "Applying normalization factor assuming " << m_ngen 
             << " generated uniformly over:"
             << "\n\t cos theta from 0 to 1"
             << "\n\t log E with E from "<< m_emin << " to " << m_emax << std::endl;
 
+        // normalize and draw logE and Aeff
         for(int i=0; i<4; ++i){
 
             TH1F* h =(TH1F*)hist_file.Get(hist_name(i,99)) ; 
             if(h==0){
-                std::cerr << "could not find "<< hist_name(i,99) << " in summary file " << hist_file.GetName() <<std::endl;
+                std::cerr << "could not find "<< hist_name(i,99) << " in summary file " 
+                          << hist_file.GetName() <<std::endl;
                 return;
             }
             printf("\tdrawing %s\n", h->GetTitle());
@@ -101,7 +148,9 @@ public:
         c.Print(ps.c_str() );
 
     }
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    //__________________________________________________________________________
+
     void drawAngles(std::string ps)
     {
         TFile hist_file(summary_filename().c_str() ); // for the histograms
@@ -120,7 +169,8 @@ public:
                 return;
             }
             h->SetStats(false);
-            double norm_factor=m_target_area/m_ngen*m_zdir_bins/(logedelta/log10(m_emax/m_emin));;
+            double norm_factor = m_target_area/m_ngen * 
+                                 m_zdir_bins / (logedelta/log10(m_emax/m_emin));
 
             std::cout << "\ndrawing " << h->GetTitle() << std::endl;
 
@@ -138,22 +188,27 @@ public:
         c.Print(ps.c_str() );
 
     }
+
+
     void doit(){
-        std::string psfile( output_file_root()+m_ps_filename);
+        std::string psfile( output_file_root()+m_ps_filename );
         if( ! fileExists()) project();
         draw(psfile+"(", "", "Effective Area vs. energy");
         drawAngles(psfile+")");
     }
-    private:
 
+    private:
+    std::string m_ps_filename
     double m_binsize;
     double m_emin, m_emax;
-    int m_ngen;
+    int    m_ngen;
     double m_target_area;
-    int m_zdir_bins;
-    std::string m_ps_filename;
+    int    m_zdir_bins;
 };
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+//_____________________________________________________________________________
+
 int main(){
     TCut bkg("BkVeto==0");
 
