@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "GlastSvc/GlastDetSvc/IGeometry.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 namespace detModel {class IdField; }
 
 /**
@@ -15,8 +16,14 @@ namespace detModel {class IdField; }
 class GeometryVisitor : public detModel::SectionsVisitor {
     
 public:
+    /**
+     * @a geom         Reference to the client geometry visitor
+     * @a visitorMode  Default visitor mode corresponding to property
+     *                 of IGlastDetSvc
+     */
+    GeometryVisitor( IGeometry& geom, std::string visitorMode ); 
     
-    GeometryVisitor( IGeometry& geom ); 
+    virtual ~GeometryVisitor() { };
     
     virtual void visitEnsemble(detModel::Ensemble*);
     

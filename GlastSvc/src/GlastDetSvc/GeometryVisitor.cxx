@@ -3,6 +3,7 @@
 #include <string>
 
 #include "GeometryVisitor.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Sections/Section.h"
@@ -22,12 +23,19 @@
 #include <cassert>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-GeometryVisitor::GeometryVisitor( IGeometry& geom )
+GeometryVisitor::GeometryVisitor( IGeometry& geom, std::string visitorMode )
 : m_geom(geom)
 {
     setRecursive(0);
     cacheTransform(); // set initial tranformation
-    setMode(geom.getMode()); // Get choice mode from the client
+    std::string mode = geom.getMode();
+    if (mode.size() > 0) {  // use client-requested mode
+      setMode(mode); 
+    }
+    else { // use GlastDetSvc default
+      setMode(visitorMode);
+    }
+      
 }
 
 
@@ -139,7 +147,7 @@ void  GeometryVisitor::visitAxisMPos(detModel::AxisMPos* pos)
     // get the rotation angle, transform as necessary!
     double rot = -pos->getRotation();
     
-    for( int i = 0; i< pos->getNcopy(); ++i) {
+    for( unsigned int i = 0; i< pos->getNcopy(); ++i) {
         
         double disp = pos->getDisp(i),
             rx=0, ry=0, rz=0,

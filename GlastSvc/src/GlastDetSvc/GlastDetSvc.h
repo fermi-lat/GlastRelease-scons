@@ -56,7 +56,7 @@ public:
     //! start a visitor of the detModel geometry description (implements IGlastDetSvc)
     virtual void accept(IGeometry& geom);
 
-    //! detModel interface to retrive numeric constants
+    //! detModel interface to retrieve numeric constants
     virtual StatusCode getNumericConstByName(std::string, double*);
 
     /// retrive the 3D transformation of a volume given a valid ID

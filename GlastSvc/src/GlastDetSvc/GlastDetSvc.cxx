@@ -139,7 +139,7 @@ const IID&  GlastDetSvc::type () const {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GlastDetSvc::accept(IGeometry& geom)
 {
-    m_dm->accept(&GeometryVisitor(geom));
+    m_dm->accept(&GeometryVisitor(geom, m_visitorMode));
 }
 
 void GlastDetSvc::accept(IMedia& media)
