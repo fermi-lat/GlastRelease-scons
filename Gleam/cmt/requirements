@@ -7,7 +7,7 @@ version  v2r1p1
 
 # gaudi system files: this would checkout all of the Gaudi packages
 use GaudiSys    v9r0p6
-use GaudiAlg
+use GaudiAlg	v5r0p2
 
 # ROOT add-on
 use ROOT        v3r2p9
