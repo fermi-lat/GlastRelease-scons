@@ -137,7 +137,9 @@ public:
             return ((m_readout[(nRanges + range - ((m_readout[0])).getRange(face)) % nRanges])).getAdc(face);
     }
 
-    
+    /// Fill the ASCII output stream
+    virtual std::ostream& fillStream( std::ostream& s ) const;
+
 
 private:
     
@@ -151,6 +153,43 @@ private:
 };
 
 typedef ObjectVector<CalDigi> CalDigiCol;
+
+
+/// Fill the ASCII output stream
+inline std::ostream& CalDigi::fillStream( std::ostream& s ) const
+{
+    char *modeStr;
+    if (m_mode == idents::CalXtalId::BESTRANGE) {
+        modeStr = "BESTRANGE";
+    } else {
+        modeStr = "ALLRANGE";
+    }
+
+    s << "class CalDigi"
+    << " :"
+    << "\n    Mode                          = " << modeStr
+    << "\n    Xtal Id  (tower, layer, col)  = (" << m_xtalId.getTower() << ","
+    << m_xtalId.getLayer() << "," << m_xtalId.getColumn() << ")"
+    << "\n    Number of readouts            =  " << m_readout.size() << "\n";
+    unsigned int ixtal;
+    for (ixtal = 0; ixtal < m_readout.size(); ixtal++) {
+        CalDigi::CalXtalReadout read = m_readout[ixtal];
+        int rangeP = int(read.getRange(idents::CalXtalId::POS));
+        int rangeM = int(read.getRange(idents::CalXtalId::NEG));
+        unsigned int adcP = read.getAdc(idents::CalXtalId::POS);
+        unsigned int adcM = read.getAdc(idents::CalXtalId::NEG);
+        s << "Readout :"
+            << "\n   POS (range, adc) = (" << rangeP
+            << "," << adcP << ")"
+            << "\n   NEG (range, adc) = (" << rangeM
+            << "," << adcM << ")";
+    }
+
+    return s;
+    
+}
+
+
 
 }
 
