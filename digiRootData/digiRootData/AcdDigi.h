@@ -4,6 +4,7 @@
 
 #include "AcdId.h"
 #include "TObject.h"
+#include "TString.h"
 #include "mcRootData/VolumeIdentifier.h"
 
 /** @class AcdDigi
@@ -33,6 +34,16 @@ private:
     |__|____|____|___|___________________________________| 
     @endverbatim
 
+
+    ldf packed word contains range and parity error information
+    @verbatim
+     ____________________________________________________
+    | | | | | |  |  |  |  |  |  |  |  |  | 1   | 0   |
+    |_|_|_|_|_|__|__|__|__|__|__|__|__|__|_____|_____|
+    | | | | | |  |  |  |  |  |  |  |  |  |Range|Error|
+    |_|_| |_|________________________________________| 
+    @endverbatim
+
     */
 
     enum {
@@ -46,6 +57,13 @@ private:
         HIGH_WIDTH = 1,
         HIGH_SHIFT = (VETO_WIDTH + VETO_SHIFT),
     };
+  
+    enum {
+        ERROR_WIDTH = 1,
+        ERROR_SHIFT = 0,
+        RANGE_WIDTH = 1,
+        RANGE_SHIFT = (ERROR_WIDTH + ERROR_SHIFT)
+    };
 
 public:
 
@@ -53,6 +71,17 @@ public:
         A = 0,
         B = 1
     } PmtId;
+
+    typedef enum {
+        LOW = 0,
+        HIGH = 1
+    } Range;
+
+    typedef enum {
+        NOERROR = 0,
+        ERROR = 1
+    } ParityError;
+
 
     
     AcdDigi();
@@ -64,6 +93,8 @@ public:
         Bool_t *low, Bool_t *high);
     
     virtual ~AcdDigi() { };
+
+    void initLdfParameters(const char *tileName, int tileNumber, Range *rangeCol, ParityError *errCol);
 
     void Clear(Option_t *option ="");
 
@@ -83,6 +114,11 @@ public:
     /// Returns 1/0 denoting if this ACD Tile's high discriminator bit is on (CNO).
     Bool_t getHighDiscrim(AcdDigi::PmtId pmt) const;
 
+    Int_t getTileNumber() const { return m_tileNumber; };
+    const char* getTileName() const { return m_tileName.Data(); };
+    Range getRange(AcdDigi::PmtId pmt) const;
+    ParityError getParityError(AcdDigi::PmtId pmt) const;
+
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
@@ -90,6 +126,8 @@ public:
 private:
 
     void initPackedWord(PmtId pmt, UShort_t pha, Bool_t veto, Bool_t low, Bool_t high);
+
+    void initPackedLdfWord(PmtId pmt, Range range, ParityError error);
 
     /// Energy deposited in MeV - provided as a check
     Float_t m_energy;
@@ -100,7 +138,12 @@ private:
     /// Volume id for geometry
     VolumeIdentifier m_volId;
 
-    ClassDef(AcdDigi,2) // Digitization for a single ACD entity
+    // New data members for version 3 
+    UShort_t m_packedLdf[2];
+    Int_t m_tileNumber;
+    TString m_tileName;
+
+    ClassDef(AcdDigi,3) // Digitization for a single ACD entity
 };
 
 #endif

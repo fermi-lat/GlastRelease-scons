@@ -12,25 +12,43 @@ AcdDigi::AcdDigi() {
     m_packed[AcdDigi::A] = 0;
     m_packed[AcdDigi::B] = 0;
     m_id.setId(0, 1, 2);
+    m_packedLdf[AcdDigi::A] = 0;
+    m_packedLdf[AcdDigi::B] = 0;
+    m_tileName = TString("");
+    m_tileNumber = -1;
 }
 
 AcdDigi::AcdDigi(const AcdId& id) : m_id(id) {
     m_packed[AcdDigi::A] = 0;
     m_packed[AcdDigi::B] = 0;
+    m_packedLdf[AcdDigi::A] = 0;
+    m_packedLdf[AcdDigi::B] = 0;
+    m_tileName = TString("");
+    m_tileNumber = -1;
 }
 
 AcdDigi::AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy, 
                  UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high) 
-                 : m_id(id), m_volId(volId)
+                 : m_id(id), m_volId(volId), m_tileNumber(-1), m_tileName("")
 {
     AcdDigi::PmtId pmt = AcdDigi::A;
     initPackedWord(pmt, pha[pmt], veto[pmt], low[pmt], high[pmt]); 
+    initPackedLdfWord(pmt, LOW, NOERROR);
     pmt = AcdDigi::B;
     initPackedWord(pmt, pha[pmt], veto[pmt], low[pmt], high[pmt]); 
+    initPackedLdfWord(pmt, LOW, NOERROR);
 
     m_energy = energy;
 }
 
+void AcdDigi::initLdfParameters(const char *name, Int_t number, Range *rangeCol, ParityError *errCol) {
+    m_tileName = name;
+    m_tileNumber = number;
+    AcdDigi::PmtId pmt = AcdDigi::A;
+    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt]);
+    pmt = AcdDigi::B;
+    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt]);
+}
 
 void AcdDigi::Clear(Option_t *option) {
 
@@ -42,14 +60,19 @@ void AcdDigi::Print(Option_t *option) const {
     cout.precision(2);
     cout << "Id: " << endl;
     m_id.Print();
+    cout << "name, number: " << m_tileName.Data() << ", " << m_tileNumber << endl;
     cout << "PMT A: " << getPulseHeight(AcdDigi::A)  
         << " (low, veto, high): (" << Short_t(getLowDiscrim(AcdDigi::A)) << ", "
         << Short_t(getVeto(AcdDigi::A)) << ", " 
         << Short_t(getHighDiscrim(AcdDigi::A)) << ")" << endl;
+    cout << " (range, error): (" << Short_t(getRange(AcdDigi::A)) << ", "
+        << Short_t(getParityError(AcdDigi::A)) << ")" << endl;
     cout << "PMT B: " << getPulseHeight(AcdDigi::B) 
         << " (low, veto, high): (" << Short_t(getLowDiscrim(AcdDigi::B)) << ", "
         << Short_t(getVeto(AcdDigi::B)) << ", " 
         << Short_t(getHighDiscrim(AcdDigi::B)) << ")" << endl;
+    cout  << " (range, error): (" << Short_t(getRange(AcdDigi::B)) << ", "
+        << Short_t(getParityError(AcdDigi::B)) << ")" << endl;
 }
 
 
@@ -70,6 +93,14 @@ UShort_t AcdDigi::getPulseHeight(AcdDigi::PmtId pmt) const {
     return ((m_packed[pmt] >> PMT_SHIFT) & PMT_MAX);
 }
 
+AcdDigi::Range AcdDigi::getRange(AcdDigi::PmtId pmt) const {
+    return (((m_packedLdf[pmt] >> RANGE_SHIFT) & 1 ) ? HIGH : LOW);
+}
+
+AcdDigi::ParityError AcdDigi::getParityError(AcdDigi::PmtId pmt) const {
+    return (((m_packedLdf[pmt] >> ERROR_SHIFT) & 1 ) ? ERROR : NOERROR);
+}
+
 void AcdDigi::initPackedWord(AcdDigi::PmtId pmt, UShort_t pha, Bool_t veto,
                     Bool_t low, Bool_t high) 
 {
@@ -82,6 +113,13 @@ void AcdDigi::initPackedWord(AcdDigi::PmtId pmt, UShort_t pha, Bool_t veto,
     } else {
         m_packed[pmt] |= pha;
     }
+}
+
+void AcdDigi::initPackedLdfWord(AcdDigi::PmtId pmt, Range range, ParityError err) {
+    m_packedLdf[pmt] = 0;
+    if (range == HIGH) m_packedLdf[pmt] |= (HIGH << RANGE_SHIFT); 
+    if (err == ERROR) m_packedLdf[pmt] |= (ERROR << ERROR_SHIFT);
+
 }
 
 Int_t AcdDigi::Compare(const TObject *obj) const {
