@@ -246,12 +246,14 @@
          a shift : distance between the coordinate origin of the stack and the
                    coordinate origin of the first stacked volume, or between
                    the coordinate origin of the previously stacked volume and the
-                   coordinate origin of the first stacked volume.
+                   coordinate origin of the first [jrb: current??]
+                   stacked volume.
 
          a gap   : distance between the coordinate origin of the stack and the
                    lowest dimension of the first stacked volume, or between the
                    highest dimension of the previously stacked volume and the
-                   lowest dimension of the first stacked volume.
+                   lowest dimension of the first [jrb: current??]
+                   stacked volume.
 
 
      Coordinate system: The coordinate system of the stack can be

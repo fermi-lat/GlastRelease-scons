@@ -28,7 +28,7 @@
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: test 9/28/2001 10:55 " creatorId="Id: makeXmlForProg.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.11 2001/10/17 23:45:48 jrb Exp " creatorId="Id: makeXmlForProg.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forProg.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -386,39 +386,54 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
           Si thickness        </prim>
         <prim name="coreThick" type="double" uType="length" value="27.92" unitAngle="deg" unitLength="mm">
           Thickness of core material
-            in all trays except the bottom        </prim>
-        <prim name="coreThickBottom" type="double" uType="length" value="33.909" unitAngle="deg" unitLength="mm">
+            in all trays except the bottom and top        </prim>
+        <prim name="coreThickOuter" type="double" uType="length" value="34.27" unitAngle="deg" unitLength="mm">
           Core thickness for
-            bottom tray        </prim>
+            bottom and top trays  (15oct01)        </prim>
         <prim name="glueSiThick" type="double" uType="length" value="0.15" unitAngle="deg" unitLength="mm">
           Thickness of glue
             between Si and bias plane        </prim>
-        <prim name="glueThick" type="double" uType="length" value="0.075" unitAngle="deg" unitLength="mm">
+        <prim name="glueCoreThick" type="double" uType="length" value="0.075" unitAngle="deg" unitLength="mm">
           Thickness of glue between
-            non-Si components        </prim>
+            core (or closeout) and something else (15oct01)        </prim>
+        <prim name="glueDefThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
+          Default glue thickness,
+            when neither Si nor core is involved (15oct01)        </prim>
         <prim name="convThickReg" type="double" uType="length" value="0.105" unitAngle="deg" unitLength="mm">
           Thickness of conversion 
             material in "regular" layers in mm        </prim>
-        <prim name="convThickSup" type="double" uType="length" value="0.630" unitAngle="deg" unitLength="mm">
+        <prim name="convThickSup" type="double" uType="length" value="0.723" unitAngle="deg" unitLength="mm">
           Thickness of conversion 
-            material in super-GLAST layers in mm        </prim>
-        <prim name="faceThick" type="double" uType="length" value="0.152" unitAngle="deg" unitLength="mm">
+            material in super-GLAST layers in mm (as of 15 oct 2001)        </prim>
+        <prim name="faceThick" type="double" uType="length" value="0.200" unitAngle="deg" unitLength="mm">
           Face sheet thickness
-            for all but super-glast layers        </prim>
-        <prim name="faceThickSuper" type="double" uType="length" value="0.228" unitAngle="deg" unitLength="mm">
+            for all but super-glast layers (as of 15oct01)        </prim>
+        <prim name="faceThickSuper" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
           Face sheet thickness
-            for super-glast layers        </prim>
-        <prim name="biasPlaneThick" type="double" uType="length" value="0.239" unitAngle="deg" unitLength="mm">
+            for super-glast layers (15oct01)        </prim>
+        <prim name="biasPlaneThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
           Thickness of bias
-            plane        </prim>
+            plane (15oct01)        </prim>
         <prim name="intertrayGap" type="double" uType="length" value="2.00" unitAngle="deg" unitLength="mm">
           Gap between top of one tray
-         and bottom of the tray above        </prim>
+         and bottom of the tray above  **obsolete by 19oct01! 
+        gaps now vary **        </prim>
+        <prim name="tray0Gap" type="double" uType="length" value="2.005" unitAngle="deg" unitLength="mm">
+          Gap above bottom tray        </prim>
+        <prim name="trayNoCnvGap" type="double" uType="length" value="2.130" unitAngle="deg" unitLength="mm">
+          Gap above non-bottom
+        no-converter trays        </prim>
+        <prim name="traySuperGap" type="double" uType="length" value="2.127" unitAngle="deg" unitLength="mm">
+          Gap above super-glast
+        trays        </prim>
+        <prim name="trayRegGap" type="double" uType="length" value="2.215" unitAngle="deg" unitLength="mm">
+          Gap above regular trays        </prim>
         <prim name="TKRTotalZ" type="double" uType="length" value="617.787" unitAngle="deg" unitLength="mm">
           Height of a tracker tower        </prim>
         <!--  inner structure of Si -->
-        <prim name="ssdGap" type="double" uType="length" value="0.1" unitAngle="deg" unitLength="mm">
-          gap between Si dies (superseded/obsolete?)
+        <prim name="ssdGap" type="double" uType="length" value="0.025" unitAngle="deg" unitLength="mm">
+          gap between Si dies within a ladder 
+(15oct01)
         </prim>
         <prim name="SiWaferSide" type="double" uType="length" value="89.5" unitAngle="deg" unitLength="mm">
           Length and width of Si wafer        </prim>
@@ -429,18 +444,13 @@ area on a wafer        </prim>
         <prim name="TKRWidth" type="double" uType="length" value="371.5" unitAngle="deg" unitLength="mm">
           **Is this just a replacement 
            for wallWidth?        </prim>
-        <prim name="faceWidth" type="double" uType="length" value="360.1" unitAngle="deg" unitLength="mm">
-          X and y width of face sheet        </prim>
+        <prim name="faceWidth" type="double" uType="length" value="360.6" unitAngle="deg" unitLength="mm">
+          X and y width of face sheet
+ (15oct01)        </prim>
         <prim name="TKRElectGap" type="double" uType="length" value="4.2" unitAngle="deg" unitLength="mm">
           **Insert comment here**        </prim>
         <prim name="ladderGap" type="double" uType="length" value="0.20" unitAngle="deg" unitLength="mm">
           gap between ladders        </prim>
-        <prim name="traySpacing" type="double" uType="length" value="32.0" unitAngle="deg" unitLength="mm">
-          Center-to-center distance
-         between trays.  Obsolete.  Now gap between trays is constant        </prim>
-        <prim name="panelThick" type="double" uType="length" value="28.8" unitAngle="deg" unitLength="mm">
-          Thickness of converter + core??
-           Probably obsolete        </prim>
         <prim name="guardRing" type="double" uType="length" value="0.745" unitAngle="deg" unitLength="mm">
           guard ring size. Probably 
          irrelevant.        </prim>
@@ -672,18 +682,38 @@ grid flange        </prim>
         <overview>
           Derived constants specific to tracker        </overview>
         <const name="TKRTrayWidth" uType="length" value="363.1" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickUpperReg" uType="length" value="0.691" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickUpperSuper" uType="length" value="0.767" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickLowerNoCnv" uType="length" value="0.766" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickBelowCnv" uType="length" value="0.464" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickToCnvReg" uType="length" value="0.302" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickToCnvSuper" uType="length" value="0.378" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickOutside" uType="length" value="0.227" unitAngle="deg" unitLength="mm" />
+        <const name="waferPitch" uType="length" value="89.525" unitAngle="deg" unitLength="mm" />
+        <const name="ladderPitch" uType="length" value="89.7" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickUpperReg" uType="length" value="0.625" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickUpperSuper" uType="length" value="0.715" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickLowerNoCnv" uType="length" value="0.625" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickBelowCnv" uType="length" value="0.35" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickToCnvReg" uType="length" value="0.375" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickToCnvSuper" uType="length" value="0.465" unitAngle="deg" unitLength="mm" />
+        <const name="inactiveThickOutside" uType="length" value="0.275" unitAngle="deg" unitLength="mm" />
         <const name="TKRMaxNoCnv" uType="count" value="2" unitAngle="deg" unitLength="mm" />
         <const name="TKRMaxReg" uType="count" value="17" unitAngle="deg" unitLength="mm" />
-        <!--  probably obsolete (3/20/01) -->
-        <const name="outsideTrayZ" uType="length" value="29.504" unitAngle="deg" unitLength="mm" />
-        <const name="middleTrayZ" uType="length" value="29.904" unitAngle="deg" unitLength="mm" />
+        <const name="nWaferAcrossM1" uType="count" value="3" unitAngle="deg" unitLength="mm" />
+        <!--  probably obsolete (3/20/01) 
+	<const name = "outsideTrayZ">
+          <notes>Total Z dimension of top and bottom trays</notes>
+	  <add>
+	    <refer refTo = "panelThick" />
+            <refer refTo = "faceThick" />
+            <refer refTo = "faceThick" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+	<const name = "middleTrayZ">
+          <notes>Total Z dimension of interior trays</notes>
+	  <add>
+	    <refer refTo = "outsideTrayZ" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+-->
       </derCategory>
       <derCategory name="derACD" save="true">
         <overview>
@@ -851,6 +881,12 @@ grid flange        </prim>
     <field name="fCALLog">
       <vMinMax max="11" min="0" />
     </field>
+    <field name="fLadder">
+      <vMinMax max="3" min="0" />
+    </field>
+    <field name="fWafer">
+      <vMinMax max="3" min="0" />
+    </field>
     <field name="fCALCellCmp">
       <vList>
         <vEnumVal value="0" />
@@ -863,9 +899,6 @@ grid flange        </prim>
     </field>
     <field name="fACDFace">
       <vMinMax max="4" min="0" />
-    </field>
-    <field name="fLadder">
-      <vMinMax max="3" min="0" />
     </field>
     <!--  constraints for these depend on which side we're in -->
     <field name="fRow" />
@@ -898,11 +931,13 @@ grid flange        </prim>
           </pValues>
           <dictNode fieldName="fTowerX">
             <dictNode fieldName="fTowerObjects">
+              <!--  CAL non-detector  -->
               <dictNode fieldName="fCALStructural">
                 <pValues>
                   <vEnumVal value="0" />
                 </pValues>
               </dictNode>
+              <!--  CAL detector  -->
               <dictNode fieldName="fLayer">
                 <pValues>
                   <vEnumVal value="0" />
@@ -914,48 +949,18 @@ grid flange        </prim>
                   </dictNode>
                 </dictNode>
               </dictNode>
+              <!--  TKR  -->
+              <!--  Simplify by lumping all tray identifiers together.
+                  Could constrain things a bit further by keeping
+                  track here of components of different trays, but
+                  don't bother (see version 1.8 or earlier of this 
+                  file for details on how this is done) -->
               <dictNode fieldName="fTKRTray">
-                <pValues>
-                  <vEnumVal value="1" />
-                </pValues>
-                <!--  child for bottom tray -->
                 <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal value="0" />
-                  </pValues>
                   <dictNode fieldName="fTKRTrayCmp">
-                    <vEnumVal value="1" />
-                  </dictNode>
-                </dictNode>
-                <!--  child for other non-converter trays -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax max="2" min="1" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp">
-                    <vList>
-                      <vEnumVal value="1" />
-                      <vEnumVal value="0" />
-                    </vList>
-                  </dictNode>
-                </dictNode>
-                <!--  child for normal trays  -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax max="17" min="3" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" />
-                </dictNode>
-                <!--  child for top tray -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal value="18" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp">
-                    <vList>
-                      <vEnumVal value="2" />
-                      <vEnumVal value="0" />
-                    </vList>
+                    <dictNode fieldName="fLadder">
+                      <dictNode fieldName="fWafer" />
+                    </dictNode>
                   </dictNode>
                 </dictNode>
               </dictNode>
@@ -1229,33 +1234,43 @@ grid flange        </prim>
      doesn't know about individual strips  -->
     <!--  Stay-clear envelope -->
     <box X="372.0" Y="372.0" Z="640.0" name="TKRStayClearBox" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <!--  Trays come in 3 flavors: top tray, bottom tray and middle tray.
-     These are further subdivided by thickness of converter layer which
-     may be any of 
-          no converter (bottom and middle trays only)
-          super-GLAST thickness (middle only)
-          "normal" thickness (middle and top only)  -->
-    <box X="363.1" Y="363.1" Z="0.105" name="convReg" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="363.1" Y="363.1" Z="0.630" name="convSuper" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  make double stack (first Y, then X) of converter squares, each of
+     which is centered over a wafer.  Do it once for regular converter
+     thickness and once for superGLAST layers -->
+    <box X="87.552" Y="87.552" Z="0.105" name="convRegSquare" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <stackY name="convRegLadder" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.525" shift0="0" volume="convRegSquare" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fWafer" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackX name="convRegArray" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.7" shift0="0" volume="convRegLadder" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLadder" step="1" value="0" />
+      </axisMPos>
+    </stackX>
+    <box X="87.552" Y="87.552" Z="0.723" name="convSuperSquare" material="W" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <stackY name="convSuperLadder" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.525" shift0="0" volume="convSuperSquare" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fWafer" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackX name="convSuperArray" origin="atStart">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.7" shift0="0" volume="convSuperLadder" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fLadder" step="1" value="0" />
+      </axisMPos>
+    </stackX>
     <box X="363.1" Y="363.1" Z="27.92" name="TKRCoreReg" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="363.1" Y="363.1" Z="33.909" name="TKRCoreBottom" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <!--  box name="TKRCoreNoConv" 
-	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
-	 ZREF="panelThick" materialREF="coreMat" /   -->
-    <!--  Instead of defining a silicon box, should perhaps make
-     a composition or stack(s) defining internal structure
-     of ladders and strips.
-  -->
+    <box X="363.1" Y="363.1" Z="34.27" name="TKRCoreOuter" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
     <box X="363.1" Y="363.1" Z="0.4" name="SiLayerBox" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
-    <choice name="SiLayer">
-      <case mode="propagate" volume="SiLayerBox" />
-      <case mode="digi recon" volume="SiLayerComp" />
-    </choice>
     <!--  No explicit material, so vacuum -->
     <box X="363.1" Y="363.1" Z="0.4" name="SiLayerEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
     <!--  The unrotated wafer is segmented along the x axis, hence measures X,
-     hence is an X layer -->
+     hence is an X layer
+ 
+     Active area is not quite a square, but very close.  For now,
+     ignore the .02 mm difference between length and width;
+     use the shorter dimension for both.
+-->
     <box X="87.552" Y="87.552" Z="0.4" name="SiWaferActive" material="Si" sensitive="true" unitAngle="deg" unitLength="mm">
       <seg axis="X" nSeg="384" reason="readout" />
     </box>
@@ -1268,30 +1283,47 @@ grid flange        </prim>
      strip id in glastsim style is then 
            local(in wafer)-strip# + strips-per-wafer * wafer-id
  -->
-    <stackX name="waferRow" origin="atCentre">
-      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="SiWaferNest" rotation="0" unitAngle="deg" unitLength="mm">
+    <!--        Try stacking in Y first to make a ladder.     -->
+    <stackY name="ladder" origin="atCentre">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.525" shift0="0" volume="SiWaferNest" rotation="0" unitAngle="deg" unitLength="mm">
+        <idField name="fWafer" step="1" value="0" />
+      </axisMPos>
+    </stackY>
+    <stackX name="towerLayerWafers" origin="atCentre">
+      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="89.7" shift0="0" volume="ladder" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fLadder" step="1" value="0" />
       </axisMPos>
     </stackX>
-    <stackY name="towerLayerWafers" origin="atCentre">
-      <axisMPos dX="0" dY="0" dZ="0" gap="0" gap0="0" ncopy="4" shift="0" shift0="0" volume="waferRow" rotation="0" unitAngle="deg" unitLength="mm" />
-    </stackY>
     <!--  The collection of wafers is centered in the volume -->
     <composition name="SiLayerComp" envelope="SiLayerEnv">
       <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="towerLayerWafers" unitAngle="deg" unitLength="mm" />
     </composition>
+    <!--  Should we even bother with a choice here?  All clients
+     probably want the more detailed SiLayerComp structure -->
+    <choice name="SiLayer">
+      <case mode="fastmc" volume="SiLayerBox" />
+      <case mode="digi" volume="SiLayerComp" />
+      <case mode="recon" volume="SiLayerComp" />
+      <case mode="propagate" volume="SiLayerComp" />
+    </choice>
     <!--  actually includes all inactive materials except core, conv -->
-    <box X="360.1" Y="360.1" Z="0.691" name="TKRFaceUpperReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.767" name="TKRFaceUpperSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.766" name="TKRFaceLowerNoCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.464" name="TKRBelowCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.378" name="TKRFaceToCnvSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.302" name="TKRFaceToCnvReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="360.1" Y="360.1" Z="0.227" name="TKRFaceOutside" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.625" name="TKRFaceUpperReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.715" name="TKRFaceUpperSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.625" name="TKRFaceLowerNoCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.35" name="TKRBelowCnv" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.465" name="TKRFaceToCnvSuper" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.375" name="TKRFaceToCnvReg" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="360.6" Z="0.275" name="TKRFaceOutside" material="C" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  Trays come in 3 flavors: top tray, bottom tray and middle tray.
+     These are further subdivided by thickness of converter layer which
+     may be any of 
+          no converter (bottom and middle trays only)
+          super-GLAST thickness (middle only)
+          "normal" thickness (middle and top only)  -->
     <!--  Make a stack for the bottom tray -->
     <stackZ name="trayBot" origin="atStart">
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreBottom" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreOuter" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceUpperReg" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="SiLayer" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="1" />
@@ -1315,7 +1347,7 @@ grid flange        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuper" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convSuperArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvSuper" rotation="0" unitAngle="deg" unitLength="mm" />
@@ -1331,7 +1363,7 @@ grid flange        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convRegArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
@@ -1347,11 +1379,11 @@ grid flange        </prim>
         <idField name="fTKRTrayCmp" step="0" value="0" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRBelowCnv" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="convRegArray" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTrayCmp" step="0" value="2" />
       </axisPos>
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceToCnvReg" rotation="0" unitAngle="deg" unitLength="mm" />
-      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreReg" rotation="0" unitAngle="deg" unitLength="mm" />
+      <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRCoreOuter" rotation="0" unitAngle="deg" unitLength="mm" />
       <axisPos dX="0" dY="0" dZ="0" gap="0" shift="0" volume="TKRFaceOutside" rotation="0" unitAngle="deg" unitLength="mm" />
     </stackZ>
     <!--  make a tracker by stacking up the trays -->
@@ -1360,75 +1392,75 @@ grid flange        </prim>
         <idField name="fTKRTray" step="0" value="0" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayNoConv" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.005" shift="0" volume="trayNoConv" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="1" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayNoConv" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.130" shift="0" volume="trayNoConv" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="2" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.130" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="3" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.127" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="4" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.127" shift="0" volume="traySuper" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="5" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.127" shift="0" volume="traySuper" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="6" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.127" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="7" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="8" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="9" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="10" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="11" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="12" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="13" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="14" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="15" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="16" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayReg" rotation="0" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="17" />
         <idField name="fMeasure" step="0" value="0" />
       </axisPos>
-      <axisPos dX="0" dY="0" dZ="0" gap="2.00" shift="0" volume="trayTop" rotation="90" unitAngle="deg" unitLength="mm">
+      <axisPos dX="0" dY="0" dZ="0" gap="2.215" shift="0" volume="trayTop" rotation="90" unitAngle="deg" unitLength="mm">
         <idField name="fTKRTray" step="0" value="18" />
         <idField name="fMeasure" step="0" value="1" />
       </axisPos>

@@ -53,6 +53,15 @@
       <vMinMax min="0" maxREF="maxLog" />
     </field>
 
+    <field name="fLadder" >
+      <vMinMax min="0" maxREF="nLadderM1" />
+    </field>
+
+    <field name="fWafer" >
+      <vMinMax min="0" maxREF="nWaferAcrossM1" />
+    </field>
+
+
     <field name="fCALCellCmp" >
       <vList>
         <vEnumVal valueREF="eXtal" />
@@ -68,9 +77,6 @@
       <vMinMax minREF="eACDTopFace" maxREF="eACDYPosFace" /> 
     </field>
 
-    <field name="fLadder" >
-      <vMinMax min="0" maxREF="nLadderM1" />
-    </field>
 <!-- constraints for these depend on which side we're in -->
     <field name="fRow" />
 
@@ -108,11 +114,15 @@
           </pValues>
           <dictNode fieldName="fTowerX" >
             <dictNode fieldName="fTowerObjects" >
+
+              <!-- CAL non-detector  -->
               <dictNode fieldName="fCALStructural" >
                 <pValues>
                   <vEnumVal valueREF="eTowerCAL" />
                 </pValues>
               </dictNode>
+
+              <!-- CAL detector  -->
               <dictNode fieldName="fLayer" >
                 <pValues>
                   <vEnumVal valueREF="eTowerCAL" />
@@ -124,60 +134,31 @@
                   </dictNode>
                 </dictNode> 
               </dictNode>
+
+              <!-- TKR  -->
+              <!-- Simplify by lumping all tray identifiers together.
+                  Could constrain things a bit further by keeping
+                  track here of components of different trays, but
+                  don't bother (see version 1.8 or earlier of this 
+                  file for details on how this is done) -->
               <dictNode fieldName="fTKRTray">
-                <pValues>
-                  <vEnumVal valueREF="eTowerTKR" />
-                </pValues>
-               
-                <!-- child for bottom tray -->
                 <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal value="0" />
-                  </pValues>
                   <dictNode fieldName="fTKRTrayCmp" >
-                    <vEnumVal valueREF="eTKRSiTop" />
+                    <dictNode fieldName="fLadder" >
+                      <dictNode fieldName="fWafer" />
+                    </dictNode>
                   </dictNode>
                 </dictNode>
 
-                <!-- child for other non-converter trays -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax min="1" maxREF="TKRMaxNoCnv" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" >
-                    <vList>
-                      <vEnumVal valueREF="eTKRSiTop" />
-                      <vEnumVal valueREF="eTKRSiBottom" />
-                    </vList>
-                  </dictNode>
-                </dictNode>
-
-                <!-- child for normal trays  -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vMinMax minREF="numNoCnvTrays" maxREF="TKRMaxReg" />
-                  </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" />
-                </dictNode>
-
-                <!-- child for top tray -->
-                <dictNode fieldName="fMeasure">
-                  <pValues>
-                    <vEnumVal valueREF="maxTray" />
-                   </pValues>
-                  <dictNode fieldName="fTKRTrayCmp" >
-                    <vList>
-                      <vEnumVal valueREF="eTKRCnv" />
-                      <vEnumVal valueREF="eTKRSiBottom" />
-                    </vList>
-                  </dictNode>
-                </dictNode>
               </dictNode>         <!-- end tray field -->
+
+
               <dictNode fieldName="fGridObjects" >
                 <pValues>
                   <vEnumVal valueREF="eTowerGrid" />
                 </pValues>
               </dictNode>
+
             </dictNode>           <!-- end towerObjects -->
           </dictNode>             <!-- end towerX -->
         </dictNode>               <!-- end towerY -->

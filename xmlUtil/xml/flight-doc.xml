@@ -28,7 +28,7 @@
     <!ENTITY idDict SYSTEM "flightIdDict.xml">
   ]>
 <gdd CVSid="$Id$" DTDversion="2.0" substituted="false">
-  <source inputId="Id: test 9/28/2001 10:55 " creatorId="Id: makeXmlForDoc.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
+  <source inputId="Id: flight.xml,v 1.11 2001/10/17 23:45:48 jrb Exp " creatorId="Id: makeXmlForDoc.cxx,v 1.3 2001/07/03 22:40:24 jrb Exp ">
     Do not edit! This file automatically created by xmlUtil/v1/src/forDoc.exe  </source>
   <constants>
     <version major="0" minor="0" />
@@ -386,39 +386,54 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
           Si thickness        </prim>
         <prim name="coreThick" type="double" uType="length" value="27.92" unitAngle="deg" unitLength="mm">
           Thickness of core material
-            in all trays except the bottom        </prim>
-        <prim name="coreThickBottom" type="double" uType="length" value="33.909" unitAngle="deg" unitLength="mm">
+            in all trays except the bottom and top        </prim>
+        <prim name="coreThickOuter" type="double" uType="length" value="34.27" unitAngle="deg" unitLength="mm">
           Core thickness for
-            bottom tray        </prim>
+            bottom and top trays  (15oct01)        </prim>
         <prim name="glueSiThick" type="double" uType="length" value="0.15" unitAngle="deg" unitLength="mm">
           Thickness of glue
             between Si and bias plane        </prim>
-        <prim name="glueThick" type="double" uType="length" value="0.075" unitAngle="deg" unitLength="mm">
+        <prim name="glueCoreThick" type="double" uType="length" value="0.075" unitAngle="deg" unitLength="mm">
           Thickness of glue between
-            non-Si components        </prim>
+            core (or closeout) and something else (15oct01)        </prim>
+        <prim name="glueDefThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
+          Default glue thickness,
+            when neither Si nor core is involved (15oct01)        </prim>
         <prim name="convThickReg" type="double" uType="length" value="0.105" unitAngle="deg" unitLength="mm">
           Thickness of conversion 
             material in "regular" layers in mm        </prim>
-        <prim name="convThickSup" type="double" uType="length" value="0.630" unitAngle="deg" unitLength="mm">
+        <prim name="convThickSup" type="double" uType="length" value="0.723" unitAngle="deg" unitLength="mm">
           Thickness of conversion 
-            material in super-GLAST layers in mm        </prim>
-        <prim name="faceThick" type="double" uType="length" value="0.152" unitAngle="deg" unitLength="mm">
+            material in super-GLAST layers in mm (as of 15 oct 2001)        </prim>
+        <prim name="faceThick" type="double" uType="length" value="0.200" unitAngle="deg" unitLength="mm">
           Face sheet thickness
-            for all but super-glast layers        </prim>
-        <prim name="faceThickSuper" type="double" uType="length" value="0.228" unitAngle="deg" unitLength="mm">
+            for all but super-glast layers (as of 15oct01)        </prim>
+        <prim name="faceThickSuper" type="double" uType="length" value="0.290" unitAngle="deg" unitLength="mm">
           Face sheet thickness
-            for super-glast layers        </prim>
-        <prim name="biasPlaneThick" type="double" uType="length" value="0.239" unitAngle="deg" unitLength="mm">
+            for super-glast layers (15oct01)        </prim>
+        <prim name="biasPlaneThick" type="double" uType="length" value="0.100" unitAngle="deg" unitLength="mm">
           Thickness of bias
-            plane        </prim>
+            plane (15oct01)        </prim>
         <prim name="intertrayGap" type="double" uType="length" value="2.00" unitAngle="deg" unitLength="mm">
           Gap between top of one tray
-         and bottom of the tray above        </prim>
+         and bottom of the tray above  **obsolete by 19oct01! 
+        gaps now vary **        </prim>
+        <prim name="tray0Gap" type="double" uType="length" value="2.005" unitAngle="deg" unitLength="mm">
+          Gap above bottom tray        </prim>
+        <prim name="trayNoCnvGap" type="double" uType="length" value="2.130" unitAngle="deg" unitLength="mm">
+          Gap above non-bottom
+        no-converter trays        </prim>
+        <prim name="traySuperGap" type="double" uType="length" value="2.127" unitAngle="deg" unitLength="mm">
+          Gap above super-glast
+        trays        </prim>
+        <prim name="trayRegGap" type="double" uType="length" value="2.215" unitAngle="deg" unitLength="mm">
+          Gap above regular trays        </prim>
         <prim name="TKRTotalZ" type="double" uType="length" value="617.787" unitAngle="deg" unitLength="mm">
           Height of a tracker tower        </prim>
         <!--  inner structure of Si -->
-        <prim name="ssdGap" type="double" uType="length" value="0.1" unitAngle="deg" unitLength="mm">
-          gap between Si dies (superseded/obsolete?)
+        <prim name="ssdGap" type="double" uType="length" value="0.025" unitAngle="deg" unitLength="mm">
+          gap between Si dies within a ladder 
+(15oct01)
         </prim>
         <prim name="SiWaferSide" type="double" uType="length" value="89.5" unitAngle="deg" unitLength="mm">
           Length and width of Si wafer        </prim>
@@ -429,18 +444,13 @@ area on a wafer        </prim>
         <prim name="TKRWidth" type="double" uType="length" value="371.5" unitAngle="deg" unitLength="mm">
           **Is this just a replacement 
            for wallWidth?        </prim>
-        <prim name="faceWidth" type="double" uType="length" value="360.1" unitAngle="deg" unitLength="mm">
-          X and y width of face sheet        </prim>
+        <prim name="faceWidth" type="double" uType="length" value="360.6" unitAngle="deg" unitLength="mm">
+          X and y width of face sheet
+ (15oct01)        </prim>
         <prim name="TKRElectGap" type="double" uType="length" value="4.2" unitAngle="deg" unitLength="mm">
           **Insert comment here**        </prim>
         <prim name="ladderGap" type="double" uType="length" value="0.20" unitAngle="deg" unitLength="mm">
           gap between ladders        </prim>
-        <prim name="traySpacing" type="double" uType="length" value="32.0" unitAngle="deg" unitLength="mm">
-          Center-to-center distance
-         between trays.  Obsolete.  Now gap between trays is constant        </prim>
-        <prim name="panelThick" type="double" uType="length" value="28.8" unitAngle="deg" unitLength="mm">
-          Thickness of converter + core??
-           Probably obsolete        </prim>
         <prim name="guardRing" type="double" uType="length" value="0.745" unitAngle="deg" unitLength="mm">
           guard ring size. Probably 
          irrelevant.        </prim>
@@ -773,36 +783,46 @@ grid, etc. (may be superseded by info from Eric)          </notes>
         <overview>
           Derived constants specific to tracker        </overview>
         <const name="TKRTrayWidth" uType="length" value="363.1" unitAngle="deg" unitLength="mm" />
-        <const name="inactiveThickUpperReg" uType="length" value="0.691" unitAngle="deg" unitLength="mm">
+        <const name="waferPitch" uType="length" value="89.525" unitAngle="deg" unitLength="mm">
+          <notes>
+             Distance between centers of adjacent wafers in 
+                  a ladder          </notes>
+        </const>
+        <const name="ladderPitch" uType="length" value="89.7" unitAngle="deg" unitLength="mm">
+          <notes>
+             Distance between centers of adjacent wafers in 
+                  adjacent ladders          </notes>
+        </const>
+        <const name="inactiveThickUpperReg" uType="length" value="0.625" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials above core between Si and core
                  for regular layers          </notes>
         </const>
-        <const name="inactiveThickUpperSuper" uType="length" value="0.767" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickUpperSuper" uType="length" value="0.715" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials above core between Si and core
                  for superGlast layers          </notes>
         </const>
-        <const name="inactiveThickLowerNoCnv" uType="length" value="0.766" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickLowerNoCnv" uType="length" value="0.625" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials from core on down to Si for no cnv
                  layers          </notes>
         </const>
-        <const name="inactiveThickBelowCnv" uType="length" value="0.464" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickBelowCnv" uType="length" value="0.35" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials below converter, above bottom Si          </notes>
         </const>
-        <const name="inactiveThickToCnvReg" uType="length" value="0.302" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickToCnvReg" uType="length" value="0.375" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials from core to converter, exclusive,
                  for regular layers          </notes>
         </const>
-        <const name="inactiveThickToCnvSuper" uType="length" value="0.378" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickToCnvSuper" uType="length" value="0.465" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials from core to converter, exclusive,
                  for super-glast layers          </notes>
         </const>
-        <const name="inactiveThickOutside" uType="length" value="0.227" unitAngle="deg" unitLength="mm">
+        <const name="inactiveThickOutside" uType="length" value="0.275" unitAngle="deg" unitLength="mm">
           <notes>
             Inactive materials from outside (top of top or bottom
              of bottom layer) to core          </notes>
@@ -816,15 +836,30 @@ grid, etc. (may be superseded by info from Eric)          </notes>
             Tray number of most forward "regular" tray. Top
                  tray doesn't qualify since it has no top Si.          </notes>
         </const>
-        <!--  probably obsolete (3/20/01) -->
-        <const name="outsideTrayZ" uType="length" value="29.504" unitAngle="deg" unitLength="mm">
+        <const name="nWaferAcrossM1" uType="count" value="3" unitAngle="deg" unitLength="mm">
           <notes>
-            Total Z dimension of top and bottom trays          </notes>
+            Used as bound for possible idField values          </notes>
         </const>
-        <const name="middleTrayZ" uType="length" value="29.904" unitAngle="deg" unitLength="mm">
-          <notes>
-            Total Z dimension of interior trays          </notes>
-        </const>
+        <!--  probably obsolete (3/20/01) 
+	<const name = "outsideTrayZ">
+          <notes>Total Z dimension of top and bottom trays</notes>
+	  <add>
+	    <refer refTo = "panelThick" />
+            <refer refTo = "faceThick" />
+            <refer refTo = "faceThick" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+	<const name = "middleTrayZ">
+          <notes>Total Z dimension of interior trays</notes>
+	  <add>
+	    <refer refTo = "outsideTrayZ" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+-->
       </derCategory>
       <derCategory name="misc" save="false">
         <overview>
