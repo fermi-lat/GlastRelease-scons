@@ -2,6 +2,7 @@
  * package GlastEvent
  * package manager:T.Burnett (original author: H. Gillespie)
  *
+ * v6r1  26-mar-02 THB  change McParticle, remvoe McVertex 
  * v5r2 15-Mar-2002 HMK update for Gaudi v9 and remove IRF classes\n
  * v5r1  THB: remove dependence on data\n
  * v4r2  THB: Tag following addition of TkrVertexCol\n

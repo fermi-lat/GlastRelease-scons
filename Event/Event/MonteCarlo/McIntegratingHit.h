@@ -89,8 +89,8 @@ class McIntegratingHit : virtual public ContainedObject {
     /// Remove all energyInfos
     void clearEnergyItems();
     /// Add single energyInfo to energyDepositMap
-    void addEnergyItem( const double& energy, McParticle* t, const HepPoint3D& position );
-    void addEnergyItem( const double& energy, SmartRef<McParticle> t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, mc::McParticle* t, const HepPoint3D& position );
+    void addEnergyItem( const double& energy, SmartRef<mc::McParticle> t, const HepPoint3D& position );
 
     /// Retrieve primary-origin flag
     bool primaryOrigin() const;

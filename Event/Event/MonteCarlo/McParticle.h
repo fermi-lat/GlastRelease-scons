@@ -1,4 +1,9 @@
-// $Header$
+/** 
+* @file McReconAlg.cxx
+* @brief Declaration and definition of the TDS object McParticle.
+*
+*  $Header$
+*/
 #ifndef GlastEvent_McParticle_H
 #define GlastEvent_McParticle_H 1
 
@@ -43,34 +48,30 @@
 //------------------------------------------------------------------------------
  */
 
-namespace mc {  // NameSpace
 
 extern const CLID& CLID_McParticle;
+
+namespace mc {  // NameSpace
 
 class McParticle  : virtual public ContainedObject  {
   public:
     typedef int  StdHepId;
-   // vertex type definition
-    enum originType {primaryOrigin = 1, 
-        daughterOrigin = 2, 
-        decayProduct = 3, 
-        showerContents = 4, 
-        showerBacksplash = 5};
 
-    enum StatusBits{
-        DECAYED =1 ,   //! Decayed by generator
-        DECAYFLT=1<<1, //! Decayed in flight by swimmer
-        MISSED=  1<<2 ,//! Does not hit detector
-        NOINTER =1<<3, //! Traverses detector w/o interacting 
-        STOPPED =1<<4, //! Energy below cut; other bits may say why 
-        INTERACT=1<<5, //! Interacted, no further decision to be made
-        INTSHDEP=1<<6, //! Interacted, further decision depends on ! selection of shower deposition r 
-        PRIMARY =1<<7, //! primary particle 
-        SWERROR =1<<8, //! Error occurred in swimming the track 
-        SW2MNYST=1<<9, //! Swim aborted: too many steps (ISTOP=99) Parameter 
+    //! status bits modeled on successful SLD scheme
+    enum StatusBits{  
+        DECAYED =1 ,    //! Decayed by generator
+        DECAYFLT=1<<1,  //! Decayed in flight by swimmer
+        MISSED=  1<<2,  //! Does not hit detector
+        NOINTER =1<<3,  //! Traverses detector w/o interacting 
+        STOPPED =1<<4,  //! Energy below cut; other bits may say why 
+        INTERACT=1<<5,  //! Interacted, no further decision to be made
+        INTSHDEP=1<<6,  //! Interacted, further decision depends on ! selection of shower deposition  
+        PRIMARY =1<<7,  //! primary particle 
+        SWERROR =1<<8,  //! Error occurred in swimming the track 
+        SW2MNYST=1<<9,  //! Swim aborted: too many steps (ISTOP=99)  
         WOUTOFT =1<<10, //! Swim aborted: out of sensitive time of ! detector (ISTOP=4) 
         NOTTRACK=1<<11, //! Not tracked by user request 
-        Swum =   1<<12  //! // this particle was produced by the swimmer
+        Swum =   1<<12  //! this particle was produced by the swimmer
     };
 
 
@@ -84,7 +85,13 @@ class McParticle  : virtual public ContainedObject  {
     /// Destructor
     virtual ~McParticle() {}
 
-    void init(const McParticle* mother, StdHepId id, const Mc 
+    //! completely initialize a newed object. No other way to set most attributes.
+    void init( McParticle* mother, 
+        StdHepId id, 
+        unsigned int statusBits,
+        const HepLorentzVector& initalMomentum,
+        const HepLorentzVector& finalMomentum,
+        const HepPoint3D& finalPosition);
 
     /// Retrieve particle identificatio
     ParticleID particleID() const;
@@ -99,9 +106,11 @@ class McParticle  : virtual public ContainedObject  {
     /// Retrieve whether this is a primary particle: true if mother is itself
     bool primaryParticle() const;
 
-    /// Retrieve pointer to the incoming vertex 
-    const HepPoint3D& originVertex() const;
+    /// Retrieve pointer to the start, end vertex positions 
+    const HepPoint3D& initialPosition() const;
+    const HepPoint3D& finalPosition() const;
 
+    const HepLorentzVector&  initialFourMomemtum()const;
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
@@ -135,9 +144,8 @@ class McParticle  : virtual public ContainedObject  {
 //template <class TYPE> class ObjectVector;
 //typedef ObjectVector<McParticle>     McParticleVector;
 
-template <class TYPE> class ObjectList;
-typedef ObjectList<McParticle>       McParticleList;
-typedef ObjectList<McParticle>       McParticleCol;
+typedef ObjectList<mc::McParticle>       McParticleList;
+typedef ObjectList<mc::McParticle>       McParticleCol;
 
 inline StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
 {
