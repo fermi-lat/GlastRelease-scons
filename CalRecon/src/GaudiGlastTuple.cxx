@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "CalRecon\GaudiGlastTuple.h"
+#include "CalRecon/GaudiGlastTuple.h"
 
 /*! Here we need to pass in a pointer to the NTupleSvc, which you get from
     from the ntupleSvc() call back in the algorithm.
