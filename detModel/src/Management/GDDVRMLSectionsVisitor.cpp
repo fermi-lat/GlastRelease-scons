@@ -76,7 +76,7 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
 	if(section->getVolumes()[i]->getVolumeType() == composition)
 	  {
 	    GDDcomposition* comp = static_cast<GDDcomposition*>(section->getVolumes()[i]);
-	    if (comp->getEnvelope() == section->getTopVolume())
+	    if (comp == section->getTopVolume())
 	      {
 		vol = section->getVolumes()[i];
 	      }
@@ -101,7 +101,9 @@ void  GDDVRMLSectionsVisitor::visitSection(GDDsection* section)
   /** 
    * We setup three standard view on the three coordinates planes;
    * since in VRML97 there is no orthographic camera, we simulate it
-   * with a far away camera and a small field of view. */
+   * with a far away camera and a small field of view. \todo To be 
+   * corrected; some views are not properly performed
+   */
   
   out << "Viewpoint {" << std::endl;
   out << "position 0 0 " << dimX << std::endl;
@@ -163,6 +165,9 @@ void  GDDVRMLSectionsVisitor::visitComposition(GDDcomposition* composition)
     }
 }
 
+/** \todo The visitStack mechanism is undergoing a big redesign .. 
+ *too much duplicated code in different visitors
+ */
 void  GDDVRMLSectionsVisitor::visitStack(GDDstack* st)
 {
   unsigned int j;
@@ -263,6 +268,9 @@ void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
 }
 
 
+/** \todo The visitAxisPos mechanism is undergoing a big redesign .. 
+ *too much duplicated code in different visitors
+ */
 void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 {
   out << "Transform { " << std::endl;
@@ -285,6 +293,9 @@ void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
 
 }
 
+/** \todo The visitAxisMPos mechanism is undergoing a big redesign .. 
+ *too much duplicated code in different visitors
+ */
 void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 {
   int i;
@@ -322,12 +333,12 @@ void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 
 void  GDDVRMLSectionsVisitor::visitIdField(GDDidField*)
 {
-
+  /// We don't need identifiers in the VRML visitor
 }
 
 void  GDDVRMLSectionsVisitor::visitSeg(GDDseg*)
 {
-
+  /// \todo Still not implemented the subdivision in seg of a box
 }
 
 void GDDVRMLSectionsVisitor::setDepth(std::string name, int d)

@@ -19,6 +19,8 @@
 #include "detModel/GDD.h"
 
 
+/* This basic test needs two argument; the xml file to use and the volume 
+   name to use as the mother volume */
 int main(int argc, char* argv[]) {
 
   // We need the XML flight as input to the test executable
