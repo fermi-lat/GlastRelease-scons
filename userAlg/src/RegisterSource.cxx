@@ -40,8 +40,9 @@ public:
         return 0;
     }
 
+    /// return (costheta, phi)
     virtual std::pair<float,float> dir(float energy)const {
-        return std::make_pair(-1.0,0) ;}
+        return std::make_pair(1.0,0) ;}
 
     // not really needed by the interface
     virtual float operator()(float /*r*/)const{return 0;}
