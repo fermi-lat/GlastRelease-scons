@@ -2,7 +2,6 @@
 #include "detModel/Utilities/GDDmatrix.h"
 #include "detModel/Sections/GDDstack.h"
 #include "detModel/Sections/GDDstackedPos.h"
-#include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 
 /// \todo Deal with case different from origin
@@ -19,16 +18,7 @@ void GDDstack::buildDisp(){
       if(!b->exists())
 	(*i)->buildBB();
       
-      if(GDDaxisPos* pos = dynamic_cast<GDDaxisPos*>(*i))
-	{
-	  pos->setDisp(actualDisp + 
-		       b->getDirDim((GDDboundingBox::axisDir)getAxisDir())/2 
-		       + pos->getGap());
-	  
-	  actualDisp = actualDisp + 
-	    b->getDirDim((GDDboundingBox::axisDir)getAxisDir()) + pos->getGap();
-	}
-      else if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))
+      if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))
 	{
 	  pos->setDispCM(actualDisp + 
 			 b->getDirDim((GDDboundingBox::axisDir)getAxisDir())/2 
@@ -54,33 +44,7 @@ void GDDstack::buildBB(){
 	{
 	  b = (*i)->getBBox();
 	  
-	  if(GDDaxisPos* pos = dynamic_cast<GDDaxisPos*>(*i))
-	    {
-	      switch(getAxisDir()){
-	      case xDir:
-		getBBox()->merge(b,
-				 pos->getDisp()+pos->getDx(), 
-				 pos->getDx(), 
-				 pos->getDz());
-		getBBox()->setXDim(getBBox()->getXDim()/2);
-		break;	
-	      case yDir:
-		getBBox()->merge(b,
-				 pos->getDx(), 
-				 pos->getDisp()+ pos->getDy(), 
-				 pos->getDz());
-		getBBox()->setYDim(getBBox()->getYDim()/2);
-		break;	
-	      case zDir:
-		getBBox()->merge(b,
-				 pos->getDx(), 
-				 pos->getDy(),
-				 pos->getDisp()+ pos->getDz());
-		getBBox()->setZDim(getBBox()->getZDim()/2);
-		break;	
-	      }
-	    }
-	  else if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))
+	  if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))
 	    {
 	      switch(getAxisDir()){
 	      case xDir:
@@ -111,11 +75,8 @@ void GDDstack::buildBB(){
       for(i=p.begin();i<p.end();i++)
 	{
 	  b = (*i)->getBBox();
-
-	  if(GDDaxisPos* pos = dynamic_cast<GDDaxisPos*>(*i))	  
-	    pos->setDisp(pos->getDisp() 
-			 - getBBox()->getDirDim((GDDboundingBox::axisDir)getAxisDir())/2);
-	  else if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))	  
+	  
+	  if(GDDaxisMPos* pos = dynamic_cast<GDDaxisMPos*>(*i))	  
 	    {
 	      pos->setDispCM(pos->getDispCM() - 
 			     getBBox()->getDirDim((GDDboundingBox::axisDir)getAxisDir())/2);

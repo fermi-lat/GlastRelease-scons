@@ -9,7 +9,6 @@
 #include "detModel/Sections/GDDensemble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
-#include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDseg.h"
@@ -86,13 +85,6 @@ void  GDDprinterSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
   std::cout << "\t\t\t whose position is   X: " 
 	    << pos->getX() << "  Y: " << pos->getY() << "  Z: " << pos->getZ() << std::endl;  
   std::cout << "\t\t\t ------------------ -----------------------------------" << std::endl;
-}
-
-void  GDDprinterSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
-{
-  std::cout << "\t\t\t Visiting the AxisPos of " << pos->getVolume()->getName() << std::endl;    
-  std::cout << "\t\t\t displaced along the axis by " << pos->getDisp() << std::endl;    
-  std::cout << "\t\t\t -----------------------------------" << std::endl;
 }
 
 void  GDDprinterSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)

@@ -13,11 +13,11 @@ public:
 
     void addColor(GDDcolor* c){colors.push_back(c);}
     int getColorNumber(){return colors.size();};
-    GDDcolor* getColor(int i){if (i<colors.size()) return colors[i]; else return 0;}
+    GDDcolor* getColor(unsigned int i){if (i<colors.size()) return colors[i]; else return 0;}
 
     void hsvToRgb(double *r, double *g, double *b, double h, double s, double v);
 
-    void makeColors(int n);
+    void makeColors(unsigned int n);
 
 private:    
 

@@ -14,7 +14,6 @@
 #include "detModel/Sections/GDDensemble.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
-#include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 #include "detModel/Sections/GDDidField.h"
 #include "detModel/Sections/GDDposition.h"
@@ -25,7 +24,7 @@
 GDDVRMLSectionsVisitor::GDDVRMLSectionsVisitor(std::string nvol)
 {
   // Some variables
-  int i;
+  unsigned int i;
   typedef std::map<std::string,GDDcolor*>M1;
   typedef std::map<std::string,int>M2;
   typedef std::map<std::string,GDDvolume*>M3;
@@ -210,33 +209,6 @@ void  GDDVRMLSectionsVisitor::visitPosXYZ(GDDposXYZ* pos)
   out << "} " << std::endl;
 }
 
-
-void  GDDVRMLSectionsVisitor::visitAxisPos(GDDaxisPos* pos)
-{
-  out << "Transform { " << std::endl;
-  switch(pos->getAxisDir()){
-  case (GDDstack::xDir):
-    out << "rotation " << " 1 0 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
-    out << "translation " << 
-      pos->getDx()+pos->getDisp() << " " << pos->getDy() << " " << pos->getDz() << std::endl;
-    break;
-  case (GDDstack::yDir):
-    out << "rotation " << " 0 1 0 " <<  pos->getRotation()*3.141927/180 << std::endl;  
-    out << "translation " << 
-      pos->getDx() << " " << pos->getDy()+pos->getDisp() << " " << pos->getDz() << std::endl;
-    break;
-  case (GDDstack::zDir):
-    out << "rotation " << " 0 0 1 " <<  pos->getRotation()*3.141927/180  << std::endl;  
-    out << "translation " << 
-      pos->getDx() << " " << pos->getDy() << " " << pos->getDz()+pos->getDisp() << std::endl;
-    break;
-  }
-  out << "children [ " << std::endl;
-  pos->getVolume()->AcceptNotRec(this);
-  out << "] " << std::endl; 
-  out << "} " << std::endl;
-
-}
 
 void  GDDVRMLSectionsVisitor::visitAxisMPos(GDDaxisMPos* pos)
 {

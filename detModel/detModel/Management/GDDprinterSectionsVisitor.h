@@ -42,11 +42,6 @@ class GDDprinterSectionsVisitor : public GDDsectionsVisitor {
   virtual void visitPosXYZ(GDDposXYZ*);
 
   /**
-   * This is the visitor for the GDDaxisPos 
-   */
-  virtual void visitAxisPos(GDDaxisPos*);
-
-  /**
    * This is the visitor for the GDDaxisMPos 
    */
   virtual void visitAxisMPos(GDDaxisMPos*);

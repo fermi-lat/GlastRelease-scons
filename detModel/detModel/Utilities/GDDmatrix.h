@@ -6,6 +6,7 @@
 class GDDvector{
  public:
 
+  GDDvector():x(0),y(0),z(0){};
   GDDvector(double px, double py, double pz):x(px), y(py), z(pz){};
 
   double getX(){return x;}
@@ -21,7 +22,7 @@ class GDDvector{
   double z;
 };
 
-
+void GDDequate(GDDvector* t, GDDvector* v);
 void GDDtranslate(GDDvector* t, GDDvector* v);
 void GDDrotate(int dir, double theta, GDDvector* v);
 

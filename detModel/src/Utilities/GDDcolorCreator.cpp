@@ -27,7 +27,7 @@ void GDDcolorCreator::hsvToRgb(double *r, double *g, double *b, double h, double
   }
 }
 
-void GDDcolorCreator::makeColors(int n)
+void GDDcolorCreator::makeColors(unsigned int n)
 {
   unsigned int i;
   double r, g, b;

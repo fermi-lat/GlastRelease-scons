@@ -7,7 +7,6 @@ class GDDsection;
 class GDDbox;
 class GDDensemble;
 class GDDposXYZ;
-class GDDaxisPos;
 class GDDaxisMPos;
 class GDDidField;
 class GDDseg;
@@ -39,10 +38,6 @@ class GDDsectionsVisitor : public GDDvisitor {
    * This is the visitor for the GDDposXYZ 
    */
   virtual void visitPosXYZ(GDDposXYZ*) = 0;
-  /**
-   * This is the visitor for the GDDaxisPos 
-   */
-  virtual void visitAxisPos(GDDaxisPos*) = 0;
   /**
    * This is the visitor for the GDDaxisMPos 
    */

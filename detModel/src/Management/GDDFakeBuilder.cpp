@@ -11,7 +11,6 @@
 #include "detModel/Sections/GDDcomposition.h"
 #include "detModel/Sections/GDDposXYZ.h"
 #include "detModel/Sections/GDDstack.h"
-#include "detModel/Sections/GDDaxisPos.h"
 #include "detModel/Sections/GDDaxisMPos.h"
 #include "detModel/Sections/GDDchoice.h"
 #include "detModel/Sections/GDDidField.h"

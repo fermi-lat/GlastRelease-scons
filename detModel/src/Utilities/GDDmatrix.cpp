@@ -8,6 +8,13 @@ void GDDtranslate(GDDvector* t, GDDvector* v)
   v->z = v->z + t->z;
 };
 
+void GDDequate(GDDvector* t, GDDvector* v)
+{
+  t->x = v->x;
+  t->y = v->y;
+  t->z = v->z;
+};
+
 /// 0 = x, 1 = y, 2 = z
 void GDDrotate(int dir, double theta, GDDvector* v)
 {
