@@ -119,7 +119,6 @@ StatusCode GuiSvc::initialize ()
         IntegerProperty evtMax("EvtMax",0);
         status = propMgr->getProperty( &evtMax );
         if (status.isFailure()) return status;
-        int max_event = evtMax.value();
         
         setProperty(evtMax);
     }
