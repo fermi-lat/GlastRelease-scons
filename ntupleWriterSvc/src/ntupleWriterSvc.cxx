@@ -27,7 +27,7 @@ static std::string tupleRoot("/NTUPLES/");
 
 // A value to insert into the ntuple when NaN or inf is
 // passed in to be written
-static float badValue = -99.0;
+static float badValue = -99999.0;
 
 unsigned int ntupleWriterSvc::m_tupleCounter;
 
