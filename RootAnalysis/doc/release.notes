@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v7r0     07-Feb-2005: JCT: Upgrade RootTreeAnalysis and PruneTrees directory to new TkrRecon
  v6r0     24-Jan-2005: HMK: Fix up usage of TTree::GetEntries which now returns
           a Long64_t rather than a Double_t
  v5r0     11-Jun-2004: HMK: Try out selectors and tasks - but do not build for 

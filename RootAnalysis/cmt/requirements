@@ -1,5 +1,5 @@
 package RootAnalysis
-version v6r0
+version v7r0
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
@@ -62,8 +62,8 @@ application test_RootAnalysis test/runTreeAnalysis.cxx \
             RootTreeAnalysis/RootTreeAnalysis.cxx \
             ${RootAnalysis_headers}
 
-application runTreeMaker LeaningTower/runTreeMaker.cxx \
-            LeaningTower/TreeMaker.cxx
+#application runTreeMaker LeaningTower/runTreeMaker.cxx \
+#            LeaningTower/TreeMaker.cxx
 
 # Define the new Selector Library and Application
 #library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
