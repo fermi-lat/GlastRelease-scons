@@ -1,6 +1,6 @@
 package geomrep
 
-version v4
+version v4r1
 #$Header$
 
 use geometry 
