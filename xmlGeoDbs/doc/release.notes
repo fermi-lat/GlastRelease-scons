@@ -2,6 +2,8 @@
  * Package xmlGeoDbs
  * Coordinator: J. Bogart
  *
+ *  8-jul-2003: jrb - tag v1r11p3  Incorporate one more tkr adjustment and
+ *                                 minor CAL constant redefinition
  * 24-jun-2003: jrb - tag v1r11p2  Incorporate Leon's fixes to vertical 
  *                                 dimensions and positions within tracker
  * 20-jun-2003: jrb - tag v1r11p1  1. Implement top frame according to new
