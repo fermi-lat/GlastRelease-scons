@@ -87,7 +87,7 @@ void MuonPhysics::ConstructProcess()
   pManager->AddProcess(&fMuMinusMultipleScattering);
   pManager->SetProcessOrdering(&fMuMinusMultipleScattering, idxAlongStep,  1);
   pManager->SetProcessOrdering(&fMuMinusMultipleScattering, idxPostStep,  1);
-  pManager->AddRestProcess(&fMuMinusCaptureAtRest);
+//  pManager->AddRestProcess(&fMuMinusCaptureAtRest);
 
   // Tau Plus Physics
   pManager = G4TauPlus::TauPlus()->GetProcessManager();
