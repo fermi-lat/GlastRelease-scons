@@ -32,7 +32,6 @@
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McEventStructure.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 
 
 class McGetEventInfoTool : public AlgTool, virtual public IMcGetEventInfoTool 

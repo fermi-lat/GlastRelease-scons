@@ -1,8 +1,8 @@
 /** 
  * @class McGetTrackInfoTool
  *
- * @brief A Gaudi tool for extracting information from the McParticle - TkrPatCand and 
- *        TkrPatCandHit relational tables for studying pattern reconstruction issues. 
+ * @brief A Gaudi tool for extracting information from the McParticle - TkrTrack and 
+ *        TkrTrackHit relational tables for studying pattern reconstruction issues. 
  *
  *        NOTE: The interface for this Gaudi tool is defined 
  *              in GlastSvc/MonteCarlo/IMcGetTrackInfoTool
@@ -30,7 +30,6 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 
 
 class McGetTrackInfoTool : public AlgTool, virtual public IMcGetTrackInfoTool 
@@ -44,20 +43,20 @@ public:
     StatusCode                    initialize();
 
     /// @brief Return the number of Monte Carlo tracks
-    int                           getNMcParticles(const Event::TkrPatCand*);
+    int                           getNMcParticles(const Event::TkrTrack*);
 
     /// @brief Return a vector of McParticles which have hits in the tracker
-    const Event::McParticleRefVec getMcParticleVec(const Event::TkrPatCand*);
+    const Event::McParticleRefVec getMcParticleVec(const Event::TkrTrack*);
 
-    /// @brief Return TkrPatCand <-> McParticle "best" match
-    const Event::McParticle*      getBestMcParticle(const Event::TkrPatCand*);
+    /// @brief Return TkrTrack <-> McParticle "best" match
+    const Event::McParticle*      getBestMcParticle(const Event::TkrTrack*);
 
-    /// @brief Return TkrPatCand <-> McParticle "best" match
-    const Event::TkrPatCand*      getBestTkrPatCand(const Event::McParticle*);
+    /// @brief Return TkrTrack <-> McParticle "best" match
+    const Event::TkrTrack*        getBestTkrTrack(const Event::McParticle*);
 
-    /// @brief Return the number of hits on a given TkrPatCand track associated to
+    /// @brief Return the number of hits on a given TkrTrack track associated to
     ///        a given McParticle
-    int                           getNumMcHits(const Event::TkrPatCand*, const Event::McParticle*);
+    int                           getNumMcHits(const Event::TkrTrack*, const Event::McParticle*);
 
 private:
     /// Method for updating data
@@ -77,11 +76,11 @@ private:
     int                            m_lastEventNo;    // backup for now
 
     /// Pointers to the Monte Carlo information for a single event
-    Event::McPartToTkrCandHitTab*  m_partToCandHitTab;
-    Event::McPartToTkrPatCandTab*  m_partToPatCandTab;
+    Event::McPartToTkrTrackHitTab* m_partToTkrTrackHitTab;
+    Event::McPartToTkrTrackTab*    m_partToTkrTrackTab;
 
     /// Null particle reference
-    Event::McParticle             m_nullParticle;
+    Event::McParticle              m_nullParticle;
 };
 
 
@@ -97,8 +96,8 @@ McGetTrackInfoTool::McGetTrackInfoTool(const std::string& type, const std::strin
     //Declare additional interface
     declareInterface<IMcGetTrackInfoTool>(this);
 
-    m_partToCandHitTab = 0;
-    m_partToPatCandTab = 0;
+    m_partToTkrTrackHitTab = 0;
+    m_partToTkrTrackTab = 0;
 
 	return;
 }
@@ -146,16 +145,16 @@ const bool McGetTrackInfoTool::updateData()
             m_lastEventNo = mcEvent->getSequence();
 
             // Clean up the last table (if one)
-            if (m_partToCandHitTab) delete m_partToCandHitTab;
-            if (m_partToPatCandTab) delete m_partToPatCandTab;
+            if (m_partToTkrTrackHitTab) delete m_partToTkrTrackHitTab;
+            if (m_partToTkrTrackTab)    delete m_partToTkrTrackTab;
 
             // Retrieve the McParticle to Pat Cand Hit relational table
-            SmartDataPtr<Event::McPartToTkrCandHitTabList> candHitTable(m_dataSvc,EventModel::MC::McPartToTkrCandHitTab);
-            m_partToCandHitTab = new Event::McPartToTkrCandHitTab(candHitTable);
+            SmartDataPtr<Event::McPartToTkrTrackHitTabList> TkrTrackHitTable(m_dataSvc,EventModel::MC::McPartToTkrTrackHitTab);
+            m_partToTkrTrackHitTab = new Event::McPartToTkrTrackHitTab(TkrTrackHitTable);
 
             // Retrieve the McParticle to Pat Cand Track relational table
-            SmartDataPtr<Event::McPartToTkrPatCandTabList> patCandTable(m_dataSvc,EventModel::MC::McPartToTkrPatCandTab);
-            m_partToPatCandTab = new Event::McPartToTkrPatCandTab(patCandTable);
+            SmartDataPtr<Event::McPartToTkrTrackTabList> trackTable(m_dataSvc,EventModel::MC::McPartToTkrTrackTab);
+            m_partToTkrTrackTab = new Event::McPartToTkrTrackTab(trackTable);
         }
     }
     else
@@ -167,14 +166,14 @@ const bool McGetTrackInfoTool::updateData()
     return loaded;
 }
 
-int McGetTrackInfoTool::getNMcParticles(const Event::TkrPatCand* patCand)
+int McGetTrackInfoTool::getNMcParticles(const Event::TkrTrack* patCand)
 {
     int numParticles = 0;
 
     if (updateData())
     {
         // Find the hits associated with this particle
-        Event::McPartToTkrPatCandVec partVec = m_partToPatCandTab->getRelBySecond(patCand);
+        Event::McPartToTkrTrackVec partVec = m_partToTkrTrackTab->getRelBySecond(patCand);
 
         numParticles = partVec.size();
     }
@@ -182,7 +181,7 @@ int McGetTrackInfoTool::getNMcParticles(const Event::TkrPatCand* patCand)
     return numParticles;
 }
 
-const Event::McParticleRefVec McGetTrackInfoTool::getMcParticleVec(const Event::TkrPatCand* patCand)
+const Event::McParticleRefVec McGetTrackInfoTool::getMcParticleVec(const Event::TkrTrack* patCand)
 {
     Event::McParticleRefVec mcPartVec;
 
@@ -191,9 +190,9 @@ const Event::McParticleRefVec McGetTrackInfoTool::getMcParticleVec(const Event::
     if (updateData())
     {
         // Find the hits associated with this particle
-        Event::McPartToTkrPatCandVec partVec = m_partToPatCandTab->getRelBySecond(patCand);
+        Event::McPartToTkrTrackVec partVec = m_partToTkrTrackTab->getRelBySecond(patCand);
 
-        for(Event::McPartToTkrPatCandVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
+        for(Event::McPartToTkrTrackVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
         {
             const Event::McParticle* mcPart = (*partIter)->getFirst();
 
@@ -204,7 +203,7 @@ const Event::McParticleRefVec McGetTrackInfoTool::getMcParticleVec(const Event::
     return mcPartVec;
 }
 
-const Event::McParticle* McGetTrackInfoTool::getBestMcParticle(const Event::TkrPatCand* patCand)
+const Event::McParticle* McGetTrackInfoTool::getBestMcParticle(const Event::TkrTrack* patCand)
 {
     Event::McParticle* mcPartBest =  0;
     int                nBestHits  = -1;
@@ -212,11 +211,11 @@ const Event::McParticle* McGetTrackInfoTool::getBestMcParticle(const Event::TkrP
     if (updateData())
     {
         // Find the hits associated with this particle
-        Event::McPartToTkrPatCandVec partVec = m_partToPatCandTab->getRelBySecond(patCand);
+        Event::McPartToTkrTrackVec partVec = m_partToTkrTrackTab->getRelBySecond(patCand);
 
-        for(Event::McPartToTkrPatCandVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
+        for(Event::McPartToTkrTrackVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
         {
-            Event::McPartToTkrPatCandRel* rel         = *partIter;
+            Event::McPartToTkrTrackRel* rel         = *partIter;
             std::vector<std::string>      infoVec     = rel->getInfos();
             int                           infoVecSize = infoVec.size();
 
@@ -231,19 +230,19 @@ const Event::McParticle* McGetTrackInfoTool::getBestMcParticle(const Event::TkrP
     return mcPartBest;
 }
 
-const Event::TkrPatCand* McGetTrackInfoTool::getBestTkrPatCand(const Event::McParticle* mcPart)
+const Event::TkrTrack* McGetTrackInfoTool::getBestTkrTrack(const Event::McParticle* mcPart)
 {
-    const Event::TkrPatCand* patCand   =  0;
+    const Event::TkrTrack* patCand   =  0;
     int                      nBestHits = -1;
 
     if (updateData())
     {
         // Find the hits associated with this particle
-        Event::McPartToTkrPatCandVec partVec = m_partToPatCandTab->getRelByFirst(mcPart);
+        Event::McPartToTkrTrackVec partVec = m_partToTkrTrackTab->getRelByFirst(mcPart);
 
-        for(Event::McPartToTkrPatCandVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
+        for(Event::McPartToTkrTrackVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
         {
-            Event::McPartToTkrPatCandRel* rel         = *partIter;
+            Event::McPartToTkrTrackRel* rel         = *partIter;
             std::vector<std::string>      infoVec     = rel->getInfos();
             int                           infoVecSize = infoVec.size();
 
@@ -258,18 +257,18 @@ const Event::TkrPatCand* McGetTrackInfoTool::getBestTkrPatCand(const Event::McPa
     return patCand;
 }
 
-int McGetTrackInfoTool::getNumMcHits(const Event::TkrPatCand* patCand, const Event::McParticle* mcPart)
+int McGetTrackInfoTool::getNumMcHits(const Event::TkrTrack* patCand, const Event::McParticle* mcPart)
 {
     int numMcHits = 0;
 
     if (updateData())
     {
         // Find the hits associated with this particle
-        Event::McPartToTkrPatCandVec partVec = m_partToPatCandTab->getRelBySecond(patCand);
+        Event::McPartToTkrTrackVec partVec = m_partToTkrTrackTab->getRelBySecond(patCand);
 
-        for(Event::McPartToTkrPatCandVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
+        for(Event::McPartToTkrTrackVec::iterator partIter = partVec.begin(); partIter != partVec.end(); partIter++)
         {
-            Event::McPartToTkrPatCandRel* rel         = *partIter;
+            Event::McPartToTkrTrackRel* rel         = *partIter;
 
             if (mcPart == rel->getFirst())
             {
