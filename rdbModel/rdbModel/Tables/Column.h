@@ -29,7 +29,7 @@ namespace rdbModel{
     const std::string& getComment() const {return m_comment;};
 
     Visitor::VisitorState accept(Visitor* v);
-    Visitor::VisitorState acceptNotRec(Visitor* v);
+    //    Visitor::VisitorState acceptNotRec(Visitor* v);
 
   private:
     friend XercesBuilder; // needs access to add.. methods below

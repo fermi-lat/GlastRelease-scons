@@ -21,8 +21,10 @@ namespace rdbModel{
     Index() {};
     ~Index();
 
+    const std::string& getName() const {return m_name; };
+
     Visitor::VisitorState accept(Visitor* v);
-    Visitor::VisitorState acceptNotRec(Visitor* v);
+    //    Visitor::VisitorState acceptNotRec(Visitor* v);
 
   private:
     /// Is it a primary key?

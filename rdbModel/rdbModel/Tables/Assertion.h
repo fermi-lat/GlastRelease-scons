@@ -22,7 +22,7 @@ namespace rdbModel{
     Assertion();
     ~Assertion();
     Visitor::VisitorState accept(Visitor* v);
-    Visitor::VisitorState acceptNotRec(Visitor* v);
+    //    Visitor::VisitorState acceptNotRec(Visitor* v);
 
     bool execute();
 
