@@ -7,7 +7,7 @@ TkrCandHit::TkrCandHit()
     Clear();
 }
 
-TkrCandHit::TkrCandhit(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view)
+TkrCandHit::TkrCandHit(const TVector3& pos, UInt_t hitId, UInt_t tower, UInt_t layer, AXIS view)
 {
     initialize(pos,hitId,tower,layer,view);
 }
