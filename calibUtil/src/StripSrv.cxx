@@ -43,8 +43,10 @@ namespace calibUtil {
     DOM_Element docElt = doc.getDocumentElement();
     m_genSrv = new GenericSrv(docElt);
 
-    unsigned nTower = 
-      (doc.getElementsByTagName(DOMString("tower"))).getLength();
+    std::vector<DOM_Element> towers;
+
+    Dom::getDescendantsByTagName(docElt, "tower", towers);
+    unsigned nTower = towers.size();
 
     m_towers.reserve(nTower);
 
@@ -53,29 +55,32 @@ namespace calibUtil {
     else if (!bString.compare("dead")) m_badType = DEAD;
     else m_badType = UNKNOWN_BADTYPE;
 
-    DOM_Element towerElt = Dom::findFirstChildByName(docElt, "tower");
 
-    while (towerElt != DOM_Element() ) {
+    for (unsigned int iTower = 0; iTower < nTower; iTower++) {
       Tower tower;
       tower.m_uniplanes.clear();
-      tower.m_row = atoi((Dom::getAttribute(towerElt,"row")).c_str());
-      tower.m_col = atoi((Dom::getAttribute(towerElt,"col")).c_str());
-      //      std::string attValue = Dom::getAttribute(towerElt,"allBad");
-      
-      //      tower.m_allBad = (attValue.compare("true") == 0);
+      try {
+        tower.m_row = Dom::getIntAttribute(towers[iTower], "row");
+        tower.m_col = Dom::getIntAttribute(towers[iTower], "col");
+      }
+      catch (xml::DomException ex) {
+        std::cerr << "From calibUtil::StripSrv::StripSrv" << std::endl
+                  << ex.getMsg() << std::endl;
+        throw ex;
+      }
 
       tower.m_howBad = 0;
       tower.m_allBad = 0;
 
-      std::string attValue = Dom::getAttribute(towerElt, "nOnbdCalib");
+      std::string attValue = Dom::getAttribute(towers[iTower], "nOnbdCalib");
       if (attValue.compare("true") == 0) {
         tower.m_howBad |= vCALIBUTIL_nOnbdCalib;
       }
-      attValue = Dom::getAttribute(towerElt, "nOnbdTrig");
+      attValue = Dom::getAttribute(towers[iTower], "nOnbdTrig");
       if (attValue.compare("true") == 0) {
         tower.m_howBad |= vCALIBUTIL_nOnbdTrig;
       }
-      attValue = Dom::getAttribute(towerElt, "nOnbdData");
+      attValue = Dom::getAttribute(towers[iTower], "nOnbdData");
       if (attValue.compare("true") == 0) {
         tower.m_howBad |= vCALIBUTIL_nOnbdData;
       }
@@ -85,7 +90,7 @@ namespace calibUtil {
       }    // otherwise have to process individual uniplane elements
 
       {
-        DOM_Element uniElt = Dom::getFirstChildElement(towerElt);
+        DOM_Element uniElt = Dom::getFirstChildElement(towers[iTower]);
 
         while (uniElt != DOM_Element()) {
           Uniplane uni;
@@ -99,7 +104,7 @@ namespace calibUtil {
       }
     NEXT:
       m_towers.push_back(tower);
-      towerElt = Dom::getSiblingElement(towerElt);
+      //      towerElt = Dom::getSiblingElement(towerElt);
     }
   }
 
@@ -223,21 +228,28 @@ namespace calibUtil {
 
 
   void StripSrv::fillStrips(const DOM_Element& badElt, StripCol& list) {
+    using xml::Dom;
 
-    DOM_Element childElt = xml::Dom::getFirstChildElement(badElt);
+    DOM_Element childElt = Dom::getFirstChildElement(badElt);
 
     while (childElt != DOM_Element() ) {
       // must be list or span
-      if ((childElt.getTagName()).equals("stripList") ) {
-
-        std::string xmlList = xml::Dom::getAttribute(childElt, "strips");
+      if (Dom::checkTagName(childElt, "stripList")) {
+        std::string xmlList = Dom::getAttribute(childElt, "strips");
         strToNum(xmlList, list);
       }
-      else if ((childElt.getTagName()).equals("stripSpan") ) {
-        std::string firstStr = xml::Dom::getAttribute(childElt, "first");
-        unsigned short first = (unsigned short) atoi(firstStr.c_str());
-        std::string lastStr = xml::Dom::getAttribute(childElt, "last");
-        unsigned short last = (unsigned short) atoi(lastStr.c_str());
+      else  if (Dom::checkTagName(childElt, "stripSpan")) {
+        unsigned short first, last;
+
+        try {
+          first = Dom::getIntAttribute(childElt, "first");
+          last = Dom::getIntAttribute(childElt, "last");
+        }
+        catch (xml::DomException ex) {
+          std::cerr << "From calibUtil::StripSrv::fillStrips" << std::endl
+                    << ex.getMsg() << std::endl;
+          throw ex;
+        }
       
         if (last >= first) {
           // Might as well reserve memory all at once
@@ -247,7 +259,7 @@ namespace calibUtil {
           }
         }
       }
-      childElt = xml::Dom::getSiblingElement(childElt);
+      childElt = Dom::getSiblingElement(childElt);
     }
   }
 
