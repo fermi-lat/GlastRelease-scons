@@ -112,7 +112,7 @@ SurfaceMuons::SurfaceMuons(const std::string& paramstring)
         
       for( int i=0; i< n; ++i){
         double 
-	  e = pow(10, 0.025*i),
+	  e = pow(10.0, 0.025*i),
 	  f= e*spectrum(e);
         
         m_ispec[m_total +=f] =e;

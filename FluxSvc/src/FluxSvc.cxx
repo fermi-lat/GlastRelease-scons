@@ -27,6 +27,7 @@
 
 #include "FluxMgr.h"
 #include <algorithm>
+#include <sstream>
 /** 
 * \class FluxSvc
 *
@@ -350,7 +351,7 @@ std::string FluxSvc::fluxName()const{
 
 /// return a string which uniquely identifies the source
 std::string FluxSvc::uniqueIDString()const{
-    std::strstream t;
+    std::stringstream t;
     t << m_currentFlux->numSource();
     return m_currentFlux->name() + t.str();
 }

@@ -284,7 +284,7 @@ void rootplot::init(std::vector<const char*> argv)
         
         for(j = 0; j < num_bins; j++) 
         {
-            std::cout << energy_min*pow(10,((j + 0.5)/num_bins) * energy_hist.retrieveRange() ) 
+            std::cout << energy_min*pow(10.0,((j + 0.5)/num_bins) * energy_hist.retrieveRange() ) 
                 << "   \t" << energy_hist.retrieveFlux(j) << "\t";
             std::cout << std::endl;         
         }

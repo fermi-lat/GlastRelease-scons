@@ -83,7 +83,7 @@ int GalElSpectrum::askGPS() {
 }
 
 float GalElSpectrum::findCutoff(float rflux) const {
-    return pow(-m_expo*rflux/m_norm, 1./m_expo);
+    return pow(static_cast<double>(-m_expo*rflux/m_norm), 1./m_expo);
 }
 float GalElSpectrum::findCutoff(float lat, float lon) const {
 #if 0

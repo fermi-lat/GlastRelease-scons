@@ -133,7 +133,7 @@ double rootEnergyHist::retrieveFluxUncertainty(int binNumber)
 
 double rootEnergyHist::retrieveEnergy(int binNumber)
 {
-    return emin*pow(10,((binNumber + 0.5)/num_bins) * range );
+    return emin*pow(10.0,((binNumber + 0.5)/num_bins) * range );
 }
 
 double rootEnergyHist::retrieveRange(void)
