@@ -10,6 +10,9 @@ rootplot::rootplot(int argc, char* argv[])
     std::vector<const char*> args;
     for( int i =1; i< argc; ++i) 
         args.push_back(argv[i]);
+    std::vector<std::string > test;
+    FluxMgr fm(test);
+    m_fm = &fm;
     init(args);
 
 }

@@ -51,7 +51,10 @@ SimpleSpectrum::SimpleSpectrum(const DOM_Element& xelem){
         m_emax = 100.0;
         m_index = 0.0;
     }
-    else FATAL_MACRO("Unknown particle spectrum!");
+    else {
+        std::cerr << "Unknown name: " << m_name << std::endl;
+        FATAL_MACRO("Unknown particle spectrum!");
+    }
 }
 
 
