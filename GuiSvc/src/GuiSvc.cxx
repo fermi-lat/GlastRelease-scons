@@ -13,7 +13,7 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/IObjmanager.h"
+#include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IToolFactory.h"
 
@@ -153,7 +153,7 @@ StatusCode GuiSvc::initialize ()
 
     }
 
-    return Status::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 
