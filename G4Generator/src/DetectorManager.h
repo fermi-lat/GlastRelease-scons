@@ -58,7 +58,7 @@ class DetectorManager : public G4VSensitiveDetector {
   /// generate the box parameters to display
   void makeDisplayBox(G4TouchableHistory* touched,
                                      idents::VolumeIdentifier id,
-                                     bool hitBox=true);
+                                     bool hitBox=false);
   
   /// The pointer to the IdataProviderSvc
   IDataProviderSvc* m_esv;
