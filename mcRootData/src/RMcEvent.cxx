@@ -1,14 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       
-// The McEvent class contains general information about a Monte Carlo
+// The RMcEvent class contains general information about a Monte Carlo
 // Event, (Run/Event numbers, etc) as well as a list of McParticle
 // instances generated during the simulated event.
 //                                                                       
 ///////////////////////////////////////////////////////////////////////////
 
-#include "mcRootData/McEvent.h"
+#include "mcRootData/RMcEvent.h"
 
-ClassImp(McEvent)
+ClassImp(RMcEvent)
 //________________________________________________________________________
 /*! Default Constructor
  *  NORMALLY Reserved for use by ROOT I/O.  For this class, all initialization
@@ -16,16 +16,16 @@ ClassImp(McEvent)
  *  members using the setXXXX functions provided.  Default constructor is,
  *  therefore, used for instantiating new instances.
  */
-McEvent::McEvent() : 
+RMcEvent::RMcEvent() : 
     m_nEvent(0), m_nRun(0), m_nPartCount(0), m_pPartList(0)
 {
 }
 //________________________________________________________________________
-McEvent::~McEvent() {
+RMcEvent::~RMcEvent() {
     Clean();
 }
 //________________________________________________________________________
-void McEvent::Clean() {
+void RMcEvent::Clean() {
     if (m_pPartList)
         delete m_pPartList;
 
@@ -36,7 +36,7 @@ void McEvent::Clean() {
     m_nPartCount = 0;
 }
 //________________________________________________________________________
-void McEvent::Create() {
+void RMcEvent::Create() {
     m_pPartList = new TObjArray();
     m_pPartList->SetOwner();
 
@@ -47,9 +47,9 @@ void McEvent::Create() {
 //________________________________________________________________________
 /*! Returns requested particle if it exists.  Else returns NULL.
  */
-McParticle *McEvent::getPart(Int_t index) const {
+RMcParticle *RMcEvent::getPart(Int_t index) const {
     if ((index >= 0) && (index < getPartCount()))
-        return (McParticle*)m_pPartList->At(index);
+        return (RMcParticle*)m_pPartList->At(index);
     else
         return 0;
 }
@@ -58,7 +58,7 @@ McParticle *McEvent::getPart(Int_t index) const {
  *  This function, and ALL functions which modify the particle list
  *  MUST also update the m_nPartCount member.
  */
-Int_t McEvent::addPart(McParticle *pPart) {
+Int_t RMcEvent::addPart(RMcParticle *pPart) {
     if (pPart) {
         m_pPartList->AddLast(pPart);
         return (m_nPartCount++);

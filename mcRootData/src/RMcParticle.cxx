@@ -1,31 +1,31 @@
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       
-// The McParticle class provides an interface to a particle for use in
+// The RMcParticle class provides an interface to a particle for use in
 // GLAST Monte Carlo applications
 //                                                                       
 ///////////////////////////////////////////////////////////////////////////
 
-#include "mcRootData/McParticle.h"
+#include "mcRootData/RMcParticle.h"
 
-ClassImp(McParticle)
+ClassImp(RMcParticle)
 //________________________________________________________________________
 /*! Default Constructor
  *  Reserved for use by ROOT I/O.  Do not use this constructor, as no
  *  initialization is performed.
  */
-McParticle::McParticle() :
+RMcParticle::RMcParticle() :
     m_nPDGId(0), m_pParent(0), m_pVert(0) 
 {
 }
 //________________________________________________________________________
-McParticle::McParticle(Int_t id, McParticle *pParent, McVertex *pVertex) :
+RMcParticle::RMcParticle(Int_t id, RMcParticle *pParent, RMcVertex *pVertex) :
   m_nPDGId(id), m_pParent(pParent), m_pVert(pVertex)    
 {
     m_pChildList = new TObjArray();
     m_pChildList->SetOwner();
 }
 //________________________________________________________________________
-McParticle::~McParticle() {
+RMcParticle::~RMcParticle() {
   if (m_pVert)
     delete m_pVert;
 
@@ -35,10 +35,10 @@ McParticle::~McParticle() {
 //________________________________________________________________________
 /*! Returns requested child if it exists.  Else returns NULL.
  */
-McParticle *McParticle::getChild(Int_t nIndex) const {
-    McParticle *pChild = 0;
+RMcParticle *RMcParticle::getChild(Int_t nIndex) const {
+    RMcParticle *pChild = 0;
     if ((nIndex >= 0) && (nIndex < m_nChildCount))
-        pChild = (McParticle*)m_pChildList->At(nIndex);
+        pChild = (RMcParticle*)m_pChildList->At(nIndex);
     return pChild;
 }
 //________________________________________________________________________
@@ -46,7 +46,7 @@ McParticle *McParticle::getChild(Int_t nIndex) const {
  *  This function, and ALL functions which modify the child list
  *  MUST also update the m_nChildCount member.
  */
-void McParticle::addChild(McParticle *pChild) {
+void RMcParticle::addChild(RMcParticle *pChild) {
     if (pChild) {
         m_pChildList->Add(pChild);
         m_nChildCount++;
