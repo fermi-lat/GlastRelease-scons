@@ -14,7 +14,7 @@ namespace xmlUtil {
     m_name = std::string(xml::Dom::transToChar(elt.getAttribute("name")));
   }
 
-  bool DictField::allowed(const unsigned value) {
+  bool DictField::allowed(unsigned value) const {
     if (m_constraints) return m_constraints->allowed(value);
     else return true;
   }

@@ -24,7 +24,7 @@ namespace xmlUtil {
     const std::string& getName() const {return m_name;}
 
     //! Does the specified value satisfy the constraints, if any?
-    bool allowed(const unsigned value);
+    bool allowed(unsigned value) const;
 
     bool accept(DictVisitor* vis) {return vis->visitField(this);}
     DictConstraints* getConstraints() const {return m_constraints;}

@@ -6,18 +6,16 @@ package xmlUtil
 ##  do we want to specify a version of xml?  Would be v3 if we do.
 use xml 
 
-# include_path "${XMLUTILROOT}"
 include_dirs "${XMLUTILROOT}"
 
 apply_pattern package_linkopts
+apply_pattern package_headers
+apply_pattern package_xmlfiles
 
-##macro   xmlUtil_linkopts "-L${XMLUTILROOT}/${CMTCONFIG} -lxmlUtil"\
-##        VisualC  ""
+# private 
+# macro xmlUtil_xmlfiles "" WIN32 "../xml/*.xml" 
 
-##macro_append Win32Debug   " ${XMLUTILROOT}/${DebugDir}/xmlUtillib.lib"
-##macro_append Win32Release " ${XMLUTILROOT}/${ReleaseDir}/xmlUtillib.lib"
-
-library xmlUtil -no_share \
+library xmlUtil ${xmlUtil_headers} -no_share \
      Arith.cxx            \
      Substitute.cxx       \
      Constants.cxx        \
@@ -26,13 +24,16 @@ library xmlUtil -no_share \
      id/DictField.cxx        \
      id/DictFieldMan.cxx     \
      id/DictNode.cxx         \
-     id/IdDict.cxx           \
-     id/NamedId.cxx          \
      id/DictValidVisitor.cxx \
-     id/testId.cxx        \
-     ../xml/*.xml         \
-     ../xmlUtil/*.h       \
-     ../xmlUtil/id/*.h
+     id/IdConversion.cxx     \
+     id/IdConverter.cxx      \
+     id/IdDict.cxx           \
+     id/IdDictMan.cxx        \
+     id/IdOpCompress.cxx     \
+     id/IdOpTruncate.cxx     \
+     id/IdOperation.cxx       \
+     id/NamedId.cxx          \
+     ${xmlUtil_xmlfiles} 
 
 private
 application eval eval.cxx Arith.cxx Substitute.cxx  Constants.cxx Source.cxx

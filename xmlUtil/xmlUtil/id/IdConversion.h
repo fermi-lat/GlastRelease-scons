@@ -20,7 +20,7 @@ namespace xmlUtil {
   public:
     //! Default constructor produces a conversion which acts on any NamedId 
     //! and does nothing to it; that is, returns a copy.
-    IdConverion() {}; // 
+    IdConversion();
 
 
     //! The usual case:  build a conversion from its XML description
@@ -32,7 +32,7 @@ namespace xmlUtil {
     bool inDomain(NamedId& inputId);
 
     //! Convert the identifier if in domain; else return null.
-    *NamedId convert(NamedId& inputId);
+    NamedId * convert(NamedId& inputId);
     // {return new NamedId(*inputId);};
 
   private:
@@ -42,7 +42,14 @@ namespace xmlUtil {
 
     //! Doesn't check that input is in domain.  Typically invoked
     //! from \b convert.
-    *NamedId internalConvert(NamedId& inputId);
+    NamedId * internalConvert(NamedId& inputId);
+
+    //! Form path component from corresponding piece of xml
+    void makePath(const DOM_Element& pathElt);
+
+    //! Determine operation type and instantiate object of
+    //! appropriate operation class.
+    void buildOp(const DOM_Element& optElt);
     
     //! For now only condition recognized is \b hasField, which
     //! can be represented by a string: the field name.
@@ -59,3 +66,4 @@ namespace xmlUtil {
     IdOperation *op;
   };  // end of class IdConversion
 }   // end of namespace
+#endif

@@ -4,22 +4,21 @@
 #define XMLUTIL_IDOPCOMPRESS_H
 
 #include <string>
-#include "id/IdOperation.h"
+#include "xmlUtil/id/IdOperation.h"
 
 
 namespace xmlUtil {
-  //!
+  //! Compresses out all fields between "from" and "to", leaving the
+  //! "from" and "to" fields themselves alone.
   class IdOpCompress : public IdOperation {
   public:
-    IdOpCompress(const DOM_Element) {};
-    ~IdOpCompress() {};
+    IdOpCompress(DOM_Element cmprss);
+    ~IdOpCompress() {}
 
-    virtual *NamedId convert(const NamedId& inputId);
+    virtual NamedId * convert(const NamedId& inputId);
   private:
-    std:string from;
-    std:string to;
-
-  }    
-
+    std::string from;
+    std::string to;
+  };
 }
 #endif

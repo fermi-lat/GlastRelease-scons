@@ -14,8 +14,10 @@ namespace xmlUtil {
     virtual ~DictVisitor() {};
     virtual bool visitDict(IdDict *dict)=0;
     virtual bool visitNode(DictNode *node)=0;
-    virtual bool visitField(DictField *field) {return false;}
-    virtual bool visitFieldMan(DictFieldMan *fieldMan) {return false;}
+    //    virtual bool visitField(DictField *field) {return false;}
+    virtual bool visitField(DictField *field)=0;
+    //    virtual bool visitFieldMan(DictFieldMan *fieldMan) {return false;}
+    virtual bool visitFieldMan(DictFieldMan *fieldMan)=0;
   };
 }
 #endif
