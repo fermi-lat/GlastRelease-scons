@@ -31,6 +31,7 @@
 #include "commonRootData/RelTable.h"
 
 #include "commonData.h"
+#include "RootIo/IRootIoSvc.h"
 
 #include "digiRootData/DigiEvent.h"
 #include "mcRootData/McEvent.h"
@@ -99,7 +100,7 @@ private:
     int m_compressionLevel;
     
     commonData m_common;
-
+    IRootIoSvc* m_rootIoSvc;
 };
 
 
@@ -117,7 +118,6 @@ Algorithm(name, pSvcLocator)
     // ROOT default compression
     declareProperty("compressionLevel", m_compressionLevel=1);
     declareProperty("treeName", m_treeName="Relations");
-
 }
 
 StatusCode relationRootWriterAlg::initialize()
@@ -131,6 +131,12 @@ StatusCode relationRootWriterAlg::initialize()
     // Use the Job options service to set the Algorithm's parameters
     // This will retrieve parameters set in the job options file
     setProperties();
+
+    if ( service("RootIoSvc", m_rootIoSvc).isFailure() ){
+        log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
+        log << MSG::INFO << "No Auto Saving" << endreq;
+        m_rootIoSvc = 0;
+    } 
     
     facilities::Util::expandEnvVar(&m_fileName);
 
@@ -407,12 +413,16 @@ void relationRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the Relations data for this event in the ROOT
     //    tree.  The m_common object is cleared for the next event.
 
+    static int eventCounter = 0;
     TDirectory *saveDir = gDirectory;
     m_relFile->cd();
     m_relTree->Fill();
     m_relTable->Clear();
     saveDir->cd();
     m_common.clear();
+    ++eventCounter;
+    if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_relTree->AutoSave();
+
     return;
 }
 
