@@ -45,18 +45,11 @@ namespace CalibData {
 
     bool              operator> ( const ITime& other) const;
   
-    // adding   
-    CalibTime&            operator+=( const ITime& other) {
-      *this =  this->facilities::Timestamp::operator+=(CalibTime(other));
-      return *this;
-    }
+    // adding   -- doesn't make sense for timestamps
+    CalibTime&            operator+=(const ITime& other);
   
-    // substraction
-    CalibTime&            operator-=( const ITime& other) {
-      *this = this->facilities::Timestamp::operator-=(CalibTime(other));
-      return *this;
-    }
-  
+    // substraction  -- doesn't make sense for timestamps
+    CalibTime&            operator-=(const ITime& other);
       
     std::ostream& printOut(std::ostream&) const;
   };
