@@ -61,6 +61,9 @@ class RunManager
   std::string m_topvol;
   /// mode to apply to start the visitor, like "fastmc"
   std::string m_visitorMode;
+
+  /// log for summary output
+  std::ostream& m_log;
   
  public: 
   /** 
@@ -69,7 +72,7 @@ class RunManager
      geometry level of details
   */
   RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv, 
-             std::string geometryMode);
+      std::string geometryMode, std::ostream& log);
   virtual ~RunManager();
 
  public: 

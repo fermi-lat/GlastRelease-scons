@@ -1,5 +1,6 @@
 //$Header$
 /*
+ * v3r5   02-may-02 THB No longer uses FluxSvc: gets incoming particle from TDS
  * v3r4p1 28-Apr-02 THB remove cm and GeV factors when using FluxSvc
  * v3r4   20-Apr-02 RG  code review tag (new documentation and comments)
  * v3r3p2 11-Apr-02 THB patch in DisplayManager.cxx to satisfy egcs 

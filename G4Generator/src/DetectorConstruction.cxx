@@ -35,9 +35,11 @@
 
 DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
                                            IDataProviderSvc* esv,
-                                           std::string geometry_mode)
+                                           std::string geometry_mode,
+                                           std::ostream& log)
                                            :m_gsv(gsv), 
-                                           m_geometryMode(geometry_mode)
+                                           m_geometryMode(geometry_mode),
+                                           m_log(log)
 {
   // Purpose and Method: the constructor needs the GlastDetSvc and
   // DataProviderSvc; the first one is used to start the visitor mechanism using
@@ -62,18 +64,22 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // geometry 
   // Outputs: a pointer to the world physical volume
 
-  G4Geometry* geom = new G4Geometry(m_posDet, m_intDet, &m_idMap, 
+  G4Geometry geom(m_posDet, m_intDet, &m_idMap, 
                                     m_geometryMode);
-  G4Media* media = new G4Media();
-  m_gsv->accept(*media);
-  m_gsv->accept(*geom);
+  G4Media media;
+  m_gsv->accept(media);
+  m_gsv->accept(geom);
 
-  // this is to print something on the scree; it should be removed or, better,
-  // improved to use the standard output of Gaudi
-  std::cout << "Geometry done with " << geom->getPhysicalNumber() << 
-      " physical volumes" << std::endl;
+  // summary log output
+  m_log << "\tDetectorConstruction created "
+      << geom.getPhysicalNumber() <<  " physical volumes, using ";
+  if (m_geometryMode=="" ) {
+      m_log <<  "default mode from GlastDetSvc"  << std::endl;
+  }else {
+      m_log << " mode from G4Generator job options: " << m_geometryMode << std::endl;
+  }
 
-  return geom->getWorld();
+  return geom.getWorld();
 }
 
 
