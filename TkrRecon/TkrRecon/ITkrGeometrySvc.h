@@ -33,6 +33,8 @@ public:
     virtual int    numYTowers()=0;
     virtual int    numViews()=0;
     virtual int    numLayers()=0;
+    virtual int    numNoConverter()=0;
+    virtual int    numSuperGlast()=0;
 
     virtual int    numPlanes()=0;
 
