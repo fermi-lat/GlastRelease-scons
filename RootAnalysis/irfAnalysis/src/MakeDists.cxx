@@ -99,7 +99,8 @@ void MakeDists::draw(const std::string &ps_filename, bool logy, Fitter* fitter) 
 
     for( int i=0; i<angle_bins; ++i){
        ps.NewPage();
-        divideCanvas(c,4,2, std::string("Plots from ")
+       int rows=2;
+        divideCanvas(c,energy_bins/rows,rows, std::string("Plots from ")
                  +summary_filename());
        for(int j=0; j<energy_bins; ++j){
           c.cd(j+1);

@@ -190,7 +190,8 @@ void PSF::draw(std::string ps_filename, double ymax, std::string title)
     if( ! psf_file.IsOpen()) throw "could not open psf root file";
 
     TCanvas c;
-    divideCanvas(c,4,2, title + "plots from "+summary_filename());
+    int rows=2;
+    divideCanvas(c,energy_bins/rows,rows, title + "plots from "+summary_filename());
 
     for(int j=0; j<energy_bins; ++j){
         c.cd(j+1);
@@ -202,7 +203,7 @@ void PSF::draw(std::string ps_filename, double ymax, std::string title)
         leg->SetHeader("Angle range   68%   95%");
         double logecenter=logestart+logedelta*j, ecenter=pow(10., logecenter);
 
-        double xmin=j/double(energy_bins), xmax= (j+1)/double(energy_bins);
+//        double xmin=j/double(energy_bins), xmax= (j+1)/double(energy_bins);
 
         for( int i=0; i<angle_bins; ++i){
             TH1F* h = (TH1F*)psf_file.Get(hist_name(i,j));

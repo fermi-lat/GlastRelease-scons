@@ -16,16 +16,20 @@ IRF::IRF(std::string summary_root_filename)
 , m_summary_filename(output_file_root()+summary_root_filename)
 , m_ymin(0)
 , m_ymax(1)
-,m_user_cut("")
+, m_user_cut("")
 {
-
+#if 0
     // energy binning: 3 per decade
     logestart=5./3., logedelta=1./3.;
-    energy_bins = 8;
-
+    energy_bins = 10;
+#else
+    logedelta=0.5; // 2 per decade
+    logestart = 1.75;
+    energy_bins=8;
+#endif
     // angle binning : delta cos(theta) = 0.2.
     angle_bins=4;
-
+    
     // redefine some defaults
    gStyle->SetPadColor(10); // out with the gray
    gStyle->SetCanvasColor(10);
