@@ -56,6 +56,11 @@ GlastDetSvc.topVolume="LAT";
 //GlastDetSvc.topVolume="trayReg";
 //GlastDetSvc.topVolume="trayBot";
 
+// ----------------------------
+//  Randoms definition
+//
+ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
+
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
