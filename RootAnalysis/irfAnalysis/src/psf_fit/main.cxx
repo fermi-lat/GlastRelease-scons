@@ -76,7 +76,7 @@ int main(){
 
     //-------test GenericFitter and setEnergyScaling--------------
     std::string myFunction 
-       = "x*( [0]*exp(-0.5*x*x/([1]*[1])) + [2]*exp(-pow((x/[3]), [4])) )";
+       = "x*( [0]*exp(-0.5*x*x/([1]*[1])) + [2]*exp(-pow((x*[3]), [4])) )";
     double pinit[] = {0.01, 1.0, 0.2, 1.0, 1.0};
     std::vector<double> fitParams(pinit, pinit+sizeof(pinit)/sizeof(double));
     myfit = new GenericFitter(myFunction, fitParams, 
@@ -100,6 +100,38 @@ int main(){
     delete myfit;
     psf_test.addCutInfo("psf_test_parameters.root", "fitParams");
     psf_test.addEnergyScaling("psf_test_parameters.root", "energyScaling");
+
+    //-------energy dispersion-------
+    std::string gaussian("[0]/[2]*exp(-0.5*pow((x - [1])/[2], 2.))");
+    double gauss_params[] = {1., 1., 0.2};
+
+    std::vector<double> gaussParams(gauss_params, gauss_params+3);
+    myfit = new GenericFitter(gaussian, gaussParams, 
+                              "edisp_thin_parameters.root");
+    MakeDists edisp_thin("edisp_thin.root");
+    edisp_thin.set_user_cut(TCut("Tkr1FirstLayer<12"));
+    if (!edisp_thin.fileExists()) 
+       edisp_thin.project("EvtEnergySumOpt/McEnergy", -0.5, 2.5, 100);
+    edisp_thin.set_ymax(0.5);
+    edisp_thin.set_ymin(1e-4);
+    edisp_thin.draw("edisp_thin.ps", true, myfit);
+    delete myfit;
+    edisp_thin.addCutInfo("edisp_thin_parameters.root", "fitParams");
+
+    gaussParams[0] = 1.;
+    gaussParams[1] = 1.;
+    gaussParams[2] = 0.2;
+    myfit = new GenericFitter(gaussian, gaussParams, 
+                              "edisp_thick_parameters.root");
+    MakeDists edisp_thick("edisp_thick.root");
+    edisp_thick.set_user_cut(TCut("Tkr1FirstLayer>11"));
+    if (!edisp_thick.fileExists()) 
+       edisp_thick.project("EvtEnergySumOpt/McEnergy", -0.5, 2.5, 100);
+    edisp_thick.set_ymax(0.5);
+    edisp_thick.set_ymin(1e-4);
+    edisp_thick.draw("edisp_thick.ps", true, myfit);
+    delete myfit;
+    edisp_thick.addCutInfo("edisp_thick_parameters.root", "fitParams");
 
     return 0;
 }
