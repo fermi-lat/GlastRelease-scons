@@ -2,7 +2,8 @@
 #ifndef CALIBUTIL_METADATA_H
 #define CALIBUTIL_METADATA_H
 
-#include "calibUtil/Timestamp.h"
+//#include "calibUtil/Timestamp.h"
+#include "facilities/Timestamp.h"
 //#include <my_global.h>
 //#include <mysql.h>
 
@@ -115,7 +116,8 @@ namespace calibUtil {
 
     /// Set validity interval: period over which calibration data
     /// is applicable.
-    eRet addValidInterval(Timestamp startTime, Timestamp endTime);
+    eRet addValidInterval(facilities::Timestamp startTime, 
+                          facilities::Timestamp endTime);
 
     /** Explicit clear of record.  Must have a call to either insertRecord
      *  (to actually write the record to the database) or clearRecord 
@@ -145,7 +147,7 @@ namespace calibUtil {
     */
     eRet findBest(unsigned int *ser,
                   eCalibType calibType, 
-                  const Timestamp& timestamp,
+                  const facilities::Timestamp& timestamp,
                   unsigned int levelMask, 
                   eInstrument instrument);
     /** Return serial number for calibration which is best match to
@@ -170,7 +172,7 @@ namespace calibUtil {
     */
     eRet findBest(unsigned int *ser,
                   const std::string& calibType, 
-                  const Timestamp& timestamp,
+                  const facilities::Timestamp& timestamp,
                   unsigned int levelMask, 
                   const std::string& instrument);
 

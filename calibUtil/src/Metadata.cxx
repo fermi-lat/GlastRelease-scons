@@ -81,14 +81,14 @@ namespace calibUtil {
     }
   }
 
-  Metadata::eRet Metadata::addValidInterval(Timestamp startTime, 
-                                            Timestamp endTime) {
+  Metadata::eRet Metadata::addValidInterval(facilities::Timestamp startTime, 
+                                            facilities::Timestamp endTime) {
     if (!(m_rowStatus & eOpened) ) return RETWrongState;
 
     if (m_rowStatus & eValid) return RETWrongState;
     
-    m_row += ", vstart='"; m_row += startTime.timeString();
-    m_row += "', vend='"; m_row += endTime.timeString();
+    m_row += ", vstart='"; m_row += startTime.getString();
+    m_row += "', vend='"; m_row += endTime.getString();
     m_row += "'";
     m_rowStatus |=  eValid;
     return RETOk;   // or something else
@@ -164,7 +164,7 @@ namespace calibUtil {
 
   Metadata::eRet Metadata::findBest(unsigned int *ser,
                                     eCalibType calibType, 
-                                    const Timestamp& timestamp,
+                                    const facilities::Timestamp& timestamp,
                                     unsigned int levelMask, 
                                     eInstrument instrument) {
     const std::string* const ctypeStr = getCalibTypeStr(calibType);
@@ -178,7 +178,7 @@ namespace calibUtil {
 
   Metadata::eRet Metadata::findBest(unsigned int *ser,
                           const std::string& calibType, 
-                          const Timestamp& timestamp, 
+                          const facilities::Timestamp& timestamp, 
                           unsigned int levelMask,    // could have default
                           const std::string& instrument) // could have default
   {
@@ -198,9 +198,9 @@ namespace calibUtil {
     query += "' and calib_type ='";
     query += calibType;
     query += "' and '";
-    query += timestamp.timeString();
+    query += timestamp.getString();
     query += "'> vstart and vend > '";
-    query += timestamp.timeString();
+    query += timestamp.getString();
     query += "'";
     while (levelMask) {
       // find highest priority known bit in levelMask, add appropriate

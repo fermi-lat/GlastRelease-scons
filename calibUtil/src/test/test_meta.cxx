@@ -11,13 +11,13 @@ void gotIt(unsigned int ser, calibUtil::Metadata::eDataFmt dataFmt,
            const std::string& fmtVersion, const std::string& dataIdent);
 
 calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
-                                 const calibUtil::Timestamp& ts,
+                                 const facilities::Timestamp& ts,
                                  unsigned int levelMask,
                                  calibUtil::Metadata::eInstrument inst);
 
 int main(int argc, char* argv[]) {
   using calibUtil::Metadata;
-  using calibUtil::Timestamp;
+  using facilities::Timestamp;
 
   Metadata  meta;
   Timestamp t_ok("2001-11-10 08:00");
@@ -85,7 +85,7 @@ void gotIt(unsigned int ser, calibUtil::Metadata::eDataFmt dataFmt,
 }
 
 calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
-                                 const calibUtil::Timestamp& ts,
+                                 const facilities::Timestamp& ts,
                                  unsigned int levelMask,
                                  calibUtil::Metadata::eInstrument inst) {
   using calibUtil::Metadata;
@@ -95,7 +95,7 @@ calibUtil::Metadata::eRet lookup(calibUtil::Metadata::eCalibType ctype,
   std::cout << std::endl;
   std::cout << "lookup called with input " << std::endl;
   std::cout << "   calibType = " << ctype <<std::endl;
-  std::cout << "   timestamp = " << ts.timeString() << std::endl;
+  std::cout << "   timestamp = " << ts.getString() << std::endl;
   std::cout << "   levelMask = " << levelMask << std::endl;
   std::cout << "   instrument = " << inst << std::endl;
 
