@@ -16,7 +16,10 @@ namespace xmlUtil {
     static  GDDDocMan* getPointer();
 
     // Allow caller option of saving (or not) notes associated with constants 
-    virtual bool parse(const std::string& filename, bool saveNotes = true);
+    // docType should be gdd (should we even allow anything else?)
+    virtual bool parse(const std::string& filename, 
+                       bool saveNotes = true,
+                       const std::string& docType=std::string("gdd"));
 
     virtual ~GDDDocMan() {delete m_constsClient;}
 
