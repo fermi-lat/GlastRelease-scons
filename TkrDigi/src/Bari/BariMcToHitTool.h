@@ -15,6 +15,8 @@
 #include "../IMcToHitTool.h"
 #include "InitCurrent.h"
 
+#include "TkrUtil/ITkrGeometrySvc.h"
+
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
@@ -40,6 +42,8 @@ private:
     std::string       m_CurrentsFile;
     /// Extracted current information
     InitCurrent       m_openCurr;
+    /// pointer to geometry svc
+    ITkrGeometrySvc* m_geoSvc;
 
 };
 
