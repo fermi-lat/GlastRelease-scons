@@ -32,10 +32,12 @@ fi
 dnl Look for required libraries
 glast_CHECK_LIB_SRC(LIB_ANALYSIS, libanalysis.la, ../analysis)
 
-AC_OUTPUT(Makefile src/Makefile)
+AC_OUTPUT(Makefile merit.spec src/Makefile)
 
 
 AC_MSG_RESULT([
 	Merit program now configured.
 ])
+
+
 
