@@ -1,14 +1,16 @@
 /*
 package manager:T.Burnett 
 
+ * v2r8p4 04-sept-02 HMK add AcdId ctor to unpack volId\n
+ *                       add const operator[] to VolumeIdentifier\n
  * v2r8 11-may-02 THB  make TowerId sortable. 
  * v2r7 10-may-02 THB clean up CalLogId. 
-02-apr-02 THB new CalLogid. --> v2r5
-22-mar-02 THB missing void -> v2r4p2
-15-mar-02 thb Marco's fix to thb's bug -> v2r4p1
-8-Mar-02 THB tag v2r4
-6-Mar-02 Marco fixes VolumeIdentifier
-20001126  THB create to hold id classes
-20010804 HMK update AcdId to store 2 bits for layer number
-20010804 HMK tag v2r2
+ * 02-apr-02 THB new CalLogid. --> v2r5
+ * 22-mar-02 THB missing void -> v2r4p2
+ * 15-mar-02 thb Marco's fix to thb's bug -> v2r4p1
+ * 8-Mar-02 THB tag v2r4
+ * 6-Mar-02 Marco fixes VolumeIdentifier
+ * 20001126  THB create to hold id classes
+ * 20010804 HMK update AcdId to store 2 bits for layer number
+ * 20010804 HMK tag v2r2
 */
