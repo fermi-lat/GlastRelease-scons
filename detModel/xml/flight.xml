@@ -30,6 +30,7 @@ of the LAT.</overview>
 </prim>
         <prim name="wallThickness"  value="1.5">   Wall thickness</prim>
         <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)</prim>
+        <prim name="vacuumMat" value="Vacuum" />
       </primCategory>
       <primCategory name="CALprim" >
 <overview><![CDATA[CAL people need to put something real here.  If
@@ -169,7 +170,6 @@ form a square array of this dimension</prim>
       <derCategory name="derAll">
 <overview>It's OK to add some overview information for derived categories,
 too, but not required.</overview>
-        <const name="vacuumMat" value="Vacuum" />
 
     <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->
         <const name="diodePosXOffset" >

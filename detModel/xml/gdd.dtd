@@ -759,7 +759,7 @@ with corresponding field names.
 <!ELEMENT const ((%operator;)? ) >
 <!ATTLIST const name ID #IMPLIED
                 value CDATA #IMPLIED
-                uType (length | angle | count | mat | none) "length"
+                uType (length | angle | count | none) "length"
                 %units; >
 
 <!-- possible "operand" is
