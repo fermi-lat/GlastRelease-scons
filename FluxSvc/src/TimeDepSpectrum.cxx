@@ -1,6 +1,6 @@
 #include "TimeDepSpectrum.h"
 // define a factory for anonomous instantiation
-#include "SpectrumFactory.h"
+#include "FluxSvc/SpectrumFactory.h"
 
 static SpectrumFactory<TimeDepSpectrum> factory;
 const ISpectrumFactory& TimeDepSpectrumFactory = factory;

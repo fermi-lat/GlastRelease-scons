@@ -10,7 +10,7 @@
 #include <utility>
 #include <strstream>
 #include <cmath>
-#include "SpectrumFactory.h"
+#include "FluxSvc/SpectrumFactory.h"
 
 static SpectrumFactory<SimpleSpectrum> factory;
 

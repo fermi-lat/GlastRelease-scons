@@ -6,7 +6,7 @@
 
 #include <vector>
 #include <utility>
-#include "Spectrum.h"
+#include "FluxSvc/Spectrum.h"
 
 class CrSpectrum;
 //! The class that calls each cosmic-ray electron components based on

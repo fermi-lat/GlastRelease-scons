@@ -1,7 +1,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "SpectrumFactoryTable.h"
+#include "FluxSvc/SpectrumFactoryTable.h"
 
 #include <list>
 #include <string>

@@ -12,7 +12,7 @@
 #include "GPS.h"
 
 // this is needed to include in the executable or dll
-#include "SpectrumFactory.h"
+#include "FluxSvc/SpectrumFactory.h"
 
 static SpectrumFactory<CHIMESpectrum> factory;
 const ISpectrumFactory& CHIMESpectrumFactory = factory;

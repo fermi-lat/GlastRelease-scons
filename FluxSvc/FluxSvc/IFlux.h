@@ -10,7 +10,8 @@
 #include <string>
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-#include "../src/SpectrumFactoryTable.h"
+#include "FluxSvc/SpectrumFactoryTable.h"
+#include "geometry/CoordTransform.h"
 
 class ParticleProperty;
 
@@ -65,6 +66,9 @@ public:
 
     /// pass a specific amount of time
     virtual void pass ( double t)=0;
+
+    /// get the transformation matrix
+    virtual Rotation CELTransform(double time)const=0;
        
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
 #if 0

@@ -14,6 +14,9 @@
 #include <map>
 #include <list>
 #include <string>
+//#include "geometry/Point.h"
+#include "geometry/CoordTransform.h"
+
 //! The point of entry for interfacing with the flux package.
 /*! holds methods for creating sources and sending new particles, 
     and methods for interfacing with the satellite position, and 
@@ -67,6 +70,10 @@ public:
     
     /// get the current satellite location
     std::pair<double,double> location();
+
+
+    ///get the transformation matrix.
+    Rotation CELTransform(double time);
     
 private:
     

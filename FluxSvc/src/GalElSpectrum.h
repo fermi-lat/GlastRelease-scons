@@ -30,7 +30,7 @@
 #define GAL_EL_SPECTRUM_H
 
 
-#include "Spectrum.h"
+#include "FluxSvc/Spectrum.h"
 #include "CHIMESpectrum.h"
 #include "facilities/Observer.h"
 #include <string>

@@ -2,7 +2,7 @@
 #define TimeDepSpectrum_H
 // $Heading:$
 //
-#include "Spectrum.h"
+#include "FluxSvc/Spectrum.h"
 #include "facilities/Observer.h"
 #include <vector>
 #include <string>

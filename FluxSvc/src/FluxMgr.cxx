@@ -3,7 +3,7 @@
 
 #include "FluxSvc/FluxMgr.h"
 #include "FluxSvc/FluxSource.h"
-#include "SpectrumFactoryTable.h"
+#include "FluxSvc/SpectrumFactoryTable.h"
 #include "GPS.h"
 #include "FluxException.h" // defines FATAL_MACRO
 
@@ -277,6 +277,12 @@ void sampleintvl ( /*GPStime*/double t ){
 std::pair<double,double> FluxMgr::location(){
     return std::make_pair<double,double>(GPS::instance()->lat(),GPS::instance()->lon());
 }
+
+//get the transformation matrix.
+Rotation FluxMgr::CELTransform(double time){
+    return GPS::instance()->orbit()->CELtransform(time);
+}
+
 
 /** creates a document of the form
 

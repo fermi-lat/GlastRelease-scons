@@ -6,7 +6,7 @@
 #include "dom/DOM_NodeList.hpp"
 #include "xml/Dom.h"
 
-#include "SpectrumFactoryTable.h"
+#include "FluxSvc/SpectrumFactoryTable.h"
 
 #include "FluxSvc/SimpleSpectrum.h"
 

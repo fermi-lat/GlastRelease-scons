@@ -14,7 +14,7 @@
 
 
 #include <utility>
-#include "Spectrum.h"
+#include "FluxSvc/Spectrum.h"
 class HepRandomEngine;
 
 class CrSpectrum : public Spectrum

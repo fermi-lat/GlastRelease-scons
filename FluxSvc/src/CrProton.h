@@ -10,7 +10,7 @@
 #include <vector>
 #include <utility>
 #include <string>
-#include "Spectrum.h"
+#include "FluxSvc/Spectrum.h"
 
 class CrSpectrum;
 

@@ -40,6 +40,7 @@ void Flux::generate()
 {
     m_flux = m_event->event();
     m_time+= m_event->interval();
+    pass(m_event->interval());
 }
 
 // the particle generated 
@@ -127,4 +128,9 @@ void Flux::addFactory( const IFactory* factory ) {
 
 void Flux::addFactory(std::string name, const ISpectrumFactory* factory ) {
     SpectrumFactoryTable::instance()->addFactory(name,factory);
+}
+
+
+Rotation Flux::CELTransform(double time)const{
+return s_mgr->CELTransform(time);
 }

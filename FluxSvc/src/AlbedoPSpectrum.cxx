@@ -9,7 +9,7 @@
 #include "CLHEP/Random/Random.h"
 #include "GPS.h"
 #include "Geomag.h"
-#include "SpectrumFactory.h"
+#include "FluxSvc/SpectrumFactory.h"
 
 static SpectrumFactory<AlbedoPSpectrum> factory;
 const ISpectrumFactory& AlbedoPSpectrumFactory = factory;

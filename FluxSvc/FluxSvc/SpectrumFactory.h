@@ -11,7 +11,7 @@
 #endif // _MSC_VER > 1000
 
 #include "FluxSvc/ISpectrumFactory.h"
-#include "SpectrumFactoryTable.h"
+#include "FluxSvc/SpectrumFactoryTable.h"
 #include <typeinfo>
 #include <vector>
 

@@ -5,7 +5,7 @@
 
 
 #include "FluxSvc/IFlux.h"
-
+#include "geometry/CoordTransform.h"
 
 // forward declarations
 class FluxMgr;
@@ -75,9 +75,12 @@ public:
     
    // virtual void addFactory( const IFactory* factory );
     
-    virtual void addFactory(std::string name, const ISpectrumFactory* factory );/* {
-                                                                                insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
-}*/
+    virtual void addFactory(std::string name, const ISpectrumFactory* factory );
+    
+    virtual Rotation CELTransform(double time)const;
+                                                                                  
+//    insert(std::make_pair<std::string, const ISpectrumFactory*>(name, factory));
+
     
     
 private:
