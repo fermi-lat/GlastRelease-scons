@@ -135,12 +135,8 @@ StatusCode TestEnergyTool::initialize() {
 
 /*!
   Method:
-  -# if(calibFlavor != none)
-  -# set event time for DetDataSvc
-  -# obtain pointers pedestal and elecgain data in TDS
-  -# use uniqe pedestal and gain information for each xtal/range
-  -# else
-  -# use default pedesatl values for all xtal/range
+  -# if(calibFlavor != none) set event time for DetDataSvc, obtain pointers pedestal and elecgain data in TDS, use uniqe pedestal and gain information for each xtal/range
+  -# else use default pedesatl values for all xtal/range</ol>
   -# convert adc values into energy (e = gain*(adc-ped))
   -# return average of POS and NEG energy estimations
 
@@ -250,12 +246,8 @@ StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,
   
 /*!
   Method:
-  -# if(calibFlavor != none)
-  -# set event time for DetDataSvc
-  -# obtain pointers pedestal and elecgain data in TDS
-  -# use uniqe pedestal and gain information for each xtal/range
-  -# else
-  -# use default pedesatl values for all xtal/range
+  -# if(calibFlavor != none) set event time for DetDataSvc, obtain pointers pedestal and elecgain data in TDS, use uniqe pedestal and gain information for each xtal/range
+  -# else use default pedestal values for all xtal/range
   -# convert adc values into energy (e = gain*(adc-ped))
 */
 StatusCode TestEnergyTool::calculate(const idents::CalXtalId &xtalId,

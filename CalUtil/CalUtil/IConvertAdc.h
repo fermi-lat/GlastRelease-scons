@@ -1,7 +1,6 @@
 #ifndef _IConvertAdc_H
 #define _IConvertAdc_H 1
 
-
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 #include "idents/CalXtalId.h"

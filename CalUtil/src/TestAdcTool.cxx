@@ -33,18 +33,21 @@ StatusCode TestAdcTool::initialize() {
   typedef std::map<int*,std::string> PARAMAP;
 
   PARAMAP param;
-  param[&m_nCsISeg]= std::string("nCsISeg");
-  param[&m_eXtal]=       std::string("eXtal");
-  param[&m_eDiodeMSmall]=std::string("eDiodeMSmall");
-  param[&m_eDiodePSmall]=std::string("eDiodePSmall");
-  param[&m_eDiodeMLarge]=std::string("eDiodeMLarge");
-  param[&m_eDiodePLarge]=std::string("eDiodePLarge");
-  param[m_noise]=std::string("cal.noiseLarge");
-  param[m_noise+1]=std::string("cal.noiseSmall");
-  param[m_ePerMeV+1]=std::string("cal.ePerMeVSmall");
-  param[m_ePerMeV]=std::string("cal.ePerMevLarge");
-  param[&m_pedestal]=std::string("cal.pedestal");
-  param[&m_maxAdc]=std::string("cal.maxAdcValue");
+  param[&m_xNum]        = std::string("xNum");
+  param[&m_eTowerCal]   = std::string("eTowerCAL");
+  param[&m_eLatTowers]  = std::string("eLATTowers");
+  param[&m_nCsISeg]     = std::string("nCsISeg");
+  param[&m_eXtal]       = std::string("eXtal");
+  param[&m_eDiodeMSmall]= std::string("eDiodeMSmall");
+  param[&m_eDiodePSmall]= std::string("eDiodePSmall");
+  param[&m_eDiodeMLarge]= std::string("eDiodeMLarge");
+  param[&m_eDiodePLarge]= std::string("eDiodePLarge");
+  param[m_noise]        = std::string("cal.noiseLarge");
+  param[m_noise+1]      = std::string("cal.noiseSmall");
+  param[m_ePerMeV+1]    = std::string("cal.ePerMeVSmall");
+  param[m_ePerMeV]      = std::string("cal.ePerMevLarge");
+  param[&m_pedestal]    = std::string("cal.pedestal");
+  param[&m_maxAdc]      = std::string("cal.maxAdcValue");
 
   // now try to find the GlastDevSvc service
 
@@ -66,8 +69,8 @@ StatusCode TestAdcTool::initialize() {
 
   typedef std::map<double*,std::string> DPARAMAP;
   DPARAMAP dparam;
-  dparam[&m_CsILength]=std::string("CsILength");
-  dparam[&m_lightAtt]=std::string("cal.lightAtt");
+  dparam[&m_CsILength]  = std::string("CsILength");
+  dparam[&m_lightAtt]   = std::string("cal.lightAtt");
 
   for(DPARAMAP::iterator dit=dparam.begin(); dit!=dparam.end();dit++){
     if(!detSvc->getNumericConstByName((*dit).second,(*dit).first)) {
@@ -109,6 +112,15 @@ StatusCode TestAdcTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
+/*!
+  Method:
+  -# loop through hits, make sure they are for appropriate volume
+  -# for each hit, add energy to either A) one diode volume (direct diode hit) or B) calculate signal to each face (xtal hit)
+  -# sum signal to each diode
+  -# calculate random noise and add that to diode signal
+  -# calculate adc response for each diode/range adc = diodeEnergy*gain + ped
+  -# find best range for each face
+*/
 StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
                                   const std::vector<const Event::McIntegratingHit*> &hitList, // list of all mc hits for this xtal & it's diodes.
                                   std::vector<int> &adcP,              // output - ADC's for all ranges 0-3
@@ -136,6 +148,22 @@ StatusCode TestAdcTool::calculate(const idents::CalXtalId &xtalId,
 
     // get volume identifier.
     idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
+
+    // skip any hits not registered as Cal
+    if ((int)volId[fLATObjects] != m_eLatTowers ||
+        (int)volId[fTowerObjects] != m_eTowerCal) {
+      msglog << MSG::WARNING << "Invalid volume id.  Continuing w/out it but this shouldn't happen." << endreq;
+      continue;
+    }
+
+    // make sure volumeid matches xtalId
+    if (volId[fCALXtal]  != xtalId.getColumn() ||
+        volId[fLayer]    != xtalId.getLayer()  ||
+        (volId[fTowerY]*m_xNum + 
+         volId[fTowerX]) != xtalId.getTower()) {
+      msglog << MSG::WARNING << "Invalid volume id.  Continuing w/out it but this shouldn't happen." << endreq;
+      continue;
+    }
 
     double ene = (*it)->totalEnergy();
     HepPoint3D mom1 = (*it)->moment1();

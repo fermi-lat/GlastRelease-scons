@@ -2,9 +2,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "CLHEP/Geometry/Transform3D.h"
-#include "geometry/Point.h"
-#include "idents/VolumeIdentifier.h"
 #include "facilities/Timestamp.h"
 
 #include "CalibData/Cal/CalCalibMuSlope.h"
@@ -117,11 +114,11 @@ StatusCode TestPosTool::initialize() {
     return sc;
   }
 
-  unsigned int underpos = m_startTimeAsc.find("_");
-  if (underpos < m_startTimeAsc.size()) {
-    m_startTimeAsc.replace(underpos, 1, " ");
-  }
-  m_startTime = facilities::Timestamp(m_startTimeAsc).getClibTime();
+  std::string strStartTime = m_startTimeAsc.value();
+  unsigned int underpos = strStartTime.find("_");
+  if (underpos < strStartTime.size()) 
+    strStartTime.replace(underpos, 1, " ");
+  m_startTime = facilities::Timestamp(strStartTime).getClibTime();
 
   msglog << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
   msglog << MSG::INFO << "Time of first event: (ascii) "
@@ -162,8 +159,13 @@ StatusCode TestPosTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-
-// calculate position given the digital response on both faces
+/*!
+  Method:
+  -# get energy for both faces from TestEnergyTool
+  -# use MuSlope from CalibDataSvc if available, otherwise use slope based on default lightAttenutation
+  -# calculate lightAsymetry
+  -# return position relative to xtal center
+*/
 StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
                                   int adcP, 
                                   idents::CalXtalId::AdcRange rangeP,
@@ -186,54 +188,6 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
   } else {
     msglog << MSG::INFO << "Enable to retrieve mu slopes from calib database" << endreq;            
   }
-
-  // unpack crystal identification into tower, layer and column number
-  int layer = xtalId.getLayer();
-  int tower = xtalId.getTower();
-  int col   = xtalId.getColumn();
-
-  // create Volume Identifier for segment 0 of this crystal
-  idents::VolumeIdentifier segm0Id;
-  segm0Id.append(m_eLATTowers);
-  segm0Id.append(tower/m_xNum);
-  segm0Id.append(tower%m_xNum);
-  segm0Id.append(m_eTowerCAL);
-  segm0Id.append(layer);
-  segm0Id.append(layer%2); 
-  segm0Id.append(col);
-  segm0Id.append(m_eXtal);
-  segm0Id.append(0);
-
-  HepTransform3D transf;
-
-  //get 3D transformation for segment 0 of this crystal
-  detSvc->getTransform3DByID(segm0Id,&transf);
-
-  //get position of the center of the segment 0
-  Vector vect0 = transf.getTranslation();
-
-			
-  // create Volume Identifier for the last segment of this crystal
-  idents::VolumeIdentifier segm11Id;
-
-  // copy all fields from segm0Id, except segment number
-  for(int ifield = 0; ifield<fSegment; ifield++)segm11Id.append(segm0Id[ifield]);
-  segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
-
-  //get 3D transformation for the last segment of this crystal
-  detSvc->getTransform3DByID(segm11Id,&transf);
-
-  //get position of the center of the last segment
-  Vector vect11 = transf.getTranslation();
-
-  Point p0(0.,0.,0.);		
-
-  // position of the crystal center
-  Point pCenter = p0+(vect0+vect11)*0.5; 
-
-  //normalized vector of the crystal direction 
-  Vector dirXtal = 0.5*(vect11-vect0)*m_nCsISeg/(m_nCsISeg-1);	
-
 	
   //extract energy for the best range for both crystal faces 	
   float calEnergyP,calEnergyN;
@@ -241,11 +195,13 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
                                   (idents::CalXtalId::POS),
                                   adcP,.5,calEnergyP)!=StatusCode::SUCCESS) {
     msglog << MSG::ERROR << "Error on calenergytool::calculate" << endreq;
+    return StatusCode::FAILURE;
   }
   if (m_pCalEnergyTool->calculate(xtalId,(idents::CalXtalId::AdcRange)rangeN,
                                   (idents::CalXtalId::NEG),
                                   adcN,.5,calEnergyN)!=StatusCode::SUCCESS) {
     msglog << MSG::ERROR << "Error on calenergytool::calculate" << endreq;
+    return StatusCode::FAILURE;
   }
   msglog << MSG::INFO << " eneP " << calEnergyP << " eneM " << calEnergyN << std::endl;
    
@@ -259,7 +215,6 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
   double slope = (1+m_lightAtt)/(1-m_lightAtt)*0.5;
     
   // extract mu slopes for selected ranges from calibration objects
- 
   if(pMuSlopes){
     CalibData::RangeBase* pRangeP = pMuSlopes->getRange(xtalId, rangeP,idents::CalXtalId::POS);
     CalibData::RangeBase* pRangeM = pMuSlopes->getRange(xtalId, rangeN,idents::CalXtalId::NEG);
@@ -276,10 +231,7 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
 
   //calculate light asymmetry
   if(enePos>0 && eneNeg>0)
-
     asym =  log(enePos/eneNeg);
-  //            asym = (enePos-eneNeg)/(enePos+eneNeg);
-
 
   // longitudinal position in relative units (this value equal to +1 or -1
   // at the end of a crystal
@@ -290,15 +242,7 @@ StatusCode TestPosTool::calculate(const idents::CalXtalId &xtalId,
   if(relpos > 1.0) relpos = 1.0;
   if(relpos <-1.0) relpos = -1.0;
         
-  // calculate average position of energy deposit in this crystal
-  Point pXtal = pCenter+dirXtal*relpos;
-	
-
-  // store calculated position in the reconstructed data
-  // for the best readout range
   position = relpos;
-  //(recData->getRangeRecData(0))->setPosition(pXtal);
 
-  
   return StatusCode::SUCCESS;
 }

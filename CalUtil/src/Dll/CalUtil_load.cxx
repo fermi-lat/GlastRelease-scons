@@ -1,5 +1,5 @@
 /** 
-* @file GlastDigi_load.cpp
+* @file CalUtil_load.cpp
 * @brief This is needed for forcing the linker to load all components
 * of the library.
 *

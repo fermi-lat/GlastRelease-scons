@@ -21,7 +21,7 @@ class ICalPosTool : virtual public IAlgTool {
   static const InterfaceID& interfaceID() { return IID_CalPosTool; }
 
 
-  /// calculate position of energy centroid given the digital response on both faces
+  /// calculate position of energy centroid relative to xtal, given the digital response for both faces 
   /// \param xtalId specify xtal log
   /// \param adcP input adc value for Positive end
   /// \param adcN input adc value for Negative end

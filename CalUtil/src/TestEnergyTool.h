@@ -30,6 +30,7 @@ public:
   /// retrieves needed parameters and pointers to required services
   virtual StatusCode initialize();
 
+  /// calculate energy deposition given the digi response for both xtal faces
   StatusCode calculate(const idents::CalXtalId &xtalId, 
                        idents::CalXtalId::AdcRange rangeP,
                        idents::CalXtalId::AdcRange rangeN,
@@ -39,6 +40,7 @@ public:
                        float &energy                    // output
                        );
   
+  /// calculate energy deposition given the digi response for one xtal face
   StatusCode calculate(const idents::CalXtalId &xtalId,
                        idents::CalXtalId::AdcRange range,
                        idents::CalXtalId::XtalFace face,
@@ -64,8 +66,8 @@ private:
   IGlastDetSvc* detSvc;                  ///< pointer to the Glast Detector Service
   IDataProviderSvc* m_pCalibDataSvc;     ///< pointer to CalibDataSvc
 
-  /// Handle to the IDetDataSvc interface of the CalibDataSvc
-  IDetDataSvc* m_detDataSvc;
+  IDetDataSvc* m_detDataSvc;             ///< Handle to the IDetDataSvc interface of the CalibDataSvc
+
 };
 
 #endif //_TestEnergyTool_H

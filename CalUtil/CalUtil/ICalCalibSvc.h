@@ -46,6 +46,7 @@ class ICalCalibSvc : virtual public IInterface {
   /// \param range specify xtal range
   /// \param vals output const ref to vector of ADC values (y).
   /// \param dacs output const ref to vector of associated DAC values (x).
+  /// \param error error values on ADC
   virtual StatusCode getIntNonlin(const idents::CalXtalId &xtalId,
                                   idents::CalXtalId::XtalFace face,
                                   idents::CalXtalId::AdcRange range,

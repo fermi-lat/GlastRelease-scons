@@ -31,7 +31,7 @@ class ICalAdcTool : virtual public IAlgTool {
   /// \param rangeP output best range for Positive xtal face
   /// \param rangeN output best range for Negative xtal face
   /// \param adcP output vector of 4 adc responses for each range for Positive face - ranges always in default order (from 0-3)
-  /// \param adcP output vector of 4 adc responses for each range for Negative face - ranges always in default order (from 0-3)
+  /// \param adcN output vector of 4 adc responses for each range for Negative face - ranges always in default order (from 0-3)
   virtual StatusCode calculate(const idents::CalXtalId &xtalId, 
                                const std::vector<const Event::McIntegratingHit*> &hitList,
                                std::vector<int> &adcP,              // output - ADC's for all ranges 0-3

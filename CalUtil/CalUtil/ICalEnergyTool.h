@@ -25,6 +25,7 @@ public:
   /// \param adcN input adc value for Negative end
   /// \param rangeP input adc range for Positive end
   /// \param rangeN input adc range for Negative end
+  /// \param position centriod of energy deposition
   /// \param energy output total deposited energy 
   virtual StatusCode calculate(const idents::CalXtalId &xtalId, 
                                idents::CalXtalId::AdcRange rangeP,
