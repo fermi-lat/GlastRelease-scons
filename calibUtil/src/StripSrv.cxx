@@ -14,7 +14,6 @@
 #include <memory>
 
 #include "calibUtil/StripSrv.h"
-// #include "calibUtil/GenericSrv.h"
 
 namespace calibUtil {
   
@@ -44,7 +43,7 @@ namespace calibUtil {
 
 
   /// Initialize the data structures by parsing the XML file
-  StripSrv::StripSrv(std::string xmlFileName) : genSrv(xmlFileName){
+  StripSrv::StripSrv(std::string xmlFileName){
     
     xml::XmlParser* parser = new xml::XmlParser();
     DOM_Document doc = parser->parse(xmlFileName.c_str());
@@ -56,8 +55,10 @@ namespace calibUtil {
       std::cout << "Error parsing document" << std::endl;
       exit(1);    
     }
-    
+
     DOM_Element docElt = doc.getDocumentElement();
+    genSrv = new GenericSrv(docElt);
+
     badType = xml::Dom::getAttribute(docElt,"badType");
     DOMString domstr = DOMString("tower");
     DOM_NodeList list = docElt.getElementsByTagName(domstr);
@@ -161,6 +162,11 @@ namespace calibUtil {
     }         /// end of for
 
   }
+
+  /// destructor used to deallocate memory
+  StripSrv::~StripSrv(){
+    delete genSrv;
+  }
   
   /// return the status (Hot or Dead) of the strip
   std::string  StripSrv::getBadType(){
@@ -226,21 +232,18 @@ namespace calibUtil {
     unsigned stripCount = 0;
     
     while(it != towerCol.end() ) {
-
-       if((it->id.row == towerId.row) && (it->id.col == towerId.col)){
-
-         for(unsigned int i = 0; i < it->trayCol.size(); i++){
- 
+      if((it->id.row == towerId.row) && (it->id.col == towerId.col)){
+        for(unsigned int i = 0; i < it->trayCol.size(); i++){
           if(it->trayCol[i].topLayer != NULL){
-             if(it->trayCol[i].topLayer->stripType == std::string("bad")){
+            if(it->trayCol[i].topLayer->stripType == std::string("bad")){
                stripCount += it->trayCol[i].topLayer->stripCol.size();
-              }
+            }
           }
           if(it->trayCol[i].botLayer != NULL){
             if(it->trayCol[i].botLayer->stripType == std::string("bad")){
               stripCount += it->trayCol[i].botLayer->stripCol.size();
-             }
-           }
+            }
+          }
         }
       }
       it++;
@@ -309,7 +312,7 @@ namespace calibUtil {
   }
     
   /// count for very bad strips for the tower,tray and unilayer  specified 
-  unsigned int  StripSrv::countVeryBad(towerRC towerId, unsigned int trayNum, std::string uniLayer){
+  unsigned int  StripSrv::countVeryBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
     unsigned stripCount = 0;
@@ -319,13 +322,13 @@ namespace calibUtil {
         for(unsigned int i = 0; i < it->trayCol.size(); i++){ 
           if(it->trayCol[i].id == trayNum){ 
             if((it->trayCol[i].topLayer != NULL) && 
-               (uniLayer == std::string("top"))){
+               (uniLayer == TOP)){
               if(it->trayCol[i].topLayer->stripType == std::string("veryBad")){
                 stripCount += it->trayCol[i].topLayer->stripCol.size();
               }
             }
             if((it->trayCol[i].botLayer != NULL) && 
-               (uniLayer == std::string("bot"))){
+               (uniLayer == BOT)){
               if(it->trayCol[i].botLayer->stripType == std::string("veryBad")){
                 stripCount += it->trayCol[i].botLayer->stripCol.size();
               }
@@ -342,7 +345,8 @@ namespace calibUtil {
   
   /// count for  bad strips (including very bad) for the tower, tray 
   /// and unilayer specified 
-  unsigned int  StripSrv::countBad(towerRC towerId, unsigned int trayNum,std::string uniLayer){
+  unsigned int  StripSrv::countBad(towerRC towerId, unsigned int trayNum, 
+                                   uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
     unsigned stripCount = 0;
@@ -352,13 +356,13 @@ namespace calibUtil {
         for(unsigned int i = 0; i < it->trayCol.size(); i++){ 
           if(it->trayCol[i].id == trayNum){ 
             if((it->trayCol[i].topLayer != NULL) && 
-               (uniLayer == std::string("top"))){
+               (uniLayer == TOP)){
               if(it->trayCol[i].topLayer->stripType == std::string("bad")){
                 stripCount += it->trayCol[i].topLayer->stripCol.size();
               }
             }
             if((it->trayCol[i].botLayer != NULL) && 
-               (uniLayer == std::string("bot"))){
+               (uniLayer == BOT)){
               if(it->trayCol[i].botLayer->stripType == std::string("bad")){
                 stripCount += it->trayCol[i].botLayer->stripCol.size();
               }
@@ -373,7 +377,7 @@ namespace calibUtil {
   }
   
   /// List all very bad strips with the tower,tray and unilayer  
-  std::vector<unsigned int>  StripSrv::getVeryBad(towerRC towerId, unsigned int trayNum, std::string uniLayer){
+  std::vector<unsigned int>  StripSrv::getVeryBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
     std::vector<unsigned int> stripList;
@@ -383,13 +387,13 @@ namespace calibUtil {
         for(unsigned int i = 0; i < it->trayCol.size(); i++){ 
           if(it->trayCol[i].id == trayNum){ 
             if((it->trayCol[i].topLayer != NULL) && 
-               (uniLayer == std::string("top"))){
+               (uniLayer == TOP)){
               if(it->trayCol[i].topLayer->stripType == std::string("veryBad")){
                 stripList = it->trayCol[i].topLayer->stripCol;
               }
             }
             if((it->trayCol[i].botLayer != NULL) && 
-               (uniLayer == std::string("bot"))){
+               (uniLayer == BOT)){
               if(it->trayCol[i].botLayer->stripType == std::string("veryBad")){
                 stripList = it->trayCol[i].botLayer->stripCol;
               }
@@ -407,7 +411,7 @@ namespace calibUtil {
   
   /// List  bad strips (including very bad) with the tower, tray 
   /// and unilayer specified 
-  std::vector<unsigned int>  StripSrv::getBad(towerRC towerId, unsigned int trayNum, std::string uniLayer){
+  std::vector<unsigned int>  StripSrv::getBad(towerRC towerId, unsigned int trayNum, uniL uniLayer){
 
     std::vector<Tower>::iterator it = towerCol.begin();
     std::vector<unsigned int> stripList;
@@ -417,13 +421,13 @@ namespace calibUtil {
         for(unsigned int i = 0; i < it->trayCol.size(); i++){ 
           if(it->trayCol[i].id == trayNum){ 
             if((it->trayCol[i].topLayer != NULL) && 
-               (uniLayer == std::string("top"))){
+               (uniLayer == TOP)){
               if(it->trayCol[i].topLayer->stripType == std::string("bad")){
                 stripList = it->trayCol[i].topLayer->stripCol;
               }
             }
             if((it->trayCol[i].botLayer != NULL) && 
-               (uniLayer == std::string("bot"))){
+               (uniLayer == BOT)){
               if(it->trayCol[i].botLayer->stripType == std::string("bad")){
                 stripList = it->trayCol[i].botLayer->stripCol;
               }
@@ -441,25 +445,51 @@ namespace calibUtil {
 
     /// Get instrument name
     std::string StripSrv::getInst(){
-      return genSrv.getInst();
+      return genSrv->getInst();
     }
     
     /// Get timestamp
     std::string StripSrv::getTimestamp(){
-      return genSrv.getTimestamp();
+      return genSrv->getTimestamp();
     }
 
     /// Get calibration type
     std::string StripSrv::getCalType(){
-      return genSrv.getCalType();
+      return genSrv->getCalType();
     }
     
     /// Get format Version
     std::string StripSrv::getFmtVer(){
-      return genSrv.getFmtVer();
+      return genSrv->getFmtVer();
     } 
 
+
+  /// call back method for client to access large data
+  void StripSrv::traverseInfo(ClientObject *client){
+    
+    std::vector<Tower>::iterator it = towerCol.begin();
+    
+    while(it != towerCol.end() ){
+      for(unsigned int i = 0; i < it->trayCol.size(); i++){           
+        if(it->trayCol[i].topLayer != NULL){
+          client->readData(it->id,it->trayCol[i].id, TOP,
+                          it->trayCol[i].topLayer->stripCol);
+        }
+        if(it->trayCol[i].botLayer != NULL){
+          client->readData(it->id,it->trayCol[i].id, BOT,
+                          it->trayCol[i].botLayer->stripCol);
+        }
+      }    
+      it++;
+    }
+
+  }
+
 }/// end of namespace calibUtil
+
+
+
+
 
 
 
