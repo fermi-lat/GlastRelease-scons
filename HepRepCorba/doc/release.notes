@@ -7,5 +7,6 @@
  * v0r8     20-07-04 RG Tag with support for random access to Root files
  * v1r0     29-09-04 RG Support for HepEventServer CORBA interface and full types
  * v1r1     06-12-04 RG Increased the maximum lenght of CORBA messages; cleaned the code
- * v1r2     11-01-04 RG Added support for step backward in a root file
+ * v1r2     11-01-05 RG Added support for step backward in a root file
+ * v1r3     24-01-05 RG Added support to let Gleam start automatically FRED
 */
