@@ -73,7 +73,7 @@ StatusCode test_CalDigi::execute()
   SmartDataPtr<Event::CalDigiCol> digiCol(eventSvc(),EventModel::Digi::CalDigiCol );
 
   if ((digiCol == 0) || (digiCol->size()) == 0) {
-    log << MSG::DEBUG << "no/incorrect number calorimeter digis found" << endreq;
+    log << MSG::FATAL << "no/incorrect number calorimeter digis found" << endreq;
     sc = StatusCode::FAILURE;
     return sc;
   }
