@@ -13,7 +13,8 @@
 namespace ident{class VolumeIdentifier;}
 class G4LogicalVolume;
 class G4VPhysicalVolume;
-class GlastDetectorManager;
+class PosDetectorManager;
+class IntDetectorManager;
 
 /**
 This class instantiates the G4 geometry, from detModel
@@ -26,7 +27,8 @@ public:
   typedef std::map<const G4VPhysicalVolume*, idents::VolumeIdentifier> IdMap;
 
   G4Geometry();
-  G4Geometry(GlastDetectorManager* gdm,IdMap* idmap):m_gdm(gdm),m_idMap(idmap),
+  G4Geometry(PosDetectorManager* pdm,IntDetectorManager* idm,
+	     IdMap* idmap):m_pdm(pdm),m_idm(idm),m_idMap(idmap),
       m_worldPhys(0),m_replica(0),m_replicaMother(0){};
 
   ~G4Geometry();
@@ -89,8 +91,9 @@ public:
   /// pointer to the clients map that we fill
   IdMap* m_idMap;
 
-  /// the detector manager
-  GlastDetectorManager* m_gdm;    
+  /// the detector managers
+  PosDetectorManager* m_pdm;    
+  IntDetectorManager* m_idm;    
 
   /// a flag for optimization mechanism of the G4 geometry
   bool m_replica;

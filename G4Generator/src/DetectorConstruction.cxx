@@ -10,7 +10,8 @@
 #include "globals.hh"
 #include "G4SDManager.hh"
 
-#include "GlastDetectorManager.h"
+#include "PosDetectorManager.h"
+#include "IntDetectorManager.h"
 
 #include "G4Geometry.h"
 #include "G4Media.h"
@@ -22,21 +23,21 @@ DetectorConstruction::DetectorConstruction(IGlastDetSvc* gsv,
                                            IDataProviderSvc* esv):m_gsv(gsv)
 {
     
-  // now create the GlastDetector manager, and pass in the id map
-  m_glastdet = new GlastDetectorManager(this, esv);
-
-
+  // now create the GlastDetector managers
+  m_posDet = new PosDetectorManager(this, esv);
+  m_intDet = new IntDetectorManager(this, esv);
 }
 
 DetectorConstruction::~DetectorConstruction()
 
 { 
-  delete m_glastdet;
+  delete m_posDet;
+  delete m_intDet;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {  
-  G4Geometry* geom = new G4Geometry(m_glastdet, &m_idMap);
+  G4Geometry* geom = new G4Geometry(m_posDet, m_intDet, &m_idMap);
   G4Media* media = new G4Media();
   m_gsv->accept(*media);
   m_gsv->accept(*geom);

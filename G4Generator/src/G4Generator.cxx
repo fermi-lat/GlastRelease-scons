@@ -192,8 +192,10 @@ StatusCode G4Generator::execute()
     }
 
 
+#if 0
     SmartDataPtr<McPositionHitVector> hits(eventSvc(), "/Event/MC/PositionHitsCol");
      if (hits) log << MSG::INFO << "Number of hits in the event = " << hits->size() << endreq;
+#endif
 
     return StatusCode::SUCCESS;
 }

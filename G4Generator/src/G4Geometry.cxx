@@ -1,5 +1,6 @@
 #include "G4Geometry.h"
-#include "GlastDetectorManager.h"
+#include "PosDetectorManager.h"
+#include "IntDetectorManager.h"
 
 #include "G4Material.hh"
 #include "G4VSolid.hh"
@@ -171,11 +172,14 @@ void G4Geometry::pushShape(ShapeType s, const UintVector& idvec, std::string nam
   (*m_idMap)[phys] = vid;
 
   // Register the volume to the sensitive detector if necessary
-  if (type == Sensitive) 
+  if (type == posSensitive) 
       {
-        m_gdm->process(logical);
+	m_pdm->process(logical);
       }
-
+  else if (type == intSensitive)
+      {
+	m_idm->process(logical);
+      }
   // push this volume in the stack of mothers
   pushActualMother(logical);    
 }

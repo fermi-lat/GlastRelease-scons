@@ -13,7 +13,8 @@ class G4VPhysicalVolume;
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
-class GlastDetectorManager;
+class PosDetectorManager;
+class IntDetectorManager;
 
 /** callec by the RunManager to construct:
 - full detector geometry
@@ -49,7 +50,10 @@ private:
   IdMap m_idMap;
   
   // delegate creation of detectors.
-  GlastDetectorManager* m_glastdet;
+  PosDetectorManager* m_posDet;
+
+  // delegate creation of detectors.
+  IntDetectorManager* m_intDet;
 };
 
 #endif

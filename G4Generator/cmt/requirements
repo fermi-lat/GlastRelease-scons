@@ -29,13 +29,14 @@ use xmlUtil  v2r8
 
 use idents   v2*
 
-
 use GlastEvent v5*
 use GlastSvc  v4*
 
 # flux determination
 use FluxSvc  v5*
 
+# digi
+use GlastDigi 
 
 #to make standard display available
 use gui      v2r6p2
