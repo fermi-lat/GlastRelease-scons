@@ -4,6 +4,7 @@
 $Id$
 @verbatim
  * Package CalDigi
+ * v1r6p2     23-Feb-2005 ZF reduced msgstream constructors to fix slowness, richard put in an adc range check
  * v1r6p1     05-Feb-2005 ZF updated .cvsignore file
  * v1r6       05-Feb-2005 ZF Now uses CalXtalResponse package
  * v1r5p8     30-Jan-2005 RXD fix setting of status for dead channels
