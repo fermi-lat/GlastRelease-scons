@@ -9,39 +9,47 @@
 #include "TCanvas.h"
 #include "TString.h"
 #include "TStyle.h"
-
+#include "TPaveText.h"
 TFile *myFile;
 TTree *myTree;
 TString TID;
+TString LayerName;
+
 ////////////////// Functions definitions ////////////////////////////////
 void help();
-void AddTray(int l, int v);
-void SelectTray(int l, int v);
+void AddLayer(TString VL);
 void Init(char *filename="MyRootFile.root");
-TString TrayId(long int l, long int v);
-void PlotToT_0(TString myCuts="");
-void PlotToT_1(TString myCuts="");
+TString LayerId(TString VL);
+
+////////// HISTOGRAMS //////////
+TH1D *ToT_0(TString myCuts="");
+TH1D *ToT_1(TString myCuts="");
+TH1D *HitMap(TString myCuts="");
+TH1D *ProjectHitMap(TString myCuts="");
+TH1D *NumHitsLayer(TString myCuts="");
+TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts="");
+TGraph *Graph(TString VL1,  TString varA, TString varB, TString myCuts="");
+////////// CANVASES ////////////
 void PlotToT(TString myCuts="");
 void PlotHitMap(TString myCuts="");
-void ProjectHitMap(TString myCuts="");
+void PlotProjectHitMap(TString myCuts="");
 void PlotNumHitsLayer(TString myCuts="");
-void FindEvents(TString myCuts="");
-void PlotTotTot(TString myCuts="");
-void PlotAllDigi(TString myCuts="");
-void PlotVtx(TString myCuts="");
-void PlotClusHit(TString myCuts="");
 
+void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts="");
+void PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts="");
+//--------------------------------------------------//
+long FindEvents(TString myCuts="");
+void  PlotVtx(TString myCuts="");
+TH2D *PlotClusHit(TString myCuts="");
+//--------------------------------------------------//
+void PlotAllDigi(TString LV="X0",TString myCuts="");
+TCanvas *Report(TString LV="X0",TString myCuts="");
+void DumpReport(TString LV="X0",char *filename="MyRootFile.root");
 ////////////////// Implementation: ////////////////////
-void AddTray(int l, int v)
+void AddLayer(TString VL)
 {
-  std::cout<<TrayId(l,v)<<" add to the stack of tree data "<<std::endl;
-  myTree->AddFriend(TrayId(l,v),myFile);
-}
-
-void SelectTray(int l, int v)
-{
-  AddTray(l,v);
-  std::cout<<" & Selected for plotting "<<std::endl;
+  std::cout<<LayerId(VL)<<" add to the stack of tree data "<<std::endl;
+  myTree->AddFriend(LayerId(VL),myFile);
 }
 
 void Init(char *filename)
@@ -50,28 +58,25 @@ void Init(char *filename)
   gStyle->SetCanvasColor(10);
   gStyle->SetFillColor(10);
   
-  TFile *myFile = new TFile(filename);
+  myFile = new TFile(filename);
   
   myTree = (TTree*) myFile->Get("Header");
 
-  AddTray(1,0);
-  SelectTray(1,0);
-
+  //  AddLayer("X0");
   //  TFile myOutFile(f, "recreate");
+
   help();
 }
 
 
 void help()
 {
-  std::cout<<" ******************** Analysis Program for Tray(s) data ********************"<<std::endl;
+  std::cout<<" ******************** Analysis Program for Layer(s) data ********************"<<std::endl;
   std::cout<<" ---------- DIGI ANALYSIS:     "<<std::endl;
-  std::cout<<" Init(input filename, outFilename) : Initialize the analysis. "<<std::endl;
-  std::cout<<" AddTray(l,d) : Add a tray to the stack of the trays to analyze.  "<<std::endl;
-  std::cout<<"               By default Tray(1,0) is added                     "<<std::endl;
-  std::cout<<" SelectTray(l,d): The Tray l,d is selected for plotting       "<<std::endl;
-  std::cout<<"                  By default Tray(1,0) is added               "<<std::endl;
-  std::cout<<" ------------------------------ Plot Macros: --------------------"<<std::endl;
+  std::cout<<" 1) Init(input filename, outFilename) : Initialize the analysis. "<<std::endl;
+  std::cout<<" 2) AddLayer(int l,char *d)   : Add a layer to the stack of the layers to analyze and select it for plotting.  "<<std::endl;
+  std::cout<<"                    example: AddLayer(1,\"X\") Add the LayerX1..."<<std::endl;
+  std::cout<<" 3) ------------------------------ Plot Macros: --------------------"<<std::endl;
   std::cout<<" PlotToT(TString myCuts=\"\")  "<<std::endl;
   std::cout<<" PlotTotTot(TString myCuts=\"\")"<<std::endl;
   std::cout<<" PlotHitMap(TString myCuts=\"\") "<<std::endl;
@@ -85,68 +90,82 @@ void help()
   std::cout<<" than it is possible to specify the tray used for cutting "<<std::endl;
   std::cout<<" (otherwise the selected tray for plotting is used)       "<<std::endl;
   std::cout<<""<<std::endl;
-  std::cout<<" For Example:"<<std::endl;
-  std::cout<<" PlotToT(\"ToT0>0\")                 Plot the ToT for the Tray2 (defaul) if its ToT is >0"<<std::endl;
-  std::cout<<" AddTray(1,1)                        (this add the tray 1,1 to the the stack as Tray3 (do it only once!) "<<std::endl;
-  std::cout<<" PlotToT(\"Tray3.ToT0>0\")           Plot the ToT for the Tray2 if the ToT of the Tray3 is is >0"<<std::endl;
-  std::cout<<" SelectTray(1,1)                     This select the tray 3..."<<std::endl;
-  std::cout<<" PlotToT(\"Tray3.ToT0>0\")           Plot the ToT for the Tray3 if the ToT of the Tray3 is is >0 (same as PlotToT())"<<std::endl;
-  std::cout<<" PlotToT(\"Tray2.ToT0>0\")           Plot the ToT for the Tray3 if the ToT of the Tray2 is is >0 (same as PlotToT())"<<std::endl;
+  std::cout<<" Example of analysis:"<<std::endl;
+  std::cout<<" Init(char* filename=\"MyRootFile.root\") Load the file (or reset the analysis)           "<<std::endl; 
+  std::cout<<" AddLayer(0,\"X\")                    Select Layer  X0 "<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX0 if its ToT0 is >0"<<std::endl;
+  std::cout<<" AddLayer(1,\"X\")                    Add the Layer X1 to the stack of layers "<<std::endl;
+  std::cout<<" PlotToT(\"ToT0>0\")                  Plot the ToT for the LayerX1 if its ToT0 is >0"<<std::endl;
+  std::cout<<" PlotToT(\"LayerX0.ToT0>0\")          Plot the ToT for the LayerX1 if the ToT0 of the Layer X0 is >0"<<std::endl;
+  std::cout<<" AddLayer(0,\"X\")                    Add (select) the Layer X0"<<std::endl;
+  std::cout<<" PlotToT(\"LayerX1.ToT0>0\")          Plot the ToT for the LayerX0 if the ToT of the LayerX1 is is >0"<<std::endl;
   std::cout<<" Note that PlotToT(\"TkrHits[]==5\") Plot the ToTs for the events which hit the strip 5 !!"<<std::endl; 
   std::cout<<" "<<std::endl;
-  std::cout<<" The available variables are:"<<std::endl;
-  std::cout<<" EventId, RunId, TkrTotalNumHits (Global variables)"<<std::endl;
-  std::cout<<" TkrNumHits,  ToT0, ToT1, TkrHits[]  (These are for each trays"<<std::endl;
-  std::cout<<" NOTE: Is alwais possible accessing directly to the tree : \"myTree->Draw(\"RunId\"), or myTree->Draw(\"Tray2.ToT0\")"<<std::endl;
+  std::cout<<" ------------------------------ The available variables are:------------------------------"<<std::endl;
+  std::cout<<" EventId,  RunId,  TkrTotalNumHits (Global variables)"<<std::endl;
+  std::cout<<" TkrNumHits,  ToT0, ToT1, TkrHits[]  (These are for each layer)"<<std::endl;
+  std::cout<<" NOTE: Is alwais possible accessing directly to the tree : \"myTree->Draw(\"RunId\"), or myTree->Draw(\"LayerX1.ToT0\")"<<std::endl;
   std::cout<<" ---------- RECON ANALYSIS (only if available):     "<<std::endl;
   std::cout<<" PlotVtx(TString myCuts=\"\")"<<std::endl;
   std::cout<<" PlotClusHit(TString myCuts=\"\")"<<std::endl;
-  std::cout<<" PlotAllDigi()"<<std::endl;
+  std::cout<<" ====================    Macros    ===================="<<std::endl;
+  std::cout<<" 1) Init(char* filename=\"MyRootFile.root\") Load the file"<<std::endl; 
+  std::cout<<" 2) AddLayer(0,\"X\") Add the layer 0X to the stak of layers... ready to be analyzed"<<std::endl; 
+  std::cout<<" 3) PlotAllDigi(TString myCuts=\"\") Execute all the Plot macros for digi root file..."<<std::endl;
+  std::cout<<" 4) Report(TString myCuts=\"\") Makes a report page with some plots and infos. "<<std::endl;
+  std::cout<<" 5) DumpReport(char *filename=\"MyRootFile.root\")   Execute different Report() with different set of cuts (see code)"<<std::endl;
+  std::cout<<"                                                     It saves all the plot in a ps file (Report_[layer].ps)"<<std::endl;
   
 }
 
 //////////////////////////////////////////////////
-//              1 Tray Analysis                 //
+//              1 Layer Analysis                 //
 //////////////////////////////////////////////////
-TString TrayId(long int l, long int v)
+TString LayerId(TString VL)
 {
-  //  std::cout<<"---------- Layer = "<<l<<" ; view = "<<v<<std::endl;
-  int Plane = 2*l+v;
-  TString ts="Tray";//"[";
-  //  TString *trayid;
-  //ts +=l ;
-  //ts+="][";
-  //ts+=v;
-  //ts+="]";
-  ts+=Plane;
-  TID=ts+".";
-  return ts;
+  LayerName="Layer";
+  LayerName+=VL;
+  TID=LayerName+".";
+  return LayerName;
 }
 
 
-void PlotToT_0(TString myCuts)
+TH1D *ToT_0(TString myCuts)
 {
-  
   TString var="ToT0";
   var.Prepend(TID);
-
-  gDirectory->Delete("ToT0");
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
+  //  gDirectory->Delete("ToT0");
   TH1D *ToT0;
-  ToT0 = new TH1D("ToT0",var,255,0,255);
+  ToT0 = new TH1D("ToT0",title,255,0,255);
   var+=">>ToT0";
   myTree->Draw(var,myCuts);
+  return ToT0;
 }
 
-void PlotToT_1(TString myCuts)
+TH1D *ToT_1(TString myCuts)
 {
   TString var="ToT1";
   var.Prepend(TID);
-
-  gDirectory->Delete("ToT1");
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
+//  gDirectory->Delete("ToT1");
   TH1D *ToT1;
-  ToT1 = new TH1D("ToT1",var,255,0,255);
+  ToT1 = new TH1D("ToT1",title,255,0,255);
   var+=">>ToT1";
   myTree->Draw(var,myCuts);
+  return ToT1;
 }
 
 void PlotToT(TString myCuts)
@@ -156,42 +175,68 @@ void PlotToT(TString myCuts)
   ToTC = new TCanvas("ToTC","ToTC",800,400);
   ToTC->Divide(2,1);
   ToTC->cd(1);
-  PlotToT_0(myCuts);
+  ToT_0(myCuts);
   ToTC->cd(2);
-  PlotToT_1(myCuts);
+  ToT_1(myCuts);
 }
+
+TH1D *HitMap(TString myCuts)
+{
+  TString var="TkrHits";
+  var.Prepend(TID);
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
+  //  gDirectory->Delete("HitMap");
+  TH1D *HitMap;
+  HitMap = new TH1D("HitMap",title,1536,-0.5,1535.6);
+  HitMap->SetLineColor(4);
+  var+=">>HitMap";
+  myTree->Draw(var,myCuts);
+  std::cout<<" Number of Hits: "<<HitMap->GetEntries()<<std::endl;
+  return (TH1D*) HitMap;
+}
+
 
 void PlotHitMap(TString myCuts)
 {
   gDirectory->Delete("HitCan");
   TCanvas *HitCan;
   HitCan = new TCanvas("HitCan","Hit Map",1200,500);
-  TString var="TkrHits";
-  var.Prepend(TID);
-  gDirectory->Delete("HitMap");
-  TH1D *HitMap;
-  HitMap = new TH1D("HitMap",var,1535,-0.5,1534.5);
-  HitMap->SetLineColor(4);
-  var+=">>HitMap";
-  myTree->Draw(var,myCuts);
-  std::cout<<" Number of Hits: "<<HitMap->GetEntries()<<std::endl;
+  HitMap(myCuts);
 }
 
 
-void ProjectHitMap(TString myCuts)
+TH1D *ProjectHitMap(TString myCuts)
 {
-  gDirectory->Delete("prjHitCan");
-  TCanvas *prjHitCan;
-  prjHitCan = new TCanvas("prjHitCan","Projected Hit Map",500,500);
+  gDirectory->Delete("myCanvas");
+  TCanvas *myCanvas;
+  myCanvas = new TCanvas("myCanvas","myCanvas",100,50);
+
+  gDirectory->Delete("HitMap1");
+  
   TString var="TkrHits";
   var.Prepend(TID);
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
   gDirectory->Delete("HitMap1");
   TH1D *HitMap1;
-  HitMap1 = new TH1D("HitMap1",var,1535,-0.5,1534.5);
+  HitMap1 = new TH1D("HitMap1",title,1536,-0.5,1535.6);
   var+=">>HitMap1";
   myTree->Draw(var,myCuts);
-
+  
   int max_hit=(int) HitMap1->GetMaximum();
+  std::cout<<max_hit<<std::endl;
+  //  gDirectory->Delete("PrjHitMap");
   TH1D *PrjHitMap;
   PrjHitMap = new TH1D("PrjHitMap","Projected Hit Map",100,0,max_hit);
   
@@ -201,29 +246,72 @@ void ProjectHitMap(TString myCuts)
     }
   
   PrjHitMap->SetFillColor(5);
-  int Integral = (int) PrjHitMap->GetSum();
-  if (Integral!=0)  PrjHitMap->Scale(1./Integral);
+  //  int Integral = (int) PrjHitMap->GetSum();
+  //  if (Integral!=0)  PrjHitMap->Scale(1./Integral);
 
   PrjHitMap->Draw();
+  
   PrjHitMap->Fit("gaus","qsame");
 
-  TF1 *Gaussian = PrjHitMap->GetFunction("gaus");
-  
-  double sigma = Gaussian->GetParameter(2);
-  double mean  = Gaussian->GetParameter(1);
-  std::cout<<" Mean : "<<mean<<", Sigma "<<sigma<<std::endl;
-  
-  for(int strip=1;strip<=1535;strip++)
+  if(max_hit>=10)
     {
-      int numHits = (int) HitMap1->GetBinContent(strip);
-      if(numHits < mean - 3.0*sigma)
-	std::cout<<" WARNING!! Strip Number "<<strip-1<<" is below 3 sigma from the mean!! Counts : "<<numHits<<std::endl;
+      TF1 *Gaussian = PrjHitMap->GetFunction("gaus");
       
-      if(numHits > mean + 3.0*sigma)
-	std::cout<<" WARNING!! Strip Number "<<strip-1<<" is above 3 sigma from the mean!! Counts : "<<numHits<<std::endl;
+      double sigma = Gaussian->GetParameter(2);
+      double mean  = Gaussian->GetParameter(1);
+      
+      std::cout<<" Mean : "<<mean<<", Sigma "<<sigma<<std::endl;
+      if(sigma>1) 
+	{ 
+	  for(int strip=1;strip<=1535;strip++)
+	    {
+	      int numHits = (int) HitMap1->GetBinContent(strip);
+	      if(numHits==0)
+		std::cout<<" WARNING!! Strip Number "<<strip-1<<" has 0 counts ****************************"<<std::endl;
+	      
+	      if(numHits > mean + 10.0*sigma)
+		std::cout<<" WARNING!! Strip Number "<<strip-1<<" is above 10 sigma from the mean!! Counts : "<<numHits<<std::endl;
+	    }
+	}
     }
+
+  myCanvas->Close();
+
+  return PrjHitMap;
   
-  
+}
+
+void PlotProjectHitMap(TString myCuts)
+{
+  TH1D *PHM = ProjectHitMap(myCuts);
+
+  gDirectory->Delete("prjHitCan");
+  TCanvas *prjHitCan;
+  prjHitCan = new TCanvas("prjHitCan","Projected Hit Map",500,500);
+  PHM->Draw();
+}
+
+
+TH1D *NumHitsLayer(TString myCuts)
+{
+  TString var="TkrNumHits";
+  var.Prepend(TID);
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
+  //  gDirectory->Delete("TkrNumHits");
+  var+=">>TkrNumHits";
+  TH1D *TkrNumHits = new TH1D("TkrNumHits",title,130,-0.5,128.5);
+
+  myTree->Draw(var,myCuts);
+  //  TH1D *TkrNumHits = (TH1D*) gDirectory->Get("TkrNumHits");
+  TkrNumHits->SetFillColor(3);
+  std::cout<<" Number of Selected Events: "<<TkrNumHits->GetEntries()<<std::endl;
+  return   TkrNumHits;
 }
 
 void PlotNumHitsLayer(TString myCuts)
@@ -231,76 +319,274 @@ void PlotNumHitsLayer(TString myCuts)
   gDirectory->Delete("NumHitsCan");
   TCanvas *NumHitsCan;
   NumHitsCan = new TCanvas("NumHitsCan","Num Hits",500,500);
-  TString var="TkrNumHits";
-  var.Prepend(TID);
-  gDirectory->Delete("TkrNumHits");
-  var+=">>TkrNumHits";
-  myTree->Draw(var,myCuts);
-  TH1D *TkrNumHits = (TH1D*) gDirectory->Get("TkrNumHits");
-  TkrNumHits->SetFillColor(3);
-  std::cout<<" Number of Events: "<<myTree->GetEntries()<<std::endl;
+  NumHitsCan->SetLogy();
+
+  NumHitsLayer(myCuts);
 }
 
-void FindEvents(TString myCuts)
+long FindEvents(TString myCuts)
 {
-  myTree->Scan("EventId",myCuts);
+  return myTree->Scan("EventId",myCuts);
 }
 
-void PlotTotTot(TString myCuts)
+
+TGraph *Correlation(TString var, TString VL1, TString VL2, TString myCuts)
 { 
-  gDirectory->Delete("ToTToTCan");
-  TCanvas *ToTToTCan;
-  ToTToTCan = new TCanvas("ToTToTCan","ToT vs ToT",500,500);
-  TString var0="ToT0";
-  TString var1="ToT1";
-  var0.Prepend(TID);
-  var1.Prepend(TID);
-  TString var=var0;
-  var+=":";
-  var+=var1;
+  AddLayer(VL1);
+  AddLayer(VL2);
+  TString var0="Layer";
+  TString var1="Layer";
   
-  //  var+=">>tot";
-  myTree->Draw(var,myCuts);
+  var0+=VL1;
+  var1+=VL2;
+
+  var0+=".";
+  var1+=".";
+  var0+=var;
+  var1+=var;
+  var0+=":";
+  var0+=var1;
+  
+  myTree->Draw(var0,myCuts);
   TGraph *graph = (TGraph*) gPad->GetPrimitive("Graph");
   graph->SetMarkerStyle(25);
   graph->SetMarkerSize(0.2);
   graph->SetMarkerColor(2);
   graph->Draw("P");
-  
+  return graph;
 }
 
-void PlotAllDigi(TString myCuts)
+
+TGraph *Graph(TString VL1,  TString varA, TString varB, TString myCuts)
+{ 
+  AddLayer(VL1);
+  TString var0="Layer";
+  TString var1="Layer";
+  
+  var0+=VL1;
+  var1+=VL1;
+
+  var0+=".";
+  var1+=".";
+  var0+=varA;
+  var1+=varB;
+  var0+=":";
+  var0+=var1;
+  
+  myTree->Draw(var0,myCuts);
+  TGraph *graph = (TGraph*) gPad->GetPrimitive("Graph");
+  graph->SetMarkerStyle(4);
+  graph->SetMarkerSize(0.3);
+  graph->SetMarkerColor(4);
+  graph->Draw("P");
+  return graph;
+}
+
+
+void PlotAllDigi(TString LV,TString myCuts)
 {
-  PlotToT(myCuts);
-  PlotTotTot(myCuts);
-  PlotHitMap(myCuts);
+  AddLayer(LV);
   PlotNumHitsLayer(myCuts);
-  ProjectHitMap(myCuts);
+  PlotHitMap(myCuts);
+  PlotProjectHitMap(myCuts);
+  PlotToT(myCuts);
+  PlotGraph(LV,"ToT0","ToT1",myCuts);
 }
 
-void DumpReport()
+void PlotCorrelation(TString var, TString VL1, TString VL2, TString myCuts)
+{ 
+  gDirectory->Delete("CorrCan");
+  TCanvas *CorrCan;
+  CorrCan = new TCanvas("CorrCan","Correlation between two Layers",500,500);
+  Correlation(var,VL1,VL2,myCuts);
+}
+
+void PlotGraph(TString VL1,  TString varA, TString varB, TString myCuts)
+{ 
+  gDirectory->Delete("GraphCan");
+  TCanvas *GraphCan;
+  GraphCan = new TCanvas("GraphCan","Correlation between two variables",500,500);
+  Graph(VL1,varA,varB,myCuts);
+}
+
+
+TCanvas *Report(TString LV,TString myCuts)
 {
-  TCanvas ReportCanvas("ReportCanvas");
-  ReportCanvas.Print("Report.ps[");
+  //////////////////////////////////////////////////
+  //  gDirectory->Delete("ReportCanvas");
+  AddLayer(LV);
+  TString Name="Off_line_Report ";
+  TString Title="Off line Report ";
+  Name+=myCuts;
+  Title+=myCuts;
+  TCanvas *ReportCanvas = new TCanvas("ReportCanvas","ReportCanvas",700,950);
+  ReportCanvas->SetName(Name);
+  ReportCanvas->SetTitle(Title);
+  ReportCanvas->Divide(1,4);
+  ReportCanvas->cd(1);
+  TPad *top = (TPad*) gPad;
 
+  ReportCanvas->cd(2);
+  TPad *middleUp = (TPad*) gPad;
+
+  ReportCanvas->cd(3);
+  TPad *middleDown = (TPad*) gPad;
+
+  ReportCanvas->cd(4);
+  TPad *bottom = (TPad*) gPad;
   
+  //  middleUp->Divide(2,1);
+  middleDown->Divide(2,1);
+  bottom->Divide(2,1);
+  //////////////////////////////////////////////////
 
-
-
-  TCanvas *SelectedCanvas;
-  SelectedCanvas = (TCanvas*) gROOT->FindObject("ToTC");
-  if(SelectedCanvas) SelectedCanvas->Print("Report.ps");
-  SelectedCanvas = (TCanvas*) gROOT->FindObject("HitCan");
-  if(SelectedCanvas) SelectedCanvas->Print("Report.ps");
-  SelectedCanvas = (TCanvas*) gROOT->FindObject("prjHitCan");
-  if(SelectedCanvas) SelectedCanvas->Print("Report.ps");
-  SelectedCanvas = (TCanvas*) gROOT->FindObject("NumHitsCan");
-  if(SelectedCanvas) SelectedCanvas->Print("Report.ps");
-  SelectedCanvas = (TCanvas*) gROOT->FindObject("ToTToTCan");
-  if(SelectedCanvas) SelectedCanvas->Print("Report.ps");
+  TDatime date;
+  int year    = date.GetYear();
+  int month   = date.GetMonth();
+  int day     = date.GetDay();
+  int hour    = date.GetHour();
+  int minute  = date.GetMinute();
   
-  ReportCanvas.Print("Report.ps]");
+  TString text;  
+  TPaveText *pt = new TPaveText(0,0,1,1);
+  pt->AddText(" Offline analysis report");
+  TString text1=" Date : ";
+  text1+=year;
+  if(month<10)
+    text1+=" / 0";
+  else     
+    text1+=" / 0";
+  text1+=month;
+  if(day<10)
+    text1+=" / 0";
+  else
+    text1+=" / ";
+
+  text1+=day;
+  text1+="   -   ";
+  text1+=hour;
+  if (minute<10)
+    text1+=":0";
+  else 
+    text1+=":";
+  text1+=minute;
+  pt->AddText(text1);
+
+
+  text="Data File Name :";
+  text+= myFile->GetName();  
+  pt->AddText(text);
+
+  pt->AddText(LayerName);
+
+  /*
+  text=" Layer = ";
+  text+=LayerName;
+  pt->AddText(text);
+  */  
+
+
+  pt->SetTextSize(.08);
+  pt->SetTextColor(2);
+  
+  top->cd();
+  pt->Draw();
+
+ 
+  //  TH1D *SelectedHist;
+  
+  //  pt->AddText(myCuts);
+  //////////////////////////////////////////////////
+  long NumberOfEvents=myTree->GetEntries();
+
+  TString text2=" TotalNumber of events :";
+  text2+=NumberOfEvents;
+  pt->AddText(text2);
+  
+  middleUp->cd();
+  HitMap(myCuts);
+  
+  TH1D *HM = HitMap(myCuts);
+  //HM->SetName("HM");
+  
+  middleDown->cd(2);
+  gPad->SetLogy();
+
+  TH1D *NHL = NumHitsLayer(myCuts);
+  
+  long Sel_ToT1_ToT2_0_0 =  NHL->GetEntries();
+
+  TString text3 = " Number of selected events ( ";
+  text3+=myCuts;
+  text3+=" ) = ";
+  text3+=Sel_ToT1_ToT2_0_0;
+  double frac=1.0*Sel_ToT1_ToT2_0_0/(1.0*NumberOfEvents);
+  char fractext[10];
+  sprintf(fractext," (%.2g\%) ",frac*100.);
+  text3+=fractext;
+
+  pt->AddText(text3);
+  std::cout<<text3<<std::endl;  
+  
+  middleDown->cd(1);
+  TH1D *PHM  = ProjectHitMap(myCuts);
+  middleDown->cd(1);
+  PHM->Draw();
+  
+  bottom->cd(1);  
+  gPad->SetLogy();
+  TH1D *TOT0 = ToT_0(myCuts);
+  
+  
+  bottom->cd(2);
+  gPad->SetLogy();
+  TH1D *TOT1  = ToT_1(myCuts);
+  
+  //ReportCanvas->cd();
+  return ReportCanvas;
+  //////////////////////////////////////////////////
 }
+
+void DumpReport(TString LV,char *filename)
+{ 
+  AddLayer(LV);
+  TString PSFileName = "Report_";
+  PSFileName+=LayerName;
+  TString PSFileOpen=PSFileName;
+  TString PSFileClose=PSFileName;
+  PSFileOpen+=".ps(";
+  PSFileClose+=".ps)";
+  PSFileName+=".ps";
+
+  Report(LV)->Print(PSFileOpen);
+  
+  Report(LV,"ToT0==0 && ToT1==0")->Print(PSFileName);
+  Report(LV,"ToT0>0")->Print(PSFileName);
+  Report(LV,"ToT1>0")->Print(PSFileName);
+  Report(LV,"ToT0>0 && ToT1>0")->Print(PSFileName);
+  Report(LV,"ToT0>0 || ToT1>0")->Print(PSFileName);
+  Report(LV,"ToT0>249 && ToT1>249")->Print(PSFileName);
+  Report(LV,"TkrNumHits >= 30")->Print(PSFileName);
+  Report(LV,"TkrNumHits >= 60")->Print(PSFileName);
+  Report(LV,"TkrNumHits >= 120")->Print(PSFileName);
+  
+  TCanvas *CorrCan = new TCanvas("CorrCan","CorrelationsBetween Layer",700,700);
+  CorrCan->Divide(2,3);
+  CorrCan->cd(1);
+  Correlation("TkrNumHits","X0","X1","LayerX0.TkrNumHits>32");
+  CorrCan->cd(2);
+  Correlation("TkrNumHits","X0","X2","LayerX0.TkrNumHits>32");
+  CorrCan->cd(3);
+  Correlation("TkrNumHits","X0","X3","LayerX0.TkrNumHits>32");
+  CorrCan->cd(4);
+  Correlation("TkrNumHits","X1","X2","LayerX1.TkrNumHits>32");
+  CorrCan->cd(5);
+  Correlation("TkrNumHits","X1","X3","LayerX1.TkrNumHits>32");
+  CorrCan->cd(6);
+  Correlation("TkrNumHits","X2","X3","LayerX2.TkrNumHits>32");
+  CorrCan->Print(PSFileClose);
+}
+
 //////////////////////////////////////////////////
 // RECON
 //////////////////////////////////////////////////
@@ -320,6 +606,7 @@ void PlotVtx(TString myCuts)
     myCuts=NumVtx;
 
   TCanvas *CanVtx;
+  gDirectory->Delete("CanVtx");
   CanVtx = new TCanvas("CanVtx","CanVtx",1000,300);
   CanVtx->Divide(3,1);
   CanVtx->cd(1);
@@ -328,19 +615,25 @@ void PlotVtx(TString myCuts)
   myTree->Draw("TkrVtxY",myCuts);
   CanVtx->cd(3);
   myTree->Draw("TkrVtxZ",myCuts);
-  
 }
 
-void PlotClusHit(TString myCuts)
+TH2D *PlotClusHit(TString myCuts)
 {
   TString var0="TkrNumClus";
   TString var1="TkrTotalNumHits";
   TString var=var0;
   var+=":";
   var+=var1;
-  gDirectory->Delete("NumClus_NumHits");
+  TString title=var;
+  if(myCuts!="")
+    {
+      title+=" {";
+      title+=myCuts;
+      title+="}";
+    }
+//  gDirectory->Delete("NumClus_NumHits");
   TH2D *NumClus_NumHits;
-  NumClus_NumHits = new TH2D("NumClus_NumHits","Clusters vs Hits",30,0,15,30,0,15);
+  NumClus_NumHits = new TH2D("NumClus_NumHits",var,30,0,15,30,0,15);
   NumClus_NumHits->SetXTitle("Number of Hits");
   NumClus_NumHits->SetYTitle("Number of Clusters");
   
@@ -353,6 +646,6 @@ void PlotClusHit(TString myCuts)
   */
   gStyle->SetOptStat(11);
   NumClus_NumHits->Draw("box");
-
+  return NumClus_NumHits;
 }
 

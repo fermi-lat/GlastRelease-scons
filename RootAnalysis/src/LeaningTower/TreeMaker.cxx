@@ -22,10 +22,11 @@ void TreeMaker::CreateDigiTree(Int_t numEvents)
 
 void TreeMaker::CreateTree(Int_t numEvents)
 {    
-  static const int MaxNumLayers=4;
+  static const int MaxNumLayers=36;
   Int_t TrueToT0[MaxNumLayers];
   Int_t TrueToT1[MaxNumLayers];
   Int_t TrueTkrNumHits[MaxNumLayers];
+  Int_t TrueTkrHits[MaxNumLayers][128];
   
   Int_t ToT0;//[MaxNumLayers];
   Int_t ToT1;//[MaxNumLayers];
@@ -54,9 +55,9 @@ void TreeMaker::CreateTree(Int_t numEvents)
   
   //////////////////// Recon //////////////////////////////
   double Theta,Phi,ThetaXZ,ThetaYZ;
-
+  
   TreeCollection = new TObjArray();
-
+  
   // mc branches:
   if (mcTree) {
     mcTree->SetBranchStatus("*", 0);    // disable all branches
@@ -69,32 +70,37 @@ void TreeMaker::CreateTree(Int_t numEvents)
   }
   
   if (digiTree) {
-      digiTree->SetBranchStatus("*",0);  // disable all branches
-      // activate desired brances
-      digiTree->SetBranchStatus("m_cal*",1);  
-      digiTree->SetBranchStatus("m_tkr*",1);  
-      digiTree->SetBranchStatus("m_acd*",1);
-      digiTree->SetBranchStatus("m_eventId", 1); 
-      digiTree->SetBranchStatus("m_runId", 1);
-      
-      for(int i=0;i<MaxNumLayers-1;i++)
-	{
-	  TString TS="Tray";
-	  TS+=i;
-	  TTree *Layer = new TTree(TS,TS);
-	  Layer->Branch("ToT0",&ToT0,"ToT0/I");
-	  Layer->Branch("ToT1",&ToT1,"ToT1/I");
-	  Layer->Branch("TkrNumHits",&TkrNumHits,"TkrNumHits/I");
-	  Layer->Branch("TkrHits",TkrHits,"TkrHits[TkrNumHits]/I");
-	  TreeCollection->Add((TObject*) Layer);
-	}
-      
-      TTree *Header = new TTree("Header","Header");
-      Header->Branch("EventId",&EventId,"EventId/I");
-      Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
-      Header->Branch("RunId",&RunId,"RunId/I");
-      
-      TreeCollection->Add(Header);
+    digiTree->SetBranchStatus("*",0);  // disable all branches
+    // activate desired brances
+    digiTree->SetBranchStatus("m_cal*",1);  
+    digiTree->SetBranchStatus("m_tkr*",1);  
+    digiTree->SetBranchStatus("m_acd*",1);
+    digiTree->SetBranchStatus("m_eventId", 1); 
+    digiTree->SetBranchStatus("m_runId", 1);
+    
+    
+    for(int i=0;i<MaxNumLayers;i++)
+      {
+	TString TS="Layer";
+	if(i % 2 == 0) 
+	  TS+="X";
+	else 
+	  TS+="Y";
+	TS+=i/2; 
+	std::cout<<TS<<std::endl;
+	TTree *Layer = new TTree(TS,TS);
+	Layer->Branch("ToT0",&ToT0,"ToT0/I");
+	Layer->Branch("ToT1",&ToT1,"ToT1/I");
+	Layer->Branch("TkrNumHits",&TkrNumHits,"TkrNumHits/I");
+	Layer->Branch("TkrHits",TkrHits,"TkrHits[TkrNumHits]/I");
+	TreeCollection->Add((TObject*) Layer);
+      }
+    TTree *Header = new TTree("Header","Header");
+    Header->Branch("EventId",&EventId,"EventId/I");
+    Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
+    Header->Branch("RunId",&RunId,"RunId/I");      
+    TreeCollection->Add(Header);
+    
   }
   std::cout<<TreeCollection->GetEntries()<<std::endl;
   
@@ -244,12 +250,12 @@ void TreeMaker::CreateTree(Int_t numEvents)
 		if ( TrueTkrNumHits[Plane] > 0 ) 
 		  {
 		    for ( int h=0; h<TrueTkrNumHits[Plane] ; h++ ) 
-		      TkrHits[h] = pTkrDigi->getHit(h);
+		      TrueTkrHits[Plane][h] = pTkrDigi->getHit(h);
 		    		    
 		    if ( DEBUG ) 
 		      { 
 			std::cout << "list of hits:";
-			for ( int h=0; h<TrueTkrNumHits[Plane] ; h++ ) std::cout << " " << TkrHits[h];
+			for ( int h=0; h<TrueTkrNumHits[Plane] ; h++ ) std::cout << " " << TrueTkrHits[Plane][h];
 			std::cout << std::endl;
 		      }
 		    
@@ -337,10 +343,18 @@ void TreeMaker::CreateTree(Int_t numEvents)
 	  TkrNumHits = TrueTkrNumHits[i];
 	  ToT0       = TrueToT0[i];
 	  ToT1       = TrueToT1[i];
-	  if ( DEBUG )	  std::cout<<"fill "<<i<<" "<<TkrNumHits<<std::endl;
-	  aTree->Fill();
+	  //	  TkrHits    = TrueTkrHits[i];
 	  
+	  if (TkrNumHits > 0 || i==0 ) 
+	    {
+	      for ( int h=0; h<TkrNumHits; h++ ) 
+		TkrHits[h] = TrueTkrHits[i][h];
+	      if ( DEBUG )	  
+		std::cout<<"fill "<<i<<" "<<TkrNumHits<<std::endl;
+	    }
+	  aTree->Fill();
 	  i++;
+	  
 	}
       //      if(nTkrDigi>0) myTree->Fill();
       if ( DEBUG ) std::cout << "...filled!" << nTkrDigi << std::endl;
@@ -356,3 +370,4 @@ void TreeMaker::CreateTree(Int_t numEvents)
 }
 
 #endif
+  
