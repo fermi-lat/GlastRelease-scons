@@ -10,6 +10,8 @@ TKR Stay Clear envelope from LAT-DS-00038-2</prim>
             in all trays except the bottom and top</prim>
         <prim name="coreThickOuter" value="34.27">Core thickness for
             bottom and top trays  (15oct01)</prim>
+        <prim name="TKRCloseoutWidth" value="4.0">Width of closeout 
+            walls</prim>
         <prim name="glueSiThick" value="0.15">Thickness of glue
             between Si and bias plane</prim>
         <prim name="glueCoreThick" value="0.075">Thickness of glue between

@@ -373,6 +373,59 @@ grid, etc. (may be superseded by info from Eric)</notes>
           <refer refTo="faceWidth" />
         </const>
 
+        <const name="TKRCloseoutThick" >
+          <notes>Z dimension of closeout for trays other than top
+                 and bottom</notes>
+          <refer refTo="coreThick" />
+        </const>
+
+        <const name="TKRCloseoutThickOuter" >
+          <notes>Z dimension of closeout for top and bottom trays</notes>
+          <refer refTo="coreThickOuter" />
+        </const>
+
+        <const name="TKRCloseoutLen" >
+          <notes>Transverse length of longer of (imaginary) closeout 
+                pieces, just the same as the face sheet</notes>
+          <refer refTo="faceWidth" />
+        </const>
+
+        <const name="TKRCloseoutLenShort" >
+          <notes>Transverse length of shorter of (imaginary) closeout
+                 pieces</notes>
+          <minus>
+            <refer refTo="TKRCloseoutLen" />
+            <mul>
+              <refer refTo="TKRCloseoutWidth" />
+              <const value="2" uType="count" />
+            </mul>
+          </minus>
+        </const>
+ 
+        <const name="TKRCoreWidth" >
+          <notes>Length of sides for core </notes>
+          <refer refTo="TKRCloseoutLenShort" />
+        </const>
+        
+        <const name="TKRCloseout_dt" >
+          <notes>Transverse (x or y) offset of closeout pieces 
+                 w.r.t. tray</notes>
+          <mul>
+            <minus>
+              <refer refTo="TKRCloseoutLen" />
+              <refer refTo="TKRCloseoutWidth" />
+            </minus>
+            <const value="0.5" uType="count" />
+          </mul>
+        </const>
+
+        <const name="TKRCloseout_dtn" >
+          <notes>Negative transverse offset of closeout pieces</notes>
+          <uminus>
+            <refer refTo="TKRCloseout_dt" />
+          </uminus>
+        </const>
+
         <const name="biasGlueThick" >
           <notes>Thickness of upper bias board and glue above it</notes>
           <add>

@@ -401,6 +401,9 @@ TKR Stay Clear envelope from LAT-DS-00038-2        </prim>
         <prim name="coreThickOuter" type="double" uType="length" value="34.27" unitAngle="deg" unitLength="mm">
           Core thickness for
             bottom and top trays  (15oct01)        </prim>
+        <prim name="TKRCloseoutWidth" type="double" uType="length" value="4.0" unitAngle="deg" unitLength="mm">
+          Width of closeout 
+            walls        </prim>
         <prim name="glueSiThick" type="double" uType="length" value="0.15" unitAngle="deg" unitLength="mm">
           Thickness of glue
             between Si and bias plane        </prim>
@@ -673,6 +676,13 @@ grid flange        </prim>
         <const name="waferPitch" uType="length" value="89.525" unitAngle="deg" unitLength="mm" />
         <const name="ladderPitch" uType="length" value="89.7" unitAngle="deg" unitLength="mm" />
         <const name="TKRBiasWidth" uType="length" value="360.6" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseoutThick" uType="length" value="27.92" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseoutThickOuter" uType="length" value="34.27" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseoutLen" uType="length" value="360.6" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseoutLenShort" uType="length" value="352.6" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCoreWidth" uType="length" value="352.6" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseout_dt" uType="length" value="178.3" unitAngle="deg" unitLength="mm" />
+        <const name="TKRCloseout_dtn" uType="length" value="-178.3" unitAngle="deg" unitLength="mm" />
         <const name="biasGlueThick" uType="length" value="0.25" unitAngle="deg" unitLength="mm" />
         <const name="faceGlueRegThick" uType="length" value="0.275" unitAngle="deg" unitLength="mm" />
         <const name="faceGlueSupThick" uType="length" value="0.365" unitAngle="deg" unitLength="mm" />
@@ -1224,9 +1234,10 @@ grid flange        </prim>
         <idField name="fLadder" step="1" value="0" />
       </axisMPos>
     </stackX>
-    <!--  Now make all the other boxes we need for TKR:
-     * Core box for inner layers                     TKRCoreReg
-     * Core box for outer (top and bottom) layers    TKRCoreOuter
+    <!--  Now make all the other elements we need for TKR:
+     * Core composition for inner layers, including  TKRCoreReg
+       core and surrounding closeout              
+     * Core comp. for outer (top and bottom) layers  TKRCoreOuter
      * bias board box (include glue to attach Si)    TKRBiasBox
      * face sheet for regular layers, includes glue  TKRFaceReg
        attaching to closeout/core
@@ -1238,8 +1249,33 @@ grid flange        </prim>
        a detailed view with individual wafers, but someone might
        be happy with just a slab of silicon.)
  -->
-    <box X="363.1" Y="363.1" Z="27.92" name="TKRCoreReg" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
-    <box X="363.1" Y="363.1" Z="34.27" name="TKRCoreOuter" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="363.1" Y="363.1" Z="27.92" name="TKRCoreRegEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="363.1" Y="363.1" Z="34.27" name="TKRCoreOuterEnv" material="Vacuum" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="352.6" Y="352.6" Z="27.92" name="TKRCoreRegBox" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="352.6" Y="352.6" Z="34.27" name="TKRCoreOuterBox" material="FOAM05" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  Define boxes for short and long closeout pieces, both regular
+     and outer, so 4 boxes altogether. -->
+    <box X="360.6" Y="4.0" Z="27.92" name="TKRCloseoutRegLong" material="CarbonFiber" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="352.6" Y="4.0" Z="27.92" name="TKRCloseoutRegShort" material="CarbonFiber" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="360.6" Y="4.0" Z="34.27" name="TKRCloseoutOuterLong" material="CarbonFiber" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <box X="352.6" Y="4.0" Z="34.27" name="TKRCloseoutOuterShort" material="CarbonFiber" sensitive="false" unitAngle="deg" unitLength="mm" />
+    <!--  Now make the two compositions needed for core+closeout -->
+    <composition name="TKRCoreReg" envelope="TKRCoreRegEnv">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCoreRegBox" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="0" Y="178.3" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCloseoutRegLong" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="0" Y="-178.3" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCloseoutRegLong" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="178.3" Y="0" Z="0" xrot="0" yrot="0" zrot="90" volume="TKRCloseoutRegShort" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-178.3" Y="0" Z="0" xrot="0" yrot="0" zrot="90" volume="TKRCloseoutRegShort" unitAngle="deg" unitLength="mm" />
+    </composition>
+    <!--  Now same thing for outer tray cores -->
+    <composition name="TKRCoreOuter" envelope="TKRCoreOuterEnv">
+      <posXYZ S="0" X="0" Y="0" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCoreOuterBox" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="0" Y="178.3" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCloseoutOuterLong" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="0" Y="-178.3" Z="0" xrot="0" yrot="0" zrot="0" volume="TKRCloseoutOuterLong" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="178.3" Y="0" Z="0" xrot="0" yrot="0" zrot="90" volume="TKRCloseoutOuterShort" unitAngle="deg" unitLength="mm" />
+      <posXYZ S="0" X="-178.3" Y="0" Z="0" xrot="0" yrot="0" zrot="90" volume="TKRCloseoutOuterShort" unitAngle="deg" unitLength="mm" />
+    </composition>
+    <!--     ***   -->
     <box X="363.1" Y="363.1" Z="0.4" name="SiLayerBox" material="Si" sensitive="true" unitAngle="deg" unitLength="mm" />
     <!--   Just a single sheet. For convenience make a box the thickness of
       bias board + glue adjacent to Si   -->

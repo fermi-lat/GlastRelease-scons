@@ -58,9 +58,10 @@
     </stackX>
 
 
-<!-- Now make all the other boxes we need for TKR:
-     * Core box for inner layers                     TKRCoreReg
-     * Core box for outer (top and bottom) layers    TKRCoreOuter
+<!-- Now make all the other elements we need for TKR:
+     * Core composition for inner layers, including  TKRCoreReg
+       core and surrounding closeout              
+     * Core comp. for outer (top and bottom) layers  TKRCoreOuter
      * bias board box (include glue to attach Si)    TKRBiasBox
      * face sheet for regular layers, includes glue  TKRFaceReg
        attaching to closeout/core
@@ -72,18 +73,90 @@
        a detailed view with individual wafers, but someone might
        be happy with just a slab of silicon.)
  -->
-
-    <box name="TKRCoreReg"
+    <box name="TKRCoreRegEnv"
 	 XREF="TKRTrayWidth" 
 	 YREF="TKRTrayWidth" 
 	 ZREF="coreThick" 
-	 materialREF="coreMat" />
-    <box name="TKRCoreOuter" 
+         materialREF="vacuumMat" />        
+
+    <box name="TKRCoreOuterEnv"
 	 XREF="TKRTrayWidth" 
-	 YREF="TKRTrayWidth"
+	 YREF="TKRTrayWidth" 
+	 ZREF="coreThickOuter" 
+         materialREF="vacuumMat" />        
+
+    <box name="TKRCoreRegBox"
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth" 
+	 ZREF="coreThick" 
+	 materialREF="coreMat" />
+
+    <box name="TKRCoreOuterBox" 
+	 XREF="TKRCoreWidth" 
+	 YREF="TKRCoreWidth"
 	 ZREF="coreThickOuter" materialREF="coreMat" />
 
+<!-- Define boxes for short and long closeout pieces, both regular
+     and outer, so 4 boxes altogether. -->
+    <box name="TKRCloseoutRegLong"
+         XREF="TKRCloseoutLen"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThick"
+         materialREF="TKRCloseoutMat" />
 
+    <box name="TKRCloseoutRegShort"
+         XREF="TKRCloseoutLenShort"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThick"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutOuterLong"
+         XREF="TKRCloseoutLen"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickOuter"
+         materialREF="TKRCloseoutMat" />
+
+    <box name="TKRCloseoutOuterShort"
+         XREF="TKRCloseoutLenShort"
+         YREF="TKRCloseoutWidth"
+         ZREF="TKRCloseoutThickOuter"
+         materialREF="TKRCloseoutMat" />
+
+
+<!-- Now make the two compositions needed for core+closeout -->
+
+    <composition name="TKRCoreReg" envelope="TKRCoreRegEnv">
+      <posXYZ volume="TKRCoreRegBox" />
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutRegLong"
+              YREF="TKRCloseout_dtn" />
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutRegShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" />
+    </composition>
+
+<!-- Now same thing for outer tray cores -->
+    <composition name="TKRCoreOuter" envelope="TKRCoreOuterEnv">
+      <posXYZ volume="TKRCoreOuterBox" />
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutOuterLong"
+              YREF="TKRCloseout_dtn" />
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dt" />
+      <posXYZ volume="TKRCloseoutOuterShort"
+              zrot="90"
+              XREF="TKRCloseout_dtn" />
+    </composition>
+
+
+<!--    ***   -->  
+     
     <box name="SiLayerBox"
          sensitive="true"  
 	 XREF="TKRTrayWidth" 
