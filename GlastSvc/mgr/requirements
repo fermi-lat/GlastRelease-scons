@@ -3,7 +3,7 @@ version v1
 
 branches src mgr doc
 
-use instrument v2r2
+use instrument v2r3
 use Gaudi v8
 use data 
 use GlastEvent v1r1
@@ -52,7 +52,7 @@ macro_append cppflags ""\
 # for the moment, use libraryshr_linkopts to fix red hat 6.2 linking problem
 #macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts)" \
 macro GlastSvc_shlibflags   "$(libraryshr_linkopts) $(use_linkopts)" \
-                 VisualC  "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+                 VisualC  "Service.obj Converter.obj DataObject.obj $(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
 
 # WinIncludes is to allow header files to be added to the 
