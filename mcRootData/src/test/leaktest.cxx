@@ -38,9 +38,10 @@
     VolumeIdentifier id;
 
     Int_t ievent, ipart;
+    Double_t timestamp=0.0;
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        ev->initialize(ievent, runNum, sourceId, sequence);
+        ev->initialize(ievent, runNum, sourceId, sequence, timestamp);
 
         for (ipart = 0; ipart < numParticles; ipart ++) {
             McParticle *mcPart = new McParticle();
