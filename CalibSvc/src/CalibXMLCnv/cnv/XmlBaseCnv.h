@@ -101,11 +101,11 @@ protected:
   /// Convenience routine used by most CAL calibration types, which
   /// have a <dimension> element describing how the remainder of the
   /// data is laid out.
-  StatusCode XmlBaseCnv::readDimension(const DOM_Element& docElt, 
-                                       unsigned& nRow, unsigned& nCol, 
-                                       unsigned& nLayer,
-                                       unsigned& nXtal, unsigned& nFace,
-                                       unsigned& nRange);
+  StatusCode readDimension(const DOM_Element& docElt, 
+                           unsigned& nRow, unsigned& nCol, 
+                           unsigned& nLayer,
+                           unsigned& nXtal, unsigned& nFace,
+                           unsigned& nRange);
 
   /// Another one to find first range element
   DOM_Element findFirstRange(const DOM_Element& docElt);

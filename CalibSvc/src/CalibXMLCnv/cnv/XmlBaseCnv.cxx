@@ -41,6 +41,7 @@ namespace {
     if (att.compare(std::string("HEX1")) == 0) return CalXtalId::HEX1; 
     // anything else is illegal.  Should be caught by parser, but
     // maybe should also throw exception here.
+    return 0;
   }
 
   unsigned findFace(const DOM_Element& faceElt) {
