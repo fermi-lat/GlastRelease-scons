@@ -54,13 +54,13 @@ public:
     }
     
     /// Retrieve energy range for selected face and readout
-    Char_t getRange(short readoutIndex, CalXtalId::XtalFace face) const;
+    Char_t getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve pulse height for selected face and readout
-    Short_t getAdc(Short_t readoutIndex, CalXtalId::XtalFace face) const;
+    Short_t getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve ranges and pulse heights from both ends of selected readout
-    const CalXtalReadout* getXtalReadout(Short_t readoutIndex);
+    const CalXtalReadout* getXtalReadout(UShort_t readoutIndex);
     
     /// Retrieve pulse height from selected range
     Short_t getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const;
