@@ -533,6 +533,7 @@ void FluxSource::computeLaunch (double time)
                 double zInc = patchTop;
                 m_launchPoint = Point(xInc, yInc, zInc);
             } else {
+#if 0 // THB: this code gets into an infinite loop
                 double dist = FLT_MAX;
                 const double distToSearch = 500.;
                 do {
@@ -544,9 +545,19 @@ void FluxSource::computeLaunch (double time)
                     if (dist < FLT_MAX) m_launchPoint = trialRay.position(dist);
                     
                     // search til we find a position that satisfies our patch
+
                 } while (dist >= FLT_MAX); 
+#else // isn't this what the user wants? 
+                // Just choose a random position within the box 
+                double xInc = patchXmin + patchWidX * RandFlat::shoot();
+                double yInc = patchYmin + patchWidY * RandFlat::shoot();
+                double zInc = patchBottom + (patchTop-patchBottom) * RandFlat::shoot();
+                m_launchPoint = Point(xInc, yInc, zInc);
+#endif
+
             }
             break;
+
         }
     }
     //   transformDirection(); 
@@ -618,7 +629,7 @@ void FluxSource::setLaunch(double theta, double phi)
 void FluxSource::setLaunch(const Vector& dir)
 {
     //std::cout << "setting launch" << std::endl;
-    m_launchDir    = dir.unit();
+    m_correctedDir=m_launchDir    = dir.unit();
     m_launch      = DIRECTION;
     _theta = (-dir).theta();
     _phi   = (-dir).phi();
