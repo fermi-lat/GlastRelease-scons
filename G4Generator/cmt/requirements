@@ -20,7 +20,7 @@ use EXTLIB v2r4p2
 
 #  this is a checkout package
 # that should need only the Gaudi system stuff
-use Geant4   v1
+use Geant4   v1r1
 
 use facilities v2r1
 use XMLEXT   v2r2
