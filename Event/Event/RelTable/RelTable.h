@@ -41,7 +41,7 @@ public:
     void init() { m_relations = new ObjectList< Relation<T1,T2> >;}
       
     /// The following method add a new Relation to the vector of relations.
-    void addRelation(Relation<T1,T2>* rel);
+    void addRelation(Relation<T1,T2>* rel) const;
 
     /**
      * This method search for all relations having obj in the first
@@ -49,7 +49,7 @@ public:
      * @param obj it's a pointer to the object given by the user
      * @return A vector of pointers to the relations involving the given object.
      */
-    std::vector< Relation<T1,T2>* > getRelByFirst(T1* pobj);
+    std::vector< Relation<T1,T2>* > getRelByFirst(const T1* pobj) const;
 
     /**
      * This method search for all relations having pobj in the second
@@ -57,13 +57,13 @@ public:
      * @param pobj it's a pointer to the object given by the user
      * @return A vector of pointers to the relations involving the given object.
      */
-    std::vector< Relation<T1,T2>* > getRelBySecond(T2* pobj);
+    std::vector< Relation<T1,T2>* > getRelBySecond(const T2* pobj) const;
  
     /// This method returns the number of relations in the table
-    unsigned long size();
+    unsigned long size() const ;
 
     /// Returns the pointer to the collection of relations.
-    ObjectList< Relation<T1,T2> >* getAllRelations();
+    ObjectList< Relation<T1,T2> >* getAllRelations() const;
        
 private:
     
@@ -83,7 +83,7 @@ inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels) {
 }
 
 template <class T1,class T2>
-void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
+void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) const {
   // Purpose and Method:  This routine add a new relation to the collection.
   // Inputs:  rel is a pointer to the relation to be added.
 
@@ -142,7 +142,7 @@ void RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
 
 
 template <class T1,class T2>
-std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(T1* pobj) {
+std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(const T1* pobj) const {
   // Purpose and Method: This routine finds all relations having pobj in the
   // first field.  
   // Inputs: pobj is a pointer to the object to be searched in the first field
@@ -169,7 +169,7 @@ std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(T1* pobj) {
   
 
 template <class T1,class T2>
-std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelBySecond(T2* pobj) {
+std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelBySecond(const T2* pobj) const {
   // Purpose and Method: This routine finds all relations having pobj in the
   // second field.  
   // Inputs: pobj is a pointer to the object to be searched in the second field
@@ -196,14 +196,14 @@ std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelBySecond(T2* pobj) {
 
 
 template <class T1,class T2>
-inline unsigned long RelTable<T1,T2>::size() {
+inline unsigned long RelTable<T1,T2>::size() const {
   // Purposae: This method returns the total number of relations contained in the
   // collection
   return m_relations->size();
 }
 
 template <class T1,class T2>
-inline ObjectList< Relation<T1,T2> >* RelTable<T1,T2>::getAllRelations() {
+inline ObjectList< Relation<T1,T2> >* RelTable<T1,T2>::getAllRelations() const {
 
   return m_relations;
 
