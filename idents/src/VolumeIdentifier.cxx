@@ -59,7 +59,8 @@ void VolumeIdentifier::update()
     assert(size()<11); 
     for(VolumeIdentifier::iterator i = begin(); i!=end(); ++i){
         assert ((*i)<32);
-        m_value =(m_value >> 6) | (*i) << 54;
+	int64 t = *i;
+        m_value =(m_value >> 6) | (t << 54);
     }
     
 }
