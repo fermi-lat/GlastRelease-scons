@@ -40,6 +40,8 @@ public:
     };
     
     McParticle();
+
+    McParticle(const McParticle& p);
     
     virtual ~McParticle();
 
@@ -56,10 +58,13 @@ public:
     
     Int_t getParticleId() const { return m_particleId;};    
     
-    const McParticle* getMother() const;
+    /// return an McParticle pointer to the mother particle
+    McParticle* getMother();
 
+    /// return a daughter McParticle corresponding to index
     const McParticle* getDaughter(Int_t index) const;
 
+    /// return the full list of daughters
     const TRefArray& getDaughterList() const { return m_daughters; };
 
     Int_t getParticleProperty() const;
@@ -68,12 +73,16 @@ public:
 
     /// Retrieve whether this is a primary particle
     Bool_t primaryParticle() const;
+    
     /// Retrieve pointer to the start vertex positions
     const TVector3& getInitialPosition() const;
+    
     /// Retrieve pointer to end vertex position
     const TVector3& getFinalPosition() const;
     
-    const TLorentzVector&  getInitialFourMomemtum()const { return m_initialFourMomentum; };
+    const TLorentzVector&  getInitialFourMomentum() const;
+
+    const TLorentzVector& getFinalFourMomentum() const;
     
     
 private:
@@ -90,10 +99,10 @@ private:
     TLorentzVector m_finalFourMomentum;
     /// Pointer to mother particle
     TRef m_mother;
-    /// Array of pointers to daughter particles
+    /// Reference array of daughter particles
     TRefArray m_daughters;
-    
-    ClassDef(McParticle,2)
+
+    ClassDef(McParticle,2) // Monte Carlo Particle Class
 };
 
 #endif

@@ -7,7 +7,10 @@
 #include <string>
 
 /** @class VolumeIdentifier
-* @brief 
+* @brief This is the ROOT version of the idents::VolumeIdentifier
+*
+* ROOT is not yet able to store 64 bit longs as a machine independent type.
+* Instead, we split the VolumeId into two 32 bit UInt_t.
 *
 *  @author Heather Kelly
 *  
@@ -58,7 +61,7 @@ private:
     /// number of single ids which constitute the volume identifier
     UInt_t m_size;
     
-    ClassDef(VolumeIdentifier,1)
+    ClassDef(VolumeIdentifier,1) // Volume Identifier Class
 };
 
 #endif
