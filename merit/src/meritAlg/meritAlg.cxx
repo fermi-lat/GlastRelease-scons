@@ -541,11 +541,15 @@ StatusCode meritAlg::execute() {
     }
     m_ctree->execute();
     m_fm->execute();
-    if( m_rootTupleSvc) {
+
+    // write out the ROOT tuple only for valid events
+    double track_count = m_tuple->tupleItem("TkrNumTracks")->value();
+    if( m_rootTupleSvc && track_count>0 ) {
             copyPointingInfo();
             copyFT1info();
             m_rootTupleSvc->storeRowFlag(true);
     }
+
     return sc;
 }
 //------------------------------------------------------------------------------
@@ -561,7 +565,8 @@ StatusCode meritAlg::finalize() {
         }
     }
     log << endreq;
-    log << MSG::INFO << "Number of warnings (FilterStatus not found): "<< m_warnNoFilterStatus << endreq;
+    if(m_warnNoFilterStatus>0)
+        log << MSG::INFO << "Number of warnings (FilterStatus not found): "<< m_warnNoFilterStatus << endreq;
 
     delete m_tuple;
     delete m_fm;
