@@ -246,10 +246,25 @@ StatusCode meritAlg::setupTools() {
         VisitBill( meritAlg* me) : m_merit(me){}
         IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const double& value) const
         {
-            //   std::cout << "Creating tupleitem  from AnalysisNtuple value " << varName << std::endl;
             double * val = const_cast<double*>(&value);
             m_merit->addItem( varName, val);
             return IValsTool::Visitor::CONT;
+        }
+      IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const float& value) const
+        {
+            float * val = const_cast<float*>(&value);
+            m_merit->addItem( varName, val);
+            return IValsTool::Visitor::CONT;
+        }
+      IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const int& value) const
+        {
+#if 1 // not yet implemented
+            return IValsTool::Visitor::ERROR;
+#else
+            int * val = const_cast<int*>(&value);
+            m_merit->addItem( varName, val);
+            return IValsTool::Visitor::CONT;
+#endif
         }
 
     private:
