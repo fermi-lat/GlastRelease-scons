@@ -429,6 +429,17 @@ grid, etc. (may be superseded by info from Eric)</notes>
           </add>
         </const>
 
+        <const name="TKRGuardRing" >
+          <notes>Width of dead region around outside of Si wafer</notes>
+          <quo>
+            <minus>
+              <refer refTo="SiWaferSide" />
+              <refer refTo="SiWaferActiveSide" />
+            </minus>
+            <const value='2' uType='count' />
+          </quo>
+        </const>
+
         <const name="TKRBiasWidth" >
           <notes>Transverse dimension of bias board (for now assuming
           it's a square</notes>

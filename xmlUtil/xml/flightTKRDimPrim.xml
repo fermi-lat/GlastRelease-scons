@@ -49,7 +49,8 @@ area on a wafer</prim>
            for wallWidth?</prim>  
         <prim name="faceWidth" value="360.6">X and y width of face sheet
  (15oct01)</prim>
-        <prim name= "TKRElectGap" value= "4.2">**Insert comment here**</prim>
+        <prim name= "TKRElectGap" value= "4.2">Distance between wall
+           and panel edge (each edge)</prim>
         <prim name="ladderGap" value="0.20">gap between ladders</prim>
 
         <prim name="guardRing" value="0.745">guard ring size. Probably 
