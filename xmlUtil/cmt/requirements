@@ -33,6 +33,8 @@ library xmlUtil ${xmlUtil_headers} -no_share \
      id/IdOpTruncate.cxx     \
      id/IdOperation.cxx       \
      id/NamedId.cxx          \
+     docMan/DocMan.cxx       \
+     docMan/GDDDocMan.cxx    \
      ${xmlUtil_xmlfiles} 
 
 private
@@ -44,5 +46,5 @@ application forProg makeXmlForProg.cxx Arith.cxx Substitute.cxx \
 application forDoc makeXmlForDoc.cxx Arith.cxx  Constants.cxx Source.cxx
 
 application testId id/*.cxx
-
+application testDocMan docMan/*.cxx
 
