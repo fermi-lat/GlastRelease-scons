@@ -8,13 +8,12 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-#define DLL_DECL_TOOL(x)       extern const IToolFactory& x##Factory; x##Factory.addRef();
-
-
 DECLARE_FACTORY_ENTRIES(TkrUtil) {
-    DECLARE_SERVICE( TkrFailureModeSvc );
-    DECLARE_SERVICE( TkrBadStripsSvc   );
-    DECLARE_SERVICE( TkrGeometrySvc    );
+    DECLARE_SERVICE( TkrFailureModeSvc   );
+    DECLARE_SERVICE( TkrBadStripsSvc     );
+    DECLARE_SERVICE( TkrGeometrySvc      );
+
+    DECLARE_TOOL(    TkrQueryClustersTool);
 } 
 
 
