@@ -32,7 +32,6 @@
     t->Branch("ReconEvent", "ReconEvent", &ev, 64000, 1);
     
     gObjectTable->Print();
-    TkrSiCluster *siCluster;
     TkrCandTrack *candTrack;
     TkrTrack *track;
     TkrVertex *vertex;
@@ -57,6 +56,7 @@
         acdRec->addRowActDist(f);
         acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId);
 
+		// Create CalRecon object
         CalRecon *calRec = new CalRecon();
         calRec->initialize();
 
@@ -103,15 +103,16 @@
         TkrRecon *tkrRec = new TkrRecon();
         tkrRec->initialize();
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            siCluster = new TkrSiCluster();
-            UInt_t layer = 5;
-            TkrSiCluster::TKRAxes xy = TkrSiCluster::X;
-            UShort_t center = 7;
-            UShort_t nStrips = 6;
-            Float_t stripPos = f;
-            Float_t zpos = f*randNum;
-            siCluster->initialize(icluster, layer, xy, center, nStrips, stripPos, zpos);
-            tkrRec->addSiCluster(siCluster);
+            UInt_t iplane = 5;
+            UInt_t strip0 = 4;
+            UInt_t stripf = 10;
+            TVector3 pos(f, 2.*f, 3.*f);
+			Double_t tot = f;
+			UInt_t flag = 1;
+			UInt_t tower = 8;
+            TkrCluster *tkr_cluster = new TkrCluster(icluster, iplane, TkrCluster::X, strip0, stripf,
+				pos, tot, flag, tower);
+            tkrRec->addCluster(tkr_cluster);
         }
         UInt_t itrack;
         for (itrack = 0; itrack < numTracks; itrack++) {

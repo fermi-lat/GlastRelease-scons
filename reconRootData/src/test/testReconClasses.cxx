@@ -333,37 +333,48 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     return 0;
 }
 
-int checkTkrSiCluster(const TkrSiCluster *cluster, UInt_t ievent, UInt_t icluster) {
+int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
     Float_t f = Float_t (ievent);
     Float_t fr = f*randNum;
     if ( cluster->getId() != icluster)  {
-        std::cout << "SiCluster id is wrong: " << cluster->getId() << std::endl;
+        std::cout << "TkrCluster id is wrong: " << cluster->getId() << std::endl;
         return -1;
     }
-    if ( cluster->getLayer() != 5 ) {
-        std::cout << "SiCluster layer is wrong: " << cluster->getLayer() << std::endl;
+    if ( cluster->getPlane() != 5 ) {
+        std::cout << "TkrCluster plane is wrong: " << cluster->getPlane() << std::endl;
         return -1;
     }
-    if ( cluster->getXY() != TkrSiCluster::X) {
-        std::cout << "SiCluster axes is wrong: " << cluster->getXY() << std::endl;
+    if ( cluster->getView() != TkrCluster::X) {
+        std::cout << "TkrCluster axes is wrong: " << cluster->getView() << std::endl;
         return -1;
     }
-    if ( cluster->getCenterStrip() != 7)  {
-        std::cout << "SiCluster center is wrong: " << cluster->getCenterStrip() << std::endl;
+    if ( !floatInRange(cluster->getStrip(), 7.))  {
+        std::cout << "TkrCluster center is wrong: " << cluster->getStrip() << std::endl;
         return -1;
     }
-    if ( cluster->getNumStrips() != 6) {
-        std::cout << "SiCluster numStrips is wrong: " << cluster->getNumStrips() << std::endl;
+    if ( !floatInRange(cluster->getSize(), 7.)) {
+        std::cout << "TkrCluster size is wrong: " << cluster->getSize() << std::endl;
         return -1;
     }
-    if ( !floatInRange((*cluster).getPosition(), f)) {
-        std::cout << "SiCluster Position: " << cluster->getPosition() << std::endl;
+	if (cluster->getTower() != 8) {
+		std::cout << "TkrCluster Tower number is wrong: " << cluster->getTower() << std::endl;
+		return -1;
+	}
+	if ( !floatInRange(cluster->getToT(), f) ) {
+		std::cout << "TkrCluster ToT is wrong: " << cluster->getToT() << std::endl;
+		return -1;
+	}
+	TVector3 pos = cluster->getPosition();
+    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f*2.)) 
+		|| (!floatInRange(pos.Z(), f*3.)) ) {
+        std::cout << "TkrCluster Position: (" << pos.X() << ", "
+			<< pos.Y() << ", " << pos.Z() << ")" << std::endl;
         return -1;
     }
-    if ( !floatInRange(cluster->getZPosition(), fr)) {
-        std::cout << "SiCluster Z Position: " << cluster->getZPosition() << std::endl;
-        return -1;
-    }
+	if ( !cluster->hitFlagged() ) {
+		std::cout << "TkrCluster not flagged " << cluster->hitFlagged() << std::endl;
+		return -1;
+	}
 
     return 0;
 }
@@ -561,16 +572,16 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
 
 int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
-    TObjArray *siClusterCol = tkr->getSiClusterCol();
-    if (siClusterCol->GetEntries() != numClusters) {
-        std::cout << "Number of TkrRecon clusters is wrong: " << siClusterCol->GetEntries() << std::endl;
+    TObjArray *clusterCol = tkr->getClusterCol();
+    if (clusterCol->GetEntries() != numClusters) {
+        std::cout << "Number of TkrRecon clusters is wrong: " << clusterCol->GetEntries() << std::endl;
         return -1;
     }
     UInt_t icluster = 0;
-    TIter siClusIt(siClusterCol);
-    TkrSiCluster *cluster;
-    while ( (cluster = (TkrSiCluster*)(siClusIt.Next()) ) ){
-        if (checkTkrSiCluster(cluster, ievent, icluster) < 0) return -1;
+    TIter siClusIt(clusterCol);
+    TkrCluster *cluster;
+    while ( (cluster = (TkrCluster*)(siClusIt.Next()) ) ){
+        if (checkTkrCluster(cluster, ievent, icluster) < 0) return -1;
         icluster++;
     }
 
@@ -819,17 +830,18 @@ int write(char* fileName, int numEvents) {
         TkrRecon *tkrRec = new TkrRecon();
         tkrRec->initialize();
 
-        TkrSiCluster *siCluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            siCluster = new TkrSiCluster();
-            UInt_t layer = 5;
-            TkrSiCluster::TKRAxes xy = TkrSiCluster::X;
-            UShort_t center = 7;
-            UShort_t nStrips = 6;
-            Float_t pos = f;
-            Float_t zpos = f*randNum;
-            siCluster->initialize(icluster, layer, xy, center, nStrips, pos, zpos);
-            tkrRec->addSiCluster(siCluster);
+            UInt_t iplane = 5;
+            TkrCluster::view xy = TkrCluster::X;
+            UInt_t strip0 = 4;
+            UInt_t stripf = 10;
+            TVector3 pos(f, 2.*f, 3.*f);
+			Double_t tot = f;
+			UInt_t flag = 1;
+			UInt_t tower = 8;
+            TkrCluster *cluster = new TkrCluster(icluster, iplane, xy, strip0, stripf,
+				pos, tot, flag, tower);
+            tkrRec->addCluster(cluster);
         }
         UInt_t itrack;
         TkrCandTrack *candTrack;
