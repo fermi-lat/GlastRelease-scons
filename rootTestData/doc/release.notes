@@ -3,8 +3,9 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v1r0       1-dec-04  HMK Update default ROOT files - generated using GR v4r6
-v0r0p1     9-sep-04  THB fix to not add to include path 
+v2r0      06-Jan-05  HMK Add new vertical_surface_muons data
+v1r0      01-dec-04  HMK Update default ROOT files - generated using GR v4r6
+v0r0p1    09-sep-04  THB fix to not add to include path 
 
 @endverbatim
 */
