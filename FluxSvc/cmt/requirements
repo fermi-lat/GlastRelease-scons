@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r13p4
+version v6r13p5
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -27,12 +27,15 @@ apply_pattern packageShr
 apply_pattern package_include
 
 # _____________________________________________________________
+
 private
 
 macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 macro_append includes  $(ppcmd)"$(FLUXROOT)" '
 #  shared component library 
 apply_pattern package_Cshlibflags
+
+private
 library  FluxSvc   -import=flux -import=GRB \
      -s=../FluxSvc $(source) \
      -s=Dll *.cxx\
