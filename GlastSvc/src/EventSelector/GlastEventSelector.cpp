@@ -32,7 +32,7 @@ StatusCode GlastEventSelector::initialize()     {
         log << MSG::ERROR << "Unable to initialize service " << endreq;
     }
     
-    if(m_jobInput != " "){
+    if(m_jobInput.value() != " "){
         sc = setCriteria(m_jobInput);
         if(sc.isFailure()){
             log << MSG::ERROR << "Unable to parse string of input files" << endreq;

@@ -69,14 +69,14 @@ private:
     StatusCode GlastEventSelector::getFileName(ListName::const_iterator* inputIt, std::string& fName) const;
     
     std::string           m_criteria;
-    std::string           m_jobInput;
+    StringProperty         m_jobInput;
     CriteriaType          m_criteriaType;
     GlastEvtIterator      m_evtEnd;
     ListName*             m_inputDataList;
     IGlastDetSvc*         m_detSvc;
     IDataProviderSvc*     m_eventDataSvc;
     GlastEvtIterator*     m_it; 
-    int                   m_evtMax;
+    IntegerProperty           m_evtMax;
     
     IAddressCreator*      m_addrCreator;
     CLID                  m_rootCLID;
