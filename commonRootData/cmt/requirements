@@ -2,8 +2,6 @@ package commonRootData
 version v0r2p1
 
 use GlastPolicy v5r*
-use ROOT v2r* IExternal
-
 
 apply_pattern package_include
 apply_pattern package_linkopts
@@ -17,6 +15,9 @@ private
 use RootPolicy v2r*
 apply_pattern root_package
 apply_pattern root_package2
+
+apply_pattern vsnet_rootcint
+
 
 macro root_headers "\
  ../commonRootData/RelTable.h\
