@@ -54,29 +54,22 @@ public:
                      QMATERIAL,              // For access to the contribution from scattering
                      UNKNOWN};               // Unknown
 
-    /** Status word bits organized like:
-     *        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-     *         < volume info  >                    <    track fitting status          >
-     * The elements in the StatusBits enum are the following:
-     * - HASCLUSTER   = Hit is associated to a valid cluster
-     * - HASMEASURED  = Hit has valid measured parameters
-     * - HASPREDICTED = Hit has valid predicted parameters
-     * - HASFILTERED  = Hit has valid filtered parameters
-     * - HASSMOOTHED  = Hit has valid smoothed parameters
-     * - HASMATERIAL  = Hit has valid material matrix
-     * - MEASURESX    = Plane measures in X direction
-     * - MEASURESY    = Plane measures in Y direction
-     * - HASVALIDTKR  = Valid track volume identifier
-     **/
-     enum StatusBits {HASCLUSTER   = 0x0001,
-                     HASMEASURED  = 0x0002,
-                     HASPREDICTED = 0x0004,
-                     HASFILTERED  = 0x0008,
-                     HASSMOOTHED  = 0x0010,
-                     HASMATERIAL  = 0x0020,
-                     MEASURESX    = 0x1000,
-                     MEASURESY    = 0x2000,
-                     HASVALIDTKR  = 0x8000};
+    /// Status word bits organized like:
+    ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    ///         < volume info  >  <   hit type    > <    track fitting status          >
+    enum StatusBits {HITONFIT     = 0x0001,  // Hit is used in the fit
+                     HASMEASURED  = 0x0002,  // Hit has valid measured parameters
+                     HASPREDICTED = 0x0004,  // Hit has valid predicted parameters
+                     HASFILTERED  = 0x0008,  // Hit has valid filtered parameters
+                     HASSMOOTHED  = 0x0010,  // Hit has valid smoothed parameters
+                     HASMATERIAL  = 0x0020,  // Hit has valid material matrix
+					 HITISSSD     = 0x0100,  // Hit comes from a SSD
+					 HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
+					 HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
+					 HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
+                     MEASURESX    = 0x1000,  // Plane measures in X direction
+                     MEASURESY    = 0x2000,  // Plane measures in Y direction
+                     HASVALIDTKR  = 0x8000}; // Valid track volume identifier
 
 
     /// Default (null) constructor (just in case...)
@@ -97,7 +90,7 @@ public:
                     m_energy(hitEnergy), m_radLen(hitRadLen), m_activeDist(hitActDist),
                     m_chiSquareFilter(hitChiFilter), m_chiSquareSmooth(hitChiSmooth)
     {
-        if (m_cluster != 0)  m_statusBits  = HASCLUSTER;
+        if (m_cluster != 0)  m_statusBits  = HITISSSD | HITONFIT;
         if (tkrID.hasTray()) m_statusBits |= HASVALIDTKR;
     }
 
@@ -112,7 +105,8 @@ public:
     inline const unsigned int  getStatusBits() const {return m_statusBits;}
 
     /// Answer quick questions based on status bits
-    inline const bool validCluster()      const {return (m_statusBits & HASCLUSTER  ) == HASCLUSTER;}
+    inline const bool validCluster()      const {return  m_cluster != 0;}
+	inline const bool hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
     inline const bool validMeasuredHit()  const {return (m_statusBits & HASMEASURED ) == HASMEASURED;}
     inline const bool validPredictedHit() const {return (m_statusBits & HASPREDICTED) == HASPREDICTED;}
     inline const bool validFilteredHit()  const {return (m_statusBits & HASFILTERED ) == HASFILTERED;}
