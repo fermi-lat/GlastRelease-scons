@@ -1,11 +1,13 @@
 //$Header$
 #include <string>
-#include <stdio.h>   // ???
+//#include <stdio.h>   // ???
+#include <cstdio>
 
 #include "CalibMySQLCnvSvc.h"
 #include "calibUtil/Metadata.h"
 
 #include "CalibData/CalibBase.h"
+#include "CalibData/CalibTime.h"
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -15,18 +17,8 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
-
-//                             %%%%% WARNING  %%%%% 
-//
-// This file is in the process of being adapted from an LHCb class
-// DetCond/ConditionsDBCnvSvc. 
-// It is unusable as it stands and frequently misleading  
-//
-//                             %%%%% END WARNING  %%%%% 
-
 
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<CalibMySQLCnvSvc>          CalibMySQLCnvSvc_factory;
@@ -165,9 +157,9 @@ StatusCode CalibMySQLCnvSvc::finalize()
 StatusCode CalibMySQLCnvSvc::queryInterface(const IID& riid, 
                                             void** ppvInterface)
 {
-  if ( IID_ICalibMySQLCnvSvc == riid )  {
+  if ( IID_ICalibMetaCnvSvc == riid )  {
     // With the highest priority return the specific interface of this service
-    *ppvInterface = (ICalibMySQLCnvSvc*)this;
+    *ppvInterface = (ICalibMetaCnvSvc*)this;
   } else  {
     // Interface is not directly available: try out a base class
     return ConversionSvc::queryInterface(riid, ppvInterface);
@@ -187,7 +179,7 @@ StatusCode CalibMySQLCnvSvc::createObj (IOpaqueAddress* pAddress,
   log << MSG::DEBUG << "Method createObj starting" << endreq;
 
   if (( !m_detDataSvc->validEventTime() ) ||
-      ( !m_instrSvc->validInstrument())  )   {
+      ( !m_instrSvc->validInstrumentName())  )   {
     log << MSG::ERROR
 	<< "Cannot create DataObject: event time or instrument undefined"
 	<< endreq; 
@@ -242,6 +234,8 @@ StatusCode CalibMySQLCnvSvc::fillObjRefs(IOpaqueAddress* /*pAddress*/,
 StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress, 
                                        DataObject*     pObject  ) {
 
+  using facilities::Timestamp;
+
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
 
@@ -253,16 +247,21 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
 	<< endreq; 
     return StatusCode::FAILURE;
   } else {
-    ITime::AbsoluteTime absTime;
-    absTime = m_detDataSvc->eventTime().absoluteTime();
+    std::string tString  = 
+      CalibData::CalibTime(m_detDataSvc->eventTime()).getString();
+    //    ITime::AbsoluteTime absTime;
+    //    absTime = m_detDataSvc->eventTime().absoluteTime();
     log << MSG::DEBUG
-	<< "Event time: " << absTime 
-	<< "(0x" << std::hex 
-	<< absTime 
-	<< std::dec << ")" 
-	<< endreq; 
+	<< "Event time: ";
+    log <<  tString << endreq;
+
+    log	<< endreq; 
+  // absTime 
+      //	<< "(0x" << std::hex 
+      //	<< absTime 
+      //	<< std::dec << ")" 
   }
-  if ( !m_detinstrSvc->validInstrumentName() ) {
+  if ( !m_instrSvc->validInstrumentName() ) {
     log << MSG::ERROR
 	<< "Cannot update DataObject: instrument name undefined"
 	<< endreq; 
@@ -287,8 +286,16 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
     return StatusCode::SUCCESS;
   }
 
+  std::string tString  = 
+    CalibData::CalibTime(pValidity->validSince()).getString();
+
   log << MSG::DEBUG << "Old ccalib DataObject was valid since "
-      << pValidity->validSince().absoluteTime() 
+      << tString << " till ";
+
+  log << CalibData::CalibTime(pValidity->validTill()).getString() << endreq;
+
+
+    /*      << pValidity->validSince().absoluteTime() 
       << "(0x" << std::hex 
       << pValidity->validSince().absoluteTime() 
       << std::dec << ")" 
@@ -296,7 +303,7 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
       << "(0x" << std::hex 
       << pValidity->validTill().absoluteTime() 
       << std::dec << ")" 
-      << endreq;
+      << endreq; */
   StatusCode sc;
   if (pValidity->isValid(m_detDataSvc->eventTime())) { // done
     return StatusCode::SUCCESS;
@@ -389,11 +396,11 @@ StatusCode CalibMySQLCnvSvc::updateRepRefs (IOpaqueAddress* /*pAddress*/,
 /// Create an address using explicit arguments to identify a single object.
 /// Par[0] is calibration type name
 /// Par[1] is flavor
-StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
-					      const CLID& clid,
-					      const std::string* par, 
-					      const unsigned long* /*ipar*/,
-					      IOpaqueAddress*& refpAddress ) {
+StatusCode CalibMySQLCnvSvc::createAddress(unsigned char svc_type,
+                                           const CLID& clid,
+                                           const std::string* par, 
+                                           const unsigned long* /*ipar*/,
+                                           IOpaqueAddress*& refpAddress ) {
 
   // First check that requested address is of type MYSQL_StorageType
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
@@ -426,31 +433,31 @@ StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
 /// - this will dispatch to appropriate converter according to CLID
 ///   (CalibMySQLCnvSvc has no converters of its own).
 StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
-                                                 const std::string& calibType,
-                                                 const std::string& flavor,
-                                                 const ITime&       time,
-                                                 const std::string& instrName,
-                                                 const CLID&        classID,
-                                                 IRegistry*         entry )
+                                         const std::string& calibType,
+                                         const std::string& flavor,
+                                         const ITime&       time,
+                                         const std::string& instrName,
+                                         const CLID&        classID,
+                                         IRegistry*         entry)
 {
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc" );
 
   // Look up calib object in the Metadata database
   unsigned int ser;
   calibUtil::Metadata::eRet ret = 
-    m_meta->findBest(&ser, calibType, facilities::Timestamp(time),
+    m_meta->findBest(&ser, calibType, CalibData::CalibTime(time),
                      m_calibLevelMask, instrName, flavor);
   if (ret != calibUtil::Metadata::RETOk) {
     // complain
-    return StatusCode::ERROR;
+    return StatusCode::FAILURE;
   }
   else if (ser == 0) {  // no error, but no appropriate calib was found
     log << MSG::ERROR
         << "No appropriate calibration of (type, flavor) ("
         << calibType << ", " << flavor << ")" << endreq;
-    return StatusCode::ERROR;
+    return StatusCode::FAILURE;
   }
-  unsigned int physFmt = 0;
+  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
   std::string fmtVersion;
   std::string dataIdent;
 
@@ -458,10 +465,10 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   //   * physical storage type
   //   * version of the physical format
   //   * pathname or similar identifying information so the data can be found
-  ret = getReadInfo(ser, &physFmt, &fmtVersion, &dataIdent);
+  ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
   unsigned char storageType;
-  StatusCode sc = decodeDescription(physFmt, &storageType);
+  StatusCode sc = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
   // conversion service to invoke.  Pass dataIdent and fmtVersion
@@ -476,15 +483,15 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 
   IOpaqueAddress* tmpAddress;
   std::string fullpath = "/Calib/" + calibType + "/" + flavor;
-  const std::string par[3] = {fmtVersion, dataIdent, path};
+  const std::string par[3] = {fmtVersion, dataIdent, fullpath};
   const unsigned long ipar[1] = {ser};
   
-  status = addressCreator()->createAddress(storageType, classID, 
-                                           par, ipar, tmpAddress);
-  if ( !status.isSuccess() ) {
+  sc = addressCreator()->createAddress(storageType, classID, 
+                                       par, ipar, tmpAddress);
+  if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
-    return status;
+    return sc;
   }  
   log << MSG::DEBUG << "Temporary address successfully created" << endreq;
   tmpAddress->addRef();
@@ -495,12 +502,12 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   // Now create the object
   log << MSG::DEBUG 
       << "Delegate object creation to the persistency service" << endreq;
-  status = m_detPersSvc->createObj(tmpAddress, refpObject);
+  sc = m_detPersSvc->createObj(tmpAddress, refpObject);
   tmpAddress->release();
-  if ( !status.isSuccess() ) {
+  if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new object" << endreq;
-    return status;
+    return sc;
   }
 
   // Set validity of created object
@@ -510,7 +517,11 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 	<< "Created object does not implement IValidity: cannot set validity"
 	<< endreq;
   } else {
-    pValidity->setValidity(since, till);
+    facilities::Timestamp* since;
+    facilities::Timestamp* till;
+    m_meta->getInterval(ser, since, till);
+    pValidity->setValidity(CalibData::CalibTime(*since), 
+                           CalibData::CalibTime(*till));
   }
 
   log << MSG::DEBUG << "New object successfully created" << endreq;
@@ -564,26 +575,28 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
         << "Object to be updated is not a calib object! " << endreq;
     return StatusCode::FAILURE;
   }
-  if (pBase->isValid(m_detDataSvc->eventTime()) return StatusCode::SUCCESS;
+
+  if (pBase->isValid(m_detDataSvc->eventTime()) )
+      return StatusCode::SUCCESS;
 
   // Following comes from createCalib.  Perhaps create and update
   // should be calling common utility since much of what they do is identical.
   unsigned int ser;
   calibUtil::Metadata::eRet ret = 
-    m_meta->findBest(&ser, calibType, facilities::Timestamp(time),
-                     m_calibLevelMask, instrName, flavor);
+    m_meta->findBest(&ser, calibType, CalibData::CalibTime(time),
+                     m_calibLevelMask, instr, flavor);
   if (ret != calibUtil::Metadata::RETOk) {
     // complain
-    return StatusCode::ERROR;
+    return StatusCode::FAILURE;
   }
   else if (ser == 0) {  // no error, but no appropriate calib was found
     log << MSG::ERROR
         << "No appropriate calibration of (type, flavor) ("
         << calibType << ", " << flavor << ")" << endreq;
-    return StatusCode::ERROR;
+    return StatusCode::FAILURE;
   }
 
-  unsigned int physFmt = 0;
+  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
   std::string fmtVersion;
   std::string dataIdent;
 
@@ -591,10 +604,10 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   //   * physical storage type
   //   * version of the physical format
   //   * pathname or similar identifying information so the data can be found
-  ret = getReadInfo(ser, &physFmt, &fmtVersion, &dataIdent);
+  ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
   unsigned char storageType;
-  StatusCode sc = decodeDescription(physFmt, &storageType);
+  status = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
   // conversion service to invoke.  Pass dataIdent and fmtVersion
@@ -610,7 +623,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 
   IOpaqueAddress* tmpAddress;
   std::string fullpath = "/Calib/" + calibType + "/" + flavor;
-  const std::string par[3] = {fmtVersion, dataIdent, path};
+  const std::string par[3] = {fmtVersion, dataIdent, fullpath};
   const unsigned long ipar[1] = {ser};
   
   status = addressCreator()->createAddress(storageType, classID, 
@@ -662,8 +675,13 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
     log << MSG::ERROR 
 	<< "Updated object does not implement IValidity" << endreq;
     return StatusCode::FAILURE;
+  }  else {
+    facilities::Timestamp* since;
+    facilities::Timestamp* till;
+    m_meta->getInterval(ser, since, till);
+    pValidity->setValidity(CalibData::CalibTime(*since), 
+                           CalibData::CalibTime(*till));
   }
-  pValidity->setValidity ( since, till );
   return StatusCode::SUCCESS;
 }
 
@@ -671,6 +689,8 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
                                                 unsigned char& type )
 {
+  MsgStream log(msgSvc(), "CalibMySQLCnvSvc");
+
   if (description == calibUtil::Metadata::FMTXml) {
     type = XML_StorageType;
   }

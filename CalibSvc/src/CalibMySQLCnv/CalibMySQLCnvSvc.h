@@ -4,6 +4,7 @@
 
 /// Include files
 #include "CalibSvc/ICalibMetaCnvSvc.h"
+#include "CalibSvc/IInstrumentName.h"
 #include "GaudiKernel/ConversionSvc.h"
 
 /// Forward and external declarations
@@ -103,19 +104,20 @@ class CalibMySQLCnvSvc : public ConversionSvc,
                          const ITime&       time,
                          const std::string& instrument,
                          const CLID&        classID,
-                         IRegistry*         entry=0) = 0;
+                         IRegistry*         entry=0);
   
   /// Update a condition DataObject by 
   /// This method does not register DataObject in the transient data store,
   /// but may register TDS addresses for its children if needed (e.g. Catalog).
   /// The string storage type is discovered at runtime in the CondDB.
   /// The entry name identifies a condition amongst the many in the string.
-  StatusCode updateCalib(DataObject*          pObject,
+  StatusCode updateCalib(DataObject*        pObject,
                          const std::string& calibType,
                          const std::string& flavor,
                          const ITime&       time,
+                         const std::string& instName,
                          const CLID&        classID,
-                         IRegistry*         entry=0) = 0;
+                         IRegistry*         entry=0);
   
   /// Decode the string storage type to enumerated storage type
   StatusCode decodeDescription(unsigned int   description,
@@ -147,7 +149,7 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   // need all these different handles to the same class??
   // Keep them separate for now to preserve possibility of putting
   // CalibDataSvc in a separate package.
-  IInstrumentNameSvc*  m_instrSvc;
+  IInstrumentName*  m_instrSvc;
 };
 #endif   
 
