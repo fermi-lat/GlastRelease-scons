@@ -19,6 +19,7 @@
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/GaudiException.h"
 
 #include "facilities/Util.h"
 
@@ -30,7 +31,7 @@
 #ifdef WIN32
 #include <float.h> // used to check for NaN
 #else
-#include <math.h>
+#include <cmath>
 #endif
 
 // Storage location for ntuples within the TDS
@@ -102,7 +103,7 @@ StatusCode ntupleWriterSvc::initialize ()
     title += ")";
 
     // Setup the ntuples asked for in the job options file
-    int index = 0;
+    unsigned int index = 0;
     for (index = 0; index < m_tuple_name.size(); index++) {
         ++m_tupleCounter;
         // store the id for this ntuple
@@ -181,8 +182,15 @@ void ntupleWriterSvc::endEvent()  // must be called at the end of an event to up
 
     if (m_storeFlag == false) return;
     
+    // set values from pointers, if any
+
+    for( NTupleItemMap ::const_iterator it=m_itemList.begin();  it !=m_itemList.end(); ++it){
+        NTuple::Item<float> item = (*it).first;
+       item = static_cast<float>(*(*it).second);
+    }
+
     // fill and write out the Gaudi tuple   
-    int index = 0;
+    unsigned int index = 0;
     for (index = 0; index < m_tuple_name.size(); index++) {
         sc = writeNTuple(index);
         if (sc.isFailure()) log << MSG::ERROR << "Could not write out ntuple " << (index+1) << endreq;
@@ -293,6 +301,28 @@ StatusCode ntupleWriterSvc::addItem(const char *tupleName, const char *item, dou
     }
 
     return sc;
+}
+StatusCode ntupleWriterSvc::addItem(const std::string & tupleName, const std::string& itemName, const double* pval){
+
+    // first, make sure this guy is not already there
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
+
+    SmartDataPtr<NTuple::Tuple> m_nt(ntupleSvc, m_tuples[tupleName]);
+    if( m_nt){}else{ throw GaudiException("could not find a tuple", name(), StatusCode::FAILURE); }
+
+    NTuple::Item<float> ntItem;
+    // Check to see if this item has already been added into the ntuple
+    sc = m_nt->item(itemName, ntItem);
+    if (sc.isSuccess()) {
+        log << MSG::ERROR << "Item " << itemName << " already in ntuple " << tupleName << endreq;
+        return sc;
+    }
+    sc=  m_nt->addItem(itemName, ntItem);
+    // now add the pointer to the list for filling at end of event time
+    m_itemList[ntItem]=pval;
+    return sc;
+
 }
 
 int ntupleWriterSvc::isFinite(float val) {

@@ -38,8 +38,11 @@ public:
 private:
     std::string m_tupleName;
     float m_float;
+    double m_count; // special value to put into tuples
+    double m_square; // another
 
     INTupleWriterSvc *m_ntupleWriteSvc;
+    INTupleWriterSvc *m_rootTupleSvc;
 
 };
 
@@ -61,7 +64,6 @@ StatusCode writeJunkAlg::initialize() {
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-
     // get a pointer to our ntupleWriterSvc
     sc = service("ntupleWriterSvc", m_ntupleWriteSvc);
 
@@ -70,6 +72,17 @@ StatusCode writeJunkAlg::initialize() {
         return sc;
     }
 
+    // test indirect interface
+    sc = m_ntupleWriteSvc->addItem(m_tupleName, "Indirect", &m_count);
+      // get a pointer to RootTupleSvc as well
+    sc = service("RootTupleSvc", m_rootTupleSvc);
+
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "writeJunkAlg failed to get the RootTupleSvc" << endreq;
+        return sc;
+    }
+    m_rootTupleSvc->addItem("","count", &m_count);
+    m_rootTupleSvc->addItem("","square", &m_square);
     return sc;
 }
 
@@ -81,11 +94,16 @@ StatusCode writeJunkAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
+    // note that setting these variables is all that is necessary to have it changed in the tuple itself
+    ++m_count;
+    m_square= m_count*m_count;
+    // also set it directly (original interface)
     sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "CallCount", callCount);
 
     m_float = 700.05f;
     sc = m_ntupleWriteSvc->addItem(m_tupleName.c_str(), "MyFirstItem", m_float);
 
+    
     float zero = 0.0;
     // Let's try to add an undefined float
     float bad = 100.0/zero;
@@ -98,6 +116,7 @@ StatusCode writeJunkAlg::execute() {
         ///m_ntupleWriteSvc->saveNTuples();
 
     ++callCount;
+
 
     return sc;
 }

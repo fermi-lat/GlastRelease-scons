@@ -4,7 +4,7 @@
 //
 
 // List of Services that are required for this run
-ApplicationMgr.ExtSvc   = {"ntupleWriterSvc"};
+ApplicationMgr.ExtSvc   = {"ntupleWriterSvc", "RootTupleSvc"};
 
 // List of DLLs required
 ApplicationMgr.DLLs   = { "ntupleWriterSvc",  "RootHistCnv"};
@@ -32,6 +32,9 @@ NTupleSvc.Output = {"TESTALG DATAFILE='testAlg.root' OPT='NEW'"};
 // Number of Events to Process
 ApplicationMgr.EvtMax = 20;
 
+RootTupleSvc.filename="test.root";
+RootTupleSvc.treename="2";
+RootTupleSvc.title="test";
 
 //==============================================================
 //

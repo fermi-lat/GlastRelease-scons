@@ -9,6 +9,8 @@
  * algorithms use the ntupleWriterSvc to submit entries into the
  * standard GLAST ntuple.
  * For more information see the <a href=../ntupleWriterSvc.htm>manual</a>.
+
+ * <br>An additional posibility for ROOT tuples is the service RootTupleSvc
  * <hr>
  * @section notes release notes
  * release.notes
