@@ -19,8 +19,14 @@
 namespace calibUtil {
   
 
+  StripSrv::StripSrv(eBadType badType, const GenericSrv& gen)
+    : m_badType(badType), m_state(BUILDING) {
+    m_genSrv = new GenericSrv(gen);
+  }
+
   // Initialize the data structures by parsing the XML file
   StripSrv::StripSrv(std::string xmlFileName) : m_badType(UNKNOWN_BADTYPE),
+                                                m_state(FROM_PERS), 
                                                 m_genSrv(0)            
   {
     xml::XmlParser* parser = new xml::XmlParser();
@@ -115,7 +121,7 @@ namespace calibUtil {
   }
   
   /// counts very bad strips for the tower specified 
-  unsigned int  StripSrv::nVeryBad(towerRC towerId) const {
+  unsigned int  StripSrv::nVeryBad(const towerRC& towerId) const {
     unsigned nStrip = 0;
 
     const Tower* tower = findTower(towerId);
@@ -137,7 +143,7 @@ namespace calibUtil {
   }
   
   /// counts bad strips (including very bad) for the tower specified 
-  unsigned int  StripSrv::nBad(towerRC towerId) const {
+  unsigned int  StripSrv::nBad(const towerRC& towerId) const {
     unsigned nStrip = 0;
     const Tower* tower = findTower(towerId);
 
@@ -161,7 +167,8 @@ namespace calibUtil {
   }
   
   /// counts very bad strips for the tower and tray specified 
-  unsigned int StripSrv::nVeryBad(towerRC towerId, unsigned int trayNum) const{
+  unsigned int StripSrv::nVeryBad(const towerRC& towerId, 
+                                  unsigned int trayNum) const {
 
     const Tower* tower = findTower(towerId);
     if (!tower) return 0;
@@ -183,7 +190,8 @@ namespace calibUtil {
   }
   
   /// counts bad strips (including very bad) for the tower and tray specified 
-  unsigned int  StripSrv::nBad(towerRC towerId, unsigned int trayNum) const {
+  unsigned int  StripSrv::nBad(const towerRC& towerId, 
+                               unsigned int trayNum) const {
 
     const Tower* tower = findTower(towerId);
     if (!tower) return 0;
@@ -207,8 +215,9 @@ namespace calibUtil {
   }
     
   /// counts very bad strips for the tower,tray and unilayer  specified 
-  unsigned int  StripSrv::nVeryBad(towerRC towerId, unsigned int trayNum, 
-                                   eUnilayer uni)  const {
+  unsigned int  StripSrv::nVeryBad(const towerRC& towerId, 
+                                   unsigned int trayNum, 
+                                   eUnilayer uni) const {
 
     const Tower* tower = findTower(towerId);
     if (!tower) return 0;
@@ -235,7 +244,7 @@ namespace calibUtil {
   
   /// counts bad strips (including very bad) for the tower, tray 
   /// and unilayer specified 
-  unsigned int  StripSrv::nBad(towerRC towerId, unsigned int trayNum, 
+  unsigned int  StripSrv::nBad(const towerRC& towerId, unsigned int trayNum, 
                                eUnilayer uni) const {
 
     const Tower* tower = findTower(towerId);
@@ -264,9 +273,9 @@ namespace calibUtil {
   
   /// Lists all very bad strips with the tower,tray and unilayer  
   
-  void StripSrv::getVeryBad(towerRC towerId, unsigned int trayNum, 
+  void StripSrv::getVeryBad(const towerRC& towerId, unsigned int trayNum, 
                             eUnilayer uni,
-                            std::vector<unsigned int>& strips) const{
+                            StripCol& strips) const {
     const Tower *tower = findTower(towerId);
     if (!tower) return;
 
@@ -294,8 +303,9 @@ namespace calibUtil {
   /// Lists  bad strips (including very bad) with the tower, tray 
   /// and unilayer specified 
 
-  void StripSrv::getBad(towerRC towerId, unsigned int trayNum, eUnilayer uni,
-                   std::vector<unsigned int>&  strips) const {
+  void StripSrv::getBad(const towerRC& towerId, unsigned int trayNum, 
+                        eUnilayer uni,
+                        StripCol&  strips)  const {
     const Tower *tower = findTower(towerId);
     if (!tower) return;
 
@@ -324,7 +334,7 @@ namespace calibUtil {
  /// methods giving access to generic data
 
   /// Get instrument name
-  std::string StripSrv::getInst() const{
+  std::string StripSrv::getInst() const {
     return m_genSrv->getInst();
   }
   
@@ -426,7 +436,7 @@ namespace calibUtil {
     }
   }
 
-  void StripSrv::strToNum(std::string s, std::vector<unsigned int> &v){
+  void StripSrv::strToNum(std::string s, std::vector<unsigned short int> &v){
 
     std::string::iterator it = s.begin();
     
@@ -456,6 +466,17 @@ namespace calibUtil {
 
   }
 
+  StripSrv::Tower* StripSrv::findTower(towerRC& towerId) {
+    std::vector<Tower>::iterator it = m_towers.begin();
+    while(it != m_towers.end() ) {
+      if ((it->id.row == towerId.row) && (it->id.col == towerId.col)) {
+        return (it);
+      }
+      ++it;
+    }
+    return 0;
+  }
+
   const StripSrv::Tower* StripSrv::findTower(const towerRC& towerId) const {
     std::vector<Tower>::const_iterator it = m_towers.begin();
     while(it != m_towers.end() ) {
@@ -467,8 +488,19 @@ namespace calibUtil {
     return 0;
   }
 
+
+  StripSrv::Tray* StripSrv::findTray(Tower& tower, 
+                                     unsigned int trayNum) {
+    std::vector<Tray>& trays = tower.trays;
+    for (unsigned int i = 0; i < trays.size(); i++) {
+      if (trays[i].id == trayNum) return &trays[i];
+    }
+
+    return 0;
+  }
+
   const StripSrv::Tray* StripSrv::findTray(const Tower& tower, 
-                                     unsigned int trayNum) const {
+                                           unsigned int trayNum) const {
     const std::vector<Tray>& trays = tower.trays;
     for (unsigned int i = 0; i < trays.size(); i++) {
       if (trays[i].id == trayNum) return &trays[i];
@@ -477,5 +509,66 @@ namespace calibUtil {
     return 0;
   }
     
+
+  bool StripSrv::addBad(eBadness howBad, towerRC& t, int iTray, 
+                        eUnilayer uni, const StripCol& list) {
+    if (m_state != BUILDING) return false;
+
+    bool ret;
+
+    Tower* tow = findTower(t);
+
+    if (!tow) {
+      Tower newTow;
+      newTow.id = t;
+      ret = addBad(howBad, &newTow, iTray, uni, list);
+      if (ret) m_towers.push_back(newTow);
+    }
+    ret = addBad(howBad, tow, iTray, uni, list);
+    return ret;
+  }
+
+  bool StripSrv::addBad(eBadness howBad,  Tower* tow, int iTray,
+                        eUnilayer uni, const StripCol& list) {
+
+    Tray* tr = findTray(*tow, iTray);
+    bool ret;
+    if (tr) return addBad(howBad, tr, uni, list);
+
+    Tray newTray;
+    newTray.id = iTray;
+    newTray.top = newTray.bot = 0;
+    ret = addBad(howBad, &newTray, uni, list);
+    if (ret) tow->trays.push_back(newTray);
+    return ret;
+  }
+
+
+  bool StripSrv::addBad(eBadness howBad, Tray* tr, eUnilayer uni,
+                        const StripCol& list) {
+    Unilayer* pUni;
+    switch (uni) {
+    case TOP:
+      if (!tr->top) tr->top = new Unilayer();
+      pUni = tr->top;
+      break;
+    case BOT:
+      if (!tr->bot) tr->bot = new Unilayer();
+      pUni = tr->bot;
+      break;
+    default:    // bad argument
+      return false;
+    }
+    pUni->badLists[howBad].insert(pUni->badLists[howBad].end(), 
+                                  list.begin(), list.end());
+    // sort??  remove duplicates??
+    return true;
+
+  }
+
+  StripSrv::eRet StripSrv::writeXml(std::ostream* out) {
+    return DONE;
+  }
+
 
 }// end of namespace calibUtil
