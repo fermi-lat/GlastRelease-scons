@@ -14,6 +14,7 @@ use GaudiSvc v3r1
 library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
+                 ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
                  Dll/*.cpp
 
 macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
@@ -42,6 +43,7 @@ macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Deb
 application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
                  GlastDetSvc/*.h  GlastDetSvc/*.cpp \
                  EventSelector/*.h  EventSelector/*.cpp \
+                 ../GlastSvc/MonteCarlo/*.h MonteCarlo/*.cpp \
                  Dll/*.cpp \
                  test/*.cpp test/*.h test/*.txt
 

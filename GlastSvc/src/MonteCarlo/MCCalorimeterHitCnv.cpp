@@ -11,7 +11,7 @@
 #include "Gaudi/Kernel/CnvFactory.h"
 #include "Gaudi/Interfaces/IDataProviderSvc.h"
 #include "GlastEvent/TopLevel/ObjectVector.h"
-#include "GlastEvent/Hits/MCCalorimeterHit.h"
+#include "GlastEvent/MonteCarlo/MCCalorimeterHit.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "IRFConverter.h"
