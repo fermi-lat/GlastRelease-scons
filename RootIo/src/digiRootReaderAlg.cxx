@@ -382,9 +382,10 @@ StatusCode digiRootReaderAlg::readEventSummary() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    unsigned summaryWord = m_digiEvt->getEventSummaryData().summary();
-    unsigned eventFlags = m_digiEvt->getEventSummaryData().eventFlags();
     EventSummaryData evtSummary = m_digiEvt->getEventSummaryData();
+    unsigned summaryWord = evtSummary.summary();
+    unsigned eventFlags = evtSummary.eventFlags();
+    unsigned int evtSeq = evtSummary.eventSequence();
 
 //    LdfEvent::EventSummaryData *evtSumTds;
 
@@ -403,6 +404,7 @@ StatusCode digiRootReaderAlg::readEventSummary() {
 
     evtSumTds->initialize(summaryWord);
     evtSumTds->initEventFlags(eventFlags);
+    evtSumTds->initOswEvtSequence(evtSeq);
     //const unsigned int nTem = 16;
     //unsigned int iTem;
     //unsigned int tem[nTem];
