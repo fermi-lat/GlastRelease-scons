@@ -19,6 +19,9 @@ public:
     //! alternate constructor uses pointer to other buffer
     TupleItem(const std::string& name, double* x);
 
+    //! alternate constructor uses pointer to other buffer
+    TupleItem(const std::string& name, float* x);
+
     void operator=(double x){
       datum=x;
 

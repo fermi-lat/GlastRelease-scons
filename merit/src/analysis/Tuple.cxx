@@ -225,6 +225,13 @@ TupleItem::TupleItem(const std::string& iname, double x)
     }
     Tuple::s_currentTuple->push_back(this);
 }
+    
+TupleItem::TupleItem(const std::string& name, float* x)
+: m_name(name)
+{
+    std::cerr << "Float not implemented yet" << std::endl;
+    throw("Tuples with float pointer not implemented");
+}
 
 TupleItem::TupleItem(const std::string& iname, double* px)
 : m_name(iname), m_pdatum(px)
