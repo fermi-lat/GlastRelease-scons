@@ -15,6 +15,7 @@
          materialREF="vacuumMat"
          />
     <composition name="oneTower" envelope="oneTowerEnv">
+
       <posXYZ volume="oneTKR"
               ZREF="TKR_dz" >
         <idField name="fTowerObjects" valueREF="eTowerTKR" />
@@ -81,10 +82,10 @@
         <idField name="fTowerObjects" valueREF="eTowerGrid" />
         <idField name="fGridObjects" value="7" />
       </posXYZ>
-<!--
+
       <posXYZ volume="oneCAL"
               ZREF="CAL_dz" >
         <idField name="fTowerObjects" valueREF="eTowerCAL" />
       </posXYZ>
--->
+
     </composition>

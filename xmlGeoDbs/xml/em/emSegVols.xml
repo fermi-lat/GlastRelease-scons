@@ -23,9 +23,10 @@
 
     <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
-    <!ENTITY CALDimPrim     SYSTEM "../em/emCALDimPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "../flight/flightCALDimPrim.xml">
     <!ENTITY CALResponse    SYSTEM "../flight/flightCALResponse.xml">
-    <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCalSegVols.xml">
+    <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCal.xml">
+    <!ENTITY CALCsI         SYSTEM "../flight/flightCsISegmented.xml">
 
     <!ENTITY TKRMatPrim     SYSTEM "../em/emTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "../em/emTKRCountPrim.xml">
@@ -48,7 +49,7 @@
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
     <!ENTITY Derived        SYSTEM "../flight/flightDerivedConstants.xml">
-    <!ENTITY TKRDerived     SYSTEM "../flight/flightTKRDerived.xml">
+    <!ENTITY TKRDerived     SYSTEM "../em/emTKRDerived.xml">
     <!ENTITY CALDerived     SYSTEM "../flight/flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "../flight/flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "../flight/flightNADDerived.xml">

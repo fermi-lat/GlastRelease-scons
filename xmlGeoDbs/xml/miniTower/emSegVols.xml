@@ -23,9 +23,10 @@
 
     <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
-    <!ENTITY CALDimPrim     SYSTEM "../miniTower/emCALDimPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "../flight/flightCALDimPrim.xml">
     <!ENTITY CALResponse    SYSTEM "../flight/flightCALResponse.xml">
-    <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCalSegVols.xml">
+    <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCal.xml">
+    <!ENTITY CALCsI         SYSTEM "../flight/flightCsISegmented.xml">
 
     <!ENTITY TKRMatPrim     SYSTEM "../miniTower/emTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "../miniTower/emTKRCountPrim.xml">

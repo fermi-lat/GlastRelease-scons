@@ -22,7 +22,13 @@
 	 z="14" 
 	 aweight="28.088" 
 	 />
-
+<!--
+<element name="Pb" 
+	 symbol="Pb"
+	 z="82" 
+	 aweight="207.2" 
+	 />
+-->
 <element name="Copper" 
 	 symbol="Cu"
 	 z="29" 
@@ -121,6 +127,13 @@
   </addmaterial>
 </composite>
 
+<!--
+<composite name="Lead" density="11.34">
+  <addmaterial material="Pb">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
+-->
 
 <composite name="Si" density="2.33">
    <addmaterial material="Silicon">
