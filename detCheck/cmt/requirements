@@ -20,6 +20,8 @@ application test overlapsMain.cxx Overlaps.cxx
 
 application heprep HepRep.cxx HepRepSectionsVisitor.cxx
 
+application dumpIds dumpIds.cxx
+
 # Only can build this app on Linux (doesn't compile on Windows).
 # Fortunately, don't *need* to build it anywhere else.
 # The usual gmake command will not build it.  One has to
