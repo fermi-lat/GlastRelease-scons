@@ -248,21 +248,26 @@ StatusCode TkrSimpleDigiAlg::execute()
 	SmartDataPtr<Event::McPositionHitVector> mcHits(eventSvc(), EventModel::MC::McPositionHitCol);
 
 	//If the McPositionHitVector doesn't exist
-	if( 0 == mcHits)  { 
+	if( !mcHits)  { 
 		log << MSG::DEBUG;
 		if (log.isActive() ) {
 			log << "could not find \""<< "EventModel::MC::McPositionHitCol" 
-				<<"\"";
+				<<"\". ";
 		}
-		log << endreq;
-		return  sc;
+        if(m_noiseOccupancy>0.0) {
+            log << "Will add noise hits to event.";
+            log << endreq;
+        } else {
+            log << endreq;
+            return  sc;
+        }
 	}
 
 	// create full map
 
 	// now create the Si hits
-	createSiHits(mcHits);
-
+    clear();
+	if (mcHits) createSiHits(mcHits);
 	addNoise();
 
 	//Take care of insuring that data area has been created
@@ -520,8 +525,6 @@ void TkrSimpleDigiAlg::createSiHits(const Event::McPositionHitVector& hits)
 		log << "Number of position hits found = " << hits.size();
 	}
 	log << endreq;
-
-	clear();
 
 	for(Event::McPositionHitVector::const_iterator ihit=hits.begin(); ihit != hits.end(); ++ihit) {
 		const Event::McPositionHit & hit = **ihit;
