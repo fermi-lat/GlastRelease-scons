@@ -23,4 +23,5 @@ libgeometry_la_SOURCES = \
 libgeometry_la_LDFLAGS = -version-info 1
 
 INCLUDES = -I$(top_srcdir) \
+	-I$(top_srcdir)/../CLHEP \
 	-I$(glast_prefix)/include

@@ -25,6 +25,7 @@ libgeomrep_la_SOURCES = \
 libgeomrep_la_LDFLAGS = -version-info 1
 
 INCLUDES = -I$(top_srcdir) \
+	-I$(top_srcdir)/../CLHEP    \
 	-I$(top_srcdir)/../geometry \
 	-I$(top_srcdir)/../graphics \
 	-I$(glast_prefix)/include
