@@ -282,6 +282,9 @@ void MonteCarloFindTrackTool::buildTrackFromMcPart(const Event::McParticle* mcPa
             }
         }
 
+        // No track, no sense continuing
+        if (track == 0) return;
+
         // Now loop through to fill in the hits
         // Note that if no cluster found above then this loop will not (should not) execute
         for(; hitIter != hitVec.end(); hitIter++)
