@@ -116,7 +116,7 @@ namespace Event {
             return m_tkrId.getTray()*2 + m_tkrId.getBotTop() - getPlaneOffset(); 
         }
         // construct layer from Plane
-        inline getLayer()     const { 
+        inline int getLayer() const { 
             return (getPlane() + getLayerOffset())/2 ; }
         // cluster used on a track
         bool hitFlagged()     const { 
