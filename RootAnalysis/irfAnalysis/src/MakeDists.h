@@ -35,7 +35,7 @@ public:
                 Fitter *fitter=0);
 
 
-   void draw(const std::string &ps_filename, double ymax, bool logy=false, Fitter* fit=0);
+   void draw(const std::string &ps_filename,  bool logy=false, Fitter* fit=0);
 
 private:
 

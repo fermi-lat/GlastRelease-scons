@@ -98,7 +98,7 @@ void MakeDists::project(const std::string &branchName,
 //    psf.draw(ps_filename);
 // }
 
-void MakeDists::draw(const std::string &ps_filename, double ymax, bool logy, Fitter* fitter) {
+void MakeDists::draw(const std::string &ps_filename,  bool logy, Fitter* fitter) {
 
     TFile psf_file(summary_filename().c_str() ); // for the histograms
     if( ! psf_file.IsOpen()) throw "could not open psf root file";
@@ -133,7 +133,8 @@ void MakeDists::draw(const std::string &ps_filename, double ymax, bool logy, Fit
           // now add overflow to last bin
           h->SetBinContent(m_nbins, h->GetBinContent(m_nbins)
                            +h->GetBinContent(m_nbins+1));
-          h->SetMaximum(ymax);
+          h->SetMaximum(m_ymax);
+          h->SetMinimum(m_ymin);
           h->SetStats(false);
           h->SetLineColor(i+1);
           

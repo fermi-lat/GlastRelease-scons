@@ -74,8 +74,17 @@ public:
     std::string summary_filename(){ return m_summary_filename;}
     std::string input_filename(){return ::getenv("input_file");}
 
-//should be private::
+    void set_ymin(double y){ m_ymin=y;}
+    void set_ymax(double y){ m_ymax=y;}
+
+    //! optional extra user cut
+    void set_user_cut(TCut & cut){ m_user_cut=cut;}
+
+protected:
     TCut goodCal, goodPSF, goodEvent;
+
+    TCut m_user_cut;
+
     std::string  m_input_filename;
     std::string  m_summary_filename;
 
@@ -92,5 +101,8 @@ public:
 
     // the tree that will be analyzed
     TTree* m_tree;
+
+    // limits used in the draw phase
+    double m_ymin, m_ymax;
 };
 #endif

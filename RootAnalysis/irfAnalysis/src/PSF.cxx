@@ -30,7 +30,7 @@ void PSF::open_input_file()
     // check to see if the friend file exists
     TFile fr(friend_file.c_str() );
     if( ! fr.IsOpen() ) {
-        std::cout << "Creating friend file with derived s tuff: this takes a while" << std::endl;
+        std::cout << "Creating friend file with derived stuff: this takes a while" << std::endl;
 
         // stuff to get from the input tuple
         double Tkr1FirstLayer, Tkr1PhiErr, Tkr1ThetaErr, IMvertexProb, VtxAngle,McTkr1DirErr,McDirErr;

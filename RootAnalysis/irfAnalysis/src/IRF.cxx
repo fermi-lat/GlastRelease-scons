@@ -14,6 +14,9 @@ int IRF::angles[] = {0, 37, 53, 66, 78}; //cos theta 1, .8., .6, .4, .2
 IRF::IRF(std::string summary_root_filename)
 : m_file(0), m_tree(0)
 , m_summary_filename(output_file_root()+summary_root_filename)
+, m_ymin(0)
+, m_ymax(1)
+,m_user_cut("")
 {
 
     // energy binning: 3 per decade
@@ -48,7 +51,7 @@ void IRF::open_input_file()
     std::cout << "Opened root file " << input_filename() << std::endl;
     m_tree = (TTree*)m_file->Get(tree_name.c_str());
     if( m_tree==0) {
-        std::cerr << "Did not find tree \"i\" in the input file" << std::endl;
+        std::cerr << "Did not find tree \"" << tree_name << "\" in the input file" << std::endl;
         throw "did not find the TTree";
     }
 
@@ -56,11 +59,15 @@ void IRF::open_input_file()
     goodCal="CalTotRLn>2&&CalEnergySum>5.0 && IMgoodCalProb>0.2";
     goodPSF ="IMcoreProb>0.2&&IMpsfErrPred<3.0"; // this is Bill's minimal cut
     TCut tempFix("Tkr1KalEne > 0.5* McEnergy"); // temporary fix for bad energy estimate
-    TCut zdir_cut("BestDirErr<-0.2"); 
+    TCut zdir_cut("Tkr1ZDir<-0.2"); 
     TCut bk_cut("BkVeto==0.0");
     goodEvent=goodCal&&goodPSF&&zdir_cut&&bk_cut;
 
+    if( m_user_cut != "") { goodEvent = goodEvent&&m_user_cut;
+    }
+
     std::cout << "good event definition: " << goodEvent.GetTitle() << std::endl;
+
 
 
 }
