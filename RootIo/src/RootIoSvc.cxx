@@ -194,8 +194,8 @@ StatusCode RootIoSvc::initialize ()
         Long64_t maxTreeSize = m_treeSize * 1000000;
         TTree::SetMaxTreeSize(maxTreeSize);
     } else if (m_treeSize == 0) {
-        // 10 GB default
-        Long64_t maxTreeSize = 10000000000;
+        // 25 GB default
+        Long64_t maxTreeSize = 25000000000;
         TTree::SetMaxTreeSize(maxTreeSize);
     }
 
