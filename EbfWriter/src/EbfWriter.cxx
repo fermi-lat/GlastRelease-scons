@@ -66,30 +66,6 @@ public:
     StatusCode finalize();
     
 private:
-    /// read in the Event Header information
-    void printHeader(const Event::EventHeader& );
-
-    /// read the MCEvent header information
-    void printMcHeader(const Event::MCEvent&);
-
-    /// read the Monte Carlo Particle data
-    void printMcParticles(const Event::McParticleCol&);
-
-    /// read the Monte Carlo Position Hit data
-    void printPositionHits(const Event::McPositionHitCol&);
-
-    /// read the Monte Carlo Integrating Hit data
-    void printIntegratingHits(const Event::McIntegratingHitCol&);
-
-    /// read the hit strip data
-    void printTkrDigi(const Event::TkrDigiCol&);
-
-    /// read in CAL ADC
-    void printCalDigi(const Event::CalDigiCol&);
-
-    /// read in ACD ADC 
-    void printAcdDigi(const Event::AcdDigiCol&);
-
     EbfOutput m_output;
 
     EbfGltCounters  m_latcounters;
