@@ -129,7 +129,7 @@ class McParticle  : virtual public ContainedObject  {
 
 
     /// access to the list of daughters
-    const SmartRefVector<McParticle>& daugherList()const;
+    const SmartRefVector<McParticle>& daughterList()const;
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
