@@ -8,12 +8,13 @@ use commonRootData v0r*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
-../calibRootData/Base.h \
-../calibRootData/DacCol.h \
-../calibRootData/Cal/CalBase.h \
-../calibRootData/Cal/CalDimension.h \
-../calibRootData/Cal/CalGain.h \
-../calibRootData/Cal/CalGainCol.h"
+ ../calibRootData/Base.h \
+ ../calibRootData/DacCol.h \
+ ../calibRootData/Cal/CalBase.h \
+ ../calibRootData/Cal/CalDimension.h \
+ ../calibRootData/Cal/CalGain.h \
+ ../calibRootData/Cal/CalGainCol.h" \
+ includes="-I${COMMONROOTDATA}"
 
 # ..and all other include files, once I figure out what they are
 
