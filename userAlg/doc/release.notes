@@ -3,6 +3,7 @@
 
 @verbatim
 
+ * v6r2p2 09-sep-04  THB need explicit use astro
  * v6r2p1 15-jul-04  THB bug fix for linux
  * v6r2 13-jul-04  THB update tuple example
  * v6r1 22-jun-04  THB remove obsolete tuple example
