@@ -34,4 +34,10 @@
         <item name="mev_per_mip" value="1.9"> Mev per MIP </item>
     </section>
 
+    <section name="edge_effects">
+        <item name="max_edge_dist"  value="20"> mm </item>
+        <item name="edge_slope"     value="0.01"> slope of linear function </item>
+        <item name="edge_intercept" value="0.8"> y-intercept of linear function </item>
+    </section>
+
 </acdDigi>

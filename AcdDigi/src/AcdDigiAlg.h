@@ -91,6 +91,11 @@ private:
     /// JobOptions parameter denoting whether or not to apply edge effects
     /// according to the position of MC hits.
     bool m_edge_effect;
+
+    /// Slope of the linear function used to estimate the edge effect
+    double m_edge_slope;
+    /// y-intercept of the linear function used to estimate the edge effect
+    double m_edge_intercept;
 };
 
 #endif
