@@ -18,7 +18,8 @@
 
 namespace detCheck {
 
-  double Overlaps::DEFAULT_EPSILON = 0.000001;
+  //  double Overlaps::DEFAULT_EPSILON = 0.000001;
+  double Overlaps::DEFAULT_EPSILON = 0.00001;
 
   Overlaps::Overlaps(detModel::Gdd* gdd) {
     m_gdd = gdd;
