@@ -2,5 +2,6 @@
 /*
  * v0r1     07-07-03 RG Inital release of the package
  * v0r2     17-07-03 RG Prepare for Latest
- * v0r5     04-06-03 RG Updated for new HepRepSvc features
+ * v0r5     04-06-04 RG Updated for new HepRepSvc features
+ * v0r6     20-07-04 RG Updated for new External libs structure
 */
