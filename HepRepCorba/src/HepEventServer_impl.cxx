@@ -53,12 +53,15 @@ char* HepEventServer_impl::attach(const char* clientDesc)
 
     //    char* serverDesc = new char[descLength];
     std::string serverDesc;
+//    serverDesc = 
+//      "GlastServer version=0.1\ndataFormat=HepRep\nsetEventCommand=next,fluxes,source\n";
     serverDesc = 
-      "GlastServer version=0.1\ndataFormat=HepRep\nsetEventCommand=next,fluxes,source\n";
-
+      "GlastServer version=0.1\ndataFormat=HepRep\nsetEventCommand=" + m_svcAdapter->getCommands();
     
     std::cout << "Wow, I've been requested by " 
               << _clientDesc << std::endl;
+
+    std::cout << "Replied with " << serverDesc << std::endl;
 
     return CORBA::string_dup(serverDesc.c_str());
   }
@@ -111,6 +114,16 @@ char* HepEventServer_impl::setEvent(const char* command)
 				nextEventMsg = "No more event";
 			}
     }
+  else if (cmd == "commands")
+  {
+    nextEventMsg = m_svcAdapter->getCommands();
+  }
+  else if (cmd.substr(0,8) == "eventId:")
+  {
+    int run, event;
+    sscanf(cmd.c_str(), "eventId:%d-%d", &run, &event);
+    m_svcAdapter->setEventId(run, event);
+  }
 	else if (cmd == "fluxes")
     {
       nextEventMsg = m_svcAdapter->getSources();
