@@ -23,7 +23,7 @@ EventSelector.Input = "NONE";
 
 
 ApplicationMgr.TopAlg = {
-    "FluxAlg", "FluxDisplay",
+    "FluxAlg", 
     "G4Generator",
     "HitDisplay"    
     };
