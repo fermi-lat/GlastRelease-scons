@@ -3,7 +3,7 @@ version v7r0
 
 use mcRootData v2r*
 use GlastPolicy v*
-use ldfExt  v0r*  IExternal
+
 
 apply_pattern package_include
 
@@ -15,7 +15,10 @@ apply_pattern ld_library_path
 
 #-------------------------------------------------------
 private
+
 use RootPolicy v2r*
+use ldfExt  v0r*  IExternal
+
 apply_pattern root_package
 apply_pattern root_package2
  
