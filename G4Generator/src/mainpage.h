@@ -8,9 +8,9 @@
  * @section description Description
  *
  * This package is the GLAST interface to the Montecarlo simulations toolkit
- * Geant4 (see <a href="http://cern.geant4.ch">here</a> for more information on
- * this C++ toolkit). The steering is done with the main Algorithm,
- * G4Generator.<br>
+ * Geant4 (see <a href="http://geant4.web.cern.ch">here</a> 
+ * for more information on this C++ toolkit). 
+ * The steering is done with the main Algorithm, G4Generator.<br>
  * 
  * The main simulation is controlled by RunManager, a customized and stripped
  * version of the Geant4 standard G4RunManager singleton. Since GLAST main event

@@ -1,4 +1,19 @@
+// File and Version Information:
 // $Header$
+//
+// Description: 
+// This class manages the Geant4 main loop and calls; since we don't need event
+// loop management, graphics interfaces or data persistency with standard Geant4
+// features (we are using Gaudi for that, this is a stripped version of a true
+// G4RunManager class. Most of its methods and members are hinerited from the
+// Geant4 one; since they are not supposed to be used directly by any GLAST
+// client (since they are automatically used by Geant4 internal architecture)
+// they are not documented. For their meaning please look at the standard Geant4
+// documentation
+//
+// Author(s):
+//      R.Giannitrapani
+
 #include "G4Timer.hh"
 
 #include "DetectorConstruction.h"
@@ -60,24 +75,23 @@ RunManager::RunManager(IGlastDetSvc* gds, IDataProviderSvc* esv)
 
   fRunManager = this;
 
-  /// This dummy session is needed later to silent G4
+  // This dummy session is needed later to silent G4
   session = new UIsession;
 
-  /// The event manager of G4
+  // The event manager of G4
   eventManager = new G4EventManager();
-  /// The timer of G4
+  // The timer of G4
   timer = new G4Timer();
 
   // Set the TrackingAction to track the McParticle
   eventManager->SetUserAction(new TrackingAction);
 
-  /// Various G4 messenger needed
+  // Various G4 messenger needed
   G4ParticleTable::GetParticleTable()->CreateMessenger();
   G4ProcessTable::GetProcessTable()->CreateMessenger();
   randomNumberStatusDir = "./";
 
-  /// The user stuff
-
+  // The user stuff
   userDetector = new DetectorConstruction(gds,esv);
   physicsList = new PhysicsList;
   userPrimaryGeneratorAction = new PrimaryGeneratorAction;

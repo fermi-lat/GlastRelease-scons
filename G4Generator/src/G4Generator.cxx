@@ -1,4 +1,15 @@
+// File and Version Information:
 // $Header$
+//
+// Description:
+// This is the Gaudi algorithm that runs Geant4 and fills the TDS with
+// Montecarlo data. It initalize some services (for tds and detector geometry)
+// and than passes them to the RunManager class that do most of the work.  
+//      
+//
+// Author(s):
+//      T.Burnett
+//      R.Giannitrapani
 
 // Include files
 
@@ -47,265 +58,278 @@ static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;
 
 G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator) 
-:Algorithm(name, pSvcLocator) , m_guiMgr(0)
+  :Algorithm(name, pSvcLocator) , m_guiMgr(0)
 {
-// set defined properties
-     declareProperty("source_name",  m_source_name);
-     declareProperty("UIcommands", m_uiCommands);
+  // set defined properties
+  declareProperty("source_name",  m_source_name);
+  declareProperty("UIcommands", m_uiCommands);
 }
     
 ////////////////////////////////////////////////////////////////////////////
 StatusCode G4Generator::initialize()
 {
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
+  // Purpose and Method:  This routine is the initialize routine for the
+  //     Gaudi algorithm.  It is called once before event processing begins.
+  // Outputs:  A StatusCode which denotes success or failure.
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "initialize" << endreq;
 
-    // Use the Job options service to set the Algorithm's parameters
-    setProperties();
-    if(! m_source_name.empty()){
+  // Use the Job options service to set the Algorithm's parameters
+  setProperties();
+  if(! m_source_name.empty()){
 
-        if ( service("FluxSvc", m_fluxSvc).isFailure() ){
-            log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
-            return StatusCode::FAILURE;
-        }
+    if ( service("FluxSvc", m_fluxSvc).isFailure() ){
+      log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
+      return StatusCode::FAILURE;
+    }
         
-        if ( m_fluxSvc->source(m_source_name, m_flux).isFailure() ){
-            log << MSG::ERROR << "Couldn't find the source \"" 
-                << m_source_name << "\"" << endreq;
-            return StatusCode::FAILURE;
-        }
+    if ( m_fluxSvc->source(m_source_name, m_flux).isFailure() ){
+      log << MSG::ERROR << "Couldn't find the source \"" 
+          << m_source_name << "\"" << endreq;
+      return StatusCode::FAILURE;
+    }
     log << MSG::INFO << "Source: "<< m_flux->title() << endreq;
+  }
+  setupGui();
+
+  if( !m_uiCommands.value().empty() ) {
+    G4UImanager* UI = G4UImanager::GetUIpointer();
+    for( std::vector<std::string>::const_iterator k = 
+           m_uiCommands.value().begin(); 
+         k!=m_uiCommands.value().end(); ++k){
+      UI->ApplyCommand(*k);
+      log << MSG::INFO << "UI command: " << (*k) << endreq;
     }
-    setupGui();
+  }  
 
-    if( !m_uiCommands.value().empty() ) {
-        G4UImanager* UI = G4UImanager::GetUIpointer();
-        for( std::vector<std::string>::const_iterator k = 
-               m_uiCommands.value().begin(); 
-             k!=m_uiCommands.value().end(); ++k){
-          UI->ApplyCommand(*k);
-          log << MSG::INFO << "UI command: " << (*k) << endreq;
-        }
-    }  
+  // Get the Glast detector service 
+  IGlastDetSvc* gsv=0;
+  if( service( "GlastDetSvc", gsv).isFailure() ) {
+    log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
+    return StatusCode::FAILURE;
+  }
 
-    // Get the Glast detector service 
-    IGlastDetSvc* gsv=0;
-    if( service( "GlastDetSvc", gsv).isFailure() ) {
-        log << MSG::ERROR << "Couldn't set up GlastDetSvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
+  // Init the McParticle hierarchy 
+  McParticleManager::getPointer()->initialize(eventSvc());
 
-    // Init the McParticle hierarchy 
-    McParticleManager::getPointer()->initialize(eventSvc());
-
-    if( service( "ParticlePropertySvc", m_ppsvc).isFailure() ) {
-        log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
+  if( service( "ParticlePropertySvc", m_ppsvc).isFailure() ) {
+    log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
+    return StatusCode::FAILURE;
+  }
 
 
-    // The geant4 manager
-    if (!(m_runManager = RunManager::GetRunManager()))
+  // The geant4 manager
+  if (!(m_runManager = RunManager::GetRunManager()))
     {
-        m_runManager = new RunManager(gsv,eventSvc());
+      m_runManager = new RunManager(gsv,eventSvc());
 
-        // Initialize Geant4
-        m_runManager->Initialize();
+      // Initialize Geant4
+      m_runManager->Initialize();
 
-        log << MSG::DEBUG << "G4 RunManager ready" << endreq;
+      log << MSG::DEBUG << "G4 RunManager ready" << endreq;
     }
 
-    // Initialize Geant4
-    m_runManager->Initialize();
+  // Initialize Geant4
+  m_runManager->Initialize();
 
-    log << MSG::DEBUG << "G4 RunManager ready" << endreq;
-    return StatusCode::SUCCESS;
+  log << MSG::DEBUG << "G4 RunManager ready" << endreq;
+  return StatusCode::SUCCESS;
 
 }
 
 void G4Generator::setupGui()
 {
-    //
-    // get the (optional) Gui service
-    //
-    MsgStream log(msgSvc(), name());
+  // Purpose and Method:  This routine setup the (optional) Gui service
 
-    IGuiSvc* guiSvc=0;
+  MsgStream log(msgSvc(), name());
+
+  IGuiSvc* guiSvc=0;
     
-    if ( service("GuiSvc", guiSvc).isFailure() ){
-        log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
-        return;
-    } 
-    m_guiMgr= guiSvc->guiMgr();
-    new DisplayManager(&m_guiMgr->display());
+  if ( service("GuiSvc", guiSvc).isFailure() ){
+    log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
+    return;
+  } 
+  m_guiMgr= guiSvc->guiMgr();
+  new DisplayManager(&m_guiMgr->display());
 
 
-    // now get the filemenu and add a source button to it.
-    gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
+  // now get the filemenu and add a source button to it.
+  gui::SubMenu& filemenu = m_guiMgr->menu().file_menu();
     
-    gui::SubMenu& source_menu = filemenu.subMenu("Set source");
+  gui::SubMenu& source_menu = filemenu.subMenu("Set source");
     
-    //   ----------------------------------
-    //  loop over sources in source_library
-    class SetSource : public gui::Command { public:
-    SetSource(G4Generator* gg, std::string sn):m_gg(gg),m_name(sn){}
-    void execute(){m_gg->setSource(m_name);}
-    std::string m_name;
-    G4Generator* m_gg;
-    };
-    std::list<std::string> names = m_fluxSvc->fluxNames();
-    for( std::list<std::string>::iterator it = names.begin(); 
-         it!=names.end(); ++it){
-      source_menu.addButton(*it, new SetSource(this, *it));
-    }
+  //   ----------------------------------
+  //  loop over sources in source_library
+  class SetSource : public gui::Command { public:
+  SetSource(G4Generator* gg, std::string sn):m_gg(gg),m_name(sn){}
+  void execute(){m_gg->setSource(m_name);}
+  std::string m_name;
+  G4Generator* m_gg;
+  };
+  std::list<std::string> names = m_fluxSvc->fluxNames();
+  for( std::list<std::string>::iterator it = names.begin(); 
+       it!=names.end(); ++it){
+    source_menu.addButton(*it, new SetSource(this, *it));
+  }
     
 }
 
 StatusCode G4Generator::execute() 
 {
-    MsgStream   log( msgSvc(), name() );
+  // Purpose and Method: This is the execute routine of the algorithm, called
+  //            once every event. 
+  // Outputs:  A StatusCode which denotes success or failure.
+  // TDS Inputs:  If it exists, the McParticle tree to get the primary
 
-    // Here the TDS is prepared to receive hits vectors
-    // Check for the MC branch - it will be created if it is not available
-    DataObject *mc;
-    eventSvc()->retrieveObject("/Event/MC", mc);
+  MsgStream   log( msgSvc(), name() );
 
-    log << MSG::DEBUG << "TDS ready" << endreq;
+  // Here the TDS is prepared to receive hits vectors
+  // Check for the MC branch - it will be created if it is not available
+  DataObject *mc;
+  eventSvc()->retrieveObject("/Event/MC", mc);
 
-    // Clean the McParticle hierarchy 
-    McParticleManager::getPointer()->clear();
+  log << MSG::DEBUG << "TDS ready" << endreq;
 
-    // following model from previous version, allow property "UIcommands" to
-    // generate UI commands here.
-    //
-    if( !m_uiCommands.value().empty() ) {
-        for( std::vector<std::string>::const_iterator 
-               k = m_uiCommands.value().begin(); 
-             k!=m_uiCommands.value().end(); ++k){
-          G4UImanager::GetUIpointer()->ApplyCommand(*k);
-          log << MSG::INFO << "Apply UI command: \"" << (*k) << "\"" <<endreq;
-        }
-    }  
+  // Clean the McParticle hierarchy 
+  McParticleManager::getPointer()->clear();
 
-    //
-    // have the flux service create parameters of an incoming particle, 
-    // and define it as a MCParticle
-    //
-    // is there a particle already in the TDS??
-    mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
-
-    HepVector3D dir;
-    double ke;
-    HepPoint3D p;
-    std::string name;
-
-    if( pcol==0){ 
-        //no: get from the flux service
-        m_flux->generate();
-        
-        // these are the particle properties
-        name = m_flux->particleName();
-        dir =  m_flux->launchDir(); 
-        ke=    m_flux->energy() ;
-        p =    m_flux->launchPoint();
-        
-        /// Starting position, in mm
-        p = 10*p;
-        /// Energy in MeV
-        ke = ke*1000;
-    } else {
-        // yes: get it from the TDS
-        mc::McParticle* primary = pcol->front();
-        mc::McParticle::StdHepId hepid= primary->particleProperty();
-        ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-        name = ppty->particle(); 
-        const HepLorentzVector& pfinal = primary->finalFourMomentum();
-        dir=    pfinal.vect().unit();
-        ke =   pfinal.e() - pfinal.m(); // note possibility of truncation error here! especially with MeV.
-
+  // following model from previous version, allow property "UIcommands" to
+  // generate UI commands here.
+  //
+  if( !m_uiCommands.value().empty() ) {
+    for( std::vector<std::string>::const_iterator 
+           k = m_uiCommands.value().begin(); 
+         k!=m_uiCommands.value().end(); ++k){
+      G4UImanager::GetUIpointer()->ApplyCommand(*k);
+      log << MSG::INFO << "Apply UI command: \"" << (*k) << "\"" <<endreq;
     }
-    
-    PrimaryGeneratorAction* primaryGenerator = 
-      (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
-    
-    // Set the G4 primary generator
-    // the position has to be expressed in mm
-    // while the energy in MeV
-    primaryGenerator->setParticle(name);
-    primaryGenerator->setMomentum(dir);
-    primaryGenerator->setPosition(p);
-    // TODO: this shoule be full energy, but don't know mass yet
-    primaryGenerator->setEnergy(ke);  
+  }  
 
-    //
-    // create entry in McParticleCol for the primary generator.
-    //
-    G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
-    HepLorentzVector pin= primaryGenerator->GetFourMomentum();
+  //
+  // have the flux service create parameters of an incoming particle, 
+  // and define it as a MCParticle
+  //
+  // is there a particle already in the TDS??
+  mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(eventSvc(), "/Event/MC/McParticleCol");
+
+  HepVector3D dir;
+  double ke;
+  HepPoint3D p;
+  std::string name;
+
+  if( pcol==0){ 
+    //no: get from the flux service
+    m_flux->generate();
+        
+    // these are the particle properties
+    name = m_flux->particleName();
+    dir =  m_flux->launchDir(); 
+    ke=    m_flux->energy() ;
+    p =    m_flux->launchPoint();
+        
+    /// Starting position, in mm
+    p = 10*p;
+    /// Energy in MeV
+    ke = ke*1000;
+  } else {
+    // yes: get it from the TDS
+    mc::McParticle* primary = pcol->front();
+    mc::McParticle::StdHepId hepid= primary->particleProperty();
+    ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+    name = ppty->particle(); 
+    const HepLorentzVector& pfinal = primary->finalFourMomentum();
+    dir=    pfinal.vect().unit();
+    ke =   pfinal.e() - pfinal.m(); // note possibility of truncation error here! especially with MeV.
+
+  }
+    
+  PrimaryGeneratorAction* primaryGenerator = 
+    (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
+    
+  // Set the G4 primary generator
+  // the position has to be expressed in mm
+  // while the energy in MeV
+  primaryGenerator->setParticle(name);
+  primaryGenerator->setMomentum(dir);
+  primaryGenerator->setPosition(p);
+  // TODO: this shoule be full energy, but don't know mass yet
+  primaryGenerator->setEnergy(ke);  
+
+  //
+  // create entry in McParticleCol for the primary generator.
+  //
+  G4ParticleDefinition * pdef = primaryGenerator->GetParticleDefinition();
+  HepLorentzVector pin= primaryGenerator->GetFourMomentum();
 
 #if 0
-    mc::McParticleCol* pcol = new mc::McParticleCol;
-    eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
-    mc::McParticle * parent= new mc::McParticle;
-    pcol->push_back(parent);
+  mc::McParticleCol* pcol = new mc::McParticleCol;
+  eventSvc()->registerObject("/Event/MC/McParticleCol", pcol);
+  mc::McParticle * parent= new mc::McParticle;
+  pcol->push_back(parent);
 
-    // This parent particle decay at the start in the first particle, 
-    // so initial momentum and final one are the same
-    parent->initialize(parent, pdef->GetPDGEncoding(), 
-        mc::McParticle::PRIMARY,
-        pin);
-    parent->finalize(pin, p);
+  // This parent particle decay at the start in the first particle, 
+  // so initial momentum and final one are the same
+  parent->initialize(parent, pdef->GetPDGEncoding(), 
+                     mc::McParticle::PRIMARY,
+                     pin);
+  parent->finalize(pin, p);
 #else
 
-    mc::McParticle * parent= new mc::McParticle;
-    // This parent particle decay at the start in the first particle, 
-    // so initial momentum and final one are the same
-    parent->initialize(parent, pdef->GetPDGEncoding(), 
-        mc::McParticle::PRIMARY,
-        pin);
-    parent->finalize(pin, p);
+  mc::McParticle * parent= new mc::McParticle;
+  // This parent particle decay at the start in the first particle, 
+  // so initial momentum and final one are the same
+  parent->initialize(parent, pdef->GetPDGEncoding(), 
+                     mc::McParticle::PRIMARY,
+                     pin);
+  parent->finalize(pin, p);
     
-    McParticleManager::getPointer()->addMcParticle(0,parent);
+  McParticleManager::getPointer()->addMcParticle(0,parent);
     
 #endif    
 
-    // Run geant4
-    m_runManager->BeamOn(); 
+  // Run geant4
+  m_runManager->BeamOn(); 
     
-    // Save the McParticle hierarchy in the TDS
-    McParticleManager::getPointer()->save();
+  // Save the McParticle hierarchy in the TDS
+  McParticleManager::getPointer()->save();
     
-    // set up display of trajectories
-    DisplayManager* dm = DisplayManager::instance();
-    if(dm !=0) {   
-      for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
-        std::auto_ptr<std::vector<Hep3Vector> > points = 
-          m_runManager->getTrajectoryPoints(i);
-        dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
-      }
+  // set up display of trajectories
+  DisplayManager* dm = DisplayManager::instance();
+  if(dm !=0) {   
+    for( int i = 0; i< m_runManager->getNumberOfTrajectories(); ++i){
+      std::auto_ptr<std::vector<Hep3Vector> > points = 
+        m_runManager->getTrajectoryPoints(i);
+      dm->addTrack(*(points.get()), m_runManager->getTrajectoryCharge(i));
     }
-    return StatusCode::SUCCESS;
+  }
+  return StatusCode::SUCCESS;
 }
 
 StatusCode G4Generator::finalize() 
 {
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "finalize: " << endreq;
+  // Purpose and Method: This is the finalize routine of the algorithm, called
+  //            at the end of the event loop. 
+  // Outputs:  A StatusCode which denotes success or failure.
 
-    // delete the runManager of geant4
-    delete m_runManager;
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "finalize: " << endreq;
+
+  // delete the runManager of geant4
+  delete m_runManager;
     
-    return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
-// called from GUI
 void G4Generator::setSource(std::string source_name)
 {
-    m_source_name=source_name;
-    StatusCode sc = m_fluxSvc->source(m_source_name, m_flux);
-    if( sc.isFailure() ) {
-        gui::GUI::instance()->inform("Could not find the source!");
-    }
+  // Purpose and Method: This method is used to set the source of the simulation  // from the GUI
+  // Inputs:  The name of the source from the xml database of sources
+
+  m_source_name=source_name;
+  StatusCode sc = m_fluxSvc->source(m_source_name, m_flux);
+  if( sc.isFailure() ) {
+    gui::GUI::instance()->inform("Could not find the source!");
+  }
 }
 
 

@@ -32,13 +32,13 @@ public:
     ParticleTransporter();
    ~ParticleTransporter();
 
-    /**  
-    * Sets the starting point and direction and will do an initial step of distance step
-    * @param start - the initial starting point
-    * @param dir   - the initial direction
-    * @param step  - the initial step length to take
+   /**  
+    * Sets the starting point and direction and will do an initial step of
+    * distance step @param start - the initial starting point @param dir - the
+    * initial direction @param step - the initial step length to take
     */
-    void               setInitStep(const Point& start, const Vector& dir, const double step);
+    void  setInitStep(const Point& start, const Vector& dir, 
+                      const double step);
 
     /// Performs the actual stepping
     bool               transport();
@@ -49,7 +49,8 @@ public:
     ConstStepPtr       getStepEnd()      const {return stepInfo.end();}
 
     TransportStepInfo* getLastStep()     const {return stepInfo.back();}
-    TransportStepInfo* getPrevBoundary() const {return stepInfo.back();} //for now
+    //for now
+    TransportStepInfo* getPrevBoundary() const {return stepInfo.back();} 
 
     Point              getStartPoint()   const {return startPoint;}
     Vector             getStartDir()     const {return startDir;}

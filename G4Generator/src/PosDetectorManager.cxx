@@ -1,4 +1,12 @@
+// File and Version Information:
 // $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      R.Giannitrapani
+
 
 #include "PosDetectorManager.h"
 #include "McParticleManager.h"

@@ -1,12 +1,11 @@
 // File and Version Information:
-// /$Header/$
+// $Header$
 //
 // Description:
-//      PhysicsList .....
+//      
 //
 // Author(s):
 //      F.Longo
-
 
 #include "PhysicsList.h"
 

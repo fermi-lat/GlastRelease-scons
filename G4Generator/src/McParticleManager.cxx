@@ -1,3 +1,12 @@
+// File and Version Information:
+// $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      R.Giannitrapani
+
 #include "McParticleManager.h"
 
 // Gaudi
@@ -22,17 +31,17 @@ McParticleManager* McParticleManager::getPointer()
 void McParticleManager::save()
 {
     // if running FluxAlg, collection will already have parent 
-    mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
+  mc::McParticleCol*  pcol=  SmartDataPtr<mc::McParticleCol>(m_esv, "/Event/MC/McParticleCol");
 
-    if( pcol==0) {
-        // create the TDS stuff
-        pcol = new mc::McParticleCol;
-        m_esv->registerObject("/Event/MC/McParticleCol", pcol);
-    }
-
-    // fill the McParticleCol with McParticles
+  if( pcol==0) {
+    // create the TDS stuff
+    pcol = new mc::McParticleCol;
+    m_esv->registerObject("/Event/MC/McParticleCol", pcol);
+  }
+  
+  // fill the McParticleCol with McParticles
   std::map <unsigned int, mc::McParticle*>::iterator it;
-
+  
   for(it=m_particles.begin();it != m_particles.end(); it++)
     pcol->push_back(it->second);
 }

@@ -1,3 +1,12 @@
+// File and Version Information:
+// $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      R.Giannitrapani
+
 #include "McParticleManager.h"
 #include "TrackingAction.h"
 

@@ -1,3 +1,12 @@
+// File and Version Information:
+// $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      R.Giannitrapani
+
 #include "G4Geometry.h"
 #include "PosDetectorManager.h"
 #include "IntDetectorManager.h"

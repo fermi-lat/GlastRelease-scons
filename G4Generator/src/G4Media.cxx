@@ -1,19 +1,36 @@
+// File and Version Information:
+// $Header$
+//
+// Description: 
+// This class implements the abstract interface IMedia of GlastDetSvc. The main
+// purpouse is to build the material table for a Geant4 simulation by reading
+// material specifications from the detModel representation (obtained by reading
+// xml files). The use of an abstract interface permits to avoid the explicit
+// exposition of detModel interfaces to clients.
+//      
+//
+// Author(s):
+//      R.Giannitrapani
+
 #include "G4Media.h"
 
 #include "G4Material.hh"
 #include "globals.hh"
-
 #include <numeric> // for accumulate
 
 
 void G4Media::addMaterial(std::string name, 
                           MediaType type,
-                          const DoubleVector& params, std::string symbol)
-{
+                          const DoubleVector& params, std::string symbol){
+  // Purpose and Method:  This routine add a simple material to the table
+  // Inputs: the material name, type (element or material), vector of
+  //         parameters (atomic number, density, etc etc) and the symbol 
+  //         (in case of elements)
+  
   if (type == IMedia::Element)
     {
       new G4Element(name, symbol, params[0], params[1]*g/mole);    
-   }
+    }
   else 
     {
       // This is temporary waiting for a new material category 
@@ -35,8 +52,12 @@ void G4Media::addComposite(std::string name,
                            CompositeType type,
                            double density,
                            const StringVector& components, 
-                           const DoubleVector& qty)
-{
+                           const DoubleVector& qty){
+  // Purpose and Method:  This routine add a composite to the table
+
+  // Inputs: the material name, type (by mass fractions or atomic composition),
+  //         density, vector of components and their quantities
+
   G4Element* ptElement = 0;
   G4Material* ptMaterial = 0;
   

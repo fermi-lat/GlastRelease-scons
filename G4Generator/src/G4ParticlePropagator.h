@@ -19,13 +19,14 @@
 /** 
 * @class G4ParticlePropagator
 *
-* @brief Singleton object providing particle transport (ie error matrix extrapolation)
+* @brief Singleton object providing particle transport (ie error matrix
+* extrapolation)
 *
-* This class implements a particle transport algorithm for extrapolating the track 
-* error matrix from a start point to and end point by "swimming" through the GLAST
-* geometry. It uses the Geant4 instantiation of the geometry and the Geant4 tracking
-* routines. 
-* The interface is adapted from that used for RCparticle, the gismo propagator.
+* This class implements a particle transport algorithm for extrapolating the
+* track error matrix from a start point to and end point by "swimming" through
+* the GLAST geometry. It uses the Geant4 instantiation of the geometry and the
+* Geant4 tracking routines.  The interface is adapted from that used for
+* RCparticle, the gismo propagator.
 *
 * @author Tracy Usher
 *
@@ -36,11 +37,15 @@
 class G4ParticlePropagator : public ParticleTransporter, public IKalmanParticle
 {
 public: 
-    /// Method to return pointer to the singleton object (and instantiate if not already)
+  /// Method to return pointer to the singleton object (and instantiate if not
+  /// already)
     static  G4ParticlePropagator* instance();
 
     /// Methods for interfacing to the class
-    virtual void      setStepStart(const Point& start, const Vector& dir, const double step) {setInitStep(start,dir,step);}
+    virtual void      setStepStart(const Point& start, 
+                                   const Vector& dir, 
+                                   const double step) 
+      {setInitStep(start,dir,step);}
     virtual bool      trackToNextPlane();
     virtual bool      trackToNextSamePlane();
     virtual int       numberPlanesCrossed() const;

@@ -1,4 +1,11 @@
+// File and Version Information:
 // $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      T.Burnett
 
 #include "DisplayManager.h"
 

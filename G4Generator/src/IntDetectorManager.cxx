@@ -1,4 +1,11 @@
+// File and Version Information:
 // $Header$
+//
+// Description:
+//      
+//
+// Author(s):
+//      R.Giannitrapani
 
 #include "IntDetectorManager.h"
 #include "McParticleManager.h"
