@@ -46,10 +46,43 @@ namespace EbfWriterTds{
         unsigned int m_length;
     };
 
-   inline  char *Ebf::get(unsigned int &dataLength) const{
-    dataLength=m_length;
-    return m_data;
-}
+    //inline stuff for client
+    inline Ebf::Ebf(){ m_data=0; m_length=0;}
 
-};
+    inline  char *Ebf::get(unsigned int &dataLength) const{
+      dataLength=m_length;
+      return m_data;
+    }
+
+    inline Ebf::Ebf(char *newData, unsigned int dataLength){
+      m_data=NULL;
+      m_length=0;
+      set(newData,dataLength);
+    }
+
+    inline Ebf::~Ebf(){
+      if(m_data!=NULL)
+        delete[] m_data;
+    }
+
+
+    inline std::ostream& Ebf::fillStream( std::ostream &s) const{
+      if(m_length>0)
+        s.write(m_data,m_length);
+      return s;
+    }
+
+    inline std::ostream& operator << (std::ostream& s, const Ebf& obj){
+      return obj.fillStream(s);
+    }
+
+    inline void Ebf::set(char *newData,unsigned int dataLength){
+      if(m_data!=NULL)
+        delete[] m_data;
+      m_data=NULL;
+      m_data=new char[dataLength];
+      memcpy(m_data,newData,dataLength);
+      m_length=dataLength;
+    }
+}// namespace
 #endif
