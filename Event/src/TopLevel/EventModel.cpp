@@ -121,6 +121,7 @@ public:
     const CLID& CLID_McParticle         = 1102;
     const CLID& CLID_McPositionHit      = 1103;
     const CLID& CLID_McIntegratingHit   = 1104;
+    const CLID& CLID_McVertexCnv        = 1105;
 
     //! Irf class IDs
     const CLID& CLID_IrfEvent           = 1200;
