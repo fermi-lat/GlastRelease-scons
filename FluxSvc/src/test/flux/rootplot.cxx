@@ -3,7 +3,7 @@
 
 
 rootplot::rootplot(std::vector<char*> argv): NUM_BINS(30),LOOP(30000),
-TIME(0.01), ENERGY_MIN(0.01), ENERGY_MAX(100.0)
+TIME(0.01), ENERGY_MIN(0.01*1000.), ENERGY_MAX(100.0*1000.)
 {
     
     int argc = argv.size();
