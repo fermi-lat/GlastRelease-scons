@@ -2,6 +2,8 @@
  * Package xmlUtil
  * Coordinator: J. Bogart
  *
+ * 04-apr-2002: jrb - tag v2r8p1 Get rid of unnecessary packageShr pattern
+ *              jrb - tag v2r8
  * 31-jan-2002: jrb - tag v2r7p1 - Add doc directory and this file
  *              to bring xmlUtil into better compliance with code
  *              doc recommendations.  Expect that this will be the
