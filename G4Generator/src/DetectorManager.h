@@ -51,12 +51,13 @@ protected:
     
     void display(G4TouchableHistory* touched, mc::McPositionHit * hit);
 
+   //! keep track of hit detectors for display
+    typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
+    DetectorList m_detectorList;
+
 private:
     DetectorConstruction::IdMap* m_idMap;
 
-    //! keep track of hit detectors for display
-    typedef std::map<idents::VolumeIdentifier, unsigned int> DetectorList;
-    DetectorList m_detectorList;
 
 #if 0
     

@@ -21,6 +21,7 @@ PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
 
 void PosDetectorManager::Initialize(G4HCofThisEvent*HCE)
 {
+  m_detectorList.clear();
   // At the start of the event we create a new container
   m_posHit = new McPositionHitVector;    
 }
