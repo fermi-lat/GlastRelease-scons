@@ -72,11 +72,12 @@ const char * Spectrum::particleName()const{
     return &x;
 }
 
-double Spectrum::energySrc(HepRandomEngine* engine)
+double Spectrum::energySrc(HepRandomEngine* engine, double time)
 {
     // default implementation, which works for other Spectrum objects
     return (*this)(engine->flat());
 }
+
 
 std::pair<double,double> Spectrum::dir(double energy, HepRandomEngine* engine)
 {

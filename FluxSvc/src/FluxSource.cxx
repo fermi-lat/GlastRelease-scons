@@ -247,7 +247,7 @@ void FluxSource::spectrum(Spectrum* s, double emax)
 
 FluxSource* FluxSource::event(double time) 
 {
-    computeLaunch();
+    computeLaunch(time);
     EventSource::setTime(time);
     return this;
     // could be a call-back
@@ -296,7 +296,7 @@ double FluxSource::solidAngle() const
 }
 #endif
 
-void FluxSource::computeLaunch ()
+void FluxSource::computeLaunch (double time)
 {
     // set energy using the Spectrum object (scales momentum)
     // Note: since PEGS files crap out at some energ, the max energy must
@@ -306,7 +306,7 @@ void FluxSource::computeLaunch ()
     do {
         // kinetic_energy= (*spectrum())(RandFlat::shoot(m_rmin, m_rmax));
         //FIXME: make this a class variable
-        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine() );
+        kinetic_energy = spectrum()->energySrc( HepRandom::getTheEngine(), time );
     }    while (kinetic_energy > m_maxEnergy* fudge);
     
     // get the launch point and direction, according to the various strategies

@@ -62,7 +62,7 @@ public:
     virtual std::pair<float,float> dir(float energy)const;
     
     /// new interface for Hirosima classes
-    virtual double energySrc(HepRandomEngine* engine);
+    virtual double energySrc(HepRandomEngine* engine, double time=0);
     virtual std::pair<double,double> dir(double energy, HepRandomEngine* engine);
     
     

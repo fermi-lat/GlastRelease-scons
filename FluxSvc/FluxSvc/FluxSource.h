@@ -37,7 +37,7 @@ class FluxSource : public EventSource
       virtual std::string displayTitle () const;
       
       ///    getLaunch - compute launch point, direction, & energy
-      virtual void computeLaunch ();
+      virtual void computeLaunch (double time=0);
 
       virtual double flux(double time)const; // calculate flux for attached specturm
 
