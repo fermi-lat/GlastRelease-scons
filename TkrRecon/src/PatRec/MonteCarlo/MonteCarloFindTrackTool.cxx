@@ -7,7 +7,7 @@
 // Author:
 //      The Tracking Software Group  
 
-#include "src/PatRec/MonteCarlo/MonteCarloFindTrackTool.h"
+#include "MonteCarloFindTrackTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
