@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r14p7 THB  06-jan-04 remove "CELESTIAL"
  *  v6r14p7 TRK  18-dec-03 New code for fastFilter: PruneTree.cxx, .h, app/fastFilter
  * 
  *  v6r14p6 JCT  12-dec-03 fix the FT1Energy entry which now uses EvtEnergySumOpt
