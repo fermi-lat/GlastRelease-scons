@@ -57,7 +57,7 @@ public:
         // determine normalization factor for Aeff
         double  dcosT       = 1.0/m_zdir_bins;
         double  dlogE       = m_binsize;
-        double  ngenPerBin  = m_ngen * (dcosT*dlogE)/((5.5-1)*1.0);
+        double  ngenPerBin  = m_ngen * (dcosT*dlogE)/log10(m_emax/m_emin);
         double  norm_factor = m_target_area/ngenPerBin ;
 
         std::cout << "Apply normalization factor for Aeff Table assuming " 
