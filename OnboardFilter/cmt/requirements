@@ -1,5 +1,5 @@
 package OnboardFilter
-version v0r2p4
+version v0r3
 # $Header$
 use EbfWriter           *
 use TkrUtil             *
@@ -21,7 +21,7 @@ macro headers "" WIN32 "*.h"
 
 library OnboardFilter $(headers) *.cxx *.c Dll/*.cxx
 
-private
+# use this only for the test. TODO: make it cleaner
 apply_pattern package_Cshlibflags
 use TkrRecon       *
 use FluxSvc        *
