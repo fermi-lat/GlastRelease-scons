@@ -3,6 +3,7 @@
 @verbatim
     $Id$
 
+ v5r7   15-jan-04 THB moved MS calculation to new package
  v5r6p2 17-oct-03 THB correct GeV/MeV confusion for heavy ions masses
  v5r6p1 08-aug-03 LSR fix for picky unix compiler; apparently SmartRef!=pointer in delete statement?
  v5r6   07-aug-03 LSR updates to pruning; check for z offset
