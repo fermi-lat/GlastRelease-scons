@@ -25,6 +25,7 @@ StreamBuffer& McVertex::serialize( StreamBuffer& s ) const
     << tmp // m_vertexType
     << m_initialFourMomentum
     << m_finalFourMomentum
+    << m_mcParticle(this)
     << m_motherMcParticle(this)
     << m_daughterMcParticles(this);
 }
@@ -42,6 +43,7 @@ StreamBuffer& McVertex::serialize( StreamBuffer& s )
     >> tmp // m_vertexType
     >> m_initialFourMomentum
     >> m_finalFourMomentum
+    >> m_mcParticle(this)
     >> m_motherMcParticle(this)
     >> m_daughterMcParticles(this);
 
@@ -91,6 +93,7 @@ std::ostream& McVertex::fillStream( std::ostream& s ) const
     << GlastEventFloatFormat( GlastEvent::width, GlastEvent::precision )
     << m_finalFourMomentum.e()  << " )"
     << "\n    Vertex Type           = " << int(m_vertexType)
+    << "\n    Pair McParticle       = " << m_mcParticle(this)
     << "\n    Mother McParticle     = " << m_motherMcParticle(this)
     << "\n    Daughter McParticles  = ";
     SmartRefVector<McParticle>::const_iterator it;

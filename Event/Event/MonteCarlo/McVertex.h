@@ -14,6 +14,7 @@
 #include "Gaudi/Kernel/SmartRefVector.h"
 #include "GlastEvent/TopLevel/Definitions.h"
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Vector/LorentzVector.h"
 #include "GlastEvent/Utilities/CLHEPStreams.h"
 // Include all Glast container types here
 //   to simplify inlude statements in algorithms
@@ -102,6 +103,13 @@ class McVertex : virtual public ContainedObject {
     /// Update final 4-momentum
     void setFinalFourMomentum( const HepLorentzVector& value );
 
+    /// Retrieve pointer to the pair particle (const or non-const)
+    const McParticle* mcParticle() const;
+          McParticle* mcParticle();
+    /// Update pointer to the pair particle (by a C++ pointer or a smart reference)
+    void setMcParticle( McParticle* value );
+    void setMcParticle( SmartRef<McParticle> value );
+
     /// Retrieve pointer to mother particle (const or non-const)
     const McParticle* motherMcParticle() const;
           McParticle* motherMcParticle();
@@ -149,9 +157,11 @@ class McVertex : virtual public ContainedObject {
     /// 4-momentum vectors:
     /// <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
     /// Initial 4-momentum
-    HepLorentzVector          m_initialFourMomentum;
+    HepLorentzVector           m_initialFourMomentum;
     /// Final 4-momentum
-    HepLorentzVector          m_finalFourMomentum;
+    HepLorentzVector           m_finalFourMomentum;
+    /// The pair McParticle
+    SmartRef<McParticle>       m_mcParticle;
     /// Pointer to mother particle
     SmartRef<McParticle>       m_motherMcParticle;
     /// Vector of pointers to daughter particles
@@ -227,8 +237,63 @@ inline void McVertex::setVertexType (McVertex::originType value)
 }
 
 
+/// Retrieve initial 4-momentum
+inline const HepLorentzVector& McVertex::initialFourMomentum() const
+{
+  return m_initialFourMomentum;
+}
+/// Retrieve initial 4-momentum
+inline HepLorentzVector& McVertex::initialFourMomentum()
+{
+  return m_initialFourMomentum;
+}
+/// Update initial 4-momentum
+inline void McVertex::setInitialFourMomentum( const HepLorentzVector& value )
+{
+  m_initialFourMomentum = value;
+}
+
+
+/// Retrieve final 4-momentum
+inline const HepLorentzVector& McVertex::finalFourMomentum() const
+{
+  return m_finalFourMomentum;
+}
+/// Retrieve final 4-momentum
+inline HepLorentzVector& McVertex::finalFourMomentum()
+{
+  return m_finalFourMomentum;
+}
+/// Update final 4-momentum
+inline void McVertex::setFinalFourMomentum( const HepLorentzVector& value )
+{
+  m_finalFourMomentum = value;
+}
+
+
+/// Retrieve pointer to the pair particle (const or non-const)
+inline const McParticle* McVertex::mcParticle() const
+{
+  return m_mcParticle;
+}
+inline       McParticle* McVertex::mcParticle()
+{
+  return m_mcParticle;
+}
+/// Update pointer to the pair particle (by a C++ pointer or a smart reference)
+inline void McVertex::setMcParticle( McParticle* value )
+{
+  m_mcParticle = value;
+}
+inline void McVertex::setMcParticle( SmartRef<McParticle> value )
+{
+  m_mcParticle = value;
+}
+
+
 /// Retrieve pointer to mother particle (const or non-const)
-inline const McParticle* McVertex::motherMcParticle() const                             {
+inline const McParticle* McVertex::motherMcParticle() const
+{
   return m_motherMcParticle;
 }
 inline       McParticle* McVertex::motherMcParticle()
