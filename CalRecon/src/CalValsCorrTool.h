@@ -8,8 +8,8 @@ $Header$
 #ifndef __CalValsCorrTool_H
 #define __CalValsCorrTool_H 1
 
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "EnergyCorr.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 class IPropagatorSvc;
 class ITkrGeometrySvc;
@@ -28,7 +28,7 @@ class IDataProviderSvc;
 */
 
 
-class CalValsCorrTool :  public EnergyCorr {
+class CalValsCorrTool : public EnergyCorr {
 
 public:
 
@@ -39,29 +39,17 @@ public:
     StatusCode initialize();
 
     // worker function to get the corrected energy      
-    StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster);
-
-    StatusCode finalize();
-
-    StatusCode execute();
-
-
+    StatusCode doEnergyCorr( const CalClusteringData *, Event::CalCluster * ) ;
 
 private:
 
     /// Bill's calculation here
-    StatusCode calculate();
+    StatusCode calculate( const CalClusteringData * );
     double activeDist(Point pos, int& view) const;
     double containedFraction(Point pos, double gap, 
         double r, double costh, double phi) const;
-    StatusCode aveRadLens(Point x0, Vector t0, double radius, int numSamples);
+    StatusCode aveRadLens(const CalClusteringData * data, Point x0, Vector t0, double radius, int numSamples);
 
-
-    // some pointers to services  
-    IDataProviderSvc* m_pEventSvc;
-
-    /// GlastDetSvc used for access to detector info
-    IGlastDetSvc*    m_detSvc; 
     /// TkrGeometrySvc used for access to tracker geometry info
     ITkrGeometrySvc* m_tkrGeom;
 
@@ -69,6 +57,7 @@ private:
     double m_towerPitch;
     int    m_xNum;
     int    m_yNum;
+    
     /// gets the CAL info from detModel
     StatusCode getCalInfo();
 

@@ -2,13 +2,20 @@
 #include "ProfileTool.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 // to access an XML containing Profile Bias parameters file
 #include "xmlBase/IFile.h"
 
-static const ToolFactory<ProfileTool>  s_factory;
-const IToolFactory& ProfileToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(ProfileTool) ;
 
+double ProfileTool::m_static_slope=0;
+
+double ProfileTool::m_xtalHeight=0.; //!< xtal height in cm
+double ProfileTool::m_xtalWidth=0.;  //!< xtal width  in cm
+int ProfileTool::m_nbins=0;  //!< Number of bins used for the fit
+std::vector<double> ProfileTool::m_g_elayer;  //!< Energy per layer in GeV
+     
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function:
 *       gamma(double,double) implemented in gamma.cxx
@@ -32,7 +39,7 @@ double ProfileTool::gam_prof(double *par, int i)
 {
     double result =0; 
     
-    double length = ((m_xtalHeight*i+par[2])/1.85)/getStaticSlope();
+    double length = ((m_xtalHeight*i+par[2])/1.85)/m_static_slope ;
     
     // Evaluation of the parameters of CsI at this energy	
     //	double alpha = par[1];
@@ -43,7 +50,7 @@ double ProfileTool::gam_prof(double *par, int i)
     
     
     double x=length/lambda;
-    double dx = m_xtalHeight / (1.85 *lambda)/getStaticSlope();
+    double dx = m_xtalHeight / (1.85 *lambda)/m_static_slope;
     
     double gamma1 =0;
     double gamma2 = 0;
@@ -107,10 +114,10 @@ double ProfileTool::bias( double energy )
 // Output:  - bias
 {
   // check for valid angles
-  if( getStaticSlope() < m_BiasCTLim ) return energy;
+  if( m_static_slope < m_BiasCTLim ) return energy;
 
   // get value: cos(angle of incidence)
-  double cTh= 1./sqrt(1+getStaticSlope()*getStaticSlope());
+  double cTh= 1./sqrt(1+m_static_slope*m_static_slope);
   double debiasedE= energy;
 
   // correction repeated thrice
@@ -153,65 +160,21 @@ StatusCode ProfileTool::initialize()
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
 {
+    if (EnergyCorr::initialize().isFailure())
+     { return StatusCode::FAILURE ; }
+
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     log << MSG::INFO << "Initializing ProfileTool" <<endreq;
-    
-    IGlastDetSvc* detSvc;
-    
-    
-    // get pointer to GlastDetSvc
-    sc = service("GlastDetSvc", detSvc);
-    
-    // if GlastDetSvc isn't available - put error message and return
-    if(sc.isFailure())
-    {
-        log << MSG::ERROR << "GlastDetSvc could not be found" <<endreq;
-        return sc;
-    }
-    
-    
-    // extracting detector geometry constants from xml file
-    
-    double value;
-    if(!detSvc->getNumericConstByName(std::string("CALnLayer"), &value)) 
-    {
-        log << MSG::ERROR << " constant " << " CALnLayer "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } else setNLayers(int(value));
-    
-
-    double CsIWidth;
-    if(!detSvc->getNumericConstByName(std::string("CsIWidth"),&CsIWidth))
-    {
-        log << MSG::ERROR << " constant " << " CsIWidth "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } 
-    
-    double CsIHeight;
-    if(!detSvc->getNumericConstByName(std::string("CsIHeight"),&CsIHeight))
-    {
-        log << MSG::ERROR << " constant " << " CsIHeight "
-            <<" not defined" << endreq;
-        return StatusCode::FAILURE;
-    } 
-
-    m_xtalHeight = CsIHeight/10.;  // crystal height in cm
-    m_xtalWidth = CsIWidth/10.;    // crystal width in cm
-    
-    
+        
     // Minuit object
     m_minuit = new TMinuit(5);
     
     //Sets the function to be minimized
     m_minuit->SetFCN(fcn);
-    
-    
+        
     m_g_elayer.clear();
-
-    
+   
     // Read in the parameters from the XML file
     xmlBase::IFile m_ifile(m_xmlFile.c_str());
     if ( m_ifile.contains("profileBias", "CosThetaLimit" ) ){
@@ -249,7 +212,7 @@ StatusCode ProfileTool::initialize()
 }
 
 
-StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
+StatusCode ProfileTool::doEnergyCorr( const CalClusteringData * data, Event::CalCluster* cluster)
 //               This function fits the parameters of shower profile using
 //               the Minuit minimization package and stores the fitted
 //               parameters in the CalCluster object
@@ -264,16 +227,23 @@ StatusCode ProfileTool::doEnergyCorr(double eTotal, Event::CalCluster* cluster)
     MsgStream lm(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
+    double eTotal = cluster->getEnergySum() ;
+    
+    m_static_slope = data->getSlope() ;
+
+    m_xtalHeight = data->getCalCsIHeight()/10.;  // crystal height in cm
+    m_xtalWidth = data->getCalCsIWidth()/10.;    // crystal width in cm
+
     // defines global variable to be used for fcn
-    m_g_elayer.resize(getNLayers());
-    for (int i =0;i<getNLayers();i++)
+    m_nbins = data->getCalNLayers() ;
+    m_g_elayer.resize(m_nbins);
+    for (int i =0;i<m_nbins;i++)
     {
         // We are working in GeV
         m_g_elayer[i] = cluster->getEneLayer(i)/1000.;
     }
-    m_nbins = getNLayers();
     
-    if( eTotal<2000. || getStaticSlope() == 0) //algorithm is useless under several GeV
+    if( eTotal<2000. || m_static_slope == 0) //algorithm is useless under several GeV
     {
         cluster->initProfile(0,0,0,0,0);
     }
@@ -418,14 +388,3 @@ StatusCode ProfileTool::finalize()
     return sc;
 }
 
-StatusCode ProfileTool::execute()
-{
-    StatusCode sc = StatusCode::SUCCESS;
-    
-    return sc;
-}
-
-     double ProfileTool::m_xtalHeight=0.; //!< xtal height in cm
-     double ProfileTool::m_xtalWidth=0.;  //!< xtal width  in cm
-     int ProfileTool::m_nbins=0;  //!< Number of bins used for the fit
-     std::vector<double> ProfileTool::m_g_elayer;  //!< Energy per layer in GeV

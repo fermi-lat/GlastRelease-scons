@@ -1,4 +1,3 @@
-#include "EnergyCorr.h"
 
-double EnergyCorr::m_static_slope;
+#include "EnergyCorr.h"
 

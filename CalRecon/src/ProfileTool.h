@@ -92,12 +92,10 @@ E_i = E_{tot}(\Gamma_{inc}
 * - 10/17/00    RT    comments added
 * - 05/00       RT    first implementation
 */     
-     StatusCode doEnergyCorr(double eTotal, Event::CalCluster* cluster);
+     StatusCode doEnergyCorr( const CalClusteringData *, Event::CalCluster * ) ;
 
      StatusCode finalize();
     
-     StatusCode execute();
-
 protected:
 
      // function passed to Minuit to minimize
@@ -108,6 +106,9 @@ protected:
     double bias( double logEnergy );
 
 private:
+
+    // sets static version of the slope. Needed for bias/gam_prof 
+    static double m_static_slope ; 
 
     TMinuit* m_minuit;
 

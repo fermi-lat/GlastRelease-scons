@@ -8,6 +8,7 @@ $Header$
 #include "CalValsCorrTool.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "Event/TopLevel/EventModel.h"
 
@@ -25,8 +26,7 @@ $Header$
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "geometry/Ray.h"
 
-static const ToolFactory<CalValsCorrTool>  s_factory;
-const IToolFactory& CalValsCorrToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalValsCorrTool) ;
 
 #include "TMath.h"
 #include <stdexcept>
@@ -95,38 +95,23 @@ namespace {
 }
 
 
-CalValsCorrTool::CalValsCorrTool( const std::string& type, 
-                                 const std::string& name, 
-                                 const IInterface* parent)
-                                 : EnergyCorr(type,name,parent)
-{
-    // declare base interface for all consecutive concrete classes
-    declareInterface<IEnergyCorr>(this);
-}
-
-
-
-StatusCode CalValsCorrTool::initialize()
+CalValsCorrTool::CalValsCorrTool
+ ( const std::string & type, 
+   const std::string & name, 
+   const IInterface * parent )
+ : EnergyCorr(type,name,parent)
+ { declareInterface<IEnergyCorr>(this) ; }
 
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
-
+StatusCode CalValsCorrTool::initialize()
 {
+    if (EnergyCorr::initialize().isFailure())
+     { return StatusCode::FAILURE ; }
+
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     log << MSG::INFO << "Initializing CalValsCorrTool" <<endreq;
-
-    sc = serviceLocator()->service( "EventDataSvc", m_pEventSvc, true );
-    if(sc.isFailure()){
-        log << MSG::ERROR << "Could not find EventDataSvc" << std::endl;
-        return sc;
-    }
-    // find GlastDevSvc service
-    if (service("GlastDetSvc", m_detSvc, true).isFailure()){
-        log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
-
 
     // find TkrGeometrySvc service
     if (service("TkrGeometrySvc", m_tkrGeom, true).isFailure()){
@@ -163,7 +148,7 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-StatusCode CalValsCorrTool::doEnergyCorr(double, Event::CalCluster* cluster)
+StatusCode CalValsCorrTool::doEnergyCorr( const CalClusteringData * data, Event::CalCluster* cluster)
 
 //Purpose and method:
 //
@@ -176,14 +161,14 @@ StatusCode CalValsCorrTool::doEnergyCorr(double, Event::CalCluster* cluster)
 
 {
     MsgStream lm(msgSvc(), name());
-    StatusCode sc =  calculate();
+    StatusCode sc =  calculate(data);
     double correctedEnergy = CAL_Energy_Corr;
     if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
 
     return sc;
 }
 
-StatusCode CalValsCorrTool::calculate()
+StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
 {
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -191,13 +176,13 @@ StatusCode CalValsCorrTool::calculate()
 
     // Recover Track associated info. 
     SmartDataPtr<Event::TkrTrackCol>  
-        pTracks(m_pEventSvc,EventModel::TkrRecon::TkrTrackCol);
+        pTracks(data->getEventSvc(),EventModel::TkrRecon::TkrTrackCol);
     SmartDataPtr<Event::TkrVertexCol>     
-        pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);
+        pVerts(data->getEventSvc(),EventModel::TkrRecon::TkrVertexCol);
     SmartDataPtr<Event::CalClusterCol>     
-        pCals(m_pEventSvc,EventModel::CalRecon::CalClusterCol);
+        pCals(data->getEventSvc(),EventModel::CalRecon::CalClusterCol);
     SmartDataPtr<Event::CalXtalRecCol> 
-        pxtalrecs(m_pEventSvc,EventModel::CalRecon::CalXtalRecCol);
+        pxtalrecs(data->getEventSvc(),EventModel::CalRecon::CalXtalRecCol);
 
     //Do some vital initializations
     CAL_EnergySum     = 0.;
@@ -422,7 +407,7 @@ StatusCode CalValsCorrTool::calculate()
     // Now get averaged radiation lengths
     // The averaging is set for 6 + 1 samples at a radius of rm_hard/4
     // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
-    if(aveRadLens(cal_top, -t_axis, rm_hard/4., 6) == StatusCode::FAILURE) return sc; 
+    if(aveRadLens(data,cal_top, -t_axis, rm_hard/4., 6) == StatusCode::FAILURE) return sc; 
 
     double t_cal_tot = m_radLen_CsI + m_radLen_Stuff; //m_radLen_CsI; //s_min/20.; // 
     ene_sum_corr    *=  t_cal_tot/m_radLen_CsI;       // Correct for unseen stuff
@@ -582,7 +567,7 @@ double CalValsCorrTool::containedFraction(Point pos, double gap,
     return in_frac;
 }
 
-StatusCode CalValsCorrTool::aveRadLens(Point x0, Vector t0, double radius, int numSamples)
+StatusCode CalValsCorrTool::aveRadLens(const CalClusteringData * data, Point x0, Vector t0, double radius, int numSamples)
 { // This method finds the averages and rms for a cylinder of rays passing through 
     // the calorimeter of the radiation lengths in CsI and other material. 
     // The radius of the cylinder is "radius" and the number of rays = numSample (plus the 
@@ -660,7 +645,7 @@ StatusCode CalValsCorrTool::aveRadLens(Point x0, Vector t0, double radius, int n
         double rl_Stuff     = 0.;
         double rl_StuffCntr = 0.;
         idents::VolumeIdentifier volId;
-        idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
+        idents::VolumeIdentifier prefix = data->getDetSvc()->getIDPrefix();
         int istep  = 0;
         for(; istep < numSteps; ++istep) {
             volId = m_G4PropTool->getStepVolumeId(istep);
@@ -705,19 +690,5 @@ StatusCode CalValsCorrTool::aveRadLens(Point x0, Vector t0, double radius, int n
     m_radLen_CntrStuff  /= num_good;
     m_rms_RL_CntrStuff   = sqrt(m_rms_RL_CntrStuff/num_good - m_radLen_CntrStuff*m_radLen_CntrStuff);
     return StatusCode::SUCCESS;
-}
-
-StatusCode CalValsCorrTool::finalize()
-{
-    StatusCode sc = StatusCode::SUCCESS;
-
-    return sc;
-}
-
-StatusCode CalValsCorrTool::execute()
-{
-    StatusCode sc = StatusCode::SUCCESS;
-
-    return sc;
 }
 
