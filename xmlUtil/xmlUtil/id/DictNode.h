@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 namespace xmlUtil {
   //! DictNode represents a node in an identifier dictionary.
@@ -103,6 +104,10 @@ namespace xmlUtil {
     }; 
 
     const Nodes&     getChildren() const {return m_children;}
+
+    /// The following may be called by IdDict during, e.g., validation
+    static void   setOstream(std::ostream* out) {m_err = out;}
+
     // More constructor, for when dictionary is built dynamically
     // rather than from xml file
     /*    DictNode(DictField& field);                             TO DO
@@ -152,10 +157,11 @@ namespace xmlUtil {
 
     DictNode() {};                    /*< don't allow uninitialized node */
     Nodes            m_children;      /*< collection of child nodes */
-    const DictField *m_field;         /*< id field for this node */
-    const DictNode  *m_parent;        /*< parent dictnode */
-    DictConstraints *m_parConstraints;/*< Constraints on values of parent */
-    DictConstraints *m_myConstraints; /*< Constraints on values for this node*/
+    const DictField* m_field;         /*< id field for this node */
+    const DictNode*  m_parent;        /*< parent dictnode */
+    DictConstraints* m_parConstraints;/*< Constraints on values of parent */
+    DictConstraints* m_myConstraints; /*< Constraints on values for this node*/
+    static std::ostream* m_err;
 
   };       // end DictNode class definition
 }          // end namespace xmlUtil
