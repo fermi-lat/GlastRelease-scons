@@ -3,7 +3,7 @@
 # only need to change this line for different tests
 # by specifying name of test (which is also the name
 # of the directory containing the test)
-export SYSTEST=CALSingleCrystal
+export SYSTEST=ACDTop
 
 # script that invokes this one needs to run this from test directory
 source ../../../cmt/setup.sh
