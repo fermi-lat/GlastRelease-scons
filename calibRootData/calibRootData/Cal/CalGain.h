@@ -3,7 +3,7 @@
 
 #include "TObject.h"
 #include "TString.h"
-#include "commonRootData/idents/calXtalId.h"
+#include "commonRootData/idents/CalXtalId.h"
 /*  Might need some more ROOT includes
 #include "TRef.h"
 #include "TRefArray.h"
@@ -28,6 +28,11 @@ namespace calibRootData {
       m_id(packedId), m_gain(val), m_sig(sig) {}
 
     virtual ~CalGain() { };
+
+    const commonRootData::CalXtalId& getId() const {return m_id;}
+    const float getGain() const {return m_gain;}
+    const float getSig() const {return m_sig;}
+    
 
   private:
     commonRootData::CalXtalId  m_id;
