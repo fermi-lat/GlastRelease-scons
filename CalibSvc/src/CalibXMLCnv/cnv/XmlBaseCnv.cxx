@@ -123,6 +123,11 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
         << par0 << endreq;
     return StatusCode::FAILURE;
   }
+  else {
+    log << MSG::INFO
+        << "successfully parsed document " << par[0] << " aka " 
+        << par0 << endreq;
+  }
 
   // Could conceivably write some code here to handle generic
   // parts of document.  Or, alternatively, add services to

@@ -105,7 +105,7 @@ StatusCode XmlBadStripsCnv::i_createObj(const DOM_Element& element,
   // Find child tower elements 
   
   // const 
-  StatusCode sc = StatusCode::FAILURE;
+  StatusCode sc = StatusCode::SUCCESS;   // it's OK to have no bad towers
   DOM_Element child = Dom::findFirstChildByName(element, "tower");
   while (child != DOM_Element()) {
     sc = processTower(child, pBad);
