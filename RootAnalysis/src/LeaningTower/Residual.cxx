@@ -3,7 +3,7 @@
 #include "TFile.h"
 #include "TGraph.h"
 #include "TLine.h"
-#include "TMap.h"
+#include "TList.h"
 #include "TString.h"
 #include "TStyle.h"
 #include "TSystem.h"
@@ -42,7 +42,7 @@ Residual::Residual(TString filename, TString resFileName) {
     myTracker->loadFitting(gSystem->ExpandPathName(
         "$ROOTANALYSISROOT/src/LeaningTower/geometry/Tower0FittingPlanes.txt"));
     myTracker->SetTower(true);
-    myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
+    myEvent = new Event(filename, myTracker->GetGeometry());
     myResFileName = resFileName;
 }
 
@@ -82,7 +82,7 @@ void Residual::Go(int lastEntry) {
         hRes[1][i] = TH1D(title, title, bins, xmin, xmax);
     }
 
-    const TMap* myGeometry = myTracker->GetGeometry();
+    const TList* myGeometry = myTracker->GetGeometry();
 
     Recon* recon = myEvent->GetRecon();
     Progress progress;
@@ -244,9 +244,6 @@ void Residual::DrawResSlopeAll(TCut cut) {
 
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
-    TMap* myGeometry = myTracker->GetGeometry();
-    TMapIter ti(myGeometry);
-    TObjString* key;
 
     gStyle->SetTitleFontSize(0.1);
     gStyle->SetOptStat(0);
@@ -260,9 +257,11 @@ void Residual::DrawResSlopeAll(TCut cut) {
     std::ofstream fout("newGeometry.txt");
     fout.setf(std::ios_base::fixed);
     fout.precision(3);
-    while ( (key=(TObjString*)ti.Next()) ) {
-        Layer* plane = (Layer*)myGeometry->GetValue(key);
-        TString planeName = key->String();
+
+    TList* myGeometry = myTracker->GetGeometry();
+    TIter next(myGeometry);
+    while ( Layer* plane = (Layer*)next() ) {
+        TString planeName = plane->GetName();
         c->cd(++i);
         gPad->SetTicks(1,1);
         TString onPlane = "name==\"" + planeName + "\"";
@@ -341,9 +340,6 @@ void Residual::DrawResOrdAll(TCut cut) {
 
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
-    TMap* myGeometry = myTracker->GetGeometry();
-    TMapIter ti(myGeometry);
-    TObjString* key;
 
     gStyle->SetTitleFontSize(0.1);
     gStyle->SetOptStat(0);
@@ -357,9 +353,11 @@ void Residual::DrawResOrdAll(TCut cut) {
     //    std::ofstream fout("newGeometry.txt");
     //    fout.setf(std::ios_base::fixed);
     //    fout.precision(3);
-    while ( (key=(TObjString*)ti.Next()) ) {
-        Layer* plane = (Layer*)myGeometry->GetValue(key);
-        TString planeName = key->String();
+
+    TList* myGeometry = myTracker->GetGeometry();
+    TIter next(myGeometry);
+    while ( Layer* plane = (Layer*)next() ) {
+        TString planeName = plane->GetName();
         c->cd(++i);
         gPad->SetTicks(1,1);
         TString onPlane = "name==\"" + planeName + "\"";

@@ -4,7 +4,7 @@
 #include "TGraph.h"
 #include "TGraphErrors.h"
 #include "TLine.h"
-#include "TMap.h"
+#include "TList.h"
 #include "TObjectTable.h"
 #include "TObjString.h"
 #include "TString.h"
@@ -62,7 +62,7 @@ EventDisplay::EventDisplay(TString filename) {
         myTracker->loadGeometry(
               "$ROOTANALYSISROOT/src/LeaningTower/geometry/stack2geometry.txt");
   
-    myEvent = new Event(filename, (TMap*)myTracker->GetGeometry());
+    myEvent = new Event(filename, myTracker->GetGeometry());
   
     myEventDisplay = new TCanvas("myEventDisplay", "myEventDisplay", 1100, 800);
     myTracker->Display(myEventDisplay);
@@ -111,7 +111,7 @@ void EventDisplay::Go(int numEvent) {
 
     Recon* recon = myEvent->GetRecon();
 
-    TMap *myGeometry = myTracker->GetGeometry();
+    TList *myGeometry = myTracker->GetGeometry();
     // this here "corrects" cluster positions with respect to the recon results.
     recon->TkrAlignmentSvc(myGeometry);
 
@@ -125,32 +125,22 @@ void EventDisplay::Go(int numEvent) {
         std::cout << "??? TkrTrk1NumClus > TkrNumClus > TkrTotalNumHits ???"
                   << std::endl;
 
-    TMapIter ti(myGeometry);
-    TObjString* key;
-
+    TIter next(myGeometry);
     int i=0;
-    while ( ( key = (TObjString*)ti.Next() ) ) {
-        Layer* aLayer = (Layer*)myGeometry->GetValue(key);
+    while ( Layer* aPlane = (Layer*)next() ) {
+        const double height = aPlane->GetHeight();
+        const int planeNumHits = myEvent->GetPlaneNumHits(aPlane->GetName());
 
-        TString LayerName=key->String();
-
-        double height = aLayer->GetHeight();
-      
-        int LayerNumHits = myEvent->GetLayerNumHits(LayerName);
-        //      int *LayerHits   = myEvent->GetLayerHits(LayerName);
-      
-        //        TString title = (TString("(")+=LayerNumHits) + ")";
-
-        if(aLayer->IsX()) 
+        if(aPlane->IsX()) 
             myEventDisplay->cd(1);      
         else
             myEventDisplay->cd(2);
 
         TriggerReqText[i][0].SetText(-5, height,
-                                     aLayer->GetTriggerReq(false) ? "x" : ".");
+                                     aPlane->GetTriggerReq(false) ? "x" : ".");
         TriggerReqText[i][1].SetText(365, height,
-                                     aLayer->GetTriggerReq(true) ? "x" : ".");
-        LabelNumHits[i].SetText(410, height, (TString("(")+=LayerNumHits)+")");
+                                     aPlane->GetTriggerReq(true) ? "x" : ".");
+        LabelNumHits[i].SetText(410, height, (TString("(")+=planeNumHits)+")");
         TriggerReqText[i][0].Draw();
         TriggerReqText[i][1].Draw();
         LabelNumHits[i].Draw();

@@ -6,7 +6,7 @@
 
 #include "TFile.h"
 #include "TTree.h"
-#include "TMap.h"
+#include "TList.h"
 #include "TGraph.h"
 #include "TString.h"
 #include "TObjString.h"
@@ -19,7 +19,7 @@
 
 class Event {
  public:
-    Event(TString filename, TMap *geometry);
+    Event(TString filename, TList* geometry);
     virtual ~Event();
 
     void Go(int event) {
@@ -33,14 +33,14 @@ class Event {
     Int_t GetTkrTotalNumHits() const { return TkrTotalNumHits; }
     Double_t GetEbfTime()      const { return EbfTime; }
 
-    int GetLayerNumHits(TString LayerName);
-    int *GetLayerHits(TString LayerName);
-    Bool_t GetTriggerReq(TString LayerName, Bool_t side);
+    int GetPlaneNumHits(TString PlaneName);
+    int *GetPlaneHits(TString PlaneName);
+    Bool_t GetTriggerReq(TString PlaneName, Bool_t side);
 
     // hits and clusters
     TGraph GetTGraphHits(TString view);
     TGraph GetTGraphHits(int view);
-    std::vector<double> GetClusters(TString LayerName);
+    std::vector<double> GetClusters(TString PlaneName);
     TGraph GetTGraphClusters(TString view);
     TGraph GetTGraphClusters(int view);
 
@@ -61,7 +61,7 @@ class Event {
 
     TTree* myTree;
     TFile* myFile;
-    TMap*  myGeometry;
+    TList*  myGeometry;
     Recon* myRecon;
   
     // last line of class def

@@ -1,7 +1,7 @@
 #ifndef __LEANINGTOWER_TRACKER__
 #define __LEANINGTOWER_TRACKER__
 
-#include "TMap.h"
+#include "TList.h"
 #include "TString.h"
 #include "TSystem.h"
 #include "TCanvas.h"
@@ -17,7 +17,7 @@ class Tracker {
     void loadFitting(TString=
                "$ROOTANALYSISROOT/src/LeaningTower/geometry/FittingPlanes.txt");
     void Display(TCanvas*);
-    TMap* GetGeometry() const { return myGeometry; }
+    TList* GetGeometry() const { return myGeometry; }
     std::vector<TString> GetPlaneNameCol(const int view,
                                          const bool onlyTheGood=false) const;
     std::vector<TString> GetPlaneNameCol(const TString view,
@@ -25,7 +25,7 @@ class Tracker {
     void SetTower(const bool tower) { TOWER = tower; }
  private:
     bool TOWER;
-    TMap* myGeometry;
+    TList* myGeometry;
 
     // last line of class def
     ClassDef(Tracker, 1)

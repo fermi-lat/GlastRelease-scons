@@ -29,7 +29,7 @@ void Recon::GetEvent(int event) {
     }
 }
 
-void Recon::TkrAlignmentSvc(const TMap *myGeometry) {
+void Recon::TkrAlignmentSvc(const TList *myGeometry) {
     // this is the real alignment.  Z is replaced by the Z of the geometry file.
     // This seems to be awkward, but the alternative would be to rerun recon
     // every time the position changes.
@@ -37,7 +37,7 @@ void Recon::TkrAlignmentSvc(const TMap *myGeometry) {
     // subtracted from the cluster positions.
   
     for ( int i=0; i<TkrNumClus; ++i ) {
-        Layer* plane = (Layer*)myGeometry->GetValue(
+        Layer* plane = (Layer*)myGeometry->FindObject(
                         GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
         TkrClusX[i] += plane->GetX();
         TkrClusY[i] += plane->GetY();

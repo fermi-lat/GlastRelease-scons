@@ -5,7 +5,7 @@
 
 #include <vector>
 
-Event::Event(TString filename, TMap* geometry) {
+Event::Event(TString filename, TList* geometry) {
     myFile = new TFile(filename);
     myGeometry = geometry;  
 
@@ -18,12 +18,9 @@ Event::Event(TString filename, TMap* geometry) {
     NumberOfEvents = (int)myTree->GetEntries();
     std::cout << "Number of Events: " << NumberOfEvents << std::endl;
   
-    TMapIter ti(myGeometry);
-    TObjString* key;
-    while ( ( key = (TObjString*)ti.Next() ) ) {
-      Layer *aLayer = (Layer*)myGeometry->GetValue(key);
-      aLayer->SetTree(myFile);
-    }
+    TIter next(myGeometry);
+    while ( Layer* aPlane = (Layer*)next() )
+        aPlane->SetTree(myFile);
 
     myRecon = new Recon(myFile);
 }
@@ -34,25 +31,23 @@ Event::~Event() {
     delete myFile;
 }
 
-int Event::GetLayerNumHits(TString LayerName)
-{
-  Layer *aLayer = ((Layer*) myGeometry->GetValue(LayerName));
-  aLayer->GetEvent(SelectedEvent);
-  return aLayer->TkrNumHits;
+int Event::GetPlaneNumHits(TString PlaneName) {
+    Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
+    aPlane->GetEvent(SelectedEvent);
+    return aPlane->TkrNumHits;
 }
 
-int *Event::GetLayerHits(TString LayerName)
-{
-  Layer *aLayer = ((Layer*) myGeometry->GetValue(LayerName));
-  aLayer->GetEvent(SelectedEvent);
-  return aLayer->TkrHits;
+int* Event::GetPlaneHits(TString PlaneName) {
+    Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
+    aPlane->GetEvent(SelectedEvent);
+    return aPlane->TkrHits;
 }
 
-Bool_t Event::GetTriggerReq(TString LayerName, Bool_t side) {
-  Layer *aLayer = (Layer*)myGeometry->GetValue(LayerName);
-  aLayer->GetEvent(SelectedEvent);
-  return aLayer->GetTriggerReq(side);
-}    
+Bool_t Event::GetTriggerReq(TString PlaneName, Bool_t side) {
+    Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
+    aPlane->GetEvent(SelectedEvent);
+    return aPlane->GetTriggerReq(side);
+}
 
 TGraph Event::GetTGraphHits(TString view) {
     if ( view == "X" )
@@ -68,75 +63,64 @@ TGraph Event::GetTGraphHits(TString view) {
 
 TGraph Event::GetTGraphHits(int view) {
     TGraph tg;
-    TMapIter ti(myGeometry);
-    TObjString* key;
-
-    while ( ( key = (TObjString*)ti.Next() ) ) {
-        Layer* l = (Layer*)myGeometry->GetValue(key);
-        if ( view == 0 && !l->IsX() )
+    TIter next(myGeometry);
+    while ( Layer* aPlane = (Layer*)next() ) {
+        if ( view == 0 && !aPlane->IsX() )
             continue;
-        if ( view == 1 && !l->IsY() )
+        if ( view == 1 && !aPlane->IsY() )
             continue;
 
-        TString layerName = key->String();
-        int layerNumHits = GetLayerNumHits(layerName);
-        if ( layerNumHits <= 0 )
+        const TString planeName = aPlane->GetName();
+        const int planeNumHits = GetPlaneNumHits(planeName);
+        if ( planeNumHits <= 0 )
             continue;
 
-        double z = l->GetHeight();
-        int* layerHits = GetLayerHits(layerName);
-      
-        for ( int i=0; i<layerNumHits; ++i ) {
-            double pos = l->GetCoordinate(layerHits[i]);
-            //            std::cout << layerName << ' ' << view << ' ' << pos << ' ' << z << std::endl;
-            tg.SetPoint(tg.GetN(), pos, z);
-        }
+        int* planeHits = GetPlaneHits(planeName);
+        for ( int i=0; i<planeNumHits; ++i )
+            tg.SetPoint(tg.GetN(), aPlane->GetCoordinate(planeHits[i]),
+                        aPlane->GetHeight());
     }
     return tg;
 }
 
-std::vector<double> Event::GetClusters(TString LayerName)
-{
-  Layer *aLayer = ((Layer*) myGeometry->GetValue(LayerName));
-  aLayer->GetEvent(SelectedEvent);
+std::vector<double> Event::GetClusters(TString PlaneName) {
+    Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
+    aPlane->GetEvent(SelectedEvent);
   
-  int NumHits = aLayer->TkrNumHits;
-  int *Hits   = aLayer->TkrHits;
+    int NumHits = aPlane->TkrNumHits;
+    int *Hits   = aPlane->TkrHits;
   
-  std::vector<double> Cluster;
-  if(NumHits==0) return Cluster;
-  //  Cluster->Set(NumHits);
+    std::vector<double> Cluster;
+    if(NumHits==0) return Cluster;
+    //  Cluster->Set(NumHits);
 
-  int LastClusterStrip = Hits[0];
+    int LastClusterStrip = Hits[0];
   
-  Cluster.push_back(aLayer->GetCoordinate(LastClusterStrip));
+    Cluster.push_back(aPlane->GetCoordinate(LastClusterStrip));
   
-  int ClusterSize=1;
-  int Clusters=0;
+    int ClusterSize=1;
+    int Clusters=0;
   
-  for(int i=1; i<NumHits; i++)
-    {
-      int nextHit =  Hits[i];
-      if(nextHit < LastClusterStrip+GAP) 
-	{
-	  Cluster[Clusters] = (ClusterSize * Cluster[Clusters] + 
-			       aLayer->GetCoordinate(nextHit))/
-	    ((double)(ClusterSize+1));
-	  ClusterSize++;
+    for ( int i=1; i<NumHits; i++ ) {
+        int nextHit =  Hits[i];
+        if ( nextHit < LastClusterStrip+GAP ) {
+            Cluster[Clusters] = (ClusterSize * Cluster[Clusters] + 
+                                 aPlane->GetCoordinate(nextHit))/
+                (double)(ClusterSize+1);
+            ClusterSize++;
 	}
-      else
-	{
-	  Clusters++;
-	  LastClusterStrip  = nextHit;
-	  Cluster.push_back(aLayer->GetCoordinate(LastClusterStrip));
+        else {
+            Clusters++;
+            LastClusterStrip  = nextHit;
+            Cluster.push_back(aPlane->GetCoordinate(LastClusterStrip));
 	}
     }
-  //  Cluster.Set(Clusters);
-  // This is to have no more than one cluster per layer:
+    //  Cluster.Set(Clusters);
+    // This is to have no more than one cluster per plane:
 
-  if(Cluster.size()>1) 
-    Cluster.clear();
-  return Cluster;
+    if(Cluster.size()>1) 
+        Cluster.clear();
+    return Cluster;
 }
 
 TGraph Event::GetTGraphClusters(TString view) {
@@ -153,27 +137,23 @@ TGraph Event::GetTGraphClusters(TString view) {
 
 TGraph Event::GetTGraphClusters(int view) {
     TGraph tg;
-    TMapIter ti(myGeometry);
-    TObjString* key;
-
-    while ( ( key = (TObjString*)ti.Next() ) ) {
-        Layer* l = ((Layer*)myGeometry->GetValue(key));
-        if ( view == 0 && !l->IsX() )
+    TIter next(myGeometry);
+    while ( Layer* aPlane = (Layer*)next() ) {
+        if ( view == 0 && !aPlane->IsX() )
             continue;
-        if ( view == 1 && !l->IsY() )
+        if ( view == 1 && !aPlane->IsY() )
             continue;
 
-        TString layerName = key->String();
-        int layerNumHits = GetLayerNumHits(layerName);
-        if ( layerNumHits <= 0 )
+        const TString planeName = aPlane->GetName();
+        const int planeNumHits = GetPlaneNumHits(planeName);
+        if ( planeNumHits <= 0 )
             continue;
 
-        double z = l->GetHeight();
-        // getting cluster(s) from each layer
-        std::vector<double> clusterPos = GetClusters(layerName);
-        int clusterNum = clusterPos.size();
+        // getting cluster(s) from each plane
+        std::vector<double> clusterPos = GetClusters(planeName);
+        const int clusterNum = clusterPos.size();
         for ( int i=0; i<clusterNum; ++i )
-            tg.SetPoint(tg.GetN(), clusterPos[i], z);
+            tg.SetPoint(tg.GetN(), clusterPos[i], aPlane->GetZ());
     }
     return tg;
 }
