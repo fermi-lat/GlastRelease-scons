@@ -30,7 +30,7 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
-#include "ntupleWriterSvc/INtupleWriterSvc.h"
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 // for access to geometry perhaps
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"

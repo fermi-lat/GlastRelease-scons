@@ -25,18 +25,18 @@ public:
     virtual std::string title()const{return "test spectrum";}
 
     /// a randomized interval to the next event - default is 1/rate()
-    virtual double interval (double time) { return 1.0;}
+    virtual double interval (double /*time*/) { return 1.0;}
 
 
     /// use the engine and the current time to return an energy
-    virtual double energy(double time){return 2.;};// in GeV for now
+    virtual double energy(double /*time*/){return 2.;};// in GeV for now
 
     /// given the selected energy, return a pair(costheta, phi)
-    virtual std::pair<double,double> dir(double energy){
+    virtual std::pair<double,double> dir(double /*energy*/){
         return std::make_pair(1.0,0);
     }
     /// calculate the flux, particles/m^2/sr. (default zero)
-    virtual double    flux (double time ) const{
+    virtual double    flux (double /*time*/ ) const{
         return 0;
     }
 
