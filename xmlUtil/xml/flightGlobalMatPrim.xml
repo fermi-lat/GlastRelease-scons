@@ -3,6 +3,6 @@
   <prim name="wallMaterial"   value="C" type="string" uType="mat"> Wall material</prim>
   <prim name="vacuumMat" value="Vacuum" type="string" uType="mat">Need
       vacuum for some 'solids'</prim>
-  <prim name="blanketMat" value="thermal_blanket" type="string" uType="mat">
+  <prim name="blanketMat" value="blanket" type="string" uType="mat">
 Material for thermal blanket</prim>
 </primCategory>

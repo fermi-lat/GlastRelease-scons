@@ -14,12 +14,12 @@
         material used in tracker tray core for superGLAST trays</prim>
   <prim name="TKRCloseoutMat" value="C_closeout" type="string" uType="mat">
      material for closeout pieces</prim>
-  <prim name="TKRTopFaceMat" value="top_face_material" type="string"
+  <prim name="TKRTopFaceMat" value="Tray_top_face" type="string"
      uType="mat">Composite representing top face sheet,  bias board,
      and surrouding glue</prim>
-  <prim name="TKRBotFaceMat" value="bot_face_material" type="string"
+  <prim name="TKRBotFaceMat" value="Tray_bot_face" type="string"
      uType="mat">Composite representing bottom face sheet + glue</prim>
-  <prim name="TKRBotBiasMat" value="bot_bias_material" type="string" 
+  <prim name="TKRBotBiasMat" value="Tray_bot_bias" type="string" 
         uType="mat">Composite for bias board + surrounding glue </prim>
 
   <prim name="TKRFaceMat" value="C" type="string" uType="mat">
