@@ -9,6 +9,8 @@
 #include "GaudiKernel/DataObject.h"
 #include "gui/DisplayRep.h"
 
+#include "CalRecon/CalDisplay.h"
+
 extern const CLID& CLID_CalRecLogs;
 
 
@@ -78,8 +80,8 @@ public:
 
 	// constructor
 	CalRecLogs(int nmodX=1, int nmodY=1, int nlogs=10, int nlayers=4, int iviews=2)
-	{ini(nmodX,nmodY,nlogs,nlayers,iviews);}
-	~CalRecLogs();
+    {ini(nmodX,nmodY,nlogs,nlayers,iviews); m_calDisp=0;}
+    ~CalRecLogs();
 
 
 	// GAUDI members to be use by the converters
@@ -103,6 +105,8 @@ public:
 	void writeOut() const;
 	void update(gui::DisplayRep& v)  {draw(v);}
 
+    void setCalDisplay(CalDisplay* calDisp){m_calDisp=calDisp;}
+
 private:
 
 	virtual void ini(int nmodX, int nmodY, int nlogs, int nlayers, int iviews);
@@ -113,6 +117,7 @@ private:
 
 	std::vector<CalRecLog*>  m_List;
 
+    CalDisplay* m_calDisp;
 };
 
 #endif

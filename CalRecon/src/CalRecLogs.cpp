@@ -104,6 +104,7 @@ void CalRecLogs::ini(int nModX, int nModY, int nLogs, int nLayers, int nViews)
 CalRecLogs::~CalRecLogs()
 //######################################
 {
+    if(m_calDisp) m_calDisp->clearLogsDisp();
 	for (int ilog = 0; ilog < m_List.size(); ilog++) delete m_List[ilog];
 }
 //######################################

@@ -7,6 +7,8 @@
 // #include "Event/trsDataVI.h"
 #include "GaudiKernel/DataObject.h"
 
+#include "CalRecon/CalDisplay.h"
+
 extern const CLID& CLID_CalClusterList;
 
 
@@ -164,8 +166,8 @@ class CsIClusterList : public DataObject
 {
 public:
 
-	CsIClusterList() {clear();}
-	~CsIClusterList() {clear();}
+	CsIClusterList() { m_calDisp = 0;clear();}
+	~CsIClusterList() { if(m_calDisp) m_calDisp->clearClusterDisp();clear();}
 
 
 	// GAUDI members to be use by the converters
@@ -184,6 +186,7 @@ public:
 	virtual void make() {}
 
 	virtual void writeOut() const;
+    void setCalDisplay(CalDisplay* calDisp) {m_calDisp = calDisp;}
 
 protected:
 
@@ -192,6 +195,8 @@ protected:
 private:
 
 	std::vector<CsICluster*> m_CsIClustersList;
+
+    CalDisplay* m_calDisp;
 };
 #endif	
 

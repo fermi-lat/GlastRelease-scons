@@ -1,7 +1,6 @@
 //$Header$
 
 /// Gaudi specific include files
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -14,30 +13,9 @@
 #include "CalRecon/CsIClusters.h"
 #include "CalRecon/CalRecLogs.h"
 #include "CalRecon/CalGeometrySvc.h"
+#include "CalRecon/CalDisplay.h"
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/**
-    Display the Cal reconstructed information
-  */
-class CalDisplay : public Algorithm
-{
-public:
-    //! Constructor of this form must be provided
-    CalDisplay(const std::string& name, ISvcLocator* pSvcLocator); 
-    virtual ~CalDisplay() {}
-    //! mandatory
-    StatusCode initialize();
-    //! mandatory
-    StatusCode execute();
-    //! mandatory
-    StatusCode finalize(){ return StatusCode::SUCCESS;}
-private:
-    
-	CalRecLogs* m_crl;
-	CsIClusterList* m_cls;
-	CalGeometrySvc* m_CalGeo; 
 
-};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 static const AlgFactory<CalDisplay>  Factory;
 const IAlgFactory& CalDisplayFactory = Factory;
@@ -194,7 +172,8 @@ StatusCode CalDisplay::initialize()
      float calZtop = Z0+(nlayers-1)*layerheight;
      float calZbottom = Z0;
 
-    
+
+
     //Ok, see if we can set up the display
     if (sc.isSuccess())  {
 	//Set up the display rep for Clusters
@@ -216,7 +195,7 @@ StatusCode CalDisplay::execute()
 	
 	        log << MSG::ERROR << "CalDisplay failed to access CalRecLogs" << endreq;
 			return sc;
-	}
+    } else { m_crl->setCalDisplay(this);}
     
 	
 	m_cls  = SmartDataPtr<CsIClusterList>(eventSvc(),"/Event/CalRecon/CsIClusterList");
@@ -225,7 +204,7 @@ StatusCode CalDisplay::execute()
 	
 	        log << MSG::ERROR << "CalDisplay failed to access CsIClusterList" << endreq;
 			return sc;
-	}
+    } else {m_cls->setCalDisplay(this);}
     
     return sc;
 }
