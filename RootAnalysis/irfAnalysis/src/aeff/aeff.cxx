@@ -19,7 +19,10 @@ public:
         , m_zdir_bins(20)
     {}
 
-    // override this to project only the summary plots of energy for each angle range
+
+// override this to project only the summary plots of energy for each angle range
+//__________________________________________________________________________
+
     void project() 
     {
         open_input_file();
@@ -30,11 +33,11 @@ public:
         for(int i=0; i<angle_bins; ++i){
             // loop over angle ranges
            char title[256];  sprintf(title,
-               "Energy distirbution: for angles  %2d-%2d degrees", angles[i], angles[i+1]);
+               "Energy distribution: for angles  %2d-%2d degrees", angles[i], angles[i+1]);
             // histogram to show energy distribution for each angle
             TH1F* h = new TH1F(hist_name(i,99), title, (5.5-1.0)/m_binsize, 1.0, 5.5);
             printf("\tProjecting angle range %s\n",angle_cut(i));
-            m_tree->Project(h->GetName(), "McLogEnergy", goodEvent&& TCut(angle_cut(i)));
+            m_tree->Project(h->GetName(), "McLogEnergy", goodEvent && TCut(angle_cut(i)));
             h->SetDirectory(&hist_file);  // move to the summary file
         }
         for(int j=0; j<energy_bins; ++j){
@@ -47,13 +50,16 @@ public:
             h->SetDirectory(&hist_file);  // move to the summary file
         }
 
+        // This code is only very temporarily here -- will move soon
+        std::cout << "Fill logE vs cosT Histograms for latResponse AeffRootTable "
+                  << std::endl;
         // determine normalization factor for Aeff
         double  dcosT       = 1.0/m_zdir_bins;
         double  dlogE       = m_binsize;
         double  ngenPerBin  = m_ngen * (dcosT*dlogE)/((5.5-1)*1.0);
         double  norm_factor = m_target_area/ngenPerBin ;
 
-        std::cout << "Applying normalization factor for Aeff Table assuming " 
+        std::cout << "Apply normalization factor for Aeff Table assuming " 
             << m_ngen 
             << " events generated uniformly over:"
             << "\n\t cos theta from -1 to 0"
@@ -189,6 +195,7 @@ public:
 
     }
 
+ //__________________________________________________________________________
 
     void doit(){
         std::string psfile( output_file_root()+m_ps_filename );
@@ -224,7 +231,7 @@ int main(){
     front.doit();
 
     Aeff back("aeff_back.root", "aeff_back.ps");
-    back.set_user_cut(TCut("Tkr1FirstLayer>11&&"));
+    back.set_user_cut(TCut("Tkr1FirstLayer>11"));
     back.doit();
 
 #if 0
