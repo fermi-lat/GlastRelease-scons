@@ -55,7 +55,7 @@ use FluxDisplay  v2r2
 use G4Generator         v4r3p3
 
 #digitization
-use CalDigi              v1r2p3
+use CalDigi              v1r2p4
 use TkrDigi              v1r6
 use AcdDigi              v1r4
 
@@ -66,7 +66,7 @@ use Trigger             v3r3p4
 use Recon               v2r3p3
 
 use TkrRecon            v8r1
-use CalRecon            v5r7p3  
+use CalRecon            v5r7p3 
 use AcdRecon            v1r2p1       
 
 #ROOT persistence: RootIo specifies the data packages
