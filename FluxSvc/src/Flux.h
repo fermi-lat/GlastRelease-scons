@@ -39,6 +39,10 @@ public:
     // direction
     virtual HepVector3D launchDir()const;
 
+	// time
+	virtual double time()const;
+
+
     // rate ( /mm**2 /s)
     virtual double rate()const;
 
@@ -66,6 +70,7 @@ public:
 private:
 
     EventSource* m_event;  
+	double m_time;  // elapsed time: here for now.
     FluxSource* m_flux; // actual FluxSource used 
 
     static FluxMgr* s_mgr;

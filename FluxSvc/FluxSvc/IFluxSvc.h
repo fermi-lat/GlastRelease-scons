@@ -17,6 +17,7 @@ static const InterfaceID IID_IFluxSvc(910, 1 , 0);
 
 // forward declarations
 class IFlux;
+class HepRandomEngine;
 
 /** Abstract interface for the flux service
 
@@ -37,6 +38,8 @@ public:
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
 
 
+	/// access to the local random engine (testing)
+	virtual HepRandomEngine* getEngine()=0;
 };
 
 #endif  // _H_IFluxSvc

@@ -9,7 +9,9 @@
 #include "flux/EventSource.h"
 #include "flux/FluxMgr.h"
 
-Flux::Flux(std::string name) {
+Flux::Flux(std::string name) 
+: m_time(0)
+{
     m_event = s_mgr->source(name);
 }
 Flux::~Flux() 
@@ -32,16 +34,16 @@ std::string Flux::title()const
     return m_event->fullTitle();
 }
 
-// generate a new entry trajectory, set FluxSource
+// generate a new entry trajectory, set FluxSource, increment local time
 void Flux::generate()
 {
     m_flux = m_event->event();
+	m_time+= m_event->interval();
 }
 
 // the particle generated 
 std::string Flux::particleName()const{
-    return m_flux->spectrum()->particleName();
-    //TODO: fix for composite spectra
+    return std::string(m_flux->spectrum()->particleName());
 }
 
 // its kinetic energy
@@ -56,6 +58,10 @@ HepPoint3D Flux::launchPoint()const
     return m_flux->launchPoint();
 }
 
+double Flux::time()const 
+{
+	return m_time ;
+}
 // direction
 HepVector3D Flux::launchDir()const
 {

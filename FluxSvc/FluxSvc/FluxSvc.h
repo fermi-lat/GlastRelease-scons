@@ -31,6 +31,9 @@ public:
     /// add a new source
     virtual void addFactory(std::string name, const ISpectrumFactory* factory );
 
+	/// access to the local random engine (testing)
+	virtual HepRandomEngine* getEngine();
+
 
     //------------------------------------------------------------------
     //  stuff required by a Service

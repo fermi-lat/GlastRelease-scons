@@ -16,8 +16,12 @@
 // nasty include needed so that we can get at the HepRandomEngine
 // in the initialize method. (Ian Gable) 
 // The actual is GaudiSvc
+#if 0
 #include "src/RndmGenSvc/HepRndmBaseEngine.h"
+#endif
 #include "CLHEP/Random/Random.h"
+#include "CLHEP/Random/RanluxEngine.h"
+
 
 #include "Flux.h"
 
@@ -42,7 +46,8 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties and set defaults
     
     //declareProperty ("size", m_default_name);
-
+	
+	HepRandom::setTheEngine(new RanluxEngine);
 }
 
 std::list<std::string> FluxSvc::fluxNames()const{
@@ -91,6 +96,8 @@ StatusCode FluxSvc::initialize ()
         log << MSG::ERROR  << "Did not initialize properly: no sources detected" << endreq;
         status = StatusCode::FAILURE;
     }
+
+#if 0
     // set up the random number service to use Gaudi's default (in progress )
     IRndmGenSvc* randSvc = 0;
     StatusCode sc = service( "RndmGenSvc", randSvc, true );
@@ -124,7 +131,7 @@ StatusCode FluxSvc::initialize ()
     HepRandom* gen = HepRandom::getTheGenerator(); 
     gen->setTheEngine(hepengine);
    
-
+#endif
 
     return status;
 }
@@ -154,4 +161,9 @@ StatusCode FluxSvc::queryInterface(const IID& riid, void** ppvInterface)  {
 /// add a new source
 void FluxSvc::addFactory(std::string name, const ISpectrumFactory* factory ){
 m_fluxMgr->addFactory(name, factory);
+}
+
+HepRandomEngine* FluxSvc::getEngine()
+{
+	return HepRandom::getTheEngine();
 }

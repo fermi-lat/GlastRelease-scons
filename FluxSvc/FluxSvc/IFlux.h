@@ -44,6 +44,9 @@ public:
     /// direction
     virtual HepVector3D launchDir()const=0;
 
+	/// time (s) (absolute or elapsed??)
+	virtual double time()const=0;
+
     /// return rate ( /mm**2 /s)
     virtual double rate()const=0;
 
