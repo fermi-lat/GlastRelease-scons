@@ -9,7 +9,6 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/VrmlSectionsVisitor.h"
 #include "detModel/Management/DawnSectionsVisitor.h"
-#include "detModel/Management/HepRepSectionsVisitor.h"
 #include "detModel/Management/PrinterSectionsVisitor.h"
 #include "detModel/Management/HtmlConstantsVisitor.h"
 #include "detModel/Management/PrinterMaterialsVisitor.h"
@@ -95,11 +94,11 @@ int main(int argc, char* argv[]) {
   // We start the vrml visitor
   manager->startVisitor(visitor);
 
-  manager->startVisitor(new detModel::HepRepSectionsVisitor(argv[2]));
   
   delete manager;
   return(0);
 }
+
 
 
 
