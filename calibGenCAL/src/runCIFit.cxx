@@ -1,6 +1,6 @@
 // LOCAL INCLUDES
 #include "RootFileAnalysis.h"
-#include "cfCfg.h"
+#include "CfCfg.h"
 #include "CalDefs.h"
 
 // GLAST INCLUDES
