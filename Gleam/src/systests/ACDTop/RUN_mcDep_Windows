@@ -11,10 +11,7 @@
   gROOT->LoadMacro("chainTrees.cxx");
 
 
-  char *list[] = {"muon_pencil_300MeV_centerTile0022_acdtop-run1-mc.root", muon_
-pencil_300MeV_centerTile0022_acdtop-run2-mc.root", "muon_pencil_300MeV_centerTil
-e0022_acdtop-run3-mc.root", "muon_pencil_300MeV_centerTile0022_acdtop-run4-mc.ro
-ot", "muon_pencil_300MeV_centerTile0022_acdtop-run5-mc.root"};
+  char *list[] = {"muon_300MeV_Tile0022_acdtop-run1-mc.root", muon_300MeV_Tile0022_acdtop-run2-mc.root", "muon_300MeV_Tile0022_acdtop-run3-mc.root", "muon_300MeV_Tile0022_acdtop-run4-mc.root", "muon_300MeV_Tile0022_acdtop-run5-mc.root"};
 
   TChain *chain = chainTrees(5, list, "Mc");
 
@@ -22,15 +19,21 @@ ot", "muon_pencil_300MeV_centerTile0022_acdtop-run5-mc.root"};
 
   m->Go(250000);
   m->histFile->Write();
-  TFile f("Histograms.root")
 
-  // Create nice plot of the angular dependence on the energy deposition 
+  TFile f("Histograms.root");
+
+  // Create nice plot of the angular dependence on the energy deposition
   TProfile *prof = (TProfile*)f.Get("PROFDEP");
-  T1F *f1 = new TF1("user", "[0]/cos(x*[1]/[2])", 0, 80);
-  f1->SetParameter(0, prof->GetBinContent(1))
+  prof->GetXaxis()->SetTitle("Degrees");
+  prof->GetYaxis()->SetTitle("MeV");
+  prof->SetLineColor(9);
+  TF1 *f1 = new TF1("user", "[0]/cos(x*[1]/[2])", 0, 80);
+  f1->SetParameter(0, prof->GetBinContent(1));
   f1->SetParameter(1, 3.14159);
   f1->SetParameter(2, 180.0);
+  gStyle->SetOptStat(0001011);
   gStyle->SetOptFit(1011);
-  prof->Fit("user");
+  prof->Fit("user", "", "CLP");
+
 
 }

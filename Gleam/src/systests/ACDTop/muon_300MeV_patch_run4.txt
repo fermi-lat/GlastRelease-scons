@@ -12,10 +12,8 @@ MessageSvc.OutputLevel = 4;
 GlastRandomSvc.RunNumber = 4;
 TriggerAlg.mask = 0;
 
-mcRootWriterAlg.mcRootFile =
-"$GLEAMROOT/src/systests/ACDTop/muon_pencil_300MeV_centerTile0022_acdtop-run4-mc.root";
-digiRootWriterAlg.digiRootFile =
-"$GLEAMROOT/src/systests/ACDTop/muon_pencil_300MeV_centerTile0022_acdtop-run4-digi.root";
+mcRootWriterAlg.mcRootFile = "$GLEAMROOT/src/systests/ACDTop/muon_300MeV_Tile0022_acdtop-run4-mc.root";
+digiRootWriterAlg.digiRootFile = "$GLEAMROOT/src/systests/ACDTop/muon_300MeV_Tile0022_acdtop-run4-digi.root";
 
 AcdDigiAlg.applyPoisson = true;
 AcdDigiAlg.applyGaussianNoise = true;

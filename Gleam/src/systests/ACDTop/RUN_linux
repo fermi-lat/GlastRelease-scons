@@ -1,18 +1,3 @@
-{
-  // Not sure why root can't find libPhysics.so
-  // but it can't and libreconRootData.so needs
-  // the TVector3d class in it so we grab it explicitly
-  gSystem->Load("libPhysics.so");
 
-  gSystem->Load("libmcRootData.so");
-  gSystem->Load("libdigiRootData.so");
-  gSystem->Load("libreconRootData.so");
+  .x RUN_mcDep_linux
 
-  gROOT->Reset();
-  gROOT->LoadMacro("systest_Gleam.cxx");
-
-  RootTreeAnalysis* m= new RootTreeAnalysis("digi.root","","mc.root");
-
-  m->Go();
-  m->histFile->Write();
-}
