@@ -1,7 +1,9 @@
 /** @file release.notes
  * Package CalibSvc
  * Coordinator:  J. Bogart
+ *                  EOH
  *
+ * 10-Nov-2004: jrb v0r15    Upgrade for Xerces 2.6.0
  *  3-Nov-2004: jrb v0r14p3: Trim trailing white space from data_ident 
  *                           (calib. filename)
  * 15-Oct-2004: jrb v0r14p2: Modify UsePeds test algorithm to make use of
