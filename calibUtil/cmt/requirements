@@ -22,8 +22,8 @@ apply_pattern package_linkopts
 library calibUtil -no_share $(calibUtil_headers) *.cxx *.c
 
 
-##application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
-application test_strips test/test_strips.cxx 
+application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
+##application test_strips test/test_strips.cxx 
 application test_meta test/test_meta.cxx  Metadata.cxx Timestamp.cxx
 
 
