@@ -91,6 +91,7 @@ StatusCode FluxAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+#if 0 // TODO: make this work
     
     //
     // have the flux service create parameters of an incoming particle 
@@ -162,7 +163,6 @@ StatusCode FluxAlg::execute()
     
     v1->setMotherMcParticle( 0);
 
-#if 0
     p1->setParticleID(p->idCode()); //TODO: is this right?
     p1->setParticleProperty(p->idCode());//TODO: is this right?
     p1->setPrimaryParticleFlag(true);

@@ -39,8 +39,7 @@ private:
     McVertex*       m_root; // 
     
     IDataProviderSvc* m_eds;
-    McVertexCol*   m_vlist;
-    McParticleCol* m_plist;
+    mc::McParticleCol* m_plist;
 
     IParticlePropertySvc * m_partSvc;
     
