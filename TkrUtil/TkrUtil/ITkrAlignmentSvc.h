@@ -60,7 +60,7 @@ public:
     double getRotZ()    const {return m_rotZ;}
 
     /// check for a zero AlignmentConsts
-    bool isNull() { return (m_deltaX==0. && m_deltaY==0. && m_deltaX==0.
+    bool isNull() { return (m_deltaX==0. && m_deltaY==0. && m_deltaZ==0.
         && m_rotX==0. &&m_rotY==0. && m_rotZ==0.);}  
     /*
     //! Serialize the object for reading
