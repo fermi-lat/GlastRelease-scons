@@ -8,10 +8,21 @@
 CAL composite cell material</prim>
 <prim name="PCBMat" value="Fiberglass" type="string" uType="mat">**NEW** 
 Material for printed circuit boards</prim>
+  <prim name= "CALFrameMat" value= "Al" type="string" uType="mat">
+Material for CAL frame</prim>
+  <prim name= "CALMountTabMat" value= "Al" type="string" uType="mat">
+Material for CAL mount tabs</prim>
+  <prim name= "CALRibMat" value= "Al" type="string" uType="mat">
+Material for CAL (bottom) ribs</prim>
+  <prim name="CALCylSupportMat" value="Al" type="string" uType="mat">
+Material for CAL cylindrical supports.</prim>
+
+<prim name="CALCellWallMat" value="C" type="string" uType="mat">
+Material for cell walls, reinforcement</prim>
+
+<!-- Everything below this comment is of doubtful value -->
   <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
 Wrap material for CsI logs [obsolete??]</prim>
-  <prim name= "CALFrameMat" value= "Al20" type="string" uType="mat">
-Material for CAL frame [obsolete??]</prim>
   <prim name="CALSpaceMat" value="rubber60A1" type="string" uType="mat">
 Material for space between CAL layers [obsolete??]</prim>
   <prim name= "CALGridMat" value= "Al" type="string" uType="mat">Material 

@@ -58,12 +58,12 @@ of PCB  within (largely hollow) side wall</prim>
   <prim name="CALModuleWidth" value="363.0">**NEW** Horizontal, face-to-face
 dimension of CAL module (presumably both X and Y)</prim>
 
-<prim nmae=CALModuleHeight" value="223.80">**NEW** Vertical, top-to-bottom
+<prim name="CALModuleHeight" value="223.80">**NEW** Vertical, top-to-bottom
 dimention of CAL module</prim>
 
-  <prim name="CALcylSupportDiameter" value="10.00">**NEW** Diameter of
+  <prim name="CALCylSupportDiameter" value="10.00">**NEW** Diameter of
 cylindrical supports (Al)</prim>
-  <prim name="CALcylSupportCellDelta" value="4" uType="count"> **NEW** 
+  <prim name="CALCylSupportCellDelta" value="4" uType="count"> **NEW** 
 Number of
 cells between adjacent (in the same layer) cylindrical supports</prim>
 
@@ -73,8 +73,32 @@ cells between adjacent (in the same layer) cylindrical supports</prim>
 <!-- Just use one symbol for now since top and bottome are the same.
      Would have to have additional symbol and additional box type
      if this changes.  -->
-  <prim name= "CALFrameTBThick" value= "20.0">Thickness of top and bottom of 
-CAL frame</prim>
+  <prim name= "CALFrameTBThick" value= "16.0">Thickness of top and bottom of 
+CAL frame [partially obsolete] </prim>
+  <prim name= "CALTopFrameThick" value= "16.0">Thickness of top of
+CAL frame (Al) </prim>
+  <prim name= "CALBottomFrameThick" value= "16.0">Thickness of bottom of 
+CAL frame (Al) </prim>
+  <prim name="CALTopFrameWidth" value="22.0">Width of top picture
+frame (Al)</prim>
+  <prim name="CALBottomFrameWidth" value="35.0">Width of bottom picture
+frame (Al)</prim>
+<prim name="CALTopPlateThick" value="2.0">Vertical thickness of CAL
+top plate composite</prim>
+<prim name="CALBottomPlateThick" value="4.0">Vertical thickness of CAL
+bottom plate composite</prim>
+<prim name="CALBottomRibPitch" value="73.0">Pitch of bottom plate
+ribs (Al) </prim>
+<prim name="CALBottomRibWidth" value="10.0">Width of bottom plate
+ribs (Al) </prim>
+<prim name="CALBottomRibThick" value="12.0">Thickness of bottom plate
+ribs (Al) </prim>
+
+<prim name="CALMountTabThick" value="15.0">Thickness of CAL mounting
+tabs, CAL to grid (Al)</prim>
+<prim name="CALMountTabWidth" value="12.0">Width of CAL mounting
+tabs</prim>
+
 
     <!-- Cal grid stuff.  Should be replaced with information 
          from Eduardo's document -->

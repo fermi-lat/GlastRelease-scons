@@ -84,7 +84,7 @@
 
 <!--
         <const name= "CALHalfGap">
-          <notes>was convenience  -- now OBSOLETE</notes>
+          <notes>was convenience, now OBSOLETE</notes>
           <mul> 
             <refer refTo="CALGap" /> 
             <const value="0.5" uType="count" /> 
@@ -154,6 +154,45 @@ crystal and its diodes</notes>
           </minus>
         </const>
 
+<!-- offsets for positioning cell walls inside the cel -->
+        <const name="cellHorWall_dz">
+          <notes>Z position rel. to cell of upper horiz. wall</notes>
+          <mul>
+            <const value="2.0" />
+            <minus>
+              <refer refTo="cellVertPitch" />
+              <refer refTo="cellHorWallHalfThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellHorWall_dzn">
+          <notes>Z position rel. to cell of lower horiz. wall</notes>
+          <uminus>
+            <refer refTo="cellHorWall_dz" />
+          </uminus>
+        </const>
+
+        <const name="cellVertWall_dy">
+          <notes>Y displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)</notes>
+          <mul>
+            <const value="2.0" />
+            <minus>
+              <refer refTo="cellHorPitch" />
+              <refer refTo="cellVertWallHalfThick" />
+            </minus>
+          </mul>
+        </const>
+
+        <const name="cellVertWall_dyn" >
+          <notes>Neg. of Y  displacement rel. to cell of vertical cell wall
+(here Y means perp. to height and length directions)</notes>
+          <uminus>
+            <refer refTo="cellVertWall_dy" />
+          </uminus>
+        </const>
+        
 <!-- the following should be the maximum of the length of a single
      CsIElement and the transverse distance across the whole 
      collection of CsIElements in a layer, so
@@ -173,22 +212,22 @@ crystal and its diodes</notes>
 side of log + C-cell [composite cell??] and CAL side wall</notes>
           <mul>
             <const value="0.5" />
-            <add>
+            <minus>
               <refer refTo="CALModuleWidth" />
-              <uminus>
+              <add>
                 <mul>
                   <refer refTo="nCsIPerLayer" />
                   <refer refTo="cellHorPitch" />
                 </mul>
-              </uminus>
-              <mul>
-                <const value="2.0" />
-                <minus>
-                  <refer refTo="CALSideWallThick" />
-                  <refer refTo="cellSideReinfThick" />
-                </minus>
-              </mul>
-            </add>
+                <mul>
+                  <const value="2.0" />
+                  <add>
+                    <refer refTo="CALSideWallThick" />
+                    <refer refTo="cellSideReinfThick" />
+                  </add>
+                </mul>
+              </add>
+            </minus>
           </mul>
         </const>
 
@@ -207,7 +246,7 @@ side of log + C-cell [composite cell??] and CAL side wall</notes>
           </mul>
         </const>
 
-        <const name="cellVertGap" />
+        <const name="cellVertGap" >
           <notes>New from Eric/Sacha.  Vertical gap between xtal
                  and cell wall.</notes>
           <mul>
@@ -222,7 +261,17 @@ side of log + C-cell [composite cell??] and CAL side wall</notes>
           </mul>
         </const>
 
-
+<!-- Following comes from CAL docs of 31 May, 2001 -->
+        <const name="CALCylLength">
+          <notes>Length of cylindrical supports for side walls</notes>
+          <add>
+            <refer refTo="CALTransvGap" />
+            <refer refTo="CALSideWallThick" />
+            <uminus>
+              <refer refTo="CALSideWallOuterThick" />
+            </uminus>
+          </add>
+        </const>
 
 <!-- the following includes cal layers and inter-layer spacers, but
      not frame, grid between cal and tkr, etc. 
@@ -236,6 +285,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
             <refer refTo="cellVertPitch" />
           </mul>
         </const>
+
 
     <!-- additional (derived) dimensions for frame -->
         <const name = "CALFrameWidth">
@@ -256,10 +306,8 @@ grid, etc. (may be superseded by info from Eric)</notes>
           <notes>Height of entire frame</notes>
 	  <add>
 	    <refer refTo="CALTotalZ" />
-	    <mul>
-	      <const value="2" uType="count"/>
-	      <refer refTo="CALFrameTBThick" />
-	    </mul>
+            <refer refTo="CALTopFrameThick" />
+            <refer refTo="CALBottomFrameThick" />
 	  </add>
 	</const>
 
@@ -281,6 +329,8 @@ grid, etc. (may be superseded by info from Eric)</notes>
 	  </uminus>
 	</const>
 
+<!-- May want to replace this with separate definitions for
+     top and bottom frame displacements -->
 	<const name="CALFrameTB_d" > 
           <notes>Displacement of top and bottom of frame, relative to 
                 the whole.</notes>
@@ -294,7 +344,7 @@ grid, etc. (may be superseded by info from Eric)</notes>
 	</const>
 	    
 	<const name="CALFrameTB_dN" >
-          <notes>Displacement of top and bottom of frame, relative to 
+          <notes>Neg of displacement of top and bottom of frame, relative to 
                 the whole.</notes>
 	  <uminus>
 	    <refer refTo="CALFrameTB_d" />

@@ -36,13 +36,14 @@
       <vMinMax min="0" maxREF="maxLog" />
     </field>
 
-    <field name="fCALLogCmp" >
+    <field name="fCALCellCmp" >
       <vList>
-        <vEnumVal valueREF="eLogXtal" />
+        <vEnumVal valueREF="eXtal" />
         <vEnumVal valueREF="eDiodeMSmall" />
         <vEnumVal valueREF="eDiodePSmall" />
         <vEnumVal valueREF="eDiodeMLarge" />
         <vEnumVal valueREF="eDiodePLarge" />
+        <vEnumVal valueREF="eCellWall" />
       </vList>
     </field>
 
@@ -97,7 +98,7 @@
                 <vMinMax min="0" maxREF="CALMaxLayer" />
                 <dictNode fieldName="fMeasure" >
                   <dictNode fieldName="fCALLog" >
-                    <dictNode fieldName="fCALLogCmp" />
+                    <dictNode fieldName="fCALCellCmp" />
                   </dictNode>
                 </dictNode> 
               </dictNode>

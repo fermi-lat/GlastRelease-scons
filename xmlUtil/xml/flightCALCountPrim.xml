@@ -5,14 +5,18 @@
 CsI crystals</prim>
   <prim name= "nCsIPerLayer" value= "12" uType="count">Number of crystals per
  layer within a tower</prim>
-  <prim name="eLogXtal" value="0" uType="count">idField value for CAL log cmp
+  <prim name="CALnBottomRibs" value="3" uType="count"> Number of
+ribs in bottom frame grid in one direction (X or Y)</prim>
+  <prim name="eXtal" value="0" uType="count">idField value for CAL cell cmp
 field (the CsI crystal)</prim>
   <prim name="eDiodeMSmall" value="1" uType="count">idField value for CAL
-log cmp field diode(minus, small)</prim>
+cell cmp field diode(minus, small)</prim>
   <prim name="eDiodePSmall" value="2" uType="count">idField value for CAL
-log cmp field diode(plus, small)</prim>
+cell cmp field diode(plus, small)</prim>
   <prim name="eDiodeMLarge" value="3" uType="count">idField value for CAL 
-log cmp field diode(minus, large)</prim>
+cell cmp field diode(minus, large)</prim>
   <prim name="eDiodePLarge" value="4" uType="count">idField value for CAL
-log cmp diode(plus, large)</prim>
+cell cmp diode(plus, large)</prim>
+  <prim name="eCellWall" value="5" uType="count">idField value for CAL
+cell component for cell wall. </prim>
 </primCategory>
