@@ -129,6 +129,7 @@ Tkr.Members = {
 Cal2.Members = {
       "CalClustersAlg/second"
       };
+second.OutputLevel=5;  // since this guy generates INFO lines
 
 // ----------------------------
 //   ACD recon
@@ -136,7 +137,7 @@ Cal2.Members = {
 ApplicationMgr.DLLs += {"AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
-// ----------------------------
+// ---------------------------- 
 //   Output
 //
 ApplicationMgr.DLLs +={ 

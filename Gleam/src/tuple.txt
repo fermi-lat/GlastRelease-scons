@@ -1,0 +1,36 @@
+//##############################################################
+//
+// Job options file for Gleam job to run detault source for 10K events and write a summary tuple
+
+//$Header$
+
+// start with the basic program defined in Gleam
+#include "$GLEAMROOT/src/basicOptions.txt"
+CalClustersAlg.OutputLevel=4; // too much info
+
+// and disable normal root output
+Output.Members = {}; // turn off root for this
+
+// make sure we have the default 100 MeV gamma source
+FluxAlg.source_name="default";
+
+// setup up merit to monitor the output and write the tuple
+ApplicationMgr.DLLs   += {"merit"};
+Triggered.Members += {"meritAlg"};
+
+
+// Number of events to process
+ApplicationMgr.EvtMax = 10000;
+
+// sumamry tuple control
+MeritAlg.generated = 10000; // for estimation of Aeff: should be the same as above
+meritAlg.cuts="LnA";  // see merit doc for explanation of selection cuts
+meritAlg.RootFileName="100_mev_tuple.root";
+
+MessageSvc.OutputLevel      =3;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
