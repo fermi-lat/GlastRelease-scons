@@ -74,7 +74,8 @@ public:
     @return previous value
     This service  does not implement, it is ignored (return false)
     */
-   virtual bool storeRowFlag(const std::string& tupleName, bool flag){ return false;}
+   virtual bool storeRowFlag(const std::string& /*tupleName*/, bool /*flag*/)
+       { return false; }
 
 protected: 
 

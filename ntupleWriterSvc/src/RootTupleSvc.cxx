@@ -1,6 +1,12 @@
-/** @file RootTupleSvc.cxx
-@brief declare, implement the class RootTupleSvc
-*/
+/** 
+ * @file RootTupleSvc.cxx
+ * @brief declare, implement the class RootTupleSvc
+ *
+ * Special service that directly writes ROOT tuples
+ * It also allows multiple TTree's in the root file: see the addItem (by pointer) member function.
+ * $Header$
+ */
+
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/INTupleSvc.h"
@@ -19,15 +25,11 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TSystem.h"
+#include "TLeafD.h"
+
+#include <fstream>
 
 
-/** 
-* @class RootTupleSvc
-* @brief Special service that directly writes ROOT tuples
-*
-* It also allows multiple TTree's in the root file: see the addItem (by pointer) member function.
-* $Header$
-*/
 class RootTupleSvc :  public Service, virtual public IIncidentListener,
     virtual public INTupleWriterSvc
 {  
@@ -47,14 +49,15 @@ public:
     virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
 
     /// Provide the named ntuple Ptr from the data store -- dummy since we are not using this
-    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char *tupleName){
+    virtual SmartDataPtr<NTuple::Tuple> getNTuple(const char* /* tupleName */) {
         INTupleSvc *ntupleSvc=0;
         return SmartDataPtr<NTuple::Tuple> (ntupleSvc, "");
     }
 
     /// add a new item to an ntuple -- not supported
-    virtual StatusCode addItem(const char *tupleName, 
-        const char *item, double val){return StatusCode::FAILURE;};
+    virtual StatusCode addItem(const char* /* tupleName */, 
+                               const char* /* item */,
+                               double /* val */) { return StatusCode::FAILURE; }
 
     /** @brief Adds a <EM>pointer</EM> to an item -- only way to fill this guy
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -65,12 +68,12 @@ public:
         const std::string& itemName, const double* pval);
 
     /// force writing of the ntuple to disk -- not suppored, but harmless since it happens anyway
-    virtual StatusCode saveNTuples(){return StatusCode::SUCCESS;};
+    virtual StatusCode saveNTuples() { return StatusCode::SUCCESS; }
 
     /// Set a flag to denote whether or not to store a row at the end of this event,
-    virtual void storeRowFlag(bool flag) { m_storeAll = flag; };
+    virtual void storeRowFlag(bool flag) { m_storeAll = flag; }
     /// retrieve the flag that denotes whether or not to store a row
-    virtual bool storeRowFlag() { return m_storeAll; };
+    virtual bool storeRowFlag() { return m_storeAll; }
 
     /** store row flag by tuple Name option, retrive currrent
     @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
@@ -78,7 +81,7 @@ public:
     @return previous value
     If service does not implement, it is ignored (return false)
     */
-    virtual bool storeRowFlag(const std::string& tupleName, bool flag);;
+    virtual bool storeRowFlag(const std::string& tupleName, bool flag);
 
 private:
     /// Allow only SvcFactory to instantiate the service.
@@ -92,12 +95,22 @@ private:
     /// routine that is called when we reach the end of an event
     void endEvent();
 
+    /// a general routine that prepares the computation of the checksum
+    void checkSum(TTree*);
+
+    /// computes a simple checksum
+    unsigned long checkSumSimple(std::vector<unsigned char>*);
+
     StringProperty m_filename;
+    StringProperty m_checksumfilename;
     StringProperty m_treename;
     StringProperty m_title;
 
     /// the ROOT stuff: a file and a a set of trees to put into it
     TFile * m_tf;
+
+    /// ofstream used for storing the check sum
+    std::ofstream m_csout;
 
     std::map<std::string, TTree *> m_tree;
 
@@ -124,6 +137,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="RootTupleSvc.root");
+    declareProperty("checksumfilename", m_checksumfilename=""); // default empty
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
@@ -164,6 +178,19 @@ StatusCode RootTupleSvc::initialize ()
     //TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
     //m_tree[m_treename.value().c_str()] = t;
     //t->SetAutoSave(m_autoSave); 
+
+    // set up the check sum ofstream
+    std::string fn(m_checksumfilename);
+    facilities::Util::expandEnvVar(&fn);
+    if ( fn.size() ) {
+        m_csout.open(fn.c_str());
+        if ( m_csout.is_open() )
+            log<<MSG::INFO<< "using " << fn << " for storing checksum" <<endreq;
+        else {
+            log << MSG::ERROR << "cannot open checksum file " << fn << endreq;
+            return StatusCode::FAILURE;
+        }
+    }
 
     return status;
 }
@@ -210,13 +237,22 @@ void RootTupleSvc::beginEvent()
     }
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void RootTupleSvc::endEvent()  // must be called at the end of an event to update, allow pause
+void RootTupleSvc::endEvent()
+    // must be called at the end of an event to update, allow pause
 {         
+    MsgStream log(msgSvc(),name());
+
     ++m_trials;
-    for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
+    for( std::map<std::string, TTree*>::iterator it = m_tree.begin();
+         it!=m_tree.end(); ++it){
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
             t->Fill();
+            if ( m_csout.is_open() && (std::string)t->GetName()=="MeritTuple" ){
+                log << MSG::VERBOSE << "calculating checksum for "
+                    << t->GetName() << endreq;
+                checkSum(t);
+            }
         }
     }
 
@@ -264,8 +300,11 @@ StatusCode RootTupleSvc::finalize ()
     m_tf->Close(); 
     saveDir->cd();
 
+    // closing the (optional) check sum stream
+    if ( m_csout.is_open() )
+        m_csout.close();
 
-    return StatusCode::SUCCESS;;
+    return StatusCode::SUCCESS;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -274,4 +313,79 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
     bool t = m_storeTree[tupleName];
     m_storeTree[tupleName] = flag;
     return t;
+}
+
+
+void RootTupleSvc::checkSum(TTree* t) {
+    MsgStream log( msgSvc(), name() );
+
+    TObjArray* lcol = t->GetListOfLeaves();
+    const int lsize = lcol->GetEntries();
+    log << MSG::DEBUG << "TTree " << t->GetName()
+        << " has " << lsize << " leaves " << endreq;
+    std::vector<unsigned char> charCol;
+    Double_t eventId = -1;     // initialize with something unreasonable
+    Double_t elapsedTime = -1;
+
+    for ( int i=0; i<lsize; ++i ) {
+        // there exists a TTreeFriendLeafIter, but how to use it?
+
+        TObject* l = lcol->At(i);
+        const std::string c = l->ClassName();
+        const std::string n = l->GetName();
+        log << MSG::VERBOSE << i << " " << n << " " << c;
+
+        if ( c == "TLeafD" ) {
+            const Double_t v = dynamic_cast<TLeafD*>(l)->GetValue();
+            if ( log.isActive() )
+                log << " " << std::setprecision(25) << v << std::setprecision(0)
+                    << endreq;
+
+            const unsigned int s = sizeof(v);
+            unsigned char p[s];
+            for ( unsigned int ip=0; ip<s; ++ip )
+                p[ip] = 255;
+            memcpy(p, &v, s);
+            for ( unsigned int ip=0; ip<s; ++ip ) {
+                log << MSG::VERBOSE << "   " << i << " " << ip << " "
+                    << (unsigned short)p[ip] << endreq;
+                charCol.push_back(p[ip]);
+            }
+
+            if ( n == "Event_ID" )
+                eventId = v;
+            else if ( n == "elapsed_time" ) {
+                elapsedTime = v;
+            }
+        }
+        else {
+            if ( log.isActive() )
+                log << endreq;
+            log<<MSG::WARNING<< "class " << c << " is not implemented!"<<endreq;
+        }
+    }
+
+    const unsigned long theSum = checkSumSimple(&charCol);
+    log << MSG::DEBUG << "checksum: "
+        << std::setprecision(25)
+        << std::resetiosflags(std::ios::scientific) << eventId << " "
+        << std::setiosflags(std::ios::scientific)   << elapsedTime << " "
+        << theSum << " "
+        << charCol.size()
+        << endreq;
+    m_csout.precision(25);
+    m_csout << std::setw(10)
+            << std::resetiosflags(std::ios::scientific) << eventId << "     "
+            << std::setw(25)
+            << std::setiosflags(std::ios::scientific) << elapsedTime << "     "
+            << std::setw(25) << theSum
+            << std::endl;
+}
+
+
+unsigned long RootTupleSvc::checkSumSimple(std::vector<unsigned char>* v) {
+    unsigned long sum = 0;
+    for( std::vector<unsigned char>::iterator it=v->begin(); it<v->end(); ++it )
+        sum += *it;
+    return sum;
 }
