@@ -33,7 +33,7 @@ document event_dorootcint EventRootCint CINTFILE=../digiRootData/EventCint.cxx
 
 # For some reason, I was getting errors when loading the TBEvent shareable
 # in root.  Linking the Root Physics library in avoids this.
-macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics " \
+macro digiRootData_shlibflags " -L${ROOT_PATH}/lib -lPhysics -lMatrix " \
       VisualC            ""
 
 
