@@ -212,19 +212,23 @@ StatusCode test_CalXtalResponse::test_xtalEneTool() {
   CalXtalId xtalId(0,2,3,face,rng);
   float energy;
 
-  bool below_thresh;
-  if ((sc = m_xtalEneTool->calculate(xtalId, rng, rng, 1000, 1000, energy, below_thresh))
+  bool xtalBelowThresh=false, rngBelowThresh=false;
+  if ((sc = m_xtalEneTool->calculate(xtalId, rng, rng, 
+                                     1000, 1000, energy, 
+                                     rngBelowThresh,
+                                     xtalBelowThresh))
       != sc) {
     msglog << MSG::ERROR << "Error calling XtalEneTool::calculate()" << endreq;
     return sc;
   }
   msglog << MSG::INFO << "2 face energy calculated:" << energy << 
-    " below_thresh=" << below_thresh<< endreq;
+    " below_thresh="  << xtalBelowThresh << endreq;
 
-  if ((sc = m_xtalEneTool->calculate(xtalId, 1000, 0, energy, below_thresh))
+  if ((sc = m_xtalEneTool->calculate(xtalId, 1000, 0, energy, 
+                                     rngBelowThresh, xtalBelowThresh))
       != sc) {
     msglog << MSG::ERROR << "Error calling XtalEneTool::calculate()" 
-      " below_thresh=" << below_thresh<< endreq;
+      " below_thresh="   << xtalBelowThresh << endreq;
     return sc;
   }
   msglog << MSG::INFO << "1 face energy calculated:" << energy << endreq;
