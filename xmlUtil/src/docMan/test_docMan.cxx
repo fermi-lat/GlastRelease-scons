@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
   pMan->regClient("section", myClient);
   pMan->regClient("section", myClient2);
   pMan->regClient("source", myClient);  
-  pMan->parse(*pFileName);
+  pMan->parse(*pFileName, "gdd");
 
   // Now GDDDocMan
   std::cout << std::endl << "Output from GGDDocMan parsing " << std::endl;
