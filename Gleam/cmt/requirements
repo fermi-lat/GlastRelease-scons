@@ -1,6 +1,6 @@
 package Gleam
 
-version v0
+version v0r0p1
 
 # This is a G4 development check-out package, that does not yet define an executable 
 # $Header$
@@ -23,7 +23,7 @@ use gui         v2r6p2
 use geomrep     v4r1
 
 # the basic geometry data base
-use idents      v2r4p1 
+use idents      v2r4p2 
 use detModel    v2r8
 use xmlGeoDbs   v1r1
 
@@ -36,9 +36,9 @@ use GuiSvc      v3
 use GlastEvent  v6
 use FluxSvc     v5r2
 
-use GlastSvc    v5r1
+use GlastSvc    v5r1p1
 use G4Generator v3r1
-use GlastDigi   v2r2
+use GlastDigi   v2r2p1
 
-use Recon       v0r3
+use Recon       v0r4p1
 
