@@ -278,6 +278,7 @@ namespace calibUtil {
         MYSQL_ROW myRow = mysql_fetch_row(myres);
         // serial number is pointed to by myRow[0]
         *ser = atoi(myRow[0]);
+        mysql_free_result(myres);
         return RETOk;
       }
       // otherwise there was no error, but also no rows returned
