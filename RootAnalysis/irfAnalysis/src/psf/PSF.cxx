@@ -251,7 +251,7 @@ void PSF::drawAeff(std::string ps)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void main()
+int main()
 {
     PSF p;
     if(!p.fileExists())  p.project();
@@ -262,4 +262,5 @@ void main()
     p.drawAsymmetry(ps+")");
 
     std::cout << "done" << std::endl;
+    return 0;
 }

@@ -1,8 +1,9 @@
+#include <string>
 #include "tree_class.h"
 
 static inline double sqr(double x){return x*x;}
 
-main(){
+int main(){
 
     /******************************************************
     Procedure:
@@ -14,7 +15,7 @@ main(){
     (If you want to use a differente file name you have to change the
     code here and in the definition of the class).
 
-    ********************************************************
+    ********************************************************/
 
     /**************************************************************
     Branches to be added to the ntuple:
@@ -39,7 +40,9 @@ main(){
 //    gROOT->Reset();
 
 
-    TFile f("/common/IRF/root_files/fulltup.root", "update");
+//    TFile f("/common/IRF/root_files/fulltup.root", "update");
+   std::string path = ::getenv("file_root");
+    TFile f((path+"/root_files/fulltup.root").c_str(), "update");
     TTree *tree = (TTree*)f.Get("1");
     Int_t nentries=tree->GetEntries();
 

@@ -158,7 +158,7 @@ void EnergyResponse::drawEnergy(std::string ps)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void main(){
+int main(){
     EnergyResponse er;
 
     if( !er.fileExists() ) er.define();
@@ -171,4 +171,5 @@ void main(){
     er.drawEnergy(psfile+")");
 
     printf("done\n");
+    return 0;
 }
