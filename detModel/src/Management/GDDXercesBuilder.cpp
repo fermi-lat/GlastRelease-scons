@@ -544,11 +544,11 @@ void GDDXercesBuilder::setAttributePosition(GDDanyPosition* pos, DOM_Node* e)
 	    for(unsigned int i=0;i<attributelist.getLength();i++){
 	      
 	      std::string NameAttr=
-		std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
-	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
+		std::string(xml::Dom::transToChar(attributelist.item(i).getNodeName()) );
+	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(i).getNodeValue() );
 	      if(NameAttr=="name")field->setName(ValueAttr);
-	      else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
-	      else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
+	      else if(NameAttr=="step")field->setStep(atof(ValueAttr));
+	      else if(NameAttr=="value")field->setValue(atof(ValueAttr));
 	    }//end for
 	    pos->addIdField(field);
 	  }//end if
@@ -601,11 +601,11 @@ void GDDXercesBuilder::setAttributeRelativePosition(GDDanyRelativePosition* pos,
 	    for(unsigned int i=0;i<attributelist.getLength();i++){
 	      
 	      std::string NameAttr=
-		std::string(xml::Dom::transToChar(attributelist.item(k).getNodeName()) );
-	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(k).getNodeValue() );
+		std::string(xml::Dom::transToChar(attributelist.item(i).getNodeName()) );
+	      char* ValueAttr=xml::Dom::transToChar( attributelist.item(i).getNodeValue() );
 	      if(NameAttr=="name")field->setName(ValueAttr);
-	      else if(NameAttr=="step" && ValueAttr!="0")field->setStep(atof(ValueAttr));
-	      else if(NameAttr=="value" && ValueAttr!="0")field->setValue(atof(ValueAttr));
+	      else if(NameAttr=="step")field->setStep(atof(ValueAttr));
+	      else if(NameAttr=="value")field->setValue(atof(ValueAttr));
 	    }//end for
 	    pos->addIdField(field);
 	  }//end if

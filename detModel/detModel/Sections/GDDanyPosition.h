@@ -119,6 +119,9 @@ public:
 
   positiontype getPosType(){return typePosition;};
 
+  /** @link aggregation */
+  vector <GDDidField*> idFields;
+
  protected:
   GDDanyPosition(positiontype ptypePosition):
     typePosition(ptypePosition),xrot(0),yrot(0),zrot(0),S(0),volume(0),
@@ -139,8 +142,6 @@ public:
   GDDvolume * volume;
   string volumeRef;
   
-  /** @link aggregation */
-  vector <GDDidField*> idFields;
 };
 #endif //GDDANYPOSITION_H
 

@@ -149,6 +149,9 @@ public:
    *
    */ 
   double getGap()const{return gap;}
+
+  /** @link aggregation */
+  vector <GDDidField *> idFields;
   
 
  protected:
@@ -172,8 +175,6 @@ public:
   unitAngletype unitAngle; ///default deg
   stacktype posDir;
   
-  /** @link aggregation */
-  vector <GDDidField *> idFields;
   double shift; ///default 0
   double gap;  ///default 0
 };

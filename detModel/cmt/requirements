@@ -1,27 +1,16 @@
 package detModel
 
-branches detModel src doc xml
-
-use xml 
-use xmlUtil 
-use XMLEXT
+use xml v3 
+use xmlUtil v2 
+use XMLEXT v2
 
 
-# All that follows is a bit premature -- no code yet!
-include_path "${DETMODELROOT}"
+include_dirs "${DETMODELROOT}"
 
+apply_pattern package_linkopts
 
-macro   detModel_linkopts "-L ${DETMODELROOT}/${CMTCONFIG} -ldetModel"\
-        VisualC     ""
-
-macro_append Win32Debug   " ${DETMODELROOT}/${DebugDir}/detModellib.lib"
-macro_append Win32Release " ${DETMODELROOT}/${ReleaseDir}/detModellib.lib"
-
-path_append LD_LIBRARY_PATH "${DETMODELROOT}/${CMTCONFIG}"
-
-
-
-library detModel -no_share \
+library detModel -no_share\
+     *.cxx \
      *.cpp \
      Management/*.cpp \
      Sections/*.cpp \
@@ -31,5 +20,7 @@ library detModel -no_share \
 private
 
 application test main.cxx 
+
+
 
 

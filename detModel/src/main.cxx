@@ -8,6 +8,7 @@
 
 #include "detModel/Management/GDDmanager.h"
 #include "detModel/Management/GDDVRMLSectionsVisitor.h"
+#include "detModel/Management/GDDprinterSectionsVisitor.h"
 #include "detModel/Management/GDDHTMLConstantsVisitor.h"
 #include "detModel/Management/GDDXercesBuilder.h"
 #include "detModel/Sections/GDDvolume.h"
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
   
 
   // We set the mode for the choice elements in the XML file
-  manager->setMode("propagate");
+  manager->setMode("digi recon");
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // and the sections
@@ -52,8 +53,8 @@ int main(int argc, char* argv[]) {
     visitor = new GDDVRMLSectionsVisitor(argv[2]);  
 
   visitor->setOpacity("FOAM05",0.0);
-  //  visitor->setDepth("oneTKR", 0);
-  //  visitor->setDepth("oneCAL", 0);
+  // visitor->setDepth("oneTKR", 0);
+  // visitor->setDepth("oneCAL", 0);
   manager->startVisitor(visitor);
   
   // We start the HTMLConstantsVisitor to build the html file with the
@@ -76,3 +77,8 @@ int main(int argc, char* argv[]) {
   delete manager;
   return(0);
 }
+
+
+
+
+
