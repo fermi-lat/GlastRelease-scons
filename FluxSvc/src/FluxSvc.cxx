@@ -65,6 +65,9 @@ public:
     /// return pointer to a flux object
     StatusCode source(std::string name, IFlux*&);
 
+    /// set pointer to a flux object, constructed from set of names
+    StatusCode compositeSource(std::vector<std::string> names, IFlux*& flux);
+
     /// return a list of possible names
     std::list<std::string> fluxNames()const;
 
@@ -209,13 +212,17 @@ StatusCode FluxSvc::source(std::string name, IFlux*& flux) {
 
     if( std::find(source_list.begin(), source_list.end(), name) == source_list.end() 
         &&(std::find(source_list2.begin(), source_list2.end(), name) == source_list2.end()))
-        //flux =  new Flux(name);
         return StatusCode::FAILURE;
     flux =  new Flux(name);
     m_currentFlux = flux;    
     return StatusCode::SUCCESS;
 }
 
+StatusCode FluxSvc::compositeSource(std::vector<std::string> names, IFlux*& flux) {
+    flux =  new Flux(names);
+    m_currentFlux = flux;    
+    return StatusCode::SUCCESS;
+}
 /// Standard Destructor
 FluxSvc::~FluxSvc()  
 {

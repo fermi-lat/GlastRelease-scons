@@ -28,6 +28,7 @@ $Header$
 #include "flux/SpectrumFactory.h"
 
 #include "flux/EventSource.h"
+#include "flux/CompositeSource.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
 
@@ -40,10 +41,6 @@ $Header$
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
-
-// class IFlux;
-// class IFluxSvc;
-// class IparticlePropertySvc;
 
 
 /** 
@@ -60,26 +57,31 @@ class FluxAlg : public Algorithm {
 public:
     FluxAlg(const std::string& name, ISvcLocator* pSvcLocator);
     double currentRate(){return m_currentRate;}
-    
+
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize();
-    
-    
+
+
 private: 
     double m_currentRate;
+
+    /// a single source
     StringProperty m_source_name;
+
+    /// allow specification of a list of sources, which will be combined
+    StringArrayProperty m_source_list;
 
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
-    
-    
+
+
     UnsignedIntegerProperty m_run;      // run number
     unsigned int m_sequence;  // sequence number
     StringProperty m_pointing_history_input_file;
-    
+
     IDataProviderSvc* m_eds;
-    
+
     IParticlePropertySvc * m_partSvc;
 
     // the target area
@@ -90,7 +92,7 @@ private:
 
     std::map<int, int> m_counts; //! for measuring the total number generated per code.
     TimeStamp m_initialTime;
-    
+
 };
 //------------------------------------------------------------------------
 
@@ -105,13 +107,14 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
+    declareProperty("sources",     m_source_list);
     declareProperty("MCrun",        m_run=100);
     declareProperty("area",        m_area=6.0); // target area in m^2
     declareProperty("pointing_mode", m_pointing_mode=0);
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
-	declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
-    
+    declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+
 }
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
@@ -119,12 +122,12 @@ StatusCode FluxAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
-    
+
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
     // set target area for random point generation
     EventSource::totalArea(m_area);
-    
+
     // set pointing mode and associated rocking angle 
     if ( service("FluxSvc", m_fluxSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
@@ -139,23 +142,37 @@ StatusCode FluxAlg::initialize(){
     //then this line sets the rocking type, as well as the rocking angle.
     m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
-	//set the input file to be used as the pointing database, if used
-	if(! m_pointing_history_input_file.value().empty() ){
-		m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
+    //set the input file to be used as the pointing database, if used
+    if(! m_pointing_history_input_file.value().empty() ){
+        m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
     }
 
-    log << MSG::INFO << "loading source " << m_source_name << endreq;
-    
-    sc =  m_fluxSvc->source(m_source_name, m_flux);
-    if( sc.isFailure()) {
-        log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
-        return sc;
+    if( !m_source_list.value().empty()){
+        log << MSG::INFO << "loading sources " << endreq;
+        std::vector<std::string> sources=m_source_list.value();
+        for(std::vector<std::string>::const_iterator it= sources.begin(); it!=sources.end(); ++it){
+             log << MSG::INFO << "\t" << (*it) << endreq;
+        }
+        sc =  m_fluxSvc->compositeSource(sources, m_flux);
+         if( sc.isFailure()) {
+            log << MSG::ERROR << "Could not find one of the sources" << endreq;
+            return sc;
+        }
+
+
+    }else{
+        log << MSG::INFO << "loading source " << m_source_name << endreq;
+
+        sc =  m_fluxSvc->source(m_source_name, m_flux);
+        if( sc.isFailure()) {
+            log << MSG::ERROR << "Could not find flux " << m_source_name << endreq;
+            return sc;
+        }
     }
-   
     log << MSG::INFO << "Source title: " << m_flux->title() << endreq;
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
-    
+
     if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
@@ -176,10 +193,10 @@ StatusCode FluxAlg::execute()
     // but if the "current" IFlux is not the same as the one we have now,
     // then change our m_flux pointer to be the new one.
     // Output:  a staturCode to ensure the function executed properly.
-    
+
     if(m_fluxSvc->currentFlux() == m_flux){
         m_flux->generate();
-            }else{
+    }else{
         m_flux = m_fluxSvc->currentFlux();
         m_flux->generate();
     }
@@ -193,19 +210,19 @@ StatusCode FluxAlg::execute()
         particleName = "gamma"; 
         setFilterPassed( false );//no need to return - we want the time record on the TDS.  the ExposureAlg will handle the rest.
     }
-    
-    
+
+
     //here's where we get the particleID and mass for later.
     if( particleName=="p") particleName="proton";
     ParticleProperty* prop = m_partSvc->find(particleName);
-    
+
     if( prop==0) {
         log << MSG::ERROR << "Particle name " << particleName << " not found by particle properties" << endreq;
         return StatusCode::FAILURE;
     }
-    
+
     int partID = prop->jetsetID(); // same as stdhep id
-    
+
     log << MSG::DEBUG << particleName
         << "(" << m_flux->energy()
         << " MeV), Launch: " 
@@ -213,8 +230,8 @@ StatusCode FluxAlg::execute()
         << " mm, Dir " 
         << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
         << endreq;
-    
-    
+
+
     // Here the TDS is prepared to receive hits vectors
     // Check for the MC branch - it will be created if it is not available
     Event::MCEvent* mch = 0;
@@ -228,37 +245,37 @@ StatusCode FluxAlg::execute()
             delete mch;
             return sc;
         }
-        
+
     }else mch = mcheader;
 
 
     mch->initialize(mch->getRunNumber(), m_flux->numSource(), mch->getSequence(), m_flux->time());
 
 
-    
+
     Event::McParticleCol* pcol = new Event::McParticleCol;
     sc = eventSvc()->registerObject(EventModel::MC::McParticleCol, pcol);
     if( sc.isFailure()) {
-        
+
         log << MSG::ERROR << "Could not Register "<< EventModel::MC::McParticleCol << endreq;
-        
+
         return sc;
     }
     Event::McParticle * parent= new Event::McParticle;
     pcol->push_back(parent);
-    
+
     double mass = prop->mass() , 
         energy = (ke+mass),
         momentum=sqrt(energy*energy - mass*mass); 
     HepLorentzVector pin(d*momentum,energy);
-    
+
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
     parent->initialize(parent, partID, 
         Event::McParticle::PRIMARY,
         pin,p);
     parent->finalize(pin, p);
-    
+
     // get the event header to set the time
     Event::EventHeader* h = 0; 
 
@@ -293,7 +310,7 @@ StatusCode FluxAlg::finalize(){
         log << "\n\t\t\t\t" << im->first << "\t" << im->second;
     }
     log  << endreq;
-    
+
     return sc;
 }
 
