@@ -89,13 +89,9 @@ StatusCode AcdReconAlg::execute() {
         log << MSG::INFO << "No AcdDigiCol found on the TDS" << endreq;
         return sc;
     }
-	
-    m_acdDigiCol = acdDigiCol;
-	
+		
     // run the reconstruction
-    reconstruct(m_acdDigiCol);
-
-    m_acdDigiCol = 0;
+    reconstruct(acdDigiCol);
 	
     return sc;
 }
@@ -103,7 +99,6 @@ StatusCode AcdReconAlg::execute() {
 
 StatusCode AcdReconAlg::finalize() {    
     clear();
-    m_acdDigiCol = 0;
     return StatusCode::SUCCESS;
 }
 
@@ -131,7 +126,6 @@ void AcdReconAlg::getParameters () {
 
 void AcdReconAlg::clear() {
     // Purpose and Method:  Initializes all member variables
-    m_acdRecon = 0;
     m_totEnergy = 0.0;
     m_tileCount = 0;
     m_gammaDoca = maxDoca;
@@ -184,7 +178,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     log << MSG::DEBUG << "num Tiles = " << m_tileCount << endreq;
     log << MSG::DEBUG << "total energy = " << m_totEnergy << endreq;
 	
-    trackDistances();
+    trackDistances(digiCol);
 	
     log << MSG::DEBUG << "DOCA: " << m_doca << " "
         << "ActDist: " << m_act_dist << endreq;
@@ -197,10 +191,10 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
             m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
     } else {
         // create the TDS location for the AcdRecon
-        m_acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+        Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
             m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol);
         
-        sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, m_acdRecon);
+        sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
             log << "Failed to register AcdRecon" << endreq;
             return StatusCode::FAILURE;
@@ -211,7 +205,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 }
 
 
-StatusCode AcdReconAlg::trackDistances() {
+StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
     // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
     //  calculates the DOCA and Active Distance quantities.  Updates the
     // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
@@ -232,9 +226,9 @@ StatusCode AcdReconAlg::trackDistances() {
     while(trkPtr != tracksTds->end())
     {
         const Event::TkrFitTrackBase* trackTds  = *trkPtr++;       // The TDS track
-        double testDoca = doca(trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
+        double testDoca = doca(digiCol, trackTds->getPosition(), trackTds->getDirection(), m_rowDocaCol);
         if(testDoca < m_doca) m_doca = testDoca;
-        double test_dist= hitTileDist(trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
+        double test_dist= hitTileDist(digiCol, trackTds->getPosition(), -(trackTds->getDirection()), m_rowActDistCol);
         if(test_dist > m_act_dist) m_act_dist = test_dist;
     }
 	
@@ -242,7 +236,7 @@ StatusCode AcdReconAlg::trackDistances() {
 	
 }
 
-double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0, 
+double AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
 						 std::vector<double> &doca_values) {
     // Purpose and Method:  This method looks for close-by hits to the ACD tiles
     //        Calculates the minimum distance between the track and the center
@@ -260,10 +254,10 @@ double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0,
 	
     Event::AcdDigiCol::const_iterator acdDigiIt;
     
-    for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
-		
-		// toss out hits below threshold
-		if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
+    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
+        
+        // toss out hits below threshold
+        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
 		
         idents::AcdId acdId = (*acdDigiIt)->getId();
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
@@ -297,11 +291,11 @@ double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0,
         // i.e. top, and each type of side row tile
         if (acdId.top() && dist < doca_values[0]) doca_values[0] = dist;
         if (acdId.side()) {
-			unsigned int k = acdId.row()+1;
-			if( k >= doca_values.size()){
-				log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
-			}else
-				if (dist < doca_values[k]) doca_values[k] = dist;
+            unsigned int k = acdId.row()+1;
+            if( k >= doca_values.size()){
+                log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
+            }else
+                if (dist < doca_values[k]) doca_values[k] = dist;
         }
 		
     }
@@ -309,7 +303,7 @@ double AcdReconAlg::doca(const HepPoint3D &x0, const HepVector3D &t0,
     return minDoca;
 }
 
-double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0, 
+double AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
                                 std::vector<double> &row_values) {
     // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
     //       Determines minimum distance between a track and the edges of ACD
@@ -324,10 +318,10 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
 	
     // iterate over all tiles
     Event::AcdDigiCol::const_iterator acdDigiIt;
-    for (acdDigiIt = m_acdDigiCol.begin(); acdDigiIt != m_acdDigiCol.end(); acdDigiIt++) {
+    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         
         // toss out hits below threshold
-		if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
+        if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
         idents::AcdId acdId = (*acdDigiIt)->getId();
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
@@ -394,11 +388,11 @@ double AcdReconAlg::hitTileDist(const HepPoint3D &x0, const HepVector3D &t0,
         // i.e. top, and each type of side row tile
         if (acdId.top() && test_dist < row_values[0]) row_values[0] = test_dist;
         if (acdId.side()) {
-			unsigned int k = acdId.row()+1;
-			if( k >= row_values.size()){
-				log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
-			}else
-				if (test_dist < row_values[k]) row_values[k] = test_dist;
+            unsigned int k = acdId.row()+1;
+            if( k >= row_values.size()){
+                log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
+            }else
+                if (test_dist < row_values[k]) row_values[k] = test_dist;
         }
 		
     }

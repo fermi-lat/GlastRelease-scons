@@ -58,14 +58,15 @@ class AcdReconAlg : public Algorithm
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
       /// retrieves tracks and calls the DOCA and Active Distance routines
-      StatusCode trackDistances();
+      StatusCode trackDistances(const Event::AcdDigiCol& digiCol);
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles
-      double doca (const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &doca_values);
+      double doca (const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &doca_values);
 
       /// Bill Atwood's new calculation for Active Distance
-      double hitTileDist(const HepPoint3D &x0, const HepVector3D &dir, std::vector<double> &row_values);
+      double hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
+          const HepVector3D &dir, std::vector<double> &row_values);
 
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
@@ -76,10 +77,6 @@ class AcdReconAlg : public Algorithm
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
-
-      Event::AcdDigiCol m_acdDigiCol;
-
-      Event::AcdRecon *m_acdRecon;
 
       /// Number of Acd Tiles above threshold
       unsigned int m_tileCount;
