@@ -155,7 +155,7 @@ StatusCode FluxAlg::execute()
     // so initial momentum and final one are the same
     parent->initialize(parent, partID, 
         Event::McParticle::PRIMARY,
-        pin);
+        pin,p);
     parent->finalize(pin, p);
 
     return sc;
