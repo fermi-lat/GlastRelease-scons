@@ -7,14 +7,14 @@ use GlastSvc
 
 use reconstruction v3r1
 
-library CalRecon  *.cxx ../CalRecon/*.h  
+library CalRecon  *.cxx ../CalRecon/*.h  Dll/*.cpp
 
 macro CalRecon Dir  "$(CALRECONROOT)/$(DEBUGDIR)"
 
 macro CalRecon_linkopts   " " 
 macro CalRecon_stamps     
 
-set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalReconSvc"
+set   CalReconShr           "${CALRECONROOT}/${DEBUGDIR}/libCalRecon"
 
 include_path $(CALRECONROOT)
 
@@ -28,7 +28,7 @@ macro_append cppflags ""\
 
 macro CalRecon_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
 
-# build this for non-shareable testing
+# build this for testing
 
 application test \
         test/*.cxx test/*.h test/*.txt
