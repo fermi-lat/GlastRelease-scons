@@ -400,8 +400,10 @@ void KalTrack::eneDetermination()
         double eta = ((chie-1.)*(chie-1.)*(chie-1.))/((chie+2.)*(chie+2.));
         eta = sqrt(fabs(eta));
         double z1 = kplanelist[iplane].getZPlane();
-        std::auto_ptr<IKalmanParticle> 
-            kalPart(TkrReconAlg::m_gismoSvc->kalmanParticle(m_x0, m_dir, (z1-z0)/dir_ini.z()));
+        //std::auto_ptr<IKalmanParticle> 
+        //    kalPart(TkrReconAlg::m_gismoSvc->kalmanParticle(m_x0, m_dir, (z1-z0)/dir_ini.z()));
+        IKalmanParticle* kalPart = TkrReconAlg::m_KalParticle;
+        kalPart->setStepStart(m_x0, m_dir, (z1-z0)/dir_ini.z());
         
         totalRad += kalPart->radLength();
         double factor = 1./(2.-exp(-1.*totalRad));
