@@ -2,6 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *
+ *  9-Aug-2004: jrb v0r130:  Minor clean-up of test algorithms
  *  9-Aug-2004: jrb v0r13:   1. Support for TKR splits calibration
  *                           2. For mc data, fetch mission start from 
  *                              proper place (astro package)
