@@ -68,7 +68,7 @@ MCCalorimeterHitCnv::MCCalorimeterHitCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
 
-  declareObject("/Event/MCCalorimeterHit", objType(), "PASS");
+  declareObject("/Event/MC/MCCalorimeterHits", objType(), "PASS");
 }
 
 /// Standard Destructor

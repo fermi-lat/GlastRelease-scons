@@ -69,7 +69,8 @@ ACDhitCnv::ACDhitCnv(ISvcLocator* svc)
 : BaseCnv(classID(), svc)
 {
 
-  declareObject("/Event/ACDTile", objType(), "PASS");
+  //declareObject("/Event/ACDTile", objType(), "PASS");
+  declareObject("/Event/MC/MCACDHits", objType(), "PASS");
 }
 
 /// Standard Destructor
