@@ -25,8 +25,6 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 
-#include "GalacticHist.h"
-
 //#include "FluxAlg.h"
 /*! \class FluxTestAlg
 \brief 
@@ -56,12 +54,15 @@ private:
     IFlux* m_flux;
     std::string m_source_name;
     IParticlePropertySvc * m_partSvc;
+    double m_glastExposureAngle;
+    int m_exposureMode;
     double m_exposedArea[360][180];
     double m_currentTime;
     double m_passedTime;  //time passed during this event
     std::vector<exposureSet> findExposed(double l,double b, double deltat);
     void addToTotalExposure(std::vector<exposureSet>);
     void displayExposure();
+    void rootDisplay();
 };
 
 
@@ -78,6 +79,8 @@ FluxTestAlg::FluxTestAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator){
     
     declareProperty("source_name", m_source_name="default");
+    declareProperty("glastExposureAngle", m_glastExposureAngle=10.);
+    declareProperty("exposureMode", m_exposureMode=1.);
 }
 
 
@@ -201,10 +204,10 @@ StatusCode FluxTestAlg::execute() {
     //log << MSG::INFO
     //    << "(" << "l = " << l << ", b = " << b <<")" 
     //    << endreq;
-
+    
     m_passedTime = (m_flux->time())-m_currentTime;
     m_currentTime = m_flux->time();
-
+    
     std::vector<exposureSet> exposed;
     exposed = findExposed(l,b,m_passedTime);
     addToTotalExposure(exposed);
@@ -223,21 +226,41 @@ StatusCode FluxTestAlg::finalize() {
 
 
 
-std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){
+std::vector<FluxTestAlg::exposureSet> FluxTestAlg::findExposed(double l,double b,double deltat){    
+    MsgStream log(msgSvc(), name());
+    
     std::vector<exposureSet> returned;
-    double angularRadius = 15;
-    for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
-        for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
-            
-            if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
-                //set up the point, and stick it into the vector
-                exposureSet point;
-                point.x = i; //yes, this is doing an implicit cast.
-                point.y = j;
-                point.amount = deltat;
-                returned.push_back(point);
+    double angularRadius = m_glastExposureAngle/2.;
+    
+    if(m_exposureMode == 0){
+        exposureSet point;
+        point.x = l; //yes, this is doing an implicit cast.
+        point.y = b;
+        point.amount = deltat;
+        returned.push_back(point);
+    }
+    
+    else if(m_exposureMode == 1){
+        for(int i= l-angularRadius ; i<=l+angularRadius ; i++){
+            for(int j= b-angularRadius ; j<=b+angularRadius ; j++){
+                
+                if((pow(l-i,2)+pow(b-j,2) <= pow(angularRadius,2))){
+                    //set up the point, and stick it into the vector
+                    exposureSet point;
+                    float correctedl = fmod(i, 360);   // Fold into the range [0, 360)
+                    float correctedb = fmod(j, 180);   // Fold into the range [0, 360)
+                    if(correctedl < 0)correctedl+=360;
+                    if(correctedb < 0)correctedb+=180;
+
+                    point.x = correctedl; //yes, this is doing an implicit cast.
+                    point.y = correctedb;
+                    point.amount = deltat;
+                    returned.push_back(point);
+                }
             }
         }
+    }else{
+        log << MSG::ERROR << "Invalid Exposure Mode " << endreq;
     }
     return returned;
 }
@@ -263,7 +286,7 @@ void FluxTestAlg::addToTotalExposure(std::vector<FluxTestAlg::exposureSet> toBeA
 void FluxTestAlg::displayExposure(){
     //make the file
     std::ofstream out_file("data.dat", std::ios::ate);
-
+    
     int i,j;
     for(i=0 ; i<360 ; i++){
         //std::strstream out;
@@ -275,10 +298,65 @@ void FluxTestAlg::displayExposure(){
         //std::cout << out.str();
     }
     out_file.close();
-    //then use galacticHist to display the stuf in the file
-    galacticHist abc;
-    abc.test();
+    //then use rootDisplay to display the stuff in the file
+    rootDisplay();
 }
 
-
+void FluxTestAlg::rootDisplay(){
+    
+    std::ofstream out_file("graph.cxx", std::ios::app);
+    
+    out_file.clear();
+    
+    out_file << 
+        "{\n"
+        
+        "  FILE *fp;\n"
+        "  float ptmp,p[20];\n"
+        "  int i, iline=0;\n";
+    out_file << 
+        "  ntuple = new TNtuple(" << '"' << "ntuple" << '"' << "," << '"' << "NTUPLE" << '"' << "," << '"' <<"x:y:z" << '"' << ");\n";
+    
+    
+    out_file <<
+        "  TH2D *hist1 = new TH2D(" << '"' << "hist1" << '"' << "," << '"' << "Total Exposure" << '"' << ",360,0.,360.,180,-90.,90.);\n";
+    
+    out_file <<
+        "  hist1->SetXTitle(" << '"' << "l" << '"' <<");\n";
+    out_file <<
+        "  hist1->SetYTitle(" << '"' << "b" << '"' <<");\n";
+    
+    
+    out_file <<
+        "  fp = fopen(" << '"' << "./data.dat" << '"' << "," << '"' << "r" << '"' << ");\n"
+        
+        "  while ( fscanf(fp," << '"' << "%f" << '"' << ",&ptmp) != EOF ){\n"
+        "    p[i++]=ptmp;\n"
+        "    if (i==3){\n"
+        "      i=0; \n"
+        "      iline++;\n"
+        "      ntuple->Fill(p[0],p[1],p[2]); \n"
+        "      hist1->Fill(p[0],p[1],p[2]); \n"
+        "    }\n"
+        "  }\n"
+        
+        
+        //"  ntuple.Draw(" << '"' << "z:y:x" << '"' 
+        //<< "," << '"' << '"'
+        //<< "," << '"' << "HIST" << '"' 
+        //<< ");\n"
+        
+        "  hist1.Draw("
+        << '"' << "CONT" << '"' 
+        << ");\n"
+        
+        <<");\n"
+        
+        "}\n";
+    
+    out_file.close();
+    
+    system("root -l graph.cxx");
+    
+}
 

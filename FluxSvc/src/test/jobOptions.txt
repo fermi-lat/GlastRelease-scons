@@ -29,8 +29,18 @@ FluxTestAlg.source_name="default";
 //FluxTestAlg.source_name="all_gamma";
 //FluxAlg.source_name="chime";
 
+//the angular size of GLAST's exposure, if needed (see below)
+FluxTestAlg.glastExposureAngle = 25.;
+
+//selecting the kind of exposure GLAST gets,
+//to be appropriate for exposure maps or sky maps.
+//0: sources only expose EXACTLY where they are
+//1: exposure of GLAST has an angular size to the aperture, given above
+FluxTestAlg.ExposureMode = 1;
+
+
 ApplicationMgr.EvtSel = "NONE";
-ApplicationMgr.EvtMax = 1500;
+ApplicationMgr.EvtMax = 1000;
 
 //==============================================================
 //
