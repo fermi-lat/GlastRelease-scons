@@ -21,8 +21,8 @@ ApplicationMgr.ExtSvc = {
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
-// EventSelector.StorageType = "EBFFILE";
-EventSelector.StorageType = "EBFFITS";
+EventSelector.StorageType = "EBFFILE";
+//EventSelector.StorageType = "EBFFITS";
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5.ebf"};
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5_1.fits"};
 // EventSelector.InputList = {"$(LDFCONVERTERROOT)/data/ebf030502182112.fits"};
@@ -31,10 +31,10 @@ EventSelector.StorageType = "EBFFITS";
 // EventSelector.InputList = {"$(LDFCONVERTERROOT)/data/ebf030729135138.fits"};
 
 // Following is standard test file used in nightly build
-EventSelector.InputList = {"/nfs/farm/g/glast/u03/EM2003/miniTower/unzipped/ebf030507023417.fits"};
+// This file is now gone - after u03 cleaning
+//EventSelector.InputList = {"/nfs/farm/g/glast/u03/EM2003/miniTower/unzipped/ebf030507023417.fits"};
 
-// New full EM file, including CAL data, from Ric
-// EventSelector.InputList = {"/nfs/slac/g/glast/users/glground/jrb/data/ebf030815025559.fits"};
+EventSelector.InputList = {"$GLAST_EXT/LDF/v05-01-02/test/data/muon-5.arch"};
 // Turn off debugging messages by setting level to 0
 EventSelector.EbfDebugLevel = 0;
 // EventSelector.EbfDebugLevel = 1;
