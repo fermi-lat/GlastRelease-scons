@@ -1,5 +1,5 @@
 package geometry
-version v2r2
+version v3
 
 use GlastPolicy
 use CLHEP

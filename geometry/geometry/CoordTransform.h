@@ -5,6 +5,7 @@
 #define __COORDTRANSFORM_H
 
 #include "CLHEP/Vector/Rotation.h"
+#include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Vector.h"
 class Point;
 
@@ -25,6 +26,9 @@ class CoordTransform
    CoordTransform(const Vector& t):X(t){};
    CoordTransform(const Rotation& _R):R(_R){};
    CoordTransform(const Rotation& _R, const Vector& t):X(t),R(_R){}
+
+   //! initialize from newer HepTransform3D (allows auto conversion)
+   CoordTransform(const HepTransform3D& T):X(T.getTranslation()),R(T.getRotation()){};
    // constructors: specify either or both rotation matrix, translation
 
    /// return inverse transformation

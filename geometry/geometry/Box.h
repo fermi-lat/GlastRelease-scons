@@ -3,8 +3,8 @@
 //  Project: geometry
 //
 
-#ifndef BOX_H
-#define BOX_H
+#ifndef GEOMETRY_BOX_H
+#define GEOMETRY_BOX_H
 
 #include "geometry/Hexahedron.h"
 

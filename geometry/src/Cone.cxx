@@ -21,7 +21,7 @@ Cone::Cone( double length, double ri1, double ro1, double ri2, double ro2 )
   //  z > 0, ri2 > ri1 >= 0, ro2 > ro1 > ri1, and ro2 > ri2.
    if ( ( length <= 0.0 ) || ( ri1 <  0.0 ) || ( ro1 <= ri1 )
                           || ( ri2 <  0.0 ) || ( ro2 <= ri2 )
-      )FATAL("Illegal parameters for Cone");
+      )GeometryException("Illegal parameters for Cone");
 
    double h_z = 0.5*length;
    addSurface(new Conic( center(), zhat, 0.5*(ro1 +ro2), (ro2-ro1)/length) );

@@ -9,7 +9,7 @@
 #include "geometry/Vector.h"
 
 /** Defines a geometrical point, differing from  Vector only by
-  its transformation properties, and the fact that it can be displayed.
+  its transformation properties and operators: it is illegal to add two points, for example.
   */
 class Point: public Hep3Vector , public GeomObject
 {

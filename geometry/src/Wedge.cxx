@@ -15,7 +15,7 @@ Wedge::Wedge(const Point& center, const Vector& axis,  double phi1, double phi2)
     // phi1 is angle from x-axis to first plane
     // phi2 is angle from x-axis to second plane
 	if ( ( phi2 < phi1 ) || ( phi2 >= ( phi1 + 2*M_PI ) ) )
-	  FATAL("Bad parameters for a Wedge");
+	  GeometryException("Bad parameters for a Wedge");
 
 }
 

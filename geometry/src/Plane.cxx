@@ -11,7 +11,7 @@ Plane::Plane(const Point& o, const Vector& n)
 , m_d(n.magnitude())		 // magnitude here
 {
    if(m_d==0)
-   FATAL("Plane constructor called with null unit vector");
+   GeometryException("Plane constructor called with null unit vector");
 
 }
 Plane::Plane(const Point& o, const Vector& n, double dist)

@@ -75,7 +75,7 @@ Volume::getBoundaryIndex(const Point& p)const
     }
     if( closest< Surface_EPSILON)
 	return found;
-    WARNING("Volume::associate: suface to tag not found");
+    //never happens? WARNING("Volume::associate: suface to tag not found");
     return -1;
 }
 int
@@ -118,10 +118,9 @@ static double Surface_distanceToLeave( const Surface &s, const Ray& r, double ma
     if ( d < -Volume::Surface_EPSILON ) {
 	// the outside case for s
 		std::ostrstream error_text;
-		error_text << "Volume--bad geometry for surface \n\t" << s
-		    << "\n\t" << r.position() << " is " << d << "cm outside\n";
-		error_text << '\0';
-		WARNING(error_text.str());
+                std::cerr << "Volume--bad geometry for surface \n\t" << s
+		    << "\n\t" << r.position() << " is " << d << "cm outside\n"
+                    << std::endl;
 		status   = Surface_OUTSIDE;
 		solution = Surface_NO_SOLUTION;
 		return FLT_MAX;
@@ -266,13 +265,11 @@ Volume::distanceToLeave( const Ray& r,  double maxStep ) const
 
 	if ( bad )
 	{
-	    std::ostrstream cerr;
-	    cerr << "Volume::distanceToLeave, position bad by "
-		<< surface(j).how_near(p) << '\n';
-	    cerr << "\tVolume=" << *this << '\n';
-	    cerr << "\tRay= " << r << '\n';
-	    cerr << "\tPoint" << p << '\n';
-	    cerr << '\0'; WARNING(cerr.str());
+            std::cerr << "Volume::distanceToLeave, position bad by "
+		<< surface(j).how_near(p) << '\n'
+	        << "\tVolume=" << *this << '\n'
+	        << "\tRay= " << r << '\n'
+                << "\tPoint" << p << std::endl;
 	    solutionVolume = Surface_NO_SOLUTION;
 	    return FLT_MAX;
 	}
