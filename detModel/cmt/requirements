@@ -1,0 +1,21 @@
+package detModel
+version v1
+
+branches detModel src doc xml
+use xml
+use XMLEXT
+
+
+# All that follows is a bit premature -- no code yet!
+include_path "${DETMODELROOT}"
+
+
+macro   detModel_linkopts "-L ${DETMODELROOT}/${CMTCONFIG} -ldetModel"\
+        VisualC     ""
+
+macro_append Win32Debug   " ${DETMODELROOT}/${DebugDir}/detModellib.lib"
+macro_append Win32Release " ${DETMODELROOT}/${ReleaseDir}/detModellib.lib"
+
+path_append LD_LIBRARY_PATH "${DETMODELROOT}/${CMTCONFIG}"
+
+

@@ -1,0 +1,819 @@
+<?xml version="1.0"  ?>
+
+<!-- 1 Feb 2001   Default length unit is now mm.  Change constants
+                   accordingly.                             (jrb) -->
+
+<!DOCTYPE gdd SYSTEM "geochoice.dtd"
+  [
+<!-- Following 4 definitions are used to identify diodes -->
+    <!ENTITY dminus    "0" >
+    <!ENTITY dplus     "1" >
+    <!ENTITY dsmall    "0" >
+    <!ENTITY dlarge    "1" >
+  ]
+>
+<gdd>
+  <constants>
+    <version major="0" minor="0" />
+    <primary>
+      <category name="global">
+        <prim name="modWidth" value="389.7">Width of a single CAL-TKR module.
+</prim>
+        <prim name="xNum" value="4" uType="count">Number of towers in x.</prim>
+        <prim name="yNum" value="4" uType="count">Number of towers in y.</prim>
+        <prim name="cal_tracker_gap" value="42.8">Spacing between tracker 
+           and calorimeter</prim>
+        <prim name="wallGap" value="1.0">gap between modules</prim>
+        <prim name="wallMaterial"   value="C" type="string" uType="mat"> Wall material
+</prim>
+        <prim name="wallThickness"  value="1.5">   Wall thickness</prim>
+        <prim name="wallWidth"  value="389.7">width of walls (less than mod_width)
+</prim>
+      </category>
+      <category name="CALprim" >
+	<prim name="crystalMat" value="CsI" type="string" uType="mat">Crystal Material
+</prim>
+	<prim name="diodeMat" value="Si" type="string" uType="mat">Diode Material
+</prim>
+        <prim name= "CALWrapMat" value= "Polystyrene" type="string" uType="mat">
+Wrap material for CsI logs</prim>
+        <prim name= "CALFrameMat" value= "Al20" type="string" uType="mat">
+Material for CAL frame</prim>
+	<prim name="CALSpaceMat" value="rubber60A1" type="string" uType="mat">
+Material for space between CAL layers
+</prim>
+	<prim name="nLayer" value="8" uType="count"> Number of layers of CAL CsI crystals
+</prim>
+        <prim name="diodeX" value="0.18">Thickness of diodes
+</prim>
+        <prim name= "diodeY" value= "12.0">Width of diodes
+</prim>
+        <prim name= "diodeLZ" value= "8.0">Height of large diode
+</prim >
+        <prim name= "diodeSZ" value= "2.0">Height of a small diode
+</prim>
+        <prim name= "CsILength" value= "369.9">Length of a CsI crystal
+</prim>
+
+      <!-- this used to be called height -->
+        <prim name= "CsITrans" value= "30.0">(Transverse) width of a CsI crytal
+</prim>   
+     <!-- this used to be called width -->
+         <prim name= "CsIZ" value= "21.0">Height of a CsI crystal
+</prim> 
+        <prim name= "diodeYOffset" value= "0.0">Y (transverse) offset of diode relative to crystal
+</prim>
+        <prim name= "diodeLZOffset" value= "-2.6">Z offset of large diode relative to crystal
+</prim>
+        <prim name= "diodeSZOffset" value= "5.6">Z offset of small diode relative to crystal
+</prim>
+
+         <!-- trans. distance between logs -->
+        <prim name= "CALGap" value= "0.84">Transverse distance between logs
+</prim> 
+        <prim name= "nEltPerLayer" value= "12" uType="count">Number of crystals per layer within a tower
+</prim>
+        <prim name="CALInterLayer" value="2.62" >Gap between CAL layers
+</prim>
+
+        <prim name= "CALFrameSideThick" value= "8.0">Thickness of CAL frame sides
+</prim>
+
+<!-- Just use one symbol for now since top and bottome are the same.
+     Would have to have additional symbol and additional box type
+     if this changes.  -->
+        <prim name= "CALFrameTBThick" value= "20.0">Thickness of top and bottom of CAL frame
+</prim>
+
+    <!-- Cal grid stuff -->
+        <prim name= "CALGridInner" value= "3.0">
+        Thickness of CAL grid between towers
+</prim>
+        <prim name= "CALGridOuter" value= "12.0">Thickness of CAL grid on outside towers</prim>
+        <prim name= "CALGridMat" value= "Al" type="string" uType="mat">Material for CAL grid</prim>
+        <prim name= "CALFlange" value= "26.0">** Need meaningful comment here**
+</prim>
+        <prim name= "CALFlangeMat" value= "Al50" type="string" uType="mat">
+Material for CAL flange
+</prim>
+      </category>
+      <category name="TKRprim" >
+        <prim name="convMat" value="Pb" type="string" uType="mat">material used in tracker conversion
+</prim>
+        <prim name="coreMat" value="FOAM05" type="string" uType="mat">material used in tracker tray core</prim>
+        <prim name="convThickReg" value="0.14">Thickness of conversion material in "regular" layers in mm (.025 * 5.6)
+</prim>
+        <prim name="convThickSup" value="1.4">Thickness of conversion material in super-GLAST layers in mm (.25 * 5.6)
+</prim>
+        <prim name="TKRDetMat" value="Si" type="string" uType="mat">Material of tracker detector elements
+</prim>
+        <prim name="TKRFaceMat" value="C" type="string" uType="mat">Material of tracker face sheet
+</prim>
+	<prim name="traySpacing" value="32.0">Center-to-center distance between trays
+</prim>
+        <prim name="ssdDieSize" value="95.0">Si wafer size
+</prim>
+        <prim name="guardRing" value="0.8">guard ring size
+</prim>
+        <prim name="ssdGap" value="0.1">gap between Si dies
+</prim>
+	<prim name="SiWaferSide" value="89.5">Length and width of Si wafer</prim>
+        <prim name="SiWaferActiveSide" value="87.552">Length and width of active
+area on a wafer</prim>
+	<prim name="stripPerWafer"  value="384" uType="count">Number of strips per wafer</prim>
+<prim name="nWaferAcross" value="4" uType="count"> Wafers for a layer within a tower
+form a square array of this dimension</prim>
+<!-- NB Maintainers - The following constants defining the layout of
+     lead in the trays do not  propagate to the section of the
+     file which describes the trays.  They merely act as documentation.
+     At best, the code interpreting this file could check that the
+     description of tracker volumes below is in accord with the 
+     numbers.  In particular, 
+       ** any change to numTrays, numNoLeadTrays or numSuperGlast
+       ** will entail changes to the definition of the 
+       ** tracker volumes.
+ -->
+        <prim name="numTrays" value="19" uType="count">number of trays (one more than number of x-y planes)</prim>
+        <prim name="numNoLeadTrays" value="3" uType="count">number of trays with no lead.  These trays have the lowest tray number</prim>
+        <prim name="numSuperGlast" value="4" uType="count">number of trays with super-Glast thickness lead.  These are immediately above the no-lead trays</prim>
+        <prim name= "SiThick" value= "0.4" >Si thickness
+</prim>
+        <prim name= "traySpacing" value= "32.0" >Center-to-center distance between trays
+</prim>
+        
+        <prim name= "TKRWidth" value= "389.7">**Is this just a replacement for wallWidth?
+</prim>  
+        <prim name= "TKRElectGap" value= "4.7">**Insert comment here**
+</prim>
+        <prim name= "faceThick" value= "0.2">**insert comment here**
+</prim>
+        <prim name= "panelThick" value= "28.8">Thickness of converter + core??
+</prim>
+        <prim name="nSiDies" value="4" uType="count">Number of dies on a side
+</prim>
+        <prim name="nFeChips" value="7" uType="count">Number of front-end readout strips per die
+(determines number of Si strips)
+</prim>
+
+      </category>
+    </primary>
+
+    <derived>
+      <category name="derAll">
+        <const name="vacuumMat" value="Vacuum" />
+
+    <!-- diodePosXOffset  = (CsILength + diodeX)/2 -->
+        <const name="diodePosXOffset" >
+          <quo>
+            <add>
+              <refer refTo="CsILength" />
+              <refer refTo="diodeX" />
+            </add>
+            <const value="2" uType="count"/>
+          </quo>
+        </const>
+        <const name="diodeNegXOffset" >
+          <uminus><refer refTo="diodePosXOffset" /> </uminus>
+        </const>
+
+        <const name= "CALHalfGap">
+          <mul> 
+            <refer refTo="CALGap" /> 
+            <const value="0.5" uType="count" /> 
+          </mul>
+        </const>
+
+
+<!-- dimensions for log envelope volume -->
+        <const name="CsIEnvX">  
+          <add>
+            <refer refTo="CsILength" />
+            <mul>
+              <const value="2" uType="count"/>
+              <refer refTo="diodeX" />
+            </mul>
+          </add>
+        </const>
+
+        <const name="CsIEnvY">  
+          <add>
+            <refer refTo="CsITrans" />
+            <refer refTo="CALGap" />
+          </add>
+        </const>
+
+        <const name = "CsIEnvZ" >
+          <add>
+            <refer refTo="CsIZ" />
+            <refer refTo="CALGap" />
+          </add>
+        </const>
+
+<!-- the following should be the maximum of the length of a single
+     CsIElement and the transverse distance across the whole 
+     collection of CsIElements in a layer, so
+      max(CsIEnvX, nEltPerLayer*CsIEnvY), which ends up being
+      CsIEnvX in this case    --> 
+        <const name = "CALLayerTrans" >
+          <max>
+            <refer refTo="CsIEnvX" />
+            <mul>
+              <refer refTo="nEltPerLayer" />
+              <refer refTo="CsIEnvY" />
+            </mul>
+          </max>
+	</const>
+
+<!-- the following includes cal layers and inter-layer spacers, but
+     not frame, grid between cal and tkr, etc. 
+     Hence it's nlayer*CsIEnvZ + (nlayer - 1)*CALInterLayer or
+     nLayer*(CsIEnvZ + CALInterLayer) - CALInterLayer = 19.306 -->
+        <const name="CALTotalZ">
+          <minus>
+            <mul>
+              <refer refTo="nLayer" />
+              <add>
+                <refer refTo="CsIEnvZ" />
+                <refer refTo="CALInterLayer" />
+              </add>
+            </mul>
+            <refer refTo="CALInterLayer" />
+          </minus>
+        </const>
+
+    <!-- additional (derived) dimensions for frame -->
+        <const name = "CALFrameWidth">
+          <add>
+            <refer refTo="CALLayerTrans" />
+            <mul>
+              <const value="2" uType="count"/>
+              <refer refTo="CALFrameSideThick" />
+            </mul>
+          </add>
+        </const>
+  
+    <!--  Height of side pieces is just CALTotalZ -->
+
+    <!-- Height of entire frame must also include thickness of top&bottom -->
+	<const name="CALFrameHeight"  >
+	  <add>
+	    <refer refTo="CALTotalZ" />
+	    <mul>
+	      <const value="2" uType="count"/>
+	      <refer refTo="CALFrameTBThick" />
+	    </mul>
+	  </add>
+	</const>
+
+	<const name = "CALFrameSideDsp"> 
+	  <mul>
+	    <add>
+	      <refer refTo="CALFrameSideThick" />
+	      <refer refTo= "CALFrameWidth" />
+	    </add>
+	    <const value="0.5" uType="count" />
+	  </mul>
+	</const>
+
+	<const name ="CALFrameSideDspN" >
+	  <uminus>
+	    <refer refTo="CALFrameSideDsp" />
+	  </uminus>
+	</const>
+
+	<const name="CALFrameTBDsp" > 
+	  <mul>
+	    <add>
+	      <refer refTo= "CALFrameTBThick" />
+	      <refer refTo="CALTotalZ" />
+	    </add>
+	    <const value="0.5" uType="count"/>
+	  </mul>
+	</const>
+	    
+	<const name="CALFrameTBDspN" >
+	  <uminus>
+	    <refer refTo="CALFrameTBDsp" />
+	  </uminus>
+	</const>
+
+	<const name="TKRTrayWidth" >
+	  <minus>
+	    <refer refTo="TKRWidth" />
+	    <mul>
+	      <const value="2" uType="count"/>
+	      <refer refTo="TKRElectGap" />
+	    </mul>
+	  </minus>
+	</const>
+
+	<const name="coreThickReg" > <!--    panelthick-convThickReg  -->
+	  <minus>
+	    <refer refTo="panelThick" />
+	    <refer refTo="convThickReg" />
+	  </minus>
+	</const>
+
+	<const name = "coreThickSuper"  > <!--  panelthick-convThickSuper -->
+	  <minus>
+	    <refer refTo="panelThick" />
+	    <refer refTo="convThickSup" />
+	  </minus>
+	</const>
+
+        <!-- total Z dimension of top and bottom trays -->
+	<const name = "outsideTrayZ">
+	  <add>
+	    <refer refTo = "panelThick" />
+            <refer refTo = "faceThick" />
+            <refer refTo = "faceThick" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+	<!-- total Z dimension of middle trays -->
+	<const name = "middleTrayZ">
+	  <add>
+	    <refer refTo = "outsideTrayZ" />
+	    <refer refTo = "SiThick" />
+	  </add>
+	</const>
+
+	<!-- gap between outside and middle tray -->
+	<const name = "outerInterTrayGap">
+	  <minus>
+	    <refer refTo="traySpacing" />
+	    <mul>
+	      <const value=".5" uType="count" />
+	      <add>
+		<refer refTo="outsideTrayZ" />
+		<refer refTo="middleTrayZ" />
+	      </add>
+	    </mul>
+	  </minus>
+	</const>
+
+<!-- gap between two inside trays -->
+	<const name = "innerInterTrayGap">
+	  <minus>
+	    <refer refTo="traySpacing" />
+	    <refer refTo="middleTrayZ" />
+	  </minus>
+	</const>
+
+	<const name="totalX" value = "??" />
+	<const name="totalY" value = "??" />
+	<const name="totalZ" value = "??" />
+
+      </category>
+    </derived>
+  </constants>
+
+  <section name="towers"
+           version="1.0" date="2001/1/4" author="J.Bogart"
+           topVolume="towers" >
+    <!-- "towers" is made up of 16 "tower" s.
+         Each "tower" has a tracker, a calorimeter, and a mechanical
+         piece inbetween. (what about electronics?)
+         Each tracker consists of trays
+         Each tray has 1 (iff top or bottom) or 2 layers of silicon
+         and most trays also have a converter layer (can be of
+         two possible thicknesses. -->
+    <!-- Use conventions as laid out in Steve Ritz's memo.  Z is
+    up (perp. to cal. layers and tracker trays).  An "x-strip"
+    is one that measures the x-coordinate of the hit, hence its
+    length is parallel to the y-axis.  An "x-log", on the other
+    hand, has its long axis parallel to the x-axis (but there 
+    is some consistency here: logs make their most precise 
+    measurement in the direction parallel to their length.) 
+    
+    Cal layer numbers increase from the front (largest Z value,
+    which is 0 for the Cal) to the back (smallest Z).  Layer 0 
+    has x-logs;  layer 7, the last layer, has y-logs.  
+    
+    Tracker trays and layers are numbered from back to front,
+    i.e. increase with increasing Z.  All strips associated
+    with a tray (i.e., front side and back side, if the tray 
+    is one that has both) have the same orientation.  Even-numbered
+    trays have Y-strips and odd-numbered trays have X-strips.
+    -->
+    
+    <box name="towers" 
+         XREF="totalX" YREF="totalY" ZREF="totalZ"
+         material = "vacuumMat" />
+    
+    <!-- According to conventions above, an unrotated CsIDetector would
+    be an X-log -->
+    <box name="CsIDetector" 
+         XREF="CsILength" YREF="CsITrans" ZREF="CsIZ"
+         material="crystalMat"  >
+      <seg axis="X" nSeg="10" reason="energyAcct" />
+    </box>
+
+<!-- there are two kinds of diodes: large and small. See diode section of
+     instrument.xml.   These
+     diode boxes or oriented the same way as the unrotated CsIDetector
+     above.  Old names for x,y,z dimensions were respectively
+     thickness,x_width,y_width   -->
+    <box name="diodeL"
+         XREF="diodeX"     
+         YREF="diodeY"
+         ZREF="diodeLZ"          
+         material="diodeMat" />
+    <box name="diodeS"
+         XREF="diodeX"     
+         YREF="diodeY"
+         ZREF="diodeSZ"          
+         material="diodeMat" />
+
+    <box name="CsIElementEnv"
+         material="CALWrapMat"
+         XREF="CsIEnvX"
+         YREF="CsIEnvY"
+         ZREF="CsIEnvZ"/>
+
+    <!-- This name comes from GlastSim code. -->
+    <composition name="CsIElement"  envelope="CsIElementEnv">
+      <posXYZ volume="CsIDetector" />  <!-- centered in envelope -->
+      <posXYZ volume="diodeS" 
+              XREF="diodeNegXOffset"
+              YREF="diodeYOffset"
+              ZREF="diodeSZOffset"
+        >
+        <identifier field="end" value="&dminus;" />
+        <identifier field="dsize" value="&dsmall;" />
+      </posXYZ>
+      <posXYZ volume="diodeS" 
+              XREF="diodePosXOffset"
+              YREF="diodeYOffset"
+              ZREF="diodeSZOffset"
+        >
+        <identifier field="end" value="&dplus;" />
+        <identifier field="dsize" value="&dsmall;" />
+      </posXYZ>
+      <posXYZ volume="diodeL" 
+              XREF="diodeNegXOffset"
+              YREF="diodeYOffset"
+              ZREF="diodeLZOffset"
+        >
+        <identifier field="end" value="&dminus;" />
+        <identifier field="dsize" value="&dlarge;" />
+      </posXYZ>
+      <posXYZ volume="diodeL" 
+              XREF="diodePosXOffset"
+              YREF="diodeYOffset"
+              ZREF="diodeLZOffset"
+        >
+        <identifier field="end" value="&dplus;" />
+        <identifier field="dsize" value="&dlarge;" />
+      </posXYZ>
+    </composition>
+
+    <!-- make a layer out of some evenly-spaced CsIElements -->
+    <stackY name="CALLayer" >
+      <axisMPos volume="CsIElement" ncopyREF="nEltPerLayer"
+                gapREF="CALGap" >
+        <identifier field="xtal" value="0" step="1" />
+      </axisMPos>
+    </stackY>
+
+<!-- Need to define spacer box between layers -->
+    <box name="CALSpace"
+         XREF="CALLayerTrans"
+         YREF="CALLayerTrans"
+         ZREF="CALInterLayer"
+         material="CALSpaceMat"
+         />
+
+<!-- intersperse log layers with calSpace boxes.  Volumes get
+     added with increasing Z, so we're starting at the back
+     with layer 7 (a Y-layer) and working our way forward to
+     layer 0, an X layer.  The Y-layers must be rotated -->
+    <stackZ name="CALLayers"  >
+      <axisPos volume="CALLayer" rotation="90" >
+        <identifier field="layer" value="7" />
+        <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <identifier field="layer" value="6" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <identifier field="layer" value="5" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <identifier field="layer" value="4" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <identifier field="layer" value="3" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <identifier field="layer" value="2" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer" rotation="90" >
+        <identifier field="layer" value="1" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="CALSpace" />
+      <axisPos volume="CALLayer"  >
+        <identifier field="layer" value="0" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+    </stackZ>
+
+    <!-- pieces of Calorimeter frame 
+           but we can maybe do without pieces, just use envelope -->
+<!--
+    <box name="CALTBFrame"
+         XREF="CALFrameWidth"
+         YREF="CALFrameWidth"
+         ZREF="CALframeTBThick"
+         material="CALFrameMat"
+         />
+    <box name="calSideFrame"
+         XREF="CALFrameWidth"
+         YREF="CALFrameSideThick"
+         ZREF="CALTotalZ"
+         material="CALFrameMat;"
+         />
+ -->
+    <box name="oneCALEnv"
+         XREF="CALFrameWidth"
+         YREF="CALFrameWidth"
+         ZREF="CALFrameHeight"
+         material="CALFrameMat"
+         />
+    <!-- Calorimeter for a tower consists of layers plus frame pieces -->
+    <!-- Alternatively, just embed layers stack into box of frame
+         material -->
+    <composition name="oneCAL" envelope="oneCALEnv" >
+      <posXYZ volume="CALLayers" />  <!-- centered in envelope -->
+    </composition>
+
+<!--
+    <posXYZ volume="CALTBFrame" ZREF="CALFrameTBDsp" />  
+    <posXYZ volume="CALTBFrame" ZREF="CALFrameTBDspN" /> 
+
+       Sides parallel to x-axis 
+    <posXYZ volume="CALSideFrame" YREF="CALFrameSideDsp" />
+    <posXYZ volume="CALSideFrame" YREF="CALFrameSideDspN" />
+
+     Sides parallel to y-axis (rotate logical side volume) 
+    <posXYZ volume="CALSideFrame" 
+	    zrot="90"
+	    XREF="CALFrameSideDsp"           />
+    <posXYZ volume="CALSideFrame"
+	    zrot="90"
+              XREF="CALFrameSideDspN" />
+  </composition>
+ -->
+
+
+<!-- Tracker stuff.  The tracker consists of trays.  Alternate trays
+     are rotated by 90 degrees with just vacuum inbetween.  But
+     the rotation is not apparent to the simulator since it
+     doesn't know about individual strips  -->
+<!-- Trays come in 3 flavors: top tray, bottom tray and middle tray.
+     These are further subdivided by thickness of converter layer which
+     may be any of 
+          no converter (bottom and middle trays only)
+          super-GLAST thickness (middle only)
+          "normal" thickness (middle and top only)  -->
+    <box name="convReg" 
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth" 
+	 ZREF="convThickReg"
+	 material="convMat" />
+    <box name="convSuper" 
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="convThickSup" 
+	 material="convMat" />
+    <box name="TKRCoreReg"
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth" 
+	 ZREF="coreThickReg" 
+	 material="coreMat" />
+    <box name="TKRCoreSuper" 
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="coreThickSuper" material="coreMat" />
+    <box name="TKRCoreNoConv" 
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="panelThick" material="coreMat" />
+
+<!-- Instead of defining a silicon box, should perhaps make
+     a composition or stack(s) defining internal structure
+     of ladders and strips.
+  -->
+    <box name="SiLayerBox"  
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth"
+	 ZREF="SiThick" material="TKRDetMat" />
+
+    <choice name="SiLayer" >  
+      <case mode="propagate" volume="SiLayerBox" />
+      <case mode="digi recon" volume="SiLayerComp" />
+    </choice>
+
+  <!-- No explicit material, so vacuum -->
+    <box name="SiLayerEnv"    
+      XREF="TKRTraywidth"
+      YREF="TKRTraywidth"
+      ZREF="SiThick" />
+
+<!-- The unrotated wafer is segmented along the x axis, hence measures X,
+     hence is an X layer -->
+    <box name="SiWaferActive"
+	 XREF="SiWaferActiveSide"
+	 YREF="SiWaferActiveSide"
+	 ZREF="SiThick"
+	 material="TKRDetMat">
+      <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
+    </box>
+
+    <box name="SiWafer"
+	 XREF="SiWaferSide"
+	 YREF="SiWaferSide"
+	 ZREF="SiThick"
+	 material="TKRDetMat">
+    </box>
+
+    <composition name="SiWaferNest" envelope="SiWafer">
+      <posXYZ volume="SiWaferActive" />
+    </composition>
+    
+    <stackX name="waferRow" origin="atCentre" >
+      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross" /> <!-- ident? -->
+    </stackX>
+
+    <stackY name="towerLayerWafers" origin="atCentre" >
+      <axisMPos volume="waferRow" ncopyREF="nWaferAcross"/>
+    </stackY>
+
+<!-- The collection of wafers is centered in the volume -->
+    <composition name="SiLayerComp" env="SiLayerEnv">
+      <posXYZ volume="towerLayerWafers" />
+    </composition>
+
+    <box name="TKRFaceSheet"  
+	 XREF="TKRTrayWidth" 
+	 YREF="TKRTrayWidth" 
+	 ZREF="faceThick" material="TKRFaceMat" />
+
+    <!-- Make a stack for the bottom tray -->
+    <stackZ name="trayBot" >
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="TKRCoreNoConv" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+      </axisPos>
+    </stackZ>
+
+    <!-- Stack for middle no-lead trays -->
+    <stackZ name="trayNoConv" >
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+      </axisPos>
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="TKRCoreNoConv" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+      </axisPos>
+    </stackZ>
+
+    <!-- stack for super-GLAST layers -->
+    <stackZ name="traySuper" >
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+      </axisPos>
+      <axisPos volume="convSuper" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="TKRCoreSuper" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+      </axisPos>
+    </stackZ>
+
+    <!-- Regular trays other than top -->
+    <stackZ name="trayReg" >
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+      </axisPos>
+      <axisPos volume="convReg" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="TKRCoreReg" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="1" /> <!-- 1 means top -->
+      </axisPos>
+    </stackZ>
+
+    <!-- top tray -->
+    <stackZ name="trayTop" >
+      <axisPos volume="SiLayer" >
+	<identifier field="SiPosition" value="0" /> <!-- 0 means bottom -->
+      </axisPos>
+      <axisPos volume="convReg" />
+      <axisPos volume="TKRFaceSheet" />
+      <axisPos volume="TKRCoreReg" />
+      <axisPos volume="TKRFaceSheet" />
+    </stackZ>
+
+    <!-- make a tracker by stacking up the trays -->
+    <stackZ name="tracker" >
+      <axisPos volume="trayBot" zrot="90" >
+	<identifier field="tray" value="0" />
+        <identifier field="orient" value="1" /> <!-- 0 is X, 1 is Y -->
+      </axisPos>
+      <axisPos volume="trayNoConv" gapREF="outerInterTrayGap" >
+	<identifier field="tray" value="1" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayNoConv" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="2" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="traySuper" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="3" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="traySuper" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="4" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="traySuper" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="5" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="traySuper" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="6" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="7" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="8" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="9" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="10" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="11" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="12" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="13" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="14" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="15" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="16" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+      <axisPos volume="trayReg" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="17" />
+        <identifier field="orient" value="0" />
+      </axisPos>
+      <axisPos volume="trayReg" zrot="90" gapREF="innerInterTrayGap" >
+	<identifier field="tray" value="18" />
+        <identifier field="orient" value="1" />
+      </axisPos>
+
+    </stackZ>
+
+  </section>
+</gdd>
