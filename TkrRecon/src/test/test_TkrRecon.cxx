@@ -13,10 +13,8 @@
 
 #include "Event/Digi/TkrDigi.h"
 
-#include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
-#include "Event/Recon/TkrRecon/TkrFitTrack.h"
-#include "Event/Recon/TkrRecon/TkrFitPlane.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
 
@@ -112,22 +110,9 @@ StatusCode test_TkrRecon::execute()
             << endreq;
     }
     
-    // and the Pat Rec candidates
-    SmartDataPtr<Event::TkrPatCandCol> candData(eventSvc(), 
-        EventModel::TkrRecon::TkrPatCandCol);
-    
-    if (candData==0) {
-        log << MSG::INFO << "no TkrPatCandCol found" << endreq;
-        sc = StatusCode::FAILURE;        
-        return sc;}
-    else {
-        log << MSG::INFO  << candData->size() 
-            << " candidate tracks(s) found" << endreq;
-    }
-    
     // and the TkrFitTracks
-    SmartDataPtr<Event::TkrFitTrackCol> trackData(eventSvc(), 
-        EventModel::TkrRecon::TkrFitTrackCol);
+    SmartDataPtr<Event::TkrTrackCol> trackData(eventSvc(), 
+        EventModel::TkrRecon::TkrTrackCol);
     
     if (trackData==0) {
         log << MSG::INFO << "no TkrTrackCol found" << endreq;

@@ -63,7 +63,7 @@ protected:
 
     class Candidate
     {
-	friend ComboFindTrackTool;
+	//friend ComboFindTrackTool;
     public:
 		Candidate(double e, Point x, Vector t, double chi_cut,
 			      IFindTrackHitsTool *hit_finder, ITkrFitTool *fitter);

@@ -651,7 +651,7 @@ int FindTrackHitsTool::addLeadingHits(Event::TkrTrack* track)
 
         // Fill in a temporary filter parameter set
 		double arc_len = m_propagatorTool->getArcLen(); 
-		Event::TkrTrackParams& next_params = m_propagatorTool->getTrackParams(arc_len, cur_energy, true);
+		Event::TkrTrackParams next_params = m_propagatorTool->getTrackParams(arc_len, cur_energy, true);
 		next_params(2) = -next_params(2);
 		next_params(4) = -next_params(4); 
 		Event::TkrTrackParams& filter_params = trackHit->getTrackParams(Event::TkrTrackHit::FILTERED);
