@@ -760,7 +760,7 @@ StatusCode CalValsTool::calculate()
     CAL_TotSum_Corr = CAL_EneSum_Corr/CAL_EnergySum;
     //CAL_Total_Corr  = CAL_Energy_Corr/CAL_EnergySum; 
 	CAL_CsI_RLn     = radLen_CsI;
-	CAL_MIP_Diff    = CAL_EnergySum - 12.52*radLen_CsI;
+	CAL_MIP_Diff    = CAL_EnergySum - 12.07*radLen_CsI;
     CAL_Tot_RLn     = t_total;
     CAL_Cnt_RLn     = t;
     CAL_DeadTot_Rat = radLen_Stuff/t_total;
