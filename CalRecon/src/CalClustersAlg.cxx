@@ -13,454 +13,24 @@
 #include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/ObjectVector.h"
 
-//Gamma function and Minuit
-#include "TMath.h"
-#include "TMinuit.h"
-
-int nbins;  //!< Number of bins used for the fit
-std::vector<double> g_elayer;  //!< Energy per layer in GeV
-double slope;   //!< slope of the shower direction
-double xtalHeight; //!< xtal height in cm
-double xtalWidth;  //!< xtal width  in cm
-
-
 static const AlgFactory<CalClustersAlg>  Factory;
 const IAlgFactory& CalClustersAlgFactory = Factory;
 
 using namespace Event;
 
-//! function to compute the true energy deposited in a layer
-/*! Uses the incomplete gamma function:
-*       gamma(double,double) implemented in gamma.cxx
-*/ 
-static double gam_prof(double *par, int i)
-
-// Purpose and method:
-//        To find the integral of the shower profile over the layer i.
-//
-//        Takes into account the shower angle with vertical direction. 
-//
-//  Inputs:
-//           par - pointer to the array of 4 shower profile parameters,
-//                 only par[0] and par[2] are used, while 2 other parameters
-//                 are evaluated using predefined formulas;
-//           i   - layer number
-//
-//   returned: integral of shower profile over requested layer.
-//
-{
-	double result =0; 
-	
-	double length = ((xtalHeight*i+par[2])/1.85)/slope;
-	
-	// Evaluation of the parameters of CsI at this energy	
-	//	double alpha = par[1];
-	//	double lambda = par[3];
-	
-	double alpha = 2.65*exp(0.15*log(par[0]));
-	double lambda = 2.29*exp(-0.031*log(par[0]));
-	
-	
-	double x=length/lambda;
-	double dx = xtalHeight / (1.85 *lambda)/slope;
-	
-	double gamma1 =0;
-	double gamma2 = 0;
-	
-	// Now we will calculate the gamma incomplete function
-	
-	// gamma1 = integration from 0 to x	
-	gamma1 = TMath::Gamma(alpha,x);
-	x += dx;
-	
-	// gamma2 = integration from 0 to x+dx	
-	gamma2 = TMath::Gamma(alpha,x);
-	
-	// the result of integration over Xtal pathlength is E*(gamma2-gamma1)
-	result = par[0]*(gamma2 - gamma1);
-	
-	return result;
-}
-
-
-//! the fcn function needed by Minuit
-/*! Computes the chisquare ie:
-\f$ \chi^2= \sum_{i=1}^{8}\frac{(\bar{E}-E_i)^2}{\sigma_i}\f$
-*/
-
-static void fcn(int & , double *, double &f, double *par, int )
-
-// Purpose: calculates the weighted sum of quadratic deviations
-//          of energy depositioins in layers from predicted by shower
-//          profile function
-//          this function is called by Minuit package, which defines
-//          the set of parameters. Not all parameters are used by this
-//          function
-//
-// Input: par - array of parameters of fitted profile function
-//         
-// Output: f - the result of chi2 calculation
-{
-	int i;
-	//calculate 'chisquare'
-	double chisq = 0;
-	double dlt;
-	
-	for (i=0;i<nbins; i++) {
-		dlt  = (g_elayer[i]-gam_prof(par,i));
-		if(g_elayer[i]>0.001) chisq += dlt*dlt/g_elayer[i];
-	}
-	
-	f = chisq;
-}
-
-double CalClustersAlg::Leak(double eTotal,double elast)
-
-// Purpose and method:
-//              
-//              Calculates the energy leakage from calorimeter
-//              using the fitted correlation with last layer energy
-//               deposition
-//  
-//    Inputs:
-//             eTotal - total energy deposition in the calorimeter
-//             elast  - energy deposition in the last layer
-//
-//    Returned: energy leakage
-
-{
-    if(eTotal<200.) return 0.;
-    else
-    {
-        // Evaluation of energy using correlation method
-        // Coefficients fitted using GlastSim.
-        double p0 = -1.49 + 1.72*slope;
-        double p1 = 0.28 + 0.434 * slope;
-        double p2 = -15.16 + 11.55 * slope;
-        double p3 = 13.88 - 10.18 * slope;
-        double lnE = log(eTotal/1000.);
-        double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
-        
-        double e_leak = funcoef * elast;
-        
-        // Evaluation of energy using correlation with last layer
-       	// coefficients fitted using tbsim and valid for ~1GeV<E<~50GeV
-       	//double slope = 1.111 + 0.557*log(eTotal/1000.);
-        //double intercept = 210. + 112.* log(eTotal/1000.)*log(eTotal/1000.); 
-       	//double e_leak = slope * elast + intercept;
-        return e_leak;
-    }
-}
-
-void CalClustersAlg::Profile(double eTotal, Event::CalCluster* cl)
-
-// Purpose and method:
-// 
-//               This function fits the parameters of shower profile using
-//               the Minuit minimization package and stores the fitted
-//               parameters in the CalCluster object
-//
-//  Inputs:    eTotal - total energy deposition in the calorimeter
-//             cl - pointer to the CalCluster object to store the fitted
-//                  parameters 
-//
-//  Output:   parameters fit_energy,ki2,fit_start,fit_alpha,fit_lambda,
-//            stored in CalCluster object using initProfile() method
-
-{
-    
-    if( eTotal<2000. || slope == 0) //algorithm is useless under several GeV
-    {
-        cl->initProfile(0,0,0,0,0);
-    }
-    else
-    {
-        double fit_energy;
-        double ki2;
-        double fit_alpha;
-        double fit_lambda;
-        double fit_start;
-        double energy_err;
-        double alpha_err;
-        double lambda_err;
-        double start_err;
-        
-        // Vector of step, initial min and max value
-        float vstrt[5];
-        float stp[5];
-        float bmin[5];
-        float bmax[5];
-        
-        // We are working in GeV
-        double eTotal_GeV = eTotal / 1000;
-        
-        // par[0] is energy
-        // par[1] is alpha
-        // par[2] is the starting point
-        // par[3] is lambda
-        
-        // Init start values and bounds
-        
-        // starting value of each parameter
-        vstrt[0] = eTotal_GeV;
-		
-        
-        // parametrisation of alpha
-        vstrt[1] = 2.65 * exp(0.15*log(eTotal_GeV));
-		
-        // eq to 1X0 in CsI
-        vstrt[2] = 1.8f;			
-        vstrt[3] = 2.29 * exp(-0.031*log(eTotal_GeV));
-		
-        // step value of each parameter
-        stp[0] = 0.1f;
-        stp[1] = 0.1f;
-        stp[2] = 0.02f;
-        stp[3] = 0.2f;
-        
-        // minimum value of each parameter
-        bmin[0] = 0.5*eTotal_GeV;
-        bmin[1] = 0.5;
-        bmin[2] = -5;
-        bmin[3] = 0.;
-        
-        // maximum value of each parameter
-        bmax[0] = 5 * eTotal_GeV;
-        bmax[1] = 15;
-        bmax[2] = 10;
-        bmax[3] = 10;
-        
-        // Those are the arguments for Minuit
-        double arglist[10];
-        int ierflg = 0;
-        
-        // Set no output because of tuple output
-        arglist[0] = -1;
-        minuit->mnexcm("SET PRI", arglist ,1,ierflg);
-        
-        // idem with warnings ( minuit prints warnings
-        // when the Hessian matrix is not positive )
-        minuit->mnexcm("SET NOW", arglist ,1,ierflg);
-        
-        arglist[0] = 1;
-        minuit->mnexcm("SET ERR", arglist ,1,ierflg);
-        
-        // defines the strategy used by minuit
-        // 1 is standard
-        arglist[0] = 2;
-        minuit->mnexcm("SET STR", arglist ,1,ierflg);
-        
-        
-        // Defines parameters
-        
-        minuit->mnparm(0, "Energy",    vstrt[0], stp[0],
-			bmin[0],bmax[0],ierflg);
-        minuit->mnparm(1, "Alpha",    vstrt[1], stp[1],
-			bmin[1],bmax[1],ierflg);
-        minuit->mnparm(2, "Starting point",  vstrt[2], stp[2],
-			bmin[2],bmax[2],ierflg);
-        minuit->mnparm(3, "Lambda",  vstrt[3], stp[3],
-			bmin[3],bmax[3],ierflg);
-        
-        // Fix some parameters
-        // alpha
-        arglist[0] = 2;
-        minuit->mnexcm("FIX ", arglist ,1,ierflg);
-        
-        // lambda
-        arglist[0] = 4;
-        minuit->mnexcm("FIX ", arglist ,1,ierflg);
-        
-        
-        // Calls Migrad with 500 iterations maximum
-        arglist[0]=500;
-        arglist[1]=1;
-        minuit->mnexcm("MIGRAD",arglist,2,ierflg);
-        
-        // Retrieve parameter information 
-        
-        minuit->GetParameter( 0, fit_energy,energy_err ); 
-        minuit->GetParameter( 1, fit_alpha,alpha_err ); 
-        minuit->GetParameter( 2, fit_start,start_err ); 
-        minuit->GetParameter( 3, fit_lambda,lambda_err ); 
-        
-        // Get chi-square
-        double edm,errdef;
-        int nvpar,nparx,icstat;
-        minuit->mnstat(ki2,edm,errdef,nvpar,nparx,icstat);
-        
-        // Fills data
-        
-        cl->initProfile(1000*fit_energy,ki2,fit_start,fit_alpha,fit_lambda);
-		
-        // Clear minuit
-        arglist[0] = 1;
-        minuit->mnexcm("CLEAR", arglist ,1,ierflg);
-        
-    } 
-	
-}
-
-
-
-Vector CalClustersAlg::Fit_Direction(std::vector<Vector> pos,
-                                     std::vector<Vector> sigma2,
-                                     int nlayers)
-									 //
-									 // Purpose and Method:
-									 //       find the particle direction from average positions in each
-									 //       layer and their quadratic errors. The fit is made independently
-									 //       in XZ and YZ planes for odd and even layers, respectively.
-									 //       Then the 3-vector of particle direction is calculated from these 
-									 //       2 projections.
-									 //       Only position information based on the transversal crystal position
-									 //       is used. The position along the crystal, calculated from signal
-									 //       asymmetry is not used.
-									 //
-									 // Inputs:
-									 //         pos      - average position for each calorimeter layer
-									 //         sigma2   - quadratic error of position measurement for each layer
-									 //                    in each direction  
-									 //         nlayers  - number of calorimeter layers
-									 //
-									 // Returned value:    3-Vector of reconstructred particle direction
-									 //
-                                     
-{
-    
-    MsgStream log(msgSvc(), name());
-    
-    // sigma2.z() is useless here no matter its value.
-    double cov_xz = 0;  // covariance x,z
-    double cov_yz = 0;  // covariance y,z
-    double mx=0;        // mean x
-    double my=0;        // mean y
-    double mz1=0;       // mean z for x pos
-    double mz2=0;       // mean z for y pos
-    double norm1=0;     // sum of weights for odd layers
-    double norm2=0;     // sum of weights for even layers
-    double var_z1=0;    // variance of z for odd layers	
-    double var_z2=0;    // variance of z for even layers
-	
-    // number of layers with non-zero energy deposition
-    // in X and Y direction, respectively
-    int nlx=0,nly=0;
-    
-	
-    // "non-physical vector of direction, which is returned
-    // if fit is imposible due to insufficient number of hitted layers
-    Vector nodir(-1000.,-1000.,-1000.);
-	
-    
-    // loop over calorimeter layers
-    for(int il=0;il<nlayers;il++)
-    {                
-        // For the moment forget about longitudinal position
-		
-        // odd layers used for XZ fit
-        if(il%2==1)
-        {
-			
-            // only if the spread in X direction is not zero,
-            // which is the case if there is non-zero energy
-            // deposition in this layer
-            if (sigma2[il].x()>0.)
-            {
-                nlx++; // counting layers used for the fit in XZ plane 
-				
-                // calculate weighting coefficient for this layer
-                double err = 1/sigma2[il].x(); 
-				
-                // calculate sums for least square linear fit in XZ plane
-                cov_xz += pos[il].x()*pos[il].z()*err;
-                var_z1 += pos[il].z()*pos[il].z()*err;
-                mx += pos[il].x()*err;
-                mz1 += pos[il].z()*err;
-                norm1 += err;
-            }
-        }
-        // even layers used for YZ fit
-        else
-        {
-            // only if the spread in Y direction is not zero,
-            // which is the case if there is non-zero energy
-            // deposition in this layer
-            if(sigma2[il].y()>0.)
-            {
-                
-                nly++; // counting layers used for the fit in YZ plane 
-				
-                // calculate weighting coefficient for this layer
-                double err = 1/sigma2[il].y();
-				
-				
-                // calculate sums for least square linear fit in YZ plane
-                cov_yz += pos[il].y()*pos[il].z()*err;
-                var_z2 += pos[il].z()*pos[il].z()*err;
-                my += pos[il].y()*err;
-                mz2 += pos[il].z()*err;
-                norm2 += err;
-            }
-        }
-    }		
-    
-    // linear fit requires at least 2 hitted layers in both XZ and YZ planes
-    // otherwise non-physical direction is returned
-    // which means that direction hasn't been found
-    if(nlx <2 || nly < 2 )return nodir;
-    
-    
-    
-    
-    mx /= norm1;
-    mz1 /= norm1;
-    cov_xz /= norm1;
-    cov_xz -= mx*mz1;
-    var_z1 /= norm1;
-    var_z1 -= mz1*mz1;
-	
-    // protection against dividing by 0 in the next statment
-    if(var_z1 == 0) return nodir;
-	
-    // Now we have cov(x,z) and var(z) we can
-    // deduce slope in XZ plane
-    double tgthx = cov_xz/var_z1;
-    
-    
-    my /= norm2;
-    mz2 /= norm2;
-    cov_yz /= norm2;
-    cov_yz -= my*mz2;
-    var_z2 /= norm2;
-    var_z2 -= mz2*mz2;
-    
-    // protection against dividing by 0 in the next statment
-    if(var_z2 == 0) return nodir;
-	
-    // Now we have cov(y,z) and var(z) we can
-    // deduce slope in YZ plane
-    double tgthy = cov_yz/var_z2;
-    
-    // combining slope in XZ and YZ planes to get normalized 3-vector
-    // of particle direction
-    double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
-    double costheta = 1/sqrt(1+tgtheta_sqr);
-    Vector dir(costheta*tgthx,costheta*tgthy,costheta);
-    return dir;
-}
-
-
 CalClustersAlg::CalClustersAlg(const std::string& name,
                                ISvcLocator* pSvcLocator):
 Algorithm(name, pSvcLocator)
 {
-	
+    
     // declaration of parameter needed to distinguish 2 calls
     // of CalClustersAlg:
     // 1st - before TkrRecon and 2nd - after TkrRecon
     
     declareProperty("callNumber",m_callNumber=0);
     declareProperty ("clusterToolName", m_clusterToolName="SingleClusterTool");
+    declareProperty ("lastLayerToolName", m_lastLayerToolName="LastLayerCorrTool");
+    declareProperty ("profileToolName", m_profileToolName="ProfileTool");
     
 }
 
@@ -479,7 +49,7 @@ StatusCode CalClustersAlg::initialize()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	
+    
     
     
     // get pointer to GlastDetSvc
@@ -492,9 +62,9 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
     
-	
+    
     // extracting detector geometry constants from xml file
-	
+    
     double value;
     if(!detSvc->getNumericConstByName(std::string("CALnLayer"), &value)) 
     {
@@ -528,19 +98,7 @@ StatusCode CalClustersAlg::initialize()
     // set global constants with geometry parameters (in cm)
     // used by Profile() function
     
-    xtalHeight = m_CsIHeight/10.;  // crystal height in cm
-    xtalWidth = m_CsIWidth/10.;    // crystal width in cm
     
-    
-    // Minuit object
-    minuit = new TMinuit(5);
-    
-    //Sets the function to be minimized
-    minuit->SetFCN(fcn);
-    
-    
-    g_elayer.clear();
-
     // it appears that retrieveTool cannot store a Cluster* pointer. Will need
     // to find ICluster* and downcast it to Cluster*
     ICluster* iclus;
@@ -550,7 +108,25 @@ StatusCode CalClustersAlg::initialize()
         return sc;
     }
     m_clusterTool = dynamic_cast<Cluster*>(iclus);
-	
+    
+    // it appears that retrieveTool cannot store a EnergyCorr* pointer. Will need
+    // to find IEnergyCorr* and downcast it to EnergyCorr*
+    IEnergyCorr* ilast;
+    sc = toolSvc()->retrieveTool(m_lastLayerToolName,ilast);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to create " << m_lastLayerToolName << endreq;
+        return sc;
+    }
+    m_lastLayerTool = dynamic_cast<EnergyCorr*>(ilast);
+
+    IEnergyCorr* iprof;
+    sc = toolSvc()->retrieveTool(m_lastLayerToolName,iprof);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to create " << m_profileToolName << endreq;
+        return sc;
+    }
+    m_profileTool = dynamic_cast<EnergyCorr*>(iprof);
+
     return sc;
 }
 
@@ -571,15 +147,15 @@ StatusCode CalClustersAlg::retrieve()
     
     DataObject* pnode=0;
     
-	
+    
     // get pointer to Calrecon directory in TDS
     sc = eventSvc()->retrieveObject(EventModel::CalRecon::Event, pnode );
     
     // if this directory doesn't yet exist - attempt to create it
     if( sc.isFailure() ) {
         sc = eventSvc()->registerObject(EventModel::CalRecon::Event,
-			new DataObject);
-		
+            new DataObject);
+        
         
         // if can't create - put error message and return
         if( sc.isFailure() ) {
@@ -589,11 +165,11 @@ StatusCode CalClustersAlg::retrieve()
             return sc;
         }
     }
-	
+    
     // attempt to get pointer to CalClusterCol, if it exists already
     m_calClusterCol = SmartDataPtr<CalClusterCol> (eventSvc(),
-		EventModel::CalRecon::CalClusterCol);
-	
+        EventModel::CalRecon::CalClusterCol);
+    
     
     // if it doesn't exist - create it and register in TDS
     if (!m_calClusterCol )
@@ -601,7 +177,7 @@ StatusCode CalClustersAlg::retrieve()
         m_calClusterCol = 0;
         m_calClusterCol = new CalClusterCol();
         sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,
-			m_calClusterCol);
+            m_calClusterCol);
     }
     
     // if it exists - delete all clusters
@@ -609,12 +185,12 @@ StatusCode CalClustersAlg::retrieve()
     {
         m_calClusterCol->delClusters();
     }
-	
-	m_clusterTool->setClusterCol(m_calClusterCol);
-	
+    
+    m_clusterTool->setClusterCol(m_calClusterCol);
+    
     // get pointer to CalXtalRecCol
     m_calXtalRecCol = SmartDataPtr<CalXtalRecCol>(eventSvc(),
-		EventModel::CalRecon::CalXtalRecCol); 
+        EventModel::CalRecon::CalXtalRecCol); 
     
     
     return sc;
@@ -644,31 +220,32 @@ StatusCode CalClustersAlg::execute()
 {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	
+    
     //get pointers to the TDS data structures
     sc = retrieve();
-	
+    
     const Point p0(0.,0.,0.);
     
     // variable indicating ( if >0) the presence of tracker
     // reconstruction output
     int rectkr=0;  
-	
+    
     int ntracks=0;
     Vector trackDirection;
     Point trackVertex;
+    double slope;
     
-	
+    
     // get pointer to the tracker vertex collection
     SmartDataPtr<TkrVertexCol> tkrRecData(eventSvc(),
-		EventModel::TkrRecon::TkrVertexCol);
-	
+        EventModel::TkrRecon::TkrVertexCol);
+    
     // if reconstructed tracker data doesn't exist - put the debugging message
     if (tkrRecData == 0) {
         log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
         // return sc;
     }
-	
+    
     
     // if data exist and number of tracks not zero 
     // - get information of track position and direction 
@@ -690,71 +267,56 @@ StatusCode CalClustersAlg::execute()
             log << MSG::DEBUG << "No reconstructed tracks " << endreq;
         }	
     }
-	
-	int nLayers = m_CalnLayers;
-	
-	// call the Cluster tool to find clusters
-	m_clusterTool->findClusters(m_calXtalRecCol);
-	
-	
+    
+    int nLayers = m_CalnLayers;
+    
+    // call the Cluster tool to find clusters
+    m_clusterTool->findClusters(m_calXtalRecCol);
+    
+    
     // loop over all found clusters
     for (Event::CalClusterCol::const_iterator it = m_calClusterCol->begin();
-    it != m_calClusterCol->end(); it++){
-		
-		
-		// Compute direction using the positions and rms per layer
-		Vector caldir = Fit_Direction((*it)->getPosLayer(),
-			(*it)->getRmsLayer(),
-			nLayers);
-		
-		
-		// if no tracker rec then fill slope
-		if(!rectkr) slope = caldir.z();
-		
+    it != m_calClusterCol->end(); it++){       
         
-		// Leakage correction
-		double eleak = Leak((*it)->getEnergySum(),
-			(*it)->getEneLayer(nLayers-1))
-			+(*it)->getEnergySum();
-		
-		// iteration
-		eleak = Leak(eleak,(*it)->getEneLayer(nLayers-1))
-			+(*it)->getEnergySum();	
-		
-		
-		
-		// defines global variable to be used for fcn
-		g_elayer.resize(nLayers);
-		for (int i =0;i<nLayers;i++)
-		{
-			// We are working in GeV
-			g_elayer[i] = (*it)->getEneLayer(i)/1000.;
-		}
-		nbins = nLayers;
-		
-		// Do profile fitting
-		Profile((*it)->getEnergySum(),(*it));
-		
-		// calculating the transverse offset of average position in the calorimeter
-		// with respect to the position predicted from tracker information
-		double calTransvOffset = 0.;
-		if(ntracks>0){
-			Vector calOffset = ((*it)->getPosition()) - trackVertex;
-			double calLongOffset = trackDirection*calOffset;
-			calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
-			
-		}
-		
-		// store the calculated quantities back in this CalCluster object. Note
-		// temporary ugly kluge of overwriting all but two existing elements!
-		(*it)->initialize(eleak,
-			(*it)->getEneLayer(),
-			(*it)->getPosLayer(),
-			(*it)->getRmsLayer(),
-			(*it)->getRmsLong(),
-			(*it)->getRmsTrans(),
-			caldir,calTransvOffset);
-	}   // close loop on clusters
+        // if no tracker rec then fill slope from cluster
+        if(!rectkr) slope = (*it)->getDirection().z();
+ 
+        // do last layer correlation method
+
+        m_lastLayerTool->setTrackSlope(slope);
+        m_lastLayerTool->doEnergyCorr((*it)->getEnergySum(),(*it));
+
+        // iteration
+        m_lastLayerTool->doEnergyCorr(m_lastLayerTool->getEnergyCorr(),(*it));       
+        double eleak = m_lastLayerTool->getEnergyCorr();
+
+        
+        // Do profile fitting
+
+        m_profileTool->setTrackSlope(slope);
+        m_profileTool->doEnergyCorr((*it)->getEnergySum(),(*it));
+        
+        // calculating the transverse offset of average position in the calorimeter
+        // with respect to the position predicted from tracker information
+        double calTransvOffset = 0.;
+        if(ntracks>0){
+            Vector calOffset = ((*it)->getPosition()) - trackVertex;
+            double calLongOffset = trackDirection*calOffset;
+            calTransvOffset =sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
+            
+        }
+        
+        // store the calculated quantities back in this CalCluster object. Note
+        // temporary ugly kluge of overwriting all but two existing elements!
+        (*it)->initialize(eleak,
+            (*it)->getEneLayer(),
+            (*it)->getPosLayer(),
+            (*it)->getRmsLayer(),
+            (*it)->getRmsLong(),
+            (*it)->getRmsTrans(),
+            (*it)->getDirection(),
+            calTransvOffset);
+    }   // close loop on clusters
     
     // print the reconstruction results for debugging
     m_calClusterCol->writeOut(log << MSG::DEBUG);
@@ -764,13 +326,9 @@ StatusCode CalClustersAlg::execute()
 
 StatusCode CalClustersAlg::finalize()
 {
-	StatusCode sc = StatusCode::SUCCESS;
-	
-	
-	// delete Minuit object
-	delete minuit;
-	
-	return sc;
+    StatusCode sc = StatusCode::SUCCESS;
+        
+    return sc;
 }
 
 
