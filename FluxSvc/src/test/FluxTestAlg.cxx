@@ -188,10 +188,12 @@ StatusCode FluxTestAlg::execute() {
 
 //------------------------------------------------------------------------------
 StatusCode FluxTestAlg::finalize() {
-    delete m_out;
+#if 0 //enable for tests
     std::ostream& diffsources = *m_diffsources;
     m_flux->writeSourceCharacteristic(diffsources);
     delete m_diffsources;
+    delete m_out;
+#endif
     return StatusCode::SUCCESS;
 }
 

@@ -29,7 +29,7 @@ FluxTestAlg.source_name="default";
 
 //ApplicationMgr.EvtSel = "NONE";
 
-ApplicationMgr.EvtMax = 300;
+ApplicationMgr.EvtMax = 10;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
 

@@ -141,20 +141,24 @@ long double CompositeDiffuse::logNlogS(long double flux){
 }
 
 double sizeOfFifthDecade(double currentFlux){
-    return /*currentFlux**/(pow(10,0.2)-1.);
+    return currentFlux*(pow(10,0.2)-1.);
 }
 
 double CompositeDiffuse::getRandomFlux(){
     //NEED TO SET TOTAL INTEGRATED FLUX!!!!
     long double prob=RandFlat::shoot(m_totalIntegratedFlux);
-    long double dx=0.0000000000001;
+    //long double dx=0.0000000000001;
+    long double dx=1E-4;
+    std::cout << "prob=" << prob << std::endl;
     
     double currentFlux = m_minFlux;
     while(prob > 0 && currentFlux<m_maxFlux){
         //dx=0.01*pow(10.0,log10(i));
         double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
-        prob-=(dx)* sourcesPerFlux;
-        currentFlux+=sourcesPerFlux*dx;
+        //std::cout << "currentFlux= " << currentFlux << ", logNlogS(currentFlux) = " << logNlogS(currentFlux) << std::endl;
+        prob-=(dx)* sourcesPerFlux * currentFlux;
+        currentFlux+=(dx)/** sourcesPerFlux*/ * currentFlux;
+        //std::cout << currentFlux << std::endl;
         //	printf("\nin the findandaddnew loop; i=%12.10e, prob=%12.10e, dx=%12.10e , logi=%lf\n",i,prob,dx,log10(i));
     }
     std::cout << "New Source created in CompositeDiffuse, with flux = " << currentFlux << std::endl;
@@ -164,14 +168,16 @@ double CompositeDiffuse::getRandomFlux(){
 void CompositeDiffuse::setFileFlux(){
     double  currentFlux = m_minFlux ;
     m_totalIntegratedFlux = 0.;  //to initialize
-    long double dx=0.0000000000001; 
+    //long double dx=0.0000000000001; 
+    long double dx=1E-4;
     while(currentFlux < m_maxFlux){
         double sourcesPerFlux = logNlogS(currentFlux)/sizeOfFifthDecade(currentFlux);
-        m_totalIntegratedFlux+=(dx)* sourcesPerFlux;
-        currentFlux+=sourcesPerFlux*dx;
+        m_totalIntegratedFlux+=(dx)* sourcesPerFlux * currentFlux;
+        currentFlux+=(dx)/** sourcesPerFlux*/ * currentFlux;
         //std::cout << "m_currentFlux = " << currentFlux << std::endl;
         
     }
+    std::cout << "m_integratedFlux = " << m_totalIntegratedFlux << std::endl;
     
 }
 
@@ -323,7 +329,7 @@ char* CompositeDiffuse::writeLogHistogram(){
     
     std::vector<std::pair<double,double> > currentHistPoints;
     //the histogram starts at minFlux, ends at maxFlux, and holds number of events.
-    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=curFlux*sizeOfFifthDecade(curFlux) ){
+    for(double curFlux = m_minFlux ; curFlux*(1.+sizeOfFifthDecade(curFlux)) <=m_maxFlux ; curFlux+=/*curFlux**/sizeOfFifthDecade(curFlux) ){
         currentHistPoints.push_back(std::make_pair<double,double>(curFlux,0.));  
     }
     
