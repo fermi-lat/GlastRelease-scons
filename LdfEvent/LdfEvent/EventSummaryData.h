@@ -34,7 +34,9 @@ namespace LdfEvent{
         typedef enum {
             GOOD = 0,
             EVTSEQ = 1,
-            TKRRECON = 2
+            TKRRECON = 2,
+            PACKETERROR = 4,
+            SUMMARYERROR = 8
         } EventFlags ;
 
 
@@ -100,6 +102,9 @@ namespace LdfEvent{
         bool badEventSeq() const { return (m_flags && EVTSEQ); };
         bool badTkrRecon() const { return (m_flags && TKRRECON); };
         bool badEvent() const { return (m_flags != 0); } ;
+        bool packetError() const { return (m_flags && PACKETERROR); };
+        bool summaryError() const { return (m_flags && SUMMARYERROR); };
+
         unsigned long eventSequence() const {
             unsigned eventNumber = EventSummary::eventNumber(m_summary);
             unsigned tag = EventSummary::tag(m_summary);
