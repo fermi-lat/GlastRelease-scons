@@ -427,6 +427,7 @@ namespace detModel{
     if(el.getAttribute("Z") != "0")
       b->setZ(atof(xml::Dom::transToChar(el.getAttribute("Z"))));
     b->setMaterial(xml::Dom::transToChar(el.getAttribute("material")));
+    b->setDetectorType(atoi(xml::Dom::transToChar(el.getAttribute("detectorType"))));
 
     if (std::string((xml::Dom::transToChar(el.getAttribute("sensitive")))) == "true")
       b->setSensitive(1);
