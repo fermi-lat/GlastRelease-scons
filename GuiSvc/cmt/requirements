@@ -20,6 +20,10 @@ macro GuiSvc_lib " -L ${GUISVCROOT}/${CMTCONFIG} -lGuiSvc "\
 
 # *No* linkopts.
 
+# make this available to build (identical) GUi client applications
+macro GuiMain ${GUISVCROOT}/src/GuiMain.cxx
+
+
 private
 
 # This following is a pattern to use on any Gui application. A main is not necessary since the lib has 
