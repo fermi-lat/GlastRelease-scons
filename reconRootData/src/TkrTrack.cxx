@@ -2,99 +2,52 @@
 
 ClassImp(TkrTrack)
 
-TkrTrack::TkrTrack() {
-    // default constructor
-    m_hits = 0;
-    m_locator = 0;              // list of hits
-    
-    m_id = 0;              // track id
-    m_type = NONE;            // type of the track (gamma, e+, e-, hadron ...)
-    m_motherId = NONE;        // id of the mother particle (-1 if none)
+// Default constructor
+TkrTrack::TkrTrack() 
+{
+    // Make sure everything is properly zeroed
+    m_id          = -9999;
+    m_ChiSq       = -9999.;
+    m_ChiSqSmooth = -9999.;
+    m_rmsResid    = 0.;
+    m_Q           = 0.;
+    m_KalEnergy   = 0.;
+    m_KalThetaMS  = 0.;
+    m_Xgaps       = 0;
+    m_Ygaps       = 0;
+    m_XistGaps    = 0;
+    m_YistGaps    = 0;
 
-    m_residual = 0.0f;         // residual  
-    m_chi2 = 0.0f;             // chi**2 of the fit
-    m_quality = 0.0f;          // quality measure of the track
-
-    m_firstLayer = 0;         // layer where the particle starts
-
-    m_energyInput = 0.0f;         // energy input from the cal
-    m_energyDetermined = 0.0f;    // energy determined using the tracker + cal
+    m_hits.clear();
 }
 
-TkrTrack::TkrTrack(UShort_t id) {    
-    m_id = id;              // track id
-    m_type = NONE;            // type of the track (gamma, e+, e-, hadron ...)
-    m_motherId = NONE;        // id of the mother particle (-1 if none)
+void TkrTrack::initializeInfo(UInt_t id, UInt_t xgaps, UInt_t ygaps, UInt_t x1st, UInt_t y1st)
+{
+    m_id       = id;
+    m_Xgaps    = xgaps;
+    m_Ygaps    = ygaps;
+    m_XistGaps = x1st;
+    m_YistGaps = y1st;
 
-    m_residual = 0.0f;         // residual  
-    m_chi2 = 0.0f;             // chi**2 of the fit
-    m_quality = 0.0f;          // quality measure of the track
-
-    m_firstLayer = 0;         // layer where the particle starts
-
-    m_energyInput = 0.0f;         // energy input from the cal
-    m_energyDetermined = 0.0f;    // energy determined using the tracker + cal
-    
-    m_hits = 0; 
-    m_locator = 0; 
-
-    Create();
+    m_hits.clear();
 }
 
-TkrTrack::~TkrTrack() {
-    Clean();
-    if (m_hits) {
-        delete m_hits;
-        m_hits = 0;
-    }
-    if (m_locator) {
-        delete m_locator;
-        m_locator = 0;
-    }
+void TkrTrack::initializeQaul(Double_t chiSq, Double_t ChiSqSmooth, Double_t rms, Double_t quality, Double_t e, Double_t ms)
+{
+    m_ChiSq       = chiSq;
+    m_ChiSqSmooth = ChiSqSmooth;
+    m_rmsResid    = rms;
+    m_Q           = quality;
+    m_KalEnergy   = e;
+    m_KalThetaMS  = ms;
 }
 
-void TkrTrack::Clean() {
+const TkrHitPlane& TkrTrack::getEndHit(TKREND end)
+{
+    // If no hits put a bogus one in the list so we don't blow up
+    if (m_hits.size() == 0) m_hits.push_back(TkrHitPlane());
 
-    if (m_hits) {
-        
-        int nEntries = m_hits->GetEntries();
-        for (int i=0; i<nEntries; i++)
-            delete m_hits->At(i);
-            
-        m_hits->Clear();
-        //delete m_hits;
-        //m_hits = 0;
-        
-        //m_hits->Delete();
-    }
-
-    if (m_locator) {
-        
-        int nEntries = m_locator->GetEntries();
-        for (int i=0; i<nEntries; i++)
-            delete m_locator->At(i);
-        m_locator->Clear();
-        //delete m_locator;
-        //m_locator = 0;
-        
-        //m_locator->Delete();
-    }
-
-    m_id = 0;              // track id
-    m_type = NONE;            // type of the track (gamma, e+, e-, hadron ...)
-    m_motherId = NONE;        // id of the mother particle (-1 if none)
-
-    m_residual = 0.0f;         // residual  
-    m_chi2 = 0.0f;             // chi**2 of the fit
-    m_quality = 0.0f;          // quality measure of the track
-
-    m_firstLayer = 0;         // layer where the particle starts
-
-    m_energyInput = 0.0f;         // energy input from the cal
-    m_energyDetermined = 0.0f;    // energy determined using the tracker + cal
-}
-
-void TkrTrack::Create() {
-    if (!m_hits) m_hits = new TObjArray();
-    if (!m_locator) m_locator = new TObjArray();
+    // Return the TkrHitPlane object at the desired end of the track
+    if (end == TKREND::FIRSTHIT) return m_hits.front();
+    else                         return m_hits.back();
 }
