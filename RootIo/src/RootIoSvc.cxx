@@ -262,8 +262,8 @@ void RootIoSvc::beginEvent() // should be called at the beginning of an event
 
 void RootIoSvc::endEvent()  // must be called at the end of an event to update, allow pause
 {        
-	setIndex(-1);
-	setRunEventPair(std::pair<int,int>(-1,-1));
+    m_index = -1;
+    m_runEventPair = std::pair<int, int>(-1,-1);
 }
 
 StatusCode RootIoSvc::run(){
