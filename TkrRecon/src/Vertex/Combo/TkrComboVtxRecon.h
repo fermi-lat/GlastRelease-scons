@@ -24,16 +24,16 @@
 #include "Event/Recon/TkrRecon/TkrPatCand.h"
 #include "Event/Recon/TkrRecon/TkrFitTrack.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
-
-
-
-using namespace Event;
+#include "Event/RelTable/RelTable.h"
 
 class TkrComboVtxRecon 
 {
 public:
-    TkrComboVtxRecon(ITkrGeometrySvc* pTkrGeo, TkrVertexCol* vertexCol, TkrFitTrackCol* pTracks, 
-                     TkrPatCandCol* pCandTracks);
+    TkrComboVtxRecon(ITkrGeometrySvc* pTkrGeo, 
+                     Event::TkrVertexCol* vertexCol, 
+                     Event::TkrFitTrackCol* pTracks, 
+                     Event::TkrPatCandCol* pCandTracks, 
+                     Event::RelTable<Event::TkrVertex,Event::TkrFitTrackBase>* vertexRelTab);
    ~TkrComboVtxRecon();
 
 private:

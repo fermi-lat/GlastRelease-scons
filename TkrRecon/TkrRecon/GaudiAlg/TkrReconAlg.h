@@ -3,6 +3,9 @@
 
 #include "GaudiKernel/Algorithm.h"
 
+#include "Event/Recon/TkrRecon/TkrFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrPatCand.h"
+
 /** 
  * @class TkrReconAlg
  *
@@ -30,6 +33,10 @@ public:
     StatusCode finalize();
     
 private:
+
+    // Internal reconstruction methods
+    StatusCode doFirstPassRecon();
+    StatusCode doSecondPassRecon(Event::TkrPatCandCol* tkrCands);
     
     // Input parameter which determines the type of reconstruction to run
     std::string m_TrackerReconType;

@@ -36,7 +36,7 @@ public:
     StatusCode finalize();
 
     // This maintains a pointer to the particular propagator needed by the track fit
-    static IKalmanParticle* m_KalParticle;
+    //static IKalmanParticle* m_KalParticle;
     
 private:
 
@@ -45,9 +45,6 @@ private:
 
     /// Always use Sears Craftsmen tools for the job
     ITkrFitTool* m_FitTool;
-
-    /// Propagator type, currently RcParticle or G4Propagator
-    int          m_PropagatorType;
 };
 
 #endif

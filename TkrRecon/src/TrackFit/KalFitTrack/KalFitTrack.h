@@ -77,6 +77,8 @@ public:
     void          setStatus(Status status) {m_status = status;}
     void          setType(int type)        {m_type   = type;}
     Status        status() const           {return m_status;}
+
+    void          setEnergy(double energy) {m_energy0 = energy;}
     
 private:    
     /// Utilities

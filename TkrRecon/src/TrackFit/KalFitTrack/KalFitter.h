@@ -34,6 +34,7 @@ class KalFitter
 {    
 public:
     KalFitter(TkrClusterCol* clusters, ITkrGeometrySvc* geo, TkrKalFitTrack* track, int layer, int tower, double sigmaCut, double energy, const Ray& testRay);
+    KalFitter(TkrClusterCol* clusters, ITkrGeometrySvc* geo, TkrKalFitTrack* track, double sigmaCut, double energy);
    ~KalFitter() {}
 
     /// Hit Finding & Fitting

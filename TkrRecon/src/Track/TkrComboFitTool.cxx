@@ -12,15 +12,17 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/Recon/TkrRecon/TkrClusterCol.h"
+#include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
+#include "Event/Recon/TkrRecon/TkrTrackTab.h"
 #include "Event/TopLevel/EventModel.h"
 
-#include "Event/Recon/TkrRecon/TkrKalFitTrack.h"
 #include "src/TrackFit/KalFitTrack/KalFitter.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "src/Track/TkrControl.h"
 
 static ToolFactory<TkrComboFitTool> s_factory;
 const IToolFactory& TkrComboFitToolFactory = s_factory;
+
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter
 //
@@ -79,8 +81,15 @@ StatusCode TkrComboFitTool::doTrackFit(Event::TkrPatCand* patCand)
         
     if (!track->empty(control->getMinSegmentHits())) 
     {
+        //Add the track to the collection in the TDS
         Event::TkrFitTrackCol* pFitTracks = SmartDataPtr<Event::TkrFitTrackCol>(pDataSvc,EventModel::TkrRecon::TkrFitTrackCol); 
         pFitTracks->push_back(track);
+
+        //Update the candidate - fit track relational table
+        Event::TkrFitTrackTab  trackRelTab(SmartDataPtr<Event::TkrFitTrackTabList >(pDataSvc,EventModel::TkrRecon::TkrTrackTab));
+        Event::TkrFitTrackRel* rel = new Event::TkrFitTrackRel(patCand, track);
+
+        trackRelTab.addRelation(rel);
 
         fitter->flagAllHits();
         if(pFitTracks->size() == 1) 
