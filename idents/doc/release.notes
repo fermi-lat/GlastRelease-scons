@@ -1,3 +1,5 @@
 package manager:T.Burnett 
 
 20001126  THB create to hold id classes
+20010804 HMK update AcdId to store 2 bits for layer number
+20010804 HMK tag v2r2
