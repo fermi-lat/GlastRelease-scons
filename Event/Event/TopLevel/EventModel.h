@@ -41,8 +41,8 @@
 
         namespace MC {
             _EXTERN_ std::string Event;
-            _EXTERN_ std::string McVertices;
-            _EXTERN_ std::string McParticles;
+            _EXTERN_ std::string McVertexCol;
+            _EXTERN_ std::string McParticleCol;
             _EXTERN_ std::string McPositionHits;
             _EXTERN_ std::string McIntegratingHits;
         }

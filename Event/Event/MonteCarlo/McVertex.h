@@ -179,6 +179,7 @@ template <class TYPE> class ObjectVector;
 typedef ObjectVector<McVertex>     McVertexVector;
 template <class TYPE> class ObjectList;
 typedef ObjectList<McVertex>       McVertexList;
+typedef ObjectList<McVertex>       McVertexCol;
 
 //} // NameSpace GlastEvent
 

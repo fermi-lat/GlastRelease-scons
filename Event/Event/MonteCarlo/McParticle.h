@@ -114,10 +114,12 @@ class McParticle  : virtual public ContainedObject  {
 
 
 // Definition of all container types of McParticle
-template <class TYPE> class ObjectVector;
-typedef ObjectVector<McParticle>     McParticleVector;
+//template <class TYPE> class ObjectVector;
+//typedef ObjectVector<McParticle>     McParticleVector;
+
 template <class TYPE> class ObjectList;
 typedef ObjectList<McParticle>       McParticleList;
+typedef ObjectList<McParticle>       McParticleCol;
 
 inline StreamBuffer& McParticle::serialize( StreamBuffer& s ) const
 {

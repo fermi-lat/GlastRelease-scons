@@ -24,8 +24,9 @@ public:
             
         // Monte Carlo 
         EventModel::MC::Event             = EventModel::Event + "/MC";
-        EventModel::MC::McVertices        = EventModel::MC::Event  + "/McVertices";
-        EventModel::MC::McParticles       = EventModel::MC::Event  + "/McParticles";
+        EventModel::MC::McVertexCol        = EventModel::MC::Event  + "/McVertexCol";
+        EventModel::MC::McParticleCol       = EventModel::MC::Event  + "/McParticleCol";
+
         EventModel::MC::McPositionHits    = EventModel::MC::Event  + "/McPositionHits";
         EventModel::MC::McIntegratingHits = EventModel::MC::Event  + "/McIntegratingHits";
 
