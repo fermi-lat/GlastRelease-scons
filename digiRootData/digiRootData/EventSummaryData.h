@@ -94,14 +94,14 @@ public:
     /// Returns true if the flag member is non-zero
     Bool_t badEvent() const { return (m_flags != 0); };
     /// Checks of event sequence bit is set in the event flags
-    Bool_t badEventSequence() const { return (m_flags & enums::EVTSEQ); };
+    Bool_t badEventSequence() const { return (m_flags & enums::EVTSEQ)!=0; };
     /// Checks the TkrRecon bit, if set an error occurred during TkrRecon
-    Bool_t badTkrRecon() const { return (m_flags & enums::TKRRECON); };
-    Bool_t packetError() const { return (m_flags & enums::PACKETERROR); };
-    Bool_t temError() const { return (m_flags & enums::SUMMARYERROR); };
+    Bool_t badTkrRecon() const { return (m_flags & enums::TKRRECON)!=0; };
+    Bool_t packetError() const { return (m_flags & enums::PACKETERROR)!=0; };
+    Bool_t temError() const { return (m_flags & enums::SUMMARYERROR)!=0; };
     // old name for temError method
-    Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR); };
-    Bool_t trgParityError() const { return (m_flags & enums::TRGPARITYERROR); };
+    Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR)!=0; };
+    Bool_t trgParityError() const { return (m_flags & enums::TRGPARITYERROR)!=0; };
     
     /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
     UInt_t temLength(unsigned int tem) const { return m_temLen[tem]; }

@@ -34,17 +34,17 @@ public:
     UInt_t getTriggerWord() const { return m_trigger; };
 
     /// kTRUE indicates that ACD LOW occurred
-    bool getAcdLow() const { return m_trigger & enums::b_ACDL;};
+    bool getAcdLow() const { return (m_trigger & enums::b_ACDL)!=0;};
     /// kTRUE indicates that ACD HIGH occurred
-    bool getAcdHigh() const { return m_trigger & enums::b_ACDH;};
+    bool getAcdHigh() const { return (m_trigger & enums::b_ACDH)!=0;};
     /// kTRUE indicates that 3-in-a-row occurred in the TKR
-    bool getTkr3InARow() const { return m_trigger & enums::b_Track;};
+    bool getTkr3InARow() const { return (m_trigger & enums::b_Track)!=0;};
     /// kTRUE indicates that CAL LOW occurred
-    bool getCalLow() const { return m_trigger & enums::b_LO_CAL; };
+    bool getCalLow() const { return (m_trigger & enums::b_LO_CAL)!=0; };
     /// kTRUE indicates that CAL HIGH occurred
-    bool getCalHigh() const { return m_trigger & enums::b_HI_CAL; };
+    bool getCalHigh() const { return (m_trigger & enums::b_HI_CAL)!=0; };
     /// kTRUE when Ritz Throttle is satisfied
-    bool getThrottle() const { return m_trigger & enums::b_THROTTLE; };
+    bool getThrottle() const { return (m_trigger & enums::b_THROTTLE)!=0; };
 	/*@}*/
 
      UInt_t getDigiTriRowBits(const Int_t tower) const;
