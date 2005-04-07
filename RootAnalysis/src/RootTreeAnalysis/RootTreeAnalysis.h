@@ -48,6 +48,7 @@
 
 #if !defined(__CINT__)
 // Need these includes if we wish to compile this code
+#include "TNtuple.h"
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
