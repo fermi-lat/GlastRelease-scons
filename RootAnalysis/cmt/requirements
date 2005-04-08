@@ -44,7 +44,7 @@ private
 # includes="-I${COMMONROOTDATAROOT} -I${DIGIROOTDATAROOT} -I${MCROOTDATAROOT} -I${RECONROOTDATAROOT} -I${ROOTANALYSISROOT}"
 #macro root_linkdef "${ROOTANALYSISROOT}/src/SelectorAnalysis/digi/LinkDef.h" 
 
-macro_append ROOT_libs " -lHist " \
+macro_append ROOT_libs " -lHist -lTreePlayer " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
 
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"\
@@ -62,8 +62,8 @@ application test_RootAnalysis test/runTreeAnalysis.cxx \
             RootTreeAnalysis/RootTreeAnalysis.cxx \
             ${RootAnalysis_headers}
 
-#application runTreeMaker LeaningTower/runTreeMaker.cxx \
-#            LeaningTower/TreeMaker.cxx
+application runTreeMaker LeaningTower/runTreeMaker.cxx \
+            LeaningTower/TreeMaker.cxx
 
 # Define the new Selector Library and Application
 #library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
