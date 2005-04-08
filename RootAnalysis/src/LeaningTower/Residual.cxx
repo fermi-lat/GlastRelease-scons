@@ -31,7 +31,7 @@ public:
         delete myTracker;
     }
 
-    void Go(int lastEntry=-1);
+    void Go(int numEntries=-1, int firstEntry=0);
     // general for DrawXxx: residual is h_abs - h_abs_ext
     // ***********
     // draws the residual, top without fitting, bottom with gauss fit
@@ -60,11 +60,18 @@ Residual::Residual(TString filename, TString resFileName, TString geoFileName) {
     myResFileName = resFileName;
 }
 
-void Residual::Go(int lastEntry) {
-    int numEntries = myEvent->GetEntries();
-    if ( lastEntry == -1 )
-        lastEntry = numEntries;
-    lastEntry = std::min(numEntries, lastEntry);
+void Residual::Go(int numEntries, int firstEntry) {
+    if ( firstEntry < 0 )
+        firstEntry = 0;
+    const int allEntries = myEvent->GetEntries();
+    if ( numEntries == -1 )
+        numEntries = allEntries;
+    else
+        numEntries = std::min(allEntries, firstEntry+numEntries);
+    numEntries -= firstEntry;
+
+    std::cout << "Residual::Go(): firstEntry = " << firstEntry
+              << " numEntries = " << numEntries << std::endl;
 
     int bins = 80000;
     double xmin = -400;
@@ -107,10 +114,10 @@ void Residual::Go(int lastEntry) {
     int usedTrack[2] = { 0, 0 };
     int usedEvent = 0;
 
-    for ( int entry=0; entry<lastEntry; ++entry ) { 
+    for ( int entry=firstEntry; entry<firstEntry+numEntries; ++entry ) {
         myEvent->Go(entry);
 
-        progress.Go(entry, lastEntry);
+        progress.Go(entry, numEntries, firstEntry);
 
         recon->GetEvent(entry);
         const Int_t TkrNumClus = recon->GetTkrNumClus();
@@ -191,7 +198,7 @@ void Residual::Go(int lastEntry) {
             ++usedEvent;
     } // end of loop over all events
 
-    std::cout << "used " << usedEvent << " of " << lastEntry << std::endl;
+    std::cout<<"used "<<usedEvent<<" of "<<numEntries<<" events"<<std::endl;
     std::cout << "found " << ++usedTrack[0] << " good tracks in X and "
               << ++usedTrack[1] << " in Y" << std::endl;
 
