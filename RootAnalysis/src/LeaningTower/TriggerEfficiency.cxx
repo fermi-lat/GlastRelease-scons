@@ -15,6 +15,8 @@
 #include "Recon.h"
 #include "Progress.h"
 
+#include <bitset>
+
 class TriggerEfficiency {
 private:
     Event*   myEvent;
@@ -49,14 +51,15 @@ void TriggerEfficiency::Go(int lastEntry) {
 
     Progress progress;
 
-    int shouldTrigger[18];
-    int isTrigger[18];
+    UInt_t shouldTrigger[18];
+    UInt_t isTrigger[18];
     for ( int l=0; l<18; ++l )
         shouldTrigger[l] = isTrigger[l] = 0;
 
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
         const Int_t eventId = myEvent->GetEventId();
+	std::cout<<eventId<<std::endl;
         progress.Go(entry, lastEntry);
 
         bool hits[18][2];
@@ -84,13 +87,24 @@ void TriggerEfficiency::Go(int lastEntry) {
         }
         // doing 3-in-a-row
         // index i will measure the efficiency of the layer combination i-1,1,i+1
+	UInt_t digi3row   = myEvent->GetTkrDigi3RowBits();
+	UInt_t trgReq3row = myEvent->GetTkrTrgReq3RowBits();
+	UInt_t recomp_digi(0);
+	UInt_t recomp_trgreq(0);
+	//	std::cout<<std::bitset<16>(trgReq3row)<<" "<<std::bitset<16>(digi3row) <<std::endl;
         for ( int l=1; l<17; ++l )
-            if ( hits[l-1][0] && hits[l-1][1] && hits[l][0] && hits[l][1] && hits[l+1][0] && hits[l+1][1] ) { // 3-in-a-row hits
-                ++shouldTrigger[l];
-                if ( trigger[l-1][0] && trigger[l-1][1] && trigger[l][0] && trigger[l][1] && trigger[l+1][0] && trigger[l+1][1] )
-                    ++isTrigger[l];
+	  {
+	    if ( hits[l-1][0] && hits[l-1][1] && hits[l][0] && hits[l][1] && hits[l+1][0] && hits[l+1][1] ) { // 3-in-a-row hits
+	      ++shouldTrigger[l];
+	      recomp_digi|=(1<<l-1);
+	      if ( trigger[l-1][0] && trigger[l-1][1] && trigger[l][0] && trigger[l][1] && trigger[l+1][0] && trigger[l+1][1] )
+		{++isTrigger[l];recomp_trgreq|=(1<<l-1);}	  
             }
+	  }
+	//these should be dentical to digi3row and trgReq3row:
+	//	std::cout<<std::bitset<16>(recomp_trgreq)<<" "<<std::bitset<16>(recomp_digi)<< std::endl;
     }
+    
     std::cout << "Layers   shouldTrigger   trigger   efficiency  inefficiency" << std::endl;
     for ( int l=1; l<17; ++l ) {
         const float eff = shouldTrigger[l] > 0 ? 100. * isTrigger[l] / shouldTrigger[l] : -100.;

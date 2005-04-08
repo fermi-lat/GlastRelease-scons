@@ -14,7 +14,8 @@ Event::Event(TString filename, TList* geometry) {
     myTree->SetBranchAddress("RunId",&RunId);
     myTree->SetBranchAddress("TkrTotalNumHits",&TkrTotalNumHits);
     myTree->SetBranchAddress("EbfTime",&EbfTime);
-    myTree->SetBranchAddress("Tkr3RowBits",&Tkr3RowBits);
+    myTree->SetBranchAddress("TkrDigi3RowBits",&TkrDigi3RowBits);
+    myTree->SetBranchAddress("TkrTrgReq3RowBits",&TkrTrgReq3RowBits);
 
     NumberOfEvents = (int)myTree->GetEntries();
     std::cout << "Number of events: " << NumberOfEvents << std::endl;

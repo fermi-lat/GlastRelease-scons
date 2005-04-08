@@ -90,7 +90,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     Float_t TkrVtx1X, TkrVtx1Y, TkrVtx1Z;
     Float_t TkrVtx1Theta, TkrVtx1Phi, TkrVtx1ThetaXZ, TkrVtx1ThetaYZ;
 
-    UInt_t Tkr3RowBits;
+    UInt_t TkrDigi3RowBits,TkrTrgReq3RowBits;
 
     TFile myFile(m_TreeFileName, "RECREATE", "TreeFile", 1);
     TreeCollection = new TObjArray();
@@ -144,8 +144,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         tag += NumGTCC * NumGTRC;
         tag += "]/I";
         Header->Branch("TkrDiagnostics", TkrDiagnostics, tag);
-	Header->Branch("Tkr3RowBits",&Tkr3RowBits,"Tkr3RowBits/I");
-
+	Header->Branch("TkrTrgReq3RowBits",&TkrTrgReq3RowBits,"TkrTrgReq3RowBits/i");
+	Header->Branch("TkrDigi3RowBits",&TkrDigi3RowBits,"TkrDigi3RowBits/i");
 #endif
         TreeCollection->Add(Header);
     }
@@ -284,9 +284,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             LevelOneTrigger = l1t.getTriggerWord() & 0x1f;
             // there are more bits set, but why?
             bool tkrTrigger = l1t.getTkr3InARow();
-            // Johann, I assume Digi is right here (vs. Trg)?
-	    Tkr3RowBits = l1t.getDigiTriRowBits(0);
-
+	    TkrTrgReq3RowBits = evt->getL1T().getTrgReqTriRowBits(0);
+	    TkrDigi3RowBits = evt->getL1T().getDigiTriRowBits(0);
             if ( DEBUG )
                 std::cout << "bool 3-in-a-row: " << tkrTrigger
                           << "  Tkr3RowBits: " << std::setw(6) << Tkr3RowBits
@@ -400,12 +399,10 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 if ( TkrNumTracks > 0 ) {
 		  track1 = (TkrTrack*)tkrCol->First();
 		  TkrTrk1NumClus = track1->GetEntries();
-		  std::cout<<"track1 with  "<<TkrTrk1NumClus<<"hits"<<std::endl;
  		}
 		////////////////// TKR CLUSTER: ////////////////////////////////
                 const TObjArray* clusCol = tkrRec->getClusterCol();
                 TkrNumClus = clusCol->GetEntries();
-		std::cout<<"event with  "<<TkrNumClus<<" clusters"<<std::endl;
                 TIter tkrClusIter(clusCol);
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
