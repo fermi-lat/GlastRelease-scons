@@ -7,6 +7,7 @@
 #include "TList.h"
 #include "TObjectTable.h"
 #include "TObjString.h"
+#include "TPaveText.h"
 #include "TString.h"
 #include "TStyle.h"
 #include "TText.h"
@@ -41,9 +42,12 @@ private:
     TGraph* TGraphYclusters2;
     TLine anXtrack;
     TLine anYtrack;
+    TPaveText* TPaveStat;
+    int runId;
 
 public:
     EventDisplay(TString="MyRootFile.root", TString geo="");
+    void SetRunId(const int r) { runId = r; }
     void Go(int=-1);
 };
 
@@ -83,6 +87,12 @@ EventDisplay::EventDisplay(TString filename, TString geoFileName) {
     TGraphYclusters1 = new TGraph;
     TGraphXclusters2 = new TGraph;
     TGraphYclusters2 = new TGraph;
+
+    TPaveStat = new TPaveText(300, 710, 500, 785);
+    TPaveStat->SetTextAlign(12);
+    TPaveStat->SetTextSize(0.025);
+
+    runId = -1;
 }
 
 void EventDisplay::Go(int numEvent) {
@@ -101,13 +111,23 @@ void EventDisplay::Go(int numEvent) {
     myEvent->Go(entry);
     myEventDisplay->cd();
 
+    if ( runId == -1 )
+        runId = myEvent->GetRunId();
     const int eventId         = myEvent->GetEventId();
+    const float ebfTime       = myEvent->GetEbfTime();
     const int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
 
+    std::cout << "RunId           = " << runId << std::endl;
     std::cout << "EventId         = " << eventId << std::endl;
-    std::cout << "RunId           = " << myEvent->GetRunId() << std::endl;
-    std::cout << "EbfTime         = " << myEvent->GetEbfTime() << std::endl;
+    std::cout << "EbfTime         = " << ebfTime << std::endl;
     std::cout << "TkrTotalNumHits = " << TkrTotalNumHits << std::endl;
+
+    TPaveStat->Clear();
+    TPaveStat->AddText((TString("RunId:     "))+=runId);
+    TPaveStat->AddText((TString("EventId:  "))+=eventId);
+    TPaveStat->AddText((TString("EbfTime: "))+=ebfTime);
+    myEventDisplay->cd(2);
+    TPaveStat->Draw();
 
     Recon* recon = myEvent->GetRecon();
 
