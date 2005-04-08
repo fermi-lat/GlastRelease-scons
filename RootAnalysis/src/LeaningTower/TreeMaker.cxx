@@ -199,7 +199,6 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     UInt_t evtCounterMc    = 0;
     UInt_t evtCounterDigi  = 0;
     UInt_t evtCounterRecon = 0;
-    const Int_t rollOver = 131072;
     Int_t digiEventIdOld, reconEventIdOld, mcEventIdOld;
     digiEventIdOld = reconEventIdOld = mcEventIdOld = -1;
     for ( Int_t evtCounter=0; evtCounter<numEvents; ++evtCounter ) {
@@ -239,42 +238,12 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         GetEvent(evtCounterMc, evtCounterDigi, evtCounterRecon);
 
         // synchronizing the three trees
-        if (mc) {
+        if (mc)
             mcEventId = mc->getEventId();
-            /*
-            if ( mcEventIdOld > mcEventId ) {
-                std::cout << "*********************** " << mcEventIdOld << ' '
-                << mcEventId << ' ' << rollOver;
-                //                mcEventId += rollOver;
-                std::cout << ' ' << mcEventId << std::endl;
-            }                
-            mcEventIdOld = mcEventId;
-            */
-        }
-        if (evt) {
+        if (evt)
             digiEventId = evt->getEventId();
-            /*
-            if ( digiEventIdOld > digiEventId ) {
-                std::cout << "*********************** " << digiEventIdOld << ' '
-                << digiEventId << ' ' << rollOver;
-                //                digiEventId += rollOver;
-                std::cout << ' ' << digiEventId << std::endl;
-            }                
-            digiEventIdOld = digiEventId;
-            */
-        }
-            if (rec) {
+            if (rec)
             reconEventId = rec->getEventId();
-            /*
-            if ( reconEventIdOld > reconEventId ) {
-                std::cout << "*********************** " << reconEventIdOld
-                << ' '<< reconEventId << ' ' << rollOver;
-                //                reconEventId += rollOver;
-                std::cout << ' ' << reconEventId << std::endl;
-            }                
-            reconEventIdOld = reconEventId;
-            */
-        }
         // agreeing on a common event id
         EventId = std::min(std::min(mcEventId, digiEventId), reconEventId);
 
@@ -315,7 +284,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             LevelOneTrigger = l1t.getTriggerWord() & 0x1f;
             // there are more bits set, but why?
             bool tkrTrigger = l1t.getTkr3InARow();
-	    Tkr3RowBits = l1t.getTriRowBits(0);
+            // Johann, I assume Digi is right here (vs. Trg)?
+	    Tkr3RowBits = l1t.getDigiTriRowBits(0);
 
             if ( DEBUG )
                 std::cout << "bool 3-in-a-row: " << tkrTrigger
@@ -323,28 +293,6 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                           << ' '
                           << static_cast<std::bitset<sizeof(UInt_t)*8> >
                     (Tkr3RowBits) <<std::endl;
-
-            // indicates that 3-in-a-row occurred in the TKR
-
-            // ***************************************************************
-            // it is not clear if the files taken at Pisa in August and
-            // September 2004 contain a correct L1T.  E.g., 040826180009.ldf
-            // should have been taken with internal trigger (00100), but the
-            // trigger word is 10010.
-            // ***************************************************************
-            // print some info about the trigger
-            static bool tkrTriggerWarning = true;
-            if ( DEBUG || tkrTriggerWarning ) { // print at least once
-                if ( !tkrTrigger )
-                    std::cerr << "Trigger primitive:  External trigger!"
-                              << std::endl;
-                std::cout << "LevelOneTrigger: " << LevelOneTrigger <<std::endl;
-                std::cout << "L1T doesn't seem to work, thus we record the "
-                          << "TkrDiagnostics even if it may not make sense!"
-                          << std::endl;
-            }
-            tkrTrigger = true;
-            tkrTriggerWarning = false;
 
             // Ebf time
             static Double_t EbfTimeStart = evt->getEbfTimeSec();
@@ -462,7 +410,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
                 TkrCluster* pTkrClus = 0;
                 int clusIdx = 0;
 		int trk1Idx = 0;
-		float eps = 0.0001;
+                // what was eps for?  Comment now, but to be removed one day!
+                //		float eps = 0.0001;
                 while ( ( pTkrClus = (TkrCluster*)tkrClusIter.Next() ) ) {
                     // filling the arrays of TkrClus.
                     // Don't fill more than MaxNumTkrClusters!
