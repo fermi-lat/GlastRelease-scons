@@ -382,12 +382,10 @@ StatusCode digiRootReaderAlg::readEventSummary() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    EventSummaryData evtSummary = m_digiEvt->getEventSummaryData();
+    const EventSummaryData &evtSummary = m_digiEvt->getEventSummaryData();
     unsigned summaryWord = evtSummary.summary();
     unsigned eventFlags = evtSummary.eventFlags();
     unsigned int evtSeq = evtSummary.eventSequence();
-
-//    LdfEvent::EventSummaryData *evtSumTds;
 
     // Only update the eventflags on the TDS if the /Event/EventSummary
     // does not yet exist (digiRootReader may fill this for us)
@@ -405,6 +403,7 @@ StatusCode digiRootReaderAlg::readEventSummary() {
     evtSumTds->initialize(summaryWord);
     evtSumTds->initEventFlags(eventFlags);
     evtSumTds->initOswEvtSequence(evtSeq);
+
     //const unsigned int nTem = 16;
     //unsigned int iTem;
     //unsigned int tem[nTem];
