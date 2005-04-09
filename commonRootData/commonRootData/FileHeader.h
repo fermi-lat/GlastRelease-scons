@@ -39,6 +39,12 @@ public:
     void setString( const char * name, const TString & ) ;
     TString getString( const char * name ) const ;
 
+    TMapIter& getIntMapIter(Bool_t dir=kIterForward) const; 
+ 
+    TMapIter& getDoubleMapIter(Bool_t dir=kIterForward) const ; 
+
+    TMapIter& getStringMapIter(Bool_t dir=kIterForward) const ; 
+
 private:
 
     TMap m_integers ;

@@ -55,4 +55,19 @@ TString FileHeader::getString( const char * name ) const {
 	else
 	  return ((TObjString *)value)->GetString() ;
 }
+
+TMapIter& FileHeader::getIntMapIter(Bool_t dir) const {
+    static TMapIter m(&m_integers, dir);
+    return m;
+}
+
+TMapIter& FileHeader::getDoubleMapIter(Bool_t dir) const {
+    static TMapIter m(&m_doubles, dir);
+    return m;
+}
+
+TMapIter& FileHeader::getStringMapIter(Bool_t dir) const {
+    static TMapIter m(&m_strings, dir);
+    return m;
+}
  
