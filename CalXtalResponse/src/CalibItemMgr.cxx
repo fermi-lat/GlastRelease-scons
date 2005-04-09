@@ -121,18 +121,23 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
     if ((sc = updateCache()).isFailure()) return sc;
   }
 
+  // check that we have a spline for this particular xtal
+  // (i.e. when LAT is not fully populated)
+  TSpline3 *spline = m_splineLists[calibType][idx];
+  if (!spline) return StatusCode::FAILURE;
+
   // bounds check input to spline function to avoid
   // weird behavior
   x = max<double>(m_splineXMin[calibType][idx],x);
   x = min<double>(m_splineXMax[calibType][idx],x);
 
-  y = m_splineLists[calibType][idx]->Eval(x);
+  y = spline->Eval(x);
   
   if (owner->m_superVerbose) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::VERBOSE << "Evaluating spline: "
-           << m_splineLists[calibType][idx]->GetName()
+           << spline->GetName()
            << " X=" << x
            << " Y=" << y
            << endreq;

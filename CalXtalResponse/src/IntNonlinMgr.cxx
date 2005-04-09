@@ -22,9 +22,9 @@ IntNonlinMgr::IntNonlinMgr() :
 
   // set size of spline lists (1 per range)
   for (unsigned i = 0; i < m_splineLists.size(); i++) {
-    m_splineLists[i].resize(RngIdx::N_VALS);
-    m_splineXMin[i].resize (RngIdx::N_VALS);
-    m_splineXMax[i].resize (RngIdx::N_VALS);
+    m_splineLists[i].resize(RngIdx::N_VALS, 0);
+    m_splineXMin[i].resize (RngIdx::N_VALS, 0);
+    m_splineXMax[i].resize (RngIdx::N_VALS, 0);
   }
 }
 
@@ -113,7 +113,7 @@ StatusCode IntNonlinMgr::genSplines() {
     float error;
 
     sc = getIntNonlin(rngIdx.getCalXtalId(), adc, dac, error);
-    if (sc.isFailure()) return sc;
+    if (sc.isFailure()) continue; // support parial LATs
 
     int n = min(adc->size(),dac->size());
 
@@ -140,12 +140,12 @@ StatusCode IntNonlinMgr::genSplines() {
 }
 
 StatusCode IntNonlinMgr::fillRangeBases() {
-  m_rngBases.resize(RngIdx::N_VALS);
+  m_rngBases.resize(RngIdx::N_VALS,0);
 
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     CalXtalId xtalId = rngIdx.getCalXtalId();
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) return StatusCode::FAILURE;
+    if (!rngBase) continue; // support partial LAT inst
 
     if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
 

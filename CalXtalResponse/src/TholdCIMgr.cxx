@@ -73,12 +73,12 @@ StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
 }
 
 StatusCode TholdCIMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS);
+  m_rngBases.resize(XtalIdx::N_VALS,0);
 
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
     CalXtalId xtalId = xtalIdx.getCalXtalId();
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) return StatusCode::FAILURE;
+    if (!rngBase) continue; // support parial LAT inst
 
     if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
 

@@ -31,7 +31,8 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-/// retrieve pedestal calibration constants as measured during muon calibration threshold testing.
+/** \brief retrieve pedestal calibration constants as measured with muons
+ */
 StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
                                 CalibData::ValSig &ped) {
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
@@ -50,12 +51,12 @@ StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
 }
 
 StatusCode TholdMuonMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS);
+  m_rngBases.resize(XtalIdx::N_VALS,0);
 
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
     CalXtalId xtalId = xtalIdx.getCalXtalId();
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) return StatusCode::FAILURE;
+    if (!rngBase) continue; // support partial LAT instruments
 
     if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
 

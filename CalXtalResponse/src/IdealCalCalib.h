@@ -31,7 +31,7 @@ class IdealCalCalib {
   //////////////////
   vector<double> pedVals;       ///< 1 pedestal value per range
   vector<double> pedCos;        ///< associated correlated pedestal cosines
-  double         pedSigPct;     ///< sigma/val for all pedestal calibrations
+  vector<double> pedSigs;       ///< sigma/val for all pedestal calibrations
 
   //////////////////
   //// ASYMMETRY ///

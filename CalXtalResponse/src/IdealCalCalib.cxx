@@ -33,7 +33,7 @@ StatusCode IdealCalCalib::readCfgFile(const string &path) {
 
   pedVals       = ifile.getDoubleVector(PEDS.c_str(), "VALS");
   pedCos        = ifile.getDoubleVector(PEDS.c_str(), "COS");
-  pedSigPct     = ifile.getDouble(PEDS.c_str(), "SIG_PCT");
+  pedSigs       = ifile.getDoubleVector(PEDS.c_str(), "SIG");
 
   asymLrgNeg    = ifile.getDouble(ASYM.c_str(), "LARGE_NEG");
   asymLrgPos    = ifile.getDouble(ASYM.c_str(), "LARGE_POS");

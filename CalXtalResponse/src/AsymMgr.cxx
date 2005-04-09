@@ -22,9 +22,9 @@ AsymMgr::AsymMgr() :
 
   // set size of spline lists (1 per xtal)
   for (unsigned i = 0; i < m_splineLists.size(); i++) {
-    m_splineLists[i].resize(XtalIdx::N_VALS);
-    m_splineXMin[i].resize(XtalIdx::N_VALS);
-    m_splineXMax[i].resize(XtalIdx::N_VALS);
+    m_splineLists[i].resize(XtalIdx::N_VALS, 0);
+    m_splineXMin[i].resize(XtalIdx::N_VALS,  0);
+    m_splineXMax[i].resize(XtalIdx::N_VALS,  0);
   }
 }
 
@@ -135,7 +135,7 @@ StatusCode AsymMgr::genSplines() {
                  asymLrg, asymSm, 
                  asymNSPB, asymPSNB, 
                  Xpos);
-    if (sc.isFailure()) return sc;
+    if (sc.isFailure()) continue; //support partial LATs
 
     int n = Xpos->size();
     
@@ -237,13 +237,13 @@ StatusCode AsymMgr::genSplines() {
 }
 
 StatusCode AsymMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS);
+  m_rngBases.resize(XtalIdx::N_VALS,0);
 
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
     CalXtalId xtalId = xtalIdx.getCalXtalId();
 
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) return StatusCode::FAILURE;
+    if (!rngBase) continue; // support partial LAT inst
 
     if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
 
@@ -255,11 +255,11 @@ StatusCode AsymMgr::fillRangeBases() {
 
 StatusCode AsymMgr::loadIdealVals() {
   // linear 'fake' spline needs only 2 points
-  m_idealAsymLrg.resize(2);
-  m_idealAsymSm.resize(2);
+  m_idealAsymLrg.resize (2);
+  m_idealAsymSm.resize  (2);
   m_idealAsymNSPB.resize(2);
   m_idealAsymPSNB.resize(2);
-  m_idealXVals.resize(2);
+  m_idealXVals.resize   (2);
 
   m_idealAsymLrg[0].m_val = owner->m_idealCalib.asymLrgNeg;
   m_idealAsymLrg[0].m_sig = owner->m_idealCalib.asymLrgNeg * 
