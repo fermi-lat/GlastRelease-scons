@@ -54,6 +54,9 @@ public:
     /// update the pointer
     void update(CalibData::TkrSplitsCalib* pSplits);
 
+    /// get max hits
+    int getMaxStrips(int tower, int layer, int view, int end) const;
+
 private:
     /// internal init method
     StatusCode doInit();
@@ -69,6 +72,8 @@ private:
     std::string m_splitsFile;
     /// array containing splits, for use as a quick test
     int m_splits[NTOWERS][NLAYERS][NVIEWS];
+    /// default maxStrips
+    int m_defaultMaxStrips;
 };
 
 #endif // TkrSplitsSvc_H

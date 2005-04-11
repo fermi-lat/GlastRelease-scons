@@ -50,6 +50,7 @@ TkrSplitsSvc::TkrSplitsSvc(const std::string& name,ISvcLocator* svc)
     // declare the properties
 
     declareProperty("splitsFile", m_splitsFile="");
+    declareProperty("defaultMaxStrips", m_defaultMaxStrips=64);
 }
 
 StatusCode  TkrSplitsSvc::queryInterface (const IID& riid, void **ppvIF)
@@ -161,6 +162,12 @@ int TkrSplitsSvc::getLastC0Strip(int tower, int layer, int view) const
 
         return pSplit->getHigh()*NSTRIPS - 1;
     }
+}
+
+int TkrSplitsSvc::getMaxStrips(int tower, int layer, int view, int end) const
+{
+    // for now, just return m_defaultStrips... we need something to handle contouring
+    return m_defaultMaxStrips;
 }
 
 void TkrSplitsSvc::update(CalibData::TkrSplitsCalib* pSplits)

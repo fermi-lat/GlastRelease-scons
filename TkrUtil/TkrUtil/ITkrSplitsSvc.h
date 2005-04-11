@@ -39,6 +39,9 @@ public:
         const = 0;
     /// update to latest pointer when calibration changes
     virtual void update(CalibData::TkrSplitsCalib* pSplits) = 0;
+    /// max number of hits
+    virtual int  getMaxStrips(int tower, int layer, int view, int end=0)
+        const = 0;
 
 };
 
