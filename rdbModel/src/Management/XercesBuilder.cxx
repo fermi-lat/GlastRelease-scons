@@ -123,6 +123,8 @@ namespace rdbModel {
     DOMElement* src = xmlBase::Dom::findFirstChildByName(e, "src");
 
     newCol->m_null = (xmlBase::Dom::getAttribute(src, "null") == "true");
+    newCol->m_stickyInsert = 
+      (xmlBase::Dom::getAttribute(src, "stickyInsert") == "true");
 
     DOMElement* child = xmlBase::Dom::getFirstChildElement(src);
     if (xmlBase::Dom::checkTagName(child, "default")) {
@@ -149,8 +151,11 @@ namespace rdbModel {
         else if (contents == "username") {
           newCol->m_contents = Column::CONTENTSusername;
         }
-        else if (contents == "enter_time") {
-          newCol->m_contents = Column::CONTENTSenterTime;
+        else if (contents == "insert_time") {
+          newCol->m_contents = Column::CONTENTSinsertTime;
+        }
+        else if (contents == "update_time") {
+          newCol->m_contents = Column::CONTENTSupdateTime;
         }
         // otherwise just stick with default value of CONTENTSunspecified
       }
