@@ -14,6 +14,11 @@ CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type, const std::
 };
 
 StatusCode CalTkrLikelihoodTool::initialize(){
+    
+    // parent initialize must not be forgotten
+    if (EnergyCorr::initialize().isFailure())
+     { return StatusCode::FAILURE ; }
+
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
     MsgStream log(msgSvc(), name());
@@ -50,8 +55,7 @@ StatusCode CalTkrLikelihoodTool::initialize(){
 }
 
 
-StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data, 
-                                      Event::CalCluster* cluster)
+StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
 //Purpose and method:
 //
 //   This function performs:
@@ -65,7 +69,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data,
   StatusCode sc = StatusCode::SUCCESS;
 
   // if reconstructed tracker data doesn't exist or number of tracks is 0:
-  if( !data->getTkrNVertices() ) {
+  if( !getKernel()->getTkrNVertices() ) {
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutNOTKRREC, 1.);
     return sc;
   }
@@ -78,7 +82,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data,
   
   // Energy:
   double pdfVariables[2]= {cluster->getEnergySum(), 0.};
-  double pdfDataPoint[2]= {0., data->getSlope()};
+  double pdfDataPoint[2]= {0., getKernel()->getSlope()};
   if( pdfVariables[0]<20. ) {
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutMAXCALENERGY, 1.);
     return sc;
@@ -89,13 +93,13 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data,
   }
   
   // direction: slope must be above \f$cos(32\circ)$\f
-  if( data->getSlope()<.8480481 ){ 
+  if( getKernel()->getSlope()<.8480481 ){ 
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutSLOPE, 1.);
     return sc; 
   }
 
   // z-position:
-  const Point &trackVertex= data->getTkrFrontVertexPosition();
+  const Point &trackVertex= getKernel()->getTkrFrontVertexPosition();
   int vertex=  int((trackVertex[2]-108.)*3.2e-2);
   if( vertex<0 || vertex>15 ) { 
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutVERTEX, 1.);
@@ -107,7 +111,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data,
   //    integrated along the track, normalized to 1.
   //               3. use the geometric mean of values on X and Y axis as a
   //    basis for geometric cut.
-  const Vector &trackDir= data->getTkrFrontVertexDirection();
+  const Vector &trackDir= getKernel()->getTkrFrontVertexDirection();
   double geometricCut= 1.;
   for( int ax= 0; ax<2; ++ax ){
     double slope= -trackDir[ax]/trackDir[2];
@@ -131,7 +135,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( const CalClusteringData *data,
   // CALCULATE
   //    - get number of hits in TKR
   Event::TkrDigiCol *tkrDigiData = SmartDataPtr<Event::TkrDigiCol>
-                          (data->getEventSvc(), EventModel::Digi::TkrDigiCol); 
+                          (getKernel()->getEventSvc(), EventModel::Digi::TkrDigiCol); 
   Event::TkrDigiCol::iterator it;
   for ( it= tkrDigiData->begin(); it!=tkrDigiData->end(); ++it )
     pdfVariables[0]+= (double)(*it)->getNumHits();

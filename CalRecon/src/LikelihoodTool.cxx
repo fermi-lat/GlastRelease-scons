@@ -27,15 +27,16 @@ StatusCode LikelihoodTool::readPDFparameters( MsgStream &log,
     int errflag;
     while( !dataFile.eof() ){
       getline(dataFile, line);
+      std::cout<<line<<std::endl ;
       if( (line=="") || (line=="\n") ) continue;
       else if( line.size()>6 && (line.substr(0, 7)=="COMMENT") ) continue; 
       else if( line.size()>6 && (line.substr(0, 6)=="#PDFs:") ){
-        m_PDFCol= new PDF_Data*[m_Npdf];
-        for( int pdfs= 0; pdfs<m_Npdf; ++pdfs ) m_PDFCol[pdfs]= 0;
         sscanf(line.data(), "#PDFs: %d #Parameters: %d", &m_Npdf, &nPar);
         log<<MSG::DEBUG<<"File must contain "<<m_Npdf<<", for "<<nPar
                        <<" parameters"<<endreq;
-        if( nPar>0 && m_Npdf>0 ) continue;
+        m_PDFCol= new PDF_Data*[m_Npdf];
+        for( int pdfs= 0; pdfs<m_Npdf; ++pdfs ) m_PDFCol[pdfs]= 0;
+       if( nPar>0 && m_Npdf>0 ) continue;
       } else if( line=="AXES:" ){
         if( !m_PDFAxes ){
           log<<MSG::DEBUG<<"Extracting Axes"<<endreq;

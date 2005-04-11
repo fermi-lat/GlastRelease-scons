@@ -3,13 +3,14 @@
 #define __CalClusteringTool_H 1
 
 #include "CalIClusteringTool.h"
+#include "CalReconActor.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
 
 /**   
 * @class CalClusteringTool
@@ -26,7 +27,7 @@
 */
 
 
-class CalClusteringTool : public CalIClusteringTool,  public AlgTool {
+class CalClusteringTool : public CalIClusteringTool,  public AlgTool, protected CalReconActor {
 	
   public:
     
@@ -37,13 +38,10 @@ class CalClusteringTool : public CalIClusteringTool,  public AlgTool {
     virtual ~CalClusteringTool() ;
     
 	/// @brief Intialization of the tool
-    virtual StatusCode initialize();
+    virtual StatusCode initialize() ;
 
     /// @brief Default cluster finding framework
-    virtual StatusCode findClusters(
-        const Event::CalXtalRecCol *,
-        Event::CalClusterCol *
-      ) ;
+    virtual StatusCode findClusters() ;
 
   protected:
     
@@ -51,23 +49,14 @@ class CalClusteringTool : public CalIClusteringTool,  public AlgTool {
     typedef  std::vector<Event::CalXtalRecData *> XtalDataVec ;
     typedef  std::vector<XtalDataVec *> XtalDataVecVec ;
 
-	//! crystal width
-    double m_CsIWidth;
-
-    //! crystal height
-    double m_CsIHeight;
-
-    //! number of layers
-    int m_CalnLayers;
-
     //! Collect CalXtalRecData pointers
-    virtual void getXtals( const Event::CalXtalRecCol *, XtalDataVec & xtals ) ;
+    virtual void getXtals( XtalDataVec & xtals ) ;
 
-    //! Distinguish sets of related xtals
+    //! THE METHOD TO IMPLEMENT: aggregate the sets of related xtals
     virtual void makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters ) =0 ;
 
     //! Construct CalClusters from sets of related xtals
-    virtual void setClusters( const XtalDataVecVec &, Event::CalClusterCol * ) ;
+    virtual void setClusters( const XtalDataVecVec & ) ;
 
     // calculate the direction of the shower from the hits
     virtual Vector fitDirection

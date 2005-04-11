@@ -36,6 +36,7 @@ Simulation.Members += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
 ApplicationMgr.DLLs += { "CalRecon", "TkrRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
 Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg", "TkrReconAlg" } ;
+CalClustersAlg.corrToolNames = { "LastLayerCorrTool", "ProfileTool", "CalValsCorrTool", "CalTkrLikelihoodTool" } ;
 
 // output
 Reconstruction.Members += { "digiRootWriterAlg", "reconRootWriterAlg" } ;

@@ -79,30 +79,31 @@ StatusCode LastLayerCorrTool::initialize()
 // TDS input: CalCluster
 // TDS output: CalClusters
 
-StatusCode LastLayerCorrTool::doEnergyCorr( const CalClusteringData * data, Event::CalCluster * cluster) {
+StatusCode LastLayerCorrTool::doEnergyCorr( Event::CalCluster * cluster )
+ {
 
   MsgStream lm(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
    
   double eTotal = cluster->getEnergySum() ;
+  double eCorrected = 0 ;
   
   if (eTotal<500.) {
 
-    setEnergyCorr(-1.) ;
-    return sc ;
+    eCorrected = -1. ;
 
   }
   else {
 
-    Event::TkrVertexCol * tkrRecData = SmartDataPtr<Event::TkrVertexCol>(data->getEventSvc(),
+    Event::TkrVertexCol * tkrRecData = SmartDataPtr<Event::TkrVertexCol>(getKernel()->getEventSvc(),
       EventModel::TkrRecon::TkrVertexCol);    
            
     // if reconstructed tracker data doesn't exist - put the debugging message
     if (tkrRecData == 0) {
 
-      setEnergyCorr(-2) ;
+      eCorrected = -2 ;
       //log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
-      return sc;
+      //return sc;
 
     }
     // if data exist and number of tracks not zero 
@@ -110,9 +111,9 @@ StatusCode LastLayerCorrTool::doEnergyCorr( const CalClusteringData * data, Even
     else {
 
 	  // First get reconstructed direction from tracker
-	  int ntracks = data->getTkrNVertices() ;
-	  const Vector & trackDirection = data->getTkrFrontVertexDirection() ;
-	  const Point & trackPosition = data->getTkrFrontVertexPosition() ;
+	  int ntracks = getKernel()->getTkrNVertices() ;
+	  const Vector & trackDirection = getKernel()->getTkrFrontVertexDirection() ;
+	  const Point & trackPosition = getKernel()->getTkrFrontVertexPosition() ;
       
       double thetarec=-1;//reconstructed theta
       double phirec=0;  //reconstructed phi
@@ -140,51 +141,62 @@ StatusCode LastLayerCorrTool::doEnergyCorr( const CalClusteringData * data, Even
       }	
 
       //for now valid up to 26 degrees.. 
-      if (-thetarec < 0.898 )
-       { setEnergyCorr(-3.) ; return sc ; }
-
-      //make cuts for the 0-26 degree limit. Will later make the (theta,phi) dependence available
-
-      if ( fabs(fabs(fabs(fabs(px)-375)-187.5)-187.5)>55 &&
-           fabs(fabs(fabs(fabs(py)-375)-187.5)-187.5)>55) {
-
-        // Evaluation of energy using correlation method
-        // Coefficients fitted using GlastSim.
-        /*
-        double p0 = -1.49 + 1.72*data->getSlope();
-        double p1 = 0.28 + 0.434 * data->getSlope();
-        double p2 = -15.16 + 11.55 * data->getSlope();
-        double p3 = 13.88 - 10.18 * data->getSlope();
-        double lnE = log(eTotal/1000.);
-        double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
-        */
-	  
-        double acoef = m_c0 - m_c1*thetarec + m_c2*thetarec*thetarec;
-
-        double lnE = log(eTotal/1000.) ;
-        double funcoef = (acoef + m_c3 * lnE ) ;
-        double E1 = eTotal + funcoef* cluster->getEneLayer()[data->getCalNLayers()-1];
-        double biascoef = m_b0 + m_b1*log(E1/1000);
-        double E2 = E1/biascoef;
-        funcoef = (acoef + m_c3 * log(E2/1000) ) ;
-        ///first iteration
-        double E3 = eTotal + funcoef* cluster->getEneLayer()[data->getCalNLayers()-1];
-        biascoef= m_b0 + m_b1*log(E3/1000);
-        double E4 = E3/biascoef;
-        funcoef = (acoef + m_c3 * log(E4/1000) );
-        ///second iteration.. probably overkill
-        setEnergyCorr( E4) ;
-
-        //setEnergyCorr( funcoef * cluster->getEneLayer()[getNLayers()-1]);
-
+      if (-thetarec < 0.898 ) {
+          eCorrected = -3. ;
+          //return sc ;
       }
       else {
-      
-        setEnergyCorr(-4) ;
-
-      }
+          //make cuts for the 0-26 degree limit. Will later make the (theta,phi) dependence available
+    
+          if ( fabs(fabs(fabs(fabs(px)-375)-187.5)-187.5)>55 &&
+               fabs(fabs(fabs(fabs(py)-375)-187.5)-187.5)>55) {
+    
+            // Evaluation of energy using correlation method
+            // Coefficients fitted using GlastSim.
+            /*
+            double p0 = -1.49 + 1.72*getKernel()->getSlope();
+            double p1 = 0.28 + 0.434 * getKernel()->getSlope();
+            double p2 = -15.16 + 11.55 * getKernel()->getSlope();
+            double p3 = 13.88 - 10.18 * getKernel()->getSlope();
+            double lnE = log(eTotal/1000.);
+            double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
+            */
+          
+            double acoef = m_c0 - m_c1*thetarec + m_c2*thetarec*thetarec;
+    
+            double lnE = log(eTotal/1000.) ;
+            double funcoef = (acoef + m_c3 * lnE ) ;
+            double E1 = eTotal + funcoef* cluster->getEneLayer()[getKernel()->getCalNLayers()-1];
+            double biascoef = m_b0 + m_b1*log(E1/1000);
+            double E2 = E1/biascoef;
+            funcoef = (acoef + m_c3 * log(E2/1000) ) ;
+            ///first iteration
+            double E3 = eTotal + funcoef* cluster->getEneLayer()[getKernel()->getCalNLayers()-1];
+            biascoef= m_b0 + m_b1*log(E3/1000);
+            double E4 = E3/biascoef;
+            funcoef = (acoef + m_c3 * log(E4/1000) );
+            ///second iteration.. probably overkill
+            eCorrected = E4 ;
+    
+            // eCorrected = funcoef * cluster->getEneLayer()[getNLayers()-1] ;
+    
+          }
+          else {
+          
+            eCorrected = -4 ;
+    
+          }
+       }
     }
   }
 
+ cluster->initialize(eCorrected,
+   cluster->getEneLayer(),
+   cluster->getPosLayer(),
+   cluster->getRmsLayer(),
+   cluster->getRmsLong(),
+   cluster->getRmsTrans(),
+   cluster->getDirection(),
+   cluster->getTransvOffset()) ;
   return sc;
 }

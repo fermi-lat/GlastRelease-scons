@@ -148,7 +148,7 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-StatusCode CalValsCorrTool::doEnergyCorr( const CalClusteringData * data, Event::CalCluster* cluster)
+StatusCode CalValsCorrTool::doEnergyCorr( Event::CalCluster * cluster )
 
 //Purpose and method:
 //
@@ -161,17 +161,19 @@ StatusCode CalValsCorrTool::doEnergyCorr( const CalClusteringData * data, Event:
 
 {
     MsgStream lm(msgSvc(), name());
-    StatusCode sc =  calculate(data);
+    StatusCode sc =  calculate();
     double correctedEnergy = CAL_Energy_Corr;
     if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
 
     return sc;
 }
 
-StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
+StatusCode CalValsCorrTool::calculate( )
 {
     StatusCode sc = StatusCode::SUCCESS;
 
+    const CalReconKernel * data = getKernel() ;
+    
     //MsgStream logstream(msgSvc(), name());
 
     // Recover Track associated info. 
@@ -186,7 +188,7 @@ StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
 
     //Do some vital initializations
     CAL_EnergySum     = 0.;
-    CAL_Energy_LLCorr = 0.;
+// unused !?    CAL_Energy_LLCorr = 0.;
     CAL_EneSum_Corr   = 0.;
     CAL_Energy_Corr   = 0.;
 
@@ -210,7 +212,7 @@ StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
         CAL_LRms_Ratio    = CAL_Long_Rms / CAL_EnergySum;
     }
 
-    CAL_Energy_LLCorr = calCluster->getEnergyLeak();
+// unused !?    CAL_Energy_LLCorr = calCluster->getEnergyLeak();
 
     //Code from meritAlg
     int no_xtals=0;
@@ -370,7 +372,7 @@ StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
     CAL_EdgeSum_Corr = ene_sum_corr/CAL_EnergySum;
     if (good_layers>0) edge_corr /= good_layers;
     CAL_Edge_Corr = edge_corr; 
-    double cal_half_width = 0.5*std::max(m_calXWidth, m_calYWidth);
+//unused !?    double cal_half_width = 0.5*std::max(m_calXWidth, m_calYWidth);
 
     //       Leakage Correction  
     // First: get the rad.lens. in the tracker 
@@ -458,7 +460,7 @@ StatusCode CalValsCorrTool::calculate( const CalClusteringData * data )
 
     // The "final" correction derived empirically from analyizing and flattening the 
     // resultant energy in cos(theta) and log10(E) 
-    double logEsum = log10(ene_sum_corr); 
+// unused !?    double logEsum = log10(ene_sum_corr); 
     //double ad_hoc_factor = (1.35-.15*logEsum )/(1.+.9*(.6 - costh)*(.6 - costh))/
     // (1.-.125*logEsum + (.125*logEsum)*costh);  
     //double ad_hoc_factor = (1.23 - .065*logEsum)/(1.+.14*(logEsum-1.)*(costh-.74));  
@@ -567,7 +569,7 @@ double CalValsCorrTool::containedFraction(Point pos, double gap,
     return in_frac;
 }
 
-StatusCode CalValsCorrTool::aveRadLens(const CalClusteringData * data, Point x0, Vector t0, double radius, int numSamples)
+StatusCode CalValsCorrTool::aveRadLens(const CalReconKernel * data, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
 { // This method finds the averages and rms for a cylinder of rays passing through 
     // the calorimeter of the radiation lengths in CsI and other material. 
     // The radius of the cylinder is "radius" and the number of rays = numSample (plus the 

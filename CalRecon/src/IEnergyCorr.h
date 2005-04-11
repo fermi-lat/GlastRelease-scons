@@ -5,7 +5,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "geometry/Vector.h"
-#include "CalClusteringData.h"
+#include "CalReconKernel.h"
 
 /**   
 * @class IEnergyCorr
@@ -36,9 +36,9 @@ public:
      *  - Energy per layer is computed and stored in CalEnergyCorr in MeV
      *  - Barycenter per layer is also computed and stored in CalEnergyCorr
      */        
-    virtual StatusCode doEnergyCorr( const CalClusteringData *, Event::CalCluster * ) =0 ;
+    virtual StatusCode doEnergyCorr( Event::CalCluster * ) =0 ;
     
-    virtual double getEnergyCorr() =0 ;
+    // unused ! virtual double getEnergyCorr() =0 ;
 
 } ;
 

@@ -12,50 +12,14 @@ CalClusteringTool::CalClusteringTool
 CalClusteringTool::~CalClusteringTool()
  {} 
     
-// This function extracts geometry constants from xml
-// file using GlastDetSvc
 StatusCode CalClusteringTool::initialize()
  {
-  MsgStream log(msgSvc(), name());
-  StatusCode sc = StatusCode::SUCCESS;
-  log<<MSG::INFO<<"BEGIN initialize()"<<endreq ;
-
-  // GlastDetSvc
-  IGlastDetSvc * detSvc ;
-  sc = service("GlastDetSvc", detSvc);
-  if (sc.isFailure())
-   {
-    log<< MSG::ERROR<<"GlastDetSvc not found"<<endreq ;
-    return StatusCode::FAILURE ;
-   }
-   
-  double value;
-  if (!detSvc->getNumericConstByName(std::string("CALnLayer"),&value)) 
-   {
-    log<<MSG::ERROR<<"CALnLayer not defined"<<endreq ;
-    return StatusCode::FAILURE;
-   }
-  else m_CalnLayers = int(value) ;
-    
-  if (!detSvc->getNumericConstByName(std::string("CsIWidth"),&m_CsIWidth))
-   {
-    log<<MSG::ERROR<<"CsIWidth not defined"<<endreq ;
-    return StatusCode::FAILURE ;
-   } 
-    
-  if (!detSvc->getNumericConstByName(std::string("CsIHeight"),&m_CsIHeight))
-   {
-    log<<MSG::ERROR<<"CsIHeight not defined"<<endreq ;
-    return StatusCode::FAILURE ;
-   } 
-      
-  log<<MSG::INFO<<"END initialize()"<<endreq ;
+  if (CalReconActor::initialize(serviceLocator()).isFailure())
+   { return StatusCode::FAILURE ; }
   return StatusCode::SUCCESS ;
  }
 
-StatusCode CalClusteringTool::findClusters(
-    const Event::CalXtalRecCol * calXtalRecCol,
-    Event::CalClusterCol * calClusterCol )
+StatusCode CalClusteringTool::findClusters()
 //Purpose and method:
 //
 //   This function performs the calorimeter cluster reconstruction.
@@ -74,7 +38,7 @@ StatusCode CalClusteringTool::findClusters(
 
   // prepare the initital set of xtals
   XtalDataVec xtals ;
-  getXtals(calXtalRecCol,xtals) ;
+  getXtals(xtals) ;
   
   // find out groups, with at least a zero
   // cluster so that downstream code runs ok
@@ -85,7 +49,7 @@ StatusCode CalClusteringTool::findClusters(
    { clusters.push_back(new XtalDataVec) ; }
 
   // make the clusters
-  setClusters(clusters,calClusterCol) ;
+  setClusters(clusters) ;
   XtalDataVecVec::iterator cluster ;
   for ( cluster = clusters.begin() ;
         cluster != clusters.end() ;
@@ -96,11 +60,11 @@ StatusCode CalClusteringTool::findClusters(
  }
 
 //! Collect CalXtalRecData pointers
-void CalClusteringTool::getXtals( const Event::CalXtalRecCol * calXtalRecCol, XtalDataVec & xtals )
+void CalClusteringTool::getXtals( XtalDataVec & xtals )
  {
   xtals.clear();
   Event::CalXtalRecCol::const_iterator it ;
-  for ( it = calXtalRecCol->begin() ; it != calXtalRecCol->end() ; ++it )
+  for ( it = getKernel()->getXtalRecs()->begin() ; it != getKernel()->getXtalRecs()->end() ; ++it )
    {
     // get pointer to the reconstructed data for given crystal
 	Event::CalXtalRecData * recData = *it ;
@@ -110,9 +74,10 @@ void CalClusteringTool::getXtals( const Event::CalXtalRecCol * calXtalRecCol, Xt
  
 /// This makes CalClusters out of associated CalXtalRecData pointers
 void CalClusteringTool::setClusters
- ( const XtalDataVecVec & clusters,
-   Event::CalClusterCol * calClusterCol )
+ ( const XtalDataVecVec & clusters )
  {
+  getKernel()->getClusters()->delClusters() ;
+  int calnLayers = getKernel()->getCalNLayers() ;
   XtalDataVecVec::const_iterator cluster ;
   for ( cluster = clusters.begin() ;
         cluster != clusters.end() ;
@@ -123,9 +88,9 @@ void CalClusteringTool::setClusters
     //Initialize variables
     double ene = 0;                                 // Total energy in this cluster
     Vector pCluster(0.,0.,0.);                      // Cluster position
-    std::vector<double> eneLayer(m_CalnLayers,0.);     // Energy by layer
-    std::vector<Vector> pLayer(m_CalnLayers);       // Position by layer
-    std::vector<Vector> rmsLayer(m_CalnLayers);     // rms by layer
+    std::vector<double> eneLayer(calnLayers,0.);     // Energy by layer
+    std::vector<Vector> pLayer(calnLayers);       // Position by layer
+    std::vector<Vector> rmsLayer(calnLayers);     // rms by layer
 
     // Compute barycenter and various moments
     
@@ -172,7 +137,7 @@ void CalClusteringTool::setClusters
     
     // loop over calorimeter layers
     int i ;
-    for( i = 0; i < m_CalnLayers; i++)
+    for( i = 0; i < calnLayers; i++)
     {
         // if energy in the layer is not zero - finalize calculations
         if(eneLayer[i]>0)
@@ -190,9 +155,10 @@ void CalClusteringTool::setClusters
             
             // the precision of transverse coordinate measurement
             // if there is no fluctuations: 1/sqrt(12) of crystal width
-            Vector d; 
-            if(i%2 == 1) d = Vector(m_CsIWidth*m_CsIWidth/12.,0.,0.);
-            else d = Vector(0.,m_CsIWidth*m_CsIWidth/12.,0.);
+            Vector d;
+            double csIWidth = getKernel()->getCalCsIWidth() ;
+            if(i%2 == 1) d = Vector(csIWidth*csIWidth/12.,0.,0.);
+            else d = Vector(0.,csIWidth*csIWidth/12.,0.);
             
             // subtracting the  squared average position and adding
             // the square of crystal width, divided by 12
@@ -211,9 +177,9 @@ void CalClusteringTool::setClusters
     // Now sum the different rms to have one transverse and one longitudinal rms
     double rms_trans = 0;
     double rms_long = 0;
-    std::vector<Vector> posrel(m_CalnLayers);
+    std::vector<Vector> posrel(calnLayers);
     
-    for(int ilayer = 0; ilayer < m_CalnLayers; ilayer++)
+    for(int ilayer = 0; ilayer < calnLayers ; ilayer++)
     {
         posrel[ilayer]=pLayer[ilayer]-pCluster;
        
@@ -238,7 +204,7 @@ void CalClusteringTool::setClusters
 
     cl->initialize(ene, eneLayer, pLayer, rmsLayer, rms_long, rms_trans, caldir, 0.);
 
-    calClusterCol->add(cl);
+    getKernel()->getClusters()->add(cl);
 
    }
   return ;
@@ -293,7 +259,7 @@ Vector CalClusteringTool::fitDirection
     
     
     // loop over calorimeter layers
-    for(int il=0;il<m_CalnLayers;il++)
+    for(int il=0;il<getKernel()->getCalNLayers();il++)
     {                
         // For the moment forget about longitudinal position
         

@@ -8,7 +8,13 @@ package CalRecon
 
 package manager: Alexandre Chekhtman
 
-  v5r23p? ??-apr-05   Pol Introduction of CalTkrLikelihoodTool.
+  v5r24   07-apr-05   Pol Introduction of CalTkrLikelihoodTool.
+                      DC  Introduction of CalTransvOffsetTool (code extracted from CalClustersAlg).
+                      DC  CalClusteringData transformed into CalReconKernel
+                      DC  Factorize access to CalReconKernel in CalReconActor
+                      DC  Corr tools managed as a list.
+                      DC  Removed energy attribute from EnergyCorr.
+                      DC  LastLayerTool directly stores its result in cluster.
   v5r23p2 05-apr-05   DC  Energy corrections made optional.
                       DC  Experimental: check the use of algorithm options.
                       DC  Tests independent of TkrRecon.

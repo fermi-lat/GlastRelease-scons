@@ -78,7 +78,7 @@ public:
 */
            
      // worker function to calculate energy correction 
-     StatusCode doEnergyCorr( const CalClusteringData *, Event::CalCluster * ) ;
+     StatusCode doEnergyCorr( Event::CalCluster * ) ;
 
     
  private:

@@ -212,7 +212,7 @@ StatusCode ProfileTool::initialize()
 }
 
 
-StatusCode ProfileTool::doEnergyCorr( const CalClusteringData * data, Event::CalCluster* cluster)
+StatusCode ProfileTool::doEnergyCorr( Event::CalCluster * cluster )
 //               This function fits the parameters of shower profile using
 //               the Minuit minimization package and stores the fitted
 //               parameters in the CalCluster object
@@ -229,13 +229,13 @@ StatusCode ProfileTool::doEnergyCorr( const CalClusteringData * data, Event::Cal
 
     double eTotal = cluster->getEnergySum() ;
     
-    m_static_slope = data->getSlope() ;
+    m_static_slope = getKernel()->getSlope() ;
 
-    m_xtalHeight = data->getCalCsIHeight()/10.;  // crystal height in cm
-    m_xtalWidth = data->getCalCsIWidth()/10.;    // crystal width in cm
+    m_xtalHeight = getKernel()->getCalCsIHeight()/10.;  // crystal height in cm
+    m_xtalWidth = getKernel()->getCalCsIWidth()/10.;    // crystal width in cm
 
     // defines global variable to be used for fcn
-    m_nbins = data->getCalNLayers() ;
+    m_nbins = getKernel()->getCalNLayers() ;
     m_g_elayer.resize(m_nbins);
     for (int i =0;i<m_nbins;i++)
     {

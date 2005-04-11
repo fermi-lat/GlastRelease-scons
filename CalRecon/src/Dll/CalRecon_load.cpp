@@ -14,11 +14,14 @@ DECLARE_FACTORY_ENTRIES( CalRecon ) {
     DECLARE_ALGORITHM( CalClustersAlg ) ;
     DECLARE_ALGORITHM( CalDisplay ) ;
     DECLARE_ALGORITHM( PropertiesCheckAlg ) ;
+    DECLARE_TOOL( CalReconKernel ) ;
     DECLARE_TOOL( CalSingleClusteringTool ) ;
     DECLARE_TOOL( CalSimpleClusteringTool ) ;
     DECLARE_TOOL( LastLayerCorrTool );
+    DECLARE_TOOL( CalTkrLikelihoodTool );
     DECLARE_TOOL( ProfileTool );
     DECLARE_TOOL( CalValsCorrTool );
+    DECLARE_TOOL( CalTransvOffsetTool );
 } 
 
 

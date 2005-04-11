@@ -6,10 +6,11 @@
 #ifndef __CALCLUSTERSALG_H
 #define __CALCLUSTERSALG_H 1
 
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/Property.h"
+#include "CalReconActor.h"
 #include "CalIClusteringTool.h"
 #include "IEnergyCorr.h"
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/Property.h"
 
 class IGlastDetSvc;
 
@@ -54,7 +55,7 @@ class IGlastDetSvc;
 */
 
 
-class CalClustersAlg : public Algorithm
+class CalClustersAlg : public Algorithm, protected CalReconActor
 {
 public:
     
@@ -63,7 +64,7 @@ public:
     //! destructor
     virtual ~CalClustersAlg() {}; 
     
-    StatusCode initialize();
+    virtual StatusCode initialize() ;
 
         
 /*!Performs the reconstruction, creates one CalCluster object and stores
@@ -75,28 +76,17 @@ public:
  */        
     StatusCode execute();
 
-/*! Finalization of algorithm 
- *  - minuit deleted
- */    
-    StatusCode finalize();
+    StatusCode finalize() ;
         
 protected:
     
-    StatusCode retrieve();
-    
+//    StatusCode retrieve();
+//    
 private:
     
-    //! reconstructed data for crystals, the input of the reconstruction
-    Event::CalXtalRecCol* m_calXtalRecCol;
-    //! the clusters list, the output of the reconstruction
-    Event::CalClusterCol* m_calClusterCol;
-
-    //! data shared by all clustering actors
-    CalClusteringData * m_data ;
-
-    //! this parameter permits to distinguish multiple calls
-    //! to calorimeter reconstruction for the same event
-    int m_callNumber;
+//    //! this parameter permits to distinguish multiple calls
+//    //! to calorimeter reconstruction for the same event
+//    int m_callNumber ;
 
     /// name of Tool for finding clusters
     StringProperty m_clusteringToolName;
@@ -104,30 +94,13 @@ private:
     /// pointer to actual tool for finding clusters
     CalIClusteringTool* m_clusteringTool;
 
-    /// name of Tool for finding last layer energy leakage
-    StringProperty m_lastLayerToolName;
-
-    /// pointer to actual tool for last layer energy correlation
-    IEnergyCorr* m_lastLayerTool;
-
-    /// name of Tool for finding last layer energy leakage
-    StringProperty m_profileToolName;
-
-    /// pointer to actual tool for last layer energy correlation
-    IEnergyCorr* m_profileTool;
-
-    /// name of Tool for calling CalVals tool
-    StringProperty m_calValsCorrToolName;
-
-    /// pointer to actual tool for calling CalVals tool
-    IEnergyCorr* m_calValsCorrTool;
-
-    /// name of Tool for calling CalTkrLikelihood tool
-    StringProperty m_tkrLikelihoodToolName;
-
-    /// pointer to actual tool for calling CalTkrLikelihood tool
-    IEnergyCorr* m_tkrLikelihoodTool;
-};
+    //! correction tool names
+    StringArrayProperty m_corrToolNames ;
+    
+    //! correction tools
+    std::vector<IEnergyCorr*> m_corrTools ;
+    
+} ;
 
 #endif
 

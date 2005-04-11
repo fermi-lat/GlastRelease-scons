@@ -92,7 +92,7 @@ E_i = E_{tot}(\Gamma_{inc}
 * - 10/17/00    RT    comments added
 * - 05/00       RT    first implementation
 */     
-     StatusCode doEnergyCorr( const CalClusteringData *, Event::CalCluster * ) ;
+     StatusCode doEnergyCorr( Event::CalCluster * ) ;
 
      StatusCode finalize();
     

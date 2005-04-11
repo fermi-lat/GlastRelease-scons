@@ -51,7 +51,7 @@ class CalTkrLikelihoodTool :  public LikelihoodTool {
   *\author
   */
            
-     StatusCode doEnergyCorr( const CalClusteringData* , Event::CalCluster* );
+     StatusCode doEnergyCorr( Event::CalCluster * ) ;
 
     
  private:

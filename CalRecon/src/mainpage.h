@@ -85,12 +85,8 @@
  *        The FuzzyCluster library should be loaded if one uses 
  *        FuzzyClusteringTool.
  *
- * @param CalClustersAlg.lastLayerToolName
- *        name of tool performing last layer energy correction
- * @param CalClustersAlg.calTkrLikelihoodToolName
- *        name of tool performing tracker hits energy correction
- * @param CalClustersAlg.profileToolName
- *        name of tool performing profile fitting energy correction
+ * @param CalClustersAlg.corrToolNames
+ *        name of tools performing corrections
  *
  *
  * @param CalXtalRecAlg.xtalEneTool

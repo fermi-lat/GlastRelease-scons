@@ -2,10 +2,11 @@
 #ifndef __CalIClusteringTool_H
 #define __CalIClusteringTool_H 1
 
-#include "GaudiKernel/IAlgTool.h"
+#include "CalReconKernel.h"
+#include "geometry/Vector.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "geometry/Vector.h"
+#include "GaudiKernel/IAlgTool.h"
 
 /**   
 * @class CalIClusteringTool
@@ -29,10 +30,7 @@ class CalIClusteringTool : virtual public IAlgTool {
     virtual ~CalIClusteringTool() {}
 
     //! main method
-    virtual StatusCode findClusters(
-        const Event::CalXtalRecCol *,
-        Event::CalClusterCol *
-      ) =0 ;
+    virtual StatusCode findClusters() =0 ;
 
  } ;
 
