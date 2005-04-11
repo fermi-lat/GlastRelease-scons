@@ -231,7 +231,14 @@ long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
   // Open file
   FXFileDialog *opendialog = new FXFileDialog(this, "Open File");
   opendialog->setSelectMode(SELECTFILE_EXISTING);
-  opendialog->setPatternList("XML files (*.xml)\nAll files (*)");
+  opendialog->setPatternList("XML files (*.xml)\nAll files (*)"); 
+
+  // If the env variable RDBMODELROOT is set, the directory $RDBMODELROOT/xml is
+  // used as the default opening directory for the file browser
+  if (::getenv("RDBMODELROOT") != NULL)
+    opendialog->setDirectory(FXString(::getenv("RDBMODELROOT"))+ "/xml");
+
+  
   if (opendialog->execute() != 0)
     {
       if (onCloseConnection(NULL,0,NULL))
