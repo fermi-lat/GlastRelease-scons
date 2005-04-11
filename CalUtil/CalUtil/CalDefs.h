@@ -323,8 +323,7 @@ namespace CalDefs {
   class XtalIdx : public LATWideIndex {
   public:
     XtalIdx(const idents::CalXtalId &xtal) :
-      //LATWideIndex(calc(xtal.getTower(),
-      LATWideIndex(calc(0, // currently only using tower=0
+      LATWideIndex(calc(xtal.getTower(),
                         xtal.getLayer(),
                         xtal.getColumn())) {}
         
@@ -339,7 +338,8 @@ namespace CalDefs {
                                getLyr(),
                                getCol());
     }
-    static const int N_VALS  = LyrNum::N_VALS*ColNum::N_VALS;
+    static const int N_VALS  = 
+      TwrNum::N_VALS*LyrNum::N_VALS*ColNum::N_VALS;
 
     short getTwr() const {return m_data/TWR_BASE;}
     short getLyr() const {return (m_data%TWR_BASE)/LYR_BASE;}
@@ -371,8 +371,8 @@ namespace CalDefs {
         throw invalid_argument("FaceIdx requires valid face info in xtalId"
                                ".  Programmer error");
 
-      //m_data = calc(xtalId.getTower(),
-      m_data = calc(0, // currently only supporting 1-tower mode
+      
+      m_data = calc(xtalId.getTower(), 
                     xtalId.getLayer(),
                     xtalId.getColumn(),
                     xtalId.getFace());
@@ -431,8 +431,7 @@ namespace CalDefs {
         throw invalid_argument("DiodeIdx requires valid face info in xtalId."
                                "  Programmer error");
 
-      //m_data = calc(xtalId.getTower(),
-      m_data = calc(0, // currenly only support 1-tower mode
+      m_data = calc(xtalId.getTower(),
                     xtalId.getLayer(),
                     xtalId.getColumn(),
                     xtalId.getFace(), 
