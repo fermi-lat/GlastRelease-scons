@@ -53,15 +53,20 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
     return false;
   }
 
+  cout << "TEST INL RANGEBASE [" << xtalId 
+     << "]" << intNonlinVec->size() << endl;
+
   // check that there are enough DAC vals for ADC vals in this rng
   if (intNonlinVec->size() > intNonlinDacVec->size()) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "intNonlin nADC > nDAC" 
+    msglog << MSG::ERROR;
+    // use stream class to get proper formatting out of CalXtalId
+    msglog.stream() << "intNonlin nADC > nDAC" 
            << " CalXtalId=" << xtalId
-           << " nADC="   << intNonlinVec->size()   << " " 
-           << " nDAC="   << intNonlinDacVec->size() << "CalXtalId=" << xtalId
-           << endreq;
+           << " nADC="      << intNonlinVec->size()
+           << " nDAC="      << intNonlinDacVec->size();
+    msglog << endreq;
     return false;
   }
 
@@ -126,13 +131,14 @@ StatusCode IntNonlinMgr::genSplines() {
 
     // put rng id string into spline name
     ostringstream rngStr;
-    rngStr << rngIdx.getCalXtalId() 
-           << " " << rngIdx.getFace()
-           << " " << rngIdx.getRng();
+    rngStr << '[' << rngIdx.getCalXtalId() 
+           << ' ' << rngIdx.getFace()
+           << ' ' << rngIdx.getRng()
+           << ']';
 
-    genSpline(INL_SPLINE,     rngIdx, "intNonlin"+rngStr.str(),    
+    genSpline(INL_SPLINE,     rngIdx, "intNonlin"    + rngStr.str(),    
               dblAdc, dblDac);
-    genSpline(INV_INL_SPLINE, rngIdx, "invIntNonlin"+rngStr.str(), 
+    genSpline(INV_INL_SPLINE, rngIdx, "invIntNonlin" + rngStr.str(), 
               dblDac, dblAdc);
   }
 

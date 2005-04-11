@@ -212,7 +212,7 @@ StatusCode AsymMgr::genSplines() {
 
     // put xtal id string into spline name
     ostringstream xtalStr;
-    xtalStr << xtalIdx.getCalXtalId();
+    xtalStr << '[' << xtalIdx.getCalXtalId() << ']';
 
     genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg"     + xtalStr.str(),   
               dblXpos, dblAsymLrg);
