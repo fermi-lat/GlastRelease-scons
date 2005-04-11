@@ -44,6 +44,9 @@ class GeneralHitToDigiTool : public AlgTool, virtual public IHitToDigiTool {
 
 private:
 
+    int truncateGTRC(Event::TkrDigi* pDigi);
+    int truncateGTCC(Event::TkrDigiCol* pDigiCol);
+
     /// Pointer to the event data service (aka "eventSvc")
     IDataProviderSvc*   m_edSvc;
     /// Pointer to the Glast detector service
