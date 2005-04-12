@@ -24,7 +24,8 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_COMMAND,          QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert),
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_UPDATELAST,         RdbGUIWindow::onUpdateLastRow),
-  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_UPDATEROW,           RdbGUIWindow::onUpdateRowByKey)
+  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_UPDATEROW,           RdbGUIWindow::onUpdateRowByKey),
+  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_COPYROW,             RdbGUIWindow::onCopyRowByKey)
 };
 
 
@@ -495,9 +496,38 @@ long RdbGUIWindow::onUpdateRowByKey(FXObject*,FXSelector, void* ptr)
     m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
   m_dgInsert->recalc();  
   
-  return 1;  
   return 1;
 }
+
+long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
+{
+  FXint row = (FXint) ptr;
+  
+  m_dgInsert->setConnection(m_connect);
+  if ((uiTblColList->getTableList()->getNumItems() == 0 )
+      || (m_connect == 0) || !(m_connect->isConnected()))
+    return 1;
+
+  m_dgInsert->setTableName(uiTable->getTableName());
+  // Build the form
+  m_rdbManager->startVisitor(m_dgInsert);
+  // Fill the form with the last row inserted in the DB
+  m_dgInsert->fillWithRowByKey(uiTable->getItemText(row, 0).text());
+  // Set the mode of the dialog to Insert 
+  m_dgInsert->setInsertMode(1);
+  
+  m_dgInsert->show(PLACEMENT_OWNER);
+  m_dgInsert->setUiLog(uiLog);
+
+  if (m_dgInsert->getDefaultWidth() < 250)
+    m_dgInsert->resize(250,m_dgInsert->getDefaultHeight());
+  else
+    m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();  
+  
+  return 1;
+}
+
 
 void RdbGUIWindow::closeConnection()
 {

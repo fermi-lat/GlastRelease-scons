@@ -69,7 +69,8 @@ public:
     ID_ABOUT,
     ID_INSERT,
     ID_UPDATELAST,
-    ID_UPDATEBYKEY
+    ID_UPDATEROW,
+    ID_COPYROW      
     };
 
   // Message handlers
@@ -86,6 +87,8 @@ public:
   long onInsert(FXObject*,FXSelector, void*);
   long onUpdateLastRow(FXObject*,FXSelector, void*);
   long onUpdateRowByKey(FXObject*,FXSelector, void*);
+  long onCopyRowByKey(FXObject*,FXSelector, void* ptr);
+  
   // ..eccetera
   
 public:

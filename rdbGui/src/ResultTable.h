@@ -12,7 +12,8 @@ class ResultTable: public FXTable
   public:
   
     enum {
-      ID_UPDATEROW = FXTable::ID_LAST
+      ID_UPDATEROW = FXTable::ID_LAST,
+      ID_COPYROW
     };
   
     ResultTable(FXComposite *p, FXObject* tgt=NULL,FXSelector sel=0,
@@ -38,6 +39,7 @@ class ResultTable: public FXTable
     long onCmdCopySel(FXObject*,FXSelector,void*);
     long onCmdMenuPane(FXObject*,FXSelector,void*);
     long onUpdRow(FXObject*,FXSelector,void*);
+    long onCopyRow(FXObject*,FXSelector,void*);
     
   protected:
     ResultTable() {};
@@ -47,6 +49,7 @@ class ResultTable: public FXTable
     std::string m_tableName;
     FXMenuPane *m_recordActions;
     FXMenuCommand *m_updRow;
+    FXMenuCommand *m_copyRow;
     FXint m_selRow;
     
 };

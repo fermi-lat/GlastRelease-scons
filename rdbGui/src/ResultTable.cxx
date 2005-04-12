@@ -12,7 +12,8 @@ FXDEFMAP(ResultTable) ResultTableMap[]={
   FXMAPFUNC(SEL_KEYPRESS,            0,                                    ResultTable::onKeyPress),
   FXMAPFUNC(SEL_COMMAND,             FXTable::ID_COPY_SEL,                 ResultTable::onCmdCopySel),
   FXMAPFUNC(SEL_RIGHTBUTTONRELEASE,  0,                                    ResultTable::onCmdMenuPane),
-  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_UPDATEROW,            ResultTable::onUpdRow)
+  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_UPDATEROW,            ResultTable::onUpdRow),
+  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_COPYROW,              ResultTable::onCopyRow)    
 };
 
 
@@ -30,6 +31,8 @@ ResultTable::ResultTable(FXComposite *p, FXObject* tgt,
 {
   m_recordActions = new FXMenuPane(this);
   m_updRow = new FXMenuCommand(m_recordActions,"Update Row",NULL, this, ResultTable::ID_UPDATEROW);
+  m_copyRow = new FXMenuCommand(m_recordActions,"Copy Row",NULL, this, ResultTable::ID_COPYROW);
+
 }
 
  
@@ -226,6 +229,10 @@ long ResultTable::onCmdMenuPane(FXObject* sender,FXSelector sel,void* ptr)
   return 1;
 }
 
+long ResultTable::onCopyRow(FXObject*,FXSelector,void*)
+{
+  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_COPYROW),(void *)m_selRow);
+}
 
 long ResultTable::onUpdRow(FXObject*,FXSelector,void*)
 {
