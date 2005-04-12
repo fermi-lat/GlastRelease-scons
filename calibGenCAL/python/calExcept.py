@@ -1,14 +1,9 @@
 """
-calExcept
-\brief Calorimeter specific exception classes
+Calorimeter specific exception classes
 """
 
-##
-## \file calExcept.py
-##
 
-
-__facility__      = "CAL"
+__facility__      = "Offline"
 __abstract__      = "Calorimeter specific exception classes"
 __author__        = "D.L.Wood"
 __date__          = "$Date$"
