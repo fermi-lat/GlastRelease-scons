@@ -400,10 +400,11 @@ StatusCode TkrValsTool::calculate()
 
     // Recover Track associated info. 
     SmartDataPtr<Event::TkrTrackCol>   pTracks(m_pEventSvc,EventModel::TkrRecon::TkrTrackCol);
+    if(!pTracks) return sc;
+
     SmartDataPtr<Event::TkrVertexCol>  pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);
     SmartDataPtr<Event::TkrClusterCol> pClusters(m_pEventSvc,EventModel::TkrRecon::TkrClusterCol);
 
-    if(!pTracks) return StatusCode::FAILURE;
 
     // all variable values are preset to zero. Be sure to re-initialize the ones you care about  
 

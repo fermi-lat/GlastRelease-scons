@@ -135,7 +135,7 @@ StatusCode TkrHitValsTool::calculate()
     SmartDataPtr<Event::TkrClusterCol>   
         pClusters(m_pEventSvc,EventModel::TkrRecon::TkrClusterCol);
 
-    if (!pClusters) return StatusCode::FAILURE;
+    if (!pClusters) return sc;
 
     //Make sure we have valid cluster data
     if (pClusters)
