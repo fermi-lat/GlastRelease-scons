@@ -80,6 +80,9 @@ private:
         return true;
     }
 
+    void getConsts(idents::TkrId id, int strip, 
+        double& threshold, double& gain, double& quad, double& muonScale) const;
+
     /// mode: currently "default" or "EM"
     std::string m_mode;
     /// default Gain
