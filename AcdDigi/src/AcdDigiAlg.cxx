@@ -239,7 +239,7 @@ StatusCode AcdDigiAlg::execute() {
         m_pmtB_vetoMipsMap[id] = pmtB_observedMips_veto;
 
         m_pmtA_cnoMipsMap[id] = pmtA_observedMips_cno;
-        m_pmtA_cnoMipsMap[id] = pmtB_observedMips_cno;
+        m_pmtB_cnoMipsMap[id] = pmtB_observedMips_cno;
         
     } // end loop over MC hits
 

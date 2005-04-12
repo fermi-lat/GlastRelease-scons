@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r11p2 12-Apr-2005 HMK Fix typo that prevented CNO on B side from being set
  v1r11p1 04-Jan-2004 JRB fix up xml usage
  v1r11p0 16-Dec-2004 TU  Modify requirements to use Event v10*
  v1r10p1 10-Nov-2004 jrb Change use of xml to v5r* 
