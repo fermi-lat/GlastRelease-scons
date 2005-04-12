@@ -289,7 +289,7 @@ class calIntNonlinCalibXML(calCalibXML):
 
     def write(self, startTime, stopTime, triggers, mode, source, tems = (0,)):             
         """
-        Write data to a CAL TholdCI XML file
+        Write data to a CAL IntNonlin XML file
         """
 
         doc = self.getDoc()        
@@ -397,7 +397,7 @@ class calIntNonlinCalibXML(calCalibXML):
 
     def read(self):
         """
-        Read data from a CAL TholdCI XML file
+        Read data from a CAL IntNonlin XML file
 
         Returns: A tuple of references to Numeric arrays and containing the
         calibration data:
@@ -405,8 +405,10 @@ class calIntNonlinCalibXML(calCalibXML):
         
         doc = self.getDoc()
         
-        dacData = Numeric.zeros((4,), Numeric.PyObject)
-        adcData = Numeric.zeros((16, 4, 8, 2, 12), Numeric.PyObject)
+        dacData = [None, None, None, None]
+        adcData = [None, None, None, None]
+
+        dataSize = [0, 0, 0, 0]        
 
         # find <dac> elements
 
@@ -420,7 +422,14 @@ class calIntNonlinCalibXML(calCalibXML):
             for dac in valueList:
                 data.append(int(dac))
             dacData[erng] = data
-        print dacData
+            dataSize[erng] = len(data)
+
+        # create empty ADC data arrays
+
+        for erng in range(4):
+            size = dataSize[erng]
+            data = Numeric.zeros((16, 8, 2, 12, size), Numeric.Float32)
+            adcData[erng] = data
 
         # find <tower> elements
 
@@ -429,6 +438,7 @@ class calIntNonlinCalibXML(calCalibXML):
 
             tRow = int(t.getAttribute('iRow'))
             tCol = int(t.getAttribute('iCol'))
+            tem = 0
 
             # find <layer> elements
 
@@ -462,10 +472,15 @@ class calIntNonlinCalibXML(calCalibXML):
                             erng = ERNG_MAP[erngName]
                             valueStr = n.getAttribute('values')
                             valueList = valueStr.split()
-                            data = []
+                            data = adcData[erng]
+                            x = 0
                             for adc in valueList:
-                                data.append(float(adc))
-                            print len(data)
+                                data[tem, row, end, fe, x] = float(adc)
+                                x += 1
+                            if x < dataSize[erng]:
+                                for xi in range(x, dataSize[erng]):
+                                    data[tem, row, end, fe, xi] = -1
+                                
 
         return (dacData, adcData)
     
