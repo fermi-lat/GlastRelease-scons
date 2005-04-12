@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v5r13  THB 12-apr-05   add FhSetAlg to output                
 * v5r12p2THB 03-apr-05   restore unit test to 1000 gammas incident                
 * v5r12p1THB 20-mar-05   Test flux to a mixture of clock and default                
 * v5r12  THB 17-mar-05   Put all simulation on FluxAlg sequence, branch to ExposureAlg                
