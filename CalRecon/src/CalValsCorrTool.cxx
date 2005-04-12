@@ -652,14 +652,12 @@ StatusCode CalValsCorrTool::aveRadLens(const CalReconKernel * data, Point /* unu
         for(; istep < numSteps; ++istep) {
             volId = m_G4PropTool->getStepVolumeId(istep);
             volId.prepend(prefix);
-            //std::cout << istep << " " << volId.name() << std::endl;
             bool inXtal = ( volId.size()>7 && volId[0]==0 
                 && volId[3]==0 && volId[7]==0 ? true : false );
             double radLen_step = m_G4PropTool->getStepRadLength(istep);
             double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
             Point x_step       = m_G4PropTool->getStepPosition(istep);
             if(inXtal) {
-                //std::cout << "inXtal " << volId.name() << " " << arcLen_step << " " << radLen_step << std::endl;
                 rl_CsI  += radLen_step;
                 if(is == 0) m_arcLen_CsI  += arcLen_step;
             }

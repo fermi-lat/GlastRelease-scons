@@ -29,7 +29,7 @@ CalClustersAlg::CalClustersAlg
     
   declareProperty ("clusteringToolName", m_clusteringToolName="CalSingleClusteringTool") ;
 
-  const unsigned int nbDefaultCorrTools = 4 ;
+  const unsigned int nbDefaultCorrTools = 5 ;
   std::string defaultCorrTools[nbDefaultCorrTools] =
    { "LastLayerCorrTool", "ProfileTool", "CalValsCorrTool",
      "CalTkrLikelihoodTool", "CalTransvOffsetTool" } ;

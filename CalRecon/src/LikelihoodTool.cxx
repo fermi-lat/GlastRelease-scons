@@ -27,7 +27,6 @@ StatusCode LikelihoodTool::readPDFparameters( MsgStream &log,
     int errflag;
     while( !dataFile.eof() ){
       getline(dataFile, line);
-      std::cout<<line<<std::endl ;
       if( (line=="") || (line=="\n") ) continue;
       else if( line.size()>6 && (line.substr(0, 7)=="COMMENT") ) continue; 
       else if( line.size()>6 && (line.substr(0, 6)=="#PDFs:") ){
