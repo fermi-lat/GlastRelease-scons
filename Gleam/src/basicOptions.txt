@@ -204,7 +204,7 @@ MeritAlg.cuts="LnA";     // no test for tail suppression
 //   Output
 //
 ApplicationMgr.DLLs +={   "RootIo"}; 
-Output.Members = {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+Output.Members = {"FhSetAlg","mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
 
  // output levels, including suppression to allow debug, info
 mcRootWriterAlg.OutputLevel=3;
