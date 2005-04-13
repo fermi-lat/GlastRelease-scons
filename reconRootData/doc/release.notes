@@ -1,4 +1,6 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
+
+v5r4      13-Apr-05  : HMK use commonRootData namespace
 v5r3p4    03-Mar-05  : LSR Propagate a bug fix to TkrTrack.h ... no change to interface
 v5r3p3    02-Mar-05  : HMK Increment ID for TkrRecon
 v5r3p2    28-Feb-05  : LSR add 2 new bit definitions

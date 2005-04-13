@@ -49,15 +49,15 @@
         Double_t gDoca = f*randNum;
         Double_t doca = randNum;
         Double_t actDist = 2.*f;
-        AcdId minDocaId(0, 0, 3, 2);
+        commonRootData::AcdId minDocaId(0, 0, 3, 2);
         acdRec->addRowDoca(randNum);
         acdRec->addRowDoca(f);
         acdRec->addRowActDist(randNum);
         acdRec->addRowActDist(f);
 		acdRec->addEnergy(f*2.);
 		acdRec->addEnergy(f);
-		acdRec->addId(AcdId(0, 0, 1, 2));
-		acdRec->addId(AcdId(0, 1, 3, 4));
+		acdRec->addId(commonRootData::AcdId(0, 0, 1, 2));
+		acdRec->addId(commonRootData::AcdId(0, 1, 3, 4));
         acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId);
 
 		// Create CalRecon object
@@ -94,10 +94,10 @@
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalXtalRecData* xtal = new CalXtalRecData();
-            CalXtalId id;
+            commonRootData::CalXtalId id;
             id.init(1, 2, 3);
-            xtal->initialize(CalXtalId::BESTRANGE, id);
-            CalRangeRecData rec(CalXtalId::LEX8, randNum*f, CalXtalId::HEX8, randNum*4.0);
+            xtal->initialize(commonRootData::CalXtalId::BESTRANGE, id);
+            CalRangeRecData rec(commonRootData::CalXtalId::LEX8, randNum*f, commonRootData::CalXtalId::HEX8, randNum*4.0);
             TVector3 pos(4.5, 7.5, 8.5);
             rec.initialize(pos);
             xtal->addRangeRecData(rec);

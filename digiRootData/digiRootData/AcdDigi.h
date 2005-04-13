@@ -87,9 +87,9 @@ public:
     
     AcdDigi();
 
-    AcdDigi(const AcdId& id);
+    AcdDigi(const commonRootData::AcdId& id);
     
-    AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy, 
+    AcdDigi(const commonRootData::AcdId& id, const commonRootData::VolumeIdentifier& volId, Float_t energy, 
         UShort_t *pha, Bool_t *veto,
         Bool_t *low, Bool_t *high);
     
@@ -106,8 +106,8 @@ public:
 	/// Returns the Monte Carlo energy deposited in this ACD detector
     Float_t getEnergy() { return m_energy; };
 
-    const AcdId& getId() const { return m_id; };
-    const VolumeIdentifier& getVolId() const { return m_volId; };
+    const commonRootData::AcdId& getId() const { return m_id; };
+    const commonRootData::VolumeIdentifier& getVolId() const { return m_volId; };
 
     /// Returns the PHA value for the PMT requested
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
@@ -139,9 +139,9 @@ private:
     /// packed word containing ACD digi data
     UShort_t m_packed[2];	
     /// ACD Id
-    AcdId m_id; 
+    commonRootData::AcdId m_id; 
     /// Volume id for geometry
-    VolumeIdentifier m_volId;
+    commonRootData::VolumeIdentifier m_volId;
 
     // New data members for version 3 
     UShort_t m_packedLdf[2];

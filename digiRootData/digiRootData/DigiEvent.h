@@ -96,7 +96,7 @@ public:
     /// retrieve a specific AcdDigi, based upon the layer, face, row, col, if not found returns null
     const AcdDigi* getAcdDigi(UShort_t l, UShort_t f, UShort_t r, UShort_t c) const;
     /// retrieve a specific AcdTile, based upon a valid AcdId, if not found returns null
-    const AcdDigi* getAcdDigi(const AcdId &id) const;
+    const AcdDigi* getAcdDigi(const commonRootData::AcdId &id) const;
 
     /// retrieve the whole CalDigi collection
     const TClonesArray* getCalDigiCol();
@@ -135,7 +135,8 @@ public:
     CalDigi* addCalDigi();
 	
 	/// Add a new AcdDigi entry into the ACD digi array
-    AcdDigi* addAcdDigi(const AcdId& id, const VolumeIdentifier& volId, 
+    AcdDigi* addAcdDigi(const commonRootData::AcdId& id, 
+                        const commonRootData::VolumeIdentifier& volId, 
         Float_t energy, UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high);
 
     void initGem(const Gem& gem) { m_gem = gem; };

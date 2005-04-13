@@ -39,10 +39,10 @@ public:
     const TVector3& getPosition() const { return m_pos;}
     
     /// retrieve energy from specified face
-    Double_t getEnergy(CalXtalId::XtalFace face) const;
+    Double_t getEnergy(commonRootData::CalXtalId::XtalFace face) const;
     
     /// retrieve energy range from specified face
-    Char_t getRange(CalXtalId::XtalFace face) const;
+    Char_t getRange(commonRootData::CalXtalId::XtalFace face) const;
     
     
 private:

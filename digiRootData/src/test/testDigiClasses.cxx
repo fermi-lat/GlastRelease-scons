@@ -151,14 +151,14 @@ int checkL1T(const L1T &level1) {
 int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     // Checks the contents of one CalDigi object
 
-    CalXtalId id = digi->getPackedId();
+    commonRootData::CalXtalId id = digi->getPackedId();
     if ( (id.getTower() != 5) || (id.getLayer() != 4) || (id.getColumn() != 3) ) {
         std::cout << "CalDigi id is wrong: " << id.getTower() << ", "
         << id.getLayer() << ", " << id.getColumn() << std::endl;
         return -1;
     }
-    CalXtalId::CalTrigMode mode = digi->getMode();
-    if (mode != CalXtalId::BESTRANGE) {
+    commonRootData::CalXtalId::CalTrigMode mode = digi->getMode();
+    if (mode != commonRootData::CalXtalId::BESTRANGE) {
         std::cout << "Cal Digi Mode is wrong: " << mode << std::endl;
         return -1;
     }
@@ -177,16 +177,16 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     for (iReadout = 0; iReadout<numEntries; iReadout++){
         calReadout = &(readoutCol[iReadout]);
         calReadout->Print();
-        UShort_t adcP = calReadout->getAdc(CalXtalId::POS);
-        UShort_t adcM = calReadout->getAdc(CalXtalId::NEG);
-        Char_t rangeM = calReadout->getRange(CalXtalId::NEG);
-        Char_t rangeP = calReadout->getRange(CalXtalId::POS);
+        UShort_t adcP = calReadout->getAdc(commonRootData::CalXtalId::POS);
+        UShort_t adcM = calReadout->getAdc(commonRootData::CalXtalId::NEG);
+        Char_t rangeM = calReadout->getRange(commonRootData::CalXtalId::NEG);
+        Char_t rangeP = calReadout->getRange(commonRootData::CalXtalId::POS);
         if ((adcP != 4095) || (adcM != 4095) ) {
             std::cout << "adcP or adcM are wrong: " << adcP << " "
                 << adcM << std::endl;
             return -1;
         }
-        if ( (rangeM != CalXtalId::LEX8) || (rangeP != CalXtalId::HEX8)) {
+        if ( (rangeM != commonRootData::CalXtalId::LEX8) || (rangeP != commonRootData::CalXtalId::HEX8)) {
             std::cout << "rangeP or rangeM are wrong: " << rangeP << " "
                 << rangeM << std::endl;
             return -1;
@@ -194,14 +194,14 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     }
 
     // Checking results of calling the getAdcSelectedRange method
-    Short_t adcP_lex8 = digi->getAdcSelectedRange(CalXtalId::LEX8, CalXtalId::POS);
-    Short_t adcP_hex8 = digi->getAdcSelectedRange(CalXtalId::HEX8, CalXtalId::POS);
-    Short_t adcP_lex1 = digi->getAdcSelectedRange(CalXtalId::LEX1, CalXtalId::POS);
-    Short_t adcP_hex1 = digi->getAdcSelectedRange(CalXtalId::HEX1, CalXtalId::POS);
-    Short_t adcM_lex8 = digi->getAdcSelectedRange(CalXtalId::LEX8, CalXtalId::NEG);
-    Short_t adcM_hex8 = digi->getAdcSelectedRange(CalXtalId::HEX8, CalXtalId::NEG);
-    Short_t adcM_lex1 = digi->getAdcSelectedRange(CalXtalId::LEX1, CalXtalId::NEG);
-    Short_t adcM_hex1 = digi->getAdcSelectedRange(CalXtalId::HEX1, CalXtalId::NEG);
+    Short_t adcP_lex8 = digi->getAdcSelectedRange(commonRootData::CalXtalId::LEX8, commonRootData::CalXtalId::POS);
+    Short_t adcP_hex8 = digi->getAdcSelectedRange(commonRootData::CalXtalId::HEX8, commonRootData::CalXtalId::POS);
+    Short_t adcP_lex1 = digi->getAdcSelectedRange(commonRootData::CalXtalId::LEX1, commonRootData::CalXtalId::POS);
+    Short_t adcP_hex1 = digi->getAdcSelectedRange(commonRootData::CalXtalId::HEX1, commonRootData::CalXtalId::POS);
+    Short_t adcM_lex8 = digi->getAdcSelectedRange(commonRootData::CalXtalId::LEX8, commonRootData::CalXtalId::NEG);
+    Short_t adcM_hex8 = digi->getAdcSelectedRange(commonRootData::CalXtalId::HEX8, commonRootData::CalXtalId::NEG);
+    Short_t adcM_lex1 = digi->getAdcSelectedRange(commonRootData::CalXtalId::LEX1, commonRootData::CalXtalId::NEG);
+    Short_t adcM_hex1 = digi->getAdcSelectedRange(commonRootData::CalXtalId::HEX1, commonRootData::CalXtalId::NEG);
 
     if ( (adcP_lex8 != (Char_t)-1) || (adcP_lex1 != (Char_t)-1) ||
         (adcP_hex1 != (Char_t)-1) ){
@@ -233,7 +233,7 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
 
 int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
 
-    TowerId id = digi->getTower();
+    commonRootData::TowerId id = digi->getTower();
     if ((id.ix() != 3) || (id.iy() != 2) ) {
         std::cout << "TkrDigi id is wrong (x,y): (" << id.ix() << "," 
             << id.iy() << ")" << std::endl;
@@ -338,13 +338,13 @@ int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t idigi) {
         return -1;
     }
 
-    AcdId id = digi->getId();
+    commonRootData::AcdId id = digi->getId();
     if (id.getLayer() != 0) {
         std::cout << "AcdId Layer is wrong " << id.getLayer() << std::endl;
         return -1;
     }
 
-    VolumeIdentifier volId = digi->getVolId();
+    commonRootData::VolumeIdentifier volId = digi->getVolId();
     if ( (volId.getBits0to31() != 0) || (volId.getBits32to63() != 16777216) || (volId.size() != 1) ) {
         std::cout << "AcdDigi VolId is incorrect" << std::endl;
         return -1;
@@ -527,14 +527,14 @@ int write(char* fileName, int numEvents) {
         
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalDigi *cal = ev->addCalDigi();
-            CalXtalId::CalTrigMode mode = CalXtalId::BESTRANGE;
+            commonRootData::CalXtalId::CalTrigMode mode = commonRootData::CalXtalId::BESTRANGE;
             Short_t tower = 5;
             Short_t layer = 4;
             Short_t col = 3;
-            CalXtalId xtalId(tower, layer, col);
+            commonRootData::CalXtalId xtalId(tower, layer, col);
             cal->initialize(mode, xtalId);
-            Char_t rangeM = CalXtalId::LEX8;
-            Char_t rangeP = CalXtalId::HEX8;
+            Char_t rangeM = commonRootData::CalXtalId::LEX8;
+            Char_t rangeP = commonRootData::CalXtalId::HEX8;
             UShort_t adcM = 4095;
             UShort_t adcP = 4095;
             cal->addReadout(rangeP, adcP, rangeM, adcM);            
@@ -544,7 +544,7 @@ int write(char* fileName, int numEvents) {
         for (idigi = 0; idigi < numDigi; idigi++) {
             TkrDigi *tkr = new TkrDigi();
             Int_t tot[2] = {idigi, idigi+1};
-            TowerId id(3, 2);
+            commonRootData::TowerId id(3, 2);
             tkr->initialize(idigi, GlastAxis::Y, id, tot);
             UInt_t istrip;
             for (istrip = 0; istrip < idigi; istrip++) {
@@ -555,13 +555,13 @@ int write(char* fileName, int numEvents) {
         }
 
         for (idigi = 0; idigi < numAcd; idigi++) {
-            AcdId id(0, 2, 5, 4);
+            commonRootData::AcdId id(0, 2, 5, 4);
             Float_t energy = ievent*randNum;
             Bool_t veto[2] = {kFALSE, kTRUE};
             Bool_t low[2] = {kTRUE, kTRUE};
             Bool_t high[2] = {kFALSE, kTRUE};
             UShort_t pha[2] = {4095, 1};
-            VolumeIdentifier volId;
+            commonRootData::VolumeIdentifier volId;
             volId.Clear();
             volId.append(1);
             ev->addAcdDigi(id, volId, energy, pha, veto, low, high);

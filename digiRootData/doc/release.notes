@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v8r2      13-Apr-2005 HMK Update for commonRootData namespace
 v8r1p2    08-Apr-2005 HMK Init EventSummaryData::eventSequence
 v8r1p1    07-Apr-2005 THB Fix if statements in header files to avoid vcc warning messages
 v8r1      05-Apr-2005 HMK Handle new 32bit evtSeq number in EventSummaryData

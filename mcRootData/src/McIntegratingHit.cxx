@@ -15,7 +15,7 @@ McIntegratingHit::~McIntegratingHit() {
 }
 
 
-void McIntegratingHit::initialize(const VolumeIdentifier& id) {
+void McIntegratingHit::initialize(const commonRootData::VolumeIdentifier& id) {
     m_volumeId = id;
 }
 

@@ -40,9 +40,9 @@ public:
     AcdRecon();
  
     AcdRecon(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-            const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
+            const commonRootData::AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
             const std::vector<Double_t> &rowActDist,
-			const std::vector<AcdId> &idCol, const std::vector<Double_t> &energyCol)       
+			const std::vector<commonRootData::AcdId> &idCol, const std::vector<Double_t> &energyCol)       
             : m_totEnergy(e),
             m_gammaDoca(gDoca),
             m_doca(doca),
@@ -58,12 +58,12 @@ public:
     virtual ~AcdRecon();
     
     void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-        const AcdId &minDocaId, const std::vector<Double_t> &rowDoca, 
-        const std::vector<Double_t> &rowActDist, const std::vector<AcdId> &idCol,
+        const commonRootData::AcdId &minDocaId, const std::vector<Double_t> &rowDoca, 
+        const std::vector<Double_t> &rowActDist, const std::vector<commonRootData::AcdId> &idCol,
 		const std::vector<Double_t> &energyCol);
 
     /// overload initialize for interactive root where we cannot use std::vector
-    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist, const AcdId &minDocaId);
+    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist, const commonRootData::AcdId &minDocaId);
     
     void Clear(Option_t *option="");
     
@@ -74,7 +74,7 @@ public:
     inline const Double_t getGammaDoca() const { return m_gammaDoca; };
     inline const Double_t getDoca() const { return m_doca; };
     inline const Double_t getActiveDist() const { return m_actDist; };
-    inline const AcdId& getMinDocaId() const { return m_minDocaId; };
+    inline const commonRootData::AcdId& getMinDocaId() const { return m_minDocaId; };
     inline const std::vector<Double_t>& getRowDocaCol() const { return m_rowDocaCol; };
     inline const Double_t getRowDoca(UInt_t i) const { 
         return ((i < m_rowDocaCol.size()) ? m_rowDocaCol[i] : -1.); };
@@ -87,11 +87,11 @@ public:
 	inline const Double_t getEnergy(UInt_t i) const { 
 		return ( (i < m_energyCol.size()) ? m_energyCol[i] : -1.); };
 	inline void addEnergy(Double_t e) { m_energyCol.push_back(e); };
-	inline const std::vector<AcdId>& getIdCol() const { return m_idCol; };
-	inline const AcdId* getId(UInt_t i) const { 
+	inline const std::vector<commonRootData::AcdId>& getIdCol() const { return m_idCol; };
+	inline const commonRootData::AcdId* getId(UInt_t i) const { 
 		return ( (i < m_idCol.size()) ? &m_idCol[i] : 0); };
-	inline void addId(const AcdId &id) { m_idCol.push_back(id); };
-	Double_t getEnergy(const AcdId &id) const;
+	inline void addId(const commonRootData::AcdId &id) { m_idCol.push_back(id); };
+	Double_t getEnergy(const commonRootData::AcdId &id) const;
     
 private:
     /// Total energy in MeV deposited in the whole ACD system
@@ -112,10 +112,10 @@ private:
     vector<Double_t> m_rowActDistCol;
 
     /// record of the tile with the minimum Distance of Closest Approach
-    AcdId m_minDocaId;
+    commonRootData::AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
-	vector<AcdId> m_idCol;
+	vector<commonRootData::AcdId> m_idCol;
 	vector<Double_t> m_energyCol;
     
     ClassDef(AcdRecon,3) // Acd Reconstruction data

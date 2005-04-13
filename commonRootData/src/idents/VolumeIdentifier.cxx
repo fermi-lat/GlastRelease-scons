@@ -2,7 +2,7 @@
 #include "commonRootData/idents/VolumeIdentifier.h"
 #include <iostream>
 
-ClassImp(VolumeIdentifier)
+ClassImp(commonRootData::VolumeIdentifier)
 
 // File and Version Information:
 //      $Header$
@@ -25,6 +25,8 @@ ClassImp(VolumeIdentifier)
 #else
 #include <sstream>
 #endif
+
+namespace commonRootData {
 
 
 VolumeIdentifier::VolumeIdentifier() :  
@@ -130,3 +132,5 @@ void VolumeIdentifier::append( unsigned int id)
     
     m_size++;
 }
+
+} // end namespace

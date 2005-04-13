@@ -20,7 +20,7 @@ CalDigi::~CalDigi() {
     Clear();    
 }
 
-void CalDigi::initialize(CalXtalId::CalTrigMode m, const CalXtalId &id) {
+void CalDigi::initialize(commonRootData::CalXtalId::CalTrigMode m, const commonRootData::CalXtalId &id) {
     m_mode = m;
     m_xtalId = id;
 }
@@ -30,7 +30,7 @@ void CalDigi::Clear(Option_t *option) {
     m_xtalId.Clear();
     for(int i=0;i<4;i++)(m_readoutArr[i]).Clear();
     if (m_readoutCol) m_readoutCol->Clear();
-    m_mode = CalXtalId::BESTRANGE;
+    m_mode = commonRootData::CalXtalId::BESTRANGE;
 }
 
 void CalDigi::Print(Option_t *option) const {
@@ -54,7 +54,7 @@ const CalXtalReadout* CalDigi::addReadout(Char_t rangeP, UShort_t adcP, Char_t r
     return &(m_readoutArr[m_numReadouts++]);
 } 
 
-Char_t CalDigi::getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const
+Char_t CalDigi::getRange(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const
 {
     // Maintain backward compatibility
     if (m_readoutCol) {
@@ -66,7 +66,7 @@ Char_t CalDigi::getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const
         ? (m_readoutArr[readoutIndex]).getRange(face) : (Char_t)-1;
 }
 
-Short_t CalDigi::getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const
+Short_t CalDigi::getAdc(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const
 {
     // Maintain backward compatibility
     if (m_readoutCol) {
@@ -91,7 +91,7 @@ const CalXtalReadout* CalDigi::getXtalReadout(UShort_t readoutIndex)
     
 }
 
-Short_t CalDigi::getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const
+Short_t CalDigi::getAdcSelectedRange(Char_t range, commonRootData::CalXtalId::XtalFace face) const
 {
     // Maintain Backward Compatibility
     if (m_readoutCol) {
@@ -135,8 +135,8 @@ const CalXtalReadout* CalDigi::getReadoutCol() {
         TIter cloneIter(m_readoutCol);
         CalXtalReadout *readout = 0;
         while ((readout = (CalXtalReadout*)cloneIter.Next())!=0) {
-            addReadout(readout->getRange(CalXtalId::POS), readout->getAdc(CalXtalId::POS),
-                readout->getRange(CalXtalId::NEG), readout->getAdc(CalXtalId::NEG));
+            addReadout(readout->getRange(commonRootData::CalXtalId::POS), readout->getAdc(commonRootData::CalXtalId::POS),
+                readout->getRange(commonRootData::CalXtalId::NEG), readout->getAdc(commonRootData::CalXtalId::NEG));
         }
 
     }

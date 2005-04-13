@@ -32,7 +32,7 @@ public:
     
     ~TkrDigi ();
     
-    void initialize (Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot);
+    void initialize (Int_t l, GlastAxis::axis v, commonRootData::TowerId t, Int_t* tot);
     
     void Clear(Option_t *option ="");
 
@@ -41,7 +41,7 @@ public:
 	/**@defgroup TkrDigiGroup TkrDigi End-User Interface */
 	/*@{*/
     //! Retrieve tower info
-    TowerId getTower() const { return m_tower; }
+    commonRootData::TowerId getTower() const { return m_tower; }
     //! Retrieve layer info
     UShort_t getBilayer() const { return m_bilayer; } 
     //! Retrieve view info
@@ -75,7 +75,7 @@ private:
     UShort_t m_tot[2];
     /// Denotes highest strip number from controller 0, set to -1 when undefined.
     Short_t m_lastController0Strip; 
-    TowerId m_tower;
+    commonRootData::TowerId m_tower;
     /// Denotes which axis is measured
     GlastAxis::axis m_view;
     /// Collection of hit strips

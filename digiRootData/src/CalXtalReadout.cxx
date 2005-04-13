@@ -49,10 +49,10 @@ void CalXtalReadout::Print(Option_t *option) const {
 }
 
 
-UShort_t CalXtalReadout::getAdc(CalXtalId::XtalFace face) const {
-    return face == CalXtalId::POS ? m_adcP : m_adcM;
+UShort_t CalXtalReadout::getAdc(commonRootData::CalXtalId::XtalFace face) const {
+    return face == commonRootData::CalXtalId::POS ? m_adcP : m_adcM;
 }
 
-Char_t CalXtalReadout::getRange(CalXtalId::XtalFace face) const {
-    return face == CalXtalId::POS ? m_rangeP : m_rangeM;
+Char_t CalXtalReadout::getRange(commonRootData::CalXtalId::XtalFace face) const {
+    return face == commonRootData::CalXtalId::POS ? m_rangeP : m_rangeM;
 }

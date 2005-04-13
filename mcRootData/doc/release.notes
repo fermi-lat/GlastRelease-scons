@@ -9,6 +9,7 @@
 $Header$
 
 
+v2r15     13-Apr-2005 HMK use commonRootData namespace
 v2r14p1   10-aug-2004 THB moved RootPolicy to GlastPolicy/RootcintPolicy
 v2r14     22-Jul-2004 HMK Move VolumeIdentifier class to commonRootData
 

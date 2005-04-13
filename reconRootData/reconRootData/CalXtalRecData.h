@@ -35,26 +35,26 @@ public:
         
     virtual ~CalXtalRecData() { };
     
-    void initialize(CalXtalId::CalTrigMode m, CalXtalId id);
+    void initialize(commonRootData::CalXtalId::CalTrigMode m, commonRootData::CalXtalId id);
 
     void Clear(Option_t *option="");
 
     void Print(Option_t *option="") const;
 
     /// Retrieve readout mode
-    const CalXtalId::CalTrigMode getMode() const { return m_mode; };
+    const commonRootData::CalXtalId::CalTrigMode getMode() const { return m_mode; };
     
     /// Retrieve Xtal identifier
-    const CalXtalId getPackedId() const { return m_xtalId; };
+    const commonRootData::CalXtalId getPackedId() const { return m_xtalId; };
     
     /// Add a new element to the CalRangeRecData collection
     void addRangeRecData(CalRangeRecData r) { m_recData.push_back(r); } ;
     
     /// Retrieve energy range for selected face and readout
-    Char_t getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
+    Char_t getRange(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const;
     
     /// Retrieve energy for selected face and readout
-    Double_t getEnergy(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
+    Double_t getEnergy(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const;
     
     
     /// Retrieve average energy of two faces for the best range
@@ -70,16 +70,16 @@ public:
     const CalRangeRecData* getRangeRecData(UShort_t readoutIndex) const;
     
     /// Retrieve pulse height from selected range
-    Double_t getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face) const;
+    Double_t getEnergySelectedRange(commonRootData::CalXtalId::AdcRange range, commonRootData::CalXtalId::XtalFace face) const;
     
     
     
 private:
     
     /// Cal readout mode is based on trigger type
-    CalXtalId::CalTrigMode m_mode;
+    commonRootData::CalXtalId::CalTrigMode m_mode;
     /// Cal ID
-    CalXtalId m_xtalId;
+    commonRootData::CalXtalId m_xtalId;
     /// ranges and pulse heights
     vector<CalRangeRecData> m_recData;
     

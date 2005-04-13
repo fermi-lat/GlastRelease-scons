@@ -1,11 +1,13 @@
 #include "commonRootData/idents/CalXtalId.h"
 
-ClassImp(CalXtalId)
+ClassImp(commonRootData::CalXtalId)
 
 #include <iostream>
 using namespace std;
 
 #include "TObject.h"
+
+namespace commonRootData {
 
 //
 // ClassName:   CalXtalId        
@@ -92,3 +94,4 @@ void CalXtalId::getUnpackedId(Short_t& tower, Short_t& layer, Short_t& column)
     column = getColumn();
 }
 
+} // end namespace

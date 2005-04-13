@@ -66,7 +66,7 @@ Double_t McPositionHit::getDirectionCosine() const
 
 
 void McPositionHit::initialize(Int_t particleId, Double_t edep, 
-                               const VolumeIdentifier &volId,
+                               const commonRootData::VolumeIdentifier &volId,
                                const TVector3& entry, const TVector3& exit,
                                McParticle *mc, McParticle *origin, 
                                Double_t pE, 
@@ -85,7 +85,7 @@ void McPositionHit::initialize(Int_t particleId, Double_t edep,
 }
 
 void McPositionHit::initialize(Int_t mcParticleId, Int_t originParticleId, 
-                               Double_t edep, const VolumeIdentifier& volId, 
+                               Double_t edep, const commonRootData::VolumeIdentifier& volId, 
                                const TVector3& entry, const TVector3& exit,
                                const TVector3& gEntry, const TVector3& gExit, 
                                McParticle *mc, McParticle *origin, Double_t pE,

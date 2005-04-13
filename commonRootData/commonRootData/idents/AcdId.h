@@ -4,6 +4,8 @@
 
 #include "TObject.h"
 
+namespace commonRootData {
+
 /** @class AcdId
  @brief encapsulate the id for an ACD tile.
  
@@ -157,5 +159,7 @@ private:
     
     ClassDef(AcdId,4)	  // ACD Tile identification information
 };
+
+} // end namespace
 
 #endif
