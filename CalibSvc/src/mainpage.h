@@ -124,6 +124,10 @@
         database) is always preferred to dev, dev to test, and
         test to superseded.
        </dd> 
+  <dt> CrashOnError </dt> <dd>defaults to true: if a requested calibration
+                       can't be found, job will issue a message and exit.
+                      Otherwise the service will continue and it is up
+                      to client to handle the error.</dd>
   <dt> Host </dt>        <dd>defaults to "*", meaning "use default MySQL
                              host" </dd>
   <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
