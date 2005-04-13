@@ -1,8 +1,9 @@
 /** @file release.notes
  * Package xmlUtil
  * Coordinator: J. Bogart
- *    EHO
+ *    EOH
  *
+ * 13 Apr 2005  jrb v3r1p1  Comment out trouble-making unnecessary test apps
  *  3-Jan-2005  jrb v3r1    Use xmlBase rather than xml package
  * 10-Nov-2004  jrb v3r0    Upgrades for Xerces 2.6.0
  * 20-Apr-2004  jrb v2r13p0 Use v6r* of GlastPolicy
