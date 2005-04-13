@@ -1,6 +1,7 @@
 //$Header$
 #include <string>
 #include <cstdio>
+#include <stdexcept>
 
 #include "CalibMySQLCnvSvc.h"
 #include "CalibSvc/ICalibRootSvc.h"   // for def. of CALIBROOT_StorageType
@@ -57,6 +58,7 @@ CalibMySQLCnvSvc::CalibMySQLCnvSvc( const std::string& name, ISvcLocator* svc)
   declareProperty("EnterTimeStart", m_enterTimeStartString = std::string("") );
   declareProperty("DbName", m_dbName = std::string("calib") );
   declareProperty("QualityList", m_qualityList);
+  declareProperty("CrashOnError", m_crash = true);
 }
 
 CalibMySQLCnvSvc::~CalibMySQLCnvSvc(){ }
@@ -503,17 +505,27 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
                                 m_enterTimeEnd, m_qualityMask, 
                                 instrName, flavor);
   }
+  MSG::Level msgLevel = (m_crash) ? MSG::FATAL : MSG::ERROR;
   if (ret != calibUtil::Metadata::RETOk) {
-    log << MSG::ERROR << "Could not access MySQL database" << endreq;
+    log << msgLevel << "Could not access MySQL database" << endreq;
+    //    if (m_crash) throw std::runtime_error("Could not acces MySQL dbs");
+    if (m_crash) {
+      log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
+      exit(0);
+    }
     return StatusCode::FAILURE;
   }
   else if (ser == 0) {  // no error, but no appropriate calib was found
-    log << MSG::ERROR
-        << "No appropriate calibration of (type, flavor) ("
+    log << msgLevel
+        << std::endl << "No appropriate calibration of (type, flavor) ("
         << cType << ", " << flavor << ")" << endreq;
+    if (m_crash) {
+      log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
+      exit(0);
+    }
+
     return StatusCode::FAILURE;
   }
-  //  calibUtil::Metadata::eDataFmt physFmt = calibUtil::Metadata::FMTUnknown;
   std::string physFmt = "UNK";
   std::string fmtVersion;
   std::string dataIdent;
@@ -541,9 +553,13 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   sc = addressCreator()->createAddress(storageType, classID, 
                                        par, ipar, tmpAddress);
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
+    log << msgLevel 
 	<< "Persistency service could not create a new address" << endreq;
-    return sc;
+    if (m_crash) {
+      log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
+      exit(0);
+    }
+     return sc;
   }  
   tmpAddress->addRef();
 
@@ -554,8 +570,12 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   sc = m_detPersSvc->createObj(tmpAddress, refpObject);
   tmpAddress->release();
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
+    log << msgLevel 
 	<< "Persistency service could not create a new object" << endreq;
+    if (m_crash) {
+      log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
+      exit(0);
+    }
     return sc;
   }
 

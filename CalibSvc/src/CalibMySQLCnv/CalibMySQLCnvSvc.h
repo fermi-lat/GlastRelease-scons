@@ -173,6 +173,7 @@ class CalibMySQLCnvSvc : public ConversionSvc,
   /// "PROD", "DEV", "TEST", "SUPSED"  (look only at first 3 characters)
   std::vector<std::string> m_qualityList;
   unsigned int             m_qualityMask;
+  bool                     m_crash;   // If true, failure is fatal
 
 };
 #endif   
