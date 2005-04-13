@@ -14,11 +14,8 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
-// There are several other possibilities for test algroithm, including
-//  UseBadStrips, UseGains,...
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
-
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseScale", "UseTot"};
+digiRootReaderAlg.digiRootFile = "$(ROOTTESTDATAROOT)/data/default/digi.root";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -35,10 +32,6 @@ GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;
 
-// Model for immediately following lines is LHCb example.  See
-// http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
-//   in particular, files contDB.opts and common.opts
-
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
@@ -49,10 +42,11 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-CalibDataSvc.CalibFlavorList = {"ideal"};
+
+CalibDataSvc.CalibFlavorList = {"ideal","RootBeer"};
 // not used yet
-CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
-			   "Test_1/mocha"};
+// CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
+//			   "Test_1/mocha"};
 
 // CalibDataSvc properties below are explicitly set to the
 // default values as established in CalibDataSvc.cxx.  
@@ -71,11 +65,11 @@ CalibMySQLCnvSvc.Host = "*";
 // By default, use production database "calib", but user may override.
 //  calib_user is a development database for use of, e.g., calibration
 //  algorithm developers
-// CalibMySQLCnvSvc.DbName = "calib_user";
+CalibMySQLCnvSvc.DbName = "calib_test";
 
 CalibDataSvc.CalibTimeSource = "clock";
 CalibDataSvc.startTime = "2003-2-25 00:20";
-CalibDataSvc.delayTime = 900;
+CalibDataSvc.delayTime = 3000;
 
 // In order to circumvent normal calibration-fetching mechanism, which
 // relies on event timestamp, you *must* include the first two lines

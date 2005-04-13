@@ -17,7 +17,7 @@ ApplicationMgr.Runable= "RootIoSvc";
 // There are several other possibilities for test algroithm, including
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
-digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi_1409.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
 // mcRootReaderAlg.mcRootFileList = {"$CALIBSVCROOT/src/test/mc_1409.root"};
 
 

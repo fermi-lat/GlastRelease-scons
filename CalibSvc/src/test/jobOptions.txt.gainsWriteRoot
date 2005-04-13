@@ -15,7 +15,7 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseGains" };
-digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
 
 // UseGains.DoWrite = "false";
 UseGains.DoWrite = "true";
