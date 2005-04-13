@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
                               EOH
 
+   v1r6   13-Apr-2005 jrb    Upgrades for commonRootData v2 (namespace)
    v1r5   31-Mar-2005 jrb    Add classes for charge scale
    v1r4p1 12-Jan-2005 jrb    Tag Heather's little changes to make ROOT 4 happy
    v1r4p0  5-Jan-2005 jrb    Make a two-tower fake ToT file
