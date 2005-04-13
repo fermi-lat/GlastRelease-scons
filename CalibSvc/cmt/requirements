@@ -40,6 +40,7 @@ use GlastSvc v9r* -no_auto_imports
 use RootIo v* -no_auto_imports
 use LdfEvent v2r* -no_auto_imports
 use Event v10r* -no_auto_imports
+use rootTestData v* -no_auto_imports
 
 
 apply_pattern package_include
