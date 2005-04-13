@@ -1,3 +1,4 @@
+v0r3p1  4/13/05 fewtrell tested multi-tower.  fixed bad asymetry for mixed diode size events.
 v0r3    4/04/05 fewtrell Support multiple towers now.  updated ideal_flight params to handle higher energies b4 saturation.
 v0r2p8  3/30/05 fewtrell Moved descriptions of optional JO prameters to customOptions.txt file.  this reduces logfile verbosity.
 v0r2p7          fewtrell Added separate flight & muon idealMode.xml files.  also defaultOptions.txt now documents all major jobOptions.
