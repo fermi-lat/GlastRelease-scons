@@ -43,11 +43,11 @@ it incoperates the following improvements over the prievous version.
 	<item name  = "SMALL_NEG" value = "-0.31"> POS value for Small Diode asymetry spline </item>
 	<item name  = "SMALL_POS" value = "0.31">  NEG value for Small Diode asymetry spline </item>
 	
-	<item name  = "PSNB_NEG"  value = "-2.0"> POS value for PSNB asymetry spline        </item>
-	<item name  = "PSNB_POS"  value = "-1.4"> NEG value for PSNB asymetry spline        </item>
+	<item name  = "PSNB_NEG"  value = "-4.3"> POS value for PSNB asymetry spline        </item>
+	<item name  = "PSNB_POS"  value = "-3.7"> NEG value for PSNB asymetry spline        </item>
 	
-	<item name  = "NSPB_NEG"  value = "1.4">  POS value for NSPB asymetry spline        </item>
-	<item name  = "NSPB_POS"  value = "2.0">  NEG value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_NEG"  value = "3.7">  POS value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_POS"  value = "4.3">  NEG value for NSPB asymetry spline        </item>
 	
 	<item name  = "SIG_PCT"   value = "0.003"> sigma/val for all vals in asymetry group </item>
   </section>
