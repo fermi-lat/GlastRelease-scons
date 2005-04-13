@@ -4,7 +4,7 @@ package calibRootData
 version v1r5
 
 use RootcintPolicy v4r* GlastPolicy
-use commonRootData v1r*
+use commonRootData v2r*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
