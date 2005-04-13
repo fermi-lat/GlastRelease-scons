@@ -121,7 +121,7 @@ StatusCode CalCalibSvc::initialize ()
     int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
     incSvc->addListener(this, "BeginEvent", priority);
   } else {
-    msglog << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
+    msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;
     return sc;
   }
 

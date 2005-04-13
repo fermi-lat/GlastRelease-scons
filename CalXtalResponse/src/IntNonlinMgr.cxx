@@ -36,8 +36,14 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   const vector<float> *intNonlinVec = intNonlin->getValues();
   if (!intNonlinVec) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Unable to get vector for IntNonlin vals" << endreq;
+    if (owner->m_superVerbose) {
+      MsgStream msglog(owner->msgSvc(), owner->name()); 
+      msglog << MSG::VERBOSE;
+      msglog.stream() << "can't get IntNonlin vals [" << xtalId 
+        << ']';
+      msglog << endreq;
+    }
+    
     return false;
   }
 
@@ -53,8 +59,11 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
     return false;
   }
 
-  cout << "TEST INL RANGEBASE [" << xtalId 
-     << "]" << intNonlinVec->size() << endl;
+  if (owner->m_superVerbose) {
+   MsgStream msglog(owner->msgSvc(), owner->name()); 
+   msglog << "TEST INL RANGEBASE [" << xtalId 
+     << ']' << intNonlinVec->size() << endreq;
+  }
 
   // check that there are enough DAC vals for ADC vals in this rng
   if (intNonlinVec->size() > intNonlinDacVec->size()) {
@@ -73,7 +82,7 @@ bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBa
   return true;
 }
 
-/// retrieve integral non-linearity vals for given xtal/face/rng
+/// get integral non-linearity vals for given xtal/face/rng
 StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
                                       const vector< float > *&adcs,
                                       const vector< unsigned > *&dacs,
@@ -117,8 +126,10 @@ StatusCode IntNonlinMgr::genSplines() {
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     float error;
 
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
     sc = getIntNonlin(rngIdx.getCalXtalId(), adc, dac, error);
-    if (sc.isFailure()) continue; // support parial LATs
+    if (sc.isFailure()) continue;
 
     int n = min(adc->size(),dac->size());
 
@@ -136,9 +147,9 @@ StatusCode IntNonlinMgr::genSplines() {
            << ' ' << rngIdx.getRng()
            << ']';
 
-    genSpline(INL_SPLINE,     rngIdx, "intNonlin"    + rngStr.str(),    
+    genSpline(INL_SPLINE,     rngIdx, "INL"    + rngStr.str(),    
               dblAdc, dblDac);
-    genSpline(INV_INL_SPLINE, rngIdx, "invIntNonlin" + rngStr.str(), 
+    genSpline(INV_INL_SPLINE, rngIdx, "invINL" + rngStr.str(), 
               dblDac, dblAdc);
   }
 
@@ -153,7 +164,9 @@ StatusCode IntNonlinMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT inst
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[rngIdx] = rngBase;
   }

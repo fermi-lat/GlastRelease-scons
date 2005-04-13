@@ -25,7 +25,7 @@ class PedMgr : public CalibItemMgr {
     m_idealCos(RngNum::N_VALS)
     {};
 
-  /// retrieve pedestal vals for given xtal/face/rng
+  /// get pedestal vals for given xtal/face/rng
   StatusCode getPed(const CalXtalId &xtalId,
                     float &avr,
                     float &sig,

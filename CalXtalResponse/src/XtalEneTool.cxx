@@ -32,7 +32,7 @@ public:
                             const string& name, 
                             const IInterface* parent);
 
-  /// retrieves needed parameters and pointers to required services
+  /// gets needed parameters and pointers to required services
   virtual StatusCode initialize();
 
   /// calculate energy deposition given the digi response for both xtal faces
@@ -88,7 +88,7 @@ StatusCode XtalEneTool::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "Unable to get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
     return sc;
   }
 
@@ -111,7 +111,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   energy = 0;
   rngBelowThresh  = false;
  
-  //-- RETRIEVE PED && LAC (POS_FACE) --//
+  //-- GET PED && LAC (POS_FACE) --//
   float pedP, pedN, sigP, sigN, cos;
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sigP, cos);
@@ -125,7 +125,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                    POS_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
   
-  //-- RETRIEVE PED && LAC (NEG_FACE) --//
+  //-- GET PED && LAC (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sigN, cos);
   if (sc.isFailure()) return sc;
@@ -210,13 +210,25 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   }
   // now both dac vals are for the same diode size
 
-  //-- RETRIEVE MEVPERDAC --//
+  //-- GET MEVPERDAC --//
   CalibData::ValSig mpdLrg, mpdSm;
   sc = m_calCalibSvc->getMeVPerDac(xtalId, mpdLrg, mpdSm);
   if (sc.isFailure()) return sc;
   
   //-- CALC MEAN DAC & ENERGY --//
+  // check for invalid dac vals (i need to take the sqrt)
+  if (dacP < 0 || dacN < 0) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(msgSvc(), name()); 
+    msglog << MSG::WARNING;
+    // need to use .stream() to get xtalId to pretty print.
+    msglog.stream() << "DAC val < 0, can't calculate energy." 
+       <<  " xtal=[" << xtalId << ']';
+    msglog << endreq;
+    return StatusCode::FAILURE;
+  } 
   double meanDAC = sqrt(dacP*dacN);
+  
   if (diodeP == SM_DIODE)
     energy = meanDAC*mpdSm.getVal();
   else
@@ -244,7 +256,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
 
   RngNum rng(xtalId.getRange());
   
-  // retrieve ped
+  // get ped
   float ped, sig, cos;
   sc = m_calCalibSvc->getPed(xtalId, ped, sig, cos);
   if (sc.isFailure()) return sc;
@@ -280,7 +292,15 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   double dac;
   sc = m_calCalibSvc->evalDAC(xtalId, adcPed, dac);
   if (sc.isFailure()) return sc;
-
+  
+  // check for invalid dac vals (i need to take the sqrt)
+  if (dac < 0) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(msgSvc(), name()); 
+    msglog << MSG::WARNING << "DAC val < 0, can't calculate energy.  This shouldn't happen." << endreq;
+    return StatusCode::FAILURE;
+  } 
+  
   DiodeNum diode(rng.getDiode());
 
   // use appropriate asymmetry to calc position based on

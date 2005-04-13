@@ -9,7 +9,7 @@
 using namespace CalDefs;
 using namespace idents;
 
-/// retrieve threshold calibration constants as measured w/ charnge injection
+/// get threshold calibration constants as measured w/ charnge injection
 StatusCode TholdCIMgr::getTholds(const CalXtalId &xtalId,
                                  CalibData::ValSig &FLE,
                                  CalibData::ValSig &FHE,
@@ -35,7 +35,7 @@ StatusCode TholdCIMgr::getTholds(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-/// retrieve Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
+/// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
 StatusCode TholdCIMgr::getULD(const CalXtalId &xtalId,
                               CalibData::ValSig &ULDThold) {
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
@@ -54,7 +54,7 @@ StatusCode TholdCIMgr::getULD(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-/// retrieve pedestal calibration constants as measured during charge injection threshold testing.
+/// get pedestal calibration constants as measured during charge injection threshold testing.
 StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
                               CalibData::ValSig &ped) {
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
@@ -80,7 +80,9 @@ StatusCode TholdCIMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support parial LAT inst
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }
@@ -94,13 +96,13 @@ StatusCode TholdCIMgr::loadIdealVals() {
   if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endl;
+    msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endreq;
     return StatusCode::FAILURE;;
   }
   if (owner->m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endl;
+    msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endreq;
     return StatusCode::FAILURE;;
   }
 

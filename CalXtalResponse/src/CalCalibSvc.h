@@ -23,7 +23,7 @@
 using namespace CalDefs;
 
 /** @class CalCalibSvc
- * \brief Instatiates ICalCalibSvc interface, retrieves data from CalibDataSvc
+ * \brief Instatiates ICalCalibSvc interface, gets data from CalibDataSvc
  *
  * handles:
  * - data storage/destruction
@@ -57,14 +57,14 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   /// return the service type
   const IID&  CalCalibSvc::type () const {return IID_ICalCalibSvc;}
 
-  /// retrieve MeVPerDac ratios for given xtal
+  /// get MeVPerDac ratios for given xtal
   StatusCode getMeVPerDac(const CalXtalId &xtalId,
                           CalibData::ValSig &asymLrg,
                           CalibData::ValSig &asymSm) {
     return m_mpdMgr.getMPD(xtalId, asymLrg, asymSm);
   }
 
-  /// retrieve integral non-linearity vals for given xtal/face/rng
+  /// get integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
                           const vector< float > *&adcs,
                           const vector< unsigned > *&dacs,
@@ -72,7 +72,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
     return m_intNonlinMgr.getIntNonlin(xtalId, adcs, dacs, error);
   }
 
-  /// retrieve pedestal vals for given xtal/face/rng
+  /// get pedestal vals for given xtal/face/rng
   StatusCode getPed(const CalXtalId &xtalId,
                     float &avr,
                     float &sig,
@@ -80,7 +80,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
     return m_pedMgr.getPed(xtalId, avr, sig, cos);
   }
 
-  /// retrieve Asymmetry calibration information for one xtal
+  /// get Asymmetry calibration information for one xtal
   StatusCode getAsym(const CalXtalId &xtalId,
                      const vector<CalibData::ValSig> *&asymLrg,
                      const vector<CalibData::ValSig> *&asymSm,
@@ -90,7 +90,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
     return m_asymMgr.getAsym(xtalId, asymLrg, asymSm, AsymNSPB, asymPSNB, xVals);
   }
 
-  /// retrieve threshold calibration constants as measured w/ charnge injection
+  /// get threshold calibration constants as measured w/ charnge injection
   StatusCode getTholdCI(const CalXtalId &xtalId,
                         CalibData::ValSig &FLE,
                         CalibData::ValSig &FHE,
@@ -99,19 +99,19 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
     return m_tholdCIMgr.getTholds(xtalId, FLE, FHE, LAC);
   }
 
-  /// retrieve Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
+  /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
   StatusCode getULDCI(const CalXtalId &xtalId,
                       CalibData::ValSig &ULDThold) {
     return m_tholdCIMgr.getULD(xtalId, ULDThold);
   }
 
-  /// retrieve pedestal calibration constants as measured during charge injection threshold testing.
+  /// get pedestal calibration constants as measured during charge injection threshold testing.
   StatusCode getPedCI(const CalXtalId &xtalId,
                       CalibData::ValSig &ped) {
     return m_tholdCIMgr.getPed(xtalId, ped);
   }
 
-  /// retrieve threshold calibration constants as measured w/ muon calibration
+  /// get threshold calibration constants as measured w/ muon calibration
   StatusCode getTholdMuon(const CalXtalId &xtalId,
                           CalibData::ValSig &FLE,
                           CalibData::ValSig &FHE
@@ -119,7 +119,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
     return m_tholdMuonMgr.getTholds(xtalId, FLE, FHE);
   }
 
-  /// retrieve pedestal calibration constants as measured during muon calibration threshold testing.
+  /// get pedestal calibration constants as measured during muon calibration threshold testing.
   StatusCode getPedMuon(const CalXtalId &xtalId,
                         CalibData::ValSig &ped) {
     return m_tholdMuonMgr.getPed(xtalId, ped);

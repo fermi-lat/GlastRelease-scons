@@ -23,7 +23,7 @@ class MPDMgr : public CalibItemMgr {
   MPDMgr() : 
     CalibItemMgr(CalibData::CAL_MevPerDac) {};
 
-  /// retrieve MeVPerDac ratios for given xtal
+  /// get MeVPerDac ratios for given xtal
   StatusCode getMPD(const CalXtalId &xtalId,
                     ValSig &mpdLrg,
                     ValSig &mpdSm);

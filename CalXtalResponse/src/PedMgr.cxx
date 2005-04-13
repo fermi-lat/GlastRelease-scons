@@ -9,7 +9,7 @@
 using namespace CalDefs;
 using namespace idents;
 
-/// retrieve pedestal vals for given xtal/face/rng
+/// get pedestal vals for given xtal/face/rng
 StatusCode PedMgr::getPed(const CalXtalId &xtalId,
                           float &avr,
                           float &sig,
@@ -27,6 +27,7 @@ StatusCode PedMgr::getPed(const CalXtalId &xtalId,
   } 
 
   CalibData::Ped *ped = getRangeBase(xtalId);
+  if (!ped) return StatusCode::FAILURE;
 
   //vals
   avr = ped->getAvr();
@@ -44,7 +45,9 @@ StatusCode PedMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT inst
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[rngIdx] = rngBase;
   }
@@ -59,19 +62,19 @@ StatusCode PedMgr::loadIdealVals() {
   if (owner->m_idealCalib.pedVals.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name());
-    msglog << MSG::ERROR << "wrong # of ideal pedestal vals." << endl;
+    msglog << MSG::ERROR << "wrong # of ideal pedestal vals." << endreq;
     return StatusCode::FAILURE;;
   }
   if (owner->m_idealCalib.pedCos.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name());
-    msglog << MSG::ERROR << "wrong # of ideal ped cosine vals." << endl;
+    msglog << MSG::ERROR << "wrong # of ideal ped cosine vals." << endreq;
     return StatusCode::FAILURE;;
   }
   if (owner->m_idealCalib.pedSigs.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name());
-    msglog << MSG::ERROR << "wrong # of ideal ped sigma vals." << endl;
+    msglog << MSG::ERROR << "wrong # of ideal ped sigma vals." << endreq;
     return StatusCode::FAILURE;;
   }
 

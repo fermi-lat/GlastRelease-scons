@@ -32,7 +32,7 @@ public:
                             const string& name, 
                             const IInterface* parent);
 
-  /// retrieves needed parameters and pointers to required services
+  /// gets needed parameters and pointers to required services
   virtual StatusCode initialize();
 
   /// calculate xtal Adc response for all rngs basedon collection of McHits in xtal & diode regions
@@ -116,11 +116,11 @@ StatusCode XtalADCTool::initialize() {
   IGlastDetSvc* detSvc;
   sc = service("GlastDetSvc", detSvc);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to retrieve GlastDetSvc " << endreq;
+    msglog << MSG::ERROR << "  can't get GlastDetSvc " << endreq;
     return sc;
   }
 
-  //-- Retrieve GlastDetSvc constants --//
+  //-- Get GlastDetSvc constants --//
   PARAMAP param;
   param[&m_nCsISeg]      = string("nCsISeg");
   param[&m_eXtal]        = string("eXtal");
@@ -152,7 +152,7 @@ StatusCode XtalADCTool::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "Unable to get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
     return sc;
   }
 
@@ -279,6 +279,8 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     } else {
     
       //--DIRECT DIODE DEPOSIT--//
+       if (m_superVerbose) {
+          }
 
       double eDiode = ene*m_ePerMeVInDiode; // convert MeV-in-diode to electrons
 
@@ -358,7 +360,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       rngXtalId(RngIdx(xtalId,xRng).getCalXtalId());
     
 
-    // retrieve peds
+    // get peds
     sc = m_calCalibSvc->getPed(rngXtalId,
                                pedVals[xRng],
                                pedSigs[xRng],
@@ -501,11 +503,11 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     msglog.stream() << "id=" << xtalId
                     << "\tadcP:";
     for (RngNum rng=0; rng.isValid(); rng++)
-      msglog.stream() << adcP[rng] << " ";
+      msglog.stream() << adcP[rng] << ' ';
     msglog.stream() << "id=" << xtalId
                     << "\tadcN:";
     for (RngNum rng=0; rng.isValid(); rng++)
-      msglog.stream() << adcN[rng] << " ";
+      msglog.stream() << adcN[rng] << ' ';
     msglog << endreq;
   }
 

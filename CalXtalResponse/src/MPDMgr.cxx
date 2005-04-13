@@ -14,7 +14,7 @@ using namespace std;
 using namespace CalDefs;
 using namespace idents;
 
-/// retrieve MeVPerDac ratios for given xtal
+/// get MeVPerDac ratios for given xtal
 StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
                           CalibData::ValSig &mpdLrg,
                           CalibData::ValSig &mpdSm) {
@@ -27,7 +27,7 @@ StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  // Retrieve generic pointer to rng specific data
+  // Get generic pointer to rng specific data
   CalibData::CalMevPerDac *mpd = getRangeBase(xtalId);
   if (!mpd) return StatusCode::FAILURE;
 
@@ -45,7 +45,9 @@ StatusCode MPDMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT inst
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }

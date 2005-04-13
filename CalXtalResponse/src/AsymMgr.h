@@ -23,7 +23,7 @@ class AsymMgr : public CalibItemMgr {
  public:
   AsymMgr();
 
-  /// retrieve Asymmetry calibration information for one xtal
+  /// get Asymmetry calibration information for one xtal
   StatusCode getAsym(const CalXtalId &xtalId,
                      const vector<ValSig> *&asymLrg,
                      const vector<ValSig> *&asymSm,

@@ -37,27 +37,31 @@ bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase)
   CalibData::CalAsym *asym = (CalibData::CalAsym*)(rngBase);
 
   if (!(asymLrg = asym->getBig())) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if asym->getBig() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
     return false;
   }
   if (!(asymSm = asym->getSmall())) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath << endreq;
     return false;
   }
   if (!(asymNSPB = asym->getNSmallPBig())) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath << endreq;
     return false;
   }
   if (!(asymPSNB = asym->getPSmallNBig())) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Unable to retrieve calib data for " << m_calibPath << endreq;
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath << endreq;
     return false;
   }
 
@@ -75,7 +79,7 @@ bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase)
   return true;
 }
 
-/// retrieve Asymmetry calibration information for one xtal
+/// get Asymmetry calibration information for one xtal
 StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
                             const vector<CalibData::ValSig> *&asymLrg,
                             const vector<CalibData::ValSig> *&asymSm,
@@ -95,6 +99,7 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
   }
   
   CalibData::CalAsym *asym = getRangeBase(xtalId);
+  if (!asym) return StatusCode::FAILURE;
   
   // get main data arrays
   asymLrg = asym->getBig();
@@ -131,6 +136,8 @@ StatusCode AsymMgr::genSplines() {
     const vector<CalibData::ValSig> *asymPSNB;
     const vector<float> *Xpos;
 
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
     sc = getAsym(xtalIdx.getCalXtalId(), 
                  asymLrg, asymSm, 
                  asymNSPB, asymPSNB, 
@@ -201,12 +208,12 @@ StatusCode AsymMgr::genSplines() {
       MsgStream msglog(owner->msgSvc(), owner->name()); 
       msglog << MSG::VERBOSE << "xpos ";
       for (unsigned i = 0; i < dblXpos.size(); i++) 
-        msglog << dblXpos[i] << " ";
+        msglog << dblXpos[i] << ' ';
       msglog << endreq;
 
       msglog << MSG::VERBOSE << "asymLL ";
       for (unsigned i = 0; i < dblAsymLrg.size(); i++) 
-        msglog << dblAsymLrg[i] << " ";
+        msglog << dblAsymLrg[i] << ' ';
       msglog << endreq;
     }
 
@@ -223,13 +230,13 @@ StatusCode AsymMgr::genSplines() {
     genSpline(ASYMPSNB_SPLINE,  xtalIdx, "asymPSNB"    + xtalStr.str(),  
               dblXpos, dblAsymPSNB);
 
-    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invLrg"  + xtalStr.str(),   
+    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invAsymLrg"  + xtalStr.str(),   
               dblAsymLrg,   dblXpos);
-    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invSm"   + xtalStr.str(),    
+    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invAsymSm"   + xtalStr.str(),    
               dblAsymSm,    dblXpos);
-    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invNSPB" + xtalStr.str(),  
+    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invAsymNSPB" + xtalStr.str(),  
               dblAsymNSPB,  dblXpos);
-    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invPSNB" + xtalStr.str(),  
+    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invAsymPSNB" + xtalStr.str(),  
               dblAsymPSNB,  dblXpos);
   }  
   
@@ -245,7 +252,9 @@ StatusCode AsymMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT inst
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }

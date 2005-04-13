@@ -32,7 +32,7 @@ StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs
   
   m_flavor = flavor;
 
-  m_calibPath = m_calibTypePath + "/" + flavor;
+  m_calibPath = m_calibTypePath + '/' + flavor;
     
   sc = loadIdealVals();
   if (sc.isFailure()) return sc;
@@ -66,7 +66,7 @@ StatusCode CalibItemMgr::updateCache() {
   //-- CHECK TDS DATA VALIDITY --//
   /////////////////////////////////
 
-  // Retrieve pointer to Gain tree from TDS
+  // Get pointer to Gain tree from TDS
   // usually this f() should return immediately
   // if it fails then we have no valid calib data
   // for the current event.
@@ -79,7 +79,7 @@ StatusCode CalibItemMgr::updateCache() {
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     
     // else return error (can't find calib)
-    msglog << MSG::ERROR << "Unable to retrieve " 
+    msglog << MSG::ERROR << "can't get " 
            << m_calibPath << " from calib db" << endreq;
     return sc;  
   }
@@ -171,16 +171,16 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
   if (owner->m_superVerbose) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::VERBOSE << "Generated spline " << name.c_str() 
+    msglog << MSG::VERBOSE << "Gen spline " << name.c_str() 
            << " t="  << calibType 
            << " i="  << idx.getInt()
            << " nx=" << n
            << " ("   << m_splineXMin[calibType][idx] 
-           << "->"   << m_splineXMax[calibType][idx] << ")"
+           << "->"   << m_splineXMax[calibType][idx] << ')'
            << " ny=" << n
            << " ("   << yp[0]
            << "->"   << yp[n-1]
-           << ")"    << endreq;
+           << ')'    << endreq;
 
     // clear heap variables
     delete xp;

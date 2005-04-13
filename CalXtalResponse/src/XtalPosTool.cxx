@@ -30,7 +30,7 @@ public:
                             const string& name, 
                             const IInterface* parent);
 
-  /// retrieves needed paramters and pointers to required services
+  /// gets needed paramters and pointers to required services
   virtual StatusCode initialize();
 
   /// calculate position of energy deposition in mm from xtal-center = 0
@@ -70,7 +70,7 @@ StatusCode XtalPosTool::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "Unable to get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
     return sc;
   }
 
@@ -78,7 +78,7 @@ StatusCode XtalPosTool::initialize() {
   IGlastDetSvc* detSvc;
   sc = service("GlastDetSvc", detSvc);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to retrieve GlastDetSvc " << endreq;
+    msglog << MSG::ERROR << "  can't get GlastDetSvc " << endreq;
     return sc;
   }
 
@@ -106,14 +106,14 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   // used for index manipulation
   XtalIdx xtalIdx(xtalId);
 
-  //-- RETRIEVE PED (POS_FACE) --//
+  //-- GET PED (POS_FACE) --//
   float pedP, pedN, sig, cos;
   RngIdx rngIdxP(xtalIdx, POS_FACE, rngP);
   sc = m_calCalibSvc->getPed(rngIdxP.getCalXtalId(), pedP, sig, cos);
   if (sc.isFailure()) return sc;
   float adcPedP = adcP - pedP;   // ped subtracted ADC
   
-  //-- RETRIEVE PED (NEG_FACE) --//
+  //-- GET PED (NEG_FACE) --//
   RngIdx rngIdxN(xtalIdx, NEG_FACE, rngN);
   sc = m_calCalibSvc->getPed(rngIdxN.getCalXtalId(), pedN, sig, cos);
   if (sc.isFailure()) return sc;
@@ -130,7 +130,7 @@ StatusCode XtalPosTool::calculate(const CalXtalId &xtalId,
   if (dacP <= 0 || dacN <=0) {
     // create MsgStream only when needed for performance
     MsgStream msglog(msgSvc(), name()); 
-    msglog << MSG::WARNING << "DAC val <= 0, can't calculate position.  This shouldn't happen." << endl;
+    msglog << MSG::WARNING << "DAC val <= 0, can't calculate position.  This shouldn't happen." << endreq;
     return StatusCode::FAILURE;
   }
   double asym = log(dacP/dacN);

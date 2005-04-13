@@ -21,7 +21,7 @@ class IntNonlinMgr : public CalibItemMgr {
  public:
   IntNonlinMgr();
 
-  /// retrieve integral non-linearity vals for given xtal/face/rng
+  /// get integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
                           const vector< float > *&adcs,
                           const vector< unsigned > *&dacs,

@@ -76,23 +76,23 @@ StatusCode test_CalXtalResponse::initialize(){
   msglog << MSG::INFO << "initialize" << endreq;
 
   // get cal energy Tool
-  sc = toolSvc()->retrieveTool("XtalEneTool", m_xtalEneTool);
+  sc = toolSvc()->getTool("XtalEneTool", m_xtalEneTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to create " << "XtalEneTool" << endreq;
+    msglog << MSG::ERROR << "  can't create " << "XtalEneTool" << endreq;
     return sc;
   }
 
   // get cal pos Tool
-  sc = toolSvc()->retrieveTool("XtalPosTool", m_xtalPosTool);
+  sc = toolSvc()->getTool("XtalPosTool", m_xtalPosTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to create " << "XtalPosTool" << endreq;
+    msglog << MSG::ERROR << "  can't create " << "XtalPosTool" << endreq;
     return sc;
   }
 
   // get cal adc Tool
-  sc = toolSvc()->retrieveTool("XtalADCTool", m_xtalADCTool);
+  sc = toolSvc()->getTool("XtalADCTool", m_xtalADCTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to create " << "XtalADCTool" << endreq;
+    msglog << MSG::ERROR << "  can't create " << "XtalADCTool" << endreq;
     return sc;
   }
 
@@ -134,7 +134,7 @@ StatusCode test_CalXtalResponse::test_calCalibSvc() {
   ICalCalibSvc *pCalCalibSvc;
   sc = service("CalCalibSvc", pCalCalibSvc, false);
   if (!pCalCalibSvc) {
-    msglog << MSG::ERROR << "Unable to retrieve CalCalibSvc" << endreq;
+    msglog << MSG::ERROR << "can't get CalCalibSvc" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -188,7 +188,7 @@ StatusCode test_CalXtalResponse::test_calCalibSvc() {
     msglog << MSG::ERROR << "Error retrieving Asym from CalCalibSvc" << endreq;
     return sc;
   }
-  msglog << MSG::DEBUG << "Asymmetry successfully retrieved" << endreq;
+  msglog << MSG::DEBUG << "Asymmetry successfully getd" << endreq;
 
   // MeVPerDac
   CalibData::ValSig mpdLrg, mpdSm;
@@ -196,7 +196,7 @@ StatusCode test_CalXtalResponse::test_calCalibSvc() {
     msglog << MSG::ERROR << "Error retrieving MPD from CalCalibSvc" << endreq;
     return sc;
   }
-  msglog << MSG::DEBUG << "MeV per Dac successfully retrieved" << endreq;
+  msglog << MSG::DEBUG << "MeV per Dac successfully getd" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -289,16 +289,16 @@ StatusCode test_CalXtalResponse::test_xtalADCTool() {
          << " rngP " << rngP
          << " peggedP " << peggedP
          << " adcP " << adcP[0]
-         << " "      << adcP[1]
-         << " "      << adcP[2]
-         << " "      << adcP[3]
+         << ' '      << adcP[1]
+         << ' '      << adcP[2]
+         << ' '      << adcP[3]
          << " lacN " << lacN
          << " rngN " << rngN
          << " peggedP " << peggedN
          << " adcN " << adcN[0]
-         << " "      << adcN[1]
-         << " "      << adcN[2]
-         << " "      << adcN[3]
+         << ' '      << adcN[1]
+         << ' '      << adcN[2]
+         << ' '      << adcN[3]
          << endreq;
 
   return StatusCode::SUCCESS;

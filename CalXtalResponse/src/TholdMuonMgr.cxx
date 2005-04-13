@@ -9,7 +9,7 @@
 using namespace CalDefs;
 using namespace idents;
 
-/// retrieve threshold calibration constants as measured w/ muon calibration
+/// get threshold calibration constants as measured w/ muon calibration
 StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
                                    CalibData::ValSig &FLE,
                                    CalibData::ValSig &FHE) {
@@ -31,7 +31,7 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-/** \brief retrieve pedestal calibration constants as measured with muons
+/** \brief get pedestal calibration constants as measured with muons
  */
 StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
                                 CalibData::ValSig &ped) {
@@ -58,7 +58,9 @@ StatusCode TholdMuonMgr::fillRangeBases() {
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT instruments
 
-    if (!validateRangeBase(xtalId,rngBase)) return StatusCode::FAILURE;
+    // support missing towers & missing crystals
+    // keep moving if we're missing a particular calibration
+    if (!validateRangeBase(xtalId,rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }
@@ -72,7 +74,7 @@ StatusCode TholdMuonMgr::loadIdealVals() {
   if (owner->m_idealCalib.muonPeds.size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Wrong # of ideal muon pedestal vals." << endl;
+    msglog << MSG::ERROR << "Wrong # of ideal muon pedestal vals." << endreq;
     return StatusCode::FAILURE;;
   }
 

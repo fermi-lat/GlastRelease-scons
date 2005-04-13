@@ -25,12 +25,12 @@ class TholdMuonMgr : public CalibItemMgr {
     m_idealPed(RngNum::N_VALS)
     {};
 
-  /// retrieve threshold calibration constants as measured w/ muon calibration
+  /// get threshold calibration constants as measured w/ muon calibration
   StatusCode getTholds(const CalXtalId &xtalId,
                        CalibData::ValSig &FLE,
                        CalibData::ValSig &FHE);
 
-  /// retrieve pedestal calibration constants as measured during muon calibration threshold testing.
+  /// get pedestal calibration constants as measured during muon calibration threshold testing.
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:

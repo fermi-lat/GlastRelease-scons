@@ -25,17 +25,17 @@ class TholdCIMgr : public CalibItemMgr {
     m_idealULD(RngNum::N_VALS),
     m_idealPed(RngNum::N_VALS) {};
 
-  /// retrieve threshold calibration constants as measured w/ charge injection
+  /// get threshold calibration constants as measured w/ charge injection
   StatusCode getTholds(const CalXtalId &xtalId,
                        CalibData::ValSig &FLE,
                        CalibData::ValSig &FHE,
                        CalibData::ValSig &LAC);
 
-  /// retrieve Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
+  /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
   StatusCode getULD(const CalXtalId &xtalId,
                     CalibData::ValSig &ULDThold);
 
-  /// retrieve pedestal calibration constants as measured during charge injection threshold testing.
+  /// get pedestal calibration constants as measured during charge injection threshold testing.
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:
