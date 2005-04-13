@@ -20,11 +20,7 @@ ClassImp(commonRootData::VolumeIdentifier)
 //
 
 
-#ifndef WIN32  
-#include <strstream>
-#else
 #include <sstream>
-#endif
 
 namespace commonRootData {
 
@@ -34,7 +30,7 @@ m_bits0to31(0), m_bits32to63(0), m_size(0)
 {
 }
 
-VolumeIdentifier::VolumeIdentifier(const VolumeIdentifier& id) {
+VolumeIdentifier::VolumeIdentifier(const VolumeIdentifier& id) : TObject(id) {
     m_bits0to31 = id.m_bits0to31;
     m_bits32to63 = id.m_bits32to63;
     m_size = id.m_size;
@@ -59,11 +55,8 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 {
     // Purpose and Method:  Return the equivalent string of the volume 
     //    identifier, that is the single ids separated by a '/' character
-#ifndef WIN32    
-    std::strstream s;
-#else
+
     std::stringstream s;
-#endif
     
     unsigned int i;
     s << delimiter;
@@ -72,9 +65,6 @@ std::string VolumeIdentifier::name(const char* delimiter) const
         s << this->operator[](i) << delimiter;
     }
     
-#ifndef WIN32
-    s << '\0';
-#endif
     std::string tmp=s.str();
     return tmp.substr(0,tmp.size()-1);
 }

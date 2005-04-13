@@ -16,11 +16,11 @@ RelTable::RelTable() {
     Clear();
 }
 
-RelTable::RelTable(const RelTable& copy) {
+RelTable::RelTable(const RelTable& copy) : TObject(copy) {
     Clear();
     TIter it(copy.m_table);
     Relation *rel = 0;
-    while (rel = (Relation*)it.Next()) {
+    while ((rel = (Relation*)it.Next())) {
         addRelation(rel);
     }
 }
@@ -38,7 +38,7 @@ void RelTable::addRelation(Relation *rel) {
 const Relation* RelTable::getRelByFirst(const TObject *key) const {
     TIter it(m_table);
     Relation *rel = 0;
-    while (rel = (Relation*)it.Next()) {
+    while ((rel = (Relation*)it.Next())) {
         if (rel->getKey() == key) return rel;
     }
     
@@ -55,7 +55,7 @@ void RelTable::Print(Option_t *option) const {
     TObject::Print(option);
     TIter it(m_table);
     Relation *rel = 0;
-    while (rel = (Relation*)it.Next()) {
+    while ((rel = (Relation*)it.Next())) {
         rel->Print();
     }
 }
