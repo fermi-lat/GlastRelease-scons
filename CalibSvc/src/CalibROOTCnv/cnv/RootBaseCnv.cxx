@@ -38,7 +38,7 @@ RootBaseCnv::~RootBaseCnv() {
   // release TFile, TTree if they need releasing.  With normal 
   // termination they should already have been released.
 
-  doClean();
+  //  doClean();
 
 }
 
