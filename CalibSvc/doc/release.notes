@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r19p2 12-Apr-2005  jrb  Eliminate call to RootBaseCnv::doClean in
+                             constructor..can cause crash in finalize
    v0r19p1 12-Apr-2005  jrb  Exit or not, according to JO, if requested
                              calibration isn't found or loaded.
                              Addresses JIRA issue CALIB-13
