@@ -22,13 +22,13 @@ namespace calibRootData {
 
     virtual ~CalGain() { };
 
-    const CalXtalId& getId() const {return m_id;}
+    const commonRootData::CalXtalId& getId() const {return m_id;}
     const float getGain() const {return m_gain;}
     const float getSig() const {return m_sig;}
     
 
   private:
-    CalXtalId  m_id;
+    commonRootData::CalXtalId  m_id;
     Float_t  m_gain;
     Float_t  m_sig;
 
