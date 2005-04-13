@@ -3,7 +3,7 @@ version v8r2
 # $Id$
 
 use RootcintPolicy v4r* GlastPolicy
-use commonRootData v1r*
+use commonRootData v2r*
 use enums v*
 use ldfExt  v0r*  IExternal
 
