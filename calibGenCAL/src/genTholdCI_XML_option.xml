@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!DOCTYPE ifile SYSTEM "$(XMLROOT)/xmldata/ifile.dtd" >
+<!DOCTYPE ifile SYSTEM "$(XMLBASEROOT)/xml/ifile.dtd" >
 
 <ifile cvs_Header="$Header$" cvs_Revision="$Revision$" >
 
