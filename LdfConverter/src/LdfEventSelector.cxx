@@ -285,9 +285,9 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
     {
    //     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
         
-        log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
         
         irfIt->m_evtCount++;
+        log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
         static bool findFirstMarkerFive = false;
         // Allows JO to skip the search for the sweep events
         if (m_sweepSearch == 0) {
@@ -363,6 +363,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         (simpleIt->m_recId)++;
         log << MSG::DEBUG << "Reading Event " <<  simpleIt->m_evtCount << endreq;
         simpleIt->m_evtCount++;
+        log << MSG::DEBUG << "Reading Event " <<  simpleIt->m_evtCount << endreq;
         
         //If we go over the count set equal to the end
         if(simpleIt->m_evtCount > m_evtMax) {
