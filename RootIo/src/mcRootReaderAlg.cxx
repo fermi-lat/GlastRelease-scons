@@ -74,7 +74,7 @@ private:
     StatusCode readMcIntegratingHits();
     
     /// Converts from ROOT's VolumeIdentifier to idents::VolumeIdentifier 
-    void convertVolumeId(VolumeIdentifier rootVolId, 
+    void convertVolumeId(commonRootData::VolumeIdentifier rootVolId, 
         idents::VolumeIdentifier &tdsVolId);
     
     /// Closes the ROOT file
@@ -489,7 +489,7 @@ StatusCode mcRootReaderAlg::readMcPositionHits() {
         
         Event::McPositionHit *posHitTds = new Event::McPositionHit();
         
-        VolumeIdentifier volIdRoot = posHitRoot->getVolumeId();
+        commonRootData::VolumeIdentifier volIdRoot = posHitRoot->getVolumeId();
         idents::VolumeIdentifier volIdTds;
         convertVolumeId(volIdRoot, volIdTds);
         
@@ -572,7 +572,7 @@ StatusCode mcRootReaderAlg::readMcIntegratingHits() {
         
         Event::McIntegratingHit *intHitTds = new Event::McIntegratingHit();
         
-        const VolumeIdentifier idRoot = intHitRoot->getVolumeId();
+        const commonRootData::VolumeIdentifier idRoot = intHitRoot->getVolumeId();
         idents::VolumeIdentifier idTds;
         convertVolumeId(idRoot, idTds);
         
@@ -612,7 +612,7 @@ StatusCode mcRootReaderAlg::readMcIntegratingHits() {
     return sc;
 }
 
-void mcRootReaderAlg::convertVolumeId(VolumeIdentifier rootVolId, 
+void mcRootReaderAlg::convertVolumeId(commonRootData::VolumeIdentifier rootVolId, 
                                       idents::VolumeIdentifier& tdsVolId) 
 {
     // Purpose and Method:  We must store the volume ids as two 32 bit UInt_t
