@@ -2,7 +2,7 @@ package reconRootData
 # $Id$
 version v5r4
 
-use commonRootData v1r*
+use commonRootData v2r*
 
 use RootcintPolicy v4r* GlastPolicy
 
