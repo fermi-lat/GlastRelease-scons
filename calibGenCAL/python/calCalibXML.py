@@ -65,14 +65,14 @@ class calCalibXML(calXML.calXML):
         g.setAttribute('instrument', 'LAT')
         g.setAttribute('calibType', 'CAL_TholdCI')
         g.setAttribute('fmtVersion', 'v2r2')
-        g.setAttribute('creator', '')
+        g.setAttribute('creator', 'myname')
         ts = time.strftime('%Y-%m-%d-%H:%M', time.gmtime())
         g.setAttribute('timestamp', ts)
 
         return g
 
 
-    def dimensionWrite(self, nFace = 2, nRange = 4):
+    def dimensionWrite(self, nFace = 2, nRange = 4, nDacCol = 0):
         """
         Creates the <dimension> element for a calibration XML file
 
@@ -90,6 +90,8 @@ class calCalibXML(calXML.calXML):
         d.setAttribute('nFace', str(nFace))
         d.setAttribute('nRange', str(nRange))
         d.setAttribute('exact', 'false')
+        if nDacCol > 0:
+            d.setAttribute('nDacCol', str(nDacCol))
 
         return d        
 
@@ -1192,8 +1194,7 @@ class calMevPerDacCalibXML(calCalibXML):
                             energyData[tem, row, fe, 7] = float(eng)
                                     
         return energyData                        
-                    
-                           
+                                            
 
     def info(self):
         """
