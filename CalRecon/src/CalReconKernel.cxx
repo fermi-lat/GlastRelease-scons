@@ -76,7 +76,7 @@ void CalReconKernel::reviewEvent()
   if (!m_calClusterCol)
    {
     m_calClusterCol = new Event::CalClusterCol() ;
-    if (getEventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,m_calClusterCol))
+    if ((getEventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,m_calClusterCol)).isFailure())
      {
       log<<MSG::ERROR<<"Cannot register CalClusterCol"<<endreq ;
       m_status = StatusCode::FAILURE ;
