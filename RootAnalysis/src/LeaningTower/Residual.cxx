@@ -32,7 +32,7 @@ public:
     }
 
     void Go(int numEntries=-1, int firstEntry=0);
-    // general for DrawXxx: residual is h_abs - h_abs_ext
+    // general for DrawXxx: residual is defined as h_abs_ext-h_abs
     // ***********
     // draws the residual, top without fitting, bottom with gauss fit
     void DrawResidual(TString plane, TCut="");
@@ -130,15 +130,13 @@ void Residual::Go(int numEntries, int firstEntry) {
         // "corrects" cluster positions with respect to the recon results
         recon->TkrAlignmentSvc(myGeometry);
 
-        // ATTENTION -------------------------------------------------
-        // recon counts layers from top, i.e. X0 -> layer 17 view 0
         const Int_t* TkrClusLayer = recon->GetTkrClusLayer();
         const Int_t* TkrClusView = recon->GetTkrClusView();
         const Float_t* TkrClusX = recon->GetTkrClusX();
         const Float_t* TkrClusY = recon->GetTkrClusY();
         const Float_t* TkrClusZ = recon->GetTkrClusZ();
 
-        // lets first make two tracks which are later used to determine an
+        // let's first define two tracks for later determination of the
         // approximate position in the plane of interest.
         // We don't care that there is exactly one cluster per plane.  If it
         // would matter, the Chi2 would be bad anyway!
@@ -156,8 +154,7 @@ void Residual::Go(int numEntries, int firstEntry) {
         // now, loop over all clusters
         for ( int i=0; i<TkrNumClus; ++i ) {
             const int iView = TkrClusView[i];
-            const int iReconLayer = TkrClusLayer[i];
-            const int iLayer = 17 - iReconLayer;
+            const int iLayer = TkrClusLayer[i];
             const TString planeName = GetPlaneName(iLayer, iView);
             std::vector<TString> planeCol = planeCols[iView];
             // remove all hits on tray to which the plane to be studied belongs
@@ -263,6 +260,10 @@ void Residual::DrawResSlope(TString plane, TCut cut) {
         c->Divide(1,2);
     }
 
+    gStyle->Reset();
+    gStyle->SetOptStat("oeu");
+    gStyle->SetOptFit(1111);
+
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
@@ -271,14 +272,23 @@ void Residual::DrawResSlope(TString plane, TCut cut) {
     c->cd(1);
     gPad->SetTicks(1,1);
     t->Draw("h_abs_ext-h_abs:invSlope", cut);
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("cot(theta)");
+    htemp->GetYaxis()->SetTitle("residual/mm");
 
     c->cd(2);
     gPad->SetTicks(1,1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(1111);
     t->Draw("h_abs_ext-h_abs:invSlope", cut, "prof");
-    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("cot(theta)");
+    htemp->GetYaxis()->SetTitle("residual/mm");
     htemp->Fit("pol1", "", "", -0.6, 0.6);
+    gPad->Update();
+    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    pStats->SetOptStat(0);
+    pStats->SetX1NDC(0.71);
+    pStats->SetY1NDC(0.8);
+    gPad->Modified();
 
     c->cd();
     f.Close();
@@ -296,6 +306,10 @@ void Residual::DrawResOrd(TString plane, TCut cut) {
         c->Divide(1,2);
     }
 
+    gStyle->Reset();
+    gStyle->SetOptStat("oeu");
+    gStyle->SetOptFit(1111);
+
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
@@ -304,14 +318,23 @@ void Residual::DrawResOrd(TString plane, TCut cut) {
     c->cd(1);
     gPad->SetTicks(1,1);
     t->Draw("h_abs_ext-h_abs:h_ord", cut);
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("position in other view/mm");
+    htemp->GetYaxis()->SetTitle("residual/mm");
 
     c->cd(2);
     gPad->SetTicks(1,1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(1111);
     t->Draw("h_abs_ext-h_abs:h_ord", cut, "prof");
-    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("position in other view/mm");
+    htemp->GetYaxis()->SetTitle("residual/mm");
     htemp->Fit("pol1");
+    gPad->Update();
+    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    pStats->SetOptStat(0);
+    pStats->SetX1NDC(0.71);
+    pStats->SetY1NDC(0.8);
+    gPad->Modified();
 
     c->cd();
     f.Close();
@@ -325,17 +348,15 @@ void Residual::DrawResSlopeAll(TCut cut) {
         c->Divide(6,6);
     }
 
+    gStyle->Reset();
+    gStyle->SetOptFit(11);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetFitFormat(".3f");
+    gStyle->SetStatBorderSize(1);
+
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
 
-    gStyle->SetTitleFontSize(0.1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(11);
-    //    gStyle->SetStatFontSize(0.1);
-    gStyle->SetStatBorderSize(1);
-    gStyle->SetStatH(0.25);
-    gStyle->SetStatW(0.35);
-    gStyle->SetFitFormat(".3f");
     int i=0;
     TList* myGeometry = myTracker->GetGeometry();
     std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
@@ -352,13 +373,21 @@ void Residual::DrawResSlopeAll(TCut cut) {
         float dx, dy, dz;
         dx = dy = dz = 0.;
         if ( htemp ) { // histogram might be empty
+            htemp->GetXaxis()->SetTitle("cot(theta)");
+            htemp->GetYaxis()->SetTitle("residual/mm");
             htemp->SetTitle(planeName);
             htemp->Fit("pol1", "q", "", -1.0, 1.0);
             gPad->Update();
+            TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+            pStats->SetOptStat(0);
+            pStats->SetX1NDC(0.35);
+            pStats->SetY1NDC(0.8);
+            gPad->Modified();
             TF1* f = htemp->GetFunction("pol1");
             // if I define the residual as h_abs_ext-h_abs, the horizontal shift
             // is p0, but the vertical is -p1
-            dz = -f->GetParameter(1);
+            dz = f->GetParameter(1);
+            dz = 0;
             float dh = f->GetParameter(0);
             if ( plane->GetView() )
                 dy = dh;
@@ -387,17 +416,15 @@ void Residual::DrawResOrdAll(TCut cut) {
         c->Divide(6,6);
     }
 
+    gStyle->Reset();
+    gStyle->SetOptFit(11);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetFitFormat(".3g");
+    gStyle->SetStatBorderSize(1);
+
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
 
-    gStyle->SetTitleFontSize(0.1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptFit(11);
-    //    gStyle->SetStatFontSize(0.1);
-    gStyle->SetStatBorderSize(1);
-    gStyle->SetStatH(0.25);
-    gStyle->SetStatW(0.35);
-    gStyle->SetFitFormat(".3g");
     int i=0;
     TList* myGeometry = myTracker->GetGeometry();
     std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
@@ -414,9 +441,16 @@ void Residual::DrawResOrdAll(TCut cut) {
         float dx, dy, dz, dangZ;
         dx = dy = dz = dangZ = 0.;
         if ( htemp ) { // histogram might be empty
+            htemp->GetXaxis()->SetTitle("position in other view/mm");
+            htemp->GetYaxis()->SetTitle("residual/mm");
             htemp->SetTitle(planeName);
             htemp->Fit("pol1", "q", "", 0, 350);
             gPad->Update();
+            TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+            pStats->SetOptStat(0);
+            pStats->SetX1NDC(0.35);
+            pStats->SetY1NDC(0.8);
+            gPad->Modified();
             TF1* f = htemp->GetFunction("pol1");
             // dangZ is the rotation around z (check the sign)
             dangZ = 1000. * f->GetParameter(1);  // mrad
