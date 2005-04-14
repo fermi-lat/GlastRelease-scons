@@ -6,8 +6,8 @@ author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 branches src cmt doc
 
 use GlastPolicy
-use CalUtil
-use CalXtalResponse
+use CalUtil v2r*
+use CalXtalResponse v0r*
 use GaudiInterface * IExternal
 use CLHEP          * IExternal
 use GlastSvc
@@ -23,7 +23,12 @@ apply_pattern packageShr
 #========================================================
 private
 
-use RootIo
+use RootIo v15r*
+use mcRootData v2r*
+use digiRootData v8r*
+use reconRootData v5r*
+use commonRootData v2r*
+use rootTestData v3r*
 
 macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 

@@ -142,31 +142,34 @@ StatusCode CalXtalRecAlg::execute()
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
        digiIter != m_calDigiCol->end(); digiIter++) {
-
+    
     // if there is no digi data, then move on w/ out creating
     // recon TDS data for this xtal
     if ((*digiIter)->getReadoutCol().size() < 1) continue;
-
+    
     CalXtalId xtalId = (*digiIter)->getPackedId();
-
-    // create new object to store crystal reconstructed data     
-    CalXtalRecData* recData = 
-      new CalXtalRecData((*digiIter)->getMode(),xtalId);
-           
+    
+    // create new object to store crystal reconstructed data  
+    // use auto_ptr so it is autmatically deleted when we exit early
+    // on error.
+    auto_ptr<CalXtalRecData> recData(new CalXtalRecData((*digiIter)->getMode(),
+                                                        xtalId));
+                                     
     // calculate energy in the crystal
-    bool below_thresh;
-    sc = computeEnergy(*recData, **digiIter, below_thresh);
-    if (sc.isFailure()) return sc;
+    bool below_thresh=false; // initialize to false every time
+    sc = computeEnergy(*recData, **digiIter, below_thresh);    
+    // if fails move to next event (don't die on me)
+    if (sc.isFailure()) continue;
 
     if(!below_thresh){      
       // calculate position in the crystal
       sc = computePosition(*recData, **digiIter);   
-      if (sc.isFailure()) return sc;
+      // if fails move to next event (don't die on me)
+      if (sc.isFailure()) continue; 
 
       // add new reconstructed data to the collection
-      m_calXtalRecCol->push_back(recData);
-    } else {
-      delete recData;
+      // release it from the auto_ptr so it is not deleted
+      m_calXtalRecCol->push_back(recData.release());
     }
   }
 
@@ -256,7 +259,7 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData &recData,
   int adcP = (*ro).getAdc(CalXtalId::POS);   
   int adcM = (*ro).getAdc(CalXtalId::NEG);   
 
-  float ene;
+  float ene=0;
 
   // used for current range only
   bool range_below_thresh = false;

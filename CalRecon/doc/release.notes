@@ -2,12 +2,14 @@
  
  @brief Package CalRecon
  @verbatim
- $Id$
 
 package CalRecon
 
-package manager: Alexandre Chekhtman
+package manager: David Chamont
 
+  v5r24p2 14-apr-05   DC  merge v5r22p5em1->v5r22p5em2.
+                      DC  try to adapt to new root formats => failure
+  v5r22p5em2 13-apr-05 ZF skip don't die on bad xtal response.  initialize loop var.  works with multi tower.
   v5r24   07-apr-05   Pol Introduction of CalTkrLikelihoodTool.
                       DC  Introduction of CalTransvOffsetTool (code extracted from CalClustersAlg).
                       DC  CalClusteringData transformed into CalReconKernel
@@ -23,15 +25,15 @@ package manager: Alexandre Chekhtman
   v5r23p1 16-mar-05   DC  improved tests, unified EnergyCorr interface, centralized Clustering data
   v5r22p5em1 25-mar-05 ZF really fixed TKR only bug this time.
   v5r22p5em0 25-mar-05 ZF  fixed bug w/ tkr only data.  updated comments & doc for CalXXtalRecAlg.
-  v5r22p5 16-mar-05   ZF  improved verbose print outs, improved performance re: MsgStream ctors
-  v5r22p4  2-mar-05   ZF  uses latest CalXtalResponse
-  v5r22p3 20-feb-05   THB include CalValsCoorTool update to correct tracker plane numbering.  
-  v5r22p2 20-feb-05   THB replace xml with xmlBase, so that xml package can be removed.  
-  v5r22p1 18-feb-05   ZF  once again... DOS path had bad case, had to fix for linux
-  v5r22   18-feb-05   ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
-  v5r21p2 07-feb-05   ZF  Fixed small bug in requirements file re: ROOT_linkopts
-  v5r21p1 05-feb-05   ZF  Builds & runs on Linux
-  v5r21   05-feb-05   ZF  Now works with CalXtalResponse package
+  v5r22p5 16-mar-05    ZF  improved verbose print outs, improved performance re: MsgStream ctors
+  v5r22p4  2-mar-05    ZF  uses latest CalXtalResponse
+  v5r22p3 20-feb-05    THB include CalValsCoorTool update to correct tracker plane numbering.  
+  v5r22p2 20-feb-05    THB replace xml with xmlBase, so that xml package can be removed.  
+  v5r22p1 18-feb-05    ZF  once again... DOS path had bad case, had to fix for linux
+  v5r22   18-feb-05    ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
+  v5r21p2 07-feb-05    ZF  Fixed small bug in requirements file re: ROOT_linkopts
+  v5r21p1 05-feb-05    ZF  Builds & runs on Linux
+  v5r21   05-feb-05    ZF  Now works with CalXtalResponse package
   v5r20p2 27-jan-05   PA  Added bias correctio to profile tool
   v5r20p1 27-jan-05   .....
   v5r17p3 17-jan-05   THB remove RootPolicy from requirements
