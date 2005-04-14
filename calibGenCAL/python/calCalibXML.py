@@ -89,7 +89,7 @@ class calCalibXML(calXML.calXML):
         d.setAttribute('nXtal', '12')
         d.setAttribute('nFace', str(nFace))
         d.setAttribute('nRange', str(nRange))
-        d.setAttribute('exact', 'true')
+        d.setAttribute('exact', 'false')
 
         return d        
 
