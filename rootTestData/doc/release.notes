@@ -3,7 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v2r4      14-Apr-05  DC  move there root files from CalRecon (gamma...)
+v3r1      14-Apr-05  DC  move there root files from CalRecon (gamma...)
 v2r3      10-Feb-05  LSR modified TkrId; added more jobOptions files
 v2r2      07-Feb-05  LSR new TkrCluster, but reran everything anyway
                            Next time consider whether we can read in
