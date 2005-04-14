@@ -87,8 +87,8 @@ void TriggerEfficiency::Go(int lastEntry) {
         }
         // doing 3-in-a-row
         // index i will measure the efficiency of the layer combination i-1,1,i+1
-	UInt_t digi3row   = myEvent->GetTkrDigi3RowBits();
-	UInt_t trgReq3row = myEvent->GetTkrTrgReq3RowBits();
+        //	UInt_t digi3row   = myEvent->GetTkrDigi3RowBits();
+        //	UInt_t trgReq3row = myEvent->GetTkrTrgReq3RowBits();
 	UInt_t recomp_digi(0);
 	UInt_t recomp_trgreq(0);
 	//	std::cout<<std::bitset<16>(trgReq3row)<<" "<<std::bitset<16>(digi3row) <<std::endl;
