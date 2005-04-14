@@ -238,7 +238,8 @@ void Residual::DrawResidual(TString plane, TCut cut) {
     htemp->GetXaxis()->SetTitle("residual/mm");
     htemp->Fit("gaus", "", "", -0.2, 0.2);
     gPad->Update();
-    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    TPaveStats* pStats =
+        (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
     pStats->SetOptStat(0);
     pStats->SetX1NDC(0.71);
     pStats->SetY1NDC(0.8);
@@ -284,7 +285,8 @@ void Residual::DrawResSlope(TString plane, TCut cut) {
     htemp->GetYaxis()->SetTitle("residual/mm");
     htemp->Fit("pol1", "", "", -0.6, 0.6);
     gPad->Update();
-    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    TPaveStats* pStats =
+        (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
     pStats->SetOptStat(0);
     pStats->SetX1NDC(0.71);
     pStats->SetY1NDC(0.8);
@@ -330,7 +332,8 @@ void Residual::DrawResOrd(TString plane, TCut cut) {
     htemp->GetYaxis()->SetTitle("residual/mm");
     htemp->Fit("pol1");
     gPad->Update();
-    TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    TPaveStats* pStats =
+        (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
     pStats->SetOptStat(0);
     pStats->SetX1NDC(0.71);
     pStats->SetY1NDC(0.8);
@@ -378,7 +381,8 @@ void Residual::DrawResSlopeAll(TCut cut) {
             htemp->SetTitle(planeName);
             htemp->Fit("pol1", "q", "", -1.0, 1.0);
             gPad->Update();
-            TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+            TPaveStats* pStats =
+                (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
             pStats->SetOptStat(0);
             pStats->SetX1NDC(0.35);
             pStats->SetY1NDC(0.8);
@@ -386,8 +390,7 @@ void Residual::DrawResSlopeAll(TCut cut) {
             TF1* f = htemp->GetFunction("pol1");
             // if I define the residual as h_abs_ext-h_abs, the horizontal shift
             // is p0, but the vertical is -p1
-            dz = f->GetParameter(1);
-            dz = 0;
+            dz = -f->GetParameter(1);
             float dh = f->GetParameter(0);
             if ( plane->GetView() )
                 dy = dh;
@@ -446,7 +449,8 @@ void Residual::DrawResOrdAll(TCut cut) {
             htemp->SetTitle(planeName);
             htemp->Fit("pol1", "q", "", 0, 350);
             gPad->Update();
-            TPaveStats* pStats = (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+            TPaveStats* pStats =
+                (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
             pStats->SetOptStat(0);
             pStats->SetX1NDC(0.35);
             pStats->SetY1NDC(0.8);
@@ -468,7 +472,7 @@ void Residual::DrawResOrdAll(TCut cut) {
             std::cout << planeName << " dh(h=0) = " << std::setprecision(3)
                       << std::fixed << dh << " rotZ = " << dangZ << std::endl;
         }
-        fout << plane->GetGeometry(damp*dz, damp*dy, damp*dx, dangZ) <<std::endl;
+        fout << plane->GetGeometry(damp*dz,damp*dy,damp*dx,dangZ) <<std::endl;
     }
 
     fout.close();
