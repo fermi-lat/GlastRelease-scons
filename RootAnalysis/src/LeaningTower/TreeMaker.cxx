@@ -288,10 +288,15 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 	    TkrDigi3RowBits = evt->getL1T().getDigiTriRowBits(0);
             if ( DEBUG )
                 std::cout << "bool 3-in-a-row: " << tkrTrigger
-                          << "  Tkr3RowBits: " << std::setw(6) << TkrDigi3RowBits
-                          << ' '
+                          << "  TkrTrgReq3RowBits: "
+                          << std::setw(6) << TkrTrgReq3RowBits << ' '
                           << static_cast<std::bitset<sizeof(UInt_t)*8> >
-                    (TkrTrgReq3RowBits) <<std::endl;
+                    (TkrTrgReq3RowBits)
+                          << "  TkrDigi3RowBits: "
+                          << std::setw(6) << TkrDigi3RowBits << ' '
+                          << static_cast<std::bitset<sizeof(UInt_t)*8> >
+                    (TkrDigi3RowBits)
+                          <<std::endl;
 
             // Ebf time
             static Double_t EbfTimeStart = evt->getEbfTimeSec();
