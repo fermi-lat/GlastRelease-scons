@@ -180,6 +180,12 @@ StatusCode TkrCalibAlg::initialize()
     if (m_injectionFlavor=="notSet")  m_injectionFlavor  = m_flavor;
     if (m_muonFlavor=="notSet")       m_muonFlavor       = m_flavor;
 
+    m_serHot       = -1;
+    m_serDead      = -1;
+    m_serSplits    = -1;
+    m_serInjection = -1;
+    m_serMuons     = -1;
+
     return StatusCode::SUCCESS;   
 }
 
@@ -362,10 +368,10 @@ StatusCode TkrCalibAlg::execute( ) {
         }
 
         int newSerNo = pScale->getSerNo();
-        if (newSerNo!=m_serInjection) {
+        if (newSerNo!=m_serMuons) {
             log << MSG::INFO << "muon scale serial number changed..." 
                 << endreq;
-            m_serInjection = newSerNo;
+            m_serMuons = newSerNo;
             log << MSG::INFO << "Retrieved with path " << fullToTPath << endreq
                 << "Serial #" <<  pScale->getSerNo() << endreq; 
             log << MSG::INFO << "Vstart: " <<  (pScale->validSince()).hours()
