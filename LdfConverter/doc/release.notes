@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r8p1  14-Apr-2005 HMK Suppress Warning message when no events are skipped
+        when searching for first sweep event - requested by Anders
 v1r8p0  12-Apr-2005 HMK Move Debug statements to after incrementing the event
         counter - JIRA GRINF-24
 v1r8    05-Apr-2005 HMK Retrieve new 32 bit event sequence number 

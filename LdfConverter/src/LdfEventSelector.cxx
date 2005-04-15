@@ -312,8 +312,9 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             static unsigned int skippedEvents = 0;
             if (!findFirstMarkerFive) {
                 if (marker == 5) { 
-                    log << MSG::WARNING << "Skipped " << skippedEvents 
-                        << " Events before finding first sweep event" << endreq;
+                    if (skippedEvents > 0)
+                        log << MSG::WARNING << "Skipped " << skippedEvents 
+                          << " Events before finding first sweep event" << endreq;
                     findFirstMarkerFive = true; 
                 } else {
                     if (!skippedEvents)
