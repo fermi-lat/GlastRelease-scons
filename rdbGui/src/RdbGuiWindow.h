@@ -68,6 +68,7 @@ public:
     ID_PASTEFROMTABLE,
     ID_ABOUT,
     ID_INSERT,
+    ID_MULTI,
     ID_UPDATELAST,
     ID_UPDATEROW,
     ID_COPYROW      
@@ -85,6 +86,7 @@ public:
   long onUpdResTableCols(FXObject*,FXSelector, void*);
   long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
+  long onMultiInsert(FXObject*,FXSelector, void*);
   long onUpdateLastRow(FXObject*,FXSelector, void*);
   long onUpdateRowByKey(FXObject*,FXSelector, void*);
   long onCopyRowByKey(FXObject*,FXSelector, void* ptr);

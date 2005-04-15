@@ -23,6 +23,7 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_DESELECTED,       TableColumnList::ID_TBLLIST,         RdbGUIWindow::onUpdResTableCols),
   FXMAPFUNC(SEL_COMMAND,          QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_MULTI,              RdbGUIWindow::onMultiInsert),  
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_UPDATELAST,         RdbGUIWindow::onUpdateLastRow),
   FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_UPDATEROW,           RdbGUIWindow::onUpdateRowByKey),
   FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_COPYROW,             RdbGUIWindow::onCopyRowByKey)
@@ -135,6 +136,8 @@ RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL
   new FXMenuTitle(uiMenuBar, "&Action", NULL, uiActionmenu);
   new FXMenuCommand(uiActionmenu, "&Insert\tCtl-I\tInsert a new row\tInsert a new row",
     NULL, this, ID_INSERT);
+  new FXMenuCommand(uiActionmenu, "&MultiInsert\tCtl-M\tMultiInsert a new row\tMultiInsert a new row",
+    NULL, this, ID_MULTI);
   new FXMenuCommand(uiActionmenu, "&Redo Last Insert\tCtl-R\tRedo the last row inserted\tRedo the last row inserted",
     NULL, this, ID_UPDATELAST);
 
@@ -415,6 +418,36 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
     onUpdResTableCols(NULL, 0, (void *) i);
   return 1;
 }
+
+long RdbGUIWindow::onMultiInsert(FXObject*,FXSelector, void*)
+{
+  m_dgInsert->setConnection(m_connect);
+  if ((uiTblColList->getTableList()->getNumItems() == 0 )
+      || (m_connect == 0) || !(m_connect->isConnected()) ||
+      (m_dgInsert->getLastRow() < 0))
+    return 1;
+
+  int index = uiTblColList->getTableList()->getCurrentItem(); 
+  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  // Fill the form
+  m_rdbManager->startVisitor(m_dgInsert);
+  // Fill the form with the sticky values of the last row inserted in the DB
+  m_dgInsert->fillStickyWithLastRow();
+  // Set the mode of the dialog to Insert
+  m_dgInsert->setInsertMode(1);
+  
+  m_dgInsert->show(PLACEMENT_OWNER);
+  m_dgInsert->setUiLog(uiLog);
+
+  if (m_dgInsert->getDefaultWidth() < 250)
+    m_dgInsert->resize(250,m_dgInsert->getDefaultHeight());
+  else
+    m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();  
+  
+  return 1;
+}
+
 
 long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 {

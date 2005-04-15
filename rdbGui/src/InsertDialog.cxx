@@ -41,7 +41,6 @@ InsertDialog::InsertDialog(FXApp *owner):
   new FXButton(uiClosebox, "&Send", NULL, this, ID_GO,
                BUTTON_INITIAL|LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK, 0, 0, 0, 0, 20, 20);
                
-
   m_connection = 0;
   m_factory = new ColWidgetFactory();
 
@@ -52,7 +51,9 @@ InsertDialog::InsertDialog(FXApp *owner):
   // Let start in insert mode
   m_insertMode = 1;
 
+  multi->hide();  
 }
+
 
 void InsertDialog::fillWithRowByKey(std::string primKeyVal)
 {
@@ -92,6 +93,51 @@ void InsertDialog::fillWithRowByKey(std::string primKeyVal)
   }
   m_selRow = primKeyVal;
 }
+
+void InsertDialog::fillStickyWithLastRow()
+{
+  std::string primKeyVal;
+  primKeyVal = FXStringVal(m_lastRow).text();
+
+  unsigned int i;
+  
+  std::vector<std::string> colNames;
+  std::vector<std::string> colValues;
+
+  std::string name;
+   
+  for(i=0;i<m_widgets.size();i++)
+  {
+    ColWidget* temp = m_widgets[i]; 
+    
+    name = temp->getColumn()->getName();
+    facilities::Util::trimTrailing(&name);
+    colNames.push_back(name); 
+  }
+
+  // Set up WHERE clause, always the same
+  rdbModel::Assertion::Operator* serEquals = 
+    new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
+                                      primKeyVal, false, true);
+  rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
+
+
+  if(m_connection)
+    m_result = m_connection->select(m_tableName, colNames, colNames, whereSer);
+
+
+  m_result->getRow(colValues, 0, 1);
+
+  for(i=0;i<m_widgets.size();i++)
+  {
+    ColWidget* temp = m_widgets[i]; 
+    if (temp->getColumn()->stickyInsert())
+      temp->setValue(colValues[i].c_str());
+  }
+  m_selRow = primKeyVal;
+  
+}
+
 
 // Get the last row from the database and fill the dialog form
 void InsertDialog::fillWithLastRow()

@@ -22,7 +22,7 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
  
    enum{
     ID_LIST=FXDialogBox::ID_LAST,
-    ID_GO
+    ID_GO,
    };
 
  
@@ -44,8 +44,12 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   bool getInsertMode(){return m_insertMode;};
   void setInsertMode(bool m){m_insertMode = m;};
 
+  
   void fillWithRowByKey(std::string ser);
   void fillWithLastRow();
+
+  /// Fills a new row with the last one only in the sticky values ..
+  void fillStickyWithLastRow();
 
  protected:
   InsertDialog(){}
@@ -60,6 +64,9 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   FXMatrix *m_matrix;
   ColWidgetFactory* m_factory;  
 
+  /// This is the button for multi-insert operation
+  FXButton* multi;
+    
   /// Visitors to build the insert widgets  
   rdbModel::Visitor::VisitorState visitRdb(rdbModel::Rdb *rdb);
   rdbModel::Visitor::VisitorState visitTable(rdbModel::Table *table);
