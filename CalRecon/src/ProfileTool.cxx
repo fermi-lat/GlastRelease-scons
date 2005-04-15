@@ -229,7 +229,7 @@ StatusCode ProfileTool::doEnergyCorr( Event::CalCluster * cluster )
 
     double eTotal = cluster->getEnergySum() ;
     
-    m_static_slope = getKernel()->getSlope() ;
+    m_static_slope = getKernel()->getSlope(cluster) ;
 
     m_xtalHeight = getKernel()->getCalCsIHeight()/10.;  // crystal height in cm
     m_xtalWidth = getKernel()->getCalCsIWidth()/10.;    // crystal width in cm

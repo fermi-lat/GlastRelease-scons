@@ -7,6 +7,8 @@ package CalRecon
 
 package manager: David Chamont
 
+  v5r24p4 15-apr-05   CD  improve management of slope.
+  v5r24p3 15-apr-05   TU  urgent bug fix when registering CalClusterCol.
   v5r24p2 14-apr-05   DC  merge v5r22p5em1->v5r22p5em2.
                       DC  try to adapt to new root formats => failure
   v5r22p5em2 13-apr-05 ZF skip don't die on bad xtal response.  initialize loop var.  works with multi tower.

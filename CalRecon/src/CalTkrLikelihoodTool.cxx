@@ -82,7 +82,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   
   // Energy:
   double pdfVariables[2]= {cluster->getEnergySum(), 0.};
-  double pdfDataPoint[2]= {0., getKernel()->getSlope()};
+  double pdfDataPoint[2]= {0., getKernel()->getSlope(cluster)};
   if( pdfVariables[0]<20. ) {
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutMAXCALENERGY, 1.);
     return sc;
@@ -93,7 +93,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   }
   
   // direction: slope must be above \f$cos(32\circ)$\f
-  if( getKernel()->getSlope()<.8480481 ){ 
+  if( getKernel()->getSlope(cluster)<.8480481 ){ 
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutSLOPE, 1.);
     return sc; 
   }

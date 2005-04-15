@@ -187,11 +187,6 @@ StatusCode CalClustersAlg::execute()
           it != getKernel()->getClusters()->end() ;
           ++it ) {       
         
-        // if no tracker rec then fill slope from cluster
-        if (getKernel()->getTkrNVertices()==0)
-          getKernel()->setSlope((*it)->getDirection().z()) ;
- 
-
         // apply corrections
         int itool = 0 ;
         std::vector<IEnergyCorr *>::const_iterator tool ;

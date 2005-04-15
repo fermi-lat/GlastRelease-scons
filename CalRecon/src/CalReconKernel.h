@@ -74,12 +74,9 @@ class CalReconKernel : public AlgTool
     const Point & getTkrFrontVertexPosition() const
      { return m_tkrFrontVertexPosition ; }
 
-    // eventually changed cluster by cluster
-    // => TO BE MODIFIED !!!
-    void setSlope( double slope )
-     { m_slope = slope ; }
-    double getSlope() const
-     { return m_slope ; }
+    // utilities
+    double getSlope( Event::CalCluster * cluster ) const
+     { return (m_tkrSlope?m_tkrSlope:cluster->getDirection().z()) ; }
 
   private :
     
@@ -105,9 +102,7 @@ class CalReconKernel : public AlgTool
     int m_tkrNVertices ;
     Vector m_tkrFrontVertexDirection ;
     Point m_tkrFrontVertexPosition ;
-    
-    // other
-    double m_slope;
+    double m_tkrSlope ;
 
  } ;
 

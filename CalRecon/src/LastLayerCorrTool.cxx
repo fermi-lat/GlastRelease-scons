@@ -154,10 +154,11 @@ StatusCode LastLayerCorrTool::doEnergyCorr( Event::CalCluster * cluster )
             // Evaluation of energy using correlation method
             // Coefficients fitted using GlastSim.
             /*
-            double p0 = -1.49 + 1.72*getKernel()->getSlope();
-            double p1 = 0.28 + 0.434 * getKernel()->getSlope();
-            double p2 = -15.16 + 11.55 * getKernel()->getSlope();
-            double p3 = 13.88 - 10.18 * getKernel()->getSlope();
+            double slope = getKernel()->getSlope(cluster) ;
+            double p0 = -1.49 + 1.72*slope ;
+            double p1 = 0.28 + 0.434 * slope ;
+            double p2 = -15.16 + 11.55 * slope ;
+            double p3 = 13.88 - 10.18 * slope ;
             double lnE = log(eTotal/1000.);
             double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
             */

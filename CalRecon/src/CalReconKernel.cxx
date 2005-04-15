@@ -85,6 +85,7 @@ void CalReconKernel::reviewEvent()
     
   // Tracker
   m_tkrNVertices = 0 ;
+  m_tkrSlope = 0 ;
   SmartDataPtr<Event::TkrVertexCol> tkrRecData(getEventSvc(),EventModel::TkrRecon::TkrVertexCol) ;
   if (tkrRecData==0)
    { log<<MSG::DEBUG<<"No TKR Reconstruction available "<<endreq ; }
@@ -96,8 +97,8 @@ void CalReconKernel::reviewEvent()
      {
       m_tkrFrontVertexDirection = tkrRecData->front()->getDirection() ;
       m_tkrFrontVertexPosition = tkrRecData->front()->getPosition() ;
-      m_slope = fabs(m_tkrFrontVertexDirection.z()) ;
-      log<<MSG::DEBUG<<"Track direction = "<<m_slope<<endreq ;
+      m_tkrSlope = fabs(m_tkrFrontVertexDirection.z()) ;
+      log<<MSG::DEBUG<<"Track direction = "<<m_tkrSlope<<endreq ;
      }
     else
      { log<<MSG::DEBUG<<"No reconstructed tracks "<<endreq ; }	
