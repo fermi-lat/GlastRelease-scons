@@ -3,6 +3,8 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r3p6 15-Apr-2005 jrb Make some attributes in calCalib dtd CDATA rather
+                          than NMTOKEN (so value is less restricted)
    v1r3p5 18-Mar-2005 jrb Fix bug in tkrCalibration.dtd affecting chargeScale
                           calibrations
    v1r3p4 17-Mar-2005 jrb Add a (defaulted) attribute to <tower> in 
