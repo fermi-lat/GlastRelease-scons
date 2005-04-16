@@ -53,14 +53,14 @@
 <!ELEMENT  generic  (inputSample?) >
 <!ATTLIST generic  
    instrument  (LAT | BFEM | BTEM | EM | EM2 | CU) #REQUIRED
-   timestamp   NMTOKEN #REQUIRED
+   timestamp   CDATA #REQUIRED
    calibType (CAL_LightAtt | CAL_LightAsym | CAL_LightYield |
               CAL_Ped | CAL_ElecGain | CAL_IntNonlin | CAL_DiffNonlin |
               CAL_MuSlope | CAL_Asym | CAL_MevPerDac | CAL_TholdCI |
               CAL_TholdMuon)    #REQUIRED
-   DTDVersion  NMTOKEN "v2r2p1"       
+   DTDVersion  NMTOKEN "v2r2p2"       
    fmtVersion  NMTOKEN #REQUIRED
-   creator     NMTOKEN #IMPLIED >
+   creator     CDATA #IMPLIED >
 
 <!-- Description of events used as input to the procedure 
      Start- and stop-times should be timestamps of earliest and
@@ -68,8 +68,8 @@
      inputSample is (for now) optional.
 -->
 <!ELEMENT inputSample (#PCDATA) >
-<!ATTLIST inputSample  startTime NMTOKEN #REQUIRED
-                       stopTime  NMTOKEN #REQUIRED
+<!ATTLIST inputSample  startTime CDATA #REQUIRED
+                       stopTime  CDATA #REQUIRED
                        triggers  NMTOKENS #REQUIRED 
                        source    NMTOKENS #REQUIRED
                        mode      NMTOKEN  #REQUIRED>
