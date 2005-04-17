@@ -622,21 +622,43 @@ StatusCode CalibDataSvc::fetchDigiTime() {
 StatusCode CalibDataSvc::fetchFakeClockTime() {
 
   static unsigned int eventNumber = 0;
+  static long seconds = 0;
+  static long nano    = 0;
 
+  static long seconds_incr = m_delayTime / 1000;
+  static long nano_incr = (m_delayTime - 1000*seconds_incr) * 1000000;
+
+  seconds += seconds_incr;
+  nano += nano_incr;
+  while (nano >= 1000000000) {
+    nano -= 1000000000;
+    seconds++;
+  }
   // Set the event time.  m_delay has been specified in milliseconds
-  double incr = eventNumber*m_delayTime;
-  long   seconds_incr = (long) (incr / 1000);
-  long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000000);
+    //  double incr = eventNumber*m_delayTime;
+    //  long   seconds_incr = (long) (incr / 1000);
+    //  long   nano_incr = (long) ((incr - (1000*seconds_incr)) * 1000000);
 
-  facilities::Timestamp time(m_startTime + seconds_incr, nano_incr);
-  m_time = CalibData::CalibTime(time);
+  std::string timestring;
+  try {
+    facilities::Timestamp time(m_startTime + seconds, nano);
+    timestring = time.getString();
+    m_time = CalibData::CalibTime(time);
+  }
+  catch (facilities::BadTimeInput  ex) {
+    std::cerr << "Caught facilities::BadTimeInput exception with complaint "
+              << ex.complaint << std::endl;
+    std::cerr << "Exiting..." << std::endl;
+    std::cerr.flush();
+    exit(0);
+  }
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << "Fake Clock Event number: " 
         << eventNumber << endreq;
     log << MSG::DEBUG << "Event time: "
-        << time.getString()
+        << timestring
         << endreq; 
     log << MSG::DEBUG << "Event time (hours) " << m_time.hours() << endreq;
   }
