@@ -39,6 +39,7 @@ public:
            m_errLen[i] = summary.m_errLen[i];
            m_diagLen[i] = summary.m_diagLen[i];
         }
+        m_eventSizeInBytes = summary.m_eventSizeInBytes;
     }
 
     virtual ~EventSummaryData();
@@ -48,6 +49,8 @@ public:
     void initEventSequence(UInt_t evtSeq) { m_eventSequence = evtSeq; };
 
     void initEventFlags(UInt_t flags) { m_flags = flags; };
+
+    void initEventSizeInBytes(ULong_t size) { m_eventSizeInBytes = size; }
 
     void initTemContribLen(unsigned int *len, unsigned int *diag, unsigned int *err) {
         unsigned int i;
@@ -86,6 +89,8 @@ public:
     // renamed to promote the other trgParityError method
     UInt_t getTrgParityError();
 
+
+    ULong_t eventSizeInBytes() const { return m_eventSizeInBytes; };
 
     UInt_t eventSequence() const { return m_eventSequence; };
     UInt_t eventFlags() const { return m_flags; };
@@ -133,8 +138,9 @@ private:
     UInt_t m_otherContribLen[3];
 
     UInt_t m_eventSequence;
+    ULong_t m_eventSizeInBytes;
 
-    ClassDef(EventSummaryData,5) // Storage for Event Summary Data 
+    ClassDef(EventSummaryData,6) // Storage for Event Summary Data 
 }; 
 
 #endif

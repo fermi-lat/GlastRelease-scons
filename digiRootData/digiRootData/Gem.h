@@ -213,6 +213,7 @@ public:
                      UShort_t calLE,
                      UShort_t calHE, UShort_t cno, 
                      UShort_t conditionSummary, 
+                     UShort_t missed,
                      const GemTileList &tileList);
 
 
@@ -230,7 +231,7 @@ public:
     UShort_t getCalHeVector() const { return m_cal_He_Vector;};
     UShort_t getCnoVector() const { return m_cno_Vector;};
     UShort_t getConditionSummary() const { return m_conditionSummary;};
-    UShort_t getMissed() const { return (m_conditionSummary >> 8) & (( 1 << 8 ) - 1); };
+    UShort_t getMissed() const { return m_missed; };
     const GemTileList& getTileList() const { return m_tileList; };
     UInt_t getLiveTime() const {return m_liveTime; };
     UInt_t getPrescaled() const { return m_prescaled;};
@@ -279,8 +280,9 @@ public:
     UInt_t  m_deltaEventTime;
     GemCondArrivalTime m_condArr;
     UShort_t m_deltaWindOpenTime;
+    UShort_t m_missed;
 
-    ClassDef(Gem,2) // Storage for GEM 
+    ClassDef(Gem,3) // Storage for GEM 
 }; 
  
 #endif

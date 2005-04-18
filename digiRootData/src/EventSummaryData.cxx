@@ -36,12 +36,14 @@ void EventSummaryData::Clear(Option_t *option) {
     m_otherContribLen[GEM] = 0;
     m_otherContribLen[AEM] = 0;
     m_otherContribLen[OSW] = 0;
+    m_eventSizeInBytes = 0;
 }
 
 void EventSummaryData::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout.precision(2);
+    cout<<"Event Size: " << m_eventSizeInBytes << endl;
     cout << "Tem Lengths: " << endl;
     UInt_t i;
     for (i = 0; i<16; i++)

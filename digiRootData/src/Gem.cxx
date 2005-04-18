@@ -45,12 +45,14 @@ Gem::Gem(const Gem& gem) :TObject(gem) {
     m_triggerTime = gem.m_triggerTime;
     m_deltaEventTime = gem.m_deltaEventTime;
     m_deltaWindOpenTime = gem.m_deltaWindOpenTime;
+    m_missed = gem.m_missed;
 }
 
 void Gem::initTrigger(UShort_t tkr, UShort_t roi,
                      UShort_t calLE,
                      UShort_t calHE, UShort_t cno,
                      UShort_t conditionSummary,
+                     UShort_t missed,
                      const GemTileList &tileList) 
 {
     m_tkrVector = tkr;
@@ -59,6 +61,7 @@ void Gem::initTrigger(UShort_t tkr, UShort_t roi,
     m_cal_He_Vector = calHE;
     m_cno_Vector = cno;
     m_conditionSummary = conditionSummary;
+    m_missed = missed;
     m_tileList = tileList;
 }
 
@@ -97,6 +100,7 @@ void Gem::Clear(Option_t *option) {
     m_onePpsTime.Clear(option);
     m_deltaEventTime = 0;
     m_deltaWindOpenTime = 0;
+    m_missed = 0;
 }
 
 void Gem::Print(Option_t *option) const {

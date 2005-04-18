@@ -318,6 +318,7 @@ int checkGem(const Gem &gem) {
    if(gem.getCalHeVector() != 4) return -1;
    if (gem.getCnoVector() != 5) return -1;
    if (gem.getConditionSummary() != 6) return -1;
+   if (gem.getMissed() != 1) return -1;
    if (gem.getLiveTime() != 7) return -1;
    if (gem.getPrescaled() != 8) return -1;
    if (gem.getDiscarded() != 9) return -1;
@@ -520,7 +521,7 @@ int write(char* fileName, int numEvents) {
         ev->initialize(ievent, runNum, randNum*ievent, randNum*ievent, level1, summary, fromMc);
         Gem myGem;
         GemTileList tileList(20, 21, 22, 23, 24, 25, 26);
-        myGem.initTrigger(1, 2, 3, 4, 5, 6, tileList);
+        myGem.initTrigger(1, 2, 3, 4, 5, 6, 1, tileList);
         GemOnePpsTime ppsTime(50, 100);
         myGem.initSummary(7, 8, 9, 10, 11, ppsTime, 12, 13);
         ev->initGem(myGem);

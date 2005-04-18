@@ -7,6 +7,7 @@ Coordinator:H.Kelly
 @verbatim
 
 v8r3      17-Apr-2005 HMK Back out commonRootData namespace
+          Store Gem.Missed and EventSizeInBytes
 v8r2      13-Apr-2005 HMK Update for commonRootData namespace
 v8r1p2    08-Apr-2005 HMK Init EventSummaryData::eventSequence
 v8r1p1    07-Apr-2005 THB Fix if statements in header files to avoid vcc warning messages

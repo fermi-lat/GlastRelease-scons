@@ -219,7 +219,7 @@ StatusCode createFakeTdsDataAlg::storeGemData() {
     // create the TDS location for the Gem
     LdfEvent::Gem *gemTds= new LdfEvent::Gem;
     LdfEvent::GemTileList tileListTds(1,2, 3, 4, 5, 6, 7);
-    gemTds->initTrigger(8, 9, 10, 11, 12, 13, tileListTds);
+    gemTds->initTrigger(8, 9, 10, 11, 12, 13, 1, tileListTds);
     LdfEvent::GemOnePpsTime ppsTimeTds(14, 15);
     LdfEvent::GemDataCondArrivalTime condArr;
     condArr.init(19);
