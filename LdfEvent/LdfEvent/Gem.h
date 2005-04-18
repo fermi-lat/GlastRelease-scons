@@ -196,6 +196,7 @@ private:
                          unsigned short calLE,
                          unsigned short calHE, unsigned short cno, 
                          unsigned short conditionSummary, 
+                         unsigned short missed,
                          const GemTileList &tileList);
 
         void initSummary(unsigned liveTime, unsigned prescaled, 
@@ -215,8 +216,7 @@ private:
         unsigned short calHEvector() const { return m_cal_HE_Vector;};
         unsigned short cnoVector() const { return m_cno_Vector;};
         unsigned short conditionSummary() const { return m_conditionSummary;};
-        unsigned short missed() const {
-           return (m_conditionSummary >> 8) & (( 1 << 8 ) - 1 ); };
+        unsigned short missed() const { return m_missed; };
         const GemTileList& tileList() const { return m_tileList; };
         unsigned liveTime() const {return m_liveTime; };
         unsigned prescaled() const { return m_prescaled;};
@@ -255,6 +255,7 @@ private:
         GemOnePpsTime m_onePpsTime;
         unsigned short m_deltaEventTime;
         unsigned short m_deltaWindOpenTime;
+        unsigned short m_missed;
 
     };
 
@@ -262,6 +263,7 @@ private:
    inline void Gem::initTrigger(unsigned short tkr, unsigned short roi,
                   unsigned short calLE, unsigned short calHE, 
                   unsigned short cno, unsigned short conditionSummary, 
+                  unsigned short missed,
                   const GemTileList &tileList) {
         m_tkrVector = tkr;
         m_roiVector = roi;
@@ -269,6 +271,7 @@ private:
         m_cal_HE_Vector = calHE;
         m_cno_Vector = cno;
         m_conditionSummary = conditionSummary;
+        m_missed = missed;
         m_tileList = tileList;
     }
 
@@ -317,6 +320,7 @@ private:
         m_onePpsTime.clear();
         m_deltaEventTime = 0;
         m_deltaWindOpenTime = 0;
+        m_missed = 0;
     }
 
 

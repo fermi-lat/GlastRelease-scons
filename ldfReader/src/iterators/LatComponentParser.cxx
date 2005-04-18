@@ -92,7 +92,7 @@ namespace ldfReader {
         gem.initTrigger(contribution->tkrVector(), contribution->roiVector(),
             contribution->calLEvector(), contribution->calHEvector(), 
             contribution->cnoVector(), contribution->conditionSummary(),
-            tileList);
+            contribution->missed(), tileList);
         
             GemDataCondArrivalTime condArrTime;
             condArrTime.init(contribution->condArrTime().datum());

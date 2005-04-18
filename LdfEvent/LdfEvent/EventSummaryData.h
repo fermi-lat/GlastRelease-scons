@@ -59,6 +59,7 @@ namespace LdfEvent{
             m_otherContribLen[GEM] = 0;
             m_otherContribLen[AEM] = 0;
             m_otherContribLen[OSW] = 0;
+            m_evtSizeInBytes = 0;
         }
 
         void initialize(unsigned int summary){m_summary=summary;};
@@ -86,6 +87,8 @@ namespace LdfEvent{
             initDiagContribLen(diagLen);
             initErrContribLen(errLen);
         }
+  
+        void initEventSizeInBytes(unsigned long size) { m_evtSizeInBytes = size; };
         
         unsigned int temLength(unsigned int tem) const { return m_temLen[tem]; }
         unsigned int diagnosticLength(unsigned int tem) const { return m_diagLen[tem]; }
@@ -124,6 +127,8 @@ namespace LdfEvent{
         unsigned int eventNumber() const {return EventSummary::eventNumber(m_summary);};
         unsigned int trgParityError() const {return EventSummary::trgParityError(m_summary);}; 
 
+        unsigned long eventSizeInBytes() const { return m_evtSizeInBytes; };
+
     private:
     unsigned int m_summary;
     /// Event Flags - used to denote bad events
@@ -135,6 +140,7 @@ namespace LdfEvent{
     unsigned int m_otherContribLen[3];
     // New 32 bit event sequence number from OSW
     unsigned int m_evtSequence;
+    unsigned long m_evtSizeInBytes;
     };
 
     inline EventSummaryData::~EventSummaryData(){

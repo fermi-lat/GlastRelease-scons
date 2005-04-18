@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v2r11   17-Apr-2005 HMK Store Gem.Missed and EventSummary.EventSizeInBytes
 v2r10   05-Apr-2005 HMK handle new 32 bit event sequence number
 v2r9p0  16-Mar-2005 HMK fix typo in Gem
 v2r9    15-Mar-2005 HMK add missed method to Gem, as LDF v05-05-00 does

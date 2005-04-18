@@ -41,7 +41,7 @@ namespace ldfReader {
 
         unsigned int eventId() { return m_eventId; };
 
-        unsigned int eventSize() { return m_eventSize; };
+        unsigned long eventSize() { return m_eventSize; };
 
         //bool end(EBFevent *evt);
         bool end();
@@ -80,7 +80,7 @@ namespace ldfReader {
 
         unsigned int m_runId;
         unsigned int m_eventId;
-        unsigned int m_eventSize;
+        unsigned long m_eventSize;
 
         int m_ebfSize;
 

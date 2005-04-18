@@ -67,6 +67,7 @@ namespace ldfReader {
         m_osw.clear();
         m_aem.clear();
         m_flags = 0;
+        m_eventSize = 0;
     }
 
 
