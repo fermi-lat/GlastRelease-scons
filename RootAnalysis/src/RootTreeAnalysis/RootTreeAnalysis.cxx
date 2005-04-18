@@ -199,7 +199,7 @@ void RootTreeAnalysis::McData() {
         float eHit = hit->getTotalEnergy();
         
         // use volume ID to pick ACD or CAL
-        commonRootData::VolumeIdentifier volId = hit->getVolumeId();
+        VolumeIdentifier volId = hit->getVolumeId();
         if (volId[0] == 0 &&    // CAL identifier
             volId[3] == 0){ 
             eTotCal += eHit;
@@ -304,8 +304,8 @@ void RootTreeAnalysis::DigiCal() {
 
         // Assuming Best Range and checking only the first readout
         const CalXtalReadout* cRo=c->getXtalReadout(0);
-        Float_t adcP = cRo->getAdc(commonRootData::CalXtalId::POS);
-        Float_t adcN = cRo->getAdc(commonRootData::CalXtalId::NEG);
+        Float_t adcP = cRo->getAdc(CalXtalId::POS);
+        Float_t adcN = cRo->getAdc(CalXtalId::NEG);
 
         // ligh asymmetry
         Float_t asy = 1.;
@@ -317,13 +317,13 @@ void RootTreeAnalysis::DigiCal() {
         Float_t eAve = (adcP + adcN)/2.;
 
         ((TH1F*)GetObjectPtr("CALEAVE"))->Fill(eAve);
-        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(commonRootData::CalXtalId::POS));
-        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(commonRootData::CalXtalId::NEG));
-        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(commonRootData::CalXtalId::POS));
-        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(commonRootData::CalXtalId::NEG));
+        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::POS));
+        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::NEG));
+        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::POS));
+        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::NEG));
 
         // Retrieve the identifer for this crystal
-        commonRootData::CalXtalId id = c->getPackedId();
+        CalXtalId id = c->getPackedId();
         Int_t layer = id.getLayer();
         Int_t tower = id.getTower();
         Int_t column = id.getColumn();
@@ -372,13 +372,13 @@ void RootTreeAnalysis::DigiAcd() {
     Double_t totE = 0.0;
     UShort_t pha0 = 0;
     // Create an id for tile 0041
-    commonRootData::AcdId id41(0, 0, 4, 1);
+    AcdId id41(0, 0, 4, 1);
 
     TIter acdDigiIter(acdDigiCol);
     AcdDigi *acdDigiItem = 0;
     
     while (acdDigiItem = (AcdDigi*)acdDigiIter.Next()) {
-        commonRootData::AcdId id = acdDigiItem->getId();
+        AcdId id = acdDigiItem->getId();
         if (id.getId() == id41.getId()) {
             pha0 = acdDigiItem->getPulseHeight(AcdDigi::A) + 
                 acdDigiItem->getPulseHeight(AcdDigi::B);
@@ -465,7 +465,7 @@ void RootTreeAnalysis::ReconCal() {
     while (xtal = (CalXtalRecData*)xtalIter.Next()) {
         Double_t xtalEnergy = xtal->getEnergy();
         if (xtalEnergy > 2000) {
-            const commonRootData::CalXtalId id = xtal->getPackedId();
+            const CalXtalId id = xtal->getPackedId();
 	    int lyr = id.getLayer();
 	    int twr = id.getTower();
 	    int col = id.getColumn();

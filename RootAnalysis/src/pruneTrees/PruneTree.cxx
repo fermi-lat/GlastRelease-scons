@@ -166,7 +166,7 @@ void RootTreeAnalysis::McData() {
         float eHit = hit->getTotalEnergy();
         
         // use volume ID to pick ACD or CAL
-        commonRootData::VolumeIdentifier volId = hit->getVolumeId();
+        VolumeIdentifier volId = hit->getVolumeId();
         if (volId[0] == 0 &&    // CAL identifier
             volId[3] == 0){ 
             eTotCal += eHit;
@@ -230,13 +230,13 @@ void RootTreeAnalysis::DigiCal() {
     
     while (c = (CalDigi*)calDigiIter.Next()) {
         const CalXtalReadout* cRo=c->getXtalReadout(0);
-        float eAve = (cRo->getAdc(commonRootData::CalXtalId::POS)+cRo->getAdc(commonRootData::CalXtalId::NEG))/2.;
+        float eAve = (cRo->getAdc(CalXtalId::POS)+cRo->getAdc(CalXtalId::NEG))/2.;
         ((TH1F*)GetObjectPtr("CALEAVE"))->Fill(eAve);
-        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(commonRootData::CalXtalId::POS));
-        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(commonRootData::CalXtalId::NEG));
-        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(commonRootData::CalXtalId::POS));
-        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(commonRootData::CalXtalId::NEG));
-        commonRootData::CalXtalId id = c->getPackedId();
+        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::POS));
+        ((TH1F*)GetObjectPtr("CALADC"))->Fill((float)cRo->getAdc(CalXtalId::NEG));
+        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::POS));
+        ((TH1F*)GetObjectPtr("CALRANGE"))->Fill(cRo->getRange(CalXtalId::NEG));
+        CalXtalId id = c->getPackedId();
         int layer = id.getLayer();
         int tower = id.getTower();
         int column = id.getColumn();
@@ -282,14 +282,14 @@ void RootTreeAnalysis::DigiAcd() {
     Double_t totE = 0.0;
     UShort_t pha0 = 0;
     // Create an id for tile 0000
-    commonRootData::AcdId id41(0, 0, 4, 1);
+    AcdId id41(0, 0, 4, 1);
 
     TIter acdDigiIter(acdDigiCol);
     AcdDigi *acdDigiItem = 0;
     
     while (acdDigiItem = (AcdDigi*)acdDigiIter.Next()) {
         totE = acdDigiItem->getEnergy();
-        commonRootData::AcdId id = acdDigiItem->getId();
+        AcdId id = acdDigiItem->getId();
         if (id.getId() == id41.getId()) {
             pha0 = acdDigiItem->getPulseHeight(AcdDigi::A) + 
                 acdDigiItem->getPulseHeight(AcdDigi::B);
