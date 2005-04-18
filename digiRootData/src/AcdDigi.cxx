@@ -18,7 +18,7 @@ AcdDigi::AcdDigi() {
     m_tileNumber = -1;
 }
 
-AcdDigi::AcdDigi(const commonRootData::AcdId& id) : m_id(id) {
+AcdDigi::AcdDigi(const AcdId& id) : m_id(id) {
     m_packed[AcdDigi::A] = 0;
     m_packed[AcdDigi::B] = 0;
     m_packedLdf[AcdDigi::A] = 0;
@@ -27,7 +27,7 @@ AcdDigi::AcdDigi(const commonRootData::AcdId& id) : m_id(id) {
     m_tileNumber = -1;
 }
 
-AcdDigi::AcdDigi(const commonRootData::AcdId& id, const commonRootData::VolumeIdentifier& volId, Float_t energy, 
+AcdDigi::AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy, 
                  UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high) 
                  : m_id(id), m_volId(volId), m_tileNumber(-1), m_tileName("")
 {

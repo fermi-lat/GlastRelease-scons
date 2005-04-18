@@ -34,10 +34,10 @@ public:
 	/** @defgroup CalXtalReadoutGroup CalXtalReadout End-User Interface */
 	/*@{*/
     /// retrieve pulse height from specified face
-    UShort_t getAdc(commonRootData::CalXtalId::XtalFace face) const;
+    UShort_t getAdc(CalXtalId::XtalFace face) const;
     
     /// retrieve energy range from specified face
-    Char_t getRange(commonRootData::CalXtalId::XtalFace face) const;
+    Char_t getRange(CalXtalId::XtalFace face) const;
     /*@*/
 
 private:

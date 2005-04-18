@@ -31,7 +31,7 @@ void TkrDigi::Print(Option_t *option) const {
     cout << "NumHits: " << getNumHits() << endl;
 }
 
-void TkrDigi::initialize(Int_t l, GlastAxis::axis v, commonRootData::TowerId t, Int_t* tot)
+void TkrDigi::initialize(Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot)
 {
     m_bilayer = l;
     m_tower = t;

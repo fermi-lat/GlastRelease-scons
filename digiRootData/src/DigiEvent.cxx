@@ -179,7 +179,7 @@ void DigiEvent::Print(Option_t *option) const {
     cout << "Number of AcdDigis " << m_acdDigiCol->GetEntries() << endl;
 }
 
-AcdDigi* DigiEvent::addAcdDigi(const commonRootData::AcdId& id, const commonRootData::VolumeIdentifier& volId,
+AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, const VolumeIdentifier& volId,
                                Float_t energy, UShort_t *pha, 
                                Bool_t *veto, Bool_t *low, Bool_t *high) {
     // Add a new AcdDigi entry, note that
@@ -195,7 +195,7 @@ const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r,
                                      UShort_t c) const {
     // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdDigi identified by layer, face, row, column
-    commonRootData::AcdId tempId(l, f, r, c);
+    AcdId tempId(l, f, r, c);
     AcdDigi tempDigi = AcdDigi(tempId.getId());
     if (!m_acdDigiCol->IsSorted()) m_acdDigiCol->Sort();
     int index = m_acdDigiCol->BinarySearch(&tempDigi);
@@ -203,7 +203,7 @@ const AcdDigi* DigiEvent::getAcdDigi(UShort_t l, UShort_t f, UShort_t r,
     return 0;
 }
 
-const AcdDigi* DigiEvent::getAcdDigi(const commonRootData::AcdId &id) const {
+const AcdDigi* DigiEvent::getAcdDigi(const AcdId &id) const {
     // Find a specific AcdDigi in the TClonesArray
     // User supplies a valid AcdId
     AcdDigi tempDigi = AcdDigi(id.getId());
@@ -255,21 +255,21 @@ const TClonesArray* DigiEvent::getCalDigiCol() {
         while ((calDigiObj = (CalDigi*)objIter.Next())!=0) {
             CalDigi *newObj = addCalDigi();
             newObj->initialize(calDigiObj->getMode(), calDigiObj->getPackedId());
-            if (calDigiObj->getMode() == commonRootData::CalXtalId::BESTRANGE) {
+            if (calDigiObj->getMode() == CalXtalId::BESTRANGE) {
                 const CalXtalReadout *readout = calDigiObj->getXtalReadout(0);
-                Char_t rangePlus = readout->getRange(commonRootData::CalXtalId::POS);
-                UInt_t adcPlus = readout->getAdc(commonRootData::CalXtalId::POS);
-                Char_t rangeMin = readout->getRange(commonRootData::CalXtalId::NEG);
-                UInt_t adcMin = readout->getAdc(commonRootData::CalXtalId::NEG);
+                Char_t rangePlus = readout->getRange(CalXtalId::POS);
+                UInt_t adcPlus = readout->getAdc(CalXtalId::POS);
+                Char_t rangeMin = readout->getRange(CalXtalId::NEG);
+                UInt_t adcMin = readout->getAdc(CalXtalId::NEG);
                 newObj->addReadout(rangePlus, adcPlus, rangeMin, adcMin);
             } else { // Handle AllRange
                 Int_t range;
-                for (range = commonRootData::CalXtalId::LEX8; range <= commonRootData::CalXtalId::HEX1; range++) {
+                for (range = CalXtalId::LEX8; range <= CalXtalId::HEX1; range++) {
                     const CalXtalReadout *readout = calDigiObj->getXtalReadout(range);
-                    Char_t rangePlus = readout->getRange(commonRootData::CalXtalId::POS);
-                    UInt_t adcPlus = readout->getAdc(commonRootData::CalXtalId::POS);
-                    Char_t rangeMin = readout->getRange(commonRootData::CalXtalId::NEG);
-                    UInt_t adcMin = readout->getAdc(commonRootData::CalXtalId::NEG);
+                    Char_t rangePlus = readout->getRange(CalXtalId::POS);
+                    UInt_t adcPlus = readout->getAdc(CalXtalId::POS);
+                    Char_t rangeMin = readout->getRange(CalXtalId::NEG);
+                    UInt_t adcMin = readout->getAdc(CalXtalId::NEG);
                     newObj->addReadout(rangePlus, adcPlus, rangeMin, adcMin);
                 }
             }

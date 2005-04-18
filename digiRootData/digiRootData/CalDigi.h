@@ -35,7 +35,7 @@ public:
     
     virtual ~CalDigi();
 
-    void initialize(commonRootData::CalXtalId::CalTrigMode m, const commonRootData::CalXtalId &id);
+    void initialize(CalXtalId::CalTrigMode m, const CalXtalId &id);
 
     void Clear(Option_t *option ="");
 
@@ -44,10 +44,10 @@ public:
 	/** @ingroup CalDigiGroup */
 	/*@{*/
     /// Retrieve readout mode
-    const commonRootData::CalXtalId::CalTrigMode getMode() const { return m_mode; };
+    const CalXtalId::CalTrigMode getMode() const { return m_mode; };
     
     /// Retrieve log identifier
-    const commonRootData::CalXtalId getPackedId() const { return m_xtalId; };
+    const CalXtalId getPackedId() const { return m_xtalId; };
     
     const CalXtalReadout* getReadoutCol();
     const UInt_t getNumReadouts() const { 
@@ -58,16 +58,16 @@ public:
     }
     
     /// Retrieve energy range for selected face and readout
-    Char_t getRange(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const;
+    Char_t getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve pulse height for selected face and readout
-    Short_t getAdc(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const;
+    Short_t getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve ranges and pulse heights from both ends of selected readout
     const CalXtalReadout* getXtalReadout(UShort_t readoutIndex);
     
     /// Retrieve pulse height from selected range
-    Short_t getAdcSelectedRange(Char_t range, commonRootData::CalXtalId::XtalFace face) const;
+    Short_t getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const;
     /*@}*/
 
     const CalXtalReadout* addReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);
@@ -75,11 +75,11 @@ public:
 private:
     
     /// Cal readout mode is based on trigger type
-    commonRootData::CalXtalId::CalTrigMode m_mode;
+    CalXtalId::CalTrigMode m_mode;
     /// number of readouts actually filled in m_readoutArr
     UInt_t m_numReadouts;
     /// Cal Xtal Id
-    commonRootData::CalXtalId m_xtalId;
+    CalXtalId m_xtalId;
     /// collection of ranges and pulse heights
     // Allow for backward compatibilty by retaining the old TClonesArray*
     TClonesArray *m_readoutCol;

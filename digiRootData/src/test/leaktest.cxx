@@ -37,8 +37,8 @@
     
 
     Int_t ievent, ixtal;
-    commonRootData::CalXtalId xtalId;
-    commonRootData::VolumeIdentifier volId;
+    CalXtalId xtalId;
+    VolumeIdentifier volId;
 
     Float_t rand = gRandom->Rndm();
 
@@ -49,15 +49,15 @@
 
         for (ixtal = 0; ixtal < numXtals; ixtal++) {
             CalDigi *cal = ev->addCalDigi();
-            commonRootData::CalXtalId::CalTrigMode mode = commonRootData::CalXtalId::BESTRANGE;
+            CalXtalId::CalTrigMode mode = CalXtalId::BESTRANGE;
             Short_t tower = 5;
             Short_t layer = 4;
             Short_t col = 3;
             xtalId.init(tower, layer, col);
             cal->initialize(mode, xtalId);
             
-            Char_t rangeM = commonRootData::CalXtalId::LEX8;
-            Char_t rangeP = commonRootData::CalXtalId::HEX8;
+            Char_t rangeM = CalXtalId::LEX8;
+            Char_t rangeP = CalXtalId::HEX8;
             UShort_t adcM = 4095;
             UShort_t adcP = 4095;
             cal->addReadout(rangeP, adcP, rangeM, adcM);
@@ -67,7 +67,7 @@
         for (idigi = 0; idigi < numDigi; idigi++) {
             TkrDigi *tkr = new TkrDigi();
             Int_t tot[2] = {idigi, idigi+1};
-            commonRootData::TowerId id(3, 2);
+            TowerId id(3, 2);
             tkr->initialize(idigi, GlastAxis::Y, id, tot);
             UInt_t istrip;
             for (istrip = 0; istrip < idigi; istrip++) {
@@ -78,7 +78,7 @@
         }
 
         for (idigi = 0; idigi < numAcd; idigi++) {
-            commonRootData::AcdId acd_id(0, 2, 5, 4);
+            AcdId acd_id(0, 2, 5, 4);
             Float_t energy = ievent;
             Bool_t veto[2];
             veto[0]= kFALSE;
