@@ -6,6 +6,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r1    17-Apr-2005 HMK Remove commonRootData namespace for now, until ROOT
+        can handle introducing a namespace into std::vector
 v2r0    13-Apr-2005 HMK Use commonRootData namespace throughout idents
 v1r3    09-Apr-2005 HMK Add methods to FileHeader to create a TMapIter for the
         three Maps contains the ints, doubles, and strings

@@ -1,5 +1,5 @@
 package commonRootData
-version v2r0
+version v2r1
 
 use RootcintPolicy v4r* GlastPolicy
 
