@@ -145,8 +145,30 @@ class calCalibXML(calXML.calXML):
         else:
             infoDict['DTDVersion'] = str(value)
 
-        return g            
+        return g
 
+
+    def getTowers(self):
+        """
+        Get the ID's of towers contributing to the data file.
+
+        Returns: A list of tower ID's.        
+        """
+
+        towers = []        
+
+        # find <tower> elements
+
+        tList = self.getDoc().getElementsByTagName('tower')
+        for t in tList:
+
+            tRow = int(t.getAttribute('iRow'))
+            tCol = int(t.getAttribute('iCol'))
+            tem = towerToTem(tCol, tRow)
+            towers.append(tem)
+
+        return towers
+    
 
     
 class calTholdCICalibXML(calCalibXML):
