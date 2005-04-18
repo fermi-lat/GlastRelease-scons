@@ -5,7 +5,7 @@ JobOptionsSvc        INFO
 
 
 
-// --> Including file $CALRECONROOT/src/test/common.txt
+// --> Including file $ROOTTESTDATAROOT/data/gamma_5_gev_normal/common.txt
 
 
 
@@ -44,23 +44,28 @@ ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;
 ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
 ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
-MessageSvc.OutputLevel = 3 ;
+PropertiesCheckAlg.exclude = {
+  "ApplicationMgr", "EventSelector", "MessageSvc", "", "", "",
+  "GlastDetSvc", "DetectorPersistencySvc", "EventPersistencySvc",
+  "CalibDataSvc", "CalCalibSvc",
+  "PropertiesCheckAlg" } ;
+  
+// etc
+MessageSvc.OutputLevel = 2 ;
 
 
-// <-- End of including file $CALRECONROOT/src/test/common.txt
+// <-- End of including file $ROOTTESTDATAROOT/data/gamma_5_gev_normal/common.txt
 
 
 // read back simulation and reconstruction first pass
 Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
-PropertiesCheckAlg.targets += { "digiRootReaderAlg", "reconRootReaderAlg"  } ;
-digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-digi.root" ;
-reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/gamma_5_gev_normal-recon.root" ;
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/digi.root" ;
+reconRootReaderAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/recon.root" ;
 
 // calo reconstruction second pass
 ApplicationMgr.DLLs += { "CalRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalClustersAlg" } ;
-PropertiesCheckAlg.targets += { "CalClustersAlg" } ;
+Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg" } ;
 ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 
 
@@ -68,19 +73,159 @@ ApplicationMgr.TopAlg += { "test_CalRecon" } ;
 
 // <-- End of including file $CALRECONROOT/src/test/jobOptions.txt
 
-CalClustersAlg.clusteringToolName="CalSimpleClusteringTool";
+CalClustersAlg.clusteringToolName = "CalSimpleClusteringTool" ;
 
-Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/src/test/simpleOptions.txt
+
+Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/v5r999/src/test/simpleOptions.txt
+ApplicationMgr      DEBUG Getting my own properties
+DllClassManager     DEBUG Found factory Algorithm SetSeeds
+DllClassManager     DEBUG Found factory MCEventCnv
+ConverterFactory    DEBUG Added converter for class:MCEventCnv Storage id:1 clID:2929757986
+DllClassManager     DEBUG Found factory Service GlastRandomSvc
+DllClassManager     DEBUG Found factory Service GlastPropagatorSvc
+DllClassManager     DEBUG Found factory Service GlastEventSelector
+DllClassManager     DEBUG Found factory Service GlastDetSvc
+DllClassManager     DEBUG Found factory Service EventCnvSvc
+DllClassManager     DEBUG Found factory EventCnv
+ConverterFactory    DEBUG Added converter for class:EventCnv Storage id:1 clID:110
+DllClassManager     DEBUG Loaded 8 factories from module GlastSvc
+DllClassManager     DEBUG Found factory Service G4GeometrySvc
+DllClassManager     DEBUG Found factory G4GeneratorRandom
+ObjectManager       DEBUG Added object factory for class:G4GeneratorRandom
+DllClassManager     DEBUG Found factory Algorithm G4Generator
+DllClassManager     DEBUG Loaded 3 factories from module G4Generator
+DllClassManager     DEBUG Found factory G4PropagatorTool
+ObjectManager       DEBUG Added object factory for class:G4PropagatorTool
+DllClassManager     DEBUG Found factory G4PropagationTool
+ObjectManager       DEBUG Added object factory for class:G4PropagationTool
+DllClassManager     DEBUG Loaded 2 factories from module G4Propagator
+DllClassManager     DEBUG Found factory Service TkrToTSvc
+DllClassManager     DEBUG Found factory Service TkrSplitsSvc
+DllClassManager     DEBUG Found factory TkrQueryClustersTool
+ObjectManager       DEBUG Added object factory for class:TkrQueryClustersTool
+DllClassManager     DEBUG Found factory TkrMakeClustersTool
+ObjectManager       DEBUG Added object factory for class:TkrMakeClustersTool
+DllClassManager     DEBUG Found factory Service TkrGeometrySvc
+DllClassManager     DEBUG Found factory Service TkrFailureModeSvc
+DllClassManager     DEBUG Found factory Algorithm TkrCalibAlg
+DllClassManager     DEBUG Found factory Service TkrBadStripsSvc
+DllClassManager     DEBUG Found factory Service TkrAlignmentSvc
+DllClassManager     DEBUG Loaded 9 factories from module TkrUtil
+DllClassManager     DEBUG Found factory Service CalFailureModeSvc
+DllClassManager     DEBUG Loaded 1 factories from module CalUtil
+DllClassManager     DEBUG Found factory XmlTkrSplitsCnv
+ConverterFactory    DEBUG Added converter for class:XmlTkrSplitsCnv Storage id:7 clID:6106
+DllClassManager     DEBUG Found factory XmlTest1Cnv
+ConverterFactory    DEBUG Added converter for class:XmlTest1Cnv Storage id:7 clID:6500
+DllClassManager     DEBUG Found factory XmlCalTholdMuonCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalTholdMuonCnv Storage id:7 clID:6214
+DllClassManager     DEBUG Found factory XmlCalTholdCICnv
+ConverterFactory    DEBUG Added converter for class:XmlCalTholdCICnv Storage id:7 clID:6213
+DllClassManager     DEBUG Found factory XmlCalPedCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalPedCnv Storage id:7 clID:6203
+DllClassManager     DEBUG Found factory XmlCalMuSlopeCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalMuSlopeCnv Storage id:7 clID:6211
+DllClassManager     DEBUG Found factory XmlCalMevPerDacCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalMevPerDacCnv Storage id:7 clID:6212
+DllClassManager     DEBUG Found factory XmlCalLightAttCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalLightAttCnv Storage id:7 clID:6200
+DllClassManager     DEBUG Found factory XmlCalLightAsymCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalLightAsymCnv Storage id:7 clID:6201
+DllClassManager     DEBUG Found factory XmlCalIntNonlinCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalIntNonlinCnv Storage id:7 clID:6205
+DllClassManager     DEBUG Found factory XmlCalGainCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalGainCnv Storage id:7 clID:6204
+DllClassManager     DEBUG Found factory XmlCalAsymCnv
+ConverterFactory    DEBUG Added converter for class:XmlCalAsymCnv Storage id:7 clID:6215
+DllClassManager     DEBUG Found factory XmlBadStripsCnv
+ConverterFactory    DEBUG Added converter for class:XmlBadStripsCnv Storage id:7 clID:6102
+DllClassManager     DEBUG Found factory XmlAcdPedCnv
+ConverterFactory    DEBUG Added converter for class:XmlAcdPedCnv Storage id:7 clID:6304
+DllClassManager     DEBUG Found factory XmlAcdGainCnv
+ConverterFactory    DEBUG Added converter for class:XmlAcdGainCnv Storage id:7 clID:6305
+DllClassManager     DEBUG Found factory RootTkrTotCnv
+ConverterFactory    DEBUG Added converter for class:RootTkrTotCnv Storage id:5 clID:6103
+DllClassManager     DEBUG Found factory RootTkrScaleCnv
+ConverterFactory    DEBUG Added converter for class:RootTkrScaleCnv Storage id:5 clID:6107
+DllClassManager     DEBUG Found factory RootCalGainCnv
+ConverterFactory    DEBUG Added converter for class:RootCalGainCnv Storage id:5 clID:6204
+DllClassManager     DEBUG Found factory Service CalibXmlCnvSvc
+DllClassManager     DEBUG Found factory Service CalibRootCnvSvc
+DllClassManager     DEBUG Found factory Service CalibMySQLCnvSvc
+DllClassManager     DEBUG Found factory Algorithm CalibEvtClock
+DllClassManager     DEBUG Found factory Service CalibDataSvc
+DllClassManager     DEBUG Loaded 23 factories from module CalibSvc
+DllClassManager     DEBUG Found factory XtalPosTool
+ObjectManager       DEBUG Added object factory for class:XtalPosTool
+DllClassManager     DEBUG Found factory XtalEneTool
+ObjectManager       DEBUG Added object factory for class:XtalEneTool
+DllClassManager     DEBUG Found factory XtalADCTool
+ObjectManager       DEBUG Added object factory for class:XtalADCTool
+DllClassManager     DEBUG Found factory CalXtalRespRandom
+ObjectManager       DEBUG Added object factory for class:CalXtalRespRandom
+DllClassManager     DEBUG Found factory Service CalCalibSvc
+DllClassManager     DEBUG Loaded 5 factories from module CalXtalResponse
+DllClassManager     DEBUG Found factory Algorithm EventCounter
+DllClassManager     DEBUG Found factory Algorithm Prescaler
+DllClassManager     DEBUG Found factory Algorithm Sequencer
+DllClassManager     DEBUG Found factory Algorithm GaudiAlgorithm
+DllClassManager     DEBUG Loaded 4 factories from module GaudiAlg
+DllClassManager     DEBUG Found factory Algorithm relationRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm relationRootReaderAlg
+DllClassManager     DEBUG Found factory Algorithm reconRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm reconRootReaderAlg
+DllClassManager     DEBUG Found factory Algorithm mcRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm mcRootReaderAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootReaderAlg
+DllClassManager     DEBUG Found factory Service RootIoSvc
+DllClassManager     DEBUG Found factory RootIoRandom
+ObjectManager       DEBUG Added object factory for class:RootIoRandom
+DllClassManager     DEBUG Found factory FhTool
+ObjectManager       DEBUG Added object factory for class:FhTool
+DllClassManager     DEBUG Found factory Algorithm FhSetAlg
+DllClassManager     DEBUG Found factory Algorithm FhDemoGetAlg
+DllClassManager     DEBUG Found factory Algorithm FhDemoCaloSetAlg
+DllClassManager     DEBUG Loaded 14 factories from module RootIo
+DllClassManager     DEBUG Found factory Algorithm PropertiesCheckAlg
+DllClassManager     DEBUG Found factory ProfileTool
+ObjectManager       DEBUG Added object factory for class:ProfileTool
+DllClassManager     DEBUG Found factory LastLayerCorrTool
+ObjectManager       DEBUG Added object factory for class:LastLayerCorrTool
+DllClassManager     DEBUG Found factory Algorithm CalXtalRecAlg
+DllClassManager     DEBUG Found factory CalValsCorrTool
+ObjectManager       DEBUG Added object factory for class:CalValsCorrTool
+DllClassManager     DEBUG Found factory CalTransvOffsetTool
+ObjectManager       DEBUG Added object factory for class:CalTransvOffsetTool
+DllClassManager     DEBUG Found factory CalTkrLikelihoodTool
+ObjectManager       DEBUG Added object factory for class:CalTkrLikelihoodTool
+DllClassManager     DEBUG Found factory CalSingleClusteringTool
+ObjectManager       DEBUG Added object factory for class:CalSingleClusteringTool
+DllClassManager     DEBUG Found factory CalSimpleClusteringTool
+ObjectManager       DEBUG Added object factory for class:CalSimpleClusteringTool
+DllClassManager     DEBUG Found factory CalReconKernel
+ObjectManager       DEBUG Added object factory for class:CalReconKernel
+DllClassManager     DEBUG Found factory Algorithm CalDisplay
+DllClassManager     DEBUG Found factory Algorithm CalClustersAlg
+DllClassManager     DEBUG Loaded 12 factories from module CalRecon
 ApplicationMgr       INFO Successfully loaded modules: GlastSvc, G4Generator, G4Propagator, TkrUtil, CalUtil, CalibSvc, CalXtalResponse, GaudiAlg, RootIo, CalRecon
 ApplicationMgr       INFO Application Manager Configured successfully
+ServiceManager      DEBUG Initializing service EventSelector
+EventSelector       DEBUG Service base class initialized successfully
 EventSelector        INFO GlastEventSelector input has been set to NONE
+EventDataSvc        DEBUG Service base class initialized successfully
 EventPersistenc...   INFO "CnvServices": ["EventCnvSvc"]
+EventPersistenc...  DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service EventCnvSvc
+EventCnvSvc         DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service GlastDetSvc
+GlastDetSvc         DEBUG Service base class initialized successfully
 detModel Doc Client: registered the constants!
 detModel Doc Client: registered the materials!
 detModel Doc Client: registered the id dictionary!
 detModel Doc Client: registered the sections!
 GlastDetSvc          INFO  geometry setup: 
-    document = /home/chamont/Glast/GlastRelease/v6r3p2/xmlGeoDbs/v1r22p1/xml/flight/flightSegVols.xml
+    document = /home/chamont/Glast/LATEST1.1460//xmlGeoDbs/v1r22p2/xml/flight/flightSegVols.xml
         mode = recon
       topvol = LAT
 Summary of IDmap contents:
@@ -113,41 +258,179 @@ sideTileR2EdgeLesser         4
        yRibbonTopMid         8
               total:     33921
 
+ServiceManager      DEBUG Initializing service G4GeometrySvc
 G4GeometrySvc        INFO G4GeometrySvc Initialization started
+G4GeometrySvc       DEBUG Service base class initialized successfully
 	DetectorConstruction created 407, 137 physical, logical volumes, using  mode from G4Generator job options: recon
 G4GeometrySvc        INFO G4GeometrySvc Initialization completed successfully
+ServiceManager      DEBUG Initializing service CalibDataSvc
+CalibDataSvc        DEBUG Service base class initialized successfully
 DetectorPersist...   INFO "CnvServices": ["CalibMySQLCnvSvc", "CalibXmlCnvSvc"]
+DetectorPersist...  DEBUG Service base class initialized successfully
+CalibDataSvc        DEBUG Storage type used is: 14
+IncidentSvc         DEBUG Service base class initialized successfully
 DetectorPersist...   INFO Added successfully Conversion service:CalibMySQLCnvSvc
+ServiceManager      DEBUG Initializing service CalibMySQLCnvSvc
+CalibMySQLCnvSvc    DEBUG Service base class initialized successfully
 CalibMySQLCnvSvc     INFO Specific initialization starting
+CalibMySQLCnvSvc    DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
+CalibMySQLCnvSvc    DEBUG Retrieved IInstrumentNameSvc interface of CalibDataSvc
+CalibMySQLCnvSvc    DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
+CalibMySQLCnvSvc    DEBUG Retrieved IAddressCreator interface of DetectorPersistencySvc
+CalibMySQLCnvSvc    DEBUG Properties were read from jobOptions
 CalibMySQLCnvSvc     INFO Specific initialization completed
+ServiceManager      DEBUG Initializing service CalibXmlCnvSvc
+CalibXmlCnvSvc      DEBUG Service base class initialized successfully
+CalibXmlCnvSvc      DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
+CalibXmlCnvSvc      DEBUG Retrieved IAddressCreator interface of DetectorPersistencySvc
+CalibXmlCnvSvc      DEBUG Set it as the address creator of the CalibXmlCnvSvc
+ServiceManager      DEBUG Initializing service CalCalibSvc
+CalCalibSvc         DEBUG Service base class initialized successfully
 CalCalibSvc          INFO initialize
+CalCalibSvc         DEBUG Initializing...
+CalCalibSvc         DEBUG   CalibDavaSvc   : CalibDataSvc
+CalCalibSvc         DEBUG   DefaultFlavor  : ideal
+CalCalibSvc         DEBUG   FlavorIntNonlin: ideal
+CalCalibSvc         DEBUG   FlavorAsym     : ideal
+CalCalibSvc         DEBUG   FlavorPed      : ideal
+CalCalibSvc         DEBUG   FlavorMeVPerDac: ideal
+CalCalibSvc         DEBUG   FlavorTholdCI  : ideal
+CalCalibSvc         DEBUG   FlavorTholdMuon: ideal
+ServiceManager      DEBUG Initializing service GlastPropagatorSvc
+GlastPropagatorSvc  DEBUG Service base class initialized successfully
+ToolSvc             DEBUG Service base class initialized successfully
 ToolSvc.G4Propa...   INFO G4 Propagator Tool initializing now
 ToolSvc.G4Propa...   INFO G4 Propagation Tool initializing now
 ToolSvc.G4Propa...   INFO G4 Propagation Tool ready
 ToolSvc.G4Propa...   INFO G4 Propagator Tool ready
 GlastPropagatorSvc   INFO Using Geant4 Particle Propagator
+ServiceManager      DEBUG Service EventPersistencySvc already initialized
+ServiceManager      DEBUG Service EventDataSvc already initialized
+ServiceManager      DEBUG Service DetectorPersistencySvc already initialized
+ServiceManager      DEBUG Service IncidentSvc already initialized
+ServiceManager      DEBUG Service ToolSvc already initialized
+ServiceManager      DEBUG Initializing service AppMgrRunable
+AppMgrRunable       DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service EventLoopMgr
+EventLoopMgr        DEBUG Service base class initialized successfully
+EventLoopMgr        DEBUG Creating Top Algorithm PropertiesCheckAlg with name PropertiesCheckAlg
+EventLoopMgr        DEBUG Creating Top Algorithm TkrCalibAlg with name TkrCalibAlg
+EventLoopMgr        DEBUG Creating Top Algorithm Sequencer with name Simulation
+EventLoopMgr        DEBUG Creating Top Algorithm Sequencer with name Reconstruction
+EventLoopMgr        DEBUG Creating Top Algorithm test_CalRecon with name test_CalRecon
 TkrCalibAlg          INFO Initialize()
+TkrCalibAlg         DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
+TkrBadStripsSvc     DEBUG Service base class initialized successfully
+TkrGeometrySvc      DEBUG Service base class initialized successfully
+ToolSvc             DEBUG Retrieved toolG4PropagationTool
 TkrGeometrySvc       INFO Retrieved G4PropagationTool
-TkrGeometrySvc       INFO Propagator goes from 682.315 to -57.685
-
+TkrGeometrySvc      DEBUG Propagator goes from 682.315 to -57.685
+ digiLayer 0 Conv 0 Rest 0.0215344
+TkrGeometrySvc      DEBUG  digiLayer 1 Conv 0 Rest 0.015397
+TkrGeometrySvc      DEBUG  digiLayer 2 Conv 0.181349 Rest 0.015397
+TkrGeometrySvc      DEBUG  digiLayer 3 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 4 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 5 Conv 0.181349 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 6 Conv 0.0299628 Rest 0.0201581
+TkrGeometrySvc      DEBUG  digiLayer 7 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 8 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 9 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 10 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 11 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 12 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 13 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 14 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 15 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 16 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG  digiLayer 17 Conv 0.0299628 Rest 0.0157522
+TkrGeometrySvc      DEBUG 
+TkrGeometrySvc       INFO 
 TkrGeometrySvc       INFO Type 0 numLayers 2 aveConv 0 aveRest 0.0184657
 TkrGeometrySvc       INFO Type 1 numLayers 12 aveConv 0.0299628 aveRest 0.0161194
 TkrGeometrySvc       INFO Type 2 numLayers 4 aveConv 0.181349 aveRest 0.0189678
 TkrGeometrySvc       INFO Type 3 numLayers 18 aveConv 0.060275 aveRest 0.0170131
 TkrGeometrySvc       INFO 
+TkrFailureModeSvc   DEBUG Service base class initialized successfully
+TkrAlignmentSvc     DEBUG Service base class initialized successfully
+tray 0 z: 23.5075 -19.0075 18.8075
+tray 1 z: 59.55 -14.785 14.785
+tray 2 z: 91.65 -14.785 14.785
+tray 3 z: 124.251 -15.2865 15.2865
+tray 4 z: 157.352 -15.2865 15.2865
+tray 5 z: 190.452 -15.2865 15.2865
+tray 6 z: 223.552 -15.2865 15.2865
+tray 7 z: 256.253 -14.8875 14.8875
+tray 8 z: 288.553 -14.8875 14.8875
+tray 9 z: 320.853 -14.8875 14.8875
+tray 10 z: 353.153 -14.8875 14.8875
+tray 11 z: 385.453 -14.8875 14.8875
+tray 12 z: 417.753 -14.8875 14.8875
+tray 13 z: 450.053 -14.8875 14.8875
+tray 14 z: 482.353 -14.8875 14.8875
+tray 15 z: 514.653 -14.8875 14.8875
+tray 16 z: 546.953 -14.8875 14.8875
+tray 17 z: 579.253 -14.8875 14.8875
+tray 18 z: 614.215 -17.55 17.75
+
+rlayer/view z 0 0 44.765
+rlayer/view z 0 1 42.315
+rlayer/view z 1 0 74.335
+rlayer/view z 1 1 76.865
+rlayer/view z 2 0 108.965
+rlayer/view z 2 1 106.435
+rlayer/view z 3 0 139.538
+rlayer/view z 3 1 142.065
+rlayer/view z 4 0 175.165
+rlayer/view z 4 1 172.638
+rlayer/view z 5 0 205.738
+rlayer/view z 5 1 208.265
+rlayer/view z 6 0 241.365
+rlayer/view z 6 1 238.838
+rlayer/view z 7 0 271.14
+rlayer/view z 7 1 273.665
+rlayer/view z 8 0 305.965
+rlayer/view z 8 1 303.44
+rlayer/view z 9 0 335.74
+rlayer/view z 9 1 338.265
+rlayer/view z 10 0 370.565
+rlayer/view z 10 1 368.04
+rlayer/view z 11 0 400.34
+rlayer/view z 11 1 402.865
+rlayer/view z 12 0 435.165
+rlayer/view z 12 1 432.64
+rlayer/view z 13 0 464.94
+rlayer/view z 13 1 467.465
+rlayer/view z 14 0 499.765
+rlayer/view z 14 1 497.24
+rlayer/view z 15 0 529.54
+rlayer/view z 15 1 532.065
+rlayer/view z 16 0 564.365
+rlayer/view z 16 1 561.84
+rlayer/view z 17 0 594.14
+rlayer/view z 17 1 596.665
+TkrAlignmentSvc     DEBUG 
 TkrAlignmentSvc      INFO No alignment was requested.
 TkrAlignmentSvc      INFO   No alignment will be done.
+TkrSplitsSvc        DEBUG Service base class initialized successfully
 TkrSplitsSvc      WARNING Service already initialized
-TkrToTSvc            INFO TkrToTSvc initialized with mode: ideal
+TkrToTSvc           DEBUG Service base class initialized successfully
 TkrGeometrySvc       INFO TkrGeometrySvc successfully initialized
 TkrBadStripsSvc      INFO No bad strips file was requested.
+Simulation          DEBUG digiRootReaderAlg doesn't exist - created and appended to member list
+Simulation          DEBUG reconRootReaderAlg doesn't exist - created and appended to member list
 Simulation           INFO Member list: digiRootReaderAlg, reconRootReaderAlg
-digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/gamma_5_gev_normal-digi.root
-reconRootReaderAlg   INFO Opened file: /home/chamont/Glast/CalReconDev/CalRecon/src/test/gamma_5_gev_normal-recon.root
-Reconstruction       INFO Member list: CalClustersAlg
-CalClustersAlg       INFO CalClustersAlg: callNumber = 0
-ToolSvc.CalSimp...   INFO BEGIN initialize()
-ToolSvc.CalSimp...   INFO END initialize()
+RootIoSvc           DEBUG Service base class initialized successfully
+digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/rootTestData/v3r999/data/gamma_5_gev_normal/digi.root
+ToolSvc             DEBUG Retrieved toolFhTool
+reconRootReaderAlg   INFO Opened file: /home/chamont/Glast/CalReconDev/rootTestData/v3r999/data/gamma_5_gev_normal/recon.root
+Reconstruction      DEBUG CalXtalRecAlg doesn't exist - created and appended to member list
+Reconstruction      DEBUG CalClustersAlg doesn't exist - created and appended to member list
+Reconstruction       INFO Member list: CalXtalRecAlg, CalClustersAlg
+ToolSvc.XtalEne...   INFO initialize
+ToolSvc.XtalPos...   INFO initialize
+ToolSvc             DEBUG Retrieved toolCalReconKernel
+ToolSvc             DEBUG Retrieved toolCalSimpleClusteringTool
+ToolSvc             DEBUG Retrieved toolCalReconKernel
 ToolSvc.LastLay...   INFO Initializing LastLayerCorrTool
 ToolSvc.LastLay...   INFO  value for c0 -35.3747
 ToolSvc.LastLay...   INFO  value for c1 68.1653
@@ -158,6 +441,7 @@ ToolSvc.LastLay...   INFO  value for b1 0.045
 ToolSvc.LastLay...   INFO  value for k0 -2778
 ToolSvc.LastLay...   INFO  value for k1 6576
 ToolSvc.LastLay...   INFO  value for k2 -3797
+ToolSvc             DEBUG Retrieved toolCalReconKernel
 ToolSvc.Profile...   INFO Initializing ProfileTool
 ToolSvc.Profile...   INFO  value for CosThetaLimit 0.3
 ToolSvc.Profile...   INFO  value for BiasParNb9
@@ -171,287 +455,964 @@ ToolSvc.Profile...   INFO  value for bias5 -0.0962898
 ToolSvc.Profile...   INFO  value for bias6 0.273117
 ToolSvc.Profile...   INFO  value for bias7 -0.604589
 ToolSvc.Profile...   INFO  value for bias8 0.452359
+ToolSvc             DEBUG Retrieved toolCalReconKernel
 ToolSvc.CalVals...   INFO Initializing CalValsCorrTool
+ToolSvc             DEBUG Retrieved toolG4PropagationTool
+ToolSvc             DEBUG Retrieved toolCalReconKernel
+ToolSvc.CalTkrL...   INFO Initializing CalTkrLikelihoodTool
+ToolSvc.CalTkrL...  DEBUG Initializing LikelihoodTool with file $(CALRECONROOT)/xml/CalTkrLikelihood.data
+ToolSvc.CalTkrL...  DEBUG File must contain 48, for 5 parameters
+ToolSvc.CalTkrL...  DEBUG Extracting Axes
+ToolSvc.CalTkrL...  DEBUG Reading Axes 	9	5
+ToolSvc.CalTkrL...  DEBUG 2 Axes for a total of 45 bins
+ToolSvc.CalTkrL...  DEBUG Reading Centers for Axis 0:
+ToolSvc.CalTkrL...  DEBUG (0:50)(1:60)(2:100)(3:200)(4:300)(5:500)(6:900)(7:1000)(8:2000)
+ToolSvc.CalTkrL...  DEBUG Reading Centers for Axis 1:
+ToolSvc.CalTkrL...  DEBUG (0:0.848048)(1:0.898794)(2:0.951057)(3:0.984808)(4:1)
+ToolSvc.CalTkrL...  DEBUG Read 14 values
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #0
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #1
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #2
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #3
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #4
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #5
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #6
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #7
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #8
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #9
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #10
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #11
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #12
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #13
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #14
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #15
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #16
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #17
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #18
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #19
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #20
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #21
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #22
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #23
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #24
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #25
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #26
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #27
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #28
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #29
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #30
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #31
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #32
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #33
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #34
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #35
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #36
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #37
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #38
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #39
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #40
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #41
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #42
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #43
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #44
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #45
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #46
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #47
+ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
+ToolSvc.CalTkrL...  DEBUG Read 45 bins
+ToolSvc             DEBUG Retrieved toolCalReconKernel
 test_CalRecon        INFO initialize
+EventSelector       DEBUG Using Simple counter GlastEventSelector
 EventSelector        INFO No input file selected for GlastEventSelector
+EventSelector       DEBUG Reading Event 0
+HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramPersis...   INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 EventPersistenc...   INFO Added successfully Conversion service:EventCnvSvc
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+AuditorSvc          DEBUG Service base class initialized successfully
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 6
+CalReconKernel:...  DEBUG Track direction = 0.993584
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
+CalClustersAlg      DEBUG Energy 3847.46 Corrected 4867.75 91.4659 143.347 -133.248 0.0267244 0.0531334 0.99823
+CalClustersAlg      DEBUG Energy 11.0258 Corrected 4867.75 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
+CalClustersAlg      DEBUG Energy 3.8639 Corrected 4867.75 -34.13 -150.341 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.24802 Corrected 4867.75 201.17 114.121 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.4429 Corrected 4867.75 -145.49 90.0869 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.58859 Corrected 4867.75 48.0325 436.47 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.4115 Corrected 4867.75 229.01 164.794 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 1 time
-test_CalRecon        INFO Energy 3854.78 Corrected 4877.35 91.4653 143.115 -133.271 0.0271267 0.0526307 0.998246
-test_CalRecon        INFO Profile Corr Energy 5519.15
-test_CalRecon        INFO Last Layer Corr Energy 5318.51
-test_CalRecon        INFO Energy 11.0166 Corrected 4877.35 -37.1874 85.7895 -174.803 6.64536e-12 0.890383 0.455212
+test_CalRecon        INFO Energy 3847.46 Corrected 4867.75 91.4659 143.347 -133.248 0.0267244 0.0531334 0.99823
+test_CalRecon        INFO Profile Corr Energy 5506.12
+test_CalRecon        INFO Last Layer Corr Energy 5306.7
+test_CalRecon        INFO Energy 11.0258 Corrected 4867.75 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.83179 Corrected 4877.35 -34.13 -150.032 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.8639 Corrected 4867.75 -34.13 -150.341 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 7.42521 Corrected 4877.35 221.224 140.911 -148.637 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.24802 Corrected 4867.75 201.17 114.121 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.48966 Corrected 4877.35 -145.49 85.5714 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.4429 Corrected 4867.75 -145.49 90.0869 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.5746 Corrected 4877.35 56.775 436.47 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.58859 Corrected 4867.75 48.0325 436.47 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.981701 Corrected 4877.35 -117.65 24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.4115 Corrected 4867.75 229.01 164.794 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.925557 Corrected 4877.35 84.6886 -61.97 -186.17 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.882272 Corrected 4877.35 24.2498 34.13 -100.77 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 1
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 5
+CalClustersAlg      DEBUG Energy 2891.31 Corrected 2891.31 224.042 196.639 -159.81 0.030931 0.0229649 0.999258
+CalClustersAlg      DEBUG Energy 4.62055 Corrected 2891.31 -61.97 180.39 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.08044 Corrected 2891.31 312.53 187.25 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.87856 Corrected 2891.31 304.226 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.70278 Corrected 2891.31 145.49 -24.2498 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 2 time
-test_CalRecon        INFO Energy 2897.28 Corrected 2897.28 224.287 196.755 -159.792 0.0246678 0.0215784 0.999463
-test_CalRecon        INFO Profile Corr Energy 5285.44
+test_CalRecon        INFO Energy 2891.31 Corrected 2891.31 224.042 196.639 -159.81 0.030931 0.0229649 0.999258
+test_CalRecon        INFO Profile Corr Energy 5273.77
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 4.65264 Corrected 2897.28 -61.97 180.437 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4.62055 Corrected 2891.31 -61.97 180.39 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.04818 Corrected 2897.28 312.53 176.851 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.08044 Corrected 2891.31 312.53 187.25 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.9183 Corrected 2897.28 304.228 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.87856 Corrected 2891.31 304.226 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.70278 Corrected 2897.28 145.49 -24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.70278 Corrected 2891.31 145.49 -24.2498 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.724647 Corrected 2897.28 398.75 408.63 -186.17 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 2
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 8
+CalReconKernel:...  DEBUG Track direction = 0.993232
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
+CalClustersAlg      DEBUG Energy 2331.76 Corrected 2943.22 153.441 74.9218 -140.075 -0.023816 0.166117 0.985818
+CalClustersAlg      DEBUG Energy 7.47634 Corrected 2943.22 241.265 -29.3696 -190.69 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.84841 Corrected 2943.22 220.192 173.33 -58.07 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.09138 Corrected 2943.22 61.97 88.8924 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.00517 Corrected 2943.22 61.97 61.1241 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.40602 Corrected 2943.22 -61.97 -277.306 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.31404 Corrected 2943.22 139.022 -34.13 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 3 time
-test_CalRecon        INFO Energy 2335.5 Corrected 2939.02 152.93 75.1215 -140.06 -0.0218125 0.16706 0.985705
-test_CalRecon        INFO Profile Corr Energy 3106.42
-test_CalRecon        INFO Last Layer Corr Energy 3420.57
-test_CalRecon        INFO Energy 9.40856 Corrected 2939.02 218.892 -44.0187 -187.478 -0.171773 -1.4819e-15 0.985137
+test_CalRecon        INFO Energy 2331.76 Corrected 2943.22 153.441 74.9218 -140.075 -0.023816 0.166117 0.985818
+test_CalRecon        INFO Profile Corr Energy 3101.61
+test_CalRecon        INFO Last Layer Corr Energy 3415.81
+test_CalRecon        INFO Energy 7.47634 Corrected 2943.22 241.265 -29.3696 -190.69 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.89114 Corrected 2939.02 239.877 173.057 -62.6216 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.84841 Corrected 2943.22 220.192 173.33 -58.07 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.12363 Corrected 2939.02 61.97 90.381 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.09138 Corrected 2943.22 61.97 88.8924 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.45567 Corrected 2939.02 -61.97 -263.391 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.00517 Corrected 2943.22 61.97 61.1241 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.31404 Corrected 2939.02 139.022 -34.13 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.40602 Corrected 2943.22 -61.97 -277.306 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.04668 Corrected 2939.02 312.53 36.4098 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.31404 Corrected 2943.22 139.022 -34.13 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.967971 Corrected 2939.02 117.65 -40.4256 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 3
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 10
+CalClustersAlg      DEBUG Energy 3311.41 Corrected 3311.41 131.725 310.988 -149.273 0.175871 -0.0201556 0.984207
+CalClustersAlg      DEBUG Energy 14.5217 Corrected 3311.41 -229.01 -230.893 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 26.6849 Corrected 3311.41 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
+CalClustersAlg      DEBUG Energy 2.57704 Corrected 3311.41 119.65 201.17 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.57504 Corrected 3311.41 284.69 426.759 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.42216 Corrected 3311.41 167.621 173.33 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.62036 Corrected 3311.41 173.33 551.969 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.44253 Corrected 3311.41 -143.315 519.99 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.41587 Corrected 3311.41 117.65 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.26371 Corrected 3311.41 398.75 284.69 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 4 time
-test_CalRecon        INFO Energy 3319.16 Corrected 3319.16 131.505 310.865 -149.304 0.173364 -0.0184115 0.984686
-test_CalRecon        INFO Profile Corr Energy 5198.31
+test_CalRecon        INFO Energy 3311.41 Corrected 3311.41 131.725 310.988 -149.273 0.175871 -0.0201556 0.984207
+test_CalRecon        INFO Profile Corr Energy 5183.2
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 14.5552 Corrected 3319.16 -229.01 -228.617 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 14.5217 Corrected 3311.41 -229.01 -230.893 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 26.756 Corrected 3319.16 135.654 420.624 -156.949 0.251701 -0.0719558 0.965126
+test_CalRecon        INFO Energy 26.6849 Corrected 3311.41 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.589 Corrected 3319.16 284.69 421.42 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.57704 Corrected 3311.41 119.65 201.17 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.55454 Corrected 3319.16 96.1319 210.713 -94.8988 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.57504 Corrected 3311.41 284.69 426.759 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.60407 Corrected 3319.16 173.33 541.99 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.42216 Corrected 3311.41 167.621 173.33 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.45815 Corrected 3319.16 117.65 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.62036 Corrected 3311.41 173.33 551.969 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.42566 Corrected 3319.16 -131.693 519.99 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.44253 Corrected 3311.41 -143.315 519.99 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.26371 Corrected 3319.16 398.75 284.69 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.41587 Corrected 3311.41 117.65 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.84611 Corrected 3319.16 -116.634 284.923 -176.324 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.26371 Corrected 3311.41 398.75 284.69 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.89329 Corrected 3319.16 256.85 668.002 -164.82 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.877591 Corrected 3319.16 350.25 201.17 -58.07 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 4
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 2
+CalReconKernel:...  DEBUG Track direction = 0.991863
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 9
+CalClustersAlg      DEBUG Energy 3808.71 Corrected 4859.44 55.5243 193.562 -126.734 0.148746 0.0941046 0.984388
+CalClustersAlg      DEBUG Energy 35.3307 Corrected 4859.44 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
+CalClustersAlg      DEBUG Energy 3.52032 Corrected 4859.44 -115.277 173.33 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.00235 Corrected 4859.44 131.871 89.81 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.82732 Corrected 4859.44 173.33 350.25 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.68393 Corrected 4859.44 -117.65 215.483 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.36137 Corrected 4859.44 229.01 349.511 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.29629 Corrected 4859.44 -24.2498 34.13 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.13448 Corrected 4859.44 -24.2498 89.81 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 5 time
-test_CalRecon        INFO Energy 3813.27 Corrected 4873.28 55.7111 193.261 -126.71 0.148768 0.0936761 0.984425
-test_CalRecon        INFO Profile Corr Energy 5112.58
-test_CalRecon        INFO Last Layer Corr Energy 4930.98
-test_CalRecon        INFO Energy 39.8283 Corrected 4873.28 -64.9584 194.318 -156.954 0.0468321 -0.618514 0.784377
+test_CalRecon        INFO Energy 3808.71 Corrected 4859.44 55.5243 193.562 -126.734 0.148746 0.0941046 0.984388
+test_CalRecon        INFO Profile Corr Energy 5102.88
+test_CalRecon        INFO Last Layer Corr Energy 4926.05
+test_CalRecon        INFO Energy 35.3307 Corrected 4859.44 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.47336 Corrected 4873.28 -24.2498 229.01 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.52032 Corrected 4859.44 -115.277 173.33 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.18019 Corrected 4873.28 198.15 311.138 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.00235 Corrected 4859.44 131.871 89.81 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.5662 Corrected 4873.28 -85.5386 181.847 -200.18 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.82732 Corrected 4859.44 173.33 350.25 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.28271 Corrected 4873.28 -27.3186 34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.68393 Corrected 4859.44 -117.65 215.483 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.19774 Corrected 4873.28 -24.2498 102.715 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.36137 Corrected 4859.44 229.01 349.511 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.06036 Corrected 4873.28 24.2498 312.53 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.29629 Corrected 4859.44 -24.2498 34.13 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.04273 Corrected 4873.28 -256.85 202.449 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.13448 Corrected 4859.44 -24.2498 89.81 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.960496 Corrected 4873.28 229.01 121.294 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.877591 Corrected 4873.28 350.25 -34.13 -186.17 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 5
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 8
+CalClustersAlg      DEBUG Energy 2742.53 Corrected 2742.53 69.4369 263.105 -156.257 0.18868 -0.0325067 0.9815
+CalClustersAlg      DEBUG Energy 5.71078 Corrected 2742.53 -96.8519 220.874 -190.188 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.46931 Corrected 2742.53 24.2498 117.65 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.91911 Corrected 2742.53 145.49 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.74134 Corrected 2742.53 -161.428 457.396 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.48786 Corrected 2742.53 -117.65 261.747 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.35607 Corrected 2742.53 82.2574 340.37 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.12628 Corrected 2742.53 201.17 24.2498 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 6 time
-test_CalRecon        INFO Energy 2742.27 Corrected 2742.27 69.5093 262.854 -156.291 0.1886 -0.0320615 0.981531
-test_CalRecon        INFO Profile Corr Energy 4411.48
+test_CalRecon        INFO Energy 2742.53 Corrected 2742.53 69.4369 263.105 -156.257 0.18868 -0.0325067 0.9815
+test_CalRecon        INFO Profile Corr Energy 4409.02
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 6.37054 Corrected 2742.27 -88.3047 230.648 -185.24 -0.765654 0.510436 0.391444
+test_CalRecon        INFO Energy 5.71078 Corrected 2742.53 -96.8519 220.874 -190.188 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.48883 Corrected 2742.27 24.2498 117.65 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.46931 Corrected 2742.53 24.2498 117.65 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.92527 Corrected 2742.27 145.49 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.91911 Corrected 2742.53 145.49 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.74134 Corrected 2742.27 -161.428 457.396 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.74134 Corrected 2742.53 -161.428 457.396 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.47045 Corrected 2742.27 -117.65 273.37 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.48786 Corrected 2742.53 -117.65 261.747 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.35607 Corrected 2742.27 82.2574 340.37 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.35607 Corrected 2742.53 82.2574 340.37 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.13312 Corrected 2742.27 201.17 24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.12628 Corrected 2742.53 201.17 24.2498 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.10692 Corrected 2742.27 -61.97 201.568 -79.42 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.05841 Corrected 2742.27 -229.01 217.195 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.02631 Corrected 2742.27 34.13 530.869 -79.42 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 6
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 6
+CalClustersAlg      DEBUG Energy 2906.62 Corrected 2906.62 118.732 57.2426 -161.709 0.0587375 0.0593428 0.996508
+CalClustersAlg      DEBUG Energy 16.1594 Corrected 2906.62 128.181 -48.1135 -198.325 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 6.1267 Corrected 2906.62 141.769 -84.5813 -116.091 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.05338 Corrected 2906.62 173.33 -171.813 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.87543 Corrected 2906.62 -145.007 34.13 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.19201 Corrected 2906.62 -24.2498 -34.13 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 7 time
-test_CalRecon        INFO Energy 2908.51 Corrected 2908.51 118.573 57.3243 -161.688 0.0635984 0.0592659 0.996214
-test_CalRecon        INFO Profile Corr Energy 5524.5
+test_CalRecon        INFO Energy 2906.62 Corrected 2906.62 118.732 57.2426 -161.709 0.0587375 0.0593428 0.996508
+test_CalRecon        INFO Profile Corr Energy 5523.94
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 20.0559 Corrected 2908.51 119.106 -51.7149 -182.601 -0.309942 -1.19074e-15 0.950756
+test_CalRecon        INFO Energy 16.1594 Corrected 2906.62 128.181 -48.1135 -198.325 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 6.25488 Corrected 2908.51 166.105 -89.2122 -125.618 -1000 -1000 -1000
+test_CalRecon        INFO Energy 6.1267 Corrected 2906.62 141.769 -84.5813 -116.091 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.11683 Corrected 2908.51 173.33 -157.305 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.05338 Corrected 2906.62 173.33 -171.813 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.85999 Corrected 2908.51 -153.172 34.13 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.87543 Corrected 2906.62 -145.007 34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.17899 Corrected 2908.51 -24.2498 -34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.19201 Corrected 2906.62 -24.2498 -34.13 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.04125 Corrected 2908.51 350.25 61.97 -58.07 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.03679 Corrected 2908.51 34.13 -80.4488 -164.82 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 7
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 3
+CalReconKernel:...  DEBUG Track direction = 0.999445
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 8
+CalClustersAlg      DEBUG Energy 4040.55 Corrected 5197.73 162.677 206 -127.078 0.0797226 0.00643136 0.996796
+CalClustersAlg      DEBUG Energy 9.43188 Corrected 5197.73 -167.086 492.15 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 8.49391 Corrected 5197.73 201.17 485.321 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 4.63259 Corrected 5197.73 235.232 463.208 -152.106 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.0471 Corrected 5197.73 -34.13 415.182 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.83323 Corrected 5197.73 61.97 449.597 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.571 Corrected 5197.73 -61.97 -227.594 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.15249 Corrected 5197.73 519.99 24.2498 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 8 time
-test_CalRecon        INFO Energy 4044.34 Corrected 5217.13 162.603 206.247 -127.069 0.0752279 0.00556248 0.997151
-test_CalRecon        INFO Profile Corr Energy 5362.71
-test_CalRecon        INFO Last Layer Corr Energy 5307.53
-test_CalRecon        INFO Energy 9.44759 Corrected 5217.13 -165.443 492.15 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4040.55 Corrected 5197.73 162.677 206 -127.078 0.0797226 0.00643136 0.996796
+test_CalRecon        INFO Profile Corr Energy 5358.46
+test_CalRecon        INFO Last Layer Corr Energy 5301.68
+test_CalRecon        INFO Energy 9.43188 Corrected 5197.73 -167.086 492.15 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 8.45917 Corrected 5217.13 201.17 481.272 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 8.49391 Corrected 5197.73 201.17 485.321 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.6304 Corrected 5217.13 235.275 456.332 -152.1 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4.63259 Corrected 5197.73 235.232 463.208 -152.106 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.03322 Corrected 5217.13 -34.13 421.903 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.0471 Corrected 5197.73 -34.13 415.182 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.86552 Corrected 5217.13 61.97 451.53 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.83323 Corrected 5197.73 61.97 449.597 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.87906 Corrected 5217.13 -161.018 -236.484 -92.1234 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.571 Corrected 5197.73 -61.97 -227.594 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.17154 Corrected 5217.13 519.99 25.6265 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.15249 Corrected 5197.73 519.99 24.2498 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.10599 Corrected 5217.13 604.728 201.17 -186.17 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.04125 Corrected 5217.13 117.65 398.75 -79.42 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 8
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 3
+CalClustersAlg      DEBUG Energy 2974.65 Corrected 2974.65 95.8698 95.4435 -169.244 0.171614 -0.0340667 0.984575
+CalClustersAlg      DEBUG Energy 2.11172 Corrected 2974.65 -112.267 145.49 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.66579 Corrected 2974.65 229.01 130.194 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 9 time
-test_CalRecon        INFO Energy 2975.22 Corrected 2975.22 95.697 95.242 -169.254 0.172152 -0.0339866 0.984484
-test_CalRecon        INFO Profile Corr Energy 6434.03
+test_CalRecon        INFO Energy 2974.65 Corrected 2974.65 95.8698 95.4435 -169.244 0.171614 -0.0340667 0.984575
+test_CalRecon        INFO Profile Corr Energy 6431.57
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 2.10903 Corrected 2975.22 -97.1941 145.49 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.11172 Corrected 2974.65 -112.267 145.49 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.63584 Corrected 2975.22 171.609 134.059 -114.245 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.66579 Corrected 2974.65 229.01 130.194 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.00194 Corrected 2975.22 89.81 -24.2498 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 0.791213 Corrected 2975.22 -117.65 350.25 -207.52 -1000 -1000 -1000
-test_CalRecon        INFO Profile Corr Energy 0
-test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 9
+CalibDataSvc        DEBUG New incident received
+CalibDataSvc        DEBUG Incident source: EventLoopMgr
+CalibDataSvc        DEBUG Incident type: BeginEvent
+Simulation          DEBUG Simulation Sequencer::execute( )
+Reconstruction      DEBUG Reconstruction Sequencer::execute( )
+CalClustersAlg      DEBUG Begin
+CalReconKernel:...  DEBUG Number of tracks = 0
+CalReconKernel:...  DEBUG No reconstructed tracks 
+CalClustersAlg      DEBUG Clustering
+CalClustersAlg      DEBUG Corrections
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG Correction 0
+CalClustersAlg      DEBUG Correction 1
+CalClustersAlg      DEBUG Correction 2
+CalClustersAlg      DEBUG Correction 3
+CalClustersAlg      DEBUG Correction 4
+CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
+CalClustersAlg      DEBUG Energy 3736.85 Corrected 3736.85 231.787 256.47 -136.607 -0.0320015 -0.0248173 0.99918
+CalClustersAlg      DEBUG Energy 5.08024 Corrected 3736.85 312.53 140.47 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.72577 Corrected 3736.85 152.369 408.63 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.14989 Corrected 3736.85 117.65 187.25 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.79578 Corrected 3736.85 436.47 222.546 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.79233 Corrected 3736.85 411.994 -34.13 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.25019 Corrected 3736.85 492.15 24.2498 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 10 time
-test_CalRecon        INFO Energy 3744.03 Corrected 3744.03 231.794 256.432 -136.486 -0.015944 -0.0311023 0.999389
-test_CalRecon        INFO Profile Corr Energy 5079.31
+test_CalRecon        INFO Energy 3736.85 Corrected 3736.85 231.787 256.47 -136.607 -0.0320015 -0.0248173 0.99918
+test_CalRecon        INFO Profile Corr Energy 5065.95
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 3.81251 Corrected 3744.03 158.344 427.365 -192.256 -1000 -1000 -1000
+test_CalRecon        INFO Energy 5.08024 Corrected 3736.85 312.53 140.47 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.10369 Corrected 3744.03 126.208 217.768 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.72577 Corrected 3736.85 152.369 408.63 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.81119 Corrected 3744.03 436.47 230.99 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.14989 Corrected 3736.85 117.65 187.25 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.79233 Corrected 3744.03 411.994 -34.13 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.79578 Corrected 3736.85 436.47 222.546 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.14424 Corrected 3744.03 468.959 104.569 -198.805 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.79233 Corrected 3736.85 411.994 -34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.04154 Corrected 3744.03 204.02 404.569 -134.694 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.25019 Corrected 3736.85 492.15 24.2498 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
+EventSelector       DEBUG Reading Event 10
 TkrCalibAlg          INFO           Finalize TkrCalibAlg 
 test_CalRecon        INFO finalize after 10 calls.
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TkrGeometrySvc       INFO TkrGeometrySvc finalize called
 ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc             DEBUG Removing tool ToolSvc.CalTransvOffsetTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalTkrLikelihoodTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalValsCorrTool
+ToolSvc             DEBUG Removing tool ToolSvc.ProfileTool
+ToolSvc             DEBUG Removing tool ToolSvc.LastLayerCorrTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalSimpleClusteringTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalReconKernel
+ToolSvc             DEBUG Removing tool ToolSvc.XtalPosTool
+ToolSvc             DEBUG Removing tool ToolSvc.XtalEneTool
+ToolSvc             DEBUG Removing tool ToolSvc.FhTool
+ToolSvc             DEBUG Removing tool ToolSvc.G4PropagationTool
+ToolSvc             DEBUG Removing tool ToolSvc.G4PropagatorTool
+CalibMySQLCnvSvc    DEBUG Finalizing
+CalibDataSvc        DEBUG Finalizing
 ApplicationMgr       INFO Application Manager Finalized successfully

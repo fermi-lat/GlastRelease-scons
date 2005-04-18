@@ -6,6 +6,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
+#include <cmath>
+#include <cerrno>
 
 class test_CalRecon : public Algorithm {
 public:
@@ -39,10 +41,18 @@ test_CalRecon::test_CalRecon(const std::string& name, ISvcLocator* pSvcLocator)
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
 StatusCode test_CalRecon::initialize(){
-    StatusCode  sc = StatusCode::SUCCESS;
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
-    return sc;
+    MsgStream log(msgSvc(),name()) ;
+    log<<MSG::INFO<<"initialize"<<endreq ;
+    
+    // check errno
+    errno = 0 ;
+    log10(-1) ;
+    if (!errno) {
+        log<<MSG::FATAL<<"errno not workng as expected"<<endreq ;
+        return StatusCode::FAILURE ;
+    }
+    
+    return StatusCode::SUCCESS ;
 }
 
 //------------------------------------------------------------------------
