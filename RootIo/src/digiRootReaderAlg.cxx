@@ -382,7 +382,7 @@ StatusCode digiRootReaderAlg::readEventSummary() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    const EventSummaryData &evtSummary = m_digiEvt->getEventSummaryData();
+    EventSummaryData &evtSummary = m_digiEvt->getEventSummaryData();
     unsigned summaryWord = evtSummary.summary();
     unsigned eventFlags = evtSummary.eventFlags();
     unsigned int evtSeq = evtSummary.eventSequence();
