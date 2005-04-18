@@ -118,7 +118,7 @@ private:
 	vector<AcdId> m_idCol;
 	vector<Double_t> m_energyCol;
     
-    ClassDef(AcdRecon,3) // Acd Reconstruction data
+    ClassDef(AcdRecon,4) // Acd Reconstruction data
 };
 
 #endif
