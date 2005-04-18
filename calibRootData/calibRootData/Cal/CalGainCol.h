@@ -23,7 +23,7 @@ namespace calibRootData {
     // Will this work as it stands or do I need to make a (non-const) copy?
     void  addChannel(const CalGain& gainObj) {m_gains.push_back(gainObj);}
 
-    void addChannel(const commonRootData::CalXtalId id, Float_t gain, 
+    void addChannel(const CalXtalId id, Float_t gain, 
                     Float_t sig) {
       m_gains.push_back(CalGain(id.getPackedId(), gain, sig));
     }
