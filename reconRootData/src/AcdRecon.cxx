@@ -12,9 +12,9 @@ AcdRecon::~AcdRecon() {
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const commonRootData::AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
+                          const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
-						  const std::vector<commonRootData::AcdId> &idCol,
+						  const std::vector<AcdId> &idCol,
 						  const std::vector<Double_t> &energyCol) {
     Clear();
     m_totEnergy = e;
@@ -30,7 +30,7 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
 }
 
 void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const commonRootData::AcdId &minDocaId) {
+                          const AcdId &minDocaId) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
@@ -78,8 +78,8 @@ void AcdRecon::Print(Option_t *option) const {
 
 }
 
-Double_t AcdRecon::getEnergy(const commonRootData::AcdId& id) const {
-	std::vector<commonRootData::AcdId>::const_iterator idIt;
+Double_t AcdRecon::getEnergy(const AcdId& id) const {
+	std::vector<AcdId>::const_iterator idIt;
 	unsigned int index = 0;
 	for (idIt = m_idCol.begin(); idIt != m_idCol.end(); idIt++) {
 		if (*idIt == id) break;

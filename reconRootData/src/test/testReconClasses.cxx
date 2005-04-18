@@ -195,11 +195,11 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
 
     (*rec).Print();
 
-    if ((*rec).getMode() != commonRootData::CalXtalId::BESTRANGE) {
+    if ((*rec).getMode() != CalXtalId::BESTRANGE) {
         std::cout << "Xtal mode is not BESTRANGE" << std::endl;
         return -1;
     }
-    commonRootData::CalXtalId id = (*rec).getPackedId();
+    CalXtalId id = (*rec).getPackedId();
     if ( (id.getTower() != 1) || (id.getLayer() != 2) || (id.getColumn() != 3) ) {
         std::cout << "Xtal Id is wrong (tower, Layer, Col): (" << id.getTower()
             << "," << id.getLayer() << "," << id.getColumn() << ")" << std::endl;
@@ -214,20 +214,20 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
             return -1;
         }
 
-        Char_t rangeP = (*rec).getRange(0, commonRootData::CalXtalId::POS);
-        Char_t rangeM = (*rec).getRange(0, commonRootData::CalXtalId::NEG);
+        Char_t rangeP = (*rec).getRange(0, CalXtalId::POS);
+        Char_t rangeM = (*rec).getRange(0, CalXtalId::NEG);
 
-        if (rangeP != commonRootData::CalXtalId::LEX8) {
+        if (rangeP != CalXtalId::LEX8) {
             std::cout << "POS range: " << rangeP << std::endl;
             return -1;
         }
-        if (rangeM != commonRootData::CalXtalId::HEX8) {
+        if (rangeM != CalXtalId::HEX8) {
             std::cout << "NEG range: " << rangeM << std::endl;
             return -1;
         }
         Double_t energy = (*rec).getEnergy();
-        Double_t energyP = (*rec).getEnergy(0, commonRootData::CalXtalId::POS);
-        Double_t energyM = (*rec).getEnergy(0, commonRootData::CalXtalId::NEG);
+        Double_t energyP = (*rec).getEnergy(0, CalXtalId::POS);
+        Double_t energyM = (*rec).getEnergy(0, CalXtalId::NEG);
         if (!floatInRange(energyP, fr) ) {
             std::cout << "Range POS energy: " << energyP << std::endl;
             return -1;
@@ -243,57 +243,57 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
         }
 
         const CalRangeRecData* rangeRecData = (*rec).getRangeRecData(0);
-        if (!floatInRange(energyP, rangeRecData->getEnergy(commonRootData::CalXtalId::POS)) ) {
+        if (!floatInRange(energyP, rangeRecData->getEnergy(CalXtalId::POS)) ) {
             std::cout << "CalRangeRecData POS energy differs " << std::endl;
             return -1;
         }
-        if (!floatInRange(energyM, rangeRecData->getEnergy(commonRootData::CalXtalId::NEG)) ) {
+        if (!floatInRange(energyM, rangeRecData->getEnergy(CalXtalId::NEG)) ) {
             std::cout << "CalRangeRecData NEG energy differs " << std::endl;
             return -1;
         }
-        if (commonRootData::CalXtalId::LEX8 != rangeRecData->getRange(commonRootData::CalXtalId::POS)) {
+        if (CalXtalId::LEX8 != rangeRecData->getRange(CalXtalId::POS)) {
             std::cout << "CalRangeRecData POS range differs" << std::endl;
             return -1;
         }
-        if (commonRootData::CalXtalId::HEX8 != rangeRecData->getRange(commonRootData::CalXtalId::NEG)) {
+        if (CalXtalId::HEX8 != rangeRecData->getRange(CalXtalId::NEG)) {
             std::cout << "CalRangeRecData NEG range differs" << std::endl;
             return -1;
         }
 
-        Double_t energyRangeP = (*rec).getEnergySelectedRange(commonRootData::CalXtalId::LEX8, commonRootData::CalXtalId::POS);
+        Double_t energyRangeP = (*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::POS);
         if (!floatInRange(energyRangeP, energyP)) {
             std::cout << "get selected POS range differs" << std::endl;
             return -1;
         }
-        Double_t energyRangeM = (*rec).getEnergySelectedRange(commonRootData::CalXtalId::HEX8, commonRootData::CalXtalId::NEG);
+        Double_t energyRangeM = (*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::NEG);
         if (!floatInRange(energyRangeM, energyM) ) {
             std::cout << "get selected NEG range differs" << std::endl;
             return -1;
         }
 
         // Check range and faces that should return -1, since they are undefined
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::LEX1, commonRootData::CalXtalId::POS), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::POS), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::HEX1, commonRootData::CalXtalId::POS), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::POS), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::HEX8, commonRootData::CalXtalId::POS), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX8, CalXtalId::POS), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
 
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::LEX1, commonRootData::CalXtalId::NEG), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX1, CalXtalId::NEG), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::LEX8, commonRootData::CalXtalId::NEG), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::LEX8, CalXtalId::NEG), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
-        if ( !floatInRange((*rec).getEnergySelectedRange(commonRootData::CalXtalId::HEX1, commonRootData::CalXtalId::NEG), -1.) ) {
+        if ( !floatInRange((*rec).getEnergySelectedRange(CalXtalId::HEX1, CalXtalId::NEG), -1.) ) {
             std::cout << "undefined range face pair does not return -1" << std::endl;
             return -1;
         }
@@ -632,7 +632,7 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         return -1;
     }
 
-    commonRootData::AcdId acdMinDocaId = acd->getMinDocaId();
+    AcdId acdMinDocaId = acd->getMinDocaId();
     if ((acdMinDocaId.getLayer() != 0) || (acdMinDocaId.getFace() != 0) ||
         (acdMinDocaId.getRow() != 3) || (acdMinDocaId.getColumn() != 2) ) {
             std::cout << "MinDoca AcdID is wrong: " << acdMinDocaId.getLayer() << " "
@@ -673,16 +673,16 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
             return -1;
         }
 
-        std::vector<commonRootData::AcdId> idCol = acd->getIdCol();
+        std::vector<AcdId> idCol = acd->getIdCol();
         if (idCol.size() != 2) {
             std::cout << "AcdRecon number of ids is wrong: " << acd->getIdCol().size() << std::endl;
             return -1;
         }
-        if ( !(idCol[0] == commonRootData::AcdId(0, 0, 3, 2)) ) {
+        if ( !(idCol[0] == AcdId(0, 0, 3, 2)) ) {
 
         }
 
-        if ( !(idCol[1] == commonRootData::AcdId(0, 2, 2, 1))) {
+        if ( !(idCol[1] == AcdId(0, 2, 2, 1))) {
 
         }
 
@@ -767,16 +767,16 @@ int write(char* fileName, int numEvents) {
         Double_t gDoca = f*randNum;
         Double_t doca = randNum;
         Double_t actDist = 2.*f;
-        commonRootData::AcdId minDocaId(0, 0, 3, 2);
+        AcdId minDocaId(0, 0, 3, 2);
         std::vector<Double_t> rowDocaCol;
         rowDocaCol.push_back(randNum);
         rowDocaCol.push_back(f);
         std::vector<Double_t> rowActDistCol;
         rowActDistCol.push_back(randNum);
         rowActDistCol.push_back(f);
-        std::vector<commonRootData::AcdId> idCol;
-        idCol.push_back(commonRootData::AcdId(0, 0, 3, 2));
-        idCol.push_back(commonRootData::AcdId(0, 2, 2, 1));
+        std::vector<AcdId> idCol;
+        idCol.push_back(AcdId(0, 0, 3, 2));
+        idCol.push_back(AcdId(0, 2, 2, 1));
         std::vector<Double_t> energyCol;
         energyCol.push_back(f);
         energyCol.push_back(2.*f);
@@ -822,10 +822,10 @@ int write(char* fileName, int numEvents) {
 
         for (ixtal = 0; ixtal < numXtals; ixtal ++) {
             CalXtalRecData *xtal = new CalXtalRecData();
-            commonRootData::CalXtalId id;
+            CalXtalId id;
             id.init(1, 2, 3);
-            xtal->initialize(commonRootData::CalXtalId::BESTRANGE, id);
-            CalRangeRecData rec(commonRootData::CalXtalId::LEX8, randNum*f, commonRootData::CalXtalId::HEX8, randNum*4.0);
+            xtal->initialize(CalXtalId::BESTRANGE, id);
+            CalRangeRecData rec(CalXtalId::LEX8, randNum*f, CalXtalId::HEX8, randNum*4.0);
             TVector3 pos(4.5, 7.5, 8.5);
             rec.initialize(pos);
             xtal->addRangeRecData(rec);

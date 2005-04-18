@@ -13,10 +13,10 @@ ClassImp(CalRangeRecData)
 //
 
 // retrieve energy from specified face
-Double_t CalRangeRecData::getEnergy(commonRootData::CalXtalId::XtalFace face) const {return face == commonRootData::CalXtalId::POS ? m_eneP : m_eneM;};
+Double_t CalRangeRecData::getEnergy(CalXtalId::XtalFace face) const {return face == CalXtalId::POS ? m_eneP : m_eneM;};
 
 // retrieve energy range from specified face
-Char_t CalRangeRecData::getRange(commonRootData::CalXtalId::XtalFace face) const {return face == commonRootData::CalXtalId::POS ? m_rangeP : m_rangeM;};
+Char_t CalRangeRecData::getRange(CalXtalId::XtalFace face) const {return face == CalXtalId::POS ? m_rangeP : m_rangeM;};
 
 void CalRangeRecData::Clear(Option_t* /* option */) {
     m_eneP = 0.0;

@@ -10,7 +10,7 @@ ClassImp(CalXtalRecData)
 // Author: A.Chekhtman
 
 
-void CalXtalRecData::initialize(commonRootData::CalXtalId::CalTrigMode m, commonRootData::CalXtalId id) {
+void CalXtalRecData::initialize(CalXtalId::CalTrigMode m, CalXtalId id) {
     m_mode = m;
     m_xtalId = id;
 }
@@ -24,21 +24,21 @@ void CalXtalRecData::Print(Option_t* /* option */) const {
     TObject::Print();
     cout << "XtalId (tower, layer, column): " << m_xtalId.getTower() << "," 
         << m_xtalId.getLayer() << ", " << m_xtalId.getColumn() << endl;
-    cout << "BESTRANGE POS(range, energy): (" << Int_t(getRange(0, commonRootData::CalXtalId::POS))
-        << "," << getEnergy(0, commonRootData::CalXtalId::POS) << ")"
-        << "  NEG (range, energy): (" << Int_t(getRange(0, commonRootData::CalXtalId::NEG))
-        << "," << getEnergy(0, commonRootData::CalXtalId::NEG) << ")" << std::endl;
+    cout << "BESTRANGE POS(range, energy): (" << Int_t(getRange(0, CalXtalId::POS))
+        << "," << getEnergy(0, CalXtalId::POS) << ")"
+        << "  NEG (range, energy): (" << Int_t(getRange(0, CalXtalId::NEG))
+        << "," << getEnergy(0, CalXtalId::NEG) << ")" << std::endl;
 
 }
 
 
-Char_t CalXtalRecData::getRange(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const 
+Char_t CalXtalRecData::getRange(UShort_t readoutIndex, CalXtalId::XtalFace face) const 
 {
     return (readoutIndex < m_recData.size()) ? ((m_recData[readoutIndex])).getRange(face) : (char)-1;
 }
 
 
-Double_t CalXtalRecData::getEnergy(UShort_t readoutIndex, commonRootData::CalXtalId::XtalFace face) const
+Double_t CalXtalRecData::getEnergy(UShort_t readoutIndex, CalXtalId::XtalFace face) const
 {
     return (readoutIndex < m_recData.size()) ? ((m_recData[readoutIndex])).getEnergy(face) : -1.0;
 };
@@ -46,8 +46,8 @@ Double_t CalXtalRecData::getEnergy(UShort_t readoutIndex, commonRootData::CalXta
 
 Double_t CalXtalRecData::getEnergy() const
 {
-    return (getEnergy(0,commonRootData::CalXtalId::POS)
-        +getEnergy(0,commonRootData::CalXtalId::NEG))/2;
+    return (getEnergy(0,CalXtalId::POS)
+        +getEnergy(0,CalXtalId::NEG))/2;
 };
 
 
@@ -60,7 +60,7 @@ const CalRangeRecData* CalXtalRecData::getRangeRecData(UShort_t readoutIndex) co
     
 };
 
-Double_t CalXtalRecData::getEnergySelectedRange(commonRootData::CalXtalId::AdcRange range, commonRootData::CalXtalId::XtalFace face) const
+Double_t CalXtalRecData::getEnergySelectedRange(CalXtalId::AdcRange range, CalXtalId::XtalFace face) const
 {
     Int_t nRanges = m_recData.size();
     if (nRanges == 1)
