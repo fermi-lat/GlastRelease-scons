@@ -3,8 +3,6 @@
 
 #include "TObject.h"
 
-namespace commonRootData {
-
 /** @class TowerId
  * @brief ROOT version of the Tower identifier following Ritz specs.
  *
@@ -51,8 +49,6 @@ private:
     
     ClassDef(TowerId,1)
 };
-
-} //end namespace
 
 #endif // digiRootData_GLAST_TOWERID_H
 

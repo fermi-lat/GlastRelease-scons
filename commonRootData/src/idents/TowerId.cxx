@@ -1,9 +1,7 @@
 #include "commonRootData/idents/TowerId.h"
 #include <iostream>
 
-ClassImp(commonRootData::TowerId)
-
-namespace commonRootData {
+ClassImp(TowerId)
 
 TowerId::TowerId (UShort_t id):m_id(id)
 {
@@ -30,6 +28,4 @@ Bool_t TowerId::neighbor (const TowerId& n) const
     Int_t dx = ix()-n.ix(), dy=iy()-n.iy();
     return dx<2 && dx>-2 && dy<2 && dy>-2; 
 }
-
-} // end namespace
 

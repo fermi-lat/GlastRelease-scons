@@ -6,8 +6,6 @@
 
 #include <string>
 
-namespace commonRootData {
-
 /** @class VolumeIdentifier
 * @brief This is the ROOT version of the idents::VolumeIdentifier
 *
@@ -69,7 +67,5 @@ private:
     
     ClassDef(VolumeIdentifier,1) // Volume Identifier Class
 };
-
-} // end namespace
 
 #endif

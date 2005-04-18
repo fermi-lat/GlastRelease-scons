@@ -3,8 +3,6 @@
 
 #include "TObject.h"
 
-namespace commonRootData {
-
 /* @class CalXtalId        
 * @brief ID class for CAL logs   
 *                             
@@ -133,6 +131,5 @@ private:
     ClassDef(CalXtalId,1) // Cal Xtal Identifier
 };
 
-}
 
 #endif    // GlastEvent_LOGID_H

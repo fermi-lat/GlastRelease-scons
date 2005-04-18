@@ -11,9 +11,7 @@
 #include "commonRootData/idents/AcdId.h"
 #include <iostream>
 
-ClassImp(commonRootData::AcdId)
-
-namespace commonRootData {
+ClassImp(AcdId)
 
 UShort_t AcdId::badId = 3799;
 
@@ -231,5 +229,3 @@ bool AcdId::operator== (const AcdId& i) const {
 	if (m_id == i.m_id) return true;
 	return false;
 }
-
-} // end namespace
