@@ -41,19 +41,19 @@ public:
     void Print(Option_t *option="") const;
 
     void initialize(Int_t particleId, 
-        Double_t edep, const commonRootData::VolumeIdentifier& volId, 
+        Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit, 
         McParticle *mc, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
 
     void initialize(Int_t mcParticleId, Int_t originParticleId, 
-        Double_t edep, const commonRootData::VolumeIdentifier& volId, 
+        Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit,
         const TVector3& gEntry, const TVector3& gExit, 
         McParticle *mc, McParticle *origin, Double_t pE,
         Double_t tof, UInt_t flags = 0);
     
-    const commonRootData::VolumeIdentifier& getVolumeId() const { return m_volumeId; };
+    const VolumeIdentifier& getVolumeId() const { return m_volumeId; };
     
     const TVector3& getEntryPosition() const { return m_entry; }
 
@@ -110,7 +110,7 @@ private:
     TRef m_mcParticle;
     TRef m_originMcParticle;
     
-    commonRootData::VolumeIdentifier m_volumeId;
+    VolumeIdentifier m_volumeId;
     
     ClassDef(McPositionHit,4)  // Monte Carlo PositionHit class
 };

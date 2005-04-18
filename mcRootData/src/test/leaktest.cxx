@@ -18,8 +18,8 @@
     UInt_t numEvents = 500;
     UInt_t numParticles = 100;
     UInt_t runNum = 1;
-    Int_t sourceId = 7;
-    UInt_t sequence = 4;
+	Int_t sourceId = 7;
+	UInt_t sequence = 4;
 
     gObjectTable->Print();
     
@@ -35,7 +35,7 @@
     
     gObjectTable->Print();
     
-    commonRootData::VolumeIdentifier id;
+    VolumeIdentifier id;
 
     Int_t ievent, ipart;
     Double_t timestamp=0.0;

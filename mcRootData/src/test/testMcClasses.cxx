@@ -135,7 +135,7 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
         return -1;
     }
 
-    commonRootData::VolumeIdentifier id = mcPosHit->getVolumeId();
+    VolumeIdentifier id = mcPosHit->getVolumeId();
     std::cout << "McPosHit Id = " << id.name() << std::endl;
     if ( (id.getBits0to31() != 0) || (id.getBits32to63() != 16777216) || (id.size() != 1) ) {
         std::cout << "McPosHit VolId is incorrect" << std::endl;
@@ -200,7 +200,7 @@ int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart,
                           UInt_t ievent) {
     // Purpose and Method: Check the contents of the McIntegratingHit read in 
     //    from the ROOT file
-    commonRootData::VolumeIdentifier id = mcIntHit->getVolumeId();
+    VolumeIdentifier id = mcIntHit->getVolumeId();
     std::cout << "McIntHit volumeId: " << id.name() << std::endl;
     if ( (id.size() != 1) || (id.getBits0to31() != 0) || (id.getBits32to63() != 0) ) {
         std::cout << "McIntHit VolId is incorrect" << std::endl;
@@ -314,7 +314,7 @@ int write(char* fileName, UInt_t numEvents) {
     std::cout << "Created new ROOT file" << std::endl;
     
     TRandom randGen;
-    commonRootData::VolumeIdentifier id;
+    VolumeIdentifier id;
     UInt_t ievent, ipart;
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {

@@ -69,9 +69,9 @@ public:
 
     void Print(Option_t *option="") const;
 
-    void initialize(const commonRootData::VolumeIdentifier& id);
+    void initialize(const VolumeIdentifier& id);
     
-    const commonRootData::VolumeIdentifier getVolumeId() const { return m_volumeId; };
+    const VolumeIdentifier getVolumeId() const { return m_volumeId; };
     
     Double_t getTotalEnergy() const { return m_totalEnergy; };
     
@@ -106,7 +106,7 @@ private:
     /// Packed flags for particle property
     UInt_t m_packedFlags;
     /// identifies what volume this integrating hit occurred in
-    commonRootData::VolumeIdentifier m_volumeId;
+    VolumeIdentifier m_volumeId;
     /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
     TVector3 m_moment1Seed;
     /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
