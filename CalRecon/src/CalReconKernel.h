@@ -4,6 +4,8 @@
 
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "geometry/Point.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -60,19 +62,21 @@ class CalReconKernel : public AlgTool
     double getCalCsIHeight() const
      { return m_calCsIHeight ; }
 
-    // cal data
+    // cal event data
     Event::CalXtalRecCol * getXtalRecs()
      { return m_calXtalRecCol ; }
     Event::CalClusterCol * getClusters()
      { return m_calClusterCol ; }
 
-    // tkr data
+    // tkr event data
     int getTkrNVertices() const
      { return m_tkrNVertices ; }
-    const Vector & getTkrFrontVertexDirection() const
-     { return m_tkrFrontVertexDirection ; }
-    const Point & getTkrFrontVertexPosition() const
-     { return m_tkrFrontVertexPosition ; }
+    const Event::TkrVertex * getTkrFrontVertex() const
+     { return m_tkrFrontVertex ; }
+    int getTkrNTracks() const
+     { return m_tkrNTracks ; }
+    const Event::TkrTrack * getTkrFrontTrack() const
+     { return m_tkrFrontTrack ; }
 
     // utilities
     double getSlope( Event::CalCluster * cluster ) const
@@ -100,9 +104,10 @@ class CalReconKernel : public AlgTool
 
     // tkr information
     int m_tkrNVertices ;
-    Vector m_tkrFrontVertexDirection ;
-    Point m_tkrFrontVertexPosition ;
+    Event::TkrVertex * m_tkrFrontVertex ;
     double m_tkrSlope ;
+    int m_tkrNTracks ;
+    Event::TkrTrack * m_tkrFrontTrack ;
 
  } ;
 

@@ -4,8 +4,6 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Event/TopLevel/EventModel.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
 #include "CalReconKernel.h"
 
 DECLARE_TOOL_FACTORY(CalReconKernel) ;
@@ -33,6 +31,7 @@ StatusCode CalReconKernel::initialize()
   if (service("GlastDetSvc",m_detSvc, true).isFailure())
    { log<<MSG::ERROR<<"Could not find the GlastDetSvc"<<endreq ; m_status = StatusCode::FAILURE ; }
 
+  // cal const info
   if (!m_detSvc->getNumericConstByName(std::string("CALnLayer"), &m_calNLayers)) 
    { log<<MSG::ERROR<<"Constant CALnLayer not defined"<<endreq ; m_status = StatusCode::FAILURE ; }
   else
@@ -47,6 +46,13 @@ StatusCode CalReconKernel::initialize()
    { log<<MSG::ERROR<<"CsIWidth not defined"<<endreq ; m_status = StatusCode::FAILURE ; }
   if (!m_detSvc->getNumericConstByName(std::string("CsIHeight"),&m_calCsIHeight))
    { log<<MSG::ERROR<<"CsIHeight not defined"<<endreq ; m_status = StatusCode::FAILURE ; } 
+
+  // tkr event info
+  m_tkrNVertices = 0 ;
+  m_tkrFrontVertex = 0 ;
+  m_tkrSlope = 0 ;
+  m_tkrNTracks = 0 ;
+  m_tkrFrontTrack = 0 ;
 
   return m_status ;
  }
@@ -85,23 +91,37 @@ void CalReconKernel::reviewEvent()
     
   // Tracker
   m_tkrNVertices = 0 ;
+  m_tkrFrontVertex = 0 ;
   m_tkrSlope = 0 ;
-  SmartDataPtr<Event::TkrVertexCol> tkrRecData(getEventSvc(),EventModel::TkrRecon::TkrVertexCol) ;
-  if (tkrRecData==0)
-   { log<<MSG::DEBUG<<"No TKR Reconstruction available "<<endreq ; }
+  SmartDataPtr<Event::TkrVertexCol> tkrVertexCol(getEventSvc(),EventModel::TkrRecon::TkrVertexCol) ;
+  if (tkrVertexCol==0)
+   { log<<MSG::DEBUG<<"No TKR vertices collection available"<<endreq ; }
   else
    {
-    m_tkrNVertices = tkrRecData->size();
-    log<<MSG::DEBUG<<"Number of tracks = "<<m_tkrNVertices<<endreq ;
+    m_tkrNVertices = tkrVertexCol->size();
+    log<<MSG::DEBUG<<"Number of TKR vertices = "<<m_tkrNVertices<<endreq ;
     if (m_tkrNVertices>0)
      {
-      m_tkrFrontVertexDirection = tkrRecData->front()->getDirection() ;
-      m_tkrFrontVertexPosition = tkrRecData->front()->getPosition() ;
-      m_tkrSlope = fabs(m_tkrFrontVertexDirection.z()) ;
-      log<<MSG::DEBUG<<"Track direction = "<<m_tkrSlope<<endreq ;
+      m_tkrFrontVertex = tkrVertexCol->front() ;
+      m_tkrSlope = fabs(m_tkrFrontVertex->getDirection().z()) ;
+      log<<MSG::DEBUG<<"Vertex direction = "<<m_tkrSlope<<endreq ;
      }
     else
-     { log<<MSG::DEBUG<<"No reconstructed tracks "<<endreq ; }	
+     { log<<MSG::DEBUG<<"No TKR vertices available"<<endreq ; }	
+   } 
+  m_tkrNTracks = 0 ;
+  m_tkrFrontTrack = 0 ;
+  SmartDataPtr<Event::TkrTrackCol> tkrTrackCol(getEventSvc(),EventModel::TkrRecon::TkrTrackCol) ;
+  if (tkrTrackCol==0)
+   { log<<MSG::DEBUG<<"No TKR tracks collection available"<<endreq ; }
+  else
+   {
+    m_tkrNTracks = tkrTrackCol->size();
+    log<<MSG::DEBUG<<"Number of TKR tracks = "<<m_tkrNTracks<<endreq ;
+    if (m_tkrNTracks>0)
+     { m_tkrFrontTrack = tkrTrackCol->front() ; }
+    else
+     { log<<MSG::DEBUG<<"No TKR tracks available"<<endreq ; }	
    } 
  }
 

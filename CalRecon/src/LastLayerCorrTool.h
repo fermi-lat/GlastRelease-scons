@@ -83,13 +83,9 @@ public:
     
  private:
 
-        /// input XML file containing parameters for Digitization
-        std::string	m_xmlFile;
-        
-///// pointer to EventSvc
-//    IDataProviderSvc* m_eventSvc;
-//    DataSvc* m_dataSvc;
-    
+     /// input XML file containing parameters for Digitization
+     std::string m_xmlFile;
+            
 /// correlation factor 1 
 	float m_c0;    
 /// correlation factor 2

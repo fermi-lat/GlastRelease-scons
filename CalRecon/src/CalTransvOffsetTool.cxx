@@ -21,8 +21,8 @@ StatusCode CalTransvOffsetTool::doEnergyCorr( Event::CalCluster * cluster )
   double calTransvOffset = 0.;
   if (getKernel()->getTkrNVertices()>0)
    {
-    Vector calOffset = (cluster->getPosition()) - getKernel()->getTkrFrontVertexPosition() ;
-    double calLongOffset = getKernel()->getTkrFrontVertexDirection()*calOffset;
+    Vector calOffset = (cluster->getPosition()) - getKernel()->getTkrFrontVertex()->getPosition() ;
+    double calLongOffset = getKernel()->getTkrFrontVertex()->getDirection()*calOffset;
     calTransvOffset = sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
    }
     

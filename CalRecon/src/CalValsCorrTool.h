@@ -44,11 +44,13 @@ public:
 private:
 
     /// Bill's calculation here
-    StatusCode calculate();
-    double activeDist(Point pos, int& view) const;
-    double containedFraction(Point pos, double gap, 
-        double r, double costh, double phi) const;
-    StatusCode aveRadLens(const CalReconKernel * data, Point x0, Vector t0, double radius, int numSamples);
+    double activeDist(Point pos, int& view) const ;
+    double containedFraction
+     ( Point pos, double gap, 
+       double r, double costh, double phi ) const ;
+    StatusCode aveRadLens
+     ( const idents::VolumeIdentifier & prefix,
+       Point x0, Vector t0, double radius, int numSamples ) ;
 
     /// TkrGeometrySvc used for access to tracker geometry info
     ITkrGeometrySvc* m_tkrGeom;

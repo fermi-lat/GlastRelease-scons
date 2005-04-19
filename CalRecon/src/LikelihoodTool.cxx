@@ -1,6 +1,7 @@
 #include "LikelihoodTool.h"
 #include "facilities/Util.h"
 #include <fstream>
+#include <cerrno>
 
 StatusCode LikelihoodTool::readPDFparameters( MsgStream &log,
                                        std::string &dataFileName ){
@@ -205,6 +206,7 @@ double LikelihoodTool::pdfFCN( double x[2], double parameters[5] ) const{
   // \f[ LogNormal(x, parameters(recEnergy)) \f]
   // if( par[3]==0. ) return 0.; that shouldn't happen
   // \f[ LogNormal(x)= N\,\exp(-\frac{1}{2}(\frac{\ln(1+\tau (x-\mu) \frac{\sinh({\tau}\sqrt{\ln\,4})}{ 2.36\beta{\tau}\,\sqrt{\ln\,4}})}\tau)^2+\tau^2) \f]
+  errno = 0 ;
   double result= (x[0]+x[1]*parameters[0]-parameters[2])/parameters[3];
   if( parameters[4]!=0. ){
     double val= 1.17741002251547466*parameters[4]; //sqrt(log(4.))*\tau
@@ -213,7 +215,7 @@ double LikelihoodTool::pdfFCN( double x[2], double parameters[5] ) const{
   }
   result*= -result*.5;
   result= parameters[1]*exp(result+parameters[4]*parameters[4]);
-  return isnan(result)?0.:result;
+  return errno?0.:result;
 }
 
 StatusCode LikelihoodTool::finalize()

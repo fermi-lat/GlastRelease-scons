@@ -140,7 +140,7 @@ StatusCode CalValsCorrTool::initialize()
         return StatusCode::FAILURE;
     }
     if(!toolSvc->retrieveTool("G4PropagationTool", m_G4PropTool)) {
-        log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
+        log << MSG::ERROR << "Couldn't find the G4PropagationTool !" << endreq;
         return StatusCode::FAILURE;
     }
 
@@ -148,59 +148,21 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-StatusCode CalValsCorrTool::doEnergyCorr( Event::CalCluster * cluster )
-
-//Purpose and method:
-//
-//   This function calls CalValsTool and extracts the crack/leakage corrected
-//   energy, storing it in CalCluster.
-// 
-// TDS input: none
-// TDS output: CalClusters
-
-
+//! Extract the crack/leakage corrected energy, storing it in CalCluster.
+StatusCode CalValsCorrTool::doEnergyCorr( Event::CalCluster * calCluster )
 {
-    MsgStream lm(msgSvc(), name());
-    StatusCode sc =  calculate();
-    double correctedEnergy = CAL_Energy_Corr;
-    if (sc == StatusCode::SUCCESS) cluster->setEnergyCorrected(correctedEnergy);
-
-    return sc;
-}
-
-StatusCode CalValsCorrTool::calculate( )
-{
-    StatusCode sc = StatusCode::SUCCESS;
-
-    const CalReconKernel * data = getKernel() ;
+    CalReconKernel * kernel = getKernel() ;
     
-    //MsgStream logstream(msgSvc(), name());
-
-    // Recover Track associated info. 
-    SmartDataPtr<Event::TkrTrackCol>  
-        pTracks(data->getEventSvc(),EventModel::TkrRecon::TkrTrackCol);
-    SmartDataPtr<Event::TkrVertexCol>     
-        pVerts(data->getEventSvc(),EventModel::TkrRecon::TkrVertexCol);
-    SmartDataPtr<Event::CalClusterCol>     
-        pCals(data->getEventSvc(),EventModel::CalRecon::CalClusterCol);
-    SmartDataPtr<Event::CalXtalRecCol> 
-        pxtalrecs(data->getEventSvc(),EventModel::CalRecon::CalXtalRecCol);
-
     //Do some vital initializations
     CAL_EnergySum     = 0.;
-// unused !?    CAL_Energy_LLCorr = 0.;
     CAL_EneSum_Corr   = 0.;
     CAL_Energy_Corr   = 0.;
 
-    //Make sure we have valid cluster data
-    if (!pCals) return sc;
-
-    //double z0 = 0.0; // placeholder for offset
-
-    Event::CalCluster* calCluster = pCals->front();
+     //double z0 = 0.0; // placeholder for offset
 
     CAL_EnergySum   = calCluster->getEnergySum();
-    for(int i = 0; i<8; i++) CAL_eLayer[i] = calCluster->getEneLayer(i);
+    for(int i = 0; i<8; i++)
+      CAL_eLayer[i] = calCluster->getEneLayer(i);
     CAL_Long_Rms      = calCluster->getRmsLong();
     CAL_Trans_Rms     = calCluster->getRmsTrans();
 
@@ -214,26 +176,29 @@ StatusCode CalValsCorrTool::calculate( )
 
 // unused !?    CAL_Energy_LLCorr = calCluster->getEnergyLeak();
 
-    //Code from meritAlg
-    int no_xtals=0;
-    int no_xtals_trunc=0;
-    double max_log_energy = 0.; 
-    for( Event::CalXtalRecCol::const_iterator jlog=pxtalrecs->begin(); jlog != pxtalrecs->end(); ++jlog){
-
-        const Event::CalXtalRecData& recLog = **jlog;
-
-        double eneLog = recLog.getEnergy();
-        if(eneLog > max_log_energy) max_log_energy = eneLog; 
-        if(eneLog>0)no_xtals++;
-        if(eneLog>0.01*CAL_EnergySum)no_xtals_trunc++;
-    }
-    CAL_Xtal_Ratio= (no_xtals>0) ? float(no_xtals_trunc)/no_xtals : 0;
-    CAL_No_Xtals_Trunc = float(no_xtals_trunc); 
-    CAL_Xtal_maxEne = max_log_energy; 
+//    David: USELESS IN THE CONTEXT OF CALRECON
+//    //Code from meritAlg
+//    int no_xtals=0;
+//    int no_xtals_trunc=0;
+//    double max_log_energy = 0.;
+//    Event::CalXtalRecCol::const_iterator jlog ;
+//    for ( jlog=pxtalrecs->begin() ; jlog != pxtalrecs->end() ; ++jlog ) {
+//
+//        const Event::CalXtalRecData& recLog = **jlog;
+//
+//        double eneLog = recLog.getEnergy();
+//        if(eneLog > max_log_energy) max_log_energy = eneLog; 
+//        if(eneLog>0)no_xtals++;
+//        if(eneLog>0.01*CAL_EnergySum)no_xtals_trunc++;
+//    }
+//    CAL_Xtal_Ratio= (no_xtals>0) ? float(no_xtals_trunc)/no_xtals : 0;
+//    CAL_No_Xtals_Trunc = float(no_xtals_trunc); 
+//    CAL_Xtal_maxEne = max_log_energy; 
 
     //Overwritten below, if there are tracks
     CAL_Energy_Corr = calCluster->getEnergyCorrected(); 
-    if(CAL_EnergySum < 5.) return sc;  
+    
+    if (CAL_EnergySum < 5.) return StatusCode::SUCCESS ;  
 
     Point  cal_pos  = calCluster->getPosition();
     Vector cal_dir  = calCluster->getDirection();
@@ -252,24 +217,19 @@ StatusCode CalValsCorrTool::calculate( )
     CAL_TE_Nrm = ( view==0 ? cal_dir.x() : cal_dir.y() );
 
     // with no tracks we've done what we can do.
-    if(!pTracks) return sc; 
-    int num_tracks = pTracks->size(); 
-    if(num_tracks <= 0 ) return sc;
-
-    // Get the first track
-    Event::TkrTrackColConPtr pTrack1 = pTracks->begin();
-    Event::TkrTrack* track_1 = dynamic_cast<Event::TkrTrack*>(*pTrack1);
-
-    // Get the start and direction 
-    Point  x0 = track_1->getInitialPosition();
-    Vector t0 = track_1->getInitialDirection();
+    if (kernel->getTkrNTracks()<=0)
+      return StatusCode::SUCCESS ;
+        
+    // Get the first track, the start and direction 
+    const Event::TkrTrack * track_1 = kernel->getTkrFrontTrack() ;
+    Point  x0 = track_1->getInitialPosition() ;
+    Vector t0 = track_1->getInitialDirection() ;
 
     // If vertexed - use first vertex
-    if(pVerts) {
-        Event::TkrVertexColPtr gammaPtr =  pVerts->begin(); 
-        Event::TkrVertex *gamma = *gammaPtr; 
-        x0 = gamma->getPosition();
-        t0 = gamma->getDirection();
+    if (kernel->getTkrNVertices()>0) {
+        const Event::TkrVertex * vertex_1 = kernel->getTkrFrontVertex() ;
+        x0 = vertex_1->getPosition();
+        t0 = vertex_1->getDirection();
     }
 
     // this "cos(theta)" doesn't distinguish between up and down
@@ -368,7 +328,7 @@ StatusCode CalValsCorrTool::calculate( )
         edge_corr    += corr_factor;
         good_layers  += 1.; 
     }
-    if(ene_sum_corr < 1.) return sc;
+    if(ene_sum_corr < 1.) return StatusCode::SUCCESS ;
     CAL_EdgeSum_Corr = ene_sum_corr/CAL_EnergySum;
     if (good_layers>0) edge_corr /= good_layers;
     CAL_Edge_Corr = edge_corr; 
@@ -409,7 +369,8 @@ StatusCode CalValsCorrTool::calculate( )
     // Now get averaged radiation lengths
     // The averaging is set for 6 + 1 samples at a radius of rm_hard/4
     // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
-    if(aveRadLens(data,cal_top, -t_axis, rm_hard/4., 6) == StatusCode::FAILURE) return sc; 
+    if (aveRadLens(kernel->getDetSvc()->getIDPrefix(),cal_top,-t_axis,rm_hard/4.,6)==StatusCode::FAILURE)
+      return StatusCode::SUCCESS ; 
 
     double t_cal_tot = m_radLen_CsI + m_radLen_Stuff; //m_radLen_CsI; //s_min/20.; // 
     ene_sum_corr    *=  t_cal_tot/m_radLen_CsI;       // Correct for unseen stuff
@@ -485,7 +446,9 @@ StatusCode CalValsCorrTool::calculate( )
     CAL_Leak_Corr  = in_frac_2;   
     //    CAL_TwrGap      = m_arcLen_Stuff - m_arcLen_Gap;
 
-    return sc;
+    calCluster->setEnergyCorrected(CAL_Energy_Corr) ;
+
+    return StatusCode::SUCCESS ;
 }
 
 StatusCode CalValsCorrTool::getCalInfo()
@@ -569,7 +532,7 @@ double CalValsCorrTool::containedFraction(Point pos, double gap,
     return in_frac;
 }
 
-StatusCode CalValsCorrTool::aveRadLens(const CalReconKernel * data, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
+StatusCode CalValsCorrTool::aveRadLens(const idents::VolumeIdentifier & prefix, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
 { // This method finds the averages and rms for a cylinder of rays passing through 
     // the calorimeter of the radiation lengths in CsI and other material. 
     // The radius of the cylinder is "radius" and the number of rays = numSample (plus the 
@@ -647,7 +610,6 @@ StatusCode CalValsCorrTool::aveRadLens(const CalReconKernel * data, Point /* unu
         double rl_Stuff     = 0.;
         double rl_StuffCntr = 0.;
         idents::VolumeIdentifier volId;
-        idents::VolumeIdentifier prefix = data->getDetSvc()->getIDPrefix();
         int istep  = 0;
         for(; istep < numSteps; ++istep) {
             volId = m_G4PropTool->getStepVolumeId(istep);

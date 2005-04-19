@@ -632,8 +632,9 @@ AuditorSvc          DEBUG Service base class initialized successfully
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 6
-CalReconKernel:...  DEBUG Track direction = 0.993584
+CalReconKernel:...  DEBUG Number of TKR vertices = 6
+CalReconKernel:...  DEBUG Vertex direction = 0.993584
+CalReconKernel:...  DEBUG Number of TKR tracks = 6
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -673,33 +674,33 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
 CalClustersAlg      DEBUG Energy 3847.46 Corrected 4867.75 91.4659 143.347 -133.248 0.0267244 0.0531334 0.99823
-CalClustersAlg      DEBUG Energy 11.0258 Corrected 4867.75 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
-CalClustersAlg      DEBUG Energy 3.8639 Corrected 4867.75 -34.13 -150.341 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 3.24802 Corrected 4867.75 201.17 114.121 -164.82 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.4429 Corrected 4867.75 -145.49 90.0869 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.58859 Corrected 4867.75 48.0325 436.47 -143.47 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.4115 Corrected 4867.75 229.01 164.794 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 11.0258 Corrected 17.2583 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
+CalClustersAlg      DEBUG Energy 3.8639 Corrected 3.8639 -34.13 -150.341 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.24802 Corrected 3.24802 201.17 114.121 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.4429 Corrected 2.4429 -145.49 90.0869 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.58859 Corrected 1.58859 48.0325 436.47 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.4115 Corrected 1.4115 229.01 164.794 -122.12 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 1 time
 test_CalRecon        INFO Energy 3847.46 Corrected 4867.75 91.4659 143.347 -133.248 0.0267244 0.0531334 0.99823
 test_CalRecon        INFO Profile Corr Energy 5506.12
 test_CalRecon        INFO Last Layer Corr Energy 5306.7
-test_CalRecon        INFO Energy 11.0258 Corrected 4867.75 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
+test_CalRecon        INFO Energy 11.0258 Corrected 17.2583 -38.8808 87.2542 -174.933 7.10601e-12 0.890383 0.455212
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.8639 Corrected 4867.75 -34.13 -150.341 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.8639 Corrected 3.8639 -34.13 -150.341 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.24802 Corrected 4867.75 201.17 114.121 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.24802 Corrected 3.24802 201.17 114.121 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.4429 Corrected 4867.75 -145.49 90.0869 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.4429 Corrected 2.4429 -145.49 90.0869 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.58859 Corrected 4867.75 48.0325 436.47 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.58859 Corrected 1.58859 48.0325 436.47 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.4115 Corrected 4867.75 229.01 164.794 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.4115 Corrected 1.4115 229.01 164.794 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 1
@@ -709,8 +710,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -740,25 +743,25 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 5
 CalClustersAlg      DEBUG Energy 2891.31 Corrected 2891.31 224.042 196.639 -159.81 0.030931 0.0229649 0.999258
-CalClustersAlg      DEBUG Energy 4.62055 Corrected 2891.31 -61.97 180.39 -164.82 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 3.08044 Corrected 2891.31 312.53 187.25 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 3.87856 Corrected 2891.31 304.226 398.75 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.70278 Corrected 2891.31 145.49 -24.2498 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 4.62055 Corrected 4.62055 -61.97 180.39 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.08044 Corrected 3.08044 312.53 187.25 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.87856 Corrected 3.87856 304.226 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.70278 Corrected 1.70278 145.49 -24.2498 -164.82 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 2 time
 test_CalRecon        INFO Energy 2891.31 Corrected 2891.31 224.042 196.639 -159.81 0.030931 0.0229649 0.999258
 test_CalRecon        INFO Profile Corr Energy 5273.77
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 4.62055 Corrected 2891.31 -61.97 180.39 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4.62055 Corrected 4.62055 -61.97 180.39 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.08044 Corrected 2891.31 312.53 187.25 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.08044 Corrected 3.08044 312.53 187.25 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.87856 Corrected 2891.31 304.226 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.87856 Corrected 3.87856 304.226 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.70278 Corrected 2891.31 145.49 -24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.70278 Corrected 1.70278 145.49 -24.2498 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 2
@@ -768,8 +771,9 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 8
-CalReconKernel:...  DEBUG Track direction = 0.993232
+CalReconKernel:...  DEBUG Number of TKR vertices = 8
+CalReconKernel:...  DEBUG Vertex direction = 0.993232
+CalReconKernel:...  DEBUG Number of TKR tracks = 8
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -809,33 +813,33 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
 CalClustersAlg      DEBUG Energy 2331.76 Corrected 2943.22 153.441 74.9218 -140.075 -0.023816 0.166117 0.985818
-CalClustersAlg      DEBUG Energy 7.47634 Corrected 2943.22 241.265 -29.3696 -190.69 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 3.84841 Corrected 2943.22 220.192 173.33 -58.07 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.09138 Corrected 2943.22 61.97 88.8924 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.00517 Corrected 2943.22 61.97 61.1241 -164.82 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.40602 Corrected 2943.22 -61.97 -277.306 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.31404 Corrected 2943.22 139.022 -34.13 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 7.47634 Corrected 0 241.265 -29.3696 -190.69 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 3.84841 Corrected 3.84841 220.192 173.33 -58.07 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.09138 Corrected 2.09138 61.97 88.8924 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.00517 Corrected 2.00517 61.97 61.1241 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.40602 Corrected 1.40602 -61.97 -277.306 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.31404 Corrected 1.31404 139.022 -34.13 -100.77 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 3 time
 test_CalRecon        INFO Energy 2331.76 Corrected 2943.22 153.441 74.9218 -140.075 -0.023816 0.166117 0.985818
 test_CalRecon        INFO Profile Corr Energy 3101.61
 test_CalRecon        INFO Last Layer Corr Energy 3415.81
-test_CalRecon        INFO Energy 7.47634 Corrected 2943.22 241.265 -29.3696 -190.69 -1000 -1000 -1000
+test_CalRecon        INFO Energy 7.47634 Corrected 0 241.265 -29.3696 -190.69 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.84841 Corrected 2943.22 220.192 173.33 -58.07 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.84841 Corrected 3.84841 220.192 173.33 -58.07 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.09138 Corrected 2943.22 61.97 88.8924 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.09138 Corrected 2.09138 61.97 88.8924 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.00517 Corrected 2943.22 61.97 61.1241 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.00517 Corrected 2.00517 61.97 61.1241 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.40602 Corrected 2943.22 -61.97 -277.306 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.40602 Corrected 1.40602 -61.97 -277.306 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.31404 Corrected 2943.22 139.022 -34.13 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.31404 Corrected 1.31404 139.022 -34.13 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 3
@@ -845,8 +849,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -901,45 +907,45 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 10
 CalClustersAlg      DEBUG Energy 3311.41 Corrected 3311.41 131.725 310.988 -149.273 0.175871 -0.0201556 0.984207
-CalClustersAlg      DEBUG Energy 14.5217 Corrected 3311.41 -229.01 -230.893 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 26.6849 Corrected 3311.41 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
-CalClustersAlg      DEBUG Energy 2.57704 Corrected 3311.41 119.65 201.17 -100.77 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.57504 Corrected 3311.41 284.69 426.759 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.42216 Corrected 3311.41 167.621 173.33 -143.47 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.62036 Corrected 3311.41 173.33 551.969 -164.82 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.44253 Corrected 3311.41 -143.315 519.99 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.41587 Corrected 3311.41 117.65 398.75 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.26371 Corrected 3311.41 398.75 284.69 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 14.5217 Corrected 14.5217 -229.01 -230.893 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 26.6849 Corrected 26.6849 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
+CalClustersAlg      DEBUG Energy 2.57704 Corrected 2.57704 119.65 201.17 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.57504 Corrected 2.57504 284.69 426.759 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.42216 Corrected 2.42216 167.621 173.33 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.62036 Corrected 1.62036 173.33 551.969 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.44253 Corrected 1.44253 -143.315 519.99 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.41587 Corrected 1.41587 117.65 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.26371 Corrected 1.26371 398.75 284.69 -186.17 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 4 time
 test_CalRecon        INFO Energy 3311.41 Corrected 3311.41 131.725 310.988 -149.273 0.175871 -0.0201556 0.984207
 test_CalRecon        INFO Profile Corr Energy 5183.2
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 14.5217 Corrected 3311.41 -229.01 -230.893 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 14.5217 Corrected 14.5217 -229.01 -230.893 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 26.6849 Corrected 3311.41 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
+test_CalRecon        INFO Energy 26.6849 Corrected 26.6849 133.264 420.461 -156.982 0.251726 -0.0706034 0.96522
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.57704 Corrected 3311.41 119.65 201.17 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.57704 Corrected 2.57704 119.65 201.17 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.57504 Corrected 3311.41 284.69 426.759 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.57504 Corrected 2.57504 284.69 426.759 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.42216 Corrected 3311.41 167.621 173.33 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.42216 Corrected 2.42216 167.621 173.33 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.62036 Corrected 3311.41 173.33 551.969 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.62036 Corrected 1.62036 173.33 551.969 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.44253 Corrected 3311.41 -143.315 519.99 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.44253 Corrected 1.44253 -143.315 519.99 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.41587 Corrected 3311.41 117.65 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.41587 Corrected 1.41587 117.65 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.26371 Corrected 3311.41 398.75 284.69 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.26371 Corrected 1.26371 398.75 284.69 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 4
@@ -949,8 +955,9 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 2
-CalReconKernel:...  DEBUG Track direction = 0.991863
+CalReconKernel:...  DEBUG Number of TKR vertices = 2
+CalReconKernel:...  DEBUG Vertex direction = 0.991863
+CalReconKernel:...  DEBUG Number of TKR tracks = 3
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1000,41 +1007,41 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 9
 CalClustersAlg      DEBUG Energy 3808.71 Corrected 4859.44 55.5243 193.562 -126.734 0.148746 0.0941046 0.984388
-CalClustersAlg      DEBUG Energy 35.3307 Corrected 4859.44 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
-CalClustersAlg      DEBUG Energy 3.52032 Corrected 4859.44 -115.277 173.33 -143.47 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.00235 Corrected 4859.44 131.871 89.81 -100.77 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.82732 Corrected 4859.44 173.33 350.25 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.68393 Corrected 4859.44 -117.65 215.483 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.36137 Corrected 4859.44 229.01 349.511 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.29629 Corrected 4859.44 -24.2498 34.13 -143.47 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.13448 Corrected 4859.44 -24.2498 89.81 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 35.3307 Corrected 45.5776 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
+CalClustersAlg      DEBUG Energy 3.52032 Corrected 3.52032 -115.277 173.33 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.00235 Corrected 2.00235 131.871 89.81 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.82732 Corrected 1.82732 173.33 350.25 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.68393 Corrected 1.68393 -117.65 215.483 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.36137 Corrected 1.36137 229.01 349.511 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.29629 Corrected 1.29629 -24.2498 34.13 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.13448 Corrected 1.13448 -24.2498 89.81 -143.47 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 5 time
 test_CalRecon        INFO Energy 3808.71 Corrected 4859.44 55.5243 193.562 -126.734 0.148746 0.0941046 0.984388
 test_CalRecon        INFO Profile Corr Energy 5102.88
 test_CalRecon        INFO Last Layer Corr Energy 4926.05
-test_CalRecon        INFO Energy 35.3307 Corrected 4859.44 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
+test_CalRecon        INFO Energy 35.3307 Corrected 45.5776 -52.9397 206.693 -166.798 0.0775028 -0.544517 0.835161
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 3.52032 Corrected 4859.44 -115.277 173.33 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 3.52032 Corrected 3.52032 -115.277 173.33 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.00235 Corrected 4859.44 131.871 89.81 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.00235 Corrected 2.00235 131.871 89.81 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.82732 Corrected 4859.44 173.33 350.25 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.82732 Corrected 1.82732 173.33 350.25 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.68393 Corrected 4859.44 -117.65 215.483 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.68393 Corrected 1.68393 -117.65 215.483 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.36137 Corrected 4859.44 229.01 349.511 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.36137 Corrected 1.36137 229.01 349.511 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.29629 Corrected 4859.44 -24.2498 34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.29629 Corrected 1.29629 -24.2498 34.13 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.13448 Corrected 4859.44 -24.2498 89.81 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.13448 Corrected 1.13448 -24.2498 89.81 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 5
@@ -1044,8 +1051,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1090,37 +1099,37 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 8
 CalClustersAlg      DEBUG Energy 2742.53 Corrected 2742.53 69.4369 263.105 -156.257 0.18868 -0.0325067 0.9815
-CalClustersAlg      DEBUG Energy 5.71078 Corrected 2742.53 -96.8519 220.874 -190.188 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.46931 Corrected 2742.53 24.2498 117.65 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.91911 Corrected 2742.53 145.49 398.75 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.74134 Corrected 2742.53 -161.428 457.396 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.48786 Corrected 2742.53 -117.65 261.747 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.35607 Corrected 2742.53 82.2574 340.37 -100.77 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.12628 Corrected 2742.53 201.17 24.2498 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 5.71078 Corrected 5.71078 -96.8519 220.874 -190.188 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.46931 Corrected 2.46931 24.2498 117.65 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.91911 Corrected 1.91911 145.49 398.75 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.74134 Corrected 2.74134 -161.428 457.396 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.48786 Corrected 1.48786 -117.65 261.747 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.35607 Corrected 1.35607 82.2574 340.37 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.12628 Corrected 1.12628 201.17 24.2498 -164.82 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 6 time
 test_CalRecon        INFO Energy 2742.53 Corrected 2742.53 69.4369 263.105 -156.257 0.18868 -0.0325067 0.9815
 test_CalRecon        INFO Profile Corr Energy 4409.02
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 5.71078 Corrected 2742.53 -96.8519 220.874 -190.188 -1000 -1000 -1000
+test_CalRecon        INFO Energy 5.71078 Corrected 5.71078 -96.8519 220.874 -190.188 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.46931 Corrected 2742.53 24.2498 117.65 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.46931 Corrected 2.46931 24.2498 117.65 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.91911 Corrected 2742.53 145.49 398.75 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.91911 Corrected 1.91911 145.49 398.75 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.74134 Corrected 2742.53 -161.428 457.396 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.74134 Corrected 2.74134 -161.428 457.396 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.48786 Corrected 2742.53 -117.65 261.747 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.48786 Corrected 1.48786 -117.65 261.747 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.35607 Corrected 2742.53 82.2574 340.37 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.35607 Corrected 1.35607 82.2574 340.37 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.12628 Corrected 2742.53 201.17 24.2498 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.12628 Corrected 1.12628 201.17 24.2498 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 6
@@ -1130,8 +1139,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1166,29 +1177,29 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 6
 CalClustersAlg      DEBUG Energy 2906.62 Corrected 2906.62 118.732 57.2426 -161.709 0.0587375 0.0593428 0.996508
-CalClustersAlg      DEBUG Energy 16.1594 Corrected 2906.62 128.181 -48.1135 -198.325 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 6.1267 Corrected 2906.62 141.769 -84.5813 -116.091 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.05338 Corrected 2906.62 173.33 -171.813 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.87543 Corrected 2906.62 -145.007 34.13 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.19201 Corrected 2906.62 -24.2498 -34.13 -143.47 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 16.1594 Corrected 16.1594 128.181 -48.1135 -198.325 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 6.1267 Corrected 6.1267 141.769 -84.5813 -116.091 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.05338 Corrected 2.05338 173.33 -171.813 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.87543 Corrected 1.87543 -145.007 34.13 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.19201 Corrected 1.19201 -24.2498 -34.13 -143.47 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 7 time
 test_CalRecon        INFO Energy 2906.62 Corrected 2906.62 118.732 57.2426 -161.709 0.0587375 0.0593428 0.996508
 test_CalRecon        INFO Profile Corr Energy 5523.94
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 16.1594 Corrected 2906.62 128.181 -48.1135 -198.325 -1000 -1000 -1000
+test_CalRecon        INFO Energy 16.1594 Corrected 16.1594 128.181 -48.1135 -198.325 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 6.1267 Corrected 2906.62 141.769 -84.5813 -116.091 -1000 -1000 -1000
+test_CalRecon        INFO Energy 6.1267 Corrected 6.1267 141.769 -84.5813 -116.091 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.05338 Corrected 2906.62 173.33 -171.813 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.05338 Corrected 2.05338 173.33 -171.813 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.87543 Corrected 2906.62 -145.007 34.13 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.87543 Corrected 1.87543 -145.007 34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.19201 Corrected 2906.62 -24.2498 -34.13 -143.47 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.19201 Corrected 1.19201 -24.2498 -34.13 -143.47 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 7
@@ -1198,8 +1209,9 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 3
-CalReconKernel:...  DEBUG Track direction = 0.999445
+CalReconKernel:...  DEBUG Number of TKR vertices = 3
+CalReconKernel:...  DEBUG Vertex direction = 0.999445
+CalReconKernel:...  DEBUG Number of TKR tracks = 3
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1244,37 +1256,37 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 8
 CalClustersAlg      DEBUG Energy 4040.55 Corrected 5197.73 162.677 206 -127.078 0.0797226 0.00643136 0.996796
-CalClustersAlg      DEBUG Energy 9.43188 Corrected 5197.73 -167.086 492.15 -100.77 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 8.49391 Corrected 5197.73 201.17 485.321 -207.52 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 4.63259 Corrected 5197.73 235.232 463.208 -152.106 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.0471 Corrected 5197.73 -34.13 415.182 -164.82 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.83323 Corrected 5197.73 61.97 449.597 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.571 Corrected 5197.73 -61.97 -227.594 -79.42 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.15249 Corrected 5197.73 519.99 24.2498 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 9.43188 Corrected 10.3127 -167.086 492.15 -100.77 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 8.49391 Corrected 9.35996 201.17 485.321 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 4.63259 Corrected 4.63259 235.232 463.208 -152.106 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.0471 Corrected 2.0471 -34.13 415.182 -164.82 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.83323 Corrected 1.83323 61.97 449.597 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.571 Corrected 1.571 -61.97 -227.594 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.15249 Corrected 1.15249 519.99 24.2498 -79.42 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 8 time
 test_CalRecon        INFO Energy 4040.55 Corrected 5197.73 162.677 206 -127.078 0.0797226 0.00643136 0.996796
 test_CalRecon        INFO Profile Corr Energy 5358.46
 test_CalRecon        INFO Last Layer Corr Energy 5301.68
-test_CalRecon        INFO Energy 9.43188 Corrected 5197.73 -167.086 492.15 -100.77 -1000 -1000 -1000
+test_CalRecon        INFO Energy 9.43188 Corrected 10.3127 -167.086 492.15 -100.77 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 8.49391 Corrected 5197.73 201.17 485.321 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 8.49391 Corrected 9.35996 201.17 485.321 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 4.63259 Corrected 5197.73 235.232 463.208 -152.106 -1000 -1000 -1000
+test_CalRecon        INFO Energy 4.63259 Corrected 4.63259 235.232 463.208 -152.106 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.0471 Corrected 5197.73 -34.13 415.182 -164.82 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.0471 Corrected 2.0471 -34.13 415.182 -164.82 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.83323 Corrected 5197.73 61.97 449.597 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.83323 Corrected 1.83323 61.97 449.597 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.571 Corrected 5197.73 -61.97 -227.594 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.571 Corrected 1.571 -61.97 -227.594 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.15249 Corrected 5197.73 519.99 24.2498 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.15249 Corrected 1.15249 519.99 24.2498 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 8
@@ -1284,8 +1296,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1305,17 +1319,17 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 3
 CalClustersAlg      DEBUG Energy 2974.65 Corrected 2974.65 95.8698 95.4435 -169.244 0.171614 -0.0340667 0.984575
-CalClustersAlg      DEBUG Energy 2.11172 Corrected 2974.65 -112.267 145.49 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.66579 Corrected 2974.65 229.01 130.194 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.11172 Corrected 2.11172 -112.267 145.49 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.66579 Corrected 1.66579 229.01 130.194 -122.12 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 9 time
 test_CalRecon        INFO Energy 2974.65 Corrected 2974.65 95.8698 95.4435 -169.244 0.171614 -0.0340667 0.984575
 test_CalRecon        INFO Profile Corr Energy 6431.57
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 2.11172 Corrected 2974.65 -112.267 145.49 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.11172 Corrected 2.11172 -112.267 145.49 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.66579 Corrected 2974.65 229.01 130.194 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.66579 Corrected 1.66579 229.01 130.194 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 9
@@ -1325,8 +1339,10 @@ CalibDataSvc        DEBUG Incident type: BeginEvent
 Simulation          DEBUG Simulation Sequencer::execute( )
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
 CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
+CalReconKernel:...  DEBUG Number of TKR vertices = 0
+CalReconKernel:...  DEBUG No TKR vertices available
+CalReconKernel:...  DEBUG Number of TKR tracks = 0
+CalReconKernel:...  DEBUG No TKR tracks available
 CalClustersAlg      DEBUG Clustering
 CalClustersAlg      DEBUG Corrections
 CalClustersAlg      DEBUG Correction 0
@@ -1366,33 +1382,33 @@ CalClustersAlg      DEBUG Correction 3
 CalClustersAlg      DEBUG Correction 4
 CalClustersAlg      DEBUG  --- CalClusterCol  --- 7
 CalClustersAlg      DEBUG Energy 3736.85 Corrected 3736.85 231.787 256.47 -136.607 -0.0320015 -0.0248173 0.99918
-CalClustersAlg      DEBUG Energy 5.08024 Corrected 3736.85 312.53 140.47 -79.42 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.72577 Corrected 3736.85 152.369 408.63 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 2.14989 Corrected 3736.85 117.65 187.25 -79.42 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.79578 Corrected 3736.85 436.47 222.546 -122.12 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.79233 Corrected 3736.85 411.994 -34.13 -186.17 -1000 -1000 -1000
-CalClustersAlg      DEBUG Energy 1.25019 Corrected 3736.85 492.15 24.2498 -207.52 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 5.08024 Corrected 5.08024 312.53 140.47 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.72577 Corrected 2.72577 152.369 408.63 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 2.14989 Corrected 2.14989 117.65 187.25 -79.42 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.79578 Corrected 1.79578 436.47 222.546 -122.12 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.79233 Corrected 1.79233 411.994 -34.13 -186.17 -1000 -1000 -1000
+CalClustersAlg      DEBUG Energy 1.25019 Corrected 1.25019 492.15 24.2498 -207.52 -1000 -1000 -1000
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 10 time
 test_CalRecon        INFO Energy 3736.85 Corrected 3736.85 231.787 256.47 -136.607 -0.0320015 -0.0248173 0.99918
 test_CalRecon        INFO Profile Corr Energy 5065.95
 test_CalRecon        INFO Last Layer Corr Energy -4
-test_CalRecon        INFO Energy 5.08024 Corrected 3736.85 312.53 140.47 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 5.08024 Corrected 5.08024 312.53 140.47 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.72577 Corrected 3736.85 152.369 408.63 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.72577 Corrected 2.72577 152.369 408.63 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 2.14989 Corrected 3736.85 117.65 187.25 -79.42 -1000 -1000 -1000
+test_CalRecon        INFO Energy 2.14989 Corrected 2.14989 117.65 187.25 -79.42 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.79578 Corrected 3736.85 436.47 222.546 -122.12 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.79578 Corrected 1.79578 436.47 222.546 -122.12 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.79233 Corrected 3736.85 411.994 -34.13 -186.17 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.79233 Corrected 1.79233 411.994 -34.13 -186.17 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
-test_CalRecon        INFO Energy 1.25019 Corrected 3736.85 492.15 24.2498 -207.52 -1000 -1000 -1000
+test_CalRecon        INFO Energy 1.25019 Corrected 1.25019 492.15 24.2498 -207.52 -1000 -1000 -1000
 test_CalRecon        INFO Profile Corr Energy 0
 test_CalRecon        INFO Last Layer Corr Energy -1
 EventSelector       DEBUG Reading Event 10

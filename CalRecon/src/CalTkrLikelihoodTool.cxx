@@ -99,7 +99,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   }
 
   // z-position:
-  const Point &trackVertex= getKernel()->getTkrFrontVertexPosition();
+  const Point &trackVertex= getKernel()->getTkrFrontVertex()->getPosition();
   int vertex=  int((trackVertex[2]-108.)*3.2e-2);
   if( vertex<0 || vertex>15 ) { 
     //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutVERTEX, 1.);
@@ -111,7 +111,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   //    integrated along the track, normalized to 1.
   //               3. use the geometric mean of values on X and Y axis as a
   //    basis for geometric cut.
-  const Vector &trackDir= getKernel()->getTkrFrontVertexDirection();
+  const Vector &trackDir= getKernel()->getTkrFrontVertex()->getDirection();
   double geometricCut= 1.;
   for( int ax= 0; ax<2; ++ax ){
     double slope= -trackDir[ax]/trackDir[2];
