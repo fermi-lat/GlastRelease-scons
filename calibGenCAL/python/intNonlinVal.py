@@ -175,7 +175,7 @@ def rootHists(errData):
 
         title = "Summary_%s" % calConstant.CRNG[erng]
         hName = "h_%s" % title
-        hs = ROOT.TH1F(hName, title, 100, 0.0, 0.5)
+        hs = ROOT.TH1F(hName, title, 100, 0.0, errLimit)
         hs.SetLineColor(erng + 1)
         sumHists[erng] = hs
         cs.Update()
@@ -198,7 +198,7 @@ def rootHists(errData):
                     for erng in range(4):
                         
                         hName = "h_%s_%s" % (title, calConstant.CRNG[erng])
-                        hc = ROOT.TH1F(hName, title, 100, 0.0, 0.5)
+                        hc = ROOT.TH1F(hName, title, 100, 0.0, errLimit)
                         hs = sumHists[erng]
                         hc.SetLineColor(erng + 1)
 
