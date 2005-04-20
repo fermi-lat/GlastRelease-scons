@@ -1,5 +1,7 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v5r6p0    20-Apr-05  : HMK Check if the TObjArrays in TkrRecon exist before 
+                       deleting them
 v5r6      19-Apr-05  : HMK clear TObjArrays as Ursula did in DigiEvent and 
                        McEvent
 v5r5      17-Apr-05  : HMK back out commonRootData namespace
