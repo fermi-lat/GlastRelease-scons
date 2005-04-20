@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r22p3 19-Apr-2005 awb  More latAssembly files for singleBay and LAT, 
+                            this time for VDG.
    v1r22p2 14-Mar-2005 jrb  (for Anders) add more latAssembly files for singleBay
                              and lat1Tower, lat2Tower
    v1r22p1 11-Feb-2005 jrb  (for Xin) add files to latAssembly for 1 tower
