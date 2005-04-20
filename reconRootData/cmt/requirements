@@ -1,6 +1,6 @@
 package reconRootData
 # $Id$
-version v5r5
+version v5r6
 
 use commonRootData v2r*
 

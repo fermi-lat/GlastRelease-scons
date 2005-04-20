@@ -1,5 +1,7 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v5r6      19-Apr-05  : HMK clear TObjArrays as Ursula did in DigiEvent and 
+                       McEvent
 v5r5      17-Apr-05  : HMK back out commonRootData namespace
 v5r4      13-Apr-05  : HMK use commonRootData namespace
 v5r3p4    03-Mar-05  : LSR Propagate a bug fix to TkrTrack.h ... no change to interface
