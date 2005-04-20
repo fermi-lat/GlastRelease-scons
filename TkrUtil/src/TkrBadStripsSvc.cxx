@@ -465,7 +465,7 @@ CalibData::eVisitorRet BadVisitor::badPlane(unsigned int row,
     
     if (!allBad) { 
         unsigned int i;
-        int tower = idents::TowerId(row, col).id();
+        int tower = idents::TowerId(col, row).id();
         //int layer = top ? tray : tray-1;
         //int view  = layer%2 ? 1-top : top;
         int layer, view;
