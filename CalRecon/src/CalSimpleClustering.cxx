@@ -1,5 +1,5 @@
 /**
- * @class CalSimpleClusteringTool
+ * @class CalSimpleClustering
  *
  * @brief Implements a Gaudi Tool for performing very simple clustering in the Cal 
  *
@@ -15,28 +15,28 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "CalSimpleClusteringTool.h"
+#include "CalSimpleClustering.h"
 
-DECLARE_TOOL_FACTORY(CalSimpleClusteringTool) ;
+DECLARE_TOOL_FACTORY(CalSimpleClustering) ;
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter
 //
 
-CalSimpleClusteringTool::CalSimpleClusteringTool
+CalSimpleClustering::CalSimpleClustering
  ( const std::string & type,
    const std::string & name,
    const IInterface * parent )
- : CalClusteringTool(type, name, parent)
- { declareInterface<CalIClusteringTool>(this) ; }
+ : CalClustering(type, name, parent)
+ { declareInterface<ICalClustering>(this) ; }
 
 // 
 // Cleanup memory on exit
 //
-CalSimpleClusteringTool::~CalSimpleClusteringTool()
+CalSimpleClustering::~CalSimpleClustering()
  {}
  
-void CalSimpleClusteringTool::makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters )
+void CalSimpleClustering::makeSets( const XtalDataVec & xtals, XtalDataVecVec & clusters )
  {
   XtalDataVec xTalVec(xtals) ;
   while (xTalVec.size()>0)
@@ -119,7 +119,7 @@ void CalSimpleClusteringTool::makeSets( const XtalDataVec & xtals, XtalDataVecVe
   // Finished! 
 }
 
-CalClusteringTool::XtalDataVec CalSimpleClusteringTool::getXtalsInLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal)
+CalClustering::XtalDataVec CalSimpleClustering::getXtalsInLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal)
 {
     XtalDataVec newVec;
     newVec.clear();
@@ -144,7 +144,7 @@ CalClusteringTool::XtalDataVec CalSimpleClusteringTool::getXtalsInLayer(XtalData
     return newVec;
 }
 
-Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(XtalDataVec& xTalVec, XtalDataVec& NNvec, Event::CalXtalRecData* xTal)
+Event::CalXtalRecData* CalSimpleClustering::getNearestXtalInSameLayer(XtalDataVec& xTalVec, XtalDataVec& NNvec, Event::CalXtalRecData* xTal)
 {
     //Extract the ID information we need from current crystal
     const idents::CalXtalId xTalId    = xTal->getPackedId();
@@ -182,7 +182,7 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInSameLayer(XtalDa
     return 0;
 }
 
-Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInDiffLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer)
+Event::CalXtalRecData* CalSimpleClustering::getNearestXtalInDiffLayer(XtalDataVec& xTalVec, Event::CalXtalRecData* xTal, int layer)
 {
     Event::CalXtalRecData* newXtal = 0;
 

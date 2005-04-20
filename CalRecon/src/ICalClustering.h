@@ -1,6 +1,6 @@
 
-#ifndef __CalIClusteringTool_H
-#define __CalIClusteringTool_H 1
+#ifndef __ICalClustering_H
+#define __ICalClustering_H 1
 
 #include "CalReconKernel.h"
 #include "geometry/Vector.h"
@@ -9,25 +9,25 @@
 #include "GaudiKernel/IAlgTool.h"
 
 /**   
-* @class CalIClusteringTool
+* @class ICalClustering
 *
 * Base class for clustering tools
 *
 * $Header$
 */
 
-static const InterfaceID IID_CalIClusteringTool("CalIClusteringTool",1,0) ;
+static const InterfaceID IID_ICalClustering("ICalClustering",1,0) ;
 
-class CalIClusteringTool : virtual public IAlgTool {
+class ICalClustering : virtual public IAlgTool {
 
   public:
 
     // retrieve Gaudi interface ID
     static const InterfaceID& interfaceID()
-     { return IID_CalIClusteringTool; }
+     { return IID_ICalClustering; }
 
-    CalIClusteringTool() {}
-    virtual ~CalIClusteringTool() {}
+    ICalClustering() {}
+    virtual ~ICalClustering() {}
 
     //! main method
     virtual StatusCode findClusters() =0 ;

@@ -46,18 +46,18 @@
  * The original clustering and energy corrections (profile and last-layer
  * correlation methods) have been recast as Gaudi tools.
  *
- * The clustering is now based on the CalIClusteringTool and ClusteringTool base classes, 
- * while the leakage corrections derive from IEnergyCorr and EnergyCorr.
- * The clustering tools currently available are CalSingleClusteringTool and
- * CalSimpleClusteringTool (FuzzyClusteringTool needs additional tuning). The last
- * layer leakage tool is LastLayerCorrTool, and the profile tool is
- * ProfileTool. The tool using energy correlation with the number of hits in the
- * tracker is CalTkrLikelihoodTool
+ * The clustering is now based on the ICalClustering and Clustering base classes, 
+ * while the leakage corrections derive from ICalEnergyCorr and CalEnergyCorr.
+ * The clustering tools currently available are CalSingleClustering and
+ * CalSimpleClustering (FuzzyClustering needs additional tuning). The last
+ * layer leakage tool is CalLastLayerCorr, and the profile tool is
+ * CalProfileCorr. The tool using energy correlation with the number of hits in the
+ * tracker is CalTkrLikelihoodCorr
  *
- * The calo FuzzyClusteringTool retrieves the generic FuzzyCluster Gaudi
+ * The calo FuzzyClustering retrieves the generic FuzzyCluster Gaudi
  * tool to perform fuzzy clustering on all cal hits. However, if there are
  * less than one hit point per cluster, it applies one single cluster
- * calculations, like the CalSingleClusteringTool. 
+ * calculations, like the CalSingleClustering. 
  *
  * CalClustersAlg calls all 3 tools so far.
  *
@@ -70,8 +70,8 @@
  *        The default value is 0 .
  *
  * @param CalClustersAlg.clusteringToolName
- *        name of tool performing clustering. Default is CalSingleClusteringTool
- *        If set to FuzzyClusteringTool, the following param is mandatory:
+ *        name of tool performing clustering. Default is CalSingleClustering
+ *        If set to FuzzyClustering, the following param is mandatory:
  * @param ToolSvc.FuzzyClusterTool.FuzzyCluster.command
  *        the command param is mandatory for the FuzzyCluster Gaudi tool
  *        which is retrieved as a private tool by FuzzyClusterTool, that
@@ -83,7 +83,7 @@
  *        value is zero.
  * @param ApplicationMgr.DLLs += {"FuzzyCluster"};
  *        The FuzzyCluster library should be loaded if one uses 
- *        FuzzyClusteringTool.
+ *        FuzzyClustering.
  *
  * @param CalClustersAlg.corrToolNames
  *        name of tools performing corrections

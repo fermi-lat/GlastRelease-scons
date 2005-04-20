@@ -1,25 +1,25 @@
 
-#include "CalClusteringTool.h"
+#include "CalClustering.h"
 #include "GaudiKernel/MsgStream.h"
 
-CalClusteringTool::CalClusteringTool
+CalClustering::CalClustering
  ( const std::string & type, 
    const std::string & name,
    const IInterface * parent )
  : AlgTool( type, name, parent )
- { declareInterface<CalIClusteringTool>(this) ; }
+ { declareInterface<ICalClustering>(this) ; }
 
-CalClusteringTool::~CalClusteringTool()
+CalClustering::~CalClustering()
  {} 
     
-StatusCode CalClusteringTool::initialize()
+StatusCode CalClustering::initialize()
  {
   if (CalReconActor::initialize(serviceLocator()).isFailure())
    { return StatusCode::FAILURE ; }
   return StatusCode::SUCCESS ;
  }
 
-StatusCode CalClusteringTool::findClusters()
+StatusCode CalClustering::findClusters()
 //Purpose and method:
 //
 //   This function performs the calorimeter cluster reconstruction.
@@ -60,7 +60,7 @@ StatusCode CalClusteringTool::findClusters()
  }
 
 //! Collect CalXtalRecData pointers
-void CalClusteringTool::getXtals( XtalDataVec & xtals )
+void CalClustering::getXtals( XtalDataVec & xtals )
  {
   xtals.clear();
   Event::CalXtalRecCol::const_iterator it ;
@@ -73,7 +73,7 @@ void CalClusteringTool::getXtals( XtalDataVec & xtals )
  }
  
 /// This makes CalClusters out of associated CalXtalRecData pointers
-void CalClusteringTool::setClusters
+void CalClustering::setClusters
  ( const XtalDataVecVec & clusters )
  {
   getKernel()->getClusters()->delClusters() ;
@@ -210,7 +210,7 @@ void CalClusteringTool::setClusters
   return ;
  }
 
-Vector CalClusteringTool::fitDirection
+Vector CalClustering::fitDirection
  ( std::vector<Vector> pos,
    std::vector<Vector> sigma2 )
 //

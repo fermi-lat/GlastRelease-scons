@@ -1,11 +1,11 @@
-/** @file CalValsCorrTool.cxx
-@brief implementation of the class CalValsCorrTool
+/** @file CalValsCorr.cxx
+@brief implementation of the class CalValsCorr
 
 $Header$
 
 */
 
-#include "CalValsCorrTool.h"
+#include "CalValsCorr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -26,7 +26,7 @@ $Header$
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "geometry/Ray.h"
 
-DECLARE_TOOL_FACTORY(CalValsCorrTool) ;
+DECLARE_TOOL_FACTORY(CalValsCorr) ;
 
 #include "TMath.h"
 #include <stdexcept>
@@ -95,23 +95,23 @@ namespace {
 }
 
 
-CalValsCorrTool::CalValsCorrTool
+CalValsCorr::CalValsCorr
  ( const std::string & type, 
    const std::string & name, 
    const IInterface * parent )
- : EnergyCorr(type,name,parent)
- { declareInterface<IEnergyCorr>(this) ; }
+ : CalEnergyCorr(type,name,parent)
+ { declareInterface<ICalEnergyCorr>(this) ; }
 
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
-StatusCode CalValsCorrTool::initialize()
+StatusCode CalValsCorr::initialize()
 {
-    if (EnergyCorr::initialize().isFailure())
+    if (CalEnergyCorr::initialize().isFailure())
      { return StatusCode::FAILURE ; }
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Initializing CalValsCorrTool" <<endreq;
+    log << MSG::INFO << "Initializing CalValsCorr" <<endreq;
 
     // find TkrGeometrySvc service
     if (service("TkrGeometrySvc", m_tkrGeom, true).isFailure()){
@@ -149,7 +149,7 @@ StatusCode CalValsCorrTool::initialize()
 
 
 //! Extract the crack/leakage corrected energy, storing it in CalCluster.
-StatusCode CalValsCorrTool::doEnergyCorr( Event::CalCluster * calCluster )
+StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
 {
     CalReconKernel * kernel = getKernel() ;
     
@@ -451,7 +451,7 @@ StatusCode CalValsCorrTool::doEnergyCorr( Event::CalCluster * calCluster )
     return StatusCode::SUCCESS ;
 }
 
-StatusCode CalValsCorrTool::getCalInfo()
+StatusCode CalValsCorr::getCalInfo()
 {
     m_calZTop = m_tkrGeom->calZTop();
     m_calZBot = m_tkrGeom->calZBot();
@@ -461,7 +461,7 @@ StatusCode CalValsCorrTool::getCalInfo()
     return StatusCode::SUCCESS;
 }
 
-double CalValsCorrTool::activeDist(Point pos, int &view) const
+double CalValsCorr::activeDist(Point pos, int &view) const
 {
     double edge = 0.;
     double x = pos.x();
@@ -480,7 +480,7 @@ double CalValsCorrTool::activeDist(Point pos, int &view) const
     return edge;
 }
 
-double CalValsCorrTool::containedFraction(Point pos, double gap, 
+double CalValsCorr::containedFraction(Point pos, double gap, 
                                           double r, double costh, double phi) const
 {
     double x = pos.x();
@@ -532,7 +532,7 @@ double CalValsCorrTool::containedFraction(Point pos, double gap,
     return in_frac;
 }
 
-StatusCode CalValsCorrTool::aveRadLens(const idents::VolumeIdentifier & prefix, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
+StatusCode CalValsCorr::aveRadLens(const idents::VolumeIdentifier & prefix, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
 { // This method finds the averages and rms for a cylinder of rays passing through 
     // the calorimeter of the radiation lengths in CsI and other material. 
     // The radius of the cylinder is "radius" and the number of rays = numSample (plus the 

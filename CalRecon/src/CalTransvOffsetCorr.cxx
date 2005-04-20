@@ -1,20 +1,20 @@
 
-#include "CalTransvOffsetTool.h"
+#include "CalTransvOffsetCorr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_TOOL_FACTORY(CalTransvOffsetTool) ;
+DECLARE_TOOL_FACTORY(CalTransvOffsetCorr) ;
 
-CalTransvOffsetTool::CalTransvOffsetTool
+CalTransvOffsetCorr::CalTransvOffsetCorr
  ( const std::string & type,
    const std::string & name,
    const IInterface * parent )
- : EnergyCorr(type,name,parent)
+ : CalEnergyCorr(type,name,parent)
  {
-  declareInterface<IEnergyCorr>(this) ;
+  declareInterface<ICalEnergyCorr>(this) ;
  }
 
-StatusCode CalTransvOffsetTool::doEnergyCorr( Event::CalCluster * cluster )
+StatusCode CalTransvOffsetCorr::doEnergyCorr( Event::CalCluster * cluster )
  {
   // calculating the transverse offset of average position in the calorimeter
   // with respect to the position predicted from tracker information

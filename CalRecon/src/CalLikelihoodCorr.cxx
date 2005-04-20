@@ -1,14 +1,14 @@
-#include "LikelihoodTool.h"
+#include "CalLikelihoodCorr.h"
 #include "facilities/Util.h"
 #include <fstream>
 #include <cerrno>
 
-StatusCode LikelihoodTool::readPDFparameters( MsgStream &log,
+StatusCode CalLikelihoodCorr::readPDFparameters( MsgStream &log,
                                        std::string &dataFileName ){
     // This function does following initialization actions:
     //    - extracts PDF parameters from txt file
     StatusCode sc = StatusCode::SUCCESS;
-	  log << MSG::DEBUG <<"Initializing LikelihoodTool with file "<<dataFileName<<endreq;
+	  log << MSG::DEBUG <<"Initializing CalLikelihoodCorr with file "<<dataFileName<<endreq;
 
     // Read in the parameters from the data file
     facilities::Util::expandEnvVar(&dataFileName);
@@ -70,7 +70,7 @@ StatusCode LikelihoodTool::readPDFparameters( MsgStream &log,
 }
 
 
-StatusCode LikelihoodTool::calculateEvent( int iEvtPDF,
+StatusCode CalLikelihoodCorr::calculateEvent( int iEvtPDF,
                               double methodMinEnergy, double methodMaxEnergy,
                               double *pdfVariables, double *pdfDataPoint,
                               double &recEnergy, double &recEnergyWidth )
@@ -201,7 +201,7 @@ StatusCode LikelihoodTool::calculateEvent( int iEvtPDF,
   return sc;
 }
 
-double LikelihoodTool::pdfFCN( double x[2], double parameters[5] ) const{
+double CalLikelihoodCorr::pdfFCN( double x[2], double parameters[5] ) const{
   // calculate LogNormal(x[1]*parameters[0]+x[0]):
   // \f[ LogNormal(x, parameters(recEnergy)) \f]
   // if( par[3]==0. ) return 0.; that shouldn't happen
@@ -218,7 +218,7 @@ double LikelihoodTool::pdfFCN( double x[2], double parameters[5] ) const{
   return errno?0.:result;
 }
 
-StatusCode LikelihoodTool::finalize()
+StatusCode CalLikelihoodCorr::finalize()
 {
   StatusCode sc = StatusCode::SUCCESS;
   if( m_PDFCol ){

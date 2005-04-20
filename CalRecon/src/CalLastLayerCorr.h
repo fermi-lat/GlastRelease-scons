@@ -1,13 +1,13 @@
 
-#ifndef __LastLayerCorrTool_H
-#define __LastLayerCorrTool_H 1
+#ifndef __CalLastLayerCorr_H
+#define __CalLastLayerCorr_H 1
 
-#include "EnergyCorr.h"
+#include "CalEnergyCorr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/DataSvc.h"
 
 /**   
-* @class LastLayerCorrTool
+* @class CalLastLayerCorr
 *
 * Algorithm for calculation of energy leakage correction by correlating
 * the energy in the last CAL layer with the total.  
@@ -17,13 +17,13 @@
 */
 
 
-class LastLayerCorrTool : public EnergyCorr {
+class CalLastLayerCorr : public CalEnergyCorr {
 
 public:
     
     //! destructor
-    LastLayerCorrTool( const std::string& type, const std::string& name, const IInterface* parent);
-     ~LastLayerCorrTool() {}; 
+    CalLastLayerCorr( const std::string& type, const std::string& name, const IInterface* parent);
+     ~CalLastLayerCorr() {}; 
     
      StatusCode initialize();
 

@@ -1,10 +1,10 @@
-#ifndef __CalTkrLikelihoodTool_H
-#define __CalTkrLikelihoodTool_H 1
+#ifndef __CalTkrLikelihoodCorr_H
+#define __CalTkrLikelihoodCorr_H 1
 
-#include "LikelihoodTool.h"
+#include "CalLikelihoodCorr.h"
 
 /**   
-* @class CalTkrLikelihoodTool
+* @class CalTkrLikelihoodCorr
 *
 * Algorithm for correction of energy degradation in the tracker by correlating
 * the energy in the CAL with the number of hit TKR strips.  
@@ -13,12 +13,12 @@
 */
 
 
-class CalTkrLikelihoodTool :  public LikelihoodTool {
+class CalTkrLikelihoodCorr :  public CalLikelihoodCorr {
   public:
     //! destructor
-    CalTkrLikelihoodTool( const std::string& type, const std::string& name, 
+    CalTkrLikelihoodCorr( const std::string& type, const std::string& name, 
                  const IInterface* parent);
-    ~CalTkrLikelihoodTool(){}
+    ~CalTkrLikelihoodCorr(){}
     
     StatusCode initialize();
 

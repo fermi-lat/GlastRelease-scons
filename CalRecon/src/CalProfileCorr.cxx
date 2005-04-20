@@ -1,5 +1,5 @@
 
-#include "ProfileTool.h"
+#include "CalProfileCorr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -7,21 +7,21 @@
 // to access an XML containing Profile Bias parameters file
 #include "xmlBase/IFile.h"
 
-DECLARE_TOOL_FACTORY(ProfileTool) ;
+DECLARE_TOOL_FACTORY(CalProfileCorr) ;
 
-double ProfileTool::m_static_slope=0;
+double CalProfileCorr::m_static_slope=0;
 
-double ProfileTool::m_xtalHeight=0.; //!< xtal height in cm
-double ProfileTool::m_xtalWidth=0.;  //!< xtal width  in cm
-int ProfileTool::m_nbins=0;  //!< Number of bins used for the fit
-std::vector<double> ProfileTool::m_g_elayer;  //!< Energy per layer in GeV
+double CalProfileCorr::m_xtalHeight=0.; //!< xtal height in cm
+double CalProfileCorr::m_xtalWidth=0.;  //!< xtal width  in cm
+int CalProfileCorr::m_nbins=0;  //!< Number of bins used for the fit
+std::vector<double> CalProfileCorr::m_g_elayer;  //!< Energy per layer in GeV
      
 //! function to compute the true energy deposited in a layer
 /*! Uses the incomplete gamma function:
 *       gamma(double,double) implemented in gamma.cxx
 */ 
 
-double ProfileTool::gam_prof(double *par, int i)
+double CalProfileCorr::gam_prof(double *par, int i)
 
 // Purpose and method:
 //        To find the integral of the shower profile over the layer i.
@@ -76,7 +76,7 @@ double ProfileTool::gam_prof(double *par, int i)
 \f$ \chi^2= \sum_{i=1}^{8}\frac{(\bar{E}-E_i)^2}{\sigma_i}\f$
 */
 
-void ProfileTool::fcn(int & , double *, double &f, double *par, int )
+void CalProfileCorr::fcn(int & , double *, double &f, double *par, int )
 // Purpose: calculates the weighted sum of quadratic deviations
 //          of energy depositioins in layers from predicted by shower
 //          profile function
@@ -101,7 +101,7 @@ void ProfileTool::fcn(int & , double *, double &f, double *par, int )
     f = chisq;
 }
 
-double ProfileTool::bias( double energy )
+double CalProfileCorr::bias( double energy )
 // Purpose: calculates the mean bias for the profile method at a given energy 
 // and angle. The bias is estimated as the output energy of the fit times a 
 // polynomial P( log(fit_energy), cos(incidence) ). It is valid for 
@@ -143,29 +143,29 @@ double ProfileTool::bias( double energy )
   return debiasedE;  
 }
 
-ProfileTool::ProfileTool( const std::string& type, 
+CalProfileCorr::CalProfileCorr( const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent)
-                         : EnergyCorr(type,name,parent)
+                         : CalEnergyCorr(type,name,parent)
 {
     // declare base interface for all consecutive concrete classes
-    declareInterface<IEnergyCorr>(this);
+    declareInterface<ICalEnergyCorr>(this);
     declareProperty ("xmlFile", m_xmlFile="$(CALRECONROOT)/xml/CalProfile.xml");
     // Declare the properties that may be set in the job options file
 }
 
 
 
-StatusCode ProfileTool::initialize()
+StatusCode CalProfileCorr::initialize()
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
 {
-    if (EnergyCorr::initialize().isFailure())
+    if (CalEnergyCorr::initialize().isFailure())
      { return StatusCode::FAILURE ; }
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Initializing ProfileTool" <<endreq;
+    log << MSG::INFO << "Initializing CalProfileCorr" <<endreq;
         
     // Minuit object
     m_minuit = new TMinuit(5);
@@ -212,7 +212,7 @@ StatusCode ProfileTool::initialize()
 }
 
 
-StatusCode ProfileTool::doEnergyCorr( Event::CalCluster * cluster )
+StatusCode CalProfileCorr::doEnergyCorr( Event::CalCluster * cluster )
 //               This function fits the parameters of shower profile using
 //               the Minuit minimization package and stores the fitted
 //               parameters in the CalCluster object
@@ -378,7 +378,7 @@ StatusCode ProfileTool::doEnergyCorr( Event::CalCluster * cluster )
     return sc;
 }
 
-StatusCode ProfileTool::finalize()
+StatusCode CalProfileCorr::finalize()
 {
     StatusCode sc = StatusCode::SUCCESS;
  

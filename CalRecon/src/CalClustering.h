@@ -1,8 +1,8 @@
 
-#ifndef __CalClusteringTool_H
-#define __CalClusteringTool_H 1
+#ifndef __CalClustering_H
+#define __CalClustering_H 1
 
-#include "CalIClusteringTool.h"
+#include "ICalClustering.h"
 #include "CalReconActor.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
@@ -13,7 +13,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 
 /**   
-* @class CalClusteringTool
+* @class CalClustering
 *
 * Base class for clustering tools, containing member data and
 * default code for the global algorithm, the preparation of
@@ -27,15 +27,15 @@
 */
 
 
-class CalClusteringTool : public CalIClusteringTool,  public AlgTool, protected CalReconActor {
+class CalClustering : public ICalClustering,  public AlgTool, protected CalReconActor {
 	
   public:
     
-    CalClusteringTool
+    CalClustering
      ( const std::string & type, 
        const std::string & name,
        const IInterface * parent ) ;
-    virtual ~CalClusteringTool() ;
+    virtual ~CalClustering() ;
     
 	/// @brief Intialization of the tool
     virtual StatusCode initialize() ;

@@ -1,4 +1,4 @@
 
 #include "$CALRECONROOT/src/test/jobOptions.txt"
-CalClustersAlg.clusteringToolName = "CalSimpleClusteringTool" ;
+CalClustersAlg.clusteringToolName = "CalSimpleClustering" ;
 

@@ -1,15 +1,15 @@
 
-#ifndef __ProfileTool_H
-#define __ProfileTool_H 1
+#ifndef __CalProfileCorr_H
+#define __CalProfileCorr_H 1
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "EnergyCorr.h"
+#include "CalEnergyCorr.h"
 //Gamma function and Minuit
 #include "TMath.h"
 #include "TMinuit.h"
 
 /**   
-* @class ProfileTool
+* @class CalProfileCorr
 *
 * Algorithm for calculating energy leakage by fitting the longitudinal
 * shower profile.
@@ -19,13 +19,13 @@
 */
 
 
-class ProfileTool :  public EnergyCorr {
+class CalProfileCorr :  public CalEnergyCorr {
 
 public:
     
     //! destructor
-    ProfileTool( const std::string& type, const std::string& name, const IInterface* parent);
-     ~ProfileTool() {}; 
+    CalProfileCorr( const std::string& type, const std::string& name, const IInterface* parent);
+     ~CalProfileCorr() {}; 
     
      StatusCode initialize();
 

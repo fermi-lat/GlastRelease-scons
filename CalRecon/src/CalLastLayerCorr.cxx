@@ -1,5 +1,5 @@
 
-#include "LastLayerCorrTool.h"
+#include "CalLastLayerCorr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -11,7 +11,7 @@
 // to access an XML containing Digi parameters file
 #include "xmlBase/IFile.h"
 
-DECLARE_TOOL_FACTORY(LastLayerCorrTool) ;
+DECLARE_TOOL_FACTORY(CalLastLayerCorr) ;
 
 void updateLeakEnergy
  ( Event::CalCluster * cluster, double energy )
@@ -26,27 +26,27 @@ void updateLeakEnergy
     cluster->getTransvOffset()) ;
  }
  
-LastLayerCorrTool::LastLayerCorrTool( const std::string& type, const std::string& name, const IInterface* parent)
-:EnergyCorr(type,name,parent){
+CalLastLayerCorr::CalLastLayerCorr( const std::string& type, const std::string& name, const IInterface* parent)
+:CalEnergyCorr(type,name,parent){
 
     // declare base interface for all consecutive concrete classes
-    declareInterface<IEnergyCorr>(this);
+    declareInterface<ICalEnergyCorr>(this);
     declareProperty ("xmlFile", m_xmlFile="$(CALRECONROOT)/xml/CalLayer.xml");
 };
 
 
-StatusCode LastLayerCorrTool::initialize()
+StatusCode CalLastLayerCorr::initialize()
 
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
 
 {
-    if (EnergyCorr::initialize().isFailure())
+    if (CalEnergyCorr::initialize().isFailure())
      { return StatusCode::FAILURE ; }
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	log << MSG::INFO << "Initializing LastLayerCorrTool" <<endreq;
+	log << MSG::INFO << "Initializing CalLastLayerCorr" <<endreq;
     
     // extracting detector geometry constants from xml file
        
@@ -92,7 +92,7 @@ StatusCode LastLayerCorrTool::initialize()
 // TDS input: CalCluster
 // TDS output: CalClusters
 
-StatusCode LastLayerCorrTool::doEnergyCorr( Event::CalCluster * cluster ) {
+StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
 
     double eTotal = cluster->getEnergySum() ;  
     if (eTotal<500.) {

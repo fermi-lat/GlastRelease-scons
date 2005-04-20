@@ -15,13 +15,13 @@ DECLARE_FACTORY_ENTRIES( CalRecon ) {
     DECLARE_ALGORITHM( CalDisplay ) ;
     DECLARE_ALGORITHM( PropertiesCheckAlg ) ;
     DECLARE_TOOL( CalReconKernel ) ;
-    DECLARE_TOOL( CalSingleClusteringTool ) ;
-    DECLARE_TOOL( CalSimpleClusteringTool ) ;
-    DECLARE_TOOL( LastLayerCorrTool );
-    DECLARE_TOOL( CalTkrLikelihoodTool );
-    DECLARE_TOOL( ProfileTool );
-    DECLARE_TOOL( CalValsCorrTool );
-    DECLARE_TOOL( CalTransvOffsetTool );
+    DECLARE_TOOL( CalSingleClustering ) ;
+    DECLARE_TOOL( CalSimpleClustering ) ;
+    DECLARE_TOOL( CalLastLayerCorr );
+    DECLARE_TOOL( CalTkrLikelihoodCorr );
+    DECLARE_TOOL( CalProfileCorr );
+    DECLARE_TOOL( CalValsCorr );
+    DECLARE_TOOL( CalTransvOffsetCorr );
 } 
 
 

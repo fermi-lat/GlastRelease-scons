@@ -1,14 +1,14 @@
 
-/** @file CalValsCorrTool.h
+/** @file CalValsCorr.h
 @brief declaration of the class
 
 $Header$
 
 */
-#ifndef __CalValsCorrTool_H
-#define __CalValsCorrTool_H 1
+#ifndef __CalValsCorr_H
+#define __CalValsCorr_H 1
 
-#include "EnergyCorr.h"
+#include "CalEnergyCorr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 class IPropagatorSvc;
@@ -17,7 +17,7 @@ class IPropagator;
 class IDataProviderSvc;
 
 /**   
-* @class CalValsCorrTool
+* @class CalValsCorr
 * @author Bill Atwood
 *
 * Tool to corrected energy for cracks and leakage.
@@ -28,13 +28,13 @@ class IDataProviderSvc;
 */
 
 
-class CalValsCorrTool : public EnergyCorr {
+class CalValsCorr : public CalEnergyCorr {
 
 public:
 
     //! destructor
-    CalValsCorrTool( const std::string& type, const std::string& name, const IInterface* parent);
-    ~CalValsCorrTool() {}; 
+    CalValsCorr( const std::string& type, const std::string& name, const IInterface* parent);
+    ~CalValsCorr() {}; 
 
     StatusCode initialize();
 

@@ -7,10 +7,12 @@ package CalRecon
 
 package manager: David Chamont
 
-  v5r24p5 15-apr-05   CD  better integrate CalValsCorrTool into the CalRecon framework.
-                      CD  slightly review tkr data access from CalReconKernel.
-                      CD  slightly review LastLayerCorrTool.
-  v5r24p4 15-apr-05   CD  improve management of slope.
+  v5r25   20-apr-05   DC  move loop on clusters from CalClustersAlg into EnergyCorr.
+                      DC  huge renaming session
+  v5r24p5 15-apr-05   DC  better integrate CalValsCorrTool into the CalRecon framework.
+                      DC  slightly review tkr data access from CalReconKernel.
+                      DC  slightly review LastLayerCorrTool.
+  v5r24p4 15-apr-05   DC  improve management of slope.
   v5r24p3 15-apr-05   TU  urgent bug fix when registering CalClusterCol.
   v5r24p2 14-apr-05   DC  merge v5r22p5em1->v5r22p5em2.
                       DC  try to adapt to new root formats => failure

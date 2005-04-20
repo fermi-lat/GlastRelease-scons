@@ -1,29 +1,29 @@
-#include "CalTkrLikelihoodTool.h"
+#include "CalTkrLikelihoodCorr.h"
 #include "Event/Digi/TkrDigi.h"
 #include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_TOOL_FACTORY(CalTkrLikelihoodTool) ;
+DECLARE_TOOL_FACTORY(CalTkrLikelihoodCorr) ;
 
-CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type, const std::string& name, const IInterface* parent)
-  :LikelihoodTool(type,name,parent){
+CalTkrLikelihoodCorr::CalTkrLikelihoodCorr( const std::string& type, const std::string& name, const IInterface* parent)
+  :CalLikelihoodCorr(type,name,parent){
     // declare base interface for all consecutive concrete classes
-    declareInterface<IEnergyCorr>(this);
+    declareInterface<ICalEnergyCorr>(this);
     declareProperty("dataFile",
                     m_dataFile="$(CALRECONROOT)/xml/CalTkrLikelihood.data");
 };
 
-StatusCode CalTkrLikelihoodTool::initialize(){
+StatusCode CalTkrLikelihoodCorr::initialize(){
     
     // parent initialize must not be forgotten
-    if (EnergyCorr::initialize().isFailure())
+    if (CalEnergyCorr::initialize().isFailure())
      { return StatusCode::FAILURE ; }
 
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	  log << MSG::INFO << "Initializing CalTkrLikelihoodTool" <<endreq;
+	  log << MSG::INFO << "Initializing CalTkrLikelihoodCorr" <<endreq;
 
     typedef std::map<double*,std::string> PARAMAP;
     PARAMAP param;
@@ -55,13 +55,13 @@ StatusCode CalTkrLikelihoodTool::initialize(){
 }
 
 
-StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
+StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
 //Purpose and method:
 //
 //   This function performs:
 //   The main actions are:
 //      - check wheter the event meets basic requirements (CUTS)
-//      - calculate energy by TKR correction method using LikelihoodTool 
+//      - calculate energy by TKR correction method using CalLikelihoodCorr 
 // 
 // TDS input: CalCluster (and TkrDigi?)
 // TDS output: CalClusters
@@ -70,7 +70,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
 
   // if reconstructed tracker data doesn't exist or number of tracks is 0:
   if( !getKernel()->getTkrNVertices() ) {
-    //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutNOTKRREC, 1.);
+    //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutNOTKRREC, 1.);
     return sc;
   }
       
@@ -78,23 +78,23 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   // this checks whether a set of PDF parameters exist for this event's
   // energy, direction and point of impact.
   // if not, the setEnergyCorr value corresponds to the
-  // defined CalTkrLikelihoodToolFlags values
+  // defined CalTkrLikelihoodCorrFlags values
   
   // Energy:
   double pdfVariables[2]= {cluster->getEnergySum(), 0.};
   double pdfDataPoint[2]= {0., getKernel()->getSlope(cluster)};
   if( pdfVariables[0]<20. ) {
-    //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutMAXCALENERGY, 1.);
+    //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutMAXCALENERGY, 1.);
     return sc;
   }
   if( pdfVariables[0]>1900. ) { 
-    //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutMAXCALENERGY, 1.);
+    //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutMAXCALENERGY, 1.);
     return sc;
   }
   
   // direction: slope must be above \f$cos(32\circ)$\f
   if( getKernel()->getSlope(cluster)<.8480481 ){ 
-    //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutSLOPE, 1.);
+    //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutSLOPE, 1.);
     return sc; 
   }
 
@@ -102,7 +102,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   const Point &trackVertex= getKernel()->getTkrFrontVertex()->getPosition();
   int vertex=  int((trackVertex[2]-108.)*3.2e-2);
   if( vertex<0 || vertex>15 ) { 
-    //cluster->setEnergyCalTkrLikelihood((double) LikelihoodTool::cutVERTEX, 1.);
+    //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutVERTEX, 1.);
     return sc; 
   }
 
@@ -150,7 +150,7 @@ StatusCode CalTkrLikelihoodTool::doEnergyCorr( Event::CalCluster * cluster )
   return sc;
 }
 
-double CalTkrLikelihoodTool::integratedDistance2TowerSide( double x, 
+double CalTkrLikelihoodCorr::integratedDistance2TowerSide( double x, 
                                                   double slope ) const {
   if( slope==0. ) return 1.;
   if( slope>0. ){ x*= -1.; slope*= -1; }
