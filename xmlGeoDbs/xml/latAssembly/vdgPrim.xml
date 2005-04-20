@@ -6,6 +6,8 @@ VDG.</overview>
       <prim name = "thickShield" value = "1.25"> Thickness of Shield plate </prim>
       <prim name = "yShield" value = "200"> y coordinate of the shield </prim>
       <prim name = "xShield" value = "-200">x coordinate of the shield </prim>
+      <prim name = "yShieldLat" value = "-600"> y coordinate of the shield </prim>
+      <prim name = "xShieldLat" value = "-600">x coordinate of the shield </prim> 
 
       <!-- top of tracker is roughly 633 mm -->
       <prim name = "zShield" value = "636"> z coordinate of the shield</prim>
