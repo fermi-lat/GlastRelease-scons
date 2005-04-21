@@ -217,8 +217,11 @@ StatusCode TkrMakeClustersTool::makeClusters(
 
                     // code to generate 1st order corrected ToT
                     int end;
-                    int rawToT;
-                    float ToT = calculateMips(pDigi, strip0, stripf, rawToT, end);
+                    int rawToT = 0;
+                    float ToT = 0.0;
+                    if(m_type!=ITkrBadStripsSvc::BADCLUSTERS) {
+                        ToT = calculateMips(pDigi, strip0, stripf, rawToT, end);
+                    }
                     unsigned int status = defaultStatus | 
                         ((end<<Event::TkrCluster::shiftEND)&Event::TkrCluster::maskEND);
 
