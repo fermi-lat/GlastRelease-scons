@@ -71,5 +71,21 @@
  * approximate Poisson distribution by gaussian for numberElectrons. (default=true)
  * @param TestAdcTool.xmlFile
  * xml file for grabbing CalDigi configuration.  (default="$(CALDIGIROOT)/xml/CalDigi.xml")
+ * 
+ * 
+ * @section CalXtalRecAlg CalXtalRecAlg
+ *   CalXtalRecAlg takes the digitized calorimeter information from CalDigiCol
+ *   as input, calculates the energy and position in each hitted crystal
+ *   and stores this data into CalXtalRecCol.  CalXtalResponse package is 
+ *   used for the estimation of energy & position from digi info.  See
+ *   documentation in CalXtalResponse for details.
+ *
+ * 
+ * @subsection jobOptions jobOptions
+ * @param CalXtalRecAlg.xtalEneTool
+ *        name of CalXtalResponse/IXtalEneTool based tool performing xtal digi->energy conversion (default is "XtalEneTool")
+ * @param CalXtalRecAlg.xtalPosTool
+ *        name of CalXtalResponse/IXtalPosTool based tool performing xtal digi->position conversion (default is "XtalPosTool")
+ *
  */
 

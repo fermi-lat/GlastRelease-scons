@@ -16,6 +16,8 @@
 DECLARE_FACTORY_ENTRIES(CalXtalResponse) {
   
   DECLARE_SERVICE( CalCalibSvc );
+  
+  DECLARE_ALGORITHM( CalXtalRecAlg);
 
   DLL_DECL_TOOL( XtalADCTool );
   DLL_DECL_TOOL( XtalEneTool );
