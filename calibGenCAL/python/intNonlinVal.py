@@ -255,8 +255,8 @@ def deriv2(d, a):
      y1 = (a[2] - a[1]) / (d[2] - d[1])
      x0 = (d[0] + d[1]) / 2
      x1 = (d[1] + d[2]) / 2
-     d = (y1 - y0) / (x1 - x0)
-     return math.fabs(d)
+     z = (y1 - y0) / (x1 - x0)
+     return math.fabs(z)
 
 
 
