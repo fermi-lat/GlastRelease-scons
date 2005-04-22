@@ -1,4 +1,4 @@
-// $Header$
+
 // Mainpage for doxygen
 
 /** @mainpage package CalRecon
@@ -10,19 +10,12 @@
  *  CalRecon package reconstructs the energy and direction  of  incident particle from
  *   the calorimeter information. 
  *   
- *   Package contains 3 algorithms: CalXtalRecAlg, CalClustersAlg
- *   and CalDisplay.
+ *   Package contains 2 algorithms: CalClustersAlg and CalDisplay.
  *
  *   The  control flow diagram of CalRecon package, including also the CalDigi package,
  *   is given on the following WEB page:
  * <A HREF="http://www-glast.slac.stanford.edu/software/CAL/meetings/calrecondiagram.pdf"> CalRecon diagram </A> 
  *
- *   CalXtalRecAlg takes the digitized calorimeter information from CalDigiCol
- *   as input, calculates the energy and position in each hitted crystal
- *   and stores this data into CalXtalRecCol.  CalXtalResponse package is 
- *   used for the estimation of energy & position from digi info.  See
- *   documentation in CalXtalResponse for details.
- *  
  *   CalClustersAlg calculates the energy, position and direction for
  *   calorimeter clusters and applies energy corrections.
  *   Actually there is no real clustering algorithm implemented,
@@ -88,11 +81,6 @@
  * @param CalClustersAlg.corrToolNames
  *        name of tools performing corrections
  *
- *
- * @param CalXtalRecAlg.xtalEneTool
- *        name of CalXtalResponse/IXtalEneTool based tool performing xtal digi->energy conversion (default is "XtalEneTool")
- * @param CalXtalRecAlg.xtalPosTool
- *        name of CalXtalResponse/IXtalPosTool based tool performing xtal digi->position conversion (default is "XtalPosTool")
  *
  * <hr>
  * @section notes release notes

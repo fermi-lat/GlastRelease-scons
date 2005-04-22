@@ -7,80 +7,81 @@ package CalRecon
 
 package manager: David Chamont
 
-  v5r25   20-apr-05   DC  move loop on clusters from CalClustersAlg into EnergyCorr.
-                      DC  huge renaming session
-  v5r24p5 15-apr-05   DC  better integrate CalValsCorrTool into the CalRecon framework.
-                      DC  slightly review tkr data access from CalReconKernel.
-                      DC  slightly review LastLayerCorrTool.
-  v5r24p4 15-apr-05   DC  improve management of slope.
-  v5r24p3 15-apr-05   TU  urgent bug fix when registering CalClusterCol.
-  v5r24p2 14-apr-05   DC  merge v5r22p5em1->v5r22p5em2.
-                      DC  try to adapt to new root formats => failure
-  v5r22p5em2 13-apr-05 ZF skip don't die on bad xtal response.  initialize loop var.  works with multi tower.
-  v5r24   07-apr-05   Pol Introduction of CalTkrLikelihoodTool.
-                      DC  Introduction of CalTransvOffsetTool (code extracted from CalClustersAlg).
-                      DC  CalClusteringData transformed into CalReconKernel
-                      DC  Factorize access to CalReconKernel in CalReconActor
-                      DC  Corr tools managed as a list.
-                      DC  Removed energy attribute from EnergyCorr.
-                      DC  LastLayerTool directly stores its result in cluster.
-  v5r23p2 05-apr-05   DC  Energy corrections made optional.
-                      DC  Experimental: check the use of algorithm options.
-                      DC  Tests independent of TkrRecon.
-                      DC  merge v5r22p5em0 and v5r22p5em1 
-                      ZF  Windows bug fixes.
-  v5r23p1 16-mar-05   DC  improved tests, unified EnergyCorr interface, centralized Clustering data
-  v5r22p5em1 25-mar-05 ZF really fixed TKR only bug this time.
+  v5r26      22-apr-05 DC  merge v5r22p5em2->v5r22p5em3 into tthe trunk.
+  v5r22p5em3 21-apr-05 ZF  moved CalXtalRecAlg to CalXtalResponse as it's development path is tied closer to CalXtalResponse than to the other Algs in CalRecon
+  v5r25      20-apr-05 DC  move loop on clusters from CalClustersAlg into EnergyCorr.
+                       DC  huge renaming session
+  v5r24p5    15-apr-05 DC  better integrate CalValsCorrTool into the CalRecon framework.
+                       DC  slightly review tkr data access from CalReconKernel.
+                       DC  slightly review LastLayerCorrTool.
+  v5r24p4    15-apr-05 DC  improve management of slope.
+  v5r24p3    15-apr-05 TU  urgent bug fix when registering CalClusterCol.
+  v5r24p2    14-apr-05 DC  merge v5r22p5em1->v5r22p5em2.
+                       DC  try to adapt to new root formats => failure
+  v5r22p5em2 13-apr-05 ZF  skip don't die on bad xtal response.  initialize loop var.  works with multi tower.
+  v5r24      07-apr-05 Pol Introduction of CalTkrLikelihoodTool.
+                       DC  Introduction of CalTransvOffsetTool (code extracted from CalClustersAlg).
+                       DC  CalClusteringData transformed into CalReconKernel
+                       DC  Factorize access to CalReconKernel in CalReconActor
+                       DC  Corr tools managed as a list.
+                       DC  Removed energy attribute from EnergyCorr.
+                       DC  LastLayerTool directly stores its result in cluster.
+  v5r23p2    05-apr-05 DC  Energy corrections made optional.
+                       DC  Experimental: check the use of algorithm options.
+                       DC  Tests independent of TkrRecon.
+                       DC  merge v5r22p5em0 and v5r22p5em1 
+                       ZF  Windows bug fixes.
+  v5r23p1    16-mar-05 DC  improved tests, unified EnergyCorr interface, centralized Clustering data
+  v5r22p5em1 25-mar-05 ZF  really fixed TKR only bug this time.
   v5r22p5em0 25-mar-05 ZF  fixed bug w/ tkr only data.  updated comments & doc for CalXXtalRecAlg.
-  v5r22p5 16-mar-05    ZF  improved verbose print outs, improved performance re: MsgStream ctors
-  v5r22p4  2-mar-05    ZF  uses latest CalXtalResponse
-  v5r22p3 20-feb-05    THB include CalValsCoorTool update to correct tracker plane numbering.  
-  v5r22p2 20-feb-05    THB replace xml with xmlBase, so that xml package can be removed.  
-  v5r22p1 18-feb-05    ZF  once again... DOS path had bad case, had to fix for linux
-  v5r22   18-feb-05    ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
-  v5r21p2 07-feb-05    ZF  Fixed small bug in requirements file re: ROOT_linkopts
-  v5r21p1 05-feb-05    ZF  Builds & runs on Linux
-  v5r21   05-feb-05    ZF  Now works with CalXtalResponse package
-  v5r20p2 27-jan-05   PA  Added bias correctio to profile tool
-  v5r20p1 27-jan-05   .....
-  v5r17p3 17-jan-05   THB remove RootPolicy from requirements
-  v5r17p2 10-jan-05   THB Accept Tracy's change to CalValsCorrTool to adapt to new Event
-  v5r17p1 07-jan-05   THB Change from xml to xmlBase for JRB
-  v5r17   07-jan-05   THB Tag the previous change
-          22-sep-04   THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
-  v5r15               BG  Temporarily move Fuzzies to Attic
-  v5r14               BG  Tag for Gabriel's clustering
-  v5r13p3 25-Jun-2003 BG  Extend LastLayer tool to 26 degrees
-  v5r13p2 13-Jun-2003 RXD Replace LastLayerTool with Berrie's updates; fix test app to handle change in use of CalValTool
-  v5r12p1 11-may-2003 THB Fix Tool inheritance to use abstract interface, avoid downcasts 
-  v5r12   03-apr-2003 AC  CalibSvc is used to get calibration data
-  v5r11p6 25-mar-2003 AC  required RootIo version set to v*
-  v5r11p5 11-mar-2003 LSR more patches for latest AnalysisNtuple
-  v5r11p4 04-mar-2003 RXD patches for AnalysisNtuple
-  v5r11   20-feb-2003 RXD move clustering and energy corrections to Tools
-  v5r10p3 07-jan-2003 RXD change test_app to Algorithm.
-  v5r7p6 06-nov-2002 AC INFO messages in CalClusterAlg changed to DEBUG
-  v5r7p5 24-sep-2002 AC  cal response constants from xml file are now expressed in MeV
-  v5r7p4 13-sep-2002 AC  warnings in linux compilation corrected
-  v5r7p3 11-sep-2002 AC  Required version numbers for Event and GlastSvc set to *. Profile fitting now uses TMinut from ROOT.
-  v5r7p2 22-jul-2002 AC  unphysical longitudinal positions fixed
-  v5r7p1 13-jun-2002 AC  minor corrections in documentation and comments - submitted for code review
-  v5r7   13-jun-2002 AC  headers moved to src folder, requirements moved to cmt folder
-  v5r6   13-jun-2002 AC  documentation updated before the code review
-  v5r5p2 05-jun-2002 THB make RootIo use private, try to break dependency loop
-  v5r5p1 31-may-2002 THB fix to use TkrVertexCol 
-  v5r5 28-may-2002 AC  CalClusterCol modified to inherit from std::vector<CalCluster*>
-  v5r4 22-may-2002 AC  CalClusterAlg modified to use tracker information from TkrVertexCol
-  v5r3 21-may-2002 AC  test program jobOptions file modified to read digi root file
-  v5r2 20-may-2002 AC  CalDisplay added and modified to work with new TDS classes,
-                       bugs in direction calculation fixed.
-                       
-  v5r1 13-may-2002 AC  namespace cal renamed to Event, TDS object names defined in EventModel
-                       CalCluster::writeOut now writes to MsgStream     
-  v5r0 10-may-2002 THB after conversion to Event
-  v4r1 08-may-2002 AC TDS classes moved to GlastEvent
-  v2r4 23-aug-2001 THB
-  v1r9 07-may-2001 THB
+  v5r22p5    16-mar-05 ZF  improved verbose print outs, improved performance re: MsgStream ctors
+  v5r22p4    02-mar-05 ZF  uses latest CalXtalResponse
+  v5r22p3    20-feb-05 THB include CalValsCoorTool update to correct tracker plane numbering.  
+  v5r22p2    20-feb-05 THB replace xml with xmlBase, so that xml package can be removed.  
+  v5r22p1    18-feb-05 ZF  once again... DOS path had bad case, had to fix for linux
+  v5r22      18-feb-05 ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
+  v5r21p2    07-feb-05 ZF  Fixed small bug in requirements file re: ROOT_linkopts
+  v5r21p1    05-feb-05 ZF  Builds & runs on Linux
+  v5r21      05-feb-05 ZF  Now works with CalXtalResponse package
+  v5r20p2    27-jan-05 PA  Added bias correctio to profile tool
+  v5r20p1    27-jan-05 .....
+  v5r17p3    17-jan-05 THB remove RootPolicy from requirements
+  v5r17p2    10-jan-05 THB Accept Tracy's change to CalValsCorrTool to adapt to new Event
+  v5r17p1    07-jan-05 THB Change from xml to xmlBase for JRB
+  v5r17      07-jan-05 THB Tag the previous change
+             22-sep-04 THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
+  v5r15                BG  Temporarily move Fuzzies to Attic
+  v5r14                BG  Tag for Gabriel's clustering
+  v5r13p3    25-Jun-03 BG  Extend LastLayer tool to 26 degrees
+  v5r13p2    13-Jun-03 RXD Replace LastLayerTool with Berrie's updates; fix test app to handle change in use of CalValTool
+  v5r12p1    11-may-03 THB Fix Tool inheritance to use abstract interface, avoid downcasts 
+  v5r12      03-apr-03 AC  CalibSvc is used to get calibration data
+  v5r11p6    25-mar-03 AC  required RootIo version set to v*
+  v5r11p5    11-mar-03 LSR more patches for latest AnalysisNtuple
+  v5r11p4    04-mar-03 RXD patches for AnalysisNtuple
+  v5r11      20-feb-03 RXD move clustering and energy corrections to Tools
+  v5r10p3    07-jan-03 RXD change test_app to Algorithm.
+  v5r7p6     06-nov-02 AC  INFO messages in CalClusterAlg changed to DEBUG
+  v5r7p5     24-sep-02 AC  cal response constants from xml file are now expressed in MeV
+  v5r7p4     13-sep-02 AC  warnings in linux compilation corrected
+  v5r7p3     11-sep-02 AC  Required version numbers for Event and GlastSvc set to *. Profile fitting now uses TMinut from ROOT.
+  v5r7p2     22-jul-02 AC  unphysical longitudinal positions fixed
+  v5r7p1     13-jun-02 AC  minor corrections in documentation and comments - submitted for code review
+  v5r7       13-jun-02 AC  headers moved to src folder, requirements moved to cmt folder
+  v5r6       13-jun-02 AC  documentation updated before the code review
+  v5r5p2     05-jun-02 THB make RootIo use private, try to break dependency loop
+  v5r5p1     31-may-02 THB fix to use TkrVertexCol 
+  v5r5       28-may-02 AC  CalClusterCol modified to inherit from std::vector<CalCluster*>
+  v5r4       22-may-02 AC  CalClusterAlg modified to use tracker information from TkrVertexCol
+  v5r3       21-may-02 AC  test program jobOptions file modified to read digi root file
+  v5r2       20-may-02 AC  CalDisplay added and modified to work with new TDS classes,
+                           bugs in direction calculation fixed.
+  v5r1       13-may-02 AC  namespace cal renamed to Event, TDS object names defined in EventModel
+                           CalCluster::writeOut now writes to MsgStream     
+  v5r0       10-may-02 THB after conversion to Event
+  v4r1       08-may-02 AC  TDS classes moved to GlastEvent
+  v2r4       23-aug-01 THB
+  v1r9       07-may-01 THB
 
 
 !======================================================================
