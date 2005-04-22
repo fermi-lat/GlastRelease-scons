@@ -187,6 +187,26 @@
            <direction theta="0" phi="0" />
            <patch />
        </spectrum>
+     </source> 
+   <source name="C_test">
+       <spectrum escale="GeV"> 
+         <particle name="C"><energy e="20.4"/> </particle>
+           <direction theta="0" phi="0" />      
+           <launch_point x="200" y="174" z="800" />
+       </spectrum>
+     </source>   
+  <source name="O_test">
+       <spectrum escale="GeV"> 
+         <particle name="O"><energy e="48"/> </particle>
+           <direction theta="0" phi="0" />      
+           <launch_point x="200" y="174" z="800" />
+       </spectrum>
+     </source>   
+    <source name="Si_test">
+       <spectrum escale="GeV"> 
+         <particle name="Si"><energy e="56"/> </particle>
+           <direction theta="0" phi="0" />      
+           <launch_point x="200" y="174" z="800" />
+       </spectrum>
      </source>
-
 </source_library>
