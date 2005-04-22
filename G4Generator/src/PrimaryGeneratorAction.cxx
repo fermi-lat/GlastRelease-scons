@@ -71,7 +71,17 @@ void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc*
 
   // note the conversion from mass in Mev/c^2 to AMU in case of the ion.
   if (isIon(hepid))
-    setIon((int)ppty->charge() , (int)ppty->mass()/931.49);
+    {
+      //      std::cout << " Ion " << (int)ppty->charge() << " " << (int)ppty->mass()/931.49 << std::endl;
+      int z=0;
+      int a=0;
+      a = (hepid - 1e9)/1e6;
+      z = (hepid - 1e9 -a*1e6)/1e3;
+      
+      //      std::cout<< " Ion new " << z << " " << a << std::endl;
+      //      setIon((int)ppty->charge() , (int)ppty->mass()/931.49);
+      setIon(z,a);
+    }
   else
     setParticle(ppty->particle());
   
@@ -85,9 +95,11 @@ bool PrimaryGeneratorAction::isIon(int id)
   // Purpose and Method: this method return true if the id correspond to an ion
   // Inputs: id is the IDHEP identifier
   
-  if ((id>=80000) && (id<90000))
+  //  if ((id>=80000) && (id<90000))
+  if (id>1e9) // new convention
     return 1;
   else return 0;
+  
 }
 
 void PrimaryGeneratorAction::setIon(int pNatomic, int pMatomic, double pElevel)

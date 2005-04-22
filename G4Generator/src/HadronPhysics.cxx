@@ -334,7 +334,7 @@ void HadronPhysics::ConstructProcess()
   
   // Full Physics List
   
-  if (m_physicsChoice=="full")
+  if (m_physicsChoice=="full" || m_physicsChoice=="improved")
     {
       // Elastic scatter 
       
