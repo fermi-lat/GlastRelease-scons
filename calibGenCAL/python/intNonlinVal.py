@@ -354,6 +354,10 @@ if __name__ == '__main__':
 
     xmlName = args[0]
 
+    log.debug('intNonlinVal: using input file %s', xmlName)
+    log.debug('intNonlinVal: using sec deriv err limit %0.3f', errLimit)
+    log.debug('intNonlinVal: using sec deriv warn limit %0.3f', warnLimit)    
+
     # open and read XML IntNonlin file
 
     xmlFile = calCalibXML.calIntNonlinCalibXML(xmlName)

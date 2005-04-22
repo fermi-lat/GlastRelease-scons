@@ -278,8 +278,8 @@ if __name__ == '__main__':
     xmlName = args[0]
 
     log.debug('asymVal: using input file %s', xmlName)
-    log.debug('asymVal: using sec deriv err limit %0.3f', errLimit)
-    log.debug('asymVal: using sec deriv err limit %0.3f', warnLimit)
+    log.debug('asymVal: using sec deriv err limit %0.6f', errLimit)
+    log.debug('asymVal: using sec deriv warn limit %0.6f', warnLimit)
 
     # open and read XML Asym file
 
