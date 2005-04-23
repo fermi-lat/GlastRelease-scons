@@ -63,10 +63,13 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
   if (cable != curHeader.cableNumber()) {
       printf("cable for PHA doesn't match cable for header\n");
   }
+  // The bits in the hit map and accept map are numbered from left to right
+  // zero - 17
+  const unsigned offsetMap = 17;
   unsigned hitMap = curHeader.hitMap();
-  bool veto = (hitMap >> channel) & 1;
+  bool veto = (hitMap >> (offsetMap - channel)) & 1;
   unsigned acceptMap = curHeader.acceptMap();
-  bool accept = (acceptMap >> channel) & 1;
+  bool accept = (acceptMap >> (offsetMap - channel)) & 1;
 
   LATtypeId id   = event()->identity();
   // Tile number in [0,107]
