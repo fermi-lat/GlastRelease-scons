@@ -181,12 +181,12 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
            << " ("   << yp[0]
            << "->"   << yp[n-1]
            << ')'    << endreq;
-
-    // clear heap variables
-    delete xp;
-    delete yp;
   }
-
+  
+  // clear heap variables
+  delete xp;
+  delete yp;
+  
   return StatusCode::SUCCESS;
 }
 

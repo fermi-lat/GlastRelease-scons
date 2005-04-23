@@ -1,3 +1,4 @@
+v0r4p1  4/23/05 fewtrell fixed memory leak found from valgrind in CalibItemMgr::genSpline()
 v0r4    4/21/05 fewtrell grabbed CalXtalRecAlg from CalRecon b/c RecAlg updates are always synched w/ XtalResponse & not w/ CalRecon
 v0r3p1  4/13/05 fewtrell tested multi-tower.  fixed bad asymetry for mixed diode size events.
 v0r3    4/04/05 fewtrell Support multiple towers now.  updated ideal_flight params to handle higher energies b4 saturation.
