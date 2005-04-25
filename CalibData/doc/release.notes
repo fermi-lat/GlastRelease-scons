@@ -4,6 +4,8 @@
 
                     EOH
 
+   v0r12p1   25-Apr-2005  jrb Merge bad strip lists for same uniplane, same
+                              badness
    v0r12     31-Mar-2005  jrb Support for TKR charge scale calibration
    v0r11p1   02-Jan-2005  jrb Use idents::TkrId::getTray() rather than 
                               obsolete getPlane()
