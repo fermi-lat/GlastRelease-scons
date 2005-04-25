@@ -25,8 +25,8 @@ void TkrRecon::initialize() {
     if (!m_vertexCol) m_vertexCol = new TObjArray();
 }
 
-void TkrRecon::Clear(Option_t* /* option */) {
-    const Int_t nd = 20000;
+void TkrRecon::Clear(Option_t* option) {
+    const Int_t nd = 10000;
     static Int_t indCluster = 0, indTrack=0, indVertex=0;
     static Int_t limitCluster = 100;
     static Int_t limitTrack = 100;
@@ -103,6 +103,16 @@ void TkrRecon::Clear(Option_t* /* option */) {
         }
         m_vertexCol->Clear();
     }
+
+    // If we pass in option 'D', we want to delete everything, including
+    // what's being kept in the static arrays.
+    if( option && option[0]=='D') {
+      for (i=0;i<indCluster;i++) delete keepCluster[i];
+      for (i=0;i<indTrack;i++) delete keepTrack[i];
+      for (i=0;i<indVertex;i++) delete keepVertex[i];
+      indCluster = 0; indTrack = 0; indVertex = 0;
+    }
+
 }
 
 void TkrRecon::Print(Option_t *option) const {
