@@ -175,9 +175,15 @@ if __name__ == '__main__':
             for row in range(8):
                 for end in range(2):
                     for fe in range(12):
-                        for dac in range(inData.shape[-1]):
+                        inSize = inData.shape[-1]
+                        outSize = outData.shape[-1]
+                        for dac in range(inSize):
                             x = inData[0, row, end, fe, dac]
                             outData[f.twr, row, end, fe, dac] = x
+                        if outSize > inSize:
+                            for dac in range(inSize, outSize):
+                               outData[f.twr, row, end, fe, dac] = -1.0 
+                            
             
 
     log.info('intNonlinMerge: writing output file %s', outName)
