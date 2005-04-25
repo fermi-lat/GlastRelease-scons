@@ -24,7 +24,8 @@
 
     gObjectTable->Print();
     
-    gSystem->Load("reconRootData.dll");
+    gSystem->Load("libcommonRootData.so");
+    gSystem->Load("libreconRootData.so");
 
     TFile *file =  new TFile("recon.root", "RECREATE");
     TTree *t = new TTree("Recon", "Recon");
@@ -32,7 +33,7 @@
     t->Branch("ReconEvent", "ReconEvent", &ev, 64000, 1);
     
     gObjectTable->Print();
-    TkrCandTrack *candTrack;
+    //TkrCandTrack *candTrack;
     TkrTrack *track;
     TkrVertex *vertex;
 
@@ -122,8 +123,8 @@
             UInt_t flag = 1;
             UInt_t tower = 8;
             UInt_t nBad  = 0;
-            TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, flag, nBad);
-            tkrRec->addCluster(cluster);
+            TkrCluster *tcluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, flag, nBad);
+            tkrRec->addCluster(tcluster);
         }
 
         TkrTrack *track;
