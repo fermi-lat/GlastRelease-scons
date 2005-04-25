@@ -19,6 +19,7 @@ ReconEvent::~ReconEvent() {
     }
 
     if (m_tkr) {
+        m_tkr->Clear("D");
         delete m_tkr;
         m_tkr = 0;
     }
