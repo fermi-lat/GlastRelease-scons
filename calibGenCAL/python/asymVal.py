@@ -2,7 +2,7 @@
 Validate CAL Asym calibration data in XML format.  The command
 line is:
 
-asymVal [-E <err_limit>] [-W <warn_limit>] [-R <root_file>] <xml_file>
+asymVal [-V] [-E <err_limit>] [-W <warn_limit>] [-R <root_file>] <xml_file>
 
 where:
 
