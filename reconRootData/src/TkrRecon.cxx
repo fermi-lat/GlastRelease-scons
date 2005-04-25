@@ -3,6 +3,12 @@
 
 ClassImp(TkrRecon)
 
+const Int_t nd = 10000;
+TkrCluster *TkrRecon::keepCluster[nd];
+TkrTrack *TkrRecon::keepTrack[nd];
+TkrVertex *TkrRecon::keepVertex[nd];
+Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, TkrRecon::indVertex=0;
+
 TkrRecon::TkrRecon() {
     m_clusterCol = 0;
     m_trackCol = 0;
@@ -25,15 +31,15 @@ void TkrRecon::initialize() {
     if (!m_vertexCol) m_vertexCol = new TObjArray();
 }
 
-void TkrRecon::Clear(Option_t* option) {
-    const Int_t nd = 10000;
-    static Int_t indCluster = 0, indTrack=0, indVertex=0;
+void TkrRecon::Clear(Option_t* /*option*/) {
+    //const Int_t nd = 10000;
+    //static Int_t indCluster = 0, indTrack=0, indVertex=0;
     static Int_t limitCluster = 100;
     static Int_t limitTrack = 100;
     static Int_t limitVertex = 100;
-    static TkrCluster *keepCluster[nd];
-    static TkrVertex *keepVertex[nd];
-    static TkrTrack *keepTrack[nd];
+    //static TkrCluster *keepCluster[nd];
+    //static TkrVertex *keepVertex[nd];
+    //static TkrTrack *keepTrack[nd];
 
 //    if (m_clusterCol) m_clusterCol->Delete();
 //    if (m_trackCol) m_trackCol->Delete();
@@ -104,14 +110,14 @@ void TkrRecon::Clear(Option_t* option) {
         m_vertexCol->Clear();
     }
 
-    // If we pass in option 'D', we want to delete everything, including
-    // what's being kept in the static arrays.
-    if( option && option[0]=='D') {
-      for (i=0;i<indCluster;i++) delete keepCluster[i];
-      for (i=0;i<indTrack;i++) delete keepTrack[i];
-      for (i=0;i<indVertex;i++) delete keepVertex[i];
-      indCluster = 0; indTrack = 0; indVertex = 0;
-    }
+}
+
+static void TkrRecon::CleanUp() {
+    Int_t i;
+    for (i=0;i<indCluster;i++) delete keepCluster[i];
+    for (i=0;i<indTrack;i++) delete keepTrack[i];
+    for (i=0;i<indVertex;i++) delete keepVertex[i];
+    indCluster = 0; indTrack = 0; indVertex = 0;
 
 }
 

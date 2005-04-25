@@ -33,6 +33,7 @@ public:
     void initialize();
     
     void Clear(Option_t *option="");
+    static void CleanUp();
 
     void Print(Option_t *option="") const;
 
@@ -53,6 +54,11 @@ private:
     TObjArray *m_trackCol;
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
+
+    static TkrCluster *keepCluster[10000]; //!
+    static TkrTrack *keepTrack[10000]; //!
+    static TkrVertex *keepVertex[10000]; //!
+    static Int_t indCluster, indTrack, indVertex; //!
 
     ClassDef(TkrRecon,5)
 };

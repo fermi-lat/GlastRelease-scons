@@ -11,7 +11,6 @@ ReconEvent::ReconEvent() {
 }
 
 ReconEvent::~ReconEvent() {
-    Clear();
 
     if (m_cal) {
         delete m_cal;
@@ -19,7 +18,7 @@ ReconEvent::~ReconEvent() {
     }
 
     if (m_tkr) {
-        m_tkr->Clear("D");
+        m_tkr->Clear();
         delete m_tkr;
         m_tkr = 0;
     }
@@ -28,6 +27,9 @@ ReconEvent::~ReconEvent() {
         delete m_acd;
         m_acd = 0;
     }
+    Clear();
+
+    TkrRecon::CleanUp();
 
 }
 
