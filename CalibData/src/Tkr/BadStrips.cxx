@@ -6,6 +6,48 @@
 #include "CalibData/Tkr/BadStrips.h"
 #include "GaudiKernel/MsgStream.h"
 
+namespace {
+  static const unsigned MAX_STRIP_ID = 1535;
+  static const unsigned N_MASK = (MAX_STRIP_ID + 31) / 32;
+  // Given an array of integers, OR corresponding bits into a bit mask
+  void toMask(const std::vector<unsigned short int>& vec, 
+              unsigned* mask) {
+    unsigned sz = vec.size();
+    for (unsigned s = 0; s < sz; s++) {
+      unsigned iWd = vec[s] / 32;
+      unsigned iBit = vec[s] % 32;
+      *(mask + iWd) |= (((unsigned) 1) << iBit);
+    }
+  }
+
+  // Utility to merge strip lists.  Convert each to a multi-word bit mask
+  // take OR, then write back to first vector.
+  void merge(std::vector<unsigned short int>* orig, 
+             std::vector<unsigned short int>* more) {
+    
+    unsigned mask[N_MASK - 1];
+
+    // Clear
+    for (unsigned i = 0; i < N_MASK; i++) {
+      mask[i] = 0;
+    }
+    toMask(*orig, mask);
+    toMask(*more, mask);
+    unsigned maxSize = orig->size() + more->size();
+    orig->reserve(maxSize);
+    orig->resize(0);
+    for (unsigned j = 0; j < N_MASK; j++) {
+      // unfold jth word of mask
+      unsigned wordOffset = j*32;
+      for (unsigned iBit = 0; iBit < 32; iBit++) {
+        if (mask[j] & (1 << iBit)) {
+          orig->push_back(wordOffset + iBit);
+        }
+      }
+    }
+    
+  }
+}
 namespace CalibData {
   BadStrips::Tower::Tower(bool allBad, int howBad, 
                           unsigned row, unsigned col) :
@@ -165,8 +207,12 @@ namespace CalibData {
     while (iUni != pTower->m_uniplanes->end() ) {
       if ((iUni->m_tray == tray) && (iUni->m_top == top) && 
           (iUni->m_howBad == howBad)) {
+        // merge
+        merge(iUni->m_badStrips, &badStrips);
+
+        return StatusCode::SUCCESS;
         // complain
-        return StatusCode::FAILURE;
+        //        return StatusCode::FAILURE;
       }
       iUni++;
     }
