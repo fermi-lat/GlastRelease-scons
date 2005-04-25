@@ -76,6 +76,15 @@ if __name__ == '__main__':
 
     configName = args[0]
     outName = args[1]
+    
+
+    # get environment settings
+
+    try:
+        calibUtilRoot = os.environ['CALIBUTILROOT']
+    except:
+        log.error('intNonlinMerge: CALIBUTILROOT must be defined')
+        sys.exit(1)
 
 
     # read config file settings
@@ -119,8 +128,8 @@ if __name__ == '__main__':
     if not configFile.has_option('dtdfiles', 'dtdfile'):
         log.error("intNonlinMerge: config file %s missing [dtdfiles]:dtdfile option" % configName)
         sys.exit(1)
-    dtdName = configFile.get('dtdfiles', 'dtdfile')
-
+    dtdName = os.path.join(calibUtilRoot, 'xml', configFile.get('dtdfiles', 'dtdfile'))
+    
 
     # read input files
 
