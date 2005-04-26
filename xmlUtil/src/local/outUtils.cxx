@@ -4,7 +4,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <iostream>
 #include <fstream>
-
+#include <string>
 
 const char chDoubleQ = 0x22;
 const std::string dquote(&chDoubleQ);

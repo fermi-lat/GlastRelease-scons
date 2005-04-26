@@ -47,10 +47,9 @@ library xmlUtil ${xmlUtil_headers}  \
 application byId_test  byId_test/byId_test.cxx
 application arith_test arith_test/arith_test.cxx
 
-## Temporarily get rid of unimportant applications that don't build on Windows
-## application eval eval.cxx local/outUtils.cxx
-## application forProg makeXmlForProg.cxx local/outUtils.cxx
-## application forDoc     makeXmlForDoc.cxx local/outUtils.cxx
+application eval eval.cxx local/outUtils.cxx
+application forProg makeXmlForProg.cxx local/outUtils.cxx
+application forDoc     makeXmlForDoc.cxx local/outUtils.cxx
 
 application testId     id/testId.cxx
 application testDocMan docMan/*.cxx
