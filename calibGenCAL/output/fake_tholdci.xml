@@ -255,7 +255,7 @@
 
 ]>
 <calCalib>
- <generic instrument="LAT" timestamp="2004-07-31-06:50" calibType="CAL_TholdCI" fmtVersion="v2r2" creator="$Name$">
+ <generic instrument="LAT" timestamp="2004-07-31-06:50" calibType="CAL_TholdCI" fmtVersion="v2r2">
  </generic>
  <dimension nRow="1" nCol="1" nLayer="8" nXtal="12" nFace="2" nRange="1"/>
  <tower iRow="0" iCol="0">
