@@ -253,7 +253,7 @@ void CfData::ReadSplinesTXT (const string &filename) {
     throw tmp.str();
   }
 
-  short twr = m_cfg.twrBay;
+  //short twr = m_cfg.twrBay;
   short lyr;
   short col;
   short face;
