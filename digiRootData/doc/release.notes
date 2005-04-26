@@ -6,6 +6,9 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v8r3p0    25-Apr-2005 HMK Remove EventSummaryData initEventSeq since we now
+          use the top-level event id only, but retain the eventsequence data
+          member for backward compatbility
 v8r3      17-Apr-2005 HMK Back out commonRootData namespace
           Store Gem.Missed and EventSizeInBytes
 v8r2      13-Apr-2005 HMK Update for commonRootData namespace

@@ -46,7 +46,7 @@ public:
 
     void initialize(UInt_t summary);
 
-    void initEventSequence(UInt_t evtSeq) { m_eventSequence = evtSeq; };
+    //void initEventSequence(UInt_t evtSeq) { m_eventSequence = evtSeq; };
 
     void initEventFlags(UInt_t flags) { m_flags = flags; };
 
