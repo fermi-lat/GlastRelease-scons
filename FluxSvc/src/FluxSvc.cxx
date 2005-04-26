@@ -29,6 +29,7 @@
 
 #include "flux/FluxMgr.h"
 #include <algorithm>
+#include <iterator>
 #include <sstream>
 #include <iomanip>
 /** 

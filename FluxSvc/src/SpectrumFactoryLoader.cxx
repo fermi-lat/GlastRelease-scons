@@ -18,8 +18,7 @@ ISpectrumFactory & PulsarSpectrumFactory();
 SpectrumFactoryLoader::SpectrumFactoryLoader()
 {
     ISpectrumFactory& f =GRBmanagerFactory();
-    // fix these in next release, when GRB gets rebuild with new interface
-//    m_names.push_back(f.name());
+    m_names.push_back(f.name());
     f=GRBobsFactory();
-//    m_names.push_back(f.name());
+    m_names.push_back(f.name());
 }

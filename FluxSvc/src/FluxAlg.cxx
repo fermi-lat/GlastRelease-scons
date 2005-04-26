@@ -46,7 +46,6 @@ $Header$
 #include <vector>
 
 
-
 // Include files
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
@@ -129,7 +128,7 @@ const IAlgFactory& FluxAlgFactory = Factory;
 //! ctor
 FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) , m_sequence(0), m_initialTime(0)
-, m_insideSAA(false), m_SAAreject(0)
+, m_SAAreject(0), m_insideSAA(false)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
