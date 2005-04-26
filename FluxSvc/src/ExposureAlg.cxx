@@ -1,9 +1,3 @@
-/** 
-* @file ExposureAlg.cxx
-* @brief Definition and implementation of class ExposureAlg
-*
-*  $Header$
-*/
 
 // Include files
 #include "FluxSvc/PointingInfo.h"

@@ -18,7 +18,7 @@
 #include "astro/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IFluxSvc("FluxSvc", 4 , 1); 
+static const InterfaceID IID_IFluxSvc("FluxSvc", 5 , 0); 
 
 // forward declarations
 class IFlux;
@@ -103,6 +103,8 @@ public:
     /// set pointer to a flux object, constructed from set of names
     virtual StatusCode compositeSource(std::vector<std::string> names, IFlux*& flux)=0;
 
+    /// return current SAA status
+    virtual bool insideSAA()=0;
 
 };
 

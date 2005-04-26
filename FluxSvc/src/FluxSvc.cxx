@@ -8,6 +8,7 @@
 
 #include "FluxSvc/IRegisterSource.h"
 #include "facilities/Timestamp.h"
+#include "facilities/Observer.h"
 
 #include "flux/rootplot.h"
 
@@ -54,14 +55,7 @@ class IFlux;  // interface
 class FluxMgr;  // actual manager
 class IParticlePropertySvc; 
 class IAppMgrUI;
-
-// declare the external factories.
-ISpectrumFactory & GRBmanagerFactory();
-ISpectrumFactory & GRBobsFactory();
-ISpectrumFactory & IsotropicFactory();
-ISpectrumFactory & PulsarSpectrumFactory();
-
-
+#include "SpectrumFactoryLoader.h"
 
 class FluxSvc : 
     virtual public Service, 
@@ -138,6 +132,7 @@ public:
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
 
 
+    bool insideSAA() { return m_insideSAA;}
     /// for the IRunnable interfce
     virtual StatusCode run();
 
@@ -192,6 +187,12 @@ private:
 
     StringProperty m_startDate;
 
+    ObserverAdapter< FluxSvc > m_observer; //obsever tag
+    int askGPS(); // the function that will be called
+    bool m_insideSAA; 
+
+
+
 };
 
 // declare the service factories for the FluxSvc
@@ -207,7 +208,7 @@ static std::string default_dtd_file("$(FLUXROOT)/xml/source.dtd");
 // ------------------------------------------------
 /// Standard Constructor
 FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_currentFlux(0)
+: Service(name,svc), m_currentFlux(0), m_insideSAA(false)
 {
 
     declareProperty("source_lib" , m_source_lib); 
@@ -304,6 +305,14 @@ StatusCode FluxSvc::initialize ()
         return StatusCode::FAILURE;
     }
 
+    log << MSG::INFO << "Registering factories external to flux: ";
+    SpectrumFactoryLoader externals;
+    std::copy( externals.names().begin(), externals.names().end(), 
+        std::ostream_iterator<std::string>(log.stream(), ", "));
+    log  << endreq;
+
+
+
     //----------------------------------------------------------------
     // most of  the following cribbed from ToolSvc and ObjManager
 
@@ -323,14 +332,6 @@ StatusCode FluxSvc::initialize ()
     IToolFactory* toolfactory = 0;
     
     // search throught all objects (factories?)
-    //////////////////////////////////////////////////
-    // Adding GRB Factory!
-    log << MSG::INFO << "Registering factories external to flux" << endreq;
-    GRBmanagerFactory();
-    GRBobsFactory();
-    //IsotropicFactory();
-
-    //////////////////////////////////////////////////
     for(IObjManager::ObjIterator it = objManager->objBegin(); it !=objManager->objEnd(); ++ it){
 
         std::string tooltype= (*it)->ident();
@@ -353,7 +354,30 @@ StatusCode FluxSvc::initialize ()
 
     }
 
+    // attach an observer to be notified when orbital position changes
+    // set callback to be notified when the position changes
+    m_observer.setAdapter( new ActionAdapter<FluxSvc>
+        (this, &FluxSvc::askGPS) );
+
+    attachGpsObserver(&m_observer);
+
+
     return StatusCode::SUCCESS;
+}
+//------------------------------------------------------------------------
+int FluxSvc::askGPS()
+{
+    astro::EarthCoordinate pos = GPS::instance()->earthpos();
+    bool inside = pos.insideSAA();
+
+    if( m_insideSAA == inside) return 0; // no change
+    MsgStream log( msgSvc(), name() );
+    log << MSG::INFO
+        << (!inside? " leaving" : "entering") 
+        << " SAA at "  << GPS::instance()->time() << endreq;
+    m_insideSAA = inside;
+
+    return 0; // can't be void in observer pattern
 }
 
 

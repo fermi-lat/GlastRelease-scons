@@ -28,6 +28,7 @@ $Header$
 // to write a Tree with entryosure info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "facilities/Util.h"
+#include "facilities/Observer.h"
 
 //flux
 #include "FluxSvc/PointingInfo.h"
@@ -101,13 +102,21 @@ private:
     DoubleProperty m_rocking_angle_z; // z-axis
 
     std::map<int, int> m_counts; //! for measuring the total number generated per code.
+    int m_SAAreject;
     TimeStamp m_initialTime;
 
     PointingInfo m_pointing_info;
     StringProperty m_root_tree;
     BooleanProperty m_save_tuple; // set true to save
+    BooleanProperty m_avoidSAA;
 
-    INTupleWriterSvc* m_rootTupleSvc;;
+
+    INTupleWriterSvc* m_rootTupleSvc;
+
+    ObserverAdapter< FluxAlg > m_observer; //obsever tag
+    int askGPS(); // the function that will be called
+    bool m_insideSAA; 
+
 
 };
 //------------------------------------------------------------------------
@@ -120,6 +129,7 @@ const IAlgFactory& FluxAlgFactory = Factory;
 //! ctor
 FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) , m_sequence(0), m_initialTime(0)
+, m_insideSAA(false), m_SAAreject(0)
 {
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
@@ -133,6 +143,8 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
     declareProperty("pointing_info_tree_name",  m_root_tree="MeritTuple");
     declareProperty("save_pointing_info",  m_save_tuple=false);
+    declareProperty("AvoidSAA",   m_avoidSAA=false);
+
 
 }
 //------------------------------------------------------------------------
@@ -230,9 +242,24 @@ StatusCode FluxAlg::initialize(){
         m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
     }
 
+
+    // attach an observer to be notified when orbital position changes
+        // set callback to be notified when the position changes
+    m_observer.setAdapter( new ActionAdapter<FluxAlg>
+        (this, &FluxAlg::askGPS) );
+
+    m_fluxSvc->attachGpsObserver(&m_observer);
+
     return sc;
 }
+//------------------------------------------------------------------------
+int FluxAlg::askGPS()
+{
+    astro::EarthCoordinate pos = GPS::instance()->earthpos();
+    m_insideSAA = pos.insideSAA();
 
+    return 0; // can't be void in observer pattern
+}
 
 //------------------------------------------------------------------------
 //! process an event
@@ -246,24 +273,25 @@ StatusCode FluxAlg::execute()
     // but if the "current" IFlux is not the same as the one we have now,
     // then change our m_flux pointer to be the new one.
     // Output:  a staturCode to ensure the function executed properly.
+    m_flux = m_fluxSvc->currentFlux();
 
-    if(m_fluxSvc->currentFlux() == m_flux){
+    std::string particleName;
+    m_SAAreject--;
+    do{ // loop if we are rejecting particles generated during SAA
         m_flux->generate();
-    }else{
-        m_flux = m_fluxSvc->currentFlux();
-        m_flux->generate();
-    }
+        particleName = m_flux->particleName();
+
+        //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.
+        if(particleName == "TimeTick" || particleName == "Clock"){
+            setFilterPassed( false );
+            return sc;
+        }
+        ++m_SAAreject;
+    } while(m_insideSAA && m_avoidSAA.value());
+
     HepPoint3D p = m_flux->launchPoint();
     HepVector3D d = m_flux->launchDir();
     double ke = m_flux->energy(); // kinetic energy in MeV
-    std::string particleName = m_flux->particleName();
-
-
-    //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.
-    if(particleName == "TimeTick" || particleName == "Clock"){
-        setFilterPassed( false );
-        return sc;
-    }
 
     //here's where we get the particleID and mass for later.
     if( particleName=="p") particleName="proton";
@@ -276,13 +304,16 @@ StatusCode FluxAlg::execute()
 
     int partID = prop->jetsetID(); // same as stdhep id
 
-    log << MSG::DEBUG << particleName
+    log << MSG::DEBUG ;
+    if( log.isActive()){
+        log<< particleName
         << "(" << m_flux->energy()
         << " MeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
         << " mm, Dir " 
-        << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" 
-        << endreq;
+        << "(" << d.x() <<", "<< d.y() <<", "<<d.z()<<")" ;
+    }
+    log << endreq;
 
 
     // Here the TDS is prepared to receive hits vectors
@@ -386,6 +417,10 @@ StatusCode FluxAlg::finalize(){
     }
     log  << endreq;
 
+    if( m_avoidSAA){
+        log << "\t\tRejected by SAA: " << m_SAAreject << endreq;
+            log << "\t\t(note that this may invalidate the rate calculation)" << endreq;
+    }
     return sc;
 }
 
