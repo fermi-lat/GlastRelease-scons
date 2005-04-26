@@ -329,7 +329,7 @@ StatusCode digiRootWriterAlg::writeEventSummary() {
     }
     m_digiEvt->getEventSummaryData().initialize(summaryTds->summary());
     m_digiEvt->getEventSummaryData().initEventFlags(summaryTds->eventFlags());
-    m_digiEvt->getEventSummaryData().initEventSequence(summaryTds->eventSequence());
+    //m_digiEvt->getEventSummaryData().initEventSequence(summaryTds->eventSequence());
     m_digiEvt->getEventSummaryData().initEventSizeInBytes(summaryTds->eventSizeInBytes());
 
     //const unsigned int nTem = 16;
