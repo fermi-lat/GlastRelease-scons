@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  *
  *
+ * v10r3p2 25-Apr-05 HMK Set Event's m_eventId as unsigned to accomodate 
+ *                       32 bit event sequence in LDF
  * v10r3p1  2-Mar-05 TU  add new line to end of McEventStructure for linux warnings
  * v10r3p0 27-Feb-05 LSR add some bits to TkrTrackHit status word
                             should be transparent

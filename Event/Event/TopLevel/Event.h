@@ -31,7 +31,7 @@ class EventHeader : public DataObject                                           
 public:
     /// default constructor: flag all fields invalic
     EventHeader()
-        : DataObject(), m_event(-1), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1) { }
+        : DataObject(), m_event(0), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1) { }
     
     virtual ~EventHeader() { }
     
@@ -40,9 +40,9 @@ public:
     static const CLID& classID() { return CLID_Event; }
     
     /// Retrieve event number
-    long event () const                                        { return m_event; }
+    unsigned long event () const                                        { return m_event; }
     /// Update event number
-    void setEvent (long value)                                { m_event = value; }
+    void setEvent (unsigned long value)                                { m_event = value; }
     
     /// Retrieve run number
     long run () const                                            { return m_run; }
@@ -79,7 +79,7 @@ public:
     
 private:
     /// Event number
-    long                m_event;
+    unsigned long       m_event;
     /// Run number
     long                m_run;
     /// Time stamp: use special class to encapsulate type
