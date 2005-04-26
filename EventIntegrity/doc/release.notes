@@ -2,6 +2,8 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
+ * v0r4   2005-Apr-25  HMK Use EventHeader's event id rather than the event
+          Sequence in the EventSummaryData on the TDS
  * v0r3   2005-Mar-15  HMK Updated for modification to LdfEvent for retrieving
           the tem error 
  * v0r2   2005-Jan-17  HMK Handle Trigger Parity Error in EventIntegrityAlg

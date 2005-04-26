@@ -84,7 +84,14 @@ StatusCode EventIntegrityAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    SmartDataPtr<LdfEvent::EventSummaryData> summary(eventSvc(), "/Event/EventSummary");
+   // Retrieve the Event data for this event
+ SmartDataPtr<Event::EventHeader> evtTds(eventSvc(), EventModel::EventHeader);
+ if (!evtTds) {
+    log << MSG::DEBUG << "No Event Header Found" << endreq;
+    return sc;
+ }
+
+ SmartDataPtr<LdfEvent::EventSummaryData> summary(eventSvc(), "/Event/EventSummary");
     if( summary==0 ) {
         log << MSG::DEBUG << "No EventSummary found" << endreq;
         // if no EventSummary is available (and hence no event flag)
@@ -102,12 +109,12 @@ StatusCode EventIntegrityAlg::execute()
         if ( (summary->packetError()) || (summary->temError()) ) {
             setFilterPassed( false );
             log << MSG::INFO << "Event Flag contains Error bits - skipping " 
-                             << summary->eventSequence() << endreq;
+                             << evtTds->event() << endreq;
         }
         if (summary->badEventSeq()) {
             setFilterPassed(false);
             log << MSG::INFO << "Event Flag contains Bad Event Seq - skipping " 
-                             << summary->eventSequence() << endreq;
+                             << evtTds->event() << endreq;
         }
         if (summary->trgParityError()) {
             setFilterPassed(false);
