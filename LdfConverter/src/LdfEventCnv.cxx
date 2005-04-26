@@ -43,11 +43,7 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
     // According to LAT Inter-module Communications Reference Manual
     // the event number is a 17 bit value, the 2 least significant are the
     // tag and the 15 most significant are in the eventNumber field of the summary
-    unsigned eventNumber = EventSummary::eventNumber(summary);
-    unsigned tag = EventSummary::tag(summary);
-    //long actualEventNum = (tag << 15) | eventNumber;
-    long actualEventNum = (eventNumber << 2) | tag;
-    header->setEvent(actualEventNum);
+    header->setEvent(ldfReader::LatData::instance()->getOsw().evtSequence());
     header->setRun(ldfReader::LatData::instance()->runId());
 	
     // Also set the time in the Event::EventHeader

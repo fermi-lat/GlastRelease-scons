@@ -39,7 +39,7 @@ StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* ,
     LdfEvent::EventSummaryData *summary = new LdfEvent::EventSummaryData(ebfSummary);
     summary->initEventFlags(ldfReader::LatData::instance()->getEventFlags());
 
-    summary->initOswEvtSequence(ldfReader::LatData::instance()->getOsw().evtSequence());
+    //summary->initOswEvtSequence(ldfReader::LatData::instance()->getOsw().evtSequence());
 
     summary->initEventSizeInBytes(ldfReader::LatData::instance()->eventSizeInBytes());
 

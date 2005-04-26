@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r10   25-Apr-2005 HMK Fix filling of Event::eventId and ditch EventSummary's
+        event sequence
 v1r9    17-Apr-2005 HMK Store Gem.Missed and EventSummary.EventSizeInBytes
 v1r8p1  14-Apr-2005 HMK Suppress Warning message when no events are skipped
         when searching for first sweep event - requested by Anders
