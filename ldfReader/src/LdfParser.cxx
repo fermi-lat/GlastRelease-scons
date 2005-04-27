@@ -67,7 +67,7 @@ const unsigned LdfParser::BufferSize = 64*1024;
 
                 int iKey;
                 char* comment=0;
-                char keyName[15], value[15];
+                char keyName[15], value[50];
                 for (iKey = 1; iKey <= numKeys; iKey++) {
                     fits_read_keyn(ffile, iKey, keyName, value, comment, &status);
                     if (status == 0) {
