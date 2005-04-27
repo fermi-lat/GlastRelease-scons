@@ -7,10 +7,11 @@
 */
 
 #include "FluxSvc/IRegisterSource.h"
+
 #include "facilities/Timestamp.h"
 #include "facilities/Observer.h"
 
-#include "flux/rootplot.h"
+#include "celestialSources/SpectrumFactoryLoader.h"
 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -26,8 +27,10 @@
 #include "CLHEP/Random/Random.h"
 
 #include "flux/Flux.h"
-
 #include "flux/FluxMgr.h"
+#include "flux/rootplot.h"
+#include "flux/ISpectrumFactory.h"
+
 #include <algorithm>
 #include <iterator>
 #include <sstream>
@@ -308,8 +311,16 @@ StatusCode FluxSvc::initialize ()
 
     log << MSG::INFO << "Registering factories external to flux: ";
     SpectrumFactoryLoader externals;
-    std::copy( externals.names().begin(), externals.names().end(), 
+    std::vector<std::string> flux_names(externals.names());
+#if 1
+    std::copy( flux_names.begin(), flux_names.end(), 
         std::ostream_iterator<std::string>(log.stream(), ", "));
+#else
+    for( std::vector<std::string>::const_iterator cit = names.begin(); cit !=names.end(); ++cit){
+        const std::string& name= *cit;
+        log << name;
+    }
+#endif
     log  << endreq;
 
 
@@ -318,7 +329,7 @@ StatusCode FluxSvc::initialize ()
     // most of  the following cribbed from ToolSvc and ObjManager
 
     // look for a factory of an AlgTool that implements the IRegisterSource interface:
-    // if found, make one and call the special method 
+    // if found, make one and call the special method  
 
     // Manager of the AlgTool Objects
     IObjManager* objManager=0;             

@@ -4,8 +4,9 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
-   26-mar-05  v6r22p1 THB  fix gcc error
-   26-mar-05  v6r22   THB  Add capability to skip incoming particles in SAA. Move external flux factory stuff to new clas
+   27-apr-05  v6r23   THB  use celestialSources to load external factories
+   26-apr-05  v6r22p1 THB  fix gcc error
+   26-apr-05  v6r22   THB  Add capability to skip incoming particles in SAA. Move external flux factory stuff to new clas
    26-mar-05  v6r21p1 THB  Add property to allow saving of pointing into in tuple to be normally off, until set by merit
    26-mar-05  v6r21   THB  Allow RootTupleSvc to not be available-2nd try
    21-mar-05  v6r20p2 THB  Allow RootTupleSvc to not be available-2nd try

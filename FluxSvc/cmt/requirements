@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r22p1
+version v6r23
 
 # $Id$
 author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
@@ -19,9 +19,8 @@ use facilities *
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE  "${FLUXSVCROOT}"
 
-# declare external sources, in public section for xml
-use GRB * celestialSources -no_auto_imports
-
+# declare external sources
+use celestialSources * 
 
 # _____________________________________________________________
 
@@ -29,8 +28,6 @@ private
 use Event       v*
 use GlastSvc    v*
 use astro       v*
-#use genericSources * celestialSources
-#use Pulsar  * celestialSources
 
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
