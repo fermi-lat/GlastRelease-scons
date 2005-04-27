@@ -511,7 +511,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
     //    if (m_crash) throw std::runtime_error("Could not acces MySQL dbs");
     if (m_crash) {
       log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
-      exit(3);
+      exit(1);
     }
     return StatusCode::FAILURE;
   }
@@ -521,7 +521,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
         << cType << ", " << flavor << ")" << endreq;
     if (m_crash) {
       log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
-      exit(3);
+      exit(1);
     }
 
     return StatusCode::FAILURE;
@@ -557,7 +557,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 	<< "Persistency service could not create a new address" << endreq;
     if (m_crash) {
       log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
-      exit(3);
+      exit(1);
     }
      return sc;
   }  
@@ -574,7 +574,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 	<< "Persistency service could not create a new object" << endreq;
     if (m_crash) {
       log << msgLevel << std::endl << "Exiting... " << std::endl << endreq;
-      exit(3);
+      exit(1);
     }
     return sc;
   }
