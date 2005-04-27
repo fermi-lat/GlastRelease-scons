@@ -9,7 +9,7 @@
   <section name="TEST_INFO"> Test configuration info.
     <item name="TIMESTAMP"    value="2004-07-31-06:50"> Timestamp for test run.</item>
     <item name="INSTRUMENT"   value="LAT"> Instrument name </item>
-    <item name="TOWER_BAY"    value="4"> Currently supports single tower calibration on arbitrary tower </item>
+    <item name="TOWER_BAY"    value="0"> Currently supports single tower calibration on arbitrary tower </item>
   </section>
 
   <section name="PATHS"> Intput/Output file paths
