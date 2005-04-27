@@ -489,7 +489,7 @@ void RootCI::DigiCal() {
   int testDAC   = (ievt%m_cfg.nPulsesPerXtal)/m_cfg.nPulsesPerDAC;
   int iSamp   = (ievt%m_cfg.nPulsesPerXtal)%m_cfg.nPulsesPerDAC;
 
-  const TObjArray* calDigiCol = m_digiEvt->getCalDigiCol();
+  const TClonesArray* calDigiCol = m_digiEvt->getCalDigiCol();
   if (!calDigiCol) {
     ostringstream tmp;
     tmp << __FILE__ << ":" << __LINE__ << " " 
