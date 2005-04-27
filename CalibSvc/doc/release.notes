@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r21p1 27-Apr-2005  jrb  Change error exits from exit(0) to exit(3)
    v0r21   17-Apr-2005  jrb  Back out commonRootData namespace
    v0r20   13-Apr-2005  jrb  Upgrades for commonRootData v2r*
    v0r19p2 12-Apr-2005  jrb  Eliminate call to RootBaseCnv::doClean in
