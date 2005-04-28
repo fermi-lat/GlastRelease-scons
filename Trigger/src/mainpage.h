@@ -12,7 +12,6 @@ TriggerAlg analyzes the digis for trigger conditions, and optionally
 sets a flag to abort processing of subsequent algorithms in the same sequence. 
 
 @param mask [0xffffffff]  Mask to apply to the trigger word to decide if event is accepted; if 0, accept all; default accept any set bit
-@param  run  [0]      Run number to apply if MC run
 @param deadtime [0.]  Livetime threshold (s). Ignore if zero. 
     
 If the deadtime is enabled, this much time is subtracted from the accumulated livetime associated with the given 

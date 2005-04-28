@@ -103,7 +103,6 @@ private:
     double m_LOCALthreshold;
     double m_HICALthreshold;
 
-    int m_run;
     int m_event;
     DoubleProperty m_deadtime;
 
@@ -133,7 +132,6 @@ m_lastTriggerTime(0), m_liveTime(0), m_total(0),
 m_triggered(0), m_deadtimeLoss(0)
 {
     declareProperty("mask"     ,  m_mask=0xffffffff); // trigger mask
-    declareProperty("run"      ,  m_run =0 );
     declareProperty("deadtime" ,  m_deadtime=0. );    // deadtime to apply to trigger, in sec.
 
 }
