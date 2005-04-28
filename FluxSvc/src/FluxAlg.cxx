@@ -101,8 +101,8 @@ private:
     DoubleProperty m_rocking_angle_z; // z-axis
 
     std::map<int, int> m_counts; //! for measuring the total number generated per code.
-    int m_SAAreject;
     TimeStamp m_initialTime;
+    int m_SAAreject;
 
     PointingInfo m_pointing_info;
     StringProperty m_root_tree;
@@ -405,7 +405,7 @@ StatusCode FluxAlg::execute()
 //! clean up, summarize
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
-    static done = false;
+    static bool done = false;
     if( done || m_counts.empty() ) return sc;
     done=true;
     MsgStream log(msgSvc(), name());

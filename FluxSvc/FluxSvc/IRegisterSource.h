@@ -4,6 +4,8 @@
 // includes
 #include "GaudiKernel/IAlgTool.h"
 #include "flux/ISpectrumFactory.h"
+#include <typeinfo>
+
 
 class IFluxSvc;
 
