@@ -59,7 +59,6 @@ class IFlux;  // interface
 class FluxMgr;  // actual manager
 class IParticlePropertySvc; 
 class IAppMgrUI;
-#include "SpectrumFactoryLoader.h"
 
 class FluxSvc : 
     virtual public Service, 
