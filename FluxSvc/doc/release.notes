@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   27-apr-05  v6r23p1 THB  minor fix 
    27-apr-05  v6r23   THB  use celestialSources to load external factories
    26-apr-05  v6r22p1 THB  fix gcc error
    26-apr-05  v6r22   THB  Add capability to skip incoming particles in SAA. Move external flux factory stuff to new clas
