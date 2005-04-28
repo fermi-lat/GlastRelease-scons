@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   27-apr-05  v6r23p2 THB  another minor fix: needed to remove a test file 
    27-apr-05  v6r23p1 THB  minor fix 
    27-apr-05  v6r23   THB  use celestialSources to load external factories
    26-apr-05  v6r22p1 THB  fix gcc error
