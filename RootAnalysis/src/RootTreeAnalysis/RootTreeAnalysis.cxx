@@ -3,7 +3,6 @@
 
 #include "RootTreeAnalysis.h"
 
-TObjArray tkrLayerHistArr;
 UInt_t digiEventId, reconEventId, mcEventId;
 UInt_t digiRunNum, reconRunNum, mcRunNum;
 
@@ -132,15 +131,14 @@ void RootTreeAnalysis::ReconHistDefine() {
     // within this histogram ROOT file.
     histFile->cd();
 
-    TNtuple *tkrReconTup = new TNtuple("tkrReconTup", "example Ntuple", "TkrNumFitTracks:TkrNumClusters");
+    TNtuple *TKRRECONTUP = new TNtuple("TKRRECONTUP", "example Ntuple", "TkrNumFitTracks:TkrNumClusters");
 
-    TNtuple *calReconTup = new TNtuple("calReconTup", "example Ntuple", "NumClusters:NumXtalRec");
+    TNtuple *CALRECONTUP = new TNtuple("CALRECONTUP", "example Ntuple", "NumClusters:NumXtalRec");
 
     TH1F *TKRNUMFITTRACKS = new TH1F("TKRNUMFITTRACKS", "Number of Fit Tracks",
         30, 0, 30);
 
-    TH1F *TKRNUMHITSPERTRACK = new TH1F("TKRNUMHITSPERTRACK", "Number of Hits/Tracks",
-        40, 0, 40);
+    TH1F *TKRNUMHITSPERTRACK = new TH1F("TKRNUMHITSPERTRACK", "Number of Hits/Tracks", 40, 0, 40);
 
 
    TH1F *CALXTALCOUNT = new TH1F("CALXTALCOUNT", "Cal Xtal multiplicity",
@@ -394,7 +392,7 @@ void RootTreeAnalysis::DigiAcd() {
 
 void RootTreeAnalysis::ReconTkr() {
     // Purpose and Method:  Process one TkrRecon event
-    
+
     TkrRecon *tkrRecon = rec->getTkrRecon();
     
     // If no TRKRECON data is available then return
@@ -409,46 +407,51 @@ void RootTreeAnalysis::ReconTkr() {
     // Retrieve collection of tracks    
     TObjArray* trackCol = tkrRecon->getTrackCol();
 
-    ((TH1F*)GetObjectPtr("TKRNUMFITTRACKS"))->Fill(trackCol->GetEntries());
+     if (trackCol) {
+        ((TH1F*)GetObjectPtr("TKRNUMFITTRACKS"))->Fill(trackCol->GetEntries());
 
-    // loop over all tracks
-    TIter trackIter(trackCol);
-    TkrTrack *track = 0;
-    while (track = (TkrTrack*)trackIter.Next()) {
-        ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
+        // loop over all tracks
+        TIter trackIter(trackCol);
+        TkrTrack *track = 0;
+        while ((track = (TkrTrack*)trackIter.Next())) {
+           ((TH1F*)GetObjectPtr("TKRNUMHITSPERTRACK"))->Fill(track->Size());
 
-        TVector3 initPos = track->getInitialPosition();
-        TVector3 dir = track->getInitialDirection();
-        Double_t costh = -dir.Z();
+            TVector3 initPos = track->getInitialPosition();
+            TVector3 dir = track->getInitialDirection();
+            Double_t costh = -dir.Z();
 
-        Double_t quality = track->getQuality();
-        Double_t kalEnergy = track->getKalEnergy();
+            Double_t quality = track->getQuality();
+            Double_t kalEnergy = track->getKalEnergy();
 
-        // loop over hits in this track
-        TIter hitIter(track);
-        TkrTrackHit *hit = 0;
-        while (hit = (TkrTrackHit*)hitIter.Next()) {
-            Double_t planeZ = hit->getZPlane();
+            // loop over hits in this track
+            TkrTrackHit *hit = 0;
+            Int_t i;
+            for (i=0; i < track->Size(); i++ ) {
+                hit = (TkrTrackHit*)track->At(i);
+                Double_t planeZ = hit->getZPlane();
 
-            const TkrCluster *cluster = ((*hit).getClusterPtr());
-            if (!cluster) continue;
+                const TkrCluster *cluster = ((*hit).getClusterPtr());
+                if (!cluster) continue;
 
-            Int_t layer = cluster->getLayer();
+                Int_t layer = cluster->getLayer();
 
-            commonRootData::TkrId id = cluster->getTkrId();
-            Int_t plane  = cluster->getPlane();
-            Int_t view   = id.getView();
+                commonRootData::TkrId id = cluster->getTkrId();
+                Int_t plane  = cluster->getPlane();
+                Int_t view   = id.getView();
 
-            // get the tower from the TkrId
-            Int_t towerX = id.getTowerX();
-            Int_t towerY = id.getTowerY();
+                // get the tower from the TkrId
+                Int_t towerX = id.getTowerX();
+                Int_t towerY = id.getTowerY();
+
+           }
 
         }
-
     }
 
-    Float_t recArr[2] = {trackCol->GetEntries(), clusterCol->GetEntries()};
-    ((TNtuple*)GetObjectPtr("tkrReconTup"))->Fill(recArr);
+    if (trackCol && clusterCol) {
+        Float_t recArr[2] = {(Float_t)trackCol->GetEntries(), (Float_t)clusterCol->GetEntries()};
+        ((TNtuple*)GetObjectPtr("TKRRECONTUP"))->Fill(recArr);
+    }
 }
 
 void RootTreeAnalysis::ReconCal() {
@@ -460,57 +463,63 @@ void RootTreeAnalysis::ReconCal() {
     float totXE = 0.;
     
     TObjArray *xtalRecCol = calRec->getCalXtalRecCol();
-    TIter xtalIter(xtalRecCol);
-    CalXtalRecData *xtal = 0;
-    while (xtal = (CalXtalRecData*)xtalIter.Next()) {
-        Double_t xtalEnergy = xtal->getEnergy();
-        if (xtalEnergy > 2000) {
-            const CalXtalId id = xtal->getPackedId();
-	    int lyr = id.getLayer();
-	    int twr = id.getTower();
-	    int col = id.getColumn();
-	    CalRangeRecData* rData = xtal->getRangeRecData(0);
-	    int range = rData->getRange(0);
-	    double ph0 = xtal->getEnergySelectedRange(range,0);
-  	    continue;
-         }
-      totXE += xtalEnergy;
+    if (xtalRecCol) {
+        TIter xtalIter(xtalRecCol);
+        CalXtalRecData *xtal = 0;
+        while (xtal = (CalXtalRecData*)xtalIter.Next()) {
+            Double_t xtalEnergy = xtal->getEnergy();
+            if (xtalEnergy > 2000) {
+                const CalXtalId id = xtal->getPackedId();
+	        int lyr = id.getLayer();
+	        int twr = id.getTower();
+	        int col = id.getColumn();
+	        CalRangeRecData* rData = xtal->getRangeRecData(0);
+	        int range = rData->getRange(0);
+	        double ph0 = xtal->getEnergySelectedRange(range,0);
+  	        continue;
+             }
+          totXE += xtalEnergy;
+
+        }
+
+
+        ((TH1F*)GetObjectPtr("CALXTALTOTE"))->Fill(totXE);
 
     }
-
-
-    ((TH1F*)GetObjectPtr("CALXTALTOTE"))->Fill(totXE);
-
     
     TObjArray*  clusCol = calRec->getCalClusterCol();
-    Long64_t numClus = clusCol->GetEntries();
-    ((TH1F*)GetObjectPtr("CALNUMCLUS"))->Fill(numClus);
+    if (clusCol) {
+        Int_t numClus = clusCol->GetEntries();
+        ((TH1F*)GetObjectPtr("CALNUMCLUS"))->Fill(numClus);
 
-    float totE = 0.;
-    for (int jc=0;jc<numClus; jc++) {
-      CalCluster* c1 = (CalCluster*)clusCol->At(jc);
-      float clusterEnergy = c1->getEnergySum();
-      totE += clusterEnergy;
-      ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(c1->getEnergySum());
-      ((TH1F*)GetObjectPtr("CALRECELEAK"))->Fill(c1->getEnergyLeak());
-      ((TH1F*)GetObjectPtr("CALRECECORR"))->Fill(c1->getEnergyCorrected());
+        float totE = 0.;
+        for (int jc=0;jc<numClus; jc++) {
+            CalCluster* c1 = (CalCluster*)clusCol->At(jc);
+            float clusterEnergy = c1->getEnergySum();
+            totE += clusterEnergy;
+            ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(c1->getEnergySum());
+            ((TH1F*)GetObjectPtr("CALRECELEAK"))->Fill(c1->getEnergyLeak());
+            ((TH1F*)GetObjectPtr("CALRECECORR"))->Fill(c1->getEnergyCorrected());
+        }
+        ((TH1F*)GetObjectPtr("CALTOTE"))->Fill(totE);
+
+        if (totE > 0.) {
+            for (int ic=0;ic<numClus; ic++) {
+	        CalCluster* c2 = (CalCluster*)clusCol->At(ic);
+	        float clusterEnergy = c2->getEnergySum();
+	        ((TH1F*)GetObjectPtr("CALECLUS"))->Fill(clusterEnergy);
+                float eFraction = clusterEnergy/totE;
+                ((TH1F*)GetObjectPtr("CALEFRAC"))->Fill(eFraction);
+            }
+        }
     }
-    ((TH1F*)GetObjectPtr("CALTOTE"))->Fill(totE);
 
-    if (totE > 0.) {
-      for (int ic=0;ic<numClus; ic++) {
-	CalCluster* c2 = (CalCluster*)clusCol->At(ic);
-	float clusterEnergy = c2->getEnergySum();
-	((TH1F*)GetObjectPtr("CALECLUS"))->Fill(clusterEnergy);
-        float eFraction = clusterEnergy/totE;
-        ((TH1F*)GetObjectPtr("CALEFRAC"))->Fill(eFraction);
-      }
+
+
+    if (clusCol && xtalRecCol) {
+        Float_t recArr[2] = {clusCol->GetEntries(), xtalRecCol->GetEntries()};
+        ((TNtuple*)GetObjectPtr("CALRECONTUP"))->Fill(recArr);
     }
-
-
-
-    Float_t recArr[2] = {clusCol->GetEntries(), xtalRecCol->GetEntries()};
-    ((TNtuple*)GetObjectPtr("calReconTup"))->Fill(recArr);
 
     return;
 }

@@ -57,6 +57,7 @@
 #include "TH1.h"
 #include "TStyle.h"
 #include "TCollection.h"  // Declares TIter
+#include "TObjArray.h"
 #include "digiRootData/DigiEvent.h"
 #include "reconRootData/ReconEvent.h"
 #include "mcRootData/McEvent.h"
@@ -130,14 +131,15 @@ public :
         const char* mcFileName=""); 
     /// define user histograms, ntuples and other output objects that will be saved to output
     void HistDefine();   
-    /// make list of user histograms and all objects created for output
-    void MakeHistList(); 
     /// write the existing histograms and ntuples out to file
     void WriteHist() { if (histFile) histFile->Write(); }; 
     /// Reset() all user histograms
     void HistClear(); 
     /// Retrieve a pointer to an object stored in our output ROOT file
-    TObject* GetObjectPtr(const char *tag) { return (m_histList->FindObject(tag)); };
+    TObject* GetObjectPtr(const char *tag) { 
+        if (histFile) return (histFile->FindObjectAny(tag)); 
+        else return 0;
+    };
     /// process events
     void Go(Long64_t numEvents=100000); 
     /// returns number of events in all open files
@@ -148,8 +150,6 @@ public :
 private:
     /// starting event number
     Long64_t m_StartEvent;
-    /// list of user histograms
-    THashList *m_histList;
         
     /// reset all member variables
     void Clear(); 
@@ -201,7 +201,6 @@ inline RootTreeAnalysis::RootTreeAnalysis(const char* digiFileName,
     
     SetHistFileName(histFileName);
     HistDefine();
-    MakeHistList();
     
     Init(digiFileName, reconFileName, mcFileName);
 }
@@ -214,7 +213,6 @@ inline RootTreeAnalysis::RootTreeAnalysis(TChain *digiChain,
     
     SetHistFileName(histFileName);
     HistDefine();
-    MakeHistList();
     
     if (chainArr) delete chainArr;
     chainArr = new TObjArray();
@@ -246,7 +244,6 @@ inline RootTreeAnalysis::RootTreeAnalysis(TChain *digiChain,
 inline RootTreeAnalysis::~RootTreeAnalysis() {
     histFile->Close();
     
-    //if (m_histList) delete m_histList;
     
     if (histFile) delete histFile;
     
@@ -417,30 +414,12 @@ inline Long64_t RootTreeAnalysis::GetEntries() const {
 }
 
 
-inline void RootTreeAnalysis::MakeHistList() {
-    // Purpose and Method:  Make a THashList of histograms
-    //   This avoids the need to refresh the histogram pointers
-    
-    if (m_histList) delete m_histList;
-    
-    m_histList = new THashList(30, 5);
-    
-    TList* list = histFile->GetList();
-    TIter iter(list);
-    
-    TObject* obj = 0;
-    
-    while (obj=iter.Next()) {
-        m_histList->Add(obj);
-    }
-}
-
 inline void RootTreeAnalysis::HistClear() {
     // Purpose and Method:  Clear histograms by iterating over the THashList
     
-    if (!m_histList) return;
+    if (!histFile) return;
     
-    TIter iter(m_histList);
+    TIter iter(histFile->GetList());
     
     TObject* obj = 0;
     
@@ -452,7 +431,6 @@ inline void RootTreeAnalysis::HistClear() {
 inline void RootTreeAnalysis::Clear() {
     m_StartEvent = 0;
     histFile = 0; 
-    m_histList = 0;
     
     digiFile = 0; 
     reconFile = 0;
