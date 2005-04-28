@@ -3,6 +3,7 @@
 
 // includes
 #include "GaudiKernel/IAlgTool.h"
+#include "flux/ISpectrumFactory.h"
 
 class IFluxSvc;
 
@@ -80,5 +81,36 @@ public:
     /// Pass a pointer to the service to the tool. 
     virtual StatusCode registerMe(IFluxSvc*) = 0;
 };
+
+template <class T> class RemoteSpectrumFactory : public ISpectrumFactory 
+{
+public:
+    
+    RemoteSpectrumFactory(IFluxSvc* svc){
+        //Get class name using RTTI:
+        std::string m_classname = typeid(T).name();
+        int s = m_classname.find_first_of("class");
+        if( s==0 ) s=6; //found it
+        else s =m_classname.find_first_not_of("0123456789");
+        m_classname = m_classname.substr(s);
+        svc->addFactory(m_classname, this); 
+    }
+    /*! return a new Spectrum object
+    @param params String from the xml
+    @param engine random engine to use
+    */
+
+    virtual ISpectrum* instantiate(const std::string& params) const{
+        return new T(params);
+    }
+    
+    //! dummy to follow Gaudi model
+    virtual void addRef()const{}
+
+    std::string name()const{return m_classname;}
+private:
+    std::string m_classname;
+};
+
 
 #endif  // _H_IRegisterSource
