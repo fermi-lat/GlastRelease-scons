@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v5r26p1    29-apr-05 DC  bug fix for the ambiguous use of log10.
   v5r26      22-apr-05 DC  merge v5r22p5em2->v5r22p5em3 into tthe trunk.
   v5r22p5em3 21-apr-05 ZF  moved CalXtalRecAlg to CalXtalResponse as it's development path is tied closer to CalXtalResponse than to the other Algs in CalRecon
   v5r25      20-apr-05 DC  move loop on clusters from CalClustersAlg into EnergyCorr.

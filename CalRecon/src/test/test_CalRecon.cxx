@@ -46,7 +46,7 @@ StatusCode test_CalRecon::initialize(){
     
     // check errno
     errno = 0 ;
-    log10(-1) ;
+    log10(-1.) ;
     if (!errno) {
         log<<MSG::FATAL<<"errno not workng as expected"<<endreq ;
         return StatusCode::FAILURE ;
