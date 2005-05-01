@@ -139,8 +139,8 @@ AlgTool(type, name, parent)
     declareProperty("GapMaxRejectionSize",   m_max_gap_dist = 10.); 
     declareProperty("MaxAllowedSlope",       m_max_slope = 5.);
     declareProperty("MaxLeadingHits",        m_maxLeadingHits = 2);
-    declareProperty("MaxGaps",               m_maxGaps = 0);
-    declareProperty("MaxConsecutiveGaps",    m_maxConsecutiveGaps = 0);
+    declareProperty("MaxGaps",               m_maxGaps = 2);
+    declareProperty("MaxConsecutiveGaps",    m_maxConsecutiveGaps = 1);
     return;
 }
 
