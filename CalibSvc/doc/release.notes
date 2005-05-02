@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r21p3  2-May-2005  jrb  Change exit for bad fake clock time to exit(1) also
    v0r21p2 27-Apr-2005  jrb  Make it exit(1) to be absolutely sure Pipeline
                              recognizes it.
    v0r21p1 27-Apr-2005  jrb  Change error exits from exit(0) to exit(3)
