@@ -6,7 +6,7 @@ intNonlinMerge <cfg_file> <out_xml_file>
 
 where:
     <cfg_file> = The application configuration file to use.
-    <out_xml_file> = The merged CAL Int_Nonlin calibration XML file to validate.
+    <out_xml_file> = The merged CAL Int_Nonlin calibration XML file to output.
 """
 
 
