@@ -650,7 +650,7 @@ StatusCode CalibDataSvc::fetchFakeClockTime() {
               << ex.complaint << std::endl;
     std::cerr << "Exiting..." << std::endl;
     std::cerr.flush();
-    exit(0);
+    exit(1);
   }
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
