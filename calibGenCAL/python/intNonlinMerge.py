@@ -1,6 +1,12 @@
 """
 Tool to merge mutilple single tower CAL IntNonlin calibration XML files into a
-single output file.
+single output file.  The command line is:
+
+intNonlinMerge <cfg_file> <out_xml_file>
+
+where:
+    <cfg_file> = The application configuration file to use.
+    <out_xml_file> = The merged CAL Int_Nonlin calibration XML file to validate.
 """
 
 
