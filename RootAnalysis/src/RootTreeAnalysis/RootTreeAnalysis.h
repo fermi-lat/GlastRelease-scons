@@ -108,7 +108,7 @@ public :
         const char* digiFileName, 
         const char* reconFileName="", 
         const char* mcFileName="", 
-        char *histFileName="Histograms.root"); 
+        const char *histFileName="Histograms.root"); 
 
 	/// Special ctor which accepts TChains for input files
     RootTreeAnalysis( 
@@ -132,7 +132,7 @@ public :
     /// define user histograms, ntuples and other output objects that will be saved to output
     void HistDefine();   
     /// write the existing histograms and ntuples out to file
-    void WriteHist() { if (histFile) histFile->Write(); }; 
+    void WriteHist() { if (histFile) histFile->Write("", TObject::kOverwrite); }; 
     /// Reset() all user histograms
     void HistClear(); 
     /// Retrieve a pointer to an object stored in our output ROOT file
@@ -170,6 +170,10 @@ private:
     void DigiCal();
     /// event processing for digi ACD data
     void DigiAcd();
+    // event processig for digi GEM data
+    void DigiGem();
+    // event processing for diagnostic data
+    void DigiDiagnostic();
     
     /// event processing for the recon TKR data
     void ReconTkr();
@@ -189,7 +193,7 @@ inline RootTreeAnalysis::RootTreeAnalysis()
 inline RootTreeAnalysis::RootTreeAnalysis(const char* digiFileName, 
                                    const char* reconFileName, 
                                    const char* mcFileName, 
-                                   char* histFileName)
+                                   const char* histFileName)
 {
     // Purpose and Method:  Standard constructor where the user provides the 
     //  names of input ROOT files and optionally the name of the output ROOT

@@ -123,6 +123,8 @@ void RootTreeAnalysis::DigiHistDefine() {
     TH1F *ACDTOTE = new TH1F("ACDTOTE", "ACD Total Energy",
         20, 0, 10);
     
+    TH1F *GEMCONDSUM = new TH1F("GEMCONDSUM", "Gem Condition Summary",
+        129, -0.5, 128.5);
 }
 
 void RootTreeAnalysis::ReconHistDefine() {
@@ -248,7 +250,7 @@ void RootTreeAnalysis::DigiTkr() {
     // Loop over all TkrDigis
     TIter tkrIter(tkrDigiCol);
     TkrDigi *tkr = 0;
-    while (tkr = (TkrDigi*)tkrIter.Next()) {
+    while ((tkr = (TkrDigi*)tkrIter.Next())) {
       // Identify the tower and layer
       Int_t tower = tkr->getTower().id();
       Int_t layer = tkr->getBilayer();
@@ -298,7 +300,7 @@ void RootTreeAnalysis::DigiCal() {
     TIter calDigiIter(calDigiCol);
     CalDigi *c = 0;
     
-    while (c = (CalDigi*)calDigiIter.Next()) {
+    while ((c = (CalDigi*)calDigiIter.Next())) {
 
         // Assuming Best Range and checking only the first readout
         const CalXtalReadout* cRo=c->getXtalReadout(0);
@@ -375,7 +377,7 @@ void RootTreeAnalysis::DigiAcd() {
     TIter acdDigiIter(acdDigiCol);
     AcdDigi *acdDigiItem = 0;
     
-    while (acdDigiItem = (AcdDigi*)acdDigiIter.Next()) {
+    while ((acdDigiItem = (AcdDigi*)acdDigiIter.Next())) {
         AcdId id = acdDigiItem->getId();
         if (id.getId() == id41.getId()) {
             pha0 = acdDigiItem->getPulseHeight(AcdDigi::A) + 
@@ -389,6 +391,46 @@ void RootTreeAnalysis::DigiAcd() {
     return;
 }
 
+void RootTreeAnalysis::DigiGem() {
+    const Gem& gem = evt->getGem();
+
+    ((TH1F*)GetObjectPtr("GEMCONDSUM"))->Fill((Float_t)gem.getConditionSummary());
+
+    UShort_t deadZone =  gem.getMissed();
+  
+    UInt_t liveTime = gem.getLiveTime();
+
+    const GemCondArrivalTime& condArrTime = gem.getCondArrTime();
+
+}
+
+void RootTreeAnalysis::DigiDiagnostic() {
+
+    TClonesArray *calDiagCol = evt->getCalDiagnosticCol();
+    TClonesArray *tkrDiagCol = evt->getTkrDiagnosticCol();
+
+    if (!calDiagCol && !tkrDiagCol) return;
+
+    if (calDiagCol) {
+
+      TIter calDiagIt(calDiagCol);
+      CalDiagnosticData *cal = 0;
+      while( (cal = (CalDiagnosticData*)calDiagIt.Next()) ) {
+
+      }
+
+    }
+
+    if (tkrDiagCol) {
+      TIter tkrDiagIt(tkrDiagCol);
+      TkrDiagnosticData *tkr = 0;
+      while( (tkr = (TkrDiagnosticData*)tkrDiagIt.Next()) ) {
+
+      }
+   
+    }
+
+}
 
 void RootTreeAnalysis::ReconTkr() {
     // Purpose and Method:  Process one TkrRecon event
@@ -425,7 +467,7 @@ void RootTreeAnalysis::ReconTkr() {
 
             // loop over hits in this track
             TkrTrackHit *hit = 0;
-            Int_t i;
+            UInt_t i;
             for (i=0; i < track->Size(); i++ ) {
                 hit = (TkrTrackHit*)track->At(i);
                 Double_t planeZ = hit->getZPlane();
@@ -466,16 +508,16 @@ void RootTreeAnalysis::ReconCal() {
     if (xtalRecCol) {
         TIter xtalIter(xtalRecCol);
         CalXtalRecData *xtal = 0;
-        while (xtal = (CalXtalRecData*)xtalIter.Next()) {
+        while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
             Double_t xtalEnergy = xtal->getEnergy();
             if (xtalEnergy > 2000) {
                 const CalXtalId id = xtal->getPackedId();
 	        int lyr = id.getLayer();
 	        int twr = id.getTower();
 	        int col = id.getColumn();
-	        CalRangeRecData* rData = xtal->getRangeRecData(0);
-	        int range = rData->getRange(0);
-	        double ph0 = xtal->getEnergySelectedRange(range,0);
+	        const CalRangeRecData* rData = xtal->getRangeRecData(0);
+	        int range = rData->getRange(CalXtalId::POS);
+	        double ph0 = xtal->getEnergySelectedRange(range,CalXtalId::POS);
   	        continue;
              }
           totXE += xtalEnergy;
@@ -576,6 +618,7 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
         digiTree->SetBranchStatus("m_acd*",1);
         digiTree->SetBranchStatus("m_eventId", 1); 
         digiTree->SetBranchStatus("m_runId", 1);
+        digiTree->SetBranchStatus("m_gem", 1);
     }
     
     if (reconTree) {
@@ -630,6 +673,8 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
             DigiTkr();
             DigiCal();
             DigiAcd();
+            DigiGem();
+            DigiDiagnostic();
         }
         
         
