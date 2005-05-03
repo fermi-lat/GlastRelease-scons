@@ -33,7 +33,7 @@ int main(int argn, char** argc) {
     if (argn > 1) mcFileName = argc[1];
     if (argn > 2) digiFileName = argc[2];
     if (argn > 3) reconFileName = argc[3];
-    std::string histFileName = "";
+    std::string histFileName = "Histograms.root";
     if (argn > 4 && strlen(argc[4]) > 0)
         histFileName = argc[4];
     std::cout << "Setup for Processing" << std::endl;

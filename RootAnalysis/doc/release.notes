@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v8r3     03-May-2005: HMK: Add examples for GEM and Diagnostics in 
+          RootTreeAnalysis.
  v8r2     27-Apr-2005: HMK: Address JIRA ROOT-9 in RootTreeAnalysis
  v8r1     17-Apr-2005: HMK: back out commonRootData namespace
  v8r0     13-Apr-2005: HMK: update for commonRootData namespace
