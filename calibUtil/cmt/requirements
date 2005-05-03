@@ -23,6 +23,7 @@ private
 # ___________________________________________________________
 
 apply_pattern package_headers
+macro_append calibUtil_headers "" WIN32 "../calibUtil/dbIntegrity/*.h"
 
 library calibUtil  $(calibUtil_headers) *.cxx *.c
 
@@ -31,6 +32,8 @@ application test_strips test/test_strips.cxx StripSrv.cxx GenericSrv.cxx
 
 application test_meta   test/test_meta.cxx 
 application add_meta    test/add_meta.cxx 
+application calibCoverage dbIntegrity/calibCoverage.cxx dbIntegrity/Coverage.cxx
+
 
 
 

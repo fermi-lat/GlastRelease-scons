@@ -585,6 +585,8 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     m_man->setBuilder(new rdbModel::XercesBuilder);
     m_man->setInputSource(schema);
 
+    // Maybe first check if file exists?  E.g., try opening for read
+
     // good errcode is 0
     int errcode = m_man->build();
 
