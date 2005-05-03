@@ -154,7 +154,7 @@ StatusCode reconRootWriterAlg::initialize()
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
     }
-    headersSc = m_headersTool->newReconHeader() ;
+    //headersSc = m_headersTool->newReconHeader() ;
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to create a new Recon FileHeader" << endreq;
     }

@@ -154,7 +154,7 @@ StatusCode digiRootWriterAlg::initialize()
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
     }
-    headersSc = m_headersTool->newDigiHeader() ;
+    //headersSc = m_headersTool->newDigiHeader() ;
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to create a new Digi FileHeader" << endreq;
     }

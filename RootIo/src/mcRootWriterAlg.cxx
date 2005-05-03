@@ -149,7 +149,7 @@ StatusCode mcRootWriterAlg::initialize()
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to retreive headers tool" << endreq;
     }
-    headersSc = m_headersTool->newMcHeader() ;
+    //headersSc = m_headersTool->newMcHeader() ;
     if (headersSc.isFailure()) {
         log<<MSG::WARNING << "Failed to create a new Mc FileHeader" << endreq;
     }
