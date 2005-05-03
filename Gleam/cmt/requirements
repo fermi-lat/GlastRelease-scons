@@ -1,6 +1,6 @@
 package Gleam
 
-version  v5r13
+version  v5r13p1
 
 # $Id$
 
@@ -14,7 +14,6 @@ use GlastSvc    v*
 use FluxSvc     v*
 use CRflux      v*
 
-use FluxDisplay v*
 use G4Generator v*
 use G4Propagator v*
 

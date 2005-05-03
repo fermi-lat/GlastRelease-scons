@@ -9,11 +9,10 @@ ApplicationMgr.ExtSvc += {"GuiSvc"};
 ApplicationMgr.Runable = "GuiSvc";
 GuiSvc.size=-3000;  // set size, orientation
 
-ApplicationMgr.DLLs   += {"FluxDisplay", "DetDisplay" };    
+ApplicationMgr.DLLs   += { "DetDisplay" };    
 
 // these are algorithms 
 EventDisplay.Members = {
-   "FluxDisplay",
    "CalDisplay",
    "AcdDisplay"  
    };
