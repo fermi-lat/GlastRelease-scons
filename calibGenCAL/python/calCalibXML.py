@@ -788,8 +788,13 @@ class calIntNonlinCalibXML(calCalibXML):
         isList = g.getElementsByTagName('inputSample')
         isLen = len(isList)
         if isLen != 1:
-            raise calFileReadExcept, "found %d <inputSample> elements (expected 1)" % isLen
-
+            i['startTime'] = None
+            i['stopTime'] = None
+            i['triggers'] = None
+            i['mode'] = None
+            i['source'] = None
+            return i
+            
         # get <inputSample> attribute values
 
         isn = isList[0]
