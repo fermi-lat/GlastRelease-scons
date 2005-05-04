@@ -577,7 +577,7 @@ class calIntNonlinCalibXML(calCalibXML):
 
         # insert <dimension> element  
             
-        d = self.dimensionWrite(nRange = 4)
+        d = self.dimensionWrite(nRange = 4, nDacCol = 4)
         r.appendChild(d)
 
         # insert <dac> elements
