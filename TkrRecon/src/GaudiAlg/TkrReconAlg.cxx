@@ -305,7 +305,10 @@ StatusCode TkrReconAlg::execute()
 
         if (numClusters > m_maxClusters)
         {
-            return handleError("Exceeded maximum allowed clusters");
+            std::stringstream errorStream;
+            errorStream << numClusters << " clusters found, max allowed is " 
+                << m_maxClusters ;
+            return handleError(errorStream.str());
         }
         
         // throw some exceptions to test the logging, maybe make an option later
