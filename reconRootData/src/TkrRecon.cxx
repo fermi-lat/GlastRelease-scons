@@ -112,7 +112,7 @@ void TkrRecon::Clear(Option_t* /*option*/) {
 
 }
 
-static void TkrRecon::CleanUp() {
+void TkrRecon::CleanUp() {
     Int_t i;
     for (i=0;i<indCluster;i++) delete keepCluster[i];
     for (i=0;i<indTrack;i++) delete keepTrack[i];

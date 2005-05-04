@@ -1,5 +1,6 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v5r6p2    04-May-05  : HMK Fix use of static TkrRecon::Clear for windows
 v5r6p1    25-Apr-05  : HMK Modify TkrRecon::Clear to accept input option
                        to denote when to delete static arrays
 v5r6p0    20-Apr-05  : HMK Check if the TObjArrays in TkrRecon exist before 
