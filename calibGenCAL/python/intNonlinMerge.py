@@ -220,9 +220,7 @@ if __name__ == '__main__':
         temList.append(f.destTwr)
 
     outFile = calCalibXML.calIntNonlinCalibXML(outName, calCalibXML.MODE_CREATE)
-    outFile.write(dacDataOut, adcDataOut, startTime = info['startTime'], stopTime = info['stopTime'], \
-                  triggers = info['triggers'], mode = info['mode'], source = info['mode'], \
-                  tems = temList)
+    outFile.write(dacDataOut, adcDataOut, inputSample = None, tems = temList)
     outFile.close()
 
 
