@@ -24,9 +24,6 @@ Layer::Layer(TString name, float pz, float py, float px,
 
     INACTIVEBORDERWIDTH = ( SIWAFERSIDE - SIWAFERACTIVESIDE ) * 0.5;
 
-    MissingHits = 0;
-    HitsInActiveArea = 0;
-
     for ( int i=0; i<4; i++ ) {
         double xcoord1 = GetCoordinate(i*384);
         double xcoord2 = GetCoordinate((i+1)*384-1);

@@ -54,20 +54,6 @@ class Layer : public TNamed {
     const std::vector<TString>& GetPlanesForFittingCol() const {
         return planesForFittingCol; }
 
-    void AddHitInActiveArea()       { ++HitsInActiveArea; }
-    void AddMissingHit()            { ++MissingHits; }
-    void SetHitsInActiveArea(int i) { HitsInActiveArea = i; }
-    void SetMissingHits(int i)      { MissingHits = i; }
-    int GetHitsInActiveArea() const { return HitsInActiveArea; }
-    int GetMissingHits()      const { return MissingHits; }
-    float GetInefficiency()   const {
-        if ( HitsInActiveArea )
-            return static_cast<float>(MissingHits) / HitsInActiveArea;
-        else
-            return -1.;
-    }
-    float GetEfficiency() const { return 1. - GetInefficiency(); }
-
  private:
     float X, Y, Z;
     float rotX, rotY, rotZ;
@@ -87,7 +73,6 @@ class Layer : public TNamed {
     float SSDGAP;
     float INACTIVEBORDERWIDTH;
 
-    int HitsInActiveArea, MissingHits;
     Bool_t TriggerReq0;
     Bool_t TriggerReq1;
     std::vector<TString> planesForFittingCol;
