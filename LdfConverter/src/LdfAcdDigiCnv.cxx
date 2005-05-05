@@ -60,17 +60,20 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         //  Assumed passed low threshold - it looks like zero suppression is always on now
         bool lowArr[2] = {true, true};
         bool cnoArr[2] = {false, false};
+        Event::AcdDigi::Range range[2] = {Event::AcdDigi::LOW, Event::AcdDigi::LOW};
+        Event::AcdDigi::ParityError error[2] = { Event::AcdDigi::NOERROR, Event::AcdDigi::NOERROR};
         for (curReadout = readoutCol.begin(); curReadout != readoutCol.end(); curReadout++) {
             int index = (curReadout->getSide() == ldfReader::AcdDigi::A) ? 0 : 1;
             pha[index] = (unsigned short) curReadout->getPha();
             vetoArr[index] = curReadout->getHit();
             lowArr[index] = curReadout->getAccept();
+
+            range[index] = (curReadout->getRange() == 0) ? Event::AcdDigi::LOW : Event::AcdDigi::HIGH;
+            error[index] = (curReadout->getParityError() == ldfReader::AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
         }
         Event::AcdDigi *newDigi = new Event::AcdDigi(
             identsId, identsId.volId(), 0.0, pha, vetoArr, lowArr, cnoArr);
 
-        Event::AcdDigi::Range range[2] = {Event::AcdDigi::LOW, Event::AcdDigi::LOW};
-        Event::AcdDigi::ParityError error[2] = { Event::AcdDigi::NOERROR, Event::AcdDigi::NOERROR};
 
         newDigi->initLdfParameters(tileName, tileNumber, range, error);
 
