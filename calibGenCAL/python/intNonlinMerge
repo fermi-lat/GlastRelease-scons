@@ -1,0 +1,7 @@
+#! /bin/sh
+# CVS $Id$
+
+PYTHONPATH=${CALIBGENCALROOT}/python;${PYTHONROOT}
+export PYTHONPATH
+
+python ${CALIBGENCALROOT}/python/intNonlinMerge.py "$@"
