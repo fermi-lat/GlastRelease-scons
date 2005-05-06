@@ -29,7 +29,7 @@ WinNT.*.Editor:          notepad
 
 
 # Rint (interactive ROOT executable) specific alias, logon and logoff macros
-Rint.Load:               $(ROOTANALYSIS)/src/setup/rootalias.C
+#Rint.Load:               $(ROOTANALYSIS)/src/setup/rootalias.C
 Rint.Logon:              $(ROOTANALYSIS)/src/setup/rootlogon.C
 Rint.Logoff:             $(ROOTANALYSIS)/src/setup/rootlogoff.C
 # Record session commands, set to "-" to turn off command recording

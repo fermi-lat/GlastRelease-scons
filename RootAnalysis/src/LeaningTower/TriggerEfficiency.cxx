@@ -12,10 +12,15 @@
 #include "Tracker.h"
 #include "Layer.h"
 #include "Event.h"
-#include "Recon.h"
 #include "Progress.h"
 
 #include <bitset>
+
+// I simplified the code a lot using the new GetTkrDigi3RowBits() and
+// GetTkrTrgReq3RowBits() functions.  Thus, I could remove a lot code.  However,
+// to log the deviation of TkrDigis and TriggerReqs, I need to keep some of it.
+// I you want to check for differences, define TRIGGER_EFF_DEBUG.
+#define TRIGGER_EFF_DEBUG
 
 class TriggerEfficiency {
 private:
@@ -31,7 +36,8 @@ public:
     void Go(int lastEntry=-1);
 };
 
-TriggerEfficiency::TriggerEfficiency(const TString filename, TString geoFileName) {
+TriggerEfficiency::TriggerEfficiency(const TString filename,
+                                     TString geoFileName) {
     if ( geoFileName.Length() == 0 )
         geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
     myTracker = new Tracker;
@@ -47,72 +53,58 @@ void TriggerEfficiency::Go(int lastEntry) {
         lastEntry = numEntries;
     lastEntry = std::min(numEntries, lastEntry);
 
-    const TList* myGeometry = myTracker->GetGeometry();
-
     Progress progress;
 
-    UInt_t shouldTrigger[18];
-    UInt_t isTrigger[18];
-    for ( int l=0; l<18; ++l )
-        shouldTrigger[l] = isTrigger[l] = 0;
+    UInt_t shouldSum[16];
+    UInt_t isSum[16];
+    for ( int i=0; i<16; ++i )
+        shouldSum[i] = isSum[i] = 0;
+
+#ifdef TRIGGER_EFF_DEBUG
+    const TList* myGeometry = myTracker->GetGeometry();
+#endif
 
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
-        const Int_t eventId = myEvent->GetEventId();
-	std::cout<<eventId<<std::endl;
         progress.Go(entry, lastEntry);
 
-        bool hits[18][2];
-        bool trigger[18][2];
-        for ( int l=0; l<18; ++l )
-            for ( int v=0; v<2; ++v )
-                hits[l][v] = trigger[l][v] = false;
+        UInt_t digi3row   = myEvent->GetTkrDigi3RowBits();
+        UInt_t trgReq3row = myEvent->GetTkrTrgReq3RowBits();
+        for ( int i=0; i<16; ++i ) {
+	    if ( digi3row&(1<<i) ) // 3-in-a-row hits
+                ++shouldSum[i];
+            if ( trgReq3row&(1<<i) )
+                ++isSum[i];
+        }
 
+#ifdef TRIGGER_EFF_DEBUG
         TIter next(myGeometry);
         while ( Layer* plane = (Layer*)next() ) {
             const TString planeName = plane->GetName();
-            const int TkrNumHits = myEvent->GetPlaneNumHits(planeName);
-            const int l = plane->GetLayer();
-            const int v = plane->GetView();
-            hits[l][v] = TkrNumHits > 0;
-            trigger[l][v] = myEvent->GetTriggerReq(planeName,0)
-                || myEvent->GetTriggerReq(planeName,1);
-            if ( hits[l][v] ^ trigger[l][v] )
-                std::cerr << "eventId " << std::setw(6) << eventId
+            const int layer = plane->GetLayer();
+            if ( (digi3row^trgReq3row)&(1<<layer-1) )
+                std::cerr << "eventId " << std::setw(6) << myEvent->GetEventId()
                           << " plane " << std::setw(3) << planeName
-                          << " numHits " << TkrNumHits
-                          << " triggerReqOR " << trigger[l][v]
-                          << " ToT " << std::setw(3) << myEvent->GetToT(planeName,0)
-                          << ' ' << std::setw(3) << myEvent->GetToT(planeName,1) << std::endl;
+                          << " numHits " << myEvent->GetPlaneNumHits(planeName)
+                          << " triggerReqOR " << (trgReq3row&(1<<layer-1))
+                          << " ToT "<<std::setw(3)<<myEvent->GetToT(planeName,0)
+                          << ' ' << std::setw(3) << myEvent->GetToT(planeName,1)
+                          << std::endl;
         }
-        // doing 3-in-a-row
-        // index i will measure the efficiency of the layer combination i-1,1,i+1
-        //	UInt_t digi3row   = myEvent->GetTkrDigi3RowBits();
-        //	UInt_t trgReq3row = myEvent->GetTkrTrgReq3RowBits();
-	UInt_t recomp_digi(0);
-	UInt_t recomp_trgreq(0);
-	//	std::cout<<std::bitset<16>(trgReq3row)<<" "<<std::bitset<16>(digi3row) <<std::endl;
-        for ( int l=1; l<17; ++l )
-	  {
-	    if ( hits[l-1][0] && hits[l-1][1] && hits[l][0] && hits[l][1] && hits[l+1][0] && hits[l+1][1] ) { // 3-in-a-row hits
-	      ++shouldTrigger[l];
-	      recomp_digi|=(1<<l-1);
-	      if ( trigger[l-1][0] && trigger[l-1][1] && trigger[l][0] && trigger[l][1] && trigger[l+1][0] && trigger[l+1][1] )
-		{++isTrigger[l];recomp_trgreq|=(1<<l-1);}	  
-            }
-	  }
-	//these should be dentical to digi3row and trgReq3row:
-	//	std::cout<<std::bitset<16>(recomp_trgreq)<<" "<<std::bitset<16>(recomp_digi)<< std::endl;
+#endif
     }
     
-    std::cout << "Layers   shouldTrigger   trigger   efficiency  inefficiency" << std::endl;
-    for ( int l=1; l<17; ++l ) {
-        const float eff = shouldTrigger[l] > 0 ? 100. * isTrigger[l] / shouldTrigger[l] : -100.;
-        std::cout << std::setw(2) << l-1 << '-' << std::setw(2) << l << '-' << std::setw(2) << l+1
-                  << ' ' << std::setw(13) << shouldTrigger[l] << ' ' << std::setw(9) << isTrigger[l]
+    std::cout << "Layers   shouldTrigger   trigger   efficiency  inefficiency"
+              << std::endl;
+    for ( int i=0; i<16; ++i ) {
+        const float eff = shouldSum[i] > 0 ? 100.*isSum[i]/shouldSum[i] : -100.;
+        std::cout << std::setw(2) << i << '-' << std::setw(2) << i+1 << '-'
+                  << std::setw(2) << i+2
+                  << ' ' << std::setw(13) << shouldSum[i]
+                  << ' ' << std::setw(9) << isSum[i]
                   << std::setiosflags(std::ios::fixed)
                   << std::setw(11) << std::setprecision(1) << eff << " % "
-                  << std::setw(11) << std::setprecision(1) << 100. - eff << " % "
+                  << std::setw(11) << std::setprecision(1) << 100.-eff << " % "
                   << std::endl;
     }
 }
