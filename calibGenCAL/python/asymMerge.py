@@ -126,11 +126,11 @@ if __name__ == '__main__':
     for opt in options:
         optList = opt.split('_')
         if len(optList) != 2 or optList[0] != 'asym':
-            log.error("asymMerge: unknown option %s in section [infiles]", opt)
-            sys.exit(1)
+            continue
         destTwr = int(optList[1])
         if destTwr < 0 or destTwr > 15:
-            log.error("asymMerge: index for [infiles] option %s out of range (0 - 15)", opt)
+            log.error("asymMerge: dest index for [infiles] option %s out of range (0 - 15)", opt)
+            sys.exit(1)
         value = configFile.get('infiles', opt)
         nameList = value.split(',')
         nameLen = len(nameList)
@@ -142,6 +142,10 @@ if __name__ == '__main__':
             srcTwr = int(nameList[1])
         else:
             log.error("asymMerge: incorrect option format %s", value)
+            sys.exit(1)
+        if srcTwr < 0 or srcTwr > 15:
+            log.error("asymMerge: src index for [infiles] option %s out of range (0 - 15)", opt)
+            sys.exit(1)    
         inFile = inputFile(srcTwr, destTwr, name, None, None)
         inFiles.append(inFile)
         log.debug('asymMerge: adding file %s to input as tower %d', name, destTwr)

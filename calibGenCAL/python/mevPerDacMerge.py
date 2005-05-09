@@ -122,11 +122,11 @@ if __name__ == '__main__':
     for opt in options:
         optList = opt.split('_')
         if len(optList) != 2 or optList[0] != 'mevperdac':
-            log.error("mevPerDacMerge: unknown option %s in section [infiles]", opt)
-            sys.exit(1)
+            continue
         destTwr = int(optList[1])
         if destTwr < 0 or destTwr > 15:
-            log.error("mevPerDacMerge: index for [infiles] option %s out of range (0 - 15)", opt)
+            log.error("mevPerDacMerge: dest index for [infiles] option %s out of range (0 - 15)", opt)
+            sys.exit(1)
         value = configFile.get('infiles', opt)
         nameList = value.split(',')
         nameLen = len(nameList)
@@ -138,6 +138,10 @@ if __name__ == '__main__':
             srcTwr = int(nameList[1])
         else:
             log.error("intNonlinMerge: incorrect option format %s", value)
+            sys.exit(1)
+        if srcTwr < 0 or srcTwr > 15:
+            log.error("mevPerDacMerge: src index for [infiles] option %s out of range (0 - 15)", opt)
+            sys.exit(1)    
         inFile = inputFile(srcTwr, destTwr, name, None)
         inFiles.append(inFile)
         log.debug('mevPerDacMerge: adding file %s to input as tower %d', name, destTwr)
