@@ -684,7 +684,7 @@ TkrTrackHit* FindTrackHitsTool::setFirstHit(TkrTrack* track)
         0., 0., 0., 0.);
     int layer, view; 
     m_tkrGeom->planeToLayer (next_plane, layer, view);
-    double rad_len = m_tkrGeom->getReconRadLenConv(layer); 
+    double rad_len = m_tkrGeom->getRadLenConv(layer); 
     trackHit->setRadLen(rad_len);
     //trackHit->setActiveDist(const double d); How to set this?  
 
