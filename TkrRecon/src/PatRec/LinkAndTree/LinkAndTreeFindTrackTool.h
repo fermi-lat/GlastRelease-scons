@@ -29,7 +29,7 @@ public:
     ///        the TDS, including calorimeter energy, and then use TkrLinkAndTree to find all
     ///        possible track candidates. The resulting track candidate collection is then 
     ///        stored in the TDS for the next stage.
-	StatusCode initialize();
+    StatusCode initialize();
     StatusCode findTracks();
 
 };

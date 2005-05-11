@@ -156,7 +156,7 @@ FindTrackHitsTool::~FindTrackHitsTool()
 //
 
 StatusCode FindTrackHitsTool::initialize()
-{	
+{    
     StatusCode sc   = StatusCode::SUCCESS;
 
     //Set the properties

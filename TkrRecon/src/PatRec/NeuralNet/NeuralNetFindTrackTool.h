@@ -24,8 +24,8 @@ class NeuralNetFindTrackTool : public PatRecBaseTool
 
   /// Standard Gaudi Tool interface constructor
   NeuralNetFindTrackTool(const std::string& type, 
-			 const std::string& name, 
-			 const IInterface* parent);
+             const std::string& name, 
+             const IInterface* parent);
 
   virtual ~NeuralNetFindTrackTool() {}
   
@@ -41,8 +41,8 @@ class NeuralNetFindTrackTool : public PatRecBaseTool
 
   /// Instantiation and fake fit of the TkrPatCand candidate tracks.
   void buildCand( Event::TkrTrackCol&, 
-		          const TkrNeuronList&, 
-		          Event::TkrClusterCol* );
+                  const TkrNeuronList&, 
+                  Event::TkrClusterCol* );
   
 
  private:

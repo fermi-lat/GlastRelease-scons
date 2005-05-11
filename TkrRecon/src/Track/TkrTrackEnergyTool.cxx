@@ -153,7 +153,7 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
     //If candidates, then proceed
     if (trackCol->size() > 0)
     {
-	    // Get the first track to find out the energy option used 
+        // Get the first track to find out the energy option used 
         // execute default (LATENERGY) if appropriate
         //Event::TkrTrack* firstTrack = *trackCol->begin();
         Event::TkrTrack* firstCandTrk = trackCol->front();
@@ -165,7 +165,7 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
             num_hits2 = secndCandTrk->getNumFitHits();
         }
         
-	    if(firstCandTrk->getStatusBits() & Event::TkrTrack::LATENERGY) 
+        if(firstCandTrk->getStatusBits() & Event::TkrTrack::LATENERGY) 
         {
             if (!pCalClusters) {
                 // no cal info... set track energies to MS energies if possible.
@@ -215,7 +215,7 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
                 else                // Divide up the energy between the first two tracks
                 {
         
-			        // Need to use Hits-on-Fits until tracks are truncated to last real SSD hit
+                    // Need to use Hits-on-Fits until tracks are truncated to last real SSD hit
                     double e1 = firstCandTrk->front()->getEnergy();
                     double e2 = secndCandTrk->front()->getEnergy();
                     double e1_min = 2.*num_hits1;        //Coefs are MeV/Hit

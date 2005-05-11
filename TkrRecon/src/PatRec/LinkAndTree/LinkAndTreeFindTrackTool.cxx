@@ -27,7 +27,7 @@ const IToolFactory& LinkAndTreeFindTrackToolFactory = s_factory;
 LinkAndTreeFindTrackTool::LinkAndTreeFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent) :
                           PatRecBaseTool(type, name, parent)
 {
-	return;
+    return;
 }
 
 StatusCode LinkAndTreeFindTrackTool::initialize()

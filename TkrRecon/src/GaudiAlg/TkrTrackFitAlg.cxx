@@ -238,8 +238,8 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     // Find the collection of candidate tracks
     Event::TkrTrackCol* trackCol = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
 
-	// Check that there are tracks to fit
-	if(trackCol->size() < 1) return sc;
+    // Check that there are tracks to fit
+    if(trackCol->size() < 1) return sc;
 
     // Set the energy of the tracks
     m_EnergyTool->SetTrackEnergies();

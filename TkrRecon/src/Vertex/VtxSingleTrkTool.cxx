@@ -52,6 +52,6 @@ StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& /*theVtxCol*/)
       
       theVtxCol.push_back(vertex); 
     }
-	*/
+    */
   return StatusCode::SUCCESS;
 }

@@ -42,8 +42,8 @@ class TkrNeuralNet : public DataObject
   
   // constructor
   TkrNeuralNet(Event::TkrClusterCol* pClusters, ITkrQueryClustersTool* clusTool,
-	       std::map<const char*,double, ltstr>& params,
-	       double calEne = 0., Point calHit = Point(0.,0.,0.));
+           std::map<const char*,double, ltstr>& params,
+           double calEne = 0., Point calHit = Point(0.,0.,0.));
   
   // destructor
   ~TkrNeuralNet() {}
@@ -111,13 +111,13 @@ class TkrNeuralNet : public DataObject
 
   /// number of neurons in m_neuronList
   unsigned int   m_numNeurons;
-	  
+      
   /// position of cal hit
   Point          m_Pcal;
 
   /// energy for the event
   double         m_energy;
-	      
+          
   Event::TkrClusterCol*   m_clusters;
 
   ITkrQueryClustersTool*  m_clusTool;

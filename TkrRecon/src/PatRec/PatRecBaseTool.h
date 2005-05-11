@@ -18,7 +18,7 @@ class PatRecBaseTool : public AlgTool, virtual public ITkrFindTrackTool
  public:
   // Constructor
   PatRecBaseTool( const std::string& type, const std::string& name, 
-		  const IInterface* parent);
+          const IInterface* parent);
   // Standard Destructor
   virtual ~PatRecBaseTool() {;}
   

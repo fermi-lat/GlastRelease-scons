@@ -14,8 +14,8 @@
 #include "Event/TopLevel/EventModel.h"
 
 PatRecBaseTool::PatRecBaseTool( const std::string& type, 
-				const std::string& name, 
-				const IInterface* parent)
+                const std::string& name, 
+                const IInterface* parent)
   : AlgTool(type,name,parent)
 {
   // declare base interface for all consecutive concrete classes
