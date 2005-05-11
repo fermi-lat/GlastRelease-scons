@@ -603,7 +603,7 @@ class calFitsXML(object):
 
     def __readREL(self):       
 
-        data = Numeric.zeros((9, 1, 4, 8, 2, 12), Numeric.Float32)
+        data = Numeric.zeros((9, 4, 16, 8, 2, 12), Numeric.Float32)
 
         if self.__xmlVersion >= 1:
             elName = 'row'
@@ -657,7 +657,7 @@ class calFitsXML(object):
                             if dNum != 9:
                                 raise calFileReadExcept, "wrong number of data points: %u (expected 9)" % dNum
                             for gain in range(9):
-                                data[gain, 0, erng, layer, end, fe] = float(adcList[gain])
+                                data[gain, erng, tem, layer, end, fe] = float(adcList[gain])
 
         return data
 
