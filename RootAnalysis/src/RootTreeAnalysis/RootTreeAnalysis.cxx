@@ -673,8 +673,9 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
             DigiTkr();
             DigiCal();
             DigiAcd();
-            DigiGem();
-            DigiDiagnostic();
+
+            //DigiGem();
+            //DigiDiagnostic();
         }
         
         
