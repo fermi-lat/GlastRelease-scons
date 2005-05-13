@@ -4,7 +4,7 @@
  * HISTORY
  *
  * DATE         WHO    WHAT
- * 5/28/03  russell    Added what I deemed to be a kludge to take care of the 
+ * 5/28/03  russel     Added what I deemed to be a kludge to take care of the 
  *                     fact that the algorithm gets called make after all the
  *                     events have been read. If any of the DIGI pointers are
  *                     NULL, I take this as bad, and just return -1. I think
