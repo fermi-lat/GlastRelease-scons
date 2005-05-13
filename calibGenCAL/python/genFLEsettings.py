@@ -1,5 +1,13 @@
 """
-Generate FLE Discriminator settings selected by Energy
+Generate FLE Discriminator settings selected by Energy.  The command line is:
+
+genFLEsettings [-V] <MeV> <cfg_file> <out_xml_file>
+
+where:
+    -V              = verbose; turn on debug output
+    <MeV>           = The threshold energy in MeV units.
+    <cfg_file>      = The application configuration file to use.
+    <out_xml_file>  = The FLE settings XML file to output.
 """
 
 ##

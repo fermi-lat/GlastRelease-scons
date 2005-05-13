@@ -1,5 +1,13 @@
 """
-Generate LAC Discriminator settings selected by Energy
+Generate LAC Discriminator settings selected by Energy.  The command line is:
+
+genLACsettings [-V] <MeV> <cfg_file> <out_xml_file>
+
+where:
+    -V              = verbose; turn on debug output
+    <MeV>           = The threshold energy in MeV units.
+    <cfg_file>      = The application configuration file to use.
+    <out_xml_file>  = The LAC settings XML file to output.
 """
 
 

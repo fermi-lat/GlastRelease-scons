@@ -1,5 +1,13 @@
 """
-Generate FHE Discriminator settings selected by Energy
+Generate FHE Discriminator settings selected by Energy.  The command line is:
+
+genFHEsettings [-V] <GeV> <cfg_file> <out_xml_file>
+
+where:
+    -V              = verbose; turn on debug output
+    <GeV>           = The threshold energy in GeV units.
+    <cfg_file>      = The application configuration file to use.
+    <out_xml_file>  = The FHE settings XML file to output.
 """
 
 
