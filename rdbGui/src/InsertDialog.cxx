@@ -51,7 +51,8 @@ InsertDialog::InsertDialog(FXApp *owner):
   // Let start in insert mode
   m_insertMode = 1;
 
-  multi->hide();  
+  // This causes problems
+  //  multi->hide();  
 }
 
 
