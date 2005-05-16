@@ -555,6 +555,10 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     cols.push_back("uid"); vals.push_back(uid);
     facilities::Timestamp curTime;
     cols.push_back("enter_time");vals.push_back(curTime.getString());
+    // update_time is set automatically by MySQL, but MySQL uses
+    // local timezone rather than gmt, so we have set it explicitly
+    cols.push_back("update_time");vals.push_back(curTime.getString());
+
 
     if (m_rdb) {
       bool ok = checkValues(cols, vals);
@@ -562,7 +566,7 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
       if (!ok) return 0;
     }
 
-    // update_time and ser_no get set automatically by MySQL
+    // ser_no gets set automatically by MySQL
     int ser_no;
     if (!(m_writeCxt->insertRow(m_table, cols, vals, &ser_no, &nullCols)) ) {
       return 0;
@@ -730,6 +734,9 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     toUpdate.push_back("vend");
     StringVector newVal;
     newVal.push_back(fields[5]);
+    // also update update_time. If we leave it to MySQL, won't be GMT
+    facilities::Timestamp curTime;
+    toUpdate.push_back("update_time");newVal.push_back(curTime.getString());
 
     unsigned nModified = m_writeCxt->update(m_table, toUpdate, newVal, where);
     delete where;
