@@ -813,7 +813,14 @@ TkrCluster* FindTrackHitsTool::findNearestCluster(int plane, TkrTrackParams* par
         int    pred_cluster_size = (int) std::max(num_strips_hit - 1., 1.);
 
         // Only care if meas. cluster size is too small
-        if (meas_cluster_size < pred_cluster_size) continue; // look for another one
+
+        if (meas_cluster_size < pred_cluster_size) {
+            int stripsPerLadder = m_tkrGeom->ladderNStrips();
+            //could be okay if we're at the edge of a ladder
+            bool isAtEdge = ((cluster->firstStrip()%stripsPerLadder==0) 
+                || ((cluster->lastStrip()+1)%stripsPerLadder==0));
+            if(!isAtEdge) continue; // look for another one
+        }
 
         // Check if predicted hit is inside this tower: non measured co-ordinate
         double outsideTower = (view == idents::TkrId::eMeasureY) ? 
