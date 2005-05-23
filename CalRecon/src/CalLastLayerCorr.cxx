@@ -100,7 +100,7 @@ StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
       return StatusCode::SUCCESS ;
     }
 
-    int ntracks = getKernel()->getTkrNVertices() ;
+    int ntracks = m_calReconSvc->getTkrNVertices() ;
     if (ntracks<=0) {
       updateLeakEnergy(cluster,-2.) ;
       return StatusCode::SUCCESS ;
@@ -108,7 +108,7 @@ StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
  
     double thetarec = -1 ; //reconstructed theta
     double phirec = 0 ;  //reconstructed phi
-    const Vector & trackDirection = getKernel()->getTkrFrontVertex()->getDirection() ;
+    const Vector & trackDirection = m_calReconSvc->getTkrFrontVertex()->getDirection() ;
     thetarec = trackDirection[2] ;
     phirec = atan2(trackDirection[1],trackDirection[0]) ;
   
@@ -119,7 +119,7 @@ StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
     }
   
     // find projected positions on the 0,0,0 plane
-    const Point & trackPosition = getKernel()->getTkrFrontVertex()->getPosition() ;
+    const Point & trackPosition = m_calReconSvc->getTkrFrontVertex()->getPosition() ;
     double px = 0 ;      //projected position on (0,0,0 plane) 
     double py = 0 ;
     px = trackPosition[0]+sqrt((-trackPosition[2]/thetarec)*(-trackPosition[2]/thetarec)-trackPosition[2]*trackPosition[2])*cos(phirec) ; 
@@ -137,7 +137,7 @@ StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
     // Evaluation of energy using correlation method
     // Coefficients fitted using GlastSim.
     /*
-    double slope = getKernel()->getSlope(cluster) ;
+    double slope = m_calReconSvc->getSlope(cluster) ;
     double p0 = -1.49 + 1.72*slope ;
     double p1 = 0.28 + 0.434 * slope ;
     double p2 = -15.16 + 11.55 * slope ;
@@ -150,12 +150,12 @@ StatusCode CalLastLayerCorr::doEnergyCorr( Event::CalCluster * cluster ) {
     
     double lnE = log(eTotal/1000.) ;
     double funcoef = (acoef + m_c3 * lnE ) ;
-    double E1 = eTotal + funcoef* cluster->getEneLayer()[getKernel()->getCalNLayers()-1];
+    double E1 = eTotal + funcoef* cluster->getEneLayer()[m_calReconSvc->getCalNLayers()-1];
     double biascoef = m_b0 + m_b1*log(E1/1000);
     double E2 = E1/biascoef;
     funcoef = (acoef + m_c3 * log(E2/1000) ) ;
     ///first iteration
-    double E3 = eTotal + funcoef* cluster->getEneLayer()[getKernel()->getCalNLayers()-1];
+    double E3 = eTotal + funcoef* cluster->getEneLayer()[m_calReconSvc->getCalNLayers()-1];
     biascoef= m_b0 + m_b1*log(E3/1000);
     double E4 = E3/biascoef;
     funcoef = (acoef + m_c3 * log(E4/1000) );

@@ -2,7 +2,7 @@
 #ifndef __ICalClustering_H
 #define __ICalClustering_H 1
 
-#include "CalReconKernel.h"
+#include "ICalReconSvc.h"
 #include "geometry/Vector.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"

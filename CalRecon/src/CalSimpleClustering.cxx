@@ -99,7 +99,7 @@ void CalSimpleClustering::makeSets( const XtalDataVec & xtals, XtalDataVecVec & 
 
     //Loop "down" (if possible) associating xTals below us
     bestXtal = xTal;
-    for(int layer = xTalId.getLayer() + 1; layer < getKernel()->getCalNLayers() ; layer++)
+    for(int layer = xTalId.getLayer() + 1; layer < m_calReconSvc->getCalNLayers() ; layer++)
     {
         bestXtal = getNearestXtalInDiffLayer(xTalVec, bestXtal, layer);
 
@@ -208,7 +208,7 @@ Event::CalXtalRecData* CalSimpleClustering::getNearestXtalInDiffLayer(XtalDataVe
         {
             //Compute distance to this xTal
             Vector distVec = curPos - xTalRec->getPosition();
-            double dist = distVec.magnitude() / getKernel()->getCalCsIHeight() ;
+            double dist = distVec.magnitude() / m_calReconSvc->getCalCsIHeight() ;
 
             if (dist < bestDist)
             {

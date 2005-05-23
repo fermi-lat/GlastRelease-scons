@@ -3,9 +3,6 @@
 #define __ICalEnergyCorr_H 1
 
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
-#include "geometry/Vector.h"
-#include "CalReconKernel.h"
 
 /**   
 * @class ICalEnergyCorr

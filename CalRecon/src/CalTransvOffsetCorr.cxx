@@ -19,10 +19,10 @@ StatusCode CalTransvOffsetCorr::doEnergyCorr( Event::CalCluster * cluster )
   // calculating the transverse offset of average position in the calorimeter
   // with respect to the position predicted from tracker information
   double calTransvOffset = 0.;
-  if (getKernel()->getTkrNVertices()>0)
+  if (m_calReconSvc->getTkrNVertices()>0)
    {
-    Vector calOffset = (cluster->getPosition()) - getKernel()->getTkrFrontVertex()->getPosition() ;
-    double calLongOffset = getKernel()->getTkrFrontVertex()->getDirection()*calOffset;
+    Vector calOffset = (cluster->getPosition()) - m_calReconSvc->getTkrFrontVertex()->getPosition() ;
+    double calLongOffset = m_calReconSvc->getTkrFrontVertex()->getDirection()*calOffset;
     calTransvOffset = sqrt(calOffset.mag2() - calLongOffset*calLongOffset);
    }
     

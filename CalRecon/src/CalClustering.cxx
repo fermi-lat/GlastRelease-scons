@@ -6,7 +6,7 @@ CalClustering::CalClustering
  ( const std::string & type, 
    const std::string & name,
    const IInterface * parent )
- : AlgTool( type, name, parent )
+ : AlgTool( type, name, parent ), m_calReconSvc(0)
  { declareInterface<ICalClustering>(this) ; }
 
 CalClustering::~CalClustering()
@@ -14,8 +14,12 @@ CalClustering::~CalClustering()
     
 StatusCode CalClustering::initialize()
  {
-  if (CalReconActor::initialize(serviceLocator()).isFailure())
-   { return StatusCode::FAILURE ; }
+  MsgStream log(msgSvc(),name()) ;
+  if (service("CalReconSvc",m_calReconSvc,true).isFailure())
+   {
+    log<<MSG::ERROR<<"Could not find CalReconSvc"<<endreq ;
+    return StatusCode::FAILURE ;
+   }
   return StatusCode::SUCCESS ;
  }
 
@@ -64,7 +68,7 @@ void CalClustering::getXtals( XtalDataVec & xtals )
  {
   xtals.clear();
   Event::CalXtalRecCol::const_iterator it ;
-  for ( it = getKernel()->getXtalRecs()->begin() ; it != getKernel()->getXtalRecs()->end() ; ++it )
+  for ( it = m_calReconSvc->getXtalRecs()->begin() ; it != m_calReconSvc->getXtalRecs()->end() ; ++it )
    {
     // get pointer to the reconstructed data for given crystal
 	Event::CalXtalRecData * recData = *it ;
@@ -76,8 +80,8 @@ void CalClustering::getXtals( XtalDataVec & xtals )
 void CalClustering::setClusters
  ( const XtalDataVecVec & clusters )
  {
-  getKernel()->getClusters()->delClusters() ;
-  int calnLayers = getKernel()->getCalNLayers() ;
+  m_calReconSvc->getClusters()->delClusters() ;
+  int calnLayers = m_calReconSvc->getCalNLayers() ;
   XtalDataVecVec::const_iterator cluster ;
   for ( cluster = clusters.begin() ;
         cluster != clusters.end() ;
@@ -156,7 +160,7 @@ void CalClustering::setClusters
             // the precision of transverse coordinate measurement
             // if there is no fluctuations: 1/sqrt(12) of crystal width
             Vector d;
-            double csIWidth = getKernel()->getCalCsIWidth() ;
+            double csIWidth = m_calReconSvc->getCalCsIWidth() ;
             if(i%2 == 1) d = Vector(csIWidth*csIWidth/12.,0.,0.);
             else d = Vector(0.,csIWidth*csIWidth/12.,0.);
             
@@ -204,7 +208,7 @@ void CalClustering::setClusters
 
     cl->initialize(ene, eneLayer, pLayer, rmsLayer, rms_long, rms_trans, caldir, 0.);
 
-    getKernel()->getClusters()->add(cl);
+    m_calReconSvc->getClusters()->add(cl);
 
    }
   return ;
@@ -259,7 +263,7 @@ Vector CalClustering::fitDirection
     
     
     // loop over calorimeter layers
-    for(int il=0;il<getKernel()->getCalNLayers();il++)
+    for(int il=0;il<m_calReconSvc->getCalNLayers();il++)
     {                
         // For the moment forget about longitudinal position
         

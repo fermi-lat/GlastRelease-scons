@@ -69,7 +69,7 @@ StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
   StatusCode sc = StatusCode::SUCCESS;
 
   // if reconstructed tracker data doesn't exist or number of tracks is 0:
-  if( !getKernel()->getTkrNVertices() ) {
+  if( !m_calReconSvc->getTkrNVertices() ) {
     //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutNOTKRREC, 1.);
     return sc;
   }
@@ -82,7 +82,7 @@ StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
   
   // Energy:
   double pdfVariables[2]= {cluster->getEnergySum(), 0.};
-  double pdfDataPoint[2]= {0., getKernel()->getSlope(cluster)};
+  double pdfDataPoint[2]= {0., m_calReconSvc->getSlope(cluster)};
   if( pdfVariables[0]<20. ) {
     //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutMAXCALENERGY, 1.);
     return sc;
@@ -93,13 +93,13 @@ StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
   }
   
   // direction: slope must be above \f$cos(32\circ)$\f
-  if( getKernel()->getSlope(cluster)<.8480481 ){ 
+  if( m_calReconSvc->getSlope(cluster)<.8480481 ){ 
     //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutSLOPE, 1.);
     return sc; 
   }
 
   // z-position:
-  const Point &trackVertex= getKernel()->getTkrFrontVertex()->getPosition();
+  const Point &trackVertex= m_calReconSvc->getTkrFrontVertex()->getPosition();
   int vertex=  int((trackVertex[2]-108.)*3.2e-2);
   if( vertex<0 || vertex>15 ) { 
     //cluster->setEnergyCalTkrLikelihood((double) CalLikelihoodCorr::cutVERTEX, 1.);
@@ -111,7 +111,7 @@ StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
   //    integrated along the track, normalized to 1.
   //               3. use the geometric mean of values on X and Y axis as a
   //    basis for geometric cut.
-  const Vector &trackDir= getKernel()->getTkrFrontVertex()->getDirection();
+  const Vector &trackDir= m_calReconSvc->getTkrFrontVertex()->getDirection();
   double geometricCut= 1.;
   for( int ax= 0; ax<2; ++ax ){
     double slope= -trackDir[ax]/trackDir[2];
@@ -135,7 +135,7 @@ StatusCode CalTkrLikelihoodCorr::doEnergyCorr( Event::CalCluster * cluster )
   // CALCULATE
   //    - get number of hits in TKR
   Event::TkrDigiCol *tkrDigiData = SmartDataPtr<Event::TkrDigiCol>
-                          (getKernel()->getEventSvc(), EventModel::Digi::TkrDigiCol); 
+                          (m_calReconSvc->getEventSvc(), EventModel::Digi::TkrDigiCol); 
   Event::TkrDigiCol::iterator it;
   for ( it= tkrDigiData->begin(); it!=tkrDigiData->end(); ++it )
     pdfVariables[0]+= (double)(*it)->getNumHits();

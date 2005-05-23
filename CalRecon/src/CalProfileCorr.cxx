@@ -229,13 +229,13 @@ StatusCode CalProfileCorr::doEnergyCorr( Event::CalCluster * cluster )
 
     double eTotal = cluster->getEnergySum() ;
     
-    m_static_slope = getKernel()->getSlope(cluster) ;
+    m_static_slope = m_calReconSvc->getSlope(cluster) ;
 
-    m_xtalHeight = getKernel()->getCalCsIHeight()/10.;  // crystal height in cm
-    m_xtalWidth = getKernel()->getCalCsIWidth()/10.;    // crystal width in cm
+    m_xtalHeight = m_calReconSvc->getCalCsIHeight()/10.;  // crystal height in cm
+    m_xtalWidth = m_calReconSvc->getCalCsIWidth()/10.;    // crystal width in cm
 
     // defines global variable to be used for fcn
-    m_nbins = getKernel()->getCalNLayers() ;
+    m_nbins = m_calReconSvc->getCalNLayers() ;
     m_g_elayer.resize(m_nbins);
     for (int i =0;i<m_nbins;i++)
     {

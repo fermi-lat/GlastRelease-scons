@@ -1,30 +1,138 @@
 
+// for class definition
+#include "ICalReconSvc.h"
+#include "GaudiKernel/Service.h"
+
+// for implementation
+#include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "Event/TopLevel/EventModel.h"
-#include "CalReconKernel.h"
 
-DECLARE_TOOL_FACTORY(CalReconKernel) ;
+/**   
+* @class CalReconSvc
+*
+* Data and features shared by all CalRecon actors.
+*
+* $Header$
+*/
 
-CalReconKernel::CalReconKernel
- ( const std::string & type, 
-   const std::string & name, 
-   const IInterface* parent)
- : AlgTool(type,name,parent)
- { declareInterface<CalReconKernel>(this) ; }
+class CalReconSvc : public Service, public virtual ICalReconSvc
+ {
 
-CalReconKernel::~CalReconKernel()
+  public:
+
+    CalReconSvc( const std::string & name, ISvcLocator * ) ;
+    virtual ~CalReconSvc() ;
+
+    virtual StatusCode initialize() ;
+    StatusCode queryInterface( const IID &, void** ppvUnknown ) ;
+        
+   //! update what depends on event state
+    void reviewEvent() ;
+    
+    // generic services
+    StatusCode getStatus() const
+     { return m_status ; }
+    IDataProviderSvc * getEventSvc() const
+     { return m_eventSvc ; }
+    IGlastDetSvc * getDetSvc() const
+     { return m_detSvc ; }
+
+    // cal parameters
+    int getCalNLayers() const
+     { return m_calNLayers ; }
+    double getCalCsIWidth() const
+     { return m_calCsIWidth ; }
+    double getCalCsIHeight() const
+     { return m_calCsIHeight ; }
+
+    // cal event data
+    Event::CalXtalRecCol * getXtalRecs()
+     { return m_calXtalRecCol ; }
+    Event::CalClusterCol * getClusters()
+     { return m_calClusterCol ; }
+
+    // tkr event data
+    int getTkrNVertices() const
+     { return m_tkrNVertices ; }
+    const Event::TkrVertex * getTkrFrontVertex() const
+     { return m_tkrFrontVertex ; }
+    int getTkrNTracks() const
+     { return m_tkrNTracks ; }
+    const Event::TkrTrack * getTkrFrontTrack() const
+     { return m_tkrFrontTrack ; }
+
+    // utilities
+    double getSlope( Event::CalCluster * cluster ) const
+     { return (m_tkrSlope?m_tkrSlope:cluster->getDirection().z()) ; }
+
+  private :
+    
+    // some pointers to services  
+    StatusCode m_status ;
+    IMessageSvc * m_messageSvc ;
+    IDataProviderSvc * m_eventSvc ;
+    IGlastDetSvc * m_detSvc; 
+    
+    //! CAL number of layers
+    int m_calNLayers ;
+    //! CAL crystal width
+    double m_calCsIWidth ;
+    //! CAL crystal height
+    double m_calCsIHeight ;
+    
+    //! reconstructed data for crystals
+    Event::CalXtalRecCol * m_calXtalRecCol ;
+    //! the clusters list
+    Event::CalClusterCol * m_calClusterCol ;
+
+    // tkr information
+    int m_tkrNVertices ;
+    Event::TkrVertex * m_tkrFrontVertex ;
+    double m_tkrSlope ;
+    int m_tkrNTracks ;
+    Event::TkrTrack * m_tkrFrontTrack ;
+
+ } ;
+
+
+//==========================================================
+// implementation
+//==========================================================
+
+
+DECLARE_SERVICE_FACTORY(CalReconSvc) ;
+
+CalReconSvc::CalReconSvc
+ ( const std::string & name, ISvcLocator* svcLocator )
+ : Service(name,svcLocator)
  {}
 
-StatusCode CalReconKernel::initialize()
+CalReconSvc::~CalReconSvc()
+ {}
+
+StatusCode CalReconSvc::queryInterface( const IID & riid, void** ppvIF )
  {
+  if (IID_ICalReconSvc == riid)
+   {
+    *ppvIF = dynamic_cast<ICalReconSvc*>(this) ;
+    return StatusCode::SUCCESS ;
+   }
+  else
+   { return Service::queryInterface(riid,ppvIF) ; }
+ }
+
+StatusCode CalReconSvc::initialize()
+ {
+  Service::initialize() ;
+     
   m_status = StatusCode::SUCCESS ;
   
   //svcLocator->service("MessageSvc",m_messageSvc,true) ;
   service("MessageSvc",m_messageSvc,true) ;
-  MsgStream log(m_messageSvc,"CalReconKernel::CalReconKernel");
+  MsgStream log(m_messageSvc,"CalReconSvc::CalReconSvc");
 
   if (service("EventDataSvc",m_eventSvc,true).isFailure())
    { log<<MSG::ERROR<<"Could not find EventDataSvc"<<endreq ; m_status = StatusCode::FAILURE ; }
@@ -57,9 +165,9 @@ StatusCode CalReconKernel::initialize()
   return m_status ;
  }
  
-void CalReconKernel::reviewEvent()
+void CalReconSvc::reviewEvent()
  {
-  MsgStream log(m_messageSvc,"CalReconKernel::reviewEvent") ;
+  MsgStream log(m_messageSvc,"CalReconSvc::reviewEvent") ;
 
   // Ensure CalRecon/Event directory in TDS
   // David Chamont: I tried to move this section in the constructor above,

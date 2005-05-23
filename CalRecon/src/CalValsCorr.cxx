@@ -150,9 +150,7 @@ StatusCode CalValsCorr::initialize()
 
 //! Extract the crack/leakage corrected energy, storing it in CalCluster.
 StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
-{
-    CalReconKernel * kernel = getKernel() ;
-    
+{ 
     //Do some vital initializations
     CAL_EnergySum     = 0.;
     CAL_EneSum_Corr   = 0.;
@@ -217,17 +215,17 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     CAL_TE_Nrm = ( view==0 ? cal_dir.x() : cal_dir.y() );
 
     // with no tracks we've done what we can do.
-    if (kernel->getTkrNTracks()<=0)
+    if (m_calReconSvc->getTkrNTracks()<=0)
       return StatusCode::SUCCESS ;
         
     // Get the first track, the start and direction 
-    const Event::TkrTrack * track_1 = kernel->getTkrFrontTrack() ;
+    const Event::TkrTrack * track_1 = m_calReconSvc->getTkrFrontTrack() ;
     Point  x0 = track_1->getInitialPosition() ;
     Vector t0 = track_1->getInitialDirection() ;
 
     // If vertexed - use first vertex
-    if (kernel->getTkrNVertices()>0) {
-        const Event::TkrVertex * vertex_1 = kernel->getTkrFrontVertex() ;
+    if (m_calReconSvc->getTkrNVertices()>0) {
+        const Event::TkrVertex * vertex_1 = m_calReconSvc->getTkrFrontVertex() ;
         x0 = vertex_1->getPosition();
         t0 = vertex_1->getDirection();
     }
@@ -369,7 +367,7 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     // Now get averaged radiation lengths
     // The averaging is set for 6 + 1 samples at a radius of rm_hard/4
     // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
-    if (aveRadLens(kernel->getDetSvc()->getIDPrefix(),cal_top,-t_axis,rm_hard/4.,6)==StatusCode::FAILURE)
+    if (aveRadLens(m_calReconSvc->getDetSvc()->getIDPrefix(),cal_top,-t_axis,rm_hard/4.,6)==StatusCode::FAILURE)
       return StatusCode::SUCCESS ; 
 
     double t_cal_tot = m_radLen_CsI + m_radLen_Stuff; //m_radLen_CsI; //s_min/20.; // 

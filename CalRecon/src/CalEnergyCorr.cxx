@@ -3,8 +3,12 @@
 
 StatusCode CalEnergyCorr::initialize()
  {
-  if (CalReconActor::initialize(serviceLocator()).isFailure())
-   { return StatusCode::FAILURE ; }
+  MsgStream log(msgSvc(),name()) ;
+  if (service("CalReconSvc",m_calReconSvc,true).isFailure())
+   {
+    log<<MSG::ERROR<<"Could not find CalReconSvc"<<endreq ;
+    return StatusCode::FAILURE ;
+   }
   return StatusCode::SUCCESS ;
  }
 
@@ -13,8 +17,8 @@ StatusCode CalEnergyCorr::doEnergyCorr()
   StatusCode sc = StatusCode::SUCCESS ;
   int icluster ;
   Event::CalClusterCol::const_iterator it ;
-  for ( it = getKernel()->getClusters()->begin(), icluster=0 ;
-        it != getKernel()->getClusters()->end() ;
+  for ( it = m_calReconSvc->getClusters()->begin(), icluster=0 ;
+        it != m_calReconSvc->getClusters()->end() ;
         ++it, ++icluster )
    {
     if (doEnergyCorr(*it).isFailure())
