@@ -450,7 +450,7 @@ class calFitsXML(object):
         dList = self.__doc.getElementsByTagName('CALdoc')
         dLen = len(dList)
         if dLen != 1:
-            raise calFileReadExcept, "wrong number of <CAL_doc> elements: %u (expected 1)" % dNum
+            raise calFileReadExcept, "wrong number of <CAL_doc> elements: %u (expected 1)" % dLen
         d = dList[0]
         type = d.getAttribute('type')
         if len(type) == 0:
