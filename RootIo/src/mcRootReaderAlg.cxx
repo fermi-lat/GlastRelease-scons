@@ -200,7 +200,10 @@ StatusCode mcRootReaderAlg::initialize()
 
     if (m_rootIoSvc) {
         m_rootIoSvc->setRootEvtMax(m_numEvents);
-	if (!m_mcTree->GetIndex()) m_mcTree->BuildIndex("m_runId", "m_eventId");
+        if (!m_mcTree->GetTreeIndex()) {
+            log << MSG::INFO << "Input file does not contain new style index, rebuilding" << endreq;
+            m_mcTree->BuildIndex("m_runId", "m_eventId");
+        }
         m_rootIoSvc->registerRootTree(m_mcTree);
     }
      

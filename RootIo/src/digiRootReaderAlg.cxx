@@ -205,7 +205,10 @@ StatusCode digiRootReaderAlg::initialize()
     
     if (m_rootIoSvc) {
       m_rootIoSvc->setRootEvtMax(m_numEvents);
-      if (!m_digiTree->GetIndex()) m_digiTree->BuildIndex("m_runId", "m_eventId");
+      if (!m_digiTree->GetTreeIndex()) {
+          log << MSG::INFO << "Input file does not contain new style index, rebuilding" << endreq;
+          m_digiTree->BuildIndex("m_runId", "m_eventId");
+      }
       m_rootIoSvc->registerRootTree(m_digiTree);
     }
 

@@ -196,7 +196,10 @@ StatusCode relationRootReaderAlg::initialize()
     m_numEvents = m_relTree->GetEntries();
     if (m_rootIoSvc) {
         m_rootIoSvc->setRootEvtMax(m_numEvents);
-        if(!m_relTree->GetIndex()) m_relTree->BuildIndex("m_runId", "m_eventId");
+        if(!m_relTree->GetTreeIndex()) {
+            log << MSG::INFO << "Input file does not contain new style index, rebuilding" << endreq;
+            m_relTree->BuildIndex("m_runId", "m_eventId");
+        }
         m_rootIoSvc->registerRootTree(m_relTree);
     }
 
