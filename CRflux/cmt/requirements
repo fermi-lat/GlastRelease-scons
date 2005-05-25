@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r3
+version v1r4
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
@@ -15,6 +15,8 @@ apply_pattern packageShr
 private
 use astro *
 use Event *
+# libraries that are only linked locally
+use flux  *   
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags
