@@ -234,7 +234,7 @@ if __name__ == '__main__':
 
     # create output file
 
-    fio = calDacXML.calDacXML(outName, 'fle_dac', calDacXML.MODE_CREATE)
+    fio = calDacXML.calDacXML(outName, 'fhe_dac', calDacXML.MODE_CREATE)
     tlist = (destTwr,)
     fio.write(nomSetting, hrefgain = heGain, tems = tlist)
     fio.close()
