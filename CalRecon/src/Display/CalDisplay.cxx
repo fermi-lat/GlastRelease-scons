@@ -141,16 +141,10 @@ void CalRep::update()
         setColor("blue"); // set cross color to blue
 
         // get pointer to the cluster 0 - the only one exiting now
-        CalCluster* cl = cls->getCluster(0); 
+        CalCluster* cl = cls->front(); 
 
         // get total energy in the calorimeter
-        double energy_sum = cl->getEnergySum();
-
-        // get vector of layer energies
-        const std::vector<double>& eneLayer = cl->getEneLayer();
-
-        // get layer positions
-        const std::vector<Vector>& posLayer = cl->getPosLayer();
+        double energy_sum = cl->getCalParams().getEnergy();
 
         // draw only if there is some energy in the calorimeter        
         if(energy_sum > 0){        
@@ -160,10 +154,14 @@ void CalRep::update()
 
                 // if energy in this layer is not zero - draw blue cross at
                 // the average reconstructed position for this layer
-                if (eneLayer[l]>0){
-                    double x=(posLayer[l]).x();
-                    double y=(posLayer[l]).y();
-                    double z=(posLayer[l]).z();
+                if ((*cl)[l].getEnergy() > 0)
+                {
+                    Point layerPos = (*cl)[l].getPosition();
+
+                    double x = layerPos.x();
+                    double y = layerPos.y();
+                    double z = layerPos.z();
+
                     moveTo(Point(x-s, y, z));
                     lineTo(Point(x+s, y, z));
                     moveTo(Point(x, y-s, z));

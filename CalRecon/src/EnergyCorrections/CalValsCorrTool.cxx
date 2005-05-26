@@ -1,35 +1,170 @@
-/** @file CalValsCorr.cxx
-@brief implementation of the class CalValsCorr
+/** @file CalValsCorrTool.cxx
+@brief implementation of the class CalValsCorrTool
 
 $Header$
 
 */
 
-#include "CalValsCorr.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h" 
 
 #include "Event/TopLevel/EventModel.h"
 
-#include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 
+#include "ICalEnergyCorr.h"
 #include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "geometry/Ray.h"
 
-DECLARE_TOOL_FACTORY(CalValsCorr) ;
-
 #include "TMath.h"
 #include <stdexcept>
+/**   
+* @class CalValsCorrTool
+* @author Bill Atwood
+*
+* Tool to corrected energy for cracks and leakage.
+*
+* Copied by THB from AnalysisNtuple::CalValsTool.cxx revision 1.43
+*
+* $Header$
+*/
+
+class CalValsCorrTool : public AlgTool, virtual public ICalEnergyCorr
+{
+public:
+
+    //! destructor
+    CalValsCorrTool( const std::string& type, const std::string& name, const IInterface* parent);
+    ~CalValsCorrTool() {}; 
+
+    StatusCode initialize();
+
+    // worker function to get the corrected energy      
+    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* );
+
+private:
+
+    /// Bill's calculation here
+    StatusCode calculate();
+    double     activeDist(Point pos, int& view) const;
+    double     containedFraction(Point  pos, 
+                                 double gap, 
+                                 double r, 
+                                 double costh, 
+                                 double phi) const;
+    StatusCode aveRadLens(Point x0, Vector t0, double radius, int numSamples);
+
+    /// TkrGeometrySvc used for access to tracker geometry info
+    ITkrGeometrySvc*  m_tkrGeom;
+
+    /// Pointer to the Gaudi data provider service
+    IDataProviderSvc* m_dataSvc;
+
+    /// G4 Propagator tool
+    IPropagator *     m_G4PropTool; 
+
+    /// Detector Service
+    IGlastDetSvc *    m_detSvc; 
+
+    /// some Geometry
+    double m_towerPitch;
+    int    m_xNum;
+    int    m_yNum;
+    
+    /// gets the CAL info from detModel
+    StatusCode getCalInfo();
+
+    /// CAL vars
+    double m_calXWidth;
+    double m_calYWidth;
+    double m_calZTop;
+    double m_calZBot;
+
+    // Internal Variables
+    double m_radLen_CsI, m_rms_RL_CsI;
+    double m_radLen_Stuff, m_rms_RL_Stuff;
+    double m_radLen_Cntr, m_rms_RL_Cntr; 
+    double m_radLen_CntrStuff, m_rms_RL_CntrStuff;
+
+    double m_arcLen_CsI; 
+    double m_arcLen_Stuff; 
+    double m_arcLen_Cntr;  
+
+    //Global Calorimeter Tuple Items -- but only CAL_Energy_Corr is actually used
+    double CAL_EnergySum; 
+    double CAL_Leak_Corr;
+    double CAL_Edge_Corr; 
+    double CAL_EdgeSum_Corr;     
+    //double CAL_Total_Corr; 
+    double CAL_TotSum_Corr; 
+// unused !?    double CAL_Energy_LLCorr; 
+
+    double CAL_CsI_RLn;
+    double CAL_Tot_RLn;
+    double CAL_Cnt_RLn; 
+    double CAL_LAT_RLn; 
+    double CAL_DeadTot_Rat;
+    double CAL_DeadCnt_Rat; 
+    //double CAL_a_Parm;
+    //double CAL_b_Parm; 
+    double CAL_t_Pred; 
+    double CAL_deltaT;
+
+    double CAL_EneSum_Corr;
+    double CAL_Energy_Corr;
+    double CAL_xEcntr;
+    double CAL_yEcntr;
+    double CAL_zEcntr;
+    double CAL_xdir;
+    double CAL_ydir;
+    double CAL_zdir;
+
+    double CAL_TwrEdgeCntr;
+    double CAL_TwrEdge0;
+    double CAL_LATEdge; 
+
+    double CAL_TE_Nrm;
+    double CAL_Track_Sep;
+
+    double CAL_Lyr0_Ratio;
+    double CAL_Lyr7_Ratio;
+    double CAL_BkHalf_Ratio;
+
+    double CAL_Xtal_Ratio;
+    double CAL_Xtal_maxEne; 
+    double CAL_eLayer[8];
+    double CAL_No_Xtals_Trunc;
+    double CAL_Long_Rms;
+    double CAL_Trans_Rms;
+    double CAL_LRms_Ratio;
+
+    double CAL_MIP_Diff; 
+    double CAL_MIP_Ratio;
+
+    //Calimeter items with Recon - Tracks
+    double CAL_Track_DOCA;
+    double CAL_Track_Angle;
+    double CAL_TwrGap; 
+    double CAL_x0;
+    double CAL_y0;
+    double CAL_z0;
+
+
+};
+
+#include "GaudiKernel/DeclareFactoryEntries.h"
+DECLARE_TOOL_FACTORY(CalValsCorrTool) ;
 
 namespace {
 
@@ -89,58 +224,65 @@ namespace {
         double slice_m = circleFraction(r-angle_factor);
         return (slice_p + 4.*slice_0 + slice_m)/6.;
     }
-
-
-
 }
 
-
-CalValsCorr::CalValsCorr
- ( const std::string & type, 
-   const std::string & name, 
-   const IInterface * parent )
- : CalEnergyCorr(type,name,parent)
- { declareInterface<ICalEnergyCorr>(this) ; }
+CalValsCorrTool::CalValsCorrTool( const std::string & type, 
+                                  const std::string & name, 
+                                  const IInterface * parent )
+                                : AlgTool(type,name,parent)
+{ 
+    declareInterface<ICalEnergyCorr>(this) ; 
+}
 
 // This function does following initialization actions:
 //    - extracts geometry constants from xml file using GlastDetSvc
-StatusCode CalValsCorr::initialize()
+StatusCode CalValsCorrTool::initialize()
 {
-    if (CalEnergyCorr::initialize().isFailure())
-     { return StatusCode::FAILURE ; }
+//    if (EnergyCorr::initialize().isFailure())
+//    { 
+//        return StatusCode::FAILURE ; 
+//    }
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Initializing CalValsCorr" <<endreq;
+    log << MSG::INFO << "Initializing CalValsCorrTool" <<endreq;
 
     // find TkrGeometrySvc service
-    if (service("TkrGeometrySvc", m_tkrGeom, true).isFailure()){
-        log << MSG::ERROR << "Couldn't find the TkrGeometrySvc!" << endreq;
-        return StatusCode::FAILURE;
+    if ((sc = service("TkrGeometrySvc", m_tkrGeom, true)).isFailure())
+    {
+        throw GaudiException("Service [TkrGeometrySvc] not found", name(), sc);
     }
 
     m_towerPitch = m_tkrGeom->towerPitch();
     m_xNum = m_tkrGeom->numXTowers();
     m_yNum = m_tkrGeom->numYTowers();
 
-    if (getCalInfo().isFailure()) {
-        log << MSG::ERROR << "Couldn't initialize the CAL constants" << endreq;
-        return StatusCode::FAILURE;
+    if ((sc = getCalInfo()).isFailure()) 
+    {
+        throw GaudiException("Could not initialize the CAL constants", name(), sc);
     }
 
-    // pick up the chosen propagator
-    if (service("GlastPropagatorSvc", m_propSvc, true).isFailure()) {
-        log << MSG::ERROR << "Couldn't find the GlastPropagatorSvc!" << endreq;
-        return StatusCode::FAILURE;
+    if ((sc = service("GlastDetSvc", m_detSvc, true)).isFailure())
+    { 
+        throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
+    }
+
+    //Locate and store a pointer to the data service which allows access to the TDS
+    if ((sc = service("EventDataSvc", m_dataSvc)).isFailure())
+    {
+        throw GaudiException("Service [EventDataSvc] not found", name(), sc);
     }
 
     IToolSvc* toolSvc = 0;
-    if(service("ToolSvc", toolSvc, true).isFailure()) {
-        log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
-        return StatusCode::FAILURE;
+    if((sc = service("ToolSvc", toolSvc, true)).isFailure()) 
+    {
+        throw GaudiException("Service [ToolSvc] not found", name(), sc);
     }
-    if(!toolSvc->retrieveTool("G4PropagationTool", m_G4PropTool)) {
-        log << MSG::ERROR << "Couldn't find the G4PropagationTool !" << endreq;
+
+    if((sc = toolSvc->retrieveTool("G4PropagationTool", m_G4PropTool)).isFailure()) 
+    {
+        throw GaudiException("Tool [G4PropagationTool] not found", name(), sc);
+        log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
         return StatusCode::FAILURE;
     }
 
@@ -148,19 +290,62 @@ StatusCode CalValsCorr::initialize()
 }
 
 
-//! Extract the crack/leakage corrected energy, storing it in CalCluster.
-StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
-{ 
+Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
+{
+    //Purpose and method:
+    //
+    //   This function calls CalValsTool and extracts the crack/leakage corrected
+    //   energy, storing it in CalCluster.
+    // 
+    // TDS input: none
+    // TDS output: CalClusters
+
+    Event::CalCorToolResult* corResult = 0;
+
+    MsgStream lm(msgSvc(), name());
+
+    StatusCode sc =  calculate();
+
+    if (sc.isSuccess())
+    {
+        // Create a CalCorToolResult object to hold the information
+        corResult = new Event::CalCorToolResult();
+
+        corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
+        corResult->setCorrectionName(type());
+        corResult->setParams(cluster->getCalParams());
+        corResult->setChiSquare(1.);
+        corResult->insert(Event::CalCorEneValuePair("CorrectedEnergy", CAL_Energy_Corr));
+    }
+
+    return corResult;
+}
+
+StatusCode CalValsCorrTool::calculate( )
+{
+    StatusCode sc = StatusCode::SUCCESS;
+
+    // Recover Track associated info. 
+    SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc, EventModel::TkrRecon::TkrTrackCol);
+    SmartDataPtr<Event::TkrVertexCol>  pVerts(m_dataSvc,EventModel::TkrRecon::TkrVertexCol);
+    SmartDataPtr<Event::CalClusterCol> pCals(m_dataSvc,EventModel::CalRecon::CalClusterCol);
+    SmartDataPtr<Event::CalXtalRecCol> pxtalrecs(m_dataSvc,EventModel::CalRecon::CalXtalRecCol);
+
     //Do some vital initializations
     CAL_EnergySum     = 0.;
+// unused !?    CAL_Energy_LLCorr = 0.;
     CAL_EneSum_Corr   = 0.;
     CAL_Energy_Corr   = 0.;
 
-     //double z0 = 0.0; // placeholder for offset
+    //Make sure we have valid cluster data
+    if (!pCals) return sc;
 
-    CAL_EnergySum   = calCluster->getEnergySum();
-    for(int i = 0; i<8; i++)
-      CAL_eLayer[i] = calCluster->getEneLayer(i);
+    //double z0 = 0.0; // placeholder for offset
+
+    Event::CalCluster* calCluster = pCals->front();
+
+    CAL_EnergySum   = calCluster->getCalParams().getEnergy();
+    for(int i = 0; i<8; i++) CAL_eLayer[i] = (*calCluster)[i].getEnergy();
     CAL_Long_Rms      = calCluster->getRmsLong();
     CAL_Trans_Rms     = calCluster->getRmsTrans();
 
@@ -174,29 +359,27 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
 
 // unused !?    CAL_Energy_LLCorr = calCluster->getEnergyLeak();
 
-//    David: USELESS IN THE CONTEXT OF CALRECON
-//    //Code from meritAlg
-//    int no_xtals=0;
-//    int no_xtals_trunc=0;
-//    double max_log_energy = 0.;
-//    Event::CalXtalRecCol::const_iterator jlog ;
-//    for ( jlog=pxtalrecs->begin() ; jlog != pxtalrecs->end() ; ++jlog ) {
-//
-//        const Event::CalXtalRecData& recLog = **jlog;
-//
-//        double eneLog = recLog.getEnergy();
-//        if(eneLog > max_log_energy) max_log_energy = eneLog; 
-//        if(eneLog>0)no_xtals++;
-//        if(eneLog>0.01*CAL_EnergySum)no_xtals_trunc++;
-//    }
-//    CAL_Xtal_Ratio= (no_xtals>0) ? float(no_xtals_trunc)/no_xtals : 0;
-//    CAL_No_Xtals_Trunc = float(no_xtals_trunc); 
-//    CAL_Xtal_maxEne = max_log_energy; 
+    //Code from meritAlg
+    int no_xtals=0;
+    int no_xtals_trunc=0;
+    double max_log_energy = 0.; 
+    for( Event::CalXtalRecCol::const_iterator jlog=pxtalrecs->begin(); jlog != pxtalrecs->end(); ++jlog)
+    {
+
+        const Event::CalXtalRecData& recLog = **jlog;
+
+        double eneLog = recLog.getEnergy();
+        if(eneLog > max_log_energy) max_log_energy = eneLog; 
+        if(eneLog>0)no_xtals++;
+        if(eneLog>0.01*CAL_EnergySum)no_xtals_trunc++;
+    }
+    CAL_Xtal_Ratio= (no_xtals>0) ? float(no_xtals_trunc)/no_xtals : 0;
+    CAL_No_Xtals_Trunc = float(no_xtals_trunc); 
+    CAL_Xtal_maxEne = max_log_energy; 
 
     //Overwritten below, if there are tracks
-    CAL_Energy_Corr = calCluster->getEnergyCorrected(); 
-    
-    if (CAL_EnergySum < 5.) return StatusCode::SUCCESS ;  
+    CAL_Energy_Corr = calCluster->getCalParams().getEnergy(); 
+    if(CAL_EnergySum < 5.) return sc;  
 
     Point  cal_pos  = calCluster->getPosition();
     Vector cal_dir  = calCluster->getDirection();
@@ -215,19 +398,24 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     CAL_TE_Nrm = ( view==0 ? cal_dir.x() : cal_dir.y() );
 
     // with no tracks we've done what we can do.
-    if (m_calReconSvc->getTkrNTracks()<=0)
-      return StatusCode::SUCCESS ;
-        
-    // Get the first track, the start and direction 
-    const Event::TkrTrack * track_1 = m_calReconSvc->getTkrFrontTrack() ;
-    Point  x0 = track_1->getInitialPosition() ;
-    Vector t0 = track_1->getInitialDirection() ;
+    if(!pTracks) return sc; 
+    int num_tracks = pTracks->size(); 
+    if(num_tracks <= 0 ) return sc;
+
+    // Get the first track
+    Event::TkrTrackColConPtr pTrack1 = pTracks->begin();
+    Event::TkrTrack* track_1 = dynamic_cast<Event::TkrTrack*>(*pTrack1);
+
+    // Get the start and direction 
+    Point  x0 = track_1->getInitialPosition();
+    Vector t0 = track_1->getInitialDirection();
 
     // If vertexed - use first vertex
-    if (m_calReconSvc->getTkrNVertices()>0) {
-        const Event::TkrVertex * vertex_1 = m_calReconSvc->getTkrFrontVertex() ;
-        x0 = vertex_1->getPosition();
-        t0 = vertex_1->getDirection();
+    if(pVerts) {
+        Event::TkrVertexColPtr gammaPtr =  pVerts->begin(); 
+        Event::TkrVertex *gamma = *gammaPtr; 
+        x0 = gamma->getPosition();
+        t0 = gamma->getDirection();
     }
 
     // this "cos(theta)" doesn't distinguish between up and down
@@ -259,8 +447,8 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     CAL_x0    = cal_top.x();
     CAL_y0    = cal_top.y();
     CAL_z0    = cal_top.z();
-    std::vector<Vector> pos_Layer = calCluster->getPosLayer();
-    std::vector<double> ene_Layer = calCluster->getEneLayer();
+    //std::vector<Vector> pos_Layer = calCluster->getPosLayer();
+    //std::vector<double> ene_Layer = calCluster->getEneLayer();
 
     double ene_sum_corr = 0.;
 
@@ -299,16 +487,18 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     // Apply circle correction layer by layer in the calorimeter
     // This is a essentially just a geometric correction which is 
     // "integrated" layer by layer through the the Calorimeter. 
+    Event::CalClusterLayerDataVec& layerData = (*calCluster);
     double max_corr = 2.5; //This limits the size of the edge correction (was 1.4)
     double edge_corr = 0.; 
     double good_layers = 0.; 
     for(int i=0; i<8; i++){
-        if(ene_Layer[i] < 5.) {
-            ene_sum_corr += ene_Layer[i];
+        if(layerData[i].getEnergy() < 5.) 
+        {
+            ene_sum_corr += layerData[i].getEnergy();
             continue; 
         }
-        Vector pos = cal_top;
-        double arc_len = (pos_Layer[i] - pos).magnitude();
+        Point pos = cal_top;
+        double arc_len = (layerData[i].getPosition() - pos).magnitude();
         Point xyz_layer = axis.position(-arc_len);
 
         double in_frac_soft = containedFraction(xyz_layer, gap, rm_soft, costh, phi_90);
@@ -321,12 +511,12 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
         double corr_factor 
             = 1./((1.-hard_frac)*in_frac_soft + hard_frac*in_frac_hard);
         if(corr_factor > max_corr) corr_factor = max_corr;  
-        double ene_corr = ene_Layer[i]*corr_factor;
+        double ene_corr = layerData[i].getEnergy() * corr_factor;
         ene_sum_corr += ene_corr;
         edge_corr    += corr_factor;
         good_layers  += 1.; 
     }
-    if(ene_sum_corr < 1.) return StatusCode::SUCCESS ;
+    if(ene_sum_corr < 1.) return sc;
     CAL_EdgeSum_Corr = ene_sum_corr/CAL_EnergySum;
     if (good_layers>0) edge_corr /= good_layers;
     CAL_Edge_Corr = edge_corr; 
@@ -341,19 +531,19 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     if (m_tkrGeom->isTopPlaneInLayer(plane)) {
         t_tracker += 0.5*m_tkrGeom->getRadLenConv(layer)/costh;
     }
-	// Need to fix a problem here.  There can be large fluctuations on single
-	// trajectories.  This should be fixed in TkrValsTool probably by averaging
-	// over a cylinder as we do in CalValsTool.
+    // Need to fix a problem here.  There can be large fluctuations on single
+    // trajectories.  This should be fixed in TkrValsTool probably by averaging
+    // over a cylinder as we do in CalValsTool.
 
     // add up the rad lens; this could be a local array if you're bothered by the overhead
     //   but hey, compared to the propagator...
-	double tkr_radLen_nom = 0.; 
+    double tkr_radLen_nom = 0.; 
     int layerCount = layer;
     for(; layerCount>=0; --layerCount) {
         tkr_radLen_nom += m_tkrGeom->getRadLenConv(layerCount) 
             + m_tkrGeom->getRadLenRest(layerCount);
     }
-	tkr_radLen_nom /= costh;
+    tkr_radLen_nom /= costh;
     if(t_tracker > tkr_radLen_nom * 1.5)     {t_tracker = tkr_radLen_nom * 1.5;}
     else if(t_tracker < tkr_radLen_nom * .5) {t_tracker  = tkr_radLen_nom * .5;}
 
@@ -367,8 +557,7 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     // Now get averaged radiation lengths
     // The averaging is set for 6 + 1 samples at a radius of rm_hard/4
     // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
-    if (aveRadLens(m_calReconSvc->getDetSvc()->getIDPrefix(),cal_top,-t_axis,rm_hard/4.,6)==StatusCode::FAILURE)
-      return StatusCode::SUCCESS ; 
+    if(aveRadLens(cal_top, -t_axis, rm_hard/4., 6) == StatusCode::FAILURE) return sc; 
 
     double t_cal_tot = m_radLen_CsI + m_radLen_Stuff; //m_radLen_CsI; //s_min/20.; // 
     ene_sum_corr    *=  t_cal_tot/m_radLen_CsI;       // Correct for unseen stuff
@@ -444,12 +633,26 @@ StatusCode CalValsCorr::doEnergyCorr( Event::CalCluster * calCluster )
     CAL_Leak_Corr  = in_frac_2;   
     //    CAL_TwrGap      = m_arcLen_Stuff - m_arcLen_Gap;
 
-    calCluster->setEnergyCorrected(CAL_Energy_Corr) ;
+    // Whew! 
+    // Ok, fill in the corrected information and exit
+    Event::CalParams params(CAL_Energy_Corr, 10.*CAL_Energy_Corr, 
+                            CAL_xEcntr, CAL_yEcntr, CAL_zEcntr, 1., 0., 0., 1., 0., 1.,
+                            CAL_xdir,   CAL_ydir,   CAL_zdir,   1., 0., 0., 1., 0., 1.);
 
-    return StatusCode::SUCCESS ;
+    Event::CalCorToolResult* corResult = new Event::CalCorToolResult();
+
+    corResult->setStatusBit(Event::CalCorToolResult::CALVALS);
+    corResult->setParams(params);
+    corResult->setChiSquare(1.);
+
+    SmartDataPtr<Event::CalEventEnergy> eventEnergy(m_dataSvc,EventModel::CalRecon::CalEventEnergy);
+
+    eventEnergy->push_back(corResult);
+
+    return sc;
 }
 
-StatusCode CalValsCorr::getCalInfo()
+StatusCode CalValsCorrTool::getCalInfo()
 {
     m_calZTop = m_tkrGeom->calZTop();
     m_calZBot = m_tkrGeom->calZBot();
@@ -459,7 +662,7 @@ StatusCode CalValsCorr::getCalInfo()
     return StatusCode::SUCCESS;
 }
 
-double CalValsCorr::activeDist(Point pos, int &view) const
+double CalValsCorrTool::activeDist(Point pos, int &view) const
 {
     double edge = 0.;
     double x = pos.x();
@@ -478,7 +681,7 @@ double CalValsCorr::activeDist(Point pos, int &view) const
     return edge;
 }
 
-double CalValsCorr::containedFraction(Point pos, double gap, 
+double CalValsCorrTool::containedFraction(Point pos, double gap, 
                                           double r, double costh, double phi) const
 {
     double x = pos.x();
@@ -530,7 +733,7 @@ double CalValsCorr::containedFraction(Point pos, double gap,
     return in_frac;
 }
 
-StatusCode CalValsCorr::aveRadLens(const idents::VolumeIdentifier & prefix, Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
+StatusCode CalValsCorrTool::aveRadLens(Point /* unused !? x0*/, Vector t0, double radius, int numSamples)
 { // This method finds the averages and rms for a cylinder of rays passing through 
     // the calorimeter of the radiation lengths in CsI and other material. 
     // The radius of the cylinder is "radius" and the number of rays = numSample (plus the 
@@ -608,6 +811,7 @@ StatusCode CalValsCorr::aveRadLens(const idents::VolumeIdentifier & prefix, Poin
         double rl_Stuff     = 0.;
         double rl_StuffCntr = 0.;
         idents::VolumeIdentifier volId;
+        idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
         int istep  = 0;
         for(; istep < numSteps; ++istep) {
             volId = m_G4PropTool->getStepVolumeId(istep);

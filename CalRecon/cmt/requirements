@@ -34,8 +34,19 @@ macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 
 
 apply_pattern package_headers
+apply_pattern package_include
 
-library CalRecon  *.cxx *.cpp Dll/*.cpp ${CalRecon_headers}
+macro_prepend includes "-I ../src " WIN32 " /I ..\src  "
+
+macro source "*.cxx" WIN32 "*.h *.cxx"
+
+library CalRecon  *.cxx ${CalRecon_headers}      \
+                  -s=Dll *.cpp                   \
+                  -s=Display          ${source}  \
+                  -s=Clustering        ${source} \
+                  -s=MipFinding        ${source} \
+                  -s=EnergyCorrections ${source} \
+                  -s=Utilities         ${source}
 
 macro CalRecon_stamps     
 

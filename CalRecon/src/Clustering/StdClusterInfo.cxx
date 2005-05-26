@@ -1,92 +1,10 @@
 
-#include "CalClustering.h"
-#include "GaudiKernel/MsgStream.h"
-
-CalClustering::CalClustering
- ( const std::string & type, 
-   const std::string & name,
-   const IInterface * parent )
- : AlgTool( type, name, parent ), m_calReconSvc(0)
- { declareInterface<ICalClustering>(this) ; }
-
-CalClustering::~CalClustering()
- {} 
-    
-StatusCode CalClustering::initialize()
- {
-  MsgStream log(msgSvc(),name()) ;
-  if (service("CalReconSvc",m_calReconSvc,true).isFailure())
-   {
-    log<<MSG::ERROR<<"Could not find CalReconSvc"<<endreq ;
-    return StatusCode::FAILURE ;
-   }
-  return StatusCode::SUCCESS ;
- }
-
-StatusCode CalClustering::findClusters()
-//Purpose and method:
-//
-//   This function performs the calorimeter cluster reconstruction.
-//   The main actions are:
-//      - calculate energy sum
-//                  energy per layer
-//                  average position per layer
-//                  quadratic spread per layer
-//      - fit the particle direction using Fit_Direction() function
-//      - store all calculated quantities in CalCluster objects
-// 
-// TDS input: CalXtalRecCol
-// TDS output: CalClustersCol
- {
-  MsgStream log(msgSvc(),name()) ;
-
-  // prepare the initital set of xtals
-  XtalDataVec xtals ;
-  getXtals(xtals) ;
-  
-  // find out groups, with at least a zero
-  // cluster so that downstream code runs ok
-  XtalDataVecVec clusters ;
-  if (xtals.size()>0)
-   { makeSets(xtals,clusters) ; }
-  else
-   { clusters.push_back(new XtalDataVec) ; }
-
-  // make the clusters
-  setClusters(clusters) ;
-  XtalDataVecVec::iterator cluster ;
-  for ( cluster = clusters.begin() ;
-        cluster != clusters.end() ;
-        ++cluster )
-    delete (*cluster) ;
-  
-  return StatusCode::SUCCESS ;
- }
-
-//! Collect CalXtalRecData pointers
-void CalClustering::getXtals( XtalDataVec & xtals )
- {
-  xtals.clear();
-  Event::CalXtalRecCol::const_iterator it ;
-  for ( it = m_calReconSvc->getXtalRecs()->begin() ; it != m_calReconSvc->getXtalRecs()->end() ; ++it )
-   {
-    // get pointer to the reconstructed data for given crystal
-	Event::CalXtalRecData * recData = *it ;
-    xtals.push_back(recData) ;
-   }
- }
+#include "StdClusterInfo.h"
  
 /// This makes CalClusters out of associated CalXtalRecData pointers
-void CalClustering::setClusters
- ( const XtalDataVecVec & clusters )
- {
-  m_calReconSvc->getClusters()->delClusters() ;
-  int calnLayers = m_calReconSvc->getCalNLayers() ;
-  XtalDataVecVec::const_iterator cluster ;
-  for ( cluster = clusters.begin() ;
-        cluster != clusters.end() ;
-        ++cluster )
-   {    
+Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
+{
+    int   calnLayers = m_calReconSvc->getCalNLayers() ;
     const Point p0(0.,0.,0.);  
 
     //Initialize variables
@@ -100,7 +18,7 @@ void CalClustering::setClusters
     
     // loop over all crystals in the current cluster
     XtalDataVec::const_iterator xTalIter;
-    for(xTalIter = (**cluster).begin(); xTalIter != (**cluster).end(); xTalIter++)
+    for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
 		Event::CalXtalRecData* recData = *xTalIter;
@@ -203,20 +121,35 @@ void CalClustering::setClusters
     // Compute direction using the positions and rms per layer
     Vector caldir = fitDirection(pLayer, rmsLayer);
 
+    Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
+                                         caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+
     // Fill CalCluster data
-    Event::CalCluster* cl = new Event::CalCluster(ene, pCluster + p0);
+    Event::CalCluster* cl = new Event::CalCluster(0);
 
-    cl->initialize(ene, eneLayer, pLayer, rmsLayer, rms_long, rms_trans, caldir, 0.);
+    cl->clear();
 
-    m_calReconSvc->getClusters()->add(cl);
+    cl->initialize(params, rms_long, rms_trans);
 
-   }
-  return ;
+    for( i = 0; i < calnLayers; i++)
+    {
+        Point layerPos(pLayer[i].x(), pLayer[i].y(), pLayer[i].z());
+
+        // Set the data for the vector
+        Event::CalClusterLayerData layerData(eneLayer[i], layerPos, rmsLayer[i]);
+
+        cl->push_back(layerData);
+    }
+
+    // Fill CalCluster data
+    //Event::CalCluster* cl = new Event::CalCluster(ene, pCluster + p0);
+
+    //cl->initialize(ene, eneLayer, pLayer, rmsLayer, rms_long, rms_trans, caldir, 0.);
+
+  return cl;
  }
 
-Vector CalClustering::fitDirection
- ( std::vector<Vector> pos,
-   std::vector<Vector> sigma2 )
+Vector StdClusterInfo::fitDirection(std::vector<Vector> pos, std::vector<Vector> sigma2)
 //
 // Purpose and Method:
 //       find the particle direction from average positions in each
@@ -236,10 +169,7 @@ Vector CalClustering::fitDirection
 //
 // Returned value:    3-Vector of reconstructred particle direction
 //
- {
-    
-    MsgStream log(msgSvc(), name());
-    
+{
     // sigma2.z() is useless here no matter its value.
     double cov_xz = 0;  // covariance x,z
     double cov_yz = 0;  // covariance y,z
@@ -256,19 +186,17 @@ Vector CalClustering::fitDirection
     // in X and Y direction, respectively
     int nlx=0,nly=0;
     
-    
     // "non-physical vector of direction, which is returned
     // if fit is imposible due to insufficient number of hitted layers
     Vector nodir(-1000.,-1000.,-1000.);
     
-    
     // loop over calorimeter layers
-    for(int il=0;il<m_calReconSvc->getCalNLayers();il++)
+    for(int il = 0; il < m_calReconSvc->getCalNLayers(); il++)
     {                
         // For the moment forget about longitudinal position
         
         // odd layers used for XZ fit
-        if(il%2==1)
+        if(il % 2 == 1)
         {
             
             // only if the spread in X direction is not zero,
@@ -318,9 +246,6 @@ Vector CalClustering::fitDirection
     // otherwise non-physical direction is returned
     // which means that direction hasn't been found
     if(nlx <2 || nly < 2 )return nodir;
-    
-    
-    
     
     mx /= norm1;
     mz1 /= norm1;
