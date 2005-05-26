@@ -120,6 +120,7 @@ class McParticle  : virtual public ContainedObject  {
 
     /// access to the mother particle
     const McParticle& mother()const; 
+    const SmartRef<McParticle> getMother() const {return m_mother;}
 
     /// set the mother particle
     void setMother(const SmartRef<McParticle> m);

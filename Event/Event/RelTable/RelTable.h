@@ -35,7 +35,7 @@ namespace Event {
     
 public:
   
-  RelTable() {}
+  RelTable() : m_relations(0), m_firstStart(0), m_secondStart(0) {}
   RelTable(ObjectList < Relation<T1,T2> >* rels);
   
   
@@ -108,7 +108,9 @@ private:
   
   /// Pointer to a collection of relations
   ObjectList < Relation<T1,T2> >* m_relations;
-  
+
+  Relation<T1,T2>* m_firstStart;
+  Relation<T1,T2>* m_secondStart;
 
   void bindRelationFirst(Relation<T1,T2> *rel);
   void bindRelationSecond(Relation<T1,T2> *rel);
@@ -123,17 +125,17 @@ private:
   };
   
   
+template <class T1,class T2>
+    inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels) 
+{
+    m_relations   = rels;
+    m_firstStart  = m_relations->front();
+    m_secondStart = m_relations->front();
+}
   
-  
-  template <class T1,class T2>
-    inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels) {
-    
-    m_relations = rels;
-    
-  }
-  
-  template <class T1,class T2>
-    void RelTable<T1,T2>::addDupRel(Relation<T1,T2>* rel) {
+template <class T1,class T2>
+    void RelTable<T1,T2>::addDupRel(Relation<T1,T2>* rel) 
+{
     // Purpose and Method:  This routine add a new relation to the collection, even
     // if there is a already a relation between the same two objects
     // Inputs:  rel is a pointer to the relation to be added.
@@ -141,11 +143,12 @@ private:
     bindRelationFirst(rel);
     bindRelationSecond(rel);
     m_relations->push_back(rel);
-  }
+}
   
   
-  template <class T1,class T2>
-    bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) {
+template <class T1,class T2>
+    bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) 
+{
     // Purpose and Method:  This routine add a relation to the table if it doesn't 
     // contain a relation between the same two objects, otherwise it appends the info
     // vector to the exsisting relation
@@ -155,17 +158,19 @@ private:
     //          In the latter case the user has to delete the relation
     
     if (bindRelationNoDup(rel))
-      {
-	bindRelationSecond(rel);
-	m_relations->push_back(rel);
+    {
+	    bindRelationSecond(rel);
+	    m_relations->push_back(rel);
         return true;
-      }
+    }
+
     return false;
-  }
+}
 
 
-  template <class T1,class T2>
-    std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(const T1* pobj) const {
+template <class T1,class T2>
+    std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelByFirst(const T1* pobj) const 
+{
     // Purpose and Method: This routine finds all relations having pobj in the
     // first field.  
     // Inputs: pobj is a pointer to the object to be searched in the first field
@@ -173,8 +178,11 @@ private:
     
     std::vector< Relation<T1,T2>* > rels;
     if (!m_relations->size()) return rels;
-    SmartRef< Relation<T1,T2> > r = m_relations->front();
-    while (pobj != r->getFirst() && r->m_first.getFirst())
+    SmartRef< Relation<T1,T2> > rStart = m_firstStart;
+    //while(!rStart->m_first.getFirst()) rStart = rStart->m_first.getPrev();
+    SmartRef< Relation<T1,T2> > r      = rStart;
+
+    while (pobj != r->getFirst() && r->m_first.getFirst() != rStart)
     {
       r = r->m_first.getFirst();
     }
@@ -188,20 +196,25 @@ private:
         r = r->m_first.getSame();
       }
     }
+
     return rels;
-  }
+}
   
   
-  template <class T1,class T2>
-    std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelBySecond(const T2* pobj) const {
+template <class T1,class T2>
+    std::vector< Relation<T1,T2>* > RelTable<T1,T2>::getRelBySecond(const T2* pobj) const 
+{
     // Purpose and Method: This routine finds all relations having pobj in the
     // second field.  
     // Inputs: pobj is a pointer to the object to be searched in the second field
     // Outputs: A pointer to a vector of Relation* including pobj
     std::vector< Relation<T1,T2>* > rels;
     if (!m_relations->size()) return rels;
-    SmartRef< Relation<T1,T2> > r = m_relations->front();
-    while (pobj != r->getSecond() && r->m_second.getFirst())
+    SmartRef< Relation<T1,T2> > rStart = m_secondStart;
+    //while(!rStart->m_second.getFirst()) rStart = rStart->m_second.getPrev();
+    SmartRef< Relation<T1,T2> > r      = rStart;
+
+    while (pobj != r->getSecond() && r->m_second.getFirst() != rStart)
     {
       r = r->m_second.getFirst();
     }
@@ -215,12 +228,14 @@ private:
         r = r->m_second.getSame();
       }
     }
+
     return rels;
-  }
+}
   
 
-  template <class T1,class T2>
-    void RelTable<T1,T2>::erase(Relation<T1,T2> *rel) {
+template <class T1,class T2>
+    void RelTable<T1,T2>::erase(Relation<T1,T2> *rel) 
+{
     // Purpose: This method remove the given relation from the table
 
     removeFirst(rel);
@@ -228,11 +243,12 @@ private:
 
     m_relations->remove(rel);
     delete rel;
-  }
+}
 
   
-  template <class T1,class T2>
-    void RelTable<T1,T2>::changeFirst(Relation<T1,T2> *rel, T1 *pobj) {
+template <class T1,class T2>
+    void RelTable<T1,T2>::changeFirst(Relation<T1,T2> *rel, T1 *pobj) 
+{
     // Purpose: This method change the first data pointer of a relation with the
     // one given by the user
 
@@ -241,11 +257,12 @@ private:
     m_relations->remove(rel);
     rel->setFirst(pobj);
     addRelation(rel);
-  }
+}
 
 
-  template <class T1,class T2>
-    void RelTable<T1,T2>::changeSecond(Relation<T1,T2> *rel, T2 *pobj) {
+template <class T1,class T2>
+    void RelTable<T1,T2>::changeSecond(Relation<T1,T2> *rel, T2 *pobj) 
+{
     // Purpose: This method change the second data pointer of a relation with the
     // one given by the user
 
@@ -254,61 +271,70 @@ private:
     m_relations->remove(rel);
     rel->setSecond(pobj);
     addRelation(rel);
-  }
+}
 
 
-  template <class T1,class T2>
-    inline unsigned long RelTable<T1,T2>::size() const {
+template <class T1,class T2>
+    inline unsigned long RelTable<T1,T2>::size() const 
+{
     // Purpose: This method returns the total number of relations contained in the
     // collection
     return m_relations->size();
-  }
+}
   
-  template <class T1,class T2>
-    inline ObjectList< Relation<T1,T2> >* RelTable<T1,T2>::getAllRelations() const {
-    
+template <class T1,class T2>
+    inline ObjectList< Relation<T1,T2> >* RelTable<T1,T2>::getAllRelations() const 
+{
     return m_relations;
-    
-  }
+}
+ 
 
-  
-
-  template <class T1,class T2>
-    inline void RelTable<T1,T2>::bindRelationFirst(Relation<T1,T2> *rel) {
+template <class T1,class T2>
+    inline void RelTable<T1,T2>::bindRelationFirst(Relation<T1,T2> *rel) 
+{
     
     Relation<T1,T2>* temp;
 
     if (m_relations->size())
     {
-      SmartRef< Relation<T1,T2> > r = m_relations->front();
-      while ((r->getFirst() != rel->getFirst()))
-      {
-        if (r->m_first.getFirst())
+        SmartRef< Relation<T1,T2> > rStart = m_relations->front();
+        SmartRef< Relation<T1,T2> > r      = m_relations->front();
+
+        while ((r->getFirst() != rel->getFirst()))
         {
-          r = r->m_first.getFirst();
+            if (r->m_first.getFirst() != rStart)
+            {
+                r = r->m_first.getFirst();
+            }
+            else
+            {
+                break;
+            }
+        }
+      
+        if (r->getFirst() != rel->getFirst())
+        {
+            rel->m_first.setFirst(r->m_first.getFirst());
+            r->m_first.getFirst()->m_first.setPrev(rel);
+            r->m_first.setFirst(rel);
+            rel->m_first.setPrev(r);
         }
         else
         {
-          break;
+            temp = r->m_first.getSame();
+            rel->m_first.setSame(temp);
+            if (temp) temp->m_first.setPrev(rel);
+            r->m_first.setSame(rel);
+            rel->m_first.setPrev(r);
         }
-      }
-      
-      if (r->getFirst() != rel->getFirst())
-      {
-        r->m_first.setFirst(rel);
-        rel->m_first.setPrev(r);
-      }
-      else
-      {
-        temp = r->m_first.getSame();
-        rel->m_first.setSame(temp);
-        if (temp)
-          temp->m_first.setPrev(rel);
-        r->m_first.setSame(rel);
-        rel->m_first.setPrev(r);
-      }
     }
-  }
+    else
+    {
+        rel->m_first.setFirst(rel);
+        rel->m_first.setPrev(rel);
+        m_firstStart = rel;
+    }
+}
 
 
   template <class T1,class T2>
@@ -317,109 +343,168 @@ private:
 
     if (m_relations->size())
     {
-      SmartRef< Relation<T1,T2> > r = m_relations->front();
+        SmartRef< Relation<T1,T2> > rStart = m_relations->front();
+        SmartRef< Relation<T1,T2> > r      = m_relations->front();
 
-      while ((r->getSecond() != rel->getSecond()))
-      {
-        if (r->m_second.getFirst())
+        while ((r->getSecond() != rel->getSecond()))
         {
-          r = r->m_second.getFirst();
+            if (r->m_second.getFirst() != rStart)
+            {
+                r = r->m_second.getFirst();
+            }
+            else
+            {
+                break;
+            }
+        }
+      
+        if (r->getSecond() != rel->getSecond())
+        {
+            rel->m_second.setFirst(r->m_second.getFirst());
+            r->m_second.getFirst()->m_second.setPrev(rel);
+            r->m_second.setFirst(rel);
+            rel->m_second.setPrev(r);
         }
         else
         {
-          break;
+            temp = r->m_second.getSame();
+            rel->m_second.setSame(temp);
+            if (temp) temp->m_second.setPrev(rel);
+            r->m_second.setSame(rel);
+            rel->m_second.setPrev(r);
         }
-      }
-      
-      if (r->getSecond() != rel->getSecond())
-      {
-        r->m_second.setFirst(rel);
-        rel->m_second.setPrev(r);
-      }
-      else
-      {
-        temp = r->m_second.getSame();
-        rel->m_second.setSame(temp);
-        if (temp) 
-          temp->m_second.setPrev(rel);
-        r->m_second.setSame(rel);
-        rel->m_second.setPrev(r);
-      }
     }    
-  }
+    else
+    {
+        rel->m_second.setFirst(rel);
+        rel->m_second.setPrev(rel);
+        m_secondStart = rel;
+    }
+}
 
 
  
-  template <class T1,class T2>
+template <class T1,class T2>
     inline Relation<T1,T2>* RelTable<T1,T2>::findDup(Relation<T1,T2> *rel1, Relation<T1,T2>* rel2)
-    {
-      while (rel1)
+{
+    while (rel1)
 	{
-	  if (rel1->getSecond() == rel2->getSecond())
-	    return rel1;
-	  rel1 = rel1->m_first.getSame();
+	    if (rel1->getSecond() == rel2->getSecond()) return rel1;
+	    rel1 = rel1->m_first.getSame();
 	}
-      return rel1;
-    }
+    
+    return rel1;
+}
 	  
  
 
-  template <class T1,class T2>
-    inline bool RelTable<T1,T2>::bindRelationNoDup(Relation<T1,T2> *rel) {
-    
+template <class T1,class T2>
+    inline bool RelTable<T1,T2>::bindRelationNoDup(Relation<T1,T2> *rel) 
+{
     Relation<T1,T2>* temp;
 
     if (m_relations->size())
     {
-      SmartRef< Relation<T1,T2> > r = m_relations->front();
-      while ((r->getFirst() != rel->getFirst()))
-      {
-        if (r->m_first.getFirst())
+        SmartRef< Relation<T1,T2> > rStart = m_relations->front();
+        SmartRef< Relation<T1,T2> > r      = m_relations->front();
+
+        while ((r->getFirst() != rel->getFirst()))
         {
-          r = r->m_first.getFirst();
+            if (r->m_first.getFirst() != rStart)
+            {
+                r = r->m_first.getFirst();
+            }
+            else
+            {
+                break;
+            }
+        }
+      
+        if (r->getFirst() != rel->getFirst())
+        {
+            rel->m_first.setFirst(r->m_first.getFirst());
+            r->m_first.setFirst(rel);
+            rel->m_first.setPrev(r);
+	        return true;
         }
         else
         {
-          break;
+	        temp = findDup(r,rel);
+	        if (!temp)
+	        {
+	            temp = r->m_first.getSame();
+	            rel->m_first.setSame(temp);
+	            if (temp) temp->m_first.setPrev(rel);
+	            r->m_first.setSame(rel);
+	            rel->m_first.setPrev(r);
+	            return true;
+	        }
+	        else
+	        {
+	            std::copy(rel->m_infos.begin(),rel->m_infos.end(),std::back_inserter(temp->m_infos));
+	            return false;
+	        }
         }
-      }
-      
-      if (r->getFirst() != rel->getFirst())
-      {
-        r->m_first.setFirst(rel);
-        rel->m_first.setPrev(r);
-	return true;
-      }
-      else
-      {
-	temp = findDup(r,rel);
-	if (!temp)
-	  {
-	    temp = r->m_first.getSame();
-	    rel->m_first.setSame(temp);
-	    if (temp)
-	      temp->m_first.setPrev(rel);
-	    r->m_first.setSame(rel);
-	    rel->m_first.setPrev(r);
-	    return true;
-	  }
-	else
-	  {
-	    std::copy(rel->m_infos.begin(),rel->m_infos.end(),std::back_inserter(temp->m_infos));
-	    return false;
-	  }
-      }
     }
+    else
+    {
+        rel->m_first.setFirst(rel);
+        rel->m_first.setPrev(rel);
+        m_firstStart = rel;
+    }
+
     return true;
-  }
+}
 
 
 
-  template <class T1,class T2>
-    inline void RelTable<T1,T2>::removeFirst(Relation<T1,T2> *rel) {
-
+template <class T1,class T2>
+    inline void RelTable<T1,T2>::removeFirst(Relation<T1,T2> *rel) 
+{
     Relation<T1,T2> *prev, *next, *first;
 
+    // Recover links
+    prev  = rel->m_first.getPrev();    // Always the previous relation in the list
+    next  = rel->m_first.getSame();    // The next relation of this type in the list
+    first = rel->m_first.getFirst();   // The first relation in the list not of the current type
+
+    // If the next relation of the same type exists then update its links
+    if (next)
+    {
+        next->m_first.setPrev(prev);   // Set to point to the previous relation
+    }
+
+    // If the previous relation exists then update its links
+    if (prev)
+    {
+        if (prev->m_first.getSame() == rel)                  prev->m_first.setSame(next);
+        else if (prev->m_first.getFirst() == rel && !first) prev->m_first.setFirst(next);
+    }
+
+    // first is non-zero then we can have three conditions to deal with
+    if (first)
+    {
+        if (next)       // Removing the first relation of a given type
+        {
+            next->m_first.setFirst(first);
+            first->m_first.setPrev(next);
+            if (prev) prev->m_first.setFirst(next);
+        }
+        else if (prev)  // Removing the last relation of a given type in the middle somewhere
+        {
+            prev->m_first.setFirst(first);
+            first->m_first.setPrev(prev);
+        }
+        else first->m_first.setPrev(prev);  // Removed last relation from front of list
+    }
+
+    if (rel == m_firstStart) m_firstStart = first;
+    
+    rel->m_first.setPrev(0);
+    rel->m_first.setSame(0);
+    rel->m_first.setFirst(0);
+/*
+// Marco Original versions
     prev = rel->m_first.getPrev();
     next = rel->m_first.getSame();
     if (next)
@@ -437,14 +522,58 @@ private:
     rel->m_first.setPrev(0);
     rel->m_first.setSame(0);
     rel->m_first.setFirst(0);
+*/
   }
 
 
-  template <class T1,class T2>
-    inline void RelTable<T1,T2>::removeSecond(Relation<T1,T2> *rel) {
-
+template <class T1,class T2>
+    inline void RelTable<T1,T2>::removeSecond(Relation<T1,T2> *rel) 
+{
     Relation<T1,T2> *prev, *next, *first;
 
+    // Recover links
+    prev  = rel->m_second.getPrev();    // Always the previous relation in the list
+    next  = rel->m_second.getSame();    // The next relation of this type in the list
+    first = rel->m_second.getFirst();   // The first relation in the list not of the current type
+
+    // If the next relation of the same type exists then update its links
+    if (next)
+    {
+        next->m_second.setPrev(prev);   // Set to point to the previous relation
+    }
+
+    // If the previous relation exists then update its links
+    if (prev)
+    {
+        if (prev->m_second.getSame() == rel)                  prev->m_second.setSame(next);
+        else if (prev->m_second.getFirst() == rel && !first) prev->m_second.setFirst(next);
+    }
+
+    // first is non-zero then we can have three conditions to deal with
+    if (first)
+    {
+        if (next)       // Removing the first relation of a given type
+        {
+            next->m_second.setFirst(first);
+            first->m_second.setPrev(next);
+            if (prev) prev->m_second.setFirst(next);
+        }
+        else if (prev)  // Removing the last relation of a given type in the middle somewhere
+        {
+            prev->m_second.setFirst(first);
+            first->m_second.setPrev(prev);
+        }
+        else first->m_second.setPrev(prev);  // Removed last relation from front of list
+    }
+
+    if (rel == m_secondStart) m_secondStart = first;
+
+    rel->m_second.setPrev(0);
+    rel->m_second.setSame(0);
+    rel->m_second.setFirst(0);
+
+/*
+// Marco Original versions
     prev = rel->m_second.getPrev();
     next = rel->m_second.getSame();
     if (next)
@@ -462,6 +591,7 @@ private:
     rel->m_second.setPrev(0);
     rel->m_second.setSame(0);
     rel->m_second.setFirst(0);
+*/
   }
 
 }

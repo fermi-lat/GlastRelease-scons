@@ -8,6 +8,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "Event/TopLevel/Definitions.h"
+#include "CLHEP/Vector/LorentzVector.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "Event/Utilities/CLHEPStreams.h"
 #include "Event/Utilities/IDStreams.h"
@@ -102,8 +103,11 @@ class McPositionHit : virtual public ContainedObject {
     void setDepositedEnergy( double value );
     /// Retrieve depositing particle's energy
     double particleEnergy() const;
+    Hep3Vector particleMomentum() const;
+    HepLorentzVector particleFourMomentum() const;
     /// Update depositing particle's energy
-    void setParticleEnergy( double value );
+    ///void setParticleEnergy( double value );
+    void setParticle4Momentum( const HepLorentzVector& fourMom);
 
     /// Retrieve primary-origin flag
     bool primaryOrigin() const;
@@ -173,6 +177,7 @@ class McPositionHit : virtual public ContainedObject {
     double                  m_depositedEnergy;
     /// Depositing particle's energy
     double                  m_particleEnergy;
+    HepLorentzVector        m_particleFourMomentum;
     /// Time of flight
     double                  m_timeOfFlight;
     /// ID of the McParticle causing the hit

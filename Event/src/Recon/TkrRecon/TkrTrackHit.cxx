@@ -95,7 +95,10 @@ const Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::Par
         }
         case SMOOTHED:  
         {
-            if (!validSmoothedHit()) throw std::invalid_argument("Invalid Smoothed TkrTrackParams requested");
+            if (!validSmoothedHit()) 
+            {
+                throw std::invalid_argument("Invalid Smoothed TkrTrackParams requested");
+            }
             return m_hitSmooth;
         }
         case QMATERIAL: 
