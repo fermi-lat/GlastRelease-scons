@@ -4,7 +4,7 @@
 ClassImp(McPositionHit)
 
 McPositionHit::McPositionHit() :
-m_depositedEnergy(0.), m_particleEnergy(0.), 
+m_depositedEnergy(0.), m_particleFourMomentum(0.,0.,0.,0.), 
 m_timeOfFlight(0.), m_statusFlags(0)
 {
 }
@@ -17,7 +17,7 @@ McPositionHit::~McPositionHit()
 void McPositionHit::Clear(Option_t *option)
 {
     m_depositedEnergy = 0.;
-    m_particleEnergy = 0;
+    m_particleFourMomentum = TLorentzVector(0.,0.,0.,0.);
     m_timeOfFlight = 0.;
     m_statusFlags = 0;
     m_entry = TVector3(0., 0., 0.);
@@ -34,7 +34,7 @@ void McPositionHit::Print(Option_t *option) const {
     cout.precision(2);
     cout << "Flags: " << m_statusFlags 
         << "    Dep Energy: " << m_depositedEnergy
-        << "    Part Energy: " << m_particleEnergy
+        << "    Part Energy: " << m_particleFourMomentum.E()
         << "    TOF:  " << m_timeOfFlight << endl;
     cout << "Local Entry: (" << m_entry.X() << ","
         << m_entry.Y() << "," << m_entry.Z() << ")"
@@ -69,7 +69,7 @@ void McPositionHit::initialize(Int_t particleId, Double_t edep,
                                const VolumeIdentifier &volId,
                                const TVector3& entry, const TVector3& exit,
                                McParticle *mc, McParticle *origin, 
-                               Double_t pE, 
+                               TLorentzVector& p4Mom, 
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = particleId;
@@ -79,7 +79,7 @@ void McPositionHit::initialize(Int_t particleId, Double_t edep,
     m_exit = exit;
     m_mcParticle = mc;
     m_originMcParticle = origin;
-    m_particleEnergy = pE;
+    m_particleFourMomentum = p4Mom;
     m_timeOfFlight = tof;
     m_statusFlags = flags;
 }
@@ -88,7 +88,7 @@ void McPositionHit::initialize(Int_t mcParticleId, Int_t originParticleId,
                                Double_t edep, const VolumeIdentifier& volId, 
                                const TVector3& entry, const TVector3& exit,
                                const TVector3& gEntry, const TVector3& gExit, 
-                               McParticle *mc, McParticle *origin, Double_t pE,
+                               McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = mcParticleId;
@@ -101,7 +101,7 @@ void McPositionHit::initialize(Int_t mcParticleId, Int_t originParticleId,
     m_globalExit = gExit;
     m_mcParticle = mc;
     m_originMcParticle = origin;
-    m_particleEnergy = pE;
+    m_particleFourMomentum = p4Mom;
     m_timeOfFlight = tof;
     m_statusFlags = flags;
 }

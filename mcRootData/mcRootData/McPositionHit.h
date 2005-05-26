@@ -43,14 +43,14 @@ public:
     void initialize(Int_t particleId, 
         Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit, 
-        McParticle *mc, McParticle *origin, Double_t pE,
+        McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
         Double_t tof, UInt_t flags = 0);
 
     void initialize(Int_t mcParticleId, Int_t originParticleId, 
         Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit,
         const TVector3& gEntry, const TVector3& gExit, 
-        McParticle *mc, McParticle *origin, Double_t pE,
+        McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
         Double_t tof, UInt_t flags = 0);
     
     const VolumeIdentifier& getVolumeId() const { return m_volumeId; };
@@ -69,7 +69,11 @@ public:
 
     Double_t getDepositedEnergy() const { return m_depositedEnergy; }
     
-    Double_t getParticleEnergy() const { return m_particleEnergy; }
+    Double_t getParticleEnergy() const { return m_particleFourMomentum.E(); }
+    TVector3 getParticleMomentum() const { return m_particleFourMomentum.Vect();}
+    TLorentzVector getParticle4Momentum() const {return m_particleFourMomentum;}
+    void     setParticle4Momentum(TVector3& partMom, Double_t partE) 
+    {m_particleFourMomentum = TLorentzVector(partMom, partE);}
     
     Double_t getTimeOfFlight() const { return m_timeOfFlight; }
 
@@ -87,8 +91,10 @@ public:
 private:
 
     Double_t m_depositedEnergy;
-    Double_t m_particleEnergy;
+    //Double_t m_particleEnergy;
     Double_t m_timeOfFlight;
+    /// Particle 4-momentum at this hit
+    TLorentzVector m_particleFourMomentum;
    
     /// Packed flags for the internal use.
     UInt_t m_statusFlags;

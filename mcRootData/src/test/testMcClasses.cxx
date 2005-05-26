@@ -341,6 +341,8 @@ int write(char* fileName, UInt_t numEvents) {
             id.append(1);
             Double_t depE = randNum;
             Double_t partE = randNum*0.1;
+            TVector3 partMom = entry - exit;
+            TLorentzVector part4Mom(partMom, partE);
             Double_t tof = randNum*0.4;
             UInt_t flags = 0;
             McParticle *originMcPart = 0;
@@ -348,7 +350,7 @@ int write(char* fileName, UInt_t numEvents) {
             Int_t originId = -13;
             posHit->initialize(particleId, originId, depE, id, 
                 entry, exit, gEntry, gExit,
-                mcPart, originMcPart, partE, tof, flags);
+                mcPart, originMcPart, part4Mom, tof, flags);
             ev->addMcPositionHit(posHit);
             
             McIntegratingHit *intHit = new McIntegratingHit();
