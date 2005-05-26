@@ -8,20 +8,21 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/IToolFactory.h"
 
-DECLARE_FACTORY_ENTRIES( CalRecon ) {
-    DECLARE_SERVICE( CalReconSvc ) ;
-    DECLARE_ALGORITHM( CalClustersAlg ) ;
-    DECLARE_ALGORITHM( CalEventEnergyAlg ) ;
-    DECLARE_ALGORITHM( CalDisplay ) ;
-    DECLARE_ALGORITHM( PropertiesCheckAlg ) ;
-    DECLARE_TOOL( CalSingleClustering ) ;
-    DECLARE_TOOL( CalSimpleClustering ) ;
-    DECLARE_TOOL( CalRawEnergyCorr );
-    DECLARE_TOOL( CalLastLayerCorr );
-    DECLARE_TOOL( CalTkrLikelihoodCorr );
-    DECLARE_TOOL( CalProfileCorr );
-    DECLARE_TOOL( CalValsCorr );
-    DECLARE_TOOL( CalTransvOffsetCorr );
+DECLARE_FACTORY_ENTRIES( CalRecon ) 
+{
+    DECLARE_SERVICE(   CalReconSvc             );
+    DECLARE_ALGORITHM( CalClustersAlg          );
+    DECLARE_ALGORITHM( CalEventEnergyAlg       );
+    DECLARE_ALGORITHM( CalDisplay              );
+    DECLARE_ALGORITHM( PropertiesCheckAlg      );
+    DECLARE_TOOL(      CalSingleClusteringTool );
+    DECLARE_TOOL(      CalSimpleClusteringTool );
+    DECLARE_TOOL(      CalRawEnergyTool        );
+    DECLARE_TOOL(      CalLastLayerTool        );
+    DECLARE_TOOL(      CalTkrLikelihoodTool    );
+    DECLARE_TOOL(      CalProfileTool          );
+    DECLARE_TOOL(      CalValsCorrTool         );
+    DECLARE_TOOL(      CalTransvOffsetTool     );
 } 
 
 
