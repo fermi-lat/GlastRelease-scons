@@ -510,8 +510,10 @@ StatusCode mcRootReaderAlg::readMcPositionHits() {
         
         double edepTds= posHitRoot->getDepositedEnergy();
         
-        double epartTds = posHitRoot->getParticleEnergy();
-        posHitTds->setParticleEnergy(epartTds);
+        TLorentzVector part4MomRoot = posHitRoot->getParticle4Momentum();
+        HepLorentzVector part4MomTds(part4MomRoot.X(), part4MomRoot.Y(), 
+            part4MomRoot.Z(), part4MomRoot.T());
+        posHitTds->setParticle4Momentum(part4MomTds);
         
         double tofTds = posHitRoot->getTimeOfFlight();
         posHitTds->setTimeOfFlight(tofTds);

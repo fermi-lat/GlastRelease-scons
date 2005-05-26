@@ -409,7 +409,9 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
         
         Double_t edepRoot = (*hit)->depositedEnergy();
         
-        Double_t epartRoot = (*hit)->particleEnergy();
+        HepLorentzVector part4momTds = (*hit)->particleFourMomentum();
+        TLorentzVector part4MomRoot(part4momTds.x(), part4momTds.y(), 
+            part4momTds.z(), part4momTds.t());
         
         //bool primaryOrigin = (*hit)->primaryOrigin();
         //log << MSG::INFO << "primaryOrigin " << primaryOrigin << endreq;
@@ -448,7 +450,7 @@ StatusCode mcRootWriterAlg::writeMcPositionHits() {
 
         mcPosHit->initialize(particleId, originPartId, edepRoot, volIdRoot, 
             entryRoot, exitRoot, globalEntryRoot, globalExitRoot, 
-            mcPartRoot, originRoot, epartRoot, tofRoot, flagsRoot);
+            mcPartRoot, originRoot, part4MomRoot, tofRoot, flagsRoot);
 
         // Add the ROOT McPositionHit to the ROOT collection of McPositionHits
         m_mcEvt->addMcPositionHit(mcPosHit);
