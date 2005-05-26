@@ -194,7 +194,7 @@ private:
     int askGPS(); // the function that will be called
     bool m_insideSAA; 
 
-
+    DoubleProperty m_expansionFactor;
 
 };
 
@@ -212,6 +212,7 @@ static std::string default_dtd_file("$(FLUXROOT)/xml/source.dtd");
 /// Standard Constructor
 FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc), m_currentFlux(0), m_insideSAA(false)
+, m_expansionFactor(1.0)
 {
 
     declareProperty("source_lib" , m_source_lib); 
@@ -221,6 +222,9 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("EndTime",      m_endTime=0);
     declareProperty("DeltaTime",    m_deltaTime=0);
     declareProperty("StartDate"   , m_startDate="");
+#if 0 // disable this for now, it is not consistent with CompositeSource
+    declareProperty("ExpansionFactor"   , m_expansionFactor=1.0);
+#endif
 
 }
 
@@ -303,6 +307,8 @@ StatusCode FluxSvc::initialize ()
         status = StatusCode::FAILURE;
     }
 
+    m_fluxMgr->setExpansion(m_expansionFactor);
+
     if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
         return StatusCode::FAILURE;
@@ -311,15 +317,9 @@ StatusCode FluxSvc::initialize ()
     log << MSG::INFO << "Registering factories external to flux: ";
     SpectrumFactoryLoader externals;
     std::vector<std::string> flux_names(externals.names());
-#if 1
+
     std::copy( flux_names.begin(), flux_names.end(), 
         std::ostream_iterator<std::string>(log.stream(), ", "));
-#else
-    for( std::vector<std::string>::const_iterator cit = names.begin(); cit !=names.end(); ++cit){
-        const std::string& name= *cit;
-        log << name;
-    }
-#endif
     log  << endreq;
 
 
@@ -551,7 +551,9 @@ StatusCode FluxSvc::run(){
     
     // access the starting time from the job properties
     double currentTime= startTime(); //( was: m_startTime;)
+#if 0 // this was alredy set??
     if( flux!=0 ) flux->pass(currentTime); // add to zero
+#endif
     if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_startTime+m_deltaTime;
 
     { bool noend=true;
