@@ -74,7 +74,7 @@ StatusCode NeuralNetFindTrackTool::findTracks()
   //If clusters, then retrieve estimate for the energy
   if (pCalClusters)
     {
-      CalEnergy   = pCalClusters->front()->getEnergySum(); 
+      CalEnergy   = pCalClusters->front()->getCalParams().getEnergy(); 
       CalPosition = pCalClusters->front()->getPosition();
     }
   
