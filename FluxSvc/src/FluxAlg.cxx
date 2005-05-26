@@ -116,6 +116,7 @@ private:
     int askGPS(); // the function that will be called
     bool m_insideSAA; 
 
+    IntegerProperty m_prescale;
 
 };
 //------------------------------------------------------------------------
@@ -143,6 +144,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("pointing_info_tree_name",  m_root_tree="MeritTuple");
     declareProperty("save_pointing_info",  m_save_tuple=false);
     declareProperty("AvoidSAA",   m_avoidSAA=false);
+    declareProperty("Prescale",   m_prescale=1);
 
 
 }
@@ -226,6 +228,9 @@ StatusCode FluxAlg::initialize(){
     log << MSG::INFO << "Source title: " << title << endreq;
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
     log << MSG::INFO << "        rate: " << m_flux->rate() << endreq;
+    if( m_prescale>1) {
+        log << MSG::INFO << "    prescale: "<< m_prescale << endreq;
+    }
 
     if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;
@@ -276,7 +281,9 @@ StatusCode FluxAlg::execute()
 
     std::string particleName;
     m_SAAreject--;
+    int count = m_prescale;
     do{ // loop if we are rejecting particles generated during SAA
+        // also do prescale here
         m_flux->generate();
         particleName = m_flux->particleName();
 
@@ -286,7 +293,7 @@ StatusCode FluxAlg::execute()
             return sc;
         }
         ++m_SAAreject;
-    } while(m_insideSAA && m_avoidSAA.value());
+    } while(m_insideSAA && m_avoidSAA.value() || --count>0);
 
     HepPoint3D p = m_flux->launchPoint();
     HepVector3D d = m_flux->launchDir();
