@@ -54,6 +54,9 @@ Event::BuildPatCandTab::BuildPatCandTab(IDataProviderSvc* dataSvc)
         {
             Event::TkrTrackHit*      candHit = *hitIter;
             const Event::TkrCluster* cluster = candHit->getClusterPtr();
+
+            if (cluster == 0) continue;
+
             Event::McPartToClusVec   hitVec  = mcPartToClusTab.getRelBySecond(cluster);
 
             // Ok, now loop over the  McParticle <-> TkrCluster relations
