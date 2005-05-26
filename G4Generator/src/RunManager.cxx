@@ -345,7 +345,9 @@ void RunManager::InitializePhysics()
   if(physicsList)
   {
     if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
-    kernel->InitializePhysics(physicsList);
+    kernel->InitializePhysics(physicsList);   // Use this for G4 v6
+    //kernel->SetPhysics(physicsList);        // Use this for G4 v7
+    //kernel->InitializePhysics();
   }
   else
   {

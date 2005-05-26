@@ -33,15 +33,17 @@ void McParticleManager::initialize(IDataProviderSvc* esv, IGlastDetSvc* gsvc)
 Event::McParticle* McParticleManager::getMcParticle(unsigned int id)
 {
   Event::McParticle* particle = 0;
-  std::map<unsigned int, Event::McParticle*>::iterator it;
   
-  for(it=m_particles.begin();it != m_particles.end() ; it++){
-    if (it->first == id) 
-      {
-        particle = it->second;
-        break;
-      }
-  }
+  particle = m_particles[id];
+
+  //std::map<unsigned int, Event::McParticle*>::iterator it;
+  //for(it=m_particles.begin();it != m_particles.end() ; it++){
+  //  if (it->first == id) 
+  //    {
+  //      particle = it->second;
+  //      break;
+  //    }
+  //}
 
   return particle;
 }

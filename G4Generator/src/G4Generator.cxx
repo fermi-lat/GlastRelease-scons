@@ -78,6 +78,9 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("physics_choice", m_physics_choice="full");
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
+  declareProperty("numGenerations", m_numGenerations=100000);
+  declareProperty("lowEnergyCut",m_lowEnergy=0.52);
+  declareProperty("minDistanceCut",m_minDistance=0.1);
 
   declareProperty("mscatOption",  m_mscatOption  = true); 
   declareProperty("eLossCurrent", m_eLossCurrent = true);  // default is to use the current, not 5.2.
@@ -266,14 +269,15 @@ StatusCode G4Generator::execute()
       Event::McTrajectoryCol* traj = new Event::McTrajectoryCol();  
       eventSvc()->registerObject("/Event/MC/TrajectoryCol",traj);
 
-      for(unsigned int j = 0; j< m_runManager->getNumberOfTrajectories(); ++j){
-          std::auto_ptr<std::vector<Hep3Vector> > points = 
-              m_runManager->getTrajectoryPoints(j);
-          Event::McTrajectory* tr = new Event::McTrajectory();
-          tr->addPoints(*(points.get()));
-          tr->setCharge(m_runManager->getTrajectoryCharge(j));
+      int numTrajs  = m_runManager->getNumberOfTrajectories();
+      int maxGenNum = 0;
 
-        // note that even if we can't find an associated particle, we store the trajectory and its sign
+      std::multimap<const int, const unsigned int> genVsTrajIdx;
+
+      for(unsigned int j = 0; j < m_runManager->getNumberOfTrajectories(); j++)
+      {
+          // Start by finding the McParticle associated with this trajectory
+          // note that even if we can't find an associated particle, we store the trajectory and its sign
           Event::McParticle* part = 0;
 
           if (McParticleManager::getPointer()->size() > 
@@ -283,12 +287,72 @@ StatusCode G4Generator::execute()
                   McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(j));
           }
 
-          tr->setMcParticle(part); //may be zero.
+          int genNum = 1000;
 
-          traj->push_back(tr);
+          if (part)
+          {
+              if (part->initialFourMomentum().e() < m_lowEnergy)
+              {
+                  double dist = (part->initialPosition() - part->finalPosition()).mag();
+
+                  if (dist < m_minDistance) continue;
+              }
+
+              genNum = 0;
+              SmartRef<Event::McParticle> mcPart = part->getMother();
+
+              while(mcPart != mcPart->getMother())
+              {
+                  mcPart = mcPart->getMother();
+                  genNum++;
+              }
+
+              if (genNum > maxGenNum) maxGenNum = genNum;
+          }
+
+          genVsTrajIdx.insert(std::pair<const int, const unsigned int>(genNum,j));
       }
 
-    }
+      // Check size of map
+      int genIdxMapSize  = genVsTrajIdx.size();
+      int maxGenerations = 10000;
+
+      if (genIdxMapSize > 20000)
+      {
+          maxGenerations = maxGenNum - 2;
+          if (maxGenerations > m_numGenerations) maxGenerations = m_numGenerations;
+      }
+
+      // Now go through the map and set up generation related display
+      std::multimap<const int, const unsigned int>::iterator genMapIter;
+      for(genMapIter = genVsTrajIdx.begin(); genMapIter != genVsTrajIdx.end(); genMapIter++)
+      {
+          const int          genNum  = (*genMapIter).first;
+          const unsigned int trajIdx = (*genMapIter).second;
+
+          if (genNum <= maxGenerations)
+          {
+              Event::McParticle* part = 0;
+
+              if (McParticleManager::getPointer()->size() > 
+                  static_cast<unsigned int>( m_runManager->getTrajectoryTrackId(trajIdx)))
+              {
+                  part = 
+                      McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(trajIdx));
+              }
+
+              std::auto_ptr<std::vector<Hep3Vector> > points = 
+                  m_runManager->getTrajectoryPoints(trajIdx);
+              int numPoints = (*(points.get())).size();
+              Event::McTrajectory* tr = new Event::McTrajectory();
+              tr->addPoints(*(points.get()));
+              tr->setCharge(m_runManager->getTrajectoryCharge(trajIdx));
+              tr->setMcParticle(part); //may be zero.
+
+              traj->push_back(tr);
+          }
+      }
+  }
 
   return StatusCode::SUCCESS;
 }

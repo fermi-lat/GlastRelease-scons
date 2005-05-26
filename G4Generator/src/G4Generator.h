@@ -48,6 +48,11 @@ class G4Generator : public Algorithm {
   /// flag to save trajectories in the TDS
   bool m_saveTrajectories;
 
+  /// Maximum number of generations to store trajectories for
+  int m_numGenerations;
+  double m_minDistance;
+  double m_lowEnergy;
+
   /// the McParticle tree mode
   /// It can be "full" or "minimal" or "pruneCal"
 
