@@ -1,10 +1,10 @@
 package mcRootData
-version v2r16
+version v2r17
 # $Id$
 
 
 use commonRootData v2r*
-use RootcintPolicy v4r* GlastPolicy
+use RootcintPolicy v5r* GlastPolicy
 
 # See RootPolicy for discussion of this pattern
 
