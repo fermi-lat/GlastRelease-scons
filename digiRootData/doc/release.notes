@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v8r3p1    27-May-2005 HMK new version of RootcintPolicy
 v8r3p0    25-Apr-2005 HMK Remove EventSummaryData initEventSeq since we now
           use the top-level event id only, but retain the eventsequence data
           member for backward compatbility
