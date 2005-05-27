@@ -1,6 +1,6 @@
 package OnboardFilter
 
-version v1r1p6
+version v1r1p7
 # $Header$
 
 author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
@@ -27,7 +27,7 @@ macro_prepend includes "-I ../src -I ../DFC  " WIN32 " /I ..\src  /I ..\DFC "
 
 macro_prepend includes "-I ../src " WIN32 " /I ..\src  "
 
-library OnboardFilter $(headers) *.cxx *.c Dll/*.cxx
+library OnboardFilter -s=../src $(headers) *.cxx  *.c -s=Dll *.cxx
 apply_pattern package_Cshlibflags
 # use this only for the test. TODO: make it cleaner
 # no unit test for now --THB
