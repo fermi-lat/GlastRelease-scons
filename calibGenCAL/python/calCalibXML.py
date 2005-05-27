@@ -376,12 +376,15 @@ class calTholdCICalibXML(calCalibXML):
                         
                         for erng in range(3):
 
+                            # get gain setting for channel
+
                             if erng < 2:
                                 gain = lrefGain[tem, row, end, fe]
                             else:
                                 gain = (hrefGain[tem, row, end, fe] - 8)
                                 if gain < 0:
                                     gain = 8
+                            gain = int(gain)
                        
                             # insert <tholdCIRange> elements
 
@@ -419,6 +422,7 @@ class calTholdCICalibXML(calCalibXML):
                         gain = hrefGain[tem, row, end, fe] - 8
                         if gain < 0:
                             gain = 8
+                        gain = int(gain)
                         ped = pedData[tem, gain, 3, row, end, fe]
                         tcr.setAttribute('pedVal', "%0.3f" % ped)
                         tcr.setAttribute('pedSig', '1')
