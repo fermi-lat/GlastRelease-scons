@@ -236,6 +236,8 @@ TLine Reconstruct(const TGraph* XY) {
     return track;
 }
 
+bool IsValid(const TLine& l) { return l.GetLineStyle(); }
+
 double ExtrapolateCoordinate(const TLine& track, const double z) {
     const double x1 = track.GetX1();
     const double x2 = track.GetX2();

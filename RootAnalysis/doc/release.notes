@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v8r4     27-May-2005: HMK: Updated LeaningTower files to allow compilation
+          of a shared library
  v8r3p0   17-May-2005: HMK: Bug fix for Efficiency.cxx which was removing 
           events with more than one track from processing - Pisa runs have no
           bad strip handling, and new TkrRecon splits otherwise perfect tracks

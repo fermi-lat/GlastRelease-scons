@@ -54,6 +54,8 @@ class Layer : public TNamed {
     const std::vector<TString>& GetPlanesForFittingCol() const {
         return planesForFittingCol; }
 
+    friend class Event;
+
  private:
     float X, Y, Z;
     float rotX, rotY, rotZ;

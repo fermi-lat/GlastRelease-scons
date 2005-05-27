@@ -18,9 +18,9 @@ class Tracker {
     TString GetGeoFileName() const { return m_geoFileName; }
     std::vector<TString> GetPlaneNameCol(const int view) const;
     std::vector<TString> GetPlaneNameCol(const TString view) const;
-    void SetTower(const bool tower) { TOWER = tower; }
+    void SetTower(const Bool_t t) { TOWER = t; }
  private:
-    bool TOWER;
+    Bool_t TOWER;
     TList* myGeometry;
     TString m_geoFileName;
 

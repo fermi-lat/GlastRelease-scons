@@ -82,7 +82,7 @@ class Recon : public TObject {
 };
 
 TLine Reconstruct(const TGraph*);
-bool IsValid(const TLine& l) { return l.GetLineStyle(); }
+bool IsValid(const TLine& l);
 //bool IsInvalid(const TLine& l) { return l.GetX1() == 0.0 && l.GetX2() == 0.0
 //                                    && l.GetY1() == 0.0 && l.GetY2() == 0.0; }
 double ExtrapolateCoordinate(const TLine&, const double z);

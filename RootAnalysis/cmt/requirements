@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r3p0
+version v8r4
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
@@ -7,8 +7,8 @@ use mcRootData v*
 use commonRootData v*
 use digiRootData v*
 use reconRootData v*
-use ROOT v* IExternal 
-#use RootcintPolicy v* GlastPolicy
+#use ROOT v* IExternal 
+use RootcintPolicy v* GlastPolicy
 use rootTestData v*
 
 set ROOTANALYSIS ${ROOTANALYSISROOT}
@@ -43,6 +43,26 @@ private
 # ../src/SelectorAnalysis/recon/ReconSelector.h"\
 # includes="-I${COMMONROOTDATAROOT} -I${DIGIROOTDATAROOT} -I${MCROOTDATAROOT} -I${RECONROOTDATAROOT} -I${ROOTANALYSISROOT}"
 #macro root_linkdef "${ROOTANALYSISROOT}/src/SelectorAnalysis/digi/LinkDef.h" 
+
+apply_pattern root_library headers="\
+../src/LeaningTower/Event.h \
+../src/LeaningTower/Recon.h \
+../src/LeaningTower/Tracker.h \
+../src/LeaningTower/Residual.h \
+../src/LeaningTower/Efficiency.h \
+../src/LeaningTower/TriggerEfficiency.h \
+../src/LeaningTower/EventDisplay.h \
+../src/LeaningTower/Layer.h" \
+source="LeaningTower/Event.cxx \
+LeaningTower/Recon.cxx \
+LeaningTower/TriggerEfficiency.cxx \
+LeaningTower/Tracker.cxx \
+LeaningTower/EventDisplay.cxx \
+LeaningTower/Layer.cxx \
+LeaningTower/Efficiency.cxx \
+LeaningTower/Residual.cxx" \
+sourceDir="LeaningTower"
+
 
 macro_append ROOT_libs " -lHist -lTreePlayer " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "

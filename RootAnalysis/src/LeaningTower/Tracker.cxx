@@ -11,6 +11,9 @@
 #include <sstream>
 #include <string>
 
+
+ClassImp(Tracker)
+
 Tracker::Tracker() {
     // myGeometry was a TMap.  The key was name, and the object was a Layer
     // object.  A TMap is stored in arbitrary order, and cannot be sorted.
@@ -182,4 +185,3 @@ void Tracker::Display(TCanvas* ed) {
     ed->cd();
 }
 
-ClassImp(Tracker)
