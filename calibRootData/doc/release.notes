@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
                               EOH
 
+   v1r7p0 27-May-2005 hmk    Use v5 of RootcintPolicy
    v1r7   17-Apr-2005 jrb    Back out commonRootData namespace
    v1r6   13-Apr-2005 jrb    Upgrades for commonRootData v2 (namespace)
    v1r5   31-Mar-2005 jrb    Add classes for charge scale
