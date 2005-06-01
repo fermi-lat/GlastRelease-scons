@@ -435,14 +435,36 @@ class calFitsXML(object):
         k = self.__doc.createElement('key')
         k.setAttribute('name', str(name))
         k.appendChild(self.__doc.createTextNode(str(value)))
-        hdrNode.appendChild(k)        
+        hdrNode.appendChild(k)
+
+
+    def getVersion(self):
+        """
+        \brief Get the format version of a CAL FITS/XML file
+
+        \returns The version number of the XML file, taken from the
+                 <CALdoc> attribute.
+        """
+
+        # get XML root document element
+
+        dList = self.__doc.getElementsByTagName('CALdoc')
+        dLen = len(dList)
+        if dLen != 1:
+            raise calFileReadExcept, "wrong number of <CAL_doc> elements: %u (expected 1)" % dLen
+        d = dList[0]
+
+        # get XML format version
+
+        xmlVersion = int(d.getAttribute('version'))
+        return xmlVersion
 
 
     def read(self):
         """
         \brief Read data from a CAL FITS/XML file
 
-        \returns rawEventData A Numeric array of data read from the FITS data table.
+        \returns A Numeric array of data read from the FITS data table.
         """
 
         # get XML document type
