@@ -76,7 +76,7 @@ def build_application_test(package) :
 def key_values(filename) :
 
   # lines of interest
-  regexp = re.compile('^(test_CalRecon).*Energy')
+  regexp = re.compile('^test_CalRecon.*Energy')
 
   # accumulate the values
   nb_clusters = 0
@@ -100,12 +100,13 @@ def key_values(filename) :
         if energy > 0 :
           nb_ll += 1
           ll_energy += energy
-      elif words[3] != '0' :
-        nb_clusters += 1
-        raw_energy += string.atof(words[3])
-        corrected_energy += string.atof(words[5])
-        hashed_posdir += string.atof(words[6]) + string.atof(words[7]) + string.atof(words[8])
-        hashed_posdir += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
+      elif words[2] == 'Energy' :
+        if words[3] != '0' :
+          nb_clusters += 1
+          raw_energy += string.atof(words[3])
+          corrected_energy += string.atof(words[5])
+          hashed_posdir += string.atof(words[6]) + string.atof(words[7]) + string.atof(words[8])
+          hashed_posdir += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
       
   # result
   if nb_clusters>0 :
