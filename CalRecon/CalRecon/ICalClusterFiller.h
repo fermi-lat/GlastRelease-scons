@@ -1,18 +1,18 @@
 
-#ifndef IClusterFiller_h
-#define IClusterFiller_h
+#ifndef ICalClusterFiller_h
+#define ICalClusterFiller_h
 
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "ICalClusteringTool.h"
+#include <CalRecon/ICalClusteringTool.h>
 
 /**   
-* @class IClusterFiller
+* @class ICalClusterFiller
 *
 * $Header$
 */
 
 
-class IClusterFiller 
+class ICalClusterFiller 
 {
 public:
     //* Defines the method for filling cluster info into CalCluster TDS objects

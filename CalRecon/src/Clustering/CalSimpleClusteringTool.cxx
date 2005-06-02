@@ -19,7 +19,7 @@
 #include "Event/Recon/CalRecon/CalCluster.h"
 
 #include "Utilities/ICalReconSvc.h"
-#include "ICalClusteringTool.h"
+#include <CalRecon/ICalClusteringTool.h>
 #include "StdClusterInfo.h"
 
 class CalSimpleClusteringTool : public AlgTool, virtual public ICalClusteringTool
@@ -44,7 +44,7 @@ private:
     ICalReconSvc*     m_calReconSvc;
 
     //! Utility for filling clusters
-    IClusterFiller*   m_clusterInfo;
+    ICalClusterFiller*   m_clusterInfo;
 
     //! Collect CalXtalRecData pointers
     void getXtals(XtalDataVec& xtals);

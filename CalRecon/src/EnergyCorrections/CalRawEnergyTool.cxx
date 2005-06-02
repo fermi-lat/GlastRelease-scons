@@ -5,7 +5,7 @@ $Header$
 
 */
 
-#include "ICalEnergyCorr.h"
+#include <CalRecon/ICalEnergyCorr.h>
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"

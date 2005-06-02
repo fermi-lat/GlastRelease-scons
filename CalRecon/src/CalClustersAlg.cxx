@@ -1,5 +1,5 @@
 
-#include "Clustering/ICalClusteringTool.h"
+#include <CalRecon/ICalClusteringTool.h>
 #include "Utilities/ICalReconSvc.h"
 
 // for implementation

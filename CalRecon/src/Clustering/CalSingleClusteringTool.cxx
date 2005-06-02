@@ -9,7 +9,7 @@
 #include "Event/Recon/CalRecon/CalCluster.h"
 
 #include "Utilities/ICalReconSvc.h"
-#include "ICalClusteringTool.h"
+#include <CalRecon/ICalClusteringTool.h>
 #include "StdClusterInfo.h"
 #include "MomentsClusterInfo.h"
 
@@ -35,7 +35,7 @@ private:
     ICalReconSvc*     m_calReconSvc;
 
     //! Utility for filling clusters
-    IClusterFiller*   m_clusterInfo;
+    ICalClusterFiller*   m_clusterInfo;
 } ;
 
 DECLARE_TOOL_FACTORY(CalSingleClusteringTool) ;

@@ -6,7 +6,7 @@
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/TopLevel/EventModel.h"
 
-#include "EnergyCorrections/ICalEnergyCorr.h"
+#include <CalRecon/ICalEnergyCorr.h>
 
 /**   
 * @class CalEventEnergyAlg

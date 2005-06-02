@@ -8,7 +8,7 @@
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 
-#include "ICalEnergyCorr.h"
+#include <CalRecon/ICalEnergyCorr.h>
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // to access an XML containing Profile Bias parameters file

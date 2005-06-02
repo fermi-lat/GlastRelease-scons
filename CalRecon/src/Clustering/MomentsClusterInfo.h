@@ -4,7 +4,7 @@
 
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "IClusterFiller.h"
+#include <CalRecon/ICalClusterFiller.h>
 #include "Utilities/ICalReconSvc.h"
 
 /**   
@@ -22,11 +22,11 @@
 */
 
 
-class MomentsClusterInfo : virtual public IClusterFiller
+class MomentsClusterInfo : virtual public ICalClusterFiller
 {
 public:
     MomentsClusterInfo(const ICalReconSvc* calReconSvc);
-   ~MomentsClusterInfo() {};
+    virtual ~MomentsClusterInfo() {};
     
     Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec);
 private:

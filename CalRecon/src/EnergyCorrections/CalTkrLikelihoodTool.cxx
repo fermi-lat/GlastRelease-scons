@@ -10,7 +10,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "facilities/Util.h"
 
-#include "ICalEnergyCorr.h"
+#include <CalRecon/ICalEnergyCorr.h>
 
 #include <fstream>
 

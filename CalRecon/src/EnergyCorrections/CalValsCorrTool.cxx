@@ -20,7 +20,7 @@ $Header$
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 
-#include "ICalEnergyCorr.h"
+#include <CalRecon/ICalEnergyCorr.h>
 #include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
