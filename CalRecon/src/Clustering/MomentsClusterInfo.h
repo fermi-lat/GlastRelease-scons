@@ -5,7 +5,7 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include <CalRecon/ICalClusterFiller.h>
-#include "Utilities/ICalReconSvc.h"
+#include <CalRecon/ICalReconSvc.h>
 
 /**   
 * @class MomentsClusterInfo

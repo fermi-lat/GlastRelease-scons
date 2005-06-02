@@ -1,6 +1,6 @@
 
 #include <CalRecon/ICalClusteringTool.h>
-#include "Utilities/ICalReconSvc.h"
+#include <CalRecon/ICalReconSvc.h>
 
 // for implementation
 #include "GaudiKernel/Algorithm.h"

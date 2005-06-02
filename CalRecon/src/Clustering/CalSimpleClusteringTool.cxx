@@ -18,7 +18,7 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 
-#include "Utilities/ICalReconSvc.h"
+#include <CalRecon/ICalReconSvc.h>
 #include <CalRecon/ICalClusteringTool.h>
 #include "StdClusterInfo.h"
 

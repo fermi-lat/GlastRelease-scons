@@ -1,5 +1,5 @@
 // for class definition
-#include "ICalReconSvc.h"
+#include <CalRecon/ICalReconSvc.h>
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/MsgStream.h"
