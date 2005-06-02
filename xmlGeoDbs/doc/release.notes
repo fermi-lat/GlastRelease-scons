@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r22p4 02-JUN-2005 awb  Added 4,6 and 8 tower geometry files to latAssemby.
    v1r22p3 20-Apr-2005 jrb  (for Anders) Add VDG files for various configs
    v1r22p3 19-Apr-2005 awb  More latAssembly files for singleBay and LAT, 
                             this time for VDG.
