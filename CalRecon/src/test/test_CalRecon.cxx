@@ -1,6 +1,7 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -65,6 +66,7 @@ StatusCode test_CalRecon::execute() {
 
     // First, the collection of CalRecons is retrieved from the TDS
     SmartDataPtr<Event::CalClusterCol> clusCol(eventSvc(),EventModel::CalRecon::CalClusterCol) ;
+    SmartDataPtr<Event::CalEventEnergy> calEnergy(eventSvc(),EventModel::CalRecon::CalEventEnergy);
 
     if ((clusCol == 0) || (clusCol->size()) == 0) {
         log << MSG::FATAL << "no/incorrect number calorimeter clusters found" << endreq;
@@ -75,12 +77,28 @@ StatusCode test_CalRecon::execute() {
     for ( cluster = clusCol->begin() ;
           cluster != clusCol->end() ;
           ++cluster )
-     {    
-      (*cluster)->writeOut(log<<MSG::INFO) ; 
-      log<<MSG::INFO<<"Profile Corr Energy "<<(*cluster)->getFitEnergy()<<endreq ; 
-      log<<MSG::INFO<<"Last Layer Corr Energy "<<(*cluster)->getEnergyLeak()<<endreq ; 
-     }
+    {
+     (*cluster)->writeOut(log<<MSG::INFO) ;
+    }
 
+    Event::CalCorToolResultCol::iterator corIter ;
+    for( corIter= calEnergy->begin(); corIter != calEnergy->end(); ++corIter )
+    {
+        Event::CalCorToolResult * corResult = *corIter;
+        if (corResult->getCorrectionName() == "CalProfileTool" )
+        {
+            log<<MSG::INFO<<"Profile Corr Energy "
+              <<corResult->getParams().getEnergy()
+              <<endreq ; 
+        }
+        if (corResult->getCorrectionName() == "CalLastLayerTool" )
+        {
+            log<<MSG::INFO<<"Last Layer Corr Energy "
+              <<corResult->getParams().getEnergy()
+              <<endreq ; 
+        }
+    }
+        
     return StatusCode::SUCCESS ;
 }
 
