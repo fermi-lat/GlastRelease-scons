@@ -112,7 +112,7 @@ private:
     /// RMS of energy deposition in each layer
     vector<TVector3> m_rmsLayer;
 
-    ClassDef(CalCluster,3)
+    ClassDef(CalCluster,4)
 };
 
 
