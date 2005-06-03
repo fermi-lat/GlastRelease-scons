@@ -94,7 +94,7 @@ public :
     /// Pointer to a McEvent
     McEvent     *mc;
     /// name of the output histogram ROOT file
-    char        *m_histFileName; 
+    const char        *m_histFileName; 
     /// Arrays that contain pointers to the TFile, TTree, and TChains
     TObjArray   *fileArr, *treeArr, *chainArr;
     
@@ -115,7 +115,7 @@ public :
         TChain *digiChain, 
         TChain *recChain = 0, 
         TChain *mcChain = 0, 
-        char *histFileName="Histograms.root");
+        const char *histFileName="Histograms.root");
 
     ~RootTreeAnalysis();  
 
@@ -124,7 +124,7 @@ public :
     /// reset for next Go to start at beginning of file 
     void Rewind() { m_StartEvent = 0; }; 
     /// allow the user to specify their own file name for the output ROOT file
-    void SetHistFileName(char *histFileName) { m_histFileName = histFileName; }
+    void SetHistFileName(const char *histFileName) { m_histFileName = histFileName; }
     /// re-init with these input Root files
     void Init(  const char* digiFileName="", 
         const char* reconFileName="", 
@@ -212,7 +212,7 @@ inline RootTreeAnalysis::RootTreeAnalysis(const char* digiFileName,
 inline RootTreeAnalysis::RootTreeAnalysis(TChain *digiChain, 
                                    TChain *recChain, 
                                    TChain *mcChain, 
-                                   char *histFileName) {
+                                   const char *histFileName) {
     Clear();
     
     SetHistFileName(histFileName);
@@ -427,7 +427,7 @@ inline void RootTreeAnalysis::HistClear() {
     
     TObject* obj = 0;
     
-    while ( obj=(TObject*)iter.Next() ) {
+    while ( (obj=(TObject*)iter.Next()) ) {
         ((TH1*)obj)->Reset();        
     }
 }

@@ -406,8 +406,8 @@ void RootTreeAnalysis::DigiGem() {
 
 void RootTreeAnalysis::DigiDiagnostic() {
 
-    TClonesArray *calDiagCol = evt->getCalDiagnosticCol();
-    TClonesArray *tkrDiagCol = evt->getTkrDiagnosticCol();
+    const TClonesArray *calDiagCol = evt->getCalDiagnosticCol();
+    const TClonesArray *tkrDiagCol = evt->getTkrDiagnosticCol();
 
     if (!calDiagCol && !tkrDiagCol) return;
 
@@ -516,7 +516,7 @@ void RootTreeAnalysis::ReconCal() {
 	        int twr = id.getTower();
 	        int col = id.getColumn();
 	        const CalRangeRecData* rData = xtal->getRangeRecData(0);
-	        int range = rData->getRange(CalXtalId::POS);
+	        CalXtalId::AdcRange range = (CalXtalId::AdcRange) (rData->getRange(CalXtalId::POS));
 	        double ph0 = xtal->getEnergySelectedRange(range,CalXtalId::POS);
   	        continue;
              }
