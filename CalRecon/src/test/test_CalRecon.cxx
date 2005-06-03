@@ -97,6 +97,12 @@ StatusCode test_CalRecon::execute() {
               <<corResult->getParams().getEnergy()
               <<endreq ; 
         }
+        if (corResult->getCorrectionName() == "CalValsCorrTool" )
+        {
+            log<<MSG::INFO<<"CalValsCorrTool Energy "
+              <<corResult->getParams().getEnergy()
+              <<endreq ; 
+        }
     }
         
     return StatusCode::SUCCESS ;

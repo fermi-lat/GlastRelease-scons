@@ -82,7 +82,9 @@ def key_values(filename) :
   nb_clusters = 0
   nb_profiles = 0
   nb_ll = 0
+  nb_calvals = 0
   raw_energy = 0
+  calvals_energy = 0
   corrected_energy = 0
   ll_energy = 0
   fit_energy = 0
@@ -100,13 +102,17 @@ def key_values(filename) :
         if energy > 0 :
           nb_ll += 1
           ll_energy += energy
+      elif words[2] == 'CalValsCorrTool' :
+        energy = string.atof(words[4])
+        if energy > 0 :
+          nb_calvals += 1
+          calvals_energy += energy
       elif words[2] == 'Energy' :
         if words[3] != '0' :
           nb_clusters += 1
           raw_energy += string.atof(words[3])
-          corrected_energy += string.atof(words[5])
-          hashed_posdir += string.atof(words[6]) + string.atof(words[7]) + string.atof(words[8])
-          hashed_posdir += string.atof(words[9]) + string.atof(words[9]) + string.atof(words[11])
+          hashed_posdir += string.atof(words[4]) + string.atof(words[5]) + string.atof(words[6])
+          hashed_posdir += string.atof(words[7]) + string.atof(words[8]) + string.atof(words[9])
       
   # result
   if nb_clusters>0 :
@@ -117,12 +123,14 @@ def key_values(filename) :
     fit_energy = fit_energy/nb_profiles
   if nb_ll>0 :
     ll_energy = ll_energy/nb_ll
+  if nb_calvals>0 :
+    calvals_energy = calvals_energy/nb_calvals
   ft_count = '%d'
   ft_mean = '%g'
   all_values = [ (ft_count % nb_clusters)+'*'+ (ft_mean % raw_energy) ]
   all_values = all_values + [ (ft_count % nb_ll)+'*'+ (ft_mean % ll_energy) ]
   all_values = all_values + [ (ft_count % nb_profiles)+'*'+ (ft_mean % fit_energy) ]
-  all_values = all_values + [ (ft_count % nb_clusters)+'*'+ (ft_mean % corrected_energy) ]
+  all_values = all_values + [ (ft_count % nb_calvals)+'*'+ (ft_mean % calvals_energy) ]
   all_values = all_values + [ ft_mean % hashed_posdir ]
   return all_values
 
