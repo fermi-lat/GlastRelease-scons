@@ -68,7 +68,7 @@ public:
 
     /// 
     /// Start here the methods for setting the information 
-    /// setParams for setting energy parameters
+    /// setCorrectionName for setting the corrector name
     /// @param name : the name (identifier) of the correction tool used
     inline void setCorrectionName(const std::string& name) {m_correctionName = name;}
     /// setParams for setting energy parameters
