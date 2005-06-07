@@ -1,0 +1,26 @@
+#!/bin/sh
+
+geo=${1:?}
+
+echo "// I cannot deduce what tower id should be put here."
+echo "// Hence, you have to fill that in!"
+echo
+echo "tower -1"
+echo
+echo "//           shifts / um       rotations / mrad"
+echo "//          x     y     z       x      y      z"
+paste $geo geometry/TowerGeometryGleamv5r8.txt | gawk '{
+    planeName = $1
+    print "//", planeName
+    viewName = substr(planeName, 1, 1)
+    if ( viewName == "X" )
+      view = 0
+    else
+      view = 1
+    layer = substr(planeName, 2)
+    face = ( layer + view ) % 2
+    tray = layer + ( face + 1 ) % 2
+    print "tray", tray
+    printf "face %d", face
+    printf "   %5.0f %5.0f %5.0f   %6.3f %6.3f %6.3f\n", 1000*$4, 1000*$3, 1000*($2-$9), $7, $6, $5
+}'
