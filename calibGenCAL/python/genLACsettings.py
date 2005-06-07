@@ -201,11 +201,11 @@ if __name__ == '__main__':
 
     nomSetting = Numeric.zeros((16,8,2,12))
     q = Numeric.choose(Numeric.less(fineThresholds,adcs[...,Numeric.NewAxis]),(0,1))
-    q1 = 64 - Numeric.argmax(q[srcTwr,:,:,::-1], axis = 2)
+    q1 = 64 - Numeric.argmax(q[:,:,:,::-1], axis = 3)
     q1 = Numeric.choose(Numeric.equal(q1,64),(q1,0))
     nomSetting[destTwr,...] = q1
     q = Numeric.choose(Numeric.less(coarseThresholds,adcs[...,Numeric.NewAxis]),(0,1))
-    q1 = (64 - Numeric.argmax(q[srcTwr,:,:,::-1], axis = 2)) + 64
+    q1 = (64 - Numeric.argmax(q[:,:,:,::-1], axis = 3)) + 64
     q1 = Numeric.choose(Numeric.equal(q1,128),(q1,127))
     nomSetting = Numeric.choose(Numeric.equal(nomSetting,0),(nomSetting,q1))       
 
