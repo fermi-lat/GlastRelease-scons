@@ -11,7 +11,7 @@ xx/** @mainpage package LdfConverter
   marker == 5 is a "sweep event"...whatever that means..
   <hr>
   @section jobOptions jobOptions
-  @param StorageType
+  @param LdfEventSelector.StorageType
   REQUIRED. String which must be one of supported types, currently 
   "LDFFILE for raw ldf or  "LDFFITS" for FITSified ldf or
   "EBFFILE" for raw ebf or "EBFFITS" for (slightly) FITSified ebf or
@@ -21,14 +21,18 @@ xx/** @mainpage package LdfConverter
   only the first is used.
   @param  EvtMax
   REQUIRED  Integer. Max. number of events to be processed
-  @param  Instrument
+  @param  LdfEventSelector.Instrument
   String. Unused for now (with external EBF library v3 and later)
-  @param EbfDebugLevel
+  @param LdfEventSelector.EbfDebugLevel
   Integer.  Defaults to 0 (no debug output).  Anything else enables 
   debug output
-  @param SweepEventSearch
+  @param LdfEventSelector.SweepEventSearch
   Integer.  Defaults to 1 (search for first sweep event).  Setting to zero
   skips this search.
+  @param LdfEventSelector.GemZeroCheck
+  Integer.  Deafults to 0 (skip check for GEM condition summary == 0).
+  Setting to one performs this check and prints warnings messages for the
+  first five events where Condition Summary is zero.
   <hr>
   @section notes release notes
   release.notes

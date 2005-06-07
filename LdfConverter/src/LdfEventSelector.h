@@ -93,6 +93,9 @@ private:
   IntegerProperty       m_sweepSearch; // If 0, skip search
   IAddressCreator*      m_addrCreator;
   CLID                  m_rootCLID;
+  IntegerProperty       m_gemCheck; // If 0 (default) no GEM condition summary
+                                    // check, other check for zero and print
+                                    // log message
 };
 
 #endif  // LdfEventSelector_H
