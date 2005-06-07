@@ -189,7 +189,8 @@ TLine Reconstruct(const TGraph* XY) {
     double A = 0;
     double B = 0;
 
-    if ( N <= 3 ) {
+    // comment the code that improves the fit but eats CPU
+    //    if ( N <= 3 ) {
         // swapping columns.  This improves the fit!
         TGraph g(N, Y, X);
         g.Fit("pol1", "Q");
@@ -198,6 +199,7 @@ TLine Reconstruct(const TGraph* XY) {
         A = f->GetParameter(0);
         B = f->GetParameter(1);
         delete f;
+        /*
     }
     else {
         for ( int i=0; i<N ; ++i ) {
@@ -215,6 +217,7 @@ TLine Reconstruct(const TGraph* XY) {
             delete f;
         }
     }
+        */
 
     const double Y1 = 0.0;
     const double Y2 = 700.0;
