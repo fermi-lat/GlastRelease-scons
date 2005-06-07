@@ -21,8 +21,8 @@ ApplicationMgr.ExtSvc = {
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 
-EventSelector.StorageType = "EBFFILE";
-//EventSelector.StorageType = "EBFFITS";
+EventSelector.StorageType = "LDFFILE";
+//EventSelector.StorageType = "LDFFITS";
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5.ebf"};
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5_1.fits"};
 // EventSelector.InputList = {"$(LDFCONVERTERROOT)/data/ebf030502182112.fits"};
