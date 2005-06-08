@@ -143,7 +143,7 @@ Event::CalCorToolResult* CalRawEnergyTool::doEnergyCorr(Event::CalCluster*, Even
 
     // Create a CalParams object to contain the results
     Point  centroid(posSum[0], posSum[1], posSum[2]);
-    Vector axis(axisSum[0], axisSum[1], axisSum[3]);
+    Vector axis(axisSum[0], axisSum[1], axisSum[2]);
     Event::CalParams params(rawEnergy, rawEneError, centroid, posWghtSum, axis, axisWghtSum);
 
     // Create a CalCorToolResult object to hold the information
