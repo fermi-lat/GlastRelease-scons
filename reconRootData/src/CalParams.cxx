@@ -28,23 +28,6 @@ CalParams::CalParams
       axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz ) ;
 }
 
-CalParams::CalParams( const CalParams & cp )
-{ operator=(cp) ; }
-
-CalParams & CalParams::operator=
-( const CalParams & cp )
-{
-    init
-    ( cp.getEnergy(),cp.getEnergyErr(),
-      cp.getCentroid(),
-      cp.getxPosxPos(),cp.getxPosyPos(),cp.getxPoszPos(),
-      cp.getyPosyPos(),cp.getyPoszPos(),cp.getzPoszPos(),
-      cp.getAxis(),
-      cp.getxDirxDir(),cp.getxDiryDir(),cp.getxDirzDir(),
-      cp.getyDiryDir(),cp.getyDirzDir(),cp.getzDirzDir() ) ;
-    return (*this) ;
-}
-
 void CalParams::Clear( Option_t * )
 {
     init

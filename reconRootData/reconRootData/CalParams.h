@@ -31,10 +31,16 @@ public:
       Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
       Double_t axsdyy, Double_t axsdyz, Double_t axsdzz ) ;
 
-    /// Copy constructor
-    CalParams( const CalParams & ) ;
-    CalParams & operator=( const CalParams & ) ; // needed ?
-    
+    /// init
+    void init
+    ( Double_t energy, Double_t eneError,
+      TVector3 centroid,
+      Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
+      Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
+      TVector3 axis,
+      Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
+      Double_t axsdyy, Double_t axsdyz, Double_t axsdzz ) ;
+
     virtual ~CalParams() {}
 
     /// Retrieve the energy
@@ -63,46 +69,10 @@ public:
     inline const Double_t getyDirzDir()     const {return m_axisyz; }
     inline const Double_t getzDirzDir()     const {return m_axiszz; }
 
-    /// Set the energy
-    inline void setEnergy(const Double_t& energy)         {m_energy   = energy;}
-    inline void setEnergyErr(const Double_t& energyErr)   {m_eneError = energyErr;}
-
-    /// Set centroid
-    inline void setCentroid( const TVector3 & pos)           {m_clusterCentroid = pos; }
-
-    /// Set centroid errors
-    inline void setxDirxDir(const Double_t& val)          {m_cenxx = val; }
-    inline void setxDiryDir(const Double_t& val)          {m_cenxy = val; }
-    inline void setxDirzDir(const Double_t& val)          {m_cenxz = val; }
-    inline void setyDiryDir(const Double_t& val)          {m_cenyy = val; }
-    inline void setyDirzDir(const Double_t& val)          {m_cenyz = val; }
-    inline void setzDirzDir(const Double_t& val)          {m_cenzz = val; }
-
-    /// Set parameters for axis
-    inline void setAxis( const TVector3& axis)             {m_clusterAxis = axis; }
-
-    /// Set errors
-    inline void setxPosxPos(const Double_t& val) { m_axisxx = val ; }
-    inline void setxPosyPos(const Double_t& val) { m_axisxy = val ; }
-    inline void setxPoszPos(const Double_t& val) { m_axisxz = val ; }
-    inline void setyPosySlp(const Double_t& val) { m_axisyy = val ; }
-    inline void setyPoszPos(const Double_t& val) { m_axisyz = val ; }
-    inline void setzPoszPos(const Double_t& val) { m_axiszz = val ; }
-
     void Clear( Option_t * option ="" ) ;
     void Print( Option_t * option ="" ) const ;
 
 private:
-
-    /// the private copy method
-    void init
-    ( Double_t energy, Double_t eneError,
-      TVector3 centroid,
-      Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
-      Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
-      TVector3 axis,
-      Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
-      Double_t axsdyy, Double_t axsdyz, Double_t axsdzz ) ;
 
     /// Energy and associated error
     Double_t m_energy;

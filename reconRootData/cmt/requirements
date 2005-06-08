@@ -10,6 +10,7 @@ use RootcintPolicy v5r* GlastPolicy
 apply_pattern root_package headers="\
  ../reconRootData/AcdRecon.h\
  ../reconRootData/CalParams.h\
+ ../reconRootData/CalClusterLayerData.h\
  ../reconRootData/CalCluster.h\
  ../reconRootData/CalRecon.h\
  ../reconRootData/CalRangeRecData.h\
