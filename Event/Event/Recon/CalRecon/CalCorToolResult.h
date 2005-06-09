@@ -8,6 +8,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/Recon/CalRecon/CalParams.h"
+#include "Event/RelTable/RelTable.h"
 
 static const CLID& CLID_CalCorToolResult = InterfaceID("CalCorToolResult", 1, 0);
 
@@ -93,6 +94,8 @@ private:
 typedef ObjectVector<CalCorToolResult>      CalCorToolResultCol;
 typedef CalCorToolResultCol::iterator       CalCorToolResultColItr;
 typedef CalCorToolResultCol::const_iterator CalCorToolResultColConItr;
+
+class CalCluster;
 
 // Define the relational table taking us back to CalCluster objects
 typedef Event::RelTable<Event::CalCluster, Event::CalCorToolResult>               CalClusToCorToolHitTab;
