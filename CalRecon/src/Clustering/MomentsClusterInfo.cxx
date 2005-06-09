@@ -113,6 +113,8 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
             rmsLayer[i] = m_p0;
         }
 
+
+
         // Fill the cluster layer data
         Point layerPos(pLayer[i].x(), pLayer[i].y(), pLayer[i].z());
 
@@ -121,6 +123,10 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
         cluster->push_back(layerData);
     }
+    // Set energy centroid
+	Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
+                                               0., 0., 1.,   1.,0.,0.,1.,0.,1.);
+    cluster->initialize(params, 0., 0.);
 
     return ene;
 }
@@ -128,7 +134,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalCluster* cluster, double energy)
 {
     //Initialize local variables
-    Vector pCluster(0.,0.,0.);    // Cluster position
+    Vector pCluster = cluster->getPosition();
 
     // Moments Analysis Here
     // This version lifted directly from code supplied to Bill Atwood by Toby Burnett
