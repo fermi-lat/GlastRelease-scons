@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r4
+version v8r5
 # This package contains useful Root scripts.
 
 #use these to get the env vars defined
