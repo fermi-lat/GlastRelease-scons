@@ -14,6 +14,7 @@
 #include "CalDiagnosticData.h"
 #include "EventSummaryData.h"
 #include "Gem.h"
+#include "Tem.h"
 
 /** @class DigiEvent
  * @brief This is the top-level event class to store the Digi data.
@@ -124,6 +125,10 @@ public:
     const TkrDiagnosticData* getTkrDiagnostic(UInt_t i) const;
 
     const Gem& getGem() const { return m_gem; };
+
+    const Tem* getTem(Int_t i) const;
+
+    const TClonesArray *getTemCol() { return m_temCloneCol;};
 	/*@}*/
 
 
@@ -141,6 +146,8 @@ public:
     void initGem(const Gem& gem) { m_gem = gem; };
     TkrDiagnosticData* addTkrDiagnostic();
     CalDiagnosticData* addCalDiagnostic();
+
+    Tem* addTem();
 
     void setEbfTime(UInt_t timeSec, UInt_t timeNanoSec, 
                     UInt_t upperPpcTimeBase, UInt_t lowerPpcTimeBase) {
@@ -208,7 +215,11 @@ private:
     Gem m_gem;
     Double_t m_liveTime;
 
-    ClassDef(DigiEvent,13) // Storage for Raw(Digi) event and subsystem data
+    TClonesArray *m_temCloneCol; //->
+    Int_t m_numTem;
+    static TClonesArray *s_temStaticCol; //!
+
+    ClassDef(DigiEvent,14) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif

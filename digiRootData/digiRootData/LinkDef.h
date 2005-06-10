@@ -27,6 +27,8 @@
 #pragma link C++ class GemOnePpsTime+;
 #pragma link C++ class GemCondArrivalTime+;
 #pragma link C++ class Gem+;
+#pragma link C++ class ErrorData+;
+#pragma link C++ class Tem+;
 
 #endif
 

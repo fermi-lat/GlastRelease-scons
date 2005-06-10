@@ -17,6 +17,7 @@ TObjArray *DigiEvent::s_staticTkrDigiCol = 0;
 TClonesArray *DigiEvent::s_calDigiStaticCol = 0;
 TClonesArray *DigiEvent::s_calDiagnosticStaticCol = 0;
 TClonesArray *DigiEvent::s_tkrDiagnosticStaticCol = 0;
+TClonesArray *DigiEvent::s_temStaticCol = 0;
 
 DigiEvent::DigiEvent() {
     //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
@@ -42,6 +43,10 @@ DigiEvent::DigiEvent() {
     if (!s_tkrDiagnosticStaticCol) s_tkrDiagnosticStaticCol = new TClonesArray("TkrDiagnosticData",4);
     m_tkrDiagnosticCloneCol = s_tkrDiagnosticStaticCol;
     m_numTkrDiagnostics = -1;
+
+    if (!s_temStaticCol) s_temStaticCol = new TClonesArray("Tem", 1);
+    m_numTem = -1;
+    m_temCloneCol = s_temStaticCol;
 
     Clear();
 }
@@ -80,6 +85,11 @@ DigiEvent::~DigiEvent() {
     delete m_tkrDiagnosticCloneCol;
     m_tkrDiagnosticCloneCol = 0;
  
+
+    if (m_temCloneCol == s_temStaticCol) s_temStaticCol = 0;
+    m_temCloneCol->Delete();
+    delete m_temCloneCol;
+    m_temCloneCol = 0;
 }
 
 void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
@@ -136,6 +146,9 @@ void DigiEvent::Clear(Option_t *option) {
     m_tkrDiagnosticCloneCol->Clear("C");
     m_numCalDiagnostics = -1;
     m_numTkrDiagnostics = -1;
+
+    m_temCloneCol->Clear("C");
+    m_numTem = -1;
 
    //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
    //we delete the objects in keep every nd TkrDigi objects
@@ -310,3 +323,14 @@ const TkrDiagnosticData* DigiEvent::getTkrDiagnostic(UInt_t i) const {
     return (TkrDiagnosticData*)m_tkrDiagnosticCloneCol->At(i);
 }
 
+Tem* DigiEvent::addTem() {
+    ++m_numTem;
+    TClonesArray &temCol = *m_temCloneCol;
+    new(temCol[m_numTem]) Tem();
+    return ((Tem*)(temCol[m_numTem]));
+}
+
+const Tem* DigiEvent::getTem(Int_t i) const {
+    if ( i > m_numTem ) return 0;
+    return (Tem*)m_temCloneCol->At(i);
+}

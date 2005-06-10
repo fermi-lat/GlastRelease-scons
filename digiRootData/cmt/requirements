@@ -1,5 +1,5 @@
 package digiRootData
-version v8r3p1
+version v8r4
 # $Id$
 
 use RootcintPolicy v5r* GlastPolicy
@@ -19,6 +19,8 @@ apply_pattern root_package headers="\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/Gem.h\
+ ../digiRootData/ErrorData.h\
+ ../digiRootData/Tem.h\
  ../digiRootData/EventSummaryData.h"\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
  test_source="test/testDigiClasses.cxx"

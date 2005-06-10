@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r13   09-Jun-2005 HMK Store Error Summary word
 v1r12   07-Jun-2005 HMK Add optional check for GEM condition summary equal zero
         new JO paramter EventSelector.GemZeroCheck
 v1r11   05-May-2005 HMK Store ACD range and error data
