@@ -105,6 +105,7 @@ private:
 
     // Pointers to the four main TkrRecon Gaudi Algorithms
     Algorithm*  m_TkrClusterAlg;
+    Algorithm*  m_TkrFilterAlg;
     Algorithm*  m_TkrFindAlg;
     Algorithm*  m_TkrTrackFitAlg;
     Algorithm*  m_TkrVertexAlg;
@@ -192,6 +193,13 @@ StatusCode TkrReconAlg::initialize()
             return StatusCode::FAILURE;
         }
 
+        // Filtering algorithm
+        if( createSubAlgorithm("TkrFilterAlg", "TkrFilterFirst", m_TkrFilterAlg).isFailure() ) 
+        {
+            log << MSG::ERROR << " could not open TkrFilterAlg " << endreq;
+            return StatusCode::FAILURE;
+        }
+
         // Track finding algorithm
         if( createSubAlgorithm("TkrFindAlg", "TkrFindFirst", m_TkrFindAlg).isFailure() ) 
         {
@@ -228,6 +236,13 @@ StatusCode TkrReconAlg::initialize()
     {
         // No Clustering algorithm on iteration
         m_TkrClusterAlg = 0;
+
+        // Filtering algorithm
+        if( createSubAlgorithm("TkrFilterAlg", "TkrFilterIter", m_TkrFilterAlg).isFailure() ) 
+        {
+            log << MSG::ERROR << " could not open TkrFilterAlg " << endreq;
+            return StatusCode::FAILURE;
+        }
 
         // No Track finding algorithm on iteration
         m_TkrFindAlg = 0;
@@ -327,6 +342,16 @@ StatusCode TkrReconAlg::execute()
                 int* pInt = 0;
                 int x = *pInt;
             }
+        }
+
+        // Call track filter stage
+        m_stage = "TkrFilterAlg";
+        if(m_lastStage>=CLUSTERING) sc = m_TkrFilterAlg->execute();
+        if (m_testExceptions && m_eventCount%exceptionTestTypes==3) sc = StatusCode::FAILURE;
+
+        if (sc.isFailure())
+        {
+            return handleError(stageFailed);
         }
 
         // Call track finding if in first pass mode

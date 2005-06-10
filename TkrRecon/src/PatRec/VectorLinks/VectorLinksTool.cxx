@@ -26,7 +26,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrDiagnostics.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/TkrRecon/TkrEventParams.h"
 
 #include "src/Track/TkrControl.h"
 #include "VecPoint.h"
@@ -349,13 +349,13 @@ double VectorLinksTool::getEventEnergy()
     double energy = m_minEnergy;
 
     // Recover pointer to Cal Cluster info  
-    Event::CalClusterCol* calClusters = 
-                            SmartDataPtr<Event::CalClusterCol>(m_dataSvc,EventModel::CalRecon::CalClusterCol);
+    Event::TkrEventParams* tkrEventParams = 
+                       SmartDataPtr<Event::TkrEventParams>(m_dataSvc,EventModel::TkrRecon::TkrEventParams);
 
     //If clusters, then retrieve estimate for the energy & centroid
-    if (calClusters) 
+    if (tkrEventParams) 
     {
-        if (calClusters->size() > 0) energy = std::max(calClusters->front()->getCalParams().getEnergy(), m_minEnergy); 
+        energy = std::max(tkrEventParams->getEventEnergy(), m_minEnergy); 
     }
 
     return energy;
