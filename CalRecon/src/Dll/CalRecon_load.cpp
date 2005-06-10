@@ -12,11 +12,13 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
 {
     DECLARE_SERVICE(   CalReconSvc             );
     DECLARE_ALGORITHM( CalClustersAlg          );
+    DECLARE_ALGORITHM( CalMipFinderAlg         );
     DECLARE_ALGORITHM( CalEventEnergyAlg       );
     DECLARE_ALGORITHM( CalDisplay              );
     DECLARE_ALGORITHM( PropertiesCheckAlg      );
     DECLARE_TOOL(      CalSingleClusteringTool );
     DECLARE_TOOL(      CalSimpleClusteringTool );
+    DECLARE_TOOL(      StdMipFindingTool       );
     DECLARE_TOOL(      CalRawEnergyTool        );
     DECLARE_TOOL(      CalLastLayerTool        );
     DECLARE_TOOL(      CalTkrLikelihoodTool    );
