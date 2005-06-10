@@ -16,6 +16,8 @@ use digiRootData v8r* -no_auto_imports
 use reconRootData v5r* -no_auto_imports
 use commonRootData v2r* -no_auto_imports
 
+use RootConvert v*
+
 use rootTestData v*
 
 use LdfEvent v*
