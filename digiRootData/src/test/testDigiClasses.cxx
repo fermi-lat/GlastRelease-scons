@@ -25,6 +25,7 @@ const UInt_t numAcd = 11;
 const Int_t numCalDiag = 4;
 const Int_t numTkrDiag = 2;
 const Bool_t fromMc = true;
+const Int_t numTem = 5;
 Float_t randNum;
 
 bool floatInRange(Double_t actual, Double_t desired) {
@@ -59,6 +60,31 @@ int checkDigiEvent(DigiEvent *evt, UInt_t ievent) {
         std::cout << "From MC flag is wrong" << std::endl;
         return -1;
     }
+    return 0;
+}
+
+int checkTem(Tem* curTem) {
+    const ErrorData& err = curTem->getError();
+    if (err.getCal() != 1) {
+        std::cout << "Error Data Cal is wrong" << std::endl;
+        return -1;
+    }
+
+    if (err.getTkr() != 2) {
+       std::cout << "Error Data Tkr is wrong " << std::endl;
+       return -1;
+    }
+
+    if (err.getPhs() != true) {
+        std::cout << "Phased Error is wrong " << std::endl;
+        return -1;
+    }
+
+    if (err.getTmo() != false) {
+        std::cout << "Timeout is wrong" << std::endl;
+        return -1;
+    }
+
     return 0;
 }
 
@@ -487,6 +513,12 @@ int read(char* fileName, int numEvents) {
             if (checkTkrDiagnostic(tDiag) < 0) return -1;
         }
 
+        const TClonesArray *temCol = evt->getTemCol();
+        TIter temIt(temCol);
+        Tem* curTem = 0;
+        while ((curTem = (Tem*)temIt.Next())) {
+            if (checkTem(curTem) < 0) return -1;
+        }
  }
     
     f->Close();
@@ -583,6 +615,13 @@ int write(char* fileName, int numEvents) {
             UInt_t tower = 4;
             UShort_t gtcc = 2;
             tkrDiag->initialize(dataWord,tower,gtcc);
+        }
+
+        int item;
+        for (item = 0; item < numTem; item++) {
+            Tem* curTem = ev->addTem();
+            ErrorData err(1, 2, true, false);
+            curTem->init(item, err);
         }
 
         t->Fill();
