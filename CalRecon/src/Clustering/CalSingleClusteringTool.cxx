@@ -81,12 +81,14 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     // TDS input: CalXtalRecCol
     // TDS output: CalClustersCol
     // prepare the initital set of xtals
+    
+    calClusterCol->clear() ;
     XtalDataVec* xTalClus = new XtalDataVec();
 
     xTalClus->clear();
     Event::CalXtalRecCol::const_iterator it ;
-    for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
-                it != m_calReconSvc->getXtalRecs()->end(); ++it )
+    for ( it = m_calReconSvc->getXtalRecs()->begin() ; 
+          it != m_calReconSvc->getXtalRecs()->end(); ++it )
     {
         // get pointer to the reconstructed data for given crystal
 	    Event::CalXtalRecData * recData = *it ;
