@@ -1,0 +1,35 @@
+package RootConvert
+version v0
+author David Chamont <chamont@poly.in2p3.fr>
+branches RootConvert cmt doc src
+
+use Event v*
+use commonRootData v*
+use mcRootData v*
+use digiRootData v*
+use reconRootData v*
+
+apply_pattern shared_library
+
+private
+
+apply_pattern package_headers
+
+macro_append RootConvert_headers "" WIN32 " \
+        ../RootConvert/MonteCarlo/*.h \
+        ../RootConvert/Digi/*.h \
+        ../RootConvert/Recon/*.h
+ 
+library RootConvert \
+        MonteCarlo/*.cxx \
+        Digi/*.cxx \
+        Recon/*.cxx \
+        ${RootConvert_headers}
+
+
+
+
+
+
+
+

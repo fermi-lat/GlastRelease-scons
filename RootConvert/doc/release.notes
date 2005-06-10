@@ -1,0 +1,14 @@
+/** @file release.notes
+ Package RootCnvSvc\n
+ author Ursula Berthon
+ @verbatim
+
+ v3r1p1 15-Fev-2005 David Chamont upgrade for GlastRelease v6r0, especially
+                    for new TkrRecon. Compiling, Linking, not yet running correctly.
+        04-Jan-2005 HK Start handling LDF converters
+ v3r0p0 23-Jul-2004 HK moved VolumeIdentifier to commonRootData - fixed include
+        in RootBaseCnv.h
+ v2r0p6 13-Jul-2004 add RootSvc into RootCnvSvc, remove remaining ^M-s
+ v1     20-Jan-2004 UB first working version with limited objects
+ @endverbatim
+*/
