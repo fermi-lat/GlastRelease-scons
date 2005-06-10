@@ -101,6 +101,7 @@ public:
         static std::string TkrTrackHitCol;
         static std::string TkrVertexCol;
         static std::string TkrDiagnostics;
+        static std::string TkrEventParams;
     };
 
 
@@ -113,6 +114,7 @@ public:
        static std::string Event;
        static std::string CalXtalRecCol;
        static std::string CalMIPsCol;
+       static std::string CalMipTrackCol;
        static std::string CalClusterCol;
        static std::string CalEventEnergy;
        static std::string CalClusterHitTab;
