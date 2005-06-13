@@ -7,7 +7,6 @@
 
 // STD INCLUDES
 #include <sstream>
-#include <iomanip>
 #include <stdexcept>
 
 using namespace std;

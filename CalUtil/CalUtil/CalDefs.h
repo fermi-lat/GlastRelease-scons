@@ -13,6 +13,7 @@
 #include <vector>
 #include <ostream>
 #include <stdexcept>
+#include <iomanip>
 
 using namespace std;
 
@@ -31,16 +32,12 @@ namespace CalDefs {
 
   const short X_DIR = 0;
   const short Y_DIR = 1;
-
-  /// names for volume identifier fields
-  enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
-        fMeasure, fCALXtal,fCellCmp, fSegment};
  
   /// Generic typesafe vector used for fast & simple arrays
   /// based on various Calorimeter geometry idents
   template <typename _Idx, typename _Tp >
-  class CalVec : protected vector<_Tp > {
-  protected:
+    class CalVec : protected vector<_Tp > {
+    protected:
     typedef vector<_Tp > parent_type;
     typedef size_t size_type;
     typedef typename parent_type::value_type value_type;
@@ -49,7 +46,7 @@ namespace CalDefs {
     typedef typename parent_type::iterator iterator;
     typedef typename parent_type::const_iterator const_iterator;
 
-  public:
+    public:
     CalVec() : parent_type() {};
     CalVec(size_type sz) : parent_type(sz) {}
     CalVec(size_type sz, const value_type &val) : parent_type(sz,val) {}
@@ -130,8 +127,15 @@ namespace CalDefs {
   public:
     TwrNum() : SimpleId() {}
     TwrNum(short val) : SimpleId(val) {}
+
+    short getRow() const {return m_data/N_COLS;}
+    short getCol() const {return m_data%N_COLS;}
+
     static const short N_VALS = 16; 
     bool isValid() const {return m_data < N_VALS;}
+            
+    static const short N_COLS = 4;
+    static const short N_ROWS = 4;
   };
 
   class LyrNum : public SimpleId {
@@ -443,7 +447,7 @@ namespace CalDefs {
 
     DiodeIdx(XtalIdx xtal, short face, short diode) :
       LATWideIndex(calc(xtal.getTwr(),xtal.getLyr(),xtal.getCol(),face,diode)) 
-    {}
+      {}
 
     DiodeIdx(XtalIdx xtal, XtalDiode xDiode) :
       LATWideIndex(calc(xtal.getTwr(), xtal.getLyr(), xtal.getCol(),
@@ -505,7 +509,7 @@ namespace CalDefs {
 
     RngIdx(short twr, short lyr, short col, short face, short rng) :
       LATWideIndex(calc(twr,lyr,col,face,rng)) 
-    {}
+      {}
     
     RngIdx(XtalIdx xtal, short face, short rng) :
       LATWideIndex(calc(xtal.getTwr(),xtal.getLyr(),xtal.getCol(),face,rng)) {}
@@ -571,7 +575,25 @@ namespace CalDefs {
     static const int LYR_BASE  = COL_BASE*ColNum::N_VALS;
     static const int TWR_BASE  = LYR_BASE*LyrNum::N_VALS; 
   }; 
-   
+
+  /** Volume ID field identifiers.  shouldn't be here, but there is no
+      global def as far as i can tell.
+  */
+  enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
+        fMeasure, fCALXtal,fCellCmp, fSegment};
+ 
+  ostream&  operator<< 
+    (ostream& strm, const XtalIdx &idx);
+    
+  ostream&  operator<< 
+    (ostream&  strm, const FaceIdx &idx);
+    
+  ostream&  operator<< 
+    (ostream& strm, const DiodeIdx &idx);
+    
+  ostream& operator<< 
+    (ostream& strm, const RngIdx &idx);
+
 }; // namespace caldefs
 
 #endif // CalDefs_H
