@@ -10,33 +10,33 @@
  * 
  * - Simple interface: requires only specification of unique Cal xtal and range as input.  
  * Values are returned for the most part as C primitives (float, int, etc..) C++ std::vectors are used where appropriate.
- * -  Gleam/Gaudi mechanics such as TDS access, validity checking, calibration data format, database access, and data storage are all transowner to the user.
+ * -  Gleam/Gaudi mechanics such as TDS access, validity checking, calibration data format, database access, and data storage are all transparent to the user.
  * - Some calibration types are vectors which represent the 'knots' on a spline curve.  
  * CalCalibSvc generates the spline objects for these types for the user.  CalCalibSvc handles storage/deallocation/validation for these objects.  
- * Once created, spline objects are retained in memory until their become invalid.  At this point, the cache is flushed and new objects are created.
+ * Once created, spline objects are retained in memory until they become invalid.  At this point, the cache is flushed and new objects are created.
  * - CalCalibSvc can be configured to assign different flavors to each calibration type.
  * - Multiple instances of CalCalibSvc may be created if the user needs more than one flavor for one or more calibration types.
  *
  * @subsection jobOptions jobOptions
  * 
- * Suitable default values are currently provided for all options, so consider tham all 'optional'.
+ * Suitable default values are currently provided for all options, all parameters are 'optional'.
  *
  * @param CalibDataSvc
  * Name of service from which calibration data is obtained. (default="CalibDataSvc")
  * @param DefaultFlavor
  * Flavor for all calibration types unless otherwise specified (default="vanilla")
- * @param FlavorGain
- * calib flavor for CAL_ElecGain constants
  * @param FlavorIntNonlin
  * calib flavor for integral nonlinearity constants.
- * @param FlavorLightAsym
- * calib flavor for light-asymetry data.
- * @param FlavorLightAtt
- * calib flavor for light-attenuation data.
- * @param FlavorMuSlope
- * calib flavor for muon-slope data.
+ * @param FlavorAsym
+ * override calib flavor for asymmetry data.
  * @param FlavorPed
- * calib flavor for pedestal data.
+ * override calib flavor for pedestal data.
+ * @param FlavorMeVPerDac
+ * override calib flavor for MeVPerDac data.
+ * @param FlavorTholdCI
+ * override calib flavor for tholdCI data.
+ * @param FlavorTholdMuon
+ * override calib flavor for tholdMuon data.
  *
  * @section CalResponseTools CalResponseTools
  * 
@@ -44,33 +44,26 @@
  * Once again, as much Gleam/Gaudi mechanics as possible are hidden from the user.
  *
  * CalResponseTools consists of 3 interfaces.
- * -  ICalEnergyTool allows for the calculation of deposited energy given cal-digi information for one cal crystal.
- * -  ICalPosTool allows for the calculation of the centroid position of the deposited energy given the cal-digi information for one cal crystal.
- * -  ICalAdcTool allows for the calculation of the digital response of one cal crystal given a list of enery depositions for that crystal.
+ * -  IXtalEneTool allows for the calculation of deposited energy given cal-digi information for one cal crystal.
+ * -  IXtalPosTool allows for the calculation of the centroid position of the deposited energy given the cal-digi information for one cal crystal.
+ * -  IXtalDigiTool allows for the calculation of the digital response of one cal crystal given a list of enery depositions for that crystal.
  *
- * The <i>TestResponseTools</i> are the first implemenation of the CalResponseTools interface.  They are intended to duplicate as accurately as possible the calculations in CalRecon/CalDigi/CalUtil as of EngineeringModel release v3r0402p22.  They are intended for facilitating/testing the incorperation of the CalResponseTools interface in lieu of more sophisticated routines which should be forthcoming and which will use the same interface.
- *
- * -  TestEnergyTool implements ICalEnergyTool.  The code is lifted directly from CalXtalRecAlg in CalRecon v5r16p1.
- * -  TestPosTool implements ICalEnergyTool.  The code is lifted directly from CalXtalRecAlg in CalRecon v5r16p1.
- * -  TestAdcTool implelents ICalAdcTool.  The code is lifted from two places: CalDigiAlg in CalDigi/v1r3p7 and LinearConvertADC from CalUtil/v1r2p2.
- *
+ * Currently there is only one concrete implementation of each of the CalResponseTools:  XtalEneTool, XtalPosTool, and XtalDigiTool
  *
  * @subsection jobOptions jobOptions
  *
- * once again, suitable defaults exist for all parameters, none are necesarily 'required'.
+ * once again, suitable defaults exist for all parameters, all params are optional.
  * 
- * @param TestEnergyTool.startTime 
- * for use in selecting calib data with appropriate validity interval.
- * @param TestEnergyTool.calibFlavor
- * flavor of calib data to use.  "none" for simple 'dummy' constants.  (default="none")
- * @param TestPosTool.startTime 
- * for use in selecting calib data with appropriate validity interval.
- * @param TestPosTool.calibFlavor
- * flavor of calib data to use.  "none" for simple 'dummy' constants.  (default="none")
- * @param TestAdcTool.doFluctuations
- * approximate Poisson distribution by gaussian for numberElectrons. (default=true)
- * @param TestAdcTool.xmlFile
- * xml file for grabbing CalDigi configuration.  (default="$(CALDIGIROOT)/xml/CalDigi.xml")
+ * @param XtalEnergyTool.CalCalibSvc
+ * where to retrieve calib data (defatul="CalCalibSvc")
+ * @param XtalPosTool.CalCalibSvc
+ * where to retrieve calib data (defatul="CalCalibSvc")
+ * @param XtalDigiTool.CalCalibSvc
+ * where to retrieve calib data (defatul="CalCalibSvc")
+ * @param XtalDigiTool.NoRandomNoise
+ * disable calculation of random poissonic fluctuation & electronic noise
+ * @param XtalDigiTool.SuperVerbose
+ * enable extra debug logging.
  * 
  * 
  * @section CalXtalRecAlg CalXtalRecAlg
@@ -79,7 +72,6 @@
  *   and stores this data into CalXtalRecCol.  CalXtalResponse package is 
  *   used for the estimation of energy & position from digi info.  See
  *   documentation in CalXtalResponse for details.
- *
  * 
  * @subsection jobOptions jobOptions
  * @param CalXtalRecAlg.xtalEneTool

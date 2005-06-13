@@ -28,28 +28,24 @@ class IntNonlinMgr : public CalibItemMgr {
                           float &error);
   StatusCode evalDAC(const CalXtalId &xtalId, double adc, double &dac) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INL_SPLINE, RngIdx(xtalId), adc, dac);
+    return evalSpline(INL_SPLINE, xtalId, adc, dac);
   }
   
   StatusCode evalADC(const CalXtalId &xtalId, double dac, double &adc) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_INL_SPLINE, RngIdx(xtalId), dac, adc);
+    return evalSpline(INV_INL_SPLINE, xtalId, dac, adc);
   }
 
  private:
-  CalibData::IntNonlin *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::IntNonlin*)
-      (m_rngBases[RngIdx(xtalId)]);
-  }
   
-  bool validateRangeBase(const CalXtalId &xtalId, 
-                         CalibData::RangeBase *rngBase);
+  bool validateRangeBase(CalibData::RangeBase *rngBase);
   
   StatusCode fillRangeBases();
   
   StatusCode genSplines();
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return RngIdx(xtalId);}
+
   
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())

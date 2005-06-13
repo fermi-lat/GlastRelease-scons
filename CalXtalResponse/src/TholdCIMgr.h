@@ -39,14 +39,7 @@ class TholdCIMgr : public CalibItemMgr {
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:
-  CalibData::CalTholdCI *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::CalTholdCI*) (m_rngBases[XtalIdx(xtalId)]);
-  }
-  
-  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*) 
-    {return true;}
+  bool validateRangeBase(CalibData::RangeBase*);
   
   StatusCode fillRangeBases();
   
@@ -58,6 +51,8 @@ class TholdCIMgr : public CalibItemMgr {
   }
 
   StatusCode loadIdealVals();
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return FaceIdx(xtalId);}
 
   ValSig m_idealFLE;
   ValSig m_idealFHE;

@@ -39,14 +39,14 @@ StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs
 
   //-- IDEAL MODE --//
   if (m_flavor == "ideal") {
-     m_idealMode = true;
+    m_idealMode = true;
 
-     // splines will not be automatically 
-     // generated b/c we won't actually look
-     // up any data.
-     // it's a hack, but screw it.
-     sc = genSplines();
-     if (sc.isFailure()) return sc;
+    // splines will not be automatically 
+    // generated b/c we won't actually look
+    // up any data.
+    // it's a hack, but screw it.
+    sc = genSplines();
+    if (sc.isFailure()) return sc;
   }
 
   return StatusCode::SUCCESS;
@@ -55,10 +55,14 @@ StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs
 StatusCode CalibItemMgr::updateCache() {
   StatusCode sc;
 
+  // disable recursive calling
+  if (m_inUpdate) return StatusCode::SUCCESS;
+  
   // if event is already validated return quickly
   // also we don't need validation if we're in ideal mode
   if (m_isValid || m_idealMode) return StatusCode::SUCCESS;
 
+  
   // enable 'inUpdate' flag for duration of this function
   m_inUpdate = true;
 
@@ -113,7 +117,7 @@ StatusCode CalibItemMgr::updateCache() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, 
+StatusCode CalibItemMgr::evalSpline(int calibType, const CalXtalId &xtalId, 
                                     double x, double &y) {
   // make sure we have valid calib data for this event.
   if (!m_inUpdate) {
@@ -121,10 +125,21 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
     if ((sc = updateCache()).isFailure()) return sc;
   }
 
+  LATWideIndex idx = genIdx(xtalId);
+
   // check that we have a spline for this particular xtal
   // (i.e. when LAT is not fully populated)
   TSpline3 *spline = m_splineLists[calibType][idx];
-  if (!spline) return StatusCode::FAILURE;
+  if (!spline) {
+    ostringstream msg;
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR 
+           << "No spline data found for " << m_calibPath 
+           << " xtal=" << idx.getInt()
+           << endreq;
+
+    return StatusCode::FAILURE;
+  }
 
   // bounds check input to spline function to avoid
   // weird behavior
@@ -146,8 +161,11 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string &name, 
+StatusCode CalibItemMgr::genSpline(int calibType, const CalXtalId &xtalId, const string &name, 
                                    const vector<double> &x, const vector<double> &y) {
+
+  LATWideIndex idx = genIdx(xtalId);
+                                                                           
   int n = min(x.size(),y.size());
 
   // create tmp arrays for TSpline ctor
@@ -162,6 +180,7 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
                                     xp,yp,n);
   mySpline->SetName(name.c_str());
 
+  
   // put spline in list
   m_splineLists[calibType][idx] = mySpline;
   // populate x-axis boundaries
@@ -207,4 +226,26 @@ void CalibItemMgr::flushCache() {
     fill_zero(m_splineXMin[i]);
     fill_zero(m_splineXMax[i]);
   }
+}
+
+CalibData::RangeBase *CalibItemMgr::getRangeBase(const CalXtalId &xtalId) {
+  StatusCode sc = updateCache();
+  if (sc.isFailure()) return NULL;
+
+  CalibData::RangeBase *ret = 
+    m_rngBases[genIdx(xtalId)];
+    
+  // update function attempts to load all calib data
+  // if some is not available, that is ok.
+  // only print error msg when caller-requested data
+  // is not available.
+  if (!ret && !m_inUpdate) {
+    ostringstream msg;
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR;
+    msglog.stream() << "No calib data found for " << m_calibPath << " xtal=" << xtalId;
+    msglog << endreq;
+  }
+
+  return ret;
 }

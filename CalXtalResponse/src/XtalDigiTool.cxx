@@ -1,7 +1,7 @@
 // Include files
 
 // LOCAL
-#include "CalXtalResponse/IXtalADCTool.h"
+#include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
 
 // GLAST
@@ -19,16 +19,16 @@
 
 using namespace CalDefs;
 
-/*! \class XtalADCTool
+/*! \class XtalDigiTool
   \author Zachary Fewtrell
-  \brief Official implementation of IXtalADCTool.  sums IntMcHits into digital response for one Cal xtalId.
+  \brief Official implementation of IXtalDigiTool.  sums IntMcHits into digital response for one Cal xtalId.
 
 */
 
-class XtalADCTool : public AlgTool, virtual public IXtalADCTool {
+class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
 public:
   /// default ctor, declares jobOptions
-  XtalADCTool::XtalADCTool( const string& type, 
+  XtalDigiTool::XtalDigiTool( const string& type, 
                             const string& name, 
                             const IInterface* parent);
 
@@ -43,12 +43,11 @@ public:
                        CalXtalId::AdcRange &rngP,
                        CalXtalId::AdcRange &rngN,
                        vector<int> &adcP,                
-                       vector<int> &adcN,                
-                       bool &peggedP,                     
-                       bool &peggedN
+                       vector<int> &adcN
                        );
 private:
-  StringProperty  m_calCalibSvcName;      ///< name of CalCalibSvc to use for calib constants.
+  /// name of CalCalibSvc to use for calib constants.
+  StringProperty  m_calCalibSvcName;      
   
   /// \brief
   ///
@@ -67,36 +66,50 @@ private:
      \endcode
   */
   BooleanProperty m_superVerbose;
-  ICalCalibSvc   *m_calCalibSvc;          ///< pointer to CalCalibSvc object.
+  /// pointer to CalCalibSvc object.
+  ICalCalibSvc   *m_calCalibSvc;          
 
   //-- Gaudi supplId constants --//
-  int m_nCsISeg;                         ///< number of geometric segments per Xtal
+  /// number of geometric segments per Xtal
+  int m_nCsISeg;                         
   int m_eXtal;
-  double m_CsILength;                    ///< Xtal length
-  int m_eDiodeMSm;                       ///< detModel identifier for sm minus-side diode
-  int m_eDiodePSm;                       ///< detModel identifier for sm plus-side diode
-  int m_eDiodeMLarge;                    ///< detModel identifier for large minus-side diode
-  int m_eDiodePLarge;                    ///< detModel identifier for large plus-side diode
+  /// Xtal length
+  double m_CsILength;                    
+  /// detModel identifier for sm minus-side diode
+  int m_eDiodeMSm;                       
+  /// detModel identifier for sm plus-side diode
+  int m_eDiodePSm;                       
+  /// detModel identifier for large minus-side diode
+  int m_eDiodeMLarge;                    
+  /// detModel identifier for large plus-side diode
+  int m_eDiodePLarge;                    
+  
+  /// detector volume id
+  int m_fCellCmp;
+  int m_fSegment;
+  
   double m_ePerMeVInDiode;
-  int m_ePerMeV[2];                      ///< gain - electrons/MeV 1=Sm, 0=Large
-  int m_maxAdc;                          ///< max val for ADC
+  /// gain - electrons/MeV 1=Sm, 0=Large
+  int m_ePerMeV[2];                      
+  /// max val for ADC
+  int m_maxAdc;                          
 };
 
-static ToolFactory<XtalADCTool> s_factory;
-const IToolFactory& XtalADCToolFactory = s_factory;
+static ToolFactory<XtalDigiTool> s_factory;
+const IToolFactory& XtalDigiToolFactory = s_factory;
 
-XtalADCTool::XtalADCTool( const string& type,
+XtalDigiTool::XtalDigiTool( const string& type,
                           const string& name,
                           const IInterface* parent)
   : AlgTool(type,name,parent) {
-  declareInterface<IXtalADCTool>(this);
+  declareInterface<IXtalDigiTool>(this);
 
   declareProperty("CalCalibSvc",   m_calCalibSvcName = "CalCalibSvc");
   declareProperty("NoRandomNoise", m_noRandNoise     = false);
   declareProperty("SuperVerbose",  m_superVerbose    = false);
 }
 
-StatusCode XtalADCTool::initialize() {
+StatusCode XtalDigiTool::initialize() {
   MsgStream msglog(msgSvc(), name()); 
   msglog << MSG::INFO << "initialize" << endreq;
 
@@ -110,7 +123,6 @@ StatusCode XtalADCTool::initialize() {
     msglog << MSG::ERROR << "Failed to set properties" << endreq;
     return sc;
   }
-
 
   // try to find the GlastDevSvc service
   IGlastDetSvc* detSvc;
@@ -159,16 +171,14 @@ StatusCode XtalADCTool::initialize() {
   return sc;
 }
 
-StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
+StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
                                   const vector<const Event::McIntegratingHit*> &hitList, // list of all mc hits for this xtal & it's diodes.
                                   bool &lacP,
                                   bool &lacN,
                                   CalXtalId::AdcRange &rngP,
                                   CalXtalId::AdcRange &rngN,
                                   vector<int> &adcP,
-                                  vector<int> &adcN,
-                                  bool &peggedP,
-                                  bool &peggedN
+                                  vector<int> &adcN
                                   ) {
 
   StatusCode sc;
@@ -220,11 +230,10 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::DEBUG;
       msglog.stream() << "id=" << xtalId
-                      << "\tcell=" << volId[fCellCmp] 
+                      << "\tcell=" << volId[m_fCellCmp] 
                       << " ene=" << ene;
       msglog << endreq;
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////// SUM DAC VALS FOR EACH HIT /////////////////////////
@@ -232,11 +241,11 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
     //--XTAL DEPOSIT--//
     
-    if((int)volId[fCellCmp] ==  m_eXtal ) {
+    if((int)volId[m_fCellCmp] ==  m_eXtal ) {
       sumEneCsI += ene;
       //-- HIT POSITION--//
       HepPoint3D mom1 = hit.moment1();
-      int segm = volId[fSegment]; // segment # (0-11)
+      int segm = volId[m_fSegment]; // segment # (0-11)
       // let's define the position of the segment along the crystal
       double relpos = (segm+0.5)/m_nCsISeg; // units in xtal len 0.0-1.0
       // in local reference system x is always oriented along the crystal
@@ -286,10 +295,10 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
 
       DiodeNum diode;
       FaceNum face;
-      if((int)volId[fCellCmp]      == m_eDiodePLarge)  face = POS_FACE, diode = LRG_DIODE;
-      else if((int)volId[fCellCmp] == m_eDiodeMLarge)  face = NEG_FACE, diode = LRG_DIODE;
-      else if((int)volId[fCellCmp] == m_eDiodePSm)     face = POS_FACE, diode = SM_DIODE;
-      else if((int)volId[fCellCmp] == m_eDiodeMSm)     face = NEG_FACE, diode = SM_DIODE;
+      if((int)volId[m_fCellCmp]      == m_eDiodePLarge)  face = POS_FACE, diode = LRG_DIODE;
+      else if((int)volId[m_fCellCmp] == m_eDiodeMLarge)  face = NEG_FACE, diode = LRG_DIODE;
+      else if((int)volId[m_fCellCmp] == m_eDiodePSm)     face = POS_FACE, diode = SM_DIODE;
+      else if((int)volId[m_fCellCmp] == m_eDiodeMSm)     face = NEG_FACE, diode = SM_DIODE;
       else throw invalid_argument("VolId is not in xtal or diode.  Programmer error.");
       
       // convert e-in-diode to MeV-in-xtal-center
@@ -368,7 +377,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
     if (sc.isFailure()) return sc;
     
     // calcuate adc val from dac
-    sc = m_calCalibSvc->evalADC(rngXtalId, 
+	sc = m_calCalibSvc->evalADC(rngXtalId, 
                                 diodeDAC[xDiode], 
                                 tmpADC[xRng]);
     if (sc.isFailure()) return sc;   
@@ -443,6 +452,7 @@ StatusCode XtalADCTool::calculate(const CalXtalId &xtalId,
   //-- BEST RANGE SELECTION --//
   // operates on adc + ped
   // pegged will be set true if HEX1 ADC saturates
+  bool peggedP, peggedN;
   peggedP = peggedN = false; 
   for (FaceNum face; face.isValid(); face++) {
     // BEST RANGE

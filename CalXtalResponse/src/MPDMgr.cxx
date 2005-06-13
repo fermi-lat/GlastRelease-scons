@@ -28,7 +28,8 @@ StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
   }
 
   // Get generic pointer to rng specific data
-  CalibData::CalMevPerDac *mpd = getRangeBase(xtalId);
+  CalibData::CalMevPerDac *mpd = 
+	  (CalibData::CalMevPerDac *)getRangeBase(xtalId);
   if (!mpd) return StatusCode::FAILURE;
 
   mpdLrg = *(mpd->getBig());
@@ -47,7 +48,7 @@ StatusCode MPDMgr::fillRangeBases() {
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }
@@ -65,4 +66,27 @@ StatusCode MPDMgr::loadIdealVals() {
      owner->m_idealCalib.mpdSigPct;
   
   return StatusCode::SUCCESS;
+}
+
+bool MPDMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
+
+  CalibData::CalMevPerDac *mpd = (CalibData::CalMevPerDac*)(rngBase);
+
+  if (!mpd->getBig()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if mpd->getBig() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!mpd->getSmall()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+  
+  return true;
 }

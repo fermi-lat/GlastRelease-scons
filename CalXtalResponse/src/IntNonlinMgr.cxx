@@ -28,56 +28,14 @@ IntNonlinMgr::IntNonlinMgr() :
   }
 }
 
-bool IntNonlinMgr::validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase) {
+bool IntNonlinMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
   // recast for specific calibration type
   CalibData::IntNonlin* intNonlin = (CalibData::IntNonlin*)(rngBase);
 
   //get vector of vals
   const vector<float> *intNonlinVec = intNonlin->getValues();
-  if (!intNonlinVec) {
-    // create MsgStream only when needed for performance
-    if (owner->m_superVerbose) {
-      MsgStream msglog(owner->msgSvc(), owner->name()); 
-      msglog << MSG::VERBOSE;
-      msglog.stream() << "can't get IntNonlin vals [" << xtalId 
-        << ']';
-      msglog << endreq;
-    }
-    
+  if (!intNonlinVec)    
     return false;
-  }
-
-  //get collection of associated DAC vals
-  CalibData::DacCol *intNonlinDacCol = m_calibBase->getDacCol(xtalId.getRange());
-  const vector<unsigned> *intNonlinDacVec;
-  if (intNonlinDacCol) {
-    intNonlinDacVec = intNonlinDacCol->getDacs();
-  } else {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "No intNonlinDacCol found.\n" << endreq;
-    return false;
-  }
-
-  if (owner->m_superVerbose) {
-   MsgStream msglog(owner->msgSvc(), owner->name()); 
-   msglog << "TEST INL RANGEBASE [" << xtalId 
-     << ']' << intNonlinVec->size() << endreq;
-  }
-
-  // check that there are enough DAC vals for ADC vals in this rng
-  if (intNonlinVec->size() > intNonlinDacVec->size()) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR;
-    // use stream class to get proper formatting out of CalXtalId
-    msglog.stream() << "intNonlin nADC > nDAC" 
-           << " CalXtalId=" << xtalId
-           << " nADC="      << intNonlinVec->size()
-           << " nDAC="      << intNonlinDacVec->size();
-    msglog << endreq;
-    return false;
-  }
 
   return true;
 }
@@ -97,7 +55,9 @@ StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::IntNonlin *intNonlin = getRangeBase(xtalId);
+  
+  CalibData::IntNonlin *intNonlin 
+	  = (CalibData::IntNonlin *)getRangeBase(xtalId);
   if (!intNonlin) return StatusCode::FAILURE;
 
   //get vector of vals
@@ -107,6 +67,12 @@ StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
   CalibData::DacCol *intNonlinDacCol = m_calibBase->getDacCol(xtalId.getRange());
   const vector<unsigned> *intNonlinDacVec;
   intNonlinDacVec = intNonlinDacCol->getDacs();
+
+  // check array lens (can't check during validateRangeBase() since DAC is not
+  // part of rangebase
+  if (intNonlinVec->size() > intNonlinDacVec->size()) {
+    return StatusCode::FAILURE;
+  }
 
   //whew, we made it this far... let's assign our outputs & leave!
   adcs = intNonlinVec;
@@ -125,7 +91,7 @@ StatusCode IntNonlinMgr::genSplines() {
 
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     float error;
-
+    
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
     sc = getIntNonlin(rngIdx.getCalXtalId(), adc, dac, error);
@@ -140,16 +106,16 @@ StatusCode IntNonlinMgr::genSplines() {
     copy(adc->begin(), adc->begin() + n, dblAdc.begin());
     copy(dac->begin(), dac->begin() + n, dblDac.begin());
 
+	CalXtalId xtalId = rngIdx.getCalXtalId();
+
     // put rng id string into spline name
     ostringstream rngStr;
-    rngStr << '[' << rngIdx.getCalXtalId() 
-           << ' ' << rngIdx.getFace()
-           << ' ' << rngIdx.getRng()
+    rngStr << '[' << xtalId
            << ']';
 
-    genSpline(INL_SPLINE,     rngIdx, "INL"    + rngStr.str(),    
+    genSpline(INL_SPLINE, xtalId, "INL"    + rngStr.str(),    
               dblAdc, dblDac);
-    genSpline(INV_INL_SPLINE, rngIdx, "invINL" + rngStr.str(), 
+    genSpline(INV_INL_SPLINE, xtalId, "invINL" + rngStr.str(), 
               dblDac, dblAdc);
   }
 
@@ -166,7 +132,9 @@ StatusCode IntNonlinMgr::fillRangeBases() {
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
+
+    const vector<float> *adc = ((CalibData::IntNonlin*)rngBase)->getValues();
 
     m_rngBases[rngIdx] = rngBase;
   }

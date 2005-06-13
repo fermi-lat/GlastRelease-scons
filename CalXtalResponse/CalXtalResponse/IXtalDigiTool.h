@@ -1,6 +1,6 @@
-#ifndef _IXtalADCTool_H
-#define _IXtalADCTool_H 1
-/*! @class IXtalADCTool
+#ifndef _IXtalDigiTool_H
+#define _IXtalDigiTool_H 1
+/*! @class IXtalDigiTool
  *
  * \author Zach Fewtrell
  *
@@ -19,15 +19,15 @@
 // STD INCLUDES
 #include <vector>
 
-static const InterfaceID IID_XtalADCTool("IXtalADCTool", 1 , 0);
+static const InterfaceID IID_XtalDigiTool("IXtalDigiTool", 1 , 0);
 
 using namespace std;
 using namespace idents;
 
-class IXtalADCTool : virtual public IAlgTool {
+class IXtalDigiTool : virtual public IAlgTool {
  public:
 
-  static const InterfaceID& interfaceID() { return IID_XtalADCTool; }
+  static const InterfaceID& interfaceID() { return IID_XtalDigiTool; }
 
   /// calculate Adc response for one cal xtalId.  also select best rng.
   /// \param CalXtalId specify xtal log
@@ -45,11 +45,9 @@ class IXtalADCTool : virtual public IAlgTool {
                                CalXtalId::AdcRange &rngP,   // output - best rng
                                CalXtalId::AdcRange &rngN,   // output - best rng
                                vector<int> &adcP,                   // output - ADC's for all rngs 0-3
-                               vector<int> &adcN,                    // output - ADC's for all rngs 0-3
-                               bool &peggedP,                       // output - Boolean if HEX1 ADC val is saturated (POS face)
-                               bool &peggedN                        // output - Boolean if HEX1 ADC val is saturated (NEG face)
+                               vector<int> &adcN                    // output - ADC's for all rngs 0-3
                                ) = 0;
 
 };
 
-#endif //_IXtalADCTool_H
+#endif //_IXtalDigiTool_H

@@ -1,7 +1,6 @@
 // File and version Information:
 //   $Header$
 
-
 // LOCAL INCLUDES
 #include "CalXtalRecAlg.h"
 
@@ -21,6 +20,7 @@
 using namespace Event;
 using namespace idents;
 using namespace std;
+using namespace CalDefs;
 
 static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
@@ -343,7 +343,7 @@ StatusCode CalXtalRecAlg::computePosition(CalXtalRecData &recData,
   // create Volume Identifier for the last segment of this crystal
   idents::VolumeIdentifier segm11Id;
   // copy all fields from segm0Id, except segment number
-  for(int ifield = 0; ifield<CalDefs::fSegment; ifield++)
+  for(int ifield = 0; ifield < fSegment; ifield++)
     segm11Id.append(segm0Id[ifield]);
   segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
   //get 3D transformation for the last segment of this crystal

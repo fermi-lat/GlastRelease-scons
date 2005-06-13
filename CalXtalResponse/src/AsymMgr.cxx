@@ -28,7 +28,7 @@ AsymMgr::AsymMgr() :
   }
 }
 
-bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase) {
+bool AsymMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
   const vector<CalibData::ValSig> *asymLrg;
   const vector<CalibData::ValSig> *asymSm;
   const vector<CalibData::ValSig> *asymNSPB;
@@ -43,25 +43,14 @@ bool AsymMgr::validateRangeBase(const CalXtalId&, CalibData::RangeBase *rngBase)
     // partial xtal.
     return false;
   }
-  if (!(asymSm = asym->getSmall())) {
+  if (!(asymSm = asym->getSmall())        ||
+      !(asymNSPB = asym->getNSmallPBig()) ||
+      !(asymPSNB = asym->getPSmallNBig())) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath << endreq;
-    return false;
-  }
-  if (!(asymNSPB = asym->getNSmallPBig())) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath << endreq;
-    return false;
-  }
-  if (!(asymPSNB = asym->getPSmallNBig())) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath << endreq;
+           << m_calibPath;
+    msglog << endreq;
     return false;
   }
 
@@ -98,7 +87,8 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
   
-  CalibData::CalAsym *asym = getRangeBase(xtalId);
+  CalibData::CalAsym *asym = 
+	  (CalibData::CalAsym *)getRangeBase(xtalId);
   if (!asym) return StatusCode::FAILURE;
   
   // get main data arrays
@@ -113,9 +103,9 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
 }
 
 /** return p3 such that p3 - p2 = p2 - p1
-*/
+ */
 inline double extrap(double p1, double p2) {
-   return 2*p2 - p1;
+  return 2*p2 - p1;
 }
 
 StatusCode AsymMgr::genSplines() {
@@ -217,26 +207,28 @@ StatusCode AsymMgr::genSplines() {
       msglog << endreq;
     }
 
-    // put xtal id string into spline name
+	CalXtalId xtalId = xtalIdx.getCalXtalId();
+	
+	// put xtal id string into spline name
     ostringstream xtalStr;
-    xtalStr << '[' << xtalIdx.getCalXtalId() << ']';
+    xtalStr << '[' << xtalId << ']';
 
-    genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg"     + xtalStr.str(),   
+    genSpline(ASYMLRG_SPLINE,   xtalId, "asymLrg"     + xtalStr.str(),   
               dblXpos, dblAsymLrg);
-    genSpline(ASYMSM_SPLINE,    xtalIdx, "asymSm"      + xtalStr.str(),    
+    genSpline(ASYMSM_SPLINE,    xtalId, "asymSm"      + xtalStr.str(),    
               dblXpos, dblAsymSm);
-    genSpline(ASYMNSPB_SPLINE,  xtalIdx, "asymNSPB"    + xtalStr.str(),  
+    genSpline(ASYMNSPB_SPLINE,  xtalId, "asymNSPB"    + xtalStr.str(),  
               dblXpos, dblAsymNSPB);
-    genSpline(ASYMPSNB_SPLINE,  xtalIdx, "asymPSNB"    + xtalStr.str(),  
+    genSpline(ASYMPSNB_SPLINE,  xtalId, "asymPSNB"    + xtalStr.str(),  
               dblXpos, dblAsymPSNB);
 
-    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invAsymLrg"  + xtalStr.str(),   
+    genSpline(INV_ASYMLRG_SPLINE,   xtalId, "invAsymLrg"  + xtalStr.str(),   
               dblAsymLrg,   dblXpos);
-    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invAsymSm"   + xtalStr.str(),    
+    genSpline(INV_ASYMSM_SPLINE,    xtalId, "invAsymSm"   + xtalStr.str(),    
               dblAsymSm,    dblXpos);
-    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invAsymNSPB" + xtalStr.str(),  
+    genSpline(INV_ASYMNSPB_SPLINE,  xtalId, "invAsymNSPB" + xtalStr.str(),  
               dblAsymNSPB,  dblXpos);
-    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invAsymPSNB" + xtalStr.str(),  
+    genSpline(INV_ASYMPSNB_SPLINE,  xtalId, "invAsymPSNB" + xtalStr.str(),  
               dblAsymPSNB,  dblXpos);
   }  
   
@@ -254,7 +246,7 @@ StatusCode AsymMgr::fillRangeBases() {
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
 
     m_rngBases[xtalIdx] = rngBase;
   }

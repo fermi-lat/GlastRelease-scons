@@ -26,7 +26,8 @@ StatusCode PedMgr::getPed(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   } 
 
-  CalibData::Ped *ped = getRangeBase(xtalId);
+  CalibData::Ped *ped 
+	  = (CalibData::Ped *)getRangeBase(xtalId);
   if (!ped) return StatusCode::FAILURE;
 
   //vals
@@ -47,7 +48,7 @@ StatusCode PedMgr::fillRangeBases() {
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
 
     m_rngBases[rngIdx] = rngBase;
   }

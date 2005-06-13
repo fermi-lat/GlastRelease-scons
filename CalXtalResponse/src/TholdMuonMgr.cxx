@@ -21,7 +21,8 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::CalTholdMuon *tholdMuon = getRangeBase(xtalId);
+  CalibData::CalTholdMuon *tholdMuon 
+	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
 
   //vals
@@ -42,7 +43,8 @@ StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::CalTholdMuon *tholdMuon = getRangeBase(xtalId);
+  CalibData::CalTholdMuon *tholdMuon 
+	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
 
   ped = *(tholdMuon->getPed(xtalId.getRange()));
@@ -51,18 +53,18 @@ StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
 }
 
 StatusCode TholdMuonMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS,0);
+  m_rngBases.resize(FaceIdx::N_VALS,0);
 
-  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
-    CalXtalId xtalId = xtalIdx.getCalXtalId();
+  for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
+    CalXtalId xtalId = faceIdx.getCalXtalId();
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support partial LAT instruments
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
 
-    m_rngBases[xtalIdx] = rngBase;
+    m_rngBases[faceIdx] = rngBase;
   }
 
   return StatusCode::SUCCESS;
@@ -93,4 +95,44 @@ StatusCode TholdMuonMgr::loadIdealVals() {
   }
 
   return StatusCode::SUCCESS;
+}
+
+bool TholdMuonMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
+  CalibData::CalTholdMuon *tholdMuon = (CalibData::CalTholdMuon*)(rngBase);
+
+  if (tholdMuon->getFLE()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if tholdMuon->getFLE() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (tholdMuon->getFHE()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+  
+  const vector<ValSig> *peds = tholdMuon->getPeds();
+  if (!peds) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+  if (peds->size() != RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+
+  return true;
 }

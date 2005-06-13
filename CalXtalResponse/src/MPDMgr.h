@@ -29,20 +29,15 @@ class MPDMgr : public CalibItemMgr {
                     ValSig &mpdSm);
 
  private:
-  CalibData::CalMevPerDac *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::CalMevPerDac*)(m_rngBases[XtalIdx(xtalId)]);
-  }
-
-  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*)
-    {return true;}
+  bool validateRangeBase(CalibData::RangeBase*);
 
   StatusCode fillRangeBases();
 
   bool checkXtalId(const CalXtalId&) {return true;}
 
   StatusCode loadIdealVals();
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return XtalIdx(xtalId);}
 
   ValSig m_idealMPDLrg;
   ValSig m_idealMPDSm;

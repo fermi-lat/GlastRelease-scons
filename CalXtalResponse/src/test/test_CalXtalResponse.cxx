@@ -7,7 +7,7 @@
 #include "CalXtalResponse/ICalCalibSvc.h"
 #include "CalXtalResponse/IXtalEneTool.h"
 #include "CalXtalResponse/IXtalPosTool.h"
-#include "CalXtalResponse/IXtalADCTool.h"
+#include "CalXtalResponse/IXtalDigiTool.h"
 
 // GLAST
 #include "idents/CalXtalId.h"
@@ -41,14 +41,14 @@ private:
   StatusCode test_calCalibSvc();
   StatusCode test_xtalEneTool();
   StatusCode test_xtalPosTool();
-  StatusCode test_xtalADCTool();
+  StatusCode test_xtalDigiTool();
 
   //! number of times called
   int m_count; 
 
   IXtalEneTool *m_xtalEneTool; ///< pointer to calenergyTool
   IXtalPosTool *m_xtalPosTool; ///< pointer to calposTool
-  IXtalADCTool *m_xtalADCTool; ///< pointer to XtalADCTool
+  IXtalDigiTool *m_xtalDigiTool; ///< pointer to XtalDigiTool
 
 };
 //------------------------------------------------------------------------
@@ -90,9 +90,9 @@ StatusCode test_CalXtalResponse::initialize(){
   }
 
   // get cal adc Tool
-  sc = toolSvc()->retrieveTool("XtalADCTool", m_xtalADCTool);
+  sc = toolSvc()->retrieveTool("XtalDigiTool", m_xtalDigiTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalADCTool" << endreq;
+    msglog << MSG::ERROR << "  can't create " << "XtalDigiTool" << endreq;
     return sc;
   }
 
@@ -111,7 +111,7 @@ StatusCode test_CalXtalResponse::execute()
   if ((sc = test_calCalibSvc().isFailure())) return sc;
   if ((sc = test_xtalPosTool().isFailure())) return sc;
   if ((sc = test_xtalEneTool().isFailure())) return sc;
-  if ((sc = test_xtalADCTool().isFailure())) return sc;
+  if ((sc = test_xtalDigiTool().isFailure())) return sc;
 
   return StatusCode::SUCCESS;
 }
@@ -257,7 +257,7 @@ StatusCode test_CalXtalResponse::test_xtalPosTool() {
 
 /// do single mc->digi calculation, 
 /// I'm too lazy to build my own hits, so i'm just sending empty list for now.
-StatusCode test_CalXtalResponse::test_xtalADCTool() {
+StatusCode test_CalXtalResponse::test_xtalDigiTool() {
   MsgStream msglog(msgSvc(), name());
   StatusCode sc;
 
@@ -265,36 +265,32 @@ StatusCode test_CalXtalResponse::test_xtalADCTool() {
 
   CalXtalId::AdcRange rngP, rngN;
   bool lacP, lacN;
-  bool peggedP, peggedN;
   vector<int> adcP(4,0), adcN(4,0);
 
-  // call XtalADCTool
+  // call XtalDigiTool
   vector<const Event::McIntegratingHit*> hitvec(0);
   
   
 
-  if ((sc = m_xtalADCTool->calculate(xtalId,
+  if ((sc = m_xtalDigiTool->calculate(xtalId,
                                      hitvec,
                                      lacP, lacN,
                                      rngP, rngN,
-                                     adcP, adcN,
-                                     peggedP, peggedN
+                                     adcP, adcN
                                      )).isFailure()) {
-    msglog << MSG::ERROR << "error calling XtalADCTool" << endreq;
+    msglog << MSG::ERROR << "error calling XtalDigiTool" << endreq;
     return sc;
   }
 
-  msglog << MSG::INFO << "XtalADCTool " << xtalId
+  msglog << MSG::INFO << "XtalDigiTool " << xtalId
          << " lacP " << lacP
          << " rngP " << rngP
-         << " peggedP " << peggedP
          << " adcP " << adcP[0]
          << ' '      << adcP[1]
          << ' '      << adcP[2]
          << ' '      << adcP[3]
          << " lacN " << lacN
          << " rngN " << rngN
-         << " peggedP " << peggedN
          << " adcN " << adcN[0]
          << ' '      << adcN[1]
          << ' '      << adcN[2]

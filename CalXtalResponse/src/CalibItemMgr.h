@@ -61,17 +61,19 @@ class CalibItemMgr {
   virtual StatusCode genSplines() {return StatusCode::SUCCESS;}   
 
   /// make sure that data for one rng is sane/complete
-  virtual bool validateRangeBase(const CalXtalId &xtalId, 
-                                 CalibData::RangeBase *rngBase) = 0; 
+  virtual bool validateRangeBase(CalibData::RangeBase *rngBase) = 0; 
 
   /// check that xtalId has optional range & face information (if applicable for calib_type)
   virtual bool checkXtalId(const CalXtalId &xtalId) = 0;
 
+  /// convert xtalId to appropriate LATWideIndex for current calib type
+  virtual LATWideIndex genIdx(const CalXtalId &xtalId) = 0;
+
   /// generic spline evaluation f() works for any calib_type
-  StatusCode evalSpline(int calibType, LATWideIndex  idx, double x, double &y);
+  StatusCode evalSpline(int calibType, const CalXtalId &xtalId, double x, double &y);
 
   /// generate new spline from 2 STL vecs & insert into appropriate splineList
-  StatusCode genSpline(int calibType, LATWideIndex idx, const string &name,
+  StatusCode genSpline(int calibType, const CalXtalId &xtalId, const string &name,
                        const vector<double> &x, const vector<double> &y);
 
   /// TDS path to calib data for my calib_type
@@ -95,12 +97,21 @@ class CalibItemMgr {
   vector<CalVec<LATWideIndex,TSpline3* > >     m_splineLists;
   vector<CalVec<LATWideIndex, float> >         m_splineXMin;
   vector<CalVec<LATWideIndex, float> >         m_splineXMax;
+
+  /** retrieve spec'd rangeBase object, update if necessary
+   \return NULL if there is no data 
+   */
+  CalibData::RangeBase *getRangeBase(const CalXtalId &xtalId);
   
  private:
-  virtual void flushCache();      ///< wipe out all cached data.
-  string            m_flavor;     ///< calib flavor
-  bool              m_isValid;    ///< validity state of CalibItemMgr data
-  int               m_serNo;      ///< serial # for current calibration source
+  /// wipe out all cached data.
+  virtual void flushCache();      
+  /// calib flavor
+  string            m_flavor;     
+  /// validity state of CalibItemMgr data
+  bool              m_isValid;    
+  /// serial # for current calibration source
+  int               m_serNo;      
 
   /// set to true during update process to avoid recursive checking
   bool              m_inUpdate;

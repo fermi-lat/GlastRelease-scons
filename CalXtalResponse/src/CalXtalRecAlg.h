@@ -1,13 +1,20 @@
-#ifndef __CALXTALRECALG_H
-#define __CALXTALRECALG_H 1
+#ifndef CalXtalRecAlg_h
+#define CalXtalRecAlg_h 
 
-#include "GaudiKernel/Algorithm.h"
-#include "Event/Digi/CalDigi.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
+// LOCAL INCLUDES
 #include "CalXtalResponse/IXtalEneTool.h"
 #include "CalXtalResponse/IXtalPosTool.h"
+
+// GLAST INCLUDES
+#include "Event/Digi/CalDigi.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "idents/VolumeIdentifier.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+// EXTLIB INCLUDES
+#include "GaudiKernel/Algorithm.h"
+
+// STD INCLUDES
 
 /** @class CalXtalRecAlg
     @brief  Calorimeter crystal reconstruction algorithm
@@ -72,18 +79,25 @@ class CalXtalRecAlg : public Algorithm
 
   //-- XML GEOMETRY CONSTANTS --//
   
-  int m_xNum;    ///< number of x towers
-  int m_yNum;    ///< number of y towers
+  /// number of x towers
+  int m_xNum;    
+  /// number of y towers
+  int m_yNum;    
 
   /// the value of fTowerObject field, defining calorimeter module 
   int m_eTowerCAL;
-  int m_eLATTowers; ///< the value of fLATObjects field, defining LAT towers 
-  int m_eXtal;      ///< the value of fCellCmp field defining CsI crystal
-  int m_nCsISeg;    ///< number of geometric segments per Xtal
+  /// the value of fLATObjects field, defining LAT towers 
+  int m_eLATTowers; 
+  /// the value of fCellCmp field defining CsI crystal
+  int m_eXtal;      
+  /// number of geometric segments per Xtal
+  int m_nCsISeg;    
+  
+  /// length of CsI xtal in mm
+  double m_CsILength; 
 
-  double m_CsILength; ///< length of CsI xtal in mm
-
-  IGlastDetSvc* m_detSvc; ///< pointer to the Glast Detector Service
+  /// pointer to the Glast Detector Service
+  IGlastDetSvc* m_detSvc; 
     
   /// pointer to CalResponse tool for converting xtal digi info -> energy 
   IXtalEneTool *m_xtalEneTool;

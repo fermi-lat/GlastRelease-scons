@@ -24,7 +24,8 @@ StatusCode TholdCIMgr::getTholds(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::CalTholdCI *tholdCI = getRangeBase(xtalId);
+  CalibData::CalTholdCI *tholdCI 
+	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
@@ -45,7 +46,8 @@ StatusCode TholdCIMgr::getULD(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::CalTholdCI *tholdCI = getRangeBase(xtalId);
+  CalibData::CalTholdCI *tholdCI 
+	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
@@ -64,7 +66,8 @@ StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
-  CalibData::CalTholdCI *tholdCI = getRangeBase(xtalId);
+  CalibData::CalTholdCI *tholdCI 
+	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
   if (!tholdCI) return StatusCode::FAILURE;
 
   ped = *(tholdCI->getPed(xtalId.getRange()));
@@ -73,18 +76,18 @@ StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
 }
 
 StatusCode TholdCIMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS,0);
+  m_rngBases.resize(FaceIdx::N_VALS,0);
 
-  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
-    CalXtalId xtalId = xtalIdx.getCalXtalId();
+  for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
+    CalXtalId xtalId = faceIdx.getCalXtalId();
     CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
     if (!rngBase) continue; // support parial LAT inst
 
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(xtalId,rngBase)) continue;
+    if (!validateRangeBase(rngBase)) continue;
 
-    m_rngBases[xtalIdx] = rngBase;
+    m_rngBases[faceIdx] = rngBase;
   }
 
   return StatusCode::SUCCESS;
@@ -129,4 +132,43 @@ StatusCode TholdCIMgr::loadIdealVals() {
   }
 
   return StatusCode::SUCCESS;
+}
+
+bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
+  CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)(rngBase);
+
+  if (!tholdCI->getFLE()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if tholdCI->getFLE() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!tholdCI->getFHE() ||
+      !tholdCI->getLAC()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+
+  const vector<ValSig> *peds = tholdCI->getPeds();
+  const vector<ValSig> *ulds = tholdCI->getULDs();
+  if (!peds || !ulds) {
+    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
+    return false;
+  }
+
+  if (peds->size() != RngNum::N_VALS ||
+      ulds->size() != RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+	msglog << endreq;
+    return false;
+  }
+  return true;
 }

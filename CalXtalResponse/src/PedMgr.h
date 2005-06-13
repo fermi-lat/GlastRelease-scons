@@ -31,13 +31,7 @@ class PedMgr : public CalibItemMgr {
                     float &sig,
                     float &cos);
  private:
-  CalibData::Ped *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::Ped*)(m_rngBases[RngIdx(xtalId)]);
-  }
-  
-  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*)
+  bool validateRangeBase(CalibData::RangeBase*)
     {return true;}
   
   StatusCode fillRangeBases();
@@ -49,6 +43,8 @@ class PedMgr : public CalibItemMgr {
   }
 
   StatusCode loadIdealVals();
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return RngIdx(xtalId);}
 
   CalVec<RngNum,float> m_idealPeds;   ///< ped vals to use when calib db is down
   CalVec<RngNum,float> m_idealPedSig; ///< ped sigma vals to use when calib db is down

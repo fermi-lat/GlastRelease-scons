@@ -34,14 +34,7 @@ class TholdMuonMgr : public CalibItemMgr {
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:
-  CalibData::CalTholdMuon *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::CalTholdMuon*)(m_rngBases[XtalIdx(xtalId)]);
-  }
-  
-  bool validateRangeBase(const CalXtalId&, CalibData::RangeBase*)
-    {return true;}
+  bool validateRangeBase(CalibData::RangeBase*);
   
   StatusCode fillRangeBases();
   
@@ -53,6 +46,8 @@ class TholdMuonMgr : public CalibItemMgr {
   }
 
   StatusCode loadIdealVals();
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return FaceIdx(xtalId);}
 
   ValSig m_idealFLE;
   ValSig m_idealFHE;

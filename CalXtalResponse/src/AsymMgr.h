@@ -34,50 +34,51 @@ class AsymMgr : public CalibItemMgr {
   StatusCode evalAsymLrg(const CalXtalId &xtalId, 
                          double Xpos, double &asymLrg){
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMLRG_SPLINE, XtalIdx(xtalId), Xpos, asymLrg);
+    return evalSpline(ASYMLRG_SPLINE, xtalId, Xpos, asymLrg);
   }
 
   StatusCode evalPosLrg(const CalXtalId &xtalId, 
                         double asymLrg, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMLRG_SPLINE, XtalIdx(xtalId), asymLrg, Xpos);
+    return evalSpline(INV_ASYMLRG_SPLINE, xtalId, asymLrg, Xpos);
   }
 
   StatusCode evalAsymSm(const CalXtalId &xtalId, 
                         double Xpos, double &asymSm) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMSM_SPLINE, XtalIdx(xtalId), Xpos, asymSm);
+    return evalSpline(ASYMSM_SPLINE, xtalId, Xpos, asymSm);
   }
 
   StatusCode evalPosSm(const CalXtalId &xtalId, 
                        double asymSm, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMSM_SPLINE, XtalIdx(xtalId), asymSm, Xpos);
+    return evalSpline(INV_ASYMSM_SPLINE, xtalId, asymSm, Xpos);
   }
 
   StatusCode evalAsymNSPB(const CalXtalId &xtalId, 
                           double Xpos, double &asymNSPB) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMNSPB_SPLINE, XtalIdx(xtalId), Xpos, asymNSPB);
+    return evalSpline(ASYMNSPB_SPLINE, xtalId, Xpos, asymNSPB);
   }
 
   StatusCode evalPosNSPB(const CalXtalId &xtalId, 
                          double asymNSPB, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMNSPB_SPLINE, XtalIdx(xtalId), asymNSPB, Xpos);
+    return evalSpline(INV_ASYMNSPB_SPLINE, xtalId, asymNSPB, Xpos);
   }
 
   StatusCode evalAsymPSNB(const CalXtalId &xtalId, 
                           double Xpos, double &asymPSNB) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMPSNB_SPLINE, XtalIdx(xtalId), Xpos, asymPSNB);
+    return evalSpline(ASYMPSNB_SPLINE, xtalId, Xpos, asymPSNB);
   }
 
   StatusCode evalPosPSNB(const CalXtalId &xtalId, 
-                         double asymPSNB, double &Xpos) {
+	                     double asymPSNB, double &Xpos) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMPSNB_SPLINE, XtalIdx(xtalId), asymPSNB, Xpos);
+    return evalSpline(INV_ASYMPSNB_SPLINE, xtalId, asymPSNB, Xpos);
   }
+
 
  private:
 
@@ -94,20 +95,15 @@ class AsymMgr : public CalibItemMgr {
     N_SPLINE_TYPES
   } SPLINE_TYPE;
 
-  CalibData::CalAsym *getRangeBase(const CalXtalId &xtalId) {
-    StatusCode sc = updateCache();
-    if (sc.isFailure()) return NULL;
-    return (CalibData::CalAsym*)
-      (m_rngBases[XtalIdx(xtalId)]);
-  }
-
-  bool validateRangeBase(const CalXtalId &xtalId, CalibData::RangeBase *rngBase);
+  bool validateRangeBase(CalibData::RangeBase *rngBase);
 
   StatusCode fillRangeBases();
 
   StatusCode genSplines();
 
   bool checkXtalId(const CalXtalId&) {return true;}
+
+  LATWideIndex genIdx(const CalXtalId &xtalId) {return XtalIdx(xtalId);}
 
   StatusCode loadIdealVals();
   /// Store ideal (fake) vals for large diode asym (used when db is down)
@@ -120,6 +116,8 @@ class AsymMgr : public CalibItemMgr {
   vector<ValSig> m_idealAsymPSNB;
   
   vector<float> m_idealXVals;
+
+  
 
 };
 #endif
