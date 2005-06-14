@@ -405,14 +405,15 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
 
     MsgStream lm(msgSvc(), name());
     
-    if (vertex == 0) return corResult;
-
     const Vector& trackDirection = vertex->getDirection();
     const Point&  trackPosition  = vertex->getPosition();
 
     double eTotal = cluster->getCalParams().getEnergy() ;
     
-    m_static_slope = trackDirection.z();
+    if (vertex == 0)
+     { m_static_slope = cluster->getCalParams().getAxis().z() ; }
+    else
+     { m_static_slope = trackDirection.z() ; }
 
     m_xtalHeight = m_calCsIHeight / 10.;   // crystal height in cm
     m_xtalWidth  = m_calCsIWidth / 10.;    // crystal width in cm
