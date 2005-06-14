@@ -30,12 +30,13 @@ CalCalibSvc.DefaultFlavor  = "ideal" ;
 
 // algorithms skeleton
 ApplicationMgr.DLLs += { "GaudiAlg", "RootIo" } ;
-ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;  
-ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
-ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
-ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
+ApplicationMgr.TopAlg += { "Sequencer/Top" } ;
+Top.Members = { "PropertiesCheckAlg" } ;  
+Top.Members += { "TkrCalibAlg" } ;
+Top.Members += { "Sequencer/Simulation" } ;
+Top.Members += { "Sequencer/Reconstruction" } ;
 PropertiesCheckAlg.exclude = {
-  "ApplicationMgr", "EventSelector", "MessageSvc", "", "", "",
+  "ApplicationMgr", "EventSelector", "MessageSvc", "FluxSvc",
   "GlastDetSvc", "DetectorPersistencySvc", "EventPersistencySvc",
   "CalibDataSvc", "CalCalibSvc",
   "PropertiesCheckAlg" } ;
