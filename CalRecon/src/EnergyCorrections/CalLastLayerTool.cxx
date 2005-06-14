@@ -210,25 +210,27 @@ StatusCode CalLastLayerTool::initialize()
 
 Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
 {
-    Event::CalCorToolResult* corResult = 0;
-
-    MsgStream lm(msgSvc(), name());
-   
-    Event::CalParams params = cluster->getCalParams();
+    Event::CalCorToolResult * corResult = new Event::CalCorToolResult();
+    corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
+    corResult->setCorrectionName(type());
+    corResult->setChiSquare(1.);
+    
+    Event::CalParams params = cluster->getCalParams() ;
 
     double eTotal = params.getEnergy() ;
-    double eCorrected = 0 ;
+    
+    double llStatus = 0 ;
   
     if (eTotal<500.) 
     {
-        eCorrected = -1. ;
+        llStatus = -1. ;
     }
     else 
     {
         // if reconstructed tracker data doesn't exist - put the debugging message
         if (vertex == 0) 
         {
-            eCorrected = -2 ;
+            llStatus = -2 ;
             //log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
             //return sc;
         }
@@ -259,7 +261,7 @@ Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* clust
             //for now valid up to 26 degrees.. 
             if (-thetarec < 0.898 ) 
             {
-                eCorrected = -3. ;
+                llStatus = -3. ;
                 //return sc ;
             }
             else 
@@ -272,10 +274,11 @@ Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* clust
                     // Evaluation of energy using correlation method
                     // Coefficients fitted using GlastSim.
                     /*
-                    double p0 = -1.49 + 1.72*getKernel()->getSlope();
-                    double p1 = 0.28 + 0.434 * getKernel()->getSlope();
-                    double p2 = -15.16 + 11.55 * getKernel()->getSlope();
-                    double p3 = 13.88 - 10.18 * getKernel()->getSlope();
+                    double slope = trackDirection.z() ;
+                    double p0 = -1.49 + 1.72 * slope ;
+                    double p1 = 0.28 + 0.434 * slope ;
+                    double p2 = -15.16 + 11.55 * slope ;
+                    double p3 = 13.88 - 10.18 * slope ;
                     double lnE = log(eTotal/1000.);
                     double funcoef = (p0 + p1 * lnE )/(1+exp(-p2*(lnE - p3)));
                     */
@@ -294,7 +297,6 @@ Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* clust
                     double E4 = E3/biascoef;
                     funcoef = (acoef + m_c3 * log(E4/1000) );
                     ///second iteration.. probably overkill
-                    eCorrected = E4 ;
 
                     params.setEnergy(E4);
     
@@ -302,7 +304,7 @@ Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* clust
                 }
                 else 
                 {
-                    eCorrected = -4 ;
+                    llStatus = -4 ;
                 }
             }
         }
@@ -310,13 +312,8 @@ Event::CalCorToolResult* CalLastLayerTool::doEnergyCorr(Event::CalCluster* clust
 
     // Whew! 
     // Ok, fill in the corrected information and exit
-    corResult = new Event::CalCorToolResult();
-
-    corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
-    corResult->setCorrectionName(type());
+    
     corResult->setParams(params);
-    corResult->setChiSquare(1.);
-    corResult->insert(Event::CalCorEneValuePair("eCorrected", eCorrected));
-
+    corResult->insert(Event::CalCorEneValuePair("llStatus", llStatus));
     return corResult;
 }
