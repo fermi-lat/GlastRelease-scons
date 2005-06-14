@@ -6,7 +6,6 @@
 */
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-//#include "GaudiKernel/IToolFactory.h"
 
 DECLARE_FACTORY_ENTRIES( CalRecon ) 
 {
@@ -18,7 +17,8 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_ALGORITHM( PropertiesCheckAlg      );
     DECLARE_TOOL(      CalSingleClusteringTool );
     DECLARE_TOOL(      CalSimpleClusteringTool );
-    DECLARE_TOOL(      StdMipFindingTool       );
+// WAITING FOR LACKING FILES IN CVS
+//    DECLARE_TOOL(      StdMipFindingTool       );
     DECLARE_TOOL(      CalRawEnergyTool        );
     DECLARE_TOOL(      CalLastLayerTool        );
     DECLARE_TOOL(      CalTkrLikelihoodTool    );
