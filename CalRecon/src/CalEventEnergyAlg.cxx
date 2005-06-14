@@ -184,7 +184,7 @@ StatusCode CalEventEnergyAlg::execute()
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
         for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool, ++itool ) 
         {
-            log<<MSG::DEBUG<<"Correction "<<itool<<endreq ;
+            log<<MSG::DEBUG<<(*tool)->name()<<endreq ;
             Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters->front(), vertex);
 
             if (corResult != 0)
