@@ -408,7 +408,7 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
     if (vertex == 0)
      { m_static_slope = cluster->getCalParams().getAxis().z() ; }
     else
-     { m_static_slope = vertex->getDirection().trackDirection.z() ; }
+     { m_static_slope = vertex->getDirection().z() ; }
 
 
     double eTotal = cluster->getCalParams().getEnergy() ;
@@ -541,7 +541,7 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
         m_minuit->GetParameter( 3, fit_lambda,lambda_err ); 
         
         // bias correction
-        double fit_energy_opt= bias(fit_energy);
+        //double fit_energy_opt= bias(fit_energy);
         
         // Get chi-square
         double edm,errdef;
