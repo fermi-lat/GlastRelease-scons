@@ -93,9 +93,15 @@ StatusCode test_CalRecon::execute() {
         }
         if (corResult->getCorrectionName() == "CalLastLayerTool" )
         {
-            log<<MSG::INFO<<"Last Layer Corr Energy "
-              <<corResult->getParams().getEnergy()
-              <<endreq ; 
+            double llStatus = (*corResult)["llStatus"] ;
+            if (llStatus==0)
+              log<<MSG::INFO<<"Last Layer Corr Energy "
+                <<corResult->getParams().getEnergy()
+                <<endreq ; 
+            else
+              log<<MSG::INFO<<"Last Layer Corr Energy "
+                <<llStatus
+                <<endreq ; 
         }
         if (corResult->getCorrectionName() == "CalValsCorrTool" )
         {
