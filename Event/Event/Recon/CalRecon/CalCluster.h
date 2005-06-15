@@ -73,6 +73,33 @@ public:
         
     virtual ~CalCluster() {}
 
+	/// Status word bits organized like:
+    /// low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    ///         < Not used   >    <Analysis Status> <   Found By   >  < Cluster Type >
+    /// high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    ///         <  Not yet used                                                        >
+    /// @param ALLXTALS Bit set means all xtals in the event are here - super set
+	enum StatusBits {ALLXTALS        = 0x00000001, 
+    /// @param ISOLATEDCLUSTER Bit set means this is a subset of all Xtals
+                     ISOLATEDCLUSTER = 0x00000002,
+	/// @param MIPTRACK Bit set means this is a subset of all Xtals associate with MIP
+                     MIPTRACK        = 0x00000004,  
+	/// @param SIMPLECLUSTER Bit set means cluster found using SimpleClusterTool
+                     SIMPLECLUSTER   = 0x00000010,  
+	/// @param FUZZYCLUSTER Bit set means cluster found using FuzzyClusterTool
+                     FUZZYCLUSTER    = 0x00000020,
+	/// @param MIPCLUSTER Bit set means cluster found using CalMIPFinderTool
+                     MIPCLUSTER      = 0x00000040,
+	/// @param CENTROID Bit set means centroid found
+                     CENTROID        = 0x00000100, 
+	/// @param MOMENTS Bit set means moments analysis run
+                     MOMENTS         = 0x00000200,
+	/// @param ENERGYCORR Bit set means one or more energy corrections were run
+	                 ENERGYCORR      = 0x00000400,
+	/// @param MIPFIT Bit set means a MIP like track was fitted
+	                 MIPFIT          = 0x00000800
+	};
+
     /**
     *   initializing a subset of CalCluster data members (this is
     *   primarily used by reconRootReaderAlg in translating from
@@ -85,19 +112,29 @@ public:
     */
     void initialize(const CalParams& params,
                     double rms_long,
-                    double rms_trans)
+                    double rms_trans,
+					double long_asym,
+					int num_TruncXtals)
     {
         m_params   = params;
         m_rmslong  = rms_long;
         m_rmstrans = rms_trans;
+		m_rmslongAsym = long_asym;
+		m_numTruncXtals = num_TruncXtals;
     }
 
     /*
      *   Define individual set methods here for all variables
      */
-    void setCalParams(const CalParams& params) {m_params       = params;  }
-    void setRmsLong(double rmsLong)            {m_rmslong      = rmsLong; }
-    void setRmsTrans(double rmsTrans)          {m_rmstrans     = rmsTrans;}
+    void setCalParams(const CalParams& params) {m_params        = params;  }
+    void setRmsLong(double rmsLong)            {m_rmslong       = rmsLong; }
+	void setRmsLongAsym(double rmsLongAsym)    {m_rmslongAsym   = rmsLongAsym;}
+    void setRmsTrans(double rmsTrans)          {m_rmstrans      = rmsTrans;}
+    void setNumXtals(int numXtals)             {m_numTruncXtals = numXtals;}
+
+	   /// setStatusBit and ClearStatusBit for setting and clearing bits
+    inline void setStatusBit(unsigned int bitToSet)        {m_statusBits |=  bitToSet;}
+    inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
 
     /*
      * Provide access to the data
@@ -107,11 +144,17 @@ public:
     /// get RMS of longitudinal position measurements
     const double getRmsLong()		const {return m_rmslong;} 
     /// get RMS of transverse position measurements
+	const double getRmsLongAsym()   const {return m_rmslongAsym;} 
+    /// get RMS of transverse position measurements
     const double getRmsTrans()	    const {return m_rmstrans;}
+	/// get Number of Truncated Xtals in Cluster
+    const double getNumTruncXtals()	const {return m_numTruncXtals;}
     /// get reconstructed position
     Point getPosition()             const {return m_params.getCentroid();}
     /// get reconstructed direction
     Vector getDirection()           const {return m_params.getAxis();}
+	/// Access the status bits to determine details of the Cluster (see above)
+    inline const unsigned int  getStatusBits() const {return m_statusBits;}
     /// write some of CalCluster data to the ASCII output file
     /// for debugging purposes
     void writeOut(MsgStream& stream) const;
@@ -125,15 +168,25 @@ private:
     CalParams m_params;
     //! RMS of longitudinal position measurement
     double m_rmslong;
+	//! difference in RMS of longitudinal position measurement moments
+    double m_rmslongAsym;
     //! RMS of transverse position measurement
     double m_rmstrans;
+	//! number of Xtals with > 1% Total Cluster Energy
+	int m_numTruncXtals;
+	//! Status Bits
+	unsigned int m_statusBits;
+
 };
 
 inline void CalCluster::iniCluster()
 {
-    m_params       = CalParams();
-    m_rmslong      = 0.;
-    m_rmstrans     = 0.;
+    m_params         = CalParams();
+    m_rmslong        = 0.;
+	m_rmslongAsym    = 0.;
+    m_rmstrans       = 0.;
+	m_statusBits     = 0;
+	m_numTruncXtals  = 0; 
 }
 
 inline void CalCluster::writeOut(MsgStream& stream) const
@@ -144,6 +197,7 @@ inline void CalCluster::writeOut(MsgStream& stream) const
 //        stream - Gaudi message stream
 {
     stream << "Energy " << m_params.getEnergy();
+	stream << "No.Trunc Xtals " << m_numTruncXtals;
     stream << " " << getPosition().x() 
            << " " << getPosition().y() 
            << " " << getPosition().z();
