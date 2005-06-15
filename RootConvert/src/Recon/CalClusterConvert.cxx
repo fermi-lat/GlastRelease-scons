@@ -36,9 +36,14 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
          tdsParams.getyDiryDir(),tdsParams.getyDirzDir(),tdsParams.getzDirzDir() ) ;
       
       Double_t rootRmsLong = tdsCluster.getRmsLong() ;
+      Double_t rootRmsLongAsym = tdsCluster.getRmsLongAsym() ;
       Double_t rootRmsTrans = tdsCluster.getRmsTrans() ;
+      Int_t rootNumTruncXtals = (Int_t)tdsCluster.getNumTruncXtals() ;
+      UInt_t rootStatusBits = tdsCluster.getStatusBits() ;
 
-      rootCluster.init(rootLayers,rootParams,rootRmsLong,rootRmsTrans) ;
+      rootCluster.init(rootLayers,rootParams,
+        rootRmsLong,rootRmsLongAsym,rootRmsTrans,
+        rootNumTruncXtals,rootStatusBits) ;
  }
  
 void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
@@ -58,7 +63,14 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
   tdsCluster.initialize
    ( tdsParams,
      rootCluster.getRmsLong(),
-     rootCluster.getRmsTrans() ) ;
+     rootCluster.getRmsLongAsym(),
+     rootCluster.getRmsTrans(),
+     rootCluster.getNumTruncXtals() ) ;
+  UInt_t rootStatusBits = rootCluster.getStatusBits() ;
+  Event::CalCluster::StatusBits tdsNotStatusBits
+   = (Event::CalCluster::StatusBits)(~rootStatusBits) ;
+  tdsCluster.clearStatusBit(tdsNotStatusBits) ;
+  tdsCluster.setStatusBit(rootStatusBits) ;
 
   int i ;
   for ( i=0 ; i<NUMCALLAYERS ; ++i )

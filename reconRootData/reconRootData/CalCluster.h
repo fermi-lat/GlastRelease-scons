@@ -35,10 +35,12 @@ public:
      { Clear() ; }
     CalCluster
      ( const std::vector<CalClusterLayerData> &, const CalParams &,
-       Double_t rmsLong, Double_t rmsTrans ) ;
+       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
+       Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
      ( const std::vector<CalClusterLayerData> &, const CalParams &,
-       Double_t rmsLong, Double_t rmsTrans ) ;
+       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
+       Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
 
@@ -48,9 +50,15 @@ public:
      { return m_params ; }
     Double_t getRmsLong() const
      { return m_rmsLong ; }
+    Double_t getRmsLongAsym() const
+     { return m_rmsLongAsym ; }
     Double_t getRmsTrans() const
      { return m_rmsTrans ; }
-
+    Int_t getNumTruncXtals() const
+     { return m_numTruncXtals ; }
+    UInt_t  getStatusBits() const
+     { return m_statusBits ; }
+     
     void Clear( Option_t * option ="" ) ;
     void Print( Option_t * option ="" ) const ;
 
@@ -58,10 +66,13 @@ private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
     CalParams m_params ;
-    Double_t m_rmsLong;
-    Double_t m_rmsTrans;
+    Double_t m_rmsLong ;
+    Double_t m_rmsLongAsym ;
+    Double_t m_rmsTrans ;
+	Int_t m_numTruncXtals ;
+	UInt_t m_statusBits ;
 
-    ClassDef(CalCluster,5)
+    ClassDef(CalCluster,6)
 };
 
 
