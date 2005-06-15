@@ -18,12 +18,13 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
   <hr>
   @section fluxalg_jobOptions FluxAlg jobOptions
     @param FluxSvc.source_lib   [\$(FLUXSVCROOT)/xml/source_library.xml] list of file names containing source_lib elements
-    @param FluxSvc.dtd_file     [\$(FLUXSVCROOT)/xml/source.dtd]  DTD file used to parse the XML files
+    @param FluxSvc.dtd_file     [\$(FLUXSVCROOT)/xml/source.dtd]  DTD file used to parse the XML files 
     @param FluxSvc.EvtMax       [0]  If non-zero, used as a maximum in the FluxSvc loop
     @param FluxSvc.StartTime    [0]  Mission elapsed time start
     @param FluxSvc.EndTime      [0]  Mission elapsed time end--if non-zero, will be the end.
     @param FluxSvc.DeltaTime    [0]  Maximum elapsed time.
     @param FluxSvc.StartDate    [""] Date, in form "2004-07-25 18:00" 
+    note that if both StartDate and StartTime are specified, the latter is added to form the actual start
 
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
     @param FluxAlg.sources      [{}] if used, can specify multiple sources. Overrides source_name

@@ -78,8 +78,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , m_tickCount(0)
 {
     // declare properties with setProperties calls
-    declareProperty("root_tree",  m_root_tree="pointing_history");
-    declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+    declareProperty("root_tree",m_root_tree="pointing_history"); //doesn't work???
 
 }
 
@@ -88,7 +87,6 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
 StatusCode ExposureAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -104,13 +102,6 @@ StatusCode ExposureAlg::initialize(){
     if( sc.isFailure()) {
         log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
         return sc;
-    }
-
-    //set the input file to be used as the pointing database
-    if(! m_pointing_history_input_file.value().empty() ){
-        std::string fileName(m_pointing_history_input_file.value());
-        facilities::Util::expandEnvVar(&fileName);
-        GPS::instance()->setPointingHistoryFile(fileName);
     }
 
 

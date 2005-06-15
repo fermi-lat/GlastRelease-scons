@@ -24,21 +24,24 @@ $Header$
 #include "Event/MonteCarlo/Exposure.h"
 
 
-
 // to write a Tree with entryosure info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
+
 #include "facilities/Util.h"
 #include "facilities/Observer.h"
+#include "facilities/TimeStamp.h"
+
+#include "astro/GPS.h"
 
 //flux
 #include "FluxSvc/PointingInfo.h"
 #include "FluxSvc/IFluxSvc.h"
 #include "flux/IFlux.h"
 #include "flux/Spectrum.h"
-#include "flux/SpectrumFactory.h"
+//#include "flux/SpectrumFactory.h"
 
 #include "flux/EventSource.h"
-#include "flux/CompositeSource.h"
+//#include "flux/CompositeSource.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
 
@@ -51,6 +54,7 @@ $Header$
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
 
+using astro::GPS;
 
 /** 
 * \class FluxAlg
@@ -88,7 +92,6 @@ private:
 
     UnsignedIntegerProperty m_run;      // run number
     unsigned int m_sequence;  // sequence number
-    StringProperty m_pointing_history_input_file;
 
     IDataProviderSvc* m_eds;
 
@@ -105,6 +108,10 @@ private:
     int m_SAAreject;
 
     PointingInfo m_pointing_info;
+
+    
+    StringArrayProperty m_pointingHistory;///< history file name and launch date
+
     StringProperty m_root_tree;
     BooleanProperty m_save_tuple; // set true to save
     BooleanProperty m_avoidSAA;
@@ -139,13 +146,13 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("pointing_mode", m_pointing_mode=0);
     declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
-    declareProperty("pointing_history_input_file",  m_pointing_history_input_file="");
+
+    declareProperty("PointingHistory",  m_pointingHistory); // doublet, filename and launch date
 
     declareProperty("pointing_info_tree_name",  m_root_tree="MeritTuple");
     declareProperty("save_pointing_info",  m_save_tuple=false);
     declareProperty("AvoidSAA",   m_avoidSAA=false);
     declareProperty("Prescale",   m_prescale=1);
-
 
 }
 //------------------------------------------------------------------------
@@ -174,32 +181,30 @@ StatusCode FluxAlg::initialize(){
     //then this line sets the rocking type, as well as the rocking angle.
     m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
-
-    //set the input file to be used as the pointing database, if used
-    if(! m_pointing_history_input_file.value().empty() ){
-        m_fluxSvc->setPointingHistoryFile(m_pointing_history_input_file.value().c_str());
-    }
-
     //now make the screen outputs showing what modes were called:
     if(m_pointing_mode){
         //output to record the pointing settings
         log << MSG::INFO << "rocking Mode: " << m_pointing_mode << endreq;
         log << MSG::INFO << "rocking Angle: " << m_rocking_angle << " degrees" << endreq;
     }
-    if(! m_pointing_history_input_file.value().empty()){
-        log << MSG::INFO << "Pointing History File used, file name: " << m_pointing_history_input_file.value() << endreq;
+    //set the input file to be used as the pointing database, if used
+    if(! m_pointingHistory.value().empty()){
+        std::string filename(m_pointingHistory.value()[0]);
+        facilities::Util::expandEnvVar(&filename);
+        double offset = 0;
+        if( m_pointingHistory.value().size()>1){
+            facilities::Timestamp jt(m_pointingHistory.value()[1]);
+            offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
+        }
+        GPS::instance()->setPointingHistoryFile(filename, offset);
+
+        log << MSG::INFO << "Loading Pointing History File : " << filename << endreq;
+
+        m_fluxSvc->setPointingHistoryFile(filename);
         if(m_pointing_mode){
             //problem - two kinds of pointing are being used!
             log << MSG::WARNING << "Pointing History and rocking mode both specified!" << endreq;
-        }else{
-            //no rocking called, mode=0.  say so.
-            log << MSG::INFO << "no rocking mode called, none required." << endreq;
         }
-    }
-
-    //finally, if no rocking or pointing of any kind has been set:
-    if(!m_pointing_mode && m_pointing_history_input_file.value().empty()){
-        log << MSG::INFO << "no rocking mode called, rocking disabled for this run." << endreq;
     }
 
     if( !m_source_list.value().empty()){

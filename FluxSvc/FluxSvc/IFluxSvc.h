@@ -80,12 +80,12 @@ public:
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual HepRotation transformGlastToGalactic(double time)const=0;
 
-    virtual HepRotation transformToGlast(double seconds,GPS::CoordSystem index)const=0;
+    virtual HepRotation transformToGlast(double seconds,astro::GPS::CoordSystem index)const=0;
     /// get the current satellite location
     virtual std::pair<double,double> location()=0;
 
     /// return pointer to the GPS instance of FluxSVc
-    virtual GPS* GPSinstance()=0;
+    virtual astro::GPS* GPSinstance()=0;
 
     ///set the type of rocking, along with the angle to rock to.
     ///0 = NONE : No rocking rotation done at all.

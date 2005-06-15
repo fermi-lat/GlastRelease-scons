@@ -38,7 +38,7 @@ public:
 
     // return TDS object for old scheme
     Event::Exposure* forTDS()const;
-private:
+//private:
     double start, stop;
     float sc_position[3];
     float lat_geo, lon_geo;

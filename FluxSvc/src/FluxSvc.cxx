@@ -35,6 +35,7 @@
 #include <iterator>
 #include <sstream>
 #include <iomanip>
+using astro::GPS;
 /** 
 * \class FluxSvc
 *
@@ -161,7 +162,6 @@ protected:
 
 private:
     //! 
-    double startTime() const;
 
     IParticlePropertySvc* m_partSvc;
 
@@ -183,12 +183,54 @@ private:
     IAppMgrUI*    m_appMgrUI;
     IntegerProperty m_evtMax;
 
-    // starting and ending times for orbital simulation
-    DoubleProperty m_startTime;
-    DoubleProperty m_endTime;
-    DoubleProperty m_deltaTime;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /** @class Times
+        @brief encapsulate the various times of interest
+        */
+    class Times {
+    public:
+        void initialize(){
+            // the launch: if set, all times will be added to it
+            
+            m_start = convert(m_startDate);
+            m_launch= convert(m_launchDate);
+            if( m_launch==0 ) m_launch=m_start;
 
-    StringProperty m_startDate;
+            // now add StartTime as offset to either the StartDate or LaunchDate
+            m_start += m_startTime.value();
+
+            if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_start+m_deltaTime;
+            // set the basic time here: it will be incremented by the flux object
+            GPS::instance()->time(m_start);
+            m_end = m_endTime;
+            if( m_deltaTime>0) m_end=m_start+m_deltaTime;
+
+        }
+        double convert(std::string date){
+            using astro::JulianDate;
+            if(date.empty())return 0;
+            // parse a string of the form "2004-09-03 18:00" using the Timestamp class.
+            facilities::Timestamp jt(date);
+            return (JulianDate(jt.getJulian())-JulianDate::missionStart())*JulianDate::secondsPerDay;
+        }
+        // properties get set by gaudi 
+        StringProperty m_launchDate; ///
+        StringProperty m_startDate;
+        DoubleProperty m_startTime;
+        DoubleProperty m_endTime;
+        DoubleProperty m_deltaTime;
+
+        double m_launch;
+        double m_start;
+        double m_end;
+        double m_current;
+        double launch(){return m_launch;}
+        double start(){return m_start;}
+        double current(){ return GPS::instance()->time();}
+        double end(){return m_end;}
+        double offset(double t){return t-m_launch;}
+    } m_times;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     ObserverAdapter< FluxSvc > m_observer; //obsever tag
     int askGPS(); // the function that will be called
@@ -218,10 +260,14 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("source_lib" , m_source_lib); 
     declareProperty("dtd_file"   , m_dtd_file=default_dtd_file);
     declareProperty("EvtMax"     , m_evtMax=0);
-    declareProperty("StartTime"   , m_startTime=0);
-    declareProperty("EndTime",      m_endTime=0);
-    declareProperty("DeltaTime",    m_deltaTime=0);
-    declareProperty("StartDate"   , m_startDate="");
+
+    declareProperty("StartTime"   , m_times.m_startTime=0);
+    declareProperty("EndTime"     , m_times.m_endTime=0);
+    declareProperty("DeltaTime"   , m_times.m_deltaTime=0);
+    declareProperty("StartDate"   , m_times.m_startDate="");
+    declareProperty("LaunchDate"  , m_times.m_launchDate="");
+
+
 #if 0 // disable this for now, it is not consistent with CompositeSource
     declareProperty("ExpansionFactor"   , m_expansionFactor=1.0);
 #endif
@@ -254,21 +300,6 @@ StatusCode FluxSvc::compositeSource(std::vector<std::string> names, IFlux*& flux
 FluxSvc::~FluxSvc()  
 {
 }
-
-double FluxSvc::startTime() const
-{
-    using astro::JulianDate;
-
-    if( m_startDate.value().empty()) {
-        return m_startTime;
-    }
-    // parse a string of the form "2004-09-03 18:00" using the Timestamp class.
-    facilities::Timestamp jt(m_startDate.value());
-
-    return (JulianDate(jt.getJulian())-JulianDate::missionStart())*JulianDate::secondsPerDay;
-    
-}
-
 // initialize
 StatusCode FluxSvc::initialize () 
 {   
@@ -276,10 +307,8 @@ StatusCode FluxSvc::initialize ()
 
     // bind all of the properties for this service
     setProperties ();
-    // set the starting time from date if set
-    m_startTime = startTime();
-    GPS::instance()->time(m_startTime.value());
-//    if(! m_startDate.value().empty() && m_endTime>0) m_endTime += m_startTime; 
+
+    m_times.initialize();
 
     // open the message log
     MsgStream log( msgSvc(), name() );
@@ -541,26 +570,14 @@ StatusCode FluxSvc::run(){
 
 
     // loop over the events
-    IFlux* flux=currentFlux();
-    if( flux==0 ) {
-        log << MSG::WARNING 
-            << "FluxSvc is being used for the event loop, but there is no IFlux object for access to the elapsed time"
-            << endreq;
-    }
     int eventNumber= 0;
     
     // access the starting time from the job properties
-    double currentTime= startTime(); //( was: m_startTime;)
-#if 0 // this was alredy set??
-    if( flux!=0 ) flux->pass(currentTime); // add to zero
-#endif
-    if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_startTime+m_deltaTime;
-
     { bool noend=true;
     log << MSG::INFO << "Runable interface starting event loop as :" ; 
     if( m_evtMax>0)  { log << " MaxEvt = " << m_evtMax; noend=false;  }
-    if( m_startTime>0) { log << " StartTime= " << m_startTime; }
-    if( m_endTime>0) { log << " EndTime= " << m_endTime; noend=false; }
+    if( m_times.start()>0) { log << " StartTime= launch+" << m_times.start() -m_times.launch(); }
+    if( m_times.end()>0  ) { log << " EndTime=launch+ " << m_times.end()-m_times.launch(); noend=false; }
     log << endreq;
 
     if(noend) { 
@@ -568,24 +585,24 @@ StatusCode FluxSvc::run(){
         return StatusCode::FAILURE;
     }
     }
-    if( m_startTime>m_endTime && m_endTime>0){
+    if( m_times.start() > m_times.end()){
         log << MSG::ERROR << "Start time after end time!" << endreq;
         return StatusCode::FAILURE;
     }
     int last_fraction=0;
     // loop: will quit if either limit is set, and exceeded
     while( (m_evtMax==0  || m_evtMax>0 &&  eventNumber < m_evtMax)
-        && (m_endTime==0 ||m_endTime>0 && currentTime< m_endTime) ) {
+        && (m_times.end()==0 || m_times.end()>0 && m_times.current() < m_times.end()) ) {
 
             double efrac =   (m_evtMax>0? 100.*eventNumber/m_evtMax: 0.0), 
-                tfrac =   (m_endTime>0? 100.*(currentTime-m_startTime)/(m_endTime-m_startTime) : 0.0) ;
+                tfrac =   (m_times.end()>0? 100.*(m_times.current()-m_times.start())/(m_times.end()-m_times.start()) : 0.0) ;
 
             int percent_complete= static_cast<int>(  std::max( efrac, tfrac)  );
             if( percent_complete!=last_fraction){
                 last_fraction=percent_complete;
                 if( percent_complete<10 || percent_complete%10 ==0){
                     log << MSG::INFO <<   percent_complete << "% complete: "
-                        << " event "<< eventNumber<<",  time "<< currentTime << endreq;
+                        << " event "<< eventNumber<<",  time=launch+ "<< (m_times.current()-m_times.launch()) << endreq;
                 }
 
             }
@@ -599,20 +616,17 @@ StatusCode FluxSvc::run(){
             }
 
             if( status.isFailure()) break;
-            if(flux!=0){
-                currentTime = flux->gpsTime();
-            }
             eventNumber ++;
         }
         if( status.isFailure()){
             log << MSG::ERROR << "Terminating FluxSvc loop due to error" << endreq;
 
-        }else if( m_endTime>0 && currentTime >= m_endTime ) {
+        }else if( m_times.end()>0 && m_times.current() >= m_times.end() ) {
             log << MSG::INFO << "Loop terminated by time " << endreq;
         }else {
             log << MSG::INFO << "Processing loop terminated by event count" << endreq;
         }
-        log << MSG::INFO << "End after "<< eventNumber << " events, time = " << currentTime << endreq;
+        log << MSG::INFO << "End after "<< eventNumber << " events, time = " << m_times.current() << endreq;
         return status;
     }
 
