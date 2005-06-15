@@ -19,8 +19,10 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVe
     cluster->clear();
 
     double energy = fillLayerData(xTalVec, cluster);
+	cluster->setStatusBit(Event::CalCluster::CENTROID);
 
     fillMomentsData(xTalVec, cluster, energy);
+	cluster->setStatusBit(Event::CalCluster::MOMENTS);
 
     return cluster;
 }
@@ -29,6 +31,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 {
     //Initialize local variables
     double ene = 0;                                   // Total energy in this cluster
+	int num_TruncXtals = 0;                           // Number of Xtals in the cluster with > 1% of the energy
     Vector pCluster(0.,0.,0.);                        // Cluster position
     std::vector<double> eneLayer(m_calnLayers,0.);    // Energy by layer
     std::vector<Vector> pLayer(m_calnLayers);         // Position by layer
@@ -114,7 +117,6 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
         }
 
 
-
         // Fill the cluster layer data
         Point layerPos(pLayer[i].x(), pLayer[i].y(), pLayer[i].z());
 
@@ -123,10 +125,28 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
         cluster->push_back(layerData);
     }
+
+    // loop over all crystals in the current cluster again to compute the number of Truncated Xtals
+    for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+        // get pointer to the reconstructed data for given crystal
+		Event::CalXtalRecData* recData = *xTalIter;
+        
+        // get reconstructed values
+        double eneXtal = recData->getEnergy();                  // crystal energy
+
+		if(eneXtal > .01*ene) num_TruncXtals++;   //NOTE: 1% should be a declared property!!!!!  
+    }
+
+	// Correct for Zero Supression using Truncated Xtal count
+	ene += .2*num_TruncXtals; //Note .2 MeV/Xtal should be a declared property!!!!!!!!!!!!!
+
+	// Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
+
     // Set energy centroid
 	Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                                0., 0., 1.,   1.,0.,0.,1.,0.,1.);
-    cluster->initialize(params, 0., 0.);
+    cluster->initialize(params, 0., 0., 0., num_TruncXtals);
 
     return ene;
 }
@@ -244,15 +264,17 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 	//      properties w.r.t. Xtal axis - go figure!  
 	Vector caldir = Vector(dircos[0][1], dircos[1][1], dircos[2][1]);
 
-	if(caldir[2] < 0.) caldir = -caldir;
+	if(caldir[2] < 0.) caldir = -caldir; 
 
 	double rms_long  = (moment[0] + moment[2]) / 2.;
-	double rms_trans = moment[1];
+	double rms_trans =  moment[1];
+	double long_asym = (moment[0] - moment[2])/(moment[0] + moment[2]); 
+	int num_TruncXtals = cluster->getNumTruncXtals(); 
 
     Event::CalParams params(energy, 10*energy, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                                caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
-    cluster->initialize(params, rms_long, rms_trans);
+    cluster->initialize(params, rms_long, rms_trans, long_asym, num_TruncXtals);
 
     return;
 }

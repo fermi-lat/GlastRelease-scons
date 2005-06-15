@@ -122,12 +122,12 @@ StatusCode CalSimpleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     }
 
     // Convert the results into CalClusters
-    calClusterCol->clear() ;
     for (XtalDataVecVec::iterator xTalClusIter = clusters.begin(); xTalClusIter != clusters.end(); xTalClusIter++)
     {
         XtalDataVec* xTalClus = *xTalClusIter;
 
         Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
+		cluster->setStatusBit(Event::CalCluster::SIMPLECLUSTER);
 
         calClusterCol->push_back(cluster);
 

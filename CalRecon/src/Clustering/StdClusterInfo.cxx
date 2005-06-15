@@ -129,7 +129,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
 
     cl->clear();
 
-    cl->initialize(params, rms_long, rms_trans);
+    cl->initialize(params, 0., 0., 0., 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)
     {
