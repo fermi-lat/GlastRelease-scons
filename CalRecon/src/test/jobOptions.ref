@@ -637,7 +637,9 @@ CalClustersAlg      DEBUG Energy 3871.04 90.9441 142.964 -133.43 0.0410797 0.047
 CalClustersAlg      DEBUG CalValsCorrTool Energy 4884.51
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 1 time
-test_CalRecon        INFO Energy 3871.04 90.9441 142.964 -133.43 0.0410797 0.0474641 0.998028
+test_CalRecon        INFO Energy 3871.04
+test_CalRecon        INFO Position 90.9441 142.964 -133.43
+test_CalRecon        INFO Direction 0.0410797 0.0474641 0.998028
 test_CalRecon        INFO CalValsCorrTool Energy 4884.51
 test_CalRecon        INFO Profile Corr Energy 5549.61
 test_CalRecon        INFO Last Layer Corr Energy 5345.01
@@ -661,7 +663,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 2904.59 Corrected 2904.59 223.742 196.744 -159.845 0.0231424 0.0229697 0.999468
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 2 time
-test_CalRecon        INFO Energy 2904.59 223.742 196.744 -159.845 0.0231424 0.0229697 0.999468
+test_CalRecon        INFO Energy 2904.59
+test_CalRecon        INFO Position 223.742 196.744 -159.845
+test_CalRecon        INFO Direction 0.0231424 0.0229697 0.999468
 test_CalRecon        INFO CalValsCorrTool Energy 2904.59
 test_CalRecon        INFO Profile Corr Energy 5310.87
 test_CalRecon        INFO Last Layer Corr Energy -4
@@ -685,7 +689,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 2349.9 Corrected 2962.27 153.534 74.4801 -140.201 -0.022349 0.186661 0.98217
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 3 time
-test_CalRecon        INFO Energy 2349.9 153.534 74.4801 -140.201 -0.022349 0.186661 0.98217
+test_CalRecon        INFO Energy 2349.9
+test_CalRecon        INFO Position 153.534 74.4801 -140.201
+test_CalRecon        INFO Direction -0.022349 0.186661 0.98217
 test_CalRecon        INFO CalValsCorrTool Energy 2962.27
 test_CalRecon        INFO Profile Corr Energy 3117.97
 test_CalRecon        INFO Last Layer Corr Energy 3450.48
@@ -709,7 +715,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 3365.93 Corrected 3365.93 130.311 309.656 -149.651 0.219219 -0.0315052 0.975167
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 4 time
-test_CalRecon        INFO Energy 3365.93 130.311 309.656 -149.651 0.219219 -0.0315052 0.975167
+test_CalRecon        INFO Energy 3365.93
+test_CalRecon        INFO Position 130.311 309.656 -149.651
+test_CalRecon        INFO Direction 0.219219 -0.0315052 0.975167
 test_CalRecon        INFO CalValsCorrTool Energy 3365.93
 test_CalRecon        INFO Profile Corr Energy 5259.08
 test_CalRecon        INFO Last Layer Corr Energy -4
@@ -733,7 +741,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 3856.87 Corrected 4973.32 54.4056 193.664 -127.145 0.177291 0.0823787 0.980705
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 5 time
-test_CalRecon        INFO Energy 3856.87 54.4056 193.664 -127.145 0.177291 0.0823787 0.980705
+test_CalRecon        INFO Energy 3856.87
+test_CalRecon        INFO Position 54.4056 193.664 -127.145
+test_CalRecon        INFO Direction 0.177291 0.0823787 0.980705
 test_CalRecon        INFO CalValsCorrTool Energy 4973.32
 test_CalRecon        INFO Profile Corr Energy 5194.11
 test_CalRecon        INFO Last Layer Corr Energy 4999.43
@@ -757,7 +767,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 2759.34 Corrected 2759.34 68.835 263.114 -156.445 0.218223 -0.0287678 0.975475
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 6 time
-test_CalRecon        INFO Energy 2759.34 68.835 263.114 -156.445 0.218223 -0.0287678 0.975475
+test_CalRecon        INFO Energy 2759.34
+test_CalRecon        INFO Position 68.835 263.114 -156.445
+test_CalRecon        INFO Direction 0.218223 -0.0287678 0.975475
 test_CalRecon        INFO CalValsCorrTool Energy 2759.34
 test_CalRecon        INFO Profile Corr Energy 4410.53
 test_CalRecon        INFO Last Layer Corr Energy -4
@@ -781,7 +793,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 2934.02 Corrected 2934.02 118.644 56.154 -161.856 0.0586444 0.0573498 0.99663
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 7 time
-test_CalRecon        INFO Energy 2934.02 118.644 56.154 -161.856 0.0586444 0.0573498 0.99663
+test_CalRecon        INFO Energy 2934.02
+test_CalRecon        INFO Position 118.644 56.154 -161.856
+test_CalRecon        INFO Direction 0.0586444 0.0573498 0.99663
 test_CalRecon        INFO CalValsCorrTool Energy 2934.02
 test_CalRecon        INFO Profile Corr Energy 5593.95
 test_CalRecon        INFO Last Layer Corr Energy -4
@@ -805,7 +819,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 4069.71 Corrected 5669.34 161.946 207.535 -127.198 0.0738356 0.00604591 0.997252
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 8 time
-test_CalRecon        INFO Energy 4069.71 161.946 207.535 -127.198 0.0738356 0.00604591 0.997252
+test_CalRecon        INFO Energy 4069.71
+test_CalRecon        INFO Position 161.946 207.535 -127.198
+test_CalRecon        INFO Direction 0.0738356 0.00604591 0.997252
 test_CalRecon        INFO CalValsCorrTool Energy 5669.34
 test_CalRecon        INFO Profile Corr Energy 5403.88
 test_CalRecon        INFO Last Layer Corr Energy 5355.24
@@ -829,7 +845,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 2978.43 Corrected 2978.43 95.7967 95.4985 -169.23 0.176647 -0.0353011 0.983641
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 9 time
-test_CalRecon        INFO Energy 2978.43 95.7967 95.4985 -169.23 0.176647 -0.0353011 0.983641
+test_CalRecon        INFO Energy 2978.43
+test_CalRecon        INFO Position 95.7967 95.4985 -169.23
+test_CalRecon        INFO Direction 0.176647 -0.0353011 0.983641
 test_CalRecon        INFO CalValsCorrTool Energy 2978.43
 test_CalRecon        INFO Profile Corr Energy 6430.24
 test_CalRecon        INFO Last Layer Corr Energy -4
@@ -853,7 +871,9 @@ CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
 CalClustersAlg      DEBUG Energy 3751.64 Corrected 3751.64 232.044 256.151 -136.573 -0.0285299 -0.020285 0.999387
 CalClustersAlg      DEBUG End
 test_CalRecon        INFO executing 10 time
-test_CalRecon        INFO Energy 3751.64 232.044 256.151 -136.573 -0.0285299 -0.020285 0.999387
+test_CalRecon        INFO Energy 3751.64
+test_CalRecon        INFO Position 232.044 256.151 -136.573
+test_CalRecon        INFO Direction -0.0285299 -0.020285 0.999387
 test_CalRecon        INFO CalValsCorrTool Energy 3751.64
 test_CalRecon        INFO Profile Corr Energy 5098.28
 test_CalRecon        INFO Last Layer Corr Energy -4

@@ -78,7 +78,18 @@ StatusCode test_CalRecon::execute() {
           cluster != clusCol->end() ;
           ++cluster )
     {
-     (*cluster)->writeOut(log<<MSG::INFO) ;
+      log<<MSG::INFO<<"Energy "<<(*cluster)->getCalParams().getEnergy()<<endreq ;
+      log<<MSG::INFO<<"NbTruncXtals " <<(*cluster)->getNumTruncXtals()<<endreq ;
+      log<<MSG::INFO<<"Position"
+        <<" "<<(*cluster)->getPosition().x() 
+        <<" "<<(*cluster)->getPosition().y() 
+        <<" "<<(*cluster)->getPosition().z()
+        <<endreq ;
+      log<<MSG::INFO<<"Direction"
+        <<" "<<(*cluster)->getDirection().x() 
+        <<" "<<(*cluster)->getDirection().y() 
+        <<" "<<(*cluster)->getDirection().z()
+        <<endreq ;
     }
 
     Event::CalCorToolResultCol::iterator corIter ;
