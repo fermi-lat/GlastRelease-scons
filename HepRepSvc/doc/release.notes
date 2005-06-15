@@ -18,4 +18,6 @@
  * v0r12p3  11-02-05 LR Add markers to clusters!
  * v0r12p4  26-02-05 LR Changed markers to little x's; added info to Vertex
  * v0r13    08-03-05 RG Added a jobOptions property to set a FRED directory for auto start
+ * v0r13p1  15-06-05 LR TrackFiller: closer to old-style track picture
+                        ClusterFiller: re-org, and divide bars into 4 wafers
 */
