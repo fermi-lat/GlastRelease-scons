@@ -197,7 +197,7 @@ inline void CalCluster::writeOut(MsgStream& stream) const
 //        stream - Gaudi message stream
 {
     stream << "Energy " << m_params.getEnergy();
-	stream << "No.Trunc Xtals " << m_numTruncXtals;
+	stream << " No.Trunc Xtals " << m_numTruncXtals;
     stream << " " << getPosition().x() 
            << " " << getPosition().y() 
            << " " << getPosition().z();
