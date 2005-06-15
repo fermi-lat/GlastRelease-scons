@@ -115,9 +115,9 @@ StatusCode CalEventEnergyAlg::initialize()
     log << endreq;
         
     // Now build the list of correction tools to apply during execution
-    const std::vector< std::string >& corrToolNames = m_corrToolNames ;
-    std::vector< std::string >::const_iterator toolName ;
-    ICalEnergyCorr* tool ;
+    const std::vector< std::string >& corrToolNames = m_corrToolNames;
+    std::vector< std::string >::const_iterator toolName;
+    ICalEnergyCorr* tool;
     for (toolName = corrToolNames.begin(); toolName != corrToolNames.end(); toolName++) 
     {
         // Attempt to retrieve the tool
@@ -184,12 +184,19 @@ StatusCode CalEventEnergyAlg::execute()
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
         for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool, ++itool ) 
         {
-            log<<MSG::DEBUG<<"Correction "<<itool<<endreq ;
-            Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters->front(), vertex);
+            log << MSG::DEBUG << "Correction " << itool << endreq;
 
-            if (corResult != 0)
+            // Loop over clusters
+            for (Event::CalClusterCol::const_iterator cluster = calClusters->begin();
+                 cluster != calClusters->end();
+                 cluster++)
             {
-                calEnergy->push_back(corResult);
+                Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(*cluster, vertex);
+
+                if (corResult != 0)
+                {
+                    calEnergy->push_back(corResult);
+                }
             }
         }
         // Need set the status bit in the CalCluster  

@@ -84,7 +84,6 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     XtalDataVec* xTalClus = new XtalDataVec();
 
     xTalClus->clear();
-    Event::CalXtalRecCol::const_iterator it ;
     for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
                 it != m_calReconSvc->getXtalRecs()->end(); ++it )
     {
