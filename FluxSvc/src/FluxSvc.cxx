@@ -585,7 +585,7 @@ StatusCode FluxSvc::run(){
         return StatusCode::FAILURE;
     }
     }
-    if( m_times.start() > m_times.end()){
+    if( m_times.end()>0 && m_times.start() > m_times.end()){
         log << MSG::ERROR << "Start time after end time!" << endreq;
         return StatusCode::FAILURE;
     }

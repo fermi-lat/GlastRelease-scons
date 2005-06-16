@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   15-jun-05  v6r24p1 THB  fix test in run
    15-jun-05  v6r24   THB  GPS move to astro; fix up treatment of times
    28-apr-05  v6r23p4 THB  linux fixes
    28-apr-05  v6r23p3 THB  restore external source interface
