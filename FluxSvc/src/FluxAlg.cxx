@@ -29,7 +29,7 @@ $Header$
 
 #include "facilities/Util.h"
 #include "facilities/Observer.h"
-#include "facilities/TimeStamp.h"
+#include "facilities/Timestamp.h"
 
 #include "astro/GPS.h"
 
