@@ -76,7 +76,7 @@ def build_application_test(package) :
 def key_values(filename) :
 
   # lines of interest
-  regexp = re.compile('^test_CalRecon.*Energy')
+  regexp = re.compile('^test_CalRecon.*(Energy|Position|Direction)')
 
   # accumulate the values
   nb_clusters = 0
