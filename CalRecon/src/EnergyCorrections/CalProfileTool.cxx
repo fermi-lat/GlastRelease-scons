@@ -560,16 +560,15 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
         // Ok, fill in the corrected information and exit
         Event::CalParams params = cluster->getCalParams();
 
-        params.setEnergy(fit_energy);
+        params.setEnergy(1000.*fit_energy);
         params.setEnergyErr(energy_err);
 
-        Event::CalCorToolResult* corResult = new Event::CalCorToolResult();
-
+        corResult = new Event::CalCorToolResult();
         corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
         corResult->setCorrectionName(type());
         corResult->setParams(params);
         corResult->setChiSquare(ki2);
-        corResult->insert(Event::CalCorEneValuePair("fit_energy",fit_energy));
+        corResult->insert(Event::CalCorEneValuePair("fit_energy",1000.*fit_energy));
         corResult->insert(Event::CalCorEneValuePair("energy_err",energy_err));
         corResult->insert(Event::CalCorEneValuePair("alpha", fit_alpha));
     } 
