@@ -74,7 +74,10 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
     // Now take the means
     // if energy sum is not zero - normalize cluster position
-    if(ene > 0.) pCluster /= ene; 
+	if(ene > 0.) {
+		pCluster /= ene;
+		cluster->setStatusBit(Event::CalCluster::CENTROID);
+	}
  	// if energy is zero - set cluster position to non-physical value
     else pCluster = Vector(-1000., -1000., -1000.);
     
@@ -166,7 +169,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     dircos[1][1] = 0.; 
     dircos[2][1] = 0.; 
 
-	if(pCluster.z() > -300.) 
+	if((cluster->getStatusBits()& Event::CalCluster::CENTROID) &&
+		cluster->getNumTruncXtals() > 3)
     {
 	    double m_xcen     = pCluster.x();
         double m_ycen     = pCluster.y();
@@ -238,23 +242,24 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
             moment[0] = m * cos(psi) - p/3.;
             moment[1] = m * cos(psi + 2.*M_PI/3.) - p/3.;
             moment[2] = m * cos(psi + 4.*M_PI/3.) - p/3.;
-        }
 
-        // Construct direction cosines; dircos for middle root is parallel to
-        // longest principal axis.
-        float A, B, C, D;
+            // Construct direction cosines; dircos for middle root is parallel to
+            // longest principal axis.
+            float A, B, C, D;
 
-        for(int iroot=0; iroot < 3; iroot++) 
-        {
-            A = Iyz * (Ixx - moment[iroot]) - Ixy*Ixz;
-            B = Ixz * (Iyy - moment[iroot]) - Ixy*Iyz;
-            C = Ixy * (Izz - moment[iroot]) - Ixz*Iyz;
+            for(int iroot=0; iroot < 3; iroot++) 
+            {
+                A = Iyz * (Ixx - moment[iroot]) - Ixy*Ixz;
+                B = Ixz * (Iyy - moment[iroot]) - Ixy*Iyz;
+                C = Ixy * (Izz - moment[iroot]) - Ixz*Iyz;
 
-            D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
-            dircos[0][iroot] = D * C / A;
-            dircos[1][iroot] = D * C / B;
-            dircos[2][iroot] = D;
-        }
+                D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
+                dircos[0][iroot] = D * C / A;
+                dircos[1][iroot] = D * C / B;
+                dircos[2][iroot] = D;
+            }
+		cluster->setStatusBit(Event::CalCluster::MOMENTS); 
+		}
 	}
 
     // Fill CalCluster data
@@ -264,12 +269,16 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 	//      properties w.r.t. Xtal axis - go figure!  
 	Vector caldir = Vector(dircos[0][1], dircos[1][1], dircos[2][1]);
 
-	if(caldir[2] < 0.) caldir = -caldir; 
 
-	double rms_long  = (moment[0] + moment[2]) / 2.;
-	double rms_trans =  moment[1];
-	double long_asym = (moment[0] - moment[2])/(moment[0] + moment[2]); 
+	if(caldir[2] < 0.) caldir = -caldir; 
+   
+	double longMag1 = fabs(moment[0]);
+	double longMag2 = fabs(moment[2]); 
+	double rms_long  = (longMag1 + longMag2) / 2.;
+	double rms_trans =  fabs(moment[1]);
+	double long_asym = (longMag1 - longMag2)/(longMag1 + longMag2); 
 	int num_TruncXtals = cluster->getNumTruncXtals(); 
+
 
     Event::CalParams params(energy, 10*energy, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                                caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
