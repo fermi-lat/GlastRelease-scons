@@ -92,9 +92,9 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
         xTalClus->push_back(recData) ;
     }
 
+    calClusterCol->clear() ;
     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
 	cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
-
     calClusterCol->push_back(cluster);
 
     delete xTalClus;
