@@ -102,7 +102,7 @@ StatusCode test_CalRecon::execute() {
               <<corResult->getParams().getEnergy()
               <<endreq ; 
         }
-        if (corResult->getCorrectionName() == "CalLastLayerTool" )
+        else if (corResult->getCorrectionName() == "CalLastLayerTool" )
         {
             double llStatus = (*corResult)["llStatus"] ;
             if (llStatus==0)
@@ -114,10 +114,16 @@ StatusCode test_CalRecon::execute() {
                 <<llStatus
                 <<endreq ; 
         }
-        if (corResult->getCorrectionName() == "CalValsCorrTool" )
+        else if (corResult->getCorrectionName() == "CalValsCorrTool" )
         {
             log<<MSG::INFO<<"CalValsCorrTool Energy "
               <<corResult->getParams().getEnergy()
+              <<endreq ; 
+        }
+        else
+        {
+            log<<MSG::WARNING<<"UNKNOWN CORRECTION NAME: "
+              <<corResult->getCorrectionName()
               <<endreq ; 
         }
     }
