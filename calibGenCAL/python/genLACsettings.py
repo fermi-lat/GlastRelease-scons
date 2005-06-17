@@ -29,6 +29,7 @@ import Numeric
 
 import calFitsXML
 import calDacXML
+import calConstant
 
 
 LEX8FLAG = True
@@ -179,11 +180,13 @@ if __name__ == '__main__':
     fio.close()
 
     if LEX8FLAG:
-      nrgIdx= 0
+      nrgIdx= calConstant.CRNG_LEX8
       nrgRangeMultiplier=1.
     else:
-      nrgIdx=1
+      nrgIdx=calConstant.CRNG_LEX1
       nrgRangeMultiplier=9.
+
+    # split characterization data into fine and coarse ranges      
     
     fineThresholds = adcThresholds[srcTwr,:,:,:,0:64]
     log.debug('genLACsettings: fineThresholds:[0,0,0,0,:]:%s' % str(fineThresholds[0,0,0,:]))
