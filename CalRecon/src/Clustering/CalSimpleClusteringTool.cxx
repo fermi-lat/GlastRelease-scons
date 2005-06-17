@@ -122,7 +122,7 @@ StatusCode CalSimpleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     }
 
     // Convert the results into CalClusters
-    calClusterCol->clear();   // memory leak?
+    calClusterCol->clear() ;
     for (XtalDataVecVec::iterator xTalClusIter = clusters.begin(); xTalClusIter != clusters.end(); xTalClusIter++)
     {
         XtalDataVec* xTalClus = *xTalClusIter;
