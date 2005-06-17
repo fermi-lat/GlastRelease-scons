@@ -57,6 +57,13 @@ FE_IDX = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'1
 
 CRNG = ('LEX8','LEX1','HEX8','HEX1')
 
+# Calorimeter symbolic names for energy range indicies
+
+CRNG_LEX8 = 0
+CRNG_LEX1 = 1
+CRNG_HEX8 = 2
+CRNG_HEX1 = 3
+
 # Calorimeter layer number to string mapping
 
 CLAYER = ('0','1','2','3')
