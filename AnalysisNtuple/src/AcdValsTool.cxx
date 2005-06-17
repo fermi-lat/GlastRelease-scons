@@ -8,7 +8,7 @@ $Header$
 
 #include "ValBase.h"
 
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/MsgStream.h"   
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgTool.h"
