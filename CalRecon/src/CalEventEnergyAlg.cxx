@@ -180,26 +180,26 @@ StatusCode CalEventEnergyAlg::execute()
         if (tkrVertices != 0 && !tkrVertices->empty()) vertex = tkrVertices->front();
 
         // apply corrections according to vector of tools
-        int itool = 0 ;
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
-        for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool, ++itool ) 
+        for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
         {
-            log<<MSG::DEBUG<<"Correction "<<itool<<endreq ;
-            Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters->front(), vertex);
+            log<<MSG::DEBUG<<(*tool)->name()<<endreq ;
 
-            if (corResult != 0)
-            {
-                calEnergy->push_back(corResult);
-				if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
-					// Need set the status bit in the CalCluster  
-		            Event::CalCluster * cluster = calClusters->front();
-					cluster->setStatusBit(Event::CalCluster::ENERGYCORR);
-				}
+            // Loop over clusters 	 
+            for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
+                  cluster != calClusters->end(); 	 
+                  cluster++) { 	 
+                Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(*cluster, vertex); 	 
+                if (corResult != 0) {
+                    calEnergy->push_back(corResult);
+                    if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
+                        // Need set the status bit in the CalCluster  
+                        cluster->setStatusBit(Event::CalCluster::ENERGYCORR);
+                    }
+                }
             }
         }
-        // Need set the status bit in the CalCluster  
-		Event::CalCluster * cluster = calClusters->front();
-
+        
         // Set the pass number bits
         calEnergy->setStatusBit(m_passBits);
 
