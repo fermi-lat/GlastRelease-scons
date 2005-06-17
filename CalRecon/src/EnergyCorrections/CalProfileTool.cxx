@@ -541,17 +541,13 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
         m_minuit->GetParameter( 3, fit_lambda,lambda_err ); 
         
         // bias correction
-        //double fit_energy_opt= bias(fit_energy);
+        double fit_energy_opt= bias(fit_energy);
         
         // Get chi-square
         double edm,errdef;
         int nvpar,nparx,icstat;
         m_minuit->mnstat(ki2,edm,errdef,nvpar,nparx,icstat);
 
-        // Fills data
-        //cluster->initProfile(1000*fit_energy_opt,ki2,
-        //                     fit_start,fit_alpha,fit_lambda);
-        
         // Clear minuit
         arglist[0] = 1;
         m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
