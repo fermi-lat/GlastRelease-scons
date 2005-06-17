@@ -194,7 +194,7 @@ StatusCode CalEventEnergyAlg::execute()
                     calEnergy->push_back(corResult);
                     if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
                         // Need set the status bit in the CalCluster  
-                        cluster->setStatusBit(Event::CalCluster::ENERGYCORR);
+                        (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
                     }
                 }
             }
