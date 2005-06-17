@@ -183,7 +183,7 @@ StatusCode CalEventEnergyAlg::execute()
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
         for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
         {
-            log<<MSG::DEBUG<<(*tool)->name()<<endreq ;
+            log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
 
             // Loop over clusters 	 
             for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
