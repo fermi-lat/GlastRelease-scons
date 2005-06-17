@@ -279,7 +279,8 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
 	Point x0  = m_cal_pos;
 
 	Vector t0 = m_cluster->getDirection();
-	if((m_cluster->getStatusBits()& Event::CalCluster::MOMENTS) == 0) { // Trap NaN condition caused by Moments failure
+	if((m_cluster->getStatusBits()& Event::CalCluster::MOMENTS) == 0 ||
+		m_cluster->getRmsLong() < .1) { // Trap NaN condition caused by Moments failure
 		t0 = Vector(0., 0., 1.);
 	}
 	double tkr_Energy = 0.; 
