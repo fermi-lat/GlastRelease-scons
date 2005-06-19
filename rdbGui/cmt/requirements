@@ -7,7 +7,7 @@ author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy  v*
 use FOX v0r125p*  IExternal
-use rdbModel v1r*
+use rdbModel v2r*
 use facilities v2r*
 
 private

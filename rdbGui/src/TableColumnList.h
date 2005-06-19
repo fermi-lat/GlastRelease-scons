@@ -14,6 +14,14 @@
 
 class RdbGUIWindow;
 
+namespace rdbModel {
+  class InsertRow;
+  class Supersede;
+  class InterRow;
+  class Query;
+  class Set;
+}
+
 class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
 {
   FXDECLARE(TableColumnList)
@@ -56,6 +64,22 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   rdbModel::Visitor::VisitorState visitColumn(rdbModel::Column *column);
   rdbModel::Visitor::VisitorState visitIndex(rdbModel::Index *index);
   rdbModel::Visitor::VisitorState visitAssertion(rdbModel::Assertion *assertion);
+
+  rdbModel::Visitor::VisitorState visitInsertNew(rdbModel::InsertNew*) {
+    return Visitor::VCONTINUE;
+  }
+  rdbModel::Visitor::VisitorState visitSupersede(rdbModel::Supersede* ) {
+    return Visitor::VCONTINUE;
+  }
+  rdbModel::Visitor::VisitorState visitQuery(rdbModel::Query* ){
+    return Visitor::VCONTINUE;
+  }
+  rdbModel::Visitor::VisitorState visitInterRow(rdbModel::InterRow* ) {
+    return Visitor::VCONTINUE;
+  }
+  rdbModel::Visitor::VisitorState visitSet(rdbModel::Set*) {
+    return Visitor::VCONTINUE;
+  }
   
 };
 

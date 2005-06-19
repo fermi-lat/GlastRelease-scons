@@ -77,8 +77,9 @@ void InsertDialog::fillWithRowByKey(std::string primKeyVal)
   // Set up WHERE clause, always the same
   rdbModel::Assertion::Operator* serEquals = 
     new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
-                                      primKeyVal, false, true);
-  rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
+                                      primKeyVal, rdbModel::FIELDTYPEold,
+                                      rdbModel::FIELDTYPElit);
+  rdbModel::Assertion* whereSer = new rdbModel::Assertion(serEquals);
 
 
   if(m_connection)
@@ -119,8 +120,9 @@ void InsertDialog::fillStickyWithLastRow()
   // Set up WHERE clause, always the same
   rdbModel::Assertion::Operator* serEquals = 
     new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
-                                      primKeyVal, false, true);
-  rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
+                                      primKeyVal, rdbModel::FIELDTYPEold,
+                                      rdbModel::FIELDTYPElit);
+  rdbModel::Assertion* whereSer = new rdbModel::Assertion(serEquals);
 
 
   if(m_connection)
@@ -208,8 +210,9 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
       std::string serialStr;
       rdbModel::Assertion::Operator* serEquals = 
        new rdbModel::Assertion::Operator(rdbModel::OPTYPEequal, m_primKey,
-                                      m_selRow, false, true);
-      rdbModel::Assertion* whereSer = new rdbModel::Assertion(rdbModel::Assertion::WHENwhere, serEquals);
+                                         m_selRow, rdbModel::FIELDTYPEold,
+                                         rdbModel::FIELDTYPElit);
+      rdbModel::Assertion* whereSer = new rdbModel::Assertion(serEquals);
 
       m_connection->update(m_tableName, colNames, values, whereSer, &nullValues);  
     }

@@ -196,8 +196,7 @@ long QueryFrame::onQuery(FXObject*,FXSelector,void*)
 
   rdbModel::Assertion::Operator *whereOp = buildOperator(0);
   
-  rdbModel::Assertion *where= new rdbModel::Assertion(rdbModel::Assertion::WHENwhere,
-      whereOp);
+  rdbModel::Assertion *where= new rdbModel::Assertion(whereOp);
   
   if (m_connect)
     {
@@ -245,7 +244,9 @@ rdbModel::Assertion::Operator* QueryFrame::buildCompOperator(std::string col,
   else if (comp == ">=")
     opType = rdbModel::OPTYPEgreaterOrEqual;
     
-  return new rdbModel::Assertion::Operator(opType, col, value, false, true);
+  return new rdbModel::Assertion::Operator(opType, col, value, 
+                                           rdbModel::FIELDTYPEold,
+                                           rdbModel::FIELDTYPElit);
 }
 
 rdbModel::Assertion::Operator* QueryFrame::buildOperator(int row)

@@ -380,7 +380,16 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   uiTable->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
-  
+  //   Joanne insert starts here
+  if (!queryResult) 
+
+    {
+      uiTable->setTableSize(1, 1);
+      uiTable->setRowHeaderWidth(20);
+      uiTable->setItemText(0, 0, "Null query result");
+      return 1;
+    }
+  //   Joanne insert ends here
   if (queryResult->getNRows() < 1)
     {
       uiTable->setTableSize(1, 1);
