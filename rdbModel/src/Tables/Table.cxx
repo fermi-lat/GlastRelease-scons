@@ -36,7 +36,6 @@ namespace rdbModel {
       if (col->getName() == name) return col;
     }
     return 0;
-
   }
 
   Index* Table::getIndexByName(const std::string& name) const {
@@ -44,6 +43,15 @@ namespace rdbModel {
     for (unsigned iIx = 0; iIx < nIx; iIx++) {
       Index* index = m_indices[iIx];
       if (index->getName() == name) return index;
+    }
+    return 0;
+  }
+
+  Assertion* Table::getAssertionByName(const std::string& name) const {
+    unsigned nAssert = m_asserts.size();
+    for (unsigned i = 0; i < nAssert; i++) {
+      Assertion* a = m_asserts[i];
+      if (a->getName() == name) return a;
     }
     return 0;
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "rdbModel/Management/Visitor.h"
+#include "rdbModel/Tables/Table.h"
 
 namespace rdbModel {
 
@@ -12,6 +13,7 @@ namespace rdbModel {
   class Enum;
 
   class XercesBuilder;
+
 
 
   /** 
@@ -53,6 +55,8 @@ namespace rdbModel {
     const std::string& getComment() const {return m_comment;};
 
     const std::string& getDefault() const {return m_default;}
+
+    const std::string& getTableName() const {return m_myTable->getName();}
 
     Datatype* getDatatype() const {return m_type;};
 

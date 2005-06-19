@@ -26,6 +26,7 @@ namespace rdbModel {
     const std::string& getName() const { return m_name;}
     Column* getColumnByName(const std::string& name) const;
     Index* getIndexByName(const std::string& name) const;
+    Assertion* getAssertionByName(const std::string& name) const;
     /// Verify that the input can be used to form an appropriate INSERT 
     /// statement for this row; if so and if we have a connection,
     /// ask the connection to do the insert and return status (an int,
