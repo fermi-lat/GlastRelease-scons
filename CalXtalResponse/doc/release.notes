@@ -1,3 +1,4 @@
+v0r5p1  6/19/05 fewtrell improperly initializeed geometry constant caused bad asymetry calcs in Digi.
 v0r5    6/13/05 fewtrell fixed JIRA CAL-013.  better validation of calib data & better handling of non existant calib data
 v0r4p1  4/23/05 fewtrell fixed memory leak found from valgrind in CalibItemMgr::genSpline()
 v0r4    4/21/05 fewtrell grabbed CalXtalRecAlg from CalRecon b/c RecAlg updates are always synched w/ XtalResponse & not w/ CalRecon

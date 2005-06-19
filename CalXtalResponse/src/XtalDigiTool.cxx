@@ -84,10 +84,6 @@ private:
   /// detModel identifier for large plus-side diode
   int m_eDiodePLarge;                    
   
-  /// detector volume id
-  int m_fCellCmp;
-  int m_fSegment;
-  
   double m_ePerMeVInDiode;
   /// gain - electrons/MeV 1=Sm, 0=Large
   int m_ePerMeV[2];                      
@@ -230,7 +226,7 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::DEBUG;
       msglog.stream() << "id=" << xtalId
-                      << "\tcell=" << volId[m_fCellCmp] 
+                      << "\tcell=" << volId[fCellCmp] 
                       << " ene=" << ene;
       msglog << endreq;
     }
@@ -241,11 +237,11 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
 
     //--XTAL DEPOSIT--//
     
-    if((int)volId[m_fCellCmp] ==  m_eXtal ) {
+    if((int)volId[fCellCmp] ==  m_eXtal ) {
       sumEneCsI += ene;
       //-- HIT POSITION--//
       HepPoint3D mom1 = hit.moment1();
-      int segm = volId[m_fSegment]; // segment # (0-11)
+      int segm = volId[fSegment]; // segment # (0-11)
       // let's define the position of the segment along the crystal
       double relpos = (segm+0.5)/m_nCsISeg; // units in xtal len 0.0-1.0
       // in local reference system x is always oriented along the crystal
@@ -295,10 +291,10 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
 
       DiodeNum diode;
       FaceNum face;
-      if((int)volId[m_fCellCmp]      == m_eDiodePLarge)  face = POS_FACE, diode = LRG_DIODE;
-      else if((int)volId[m_fCellCmp] == m_eDiodeMLarge)  face = NEG_FACE, diode = LRG_DIODE;
-      else if((int)volId[m_fCellCmp] == m_eDiodePSm)     face = POS_FACE, diode = SM_DIODE;
-      else if((int)volId[m_fCellCmp] == m_eDiodeMSm)     face = NEG_FACE, diode = SM_DIODE;
+      if((int)volId[fCellCmp]      == m_eDiodePLarge)  face = POS_FACE, diode = LRG_DIODE;
+      else if((int)volId[fCellCmp] == m_eDiodeMLarge)  face = NEG_FACE, diode = LRG_DIODE;
+      else if((int)volId[fCellCmp] == m_eDiodePSm)     face = POS_FACE, diode = SM_DIODE;
+      else if((int)volId[fCellCmp] == m_eDiodeMSm)     face = NEG_FACE, diode = SM_DIODE;
       else throw invalid_argument("VolId is not in xtal or diode.  Programmer error.");
       
       // convert e-in-diode to MeV-in-xtal-center
