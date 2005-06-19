@@ -99,15 +99,24 @@ bool Coverage::expandTypes(std::string& nickname,
    conditions.reserve(6);
 
    Assertion::Operator completeOp(OPTYPEequal, "completion", "OK",
-                                  false, true);
-   Assertion::Operator instOp(OPTYPEequal, "instrument", m_instr, false, true);
+                                  FIELDTYPEold, FIELDTYPElit);
+   //                                  false, true);
+   Assertion::Operator instOp(OPTYPEequal, "instrument", m_instr, 
+                              FIELDTYPEold, FIELDTYPElit);
+                              // false, true);
    Assertion::Operator calibTypeOp(OPTYPEequal, "calib_type", calibtype,
-                                   false, true);
-   Assertion::Operator flavorOp(OPTYPEequal, "flavor", m_flavor, false, true);
+                                  FIELDTYPEold, FIELDTYPElit);
+                                   //                  false, true);
+   Assertion::Operator flavorOp(OPTYPEequal, "flavor", m_flavor, 
+                                  FIELDTYPEold, FIELDTYPElit);
+   //    false, true);
    Assertion::Operator levelOp(OPTYPEequal, "proc_level", m_level, 
-                               false, true);
+                                  FIELDTYPEold, FIELDTYPElit);
+   //                        false, true);
    Assertion::Operator vstartOp(OPTYPElessThan, m_ts.getString(), 
-                                "vstart", true, false);
+                                "vstart", 
+                                FIELDTYPElit, FIELDTYPEold);
+                                //  true, false);
    conditions.push_back(&calibTypeOp);
    conditions.push_back(&instOp);
    conditions.push_back(&flavorOp);
@@ -115,7 +124,7 @@ bool Coverage::expandTypes(std::string& nickname,
    conditions.push_back(&vstartOp);
    conditions.push_back(&completeOp);
    Assertion::Operator* andOp = new Assertion::Operator(OPTYPEand, conditions);
-   Assertion* whereClause = new Assertion(Assertion::WHENwhere, andOp);
+   Assertion* whereClause = new Assertion(andOp);
 
    ResultHandle* results = 0;
 

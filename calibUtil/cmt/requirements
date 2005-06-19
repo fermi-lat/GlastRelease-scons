@@ -11,7 +11,7 @@ use xmlBase    v5r*
 
 ## use MYSQLEXT * IExternal
 ## rdbModel use could be -no_auto_imports
-use rdbModel v1r*
+use rdbModel v2r*
 
 
 set MYSQL_HOST       centaurusa.slac.stanford.edu

@@ -177,14 +177,21 @@ namespace calibUtil {
     conditions.reserve(8);
 
     Assertion::Operator completeOp(OPTYPEequal, "completion", "OK",
-                               false, true);
+                                   FIELDTYPEold, FIELDTYPElit);
+    //                               false, true);
     Assertion::Operator instOp(OPTYPEequal, "instrument", instrument,
-                           false, true);
+                               FIELDTYPEold, FIELDTYPElit);
+    //                           false, true);
     Assertion::Operator calibTypeOp(OPTYPEequal, "calib_type", calibType,
-                                false, true);
-    Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, false, true);
+                                    FIELDTYPEold, FIELDTYPElit);
+    //                                false, true);
+    Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, 
+                                 FIELDTYPEold, FIELDTYPElit);
+                                 //false, true);
     Assertion::Operator startOp(OPTYPElessOrEqual, update_start->getString(),
-                            "update_time", true, false);
+                                "update_time", 
+                                FIELDTYPEold, FIELDTYPElit);
+                                // true, false);
     
     conditions.push_back(&completeOp);
     conditions.push_back(&instOp);
@@ -198,7 +205,9 @@ namespace calibUtil {
     if (update_end) {
       endOp = new Assertion::Operator(OPTYPEgreaterOrEqual, 
                                       update_end->getString(),
-                                      "update_time", true, false);
+                                      "update_time", 
+                                      FIELDTYPElit, FIELDTYPEold);
+                                      //true, false);
       conditions.push_back(endOp);
     }
 
@@ -230,17 +239,25 @@ namespace calibUtil {
     std::vector<Assertion::Operator *> conditions;
     conditions.reserve(8);
     Assertion::Operator completeOp(OPTYPEequal, "completion", "OK",
-                               false, true);
+                                   FIELDTYPEold, FIELDTYPElit);
+    //                               false, true);
     Assertion::Operator instOp(OPTYPEequal, "instrument", instrument,
-                           false, true);
+                               FIELDTYPEold, FIELDTYPElit);
+    //                           false, true);
     Assertion::Operator calibTypeOp(OPTYPEequal, "calib_type", calibType,
-                                false, true);
-    Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, false, true);
-    Assertion::Operator vstartOp(OPTYPEgreaterThan, timestamp.getString(), "vstart",
-                      true, false);
+                                    FIELDTYPEold, FIELDTYPElit);
+    //                                false, true);
+    Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, 
+                                 FIELDTYPEold, FIELDTYPElit);
+                                 //  false, true);
+    Assertion::Operator vstartOp(OPTYPEgreaterThan, timestamp.getString(), 
+                                 "vstart",
+                                 FIELDTYPElit, FIELDTYPEold);
+    //                      true, false);
 
     Assertion::Operator vendOp(OPTYPElessThan, timestamp.getString(), "vend",
-                      true, false);
+                               FIELDTYPElit, FIELDTYPEold);
+    //                      true, false);
 
     conditions.push_back(&completeOp);
     conditions.push_back(&instOp);
@@ -274,8 +291,11 @@ namespace calibUtil {
     std::string serNoVal;
     facilities::Util::itoa(serialNo, serNoVal);
     Assertion::Operator* serOp = 
-      new Assertion::Operator(OPTYPEequal, "ser_no", serNoVal, false, true);
-    Assertion whereClause(Assertion::WHENwhere, serOp);
+      new Assertion::Operator(OPTYPEequal, "ser_no", serNoVal, 
+                              FIELDTYPEold, FIELDTYPElit);
+                              //false, true);
+    //    Assertion whereClause(Assertion::WHENwhere, serOp);
+    Assertion whereClause(serOp);
     StringVector orderBy;
     orderBy.clear();
     
@@ -322,10 +342,12 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     std::string serNoVal;
     facilities::Util::itoa(serialNo, serNoVal);
     Assertion::Operator* serOp = 
-      new Assertion::Operator(OPTYPEequal, "ser_no", serNoVal, false, true);
+      new Assertion::Operator(OPTYPEequal, "ser_no", serNoVal, 
+                              FIELDTYPEold, FIELDTYPElit);
+                              //false, true);
 
     // Assertion::Operator serOp(OPTYPEequal, "ser_no", serNoVal, false, true);
-    Assertion whereClause(Assertion::WHENwhere, serOp);
+    Assertion whereClause(serOp);
     StringVector orderCols;
     orderCols.clear();
     
@@ -429,7 +451,9 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
         return RETBadValue;
       }
       levelOp = 
-        new Assertion::Operator(OPTYPEequal, val, "PROC_LEVEL", true, false);
+        new Assertion::Operator(OPTYPEequal, val, "PROC_LEVEL", 
+                                FIELDTYPElit, FIELDTYPEold);
+                                //true, false);
       conditions.push_back(levelOp); 
       
       // make the combined operator
@@ -437,7 +461,8 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
 
       //Following creates an assertion such that creator (us) continues
       // to own the associated operator.
-      Assertion whereClause(Assertion::WHENwhere, &andOp, 0, true);
+      Assertion whereClause(&andOp, 0, true);
+      //      Assertion whereClause(Assertion::WHENwhere, &andOp, 0, true);
         
       ResultHandle* results = 0;
 
@@ -683,9 +708,11 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
       }
 
       Assertion::Operator* serOp = 
-        new Assertion::Operator(OPTYPEequal, "ser_no", serString, false, true);
+        new Assertion::Operator(OPTYPEequal, "ser_no", serString, 
+                                FIELDTYPEold, FIELDTYPElit);
+                                //false, true);
     
-      where = new Assertion(Assertion::WHENwhere, serOp);
+      where = new Assertion(serOp);
 
       // Fetch information for new row: vstart, flavor, completion,
       // proc_level, calib_type, flavor
@@ -719,16 +746,22 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     conditions.reserve(7);
     for (unsigned ix = 0; ix < 5; ix++) {
       conditions.push_back(new Assertion::Operator(OPTYPEequal, getCols[ix],
-                                                   fields[ix], false, true));
+                                                   fields[ix], 
+                                                   FIELDTYPEold, FIELDTYPElit));
+                                                   // false, true));
     }
     conditions.push_back(new Assertion::Operator(OPTYPElessThan, "vstart",
-                                                 fields[5], false, true));
+                                                 fields[5], 
+                                                 FIELDTYPEold, FIELDTYPElit));
+    //false, true));
     conditions.push_back(new Assertion::Operator(OPTYPEgreaterThan, "vend",
-                                            fields[5], false, true));
+                                                 fields[5], 
+                                                 FIELDTYPEold, FIELDTYPElit));
+                                                 // false, true));
                                             
     Assertion::Operator* andOp = 
       new Assertion::Operator(OPTYPEand, conditions);
-    where = new Assertion(Assertion::WHENwhere, andOp);
+    where = new Assertion(andOp);
     
     StringVector toUpdate;
     toUpdate.push_back("vend");

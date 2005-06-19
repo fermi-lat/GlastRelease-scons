@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
   }
   if (argc > 5) {
     try {
-      ts = Timestamp(std::string(argv[6]));
+      ts = Timestamp(std::string(argv[5]));
     }
     catch (facilities::BadTimeInput  ex) {
       std::cerr << "Caught facilities::BadTimeInput exception with complaint "
