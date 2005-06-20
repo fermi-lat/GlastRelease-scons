@@ -30,6 +30,10 @@
  * @section jobOptions jobOptions
  * No jobOptions are currently utilized in the AcdRecon package.
  * 
+ <hr>
+ * @section jobOptions jobOptions
+ * NONE
+ *
  * @section Tests Tests
  * There is one test routine available:  test_AcdRecon.
  * This test uses a digi.root file that stores the AcdDigi values to be used when running
