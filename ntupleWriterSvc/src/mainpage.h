@@ -36,6 +36,29 @@
  @param defaultStoreFlag [false] Store the row at the end of an event loop cycle. If false, client must execute storeRowFlag(true) to save all trres in  the current event. Or, the client can execute storeRowFlag(treename, true) to save the specific tree.	false
  @param AutoSave [100000]	 Number of bytes to save at a time (ROOT default is 10000000)
 
+ <hr>
+ * @section jobOptions jobOptions
+ * @param RootTupleSvc.filename 
+ * Default RootTupleSvc.root
+ * Name of the output ROOT file that will contain the ROOT ntuple
+ * @param RootTupleSvc.checksumfilename
+ * Default empty string
+ * Name of an output file to contain the checkSum data associated with this 
+ * ntuple
+ * @param RootTupleSvc.treename
+ * Default "1"
+ * Logical name of the ROOT TTree that will contain the ntuple data
+ * @param RootTupleSvc.title
+ * Default "Glast tuple"
+ * Title of the ROOT TTree
+ * @param RootTupleSvc.defaultStoreFlag
+ * Default false
+ * @param RootTupleSvc.AutoSave 
+ * Default 100000
+ * In Bytes, denoting the size the ntuple must reach before triggering a true
+ * write to disk.
+ *
+ * 
  * <hr>
  * @section notes release notes
  * release.notes
