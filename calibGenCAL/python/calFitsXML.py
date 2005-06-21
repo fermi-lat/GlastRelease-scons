@@ -864,4 +864,6 @@ def adcExtrapolate(adcData):
 
                 for d in range((dac + 1), 64):
                     adcData[row, end, fe, d] = a1 + m
-                    a1 = adcData[row, end, fe, d]        
+                    a1 = adcData[row, end, fe, d]
+
+                    
