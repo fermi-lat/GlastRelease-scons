@@ -6,8 +6,8 @@ version v2r0
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use GlastPolicy  v*
-use xmlBase      v5r*
 use facilities   v2r*
+use xmlBase      v5r*
 use MYSQLEXT v0r* IExternal 
 
 apply_pattern shared_library
