@@ -264,7 +264,7 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
                     firstCandTrk->setInitialEnergy(e1_con); 
                     (*firstCandTrk)[0]->setEnergy(e1_con);       // change the hit energy on first track
                     secndCandTrk->setInitialEnergy(e2_con);
-                    (*secndCandTrk)[0]->setEnergy(e1_con);       // change the hit energy on second track
+                    (*secndCandTrk)[0]->setEnergy(e2_con);       // change the hit energy on second track
                 }
             }
         }
