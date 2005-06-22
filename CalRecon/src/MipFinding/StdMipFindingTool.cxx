@@ -63,13 +63,16 @@ private:
     bool                     findC0();
     bool                     findC1();
     bool                     findC2();
-    void                     fitTrack();
+    void                     fitTrack(double ki2Cut, int maxCall);
     bool                     findCn();
+    double                   D2Edge(Event::CalMipXtal *calMipXtal);
     void                     readMipXtals (Event::CalMipXtalVec calMipXtalVec);
     void                     clearCalMipXtalVec(Event::CalMipXtalVec *calMipXtalVec);
     void                     readMipTracks(Event::CalMipTrackVec calMipTrackVec);
     void                     clearCalMipTrackVec(Event::CalMipTrackVec *calMipTrackVec);
     StatusCode               readGlastDet();
+
+    static double            Ecor(Event::CalMipXtal calMipXtal);
 
     StatusCode               storeCalMipTracks(Event::CalMipTrackVec calMipTrackVec);
 
@@ -95,6 +98,14 @@ private:
     double                   m_thetaMax;
     double                   m_phiMin;
     double                   m_phiMax;
+
+    double                   m_ki2Cut1;
+    int                      m_maxCall1;
+    double                   m_ki2Cut2;
+    int                      m_maxCall2;
+
+    double                   m_dx_max;
+    double                   m_beta0;
 
     /// These will be accessed by minuit fit function
     static double            m_EntryPTracy[3];
@@ -139,19 +150,39 @@ private:
     static double            m_d1;
     static double            m_d2;
     static double            m_beta;
-    static double            m_beta0;
+  //static double            m_beta0;
     static Point             m_D01point;
     static Vector            m_D01vector;
     static int               m_nbTracks;
 
     static Point             m_entryP;
     static double            m_entryPz;
+
+    static Point             m_E1;
+    static Point             m_E2;
+    static Point             m_C;
+    static Point             m_centroid;
+
     /// the GlastDetSvc used for access to detector info
     static IGlastDetSvc*     m_detSvc;
     static double            m_coordXtalZ0;
     static double            m_CsILength;
     static double            m_CsIWidth;
     static double            m_CsIHeight;
+
+    static double            m_XtalXlo[16][8][12];
+    static double            m_XtalXhi[16][8][12];
+    static double            m_XtalYlo[16][8][12];
+    static double            m_XtalYhi[16][8][12];
+    static double            m_XtalZlo[16][8][12];
+    static double            m_XtalZhi[16][8][12];
+
+    static double            m_xMinCalEdge;
+    static double            m_xMaxCalEdge;
+    static double            m_yMinCalEdge;
+    static double            m_yMaxCalEdge;
+    static double            m_zMinCalEdge;
+    static double            m_zMaxCalEdge;
 
     static double            m_ki2cut;
     static Vector            m_dir;
@@ -265,7 +296,7 @@ double                StdMipFindingTool::m_d2;
 //-----------------------------------------------------------------------------------------------------------------
 double                StdMipFindingTool::m_beta;
 //-----------------------------------------------------------------------------------------------------------------
-double                StdMipFindingTool::m_beta0;
+//double                StdMipFindingTool::m_beta0;
 //-----------------------------------------------------------------------------------------------------------------
 Point                 StdMipFindingTool::m_D01point;
 Vector                StdMipFindingTool::m_D01vector;
@@ -346,25 +377,63 @@ bool                  StdMipFindingTool::m_goodfit;
 //-----------------------------------------------------------------------------------------------------------------
 int                   StdMipFindingTool::m_compteurTest;
 //-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_xMinCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_xMaxCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_yMinCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_yMaxCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_zMinCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_zMaxCalEdge;
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalXlo[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalXhi[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalYlo[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalYhi[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalZlo[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+double                StdMipFindingTool::m_XtalZhi[16][8][12];
+//-----------------------------------------------------------------------------------------------------------------
+Point                 StdMipFindingTool::m_E1;
+//-----------------------------------------------------------------------------------------------------------------
+Point                 StdMipFindingTool::m_E2;
+//-----------------------------------------------------------------------------------------------------------------
+Point                 StdMipFindingTool::m_C;
+//-----------------------------------------------------------------------------------------------------------------
+Point                 StdMipFindingTool::m_centroid;
+//-----------------------------------------------------------------------------------------------------------------
 StdMipFindingTool::StdMipFindingTool(const std::string & type, 
                                      const std::string & name,
                                      const IInterface * parent ) : AlgTool( type, name, parent )
 { 
     declareInterface<IMipFindingTool>(this) ; 
 
-    declareProperty("MIPEneCutLow",  m_mipEneCutLow  = 6.);
-    declareProperty("MIPEneCutHigh", m_mipEneCutHigh = 50.);
-    declareProperty("KI2TYPE",       m_ki2Type       = 1);
-    declareProperty("Asymer2",       m_asymer2       = ASYMER2);
-    declareProperty("Transer2",      m_transer2      = TRANSER2);
-    declareProperty("ThetaMin",      m_fThetaMin     = -10.);
-    declareProperty("ThetaMax",      m_fThetaMax     =  90.);
-    declareProperty("PhiMin",        m_fPhiMin       = -180.);
-    declareProperty("PhiMax",        m_fPhiMax       =  180.);
-    declareProperty("ThetaMin",      m_thetaMin     = -10.);
-    declareProperty("ThetaMax",      m_thetaMax     =  90.);
-    declareProperty("PhiMin",        m_phiMin       = -180.);
-    declareProperty("PhiMax",        m_phiMax       =  180.);
+    declareProperty("MIPEneCutLow",  m_mipEneCutLow  = 2.       );
+    declareProperty("MIPEneCutHigh", m_mipEneCutHigh = 50.      );
+    declareProperty("KI2TYPE",       m_ki2Type       = 0        );
+    declareProperty("Asymer2",       m_asymer2       = ASYMER2  );
+    declareProperty("Transer2",      m_transer2      = TRANSER2 );
+    declareProperty("ThetaMin",      m_fThetaMin     = -10.     );
+    declareProperty("ThetaMax",      m_fThetaMax     =  90.     );
+    declareProperty("PhiMin",        m_fPhiMin       = -180.    );
+    declareProperty("PhiMax",        m_fPhiMax       =  180.    );
+    declareProperty("ThetaMin",      m_thetaMin      = -10.     );
+    declareProperty("ThetaMax",      m_thetaMax      =  90.     );
+    declareProperty("PhiMin",        m_phiMin        = -180.    );
+    declareProperty("PhiMax",        m_phiMax        =  180.    );
+    declareProperty("Ki2Cut1",       m_ki2Cut1       = 100.     );
+    declareProperty("MaxCall1",      m_maxCall1      = 500      );
+    declareProperty("Ki2Cut2",       m_ki2Cut2       = 99999.   );
+    declareProperty("MaxCall2",      m_maxCall2      = 500      );
+    declareProperty("Dx_max",        m_dx_max        = 4.       );
+    declareProperty("Beta0",         m_beta0         = 0.71     );
 
     m_radToDeg = 180. / 3.14159;
 
@@ -494,9 +563,214 @@ StatusCode StdMipFindingTool::readGlastDet()
     // populate crystal
     m_coordXtalZ0=pCenter.z();
 
+    m_xMinCalEdge =  99999;
+    m_xMaxCalEdge = -99999;
+    m_yMinCalEdge =  99999;
+    m_yMaxCalEdge = -99999;
+    m_zMinCalEdge =  99999;
+    m_zMaxCalEdge = -99999;
+
+    for (int itower=0;itower<16;itower++)
+    {
+        for (int ilayer=0;ilayer<8;ilayer++)
+        {
+            for (int icolumn=0;icolumn<12;icolumn++)
+            {
+                // create Volume Identifier for segment 0 of this crystal
+	            idents::VolumeIdentifier segm0Id;
+	            segm0Id.append(m_eLATTowers);
+	            segm0Id.append(itower/m_xNum);
+	            segm0Id.append(itower%m_xNum);
+	            segm0Id.append(m_eTowerCAL);
+	            segm0Id.append(ilayer);
+	            segm0Id.append(ilayer%2); 
+	            segm0Id.append(icolumn);
+	            segm0Id.append(m_eXtal);
+	            segm0Id.append(0);
+	
+	            //      
+	            HepTransform3D transf;
+	            //get 3D transformation for segment 0 of this crystal
+	            m_detSvc->getTransform3DByID(segm0Id,&transf);
+	            //get position of the center of the segment 0
+	            Vector vect0 = transf.getTranslation();
+	            // create Volume Identifier for the last segment of this crystal
+	            idents::VolumeIdentifier segm11Id;
+	            // copy all fields from segm0Id, except segment number
+	            for(int ifield = 0; ifield<fSegment; ifield++) segm11Id.append(segm0Id[ifield]);
+	            segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
+	            //get 3D transformation for the last segment of this crystal
+	            m_detSvc->getTransform3DByID(segm11Id,&transf);
+	            //get position of the center of the last segment
+	            Vector vect11 = transf.getTranslation();
+	            //      
+	            Point p0(0.,0.,0.);	      
+	            // position of the crystal center
+	            Point pCenter = p0+(vect0+vect11)*0.5; 
+
+	            double delta_x=(ilayer%2==0) ? 0.5*m_CsILength : 0.5*m_CsIWidth;
+	            double delta_y=(ilayer%2==1) ? 0.5*m_CsILength : 0.5*m_CsIWidth;
+
+	            m_XtalXlo[itower][ilayer][icolumn]=pCenter.getX()-delta_x;
+	            m_XtalXhi[itower][ilayer][icolumn]=pCenter.getX()+delta_x;
+	            m_XtalYlo[itower][ilayer][icolumn]=pCenter.getY()-delta_y;
+	            m_XtalYhi[itower][ilayer][icolumn]=pCenter.getY()+delta_y;
+	            m_XtalZlo[itower][ilayer][icolumn]=pCenter.getZ()-0.5*m_CsIHeight;
+	            m_XtalZhi[itower][ilayer][icolumn]=pCenter.getZ()+0.5*m_CsIHeight;
+	
+	            if (pCenter.getX()<m_xMinCalEdge) m_xMinCalEdge=pCenter.getX();
+	            if (pCenter.getX()>m_xMaxCalEdge) m_xMaxCalEdge=pCenter.getX();
+	            if (pCenter.getY()<m_yMinCalEdge) m_yMinCalEdge=pCenter.getY();
+	            if (pCenter.getY()>m_yMaxCalEdge) m_yMaxCalEdge=pCenter.getY();
+	            if (pCenter.getZ()<m_zMinCalEdge) m_zMinCalEdge=pCenter.getZ();
+	            if (pCenter.getZ()>m_zMaxCalEdge) m_zMaxCalEdge=pCenter.getZ();
+            }
+        }
+    }
+  
+    m_xMinCalEdge-=m_CsIWidth/2;
+    m_yMinCalEdge-=m_CsIWidth/2;
+    m_zMinCalEdge-=m_CsIHeight/2;
+    m_xMaxCalEdge+=m_CsIWidth/2;
+    m_yMaxCalEdge+=m_CsIWidth/2;
+    m_zMaxCalEdge+=m_CsIHeight/2;
+
     log << MSG::DEBUG << " SG : readGlastDet - End" << endreq;
     return sc;
 }
+//-----------------------------------------------------------------------------------------------------------------
+double StdMipFindingTool::Ecor(Event::CalMipXtal calMipXtal)
+{
+    int    itower  = calMipXtal.getXtal()->getPackedId().getTower();
+    int    ilayer  = calMipXtal.getXtal()->getPackedId().getLayer();
+    int    icolumn = calMipXtal.getXtal()->getPackedId().getColumn();
+
+    double xlow    = m_XtalXlo[itower][ilayer][icolumn];
+    double xhig    = m_XtalXhi[itower][ilayer][icolumn];
+    double ylow    = m_XtalYlo[itower][ilayer][icolumn];
+    double yhig    = m_XtalYhi[itower][ilayer][icolumn];
+    double zlow    = m_XtalZlo[itower][ilayer][icolumn];
+    double zhig    = m_XtalZhi[itower][ilayer][icolumn];
+
+    bool l1        = false;
+    bool l2        = false;
+    double lambda;
+
+    if (m_dir.getZ()!=0)
+    {
+        // zlo plane
+        lambda=(zlow-m_entryP.getZ())/m_dir.getZ();
+        m_C=m_entryP+lambda*m_dir;
+
+        if (m_C.getY()>ylow && m_C.getY()<yhig && m_C.getX()>xlow && m_C.getX()<xhig)
+	    if (!l1)
+	    {
+	        m_E1=m_C;
+	        l1=true;
+	    }
+	    else
+	    {
+	        m_E2=m_C;
+	        l2=true;
+	    }
+
+        // zhi plane
+        lambda=(zhig-m_entryP.getZ())/m_dir.getZ();
+        m_C=m_entryP+lambda*m_dir;
+
+        if (m_C.getY()>ylow && m_C.getY()<yhig && m_C.getX()>xlow && m_C.getX()<xhig)
+	    if (!l1)
+	    {
+	        m_E1=m_C;
+	        l1=true;
+	    }
+	    else
+	    {
+	        m_E2=m_C;
+	        l2=true;
+	    }
+    }
+
+    if (m_dir.getX()!=0 && !(l1 && l2))
+    {
+        //xlow plane
+        lambda=(xlow-m_entryP.getX())/m_dir.getX();
+        m_C=m_entryP+lambda*m_dir;
+        if (m_C.getY()>ylow && m_C.getY()<yhig && m_C.getZ()>zlow && m_C.getZ()<zhig)
+	    if (!l1)
+	    {
+	        m_E1=m_C;
+	        l1=true;
+	    }
+	    else
+	    {
+	        m_E2=m_C;
+	        l2=true;
+	    }
+
+        //xhig plane
+        lambda=(xhig-m_entryP.getX())/m_dir.getX();
+        m_C=m_entryP+lambda*m_dir;
+
+        if (m_C.getY()>ylow && m_C.getY()<yhig && m_C.getZ()>zlow && m_C.getZ()<zhig)
+	    if (!l1)
+	    {
+	        m_E1=m_C;
+	        l1=true;
+	    }
+	    else
+	    {
+	        m_E2=m_C;
+	        l2=true;
+	    }
+    }
+
+    if (m_dir.getY()!=0 && !(l1 && l2))
+    {
+        //ylow plane
+        lambda=(ylow-m_entryP.getY())/m_dir.getY();
+        m_C=m_entryP+lambda*m_dir;
+
+        if (m_C.getX()>xlow && m_C.getX()<xhig && m_C.getZ()>zlow && m_C.getZ()<zhig)
+	    if (!l1)
+	    {
+	        m_E1=m_C;
+	        l1=true;
+	    }
+	    else
+	    {
+	        m_E2=m_C;
+	        l2=true;
+	    }
+    }
+
+    // yhig plane
+    lambda=(yhig-m_entryP.getY())/m_dir.getY();
+    m_C=m_entryP+lambda*m_dir;
+
+    if (m_C.getX()>xlow && m_C.getX()<xhig && m_C.getZ()>zlow && m_C.getZ()<zhig)
+    if (!l1)
+    {
+	    m_E1=m_C;
+	    l1=true;
+    }
+    else
+    {
+	    m_E2=m_C;
+	    l2=true;
+    }
+
+    double ec=0.0001;
+
+    if (l1 && l2)
+    {
+        m_vect=m_E2-m_E1;
+        ec=sqrt(m_vect*m_vect)/m_CsIHeight;
+    }
+
+    return ec;
+}
+
 //-----------------------------------------------------------------------------------------------------------------
 int StdMipFindingTool::findMipXtals(const Event::CalXtalRecCol* calXtalRecCol, const Event::CalCluster* calCluster)
 {
@@ -610,24 +884,6 @@ void StdMipFindingTool::clearCalMipXtalVec(Event::CalMipXtalVec *calMipXtalVec)
     // Why isn't this all that is needed?
     calMipXtalVec->clear();
 
-/*
-    int elementNb=0;
-    for(Event::CalMipXtalVec::iterator xTalIter=calMipXtalVec->begin(); xTalIter != calMipXtalVec->end(); xTalIter++)
-    {
-        elementNb++;
-    }
-
-    int elementNbAfDel=elementNb;
-
-    if (elementNb>0)
-    {
-        for (int comptor=0; comptor<elementNb; comptor++)
-        {
-            calMipXtalVec->pop_back();
-            elementNbAfDel--;
-        }
-    }
-*/
     log << MSG::DEBUG << " SG : clearCalMipXtalVec End" << endreq;
 }
 //-----------------------------------------------------------------------------------------------------------------
@@ -642,22 +898,6 @@ void StdMipFindingTool::clearCalMipTrackVec(Event::CalMipTrackVec* calMipTrackVe
     // properly... 
     calMipTrackVec->clear();
 
-/*
-    int elementNb=0;
-    for(Event::CalMipTrackVec::iterator xTalIter=calMipTrackVec->begin(); xTalIter != calMipTrackVec->end(); xTalIter++)
-    {
-        elementNb++;
-    }
-
-    int elementNbAfDel=elementNb;
-
-    if (elementNb>0)
-      for (int comptor=0; comptor<elementNb; comptor++)
-      {
-        calMipTrackVec->pop_back();
-        elementNbAfDel--;
-      }
-*/
     log << MSG::DEBUG << " SG : clearCalMipXtalVec End" << endreq;
 }
 //-----------------------------------------------------------------------------------------------------------------
@@ -673,7 +913,7 @@ int StdMipFindingTool::findMipTracks()
     m_ki2cut = 10000;
     m_pi      = TMath::Pi();
 
-    //sc = readGlastDet();
+    sc=readGlastDet();
     ASYMER2  = pow(20.,2);
     TRANSER2 = pow(m_CsIWidth,2);
 
@@ -684,49 +924,123 @@ int StdMipFindingTool::findMipTracks()
     while (findC0())
     {
         m_first=true;
-        if (!findC1()) continue;
+        if (!findC1())
+	    {
+	        m_calMipXtalVec[m_hid0].setFree(true);
+	        continue;
+	    }
+      
         if (!findC2())
-        {
-            m_calMipXtalVec[m_hid1].setFree(true);
-            continue;
-        }
-        fitTrack();
+	    {
+	        m_calMipXtalVec[m_hid0].setFree(true);
+	        m_calMipXtalVec[m_hid1].setFree(true);
+	    continue;
+	    }
+      
+        if (!findCn())
+	    {
+	        m_calMipXtalVec[m_hid0].setFree(true);
+	        m_calMipXtalVec[m_hid1].setFree(true);
+	        m_calMipXtalVec[m_hid2].setFree(true);
+	        m_calMipTrackVec.pop_back();
+	        m_nbTracks--;
+	        continue;
+	    }
 
-        log << "tttttttm_goodfit="<<m_goodfit << endreq;
-        log << "tttttttm_kidof  ="<<m_kidof << endreq;
+        fitTrack(m_ki2Cut1, m_maxCall1);
+
+        //sylvain change
+        m_goodfit=true;
+        //
 
         if (!m_goodfit)
-        {
-            m_first=false;
-            m_calMipXtalVec[m_hid2].setFree(true);
-            if (!findC1())
-            {
-                m_calMipTrackVec.pop_back();
-                m_nbTracks--;
-                continue;
-            }
-            if (!findC2())
-            {
-                m_calMipXtalVec[m_hid1].setFree(true);
-                m_calMipTrackVec.pop_back();
-                m_nbTracks--;
-                continue;
-            }
-            fitTrack();
-        }
+	    {
+	        m_calMipXtalVec[m_hid0].setFree(true);
+	        m_calMipXtalVec[m_hid1].setFree(true);
+	        m_calMipXtalVec[m_hid2].setFree(true);
+	        m_calMipXtalVec[m_hidn].setFree(true);
+	        m_calMipTrackVec.pop_back();
+	        m_nbTracks--;
+	        continue;
+	    }
 
-        while (m_goodfit)
-        {
-            if (findCn()) fitTrack();
-            else          break;
-        }
-        if (m_calMipTrackVec.back().getNh()<4)
-        {
+        while (findCn()){}
+
+        //sylvain commented
+        //fitTrack(m_ki2Cut2, m_maxCall2);
+
+        //sylvain change test
+        if (m_calMipTrackVec.back().getNh()<4 && m_calMipTrackVec.back().getKi2()>=100)
+	    //if (m_calMipTrackVec.back().getNh()<2 && m_calMipTrackVec.back().getKi2()>=1000000)
+	    {
+	        for (int ih=0; ih<m_calMipTrackVec.back().getNh(); ih++)
+	        {
+	            m_calMipXtalVec[ih].setFree(true);
+	        }
+	        
             m_calMipTrackVec.pop_back();
-            m_nbTracks--;
-        }
-    }
+	        m_nbTracks--;
+	    }
 
+        if (m_nbTracks+1>0)
+	    {
+	        for (int itr=0; itr<=m_nbTracks; itr++)
+	        {
+	            m_kidof=-5;
+
+	            Event::CalMipTrack calMipTrack=m_calMipTrackVec[itr];
+
+	            //if (m_calMipTrackVec[itr].getNdof()>0)
+	            if (calMipTrack.getNdof()>0)
+		        {
+		            //m_kidof=m_calMipTrackVec[itr].getKi2()/m_calMipTrackVec[itr].getNdof();
+		            m_kidof=calMipTrack.getKi2()/calMipTrack.getNdof();
+		        }
+	            
+	            m_dir  = calMipTrack.getDir();
+	            m_C    = calMipTrack.getPoint();
+	            m_vect = m_C-m_centroid;
+	            m_vv   = m_vect.cross(m_dir);
+	            m_d2C  = sqrt(m_vv*m_vv);
+	            //m_calMipTrackVec[itr].setD2C(m_d2C);
+	            calMipTrack.setD2C(m_d2C);
+
+	            calMipTrack.setD2Edge(999999999);
+	            calMipTrack.setLength(-999999999);
+
+	            for (int ih=0; ih<m_calMipTrackVec[itr].getNh(); ih++)
+		        {
+		            Event::CalMipXtal* calMipXtal_ih=new Event::CalMipXtal();
+		            *calMipXtal_ih = calMipTrack.at(ih);
+		            double dd=D2Edge(calMipXtal_ih);
+
+		            if (dd<calMipTrack.getD2Edge())
+		            {
+		                calMipTrack.setD2Edge(dd);
+		            }
+		  
+                    for (int ihh=0; ihh<calMipTrack.getNh() &&ihh!=ih; ihh++)
+		            {
+		                Event::CalMipXtal* calMipXtal_ihh=new Event::CalMipXtal();
+		                *calMipXtal_ihh=calMipTrack.at(ihh);
+		                m_vv=calMipXtal_ih->getXtal()->getPosition()-calMipXtal_ihh->getXtal()->getPosition();
+
+		                double d=sqrt(m_vv*m_vv);
+		                if (d > m_calMipTrackVec.back().getLength())
+			            {
+			                m_calMipTrackVec.back().setLength(d);
+			            }
+		                calMipXtal_ihh=0;
+		                delete calMipXtal_ihh;
+		            }
+		
+		            calMipXtal_ih=0;
+		            delete calMipXtal_ih;
+		        }
+	        }
+	    }
+    }
+    
     log << MSG::DEBUG << " SG : findMipTracks - End" << endreq;
     return m_nbTracks = m_calMipTrackVec.size();
 }
@@ -735,34 +1049,36 @@ int StdMipFindingTool::findMipTracks()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
     log << MSG::DEBUG << " SG : findC0 in StdMipFindingTool" << endreq;
 
     m_hid           = -1;
     m_hid0          = -1;
     m_d2C           = -40;
     m_d2Cmax        = -50;
-
-    Event::CalMipXtal calMipXtal;
+    m_dmin=500000;
 
     for(Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
         m_hid++;
-        calMipXtal   = *xTalIter;
-        m_free       = calMipXtal.getFree();
-        m_d2C        = calMipXtal.getD2C();
-        if (m_free && m_d2C>m_d2Cmax)
-        {
-            m_d2Cmax = m_d2C;
-            m_hid0   = m_hid;
-        }
+        Event::CalMipXtal calMipXtal = *xTalIter;
+
+        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && calMipXtal.getD2C()>m_d2Cmax)
+	    {
+	        m_d2Cmax = m_d2C;
+	        m_hid0   = m_hid;
+	    }
     }
+    
     if (m_hid0>=0)
     {
         Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid0];
         calMipXtalRef.setFree(false);
+        calMipXtalRef.setFreeC0(false);
         log << MSG::DEBUG << " SG : findC0 End - True" << endreq;
         return true;
     }
+
     log << MSG::DEBUG << " SG : findC0 End - False" << endreq;
     return false;
 }
@@ -771,41 +1087,74 @@ int StdMipFindingTool::findMipTracks()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
     log << MSG::DEBUG << " SG : findC1 in StdMipFindingTool" << endreq;
 
-    m_hid=-1;
-    m_hid1=-1;
-    m_dmin=9999999;
+    m_hid  = -1;
+    m_hid1 = -1;
+    m_dmin = 8*m_CsIWidth;
 
-    Event::CalMipXtal calMipXtal;
+    int itow0 = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getTower();
+    int ilay0 = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getLayer();
+    int icol0 = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getColumn();
+
 
     for (Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
         m_hid++;
-        calMipXtal = *xTalIter;
+        Event::CalMipXtal calMipXtal = *xTalIter;
         m_dE=fabs(1-calMipXtal.getXtal()->getEnergy()/m_calMipXtalVec[m_hid0].getXtal()->getEnergy());
-        if (calMipXtal.getFree() && m_dE<m_xE)
-        {
-            m_u01  = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid0].getXtal()->getPosition();
-            m_d    = sqrt(m_u01*m_u01);
-            m_vect = m_simpCluCent-calMipXtal.getXtal()->getPosition();
-            m_beta = m_u01*m_vect;
-            if (m_d>0) m_beta/=m_d*sqrt(m_vect*m_vect);
-            else       m_beta = 0;
-            if (m_d>2*m_CsIWidth && m_d<m_dmin && m_beta<m_beta0)
-            {
-                m_dmin = m_d;
-                m_hid1 = m_hid;
-            }
-        }
+        if (calMipXtal.getFree())
+	    {
+	        m_vv     = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+	        m_u01    = m_vv.unit();
+	        m_entryP = m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+	        m_dir    = m_u01;
+
+	        int itow1  = m_calMipXtalVec[m_hid].getXtal()->getPackedId().getTower();
+	        int ilay1  = m_calMipXtalVec[m_hid].getXtal()->getPackedId().getLayer();
+	        int icol1  = m_calMipXtalVec[m_hid].getXtal()->getPackedId().getColumn();
+	  
+            //SG change
+	        if (itow1==itow0)
+	        {
+	            double ec0 = Ecor(m_calMipXtalVec[m_hid0]);
+	            double dx0 = fabs(m_calMipXtalVec[m_hid0].getXtal()->getEnergy()/ec0-13.2);
+	      
+                double ec1 = Ecor(m_calMipXtalVec[m_hid]);
+	            double dx1 = fabs(m_calMipXtalVec[m_hid].getXtal()->getEnergy()/ec1-13.2);
+	      
+                //SG change
+	            if (dx0<m_dx_max && ec0>0.001 && dx1<m_dx_max && ec1>0.001)
+		        {
+		            double d01 = sqrt(m_vv*m_vv);
+		            m_vect = m_centroid-m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+		            double beta = m_vv*m_vect;
+		            if (d01>0)
+		            {
+		                beta/=d01*sqrt(m_vect*m_vect);
+		            }
+		            else
+		            {
+		                beta=0;
+		            }
+		            
+                    if (d01<m_dmin && beta>m_beta0)
+		            {
+		                m_dmin = d01;
+		                m_hid1 = m_hid;
+		            }
+		        }
+	        }
+	    }
     }
+
     if (m_hid1>=0)
     {
         Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid1];
         calMipXtalRef.setFree(false);
-        m_u01             = m_u01.unit();
-        m_D01point  = m_calMipXtalVec[m_hid0].getXtal()->getPosition();
-        m_D01vector = m_u01;
+        m_D01point=m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+        m_D01vector=m_u01;
         log << MSG::DEBUG << " SG : findC1 End - True" << endreq;
         return true;
     }
@@ -814,58 +1163,81 @@ int StdMipFindingTool::findMipTracks()
         log << MSG::DEBUG << " SG : findC1 End - False" << endreq;
         return false;
     }
+
 }
+
 //-----------------------------------------------------------------------------------------------------------------
-  bool StdMipFindingTool::findC2()
+bool StdMipFindingTool::findC2()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
     log << MSG::DEBUG << " SG : findC2 in StdMipFindingTool" << endreq;
 
-    m_hid=-1;
-    m_hid2=-1;
-    m_dmin=9999999;
+    m_hid  = -1;
+    m_hid2 = -1;
+    m_dmin = 9999999;
 
-    Event::CalMipXtal calMipXtal;
+    m_entryP = m_D01point;
+    m_dir    = m_D01vector;
+
+    int itow1  = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
+    int ilay1  = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
+    int icol1  = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
+
 
     for (Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
         m_hid++;
-        calMipXtal = *xTalIter;
-        m_dE=fabs(1-calMipXtal.getXtal()->getEnergy()/m_calMipXtalVec[m_hid1].getXtal()->getEnergy());
+        Event::CalMipXtal calMipXtal = *xTalIter;
 
-        if (calMipXtal.getFree() && m_dE<m_xE)
-        {
-            m_u02 = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid0].getXtal()->getPosition();
-            m_u12 = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid1].getXtal()->getPosition();
-            m_vv  = m_u01.cross(m_u02);
-            m_d1  = sqrt(m_vv*m_vv);
-            m_d2  = sqrt(m_u12*m_u12);
-
-            if (m_d1<m_dmin && m_d2<(2*m_CsIWidth))
-            {
-                m_dmin=m_d1;
-                m_hid2=m_hid;
-            }
-        }
+        if (calMipXtal.getFree())
+	    {
+	        int itow2=calMipXtal.getXtal()->getPackedId().getTower();
+	        int ilay2=calMipXtal.getXtal()->getPackedId().getLayer();
+	        int icol2=calMipXtal.getXtal()->getPackedId().getColumn();
+	        if (itow2==itow1 && abs(ilay2-ilay1)<3)
+	        {
+	            double ec=Ecor(calMipXtal);
+	            double dx=fabs(calMipXtal.getXtal()->getEnergy()/ec-13.2)/6.;
+	            
+                if (dx<m_dx_max && ec>0.001)
+		        {
+		            m_u02 = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+		            m_u12 = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[m_hid1].getXtal()->getPosition();
+		            m_vv  = m_u01.cross(m_u02);
+		            double d2D01=sqrt(m_vv*m_vv);
+		            double d12=sqrt(m_u12*m_u12);
+		            //SG change
+		            if (d2D01<m_dmin && d12<16*m_CsIWidth)
+		            //		  if (d2D01<m_dmin && d12<8*m_CsIWidth)
+		            {
+		                m_dmin=d2D01;
+		                m_hid2=m_hid;
+		            }
+		        }
+	        }
+	    }
     }
 
-    log << "m_hid2="<<m_hid2 << endreq;
+    log << MSG::DEBUG <<"m_hid2="<<m_hid2<<endreq;
 
     if (m_hid2>=0)
     {
         Event::CalMipXtal& calMipXtalRef_m_hid2 = m_calMipXtalVec[m_hid2];
         calMipXtalRef_m_hid2.setFree(false);
 
+        m_hidn=m_hid2;
+
         if (m_first)
-        {
-            m_nbTracks++;
-            m_calMipTrackVec.push_back(Event::CalMipTrack());
-            Event::CalMipTrack& calMipTrackRef = m_calMipTrackVec.back();
-            calMipTrackRef.setNdof(-1);
-            calMipTrackRef.setKi2(-1);
-        }
-        Event::CalMipTrack& calMipTrack = m_calMipTrackVec.back();
+	    {
+	        m_nbTracks++;
+	        m_calMipTrackVec.push_back(Event::CalMipTrack());
+	        Event::CalMipTrack& calMipTrackRef =m_calMipTrackVec.back();
+	        calMipTrackRef.setNdof(-1);
+	        calMipTrackRef.setKi2(-1);
+	    }
+        Event::CalMipTrack& calMipTrack =m_calMipTrackVec.back();
 
         Event::CalMipXtal& calMipXtalRef0 = m_calMipXtalVec[m_hid0];
         calMipTrack.push_back(calMipXtalRef0);
@@ -879,25 +1251,23 @@ int StdMipFindingTool::findMipTracks()
         calMipTrack.setPoint(m_D01point);
         calMipTrack.setDir(m_D01vector);
 
-        Vector dir;
-        dir=calMipTrack.getDir();
-        Point C;
-        C=calMipTrack.getPoint();
+        Vector dir = calMipTrack.getDir();
+        Point  C   = calMipTrack.getPoint();
 
         if (dir.z()!=0)
-        {
-            m_entryPz=m_coordXtalZ0;
-            log << "m_entryPz="<<m_entryPz<<" - doit etre -58,... val des readGlastDet" << endreq;
-            m_d=(m_entryPz-C.z())/dir.z();
-            m_entryP.setX(C.x()+m_d*dir.x());
-            m_entryP.setY(C.y()+m_d*dir.y());
-            m_entryP.setZ(C.z()+m_d*dir.z());
-        }
+	    {
+	        m_entryPz=m_coordXtalZ0;
+	        log << MSG::DEBUG <<"m_entryPz="<<m_entryPz<<" - doit etre -58,... val des readGlastDet"<<endreq;
+	        m_d=(m_entryPz-C.z())/dir.z();
+	        m_entryP.setX(C.x()+m_d*dir.x());
+	        m_entryP.setY(C.y()+m_d*dir.y());
+	        m_entryP.setZ(C.z()+m_d*dir.z());
+	    }
         else
-        {
-            m_entryPz=C.z();
-            m_entryP=C;
-        }
+	    {
+	        m_entryPz=C.z();
+	        m_entryP=C;
+	    }
 
         calMipTrack.setPoint(m_entryP);
 
@@ -910,38 +1280,37 @@ int StdMipFindingTool::findMipTracks()
         return false;
     }
 }
+
 //-----------------------------------------------------------------------------------------------------------------
-  void StdMipFindingTool::fitTrack()
+void StdMipFindingTool::fitTrack(double ki2Cut, int maxCall)
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
     log << MSG::DEBUG << " SG : fitTrack in StdMipFindingTool" << endreq;
 
-    m_fcnNb=0;
-    
-    m_ki2=0;
-    
+    m_fcnNb = 0;
+    m_ki2   = 0;
+  
     // Initial direction
     Event::CalMipTrack& calMipTrack=m_calMipTrackVec.back();
-    m_dir=calMipTrack.getDir();
+    m_dir      = calMipTrack.getDir();
+    m_theta    = TMath::ACos(m_dir.z());
+    m_thetaErr = 1.;
 
-    m_theta=TMath::ACos(m_dir.z());
-    m_thetaErr=1.;
-    if (m_dir.x()!=0)
-      m_phi=atan(m_dir.y()/m_dir.x());
-    if (m_dir.x()<0)
-      m_phi+=m_pi;
-    if (m_phi>m_pi)
-      m_phi-=2*m_pi;
-    m_phiErr=1.;
-    m_entryP=calMipTrack.getPoint();
-    
+    if (m_dir.x() != 0) m_phi  = atan(m_dir.y()/m_dir.x());
+    if (m_dir.x() < 0)  m_phi += m_pi;
+    if (m_phi > m_pi)   m_phi -= 2 * m_pi;
+  
+    m_phiErr = 1.;
+    m_entryP = calMipTrack.getPoint();
+  
     // Beginning of m_minuit
     m_minuit->mninit(5,5,7);
-    
+  
     double arglist[10];
     int    ierflg = 0;
-    
+  
     arglist[0] = -1;
     m_minuit->mnexcm("SET PRI", arglist, 1, ierflg);
     m_minuit->mnexcm("SET NOW", arglist, 1, ierflg);
@@ -949,60 +1318,58 @@ int StdMipFindingTool::findMipTracks()
     m_minuit->mnexcm("SET ERR", arglist, 1, ierflg);
     arglist[0] = 2;
     m_minuit->mnexcm("SET STR", arglist, 1, ierflg);
-    
+  
     double vstart[4];
 
-    vstart[0]=m_entryP.x();
-    vstart[1]=m_entryP.y();
-    vstart[2]=m_theta;
-    vstart[3]=m_phi;
+    vstart[0] = m_entryP.x();
+    vstart[1] = m_entryP.y();
+    vstart[2] = m_theta;
+    vstart[3] = m_phi;
 
-    double step[4] = {0.01,0.01,0.0001,0.017};
-    
+    double step[4] = {2,2,0.035,0.035};
+  
     m_minuit->mnparm(0, "Xentry", vstart[0], step[0],-999999.,999999.,ierflg);
     m_minuit->mnparm(1, "Yentry", vstart[1], step[1],-999999.,999999.,ierflg);
     m_minuit->mnparm(2, "Theta",  vstart[2], step[2],m_thetaMin/m_radToDeg,m_thetaMax/m_radToDeg,ierflg);
     m_minuit->mnparm(3, "Phi",    vstart[3], step[3],m_phiMin/m_radToDeg,m_phiMax/m_radToDeg,ierflg);
-    
+  
     arglist[0] = 666;
-    
+  
     m_minuit->mnexcm("CALL FCN", arglist, 1, ierflg);
-    
+  
     // minimization
-    arglist[0] = 500; // maxcalls
+    arglist[0] = maxCall; // maxcalls
     arglist[1] = 1;   // tolerance
     m_minuit->mnexcm("MIGRAD", arglist, 2, ierflg);
-    
+  
     m_minuit->GetParameter(0, m_Xentry, m_XentryErr);
     m_minuit->GetParameter(1, m_Yentry, m_YentryErr);
     m_minuit->GetParameter(2, m_theta , m_thetaErr );
     m_minuit->GetParameter(3, m_phi   , m_phiErr   );
 
-    log<<"m_fcnNb="<<m_fcnNb<<endreq;
-    
+    log << MSG::DEBUG <<"m_fcnNb="<<m_fcnNb<<endreq;
+  
     // Retrieve the chi-square and determine number of degrees of freedom
     m_chiSquare = 0.;
     m_nPar      = 4;
     m_ndof      = -10;
     m_ndof      = int(m_ki2p) - m_minuit->GetNumFreePars();
+    m_kidof     = -5.;
 
-
-    m_kidof=-5.;
-
-    log<<"m_ndof ="<<m_ndof<<endreq;
+    log << MSG::DEBUG <<"m_ndof ="<<m_ndof<<endreq;
     if (m_ndof>0)
     {
         m_Ki2Tot++;
-        m_kidof=m_ki2/m_ndof;
+        m_kidof = m_ki2 / m_ndof;
     }
-    
+  
     m_goodfit=false;
 
-    log<<"m_kidof="<<m_kidof<<" - m_ki2cut="<<m_ki2cut<<endreq;
-    
-    if (m_kidof>0 && m_kidof<m_ki2cut)
+    log << MSG::DEBUG <<"m_kidof="<<m_kidof<<" - m_ki2cut="<<m_ki2cut<<endreq;
+
+    if (m_kidof>0 && m_kidof<ki2Cut)
     {
-        m_goodfit=true;
+        m_goodfit = true;
         calMipTrack.setKi2(m_ki2);
         calMipTrack.setNdof(m_ndof);
         m_entryP.setX(m_Xentry);
@@ -1012,67 +1379,122 @@ int StdMipFindingTool::findMipTracks()
         m_dir.setY(sin(m_theta)*sin(m_phi));
         m_dir.setZ(cos(m_theta));
         calMipTrack.setDir(m_dir);
-        m_thetaf=m_theta*m_radToDeg;
-        m_thetafErr=m_thetaErr*m_radToDeg;
-        m_phif=m_phi*m_radToDeg;
-        m_phifErr=m_phiErr*m_radToDeg;
-        m_thetaf=180-m_thetaf;
-        m_phif+=180;
-        m_Xentryf=m_Xentry;
-        m_Yentryf=m_Yentry;
-        m_kidoff=m_kidof;
+        m_thetaf     = m_theta*m_radToDeg;
+        m_thetafErr  = m_thetaErr*m_radToDeg;
+        m_phif       = m_phi*m_radToDeg;
+        m_phifErr    = m_phiErr*m_radToDeg;
+        m_thetaf     = 180-m_thetaf;
+        m_phif      += 180;
+        m_Xentryf    = m_Xentry;
+        m_Yentryf    = m_Yentry;
+        m_kidoff     = m_kidof;
     }
-    
-    m_theta=m_theta*m_radToDeg;
-    m_thetaErr*=m_radToDeg;
-    m_phi*=m_radToDeg;
-    m_phiErr*=m_radToDeg;
-    m_theta=180-m_theta;
-    m_phi+=180;
-    if (m_phi>180)
-      m_phi-=360;
+  
+    m_theta     = m_theta*m_radToDeg;
+    m_thetaErr *= m_radToDeg;
+    m_phi      *= m_radToDeg;
+    m_phiErr   *= m_radToDeg;
+    m_theta     = 180-m_theta;
+    m_phi      += 180;
+    if (m_phi>180) m_phi-=360;
     arglist[0]=1;
     gMinuit->mnexcm("CLEAR",arglist,1,ierflg); 
 
-    log<<"m_goodfit="<<m_goodfit<<endreq;
+    log << MSG::DEBUG <<"m_goodfit="<<m_goodfit<<endreq;
 
     log << MSG::DEBUG << " SG : fitTrack - End" << endreq;
+    
     return;
 }
 //-----------------------------------------------------------------------------------------------------------------
-  bool StdMipFindingTool::findCn()
+double StdMipFindingTool::D2Edge(Event::CalMipXtal *calMipXtal)
+{
+    double x = calMipXtal->getXtal()->getPosition().x();
+    double y = calMipXtal->getXtal()->getPosition().y();
+    double z = calMipXtal->getXtal()->getPosition().z();
+
+
+    double dd     = (x-m_xMinCalEdge)*(x-m_xMinCalEdge);
+    double d2Edge = 99999999999;
+  
+    if (dd<d2Edge) d2Edge = dd;
+
+    dd = (x-m_xMaxCalEdge)*(x-m_xMaxCalEdge);
+    if (dd<d2Edge) d2Edge = dd;
+
+    dd = (y-m_yMinCalEdge)*(y-m_yMinCalEdge);
+    if (dd<d2Edge) d2Edge = dd;
+
+    dd = (y-m_yMaxCalEdge)*(y-m_yMaxCalEdge);
+    if (dd<d2Edge) d2Edge = dd;
+
+    dd = (z-m_zMinCalEdge)*(z-m_zMinCalEdge);
+    if (dd<d2Edge) d2Edge = dd;
+
+    dd = (z-m_zMaxCalEdge)*(z-m_zMaxCalEdge);
+    if (dd<d2Edge) d2Edge = dd;
+
+    return sqrt(d2Edge);
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+bool StdMipFindingTool::findCn()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
     log << MSG::DEBUG << " SG : findCn in StdMipFindingTool" << endreq;
 
-    m_hidn=-1;
-    m_hid=-1;
-    m_dmin=9999999;
+    int hidlast = m_hidn;
+    int itowl   = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getTower();
+    int ilayl   = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getLayer();
+    int icoll   = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getColumn();
+
+    m_hidn = -1;
+    m_hid  = -1;
+    m_dmin = 9999999;
 
     Event::CalMipTrack& calMipTrack =m_calMipTrackVec.back();
 
-    Event::CalMipXtal calMipXtal;
+    m_entryP = m_C=calMipTrack.getPoint();
+    m_dir    = calMipTrack.getDir();
 
     for (Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
         m_hid++;
-        calMipXtal = *xTalIter;
+        Event::CalMipXtal calMipXtal = *xTalIter;
+      
         if (calMipXtal.getFree())
-        {
-            Point C;
-            C=calMipTrack.getPoint();
-            m_vect=calMipXtal.getXtal()->getPosition()-C;
-            m_dir=calMipTrack.getDir();
-            m_vv=m_dir.cross(m_vect);
-            m_d=sqrt(m_vv*m_vv);
-            if (m_d<m_dmin)
-            {
-                m_dmin=m_d;
-                m_hidn=m_hid;
-            }
-        }
+	    {
+	        int itown = calMipXtal.getXtal()->getPackedId().getTower();
+	        int ilayn = calMipXtal.getXtal()->getPackedId().getLayer();
+	        int icoln = calMipXtal.getXtal()->getPackedId().getColumn();
+
+	        //SG change
+	        if (itown==itowl)
+	        //	  if ((itown==itowl && abs(ilayn-ilayl)<3) || itown!=itowl)
+	        {
+	            double ec = Ecor(calMipXtal);
+	            double dx = fabs(calMipXtal.getXtal()->getEnergy()/ec-13.2)/6.;
+	            if (dx<3*m_dx_max && ec>0.001)
+		        {
+		            m_vect = calMipXtal.getXtal()->getPosition()-m_C;
+		            m_vv   = m_dir.cross(m_vect);
+		            double d2dir = sqrt(m_vect*m_vect);
+		            m_vect = calMipXtal.getXtal()->getPosition()-m_calMipXtalVec[hidlast].getXtal()->getPosition();
+		            double d2last = sqrt(m_vect*m_vect);
+		            //SG change
+		            if (d2dir<m_dmin && d2last<16*m_CsIWidth)
+		            //		  if (d2dir<m_dmin && d2last<8*m_CsIWidth)
+		            {
+		                m_dmin = d2dir;
+		                m_hidn = m_hid;
+		            }
+		        }
+	        }
+	    }
     }
+
     if (m_hidn>=0)
     {
         Event::CalMipXtal& calMipXtalRef_m_hidn = m_calMipXtalVec[m_hidn];
@@ -1087,6 +1509,7 @@ int StdMipFindingTool::findMipTracks()
         return false;
     }
 }
+
 //-----------------------------------------------------------------------------------------------------------------
 // Main method
 StatusCode StdMipFindingTool::findMIPCandidates()
@@ -1186,11 +1609,17 @@ StatusCode StdMipFindingTool::findMIPCandidates()
 void StdMipFindingTool::fcn (Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
     StatusCode sc = StatusCode::SUCCESS;
+    //MsgStream log(msgSvc(), name());
+    if (m_fcnNb==0)
+    {
+        //log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+        //log << MSG::DEBUG << "SG : fcn in StdMipFindingTool"<<endreq;
+    }
     m_fcnNb++;
 
     //Calculate chisquare
-    m_ki2p=0;
-    m_ki2=0.;
+    m_ki2p = 0;
+    m_ki2  = 0.;
 
     double dx2,err2;
 
@@ -1207,58 +1636,57 @@ void StdMipFindingTool::fcn (Int_t &npar, Double_t *gin, Double_t &f, Double_t *
     m_dir.setY(st*sp);
     m_dir.setZ(ct);
 
-    double  x,y,z;
+    Event::CalMipXtal      calMipXtal;
+    Event::CalXtalRecData* xtalData;
+    Point                  point;
+    double                 Emean,x,y,z;
 
-    Event::CalMipTrack&  calMipTrack =m_calMipTrackVec.back();
-
-    Event::CalMipXtalVec calMipXtalVec = calMipTrack;  
+    Event::CalMipTrack& calMipTrack =m_calMipTrackVec.back();
 
     for(int k=0;k<=m_ki2Type;k++)
-    {        
+    { 
         for (int ih=0; ih<calMipTrack.getNh(); ih++)
-        {
-            Event::CalMipXtal      calMipXtal = calMipXtalVec[ih];
-            Event::CalXtalRecData* xtalData   = calMipXtal.getXtal();
+	    {
+	        calMipXtal = calMipTrack.at(ih);
+	  
+	        int itow = calMipXtal.getXtal()->getPackedId().getTower();
+	        int ilay = calMipXtal.getXtal()->getPackedId().getLayer();
+	        int icol = calMipXtal.getXtal()->getPackedId().getColumn();
 
-            if (iflag==666)
-            {
-                idents::CalXtalId xTalId = xtalData->getPackedId();
+	        if (iflag==666)
+	        {
+	            xtalData = calMipXtal.getXtal();
+	            Emean    = xtalData->getEnergy();
+	            point    = xtalData->getPosition();
+	            x        = point.x();
+	            y        = point.y();
+	            z        = point.z();
+	        }
 
-                int    itow  = xTalId.getTower();
-                int    ilay  = xTalId.getLayer();
-                int    icol  = xTalId.getColumn();
-                double Emean = xtalData->getEnergy();
-                Point  point = xtalData->getPosition();
-
-                x=point.x();
-                y=point.y();
-                z=point.z();
-            }
-
-            if (k==0)
-            {
-                Point point = xtalData->getPosition();
-
-                m_vect = point - m_entryP;
-                m_vv   = m_dir.cross(m_vect);
-                dx2    = m_vv * m_vv;
-                err2   = 100.;
-            }
-            else if (k==1)
-            {
-                double energy = xtalData->getEnergy();
-
-                dx2    = pow(energy-fabs(13.2/ct),2);
-                err2   = 36.*pow(ct,2);
-            }
-            m_ki2+=dx2/err2;
-            m_ki2p++;
-        }
+	        if (k==0)
+	        {
+	            xtalData = calMipXtal.getXtal();
+	            point    = xtalData->getPosition();
+	            m_vect   = point-m_entryP;
+	            m_vv     = m_dir.cross(m_vect);
+	            dx2      = m_vv*m_vv;
+	            err2     = 100.;
+	        }
+	        else if (k==1)
+	        {
+	            double ec = Ecor(calMipXtal);
+	            dx2  = pow(calMipXtal.getXtal()->getEnergy()/ec-13.2,2);
+	            err2 = 36.*pow(ct,2);
+	        }
+	  
+            m_ki2 += dx2/err2;
+	        m_ki2p++;
+	    }
     }
 
-    f=m_ki2;
+    f = m_ki2;
 
-    return;
+  return;
 }
 
 //-----------------------------------------------------------------------------------------------------------------

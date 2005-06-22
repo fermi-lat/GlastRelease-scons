@@ -17,8 +17,7 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_ALGORITHM( PropertiesCheckAlg      );
     DECLARE_TOOL(      CalSingleClusteringTool );
     DECLARE_TOOL(      CalSimpleClusteringTool );
-// WAITING FOR LACKING FILES IN CVS
-//    DECLARE_TOOL(      StdMipFindingTool       );
+    DECLARE_TOOL(      StdMipFindingTool       );
     DECLARE_TOOL(      CalRawEnergyTool        );
     DECLARE_TOOL(      CalLastLayerTool        );
     DECLARE_TOOL(      CalTkrLikelihoodTool    );
