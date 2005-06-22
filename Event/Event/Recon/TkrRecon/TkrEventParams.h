@@ -44,8 +44,10 @@ public:
     /// Status word bits organized like:
     ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     ///         <               > <               > <               >  <              >
-    enum StatusBits {CALPARAMS = 0x0001,  //Set if using Calorimeter parameters
-                     TKRPARAMS = 0x0002}; //Set if using Tracker parameters
+    enum StatusBits {CALPARAMS  = 0x0001,  //Set if using Calorimeter parameters
+                     TKRPARAMS  = 0x0002,  //Set if using Tracker parameters
+                     FIRSTPASS  = 0x1000,  //Set if first pass numbers
+                     SECONDPASS = 0x2000}; //Set if second pass numbers used
 
     /// Access data members
     unsigned int getStatusBits()    const {return m_statusBits;}
