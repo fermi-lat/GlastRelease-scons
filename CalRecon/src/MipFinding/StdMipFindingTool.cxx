@@ -950,7 +950,7 @@ int StdMipFindingTool::findMipTracks()
         fitTrack(m_ki2Cut1, m_maxCall1);
 
         //sylvain change
-        m_goodfit=true;
+        //m_goodfit=true;
         //
 
         if (!m_goodfit)
@@ -1058,19 +1058,23 @@ int StdMipFindingTool::findMipTracks()
     m_d2Cmax        = -50;
     m_dmin=500000;
 
+    // I think this loop is looking for the xtal with the largest d2c... 
     for(Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
         m_hid++;
         Event::CalMipXtal calMipXtal = *xTalIter;
 
-        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && calMipXtal.getD2C()>m_d2Cmax)
+        // This test will very nearly always be true because m_d2Cmax will always be -40?
+        // So change this to set m_d2Cmax to the value for the selected crystal
+        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && calMipXtal.getD2C() > m_d2Cmax)
 	    {
-	        m_d2Cmax = m_d2C;
+	        //m_d2Cmax = m_d2C;
+	        m_d2Cmax = calMipXtal.getD2C();
 	        m_hid0   = m_hid;
 	    }
     }
     
-    if (m_hid0>=0)
+    if (m_hid0 >= 0)
     {
         Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid0];
         calMipXtalRef.setFree(false);
@@ -1516,92 +1520,54 @@ StatusCode StdMipFindingTool::findMIPCandidates()
 {
     // Presume success unless something bad happens
     StatusCode sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
+        
+    log << MSG::DEBUG << " SG : Enter findMIPCandidates" << endreq;
+        
+    //
+    // Task 0: Retrieve CalXtalRecData objects
+    //
+    Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(m_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
 
-    if(m_compteurTest%2==0)
-    {     
-        MsgStream log(msgSvc(), name());
+    //Get single cluster from TDS
+    /// Pointer to the data service (valBase ????)
+    Event::CalClusterCol* pCals = SmartDataPtr<Event::CalClusterCol>(m_dataSvc, EventModel::CalRecon::CalClusterCol);
+    Event::CalCluster* calCluster = pCals->front();
         
-        log << MSG::DEBUG << " SG : Enter findMIPCandidates" << endreq;
+    //
+    // Task 1: Selection of Mip Hits in CalMipXtalVec
+    //
+    int numMipXtal = findMipXtals(calXtalRecCol, calCluster);
+    if (numMipXtal<1) return  StatusCode::FAILURE;
+    log << MSG::DEBUG << " SG : numMipXtals=" << numMipXtal  << endreq;
         
-        //
-        // Task 0: Retrieve CalXtalRecData objects
-        //
-        Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(m_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
+    //
+    // Task 2: Mip Tracks Finder
+    //
+    int numTracks = findMipTracks();
+        
+    //
+    // Task 5: Store m_calMipTrackVec in TDS
+    //
+    sc=storeCalMipTracks(m_calMipTrackVec);
+        
+    //
+    // Task 7: CalMipXtalVec Cleaner
+    //
+    clearCalMipXtalVec(&m_calMipXtalVec);
+    readMipXtals(m_calMipXtalVec);
+        
+    //
+    // Task 8: CalMipTrackVec Cleaner
+    //
+    clearCalMipTrackVec(&m_calMipTrackVec);
+    readMipTracks(m_calMipTrackVec);
 
-        //Get single cluster from TDS
-        /// Pointer to the data service (valBase ????)
-        Event::CalClusterCol* pCals = SmartDataPtr<Event::CalClusterCol>(m_dataSvc, EventModel::CalRecon::CalClusterCol);
-        Event::CalCluster* calCluster = pCals->front();
-        
-        //
-        // Task 1: Selection of Mip Hits in CalMipXtalVec
-        //
-        int numMipXtal = findMipXtals(calXtalRecCol, calCluster);
-        if (numMipXtal<1) return  StatusCode::FAILURE;
-        log << MSG::DEBUG << " SG : numMipXtals=" << numMipXtal  << endreq;
-        
-        //
-        // Task 2: Mip Tracks Finder
-        //
-        int numTracks = findMipTracks();
-        
-        //
-        // Task 3: Mip Tracks Reader
-        //
-        //readMipTracks(m_calMipTrackVec);
-        
-        //
-        // Task 4: Store m_calMipTrackVec in CalMIPs object pointer
-        //
-        /*
-      Event::CalMIPs * p_calMIPs=0;
-      p_calMIPs=new Event::CalMIPs;
-      
-      Event::CalMipTrack* p_calMipTrack=&m_calMipTrackVec[0];
-      p_calMipTrack->setKi2(999999);
-      
-      p_calMIPs->setCalMipTrackVec(m_calMipTrackVec);
-        */
-        
-        //
-        // Task 5: Store m_calMipTrackVec in TDS
-        //
-        //sc=storeCalMIPs(p_calMIPs);
-        sc=storeCalMipTracks(m_calMipTrackVec);
-        /*
-      p_calMipTrack->setKi2(222222);
-      p_calMIPs->setCalMipTrackVec(m_calMipTrackVec);
-      sc=storeCalMIPs(p_calMIPs);
-      sc=storeCalMipTracks(m_calMipTrackVec);
-        */
-        
-        //
-        // Task 6: Clean pointer
-        //
-        /*
-      p_calMIPs=0;
-      delete p_calMIPs;
-        */
-        
-        //
-        // Task 7: CalMipXtalVec Cleaner
-        //
-        clearCalMipXtalVec(&m_calMipXtalVec);
-        readMipXtals(m_calMipXtalVec);
-        
-        //
-        // Task 8: CalMipTrackVec Cleaner
-        //
-        clearCalMipTrackVec(&m_calMipTrackVec);
-        readMipTracks(m_calMipTrackVec);
+    //
+    // Task 9: CalMipTrack &  CalMIPsCol Reader
+    //
+     readCalMipTrackCol();
 
-        //
-        // Task 9: CalMipTrack &  CalMIPsCol Reader
-        //
-        //readCalMIPsCol();
-        readCalMipTrackCol();
-    }
-    m_compteurTest++;
     return sc;
 }
 
@@ -1610,11 +1576,11 @@ void StdMipFindingTool::fcn (Int_t &npar, Double_t *gin, Double_t &f, Double_t *
 {
     StatusCode sc = StatusCode::SUCCESS;
     //MsgStream log(msgSvc(), name());
-    if (m_fcnNb==0)
-    {
+    //if (m_fcnNb==0)
+    //{
         //log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
         //log << MSG::DEBUG << "SG : fcn in StdMipFindingTool"<<endreq;
-    }
+    //}
     m_fcnNb++;
 
     //Calculate chisquare
