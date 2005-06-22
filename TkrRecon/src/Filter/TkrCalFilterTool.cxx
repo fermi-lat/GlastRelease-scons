@@ -140,6 +140,12 @@ StatusCode TkrCalFilterTool::doFilterStep()
             tkrEventParams->setEventPosition(calParams.getCentroid());
             tkrEventParams->setEventAxis(calParams.getAxis());
             tkrEventParams->setStatusBit(Event::TkrEventParams::CALPARAMS);
+
+            if (calEventEnergy->getStatusBits() & Event::CalEventEnergy::PASS_ONE) 
+                tkrEventParams->setStatusBit(Event::TkrEventParams::FIRSTPASS);
+
+            if (calEventEnergy->getStatusBits() & Event::CalEventEnergy::PASS_TWO) 
+                tkrEventParams->setStatusBit(Event::TkrEventParams::SECONDPASS);
         }
     }
 
