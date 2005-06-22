@@ -18,6 +18,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
 
     DECLARE_TOOL(    TkrQueryClustersTool);
     DECLARE_TOOL(    TkrMakeClustersTool );
+    DECLARE_TOOL(    TkrEnergyTool       );
 
     DECLARE_ALGORITHM ( TkrCalibAlg      );
  } 
