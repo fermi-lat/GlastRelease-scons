@@ -1,10 +1,8 @@
 #include "CalLikelihoodTool.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "Event/TopLevel/EventModel.h"
-#include "Event/Digi/TkrDigi.h"
+#include "GaudiKernel/GaudiException.h" 
 
 /**   
-* @class CalTkrLikelihoodTool
+* @class CalLastLayerLikelihoodTool
 *
 * Algorithm for correction of energy degradation in the tracker by correlating
 * the energy in the CAL with the number of hit TKR strips.  
@@ -12,14 +10,15 @@
 *
 */
 
-class CalTkrLikelihoodTool : public CalLikelihoodTool 
+class CalLastLayerLikelihoodTool : public CalLikelihoodTool 
 {
 public:
     //! constructor
-    CalTkrLikelihoodTool(const std::string& type, 
+    CalLastLayerLikelihoodTool(const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent);
-    virtual ~CalTkrLikelihoodTool(){}
+    virtual ~CalLastLayerLikelihoodTool(){}
+    StatusCode initialize();
     
     //! Tracker energy degradation correction using number of TKR hit strips
     /*! This method uses the correlation between the energy \"lost\" in the 
@@ -51,12 +50,13 @@ public:
     */
            
     Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* );
+private:
+    int m_calNLayers;
 };
 
-#include <GaudiKernel/DeclareFactoryEntries.h>
-DECLARE_TOOL_FACTORY(CalTkrLikelihoodTool) ;
-
-CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type, 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+DECLARE_TOOL_FACTORY(CalLastLayerLikelihoodTool) ;
+CalLastLayerLikelihoodTool::CalLastLayerLikelihoodTool( const std::string& type, 
                                             const std::string& name, 
                                             const IInterface* parent)
                                           : CalLikelihoodTool(type,name,parent)
@@ -64,10 +64,24 @@ CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type,
     // declare base interface for all consecutive concrete classes
     declareInterface<ICalEnergyCorr>(this);
     declareProperty("dataFile",
-                    m_dataFile="$(CALRECONROOT)/xml/CalTkrLikelihood.data");
+                    m_dataFile="$(CALRECONROOT)/xml/CalLastLayerLikelihood.data");
 };
 
-Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
+StatusCode CalLastLayerLikelihoodTool::initialize()
+{
+  StatusCode sc= CalLikelihoodTool::initialize();
+  if( sc==StatusCode::SUCCESS )
+  {
+    if (!m_detSvc->getNumericConstByName(std::string("CALnLayer"), &m_calNLayers)) 
+    { 
+        throw GaudiException("GlastDetSvc cannot find [CALnLayer]", name(), StatusCode::FAILURE);
+    }
+  }
+  return sc;
+}
+
+
+Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
 //Purpose and method:
 //
 //   This function performs:
@@ -78,8 +92,10 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
 // TDS input: CalCluster
 // TDS output: CalClusters
 {
-    MsgStream log(msgSvc(), "CalTkrLikelihoodTool::doEnergyCorr");
+    MsgStream log(msgSvc(), "CalLastLayerLikelihoodTool::doEnergyCorr");
     Event::CalCorToolResult* corResult = 0;
+        log << MSG::DEBUG << "Ending doEnergyCorr: " 
+            << endreq;
 
     // if reconstructed tracker data doesn't exist or number of tracks is 0:
     if (vertex == 0)
@@ -96,7 +112,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
     // energy, direction and point of impact.
   
     // Energy:
-    if( cluster->getCalParams().getEnergy() < 0. ) 
+    if( cluster->getCalParams().getEnergy() < 80. ) 
     {
       log << MSG::DEBUG << "Ending doEnergyCorr: "
                            "CAL Energy below Method Minimum"
@@ -104,7 +120,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
         return corResult;
     }
 
-    if( cluster->getCalParams().getEnergy() > 2900. ) 
+    if( cluster->getCalParams().getEnergy() > 49000. ) 
     {
        log << MSG::DEBUG << "Ending doEnergyCorr: "
                             "CAL Energy above Method Maximum"
@@ -134,34 +150,31 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
                                           cluster);
     if( geometricCut<.15 )
     {
+        log << MSG::DEBUG << "Ending doEnergyCorr: "
+                             "Geometric Cut too low." 
+        << endreq;
         return corResult;
     }
     // CALCULATE
     //    - get number of hits in TKR
-    int nHits= 0;
+    double calE7= 0.;
     if( hasCorrelation() )
     {
-      Event::TkrDigiCol *tkrDigiData =
-                  SmartDataPtr<Event::TkrDigiCol>(m_dataSvc, 
-                                                  EventModel::Digi::TkrDigiCol);
-
-      for ( Event::TkrDigiCol::iterator it= tkrDigiData->begin(); 
-            it!=tkrDigiData->end(); ++it )
-        nHits+= (*it)->getNumHits();
+      calE7= (*cluster)[m_calNLayers-1].getEnergy();
     }
 
 
-    setEventPDFdata(vertexPos+((geometricCut>.35)+(geometricCut>.6))*16);
+    setEventPDFdata(vertexPos+(geometricCut>.5)*16);
     setEventPDFparameters(fabs(trackDirection.z()),
                           cluster->getCalParams().getEnergy(),
-                          nHits);
+                          calE7);
     log << MSG::VERBOSE 
-        << "PDF Index: " << vertexPos+((geometricCut>.35)+(geometricCut>.6))*16 
+        << "PDF Index: " << vertexPos+(geometricCut>.5)*16 
         << endreq
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
-        << cluster->getCalParams().getEnergy() << ", " << nHits << endreq;
+        << cluster->getCalParams().getEnergy() << ", " << calE7 << endreq;
     
-    corResult= calculateEvent( 50., 3000., cluster, log );
+    corResult = calculateEvent( 200., 50000., cluster, log );
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;
     return corResult;

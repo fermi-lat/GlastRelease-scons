@@ -102,7 +102,7 @@ StatusCode test_CalRecon::execute() {
               <<corResult->getParams().getEnergy()
               <<endreq ; 
         }
-        else if (corResult->getCorrectionName() == "CalLastLayerTool" )
+        else if (corResult->getCorrectionName() == "CalLastLayerLikelihoodTool" )
         {
             double llStatus = (*corResult)["llStatus"] ;
             if (llStatus==0)
