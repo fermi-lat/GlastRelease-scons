@@ -89,6 +89,7 @@ namespace rdbModel {
 
     for (unsigned int iTable = 0; iTable < nTable; iTable++) {
       Table* newTable = buildTable(tables[iTable]);
+
       if (newTable) {
         m_rdb->addTable(newTable);
         processed++;
@@ -117,6 +118,8 @@ namespace rdbModel {
         newTable->addColumn(newCol);
       }
     }
+
+    newTable->sortColumns();
 
     // Look for primary key element, if any
     DOMElement* primaryKey = 

@@ -102,8 +102,8 @@ namespace rdbModel{
       /// Throw exception if Operaotr is not EXISTS
       const std::string& getTableName() const;
 
-      /// Throw exception if Operator is not a comparison operator
-      const FIELDTYPE* getCompareType() const;
+      /// Get types of comparison args
+      const FIELDTYPE* getCompareArgTypes() const;
 
       /// Throw exception if Operator is a comparison operator
       const std::vector<Operator* >& getChildren() const;
@@ -116,10 +116,31 @@ namespace rdbModel{
       /// True if operator or sub-operator refers to existing row
       bool getOld() const {return m_old;}
 
+      /// Evaluate operator on argument Rows 
+      bool verify(Row& old, Row& toBe, Table* t);
+
+      /// Handling specific to 2-arg compare operators
+      bool verifyCompare(Row& old, Row& toBe, Table* t);
+
+      /// Handling specific to timestamp data
+      bool compareTs(const std::string* vals, OPTYPE type);
+
+      /// Handling specific to integer data
+      bool compareInt(const std::string* vals, OPTYPE type);
+
+      /// Handling specific to floating point data
+      bool compareFloat(const std::string* vals, OPTYPE type);
+
+      /// Handling specific to string data
+      bool compareString(const std::string* vals, OPTYPE type);
+
+
     private:
       OPTYPE m_opType;
 
-      /** Following two lines apply only to compare operators
+      /** Following two lines apply only to compare operators (includes
+          isNull)
+
           In order to format properly in an SQL query, need to
           keep track of whether compare arg is literal, column name
           referring to current row under consideration, or column
@@ -174,6 +195,12 @@ namespace rdbModel{
 
     const std::string& getName() const {return m_name;}
     void setName(const std::string& name) {m_name = name;}
+
+    /// Does assertion (which may refer to one or both of an old row and
+    /// a proposed row) hold for these arguments?  
+    /// Caller is responsible for fetching old row fields out of dbs if
+    /// necessary
+    bool verify(Row& old, Row& toBe);
 
   private:
     //    WHEN m_when;

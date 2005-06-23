@@ -438,8 +438,8 @@ namespace rdbModel {
     }
     sqlString += "(";
 
-    bool literal0 = (op->getCompareType()[0] == FIELDTYPElit);
-    bool literal1 = (op->getCompareType()[1] == FIELDTYPElit);
+    bool literal0 = (op->getCompareArgTypes()[0] == FIELDTYPElit);
+    bool literal1 = (op->getCompareArgTypes()[1] == FIELDTYPElit);
 
     addArg(literal0, op->getCompareArgs()[0], sqlString);
     sqlString += opSymbols[opType];
