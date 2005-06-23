@@ -21,6 +21,7 @@ apply_pattern root_package headers="\
  ../reconRootData/TkrTrackHit.h\
  ../reconRootData/TkrTrackParams.h\
  ../reconRootData/TkrRecon.h\
- ../reconRootData/TkrVertex.h"\
+ ../reconRootData/TkrVertex.h\
+ ../reconRootData/TkrDiagnostics.h"\
  includes="-I$(COMMONROOTDATAROOT)"\
  test_source="test/testReconClasses.cxx"

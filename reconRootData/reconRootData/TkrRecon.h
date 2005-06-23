@@ -7,6 +7,7 @@
 #include "TkrCluster.h"
 #include "TkrTrack.h"
 #include "TkrVertex.h"
+#include "TkrDiagnostics.h"
 /** 
  * @class TkrRecon
  * @brief Root container for the reconstructed Tracker information 
@@ -47,6 +48,9 @@ public:
     TObjArray *getVertexCol() { return m_vertexCol; };
     void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
 
+    TObject* getDiagnostics() { return m_diagnostics;};
+    void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};
+
 private:
     /// collection of TkrSiCluster
     TObjArray *m_clusterCol;
@@ -54,6 +58,8 @@ private:
     TObjArray *m_trackCol;
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
+    /// Diagnostics
+    TObject*   m_diagnostics;
 
     static TkrCluster *keepCluster[10000]; //!
     static TkrTrack *keepTrack[10000]; //!

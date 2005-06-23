@@ -11,6 +11,7 @@
 
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
+#include "CalMipTrack.h"
 
 /** @class CalRecon
  * @brief Primary Root object containing CAL reconstruction data.
@@ -39,28 +40,27 @@ public:
     void Print(Option_t *option="") const;
 
     /// provide access to list of CalClusters
-    //std::vector<CalCluster> getCalClusterCol() { return m_clusterCol; };
-    TObjArray* getCalClusterCol() { return m_clusterCol; };
+    TObjArray* getCalClusterCol()  { return m_clusterCol; };
 
     /// provide access to the list of CalXtalRecData
-    //std::vector<CalXtalRecData> getCalXtalRecCol() { return m_xtalRecCol; };
-    TObjArray* getCalXtalRecCol() { return m_xtalRecCol;};
+    TObjArray* getCalXtalRecCol()  { return m_xtalRecCol; };
 
-  //  void addCalCluster(CalCluster *cluster) { m_clusterCol->Add(cluster); };
-    //void addCalCluster(const CalCluster &cluster) { m_clusterCol.push_back(cluster); };
-    void addCalCluster(CalCluster* cluster) { m_clusterCol->Add(cluster); };
+    /// provide access to the list of CalMipTracks
+    TObjArray* getCalMipTrackCol() { return m_mipTrackCol; };
+
+    void addCalCluster(CalCluster* cluster)   { m_clusterCol->Add(cluster); };
     void addXtalRecData(CalXtalRecData *xtal) { m_xtalRecCol->Add(xtal); };
-
-    //void addXtalRecData(const CalXtalRecData& xtal) { m_xtalRecCol.push_back(xtal); };
+    void addCalMipTrack(CalMipTrack* track)   { m_mipTrackCol->Add(track); };
 
 private:
     /// list of CalXtalRecData
-    //std::vector<CalXtalRecData> m_xtalRecCol;
-    TObjArray *m_xtalRecCol;
+    TObjArray* m_xtalRecCol;
 
     /// list of CalClusters
-    //std::vector<CalCluster> m_clusterCol;
-    TObjArray *m_clusterCol;
+    TObjArray* m_clusterCol;
+
+    /// list of CalMipTracks
+    TObjArray* m_mipTrackCol;
   
     ClassDef(CalRecon,2)
 };

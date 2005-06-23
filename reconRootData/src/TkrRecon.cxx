@@ -10,9 +10,10 @@ TkrVertex *TkrRecon::keepVertex[nd];
 Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, TkrRecon::indVertex=0;
 
 TkrRecon::TkrRecon() {
-    m_clusterCol = 0;
-    m_trackCol = 0;
-    m_vertexCol = 0;
+    m_clusterCol  = 0;
+    m_trackCol    = 0;
+    m_vertexCol   = 0;
+    m_diagnostics = 0;
 }
 
 TkrRecon::~TkrRecon() {
@@ -23,6 +24,8 @@ TkrRecon::~TkrRecon() {
     m_trackCol = 0;
     if (m_vertexCol) delete m_vertexCol;
     m_vertexCol = 0;
+    if (m_diagnostics) delete m_diagnostics;
+    m_diagnostics = 0;
 }
 
 void TkrRecon::initialize() {
