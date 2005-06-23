@@ -350,7 +350,7 @@ double CalLikelihoodTool::findGeometricCut( const Point &x,
         layer!=cluster->end(); ++layer )
   {
     weight+= (*layer).getEnergy();
-    if( (fabs(xT[0])>2.) or (fabs(xT[1])>2.) ) continue;
+    if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
     double val= 0.;
     for( int ii=0; ii<10; ++ii )
     {
