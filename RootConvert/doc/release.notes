@@ -3,6 +3,8 @@
  author Ursula Berthon
  @verbatim
 
+ v0r0p0 23-Jun-2005  TU Initial tag I think, for CalRecon preliminary release
+
  v3r1p1 15-Fev-2005 David Chamont upgrade for GlastRelease v6r0, especially
                     for new TkrRecon. Compiling, Linking, not yet running correctly.
         04-Jan-2005 HK Start handling LDF converters
