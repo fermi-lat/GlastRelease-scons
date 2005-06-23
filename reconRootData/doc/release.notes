@@ -1,5 +1,6 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v6r0p1    23-Jun-05  :  TU Forgot to include source code for TkrDiagnostics and CalMipTrack
 v6r0p0    23-Jun-05  :  TU New CalRecon output
 v5r6p3    27-May-05  : HMK use new RootcintPolicy
 v5r6p2    04-May-05  : HMK Fix use of static TkrRecon::Clear for windows
