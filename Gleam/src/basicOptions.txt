@@ -35,6 +35,7 @@ Generator.Members = {"FluxAlg",
     "G4Generator",
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
+    "Sequencer/EventDisplay",
     "Sequencer/Triggered" };
     
 // FluxAlg branch for "TimeTicks"
@@ -44,7 +45,8 @@ Generator.BranchMembers = {"FluxAlg", "ExposureAlg"};
 Triggered.Members={
     "Sequencer/Trigger",
     "Sequencer/Reconstruction",
-    "Sequencer/Output" };                 //     "Sequencer/RecoDisplay",
+    "Sequencer/RecoDisplay",
+    "Sequencer/Output" };
 
 // ----------------------------
 //  Geometry definition
@@ -210,7 +212,7 @@ MeritAlg.cuts="LnA";     // no test for tail suppression
 //   Output
 //
 ApplicationMgr.DLLs +={   "RootIo"}; 
-Output.Members = {"mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+Output.Members = {"FhSetAlg","mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
 
  // output levels, including suppression to allow debug, info
 mcRootWriterAlg.OutputLevel=3;
@@ -226,6 +228,7 @@ EbfWriter.OutputLevel=4;
 ToolSvc.LastLayerCorrTool.OutputLevel=4; 
 ToolSvc.OutputLevel=4;
 CalXtalRecAlg.OutputLevel=4;
+AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
     
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
