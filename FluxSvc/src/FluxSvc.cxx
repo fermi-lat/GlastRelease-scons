@@ -86,9 +86,11 @@ public:
 
     /// return pointer to the random engine that FluxSvc uses
     virtual HepRandomEngine* getRandomEngine();
-
+#if 0
     /// create a set of display windows using rootplot.
     void rootDisplay(std::vector<const char*> arguments);
+#endif
+    virtual void rootDisplay(std::vector<std::string> arguments);;
 
     /// attach an external observer to GPS
     void attachGpsObserver(Observer* anObserver);
@@ -460,10 +462,16 @@ void FluxSvc::addFactory(std::string name, const ISpectrumFactory* factory ){
 void FluxSvc::pass ( double t){
     m_fluxMgr->pass(t);
 }
-
+#if 0
 void FluxSvc::rootDisplay(std::vector<const char*> arguments){
     rootplot abc(arguments, m_fluxMgr);
 }
+#endif
+
+void FluxSvc::rootDisplay(std::vector<std::string> arguments){
+    rootplot abc(arguments, m_fluxMgr);   
+}
+
 
 void FluxSvc::attachGpsObserver(Observer* anObserver)
 {
