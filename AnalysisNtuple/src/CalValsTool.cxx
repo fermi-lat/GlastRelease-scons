@@ -24,7 +24,7 @@
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "event/Recon/CalRecon/CalEventEnergy.h"
+#include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "geometry/Ray.h"
