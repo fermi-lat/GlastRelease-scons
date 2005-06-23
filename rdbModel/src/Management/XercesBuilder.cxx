@@ -155,6 +155,16 @@ namespace rdbModel {
         newTable->addAssert(newAssert);
       }
     }
+
+    DOMElement* iNewElt = Dom::findFirstChildByName(tableElt, "insertNew");
+    if (iNewElt) {
+      newTable->m_iNew = buildInsertNew(iNewElt, newTable);
+    }
+    DOMElement* supElt = Dom::findFirstChildByName(tableElt, "supersede");
+    if (supElt) {
+      newTable->m_sup = buildSupersede(supElt, newTable);
+    }
+
     return newTable;
   }  
 

@@ -119,6 +119,9 @@ namespace rdbModel{
       /// Evaluate operator on argument Rows 
       bool verify(Row& old, Row& toBe, Table* t);
 
+
+
+    private:
       /// Handling specific to 2-arg compare operators
       bool verifyCompare(Row& old, Row& toBe, Table* t);
 
@@ -134,8 +137,6 @@ namespace rdbModel{
       /// Handling specific to string data
       bool compareString(const std::string* vals, OPTYPE type);
 
-
-    private:
       OPTYPE m_opType;
 
       /** Following two lines apply only to compare operators (includes

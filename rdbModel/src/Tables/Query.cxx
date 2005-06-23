@@ -9,10 +9,12 @@ namespace rdbModel {
                Assertion* pAssert) : m_myTable(table), m_assert(pAssert) {
     m_toSelect.clear();
 
-    unsigned n = toSelect->size();
-    m_toSelect.reserve(n);
-    for (unsigned i = 0; i < n; i++) {
-      m_toSelect.push_back((*toSelect)[i]);
+    if (toSelect != 0) {
+      unsigned n = toSelect->size();
+      m_toSelect.reserve(n);
+      for (unsigned i = 0; i < n; i++) {
+        m_toSelect.push_back((*toSelect)[i]);
+      }
     }
     
   }

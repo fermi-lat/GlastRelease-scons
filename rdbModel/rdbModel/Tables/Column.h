@@ -117,6 +117,8 @@ namespace rdbModel {
   class FieldVal {
     //    Column* m_pCol;
   public:
+    FieldVal(std::string colname, std::string val, bool isNull) :
+      m_colname(colname), m_val(val), m_null(isNull) { }
     std::string m_colname;
     std::string m_val;
     bool        m_null; // true if field val is NULL; then will ignore m_val
