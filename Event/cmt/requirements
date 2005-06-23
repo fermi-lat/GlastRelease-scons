@@ -1,5 +1,5 @@
 package Event
-version v10r3p2
+version v11r0p0
 
 branches Event cmt doc src
 

@@ -1,4 +1,5 @@
 package CalRecon
+version v6r0p0
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 # $Id$

@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r0p0  TU 25-Jun-05   Preliminary tag for new CalRecon (primarily)
 * v5r13p1THB 03-may-05   remove FluxDisplay for now: not supported by FRED.
 * v5r13  THB 12-apr-05   add FhSetAlg to output                
 * v5r12p2THB 03-apr-05   restore unit test to 1000 gammas incident                
