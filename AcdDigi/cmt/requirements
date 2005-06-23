@@ -1,9 +1,9 @@
 package AcdDigi
-version v1r11p2
+version v1r12p0
 # $Id$
 
 use GlastSvc v9r*
-use Event v10r*
+use Event v11r*
 
 use facilities v2r*
 
