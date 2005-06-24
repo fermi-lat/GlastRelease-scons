@@ -43,7 +43,8 @@ public:
                        int adcN,
                        float &energy,     
                        bool  &rngBelowThresh,
-                       bool  &xtalBelowThresh
+                       bool  &xtalBelowThresh,
+                       CalTupleEntry *calTupleEnt
                        );
 
   /// calculate energy deposition given the digi response for one xtal face
@@ -56,8 +57,10 @@ public:
                        );
 private:
 
-  StringProperty m_calCalibSvcName;                         ///< name of CalCalibSvc to use for calib constants.
-  ICalCalibSvc *m_calCalibSvc;                             ///< pointer to CalCalibSvc object.
+  /// name of CalCalibSvc to use for calib constants.
+  StringProperty m_calCalibSvcName;                         
+  /// pointer to CalCalibSvc object.
+  ICalCalibSvc *m_calCalibSvc;                             
 
 };
 
@@ -102,10 +105,14 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
                                   int adcN,
                                   float &energy,
                                   bool &rngBelowThresh,
-                                  bool &xtalBelowThresh
+                                  bool &xtalBelowThresh,
+                                  CalTupleEntry *calTupleEnt
                                   ) {
   StatusCode sc;
   XtalIdx xtalIdx(xtalId); // used for array indexing
+  TwrNum twr = xtalIdx.getTwr();
+  LyrNum lyr = xtalIdx.getLyr();
+  ColNum col = xtalIdx.getCol();
 
   // initial return vals
   energy = 0;
@@ -119,10 +126,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   float adcPedP = adcP - pedP;   // ped subtracted ADC
   
   CalibData::ValSig fle,fhe,lacP, lacN;
-  CalXtalId tmpIdP(xtalId.getTower(),
-                   xtalId.getLayer(),
-                   xtalId.getColumn(),
-                   POS_FACE);
+  CalXtalId tmpIdP(twr,lyr,col,POS_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdP,fle,fhe,lacP);
   
   //-- GET PED && LAC (NEG_FACE) --//
@@ -131,10 +135,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   if (sc.isFailure()) return sc;
   float adcPedN = adcN - pedN; // ped subtracted ADC
 
-  CalXtalId tmpIdN(xtalId.getTower(),
-                   xtalId.getLayer(),
-                   xtalId.getColumn(),
-                   NEG_FACE);
+  CalXtalId tmpIdN(twr,lyr,col,NEG_FACE);
   sc = m_calCalibSvc->getTholdCI(tmpIdN,fle,fhe,lacN);
   
   //-- THROW OUT LOW ADC VALS --/
@@ -233,6 +234,39 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
     energy = meanDAC*mpdSm.getVal();
   else
     energy = meanDAC*mpdLrg.getVal();
+
+  ///////////////////////////////////////////
+  //-- STEP 5: CALCULATE XTAL-FACE SIGNAL--//
+  ///////////////////////////////////////////
+  
+  // 1st 
+  double faceSignalP = dacP*((diodeP == SM_DIODE) ? mpdSm.getVal() : mpdLrg.getVal());
+  double faceSignalN = dacN*((diodeN == SM_DIODE) ? mpdSm.getVal() : mpdLrg.getVal());
+  
+  // 2nd correct for overall asymmetry of diodes (asym at center of xtal)
+  // retrieve asym
+  double asymCtrLrg, asymCtrSm;
+  sc = m_calCalibSvc->evalAsymLrg(xtalId, 0, asymCtrLrg);
+  if (sc.isFailure()) return sc;
+  sc = m_calCalibSvc->evalAsymLrg(xtalId, 0, asymCtrSm);
+  if (sc.isFailure()) return sc;
+  
+  // move asym out of log scale
+  asymCtrLrg = exp(asymCtrLrg);
+  asymCtrSm  = exp(asymCtrSm);
+
+  // apply assymetry correction
+  faceSignalP *= 1/sqrt((diodeP == LRG_DIODE) ? asymCtrLrg : asymCtrSm);
+  faceSignalN *= sqrt((diodeN == LRG_DIODE) ? asymCtrLrg : asymCtrSm);
+
+  //-- POPULATE TUPLE (OPTIONAL) --//
+  if (calTupleEnt) {
+    calTupleEnt->m_calXtalAdcPed[twr][lyr][col][POS_FACE] = adcPedP;
+    calTupleEnt->m_calXtalAdcPed[twr][lyr][col][NEG_FACE] = adcPedN;
+	
+	calTupleEnt->m_calXtalFaceSignal[twr][lyr][col][POS_FACE] = faceSignalP;
+    calTupleEnt->m_calXtalFaceSignal[twr][lyr][col][NEG_FACE] = faceSignalN;
+  }
 
   return StatusCode::SUCCESS;
 }

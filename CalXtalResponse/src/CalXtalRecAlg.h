@@ -13,6 +13,8 @@
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
+#include "TFile.h"
+#include "TTree.h"
 
 // STD INCLUDES
 
@@ -31,7 +33,13 @@ class CalXtalRecAlg : public Algorithm
 {
  public:
   CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~CalXtalRecAlg() {}
+  virtual ~CalXtalRecAlg() {
+	  // make sure optional tuple is closed out
+	  if (m_tupleFile) {
+		  m_tupleFile->Write();
+		  m_tupleFile->Close();
+	  }
+  }
     
   /// initialize internal data members.
   StatusCode initialize();
@@ -108,6 +116,20 @@ class CalXtalRecAlg : public Algorithm
   StringProperty m_eneToolName;
   /// name of IXtalPosTool instantiation
   StringProperty m_posToolName;
+
+  /// name of CalXtalRecTuple file.  Default = "" (no file).
+  StringProperty m_tupleFilename;
+  /// store current entry for CalTuple
+  CalTupleEntry m_tupleEntry;
+  /// pointer to XtalRecToolTuple file.
+  TFile *m_tupleFile;
+  /// pointer to tuple object
+  TBranch *m_tupleBranch;
+  /// pointer to tuple tree object
+  TTree   *m_tupleTree;
+  
+  /// TBranch definition string for CalTupleEntry
+  static const char *m_tupleEntryDefStr;
 };
 
 #endif

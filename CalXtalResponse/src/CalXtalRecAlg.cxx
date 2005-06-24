@@ -15,6 +15,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+
 // STD INCLUDES
 
 using namespace Event;
@@ -25,17 +26,22 @@ using namespace CalDefs;
 static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
 
+const char *CalXtalRecAlg::m_tupleEntryDefStr = "RunID/i:EventID/i:CalXtalAdcPed[16][8][12][2]/F:CalXtalFaceSignal[16][8][12][2]/F";
+
 CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
-  Algorithm(name, pSvcLocator)
+  Algorithm(name, pSvcLocator),
+  m_tupleFile(0),
+  m_tupleBranch(0)
 {
   declareProperty("xtalEneToolName", m_eneToolName="XtalEneTool");
   declareProperty("xtalPosToolName", m_posToolName="XtalPosTool");
+  declareProperty("tupleFilename",   m_tupleFilename="");
 }
 
 /** 
     This function sets values to private data members,
     representing the calorimeter geometry and digitization
-    constants. Information  from xml files is obtained using 
+    constants. Information  from xml Files is obtained using 
     GlastdetSvc::getNumericConstByName() function.
     To make this constant extraction in a loop, the pairs
     'constant pointer, constant name' are stored in
@@ -47,11 +53,12 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
 StatusCode CalXtalRecAlg::initialize()
 {
   StatusCode sc;
+  MsgStream msglog(msgSvc(), name());      
 
   //-- EXTRACT INT CONSTANTS --//
   double value;
   // map containing pointers to integer constants to be read
-  // with their symbolic names from xml file used as a key 
+  // with their symbolic names from xml File used as a key 
   typedef map<int*,string> PARAMAP;
   PARAMAP param;
 
@@ -70,7 +77,6 @@ StatusCode CalXtalRecAlg::initialize()
   for(PARAMAP::iterator iter=param.begin(); iter!=param.end();iter++){
     //  retrieve constant
     if(!m_detSvc->getNumericConstByName((*iter).second, &value)) {
-      MsgStream msglog(msgSvc(), name());
       msglog << MSG::ERROR << " constant " <<(*iter).second
              <<" not defined" << endreq;
       return StatusCode::FAILURE;
@@ -80,7 +86,7 @@ StatusCode CalXtalRecAlg::initialize()
   //-- EXTRACT DOUBLE CONSTANTS --//
 
   // map containing pointers to double constants to be read
-  // with their symbolic names from xml file used as a key 
+  // with their symbolic names from xml File used as a key 
   typedef map<double*,string> DPARAMAP;
   DPARAMAP dparam; 
 
@@ -115,6 +121,32 @@ StatusCode CalXtalRecAlg::initialize()
     MsgStream msglog(msgSvc(), name());
     msglog << MSG::ERROR << "  Unable to create " << m_posToolName << endreq;
     return sc;
+  }
+
+  //-- Open Tuple File (Optional) --//
+  if (m_tupleFilename.value() != "") {
+    m_tupleFile = new TFile(m_tupleFilename.value().c_str(),"RECREATE","CalXtalRecTuple");
+    if (!m_tupleFile) {
+      msglog << MSG::ERROR << "Unable to create TFile object: " << m_tupleFilename << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    m_tupleTree = new TTree("CalXtalRecTuple","CalXtalRecTuple");
+    if (!m_tupleTree) {
+      msglog << MSG::ERROR << "Unable to create CalTuple TTree object" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    if (!(m_tupleBranch = m_tupleTree->Branch("CalTupleEntry",      // branch name
+                                       &m_tupleEntry,        // fill object
+									   m_tupleEntryDefStr,
+									   2*sizeof(m_tupleEntry)))) { // buffer size = 2 entries (about 12k/entry for version 1)
+										                         // dunno how big to make it so i made it small, enough for one
+										                         // object + any overhead.
+										  
+      msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
+      return StatusCode::FAILURE;
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -154,6 +186,10 @@ StatusCode CalXtalRecAlg::execute()
     // on error.
     auto_ptr<CalXtalRecData> recData(new CalXtalRecData((*digiIter)->getMode(),
                                                         xtalId));
+
+	// reset optional tuple entry
+	if (m_tupleTree)
+         m_tupleEntry.Clear();
                                      
     // calculate energy in the crystal
     bool below_thresh=false; // initialize to false every time
@@ -172,6 +208,11 @@ StatusCode CalXtalRecAlg::execute()
       m_calXtalRecCol->push_back(recData.release());
     }
   }
+
+  // fill optional tuple
+  if (m_tupleTree)
+	  m_tupleTree->Fill();
+
 
   return StatusCode::SUCCESS;
 }
@@ -278,7 +319,9 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData &recData,
                                 adcP,  adcM,
                                 ene, 
                                 range_below_thresh,
-                                below_thresh);
+                                below_thresh,
+								(m_tupleFile) ? &m_tupleEntry : 0 // optional tuple entry
+								);
   if (sc.isFailure()) return sc;
 
   if (range_below_thresh) {

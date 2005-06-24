@@ -78,6 +78,8 @@
  *        name of CalXtalResponse/IXtalEneTool based tool performing xtal digi->energy conversion (default is "XtalEneTool")
  * @param CalXtalRecAlg.xtalPosTool
  *        name of CalXtalResponse/IXtalPosTool based tool performing xtal digi->position conversion (default is "XtalPosTool")
+ * @param CalXtalRecAlg.tupleFilename
+ *        name of optional CalReconTuple output file. (default is "", which generates no tuple).
  *
  */
 

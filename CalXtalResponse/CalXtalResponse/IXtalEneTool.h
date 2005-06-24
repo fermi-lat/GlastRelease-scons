@@ -10,9 +10,11 @@
  */
 
 // LOCAL INCLUDES
+#include "CalXtalResponse/CalTupleEntry.h"
 
 // GLAST INCLUDES
 #include "idents/CalXtalId.h"
+#include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -36,6 +38,7 @@ class IXtalEneTool : virtual public IAlgTool {
   /// \param position centriod of energy deposition
   /// \param energy output total deposited energy in MeV
   /// \param belowThresh returns TRUE if any LEX8 ADC is below 0.5 * LAC threshold
+  /// \param calTupleEnt pointer to optional tuple entry (NULL pointer is ignored)
   virtual StatusCode calculate(const CalXtalId &xtalId, 
                                CalXtalId::AdcRange rngP,
                                CalXtalId::AdcRange rngN,
@@ -43,7 +46,8 @@ class IXtalEneTool : virtual public IAlgTool {
                                int adcN,
                                float &energy,    //output
                                bool &rngBelowThresh,
-                               bool &xtalBelowThresh //output
+                               bool &xtalBelowThresh, //output
+                               CalTupleEntry *calTupleEnt
                                ) = 0;
 
   /// estimate total deposited energy given the digital response for one face and a centroid-position 
@@ -59,6 +63,7 @@ class IXtalEneTool : virtual public IAlgTool {
                                bool &rngBelowThresh,
                                bool &xtalBelowThresh // output
                                ) = 0;
+
 
 };
 
