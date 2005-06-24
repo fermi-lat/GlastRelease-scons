@@ -44,6 +44,7 @@ namespace rdbModel {
      * by the builder
      */
     virtual ~Rdb();
+    Rdb() : m_connection(0) { }
 
 
     unsigned getMajorVersion(){return m_majorVersion;};
@@ -64,13 +65,9 @@ namespace rdbModel {
                       const std::string& indexName) const;
 
     unsigned int getNTable() const {return m_tables.size();}
-    // There is no good way to look up assertions; they don't
-    // have names.  For now assertions may only refer to a single
-    // table, so access will be via Table object.
 
     // Do we want an unset as well?  Or just call this with arg == 0 ?
-    void setConnection(Connection* connection) {m_connection = connection;}
-
+    void setConnection(Connection* connection);
 
     /// This is the recursive accept for the visitor pattern
     unsigned int  accept(Visitor* v);

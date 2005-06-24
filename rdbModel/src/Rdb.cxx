@@ -39,6 +39,15 @@ namespace rdbModel {
 
   }
 
+  void Rdb::setConnection(Connection* connection) {
+    m_connection = connection;
+
+    // propagate to all our tables as well
+    for (unsigned i = 0; i < m_tables.size(); i++) {
+      m_tables[i]->m_connect = connection;
+    }
+  }
+
   unsigned int Rdb::accept(Visitor* v) {
     Visitor::VisitorState state = v->visitRdb(this);
     if (state != Visitor::VCONTINUE) return state;

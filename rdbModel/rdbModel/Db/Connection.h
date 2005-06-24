@@ -93,18 +93,6 @@ namespace rdbModel{
                            int* auto_value=0,
                            const StringVector* nullCols = 0) = 0;
 
-    /**
-       insert row, first checking and correcting conflicts with other
-       rows.  Must have already done successful schema match. 
-       Probably should also handles rows where agent="service".
-       Should we return some information about other rows updated?
-    */
-    virtual bool insertSmart(const std::string& tableName, 
-                             const StringVector& colNames, 
-                             const StringVector& values,
-                             int* auto_value=0,
-                             const StringVector* nullCols = 0) = 0;
-
     /*
        So far anticipated uses of UPDATE would just modify a single row
        identified by ser_no (or, more generally, primary key), so

@@ -25,8 +25,8 @@ void tryQuick(rdbModel::Table* t, const std::string& colname);
 int main(int, char**) {
   using rdbModel::FieldVal;
 
-  std::string infile("$(RDBMODELROOT)/xml/calib_test_S.xml");
-  //  std::string infile("$(RDBMODELROOT)/xml/calib_test.xml");
+  //  std::string infile("$(RDBMODELROOT)/xml/calib_test_S.xml");
+  std::string infile("$(RDBMODELROOT)/xml/calib_test.xml");
 
   rdbModel::Manager* man = rdbModel::Manager::getManager();
 

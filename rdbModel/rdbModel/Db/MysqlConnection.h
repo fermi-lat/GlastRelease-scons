@@ -82,21 +82,6 @@ namespace rdbModel{
                            const StringVector* nullCols = 0);
 
     /**
-       insert row, first checking and correcting conflicts with other
-       rows.  Must have already done successful schema match. 
-       Probably should also handles rows where agent="service".
-       Should we return some information about other rows updated?
-
-       Not yet implemented.
-    */
-    virtual bool insertSmart(const std::string& tableName, 
-                             const StringVector& colNames, 
-                             const StringVector& values,
-                             int* auto_value=0,
-                             const StringVector* nullCols = 0) 
-    {return false;}
-
-    /**
       Generic UPDATE. Return value is number of rows changed.
     */
     virtual unsigned int update(const std::string& tableName, 

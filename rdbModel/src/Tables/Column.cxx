@@ -74,8 +74,24 @@ namespace rdbModel {
       cmp = colname.compare(m_fields[guess].m_colname);
     }
     return &m_fields[guess];
-
-
   }
 
+   void  Row::regroup(std::vector<std::string>& colNames, 
+                      std::vector<std::string>& colVals, 
+                      std::vector<std::string>& nullCols) const {
+     unsigned nFields = m_fields.size();
+     colNames.reserve(nFields);
+     colVals.reserve(nFields);
+
+     for (unsigned i = 0; nFields; i++) {
+       if (m_fields[i].m_null) {
+         nullCols.push_back(m_fields[i].m_colname);
+       }
+       else {
+         colNames.push_back(m_fields[i].m_colname);
+         colVals.push_back(m_fields[i].m_val);
+       }
+     }
+   }
+ 
 }
