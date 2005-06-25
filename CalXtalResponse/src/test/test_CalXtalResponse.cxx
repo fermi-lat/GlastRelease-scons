@@ -216,7 +216,7 @@ StatusCode test_CalXtalResponse::test_xtalEneTool() {
   if ((sc = m_xtalEneTool->calculate(xtalId, rng, rng, 
                                      1000, 1000, energy, 
                                      rngBelowThresh,
-                                     xtalBelowThresh))
+                                     xtalBelowThresh, 0))
       != sc) {
     msglog << MSG::ERROR << "Error calling XtalEneTool::calculate()" << endreq;
     return sc;

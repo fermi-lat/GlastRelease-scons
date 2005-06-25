@@ -134,8 +134,6 @@ StatusCode IntNonlinMgr::fillRangeBases() {
     // keep moving if we're missing a particular calibration
     if (!validateRangeBase(rngBase)) continue;
 
-    const vector<float> *adc = ((CalibData::IntNonlin*)rngBase)->getValues();
-
     m_rngBases[rngIdx] = rngBase;
   }
 

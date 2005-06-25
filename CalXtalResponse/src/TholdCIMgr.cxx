@@ -161,8 +161,8 @@ bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
     return false;
   }
 
-  if (peds->size() != RngNum::N_VALS ||
-      ulds->size() != RngNum::N_VALS) {
+  if (peds->size() != (unsigned)RngNum::N_VALS ||
+      ulds->size() != (unsigned) RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "can't get calib data for " 

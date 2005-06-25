@@ -1,3 +1,4 @@
+v0r6p1  6/24/05 fewtrell test app wouldn't build on linux
 v0r6    6/23/05 fewtrell added test version of CalTuple
 v0r5p1  6/19/05 fewtrell improperly initializeed geometry constant caused bad asymetry calcs in Digi.
 v0r5    6/13/05 fewtrell fixed JIRA CAL-013.  better validation of calib data & better handling of non existant calib data

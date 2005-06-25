@@ -125,7 +125,7 @@ bool TholdMuonMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
 	msglog << endreq;
     return false;
   }
-  if (peds->size() != RngNum::N_VALS) {
+  if (peds->size() != (unsigned)RngNum::N_VALS) {
     // create MsgStream only when needed for performance
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "can't get calib data for " 
