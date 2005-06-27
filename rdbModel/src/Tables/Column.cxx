@@ -83,7 +83,7 @@ namespace rdbModel {
      colNames.reserve(nFields);
      colVals.reserve(nFields);
 
-     for (unsigned i = 0; nFields; i++) {
+     for (unsigned i = 0; i < nFields; i++) {
        if (m_fields[i].m_null) {
          nullCols.push_back(m_fields[i].m_colname);
        }

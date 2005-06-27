@@ -395,9 +395,14 @@ namespace rdbModel {
     std::string opName = Dom::getTagName(e);
     OPTYPE opType;
     if (opName == "isNull") {
+      DOMElement* child = Dom::getFirstChildElement(e);
       FIELDTYPE valType;
+      std::string which = Dom::getAttribute(child, "which");
+      valType =  (which == std::string("old")) ? FIELDTYPEold 
+        : FIELDTYPEtoBe;
+
       return new Assertion::Operator(OPTYPEisNull, 
-                                     Dom::getAttribute(e, "col"),
+                                     Dom::getAttribute(child, "col"),
                                      std::string(""), 
                                      valType, valType);
                                      

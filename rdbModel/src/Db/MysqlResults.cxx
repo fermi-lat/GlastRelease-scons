@@ -26,6 +26,7 @@ namespace rdbModel {
 
     unsigned nFields = mysql_num_fields(m_myres);
 
+
     if (clear) fields.clear();
 
     for (unsigned int iField = 0; iField < nFields; iField++) {
@@ -35,6 +36,11 @@ namespace rdbModel {
 
     return true;
   }
+
+    // May also want to do 
+    //  MYSQL_FIELD* fields = mysql_fetch_fields(m_myres);
+    // and make these available to client, especially for select * queries
+
 
   /*
   bool MysqlResults::getRowString(std::string& row, unsigned int iRow) const {

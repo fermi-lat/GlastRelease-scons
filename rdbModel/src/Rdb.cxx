@@ -1,6 +1,7 @@
 // $Header$ 
 #include "rdbModel/Rdb.h"
 #include "rdbModel/Tables/Table.h"
+#include "rdbModel/RdbException.h"
 
 namespace rdbModel {
 
@@ -44,8 +45,20 @@ namespace rdbModel {
 
     // propagate to all our tables as well
     for (unsigned i = 0; i < m_tables.size(); i++) {
-      m_tables[i]->m_connect = connection;
+      m_tables[i]->setConnection(connection);
     }
+  }
+
+  int Rdb::smartInsert(Table* t, Row& row, int* serial) {
+    return (t->smartInsert(row, serial));
+  }
+
+  int Rdb::smartInsert(const std::string& tName, Row& row, int* serial) {
+    Table* t = getTable(tName);
+    if (!t) {
+      throw RdbException("Rdb::smartInsert  unknown table");
+    }
+    return (t->smartInsert(row, serial));
   }
 
   unsigned int Rdb::accept(Visitor* v) {
