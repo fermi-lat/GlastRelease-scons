@@ -114,8 +114,9 @@ namespace rdbModel {
     case OPTYPEnot: 
     case OPTYPEexists:
       {
-        for (unsigned iChild = 0; iChild < m_operands.size(); iChild++) {
-          Operator* child = new Operator(m_operands[iChild], toBe);
+        unsigned nChild = op->m_operands.size();
+        for (unsigned iChild = 0; iChild < nChild; iChild++) {
+          Operator* child = new Operator((op->m_operands)[iChild], toBe);
           appendChild(child);
         }
         break;

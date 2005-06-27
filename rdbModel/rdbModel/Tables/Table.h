@@ -91,8 +91,12 @@ namespace rdbModel {
     void addAssert(Assertion* a) {m_asserts.push_back(a);}
     void addIndex(Index* i) {m_indices.push_back(i); }
 
-    bool fillProgramCol(Column* col, Row& row, bool newRow);
+    bool fillProgramCols(Row& row, bool newRow);
 
+    void fillDefaults(Row& row) const;
+
+    void doInterUpdate(const std::vector<Set>& sets, Assertion* subsAssert,
+                       Row& toBe);
     std::string m_name;
     std::string m_version;
     std::string m_comment;
