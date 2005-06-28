@@ -22,8 +22,10 @@
 const UInt_t runNum = 1;
 const UInt_t numXtals = 10;
 const UInt_t numClusters = 20;
+const UInt_t numMipTracks = 5;
 const UInt_t numTracks = 15;
 const UInt_t numVertices = 11;
+const UInt_t numClusLayerData = 5;
 Float_t randNum;
 
 bool floatInRange(Double_t actual, Double_t desired) {
@@ -48,144 +50,155 @@ int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
     return 0;
 }
 
+int checkCalParams(const CalParams &params) {
+
+    if ( !floatInRange(params.getEnergy(), 1.0) ) {
+        std::cout << "calParams energy is not 1" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getEnergyErr(), 2.0) ) {
+        std::cout << "calParams energyErr is not 2" << std::endl;
+        return -1;
+    }
+
+    TVector3 centroid = params.getCentroid();
+    if (!floatInRange(centroid.X(), 3.0) ) {
+        std::cout << "CalParams centroid X is not 3.0" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(centroid.Y(), 4.0)) {
+        std::cout << "CalParams centroid Y is not 4.0" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(centroid.Z(), 5.0)) {
+        std::cout << "CalParams centroid Z is not 5.0" << std::endl;
+        return -1;
+    }
+
+    if ( !floatInRange(params.getxPosxPos(), 6.0) ) {
+        std::cout << "calParams xPosxPos is not 6" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getxPosyPos(), 7.0) ) {
+        std::cout << "calParams xPosyPos is not 7" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getxPoszPos(), 8.0) ) {
+        std::cout << "calParams xPoszPos is not 8" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getyPosyPos(), 9.0) ) {
+        std::cout << "calParams yPosyPos is not 9" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getyPoszPos(),10.0) ) {
+        std::cout << "calParams yPoszPos is not 10" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getzPoszPos(), 11.0) ) {
+        std::cout << "calParams zPoszPos is not 11" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getxDirxDir(), 15.0) ) {
+        std::cout << "calParams xDirxDir is not 15" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getxDiryDir(), 16.0) ) {
+        std::cout << "calParams xDiryDir is not 16" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getxDirzDir(), 17.0) ) {
+        std::cout << "calParams xDirzDir is not 17" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getyDiryDir(), 18.0) ) {
+        std::cout << "calParams yDiryDir is not 18" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getyDirzDir(), 19.0) ) {
+        std::cout << "calParams yDirzDir is not 19" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(params.getzDirzDir(), 20.0) ) {
+        std::cout << "calParams zDirzDir is not 20" << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+int checkCalClusterLayerData(const CalClusterLayerData& layer) {
+
+    if ( !floatInRange(layer.getEnergy(), 1.0) ) {
+        std::cout << "CalClusterLayerData is not 1.0" << std::endl;
+        return -1;
+    }
+    TVector3 pos = layer.getPosition();
+    if (!floatInRange(pos.X(), 2.0) ) {
+        std::cout << "CalClusterLayerData X is not 2" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(pos.Y(), 3.0) ) {
+        std::cout << "CalClusterLayerData Y is not 3" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(pos.Z(), 4.0) ) {
+        std::cout << "CalClusterLayerData Y is not 4" << std::endl;
+        return -1;
+    }
+
+    TVector3 rms = layer.getRmsSpread();
+    if (!floatInRange(rms.X(), 5.0) ) {
+        std::cout << "CalClusterLayerData rms X is not 5" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(rms.Y(), 6.0) ) {
+        std::cout << "CalClusterLayerData rms Y is not 6" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(rms.Z(), 7.0) ) {
+        std::cout << "CalClusterLayerData rms Z is not 7" << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
 int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
-    Float_t f = (Float_t)ievent;
-    Float_t fr = f*randNum;
 
-    (*cluster).Print();
-
-    if (!floatInRange((*cluster).getEnergySum(), f)) {
-        std::cout << "Energy Sum is : " << (*cluster).getEnergySum() << std::endl;
+    UInt_t iClusLayerData;
+    for (iClusLayerData = 0; iClusLayerData < numClusLayerData; iClusLayerData++) {
+        const CalClusterLayerData& clusLayerData = cluster->getLayer(iClusLayerData);
+        if (checkCalClusterLayerData(clusLayerData) < 0) {
+            std::cout << "CalClusterLayer failed" << std::endl;
+            return -1;
+        }
+    }
+    if (checkCalParams(cluster->getParams()) < 0) {  
+        std::cout <<"CalParams check failed" << std::endl;
         return -1;
     }
-    if (!floatInRange((*cluster).getEnergyCorrected(), 5.*fr)) {
-        std::cout << "Energy Corrected is : " << (*cluster).getEnergyCorrected() << std::endl;
+    if ( !floatInRange(cluster->getRmsLong(), 1.0) ) {
+        std::cout << "RmsLong is not 1" << std::endl;
         return -1;
     }
-
-    TVector3 pos = (*cluster).getPosition();
-    if ( (!floatInRange(pos.X(), f)) || (!floatInRange(pos.Y(), f))
-        || (!floatInRange(pos.Z(), f) ) ){
-            std::cout << "Pos: ( " << pos.X() << "," << pos.Y() << "," 
-                << pos.Z() << ")" << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange((*cluster).getEnergyLeak(), randNum)) {
-            std::cout << "Energy Leak is : " << (*cluster).getEnergyLeak() << std::endl;
-            return -1;
-        }
-        if (!floatInRange((*cluster).getRmsLong(), randNum*f) ) {
-            std::cout << "RMS Long is: " << (*cluster).getRmsLong() << std::endl;
-            return -1;
-        }
-        if (!floatInRange((*cluster).getRmsTrans(), randNum*f*2.) ) {
-            std::cout << "RMS Trans is: " << (*cluster).getRmsTrans() << std::endl;
-            return -1;
-        }
-        if (!floatInRange((*cluster).getTransvOffset(), randNum*f*3.) ) {
-            std::cout << "TransvOffset is: " << (*cluster).getTransvOffset() << std::endl;
-            return -1;
-        }
-        TVector3 dir = (*cluster).getDirection();
-        if ( (!floatInRange(dir.X(), randNum)) || (!floatInRange(dir.Y(), randNum*3.))
-            || (!floatInRange(dir.Z(), randNum*5.) ) ){
-                std::cout << "Dir: ( " << dir.X() << "," << dir.Y() << "," 
-                    << dir.Z() << ")" << std::endl;
-                return -1;
-            }
-
-            std::vector<Double_t> eLayer = (*cluster).getEneLayer();
-            if (eLayer.size() != 2) {
-                std::cout << "E Layer vector is wrong size " 
-                    << eLayer.size() << std::endl;
-                return -1;
-            }
-            if (!floatInRange(eLayer[0], 15.0)) {
-                std::cout << "1st energy Layer item: " << eLayer[0] << std::endl;
-                return -1;
-
-            }
-            if (!floatInRange(eLayer[1], 22.0)) {
-                std::cout << "2nd energy Layer item: " << eLayer[1] << std::endl;
-                return -1;
-            }
-
-
-            std::vector<TVector3> pLayer = (*cluster).getPosLayer();
-            if (pLayer.size() != 2) {
-                std::cout << "POS Layer vector is wrong size " 
-                    << pLayer.size() << std::endl;
-                return -1;
-            }
-            TVector3 pos0 = pLayer[0];
-            TVector3 pos1 = pLayer[1];
-            if ( (!floatInRange(pos0.X(), f)) || (!floatInRange(pos0.Y(), f))
-                || (!floatInRange(pos0.Z(), f) ) ){
-                    std::cout << "1st pos Layer item: ( " << pos0.X() << ","
-                        << pos0.Y() << "," << pos0.Z() << ")" << std::endl;
-                    return -1;
-
-                }
-                if ( (!floatInRange(pos1.X(), fr)) || (!floatInRange(pos1.Y(), fr*2.))
-                    || (!floatInRange(pos1.Z(), fr*3.) ) ) {
-                        std::cout << "2nd pos Layer item: ( " << pos1.X() << ","
-                            << pos1.Y() << "," << pos1.Z() << ")" << std::endl;
-                        return -1;
-                    }
-
-                    std::vector<TVector3> rLayer = (*cluster).getRmsLayer();
-                    if (rLayer.size() != 3) {
-                        std::cout << "RMS Layer vector is wrong size " 
-                            << rLayer.size() << std::endl;
-                        return -1;
-                    }
-                    TVector3 rms0 = rLayer[0];
-                    TVector3 rms1 = rLayer[1];
-                    TVector3 rms2 = rLayer[2];
-                    if ( (!floatInRange(rms0.X(), randNum)) || (!floatInRange(rms0.Y(), randNum*5.))
-                        || (!floatInRange(rms0.Z(), randNum*10.) ) ) {
-                            std::cout << "1st rms Layer item: ( " << rms0.X() << ","
-                                << rms0.Y() << "," << rms0.Z() << ")" << std::endl;
-                            return -1;
-
-                        }
-                        if ( (!floatInRange(rms1.X(), f+1.)) || (!floatInRange(rms1.Y(), f+2.))
-                            || (!floatInRange(rms1.Z(), f+3.) ) ) {
-                                std::cout << "2nd rms Layer item: ( " << rms1.X() << ","
-                                    << rms1.Y() << "," << rms1.Z() << ")" << std::endl;
-                                return -1;
-                            }
-                            if ( (!floatInRange(rms2.X(), 14.)) || (!floatInRange(rms2.Y(), 22.))
-                                || (!floatInRange(rms2.Z(), 44.) ) ){
-                                    std::cout << "3rd rms Layer item: ( " << rms2.X() << ","
-                                        << rms2.Y() << "," << rms2.Z() << ")" << std::endl;
-                                    return -1;
-                                }
-
-
-                                if(!floatInRange((*cluster).getFitEnergy(), f) ){
-                                    std::cout << "Fit energy: " << (*cluster).getFitEnergy() << std::endl;
-                                    return -1;
-                                }
-                                if (!floatInRange((*cluster).getProfChisq(), fr) ) {
-                                    std::cout << "Chi2: " << (*cluster).getProfChisq() << std::endl;
-                                    return -1;
-                                }
-                                if( !floatInRange((*cluster).getCsiAlpha(), f*f)) {
-                                    std::cout << "CsiAlpha: " << (*cluster).getCsiAlpha() << std::endl;
-                                    return -1;
-                                }
-                                if( !floatInRange((*cluster).getCsiLambda(), f+f)){
-                                    std::cout << "CsiLambda: " << (*cluster).getCsiLambda() << std::endl;
-                                    return -1;
-                                }
-                                if( !floatInRange((*cluster).getCsiStart(), randNum*randNum)) {
-                                    std::cout << "CsiAlpha: " << (*cluster).getCsiStart() << std::endl;
-                                    return -1;
-                                }
-
-                                return 0;
+    if ( !floatInRange(cluster->getRmsLongAsym(), 2.0) ) {
+        std::cout << "RmsLongAsym is not 2" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(cluster->getRmsTrans(), 3.0) ) {
+        std::cout << "RmsTrans is not 3" << std::endl;
+        return -1;
+    }
+    if ( cluster->getNumTruncXtals() !=4 ) {
+        std::cout << "numTruncXtals is not 4" << std::endl;
+        return -1;
+    }
+    if ( cluster->getStatusBits() != 5 ) {
+        std::cout << "Status Bits is not 5" << std::endl;
+        return -1;
+    }
+    return 0;
 }
 
 int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
@@ -301,14 +314,48 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
         return 0;
 }
 
+int checkCalMipTrack( const CalMipTrack *mip, Int_t ievent ) {
+    const TVector3 pos = mip->getPoint();
+
+    const TVector3 dir = mip->getDir();
+
+    if (mip->getNdof() != 1) {
+        std::cout << "nDof is not 1" << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(mip->getKi2(), 2.) ) {
+        std::cout << "Ki2 is not 2" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getLength(), 3.) ) {
+        std::cout << "Length is not 3." << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getD2C(), 4.) ){
+        std::cout << "D2C is not 4." << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getD2Edge(), 5.) ){
+        std::cout << "D2Edge is not 5." << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getEnergy(), 6.) ) { 
+        std::cout << "Energy is not 6" << std::endl;
+        return -1;
+    }
+
+    return 0;
+
+}
+
 int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     // Checks the contents of one CalRecon object
 
-    Float_t f = (Float_t)ievent;
-    Float_t fr = f*randNum;
+    //Float_t f = (Float_t)ievent;
+    //Float_t fr = f*randNum;
 
     TObjArray *clusterCol = cal->getCalClusterCol();
-    if (clusterCol->GetEntries() != numClusters) {
+    if (UInt_t(clusterCol->GetEntries()) != numClusters) {
         std::cout << "Number of clusters in collection is wrong" << std::endl;
         return -1;
     }
@@ -319,7 +366,7 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
     }
 
     TObjArray *recCol = cal->getCalXtalRecCol();
-    if (recCol->GetEntries() != numXtals) {
+    if (UInt_t(recCol->GetEntries()) != numXtals) {
         std::cout << "Number of CalXtalRecData objects is wrong" << std::endl;
         return -1;
     }
@@ -330,12 +377,23 @@ int checkCalRecon(CalRecon *cal, UInt_t ievent) {
         if (checkCalXtalRec(rec, ievent) < 0) return -1;
     }
 
+    TObjArray *mipCol = cal->getCalMipTrackCol();
+    if (UInt_t(mipCol->GetEntries()) != numMipTracks) {
+        std::cout << "Number of MipTracks in collection is wrong" << std::endl;
+        return -1;
+    } 
+    TIter mipIt(mipCol);
+    CalMipTrack *mip = 0;
+    while ( (mip = (CalMipTrack*) mipIt.Next()) ) {
+        if (checkCalMipTrack(mip, ievent) < 0) return -1;
+    }
+
     return 0;
 }
 
 int checkTkrCluster(const TkrCluster *cluster, UInt_t ievent, UInt_t icluster) {
     Float_t f = Float_t (ievent);
-    Float_t fr = f*randNum;
+    //Float_t fr = f*randNum;
 
     commonRootData::TkrId tkrId = cluster->getTkrId();
 
@@ -555,10 +613,49 @@ int checkTkrVertex(const TkrVertex* vertex, UInt_t ievent, UInt_t ivertex) {
                     return 0;
 }
 
+int checkTkrDiagnostics(const TkrDiagnostics* diag) {
+
+    if (diag->getNumClusters() != 1) {
+        std::cout << "tkrDiagnostics numClusters is not 1" << std::endl;
+        return -1;
+    }
+    if (diag->getNumVecPoints() != 2) {
+        std::cout << "tkrDiagnostics numVecPoints is not 2" << std::endl;
+        return -1;
+    }
+    if (diag->getNumVecLinks() != 3) {
+        std::cout << "tkrDiagnostics nuVecLinks is not 3" << std::endl;
+        return -1;
+    }
+    if (diag->getnLinksNonZeroLayers() != 4) {
+        std::cout << "tkrDiagnostics nLinksnonZeroLayers is not 4" << std::endl;
+        return -1;
+    }
+    if (diag->getAveNumLinksLayer() != 5) {
+        std::cout << "tkrDiagnostics AveNumLinksLayer is not 5 " << std::endl;
+        return -1;
+    }
+    if ( !floatInRange(diag->getNumLinkCombinations(), 6.) ) {
+        std::cout << "tkrDiagnostics NumLinknCombinations is not 6" << std::endl;
+        return -1;
+    }
+    if (diag->getNumTrackElements() != 7) {
+        std::cout <<"tkrdiagnostics numTrackElements is not 7" << std::endl;
+        return -1;
+    }
+    if (diag->getNumTkrTracks() != 8) {
+        std::cout << "tkrDiagnostics NumTkrTracks is not 8" << std::endl;
+        return -1;
+    }
+ 
+
+    return 0;
+}
+
 int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
     TObjArray *clusterCol = tkr->getClusterCol();
-    if (clusterCol->GetEntries() != numClusters) {
+    if (UInt_t(clusterCol->GetEntries()) != numClusters) {
         std::cout << "Number of TkrRecon clusters is wrong: " << clusterCol->GetEntries() << std::endl;
         return -1;
     }
@@ -572,7 +669,7 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
     UInt_t iTrack = 0;
     TObjArray* trackCol = tkr->getTrackCol();
-    if (trackCol->GetEntries() != numTracks) {
+    if (UInt_t(trackCol->GetEntries()) != numTracks) {
         std::cout << "Number of TkrRecon tracks is wrong: " << trackCol->GetEntries() << std::endl;
         return -1;
     }
@@ -585,7 +682,7 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
     }
 
     TObjArray* vertexCol = tkr->getVertexCol();
-    if (vertexCol->GetEntries() != numVertices) {
+    if (UInt_t(vertexCol->GetEntries()) != numVertices) {
         std::cout << "Number of TkrRecon vertices is wrong: " << vertexCol->GetEntries() << std::endl;
         return -1;
     }
@@ -598,6 +695,10 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
             return -1;
         ivertex++;
     }
+
+    const TkrDiagnostics *diag = tkr->getDiagnostics();
+    if (checkTkrDiagnostics(diag) < 0)
+         return -1;
 
     return 0;
 }
@@ -754,7 +855,7 @@ int write(char* fileName, int numEvents) {
     std::cout << "Created new ROOT file" << std::endl;
 
     TRandom randGen;
-    Int_t ievent, ixtal;
+    Int_t ievent;
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
 
@@ -789,38 +890,25 @@ int write(char* fileName, int numEvents) {
         calRec->initialize();
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
-            TVector3 pos(f, f, f);
-            CalCluster *cluster = new CalCluster(f, pos);
-            std::vector<Double_t> eLayer;
-            eLayer.push_back(15.0);
-            eLayer.push_back(22.0);
-            std::vector<TVector3> pLayer;
-            pLayer.push_back(TVector3(f, f, f));
-            pLayer.push_back(TVector3(randNum*f, randNum*2.*f, randNum*3.*f));
-            std::vector<TVector3> rmsLayer;
-            rmsLayer.push_back(TVector3(randNum, randNum*5, randNum*10));
-            rmsLayer.push_back(TVector3(f+1., f+2., f+3.));
-            rmsLayer.push_back(TVector3(14., 22., 44.));
-            TVector3 calDir(randNum, randNum*3, randNum*5);
-            Double_t eLeak = randNum;
-            Double_t rmsLong = randNum*f;
-            Double_t rmsTrans = randNum*2.*f;
-            Double_t transOffset = randNum*3.*f;
-            Double_t eCorrect = randNum*5.*f;
-            cluster->initialize(eLeak, eCorrect, eLayer, pLayer, rmsLayer, rmsLong, 
-                rmsTrans, calDir, transOffset);
-
-            Double_t fitEnergy = f;
-            Double_t chi2 = f*randNum;
-            Double_t fStart = randNum*randNum;
-            Double_t fitAlpha = f*f;
-            Double_t fitLambda = f+f;
-            cluster->initProfile(fitEnergy, chi2, fStart, fitAlpha, fitLambda);
+            CalCluster *cluster = new CalCluster();
+            CalParams p(1.0, 2.0, TVector3(3.0, 4.0, 5.0), 6.0, 7.0, 8.0,
+                        9.0, 10.0, 11.0, TVector3(12., 13., 14.), 15., 16.0,
+                        17.0, 18.0, 19.0, 20.0);
+            std::vector<CalClusterLayerData> clusLayerData;
+            clusLayerData.clear();
+            UInt_t iclusLayer;
+            for (iclusLayer = 0; iclusLayer < numClusLayerData; iclusLayer++) {
+                CalClusterLayerData layer(1.0, TVector3(2.0, 3.0, 4.0),
+                   TVector3(5.0, 6.0, 7.0));
+                clusLayerData.push_back(layer);
+            }
+            cluster->init(clusLayerData, p, 1.0, 2.0, 3.0, 4, 5);
 
             calRec->addCalCluster(cluster);
         }
 
-        for (ixtal = 0; ixtal < numXtals; ixtal ++) {
+        UInt_t ixtal;
+        for (ixtal = 0; ixtal < numXtals; ixtal++) {
             CalXtalRecData *xtal = new CalXtalRecData();
             CalXtalId id;
             id.init(1, 2, 3);
@@ -830,6 +918,14 @@ int write(char* fileName, int numEvents) {
             rec.initialize(pos);
             xtal->addRangeRecData(rec);
             calRec->addXtalRecData(xtal);
+        }
+
+        unsigned int imip;
+        for (imip = 0; imip < numMipTracks; imip++) {
+            CalMipTrack *mipTrack = new CalMipTrack(TVector3(1.0,1.5, 1.9),
+               TVector3(2.0, 2.5, 2.9), 1, 2.0, 3.0, 4.0, 5.0, 6.0);
+            calRec->addCalMipTrack(mipTrack);
+
         }
 
         // Create TkrRecon object
@@ -855,7 +951,8 @@ int write(char* fileName, int numEvents) {
         }
 
         TkrTrack *track;
-        for (int itrack=0; itrack < numTracks; itrack++) 
+        UInt_t itrack;
+        for (itrack=0; itrack < numTracks; itrack++) 
         {
             track = new TkrTrack();
             UInt_t xgaps = itrack * itrack;
@@ -921,6 +1018,9 @@ int write(char* fileName, int numEvents) {
             //vertex->addTrackId(ivertex+2);
             tkrRec->addVertex(vertex);
         }
+
+        TkrDiagnostics *diag = new TkrDiagnostics(1, 2, 3, 4, 5, 6.0, 7, 8);
+        tkrRec->addDiagnostics(diag);
 
 
         ev->initialize(ievent, runNum, tkrRec, calRec, acdRec);
