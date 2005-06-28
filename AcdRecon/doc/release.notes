@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r7p10   27-Jun-2005 HMK Add author keyword in requirements
 v1r7p9    20-Jun-2005 HMK Update mainpage to add jobOptions section
 v1r7p8
 v1r7p7    30-Jan-2005 THB fix typos in roottestdata file names          

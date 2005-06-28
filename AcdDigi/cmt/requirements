@@ -1,5 +1,6 @@
 package AcdDigi
-version v1r12p0
+version v1r12p1
+author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
 use GlastSvc v9r*

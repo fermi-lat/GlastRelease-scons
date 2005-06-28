@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r1p1  27-Jun-2005 HMK add author
 v2r1p0  27-May-2005 HMK update version of RootcintPolicy
 v2r1    17-Apr-2005 HMK Remove commonRootData namespace for now, until ROOT
         can handle introducing a namespace into std::vector

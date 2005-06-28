@@ -1,5 +1,7 @@
 package AcdRecon
-version v1r7p9
+version v1r7p10
+
+author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 branches src doc
 

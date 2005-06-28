@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v8r4p1    27-Jun-2005 HMK add author
 v8r4      09-Jun-2005 HMK Handle Error Summary data in new Tem and ErrorData
           classes
 v8r3p1    27-May-2005 HMK new version of RootcintPolicy

@@ -1,6 +1,7 @@
 package reconRootData
+version v6r0p2
+author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
-version v6r0p1
 
 use commonRootData v2r*
 

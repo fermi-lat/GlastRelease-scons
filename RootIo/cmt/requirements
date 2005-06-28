@@ -1,5 +1,7 @@
 package RootIo
-version v16r0p1
+version v16r0p2
+
+author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 # $Header$
 
