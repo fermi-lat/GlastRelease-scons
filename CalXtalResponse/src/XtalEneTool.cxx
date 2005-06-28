@@ -224,7 +224,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
     msglog << MSG::WARNING;
     // need to use .stream() to get xtalId to pretty print.
     msglog.stream() << "DAC val < 0, can't calculate energy." 
-       <<  " xtal=[" << xtalId << ']';
+                    <<  " xtal=[" << xtalId << ']';
     msglog << endreq;
     return StatusCode::FAILURE;
   } 
@@ -242,7 +242,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   // 1st 
   double faceSignalP = dacP*((diodeP == SM_DIODE) ? mpdSm.getVal() : mpdLrg.getVal());
   double faceSignalN = dacN*((diodeN == SM_DIODE) ? mpdSm.getVal() : mpdLrg.getVal());
-  
+
   // 2nd correct for overall asymmetry of diodes (asym at center of xtal)
   // retrieve asym
   double asymCtrLrg, asymCtrSm;
@@ -259,12 +259,13 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   faceSignalP *= 1/sqrt((diodeP == LRG_DIODE) ? asymCtrLrg : asymCtrSm);
   faceSignalN *= sqrt((diodeN == LRG_DIODE) ? asymCtrLrg : asymCtrSm);
 
+
   //-- POPULATE TUPLE (OPTIONAL) --//
   if (calTupleEnt) {
     calTupleEnt->m_calXtalAdcPed[twr][lyr][col][POS_FACE] = adcPedP;
     calTupleEnt->m_calXtalAdcPed[twr][lyr][col][NEG_FACE] = adcPedN;
-	
-	calTupleEnt->m_calXtalFaceSignal[twr][lyr][col][POS_FACE] = faceSignalP;
+        
+    calTupleEnt->m_calXtalFaceSignal[twr][lyr][col][POS_FACE] = faceSignalP;
     calTupleEnt->m_calXtalFaceSignal[twr][lyr][col][NEG_FACE] = faceSignalN;
   }
 

@@ -15,7 +15,7 @@ struct CalTupleEntry {
 	  m_eventId = 0;
 
 	  memset(m_calXtalAdcPed,0,sizeof(m_calXtalAdcPed));
-	  memset(m_calXtalAdcPed,0,sizeof(m_calXtalAdcPed));
+	  memset(m_calXtalFaceSignal,0,sizeof(m_calXtalFaceSignal));
   }
 
   int m_runId;

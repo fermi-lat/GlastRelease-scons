@@ -138,12 +138,12 @@ StatusCode CalXtalRecAlg::initialize()
     }
 
     if (!(m_tupleBranch = m_tupleTree->Branch("CalTupleEntry",      // branch name
-                                       &m_tupleEntry,        // fill object
-									   m_tupleEntryDefStr,
-									   2*sizeof(m_tupleEntry)))) { // buffer size = 2 entries (about 12k/entry for version 1)
-										                         // dunno how big to make it so i made it small, enough for one
-										                         // object + any overhead.
-										  
+                                              &m_tupleEntry,        // fill object
+                                              m_tupleEntryDefStr,
+                                              2*sizeof(m_tupleEntry)))) { // buffer size = 2 entries (about 12k/entry for version 1)
+      // dunno how big to make it so i made it small, enough for one
+      // object + any overhead.
+                                                                                  
       msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
       return StatusCode::FAILURE;
     }
@@ -171,6 +171,13 @@ StatusCode CalXtalRecAlg::execute()
   if (!m_calDigiCol) return StatusCode::SUCCESS;
   // fatal error  if (sc.isFailure()) return sc;
   
+  // reset optional tuple entry
+  if (m_tupleTree)
+    m_tupleEntry.Clear();
+
+  m_tupleEntry.m_runId   = m_evtHdr->run();
+  m_tupleEntry.m_eventId = m_evtHdr->event();
+
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
        digiIter != m_calDigiCol->end(); digiIter++) {
@@ -187,9 +194,6 @@ StatusCode CalXtalRecAlg::execute()
     auto_ptr<CalXtalRecData> recData(new CalXtalRecData((*digiIter)->getMode(),
                                                         xtalId));
 
-	// reset optional tuple entry
-	if (m_tupleTree)
-         m_tupleEntry.Clear();
                                      
     // calculate energy in the crystal
     bool below_thresh=false; // initialize to false every time
@@ -206,12 +210,14 @@ StatusCode CalXtalRecAlg::execute()
       // add new reconstructed data to the collection
       // release it from the auto_ptr so it is not deleted
       m_calXtalRecCol->push_back(recData.release());
+
+
     }
   }
 
   // fill optional tuple
   if (m_tupleTree)
-	  m_tupleTree->Fill();
+    m_tupleTree->Fill();
 
 
   return StatusCode::SUCCESS;
@@ -229,6 +235,14 @@ StatusCode CalXtalRecAlg::execute()
 StatusCode CalXtalRecAlg::retrieve()
 {
   StatusCode sc = StatusCode::SUCCESS;
+
+  // Retrieve the Event data for this event                                                                                                                                                                                                                
+  m_evtHdr = SmartDataPtr<Event::EventHeader>(eventSvc(), EventModel::EventHeader);
+  if (!m_evtHdr) {
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // get a pointer to the input TDS data collection
   m_calDigiCol = SmartDataPtr<CalDigiCol>(eventSvc(),
@@ -320,8 +334,8 @@ StatusCode CalXtalRecAlg::computeEnergy(CalXtalRecData &recData,
                                 ene, 
                                 range_below_thresh,
                                 below_thresh,
-								(m_tupleFile) ? &m_tupleEntry : 0 // optional tuple entry
-								);
+                                (m_tupleFile) ? &m_tupleEntry : 0 // optional tuple entry
+                                );
   if (sc.isFailure()) return sc;
 
   if (range_below_thresh) {
