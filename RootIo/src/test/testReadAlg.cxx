@@ -239,7 +239,7 @@ StatusCode testReadAlg::readReconData() {
     if (!calClusterColTds)
         log << MSG::INFO << "No CAL recon cluster collection on the TDS" << endreq;
     else 
-        log << MSG::DEBUG << calClusterColTds->num() << " CAL clusters on TDS" << endreq;
+        log << MSG::DEBUG << calClusterColTds->size() << " CAL clusters on TDS" << endreq;
 
     SmartDataPtr<Event::AcdRecon> acdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (!acdRecTds) 

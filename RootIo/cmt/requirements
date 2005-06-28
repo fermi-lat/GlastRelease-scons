@@ -1,5 +1,5 @@
 package RootIo
-version v16r0p2
+version v16r0p3
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -9,6 +9,7 @@ branches src doc
 
 use Event v11r*
 use ROOT v3r* IExternal
+use RootConvert v0r*
 
 apply_pattern packageShr
 apply_pattern package_include
