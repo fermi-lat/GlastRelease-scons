@@ -48,7 +48,7 @@ public:
     TObjArray *getVertexCol() { return m_vertexCol; };
     void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
 
-    TObject* getDiagnostics() { return m_diagnostics;};
+    const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
     void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};
 
 private:
@@ -59,14 +59,14 @@ private:
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
     /// Diagnostics
-    TObject*   m_diagnostics;
+    TkrDiagnostics*   m_diagnostics;
 
     static TkrCluster *keepCluster[10000]; //!
     static TkrTrack *keepTrack[10000]; //!
     static TkrVertex *keepVertex[10000]; //!
     static Int_t indCluster, indTrack, indVertex; //!
 
-    ClassDef(TkrRecon,5)
+    ClassDef(TkrRecon,6)
 };
 
 #endif

@@ -62,7 +62,7 @@ private:
     /// list of CalMipTracks
     TObjArray* m_mipTrackCol;
   
-    ClassDef(CalRecon,2)
+    ClassDef(CalRecon,3)
 };
 
 #endif

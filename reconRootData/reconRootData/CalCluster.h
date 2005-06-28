@@ -69,10 +69,10 @@ private:
     Double_t m_rmsLong ;
     Double_t m_rmsLongAsym ;
     Double_t m_rmsTrans ;
-	Int_t m_numTruncXtals ;
-	UInt_t m_statusBits ;
+    Int_t m_numTruncXtals ;
+    UInt_t m_statusBits ;
 
-    ClassDef(CalCluster,6)
+    ClassDef(CalCluster,4)
 };
 
 

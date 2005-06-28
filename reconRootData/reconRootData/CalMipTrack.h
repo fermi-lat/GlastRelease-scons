@@ -64,14 +64,14 @@ private:
     void      setD2C(Double_t dTrack2C)       {m_dTrack2C    = dTrack2C;   }
     void      setD2Edge(Double_t dTrack2Edge) {m_dTrack2Edge = dTrack2Edge;}
     void      setEnergy(Double_t energy)      {m_energy      = energy;     }
-    TVector3  getPoint()                      {return m_point;             }
-    TVector3  getDir()                        {return m_dir;               }
-    Int_t     getNdof()                       {return m_ndofTrack;         }
-    Double_t  getKi2()                        {return m_ki2Track;          }
-    Double_t  getLength()                     {return m_length;            }
-    Double_t  getD2C()                        {return m_dTrack2C;          }
-    Double_t  getD2Edge()                     {return m_dTrack2Edge;       }
-    Double_t  getEnergy()                     {return m_energy;            }
+    const TVector3  getPoint() const          {return m_point;             }
+    const TVector3  getDir()   const          {return m_dir;               }
+    Int_t     getNdof() const                 {return m_ndofTrack;         }
+    Double_t  getKi2()  const                 {return m_ki2Track;          }
+    Double_t  getLength()  const              {return m_length;            }
+    Double_t  getD2C()     const              {return m_dTrack2C;          }
+    Double_t  getD2Edge()  const              {return m_dTrack2Edge;       }
+    Double_t  getEnergy()  const              {return m_energy;            }
   
     void print();
   
