@@ -462,6 +462,8 @@ const double* PDF_Axes::getBinCenters(int ax, bool bin) const
 
 bool PDF_Axes::findBin(int axis, double data) const
 {
+  // finds the bin corresponding to the double  on the axis int
+  // returns true if not found: point outside our phase space
   const double *axData= getBinCenters(axis, false);
   int nabove= m_Sizes[axis]+1;
   int nbelow= 0;
@@ -486,6 +488,8 @@ bool PDF_Axes::findBin(int axis, double data) const
 }
 
 bool PDF_Axes::findBin(double* data, int &result) const {
+  // finds the pahse space bin corresponding to the parameter vector double*
+  // returns true if not found: point outside our phase space
   result= 0;
   int width= 1;
   for( int ax= m_Naxes-1; ax>=0; --ax ){

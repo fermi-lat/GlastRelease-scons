@@ -40,12 +40,12 @@
  * correlation methods) have been recast as Gaudi tools.
  *
  * The clustering is now based on the ICalClustering and Clustering base classes, 
- * while the leakage corrections derive from ICalEnergyCorr and CalEnergyCorr.
+ * while the leakage corrections derive from ICalEnergyCorr and AlgTool.
  * The clustering tools currently available are CalSingleClustering and
  * CalSimpleClustering (FuzzyClustering needs additional tuning). The last
- * layer leakage tool is CalLastLayerCorr, and the profile tool is
- * CalProfileCorr. The tool using energy correlation with the number of hits in the
- * tracker is CalTkrLikelihoodCorr
+ * layer leakage tool is CalLastLayerLikelihoodTool. The tracker hit correlation
+ * tool is CalTkrLikelihoodTool. The last two tools derive from CaLikelihood.
+ * The profile tool is CalProfileTool.
  *
  * The calo FuzzyClustering retrieves the generic FuzzyCluster Gaudi
  * tool to perform fuzzy clustering on all cal hits. However, if there are

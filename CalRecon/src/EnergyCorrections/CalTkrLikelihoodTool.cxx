@@ -9,7 +9,6 @@
 * Algorithm for correction of energy degradation in the tracker by correlating
 * the energy in the CAL with the number of hit TKR strips.  
 *
-*
 */
 
 class CalTkrLikelihoodTool : public CalLikelihoodTool 
@@ -24,28 +23,16 @@ public:
     //! Tracker energy degradation correction using number of TKR hit strips
     /*! This method uses the correlation between the energy \"lost\" in the 
     * tracker and the energy deposited in the calorimeter.
-    * We used the Monte Carlo simulation of the LAT to determine this correlation
-    * at several energies, from 50 MeV up to 1 GeV, and angles from 0 to 32\deg. 
-    * For one particular incident energy and angle, the bidimensionnal
-    * distribution of  the  number of hit strips and the energy deposited in the 
-    * CAL can be characterised by the 1D distribution:
-    * \f[ E_{CAL} + \alpha TkrHits \f]
-    * where  \f$\alpha\f$ is been optimised so as to obtain the narrowest such
-    * distribution, normalised to a probability and with its MPV at the incident
-    * energy.
-    * These distributions can be used to defined a probability density function.
-    * The reconstructed energy for a given event then becomes the one maximising
-    * the probability, for a reconstruced direction, CAL raw energy,...
+    * We used the Monte Carlo simulation of the LAT to determine this 
+    * correlation at several energies, from 50 MeV up to 3 GeV, 
+    * and angles from 0 to 32\deg. 
+    * See CalLikelihoodTool.calculateEvent for more information
     *
-    * \par The method takes 4 arguments:
-    * \param eTotal Total energy measured in the calorimeter in MeV
-    * \param nHits  Total number of hit strips in the CAL
-    * \param vertex[3] reconstructed vertex position  
-    * \param dir[3] reconstructed direction
+    * \par The method takes 2 arguments:
+    * \param CalCluster
+    * \param TkrVertex
     *
-    *\return Corrected energy in MeV
-    *
-    *\warning needs TKR reconstruction
+    *\return CalCorToolResult with an energy and error estimate.
     *
     *\author
     */
