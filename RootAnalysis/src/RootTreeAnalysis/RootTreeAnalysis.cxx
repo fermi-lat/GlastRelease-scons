@@ -537,18 +537,17 @@ void RootTreeAnalysis::ReconCal() {
         float totE = 0.;
         for (int jc=0;jc<numClus; jc++) {
             CalCluster* c1 = (CalCluster*)clusCol->At(jc);
-            float clusterEnergy = c1->getEnergySum();
+            float clusterEnergy = c1->getParams().getEnergy();
             totE += clusterEnergy;
-            ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(c1->getEnergySum());
-            ((TH1F*)GetObjectPtr("CALRECELEAK"))->Fill(c1->getEnergyLeak());
-            ((TH1F*)GetObjectPtr("CALRECECORR"))->Fill(c1->getEnergyCorrected());
+            ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(clusterEnergy);
+            ((TH1F*)GetObjectPtr("CALRECERR"))->Fill(c1->getParams().getEnergyErr());
         }
         ((TH1F*)GetObjectPtr("CALTOTE"))->Fill(totE);
 
         if (totE > 0.) {
             for (int ic=0;ic<numClus; ic++) {
 	        CalCluster* c2 = (CalCluster*)clusCol->At(ic);
-	        float clusterEnergy = c2->getEnergySum();
+	        float clusterEnergy = c2->getParams().getEnergy();
 	        ((TH1F*)GetObjectPtr("CALECLUS"))->Fill(clusterEnergy);
                 float eFraction = clusterEnergy/totE;
                 ((TH1F*)GetObjectPtr("CALEFRAC"))->Fill(eFraction);
