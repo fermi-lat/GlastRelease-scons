@@ -54,8 +54,18 @@ namespace rdbModel {
        If @a test is true, just output description of what would be
        done without actually doing it.
        Note @a row may be modified by the function.
+       If a non-zero pointer is supplied for @a serial
+       it will contain the primary key value (if there is one) of
+       the new row on exit.
     */
     int smartInsert(Row& row, int* serial=0);
+
+    /**
+       The less smart insertRow function fills in all fields which are to
+       be supplied by "service" and inserts the row, without any further
+       checks.
+     */
+    int insertRow(Row& row, int* serial=0) const;
 
     // Do we need these for anything?  
     InsertNew* getInsertNew() const {return m_iNew;}
@@ -91,7 +101,7 @@ namespace rdbModel {
     void addAssert(Assertion* a) {m_asserts.push_back(a);}
     void addIndex(Index* i) {m_indices.push_back(i); }
 
-    bool fillProgramCols(Row& row, bool newRow);
+    bool fillProgramCols(Row& row, bool newRow) const;
 
     void fillDefaults(Row& row) const;
 

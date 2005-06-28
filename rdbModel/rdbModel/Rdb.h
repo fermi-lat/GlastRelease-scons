@@ -70,9 +70,22 @@ namespace rdbModel {
     // Do we want an unset as well?  Or just call this with arg == 0 ?
     void setConnection(Connection* connection);
 
-    int smartInsert(Table* t, Row& row, int* serial=0);
+    /**
+       insertRow has only one value-added feature as compared to 
+       an SQL insert:  it will take care of fields intended to be
+       filled by the service (e.g., insert and update timestamps)
+     */
+    int insertRow(const std::string& tName, Row& row, int* serial=0);
 
+    /**
+       The two forms of smart insert, in addition to filling in the
+       service fields, as insertRow does, do various forms of 
+       consistency checking and may even update pre-existing
+       rows.  
+    */
+    int smartInsert(Table* t, Row& row, int* serial=0);
     int smartInsert(const std::string& tName, Row& row, int* serial=0);
+
 
 
     /// This is the recursive accept for the visitor pattern
