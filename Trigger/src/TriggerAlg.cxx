@@ -301,7 +301,10 @@ StatusCode TriggerAlg::execute()
         // or in the gem trigger bits, either from hardware, or derived from trigger
         trigger_bits |= gemBits(trigger_bits) << 8;
 
-        if( static_cast<int>(h.trigger())==-1 ){
+        if( static_cast<int>(h.trigger())==-1 
+                    || h.trigger()==0  // this seems to happen when reading back from incoming??
+                    )
+        {
             // expect it to be zero if not set.
             h.setTrigger(trigger_bits);
         }else  if (h.trigger() != 0xbaadf00d && trigger_bits != h.trigger() ) {
@@ -311,7 +314,6 @@ StatusCode TriggerAlg::execute()
                 << std::setbase(16) <<trigger_bits << " vs. " << h.trigger();
             log << endreq;
         }
-
     }
 
     return sc;
