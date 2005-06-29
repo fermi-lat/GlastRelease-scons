@@ -5,6 +5,7 @@
    Coordinators: M. Frailis and R. Giannitrapani
               EOH
 
+   v1r8    29-Jun-2005  jrb      Changes for compatibility with rdbModel v2r0
    v1r7    12-Apr-2005  jrb for rg  Add new copy dialogue to do insert based on
                                  existing entry
    v1r6    11-Apr-2005  rg       The XML file browser will start automatically in the proper
