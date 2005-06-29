@@ -132,7 +132,7 @@ namespace rdbModel {
 
     // Keep around original set so that rdbGUI will display them in
     // this order
-    sort (m_sortedCols.begin(), m_sortedCols.end(), cmpObject); 
+    std::sort (m_sortedCols.begin(), m_sortedCols.end(), cmpObject); 
     m_sorted = true;
 
   }

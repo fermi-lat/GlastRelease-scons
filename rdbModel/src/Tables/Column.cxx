@@ -47,7 +47,7 @@ namespace rdbModel {
     if (m_sorted) return;
 
     FieldValCompare cmp;
-    sort(m_fields.begin(), m_fields.end(), cmp);
+    std::sort(m_fields.begin(), m_fields.end(), cmp);
     m_sorted = true;
   }
 
