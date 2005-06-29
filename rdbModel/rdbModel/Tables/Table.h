@@ -67,6 +67,11 @@ namespace rdbModel {
      */
     int insertRow(Row& row, int* serial=0) const;
 
+    /**
+       Silently fills in "service" fields as well as requested updates
+     */
+    int updateRows(Row &row, Assertion* where) const;
+
     // Do we need these for anything?  
     InsertNew* getInsertNew() const {return m_iNew;}
     Supersede* getSupersede() const {return m_sup;}

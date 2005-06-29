@@ -59,6 +59,16 @@ namespace rdbModel {
     return (t->insertRow(row, serial));
   }
 
+  int Rdb::updateRows(const std::string& tName, Row& row, Assertion* where) const {
+    Table* t = getTable(tName);
+    if (!t) {
+      std::string msg("Rdb::insertRow unknown table ");
+      msg = msg + tName;
+      throw RdbException(msg);
+    }
+    return (t->updateRows(row, where));
+  }
+
   int Rdb::smartInsert(Table* t, Row& row, int* serial) {
     return (t->smartInsert(row, serial));
   }

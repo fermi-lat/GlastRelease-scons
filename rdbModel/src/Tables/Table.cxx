@@ -283,6 +283,24 @@ namespace rdbModel {
     return (ok) ?  0 : -1;
   }    
 
+  int Table::updateRows(Row &row, Assertion* where) const {
+
+    if (!m_connect) {
+      throw RdbException("Table::smartInsert Need matching connection");
+    }
+    row.rowSort();
+
+    // Fill in columns in m_programCols list
+    fillProgramCols(row, false);
+
+    std::vector<std::string> colNames;
+    std::vector<std::string> colValues;
+    std::vector<std::string> nullCols;
+
+    row.regroup(colNames, colValues, nullCols);
+
+    return m_connect->update(m_name, colNames, colValues, where, &nullCols);
+  }
 
   bool Table::fillProgramCols(Row& row, bool newRow) const {
     std::string val;
