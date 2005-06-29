@@ -248,7 +248,7 @@ StatusCode XtalEneTool::calculate(const CalXtalId &xtalId,
   double asymCtrLrg, asymCtrSm;
   sc = m_calCalibSvc->evalAsymLrg(xtalId, 0, asymCtrLrg);
   if (sc.isFailure()) return sc;
-  sc = m_calCalibSvc->evalAsymLrg(xtalId, 0, asymCtrSm);
+  sc = m_calCalibSvc->evalAsymSm(xtalId, 0, asymCtrSm);
   if (sc.isFailure()) return sc;
   
   // move asym out of log scale
