@@ -5,6 +5,8 @@
  package manager:T.Burnett
            EOH
 
+ 03-Jul-05  LSR tag v9r13p1 Change Event version number to v*
+                            Fix SiliconPlaneGeometry to better handle alignment
  23-Jun-05  TU  tag v9r13p0 Upping requested Event version number
   1-Mar-05  TU  tag v9r12p3 Fix GlastRandomSvc to delete all instantiated tools
   v9r12p2   3-Jan-2005  jrb Use xmlBase rather than xml package

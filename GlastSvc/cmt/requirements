@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r13p0
+version v9r13p1
 
 branches src cmt doc
 #$Id$
@@ -16,7 +16,7 @@ use xmlBase *
 
 #=============================================================
 # private
-use Event v11r*
+use Event v*
 use detModel   v2r* -no_auto_imports
 use xmlGeoDbs  v1r* -no_auto_imports
 use CLHEP v2* IExternal -no_auto_imports

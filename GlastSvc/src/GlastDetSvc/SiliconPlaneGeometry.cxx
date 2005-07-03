@@ -61,15 +61,18 @@ double SiliconPlaneGeometry::insideActiveArea1D (double x, double spacing)
     // Purpose and Method: does a point fall on (in local coords) an
     //  active part of the detector? (-) if no
     //  spacing is the ladder gap for local X; the ssd gap for local Y
-    x += panel_width()/2.;
     
-    if (x < 0) return x;
+    double panel_wid2 = 0.5*panel_width(spacing);
+    if(fabs(x)>panel_wid2-guard_ring()) return (panel_wid2-guard_ring())-fabs(x);
+
+    x += panel_wid2;
     
-    double edge = fmod(x, (die_width() + spacing));    
-    if (edge > die_width()) return -edge;  // edge is in the gap btwn si dies
+    double die_wid = die_width();
+    double edge = fmod(x, (die_wid + spacing));    
+    if (edge > die_wid) return -edge;  // edge is in the gap btwn si dies
     
     if (edge >= 0) {
-        if (edge > die_width()/2.) edge -=die_width();
+        if (edge > 0.5*die_wid) edge -=die_wid;
         edge = fabs(edge);
         edge -= guard_ring();
     }
@@ -88,17 +91,19 @@ unsigned int SiliconPlaneGeometry::stripId (double x)
 {
     // Purpose and Method:  compute the strip index corresponding to a 
     //  given point
-    
+
+    const unsigned int undef_strip = 65535;
     if (insideActiveArea(x, 1.0) > 0.) {    // check that this is inside the die
-        x += panel_width()/2.;
+        x += 0.5*panel_width();
         double  die = floor(x/(die_width() 
             + ladder_gap())); // find die #
+        if (die>=n_si_dies()) return undef_strip;
         double  wafer_x = fmod(x,(die_width() 
             + ladder_gap())) - guard_ring();
         
         return static_cast<unsigned>(floor(wafer_x/si_strip_pitch()) + 
             die*strips_per_die());
-    } else return 65535;
+    } else return undef_strip;
 }
 
 double SiliconPlaneGeometry::localX (double x) 
@@ -113,7 +118,7 @@ double SiliconPlaneGeometry::localX (double x)
     // die number
     
     return  n + (i + 0.5) * si_strip_pitch() 
-        - panel_width()/2. + guard_ring();
+        - 0.5*panel_width() + guard_ring();
 }
 
 HepPoint3D SiliconPlaneGeometry::siPlaneCoord( const HepPoint3D& p, 
@@ -183,6 +188,11 @@ double SiliconPlaneGeometry::panel_width () {
     // Purpose and Method:  width of all connected silicon in a single layer
     return (n_si_dies() * die_width() + (n_si_dies() - 1) * ladder_gap());
 }
+
+double SiliconPlaneGeometry::panel_width(double spacing) {
+    return (n_si_dies() * die_width() + (n_si_dies() - 1) * spacing);
+}
+
 
 StatusCode SiliconPlaneGeometry::init(IGlastDetSvc *p_detSvc) 
 {	
