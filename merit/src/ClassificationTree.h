@@ -8,10 +8,11 @@ $Header$
 
 #include <string>
 #include <vector>
-#include "classification/Tree.h"
+#include <iostream>
 
 class TupleItem;
 class Tuple;
+namespace GlastClassify { class TreeFactory; }
 
 class ClassificationTree 
 {
@@ -38,7 +39,7 @@ private:
     class BackgroundCut;
     BackgroundCut & m_background;
 
-    classification::Tree * m_classifier;
+    GlastClassify::TreeFactory* m_factory;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
     const TupleItem*  m_calTotRLn; 
     const TupleItem*  m_calEnergySum;
@@ -51,10 +52,9 @@ private:
     const TupleItem*  m_vtxAngle;
 
     // output quantities: pointers to corresponding tuple items
-    double* m_goodCalProb;
-    double* m_coreProb; 
-    double* m_vtxProb ;
-    double* m_psfErrPred; 
+    double* m_goodCalProb; 
+    double* m_goodPsfProb; 
+    double* m_vtxProb ; // vertex or track choice
     double* m_gammaProb ;
     
 
