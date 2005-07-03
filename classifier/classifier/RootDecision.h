@@ -62,8 +62,8 @@ public:
     const DecisionTree* dtree()const{return m_dtree;}
 
 private:
-    RootTuple* m_tuple;
     const DecisionTree* m_dtree;
+    RootTuple* m_tuple;
 
 };
 #endif

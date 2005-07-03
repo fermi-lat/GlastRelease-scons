@@ -36,7 +36,7 @@ TrainingInfo::TrainingInfo( const std::string& title,  const std::string& varstr
         readnames("files.txt", files);
         for(std::vector<std::string>::iterator sit = files.begin(); sit!=files.end(); ++sit){
             std::string file_name = *sit;
-            int pos =file_name.find(',') ; 
+            unsigned int pos =file_name.find(',') ; 
             if( pos == std::string::npos) {
                 if(signal_files)  m_signalFiles.push_back(file_name);
                 else m_backgroundFiles.push_back(file_name);

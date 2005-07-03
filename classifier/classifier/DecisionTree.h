@@ -79,9 +79,8 @@ private:
     void printNode(std::ostream& out , const DecisionTree::Node * node, unsigned int id)const;
 
     std::vector<std::pair<double, Node*> > m_rootlist;
-    double m_lastWeight;
-
     std::string m_title;
+    double m_lastWeight;
 };
 #endif
 
