@@ -10,6 +10,7 @@ $Header$
 #include "classifier/TrainingInfo.h"
 #include <fstream>
 #include <cassert>
+#include <stdexcept>
 
 using namespace GlastClassify;
 
