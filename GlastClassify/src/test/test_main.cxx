@@ -54,7 +54,8 @@ int main(int argc, char ** argv)
     try {
         std::cout << "Gleam classification test:\n\ttree:\t"
             << name << std::endl;
-        std::string tree_path(std::string(::getenv("GLASTCLASSIFYROOT"))+"/data");
+        const char * root= ::getenv("GLASTCLASSIFYROOT");
+        std::string tree_path( std::string(root)+"/data");
 
         std::cout << "\tpath:\t" << tree_path << std::endl;
 
