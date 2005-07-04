@@ -203,10 +203,7 @@ ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 Triggered.Members += { "meritAlg" };
 //-------------------------------------
-// Merit configuration
-MeritAlg.IM_filename=""; // disable IM variable
-MeritAlg.cuts="LnA";     // no test for tail suppression
-
+// Merit configuration --  (use defaults)
 
 // ---------------------------- 
 //   Output
