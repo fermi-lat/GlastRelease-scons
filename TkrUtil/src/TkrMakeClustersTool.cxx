@@ -227,11 +227,16 @@ StatusCode TkrMakeClustersTool::makeClusters(
 
                     Event::TkrCluster* cl = new Event::TkrCluster(hitId, strip0, stripf, 
                         pos, rawToT, ToT, status, nBad);
-                    //if(m_type == ITkrBadStripsSvc::BADCLUSTERS) std::cout << *cl << std::endl;
-                    //cl->setMips(ToT);
+                    // for tests
+                    //if(m_type == ITkrBadStripsSvc::BADCLUSTERS) {
+                    //    std::cout << tower << " " << nHits << " " <<
+                    //        tray << " " << botTop << " " << strip0 << " " << stripf-strip0+1 << std::endl;
+                    //}
                     pClus->push_back(cl);
                     nclusters++;
                     (*clusMap)[hitId].push_back(cl);
+                    // for tests
+                    //std::cout << rawToT << " " << ToT << std::endl;
                 } 
                 lowStrip = nextStrip;  // start a new cluster with this strip
                 nBad = 0;
