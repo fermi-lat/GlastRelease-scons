@@ -1,6 +1,7 @@
 /**@file TreeFactory.h
 
 @brief declaration of class TreeFactory
+@author T. Burnett
 
 $Header$
 */
@@ -18,14 +19,14 @@ class DecisionTree;
 namespace GlastClassify {
 
     /** @class TreeFactory
-    @brief A factory for decision trees
+    @brief A factory for accessing decision trees
 
     */
     class TreeFactory {
     public:
 
-        /**
-        nested class definition interface that must be implemented by client
+        /** @class ILookupData
+        @brief nested class definition interface that must be implemented by client
         */
         class ILookupData {
         public:
@@ -39,12 +40,20 @@ namespace GlastClassify {
         // forward declaration
         class GleamValues;
 
+        /** @brief ctor sets up for tree production 
+        @param path file path to a folder containing tree data
+        @param lookup Instance of a class supplied to by user, which is called back 
+        to find address of each variable
+
+
+        */
         TreeFactory(const std::string& path, ILookupData& lookup)
             :m_path(path)
             ,m_lookup(lookup){};
 
         /** @class Tree
         @brief nested class definition
+        This class wraps a DecisionTree object
         */
         class Tree {
         public:
@@ -59,11 +68,14 @@ namespace GlastClassify {
             GleamValues* m_vals;
         };
 
-        /// @return a reference to a new tree
+        /** @param name a folder name completing the path to the folder containing the tree data
+        
+         @return a reference to a new tree. See also the evaluate() method.
+         */
         const TreeFactory::Tree& operator()(const std::string& name);
 
 
-        /// @return value of Tree # i
+        /// @return value of Tree # i for current set of values
         double evaluate(int i)const{return (*m_trees[i])();}
 
         ~TreeFactory();

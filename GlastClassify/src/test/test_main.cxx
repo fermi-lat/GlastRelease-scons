@@ -1,5 +1,6 @@
 /**@file main.cxx
 @brief main program for application to test GLAST classification trees
+$Header$
 
 */
 
@@ -31,7 +32,8 @@ public:
     {
         log() << "Creating the factory:" << std::endl;
 
-        TreeFactory factory(info_path, TestLookup());
+        TreeFactory::ILookupData& looker = *new TestLookup();
+        TreeFactory factory(info_path, looker);
 
         log() << "Ask factory for a tree: " << std::endl;
         const TreeFactory::Tree& goodcal= factory(name);
@@ -47,7 +49,7 @@ private:
 
 
 
-int main(int argc, char ** argv)
+int main(int, char ** )
 {
     int rc=0;
     std::string name("goodcal");
