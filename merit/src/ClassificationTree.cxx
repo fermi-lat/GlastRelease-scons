@@ -207,8 +207,8 @@ private:
 //_________________________________________________________________________
 
 ClassificationTree::ClassificationTree( Tuple& t, std::ostream& log, std::string treepath)
-: m_log(log)
-, m_background(*new BackgroundCut(t))
+: m_background(*new BackgroundCut(t))
+, m_log(log)
     {
         Lookup looker(t);
 

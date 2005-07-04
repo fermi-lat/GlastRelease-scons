@@ -44,7 +44,7 @@ $Header$
 #include <numeric>
 #include <cassert>
 
-static std::string  default_cuts("LnA");
+static std::string  default_cuts("LntA");
 
 namespace gui 
 {
@@ -247,7 +247,7 @@ StatusCode meritAlg::setupTools() {
             m_merit->addItem( varName, val);
             return IValsTool::Visitor::CONT;
         }
-      IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const int& value) const
+      IValsTool::Visitor::eVisitorRet analysisValue(std::string , const int& ) const
         {
 #if 1 // not yet implemented
             return IValsTool::Visitor::ERROR;

@@ -258,7 +258,7 @@ std::ostream& operator<< (std::ostream& out, const TupleItem& t)
 void Tuple::add_alias(std::string name1, std::string name2)
 {
     // create, or find, the tuple item
-    const TupleItem * ti = tupleItem(name1);
+    //? const TupleItem * ti = tupleItem(name1);
     if( find( name1) == end() ){
         std::stringstream  errmsg;
         errmsg << "Tuple::add_alias: did not find '" << name1 << "' in the tuple\n";

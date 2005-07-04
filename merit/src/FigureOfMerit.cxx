@@ -358,7 +358,7 @@ FigureOfMerit::FigureOfMerit(const Tuple& t, std::string cut_string)
     }	// if (!s_instance)
 
     //need this to add these aliases
-    Tuple& tt = const_cast<Tuple&>(t);
+    //?Tuple& tt = const_cast<Tuple&>(t);
 
     if( !cut_string.empty()) setCuts(cut_string);
 
