@@ -37,6 +37,7 @@
 
 #include "src/Track/TkrTrackEnergyTool.h"
 #include "TkrRecon/Track/ITkrFitTool.h"
+#include "Track/ITkrAlignHitsTool.h"
 
 class TkrTrackFitAlg : public Algorithm
 {
@@ -62,6 +63,8 @@ private:
 
     /// Always use Sears Craftsmen tools for the job
     ITkrFitTool* m_FitTool;
+    /// For the alignment
+    ITkrAlignHitsTool* m_AlignTool;
 
     /// And for the energy too
     ITkrTrackEnergyTool* m_EnergyTool;
@@ -131,6 +134,7 @@ StatusCode TkrTrackFitAlg::initialize()
     }
 
     sc = toolSvc()->retrieveTool("TkrTrackEnergyTool", m_EnergyTool);
+    sc = toolSvc()->retrieveTool("TkrAlignHitsTool",   m_AlignTool);
 
     return sc;
 }
@@ -248,6 +252,7 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
     {
          Event::TkrTrack* track = *trackIter;
+         m_AlignTool->alignHits(track);
          m_FitTool->doTrackReFit(track);
     }
 
