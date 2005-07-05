@@ -4,8 +4,9 @@
 
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include <CalRecon/ICalClusterFiller.h>
-#include <CalRecon/ICalReconSvc.h>
+#include "CalRecon/ICalClusterFiller.h"
+#include "CalRecon/ICalReconSvc.h"
+#include "CalMomentsAnalysis.h"
 
 /**   
 * @class MomentsClusterInfo
@@ -25,7 +26,7 @@
 class MomentsClusterInfo : virtual public ICalClusterFiller
 {
 public:
-    MomentsClusterInfo(const ICalReconSvc* calReconSvc);
+    MomentsClusterInfo(const ICalReconSvc* calReconSvc, double transScaleFactor = 1.5);
     virtual ~MomentsClusterInfo() {};
     
     Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec);
@@ -39,9 +40,12 @@ private:
     //! package service
     const ICalReconSvc* m_calReconSvc;
 
-    const double        m_minFrac; 
+    Point               m_p0;
     int                 m_calnLayers;
-    const Point         m_p0;   // WBA: Spurious off-set for origin - ?????
+    CalMomentsDataVec   m_dataVec;
+
+    /// Transverse RMS scale factor
+    double m_transScaleFactor;
 };
 
 #endif

@@ -2,10 +2,14 @@
 #include "MomentsClusterInfo.h"
 
 /// Constructor
-MomentsClusterInfo::MomentsClusterInfo(const ICalReconSvc* calReconSvc) 
-                                     : m_calReconSvc(calReconSvc), m_p0(0.,0.,0.), m_minFrac(0.01)
+MomentsClusterInfo::MomentsClusterInfo(const ICalReconSvc* calReconSvc, double transScaleFactor) 
+                                     : m_calReconSvc(calReconSvc), 
+                                       m_p0(0.,0.,0.),
+                                       m_transScaleFactor(transScaleFactor)
 {
     m_calnLayers = m_calReconSvc->getCalNLayers();
+
+    m_dataVec.clear();
 
     return;
 }
@@ -19,10 +23,8 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVe
     cluster->clear();
 
     double energy = fillLayerData(xTalVec, cluster);
-	cluster->setStatusBit(Event::CalCluster::CENTROID);
 
     fillMomentsData(xTalVec, cluster, energy);
-	cluster->setStatusBit(Event::CalCluster::MOMENTS);
 
     return cluster;
 }
@@ -156,134 +158,46 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
 void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalCluster* cluster, double energy)
 {
-    //Initialize local variables
-    Vector pCluster = cluster->getPosition();
+    // Try new utility class
+    // Begin by building a Moments Data vector
+    m_dataVec.clear();
 
-    // Moments Analysis Here
-    // This version lifted directly from code supplied to Bill Atwood by Toby Burnett
-    // TU 5/24/2005
-	Vector moment(0., 0., 0.); 
+    Point  centroid = cluster->getCalParams().getCentroid();
+    Vector axis     = cluster->getCalParams().getAxis();
 
-    double dircos[3][3];
-	dircos[0][1] = 0.; 
-    dircos[1][1] = 0.; 
-    dircos[2][1] = 0.; 
-
-	if((cluster->getStatusBits()& Event::CalCluster::CENTROID) &&
-		cluster->getNumTruncXtals() > 3)
+    // Loop through the points, first by "bilayer"
+    for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
-	    double m_xcen     = pCluster.x();
-        double m_ycen     = pCluster.y();
-        double m_zcen     = pCluster.z();
-        int    numXtals   = 0;
-		double xprm       = 0.,  yprm = 0.,  zprm = 0., Rsq = 0.,
-               Ixx        = 0.,  Iyy  = 0.,  Izz  = 0.,
-               Ixy        = 0.,  Ixz  = 0.,  Iyz  = 0.;
-        double m_Rsq_mean = 0.;
+        Event::CalXtalRecData* recData = *xTalIter;
 
-        for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
-        {
-            // Construct elements of (symmetric) "Inertia" Tensor:
-            // See Goldstein, 1965, Chapter 5 (especially, eqs. 5-6,7,22,26).
-            // Analysis easy when translated to energy centroid.
-            // get pointer to the reconstructed data for given crystal
-		    Event::CalXtalRecData* recData = *xTalIter;
-        
-            // get reconstructed values
-            double eneXtal = recData->getEnergy();                // crystal energy
-            if(eneXtal > m_minFrac * energy) 
-            {
-                numXtals++;
-                Vector pXtal   = recData->getPosition() - m_p0;         // Vector of crystal position
-                int    layer   = (recData->getPackedId()).getLayer();   // layer number
- 
-                xprm = pXtal.x() - m_xcen;
-                yprm = pXtal.y() - m_ycen;
-                zprm = pXtal.z() - m_zcen;
+        CalMomentsData momentsData(recData->getPosition(), recData->getEnergy(), 0.);
 
-                Rsq = xprm*xprm + yprm*yprm + zprm*zprm;
-                m_Rsq_mean += Rsq;
-                Ixx += (Rsq - xprm*xprm) * eneXtal;
-                Iyy += (Rsq - yprm*yprm) * eneXtal;
-                Izz += (Rsq - zprm*zprm) * eneXtal;
-                Ixy -= xprm*yprm * eneXtal;
-                Ixz -= xprm*zprm * eneXtal;
-                Iyz -= yprm*zprm * eneXtal;
-            }
-        }
+        double distToAxis = momentsData.calcDistToAxis(centroid, axis);
+                
+        m_dataVec.push_back(momentsData);
+    }
 
-        if (numXtals > 0) m_Rsq_mean = m_Rsq_mean / numXtals;
+    CalMomentsAnalysis momentsAnalysis;
 
-        // Fit Calorimeter Track via principal moments approach.
-        double resid = 0.;
-        double p, q, r, a, b, rad_test, m, psi;
+    double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid, m_transScaleFactor);
 
-        // Render determinant of Inertia Tensor into cubic form.
-        p = - (Ixx + Iyy + Izz);
-        q = Iyy*Izz + Iyy*Ixx + Izz*Ixx - (Ixy*Ixy + Iyz*Iyz + Ixz*Ixz);
-        r = - Ixx*Iyy*Izz + Ixx*Iyz*Iyz + Iyy*Ixz*Ixz +
-              Izz*Ixy*Ixy - 2.*Ixy*Iyz*Ixz;
+    if (chiSq >= 0.)
+    {
+        double rms_long  = momentsAnalysis.getLongitudinalRms();
+        double rms_trans = momentsAnalysis.getTransverseRms();
+        double long_asym = momentsAnalysis.getLongAsymmetry(); 
+    
+        int num_TruncXtals = cluster->getNumTruncXtals(); 
 
-        // See CRC's Standard Mathematical Tables (19th edition), pp 103-105.
-        // The substitution, y = x - p/3 converts  y^3 + p*y^2 + q*y + r = 0
-        // to the form  x^3 + a*x + b = 0 .  Then, if b^2/4 + a^3/27 < 0 ,
-        // there will be three real roots -- guaranteed since the Inertia Tensor
-        // is symmetric.  A second substitution, x = m*cos(psi) , yields the roots.
-        a = (3.*q - p*p)/3.;
-        b = (2.*p*p*p - 9.*p*q + 27.*r)/27.;
+        centroid = momentsAnalysis.getMomentsCentroid();
+        axis     = momentsAnalysis.getMomentsAxis();
 
-        rad_test = b*b/4. + a*a*a/27.;
+        Event::CalParams params(energy, 10*energy, centroid.x(), centroid.y(), centroid.z(), 1.,0.,0.,1.,0.,1.,
+                                                   axis.x(),     axis.y(),     axis.z(),     1.,0.,0.,1.,0.,1.);
 
-        if ((rad_test < 0.) && (Ixy != 0.) && (Ixz != 0.) && (Iyz != 0.))
-        {
-            // Construct the roots, which are the principal moments.
-            m = 2. * sqrt(-a/3.);
-            psi = acos( 3.*b/(a*m) ) / 3.;
-            moment[0] = m * cos(psi) - p/3.;
-            moment[1] = m * cos(psi + 2.*M_PI/3.) - p/3.;
-            moment[2] = m * cos(psi + 4.*M_PI/3.) - p/3.;
-
-            // Construct direction cosines; dircos for middle root is parallel to
-            // longest principal axis.
-            float A, B, C, D;
-
-            for(int iroot=0; iroot < 3; iroot++) 
-            {
-                A = Iyz * (Ixx - moment[iroot]) - Ixy*Ixz;
-                B = Ixz * (Iyy - moment[iroot]) - Ixy*Iyz;
-                C = Ixy * (Izz - moment[iroot]) - Ixz*Iyz;
-
-                D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
-                dircos[0][iroot] = D * C / A;
-                dircos[1][iroot] = D * C / B;
-                dircos[2][iroot] = D;
-            }
-		cluster->setStatusBit(Event::CalCluster::MOMENTS); 
-		}
-	}
-
-    // Fill CalCluster data
-    //Event::CalCluster* cl = new Event::CalCluster(ene, pCluster + p0); 
-	// WBA: Note pLayer & rmsLayer are hold overs and of questionable use.  Also the defs
-	//      of rms_ were pervert from the original (w.r.t. shower axis) to describe
-	//      properties w.r.t. Xtal axis - go figure!  
-	Vector caldir = Vector(dircos[0][1], dircos[1][1], dircos[2][1]);
-
-
-	if(caldir[2] < 0.) caldir = -caldir; 
-   
-	double longMag1 = fabs(moment[0]);
-	double longMag2 = fabs(moment[2]); 
-	double rms_long  = (longMag1 + longMag2) / 2.;
-	double rms_trans =  fabs(moment[1]);
-	double long_asym = (longMag1 - longMag2)/(longMag1 + longMag2); 
-	int num_TruncXtals = cluster->getNumTruncXtals(); 
-
-
-    Event::CalParams params(energy, 10*energy, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
-                                               caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
-
-    cluster->initialize(params, rms_long, rms_trans, long_asym, num_TruncXtals);
+        cluster->initialize(params, rms_long, rms_trans, long_asym, num_TruncXtals);
+        cluster->setStatusBit(Event::CalCluster::MOMENTS); 
+    }
 
     return;
 }
