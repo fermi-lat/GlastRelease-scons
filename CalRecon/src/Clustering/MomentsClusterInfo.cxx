@@ -183,15 +183,22 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 
     if (chiSq >= 0.)
     {
+        // Get the iterative moments centroid and axis
+        centroid = momentsAnalysis.getMomentsCentroid();
+        axis     = momentsAnalysis.getMomentsAxis();
+
+        // Recalculate the moments going back to using all the data points but with
+        // the iterated moments centroid
+        chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
+
+        // Extract the values for the moments with all hits present
         double rms_long  = momentsAnalysis.getLongitudinalRms();
         double rms_trans = momentsAnalysis.getTransverseRms();
         double long_asym = momentsAnalysis.getLongAsymmetry(); 
     
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
-        centroid = momentsAnalysis.getMomentsCentroid();
-        axis     = momentsAnalysis.getMomentsAxis();
-
+        // Store all this information away in the cluster
         Event::CalParams params(energy, 10*energy, centroid.x(), centroid.y(), centroid.z(), 1.,0.,0.,1.,0.,1.,
                                                    axis.x(),     axis.y(),     axis.z(),     1.,0.,0.,1.,0.,1.);
 
