@@ -65,6 +65,8 @@ class TableColumnList: public FXVerticalFrame, public rdbModel::Visitor
   rdbModel::Visitor::VisitorState visitIndex(rdbModel::Index *index);
   rdbModel::Visitor::VisitorState visitAssertion(rdbModel::Assertion *assertion);
 
+  /// <insertNew>, <supersede> and so forth are only of interest to rdbModel
+  /// so this visitor can ignore them.
   rdbModel::Visitor::VisitorState visitInsertNew(rdbModel::InsertNew*) {
     return Visitor::VCONTINUE;
   }

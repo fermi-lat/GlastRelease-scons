@@ -10,7 +10,7 @@
 #include "ResultTable.h"
 #include "ConnectionDialog.h"
 
-#include "rdbModel/Management/Manager.h"
+#include "rdbModel/Management/Manager.h"      // includes Rdb.h
 #include "rdbModel/Management/XercesBuilder.h"
 #include "rdbModel/Db/MysqlConnection.h"
 
@@ -44,6 +44,8 @@ private:
   rdbModel::XercesBuilder        *m_rdbBuilder;            // Builder of the rdb from the xml file
   rdbModel::MysqlConnection      *m_connect;               // Object to connect to a mysql db
   FXString                        m_lastDbSchema;          // last DB schema opened
+  rdbModel::Rdb                  *m_rdb;                   // Rdb for last compatible schema
+                                                              
 
   std::string                     m_primaryKey;            // the name of the primary key                       
   

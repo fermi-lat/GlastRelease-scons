@@ -38,7 +38,7 @@ FXIMPLEMENT(RdbGUIWindow,FXMainWindow,RdbGUIWindowMap,ARRAYNUMBER(RdbGUIWindowMa
 /*******************************************************************************/
 
 // Construct a RdbGUIWindow
-RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL,0,0,800,600)
+  RdbGUIWindow::RdbGUIWindow(FXApp* a):FXMainWindow(a,"rdbGUI",NULL,NULL,DECOR_ALL,0,0,800,600), m_rdb(0)
 {
   // Main window set itself as the target
   setTarget(this);
@@ -251,6 +251,7 @@ long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
             {    
               m_rdbManager->cleanRdb();
               uiTblColList->reset();
+              m_rdb = 0;
             }
           loadXMLFile(opendialog->getFilename());        
         }
@@ -312,21 +313,25 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
           case rdbModel::MATCHequivalent:
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
             searchFrame->setConnection(m_connect);
+            m_rdb = m_rdbManager->getRdb();
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHcompatible:
             uiLog->logText("XML schema and MySQL database are compatible\n");
             searchFrame->setConnection(m_connect);
+            m_rdb = m_rdbManager->getRdb();
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHfail:
             uiLog->logText("XML schema and MySQL database are NOT compatible\n");
+            m_rdb = 0;
             m_connect->close();
             break;
           case rdbModel::MATCHnoConnection:
             uiLog->logText("Connection failed while attempting match\n");
+            m_rdb = 0;
             m_connect->close();
             break;
           }
@@ -380,7 +385,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   uiTable->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
-  //   Joanne insert starts here
+  //   Joanne patch starts here
   if (!queryResult) 
 
     {
@@ -389,7 +394,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
       uiTable->setItemText(0, 0, "Null query result");
       return 1;
     }
-  //   Joanne insert ends here
+  //   Joanne patch ends here
   if (queryResult->getNRows() < 1)
     {
       uiTable->setTableSize(1, 1);
@@ -431,6 +436,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 long RdbGUIWindow::onMultiInsert(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
   if ((uiTblColList->getTableList()->getNumItems() == 0 )
       || (m_connect == 0) || !(m_connect->isConnected()) ||
       (m_dgInsert->getLastRow() < 0))
@@ -461,6 +467,7 @@ long RdbGUIWindow::onMultiInsert(FXObject*,FXSelector, void*)
 long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
   if ((uiTblColList->getTableList()->getNumItems() == 0 )
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
@@ -487,6 +494,7 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
 long RdbGUIWindow::onUpdateLastRow(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
   if ((uiTblColList->getTableList()->getNumItems() == 0 )
       || (m_connect == 0) || !(m_connect->isConnected()) 
       || (m_dgInsert->getLastRow() < 0))
@@ -517,6 +525,7 @@ long RdbGUIWindow::onUpdateRowByKey(FXObject*,FXSelector, void* ptr)
   FXint row = (FXint) ptr;
   
   m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
   if ((uiTblColList->getTableList()->getNumItems() == 0 )
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
@@ -546,6 +555,7 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
   FXint row = (FXint) ptr;
   
   m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
   if ((uiTblColList->getTableList()->getNumItems() == 0 )
       || (m_connect == 0) || !(m_connect->isConnected()))
     return 1;
@@ -574,6 +584,7 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
 void RdbGUIWindow::closeConnection()
 {
   m_connect->close();
+  m_rdb = 0;      // only useful when compatible with db we're connected to
   m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
   searchFrame->reset();
   uiTable->clearItems();

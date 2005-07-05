@@ -37,6 +37,7 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   InsertDialog(FXApp *owner);
  
   void setConnection(rdbModel::Connection* con){m_connection = con;}
+  void setRdb(rdbModel::Rdb* rdb){m_rdb = rdb;}
   void setTableName(std::string name){m_tableName = name;} 
   void setUiLog(LogText* log){m_uiLog = log;};
   long onGoPress(FXObject*,FXSelector,void*);
@@ -97,7 +98,8 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
     return Visitor::VCONTINUE;
   }
 
-  
+  /// Rdb corresponding to schema (if compatible with connection db)
+  rdbModel::Rdb *m_rdb;  
   /// The name of the current table
   std::string m_tableName;
   /// Primary key name (for now compound keys are not considered)

@@ -217,7 +217,8 @@ long ResultTable::onCmdMenuPane(FXObject* sender,FXSelector sel,void* ptr)
   FXuint buttons;
   getCursorPosition(x,y,buttons);
   m_selRow = rowAtY(y);
-  if (m_selRow >=0 && m_selRow < nrows && getItemText(0, 0) != "No data")
+  if ((m_selRow>=0) && (m_selRow < nrows) && (getItemText(0, 0) !="No data") &&
+      (getItemText(0, 0) != "Null query result") )
     {
       selectRow(m_selRow);
       m_updRow->enable();

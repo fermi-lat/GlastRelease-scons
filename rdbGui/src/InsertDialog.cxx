@@ -29,7 +29,7 @@ FXIMPLEMENT(InsertDialog,FXDialogBox,InsertDialogMap,ARRAYNUMBER(InsertDialogMap
 
 
 InsertDialog::InsertDialog(FXApp *owner):
-  FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE)
+  FXDialogBox(owner, "Insert",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE), m_rdb(0)
 { 
   m_matrix = 0;
  
@@ -155,19 +155,20 @@ void InsertDialog::fillWithLastRow()
 long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
 {     
   unsigned int i;
+  using rdbModel::FieldVal;
+  using rdbModel::Row;
   
   std::vector<std::string> colNames;
   std::vector<std::string> values;
   std::vector<std::string> nullValues;
   std::string name;
   std::string value;
+  bool        isNull;
+
+  std::vector<FieldVal> fields;
+  fields.reserve(m_widgets.size());
   
-#ifdef WIN32
-  const char* usrName = "USERNAME";
-#else
-  const char* usrName = "USER";
-#endif
-   
+
   for(i=0;i<m_widgets.size();i++)
   {
     ColWidget* temp = m_widgets[i]; 
@@ -177,32 +178,17 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
     value = temp->getValue();
     facilities::Util::trimTrailing(&value);
     
-    if (value == "")
-      nullValues.push_back(name);
-    else
-    {
-      colNames.push_back(name); 
-      values.push_back(value);
-    }      
+    isNull = (value == "");
+    fields.push_back(FieldVal(name, value, isNull));
+    
   }
+  Row row(fields);
    
-  for (i = 0; i < m_fromService.size(); i++)
-    if (m_fromService[i]->getContentsType() == rdbModel::Column::CONTENTSserviceName)
-      {
-        colNames.push_back(m_fromService[i]->getName());
-        values.push_back("rdbGui");
-      }
-    else if (m_fromService[i]->getContentsType() == rdbModel::Column::CONTENTSusername)
-      {
-        colNames.push_back(m_fromService[i]->getName());
-        values.push_back(::getenv(usrName));        
-      }
-      
   if (m_connection)
   {
     if(m_insertMode) //If in insert mode
       {
-        m_connection->insertRow(m_tableName, colNames, values, &m_lastRow, &nullValues);
+        m_rdb->insertRow(m_tableName, row, &m_lastRow);
         m_lastTblName = m_tableName;
       }  
     else //Otherwise we are in the Update Last Row mode
@@ -213,8 +199,7 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
                                          m_selRow, rdbModel::FIELDTYPEold,
                                          rdbModel::FIELDTYPElit);
       rdbModel::Assertion* whereSer = new rdbModel::Assertion(serEquals);
-
-      m_connection->update(m_tableName, colNames, values, whereSer, &nullValues);  
+      m_rdb->updateRows(m_tableName, row, whereSer);
     }
   }
     
