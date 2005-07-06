@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r22p6 6-Jul-2005  jrb  Make Leon-requested changes so that full wafer is
+                            called sensitive.  Digi code will figure out real
+                            sensitive area, taking alignment into account
    v1r22p5 16-Jun-2005 jrb  (for Anders) added 10, 12 and 14-tower files
    v1r22p4 02-JUN-2005 awb  Added 4,6 and 8 tower geometry files to latAssemby.
    v1r22p3 20-Apr-2005 jrb  (for Anders) Add VDG files for various configs
