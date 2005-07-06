@@ -1,7 +1,7 @@
 package RootConvert
 version v0r0p0
 author David Chamont <chamont@poly.in2p3.fr>
-branches RootConvert cmt doc src
+#branches RootConvert cmt doc src
 
 use Event v*
 use commonRootData v*
@@ -16,20 +16,16 @@ private
 apply_pattern package_headers
 
 macro_append RootConvert_headers "" WIN32 " \
+        ../RootConvert/Utilities/*.h \
         ../RootConvert/MonteCarlo/*.h \
         ../RootConvert/Digi/*.h \
         ../RootConvert/Recon/*.h
  
 library RootConvert \
+        Utilities/*.cxx \
         MonteCarlo/*.cxx \
         Digi/*.cxx \
         Recon/*.cxx \
         ${RootConvert_headers}
 
-
-
-
-
-
-
-
+application test_RootConvert -group=test test/test_RootConvert.cxx
