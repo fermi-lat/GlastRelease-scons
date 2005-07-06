@@ -645,11 +645,11 @@ FullShowerDevelopmentDescriptionManager::FullShowerDevelopmentDescriptionManager
     }
   CurrentFSDD = NULL;
 
-  int nmax = nmax_input;
+  int nxmax = nxmax_input;
   if(nxmax>FSDD_NMAX-1)
     {
       //      printf("FullShowerDevelopmentDescriptionManager nxmax>FSDD_NMAX-1 !!!!!!!!!!!!!!!!\n");
-      nmax = FSDD_NMAX-1;
+      nxmax = FSDD_NMAX-1;
     }
 
   NDevelopment = nxmax;
