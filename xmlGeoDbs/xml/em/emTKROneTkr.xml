@@ -538,7 +538,6 @@
 	 YREF="SiWaferActiveSide"
 	 ZREF="SiThick"
 	 materialREF="TKRDetMat">
-      <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
     </box>
 
     <box name="SiWafer"
@@ -548,9 +547,6 @@
 	 materialREF="TKRDetMat">
     </box>
 
-    <composition name="SiWaferNest" envelope="SiWafer">
-      <posXYZ volume="SiWaferActive" />
-    </composition>
 
    <!--       ************* new stuff (ladders) *************   -->
 
@@ -559,14 +555,14 @@
          value will be set correctly in rotated trays. -->
 
     <stackY name="ladder" >
-      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross"
+      <axisMPos volume="SiWaferActive" ncopyREF="nWaferAcross"
                                      shiftREF="waferPitch" >
          <idField name="fWafer" value="0" step="1" />
       </axisMPos>
     </stackY>
 
     <stackY name="ladderYMeas" >
-      <axisMPos volume="SiWaferNest" ncopyREF="nWaferAcross"
+      <axisMPos volume="SiWaferActive" ncopyREF="nWaferAcross"
                                      shiftREF="waferPitch" >
          <idField name="fWafer" valueREF="nWaferAcrossM1" step="-1" />
       </axisMPos>
@@ -592,19 +588,15 @@
 	 YREF="SiWaferActiveSide"
 	 ZREF="emSiThick"
 	 materialREF="TKRDetMat">
-      <seg axis="X" reason="readout" nSegREF="stripPerWafer" />
     </box>
-
+<!--
     <box name="emSiWafer"
 	 XREF="SiWaferSide"
 	 YREF="SiWaferSide"
 	 ZREF="emSiThick"
 	 materialREF="TKRDetMat">
     </box>
-
-    <composition name="emSiWaferNest" envelope="emSiWafer">
-      <posXYZ volume="emSiWaferActive" />
-    </composition>
+-->
 
    <!--       ************* new stuff (ladders) *************   -->
 
@@ -613,14 +605,14 @@
          value will be set correctly in rotated trays. -->
 
     <stackY name="emladder" >
-      <axisMPos volume="emSiWaferNest" ncopyREF="nWaferAcross"
+      <axisMPos volume="emSiWaferActive" ncopyREF="nWaferAcross"
                                      shiftREF="waferPitch" >
          <idField name="fWafer" value="0" step="1" />
       </axisMPos>
     </stackY>
 
     <stackY name="emladderYMeas" >
-      <axisMPos volume="emSiWaferNest" ncopyREF="nWaferAcross"
+      <axisMPos volume="emSiWaferActive" ncopyREF="nWaferAcross"
                                      shiftREF="waferPitch" >
          <idField name="fWafer" valueREF="nWaferAcrossM1" step="-1" />
       </axisMPos>
