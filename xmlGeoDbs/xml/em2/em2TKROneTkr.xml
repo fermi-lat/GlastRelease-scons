@@ -531,11 +531,15 @@
      Active area is not quite a square, but very close.  For now,
      ignore the .02 mm difference between length and width;
      use the shorter dimension for both.
+
+     6 July 2005.  Use full dimension of wafer; TkrDigi code will deal
+     with subtleties
+
 -->
     <box name="SiWaferActive"
          sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
-	 XREF="SiWaferActiveSide"
-	 YREF="SiWaferActiveSide"
+	 XREF="SiWaferSide"
+	 YREF="SiWaferSide"
 	 ZREF="SiThick"
 	 materialREF="TKRDetMat">
     </box>
@@ -581,11 +585,14 @@
         <idField name="fLadder" value="0" step="1" />
       </axisMPos>
     </stackX>
-
+<!--
+     6 July 2005.  Use full dimension of wafer; TkrDigi code will deal
+     with subtleties
+-->
     <box name="emSiWaferActive"
          sensitive="posHit"  detectorTypeREF="eDTypeTKRSi"
-	 XREF="SiWaferActiveSide"
-	 YREF="SiWaferActiveSide"
+	 XREF="SiWaferSide"
+	 YREF="SiWaferSide"
 	 ZREF="emSiThick"
 	 materialREF="TKRDetMat">
     </box>
