@@ -102,6 +102,20 @@ StatusCode test_CalRecon::execute() {
               <<corResult->getParams().getEnergy()
               <<endreq ; 
         }
+        else if (corResult->getCorrectionName() == "CalFullProfileTool" )
+        {
+            log<<MSG::INFO<<"FullProfile Corr Energy "
+	       <<corResult->getParams().getEnergy()
+	       << " alpha = " << (*corResult)["alpha"] 
+	       << " tmax = " << (*corResult)["tmax"] 
+	       << " tkrrln = " << (*corResult)["tkrrln"] 
+	       << " lastx0 = " << (*corResult)["lastx0"] 
+	       << " totchisq = " << (*corResult)["totchisq"] 
+	       << " chisq = " << (*corResult)["chisq"] 
+	       << " parcf = " << (*corResult)["parcf"] 
+	       << " parc = " << (*corResult)["parc"] 
+              <<endreq ; 
+        }
         else if (corResult->getCorrectionName() == "CalLastLayerLikelihoodTool" )
         {
             double llStatus = (*corResult)["llStatus"] ;
