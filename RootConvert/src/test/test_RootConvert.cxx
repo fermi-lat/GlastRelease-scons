@@ -1,6 +1,7 @@
 
 #include <RootConvert/MonteCarlo/McPositionHitConvert.h>
 #include <RootConvert/Recon/CalClusterConvert.h>
+#include <RootConvert/Recon/CalEventEnergyConvert.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TRandom.h"
 #include <iostream>
@@ -15,7 +16,8 @@ bool check( Float_t randNum ) {
         rootObj1.Fake(i,randNum) ;
         RootPersistence::convert(rootObj1,tdsObj) ;
         RootPersistence::convert(tdsObj,rootObj2) ;
-        if (!rootObj1.CompareInRange(rootObj2)) {
+        Bool_t theSame = rootObj1.CompareInRange(rootObj2) ;
+        if (!theSame) {
             std::cout
               <<"RootConvert test FAILED for "
               <<rootObj1.ClassName()
@@ -38,6 +40,7 @@ int main( int /* argc */, char ** /* argv */ ) {
     result = result && check<Event::McPositionHit,McPositionHit>(randNum) ;
     result = result && rootdatautil::CompareInRange(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
     result = result && check<Event::CalCluster,CalCluster>(randNum) ;
+    result = result && check<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
     
     if (result) {
       std::cout<<"RootConvert test suceeded"<<std::endl ;
