@@ -56,11 +56,11 @@ Bool_t CalCorToolResult::CompareInRange( const CalCorToolResult & res ) const
   result = result && getParams().CompareInRange(res.getParams()) ;
   const TObjArray & fp1 = getFreeAttributes() ;
   const TObjArray & fp2 = res.getFreeAttributes() ;
-  result = result && rootdatautil::CompareInRange(fp1.GetSize(),fp2.GetSize(),"Number of free params") ;
+  result = result && rootdatautil::CompareInRange(fp1.GetEntries(),fp2.GetEntries(),"Number of free params") ;
   TIter fp1Iter(&fp1), fp2Iter(&fp2) ;
   const TParameter<Double_t> * p1, * p2 ;
-  while ( p1=(const TParameter<Double_t> *)fp1Iter.Next(),
-          p2=(const TParameter<Double_t> *)fp2Iter.Next() )
+  while ( ((p1=(const TParameter<Double_t> *)fp1Iter.Next())!=0) &&
+          ((p2=(const TParameter<Double_t> *)fp2Iter.Next())!=0) )
    {
     result = result && rootdatautil::CompareInRange(p1->GetName(),p2->GetName(),"Parameter Name") ;
     result = result && rootdatautil::CompareInRange(p1->GetVal(),p2->GetVal(),"Parameter Value") ;

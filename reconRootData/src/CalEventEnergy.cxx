@@ -12,6 +12,8 @@ void CalEventEnergy::init
  {
   m_params = params ;
   m_statusBits = statusBits ;
+  m_toolsResults.Delete() ;
+  m_toolsResults.Clear() ;
   TIter toolResultIter(&toolsResults) ;
   CalCorToolResult * toolResult ;
   while ((toolResult=(CalCorToolResult *)toolResultIter.Next()))
@@ -64,8 +66,8 @@ Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c ) const
   result = result && rootdatautil::CompareInRange(res1.GetSize(),res2.GetSize(),"Number of results") ;
   TIter res1Iter(&res1), res2Iter(&res2) ;
   const CalCorToolResult * r1, * r2 ;
-  while ( r1=(const CalCorToolResult *)res1Iter.Next(),
-          r2=(const CalCorToolResult *)res2Iter.Next() )
+  while ( ((r1=(const CalCorToolResult *)res1Iter.Next())!=0) &&
+          ((r2=(const CalCorToolResult *)res2Iter.Next())!=0) )
    { result = result && r1->CompareInRange(*r2) ; }
   if (!result)
    { std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ; }
