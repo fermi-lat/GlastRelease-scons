@@ -162,7 +162,13 @@ void UseTot::processNew(CalibData::TkrTotCol* pNew,
     //    unsigned tray = 3;
     //    bool top = true;
     TkrId id(towerX, towerY, tray, top);
-    
+        if ((tray == 0) && (top)) {
+      const std::string* hwserial = pNew->getHwserial(towerY, towerX);
+
+      log << MSG::INFO << "hw serial for tower x = " << towerX
+          << " and tower y = " << towerY << " is " << *hwserial << std::endl;
+    }
+
     unsigned iStrip = 27;
 
     const CalibData::TkrTotStrip* pInfo = pNew->getStripInfo(id, iStrip);
