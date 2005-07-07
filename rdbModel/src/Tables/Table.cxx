@@ -13,6 +13,7 @@
 #include "rdbModel/Tables/Set.h"
 #include "facilities/Util.h"
 #include "facilities/Timestamp.h"
+#include <algorithm>
 
 namespace rdbModel {
   Table::Table() : m_sorted(false), m_nEndUser(0), m_iNew(0), m_sup(0), 
