@@ -5,86 +5,77 @@
 
 ClassImp(CalEventEnergy)
 
-//void CalEventEnergy::init
-// ( const std::vector<CalClusterLayerData> & layers, const CalParams & params,
-//   Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
-//   Int_t numTruncXtals, UInt_t statusBits )
-// {
-//  std::vector<CalClusterLayerData>::const_iterator layer ;
-//  int i ;
-//  for ( i=0, layer=layers.begin() ; layer != layers.end() ; ++i, ++layer )
-//    m_layers[i] = (*layer) ;
-//  m_params = params ;
-//  m_rmsLong = rmsLong ;
-//  m_rmsLongAsym = rmsLongAsym ;
-//  m_rmsTrans = rmsTrans ;
-//  m_numTruncXtals = numTruncXtals ;
-//  m_statusBits = statusBits ;
-// }
-//
-void CalEventEnergy::Clear( Option_t * )
+void CalEventEnergy::init
+ ( const CalParams & params,
+   UInt_t statusBits,
+   const TObjArray & toolsResults )
  {
-//  int i ;
-//  for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i )
-//    m_layers[i].Clear() ;
-//  m_params.Clear() ;
-//  m_rmsLong = 0.0 ;
-//  m_rmsLongAsym = 0.0 ;
-//  m_rmsTrans = 0.0 ;
-//  m_numTruncXtals = 0 ;
-//  m_statusBits = 0 ;
+  m_params = params ;
+  m_statusBits = statusBits ;
+  TIter toolResultIter(&toolsResults) ;
+  CalCorToolResult * toolResult ;
+  while ((toolResult=(CalCorToolResult *)toolResultIter.Next()))
+   { m_toolsResults.Add(toolResult) ; }  
  }
 
-//CalCluster::CalCluster
-// ( const std::vector<CalClusterLayerData> & layers, const CalParams & params,
-//   Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
-//   Int_t numTruncXtals, UInt_t statusBits )
-// { init(layers,params,rmsLong,rmsLongAsym,rmsTrans,numTruncXtals,statusBits) ; }
-//
+void CalEventEnergy::Clear( Option_t * )
+ {
+  m_params.Clear() ;
+  m_statusBits = 0 ;
+  m_toolsResults.Delete() ;
+  m_toolsResults.Clear() ;
+ }
+
+CalEventEnergy::CalEventEnergy
+ ( const CalParams & params,
+   UInt_t statusBits,
+   const TObjArray & toolsResults )
+ { init(params,statusBits,toolsResults) ; }
+
 // dummy data, just for tests
 void CalEventEnergy::Fake( UInt_t rank, Float_t randNum )
  {
-    CalParams p ;
-    p.Fake(rank,randNum) ;
-//    CalClusterLayerData layer ;
-//    std::vector<CalClusterLayerData> clusLayerData ;
-//    UInt_t iclusLayer;
-//    for ( iclusLayer = 0; iclusLayer<ROOT_NUMCALLAYERS ; ++iclusLayer ) {
-//        layer.Fake(rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
-//        clusLayerData.push_back(layer) ;
-//    }
-//    init(clusLayerData,p,1.0,2.0,3.0,4,5) ;
+  CalParams p ;
+  p.Fake(rank,randNum) ;
+  TObjArray toolsResults ;
+  CalCorToolResult * result ;
+  result = new CalCorToolResult ;
+  result->Fake(rank*2,randNum) ;
+  toolsResults.Add(result) ;
+  result = new CalCorToolResult ;
+  result->Fake(rank*2+1,randNum) ;
+  toolsResults.Add(result) ;
+  init(p,1,toolsResults) ;
  }
 
 void CalEventEnergy::Print( Option_t * ) const
  {
   m_params.Print() ;
-//  std::cout
-//    <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
-//    <<"RMS Long: "<<m_rmsLong<<"RMS Long Asym: "<<m_rmsLongAsym<<"  RMS Trans: "<<m_rmsTrans<<"\n"
-//    <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
+  m_toolsResults.Print() ;
  }
 
-Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c ) const {
+Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c ) const 
+ {
+  bool result = true ;
+  result = result && getParams().CompareInRange(c.getParams()) ;
+  result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
+  const TObjArray & res1 = getToolsResults() ;
+  const TObjArray & res2 = c.getToolsResults() ;
+  result = result && rootdatautil::CompareInRange(res1.GetSize(),res2.GetSize(),"Number of results") ;
+  TIter res1Iter(&res1), res2Iter(&res2) ;
+  const CalCorToolResult * r1, * r2 ;
+  while ( r1=(const CalCorToolResult *)res1Iter.Next(),
+          r2=(const CalCorToolResult *)res2Iter.Next() )
+   { result = result && r1->CompareInRange(*r2) ; }
+  if (!result)
+   { std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ; }
+  return result ;
 
-    bool result = true ;
+ }
 
-    result = result && getParams().CompareInRange(c.getParams()) ;
-//    int i ;
-//    for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {
-//        result = result && getLayer(i).CompareInRange(c.getLayer(i)) ;
-//    }
-//
-//    result = result && rootdatautil::CompareInRange(getRmsLong(),c.getRmsLong(),"RmsLong") ;
-//    result = result && rootdatautil::CompareInRange(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") ;
-//    result = result && rootdatautil::CompareInRange(getRmsTrans(),c.getRmsTrans(),"RmsTrans") ;
-//    result = result && rootdatautil::CompareInRange(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") ;
-//    result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
+CalEventEnergy::CalEventEnergy()
+ { Clear() ; }
 
-    if (!result) {
-        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
-    }
-    return result ;
-
-}
+CalEventEnergy::~CalEventEnergy()
+ { m_toolsResults.Delete() ; }
 

@@ -9,6 +9,7 @@
 //using namespace std;
 //#endif
 
+#include "CalEventEnergy.h"
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
 #include "CalMipTrack.h"
@@ -39,6 +40,9 @@ public:
 
     void Print(Option_t *option="") const;
 
+    /// provide access to list of event energies
+    TObjArray* getCalEventEnergyCol() { return m_eventEnergyCol; };
+
     /// provide access to list of CalClusters
     TObjArray* getCalClusterCol()  { return m_clusterCol; };
 
@@ -48,11 +52,15 @@ public:
     /// provide access to the list of CalMipTracks
     TObjArray* getCalMipTrackCol() { return m_mipTrackCol; };
 
-    void addCalCluster(CalCluster* cluster)   { m_clusterCol->Add(cluster); };
-    void addXtalRecData(CalXtalRecData *xtal) { m_xtalRecCol->Add(xtal); };
-    void addCalMipTrack(CalMipTrack* track)   { m_mipTrackCol->Add(track); };
+    void addCalEventEnergy(CalEventEnergy* energy) { m_eventEnergyCol->Add(energy); };
+    void addCalCluster(CalCluster* cluster)     { m_clusterCol->Add(cluster); };
+    void addXtalRecData(CalXtalRecData *xtal)   { m_xtalRecCol->Add(xtal); };
+    void addCalMipTrack(CalMipTrack* track)     { m_mipTrackCol->Add(track); };
 
 private:
+    /// list of CalEventEnergy
+    TObjArray* m_eventEnergyCol;
+
     /// list of CalXtalRecData
     TObjArray* m_xtalRecCol;
 

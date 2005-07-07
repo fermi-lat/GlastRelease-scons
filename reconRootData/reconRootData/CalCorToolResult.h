@@ -6,23 +6,25 @@
 #include <TObjArray.h>
 #include <TString.h>
 
-class CalCorToolResult : public TObjArray
+class CalCorToolResult : public TObject
 {
 public:
 
     CalCorToolResult() ;
+    // it takes ownership of free params
     CalCorToolResult
       ( const TString & correctionName,
         UInt_t statusBits,
         Double_t chiSquare,
         const CalParams & params,
-        const TObjArray & freeParams ) ;
+        const TObjArray & freeAttributes ) ;
+    // it takes ownership of free params
     void init
       ( const TString & correctionName,
         UInt_t statusBits,
         Double_t chiSquare,
         const CalParams & params,
-        const TObjArray & freeParams ) ;
+        const TObjArray & freeAttributes ) ;
     virtual ~CalCorToolResult() ;
 
     const TString & getCorrectionName() const
@@ -33,6 +35,8 @@ public:
      { return m_chiSquare ; }
     const CalParams & getParams() const
      { return m_params ; }
+    const TObjArray & getFreeAttributes() const
+     { return m_freeAttributes ; }
      
     void Clear( Option_t * option ="" ) ;
     void Fake( UInt_t rank, Float_t randNum ) ; // for tests
@@ -47,6 +51,7 @@ private:
     UInt_t m_statusBits ;
     Double_t m_chiSquare ;
     CalParams m_params ;
+    TObjArray m_freeAttributes ;
 
     ClassDef(CalCorToolResult,1)
 
