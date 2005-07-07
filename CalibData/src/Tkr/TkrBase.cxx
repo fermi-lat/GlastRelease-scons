@@ -49,6 +49,15 @@ namespace CalibData {
     return getUni(id);
   }
 
+  const std::string* TkrBase::getHwserial(unsigned towerRow, 
+                                          unsigned towerCol) const {
+    unsigned iTow=  m_finder->findTowerIx(towerRow, towerCol);
+
+    if (m_towers[iTow]) return &(m_towers[iTow]->m_hwserial);
+    else return 0;
+  }
+
+
   bool TkrBase::putUni(UniBase* data, unsigned towerRow, 
                         unsigned towerCol, unsigned tray, bool top) {
     return putUni(data, idents::TkrId(towerCol, towerRow, tray, top));

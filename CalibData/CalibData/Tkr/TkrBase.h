@@ -58,6 +58,11 @@ namespace CalibData {
     virtual bool putUni(UniBase* data, unsigned towerRow, 
                         unsigned towerCol, unsigned tray, bool top);
 
+    virtual const std::string* getHwserial(unsigned towerRow, 
+                                           unsigned TowerCol)
+      const;
+
+
     // Get dimensioning information; needed when transforming to 
     // permanent storage...might not need this
     /// Get # tower rows
