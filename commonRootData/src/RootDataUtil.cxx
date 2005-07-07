@@ -2,6 +2,7 @@
 #include "commonRootData/RootDataUtil.h"
 #include "TVector.h"
 #include "TLorentzVector.h"
+#include "TString.h"
 #include <iostream>
 
 namespace rootdatautil {
@@ -63,6 +64,14 @@ bool CompareInRange( UInt_t v1, UInt_t v2, const std::string & name ) {
  
 bool CompareInRange( Bool_t v1, Bool_t v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;
+}
+ 
+bool CompareInRange( const char * v1, const char * v2, const std::string & name ) {
+    return DirectCompareInRangeRefs(std::string(v1),std::string(v2),name) ;
+}
+ 
+bool CompareInRange( const TString & v1, const TString & v2, const std::string & name ) {
+    return DirectCompareInRangeRefs(std::string(v1.Data()),std::string(v2.Data()),name) ;
 }
  
 bool CompareInRange( const std::string & v1, const std::string & v2, const std::string & name ) {

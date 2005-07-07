@@ -7,6 +7,7 @@
 #include "Rtypes.h"
 class TVector3 ;
 class TLorentzVector ;
+class TString ;
 
 #include <string>
 
@@ -20,6 +21,8 @@ namespace rootdatautil {
     bool CompareInRange( Int_t, Int_t, const std::string & name ="unknown integer" ) ;
     bool CompareInRange( UInt_t, UInt_t, const std::string & name ="unknown integer" ) ;
     bool CompareInRange( Bool_t, Bool_t, const std::string & name ="unknown bool" ) ;
+    bool CompareInRange( const char *, const char *, const std::string & name ="unknown vector3" ) ;
+    bool CompareInRange( const TString &, const TString &, const std::string & name ="unknown vector3" ) ;
     bool CompareInRange( const std::string &, const std::string &, const std::string & name ="unknown vector3" ) ;
     bool CompareInRange( const TVector3 &, const TVector3 &, const std::string & name ="unknown vector3" ) ;
     bool CompareInRange( const TLorentzVector &, const TLorentzVector &, const std::string & name ="unknown lorentz vector" ) ;
