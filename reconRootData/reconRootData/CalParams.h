@@ -71,7 +71,7 @@ public:
 
     void Clear( Option_t * option ="" ) ;
     void Fake( UInt_t rank, Float_t randNum ) ; // for tests
-    Bool_t Compare( const CalParams & ) const ; // for tests
+    Bool_t CompareInRange( const CalParams & ) const ; // for tests
     void Print( Option_t * option ="" ) const ;
 
 private:

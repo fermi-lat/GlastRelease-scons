@@ -124,7 +124,7 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
     //   the ROOT file
     McPositionHit hitRef ;
     hitRef.Fake(ipart,randNum) ;
-    if (mcPosHit->Compare(hitRef))
+    if (mcPosHit->CompareInRange(hitRef))
       return 0 ;
     else
       return -1 ;

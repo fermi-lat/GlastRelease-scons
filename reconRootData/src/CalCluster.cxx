@@ -65,21 +65,21 @@ void CalCluster::Print( Option_t * ) const
     <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
  }
 
-Bool_t CalCluster::Compare( const CalCluster & c ) const {
+Bool_t CalCluster::CompareInRange( const CalCluster & c ) const {
 
     bool result = true ;
 
-    result = result && getParams().Compare(c.getParams()) ;
+    result = result && getParams().CompareInRange(c.getParams()) ;
     int i ;
     for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {
-        result = result && getLayer(i).Compare(c.getLayer(i)) ;
+        result = result && getLayer(i).CompareInRange(c.getLayer(i)) ;
     }
 
-    result = result && rootdatautil::Compare(getRmsLong(),c.getRmsLong(),"RmsLong") ;
-    result = result && rootdatautil::Compare(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") ;
-    result = result && rootdatautil::Compare(getRmsTrans(),c.getRmsTrans(),"RmsTrans") ;
-    result = result && rootdatautil::Compare(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") ;
-    result = result && rootdatautil::Compare(getStatusBits(),c.getStatusBits(),"StatusBits") ;
+    result = result && rootdatautil::CompareInRange(getRmsLong(),c.getRmsLong(),"RmsLong") ;
+    result = result && rootdatautil::CompareInRange(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") ;
+    result = result && rootdatautil::CompareInRange(getRmsTrans(),c.getRmsTrans(),"RmsTrans") ;
+    result = result && rootdatautil::CompareInRange(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") ;
+    result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
 
     if (!result) {
         std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;

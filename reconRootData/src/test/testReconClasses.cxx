@@ -168,7 +168,7 @@ int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
 
     CalCluster clusterRef ;
     clusterRef.Fake(0,randNum) ;
-    if (cluster->Compare(clusterRef))
+    if (cluster->CompareInRange(clusterRef))
       return 0 ;
     else
       return -1 ;

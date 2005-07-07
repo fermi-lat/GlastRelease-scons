@@ -39,7 +39,7 @@ public:
     void Clear(Option_t *option ="");
     
     void Fake( UInt_t rank, Float_t randNum ) ; // for tests
-    Bool_t Compare( const McPositionHit & ) const ; // for tests
+    Bool_t CompareInRange( const McPositionHit & ) const ; // for tests
 
     void Print(Option_t *option="") const;
 

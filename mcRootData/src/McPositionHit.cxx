@@ -58,28 +58,28 @@ void McPositionHit::Fake( UInt_t rank, Float_t randNum ) {
 
 }
 
-Bool_t McPositionHit::Compare( const McPositionHit & hit ) const {
+Bool_t McPositionHit::CompareInRange( const McPositionHit & hit ) const {
 
     Bool_t result = true ;
     
-    result = result && rootdatautil::Compare(getMcParticleId(),hit.getMcParticleId(),"McParticleId") ;
-    result = result && rootdatautil::Compare(getOriginMcParticleId(),hit.getOriginMcParticleId(),"OriginMcParticleId") ;
+    result = result && rootdatautil::CompareInRange(getMcParticleId(),hit.getMcParticleId(),"McParticleId") ;
+    result = result && rootdatautil::CompareInRange(getOriginMcParticleId(),hit.getOriginMcParticleId(),"OriginMcParticleId") ;
 
     VolumeIdentifier id1 = getVolumeId() ;
     VolumeIdentifier id2 = hit.getVolumeId() ;
-    result = result && rootdatautil::Compare(id1.name(),id2.name(),"VolumeId Name") ;
-    result = result && rootdatautil::Compare(id1.size(),id2.size(),"VolumeId Size") ;
-    result = result && rootdatautil::Compare(id1.getBits0to31(),id2.getBits0to31(),"VolumeId Bits0to31") ;
-    result = result && rootdatautil::Compare(id1.getBits32to63(),id2.getBits32to63(),"VolumeId Bits32to63") ;
+    result = result && rootdatautil::CompareInRange(id1.name(),id2.name(),"VolumeId Name") ;
+    result = result && rootdatautil::CompareInRange(id1.size(),id2.size(),"VolumeId Size") ;
+    result = result && rootdatautil::CompareInRange(id1.getBits0to31(),id2.getBits0to31(),"VolumeId Bits0to31") ;
+    result = result && rootdatautil::CompareInRange(id1.getBits32to63(),id2.getBits32to63(),"VolumeId Bits32to63") ;
     
-    result = result && rootdatautil::Compare(getEntryPosition(),hit.getEntryPosition(),"Entry") ;
-    result = result && rootdatautil::Compare(getExitPosition(),hit.getExitPosition(),"Exit") ;
-    result = result && rootdatautil::Compare(getGlobalEntryPosition(),hit.getGlobalEntryPosition(),"GlobalEntry") ;
-    result = result && rootdatautil::Compare(getGlobalExitPosition(),hit.getGlobalExitPosition(),"GlobalExit") ;
+    result = result && rootdatautil::CompareInRange(getEntryPosition(),hit.getEntryPosition(),"Entry") ;
+    result = result && rootdatautil::CompareInRange(getExitPosition(),hit.getExitPosition(),"Exit") ;
+    result = result && rootdatautil::CompareInRange(getGlobalEntryPosition(),hit.getGlobalEntryPosition(),"GlobalEntry") ;
+    result = result && rootdatautil::CompareInRange(getGlobalExitPosition(),hit.getGlobalExitPosition(),"GlobalExit") ;
 
-    result = result && rootdatautil::Compare(getDepositedEnergy(),hit.getDepositedEnergy(),"DepositedEnergy") ;
-    result = result && rootdatautil::Compare(getParticleEnergy(),hit.getParticleEnergy(),"ParticleEnergy") ;
-    result = result && rootdatautil::Compare(getTimeOfFlight(),hit.getTimeOfFlight(),"TimeOfFlight") ;
+    result = result && rootdatautil::CompareInRange(getDepositedEnergy(),hit.getDepositedEnergy(),"DepositedEnergy") ;
+    result = result && rootdatautil::CompareInRange(getParticleEnergy(),hit.getParticleEnergy(),"ParticleEnergy") ;
+    result = result && rootdatautil::CompareInRange(getTimeOfFlight(),hit.getTimeOfFlight(),"TimeOfFlight") ;
 
     if (!result) {
         std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;

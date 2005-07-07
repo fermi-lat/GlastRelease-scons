@@ -20,13 +20,13 @@ void CalClusterLayerData::Fake( UInt_t /* rank */, Float_t /* randNum */ )
  { init(1.,TVector3(2.,3.,4.),TVector3(5.,6.,7.)) ; }
  
 // for tests
-Bool_t CalClusterLayerData::Compare( const CalClusterLayerData & cl ) const {
+Bool_t CalClusterLayerData::CompareInRange( const CalClusterLayerData & cl ) const {
 
     Bool_t result = true ;
     
-    result = result && rootdatautil::Compare(getEnergy(),cl.getEnergy(),"Energy") ;
-    result = result && rootdatautil::Compare(getPosition(),cl.getPosition(),"Position") ;
-    result = result && rootdatautil::Compare(getRmsSpread(),cl.getRmsSpread(),"RmsSpread") ;
+    result = result && rootdatautil::CompareInRange(getEnergy(),cl.getEnergy(),"Energy") ;
+    result = result && rootdatautil::CompareInRange(getPosition(),cl.getPosition(),"Position") ;
+    result = result && rootdatautil::CompareInRange(getRmsSpread(),cl.getRmsSpread(),"RmsSpread") ;
 
     if (!result) {
         std::cout<<"Comparison ERROR for CalClusterLayerData"<<std::endl ;

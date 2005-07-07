@@ -87,26 +87,26 @@ void CalParams::Fake( UInt_t /* rank */, Float_t /* randNum */ )
       TVector3(12.,13.,14.),15.,16.,17.,18.,19.,20.) ;
  }
 
-Bool_t CalParams::Compare( const CalParams & cp ) const {
+Bool_t CalParams::CompareInRange( const CalParams & cp ) const {
     
     Bool_t result = true ;
     
-    result = result && rootdatautil::Compare(getEnergy(),cp.getEnergy(),"Energy") ;
-    result = result && rootdatautil::Compare(getEnergyErr(),cp.getEnergyErr(),"EnergyErr") ;
-    result = result && rootdatautil::Compare(getCentroid(),cp.getCentroid(),"Centroid") ;
-    result = result && rootdatautil::Compare(getxPosxPos(),cp.getxPosxPos(),"xPosxPos") ;
-    result = result && rootdatautil::Compare(getxPosyPos(),cp.getxPosyPos(),"xPosyPos") ;
-    result = result && rootdatautil::Compare(getxPoszPos(),cp.getxPoszPos(),"xPoszPos") ;
-    result = result && rootdatautil::Compare(getyPosyPos(),cp.getyPosyPos(),"yPosyPos") ;
-    result = result && rootdatautil::Compare(getyPoszPos(),cp.getyPoszPos(),"yPoszPos") ;
-    result = result && rootdatautil::Compare(getzPoszPos(),cp.getzPoszPos(),"zPoszPos") ;
-    result = result && rootdatautil::Compare(getAxis(),cp.getAxis(),"Axis") ;
-    result = result && rootdatautil::Compare(getxDirxDir(),cp.getxDirxDir(),"xDirxDir") ;
-    result = result && rootdatautil::Compare(getxDiryDir(),cp.getxDiryDir(),"xDiryDir") ;
-    result = result && rootdatautil::Compare(getxDirzDir(),cp.getxDirzDir(),"xDirzDir") ;
-    result = result && rootdatautil::Compare(getyDiryDir(),cp.getyDiryDir(),"yDiryDir") ;
-    result = result && rootdatautil::Compare(getyDirzDir(),cp.getyDirzDir(),"yDirzDir") ;
-    result = result && rootdatautil::Compare(getzDirzDir(),cp.getzDirzDir(),"zDirzDir") ;
+    result = result && rootdatautil::CompareInRange(getEnergy(),cp.getEnergy(),"Energy") ;
+    result = result && rootdatautil::CompareInRange(getEnergyErr(),cp.getEnergyErr(),"EnergyErr") ;
+    result = result && rootdatautil::CompareInRange(getCentroid(),cp.getCentroid(),"Centroid") ;
+    result = result && rootdatautil::CompareInRange(getxPosxPos(),cp.getxPosxPos(),"xPosxPos") ;
+    result = result && rootdatautil::CompareInRange(getxPosyPos(),cp.getxPosyPos(),"xPosyPos") ;
+    result = result && rootdatautil::CompareInRange(getxPoszPos(),cp.getxPoszPos(),"xPoszPos") ;
+    result = result && rootdatautil::CompareInRange(getyPosyPos(),cp.getyPosyPos(),"yPosyPos") ;
+    result = result && rootdatautil::CompareInRange(getyPoszPos(),cp.getyPoszPos(),"yPoszPos") ;
+    result = result && rootdatautil::CompareInRange(getzPoszPos(),cp.getzPoszPos(),"zPoszPos") ;
+    result = result && rootdatautil::CompareInRange(getAxis(),cp.getAxis(),"Axis") ;
+    result = result && rootdatautil::CompareInRange(getxDirxDir(),cp.getxDirxDir(),"xDirxDir") ;
+    result = result && rootdatautil::CompareInRange(getxDiryDir(),cp.getxDiryDir(),"xDiryDir") ;
+    result = result && rootdatautil::CompareInRange(getxDirzDir(),cp.getxDirzDir(),"xDirzDir") ;
+    result = result && rootdatautil::CompareInRange(getyDiryDir(),cp.getyDiryDir(),"yDiryDir") ;
+    result = result && rootdatautil::CompareInRange(getyDirzDir(),cp.getyDirzDir(),"yDirzDir") ;
+    result = result && rootdatautil::CompareInRange(getzDirzDir(),cp.getzDirzDir(),"zDirzDir") ;
 
     if (!result) {
         std::cout<<"Comparison ERROR for CalParams"<<std::endl ;

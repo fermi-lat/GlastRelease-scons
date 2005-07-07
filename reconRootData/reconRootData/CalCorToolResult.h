@@ -3,10 +3,10 @@
 #define reconRootData_CalCorToolResult_H
 
 #include "CalParams.h"
-#include <TMap.h>
+#include <TObjArray.h>
 #include <TString.h>
 
-class CalCorToolResult
+class CalCorToolResult : public TObjArray
 {
 public:
 
@@ -15,12 +15,14 @@ public:
       ( const TString & correctionName,
         UInt_t statusBits,
         Double_t chiSquare,
-        const CalParams & params ) ;
+        const CalParams & params,
+        const TObjArray & freeParams ) ;
     void init
       ( const TString & correctionName,
         UInt_t statusBits,
         Double_t chiSquare,
-        const CalParams & params ) ;
+        const CalParams & params,
+        const TObjArray & freeParams ) ;
     virtual ~CalCorToolResult() ;
 
     const TString & getCorrectionName() const
@@ -34,10 +36,12 @@ public:
      
     void Clear( Option_t * option ="" ) ;
     void Fake( UInt_t rank, Float_t randNum ) ; // for tests
-    Bool_t Compare( const CalCorToolResult & ) const ; // for tests
+    Bool_t CompareInRange( const CalCorToolResult & ) const ; // for tests
     void Print( Option_t * option ="" ) const ;
 
 private:
+
+    CalCorToolResult & operator=( const CalCorToolResult & ) ;
 
     TString m_correctionName ;
     UInt_t m_statusBits ;
