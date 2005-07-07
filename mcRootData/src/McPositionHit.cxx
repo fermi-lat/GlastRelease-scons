@@ -1,11 +1,12 @@
-#include "mcRootData/McPositionHit.h"
+#include <mcRootData/McPositionHit.h>
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(McPositionHit)
 
 McPositionHit::McPositionHit() :
-m_depositedEnergy(0.), m_particleFourMomentum(0.,0.,0.,0.), 
-m_timeOfFlight(0.), m_statusFlags(0)
+m_depositedEnergy(0.), m_timeOfFlight(0.), 
+m_particleFourMomentum(0.,0.,0.,0.), m_statusFlags(0)
 {
 }
 
@@ -14,7 +15,7 @@ McPositionHit::~McPositionHit()
     Clear();
 }
 
-void McPositionHit::Clear(Option_t *option)
+void McPositionHit::Clear(Option_t *)
 {
     m_depositedEnergy = 0.;
     m_particleFourMomentum = TLorentzVector(0.,0.,0.,0.);
@@ -27,32 +28,92 @@ void McPositionHit::Clear(Option_t *option)
     m_volumeId.Clear();
 }
 
+// dummy data, just for tests
+void McPositionHit::Fake( UInt_t rank, Float_t randNum ) {
+
+    Float_t f = Float_t(rank);
+    Float_t fr = f*randNum;
+    TVector3 entry(1., 1., 1.);
+    TVector3 exit(fr, fr, fr);
+    TVector3 gEntry(3., 3., 3.);
+    TVector3 gExit(fr*2., fr*2., fr*2.);
+            
+    VolumeIdentifier id ;
+    id.append(1) ;
+            
+    Double_t depE = randNum;
+    Double_t partE = randNum*0.1 ;
+    TVector3 partMom = entry-exit ;
+    TLorentzVector part4Mom(partMom,partE) ;
+    Double_t tof = randNum*0.4 ;
+    UInt_t flags = 0 ;
+    McParticle * mcPart = 0 ;
+    McParticle * originMcPart = 0 ;
+    Int_t particleId = 7 ;
+    Int_t originId = -13 ;
+    
+    initialize(particleId,originId,depE,id, 
+      entry,exit,gEntry,gExit,
+      mcPart,originMcPart,part4Mom,tof,flags) ;
+
+}
+
+Bool_t McPositionHit::Compare( const McPositionHit & hit ) const {
+
+    Bool_t result = true ;
+    
+    result = result && rootdatautil::Compare(getMcParticleId(),hit.getMcParticleId(),"McParticleId") ;
+    result = result && rootdatautil::Compare(getOriginMcParticleId(),hit.getOriginMcParticleId(),"OriginMcParticleId") ;
+
+    VolumeIdentifier id1 = getVolumeId() ;
+    VolumeIdentifier id2 = hit.getVolumeId() ;
+    result = result && rootdatautil::Compare(id1.name(),id2.name(),"VolumeId Name") ;
+    result = result && rootdatautil::Compare(id1.size(),id2.size(),"VolumeId Size") ;
+    result = result && rootdatautil::Compare(id1.getBits0to31(),id2.getBits0to31(),"VolumeId Bits0to31") ;
+    result = result && rootdatautil::Compare(id1.getBits32to63(),id2.getBits32to63(),"VolumeId Bits32to63") ;
+    
+    result = result && rootdatautil::Compare(getEntryPosition(),hit.getEntryPosition(),"Entry") ;
+    result = result && rootdatautil::Compare(getExitPosition(),hit.getExitPosition(),"Exit") ;
+    result = result && rootdatautil::Compare(getGlobalEntryPosition(),hit.getGlobalEntryPosition(),"GlobalEntry") ;
+    result = result && rootdatautil::Compare(getGlobalExitPosition(),hit.getGlobalExitPosition(),"GlobalExit") ;
+
+    result = result && rootdatautil::Compare(getDepositedEnergy(),hit.getDepositedEnergy(),"DepositedEnergy") ;
+    result = result && rootdatautil::Compare(getParticleEnergy(),hit.getParticleEnergy(),"ParticleEnergy") ;
+    result = result && rootdatautil::Compare(getTimeOfFlight(),hit.getTimeOfFlight(),"TimeOfFlight") ;
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+    }
+    return result ;
+
+}
+
 void McPositionHit::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     m_volumeId.Print(option);
-    cout.precision(2);
-    cout << "Flags: " << m_statusFlags 
+    std::cout.precision(2);
+    std::cout << "Flags: " << m_statusFlags 
         << "    Dep Energy: " << m_depositedEnergy
         << "    Part Energy: " << m_particleFourMomentum.E()
-        << "    TOF:  " << m_timeOfFlight << endl;
-    cout << "Local Entry: (" << m_entry.X() << ","
+        << "    TOF:  " << m_timeOfFlight << std::endl;
+    std::cout << "Local Entry: (" << m_entry.X() << ","
         << m_entry.Y() << "," << m_entry.Z() << ")"
         << "  Local Exit: (" << m_exit.X() << "," 
         << m_exit.Y() << "," << m_exit.Z() << ") Direction Cosine: " 
-        << getDirectionCosine() << endl;
-    cout << "Global Entry: (" << m_globalEntry.X() << ","
+        << getDirectionCosine() << std::endl;
+    std::cout << "Global Entry: (" << m_globalEntry.X() << ","
         << m_globalEntry.Y() << "," << m_globalEntry.Z() << ")"
         << "  Global Entry: (" << m_globalExit.X() << ","
-        << m_globalExit.Y() << "," << m_globalExit.Z() << ")" << endl;
-    cout << "McParticleId " << m_mcParticleId << endl;
+        << m_globalExit.Y() << "," << m_globalExit.Z() << ")" << std::endl;
+    std::cout << "McParticleId " << m_mcParticleId << std::endl;
     if (getMcParticle() != 0) {
-        cout << "McParticle Ref" << endl;
+        cout << "McParticle Ref" << std::endl;
         getMcParticle()->Print();
     }
-    cout << "Origin ParticleId " << m_originMcParticleId << endl;
+    std::cout << "Origin ParticleId " << m_originMcParticleId << endl;
     if (getOriginMcParticle() != 0) {
-        cout << "Origin Particle Ref" << endl;
+        cout << "Origin Particle Ref" << std::endl;
         getOriginMcParticle()->Print();
     }
 
@@ -69,7 +130,7 @@ void McPositionHit::initialize(Int_t particleId, Double_t edep,
                                const VolumeIdentifier &volId,
                                const TVector3& entry, const TVector3& exit,
                                McParticle *mc, McParticle *origin, 
-                               TLorentzVector& p4Mom, 
+                               const TLorentzVector& p4Mom, 
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = particleId;
@@ -88,7 +149,7 @@ void McPositionHit::initialize(Int_t mcParticleId, Int_t originParticleId,
                                Double_t edep, const VolumeIdentifier& volId, 
                                const TVector3& entry, const TVector3& exit,
                                const TVector3& gEntry, const TVector3& gExit, 
-                               McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
+                               McParticle *mc, McParticle *origin, const TLorentzVector& p4Mom,
                                Double_t tof, UInt_t flags)
 {
     m_mcParticleId = mcParticleId;

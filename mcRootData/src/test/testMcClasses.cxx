@@ -122,78 +122,84 @@ int checkMcParticle(McParticle* mcPart, Int_t ipart, UInt_t ievent) {
 int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent) {
     // Purpose and Method: Check the contents of the McPositionHit read in from 
     //   the ROOT file
-    Float_t f = Float_t(ipart);
-    Float_t fr = f*randNum;
+    McPositionHit hitRef ;
+    hitRef.Fake(ipart,randNum) ;
+    if (mcPosHit->Compare(hitRef))
+      return 0 ;
+    else
+      return -1 ;
     
-    if (mcPosHit->getMcParticleId() != 7) {
-        std::cout << "MC Particle Id is wrong: " << mcPosHit->getMcParticleId() << std::endl;
-        return -1;
-    }
-
-    if (mcPosHit->getOriginMcParticleId() != -13) {
-        std::cout << "MC Origin Id is wrong: " << mcPosHit->getOriginMcParticleId() << std::endl;
-        return -1;
-    }
-
-    VolumeIdentifier id = mcPosHit->getVolumeId();
-    std::cout << "McPosHit Id = " << id.name() << std::endl;
-    if ( (id.getBits0to31() != 0) || (id.getBits32to63() != 16777216) || (id.size() != 1) ) {
-        std::cout << "McPosHit VolId is incorrect" << std::endl;
-        return -1;
-    }
-    
-    TVector3 entry = mcPosHit->getEntryPosition();
-    if  ( !floatInRange(entry.X(), 1.) || 
-          !floatInRange(entry.Y(), 1.) ||
-          !floatInRange(entry.Z(), 1.) ) {
-        std::cout << "McPosHit entry is (" << entry.X() << "," << entry.Y() << ","
-            << entry.Z() << ")" << std::endl;
-        return -1;
-    }
-    
-    TVector3 exit = mcPosHit->getExitPosition();
-    if ( !floatInRange(exit.X(), fr) || !floatInRange(exit.Y(), fr) || 
-         !floatInRange(exit.Z(), fr) ) {
-        std::cout << "McPosHit exit is (" << exit.X() << "," << exit.Y() 
-            << "," << exit.Z() << std::endl;
-        return -1;
-    }
-
-    TVector3 gEntry = mcPosHit->getGlobalEntryPosition();
-    if ( !floatInRange(gEntry.X(), 3.) || !floatInRange(gEntry.Y(), 3.) || 
-         !floatInRange(gEntry.Z(), 3.) ) {
-        std::cout << "McPosHit Global Entry is (" << gEntry.X() << "," << gEntry.Y() 
-            << "," << gEntry.Z() << std::endl;
-        return -1;
-    }
-
-    TVector3 gExit = mcPosHit->getGlobalExitPosition();
-    if ( !floatInRange(gExit.X(), fr*2.) || !floatInRange(gExit.Y(), fr*2.) || 
-         !floatInRange(gExit.Z(), fr*2.) ) {
-        std::cout << "McPosHit Global exit is (" << gExit.X() << "," << gExit.Y() 
-            << "," << gExit.Z() << std::endl;
-        return -1;
-    }
-    
-    if (!floatInRange(mcPosHit->getDepositedEnergy(), randNum)) {
-        std::cout << "Error:  McPosHit dep Energy: " << mcPosHit->getDepositedEnergy() 
-            << std::endl;
-        return -1;
-    }
-    
-    if (!floatInRange(mcPosHit->getParticleEnergy(), randNum*0.1)) {
-        std::cout << "Error: McPosHit particle Energy = " << mcPosHit->getParticleEnergy() 
-            << std::endl;
-        
-        return -1;
-    }
-    
-    if (!floatInRange(mcPosHit->getTimeOfFlight(), randNum*0.4)) {
-        std::cout << "Error: McPosHit TOF: " << mcPosHit->getTimeOfFlight() << std::endl;
-        return -1;
-    }
-    
-    return 0;
+//    Float_t f = Float_t(ipart);
+//    Float_t fr = f*randNum;
+//    if (mcPosHit->getMcParticleId() != 7) {
+//        std::cout << "MC Particle Id is wrong: " << mcPosHit->getMcParticleId() << std::endl;
+//        return -1;
+//    }
+//
+//    if (mcPosHit->getOriginMcParticleId() != -13) {
+//        std::cout << "MC Origin Id is wrong: " << mcPosHit->getOriginMcParticleId() << std::endl;
+//        return -1;
+//    }
+//
+//    VolumeIdentifier id = mcPosHit->getVolumeId();
+//    std::cout << "McPosHit Id = " << id.name() << std::endl;
+//    if ( (id.getBits0to31() != 0) || (id.getBits32to63() != 16777216) || (id.size() != 1) ) {
+//        std::cout << "McPosHit VolId is incorrect" << std::endl;
+//        return -1;
+//    }
+//    
+//    TVector3 entry = mcPosHit->getEntryPosition();
+//    if  ( !floatInRange(entry.X(), 1.) || 
+//          !floatInRange(entry.Y(), 1.) ||
+//          !floatInRange(entry.Z(), 1.) ) {
+//        std::cout << "McPosHit entry is (" << entry.X() << "," << entry.Y() << ","
+//            << entry.Z() << ")" << std::endl;
+//        return -1;
+//    }
+//    
+//    TVector3 exit = mcPosHit->getExitPosition();
+//    if ( !floatInRange(exit.X(), fr) || !floatInRange(exit.Y(), fr) || 
+//         !floatInRange(exit.Z(), fr) ) {
+//        std::cout << "McPosHit exit is (" << exit.X() << "," << exit.Y() 
+//            << "," << exit.Z() << std::endl;
+//        return -1;
+//    }
+//
+//    TVector3 gEntry = mcPosHit->getGlobalEntryPosition();
+//    if ( !floatInRange(gEntry.X(), 3.) || !floatInRange(gEntry.Y(), 3.) || 
+//         !floatInRange(gEntry.Z(), 3.) ) {
+//        std::cout << "McPosHit Global Entry is (" << gEntry.X() << "," << gEntry.Y() 
+//            << "," << gEntry.Z() << std::endl;
+//        return -1;
+//    }
+//
+//    TVector3 gExit = mcPosHit->getGlobalExitPosition();
+//    if ( !floatInRange(gExit.X(), fr*2.) || !floatInRange(gExit.Y(), fr*2.) || 
+//         !floatInRange(gExit.Z(), fr*2.) ) {
+//        std::cout << "McPosHit Global exit is (" << gExit.X() << "," << gExit.Y() 
+//            << "," << gExit.Z() << std::endl;
+//        return -1;
+//    }
+//    
+//    if (!floatInRange(mcPosHit->getDepositedEnergy(), randNum)) {
+//        std::cout << "Error:  McPosHit dep Energy: " << mcPosHit->getDepositedEnergy() 
+//            << std::endl;
+//        return -1;
+//    }
+//    
+//    if (!floatInRange(mcPosHit->getParticleEnergy(), randNum*0.1)) {
+//        std::cout << "Error: McPosHit particle Energy = " << mcPosHit->getParticleEnergy() 
+//            << std::endl;
+//        
+//        return -1;
+//    }
+//    
+//    if (!floatInRange(mcPosHit->getTimeOfFlight(), randNum*0.4)) {
+//        std::cout << "Error: McPosHit TOF: " << mcPosHit->getTimeOfFlight() << std::endl;
+//        return -1;
+//    }
+//    
+//    return 0;
 }
 
 int checkMcIntegratingHit(McIntegratingHit* mcIntHit, UInt_t ipart, 
@@ -333,24 +339,7 @@ int write(char* fileName, UInt_t numEvents) {
             ev->addMcParticle(mcPart);
             
             McPositionHit *posHit = new McPositionHit();
-            TVector3 entry(1., 1., 1.);
-            TVector3 exit(fr, fr, fr);
-            TVector3 gEntry(3., 3., 3.);
-            TVector3 gExit(fr*2., fr*2., fr*2.);
-            id.Clear();
-            id.append(1);
-            Double_t depE = randNum;
-            Double_t partE = randNum*0.1;
-            TVector3 partMom = entry - exit;
-            TLorentzVector part4Mom(partMom, partE);
-            Double_t tof = randNum*0.4;
-            UInt_t flags = 0;
-            McParticle *originMcPart = 0;
-            Int_t particleId = 7;
-            Int_t originId = -13;
-            posHit->initialize(particleId, originId, depE, id, 
-                entry, exit, gEntry, gExit,
-                mcPart, originMcPart, part4Mom, tof, flags);
+            posHit->Fake(ipart,randNum) ;
             ev->addMcPositionHit(posHit);
             
             McIntegratingHit *intHit = new McIntegratingHit();

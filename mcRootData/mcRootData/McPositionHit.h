@@ -37,20 +37,25 @@ public:
     virtual ~McPositionHit();
 
     void Clear(Option_t *option ="");
+    
+    void Fake( UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t Compare( const McPositionHit & ) const ; // for tests
 
     void Print(Option_t *option="") const;
 
     void initialize(Int_t particleId, 
         Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit, 
-        McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
+        McParticle *mc, McParticle *origin,
+        const TLorentzVector & p4Mom,
         Double_t tof, UInt_t flags = 0);
 
     void initialize(Int_t mcParticleId, Int_t originParticleId, 
         Double_t edep, const VolumeIdentifier& volId, 
         const TVector3& entry, const TVector3& exit,
         const TVector3& gEntry, const TVector3& gExit, 
-        McParticle *mc, McParticle *origin, TLorentzVector& p4Mom,
+        McParticle *mc, McParticle *origin,
+        const TLorentzVector & p4Mom,
         Double_t tof, UInt_t flags = 0);
     
     const VolumeIdentifier& getVolumeId() const { return m_volumeId; };
