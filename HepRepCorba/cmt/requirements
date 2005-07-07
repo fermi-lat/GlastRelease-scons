@@ -11,6 +11,14 @@ apply_pattern package_include
 # Set a temp directory to store ior file if FRED is started automatically
 set TMP "/tmp" WIN32 "%TEMP%"
 
+# Set some OmniOrb env variables
+# This is useful for debugging
+set ORBtraceLevel 0
+# This fix the maximum size for the CORBA messages .. it can be changed to
+# avoid problems on some platform/compiler combinations
+set ORBgiopMaxMsgSize 40097152
+
+
 private
 
 use HepRepSvc
