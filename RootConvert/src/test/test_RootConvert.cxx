@@ -15,7 +15,7 @@ bool check( Float_t randNum ) {
         rootObj1.Fake(i,randNum) ;
         RootPersistence::convert(rootObj1,tdsObj) ;
         RootPersistence::convert(tdsObj,rootObj2) ;
-        if (!rootObj1.Compare(rootObj2)) {
+        if (!rootObj1.CompareInRange(rootObj2)) {
             std::cout
               <<"RootConvert test FAILED for "
               <<rootObj1.ClassName()
@@ -36,7 +36,7 @@ int main( int /* argc */, char ** /* argv */ ) {
     TRandom randGen ;
     Float_t randNum = randGen.Rndm() ;
     result = result && check<Event::McPositionHit,McPositionHit>(randNum) ;
-    result = result && rootdatautil::Compare(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
+    result = result && rootdatautil::CompareInRange(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
     result = result && check<Event::CalCluster,CalCluster>(randNum) ;
     
     if (result) {
