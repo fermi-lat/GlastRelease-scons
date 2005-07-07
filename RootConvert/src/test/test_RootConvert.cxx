@@ -1,6 +1,7 @@
 
-#include "RootConvert/MonteCarlo/McPositionHitConvert.h"
-#include "RootConvert/Recon/CalClusterConvert.h"
+#include <RootConvert/MonteCarlo/McPositionHitConvert.h>
+#include <RootConvert/Recon/CalClusterConvert.h>
+#include <commonRootData/RootDataUtil.h>
 #include "TRandom.h"
 #include <iostream>
 
@@ -11,10 +12,10 @@ bool check( Float_t randNum ) {
     UInt_t i ;
     for ( i=0 ; i<10 ; ++i ) {
 
-        RootPersistence::random(rootObj1,i,randNum) ;
+        rootObj1.Fake(i,randNum) ;
         RootPersistence::convert(rootObj1,tdsObj) ;
         RootPersistence::convert(tdsObj,rootObj2) ;
-        if (!RootPersistence::compare(rootObj1,rootObj2)) {
+        if (!rootObj1.Compare(rootObj2)) {
             std::cout
               <<"RootConvert test FAILED for "
               <<rootObj1.ClassName()
@@ -22,6 +23,10 @@ bool check( Float_t randNum ) {
             return false ;
         }
     }
+   std::cout
+     <<"RootConvert test succeeded for "
+     <<rootObj1.ClassName()
+     <<std::endl ;
    return true ;
 }
 
@@ -31,13 +36,14 @@ int main( int /* argc */, char ** /* argv */ ) {
     TRandom randGen ;
     Float_t randNum = randGen.Rndm() ;
     result = result && check<Event::McPositionHit,McPositionHit>(randNum) ;
+    result = result && rootdatautil::Compare(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
     result = result && check<Event::CalCluster,CalCluster>(randNum) ;
     
     if (result) {
       std::cout<<"RootConvert test suceeded"<<std::endl ;
       return 0 ;
     } else {
-      std::cout<<"RootConvert test FAILED"<<std::endl ;
+      std::cout<<"RootConvert test ERROR"<<std::endl ;
       return 1 ;
     }
 }
