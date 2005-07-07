@@ -13,6 +13,8 @@ apply_pattern root_package headers="\
  ../reconRootData/CalParams.h\
  ../reconRootData/CalClusterLayerData.h\
  ../reconRootData/CalCluster.h\
+ ../reconRootData/CalCorToolResult.h\
+ ../reconRootData/CalEventEnergy.h\
  ../reconRootData/CalRecon.h\
  ../reconRootData/CalRangeRecData.h\
  ../reconRootData/CalXtalRecData.h\

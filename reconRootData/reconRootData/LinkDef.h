@@ -19,6 +19,8 @@
 #pragma link C++ class CalParams+;
 #pragma link C++ class CalClusterLayerData+;
 #pragma link C++ class CalCluster+;
+#pragma link C++ class CalCorToolResult+;
+#pragma link C++ class CalEventEnergy+;
 #pragma link C++ class CalRangeRecData+;
 #pragma link C++ class CalXtalRecData+;
 #pragma link C++ class CalMipTrack+;

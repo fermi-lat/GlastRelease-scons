@@ -1,4 +1,6 @@
-#include "reconRootData/CalCluster.h"
+
+#include <reconRootData/CalCluster.h>
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(CalCluster)
@@ -39,6 +41,21 @@ CalCluster::CalCluster
    Int_t numTruncXtals, UInt_t statusBits )
  { init(layers,params,rmsLong,rmsLongAsym,rmsTrans,numTruncXtals,statusBits) ; }
 
+// dummy data, just for tests
+void CalCluster::Fake( UInt_t rank, Float_t randNum )
+ {
+    CalParams p ;
+    p.Fake(rank,randNum) ;
+    CalClusterLayerData layer ;
+    std::vector<CalClusterLayerData> clusLayerData ;
+    UInt_t iclusLayer;
+    for ( iclusLayer = 0; iclusLayer<ROOT_NUMCALLAYERS ; ++iclusLayer ) {
+        layer.Fake(rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
+        clusLayerData.push_back(layer) ;
+    }
+    init(clusLayerData,p,1.0,2.0,3.0,4,5) ;
+ }
+
 void CalCluster::Print( Option_t * ) const
  {
   m_params.Print() ;
@@ -47,4 +64,27 @@ void CalCluster::Print( Option_t * ) const
     <<"RMS Long: "<<m_rmsLong<<"RMS Long Asym: "<<m_rmsLongAsym<<"  RMS Trans: "<<m_rmsTrans<<"\n"
     <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
  }
+
+Bool_t CalCluster::Compare( const CalCluster & c ) const {
+
+    bool result = true ;
+
+    result = result && getParams().Compare(c.getParams()) ;
+    int i ;
+    for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {
+        result = result && getLayer(i).Compare(c.getLayer(i)) ;
+    }
+
+    result = result && rootdatautil::Compare(getRmsLong(),c.getRmsLong(),"RmsLong") ;
+    result = result && rootdatautil::Compare(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") ;
+    result = result && rootdatautil::Compare(getRmsTrans(),c.getRmsTrans(),"RmsTrans") ;
+    result = result && rootdatautil::Compare(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") ;
+    result = result && rootdatautil::Compare(getStatusBits(),c.getStatusBits(),"StatusBits") ;
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+    }
+    return result ;
+
+}
 

@@ -50,155 +50,162 @@ int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
     return 0;
 }
 
-int checkCalParams(const CalParams &params) {
-
-    if ( !floatInRange(params.getEnergy(), 1.0) ) {
-        std::cout << "calParams energy is not 1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getEnergyErr(), 2.0) ) {
-        std::cout << "calParams energyErr is not 2" << std::endl;
-        return -1;
-    }
-
-    TVector3 centroid = params.getCentroid();
-    if (!floatInRange(centroid.X(), 3.0) ) {
-        std::cout << "CalParams centroid X is not 3.0" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(centroid.Y(), 4.0)) {
-        std::cout << "CalParams centroid Y is not 4.0" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(centroid.Z(), 5.0)) {
-        std::cout << "CalParams centroid Z is not 5.0" << std::endl;
-        return -1;
-    }
-
-    if ( !floatInRange(params.getxPosxPos(), 6.0) ) {
-        std::cout << "calParams xPosxPos is not 6" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getxPosyPos(), 7.0) ) {
-        std::cout << "calParams xPosyPos is not 7" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getxPoszPos(), 8.0) ) {
-        std::cout << "calParams xPoszPos is not 8" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getyPosyPos(), 9.0) ) {
-        std::cout << "calParams yPosyPos is not 9" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getyPoszPos(),10.0) ) {
-        std::cout << "calParams yPoszPos is not 10" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getzPoszPos(), 11.0) ) {
-        std::cout << "calParams zPoszPos is not 11" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getxDirxDir(), 15.0) ) {
-        std::cout << "calParams xDirxDir is not 15" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getxDiryDir(), 16.0) ) {
-        std::cout << "calParams xDiryDir is not 16" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getxDirzDir(), 17.0) ) {
-        std::cout << "calParams xDirzDir is not 17" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getyDiryDir(), 18.0) ) {
-        std::cout << "calParams yDiryDir is not 18" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getyDirzDir(), 19.0) ) {
-        std::cout << "calParams yDirzDir is not 19" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(params.getzDirzDir(), 20.0) ) {
-        std::cout << "calParams zDirzDir is not 20" << std::endl;
-        return -1;
-    }
-
-    return 0;
-}
-
-int checkCalClusterLayerData(const CalClusterLayerData& layer) {
-
-    if ( !floatInRange(layer.getEnergy(), 1.0) ) {
-        std::cout << "CalClusterLayerData is not 1.0" << std::endl;
-        return -1;
-    }
-    TVector3 pos = layer.getPosition();
-    if (!floatInRange(pos.X(), 2.0) ) {
-        std::cout << "CalClusterLayerData X is not 2" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(pos.Y(), 3.0) ) {
-        std::cout << "CalClusterLayerData Y is not 3" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(pos.Z(), 4.0) ) {
-        std::cout << "CalClusterLayerData Y is not 4" << std::endl;
-        return -1;
-    }
-
-    TVector3 rms = layer.getRmsSpread();
-    if (!floatInRange(rms.X(), 5.0) ) {
-        std::cout << "CalClusterLayerData rms X is not 5" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(rms.Y(), 6.0) ) {
-        std::cout << "CalClusterLayerData rms Y is not 6" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(rms.Z(), 7.0) ) {
-        std::cout << "CalClusterLayerData rms Z is not 7" << std::endl;
-        return -1;
-    }
-
-    return 0;
-}
+//int checkCalParams(const CalParams &params) {
+//
+//    if ( !floatInRange(params.getEnergy(), 1.0) ) {
+//        std::cout << "calParams energy is not 1" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getEnergyErr(), 2.0) ) {
+//        std::cout << "calParams energyErr is not 2" << std::endl;
+//        return -1;
+//    }
+//
+//    TVector3 centroid = params.getCentroid();
+//    if (!floatInRange(centroid.X(), 3.0) ) {
+//        std::cout << "CalParams centroid X is not 3.0" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(centroid.Y(), 4.0)) {
+//        std::cout << "CalParams centroid Y is not 4.0" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(centroid.Z(), 5.0)) {
+//        std::cout << "CalParams centroid Z is not 5.0" << std::endl;
+//        return -1;
+//    }
+//
+//    if ( !floatInRange(params.getxPosxPos(), 6.0) ) {
+//        std::cout << "calParams xPosxPos is not 6" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getxPosyPos(), 7.0) ) {
+//        std::cout << "calParams xPosyPos is not 7" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getxPoszPos(), 8.0) ) {
+//        std::cout << "calParams xPoszPos is not 8" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getyPosyPos(), 9.0) ) {
+//        std::cout << "calParams yPosyPos is not 9" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getyPoszPos(),10.0) ) {
+//        std::cout << "calParams yPoszPos is not 10" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getzPoszPos(), 11.0) ) {
+//        std::cout << "calParams zPoszPos is not 11" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getxDirxDir(), 15.0) ) {
+//        std::cout << "calParams xDirxDir is not 15" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getxDiryDir(), 16.0) ) {
+//        std::cout << "calParams xDiryDir is not 16" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getxDirzDir(), 17.0) ) {
+//        std::cout << "calParams xDirzDir is not 17" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getyDiryDir(), 18.0) ) {
+//        std::cout << "calParams yDiryDir is not 18" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getyDirzDir(), 19.0) ) {
+//        std::cout << "calParams yDirzDir is not 19" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(params.getzDirzDir(), 20.0) ) {
+//        std::cout << "calParams zDirzDir is not 20" << std::endl;
+//        return -1;
+//    }
+//
+//    return 0;
+//}
+//
+//int checkCalClusterLayerData(const CalClusterLayerData& layer) {
+//
+//    if ( !floatInRange(layer.getEnergy(), 1.0) ) {
+//        std::cout << "CalClusterLayerData is not 1.0" << std::endl;
+//        return -1;
+//    }
+//    TVector3 pos = layer.getPosition();
+//    if (!floatInRange(pos.X(), 2.0) ) {
+//        std::cout << "CalClusterLayerData X is not 2" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(pos.Y(), 3.0) ) {
+//        std::cout << "CalClusterLayerData Y is not 3" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(pos.Z(), 4.0) ) {
+//        std::cout << "CalClusterLayerData Y is not 4" << std::endl;
+//        return -1;
+//    }
+//
+//    TVector3 rms = layer.getRmsSpread();
+//    if (!floatInRange(rms.X(), 5.0) ) {
+//        std::cout << "CalClusterLayerData rms X is not 5" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(rms.Y(), 6.0) ) {
+//        std::cout << "CalClusterLayerData rms Y is not 6" << std::endl;
+//        return -1;
+//    }
+//    if (!floatInRange(rms.Z(), 7.0) ) {
+//        std::cout << "CalClusterLayerData rms Z is not 7" << std::endl;
+//        return -1;
+//    }
+//
+//    return 0;
+//}
 
 int checkCalCluster(const CalCluster* cluster, UInt_t ievent) {
 
-    UInt_t iClusLayerData;
-    for (iClusLayerData = 0; iClusLayerData < numClusLayerData; iClusLayerData++) {
-        const CalClusterLayerData& clusLayerData = cluster->getLayer(iClusLayerData);
-        if (checkCalClusterLayerData(clusLayerData) < 0) {
-            std::cout << "CalClusterLayer failed" << std::endl;
-            return -1;
-        }
-    }
-    if (checkCalParams(cluster->getParams()) < 0) {  
-        std::cout <<"CalParams check failed" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(cluster->getRmsLong(), 1.0) ) {
-        std::cout << "RmsLong is not 1" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(cluster->getRmsLongAsym(), 2.0) ) {
-        std::cout << "RmsLongAsym is not 2" << std::endl;
-        return -1;
-    }
-    if ( !floatInRange(cluster->getRmsTrans(), 3.0) ) {
-        std::cout << "RmsTrans is not 3" << std::endl;
-        return -1;
-    }
-    if ( cluster->getNumTruncXtals() !=4 ) {
-        std::cout << "numTruncXtals is not 4" << std::endl;
-        return -1;
-    }
-    if ( cluster->getStatusBits() != 5 ) {
-        std::cout << "Status Bits is not 5" << std::endl;
-        return -1;
-    }
-    return 0;
+    CalCluster clusterRef ;
+    clusterRef.Fake(0,randNum) ;
+    if (cluster->Compare(clusterRef))
+      return 0 ;
+    else
+      return -1 ;
+
+//    UInt_t iClusLayerData;
+//    for (iClusLayerData = 0; iClusLayerData < numClusLayerData; iClusLayerData++) {
+//        const CalClusterLayerData& clusLayerData = cluster->getLayer(iClusLayerData);
+//        if (checkCalClusterLayerData(clusLayerData) < 0) {
+//            std::cout << "CalClusterLayer failed" << std::endl;
+//            return -1;
+//        }
+//    }
+//    if (checkCalParams(cluster->getParams()) < 0) {  
+//        std::cout <<"CalParams check failed" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(cluster->getRmsLong(), 1.0) ) {
+//        std::cout << "RmsLong is not 1" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(cluster->getRmsLongAsym(), 2.0) ) {
+//        std::cout << "RmsLongAsym is not 2" << std::endl;
+//        return -1;
+//    }
+//    if ( !floatInRange(cluster->getRmsTrans(), 3.0) ) {
+//        std::cout << "RmsTrans is not 3" << std::endl;
+//        return -1;
+//    }
+//    if ( cluster->getNumTruncXtals() !=4 ) {
+//        std::cout << "numTruncXtals is not 4" << std::endl;
+//        return -1;
+//    }
+//    if ( cluster->getStatusBits() != 5 ) {
+//        std::cout << "Status Bits is not 5" << std::endl;
+//        return -1;
+//    }
+//    return 0;
 }
 
 int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
@@ -891,19 +898,21 @@ int write(char* fileName, int numEvents) {
         UInt_t icluster;
         for (icluster = 0; icluster < numClusters; icluster++ ) {
             CalCluster *cluster = new CalCluster();
-            CalParams p(1.0, 2.0, TVector3(3.0, 4.0, 5.0), 6.0, 7.0, 8.0,
-                        9.0, 10.0, 11.0, TVector3(12., 13., 14.), 15., 16.0,
-                        17.0, 18.0, 19.0, 20.0);
-            std::vector<CalClusterLayerData> clusLayerData;
-            clusLayerData.clear();
-            UInt_t iclusLayer;
-            for (iclusLayer = 0; iclusLayer < numClusLayerData; iclusLayer++) {
-                CalClusterLayerData layer(1.0, TVector3(2.0, 3.0, 4.0),
-                   TVector3(5.0, 6.0, 7.0));
-                clusLayerData.push_back(layer);
-            }
-            cluster->init(clusLayerData, p, 1.0, 2.0, 3.0, 4, 5);
-
+            cluster->Fake(icluster,randNum) ;
+            
+//            CalParams p(1.0, 2.0, TVector3(3.0, 4.0, 5.0), 6.0, 7.0, 8.0,
+//                        9.0, 10.0, 11.0, TVector3(12., 13., 14.), 15., 16.0,
+//                        17.0, 18.0, 19.0, 20.0);
+//            std::vector<CalClusterLayerData> clusLayerData;
+//            clusLayerData.clear();
+//            UInt_t iclusLayer;
+//            for (iclusLayer = 0; iclusLayer < numClusLayerData; iclusLayer++) {
+//                CalClusterLayerData layer(1.0, TVector3(2.0, 3.0, 4.0),
+//                   TVector3(5.0, 6.0, 7.0));
+//                clusLayerData.push_back(layer);
+//            }
+//            cluster->init(clusLayerData, p, 1.0, 2.0, 3.0, 4, 5);
+//
             calRec->addCalCluster(cluster);
         }
 

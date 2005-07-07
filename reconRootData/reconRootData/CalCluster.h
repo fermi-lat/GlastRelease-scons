@@ -60,6 +60,8 @@ public:
      { return m_statusBits ; }
      
     void Clear( Option_t * option ="" ) ;
+    void Fake( UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t Compare( const CalCluster & ) const ; // for tests
     void Print( Option_t * option ="" ) const ;
 
 private:
