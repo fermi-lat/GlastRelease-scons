@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r5p1  8-Jul-2005 jrb Fix Windows compile bug
    v1r5   29-Jun-2005 jrb Changes for compatibility with rdbModel v2r0
    v1r4   3-May-2005  jrb Add calibCoverage diagnostic
    v1r3p6 15-Apr-2005 jrb Make some attributes in calCalib dtd CDATA rather
