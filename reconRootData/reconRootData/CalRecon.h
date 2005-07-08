@@ -58,9 +58,6 @@ public:
     void addCalMipTrack(CalMipTrack* track)     { m_mipTrackCol->Add(track); };
 
 private:
-    /// list of CalEventEnergy
-    TObjArray* m_eventEnergyCol;
-
     /// list of CalXtalRecData
     TObjArray* m_xtalRecCol;
 
@@ -70,6 +67,9 @@ private:
     /// list of CalMipTracks
     TObjArray* m_mipTrackCol;
   
+    /// list of CalEventEnergy
+    TObjArray* m_eventEnergyCol;
+
     ClassDef(CalRecon,3)
 };
 
