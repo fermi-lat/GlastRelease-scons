@@ -664,6 +664,8 @@ Event::TkrTrackHit* reconRootReaderAlg::convertTkrTrackHit(const TkrTrackHit* tr
                convertTkrTrackParams(trackHitRoot->getTrackParams(TkrTrackHit::PREDICTED));
     if (trackHitTds->validFilteredHit())  trackHitTds->getTrackParams(Event::TkrTrackHit::FILTERED) = 
                convertTkrTrackParams(trackHitRoot->getTrackParams(TkrTrackHit::FILTERED));
+    if (trackHitTds->validFilteredHit())  trackHitTds->getTrackParams(Event::TkrTrackHit::REVFIT)   = 
+               convertTkrTrackParams(trackHitRoot->getTrackParams(TkrTrackHit::REVFIT)); 
     if (trackHitTds->validSmoothedHit())  trackHitTds->getTrackParams(Event::TkrTrackHit::SMOOTHED) = 
                convertTkrTrackParams(trackHitRoot->getTrackParams(TkrTrackHit::SMOOTHED));
     if (trackHitTds->validMaterial())     trackHitTds->getTrackParams(Event::TkrTrackHit::QMATERIAL) = 
