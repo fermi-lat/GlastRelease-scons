@@ -63,7 +63,7 @@ Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c ) const
   result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
   const TObjArray & res1 = getToolsResults() ;
   const TObjArray & res2 = c.getToolsResults() ;
-  result = result && rootdatautil::CompareInRange(res1.GetSize(),res2.GetSize(),"Number of results") ;
+  result = result && rootdatautil::CompareInRange(res1.GetEntries(),res2.GetEntries(),"Number of results") ;
   TIter res1Iter(&res1), res2Iter(&res2) ;
   const CalCorToolResult * r1, * r2 ;
   while ( ((r1=(const CalCorToolResult *)res1Iter.Next())!=0) &&
