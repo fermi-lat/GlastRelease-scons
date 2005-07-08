@@ -39,8 +39,7 @@ int main(int, char**) {
     meta.registerCalib("kazoo","mango", "Test_Gen", "alsoNotAFile.xml",
                        "XML", facilities::Timestamp("1990-2-5"),
                        facilities::Timestamp("2037-1-1"), "", 
-                       "From add_meta test program in calibUtil package,
-                        overlaps previous",
+       "From add_meta test program in calibUtil package, overlaps previous",
                        "TEST", "SLAC", "", "OK", "", "");
   if (ser) {
     std::cout << "Successfully added metadata record; returned serial no. is " 
