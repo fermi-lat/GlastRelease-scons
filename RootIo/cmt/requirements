@@ -1,5 +1,5 @@
 package RootIo
-version v16r0p3
+version v17r0
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -7,17 +7,17 @@ author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 branches src doc
 
-use Event v11r*
+use Event v*
 use ROOT v3r* IExternal
-use RootConvert v0r*
+use RootConvert v*
 
 apply_pattern packageShr
 apply_pattern package_include
 
-use mcRootData v2r* -no_auto_imports
-use digiRootData v8r* -no_auto_imports
-use reconRootData v6r* -no_auto_imports
-use commonRootData v2r* -no_auto_imports
+use mcRootData v* -no_auto_imports
+use digiRootData v* -no_auto_imports
+use reconRootData v* -no_auto_imports
+use commonRootData v* -no_auto_imports
 
 use RootConvert v*
 
