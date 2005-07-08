@@ -196,7 +196,9 @@ StatusCode VtxValsTool::calculate()
 		Point  x2 = track_2->front()->getPoint(Event::TkrTrackHit::SMOOTHED);
 	    Vector t2 = track_2->front()->getDirection(Event::TkrTrackHit::SMOOTHED);
 
-		VTX_Head_Sep = (x1-x2).magnitude(); 
+		Point x2H = x2 + ((x1.z()-x2.z())/t2.z()) * t2;
+
+		VTX_Head_Sep = (x1-x2H).magnitude(); 
 
 		double cost1t2 = t1*t2; 
 		double t1t2  = acos(cost1t2); 
