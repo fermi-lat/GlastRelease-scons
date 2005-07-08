@@ -123,7 +123,7 @@ private:
     
     VolumeIdentifier m_volumeId;
     
-    ClassDef(McPositionHit,4)  // Monte Carlo PositionHit class
+    ClassDef(McPositionHit,5)  // Monte Carlo PositionHit class
 };
 
 #endif
