@@ -352,8 +352,8 @@ void Efficiency::PrintEfficiency(TString planeName,  const int hits,
     const float ineff = hits ? 100. * missing / hits : -100;
     std::cout << ' ' << std::setw(11) << planeName << ' '
               << std::setiosflags(std::ios::fixed)
-              << std::setw(9) << std::setprecision(1) << 100. - ineff << " % "
-              << std::setw(11) << std::setprecision(1) << ineff << " % "
+              << std::setw(9) << std::setprecision(2) << 100. - ineff << " % "
+              << std::setw(11) << std::setprecision(2) << ineff << " % "
               << std::setw(8) << hits
               << std::setw(8) << missing;
     if ( all )
