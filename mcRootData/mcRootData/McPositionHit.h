@@ -96,10 +96,9 @@ public:
 private:
 
     Double_t m_depositedEnergy;
-    //Double_t m_particleEnergy;
+    Double_t m_particleEnergy;  // no longer in use, but retained to take
+                               // advantage of schema evolution
     Double_t m_timeOfFlight;
-    /// Particle 4-momentum at this hit
-    TLorentzVector m_particleFourMomentum;
    
     /// Packed flags for the internal use.
     UInt_t m_statusFlags;
@@ -123,6 +122,9 @@ private:
     
     VolumeIdentifier m_volumeId;
     
+    /// Particle 4-momentum at this hit
+    TLorentzVector m_particleFourMomentum;
+
     ClassDef(McPositionHit,5)  // Monte Carlo PositionHit class
 };
 
