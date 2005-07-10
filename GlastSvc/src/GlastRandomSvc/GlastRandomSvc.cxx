@@ -1,12 +1,15 @@
-// Implementation file for GlastRandomSvc which gets adresses 
-// of CLHEP random number engines used in Gleam shared libraries
-// and sets seeds for them based on run and particle sequence
-// number obtained from the MCHeader
-//
-// $Header$
-//
-// Author: Toby Burnett, Karl Young
+/** @file GlastRandomSvc.cxx 
+   @brief Implementation file for GlastRandomSvc
 
+gets adresses 
+ of CLHEP random number engines used in Gleam shared libraries
+ and sets seeds for them based on run and particle sequence
+ number obtained from the MCHeader
+
+ $Header$
+
+ Author: Toby Burnett, Karl Young
+*/
 
 #include "GlastRandomSvc.h"
 #include "facilities/Util.h"
@@ -24,7 +27,7 @@
 #include "GaudiKernel/IToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
+
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
@@ -245,7 +248,7 @@ StatusCode GlastRandomSvc::initialize ()
         {
             std::string fullname = this->name()+"."+tooltype;
             IAlgTool* itool = toolfactory->instantiate(fullname,  this );
-            IRandomAccess* ranacc ;
+            RandomAccess* ranacc ;
             status =itool->queryInterface(IRandomAccess::interfaceID(), (void**)&ranacc);
             if( status.isSuccess() )
             {
@@ -271,6 +274,9 @@ StatusCode GlastRandomSvc::initialize ()
                 }
                 // Store its name and address in a map
                 m_engineMap[tooltype] = hr;
+                RandomAccess::SetFlag randset = ranacc->getRandSet();
+                log << MSG::INFO << "RandGauss setFlag at " << randset << endreq;
+                m_setFlagPointers.push_back(randset);
             }
 
             // Release the tool just allocated
@@ -387,6 +393,13 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo)
         // the other one being cached for a second call.  Setting the seed
         // doesn't flush the cache!
         RandGauss::setFlag(false);
+
+        // now make sure the external ones (if any) are done too!
+        for( std::vector< RandomAccess::SetFlag>::iterator it = m_setFlagPointers.begin();
+            it != m_setFlagPointers.end(); ++it)
+        {
+            (**it)(false);
+        }
 
 }
 

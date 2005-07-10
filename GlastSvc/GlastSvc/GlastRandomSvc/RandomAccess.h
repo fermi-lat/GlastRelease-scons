@@ -8,6 +8,7 @@
 #include "GaudiKernel/AlgTool.h"
 
 #include "CLHEP/Random/Random.h"
+#include "CLHEP/Random/RandGauss.h"
 
 /** @class RandomAccess
 *
@@ -46,6 +47,11 @@ public:
         HepRandomEngine* oldEngine = HepRandom::getTheEngine();
         HepRandom::setTheEngine(newEngine);
         return oldEngine;
+    }
+
+    typedef void(*SetFlag)(bool);
+    virtual  SetFlag getRandSet(){
+        return &RandGauss::setFlag;
     }
 
 };
