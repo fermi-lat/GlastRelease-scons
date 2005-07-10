@@ -100,10 +100,6 @@
   <dt> delayTime</dt> <dd> Only relevant if CalibTimeSource="clock".
        Difference in timestamp values (units of milliseconds) between
        adjacent events.  Defaults to 2000.</dd>
-  <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
-       calibration metadata.  Algorithm developers, etc., may need to
-       use the development database, "calib_user", instead.
-  </dd>
   </dl>
 
   <ul>
@@ -130,6 +126,10 @@
                       to client to handle the error.</dd>
   <dt> Host </dt>        <dd>defaults to "*", meaning "use default MySQL
                              host" </dd>
+  <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
+       calibration metadata.  Algorithm developers, etc., may need to
+       use the development database, "calib_user", instead.
+  </dd>
   <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
        must also set CalibDataSvc.UseEventTime to "false". In this case,
        calibrations will be selected according to enter_time (see further
