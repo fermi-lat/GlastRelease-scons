@@ -87,6 +87,14 @@ namespace rdbModel {
 
     FROM getSourceType() const {return m_from;}
     CONTENTS getContentsType() const {return m_contents;}
+
+    /**
+      Handle special literal values, depending loosely on column datatype.
+      Most Column objects won't do any interpretation, but, for example,
+      timestamp-like columns may substitute for "NOW"
+      Return true if any substitution was done
+     */
+    bool interpret(const std::string& interpType, std::string&val);
                                
     Visitor::VisitorState accept(Visitor* v);
 
@@ -146,7 +154,8 @@ namespace rdbModel {
 
     ~Row() { m_fields.clear(); }
     void rowSort();
-    void addField(FieldVal& f) {m_fields.push_back(f); m_sorted = false;}
+    void addField(const FieldVal& f) {m_fields.push_back(f); m_sorted = false;}
+    void clear() {m_fields.clear();}
 
     FieldVal* find(std::string colname);
 
