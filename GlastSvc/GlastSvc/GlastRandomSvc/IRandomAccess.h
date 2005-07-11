@@ -14,7 +14,7 @@ class HepRandomEngine;
 * $Header$
 */
 
-static const InterfaceID IID_IRandomAccess("IRandomAccess", 2 , 0);
+static const InterfaceID IID_IRandomAccess("IRandomAccess", 3 , 0);
 
 class IRandomAccess :virtual public IAlgTool {
 public:
@@ -23,6 +23,11 @@ public:
 
     /// set the local engine, return previous pointer
     virtual HepRandomEngine* setTheEngine( HepRandomEngine* engine)=0;
+
+    /// return pointer to a static function that sets the flag in the RandGauss
+    typedef void(*SetFlag)(bool);
+    virtual  SetFlag getRandSet();
+
 };
 
 #endif  // _GlastSvc_IRandomAccess_H
