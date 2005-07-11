@@ -26,7 +26,7 @@ public:
 
     /// return pointer to a static function that sets the flag in the RandGauss
     typedef void(*SetFlag)(bool);
-    virtual  SetFlag getRandSet();
+    virtual  SetFlag getRandSet()=0;
 
 };
 

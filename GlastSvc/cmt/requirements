@@ -1,8 +1,9 @@
 package GlastSvc
-version v9r14p1
+version v9r14p2
 
 branches src cmt doc
 #$Id$
+author T. Burnett <tburnett@u.washington.edu>
 
 use GlastPolicy *
 

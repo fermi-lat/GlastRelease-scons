@@ -18,6 +18,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
+#include "CLHEP/Random/RandGauss.h"
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -183,7 +184,9 @@ StatusCode CreateEvent::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    log << MSG::INFO << "execute" << endreq;
+    log << MSG::DEBUG <<"Initial RandGauss status: " << RandGauss::getFlag() << endreq;
+    double test = RandGauss::shoot();
+    log << MSG::DEBUG << "RandGauss status after a shoot: " << RandGauss::getFlag() << endreq;
     
     //TODO: put something in here to get data???
 
