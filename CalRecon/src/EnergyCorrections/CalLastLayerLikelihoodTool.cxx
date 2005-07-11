@@ -82,8 +82,6 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
 {
     MsgStream log(msgSvc(), "CalLastLayerLikelihoodTool::doEnergyCorr");
     Event::CalCorToolResult* corResult = 0;
-        log << MSG::DEBUG << "Ending doEnergyCorr: " 
-            << endreq;
 
     // if reconstructed tracker data doesn't exist or number of tracks is 0:
     if (vertex == 0)
@@ -100,7 +98,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
     // energy, direction and point of impact.
   
     // Energy:
-    if( cluster->getCalParams().getEnergy() < 80. ) 
+    if( cluster->getCalParams().getEnergy() < minTrialEnergy()*.1 ) 
     {
       log << MSG::DEBUG << "Ending doEnergyCorr: "
                            "CAL Energy below Method Minimum"
@@ -108,7 +106,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
         return corResult;
     }
 
-    if( cluster->getCalParams().getEnergy() > 49000. ) 
+    if( cluster->getCalParams().getEnergy() > maxTrialEnergy() ) 
     {
        log << MSG::DEBUG << "Ending doEnergyCorr: "
                             "CAL Energy above Method Maximum"
@@ -117,7 +115,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
     }
   
     // direction: slope must be above \f$cos(32\circ)$\f
-    if( fabs(trackDirection.z()) < .8480481 )
+    if( fabs(trackDirection.z()) < minSlope() )
     { 
         log << MSG::DEBUG << "Ending doEnergyCorr: Slope is too Small."
             << endreq;
@@ -162,7 +160,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
         << cluster->getCalParams().getEnergy() << ", " << calE7 << endreq;
     
-    corResult = calculateEvent( 200., 50000., cluster, log );
+    corResult= calculateEvent(cluster, log);
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;
     return corResult;

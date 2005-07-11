@@ -28,6 +28,7 @@ public:
    int getNaxes(void) const { return m_Naxes; }
    int getSize(int ax) const { return m_Sizes[ax]; }
    const double* getBinCenters(int, bool) const;
+   double getBinCenter(int ax, int bin) const;
 
    // finds the bin corresponding to the double  on the axis int
    // returns true if not found: point outside PDF phase space
@@ -110,8 +111,7 @@ public:
     */
            
 protected:
-    Event::CalCorToolResult *calculateEvent(double, double,
-                                            const Event::CalCluster*, 
+    Event::CalCorToolResult *calculateEvent(const Event::CalCluster*, 
                                             MsgStream& );
     
     // Sum of the horizontal distance to a crack along the flight path, inside
@@ -128,6 +128,12 @@ protected:
     void setEventPDFdata( int a ) { m_eventPDF= m_PDFCol[a]; }
     void setEventPDFparameters( double slope, double calE, double xxx ) 
     { m_eventPar[1]= slope; m_eventPar[2]= calE; m_eventPar[3]= xxx; }
+
+    double minTrialEnergy(void) const{ return m_PDFAxes->getBinCenter(0, 0); }
+    double maxTrialEnergy(void) const{ return m_PDFAxes->getBinCenter(0, -1); }
+    double minSlope(void) const{ return m_PDFAxes->getBinCenter(1, 0); }
+    double maxSlope(void) const{ return m_PDFAxes->getBinCenter(1, -1); }
+
     
     // a data set exits which doesn't use any correlation:
     // this function informs the algorithm that sch a set is being used
@@ -140,6 +146,7 @@ protected:
 
     /// Detector Service
     IGlastDetSvc*     m_detSvc; 
+
 
 private:
     double& trialEnergy(void) { return m_eventPar[0]; }

@@ -83,7 +83,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
     // energy, direction and point of impact.
   
     // Energy:
-    if( cluster->getCalParams().getEnergy() < 0. ) 
+    if( cluster->getCalParams().getEnergy() < minTrialEnergy()*.1 ) 
     {
       log << MSG::DEBUG << "Ending doEnergyCorr: "
                            "CAL Energy below Method Minimum"
@@ -91,7 +91,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
         return corResult;
     }
 
-    if( cluster->getCalParams().getEnergy() > 2900. ) 
+    if( cluster->getCalParams().getEnergy() > maxTrialEnergy() ) 
     {
        log << MSG::DEBUG << "Ending doEnergyCorr: "
                             "CAL Energy above Method Maximum"
@@ -100,7 +100,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
     }
   
     // direction: slope must be above \f$cos(32\circ)$\f
-    if( fabs(trackDirection.z()) < .8480481 )
+    if( fabs(trackDirection.z()) < minSlope() )
     { 
         log << MSG::DEBUG << "Ending doEnergyCorr: Slope is too Small."
             << endreq;
@@ -121,6 +121,9 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
                                           cluster);
     if( geometricCut<.15 )
     {
+        log << MSG::DEBUG << "Ending doEnergyCorr: "
+                             "Geometric Cut too low." 
+        << endreq;
         return corResult;
     }
     // CALCULATE
@@ -148,7 +151,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
         << cluster->getCalParams().getEnergy() << ", " << nHits << endreq;
     
-    corResult= calculateEvent( 50., 3000., cluster, log );
+    corResult= calculateEvent(cluster, log);
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;
     return corResult;

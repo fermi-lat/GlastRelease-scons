@@ -142,8 +142,6 @@ StatusCode CalLikelihoodTool::finalize()
 }
 
 Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
-                                            double minTrialEnergy,
-                                            double maxTrialEnergy,
                                             const Event::CalCluster* cluster,
                                             MsgStream &log )
 //Purpose and method:
@@ -184,26 +182,21 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
   // next values are the range boundaries
   log << MSG::DEBUG << "Starting Calculations" <<endreq;
 
-  double minE= calEnergy();
-  double maxE= calEnergy()*5.;
-  if( minE < minTrialEnergy ) minE =  minTrialEnergy;
-  if( maxE > maxTrialEnergy ) maxE =  maxTrialEnergy;
+  double limit[2]= { calEnergy(), calEnergy()*5.};
+  if( limit[0] < minTrialEnergy() ) limit[0] =  minTrialEnergy();
+  if( limit[1] > maxTrialEnergy() ) limit[1] =  maxTrialEnergy();
 
   // next variables are for the estimation of the quality of the 
   // reconstruction: m_widthEnergyCorr
-  double fwhmLimits[2]= { minE, maxE };
-  double fwhmBinWidth[2];
-  fwhmBinWidth[0]= fwhmBinWidth[1]= maxE-minE;
-
-  double recEnergy= minE;
+  double recEnergy= limit[0];
   double maxProb= -1., trialProb;
 
-  trialEnergy()= minE;
+  trialEnergy()= limit[0];
   m_PDFAxes->init(m_eventPar);
-  for( double bW= (maxE-minE)/10.; bW>.1; bW= (maxE-minE)/10. )
+  for( double bW= (limit[1]-limit[0])*.1; bW>.1; bW= (limit[1]-limit[0])*.1 )
   {
     int errCalls= 0;
-    for( trialEnergy()= minE; trialEnergy()<maxE; trialEnergy()+= bW )
+    for( trialEnergy()= limit[0]; trialEnergy()<limit[1]; trialEnergy()+= bW )
     {
       // get log normal parameters
       if( evaluatePDF(trialProb) ) 
@@ -218,16 +211,6 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
         maxProb= trialProb; 
         recEnergy= trialEnergy();
       } 
-      else if( trialProb<maxProb*.5 )
-      {
-        int iFWHM= recEnergy<trialEnergy();
-        if(   (iFWHM ^ (trialEnergy()>fwhmLimits[iFWHM]))
-           || (iFWHM ^ (recEnergy<fwhmLimits[iFWHM])) )
-        {
-          fwhmLimits[iFWHM]= trialEnergy();
-          fwhmBinWidth[iFWHM]= bW;
-        }
-      }
     }
     if( errCalls==10 )
     {
@@ -235,60 +218,51 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
       return 0;
     }
 
-    minE= recEnergy-bW;
-    maxE= recEnergy+bW;
-    if( minE<minTrialEnergy ) minE= minTrialEnergy;
-    if( maxE>maxTrialEnergy ) maxE= maxTrialEnergy;
+    limit[0]= recEnergy-bW;
+    limit[1]= recEnergy+bW;
+    if( limit[0]<minTrialEnergy() ) limit[0]= minTrialEnergy();
+    if( limit[1]>maxTrialEnergy() ) limit[1]= maxTrialEnergy();
   }
 
+  // if we hit a border, (min)maxTrialEnergy,  the method has failed
+  if( fabs(recEnergy-minTrialEnergy())<1. ||
+         fabs(recEnergy-maxTrialEnergy())<1. )
+    return 0;
   // QUALITY
   // now looking for FWHM
   // fwhmLimits is an outer limit for an energy such that 
   // evaluatePDF(x)<.5*maxProb
-  // fwhmBinWidth gives us the inner limit
 
   double recWidth= 0.;
+  double fwhmLimits[2]= { maxTrialEnergy(), maxTrialEnergy() };
   for( int iFWHM= 0; iFWHM<2; ++iFWHM )
   {
-    // reached limits of reconstruction range
-    if( fwhmLimits[iFWHM]==0. )
+    limit[0]= iFWHM?recEnergy:minTrialEnergy();
+    limit[1]= iFWHM?maxTrialEnergy():recEnergy;
+    for( double bW= (limit[1]-limit[0])*.1; bW>.01; bW= (limit[1]-limit[0])*.1 )
     {
-      recWidth+= 1.;
-      continue;
-    }
-
-    for( double bW= fwhmBinWidth[iFWHM]/10.; bW>.01; bW= (maxE-minE)/10. )
-    {
-      if( iFWHM )
-      { 
-        maxE= fwhmLimits[1];
-        minE= maxE-bW;
-      }
-      else {
-        minE= fwhmLimits[0];
-        maxE= minE+bW;
-      }
-
       int errCalls= 0;
-      for( trialEnergy()= minE; trialEnergy()<maxE; trialEnergy()+= bW )
+      double maxE= limit[1];
+      for( trialEnergy()= limit[0]; trialEnergy()<maxE; trialEnergy()+= bW )
       {
         if( evaluatePDF(trialProb) )
         { 
           ++errCalls; 
           continue;
         } 
-        if(    (trialProb<maxProb*.5)
-            && (iFWHM ^ (trialEnergy()>fwhmLimits[iFWHM])) )
-          fwhmLimits[iFWHM]= trialEnergy();
+        if( (trialProb<maxProb*.5)  && (iFWHM ^ (trialEnergy()>limit[iFWHM])) )
+          limit[iFWHM]= trialEnergy();
       }
-      if( errCalls==10 )
-      { 
-        fwhmLimits[iFWHM]= 0.;
-        break;
+      if( errCalls==10 ){
+       limit[iFWHM]= fwhmLimits[iFWHM];
+       break;
       }
+      limit[!iFWHM]= limit[iFWHM]+(1-2*iFWHM)*bW;
+      limit[iFWHM]-= (1-2*iFWHM)*bW;
     }
     
-    recWidth+= .5*fabs(recEnergy-fwhmLimits[iFWHM])/recEnergy;
+    if( fabs(limit[iFWHM]-fwhmLimits[iFWHM])<.1 ) recWidth+= 1.;
+    else recWidth+= fabs(limit[iFWHM]/recEnergy-1.);
   }
 
   log << MSG::DEBUG << "End of Calculations:"<< endreq 
@@ -450,6 +424,15 @@ PDF_Axes::~PDF_Axes()
     if( m_BinCenters ) delete []m_BinCenters;
     if( m_Sizes )      delete []m_Sizes;
     if( m_Bins )       delete []m_Bins;
+}
+
+double PDF_Axes::getBinCenter(int ax, int idAx) const
+{
+  const double *axData= m_BinCenters;
+  for( int i= 0; i<ax;  axData+= m_Sizes[i++] );
+  if(abs(idAx)>m_Sizes[ax]) return 0;
+  if(idAx<0) return axData[m_Sizes[ax]+idAx];
+  return axData[ax];
 }
 
 const double* PDF_Axes::getBinCenters(int ax, bool bin) const
