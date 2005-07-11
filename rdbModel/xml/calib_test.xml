@@ -363,6 +363,12 @@
           <isNull>
             <colRef col="prod_end" which="toBe"/>
           </isNull>
+          <isEmpty>
+            <colRef col="prod_start" which="toBe"/>
+          </isEmpty>
+          <isEmpty>
+            <colRef col="prod_end" which="toBe"/>
+          </isEmpty>
           <compare relation="lessThan">
             <colRef col="prod_start" which="toBe" />
             <colRef col="prod_end" which="toBe" />
@@ -375,6 +381,12 @@
           <isNull>
             <colRef col="input_end" which="toBe"/>
           </isNull>
+          <isEmpty>
+            <colRef col="input_start" which="toBe"/>
+          </isEmpty>
+          <isEmpty>
+            <colRef col="input_end" which="toBe"/>
+          </isEmpty>
           <compare relation="lessThan">
             <colRef col="input_start" which="toBe" />
             <colRef col="input_end" which="toBe"/>

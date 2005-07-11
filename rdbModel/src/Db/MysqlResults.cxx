@@ -56,40 +56,7 @@ namespace rdbModel {
     return true;
 
   }
-
-
-    // May also want to do 
-    //  MYSQL_FIELD* fields = mysql_fetch_fields(m_myres);
-    // and make these available to client, especially for select * queries
-
-
-  /*
-  bool MysqlResults::getRowString(std::string& row, unsigned int iRow) const {
-    mysql_data_seek(m_myres, iRow);
-    MYSQL_ROW myRow = mysql_fetch_row(m_myres);
-
-    unsigned nFields = msyql_num_fields(m_myres);
-  }
-  */
-
-
-
-  /*
-  bool MysqlResults::getRowStrings(std::vector<std::string>& rows, 
-                              unsigned int iRow=0, unsigned int maxRow,
-                              bool clear) const {
-    if (clear) rows.clear();
-
-    unsigned int nRow = getNRows();
-    unsigned lastRow = nRow - 1;
-    if (lastRow > (maxRow + iRow - 1) ) lastRow = maxRow + iRow - 1;
-
-    for (unsigned int ix = iRow; ix <= lastRow; ix++) {
-      std::string aRow;
-      getRowString(aRow, ix);
-      rows.push_back(aRow);
-    }
-    return true;
-  }
-  */
+  // May also want to do 
+  //  MYSQL_FIELD* fields = mysql_fetch_fields(m_myres);
+  // and make these available to client, especially for select * queries
 }
