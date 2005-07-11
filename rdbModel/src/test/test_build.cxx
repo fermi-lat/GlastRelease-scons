@@ -451,7 +451,7 @@ int  doSupersedes(rdbModel::Rdb* rdb, int serial, int* newSerial) {
 
   // Now leave out something necessary
   row.clear();
-  row.addField(FieldVal("data_ident", "supFile.xml"));
+  row.addField(FieldVal("notes", "oops!  left out data_ident"));
 
   retVal = doSupersede(rdb, row, serial, newSerial);
   if (!retVal) nSuccess++;

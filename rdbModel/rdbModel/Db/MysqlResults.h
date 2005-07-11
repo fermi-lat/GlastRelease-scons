@@ -28,6 +28,16 @@ namespace rdbModel{
     virtual bool getRow(std::vector<std::string>& fields, unsigned int i = 0,
                         bool clear = true);
 
+    /**  
+         Get array of field values for ith row of result set.  If a field 
+         value is NULL, return a zero ptr for that element of the array.
+
+         --> It is the responsibility of the caller to delete the strings
+             containing the field values.  See service cleanFieldPtrs
+             in base class ResultHandle.
+    */
+    virtual bool getRowPtrs(std::vector<std::string*>& fieldPtrs, 
+                            unsigned int i = 0, bool clear=true);
 
     /*
     // Return specified row in results as a string
