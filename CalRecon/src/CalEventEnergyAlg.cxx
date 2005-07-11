@@ -80,6 +80,7 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
 		corrToolVec.push_back("CalValsCorrTool");
         corrToolVec.push_back("CalProfileTool");
         corrToolVec.push_back("CalLastLayerLikelihoodTool");
+        corrToolVec.push_back("CalFullProfileTool");
         corrToolVec.push_back("CalTkrLikelihoodTool");
         corrToolVec.push_back("CalTransvOffsetTool");
 

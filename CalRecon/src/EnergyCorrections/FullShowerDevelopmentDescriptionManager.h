@@ -11,7 +11,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #define FSDD_NSTEPS_MAX 1000
-#define FSDD_NPOINTS_MAX 250
+#define FSDD_NPOINTS_MAX 100
 #define FSDD_NMAX 20
 
 /**   
@@ -41,11 +41,12 @@ class FullShowerDevelopmentDescription{
   double x0maxshower;
   double crackmaxfrac;
   double x0crackmaxfrac;
-  double firstx0;
+  double startx0;
   double lastx0;
   double totx0cal;
   double totx0crack;
-  double x0lay[8];
+  double totx0lay[8];
+  double posx0lay[8];
 
  private:
   // Geometry
@@ -76,6 +77,9 @@ class FullShowerDevelopmentDescription{
   double FSDD_PCT2;
 
  private:
+  double wideningfactor;
+
+ private:
   double FSDD_CalSafeBoundaries[3][2];
 
  private:
@@ -102,9 +106,7 @@ class FullShowerDevelopmentDescription{
   void GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend);
 
  public:
-  void Print(int i);
-  void PrintAll();
-  bool Compute(double *pp, double *vv, double startx0, double x0maxshower_input);
+  bool Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input);
   bool ConvertToFixedX0(double x0step, FullShowerDevelopmentDescription *shmm);
 };
 
@@ -119,13 +121,16 @@ class FullShowerDevelopmentDescriptionManager{
   double ZStep;
   double RadialContainedFraction;
   double X0Step;
+  double mintotx0cal;
   double maxtotx0cal;
+  double meantotx0lay[8];
+  double meanposx0lay[8];
   FullShowerDevelopmentDescription *FSDDMM[FSDD_NMAX];
   FullShowerDevelopmentDescription *FSDDX0[FSDD_NMAX];
   FullShowerDevelopmentDescription *CurrentFSDD;
  public:
   FullShowerDevelopmentDescriptionManager(IGlastDetSvc *m_detSvc_input, int nxmax, double xmax0, double dxmax, double zstep_input, double radialcontainedfraction_input, double x0step);
   virtual ~FullShowerDevelopmentDescriptionManager();
-  bool Compute(double *pp, double *vv, double startx0);
+  bool Compute(double *pp, double *vv, double startx0_input);
   void FillCurrentFSDD(double showerxmax);
 };

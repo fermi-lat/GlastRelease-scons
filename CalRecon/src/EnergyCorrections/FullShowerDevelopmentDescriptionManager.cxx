@@ -37,11 +37,14 @@ FullShowerDevelopmentDescription::FullShowerDevelopmentDescription(IGlastDetSvc 
   if(Type==0) PrepXYPoints();
   ZStep = zstep_input;
   RadialContainedFraction = radialcontainedfraction_input;
+  wideningfactor = 1.;
 }
 
 FullShowerDevelopmentDescription::~FullShowerDevelopmentDescription()
 {
-  
+  if(FSDD_XCircle!=NULL) delete FSDD_XCircle;  
+  if(FSDD_YCircle!=NULL) delete FSDD_YCircle;  
+  if(FSDD_RCircle!=NULL) delete FSDD_RCircle;  
 }
 
 void FullShowerDevelopmentDescription::Initialize()
@@ -68,7 +71,7 @@ void FullShowerDevelopmentDescription::Initialize()
   m_detSvc->getNumericConstByName(std::string("towerPitch"),&FSDD_towerPitch);
 
   // FSDD_crackHalfWidth is the average of X and Y layers crackHalfWidths
-  FSDD_crackHalfWidth = ((FSDD_towerPitch-FSDD_CsILength)/2 + (FSDD_towerPitch-12*FSDD_cellHorPitch)/2)/2;;
+  FSDD_crackHalfWidth = ((FSDD_towerPitch-FSDD_CsILength)/2 + (FSDD_towerPitch-12*FSDD_cellHorPitch)/2)/2;
 
   // Retrieving the top position of the calorimeter as in TkrUtil/*/src/TkrGeometrySvc.cxx
   FSDD_calZTop = -47.395;
@@ -134,11 +137,12 @@ void FullShowerDevelopmentDescription::Reset()
   x0maxshower = 0;
   crackmaxfrac = 0;
   x0crackmaxfrac = 0;
-  firstx0 = 0;
+  startx0 = 0;
   lastx0 = 0;
   totx0cal = 0;
   totx0crack = 0;
-  for(i=0;i<8;++i) x0lay[i] = 0;
+  for(i=0;i<8;++i) totx0lay[i] = 0;
+  for(i=0;i<8;++i) posx0lay[i] = 0;
   for(i=0;i<FSDD_NSTEPS_MAX;++i)
     {
       dX0[i] = 0;
@@ -180,8 +184,7 @@ double FullShowerDevelopmentDescription::RCore(double x)
   double xx = x;
   if(xx<.25) xx = .25;
   if(xx>2.5) xx = 2.5;
-  double val = FSDD_CORE0+FSDD_CORE1*xx;
-  return val;
+  return wideningfactor*(FSDD_CORE0+FSDD_CORE1*xx);
 }
 
 double FullShowerDevelopmentDescription::RTail(double x)
@@ -189,7 +192,7 @@ double FullShowerDevelopmentDescription::RTail(double x)
   double xx = x;
   if(xx<.25) xx = .25;
   if(xx>2.5) xx = 2.5;
-  return FSDD_TAIL0*(exp(FSDD_TAIL2*(xx-FSDD_TAIL1))+exp(FSDD_TAIL3*(xx-FSDD_TAIL1)));
+  return wideningfactor*(FSDD_TAIL0*(exp(FSDD_TAIL2*(xx-FSDD_TAIL1))+exp(FSDD_TAIL3*(xx-FSDD_TAIL1))));
 }
 
 double FullShowerDevelopmentDescription::PCore(double x)
@@ -261,20 +264,6 @@ void FullShowerDevelopmentDescription::WhereInCal(double *xyz, int *whereincal)
   whereincal[1] = ilayer;
 }
 
-void FullShowerDevelopmentDescription::Print(int i)
-{
-  printf("FullShowerDevelopmentDescription::Print  %d (RM = %4.2f) : %3.2f %3.2f %3.2f | %3.2f %3.2f %3.2f %3.2f %3.2f %3.2f %3.2f %3.2f (dX0 = %f X0 = %f) \n",
-	 i,RM[i],materialfraction[0][i],materialfraction[1][i],materialfraction[2][i],
-	 layerfraction[0][i],layerfraction[1][i],layerfraction[2][i],layerfraction[3][i],
-	 layerfraction[4][i],layerfraction[5][i],layerfraction[6][i],layerfraction[7][i],
-	 dX0[i],X0[i]);  
-}
-
-void FullShowerDevelopmentDescription::PrintAll()
-{
-  int i;
-  for(i=0;i<=NStep;++i) Print(i);
-}
 
 void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend)
 {
@@ -332,7 +321,7 @@ void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *
     }
 }
 
-bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0, double x0maxshower_input)
+bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input)
 {
   if(Type!=0)
     {
@@ -340,12 +329,14 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
       return false;
     }
 
+  wideningfactor = 1.;
+
   int i,j;
   int whereincal[2];
 
   NStep = 0;
   x0maxshower = x0maxshower_input;
-  firstx0 = startx0;
+  startx0 = startx0_input;
   lastx0 = 0;
   crackmaxfrac = 0;
   x0crackmaxfrac = 0;
@@ -405,7 +396,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 
   double z2X0mat;
 
-  X0[0] = startx0;
+  X0[0] = startx0_input;
 
   double radius, relradius;
   double effradius, releffradius;
@@ -416,7 +407,8 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 
   totx0cal = 0;
   totx0crack = 0;
-  for(j=0;j<8;++j) x0lay[j] = 0;
+  for(j=0;j<8;++j) totx0lay[j] = 0;
+  for(j=0;j<8;++j) posx0lay[j] = 0;
 
   for(j=0;j<NStep;++j)
     {
@@ -440,7 +432,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 	  ppcc[2] = ppc[2]+effradius*FSDD_XCircle[i]*vv0[2]+effradius*FSDD_YCircle[i]*vv1[2];
 	  WhereInCal(ppcc,whereincal);
 	  radius = FSDD_RCircle[i]*effradius;
-	  relradius = radius/35.;
+	  relradius = radius/FSDD_MOLRAD;
 	  radialprofile = RadialProfile(relradius,relx0position);
 	  etotdep += radialprofile;
 	  materialfraction[whereincal[0]][j] += radialprofile;
@@ -465,7 +457,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
       x0position = X0[j];
       totx0cal += materialfraction[1][j]*dX0[j];
       totx0crack += materialfraction[2][j]*dX0[j];
-      for(i=0;i<8;++i) x0lay[i] += layerfraction[i][j]*dX0[j];
+      for(i=0;i<8;++i) totx0lay[i] += layerfraction[i][j]*dX0[j];
 
       if(materialfraction[2][j]>crackmaxfrac)
 	{
@@ -520,13 +512,14 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
   NStep = 0;
   x0maxshower = shmm->x0maxshower;
   RadialContainedFraction = shmm->RadialContainedFraction ;
-  firstx0 = shmm->firstx0;
+  startx0 = shmm->startx0;
   lastx0 = shmm->lastx0;
   crackmaxfrac = 0;
   x0crackmaxfrac = 0;
   totx0cal = shmm->totx0cal;
   totx0crack = 0;
-  for(i=0;i<8;++i) x0lay[i] = shmm->x0lay[i];
+  for(i=0;i<8;++i) totx0lay[i] = shmm->totx0lay[i];
+  for(i=0;i<8;++i) posx0lay[i] = -1;
 
   ZStep = -1;
 
@@ -552,14 +545,11 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
   for(i=0;i<start_ix0;++i)
     materialfraction[0][i] = 1;
 
-  double coherencetest;
   int dimm = 0;
   int lastdimm = 0;
-  double firstx0;
 
   double last_materialfraction[3];
   double last_layerfraction[8];
-  double last_x0;
 
   last_materialfraction[0] = 1;
   for(j=1;j<3;++j) last_materialfraction[j] = 0;
@@ -629,6 +619,25 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
       for(j=0;j<8;++j) layerfraction[j][ix0] /= x0step;
     }
 
+  double meanpos,meanweight;
+  for(j=0;j<8;++j)
+    {
+      meanpos = 0;
+      meanweight = 0;
+      for(ix0=0;ix0<NStep;++ix0)
+	{
+	  if(layerfraction[j][ix0]>0)
+	    {
+	      meanpos += layerfraction[j][ix0]*X0[ix0];
+	      meanweight += layerfraction[j][ix0];
+	    }
+	}
+      if(meanweight==0)
+	posx0lay[j] = -1;
+      else
+	posx0lay[j] = meanpos/meanweight;
+    }
+
   return true;
 }
 
@@ -636,8 +645,17 @@ FullShowerDevelopmentDescriptionManager::FullShowerDevelopmentDescriptionManager
   :m_detSvc(m_detSvc_input)
 {
   NDevelopment = 0;
+  mintotx0cal = 0;
   maxtotx0cal = 0;
   int i;
+
+  for(i=0;i<8;++i)
+    {
+      meantotx0lay[i] = 0;;
+      meanposx0lay[i] = -1;
+    }
+  
+
   for(i=0;i<FSDD_NMAX;++i)
     {
       FSDDMM[i] = NULL;
@@ -678,16 +696,41 @@ FullShowerDevelopmentDescriptionManager::~FullShowerDevelopmentDescriptionManage
   if(CurrentFSDD!=NULL) delete CurrentFSDD;
 }
 
-bool FullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0)
+bool FullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input)
 {
-  int i;
-  maxtotx0cal = 0;
+  int i,j;
+  mintotx0cal = 99999999;
+  maxtotx0cal = -99999999;
   for(i=0;i<=NDevelopment;++i)
     {
-      if(!FSDDMM[i]->Compute(pp,vv,startx0,XMax[i])) return false;
+      if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i])) return false;
       if(!FSDDX0[i]->ConvertToFixedX0(X0Step,FSDDMM[i])) return false;
+      if(FSDDX0[i]->totx0cal<mintotx0cal) mintotx0cal = FSDDX0[i]->totx0cal;
       if(FSDDX0[i]->totx0cal>maxtotx0cal) maxtotx0cal = FSDDX0[i]->totx0cal;
     }
+  
+  double meanw = 0;
+  for(j=0;j<8;++j)
+    {
+      meantotx0lay[j] = 0;;
+      meanposx0lay[j] = 0;
+      meanw = 0;
+      for(i=0;i<=NDevelopment;++i)
+	{
+	  meantotx0lay[j] += FSDDX0[i]->totx0lay[j];
+	  if(FSDDX0[i]->posx0lay[j]>-1)
+	    {
+	      meanw += 1.;
+	      meanposx0lay[j] += FSDDX0[i]->posx0lay[j];
+	    }
+	}
+      meantotx0lay[j] /= (double)(NDevelopment+1);
+      if(meanw>0)
+	meanposx0lay[j] /= meanw;
+      else
+	meanposx0lay[j] = -1;
+    }
+  
   return true;
 }
 
@@ -719,11 +762,11 @@ void FullShowerDevelopmentDescriptionManager::FillCurrentFSDD(double showerxmax)
   CurrentFSDD->x0maxshower = showerxmax;
   CurrentFSDD->crackmaxfrac = (1-interpol)*FSDDX0[ish]->crackmaxfrac+interpol*FSDDX0[ish+1]->crackmaxfrac;
   CurrentFSDD->x0crackmaxfrac = (1-interpol)*FSDDX0[ish]->x0crackmaxfrac+interpol*FSDDX0[ish+1]->x0crackmaxfrac;
-  CurrentFSDD->firstx0 = (1-interpol)*FSDDX0[ish]->firstx0+interpol*FSDDX0[ish+1]->firstx0;
+  CurrentFSDD->startx0 = (1-interpol)*FSDDX0[ish]->startx0+interpol*FSDDX0[ish+1]->startx0;
   CurrentFSDD->lastx0 = (1-interpol)*FSDDX0[ish]->lastx0+interpol*FSDDX0[ish+1]->lastx0;
   CurrentFSDD->totx0cal = (1-interpol)*FSDDX0[ish]->totx0cal+interpol*FSDDX0[ish+1]->totx0cal;
   CurrentFSDD->totx0crack = (1-interpol)*FSDDX0[ish]->totx0crack+interpol*FSDDX0[ish+1]->totx0crack;
-  for(i=0;i<8;++i) CurrentFSDD->x0lay[i] = (1-interpol)*FSDDX0[ish]->x0lay[i]+interpol*FSDDX0[ish+1]->x0lay[i];
+  for(i=0;i<8;++i) CurrentFSDD->totx0lay[i] = (1-interpol)*FSDDX0[ish]->totx0lay[i]+interpol*FSDDX0[ish+1]->totx0lay[i];
   
   for(i=0;i<=CurrentFSDD->NStep;++i)
     {

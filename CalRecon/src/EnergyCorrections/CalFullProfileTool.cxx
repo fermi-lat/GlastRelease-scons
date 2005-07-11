@@ -155,7 +155,10 @@ double CalFullProfileTool::compute_chi2(double *par)
 
   m_params_contribution_factor = 3;
   if(par[1]/m_fsddm->CurrentFSDD->lastx0>0.9)
-    m_params_contribution_factor = 3+(par[1]/m_fsddm->CurrentFSDD->lastx0 - 0.9);
+    {
+      m_params_contribution_factor = 3+(par[1]/m_fsddm->CurrentFSDD->lastx0 - 0.9);
+      if(m_params_contribution_factor>10) m_params_contribution_factor = 10.;
+    }
 
   m_totchisq = m_chisq + m_params_contribution_factor * m_params_contribution;
 
@@ -183,7 +186,7 @@ StatusCode CalFullProfileTool::initialize()
 {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
-  log << MSG::INFO << "Initializing CalFullProfileTool" <<endreq;
+  log << MSG::DEBUG << "Initializing CalFullProfileTool" <<endreq;
   
   //Locate and store a pointer to the data service which allows access to the TDS
   if ((sc = service("EventDataSvc", m_dataSvc)).isFailure())
@@ -247,10 +250,12 @@ double CalFullProfileTool::GetRadiationLengthInTracker(Event::TkrVertex* vertex)
     tkr_radLen_nom += m_tkrGeom->getRadLenConv(layerCount) 
       + m_tkrGeom->getRadLenRest(layerCount);
   }
-  tkr_radLen_nom /= costheta;
-
-  if(tkr_RLn > tkr_radLen_nom * 1.5)     {tkr_RLn = tkr_radLen_nom * 1.5;}
-  else if(tkr_RLn < tkr_radLen_nom * .5) {tkr_RLn  = tkr_radLen_nom * .5;}
+  if(costheta!=0)
+    {
+      tkr_radLen_nom /= costheta;
+      if(tkr_RLn > tkr_radLen_nom * 1.5)     {tkr_RLn = tkr_radLen_nom * 1.5;}
+      else if(tkr_RLn < tkr_radLen_nom * .5) {tkr_RLn  = tkr_radLen_nom * .5;}
+    }
   
   return tkr_RLn;
 }
@@ -279,9 +284,9 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   int i;
   
   double eTotal = cluster->getCalParams().getEnergy()/1000.;
-  if( eTotal<.5)
+  if( eTotal<1.)
     {
-      lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : eTotal<1GeV -> no energy computation" <<endreq;
+      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : eTotal<1GeV -> no energy computation" <<endreq;
       return corResult;
     }
   
@@ -315,30 +320,39 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
       tkr_RLn = GetRadiationLengthInTracker(vertex);
     }
 
-//   tkr_RLn = 0;
-
-//   pp[0] = 179.992;
-//   pp[1] =  142.437;
-//   pp[2] = -184.581;
-//   vv[0] = -0.996704;
-//   vv[1] = -0.0808778;
-//   vv[2] = 0.00635119;
-
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : pp = " <<  pp[0] << " " << pp[1] << " " << pp[2] << " " <<endreq;
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : vv = " <<  vv[0] << " " << vv[1] << " " << vv[2] << " " <<endreq;
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : tkr_RLn = " << tkr_RLn <<endreq;
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : pp = " <<  pp[0] << " " << pp[1] << " " << pp[2] << " " <<endreq;
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : vv = " <<  vv[0] << " " << vv[1] << " " << vv[2] << " " <<endreq;
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : tkr_RLn = " << tkr_RLn <<endreq;
   
   if(!m_fsddm->Compute(pp,vv,tkr_RLn))
     {
-      lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : Problem during m_fsddm->Compute. Returning empty  corResult." <<endreq;
+      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : Problem during m_fsddm->Compute. Returning empty corResult." <<endreq;
+      return corResult;
+    }
+
+  if(m_fsddm->mintotx0cal<0.5) // Make sure that lastx0>0 during the fitting procedure
+    {
+      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr :  m_fsddm->mintotx0cal<0.5. No energy computation. Returning empty corResult." <<endreq;
       return corResult;
     }
   
   for(i=0;i<=m_fsddm->NDevelopment;++i)
     {
-      lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[i]->lastx0 = " << m_fsddm->FSDDX0[i]->lastx0 <<endreq;
+      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[" << i <<"] :"
+	 << " startx0 = " << m_fsddm->FSDDX0[i]->startx0
+	 << " totx0cal = " << m_fsddm->FSDDX0[i]->totx0cal
+	 << " lastx0 = " << m_fsddm->FSDDX0[i]->lastx0
+	 <<endreq;
     }
-  
+
+  for(i=0;i<8;++i)
+    {
+      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[" << i <<"] :"
+	 << m_fsddm->meantotx0lay[i]
+	 << " meanposx0lay = " << m_fsddm->meanposx0lay[i]
+	 <<endreq;
+    }
+
   // defines global variable to be used for fcn
   for (i=0;i<8;++i)
     {
@@ -373,8 +387,6 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   double par0,par1,par2;
   double epar0,epar1,epar2;
   
-  if(eTotal<0.1) eTotal = 0.2;
-
   m_fsppm->Fill(eTotal);
   
   vstart[0] = m_fsppm->alpha;
@@ -389,39 +401,37 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
   m_minuit->mnparm(2, "a3", vstart[2], vstep[2], 0.1,10000,ierflg);
   
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : Initial parameters : " << vstart[0] << " " << vstart[1] << " " << vstart[2] <<endreq;
-  
-  arglist[0] = 1000;
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : Initial parameters : " << vstart[0] << " " << vstart[1] << " " << vstart[2] <<endreq;
+
+  // Calls Migrad with 500 iterations maximum
+  arglist[0] = 500;
   arglist[1] = 1.;
-  
   m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
-  
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : ierflg = " << ierflg <<endreq;
-  
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : totchisq = " << m_totchisq << " = " << m_chisq << " + " << m_params_contribution_factor << " * " << m_params_contribution <<endreq;
+
+  double m_ierflg = (double)ierflg;
+    
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : ierflg = " << ierflg <<endreq;
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : totchisq = " << m_totchisq << " = " << m_chisq << " + " << m_params_contribution_factor << " * " << m_params_contribution <<endreq;
   
   m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
   
   m_minuit->GetParameter(0,par0,epar0);
   m_minuit->GetParameter(1,par1,epar1);
   m_minuit->GetParameter(2,par2,epar2);
-
-  double lastx0 = m_fsddm->CurrentFSDD->lastx0;
-  
-  double par[3];
-  par[0] = par0;
-  par[1] = par1;
-  par[2] = par2;
-  
-  lm << MSG::INFO << "CalFullProfileTool::doEnergyCorr : results = " << par0 << " " << par1 << " " << par2 << " " << ierflg << " " << amin <<endreq;
+      
+  double m_lastx0 = m_fsddm->CurrentFSDD->lastx0;
+  double m_totx0cal = m_fsddm->CurrentFSDD->totx0cal;
+    
+  lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : results : alpha = " << par0 
+     << " tmax = " << par1 
+     << " energy = " << par2 
+     << " fit flag " << ierflg 
+     << " totchisq = " << amin <<endreq;
   
   // Clear minuit
   arglist[0] = 1;
   m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
-  
-  // Ok, fill in the corrected information and exit
-  Event::CalParams params = cluster->getCalParams();
-
+    
   // Quick Bias Correction
   double bias = 1.;
   if(par2>0.1)
@@ -430,6 +440,9 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   if(bias>0.99) bias = 0.99;
   par2 /= bias;
   epar2 /= bias;
+  
+  // Ok, fill in the corrected information and exit
+  Event::CalParams params = cluster->getCalParams();
 
   params.setEnergy(1000.*par2);
   params.setEnergyErr(1000.*epar2);
@@ -439,22 +452,30 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   corResult->setCorrectionName(type());
   corResult->setParams(params);
   corResult->setChiSquare(amin);
-  corResult->insert(Event::CalCorEneValuePair("fit_energy",1000.*par2));
-  corResult->insert(Event::CalCorEneValuePair("energy_err",1000.*epar2));
-  corResult->insert(Event::CalCorEneValuePair("alpha", par0));
-  corResult->insert(Event::CalCorEneValuePair("tmax", par1));
-  corResult->insert(Event::CalCorEneValuePair("tkrrln",tkr_RLn ));
-  corResult->insert(Event::CalCorEneValuePair("lastx0",lastx0 ));
-  corResult->insert(Event::CalCorEneValuePair("totchisq",m_totchisq));
-  corResult->insert(Event::CalCorEneValuePair("chisq",m_chisq));
-  corResult->insert(Event::CalCorEneValuePair("parcf",m_params_contribution_factor));
-  corResult->insert(Event::CalCorEneValuePair("parc",m_params_contribution));
+  corResult->insert(Event::CalCorEneValuePair("fit_energy",1000.*par2)); // energy (in MeV)
+  corResult->insert(Event::CalCorEneValuePair("energy_err",1000.*epar2)); // energy error (in MeV)
+  corResult->insert(Event::CalCorEneValuePair("fitflag", m_ierflg)); // flag from Minuit
+  corResult->insert(Event::CalCorEneValuePair("alpha", par0)); // alpha (profile fit parameter 0)
+  corResult->insert(Event::CalCorEneValuePair("tmax", par1)); // tmax (profile fit parameter 1)
+  corResult->insert(Event::CalCorEneValuePair("tkr_RLn",tkr_RLn )); // radiation length in tracker (0 for cal only events)
+  corResult->insert(Event::CalCorEneValuePair("lastx0",m_lastx0 )); // total radiation length seen by the shower
+  corResult->insert(Event::CalCorEneValuePair("cal_eff_RLn",m_totx0cal)); // effective radiation length in cal (i.e in CsI)
+  corResult->insert(Event::CalCorEneValuePair("totchisq",m_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
+  corResult->insert(Event::CalCorEneValuePair("chisq",m_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+  corResult->insert(Event::CalCorEneValuePair("parcf",m_params_contribution_factor)); // weighting factor of the parameters constraint
+  corResult->insert(Event::CalCorEneValuePair("parc",m_params_contribution)); // parameters constraint contribution to the chisquare
+  corResult->insert(Event::CalCorEneValuePair("recp0",pp[0])); // Point and direction information - kept for the moment for debugging purpose
+  corResult->insert(Event::CalCorEneValuePair("recp1",pp[1]));
+  corResult->insert(Event::CalCorEneValuePair("recp2",pp[2]));
+  corResult->insert(Event::CalCorEneValuePair("recv0",vv[0]));
+  corResult->insert(Event::CalCorEneValuePair("recv1",vv[1]));
+  corResult->insert(Event::CalCorEneValuePair("recv2",vv[2]));
   
   return corResult;
 }
 
 
-StatusCode CalFullProfileTool::finalize()
+  StatusCode CalFullProfileTool::finalize()
 {
   StatusCode sc = StatusCode::SUCCESS;
   

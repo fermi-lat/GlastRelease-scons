@@ -76,7 +76,7 @@ bool FullShowerProfileParamsManager::Fill(double energy_input)
   slntmax = 1./(SLNT1*log(energy)+SLNT0);
   rho = RHO0-RHO1*exp(-energy/RHO2);
   relerr = RELERR0*exp(RELERR1*log(energy));
-  if(relerr>0.15) relerr = 0.15;
+  if(relerr>RELERR0) relerr = RELERR0;
   beta = (alpha-1.)/tmax;
   return true;
 }
