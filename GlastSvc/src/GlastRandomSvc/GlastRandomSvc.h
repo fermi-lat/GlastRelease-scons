@@ -17,7 +17,7 @@ $Header$
 
 #include "CLHEP/Random/Random.h"
 #include "GlastRandomSeed.h"
-#include "GlastSvc/GlastRandomSvc/RandomAccess.h"
+#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 
 class IDataProviderSvc;;
 
@@ -105,7 +105,7 @@ private:
     IDataProviderSvc* m_eventSvc;
 
     //! list of pointers to setflag functions
-    std::vector< RandomAccess::SetFlag> m_setFlagPointers;
+    std::vector< IRandomAccess::SetFlag> m_setFlagPointers;
 
 };
 

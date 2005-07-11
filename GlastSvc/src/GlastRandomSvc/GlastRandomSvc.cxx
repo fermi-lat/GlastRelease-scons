@@ -248,7 +248,7 @@ StatusCode GlastRandomSvc::initialize ()
         {
             std::string fullname = this->name()+"."+tooltype;
             IAlgTool* itool = toolfactory->instantiate(fullname,  this );
-            RandomAccess* ranacc ;
+            IRandomAccess* ranacc ;
             status =itool->queryInterface(IRandomAccess::interfaceID(), (void**)&ranacc);
             if( status.isSuccess() )
             {
@@ -274,7 +274,7 @@ StatusCode GlastRandomSvc::initialize ()
                 }
                 // Store its name and address in a map
                 m_engineMap[tooltype] = hr;
-                RandomAccess::SetFlag randset = ranacc->getRandSet();
+                IRandomAccess::SetFlag randset = ranacc->getRandSet();
                 log << MSG::INFO << "RandGauss setFlag at " << randset << endreq;
                 m_setFlagPointers.push_back(randset);
             }
@@ -395,7 +395,7 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo)
         RandGauss::setFlag(false);
 
         // now make sure the external ones (if any) are done too!
-        for( std::vector< RandomAccess::SetFlag>::iterator it = m_setFlagPointers.begin();
+        for( std::vector< IRandomAccess::SetFlag>::iterator it = m_setFlagPointers.begin();
             it != m_setFlagPointers.end(); ++it)
         {
             (**it)(false);
