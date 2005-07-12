@@ -955,14 +955,26 @@ void StdMipFindingTool::calculateTrackProperties()
         if (calMipXtal.getFree())
 	  {
 	    m_uu=calMipXtal.getXtal()->getPosition()-m_refP;
-	    //log << MSG::DEBUG << " FP : findC1 current C1 u.z= " << m_uu.z() << endreq;
-	    if (m_uu.z()==0)// don't want initial direction to be horizontal
-	      continue;
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 u.x= " << m_uu.x() << endreq;
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 u.y= " << m_uu.y() << endreq;
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 u.z= " << m_uu.z() << endreq;
+ 	    if (m_uu.z()==0)// don't want initial direction to be horizontal
+ 	      continue;
 	    m_vv=m_uu.unit();
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 v.x= " << m_vv.x() << endreq;
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 v.y= " << m_vv.y() << endreq;
+// 	    log << MSG::DEBUG << " FP : findC1 current C1 v.z= " << m_vv.z() << endreq;
+// 	    // to avoid "G4Propagator: in danger of stuck particle"
+// 	    if (fabs(m_vv.x())<0.00001)
+// 	      m_vv.setX(0.);
+// 	    if (fabs(m_vv.y())<0.00001)
+// 	      m_vv.setY(0.);
+// 	    if (fabs(m_vv.z())<0.00001)
+// 	      m_vv.setZ(0.);
 	    m_G4PropTool->setStepStart(m_refP,m_vv);
 	    d01=sqrt(m_uu*m_uu);
 	    log << MSG::DEBUG << " FP : findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;
-	    m_G4PropTool->step(d01);
+	    m_G4PropTool->step(2*d01);
 	    // Now loop over the steps to extract the materials
 	    int numSteps = m_G4PropTool->getNumberSteps();
 	    log << MSG::DEBUG << " FP : findC1 G4prop numSteps = " << numSteps << endreq;
