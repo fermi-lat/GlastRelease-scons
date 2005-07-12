@@ -139,12 +139,12 @@ class McPositionHit : virtual public ContainedObject {
     void setMcParticle( SmartRef<McParticle> value );
 
     /// Retrieve particle ID
-    McParticle::StdHepId getMcParticleId(){return m_mcParticleId;};
+    McParticle::StdHepId getMcParticleId()const{return m_mcParticleId;};
     /// Set the particle ID
     void setMcParticleId(McParticle::StdHepId id){m_mcParticleId = id;};
 
     /// Retrieve ancestor particle ID
-    McParticle::StdHepId getOriginMcParticleId(){return m_originMcParticleId;};
+    McParticle::StdHepId getOriginMcParticleId()const{return m_originMcParticleId;};
     /// Set the ancestor particle ID
     void setOriginMcParticleId(McParticle::StdHepId id){m_originMcParticleId = id;};
 
