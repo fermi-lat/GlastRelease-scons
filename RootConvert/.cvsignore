@@ -2,6 +2,8 @@ sun4x_*
 i386_linux*
 Win32*
 Visual
+VC8
+VC8debug
 setup.*
 *.mak*
 rh72_gcc2953
