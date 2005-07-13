@@ -50,7 +50,7 @@ private:
     double EvtEnergyCorr;
     double EvtEnergyRaw;
     double EvtDeltaEoE;
-    double EvtECaldgeAngle;
+    double EvtCalEdgeAngle;
     double EvtTkrEdgeAngle;
     double EvtLogEnergy;
     double EvtTkr1EFrac;
@@ -197,7 +197,7 @@ StatusCode EvtValsTool::initialize()
     addItem("EvtEnergyCorr",    &EvtEnergyCorr);
     addItem("EvtEnergyRaw",     &EvtEnergyRaw);
     addItem("EvtDeltaEoE",      &EvtDeltaEoE);
-    addItem("EvtECaldgeAngle",  &EvtECaldgeAngle);
+    addItem("EvtCalEdgeAngle",  &EvtCalEdgeAngle);
     addItem("EvtTkrEdgeAngle",  &EvtTkrEdgeAngle);
     addItem("EvtLogEnergy",     &EvtLogEnergy);
     addItem("EvtTkr1EFrac",     &EvtTkr1EFrac);
@@ -283,7 +283,7 @@ StatusCode EvtValsTool::calculate()
             EvtTkrEdgeAngle = -tkrEdge/tkr1ZDir;
         }
         if (m_pCalTool->getVal("CalTwrEdge", calEdge, nextCheck).isSuccess()) {
-            EvtECaldgeAngle = -calEdge/tkr1ZDir;
+            EvtCalEdgeAngle = -calEdge/tkr1ZDir;
         }
     }
 	double tkr1ZDir2 = tkr1ZDir*tkr1ZDir;  
