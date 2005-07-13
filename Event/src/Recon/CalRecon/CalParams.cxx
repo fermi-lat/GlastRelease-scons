@@ -89,7 +89,7 @@ void Event::CalParams::setAxisErrs(const HepMatrix& errs)
     m_axiszz = errs(3,3);
 }
 
-const HepMatrix Event::CalParams::getCentroidErrs() const
+HepMatrix Event::CalParams::getCentroidErrs() const
 {
     HepMatrix errs(3,3,0);
 
@@ -103,7 +103,7 @@ const HepMatrix Event::CalParams::getCentroidErrs() const
     return errs;
 }
 
-const HepMatrix Event::CalParams::getAxisErrs() const
+HepMatrix Event::CalParams::getAxisErrs() const
 {
     HepMatrix errs(3,3,0);
 

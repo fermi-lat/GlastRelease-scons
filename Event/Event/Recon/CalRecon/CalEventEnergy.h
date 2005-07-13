@@ -54,24 +54,25 @@ public:
                      GODOGSGO     = 0x100000};  
 
     /// Access the status bits to determine details of the hit
-    inline const unsigned int  getStatusBits() const {return m_statusBits;}
+    inline unsigned int getStatusBits() const {return m_statusBits;}
+    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
 
     /// Answer quick questions based on status bits
-    inline const bool validPassOne() const {return (m_statusBits & PASS_ONE)  == PASS_ONE;}
-    inline const bool validPassTwo() const {return (m_statusBits & PASS_TWO)  == PASS_TWO;}
+    inline bool validPassOne() const {return (m_statusBits & PASS_ONE)  == PASS_ONE;}
+    inline bool validPassTwo() const {return (m_statusBits & PASS_TWO)  == PASS_TWO;}
 
     /// Access to "the" energy and parameters
-    const CalParams  getParams()    const {return m_params;}
-    const double     getEnergy()    const {return m_params.getEnergy();}
-    const Point      getCentroid()  const {return m_params.getCentroid();}
-    const Vector     getDirection() const {return m_params.getAxis();}
+    const CalParams & getParams()    const {return m_params;}
+    double getEnergy()    const {return m_params.getEnergy();}
+    const Point & getCentroid()  const {return m_params.getCentroid();}
+    const Vector & getDirection() const {return m_params.getAxis();}
 
     ///
     /// Set methods for this class
     /// @param energy the corrected energy
     inline void setParams(const CalParams& params)    {m_params = params;}
 
-    inline void setStatusBit(unsigned int bitToSet)   {m_statusBits |=  bitToSet;}
+    inline void setStatusBit(StatusBits bitToSet)   {m_statusBits |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear) {m_statusBits &= ~bitToClear;}
         
 private:

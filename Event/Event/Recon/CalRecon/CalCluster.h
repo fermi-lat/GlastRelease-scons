@@ -53,9 +53,9 @@ public:
 
     ~CalClusterLayerData() {}
 
-    const double getEnergy()    const {return m_energy;}
-    const Point  getPosition()  const {return m_position;}
-    const Vector getRmsSpread() const {return m_rmsSpread;}
+    double getEnergy()    const {return m_energy;}
+    const Point & getPosition()  const {return m_position;}
+    const Vector &getRmsSpread() const {return m_rmsSpread;}
 private:
     double m_energy;         // Energy deposition in crystals in this cluster and layer
     Point  m_position;       // Average position in this layer
@@ -133,7 +133,7 @@ public:
     void setNumXtals(int numXtals)             {m_numTruncXtals = numXtals;}
 
 	   /// setStatusBit and ClearStatusBit for setting and clearing bits
-    inline void setStatusBit(unsigned int bitToSet)        {m_statusBits |=  bitToSet;}
+    inline void setStatusBit(StatusBits bitToSet)        {m_statusBits |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
 
     /*
@@ -142,19 +142,20 @@ public:
     /// Direct access to the CalParams
     const CalParams& getCalParams() const {return m_params;}
     /// get RMS of longitudinal position measurements
-    const double getRmsLong()		const {return m_rmslong;} 
+    double getRmsLong()		const {return m_rmslong;} 
     /// get RMS of transverse position measurements
-	const double getRmsLongAsym()   const {return m_rmslongAsym;} 
+	double getRmsLongAsym()   const {return m_rmslongAsym;} 
     /// get RMS of transverse position measurements
-    const double getRmsTrans()	    const {return m_rmstrans;}
+    double getRmsTrans()	    const {return m_rmstrans;}
 	/// get Number of Truncated Xtals in Cluster
-    const double getNumTruncXtals()	const {return m_numTruncXtals;}
+    double getNumTruncXtals()	const {return m_numTruncXtals;}
     /// get reconstructed position
-    Point getPosition()             const {return m_params.getCentroid();}
+    const Point & getPosition()             const {return m_params.getCentroid();}
     /// get reconstructed direction
-    Vector getDirection()           const {return m_params.getAxis();}
+    const Vector & getDirection()           const {return m_params.getAxis();}
 	/// Access the status bits to determine details of the Cluster (see above)
-    inline const unsigned int  getStatusBits() const {return m_statusBits;}
+    inline unsigned int getStatusBits() const {return m_statusBits;}
+    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
     /// write some of CalCluster data to the ASCII output file
     /// for debugging purposes
     void writeOut(MsgStream& stream) const;

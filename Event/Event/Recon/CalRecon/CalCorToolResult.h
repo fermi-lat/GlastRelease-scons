@@ -5,7 +5,7 @@
 #include <map>
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/RelTable/RelTable.h"
@@ -27,8 +27,8 @@ namespace Event
 {
 /// Define a map to contain output of correction tools
 /// Use a string for the key (to give flexibility), value to be contained a double
-typedef std::map< const std::string, const double> CalCorEneValueMap;
-typedef std::pair<const std::string, const double> CalCorEneValuePair;
+typedef std::map<std::string,double> CalCorEneValueMap;
+typedef std::pair<std::string,double> CalCorEneValuePair;
     
 class CalCorToolResult: public CalCorEneValueMap, virtual public ContainedObject
 {     
@@ -57,15 +57,16 @@ public:
                      GODOGSGO     = 0x40000000};  
 
     /// Answer quick questions based on status bits
-    inline const bool validParams() const {return (m_statusBits & VALIDPARAMS)  == VALIDPARAMS;}
+    inline bool validParams() const {return (m_statusBits & VALIDPARAMS)  == VALIDPARAMS;}
 
     /// Access the status bits to determine details of the hit
-    inline const unsigned int  getStatusBits() const {return m_statusBits;}
+    inline unsigned int getStatusBits() const {return m_statusBits;}
+    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
 
     /// Retrieve corrected information
-    const std::string&         getCorrectionName() const {return m_correctionName;}
-    const CalParams&           getParams()         const {return m_params;}
-    const double               getChiSquare()      const {return m_chiSquare;}
+    const std::string &         getCorrectionName() const {return m_correctionName;}
+    const CalParams &           getParams()         const {return m_params;}
+    double               getChiSquare()      const {return m_chiSquare;}
 
     /// 
     /// Start here the methods for setting the information 
@@ -77,10 +78,10 @@ public:
     inline void setParams(const CalParams& params)         {m_params = params;}
     /// setChiSquare for setting the chisquare of the correction "fit"
     /// @param chiSquare the chiSquare resulting from this correction 
-    inline void setChiSquare(const double chiSquare)       {m_chiSquare = chiSquare;}
+    inline void setChiSquare(double chiSquare)       {m_chiSquare = chiSquare;}
 
     /// setStatusBit and ClearStatusBit for setting and clearing bits
-    inline void setStatusBit(unsigned int bitToSet)        {m_statusBits |=  bitToSet;}
+    inline void setStatusBit(StatusBits bitToSet)        {m_statusBits |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
 
 private:
