@@ -202,6 +202,9 @@ StatusCode mcRootWriterAlg::execute()
     //   to the ROOT file.
 
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG;
+    if( log.isActive()) log<<"execute"<<endreq ;
+    log << endreq;
 
     StatusCode sc = StatusCode::SUCCESS;
     
