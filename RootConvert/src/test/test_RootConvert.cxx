@@ -43,7 +43,7 @@ int main( int /* argc */, char ** /* argv */ ) {
     result = result && check<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
     
     if (result) {
-      std::cout<<"RootConvert test suceeded"<<std::endl ;
+      std::cout<<"RootConvert test succeeded"<<std::endl ;
       return 0 ;
     } else {
       std::cout<<"RootConvert test ERROR"<<std::endl ;

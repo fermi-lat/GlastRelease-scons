@@ -51,7 +51,7 @@ private:
     std::string                  m_corrType;
 
     //! Set status bits depending on which iteration of algorithm
-    unsigned int                 m_passBits;
+    Event::CalEventEnergy::StatusBits m_passBits ;
     
     //! package service
     ICalReconSvc *      m_calReconSvc ;
@@ -184,7 +184,7 @@ StatusCode CalEventEnergyAlg::execute()
     // Else reset CalEventEnergy
     } else {
         calEnergy->clear() ;
-        calEnergy->clearStatusBit((Event::CalEventEnergy::StatusBits)calEnergy->getStatusBits()) ;
+        calEnergy->setStatusBits(0) ;
     }
     
     // No clusters no work

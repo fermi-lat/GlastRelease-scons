@@ -33,10 +33,7 @@ void convert( const CalCorToolResult & rootResult, Event::CalCorToolResult & tds
     tdsResult.setCorrectionName(rootResult.getCorrectionName().Data()) ;
 
     UInt_t rootStatusBits = rootResult.getStatusBits() ;
-    Event::CalCorToolResult::StatusBits tdsNotStatusBits
-        = (Event::CalCorToolResult::StatusBits)(~rootStatusBits) ;
-    tdsResult.clearStatusBit(tdsNotStatusBits) ;
-    tdsResult.setStatusBit(rootStatusBits) ;
+    tdsResult.setStatusBits(rootStatusBits) ;
 
     tdsResult.setChiSquare(rootResult.getChiSquare()) ;
 
@@ -81,10 +78,7 @@ void convert( const CalEventEnergy & rootEventEnergy, Event::CalEventEnergy & td
     tdsEventEnergy.setParams(tdsParams) ;
     
     UInt_t rootStatusBits = rootEventEnergy.getStatusBits() ;
-    Event::CalEventEnergy::StatusBits tdsNotStatusBits
-        = (Event::CalEventEnergy::StatusBits)(~rootStatusBits) ;
-    tdsEventEnergy.clearStatusBit(tdsNotStatusBits) ;
-    tdsEventEnergy.setStatusBit(rootStatusBits) ;
+    tdsEventEnergy.setStatusBits(rootStatusBits) ;
 
     tdsEventEnergy.clear() ;
     TIter rootResultsIter(&rootEventEnergy.getToolsResults()) ;

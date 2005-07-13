@@ -47,10 +47,7 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
         rootCluster.getNumTruncXtals() ) ;
     
     UInt_t rootStatusBits = rootCluster.getStatusBits() ;
-    Event::CalCluster::StatusBits tdsNotStatusBits
-        = (Event::CalCluster::StatusBits)(~rootStatusBits) ;
-    tdsCluster.clearStatusBit(tdsNotStatusBits) ;
-    tdsCluster.setStatusBit(rootStatusBits) ;
+    tdsCluster.setStatusBits(rootStatusBits) ;
 
     tdsCluster.clear() ;
     int i ;
