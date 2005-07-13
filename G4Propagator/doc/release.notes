@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r1p5 13-Jul-05 TU   Finally fix the problem with ray parallel to surface...
  v2r1p4  1-Mar-05 TU   More work on distanceToEdge, limit "outside" to 400 mm
  v2r1p3 28-Feb-05 TU   Fix an apparant pathology in distanceToEdge where arclen can be unreasonable
  v2r1p2 27-Feb-05 TU   Ok, "really" fix bug affecting cal energy determination now
