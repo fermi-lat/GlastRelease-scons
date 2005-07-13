@@ -10,6 +10,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IInterface.h"
+#include <string>
 
 static const InterfaceID IID_ICalReconSvc("ICalReconSvc",1,0) ;
 
@@ -28,11 +29,12 @@ public:
     //! retrieve Gaudi interface ID
     static const InterfaceID& interfaceID() { return IID_ICalReconSvc ; }
 
-    //! update what depends on event state
-    virtual void                  reviewEvent()           = 0 ;
-    
+    //! register errors
+    virtual StatusCode handleError
+      ( const std::string & catcherName,
+        const std::string & comment ) =0 ;
+
     // generic services
-    virtual StatusCode            getStatus()       const = 0 ;
     virtual IDataProviderSvc*     getEventSvc()     const = 0 ;
     virtual IGlastDetSvc*         getDetSvc()       const = 0 ;
 

@@ -1,5 +1,6 @@
 #include "CalLikelihoodTool.h"
 #include "GaudiKernel/GaudiException.h" 
+#include "src/Utilities/CalException.h" 
 
 /**   
 * @class CalLastLayerLikelihoodTool

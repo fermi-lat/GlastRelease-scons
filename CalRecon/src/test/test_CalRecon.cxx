@@ -9,6 +9,7 @@
 #include "GaudiKernel/Algorithm.h"
 #include <cmath>
 #include <cerrno>
+#include <exception>
 
 class test_CalRecon : public Algorithm {
 public:
@@ -69,8 +70,7 @@ StatusCode test_CalRecon::execute() {
     SmartDataPtr<Event::CalEventEnergy> calEnergy(eventSvc(),EventModel::CalRecon::CalEventEnergy);
 
     if ((clusCol == 0) || (clusCol->size()) == 0) {
-        log << MSG::FATAL << "no/incorrect number calorimeter clusters found" << endreq;
-        return StatusCode::FAILURE ;
+        throw std::runtime_error("no/incorrect number calorimeter clusters found") ;
     }
     
     Event::CalClusterCol::const_iterator cluster ;

@@ -6,6 +6,9 @@
 #include "Event/TopLevel/EventModel.h"
 
 #include "src/MipFinding/IMipFindingTool.h"
+#include "src/Utilities/CalException.h"
+
+#include <CalRecon/ICalReconSvc.h>
 
 /**   
 * @class CalMipFinderAlg
@@ -39,6 +42,9 @@ private:
     
     //! correction tools
     IMipFindingTool* m_mipFinder ;
+    
+    //! package service
+    ICalReconSvc *      m_calReconSvc ;
 } ;
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -73,6 +79,12 @@ StatusCode CalMipFinderAlg::initialize()
     }
     log << endreq;
         
+    if (service("CalReconSvc",m_calReconSvc,true).isFailure())
+    {
+        log<<MSG::ERROR<<"Could not find CalReconSvc"<<endreq ;
+        return StatusCode::FAILURE ;
+    }
+
     if ((sc = toolSvc()->retrieveTool(m_mipFinderName, m_mipFinder)).isFailure())
     {
         log << MSG::ERROR << " Unable to create " << m_mipFinderName << endreq ;
@@ -103,7 +115,17 @@ StatusCode CalMipFinderAlg::execute()
     //Event::TkrVertexCol*   tkrVertices = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
 
     // find mips
-    sc = m_mipFinder->findMIPCandidates();
+    try {
+        if ((m_mipFinder->findMIPCandidates()).isFailure()) {
+            sc = m_calReconSvc->handleError(name(),"mip finding tool failure") ;
+        }        
+    } catch( CalException & e ) {
+        sc = m_calReconSvc->handleError(name()+" CalException",e.what()) ;
+    } catch( std::exception & e) {
+        sc = m_calReconSvc->handleError(name()+" std::exception",e.what()) ;
+    } catch(...) {
+        sc = m_calReconSvc->handleError(name(),"unknown exception") ;
+    }
 
     log<<MSG::DEBUG<<"End"<<endreq ;
     return sc;

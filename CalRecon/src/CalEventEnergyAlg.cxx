@@ -1,4 +1,6 @@
 
+#include "src/Utilities/CalException.h"
+
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -7,6 +9,7 @@
 #include "Event/TopLevel/EventModel.h"
 
 #include <CalRecon/ICalEnergyCorr.h>
+#include <CalRecon/ICalReconSvc.h>
 
 /**   
 * @class CalEventEnergyAlg
@@ -49,6 +52,9 @@ private:
 
     //! Set status bits depending on which iteration of algorithm
     unsigned int                 m_passBits;
+    
+    //! package service
+    ICalReconSvc *      m_calReconSvc ;
 } ;
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -115,6 +121,12 @@ StatusCode CalEventEnergyAlg::initialize()
     }
     log << endreq;
         
+    if (service("CalReconSvc",m_calReconSvc,true).isFailure())
+    {
+        log<<MSG::ERROR<<"Could not find CalReconSvc"<<endreq ;
+        return StatusCode::FAILURE ;
+    }
+
     // Now build the list of correction tools to apply during execution
     const std::vector< std::string >& corrToolNames = m_corrToolNames ;
     std::vector< std::string >::const_iterator toolName ;
@@ -153,7 +165,7 @@ StatusCode CalEventEnergyAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log<<MSG::DEBUG<<"Begin"<<endreq ;
+    log<<MSG::DEBUG<<"Begin execute()"<<endreq ;
 
     // Retrieve our TDS objects, we use Clusters to output corrected energy in CalEventEnergy
     Event::CalClusterCol*  calClusters = SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol);
@@ -161,8 +173,7 @@ StatusCode CalEventEnergyAlg::execute()
     Event::TkrVertexCol*   tkrVertices = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
 
     // If no CalEnergy object (yet) then create one and register in TDS
-    if (calEnergy == 0)
-    {
+    if (calEnergy == 0) {
         calEnergy = new Event::CalEventEnergy();
 
         if ((eventSvc()->registerObject(EventModel::CalRecon::CalEventEnergy, calEnergy)).isFailure())
@@ -170,8 +181,12 @@ StatusCode CalEventEnergyAlg::execute()
             log<<MSG::ERROR<<"Cannot register CalEventEnergy"<<endreq ;
             return StatusCode::FAILURE ;
         }
+    // Else reset CalEventEnergy
+    } else {
+        calEnergy->clear() ;
+        calEnergy->clearStatusBit((Event::CalEventEnergy::StatusBits)calEnergy->getStatusBits()) ;
     }
-
+    
     // No clusters no work
     if (calClusters->size() > 0)
     {
@@ -182,22 +197,32 @@ StatusCode CalEventEnergyAlg::execute()
 
         // apply corrections according to vector of tools
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
-        for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
-        {
-            log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
+        for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) {
 
-            // Loop over clusters 	 
-            for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
-                  cluster != calClusters->end(); 	 
-                  cluster++) { 	 
-                Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(*cluster, vertex); 	 
-                if (corResult != 0) {
-                    calEnergy->push_back(corResult);
-                    if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
-                        // Need set the status bit in the CalCluster  
-                        (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
+            try {
+
+                log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
+    
+                // Loop over clusters 	 
+                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
+                      cluster != calClusters->end(); 	 
+                      cluster++) { 	 
+                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(*cluster, vertex); 	 
+                    if (corResult != 0) {
+                        calEnergy->push_back(corResult);
+                        if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
+                            // Need set the status bit in the CalCluster  
+                            (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
+                        }
                     }
                 }
+                
+            } catch( CalException & e ) {
+                sc = sc && m_calReconSvc->handleError(name()+" CalException",(*tool)->type()+", "+e.what()) ;
+            } catch( std::exception & e) {
+                sc = sc && m_calReconSvc->handleError(name()+" std::exception",(*tool)->type()+", "+e.what()) ;
+            } catch(...) {
+                sc = sc && m_calReconSvc->handleError(name(),(*tool)->type()+", "+"unknown exception") ;
             }
         }
         
@@ -223,7 +248,7 @@ StatusCode CalEventEnergyAlg::execute()
         }
     }
     
-    log<<MSG::DEBUG<<"End"<<endreq ;
+    log<<MSG::DEBUG<<"End execute()"<<endreq ;
     return sc;
 }
 

@@ -3,6 +3,7 @@
 #include <CalRecon/ICalReconSvc.h>
 
 // for implementation
+#include "src/Utilities/CalException.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -101,25 +102,26 @@ StatusCode CalClustersAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log<<MSG::DEBUG<<"Begin"<<endreq ;
-    m_calReconSvc->reviewEvent() ;
+    log<<MSG::DEBUG<<"Begin execute()"<<endreq ;
     
     // non fatal errors
     // if there's no CalXtalRec then CalClustersAlg is not happening
   	if (!m_calReconSvc->getXtalRecs())  return StatusCode::SUCCESS ;
       
-    // other errors are fatal
-    if (m_calReconSvc->getStatus().isFailure()) return StatusCode::FAILURE ;
-      
     // call the clustering tool
-    log<<MSG::DEBUG<<"Clustering"<<endreq ;
-    if (m_clusteringTool->findClusters(m_calReconSvc->getClusters()).isFailure())
-    {
-        log<<MSG::ERROR<<"Clustering failure"<<endreq ;
-        return StatusCode::FAILURE ;
+    try {
+        if (m_clusteringTool->findClusters(m_calReconSvc->getClusters()).isFailure()) {
+            sc = m_calReconSvc->handleError(name(),"clustering tool failure") ;
+        }        
+    } catch( CalException & e ) {
+        sc = m_calReconSvc->handleError(name()+" CalException",e.what()) ;
+    } catch( std::exception & e) {
+        sc = m_calReconSvc->handleError(name()+" std::exception",e.what()) ;
+    } catch(...) {
+        sc = m_calReconSvc->handleError(name(),"unknown exception") ;
     }
     
-    log<<MSG::DEBUG<<"End"<<endreq ;
+    log<<MSG::DEBUG<<"End execute()"<<endreq ;
     return sc;
 }
 

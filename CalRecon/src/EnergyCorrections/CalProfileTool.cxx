@@ -556,7 +556,7 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
         // Ok, fill in the corrected information and exit
         Event::CalParams params = cluster->getCalParams();
 
-        params.setEnergy(1000.*fit_energy);
+        params.setEnergy(1000.*fit_energy_opt);
         params.setEnergyErr(energy_err);
 
         corResult = new Event::CalCorToolResult();
