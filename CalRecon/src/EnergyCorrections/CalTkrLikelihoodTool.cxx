@@ -152,6 +152,9 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
         << cluster->getCalParams().getEnergy() << ", " << nHits << endreq;
     
     corResult= calculateEvent(cluster, log);
+    if( corResult ) 
+      corResult->insert(Event::CalCorEneValuePair("GeometricCut", geometricCut));
+
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;
     return corResult;
