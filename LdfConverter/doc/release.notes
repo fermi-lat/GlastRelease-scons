@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r14   14-Jul-2005 HMK Add check to LdfCalDigiCnv for all four readouts in 
+        ALLRANGE mode
 v1r13   09-Jun-2005 HMK Store Error Summary word
 v1r12   07-Jun-2005 HMK Add optional check for GEM condition summary equal zero
         new JO paramter EventSelector.GemZeroCheck
