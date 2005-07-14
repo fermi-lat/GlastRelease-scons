@@ -165,9 +165,37 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     Point  centroid = cluster->getCalParams().getCentroid();
     Vector axis     = cluster->getCalParams().getAxis();
 
-    // Loop through the points, first by "bilayer"
+    double maxDist = 0;
+    double aveDist = 0;
+
+    XtalDataVec::const_iterator xTalMax = xTalVec->end();
+/*
+    // Loop through the xtals and try to look for outliers
     for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
+        Event::CalXtalRecData* recData = *xTalIter;
+
+        Vector distToXtalVec = recData->getPosition() - centroid;
+        double distToXtal    = distToXtalVec.mag();
+
+        aveDist += distToXtal;
+        
+        if (distToXtal > maxDist) 
+        {
+            maxDist = distToXtal;
+            xTalMax = xTalIter;
+        }
+    }
+
+    aveDist /= xTalVec->size();
+
+    if (maxDist < 2. * aveDist) xTalMax = xTalVec->end();
+*/
+    // Loop through the xtals setting the hits to analyze
+    for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+        if (xTalIter == xTalMax) continue;
+
         Event::CalXtalRecData* recData = *xTalIter;
 
         CalMomentsData momentsData(recData->getPosition(), recData->getEnergy(), 0.);

@@ -1,35 +1,24 @@
 package CalRecon
-version v6r0p0
+version v6r1p1
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 # $Id$
 
 branches src cmt doc
 
-use GlastPolicy
-use CalUtil v2r*
-use CalXtalResponse v0r*
-use GaudiInterface * IExternal
-use CLHEP          * IExternal
-use GlastSvc
+use GlastPolicy 
+use CalUtil 
+use CalXtalResponse 
+use GlastSvc  
 use GuiSvc
-use Event
 use TkrUtil
-use xmlBase
-use gui
-use geometry
 
 apply_pattern packageShr
 
 #========================================================
 private
 
-use RootIo v17r*
-use mcRootData v2r*
-use digiRootData v8r*
-use reconRootData v7r*
-use commonRootData v2r*
-use rootTestData v3r*
+use RootIo 
 
 macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 

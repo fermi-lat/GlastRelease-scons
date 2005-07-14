@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_TOOL(      CalRawEnergyTool        );
     DECLARE_TOOL(      CalTkrLikelihoodTool    );
     DECLARE_TOOL(      CalLastLayerLikelihoodTool );
+    DECLARE_TOOL(      CalFullProfileTool      );
     DECLARE_TOOL(      CalProfileTool          );
     DECLARE_TOOL(      CalValsCorrTool         );
     DECLARE_TOOL(      CalTransvOffsetTool     );
