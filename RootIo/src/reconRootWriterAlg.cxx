@@ -679,19 +679,23 @@ void reconRootWriterAlg::fillCalMipTrack(CalRecon *calRec, Event::CalMipTrackCol
         calMipTrackRoot->setPoint(pointRoot);
         calMipTrackRoot->setDir(dirRoot);
 
-        double ndofTds = calMipTrackTds->getNdof();
-        double ki2Tds  = calMipTrackTds->getKi2();
-        double length  = calMipTrackTds->getLength();
-        double d2C     = calMipTrackTds->getD2C();
-        double d2Edge  = calMipTrackTds->getD2Edge();
-        double energy  = calMipTrackTds->getEnergy();
-
-        calMipTrackRoot->setNdof(ndofTds);
-        calMipTrackRoot->setKi2(ki2Tds);
-        calMipTrackRoot->setLength(length);
-        calMipTrackRoot->setD2C(d2C);
-        calMipTrackRoot->setD2Edge(d2Edge);
-        calMipTrackRoot->setEnergy(energy);
+        double   d2CTds     = calMipTrackTds->getD2C();
+        double   d2EdgeTds  = calMipTrackTds->getD2Edge();
+        int      calEdgeTds = calMipTrackTds->getCalEdge();
+        double   arcLenTds  = calMipTrackTds->getArcLen();
+        double   ecorTds    = calMipTrackTds->getEcor();
+        double   ecorRmsTds = calMipTrackTds->getEcorRms();
+        double   chi2Tds    = calMipTrackTds->getChi2();   
+        double   ermTds     = calMipTrackTds->getErm();   
+        
+        calMipTrackRoot->setD2C(d2CTds);    
+        calMipTrackRoot->setD2Edge(d2EdgeTds); 
+        calMipTrackRoot->setCalEdge(calEdgeTds);
+        calMipTrackRoot->setArcLen(arcLenTds); 
+        calMipTrackRoot->setEcor(ecorTds);   
+        calMipTrackRoot->setEcorRms(ecorRmsTds);
+        calMipTrackRoot->setChi2(chi2Tds);   
+        calMipTrackRoot->setErm(ermTds);   
 
         calRec->addCalMipTrack(calMipTrackRoot);
     }
