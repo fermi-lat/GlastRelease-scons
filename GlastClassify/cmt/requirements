@@ -1,8 +1,8 @@
 package GlastClassify
 
-version v0r1p3
+version v0r2
 author T. Burnett <tburnett@u.washington.edu>
-
+# $Header$
 use GlastPolicy *
 
 apply_pattern package_include
@@ -21,25 +21,19 @@ use ROOT * IExternal
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 macro_append ROOT_cppflags "" WIN32 " /wd4800 "
 
-macro DATA "d:/common/DC2/root_files"
-set all_gamma_data "$(DATA)/merit-200506-pruned-tkr.root"
-set background_data "$(DATA)/meritBkg-200506-pruned-Tkr.root"
 
-macro OUTPUT "$(GlastClassify_root)/data"
+macro OUTPUT "../data"
+
 
 # this app creates the classification trees
-# application run -s=../src/classify $(source) $(classify_files)
-
-macro classify_files    -s=$(OUTPUT) *.txt\
+application classify -s=../src/classify $(source)\
     -s=$(OUTPUT)/goodcal *.txt\
     -s=$(OUTPUT)/vertex_thin *.txt\
     -s=$(OUTPUT)/vertex_thick *.txt\
-    -s=$(OUTPUT)/psf_vertex_thin *.txt\
-    -s=$(OUTPUT)/psf_vertex_thick *.txt\
-    -s=$(OUTPUT)/psf_track_thin *.txt\
-    -s=$(OUTPUT)/psf_track_thick *.txt
-
-#application rgui -s=rgui *.h *.cxx *.cpp
+    -s=$(OUTPUT)/psf_thin_vertex *.txt\
+    -s=$(OUTPUT)/psf_thick_vertex *.txt\
+    -s=$(OUTPUT)/psf_thin_track *.txt\
+    -s=$(OUTPUT)/psf_thick_track *.txt
 
 # app to run tests on the training data
 application test_GlastClassify -s=../src/test $(source)
