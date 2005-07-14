@@ -6,7 +6,8 @@
 package CalRecon
 
 package manager: David Chamont
-
+ 
+  v6r1p1     Bastille  TU  New MIP finding code in place
   v6r0p0     23-Jun-05 TU  preliminary tag of new CalRecon structure
   v5r               05 DC  transform CalReconKernel into CalReconSvc.
                        DC  remove CalReconActor.
