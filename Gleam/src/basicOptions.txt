@@ -140,7 +140,7 @@ Reconstruction.Members={
 Cal1.Members = { 
     "CalXtalRecAlg",
     "CalClustersAlg/first",
-//    "CalMipFinderAlg", 
+    "CalMipFinderAlg", 
     "CalEventEnergyAlg/RawEnergy"
     };
 
