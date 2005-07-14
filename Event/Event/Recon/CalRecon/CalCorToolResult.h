@@ -60,13 +60,11 @@ public:
     inline bool validParams() const {return (m_statusBits & VALIDPARAMS)  == VALIDPARAMS;}
 
     /// Access the status bits to determine details of the hit
-    inline unsigned int getStatusBits() const {return m_statusBits;}
-    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
-
+    inline unsigned int getStatusBits()     const {return m_statusBits;}
     /// Retrieve corrected information
-    const std::string &         getCorrectionName() const {return m_correctionName;}
-    const CalParams &           getParams()         const {return m_params;}
-    double               getChiSquare()      const {return m_chiSquare;}
+    const std::string&  getCorrectionName() const {return m_correctionName;}
+    const CalParams&    getParams()         const {return m_params;}
+    double              getChiSquare()      const {return m_chiSquare;}
 
     /// 
     /// Start here the methods for setting the information 
@@ -78,10 +76,12 @@ public:
     inline void setParams(const CalParams& params)         {m_params = params;}
     /// setChiSquare for setting the chisquare of the correction "fit"
     /// @param chiSquare the chiSquare resulting from this correction 
-    inline void setChiSquare(double chiSquare)       {m_chiSquare = chiSquare;}
-
+    inline void setChiSquare(double chiSquare)             {m_chiSquare = chiSquare;}
+    /// setStatusBits
+    /// @param StatusBits : the status bits
+    inline void setStatusBits(unsigned int statusBits )    {m_statusBits = statusBits ; }
     /// setStatusBit and ClearStatusBit for setting and clearing bits
-    inline void setStatusBit(StatusBits bitToSet)        {m_statusBits |=  bitToSet;}
+    inline void setStatusBit(StatusBits bitToSet)          {m_statusBits |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
 
 private:

@@ -53,9 +53,9 @@ public:
 
     ~CalClusterLayerData() {}
 
-    double getEnergy()    const {return m_energy;}
-    const Point & getPosition()  const {return m_position;}
-    const Vector &getRmsSpread() const {return m_rmsSpread;}
+    double         getEnergy()    const {return m_energy;}
+    const  Point&  getPosition()  const {return m_position;}
+    const  Vector& getRmsSpread() const {return m_rmsSpread;}
 private:
     double m_energy;         // Energy deposition in crystals in this cluster and layer
     Point  m_position;       // Average position in this layer
@@ -133,8 +133,8 @@ public:
     void setNumXtals(int numXtals)             {m_numTruncXtals = numXtals;}
 
 	   /// setStatusBit and ClearStatusBit for setting and clearing bits
-    inline void setStatusBit(StatusBits bitToSet)        {m_statusBits |=  bitToSet;}
-    inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
+    inline void setStatusBit(StatusBits bitToSet)     {m_statusBits |=  bitToSet;}
+    inline void clearStatusBit(StatusBits bitToClear) {m_statusBits &= ~bitToClear;}
 
     /*
      * Provide access to the data
