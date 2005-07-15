@@ -1,5 +1,6 @@
 package gui
 version v3r6p3
+author T.Burnett <tburnett@u.washington.edu>
 
 use GlastPolicy v5r*
 use CLHEP       v2r* IExternal
