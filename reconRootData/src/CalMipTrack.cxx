@@ -4,7 +4,7 @@
 ClassImp(CalMipTrack)
 
 //-----------------------------------------------------------------------------------------------------------------
-void CalMipTrack::print()
+void CalMipTrack::print() const
 {
   std::cout << "---> writeOutPrint calMipTrack" << std::endl;
   std::cout << "---> point =" << getPoint().x() << " " << getPoint().y() << " " << getPoint().z() << std::endl;

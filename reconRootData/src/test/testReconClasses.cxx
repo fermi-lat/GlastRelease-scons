@@ -185,36 +185,42 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
 }
 
 int checkCalMipTrack( const CalMipTrack *mip, Int_t /*ievent*/ ) {
-/*
     const TVector3 pos = mip->getPoint();
 
     const TVector3 dir = mip->getDir();
 
-    if (mip->getNdof() != 1) {
-        std::cout << "nDof is not 1" << std::endl;
+    if (!floatInRange(mip->getD2C(), 1.0) ) {
+        std::cout << "D2C is not 1." << std::endl;
         return -1;
     }
-    if ( !floatInRange(mip->getKi2(), 2.) ) {
-        std::cout << "Ki2 is not 2" << std::endl;
-        return -1;
-    }
-    if (!floatInRange(mip->getLength(), 3.) ) {
-        std::cout << "Length is not 3." << std::endl;
-        return -1;
-    }
-    if (!floatInRange(mip->getD2C(), 4.) ){
-        std::cout << "D2C is not 4." << std::endl;
-        return -1;
-    }
-    if (!floatInRange(mip->getD2Edge(), 5.) ){
+    if (!floatInRange(mip->getD2Edge(), 2.) ){
         std::cout << "D2Edge is not 5." << std::endl;
         return -1;
     }
-    if (!floatInRange(mip->getEnergy(), 6.) ) { 
-        std::cout << "Energy is not 6" << std::endl;
+    if (mip->getCalEdge() != 3) {
+        std::cout << "CalEdge is not 3" << std::endl;
         return -1;
     }
-*/
+    if (!floatInRange(mip->getArcLen(), 4.0) ) { 
+        std::cout << "ArcLength is not 4" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getEcor(), 5.0) ) { 
+        std::cout << "Ecor is not 5" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getEcorRms(), 6.0) ) { 
+        std::cout << "EcorRms is not 6" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getChi2(), 7.0) ) { 
+        std::cout << "chi2 is not 7" << std::endl;
+        return -1;
+    }
+    if (!floatInRange(mip->getErm(), 8.0) ) { 
+        std::cout << "erm is not 8" << std::endl;
+        return -1;
+    }
     return 0;
 
 }
@@ -801,9 +807,9 @@ int write(char* fileName, int numEvents) {
 
         unsigned int imip;
         for (imip = 0; imip < numMipTracks; imip++) {
-            //CalMipTrack *mipTrack = new CalMipTrack(TVector3(1.0,1.5, 1.9),
-            //   TVector3(2.0, 2.5, 2.9), 1, 2.0, 3.0, 4.0, 5.0, 6.0);
-           //calRec->addCalMipTrack(mipTrack);
+            CalMipTrack *mipTrack = new CalMipTrack(TVector3(1.0,1.5, 1.9),
+               TVector3(2.0, 2.5, 2.9), 1.0, 2.0, 3, 4.0, 5.0, 6.0, 7.0, 8.0);
+           calRec->addCalMipTrack(mipTrack);
 
         }
 

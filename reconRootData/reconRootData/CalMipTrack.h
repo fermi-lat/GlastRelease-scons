@@ -73,18 +73,18 @@ private:
     void    setChi2    (Double_t chi2)     {m_chi2     = chi2;     }
     void    setErm     (Double_t erm)      {m_erm      = erm;      }
 
-    TVector3  getPoint   ()                {return m_point;        }
-    TVector3  getDir     ()                {return m_dir;          }
-    Double_t  getD2C     ()                {return m_d2C;          }
-    Double_t  getD2Edge  ()                {return m_d2Edge;       }
-    Int_t     getCalEdge ()                {return m_calEdge;      }
-    Double_t  getArcLen  ()                {return m_arcLen;       }
-    Double_t  getEcor    ()                {return m_ecor;         }
-    Double_t  getEcorRms ()                {return m_ecorRms;      }
-    Double_t  getChi2    ()                {return m_chi2;         }
-    Double_t  getErm     ()                {return m_erm;          }
+    TVector3  getPoint   () const          {return m_point;        }
+    TVector3  getDir     () const          {return m_dir;          }
+    Double_t  getD2C     () const          {return m_d2C;          }
+    Double_t  getD2Edge  () const          {return m_d2Edge;       }
+    Int_t     getCalEdge () const          {return m_calEdge;      }
+    Double_t  getArcLen  () const          {return m_arcLen;       }
+    Double_t  getEcor    () const          {return m_ecor;         }
+    Double_t  getEcorRms () const          {return m_ecorRms;      }
+    Double_t  getChi2    () const          {return m_chi2;         }
+    Double_t  getErm     () const          {return m_erm;          }
   
-    void print();
+    void print() const;
   
     ClassDef(CalMipTrack,1)
 };
