@@ -1,6 +1,7 @@
 package idents
 # $Header$
 version v2r13
+author Joanne Bogard <jrb@slac.stanford.edu>
 
 use GlastPolicy v*
 use facilities  v2r*

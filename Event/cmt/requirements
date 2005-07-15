@@ -1,5 +1,6 @@
 package Event
 version v11r0p3
+author T.Burnett <tburnett@u.washington.edu>
 
 branches Event cmt doc src
 

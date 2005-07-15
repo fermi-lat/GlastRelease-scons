@@ -1,5 +1,6 @@
 package GuiSvc
 version v3r5p6
+author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src
 #$Id$
