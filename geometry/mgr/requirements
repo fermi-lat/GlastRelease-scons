@@ -1,5 +1,5 @@
 package geometry
-version v3r1p1
+version v3r1p2
 author T.Burnett <tburnett@u.washington.edu>
 
 use GlastPolicy
