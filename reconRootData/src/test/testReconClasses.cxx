@@ -185,6 +185,7 @@ int checkCalXtalRec(const CalXtalRecData *rec, UInt_t ievent) {
 }
 
 int checkCalMipTrack( const CalMipTrack *mip, Int_t /*ievent*/ ) {
+/*
     const TVector3 pos = mip->getPoint();
 
     const TVector3 dir = mip->getDir();
@@ -213,7 +214,7 @@ int checkCalMipTrack( const CalMipTrack *mip, Int_t /*ievent*/ ) {
         std::cout << "Energy is not 6" << std::endl;
         return -1;
     }
-
+*/
     return 0;
 
 }
@@ -800,9 +801,9 @@ int write(char* fileName, int numEvents) {
 
         unsigned int imip;
         for (imip = 0; imip < numMipTracks; imip++) {
-            CalMipTrack *mipTrack = new CalMipTrack(TVector3(1.0,1.5, 1.9),
-               TVector3(2.0, 2.5, 2.9), 1, 2.0, 3.0, 4.0, 5.0, 6.0);
-            calRec->addCalMipTrack(mipTrack);
+            //CalMipTrack *mipTrack = new CalMipTrack(TVector3(1.0,1.5, 1.9),
+            //   TVector3(2.0, 2.5, 2.9), 1, 2.0, 3.0, 4.0, 5.0, 6.0);
+           //calRec->addCalMipTrack(mipTrack);
 
         }
 
