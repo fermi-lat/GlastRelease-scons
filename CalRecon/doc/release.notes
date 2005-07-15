@@ -6,7 +6,8 @@
 package CalRecon
 
 package manager: David Chamont
- 
+
+  v6r1p3     15-Jul-05 TU  Ok, we have to actually tag the code that was modified... 
   v6r1p2     15-Jul-05 TU  Bug fixes to MIP finding, ready to go!!
   v6r1p1     Bastille  TU  New MIP finding code in place
   v6r0p0     23-Jun-05 TU  preliminary tag of new CalRecon structure
