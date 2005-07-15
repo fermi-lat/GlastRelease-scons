@@ -1,5 +1,6 @@
 package GlastMS
 version v2r51p4
+author Tracy Usher <usher@slac.stanford.edu>
 
 use GlastPolicy   v*      
 use CLHEP         v2*     IExternal
