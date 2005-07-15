@@ -292,9 +292,9 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 // Two reasons for the problem: 1) travelling almost exactly parallel to the boundary
                 // or, 2) not parallel
                 // Try to ascertain which here
-                G4bool              temp = false;
+                G4bool              temp          = false;
                 const G4ThreeVector localExitNrml = navigator->GetLocalExitNormal(&temp);
-                G4ThreeVector       trackDir = curDir;
+                G4ThreeVector       trackDir      = curDir;
 
                 if (globalToLocal.IsRotated()) trackDir = globalToLocal.TransformAxis(curDir);
 
@@ -305,20 +305,34 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 {
                     // One of the components of the direction vector is near zero (and below tolerance)
                     // and this is causing the step length calculation to screw up. The step length 
-                    // calculation is done in local coordinates though, so if we zero out the bad global
+                    // calculation is done in local coordinates though...
+                    //
+                    // WHAT WE USED TO DO (THAT DIDN'T WORK ON LINUX)
+                    // , so if we zero out the bad global
                     // component then the transformation will probably still result in a small but non-zero
                     // number... (and the G4 code tests on identically zero). 
                     // So... zero out the bad value in local coordinates
-                    if (fabs(trackDir.x()) < kCarTolerance) trackDir.setX(0.);
-                    if (fabs(trackDir.y()) < kCarTolerance) trackDir.setY(0.);
-                    if (fabs(trackDir.z()) < kCarTolerance) trackDir.setZ(0.);
+                    //if (fabs(trackDir.x()) < kCarTolerance) trackDir.setX(0.);
+                    //if (fabs(trackDir.y()) < kCarTolerance) trackDir.setY(0.);
+                    //if (fabs(trackDir.z()) < kCarTolerance) trackDir.setZ(0.);
             
                     // Now find the transformation from local back to global coordinates
-                    G4AffineTransform  localToGlobal = navigator->GetLocalToGlobalTransform();
+                    //G4AffineTransform  localToGlobal = navigator->GetLocalToGlobalTransform();
 
                     // Update the current direction in global coordinates to this direction. 
                     // This will assure us that the value will be "correct" in the G4 step length calculation
-                    curDir = localToGlobal.TransformAxis(trackDir);
+                    //curDir = localToGlobal.TransformAxis(trackDir);
+
+                    // Now what we do is to transform the localExitNrml vector to the global system
+                    // and then shift the point by twice kCarTolerance away from the edge in the 
+                    // opposite direction. This should leave us in the original volume, but now outside
+                    // the tolerance.
+                    // It's too bad the G4 code doesn't do this right...
+                    G4AffineTransform localToGlobal = navigator->GetLocalToGlobalTransform();
+                    
+                    G4ThreeVector globalExitNrml = localToGlobal.TransformAxis(localExitNrml);
+
+                    overPoint -= 2. * kCarTolerance * globalExitNrml;
                 }
                 // Surface tolerance case 
                 else 
@@ -652,11 +666,36 @@ double ParticleTransporter::distanceToEdge(const Vector& dir) const
                     // Parallel track case
                     if (fabs(trkToExitAng) < kCarTolerance)
                     {
-                        if (fabs(curDir.x()) < kCarTolerance) curDir.setX(0.);
-                        if (fabs(curDir.y()) < kCarTolerance) curDir.setY(0.);
-                        if (fabs(curDir.z()) < kCarTolerance) curDir.setZ(0.);
+                        // One of the components of the direction vector is near zero (and below tolerance)
+                        // and this is causing the step length calculation to screw up. The step length 
+                        // calculation is done in local coordinates though...
+                        //
+                        // WHAT WE USED TO DO (THAT DIDN'T WORK ON LINUX)
+                        // , so if we zero out the bad global
+                        // component then the transformation will probably still result in a small but non-zero
+                        // number... (and the G4 code tests on identically zero). 
+                        // So... zero out the bad value in local coordinates
+                        //if (fabs(trackDir.x()) < kCarTolerance) trackDir.setX(0.);
+                        //if (fabs(trackDir.y()) < kCarTolerance) trackDir.setY(0.);
+                        //if (fabs(trackDir.z()) < kCarTolerance) trackDir.setZ(0.);
+            
+                        // Now find the transformation from local back to global coordinates
+                        //G4AffineTransform  localToGlobal = navigator->GetLocalToGlobalTransform();
 
-                        curDir.setMag(1.);
+                        // Update the current direction in global coordinates to this direction. 
+                        // This will assure us that the value will be "correct" in the G4 step length calculation
+                        //curDir = localToGlobal.TransformAxis(trackDir);
+
+                        // Now what we do is to transform the localExitNrml vector to the global system
+                        // and then shift the point by twice kCarTolerance away from the edge in the 
+                        // opposite direction. This should leave us in the original volume, but now outside
+                        // the tolerance.
+                        // It's too bad the G4 code doesn't do this right...
+                        G4AffineTransform localToGlobal = navigator->GetLocalToGlobalTransform();
+                    
+                        G4ThreeVector globalExitNrml = localToGlobal.TransformAxis(localExitNrml);
+
+                        overPoint -= 2. * kCarTolerance * globalExitNrml;
                     }
                     // Surface tolerance case 
                     else 
