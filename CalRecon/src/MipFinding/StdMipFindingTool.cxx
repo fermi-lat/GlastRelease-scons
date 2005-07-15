@@ -52,13 +52,13 @@ private:
   /// Private methods
   void                     getSingleClusterCentroid();
   int                      findMipXtals();
-  int                      findMipTracks();
+  void                     findMipTracks();
   void                     trackProperties();
   bool                     findC0();
   bool                     findC1();
   bool                     findC2();
   bool                     findCn();
-  int                      propagate(Point x0, Vector dir);
+  int                      propagate(Point x0, Vector dir, int icall);
   void                     leastSquares();
   double                   D2Edge             (Event::CalMipXtal     *calMipXtal);
   void                     readCalMipXtals    (Event::CalMipXtalVec   calMipXtalVec);
@@ -67,7 +67,7 @@ private:
   void                     clearCalMipTrackVec(Event::CalMipTrackVec *calMipTrackVec);
   void                     readCalMipTrackCol();
   StatusCode               readGlastDet();
-  StatusCode               storeCalMipTracks(Event::CalMipTrackVec calMipTrackVec);
+  StatusCode               storeCalMipTracks();
 
   /// Private data members
   /// Cut values for MIP energy
@@ -103,12 +103,6 @@ private:
   double             m_calYLo;
   double             m_calYHi;
 
-  int                m_xNum;       ///< x tower number
-  int                m_eLATTowers; ///< the value of fLATObjects field, defining LAT towers 
-  int                m_eTowerCAL;  ///< value of fTowerObject field, defining cal. module 
-  int                m_eXtal;      ///< the value of fCellCmp field defining CsI crystal
-  int                m_nCsISeg;    ///< number of geometric segments per Xtal
-
   //  Mip Xtals candidate vector from recon hit list;
   Event::CalMipXtalVec     m_calMipXtalVec;
   // Mip track candidate vector from Mip Xtals candidate vector
@@ -127,9 +121,7 @@ private:
   Vector             m_uu;
   Vector             m_vv;
   Vector             m_dir;
-
   Point              m_refP;
-  Point              m_C;
 
   bool               m_goodfit;
 } ;
@@ -201,7 +193,7 @@ StatusCode StdMipFindingTool::readGlastDet()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : readGlastDet in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " readGlastDet in StdMipFindingTool" << endreq;
     
     m_detSvc->getNumericConstByName("CsILength", &m_CsILength);
     m_detSvc->getNumericConstByName("CsIWidth",  &m_CsIWidth);
@@ -223,17 +215,17 @@ StatusCode StdMipFindingTool::readGlastDet()
     m_calYLo = m_geoSvc->getLATLimit(1,LOW)  + deltaY;
     m_calYHi = m_geoSvc->getLATLimit(1,HIGH) - deltaY;
 
-    log << MSG::DEBUG << " FP : readGlastDet m_CsILength "<< m_CsILength << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_CsIWidth "<< m_CsIWidth << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_CsIHeight "<< m_CsIHeight << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calZTop "<< m_calZTop << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calZBot "<< m_calZBot << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calXLo "<< m_calXLo << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calXHi "<< m_calXHi << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calYLo "<< m_calYLo << endreq;
-    log << MSG::DEBUG << " FP : readGlastDet m_calYHi "<< m_calYHi << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_CsILength "<< m_CsILength << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_CsIWidth  "<< m_CsIWidth << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_CsIHeight "<< m_CsIHeight << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calZTop "<< m_calZTop << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calZBot "<< m_calZBot << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calXLo "<< m_calXLo << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calXHi "<< m_calXHi << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calYLo "<< m_calYLo << endreq;
+//     log << MSG::DEBUG << " readGlastDet m_calYHi "<< m_calYHi << endreq;
 
-    log << MSG::DEBUG << " SG : readGlastDet - End" << endreq;
+//     log << MSG::DEBUG << " readGlastDet - End" << endreq;
     return sc;
 }
 
@@ -241,13 +233,13 @@ StatusCode StdMipFindingTool::readGlastDet()
 void StdMipFindingTool::getSingleClusterCentroid()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : findSingleClusterCentroid in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " findSingleClusterCentroid in StdMipFindingTool" << endreq;
 
     Event::CalClusterCol* pCals = SmartDataPtr<Event::CalClusterCol>(m_dataSvc, EventModel::CalRecon::CalClusterCol);
     Event::CalCluster* calCluster = pCals->front();
 
     m_singleClusterCentroid=calCluster->getPosition();
-    log << MSG::DEBUG << " FP : findsingleClusterCentroid " << m_singleClusterCentroid.x() << " " << m_singleClusterCentroid.y() << " " << m_singleClusterCentroid.z() << " " << endreq;
+    //    log << MSG::DEBUG << " findSingleClusterCentroid " << m_singleClusterCentroid.x() << " " << m_singleClusterCentroid.y() << " " << m_singleClusterCentroid.z() << " " << endreq;
 
     return;
 }
@@ -256,7 +248,7 @@ void StdMipFindingTool::getSingleClusterCentroid()
 int StdMipFindingTool::findMipXtals()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : findMipXtals in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " findMipXtals in StdMipFindingTool" << endreq;
 
     double emip1    = 4.0;
     double emip2    = 40.0;
@@ -289,14 +281,13 @@ int StdMipFindingTool::findMipXtals()
             mipXtal.setFree(true);
 	    mipXtal.setFreeC0(true);
 	    mipXtal.setXtal(xTalData);
-            m_C  = xTalData->getPosition();
-            m_uu = m_singleClusterCentroid - m_C;
+            m_uu = m_singleClusterCentroid - xTalData->getPosition();
             double d2C=sqrt(m_uu*m_uu);
             mipXtal.setD2C(d2C);
             mipXtal.setEcor(-1);
         }
     }
-    log << MSG::DEBUG << " SG : findMipXtals " << numMipXtals << endreq;
+    //    log << MSG::DEBUG << " findMipXtals " << numMipXtals << endreq;
     return numMipXtals;
 }
 
@@ -304,7 +295,7 @@ int StdMipFindingTool::findMipXtals()
 void StdMipFindingTool::readCalMipXtals(Event::CalMipXtalVec calMipXtalVec)
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : readCalMipXtals in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " readCalMipXtals in StdMipFindingTool" << endreq;
     int counter=0;
 
     //Loop over crystals in the calMipXtalVec
@@ -312,42 +303,42 @@ void StdMipFindingTool::readCalMipXtals(Event::CalMipXtalVec calMipXtalVec)
     {
         Event::CalMipXtal calMipXtal = *xTalIter;
 
-//         log << MSG::DEBUG << "readCalMipXtals - MipXtal No" << counter << "-------" << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - Free=" << calMipXtal.getFree()  << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - D2C =" << calMipXtal.getD2C()   << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - Ener=" << calMipXtal.getXtal()->getEnergy()   << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - PosX=" << calMipXtal.getXtal()->getPosition().x()   << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - PosY=" << calMipXtal.getXtal()->getPosition().y()   << endreq;
-//         log << MSG::DEBUG << "readCalMipXtals - PosZ=" << calMipXtal.getXtal()->getPosition().z()   << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - MipXtal No" << counter << "-------" << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - Free=" << calMipXtal.getFree()  << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - D2C =" << calMipXtal.getD2C()   << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - Ener=" << calMipXtal.getXtal()->getEnergy()   << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - PosX=" << calMipXtal.getXtal()->getPosition().x()   << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - PosY=" << calMipXtal.getXtal()->getPosition().y()   << endreq;
+//         log << MSG::DEBUG << " readCalMipXtals - PosZ=" << calMipXtal.getXtal()->getPosition().z()   << endreq;
         
-        //calMipXtal.print();
+//calMipXtal.print();
         counter++;
     }
         
-    log << MSG::DEBUG << " SG : readCalMipXtals End" << endreq;
+    //    log << MSG::DEBUG << " readCalMipXtals End" << endreq;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
 void StdMipFindingTool::readCalMipTracks(Event::CalMipTrackVec calMipTrackVec)
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : readCalMipTracks in StdMipFindingTool" << endreq;
+    log << MSG::DEBUG << " readCalMipTracks in StdMipFindingTool" << endreq;
     int counter=0;
     //Loop over tracks in the calMipTrackVec
     for(Event::CalMipTrackVec::iterator trackIter=calMipTrackVec.begin(); trackIter != calMipTrackVec.end(); trackIter++)
     {
         Event::CalMipTrack calMipTrack = *trackIter;
 
-        log << MSG::DEBUG << "readCalMipTrack - MipTrack No" << counter << "-------" << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - Nh  =" << calMipTrack.getNh()        << endreq;
-//         log << MSG::DEBUG << "readCalMipTrack - Ndof=" << calMipTrack.getNdof()      << endreq;
-//         log << MSG::DEBUG << "readCalMipTrack - Ki2 =" << calMipTrack.getKi2()       << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - PosX=" << calMipTrack.getPoint().x() << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - PosY=" << calMipTrack.getPoint().y() << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - PosZ=" << calMipTrack.getPoint().z() << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - DirX=" << calMipTrack.getDir().x()   << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - DirY=" << calMipTrack.getDir().y()   << endreq;
-        log << MSG::DEBUG << "readCalMipTrack - DirZ=" << calMipTrack.getDir().z()   << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - MipTrack No" << counter << "-------" << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - Nh  =" << calMipTrack.getNh()        << endreq;
+//         log << MSG::DEBUG << " readCalMipTrack - Ndof=" << calMipTrack.getNdof()      << endreq;
+//         log << MSG::DEBUG << " readCalMipTrack - Ki2 =" << calMipTrack.getKi2()       << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - PosX=" << calMipTrack.getPoint().x() << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - PosY=" << calMipTrack.getPoint().y() << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - PosZ=" << calMipTrack.getPoint().z() << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - DirX=" << calMipTrack.getDir().x()   << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - DirY=" << calMipTrack.getDir().y()   << endreq;
+        log << MSG::DEBUG << " readCalMipTrack - DirZ=" << calMipTrack.getDir().z()   << endreq;
 
         Event::CalMipXtalVec calMipXtalVec = calMipTrack;
         readCalMipXtals(calMipXtalVec);
@@ -355,37 +346,37 @@ void StdMipFindingTool::readCalMipTracks(Event::CalMipTrackVec calMipTrackVec)
         counter++;
     }
         
-    log << MSG::DEBUG << " SG : readCalMipTracks - End" << endreq;
+    log << MSG::DEBUG << " readCalMipTracks - End" << endreq;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
 void StdMipFindingTool::clearCalMipXtalVec(Event::CalMipXtalVec *calMipXtalVec)
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : clearCalMipXtalVec in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " clearCalMipXtalVec in StdMipFindingTool" << endreq;
     
     calMipXtalVec->clear();
 
-    log << MSG::DEBUG << " SG : clearCalMipXtalVec End" << endreq;
+    //    log << MSG::DEBUG << " clearCalMipXtalVec End" << endreq;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
 void StdMipFindingTool::clearCalMipTrackVec(Event::CalMipTrackVec* calMipTrackVec)
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : clearCalMipTrackVec in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG << " clearCalMipTrackVec in StdMipFindingTool" << endreq;
     
     calMipTrackVec->clear();
 
-    log << MSG::DEBUG << " SG : clearCalMipXtalVec End" << endreq;
+    //    log << MSG::DEBUG << " clearCalMipXtalVec End" << endreq;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-int StdMipFindingTool::findMipTracks()
+void StdMipFindingTool::findMipTracks()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : findMipTracks in StdMipFindingTool" << endreq;
-
+    log << MSG::DEBUG << " findMipTracks in StdMipFindingTool" << endreq;
+    
     m_nbTracks=-1;
 
     while (findC0())
@@ -430,16 +421,16 @@ int StdMipFindingTool::findMipTracks()
     if (m_nbTracks+1>0)
       trackProperties();
 
-    log << MSG::DEBUG << " SG : findMipTracks - End" << endreq;
-    return m_nbTracks=m_calMipTrackVec.size();
+    log << MSG::DEBUG << " findMipTracks - End " << m_calMipTrackVec.size() << endreq;
+    return;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
 void StdMipFindingTool::trackProperties()
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-  log << MSG::DEBUG << " FP : trackProperties in StdMipFindingTool" << endreq;
+//   log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+//   log << MSG::DEBUG << " trackProperties in StdMipFindingTool" << endreq;
 
   //@@@@@@@@@@@@@@@@@@@@@@ loop over tracks to compute their properties
   for(Event::CalMipTrackVec::iterator trackIter=m_calMipTrackVec.begin(); trackIter != m_calMipTrackVec.end(); trackIter++)
@@ -470,12 +461,12 @@ void StdMipFindingTool::trackProperties()
       int icol = calMipXtal0->getXtal()->getPackedId().getColumn();
       int hid  = m_hitId[itow][ilay][icol];
 
-      //log << MSG::DEBUG << " FP : trackProperties " << itow << " " << ilay << " " << icol << " " << hid << endreq;
+      //log << MSG::DEBUG << " trackProperties " << itow << " " << ilay << " " << icol << " " << hid << endreq;
 
       Event::CalMipXtal& calMipXtal = m_calMipXtalVec[hid];
       double s=100;
       Point x0=calMipXtal.getXtal()->getPosition()-s*m_dir;
-            m_G4PropTool->setStepStart(x0,m_dir);
+      m_G4PropTool->setStepStart(x0,m_dir);
       m_G4PropTool->step(3*s);	      
       // Now loop over the steps to extract the materials
       int numSteps = m_G4PropTool->getNumberSteps();
@@ -504,17 +495,17 @@ void StdMipFindingTool::trackProperties()
             found=true;
             double arcLenStep=m_G4PropTool->getStepArcLen(istep); 
             arcLen+=arcLenStep;
-            log << MSG::DEBUG << " FP : seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " " << arcLenStep << endreq;
+            //            log << MSG::DEBUG << " seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " " << arcLenStep << endreq;
           }
         }
       }
       double ene =calMipXtal.getXtal()->getEnergy();
       double ecor=calMipXtal.getEcor();
-      log << MSG::DEBUG << " FP : trackProperties ene / ecor / arcLen = " << ene << " " << ecor << " " << arcLen << endreq;        
+      //      log << MSG::DEBUG << " trackProperties ene / ecor / arcLen = " << ene << " " << ecor << " " << arcLen << endreq;        
      if (ecor==-1)
       {
         ecor=ene;
-        if (arcLen!=0)
+        if (arcLen>0)
           ecor/=arcLen;
         
         //calMipXtal.setEcor(ecor);
@@ -545,8 +536,8 @@ void StdMipFindingTool::trackProperties()
 bool StdMipFindingTool::findC0()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-    log << MSG::DEBUG << " SG : findC0 in StdMipFindingTool" << endreq;
+//     log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+//     log << MSG::DEBUG << " findC0 in StdMipFindingTool" << endreq;
 
     m_hid     = -1;
     m_hid0    = -1;
@@ -567,7 +558,7 @@ bool StdMipFindingTool::findC0()
       double z=calMipXtal.getXtal()->getPosition().z();
       double d=calMipXtal.getD2C();
       
-       log << MSG::DEBUG << " FP : find C0 " << itow0 << " " << ilay0 << " " << icol0  << " " << x << " " << y << " " << z  << " " << d << " " << ene << endreq;
+//        log << MSG::DEBUG << " find C0 " << itow0 << " " << ilay0 << " " << icol0  << " " << x << " " << y << " " << z  << " " << d << " " << ene << endreq;
 
       if (calMipXtal.getFree() && calMipXtal.getFreeC0() && ene>m_e1 && ene<m_e2 && calMipXtal.getD2C() > d2Cmax)
 	{
@@ -582,17 +573,17 @@ bool StdMipFindingTool::findC0()
         calMipXtalRef.setFree(false);
         calMipXtalRef.setFreeC0(false);
 
-	m_refP  = m_calMipXtalVec[m_hid0].getXtal()->getPosition();
+	m_refP = m_calMipXtalVec[m_hid0].getXtal()->getPosition();
 
-        log << MSG::DEBUG << " SG : findC0 End - True" << endreq;
+        //        log << MSG::DEBUG << " findC0 End - True" << endreq;
 	int itow = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getTower();
 	int ilay = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getLayer();
 	int icol = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getColumn();
-	log << MSG::DEBUG << " FP : foundC0 " << itow << " " << ilay << " " << icol  << endreq;
+        //	log << MSG::DEBUG << " foundC0 " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
 
-    log << MSG::DEBUG << " SG : findC0 End - False" << endreq;
+    //    log << MSG::DEBUG << " findC0 End - False" << endreq;
     return false;
 }
 
@@ -600,8 +591,8 @@ bool StdMipFindingTool::findC0()
 bool StdMipFindingTool::findC1()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-    log << MSG::DEBUG << " SG : findC1 in StdMipFindingTool" << endreq;
+//     log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+//     log << MSG::DEBUG << " findC1 in StdMipFindingTool" << endreq;
 
     m_hid  = -1;
     m_hid1 = -1;
@@ -626,11 +617,11 @@ bool StdMipFindingTool::findC1()
 	    m_vv=m_uu.unit();
 	    m_G4PropTool->setStepStart(m_refP,m_vv);
 	    d01=sqrt(m_uu*m_uu);
-	    log << MSG::DEBUG << " FP : findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;
+            //	    log << MSG::DEBUG << " findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;
 	    m_G4PropTool->step(1.5*d01);
 	    // Now loop over the steps to extract the materials
 	    int numSteps = m_G4PropTool->getNumberSteps();
-	    log << MSG::DEBUG << " FP : findC1 G4prop numSteps = " << numSteps << endreq;
+            //	    log << MSG::DEBUG << " findC1 G4prop numSteps = " << numSteps << endreq;
 	    idents::VolumeIdentifier volId;
 	    idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
 	    int itow=-1;
@@ -638,38 +629,35 @@ bool StdMipFindingTool::findC1()
 	    int icol=-1;
 	    bool foundOneCalMipXtalNotAlreadyUsed=false;
 	    double arcLen=0;
-	    double radLen=0;
 	    int hidp=-1;
 	    bool lnext=true;
 	    for(int istep=0; istep<numSteps && lnext; ++istep)
 	      {
 		volId=m_G4PropTool->getStepVolumeId(istep);
 		volId.prepend(prefix);
-		//		log << MSG::DEBUG << " FP : findC1 istep "<<  istep << " volId.name " << volId.name() << endreq;
+		//		log << MSG::DEBUG << " findC1 istep " << istep << " volId.name " << volId.name() << endreq;
 		if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ?	
 		  {
 		    int iitow=4*volId[1]+volId[2];
 		    int iilay=volId[4];
 		    int iicol=volId[6];
                     //		    int iiseg=volId[8];
-                    //		    log << MSG::DEBUG << " FP : findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
+                    //		    log << MSG::DEBUG << " findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
 		    // stop if current log is different from the log previously found
 		    if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
 		      {
-			//log << MSG::DEBUG << " FP : findC1 end of vol search 1" << endreq;
+			//log << MSG::DEBUG << " findC1 end of vol search 1" << endreq;
 			lnext=false;
 			continue;
 		      }
 		    int hid=m_hitId[iitow][iilay][iicol];
 		    if (hid<0) // not in the hit map (CalMipXtalVec)
 		      {
-			//log << MSG::DEBUG << " FP : findC1 end of vol search 2" << endreq;
+			//log << MSG::DEBUG << " findC1 end of vol search 2" << endreq;
 			//			lnext=false;
 			continue;
 		      }
-		    double radLen_step = m_G4PropTool->getStepRadLength(istep);
 		    double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
-		    //	    Point x_step       = m_G4PropTool->getStepPosition(istep);
 		    // ignore logs found by G4prop in the same layer as C0
 		    if (m_calMipXtalVec[hid].getFree() && !(iitow==itow0 && iilay==ilay0))
 		      {
@@ -679,22 +667,21 @@ bool StdMipFindingTool::findC1()
 			hidp=hid;
 			foundOneCalMipXtalNotAlreadyUsed=true;
 			arcLen+=arcLen_step;
-			radLen+=radLen_step;
-                        //			log << MSG::DEBUG << " FP : findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << " rad " << radLen_step << endreq;
+                        //log << MSG::DEBUG << " findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << endreq;
 		      }
                     //		    else
-                      //		      log << MSG::DEBUG << " FP : findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
+                      //		      log << MSG::DEBUG << " findC1 seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
 		  }
 	      }
 	    
-	    if (hidp==m_hid)
+	    if (hidp==m_hid && arcLen>0)
 	      {
 		double ene=m_calMipXtalVec[hidp].getXtal()->getEnergy();
 		double ecor=ene*m_CsIHeight/arcLen;
-		log << MSG::DEBUG << "------> FP : findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " rad " << radLen << " ecor " << ecor << endreq;
+                //		log << MSG::DEBUG << "------> findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen  << " ecor " << ecor << endreq;
 		    
-		//		if (ecor>m_ecor1 && ecor<m_ecor2)
-		if (ene>m_e1 && ene<m_e2)
+		// if (ecor>m_ecor1 && ecor<m_ecor2)
+		if (ecor>m_e1 && ecor<m_e2)
 		  {
 		    if (d01<dmin)
 		      {
@@ -715,16 +702,16 @@ bool StdMipFindingTool::findC1()
         Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid1];
         calMipXtalRef.setFree(false);
 
-	log << MSG::DEBUG << " SG : findC1 End - True" << endreq;
+        //	log << MSG::DEBUG << " findC1 End - True" << endreq;
 	int itow = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
 	int ilay = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
 	int icol = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
-        log << MSG::DEBUG << " FP : foundC1 " << itow << " " << ilay << " " << icol  << endreq;
+        //        log << MSG::DEBUG << " foundC1 " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
     else
     {
-        log << MSG::DEBUG << " SG : findC1 End - False" << endreq;
+        log << MSG::DEBUG << " findC1 End - False" << endreq;
         return false;
     }
 
@@ -734,14 +721,14 @@ bool StdMipFindingTool::findC1()
 bool StdMipFindingTool::findC2()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-    log << MSG::DEBUG << " FP : findC2 in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+    log << MSG::DEBUG << " findC2 in StdMipFindingTool" << endreq;
 
-    Point xStart=m_refP;
-    Vector dir=m_dir;
-    // log << MSG::DEBUG << " FP : findC2 before propagate" << endreq;
-    m_hid2=propagate(xStart,dir);
-    // log << MSG::DEBUG << " FP : findC2 after propagate" << endreq;
+    Point  xStart = m_refP;
+    Vector dir    = m_dir;
+    // log << MSG::DEBUG << " findC2 before propagate" << endreq;
+    m_hid2=propagate(xStart,dir,2);
+    // log << MSG::DEBUG << " findC2 after propagate" << endreq;
 
     if (m_hid2>=0)
     {
@@ -773,15 +760,15 @@ bool StdMipFindingTool::findC2()
         calMipTrack.setPoint(m_refP);
         calMipTrack.setDir(m_dir);
 
-        log << MSG::DEBUG << " FP : findC2 End - True" << endreq;
-        log << MSG::DEBUG << " FP : findC2 End - True m_dir.x = " << m_dir.x() << endreq;
-        log << MSG::DEBUG << " FP : findC2 End - True m_dir.y = " << m_dir.y() << endreq;
-        log << MSG::DEBUG << " FP : findC2 End - True m_dir.z = " << m_dir.z() << endreq;
+//         log << MSG::DEBUG << " findC2 End - True" << endreq;
+//         log << MSG::DEBUG << " findC2 End - True m_dir.x = " << m_dir.x() << endreq;
+//         log << MSG::DEBUG << " findC2 End - True m_dir.y = " << m_dir.y() << endreq;
+//         log << MSG::DEBUG << " findC2 End - True m_dir.z = " << m_dir.z() << endreq;
         return true;
     }
     else
     {
-        log << MSG::DEBUG << " FP : findC2 End - False" << endreq;
+        log << MSG::DEBUG << " findC2 End - False" << endreq;
         return false;
     }
 }
@@ -790,48 +777,48 @@ bool StdMipFindingTool::findC2()
 bool StdMipFindingTool::findCn()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-    log << MSG::DEBUG << " FP : findCn in StdMipFindingTool" << endreq;
+    //    log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+    log << MSG::DEBUG << " findCn in StdMipFindingTool" << endreq;
 
     Event::CalMipTrack& calMipTrack = m_calMipTrackVec.back();
 
     m_refP = calMipTrack.getPoint();
     m_dir  = calMipTrack.getDir();
 
-    Point xStart=m_refP;
-    Vector dir=m_dir;
-    // log << MSG::DEBUG << " FP : findCn before propagate" << endreq;
-    m_hidn=propagate(xStart,dir);
-    // log << MSG::DEBUG << " FP : findCn after propagate" << endreq;
+    Point xStart = m_refP;
+    Vector dir   = m_dir;
+    // log << MSG::DEBUG << " findCn before propagate" << endreq;
+    m_hidn=propagate(xStart,dir,calMipTrack.getNh());
+    // log << MSG::DEBUG << " findCn after propagate" << endreq;
 
     if (m_hidn>=0)
       {
         Event::CalMipXtal& calMipXtalRef_m_hidn = m_calMipXtalVec[m_hidn];
         calMipXtalRef_m_hidn.setFree(false);
         calMipTrack.push_back(calMipXtalRef_m_hidn);
-        log << MSG::DEBUG << " FP : findCn End - True" << endreq;
+
+        //        log << MSG::DEBUG << " findCn End - True" << endreq;
 	int itow = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getTower();
 	int ilay = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getLayer();
 	int icol = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getColumn();
-        log << MSG::DEBUG << " FP : foundCn " << itow << " " << ilay << " " << icol  << endreq;
+        //        log << MSG::DEBUG << " foundCn " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
     else
     {
-        log << MSG::DEBUG << " FP : findCn End - False" << endreq;
+      //        log << MSG::DEBUG << " findCn End - False" << endreq;
         return false;
     }
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-int StdMipFindingTool::propagate(Point xStart, Vector dir)
+int StdMipFindingTool::propagate(Point xStart, Vector dir, int icall)
 {
   MsgStream log(msgSvc(), name());
 //   log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-//   log << MSG::DEBUG << " FP : propagate in StdMipFindingTool" << endreq;
-//   log << MSG::DEBUG << " FP : propagate dir.x = " << dir.x() << endreq;
-//   log << MSG::DEBUG << " FP : propagate dir.y = " << dir.y() << endreq;
-//   log << MSG::DEBUG << " FP : propagate dir.z = " << dir.z() << endreq;  
+//   log << MSG::DEBUG << " propagate in StdMipFindingTool" << endreq;
+//   log << MSG::DEBUG << " propagate xstart= " << xStart.x() << " " << xStart.y() << "  " << xStart.z() << endreq;  
+//   log << MSG::DEBUG << " propagate dir   = " << dir.x() << " " << dir.y() << "  " << dir.z() << endreq;  
   int hidn=-1;
   double dmin = 99999;
   // get one unit vector perpendicular to track direction
@@ -850,12 +837,15 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 
   for (int numRad=1; numRad<=numRadius; numRad++)
     for(int is=numRad-1; is<=numSamples/numRad; is++)
+      //    for(int is=0; is<=numSamples/numRad; is++)
       {
-        //log << MSG::DEBUG << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ FP : propagate G4prop numSample = " << is << endreq;
+        //        if (numRad>1 && is==0) continue;
+        //log << MSG::DEBUG << " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ propagate G4prop" << " " << numRad << " " << is << endreq;
 	Point x0=xStart;
 	if(is>0)
 	  {
 	    // Compute new starting point onto of Cal
+            //	    double rotAng = (is-1)*2.*m_pi/(numSamples/numRad); 
 	    double rotAng = (is-1)*2.*m_pi/numSamples; 
 	    HepRotation rot(dir, rotAng);
 	    // get unit vector delta perpendicular to track direction with angle variable cylindrical phi angle 
@@ -871,10 +861,8 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 	    x0=segmt.position(s);
 	  }
 	   
-	// 	  log << MSG::DEBUG << " FP : propagate x0.x = " << x0.x() << endreq;
-	// 	  log << MSG::DEBUG << " FP : propagate x0.y = " << x0.y() << endreq;
-	// 	  log << MSG::DEBUG << " FP : propagate x0.z = " << x0.z() << endreq;
-
+        //log << MSG::DEBUG << " propagate x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << endreq;  
+        
 	// search for another hit forward and backward
 	for(int iforward=0;iforward<2;iforward++)
 	  {
@@ -916,13 +904,16 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 		    else
 		      exitP=x0+((m_calYLo-x0.y())/m_uu.y())*m_uu;
 		  }
+                else
+                  continue;
 	      }
+            log << MSG::DEBUG << " propagate " << icall << " " << numRad << " " << is << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
 	    m_G4PropTool->setStepStart(x0,m_uu);
 	    m_uu=x0-exitP;
 	    m_G4PropTool->step(sqrt(m_uu*m_uu));	      
 	    // Now loop over the steps to extract the materials
 	    int numSteps = m_G4PropTool->getNumberSteps();
-            //log << MSG::DEBUG << " FP : propagate G4prop iforward = " << iforward << " numSteps = " << numSteps << endreq;
+            //log << MSG::DEBUG << " propagate G4prop iforward = " << iforward << " numSteps = " << numSteps << endreq;
 	    idents::VolumeIdentifier volId;
 	    idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
 	    int itow=-1;
@@ -930,38 +921,35 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 	    int icol=-1;
 	    bool foundOneCalMipXtalNotAlreadyUsed=false;
 	    double arcLen=0;
-	    double radLen=0;
 	    int hidp=-1;
 	    bool lnext=true;
 	    for(int istep=0; istep<numSteps && lnext; ++istep)
 	      {
 		volId=m_G4PropTool->getStepVolumeId(istep);
 		volId.prepend(prefix);
-		//		log << MSG::DEBUG << " FP : propagate istep "<<  istep << " volId.name " << volId.name() << endreq;
+		//		log << MSG::DEBUG << " propagate istep "<<  istep << " volId.name " << volId.name() << endreq;
 		if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ?	
 		  {
 		    int iitow=4*volId[1]+volId[2];
 		    int iilay=volId[4];
 		    int iicol=volId[6];
                     //		    int iiseg=volId[8];
-                    //		    log << MSG::DEBUG << " FP : propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
+                    //		    log << MSG::DEBUG << " propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
 		    // stop if current log is different from the log previously found
 		    if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
 		      {
-                        //log << MSG::DEBUG << " FP : propagate end of vol search 1" << endreq;
+                        //log << MSG::DEBUG << " propagate end of vol search 1" << endreq;
 			lnext=false;
 			continue;
 		      }
 		    int hid=m_hitId[iitow][iilay][iicol];
 		    if (hid<0) // stop if current log is not in the hit map (CalMipXtalVec)
 		      {
-                        //log << MSG::DEBUG << " FP : propagate end of vol search 2" << endreq;
+                        //log << MSG::DEBUG << " propagate end of vol search 2" << endreq;
 			lnext=false;
 			continue;
 		      }
-		    double radLen_step = m_G4PropTool->getStepRadLength(istep);
-		    double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
-		    //	    Point x_step       = m_G4PropTool->getStepPosition(istep);
+                    double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
 		    if (m_calMipXtalVec[hid].getFree())
 		      {
 			itow=iitow;
@@ -970,18 +958,17 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 			hidp=hid;
 			foundOneCalMipXtalNotAlreadyUsed=true;
 			arcLen+=arcLen_step;
-			radLen+=radLen_step;
-                        //log << MSG::DEBUG << " FP : propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << " rad " << radLen_step << endreq;
+                        //log << MSG::DEBUG << " propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << endreq;
 		      }
                     // else
-                    // log << MSG::DEBUG << " FP : propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
+                    // log << MSG::DEBUG << " propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
 		  }
 	      }
 
-	    if (hidp>=0)
+	    if (hidp>=0 && arcLen>0)
 	      {
 		double ecor=m_calMipXtalVec[hidp].getXtal()->getEnergy()*m_CsIHeight/arcLen;
-                //log << MSG::DEBUG << "------> FP : propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " rad " << radLen << " ecor " << ecor << endreq;
+                //log << MSG::DEBUG << "------> propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " ecor " << ecor << endreq;
 		
 		if (ecor>m_ecor1 && ecor<m_ecor2)
 		  {
@@ -997,7 +984,7 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
 	      }
 	  }
       }
-  // log << MSG::DEBUG << " FP : end of propagate in StdMipFindingTool hidn= " << hidn << endreq;
+  // log << MSG::DEBUG << " end of propagate in StdMipFindingTool hidn= " << hidn << endreq;
   return hidn;
 }
 
@@ -1006,7 +993,7 @@ void StdMipFindingTool::leastSquares()
 {
   MsgStream log(msgSvc(), name());
 //   log << MSG::DEBUG <<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-//   log << MSG::DEBUG << " FP : leastSquares in StdMipFindingTool" << endreq;
+//   log << MSG::DEBUG << " leastSquares in StdMipFindingTool" << endreq;
 
   m_goodfit=false;
 
@@ -1034,13 +1021,13 @@ void StdMipFindingTool::leastSquares()
   
   Event::CalMipTrack& calMipTrack = m_calMipTrackVec.back();
   Event::CalMipXtal   calMipXtal;
-  log << MSG::DEBUG << " FP : leastSquares Nh = "<< calMipTrack.getNh() << endreq;
+  //  log << MSG::DEBUG << " leastSquares Nh = "<< calMipTrack.getNh() << endreq;
   for (int ih=0; ih<calMipTrack.getNh(); ih++)
     {
       calMipXtal = calMipTrack.at(ih);
 
-      m_uu     = calMipXtal.getXtal()->getPosition();
-      int ilay = calMipXtal.getXtal()->getPackedId().getLayer();
+      Point x0   = calMipXtal.getXtal()->getPosition();
+      int ilay   = calMipXtal.getXtal()->getPackedId().getLayer();
 
       for(int k=0;k<=1;k++)
 	{
@@ -1054,7 +1041,7 @@ void StdMipFindingTool::leastSquares()
 	      icoord=ilay%2;  	  
 	      err2=289;
 	    }
-	  zmeas=m_uu.z();
+	  zmeas=x0.z();
 	  // calculate weighting coefficient
 	  double w = 1/err2;
 	  mz+=w*zmeas;
@@ -1062,7 +1049,7 @@ void StdMipFindingTool::leastSquares()
 	  
 	  if(icoord==0)
 	    {
-	      xmeas=m_uu.x();
+	      xmeas=x0.x();
 	      nlx++;
 	      // calculate sums for least square linear fit in XZ plane
 	      cov_xz += w*xmeas*zmeas;
@@ -1074,7 +1061,7 @@ void StdMipFindingTool::leastSquares()
 	    }
 	  else
 	    {
-	      ymeas=m_uu.y();
+	      ymeas=x0.y();
 	      nly++;
 	      // calculate sums for least square linear fit in YZ plane
 	      cov_yz += w*ymeas*zmeas;
@@ -1088,7 +1075,7 @@ void StdMipFindingTool::leastSquares()
     }
 
   // linear fit requires at least 3 hits in both XZ and YZ planes
-  if(nlx <3 || nly <3 ) return;
+  if(nlx<3 || nly<3) return;
   
   mx /= norm1;
   var_x/=norm1;
@@ -1099,12 +1086,13 @@ void StdMipFindingTool::leastSquares()
   var_z1 /= norm1;
   var_z1 -= mz1*mz1;
   
-  // protection against dividing by 0 in the next statment
-  if(var_z1 == 0) return;
+  // protection against dividing by 0 in the next statement
+  if(var_z1==0) return;
   
   // Now we have cov(x,z) and var(z) we can
   // deduce slope in XZ plane
-  double tgthx = cov_xz/var_z1;
+  double tgthx= cov_xz/var_z1;
+
   my /= norm2;
   var_y/=norm2;
   var_y-=my*my;
@@ -1114,16 +1102,16 @@ void StdMipFindingTool::leastSquares()
   var_z2 /= norm2;
   var_z2 -= mz2*mz2;
   
-  // protection against dividing by 0 in the next statment
-  if(var_z2 == 0) return;
+  // protection against dividing by 0 in the next statement
+  if(var_z2==0) return;
   
-  m_goodfit=true;
-  mz/=norm;
-
   // Now we have cov(y,z) and var(z) we can
   // deduce slope in YZ plane
   double tgthy = cov_yz/var_z2;
   
+  m_goodfit=true;
+  mz/=norm;
+
   // combining slope in XZ and YZ planes to get normalized 3-vector
   // of particle direction
   double tgtheta_sqr = tgthx*tgthx+tgthy*tgthy;
@@ -1151,7 +1139,7 @@ void StdMipFindingTool::leastSquares()
   double chi2=chi2x/(nlx-2)+chi2y/(nly-2);
   calMipTrack.setChi2(chi2);
   
-  log << MSG::DEBUG << " FP : leastSquares - End" << endreq;
+  //  log << MSG::DEBUG << " leastSquares - End" << endreq;
   
   return;
 }
@@ -1195,10 +1183,16 @@ StatusCode StdMipFindingTool::findMIPCandidates()
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
         
-    log << MSG::DEBUG << " SG : findMIPCandidates in StdMipFindingTool" << endreq;
+    log << MSG::DEBUG << " findMIPCandidates in StdMipFindingTool" << endreq;
     readGlastDet();
-
         
+    //
+    // Task 0: CalMipTrackVec and CalMipXtalVec cleaners in case of 
+    // CalReconSvc         DEBUG CalMipFinderAlg std::exception: ParticleTransporter given invalid initial conditions. pos: Point(nan,nan,nan) dir: (-0,-0.54616,-0.837681)
+    //
+    clearCalMipXtalVec (&m_calMipXtalVec);
+    clearCalMipTrackVec(&m_calMipTrackVec);
+
     //
     // Task 1: get single cluster centroid from TDS
     //
@@ -1213,45 +1207,48 @@ StatusCode StdMipFindingTool::findMIPCandidates()
 	clearCalMipXtalVec(&m_calMipXtalVec);
 	return sc;
       }
-    log << MSG::DEBUG << " SG : numMipXtals=" << numMipXtals  << endreq;
+    log << MSG::DEBUG << " numMipXtals=" << numMipXtals  << endreq;
         
     //
     // Task 3: Mip Tracks Finder
     //
-    int numTracks = findMipTracks();
-    log << MSG::DEBUG << " SG : numTracks=" << numTracks << endreq;
+    findMipTracks();
+    log << MSG::DEBUG << " numTracks=" << m_nbTracks << endreq;
+
+    if (m_nbTracks+1>0)
+    {
+      //
+      // Task 4: Store m_calMipTrackVec in TDS
+      //
+      sc=storeCalMipTracks();
+    }
 
     //
-    // Task 4: Store m_calMipTrackVec in TDS
+    // Task 5a: CalMipXtalVec  cleaner
+    // Task 5b: CalMipTrackVec cleaner
     //
-    sc=storeCalMipTracks(m_calMipTrackVec);
-        
-    //
-    // Task 5: CalMipXtalVec Cleaner
-    //
-    clearCalMipXtalVec(&m_calMipXtalVec);
-    //    readCalMipXtals(m_calMipXtalVec);
-        
-    //
-    // Task 6: CalMipTrackVec Cleaner
-    //
+    clearCalMipXtalVec (&m_calMipXtalVec);
     clearCalMipTrackVec(&m_calMipTrackVec);
+    //readCalMipXtals (m_calMipXtalVec);
     //readCalMipTracks(m_calMipTrackVec);
 
-    //
-    // Task 7: check : read CalMipTrack & CalMIPsCol from TDS
-    //
-    readCalMipTrackCol();
+    if(m_nbTracks+1>0)
+    {
+      //
+      // Task 6: check : read CalMipTrackCol from TDS
+      //
+      readCalMipTrackCol();
+    }
 
     return sc;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-StatusCode StdMipFindingTool::storeCalMipTracks(Event::CalMipTrackVec calMipTrackVec )
+StatusCode StdMipFindingTool::storeCalMipTracks()
 {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : StoreCalMipTracks in StdMipFindingTool" << endreq;
+    log << MSG::DEBUG << " storeCalMipTracks in StdMipFindingTool" << endreq;
 
     m_calMipTrackCol = SmartDataPtr<Event::CalMipTrackCol>(m_dataSvc,EventModel::CalRecon::CalMipTrackCol);
 
@@ -1280,7 +1277,7 @@ StatusCode StdMipFindingTool::storeCalMipTracks(Event::CalMipTrackVec calMipTrac
         nbStoredTracks++;
     }
 
-    log << MSG::DEBUG << " SG : StoreCalMipTracks -  End" << endreq;
+    log << MSG::DEBUG << " storeCalMipTracks -  End" << endreq;
 
     return sc;
 }
@@ -1289,7 +1286,7 @@ StatusCode StdMipFindingTool::storeCalMipTracks(Event::CalMipTrackVec calMipTrac
 void StdMipFindingTool::readCalMipTrackCol()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << " SG : readCalMipTrackCol in StdMipFindingTool" << endreq;
+    log << MSG::DEBUG << " readCalMipTrackCol in StdMipFindingTool" << endreq;
 
     Event::CalMipTrackCol* p_calMipTrackCol = SmartDataPtr<Event::CalMipTrackCol>(m_dataSvc, EventModel::CalRecon::CalMipTrackCol); 
 
@@ -1305,5 +1302,5 @@ void StdMipFindingTool::readCalMipTrackCol()
           p_calMipTrack->writeOut(log);
         }
     }
-    log << MSG::DEBUG << " SG : readCalMipTrackCol End " << counter << endreq;
+    log << MSG::DEBUG << " readCalMipTrackCol End " << counter << endreq;
 }
