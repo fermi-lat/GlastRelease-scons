@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r0p3 THB 15-Jul-05   Turn on CalMipFinder. (Tracy update)
 * v6r0p2 THB 03-Jul-05   Restore merit processing defaults
 * v6r0p1  TU 25-Jun-05   Begin the process of fixing little bugs...
 * v6r0p0  TU 25-Jun-05   Preliminary tag for new CalRecon (primarily)
