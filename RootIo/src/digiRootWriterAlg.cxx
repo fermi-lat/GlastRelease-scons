@@ -387,24 +387,24 @@ StatusCode digiRootWriterAlg::writeGem() {
 
 
 StatusCode digiRootWriterAlg::writeError() { 
-       MsgStream log(msgSvc(), name()); 
-       StatusCode sc = StatusCode::SUCCESS; 
-    
-       SmartDataPtr<LdfEvent::ErrorData> errTds(eventSvc(), "/Event/Error"); 
-       if (!errTds) return sc; 
-    
-       const std::vector<LdfEvent::TowerErrorData> errorCol = errTds->errorCol(); 
-       std::vector<LdfEvent::TowerErrorData>::const_iterator errorColIt; 
-    
-       for (errorColIt = errorCol.begin(); errorColIt != errorCol.end(); errorColIt++) { 
-             Tem *temRoot = m_digiEvt->addTem(); 
-             ErrorData err(errorColIt->cal(), errorColIt->tkr(), 
-                           errorColIt->phs(), errorColIt->tmo()); 
-             temRoot->init(errorColIt->tower(), err); 
-         } 
-    
+    MsgStream log(msgSvc(), name()); 
+    StatusCode sc = StatusCode::SUCCESS; 
+
+    SmartDataPtr<LdfEvent::ErrorData> errTds(eventSvc(), "/Event/Error"); 
+    if (!errTds) return sc; 
+
+    const std::vector<LdfEvent::TowerErrorData> errorCol = errTds->errorCol(); 
+    std::vector<LdfEvent::TowerErrorData>::const_iterator errorColIt; 
+
+    for (errorColIt = errorCol.begin(); errorColIt != errorCol.end(); errorColIt++) { 
+        Tem *temRoot = m_digiEvt->addTem(); 
+        ErrorData err(errorColIt->cal(), errorColIt->tkr(), 
+            errorColIt->phs(), errorColIt->tmo()); 
+        temRoot->init(errorColIt->tower(), err); 
+    } 
+    return sc;    
 } 
-    
+
 
 
 StatusCode digiRootWriterAlg::writeDiagnostic() {
