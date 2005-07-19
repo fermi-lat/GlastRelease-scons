@@ -85,7 +85,7 @@ Event::CalCorToolResult* CalTransvOffsetTool::doEnergyCorr(Event::CalCluster* cl
         corResult->setCorrectionName(type());
         corResult->setParams(cluster->getCalParams());
         corResult->setChiSquare(1.);
-        corResult->insert(Event::CalCorEneValuePair("TransvOffset",calTransvOffset));
+        (*corResult)["TransvOffset"] = calTransvOffset ;
     }
     
     return corResult;

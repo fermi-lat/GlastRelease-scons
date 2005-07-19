@@ -545,22 +545,22 @@ Event::CalCorToolResult* CalValsCorrTool::loadResults()
     corResult->setCorrectionName(type());
     corResult->setParams(params);
     corResult->setChiSquare(1.);
-    corResult->insert(Event::CalCorEneValuePair("CorrectedEnergy", m_corr_energy));
-    corResult->insert(Event::CalCorEneValuePair("CalTopX0", m_cal_top.x()));
-	corResult->insert(Event::CalCorEneValuePair("CalTopY0", m_cal_top.y()));
-	corResult->insert(Event::CalCorEneValuePair("CsIRLn", m_radLen_CsI));
-	corResult->insert(Event::CalCorEneValuePair("CALRLn", m_radLen_CsI + m_radLen_Stuff));
-    corResult->insert(Event::CalCorEneValuePair("LATRLn", m_t_total));
-    corResult->insert(Event::CalCorEneValuePair("StuffRLn", m_radLen_Stuff));
-    corResult->insert(Event::CalCorEneValuePair("CntrRLn", m_t));
-	corResult->insert(Event::CalCorEneValuePair("CntrRLnStuff", m_radLen_CntrStuff));
-	corResult->insert(Event::CalCorEneValuePair("CsIArcLen", m_arcLen_CsI));
-	corResult->insert(Event::CalCorEneValuePair("GapFraction", m_gap_fraction));
-    corResult->insert(Event::CalCorEneValuePair("EdgeCorrection", m_edge_correction));
-    corResult->insert(Event::CalCorEneValuePair("LeakCorrection", m_leakage_correction));
-	corResult->insert(Event::CalCorEneValuePair("TotalCorrection", m_total_correction));
-	corResult->insert(Event::CalCorEneValuePair("PredCntr", m_t_Pred));	
-    corResult->insert(Event::CalCorEneValuePair("DeltaCntr", m_deltaT));	
+    (*corResult)["CorrectedEnergy"] = m_corr_energy ;
+    (*corResult)["CalTopX0"] = m_cal_top.x() ;
+	(*corResult)["CalTopY0"] = m_cal_top.y() ;
+	(*corResult)["CsIRLn"] = m_radLen_CsI ;
+	(*corResult)["CALRLn"] = m_radLen_CsI + m_radLen_Stuff ;
+    (*corResult)["LATRLn"] = m_t_total ;
+    (*corResult)["StuffRLn"] = m_radLen_Stuff ;
+    (*corResult)["CntrRLn"] = m_t ;
+	(*corResult)["CntrRLnStuff"] = m_radLen_CntrStuff ;
+	(*corResult)["CsIArcLen"] = m_arcLen_CsI ;
+	(*corResult)["GapFraction"] = m_gap_fraction ;
+    (*corResult)["EdgeCorrection"] = m_edge_correction ;
+    (*corResult)["LeakCorrection"] = m_leakage_correction ;
+	(*corResult)["TotalCorrection"] = m_total_correction ;
+	(*corResult)["PredCntr"] = m_t_Pred ;	
+    (*corResult)["DeltaCntr"] = m_deltaT ;	
  
     return corResult;
 }

@@ -163,7 +163,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
     
     corResult= calculateEvent(cluster, log);
     if( corResult ) 
-      corResult->insert(Event::CalCorEneValuePair("GeometricCut", geometricCut));
+      (*corResult)["GeometricCut"] = geometricCut ;
 
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;

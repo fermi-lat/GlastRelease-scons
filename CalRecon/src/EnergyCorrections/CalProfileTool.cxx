@@ -564,9 +564,9 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalCluster * cluste
         corResult->setCorrectionName(type());
         corResult->setParams(params);
         corResult->setChiSquare(ki2);
-        corResult->insert(Event::CalCorEneValuePair("fit_energy",1000.*fit_energy));
-        corResult->insert(Event::CalCorEneValuePair("energy_err",energy_err));
-        corResult->insert(Event::CalCorEneValuePair("alpha", fit_alpha));
+        (*corResult)["fit_energy"] = 1000.*fit_energy ;
+        (*corResult)["energy_err"] = energy_err ;
+        (*corResult)["alpha"] = fit_alpha ;
     } 
     
     return corResult;
