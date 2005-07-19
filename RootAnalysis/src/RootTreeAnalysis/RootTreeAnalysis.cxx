@@ -529,6 +529,7 @@ void RootTreeAnalysis::ReconCal() {
 
     }
     
+
     TObjArray*  clusCol = calRec->getCalClusterCol();
     if (clusCol) {
         Int_t numClus = clusCol->GetEntries();
@@ -540,7 +541,6 @@ void RootTreeAnalysis::ReconCal() {
             float clusterEnergy = c1->getParams().getEnergy();
             totE += clusterEnergy;
             ((TH1F*)GetObjectPtr("CALRECESUM"))->Fill(clusterEnergy);
-            ((TH1F*)GetObjectPtr("CALRECERR"))->Fill(c1->getParams().getEnergyErr());
         }
         ((TH1F*)GetObjectPtr("CALTOTE"))->Fill(totE);
 
