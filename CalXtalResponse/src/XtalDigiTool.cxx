@@ -318,7 +318,7 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
       // mean^2 = P*N, mean^2=P*P/exp(asym), mean^2*exp(asym)=P^2
       double dacP;
       dacP = sqrt(meanDAC*meanDAC*exp(asym));
-      double dac = (face=POS_FACE) ? dacP : dacP/exp(asym);
+      double dac = (face==POS_FACE) ? dacP : dacP/exp(asym);
 
       // sum dac val to running total
       diodeDAC[XtalDiode(face,diode)] += dac;
