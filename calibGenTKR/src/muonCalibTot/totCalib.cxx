@@ -2778,12 +2778,10 @@ void totCalib::findBadStrips()
 	//m_log << " " << m_badStrips[uniPlane][iBad].size();
 	//std::cout << " " << m_badStrips[uniPlane][iBad].size();
       }
-      m_log << ", " << m_towerVar[tw].bsVar[uniPlane].badStrips[2].size() 
-	    << "; " << m_towerVar[tw].bsVar[uniPlane].badStrips[g_nBad-1].size()
+      m_log << "; " << m_towerVar[tw].bsVar[uniPlane].badStrips[2].size() 
 	    << ", " << numDeadStrips 
 	    << ", " << meanRatio << std::endl;
-      std::cout << ", " << m_towerVar[tw].bsVar[uniPlane].badStrips[2].size() 
-		<< "; " << m_towerVar[tw].bsVar[uniPlane].badStrips[g_nBad-1].size()
+      std::cout << "; " << m_towerVar[tw].bsVar[uniPlane].badStrips[2].size() 
 		<< ", " << numDeadStrips 
 		<< ", " << meanRatio << std::endl;
     }
