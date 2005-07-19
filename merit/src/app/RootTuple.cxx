@@ -71,7 +71,9 @@ RootTuple::RootTuple(std::string title, std::string file, std::string treeName)
         static TROOT meritRoot("root","ROOT I/O");
     } 
 #ifdef WIN32
-    gSystem->Load("libTree.dll");
+    int ret=gSystem->Load("libTree");
+    if( ret==1) TTree dummy;
+
 #endif
     
     // Open the file, and get at the  TTree containing the data

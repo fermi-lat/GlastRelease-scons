@@ -117,9 +117,9 @@ int main(int argc, char* argv[])
         (*outstream) << "Tuple title: \""<< tuple->title() << "\"\n" ;
 
         try {
-            const char* imfile = ::getenv("IM_FILE");
+            const char* ctree_path = ::getenv("CTREE_PATH");
         // create the ct: pass in the tuple.
-            ClassificationTree pct(*tuple, std::cout, imfile? std::string(imfile) : "");
+            ClassificationTree pct(*tuple, std::cout, ctree_path? std::string(ctree_path) : "");
             FigureOfMerit fm(*tuple, cutstr);
 
 

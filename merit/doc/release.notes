@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r23   THB  19-jul-05 Added MIPS tuple variables. Small fixes in CT var code
  *  v6r22p4 THB  04-Jul-05 replace test root file, fix linux warnings
  *  v6r22p3 THB  03-Jul-05 Small updates, including author
  *  v6r22   THB  03-Jul-05 Revise to generate new decision tree variables
