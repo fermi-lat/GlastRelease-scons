@@ -209,7 +209,7 @@ StatusCode CalFullProfileTool::initialize()
   BIAS1 = 0.007235;
 
   m_fsppm = new FullShowerProfileParamsManager();
-  m_fsddm = new FullShowerDevelopmentDescriptionManager(m_detSvc,4,2.,3.,1.85,0.80,0.1);
+  m_fsddm = new FullShowerDevelopmentDescriptionManager(m_detSvc,14,2.,1.,1.85,0.80,0.1);
   
   // Minuit object
   m_minuit = new TMinuit(5);
@@ -324,6 +324,26 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : vv = " <<  vv[0] << " " << vv[1] << " " << vv[2] << " " <<endreq;
   lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : tkr_RLn = " << tkr_RLn <<endreq;
   
+
+  double wideningfactor = 1.;
+  double mytheta;
+  double tkrrln1; // when wideningfactor = 1
+  if(vertex != 0 && fabs(vv[2])>0)
+    {
+      mytheta = atan(-sqrt(vv[0]*vv[0]+vv[1]*vv[1])/vv[2])*180./TMath::Pi();
+      if(mytheta>40)
+	{
+	  tkrrln1 = 2-0.05*(mytheta-40.);
+	  if(tkr_RLn>tkrrln1)
+	    {
+	      wideningfactor = 1.+(tkr_RLn-tkrrln1)/1.5;
+	      if(wideningfactor>2) wideningfactor = 2.;
+	    }
+	}
+    }
+
+  m_fsddm->SetWideningFactor(wideningfactor);
+
   if(!m_fsddm->Compute(pp,vv,tkr_RLn))
     {
       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : Problem during m_fsddm->Compute. Returning empty corResult." <<endreq;
@@ -470,6 +490,128 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster * cl
   corResult->insert(Event::CalCorEneValuePair("recv0",vv[0]));
   corResult->insert(Event::CalCorEneValuePair("recv1",vv[1]));
   corResult->insert(Event::CalCorEneValuePair("recv2",vv[2]));
+  corResult->insert(Event::CalCorEneValuePair("widening",wideningfactor));
+
+  
+//   m_fsddm->SetWideningFactor(1.5);
+//   if(!m_fsddm->Compute(pp,vv,tkr_RLn))
+//     {
+//       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : Problem during m_fsddm->Compute. Returning empty corResult." <<endreq;
+//     }
+//   else
+//     {
+//       arglist[0] = -1;
+//       m_minuit->mnexcm("SET PRI", arglist ,1,ierflg);
+//       m_minuit->mnexcm("SET NOW", arglist ,1,ierflg);
+//       arglist[0] = 1;
+//       m_minuit->mnexcm("SET ERR", arglist ,1,ierflg);
+//       arglist[0] = 2;
+//       m_minuit->mnexcm("SET STR", arglist ,1,ierflg);        
+//       m_fsppm->Fill(eTotal);  
+//       vstart[0] = m_fsppm->alpha;
+//       vstart[1] = m_fsppm->tmax;
+//       vstart[2] = eTotal;
+//       vstep[0] = 0.05;
+//       vstep[1] = 0.05;
+//       vstep[2] = eTotal*0.1;
+//       m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
+//       m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
+//       m_minuit->mnparm(2, "a3", vstart[2], vstep[2], 0.1,10000,ierflg);
+//       arglist[0] = 500;
+//       arglist[1] = 1.;
+//       m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+//       m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);  
+//       m_minuit->GetParameter(0,par0,epar0);
+//       m_minuit->GetParameter(1,par1,epar1);
+//       m_minuit->GetParameter(2,par2,epar2);
+//       m_lastx0 = m_fsddm->CurrentFSDD->lastx0;
+//       m_totx0cal = m_fsddm->CurrentFSDD->totx0cal;
+      
+//       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : results widening = 1.5:"
+// 	 << " alpha = " << par0 
+// 	 << " tmax = " << par1 
+// 	 << " energy = " << par2 
+// 	 << " fit flag " << ierflg 
+// 	 << " totchisq = " << amin <<endreq;
+//       arglist[0] = 1;
+//       m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
+//       bias = 1.;
+//       if(par2>0.1)
+// 	bias = log(BIAS1*log(par2)+BIAS0);
+//       if(bias<0.97) bias = 0.97;
+//       if(bias>0.99) bias = 0.99;
+//       par2 /= bias;
+//       epar2 /= bias;
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_fit_energy",1000.*par2)); // energy (in MeV)
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_alpha", par0)); // alpha (profile fit parameter 0)
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_tmax", par1)); // tmax (profile fit parameter 1)
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_lastx0",m_lastx0 )); // total radiation length seen by the shower
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_cal_eff_RLn",m_totx0cal)); // effective radiation length in cal (i.e in CsI)
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_totchisq",m_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_chisq",m_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_parcf",m_params_contribution_factor)); // weighting factor of the parameters constraint
+//       corResult->insert(Event::CalCorEneValuePair("wf1.5_parc",m_params_contribution)); // parameters constraint contribution to the chisquare
+//     }
+
+//   m_fsddm->SetWideningFactor(2.);
+//   if(!m_fsddm->Compute(pp,vv,tkr_RLn))
+//     {
+//       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : Problem during m_fsddm->Compute. Returning empty corResult." <<endreq;
+//     }
+//   else
+//     {
+//       arglist[0] = -1;
+//       m_minuit->mnexcm("SET PRI", arglist ,1,ierflg);
+//       m_minuit->mnexcm("SET NOW", arglist ,1,ierflg);
+//       arglist[0] = 1;
+//       m_minuit->mnexcm("SET ERR", arglist ,1,ierflg);
+//       arglist[0] = 2;
+//       m_minuit->mnexcm("SET STR", arglist ,1,ierflg);        
+//       m_fsppm->Fill(eTotal);  
+//       vstart[0] = m_fsppm->alpha;
+//       vstart[1] = m_fsppm->tmax;
+//       vstart[2] = eTotal;
+//       vstep[0] = 0.05;
+//       vstep[1] = 0.05;
+//       vstep[2] = eTotal*0.1;
+//       m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
+//       m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
+//       m_minuit->mnparm(2, "a3", vstart[2], vstep[2], 0.1,10000,ierflg);
+//       arglist[0] = 500;
+//       arglist[1] = 1.;
+//       m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+//       m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);  
+//       m_minuit->GetParameter(0,par0,epar0);
+//       m_minuit->GetParameter(1,par1,epar1);
+//       m_minuit->GetParameter(2,par2,epar2);
+//       m_lastx0 = m_fsddm->CurrentFSDD->lastx0;
+//       m_totx0cal = m_fsddm->CurrentFSDD->totx0cal;
+      
+//       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : results widening = 2.:"
+// 	 << " alpha = " << par0 
+// 	 << " tmax = " << par1 
+// 	 << " energy = " << par2 
+// 	 << " fit flag " << ierflg 
+// 	 << " totchisq = " << amin <<endreq;
+//       arglist[0] = 1;
+//       m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
+//       bias = 1.;
+//       if(par2>0.1)
+// 	bias = log(BIAS1*log(par2)+BIAS0);
+//       if(bias<0.97) bias = 0.97;
+//       if(bias>0.99) bias = 0.99;
+//       par2 /= bias;
+//       epar2 /= bias;
+//       corResult->insert(Event::CalCorEneValuePair("wf2_fit_energy",1000.*par2)); // energy (in MeV)
+//       corResult->insert(Event::CalCorEneValuePair("wf2_alpha", par0)); // alpha (profile fit parameter 0)
+//       corResult->insert(Event::CalCorEneValuePair("wf2_tmax", par1)); // tmax (profile fit parameter 1)
+//       corResult->insert(Event::CalCorEneValuePair("wf2_lastx0",m_lastx0 )); // total radiation length seen by the shower
+//       corResult->insert(Event::CalCorEneValuePair("wf2_cal_eff_RLn",m_totx0cal)); // effective radiation length in cal (i.e in CsI)
+//       corResult->insert(Event::CalCorEneValuePair("wf2_totchisq",m_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
+//       corResult->insert(Event::CalCorEneValuePair("wf2_chisq",m_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+//       corResult->insert(Event::CalCorEneValuePair("wf2_parcf",m_params_contribution_factor)); // weighting factor of the parameters constraint
+//       corResult->insert(Event::CalCorEneValuePair("wf2_parc",m_params_contribution)); // parameters constraint contribution to the chisquare
+//     }
   
   return corResult;
 }

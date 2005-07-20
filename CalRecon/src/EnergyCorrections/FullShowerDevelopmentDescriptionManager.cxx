@@ -14,67 +14,44 @@
 
 #include "TMath.h"
 
-/**   
-* @class FullShowerDevelopmentDescription
-* @author Philippe Bruel
-*
-* Tool that describes the shower developement in the calorimeter given
-* the length in X0 seen in the tracker and the position of the shower maximum
-*
-* $Header$
-*/
-
-FullShowerDevelopmentDescription::FullShowerDevelopmentDescription(IGlastDetSvc *m_detSvc_input, int type_input, double zstep_input, double radialcontainedfraction_input)
+FullShowerGeometryManager::FullShowerGeometryManager(IGlastDetSvc *m_detSvc_input)
   :m_detSvc(m_detSvc_input)
 {
-  
   Initialize();
-  Reset();
-  FSDD_XCircle = NULL;
-  FSDD_YCircle = NULL;
-  FSDD_RCircle = NULL;
-  Type = type_input;
-  if(Type==0) PrepXYPoints();
-  ZStep = zstep_input;
-  RadialContainedFraction = radialcontainedfraction_input;
-  wideningfactor = 1.;
 }
 
-FullShowerDevelopmentDescription::~FullShowerDevelopmentDescription()
+FullShowerGeometryManager::~FullShowerGeometryManager()
 {
-  if(FSDD_XCircle!=NULL) delete FSDD_XCircle;  
-  if(FSDD_YCircle!=NULL) delete FSDD_YCircle;  
-  if(FSDD_RCircle!=NULL) delete FSDD_RCircle;  
+  
 }
 
-void FullShowerDevelopmentDescription::Initialize()
+void FullShowerGeometryManager::Initialize()
 {
+  // Retrieve geometry from Detector Service
 
-  // Geometry
+  FSGM_CsIHeight = 19.9;
+  m_detSvc->getNumericConstByName(std::string("CsIHeight"),&FSGM_CsIHeight);
+  
+  FSGM_CsIWidth = 26.7;
+  m_detSvc->getNumericConstByName(std::string("CsIWidth"),&FSGM_CsIWidth);
+  
+  FSGM_CsILength = 326.0;
+  m_detSvc->getNumericConstByName(std::string("CsILength"),&FSGM_CsILength);
 
-  FSDD_CsIHeight = 19.9;
-  m_detSvc->getNumericConstByName(std::string("CsIHeight"),&FSDD_CsIHeight);
+  FSGM_cellVertPitch = 21.35;
+  m_detSvc->getNumericConstByName(std::string("cellVertPitch"),&FSGM_cellVertPitch);
 
-  FSDD_CsIWidth = 26.7;
-  m_detSvc->getNumericConstByName(std::string("CsIWidth"),&FSDD_CsIWidth);
+  FSGM_cellHorPitch = 27.84;
+  m_detSvc->getNumericConstByName(std::string("cellHorPitch"),&FSGM_cellHorPitch);
 
-  FSDD_CsILength = 326.0;
-  m_detSvc->getNumericConstByName(std::string("CsILength"),&FSDD_CsILength);
+  FSGM_towerPitch = 374.5;
+  m_detSvc->getNumericConstByName(std::string("towerPitch"),&FSGM_towerPitch);
 
-  FSDD_cellVertPitch = 21.35;
-  m_detSvc->getNumericConstByName(std::string("cellVertPitch"),&FSDD_cellVertPitch);
-
-  FSDD_cellHorPitch = 27.84;
-  m_detSvc->getNumericConstByName(std::string("cellHorPitch"),&FSDD_cellHorPitch);
-
-  FSDD_towerPitch = 374.5;
-  m_detSvc->getNumericConstByName(std::string("towerPitch"),&FSDD_towerPitch);
-
-  // FSDD_crackHalfWidth is the average of X and Y layers crackHalfWidths
-  FSDD_crackHalfWidth = ((FSDD_towerPitch-FSDD_CsILength)/2 + (FSDD_towerPitch-12*FSDD_cellHorPitch)/2)/2;
+  // FSGM_crackHalfWidth is the average of X and Y layers crackHalfWidths
+  FSGM_crackHalfWidth = ((FSGM_towerPitch-FSGM_CsILength)/2 + (FSGM_towerPitch-12*FSGM_cellHorPitch)/2)/2;
 
   // Retrieving the top position of the calorimeter as in TkrUtil/*/src/TkrGeometrySvc.cxx
-  FSDD_calZTop = -47.395;
+  FSGM_calZTop = -47.395;
 
   int m_Tower = 0;
   idents::VolumeIdentifier topLayerId;
@@ -95,37 +72,326 @@ void FullShowerDevelopmentDescription::Initialize()
   }
   if(sc.isSuccess()) 
     {
-      FSDD_calZTop = (transfTop.getTranslation()).z()+ FSDD_cellVertPitch/2;
+      FSGM_calZTop = (transfTop.getTranslation()).z()+ FSGM_cellVertPitch/2;
     }
 
-  FSDD_calZBot = FSDD_calZTop-8*FSDD_cellVertPitch;
+  FSGM_calZBot = FSGM_calZTop-8*FSGM_cellVertPitch;
 
+  // prepare safe volume in order to define the segment of the trajectory used by the propagator
   double safedistance = 50;
-  FSDD_CalSafeBoundaries[0][0] = -2*FSDD_towerPitch-safedistance;
-  FSDD_CalSafeBoundaries[0][1] = +2*FSDD_towerPitch+safedistance;
-  FSDD_CalSafeBoundaries[1][0] = -2*FSDD_towerPitch-safedistance;
-  FSDD_CalSafeBoundaries[1][1] = +2*FSDD_towerPitch+safedistance;
-  FSDD_CalSafeBoundaries[2][0] = FSDD_calZBot-safedistance;
-  FSDD_CalSafeBoundaries[2][1] = FSDD_calZTop+safedistance;
+  FSGM_CalSafeBoundaries[0][0] = -2*FSGM_towerPitch-safedistance;
+  FSGM_CalSafeBoundaries[0][1] = +2*FSGM_towerPitch+safedistance;
+  FSGM_CalSafeBoundaries[1][0] = -2*FSGM_towerPitch-safedistance;
+  FSGM_CalSafeBoundaries[1][1] = +2*FSGM_towerPitch+safedistance;
+  FSGM_CalSafeBoundaries[2][0] = FSGM_calZBot-safedistance;
+  FSGM_CalSafeBoundaries[2][1] = FSGM_calZTop+safedistance;
+
+  // Fill the look-up table for even layers
+  geom_xy_step = (4*FSGM_towerPitch)/(double)(FSGM_XY_MAX);
+  
+  double xyz[3];
+  int whereincal[2];
+
+  int i,j;
+  // reference = middle of first layer
+  xyz[2] = FSGM_calZTop-FSGM_cellVertPitch/2;
+  
+  // reference = middle of a log
+  xyz[1] = FSGM_towerPitch/2+FSGM_cellHorPitch/2;
+  for(i=0;i<FSGM_XY_MAX;++i)
+    {
+      xyz[0] = -2*FSGM_towerPitch + geom_xy_step*(0.5+(double)i);
+      WhereInCalForGeom(xyz,whereincal);
+      switch(whereincal[0])
+	{
+	case 0:
+	  geom_x_mat[i][0] = false;
+	  geom_x_mat[i][1] = false;
+	  break;
+	case 1:
+	  geom_x_mat[i][0] = true;
+	  geom_x_mat[i][1] = false;
+	  break;
+	case 2:
+	  geom_x_mat[i][0] = false;
+	  geom_x_mat[i][1] = true;
+	  break;
+	default:
+	  geom_x_mat[i][0] = false;
+	  geom_x_mat[i][1] = false;
+	  break;
+	}
+    }
+  
+  // reference = middle of a log
+  xyz[0] = FSGM_towerPitch/2+ FSGM_cellHorPitch/2;
+  for(j=0;j<FSGM_XY_MAX;++j)
+    {
+      xyz[1] = -2*FSGM_towerPitch+geom_xy_step*(0.5+(double)j);
+      WhereInCalForGeom(xyz,whereincal);
+      switch(whereincal[0])
+	{
+	case 0:
+	  geom_y_mat[j][0] = false;
+	  geom_y_mat[j][1] = false;
+	  break;
+	case 1:
+	  geom_y_mat[j][0] = true;
+	  geom_y_mat[j][1] = false;
+	  break;
+	case 2:
+	  geom_y_mat[j][0] = false;
+	  geom_y_mat[j][1] = true;
+	  break;
+	default:
+	  geom_y_mat[j][0] = false;
+	  geom_y_mat[j][1] = false;
+	  break;
+	}
+    }
+
+  // Fill the test points used by the propagator
+  FillXYPoints();
+
+  // Parameters used for the radial shower development description
+  FSGM_CORE0 = 0.0211192;
+  FSGM_CORE1 = 0.114962;
+  FSGM_TAIL0 = 0.450839;
+  FSGM_TAIL1 = 0.840738;
+  FSGM_TAIL2 = -1.87526;
+  FSGM_TAIL3 = 0.643606;
+  FSGM_PCT0 = 2.51719;
+  FSGM_PCT1 = 0.554606;
+  FSGM_PCT2 = 0.851856;
+
+  // Limits for the relative position in the shower to shower maximum
+  FSGM_tmin = 0.25;
+  FSGM_tmax = 2.5;
+
+  // Fill radial profile look-up table
+  FillRadialProfile();
+
+}
+
+void FullShowerGeometryManager::FillXYPoints()
+{
+  int n = (int)sqrt(1/3.2*(double)FSGM_NPOINTS_MAX);
+  int i,j;
+  double step = 1/(double)(n);
+  double x,y;
+  FSGM_NCircle = 0;
+  for(i=0;i<=2*n;++i)
+    {
+      x = -1+step*(double)i;
+      for(j=0;j<=2*n;++j)
+	{
+	  y = -1+step*(double)j;
+	  if(sqrt(x*x+y*y)>1) continue;
+	  FSGM_XCircle[FSGM_NCircle] = x;
+	  FSGM_YCircle[FSGM_NCircle] = y;
+	  FSGM_RCircle[FSGM_NCircle] = sqrt(x*x+y*y);
+	  ++FSGM_NCircle;
+	}
+    }
+}
+
+void FullShowerGeometryManager::WhereInCalForGeom(double *xyz, int *whereincal)
+{
+  whereincal[0] = 0;
+  whereincal[1] = 0;
+  if(xyz[2]>=FSGM_calZTop) return;
+  if(xyz[2]<FSGM_calZBot) return;
+  if(fabs(xyz[0])>2*FSGM_towerPitch) return;
+  if(fabs(xyz[1])>2*FSGM_towerPitch) return;
+  double xmod = xyz[0]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
+  double ymod = xyz[1]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[1]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  if(FSGM_towerPitch-ymod<ymod) ymod = FSGM_towerPitch-ymod;
+  if(xmod<FSGM_crackHalfWidth || ymod<FSGM_crackHalfWidth)
+    {
+      whereincal[0] = 2;
+      return;
+    }
+  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
+  double xy = ymod;
+  if(ilayer%2==1) xy = xmod;
+  xy -= (FSGM_towerPitch/2-6*FSGM_cellHorPitch);
+  double xymod = xy-FSGM_cellHorPitch*floor(xy/FSGM_cellHorPitch);
+  if(FSGM_cellHorPitch-xymod<xymod) xymod = FSGM_cellHorPitch-xymod;
+  if(xymod<(FSGM_cellHorPitch-FSGM_CsIWidth)/2) return;
+/*   double zlayer = (FSGM_calZTop-xyz[2])-FSGM_cellVertPitch*(double)ilayer; */
+/*   if(FSGM_cellVertPitch-zlayer>zlayer) zlayer = FSGM_cellVertPitch-zlayer; */
+/*   if(zlayer<(FSGM_cellVertPitch-FSGM_CsIHeight)/2) return; */
+  whereincal[0] = 1;
+  whereincal[1] = ilayer;
+}
+
+void FullShowerGeometryManager::WhereInCal(double *xyz, int *whereincal)
+{
+  whereincal[0] = 0;
+  whereincal[1] = 0;
+
+  // test if outside z_dimension
+  if(xyz[2]>=FSGM_calZTop) return;
+  if(xyz[2]<FSGM_calZBot) return;
+
+  // test if outside xy_dimensions
+  if(fabs(xyz[0])>=2*FSGM_towerPitch) return;
+  if(fabs(xyz[1])>=2*FSGM_towerPitch) return;
+
+  // get layer number
+  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
+  whereincal[1] = ilayer;
+
+  // retrieve position in look-up table
+  int i = (int)((xyz[0]+2*FSGM_towerPitch)/geom_xy_step);
+  int j = (int)((xyz[1]+2*FSGM_towerPitch)/geom_xy_step);
+  
+  if(ilayer%2==0)  // look-up table set for even layers, invert x and y otherwise
+    {
+      if(geom_x_mat[i][1] || geom_y_mat[j][1])
+	whereincal[0] = 2;
+      else
+	whereincal[0] = (int)(geom_x_mat[i][0] && geom_y_mat[j][0]);
+    }
+  else
+    {
+      if(geom_y_mat[i][1] || geom_x_mat[j][1])
+	whereincal[0] = 2;
+      else
+	whereincal[0] = (int)(geom_y_mat[i][0] && geom_x_mat[j][0]);
+    }
+}
+
+double FullShowerGeometryManager::RCore(double t)
+{
+  double tt = t;
+  if(tt<FSGM_tmin) tt = FSGM_tmin;
+  if(tt>FSGM_tmax) tt = FSGM_tmax;
+  return (FSGM_CORE0+FSGM_CORE1*tt);
+}
+
+double FullShowerGeometryManager::RTail(double t)
+{
+  double tt = t;
+  if(tt<FSGM_tmin) tt = FSGM_tmin;
+  if(tt>FSGM_tmax) tt = FSGM_tmax;
+  return (FSGM_TAIL0*(exp(FSGM_TAIL2*(tt-FSGM_TAIL1))+exp(FSGM_TAIL3*(tt-FSGM_TAIL1))));
+}
+
+double FullShowerGeometryManager::PCore(double t)
+{
+  double tt = t;
+  if(tt<FSGM_tmin) tt = FSGM_tmin;
+  if(tt>FSGM_tmax) tt = FSGM_tmax;
+  double arg = FSGM_PCT0*exp((FSGM_PCT1-tt)/FSGM_PCT2-exp((FSGM_PCT1-tt)/FSGM_PCT2));
+  if(arg<0) arg = 0;
+  if(arg>1) arg = 1;
+  return arg;
+}
+
+double FullShowerGeometryManager::RadialProfile(double t, double r)
+{
+  double rcore2 = RCore(t);
+  rcore2 = rcore2*rcore2;
+  double rtail2 = RTail(t);
+  rtail2 = rtail2*rtail2;
+  double pcore = PCore(t);
+  return pcore*(2*rcore2/(r*r+rcore2)/(r*r+rcore2)) + (1-pcore)*(2*rtail2/(r*r+rtail2)/(r*r+rtail2));
+}
+
+double FullShowerGeometryManager::GetEffectiveRadius(double t, double radialcontainedfraction)
+{
+  double rcore2 = RCore(t);
+  rcore2 = rcore2*rcore2;
+  double rtail2 = RTail(t);
+  rtail2 = rtail2*rtail2;
+  double pcore = PCore(t);
+  
+  double a = (1-radialcontainedfraction)/rcore2/rtail2;
+  double b = (1-radialcontainedfraction)*(1/rcore2+1/rtail2) - pcore/rtail2 - (1-pcore)/rcore2;
+  double c = -radialcontainedfraction;
+  double delta = b*b-4*a*c;
+  double r1 = (-b+sqrt(delta))/2/a;
+  r1 = sqrt(r1);
+
+  if(r1>RadProf_r_max) r1 = RadProf_r_max;
+
+  return r1;
+}
+
+void FullShowerGeometryManager::FillRadialProfile()
+{
+  // Defining limits and steps
+  RadProf_r_max = 3.;
+  RadProf_t_max = 2.5;  
+  RadProf_r_step = RadProf_r_max/(double)FSGM_RPROF_R_MAX;
+  RadProf_t_step = RadProf_t_max/(double)FSGM_RPROF_T_MAX;
+
+  int i,j;
+  double r,t;
+  for(i=0;i<FSGM_RPROF_T_MAX;++i)
+    {
+      t = RadProf_t_step*(0.5+(double)i);
+      for(j=0;j<FSGM_RPROF_R_MAX;++j)
+	{
+	  r = RadProf_r_step*(0.5+(double)j);
+	  RadProf[i][j] = RadialProfile(t,r);
+	}
+    }
+}
+
+double FullShowerGeometryManager::GetRadialProfile(double t, double r)
+{
+  int i_t = (int)(t/RadProf_t_step);
+  if(i_t>=FSGM_RPROF_T_MAX)
+    i_t = FSGM_RPROF_T_MAX-1;
+
+  int i_r = (int)(r/RadProf_r_step);
+  if(i_r>=FSGM_RPROF_R_MAX)
+    i_r = FSGM_RPROF_R_MAX-1;
+  
+  return RadProf[i_t][i_r];
+}
+
+
+/**   
+* @class FullShowerDevelopmentDescription
+* @author Philippe Bruel
+*
+* Tool that describes the shower developement in the calorimeter given
+* the length in X0 seen in the tracker and the position of the shower maximum
+*
+* $Header$
+*/
+
+FullShowerDevelopmentDescription::FullShowerDevelopmentDescription(FullShowerGeometryManager *fsgm_input, int type_input, double zstep_input, double radialcontainedfraction_input)
+  :m_fsgm(fsgm_input)
+{
+  Initialize();
+  Reset();
+  Type = type_input;
+  ZStep = zstep_input;
+  RadialContainedFraction = radialcontainedfraction_input;
+  wideningfactor = 1.;
+}
+
+FullShowerDevelopmentDescription::~FullShowerDevelopmentDescription()
+{
+
+}
+
+void FullShowerDevelopmentDescription::Initialize()
+{
 
   // Radiation lengths
   FSDD_MOLRAD = 35.;
   FSDD_gCSI = 4.51;
   FSDD_gCRK = 0.607287449392712508; // 10.*2.7/(2.*22.23) // 10mm
-  FSDD_XCSI = 18.5*(FSDD_cellVertPitch/FSDD_CsIHeight);
+  FSDD_XCSI = 18.5*(m_fsgm->FSGM_cellVertPitch/m_fsgm->FSGM_CsIHeight);
   FSDD_XCRK = 395.364666666666722; // 24.01/FSDD_gCRK*10. // *10 to get it in mm
 
-  // Parameters used for the radial shower development description
-  FSDD_CORE0 = 0.0211192;
-  FSDD_CORE1 = 0.114962;
-  FSDD_TAIL0 = 0.450839;
-  FSDD_TAIL1 = 0.840738;
-  FSDD_TAIL2 = -1.87526;
-  FSDD_TAIL3 = 0.643606;
-  FSDD_PCT0 = 2.51719;
-  FSDD_PCT1 = 0.554606;
-  FSDD_PCT2 = 0.851856;
-
+  Reset();
 }
 
 void FullShowerDevelopmentDescription::Reset()
@@ -153,118 +419,6 @@ void FullShowerDevelopmentDescription::Reset()
     }
 }
 
-void FullShowerDevelopmentDescription::PrepXYPoints()
-{
-  if(FSDD_XCircle==NULL) FSDD_XCircle = new double[FSDD_NPOINTS_MAX];
-  if(FSDD_YCircle==NULL) FSDD_YCircle = new double[FSDD_NPOINTS_MAX];
-  if(FSDD_RCircle==NULL) FSDD_RCircle = new double[FSDD_NPOINTS_MAX];
-
-  int n = (int)sqrt(1/3.2*(double)FSDD_NPOINTS_MAX);
-  int i,j;
-  double step = 1/(double)(n);
-  double x,y;
-  FSDD_NCircle = 0;
-  for(i=0;i<=2*n;++i)
-    {
-      x = -1+step*(double)i;
-      for(j=0;j<=2*n;++j)
-	{
-	  y = -1+step*(double)j;
-	  if(sqrt(x*x+y*y)>1) continue;
-	  FSDD_XCircle[FSDD_NCircle] = x;
-	  FSDD_YCircle[FSDD_NCircle] = y;
-	  FSDD_RCircle[FSDD_NCircle] = sqrt(x*x+y*y);
-	  ++FSDD_NCircle;
-	}
-    }
-}
-
-double FullShowerDevelopmentDescription::RCore(double x)
-{
-  double xx = x;
-  if(xx<.25) xx = .25;
-  if(xx>2.5) xx = 2.5;
-  return wideningfactor*(FSDD_CORE0+FSDD_CORE1*xx);
-}
-
-double FullShowerDevelopmentDescription::RTail(double x)
-{
-  double xx = x;
-  if(xx<.25) xx = .25;
-  if(xx>2.5) xx = 2.5;
-  return wideningfactor*(FSDD_TAIL0*(exp(FSDD_TAIL2*(xx-FSDD_TAIL1))+exp(FSDD_TAIL3*(xx-FSDD_TAIL1))));
-}
-
-double FullShowerDevelopmentDescription::PCore(double x)
-{
-  double xx = x;
-  if(xx<.25) xx = .25;
-  if(xx>2.5) xx = 2.5;
-  double arg = FSDD_PCT0*exp((FSDD_PCT1-xx)/FSDD_PCT2-exp((FSDD_PCT1-xx)/FSDD_PCT2));
-  if(arg<0) arg = 0;
-  if(arg>1) arg = 1;
-  return arg;
-}
-
-double FullShowerDevelopmentDescription::RadialProfile(double r, double x)
-{
-  double rcore2 = RCore(x);
-  rcore2 = rcore2*rcore2;
-  double rtail2 = RTail(x);
-  rtail2 = rtail2*rtail2;
-  double pcore = PCore(x);
-  return pcore*(2*rcore2/(r*r+rcore2)/(r*r+rcore2))
-    + (1-pcore)*(2*rtail2/(r*r+rtail2)/(r*r+rtail2));
-}
-
-double FullShowerDevelopmentDescription::EffectiveRadius(double z, double radialcontainedfraction)
-{
-  double rcore2 = RCore(z);
-  rcore2 = rcore2*rcore2;
-  double rtail2 = RTail(z);
-  rtail2 = rtail2*rtail2;
-  double pcore = PCore(z);
-  
-  double a = (1-radialcontainedfraction)/rcore2/rtail2;
-  double b = (1-radialcontainedfraction)*(1/rcore2+1/rtail2) - pcore/rtail2 - (1-pcore)/rcore2;
-  double c = -radialcontainedfraction;
-  double delta = b*b-4*a*c;
-  double r1 = (-b+sqrt(delta))/2/a;
-  return sqrt(r1);
-}
-
-void FullShowerDevelopmentDescription::WhereInCal(double *xyz, int *whereincal)
-{
-  whereincal[0] = 0;
-  whereincal[1] = -1;
-  if(xyz[2]>FSDD_calZTop) return;
-  if(xyz[2]<FSDD_calZBot) return;
-  if(fabs(xyz[0])>2*FSDD_towerPitch) return;
-  if(fabs(xyz[1])>2*FSDD_towerPitch) return;
-  double xmod = xyz[0]+2*FSDD_towerPitch-FSDD_towerPitch*floor((xyz[0]+2*FSDD_towerPitch)/FSDD_towerPitch);
-  if(FSDD_towerPitch-xmod<xmod) xmod = FSDD_towerPitch-xmod;
-  double ymod = xyz[1]+2*FSDD_towerPitch-FSDD_towerPitch*floor((xyz[1]+2*FSDD_towerPitch)/FSDD_towerPitch);
-  if(FSDD_towerPitch-ymod<ymod) ymod = FSDD_towerPitch-ymod;
-  if(xmod<FSDD_crackHalfWidth || ymod<FSDD_crackHalfWidth)
-    {
-      whereincal[0] = 2;
-      return;
-    }
-  int ilayer = (int)floor( (FSDD_calZTop-xyz[2])/FSDD_cellVertPitch );
-  double xy = ymod;
-  if(ilayer%2==1) xy = xmod;
-  xy -= (FSDD_towerPitch/2-6*FSDD_cellHorPitch);
-  double xymod = xy-FSDD_cellHorPitch*floor(xy/FSDD_cellHorPitch);
-  if(FSDD_cellHorPitch-xymod<xymod) xymod = FSDD_cellHorPitch-xymod;
-  if(xymod<(FSDD_cellHorPitch-FSDD_CsIWidth)/2) return;
-/*   double zlayer = (FSDD_calZTop-xyz[2])-FSDD_cellVertPitch*(double)ilayer; */
-/*   if(FSDD_cellVertPitch-zlayer>zlayer) zlayer = FSDD_cellVertPitch-zlayer; */
-/*   if(zlayer<(FSDD_cellVertPitch-FSDD_CsIHeight)/2) return; */
-  whereincal[0] = 1;
-  whereincal[1] = ilayer;
-}
-
-
 void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend)
 {
   int i,j;
@@ -279,17 +433,17 @@ void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *
   for(i=0;i<3;++i)
     {
       if(vv[i]==0) continue;
-      lambda = (FSDD_CalSafeBoundaries[i][0]-pp[i])/vv[i];
+      lambda = (m_fsgm->FSGM_CalSafeBoundaries[i][0]-pp[i])/vv[i];
       for(j=0;j<3;++j)
 	{
 	  if(j!=i) pp0[i][j] = pp[j]+lambda*vv[j];
-	  else pp0[i][j] = FSDD_CalSafeBoundaries[i][0];
+	  else pp0[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][0];
 	}
-      lambda = (FSDD_CalSafeBoundaries[i][1]-pp[i])/vv[i];
+      lambda = (m_fsgm->FSGM_CalSafeBoundaries[i][1]-pp[i])/vv[i];
       for(j=0;j<3;++j)
 	{
 	  if(j!=i) pp1[i][j] = pp[j]+lambda*vv[j];
-	  else pp1[i][j] = FSDD_CalSafeBoundaries[i][1];
+	  else pp1[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][1];
 	}
       segmentlength[i] = 0;
       for(j=0;j<3;++j) segmentlength[i] += (pp0[i][j]-pp1[i][j])*(pp0[i][j]-pp1[i][j]);
@@ -325,11 +479,9 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 {
   if(Type!=0)
     {
-      //      printf("FullShowerDevelopmentDescription WRONG TYPE !!!!!\n");
+      //  FullShowerDevelopmentDescription WRONG TYPE
       return false;
     }
-
-  wideningfactor = 1.;
 
   int i,j;
   int whereincal[2];
@@ -342,7 +494,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
   x0crackmaxfrac = 0;
   if(x0maxshower<2)
     {
-      //      printf("FullShowerDevelopmentDescription x0maxshower is too small : %f !!! ... forcing it to be = 2\n",x0maxshower);
+      // FullShowerDevelopmentDescription x0maxshower is too small
       x0maxshower = 2;
     }
 
@@ -387,7 +539,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
   int nhist = (int)floor(lambda/ZStep);
   if(nhist>=FSDD_NSTEPS_MAX)
     {
-      //      printf("FullShowerDevelopmentDescription::Compute : nhist >= FSDD_NSTEPS_MAX : %d !!!!!!!!!!!!!!!!!!!!!!\n",nhist);
+      // FullShowerDevelopmentDescription::Compute : nhist >= FSDD_NSTEPS_MAX
       return false;
     }
   NStep = nhist;
@@ -422,18 +574,18 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
       for(i=0;i<8;++i) layerfraction[i][j] = 0;
       etotdep = 0;
       relx0position = x0position/x0maxshower;
-      releffradius = EffectiveRadius(relx0position,RadialContainedFraction);
+      releffradius = wideningfactor*m_fsgm->GetEffectiveRadius(relx0position,RadialContainedFraction);
       RM[j] = releffradius;
       effradius = 1.5*FSDD_MOLRAD*releffradius;
-      for(i=0;i<FSDD_NCircle;++i)
+      for(i=0;i<m_fsgm->FSGM_NCircle;++i)
 	{
-	  ppcc[0] = ppc[0]+effradius*FSDD_XCircle[i]*vv0[0]+effradius*FSDD_YCircle[i]*vv1[0];
-	  ppcc[1] = ppc[1]+effradius*FSDD_XCircle[i]*vv0[1]+effradius*FSDD_YCircle[i]*vv1[1];
-	  ppcc[2] = ppc[2]+effradius*FSDD_XCircle[i]*vv0[2]+effradius*FSDD_YCircle[i]*vv1[2];
-	  WhereInCal(ppcc,whereincal);
-	  radius = FSDD_RCircle[i]*effradius;
+	  ppcc[0] = ppc[0]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[0]+m_fsgm->FSGM_YCircle[i]*vv1[0]);
+	  ppcc[1] = ppc[1]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[1]+m_fsgm->FSGM_YCircle[i]*vv1[1]);
+	  ppcc[2] = ppc[2]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[2]+m_fsgm->FSGM_YCircle[i]*vv1[2]);
+	  m_fsgm->WhereInCal(ppcc,whereincal);
+	  radius = m_fsgm->FSGM_RCircle[i]*effradius;
 	  relradius = radius/FSDD_MOLRAD;
-	  radialprofile = RadialProfile(relradius,relx0position);
+	  radialprofile = m_fsgm->GetRadialProfile(relx0position,relradius/wideningfactor);
 	  etotdep += radialprofile;
 	  materialfraction[whereincal[0]][j] += radialprofile;
 	  if(whereincal[0]==1)
@@ -531,13 +683,13 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
       dX0[i] = x0step;
       for(j=0;j<3;++j) materialfraction[j][i] = 0;
       for(j=0;j<8;++j) layerfraction[j][i] = 0;  
-      RM[i] = EffectiveRadius(X0[i]/x0maxshower,RadialContainedFraction);
+      RM[i] = m_fsgm->GetEffectiveRadius(X0[i]/x0maxshower,RadialContainedFraction);
     }
 
   NStep = (int)floor(shmm->X0[shmm->NStep]/x0step)+1;
   if(NStep>=FSDD_NSTEPS_MAX)
     {
-      //      printf("FullShowerDevelopmentDescription::Convert !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! : NStep >= FSDD_NSTEPS_MAX\n");
+      //  FullShowerDevelopmentDescription::Convert : NStep >= FSDD_NSTEPS_MAX
       return false;
     }
 
@@ -612,7 +764,7 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
       if(check[ix0]==0) continue;
       if(fabs(check[ix0]-x0step)>0.0001)
 	{
-	  //	  printf("FullShowerDevelopmentDescription::Convert PROBLEM DURING CONVERSION : check[%d] = %f !!!!!!!!!!!!!!!!\n",ix0,check[ix0]);
+	  // FullShowerDevelopmentDescription::Convert PROBLEM DURING CONVERSION
 	  return false;
 	}
       for(j=0;j<3;++j) materialfraction[j][ix0] /= x0step;
@@ -641,9 +793,18 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
   return true;
 }
 
+void FullShowerDevelopmentDescription::SetWideningFactor(double widfact)
+{
+  wideningfactor = widfact;
+}
+
 FullShowerDevelopmentDescriptionManager::FullShowerDevelopmentDescriptionManager(IGlastDetSvc *m_detSvc_input, int nxmax_input, double xmax0, double dxmax, double zstep_input, double radialcontainedfraction_input, double x0step)
   :m_detSvc(m_detSvc_input)
 {
+
+  // Initialize geometry
+  m_fsgm = new FullShowerGeometryManager(m_detSvc);
+
   NDevelopment = 0;
   mintotx0cal = 0;
   maxtotx0cal = 0;
@@ -666,7 +827,7 @@ FullShowerDevelopmentDescriptionManager::FullShowerDevelopmentDescriptionManager
   int nxmax = nxmax_input;
   if(nxmax>FSDD_NMAX-1)
     {
-      //      printf("FullShowerDevelopmentDescriptionManager nxmax>FSDD_NMAX-1 !!!!!!!!!!!!!!!!\n");
+      // FullShowerDevelopmentDescriptionManager nxmax>FSDD_NMAX-1
       nxmax = FSDD_NMAX-1;
     }
 
@@ -679,10 +840,10 @@ FullShowerDevelopmentDescriptionManager::FullShowerDevelopmentDescriptionManager
   for(i=0;i<=NDevelopment;++i)
     {
       XMax[i] = xmax0+DXMax*(double)i;
-      FSDDMM[i] = new FullShowerDevelopmentDescription(m_detSvc,0,ZStep,RadialContainedFraction);
-      FSDDX0[i] = new FullShowerDevelopmentDescription(m_detSvc,1,X0Step,0);
+      FSDDMM[i] = new FullShowerDevelopmentDescription(m_fsgm,0,ZStep,RadialContainedFraction);
+      FSDDX0[i] = new FullShowerDevelopmentDescription(m_fsgm,1,X0Step,RadialContainedFraction);
     }
-  CurrentFSDD = new FullShowerDevelopmentDescription(m_detSvc,1,X0Step,0);
+  CurrentFSDD = new FullShowerDevelopmentDescription(m_fsgm,1,X0Step,RadialContainedFraction);
 }
 
 FullShowerDevelopmentDescriptionManager::~FullShowerDevelopmentDescriptionManager()
@@ -790,4 +951,16 @@ void FullShowerDevelopmentDescriptionManager::FillCurrentFSDD(double showerxmax)
 /*       for(j=0;j<8;++j) CurrentFSDD->layerfraction[j][i] = 0; */
 /*     } */
   return;
+}
+
+void FullShowerDevelopmentDescriptionManager::SetWideningFactor(double widfact)
+{  
+
+  int i;
+  for(i=0;i<=NDevelopment;++i)
+    {
+      FSDDMM[i]->SetWideningFactor(widfact);
+      FSDDX0[i]->SetWideningFactor(widfact);
+    }
+  CurrentFSDD->SetWideningFactor(widfact);
 }

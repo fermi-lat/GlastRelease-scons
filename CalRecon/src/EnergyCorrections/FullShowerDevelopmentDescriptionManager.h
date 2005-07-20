@@ -10,8 +10,12 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
+#define FSGM_XY_MAX 149800
+#define FSGM_NPOINTS_MAX 100
+#define FSGM_RPROF_R_MAX 1800
+#define FSGM_RPROF_T_MAX 250
+
 #define FSDD_NSTEPS_MAX 1000
-#define FSDD_NPOINTS_MAX 100
 #define FSDD_NMAX 20
 
 /**   
@@ -24,10 +28,71 @@
 * $Header$
 */
 
-class FullShowerDevelopmentDescription{
+class FullShowerGeometryManager{
  private:
   /// Detector Service
   IGlastDetSvc *m_detSvc;
+ private:
+  double geom_xy_step;
+  bool geom_x_mat[FSGM_XY_MAX][2]; // [0] = false : void; [0] = true : CsI; [1] = true : crack 
+  bool geom_y_mat[FSGM_XY_MAX][2];
+ public:
+  // Geometry variables
+  double FSGM_towerPitch;
+  double FSGM_calZTop;
+  double FSGM_calZBot;
+  double FSGM_crackHalfWidth;
+  double FSGM_cellVertPitch;
+  double FSGM_cellHorPitch;
+  double FSGM_CsIHeight;
+  double FSGM_CsIWidth;
+  double FSGM_CsILength;
+ public:
+  double FSGM_CalSafeBoundaries[3][2];
+ public:
+  int FSGM_NCircle;
+  double FSGM_XCircle[FSGM_NPOINTS_MAX];
+  double FSGM_YCircle[FSGM_NPOINTS_MAX];
+  double FSGM_RCircle[FSGM_NPOINTS_MAX];
+ private:
+  // Parameters used for the radial shower development description
+  double FSGM_CORE0;
+  double FSGM_CORE1;
+  double FSGM_TAIL0;
+  double FSGM_TAIL1;
+  double FSGM_TAIL2;
+  double FSGM_TAIL3;
+  double FSGM_PCT0;
+  double FSGM_PCT1;
+  double FSGM_PCT2;
+  double FSGM_tmin;
+  double FSGM_tmax;
+ private:
+  double RadProf_t_max;
+  double RadProf_r_max;
+  double RadProf_t_step;
+  double RadProf_r_step;
+  double RadProf[FSGM_RPROF_T_MAX][FSGM_RPROF_R_MAX];
+
+ public:
+  FullShowerGeometryManager(IGlastDetSvc *m_detSvc_input);
+  virtual ~FullShowerGeometryManager();
+ private:
+  void Initialize();
+  void FillXYPoints();
+  double RCore(double x);
+  double RTail(double x);
+  double PCore(double x);
+  void FillRadialProfile();
+  void WhereInCalForGeom(double *xyz, int *whereincal);
+  double RadialProfile(double t, double r);
+ public:
+  void WhereInCal(double *xyz, int *whereincal);
+  double GetEffectiveRadius(double z, double radialcontainedfraction);
+  double GetRadialProfile(double t, double r);
+};
+
+class FullShowerDevelopmentDescription{
  public:
   int Type;
   int NStep;
@@ -49,71 +114,45 @@ class FullShowerDevelopmentDescription{
   double posx0lay[8];
 
  private:
-  // Geometry
-  double FSDD_towerPitch;
-  double FSDD_calZTop;
-  double FSDD_calZBot;
-  double FSDD_crackHalfWidth;
-  double FSDD_cellVertPitch;
-  double FSDD_cellHorPitch;
-  double FSDD_CsIHeight;
-  double FSDD_CsIWidth;
-  double FSDD_CsILength;
-  // Radiation lengths
+  // geometry
+  FullShowerGeometryManager *m_fsgm;
+
+ private:
+  // Densities, radiation lengths and Moliere radius
   double FSDD_MOLRAD;
   double FSDD_gCSI;
   double FSDD_gCRK;
   double FSDD_XCSI;
   double FSDD_XCRK;
-  // Parameters used for the radial shower development description
-  double FSDD_CORE0;
-  double FSDD_CORE1;
-  double FSDD_TAIL0;
-  double FSDD_TAIL1;
-  double FSDD_TAIL2;
-  double FSDD_TAIL3;
-  double FSDD_PCT0;
-  double FSDD_PCT1;
-  double FSDD_PCT2;
 
  private:
   double wideningfactor;
 
  private:
-  double FSDD_CalSafeBoundaries[3][2];
 
- private:
-  int FSDD_NCircle;
-  double *FSDD_XCircle;
-  double *FSDD_YCircle;
-  double *FSDD_RCircle;
 
  public:
-  FullShowerDevelopmentDescription(IGlastDetSvc *m_detSvc_input, int type_input, double zstep_input, double radialcontainedfraction_input);
+  FullShowerDevelopmentDescription(FullShowerGeometryManager *fsgm_input, int type_input, double zstep_input, double radialcontainedfraction_input);
   virtual ~FullShowerDevelopmentDescription();
 
  private:
   void Initialize();
   void Reset();
-  void PrepXYPoints();
-  double RCore(double x);
-  double RTail(double x);
-  double PCore(double x);
-  double RadialProfile(double r, double x);
-  double EffectiveRadius(double z, double radialcontainedfraction);
-  void WhereInCal(double *xyz, int *whereincal);
   void RemoveEmptySteps();
   void GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend);
 
  public:
   bool Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input);
   bool ConvertToFixedX0(double x0step, FullShowerDevelopmentDescription *shmm);
+  void SetWideningFactor(double widfact);
 };
 
 class FullShowerDevelopmentDescriptionManager{
  public:
   /// Detector Service
   IGlastDetSvc *m_detSvc;
+  // geometry
+  FullShowerGeometryManager *m_fsgm;
  public:
   int NDevelopment;
   double DXMax;
@@ -133,4 +172,5 @@ class FullShowerDevelopmentDescriptionManager{
   virtual ~FullShowerDevelopmentDescriptionManager();
   bool Compute(double *pp, double *vv, double startx0_input);
   void FillCurrentFSDD(double showerxmax);
+  void SetWideningFactor(double widfact);
 };
