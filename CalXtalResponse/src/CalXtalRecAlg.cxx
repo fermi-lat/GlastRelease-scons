@@ -30,8 +30,23 @@ const char *CalXtalRecAlg::m_tupleEntryDefStr = "RunID/i:EventID/i:CalXtalAdcPed
 
 CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   Algorithm(name, pSvcLocator),
+  m_calDigiCol(0),
+  m_calXtalRecCol(0),
+  m_evtHdr(0),
+  m_xNum(-1),
+  m_yNum(-1),
+  m_eTowerCAL(-1),
+  m_eLATTowers(-1),
+  m_eXtal(-1),
+  m_nCsISeg(-1),
+  m_CsILength(-1),
+  m_detSvc(0),
+  m_xtalEneTool(0),
+  m_xtalPosTool(0),
   m_tupleFile(0),
-  m_tupleBranch(0)
+  m_tupleBranch(0),
+  m_tupleTree(0)
+  
 {
   declareProperty("xtalEneToolName", m_eneToolName="XtalEneTool");
   declareProperty("xtalPosToolName", m_posToolName="XtalPosTool");

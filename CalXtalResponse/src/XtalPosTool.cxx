@@ -43,10 +43,13 @@ public:
                        );
 private:
 
-  StringProperty m_calCalibSvcName;                   ///< name of CalCalibSvc to use for calib constants.
-  ICalCalibSvc *m_calCalibSvc;                        ///< pointer to CalCalibSvc object.
+  /// name of CalCalibSvc to use for calib constants.
+  StringProperty m_calCalibSvcName;                   
+  /// pointer to CalCalibSvc object.
+  ICalCalibSvc *m_calCalibSvc;                        
 
-  double m_CsILength;                    ///< Xtal length
+  /// Xtal length
+  double m_CsILength;                    
 };
 
 static ToolFactory<XtalPosTool> s_factory;
@@ -55,7 +58,10 @@ const IToolFactory& XtalPosToolFactory = s_factory;
 XtalPosTool::XtalPosTool( const string& type,
                           const string& name,
                           const IInterface* parent)
-  : AlgTool(type,name,parent) {
+  : AlgTool(type,name,parent),
+    m_calCalibSvc(0),
+    m_CsILength(-1)
+{
   declareInterface<IXtalPosTool>(this);
 
   declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");

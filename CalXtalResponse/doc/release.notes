@@ -1,3 +1,4 @@
+v0r6p5  7/20/05 fewtrell 2 bugs found by tracy.  1=poorly initialized CalXtalRecAlg::m_tupleBranch && other was '=' assignment instead of '==' comparison error in XtalDigiTool which caused diode deposit position estimates to be off.
 v0r6p4  7/19/05 Usher    fixed bug which put energy deposited directly into a diode always into + face
 v0r6p3  6/29/05 fewtrell fixed minor patch to caltuple which would have slight effect on small diode faceSignals
 v0r6p2  6/28/05 fewtrell fixed some caltuple bugs.  was moving too fast on fri.  let's pretend last 2 iterations didn't happen :(

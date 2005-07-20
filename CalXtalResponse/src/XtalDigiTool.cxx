@@ -97,7 +97,20 @@ const IToolFactory& XtalDigiToolFactory = s_factory;
 XtalDigiTool::XtalDigiTool( const string& type,
                           const string& name,
                           const IInterface* parent)
-  : AlgTool(type,name,parent) {
+  : AlgTool(type,name,parent),
+    m_calCalibSvc(0),
+    m_nCsISeg(-1),
+    m_eXtal(-1),
+    m_CsILength(-1),
+    m_eDiodeMSm(-1),
+    m_eDiodePSm(-1),
+    m_eDiodeMLarge(-1),
+    m_eDiodePLarge(-1),
+    m_ePerMeVInDiode(-1),
+    m_maxAdc(-1)
+{
+  memset(m_ePerMeV,0,sizeof(m_ePerMeV));
+
   declareInterface<IXtalDigiTool>(this);
 
   declareProperty("CalCalibSvc",   m_calCalibSvcName = "CalCalibSvc");
@@ -283,10 +296,6 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
       diodeDAC[XtalDiode(NEG_FACE,SM_DIODE)]  += dacSN;
     } else {
     
-      //--DIRECT DIODE DEPOSIT--//
-       if (m_superVerbose) {
-          }
-
       double eDiode = ene*m_ePerMeVInDiode; // convert MeV-in-diode to electrons
 
       DiodeNum diode;

@@ -70,7 +70,9 @@ const IToolFactory& XtalEneToolFactory = s_factory;
 XtalEneTool::XtalEneTool( const string& type,
                           const string& name,
                           const IInterface* parent)
-  : AlgTool(type,name,parent) {
+  : AlgTool(type,name,parent),
+    m_calCalibSvc(0)
+{
   declareInterface<IXtalEneTool>(this);
 
   declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");

@@ -35,11 +35,11 @@ class CalXtalRecAlg : public Algorithm
  public:
   CalXtalRecAlg(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~CalXtalRecAlg() {
-	  // make sure optional tuple is closed out
-	  if (m_tupleFile) {
-		  m_tupleFile->Write();
-		  m_tupleFile->Close();
-	  }
+    // make sure optional tuple is closed out
+    if (m_tupleFile) {
+      m_tupleFile->Write();
+      m_tupleFile->Close();
+    }
   }
     
   /// initialize internal data members.
