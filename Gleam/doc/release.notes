@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r2   THB 21-Jul-05   convert basicOptions to include CalibSvc default JO
 * v6r1   THB 21-Jul-05   Add folder in src, "jobOptions" containing pipeline JO from Anders
 * v6r0p3 THB 15-Jul-05   Turn on CalMipFinder. (Tracy update)
 * v6r0p2 THB 03-Jul-05   Restore merit processing defaults
