@@ -6,8 +6,10 @@
 // just run the "default" job with mods below
 #include "$GLEAMROOT/src/default.txt"
 
-
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel=3;
+AcdDigi.OutputLevel=2;
+
 Output.Members={}; // turn off any root ouptut
 
 // mix in ticks to generate pointing and livetime tree
@@ -16,6 +18,14 @@ FluxAlg.sources={"default","timetick30s"};
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estima/ IM variable
+
+// DC2 calib
+CalibDataSvc.CalibFlavorList = {"vanilla", "DC2"}; 
+CalCalibSvc.DefaultFlavor = "ideal"; 
+TkrCalibAlg.deadStripsCalibFlavor = "DC2"; 
+CalibDataSvc.CalibInstrumentName = "LAT"; 
+CalibMySQLCnvSvc.DbName = "calib"; 
+CalibMySQLCnvSvc.QualityList= {"PROD"}; 
 
 
 //==============================================================
