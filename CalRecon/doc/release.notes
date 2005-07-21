@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r1p4     21-Jul-05 TU  Tagging Phillipe's latest improvements to profile fitting
   v6r1p3     15-Jul-05 TU  Ok, we have to actually tag the code that was modified... 
   v6r1p2     15-Jul-05 TU  Bug fixes to MIP finding, ready to go!!
   v6r1p1     Bastille  TU  New MIP finding code in place
