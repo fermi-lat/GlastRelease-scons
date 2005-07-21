@@ -1,0 +1,333 @@
+//
+// Job Option file for generating MC:
+//
+// $Header$
+
+//
+// Things to be changed by the user can 
+// be found at the end of the file!
+//
+
+
+
+//
+// Primary DLLs, including auditor: 
+//
+ApplicationMgr.DLLs   += {"GaudiAlg",
+                          "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors    = {"ChronoAuditor"};
+
+
+//
+// Set up basic event loop:
+//
+ApplicationMgr.ExtSvc = {"GlastEventSelector/EventSelector" , 
+                         "EventCnvSvc"};
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+
+//
+// A structure for the topalg, 
+// using sequencer steps"
+// 
+ApplicationMgr.TopAlg = {"Sequencer/Top"};
+
+
+//
+// The top sequence loop:
+// 
+Top.Members = {"Sequencer/Generator",
+               "Sequencer/CalibrationUpdate",
+               "Sequencer/Digitization",
+               "Sequencer/Triggered"};
+
+//
+// Triggered members:
+//
+Triggered.Members = {"Sequencer/Trigger",
+                     "Sequencer/Reconstruction",
+                     "Sequencer/RecoDisplay",
+                     "Sequencer/Output" };
+
+
+//
+// Geometry definition:
+//
+ApplicationMgr.DLLs    += {"GlastSvc"};
+ApplicationMgr.ExtSvc  += {"GlastDetSvc"};
+GlastDetSvc.topVolume   = "LAT"; 
+GlastDetSvc.visitorMode = "recon";
+
+
+// 
+// Randoms definition:
+//
+ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
+
+
+//
+// Generator members::
+//
+ApplicationMgr.DLLs     += {"G4Generator",
+                            "G4Propagator"};
+ApplicationMgr.ExtSvc   += {"G4GeometrySvc"};
+
+Generator.Members = {"FluxAlg",
+                     "G4Generator",
+                     "ExposureAlg"};
+
+//
+// Generator cuts:
+//
+G4Generator.defaultCutValue    = 0.7; 
+G4Generator.defaultTkrCutValue = 0.1;
+G4Generator.defaultCalCutValue = 0.7;
+
+
+//
+// Needed to read in the TKR calibration constants:
+//
+CalibrationUpdate.Members = {"TkrCalibAlg"};
+
+
+//
+// Standard options for FluxSvc clients:
+//
+ApplicationMgr.ExtSvc += {"FluxSvc"};
+ApplicationMgr.DLLs   += {"FluxSvc"}; 
+FluxSvc.source_lib     = {"$(FLUXROOT)/xml/source_library.xml"};
+ApplicationMgr.ExtSvc += {"ParticlePropertySvc"};
+
+//
+// FluxSvc controls the event loop:
+//
+ApplicationMgr.Runable= "FluxSvc";
+
+
+//
+// Append (or replace) the list of source library documents:
+// 
+FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+
+
+//
+// Add in CRflux option"
+//
+ApplicationMgr.DLLs += {"CRflux"};
+FluxSvc.source_lib  += {"$(CRFLUXROOT)/xml/source_library.xml"};
+
+//
+// VDG sources:
+//
+FluxSvc.source_lib += {"$(LATINTEGRATIONROOT)/xml/source_library.xml"};
+
+
+// 
+// Digitization i.e. make digis:
+//
+ApplicationMgr.DLLs += {"TkrDigi",
+                        "CalUtil",
+                        "CalXtalResponse",
+                        "CalDigi",
+                        "AcdDigi"};
+
+
+Digitization.Members = {"TkrDigiAlg", 
+                        "CalDigiAlg", 
+                        "AcdDigiAlg"};
+
+
+// 
+// Trigger calculation:
+//
+ApplicationMgr.DLLs += {"Trigger"};
+Trigger.Members      = {"TriggerAlg"};
+
+
+// 
+// Reconstruction:
+//
+ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
+
+ApplicationMgr.DLLs += {"CalibSvc",
+                        "CalRecon",
+                        "TkrUtil",
+                        "TkrRecon"};
+
+Reconstruction.Members = {"Sequencer/Cal1", 
+                          "Sequencer/Tkr",
+                          "Sequencer/Cal2",
+                          "Sequencer/TkrIter",
+                          "Sequencer/Acd"};
+         
+
+//
+// Tracker:
+//
+ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
+ApplicationMgr.ExtSvc += {"TkrInitSvc"};
+
+
+//
+// Calibrations:
+//
+#include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/calibrations.txt"
+
+//
+// The user should change the start time to pick up whatever 
+// calibrations she wants:
+//
+FluxSvc.startDate = "2007-1-10 23:59:59";
+
+
+// 
+// Output members:
+//
+Cal1.Members    = {"CalXtalRecAlg", 
+                   "CalClustersAlg/first"};
+Tkr.Members     = {"TkrReconAlg/FirstPass"};
+Cal2.Members    = {"CalClustersAlg/second"};
+TkrIter.Members = {"TkrReconAlg/Iteration"};
+
+
+// 
+// Decrease CAL output:
+//
+second.OutputLevel = 5;
+
+
+//
+// ACD recon:
+//
+ApplicationMgr.DLLs += {"AcdRecon"};
+Acd.Members          = {"AcdReconAlg"};
+
+
+//
+// Atwood's tuple and merit:
+//
+ApplicationMgr.DLLs += {"AnalysisNtuple", 
+                        "ntupleWriterSvc",
+                        "merit"};
+
+ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+
+Triggered.Members += {"meritAlg"};
+
+
+//
+// Output members:
+//
+ApplicationMgr.DLLs += {"RootIo"}; 
+
+Output.Members = {"FhSetAlg",
+                  "mcRootWriterAlg", 
+                  "digiRootWriterAlg",
+                  "reconRootWriterAlg"};
+
+//
+// Output levels:
+//
+mcRootWriterAlg.OutputLevel           = 3;
+digiRootWriterAlg.OutputLevel         = 3;
+reconRootWriterAlg.OutputLevel        = 3;
+ToolSvc.OutputLevel                   = 3;
+CalClustersAlg.OutputLevel            = 4;
+TkrClusFirst.OutputLevel              = 4;
+CalDigiAlg.OutputLevel                = 4;
+TkrAlignmentSvc.OutputLevel           = 4;
+TkrGeometrySvc.OutputLevel            = 4;
+EbfWriter.OutputLevel                 = 4;
+ToolSvc.LastLayerCorrTool.OutputLevel = 4; 
+ToolSvc.OutputLevel                   = 4;
+CalXtalRecAlg.OutputLevel             = 4;
+    
+
+
+//
+// To avoid exception in meritAlg:
+//
+MeritAlg.IM_filename = "";     // Disable IM decision tree processing
+MeritAlg.cuts        = "LnA";  // Remove or set to "LntA" to re-enable
+
+
+
+
+//
+// The following things can be changed by the user:
+//
+
+
+//
+// Set general output level threshold:
+//    (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+
+
+// 
+// Number of events:
+//
+ApplicationMgr.EvtMax = 200000;
+
+
+//
+// Geometry:
+//
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+
+//
+// Particle source:
+//
+FluxAlg.source_name = "surface_muons";
+
+
+//
+// Trigger mask: All bits on by default,
+//               reject if none set (e.g., missed)!
+//
+TriggerAlg.mask = -1; 
+
+
+//
+// Run number (and random number seed):
+//
+GlastRandomSvc.RunNumber = 0;
+
+
+//
+// Output mc Root file:
+//
+mcRootWriterAlg.mcRootFile = "mc.root";
+
+
+//
+// Output recon Root file:
+// 
+reconRootWriterAlg.reconRootFile = "recon.root";
+
+
+//
+// Output digi Root file:
+//
+digiRootWriterAlg.digiRootFile = "digi.root";
+
+
+ApplicationMgr.ExtSvc += { "RootIoSvc" };  
+
+
+//
+// Output Merit tuple:
+//
+meritAlg.EventTreeName    = "MeritTuple"; 
+meritAlg.PointingTreeName = "Exposure"; 
+RootTupleSvc.TreeName     = "MeritTuple"; 
+RootTupleSvc.filename     = "merit.root";
+
+
+//
+// The Doors ...
+//

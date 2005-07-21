@@ -1,0 +1,143 @@
+//
+// Job Option file for fits2digi/ldf2digi: 
+//
+// $Header$
+
+
+//
+// Things to be changed by the user can 
+// be found at the end of the file!
+//
+
+
+//
+// Primary DLLs, including auditor: 
+//
+ApplicationMgr.DLLs   += {"GaudiAlg",
+                          "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors    = {"ChronoAuditor"};
+
+
+//
+// A structure for the topalg, 
+// using sequencer steps:
+//
+ApplicationMgr.TopAlg = {"Sequencer/Top"};
+
+
+//
+// Define the top sequence loop:
+//
+Top.Members = {"Sequencer/Triggered"};
+
+
+//
+// Define the Triggered sequence:
+//
+Triggered.Members = {"Sequencer/Trigger",
+                     "Sequencer/Output"};
+
+
+//
+// Services:
+//
+ApplicationMgr.DLLs    += {"GlastSvc"};
+ApplicationMgr.ExtSvc  += {"GlastDetSvc"};
+GlastDetSvc.topVolume   = "LAT"; 
+GlastDetSvc.visitorMode = "recon";
+
+
+//
+// Define the Trigger sequence:
+//
+ApplicationMgr.DLLs += {"Trigger"};
+Trigger.Members      = {"TriggerAlg"};
+
+
+//
+// Trigger mask: Accept all events!
+//
+TriggerAlg.mask = 0; 
+
+
+//
+// Define the Output sequence:
+//
+ApplicationMgr.DLLs += {"RootIo"}; 
+Output.Members       = {"FhSetAlg","digiRootWriterAlg"};
+
+//
+// Use the LDF converter service 
+// to read in LDF files:
+//
+ApplicationMgr.DLLs   += {"LdfConverter"};
+ApplicationMgr.ExtSvc += {"LdfEventSelector/EventSelector","LdfCnvSvc/EventCnvSvc"};
+
+
+//
+// Services:
+//
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+
+
+//
+// Instrument:
+// 
+EventSelector.Instrument = "LAT";
+
+
+//
+// Checking for GEM Conditions Summary Word == 0:
+//
+EventSelector.GemZeroCheck = 1;
+
+
+//
+// The following things can be changed by the user:
+//
+
+
+//
+// Set output level threshold:
+// 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL 
+//
+MessageSvc.OutputLevel = 3;
+
+
+//
+// Number of events:
+//
+ApplicationMgr.EvtMax = 1000000000;
+
+
+//
+// Geometry:
+//
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+
+//
+// fits2digi: Use 'LDFFILE' for ldf2digi 
+//            and 'LDFFITS' for fits2digi!  
+//
+EventSelector.StorageType = "LDFFITS";
+
+
+//
+// Input Fits/LDF file:
+//
+EventSelector.InputList = {"file.fits"};
+
+
+//
+// Output ROOT digi file:
+//
+digiRootWriterAlg.digiRootFile = "digi.root";
+
+
+
+
+//
+// The Doors .....
+//

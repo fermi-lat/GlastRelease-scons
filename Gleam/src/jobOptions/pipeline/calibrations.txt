@@ -1,0 +1,65 @@
+//
+// Job Option file containing calibration stuff 
+// to be included by recon and mc:
+//
+// $Header$
+//
+// Start up a CalibDataSvc: 
+//
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+
+
+//
+// Name of calibration database:
+//
+CalibMySQLCnvSvc.DbName = "calib";
+
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+
+
+//
+// Instrument name: LAT for inside the grid,
+//                  TkrFMx:CalFMxxx for single bay
+//
+CalibDataSvc.CalibInstrumentName = "LAT";
+
+// Storage type of 14 corresponds to MYSQL:
+CalibDataSvc.CalibStorageType = 14;
+
+CalibDataSvc.CalibRootName = "Calib";
+
+// Get time from data:
+CalibDataSvc.CalibTimeSource = "data";
+
+// Start up a CalCalibSvc:
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+
+// Cal flavor:
+CalCalibSvc.DefaultFlavor = "vanilla";
+
+
+//
+// For TKR Root calibration files: 
+//
+ApplicationMgr.ExtSvc += {"CalibRootCnvSvc"};                            
+DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
+
+
+//
+// Tracker flavor: 
+//
+TkrCalibAlg.calibFlavor = "vanilla";
+
+//
+// Write out bad and hot strips to the log file:
+//
+TkrBadStripsSvc.OutputLevel = 2;
+
+//
+// General calibration flavor list:
+//
+CalibDataSvc.CalibFlavorList = {"vanilla"};

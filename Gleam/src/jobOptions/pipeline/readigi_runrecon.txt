@@ -1,0 +1,260 @@
+//
+// Job Option file for readigi_runrecon:
+// Read in a digi Root file and run recon on it!
+//
+// $Header$
+
+//
+// Things to be changed by the user can 
+// be found at the end of the file!
+//
+
+
+
+//
+// Primary DLLs, including auditor:
+//
+ApplicationMgr.DLLs   += {"GaudiAlg","GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+
+//
+// Set up basic event loop: 
+//
+ApplicationMgr.ExtSvc = {"GlastEventSelector/EventSelector" , 
+                         "EventCnvSvc"};
+
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+
+
+
+
+//
+// A structure for the topalg, using sequencer steps:
+//
+ApplicationMgr.TopAlg = {"Sequencer/Top"};
+
+
+//
+// Define the top sequence loop:
+//
+Top.Members = {"Sequencer/Digitization",
+               "Sequencer/Calibration",
+               "Sequencer/Integrity",
+               "Sequencer/Output"};
+
+
+//
+// Needed for EventIntegrityAlg sequence breaking:
+//
+Top.StopOverride = true;
+
+
+//
+// Digitization sequence: Read in digis from a ROOT file
+//
+Digitization.Members = {"digiRootReaderAlg"};
+
+
+//
+// This needs to run after having read in the digis 
+// so we can get the event time form them!
+// Note: this is the opposite of what is needed for the MC!
+//
+Calibration.Members = {"TkrCalibAlg"};
+
+
+
+//
+// Using EventIntegrityAlg to decide if we run or skip recon: 
+//     If the event passes, proceed as normal.
+//     If EventIntegrityAlg is BAD, skip recon but output to file.
+//
+ApplicationMgr.DLLs += {"EventIntegrity"};
+Integrity.Members    = {"EventIntegrityAlg",
+                        "Sequencer/Reconstruction"};
+
+
+
+//
+// Detector services:
+//
+ApplicationMgr.DLLs   += {"GlastSvc"};
+ApplicationMgr.ExtSvc += {"GlastDetSvc"};
+
+GlastDetSvc.topVolume   = "LAT"; 
+GlastDetSvc.visitorMode = "recon";
+
+
+
+//
+// Randoms definition:
+//
+ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
+
+
+
+//
+// G4:
+//
+ApplicationMgr.DLLs   += {"G4Generator","G4Propagator"};
+ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
+
+
+//
+// CAL Xtal respons::
+//
+ApplicationMgr.DLLs += {"CalUtil", "CalXtalResponse"};
+
+
+//
+// Propagator:
+//
+ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
+
+ 
+//
+// Reconstruction:
+//
+ApplicationMgr.DLLs += {"CalibSvc",
+                        "TkrUtil",
+                        "CalRecon",
+                        "TkrRecon"};
+
+Reconstruction.Members = {"Sequencer/Cal1", 
+                          "Sequencer/Tkr",
+                          "Sequencer/Cal2",
+                          "Sequencer/TkrIter",
+                          "Sequencer/Acd"};
+
+
+//
+// Recon members:
+//
+Cal1.Members    = {"CalXtalRecAlg", 
+                   "CalClustersAlg/first"};
+Tkr.Members     = {"TkrReconAlg/FirstPass"};
+Cal2.Members    = {"CalClustersAlg/second"};
+TkrIter.Members = {"TkrReconAlg/Iteration"};
+
+
+//
+// Decrease output:
+//
+second.OutputLevel = 5;  
+
+
+//
+// ACD recon:
+//
+ApplicationMgr.DLLs += {"AcdRecon"};
+Acd.Members = {"AcdReconAlg"};
+
+
+//
+// Define the output sequence:
+//
+Output.Members  = {"meritAlg"};
+Output.Members += {"FhSetAlg","reconRootWriterAlg"};
+
+
+         
+
+
+//
+// Tracker geometry services:
+//
+ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
+ApplicationMgr.ExtSvc += {"TkrInitSvc"};
+
+
+//
+// Calibrations:
+//
+#include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/calibrations.txt"
+
+
+//
+// Start up a CalFailureModeSvc:
+//
+ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
+
+
+
+//
+// Merit and AnalysisNtuple:
+//
+ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","merit"};
+ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+
+
+//
+// Merit configuration: Disable IM variables
+//
+MeritAlg.IM_filename = ""; 
+MeritAlg.cuts        = "LnA";
+
+
+
+// 
+// Root IO:
+//
+ApplicationMgr.DLLs   += {"RootIo"};
+ApplicationMgr.ExtSvc += {"RootIoSvc"}; 
+
+//
+// Must use RootIo as executable, not Gaudi event loop!
+//
+ApplicationMgr.Runable = "RootIoSvc"; 
+ 
+
+//
+// The following things can be changed by the user:
+//
+
+
+// 
+// Set output level threshold:
+//  2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+//
+MessageSvc.OutputLevel = 3;
+
+
+// 
+// Number of events:
+//
+ApplicationMgr.EvtMax = 10000000000;
+
+
+//
+// Geometry:
+//
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+
+//
+// Name of input digi Root file:
+//
+digiRootReaderAlg.digiRootFile = "digi.root";
+
+
+//
+// Name of output Merit Root file:
+//
+RootTupleSvc.filename = "merit.root";
+
+
+//
+// Name of output recon Root file:
+//
+reconRootWriterAlg.reconRootFile = "recon.root";
+
+
+//
+// The Doors .....
+//

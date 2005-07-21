@@ -1,0 +1,11 @@
+//
+// Job Option file to be included by 
+// recon for VDG data: New TkrRecon only! 
+//
+// $Header$
+
+// 
+// Fix track energy to 4 MeV:
+//
+ToolSvc.ComboFindTrackTool.MinEnergy = 4.0;
+ToolSvc.ComboFindTrackTool.EnergyType = "User";
