@@ -31,14 +31,16 @@ ApplicationMgr.TopAlg = {
 Top.Members={
     "Sequencer/Generator"};
 
-Generator.Members = {"FluxAlg", 
+Generator.Members = {
+    "FluxAlg", 
     "G4Generator",
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
     "Sequencer/EventDisplay",
     "Sequencer/Triggered" };
     
-// FluxAlg branch for "TimeTicks"
+// FluxAlg branch for "TimeTicks" 
+// (note that if you override Members, this must be too)
 Generator.BranchMembers = {"FluxAlg", "ExposureAlg"};
 
 // the sequence that is triggered with data
@@ -124,7 +126,6 @@ OnboardFilter.mask=0; // all bits off by default: no rejection
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
 
 ApplicationMgr.DLLs +={ 
-    "CalibSvc",
     "CalRecon", "CalUtil", 
     "TkrRecon", "TkrUtil"
     };
@@ -159,12 +160,13 @@ TkrIter.Members = {
 
 // -------------------------------------------
 //          tracker services
+//
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 
 
 // -------------------------------------------
-// Calorimeter services
+//  Calorimeter services
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
@@ -173,21 +175,7 @@ ApplicationMgr.Dlls += {"CalXtalResponse"};
 // -------------------------------------------
 //  Calibration sevices
 //
-ApplicationMgr.ExtSvc += {"CalibDataSvc"};
-
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
-
-DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
-DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
-
-// CalibDataSvc properties 
-// Storage type of 14 corresponds to MYSQL
-CalibDataSvc.CalibInstrumentName = "LAT";
-CalibDataSvc.CalibStorageType = 14;
-CalibDataSvc.CalibRootName = "Calib";
-CalibDataSvc.CalibFlavorList = {"ideal"};
-
-
+#include "$CALIBSVCROOT/src/defaultOptions.txt"
 
 
 // ----------------------------
@@ -199,19 +187,25 @@ Acd.Members = {"AcdReconAlg"};
 // ----------------------------
 //   Atwood's tuple and merit
 //
-ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
+ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-Triggered.Members += { "meritAlg" };
+Triggered.Members +=     { "meritAlg" };
+
 //-------------------------------------
-// Merit configuration --  (use defaults)
+//   Merit configuration --  (use defaults)
 
 // ---------------------------- 
 //   Output
 //
-ApplicationMgr.DLLs +={   "RootIo"}; 
-Output.Members = {"FhSetAlg","mcRootWriterAlg", "digiRootWriterAlg", "reconRootWriterAlg"};
+ApplicationMgr.DLLs +={"RootIo"}; 
+Output.Members = {     
+    "FhSetAlg",
+    "mcRootWriterAlg", 
+    "digiRootWriterAlg", 
+    "reconRootWriterAlg"};
 
- // output levels, including suppression to allow debug, info
+
+// output levels, including suppression to allow debug, info
 mcRootWriterAlg.OutputLevel=3;
 digiRootWriterAlg.OutputLevel=3;
 reconRootWriterAlg.OutputLevel=3;

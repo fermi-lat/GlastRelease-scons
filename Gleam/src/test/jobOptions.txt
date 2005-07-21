@@ -19,14 +19,6 @@ FluxAlg.sources={"default","timetick30s"};
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estima/ IM variable
 
-// DC2 calib
-CalibDataSvc.CalibFlavorList = {"vanilla", "DC2"}; 
-CalCalibSvc.DefaultFlavor = "ideal"; 
-TkrCalibAlg.deadStripsCalibFlavor = "DC2"; 
-CalibDataSvc.CalibInstrumentName = "LAT"; 
-CalibMySQLCnvSvc.DbName = "calib"; 
-CalibMySQLCnvSvc.QualityList= {"PROD"}; 
-
 
 //==============================================================
 //
