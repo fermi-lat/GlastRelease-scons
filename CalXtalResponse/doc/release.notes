@@ -1,3 +1,4 @@
+v0r6p6  7/21/05 fewtrell increased ideal-flight pedestal noise & LAC thresholds to better approximate real flight expectaions
 v0r6p5  7/20/05 fewtrell 2 bugs found by tracy.  1=poorly initialized CalXtalRecAlg::m_tupleBranch && other was '=' assignment instead of '==' comparison error in XtalDigiTool which caused diode deposit position estimates to be off.
 v0r6p4  7/19/05 Usher    fixed bug which put energy deposited directly into a diode always into + face
 v0r6p3  6/29/05 fewtrell fixed minor patch to caltuple which would have slight effect on small diode faceSignals

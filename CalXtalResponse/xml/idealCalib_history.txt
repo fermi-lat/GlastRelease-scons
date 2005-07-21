@@ -1,4 +1,6 @@
-This documents the history of CalXtalReponse ideal calibration effective gain & noise for versions <= v0r3 at which point documentation will be included in the header of each xml file.
+This documents the history of CalXtalReponse ideal calibration effective gain & noise for versions <= v0r3.
+
+(CalXtalResponse > v0r3) - see xml/idealCalib***.xml
 
 NEWIDEAL_FLIGHT (CalXtalReponse v0r2p8 -> v0r2p7, GlastRelease v6r6 -> v6r6p1)
 RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV)
