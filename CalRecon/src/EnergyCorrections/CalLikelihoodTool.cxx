@@ -57,8 +57,8 @@ StatusCode CalLikelihoodTool::initialize()
     std::string line;
     getline(dataFile, line);
 
-    m_PDFAxes= 0;
-    m_PDFCol= 0;
+    m_Axes= 0;
+    m_Data= 0;
     int pdf= 0;
     for( int lineNumber= 0; !dataFile.eof(); ++lineNumber )
     {
@@ -71,18 +71,18 @@ StatusCode CalLikelihoodTool::initialize()
         sscanf(line.data(), "#PDFs: %d #Parameters: %d", &m_Npdf, &nPar);
         log<<MSG::DEBUG<<"File must contain "<<m_Npdf<<", for "<<nPar
                        <<" parameters"<<endreq;
-        m_PDFCol= new PDF_Data*[m_Npdf];
+        m_Data= new PDF_Data*[m_Npdf];
         for( int pdfs= 0; pdfs<m_Npdf; ++pdfs ) 
-          m_PDFCol[pdfs]= 0;
+          m_Data[pdfs]= 0;
         if( nPar>0 && m_Npdf>0 ) continue;
       } 
 
       else if( line=="AXES:" )
       {
-        if( !m_PDFAxes )
+        if( !m_Axes )
         {
           log<<MSG::DEBUG<<"Extracting Axes"<<endreq;
-          if( (m_PDFAxes= PDF_Axes::read(dataFile)) )
+          if( (m_Axes= PDF_Axes::read(dataFile)) )
             continue;
           log<<MSG::ERROR<<"Axes did not build correctly"<<endreq;
         }
@@ -90,7 +90,7 @@ StatusCode CalLikelihoodTool::initialize()
       
       else if( line.size()>4 && line.substr(0,4)=="PDF:" )
       {
-        if( !m_PDFCol )
+        if( !m_Data )
         {
           log<<MSG::ERROR<<"Line \"#PDFs: <number of PDFs> "
                            "Parameters: <number of parameters for PDF function>"
@@ -99,7 +99,7 @@ StatusCode CalLikelihoodTool::initialize()
         else if( pdf<m_Npdf )
         {
           log<<MSG::DEBUG<<"Extracting PDF Parameters for PDF #"<<pdf<<endreq;
-          if( (m_PDFCol[pdf++]= PDF_Data::read(dataFile, nPar, m_PDFAxes)) )
+          if( (m_Data[pdf++]= PDF_Data::read(dataFile, nPar, m_Axes)) )
               continue;
           log<<MSG::ERROR<<"PDF #"<<pdf-1<<" did not build correctly"<<endreq;
         }
@@ -115,7 +115,7 @@ StatusCode CalLikelihoodTool::initialize()
   }
 
   dataFile.close();
-  if( pdf<m_Npdf || !m_PDFAxes )
+  if( pdf<m_Npdf || !m_Axes )
   {
     log<<MSG::ERROR<<"Missing data in file: "<<m_dataFile<<endreq;
     return StatusCode::FAILURE;
@@ -127,16 +127,16 @@ StatusCode CalLikelihoodTool::finalize()
 {
     StatusCode sc = StatusCode::SUCCESS;
     
-    if( m_PDFCol )
+    if( m_Data )
     {
         for( int plane= 0; plane<m_Npdf; ++plane )
         {
-            if( m_PDFCol[plane] ){ delete m_PDFCol[plane]; m_PDFCol[plane]= 0; }
+            if( m_Data[plane] ){ delete m_Data[plane]; m_Data[plane]= 0; }
         }
-        delete []m_PDFCol; 
+        delete []m_Data; 
     }
   
-    if( m_PDFAxes ) delete m_PDFAxes;
+    if( m_Axes ) delete m_Axes;
   
     return sc;
 }
@@ -181,24 +181,50 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
 
   // next values are the range boundaries
   log << MSG::DEBUG << "Starting Calculations" <<endreq;
+  double mpv[2], fwhm[2];
+  if( getMPV(mpv) || getFWHM(mpv, fwhm) ) return 0;
+  log << MSG::DEBUG << "End of Calculations:"<< endreq 
+      << MSG::VERBOSE << "Found Energy:" << mpv[0] 
+                      << "MeV,\tWidth:" << .5*(fwhm[0]+fwhm[1])
+                      << "\%" << endreq;
 
+
+  // Create a CalCorToolResult object to hold the information
+  Event::CalCorToolResult *corResult = new Event::CalCorToolResult();
+
+  corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
+  corResult->setCorrectionName(type());
+  corResult->setChiSquare(1.);
+
+  Event::CalParams params= cluster->getCalParams();
+  params.setEnergy(mpv[0]);
+  params.setEnergyErr(.5*(fwhm[0]+fwhm[1]));
+  corResult->setParams(params);
+  return corResult;
+}
+
+bool CalLikelihoodTool::getMPV(double mpv[2]){
+  // next values are the range boundaries
   double limit[2]= { calEnergy(), calEnergy()*5.};
+  if( limit[1] < minTrialEnergy() )
+    limit[1]= (minTrialEnergy()+maxTrialEnergy())*.5;
   if( limit[0] < minTrialEnergy() ) limit[0] =  minTrialEnergy();
   if( limit[1] > maxTrialEnergy() ) limit[1] =  maxTrialEnergy();
 
   // next variables are for the estimation of the quality of the 
   // reconstruction: m_widthEnergyCorr
   double recEnergy= limit[0];
-  double maxProb= -1., trialProb;
+  double maxProb= -1e40;
 
   trialEnergy()= limit[0];
-  m_PDFAxes->init(m_eventPar);
+  m_Axes->init(m_eventPar);
   for( double bW= (limit[1]-limit[0])*.1; bW>.1; bW= (limit[1]-limit[0])*.1 )
   {
     int errCalls= 0;
     for( trialEnergy()= limit[0]; trialEnergy()<limit[1]; trialEnergy()+= bW )
     {
       // get log normal parameters
+      double trialProb;
       if( evaluatePDF(trialProb) ) 
       { 
         ++errCalls; 
@@ -210,78 +236,83 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
       { 
         maxProb= trialProb; 
         recEnergy= trialEnergy();
-      } 
+      }
     }
-    if( errCalls==10 )
-    {
-      log << MSG::DEBUG << "End of Calculations: NO PARAMETERS" << endreq;
-      return 0;
-    }
+    if( errCalls==10 ) return true;
 
     limit[0]= recEnergy-bW;
     limit[1]= recEnergy+bW;
     if( limit[0]<minTrialEnergy() ) limit[0]= minTrialEnergy();
     if( limit[1]>maxTrialEnergy() ) limit[1]= maxTrialEnergy();
   }
-
-  // if we hit a border, (min)maxTrialEnergy,  the method has failed
-  if( fabs(recEnergy-minTrialEnergy())<1. ||
-         fabs(recEnergy-maxTrialEnergy())<1. )
-    return 0;
+  mpv[1]= maxProb;
+  mpv[0]= recEnergy;
+  if( fabs(mpv[0]-minTrialEnergy())<1. || fabs(mpv[0]-maxTrialEnergy())<1. ) 
+    return true;
+  return false;
+}
+bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
   // QUALITY
   // now looking for FWHM
   // fwhmLimits is an outer limit for an energy such that 
   // evaluatePDF(x)<.5*maxProb
-
-  double recWidth= 0.;
-  double fwhmLimits[2]= { maxTrialEnergy(), maxTrialEnergy() };
+  fwhmLimits[0]= minTrialEnergy()+.01;
+  fwhmLimits[1]= maxTrialEnergy()-.01;
   for( int iFWHM= 0; iFWHM<2; ++iFWHM )
   {
-    limit[0]= iFWHM?recEnergy:minTrialEnergy();
-    limit[1]= iFWHM?maxTrialEnergy():recEnergy;
-    for( double bW= (limit[1]-limit[0])*.1; bW>.01; bW= (limit[1]-limit[0])*.1 )
-    {
+    double delta= 0;
+    trialEnergy()= fwhmLimits[iFWHM];
+    if( evaluatePDF(delta) ) return true;
+    delta/= mpv[1];
+    if( delta<.5 ) {
+      double limit[2]= {iFWHM?mpv[0]:minTrialEnergy(),
+                        iFWHM?maxTrialEnergy():mpv[0]};
       int errCalls= 0;
-      double maxE= limit[1];
-      for( trialEnergy()= limit[0]; trialEnergy()<maxE; trialEnergy()+= bW )
+      for( double bW= (limit[1]-limit[0])*.1; bW>.1;bW= (limit[1]-limit[0])*.1 )
       {
-        if( evaluatePDF(trialProb) )
-        { 
-          ++errCalls; 
-          continue;
-        } 
-        if( (trialProb<maxProb*.5)  && (iFWHM ^ (trialEnergy()>limit[iFWHM])) )
-          limit[iFWHM]= trialEnergy();
+        errCalls= 0;
+        double maxE= limit[1];
+        for( trialEnergy()= limit[0]; trialEnergy()<maxE; trialEnergy()+= bW )
+        {
+          double trialProb;
+          if( evaluatePDF(trialProb) )
+          { 
+            ++errCalls; 
+            continue;
+          } 
+          // for lower(upper) FWHM x axis value, move the limit up(down) when
+          // at a y axis value  below .5*maximum
+          if( (trialProb<mpv[1]*.5) && (iFWHM^(trialEnergy()>limit[iFWHM])) )
+            limit[iFWHM]= trialEnergy();
+        }
+        if( errCalls==10 ) break;
+        limit[!iFWHM]= limit[iFWHM]+(1-2*iFWHM)*bW;
+        limit[iFWHM]-= (1-2*iFWHM)*bW;
       }
-      if( errCalls==10 ){
-       limit[iFWHM]= fwhmLimits[iFWHM];
-       break;
+      if( errCalls ) return false;
+      fwhmLimits[iFWHM]= fabs(1-limit[iFWHM]/mpv[0]);
+    } else {
+      double savingCalE= calEnergy();
+      double calE[2]= {calEnergy()*(iFWHM?.3:1.), calEnergy()*(iFWHM?1.:5.)};
+      double newMPV[2];
+      // when the lower(upper) FWHM x axis value is outside the PDF pahse
+      // space, estimate it as close as possible from that point:
+      // we move calEnergy() energy around to find it
+      if( calE[1]<.1 ) calE[1]= (minTrialEnergy()+maxTrialEnergy())*.5;
+      while( fabs(delta-.5)>1e-2 && fabs(calE[0]-calE[1])>.1 ){
+        calEnergy()= (calE[0]+calE[1])*.5;
+        m_Axes->init(m_eventPar);
+        if( getMPV(newMPV) ) return true; 
+        trialEnergy()= fwhmLimits[iFWHM];
+        if( evaluatePDF(delta) ||  (delta/= newMPV[1])>1. ) return true;
+        calE[iFWHM ^ (delta<.5)]= calEnergy();
       }
-      limit[!iFWHM]= limit[iFWHM]+(1-2*iFWHM)*bW;
-      limit[iFWHM]-= (1-2*iFWHM)*bW;
+      if( fabs(delta-.5)>.01 ) return true; 
+      fwhmLimits[iFWHM]= fabs(1-fwhmLimits[iFWHM]/newMPV[0]);
+      calEnergy()= savingCalE;
     }
-    
-    if( fabs(limit[iFWHM]-fwhmLimits[iFWHM])<.1 ) recWidth+= 1.;
-    else recWidth+= fabs(limit[iFWHM]/recEnergy-1.);
   }
-
-  log << MSG::DEBUG << "End of Calculations:"<< endreq 
-      << MSG::VERBOSE << "Found Energy:" << recEnergy 
-                      << "MeV,\tWidth:" << recWidth << "\%" << endreq;
-
-
-  // Create a CalCorToolResult object to hold the information
-  Event::CalCorToolResult *corResult = new Event::CalCorToolResult();
-
-  corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
-  corResult->setCorrectionName(type());
-  corResult->setChiSquare(1.);
-
-  Event::CalParams params= cluster->getCalParams();
-  params.setEnergy(recEnergy);
-  params.setEnergyErr(recWidth);
-  corResult->setParams(params);
-  return corResult;
+  return false;
 }
 
 double CalLikelihoodTool::findGeometricCut( const Point &x,

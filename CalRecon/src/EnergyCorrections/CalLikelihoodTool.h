@@ -125,19 +125,19 @@ protected:
     int findTkrVertex( const Point &p ){ return int((p[2]-108.)*3.2e-2); }
 
     // next 2 methods update the object fields before the use of doEnergyCorr
-    void setEventPDFdata( int a ) { m_eventPDF= m_PDFCol[a]; }
+    void setEventPDFdata( int a ) { m_eventPDF= m_Data[a]; }
     void setEventPDFparameters( double slope, double calE, double xxx ) 
     { m_eventPar[1]= slope; m_eventPar[2]= calE; m_eventPar[3]= xxx; }
 
-    double minTrialEnergy(void) const{ return m_PDFAxes->getBinCenter(0, 0); }
-    double maxTrialEnergy(void) const{ return m_PDFAxes->getBinCenter(0, -1); }
-    double minSlope(void) const{ return m_PDFAxes->getBinCenter(1, 0); }
-    double maxSlope(void) const{ return m_PDFAxes->getBinCenter(1, -1); }
+    double minTrialEnergy(void) const{ return m_Axes->getBinCenter(0, 0); }
+    double maxTrialEnergy(void) const{ return m_Axes->getBinCenter(0, -1); }
+    double minSlope(void) const{ return m_Axes->getBinCenter(1, 0); }
+    double maxSlope(void) const{ return m_Axes->getBinCenter(1, -1); }
 
     
     // a data set exits which doesn't use any correlation:
     // this function informs the algorithm that sch a set is being used
-    bool hasCorrelation(void) const { return m_PDFCol[0]->getNpar()==5; }
+    bool hasCorrelation(void) const { return m_Data[0]->getNpar()==5; }
 
     /// input data file containing log normal parameters
     std::string m_dataFile;
@@ -152,10 +152,12 @@ private:
     double& trialEnergy(void) { return m_eventPar[0]; }
     double& calEnergy(void) { return m_eventPar[2]; }
     bool evaluatePDF(double&) const;
+    bool getMPV(double[2]);
+    bool getFWHM(const double[2], double[2]);
 
     // data tables
-    PDF_Axes *m_PDFAxes;
-    PDF_Data **m_PDFCol;
+    PDF_Axes *m_Axes;
+    PDF_Data **m_Data;
     int m_Npdf;
 
     // CAL origin, tower pitch, and gap between a CAL and its tower,
