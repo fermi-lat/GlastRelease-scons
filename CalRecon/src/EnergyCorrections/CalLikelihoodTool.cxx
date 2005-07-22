@@ -205,23 +205,27 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
 
 bool CalLikelihoodTool::getMPV(double mpv[2]){
   // next values are the range boundaries
-  double limit[2]= { calEnergy(), calEnergy()*5.};
-  if( limit[1] < minTrialEnergy() )
-    limit[1]= (minTrialEnergy()+maxTrialEnergy())*.5;
-  if( limit[0] < minTrialEnergy() ) limit[0] =  minTrialEnergy();
-  if( limit[1] > maxTrialEnergy() ) limit[1] =  maxTrialEnergy();
+  double lim[2]= { calEnergy(), calEnergy()*5.};
+  
+  // when this happens, must not set the bioudary to high or too low
+  // too high and the steps will be too big
+  if( lim[1] < m_Axes->getBinCenter(0, 4) )
+    lim[1]= m_Axes->getBinCenter(0, 4);
+  if( lim[0] < minTrialEnergy() ) lim[0] =  minTrialEnergy();
+  if( lim[1] > maxTrialEnergy() ) lim[1] =  maxTrialEnergy();
 
   // next variables are for the estimation of the quality of the 
   // reconstruction: m_widthEnergyCorr
-  double recEnergy= limit[0];
+  double recEnergy= lim[0];
   double maxProb= -1e40;
 
-  trialEnergy()= limit[0];
+  trialEnergy()= lim[0];
   m_Axes->init(m_eventPar);
-  for( double bW= (limit[1]-limit[0])*.1; bW>.1; bW= (limit[1]-limit[0])*.1 )
+  const int nSteps= 15;
+  for( double bW= (lim[1]-lim[0])/nSteps; bW>.1; bW= (lim[1]-lim[0])/nSteps )
   {
     int errCalls= 0;
-    for( trialEnergy()= limit[0]; trialEnergy()<limit[1]; trialEnergy()+= bW )
+    for( trialEnergy()= lim[0]; trialEnergy()<lim[1]; trialEnergy()+= bW )
     {
       // get log normal parameters
       double trialProb;
@@ -238,12 +242,12 @@ bool CalLikelihoodTool::getMPV(double mpv[2]){
         recEnergy= trialEnergy();
       }
     }
-    if( errCalls==10 ) return true;
+    if( errCalls==nSteps ) return true;
 
-    limit[0]= recEnergy-bW;
-    limit[1]= recEnergy+bW;
-    if( limit[0]<minTrialEnergy() ) limit[0]= minTrialEnergy();
-    if( limit[1]>maxTrialEnergy() ) limit[1]= maxTrialEnergy();
+    lim[0]= recEnergy-bW;
+    lim[1]= recEnergy+bW;
+    if( lim[0]<minTrialEnergy() ) lim[0]= minTrialEnergy();
+    if( lim[1]>maxTrialEnergy() ) lim[1]= maxTrialEnergy();
   }
   mpv[1]= maxProb;
   mpv[0]= recEnergy;
@@ -258,6 +262,7 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
   // evaluatePDF(x)<.5*maxProb
   fwhmLimits[0]= minTrialEnergy()+.01;
   fwhmLimits[1]= maxTrialEnergy()-.01;
+  const int nSteps= 15;
   for( int iFWHM= 0; iFWHM<2; ++iFWHM )
   {
     double delta= 0;
@@ -265,14 +270,14 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
     if( evaluatePDF(delta) ) return true;
     delta/= mpv[1];
     if( delta<.5 ) {
-      double limit[2]= {iFWHM?mpv[0]:minTrialEnergy(),
+      double lim[2]= {iFWHM?mpv[0]:minTrialEnergy(),
                         iFWHM?maxTrialEnergy():mpv[0]};
       int errCalls= 0;
-      for( double bW= (limit[1]-limit[0])*.1; bW>.1;bW= (limit[1]-limit[0])*.1 )
+      for( double bW= (lim[1]-lim[0])/nSteps; bW>.1;bW= (lim[1]-lim[0])/nSteps )
       {
         errCalls= 0;
-        double maxE= limit[1];
-        for( trialEnergy()= limit[0]; trialEnergy()<maxE; trialEnergy()+= bW )
+        double maxE= lim[1];
+        for( trialEnergy()= lim[0]; trialEnergy()<maxE; trialEnergy()+= bW )
         {
           double trialProb;
           if( evaluatePDF(trialProb) )
@@ -280,17 +285,16 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
             ++errCalls; 
             continue;
           } 
-          // for lower(upper) FWHM x axis value, move the limit up(down) when
+          // for lower(upper) FWHM x axis value, move the lim up(down) when
           // at a y axis value  below .5*maximum
-          if( (trialProb<mpv[1]*.5) && (iFWHM^(trialEnergy()>limit[iFWHM])) )
-            limit[iFWHM]= trialEnergy();
+          if( (trialProb<mpv[1]*.5) && (iFWHM^(trialEnergy()>lim[iFWHM])) )
+            lim[iFWHM]= trialEnergy();
         }
-        if( errCalls==10 ) break;
-        limit[!iFWHM]= limit[iFWHM]+(1-2*iFWHM)*bW;
-        limit[iFWHM]-= (1-2*iFWHM)*bW;
+        if( errCalls==nSteps ) return false;
+        lim[!iFWHM]= lim[iFWHM]+(1-2*iFWHM)*bW;
+        lim[iFWHM]-= (1-2*iFWHM)*bW;
       }
-      if( errCalls ) return false;
-      fwhmLimits[iFWHM]= fabs(1-limit[iFWHM]/mpv[0]);
+      fwhmLimits[iFWHM]= fabs(1-lim[iFWHM]/mpv[0]);
     } else {
       double savingCalE= calEnergy();
       double calE[2]= {calEnergy()*(iFWHM?.3:1.), calEnergy()*(iFWHM?1.:5.)};
@@ -298,7 +302,7 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
       // when the lower(upper) FWHM x axis value is outside the PDF pahse
       // space, estimate it as close as possible from that point:
       // we move calEnergy() energy around to find it
-      if( calE[1]<.1 ) calE[1]= (minTrialEnergy()+maxTrialEnergy())*.5;
+      if( calE[1]<.1 ) calE[1]= m_Axes->getBinCenter(0, 4);
       while( fabs(delta-.5)>1e-2 && fabs(calE[0]-calE[1])>.1 ){
         calEnergy()= (calE[0]+calE[1])*.5;
         m_Axes->init(m_eventPar);
@@ -463,7 +467,7 @@ double PDF_Axes::getBinCenter(int ax, int idAx) const
   for( int i= 0; i<ax;  axData+= m_Sizes[i++] );
   if(abs(idAx)>m_Sizes[ax]) return 0;
   if(idAx<0) return axData[m_Sizes[ax]+idAx];
-  return axData[ax];
+  return axData[idAx];
 }
 
 const double* PDF_Axes::getBinCenters(int ax, bool bin) const
