@@ -1,5 +1,5 @@
 package G4Generator
-version v5r9p6
+version v5r10p1
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
 author  Francesco Longo <Francesco.Longo@ts.infn.it>
@@ -31,6 +31,9 @@ use GlastMS
 
 # only needed by test program 
 use FluxSvc v*
+use cfitsio  * IExternal
+# this seems to be needed by FluxSvc
+use flux *  
 
 # get flags to build shared library
 

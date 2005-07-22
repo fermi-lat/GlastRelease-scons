@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r10p1 21-Jul-05 THB Fix test program failure; add defaultOptions.txt for inclusion by Gleam apps
  v5r10p0 23-Jun-05  TU New McPositionHits, order McTrajectories by generation 
  v5r9p6 19-jan-05 THB Tagging Longos fix for heavy ion ionization.
  v5r9p5 16-Dec-04 TU  Remove an unecessary #include which causes TrackingAction to fail compile
