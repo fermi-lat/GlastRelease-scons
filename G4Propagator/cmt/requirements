@@ -1,5 +1,5 @@
 package G4Propagator
-version v2r1p6
+version v2r1p7
 author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
@@ -34,7 +34,9 @@ library G4Propagator -s=../src $(source) -s=Dll *.cxx
 
 # test program 
 # following for test program only: no dependence on the interface
-use FluxSvc  *
+use FluxSvc *
+use cfitsio * IExternal
+use flux *
 
 public 
 apply_pattern package_test

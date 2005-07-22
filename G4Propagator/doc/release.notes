@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r1p7 22-Jul-05 TU   Mods to requirements file to include flux stuff
  v2r1p6 15-Jul-05 TU   Never say finally, I guess... but this does seem to fix it
  v2r1p5 13-Jul-05 TU   Finally fix the problem with ray parallel to surface...
  v2r1p4  1-Mar-05 TU   More work on distanceToEdge, limit "outside" to 400 mm
