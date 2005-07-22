@@ -109,6 +109,7 @@ private:
 
     int m_event;
     DoubleProperty m_deadtime;
+    BooleanProperty  m_throttle;
 
     double m_lastTriggerTime; //! time of last trigger, for calculated live time
     double m_liveTime; //! cumulative live time
@@ -137,6 +138,7 @@ m_triggered(0), m_deadtimeLoss(0)
 {
     declareProperty("mask"     ,  m_mask=0xffffffff); // trigger mask
     declareProperty("deadtime" ,  m_deadtime=0. );    // deadtime to apply to trigger, in sec.
+    declareProperty("throttle",   m_throttle=false);  // if set, veto when throttle bit is on
 
 }
 
@@ -159,6 +161,7 @@ StatusCode TriggerAlg::initialize()
         else            log.stream() << "Applying trigger mask: " <<  std::setbase(16) <<m_mask <<std::setbase(10);
 
         if( m_deadtime>0) log.stream() <<", applying deadtime of " << m_deadtime*1E6 << "u sec ";
+        if( m_throttle) log.stream() <<", throttled ";
     }
     log << endreq;
 
@@ -276,7 +279,8 @@ StatusCode TriggerAlg::execute()
     }
 
     // apply filter for subsequent processing.
-    if( m_mask!=0 && ( trigger_bits & m_mask) == 0  ) {
+    if( m_mask!=0 && ( trigger_bits & m_mask) == 0 
+        || m_throttle && ( (trigger_bits & enums::b_THROTTLE) !=0) ) {
         setFilterPassed( false );
         log << MSG::DEBUG << "Event did not trigger" << endreq;
     }else if( killedByDeadtime ){
