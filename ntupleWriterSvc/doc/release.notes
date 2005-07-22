@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r7   22-jul-2005 THB : Have RootTupleSvc reject tuple entries with non-finite values
  * v3r6p2 20-jun-2005 HMK : Add jobOptions section to mainpage
  * v3r6p1 18-mar-2005 THB : check for entry to fill in finalize stage
  * v3r6p0 04-dec-2004 HMK : add test for TFile::IsOpen in RootTupleSvc

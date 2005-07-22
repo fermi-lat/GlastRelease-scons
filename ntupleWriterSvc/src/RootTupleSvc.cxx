@@ -25,8 +25,28 @@
 #include "TFile.h"
 #include "TSystem.h"
 #include "TLeafD.h"
+#include "TLeaf.h"
 
 #include <fstream>
+
+namespace {
+#ifdef WIN32
+#include <float.h> // used to check for NaN
+#else
+#include <cmath>
+#endif
+
+    bool isFinite(double val) {
+        using namespace std; // should allow either std::isfinite or ::isfinite
+#ifdef WIN32 
+        return (_finite(val)!=0);  // Win32 call available in float.h
+#else
+        return (isfinite(val)!=0); // gcc call available in math.h 
+#endif
+    }
+} // anom namespace
+
+
 
 
 class RootTupleSvc :  public Service, virtual public IIncidentListener,
@@ -100,11 +120,12 @@ private:
 
     RootTupleSvc ( const std::string& name, ISvcLocator* al );    
 
+    StatusCode checkForNAN(TTree*, MsgStream& log);
 
     /// routine to be called at the beginning of an event
     void beginEvent();
     /// routine that is called when we reach the end of an event
-    void endEvent();
+    StatusCode endEvent();
 
     StringProperty m_filename;
     StringProperty m_checksumfilename;
@@ -129,6 +150,9 @@ private:
     bool m_defaultStoreFlag;
     IntegerProperty m_autoSave; // passed to TTree::SetAutoSave.
 
+    /// keep track of how many events rejected
+    int m_badEventCount;
+
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
@@ -138,7 +162,7 @@ const ISvcFactory& RootTupleSvcFactory = a_factory;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_trials(0)
+: Service(name,svc), m_trials(0), m_badEventCount(0)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="RootTupleSvc.root");
@@ -264,18 +288,25 @@ void RootTupleSvc::beginEvent()
     }
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void RootTupleSvc::endEvent()
+StatusCode RootTupleSvc::endEvent()
     // must be called at the end of an event to update, allow pause
 {         
     MsgStream log(msgSvc(),name());
+    StatusCode sc = SUCCESS;
 
     ++m_trials;
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin();
          it!=m_tree.end(); ++it){
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
-            t->Fill();
-            m_storeTree[it->first]=false; 
+            sc = checkForNAN(t, log);
+            // check the tuple for non-finite entries, do not fill the tuple if found
+            if( sc.isFailure() ){ 
+                m_badEventCount++; 
+            }else{
+                t->Fill();
+            }
+            m_storeTree[it->first]=false;
             // doing the checksum here
             std::string treeName = t->GetName();
             if ( m_checkSum->is_open() && treeName == "MeritTuple" ) {
@@ -285,9 +316,28 @@ void RootTupleSvc::endEvent()
             }
         }
     }
+        
+    return sc;
 
 }
+StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
+{
+    TObjArray* ta = t->GetListOfBranches();
+    StatusCode sc = SUCCESS;
 
+    // now iterate.
+    int entries = ta->GetEntries();
+    for( int i = 0; i<entries; ++i) { // should try a TIter
+        TBranch * b = (TBranch*)(*ta)[i];
+        TLeaf* leaf = (TLeaf*)(*b->GetListOfLeaves())[0]; 
+        double val = leaf->GetValue();
+        if( ! isFinite(val) ){
+            log << MSG::ERROR  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
+            sc = StatusCode::FAILURE;
+        }
+    }
+    return sc;
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::queryInterface(const IID& riid, void** ppvInterface)  {
@@ -325,6 +375,9 @@ StatusCode RootTupleSvc::finalize ()
             }
             log << endreq;
         }
+    }
+    if (m_badEventCount>0){
+        log << MSG::ERROR << "Found and rejected " << m_badEventCount << " bad events!" << endreq;
     }
 
     TDirectory *saveDir = gDirectory; 
