@@ -65,21 +65,14 @@ GlastDetSvc.visitorMode="recon";
 ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
 
 // ----------------------------
-//  Generation or input
+//  Generation and simulation
 //
-ApplicationMgr.DLLs +={ "G4Generator","G4Propagator"};
-ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
-
-
-G4Generator.defaultCutValue=0.7; 
-G4Generator.defaultTkrCutValue=0.1;
-G4Generator.defaultCalCutValue=0.7;
+//  get the parameters for simulation -- misnamed the file :-(
+#include "$G4GENERATORROOT/src/basicOptions.txt"
+ApplicationMgr.DLLs +={ "G4Propagator"};
 
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
-
-// Append (or replace) the list of source library documents
-FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
-FluxAlg.source_name="muon_pencil_angle";
+FluxAlg.source_name="default";
 
 // add in CRflux option
 ApplicationMgr.DLLs +={ "CRflux" };

@@ -15,6 +15,8 @@ Output.Members={}; // turn off any root ouptut
 // mix in ticks to generate pointing and livetime tree
 FluxAlg.sources={"default","timetick30s"};
 
+TriggerAlg.throttle = false;   // set true to test this option
+ 
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; // for estima/ IM variable
