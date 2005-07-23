@@ -5,8 +5,7 @@
 
 // LOCAL
 #include "CalXtalResponse/ICalCalibSvc.h"
-#include "CalXtalResponse/IXtalEneTool.h"
-#include "CalXtalResponse/IXtalPosTool.h"
+#include "CalXtalResponse/IXtalRecTool.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
 
 // GLAST
@@ -39,15 +38,13 @@ public:
 
 private: 
   StatusCode test_calCalibSvc();
-  StatusCode test_xtalEneTool();
-  StatusCode test_xtalPosTool();
+  StatusCode test_xtalRecTool();
   StatusCode test_xtalDigiTool();
 
   //! number of times called
   int m_count; 
 
-  IXtalEneTool *m_xtalEneTool; ///< pointer to calenergyTool
-  IXtalPosTool *m_xtalPosTool; ///< pointer to calposTool
+  IXtalRecTool *m_xtalRecTool; ///< pointer to calenergyTool
   IXtalDigiTool *m_xtalDigiTool; ///< pointer to XtalDigiTool
 
 };
@@ -76,16 +73,9 @@ StatusCode test_CalXtalResponse::initialize(){
   msglog << MSG::INFO << "initialize" << endreq;
 
   // get cal energy Tool
-  sc = toolSvc()->retrieveTool("XtalEneTool", m_xtalEneTool);
+  sc = toolSvc()->retrieveTool("XtalRecTool", m_xtalRecTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalEneTool" << endreq;
-    return sc;
-  }
-
-  // get cal pos Tool
-  sc = toolSvc()->retrieveTool("XtalPosTool", m_xtalPosTool);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalPosTool" << endreq;
+    msglog << MSG::ERROR << "  can't create " << "XtalRecTool" << endreq;
     return sc;
   }
 
@@ -109,8 +99,7 @@ StatusCode test_CalXtalResponse::execute()
 
   // Run each individual test
   if ((sc = test_calCalibSvc().isFailure())) return sc;
-  if ((sc = test_xtalPosTool().isFailure())) return sc;
-  if ((sc = test_xtalEneTool().isFailure())) return sc;
+  if ((sc = test_xtalRecTool().isFailure())) return sc;
   if ((sc = test_xtalDigiTool().isFailure())) return sc;
 
   return StatusCode::SUCCESS;
@@ -202,7 +191,8 @@ StatusCode test_CalXtalResponse::test_calCalibSvc() {
 }
 
 /// do single digi->energy calculation
-StatusCode test_CalXtalResponse::test_xtalEneTool() {
+StatusCode test_CalXtalResponse::test_xtalRecTool() {
+#if 0
   MsgStream         msglog( msgSvc(), name() );
   StatusCode sc;
 
@@ -210,47 +200,29 @@ StatusCode test_CalXtalResponse::test_xtalEneTool() {
   CalXtalId::XtalFace face = CalXtalId::POS;
   CalXtalId::AdcRange rng = CalXtalId::LEX1;
   CalXtalId xtalId(0,2,3,face,rng);
-  float energy;
 
-  bool xtalBelowThresh=false, rngBelowThresh=false;
-  if ((sc = m_xtalEneTool->calculate(xtalId, rng, rng, 
-                                     1000, 1000, energy, 
-                                     rngBelowThresh,
-                                     xtalBelowThresh, 0))
+  bool belowThreshP, belowThreshN, saturatedP, saturatedN;
+  double pos, energy;
+  if ((sc = m_xtalRecTool->calculate(xtalId, rng, rng, 
+                                     1000, 1000, energy, pos,
+                                     belowThreshP,
+                                     belowThreshN,
+                                     saturatedP,
+                                     saturatedN))
       != sc) {
-    msglog << MSG::ERROR << "Error calling XtalEneTool::calculate()" << endreq;
+    msglog << MSG::ERROR << "Error calling XtalRecTool::calculate()" << endreq;
     return sc;
   }
-  msglog << MSG::INFO << "2 face energy calculated:" << energy << 
-    " below_thresh="  << xtalBelowThresh << endreq;
-
-  if ((sc = m_xtalEneTool->calculate(xtalId, 1000, 0, energy, 
-                                     rngBelowThresh, xtalBelowThresh))
+  msglog << MSG::INFO << "2 face energy calculated:" << energy << endreq;
+  bool belowThresh, saturated;
+  if ((sc = m_xtalRecTool->calcSingleFaceEne(xtalId, 1000, 0, energy, 
+                                     belowThresh, saturated))
       != sc) {
-    msglog << MSG::ERROR << "Error calling XtalEneTool::calculate()" 
-      " below_thresh="   << xtalBelowThresh << endreq;
+    msglog << MSG::ERROR << "Error calling XtalRecTool::calculate()" << endreq;
     return sc;
   }
   msglog << MSG::INFO << "1 face energy calculated:" << energy << endreq;
-
-  return StatusCode::SUCCESS;
-}
-
-/// do single digi->pos calculation
-StatusCode test_CalXtalResponse::test_xtalPosTool() {
-  MsgStream msglog(msgSvc(), name());
-  StatusCode sc;
-
-  // pick one xtal/rng combo
-  CalXtalId::AdcRange rng = CalXtalId::LEX1;
-  CalXtalId xtalId(0,2,3);
-  float pos;
-
-  if ((sc = m_xtalPosTool->calculate(xtalId, rng, rng, 1000, 1000, pos)).isFailure()) {
-    msglog << MSG::ERROR << "Error calling XtalPosTool::calculate()" << endreq;
-    return sc;
-  }
-  msglog << MSG::INFO << "position calculated:" << pos << endreq;
+#endif
 
   return StatusCode::SUCCESS;
 }
@@ -258,6 +230,7 @@ StatusCode test_CalXtalResponse::test_xtalPosTool() {
 /// do single mc->digi calculation, 
 /// I'm too lazy to build my own hits, so i'm just sending empty list for now.
 StatusCode test_CalXtalResponse::test_xtalDigiTool() {
+#if 0
   MsgStream msglog(msgSvc(), name());
   StatusCode sc;
 
@@ -296,6 +269,6 @@ StatusCode test_CalXtalResponse::test_xtalDigiTool() {
          << ' '      << adcN[2]
          << ' '      << adcN[3]
          << endreq;
-
+#endif
   return StatusCode::SUCCESS;
 }

@@ -20,8 +20,7 @@ DECLARE_FACTORY_ENTRIES(CalXtalResponse) {
   DECLARE_ALGORITHM( CalXtalRecAlg);
 
   DLL_DECL_TOOL( XtalDigiTool );
-  DLL_DECL_TOOL( XtalEneTool );
-  DLL_DECL_TOOL( XtalPosTool );
+  DLL_DECL_TOOL( XtalRecTool );
   
   DLL_DECL_TOOL( CalXtalRespRandom );
 } 
