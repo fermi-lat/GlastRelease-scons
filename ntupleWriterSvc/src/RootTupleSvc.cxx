@@ -18,7 +18,6 @@
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "checkSum.h"
 #include "facilities/Util.h"
-#include <map>
 
 // root includes
 #include "TTree.h"
@@ -27,7 +26,9 @@
 #include "TLeafD.h"
 #include "TLeaf.h"
 
+#include <map>
 #include <fstream>
+#include <iomanip>
 
 namespace {
 #ifdef WIN32
@@ -150,8 +151,10 @@ private:
     bool m_defaultStoreFlag;
     IntegerProperty m_autoSave; // passed to TTree::SetAutoSave.
 
-    /// keep track of how many events rejected
+    /// keep track of how many events had non-finite values
     int m_badEventCount;
+    std::map<std::string, int> m_badMap; ///< map of counts for individual values
+    BooleanProperty m_rejectIfBad; ///< set true to reject the tuple entry if bad values
 
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,6 +174,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
     declareProperty("AutoSave", m_autoSave=100000); // ROOT default is 10000000
+    declareProperty("RejectIfBad", m_rejectIfBad=true); 
 
 
 }
@@ -300,9 +304,10 @@ StatusCode RootTupleSvc::endEvent()
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
             sc = checkForNAN(t, log);
-            // check the tuple for non-finite entries, do not fill the tuple if found
+            // check the tuple for non-finite entries, do not fill the tuple if found (unless overriden)
             if( sc.isFailure() ){ 
                 m_badEventCount++; 
+                if (!m_rejectIfBad) t->Fill();
             }else{
                 t->Fill();
             }
@@ -332,7 +337,8 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
         TLeaf* leaf = (TLeaf*)(*b->GetListOfLeaves())[0]; 
         double val = leaf->GetValue();
         if( ! isFinite(val) ){
-            log << MSG::ERROR  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
+            log << MSG::DEBUG  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
+            m_badMap[leaf->GetName()]++;
             sc = StatusCode::FAILURE;
         }
     }
@@ -377,7 +383,20 @@ StatusCode RootTupleSvc::finalize ()
         }
     }
     if (m_badEventCount>0){
-        log << MSG::ERROR << "Found and rejected " << m_badEventCount << " bad events!" << endreq;
+        log << MSG::WARNING << "==================================================================" << endreq;
+        log << MSG::WARNING << "Found " << m_badEventCount << " bad events: table of bad values follows\n" ;
+        if( log.isActive()) {
+            log.stream() << "\t\t\t" << std::setw(20)<< std::left << "Name" 
+                << std::setw(10) << std::right << "count" << std::endl;
+            for( std::map<std::string,int>::const_iterator it=m_badMap.begin(); it !=m_badMap.end(); ++it){
+                log.stream() << "\t\t\t"<< std::setw(20) << std::left << it->first 
+                    << std::setw(10)<<  std::right << it->second << std::endl;
+            }
+        }
+        if (m_rejectIfBad) { 
+            log << "\t\t\t==========> REJECTED since RejectIfBad flag set to do so!" ;
+            log << endreq;
+        }
     }
 
     TDirectory *saveDir = gDirectory; 
