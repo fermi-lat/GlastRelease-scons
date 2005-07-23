@@ -13,10 +13,10 @@ data could cause some calculations to go out of range.
 The effective reponse of the current configuration is as follows
 
 NEWIDEAL_MUON2 ( CalXtalReponse v0r2p6, GlastRelease v6r4 -> v6r5)
-RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV) 
-LEX8  0.03    3550    106.5            510      6.0, 0.18      43, 1.29
+RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV) FLE(ADC,MeV)  FHE(ADC,MeV)
+LEX8  0.03    3550    106.5            510      6.0, 0.18      43, 1.29     333,10
 LEX1  0.27    3850    958.5            210      0.6, 0.162                 
-HEX8  0.17    3550    569.5            510      6.0, 1.02                 
+HEX8  0.17    3550    569.5            510      6.0, 1.02                                  176,30
 HEX1  1.53    3850    5890             210      0.6, 0.92                 
 
 it incoperates the following improvements over the prievous version.
@@ -61,8 +61,8 @@ it incoperates the following improvements over the prievous version.
   </section>
   
   <section name = "THOLD_CI">
-    <item name = "FLE"     value = "0">   FLE threshold </item>
-    <item name = "FHE"     value = "0">   FHE threshold </item>
+    <item name = "FLE"     value = "333">   FLE threshold </item>
+    <item name = "FHE"     value = "176">   FHE threshold </item>
     <item name = "LAC"     value = "43">  LAC threshold </item>
     <item name = "ULD"     value = "3550, 3850, 3550, 3850"> 1 ULD threshold per ADC range</item>
     <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_CI group    </item>

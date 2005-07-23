@@ -11,10 +11,10 @@ data would cause some ideal calibrations to be out of range.
 The effective reponse of the current configuration is as follows
 
 NEWIDEAL_FLIGHT3
-RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV)
-LEX8  0.03    3550    109              510      13.3, 0.4      66.6, 2.0     
+RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV)  FLE(ADC,MeV) FHE(ADC,MeV)
+LEX8  0.03    3550    109              510      13.3, 0.4      66.6, 2.0     3333,100
 LEX1  0.27    3850    941              210      1.48, 0.4                 
-HEX8  2.16    3550    7676             510      6.0,  12.96                 
+HEX8  2.16    3550    7676             510      6.0,  12.96                               463,1000
 HEX1  19.23   3850    74,016           210      0.6,  11.5   
 
 it incoperates the following improvements over the prievous version.
@@ -58,8 +58,8 @@ pedestal noise & LAC settings higher to accomodate expected higher noise levels 
   </section>
   
   <section name = "THOLD_CI">
-    <item name = "FLE"     value = "0">     FLE threshold </item>
-    <item name = "FHE"     value = "0">     FHE threshold </item>
+    <item name = "FLE"     value = "3333">     FLE threshold </item>
+    <item name = "FHE"     value = "463">     FHE threshold </item>
     <item name = "LAC"     value = "66.6">  LAC threshold </item>
     <item name = "ULD"     value = "3550, 3850, 3550, 3850"> 1 ULD threshold per ADC range</item>
     <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_CI group    </item>

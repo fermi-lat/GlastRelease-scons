@@ -12,6 +12,8 @@
 // GLAST INCLUDES
 #include "idents/CalXtalId.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/TopLevel/Event.h"
+#include "Event/Digi/CalDigi.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -29,23 +31,28 @@ class IXtalDigiTool : virtual public IAlgTool {
 
   static const InterfaceID& interfaceID() { return IID_XtalDigiTool; }
 
-  /// calculate Adc response for one cal xtalId.  also select best rng.
-  /// \param CalXtalId specify xtal log
-  /// \param hitList input vector of energy depositions.  (const *) is used to save space.
-  /// \param rngP output best rng for Positive xtal face
-  /// \param rngN output best rng for Negative xtal face
-  /// \param adcP output vector of 4 adc responses for each rng for Positive face - rngs always in default order (from 0-3)
-  /// \param adcN output vector of 4 adc responses for each rng for Negative face - rngs always in default order (from 0-3)
-  /// \param lacP output boolean for log accept on Positive xtal face
-  /// \param lacN output boolean for log accept on Negative xtal face
+  /** \brief calculate Adc response for one cal xtalId.  also select best rng.
+      \param CalXtalId specify xtal log
+      \param hitList input vector of energy depositions.  (const *) is used to save space.
+	  \param evt pointer to current event (used for runid & evtid)
+	  \param calDigi output empty CalDigi object to be populated
+      \param fleP output FLE trigger Pos face
+	  \param fleN output FLE trigger Pos face
+	  \param fheP output FHE trigger Neg face
+	  \param fheN output FHE trigger Neg face
+      \param lacP output boolean for log accept on Positive xtal face
+      \param lacN output boolean for log accept on Negative xtal face
+  */
   virtual StatusCode calculate(const CalXtalId &xtalId, 
                                const vector<const Event::McIntegratingHit*> &hitList,
-                               bool &lacP,                          // output - log accept.
-                               bool &lacN,                          // output - log accept. 
-                               CalXtalId::AdcRange &rngP,   // output - best rng
-                               CalXtalId::AdcRange &rngN,   // output - best rng
-                               vector<int> &adcP,                   // output - ADC's for all rngs 0-3
-                               vector<int> &adcN                    // output - ADC's for all rngs 0-3
+							   const Event::EventHeader &evtHdr,            
+							   Event::CalDigi &calDigi,     // output 
+                               bool &lacP,                  // output 
+                               bool &lacN,                  // output 
+							   bool &fleP,                  // output 
+							   bool &fleN,                  // output 
+							   bool &fheP,                  // output 
+							   bool &fheN                   // output 
                                ) = 0;
 
 };

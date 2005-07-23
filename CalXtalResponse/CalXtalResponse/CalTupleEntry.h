@@ -10,13 +10,7 @@
 
 /// Single entry in CalTuple
 struct CalTupleEntry {
-  void Clear() {
-	  m_runId   = 0;
-	  m_eventId = 0;
-
-	  memset(m_calXtalAdcPed,0,sizeof(m_calXtalAdcPed));
-	  memset(m_calXtalFaceSignal,0,sizeof(m_calXtalFaceSignal));
-  }
+  void Clear() {memset(this,0,sizeof(CalTupleEntry));}
 
   int m_runId;
   int m_eventId;
@@ -25,7 +19,9 @@ struct CalTupleEntry {
   Float_t m_calXtalAdcPed[16][8][12][2];
         
   /// Cal Xtal Face signal in scintillated MeV units.
-  Float_t m_calXtalFaceSignal[16][8][12][2]; 
+  Float_t m_calXtalFaceSignal[16][8][12][2];
+
+  static const char *m_tupleDesc;
 };
 
 

@@ -44,19 +44,16 @@
  * Once again, as much Gleam/Gaudi mechanics as possible are hidden from the user.
  *
  * CalResponseTools consists of 3 interfaces.
- * -  IXtalEneTool allows for the calculation of deposited energy given cal-digi information for one cal crystal.
- * -  IXtalPosTool allows for the calculation of the centroid position of the deposited energy given the cal-digi information for one cal crystal.
+ * -  IXtalRecTool  reconstructs energy deposit intensity & centroid from digi information
  * -  IXtalDigiTool allows for the calculation of the digital response of one cal crystal given a list of enery depositions for that crystal.
  *
- * Currently there is only one concrete implementation of each of the CalResponseTools:  XtalEneTool, XtalPosTool, and XtalDigiTool
+ * Currently there is only one concrete implementation of each of the CalResponseTools:  XtalRecTool, XtalDigiTool
  *
  * @subsection jobOptions jobOptions
  *
  * once again, suitable defaults exist for all parameters, all params are optional.
  * 
  * @param XtalEnergyTool.CalCalibSvc
- * where to retrieve calib data (defatul="CalCalibSvc")
- * @param XtalPosTool.CalCalibSvc
  * where to retrieve calib data (defatul="CalCalibSvc")
  * @param XtalDigiTool.CalCalibSvc
  * where to retrieve calib data (defatul="CalCalibSvc")
@@ -74,12 +71,10 @@
  *   documentation in CalXtalResponse for details.
  * 
  * @subsection jobOptions jobOptions
- * @param CalXtalRecAlg.xtalEneTool
- *        name of CalXtalResponse/IXtalEneTool based tool performing xtal digi->energy conversion (default is "XtalEneTool")
- * @param CalXtalRecAlg.xtalPosTool
- *        name of CalXtalResponse/IXtalPosTool based tool performing xtal digi->position conversion (default is "XtalPosTool")
+ * @param CalXtalRecAlg.xtalRecTool
+ *        name of CalXtalResponse/IXtalRecTool based tool performing xtal digi->energy conversion (default is "XtalRecTool")
  * @param CalXtalRecAlg.tupleFilename
- *        name of optional CalReconTuple output file. (default is "", which generates no tuple).
+  	  *        name of optional CalReconTuple output file. (default is "", which generates no tuple).
  *
  */
 

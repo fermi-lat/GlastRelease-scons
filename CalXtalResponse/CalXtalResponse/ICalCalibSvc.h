@@ -32,40 +32,45 @@ class ICalCalibSvc : virtual public IInterface {
  public:
   static const InterfaceID& interfaceID() { return IID_ICalCalibSvc; }
 
-  /// get MeVPerDac ratios for given xtal
-  /// \param CalXtalId specify xtal log
-  /// \param mpdLrg output MeVPerDac for large diode on both faces
-  /// \param mpdSm output MeVPerDac for small diode on both faces
+
+  /** \brief get MeVPerDac ratios for given xtal
+      \param CalXtalId specify xtal log
+      \param mpdLrg output MeVPerDac for large diode on both faces
+      \param mpdSm output MeVPerDac for small diode on both faces
+  */
   virtual StatusCode getMeVPerDac(const CalXtalId &xtalId,
                                   CalibData::ValSig &mpdLrg,
                                   CalibData::ValSig &mpdSm) = 0;
 
-  /// get integral non-linearity vals for given xtal/face/rng
-  /// \param CalXtalId specify xtal log
-  /// \param vals output const ref to vector of ADC vals (y).
-  /// \param dacs output const ref to vector of associated DAC vals (x).
-  /// \param error error vals on ADC
+  /** \brief get integral non-linearity vals for given xtal/face/rng
+      \param CalXtalId specify xtal log
+      \param vals output const ref to vector of ADC vals (y).
+      \param dacs output const ref to vector of associated DAC vals (x).
+      \param error error vals on ADC
+  */
   virtual StatusCode getIntNonlin(const CalXtalId &xtalId,
                                   const vector< float > *&adcs,
                                   const vector< unsigned > *&dacs,
                                   float &error) = 0;
 
-  /// get pedestal vals for given xtal/face/rng
-  /// \param CalXtalId specify xtal log
-  /// \param avr output ped (adc units)
-  /// \param sig output sigma on avr
+  /** \brief get pedestal vals for given xtal/face/rng
+      \param CalXtalId specify xtal log
+      \param avr output ped (adc units)
+      \param sig output sigma on avr
+  */
   virtual StatusCode getPed(const CalXtalId &xtalId,
                             float &avr,
                             float &sig,
                             float &cos) = 0;
 
-  /// get Asymmetry calibration information for one xtal
-  /// \param CalXtalId specify xtal log
-  /// \param large asymmetry array over position for large diode on both faces
-  /// \param small asymmetry array over position for small diode on both faces
-  /// \param MsmallPlrg asymmetry array over position for small diode on Minus face and lrg diode on Plus face
-  /// \param PlrgMsmall asymmetry array over position for small diode on Plus face and lrg diode on Minus face
-  /// \param xVals corresponding xvals for all of the accompanying asymmetry arrays
+  /** \brief get Asymmetry calibration information for one xtal
+      \param CalXtalId specify xtal log
+      \param large asymmetry array over position for large diode on both faces
+      \param small asymmetry array over position for small diode on both faces
+      \param MsmallPlrg asymmetry array over position for small diode on Minus face and lrg diode on Plus face
+      \param PlrgMsmall asymmetry array over position for small diode on Plus face and lrg diode on Minus face
+      \param xVals corresponding xvals for all of the accompanying asymmetry arrays
+  */
   virtual StatusCode getAsym(const CalXtalId &xtalId,
                              const vector<CalibData::ValSig> *&asymLrg,
                              const vector<CalibData::ValSig> *&asymSm,
@@ -73,41 +78,46 @@ class ICalCalibSvc : virtual public IInterface {
                              const vector<CalibData::ValSig> *&asymPSNB,
                              const vector<float>  *&xVals) = 0;
 
-  /// get threshold calibration constants as measured w/ charnge injection
-  /// \param CalXtalId specify xtal log
-  /// \param FLE Fast Low Energy shaper threshold (Dac units)
-  /// \param FHE Fast High Energy shaper threshold (Dac units)
-  /// \param LAC Log accept threshold (Adc units)
+  /** \brief get threshold calibration constants as measured w/ charnge injection
+      \param CalXtalId specify xtal log
+      \param FLE Fast Low Energy shaper threshold (Dac units)
+      \param FHE Fast High Energy shaper threshold (Dac units)
+      \param LAC Log accept threshold (Adc units)
+  */
   virtual StatusCode getTholdCI(const CalXtalId &xtalId,
                                 CalibData::ValSig &FLE,
                                 CalibData::ValSig &FHE,
                                 CalibData::ValSig &LAC
                                 ) = 0;
 
-  /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
-  /// \param CalXtalId specify xtal log
-  /// \param output ULD threshold.
+  /** \brief get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
+      \param CalXtalId specify xtal log
+      \param output ULD threshold.
+  */
   virtual StatusCode getULDCI(const CalXtalId &xtalId,
                               CalibData::ValSig &ULDThold) = 0;
 
-  /// get pedestal calibration constants as measured during charge injection threshold testing.
-  /// \param CalXtalId specify xtal log
-  /// \param ped output ped val (Adc units)
+  /** \brief get pedestal calibration constants as measured during charge injection threshold testing.
+      \param CalXtalId specify xtal log
+      \param ped output ped val (Adc units)
+  */
   virtual StatusCode getPedCI(const CalXtalId &xtalId,
                               CalibData::ValSig &ped) = 0;
 
-  /// get threshold calibration constants as measured w/ muon calibration
-  /// \param CalXtalId specify xtal log
-  /// \param FLE Fast Low Energy shaper threshold (Dac units)
-  /// \param FHE Fast High Energy shaper threshold (Dac units)
+  /** \brief get threshold calibration constants as measured w/ muon calibration
+      \param CalXtalId specify xtal log
+      \param FLE Fast Low Energy shaper threshold (Dac units)
+      \param FHE Fast High Energy shaper threshold (Dac units)
+  */
   virtual StatusCode getTholdMuon(const CalXtalId &xtalId,
                                   CalibData::ValSig &FLE,
                                   CalibData::ValSig &FHE
                                   ) = 0;
 
-  /// get pedestal calibration constants as measured during muon calibration threshold testing.
-  /// \param CalXtalId specify xtal log
-  /// \param ped output ped val (Adc units)
+  /** \brief get pedestal calibration constants as measured during muon calibration threshold testing.
+      \param CalXtalId specify xtal log
+      \param ped output ped val (Adc units)
+  */
   virtual StatusCode getPedMuon(const CalXtalId &xtalId,
                                 CalibData::ValSig &ped) = 0;
 

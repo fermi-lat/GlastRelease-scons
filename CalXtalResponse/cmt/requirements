@@ -19,7 +19,8 @@ apply_pattern packageShr
 apply_pattern package_include
 apply_pattern package_headers
 
-library CalXtalResponse *.cxx Dll/*.cxx ${CalXtalResponse_headers}
+library CalXtalResponse *.cxx *.h Dll/*.cxx Dll/*.h ${CalXtalResponse_headers} \
+        CalCalib/*.cxx CalCalib/*.h XtalDigi/*.cxx XtalDigi/*.h XtalRecon/*.cxx XtalRecon/*.h
 
 #=============================================================
 private
