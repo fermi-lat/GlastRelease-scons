@@ -236,7 +236,7 @@ StatusCode TriggerAlg::execute()
     SmartDataPtr<Event::AcdDigiCol> acd(eventSvc(), EventModel::Digi::AcdDigiCol);
     if( acd==0 ) log << MSG::DEBUG << "No acd digis found" << endreq;
 
-    SmartDataPtr<Event::GltDigi> glt(eventSvc(), "Event/digi/GltDigi");
+    SmartDataPtr<Event::GltDigi> glt(eventSvc(),   EventModel::Digi::Event+"/GltDigi");
     if( glt==0 ) log << MSG::DEBUG << "No digi bits found" << endreq;
     // set bits in the trigger word
 
