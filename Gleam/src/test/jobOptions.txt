@@ -13,7 +13,7 @@ AcdDigi.OutputLevel=2;
 Output.Members={}; // turn off any root ouptut
 
 // mix in ticks to generate pointing and livetime tree
-FluxAlg.sources={"default","timetick30s"};
+FluxAlg.sources={"gamma_1_gev_normal","timetick30s"};
 
 TriggerAlg.throttle = false;   // set true to test this option
  
