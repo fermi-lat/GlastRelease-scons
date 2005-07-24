@@ -393,10 +393,10 @@ StatusCode RootTupleSvc::finalize ()
                     << std::setw(10)<<  std::right << it->second << std::endl;
             }
         }
+        log << endreq;
         if (m_rejectIfBad) { 
-            log << "\t\t\t==========> REJECTED since RejectIfBad flag set to do so!" ;
-            log << endreq;
-        }
+            log << MSG::WARNING << "==========> REJECTED since RejectIfBad flag set to do so!" << endreq;
+        } 
     }
 
     TDirectory *saveDir = gDirectory; 

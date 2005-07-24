@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r7p1
+version v3r7p3
 
 #$Id$
 author H. Kelly <heather@heapop.gsfc.nasa.gov>
@@ -33,4 +33,4 @@ macro WinJobOptions  "" VisualC "test/jobOptions.txt"
 set JOBOPTIONS  "${NTUPLEWRITERSVCROOT}/src/test/jobOptions.txt"
 application test_ntupleWriterSvc  ${GlastMain} test/writeJunkAlg.cxx $(WinJobOptions)  
 
-application test_checkSum  test/testCheckSum.cxx checkSum.cxx
+#application test_checkSum  test/testCheckSum.cxx checkSum.cxx
