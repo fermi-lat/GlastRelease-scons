@@ -182,10 +182,11 @@ StatusCode CalEventEnergyAlg::execute()
             return StatusCode::FAILURE ;
         }
     // Else reset CalEventEnergy
-    } else {
-        calEnergy->clear() ;
-        calEnergy->setStatusBits(0) ;
-    }
+    // NO! Do not reset as we want to keep the original energy sum in the collection
+    } //else {
+    //    calEnergy->clear() ;
+    //    calEnergy->setStatusBits(0) ;
+    //}
     
     // No clusters no work
     if (calClusters->size() > 0)
