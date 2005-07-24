@@ -5,7 +5,7 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs   = {  "GlastSvc","G4Generator"};
+ApplicationMgr.DLLs   = {  "GlastSvc","G4Generator","G4Propagator"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
@@ -24,7 +24,6 @@ GlastDetSvc.visitorMode="recon";
 GlastDetSvc.topVolume="LAT";         // the whole schebang 
 GlastDetSvc.visitorMode="recon";
 
-
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
 // Append (no replace) the list of source library documents
 FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
@@ -32,7 +31,6 @@ FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { 
     "FluxAlg",
-    "G4Generator",
     "G4TestAlg"};
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -50,7 +48,9 @@ G4Generator.mcTreeMode = "pruneCal";
 // commands to run before each event. 
 G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 
-ApplicationMgr.EvtMax =100;
+ApplicationMgr.EvtMax =10;
+
+G4TestAlg.OutputLevel=1;
 
 //==============================================================
 //

@@ -5,8 +5,16 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/GaudiException.h" 
 #include <string>
 
+// This defines the interface for the propogator
+#include "GlastSvc/Reco/IPropagator.h"
+
+// This gets the GLAST detector service for access to geometry
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "idents/VolumeIdentifier.h"
+#include "idents/TowerId.h"
 
 /*! \class G4TestAlg
 \brief 
@@ -24,7 +32,13 @@ public:
     StatusCode finalize();
     
 private:
-    
+    IPropagator*   m_propagator;    
+
+    /// pointer to the detector service
+    IGlastDetSvc * m_pDetSvc;
+
+    double         m_startx;
+    double         m_starty;
 };
 
 
@@ -33,8 +47,10 @@ const IAlgFactory& G4TestAlgFactory = Factory;
 
 //
 G4TestAlg::G4TestAlg(const std::string& name, ISvcLocator* pSvcLocator) :
-Algorithm(name, pSvcLocator){
- 
+Algorithm(name, pSvcLocator)
+{
+    declareProperty("StartX", m_startx = 200.); 
+    declareProperty("StartX", m_starty = 200.); 
 }
 
 
@@ -49,6 +65,111 @@ StatusCode G4TestAlg::initialize() {
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
+    //Locate a pointer to the G4Propagator
+    //IPropagator* propagatorTool = 0;
+    if( (sc = toolSvc()->retrieveTool("G4PropagationTool", m_propagator)).isFailure() )
+    {
+        throw GaudiException("ToolSvc could not find G4PropagationTool", name(), sc);
+    }
+
+    // Locate the GlastDetSvc
+    if ( (sc = service("GlastDetSvc", m_pDetSvc)).isFailure() )
+    {
+        throw GaudiException("Could not find GlastDetSvc", name(), sc);
+    }
+
+    double stayClear = 0.;
+    if( (sc = m_pDetSvc->getNumericConstByName("TKRVertStayClear", &stayClear)).isFailure()) 
+    {
+        throw GaudiException("Couldn't find TKRVertStayClear", name(), sc);
+    }
+
+    // get the z coordinate of the top silicon in the bottom tray 
+    //         (should be pretty safe!)
+    // don't make any assumptions about the view in the bottom tray
+    idents::VolumeIdentifier bottom;
+    
+    bottom.init(0,0);
+    bottom.append(0);        // in Tower
+    idents::TowerId t(1);    //
+    bottom.append(t.iy());   // yTower
+    bottom.append(t.ix());   // xTower
+    bottom.append(1);        // Tracker
+    bottom.append(0);        // tray 0
+    idents::VolumeIdentifier idBot;
+    HepTransform3D botTransform;
+    for (int view = 0; view<2; ++view) 
+    {
+        idBot = bottom;
+        idBot.append(view);          // try both views
+        idBot.append(1);             // top silicon (*most* bottom trays have one!)
+        idBot.append(0); idBot.append(0);  // ladder, wafer
+        //std::cout << "view " << view << " idBot " << idBot.name() << std::endl;
+        if(sc = m_pDetSvc->getTransform3DByID(idBot, &botTransform).isSuccess()) {
+            break;
+        }
+    }
+
+    // Everything ok?
+    if (sc.isFailure()) 
+    {
+        throw("Couldn't find bottom tray silicon", name(), sc);
+    }
+
+    double zBot;
+    zBot = (botTransform.getTranslation()).z();
+
+    // this is always above the tracker
+    double propTop = stayClear+zBot;
+
+    // Define starting point and direction
+    Point  startPoint(m_startx, m_starty, propTop);
+    Vector startDir(0., 0., -1.);
+
+    // Initialize the propagator with starting point and direction
+    // This causes the propagator to locate itself in the G4 geometry
+    m_propagator->setStepStart(startPoint, startDir);
+
+    // Determine an arclength that will run the length of the tracker in z
+    double propRange = stayClear+100.;
+    double propBot = propTop - propRange;
+
+    // Call the propagator to now step from the starting position through the given
+    // arclength in the defined direction
+    m_propagator->step(propRange);
+
+    log << MSG::INFO  << "Propagator goes from "<< propTop << " to " << propBot << endreq;
+
+    int numSteps = m_propagator->getNumberSteps();
+
+    log << MSG::INFO  << "Propagator took " << numSteps << " steps" << endreq;
+    //int istep;
+    //idents::VolumeIdentifier id;
+    //idents::VolumeIdentifier prefix = m_pDetSvc->getIDPrefix();
+
+    // Print results
+    log << MSG::INFO;
+    m_propagator->printOn(log.stream());
+    log << endreq;
+    /*
+    // Loop through the volumes encountered and output the results
+    double radlen;
+    bool startCount = false;
+    for (istep=0; istep<numSteps; ++istep) 
+    {
+        Point stepPoint = track->getStepPosition(istep);
+        id = track->getStepVolumeId(istep);
+        id.prepend(prefix);
+        std::string idName = id.name();
+        radlen = track->getStepRadLength(istep);
+        double arclen = track->getStepArcLen(istep);
+        
+        std::cout << "step " << istep << " rl " << radlen 
+        << " arclen " << arclen 
+        << " volid " << id.name()
+        << " pos " << stepPoint <<   std::endl;
+    }
+*/
     return sc;
 }
 
