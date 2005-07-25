@@ -68,12 +68,14 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     // Restrictions and Caveats:  None
 
     // declare the properties
-    declareProperty("RandomEngine",  m_randomEngine="TripleRand");
-    declareProperty("RunNumber",      m_RunNumber=10);
-    declareProperty("RunNumberString",      m_RunNumberString="");
+    declareProperty("RandomEngine",    m_randomEngine="TripleRand");
+    declareProperty("RunNumber",       m_RunNumber=-1);
+    declareProperty("RunNumberString", m_RunNumberString="runName");
     declareProperty("InitialSequenceNumber", m_InitialSequenceNumber=0);
+#if 0 // disable for now: THB
     declareProperty("SeedFile", m_seedFile="");
     declareProperty("EndSeedFile", m_endSeedFile="");
+#endif
     declareProperty("autoSeed", m_autoSeed=true); // allow turn off
     s_instance=this; // for access local to GlastSvc
 }
@@ -159,14 +161,14 @@ StatusCode GlastRandomSvc::initialize ()
     // Call super-class
     Service::initialize ();
 
-        if( serviceLocator() ) {
-            status = serviceLocator()->service("EventDataSvc", m_eventSvc, true );
-        }
-        if(status.isFailure())
-        {
-            log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-            return status;
-        }
+    if( serviceLocator() ) {
+        status = serviceLocator()->service("EventDataSvc", m_eventSvc, true );
+    }
+    if(status.isFailure())
+    {
+        log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+        return status;
+    }
 
 
     // Bind all of the properties for this service
@@ -176,6 +178,24 @@ StatusCode GlastRandomSvc::initialize ()
     }
     m_SequenceNumber = m_InitialSequenceNumber;
 
+    if( m_RunNumberString!="" ){
+        const char * rnstring = ::getenv(m_RunNumberString.c_str());
+        if( rnstring !=0) {
+            m_RunNumber = ::atof(rnstring);
+            log << MSG::INFO << "Run number set from env var "
+                << m_RunNumberString << endreq;
+        }
+    }
+    if( m_RunNumber == -1){
+        m_RunNumber = 10;
+        log << MSG::INFO << "Run number set to default: " << m_RunNumber << endreq;
+    } else {
+        log << MSG::INFO << "Run number set  to: " <<  m_RunNumber << endreq;
+        log << MSG::INFO << "==========================================" <<endreq;
+    }
+
+
+
     // use the incident service to register begin, end events
     IIncidentSvc* incsvc = 0;
     status = service ("IncidentSvc", incsvc, true);
@@ -184,6 +204,8 @@ StatusCode GlastRandomSvc::initialize ()
 
     incsvc->addListener(this, "BeginEvent", 0);
     incsvc->addListener(this, "EndEvent", 0);
+
+#if 0 // disable this
 
     if(m_endSeedFile.value() != "") {
       m_output.open(m_endSeedFile.value().c_str());
@@ -217,7 +239,7 @@ StatusCode GlastRandomSvc::initialize ()
         status = propMgr->setProperty(evtMax);
         if (status.isFailure()) return status;
     }
-
+#endif
     // Look for a factory of an AlgTool that implements the
     // IRandomAccess interface:
     // if found, make one and call the special method
@@ -309,8 +331,10 @@ void GlastRandomSvc::handle(const Incident &inc)
         }
 
 
-        int runNo, seqNo;
+        int runNo = m_RunNumber, 
+            seqNo = m_SequenceNumber++;
 
+#if 0 // disable all this -- we do not use it now (THB)
         if(m_seedFile.value() == "") {
         // allow user to put in a run number by string (allowing environment variables)
             if (m_RunNumberString != "") {
@@ -331,6 +355,7 @@ void GlastRandomSvc::handle(const Incident &inc)
             seqNo = m_seeds[iEvent].m_seqNo;
             ++iEvent; 
         }
+#endif
 
         // recorde seeds to TDS
         mcevt->initialize(runNo, -1, seqNo, 0); // last arg is timestamp, will be set in FluxAlg

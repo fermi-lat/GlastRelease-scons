@@ -5,7 +5,9 @@
  package manager:T.Burnett
            EOH
 
- 10-Jul-05  LSR tag v9r14   Fix up random seed setting to reset all RandGauss statics 
+ 24-Jul-05  THB tag v9r15   Disable logic to read seeds from a file; change run number to make
+                            default behavior to set it from env var "runName" if defined
+ 10-Jul-05  THB tag v9r14   Fix up random seed setting to reset all RandGauss statics 
  03-Jul-05  LSR tag v9r13p1 Change Event version number to v*
                             Fix SiliconPlaneGeometry to better handle alignment
  23-Jun-05  TU  tag v9r13p0 Upping requested Event version number

@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r14p3
+version v9r15
 
 branches src cmt doc
 #$Id$
@@ -51,5 +51,4 @@ macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml"
 set TESTJOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
 apply_pattern package_test
 
-#application checkSeeds  test/checkSeeds.cxx   $(WinInclude) 
 
