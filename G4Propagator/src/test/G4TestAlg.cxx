@@ -15,6 +15,8 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/VolumeIdentifier.h"
 #include "idents/TowerId.h"
+#include "CLHEP/Geometry/Transform3D.h"
+
 
 /*! \class G4TestAlg
 \brief 
