@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   26-jul-05  v6r25   THB  Define new property "FluxSvc.StartTimeEnvVar" to extract the (relative) start time
    22-jun-05  v6r24p3 THB  pass strings to flux/rootplot
    15-jun-05  v6r24p2 THB  linux patch
    15-jun-05  v6r24p1 THB  fix test in run

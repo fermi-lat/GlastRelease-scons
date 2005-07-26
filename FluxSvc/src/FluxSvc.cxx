@@ -191,7 +191,7 @@ private:
         */
     class Times {
     public:
-        void initialize(){
+        void initialize(MsgStream& log){
             // the launch: if set, all times will be added to it
             
             m_start = convert(m_startDate);
@@ -199,7 +199,20 @@ private:
             if( m_launch==0 ) m_launch=m_start;
 
             // now add StartTime as offset to either the StartDate or LaunchDate
-            m_start += m_startTime.value();
+            if(! m_startTimeEnvVar.value().empty()) {
+                const char* envar=::getenv(m_startTimeEnvVar.value().c_str());
+                if( envar==0 ){
+                    log << MSG::WARNING << "Env var " << m_startTimeEnvVar.value() 
+                        << " requested for start time, not found" << endreq;
+                } else {
+                    m_start = ::atof( envar );
+                    log << MSG::INFO << "Setting start time from environment variable " 
+                        << m_startTimeEnvVar.value() << " to "
+                        << m_start << endreq; 
+                }
+            } else {
+                m_start += m_startTime.value();
+            }
 
             if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_start+m_deltaTime;
             // set the basic time here: it will be incremented by the flux object
@@ -221,6 +234,7 @@ private:
         DoubleProperty m_startTime;
         DoubleProperty m_endTime;
         DoubleProperty m_deltaTime;
+        StringProperty m_startTimeEnvVar;
 
         double m_launch;
         double m_start;
@@ -234,11 +248,12 @@ private:
     } m_times;
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    ObserverAdapter< FluxSvc > m_observer; //obsever tag
+    ObserverAdapter< FluxSvc > m_observer; //observer tag
     int askGPS(); // the function that will be called
     bool m_insideSAA; 
 
     DoubleProperty m_expansionFactor;
+
 
 };
 
@@ -268,6 +283,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("DeltaTime"   , m_times.m_deltaTime=0);
     declareProperty("StartDate"   , m_times.m_startDate="");
     declareProperty("LaunchDate"  , m_times.m_launchDate="");
+    declareProperty("StartTimeEnvVar", m_times.m_startTimeEnvVar="");
 
 
 #if 0 // disable this for now, it is not consistent with CompositeSource
@@ -310,10 +326,11 @@ StatusCode FluxSvc::initialize ()
     // bind all of the properties for this service
     setProperties ();
 
-    m_times.initialize();
 
     // open the message log
     MsgStream log( msgSvc(), name() );
+
+    m_times.initialize(log);
 
     status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
 
