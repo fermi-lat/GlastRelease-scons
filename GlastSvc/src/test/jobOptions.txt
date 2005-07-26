@@ -37,7 +37,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // NOTE: make sure ApplicationMgr.EvtMax corresponds
 //       to the number of entries in the file if you 
 //       in fact use a file of run and event numbers
-GlastRandomSvc.SeedFile = "$GLASTSVCROOT/src/test/run_event_nos.dat";
+//THB: disabled nowGlastRandomSvc.SeedFile = "$GLASTSVCROOT/src/test/run_event_nos.dat";
 ApplicationMgr.EvtMax = 10;
 
 //==============================================================
