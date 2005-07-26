@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r0p4 26-Jul-05 TU  Update CalParams to initialize all variables
  * v11r0p3 Bastille  TU  Include new MIP finding, some Cal TDS cleanup
  * v11r0p1 12-Jul-05 THB Fix const in access method
  * v11r0p0 23-Jun-05  TU Preliminary tag for new CalRecon 
