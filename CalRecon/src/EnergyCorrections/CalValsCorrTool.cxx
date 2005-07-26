@@ -454,13 +454,13 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     if(aveRadLens(m_cal_top, -t0, rm_hard/4., 6) == StatusCode::FAILURE) return; 
 	m_status_bits |= VALIDAVERLN; 
 
-    double t_cal_tot = m_radLen_CsI + m_radLen_Stuff;// rad. len. in Cal
-    m_corr_energy   *= t_cal_tot/m_radLen_CsI;       // Correction for non-CsI shower
-    m_t_total        =  t_tracker + t_cal_tot;       // Total rad. len. in LAT
-    m_t              = t_tracker + m_radLen_Cntr;    // Energy centroid in rad. len.
-
 	if(m_radLen_CsI < m_minCsIRLn) return;
 	m_status_bits |= MINCSIRLN; 
+
+    double t_cal_tot  = m_radLen_CsI + m_radLen_Stuff;// rad. len. in Cal
+    m_corr_energy    *= t_cal_tot/m_radLen_CsI;       // Correction for non-CsI shower
+    m_t_total         = t_tracker + t_cal_tot;        // Total rad. len. in LAT
+    m_t               = t_tracker + m_radLen_Cntr;    // Energy centroid in rad. len.
 
 	//                    Energy Leakage Correction
     // Note: the TMath incomplete gamma function is really the fractional inner incomplete
@@ -546,21 +546,21 @@ Event::CalCorToolResult* CalValsCorrTool::loadResults()
     corResult->setParams(params);
     corResult->setChiSquare(1.);
     (*corResult)["CorrectedEnergy"] = m_corr_energy ;
-    (*corResult)["CalTopX0"] = m_cal_top.x() ;
-	(*corResult)["CalTopY0"] = m_cal_top.y() ;
-	(*corResult)["CsIRLn"] = m_radLen_CsI ;
-	(*corResult)["CALRLn"] = m_radLen_CsI + m_radLen_Stuff ;
-    (*corResult)["LATRLn"] = m_t_total ;
-    (*corResult)["StuffRLn"] = m_radLen_Stuff ;
-    (*corResult)["CntrRLn"] = m_t ;
-	(*corResult)["CntrRLnStuff"] = m_radLen_CntrStuff ;
-	(*corResult)["CsIArcLen"] = m_arcLen_CsI ;
-	(*corResult)["GapFraction"] = m_gap_fraction ;
-    (*corResult)["EdgeCorrection"] = m_edge_correction ;
-    (*corResult)["LeakCorrection"] = m_leakage_correction ;
+    (*corResult)["CalTopX0"]        = m_cal_top.x() ;
+	(*corResult)["CalTopY0"]        = m_cal_top.y() ;
+	(*corResult)["CsIRLn"]          = m_radLen_CsI ;
+	(*corResult)["CALRLn"]          = m_radLen_CsI + m_radLen_Stuff ;
+    (*corResult)["LATRLn"]          = m_t_total ;
+    (*corResult)["StuffRLn"]        = m_radLen_Stuff ;
+    (*corResult)["CntrRLn"]         = m_t ;
+	(*corResult)["CntrRLnStuff"]    = m_radLen_CntrStuff ;
+	(*corResult)["CsIArcLen"]       = m_arcLen_CsI ;
+	(*corResult)["GapFraction"]     = m_gap_fraction ;
+    (*corResult)["EdgeCorrection"]  = m_edge_correction ;
+    (*corResult)["LeakCorrection"]  = m_leakage_correction ;
 	(*corResult)["TotalCorrection"] = m_total_correction ;
-	(*corResult)["PredCntr"] = m_t_Pred ;	
-    (*corResult)["DeltaCntr"] = m_deltaT ;	
+	(*corResult)["PredCntr"]        = m_t_Pred ;	
+    (*corResult)["DeltaCntr"]       = m_deltaT ;	
  
     return corResult;
 }

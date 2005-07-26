@@ -14,31 +14,29 @@ CalMomentsAnalysis::CalMomentsAnalysis() : m_moment(0.,0.,0.),
                                            m_rmsTrans(0.),
                                            m_rmsLongAsym(0.)
 {
-    m_axis[0] = Vector(0.,0.,0);
-    m_axis[1] = Vector(0.,0.,0);
-    m_axis[2] = Vector(0.,0.,0);
+    m_axis[0] = Vector(0.,0.,0.);
+    m_axis[1] = Vector(0.,0.,1.);
+    m_axis[2] = Vector(0.,0.,0.);
 
     return;
 }
 
-double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& centroid)
+double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& iniCentroid)
 {
     // The Moments Analysis done here
     // This version lifted directly from code supplied to Bill Atwood by Toby Burnett
     // TU 5/24/2005
-
-    // Initialize the member variables 
-    m_moment    = Vector(0.,0.,0.); 
-    m_axis[1]   = Vector(0.,0.,1.);      // If not valid moments, assume the vector points "up" 
-	m_centroid  = Point(0.,0.,0.);
     m_weightSum = 0.;
 
     // Check that we have enough points to proceed - need at least three
-    if (dataVec.size() < 2) return -1.;
+    double chisq = -1.;
+    if (dataVec.size() < 2) return chisq;
         
     double Ixx       = 0.,  Iyy  = 0.,  Izz  = 0.,
            Ixy       = 0.,  Ixz  = 0.,  Iyz  = 0.;
     double Rsq_mean  = 0.;
+    double weightSum = 0.;
+    Point  centroid(0.,0.,0.);
 
     // Loop through the data points
     for(CalMomentsDataVec::iterator vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
@@ -50,7 +48,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         const CalMomentsData& dataPoint = *vecIter;
 
         double  weight = dataPoint.getWeight();
-        Vector  hit    = dataPoint.getPoint() - centroid;
+        Vector  hit    = dataPoint.getPoint() - iniCentroid;
 
         double Rsq  = hit.mag2();
         double xprm = hit.x();
@@ -66,12 +64,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         Ixz -= xprm*zprm * weight;
         Iyz -= yprm*zprm * weight;
 
-        m_weightSum += weight;
-        m_centroid  += weight * dataPoint.getPoint();
+        weightSum += weight;
+        centroid  += weight * dataPoint.getPoint();
     }
 
-    Rsq_mean   /= dataVec.size();
-    m_centroid /= m_weightSum;
+    Rsq_mean /= dataVec.size();
 
     // Render determinant of Inertia Tensor into cubic form.
     double p = - (Ixx + Iyy + Izz);
@@ -89,10 +86,13 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
 
     double rad_test = b*b/4. + a*a*a/27.;
 
-    double chisq = 0.;
-
     if ((rad_test < 0.) && (Ixy != 0.) && (Ixz != 0.) && (Iyz != 0.))
     {
+        // Update the weight and centroid
+        m_weightSum  = weightSum;
+        m_centroid   = centroid;
+        m_centroid  /= weightSum;
+
         // Construct the roots, which are the principal moments.
         double m   = 2. * sqrt(-a/3.);
         double psi = acos( 3.*b/(a*m) ) / 3.;
@@ -118,6 +118,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         if (m_axis[1].z() < 0.) m_axis[1] = -m_axis[1];
 
         // "Chi-squared" = sum of residuals about principal axis, through centroid, using input weight
+        chisq = 0.;
         for(CalMomentsDataVec::iterator vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
         {
             CalMomentsData& dataPoint = *vecIter;
@@ -145,7 +146,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
 
 double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec, const Point& inputCentroid, double scaleFactor)
 {
-    double chiSq   = 0.;
+    double chiSq   = -1.;
     bool   iterate = true;
 
     // Set the data centroid
@@ -156,10 +157,16 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
     while(iterate)
     {
         // Do the standard moments analysis
-        chiSq = doMomentsAnalysis(dataVec, centroid);
+        double localChiSq = doMomentsAnalysis(dataVec, centroid);
 
-        // Make sure it didn't fail
-        if (chiSq < 0.) break;
+        // Make sure it didn't fail on this iteration
+        if (localChiSq < 0.) 
+        {
+            break;
+        }
+
+        // Update global chi-square to pick up this iteration's value
+        chiSq = localChiSq;
 
         // Update the centroid for subsequent passes
         centroid = getMomentsCentroid();
