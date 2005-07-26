@@ -4,7 +4,9 @@
  *
  *                    **EOH**
 
-   v1r22p6 6-Jul-2005  jrb  Make Leon-requested changes so that full wafer is
+   v1r22p7 25-Jul-2005  jrb for Anders: add (8 tower + ACD) geometry in 
+                            latIntegration
+   v1r22p6  6-Jul-2005  jrb  Make Leon-requested changes so that full wafer is
                             called sensitive.  Digi code will figure out real
                             sensitive area, taking alignment into account
    v1r22p5 16-Jun-2005 jrb  (for Anders) added 10, 12 and 14-tower files
