@@ -398,15 +398,13 @@ int StdMipFindingTool::findMipTracks()
     
         if (m_calMipTrackVec.back().getNh()<4)
         {
-          for (int ih=0; ih<m_calMipTrackVec.back().getNh(); ih++)
-            m_calMipXtalVec[ih].setFree(true);
-          m_calMipTrackVec.pop_back();
+            for (int ih=0; ih<m_calMipTrackVec.back().getNh(); ih++) m_calMipXtalVec[ih].setFree(true);
+            m_calMipTrackVec.pop_back();
         }
     }//end of track finding
     
     int numTracks=m_calMipTrackVec.size();
-    if (numTracks>0)
-      trackProperties();
+    if (numTracks>0) trackProperties();
 
     m_log << MSG::DEBUG << "findMipTracks -end- numTracks=" << m_calMipTrackVec.size() << endreq;
     return numTracks;
@@ -415,179 +413,178 @@ int StdMipFindingTool::findMipTracks()
 //-----------------------------------------------------------------------------------------------------------------
 void StdMipFindingTool::trackProperties()
 {
-  //   m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-  //   m_log << MSG::DEBUG << "trackProperties in StdMipFindingTool" << endreq;
+    //   m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+    //   m_log << MSG::DEBUG << "trackProperties in StdMipFindingTool" << endreq;
 
-  //@@@@@@@@@@@@@@@@@@@@@@ loop over tracks to compute their properties
-  for(Event::CalMipTrackVec::iterator trackIter=m_calMipTrackVec.begin(); trackIter != m_calMipTrackVec.end(); trackIter++)
-  {
-    Event::CalMipTrack& calMipTrack = *trackIter;
-
-    // distance to centroid
-    m_dir  = calMipTrack.getDir();
-    m_refP = calMipTrack.getPoint();
-    m_uu   = m_refP-m_singleClusterCentroid;
-    m_vv   = m_uu.cross(m_dir);
-    double d2C = sqrt(m_vv*m_vv);
-    calMipTrack.setD2C(d2C);
-
-    // energy, distance to closest edge and arcLen
-    double Edep[16][8];
-    double ArcL[16][8];
-    for (int itow=0; itow<16; itow++)
-      for (int ilay=0; ilay<8; ilay++)
-      {
-        Edep[itow][ilay]=0;
-        ArcL[itow][ilay]=0;
-      }
-
-    //-- get arclen per layer
-    Point exitP1;
-    Point exitP2;
-    if (m_dir.z()!=0)
+    //@@@@@@@@@@@@@@@@@@@@@@ loop over tracks to compute their properties
+    for(Event::CalMipTrackVec::iterator trackIter=m_calMipTrackVec.begin(); trackIter != m_calMipTrackVec.end(); trackIter++)
     {
-      exitP1=m_refP+((m_calZBot-m_refP.z())/m_dir.z())*m_dir;
-      exitP2=m_refP+((m_calZTop-m_refP.z())/m_dir.z())*m_dir;
-    }
-    else if (m_dir.x()!=0)
-    {
-      exitP1=m_refP+((m_calXLo-m_refP.x())/m_dir.x())*m_dir;
-      exitP2=m_refP+((m_calXHi-m_refP.x())/m_dir.x())*m_dir;
-    }
-    else if (m_dir.y()!=0)
-    {
-      exitP1=m_refP+((m_calYLo-m_refP.y())/m_dir.y())*m_dir;
-      exitP2=m_refP+((m_calYHi-m_refP.y())/m_dir.y())*m_dir;
-    }
-    m_uu=exitP2-exitP1;
-    m_vv=m_uu.unit();
-    m_G4PropTool->setStepStart(exitP1,m_vv);
-    m_G4PropTool->step(sqrt(m_uu*m_uu));
-    // Now loop over the steps to extract the materials
-    int numSteps = m_G4PropTool->getNumberSteps();
-    idents::VolumeIdentifier volId;
-    idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
-    for(int istep=0; istep<numSteps; ++istep)
-    {
-      volId=m_G4PropTool->getStepVolumeId(istep);
-      volId.prepend(prefix);
-      if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ? 
-      {
-        int itow=4*volId[1]+volId[2];
-        int ilay=volId[4];
-        ArcL[itow][ilay]+=m_G4PropTool->getStepArcLen(istep);
-      }
-    }
+        Event::CalMipTrack& calMipTrack = *trackIter;
 
-    //-- get sum of track hit energy per layer - and d2edge at the same time
-    double d2edge=99999.;
-    int Nh=calMipTrack.getNh();
-    for (int ih=0; ih<Nh; ih++)
-    {
-      Event::CalMipXtal* calMipXtal0=new Event::CalMipXtal();
-      *calMipXtal0=calMipTrack.at(ih);    
+        // distance to centroid
+        m_dir  = calMipTrack.getDir();
+        m_refP = calMipTrack.getPoint();
+        m_uu   = m_refP-m_singleClusterCentroid;
+        m_vv   = m_uu.cross(m_dir);
+        double d2C = sqrt(m_vv*m_vv);
+        calMipTrack.setD2C(d2C);
 
-      double d=D2Edge(calMipXtal0);
-      if (d<d2edge) d2edge=d;
+        // energy, distance to closest edge and arcLen
+        double Edep[16][8];
+        double ArcL[16][8];
+        for (int itow=0; itow<16; itow++)
+            for (int ilay=0; ilay<8; ilay++)
+            {
+                Edep[itow][ilay]=0;
+                ArcL[itow][ilay]=0;
+            }
 
-      int itow = calMipXtal0->getXtal()->getPackedId().getTower();
-      int ilay = calMipXtal0->getXtal()->getPackedId().getLayer();
-      Edep[itow][ilay]+=calMipXtal0->getXtal()->getEnergy();
-      delete calMipXtal0;
-    }
-    calMipTrack.setD2Edge(d2edge);
-    // to be modified later
-    calMipTrack.setCalEdge(-1);
+        //-- get arclen per layer
+        Point exitP1;
+        Point exitP2;
+        if (m_dir.z()!=0)
+        {
+            exitP1=m_refP+((m_calZBot-m_refP.z())/m_dir.z())*m_dir;
+            exitP2=m_refP+((m_calZTop-m_refP.z())/m_dir.z())*m_dir;
+        }
+        else if (m_dir.x()!=0)
+        {
+            exitP1=m_refP+((m_calXLo-m_refP.x())/m_dir.x())*m_dir;
+            exitP2=m_refP+((m_calXHi-m_refP.x())/m_dir.x())*m_dir;
+        }
+        else if (m_dir.y()!=0)
+        {
+            exitP1=m_refP+((m_calYLo-m_refP.y())/m_dir.y())*m_dir;
+            exitP2=m_refP+((m_calYHi-m_refP.y())/m_dir.y())*m_dir;
+        }
+        m_uu=exitP2-exitP1;
+        m_vv=m_uu.unit();
+        m_G4PropTool->setStepStart(exitP1,m_vv);
+        m_G4PropTool->step(sqrt(m_uu*m_uu));
+        // Now loop over the steps to extract the materials
+        int numSteps = m_G4PropTool->getNumberSteps();
+        idents::VolumeIdentifier volId;
+        idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
+        for(int istep=0; istep<numSteps; ++istep)
+        {
+            volId=m_G4PropTool->getStepVolumeId(istep);
+            volId.prepend(prefix);
+            if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ? 
+            {
+                int itow=4*volId[1]+volId[2];
+                int ilay=volId[4];
+                ArcL[itow][ilay]+=m_G4PropTool->getStepArcLen(istep);
+            }
+        }
+
+        //-- get sum of track hit energy per layer - and d2edge at the same time
+        double d2edge=99999.;
+        int Nh=calMipTrack.getNh();
+        for (int ih=0; ih<Nh; ih++)
+        {
+            Event::CalMipXtal* calMipXtal0=new Event::CalMipXtal();
+            *calMipXtal0=calMipTrack.at(ih);    
+
+            double d=D2Edge(calMipXtal0);
+            if (d<d2edge) d2edge=d;
+
+            int itow = calMipXtal0->getXtal()->getPackedId().getTower();
+            int ilay = calMipXtal0->getXtal()->getPackedId().getLayer();
+            Edep[itow][ilay]+=calMipXtal0->getXtal()->getEnergy();
+            delete calMipXtal0;
+        }
+        calMipTrack.setD2Edge(d2edge);
+        // to be modified later
+        calMipTrack.setCalEdge(-1);
         
-    //-- get trackArcLen, trackEcor and trackEcorRms
-    double trackEcor=0;
-    double trackEcorRms=0;
-    double trackArcLen=0.;
-    int nlay=0;
-    for (int itow=0; itow<16; itow++)
-      for (int ilay=0; ilay<8; ilay++)
-      {
-        double edep=Edep[itow][ilay];
-        if (edep>0)
+        //-- get trackArcLen, trackEcor and trackEcorRms
+        double trackEcor=0;
+        double trackEcorRms=0;
+        double trackArcLen=0.;
+        int nlay=0;
+        for (int itow=0; itow<16; itow++)
+            for (int ilay=0; ilay<8; ilay++)
+            {
+                double edep=Edep[itow][ilay];
+                if (edep>0)
+                {
+                    double arcl=ArcL[itow][ilay];
+                    if (arcl>0)
+                    {
+                        nlay++;
+                        trackArcLen+=arcl;
+                        trackEcor+=edep/arcl;
+                        trackEcorRms+=(edep*edep)/(arcl*arcl);
+                    }
+                }
+            }
+        if (nlay>0)
         {
-          double arcl=ArcL[itow][ilay];
-          if (arcl>0)
-          {
-            nlay++;
-            trackArcLen+=arcl;
-            trackEcor+=edep/arcl;
-            trackEcorRms+=(edep*edep)/(arcl*arcl);
-          }
+            trackEcor/=nlay;
+            trackEcorRms/=nlay;
+            trackEcorRms=sqrt(trackEcorRms-trackEcor*trackEcor);
         }
-      }
-    if (nlay>0)
-    {
-      trackEcor/=nlay;
-      trackEcorRms/=nlay;
-      trackEcorRms=sqrt(trackEcorRms-trackEcor*trackEcor);
-    }
-    calMipTrack.setEcor(trackEcor*m_CsIHeight);
-    calMipTrack.setEcorRms(trackEcorRms*m_CsIHeight);
-    calMipTrack.setArcLen(trackArcLen);      
+        calMipTrack.setEcor(trackEcor*m_CsIHeight);
+        calMipTrack.setEcorRms(trackEcorRms*m_CsIHeight);
+        calMipTrack.setArcLen(trackArcLen);      
 
-    // total energy (including track energy) in a cylinder of radius 1Rm=3.8cm around track
-    double Rm=38;
-    double trackErm=0;
+        // total energy (including track energy) in a cylinder of radius 1Rm=3.8cm around track
+        double Rm=38;
+        double trackErm=0;
 
-    //-- find start and end of track segment
-    Point startPos;
-    Point endPos;
-    double dmax=-1.;
-    for(Event::CalMipXtalVec::iterator xTalIter1  = calMipTrack.begin(); 
-        xTalIter1 != calMipTrack.end(); 
-        xTalIter1++)
-    {
-      Event::CalMipXtal& xTal1 = *xTalIter1;
-      //++ get the vector of reconstructed position
-      Point H1=xTal1.getXtal()->getPosition();
-      //++ projection on the track
-      Point P1=m_refP+((H1-m_refP)*m_dir)*m_dir;
-      for(Event::CalMipXtalVec::iterator xTalIter2  = calMipTrack.begin(); 
-          xTalIter2 != calMipTrack.end(); 
-          xTalIter2++)
-      {
-        Event::CalMipXtal& xTal2 = *xTalIter2;
-        //++ get the vector of reconstructed position
-        Point H2=xTal2.getXtal()->getPosition();
-        //++ projection on the track
-        Point P2=m_refP+((H2-m_refP)*m_dir)*m_dir;
-        m_uu=P2-P1;
-        double dist=sqrt(m_uu*m_uu);
-        if (dist>dmax)
+        //-- find start and end of track segment
+        Point startPos;
+        Point endPos;
+        double dmax=-1.;
+        for(Event::CalMipXtalVec::iterator xTalIter1  = calMipTrack.begin(); 
+                                           xTalIter1 != calMipTrack.end(); 
+                                           xTalIter1++)
         {
-          startPos=P1;
-          endPos=P2;
-          dmax=dist;
+            Event::CalMipXtal& xTal1 = *xTalIter1;
+            //++ get the vector of reconstructed position
+            Point H1=xTal1.getXtal()->getPosition();
+            //++ projection on the track
+            Point P1=m_refP+((H1-m_refP)*m_dir)*m_dir;
+            for(Event::CalMipXtalVec::iterator xTalIter2  = calMipTrack.begin(); 
+                                               xTalIter2 != calMipTrack.end(); 
+                                               xTalIter2++)
+            {
+                Event::CalMipXtal& xTal2 = *xTalIter2;
+                //++ get the vector of reconstructed position
+                Point H2=xTal2.getXtal()->getPosition();
+                //++ projection on the track
+                Point P2=m_refP+((H2-m_refP)*m_dir)*m_dir;
+                m_uu=P2-P1;
+                double dist=sqrt(m_uu*m_uu);
+                if (dist>dmax)
+                {
+                    startPos=P1;
+                    endPos=P2;
+                    dmax=dist;
+                }
+            }
         }
-      }
-    }
 
-    //-- loop over CalXtalRecdata
-    Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(m_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
-    for(Event::CalXtalRecCol::const_iterator xTalIter=calXtalRecCol->begin(); xTalIter != calXtalRecCol->end(); xTalIter++)
-    {
-      Event::CalXtalRecData* xTalData = *xTalIter;
-      Point H = xTalData->getPosition();
-      Point P = m_refP+((H-m_refP)*m_dir)*m_dir;
-      //++ add energy if projection on track is between start and end of track segment
-      if ((P-startPos)*(P-endPos)<0)
-      {
-        m_uu=H-P;
-        double d2H=sqrt(m_uu*m_uu);
-        if (d2H<Rm)
-          trackErm+=xTalData->getEnergy();
-      }
+        //-- loop over CalXtalRecdata
+        Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(m_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
+        for(Event::CalXtalRecCol::const_iterator xTalIter=calXtalRecCol->begin(); xTalIter != calXtalRecCol->end(); xTalIter++)
+        {
+            Event::CalXtalRecData* xTalData = *xTalIter;
+            Point H = xTalData->getPosition();
+            Point P = m_refP+((H-m_refP)*m_dir)*m_dir;
+            //++ add energy if projection on track is between start and end of track segment
+            if ((P-startPos)*(P-endPos)<0)
+            {
+                m_uu=H-P;
+                double d2H=sqrt(m_uu*m_uu);
+                if (d2H<Rm) trackErm+=xTalData->getEnergy();
+            }
+        }
+        calMipTrack.setErm(trackErm);
     }
-    calMipTrack.setErm(trackErm);
-  }
     
-  //   m_log << MSG::DEBUG << "trackProperties -end-" << endreq;
-  return;
+    //   m_log << MSG::DEBUG << "trackProperties -end-" << endreq;
+    return;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -661,142 +658,141 @@ bool StdMipFindingTool::findC1()
 
     for (Event::CalMipXtalVec::iterator xTalIter=m_calMipXtalVec.begin(); xTalIter != m_calMipXtalVec.end(); xTalIter++)
     {
-      m_hid++;
-      Event::CalMipXtal calMipXtal = *xTalIter;
-      int itow1 = calMipXtal.getXtal()->getPackedId().getTower();
-      int ilay1 = calMipXtal.getXtal()->getPackedId().getLayer();
-      int icol1 = calMipXtal.getXtal()->getPackedId().getColumn();
-      //don't want initial direction to be horizontal
+        m_hid++;
+        Event::CalMipXtal calMipXtal = *xTalIter;
+        int itow1 = calMipXtal.getXtal()->getPackedId().getTower();
+        int ilay1 = calMipXtal.getXtal()->getPackedId().getLayer();
+        int icol1 = calMipXtal.getXtal()->getPackedId().getColumn();
+        //don't want initial direction to be horizontal
 
-      if (!calMipXtal.getFree() || (itow1==itow0 && ilay1==ilay0))
-        continue;
+        if (!calMipXtal.getFree() || (itow1==itow0 && ilay1==ilay0))
+            continue;
 
-      m_uu=calMipXtal.getXtal()->getPosition()-m_refP;
-      m_vv=m_uu.unit();
+        m_uu=calMipXtal.getXtal()->getPosition()-m_refP;
+        m_vv=m_uu.unit();
 
-      Point xStart=m_refP-m_CsILength*m_vv;//go back to cross C0 and compute also its arcLen
-      m_G4PropTool->setStepStart(xStart,m_vv);
+        Point xStart=m_refP-m_CsILength*m_vv;//go back to cross C0 and compute also its arcLen
+        m_G4PropTool->setStepStart(xStart,m_vv);
 
-      d01=sqrt(m_uu*m_uu);
-      m_log << MSG::DEBUG << "findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;        m_G4PropTool->step(d01+3*m_CsILength);
+        d01=sqrt(m_uu*m_uu);
+        m_log << MSG::DEBUG << "findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;        m_G4PropTool->step(d01+3*m_CsILength);
 
-      // Now loop over the steps to extract the materials
-      int numSteps = m_G4PropTool->getNumberSteps();
-      m_log << MSG::DEBUG << "findC1 G4prop numSteps=" << numSteps << endreq;
-      idents::VolumeIdentifier volId;
-      idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
-      int itow=-1;
-      int ilay=-1;
-      int icol=-1;
-      bool foundOneCalMipXtalNotAlreadyUsed=false;
-      double arcLen0=0;
-      double arcLen1=0;
-      int hidp=-1;
-      bool lnext=true;
-      bool crossedC0=false;
-      for(int istep=0; istep<numSteps && lnext; ++istep)
-      {
-        volId=m_G4PropTool->getStepVolumeId(istep);
-        volId.prepend(prefix);
-        //        m_log << MSG::DEBUG << "findC1 istep=" << istep << " volId.name=" << volId.name() << endreq;
-
-        if(!(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0))// in Xtal ? 
-          continue;
-
-        int iitow=4*volId[1]+volId[2];
-        int iilay=volId[4];
-        int iicol=volId[6];
-        int iiseg=volId[8];
-        int hid=m_hitId[iitow][iilay][iicol];
-        m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << endreq;
-
-        // continue if C0 still not crossed
-        if (!crossedC0 && hid!=m_hid0)
-          continue;
-
-        double arcLen_step = m_G4PropTool->getStepArcLen(istep);
-        if (hid==m_hid0)
+        // Now loop over the steps to extract the materials
+        int numSteps = m_G4PropTool->getNumberSteps();
+        m_log << MSG::DEBUG << "findC1 G4prop numSteps=" << numSteps << endreq;
+        idents::VolumeIdentifier volId;
+        idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
+        int itow=-1;
+        int ilay=-1;
+        int icol=-1;
+        bool foundOneCalMipXtalNotAlreadyUsed=false;
+        double arcLen0=0;
+        double arcLen1=0;
+        int hidp=-1;
+        bool lnext=true;
+        bool crossedC0=false;
+        for(int istep=0; istep<numSteps && lnext; ++istep)
         {
-          arcLen0+=arcLen_step;
-          crossedC0=true;
-          m_log << MSG::DEBUG << "00000 findC1 seg in Xtal C0 itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arcLen0 " << arcLen0 << endreq;
-          continue;
-        }
-        // at this point C0 has been crossed and the volume does not belong to C0 crystal
+            volId=m_G4PropTool->getStepVolumeId(istep);
+            volId.prepend(prefix);
+            //        m_log << MSG::DEBUG << "findC1 istep=" << istep << " volId.name=" << volId.name() << endreq;
 
-        // continue if still in same layer
-        if (iitow==itow0 && iilay==ilay0)
-          continue;
+            if(!(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0))// in Xtal ? 
+                continue;
+
+            int iitow=4*volId[1]+volId[2];
+            int iilay=volId[4];
+            int iicol=volId[6];
+            int iiseg=volId[8];
+            int hid=m_hitId[iitow][iilay][iicol];
+            m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << endreq;
+
+            // continue if C0 still not crossed
+            if (!crossedC0 && hid!=m_hid0)
+                continue;
+
+            double arcLen_step = m_G4PropTool->getStepArcLen(istep);
+            if (hid==m_hid0)
+            {
+                arcLen0+=arcLen_step;
+                crossedC0=true;
+                m_log << MSG::DEBUG << "00000 findC1 seg in Xtal C0 itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arcLen0 " << arcLen0 << endreq;
+                continue;
+            }
+            // at this point C0 has been crossed and the volume does not belong to C0 crystal
+
+            // continue if still in same layer
+            if (iitow==itow0 && iilay==ilay0)
+                continue;
         
-        // if not in the hit map (CalMipXtalVec) : continue if in same layer as current C1, stop otherwise
-        if (hid<0)
-        {
-          m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
-          if (!(iitow==itow1 && iilay==ilay1))
-            lnext=false;
-          continue;
-        }
+            // if not in the hit map (CalMipXtalVec) : continue if in same layer as current C1, stop otherwise
+            if (hid<0)
+            {
+                m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
+                if (!(iitow==itow1 && iilay==ilay1))
+                    lnext=false;
+                continue;
+            }
 
-        // stop if one log has been found and current log is different from it
-        if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
-        {
-          m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
-          lnext=false;
-          continue;
-        }
+            // stop if one log has been found and current log is different from it
+            if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
+            {
+                m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
+                lnext=false;
+                continue;
+            }
 
-        // stop if current log is not free
-        if (!m_calMipXtalVec[hid].getFree())
-        {
-          m_log << MSG::DEBUG << "findC1 end of vol search 3" << endreq;
-          lnext=false;
-          continue;
+            // stop if current log is not free
+            if (!m_calMipXtalVec[hid].getFree())
+            {
+                m_log << MSG::DEBUG << "findC1 end of vol search 3" << endreq;
+                lnext=false;
+                continue;
+            }
+            else
+            {
+                itow=iitow;
+                ilay=iilay;
+                icol=iicol;
+                hidp=hid;
+                foundOneCalMipXtalNotAlreadyUsed=true;
+                arcLen1+=arcLen_step;
+                m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arc " << arcLen_step << endreq;
+            }
         }
-        else
-        {
-          itow=iitow;
-          ilay=iilay;
-          icol=iicol;
-          hidp=hid;
-          foundOneCalMipXtalNotAlreadyUsed=true;
-          arcLen1+=arcLen_step;
-          m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arc " << arcLen_step << endreq;
-        }
-      }
         
-      if (hidp==m_hid && arcLen0>0 && arcLen1>0)
-      {
-        double ecor0=ene0*m_CsIHeight/arcLen0;
-        double ene1=m_calMipXtalVec[hidp].getXtal()->getEnergy();
-        double ecor1=ene1*m_CsIHeight/arcLen1;
-        m_log << MSG::DEBUG << "------> findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc0 " << arcLen0  << " ecor0 " << ecor0 << " arc1 " << arcLen1  << " ecor1 " << ecor1 << endreq;
+        if (hidp==m_hid && arcLen0>0 && arcLen1>0)
+        {
+            double ecor0=ene0*m_CsIHeight/arcLen0;
+            double ene1=m_calMipXtalVec[hidp].getXtal()->getEnergy();
+            double ecor1=ene1*m_CsIHeight/arcLen1;
+            m_log << MSG::DEBUG << "------> findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc0 " << arcLen0  << " ecor0 " << ecor0 << " arc1 " << arcLen1  << " ecor1 " << ecor1 << endreq;
             
-        if (ecor0>m_ecor1 && ecor0<m_ecor2 && ecor1>m_ecor1 && ecor1<m_ecor2)
-        {
-          if (d01<dmin)
-          {
-            dmin   = d01;
-            m_hid1 = hidp;
-            // impose downwards direction
-            if (m_vv.z()>0)
-              m_vv=-1.*m_vv;
-            m_dir = m_vv;
-          }
+            if (ecor0>m_ecor1 && ecor0<m_ecor2 && ecor1>m_ecor1 && ecor1<m_ecor2)
+            {
+                if (d01<dmin)
+                {
+                    dmin   = d01;
+                    m_hid1 = hidp;
+                    // impose downwards direction
+                    if (m_vv.z()>0)  m_vv=-1.*m_vv;
+                    m_dir = m_vv;
+                }
+            }
         }
-      }
     }
 
     if (m_hid1>=0)
     {
-      Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid1];
-      calMipXtalRef.setFree(false);
+        Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid1];
+        calMipXtalRef.setFree(false);
 
-      m_log << MSG::DEBUG << "findC1 -end- true" << endreq;
-      int itow = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
-      int ilay = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
-      int icol = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
-      //        m_log << MSG::DEBUG << "findC1 -end- " << itow << " " << ilay << " " << icol  << endreq;
-      return true;
+        m_log << MSG::DEBUG << "findC1 -end- true" << endreq;
+        int itow = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
+        int ilay = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
+        int icol = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
+        //        m_log << MSG::DEBUG << "findC1 -end- " << itow << " " << ilay << " " << icol  << endreq;
+        return true;
     }
 
     m_log << MSG::DEBUG << "findC1 -end- false" << endreq;
@@ -883,182 +879,177 @@ bool StdMipFindingTool::findCn()
 //-----------------------------------------------------------------------------------------------------------------
 int StdMipFindingTool::propagate(Point xStart, Vector dir)
 {
-   m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-   m_log << MSG::DEBUG << "propagate in StdMipFindingTool" << endreq;
+    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+    m_log << MSG::DEBUG << "propagate in StdMipFindingTool" << endreq;
 //   m_log << MSG::DEBUG << "propagate xStart=" << xStart.x() << " " << xStart.y() << "  " << xStart.z() << endreq;  
 //   m_log << MSG::DEBUG << "propagate dir   =" << dir.x() << " " << dir.y() << "  " << dir.z() << endreq;  
-  int hidn=-1;
-  int radn=-1;
-  double dmin = 99999;
-  // get one unit vector perpendicular to track direction
-  double costheta = dir.z();
-  double sintheta = sqrt(1.-costheta*costheta);
-  double cosphi;
-  if (sintheta!=0)
-    cosphi=dir.x()/sintheta;
-  else
-    cosphi=1;
-  Vector p(costheta/cosphi, 0., -sintheta);
-  p=p.unit();
-  int nRad=5;
-  int nAng1=3;
-  double deltaRadius=4;
+    int hidn=-1;
+    int radn=-1;
+    double dmin = 99999;
+    // get one unit vector perpendicular to track direction
+    double costheta = dir.z();
+    double sintheta = sqrt(1.-costheta*costheta);
+    double cosphi;
+    if (sintheta!=0) cosphi=dir.x()/sintheta;
+    else             cosphi=1;
+    Vector p(costheta/cosphi, 0., -sintheta);
+    p=p.unit();
+    int nRad=5;
+    int nAng1=3;
+    double deltaRadius=4;
 
-  for (int iRad=1; iRad<=nRad; iRad++)
-  {
-    double radius = iRad * deltaRadius;
-    int      nAng = iRad * nAng1;
-
-    for(int iAng=0; iAng<=nAng; iAng++)
+    for (int iRad=1; iRad<=nRad; iRad++)
     {
-      if (iRad>1 && iAng==0) continue;
-      Point x0=xStart;
-      if(iAng>0)
-      {
-        // Compute new starting point onto of Cal
-        double rotAng=2.*m_pi*(iAng-1)/nAng; 
-        HepRotation rot(dir,rotAng);
-        // get unit vector delta perpendicular to track direction with variable cylindrical phi angle 
-        Vector delta=rot*p;
-        // get starting point on cylinder surface
-        double radius=deltaRadius*nRad;
-        //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ propagate G4prop iRad=" << iRad << " radius=" << radius << " iAng=" << iAng << " rotAng " << rotAng << endreq;
-        Point xI = xStart + radius*delta;
-        double s;
-        if (costheta!=0)
-          s=(xStart.z() - xI.z())/costheta;
-        else
-          s=0;
-        Ray segmt(xI,dir); 
-        x0=segmt.position(s);
-      }
-      // search for another hit forward and backward
-      for(int iforward=0;iforward<2;iforward++)
-      {
-        Point exitP;
-        if (dir.z()!=0)
+        double radius = iRad * deltaRadius;
+        int      nAng = iRad * nAng1;
+
+        for(int iAng=0; iAng<=nAng; iAng++)
         {
-          if (iforward==0)
-          {
-            m_uu=dir;// m_dir always downwards
-            exitP=x0+((m_calZBot-x0.z())/m_uu.z())*m_uu;        
-          }
-          else
-          {
-            m_uu=-dir;// m_dir always downwards
-            exitP=x0+((m_calZTop-x0.z())/m_uu.z())*m_uu;
-          }
-        }
-        else
-        {
-          if (dir.x()!=0)
-          {
-            if (iforward==0)
-              m_uu=dir;
-            else
-              m_uu=-dir;
-            if (m_uu.x()>0)
-              exitP=x0+((m_calXHi-x0.x())/m_uu.x())*m_uu;
-            else
-              exitP=x0+((m_calXLo-x0.x())/m_uu.x())*m_uu;
-          }
-          else if (dir.y()!=0)
-          {
-            if (iforward==0)
-              m_uu=dir;
-            else
-              m_uu=-dir;
-            if (m_uu.y()>0)
-              exitP=x0+((m_calYHi-x0.y())/m_uu.y())*m_uu;
-            else
-              exitP=x0+((m_calYLo-x0.y())/m_uu.y())*m_uu;
-          }
-          else
-            continue;
-        }
-        m_log << MSG::DEBUG << "propagate " << " " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
-        m_G4PropTool->setStepStart(x0,m_uu);
-        m_uu=x0-exitP;
-        m_G4PropTool->step(sqrt(m_uu*m_uu));          
-        // Now loop over the steps to extract the materials
-        int numSteps = m_G4PropTool->getNumberSteps();
-        //m_log << MSG::DEBUG << "propagate G4prop iforward=" << iforward << " numSteps=" << numSteps << endreq;
-        idents::VolumeIdentifier volId;
-        idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
-        int itow=-1;
-        int ilay=-1;
-        int icol=-1;
-        bool foundOneCalMipXtalNotAlreadyUsed=false;
-        double arcLen=0;
-        int hidp=-1;
-        bool lnext=true;
-        for(int istep=0; istep<numSteps && lnext; ++istep)
-        {
-          volId=m_G4PropTool->getStepVolumeId(istep);
-          volId.prepend(prefix);
-          //      m_log << MSG::DEBUG << "propagate istep "<<  istep << " volId.name " << volId.name() << endreq;
-          if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ? 
-          {
-            int iitow=4*volId[1]+volId[2];
-            int iilay=volId[4];
-            int iicol=volId[6];
-            //          int iiseg=volId[8];
-            //          m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
-            // stop if current log is different from the log previously found
-            if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
+            if (iRad>1 && iAng==0) continue;
+            Point x0=xStart;
+            if(iAng>0)
             {
-              //m_log << MSG::DEBUG << "propagate end of vol search 1" << endreq;
-              lnext=false;
-              continue;
+                // Compute new starting point onto of Cal
+                double rotAng=2.*m_pi*(iAng-1)/nAng; 
+                HepRotation rot(dir,rotAng);
+                // get unit vector delta perpendicular to track direction with variable cylindrical phi angle 
+                Vector delta=rot*p;
+                // get starting point on cylinder surface
+                double radius=deltaRadius*nRad;
+                //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ propagate G4prop iRad=" << iRad << " radius=" << radius << " iAng=" << iAng << " rotAng " << rotAng << endreq;
+                Point xI = xStart + radius*delta;
+                double s;
+                if (costheta!=0) s=(xStart.z() - xI.z())/costheta;
+                else             s=0;
+                Ray segmt(xI,dir); 
+                x0=segmt.position(s);
             }
-            int hid=m_hitId[iitow][iilay][iicol];
-            if (hid<0) // stop if current log is not in the hit map (CalMipXtalVec)
+      
+            // search for another hit forward and backward
+            for(int iforward=0;iforward<2;iforward++)
             {
-              //m_log << MSG::DEBUG << "propagate end of vol search 2" << endreq;
-              lnext=false;
-              continue;
-            }
-            double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
+                Point exitP;
+                if (dir.z()!=0)
+                {
+                    if (iforward==0)
+                    {
+                        m_uu=dir;// m_dir always downwards
+                        exitP=x0+((m_calZBot-x0.z())/m_uu.z())*m_uu;        
+                    }
+                    else
+                    {
+                        m_uu=-dir;// m_dir always downwards
+                        exitP=x0+((m_calZTop-x0.z())/m_uu.z())*m_uu;
+                    }
+                }
+                else
+                {
+                    if (dir.x()!=0)
+                    {
+                        if (iforward==0) m_uu=dir;
+                        else             m_uu=-dir;
+                        if (m_uu.x()>0)
+                            exitP=x0+((m_calXHi-x0.x())/m_uu.x())*m_uu;
+                        else
+                            exitP=x0+((m_calXLo-x0.x())/m_uu.x())*m_uu;
+                    }
+                    else if (dir.y()!=0)
+                    {
+                        if (iforward==0)
+                            m_uu=dir;
+                        else
+                            m_uu=-dir;
+                        if (m_uu.y()>0)
+                            exitP=x0+((m_calYHi-x0.y())/m_uu.y())*m_uu;
+                        else
+                            exitP=x0+((m_calYLo-x0.y())/m_uu.y())*m_uu;
+                    }
+                    else
+                        continue;
+                }
+                m_log << MSG::DEBUG << "propagate " << " " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
+                m_G4PropTool->setStepStart(x0,m_uu);
+                m_uu=x0-exitP;
+                m_G4PropTool->step(sqrt(m_uu*m_uu));          
+                // Now loop over the steps to extract the materials
+                int numSteps = m_G4PropTool->getNumberSteps();
+                //m_log << MSG::DEBUG << "propagate G4prop iforward=" << iforward << " numSteps=" << numSteps << endreq;
+                idents::VolumeIdentifier volId;
+                idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
+                int itow=-1;
+                int ilay=-1;
+                int icol=-1;
+                bool foundOneCalMipXtalNotAlreadyUsed=false;
+                double arcLen=0;
+                int hidp=-1;
+                bool lnext=true;
+                for(int istep=0; istep<numSteps && lnext; ++istep)
+                {
+                    volId=m_G4PropTool->getStepVolumeId(istep);
+                    volId.prepend(prefix);
+                    //      m_log << MSG::DEBUG << "propagate istep "<<  istep << " volId.name " << volId.name() << endreq;
+                    if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ? 
+                    {
+                        int iitow=4*volId[1]+volId[2];
+                        int iilay=volId[4];
+                        int iicol=volId[6];
+                        //          int iiseg=volId[8];
+                        //          m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << endreq;
+                        // stop if current log is different from the log previously found
+                        if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
+                        {
+                            //m_log << MSG::DEBUG << "propagate end of vol search 1" << endreq;
+                            lnext=false;
+                            continue;
+                        }
+                        int hid=m_hitId[iitow][iilay][iicol];
+                        if (hid<0) // stop if current log is not in the hit map (CalMipXtalVec)
+                        {
+                            //m_log << MSG::DEBUG << "propagate end of vol search 2" << endreq;
+                            lnext=false;
+                            continue;
+                        }
+                        double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
             
-            if (m_calMipXtalVec[hid].getFree())// can have crossing tracks....
-            {
-              itow=iitow;
-              ilay=iilay;
-              icol=iicol;
-              hidp=hid;
-              foundOneCalMipXtalNotAlreadyUsed=true;
-              arcLen+=arcLen_step;
-              //m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << endreq;
-            }
-            // else
-            //  m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
-          }
-        }
+                        if (m_calMipXtalVec[hid].getFree())// can have crossing tracks....
+                        {
+                            itow=iitow;
+                            ilay=iilay;
+                            icol=iicol;
+                            hidp=hid;
+                            foundOneCalMipXtalNotAlreadyUsed=true;
+                            arcLen+=arcLen_step;
+                            //m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " " << iiseg << " arc " << arcLen_step << endreq;
+                        }
+                        // else
+                        //  m_log << MSG::DEBUG << "propagate seg in Xtal itow/ilay/icol/iseg " << iitow << "  " << iilay << "  " << iicol << " hit already in track" << endreq;
+                    }
+                }
 
-        if (hidp>=0 && arcLen>0)
-        {
-          double ecor=m_calMipXtalVec[hidp].getXtal()->getEnergy()*m_CsIHeight/arcLen;
-          m_log << MSG::DEBUG << "------> propagate " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
-          m_log << MSG::DEBUG << "------> propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " ecor " << ecor << endreq;
-          if (ecor>m_ecor1 && ecor<m_ecor2)
-          {
-            m_uu = m_calMipXtalVec[hidp].getXtal()->getPosition()-xStart;
-            m_vv = dir.cross(m_uu);
-            double d2dir = sqrt(m_vv*m_vv);
-            if (d2dir<dmin)
-            {
-              dmin = d2dir;
-              hidn = hidp;
-              radn=radius;
+                if (hidp>=0 && arcLen>0)
+                {
+                    double ecor=m_calMipXtalVec[hidp].getXtal()->getEnergy()*m_CsIHeight/arcLen;
+                    m_log << MSG::DEBUG << "------> propagate " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
+                    m_log << MSG::DEBUG << "------> propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " ecor " << ecor << endreq;
+                    if (ecor>m_ecor1 && ecor<m_ecor2)
+                    {
+                        m_uu = m_calMipXtalVec[hidp].getXtal()->getPosition()-xStart;
+                        m_vv = dir.cross(m_uu);
+                        double d2dir = sqrt(m_vv*m_vv);
+                        if (d2dir<dmin)
+                        {
+                            dmin = d2dir;
+                            hidn = hidp;
+                            radn=radius;
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
 
-  m_log << MSG::DEBUG << "propagate -end- hidn=" << hidn << " radius=" << radn << endreq;
-  return hidn;
+    m_log << MSG::DEBUG << "propagate -end- hidn=" << hidn << " radius=" << radn << endreq;
+    return hidn;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
