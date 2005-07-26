@@ -24,7 +24,7 @@ public :
 
     virtual ~CalSingleClusteringTool() {};
     
-	/// @brief Intialization of the tool
+    /// @brief Intialization of the tool
     virtual StatusCode initialize() ;
 
     /// @brief Default cluster finding framework
@@ -88,13 +88,14 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
                 it != m_calReconSvc->getXtalRecs()->end(); ++it )
     {
         // get pointer to the reconstructed data for given crystal
-	    Event::CalXtalRecData * recData = *it ;
+        Event::CalXtalRecData * recData = *it ;
         xTalClus->push_back(recData) ;
     }
 
     calClusterCol->clear() ;
+
     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
-	cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
+    cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
     calClusterCol->push_back(cluster);
 
     delete xTalClus;

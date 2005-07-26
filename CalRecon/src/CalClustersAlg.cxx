@@ -107,12 +107,43 @@ StatusCode CalClustersAlg::execute()
     // non fatal errors
     // if there's no CalXtalRec then CalClustersAlg is not happening
   	if (!m_calReconSvc->getXtalRecs())  return StatusCode::SUCCESS ;
+
+    // Ditto if the collection is empty
+    if (m_calReconSvc->getXtalRecs()->empty()) return sc;
       
     // call the clustering tool
-    try {
-        if (m_clusteringTool->findClusters(m_calReconSvc->getClusters()).isFailure()) {
+    try 
+    {
+        // Insure CalRecon/Event directory in TDS
+        DataObject * pnode = 0 ;
+        if ((eventSvc()->retrieveObject(EventModel::CalRecon::Event,pnode)).isFailure()
+            && (eventSvc()->registerObject(EventModel::CalRecon::Event,new DataObject)).isFailure()) 
+        { 
+            throw CalException("cannot register Event/CalRecon") ;
+        } 
+
+        // Look up the CalClusterCol
+        Event::CalClusterCol* calClusterCol = 
+            SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol) ;
+
+        // It should be the case that no collection exists and we need to create it
+        if (!calClusterCol) 
+        {
+            calClusterCol = new Event::CalClusterCol() ;
+            if ((eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,calClusterCol)).isFailure()) 
+            {
+                throw CalException("cannot register CalClusterCol") ;
+            }
+        }
+        // If code called on second pass then we need to clear the collection (?)
+        else calClusterCol->clear();
+
+        // Call the tool to find clusters
+        if (m_clusteringTool->findClusters(calClusterCol).isFailure()) 
+        {
             sc = m_calReconSvc->handleError(name(),"clustering tool failure") ;
-        }        
+        } 
+    // Catch any exceptions here
     } catch( CalException & e ) {
         sc = m_calReconSvc->handleError(name()+" CalException",e.what()) ;
     } catch( std::exception & e) {

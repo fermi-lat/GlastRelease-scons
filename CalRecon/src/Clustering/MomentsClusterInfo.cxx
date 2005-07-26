@@ -1,6 +1,26 @@
 
 #include "MomentsClusterInfo.h"
+#include "src/Utilities/CalException.h"
 
+namespace 
+{
+    #ifdef WIN32
+    #include <float.h> // used to check for NaN
+    #else
+    #include <cmath>
+    #endif
+     
+    bool isFinite(double val) 
+    {
+        using namespace std; // should allow either std::isfinite or ::isfinite
+        #ifdef WIN32
+            return (_finite(val)!=0);  // Win32 call available in float.h
+        #else
+            return (isfinite(val)!=0); // gcc call available in math.h
+        #endif
+    }
+} // anom namespace
+ 
 /// Constructor
 MomentsClusterInfo::MomentsClusterInfo(const ICalReconSvc* calReconSvc, double transScaleFactor) 
                                      : m_calReconSvc(calReconSvc), 
@@ -18,13 +38,18 @@ MomentsClusterInfo::MomentsClusterInfo(const ICalReconSvc* calReconSvc, double t
 Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
 {
     // Create an output cluster
-    Event::CalCluster* cluster = new Event::CalCluster(0);
+    Event::CalCluster* cluster = 0;
+    
+    if (!xTalVec->empty())
+    {
+        cluster = new Event::CalCluster(0);
 
-    cluster->clear();
+        cluster->clear();
 
-    double energy = fillLayerData(xTalVec, cluster);
+        double energy = fillLayerData(xTalVec, cluster);
 
-    fillMomentsData(xTalVec, cluster, energy);
+        fillMomentsData(xTalVec, cluster, energy);
+    }
 
     return cluster;
 }
@@ -223,6 +248,19 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
         double rms_long  = momentsAnalysis.getLongitudinalRms();
         double rms_trans = momentsAnalysis.getTransverseRms();
         double long_asym = momentsAnalysis.getLongAsymmetry(); 
+
+        if (!isFinite(rms_long))
+        {
+            throw CalException("CalMomentsAnalysis computed infinite value for rms_long") ;
+        }
+        if (!isFinite(rms_trans))
+        {
+            throw CalException("CalMomentsAnalysis computed infinite value for rms_trans") ;
+        }
+        if (!isFinite(long_asym))
+        {
+            throw CalException("CalMomentsAnalysis computed infinite value for long_asym") ;
+        }
     
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 

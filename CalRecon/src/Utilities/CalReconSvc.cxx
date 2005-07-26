@@ -267,20 +267,20 @@ Event::CalClusterCol * CalReconSvc::getClusters() {
     if (m_calClusterCol!=0) return m_calClusterCol ;
     
     // Ensure CalRecon/Event directory in TDS
-    DataObject * pnode = 0 ;
-    if ((getEventSvc()->retrieveObject(EventModel::CalRecon::Event,pnode)).isFailure()
-      && (getEventSvc()->registerObject(EventModel::CalRecon::Event,new DataObject)).isFailure()) { 
-        throw CalException("cannot register Event/CalRecon") ;
-    } 
+    //DataObject * pnode = 0 ;
+    //if ((getEventSvc()->retrieveObject(EventModel::CalRecon::Event,pnode)).isFailure()
+    //  && (getEventSvc()->registerObject(EventModel::CalRecon::Event,new DataObject)).isFailure()) { 
+    //    throw CalException("cannot register Event/CalRecon") ;
+    //} 
 
     // CalClusterCol
     m_calClusterCol = SmartDataPtr<Event::CalClusterCol>(getEventSvc(),EventModel::CalRecon::CalClusterCol) ;
-    if (!m_calClusterCol) {
-        m_calClusterCol = new Event::CalClusterCol() ;
-        if ((getEventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,m_calClusterCol)).isFailure()) {
-            throw CalException("cannot register CalClusterCol") ;
-        }
-    }
+    //if (!m_calClusterCol) {
+    //    m_calClusterCol = new Event::CalClusterCol() ;
+    //    if ((getEventSvc()->registerObject(EventModel::CalRecon::CalClusterCol,m_calClusterCol)).isFailure()) {
+    //        throw CalException("cannot register CalClusterCol") ;
+    //    }
+    //}
     
     return m_calClusterCol ;
 
