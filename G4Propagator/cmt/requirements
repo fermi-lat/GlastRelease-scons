@@ -34,9 +34,10 @@ library G4Propagator -s=../src $(source) -s=Dll *.cxx
 
 # test program 
 # following for test program only: no dependence on the interface
-use FluxSvc *
+use GlastSvc
+use FluxSvc
 use cfitsio * IExternal
-use flux *
+use flux
 
 public 
 apply_pattern package_test

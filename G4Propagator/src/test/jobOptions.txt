@@ -9,9 +9,26 @@ ApplicationMgr.DLLs   = {  "GlastSvc","G4Generator","G4Propagator"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc", 
-    "GlastDetSvc",
-    "G4GeometrySvc"};
+    "EventCnvSvc"};
+
+//----------------- local algorithms to run -------------------
+ApplicationMgr.TopAlg = { 
+    "FluxAlg",
+    "G4TestAlg"};
+    
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="LAT"; 
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 2;
+
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
@@ -25,28 +42,14 @@ GlastDetSvc.topVolume="LAT";         // the whole schebang
 GlastDetSvc.visitorMode="recon";
 
 #include "$FLUXSVCROOT/src/defaultOptions.txt"
-// Append (no replace) the list of source library documents
-FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
-//----------------- local algorithms to run -------------------
-ApplicationMgr.TopAlg = { 
-    "FluxAlg",
-    "G4TestAlg"};
-
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
-
+// add in CRflux option
+//ApplicationMgr.DLLs +={ "CRflux" };
+//FluxSvc.source_lib += {
+//    "$(CRFLUXROOT)/xml/source_library.xml"};
 
 // ask for a source that is in the library
-FluxAlg.source_name="muon_pencil";
-
-// do you want trajectories in the TDS? (default is 0)
-G4Generator.saveTrajectories = 1;
-// do you want the full or minimal tree of particles? (default is minimal)
-G4Generator.mcTreeMode = "pruneCal";
-
-// commands to run before each event. 
-G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
+FluxAlg.source_name="default";
 
 ApplicationMgr.EvtMax =10;
 
