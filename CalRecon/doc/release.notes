@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r1p7     25-Jul-05 TU  Updates to MIP finding, first attempts at protecting against NaN's
   v6r1p6     24-Jul-05 TU  Tagging Pol's newest updates and a slight fix to CalClustersAlg
   v6r1p5     22-Jul-05 TU  Tagging Pol's updates to the likelihood tools
   v6r1p4     21-Jul-05 TU  Tagging Phillipe's latest improvements to profile fitting
