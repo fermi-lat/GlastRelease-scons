@@ -105,12 +105,12 @@ namespace LdfEvent{
         void setTkrReconBit() { m_flags |= enums::TKRRECON; };
         unsigned int eventFlags() const { return m_flags; };
         bool goodEvent() const { return (m_flags == 0); };
-        bool badEventSeq() const { return (m_flags & enums::EVTSEQ); };
-        bool badTkrRecon() const { return (m_flags & enums::TKRRECON); };
+        bool badEventSeq() const { return ((m_flags & enums::EVTSEQ) != 0); };
+        bool badTkrRecon() const { return ((m_flags & enums::TKRRECON) != 0); };
         bool badEvent() const { return (m_flags != 0); } ;
-        bool packetError() const { return (m_flags & enums::PACKETERROR); };
-        bool temError() const { return (m_flags & enums::SUMMARYERROR); };
-        bool trgParityErrorOr() const { return (m_flags & enums::TRGPARITYERROR); };
+        bool packetError() const { return ((m_flags & enums::PACKETERROR) != 0); };
+        bool temError() const { return ((m_flags & enums::SUMMARYERROR) != 0); };
+        bool trgParityErrorOr() const { return ((m_flags & enums::TRGPARITYERROR) != 0); };
 
         //unsigned int eventSequence() const { return m_evtSequence; }
  
