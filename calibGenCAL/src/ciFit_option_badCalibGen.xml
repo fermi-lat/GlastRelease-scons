@@ -24,8 +24,6 @@
     <item name="XMLPATH"     value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
     <item name="TXTPATH"     value=""> Optoinal path for output .txt file (default "" autogenerates filename from input filename)</item>
 
-    <item name="INFILE_TYPE" value="ROOT">Input file type (ROOT,CSV)</item>
-
     <item name="LOGFILE"           value=""> application log file duplicates stdout (default "" autogenerates filename from input filename)</item>
     
     <item name="ROOTFILE_LE1"   value="D:\GLAST\DATA\slac_1_of_2_tower_ciFit\digitization-v3r1p10_135001585_digi_DIGI.root"> input DIGIROOT file LE </item>

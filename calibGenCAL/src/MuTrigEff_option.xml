@@ -23,7 +23,6 @@
     <item name="XMLPATH"     value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
     <item name="TXTPATH"     value=""> Optional path for output .txt file (default "" autogenerates filename from input filename)</item>
 
-    <item name="INFILE_TYPE" value="ROOT">Input file type (ROOT,CSV)</item>
     <item name="PEDFILE_TXT"       value="D:\EM_v4r060302p10\calibGenCAL\v3r6p1\output\mc_peds.050302002801_0_FM110_EMI_calu_collect_mu.T00.txt"> Optional path for output ADC pedestal text file (default "" autogenerates filename from input filename)</item>
 
     <item name="HISTFILE"      value=""> Optional path for ROOT histogram file. (default "" autogenerates filename from input filename)</item>

@@ -25,8 +25,6 @@
     <item name="XMLPATH"     value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
     <item name="TXTPATH"     value=""> Optoinal path for output .txt file (default "" autogenerates filename from input filename)</item>
 
-    <item name="INFILE_TYPE" value="ROOT">Input file type (ROOT,CSV)</item>
-
     <item name="HISTFILE"      value=""> Optional path for ROOT histogram file. (default "" autogenerates filename from input filename)</item>
 
     <item name="LOGFILE"           value=""> application log file duplicates stdout (default "" autogenerates filename from input filename)</item>
