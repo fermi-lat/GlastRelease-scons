@@ -27,8 +27,9 @@ std::string GlastClassify::s_rootpath;
 std::string GlastClassify::s_treepath;
 
 
-GlastClassify::GlastClassify(const std::string& info_path)
+GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
 : m_info(s_treepath+"/"+info_path, s_rootpath)
+, m_mixed(mixed)
 {
     std::ofstream* logfile = new std::ofstream(m_info.log().c_str());
     if( ! logfile->is_open() ) {
@@ -69,21 +70,28 @@ int GlastClassify::subdefine(std::vector<std::string>& all_names, const char *Fi
 void GlastClassify::load( unsigned int max_events, Subset set)
 {
     std::vector<std::string> all_names(m_info.vars());
+    std::cout << "Defining names" << std::endl;
     define(all_names);
-    if(m_nobkgnd) load(m_info.signalFiles(), all_names, true, true);
-    else {
-        load(m_info.signalFiles(), all_names, false, true);
-        load(m_info.backgroundFiles(), all_names, false, false);
+    if(m_mixed){
+        // signal and background are mixed in one batch of files
+        load(m_info.signalFiles(), all_names);
+    }else {
+        // separate signal, background
+        load(m_info.signalFiles(), all_names, true);
+        load(m_info.backgroundFiles(), all_names,  false);
     }
 }
 
-void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string> all_names, bool use_isGood, bool isSignal)
+void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string> all_names,  bool isSignal)
 {
-    log() << "Processing file(s)\n\t";
-    int nvars = all_names.size();
-    unsigned int max_events=0;
+    std::cout << "loading " << input.size() << " files: \n\t" ;
+    std::copy(input.begin(), input.end(), std::ostream_iterator<std::string>(std::cout, "\n\t")); 
+    std::cout << std::endl;
 
+    log() << "Processing file(s)\n\t";
     std::copy(input.begin(), input.end(), std::ostream_iterator<std::string>(log(), "\n\t"));
+
+    std::cout << "calling RootTuple" << std::endl;
     RootTuple t(input, "MeritTuple");
     t.selectColumns(all_names, false); // not weighted
     double good=0, bad=0, rejected=0;
@@ -91,13 +99,15 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
     RootTuple::Iterator rit = t.begin();
     log() << "\tsize = " << t.size() << std::endl;
 
+    unsigned int max_events=0;
+    int nvars = all_names.size();
     for( ; rit!=t.end();  ++rit)
     { 
         if (max_events>0 && rit > max_events) break ; //  max
         m_row = &*rit;
         // copy to local
         if( !accept() ) {++rejected; continue; } // apply general cut
-        bool signal = use_isGood? isgood() : isSignal;
+        bool signal = m_mixed ? isgood() : isSignal;
         if (signal) ++good; else ++bad;
         // copy the data to the Classifier's table for the classification
         m_data.push_back( Classifier::Record(signal, m_row->begin(), m_row->begin()+nvars));
@@ -120,7 +130,9 @@ void GlastClassify::classify()
     // a table of the background for a given efficiency
     BackgroundVsEfficiency plot(tree);
     plot.print(log());
+    log() << "Figure of merit sigma: " <<  plot.sigma() << std::endl;
     plot.print(std::ofstream((m_info.filepath()+"/efficiencyplot.txt").c_str()));
+    
 
     // make simple tree and print it to a local file
     DecisionTree& dtree = *tree.createTree(m_info.title());

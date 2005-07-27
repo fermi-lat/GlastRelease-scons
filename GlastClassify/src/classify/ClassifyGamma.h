@@ -1,6 +1,8 @@
 /**@file ClassifyGamma.h
 @brief 
 
+$Heading$
+
 */
 #pragma once
 #include "GlastClassify.h"
@@ -11,25 +13,33 @@ class ClassifyGamma : public GlastClassify
 {
 public:
     ClassifyGamma(const std::string& info_path)
-        : GlastClassify(info_path)
-    {setbkgnd();}
+        : GlastClassify(info_path, false) // flag that not mixed.
+    {}
 
     //functions to check or declare variables
 
     virtual void define(std::vector<std::string>& all_names)
     {
-        m_acddocaindex = find_index("AcdDoca");
+        m_acddocaindex = subdefine(all_names, "AcdDoca");
+        m_calEnergyIndex= find_index("CalEnergyRaw");
+        m_CalTotRLnIndex = find_index("CalTotRLn");
+        m_FilterAlgStatus = subdefine(all_names, "FilterAlgStatus");
     }
 
-    //function to generate goodcal test
+    //acceptance function, applied to background and signal
 
     virtual bool accept()
     {
-        return datum(m_acddocaindex) > 250;
+        return datum(m_acddocaindex)   > 250
+            && datum(m_calEnergyIndex) > 5.0 
+            && datum(m_CalTotRLnIndex) > 4.0
+            && datum(m_FilterAlgStatus)==0;
     }
 
 private:
     int m_acddocaindex;
-
+    int m_calEnergyIndex;
+    int m_CalTotRLnIndex;
+    int m_FilterAlgStatus;
 };
 

@@ -1,5 +1,6 @@
 /**@file GlastClassify.h
 @brief 
+$Heading$
 
 */
 
@@ -16,11 +17,15 @@ public:
     typedef enum{ALL, ODD, EVEN} Subset;
 
     /// ctor
-    GlastClassify(const std::string& info_path);
+    GlastClassify(const std::string& info_path, bool mixed=true);
 
     /// do it!
     void run( unsigned int max_events=0, Subset set=ALL);
 
+    static setPaths(std::string rootpath, std::string treepath){
+        s_rootpath = rootpath+"/";
+        s_treepath = treepath+"/";
+    }
     /// path to the root files
     static std::string s_rootpath;
     /// path to tree data, input and output
@@ -47,11 +52,12 @@ protected:
 
     void setbkgnd (bool v=false){ m_nobkgnd=v;}; 
 
+    
 private:
 
     void load( unsigned int max_events, Subset set);
 
-    void load(TrainingInfo::StringList input, std::vector<std::string>names, bool use_isGood, bool good);
+    void load(TrainingInfo::StringList input, std::vector<std::string>names,  bool good=true);
 
     void classify();
 
@@ -64,5 +70,6 @@ private:
     TrainingInfo m_info;
     const std::vector<float>* m_row; ///< current row in interating thru tuple
     bool m_nobkgnd;
+    bool m_mixed;
 };
 
