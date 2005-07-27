@@ -1,6 +1,6 @@
 /**@file GlastClassify.h
 @brief 
-$Heading$
+$Header$
 
 */
 

@@ -1,7 +1,7 @@
 /**@file ClassifyCal.cxx
 @brief 
 
-$Heading$
+$Header$
 
 */
 

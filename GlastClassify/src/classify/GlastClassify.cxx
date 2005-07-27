@@ -1,6 +1,7 @@
 /**@file GlastClassify.cxx
 @brief 
 
+$Header$
 */
 
 #include "GlastClassify.h"

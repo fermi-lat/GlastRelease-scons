@@ -1,6 +1,6 @@
 /**@file ClassifyCore.cxx
 @brief 
-$Heading$
+$Header$
 
 */
 

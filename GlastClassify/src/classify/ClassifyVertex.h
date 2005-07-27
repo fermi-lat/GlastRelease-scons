@@ -1,6 +1,6 @@
 /**@file ClassifyVertex.h
 @brief 
-$Heading$
+$Header$
 
 
 */

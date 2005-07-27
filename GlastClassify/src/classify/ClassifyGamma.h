@@ -1,7 +1,7 @@
 /**@file ClassifyGamma.h
 @brief 
 
-$Heading$
+$Header$
 
 */
 #pragma once

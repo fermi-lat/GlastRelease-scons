@@ -1,6 +1,6 @@
 /**@file main.cxx
 @brief main program for application to create GLAST classification trees
-$Heading$
+$Header$
 */
 
 #include "ClassifyCal.h"
