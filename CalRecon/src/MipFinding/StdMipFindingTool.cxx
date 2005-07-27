@@ -191,7 +191,7 @@ StatusCode StdMipFindingTool::initialize()
       return StatusCode::FAILURE;
     }
 
-    // This only needs to be done once?
+    // read geometry
     readGlastDet();
 
     return StatusCode::SUCCESS;
@@ -251,8 +251,8 @@ int StdMipFindingTool::findMipXtals()
 {
     //    m_log << MSG::DEBUG << "findMipXtals in StdMipFindingTool" << endreq;
 
-    double emip1= 1.;
-    double emip2=80.;
+    double emip1= 2.;
+    double emip2=50.;
 
     int numMipXtals=0;
 
@@ -375,6 +375,7 @@ void StdMipFindingTool::clearCalMipTrackVec(Event::CalMipTrackVec* calMipTrackVe
 //-----------------------------------------------------------------------------------------------------------------
 int StdMipFindingTool::findMipTracks()
 {
+    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
     m_log << MSG::DEBUG << "findMipTracks in StdMipFindingTool" << endreq;
     
     while (findC0())
@@ -598,8 +599,8 @@ void StdMipFindingTool::trackProperties()
 //-----------------------------------------------------------------------------------------------------------------
 bool StdMipFindingTool::findC0()
 {
-    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-    m_log << MSG::DEBUG << "findC0 in StdMipFindingTool" << endreq;
+  //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+  //m_log << MSG::DEBUG << "findC0 in StdMipFindingTool" << endreq;
 
     m_hid     = -1;
     m_hid0    = -1;
@@ -611,19 +612,19 @@ bool StdMipFindingTool::findC0()
         Event::CalMipXtal calMipXtal = *xTalIter;
         double ene=calMipXtal.getXtal()->getEnergy();
           
-        int itow0 = calMipXtal.getXtal()->getPackedId().getTower();
-        int ilay0 = calMipXtal.getXtal()->getPackedId().getLayer();
-        int icol0 = calMipXtal.getXtal()->getPackedId().getColumn();
+        //int itow0 = calMipXtal.getXtal()->getPackedId().getTower();
+        //int ilay0 = calMipXtal.getXtal()->getPackedId().getLayer();
+        //int icol0 = calMipXtal.getXtal()->getPackedId().getColumn();
 
-        double x=calMipXtal.getXtal()->getPosition().x();
-        double y=calMipXtal.getXtal()->getPosition().y();
-        double z=calMipXtal.getXtal()->getPosition().z();
-        double d=calMipXtal.getD2C();
+        //double x=calMipXtal.getXtal()->getPosition().x();
+        //double y=calMipXtal.getXtal()->getPosition().y();
+        //double z=calMipXtal.getXtal()->getPosition().z();
+        //double d=calMipXtal.getD2C();
       
 //        m_log << MSG::DEBUG << "find C0 " << itow0 << " " << ilay0 << " " << icol0  << " " << x << " " << y << " " << z  << " " << d << " " << ene << endreq;
 
-//        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && ene>m_e1 && ene<m_e2 && calMipXtal.getD2C() > d2Cmax)
-        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && calMipXtal.getD2C()>d2Cmax)
+        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && ene>m_e1 && ene<m_e2 && calMipXtal.getD2C()>d2Cmax)
+          //        if (calMipXtal.getFree() && calMipXtal.getFreeC0() && calMipXtal.getD2C()>d2Cmax)
         {
             d2Cmax = calMipXtal.getD2C();
             m_hid0 = m_hid;
@@ -638,10 +639,10 @@ bool StdMipFindingTool::findC0()
 
         m_refP = m_calMipXtalVec[m_hid0].getXtal()->getPosition();
 
-        int itow = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getTower();
-        int ilay = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getLayer();
-        int icol = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getColumn();
-        m_log << MSG::DEBUG << "findC0 -end- true " << itow << " " << ilay << " " << icol  << endreq;
+        //int itow = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getTower();
+        //int ilay = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getLayer();
+        //int icol = m_calMipXtalVec[m_hid0].getXtal()->getPackedId().getColumn();
+        //m_log << MSG::DEBUG << "findC0 -end- true " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
 
@@ -652,8 +653,8 @@ bool StdMipFindingTool::findC0()
 //-----------------------------------------------------------------------------------------------------------------
 bool StdMipFindingTool::findC1()
 {
-    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-    m_log << MSG::DEBUG << "findC1 in StdMipFindingTool" << endreq;
+  //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+  //m_log << MSG::DEBUG << "findC1 in StdMipFindingTool" << endreq;
 
     m_hid  = -1;
     m_hid1 = -1;
@@ -683,11 +684,12 @@ bool StdMipFindingTool::findC1()
         m_G4PropTool->setStepStart(xStart,m_vv);
 
         d01=sqrt(m_uu*m_uu);
-        m_log << MSG::DEBUG << "findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;        m_G4PropTool->step(d01+3*m_CsILength);
+        //m_log << MSG::DEBUG << "findC1 current C1 " << itow1 << " " << ilay1 << " " << icol1 << " d01=" << d01 << endreq;
+        m_G4PropTool->step(d01+3*m_CsILength);
 
         // Now loop over the steps to extract the materials
         int numSteps = m_G4PropTool->getNumberSteps();
-        m_log << MSG::DEBUG << "findC1 G4prop numSteps=" << numSteps << endreq;
+        //m_log << MSG::DEBUG << "findC1 G4prop numSteps=" << numSteps << endreq;
         idents::VolumeIdentifier volId;
         idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
         int itow=-1;
@@ -713,7 +715,7 @@ bool StdMipFindingTool::findC1()
             int iicol=volId[6];
             int iiseg=volId[8];
             int hid=m_hitId[iitow][iilay][iicol];
-            m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << endreq;
+            //m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << endreq;
 
             // continue if C0 still not crossed
             if (!crossedC0 && hid!=m_hid0)
@@ -724,7 +726,7 @@ bool StdMipFindingTool::findC1()
             {
                 arcLen0+=arcLen_step;
                 crossedC0=true;
-                m_log << MSG::DEBUG << "00000 findC1 seg in Xtal C0 itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arcLen0 " << arcLen0 << endreq;
+                //m_log << MSG::DEBUG << "findC1 seg in Xtal C0 itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arcLen0 " << arcLen0 << endreq;
                 continue;
             }
             // at this point C0 has been crossed and the volume does not belong to C0 crystal
@@ -736,7 +738,7 @@ bool StdMipFindingTool::findC1()
             // if not in the hit map (CalMipXtalVec) : continue if in same layer as current C1, stop otherwise
             if (hid<0)
             {
-                m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
+              //m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
                 if (!(iitow==itow1 && iilay==ilay1))
                     lnext=false;
                 continue;
@@ -745,7 +747,7 @@ bool StdMipFindingTool::findC1()
             // stop if one log has been found and current log is different from it
             if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
             {
-                m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
+              //m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
                 lnext=false;
                 continue;
             }
@@ -753,7 +755,7 @@ bool StdMipFindingTool::findC1()
             // stop if current log is not free
             if (!m_calMipXtalVec[hid].getFree())
             {
-                m_log << MSG::DEBUG << "findC1 end of vol search 3" << endreq;
+              //m_log << MSG::DEBUG << "findC1 end of vol search 3" << endreq;
                 lnext=false;
                 continue;
             }
@@ -765,7 +767,7 @@ bool StdMipFindingTool::findC1()
                 hidp=hid;
                 foundOneCalMipXtalNotAlreadyUsed=true;
                 arcLen1+=arcLen_step;
-                m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arc " << arcLen_step << endreq;
+                //m_log << MSG::DEBUG << "findC1 seg in Xtal itow/ilay/icol/hid/iseg " << iitow << "  " << iilay << "  " << iicol << " " << hid << " " << iiseg << " arc " << arcLen_step << endreq;
             }
         }
         
@@ -774,7 +776,7 @@ bool StdMipFindingTool::findC1()
             double ecor0=ene0*m_CsIHeight/arcLen0;
             double ene1=m_calMipXtalVec[hidp].getXtal()->getEnergy();
             double ecor1=ene1*m_CsIHeight/arcLen1;
-            m_log << MSG::DEBUG << "------> findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc0 " << arcLen0  << " ecor0 " << ecor0 << " arc1 " << arcLen1  << " ecor1 " << ecor1 << endreq;
+            //m_log << MSG::DEBUG << "------> findC1 candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc0 " << arcLen0  << " ecor0 " << ecor0 << " arc1 " << arcLen1  << " ecor1 " << ecor1 << endreq;
             
             if (ecor0>m_ecor1 && ecor0<m_ecor2 && ecor1>m_ecor1 && ecor1<m_ecor2)
             {
@@ -795,11 +797,10 @@ bool StdMipFindingTool::findC1()
         Event::CalMipXtal& calMipXtalRef = m_calMipXtalVec[m_hid1];
         calMipXtalRef.setFree(false);
 
-        m_log << MSG::DEBUG << "findC1 -end- true" << endreq;
-        int itow = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
-        int ilay = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
-        int icol = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
-        //        m_log << MSG::DEBUG << "findC1 -end- " << itow << " " << ilay << " " << icol  << endreq;
+        //int itow = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getTower();
+        //int ilay = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getLayer();
+        //int icol = m_calMipXtalVec[m_hid1].getXtal()->getPackedId().getColumn();
+        //        m_log << MSG::DEBUG << "findC1 -end- true " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
 
@@ -810,8 +811,8 @@ bool StdMipFindingTool::findC1()
 //-----------------------------------------------------------------------------------------------------------------
 bool StdMipFindingTool::findC2()
 {
-    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-    m_log << MSG::DEBUG << "findC2 in StdMipFindingTool" << endreq;
+  //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+  //m_log << MSG::DEBUG << "findC2 in StdMipFindingTool" << endreq;
 
     Point  xStart = m_refP;
     Vector dir    = m_dir;
@@ -841,9 +842,9 @@ bool StdMipFindingTool::findC2()
         calMipTrack.setPoint(m_refP);
         calMipTrack.setDir(m_dir);
 
-        m_log << MSG::DEBUG << "findC2 -end- true" << endreq;
-        m_log << MSG::DEBUG << "findC2 -end- refP =" << m_refP.x() << " " << m_refP.y() << "  " << m_refP.z() << endreq;  
-        m_log << MSG::DEBUG << "findC2 -end- dir  =" << m_dir.x() << " " << m_dir.y() << "  " << m_dir.z() << endreq;  
+        //m_log << MSG::DEBUG << "findC2 -end- true" << endreq;
+        //m_log << MSG::DEBUG << "findC2 -end- refP =" << m_refP.x() << " " << m_refP.y() << "  " << m_refP.z() << endreq;  
+        //m_log << MSG::DEBUG << "findC2 -end- dir  =" << m_dir.x() << " " << m_dir.y() << "  " << m_dir.z() << endreq;  
         return true;
     }
 
@@ -855,7 +856,7 @@ bool StdMipFindingTool::findC2()
 bool StdMipFindingTool::findCn()
 {
   //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-    m_log << MSG::DEBUG << "findCn in StdMipFindingTool" << endreq;
+  //m_log << MSG::DEBUG << "findCn in StdMipFindingTool" << endreq;
 
     Event::CalMipTrack& calMipTrack = m_calMipTrackVec.back();
 
@@ -873,22 +874,22 @@ bool StdMipFindingTool::findCn()
         calMipTrack.push_back(calMipXtalRef_m_hidn);
 
         //        m_log << MSG::DEBUG << "findCn -end- true" << endreq;
-        int itow = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getTower();
-        int ilay = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getLayer();
-        int icol = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getColumn();
+        //int itow = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getTower();
+        //int ilay = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getLayer();
+        //int icol = m_calMipXtalVec[m_hidn].getXtal()->getPackedId().getColumn();
         //        m_log << MSG::DEBUG << "findCn -end- " << itow << " " << ilay << " " << icol  << endreq;
         return true;
     }
 
-    //        m_log << MSG::DEBUG << "findCn -end- false" << endreq;
+    m_log << MSG::DEBUG << "findCn -end- false" << endreq;
     return false;
 }
 
 //-----------------------------------------------------------------------------------------------------------------
 int StdMipFindingTool::propagate(Point xStart, Vector dir)
 {
-    m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
-    m_log << MSG::DEBUG << "propagate in StdMipFindingTool" << endreq;
+  //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endreq;
+  //m_log << MSG::DEBUG << "propagate in StdMipFindingTool" << endreq;
 //   m_log << MSG::DEBUG << "propagate xStart=" << xStart.x() << " " << xStart.y() << "  " << xStart.z() << endreq;  
 //   m_log << MSG::DEBUG << "propagate dir   =" << dir.x() << " " << dir.y() << "  " << dir.z() << endreq;  
     int hidn=-1;
@@ -975,7 +976,7 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
                     else
                         continue;
                 }
-                m_log << MSG::DEBUG << "propagate " << " " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
+                //m_log << MSG::DEBUG << "propagate " << " " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
                 m_G4PropTool->setStepStart(x0,m_uu);
                 m_uu=x0-exitP;
                 m_G4PropTool->step(sqrt(m_uu*m_uu));          
@@ -1037,8 +1038,8 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
                 if (hidp>=0 && arcLen>0)
                 {
                     double ecor=m_calMipXtalVec[hidp].getXtal()->getEnergy()*m_CsIHeight/arcLen;
-                    m_log << MSG::DEBUG << "------> propagate " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
-                    m_log << MSG::DEBUG << "------> propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " ecor " << ecor << endreq;
+                    //m_log << MSG::DEBUG << "------> propagate " << iRad << " " << iAng << " x0= " << x0.x() << " " << x0.y() << "  " << x0.z() << " dir= " << m_uu.x() << " " << m_uu.y() << "  " << m_uu.z() << endreq;  
+                    //m_log << MSG::DEBUG << "------> propagate candidate in Xtal itow/ilay/icol " << itow << "  " << ilay << "  " << icol << " arc " << arcLen << " ecor " << ecor << endreq;
                     if (ecor>m_ecor1 && ecor<m_ecor2)
                     {
                         m_uu = m_calMipXtalVec[hidp].getXtal()->getPosition()-xStart;
@@ -1056,7 +1057,7 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
         }
     }
 
-    m_log << MSG::DEBUG << "propagate -end- hidn=" << hidn << " radius=" << radn << endreq;
+    //m_log << MSG::DEBUG << "propagate -end- hidn=" << hidn << " radius=" << radn << endreq;
     return hidn;
 }
 
@@ -1211,8 +1212,8 @@ bool StdMipFindingTool::leastSquares()
     double chi2=chi2x/(nlx-2)+chi2y/(nly-2);
     calMipTrack.setChi2(chi2);
     
-    m_log << MSG::DEBUG << "leastSquares -end- refP=" << m_refP.x() << " " << m_refP.y() << "  " << m_refP.z() << endreq;
-    m_log << MSG::DEBUG << "leastSquares -end- dir =" << m_dir.x() << " " << m_dir.y() << "  " << m_dir.z() << endreq;
+    //m_log << MSG::DEBUG << "leastSquares -end- refP=" << m_refP.x() << " " << m_refP.y() << "  " << m_refP.z() << endreq;
+    //m_log << MSG::DEBUG << "leastSquares -end- dir =" << m_dir.x() << " " << m_dir.y() << "  " << m_dir.z() << endreq;
 
     return true;
 }
@@ -1265,9 +1266,8 @@ StatusCode StdMipFindingTool::findMIPCandidates()
     clearCalMipTrackVec(&m_calMipTrackVec);
 
     //
-    // Task 1: read geometry and get single cluster centroid from TDS
+    // Task 1: get single cluster centroid from TDS
     //
-    //readGlastDet();  Do this at initialization and done?
     getSingleClusterCentroid();
 
     //
