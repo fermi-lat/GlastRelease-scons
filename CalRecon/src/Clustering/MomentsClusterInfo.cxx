@@ -58,7 +58,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 {
     //Initialize local variables
     double ene = 0;                                   // Total energy in this cluster
-	int num_TruncXtals = 0;                           // Number of Xtals in the cluster with > 1% of the energy
+    int num_TruncXtals = 0;                           // Number of Xtals in the cluster with > 1% of the energy
     Vector pCluster(0.,0.,0.);                        // Cluster position
     std::vector<double> eneLayer(m_calnLayers,0.);    // Energy by layer
     std::vector<Vector> pLayer(m_calnLayers);         // Position by layer
@@ -70,7 +70,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
-		Event::CalXtalRecData* recData = *xTalIter;
+        Event::CalXtalRecData* recData = *xTalIter;
         
         // get reconstructed values
         double eneXtal = recData->getEnergy();                  // crystal energy
@@ -101,11 +101,12 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
     // Now take the means
     // if energy sum is not zero - normalize cluster position
-	if(ene > 0.) {
-		pCluster /= ene;
-		cluster->setStatusBit(Event::CalCluster::CENTROID);
-	}
- 	// if energy is zero - set cluster position to non-physical value
+    if(ene > 0.) 
+    {
+        pCluster /= ene;
+        cluster->setStatusBit(Event::CalCluster::CENTROID);
+    }
+    // if energy is zero - set cluster position to non-physical value
     else pCluster = Vector(-1000., -1000., -1000.);
     
     // loop over calorimeter layers
@@ -160,21 +161,21 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
-		Event::CalXtalRecData* recData = *xTalIter;
+        Event::CalXtalRecData* recData = *xTalIter;
         
         // get reconstructed values
         double eneXtal = recData->getEnergy();                  // crystal energy
 
-		if(eneXtal > .01*ene) num_TruncXtals++;   //NOTE: 1% should be a declared property!!!!!  
+        if(eneXtal > .01*ene) num_TruncXtals++;   //NOTE: 1% should be a declared property!!!!!  
     }
 
-	// Correct for Zero Supression using Truncated Xtal count
-	ene += .2*num_TruncXtals; //Note .2 MeV/Xtal should be a declared property!!!!!!!!!!!!!
+    // Correct for Zero Supression using Truncated Xtal count
+    ene += .2*num_TruncXtals; //Note .2 MeV/Xtal should be a declared property!!!!!!!!!!!!!
 
-	// Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
+    // Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
 
     // Set energy centroid
-	Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
+    Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                                0., 0., 1.,   1.,0.,0.,1.,0.,1.);
     cluster->initialize(params, 0., 0., 0., num_TruncXtals);
 

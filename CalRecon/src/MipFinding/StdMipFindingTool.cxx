@@ -191,6 +191,9 @@ StatusCode StdMipFindingTool::initialize()
       return StatusCode::FAILURE;
     }
 
+    // This only needs to be done once?
+    readGlastDet();
+
     return StatusCode::SUCCESS;
 }
 
@@ -230,10 +233,15 @@ void StdMipFindingTool::getSingleClusterCentroid()
     //    m_log << MSG::DEBUG << "findSingleClusterCentroid in StdMipFindingTool" << endreq;
 
     Event::CalClusterCol* pCals = SmartDataPtr<Event::CalClusterCol>(m_dataSvc, EventModel::CalRecon::CalClusterCol);
-    Event::CalCluster* calCluster = pCals->front();
 
-    m_singleClusterCentroid=calCluster->getPosition();
-    //    m_log << MSG::DEBUG << "findSingleClusterCentroid -end- x=" << m_singleClusterCentroid.x() << " y=" << m_singleClusterCentroid.y() << " z=" << m_singleClusterCentroid.z() << endreq;
+    if (pCals != 0 && !pCals->empty())
+    {
+        Event::CalCluster* calCluster = pCals->front();
+
+        m_singleClusterCentroid=calCluster->getPosition();
+        //    m_log << MSG::DEBUG << "findSingleClusterCentroid -end- x=" << m_singleClusterCentroid.x() << " y=" << m_singleClusterCentroid.y() << " z=" << m_singleClusterCentroid.z() << endreq;
+    }
+    else m_singleClusterCentroid = Point(0.,0.,0.);
 
     return;
 }
@@ -1259,7 +1267,7 @@ StatusCode StdMipFindingTool::findMIPCandidates()
     //
     // Task 1: read geometry and get single cluster centroid from TDS
     //
-    readGlastDet();
+    //readGlastDet();  Do this at initialization and done?
     getSingleClusterCentroid();
 
     //
