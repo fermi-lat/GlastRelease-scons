@@ -21,7 +21,7 @@ TrainingInfo::TrainingInfo( const std::string& title,  const std::string& varstr
         parser(backgrounds, m_backgroundFiles);
     }
  
-    TrainingInfo::TrainingInfo(const std::string& filepath)
+    TrainingInfo::TrainingInfo(const std::string& filepath, const std::string& rootfilepath)
         : m_filepath(filepath)
     {
         using std::ifstream;
@@ -35,8 +35,8 @@ TrainingInfo::TrainingInfo( const std::string& title,  const std::string& varstr
         std::vector<std::string> files;
         readnames("files.txt", files);
         for(std::vector<std::string>::iterator sit = files.begin(); sit!=files.end(); ++sit){
-            std::string file_name = *sit;
-            unsigned int pos =file_name.find(',') ; 
+            std::string file_name = rootfilepath+ (*sit);
+            int pos =file_name.find(',') ; 
             if( pos == std::string::npos) {
                 if(signal_files)  m_signalFiles.push_back(file_name);
                 else m_backgroundFiles.push_back(file_name);
