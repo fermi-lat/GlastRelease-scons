@@ -11,4 +11,7 @@ Material used in ACD support.  Still need input from engineers about this.
   </prim>
   <prim name="ribbonMat" value="Polystyrene" type="string" uType="mat">
 Material for scintillating ribbon</prim>
+ <prim name="ACDScrewMat" value="IronScrew" type="string" uType="mat">
+   Material for screws in tiles
+ </prim>
 </primCategory>

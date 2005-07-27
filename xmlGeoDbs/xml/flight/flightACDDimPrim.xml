@@ -95,6 +95,19 @@ top side row dimensions</prim>
 dimension of side tiles in columns 1,2 and 3.  From
 3-d model 6-23-03</prim>
 
+<prim name="ACDTileScale" value = "0.9968" uType="none">Scale factor
+used to transform tile dimensions to operating temperature:
+5*10**(-5) by 40 degrees, from Alex.  Added July 2005</prim>
+
+<prim name="ACDHoleRad" value="1.59">Radius of hole in tile.
+Added July 2005 </prim>
+<prim name="ACDScrewRad" value="1.4">Radius of screw in tile.
+Added July 2005</prim>
+<prim name="ACDScrewLen" value="25.4">Length of screw in tile.
+Added July 2005</prim>
+<prim name="ACDScrewFromEdge" value="50.0">
+   Distance of (most) screws from edge of tile
+</prim>
 <!--  
   <prim name="sideTileTransMid" value="332.0">Transverse 
  dimension of side tiles neither in the middle nor central;
@@ -194,30 +207,5 @@ is no gap between ribbon and topmost tiles.</prim>
      tile edge of tile it's under. (This is a figment of the simulated
 model.  Real ribbons don't come in disconnected segments.)</prim>
 
- <!-- old number with new name (was "topStandoff"  
-    No guarantee it's correct. -->
-<!-- obsolete??
-  <prim name="TKRACDSupportGap" value="10.0"> distance between bottom of
-ACD support and top of TKR.  
-</prim>
--->
 
-<!-- following is probably obsolete 
-  <prim name="tapeTopExt" value="15.0">Distance tape should extend
-beyond the end of a top tile (see Heather's first diagram)</prim>
--->
-
-<!-- maybe these as well, as of Oct, 2002 reworking
-  <prim name="ACDSideStandoff" value="35.75">This one is right if
-side_standoff is another name for side_tile_standoff, the distance
-between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
-  <prim name="ACDSideSupToTile" value = "35.75"> Distance from inside edge of
-side support structure to inside edge of side tiles.  This is temporary, to
-be replaced probably with a derived ACD constant which is the sum of the
-support thickness and gap between support and side tile.</prim>
-
-  <prim name="totalTopAvail" value="91.9">This is the total amount of space
-    available to top section of the ACD, includes tiles and support structure
-(Heather).</prim>
--->
 </primCategory>

@@ -125,8 +125,411 @@
           </add>
         </const>
 
- <!-- For current approximate model, transverse displacement of a
-      side ACD face = transverse displacement of row 0. -->
+<!-- Scaled version of above for operating temp. -->
+        <const name="ACDTotalTransSideOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="ACDTotalTransSide" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+
+<!-- Scale tile thicknesses for operating temperature -->
+        <const name="tileThicknessOp">
+          <notes>Scaled tile thickness (all but top center tiles)</notes>
+          <mul>
+            <refer refTo="tileThickness" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="tileCenterThicknessOp">
+          <notes>Scaled tile thickness for top center tiles)</notes>
+          <mul>
+            <refer refTo="tileCenterThickness" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+<!-- Scale all top tile transverse dimensions for operating temperature -->
+        <const name="topTileXEdge_lOp">
+          <notes>Scaled version of topTileXEdge_l
+          </notes>
+          <mul>
+            <refer refTo="topTileXEdge_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="topTileXMid_lOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="topTileXMid_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+        <const name="topTileXCentral_lOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="topTileXCentral_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+        <const name="topTileYEdge_lOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="topTileYEdge_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+        <const name="topTileYMid_lOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="topTileYMid_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+        <const name="topTileYCentral_lOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="topTileYCentral_l" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+<!-- Scaled versions of side tile dimensions -->
+        <const name="sideTileHeight0Op">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileHeight0" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="sideTileHeight1Op">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileHeight1" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="sideTileHeight2Op">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileHeight2" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="sideTileHeight3Op">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileHeight3" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+
+        <const name="sideTileTransLesserOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileTransLesser" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="sideTileTransGreaterOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileTransGreater" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+
+        <const name="sideTileTransMidOp">
+          <notes>Scaled for operating temperature 
+          </notes>
+          <mul>
+            <refer refTo="sideTileTransMid" />
+            <refer refTo="ACDTileScale" />
+          </mul>
+        </const>
+<!-- Screws are divided into 2 pieces: the part embedded in a tile (which
+     is a s long as the tile is thick) and the part sticking out.  Since
+     there are two thicknesses of tiles, need two more constants for the
+     sticking-out parts
+ -->
+        <const name="screwExtLen" >
+          <notes>Length of screw part sticking out of normal-thickness tile
+          </notes>
+          <minus>
+            <refer refTo="ACDScrewLen" />
+            <refer refTo="tileThickness" />
+          </minus>
+        </const>
+
+        <const name="screwExtThickLen" >
+          <notes>Length of screw part sticking out of thick (top central) tile
+          </notes>
+          <minus>
+            <refer refTo="ACDScrewLen" />
+            <refer refTo="tileCenterThickness" />
+          </minus>
+        </const>
+      
+<!-- X-displacements for screws within top tiles (5 cm from edges) -->
+        <const name="topScrewXEdge_dx">
+          <notes>x-displacement for screws on +x side of X-edge tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileXEdge_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewXEdge_dxn">
+          <notes>x-displacement for screws on -x side of X-edge tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewXEdge_dx" />
+          </uminus>
+        </const>
+
+        <const name="topScrewXMid_dx">
+          <notes>x-displacement for screws on +x side of X-mid tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileXMid_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewXMid_dxn">
+          <notes>x-displacement for screws on -x side of X-mid tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewXMid_dx" />
+          </uminus>
+        </const>
+
+        <const name="topScrewXCentral_dx">
+          <notes>x-displacement for screws on +x side of X-central tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileXCentral_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewXCentral_dxn">
+          <notes>x-displacement for screws on -x side of X-edge tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewXCentral_dx" />
+          </uminus>
+        </const>
+
+<!-- Y-displacements for screws within top tiles (5 cm from edges) -->
+        <const name="topScrewYEdge_dy">
+          <notes>y-displacement for screws on +y side of Y-edge tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileYEdge_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewYEdge_dyn">
+          <notes>y-displacement for screws on -y side of Y-edge tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewYEdge_dy" />
+          </uminus>
+        </const>
+
+        <const name="topScrewYMid_dy">
+          <notes>y-displacement for screws on +y side of Y-mid tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileYMid_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewYMid_dyn">
+          <notes>y-displacement for screws on -y side of Y-mid tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewYMid_dy" />
+          </uminus>
+        </const>
+
+        <const name="topScrewYCentral_dy">
+          <notes>y-displacement for screws on +y side of Y-central tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="topTileYCentral_l" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="topScrewYCentral_dyn">
+          <notes>y-displacement for screws on -y side of Y-edge tiles
+          </notes>
+          <uminus>
+            <refer refTo="topScrewYCentral_dy" />
+          </uminus>
+        </const>
+
+<!-- displacements for screws in side tiles (other than bottom row) -->
+
+<!-- Z-displacement for screws in side tiles (5 cm from edges) -->
+        <const name="side0Screw_dz">
+          <notes>z-displacement for screws on +z side of top row (0) side tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileHeight0" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="side0Screw_dzn">
+          <notes>z-displacement for screws on -z side of top row side tiles
+          </notes>
+          <uminus>
+            <refer refTo="side0Screw_dz" />
+          </uminus>
+        </const>
+
+        <const name="side1Screw_dz">
+          <notes>z-displacement for screws on +z side of row 1 side tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileHeight1" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="side1Screw_dzn">
+          <notes>z-displacement for screws on -z side of row 1 side tiles
+          </notes>
+          <uminus>
+            <refer refTo="side1Screw_dz" />
+          </uminus>
+        </const>
+  
+        <const name="side2Screw_dz">
+          <notes>z-displacement for screws on +z side of row 2 side tiles
+          </notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileHeight2" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="side2Screw_dzn">
+          <notes>z-displacement for screws on -z side of row 2 side tiles
+          </notes>
+          <uminus>
+            <refer refTo="side2Screw_dz" />
+          </uminus>
+        </const>
+
+    <!-- transverse displacement for screws in side tiles (5 cm from edges) -->
+        <const name="sideLesserScrew_dt">
+          <notes>Transverse (x or y) displacement for screws on some narrower
+                 side tiles (col 0 for sides 2 or 3; col 4 for
+                 sides 1 and 4)</notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileTransLesser" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="sideLesserScrew_dtn">
+          <notes>Transverse (x or y) displacement for screws on outer
+                 side tiles (negative direction</notes>
+          <uminus>
+            <refer refTo="sideLesserScrew_dt" />
+          </uminus>
+        </const>
+
+
+        <const name="sideGreaterScrew_dt">
+          <notes>Transverse (x or y) displacement for screws on wider outer
+                 side tiles (col 4 for sides 2 or 3; col 0 for
+                 sides 1 and 4)</notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileTransGreater" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="sideGreaterScrew_dtn">
+          <notes>Transverse (x or y) displacement for screws on wider
+                 side tiles (negative direction</notes>
+          <uminus>
+            <refer refTo="sideGreaterScrew_dt" />
+          </uminus>
+        </const>
+
+        <const name="sideMidScrew_dt">
+          <notes>Transverse (x or y) displacement for screws on 
+                 side tiles in cols 1,2,3</notes>
+          <half>
+            <minus>
+              <refer refTo="sideTileTransMid" />
+              <refer refTo="ACDScrewFromEdge" />
+            </minus>
+          </half>
+        </const>
+
+        <const name="sideMidScrew_dtn">
+          <notes>Transverse (x or y) displacement for screws in side
+                 tiles, cols 1,2,3 (negative direction)</notes>
+          <uminus>
+            <refer refTo="sideMidScrew_dt" />
+          </uminus>
+        </const>
+
+     <!-- For current approximate model, transverse displacement of a
+           side ACD face = transverse displacement of row 0. -->
         <const name="tileSide_dt">
           <notes>Transverse (perpendicular to plane of face) displacement
                  of side face of ACD</notes>

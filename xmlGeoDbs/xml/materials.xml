@@ -114,6 +114,12 @@
 
 <!-- Single-element materials -->
 
+<composite name="IronScrew"  density="7.87" >
+  <addmaterial material="Iron" >
+    <natoms n="1" />
+  </addmaterial>
+</composite>
+
 <composite name="CarbonFiber" density="1.6">
   <addmaterial material="Carbon">
     <natoms n="1" />
