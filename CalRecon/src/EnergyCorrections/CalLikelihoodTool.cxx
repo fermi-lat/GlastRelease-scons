@@ -290,7 +290,7 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
           if( (trialProb<mpv[1]*.5) && (iFWHM^(trialEnergy()>lim[iFWHM])) )
             lim[iFWHM]= trialEnergy();
         }
-        if( errCalls==nSteps ) return false;
+        if( errCalls==nSteps ) return true;
         lim[!iFWHM]= lim[iFWHM]+(1-2*iFWHM)*bW;
         lim[iFWHM]-= (1-2*iFWHM)*bW;
       }
@@ -316,7 +316,7 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
       calEnergy()= savingCalE;
     }
   }
-  return false;
+  return (fwhmLimits[0]+fwhmLimits[1]>2.);
 }
 
 double CalLikelihoodTool::findGeometricCut( const Point &x,
