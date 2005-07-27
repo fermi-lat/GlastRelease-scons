@@ -29,6 +29,7 @@ $Header$
 
 #include "TMath.h"
 #include <stdexcept>
+
 /**   
 * @class CalValsCorrTool
 * @author Bill Atwood
@@ -752,8 +753,15 @@ StatusCode CalValsCorrTool::aveRadLens(Point /* x0 */, Vector t0, double radius,
            if(x_step.z() >= m_cal_pos.z() || centroid) {
                double step_frac = 1.; 
 			   if(x_step.z() <= m_cal_pos.z()) {
-				   centroid = false;
-				   step_frac = (last_step_z - m_cal_pos.z())/(last_step_z - x_step.z());
+                   double denominator = last_step_z - x_step.z();
+
+                   centroid = false;
+
+                   // Protect against the case where last_step_z and x_step.z() are the same
+                   // (see above where the two are set equal for the first step, it can happen
+                   //  that this code is executed on the first step...)
+                   if (denominator < 0.001) step_frac = 0.;
+                   else                     step_frac = (last_step_z - m_cal_pos.z()) / denominator;
 			   }
                if(is < numInner) m_arcLen_Cntr += step_frac*arcLen_step;
                if(!inXtal) rl_StuffCntr  += step_frac*radLen_step;
