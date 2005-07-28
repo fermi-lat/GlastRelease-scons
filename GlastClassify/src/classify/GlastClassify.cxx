@@ -137,7 +137,8 @@ void GlastClassify::classify()
 
     // make simple tree and print it to a local file
     DecisionTree& dtree = *tree.createTree(m_info.title());
-    dtree.print(std::ofstream((m_info.filepath()+"/dtree.txt").c_str()));
+    std::ofstream dtfile((m_info.filepath()+"/dtree.txt").c_str());
+    dtree.print(dtfile);
 }
 
 int GlastClassify::find_index(const std::string& name)

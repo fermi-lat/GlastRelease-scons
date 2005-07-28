@@ -3,8 +3,9 @@
 $Header$
 
 */
+#ifndef GlastClassify_GlastClassify_h
+#define GlastClassify_GlastClassify_h
 
-#pragma once
 
 #include "classifier/Classifier.h"
 #include "classifier/TrainingInfo.h"
@@ -19,10 +20,12 @@ public:
     /// ctor
     GlastClassify(const std::string& info_path, bool mixed=true);
 
+    virtual ~GlastClassify(){} 
+
     /// do it!
     void run( unsigned int max_events=0, Subset set=ALL);
 
-    static setPaths(std::string rootpath, std::string treepath){
+    static void setPaths(std::string rootpath, std::string treepath){
         s_rootpath = rootpath+"/";
         s_treepath = treepath+"/";
     }
@@ -37,7 +40,7 @@ protected:
     virtual bool isgood() {return !m_nobkgnd;};
 
     /// subclass may override
-    virtual void define(std::vector<std::string>& all_names){};
+    virtual void define(std::vector<std::string>& /*all_names*/){};
 
     /// acceptance cut applied to events in training sample: subclass may override
     virtual bool accept(){return true;}
@@ -73,3 +76,4 @@ private:
     bool m_mixed;
 };
 
+#endif

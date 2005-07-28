@@ -13,14 +13,16 @@ $Header$
 #include <vector>
 using namespace GlastClassify;
 
-static std::vector<double> values;
+static std::vector<std::pair<bool, const void *> > values;
+double value;
 class TestLookup : public TreeFactory::ILookupData {
 public:
     TestLookup(){}
-    const double * operator()(const std::string& name){
+    std::pair<bool, const void *> operator()(const std::string& name){
         std::cout << "Looking up: " << name << std::endl;
-        values.push_back(values.size());
-        return &values.back();
+        value = values.size(); // very klugy, just exercise logic
+        values.push_back(std::make_pair(false, &value));
+        return values.back();
     }
 };
 
@@ -38,6 +40,7 @@ public:
         log() << "Ask factory for a tree: " << std::endl;
         const TreeFactory::Tree& goodcal= factory(name);
         log() << "Tree's title: " << goodcal.title() << std::endl;
+        
 
         log() << name  << " value from the tree: " << goodcal() << std::endl;
     }
