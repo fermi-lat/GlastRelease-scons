@@ -20,7 +20,7 @@ class CalDigi : public TObject  {
     
 public:
     
-	/** @defgroup CalDigiGroup CalDigi End-User Interface
+	/** @defgroup CalDigiGroup CalDigi End-User Interface */
 	/*@{*/
     /// shifts and masks for packed readout of energy range and Adc value
     enum {
