@@ -14,6 +14,7 @@ class DecisionTree;
 
 #include <string>
 #include <vector>
+#include <utility>
 
 
 namespace GlastClassify {
@@ -31,7 +32,10 @@ namespace GlastClassify {
         class ILookupData {
         public:
             /// return pointer to data that will be filled by client later
-            virtual const double * operator()(const std::string& name)=0;
+            //virtual const double * operator()(const std::string& name)=0;
+
+            // return pair; bool is true if pointer to a double, false if pointer to a float
+            virtual std::pair<bool, const void*> operator()(const std::string& name)=0;
             /// a bit of a kluge for ROOT. The above might have to be cast to a float*
             virtual bool isFloat()const {return false;}  
         };
