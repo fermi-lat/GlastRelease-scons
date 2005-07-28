@@ -1,5 +1,6 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v8r0      27-Jul-05  : HMK Convert TKR Double_t to Double32_t
 v7r1p1    15-Jul-05  : HMK add const qualifers to CalMipTrack get methods
 v7r1      15-Jul-05  : HMK Update CalMipTrack
 v7r0      08-Jul-05  : DC  Finish up new CalRecon classes

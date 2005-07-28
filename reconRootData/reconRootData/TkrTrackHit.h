@@ -128,13 +128,13 @@ public:
 
     /// Access the hit's associated information
     inline const TkrCluster* getClusterPtr()      const {return m_cluster;   }
-    inline const Double_t    getZPlane()          const {return m_zPlane;    }
-    inline const Double_t    getEnergy()          const {return m_energy;    }
-    inline const Double_t    getRadLen()          const {return m_radLen;    }
-    inline const Double_t    getActiveDist()      const {return m_activeDist;}
-    inline const Double_t    getChiSquareFilter() const {return m_chiSquareFilter;}
-    inline const Double_t    getChiSquareRevFit() const {return m_chiSquareRevFit;}
-    inline const Double_t    getChiSquareSmooth() const {return m_chiSquareSmooth;}
+    inline const Double32_t    getZPlane()          const {return m_zPlane;    }
+    inline const Double32_t    getEnergy()          const {return m_energy;    }
+    inline const Double32_t    getRadLen()          const {return m_radLen;    }
+    inline const Double32_t    getActiveDist()      const {return m_activeDist;}
+    inline const Double32_t    getChiSquareFilter() const {return m_chiSquareFilter;}
+    inline const Double32_t    getChiSquareRevFit() const {return m_chiSquareRevFit;}
+    inline const Double32_t    getChiSquareSmooth() const {return m_chiSquareSmooth;}
     inline const commonRootData::TkrId getTkrId() const {return m_hitID;          }
 
     /// @enum Allow rudimentary access to the hit information here 
@@ -148,10 +148,10 @@ public:
     TVector3                 getPoint(TkrTrackHit::ParamType type);
     const TVector3           getDirection(TkrTrackHit::ParamType type)  const;
     TVector3                 getDirection(TkrTrackHit::ParamType type);
-    const Double_t           getMeasuredPosition(TkrTrackHit::ParamType type) const;
-    const Double_t           getMeasuredSlope(TkrTrackHit::ParamType type) const;
-    const Double_t           getNonMeasuredPosition(TkrTrackHit::ParamType type) const;
-    const Double_t           getNonMeasuredSlope(TkrTrackHit::ParamType type) const;
+    const Double32_t         getMeasuredPosition(TkrTrackHit::ParamType type) const;
+    const Double32_t         getMeasuredSlope(TkrTrackHit::ParamType type) const;
+    const Double32_t         getNonMeasuredPosition(TkrTrackHit::ParamType type) const;
+    const Double32_t         getNonMeasuredSlope(TkrTrackHit::ParamType type) const;
 
     /// Direct access to track params
     const TkrTrackParams& getTrackParams(ParamType type) const;
@@ -172,19 +172,19 @@ public:
     inline void clearStatusBit(UInt_t bitToClear)      {m_statusBits &= ~bitToClear;}
 
 private:
-    inline const Double_t getCoordinate(const TkrTrackParams& params, int coord) const;
-    inline Double_t       getCoordinate(const TkrTrackParams& params, int coord);
+    inline const Double32_t getCoordinate(const TkrTrackParams& params, int coord) const;
+    inline Double32_t       getCoordinate(const TkrTrackParams& params, int coord);
 
     UInt_t                m_statusBits;      // See StatusBits enumeration above for definitions
     TkrCluster*           m_cluster;         // Pointer to the cluster associated with this hit
     commonRootData::TkrId m_hitID;           // Complete TkrId identifying the details of this hit/plane
-    Double_t              m_zPlane;          // Z location of plane
-    Double_t              m_energy;          // Energy of track at this plane
-    Double_t              m_radLen;          // Radiation Lengths encountered from the previous hit
-    Double_t              m_activeDist;      // The distance inside (positive) hit SSD (neg. if outside)
-    Double_t              m_chiSquareFilter; // hit chi-square at filter stage of fit
-    Double_t              m_chiSquareRevFit; // hit chi-square at filter stage of fit
-    Double_t              m_chiSquareSmooth; // hit chi-square at smooth stage of fit
+    Double32_t              m_zPlane;          // Z location of plane
+    Double32_t              m_energy;          // Energy of track at this plane
+    Double32_t              m_radLen;          // Radiation Lengths encountered from the previous hit
+    Double32_t              m_activeDist;      // The distance inside (positive) hit SSD (neg. if outside)
+    Double32_t              m_chiSquareFilter; // hit chi-square at filter stage of fit
+    Double32_t              m_chiSquareRevFit; // hit chi-square at filter stage of fit
+    Double32_t              m_chiSquareSmooth; // hit chi-square at smooth stage of fit
         
     TkrTrackParams        m_hitMeas;
     TkrTrackParams        m_hitPred;
@@ -193,7 +193,7 @@ private:
     TkrTrackParams        m_hitSmooth;
     TkrTrackParams        m_Qmaterial;  // holds the covariance matrix of the material effects 
 
-    ClassDef(TkrTrackHit,1)
+    ClassDef(TkrTrackHit,2)
 };
 
 //typedef std::vector<TkrTrackHit>                 TkrTrackHitVector;

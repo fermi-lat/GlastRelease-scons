@@ -76,17 +76,17 @@ public:
 
     /// Access to primary quantities on track quality and scattering info
     inline UInt_t       getStatusBits()          const {return m_statusBits;}
-    inline Double_t     getChiSquareFilter()     const {return m_chiSquareFilter;}
-    inline Double_t     getChiSquareSmooth()     const {return m_chiSquareSmooth;}
+    inline Double32_t     getChiSquareFilter()     const {return m_chiSquareFilter;}
+    inline Double32_t     getChiSquareSmooth()     const {return m_chiSquareSmooth;}
     inline UInt_t       getNDegreesOfFreedom()   const {return m_nDegreesOfFreedom;}
-    inline Double_t     getQuality()             const {return m_Quality;}
+    inline Double32_t     getQuality()             const {return m_Quality;}
     ///returns the rms of the residuals between the track hits and their fitted position
-    inline Double_t     getScatter()             const {return m_rmsResid;}
+    inline Double32_t     getScatter()             const {return m_rmsResid;}
     ///returns the rms of the scattering deviations of the track
-    inline Double_t     getKalThetaMS()          const {return m_KalmanThetaMS;}
+    inline Double32_t     getKalThetaMS()          const {return m_KalmanThetaMS;}
     ///returns the energy estimate from Kalman Filter Fitter
-    inline Double_t     getKalEnergy()           const {return m_KalmanEnergy;}
-    inline Double_t     getKalEnergyError()      const {return m_KalmanEnergyErr;}
+    inline Double32_t     getKalEnergy()           const {return m_KalmanEnergy;}
+    inline Double32_t     getKalEnergyError()      const {return m_KalmanEnergyErr;}
 
     /// Access to derived information on gaps
     UInt_t              getNumGaps()             const {return m_Xgaps + m_Ygaps;}
@@ -98,16 +98,16 @@ public:
     /// Access to fit specific information
     inline TVector3     getInitialPosition()     const {return m_initialPosition;}
     inline TVector3     getInitialDirection()    const {return m_initialDirection;}
-    inline Double_t     getInitialEnergy()       const {return m_initialEnergy;}
+    inline Double32_t     getInitialEnergy()       const {return m_initialEnergy;}
     /// JCT: THE FOLLOWING SHOULD BE COMMENTED
     inline UInt_t       getNumSegmentPoints()    const {return m_numSegmentPoints;}
-    inline Double_t     chiSquareSegment(Double_t penaltyGap = 0.)  
+    inline Double32_t     chiSquareSegment(Double_t penaltyGap = 0.)  
                                            const {return m_chisqSegment + penaltyGap*getNumGaps();}
     inline UInt_t       getNumXHits()            const {return m_nxHits;}
     inline UInt_t       getNumYHits()            const {return m_nyHits;}
-	inline UInt_t       getNumFitHits()          const {return m_nxHits + m_nyHits;}
+    inline UInt_t       getNumFitHits()          const {return m_nxHits + m_nyHits;}
     /// JCT: THE FOLLOWING SHOULD BE COMMENTED
-    inline Double_t     getTkrCalRadlen()        const {return m_TkrCal_radlen;}
+    inline Double32_t     getTkrCalRadlen()        const {return m_TkrCal_radlen;}
 
     /// Access to the hits
     TIterator*          Iterator()               const {return MakeIterator();}
@@ -135,7 +135,7 @@ public:
     inline void   setNumYHits(UInt_t i)                  {m_nyHits            = i;}
     inline void   setTkrCalRadLen(Double_t x)            {m_TkrCal_radlen     = x;}
     inline void   setStatusBit(UInt_t status)            {m_statusBits       |= status;}
-	inline void   clearStatusBits()                      {m_statusBits        = 0;}
+    inline void   clearStatusBits()                      {m_statusBits        = 0;}
     inline void   clearEnergyStatusBits()                {m_statusBits       &= 0xff0f;}
 
 private:
@@ -143,20 +143,20 @@ private:
     UInt_t       m_statusBits;
 
     /// The input energy, and current position and direction
-    Double_t     m_initialEnergy;       // Initial energy at the start of the track
+    Double32_t     m_initialEnergy;       // Initial energy at the start of the track
     TVector3     m_initialPosition;     // Initial position at the start of the track
     TVector3     m_initialDirection;    // Initial direction at the start of the track
 
     // Track quality information
-    Double_t     m_chiSquareFilter;     // Chi-square/dof from Filter stage of fit
-    Double_t     m_chiSquareSmooth;     // "Smoothed" track chi-square/dof
+    Double32_t     m_chiSquareFilter;     // Chi-square/dof from Filter stage of fit
+    Double32_t     m_chiSquareSmooth;     // "Smoothed" track chi-square/dof
     UInt_t       m_nDegreesOfFreedom;   // Number of degrees of freedom for above
-    Double_t     m_rmsResid;            // RMS residuals of track hits to fit
-    Double_t     m_Quality;             // Track "Quality" derived from hit counts & chisq.
+    Double32_t     m_rmsResid;            // RMS residuals of track hits to fit
+    Double32_t     m_Quality;             // Track "Quality" derived from hit counts & chisq.
 
     // Information from the fitter
-    Double_t     m_KalmanEnergy;        // Energy estimate from Kalman Filter Fitter
-    Double_t     m_KalmanThetaMS;       // rms scattering deviation of track
+    Double32_t     m_KalmanEnergy;        // Energy estimate from Kalman Filter Fitter
+    Double32_t     m_KalmanThetaMS;       // rms scattering deviation of track
 
     // Hit gap information
     UInt_t       m_Xgaps;               // Number of x-meas points on track NOT used in fit
@@ -167,13 +167,13 @@ private:
     /// Kalman Filter Track data
     UInt_t       m_numSegmentPoints;    // Effective number of 3D segments that contribute
 	                                    //   to track direction
-    Double_t     m_chisqSegment;        // Chi-square for this portion of the track
+    Double32_t     m_chisqSegment;        // Chi-square for this portion of the track
     UInt_t       m_nxHits;              // Number of x meas. points USED in fit
     UInt_t       m_nyHits;              // Number of y meas. points USED in fit
-    Double_t     m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
-    Double_t     m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
+    Double32_t     m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
+    Double32_t     m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
 
-    ClassDef(TkrTrack,2)
+    ClassDef(TkrTrack,3)
 
 };
 #endif
