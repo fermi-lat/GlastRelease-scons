@@ -108,6 +108,12 @@ Added July 2005</prim>
 <prim name="ACDScrewFromEdge" value="50.0">
    Distance of (most) screws from edge of tile
 </prim>
+
+<prim name="ACDScrewCenterDiff" value="50.0">
+Distance between centers of screws in a screw square (in bottom side
+tiles)
+</prim>
+
 <!--  
   <prim name="sideTileTransMid" value="332.0">Transverse 
  dimension of side tiles neither in the middle nor central;

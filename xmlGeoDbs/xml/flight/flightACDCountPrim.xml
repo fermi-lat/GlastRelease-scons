@@ -25,6 +25,9 @@ long row</prim>
   tiles in bottom side</prim>
   <prim name="numPerSideRowLong" value="5" uType="count" type="int">Number of
   tiles in some (currently top 3) side rows</prim>
+  <prim name="ACDNumScrewSq" value="6" uType="count" type="int">
+Number of arrays of 4 screws in a side bottom tile
+</prim>
 
 <!-- assign idfield values for sides and top of ACD -->
   <prim name="eACDTopFace" value="0" uType="count" type="int">Top of ACD</prim>

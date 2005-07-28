@@ -1053,14 +1053,64 @@
        />
     </composition>
 
-<!-- Single tile in row 3 -->
-    <box name="sideTileR3" 
+<!-- Make  a little composition with envelope made of tileMat containing
+     an array of 4 screws -->
+    <box name="ACDScrewSqEnv"
+         XREF="ACDScrewSqSide"
+         YREF="tileThicknessOp"
+         ZREF="ACDScrewSqSide"
+         materialREF="tileMat"
+    />
+
+    <composition name="ACDScrewSq" envelope="ACDScrewSqEnv" >
+      <posXYZ volume="ACDScrewNormal" 
+              xrot="90"
+              XREF="screwInSq_dn"
+              ZREF="screwInSq_dn"  />
+      <posXYZ volume="ACDScrewNormal" 
+              xrot="90"
+              XREF="screwInSq_d"
+              ZREF="screwInSq_dn"  />
+      <posXYZ volume="ACDScrewNormal" 
+              xrot="90"
+              XREF="screwInSq_dn"
+              ZREF="screwInSq_d"  />
+      <posXYZ volume="ACDScrewNormal" 
+              xrot="90"
+              XREF="screwInSq_d"
+              ZREF="screwInSq_d"  />
+     </composition>
+
+<!-- Single tile in row 3 contains 6 of the screw squares defined above -->
+    <box name="sideTileR3Env" 
          XREF="ACDTotalTransSideOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight3Op"
          materialREF="tileMat"
          sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"/>
+         detectorTypeREF="eDTypeACDTile"
+     />
+
+    <composition name="sideTileR3" envelope="sideTileR3Env" >
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin5_dn"
+      />
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin3_dn"
+      />
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin_dn"
+      />
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin_d"
+      />
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin3_d"
+      />
+      <posXYZ volume="ACDScrewSq"
+          XREF="ACDScrewSqMin5_d"
+      />
+   </composition>
 
    <!-- now rotate them all 90 degrees for X tiles (flip x and y dimensions) 
         Do the rotation on individual tiles rather than assembling a side,

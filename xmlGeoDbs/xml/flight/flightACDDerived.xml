@@ -544,6 +544,90 @@
           </uminus>
         </const>
 
+<!-- 
+    screws in bottom side tiles come in groups of 4, the vertices of
+    squares 5 cm on a side.  The squares are evenly spaced across
+    the tile
+  -->
+    <const name="ACDScrewSqSide" >
+      <notes>Total length of side of a minimal square containing a group
+         of 4 screws </notes>
+      <add>
+         <refer refTo="ACDScrewCenterDiff" />
+         <mul>
+            <refer refTo="ACDHoleRad" />
+            <const value="2" uType="count" />
+         </mul>
+       </add>
+    </const>
+
+        
+    <const name="ACDScrewSqMin_d" >
+      <notes>Half of distance between centers of adjacent screw squares,
+             equal to transverse displacement of most central squares</notes>
+      <half>
+        <quo>
+          <refer refTo="ACDTotalTransSideOp" />
+          <refer refTo="ACDNumScrewSq" />
+        </quo>
+      </half>
+    </const>
+
+    <!-- transverse displacements for the 6 screw squares are multiples of
+         the above -->
+    <const name="ACDScrewSqMin_dn">
+      <notes>Smallest neg. displacement of a screw square</notes>
+      <uminus>
+        <refer refTo="ACDScrewSqMin_d" />
+      </uminus>
+    </const>
+
+    <const name="ACDScrewSqMin3_d">
+       <notes>Displacement for squares 2 and 5</notes>
+       <mul>
+         <refer refTo="ACDScrewSqMin_d" />
+         <const value="3" uType="count" />
+       </mul>
+    </const>
+
+    <const name="ACDScrewSqMin3_dn">
+      <notes>Neg. displacement (square 2)</notes>
+      <uminus>
+        <refer refTo="ACDScrewSqMin3_d" />
+      </uminus>
+    </const>
+
+    <const name="ACDScrewSqMin5_d">
+       <notes>Displacement for squares 1 and 6</notes>
+       <mul>
+         <refer refTo="ACDScrewSqMin_d" />
+         <const value="5" uType="count" />
+       </mul>
+    </const>
+
+    <const name="ACDScrewSqMin5_dn">
+      <notes>Neg. displacement (square 1)</notes>
+      <uminus>
+        <refer refTo="ACDScrewSqMin5_d" />
+      </uminus>
+    </const>
+
+    <const name="screwInSq_d" >
+      <notes>Displacement of a screw from center of screw square</notes>
+      <half>
+        <refer refTo="ACDScrewCenterDiff" />
+      </half>
+    </const>
+
+    <const name="screwInSq_dn" >
+      <notes>Negative displacement of a screw from center of 
+           screw square</notes>
+      <uminus>
+        <refer refTo="screwInSq_d" />
+      </uminus>
+    </const>
+    
+
  <!-- Ribbon dimensions.   An xRibbon is one more or less contained in
       a plane of constant x (perp. to x axis) and similarly for yRibbon. 
       In current (nov 2002) model yRibbons are divided into 5 segments
