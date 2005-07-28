@@ -2,7 +2,6 @@
 @brief 
 
 */
-#pragma once
 #include "GlastClassify.h"
 
 #include <cmath>

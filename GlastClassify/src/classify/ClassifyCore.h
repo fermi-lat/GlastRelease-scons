@@ -3,7 +3,6 @@
 
 */
 
-#pragma once
 #include "classifier/Classifier.h"
 #include "GlastClassify.h"
 #include "ClassifyVertex.h"

@@ -4,7 +4,6 @@
 $Header$
 
 */
-#pragma once
 #include "GlastClassify.h"
 
 #include <cmath>

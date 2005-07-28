@@ -4,8 +4,9 @@ $Header$
 
 
 */
+#ifndef GlastClassify_ClassifyVertex_h
+#define GlastClassify_ClassifyVertex_h
 
-#pragma once
 #include "classifier/Classifier.h"
 #include "GlastClassify.h"
 
@@ -51,3 +52,5 @@ private:
     int m_tkrdirerr;
     bool m_isThin; 
 };
+
+#endif
