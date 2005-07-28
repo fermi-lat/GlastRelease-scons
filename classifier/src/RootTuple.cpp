@@ -36,7 +36,22 @@ namespace {
             }
         }
     }
-}
+#ifdef WIN32
+#include <float.h> // used to check for NaN
+#else
+#include <cmath>
+#endif
+
+    bool isFinite(double val) {
+        using namespace std; // should allow either std::isfinite or ::isfinite
+#ifdef WIN32 
+        return (_finite(val)!=0);  // Win32 call available in float.h
+#else
+        return (isfinite(val)!=0); // gcc call available in math.h 
+#endif
+    }
+
+}// anon namespace
 
 /** @class RootTuple::Entry
 @brief nested class is a functor to return the current value of an entry in the tree 
@@ -155,7 +170,12 @@ void RootTuple::fill_row(int event, std::vector<float>& row )const
     EntryList::const_iterator et=m_entries[i].begin();
     for(; et !=m_entries[i].end(); ++et){
         const Entry& e = **et;
-        row.push_back( e() );
+        float v = e();
+        if( !isFinite(v) ){
+            throw std::runtime_error("RootTuple::fill_row: Nan found in input");
+
+        }
+        row.push_back(v );
     }
 }
 
