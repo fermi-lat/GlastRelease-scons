@@ -70,7 +70,7 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     // declare the properties
     declareProperty("RandomEngine",    m_randomEngine="TripleRand");
     declareProperty("RunNumber",       m_RunNumber=-1);
-    declareProperty("RunNumberString", m_RunNumberString="runName");
+    declareProperty("RunNumberString", m_RunNumberString="$(runName)");
     declareProperty("InitialSequenceNumber", m_InitialSequenceNumber=0);
 #if 0 // disable for now: THB
     declareProperty("SeedFile", m_seedFile="");
@@ -179,20 +179,30 @@ StatusCode GlastRandomSvc::initialize ()
     m_SequenceNumber = m_InitialSequenceNumber;
 
     if( m_RunNumberString!="" ){
-        const char * rnstring = ::getenv(m_RunNumberString.c_str());
-        if( rnstring !=0) {
-            m_RunNumber = ::atof(rnstring);
-            log << MSG::INFO << "Run number set from env var "
-                << m_RunNumberString << endreq;
+        std::string rs(m_RunNumberString.c_str());
+        if( (rs.substr(0,2)=="$(") && (rs.substr(rs.size()-1)==")") ) {
+            // delimited string should contain an env var -- check it
+            const char * rnstring = ::getenv(rs.substr(2, rs.size()-3).c_str());
+            if( rnstring !=0) {
+                // yes: assume that it is a number
+                m_RunNumber = facilities::Util::atoi(rnstring);
+                log << MSG::INFO << "Setting run number from environment variable \"" 
+                    << rs.substr(2,rs.size()-3) << "\"" <<endreq;
+            } 
+        }else {
+            // string does not define an environment variable
+            m_RunNumber = facilities::Util::atoi(rs);
+            log << MSG::INFO << "Run number set from numeric string to "
+                    << m_RunNumberString << endreq;
         }
     }
     if( m_RunNumber == -1){
         m_RunNumber = 10;
         log << MSG::INFO << "Run number set to default: " << m_RunNumber << endreq;
     } else {
-        log << MSG::INFO << "Run number set  to: " <<  m_RunNumber << endreq;
-        log << MSG::INFO << "==========================================" <<endreq;
+        log << MSG::INFO << "Run number set to: " <<  m_RunNumber << endreq;
     }
+    log << MSG::INFO << "==================================================" <<endreq;
 
 
 
