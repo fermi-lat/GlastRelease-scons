@@ -251,9 +251,7 @@ bool CalLikelihoodTool::getMPV(double mpv[2]){
   }
   mpv[1]= maxProb;
   mpv[0]= recEnergy;
-  if( fabs(mpv[0]-minTrialEnergy())<1. || fabs(mpv[0]-maxTrialEnergy())<1. ) 
-    return true;
-  return false;
+  return fabs(mpv[0]-minTrialEnergy())<1. || fabs(mpv[0]-maxTrialEnergy())<1.; 
 }
 bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
   // QUALITY
@@ -267,9 +265,10 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
   {
     double delta= 0;
     trialEnergy()= fwhmLimits[iFWHM];
-    if( evaluatePDF(delta) ) return true;
+    if( evaluatePDF(delta) ) delta= 0.;
     delta/= mpv[1];
-    if( delta<.5 ) {
+    if( delta<.5 ) 
+    {
       double lim[2]= {iFWHM?mpv[0]:minTrialEnergy(),
                         iFWHM?maxTrialEnergy():mpv[0]};
       int errCalls= 0;
@@ -295,7 +294,9 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
         lim[iFWHM]-= (1-2*iFWHM)*bW;
       }
       fwhmLimits[iFWHM]= fabs(1-lim[iFWHM]/mpv[0]);
-    } else {
+    } 
+    else 
+    {
       double savingCalE= calEnergy();
       double calE[2]= {calEnergy()*(iFWHM?.3:1.), calEnergy()*(iFWHM?1.:5.)};
       double newMPV[2];
@@ -303,12 +304,13 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
       // space, estimate it as close as possible from that point:
       // we move calEnergy() energy around to find it
       if( calE[1]<.1 ) calE[1]= m_Axes->getBinCenter(0, 4);
-      while( fabs(delta-.5)>1e-2 && fabs(calE[0]-calE[1])>.1 ){
+      while( fabs(delta-.5)>1e-2 && fabs(calE[0]-calE[1])>.1 )
+      {
         calEnergy()= (calE[0]+calE[1])*.5;
         m_Axes->init(m_eventPar);
         if( getMPV(newMPV) ) return true; 
         trialEnergy()= fwhmLimits[iFWHM];
-        if( evaluatePDF(delta) ||  (delta/= newMPV[1])>1. ) return true;
+        if( evaluatePDF(delta) || (delta/= newMPV[1])>1. ) return true;
         calE[iFWHM ^ (delta<.5)]= calEnergy();
       }
       if( fabs(delta-.5)>.01 ) return true; 
@@ -316,7 +318,7 @@ bool CalLikelihoodTool::getFWHM(const double mpv[2], double fwhmLimits[2]){
       calEnergy()= savingCalE;
     }
   }
-  return (fwhmLimits[0]+fwhmLimits[1]>2.);
+  return fwhmLimits[0]+fwhmLimits[1]>2.;
 }
 
 double CalLikelihoodTool::findGeometricCut( const Point &x,
@@ -416,8 +418,8 @@ bool CalLikelihoodTool::evaluatePDF( double &result ) const{
   result= exp(-0.5*(result*result+values[4]*values[4]));
   result*= values[1]*shTau/(2.50662827463100024*values[3]); //sqrt(2*pi)
 
-  if( errno ) return true;
-  else return false;
+  if( errno ) result= 0.;
+  return false;
 }
 
 
