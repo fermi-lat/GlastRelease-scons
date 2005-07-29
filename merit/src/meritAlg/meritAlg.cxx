@@ -319,7 +319,7 @@ StatusCode meritAlg::initialize() {
     @param FT1ConvPointX,FT1ConvPointY,FT1ConvPointZ (m) conversion point of event, whether single track or vertex, 999 if no tracks
 
         */
-    //FT1 INFO:
+    //FT1 INFO: 
     addItem( "FT1EventId",          &m_ft1eventid);
     addItem( "FT1Energy",           &m_ft1energy);
     addItem( "FT1Theta",            &m_ft1theta);
