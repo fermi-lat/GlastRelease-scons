@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r23p1 29-Jul-2005  jrb Make inset into big bottom side tiles (contains
+                            array of screws) sensitive, like the rest of 
+                            the tile.                       
    v1r23   29-Jul-2005  jrb Shrink ACD tiles to operating temperature size;
                             add embedded screws 
    v1r22p7 25-Jul-2005  jrb for Anders: add (8 tower + ACD) geometry in 
