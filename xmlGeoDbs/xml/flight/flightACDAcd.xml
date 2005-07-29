@@ -1060,6 +1060,8 @@
          YREF="tileThicknessOp"
          ZREF="ACDScrewSqSide"
          materialREF="tileMat"
+         sensitive="posHit" 
+         detectorTypeREF="eDTypeACDTile"
     />
 
     <composition name="ACDScrewSq" envelope="ACDScrewSqEnv" >
