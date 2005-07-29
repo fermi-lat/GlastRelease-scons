@@ -95,7 +95,7 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
     std::cout << "calling RootTuple" << std::endl;
     RootTuple t(input, "MeritTuple");
     t.selectColumns(all_names, false); // not weighted
-    double good=0, bad=0, rejected=0;
+    double good=0, bad=0, rejected=0, nan=0;
     Classifier::Record::setup();
     RootTuple::Iterator rit = t.begin();
     log() << "\tsize = " << t.size() << std::endl;
@@ -105,7 +105,13 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
     for( ; rit!=t.end();  ++rit)
     { 
         if (max_events>0 && rit > max_events) break ; //  max
-        m_row = &*rit;
+        try {
+            m_row = &*rit;
+        } catch( std::runtime_error err){
+            ++nan;
+            ++rejected;
+            continue;
+        }
         // copy to local
         if( !accept() ) {++rejected; continue; } // apply general cut
         bool signal = m_mixed ? isgood() : isSignal;
@@ -114,19 +120,29 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
         m_data.push_back( Classifier::Record(signal, m_row->begin(), m_row->begin()+nvars));
     }
     log() << "\tgood, bad, rejected records: " << good << ",  " << bad <<", " << rejected << std::endl;
+    log() << "\tWARNING: found "<< nan << " events with non-finite values " << std::endl;
     log() << "Loaded " << (good+bad) << " records"<< std::endl;
 }
 
 
 void GlastClassify::classify()
 {
+	std::cout << "So far so good..."
+				  << std::endl;
+
     // create the tree from the data
     Classifier tree(m_data, m_info.vars());
     tree.makeTree();
 
+	std::cout << "Still good..."
+			  << std::endl;
+
     // print the node list, and the variables used
     tree.printTree(log());
     tree.printVariables(log());
+
+	std::cout << "Still good..."
+			  << std::endl;
 
     // a table of the background for a given efficiency
     BackgroundVsEfficiency plot(tree);
