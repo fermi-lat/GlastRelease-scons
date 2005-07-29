@@ -1,5 +1,5 @@
-/** @file main.cxx 
-@brief Application that applies classification trees to the tuple
+/** @file run_classification_main.cxx 
+@brief Application that applies decision trees to the tuple
 
 $Header$
 */
@@ -12,6 +12,7 @@ $Header$
 #include <string>
 #include <sstream>
 #include <cassert>
+#include <stdexcept>
 
 #include "TFile.h"
 #include "TTree.h"

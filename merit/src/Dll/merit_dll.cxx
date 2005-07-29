@@ -1,4 +1,5 @@
-/** @file GlastDigi_dll.cpp
+/** @file merit_dll.cxx
+ @brief Gaudi interface
 
   $Header$
 */
