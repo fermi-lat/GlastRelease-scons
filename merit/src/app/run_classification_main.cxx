@@ -21,8 +21,8 @@ $Header$
 @page run_classification application run_classification 
 format: run_classification [input_file] [output_file]
 
-input_file: if not present look at env var MERIT_INPUT_FILE
-output_file: if not present, and MERIT_OUTPUT_FILE is not defined, just append "_new" to the file name.
+@param input_file if not present look at env var MERIT_INPUT_FILE
+@param output_file if not present, and MERIT_OUTPUT_FILE is not defined, just append "_new" to the file name.
 
 Copies the root tree MeritTuple (or "1") from input_file to output_file, but recalculates the CT variables,
 Expects the env var CTREE_PATH to point to a folder containing the trees.
