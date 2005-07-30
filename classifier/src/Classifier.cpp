@@ -437,10 +437,27 @@ void Classifier::printVariables(std::ostream& log)const
     std::vector<double> ratings;
     rateVariables(ratings);
     int i= 0; 
-    log <<  "\nVariable summary\nName\timprovement\n" << std::setprecision(4);
+#if 0 // old version
+    log <<  "\nVariable summary\nName\timprovement\n";
     for( std::vector<double>::const_iterator rit= ratings.begin(); rit!=ratings.end(); ++rit, ++i){
         log <<Classifier::Record::columnName(i)<< "\t" << *rit << std::endl;
     }
+#else // nicer format
+    typedef std::map<double, std::string, std::greater<double> > ImportanceMap;
+     ImportanceMap rating_map;
+    for( std::vector<double>::const_iterator rit= ratings.begin(); rit!=ratings.end(); ++rit, ++i){
+        rating_map[*rit] = Classifier::Record::columnName(i);
+    }
+    log <<  "\n\n\tVariable summary\n" 
+        << std::setw(20) << std::left<< "Name" 
+        << std::setw(12) << std::right << "improvement\n" << std::setprecision(5);
+    for( ImportanceMap::const_iterator rit= rating_map.begin(); 
+        rit!=rating_map.end(); ++rit )
+    {
+        log << std::setw(20)<< std::left  << rit->second
+            << std::setw(12)<< std::right << static_cast<int>(rit->first+0.5) << std::endl;
+    }
+#endif
 } 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
