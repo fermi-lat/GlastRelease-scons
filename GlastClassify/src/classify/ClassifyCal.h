@@ -9,8 +9,11 @@
 class ClassifyCal : public GlastClassify
 {
 public:
-    ClassifyCal(const std::string& info_path)
+    typedef enum {LOW, MED, HIGH, ALL} etype;
+
+    ClassifyCal(const std::string& info_path, etype energyrange=ALL)
         : GlastClassify(info_path)
+        , m_energyrange(energyrange)
     {}
 
     //functions to check or declare variables
@@ -33,9 +36,15 @@ public:
 
     virtual bool accept()
     {
-        return  datum(m_calEnergyIndex) > 5.0 && datum(m_CalTotRLnIndex)>4.0;
-
+        double energy = datum(m_calEnergyIndex);
+        if(energy<5. || datum(m_CalTotRLnIndex)<4.) return false;
+        else if(m_energyrange==LOW) return (energy<350.);
+        else if(m_energyrange==MED) return ( energy<3500.);
+        else if(m_energyrange==HIGH) return (energy>3500.);
+        else return true;
+        //		return (energy>5. && datum(m_CalTotRLnIndex)>4.);
     }
+
     float calEnergy()const{ return datum(m_calEnergyIndex); }
 
 private:
@@ -43,5 +52,6 @@ private:
     int m_mcEnergy;
     int m_calEnergyIndex;
     int m_CalTotRLnIndex;
+    etype m_energyrange;
 };
 
