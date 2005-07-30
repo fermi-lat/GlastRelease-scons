@@ -43,14 +43,13 @@ void BackgroundVsEfficiency::setup()
         cum_bkg -= background;
         m_auxmap[prob] = std::make_pair(efficiency, cum_bkg/m_total_bkg);
         m_effmap[efficiency] = cum_bkg/m_total_bkg;
-        if( background!=0) {
-            inverse_variance += signal*signal/background;
+        if( signal+background!=0) {
+            inverse_variance += signal*signal/(signal+background);
         }else{
             std::cerr << "zero  background, prob, signal = " << prob << ", " << signal << std::endl;
         }
     }
-    inverse_variance /=m_total_bkg;
-    m_sigma = m_total_sig/sqrt(inverse_variance)/m_total_bkg;
+    m_sigma = sqrt(m_total_sig/inverse_variance);
     m_setup=true;
 }
 BackgroundVsEfficiency::BackgroundVsEfficiency(
