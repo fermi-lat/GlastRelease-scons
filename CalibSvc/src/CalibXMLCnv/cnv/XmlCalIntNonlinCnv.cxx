@@ -54,17 +54,34 @@ namespace {
 
     float err;
     std::vector<float> vals;
+    std::vector<float> sdacs;
+    unsigned nSdacs = 0;
     try {
       xmlBase::Dom::getFloatsAttribute(intNonlinElt, "values", vals);
+      nSdacs =  xmlBase::Dom::getFloatsAttribute(intNonlinElt, "sdacs", sdacs);
       err = xmlBase::Dom::getDoubleAttribute(intNonlinElt, "error");
     }
-    catch (xmlBase::DomException ex) {
-      std::cerr << "From CalibSvc::XmlCalIntNonlinCnv::processRange" << std::endl;
+    catch (xmlBase::DomException& ex) {
+      std::cerr << "From CalibSvc::XmlCalIntNonlinCnv::processRange" 
+                << std::endl;
       std::cerr << ex.getMsg() << std::endl;
-      throw ex;
+      std::cerr.flush();
+      return 0;
     }
-
-    return new CalibData::IntNonlin(&vals, err);
+    if (nSdacs > 0) {
+      if (nSdacs == vals.size()) {
+        return new CalibData::IntNonlin(&vals, err, &sdacs);
+      }
+      else {
+        std::cerr << "From CalibSvc::XmlCalIntNonlinCnv::processRange" 
+                  << std::endl;
+        std::cerr << "#dacs (" << nSdacs << ") != #values (" 
+                  << vals.size() << ")" << std::endl;
+        std::cerr.flush();
+        return 0;
+      }
+    }
+    else return new CalibData::IntNonlin(&vals, err, 0);
   }
 }
 
@@ -96,9 +113,21 @@ StatusCode XmlCalIntNonlinCnv::i_createObj(const DOMElement* docElt,
 
   while (rangeElt != 0 ) {
     IntNonlin* pIntNonlin = processRange(rangeElt);
-    pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
-                   m_nFace, pIntNonlin);
-    rangeElt = findNextRange(rangeElt);
+    if (pIntNonlin) {
+      pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
+                     m_nFace, pIntNonlin);
+      rangeElt = findNextRange(rangeElt);
+    }
+    else {
+      std::cerr << 
+        "Bad specification for (towerRow,towerCol,layer,xtal,range,face)"
+                << std::endl << "(" << m_nRow 
+                << "," << m_nCol << "," << m_nLayer << "," << m_nXtal 
+                << "," << m_nRange << "," << m_nFace << ")" << std::endl;
+      std::cerr << "Exiting.." << std::endl;
+      std::cerr.flush();
+      exit(1);
+    }
   }
 
   // Also have to handle dac collections        <<<<-------

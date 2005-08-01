@@ -151,54 +151,70 @@ void UseIntNonlin::processNew(CalibData::CalCalibIntNonlin* pNew,
     short iLayer = 0;
     short iXtal = 2;
     //    unsigned range = 2;
-    unsigned range = idents::CalXtalId::HEX8;
+    //    unsigned range = idents::CalXtalId::HEX8;
     unsigned face = 0;
     CalXtalId id(iTower, iLayer, iXtal);
     
-    CalibData::RangeBase* pRange = pNew->getRange(id, range, face);
+    CalibData::RangeBase* pRange;
+    IntNonlin* pIntNonlin;
+
+    unsigned range = 0;
+    for (range = 0; range < 4; range++) {
+      pRange = pNew->getRange(id, range, face);
     
-    IntNonlin* pIntNonlin = dynamic_cast<IntNonlin * >(pRange);
-    log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
-        << " xtal = " << iXtal << endreq;
-    log << MSG::INFO << "    range = " << range 
-        << " face = " << face << endreq;
-    if (pIntNonlin) {
-      const std::vector<float>* vals = pIntNonlin->getValues();
-      unsigned nVal = vals->size();
-      log << MSG::INFO << "Retrieved " << nVal
-          << " integral nonlinearity values:"  << std::endl;
-      for (unsigned iVal = 0; iVal < nVal; iVal++) {
-        log << MSG::INFO << (*vals)[iVal] << " ";
-      }
-      log << MSG::INFO << std::endl;
-      // log << MSG::INFO << "Averaged ped = " << pIntNonlin->getAvr() << endreq;
-      log << MSG::INFO << "       error = " << pIntNonlin->getError() << endreq;
-
-      /* Fetch dacs */
-      
-      for (unsigned iRange = 0; iRange < 4; iRange++) {
-        CalibData::DacCol* dacCol = pNew->getDacCol(iRange);
-        unsigned nD = (dacCol->getDacs())->size();
-        log << MSG::INFO << "For range = " << iRange << " retrieved " 
-            << nD << " dac values: " << endreq;
-        
-        for (unsigned iD = 0; iD < nD; iD++) {
-          log << MSG::INFO << (*dacCol->getDacs())[iD] << " ";
+      pIntNonlin = dynamic_cast<IntNonlin * >(pRange);
+      log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
+          << " xtal = " << iXtal << endreq;
+      log << MSG::INFO << "    range = " << range 
+          << " face = " << face << endreq;
+      if (pIntNonlin) {
+        const std::vector<float>* vals = pIntNonlin->getValues();
+        unsigned nVal = vals->size();
+        log << MSG::INFO << "Retrieved " << nVal
+            << " integral nonlinearity values:"  << std::endl;
+        for (unsigned iVal = 0; iVal < nVal; iVal++) {
+          log << MSG::INFO << (*vals)[iVal] << " ";
         }
-        log << endreq;
+        log << MSG::INFO << std::endl;
+        // log << MSG::INFO << "Averaged ped = " << pIntNonlin->getAvr() << endreq;
+        log << MSG::INFO << "       error = " << pIntNonlin->getError() << endreq;
+        const std::vector<float>* sdacs = pIntNonlin->getSdacs();
+        if (sdacs) {
+          unsigned nSdacs = sdacs->size();
+          log << MSG::INFO << "Retrieved " << nSdacs
+              << " sdac values: " << std::endl;
+          for (unsigned iS = 0; iS < nSdacs; iS++) {
+            log << MSG::INFO << (*sdacs)[iS] << " ";
+            log << MSG::INFO << std::endl;
+          }
+        }
       }
+      else {
+        log << MSG::INFO << "No calibration data found for this channel" 
+            << endreq;
+      }
+
     }
-    else {
-      log << MSG::INFO << "No calibration data found for this channel" 
-          << endreq;
+        /* Fetch dacs */
+      
+    for (unsigned iRange = 0; iRange < 4; iRange++) {
+      CalibData::DacCol* dacCol = pNew->getDacCol(iRange);
+      unsigned nD = (dacCol->getDacs())->size();
+      log << MSG::INFO << "For range = " << iRange << " retrieved " 
+          << nD << " dac values: " << endreq;
+      
+      for (unsigned iD = 0; iD < nD; iD++) {
+        log << MSG::INFO << (*dacCol->getDacs())[iD] << " ";
+      }
+      log << endreq;
     }
 
-    /*      Try another tower */
+      /*      Try another tower */
     iTower++;
     id = CalXtalId(iTower, iLayer, iXtal);
-    
+  
     pRange = pNew->getRange(id, range, face);
-
+    
     pIntNonlin = dynamic_cast<IntNonlin * >(pRange);
     log << MSG::INFO << "For tower = " << iTower << " layer = " << iLayer
         << " xtal = " << iXtal << endreq;
@@ -216,7 +232,6 @@ void UseIntNonlin::processNew(CalibData::CalCalibIntNonlin* pNew,
     }
   }
 }
-
 StatusCode UseIntNonlin::finalize( ) {
 
   MsgStream log(msgSvc(), name());
