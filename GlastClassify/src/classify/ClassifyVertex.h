@@ -20,16 +20,11 @@ public:
     ClassifyVertex(const std::string& info_path, layer isThin)
         : GlastClassify(info_path)
         , m_isThin(isThin)
-    {}
-
-    //functions to check or declare variables
-
-    virtual void define(std::vector<std::string>& all_names)
     {
-        m_vtxangleIndex = find_index("VtxAngle");
-        m_firstlayer = subdefine(all_names, "Tkr1FirstLayer");
-        m_direrr = subdefine(all_names, "McDirErr");
-        m_tkrdirerr = subdefine(all_names, "McTkr1DirErr");
+        m_vtxangleIndex = find_index( "VtxAngle");
+        m_firstlayer =     add_index( "Tkr1FirstLayer");
+        m_direrr =         add_index( "McDirErr");
+        m_tkrdirerr =      add_index( "McTkr1DirErr");
     }
 
     //function to generate good test

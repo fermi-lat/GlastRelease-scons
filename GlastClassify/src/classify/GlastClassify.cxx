@@ -30,6 +30,7 @@ std::string GlastClassify::s_treepath;
 
 GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
 : m_info(s_treepath+"/"+info_path, s_rootpath)
+, m_all_names(m_info.vars()) 
 , m_mixed(mixed)
 {
     std::ofstream* logfile = new std::ofstream(m_info.log().c_str());
@@ -62,28 +63,25 @@ void GlastClassify::run( unsigned int max_events, Subset set)
     current_time(log());
 }
 
-int GlastClassify::subdefine(std::vector<std::string>& all_names, const char *Filename)
+int GlastClassify::add_index(const std::string& name)
 {
-    all_names.push_back(Filename);
-    return all_names.size()-1;
+    m_all_names.push_back(name);
+    return m_all_names.size()-1;
 }
 
-void GlastClassify::load( unsigned int max_events, Subset /*set*/)
+void GlastClassify::load( unsigned int max_events , Subset /*set*/)
 {
-    std::vector<std::string> all_names(m_info.vars());
-    std::cout << "Defining names" << std::endl;
-    define(all_names);
     if(m_mixed){
         // signal and background are mixed in one batch of files
-        load(m_info.signalFiles(), all_names);
+        load(m_info.signalFiles(), max_events);
     }else {
         // separate signal, background
-        load(m_info.signalFiles(), all_names, true);
-        load(m_info.backgroundFiles(), all_names,  false);
+        load(m_info.signalFiles(), max_events, true);
+        load(m_info.backgroundFiles(),max_events, false);
     }
 }
 
-void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string> all_names,  bool isSignal)
+void GlastClassify::load(TrainingInfo::StringList input, unsigned int max_events,  bool isSignal)
 {
     std::cout << "loading " << input.size() << " files: \n\t" ;
     std::copy(input.begin(), input.end(), std::ostream_iterator<std::string>(std::cout, "\n\t")); 
@@ -92,16 +90,14 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
     log() << "Processing file(s)\n\t";
     std::copy(input.begin(), input.end(), std::ostream_iterator<std::string>(log(), "\n\t"));
 
-    std::cout << "calling RootTuple" << std::endl;
     RootTuple t(input, "MeritTuple");
-    t.selectColumns(all_names, false); // not weighted
+    t.selectColumns(m_all_names, false); // not weighted
     double good=0, bad=0, rejected=0, nan=0;
     Classifier::Record::setup();
     RootTuple::Iterator rit = t.begin();
     log() << "\tsize = " << t.size() << std::endl;
 
-    unsigned int max_events=0;
-    int nvars = all_names.size();
+    int nvars = m_all_names.size();
     for( ; rit!=t.end();  ++rit)
     { 
         if (max_events>0 && rit > max_events) break ; //  max
@@ -120,37 +116,31 @@ void GlastClassify::load(TrainingInfo::StringList input, std::vector<std::string
         m_data.push_back( Classifier::Record(signal, m_row->begin(), m_row->begin()+nvars));
     }
     log() << "\tgood, bad, rejected records: " << good << ",  " << bad <<", " << rejected << std::endl;
-    log() << "\tWARNING: found "<< nan << " events with non-finite values " << std::endl;
+    if( nan>0) log() << "\tWARNING: found "<< nan << " events with non-finite values " << std::endl;
     log() << "Loaded " << (good+bad) << " records"<< std::endl;
 }
 
 
 void GlastClassify::classify()
 {
-	std::cout << "So far so good..."
-				  << std::endl;
 
     // create the tree from the data
     Classifier tree(m_data, m_info.vars());
     tree.makeTree();
 
-	std::cout << "Still good..."
-			  << std::endl;
-
-    // print the node list, and the variables used
-    tree.printTree(log());
+    // summary stuff at the top of the file
     tree.printVariables(log());
-
-	std::cout << "Still good..."
-			  << std::endl;
+    log() << "======================================\n";
+    BackgroundVsEfficiency plot(tree);
+    log() << "\nFigure of merit sigma: " <<  plot.sigma() << std::endl;
+    plot.print(log());
+    std::ofstream plotfile((m_info.filepath()+"/efficiencyplot.txt").c_str());
 
     // a table of the background for a given efficiency
-    BackgroundVsEfficiency plot(tree);
-    plot.print(log());
-    log() << "Figure of merit sigma: " <<  plot.sigma() << std::endl;
-    std::ofstream plotfile((m_info.filepath()+"/efficiencyplot.txt").c_str());
     plot.print(plotfile);
     
+    // print the node list, and the variables used
+    tree.printTree(log());
 
     // make simple tree and print it to a local file
     DecisionTree& dtree = *tree.createTree(m_info.title());

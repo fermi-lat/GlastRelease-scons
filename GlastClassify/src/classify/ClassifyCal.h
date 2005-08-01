@@ -14,16 +14,11 @@ public:
     ClassifyCal(const std::string& info_path, etype energyrange=ALL)
         : GlastClassify(info_path)
         , m_energyrange(energyrange)
-    {}
-
-    //functions to check or declare variables
-
-    virtual void define(std::vector<std::string>& all_names)
     {
         m_energyIndex   =find_index("EvtEnergyCorr");
         m_calEnergyIndex= find_index("CalEnergyRaw");
         m_CalTotRLnIndex = find_index("CalTotRLn");
-        m_mcEnergy = subdefine(all_names, "McEnergy");
+        m_mcEnergy = add_index( "McEnergy");
     }
 
     //function to generate goodcal test

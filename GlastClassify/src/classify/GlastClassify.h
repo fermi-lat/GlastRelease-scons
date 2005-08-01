@@ -48,7 +48,8 @@ protected:
     /// return index of the variable in the training list (exception if not found)
     int find_index(const std::string& name);
 
-    static int subdefine(std::vector<std::string>& all_names, const char *Filename);
+    /// add an entry to the list for making cuts to define sample to train on
+    int add_index(const std::string& name);
 
     /// access to values in the current event
     float datum(int index)const{return (*m_row)[index];};
@@ -60,7 +61,7 @@ private:
 
     void load( unsigned int max_events, Subset set);
 
-    void load(TrainingInfo::StringList input, std::vector<std::string>names,  bool good=true);
+    void load(TrainingInfo::StringList input, unsigned int max_events=0, bool good=true);
 
     void classify();
 
@@ -73,7 +74,8 @@ private:
     TrainingInfo m_info;
     const std::vector<float>* m_row; ///< current row in interating thru tuple
     bool m_nobkgnd;
-    bool m_mixed;
+    bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
+    std::vector<std::string> m_all_names;
 };
 
 #endif

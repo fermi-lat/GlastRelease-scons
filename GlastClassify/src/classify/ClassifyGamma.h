@@ -13,16 +13,12 @@ class ClassifyGamma : public GlastClassify
 public:
     ClassifyGamma(const std::string& info_path)
         : GlastClassify(info_path, false) // flag that not mixed.
-    {}
-
-    //functions to check or declare variables
-
-    virtual void define(std::vector<std::string>& all_names)
     {
-        m_acddocaindex = subdefine(all_names, "AcdDoca");
-        m_calEnergyIndex= find_index("CalEnergyRaw");
+        m_calEnergyIndex = find_index("CalEnergyRaw");
         m_CalTotRLnIndex = find_index("CalTotRLn");
-        m_FilterAlgStatus = subdefine(all_names, "FilterAlgStatus");
+
+        m_FilterAlgStatus=  add_index( "FilterAlgStatus");
+        m_acddocaindex   =  add_index( "AcdDoca");
     }
 
     //acceptance function, applied to background and signal
