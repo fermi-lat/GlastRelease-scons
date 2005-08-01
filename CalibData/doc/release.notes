@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r12p3   1-Aug-2005  jrb Allow for array of sdacs per channel for intNonlin
    v0r12p2   6-Jul-2005  jrb Add access function to TkrBase for tower hw serial
    v0r12p1   25-Apr-2005 jrb Merge bad strip lists for same uniplane, same
                               badness
