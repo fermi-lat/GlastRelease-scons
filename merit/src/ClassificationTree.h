@@ -49,7 +49,7 @@ private:
     GlastClassify::TreeFactory* m_factory;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
     const TupleItem*  m_calTotRLn; 
-    const TupleItem*  m_calEnergySum;
+    const TupleItem*  m_calEnergyRaw;
     const TupleItem*  m_acdTileCount;
     const TupleItem*  m_evtTkrEComptonRatio;
     const TupleItem*  m_evtTkrComptonRatio;
