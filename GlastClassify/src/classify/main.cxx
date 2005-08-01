@@ -52,6 +52,7 @@ int main(int argc , char * argv[])
     int max_events=0; //400000; // limit for development
     try {
         // the categories
+#if 0 // gcc objects?
         using ClassifyCal::LOW;
         using ClassifyCal::MED;
         using ClassifyCal::HIGH;
@@ -60,7 +61,7 @@ int main(int argc , char * argv[])
         using ClassifyVertex::THICK;
         using ClassifyCore::VERTEX;
         using ClassifyCore::TRACK;
-
+#endif
         if( name=="goodcal_low"  || all) ClassifyCal("goodcal_low", ClassifyCal::LOW).run();
         if( name=="goodcal_med"  || all) ClassifyCal("goodcal_med", ClassifyCal::MED).run();
         if( name=="goodcal_high" || all) ClassifyCal("goodcal_high",ClassifyCal::HIGH).run();

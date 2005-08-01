@@ -74,8 +74,8 @@ private:
     TrainingInfo m_info;
     const std::vector<float>* m_row; ///< current row in interating thru tuple
     bool m_nobkgnd;
-    bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
     std::vector<std::string> m_all_names;
+    bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
 };
 
 #endif

@@ -39,7 +39,6 @@ public:
     virtual bool accept()
     {
         // test for good energy etc first: goodCal includes this 
-        double goodCal =datum(m_CTgoodCal);
         if( datum(m_CTgoodCal)< 0.25) return false;
 
         // now do this if it is in the correct class
