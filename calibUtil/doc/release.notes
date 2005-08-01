@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r5p2  1-Aug-2005 jrb Add per-range sdacs attribute to <intNonlin>
    v1r5p1  8-Jul-2005 jrb Fix Windows compile bug
    v1r5   29-Jun-2005 jrb Changes for compatibility with rdbModel v2r0
    v1r4   3-May-2005  jrb Add calibCoverage diagnostic
