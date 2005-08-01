@@ -18,16 +18,22 @@ namespace CalibData {
   */
   class IntNonlin : public RangeBase {
   public:
-    IntNonlin(const std::vector<float>* values=0, float err = 0.0);
-    ~IntNonlin() {if (m_values) delete m_values;}
+    IntNonlin(const std::vector<float>* values=0, float err = 0.0,
+              const std::vector<float>* sdacs=0);
+    ~IntNonlin() {
+      if (m_values) delete m_values;
+      if (m_sdacs) delete m_sdacs;
+    }
 
     const std::vector<float>* getValues() const {return m_values;}
+    const std::vector<float>* getSdacs() const {return m_sdacs;}
     float getError() {return m_error;}
 
     virtual void update(RangeBase* other);
 
   private:
     std::vector<float>* m_values;
+    std::vector<float>* m_sdacs;
     float m_error;
 
   };
