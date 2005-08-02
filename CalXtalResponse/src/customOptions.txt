@@ -20,20 +20,21 @@
 
 
 ////////////////////// DEBUGGING //////////////////////////////////////////////
-
 //-- OPTIONAL - uncomment lines below for more detailed logging
-//CalDigiAlg.XtalDigiTool.OutputLevel = 1;
+//CalDigiAlg.XtalDigiTool.OutputLevel   = 1;
 //CalXtalRecAlg.XtalEneTool.OutputLevel = 1;
 //CalXtalRecAlg.XtalPosTool.OutputLevel = 1;
-//CalCalibSvc.OutputLevel = 1;
+//CalCalibSvc.OutputLevel               = 1;
 
-//-- OPTIONAL - SuperVerbose!!!
-//ToolSvc/XtalDigiTool.SuperVerbose = true;
-//CalCalibSvc.SuperVerbose = true;
+
+//-- OPTIONAL - enable detailed hit-by-hit tuples for digi/recon
+//CalDigiAlg.XtalDigiTool.tupleFilename = "xtalDigiTuple.root";
+//CalXtalRecAlg.XtalRecTool.tupleFilename = "xtalRecTuple.root";
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////// TUPLES ////////////////////////////////////////////////
+/////////////////////// CALTUPLE ////////////////////////////////////////////////
 //CalXtalRecAlg.tupleFilename = "caltuple.root";
 
 /////////////////////// MISC OPTIONS //////////////////////////////////////////

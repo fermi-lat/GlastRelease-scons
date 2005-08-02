@@ -274,9 +274,14 @@ StatusCode XtalRecTool::calculate(const Event::EventHeader &evtHdr,
   m_dat.pos = tmp;
   if (sc.isFailure()) return sc;
 
+  // 1st clip position to end of xtal
+  m_dat.pos = min<float>(   m_CsILength/2,m_dat.pos);
+  m_dat.pos = max<float>(-1*m_CsILength/2,m_dat.pos);
+  
   // generate position vector from scalar longitudinal position
   Point pXtal;
   pos2Point(m_dat.pos, pXtal);
+  
 
 
   ///////////////////////////////////////////
@@ -345,7 +350,7 @@ StatusCode XtalRecTool::calculate(const Event::EventHeader &evtHdr,
 
   if (m_tuple) {
     m_dat.RunID                   = evtHdr.run();
-    m_dat.EventID                   = evtHdr.event();
+    m_dat.EventID                 = evtHdr.event();
     m_dat.success                = true;
     m_dat.belowThresh[POS_FACE]  = belowThreshP;
     m_dat.belowThresh[NEG_FACE]  = belowThreshN;
