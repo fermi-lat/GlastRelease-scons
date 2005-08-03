@@ -13,6 +13,7 @@ data could cause some calculations to go out of range.
 The effective reponse of the current configuration is as follows
 
 NEWIDEAL_MUON2 ( CalXtalReponse v0r2p6, GlastRelease v6r4 -> v6r5)
+(all ADC units are pedestal subtracted)
 RANGE MeV/ADC MAX_ADC SATURATION(MEV)  PED(ADC) NOISE(ADC,MeV) LAC(ADC,MeV) FLE(ADC,MeV)  FHE(ADC,MeV)
 LEX8  0.03    3550    106.5            510      6.0, 0.18      43, 1.29     333,10
 LEX1  0.27    3850    958.5            210      0.6, 0.162                 
