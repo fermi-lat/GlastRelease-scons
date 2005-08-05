@@ -17,7 +17,7 @@
 
   <section name="PATHS"> Intput/Output file paths
     NOTE: All environment variables will be expanded with facilities::Util::expandEnvVar()
-    <item name="OUTPUT_FOLDER" value="..\output\"> Folder for auto-named output files </item>
+    <item name="OUTPUT_FOLDER" value="./"> Folder for auto-named output files </item>
     
     <item name="DTD_FILE"     value="$(CALIBUTILROOT)/xml/calCalib_v2r1.dtd"> description file for output .xml file </item>
     <item name="XMLPATH"     value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
