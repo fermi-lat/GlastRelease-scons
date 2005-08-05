@@ -23,7 +23,7 @@
     <item name="XMLPATH" 		value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
     <item name="TXTPATH" 		value=""> Optional path for output .txt file (default "" autogenerates filename from input filename)</item>
 
-    <item name="PEDFILE_TXT" 		value="$(CGC_PED_TXT)"> Optional path for output ADC pedestal text file (default "" autogenerates filename from input filename)</item>
+    <item name="PEDFILE_TXT" 		value="$(CGC_PED_TXT)"> Input ADC pedestal text file</item>
 
     <item name="HISTFILE" 		value=""> Optional path for ROOT histogram file. (default "" autogenerates filename from input filename)</item>
 
