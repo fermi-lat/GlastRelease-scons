@@ -96,6 +96,12 @@ private:
   IntegerProperty       m_gemCheck; // If 0 (default) no GEM condition summary
                                     // check, other check for zero and print
                                     // log message
+
+  IntegerProperty       m_startEventIndex; // used if we want to skip to 
+                                          // Event N in processing
+  IntegerProperty       m_startEventNumber; // used if we want to skip to event
+                                            // with event number N as stored
+                                            // in LDF
 };
 
 #endif  // LdfEventSelector_H

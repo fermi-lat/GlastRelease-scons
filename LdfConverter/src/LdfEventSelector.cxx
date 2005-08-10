@@ -80,6 +80,8 @@ LdfEventSelector::LdfEventSelector( const std::string& name, ISvcLocator* svcloc
     declareProperty("EbfDebugLevel", m_ebfDebugLevel = 0);
     declareProperty("SweepEventSearch", m_sweepSearch = 1);
     declareProperty("GemZeroCheck", m_gemCheck=0);
+    declareProperty("StartEventIndex", m_startEventIndex = 0);
+    declareProperty("StartEventNumber", m_startEventNumber = 0);
 
     m_inputDataList = new ListName; 
     m_it = new LdfEvtIterator(this, -1, m_inputDataList->begin());
@@ -277,6 +279,9 @@ IEvtSelector::Iterator* LdfEventSelector::begin() const {
 IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it) 
   const {
     MsgStream log(msgSvc(), name());
+
+    // static counter for use when we want to skip to event N
+    static unsigned int counter = 0;
     
     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
     unsigned marker;
@@ -288,15 +293,32 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         
         
         irfIt->m_evtCount++;
-        log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
+        counter++;  //increment skip counter too
+
+        if ((m_startEventIndex > 0) && (counter >= m_startEventIndex))  
+            log << MSG::DEBUG << "Processing Event Absolute Index " << counter << endreq;
+        else if ((m_startEventNumber == 0) && (m_startEventIndex == 0) )
+            log << MSG::DEBUG << "Processing Event " <<  irfIt->m_evtCount << endreq;
+        else if (m_startEventIndex > 0)
+            log << MSG::DEBUG << "Starting Processing on Index " << m_startEventIndex << endreq;
+
         static bool findFirstMarkerFive = false;
         // Allows JO to skip the search for the sweep events
         if (m_sweepSearch == 0) {
             log << MSG::WARNING << "Skipping check for first Sweep Event - ARE YOU SURE YOU WANT TO DO THIS???" << endreq;
             findFirstMarkerFive = true;
         }
+
+        if ((m_startEventIndex > 0) && (!findFirstMarkerFive)) {
+            log << MSG::WARNING << "Since StartEventIndex is non-zero, skipping
+              search for first sweep event" << endreq;
+            findFirstMarkerFive = true;
+        }
         
         bool DONE=false;
+        static bool foundEventNumber = false;  // Once we find the eventNumber
+        // we carry on from there
+
         while ((!DONE) || (!findFirstMarkerFive)) {
           int status = m_ebfParser->loadData();
           if (status < 0) {
@@ -306,10 +328,24 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             *(irfIt) = m_evtEnd;
             break;
           } else {
+
+            // If a StartEventNumber JO parameter is specified, check the
+            // EventSequence in the OSW contribution to see if we've reached
+            // The event in question.
+            if (m_startEventNumber > 0) {
+                unsigned int eventSeq = ldfReader::LatData::instance()->getOsw().evtSequence();
+                if (eventSeq >= m_startEventNumber) {
+                    log << MSG::DEBUG << "Processing Event Number: " << eventSeq
+                        << " and was searching for " << m_startEventNumber << endreq;
+                    foundEventNumber = true;
+                }
+            } else 
+                foundEventNumber = true;
+
             // Check marker to see if this is a data event
             unsigned int summary = ldfReader::LatData::instance()->summaryData().summary();
             marker = EventSummary::marker(summary);
-            log << MSG::DEBUG << "Marker = " << marker << endreq;
+        //    log << MSG::DEBUG << "Marker = " << marker << endreq;
             static unsigned int skippedEvents = 0;
             if (!findFirstMarkerFive) {
                 if (marker == 5) { 
@@ -326,7 +362,13 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                 }
             }
 
-            if ((marker != 0) || (!findFirstMarkerFive)) {
+
+            if ((marker != 0) || (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
+
+              // Always increment skip counter, no matter what type of data was
+              // loaded.
+              counter++;
+
               // Move file pointer for the next event
               int ret = m_ebfParser->nextEvent();
               if (ret != 0) {
@@ -335,7 +377,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                 return *irfIt;
               }
              }
-            if ( (marker == 0) && (findFirstMarkerFive)) DONE = true;
+            if ( (marker == 0) && (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
           }
         }
         
