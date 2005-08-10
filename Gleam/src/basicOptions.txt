@@ -162,8 +162,11 @@ ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 //  Calorimeter services
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
-
+// comment this out since back off CalDigi
+// #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+// and put these back in
+ApplicationMgr.DLLs += {"CalXtalResponse"}; 	
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
 // -------------------------------------------
 //  Calibration sevices

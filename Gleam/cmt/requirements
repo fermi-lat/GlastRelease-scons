@@ -1,6 +1,6 @@
 	package Gleam
 
-version  v6r3p1
+version  v6r4
 author T. Burnett <tburnett@u.washington.edu>
 
 # $Id$
@@ -50,6 +50,9 @@ use  HepRepSvc *
 use  HepRepXml *
 use  HepRepCorba *
 
+# for reading real data?
+### use LDFevent *
+
 ### define a simple executable wth GUI
 
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
@@ -59,8 +62,8 @@ application Gleam $(GlastMain) $(Win32Resource) $(jobOpts)
 
 macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
-
-
+private
+set runName "99"
 # define a standard test executable, if desired
 apply_pattern package_test
 
