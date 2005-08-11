@@ -4,7 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
-* v6r4   THB 28-Jul-05   back off include of CalXtalResponse
+* v6r4p1 THB 11-aug-05   remove artifacts of back-off
+* v6r4   THB 10-aug-05   back off include of CalXtalResponse
 * v6r3p1 THB 24-Jul-05   oops, LATcalibroot wrong for linux
 * v6r3   THB 21-Jul-05   include G4Generator's options, move pencil to test program
 * v6r2   THB 21-Jul-05   convert basicOptions to include CalibSvc default JO
