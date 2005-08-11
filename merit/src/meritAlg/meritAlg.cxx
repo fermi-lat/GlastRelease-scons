@@ -180,7 +180,6 @@ private:
 
     /// the various tree names
     StringProperty m_eventTreeName;
-    StringProperty m_pointingTreeName;
     StringProperty m_primaryType;
     long           m_nbOfEvtsInFile;
     StringProperty m_classifyPath;
@@ -199,7 +198,6 @@ Algorithm(name, pSvcLocator), m_tuple(0), m_rootTupleSvc(0), m_ctree(0)
     declareProperty("cuts" , m_cuts=default_cuts);
     declareProperty("generated" , m_generated=10000);
     declareProperty("EventTreeName",     m_eventTreeName="MeritTuple");
-    declareProperty("PointingTreeName", m_pointingTreeName="Exposure");
     declareProperty("IM_filename", m_IM_filename=""); // deprecated, not used now
     declareProperty("ClassifyPath", m_classifyPath="$(GLASTCLASSIFYROOT)/data");
     declareProperty("PrimaryType", m_primaryType="RECO"); // or "MC" (why not a bool?)
