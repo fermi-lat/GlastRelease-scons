@@ -669,18 +669,22 @@ bool StdMipFindingTool::findC1()
     {
         m_hid++;
         Event::CalMipXtal calMipXtal = *xTalIter;
+
+        if (!calMipXtal.getFree())
+          continue;
+
         int itow1 = calMipXtal.getXtal()->getPackedId().getTower();
         int ilay1 = calMipXtal.getXtal()->getPackedId().getLayer();
         int icol1 = calMipXtal.getXtal()->getPackedId().getColumn();
-        //don't want initial direction to be horizontal
 
-        if (!calMipXtal.getFree() || (itow1==itow0 && ilay1==ilay0))
-            continue;
+        //don't want initial direction to be horizontal
+        if (itow1==itow0 && ilay1==ilay0)
+          continue;
 
         m_uu=calMipXtal.getXtal()->getPosition()-m_refP;
         m_vv=m_uu.unit();
 
-        Point xStart=m_refP-m_CsILength*m_vv;//go back to cross C0 and compute also its arcLen
+        Point xStart=m_refP-m_CsILength*m_vv;//go backward to step forward and cross C0 (to compute also its arcLen)
         m_G4PropTool->setStepStart(xStart,m_vv);
 
         d01=sqrt(m_uu*m_uu);
@@ -735,20 +739,20 @@ bool StdMipFindingTool::findC1()
             if (iitow==itow0 && iilay==ilay0)
                 continue;
         
+            // stop if one log has been found and current log is different from it
+            if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
+            {
+              //m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
+                lnext=false;
+                continue;
+            }
+
             // if not in the hit map (CalMipXtalVec) : continue if in same layer as current C1, stop otherwise
             if (hid<0)
             {
               //m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
                 if (!(iitow==itow1 && iilay==ilay1))
                     lnext=false;
-                continue;
-            }
-
-            // stop if one log has been found and current log is different from it
-            if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
-            {
-              //m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
-                lnext=false;
                 continue;
             }
 
@@ -920,12 +924,11 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
             {
                 // Compute new starting point onto of Cal
                 double rotAng=2.*m_pi*(iAng-1)/nAng; 
+                //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ propagate G4prop iRad=" << iRad << " radius=" << radius << " iAng=" << iAng << " rotAng " << rotAng << endreq;
                 HepRotation rot(dir,rotAng);
                 // get unit vector delta perpendicular to track direction with variable cylindrical phi angle 
                 Vector delta=rot*p;
                 // get starting point on cylinder surface
-                double radius=deltaRadius*nRad;
-                //m_log << MSG::DEBUG << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ propagate G4prop iRad=" << iRad << " radius=" << radius << " iAng=" << iAng << " rotAng " << rotAng << endreq;
                 Point xI = xStart + radius*delta;
                 double s;
                 if (costheta!=0) s=(xStart.z() - xI.z())/costheta;
