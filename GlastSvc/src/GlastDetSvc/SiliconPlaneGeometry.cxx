@@ -63,20 +63,15 @@ double SiliconPlaneGeometry::insideActiveArea1D (double x, double spacing)
     //  spacing is the ladder gap for local X; the ssd gap for local Y
     
     double panel_wid2 = 0.5*panel_width(spacing);
+    double guard = guard_ring();
     if(fabs(x)>panel_wid2-guard_ring()) return (panel_wid2-guard_ring())-fabs(x);
 
-    x += panel_wid2;
+    x += panel_wid2 + 0.5*spacing; // make everything positive!
     
     double die_wid = die_width();
-    double edge = fmod(x, (die_wid + spacing));    
-    if (edge > die_wid) return -edge;  // edge is in the gap btwn si dies
-    
-    if (edge >= 0) {
-        if (edge > 0.5*die_wid) edge -=die_wid;
-        edge = fabs(edge);
-        edge -= guard_ring();
-    }
-    return edge;
+    double active_wid = die_wid - 2.0*guard;
+    double edge = fmod(x, (die_wid + spacing)) -0.5*(die_wid + spacing);
+    return 0.5*active_wid - fabs(edge);  
 }
 
 double SiliconPlaneGeometry::insideActiveArea (const HepPoint3D& p) 
@@ -93,17 +88,24 @@ unsigned int SiliconPlaneGeometry::stripId (double x)
     //  given point
 
     const unsigned int undef_strip = 65535;
-    if (insideActiveArea(x, 1.0) > 0.) {    // check that this is inside the die
+    double wafer_x = 0;
+    if (insideActiveArea1D(x, ladder_gap()) > 0.) {    // check that this is inside the die
         x += 0.5*panel_width();
         double  die = floor(x/(die_width() 
             + ladder_gap())); // find die #
-        if (die>=n_si_dies()) return undef_strip;
-        double  wafer_x = fmod(x,(die_width() 
+        if (die>=n_si_dies() || die<0) {
+            return undef_strip;
+        }
+        wafer_x = fmod(x,(die_width() 
             + ladder_gap())) - guard_ring();
         
         return static_cast<unsigned>(floor(wafer_x/si_strip_pitch()) + 
             die*strips_per_die());
-    } else return undef_strip;
+    } else {
+        //double modX = fmod(x + 0.5*panel_width()+guard_ring()+.2, die_width()+ladder_gap());
+        //std::cout << modX << std::endl;
+        return undef_strip;
+    }
 }
 
 double SiliconPlaneGeometry::localX (double x) 

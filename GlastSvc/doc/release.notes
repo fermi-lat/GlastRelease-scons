@@ -1,10 +1,11 @@
-/** @file release.notes
- @brief package GlastSvc
+/* @file release.notes
+@brief package GlastSvc
 @verbatim
 
  package manager:T.Burnett
            EOH
 
+ 13-Aug-05  LSR tag v9r15p3 Clean up SiliconPlaneGeometry::insideActiveArea1D()
  29-Jul-05  THB tag v9r15p2 Use Richard's convention $(...) to identify string to be converted from env var
  24-Jul-05  THB tag v9r15   Disable logic to read seeds from a file; change run number to make
                             default behavior to set it from env var "runName" if defined
