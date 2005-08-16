@@ -15,7 +15,7 @@
 #define FSGM_RPROF_R_MAX 1800
 #define FSGM_RPROF_T_MAX 250
 
-#define FSDD_NSTEPS_MAX 1000
+#define FSDD_NSTEPS_MAX 1300
 #define FSDD_NMAX 20
 
 /**   
