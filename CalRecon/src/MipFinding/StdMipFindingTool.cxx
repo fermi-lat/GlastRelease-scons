@@ -531,7 +531,11 @@ void StdMipFindingTool::trackProperties()
         {
             trackEcor/=nlay;
             trackEcorRms/=nlay;
-            trackEcorRms=sqrt(trackEcorRms-trackEcor*trackEcor);
+            trackEcorRms=trackEcorRms-trackEcor*trackEcor;
+            if (trackEcorRms>=0)
+              trackEcorRms=sqrt(trackEcorRms);
+            else
+              trackEcorRms=0.;
         }
         calMipTrack.setEcor(trackEcor*m_CsIHeight);
         calMipTrack.setEcorRms(trackEcorRms*m_CsIHeight);
@@ -735,33 +739,43 @@ bool StdMipFindingTool::findC1()
             }
             // at this point C0 has been crossed and the volume does not belong to C0 crystal
 
-            // continue if still in same layer
+            // continue if still in same layer as C0
             if (iitow==itow0 && iilay==ilay0)
                 continue;
         
             // stop if one log has been found and current log is different from it
             if (foundOneCalMipXtalNotAlreadyUsed && !(iitow==itow && iilay==ilay && iicol==icol))
             {
-              //m_log << MSG::DEBUG << "findC1 end of vol search 2" << endreq;
                 lnext=false;
                 continue;
             }
 
-            // if not in the hit map (CalMipXtalVec) : continue if in same layer as current C1, stop otherwise
+            // stop if in different layer from current C1 layer
+            if (!(iitow==itow1 && iilay==ilay1))
+            {
+              lnext=false;
+              continue;
+            }
+
+            // stop if not in the hit map (CalMipXtalVec)
             if (hid<0)
             {
-              //m_log << MSG::DEBUG << "findC1 end of vol search 1" << endreq;
-                if (!(iitow==itow1 && iilay==ilay1))
-                    lnext=false;
-                continue;
+              lnext=false;
+              continue;
             }
 
-            // stop if current log is not free
+            // stop if not free
             if (!m_calMipXtalVec[hid].getFree())
             {
-              //m_log << MSG::DEBUG << "findC1 end of vol search 3" << endreq;
-                lnext=false;
-                continue;
+              lnext=false;
+              continue;
+            }
+
+            // at this point a free crystal has been found, in same layer as current C1
+            // continue if different from C1
+            if (!(iitow==itow1 && iilay==ilay1 && iicol==icol1))
+            {
+              continue;
             }
             else
             {
