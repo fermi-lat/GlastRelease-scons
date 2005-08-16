@@ -41,6 +41,7 @@ class TkrDigiAlg : public Algorithm {
     std::string m_type;
     /// Pointers to the sub algorithms
     Algorithm* m_mcToHitAlg;
+    Algorithm* m_hitRemovalAlg;
     Algorithm* m_noiseAlg;
     Algorithm* m_hitToDigiAlg;
 
