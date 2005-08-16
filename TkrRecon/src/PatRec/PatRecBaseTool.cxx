@@ -36,6 +36,8 @@ StatusCode PatRecBaseTool::initialize()
   StatusCode sc   = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
 
+  sc = AlgTool::initialize();
+
   if( serviceLocator() ) 
   {   
       if(service( "TkrGeometrySvc", m_tkrGeom, true ).isFailure()) 
