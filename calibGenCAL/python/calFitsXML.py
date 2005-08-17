@@ -486,7 +486,7 @@ class calFitsXML(object):
 
         self.__xmlVersion = int(d.getAttribute('version'))
         err = "XML format version %d not supported for file type %s" % (self.__xmlVersion, self.__type)  
-        if self.__xmlVersion > 1:
+        if self.__xmlVersion > 2:
             raise calFileReadExcept, err
         if self.__type == 'rng_uld_dac' and self.__xmlVersion < 1:
             raise calFileReadExcept, err
