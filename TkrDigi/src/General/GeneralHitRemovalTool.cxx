@@ -130,7 +130,6 @@ StatusCode GeneralHitRemovalTool::execute() {
             if ( m_killFailed && failSvc && !failSvc->empty()) { 
                 if( failSvc->isFailed(tower, bilayer, view) ) {
                     for (itStrip=sList->begin() ;itStrip!=sList->end(); ++itStrip ) {
-                        const int stripId = itStrip->index();
                         itStrip->setStripStatus(SiStripList::FAILEDPLANE);
                     }
                     continue;

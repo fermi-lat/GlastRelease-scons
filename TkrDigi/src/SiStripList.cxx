@@ -402,9 +402,6 @@ void SiStripList::getToT(int* ToT, const int tower, const int layer, const int v
     int t2[2]     = {INT_MIN, INT_MIN};
     int simpleToT[2] = {INT_MIN, INT_MIN};
 
-    double mevPerMip = pToTSvc->getMevPerMip();    
-    double fCPerMip  = pToTSvc->getFCPerMip();
-    double countsPerMicrosecond = pToTSvc->getCountsPerMicrosecond();
     int    totMax    = pToTSvc->getMaxToT();
 
     int size = m_strips.size();
