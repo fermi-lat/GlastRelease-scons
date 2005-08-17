@@ -70,7 +70,7 @@ TkrToTSvc::TkrToTSvc(const std::string& name,ISvcLocator* svc)
 
 
     declareProperty("defaultMuonScale", m_defaultMuonScale = 1.0);
-    declareProperty("mode"            , m_mode             = "ideal");
+    //declareProperty("mode"            , m_mode             = "ideal");
     declareProperty("countsPerMicrosecond", m_countsPerMicrosecond = 5.0);
     declareProperty("maxToT"          , m_maxToT           = 250);
     declareProperty("useSingleTowerConsts" , m_useSingleTowerConsts  = false);

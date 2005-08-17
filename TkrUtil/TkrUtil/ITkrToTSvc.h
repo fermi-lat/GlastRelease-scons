@@ -38,7 +38,7 @@ public:
     /// interface methods here
     virtual double getGain       (int tower, int layer, int view, int strip) const = 0;
     virtual double getThreshold  (int tower, int layer, int view, int strip) const = 0;
-    virtual double getQuad      (int tower, int layer, int view, int strip) const = 0;
+    virtual double getQuad       (int tower, int layer, int view, int strip) const = 0;
     virtual double getQuality    (int tower, int layer, int view, int strip) const = 0;
     virtual double getMuonScale  (int tower, int layer, int view, int strip) const = 0;
     virtual double getCountsPerMicrosecond () const = 0;
@@ -46,11 +46,14 @@ public:
     virtual double getMevPerMip() const = 0;
     virtual int    getMaxToT() const = 0;
     
-    virtual double getCharge(double rawToT, int tower, int layer, int view, int strip) const = 0;
+    virtual double getCharge(double rawToT, int tower, 
+        int layer, int view, int strip) const = 0;
     //virtual double getCharge(double rawToT, idents::TkrId hitId, int strip) const = 0;
-    virtual int    getRawToT(double eDep, int tower, int layer, int view, int strip) const = 0;
+    virtual int    getRawToT(double eDep, int tower, 
+        int layer, int view, int strip) const = 0;
     //virtual int    getRawToT(double eDep, idents::TkrId hitId, int strip) const = 0;
-    virtual double getMipsFromToT(double rawToT, int tower, int layer, int view, int strip) const = 0;
+    virtual double getMipsFromToT(double rawToT, int tower, 
+        int layer, int view, int strip) const = 0;
     virtual double getMipsFromCharge(double charge) const = 0;
 
         /// update to latest pointer when calibration changes

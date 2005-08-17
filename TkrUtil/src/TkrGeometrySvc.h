@@ -215,6 +215,12 @@ public:
     int trayToBiLayer(int tray, int botTop) const {
         return tray + botTop - getBottomTrayFlag() ;
     }
+    /*
+    void planeToTray(int plane, int& tray, int& face) const {
+        tray = planeToTray(plane);
+        face = planeToBotTop(plane);
+    }
+    */
     int planeToTray(int plane) const {
         return (plane+getBottomTrayFlag())/2;
     }

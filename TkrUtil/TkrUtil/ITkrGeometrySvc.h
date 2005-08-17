@@ -29,7 +29,7 @@
  * @author Tracy Usher
  */
 
-static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 12 , 0); 
+static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 12 , 1); 
 
 namespace {
     enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
@@ -183,6 +183,7 @@ public:
     virtual double getConvZ(int layer) const = 0;
     virtual bool isTopPlaneInLayer(int plane) const = 0;
     virtual double gettkrZBot() const = 0;
+    //virtual void planeToTray(int plane, int& tray, int& face) const = 0;
 };
 
 #endif

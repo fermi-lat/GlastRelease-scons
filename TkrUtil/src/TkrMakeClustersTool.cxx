@@ -1,4 +1,4 @@
-/** @file ITkrMakeClustersTool.cxx
+/** @file TkrMakeClustersTool.cxx
 * @brief Tool to make TkrClusters, both good and bad
 
  @author Leon Rochester
