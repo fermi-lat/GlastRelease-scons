@@ -120,6 +120,18 @@ StatusCode TkrSplitsSvc::initialize ()
             return StatusCode::FAILURE;
         }
     }
+
+    if (m_maxStripsFile!="") {
+        int ret =  facilities::Util::expandEnvVar(&m_maxStripsFile);
+        if (ret>=0) {
+            log << MSG::INFO << "Input file for read controller buffer sizes: " 
+                << m_maxStripsFile << endreq;
+        } else {
+            log << MSG::ERROR << "Input filename " << m_maxStripsFile << " not resolved" << endreq;
+            return StatusCode::FAILURE;
+        }
+    }
+
     sc = doInit();
 
     return sc;
