@@ -292,7 +292,7 @@ const Event::TkrClusterVec TkrQueryClustersTool::getClustersX(
 
         const Event::TkrClusterVec newClus = (*idClusMap)[newId];
 
-        int size = clusVec.size();
+        //int size = clusVec.size();
         clusVec.insert(clusVec.end(),newClus.begin(),newClus.end());
     }
 

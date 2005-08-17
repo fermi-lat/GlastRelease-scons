@@ -221,7 +221,7 @@ double TkrToTSvc::getMuonScale(int tower, int layer, int view, int strip) const
 int TkrToTSvc::getRawToT(double eDep, int tower, int layer, int view, int strip) const
 {
     if(m_useSingleTowerConsts) tower = m_baseTower;
-    if (!valid(tower, layer, view, strip)) { return 0.0; }
+    if (!valid(tower, layer, view, strip)) { return 0; }
 
     int tray, face;
     m_tkrGeom->layerToTray(layer, view, tray, face);

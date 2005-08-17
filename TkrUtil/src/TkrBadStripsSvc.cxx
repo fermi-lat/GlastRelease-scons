@@ -118,7 +118,7 @@ StatusCode TkrBadStripsSvc::doInit()
         Event::TkrClusterCol* pClusters = new Event::TkrClusterCol(0);
         Event::TkrIdClusterMap* pMap = new Event::TkrIdClusterMap;
         setBadClusterCol(pClusters);
-        int size = pMap->size();
+        //int size = pMap->size();
         setBadIdClusterMap(pMap);
 
     
@@ -208,7 +208,7 @@ StatusCode TkrBadStripsSvc::generateBadClusters()
         }
 
         setBadClusterCol(pClusters);
-        int size = pMap->size();
+        //int size = pMap->size();
         setBadIdClusterMap(pMap);
     }
 

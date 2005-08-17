@@ -164,7 +164,7 @@ double TkrEnergyTool::getTotalEnergy(const Event::TkrTrack* track, double CalEne
 
     // need to loop over layers, because track can end before the end of the tracker
     int layer = topLayer+1; // so the "while" works
-    double sprdMax = m_tkrGeom->trayWidth()/2.;
+    //double sprdMax = m_tkrGeom->trayWidth()/2.;
 
     while(layer--) 
 
