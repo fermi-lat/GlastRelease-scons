@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r1p12    12-Aug-05 TU  Tagging updates to mip finding and profile fitting
   v6r1p10    26-Jul-05 TU  Speed up MIP finder, bug fix to Likelihood tool, more NaN protection
   v6r1p9     25-Jul-05 TU  Protect mip finder from null pointer dereference 
   v6r1p8     25-Jul-05 TU  Modify how CalClusterCol and CalEventEnergyCol are created to help
