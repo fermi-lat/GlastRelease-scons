@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r4p2 THB 20-aug-05   Fix TkrRecon bug in basicOptions; remove defunct merit property from default.txt
 * v6r4p1 THB 11-aug-05   remove artifacts of back-off
 * v6r4   THB 10-aug-05   back off include of CalXtalResponse
 * v6r3p1 THB 24-Jul-05   oops, LATcalibroot wrong for linux

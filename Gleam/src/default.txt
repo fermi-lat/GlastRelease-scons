@@ -17,7 +17,6 @@ FluxSvc.StartDate = "2005-05-01 12:00:00";
 
 // set root output from merit with following
 MeritAlg.EventTreeName="MeritTuple";
-MeritAlg.PointingTreeName="Exposure";
 
 RootTupleSvc.filename="merit.root";
 
