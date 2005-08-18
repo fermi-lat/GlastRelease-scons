@@ -1,3 +1,4 @@
+v0r7p3  8/18/05 chekhtman fixed bug, found by Richard Dubois. when few lines of code were moved from computeEnergy function to execute function, the return when below_threshold flag is set became invalid, because it caused skipping of all subsequent digis - now replaced by continue statment. 
 v0r7p2  8/02/05 fewtrell fixed bug where wild hit positions were not clipped to xtal boundaries.  
 v0r7p1  7/22/05 fewtrell XtalRecTool combins EneTool & PosTool. FLE & FHE triggers now calculated.  Also ULDs are now properly checked against ped _subtracted_ adc values.
 v0r6p6  7/21/05 fewtrell increased ideal-flight pedestal noise & LAC thresholds to better approximate real flight expectaions

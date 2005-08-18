@@ -164,8 +164,7 @@ StatusCode CalXtalRecAlg::execute()
     if (sc.isFailure()) continue;
 
     // skip any xtal w/ at least one LEX8 range below threshold
-    if (xtalBelowThresh)
-      return StatusCode::SUCCESS;
+    if (xtalBelowThresh) continue;
 
     // add new reconstructed data to the collection
     // release it from the auto_ptr so it is not deleted
