@@ -12,6 +12,7 @@ Event::Event(TString filename, TList* geometry) {
     myTree = (TTree*)myFile->Get("Header");
     myTree->SetBranchAddress("EventId",&EventId);
     myTree->SetBranchAddress("RunId",&RunId);
+    myTree->SetBranchAddress("TemId",&TemId);
     myTree->SetBranchAddress("TkrTotalNumHits",&TkrTotalNumHits);
     myTree->SetBranchAddress("EbfTime",&EbfTime);
     myTree->SetBranchAddress("TkrDigi3RowBits",&TkrDigi3RowBits);
@@ -23,7 +24,6 @@ Event::Event(TString filename, TList* geometry) {
     TIter next(myGeometry);
     while ( Layer* aPlane = (Layer*)next() )
         aPlane->SetTree(myFile);
-
     myRecon = new Recon(myFile);
 }
 

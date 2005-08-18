@@ -55,6 +55,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
     // variables to be stored in "Header"
     Int_t EventId;
     Int_t RunId;
+    Int_t TemId;
     Int_t TkrTotalNumHits;
     Double_t EbfTime;  // here double might be needed
     Int_t LevelOneTrigger;
@@ -111,7 +112,8 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         // activate desired brances
         digiTree->SetBranchStatus("m_tkr*", 1);
         digiTree->SetBranchStatus("m_eventId", 1); 
-        digiTree->SetBranchStatus("m_runId", 1);
+	digiTree->SetBranchStatus("m_runId", 1);
+	digiTree->SetBranchStatus("m_gem", 1);
 #ifdef DIAGN
         digiTree->SetBranchStatus("m_levelOneTrigger", 1);
         digiTree->SetBranchStatus("m_ebfTime*", 1);
@@ -137,6 +139,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         Header->Branch("EventId",&EventId,"EventId/I");
         Header->Branch("RunId",&RunId,"RunId/I");
         Header->Branch("TkrTotalNumHits",&TkrTotalNumHits,"TkrTotalNumHits/I");
+        Header->Branch("TemId",&TemId,"TemId/I");
 #ifdef DIAGN
         Header->Branch("EbfTime",&EbfTime,"EbfTime/D");
         Header->Branch("LevelOneTrigger",&LevelOneTrigger,"LevelOneTrigger/I");
@@ -237,6 +240,26 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         digiRunNum = reconRunNum = mcRunNum = 0;
         GetEvent(evtCounterMc, evtCounterDigi, evtCounterRecon);
 
+
+	//Giving up on this event if more than one tower is involved.
+	Int_t iTem;
+	Int_t iCount=0;
+	Gem gem = evt->getGem();
+        UShort_t tkrVec = gem.getTkrVector();
+        for (iTem = 0; iTem < 16; iTem++) {
+	  Int_t offset = ((tkrVec>>iTem)&1);
+	  //	  std::cout << "Tem "<< iTem << " " << offset  << std::endl;
+	  if (offset==1){
+	    iCount++;
+	    TemId = iTem;
+	  }
+        }
+	//flagging events for which more than one TEM contribute : to be discarded when TreeMaker ROOT file is read.
+	//For some reason putting a continue here screws up the rest of the event loop (same event repeated until the end)
+       	if(iCount>1) 
+	  TemId=-1;
+
+	  
         // synchronizing the three trees
         if (mc)
             mcEventId = mc->getEventId();
@@ -271,6 +294,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
             std::cout << "skipping digi tree: " << EventId << ' ' << mcEventId
                       << ' ' << digiEventId << ' ' << reconEventId << std::endl;
         else if ( evt ) {  // if we have digi data process it
+
             ++evtCounterDigi;
             digiRunNum = evt->getRunId();
             if ( DEBUG ) std::cout << "DIGI: run number: " << digiRunNum
@@ -585,9 +609,10 @@ void TreeMaker::CreateTree(Int_t numEvents) {
         }
 
         if ( DEBUG ) std::cout << "...filled!" << nTkrDigi << std::endl;
+	
     }  // end analysis code in event loop
 
-    TreeCollection->Write();
+    TreeCollection->Write(0, TObject::kWriteDelete);
     myFile.Close();
     std::cout << "m_TreeFileName " << m_TreeFileName << std::endl;
 }

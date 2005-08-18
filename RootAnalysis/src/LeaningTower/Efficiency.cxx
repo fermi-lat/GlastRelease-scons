@@ -3,9 +3,10 @@
 ClassImp(Efficiency)
 
 Efficiency::Efficiency(const TString filename, const TString effFileName,
-                       TString geoFileName, bool d) : debug(d) {
+                       TString geoFileName, bool d, int temid) : debug(d),m_temid(temid) {
     if ( geoFileName.Length() == 0 )
         geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
+    std::cout<<"Keeping only TemID = "<<m_temid<<std::endl;
     myTracker = new Tracker;
     myTracker->loadGeometry(geoFileName);
     myTracker->SetTower(true);
@@ -46,14 +47,18 @@ void Efficiency::Go(int lastEntry) {
     // some counters for the statistics
     int usedTrack[2] = { 0, 0 };
     int usedEvent = 0;
-
+    int correctTem = 0;
     for ( int entry=0; entry<lastEntry; ++entry ) { 
         myEvent->Go(entry);
         const Int_t eventId = myEvent->GetEventId();
 
         progress.Go(entry, lastEntry);
 
-        recon->GetEvent(entry);
+        if(myEvent->GetTemId()!=m_temid) 
+	  continue;
+	correctTem+=1;
+	
+	recon->GetEvent(entry);
         //        const Int_t TkrNumClus = recon->GetTkrNumClus();
         //        const Int_t TkrTrk1NumClus = recon->GetTkrTrk1NumClus();
 
@@ -66,6 +71,7 @@ void Efficiency::Go(int lastEntry) {
         if ( TkrNumTracks != 1 )
             continue;
         */
+
 
         // "corrects" cluster positions with respect to the recon results
         recon->TkrAlignmentSvc(myGeometry);
@@ -149,9 +155,10 @@ void Efficiency::Go(int lastEntry) {
             }
     }
 
+    std::cout << "events with requested Tem:  " << correctTem << std::endl;    
     std::cout << "used " << usedEvent << " of " << lastEntry << std::endl;
-    std::cout << "found " << ++usedTrack[0] << " good tracks in X and "
-              << ++usedTrack[1] << " in Y" << std::endl;
+    std::cout << "found " << usedTrack[0] << " good tracks in X and "
+              << usedTrack[1] << " in Y" << std::endl;
 
     f.Write();
     f.Close();

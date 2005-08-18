@@ -21,9 +21,10 @@ private:
     Tracker* myTracker;
     TString  myEffFileName;
     bool debug;
+    int m_temid;
 public:
     Efficiency(const TString="MyRootFile.root", const TString="efficiency.root",
-               TString geoFileName="", bool debug=false);
+               TString geoFileName="", bool debug=false, int temid=0);
     virtual ~Efficiency() {
         delete myEvent;
         delete myTracker;
