@@ -141,20 +141,30 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
     }
 
 
-    setEventPDFdata(vertexPos+((geometricCut>.35)+(geometricCut>.6))*16);
+    int iData= vertexPos;
+    if( geometricCut>.4 ) iData= 16*(geometricCut>.60)+32;
+    else                  iData= 16*(geometricCut>.25);
+
+    setEventPDFdata(iData);
     setEventPDFparameters(fabs(trackDirection.z()),
                           cluster->getCalParams().getEnergy(),
                           nHits);
     log << MSG::VERBOSE 
-        << "PDF Index: " << vertexPos+((geometricCut>.35)+(geometricCut>.6))*16 
-        << endreq
+        << "PDF Index: " << iData << endreq
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
         << cluster->getCalParams().getEnergy() << ", " << nHits << endreq;
     
     corResult= calculateEvent(cluster, log);
-    if( corResult ) 
-      (*corResult)["GeometricCut"] = geometricCut ;
 
+    // Both next values are not calculated in the MeritTuple
+    // in GlastRelease v6r8 MeritTuple.TkrTotalHits is actually only those
+    // inside a radius around the best track   
+    // These values are really of no interest for the rest of reconstruction and
+    // the lines could be commented.
+    if( corResult ) {
+      (*corResult)["GeometricCut"] = geometricCut ;
+      (*corResult)["TkrHitStrips"] = nHits ;
+    }
 
     log << MSG::DEBUG << "Ending doEnergyCorr: Reconstruction Done" << endreq;
     return corResult;
