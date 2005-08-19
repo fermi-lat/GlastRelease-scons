@@ -4,7 +4,7 @@
 
 @verbatim
  * package manager:T.Burnett
-
+ 19-aug-2005: v3r1p7 jrb Changes for compatibility with modified IGeometry interface
  24-mar-2004: v3r1p6 HMK Check for invalid hepid, skip and output debug message
  26-jul-2003: v3r1p4 LSR Detector Display: adjust for extra level in the new LAT geometry
                          StripDisplay: recode a couple of lines to satisfy compiler
