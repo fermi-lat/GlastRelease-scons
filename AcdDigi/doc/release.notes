@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r12p2 19-Aug-2005 jrb Changes for compatibility with modified IGeometry interface
  v1r12p1 27-Jun-2005 HMK Add author
  v1r12p0 23-Jun-2005  TU upping Event version number to compile with new code
  v1r11p2 12-Apr-2005 HMK Fix typo that prevented CNO on B side from being set
