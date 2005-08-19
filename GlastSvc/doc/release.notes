@@ -5,6 +5,8 @@
  package manager:T.Burnett
            EOH
 
+ v9r16   19-Aug-2005  jrb   Modify calling sequence for IGeometry::pushShape so
+                            that a composition may be sensitive
    v9r15p3   13-Aug-2005  lsrea
  13-Aug-05  LSR tag v9r15p3 Clean up SiliconPlaneGeometry::insideActiveArea1D()
  29-Jul-05  THB tag v9r15p2 Use Richard's convention $(...) to identify string to be converted from env var
