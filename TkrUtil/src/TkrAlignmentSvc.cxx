@@ -1116,7 +1116,7 @@ void TkrAlignmentSvc::applyDelta(double pointX, double pointY,
 
 IGeometry::VisitorRet TkrAlignmentGeomVisitor::pushShape(ShapeType /* s */, const UintVector& idvec, 
         std::string name, std::string /* material*/, const DoubleVector& params, 
-        VolumeType /*type*/)
+          VolumeType /*type*/, SenseType /*sense*/)
 {
     bool debug = false;
  
