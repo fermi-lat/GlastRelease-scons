@@ -15,7 +15,8 @@ public:
 
   typedef std::vector<double> DoubleVector;
   typedef std::vector<unsigned int>UintVector;
-  enum VolumeType{ Simple, posSensitive, intSensitive, Composite, Xstack, Ystack, Zstack };
+  enum VolumeType{ Simple, Composite, Xstack, Ystack, Zstack };
+  enum SenseType {posSensitive, intSensitive, Nonsensitive};
   enum ShapeType{ Box, Tube };
   enum VisitorRet { More, AbortSubtree};
 
@@ -32,7 +33,7 @@ public:
   virtual VisitorRet pushShape(ShapeType s, const UintVector& id, 
                                std::string name, std::string material, 
                                const DoubleVector& params, 
-                               VolumeType type)=0;
+                               VolumeType type, SenseType sense)=0;
     
   //* called to signal end of nesting */
   virtual void popShape()=0;

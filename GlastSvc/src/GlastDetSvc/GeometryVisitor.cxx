@@ -52,6 +52,7 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
     
     IGeometry::VolumeType type = IGeometry::Composite;
     std::string material;
+    IGeometry::SenseType sense = IGeometry::Nonsensitive;
     
     if ( Stack* stack = dynamic_cast<Stack*>(ensemble) ){
         switch (stack->getAxisDir()){
@@ -71,12 +72,16 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
         m_params.push_back(b->getX());
         m_params.push_back(b->getY());
         m_params.push_back(b->getZ());
+
+        if (b->getSensitive() == 0) sense = IGeometry::Nonsensitive;
+        else if (b->getSensitive() == 1) sense = IGeometry::posSensitive;
+        else sense = IGeometry::intSensitive;
         
         material = comp->getEnvelope()->getMaterial();
     }
     IGeometry::VisitorRet vret = 
       m_geom.pushShape(IGeometry::Box, m_idvec, ensemble->getName(), material,
-                       m_params,  type);
+                       m_params,  type, sense);
 
     // Do these belong in the "if" or not?  Probably only really need
     // to be done inside, but are harmless outside.
@@ -94,17 +99,18 @@ void  GeometryVisitor::visitEnsemble(detModel::Ensemble* ensemble)
 void  GeometryVisitor::visitBox(detModel::Box* b)
 {
     //IGeometry::DoubleVector params;
-  IGeometry::VolumeType type;
+  IGeometry::VolumeType type = IGeometry::Simple;
+  IGeometry::SenseType sense = IGeometry::Nonsensitive;
   m_params.push_back(b->getX());
   m_params.push_back(b->getY());
   m_params.push_back(b->getZ());
-  if (b->getSensitive() == 0) type = IGeometry::Simple;
-  else if (b->getSensitive() == 1) type = IGeometry::posSensitive;
-  else type = IGeometry::intSensitive;
+  if (b->getSensitive() == 0) sense = IGeometry::Nonsensitive;
+  else if (b->getSensitive() == 1) sense = IGeometry::posSensitive;
+  else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
   IGeometry::VisitorRet vRet =
     m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), 
-                     m_params, type);
+                     m_params, type, sense);
   m_params.clear();
   m_idvec.clear();
 
@@ -112,17 +118,18 @@ void  GeometryVisitor::visitBox(detModel::Box* b)
 
 void  GeometryVisitor::visitTube(detModel::Tube* t)
 {
-  IGeometry::VolumeType type;
+  IGeometry::VolumeType type = IGeometry::Simple;
+  IGeometry::SenseType sense;
   m_params.push_back(t->getZ());
   m_params.push_back(t->getRin());
   m_params.push_back(t->getRout());
-  if (t->getSensitive() == 0) type = IGeometry::Simple;
-  else if (t->getSensitive() == 1) type = IGeometry::posSensitive;
-  else type = IGeometry::intSensitive;
+  if (t->getSensitive() == 0) sense = IGeometry::Nonsensitive;
+  else if (t->getSensitive() == 1) sense = IGeometry::posSensitive;
+  else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
   IGeometry::VisitorRet vRet =
     m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(),
-                     m_params, type);
+                     m_params, type, sense);
   m_params.clear();
   m_idvec.clear();
 }
