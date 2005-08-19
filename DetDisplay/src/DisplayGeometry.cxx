@@ -81,7 +81,7 @@ IGeometry::VisitorRet
   DisplayGeometry::pushShape(ShapeType s, const UintVector& idvec, 
                            std::string name, std::string material, 
                            const DoubleVector& params, 
-                           VolumeType type)
+                           VolumeType type, SenseType sense)
 {
     push(params[0],params[1],params[2],params[3],params[4],params[5]);
     IGeometry::DoubleVector::const_iterator v=params.begin();
@@ -89,7 +89,7 @@ IGeometry::VisitorRet
     v+=6;
     std::copy(v,params.end(),std::back_inserter<IGeometry::DoubleVector>(shapepars));
     for( UintVector::const_iterator u=idvec.begin(); u!=idvec.end(); ++u) id("",*u); 
-    bool abort = shape(s,name,material,shapepars,type);
+    bool abort = shape(s,name,material,shapepars,type, sense);
     return abort ? AbortSubtree :  More;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -105,7 +105,8 @@ void DisplayGeometry::push(double x, double y,double z, double rx, double ry, do
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool DisplayGeometry::shape(ShapeType shape_type, std::string name, std::string material, 
-                          const DoubleVector& params, VolumeType volType)
+                          const DoubleVector& params, VolumeType volType,
+                            SenseType sense)
 {
     double volume=0;
     bool abort = false;
@@ -146,10 +147,10 @@ bool DisplayGeometry::shape(ShapeType shape_type, std::string name, std::string 
     
     // put into Medium hierarchy
     Medium* newmed;
-    if( volType >=  Composite && ! abort)
+    if( volType !=  Simple && ! abort)
         newmed = new GlastCompositeMedium(m_mediumStack.back(), s, glastMaterial.c_str());
     else newmed = new GlastMedium(m_mediumStack.back(), s, glastMaterial.c_str(),
-        volType==posSensitive || volType==intSensitive || abort);
+        sense==posSensitive || sense==intSensitive || abort);
     
     m_mediumStack.push_back(newmed);
     m_vols.push_back(s);
@@ -170,7 +171,7 @@ bool DisplayGeometry::shape(ShapeType shape_type, std::string name, std::string 
     full_name <<'\0';
 
     newmed->setTitle(full_name.str().c_str());
-    if( volType==posSensitive || volType==intSensitive || name=="oneTower") {
+    if( sense==posSensitive || sense==intSensitive || name=="oneTower") {
         //TODO: take care of CsI hit display?
     }
 

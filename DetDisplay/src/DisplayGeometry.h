@@ -39,7 +39,8 @@ public:
     */
     virtual VisitorRet pushShape(ShapeType s, const UintVector& id, 
                                  std::string name, std::string material, 
-                                 const DoubleVector& params, VolumeType type);
+                                 const DoubleVector& params, VolumeType type,
+                                 SenseType sense);
     
     //* called to signal end of nesting */
     virtual void popShape();
@@ -61,7 +62,7 @@ private:
     ///   Composite: will be filled with sub-volumes
     ///   XStack: interior volumes will be stacked in the local x-direction
     ///   Simple or Sensitive: leaf on the tree, not containing further vols
-    bool shape(ShapeType s, std::string name, std::string material, const DoubleVector& params, VolumeType type);
+    bool shape(ShapeType s, std::string name, std::string material, const DoubleVector& params, VolumeType type, SenseType sense);
     
     /// push a transformation onto the stack
     void push(double x, double y, double z, double rx, double ry, double rz);
