@@ -58,6 +58,8 @@ class G4Geometry : public IGeometry
    * @param material
    * @param params vector with the six transformation parameters, 
    *        followed by 3 or so dimensions
+   * @param type kind of volume: simple, stack or composition
+   * @param sense Sensitivity type of volume
    * @return tell caller whether to skip subvolumes or not
    */
   virtual IGeometry::VisitorRet
@@ -66,7 +68,8 @@ class G4Geometry : public IGeometry
               std::string name, 
               std::string material, 
               const DoubleVector& params, 
-              VolumeType type);
+              VolumeType type,
+              SenseType  sense);
   
   /// called to signal end of nesting 
   virtual void popShape();

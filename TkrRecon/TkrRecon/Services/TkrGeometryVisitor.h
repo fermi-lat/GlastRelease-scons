@@ -29,7 +29,7 @@ public:
     /// Standard interface to the detModel
     virtual IGeometry::VisitorRet pushShape(ShapeType s, const UintVector& id, 
         std::string name, std::string material, const DoubleVector& params, 
-        VolumeType type);
+        VolumeType type, SenseType sense);
   
     /// called to signal end of nesting 
     virtual void popShape();

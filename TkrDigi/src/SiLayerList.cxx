@@ -21,7 +21,8 @@ IGeometry::VisitorRet SiLayerList::pushShape(ShapeType /* s */,
                                              std::string name,
                                              std::string /* material */, 
                                              const DoubleVector& /* params */, 
-                                             VolumeType /* type */) {
+                                             VolumeType /* type */,
+                                             SenseType /* sense */) {
     // concatenate the id for this node to current id.
     m_idcount.push_back(idvec.size());
     for ( UintVector::const_iterator u=idvec.begin(); u!=idvec.end(); ++u )

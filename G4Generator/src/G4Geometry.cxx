@@ -58,7 +58,8 @@ G4Geometry::~G4Geometry()
 IGeometry::VisitorRet 
 G4Geometry::pushShape(ShapeType s, const UintVector& idvec, 
                       std::string name, std::string material, 
-                      const DoubleVector& params, VolumeType type)
+                      const DoubleVector& params, VolumeType type,
+                      SenseType sense)
 {
   // Purpose and Method: this method push a new volume in the stack of volumes
   // Inputs: for the meaning of ShapeType, the VolumeType and the params vector
@@ -171,11 +172,11 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
   (*m_idMap)[phys] = vid;
 
   // Register the volume to the sensitive detector if necessary
-  if (type == posSensitive) 
+  if (sense == posSensitive) 
     {
       m_pdm->process(logical);
     }
-  else if (type == intSensitive)
+  else if (sense == intSensitive)
     {
       m_idm->process(logical);
     }
