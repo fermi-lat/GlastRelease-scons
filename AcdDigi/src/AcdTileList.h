@@ -32,7 +32,7 @@ public:
     */
     virtual VisitorRet pushShape(ShapeType s, const UintVector& id, 
         std::string name, std::string material, 
-        const DoubleVector& params, VolumeType type);
+        const DoubleVector& params, VolumeType type, SenseType sense);
 
     //* called to signal end of nesting */
     virtual void popShape();
