@@ -3,6 +3,8 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+   v2r18p1 20-Aug-2005 jrb Patch so that compositions with sensitive envelopes
+                           are entered into the id map
    v2r18   3-Jan-2005  jrb Use xmlBase rather than xml package
  * v2r17   jrb 10-Nov-04   Upgrades for Xerces 2.6.0
  * v2r16   thb 14-aug-04   make rest of requirements consistent with being a static library
