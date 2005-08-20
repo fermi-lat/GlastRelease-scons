@@ -3,6 +3,8 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+   v2r18p2 20-Aug-2005 jrb Patch so that compositions in id map will be fetched
+                           back out upon request
    v2r18p1 20-Aug-2005 jrb Patch so that compositions with sensitive envelopes
                            are entered into the id map
    v2r18   3-Jan-2005  jrb Use xmlBase rather than xml package
