@@ -256,6 +256,21 @@ void IDmapBuilder::insertVolume(Volume* vol)
           m_idvec.push_back(m_actualID);
 	}
     }
+  else if (Composition* cmp = dynamic_cast<Composition*>(volume)) {
+    Shape* shape = cmp->getEnvelope();
+
+    if (shape->getSensitive())
+    {    
+      PositionedVolume* pos = new PositionedVolume();
+      pos->setVolume(volume);
+      pos->setTranslation(m_actualPos);
+      pos->setRotation(m_actualRot);
+      m_volMap[m_actualID] = pos;
+      // also save a vector of id's
+      m_idvec.push_back(m_actualID);
+    }
+
+  }
 }  
 
 const std::map<idents::VolumeIdentifier, const PositionedVolume*>* 
