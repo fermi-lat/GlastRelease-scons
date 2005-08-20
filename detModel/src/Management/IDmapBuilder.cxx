@@ -341,15 +341,24 @@ bool IDmapBuilder::getShapeByID(idents::VolumeIdentifier id,
   if (pv)
     {
       Volume* volume = pv->getVolume();
+      if  (Composition* cmp = dynamic_cast<Composition*>(volume)) {
+        volume = cmp->getEnvelope();
+      }
+        
       if (Box* box = dynamic_cast<Box*>(volume))
-        {
-          *s = "box";
-          params->push_back(box->getX());
-          params->push_back(box->getY());
-          params->push_back(box->getZ());
-        }
-      else
-        return false;
+      {
+        *s = "box";
+        params->push_back(box->getX());
+        params->push_back(box->getY());
+        params->push_back(box->getZ());
+      }
+      else if (Tube* tube = dynamic_cast<Tube*>(volume) )
+      {
+        *s="tube";
+        params->push_back(tube->getZ());
+        params->push_back(tube->getRin());
+        params->push_back(tube->getRout());
+      }
       return true;
     }
   else return false;
