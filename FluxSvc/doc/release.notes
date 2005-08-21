@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   21-aug-05  v6r25p1 THB  Fix bug to properly enable StartTimeEnvVar, provide for it to be comma-separated pair
    26-jul-05  v6r25   THB  Define new property "FluxSvc.StartTimeEnvVar" to extract the (relative) start time
    22-jun-05  v6r24p3 THB  pass strings to flux/rootplot
    15-jun-05  v6r24p2 THB  linux patch

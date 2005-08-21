@@ -20,7 +20,8 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxSvc.source_lib   [\$(FLUXSVCROOT)/xml/source_library.xml] list of file names containing source_lib elements
     @param FluxSvc.dtd_file     [\$(FLUXSVCROOT)/xml/source.dtd]  DTD file used to parse the XML files 
     @param FluxSvc.EvtMax       [0]  If non-zero, used as a maximum in the FluxSvc loop
-    @param FluxSvc.StartTimeEnvVar [""] If set (e.g., to "runName") use this as the source of the start time
+    @param FluxSvc.StartTimeEnvVar [""] If set (e.g., to "runName") use this as the source of the start time.
+    It has two forms: a number, or optionally a number for the start time offset, followed by a comma ant the delta time
     @param FluxSvc.StartTime    [0]  Mission elapsed time start
     @param FluxSvc.EndTime      [0]  Mission elapsed time end--if non-zero, will be the end.
     @param FluxSvc.DeltaTime    [0]  Maximum elapsed time.

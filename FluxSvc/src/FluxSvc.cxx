@@ -199,7 +199,8 @@ private:
             if( m_launch==0 ) m_launch=m_start;
 
             // now add StartTime as offset to either the StartDate or LaunchDate
-            double offset = m_startTime.value();;
+            double offset = m_startTime.value();
+            double delta  = m_deltaTime.value();
             if(! m_startTimeEnvVar.value().empty()) {
                 std::string t(m_startTimeEnvVar.value());
                 if( t.substr(0,2)=="$(" && t.size()>3 ) { // strip off redundant $(...) 
@@ -211,20 +212,26 @@ private:
                         << "\" requested for start time, not found, using value of StartTime: " 
                         << m_startTime << endreq;
                 } else {
-                    // set offset if env var found OK.
-                    offset = ::atof( envar );
+                    // set offset and optional delta if env var found (parse 9999,2)
+                    std::string ev(envar); 
+                    int comma =  ev.find(',');
+                    offset = ::atof( ev.substr(0,comma>0?comma+1:-1).c_str() );
                     log << MSG::INFO << "Setting start time offset from environment variable " 
-                        << t << " to "
-                        << offset << endreq; 
+                        << t << " to "  << offset; 
+                    if( comma>0){ 
+                        delta = ::atof(ev.substr(comma+1).c_str());
+                        log << "\n\t\t\tsetting deltat to " << delta; 
+                    }
+                    log << endreq;
                  }
             }
             m_start += offset;
 
-            if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_start+m_deltaTime;
+            if( delta >0 && m_endTime==0 )  m_endTime=m_start+delta;
             // set the basic time here: it will be incremented by the flux object
             GPS::instance()->time(m_start);
             m_end = m_endTime;
-            if( m_deltaTime>0) m_end=m_start+m_deltaTime;
+            if( m_deltaTime>0) m_end=m_start+delta;
 
         }
         double convert(std::string date){
