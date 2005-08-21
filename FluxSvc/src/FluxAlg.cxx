@@ -285,7 +285,7 @@ StatusCode FluxAlg::execute()
     m_flux = m_fluxSvc->currentFlux();
 
     std::string particleName;
-    m_SAAreject--;
+    if( m_avoidSAA) m_SAAreject--;
     int count = m_prescale;
     do{ // loop if we are rejecting particles generated during SAA
         // also do prescale here
@@ -297,7 +297,8 @@ StatusCode FluxAlg::execute()
             setFilterPassed( false );
             return sc;
         }
-        ++m_SAAreject;
+        if( m_avoidSAA) ++m_SAAreject;
+        else break;
     } while(m_insideSAA && m_avoidSAA.value() || --count>0);
 
     HepPoint3D p = m_flux->launchPoint();
@@ -428,7 +429,7 @@ StatusCode FluxAlg::finalize(){
     }
     log  << endreq;
 
-    if( m_avoidSAA){
+    if( m_avoidSAA && m_SAAreject>0 ){
         log << "\t\tRejected by SAA: " << m_SAAreject << endreq;
             log << "\t\t(note that this may invalidate the rate calculation)" << endreq;
     }

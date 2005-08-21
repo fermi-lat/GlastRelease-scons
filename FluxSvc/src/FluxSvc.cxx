@@ -199,20 +199,26 @@ private:
             if( m_launch==0 ) m_launch=m_start;
 
             // now add StartTime as offset to either the StartDate or LaunchDate
+            double offset = m_startTime.value();;
             if(! m_startTimeEnvVar.value().empty()) {
-                const char* envar=::getenv(m_startTimeEnvVar.value().c_str());
-                if( envar==0 ){
-                    log << MSG::WARNING << "Env var " << m_startTimeEnvVar.value() 
-                        << " requested for start time, not found" << endreq;
-                } else {
-                    m_start = ::atof( envar );
-                    log << MSG::INFO << "Setting start time from environment variable " 
-                        << m_startTimeEnvVar.value() << " to "
-                        << m_start << endreq; 
+                std::string t(m_startTimeEnvVar.value());
+                if( t.substr(0,2)=="$(" && t.size()>3 ) { // strip off redundant $(...) 
+                    t= t.substr(2, t.size()-3);
                 }
-            } else {
-                m_start += m_startTime.value();
+                const char* envar=::getenv(t.c_str());
+                if( envar==0 ){
+                    log << MSG::WARNING << "Env var \"" << t
+                        << "\" requested for start time, not found, using value of StartTime: " 
+                        << m_startTime << endreq;
+                } else {
+                    // set offset if env var found OK.
+                    offset = ::atof( envar );
+                    log << MSG::INFO << "Setting start time offset from environment variable " 
+                        << t << " to "
+                        << offset << endreq; 
+                 }
             }
+            m_start += offset;
 
             if( m_deltaTime>0 && m_endTime==0 )  m_endTime=m_start+m_deltaTime;
             // set the basic time here: it will be incremented by the flux object
