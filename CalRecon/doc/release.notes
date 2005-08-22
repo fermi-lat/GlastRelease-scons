@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r1p14    18-Aug-05 PA  bug in previous change: incorrect access to data tables for CalTkrLikelihoodTool
   v6r1p13    18-Aug-05 PA  new data files for Likelihood methods and some corresponding change in the code  
   v6r1p12    12-Aug-05 TU  Tagging updates to mip finding and profile fitting
   v6r1p10    26-Jul-05 TU  Speed up MIP finder, bug fix to Likelihood tool, more NaN protection

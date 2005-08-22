@@ -142,8 +142,8 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
 
 
     int iData= vertexPos;
-    if( geometricCut>.4 ) iData= 16*(geometricCut>.60)+32;
-    else                  iData= 16*(geometricCut>.25);
+    if( geometricCut>.4 ) iData+= 16*(geometricCut>.60)+32;
+    else                  iData+= 16*(geometricCut>.25);
 
     setEventPDFdata(iData);
     setEventPDFparameters(fabs(trackDirection.z()),
