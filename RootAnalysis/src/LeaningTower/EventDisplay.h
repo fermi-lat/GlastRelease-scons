@@ -41,10 +41,10 @@ private:
     TLine anXtrack;
     TLine anYtrack;
     TPaveText* TPaveStat;
-    int runId;
+    int runId,m_temid;
 
 public:
-    EventDisplay(TString="MyRootFile.root", TString geo="");
+    EventDisplay(TString="MyRootFile.root", TString geo="",int temid=0);
     virtual ~EventDisplay(){};
     void SetRunId(const int r) { runId = r; }
     void Go(int=-1);

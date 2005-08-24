@@ -4,7 +4,8 @@
 
 ClassImp(EventDisplay)
 
-EventDisplay::EventDisplay(TString filename, TString geoFileName) {
+EventDisplay::EventDisplay(TString filename, TString geoFileName,int temid) 
+  : m_temid(temid) {
     gStyle->SetCanvasColor(10);
     myTracker = new Tracker;
     if ( TOWER ) {
@@ -59,8 +60,14 @@ void EventDisplay::Go(int numEvent) {
         entry = lastEntry;
         std::cout << "displaying the last record of the tree" << std::endl;
     }
-
-    myEvent->Go(entry);
+    int running=0;
+    do{
+      myEvent->Go(entry+running);
+      running++;
+    } while(myEvent->GetTemId()!=m_temid);
+    --running;
+    entry+=running;
+    std::cout<<"Passed "<<running<<" events"<<std::endl;
     myEventDisplay->cd();
 
     if ( runId == -1 )
