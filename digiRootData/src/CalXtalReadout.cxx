@@ -17,7 +17,7 @@ CalXtalReadout::CalXtalReadout() {
 
 CalXtalReadout::CalXtalReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, 
                                UShort_t adcM) :
-m_rangeP(rangeP), m_adcP(adcP), m_rangeM(rangeM), m_adcM(adcM)
+m_adcP(adcP), m_adcM(adcM), m_rangeP(rangeP), m_rangeM(rangeM)
 {
 }
 

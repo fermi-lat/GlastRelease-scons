@@ -46,7 +46,7 @@ void L1T::initialize(UInt_t trigger, UInt_t *digiTriRowBits, UInt_t *trgReqTriRo
 }
 
 void L1T::setTrgReqTriRowBits(UInt_t tower, UInt_t bits) {
-    if ( (tower < 0) || (tower > 15)) return;
+    if (tower > 15) return;
     m_trgReqTriRowBits[tower] = bits;
 }
 
@@ -58,7 +58,7 @@ void L1T::setTrgReqTriRowBits(UInt_t *bits) {
 
 
 void L1T::setDigiTriRowBits(UInt_t tower, UInt_t bits) {
-    if ( (tower < 0) || (tower > 15)) return;
+    if (tower > 15) return;
     m_digiTriRowBits[tower] = bits;
 }
 

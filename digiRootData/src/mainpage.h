@@ -33,7 +33,7 @@
     -# Collection of CalDiagnosticData trigger primitives
     -# Collection of TkrDiagnosticData trigger primitives
     -# Gem (GLT Electronics Module)
-    -# ErrorData
+    -# ErrorData accessible through TEM collection
 
   <hr>
   @section notes release notes
