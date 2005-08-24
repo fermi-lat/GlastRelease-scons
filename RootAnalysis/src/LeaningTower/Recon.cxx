@@ -3,7 +3,7 @@
 #include "TF1.h"
 #include "TVector3.h"
 
-Recon::Recon(TFile* file) {
+Recon::Recon(TFile* file,int temid) : m_temid(temid) {
     reconTree = (TTree*)file->Get("Recon");
     if ( reconTree ) {
         reconTree->SetBranchAddress("TkrNumClus",     &TkrNumClus);
@@ -25,9 +25,20 @@ void Recon::GetEvent(int event) {
     // the data are nominally tower 0, which is located at about -700, -700.
     // We would like to have to origin at 0,0 (equivalent to tower 10).
     // There is also a non-understood not-cared-for shift in z.
+    //temid is the requested tem to be studied. By default it is bay0
+
+    //Here a systematic translation is applied to bring the tower
+    //to 0,0 coordinates (id est bay10). This translation depends on 
+    //the position on the grid of the tower under study. 
+    //Here we define this translation :
+    int offsetX = m_temid%4;
+    int offsetY = m_temid/4;
+    //    std::cout<<m_temid<<": Translation X and Y "<<offsetX<<" "<<offsetY<<std::endl;
     for ( int i=0; i<TkrNumClus; ++i ) {
-        TkrClusX[i] = TkrClusX[i] + 741.09;
-        TkrClusY[i] = TkrClusY[i] + 741.09;
+        TkrClusX[i] = TkrClusX[i] + 741.09 - offsetX*374.5;
+        TkrClusY[i] = TkrClusY[i] + 741.09 - offsetY*374.5;
+	//        TkrClusX[i] = TkrClusX[i] + 741.09;
+	//        TkrClusY[i] = TkrClusY[i] + 741.09;
         TkrClusZ[i] = TkrClusZ[i] +  18;
     }
 }

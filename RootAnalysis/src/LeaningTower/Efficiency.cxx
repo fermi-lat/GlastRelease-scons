@@ -42,6 +42,7 @@ void Efficiency::Go(int lastEntry) {
         myTracker->GetPlaneNameCol(0), myTracker->GetPlaneNameCol(1) };
 
     Recon* recon = myEvent->GetRecon();
+    recon->SetTemId(m_temid);
     Progress progress;
 
     // some counters for the statistics
@@ -55,7 +56,9 @@ void Efficiency::Go(int lastEntry) {
         progress.Go(entry, lastEntry);
 
         if(myEvent->GetTemId()!=m_temid) 
-	  continue;
+	  {
+	    continue;
+	  }
 	correctTem+=1;
 	
 	recon->GetEvent(entry);

@@ -15,10 +15,11 @@
 
 class Recon : public TObject {
  public:
-    Recon(TFile*);
+    Recon(TFile*, int temid=0);
 
     void GetEvent(int);
     void TkrAlignmentSvc(const TList* myGeometry);
+    void SetTemId(int temid) {m_temid=temid;}
     Int_t GetEntries()        const { return (Int_t)reconTree->GetEntries(); }
     Int_t GetTkrNumClus()     const { return TkrNumClus; }
     Int_t GetTkrNumTracks()   const { return TkrNumTracks; }
@@ -76,6 +77,8 @@ class Recon : public TObject {
     Int_t TkrNumTracks;
     Int_t TkrTrk1NumClus;
     Int_t TkrTrk1Clusters[128];
+
+    int m_temid;
 
     // last line of class def
     ClassDef(Recon, 1)
