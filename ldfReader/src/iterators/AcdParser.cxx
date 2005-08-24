@@ -94,7 +94,8 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
       acd = curLatData->getAcd(pmt->name());
   } 
   AcdDigi::ParityError err = (p.parityError() == 0) ? AcdDigi::NOERROR : AcdDigi::ERROR;
-  acd->addPmt(ldfReader::AcdDigi::AcdPmt(p.ADCvalue(), p.ADCrange(), digiSide, channel, p.more(), veto, accept, err));
+  AcdDigi::ParityError headerParity = (curHeader.parityError() == 0) ? AcdDigi::NOERROR : AcdDigi::ERROR;
+  acd->addPmt(ldfReader::AcdDigi::AcdPmt(p.ADCvalue(), p.ADCrange(), digiSide, channel, p.more(), veto, accept, err, headerParity));
 
 }
 
