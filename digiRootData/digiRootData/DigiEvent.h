@@ -22,16 +22,21 @@
  * The DigiEvent branch contains:
  * - Run Id
  * - Event Id
- * - Time stamp
+ * - Time stamp (seconds)
  * - Live Time
  * - Flag denoting if this data was simulated or not
- * - Level One Trigger
+ * - Level One Trigger (L1T)
  * - Collection of AcdDigi objects
  * - Collection of CalDigi objects
  * - Collection of TkrDigi objects
- * - EM CAL Diagnostic trigger primitives
- * - EM TKR Diagnostic trigger primitives
- * - EM Event Summary
+ * - If this is real data, the following are possibly present as well
+ *   -# PPC Time Base
+ *   -# Original 30Hz clock seconds and nanoseconds
+ *   -# EventSummaryData
+ *   -# Gem (GLT Electronics Module)
+ *   -# CAL Diagnostic trigger primitives from TEMs
+ *   -# TKR Diagnostic trigger primitives from TEMs
+ *   -# ErrorData accessed throught the TEM collection
  *
  * @li Jun 2001 Heather Kelly - revised to use TClonesArray
  * @li Jan 2000 Daniel Flath - ROOT HTML comments added
@@ -64,17 +69,25 @@ public:
 	
     /** @defgroup DigiEventGroup DigiEvent End-User Interface */
     /*@{*/
-    /// Access the DigiEvent number
+    /// Access the DigiEvent event ID 
     inline UInt_t getEventId() { return m_eventId; };
     /// Access the run number
     inline UInt_t getRunId() { return m_runId; };
 
+    /// Valid for real or simulated data, in seconds since mission start 
     inline Double_t getTimeStamp() { return m_timeStamp; };
+
+    /// Valid for both real or simulated data
     inline Double_t getLiveTime() { return m_liveTime; };
 
+    /// Seconds as reported by original 30 Hz clock (real data only)
     inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
+    /// Nanoseconds as reported by original 30 Hz clock (real data only)
     inline UInt_t getEbfTimeNanoSec() const { return m_ebfTimeNanoSec; };
+
+    /// One of two words forming PPC Time Base - see getPpcTimeSeconds
     inline UInt_t getEbfUpperPpcTimeBase() const { return m_ebfUpperPpcTimeBase; };
+    /// One of two words forming PPC Time Base - see getPpcTimeSeconds
     inline UInt_t getEbfLowerPpcTimeBase() const { return m_ebfLowerPpcTimeBase; };
     /// Return the approximate number of seconds elapsed since power on
     /// by dividing the value in the PPC registers by 16 MHz
@@ -89,6 +102,9 @@ public:
         return (upper + lower);
     };
 
+    /// New name for getEbfPpcTimeSeconds()
+    inline Double_t getPpcTimeSeconds() const { return getEbfPpcTimeSeconds(); };
+
     /// Flag denoting if this event was generated from a Monte Carlo Simulation
     inline Bool_t getFromMc() { return m_fromMc; };
 
@@ -101,7 +117,7 @@ public:
 
     /// retrieve the whole CalDigi collection
     const TClonesArray* getCalDigiCol();
-	/// retrieve one CalDigi object from the collection, using the index into the array
+    /// retrieve one CalDigi object from the collection, using the index into the array
     const CalDigi* getCalDigi(UInt_t i) const;
 
     /// retrieve the whole TObjArray of TkrDigi Data
@@ -109,37 +125,45 @@ public:
     /// retrieve a TkrDigi from the collection, using the index into the array
     const TkrDigi* getTkrDigi(UInt_t i) const;
 
-    /// Access Level 1 Trigger data
+    /// Access Level 1 Trigger data const
     inline const L1T& getL1T() const { return m_levelOneTrigger; };    
+    /// Access Level 1 Trigger data non-const
     inline L1T& getL1T() { return m_levelOneTrigger; };    
 
-	/// Returns a reference to the EventSummaryData
+    /// Returns a reference to the EventSummaryData (valid real data only) const
     inline const EventSummaryData& getEventSummaryData() const { return m_summary; };
+    /// Returns a reference to the EventSummaryData (valid real data only) non-const
     inline EventSummaryData& getEventSummaryData() { return m_summary; };
 
-	/// Returns the whole CalDiagnostic Collection
+    /// Returns the whole CalDiagnostic Collection
     const TClonesArray *getCalDiagnosticCol() { return m_calDiagnosticCloneCol;};
+    /// Returns one CalDiagnostic object located at index i in the collection
     const CalDiagnosticData* getCalDiagnostic(UInt_t i) const;
 
+    /// Returns the whole TkrDiagnostic Collection
     const TClonesArray *getTkrDiagnosticCol() { return m_tkrDiagnosticCloneCol;};
+    /// Returns one TkrDiagnostic object located at index i in the collection
     const TkrDiagnosticData* getTkrDiagnostic(UInt_t i) const;
 
+    /// Returns a reference to the Gem
     const Gem& getGem() const { return m_gem; };
 
+    /// Return one Tem object located at index i in the collection
     const Tem* getTem(Int_t i) const;
 
+    /// Returns whole Tem Collection
     const TClonesArray *getTemCol() { return m_temCloneCol;};
 	/*@}*/
 
 
-	/// clear the whole array (necessary because of the consts-s)
+    /// clear the whole array (necessary because of the consts-s)
     void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
     /// Add a TkrDigi into the TKR data collection
     void addTkrDigi(TkrDigi *digi);
 
     CalDigi* addCalDigi();
 	
-	/// Add a new AcdDigi entry into the ACD digi array
+    /// Add a new AcdDigi entry into the ACD digi array
     AcdDigi* addAcdDigi(const AcdId& id, const VolumeIdentifier& volId, 
         Float_t energy, UShort_t *pha, Bool_t *veto, Bool_t *low, Bool_t *high);
 

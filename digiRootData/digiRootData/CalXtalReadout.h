@@ -22,7 +22,6 @@ public:
     CalXtalReadout();
 
     CalXtalReadout(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);    
-    
     virtual ~CalXtalReadout();
 
     void initialize(Char_t rangeP, UShort_t adcP, Char_t rangeM, UShort_t adcM);
@@ -31,8 +30,8 @@ public:
 
     void Print(Option_t *option="") const;
 
-	/** @defgroup CalXtalReadoutGroup CalXtalReadout End-User Interface */
-	/*@{*/
+    /** @defgroup CalXtalReadoutGroup CalXtalReadout End-User Interface */
+    /*@{*/
     /// retrieve pulse height from specified face
     UShort_t getAdc(CalXtalId::XtalFace face) const;
     

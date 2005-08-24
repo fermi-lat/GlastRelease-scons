@@ -20,8 +20,8 @@ class CalDigi : public TObject  {
     
 public:
     
-	/** @defgroup CalDigiGroup CalDigi End-User Interface */
-	/*@{*/
+    /** @defgroup CalDigiGroup CalDigi End-User Interface */
+    /*@{*/
     /// shifts and masks for packed readout of energy range and Adc value
     enum {
         POS_OFFSET = 14,     // shift for POSitive face
@@ -29,7 +29,7 @@ public:
         RANGE_MASK = 0x3000, // energy range bits
         ADC_VAL_MASK = 0xfff
     };
-	/*@}*/
+    /*@}*/
     
     CalDigi();
     
@@ -41,15 +41,18 @@ public:
 
     void Print(Option_t *option="") const;
 
-	/** @ingroup CalDigiGroup */
-	/*@{*/
-    /// Retrieve readout mode
+    /** @ingroup CalDigiGroup */
+    /*@{*/
+    /// Retrieve readout mode - BEST or ALLRANGE
     const CalXtalId::CalTrigMode getMode() const { return m_mode; };
     
     /// Retrieve log identifier
     const CalXtalId getPackedId() const { return m_xtalId; };
     
+    /// Returns the whole collection of readouts
     const CalXtalReadout* getReadoutCol();
+
+    /// Number of readouts in this CalDigi (1 or 4)
     const UInt_t getNumReadouts() const { 
         if (m_readoutCol) 
             return m_readoutCol->GetEntries(); 

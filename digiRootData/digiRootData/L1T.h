@@ -31,6 +31,7 @@ public:
 
     /** @ingroup L1TGroup */
     /*@{*/
+    /// Returns full trigger word
     UInt_t getTriggerWord() const { return m_trigger; };
 
     /// kTRUE indicates that ACD LOW occurred
@@ -55,7 +56,7 @@ public:
 
 private:
     /// packed word containing trigger bits
-    UInt_t    m_trigger;    
+    UInt_t m_trigger;    
 
     UInt_t m_digiTriRowBits[16];
     UInt_t m_trgReqTriRowBits[16];

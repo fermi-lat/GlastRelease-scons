@@ -8,13 +8,24 @@
 #include "commonRootData/idents/VolumeIdentifier.h"
 
 /** @class AcdDigi
- * @brief The digitization for a single ACD entity.  
+ * @brief The digitization data for a single ACD entity (tile or ribbon).  
  * 
  * This digitization could represent a 
- * tile or a ribbon.  Each ACD entity has 2 PMTs associated with 
- * it.  Each PMT produces a pulse height and 3 discriminator
- * bits:  low, veto, high.  The PMT values are stored in a packed
- * word.
+ * tile or a ribbon.  Each ACD entity has two PMTs (A and B) associated with 
+ * it.  Each PMT contains:
+ * - PHA (pulse height)
+ * - odd parity bit
+ * - header parity bit
+ * - range (low or high)
+ * - Three Discriminators:  
+ *   -# low(accept map bit)
+ *   -# veto (hit map bit)
+ *   -# high (cno)  
+ *  The PMT values are stored in a packed word.
+ * Details concerning the ACD detector data can be found in:
+ * ACD ICD document LAT-SS-00363-08
+ * and in the AEM description:  
+ * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/AEM.pdf
  * 
  * $Header$
 */
@@ -72,6 +83,7 @@ private:
 public:
 	/** @defgroup AcdDigiGroup AcdDigi End-User Interface */
 	/*@{*/
+    /// Identifies PMT as either A or B
     typedef enum {
         A = 0,
         B = 1
@@ -105,33 +117,47 @@ public:
 
     void Print(Option_t *option="") const;
 
-	/** @ingroup AcdDigiGroup */
-	/*@{*/
-	/// Returns the Monte Carlo energy deposited in this ACD detector
+    /** @ingroup AcdDigiGroup */
+    /*@{*/
+    /// Returns the Monte Carlo energy deposited in this ACD detector
     Float_t getEnergy() { return m_energy; };
 
+    /// Returns the proper AcdId corresponding to the official numbering scheme
     const AcdId& getId() const { return m_id; };
+
+    /// VolId for the detector
     const VolumeIdentifier& getVolId() const { return m_volId; };
 
     /// Returns the PHA value for the PMT requested
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
-    /// Returns True/False denoting whether this ACD Tile's veto threshold bit is on.
+    /// Returns True/False denoting whether this ACD Tile's veto (hit map) bit is on.
     Bool_t getVeto(AcdDigi::PmtId pmt) const;
+    /// Returns True/False denoting whether this ACD Tile's veto (hit map) bit is on.
     Bool_t getHitMapBit(AcdDigi::PmtId pmt) const { return getVeto(pmt); };
-    /// Returns true/false denoting if this Acd PMT high discrim is on/off
+
+    /// Returns true/false denoting if this Acd PMT accept bit is on/off
     Bool_t getLowDiscrim(AcdDigi::PmtId pmt) const;
+    /// Returns true/false denoting if this Acd PMT accept bit is on/off
     Bool_t getAcceptMapBit(AcdDigi::PmtId pmt) const { return getLowDiscrim(pmt); };
     /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
     Bool_t getHighDiscrim(AcdDigi::PmtId pmt) const;
+    /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
     Bool_t getCno(AcdDigi::PmtId pmt) const { return getHighDiscrim(pmt); };
 
     Int_t getTileNumber() const { return m_tileNumber; };
     const char* getTileName() const { return m_tileName.Data(); };
+
+    /// Returns the range of this PMT (low or high) (currently real data only)
     Range getRange(AcdDigi::PmtId pmt) const;
+
+    /// Returns the odd parity bit for the requested PMT (real data only
     ParityError getParityError(AcdDigi::PmtId pmt) const;
+    /// Returns the odd parity bit for the requested PMT (real data only)
     ParityError getOddParityError(AcdDigi::PmtId pmt) const { return getParityError(pmt); };
+
+    /// Returns Header parity bit aka CMD/Data error from AEM header (real data only)
     ParityError getHeaderParityError(AcdDigi::PmtId pmt) const;
-	/*@}*/
+    /*@}*/
 
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 

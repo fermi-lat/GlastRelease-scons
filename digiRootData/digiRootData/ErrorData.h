@@ -7,7 +7,8 @@
 /** @class ErrorData
  * @brief This stores Error data for one TEM.
  *
- * The ErrorData branch contains:
+ * Read more about the error contribution at:
+ * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf 
  *
  * $Header$
  */
@@ -29,6 +30,7 @@ public:
     void Print(Option_t *option="") const;
 
 
+    /** @defgroup ErrorDataGroup ErrorData End-User Interface */
     /** @ingroup ErrorDataGroup */
     /*@{*/
         UShort_t getCal() const { return m_cal; }

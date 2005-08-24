@@ -38,8 +38,8 @@ public:
 
     void Print(Option_t *option="") const;
     
-	/**@defgroup TkrDigiGroup TkrDigi End-User Interface */
-	/*@{*/
+    /**@defgroup TkrDigiGroup TkrDigi End-User Interface */
+    /*@{*/
     //! Retrieve tower info
     TowerId getTower() const { return m_tower; }
     //! Retrieve layer info

@@ -4,7 +4,7 @@
 #include "TObject.h"
 
 /** @class CalDiagnosticData
- * @brief Store the EM CalDiagnosticData trigger primitives
+ * @brief Store the CalDiagnosticData trigger primitives
  *
  * For details concerning the DIAGNOSTIC contribution in the LDF please refer to:
  * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf
@@ -24,16 +24,17 @@ public:
 
     void Print(Option_t *option="") const;
 
-	/** @defgroup CalDiagnosticDataGroup CalDiagnosticData End-User Interface */
+    /** @defgroup CalDiagnosticDataGroup CalDiagnosticData End-User Interface */
     /*@{*/
-	/// Returns the full packed data word for this CalDiagnosticData object
+    /// Returns the full packed data word for this CalDiagnosticData object
     UInt_t getDataWord() const { return m_datum; };
+
     UInt_t high(UInt_t sign) const;
     UInt_t low(UInt_t sign) const;
     UInt_t logAccepts(UInt_t sign) const;
     UShort_t tower() const { return m_tower; };
     UShort_t layer() const { return m_layer; };
-	/*@}*/
+    /*@}*/
 
 private:
     /// packed word containing trigger primitives for this set of logs

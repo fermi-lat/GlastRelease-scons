@@ -7,7 +7,6 @@
 /** @class EventSummaryData
  * @brief This is the event summary class.
  *
- * The EventSummaryData branch contains:
  * $Header$
  */
 
@@ -73,9 +72,9 @@ public:
 
     void Print(Option_t *option="") const;
     
-	/** @ingroup EventSummaryDataGroup */
-	/*@{*/
-	UInt_t summary() { return m_summary; };
+    /** @ingroup EventSummaryDataGroup */
+    /*@{*/
+    UInt_t summary() { return m_summary; };
 
     UInt_t calStrobe();
     UInt_t tag();

@@ -223,8 +223,8 @@ public:
                      UShort_t deltaEvtTime, UShort_t deltaWindOpenTime);
 
 
-	/** @ingroup GemGroup */
-	/*@{*/
+    /** @ingroup GemGroup */
+    /*@{*/
     UShort_t getTkrVector() const { return m_tkrVector;};
     UShort_t getRoiVector() const { return m_roiVector;};
     UShort_t getCalLeVector() const { return m_cal_Le_Vector;};
@@ -246,21 +246,21 @@ public:
 
     /// Method to query ROI bit in the condition summary word
     Bool_t getRoiSet() const { return( (m_conditionSummary & enums::ROI) != 0); };
-	/// Method to query TKR bit in condition summary word
+    /// Method to query TKR bit in condition summary word
     Bool_t getTkrSet() const { return( (m_conditionSummary & enums::TKR) != 0); };
-	/// Method to query Cal LE bit in condition summary word
+    /// Method to query Cal LE bit in condition summary word
     Bool_t getCalLeSet() const { return( (m_conditionSummary & enums::CALLE) != 0); };
-	/// Method Cal HE bit in condition summary word
+    /// Method to query Cal HE bit in condition summary word
     Bool_t getCalHeSet() const { return( (m_conditionSummary & enums::CALHE) != 0); };
-	/// Method to query CNO bit in condition summary word
+    /// Method to query CNO bit in condition summary word
     Bool_t getCnoSet() const { return( (m_conditionSummary & enums::CNO) != 0); };
-	/// Method to query periodic bit in condition summary word
+    /// Method to query periodic bit in condition summary word
     Bool_t getPeriodicSet() const { return( (m_conditionSummary & enums::PERIODIC) != 0); };
-	/// Query Solicited bit in condition summary word
+    /// Query Solicited bit in condition summary word
     Bool_t getSolicitedSet() const { return( (m_conditionSummary & enums::SOLICITED) != 0); };
-	/// Query External bit in condition summary word
+    /// Query External bit in condition summary word
     Bool_t getExternalSet() const { return( (m_conditionSummary & enums::EXTERNAL) != 0); };
-	/*@}*/
+    /*@}*/
 
     private:
 

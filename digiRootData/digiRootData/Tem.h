@@ -32,7 +32,9 @@ public:
 
     /** @ingroup TemGroup */
     /*@{*/
+    /// ID of the TEM, which does correspond to Gleam's tower numbering
     UShort_t getTowerId() const { return m_tower; };
+    /// Retrieve the error contribution for this TEM, which may be empty
     const ErrorData& getError() const { return m_error; };
     /*@}*/
 

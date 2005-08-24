@@ -4,7 +4,7 @@
 #include "TObject.h"
 
 /** @class TkrDiagnosticData
- * @brief Store the EM TkrDiagnosticData trigger primitives
+ * @brief Store the TkrDiagnosticData trigger primitives
  *
  * For details concering the DIAGNOSTIC contribution in the LDF please refer to:
  * http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/TEM.pdf
@@ -25,14 +25,15 @@ public:
 
     void Print(Option_t *option="") const;
 
-	/**@defgroup TkrDiagnosticDataGroup TkrDiagnosticData End-User Interface */
-	/*@{*/
-	/// Returns the full packed data word for the TkrDiagnostic
+    /**@defgroup TkrDiagnosticDataGroup TkrDiagnosticData End-User Interface */
+    /*@{*/
+    /// Returns the full packed data word for the TkrDiagnostic
     UInt_t getDataWord() const { return m_datum; };
+
     UInt_t GTRC(Int_t gtrc) const;
     UShort_t tower() const {return m_tower; };
     UShort_t gtcc() const { return m_gtcc; };
-	/*@}*/
+    /*@}*/
 
 private:
     /// packed word containing trigger primitive for these TKR layers
