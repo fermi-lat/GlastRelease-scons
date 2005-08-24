@@ -28,20 +28,22 @@ private:
     
     @verbatim
      ____________________________________________________
-    |15|14  |13  |12 |11|  |  |  |  |  |  |  |  |  |  |  |
-    |__|____|____|___|__|__|__|__|__|__|__|__|__|__|__|__|
-    |  |High|Veto|Low|	      PHA Value 	         |
-    |__|____|____|___|___________________________________| 
+    |15|14  |13   |12    |11|  |  |  |  |  |  |  |  |  |  |  |
+    |__|____|_____|_____ |__|__|__|__|__|__|__|__|__|__|__|__|
+    |  |High|Veto |Low   |      PHA Value 	             |
+    |  |CNO |Hit  |Accept|                                   | 
+    |__|___|______|______|___________________________________| 
     @endverbatim
 
 
-    ldf packed word contains range and parity error information
+    ldf packed word contains header parity, range, odd parity error information
     @verbatim
      ____________________________________________________
-    | | | | | |  |  |  |  |  |  |  |  |  | 1   | 0   |
-    |_|_|_|_|_|__|__|__|__|__|__|__|__|__|_____|_____|
-    | | | | | |  |  |  |  |  |  |  |  |  |Range|Error|
-    |_|_| |_|________________________________________| 
+    | | | | | |  |  |  |  |  |  |  |  | 2    | 1   | 0   |
+    |_|_|_|_|_|__|__|__|__|__|__|__|__|_    _|_____|_____|
+    | | | | | |  |  |  |  |  |  |  |  |Header|Range|Odd  |
+    | | | | | |  |  |  |  |  |  |  |  | Error|     |Parity|
+    |_|_| |_|________________________________|_____|_____| 
     @endverbatim
 
     */
@@ -62,7 +64,9 @@ private:
         ERROR_WIDTH = 1,
         ERROR_SHIFT = 0,
         RANGE_WIDTH = 1,
-        RANGE_SHIFT = (ERROR_WIDTH + ERROR_SHIFT)
+        RANGE_SHIFT = (ERROR_WIDTH + ERROR_SHIFT),
+        HEADERPARITY_WIDTH = 1,
+        HEADERPARITY_SHIFT = (RANGE_SHIFT + HEADERPARITY_WIDTH)
     };
 
 public:
@@ -95,7 +99,7 @@ public:
     
     virtual ~AcdDigi() { };
 
-    void initLdfParameters(const char *tileName, int tileNumber, Range *rangeCol, ParityError *errCol);
+    void initLdfParameters(const char *tileName, int tileNumber, Range *rangeCol, ParityError *oddParityCol, ParityError *headerParityCol);
 
     void Clear(Option_t *option ="");
 
@@ -113,15 +117,20 @@ public:
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
     /// Returns True/False denoting whether this ACD Tile's veto threshold bit is on.
     Bool_t getVeto(AcdDigi::PmtId pmt) const;
+    Bool_t getHitMapBit(AcdDigi::PmtId pmt) const { return getVeto(pmt); };
     /// Returns true/false denoting if this Acd PMT high discrim is on/off
     Bool_t getLowDiscrim(AcdDigi::PmtId pmt) const;
+    Bool_t getAcceptMapBit(AcdDigi::PmtId pmt) const { return getLowDiscrim(pmt); };
     /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
     Bool_t getHighDiscrim(AcdDigi::PmtId pmt) const;
+    Bool_t getCno(AcdDigi::PmtId pmt) const { return getHighDiscrim(pmt); };
 
     Int_t getTileNumber() const { return m_tileNumber; };
     const char* getTileName() const { return m_tileName.Data(); };
     Range getRange(AcdDigi::PmtId pmt) const;
     ParityError getParityError(AcdDigi::PmtId pmt) const;
+    ParityError getOddParityError(AcdDigi::PmtId pmt) const { return getParityError(pmt); };
+    ParityError getHeaderParityError(AcdDigi::PmtId pmt) const;
 	/*@}*/
 
     /// Root >= 3.0 is now const correct for the Compare function
@@ -132,7 +141,7 @@ private:
 
     void initPackedWord(PmtId pmt, UShort_t pha, Bool_t veto, Bool_t low, Bool_t high);
 
-    void initPackedLdfWord(PmtId pmt, Range range, ParityError error);
+    void initPackedLdfWord(PmtId pmt, Range range, ParityError error, ParityError headerParity);
 
     /// Energy deposited in MeV - provided as a check
     Float_t m_energy;

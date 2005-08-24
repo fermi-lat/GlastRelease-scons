@@ -33,21 +33,21 @@ AcdDigi::AcdDigi(const AcdId& id, const VolumeIdentifier& volId, Float_t energy,
 {
     AcdDigi::PmtId pmt = AcdDigi::A;
     initPackedWord(pmt, pha[pmt], veto[pmt], low[pmt], high[pmt]); 
-    initPackedLdfWord(pmt, LOW, NOERROR);
+    initPackedLdfWord(pmt, LOW, NOERROR, NOERROR);
     pmt = AcdDigi::B;
     initPackedWord(pmt, pha[pmt], veto[pmt], low[pmt], high[pmt]); 
-    initPackedLdfWord(pmt, LOW, NOERROR);
+    initPackedLdfWord(pmt, LOW, NOERROR, NOERROR);
 
     m_energy = energy;
 }
 
-void AcdDigi::initLdfParameters(const char *name, Int_t number, Range *rangeCol, ParityError *errCol) {
+void AcdDigi::initLdfParameters(const char *name, Int_t number, Range *rangeCol, ParityError *errCol, ParityError *headerParityCol) {
     m_tileName = name;
     m_tileNumber = number;
     AcdDigi::PmtId pmt = AcdDigi::A;
-    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt]);
+    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt], headerParityCol[pmt]);
     pmt = AcdDigi::B;
-    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt]);
+    initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt], headerParityCol[pmt]);
 }
 
 void AcdDigi::Clear(Option_t *option) {
@@ -101,6 +101,10 @@ AcdDigi::ParityError AcdDigi::getParityError(AcdDigi::PmtId pmt) const {
     return (((m_packedLdf[pmt] >> ERROR_SHIFT) & 1 ) ? ERROR : NOERROR);
 }
 
+AcdDigi::ParityError AcdDigi::getHeaderParityError(AcdDigi::PmtId pmt) const {
+    return (((m_packedLdf[pmt] >> HEADERPARITY_SHIFT) & 1 ) ? ERROR : NOERROR);
+}
+
 void AcdDigi::initPackedWord(AcdDigi::PmtId pmt, UShort_t pha, Bool_t veto,
                     Bool_t low, Bool_t high) 
 {
@@ -115,10 +119,11 @@ void AcdDigi::initPackedWord(AcdDigi::PmtId pmt, UShort_t pha, Bool_t veto,
     }
 }
 
-void AcdDigi::initPackedLdfWord(AcdDigi::PmtId pmt, Range range, ParityError err) {
+void AcdDigi::initPackedLdfWord(AcdDigi::PmtId pmt, Range range, ParityError oddParity, ParityError headerParity) {
     m_packedLdf[pmt] = 0;
+    if (headerParity == ERROR) m_packedLdf[pmt] |= (ERROR << HEADERPARITY_SHIFT);
     if (range == HIGH) m_packedLdf[pmt] |= (HIGH << RANGE_SHIFT); 
-    if (err == ERROR) m_packedLdf[pmt] |= (ERROR << ERROR_SHIFT);
+    if (oddParity == ERROR) m_packedLdf[pmt] |= (ERROR << ERROR_SHIFT);
 
 }
 
