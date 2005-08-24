@@ -343,6 +343,7 @@ StatusCode CalValsTool::calculate()
 
     //Make sure we have valid cluster data
     if (!pCals) return sc;
+    if (pCals->empty()) return sc;
     
     Event::CalCluster* calCluster = pCals->front();
     
