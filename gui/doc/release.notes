@@ -2,6 +2,7 @@
  * Package gui 
  * Coordinator: T.Burnett
  @verbatim
+   v3r6p5 NG  25-aug-05   Updated to use new version of GlastPolicy
    v3r6p4 NG  25-aug-05   Modified linkopts to work with lib directory
    v3r6p2 THB 20-apr-04   make compatible with new GlastPolicy
    v3r6p1 THB 04-apr-04   eliminate use of guiDir macro, which is now private
