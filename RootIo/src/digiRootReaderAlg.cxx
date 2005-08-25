@@ -576,7 +576,7 @@ StatusCode digiRootReaderAlg::readAcdDigi() {
         err[0] = (acdDigiRoot->getParityError(AcdDigi::A) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
         err[1] = (acdDigiRoot->getParityError(AcdDigi::B) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
         err[2] = (acdDigiRoot->getHeaderParityError(AcdDigi::A) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
-        err[3] = (acdDigiRoot->getHeaderParityError(AcdDigi::B) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;`
+        err[3] = (acdDigiRoot->getHeaderParityError(AcdDigi::B) == AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
 
 
         acdDigiTds->initLdfParameters(acdDigiRoot->getTileName(), 
