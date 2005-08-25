@@ -16,6 +16,18 @@
 // We have 36 of these.
 //////// HISTORICAL //////////
 
+const float TOWERPITCH        = 374.5;
+const float SIWAFERSIDE       = 89.5;
+const float SIWAFERACTIVESIDE = 87.552;
+const float STRIPPITCH        =  0.228;
+const float LADDERGAP         =  0.2; 
+const float SSDGAP            =  0.025;
+
+const float INACTIVEBORDERWIDTH = 0.5 * ( SIWAFERSIDE - SIWAFERACTIVESIDE );
+const float TOWERPITCH2         = 0.5 * TOWERPITCH;
+const float SIWAFERSIDE2        = 0.5 * SIWAFERSIDE;
+const float SIWAFERACTIVESIDE2  = 0.5 * SIWAFERACTIVESIDE;
+
 class Layer : public TNamed {
  public:
     Layer(TString name, float pz, float py=0, float px=0,
@@ -32,6 +44,20 @@ class Layer : public TNamed {
     double GetRotX()   const { return rotX; }
     std::string GetGeometry(float dz=0, float dy=0, float dx=0,
                             float az=0, float ay=0, float ax=0) const;
+
+    float GetTemX(int i)       const { return ( i % 4 - 2 ) * TOWERPITCH; }
+    float GetTemY(int i)       const { return ( i / 4 - 2 ) * TOWERPITCH; }
+    float GetTemCenX(int i)    const { return GetTemX(i) + TOWERPITCH2; }
+    float GetTemCenY(int i)    const { return GetTemY(i) + TOWERPITCH2; }
+    // ladder and wafer coordinates are LOCAL to the plane!
+    float GetLadderCenX(int i) const {
+        return TOWERPITCH2 + ( i - 1.5 ) * ( SIWAFERSIDE + LADDERGAP ); }
+    float GetWaferCenY(int i)  const {
+        return TOWERPITCH2 + ( i - 1.5 ) * ( SIWAFERSIDE + SSDGAP ); }
+    float GetLadderXmin(int i) const { return GetLadderCenX(i) - SIWAFERSIDE2; }
+    float GetLadderXmax(int i) const { return GetLadderCenX(i) + SIWAFERSIDE2; }
+    float GetWaferYmin(int i)  const { return GetWaferCenY(i) - SIWAFERSIDE2; }
+    float GetWaferYmax(int i)  const { return GetWaferCenY(i) + SIWAFERSIDE2; }
 
     double GetCoordinate(int stripId);
     float activeAreaDist(const float x, const float y) const;
@@ -67,13 +93,6 @@ class Layer : public TNamed {
     int TkrNumHits;
     int TkrHits[128];
     int ToT0, ToT1;
-
-    float SIWAFERSIDE;
-    float SIWAFERACTIVESIDE;
-    float STRIPPITCH;
-    float LADDERGAP;
-    float SSDGAP;
-    float INACTIVEBORDERWIDTH;
 
     Bool_t TriggerReq0;
     Bool_t TriggerReq1;

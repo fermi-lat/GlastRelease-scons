@@ -19,13 +19,14 @@
 const float damp = 0.63;
 
 class Residual {
-private:
+ private:
     Event*   myEvent;
     Tracker* myTracker;
     TString  myResFileName;
-public:
+    int m_temid;
+ public:
     Residual(const TString="MyRootFile.root", const TString="residual.root",
-             const TString geo="");
+             const TString geo="", int temid=0);
     virtual ~Residual() {
         delete myEvent;
         delete myTracker;

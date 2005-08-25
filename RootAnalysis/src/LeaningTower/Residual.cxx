@@ -2,7 +2,8 @@
 
 ClassImp(Residual)
 
-Residual::Residual(TString filename, TString resFileName, TString geoFileName) {
+Residual::Residual(TString filename, TString resFileName, TString geoFileName, int temid)
+    : m_temid(temid) {
     if ( geoFileName.Length() == 0 )
         geoFileName = "$ROOTANALYSISROOT/src/LeaningTower/geometry/TowerBgeometry306000517.txt";
     myTracker = new Tracker;
@@ -71,7 +72,10 @@ void Residual::Go(int numEntries, int firstEntry) {
 
         progress.Go(entry, numEntries, firstEntry);
 
-        recon->GetEvent(entry);
+        if ( myEvent->GetTemId() != m_temid ) 
+            continue;
+
+       recon->GetEvent(entry);
         const Int_t TkrNumClus = recon->GetTkrNumClus();
         const Int_t TkrNumTracks = recon->GetTkrNumTracks();
         //        const Int_t TkrTrk1NumClus = recon->GetTkrTrk1NumClus();

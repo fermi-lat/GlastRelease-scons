@@ -95,7 +95,7 @@ std::vector<TString> Tracker::GetPlaneNameCol(const int view) const {
 }
 
 void Tracker::Display(TCanvas* ed) {
-    const double h[2] = { -49, 449 };
+    const double h[2] = { -40, 460 };
     double v[2] = { -10, 699 }; 
     if ( !TOWER ) {
         v[0] = -1100;

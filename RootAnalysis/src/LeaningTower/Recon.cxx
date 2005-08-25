@@ -35,8 +35,10 @@ void Recon::GetEvent(int event) {
     int offsetY = m_temid/4;
     //    std::cout<<m_temid<<": Translation X and Y "<<offsetX<<" "<<offsetY<<std::endl;
     for ( int i=0; i<TkrNumClus; ++i ) {
-        TkrClusX[i] = TkrClusX[i] + 741.09 - offsetX*374.5;
-        TkrClusY[i] = TkrClusY[i] + 741.09 - offsetY*374.5;
+        TkrClusX[i] = TkrClusX[i] + ( 2 - offsetX ) * TOWERPITCH;
+        TkrClusY[i] = TkrClusY[i] + ( 2 - offsetY ) * TOWERPITCH;
+        //        TkrClusX[i] = TkrClusX[i] + 741.09 - offsetX*374.5;
+        //        TkrClusY[i] = TkrClusY[i] + 741.09 - offsetY*374.5;
 	//        TkrClusX[i] = TkrClusX[i] + 741.09;
 	//        TkrClusY[i] = TkrClusY[i] + 741.09;
         TkrClusZ[i] = TkrClusZ[i] +  18;
@@ -155,11 +157,11 @@ TGraph Recon::GetTrk1ClustersGraph(const TString view, const int notLayer)const{
 
 TGraph Recon::GetTrk1ClustersGraph(const int view, const int notLayer) const {
     TGraph clusters;
-    std::cout<<"test: view and notlayer requested"<< view<<" "<<notLayer<<std::endl;
-    std::cout<<"test: GetTkrTrk1NumClus"<<GetTkrTrk1NumClus()<<std::endl;
+    //    std::cout<<"test: view and notlayer requested"<< view<<" "<<notLayer<<std::endl;
+    //    std::cout<<"test: GetTkrTrk1NumClus"<<GetTkrTrk1NumClus()<<std::endl;
     for ( int j=0; j<GetTkrTrk1NumClus(); ++j ) {
         int i = TkrTrk1Clusters[j];
-	std::cout<<"test: j i view layer"<<j<<" "<<i<<" "<<TkrClusView[i]<<" "<<TkrClusLayer[i]<<std::endl;
+        //	std::cout<<"test: j i view layer"<<j<<" "<<i<<" "<<TkrClusView[i]<<" "<<TkrClusLayer[i]<<std::endl;
         if ( TkrClusView[i] == view && TkrClusLayer[i] != notLayer ) {
             double pos;
             switch ( view ) {

@@ -201,7 +201,7 @@ void Efficiency::Draw2D(const TString planeName, TCut cut,
     gPad->SetTicks(1,1);
     //    gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
-    TH1F* hframe = c->DrawFrame(-20, -20, 375, 375);
+    TH1F* hframe = c->DrawFrame(-10, -10, 380, 380);
     hframe->GetXaxis()->SetTitle("x/mm");
     hframe->GetYaxis()->SetTitle("y/mm");
     hframe->SetTitle(planeName);
@@ -302,17 +302,14 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
                     TString ladderName(TString()+=ladder);
                     // the cuts should come from geometry in class Layer
                     // dirty hack, as always preliminary
-                    TCut xmin((TString(ladderPar+">=")+=ladder*89.5).Data());
-                    TCut xmax((
-                               TString(ladderPar+"<=") += (ladder+1) * 89.5
-                               ).Data());
+                    TCut xmin((TString(ladderPar+">=")+=thePlane->GetLadderXmin(ladder)).Data());
+                    TCut xmax((TString(ladderPar+"<=")+=thePlane->GetLadderXmax(ladder)).Data());
                     const TCut ladderCut(planeCut&&xmin&&xmax);
                     for ( int wafer=0; wafer<4; ++wafer ) {
                         const TString waferName(TString()+=wafer);
-                        TCut ymin((TString(waferPar+">=")+=wafer*89.5).Data());
-                        TCut ymax((
-                                   TString(waferPar+"<=") += (wafer+1) * 89.5
-                                   ).Data());
+                        TCut ymin((TString(waferPar+">=")+=thePlane->GetWaferYmin(wafer)).Data());
+
+                        TCut ymax((TString(waferPar+"<=")+=thePlane->GetWaferYmax(wafer)).Data());
                         const TCut waferCut(ladderCut&&ymin&&ymax);
                         const Long64_t numMiss =
                             t->Draw("eventId", waferCut&&isMissingHit, "goff");
@@ -387,7 +384,7 @@ void Efficiency::DrawEfficiency(const TString planeName, TCut cut,
     }
 
     const Int_t nBins(100);
-    const Double_t xmin = -20.;
+    const Double_t xmin = -10.;
     const Double_t xmax = 380.;
     const TString allhitsName("allHits"+planeName);
     TH1F* hAll = (TH1F*)gROOT->FindObject(allhitsName);

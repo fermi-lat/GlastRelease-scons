@@ -15,15 +15,6 @@ Layer::Layer(TString name, float pz, float py, float px,
     rotY = ry;
     rotX = rx;
 
-    // the constants should go into the geometry
-    SIWAFERSIDE       = 89.5;
-    SIWAFERACTIVESIDE = 87.552;
-    STRIPPITCH        =  0.228;
-    LADDERGAP         =  0.2; 
-    SSDGAP            =  0.025;
-
-    INACTIVEBORDERWIDTH = ( SIWAFERSIDE - SIWAFERACTIVESIDE ) * 0.5;
-
     for ( int i=0; i<4; i++ ) {
         double xcoord1 = GetCoordinate(i*384);
         double xcoord2 = GetCoordinate((i+1)*384-1);
@@ -55,9 +46,9 @@ double Layer::GetCoordinate(int StripNumber) {
         return -1.0;
     }
 
-    double pos = INACTIVEBORDERWIDTH + STRIPPITCH * (StripNumber+0.5)
-        + ( LADDERGAP + 2 * INACTIVEBORDERWIDTH )
-        * static_cast<float>(StripNumber/384);
+    double pos = GetLadderXmin(StripNumber/384) + INACTIVEBORDERWIDTH
+        + STRIPPITCH * ( StripNumber%384 + 0.5 );
+
     if ( DEBUG )
         std::cout << "GetCoordinate() returning " << pos <<
             "(strip number = " << StripNumber << ")" << std::endl;
@@ -107,22 +98,21 @@ float Layer::activeAreaDist(const float x, const float y) const {
 
     float dx = 1E15;
     for ( int i=0; i<4; ++i ) {
-        // x dist to wafer center
-        const float dist = std::abs((i+0.5) * SIWAFERSIDE + i * LADDERGAP - x);
+        // x dist to ladder center
+        const float dist = std::abs(GetLadderCenX(i)-x);
         if ( dist < dx )
             dx = dist;
     }
     float dy = 1E15;
     for ( int i=0; i<4; ++i ) {
         // y dist to wafer center
-        const float dist = std::abs((i+0.5) * SIWAFERSIDE + i * SSDGAP - y);
+        const float dist = std::abs(GetWaferCenY(i)-y);
         if ( dist < dy )
             dy = dist;
     }
 
-    const float SIWAFERACTIVEHALF = SIWAFERACTIVESIDE * 0.5;
-    dx -= SIWAFERACTIVEHALF;
-    dy -= SIWAFERACTIVEHALF;
+    dx -= SIWAFERACTIVESIDE2;
+    dy -= SIWAFERACTIVESIDE2;
     //      |   
     //      |  if both distances are positiv, the distance is the sqrt(dx^2+dy^2)
     //      |  otherwise it's the maximum of both

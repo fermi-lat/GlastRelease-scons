@@ -122,12 +122,12 @@ void EventDisplay::Go(int numEvent) {
         if ( ToT0 >= 0 )
             dummy += ToT0;
         dummy += aPlane->GetTriggerReq(false) ? " x" : " .";
-        TriggerReqText[i][0].SetText(-5, height, dummy);
+        TriggerReqText[i][0].SetText(5, height, dummy);
         dummy = aPlane->GetTriggerReq(true) ? "x " : ". ";
         if ( ToT1 >= 0 )
             dummy += ToT1;
-        TriggerReqText[i][1].SetText(365, height, dummy);
-        LabelNumHits[i].SetText(425, height, (TString("(")+=planeNumHits)+")");
+        TriggerReqText[i][1].SetText(375, height, dummy);
+        LabelNumHits[i].SetText(435, height, (TString("(")+=planeNumHits)+")");
         TriggerReqText[i][0].Draw();
         TriggerReqText[i][1].Draw();
         LabelNumHits[i].Draw();
