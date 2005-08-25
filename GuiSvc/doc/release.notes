@@ -3,6 +3,7 @@
  * Manager T Burnett
  * @verbatim
  *
+ * v3r5p8 25-aug-2005  NG  Linking against correct version
  * v3r5p8 25-aug-2005  NG  Modified linkopts to work with lib directory
  * v3r5p7 15-jul-2005  NG  Added author line to requirements file
  * v3r5p6 14-jul-2004  THB refer to GaudiInterface_linkopts for build
