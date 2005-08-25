@@ -2,6 +2,7 @@
  * Package gui 
  * Coordinator: T.Burnett
  @verbatim
+   v3r6p6 NG  25-aug-05   Linking against correct version of libguisystem
    v3r6p5 NG  25-aug-05   Updated to use new version of GlastPolicy
    v3r6p4 NG  25-aug-05   Modified linkopts to work with lib directory
    v3r6p2 THB 20-apr-04   make compatible with new GlastPolicy
