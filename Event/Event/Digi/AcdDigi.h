@@ -102,7 +102,7 @@ namespace Event {
         inline unsigned short getPulseHeight(PmtId id) const { return m_pulseHeight[id]; };
         
         inline bool getVeto(PmtId id) const { return m_veto[id]; };
-        inline bool getHitMapBit(PmtId id) const [ return m_veto[id]; };
+        inline bool getHitMapBit(PmtId id) const { return m_veto[id]; };
         
         inline bool getLowDiscrim(PmtId id) const { return m_low[id]; };
         inline bool getAcceptMapBit(PmtId id) const { return m_low[id]; };
