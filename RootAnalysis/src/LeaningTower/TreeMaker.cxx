@@ -242,6 +242,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 
 
 	//Giving up on this event if more than one tower is involved.
+        TemId = 0;  // default.  Pisa runs seem not to have set the tem id.
 	Int_t iTem;
 	Int_t iCount=0;
 	Gem gem = evt->getGem();
@@ -258,7 +259,7 @@ void TreeMaker::CreateTree(Int_t numEvents) {
 	//For some reason putting a continue here screws up the rest of the event loop (same event repeated until the end)
        	if(iCount>1) 
 	  TemId=-1;
-
+        std::cout << "TemId: " << TemId << ' ' << iCount << std::endl;
 	  
         // synchronizing the three trees
         if (mc)
