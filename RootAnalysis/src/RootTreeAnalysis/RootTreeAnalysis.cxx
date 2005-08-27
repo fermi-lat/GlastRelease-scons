@@ -600,6 +600,9 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
     
     // mc branches:
     if (mcTree) {
+        mcTree->SetBranchStatus("*", 1);    // enable all branches
+        /*  Use the following if you want to save I/O and only read a portion
+            of the data
         mcTree->SetBranchStatus("*", 0);    // disable all branches
         // Activate desired branches...
         mcTree->SetBranchStatus("m_eventId", 1);
@@ -607,9 +610,12 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
         mcTree->SetBranchStatus("m_runId", 1);        
         mcTree->SetBranchStatus("m_integratingHitCol", 1);        
         mcTree->SetBranchStatus("m_positionHitCol", 1);        
+       */
     }
     
     if (digiTree) {
+        digiTree->SetBranchStatus("*",1);  // enable all branches
+        /* Use the following if you want to save I/O and read only a portion of the data
         digiTree->SetBranchStatus("*",0);  // disable all branches
         // activate desired brances
         digiTree->SetBranchStatus("m_cal*",1);  
@@ -618,9 +624,12 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
         digiTree->SetBranchStatus("m_eventId", 1); 
         digiTree->SetBranchStatus("m_runId", 1);
         digiTree->SetBranchStatus("m_gem", 1);
+        */
     }
     
     if (reconTree) {
+        reconTree->SetBranchStatus("*",1);  // enable all branches
+        /* Use the following if you want to save I/O and read only a portion of the data
         reconTree->SetBranchStatus("*",0);  // disable all branches
         // activate desired branches
         reconTree->SetBranchStatus("m_cal*", 1);  
@@ -628,6 +637,7 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
         reconTree->SetBranchStatus("m_acd*", 1);
         reconTree->SetBranchStatus("m_eventId", 1); 
         reconTree->SetBranchStatus("m_runId", 1);
+        */
     }
         
     // determine how many events to process
