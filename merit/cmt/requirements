@@ -1,5 +1,5 @@
 package merit
-version v6r25p3
+version v6r25p4
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 branches doc
@@ -40,8 +40,8 @@ macro_prepend includes "-I ../src " WIN32 "/I ..\src "
 
 pattern local_library\
   library lib<package> -no_share <src> ; \
-  macro_append <package>_linkopts "-L $(<package>_cmtpath)/lib -llib<package>-${tag}-<version>" WIN32 "" ; \
-  macro lib<package> "" WIN32 "$(<package>_cmtpath)/lib/lib<package>-${tag}-<version>.lib"
+  macro_append <package>_linkopts "-L $(<package>_cmtpath)/lib -llib<package>_${tag}_<version>" WIN32 "" ; \
+  macro lib<package> "" WIN32 "$(<package>_cmtpath)/lib/lib<package>_${tag}_<version>.lib"
 
 #local, static library
 macro source "*.cxx" WIN32 "*.h *.cxx"

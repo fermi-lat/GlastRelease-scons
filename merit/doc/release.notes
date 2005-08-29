@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r25p4 NG   29-aug-05 carry foward lib name changes
  *  v6r25p3 NG   24-aug-05 modify to work with new lib directory
  *  v6r25p2 THB  23-aug-05 rearrange req file a bit
  *  v6r25p1 THB  11-aug-05 Fix documentation
