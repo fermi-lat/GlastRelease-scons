@@ -1,6 +1,6 @@
 package calibRootData
 #  $Id$
-version v1r7p1
+version v1r7p2
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use RootcintPolicy v6r* GlastPolicy
