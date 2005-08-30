@@ -32,8 +32,8 @@ void Recon::GetEvent(int event) {
     //the position on the grid of the tower under study. 
     //Here we define this translation :
     for ( int i=0; i<TkrNumClus; ++i ) {
-        TkrClusX[i] = TkrClusX[i] + ( 2 - m_temid % 4 ) * TOWERPITCH;
-        TkrClusY[i] = TkrClusY[i] + ( 2 - m_temid / 4 ) * TOWERPITCH;
+        TkrClusXorig[i] = TkrClusX[i] = TkrClusX[i] + ( 2 - m_temid % 4 ) * TOWERPITCH;
+        TkrClusYorig[i] = TkrClusY[i] = TkrClusY[i] + ( 2 - m_temid / 4 ) * TOWERPITCH;
         TkrClusZ[i] = TkrClusZ[i] +  18;
     }
 }
@@ -133,6 +133,7 @@ int Recon::TkrAlignmentSvc(const Tracker *myTracker, const bool rotate) {
             TkrClusZ[i] = v.Z();
         }
     }
+
     return alignSvcFlag;
 }
 
