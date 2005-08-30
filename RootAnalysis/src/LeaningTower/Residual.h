@@ -37,19 +37,24 @@ class Residual {
     // ***********
     // draws the residual, top without fitting, bottom with gauss fit
     void DrawResidual(TString plane, TCut="");
-    // draws top the slope vs. residual, bottom the profile with pol1 fit
+    // draws top the residual vs. inv. slope, bottom the profile with pol1 fit
     void DrawResSlope(TString plane, TCut="");
-    // draws top the other coordinate vs. residual, bottom profile with pol1 fit
+    // draws top the residual vs. other coordinate, bottom profile with pol1 fit
     void DrawResOrd(TString plane, TCut="");
+    // draws top the residual vs. position, bottom profile with pol1 fit
+    void DrawResPos(TString plane, TCut="");
     // draws the slope profiles for all planes
     void DrawResSlopeAll(TCut="abs(h_abs_ext-h_abs)<1");
     // draws the ordinate profiles for all planes
     void DrawResOrdAll(TCut="abs(h_abs_ext-h_abs)<1");
+    // draws the position profiles for all planes
+    void DrawResPosAll(TCut="abs(h_abs_ext-h_abs)<1");
     // attempt to do a "statistical" (not event be event) correction of rotZ of
     // planes.  2x3 histograms.  Left uncorrected, right rotZ corrected.  Top
     // ordinate vs. residual, middle profile of that, bottom residual.
     void DrawResOrdCorr(TString plane, TCut="");
-
+    // saves the geometry into geoFileName
+    void Residual::SaveGeometry(TString geoFileName="");
 
     ClassDef(Residual,1)
 };

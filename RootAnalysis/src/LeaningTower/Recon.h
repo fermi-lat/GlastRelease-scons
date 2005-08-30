@@ -2,6 +2,7 @@
 #define __LEANINGTOWER_RECON__
 
 #include "Layer.h"
+#include "Tracker.h"
 
 #include "TTree.h"
 #include "TFile.h"
@@ -18,7 +19,7 @@ class Recon : public TObject {
     Recon(TFile*, int temid=0);
 
     void GetEvent(int);
-    void TkrAlignmentSvc(const TList* myGeometry);
+    int TkrAlignmentSvc(const Tracker* myTracker, const bool rotate=false);
     void SetTemId(int temid) {m_temid=temid;}
     Int_t GetEntries()        const { return (Int_t)reconTree->GetEntries(); }
     Int_t GetTkrNumClus()     const { return TkrNumClus; }
@@ -70,6 +71,11 @@ class Recon : public TObject {
     Int_t TkrNumClus;
     Int_t TkrClusLayer[128];
     Int_t TkrClusView[128];
+    // ...orig contain the horizontal positions before application of the
+    // alignment service
+    Float_t TkrClusXorig[128];
+    Float_t TkrClusYorig[128];
+    // ... contain the positions after application of the alignment service
     Float_t TkrClusX[128];
     Float_t TkrClusY[128];
     Float_t TkrClusZ[128];
@@ -88,6 +94,6 @@ TLine Reconstruct(const TGraph*);
 bool IsValid(const TLine& l);
 //bool IsInvalid(const TLine& l) { return l.GetX1() == 0.0 && l.GetX2() == 0.0
 //                                    && l.GetY1() == 0.0 && l.GetY2() == 0.0; }
-double ExtrapolateCoordinate(const TLine&, const double z);
+float ExtrapolateCoordinate(const TLine&, const float z);
 
 #endif

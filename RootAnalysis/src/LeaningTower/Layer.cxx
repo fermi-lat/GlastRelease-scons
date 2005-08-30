@@ -14,10 +14,11 @@ Layer::Layer(TString name, float pz, float py, float px,
     rotZ = rz;
     rotY = ry;
     rotX = rx;
+    dX = dY = dZ = dRotX = dRotY = dRotZ = 0.0;
 
     for ( int i=0; i<4; i++ ) {
-        double xcoord1 = GetCoordinate(i*384);
-        double xcoord2 = GetCoordinate((i+1)*384-1);
+        float xcoord1 = GetCoordinate(i*384);
+        float xcoord2 = GetCoordinate((i+1)*384-1);
         LadderLine[i] = new TLine(xcoord1, Z, xcoord2, Z);
     }
     LayerLine  = new TLine(GetCoordinate(0), Z, GetCoordinate(1535), Z);
@@ -36,7 +37,7 @@ Layer::~Layer() {
 }
 
 //////////////////////////////////////////////////
-double Layer::GetCoordinate(int StripNumber) {
+float Layer::GetCoordinate(int StripNumber) {
     bool DEBUG = false;
     // Check that the strip number is within the allowed range.
     if ( StripNumber < 0 ||  StripNumber > 1535 ) {
@@ -46,7 +47,12 @@ double Layer::GetCoordinate(int StripNumber) {
         return -1.0;
     }
 
-    double pos = GetLadderXmin(StripNumber/384) + INACTIVEBORDERWIDTH
+    /*
+    float pos = INACTIVEBORDERWIDTH + STRIPPITCH * (StripNumber+0.5)
+        + ( LADDERGAP + 2 * INACTIVEBORDERWIDTH )
+        * static_cast<float>(StripNumber/384);
+        */
+    float pos = GetLadderXmin(StripNumber/384) + INACTIVEBORDERWIDTH
         + STRIPPITCH * ( StripNumber%384 + 0.5 );
 
     if ( DEBUG )
@@ -56,8 +62,8 @@ double Layer::GetCoordinate(int StripNumber) {
 }
 
 /*
-bool Layer::checkActiveArea(double ParallelCoordinate, double NormalCoordinate,
-                            double BorderWidth) {
+bool Layer::checkActiveArea(float ParallelCoordinate, float NormalCoordinate,
+                            float BorderWidth) {
   bool DEBUG = false;
   // Define some constants (to be moved out of the function?)
   // All dimension in mm.
@@ -148,17 +154,13 @@ void Layer::SetTree(TFile *file) {
     LayerTree->SetBranchAddress("ToT1",&ToT1);
 }
 
-std::string Layer::GetGeometry(float dz, float dy, float dx,
-                               float az, float ay, float ax) const {
-    // the alignment determines the shifts with respect to the input geometry:
-    //     add the shift to the geometry
-    // the alignment determines the absolute value of the rotations:
-    //     replace the rotations in the geometry file
+std::string Layer::SaveGeometry() const {
     std::stringstream s;
     s.setf(std::ios_base::fixed);
     s.precision(3);
-    s << fName << ' ' << Z+dz << ' ' << Y+dy << ' ' << X+dx
-      << ' ' << az << ' ' << ay << ' ' << ax;
+    s << fName << ' ' << Z+dZ << ' ' << Y+dY << ' ' << X+dX;
+    s.precision(2);
+    s << ' ' << rotZ+dRotZ << ' ' << rotY+dRotY << ' ' << rotX+dRotX;
     return s.str();
 }
 

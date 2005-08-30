@@ -27,8 +27,8 @@ void Residual::Go(int numEntries, int firstEntry) {
               << " numEntries = " << numEntries << std::endl;
 
     int bins = 80000;
-    double xmin = -400;
-    double xmax = 400;
+    float xmin = -400;
+    float xmax = 400;
     TFile f(myResFileName, "recreate");
 
     TTree resTree("residualTree", "residualTree");
@@ -43,20 +43,19 @@ void Residual::Go(int numEntries, int firstEntry) {
                    "extrapolated horizontal of cluster/F");
     resTree.Branch("invSlope", &invSlope, "inverse slope of track/F");
 
-    TH1D hResiduals[2];
-    hResiduals[0] = TH1D("Xresiduals", "Xresiduals", bins, xmin, xmax);
-    hResiduals[1] = TH1D("Yresiduals", "Yresiduals", bins, xmin, xmax);
+    TH1F hResiduals[2];
+    hResiduals[0] = TH1F("Xresiduals", "Xresiduals", bins, xmin, xmax);
+    hResiduals[1] = TH1F("Yresiduals", "Yresiduals", bins, xmin, xmax);
 
-    TH1D hRes[2][18];
+    TH1F hRes[2][18];
     for ( int i=0; i<18; ++i ) {
         TString title;
         title = TString("X") + (TString("residuals")+=i);
-        hRes[0][i] = TH1D(title, title, bins, xmin, xmax);
+        hRes[0][i] = TH1F(title, title, bins, xmin, xmax);
         title = TString("Y") + (TString("residuals")+=i);
-        hRes[1][i] = TH1D(title, title, bins, xmin, xmax);
+        hRes[1][i] = TH1F(title, title, bins, xmin, xmax);
     }
 
-    const TList* myGeometry = myTracker->GetGeometry();
     const std::vector<TString> planeCols[2] = {
         myTracker->GetPlaneNameCol(0), myTracker->GetPlaneNameCol(1) };
 
@@ -75,7 +74,7 @@ void Residual::Go(int numEntries, int firstEntry) {
         if ( myEvent->GetTemId() != m_temid ) 
             continue;
 
-       recon->GetEvent(entry);
+        recon->GetEvent(entry);
         const Int_t TkrNumClus = recon->GetTkrNumClus();
         const Int_t TkrNumTracks = recon->GetTkrNumTracks();
         //        const Int_t TkrTrk1NumClus = recon->GetTkrTrk1NumClus();
@@ -84,24 +83,15 @@ void Residual::Go(int numEntries, int firstEntry) {
             continue;
 
         // "corrects" cluster positions with respect to the recon results
-        recon->TkrAlignmentSvc(myGeometry);
+        int alignSvcFlag = recon->TkrAlignmentSvc(myTracker, true);
+        if ( alignSvcFlag )
+            continue;
 
         const Int_t* TkrClusLayer = recon->GetTkrClusLayer();
         const Int_t* TkrClusView = recon->GetTkrClusView();
         const Float_t* TkrClusX = recon->GetTkrClusX();
         const Float_t* TkrClusY = recon->GetTkrClusY();
         const Float_t* TkrClusZ = recon->GetTkrClusZ();
-
-        // let's first define two tracks for later determination of the
-        // approximate position in the plane of interest.
-        // We don't care that there is exactly one cluster per plane.  If it
-        // would matter, the Chi2 would be bad anyway!
-        TLine refTrack[2];
-        for ( int i=0; i<2; ++i ) {
-            // adding all clusters on planeCols[i] planes to TGclus
-            const TGraph TGclus = recon->GetClusterGraph(planeCols[i]);
-            refTrack[i] = Reconstruct(&TGclus);
-        }
 
         // helper for the statistics
         bool trackUsed[2] = { false, false };
@@ -130,14 +120,10 @@ void Residual::Go(int numEntries, int firstEntry) {
             invSlope = ( track.GetX2() - track.GetX1() )
                 / ( track.GetY2() - track.GetY1() );
             posHorAbs = iView ? TkrClusY[i] : TkrClusX[i];
-            // getting the ordinate position from the track in the other view
-            const int theOtherView = iView ? 0 : 1;
-            if ( refTrack[theOtherView].GetLineStyle() == 1 )
-                posHorOrdExt = ExtrapolateCoordinate(refTrack[theOtherView],
-                                                     posVert);
-            else
-                posHorOrdExt = -30;//maybe this should get another default value
-            const double res = posHorAbsExt - posHorAbs;
+            // getting the ordinate position from the extrapolated position in
+            // the other view (filled by Recon::TkrALignmentSvc)
+            posHorOrdExt = iView ? TkrClusX[i] : TkrClusY[i];
+            const float res = posHorAbsExt - posHorAbs;
             hRes[iView][iLayer].Fill(res);
             hResiduals[iView].Fill(res);
             resTree.Fill();
@@ -299,6 +285,52 @@ void Residual::DrawResOrd(TString plane, TCut cut) {
     f.Close();
 }
 
+void Residual::DrawResPos(TString plane, TCut cut) {
+    const TCut cutPlane("name==\"" + plane + "\"");
+    cut += cutPlane;
+
+    TString canvasName = "DrawResPos";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        c = new TCanvas(canvasName, canvasName, 600, 800);
+        c->Divide(1,2);
+    }
+
+    gStyle->Reset();
+    gStyle->SetOptStat("oeu");
+    gStyle->SetOptFit(1111);
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+    t->SetMarkerStyle(20);
+    t->SetMarkerSize(0.3);
+
+    c->cd(1);
+    gPad->SetTicks(1,1);
+    t->Draw("h_abs_ext-h_abs:h_abs", cut);
+    TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("position/mm");
+    htemp->GetYaxis()->SetTitle("residual/mm");
+
+    c->cd(2);
+    gPad->SetTicks(1,1);
+    t->Draw("h_abs_ext-h_abs:h_abs", cut, "prof");
+    htemp = (TH1F*)gPad->GetPrimitive("htemp");
+    htemp->GetXaxis()->SetTitle("position/mm");
+    htemp->GetYaxis()->SetTitle("residual/mm");
+    htemp->Fit("pol1");
+    gPad->Update();
+    TPaveStats* pStats =
+        (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+    pStats->SetOptStat(0);
+    pStats->SetX1NDC(0.71);
+    pStats->SetY1NDC(0.8);
+    gPad->Modified();
+
+    c->cd();
+    f.Close();
+}
+
 void Residual::DrawResSlopeAll(TCut cut) {
     TString canvasName = "DrawResSlopeAll";
     TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
@@ -318,7 +350,6 @@ void Residual::DrawResSlopeAll(TCut cut) {
 
     int i=0;
     TList* myGeometry = myTracker->GetGeometry();
-    std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
     TIter next(myGeometry);
     while ( Layer* plane = (Layer*)next() ) {
         TString planeName = plane->GetName();
@@ -329,8 +360,6 @@ void Residual::DrawResSlopeAll(TCut cut) {
         TCut myCut = cut && cutOnPlane;
         t->Draw("h_abs_ext-h_abs:invSlope", myCut, "prof");
         TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
-        float dx, dy, dz;
-        dx = dy = dz = 0.;
         if ( htemp ) { // histogram might be empty
             htemp->GetXaxis()->SetTitle("cot(theta)");
             htemp->GetYaxis()->SetTitle("residual/mm");
@@ -346,20 +375,19 @@ void Residual::DrawResSlopeAll(TCut cut) {
             TF1* f = htemp->GetFunction("pol1");
             // if I define the residual as h_abs_ext-h_abs, the horizontal shift
             // is p0, but the vertical is -p1
-            dz = -f->GetParameter(1);
-            float dh = f->GetParameter(0);
+            const float dz = -f->GetParameter(1);
+            plane->SetdZ(damp*dz);
+            const float dh = f->GetParameter(0);
             if ( plane->GetView() )
-                dy = dh;
+                plane->SetdY(damp*dh);
             else
-                dx = dh;
+                plane->SetdX(damp*dh);
             std::cout << planeName << " shifts: horizonal = " << std::fixed
                       << std::setprecision(3) << dh << " vertical = " << dz
                       << std::endl;
         }
-        fout << plane->GetGeometry(damp*dz, damp*dy, damp*dx) <<std::endl;
     }
 
-    fout.close();
     c->cd();
     f.Close();
 }
@@ -386,7 +414,6 @@ void Residual::DrawResOrdAll(TCut cut) {
 
     int i=0;
     TList* myGeometry = myTracker->GetGeometry();
-    std::ofstream fout(myTracker->GetGeoFileName()+".new"/*, ios_base::out*/);
     TIter next(myGeometry);
     while ( Layer* plane = (Layer*)next() ) {
         TString planeName = plane->GetName();
@@ -397,8 +424,6 @@ void Residual::DrawResOrdAll(TCut cut) {
         TCut myCut = cut && cutOnPlane;
         t->Draw("h_abs_ext-h_abs:h_ord", myCut, "prof");
         TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
-        float dx, dy, dz, dangZ;
-        dx = dy = dz = dangZ = 0.;
         if ( htemp ) { // histogram might be empty
             htemp->GetXaxis()->SetTitle("position in other view/mm");
             htemp->GetYaxis()->SetTitle("residual/mm");
@@ -413,25 +438,86 @@ void Residual::DrawResOrdAll(TCut cut) {
             gPad->Modified();
             TF1* f = htemp->GetFunction("pol1");
             // dangZ is the rotation around z (check the sign)
-            dangZ = 1000. * f->GetParameter(1);  // mrad
+            const float dangZ = 1000. * f->GetParameter(1);  // mrad
             // dh is the horizontal shift.  This should have been already fitted
             // before.  Most likely, it's 0 or close to 0.
             // However, here it is the offset a hor=0, not the offset for the
             // center of the plane.  Thus, I don't use it here.
             float dh = f->GetParameter(0);
-            /*
             if ( plane->GetView() )
-                dy = dh;
+                plane->SetdRotZ(damp*dangZ);
             else
-                dx = dh;
-            */
+                plane->SetdRotZ(-damp*dangZ);
             std::cout << planeName << " dh(h=0) = " << std::setprecision(3)
-                      << std::fixed << dh << " rotZ = " << dangZ << std::endl;
+                      << std::fixed << dh << " dRotZ = " << dangZ << std::endl;
         }
-        fout << plane->GetGeometry(damp*dz,damp*dy,damp*dx,dangZ) <<std::endl;
     }
 
-    fout.close();
+    c->cd();
+    f.Close();
+}
+
+void Residual::DrawResPosAll(TCut cut) {
+    std::cout << "MWK: Doesn't do what it claims to!" << std::endl;
+    return;
+    TString canvasName = "DrawResPosAll";
+    TCanvas* c = (TCanvas*)gROOT->GetListOfCanvases()->FindObject(canvasName);
+    if ( !c ) {
+        c = new TCanvas(canvasName, canvasName, 1100, 800);
+        c->Divide(6,6);
+    }
+
+    gStyle->Reset();
+    gStyle->SetOptFit(11);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetFitFormat(".3g");
+    gStyle->SetStatBorderSize(1);
+
+    TFile f(myResFileName);
+    TTree* t = (TTree*)f.Get("residualTree");
+
+    int i=0;
+    TList* myGeometry = myTracker->GetGeometry();
+    TIter next(myGeometry);
+    while ( Layer* plane = (Layer*)next() ) {
+        TString planeName = plane->GetName();
+        c->cd(++i);
+        gPad->SetTicks(1,1);
+        TString onPlane = "name==\"" + planeName + "\"";
+        TCut cutOnPlane = onPlane.Data();
+        TCut myCut = cut && cutOnPlane;
+        t->Draw("h_abs_ext-h_abs:h_abs", myCut, "prof");
+        TH1F* htemp = (TH1F*)gPad->GetPrimitive("htemp");
+        if ( htemp ) { // histogram might be empty
+            htemp->GetXaxis()->SetTitle("position/mm");
+            htemp->GetYaxis()->SetTitle("residual/mm");
+            htemp->SetTitle(planeName);
+            htemp->Fit("pol1", "q", "", 0, 350);
+            gPad->Update();
+            TPaveStats* pStats =
+                (TPaveStats*)htemp->GetListOfFunctions()->FindObject("stats");
+            pStats->SetOptStat(0);
+            pStats->SetX1NDC(0.35);
+            pStats->SetY1NDC(0.8);
+            gPad->Modified();
+            TF1* f = htemp->GetFunction("pol1");
+            // dangH is the rotation around a strip (check the sign)
+            const float dangH = 1000. * f->GetParameter(1);  // mrad
+            // dh is the horizontal shift.  This should have been already fitted
+            // before.  Most likely, it's 0 or close to 0.
+            // However, here it is the offset a hor=0, not the offset for the
+            // center of the plane.  Thus, I don't use it here.
+            float dh = f->GetParameter(0);
+            // for an x-plane, I determine a rotation around y (and vice versa).
+            if ( plane->GetView() )
+                plane->SetdRotX(damp*dangH);
+            else
+                plane->SetdRotY(damp*dangH);
+            std::cout << planeName << " dh(h=0) = " << std::setprecision(3)
+                      << std::fixed << dh << " dRotH = " << dangH << std::endl;
+        }
+    }
+
     c->cd();
     f.Close();
 }
@@ -522,4 +608,15 @@ void Residual::DrawResOrdCorr(TString plane, TCut cut) {
 
     c->cd();
     f.Close();
+}
+
+void Residual::SaveGeometry(TString geoFileName) {
+    if ( geoFileName == TString() )
+        geoFileName = myTracker->GetGeoFileName() + ".new";
+    TList* myGeometry = myTracker->GetGeometry();
+    std::ofstream fout(geoFileName /*, ios_base::out*/);
+    TIter next(myGeometry);
+    while ( Layer* plane = (Layer*)next() )
+        fout << plane->SaveGeometry() << std::endl;
+    fout.close();
 }

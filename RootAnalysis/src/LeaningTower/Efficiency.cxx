@@ -56,9 +56,7 @@ void Efficiency::Go(int lastEntry) {
         progress.Go(entry, lastEntry);
 
         if(myEvent->GetTemId()!=m_temid) 
-	  {
 	    continue;
-	  }
 	correctTem+=1;
 	
 	recon->GetEvent(entry);
@@ -77,7 +75,7 @@ void Efficiency::Go(int lastEntry) {
 
 
         // "corrects" cluster positions with respect to the recon results
-        recon->TkrAlignmentSvc(myGeometry);
+        recon->TkrAlignmentSvc(myTracker);
 
         TLine TLtracks[2];
         for ( int view=0; view<2; ++view ) {

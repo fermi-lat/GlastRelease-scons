@@ -92,7 +92,7 @@ void EventDisplay::Go(int numEvent) {
 
     TList *myGeometry = myTracker->GetGeometry();
     // this here "corrects" cluster positions with respect to the recon results.
-    recon->TkrAlignmentSvc(myGeometry);
+    recon->TkrAlignmentSvc(myTracker);
 
     int TkrNumClus = recon->GetTkrNumClus();
     int TkrNumTracks = recon->GetTkrNumTracks();
@@ -107,7 +107,7 @@ void EventDisplay::Go(int numEvent) {
     TIter next(myGeometry);
     int i=0;
     while ( Layer* aPlane = (Layer*)next() ) {
-        const double height = aPlane->GetHeight();
+        const float height = aPlane->GetHeight();
         const char* planeName = aPlane->GetName();
         const int planeNumHits = myEvent->GetPlaneNumHits(planeName);
         const int ToT0 = myEvent->GetToT(planeName, 0);

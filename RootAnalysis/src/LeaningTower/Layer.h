@@ -35,15 +35,20 @@ class Layer : public TNamed {
     ~Layer();
     void SetPlanesForFittingCol(std::vector<TString> v) {planesForFittingCol=v;}
 
-    double GetHeight() const { return GetZ(); }
-    double GetZ()      const { return Z; }
-    double GetY()      const { return Y; }
-    double GetX()      const { return X; }
-    double GetRotZ()   const { return rotZ; }
-    double GetRotY()   const { return rotY; }
-    double GetRotX()   const { return rotX; }
-    std::string GetGeometry(float dz=0, float dy=0, float dx=0,
-                            float az=0, float ay=0, float ax=0) const;
+    float GetHeight() const { return GetZ(); }
+    float GetZ()      const { return Z; }
+    float GetY()      const { return Y; }
+    float GetX()      const { return X; }
+    float GetRotZ()   const { return rotZ; }
+    float GetRotY()   const { return rotY; }
+    float GetRotX()   const { return rotX; }
+    void SetdZ(float a)     { dZ = a; }
+    void SetdY(float a)     { dY = a; }
+    void SetdX(float a)     { dX = a; }
+    void SetdRotZ(float a)  { dRotZ = a; }
+    void SetdRotY(float a)  { dRotY = a; }
+    void SetdRotX(float a)  { dRotX = a; }
+    std::string SaveGeometry() const;
 
     float GetTemX(int i)       const { return ( i % 4 - 2 ) * TOWERPITCH; }
     float GetTemY(int i)       const { return ( i / 4 - 2 ) * TOWERPITCH; }
@@ -59,7 +64,7 @@ class Layer : public TNamed {
     float GetWaferYmin(int i)  const { return GetWaferCenY(i) - SIWAFERSIDE2; }
     float GetWaferYmax(int i)  const { return GetWaferCenY(i) + SIWAFERSIDE2; }
 
-    double GetCoordinate(int stripId);
+    float GetCoordinate(int stripId);
     float activeAreaDist(const float x, const float y) const;
     void DrawLayer();
     void DrawGhostLayer();
@@ -83,8 +88,8 @@ class Layer : public TNamed {
     friend class Event;
 
  private:
-    float X, Y, Z;
-    float rotX, rotY, rotZ;
+    float X, Y, Z, dX, dY, dZ;
+    float rotX, rotY, rotZ, dRotX, dRotY, dRotZ;
     TLine *LayerLine;
     TLine *LadderLine[4];
     TTree *LayerTree;

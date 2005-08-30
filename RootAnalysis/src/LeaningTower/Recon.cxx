@@ -31,49 +31,109 @@ void Recon::GetEvent(int event) {
     //to 0,0 coordinates (id est bay10). This translation depends on 
     //the position on the grid of the tower under study. 
     //Here we define this translation :
-    int offsetX = m_temid%4;
-    int offsetY = m_temid/4;
-    //    std::cout<<m_temid<<": Translation X and Y "<<offsetX<<" "<<offsetY<<std::endl;
     for ( int i=0; i<TkrNumClus; ++i ) {
-        TkrClusX[i] = TkrClusX[i] + ( 2 - offsetX ) * TOWERPITCH;
-        TkrClusY[i] = TkrClusY[i] + ( 2 - offsetY ) * TOWERPITCH;
-        //        TkrClusX[i] = TkrClusX[i] + 741.09 - offsetX*374.5;
-        //        TkrClusY[i] = TkrClusY[i] + 741.09 - offsetY*374.5;
-	//        TkrClusX[i] = TkrClusX[i] + 741.09;
-	//        TkrClusY[i] = TkrClusY[i] + 741.09;
+        TkrClusX[i] = TkrClusX[i] + ( 2 - m_temid % 4 ) * TOWERPITCH;
+        TkrClusY[i] = TkrClusY[i] + ( 2 - m_temid / 4 ) * TOWERPITCH;
         TkrClusZ[i] = TkrClusZ[i] +  18;
     }
 }
 
-void Recon::TkrAlignmentSvc(const TList *myGeometry) {
+int Recon::TkrAlignmentSvc(const Tracker *myTracker, const bool rotate) {
     // this is the "real" alignment.  Z is replaced by the Z of the geometry
     // file.  This seems to be awkward, but the alternative would be to rerun
     // recon every time the position changes.
     // X and Y are taken as corrections, i.e. X and Y of the geometry file are
     // added to the cluster positions.
-  
+
+    int alignSvcFlag = 0;
+
+    const TList* myGeometry = myTracker->GetGeometry();
+
+    // translation
     for ( int i=0; i<TkrNumClus; ++i ) {
         Layer* plane = (Layer*)myGeometry->FindObject(
-		          GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
-        // translation
-        TVector3 v(TkrClusX[i]+plane->GetX(), TkrClusY[i]+plane->GetY(),
+                        GetPlaneNameFromRecon(TkrClusLayer[i], TkrClusView[i]));
+        /*
+        TVector3 v(TkrClusXorig[i]+plane->GetX(), TkrClusYorig[i]+plane->GetY(),
                    plane->GetZ());
-        /* I had to realize that to make a correction of the rotation I would
-           need to know the real 2d in-plane position of the cluster.  However,
-           we know the position perpendicular to the strips (i.e. the strip)
-           only.  The 2nd coordinate is just the center of the tray.
-        // rotation in Z is done with respect to the center of the
-        // tower (178.25, 178.25)
-        const TVector3 origin(178.25, 178.25, 0);
-        v -= origin;
-        v.RotateZ(plane->GetRotZ()/1000);
-        v += origin;
-        */
-        // refilling the clusters
         TkrClusX[i] = v.X();
         TkrClusY[i] = v.Y();
         TkrClusZ[i] = v.Z();
+        */
+        TkrClusX[i] = TkrClusXorig[i] + plane->GetX();
+        TkrClusY[i] = TkrClusYorig[i] + plane->GetY();
+        TkrClusZ[i] = plane->GetZ();
     }
+
+    // rotation
+    if ( rotate ) {
+        // let's first define two tracks for later determination of the
+        // approximate position in the plane of interest.
+        // We don't care that there is exactly one cluster per plane.  If it
+        // would matter, the Chi2 would be bad anyway!
+        TLine refTrack[2];
+        for ( int i=0; i<2; ++i ) {
+            // adding all clusters on planeCols[i] planes to TGclus
+            const TGraph TGclus =GetClusterGraph(myTracker->GetPlaneNameCol(i));
+            refTrack[i] = Reconstruct(&TGclus);
+            // If the line style is != 1, the ChiSqr of the track is worse than
+            // 1.  Let's flag this in the return value of the alignment service.
+            if ( refTrack[i].GetLineStyle() != 1 )
+                alignSvcFlag += ( 1 << i );
+        }
+
+        for ( int i=0; i<TkrNumClus; ++i ) {
+            Layer* plane = (Layer*)myGeometry->FindObject(
+                               GetPlaneNameFromRecon(TkrClusLayer[i],
+                                                     TkrClusView[i]));
+            TVector3 v(TkrClusX[i], TkrClusY[i], TkrClusZ[i]);
+            const int theOtherView = TkrClusView[i] ? 0 : 1;
+            // let's save the extrapolated position as the cluster's real
+            // position (as opposed to the planes center).
+            v[theOtherView] = ExtrapolateCoordinate(refTrack[theOtherView],
+                                                    TkrClusZ[i]);
+            float rot;
+            rot = plane->GetRotZ();
+            //            v.Print();
+            if ( rot ) {
+                //                std::cout << "rotation z " << rot << std::endl;
+                const TVector3 axisOffset(178.25, 178.25, v[2]);
+                v -= axisOffset;
+                v.RotateZ(rot/1000);
+                v += axisOffset;
+                //                v.Print();
+            }
+
+            /* MWK: Does yet do what it claims to do!
+            rot = plane->GetRotY();
+            if ( rot ) {
+                //                std::cout << "rotation y " << rot << std::endl;
+                const TVector3 axisOffset(178.25, v[1], v[2]);
+                v -= axisOffset;
+                v.RotateY(rot/1000);
+                v += axisOffset;
+                //                v.Print();
+            }
+
+            rot = plane->GetRotX();
+            if ( rot ) {
+                //                std::cout << "rotation x " << rot << std::endl;
+                const TVector3 axisOffset(v[0], 178.25, v[2]);
+                v -= axisOffset;
+                v.RotateX(rot/1000);
+                v += axisOffset;
+                //                v.Print();
+                //                std::exit(42);
+            }
+            */
+
+            // refilling the clusters
+            TkrClusX[i] = v.X();
+            TkrClusY[i] = v.Y();
+            TkrClusZ[i] = v.Z();
+        }
+    }
+    return alignSvcFlag;
 }
 
 TGraph Recon::GetAllClustersGraph(const TString view, const int notLayer) const{
@@ -92,7 +152,7 @@ TGraph Recon::GetAllClustersGraph(const int view, const int notLayer) const {
     TGraph clusters;
     for ( int i=0; i<GetTkrNumClus(); ++i ) {
         if ( TkrClusView[i] == view && TkrClusLayer[i] != notLayer ) {
-            double pos;
+            float pos;
             switch ( view ) {
             case 0:
                 pos = TkrClusX[i];
@@ -130,7 +190,7 @@ TGraph Recon::GetClusterGraph(const std::vector<TString> planeCol,
             if ( thisReconLayer!=TkrClusLayer[j] || thisView!=TkrClusView[j] )
                 continue; // cluster is not on this plane
             ++count;
-            double pos = 0;
+            float pos = 0;
             if ( thisView == 0 )
                 pos = TkrClusX[j];
             else if ( thisView == 1 )
@@ -163,7 +223,7 @@ TGraph Recon::GetTrk1ClustersGraph(const int view, const int notLayer) const {
         int i = TkrTrk1Clusters[j];
         //	std::cout<<"test: j i view layer"<<j<<" "<<i<<" "<<TkrClusView[i]<<" "<<TkrClusLayer[i]<<std::endl;
         if ( TkrClusView[i] == view && TkrClusLayer[i] != notLayer ) {
-            double pos;
+            float pos;
             switch ( view ) {
             case 0:
                 pos = TkrClusX[i];
@@ -196,11 +256,11 @@ TLine Reconstruct(const TGraph* XY) {
         return invalid;
     }
 
-    double* X = XY->GetX();
-    double* Y = XY->GetY();
-    double MinChi2 = 1E6;
-    double A = 0;
-    double B = 0;
+    Double_t* X = XY->GetX();
+    Double_t* Y = XY->GetY();
+    Double_t MinChi2 = 1E6;
+    Double_t A = 0;
+    Double_t B = 0;
 
     // comment the code that improves the fit but eats CPU
     //    if ( N <= 3 ) {
@@ -221,7 +281,7 @@ TLine Reconstruct(const TGraph* XY) {
             g.RemovePoint(i);
             g.Fit("pol1", "Q");
             TF1* f = (TF1*)g.FindObject("pol1");
-            const double chi2 = f->GetChisquare();
+            const Double_t chi2 = f->GetChisquare();
             if ( chi2 < MinChi2 ) {
                 MinChi2 = chi2;
                 A = f->GetParameter(0);
@@ -232,19 +292,19 @@ TLine Reconstruct(const TGraph* XY) {
     }
         */
 
-    const double Y1 = 0.0;
-    const double Y2 = 700.0;
+    const Double_t Y1 = 0.0;
+    const Double_t Y2 = 700.0;
     // remember: x and y are swapped!
-    const double x1 = A + B * Y1;
-    const double y1 = Y1;
-    const double x2 = A + B * Y2;
-    const double y2 = Y2;
+    const Double_t x1 = A + B * Y1;
+    const Double_t y1 = Y1;
+    const Double_t x2 = A + B * Y2;
+    const Double_t y2 = Y2;
     //    std::cout << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << std::endl;
 
     TLine track(x1, y1, x2, y2);
     track.SetLineColor(2);
 
-    static const double MaxChi2 = 1;
+    static const Double_t MaxChi2 = 1;
     //    std::cout << "chisqr " << MinChi2 << std::endl;
     if ( MinChi2 > MaxChi2 )
         track.SetLineStyle(2);
@@ -254,13 +314,13 @@ TLine Reconstruct(const TGraph* XY) {
 
 bool IsValid(const TLine& l) { return l.GetLineStyle(); }
 
-double ExtrapolateCoordinate(const TLine& track, const double z) {
-    const double x1 = track.GetX1();
-    const double x2 = track.GetX2();
-    const double y1 = track.GetY1();
-    const double y2 = track.GetY2();
-    const double newX = ( x2 == x1 )  ?  x1  :  x1 + (z-y1) / (y2-y1) * (x2-x1);
-    return newX;
+float ExtrapolateCoordinate(const TLine& track, const float z) {
+    const Double_t x1 = track.GetX1();
+    const Double_t x2 = track.GetX2();
+    const Double_t y1 = track.GetY1();
+    const Double_t y2 = track.GetY2();
+    const Double_t newX = ( x2 == x1 ) ? x1 : x1 + (z-y1) / (y2-y1) * (x2-x1);
+    return (float)newX;
 }
 
 ClassImp(Recon)

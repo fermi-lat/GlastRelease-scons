@@ -42,7 +42,7 @@ class Event {
     // hits and clusters
     TGraph GetTGraphHits(TString view);
     TGraph GetTGraphHits(int view);
-    std::vector<double> GetClusters(TString PlaneName);
+    std::vector<float> GetClusters(TString PlaneName);
     TGraph GetTGraphClusters(TString view);
     TGraph GetTGraphClusters(int view);
 

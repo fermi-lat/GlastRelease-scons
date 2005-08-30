@@ -91,14 +91,14 @@ TGraph Event::GetTGraphHits(int view) {
     return tg;
 }
 
-std::vector<double> Event::GetClusters(TString PlaneName) {
+std::vector<float> Event::GetClusters(TString PlaneName) {
     Layer* aPlane = (Layer*)myGeometry->FindObject(PlaneName);
     aPlane->GetEvent(SelectedEvent);
   
     int NumHits = aPlane->TkrNumHits;
     int *Hits   = aPlane->TkrHits;
   
-    std::vector<double> Cluster;
+    std::vector<float> Cluster;
     if(NumHits==0) return Cluster;
     //  Cluster->Set(NumHits);
 
@@ -114,7 +114,7 @@ std::vector<double> Event::GetClusters(TString PlaneName) {
         if ( nextHit < LastClusterStrip+GAP ) {
             Cluster[Clusters] = (ClusterSize * Cluster[Clusters] + 
                                  aPlane->GetCoordinate(nextHit))/
-                (double)(ClusterSize+1);
+                (float)(ClusterSize+1);
             ClusterSize++;
 	}
         else {
@@ -158,7 +158,7 @@ TGraph Event::GetTGraphClusters(int view) {
             continue;
 
         // getting cluster(s) from each plane
-        std::vector<double> clusterPos = GetClusters(planeName);
+        std::vector<float> clusterPos = GetClusters(planeName);
         const int clusterNum = clusterPos.size();
         for ( int i=0; i<clusterNum; ++i )
             tg.SetPoint(tg.GetN(), clusterPos[i], aPlane->GetZ());

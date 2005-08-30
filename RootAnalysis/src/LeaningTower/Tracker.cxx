@@ -56,7 +56,7 @@ void Tracker::loadGeometry(TString filename) {
     while ( !fin.eof() ) {
         std::getline(fin, line);
         TString layer;
-        double z, y, x, rz, ry, rx;
+        float z, y, x, rz, ry, rx;
         z = y = x = rz = ry = rx = 0;
         std::istringstream ist(line);
         ist >> layer >> z >> y >> x >> rz >> ry >> rx;
@@ -95,8 +95,8 @@ std::vector<TString> Tracker::GetPlaneNameCol(const int view) const {
 }
 
 void Tracker::Display(TCanvas* ed) {
-    const double h[2] = { -40, 460 };
-    double v[2] = { -10, 699 }; 
+    const float h[2] = { -40, 460 };
+    float v[2] = { -10, 699 }; 
     if ( !TOWER ) {
         v[0] = -1100;
         v[1] = 1100;
