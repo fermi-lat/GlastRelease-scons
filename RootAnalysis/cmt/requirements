@@ -71,6 +71,9 @@ macro_append ROOT_libs " -lHist -lTreePlayer " \
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"\
              WIN32         " ${ROOT_GUI_libs} "
 
+application runTreeMaker LeaningTower/runTreeMaker.cxx \
+            LeaningTower/TreeMaker.cxx
+
 application pruneTrees pruneTrees/PruneTree.cxx pruneTrees/runTreeAnalysisChain.cxx 
 
 application peelTrees pruneTrees/PruneRunEvent.cxx pruneTrees/runEventPeeler.cxx 
@@ -82,9 +85,6 @@ application peelTrees pruneTrees/PruneRunEvent.cxx pruneTrees/runEventPeeler.cxx
 application test_RootAnalysis test/runTreeAnalysis.cxx \
             RootTreeAnalysis/RootTreeAnalysis.cxx \
             ${RootAnalysis_headers}
-
-application runTreeMaker LeaningTower/runTreeMaker.cxx \
-            LeaningTower/TreeMaker.cxx
 
 # Define the new Selector Library and Application
 #library glastSelector SelectorAnalysis/mc/*.cxx SelectorAnalysis/digi/*.cxx SelectorAnalysis/recon/*.cxx ../RootAnalysis/*.cxx
