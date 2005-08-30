@@ -30,7 +30,7 @@ class Event {
     int GetEntries()           const { return (int)myTree->GetEntries(); }
     Int_t GetEventId()         const { return EventId; }
     Int_t GetRunId()           const { return RunId; }
-    Int_t GetTemId()           const { return TemId; }
+    Int_t GetTemId()           const { return TemId < 16 ? TemId : 0; }
     Int_t GetTkrTotalNumHits() const { return TkrTotalNumHits; }
     Double_t GetEbfTime()      const { return EbfTime; }
 

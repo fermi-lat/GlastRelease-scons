@@ -60,11 +60,11 @@ void EventDisplay::Go(int numEvent) {
         entry = lastEntry;
         std::cout << "displaying the last record of the tree" << std::endl;
     }
-    int running=0;
-    do{
-      myEvent->Go(entry+running);
-      running++;
-    } while(myEvent->GetTemId()!=m_temid);
+    int running = 0;
+    do {
+        myEvent->Go(entry+running);
+        running++;
+    } while ( myEvent->GetTemId() != m_temid );
     --running;
     entry+=running;
     std::cout<<"Passed "<<running<<" events"<<std::endl;
@@ -72,10 +72,12 @@ void EventDisplay::Go(int numEvent) {
 
     if ( runId == -1 )
         runId = myEvent->GetRunId();
+    const int temId           = myEvent->GetTemId();
     const int eventId         = myEvent->GetEventId();
     const float ebfTime       = myEvent->GetEbfTime();
     const int TkrTotalNumHits = myEvent->GetTkrTotalNumHits();
 
+    std::cout << "TemId           = " << temId << std::endl;
     std::cout << "RunId           = " << runId << std::endl;
     std::cout << "EventId         = " << eventId << std::endl;
     std::cout << "EbfTime         = " << ebfTime << std::endl;
@@ -84,6 +86,7 @@ void EventDisplay::Go(int numEvent) {
     TPaveStat->Clear();
     TPaveStat->AddText((TString("RunId:     "))+=runId);
     TPaveStat->AddText((TString("EventId:  "))+=eventId);
+    TPaveStat->AddText((TString("TemId:     "))+=temId);
     TPaveStat->AddText((TString("EbfTime: "))+=ebfTime);
     myEventDisplay->cd(2);
     TPaveStat->Draw();
