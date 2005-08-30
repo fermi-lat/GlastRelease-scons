@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
                               EOH
 
+   v1r7p2 30-Aug-2005 jrb    Pick up new major release of RootcintPolicy
    v1r7p1 28-May-2005 jrb    See v1r7p0 below
    v1r7p0 27-May-2005 hmk    Use v5 of RootcintPolicy
    v1r7   17-Apr-2005 jrb    Back out commonRootData namespace
