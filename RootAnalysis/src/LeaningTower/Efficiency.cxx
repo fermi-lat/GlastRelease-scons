@@ -12,6 +12,7 @@ Efficiency::Efficiency(const TString filename, const TString effFileName,
     myTracker->SetTower(true);
     myEvent = new Event(filename, myTracker->GetGeometry());
     myEffFileName = effFileName;
+    outfile = TString();
 }
 
 void Efficiency::Go(int lastEntry) {
@@ -280,8 +281,17 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
     TTree* t = (TTree*)f.Get("efficiencyTree");
 
     cut.Print();
-    std::cout << " Object   Plane/L/W  Efficiency  Inefficiency     "
-              << "hits  missed     all" << std::endl;
+
+    std::ostream* stdout;
+    if ( outfile != TString() ) {
+        stdout = new std::ofstream(outfile.Data());
+        std::cout << "Printing to file " << outfile << std::endl;
+    }
+    else
+        stdout = &std::cout;
+
+    *stdout << " Object   Plane/L/W  Efficiency  Inefficiency     "
+           << "hits  missed     all" << std::endl;
 
     const bool makeSummary = planeName == "all" || planeName == "plane";
     const TCut isMissingHit =
@@ -300,70 +310,86 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
                     TString ladderName(TString()+=ladder);
                     // the cuts should come from geometry in class Layer
                     // dirty hack, as always preliminary
-                    TCut xmin((TString(ladderPar+">=")+=thePlane->GetLadderXmin(ladder)).Data());
-                    TCut xmax((TString(ladderPar+"<=")+=thePlane->GetLadderXmax(ladder)).Data());
+                    TCut xmin((TString(ladderPar+">=")
+                               += thePlane->GetLadderXmin(ladder)).Data());
+                    TCut xmax((TString(ladderPar+"<=")
+                               += thePlane->GetLadderXmax(ladder)).Data());
                     const TCut ladderCut(planeCut&&xmin&&xmax);
                     for ( int wafer=0; wafer<4; ++wafer ) {
                         const TString waferName(TString()+=wafer);
-                        TCut ymin((TString(waferPar+">=")+=thePlane->GetWaferYmin(wafer)).Data());
+                        TCut ymin((TString(waferPar+">=")
+                                   += thePlane->GetWaferYmin(wafer)).Data());
 
-                        TCut ymax((TString(waferPar+"<=")+=thePlane->GetWaferYmax(wafer)).Data());
+                        TCut ymax((TString(waferPar+"<=")
+                                   += thePlane->GetWaferYmax(wafer)).Data());
                         const TCut waferCut(ladderCut&&ymin&&ymax);
                         const Long64_t numMiss =
                             t->Draw("eventId", waferCut&&isMissingHit, "goff");
-                        PrintEfficiency(thePlaneName+'/'+ladderName+'/'
-                                        +waferName,
-                              t->Draw("eventId",waferCut&&isHit,"goff")+numMiss,
-                                        numMiss);
+                        *stdout << PrintEfficiency(thePlaneName+'/'+ladderName
+                                                   +'/'+waferName,
+                                                   t->Draw("eventId",
+                                                           waferCut&&isHit,
+                                                           "goff")+numMiss,
+                                                   numMiss) << std::endl;
                     }
                     const Long64_t numMiss =
                         t->Draw("eventId", ladderCut&&isMissingHit, "goff");
-                    PrintEfficiency(thePlaneName+'/'+ladderName+"  ",
-                             t->Draw("eventId",ladderCut&&isHit,"goff")+numMiss,
-                                    numMiss);
+                    *stdout << PrintEfficiency(thePlaneName+'/'+ladderName+"  ",
+                                               t->Draw("eventId",
+                                                       ladderCut&&isHit,"goff")
+                                               +numMiss,
+                                               numMiss) << std::endl;
                 }
             }
             const Long64_t numMiss =
                 t->Draw("eventId", planeCut&&isMissingHit, "goff");
-            PrintEfficiency(thePlaneName+"    ",
-                            t->Draw("eventId",planeCut&&isHit,"goff") + numMiss,
-                            numMiss, t->Draw("eventId", planeCut, "goff"));
+            *stdout << PrintEfficiency(thePlaneName+"    ",
+                                       t->Draw("eventId",planeCut&&isHit,"goff")
+                                       + numMiss,
+                                       numMiss,
+                                       t->Draw("eventId", planeCut, "goff"))
+                    << std::endl;
         }
     }
     if ( makeSummary ) {
         const Long64_t numMiss = t->Draw("eventId", cut&&isMissingHit, "goff");
-        PrintEfficiency("           ",
-                        t->Draw("eventId", cut&&isHit, "goff") + numMiss,
-                        numMiss, t->Draw("eventId", cut, "goff"));
+        *stdout << PrintEfficiency("           ",
+                                   t->Draw("eventId",cut&&isHit,"goff")+numMiss,
+                                   numMiss,
+                                   t->Draw("eventId", cut, "goff")
+                                   ) << std::endl;
     }
 
+    if ( outfile != TString() ) {
+        delete stdout;
+    }
     f.Close();
 }
 
-void Efficiency::PrintEfficiency(TString planeName,  const int hits,
-                                 const int missing, const int all)
-    const {
+std::string Efficiency::PrintEfficiency(TString planeName,  const int hits,
+                                        const int missing, const int all) const{
+    std::stringstream s;
     for ( ; planeName.Length()<11; )
                 planeName.Prepend(' '); 
-    std::cout << std::setw(7);
+    s << std::setw(7);
     if ( planeName(10) != ' ' )
-        std::cout << "  wafer";
+        s << "  wafer";
     else if ( planeName(8) != ' ' )
-        std::cout << " ladder";
+        s << " ladder";
     else if ( planeName(6) != ' ' )
-        std::cout << "  plane";
+        s << "  plane";
     else
-        std::cout << "  tower";
+        s << "  tower";
     const float ineff = hits ? 100. * missing / hits : -100;
-    std::cout << ' ' << std::setw(11) << planeName << ' '
-              << std::setiosflags(std::ios::fixed)
-              << std::setw(9) << std::setprecision(2) << 100. - ineff << " % "
-              << std::setw(11) << std::setprecision(2) << ineff << " % "
-              << std::setw(8) << hits
-              << std::setw(8) << missing;
+    s << ' ' << std::setw(11) << planeName << ' '
+      << std::setiosflags(std::ios::fixed)
+      << std::setw(9) << std::setprecision(2) << 100. - ineff << " % "
+      << std::setw(11) << std::setprecision(2) << ineff << " % "
+      << std::setw(8) << hits
+      << std::setw(8) << missing;
     if ( all )
-        std::cout << std::setw(8) << all;
-    std::cout << std::endl;
+        s << std::setw(8) << all;
+    return s.str();
 }
 
 void Efficiency::DrawEfficiency(const TString planeName, TCut cut,

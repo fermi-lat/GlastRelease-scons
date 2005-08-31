@@ -1,3 +1,6 @@
+#include <fstream>
+#include <sstream>
+
 #include "TCut.h"
 #include "TF1.h"
 #include "TFile.h"
@@ -20,6 +23,7 @@ private:
     Event*   myEvent;
     Tracker* myTracker;
     TString  myEffFileName;
+    TString  outfile;
     bool debug;
     int m_temid;
 public:
@@ -45,6 +49,7 @@ public:
     // and here, and go into it's own class.
     bool Get_3_in_a_row(const int layer) const;
     void setDebug(const bool d) { debug = d; }
+    void setOutfile(const TString s) { outfile = s; }
 
     void Draw2D(const TString planeName="all", TCut="",
                 const float residualDist=1, const float borderWidth=1) const;
@@ -53,8 +58,8 @@ public:
     void DrawEfficiency(const TString planeName, TCut="",
                    const float residualDist=1, const float borderWidth=1) const;
 private:
-    void PrintEfficiency(TString planeName, const int hits,
-                         const int missing, const int all=0) const;
+    std::string PrintEfficiency(TString planeName, const int hits,
+                                const int missing, const int all=0) const;
     // I use functions to define cuts.  This enforces consistency over the
     // various methods.
     // elements
