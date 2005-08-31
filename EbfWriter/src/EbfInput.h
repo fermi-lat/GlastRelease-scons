@@ -1,5 +1,5 @@
-#ifndef EBF_OUTPUT_H
-#define EBF_OUTPUT_H
+#ifndef EBF_INPUT_H
+#define EBF_INPUT_H
 
 
 #include <stdio.h>
@@ -10,36 +10,31 @@ class EbfCalData;
 class EbfGemData;
 
 
-
-
-
-
-
-
-
-class EbfOutput
+class EbfInput
 {
   public:
 
-//   inline EbfOutput ()  { return; }
-   EbfOutput::EbfOutput () : LdfFormat(false) { return; }
+   inline EbfInput () { return; }
  
-   void         setLdfFormat(bool flg) { LdfFormat=flg; return;}      
+         
    int          open   (const char    *fileName,
-                        unsigned int maxEvtSize);
+                        unsigned int maxEvtSize,
+                        bool ldfFormat);
 
    unsigned int format (const EbfAcdData *acd,
                         const EbfCalData *cal,
                         const EbfTkrData *tkr,
-                        const EbfGemData *gem,
-                        unsigned int *mcInfo);
-   
-   void         writeMC (unsigned int *mcInfo, int size);
+                        const EbfGemData *gem);
+
    void         print  ()  const;
-   char * write  (bool writeEbf, unsigned int &length, unsigned int *TdsBuffer);
-   char * getData(unsigned int &dataSize) {dataSize=m_curEvtSize; return (char *)m_evtBuffer;}
+   unsigned int read  (bool ldfFormat);
    unsigned int flush  ();
    unsigned int close  ();
+   void         parse  (EbfTkrData *tkr, 
+                        EbfCalData *cal,
+                        EbfGemData *gem, 
+                        EbfAcdData *acd,
+                        EbfCalConstants *calCon);
    inline int   setPrint  (int printFlag) 
    {
        int old = m_print;
@@ -52,7 +47,7 @@ class EbfOutput
    inline unsigned int numEvtsIn  () const { return m_numEvtsIn;  }   
    
    
-   ~EbfOutput ();
+   ~EbfInput ();
    
   /*
    | The unit of all size parameters is 32 - bit words
@@ -66,11 +61,8 @@ class EbfOutput
     unsigned int     m_numEvtsIn; /*!< The number of  input events          */
     unsigned int    m_numEvtsOut; /*!< The number of output events          */
     unsigned int    *m_evtBuffer; /*!< The event buffer                     */
-    unsigned int   m_circBuffOff; /*!< Offset in circular buffer           */
-    unsigned int    *m_evtHead;   /*!< Point to event header               */
-    unsigned int    *m_evtDescriptor; /*!< Event Descriptor   */
-    unsigned int    *m_evtEnd;     /*!< Pointer to end of event */
-    bool            LdfFormat;     /*! < Flag for LDF Format */
+    unsigned int    *m_evtHeader; /*!< Pointer to Event Header              */
+    unsigned int     m_nReadEvt;
 };
 
 

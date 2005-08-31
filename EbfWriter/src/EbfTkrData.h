@@ -26,7 +26,7 @@ class EbfTkrTowerData
        NumLayerEnds        = 72,
        NumLayerEndsPerCable=  9,
        MaxStripsPerLayerEnd= 64,
-       MaxStripsPerCable   = MaxStripsPerLayerEnd*NumLayerEndsPerCable
+       MaxStripsPerCable   = 128
     };
 
 
@@ -56,6 +56,7 @@ class EbfTkrTowerData
     unsigned int        m_tots[NumLayerEnds]; /*!< TOTs by layer           */
     unsigned short int  m_data[NumLayerEnds][2*MaxStripsPerLayerEnd];
                                               /*!< The actual hit strips   */
+    bool                m_Truncated[NumCables]; /*!< Flag indicating hits truncated (FIFO Full) */
 };
 
 
@@ -71,8 +72,11 @@ class EbfTkrData
   public:
     void                 initialize ();
     void                       fill (const Event::TkrDigiCol &tkr);
+    void                       fillEncode (int encodeFlag, int event);    
     unsigned int            *format (unsigned int *dst)              const;
     unsigned int            *format (unsigned int *dst, int towerId) const;
+    void                 parseInput (unsigned int *contrib, unsigned int tower, unsigned int lcbWords);
+
     void print                      ();
 
     /**
@@ -104,10 +108,12 @@ class EbfTkrData
         return m_towers + itower;
     }
     
+    inline bool getCalStrobe() const { return m_calStrobe; }
             
     
   private:
     unsigned int                              m_trigger;
+    bool                                    m_calStrobe;
     EbfTkrTowerData m_towers[EbfTkrTowerData::NumTowers];
 };
 

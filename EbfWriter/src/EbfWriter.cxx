@@ -4,7 +4,10 @@
  * HISTORY
  *
  * DATE         WHO    WHAT
- * 5/28/03  russel     Added what I deemed to be a kludge to take care of the 
+ * 5/13/05  winer      Changes to bring the Ebf file in line with the current
+ *                     hardware configuration. In addition, provide a means to
+ *                     generate test vectors for the Front-End Simulator System.
+ * 5/28/03  russell    Added what I deemed to be a kludge to take care of the 
  *                     fact that the algorithm gets called make after all the
  *                     events have been read. If any of the DIGI pointers are
  *                     NULL, I take this as bad, and just return -1. I think
@@ -25,11 +28,15 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
+
 // TDS class declarations: input data, and McParticle tree
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/MonteCarlo/McPositionHit.h"
+#include "Event/MonteCarlo/Exposure.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
 
@@ -42,14 +49,18 @@
 #include "EbfAcdData.h"
 #include "EbfCalData.h"
 #include "EbfTkrData.h"
-#include "EbfGltData.h"
-#include "EbfGltCounters.h"
+#include "EbfGemData.h"
+#include "EbfGemCounters.h"
 #include "EbfOutput.h"
+#include "EbfInput.h"
+#include "FESOutput.h"
+
+#include "astro/PointingTransform.h"
 
 
 #include <fstream>
 #include <cassert>
-
+#include <map>
 /** 
  * @class EbfWriter
  * @brief An algorithm to convert the digi data to ebf
@@ -64,18 +75,66 @@ public:
     StatusCode initialize();
     StatusCode execute();
     StatusCode finalize();
+    StatusCode getMcEvent(double obsEn);
+    StatusCode getPointingInfo();
     
 private:
+
+// Control Output File for EBF
     EbfOutput m_output;
 
-    EbfGltCounters  m_latcounters;
+// Control Input File for EBF
+    EbfInput m_input;
+
+// Output Routines for FES Format
+    FESOutput f_output;
+
+    EbfGemCounters  m_latcounters;
     
     /// parameter to store the maximum size of an event
     /// this should be fairly static
     int         m_maxEvtSize;
-    std::string m_filename;
-    std::ofstream m_ebfOutput;
+    int         m_TkrEncodeFlag;
+    int         m_CalEncodeFlag;
+    int         m_FesFiles;
+    int         m_FesVersion;
+    int         m_ReadFile;
+    bool        m_WriteEbf;
+    bool        m_LdfFormat;
+    bool        m_storeOnTds;
+
+    int m_sourceId;
+    int m_sequence;
+
+     std::map<std::string, double> getCelestialCoords(const Hep3Vector glastDir);
+
+
+    // Monte Carlo that is stored in the 8 word header of the Ebf File 
+    struct  McInfo
+    {
+       unsigned int                 mcId;
+       unsigned short int           rsvd;
+       unsigned char             acdTile;
+       unsigned char          sourceType;
+       unsigned short int          absRA;
+       unsigned short int         absDec;
+       unsigned short int       relTheta;
+       unsigned short int         relPhi;
+       unsigned short int   actualEnergy;
+       unsigned short int observedEnergy;
+    } m_McInfo;
+
+    // Time of the previous event
+    double PreEvtTime;
+    
     EbfCalConstants m_calConstants;
+    
+    // File name fo the EbfFile
+    std::string m_FileName;
+
+    // to decode the particle charge
+    IParticlePropertySvc* m_ppsvc;
+
 };
 
 
@@ -85,11 +144,21 @@ const IAlgFactory& EbfWriterFactory = Factory;
 
 
 
+
 EbfWriter::EbfWriter(const std::string& name, ISvcLocator* pSvcLocator):
         Algorithm(name, pSvcLocator){
     // declare properties with setProperties calls
-    declareProperty("MaxEvtSize", m_maxEvtSize=0x10000);
-    declareProperty("fileName", m_filename="");
+    declareProperty("MaxEvtSize",m_maxEvtSize=0x10000);
+    declareProperty("FileName"  ,m_FileName="");
+    declareProperty("ReadFile"  ,m_ReadFile=0);
+    declareProperty("WriteEbf"  ,m_WriteEbf=false);
+    declareProperty("FESFiles"  ,m_FesFiles=0);
+    declareProperty("FESVersion",m_FesVersion=0);
+    declareProperty("TkrEncode" ,m_TkrEncodeFlag=-1);
+    declareProperty("CalEncode" ,m_CalEncodeFlag=-1);
+    declareProperty("LdfFormat" ,m_LdfFormat=false);
+    declareProperty("StoreOnTds",m_storeOnTds=true);
+
     return;
 }
 
@@ -112,9 +181,25 @@ StatusCode EbfWriter::initialize()
     if (sc.isFailure()) return sc;
     m_calConstants.initialize (detSvc, log);
 
-    m_output.setPrint (log.level () <= MSG::DEBUG);
-    m_output.open ("", m_maxEvtSize);
 
+    if( serviceLocator() ) {
+        if( service("ParticlePropertySvc", m_ppsvc, true).isFailure() ) {
+            log << MSG::ERROR << "Service [ParticlePropertySvc] not found" << endreq;
+        }
+    } else {
+        return StatusCode::FAILURE;
+    }
+
+    m_output.setPrint (log.level () <= MSG::DEBUG);
+    m_output.setLdfFormat(m_LdfFormat);
+    
+// Are we reading or outputing a file?    
+    m_ReadFile==1 ? m_input.open (m_FileName.c_str(), m_maxEvtSize, m_LdfFormat) :
+                    m_output.open(m_FileName.c_str(), m_maxEvtSize);
+
+//     m_input.open (m_FileName.c_str(), m_maxEvtSize);
+
+    
     /* Set up the EBF time stuff */
     m_latcounters.initialize ((unsigned int)2*20000000, // T0 = 2 seconds
                               (unsigned int)0,   // Initialize dead time value
@@ -123,10 +208,17 @@ StatusCode EbfWriter::initialize()
                                                  // 1 part in 10**-5
                               (double)90 * 60.); // Period of the clock
                                                  // variation, in secs
-    if(m_filename != ""){
-        m_ebfOutput.open(m_filename.c_str());
-    }
-    return sc;
+
+
+    /* Make FES Files */    
+    f_output.setVersion(m_FesVersion);
+    if(m_FesFiles>0) f_output.open(m_FileName.c_str());
+
+    PreEvtTime = 0.;
+
+//    printf("EbfWriter: Initialization done\n");
+        
+   return sc;
 }
 
 
@@ -139,7 +231,6 @@ StatusCode EbfWriter::execute()
     //     passing them (if they exist) to individual functions
     //
 
-
     MsgStream  log (msgSvc(), name());
     MSG::Level level = log.level ();
     int        print = level <= MSG::INFO;
@@ -149,88 +240,409 @@ StatusCode EbfWriter::execute()
     if(eventSvc()->retrieveObject("/Event/Filter",pnode).isFailure())
       eventSvc()->registerObject("/Event/Filter",new DataObject);
 
-    EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
-	eventSvc()->registerObject("/Event/Filter/Ebf", newEbf);
-    
-    //
-    // TKR
-    // ---
-    //
-    SmartDataPtr<Event::TkrDigiCol> 
-                 tkrDigiCol(eventSvc(), EventModel::Digi::TkrDigiCol);
-
-    // If no tracker data... 
-    if (!tkrDigiCol) return StatusCode::FAILURE;
-    
+// Taking input from GLEAM (i.e. digis)
     EbfTkrData tkr;
-    tkr.fill  (tkrDigiCol);
+    EbfCalData cal; 
+    EbfGemData gem;
+    EbfAcdData acd;
+        
+//     printf("In EbfWriter Execute: ReadFile=%i\n",m_ReadFile);   
+        
+    if(m_ReadFile==0) {
+        
+        
+        //
+        // Grab event header to pass event info
+        SmartDataPtr<Event::EventHeader>header(eventSvc(), 
+                                               EventModel::EventHeader);
+
+        //
+        // TKR
+        // ---
+        //
+        SmartDataPtr<Event::TkrDigiCol> 
+                     tkrDigiCol(eventSvc(), EventModel::Digi::TkrDigiCol);
+
+        // If no tracker data... 
+        if (!tkrDigiCol) return StatusCode::FAILURE;
+
+        
+        if(m_TkrEncodeFlag<0) {
+          tkr.fill  (tkrDigiCol);
+        } else {
+          tkr.fillEncode(m_TkrEncodeFlag,header->event());    
+        }
+        if(level <= MSG::DEBUG) tkr.print();
+
+        //
+        // CAL
+        // ---
+        //
+        SmartDataPtr<Event::CalDigiCol> 
+                     calDigiCol(eventSvc(), EventModel::Digi::CalDigiCol);
+
+        // If no CAL data... 
+        if (!calDigiCol) return StatusCode::FAILURE;
+
+               
+        if(m_CalEncodeFlag<0) {
+          cal.fill    (calDigiCol, m_calConstants);
+        } else {
+          cal.fillEncode    (m_CalEncodeFlag,m_calConstants,header->event());
+        }  
+        if(level <= MSG::DEBUG) cal.print();
+
+        //
+        // ACD
+        // ---
+        //
+        SmartDataPtr<Event::AcdDigiCol> 
+                     acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
+
+        // If no ACD data... 
+        if (!acdDigiCol) return StatusCode::FAILURE;
+
+            
+        acd.fill  (acdDigiCol);
+        if(level <= MSG::DEBUG) acd.print();
+
+        //
+        // GEM
+        // ---
+        // 
+        if (!header) return StatusCode::FAILURE;
+
+        gem.fill (header,
+                  header->event(),
+                  header->time(),
+                  &m_latcounters,
+                  &acd, 
+                  &tkr,
+                  &cal);
+        if(level <= MSG::DEBUG) gem.print();   
 
 
-    //
-    // CAL
-    // ---
-    //
-    SmartDataPtr<Event::CalDigiCol> 
-                 calDigiCol(eventSvc(), EventModel::Digi::CalDigiCol);
-
-    // If no CAL data... 
-    if (!calDigiCol) return StatusCode::FAILURE;
-
-    EbfCalData   cal;        
-    cal.fill    (calDigiCol, m_calConstants);
+        // Dump MC Information if it exists
+        double obsEn = cal.getTotalEnergy();
+        getMcEvent(obsEn);
+        getPointingInfo();
 
 
-    //
-    // ACD
-    // ---
-    //
-    SmartDataPtr<Event::AcdDigiCol> 
-                 acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
+       //
+       // Put the contributor's data into EBF format and write it out 
+       //
+       unsigned int evtSize = m_output.format (&acd, &cal, &tkr, &gem, (unsigned int *)&m_McInfo);
+   //    if (level <= MSG::DEBUG) 
+//       m_output.print  ();
 
-    // If no ACD data... 
-    if (!acdDigiCol) return StatusCode::FAILURE;
-
-    EbfAcdData acd;    
-    acd.fill  (acdDigiCol);
-
-
-    //
-    // GLT
-    // ---
-    // 
-    SmartDataPtr<Event::EventHeader>header(eventSvc(), 
-                                           EventModel::EventHeader);
-    if (!header) return StatusCode::FAILURE;
-
-    EbfGltData glt;
-    glt.fill (header->event(), 
-              header->time(), 
-              &m_latcounters,
-              &acd, 
-              &tkr,
-              &cal);
+// Get pointer and size of data
+       unsigned int dataSize;
+       char *data;
+       data = m_output.getData(dataSize);
+       
+// Write out the file
+       unsigned int length;
+       unsigned int *TdsBuffer;
+       if(m_storeOnTds) TdsBuffer = (unsigned int *)malloc(m_maxEvtSize*5);
+       if(evtSize != 0) data=m_output.write  (m_WriteEbf, length, TdsBuffer);
 
 
-    //
-    // Put the contributor's data into EBF format and write it out 
-    //
-    m_output.format (&acd, &cal, &tkr, &glt);
-    if (level <= MSG::DEBUG) m_output.print  ();
-    unsigned int length;
-    char *data=m_output.write  (length);
-    newEbf->set(data,length);
-    if(m_filename!=""){
-      m_ebfOutput.write(data,length);
-    }
+// If  we are writing EBF put it into the Tds
+       if(evtSize !=0 & m_storeOnTds) {
+
+// register object
+         EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
+	      eventSvc()->registerObject("/Event/Filter/Ebf", newEbf);
+
+// Put the object on the Tds
+         newEbf->set((char *)TdsBuffer,length);
+       }
+
+
+          if(m_storeOnTds) free(TdsBuffer);
+//
+// If we are writing LDF format, write a LATDatagram for MC Infomation
+//       if(m_LdfFormat) m_output.writeMC((unsigned int *)&m_McInfo, sizeof(m_McInfo));
+
+
+// Get the delta time in clock ticks since last event.
+       double deltaTime = header->time()-PreEvtTime;
+       PreEvtTime = header->time();
+       int nDeltaTime = m_latcounters.deltaTicks(deltaTime);
+
+// Put the contributor's data into FES format and write it out      
+      if(m_FesFiles>0) {
+      
+// If this is a gamma event, set a flag to go into FES Files      
+        m_McInfo.sourceType == 22 ? f_output.setGammaFlag(true) : f_output.setGammaFlag(false); 
+
+        f_output.dumpTKR (&tkr,nDeltaTime);
+        f_output.dumpCAL (&cal,m_calConstants,nDeltaTime);
+        f_output.dumpACD (&acd,nDeltaTime);
+        f_output.setFirstEvtFlag(false);
+      } 
+
+  
+
+// Reading from an existing EBF file
+    } else {
+
+    
+//         printf("Reading Event in EBF not available\n");
+         unsigned int data = m_input.read(m_LdfFormat);
+         m_input.parse(&tkr,&cal,&gem,&acd,&m_calConstants);
+//          printf("Done with Parse\n");
+       
+//         printf("EbfWriter: Finished Parsing of Input File\n");
+         if(cal.getCalStrobe()|| tkr.getCalStrobe()) {
+           f_output.dumpTKR (&tkr,1.0);
+           f_output.dumpCAL (&cal,m_calConstants,1.0);
+           f_output.dumpACD (&acd,1.0);
+           f_output.setFirstEvtFlag(false);
+         }   
+         
+    }   
+
+
+     
     return sc;
 }
 
 
 /// clean up
 StatusCode EbfWriter::finalize()
-{
-    if(m_filename!=""){
-        m_ebfOutput.close();
-    }
+{ 
+//    printf("EbfWriter: Finalize\n");
+    f_output.close();
+    m_ReadFile == 1 ? m_input.close() : m_output.close();
     return StatusCode::SUCCESS;
+}
+
+/// clean up
+StatusCode EbfWriter::getPointingInfo()
+{
+
+  Event::ExposureCol* elist = 0;
+  eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
+  if( elist==0) return StatusCode::FAILURE; // should not happen, but make sure ok.
+  //Event::ExposureCol::iterator curEntry = (*elist).begin();
+  const Event::Exposure& exp = **(*elist).begin();
+
+  double time     = exp.intrvalstart();
+  double latitude = exp.lat();
+  double longitude= exp.lon();
+  double altitude = exp.alt();
+  double posX     = exp.posX();
+  double posY     = exp.posY();
+  double posZ     = exp.posZ();
+  double RightAsX = exp.RAX();
+  double DeclX    = exp.DECX();
+  double RightAsZ = exp.RAZ();
+  double DeclZ    = exp.DECZ(); 
+/*  printf("Atitude Information:  
+             Time:     %f
+             Latitude: %f
+             Longitude:%f
+             Altitude: %f
+             PosX:     %f
+             PosY:     %f
+             PosZ:     %f
+             RightAsX: %f
+             DelX:     %f
+             RightAsZ: %f
+             DelZ:     %f \n",time,latitude,longitude,altitude,posX,posY,posZ,RightAsX,DeclX,RightAsZ,DeclZ);      
+*/
+// Some calculated quantities
+//   deltaRA = RightAsX - RightAsZ;
+//   if(deltaRA > 180.) 
+//   deltaDec= DeclX - DelZ;
+
+    return StatusCode::SUCCESS;
+}
+
+
+StatusCode EbfWriter::getMcEvent(double oEn)
+{
+
+    SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
+    SmartDataPtr<Event::McParticleCol> mcParticle(eventSvc(), EventModel::MC::McParticleCol);
+    
+    
+    m_McInfo.mcId           = mcEvt->getSequence();
+    m_McInfo.rsvd           = 0;
+    m_McInfo.acdTile        = 0xAA;
+    m_McInfo.absRA          = 0xCCCC;
+    m_McInfo.absDec         = 0xDDDD;
+    m_McInfo.relTheta       = 0xEEEE;
+    m_McInfo.relPhi         = 0xFFFF;
+    m_McInfo.observedEnergy = 0x2222;
+    
+//    printf("Monte Carlo sourceId %i and sequence %i\n",m_sourceId,m_sequence); 
+
+
+    double MC_Id = 99999;
+    double MC_Charge = 9999;
+    double MC_Energy = 0.;
+    double MC_x0 =9999.;
+    double MC_y0 =9999.;
+    double MC_z0 =9999.;
+    double MC_xdir = 9999.;
+    double MC_ydir = 9999.;
+    double MC_zdir = 9999.;
+    
+    
+    if(mcParticle) {
+         Event::McParticleCol::const_iterator pMCPrimary = mcParticle->begin();
+        // Skip the first particle... it's for bookkeeping.
+        // The second particle is the first real propagating particle.
+        pMCPrimary++;
+
+        Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
+        m_McInfo.sourceType = (unsigned short int)hepid;
+        ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+        if (ppty) {
+            std::string name = ppty->particle(); 
+            MC_Charge = ppty->charge();          
+        }
+        
+        HepPoint3D Mc_x0;
+        // launch point for charged particle; conversion point for neutral
+        Mc_x0 = (MC_Charge==0 ? (*pMCPrimary)->finalPosition() : (*pMCPrimary)->initialPosition());
+        HepLorentzVector Mc_p0 = (*pMCPrimary)->initialFourMomentum();
+        // there's a method v.m(), but it does something tricky if m2<0
+        double mass = sqrt(std::max(Mc_p0.m2(),0.0));
+        
+//        Vector Mc_t0 = Vector(Mc_p0.x(),Mc_p0.y(), Mc_p0.z()).unit();
+        
+        //Pure MC Tuple Items
+        // get monte carlo energy
+         unsigned int mcEn   = (unsigned int)std::max(Mc_p0.t() - mass, 0.0);
+
+         // Encode the energy in 16 bits highest 4 bits are powers of two
+         // Lowest 12 bits are most sign 12 bits...value from mc generator
+         // is mcEn.
+         unsigned int mcEnValue = 0;
+         int pwr2 = 0;
+         while ((mcEn & 0xfffff000) != 0) {
+            mcEn >>= 1;
+            pwr2++;
+         } 
+         if(pwr2<15) {
+            mcEnValue = (pwr2 << 12) | mcEn;
+         } else {
+            mcEnValue = 0xffff;
+         }
+//         printf("mcEn 0x%8.8x  pwr2 %i (0x%1.1x) mcEnValue 0x%8.8x \n",mcEn,pwr2,pwr2,mcEnValue);
+         m_McInfo.actualEnergy   = (unsigned short int)mcEnValue;
+
+
+         // Encode the energy in 16 bits highest 4 bits are powers of two
+         // Lowest 12 bits are most sign 12 bits...value of the observed value
+         // is obsEn.
+         unsigned int obsEn = (unsigned int)oEn;
+         unsigned int obsEnValue = 0;
+         pwr2 = 0;
+         while ((obsEn & 0xfffff000) != 0) {
+            obsEn >>= 1;
+            pwr2++;
+         } 
+         if(pwr2<15) {
+            obsEnValue = (pwr2 << 12) | obsEn;
+         } else {
+            obsEnValue = 0xffff;
+         }
+         m_McInfo.observedEnergy   = (unsigned short int)obsEnValue;
+//         printf("Observed Energy %i Gen Energy %i\n",obsEn,mcEn);
+
+        
+// Location of generation point in local coordinates        
+        MC_x0     = Mc_x0.x();
+        MC_y0     = Mc_x0.y();
+        MC_z0     = Mc_x0.z();
+
+// Direction vectors        
+        MC_xdir   = Mc_p0.x();
+        MC_ydir   = Mc_p0.y();
+        MC_zdir   = Mc_p0.z();         
+
+// Attempt to convert these to RA and DEC
+//        printf("MC Dir x: %f  y: %f  z: %f \n",MC_xdir,MC_ydir,MC_zdir);
+        
+        Hep3Vector glastDir = Hep3Vector(MC_xdir,MC_ydir,MC_zdir);
+
+// Reverse direction to point back to sky
+        glastDir = - glastDir.unit();
+
+// Get the relative Theta and Phi
+        double pi    = 3.14159; /* This is silly */
+        double theta = glastDir.theta();
+        double phi   = glastDir.phi();
+        if(phi<0) phi += 2*pi;
+   
+        m_McInfo.relTheta = (unsigned short int)((theta/(2*pi))*(0x1<<16));
+        m_McInfo.relPhi   = (unsigned short int)((phi/(2*pi))*(0x1<<16)); 
+
+
+// Attempt to convert these to RA and DEC
+// Adjust to make values positive definite so we can store as an integer.
+    std::map<std::string,double> cel_coords = getCelestialCoords(glastDir);
+    double absRA = cel_coords["RA"];
+    if(absRA<0.) absRA += 360.0;
+    double absDec= cel_coords["DEC"]+90.;
+//    printf("RA %f  Dec %f",absRA,absDec);
+    m_McInfo.absRA  = (unsigned short int) ((absRA/360.) *(0x1<<16));
+    m_McInfo.absDec = (unsigned short int) ((absDec/180.)*(0x1<<16));
+//    printf("absRA 0x%4.4x absDec 0x%4.4x\n",m_McInfo.absRA,m_McInfo.absDec);
+       
+
+   }
+//   printf("Particle ID %i: Charge %f; Energy %i; x,y,z, %f:%f:%f; Dir %e:%e:%e\n",m_McInfo.sourceType,MC_Charge,m_McInfo.actualEnergy,MC_x0,MC_y0,MC_z0,MC_xdir,MC_ydir,MC_zdir);
+   return StatusCode::SUCCESS;
+}
+//------------------------------------------------------------------------------
+//  This was taken from meritAlg.cxx.  It was a private method, why
+// isn't this sort of thing in a standard library someplace?
+//
+std::map<std::string, double> EbfWriter::getCelestialCoords(const Hep3Vector glastDir)
+{
+    using namespace astro;
+
+    std::map<std::string, double> fields;
+
+    //First get the coordinates from the ExposureCol
+    Event::ExposureCol* elist = 0;
+    eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
+    if( elist==0) return fields; // should not happen, but make sure ok.
+    const Event::Exposure& exp = **(*elist).begin();
+
+    // create a transformation object -- first get local directions
+    SkyDir zsky( exp.RAZ(), exp.DECZ() );
+    SkyDir xsky( exp.RAX(), exp.DECX() );
+    // orthogonalize, since interpolation and transformations destory orthogonality (limit is 10E-8)
+    Hep3Vector xhat = xsky() -  xsky().dot(zsky()) * zsky() ;
+    PointingTransform toSky( zsky, xhat );
+
+    // make zenith (except for oblateness correction) unit vector
+    Hep3Vector position( exp.posX(),  exp.posY(),  exp.posZ() );
+    SkyDir zenith(position.unit());
+
+    SkyDir sdir = toSky.gDir(glastDir);
+
+    //zenith_theta and earth_azimuth
+    double zenith_theta = sdir.difference(zenith); 
+    if( fabs(zenith_theta)<1e-8) zenith_theta=0;
+
+    SkyDir north_dir(90,0);
+    SkyDir east_dir( north_dir().cross(zenith()) );
+    double earth_azimuth=atan2( sdir().dot(east_dir()), sdir().dot(north_dir()) );
+    if( earth_azimuth <0) earth_azimuth += 2*M_PI; // to 0-360 deg.
+    if( fabs(earth_azimuth)<1e-8) earth_azimuth=0;
+
+    fields["RA"]            = sdir.ra();
+    fields["DEC"]           = sdir.dec();
+    fields["ZENITH_THETA"]  = zenith_theta*180/M_PI;
+    fields["EARTH_AZIMUTH"] = earth_azimuth*180/M_PI;
+//    printf("getCelestial: RA %f DEC %f\n",sdir.ra(),sdir.dec());
+    
+    return fields;
 }

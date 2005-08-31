@@ -2,6 +2,7 @@
 #include "EbfAcdData.h"
 #include "Event/Digi/AcdDigi.h"
 
+
 /*
  |  History
  |
@@ -32,18 +33,19 @@ static unsigned int *halfswap (unsigned short int *beg,
  */
 enum AcdBrds
 {
+/* Modified to adhere to the final AEM cable mapping - blw */
     BRD_1LA =  0,  /*!< Acd readout board 1LA readout order =  0 */
-    BRD_2LA =  1,  /*!< Acd readout board 1LA readout order =  1 */
-    BRD_2RA =  2,  /*!< Acd readout board 2RA readout order =  2 */
-    BRD_3LA =  3,  /*!< Acd readout board 3LA readout order =  3 */
-    BRD_4LA =  4,  /*!< Acd readout board 4LA readout order =  4 */
-    BRD_4RA =  5,  /*!< Acd readout board 4RA readout order =  5 */
+    BRD_2LA =  2,  /*!< Acd readout board 1LA readout order =  2 */
+    BRD_2RA =  4,  /*!< Acd readout board 2RA readout order =  4 */
+    BRD_3LA =  6,  /*!< Acd readout board 3LA readout order =  5 */
+    BRD_4LA =  8,  /*!< Acd readout board 4LA readout order =  8 */
+    BRD_4RA =  10,  /*!< Acd readout board 4RA readout order = 10 */
 
-    BRD_1RB =  6,  /*!< Acd readout board 1RB readout order =  6 */
-    BRD_2LB =  7,  /*!< Acd readout board 1LB readout order =  7 */
-    BRD_2RB =  8,  /*!< Acd readout board 2RB readout order =  8 */
-    BRD_3RB =  9,  /*!< Acd readout board 3RB readout order =  9 */
-    BRD_4LB = 10,  /*!< Acd readout board 4LB readout order = 10 */
+    BRD_1RB =  1,  /*!< Acd readout board 1RB readout order =  1 */
+    BRD_2LB =  3,  /*!< Acd readout board 1LB readout order =  2 */
+    BRD_2RB =  5,  /*!< Acd readout board 2RB readout order =  5 */
+    BRD_3RB =  7,  /*!< Acd readout board 3RB readout order =  7 */
+    BRD_4LB =  9,  /*!< Acd readout board 4LB readout order =  9 */
     BRD_4RB = 11   /*!< Acd readout board 4RB readout order = 11 */
 };
 
@@ -101,7 +103,7 @@ struct BrdChn
  *         and channel.
  *
  *   This map used as input the ACD table Rev 2.0, 11/08/02 as reprinted
- *   in the GLT Electronics Module. The unconnected input channels were
+ *   in the gem Electronics Module. The unconnected input channels were
  *   assigned outputs by MEH in Table 4 of the same document (see p 30).
  *
  */
@@ -217,14 +219,14 @@ static const struct BrdChn TileToBrdChn[4][32] =
 
     /* RIBBONS and UNASSIGNED ELECTRONICS CHANNELS */
     {
-     BC(BRD_2LA,  4, BRD_4RB,  4),  // RBN_00 600
-     BC(BRD_4RA,  1, BRD_2LB,  1),  // RBN_01 601
-     BC(BRD_2RA,  1, BRD_4LB,  1),  // RBN_02 602 
-     BC(BRD_4LA,  4, BRD_2RB,  4),  // RBN_03 603 
      BC(BRD_3LA, 13, BRD_1RB,  4),  // RBN_04 500
      BC(BRD_3LA,  2, BRD_1RB, 15),  // RBN_05 501
      BC(BRD_1LA,  2, BRD_3RB, 15),  // RBN_06 502 
      BC(BRD_1LA, 13, BRD_3RB,  4),  // RBN_07 503
+     BC(BRD_2LA,  4, BRD_4RB,  4),  // RBN_00 600
+     BC(BRD_4RA,  1, BRD_2LB,  1),  // RBN_01 601
+     BC(BRD_2RA,  1, BRD_4LB,  1),  // RBN_02 602 
+     BC(BRD_4LA,  4, BRD_2RB,  4),  // RBN_03 603 
 
      BC_UNASSIGNED               ,   // Unassigned_08
      BC_UNASSIGNED               ,   // Unassigned_09
@@ -267,22 +269,27 @@ static const struct BrdChn TileToBrdChn[4][32] =
  */
 void EbfAcdData::initialize ()
 {
-    m_glt.cno         = 0;
+    m_gem.cno         = 0;
 
-    m_glt.vetoes [XZ] = 0;
-    m_glt.vetoes [YZ] = 0;
-    m_glt.vetoes [XY] = 0;
-    m_glt.vetoes [RU] = 0;
+    m_gem.vetoes [XZ] = 0;
+    m_gem.vetoes [YZ] = 0;
+    m_gem.vetoes [XY] = 0;
+    m_gem.vetoes [RU] = 0;
 
-    m_glt.accepts[XZ] = 0;
-    m_glt.accepts[YZ] = 0;
-    m_glt.accepts[XY] = 0;
-    m_glt.accepts[RU] = 0;
+    m_gem.accepts[XZ] = 0;
+    m_gem.accepts[YZ] = 0;
+    m_gem.accepts[XY] = 0;
+    m_gem.accepts[RU] = 0;
 
     for (int ibrd = 0; ibrd < NumBoards; ibrd++)
     {
         m_brds[ibrd].accepts = 0;
         m_brds[ibrd].vetoes  = 0;
+        for(int ichn = 0; ichn < NumChannelsPerBoard; ichn++)
+        {
+           m_brds[ibrd].adcs[ichn] = 0;
+           m_brds[ibrd].adcsRng[ichn] = 0;
+        }
     }
     
 }
@@ -313,8 +320,9 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
    if (tiles.size ())
    {
        unsigned int       cno_t = 0;
-       unsigned int     *vetoes = m_glt.vetoes;
-       unsigned int    *accepts = m_glt.accepts;
+       unsigned int     *vetoes = m_gem.vetoes;
+       unsigned int    *accepts = m_gem.accepts;
+            
        
        for (Event::AcdDigiCol::const_iterator it = tiles.begin();
             it != tiles.end();
@@ -324,6 +332,8 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            idents::AcdId           id = digi.getId();
            unsigned int         pha_a = digi.getPulseHeight(Event::AcdDigi::A);
            unsigned int         pha_b = digi.getPulseHeight(Event::AcdDigi::B);
+           unsigned int         rng_a = digi.getRange(Event::AcdDigi::A);
+           unsigned int         rng_b = digi.getRange(Event::AcdDigi::B);
            bool                veto_a = digi.getVeto       (Event::AcdDigi::A);
            bool                veto_b = digi.getVeto       (Event::AcdDigi::B);
            bool                 cno_a = digi.getHighDiscrim(Event::AcdDigi::A);
@@ -331,6 +341,17 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            bool              accept_a = digi.getLowDiscrim (Event::AcdDigi::A);
            bool              accept_b = digi.getLowDiscrim (Event::AcdDigi::B);
            
+/*
+           printf("Channel     A             B\n");
+           printf("pha      0x%8.8x     0x%8.8x\n",pha_a,pha_b);
+           printf("veto     0x%8.8x     0x%8.8x\n",veto_a,veto_b);
+           printf("cno      0x%8.8x     0x%8.8x\n",cno_a,cno_b);
+           printf("accept   0x%8.8x     0x%8.8x\n",accept_a,accept_b);
+           printf("------------------------------\n");
+*/
+//  cno on side B never seems to be set; so do it to match side A
+           cno_b = cno_a;           
+
 
            int             oface;
            struct BrdChn  brdChn;
@@ -339,10 +360,19 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            int              chnA;
            int              chnB;
 
+//           id.Print("C");
            
            int            face = id.face   ();
-           int         channel = (5 * id.row() + id.column());
-           
+           int           channel = 0;
+           if(id.tile()) {
+               channel = (5 * id.row() + id.column());
+//               printf("EbfAcd Hit Face %i Row %i  Column %i  Chan %i\n",face,id.row(),id.column(),channel);
+           } else if(id.ribbon()) {            
+//               printf("EbfAcd Hit Face %i Ribbon Orientation %i Ribbon Number %i\n",face,id.ribbonOrientation(),id.ribbonNum(),channel);
+               channel = id.ribbonNum();
+           } else {
+              printf("WARNING: ACD PMT that is not a Tile or Ribbon\n");
+           }
 
            /*
             | Compute the output face number and bit offset, adjust mask
@@ -363,8 +393,8 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            else if (face == 2) { oface = XZ;                }
            else if (face == 3) { oface = YZ; channel += 16; }
            else if (face == 4) { oface = XZ; channel += 16; }
-           else if (face == 5) { oface = RU; channel +=  4; }
-           else if (face == 6) { oface = RU;                }
+           else if (face == 5) { oface = RU;                }
+           else if (face == 6) { oface = RU; channel +=  4; }
 
 
            brdChn = TileToBrdChn[oface][channel];
@@ -372,6 +402,19 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            brdB   = m_brds + brdChn.brdB;
            chnA   = brdChn.chnA;
            chnB   = brdChn.chnB;
+
+// Look for entries in the Not Assigned Location
+/*            if(oface==RU) {
+                printf("Face: %i   oFace: %i \n",face,oface);
+                printf("Channel %i    A             B\n",channel);
+                printf("pha        0x%8.8x     0x%8.8x\n",pha_a,pha_b);
+                printf("veto       0x%8.8x     0x%8.8x\n",veto_a,veto_b);
+                printf("cno        0x%8.8x     0x%8.8x\n",cno_a,cno_b);
+                printf("accept     0x%8.8x     0x%8.8x\n",accept_a,accept_b);
+                printf("------------------------------\n");                                
+//            } 
+*/
+
 
            /*
             | !!! KLUDGE !!!
@@ -389,7 +432,7 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
             |
             | This is good enough for my immediate purposes, but does need
             | to get fixed.
-           */
+           
            accept_a = pha_a > 23;
            accept_b = pha_b > 23;
            
@@ -398,7 +441,7 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
 
            cno_a    = pha_a > 450;
            cno_b    = pha_b > 450;
-
+           */
 
            /* Set the veto bits... */
            if (veto_a)
@@ -415,8 +458,11 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            }
            
 
-           /* Always store the ADC value, it can't be used unless accept on */
+           /* Store the pha and range values */
+           brdA->adcsRng[chnA] = rng_a;
            brdA->adcs[chnA] = pha_a;
+
+           brdB->adcsRng[chnB] = rng_b;
            brdB->adcs[chnB] = pha_b;           
 
 
@@ -453,10 +499,25 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            {
                cno_t |= (1 << brdChn.brdB);      
            }
-           
+
+  
+// Print Information about this board
+/*           printf("BrdA %i\n",brdChn.brdA);
+           printf("Accepts 0x%8.8x\n",brdA->accepts);
+           printf("Vetoes  0x%8.8x\n",brdA->vetoes);  
+           for(int chnl=0; chnl<18; chnl++){
+              printf("Chnl %2i  ADC 0x%8.8x  Rng 0x%8.8x\n",chnl,brdA->adcs[chnl],brdA->adcsRng[chnl]);              
+           }
+           printf("BrdB %i\n",brdChn.brdB);
+           printf("Accepts 0x%8.8x\n",brdB->accepts);
+           printf("Vetoes  0x%8.8x\n",brdB->vetoes);  
+           for(int chnl=0; chnl<18; chnl++){
+              printf("Chnl %2i  ADC 0x%8.8x  Rng 0x%8.8x\n",chnl,brdB->adcs[chnl],brdB->adcsRng[chnl]);              
+           }           
+*/           
        }
 
-       m_glt.cno = cno_t;
+       m_gem.cno = cno_t;
    }
    
    return;
@@ -508,17 +569,19 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
     |  |                                                               |
     |  +-------------+-----------------+--------------+----------------+
     |  |                               |         PHA READOUT 0         |
-    |  |A A A A A P P 0 0 0 0 0 0 0 0 0 M R V V V V V V V V V V V V V P|
-    |  |c c c c c H a                   o a a a a a a a a a a a a a a a|
-    |  |c c c c c A r                   r n l l l l l l l l l l l l l r|
-    |  |e e e e e   i                   e g u u u u u u u u u u u u u i|
-    |  |p p p p p   t                     e e e e e e e e e e e e e e t| WORD 1
-    |  |t t t t t   y                                                 y|
-    |  |                                                               |
-    |  |1 1 1 1 1   E                                                 E|
-    |  |3 4 5 6 7   r                                                 r|
-    |  |            r                                                 r|
-    |  |                                                               |
+    |  |A A A A A P P E C C C C 0 0 0 0 M R V V V V V V V V V V V V V P|
+    |  |c c c c c H a n a a a a         o a a a a a a a a a a a a a a a|
+    |  |c c c c c A r d b b b b         r n l l l l l l l l l l l l l r|
+    |  |e e e e e   i   l l l l         e g u u u u u u u u u u u u u i|
+    |  |p p p p p   t o e e e e           e e e e e e e e e e e e e e t| WORD 1
+    |  |t t t t t   y f                                               y|
+    |  |                N N N N                                        |
+    |  |1 1 1 1 1   E C u u u u                                       E|
+    |  |3 4 5 6 7   r a m m m m                                       r|
+    |  |            r b b b b b                                       r|
+    |  |              l e e e e                                        |
+    |  |              e r r r r                                        |
+    |  |                0 1 2 3
     |  +-------------+-----------------+--------------+----------------+
     |  |         PHA READOUT 1         |       PHA READOUT 2           | WORD 2
     |  |         PHA READOUT 3         |       PHA READOUT 4           | WORD 3
@@ -535,7 +598,8 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
     | without regards to its internal meaning.
    */
 #  define START_BIT (1 << 31)
-   unsigned short int  *out = (unsigned short int *)dst;  // Output word   
+   unsigned short int  *out = (unsigned short int *)dst;  // Output word 
+   unsigned short int  *start = out;  
    const struct AcdBrd *brd = m_brds;                     // ADC board info
 
 
@@ -545,18 +609,39 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
        int               accepts = brd->accepts;
        int                vetoes = brd->vetoes;
        const unsigned short *adc = brd->adcs;
+       const unsigned short *rng = brd->adcsRng;
        unsigned int start_v0_17_a0_12;
+       unsigned int a13_a17_dat_parE_cabNum;
        
+       /* Print out boards and Accepts */
+//       printf("Board %i  Vetoes 0x%8.8x  Accepts 0x%8.8x\n",ibrd,vetoes,accepts);
+
 
        /* Build the first 32 bits */
        start_v0_17_a0_12 = START_BIT | (vetoes  << 13) | (accepts >> 5);
        
-
-       /* Stash the fixed portion */
+       start = out;
+       
+       /* Stash the first 2 16 bit words of the fixed portion */
        *out++ = (start_v0_17_a0_12 >> 16);
        *out++ = start_v0_17_a0_12 & 0xffff;
-       *out++ = (accepts << 11) | (accepts ? (1<<10) : 0);
+       //printf("EbfACD: 1st 16b header %x\n",(start_v0_17_a0_12 >> 16));
+       //printf("EbfACD: 2nd 16b header %x\n",(start_v0_17_a0_12 & 0xffff));
 
+       /* build third 16 bit word of the fixed portion*/
+       a13_a17_dat_parE_cabNum = (accepts << 11) | (accepts ? (1<<10) : 0) |
+                                 (ibrd << 4);
+       /* put last cable flag in...KLUDGE: this assumes they are all there*/                          
+       if(ibrd==11) a13_a17_dat_parE_cabNum |= 1<<8;
+       
+       /* Stash the third 16 bit word */
+       *out++ = a13_a17_dat_parE_cabNum & 0xffff;
+       //printf("EbfACD: 3rd 16b header %x\n",(a13_a17_dat_parE_cabNum & 0xffff));
+
+//       for(int i=0; i<3;i++) {
+//         printf("Raw Word %i  0x%4.4x\n",i,*start); 
+//         start++;
+//       }
 
        /* Left justify the accepts */
        accepts <<= 14;
@@ -568,7 +653,7 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
            if ((signed int)accepts < 0)
            {
                unsigned short pha;
-
+               unsigned short rngV;
                /* 
                 | The 16 bit PHA word is laid out as follows
                 |
@@ -593,6 +678,7 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
                 | the lay out. So I've kind of hardcoded this in; not good.
                */
                pha       = *adc << 1;
+               rngV      = *rng << 13;
                accepts <<= 1;
                
                           
@@ -618,13 +704,15 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
                if (accepts == 0) 
                {
                    /* Just store the value and call it quits */
-                   *out++ = pha;
+                   *out++ = rngV | pha;
+                   //printf("EbfACD: pha value(f) %x\n",pha);
                    break;
                }
                else
                {
                    /* Store this value and indicate more to come */
                    *out++ = pha | 0x4000;
+                   //printf("EbfACD: pha value %x\n",pha | 0x4000);
                }
            }
            else
@@ -642,7 +730,30 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
 }
 
 
+void EbfAcdData::parseInput(unsigned int *contrib, unsigned int lcbWords)
+{
 
+// Initialize
+   initialize();
+
+
+   unsigned int *data = contrib;
+   bool debug = false;
+   if(debug) {
+      printf("ACD Contribution:\n");
+      for(int i=0; i<lcbWords; i++) {
+         for(int j=0; j<4; j++) {
+             printf(" 0x%8.8x ",*data++);
+         }
+         printf("\n");
+      }
+      printf("\n");
+   // reset pointer
+      data = contrib;
+   }
+   
+   return;
+}
 
 
 /**
@@ -663,21 +774,21 @@ void EbfAcdData::print() const
                 "  XY Tiles = %8.8x %8.8x\n"
                 "  RU Tiles = %8.8x %8.8x\n"
                 "\n",
-                m_glt.vetoes[XZ], m_glt.accepts[XZ],
-                m_glt.vetoes[YZ], m_glt.accepts[YZ],
-                m_glt.vetoes[XY], m_glt.accepts[XY],
-                m_glt.vetoes[RU], m_glt.accepts[RU]);
+                m_gem.vetoes[XZ], m_gem.accepts[XZ],
+                m_gem.vetoes[YZ], m_gem.accepts[YZ],
+                m_gem.vetoes[XY], m_gem.accepts[XY],
+                m_gem.vetoes[RU], m_gem.accepts[RU]);
 
 
    for (unsigned int list = 0; 
-        list < sizeof(m_glt.vetoes)/sizeof(*m_glt.vetoes);
+        list < sizeof(m_gem.vetoes)/sizeof(*m_gem.vetoes);
         list++)
    {
        static const char FaceNames[8][4] =
            {  "XY ", "YZ-", "XZ-", "YZ+", "XZ+", "RB ", "RA ", "UA "  };
        
-       unsigned int      veto = m_glt.vetoes[list];
-       unsigned int    accept = m_glt.accepts[list];
+       unsigned int      veto = m_gem.vetoes[list];
+       unsigned int    accept = m_gem.accepts[list];
        unsigned int      tile = veto | accept;
        unsigned int   channel =             0;
 
@@ -781,7 +892,7 @@ static unsigned int *halfswap (unsigned short int *beg,
     if (len & 1)
     {
         /* Fill in a fun word for the padding */
-        *end = 0x0acd;
+        *end = 0x0;
         len++;
     }
 

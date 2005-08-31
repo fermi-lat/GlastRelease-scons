@@ -68,7 +68,7 @@ class EbfCalLayerData
     unsigned short int       m_hi;  /*!< Bit mask of hi discriminator hits */
     unsigned short int    m_nhits;  /*!< Number of hits                    */
     unsigned short int      m_msk;  /*!< Bit mask of crystals              */
-    unsigned int m_xtals[NumLogs];  /*!< The ADCs (sparse)                 */
+    unsigned int m_xtals[NumLogs][4];/*!< The ADCs allow for 4 range readout*/
 };
 
 
@@ -134,6 +134,8 @@ class EbfCalData
     void      initialize ();
     void            fill (const Event::CalDigiCol &calDigiCol,
                           const EbfCalConstants   &constants);
+    void            fillEncode (int encodeFlag, const EbfCalConstants   &constants, int event);
+    void            parseInput (unsigned int *contrib, unsigned int tower, unsigned int lcbWords, const EbfCalConstants *calCon);
     
     unsigned int *format (unsigned int  *dst)              const;       
     unsigned int *format (unsigned int  *dst, int towerId) const;
@@ -181,13 +183,27 @@ class EbfCalData
         return m_towers + itower;
     }
             
-    
+    inline bool FourRangeReadOut () const
+    {
+        return m_range4;
+    }    
+    inline bool getCalStrobe () const
+    {
+        return m_calStrobe;
+    }        
+    inline double getTotalEnergy() const
+    {
+        return m_TotalEnergy;
+    }
     
   private:
     unsigned short int             m_lo; /*!< Mask of towers with CAL LO  */
     unsigned short int             m_hi; /*!< Mask of towers with CAL HI  */
     unsigned short int            m_msk; /*!< Mask of towers with data    */
     EbfCalTowerData m_towers[NumTowers]; /*!< The data for all the towers */ 
+    bool                       m_range4; /*!< TRUE=4 range readout enabled*/
+    bool                    m_calStrobe; /*!< calStrobe set */
+    double                m_TotalEnergy; /*!< Total Energy deposited in cal */                            
 };
 
 

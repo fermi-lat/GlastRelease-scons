@@ -16,7 +16,7 @@
 /**
  *  @class EbfAcdData Tiles
  *  @brief Summarizes the ACD data for use in producing both the EBF
- *         ACD data and the ACD data used and produced by the GLT.
+ *         ACD data and the ACD data used and produced by the GEM.
  *
  *   The ACD electronics services 216 channels, 18 channels on each
  *   of 12 so-called FREE boards. The ACD consists of 97 active
@@ -34,14 +34,14 @@
  *   is, there is no correlation with the readout order and the
  *   tile geometry.
  *
- *   The second place the ACD data occurs is in the GLT data. Here
+ *   The second place the ACD data occurs is in the GEM data. Here
  *   the ACD data is reduced to only the veto bit masks. Furthermore
  *   the 2-bold redundance is collapsed by ORing the A and B channels.
  *   The ACD data is, however, reordered to follow the geometry.
- *   The GLT ACD data consists of 4 32 bit words. The words represent
+ *   The GEM ACD data consists of 4 32 bit words. The words represent
  *   the 32 channels for the tiles measuring in the XZ, the YZ, the
  *   XY (sometimes called the TOP) planes and the ribbons. The ACD in
- *   the GLT also captures the 12 CNO bits (one per FREE board).
+ *   the GEM also captures the 12 CNO bits (one per FREE board).
  *
  */
 class EbfAcdData
@@ -51,7 +51,7 @@ class EbfAcdData
     /**
      * @enum  TileFaces
      * @brief Gives symbolic names to the 4 32 bit words of the ACD data
-     *        captured in the GLT data structure.
+     *        captured in the GEM data structure.
      *
      *  The symbolic names are chosen to name the dimensions that the
      *  tiles measure. For example, the top plane of ACD tiles is named
@@ -86,38 +86,44 @@ class EbfAcdData
     void          fill       (const Event::AcdDigiCol &tiles);
     unsigned int *format     (unsigned int *dst)      const;
     void          print      ()                       const;
+    void          parseInput (unsigned int *contrib, unsigned int lcbWords);
 
-    inline unsigned int  cno           () const { return m_glt.cno;         }
-
-    inline const
-           unsigned int *vetoes        () const { return m_glt.vetoes;      }
-    inline unsigned int  vetoesXY      () const { return m_glt.vetoes[XY];  }
-    inline unsigned int  vetoesXZ      () const { return m_glt.vetoes[XZ];  }
-    inline unsigned int  vetoesYZ      () const { return m_glt.vetoes[YZ];  }
-    inline unsigned int  vetoesRU      () const { return m_glt.vetoes[RU];  }
+    inline unsigned int  cno           () const { return m_gem.cno;         }
 
     inline const
-           unsigned int *accepts       () const { return m_glt.accepts;     }
-    inline unsigned int  acceptsXY     () const { return m_glt.accepts[XY]; }
-    inline unsigned int  acceptsXZ     () const { return m_glt.accepts[XZ]; }
-    inline unsigned int  acceptsYZ     () const { return m_glt.accepts[YZ]; }
-    inline unsigned int  acceptsRU     () const { return m_glt.accepts[RU]; }
-    
+           unsigned int *vetoes        () const { return m_gem.vetoes;      }
+    inline unsigned int  vetoesXY      () const { return m_gem.vetoes[XY];  }
+    inline unsigned int  vetoesXZ      () const { return m_gem.vetoes[XZ];  }
+    inline unsigned int  vetoesYZ      () const { return m_gem.vetoes[YZ];  }
+    inline unsigned int  vetoesRU      () const { return m_gem.vetoes[RU];  }
+
+    inline const
+           unsigned int *accepts       () const { return m_gem.accepts;     }
+    inline unsigned int  acceptsXY     () const { return m_gem.accepts[XY]; }
+    inline unsigned int  acceptsXZ     () const { return m_gem.accepts[XZ]; }
+    inline unsigned int  acceptsYZ     () const { return m_gem.accepts[YZ]; }
+    inline unsigned int  acceptsRU     () const { return m_gem.accepts[RU]; }
+
+    inline unsigned int    BrdVetoes      (int brd) const { return m_brds[brd].vetoes; }
+    inline unsigned int    BrdAccepts     (int brd) const { return m_brds[brd].accepts; }  
+    inline unsigned short  BrdAdcs(int brd,int Chn) const { return m_brds[brd].adcs[Chn]; }
+    inline unsigned short  BrdAdcsRng(int brd,int Chn) const { return m_brds[brd].adcsRng[Chn]; }
+          
   private:
 
     /**
      *  
-     *   @struct GltData
+     *   @struct GemData
      *   @brief  The data relevant to producing the ACD's contribution
-     *           to the GLT data
+     *           to the GEM data
      *
      */
-    struct GltData
+    struct GemData
     {
         unsigned int                 cno; /*!< Mask of the 12 CNO triggers */
         unsigned int    vetoes[NumMasks]; /*!< XZ, YZ, XY, RU     vetoes   */
         unsigned int   accepts[NumMasks]; /*!< XZ, YZ, XY, RU     accepts  */
-    } m_glt;
+    } m_gem;
     
 
     /**
@@ -128,10 +134,17 @@ class EbfAcdData
      */
     struct AcdBrd
     {
+        /**
+         * Note on the accept and veto bits.  They are stored in the following
+         * order
+         *         bit:  17  16  ...  1  0
+         *         chn:   0   1  ... 16 17
+        **/
         unsigned int    vetoes;             /*!< Veto   map for this board */
         unsigned int   accepts;             /*!< Accept map for this board */
         unsigned short
                  adcs[NumChannelsPerBoard]; /*!<       ADCs for this board */
+        unsigned short adcsRng[NumChannelsPerBoard]; /*!< Range 0 or 1 */         
     } m_brds[NumBoards];
 };
 

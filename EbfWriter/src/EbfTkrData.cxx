@@ -1,4 +1,15 @@
 #include <stdio.h>
+#include "GaudiKernel/Algorithm.h"
+
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+#include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/Event.h"
+
 #include "EbfTkrData.h"
 #include "Event/Digi/TkrDigi.h"
 
@@ -149,19 +160,14 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                int ilayerEnd = 2*ilayer + loHi;
                int     ihits =  tower->m_nhits[ilayerEnd];
                
-               if(ihits<128){
+               if(ihits<EbfTkrTowerData::MaxStripsPerLayerEnd){
                  tower->m_nhits[ilayerEnd]       = ihits + 1;
                  tower->m_data[ilayerEnd][ihits] = stripId;
                  tower->m_maps[xy][loHi]        |= (1 << bilayer);
-               }
-			   else{
-				   if(!reported){
-#if 0 // THB: disable this message for the duration of the Data Challenge
-					   std::cout << "Initiated large number of hits workaround. Please fix."<<std::endl;
-#endif
-					   reported=true;
-				   }
-			   }
+               } else{
+			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
+                         towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
+			      }
            }
        }
 
@@ -175,6 +181,119 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
 }
 
 
+
+/**
+ *
+ *  @fn     EbfTkrData::fillEncode ()
+ *  @brief  Fills the hits by tower and layer end. It is assumed 
+ *          that the hits are sorted within a layer end.
+ *
+ *  @param  tkr  The GLEAM representation of the hit strips + TOTs
+ *
+**/
+void EbfTkrData::fillEncode (int encodeFlag, int event)
+{
+   /*
+    | Within this routine layer ends are defined as:
+    |    X:  0 - 35 (even = lo strip addresses, odd = hi strips)  
+    |    Y: 36 - 71 (even = lo strip addresses, odd = hi strips)
+    |
+    | This is a completely arbitrary definition which need only
+    | be used consistently within this class.
+   */
+
+   /* Initialize the data structure for this event */
+   initialize ();
+   if(encodeFlag==0) return;
+
+   /* Loop Over towers */ 
+   for (int twr=0; twr<16; twr++){
+      for(int bilayer=0; bilayer<18; bilayer++){
+        for(int xy=0; xy<2; xy++){
+	  for(int split=0; split<2; split++){
+
+// Set the split point and the number of hits	
+           int lastStrip = 768;
+           unsigned int numHits = 64;
+
+// Setup Conditions for Small Encode (encodeFlag==2)
+	   if(encodeFlag==2) numHits=1;
+	   if( (bilayer != (event%18) | xy != ((event/18)%2)  | split != ((event/36)%2) ) && encodeFlag==2 ) continue;
+//	   printf("Event %i bilayer %i xy %i  split %i\n",event,bilayer,xy,split);
+	   
+           /* 
+            | The layers are numbered 
+            |    X layers:  0-17
+            |    Y layers: 18-36
+	    /
+	    /  "ilayer" must run 0-35
+	    /  "bilayer must run 0-17
+	    /  "xy" must be 0 or 1
+           */
+           int  ilayer = 18 * xy + bilayer;
+           EbfTkrTowerData *tower = m_towers + twr;
+         
+// Don't know how to fill these at the moment. Is one of these for
+// the high end and the other the low end?
+           tower->m_tots[2*ilayer]   = 0;
+           tower->m_tots[2*ilayer+1] = 0;
+      
+           bool reported=false;
+           /* Loop through all the hits on this bi_layer */
+           for (unsigned int iHit = 0; iHit < numHits; iHit++)
+           {
+	       /*
+	        / Define the stripId to be encoded as follows
+		/    bit   10: HI=1/LO=0
+		/    bit    9:  Always Zero (Avoids going over split point)
+		/    bit    8:  Tower # Even = 0 / Tower # Odd = 1
+		/    bit    7:  (bi)layer # Even = 0 / Layer # Odd = 1
+		/    bit    6:  x layer=0 / y layer=1 
+		/    bits 0-5: hit Number  
+	       */
+               int stripId = iHit;
+	       stripId |= xy << 6;
+	       if(bilayer%2)  stripId |= 1 << 7;
+	       if(twr%2)      stripId |= 1 << 8;
+	       if(split==1)   stripId |= 1 << 10; 
+
+               /*
+                | Check if this strip is before or after the LO HI splitpoint
+               */
+               EbfTkrTowerData::eLOHI loHi = (stripId > lastStrip) 
+                                           ? EbfTkrTowerData::HI
+                                           : EbfTkrTowerData::LO;
+
+               /* 
+                | Translate the layer numbering to a layer end numbering
+                |  X layers:  0-35 
+                |  Y layers: 36-71
+                |  Lo end  : Even layers
+                |  Hi end  : Odd  layers
+               */
+               int ilayerEnd = 2*ilayer + loHi;
+               int     ihits =  tower->m_nhits[ilayerEnd];
+//	       printf("Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i ihit %i StripId 0x%3.3x\n",twr,bilayer,xy,split,ilayerEnd,iHit,(ihits+1),stripId);
+               
+               if(ihits<EbfTkrTowerData::MaxStripsPerLayerEnd){
+                 tower->m_nhits[ilayerEnd]       = ihits + 1;
+                 tower->m_data[ilayerEnd][ihits] = stripId;
+                 tower->m_maps[xy][loHi]        |= (1 << bilayer);
+               } else{
+			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i ihit %i StripId 0x%3.3x\n",twr,bilayer,xy,split,ilayerEnd,iHit,(ihits+1),stripId); 
+	            }
+             } // loop over hits
+	   } // loop over split 
+         } // loop over xy
+       } // loop over bilayers
+     } // loop over towers
+      
+       m_trigger = completeTkrTrg (m_towers,  
+                                   sizeof (m_towers) / sizeof (*m_towers));
+
+   
+   return;
+}
 
 
 /**
@@ -289,6 +408,7 @@ unsigned int *EbfTkrData::format (unsigned int *dst, int itower) const
     | Using the above information, fill a data structure giving the number
     | of the first layer on a controller
    */
+
    static const int Begin[EbfTkrTowerData::NumCables] = { 2,  0,  3,  1,
                                                          38, 36, 39, 37  };
    
@@ -348,15 +468,17 @@ unsigned int *EbfTkrData::format (unsigned int *dst, int itower) const
 
    boff = packAccepts (dst, accepts);
 
-
+   int totalHits[EbfTkrTowerData::NumCables];
+   
    /* Now pack up the hits on each cable */
    for (unsigned int ocable = 0; ocable<EbfTkrTowerData::NumCables; ocable++)
    {
+       totalHits[ocable] = 0;
        int ilayerEndMin = Begin[ocable];
        int ilayerEndMax = ilayerEndMin 
                         + 4*EbfTkrTowerData::NumLayerEndsPerCable;
        
-
+//       printf("Tower %2i Cable %2i",itower,ocable);
        /* Pack the layer hits on the cable */
        for (int ilayerEnd = ilayerEndMin;
             ilayerEnd     < ilayerEndMax;
@@ -366,8 +488,14 @@ unsigned int *EbfTkrData::format (unsigned int *dst, int itower) const
                                  boff, 
                                  tower->m_data[ilayerEnd],
                                  tower->m_nhits[ilayerEnd]);
+           totalHits[ocable] +=tower->m_nhits[ilayerEnd]; 
+//           printf(" %4i",tower->m_nhits[ilayerEnd]);
        }
-
+//       printf(" %4i \n",totalHits[ocable]); 
+       if(totalHits[ocable]>EbfTkrTowerData::MaxStripsPerCable) {
+//            printf("EbfTrkData:: Tower %i Cable %i has too many hits %i \n",itower,ocable,totalHits[ocable]);
+//          tower->m_Truncated[ocable] = true;
+       } 
    }
 
    boff = packTots (dst, boff, nlayerEnds, tots);
@@ -384,7 +512,171 @@ unsigned int *EbfTkrData::format (unsigned int *dst, int itower) const
 }
 
 
+void EbfTkrData::parseInput(unsigned int *contrib, unsigned int itower, unsigned int lcbWords)
+{
 
+   static const int Begin[EbfTkrTowerData::NumCables] = { 2,  0,  3,  1,
+                                                         38, 36, 39, 37  };
+
+   unsigned int *data = contrib;
+   bool debug = false;
+   
+   if(debug) {
+      printf("Tower %i Contribution:\n",itower);
+      for(int i=0; i<lcbWords; i++) {
+         for(int j=0; j<4; j++) {
+             printf(" 0x%8.8x ",*data++);
+         }
+         printf("\n");
+      }
+      printf("\n");
+   // reset pointer
+      data = contrib;
+   }   
+   
+   if(itower==9) initialize();
+   
+   
+// Get the tower
+   EbfTkrTowerData *tower = m_towers + itower;
+   
+   
+// Peel off header words   
+   unsigned int LCB_Header0 = *data++;
+   unsigned int LCB_Header1 = *data++;
+
+// Parse out header words   
+   unsigned int startbit  = (LCB_Header1 >> 31) & 0x1;
+              m_calStrobe = (LCB_Header1 >> 30) & 0x1;
+   unsigned int sequence0 = (LCB_Header1 >> 28) & 0x3;
+   unsigned int trigAck   = (LCB_Header1 >> 27) & 0x1;
+   unsigned int range4    = (LCB_Header1 >> 26) & 0x1;
+   unsigned int zeroSup   = (LCB_Header1 >> 25) & 0x1; 
+   unsigned int marker    = (LCB_Header1 >> 22) & 0x7;
+   unsigned int ErrCont   = (LCB_Header1 >> 21) & 0x1;
+   unsigned int DiagCont  = (LCB_Header1 >> 20) & 0x1;
+   unsigned int sequence1 = (LCB_Header1 >> 1) & 0x7fff;
+   unsigned int ParErr    = (LCB_Header1 & 0x1);
+
+    if(debug) printf("LCB_Header1 0x%8.8x\n",LCB_Header1);
+    if(debug) printf("startbit %1i  calStrobe %1i seq %1i trigAck %1i 4Rng %1i ZSup %1i \nMkr %1i ErrCnt %1i DiaCnt %1i ParEr %1i Seq %i\n",
+            startbit,m_calStrobe,sequence0,trigAck,range4,zeroSup,marker,ErrCont,DiagCont,ParErr,sequence1);
+                
+// Get the number of Calorimeter hits and skip over them
+   unsigned int calHits_Wd = *data++;
+   unsigned int calHits = 0;
+   for(int i=0; i<8; i++) calHits += (calHits_Wd >> i*4) & 0xf;   
+   if(debug) printf("Hits in Cal Layers: %i\n",calHits);
+
+// Advance past the calorimeter information
+   int nmWds = range4 == 1 ? calHits*4 : calHits;
+   for(int i=0; i<nmWds; i++) data++;
+
+// Grab the cable Accept bits
+   unsigned int cableWd0 = *data++;
+   unsigned int cableWd1 = *data++;
+   unsigned int cableWd2 = *data;  //Don't advance pointer because we have strip info on this word
+
+// Now Parse Accept bits:
+   unsigned int Accept[8];
+   Accept[0] = (cableWd0 >>23) & 0x1ff;   
+   Accept[1] = (cableWd0 >>14) & 0x1ff;
+   Accept[2] = (cableWd0 >>5) & 0x1ff;
+   Accept[3] = ((cableWd0 & 0x1f) << 4) | ((cableWd1 >>28) & 0xf) ;
+   Accept[4] = (cableWd1 >>19) & 0x1ff;
+   Accept[5] = (cableWd1 >>10) & 0x1ff;
+   Accept[6] = (cableWd1 >>1) & 0x1ff;
+   Accept[7] = ((cableWd1 & 0x1) << 8) | ((cableWd2 >>24) & 0xff) ;
+   if(debug) for(int i=0; i<8; i++) printf("Accept[%i]: 0x%8.8x\n",i,Accept[i]);
+
+// Now Start grabbing the hits
+   int bitOff = 12; // Starting point after cable accepts.
+   unsigned int stripID = 0;
+   unsigned int nTOTs =0;
+   unsigned int TOTLayer[EbfTkrTowerData::NumLayerEnds];
+   
+   for(int cable=0; cable<8; cable++) {
+
+// Set the starting layerEnd for this cable
+      unsigned int ilayerEnd = Begin[cable];
+
+      unsigned int accList = Accept[cable];
+      while(accList != 0) {
+
+// first layer is in most sig. bit of accept list peel off starting at
+// the top bits      
+       if( (accList & 0x100) != 0) {
+         TOTLayer[nTOTs] = ilayerEnd;         
+         nTOTs++;
+         if(debug) printf("Cable %i accList 0x%8.8x\n",cable,accList);
+         bool LastHit = false; 
+         while(!LastHit) {
+           
+// Figure out where we need to go for strip ID
+           if(debug) printf("BitOff = %i\n",bitOff);
+           if(bitOff >= 0) {
+              stripID = (*data >> bitOff) & 0xfff;
+              if(debug) printf("NonNeg: bitOff %i  stripID 0x%8.8x\n",bitOff,stripID);
+           } else {
+              stripID =  (*data++ & (0xfff >> -bitOff)) << -bitOff;
+              if(debug) printf("Neg1: bitOff %i  stripID 0x%8.8x\n",bitOff,stripID);
+              bitOff += 32;
+              stripID |= (*data >> bitOff); 
+              if(debug) printf("Neg2: bitOff %i  stripID 0x%8.8x\n",bitOff,stripID);
+           }
+           
+// Set strip ID for this layer
+           int ihits = tower->m_nhits[ilayerEnd];
+           tower->m_nhits[ilayerEnd] = ihits+1;
+           tower->m_data[ilayerEnd][ihits] = stripID;
+                      
+// shift the bit offset                      
+           bitOff -= 12;
+
+// Check to see if this is the last strip for this layer                         
+           if( (stripID&0x800) !=0 ) LastHit = true;
+           
+         } //while more hits on this layer
+        } //if this layer has an accept bit set
+       accList <<= 0x1;
+
+// Set layer end for this accept list
+       ilayerEnd += 4;               
+       
+      }//while accept bits
+   } // loop over cables   
+        
+// Now Get the TOT
+   unsigned int TOT = 0;
+   if(debug) printf("Number of TOTs %i\n",nTOTs);
+   for(int i=0; i<nTOTs; i++) {
+      if(debug) printf("start bitOff = %i", bitOff);
+      if(bitOff==-4) bitOff = 0; //First TOT is at end of 32 bit word
+      if(bitOff==-12) { bitOff = 24; data++; } //32 bit word is finished by padding..advance to next word
+      if(bitOff%8 != 0) bitOff -=4; //middle of 32 bits word...get to byte boundary
+      if(debug) printf("End bitOff = %i\n",bitOff);
+      
+      if(bitOff >= 0) {
+         TOT = (*data >> bitOff) & 0xff;
+         if(debug) printf("NonNeg: bitOff %i  TOT 0x%8.8x\n",bitOff,TOT);
+      } else {
+         TOT =  (*data++ & (0xff >> -bitOff)) << -bitOff;
+         if(debug) printf("Neg1: bitOff %i  TOT 0x%8.8x\n",bitOff,TOT);
+         bitOff += 32;
+         TOT |= (*data >> bitOff); 
+         if(debug) printf("Neg2: bitOff %i  TOT 0x%8.8x\n",bitOff,TOT);
+      }
+
+// Set the TOT. Ebf Has dropped two least sig. bits...must scale up but
+// resolution is lost compared to original mc digi's
+      tower->m_tots[TOTLayer[i]]= TOT << 2;
+
+// Move the bit offset            
+      bitOff -= 8;          
+   }
+
+   return;
+}
   
 /**
  *
@@ -604,6 +896,8 @@ static int packLayerHits (unsigned int                  *dst,
    /*
     |  Loop over the hits, packing the strip ids 12  bits at a time
    */ 
+   
+//   printf("Packing the strip IDs: nhits = %i\n",nhits);
    while (nhits > 0)
    {
        int              idx;
@@ -692,16 +986,23 @@ static int packTots (unsigned int                  *dst,
     | Now pack the TOTs 
     | First round the bit offset to the nearest byte
    */
+//   printf("Packing TOTs: ntots = %i initial boff %i\n",ntots,boff);
    boff = (boff + 7) & ~0x7;
+//   printf("Revised boff %i\n",boff);
    for (itot = 0; itot < ntots; itot++)
    {
        int bdx;
        int tot;
        
        tot   = *tots++;
+
+// The TEM truncates the TOT value to 8 bits by dropping the
+// least significant 2 bits.
+       tot  = (tot>>2) & 0xff;
+       
        bdx   = ((boff ^ 0x1f) & 0x1f) - 7;
         
-
+//       printf("Storing TOT %i boff %i  bdx %i  tot 0x%8.8x \n",itot,boff,bdx,tot);
        if   (bdx == 24) dst[boff >> 5]  = tot <<  24;
        else             dst[boff >> 5] |= tot << bdx;
        

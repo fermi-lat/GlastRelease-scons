@@ -38,8 +38,8 @@ static inline unsigned int pack (int xtalId,
                                  int adcNeg)
 {
  return     ((xtalId & 0xf) << 28)                            | 
-          ((((rngPos & 0x3) << 12) | (adcPos & 0xfff)) << 14) |
-           (((rngNeg & 0x3) << 12) | (adcNeg & 0xfff));
+          ((((rngNeg & 0x3) << 12) | (adcNeg & 0xfff)) << 14) |
+           (((rngPos & 0x3) << 12) | (adcPos & 0xfff));
 }
 
  
@@ -168,6 +168,8 @@ StatusCode EbfCalConstants::initialize (IGlastDetSvc *detSvc, MsgStream &log)
       m_loThreshold,
       m_hiThreshold);
     */
+    
+    
     return sc;
 }
 
@@ -185,7 +187,7 @@ void EbfCalData::initialize ()
    unsigned int      itower;
    EbfCalTowerData   *tower;
 
-   m_lo = m_hi = m_msk = 0;
+   m_lo = m_hi = m_msk = m_TotalEnergy = 0;
 
    /* 
     |  Loop over all the towers 
@@ -276,112 +278,343 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
             | supported, so I commented it out. This needs to get fixed.
             |
            */
+
+// Get the  CalDigi
            Event::CalDigi                &digi = **it;
-//         idents::CalXtalId::CalTrigMode mode = digi.getMode ();
+
+// Find out the trigger mode mode==CalXtalId::BESTRANGE (best range)
+//                           mode==CalXtalId::ALLRANGE  (all four ranges)
+           idents::CalXtalId::CalTrigMode mode = digi.getMode ();
+           m_range4 = (mode==idents::CalXtalId::ALLRANGE) ? true:false;
+
+// For testing set this 4 range readout to true
+//            m_range4 = true;
+           
+            if(m_range4) printf("EbfCalData: Found 4 Range ReadOut\n");
+           
+// Get the ID for this digi (tower,layer,log)           
            idents::CalXtalId                id = digi.getPackedId();
 
-           const Event::CalDigi::CalXtalReadout 
-                         *readout = digi.getXtalReadout(0);
-           int           rangePos = readout->getRange(idents::CalXtalId::POS);
-           unsigned int    adcPos = readout->getAdc  (idents::CalXtalId::POS);
-           int           rangeNeg = readout->getRange(idents::CalXtalId::NEG);
-           unsigned int    adcNeg = readout->getAdc  (idents::CalXtalId::NEG);
+// If we have four range read out, Loop over ranges
+           int lastRange = (m_range4) ? 4 : 1;
+           for(int readoutRange=0; readoutRange<lastRange; readoutRange++) { 
+
+// Get the Readout (request which range)
+//              const Event::CalDigi::CalXtalReadout 
+//                            *readout = digi.getXtalReadout(readoutRange);
+
+// Get the Readout (force range 0 for tests)
+              const Event::CalDigi::CalXtalReadout 
+                            *readout = digi.getXtalReadout(0);
 
 
-           unsigned int   towerId = id.getTower ();
-           int            layerId = id.getLayer ();
-           unsigned int    xtalId = id.getColumn();
 
-           unsigned int  towerMsk = (1 << towerId);
-           unsigned int  layerMsk = (1 << layerId);
-           unsigned int   xtalMsk = (1 <<  xtalId);
+// Finally unpack the values for this digi                        
+              int           rangePos = readout->getRange(idents::CalXtalId::POS);
+              unsigned int    adcPos = readout->getAdc  (idents::CalXtalId::POS);
+              int           rangeNeg = readout->getRange(idents::CalXtalId::NEG);
+              unsigned int    adcNeg = readout->getAdc  (idents::CalXtalId::NEG);
 
-           EbfCalTowerData *tower = &m_towers[towerId];
-           EbfCalLayerData *layer = &tower->m_layers[layerId];
-           unsigned int      ihit = layer->m_nhits;
-           
-           /*
-            | Accumulate the bit masks for the
-            |   1. Struck towers within this event
-            |   2. Struck layers within this tower
-            |   3. Struck logs   within this layer
-           */
-           m_msk        |= towerMsk;
-           tower->m_msk |= layerMsk;
-           layer->m_msk |=  xtalMsk;
+// Decode the tower, layer and log
+              unsigned int   towerId = id.getTower ();
+              int            layerId = id.getLayer ();
+              unsigned int    xtalId = id.getColumn();
 
+              unsigned int  towerMsk = (1 << towerId);
+              unsigned int  layerMsk = (1 << layerId);
+              unsigned int   xtalMsk = (1 <<  xtalId);
 
-           /* Add the data for this log to the output stream */
-           layer->m_nhits         = ihit + 1;
-           layer->m_xtals[xtalId] = pack (xtalId,
-                                          rangePos, adcPos,
-                                          rangeNeg, adcNeg);
+              EbfCalTowerData *tower = &m_towers[towerId];
+              EbfCalLayerData *layer = &tower->m_layers[layerId];
+              unsigned int      ihit = layer->m_nhits;
 
-           /*
-            | CAL TRIGGERING CALCULATION
-            | ==========================
-            | To do the triggering, must convert the ADC reading along
-            | with its range back to MEV, the units that the triggering
-            | thresholds are stored in.
-            |
-            | The CAL contributes two triggering bits from each tower
-            | to the GLT, the CAL LO and CAL HI bits. Both are the 
-            | straight ORs of all the log ends within the tower. That 
-            | is, if any log within a tower is over the LO(HI) threshold,
-            | that tower contributes one set bit to the CAL LO(HI)
-            | GLT mask.
-            |
-            | The code below assumes that the hiThreshold > loThreshold.
-            | skipping the CAL HI determination if the loThreshold
-            | is not satisfied.
-            |
-            |
-            | !!! KLUDGE !!!
-            | --------------
-            | This really does not belong here. It should be part of a
-            | GltDigi class. Unfortunately for now there is no such
-            | class, so it is patched in here for the time being.
-            |
-           */
-           double  energyPos = c.convertToMev (rangePos, adcPos);
-           double  energyNeg = c.convertToMev (rangeNeg, adcNeg);
-	   /*
-	     if (print)
-	     {
-	     printf (" %1.1x %1.1x %1.1x %3d %8d %10.3f %3d %8d %10.3f",
-	     towerId,  layerId, xtalId,
-	     rangePos,  adcPos, energyPos,
-	     rangeNeg,  adcNeg, energyNeg);
-	     }
-	   */
+              /*
+               | Accumulate the bit masks for the
+               |   1. Struck towers within this event
+               |   2. Struck layers within this tower
+               |   3. Struck logs   within this layer
+              */
+              m_msk        |= towerMsk;
+              tower->m_msk |= layerMsk;
+              layer->m_msk |=  xtalMsk;
 
 
-           /* Check if either end is above the CAL LO threshold */ 
-           if ( (energyPos > loThreshold) || (energyNeg > loThreshold) )
-           {
-               /* Fill the masks for the low threshold */
-               m_lo        |= towerMsk;
-               tower->m_lo |= layerMsk;
-               layer->m_lo |=  xtalMsk;
+              /* Add the data for this log to the output stream */
+              /* Only count the hits once per log */
+              if(readoutRange==0) layer->m_nhits   = ihit + 1;
+              
+              
+/* Kluge Up the 4 range readout  while we wait for GLEAM to do it 
+/
+/       Assume "full" range is 20 bits
+/       Assume the ranges are constructed like the following
+/               range 0     bits 0 - 11
+/               range 1     bits 3 - 14
+/               range 2     bits 6 - 17
+/               range 3     bits 9 - 20
+/
+/       This corresponds to a factor of 8 between the ranges.
+/
+/       Warning...this is not the way it is actually done...
+/       I am just thinking about it this way to get something
+/       for testing.  We can't fill in bits that we don't know
+/       so just shift around the bits we have...this will artificially
+/       give too many zeros, but that all we can do now.
+/      
+*/
+/*
+              if(readoutRange > 0) {
 
-               //if (print) printf (" Lo: %8.8x", tower->m_lo);
+// First Positive Side              
+                  int newRangePos = rangePos + readoutRange;
+                  int newAdcPos = 0;
+                  if(newRangePos > 3) {
+                      newRangePos -= 4;
+                      newAdcPos = (adcPos & 0xfff) << (rangePos-newRangePos)*3;
+                  } else {
+                      newAdcPos = (adcPos & 0xfff) >> readoutRange*3;
+                  }
+//                  printf("Pos: %i Old Range %i Old adc 0x%3.3x New Range %i New adc 0x%3.3x\n",readoutRange,rangePos,adcPos,newRangePos,newAdcPos);
+                  rangePos = newRangePos;
+                  adcPos = newAdcPos;
+
+// Now Negative Side              
+                  int newRangeNeg = rangeNeg + readoutRange;
+                  int newAdcNeg = 0;
+                  if(newRangeNeg > 3) {
+                      newRangeNeg -= 4;
+                      newAdcNeg = (adcNeg & 0xfff) << (rangeNeg-newRangeNeg)*3;
+                  } else {
+                      newAdcNeg = (adcNeg & 0xfff) >> readoutRange*3;
+                  }
+//                  printf("Neg: %i Old Range %i Old adc 0x%3.3x New Range %i New adc 0x%3.3x\n",readoutRange,rangeNeg,adcNeg,newRangeNeg,newAdcNeg);
+                  rangeNeg = newRangeNeg;
+                  adcNeg = newAdcNeg;                                      
+              }
+*/              
+// Store the hits by packing the information
+              layer->m_xtals[xtalId][readoutRange] = pack (xtalId,
+                                                           rangePos, adcPos,
+                                                           rangeNeg, adcNeg);
+
+              /*
+               | CAL TRIGGERING CALCULATION
+               | ==========================
+               | To do the triggering, must convert the ADC reading along
+               | with its range back to MEV, the units that the triggering
+               | thresholds are stored in.
+               |
+               | The CAL contributes two triggering bits from each tower
+               | to the GEM, the CAL LO and CAL HI bits. Both are the 
+               | straight ORs of all the log ends within the tower. That 
+               | is, if any log within a tower is over the LO(HI) threshold,
+               | that tower contributes one set bit to the CAL LO(HI)
+               | GEM mask.
+               |
+               | The code below assumes that the hiThreshold > loThreshold.
+               | skipping the CAL HI determination if the loThreshold
+               | is not satisfied.
+               |
+               |
+               | !!! KLUDGE !!!
+               | --------------
+               | This really does not belong here. It should be part of a
+               | GemDigi class. Unfortunately for now there is no such
+               | class, so it is patched in here for the time being.
+               |
+              */
+              double  energyPos = c.convertToMev (rangePos, adcPos);
+              double  energyNeg = c.convertToMev (rangeNeg, adcNeg);
+	      /*
+	        if (print)
+	        {
+	        printf (" %1.1x %1.1x %1.1x %3d %8d %10.3f %3d %8d %10.3f",
+	        towerId,  layerId, xtalId,
+	        rangePos,  adcPos, energyPos,
+	        rangeNeg,  adcNeg, energyNeg);
+	        }
+	      */
+
+           if(readoutRange==0) {
+// Store total energy in the event
+              m_TotalEnergy += (energyPos+energyNeg)/2;
+              
+              /* Check if either end is above the CAL LO threshold */ 
+              if ( (energyPos > loThreshold) || (energyNeg > loThreshold) )
+              {
+                  /* Fill the masks for the low threshold */
+                  m_lo        |= towerMsk;
+                  tower->m_lo |= layerMsk;
+                  layer->m_lo |=  xtalMsk;
+
+                  //if (print) printf (" Lo: %8.8x", tower->m_lo);
 
 
-               /* Check if either end is above the CAL HI threshold */ 
-               if ( (energyPos > hiThreshold) || (energyPos > hiThreshold) )
-               {
-                   /* Fill the masks for the high threshold */
-                   m_hi        |= towerMsk;
-                   tower->m_hi |= layerMsk;
-                   layer->m_hi |=  xtalMsk;
+                  /* Check if either end is above the CAL HI threshold */ 
+                  if ( (energyPos > hiThreshold) || (energyNeg > hiThreshold) )
+                  {
+                      /* Fill the masks for the high threshold */
+                      m_hi        |= towerMsk;
+                      tower->m_hi |= layerMsk;
+                      layer->m_hi |=  xtalMsk;
 
-                   //if (print) printf (" Hi: %8.8x", tower->m_hi);
-               }
-           }
-
+                      //if (print) printf (" Hi: %8.8x", tower->m_hi);
+                  }
+              }
+             } //primary readout range only. 
+           } //loop over readout ranges.
            //if (print) printf ("\n");
        }
    }
+
+
+   return;
+}
+
+
+
+/**
+ *
+ *  @fn     void EbfCalData::fillEncode (const Event::CalDigiCol &logs,
+ *                                 const EbfCalConstants      &c)
+ *  @brief  Fills the hits by tower and layer. It is not assumed that
+ *          the hits are sorted within a layer end.
+ *
+ *  @param  logs  The data for the struck logs on this event
+ *  @param     c  The constants used to convert Energy <=> ADC and
+ *               the triggering thresholds (in Mev)
+ *
+**/ 
+void EbfCalData::fillEncode (int encodeFlag, const EbfCalConstants &c, int event)
+{
+   int print = 0;
+ 
+   initialize ();
+   if(encodeFlag==0) return;
+
+   double loThreshold = c.m_loThreshold;
+   double hiThreshold = c.m_hiThreshold;      
+   
+// Loop over each possible log in each layer in each tower
+    for (int twr=0; twr<16; twr++){
+      for(int layer=0; layer<8; layer++) {
+        for(int log=0; log<12; log++) {
+
+
+// For Small Set (encodeFlag = 2) Only do One Log per tower...but cycle through
+	      if( (layer != (event%8) | log != ((event/8)%12) ) && encodeFlag==2 ) continue;
+
+// Loop over ranges
+//         m_range4=true; // for testing
+         int lastRange = (m_range4) ? 4 : 1;
+         for(int readoutRange=0; readoutRange<lastRange; readoutRange++) { 
+        
+
+          int           rangePos = readoutRange;
+          unsigned int    adcPos = (twr & 0xf)<<8 |  (layer & 0x7)<<4 | (log & 0xf);
+        // Make it so special case twr=lay=log=0 does not have a 0 adc count.
+          if((twr+layer+log)==0) adcPos |= 1<<7;
+          int           rangeNeg = readoutRange;
+          unsigned int    adcNeg = (twr & 0xf)<<8 | 1<<7 | (layer & 0x7)<<4 | (log & 0xf);
+          printf("ENCODE: Range %i adc+ 0x%8.8x acd- 0x%8.8x\n",readoutRange,adcPos,adcNeg); 
+
+          unsigned int   towerId = twr;
+          int            layerId = layer;
+          unsigned int    xtalId = log;
+
+// Now have all the information to pack into Ebf Object
+          unsigned int  towerMsk = (1 << towerId);
+          unsigned int  layerMsk = (1 << layerId);
+          unsigned int   xtalMsk = (1 <<  xtalId);
+
+          EbfCalTowerData *tower = &m_towers[towerId];
+          EbfCalLayerData *layer = &tower->m_layers[layerId];
+          unsigned int      ihit = layer->m_nhits;
+
+        /*
+         | Accumulate the bit masks for the
+         |   1. Struck towers within this event
+         |   2. Struck layers within this tower
+         |   3. Struck logs   within this layer
+        */
+          m_msk        |= towerMsk;
+          tower->m_msk |= layerMsk;
+          layer->m_msk |=  xtalMsk;
+
+
+        /* Add the data for this log to the output stream */
+          if(readoutRange==0) layer->m_nhits   = ihit + 1;
+          layer->m_xtals[xtalId][readoutRange] = pack (xtalId,
+                                                     rangePos, adcPos,
+                                                     rangeNeg, adcNeg);
+
+        /*
+         | CAL TRIGGERING CALCULATION
+         | ==========================
+         | To do the triggering, must convert the ADC reading along
+         | with its range back to MEV, the units that the triggering
+         | thresholds are stored in.
+         |
+         | The CAL contributes two triggering bits from each tower
+         | to the GEM, the CAL LO and CAL HI bits. Both are the 
+         | straight ORs of all the log ends within the tower. That 
+         | is, if any log within a tower is over the LO(HI) threshold,
+         | that tower contributes one set bit to the CAL LO(HI)
+         | GEM mask.
+         |
+         | The code below assumes that the hiThreshold > loThreshold.
+         | skipping the CAL HI determination if the loThreshold
+         | is not satisfied.
+         |
+         |
+         | !!! KLUDGE !!!
+         | --------------
+         | This really does not belong here. It should be part of a
+         | GemDigi class. Unfortunately for now there is no such
+         | class, so it is patched in here for the time being.
+         |
+        */
+           double  energyPos = c.convertToMev (rangePos, adcPos);
+           double  energyNeg = c.convertToMev (rangeNeg, adcNeg);
+	/*
+	  if (print)
+	  {
+	  printf (" %1.1x %1.1x %1.1x %3d %8d %10.3f %3d %8d %10.3f",
+	  towerId,  layerId, xtalId,
+	  rangePos,  adcPos, energyPos,
+	  rangeNeg,  adcNeg, energyNeg);
+	  }
+	*/
+
+
+        /* Check if either end is above the CAL LO threshold */ 
+          if ( (energyPos > loThreshold) || (energyNeg > loThreshold) )
+          {
+            /* Fill the masks for the low threshold */
+            m_lo        |= towerMsk;
+            tower->m_lo |= layerMsk;
+            layer->m_lo |=  xtalMsk;
+
+            //if (print) printf (" Lo: %8.8x", tower->m_lo);
+
+
+            /* Check if either end is above the CAL HI threshold */ 
+            if ( (energyPos > hiThreshold) || (energyNeg > hiThreshold) )
+            {
+                /* Fill the masks for the high threshold */
+                m_hi        |= towerMsk;
+                tower->m_hi |= layerMsk;
+                layer->m_hi |=  xtalMsk;
+
+                //if (print) printf (" Hi: %8.8x", tower->m_hi);
+            }
+          }
+
+          }//loop over ranges
+        } //loop over logs  
+      } //loop over layers
+    } //loop over towers
+
 
 
    return;
@@ -467,16 +700,83 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
    beg    = dst++;           // Remember where that hits/layer word goes
    tower  = &m_towers[itower];
    
- 
-   /* Loop over the layers in this tower */
+/* 
+   // Loop over the layers in this tower 
    for (unsigned int ilayer = 0; 
         ilayer < EbfCalTowerData::NumLayers;
         ilayer++)
    {
 
-       /* Process the layers in the order specified by the 'Order' array */
+       // Process the layers in the order specified by the 'Order' array 
        int                   olayer = Order[ilayer];
 
+
+       // Check if there is any data in this layer 
+       if ((tower->m_msk & (1 << olayer)) == 0) continue;
+       
+
+       // Layer has data, assured that there is at least one log hit 
+       const EbfCalLayerData *layer = &tower->m_layers[olayer];
+       unsigned int         xtalMsk =  layer->m_msk;
+
+
+       // Locate the data, keep track of the number of hits this layer 
+//       const unsigned int *data = layer->m_xtals;
+       int                nhits = 0;
+       int               xtalId = 0;
+           
+             
+       // Pack the crystal hits 
+       do
+       {
+           if (xtalMsk & 1)
+           {
+               nhits += 1;
+// Introduce an error so we can see it in the comparison code
+//               if(ilayer==3) {
+//                  *dst++ = data[xtalId] & 0xffffffa5;
+//               } else {   
+//                  *dst++  = data[xtalId][0];
+                  *dst++  = layer->m_xtals[xtalId][0];
+//               }   
+           }
+       }
+       while (xtalId++, xtalMsk >>= 1);
+
+       // 
+       // Pack the number of CAL hits one per nibble.
+       // This is only necessary when there are hits on a layer, 
+       // which is why it is contained within the code that
+       // that guarantees there are hits on this layer.
+       //
+       // Note that the correct layer number is the one that
+       // counts which layer currently being output, not the
+       // number of the layer that is being output.
+       //
+       calcnt |= (nhits << (ilayer * 4));
+       
+   }
+
+*/
+
+   // Loop over groups of two layers (x0,x1),(x2,x3),(y0,y1),(y2,y3). This is
+   // important for 4-range readout which groups the information in this fashion  
+   for (unsigned int igroup = 0; 
+        igroup < EbfCalTowerData::NumLayers/2;
+        igroup++){
+        
+     unsigned int maxRange = (m_range4) ? 4:1;  
+     for(unsigned int range = 0; range<maxRange; range++) {   
+
+      for(unsigned int subLayer=0; subLayer<2; subLayer++) {        
+
+       // First which layer does this correspond to
+       int ilayer = igroup*2 + subLayer;
+       
+
+       // map this choice to the appropriate layer //
+       int                   olayer = Order[ilayer];
+       //if(itower==1) printf("igrp %i isubL %i ilayer %i  olyr %i rng %i\n",igroup,subLayer,ilayer,olayer,range);
 
        /* Check if there is any data in this layer */
        if ((tower->m_msk & (1 << olayer)) == 0) continue;
@@ -488,7 +788,7 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
 
 
        /* Locate the data, keep track of the number of hits this layer */
-       const unsigned int *data = layer->m_xtals;
+//       const unsigned int *data = layer->m_xtals;
        int                nhits = 0;
        int               xtalId = 0;
            
@@ -498,8 +798,14 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
        {
            if (xtalMsk & 1)
            {
-               nhits += 1;
-               *dst++  = data[xtalId];
+               if(range==0) nhits += 1;
+// Introduce an error so we can see it in the comparison code
+//               if(ilayer==3) {
+//                  *dst++ = data[xtalId] & 0xffffffa5;
+//               } else {   
+//                  *dst++  = data[xtalId][0];
+                  *dst++  = layer->m_xtals[xtalId][range];
+//               }   
            }
        }
        while (xtalId++, xtalMsk >>= 1);
@@ -510,17 +816,15 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
         | which is why it is contained within the code that
         | that guarantees there are hits on this layer.
         |
-        | Note that the order of the packing is from the most
-        | significant nibble for the first layer out to least
-        | significant nibble for the last layer out.
-        |
         | Note that the correct layer number is the one that
         | counts which layer currently being output, not the
         | number of the layer that is being output.
        */
-       calcnt |= (nhits << (28 - ilayer * 4));
-       
-   }
+       calcnt |= (nhits << (ilayer * 4));
+      } //subLayer 
+     } //4 ranges  
+   }//grouped layer
+
 
        
    /* Stash the number of CAL hits/layer back in this first word of the dst */
@@ -530,6 +834,184 @@ unsigned int *EbfCalData::format (unsigned int *dst, int itower) const
 }
 
 
+void EbfCalData::parseInput(unsigned int *contrib, unsigned int itower, unsigned int lcbWords, const EbfCalConstants *calCon)  
+{
+
+
+   static const unsigned int Order[EbfCalTowerData::NumLayers] =
+   { 
+     0, 2, 4, 6,
+     1, 3, 5, 7 
+   };
+
+   bool debug = false;
+   unsigned int *data = contrib;
+   if(debug) {
+      printf("Tower %i Contribution:\n",itower);
+      for(int i=0; i<lcbWords; i++) {
+         for(int j=0; j<4; j++) {
+             printf(" 0x%8.8x ",*data++);
+         }
+         printf("\n");
+      }
+      printf("\n");
+   // reset pointer   
+      data = contrib;
+   }
+
+// Initialize the EbfCal Class
+   if(itower==0) initialize ();
+   
+   double loThreshold = calCon->m_loThreshold;
+   double hiThreshold = calCon->m_hiThreshold;
+   
+// Peel off header words   
+   unsigned int LCB_Header0 = *data++;
+   unsigned int LCB_Header1 = *data++;
+
+// Parse out header words   
+   unsigned int startbit  = (LCB_Header1 >> 31) & 0x1;
+              m_calStrobe = (LCB_Header1 >> 30) & 0x1;
+   unsigned int sequence0 = (LCB_Header1 >> 28) & 0x3;
+   unsigned int trigAck   = (LCB_Header1 >> 27) & 0x1;
+              m_range4    = (LCB_Header1 >> 26) & 0x1;
+   unsigned int zeroSup   = (LCB_Header1 >> 25) & 0x1; 
+   unsigned int marker    = (LCB_Header1 >> 22) & 0x7;
+   unsigned int ErrCont   = (LCB_Header1 >> 21) & 0x1;
+   unsigned int DiagCont  = (LCB_Header1 >> 20) & 0x1;
+   unsigned int sequence1 = (LCB_Header1 >> 1) & 0x7fff;
+   unsigned int ParErr    = (LCB_Header1 & 0x1);
+
+    if(debug) printf("LCB_Header1 0x%8.8x\n",LCB_Header1);
+    if(debug) printf("startbit %1i  calStrobe %1i seq %1i trigAck %1i 4Rng %1i ZSup %1i \nMkr %1i ErrCnt %1i DiaCnt %1i ParEr %1i Seq %i\n",
+            startbit,m_calStrobe,sequence0,trigAck,m_range4,zeroSup,marker,ErrCont,DiagCont,ParErr,sequence1);
+                
+// Get Hit words
+   unsigned int calHits_Wd = *data++;
+   unsigned int calHits[8];
+   if(debug) printf("Hits in Cal Layers--");
+   for(int i=0; i<8; i++) {
+     calHits[i] = (calHits_Wd >> i*4) & 0xf;   
+     if(debug) printf(" %i:%i ",i,calHits[i]);
+   }
+   if(debug) printf("\n");
+   
+// Strips off hits in each layer
+   int nhit=0;
+//   int col[12*8];
+//   int negRng[12*8];
+//   int negADC[12*8];
+//   int posRng[12*8];
+//   int posADC[12*8];
+
+   int col;
+   int negRng;
+   int negADC;
+   int posRng;
+   int posADC;   
+   
+//   for(int ilayer=0; ilayer<8; ilayer++) {
+//      for(int hit=0; hit<calHits[ilayer]; hit++){
+// Loop over groups of two layers (x0,x1),(x2,x3),(y0,y1),(y2,y3). This is
+// important for 4-range readout which groups the information in this fashion  
+   for (unsigned int igroup = 0; 
+        igroup < EbfCalTowerData::NumLayers/2;
+        igroup++){
+        
+     unsigned int maxRange = (m_range4) ? 4:1;  
+     for(unsigned int range = 0; range<maxRange; range++) {   
+
+      for(unsigned int subLayer=0; subLayer<2; subLayer++) {        
+    
+// Get number of hits on this layer
+        int ilayer = igroup*2 + subLayer;
+
+// Output Layers
+        int olayer = Order[ilayer];    
+
+        for(int hit=0; hit<calHits[ilayer]; hit++){
+        
+// Get the data and parse it
+         unsigned int hit_Wd = *data++;
+         col    = (hit_Wd & 0xf0000000) >> 28;
+         negRng = (hit_Wd & 0x0c000000) >> 26;
+         negADC = (hit_Wd & 0x03ffc000) >> 14;
+         posRng = (hit_Wd & 0x00003000) >> 12;
+         posADC = (hit_Wd & 0x00000fff);
+         if(debug) printf("Hit Found on Col %i ilayer %i olayer %i tower %i igroup %i Range %i negRng %i negADC 0x%8.8x posRng %i posADC 0x%8.8x\n",
+                              col,ilayer,olayer,itower,igroup,range,negRng,negADC,posRng,posADC);
+
+
+// Begin to fill the EbfCal Object
+         EbfCalTowerData *tower = &m_towers[itower];
+         EbfCalLayerData *layer = &tower->m_layers[olayer];
+         unsigned int      ihit = layer->m_nhits;
+
+         unsigned int  towerMsk = (1 << itower);
+         unsigned int  layerMsk = (1 << olayer);
+         unsigned int   xtalMsk = (1 <<  col);
+         
+         /*
+          | Accumulate the bit masks for the
+          |   1. Struck towers within this event
+          |   2. Struck layers within this tower
+          |   3. Struck logs   within this layer
+         */
+         m_msk        |= towerMsk;
+         tower->m_msk |= layerMsk;
+         layer->m_msk |=  xtalMsk;
+         layer->m_nhits = ihit + 1;
+         if(debug) printf("Set the hit masks: tower 0x%8.8x  layer 0x%8.8x   col 0x%8.8x \n",m_msk,tower->m_msk,layer->m_msk);
+         
+// Store the hits by packing the information
+         layer->m_xtals[col][range] = pack (col,
+                                                      posRng, posADC,
+                                                      negRng, negADC);
+     
+         if(debug) printf("Packed the hits\n");
+// Trigger Information
+         double  energyPos = calCon->convertToMev (posRng, posADC);
+         double  energyNeg = calCon->convertToMev (negRng, negADC);
+
+         if(range==0) {
+// Store total energy in the event
+              m_TotalEnergy += (energyPos+energyNeg)/2;
+              
+              /* Check if either end is above the CAL LO threshold */ 
+              if ( (energyPos > loThreshold) || (energyNeg > loThreshold) )
+              {
+                  /* Fill the masks for the low threshold */
+                  m_lo        |= towerMsk;
+                  tower->m_lo |= layerMsk;
+                  layer->m_lo |=  xtalMsk;
+
+                  //if (print) printf (" Lo: %8.8x", tower->m_lo);
+
+
+                  /* Check if either end is above the CAL HI threshold */ 
+                  if ( (energyPos > hiThreshold) || (energyNeg > hiThreshold) )
+                  {
+                      /* Fill the masks for the high threshold */
+                      m_hi        |= towerMsk;
+                      tower->m_hi |= layerMsk;
+                      layer->m_hi |=  xtalMsk;
+
+                      //if (print) printf (" Hi: %8.8x", tower->m_hi);
+                  }
+              }
+          } //primary readout range only. 
+        if(debug) printf("Set trigger bits m_hi 0x%8.8x  m_lo 0x%8.8x \n",m_hi,m_lo);
+
+        nhit++;
+
+
+        }//loop over hits
+      } //loop over sublayers
+     }//loop over ranges
+   }//loop over groups   
+   
+   return;
+}
 
 
 
@@ -582,7 +1064,7 @@ void EbfCalData::print()
            if (xtalMsk)
            {
                /* Locate the data */
-               const unsigned int *xtals = layer->m_xtals;
+//               const unsigned int *xtals = layer->m_xtals;
                int                xtalId = 0;
                int              nmargin;
                int                 ncol;
@@ -605,7 +1087,7 @@ void EbfCalData::print()
 		 ncol = std::printf ("\n%*c", nmargin, ' ')-1;
 		 }
 		 
-		 ncol += std::printf (" %8.8x", xtals[xtalId]);
+		 ncol += std::printf (" %8.8x", layer->m_xtals[xtalId][0]);
 		 }
 		 }
 		 while (xtalId++, xtalMsk >>= 1);
