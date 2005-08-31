@@ -236,9 +236,10 @@ if __name__ == '__main__':
     log.info('Writing output file %s', outName)
     tlist = (destTwr,)
     fio = calDacXML.calDacXML(outName, 'log_acpt', calDacXML.MODE_CREATE)
-    fio.write(nomSetting, lrefgain = leGain, tems = tlist)
+    fio.write(nomSetting, leGain = leGain, energy = MeV, filename = outName, cfgfilename = configName,
+              adcfilename = lacName, relgainfilename = relName,
+              engfilename = adc2nrgName, method = 'genLACsettings:%s' % __release__, tems = tlist)
     fio.close()
 
     sys.exit(0)
-    
 

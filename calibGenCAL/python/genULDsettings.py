@@ -174,7 +174,8 @@ if __name__ == '__main__':
     log.info('Writing ULD settings file %s', outName)
     fio = calDacXML.calDacXML(outName, 'rng_uld_dac', calDacXML.MODE_CREATE)
     tlist = (destTwr,)
-    fio.write(dacData, tems = tlist)
+    fio.write(dacData, adcmargin = margin, filename = outName, cfgfilename = configName,
+              adcfilename = uldName, method = 'genULDsettings:%s' % __release__, tems = tlist)
     fio.close()
     
     sys.exit(0)
