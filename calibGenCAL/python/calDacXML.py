@@ -224,17 +224,13 @@ class calDacXML(calSnapshotXML):
 
         doc = self.getDoc()
 
-        # insert <LATdoc> element
-
-        ld = doc.createElement('LATdoc')
-        ld.setAttribute('name', self.getName())
-        doc.appendChild(ld)
-
         # insert <configuration> element
+        # this is the root element of the XML output document
 
         ce = doc.createElement('configuration')
         
-        s = '[\'GTEM\',\'GCCC\',\'GCRC\',\'GCFE\',\'%s\']' % self.__dacName  
+        s = '[\'GTEM\',\'GCCC\',\'GCRC\',\'GCFE\',\'%s\']' % self.__dacName
+        ce.setAttribute('name', 'NA')
         ce.setAttribute('hierarchy', s)
         ce.setAttribute('type', 's')
         ce.setAttribute('shape', '(%d,8,2,12)' % len(tems))
@@ -267,12 +263,12 @@ class calDacXML(calSnapshotXML):
             ce.setAttribute('biasfilename', biasfilename)
 
         if adcmargin is not None:
-            ce.setAttribute('adcmargin', int(adcmargin))
+            ce.setAttribute('adcmargin', str(adcmargin))
 
         if method is not None:
             ce.setAttribute('method', method)            
             
-        ld.appendChild(ce)
+        doc.appendChild(ce)
         
         # insert <GLAT> element  
             
