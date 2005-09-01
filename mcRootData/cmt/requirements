@@ -1,11 +1,11 @@
 package mcRootData
-version v2r17p2
+version v2r18
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
 
 use commonRootData v2r*
-use RootcintPolicy v5r* GlastPolicy
+use RootcintPolicy v* GlastPolicy
 
 # See RootPolicy for discussion of this pattern
 

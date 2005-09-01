@@ -8,6 +8,9 @@
 
 $Header$
 
+v2r18     02-Sep-2005 HMK Because I like doing things on the 2nd of the month
+                      And we need to use the most recent RootCintPolicy for
+                      the new build structure
 v2r17p2   08-Jul-2005 DC  
 v2r17p1   27-Jun-2005 HMK add author
 v2r17p0   23-Jun-2005  TU New CalRecon (could not find a v2r17 tag?)
