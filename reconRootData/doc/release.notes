@@ -1,5 +1,7 @@
 /** @file release.notes  package reconRootData  package manager:H.Kelly @verbatim
 
+v8r1      02-Sep-05  : HMK use latest RootcintPolicy that implements new
+                       build structure
 v8r0      27-Jul-05  : HMK Convert TKR Double_t to Double32_t
 v7r1p1    15-Jul-05  : HMK add const qualifers to CalMipTrack get methods
 v7r1      15-Jul-05  : HMK Update CalMipTrack
