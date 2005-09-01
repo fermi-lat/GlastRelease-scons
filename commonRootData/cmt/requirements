@@ -1,8 +1,8 @@
 package commonRootData
-version v2r2
+version v2r3
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
-use RootcintPolicy v5r* GlastPolicy
+use RootcintPolicy v* GlastPolicy
 
 # see RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
