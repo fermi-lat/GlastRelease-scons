@@ -13,6 +13,7 @@ __credits__   = "NRL code 7650"
 
 
 
+import time
 import logging
 import xml.dom.minidom
 
@@ -227,6 +228,9 @@ class calDacXML(calSnapshotXML):
         ce.setAttribute('hierarchy', s)
         ce.setAttribute('type', 's')
         ce.setAttribute('shape', '(%d,8,2,12)' % len(tems))
+        ce.setAttribute('version', 'NA')
+        ts = time.strftime('%Y-%m-%d-%H:%M', time.gmtime())
+        ce.setAttribute('time', ts)
 
         if filename is not None:
             ce.setAttribute('filename', filename)
