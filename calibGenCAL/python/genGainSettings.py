@@ -14,7 +14,7 @@ where:
 
 
 __facility__    = "Offline"
-__abstract__    = "Generate ULD Discriminator settings selected by Energy"
+__abstract__    = "Generate CAL gain settings for GCFE Config 0 Register"
 __author__      = "D.L.Wood"
 __date__        = "$Date$"
 __version__     = "$Revision$, $Author$"
@@ -36,7 +36,6 @@ if __name__ == '__main__':
 
     usage = "genGainSettings [-V] <leGain> <heGain> <out_xml_file>"
 
-    margin = 50    
 
     # setup logger
 
@@ -68,8 +67,10 @@ if __name__ == '__main__':
 
     if leGain > 7:
         log.error('LE gain value %d out of range', leGain)
+        sys.exit(1)
     if heGain > 15:
         log.error('HE gain value %d out of range', heGain)
+        sys.exit(1)
 
     log.debug('Using LE gain %d', leGain)
     log.debug('Using HE gain %d', heGain)
