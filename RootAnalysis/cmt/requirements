@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r6p1
+version v8r7
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # This package contains useful Root scripts.
 
@@ -77,6 +77,7 @@ application runTreeMaker LeaningTower/runTreeMaker.cxx \
 application pruneTrees pruneTrees/PruneTree.cxx pruneTrees/runTreeAnalysisChain.cxx 
 
 application peelTrees pruneTrees/PruneRunEvent.cxx pruneTrees/runEventPeeler.cxx 
+application mergeRootFiles utilityMacros/mergeRootFiles.cxx
 
 # Define a test program that will run RootTreeAnalysis in batch mode
 # on 3 ROOT files included with this package
