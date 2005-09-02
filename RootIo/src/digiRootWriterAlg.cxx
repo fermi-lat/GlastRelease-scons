@@ -491,7 +491,7 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         headerParity[0] = ( (*acdDigiTds)->getHeaderParityError(Event::AcdDigi::A) == Event::AcdDigi::NOERROR ) ? AcdDigi::NOERROR : AcdDigi::ERROR;   
          headerParity[1] = ( (*acdDigiTds)->getHeaderParityError(Event::AcdDigi::B) == Event::AcdDigi::NOERROR ) ? AcdDigi::NOERROR : AcdDigi::ERROR; 
 
-        digi->initLdfParameters((*acdDigiTds)->getTileName(), (*acdDigiTds)->getTileNumber(), range, err, headerParity);
+        digi->initLdfParameters((*acdDigiTds)->getTileName(), (*acdDigiTds)->getTileNumber(), range, oddParity, headerParity);
 
     }
 
