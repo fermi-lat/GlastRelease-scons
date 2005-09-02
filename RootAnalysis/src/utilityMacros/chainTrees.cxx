@@ -19,7 +19,7 @@ another analysis routine, such as RootTreeAnalysis.
   TChain *myNewChain = chainTrees(numFiles, list, "t1");
   */
 
-TChain* chainTrees(int numFiles, char* list[], char* treePath) {
+TChain* chainTrees(int numFiles, char* list[], char* treePath, bool verbose = fase) {
     
     if (numFiles <= 0) {
         printf("number of Files is <= 0!\n");
@@ -30,7 +30,7 @@ TChain* chainTrees(int numFiles, char* list[], char* treePath) {
     
     for(int i=0; i < numFiles; i++){
         
-        printf("Opening file %s\n",list[i]);
+        if (verbose) printf("Opening file %s\n",list[i]);
         
         chainedTree->Add(list[i]);
         

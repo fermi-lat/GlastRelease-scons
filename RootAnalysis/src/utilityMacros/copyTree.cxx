@@ -16,7 +16,7 @@ void copyTree(char *orgFileName, char *newFileName, char *newDir, char *treeName
   fNew.mkdir(newDir);
   fNew.cd(newDir);
   TTree *tNew = tOrg->CopyTree("");
-  fNew.Write();
+  fNew.Write(0, TObject::kWriteDelete);
   fOrg.Close();
   fNew.Close();
 }
