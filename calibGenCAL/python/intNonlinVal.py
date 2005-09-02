@@ -327,7 +327,7 @@ if __name__ == '__main__':
     # setup logger
 
     logging.basicConfig()
-    log = logging.getLogger()
+    log = logging.getLogger('intNonlinVal')
     log.setLevel(logging.INFO)
 
     # check command line
