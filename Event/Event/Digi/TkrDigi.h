@@ -1,3 +1,9 @@
+/** @file TkrDigi.h
+*
+* @author Leon Rochester
+*
+*/
+
 #ifndef Event_TkrDigi_H
 #define Event_TkrDigi_H 1
 
@@ -21,18 +27,19 @@
 #include "idents/GlastAxis.h"
 
 
+
+static const CLID& CLID_TkrDigi = InterfaceID("TkrDigi", 1, 0);
+
+namespace Event {
+
 /*!
 * \class TkrDigi
-* \author Leon Rochester
 * \brief TDS version of the TKR digi
 *
 * Contains layer and tower identification, ToT and a list of hit strips
 * The digis are produced either from MC hit output or from the actual data
 */
 
-static const CLID& CLID_TkrDigi = InterfaceID("TkrDigi", 1, 0);
-
-namespace Event {
     class TkrDigi : virtual public ContainedObject {
 
     public:

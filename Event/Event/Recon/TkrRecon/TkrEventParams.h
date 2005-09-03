@@ -1,3 +1,9 @@
+/** @file TkrEventParams.h
+*
+* $Header$
+*
+*/
+
 #ifndef TkrEventParams_h
 #define TkrEventParams_h
 
@@ -11,13 +17,13 @@
 
 static const CLID& CLID_TkrEventParams = InterfaceID("TkrEventParams", 1, 0);
 
+namespace Event {  // NameSpace
+
 /** @class TkrEventParams
 * @brief Defines the output of the TkrFilterAlg
 * 
 * 
-* $Header$
 */
-namespace Event {  // NameSpace
 
 class TkrEventParams : public DataObject 
 {    

@@ -1,3 +1,10 @@
+/** @file TkrDiagnostics.h
+*
+* @author Bill Atwood, Leon Rochester, Johann Cohen-Tanugi, Tracy Usher
+*
+* $Header$
+*
+*/
 
 #ifndef TkrDiagnostics_H
 #define TkrDiagnostics_H
@@ -7,19 +14,16 @@
 
 #include "idents/TkrId.h"
 
+static const CLID& CLID_TkrDiagnostics = InterfaceID("TkrDiagnostics",  1, 1);
+
+namespace Event { // Namespace
+
 /** 
 * @class TkrDiagnostics
 *
 * @brief Diagnostics output class
 *
-* @author Bill Atwood, Leon Rochester, Johann Cohen-Tanugi, Tracy Usher
-*
-* $Header$
 */
-
-static const CLID& CLID_TkrDiagnostics = InterfaceID("TkrDiagnostics",  1, 1);
-
-namespace Event { // Namespace
 
 class TkrDiagnostics : virtual public DataObject
 {

@@ -1,11 +1,29 @@
-//
-//-----------------------------------------------------------------
-//
-//  TkrVertex
-//
-/* @class TkrVertex
+/** @file TkrVertex.h
+* @author The Tracking Software Group
 *
-* @brief TDS Data Object defining a Tracker reconstructred vertices
+* $Header$
+*/
+
+#ifndef __TkrVertex_H
+#define __TkrVertex_H 1
+
+#include <vector>
+#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/IInterface.h"
+#include "Event/Recon/TkrRecon/TkrTrack.h"
+
+
+static const CLID& CLID_TkrVertex = InterfaceID("TkrVertex", 1, 0);
+
+namespace Event { //Namespace
+
+/** 
+* @class TkrVertex
+*
+* @brief TDS Data Object containing the information for a single tracker reconstructed vertex
 *
 * This class defines the basic TkrRecon structure containing output information
 * for a vertex reconstructed in the LAT Tracker from TkrTracks. This class 
@@ -20,35 +38,7 @@
 * 3) Also created is a TkrVertexTab to establish the relationship (ownership)
 *    of tracks by vertices and visa-versa
 *
-* @author The Tracking Software Group
 */
-//
-//-----------------------------------------------------------------
-//
-#ifndef __TkrVertex_H
-#define __TkrVertex_H 1
-
-#include <vector>
-#include "GaudiKernel/ContainedObject.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartRefVector.h"
-#include "GaudiKernel/IInterface.h"
-#include "Event/Recon/TkrRecon/TkrTrack.h"
-
-/** 
-* @class TkrVertex
-*
-* @brief Contains the information for a single found vertex
-*
-* @author The Tracking Software Group
-*
-* $Header$
-*/
-
-static const CLID& CLID_TkrVertex = InterfaceID("TkrVertex", 1, 0);
-
-namespace Event { //Namespace
 
     class TkrVertex : virtual public ContainedObject 
     {   
@@ -66,9 +56,9 @@ namespace Event { //Namespace
         virtual const CLID& clID() const   { return TkrVertex::classID(); }
         static const CLID& classID()       { return CLID_TkrVertex; }
 
-        /// Status word bits organized like:
-        ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-        ///                                             <Track Topology > <Track composition>
+        // Status word bits organized like:
+        //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+        //                                             [Track Topology ] [Track composition]
         enum StatusBits {
             ONETKRVTX = 0x0001,  //Set if single track vertex
             TWOTKRVTX = 0x0002,  //Set if 2 track vertex

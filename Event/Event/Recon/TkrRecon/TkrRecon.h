@@ -1,3 +1,7 @@
+/** @file TkrRecon.h
+* $Header$
+*/
+
 #ifndef Event_TKRRECON_H
 #define Event_TKRRECON_H 1
 
@@ -10,14 +14,14 @@
 
 static const CLID& CLID_TkrRecon = InterfaceID("TkrRecon", 1, 0);
 
+namespace Event {  // NameSpace
+
 /** @class TkrRecon
 * @brief Defines the top level object for digitization data.
 * It can be identified by "/Event/TkrRecon" on the TDS
 * 
 * 
-* $Header$
 */
-namespace Event {  // NameSpace
 
 class TkrRecon : public DataObject {
     

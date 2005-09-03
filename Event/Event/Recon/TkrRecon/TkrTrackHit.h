@@ -1,3 +1,8 @@
+/** @file TkrTrackHit.h
+* @author Bill Atwood, Leon Rochester, Johann Cohen-Tanugi, Tracy Usher
+*
+* $Header$
+*/
 
 #ifndef TkrTrackHit_H
 #define TkrTrackHit_H
@@ -13,28 +18,27 @@
 
 #include "idents/TkrId.h"
 
-/** 
-* @class TkrTrackHit
-*
-* @brief This contained data object holds summary information for each plane enountered
-*        by a track as it traverses the tracker, and also holds the four sets of track
-*        parameters:
-*        MEASURED:   Contains the measured coordinates and associated covariance matrix
-*        PREDICTED   The values predicted from extrapolating from a previous set of hits
-*        FILTERED    The "filtered" values from the Kalman Filter fit
-*        SMOOTHED    The "smoothed" values from the Kalman Filter fit
-*
-* @author Bill Atwood, Leon Rochester, Johann Cohen-Tanugi, Tracy Usher
-*
-* $Header$
-*/
-
 static const CLID& CLID_TkrTrackHit = InterfaceID("TkrTrackHit",  1, 1);
 
 namespace Event { // Namespace
 
 // Move this to TkrCluster eventually
 typedef SmartRef<Event::TkrCluster> TkrClusterPtr;
+
+/** 
+* @class TkrTrackHit
+*
+* @brief TDS object containing information about a single hit on a track
+*
+*  This contained data object holds summary information for each p;ane encountered
+*  by a track as it traverses the tracker, and also holds the four sets of track
+*  parameters:
+*  MEASURED:   Contains the measured coordinates and associated covariance matrix
+*  PREDICTED   The values predicted from extrapolating from a previous set of hits
+*  FILTERED    The "filtered" values from the Kalman Filter fit
+*  SMOOTHED    The "smoothed" values from the Kalman Filter fit
+*
+*/
 
 class TkrTrackHit : virtual public ContainedObject
 {
@@ -55,11 +59,11 @@ public:
                      QMATERIAL,              // For access to the contribution from scattering
                      UNKNOWN};               // Unknown
 
-    /// Status word bits organized like:
-    /// low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-    ///         < volume info  >  <   hit type    > <    track fitting status          >
-    /// high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-    ///                                                                < more hit type >
+    // Status word bits organized like:
+    // low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    //         < volume info  >  <   hit type    > <    track fitting status          >
+    // high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    //                                                                < more hit type >
     enum StatusBits {HITONFIT     = 0x0001,  // Hit is used in the fit
                      HASMEASURED  = 0x0002,  // Hit has valid measured parameters
                      HASPREDICTED = 0x0004,  // Hit has valid predicted parameters
@@ -77,8 +81,9 @@ public:
                      MEASURESY    = 0x2000,  // Plane measures in Y direction
                      HASVALIDTKR  = 0x8000,  // Valid track volume identifier
 
-                     HITISUNKNOWN = 0x10000, // Missing cluster, but fails all tests
-                     HITISDEADPLN = 0x20000  // Entire plane is dead
+                     HITISUNKNOWN   = 0x10000, // Missing cluster, but fails all tests
+                     HITISDEADPLN   = 0x20000, // Entire plane is dead
+                     HITISTRUNCATED = 0x40000  // Hit is in a truncated region
     };
 
 

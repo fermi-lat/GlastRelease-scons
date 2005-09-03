@@ -102,6 +102,8 @@ public:
         static std::string TkrVertexCol;
         static std::string TkrDiagnostics;
         static std::string TkrEventParams;
+        static std::string TkrTruncatedPlane;
+        static std::string TkrTruncationInfo;
     };
 
 

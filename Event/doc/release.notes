@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r2   02-Sep-05 LSR Add new classes for truncated-hits info
  * v11r1   25-Aug-05 HMK ACD update to store AEM header parity
  * v11r0p4 26-Jul-05 TU  Update CalParams to initialize all variables
  * v11r0p3 Bastille  TU  Include new MIP finding, some Cal TDS cleanup
