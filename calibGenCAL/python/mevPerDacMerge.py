@@ -193,23 +193,7 @@ if __name__ == '__main__':
 
     # fixup calibration XML file - insert DTD info
 
-    outFile = open(outName, 'r')
-    lines = outFile.readlines()
-    outFile.close()
-
-    dtdStr = '<!DOCTYPE calCalib ['
-    dtdFile = open(dtdName, 'r')
-    dtdLines = dtdFile.readlines()
-    dtdFile.close()
-    for l in dtdLines:
-        dtdStr += l
-    dtdStr += ']>\n'
-
-    outFile = open(outName, 'w')
-    outFile.write(lines[0])
-    outFile.write(dtdStr)
-    outFile.writelines(lines[1:])
-    outFile.close()
+    calCalibXML.insertDTD(outName, dtdName)
 
     sys.exit(0)
     
