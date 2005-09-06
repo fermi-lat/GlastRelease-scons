@@ -120,7 +120,7 @@
 
 
 #ifndef         AFC_SPLASHMAP_TD
-#define         ATF_SPLASHMAP_TD
+#define         AFC_SPLASHMAP_TD
 typedef struct _AFC_splashMap AFC_splashMap;
 #endif
 
