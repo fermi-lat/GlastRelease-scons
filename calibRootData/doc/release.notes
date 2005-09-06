@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
                               EOH
 
+   v1r7p3  6-Sep-2005 jrb    Put explicit use of GlastPolicy in requirements
    v1r7p2 30-Aug-2005 jrb    Pick up new major release of RootcintPolicy
    v1r7p1 28-May-2005 jrb    See v1r7p0 below
    v1r7p0 27-May-2005 hmk    Use v5 of RootcintPolicy
