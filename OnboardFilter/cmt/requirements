@@ -17,7 +17,7 @@ private
 
 macro OnboardFilter_cppflags "" \
    Linux "-DGLEAM -D__i386 -DEFC_FILTER  -D__unix__"\
-   WIN32 "/D GLEAM /D__i386"
+   WIN32 "/D GLEAM /D__i386 /DEFC_FILTER  -D_WIN32"
 
 macro OnboardFilter_cflags $(OnboardFilter_cppflags)
 
