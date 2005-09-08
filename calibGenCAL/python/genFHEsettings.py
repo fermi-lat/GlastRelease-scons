@@ -243,12 +243,22 @@ if __name__ == '__main__':
     # create output file
 
     log.info('Writing output file %s', outName)
+    
     fio = calDacXML.calDacXML(outName, 'fhe_dac', calDacXML.MODE_CREATE)
+    
     tlist = (destTwr,)
+    outName = os.path.basename(outName)
+    configName = os.path.basename(configName)
+    fheName = os.path.basename(fheName)
+    relName = os.path.basename(relName)
+    adc2nrgName = os.path.basename(adc2nrgName)
+    biasName = os.path.basename(biasName)
+    
     fio.write(nomSetting, heGain = heGain, energy = MeV, filename = outName, cfgfilename = configName,
               adcfilename = fheName, relgainfilename = relName,
               engfilename = adc2nrgName, biasfilename = biasName, method = 'genFHEsettings:%s' % __release__,
               tems = tlist)
+    
     fio.close()
 
     sys.exit(0)

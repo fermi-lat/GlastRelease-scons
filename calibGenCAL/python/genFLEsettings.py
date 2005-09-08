@@ -244,12 +244,23 @@ if __name__ == '__main__':
 
     # create output file
 
+    log.info('Writing output file %s', outName)
+
     fio = calDacXML.calDacXML(outName, 'fle_dac', calDacXML.MODE_CREATE)
+    
     tlist = (destTwr,)
+    outName = os.path.basename(outName)
+    configName = os.path.basename(configName)
+    fleName = os.path.basename(fleName)
+    relName = os.path.basename(relName)
+    adc2nrgName = os.path.basename(adc2nrgName)
+    biasName = os.path.basename(biasName)
+    
     fio.write(nomSetting, leGain = leGain, energy = MeV, filename = outName, cfgfilename = configName,
               adcfilename = fleName, relgainfilename = relName,
               engfilename = adc2nrgName, biasfilename = biasName, method = 'genFLEsettings:%s' % __release__,
               tems = tlist)
+    
     fio.close()
 
     sys.exit(0)
