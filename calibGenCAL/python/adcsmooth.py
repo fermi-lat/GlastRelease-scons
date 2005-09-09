@@ -1,6 +1,13 @@
 """
 Tool to smooth CAL XML file ADC/DAC characterization data.    The command
 line is:
+
+adcsmooth [-V] <in_file> <out_file>
+
+where:
+    [-V]        = verbose; turn on debug output
+    <in_file>   = raw ADC/DAC XML characterization file name
+    <out_file>  = smoothed output XML characterization file name
 """
 
 
