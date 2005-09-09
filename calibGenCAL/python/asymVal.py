@@ -48,8 +48,8 @@ def rootGraphs(xposData, asymData):
     # create ROOT plots XML IntNonlin data
 
     for tem in towers:
-        for row in range(8):
-            for fe in range(12):
+        for row in range(calConstant.NUM_ROW):
+            for fe in range(calConstant.NUM_FE):
 
                 # create frame                        
 
@@ -122,8 +122,8 @@ def rootHists(errData):
     # create ROOT histograms of sec deriv data per channel
 
     for tem in towers:
-        for row in range(8):
-            for fe in range(12):      
+        for row in range(calConstant.NUM_ROW):
+            for fe in range(calConstant.NUM_FE):      
 
                 title = "T%d_%s_%d" % (tem, calConstant.CROW[row], fe)
                 cName = "ch_%s" % title
@@ -195,12 +195,13 @@ def deriv2(p, a):
 
 def calcError(xposData, asymData):
 
-    errs = Numeric.zeros((16, 8, 12, 4), Numeric.PyObject)
+    errs = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 4),
+                         Numeric.PyObject)
     status = 0
 
     for tem in towers:
-        for row in range(8):
-            for fe in range(12):
+        for row in range(calConstant.NUM_ROW):
+            for fe in range(calConstant.NUM_FE):
                 for val in range(4):
 
                     err = []

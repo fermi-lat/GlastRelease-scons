@@ -154,11 +154,12 @@ if __name__ == '__main__':
     # find saturation values    
 
     sat = [127, 127, 127]
-    dacData = Numeric.zeros((16, 8, 2, 12), Numeric.Int16)
+    dacData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE),
+                            Numeric.Int16)
 
-    for row in range(8):
-        for end in range(2):
-            for fe in range(12):
+    for row in range(calConstant.NUM_ROW):
+        for end in range(calConstant.NUM_END):
+            for fe in range(calConstant.NUM_FE):
                 for erng in range(3):
                     adcmax = adcData[erng, srcTwr, row, end, fe, 127]
                     for dac in range(126, 64, -1):

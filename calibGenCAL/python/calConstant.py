@@ -80,4 +80,8 @@ NUM_FE = 12
 
 NUM_TEM = 16
 
+# Number of calorimeter energy ranges
+
+NUM_RNG = 4
+
 

@@ -179,12 +179,13 @@ if __name__ == '__main__':
     # merge tower asymmetry data
 
     xposLen = len(xposData)
-    outData = Numeric.zeros((16, 8, 12, 8, xposLen), Numeric.Float32)
+    outData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 8, xposLen),
+                            Numeric.Float32)
 
     for f in inFiles:
         asymData = f.asymData
-        for row in range(8):
-            for fe in range(12):
+        for row in range(calConstant.NUM_ROW):
+            for fe in range(calConstant.NUM_FE):
                 for val in range(8):
                     for pos in range(xposLen):
                         x = asymData[f.srcTwr, row, fe, val, pos]

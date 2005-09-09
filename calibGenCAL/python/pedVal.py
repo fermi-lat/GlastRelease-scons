@@ -58,9 +58,9 @@ def rootHists(errData):
         cs.Update()
 
     for tem in towers:
-        for row in range(8):
-            for end in range(2):
-                for fe in range(12):             
+        for row in range(calConstant.NUM_ROW):
+            for end in range(calConstant.NUM_END):
+                for fe in range(calConstant.NUM_FE):             
                     for erng in range(0, 4, 2):
                         hs = sumHists[erng]
                         eStr = errData[tem, row, end, fe, erng]
@@ -103,9 +103,9 @@ def rootHists(errData):
         cs.Update()
 
     for tem in towers:
-        for row in range(8):
-            for end in range(2):
-                for fe in range(12):             
+        for row in range(calConstant.NUM_ROW):
+            for end in range(calConstant.NUM_END):
+                for fe in range(calConstant.NUM_FE):             
                     for erng in range(1, 4, 2):
                         hs = sumHists[erng]
                         eStr = errData[tem, row, end, fe, erng]
@@ -132,14 +132,15 @@ def rootHists(errData):
 
 def calcError(pedData):
 
-    errs = Numeric.zeros((16, 8, 2, 12, 4), Numeric.PyObject)
+    errs = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
+                          calConstant.NUM_RNG), Numeric.PyObject)
     status = 0
 
     for tem in towers:
-        for row in range(8):
-            for end in range(2):
-                for fe in range(12):
-                    for erng in range(4):
+        for row in range(calConstant.NUM_ROW):
+            for end in range(calConstant.NUM_END):
+                for fe in range(calConstant.NUM_FE):
+                    for erng in range(calConstant.NUM_RNG):
 
                         err = []
                             
