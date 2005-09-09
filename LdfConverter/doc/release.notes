@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v1r17   09-Sep-2005 HMK Set n/a for AcdIds
 v1r16   24-Aug-2005 HMK Handle ACD Header Parity from AEM contribution
 v1r15   10-Aug-2005 HMK Add two new JO parameters StartEventIndex and
         StartEventNumber
