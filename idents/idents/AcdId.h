@@ -11,6 +11,7 @@
 @verbatim
  ACD tile numbering
  Layer 0 or 1, where 0 corresponds to the inner layer
+ N/A 0 or 1, where 0 is a connected detector and 1 is N/A
  Face 0 - 4 
           Face 0 == top  (hat)
           Face 1 == -X side 
@@ -32,10 +33,10 @@
  One could imagine that an ACD id could be represented by 12 bits.
  
   __ __       __ __ __     __ __ __ __      __ __ __ __
-  LAYER         FACE           ROW            COLUMN
+  N/A           FACE           ROW            COLUMN
                  OR                             OR
            RIBBON ORIENTATION               RIBBON NUMBER
- where the layer is the most significant bit
+ where N/A is the most significant bit
  This is the internal represenation of the AcdId in this class.
  @endverbatim
 
@@ -85,6 +86,8 @@ public:
     inline bool    side () const;   
     /// which layer is this tile in (1st(0 - closer to center of GLAST) or 2nd (1))
     inline short   layer () const;     
+    /// replacing layer, to denote PMTs that are N/A
+    inline short   na () const;     
     /// which face number? 
     inline short   face() const;
     /// which row number?  returns -1 if this id is a ribbon and not a tile
@@ -95,6 +98,9 @@ public:
     inline short ribbonNum() const;
     /// Does this ribbon extend along the X or Y axis?
     inline short ribbonOrientation() const;
+
+    /// Allow client to set the na bit
+    inline void na( unsigned int val );
 
 private:
     void constructorGuts(const idents::VolumeIdentifier &volid);
@@ -113,12 +119,14 @@ private:
     
     enum {
         _layermask = 0x1800,
+        _namask = 0x1800,
         _facemask  = 0x0700,
         _rowmask   = 0x00F0,
         _colmask   = 0x000F,
         _ribbonmask = 0x0007,
         _ribbonorientmask = 0x0700,
         layerShift = 11,
+        naShift = 11,
         maxAcdTileFace = 4,
         tileVolId = 40,
         ribbonVolId = 41,
@@ -137,7 +145,7 @@ inline AcdId::AcdId () : m_id (0) {}
 inline AcdId::AcdId ( const AcdId& r ) : m_id (r.m_id) {}
 inline AcdId::AcdId (short l, short f, short r, short c)  {
     m_id = 0;
-    layer(l);
+    na(l);
     face(f);
     row(r);
     column(c);
@@ -159,8 +167,8 @@ inline bool AcdId::checkVolId(const idents::VolumeIdentifier &volId) {
 inline unsigned int AcdId::id() const 
 { 
     if (tile()) 
-        return (layer() * 1000 + face() * 100 + row() * 10 + column()); 
-    return (layer() * 1000 + ribbonOrientation() * 100 + ribbonNum());
+        return (na() * 1000 + face() * 100 + row() * 10 + column()); 
+    return (na() * 1000 + ribbonOrientation() * 100 + ribbonNum());
 }
 
 inline const idents::VolumeIdentifier AcdId::volId() {
@@ -182,19 +190,22 @@ inline const idents::VolumeIdentifier AcdId::volId() {
 }
 
 inline bool AcdId::tile () const
-{ return (face() <= maxAcdTileFace); }
+{ return ((!na()) && (face() <= maxAcdTileFace)); }
 
 inline bool AcdId::ribbon () const
-{ return (face() > maxAcdTileFace); }
+{ return ((!na()) && (face() > maxAcdTileFace)); }
 
 inline bool AcdId::top () const 
-{ return (face() == 0); }
+{ return ((!na()) && (face() == 0)); }
 
 inline bool AcdId::side () const 
-{ return ((!ribbon()) && (face() != 0)); }
+{ return ((!na()) && (!ribbon()) && (face() != 0)); }
 
 inline short AcdId::layer () const 
-{ return (m_id & _layermask) >> layerShift; }
+{ return (na()); }
+
+inline short AcdId::na () const 
+{ return (m_id & _namask) >> naShift; }
 
 inline short AcdId::face () const
 { 
@@ -227,6 +238,11 @@ inline short AcdId::column () const
 
 inline void AcdId::layer( unsigned int val)
 { 
+    na(val);
+}
+
+inline void AcdId::na( unsigned int val)
+{ 
   short two = 2;
 
   bitmanip::set_word<unsigned int>( 
@@ -239,7 +255,7 @@ inline void AcdId::face( unsigned int f )
     short two = 2;
     bitmanip::set_word<unsigned int> (
         two, m_id, 
-        f | ((_layermask & m_id ) >> 8) );
+        f | ((_namask & m_id ) >> 8) );
 }
 
 inline void AcdId::row( unsigned int r ) 

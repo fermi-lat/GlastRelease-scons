@@ -25,7 +25,7 @@ AcdId::AcdId(const VolumeIdentifier& vId) : m_id(0) {
 
 void AcdId::constructorGuts(const VolumeIdentifier& volId)   {
 
-    layer(0);
+    na(0);
     if (!checkVolId(volId)) throw std::invalid_argument("VolumeIdentifier");
 
     if (volId[2] == tileVolId) {

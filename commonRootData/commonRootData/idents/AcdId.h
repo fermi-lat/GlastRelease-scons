@@ -5,11 +5,11 @@
 #include "TObject.h"
 
 /** @class AcdId
- @brief encapsulate the id for an ACD tile.
+ @brief encapsulate the id for an ACD detector.
  
  @verbatim
  ACD tile numbering
- Layer 0 - 3, where 0 corresponds to the inner layer
+ N/A 0 - 1, where 1 corresponds to a non-connected PMT
  Face 0 - 4 
     Face 0 == top  (hat)
     Face 1 == -X side 
@@ -26,7 +26,7 @@
  One could imagine that an ACD id could be represented by 13 bits.
  
  __  __       __ __ __     __ __ __ __      __ __ __ __
- LAYER       FACE           ROW            COLUMN
+ N/A         FACE           ROW            COLUMN
               OR                              OR
             RIBBON ORIENTATION              RIBBON NUMBER
  where the layer bits are the most significant bits
@@ -47,10 +47,12 @@ private:
     // for XGTs for example
     enum {
         _layermask = 0x1800,
+        _namask = 0x1800,
         _facemask  = 0x0700,
         _rowmask   = 0x00F0,
         _colmask   = 0x000F,
         layerShift = 11,
+        naShift = 11,
         _ribbonmask = 0x0007,
         _ribbonorientmask = 0x0700,
         maxAcdTileFace = 4,
@@ -91,6 +93,8 @@ public:
     bool isSide () const;   
     /// which layer is this tile in (1st(0 - closer to center of GLAST) or 2nd (1))
     Short_t getLayer () const;     
+    /// Is this not connected?
+    Short_t getNa () const;     
     /// which face number?
     Short_t getFace() const;
     /// which row number?
@@ -138,6 +142,8 @@ private:
 
     /// set layer
     void setLayer(UInt_t val);
+    /// set N/A
+    void setNa(UInt_t val);
     /// set the face number
     void setFace (UInt_t f);
     /// set the row

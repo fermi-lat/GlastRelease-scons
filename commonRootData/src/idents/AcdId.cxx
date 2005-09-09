@@ -70,21 +70,23 @@ void AcdId::Print(Option_t *option) const {
     cout.precision(2);
     cout << "Id: " << getId() << endl;
     if (isTile())
-        cout << "  (Layer, Face, Row, Column): (" << getLayer() << ", "
+        cout << "  ( Face, Row, Column): (" 
         << getFace() << ", " << getRow() << ", " << getColumn()
         << ")" << endl;
-    else
+    else if (isRibbon())
         cout << "   (RibbonNum, RibbonOrient): (" << getRibbonNumber() << ", "
         << getRibbonOrientation() << ") " << endl;
+    else
+        cout << " N/A: " << getNa() << endl;
 }
 
 UInt_t AcdId::getId(Short_t base) const { 
     // Returns the tile ID number
     if (base == 2) return m_id; 
     if (isTile())
-        return (getLayer() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
+        return (getNa() * 1000 + getFace() * 100 + getRow() * 10 + getColumn());
     else 
-        return (getLayer() * 1000 + getRibbonOrientation() * 100 + getRibbonNumber());
+        return (getNa() * 1000 + getRibbonOrientation() * 100 + getRibbonNumber());
 }
 
 void AcdId::setId(UInt_t newVal, Short_t used, Short_t base) { 
@@ -113,24 +115,29 @@ void AcdId::setId(UInt_t newVal, Short_t used, Short_t base) {
 }
 
 bool AcdId::isTile () const
-{ return (getFace() <= maxAcdTileFace); }
+{ return ((!getNa()) && getFace() <= maxAcdTileFace); }
 
 bool AcdId::isRibbon () const
-{ return (getFace() > maxAcdTileFace); }
+{ return ((!getNa()) && getFace() > maxAcdTileFace); }
 
 bool AcdId::isTop () const 
 { 
-    return (getFace() == 0); 
+    return ((!getNa()) && getFace() == 0); 
 }
 
 bool AcdId::isSide () const 
 { 
-    return (!isRibbon() && (getFace() != 0)); 
+    return ((!getNa()) && !isRibbon() && (getFace() != 0)); 
 }
 
 Short_t AcdId::getLayer () const 
 { 
-    return ((m_id & _layermask) >> layerShift); 
+    return (getNa()); 
+}
+
+Short_t AcdId::getNa () const 
+{ 
+    return ((m_id & _namask) >> naShift); 
 }
 
 Short_t AcdId::getFace () const
@@ -167,8 +174,13 @@ Short_t AcdId::getRibbonOrientation () const
 
 void AcdId::setLayer( UInt_t val )
 { 
-    m_id &= ~_layermask;
-    m_id |= (val << layerShift);
+    setNa(val);
+}
+
+void AcdId::setNa( UInt_t val )
+{ 
+    m_id &= ~_namask;
+    m_id |= (val << naShift);
     //short two = 2;
     
    // set_word( two, m_id, 
@@ -179,7 +191,7 @@ void AcdId::setFace( UInt_t f )
 {
     short two = 2;
     set_word( two, m_id, 
-        f | ((_layermask & m_id ) >> 8) );
+        f | ((_namask & m_id ) >> 8) );
 }
 
 void AcdId::setRow( UInt_t r ) 
