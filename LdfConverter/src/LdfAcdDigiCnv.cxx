@@ -49,9 +49,12 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         const char *tileName = thisAcdDigi->second->getTileName();
         int tileNumber = thisAcdDigi->second->getTileNumber();
         unsigned int tileId = thisAcdDigi->second->getTileId();
-		short layer, face, row, col;
-		base10ToAcdId(tileId, layer, face, row, col);
+        short layer, face, row, col;
+        base10ToAcdId(tileId, layer, face, row, col);
         idents::AcdId identsId(layer, face, row, col);
+        // Test for N/A
+        if ((tileId == 0) && (strcmp(tileName, "000") != 0) )
+            identsId.na(1); 
 
         const std::vector<ldfReader::AcdDigi::AcdPmt> readoutCol = thisAcdDigi->second->getReadout();
         std::vector<ldfReader::AcdDigi::AcdPmt>::const_iterator curReadout;
@@ -59,7 +62,6 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
 
         unsigned short pha[2] = {0,0};
         bool hitMapArr[2] = {false, false};
-        //  Assumed passed low threshold - it looks like zero suppression is always on now
         bool acceptMapArr[2] = {true, true};
         bool cnoArr[2] = {false, false};
         Event::AcdDigi::Range range[2] = {Event::AcdDigi::LOW, Event::AcdDigi::LOW};
