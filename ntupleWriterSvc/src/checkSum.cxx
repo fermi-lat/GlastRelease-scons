@@ -54,11 +54,11 @@ void checkSum::write(TTree* t) {
         // there exists a TTreeFriendLeafIter, but how to use it?
 
         TObject* l = lcol->At(i);
-        const std::string c = l->ClassName();
-        const std::string n = l->GetName();
+        const std::string className = l->ClassName();
+        const std::string leafName = l->GetName();
         if ( DEBUG )
-            std::cout << i << ' ' << n << ' ' << c;
-        if ( c == "TLeafD" ) {
+            std::cout << i << ' ' << leafName << ' ' << className;
+        if ( className == "TLeafD" ) {
             const Double_t v = dynamic_cast<TLeafD*>(l)->GetValue();
             if ( DEBUG )
                 std::cout << ' ' << std::setprecision(25) << v
@@ -74,13 +74,10 @@ void checkSum::write(TTree* t) {
                               << (unsigned short)p[ip] << std::endl;
                 charCol.push_back(p[ip]);
             }
-
-            if ( n == "EvtEventId" )
-                EvtEventId = v;
-            else if ( n == "EvtElapsedTime" )
+            if ( leafName == "EvtElapsedTime" )
                 EvtElapsedTime = v;
         }
-        else if ( c == "TLeafF" ) {
+        else if ( className == "TLeafF" ) {
             const Float_t v = dynamic_cast<TLeafF*>(l)->GetValue();
             if ( DEBUG )
                 std::cout << ' ' << std::setprecision(25) << v
@@ -96,9 +93,12 @@ void checkSum::write(TTree* t) {
                               << (unsigned short)p[ip] << std::endl;
                 charCol.push_back(p[ip]);
             }
+            if ( leafName == "EvtEventId" )
+                EvtEventId = v;
         }
-        else if ( c == "TLeafI" ) {
-            const Int_t v = static_cast<Int_t>(dynamic_cast<TLeafI*>(l)->GetValue());
+        else if ( className == "TLeafI" ) {
+            const Int_t v = static_cast<Int_t>(
+                                          dynamic_cast<TLeafI*>(l)->GetValue());
             if ( DEBUG )
                 std::cout << ' ' << std::setprecision(25) << v
                           << std::setprecision(0) << std::endl;
@@ -118,7 +118,8 @@ void checkSum::write(TTree* t) {
             if ( DEBUG )
                 std::cout << std::endl;
             if ( WARNING )
-                std::cout << "class " << c << " is not implemented!"<<std::endl;
+                std::cout << "class " << className << " is not implemented!"
+                          << std::endl;
         }
     }
     const unsigned long theSum = simple(&charCol);
@@ -126,8 +127,8 @@ void checkSum::write(TTree* t) {
     if ( DEBUG )
         std::cout << "checksum: "
                   << std::setprecision(25)
-                  << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
-                  << std::setiosflags(std::ios::scientific) << EvtElapsedTime <<' '
+                  <<std::resetiosflags(std::ios::scientific)<< EvtEventId << ' '
+                  <<std::setiosflags(std::ios::scientific)<<EvtElapsedTime <<' '
                   << theSum << ' '
                   << charCol.size()
                   << std::endl;
