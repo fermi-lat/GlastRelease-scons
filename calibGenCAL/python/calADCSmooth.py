@@ -1,5 +1,4 @@
 """
-calADCSmooth
 Tool to smooth CAL ADC/DAC data.
 """
 
