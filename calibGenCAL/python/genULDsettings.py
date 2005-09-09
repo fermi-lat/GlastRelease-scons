@@ -29,6 +29,7 @@ import Numeric
 
 import calFitsXML
 import calDacXML
+import calConstant
 
 
 
