@@ -20,6 +20,7 @@ import xml.dom.minidom
 import Numeric
 
 import calXML
+import calConstant
 from calExcept import *
 
 
@@ -51,6 +52,8 @@ class calSnapshotXML(calXML.calXML):
         """
         
         calXML.calXML.__init__(self, fileName, mode)
+
+        self.__log = logging.getLogger('calSnapshotXML')        
 
 
     def getTowers(self):
@@ -140,7 +143,9 @@ class calSnapshotXML(calXML.calXML):
                             raise calFileReadExcept, "<GCFE> ID attribute value %d, expected (0 - 11)" % fe
                         dacList = f.getElementsByTagName(dacName)
                         dacLen = len(dacList)
-                        if dacLen != 1:
+                        if dacLen == 0:
+                            continue
+                        elif dacLen > 1:
                             raise calFileReadExcept, "found %d %s elements, expected 1" % (dacLen, dacName)
                         d = dacList[0]
                         dd = d.childNodes[0]
