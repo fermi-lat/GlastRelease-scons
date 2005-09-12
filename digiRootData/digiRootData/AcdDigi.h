@@ -14,14 +14,14 @@
  * tile or a ribbon.  Each ACD entity has two PMTs (A and B) associated with 
  * it.  Each PMT contains:
  * - PHA (pulse height)
- * - odd parity bit
- * - header parity bit
  * - range (low or high)
+ * - odd parity bit associated with each PMT read out
+ * - header parity bit stored in the AEM header
  * - Three Discriminators:  
  *   -# low(accept map bit)
  *   -# veto (hit map bit)
- *   -# high (cno)  
- *  The PMT values are stored in a packed word.
+ *   -# high (cno) - only for use with MC data
+ * The PMT values are stored in a packed word.
  * Details concerning the ACD detector data can be found in:
  * ACD ICD document LAT-SS-00363-08
  * and in the AEM description:  
@@ -131,29 +131,38 @@ public:
     /// Returns the PHA value for the PMT requested
     UShort_t getPulseHeight (AcdDigi::PmtId pmt) const;
     /// Returns True/False denoting whether this ACD Tile's veto (hit map) bit is on.
+    /// deprecated method name, see getHitMapBit
     Bool_t getVeto(AcdDigi::PmtId pmt) const;
     /// Returns True/False denoting whether this ACD Tile's veto (hit map) bit is on.
     Bool_t getHitMapBit(AcdDigi::PmtId pmt) const { return getVeto(pmt); };
 
     /// Returns true/false denoting if this Acd PMT accept bit is on/off
+    /// deprecated method name, see getAcceptMapBit
     Bool_t getLowDiscrim(AcdDigi::PmtId pmt) const;
     /// Returns true/false denoting if this Acd PMT accept bit is on/off
     Bool_t getAcceptMapBit(AcdDigi::PmtId pmt) const { return getLowDiscrim(pmt); };
     /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
+    /// deprecated method for real data - ultimately CNO will only be available 
+    /// through GEM.  Only has meaning for MC data
     Bool_t getHighDiscrim(AcdDigi::PmtId pmt) const;
-    /// Returns true/false denoting if this ACD Tile's high discriminator bit is on (CNO).
+    /// deprecated method for real data - Returns true/false denoting if this 
+    /// ACD Tile's high discriminator (CNO) bit is on. 
+    /// Only has meaning for MC data
     Bool_t getCno(AcdDigi::PmtId pmt) const { return getHighDiscrim(pmt); };
 
+    /// Returns the tile number as reported by LDF - may not correspond
+    /// to ACD id conventions - use getId or getTileName instead
     Int_t getTileNumber() const { return m_tileNumber; };
+
+    /// Returns the string associated with this tile, as reported by LDF
+    /// Conforms to proper ACD detector id numbering scheme
     const char* getTileName() const { return m_tileName.Data(); };
 
     /// Returns the range of this PMT (low or high) (currently real data only)
     Range getRange(AcdDigi::PmtId pmt) const;
 
-    /// Returns the odd parity bit for the requested PMT (real data only
-    ParityError getParityError(AcdDigi::PmtId pmt) const;
     /// Returns the odd parity bit for the requested PMT (real data only)
-    ParityError getOddParityError(AcdDigi::PmtId pmt) const { return getParityError(pmt); };
+    ParityError getOddParityError(AcdDigi::PmtId pmt) const;
 
     /// Returns Header parity bit aka CMD/Data error from AEM header (real data only)
     ParityError getHeaderParityError(AcdDigi::PmtId pmt) const;
@@ -169,18 +178,20 @@ private:
 
     void initPackedLdfWord(PmtId pmt, Range range, ParityError error, ParityError headerParity);
 
-    /// Energy deposited in MeV - provided as a check
+    /// Energy deposited in MeV - provided as a check on MC
     Float_t m_energy;
     /// packed word containing ACD digi data
     UShort_t m_packed[2];	
-    /// ACD Id
+    /// ACD Id - contains methods to retrieve proper ACD id
     AcdId m_id; 
     /// Volume id for geometry
     VolumeIdentifier m_volId;
 
     // New data members for version 3 
     UShort_t m_packedLdf[2];
+    /// Tile number as reported by LDF, may not conform to proper id conventions
     Int_t m_tileNumber;
+    /// String returned from LDF, which does conform to proper id conventions
     TString m_tileName;
 
     ClassDef(AcdDigi,3) // Digitization for a single ACD entity

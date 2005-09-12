@@ -66,13 +66,13 @@ void AcdDigi::Print(Option_t *option) const {
         << Short_t(getVeto(AcdDigi::A)) << ", " 
         << Short_t(getHighDiscrim(AcdDigi::A)) << ")" << endl;
     cout << " (range, error): (" << Short_t(getRange(AcdDigi::A)) << ", "
-        << Short_t(getParityError(AcdDigi::A)) << ")" << endl;
+        << Short_t(getOddParityError(AcdDigi::A)) << ")" << endl;
     cout << "PMT B: " << getPulseHeight(AcdDigi::B) 
         << " (low, veto, high): (" << Short_t(getLowDiscrim(AcdDigi::B)) << ", "
         << Short_t(getVeto(AcdDigi::B)) << ", " 
         << Short_t(getHighDiscrim(AcdDigi::B)) << ")" << endl;
     cout  << " (range, error): (" << Short_t(getRange(AcdDigi::B)) << ", "
-        << Short_t(getParityError(AcdDigi::B)) << ")" << endl;
+        << Short_t(getOddParityError(AcdDigi::B)) << ")" << endl;
 }
 
 
@@ -97,7 +97,7 @@ AcdDigi::Range AcdDigi::getRange(AcdDigi::PmtId pmt) const {
     return (((m_packedLdf[pmt] >> RANGE_SHIFT) & 1 ) ? HIGH : LOW);
 }
 
-AcdDigi::ParityError AcdDigi::getParityError(AcdDigi::PmtId pmt) const {
+AcdDigi::ParityError AcdDigi::getOddParityError(AcdDigi::PmtId pmt) const {
     return (((m_packedLdf[pmt] >> ERROR_SHIFT) & 1 ) ? ERROR : NOERROR);
 }
 
