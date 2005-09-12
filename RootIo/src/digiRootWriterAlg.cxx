@@ -470,10 +470,17 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         AcdId idRoot;
         if (idTds.tile())
             idRoot.initialize(idTds.layer(), idTds.face(), idTds.row(), idTds.column());
+        else 
+            idRoot.initialize(idTds.ribbonOrientation(), idTds.ribbonNum());
+        
+
+
+        /* save this for later
         else if (idTds.ribbon())
             idRoot.initialize(idTds.ribbonOrientation(), idTds.ribbonNum());
         else 
             idRoot.initialize(idTds.na(),0,0,0);
+        */
 
         const idents::VolumeIdentifier volIdTds = (*acdDigiTds)->getVolId();
         VolumeIdentifier volIdRoot;
