@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v8r7      12-Sep-2005 HMK Clean up of AcdDigi after talking to Alex Moiseev
 v8r6      02-Sep-2005 HMK Use any RootcintPolicy which has a new build
           structure to include bin&lib directories
 v8r5      24-Aug-2005 HMK Store AEM header parity bits in AcdDigi
