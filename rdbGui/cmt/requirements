@@ -1,6 +1,6 @@
 # $Header$
 package rdbGui
-version v1r8p1
+version v1r9
 
 author Marco Frailis <frailis@fisica.uniud.it>
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
