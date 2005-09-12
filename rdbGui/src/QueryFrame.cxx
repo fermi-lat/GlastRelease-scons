@@ -55,7 +55,7 @@ QueryFrame::QueryFrame(FXComposite *owner, RdbGUIWindow *target):
   new FXHorizontalSeparator(this);
   
   int  numOper= 6;
-  FXString relOper[] = {">", "<", "=","<>","<=",">="};
+  FXString relOper[] = {"=", ">", "<", "<>","<=",">="};
   m_operators.assign(relOper, &relOper[numOper]);
   
   m_factory = new ColWidgetFactory();
@@ -218,8 +218,15 @@ long QueryFrame::onQuery(FXObject*,FXSelector,void*)
           delete m_queryResult;
           m_queryResult = NULL;
         }
-      m_queryResult = m_connect->select(m_tableName, getCols, orderCols, where);
-      return m_target && m_target->handle(NULL,FXSEL(SEL_COMMAND,ID_QUERY),NULL);
+      try {
+        m_queryResult = m_connect->select(m_tableName, getCols, 
+                                          orderCols, where);
+        return 
+          m_target && m_target->handle(NULL,FXSEL(SEL_COMMAND,ID_QUERY),NULL);
+      }
+      catch (std::exception ex) {
+        return 0;
+      }
     }  
 
   return 0;
