@@ -171,7 +171,11 @@ if __name__ == '__main__':
     # read FLE DAC ADC characterization file
     
     log.info("reading FLE ADC file %s", fleName)
-    fio = calFitsXML.calFitsXML(fileName = fleName, mode = calFitsXML.MODE_READONLY) 
+    fio = calFitsXML.calFitsXML(fileName = fleName, mode = calFitsXML.MODE_READONLY)
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, fleName)
+        sys.exit(1)
     adcThresholds = fio.read()
     fio.close() 
 
@@ -179,6 +183,10 @@ if __name__ == '__main__':
 
     log.info("reading relgain file %s", relName)
     fio = calFitsXML.calFitsXML(fileName = relName, mode = calFitsXML.MODE_READONLY)
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, relName)
+        sys.exit(1)
     relgain = fio.read()
     fio.close()
 
@@ -186,6 +194,10 @@ if __name__ == '__main__':
     
     log.info("reading adc2nrg file %s", adc2nrgName)
     fio = calDacXML.calEnergyXML(adc2nrgName, 'adc2nrg')
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, adc2nrgName)
+        sys.exit(1)
     adc2nrg = fio.read()
     fio.close()
 
@@ -193,6 +205,10 @@ if __name__ == '__main__':
       
     log.info("reading bias file %s", biasName)
     fio = calDacXML.calEnergyXML(biasName, 'thrBias')
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, biasName)
+        sys.exit(1)
     biasTable = fio.read()
     fio.close()
     

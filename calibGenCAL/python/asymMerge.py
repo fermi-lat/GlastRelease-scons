@@ -165,6 +165,10 @@ if __name__ == '__main__':
     for f in inFiles:
         log.info('Reading file %s', f.name)
         inFile = calCalibXML.calAsymCalibXML(f.name)
+        twrs = inFile.getTowers()
+        if f.srcTwr not in twrs:
+            log.error("Src twr %d data not found in file %s", f.srcTwr, f.name)
+            sys.exit(1)
         (xposData, asymData) = inFile.read()
         f.asymData = asymData
         f.xposData = xposData

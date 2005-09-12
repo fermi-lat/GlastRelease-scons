@@ -161,6 +161,10 @@ if __name__ == '__main__':
 
     log.info("Reading LAC ADC file %s", lacName)
     fio = calFitsXML.calFitsXML(fileName = lacName, mode = calFitsXML.MODE_READONLY)
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, lacName)
+        sys.exit(1)
     adcThresholds = fio.read()
     info = fio.info()
     fio.close()
@@ -169,6 +173,10 @@ if __name__ == '__main__':
 
     log.info("Reading relgain file %s", relName)
     fio = calFitsXML.calFitsXML(fileName = relName, mode = calFitsXML.MODE_READONLY)
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, relName)
+        sys.exit(1)
     relgain = fio.read()
     fio.close()
 
@@ -176,6 +184,10 @@ if __name__ == '__main__':
     
     log.info("Reading adc2nrg file %s", adc2nrgName)
     fio = calDacXML.calEnergyXML(adc2nrgName, 'adc2nrg')
+    twrs = fio.getTowers()
+    if srcTwr not in twrs:
+        log.error("Src twr %d data not found in file %s", srcTwr, adc2nrgName)
+        sys.exit(1)
     adc2nrg = fio.read()
     fio.close()
 
