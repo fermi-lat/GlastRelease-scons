@@ -82,7 +82,7 @@ class AcdReconAlg : public Algorithm
       static unsigned int s_numSideRows;
 
       // record of the tile with the minimum Distance of Closest Approach
-      idents::AcdId m_minDocaId, m_ribbon_act_dist_id;
+      idents::AcdId m_minDocaId, m_ribbon_act_dist_id, m_maxActDistId;
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;

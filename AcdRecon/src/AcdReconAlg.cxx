@@ -220,13 +220,16 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         log << endreq;
         checkAcdRecTds->clear();
         checkAcdRecTds->init(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
+            m_minDocaId, m_act_dist, m_maxActDistId, m_rowDocaCol, 
+            m_rowActDistCol, m_idCol, m_energyCol,
             m_ribbon_act_dist, m_ribbon_act_dist_id);
     } else {
         // create the TDS location for the AcdRecon
-        Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
-            m_act_dist, m_minDocaId, m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
-            m_ribbon_act_dist, m_ribbon_act_dist_id);
+        Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, 
+                                   m_tileCount, m_gammaDoca, m_doca, 
+                                   m_minDocaId, m_act_dist, m_maxActDistId, 
+                           m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
+                           m_ribbon_act_dist, m_ribbon_act_dist_id);
         
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
@@ -359,8 +362,8 @@ StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D 
 StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, const HepVector3D &t0, 
                                 std::vector<double> &row_values, double &return_dist) {
     // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
-    //       Determines minimum distance between a track and the edges of ACD
-    //       tiles above veto threshold.
+    // Determines minimum distance between a track and the edges of ACD
+    // tiles above veto threshold.
     // Inputs:  (x0, t0) defines a track
     // Outputs: Returns minimum distance
 	
@@ -422,30 +425,36 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         
         HepPoint3D x_isec = x0 + arc_dist*t0;
         
-       // HepVector3D local_x0 = xT - x_isec; 
-		HepVector3D local_x0 = x_isec - xT;
+        HepVector3D local_x0 = x_isec - xT;
         double test_dist;
         if(iFace == 0) {// Top Tile
             double dist_x = dX/2. - fabs(local_x0.x());
             double dist_y = dY/2. - fabs(local_x0.y());	 
-			// Choose which is furthest away from edge (edge @ 0.)
+            // Choose which is furthest away from edge (edge @ 0.)
             test_dist = (dist_x < dist_y) ? dist_x : dist_y;
-			// Choose closest to tile center
-			if(test_dist > return_dist) return_dist = test_dist;
+            // Choose closest to tile center
+            if(test_dist > return_dist) { 
+                return_dist = test_dist;
+                m_maxActDistId = acdId;
+            }
         }
         else if(iFace == 1 || iFace == 3) {// X Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
-        //  double dist_y = dY/2. - fabs(local_x0.y());	 And this one is WRONG TOO!
-			double dist_y = dX/2. - fabs(local_x0.y());	
+            double dist_y = dX/2. - fabs(local_x0.y());	
             test_dist = (dist_z < dist_y) ? dist_z : dist_y;
-            if(test_dist > return_dist) return_dist = test_dist;
+            if(test_dist > return_dist) { 
+                return_dist = test_dist;
+                m_maxActDistId = acdId;          
+            }
         }
         else if(iFace == 2 || iFace == 4) {// Y Side Tile
             double dist_z = dZ/2. - fabs(local_x0.z());
-         // double dist_x = dY/2. - fabs(local_x0.x());	THIS IS THE MAIN ERROR!!!!  
-			double dist_x = dX/2. - fabs(local_x0.x());
+            double dist_x = dX/2. - fabs(local_x0.x());
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
-            if(test_dist > return_dist) return_dist = test_dist;
+            if(test_dist > return_dist) {
+                return_dist = test_dist;
+                m_maxActDistId = acdId;
+            }
         }
 		
         // Pick up the max. distance from each type of tile
