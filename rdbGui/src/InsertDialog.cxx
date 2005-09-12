@@ -186,12 +186,17 @@ long InsertDialog::onGoPress(FXObject *,FXSelector, void*)
    
   if (m_connection)
   {
-    if(m_insertMode) //If in insert mode
+    if(m_insertMode == 1) //If in normal insert mode
       {
         m_rdb->insertRow(m_tableName, row, &m_lastRow);
         m_lastTblName = m_tableName;
       }  
-    else //Otherwise we are in the Update Last Row mode
+    else if (m_insertMode == 2) // insertLatest
+      {
+        m_rdb->insertLatest(m_tableName, row, &m_lastRow);
+        m_lastTblName = m_tableName;
+      }  
+    else  //Otherwise we are in the Update Last Row mode
     {
       std::string serialStr;
       rdbModel::Assertion::Operator* serEquals = 

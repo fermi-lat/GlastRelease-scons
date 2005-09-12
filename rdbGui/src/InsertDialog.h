@@ -50,8 +50,8 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   int getLastRow(){return m_lastRow;};
   void setLastRow(int l){m_lastRow = l;};
   
-  bool getInsertMode(){return m_insertMode;};
-  void setInsertMode(bool m){m_insertMode = m;};
+  unsigned getInsertMode(){return m_insertMode;};
+  void setInsertMode(unsigned m){m_insertMode = m;};
 
   
   void fillWithRowByKey(std::string ser);
@@ -116,8 +116,9 @@ class InsertDialog: public FXDialogBox,public rdbModel::Visitor
   int m_lastRow;
   /// Key of the selected row
   std::string m_selRow;                
-  /// The mode of this dialog; 1 is insert mode, 0 is update mode
-  bool m_insertMode;
+  /// The mode of this dialog; 1 is insert mode, 0 is update mode,
+  /// 2 is insertLatest (special kind of insert)
+  unsigned m_insertMode;
   /// The result of the query for the last row inserted 
   rdbModel::ResultHandle* m_result;
   /// List of columns set by the service (i.e. by the rdbGui program)

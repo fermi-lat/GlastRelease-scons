@@ -26,7 +26,9 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_MULTI,              RdbGUIWindow::onMultiInsert),  
   FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_UPDATELAST,         RdbGUIWindow::onUpdateLastRow),
   FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_UPDATEROW,           RdbGUIWindow::onUpdateRowByKey),
-  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_COPYROW,             RdbGUIWindow::onCopyRowByKey)
+  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_COPYROW,             RdbGUIWindow::onCopyRowByKey),
+  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERTLATEST,       RdbGUIWindow::onInsertLatest),
+
 };
 
 
@@ -136,6 +138,8 @@ FXIMPLEMENT(RdbGUIWindow,FXMainWindow,RdbGUIWindowMap,ARRAYNUMBER(RdbGUIWindowMa
   new FXMenuTitle(uiMenuBar, "&Action", NULL, uiActionmenu);
   new FXMenuCommand(uiActionmenu, "&Insert\tCtl-I\tInsert a new row\tInsert a new row",
     NULL, this, ID_INSERT);
+  new FXMenuCommand(uiActionmenu, "&InsertLatest\tCtl-L\tInsert latest row of this type\tInsert latest row of this type",
+    NULL, this, ID_INSERTLATEST);
   new FXMenuCommand(uiActionmenu, "&MultiInsert\tCtl-M\tMultiInsert a new row\tMultiInsert a new row",
     NULL, this, ID_MULTI);
   new FXMenuCommand(uiActionmenu, "&Redo Last Insert\tCtl-R\tRedo the last row inserted\tRedo the last row inserted",
@@ -491,6 +495,39 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
   return 1;
 }
 
+/*  ---------- */
+long RdbGUIWindow::onInsertLatest(FXObject*,FXSelector, void*)
+{
+  m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
+  if ((uiTblColList->getTableList()->getNumItems() == 0 )
+      || (m_connect == 0) || !(m_connect->isConnected()))
+    return 1;
+
+  int index = uiTblColList->getTableList()->getCurrentItem(); 
+  m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
+  // Fill the form
+  m_rdbManager->startVisitor(m_dgInsert);
+  // Set the mode of the dialog to InsertLatest
+  m_dgInsert->setInsertMode(2);
+  
+  m_dgInsert->show(PLACEMENT_OWNER);
+  m_dgInsert->setUiLog(uiLog);
+
+  if (m_dgInsert->getDefaultWidth() < 250)
+    m_dgInsert->resize(250,m_dgInsert->getDefaultHeight());
+  else
+    m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();  
+  
+  return 1;
+}
+
+
+
+
+
+/*  ---------- */
 long RdbGUIWindow::onUpdateLastRow(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
