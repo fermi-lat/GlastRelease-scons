@@ -5,6 +5,9 @@
    Coordinators: M. Frailis and R. Giannitrapani
               EOH
 
+   v1r9    12-Sep-2005  jrb      1) Add insertLatest to Action menu. 
+                                 2)catch exceptions from Connection class
+                                 3) make "=" the default for query conditions
    v1r8p1   2-Sep-2005  jrb      Use new rdbModel::Rdb functions for update, insert
    v1r8    29-Jun-2005  jrb      Changes for compatibility with rdbModel v2r0
    v1r7    12-Apr-2005  jrb for rg  Add new copy dialogue to do insert based on
