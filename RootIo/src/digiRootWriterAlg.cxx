@@ -596,16 +596,23 @@ void digiRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the DigiEvent data for this event in the ROOT
     //    tree.  The m_digiEvt object is cleared for the next event.
     static int eventCounter = 0;
+try {
     TDirectory *saveDir = gDirectory;
     m_digiTree->GetCurrentFile()->cd();
-    //m_digiFile->cd();
     m_digiTree->Fill();
-    //m_digiEvt->Clear();
     ++eventCounter;
     if (m_rootIoSvc)
-        if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) m_digiTree->AutoSave();
+        if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) 
+            m_digiTree->AutoSave();
 
     saveDir->cd();
+ } catch(...) {   
+     std::cerr << "Failed to write the event to file" << std::endl;   
+     std::cerr << "Exiting..." << std::endl;   
+     std::cerr.flush();   
+     exit(1);   
+ } 
+
     return;
 }
 
@@ -618,14 +625,22 @@ void digiRootWriterAlg::close()
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
+ try {
     TDirectory *saveDir = gDirectory;
     TFile *f = m_digiTree->GetCurrentFile();
-    //m_digiFile->cd();
     f->cd();
     m_digiTree->BuildIndex("m_runId", "m_eventId");
     f->Write(0, TObject::kWriteDelete);
     f->Close();
     saveDir->cd();
+ } catch(...) {   
+    std::cerr << "Failed final write to DIGI file" << std::endl;   
+    std::cerr << "Exiting..." << std::endl;   
+    std::cerr.flush();   
+    exit(1);   
+ }   
+  
+
     return;
 }
 
