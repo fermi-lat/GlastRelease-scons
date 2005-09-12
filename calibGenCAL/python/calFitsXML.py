@@ -838,6 +838,7 @@ class calFitsXML(calXML.calXML):
           - RPTNAME - The name of the associated test report file.
           - RUNID - The run collection ID for the data.
           - COMMENT - A general comment and notes string for the FITS file.
+          - INSTRUMENT - A summary name for the instrument under test.
           
         Returns: A dictionary of <table header key>:<value> pairs.
         """
@@ -861,6 +862,7 @@ class calFitsXML(calXML.calXML):
         i['RPTNAME'] = None
         i['RUNID'] = None
         i['COMMENT'] = None
+        i['INSTRUMENT'] = None
         
         for n in range(self.__numAxes):
             name = 'LAXIS%d' % (n + 1)
