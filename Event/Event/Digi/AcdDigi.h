@@ -18,25 +18,24 @@
 * An entity could be an ACD tile or a fiber.  Each of which would contain 
 * 2 PMTs.  There are PHA and discriminator values for each PMT.
 * Thus, there each member variable is an array of two entries.
-* - Low Discriminator enables the PHA value
-* - Veto Discriminator nominal ACD veto signal
-* - High Discriminator is for CAL calibration - CNO
+* - Low Discriminator (Accept Map bit == zero suppression) enables the PHA value
+* - Veto Discriminator (Hit Map bit) nominal ACD veto signal
+* - High (CNO) Discriminator is for CAL calibration
 * So the AcdDigi is comprised of:
 * - AcdId
 * - Energy in MeV - as a check on the pha values
 * - 2 Pulse Height values
-* - 2 Low discriminators
-* - 2 Veto discriminators
-* - 2 High discriminators
+* - 2 Low discriminators (Accept Map)
+* - 2 Veto discriminators (Hit Map)
+* - 2 High (CNO) discriminators, really only used for MC, real data has CNO
+*   stored in GEM.  AcdDigi alg needs to be updated so MC behaves the same
 *             
-* There are no set methods in this class, users are expected to fill
-* the data members through the constructor.
 *
 * @author Heather Kelly
 * $Header$
 */
 
-static const CLID& CLID_AcdDigi = InterfaceID("AcdDigi", 1, 0);
+static const CLID& CLID_AcdDigi = InterfaceID("AcdDigi", 1, 1);
 
 namespace Event {
     class AcdDigi : virtual public ContainedObject  { 
@@ -92,28 +91,42 @@ namespace Event {
         inline const idents::AcdId getId() const { return m_id; };
         inline const idents::VolumeIdentifier getVolId() const { return m_volId; };
 
+        /// Retrieve string name of the ACD detector as reported by LDF
+        /// Corresponds to the ACD ids we are familiar with
         inline const char* getTileName() const { return m_tileName; };
 
+        /// Retrieve tile number as reported by LDF, which may not correspond
+        /// to accepted ACD ids
         inline int getTileNumber() const { return m_tileNumber; };
         
+        /// Returns MC energy (MeV) deposited in the detector
+        /// strictly here as a check on MC digitization algorithm
         inline double getEnergy() const { return m_energy; };
 
         /// Retrieve pulse height from one PMT
         inline unsigned short getPulseHeight(PmtId id) const { return m_pulseHeight[id]; };
         
+        /// deprecated method name, see getHitMapBit
         inline bool getVeto(PmtId id) const { return m_veto[id]; };
+        /// Denotes that the PMT was above hit (veto) threshold
         inline bool getHitMapBit(PmtId id) const { return m_veto[id]; };
         
+        /// deprecated method name, see getAcceptMapBit
         inline bool getLowDiscrim(PmtId id) const { return m_low[id]; };
+        /// Denotes that the PMT's PHA was read out 
         inline bool getAcceptMapBit(PmtId id) const { return m_low[id]; };
         
+        /// Only useful for MC data for now
         inline bool getHighDiscrim(PmtId id) const { return m_high[id]; };
+        /// Only useful for MC data for now
         inline bool getCno(PmtId id) const { return m_high[id]; };
         
         inline Range getRange(PmtId id) const { return m_range[id]; };
 
-        inline ParityError getParityError(PmtId id) const { return m_error[id]; };
+        //inline ParityError getParityError(PmtId id) const { return m_error[id]; };
+        /// Error bit associated with PHA
         inline ParityError getOddParityError(PmtId id) const { return m_error[id]; };
+        /// Error bit stored in AEM header
         inline ParityError getHeaderParityError(PmtId id) const { return m_error[id+2]; };
 
         /// Serialize the object for writing
@@ -135,7 +148,7 @@ namespace Event {
         /// Acd ID
         idents::AcdId        m_id;
         /// Tile name in char* form, matches idents::AcdId
-        const char*                m_tileName;
+        const char*          m_tileName;
         /// Tile Number as reported from LDF
         int                  m_tileNumber;
         /// Allow one to retrieve dimensions of this volume
@@ -147,20 +160,20 @@ namespace Event {
         /// nominal Acd veto signal
         bool                 m_veto[2];
         /// 1 bit Low threshold discriminator - enables the PHA
-        /// Now more properly called the accept map bits and sometimes 
-        /// referred to as the zero suppression bits
+        /// Now more properly called the accept map bits and sometimes
+        // referred to as the zero suppression bits
         bool                 m_low[2];
-        /// 1 bit High threshold discriminator - used for calibration of the CAL
+        /// 1 bit High threshold CNO discriminator 
         /// used for calibration of the CAL
-        /// This really should not be stored here any longer, we only set CNO
-        /// per FREE board, so it is not easy to know which PMT caused it.
+        /// This really should not be stored here any longer.. we only set
+        /// CNO per FREE board.  This data member remains for the MC.
         bool                 m_high[2];
         /// Range setting either LOW (0) or HIGH (1)
         Range                m_range[2];
-        /// Stores the parity error bit from LDF:  NOERROR (0), ERROR (1)
-        /// 0,1 corespond to odd parity for each PMT and 2,3 is the header
-        /// parity found in the AEM header which coresponds to CMT/Data Error
-        /// in the ACD ICD.  Each FREE board should have its own header parity bit
+        /// Stores the parity error bits from LDF:  NOERROR (0), ERROR (1)
+        /// 0,1 correspond to odd parity for each PMT and 2,3 is the header
+        /// parity found in the AEM header which corresponds to CMD/Data Error
+        // in ACD ICD.  Each FREE board should have its own header parity bit
         ParityError          m_error[4];
     };
     
@@ -199,7 +212,7 @@ namespace Event {
             << "    base class AcdDigi :"
             << "\n        id = ( "
             << EventFloatFormat( EventFormat::width, EventFormat::precision )
-            << m_id << ", " << m_tileName << " "
+            << m_id << ", " << m_tileName << "   "
             << "\n     PMT A pulse height    = "
             << EventFloatFormat( EventFormat::width, EventFormat::precision )
             << m_pulseHeight[0] << ", "
@@ -217,9 +230,11 @@ namespace Event {
             << m_low[1]   << " , "
             << m_veto[1] << " , "
             << m_high[1] << " )\n"
-            << "     PMT B Range: " << m_range[1]
-            << "\n   Odd Parity:  " << m_error[1]
-            << "\n   Header Parity: " << m_error[3]; 
+            << "      PMT B Range: " << m_range[1]
+            << "\n     Odd Parity: " << m_error[1]
+            << "\n     Header Parity: " << m_error[3];
+    ;
+        
     }
     
     
