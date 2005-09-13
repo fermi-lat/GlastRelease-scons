@@ -736,16 +736,21 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
     if (!acdRec) return StatusCode::FAILURE;
     SmartDataPtr<Event::AcdRecon> acdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (!acdRecTds) return StatusCode::SUCCESS;
-    idents::AcdId acdIdTds = acdRecTds->getMinDocaId();
+    idents::AcdId docaIdTds = acdRecTds->getMinDocaId();
+    idents::AcdId actDistIdTds = acdRecTds->getMaxActDistId();
     std::vector<AcdId> idRootCol;
     std::vector<idents::AcdId>::const_iterator idTdsIt;
     for (idTdsIt = acdRecTds->getIdCol().begin(); idTdsIt != acdRecTds->getIdCol().end(); idTdsIt++) {
         idRootCol.push_back(AcdId(idTdsIt->layer(), idTdsIt->face(), 
             idTdsIt->row(), idTdsIt->column()));
     }
-    AcdId acdIdRoot(acdIdTds.layer(), acdIdTds.face(), acdIdTds.row(), acdIdTds.column());
+    AcdId docaIdRoot(docaIdTds.layer(), docaIdTds.face(), 
+                    docaIdTds.row(), docaIdTds.column());
+    AcdId actDistIdRoot(actDistIdTds.layer(), actDistIdTds.face(), 
+                       actDistIdTds.row(), actDistIdTds.column());
     acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getTileCount(),
-        acdRecTds->getGammaDoca(), acdRecTds->getDoca(), acdRecTds->getActiveDist(), acdIdRoot, 
+        acdRecTds->getGammaDoca(), acdRecTds->getDoca(), docaIdRoot, 
+        acdRecTds->getActiveDist(), actDistIdRoot, 
         acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol(),
         idRootCol, acdRecTds->getEnergyCol());
     
