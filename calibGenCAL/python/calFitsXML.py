@@ -188,12 +188,14 @@ class calFitsXML(calXML.calXML):
         # write ADC data into XML text
 
         a = self.__doc.createElement('adc_table')
-        t = self.__doc.createElement('tem')
-        t.setAttribute('num', '0')
-        a.appendChild(t)
         self.__rootNode.appendChild(a)
+        
+        for tem in tems:
 
-        for tem in tems:        
+            t = self.__doc.createElement('tem')
+            t.setAttribute('num', str(tem))
+            a.appendChild(t)
+            
             for layer in range(calConstant.NUM_LAYER):
                 for end in range(calConstant.NUM_END):
             
@@ -229,12 +231,14 @@ class calFitsXML(calXML.calXML):
         # write ADC data into XML text
 
         a = self.__doc.createElement('adc_table')
-        t = self.__doc.createElement('tem')
-        t.setAttribute('num', '0')
-        a.appendChild(t)
-        self.__rootNode.appendChild(a)        
+        self.__rootNode.appendChild(a)
 
         for tem in tems:
+
+            t = self.__doc.createElement('tem')
+            t.setAttribute('num', str(tem))
+            a.appendChild(t)
+            
             for layer in range(calConstant.NUM_LAYER):
                 for end in range(calConstant.NUM_END):
                 
@@ -277,12 +281,14 @@ class calFitsXML(calXML.calXML):
         # write ADC data into XML text
 
         g = self.__doc.createElement('gain_table')
-        t = self.__doc.createElement('tem')
-        t.setAttribute('num', '0')
-        g.appendChild(t)
-        self.__rootNode.appendChild(g)        
+        self.__rootNode.appendChild(g)
 
         for tem in tems:
+
+            t = self.__doc.createElement('tem')
+            t.setAttribute('num', str(tem))
+            g.appendChild(t)
+        
             for layer in range(calConstant.NUM_LAYER):
                 for end in range(calConstant.NUM_END):
                 
@@ -327,12 +333,14 @@ class calFitsXML(calXML.calXML):
         # write ADC data into XML text
 
         a = self.__doc.createElement('adc_table')
-        t = self.__doc.createElement('tem')
-        t.setAttribute('num', '0')
-        a.appendChild(t)
         self.__rootNode.appendChild(a)
 
         for tem in tems:
+            
+            t = self.__doc.createElement('tem')
+            t.setAttribute('num', str(tem))
+            a.appendChild(t)
+            
             for layer in range(calConstant.NUM_LAYER):
                 for end in range(calConstant.NUM_END):
                 
