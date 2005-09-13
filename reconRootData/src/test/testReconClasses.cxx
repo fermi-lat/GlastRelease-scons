@@ -631,6 +631,19 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
             return -1;
         }
 
+  AcdId acdMaxActDistId = acd->getMaxActDistId();   
+     if ((acdMaxActDistId.getLayer() != 0) || (acdMaxActDistId.getFace() != 0) ||   
+         (acdMaxActDistId.getRow() != 2) || (acdMaxActDistId.getColumn() != 2) )   
+     {   
+             std::cout << "MaxActDist AcdID is wrong: "   
+                 << acdMaxActDistId.getLayer() << " "   
+                 << acdMaxActDistId.getFace() << " "   
+                 << acdMaxActDistId.getRow() << " "   
+                 << acdMaxActDistId.getColumn() << std::endl;   
+             return -1;   
+      } 
+
+
         std::vector<Double_t> rowCol = acd->getRowDocaCol();
         if (rowCol.size() != 2) {
             std::cout << "AcdRecon number of row entries is wrong: " << rowCol.size() << std::endl;
@@ -758,6 +771,7 @@ int write(char* fileName, int numEvents) {
         Double_t doca = randNum;
         Double_t actDist = 2.*f;
         AcdId minDocaId(0, 0, 3, 2);
+        AcdId maxActDistId(0,0,2,2);
         std::vector<Double_t> rowDocaCol;
         rowDocaCol.push_back(randNum);
         rowDocaCol.push_back(f);
@@ -770,8 +784,8 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> energyCol;
         energyCol.push_back(f);
         energyCol.push_back(2.*f);
-        acdRec->initialize(energy, count, gDoca, doca, 
-            actDist, minDocaId, rowDocaCol, rowActDistCol,
+        acdRec->initialize(energy, count, gDoca, doca, minDocaId,
+            actDist, maxActDistId, rowDocaCol, rowActDistCol,
             idCol, energyCol);
 
         // Create CalRecon object

@@ -11,11 +11,14 @@ AcdRecon::~AcdRecon() {
     Clear();
 }
 
-void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const AcdId &minDocaId, const std::vector<Double_t> &rowDoca,
+void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, 
+                          Double_t doca, const AcdId &minDocaId, 
+                          Double_t actDist,
+                          const AcdId &maxActDistId, 
+                          const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
-						  const std::vector<AcdId> &idCol,
-						  const std::vector<Double_t> &energyCol) {
+			  const std::vector<AcdId> &idCol,
+                          const std::vector<Double_t> &energyCol) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
@@ -23,14 +26,16 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
     m_doca = doca;
     m_actDist = actDist;
     m_minDocaId = minDocaId;
+    m_maxActDistId = maxActDistId;
     m_rowDocaCol = rowDoca;
     m_rowActDistCol = rowActDist;
-	m_idCol = idCol;
-	m_energyCol = energyCol;
+    m_idCol = idCol;
+    m_energyCol = energyCol;
 }
 
-void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, Double_t actDist,
-                          const AcdId &minDocaId) {
+void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, 
+                Double_t doca, const AcdId &minDocaId, Double_t actDist,
+                const AcdId &maxActDistId) {
     Clear();
     m_totEnergy = e;
     m_tileCount = count;
@@ -38,6 +43,7 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca
     m_doca = doca;
     m_actDist = actDist;
     m_minDocaId = minDocaId;
+    m_maxActDistId = maxActDistId;
 }
 
 void AcdRecon::Clear(Option_t* /*option*/) {
@@ -48,8 +54,8 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     m_actDist = -200.0;
     m_rowDocaCol.clear();
     m_rowActDistCol.clear();
-	m_idCol.clear();
-	m_energyCol.clear();
+    m_idCol.clear();
+    m_energyCol.clear();
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -59,6 +65,7 @@ void AcdRecon::Print(Option_t *option) const {
     cout << " DOCA: " << m_doca << endl;
     m_minDocaId.Print();
     cout << " Act_Dist: " << m_actDist << endl;
+    m_maxActDistId.Print();
     cout << "GammeDoca: " << m_gammaDoca << endl;
     cout << "RowDoca: " << endl;
     std::vector<Double_t>::const_iterator rowDocaIt;

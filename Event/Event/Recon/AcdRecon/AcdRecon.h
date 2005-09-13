@@ -13,13 +13,12 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 1, 0);
+static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 2, 0);
 
 /** @class AcdRecon        
 * @brief Reconstruction data for ACD
 *
 * The reconstruction data consists of:
-* - Total Energy deposited in the whole ACD system.
 * - Number of Acd Tiles over veto threshold.
 * - Minimum Distance of Closest Approach (DOCA)
 * - List of minimum DOCAs for top and side rows.
@@ -28,6 +27,7 @@ static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 1, 0);
 * - DOCA using the reconstructed gamma direction.
 * - Collection of reconstructed energies detected by each ACD Tile.
 * - Active Distance quantity for ribbons (2)
+* - Total MC Energy (MeV) deposited in the whole ACD system.
 
 *                                 
 * @author Heather Kelly
@@ -46,8 +46,10 @@ namespace Event {
             m_doca(-99999.0)
         {};
         
-        AcdRecon(double e, int count, double gDoca, double doca, double actDist,
-            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+        AcdRecon(double e, int count, double gDoca, double doca, 
+            const idents::AcdId &minDocaId, double actDist,
+            const idents::AcdId &maxActDistId, 
+            const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol)
@@ -55,8 +57,9 @@ namespace Event {
             m_tileCount(count),
             m_gammaDoca(gDoca),
             m_doca(doca),
-            m_actDist(actDist),
             m_minDocaId(minDocaId),
+            m_actDist(actDist),
+            m_maxActDistId(maxActDistId),
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
 	    m_idCol(idCol),
@@ -66,8 +69,10 @@ namespace Event {
         {};
 
 
-        AcdRecon(double e, int count, double gDoca, double doca, double actDist,
-            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+        AcdRecon(double e, int count, double gDoca, double doca, 
+            const idents::AcdId &minDocaId, double actDist,
+            const idents::AcdId &maxActDistId, 
+            const std::vector<double> &rowDoca,
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
@@ -76,8 +81,9 @@ namespace Event {
             m_tileCount(count),
             m_gammaDoca(gDoca),
             m_doca(doca),
-            m_actDist(actDist),
             m_minDocaId(minDocaId),
+            m_actDist(actDist),
+            m_maxActDistId(maxActDistId),
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
 	    m_idCol(idCol),
@@ -90,14 +96,16 @@ namespace Event {
         
         virtual ~AcdRecon() { };
 
-	// ________________________________________________________________________
 
-        void init(double e, int count, double gDoca, double doca, double actDist,
-            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+        void init(double e, int count, double gDoca, double doca, 
+            const idents::AcdId &minDocaId, double actDist,
+            const idents::AcdId &maxActDistId, 
+            const std::vector<double> &rowDoca,
             const std::vector<double>&  rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>&  energyCol,
-            double ribbonActDist=2000.0, const idents::AcdId &ribActDistId=idents::AcdId(0,0));
+            double ribbonActDist=2000.0, 
+            const idents::AcdId &ribActDistId=idents::AcdId(0,0));
 
         void clear();
 
@@ -113,6 +121,7 @@ namespace Event {
         inline const double getRibbonActiveDist()            const { return m_ribbon_actDist; };
         inline const idents::AcdId& getRibbonActiveDistId()  const { return m_ribbon_actDist_id; };
         inline const idents::AcdId& getMinDocaId()           const { return m_minDocaId; };
+        inline const idents::AcdId& getMaxActDistId()        const { return m_maxActDistId; };
         inline const std::vector<double>& getRowDocaCol()    const { return m_rowDocaCol; };
         inline const std::vector<double>& getRowActDistCol() const { return m_rowActDistCol; };
 	inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
@@ -134,7 +143,8 @@ namespace Event {
         
     private:
         
-        /// Total energy in MeV deposited in the whole ACD system
+        /// Total MC energy in MeV deposited in the whole ACD system
+        /// This remains as a check on MC runs
         double m_totEnergy;
         /// Total number of ACD tiles above threshold
         int    m_tileCount;
@@ -144,10 +154,15 @@ namespace Event {
         /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
         double m_doca;
 
-        /// DOCA calculation using edge of tiles (Bill Atwood)
-        double m_actDist;
         /// record of the tile with the minimum Distance of Closest Approach
         idents::AcdId m_minDocaId;
+
+        /// DOCA calculation using edge of tiles (Bill Atwood)
+        double m_actDist;
+    
+        /// record of the tile with the maximum Active Distance 
+        idents::AcdId m_maxActDistId;
+ 
 
         /// Collection of distance of closest approach calculations
         /// for each side row of the ACD
@@ -169,7 +184,6 @@ namespace Event {
         idents::AcdId  m_ribbon_actDist_id;        
     };
 
-    // ________________________________________________________________________
 
     inline void AcdRecon::clear() {
         m_rowDocaCol.clear();
@@ -179,8 +193,10 @@ namespace Event {
     }
 
 
-    inline void AcdRecon::init(double e, int count, double gDoca, double doca, double actDist,
-            const idents::AcdId &minDocaId, const std::vector<double> &rowDoca,
+    inline void AcdRecon::init(double e, int count, double gDoca, double doca, 
+            const idents::AcdId &minDocaId, double actDist,
+            const idents::AcdId &maxActDistId, 
+            const std::vector<double> &rowDoca,
             const std::vector<double>&  rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol, double ribbon_actDist, const idents::AcdId &ribbonId)
@@ -193,6 +209,7 @@ namespace Event {
         m_ribbon_actDist    = ribbon_actDist;
         m_ribbon_actDist_id = ribbonId;
         m_minDocaId  = minDocaId;
+        m_maxActDistId  = maxActDistId;
         m_rowDocaCol = rowDoca;
         m_rowActDistCol = rowActDist;
         m_idCol      = idCol;
