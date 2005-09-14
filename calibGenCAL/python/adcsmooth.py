@@ -24,9 +24,15 @@ import os, sys
 import logging
 import getopt
 
-import calADCSmooth
+import Numeric
+
+import calADCFilter
 import calFitsXML
 import calConstant
+
+
+
+#######################################################################################
 
 
 if __name__ == '__main__':
@@ -70,18 +76,24 @@ if __name__ == '__main__':
     inData = inFile.read()
     tlist = inFile.getTowers()
     info = inFile.info()
-    items = info.keys()
-    items.sort()
-    for i in items:
-        log.debug('%-16s:  %s' % (i, str(info[i])))
     inFile.close()
+
+    type = info['TTYPE1']
+    if type == 'fhe_dac' or type == 'fle_dac' or type == 'log_acpt':
+        fileType = calADCFilter.FILE_TYPE_DAC
+    elif type == 'rng_uld_dac':
+        fileType = calADCFilter.FILE_TYPE_ULD
+    else:
+        log.error('file type %s not supported', type)
+        sys.exit(1)
 
     # run smoothing algorithm
 
     log.info("smoothing data for towers: %s", str(tlist))
 
-    sm = calADCSmooth.calADCSmooth(verbose = debug)
-    outData = sm.run(inData, tems = tlist)    
+    filter = calADCFilter.calADCFilter(type = fileType, smoothing = True,
+                                       verbose = debug)
+    outData = filter.run(inData, tlist)
 
     # create output FITS file
 
