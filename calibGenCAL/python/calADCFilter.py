@@ -61,7 +61,7 @@ class calADCFilter:
                         containing CAL ADC data.
         Param: tems - A list of TEM ID's to run the smoothing on.
 
-        Returns: A Numeric array of shape (16,8,2,12,128) or (16,8,2,12,128)
+        Returns: A Numeric array of shape (16,8,2,12,128) or (3,16,8,2,12,128)
                  containing smoothed CAL ADC data.        
         """
         
