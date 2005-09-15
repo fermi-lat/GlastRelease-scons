@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r24   14-Sep-2005  jrb Eliminate all side screws.  Still have top screws
+                            (and shrunken tiles)
    v1r23p1 29-Jul-2005  jrb Make inset into big bottom side tiles (contains
                             array of screws) sensitive, like the rest of 
                             the tile.                       
