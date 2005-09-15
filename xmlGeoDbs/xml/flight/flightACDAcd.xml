@@ -19,9 +19,7 @@
      those in 1,2,3.
  -->
 <!-- Scale tile dimensions for operating temperature. July 20, 2005 -->
-<!-- Rename "regular" tile boxes to envelopes, since they will become
-     envelopes for compositions including screws
- -->
+
     <!-- e.g. row 0, col 0 -->
     <box name="topTileRedgeCedge"
          XREF="topTileXEdge_lOp"
@@ -706,9 +704,6 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-
-
-<!-- Single tile in row 3 contains 6 of the screw squares defined above -->
     <box name="sideTileR3" 
          XREF="ACDTotalTransSideOp"
          YREF="tileThicknessOp"
