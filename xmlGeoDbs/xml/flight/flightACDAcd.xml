@@ -761,39 +761,14 @@
       uniformly with tranverse dimension = x -->
 <!-- 3 boxes for side row 0 -->
 
-    <box name="sideTileR0EdgeLesserEnv" 
+    <box name="sideTileR0EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight0Op"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
-
-    <composition name="sideTileR0EdgeLesser" 
-                 envelope="sideTileR0EdgeLesserEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side0Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side0Screw_dz"
-       />
-    </composition>
-
-    <box name="sideTileR0MidEnv" 
+    <box name="sideTileR0Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight0Op"
@@ -801,31 +776,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR0Mid" envelope="sideTileR0MidEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side0Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side0Screw_dz"
-       />
-    </composition>
 
 
-    <box name="sideTileR0EdgeGreaterEnv" 
+    <box name="sideTileR0EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight0Op"
@@ -833,33 +786,10 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR0EdgeGreater" 
-                 envelope="sideTileR0EdgeGreaterEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dtn"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dt"
-              ZREF="side0Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dtn"
-              ZREF="side0Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dt"
-              ZREF="side0Screw_dz"
-       />
-    </composition>
 
 
 <!-- 3 boxes for side row 1 -->
-    <box name="sideTileR1EdgeLesserEnv" 
+    <box name="sideTileR1EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight1Op"
@@ -867,32 +797,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR1EdgeLesser" 
-                 envelope="sideTileR1EdgeLesserEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side1Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side1Screw_dz"
-       />
-    </composition>
 
 
-    <box name="sideTileR1MidEnv" 
+    <box name="sideTileR1Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight1Op"
@@ -900,31 +807,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR1Mid" envelope="sideTileR1MidEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side1Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side1Screw_dz"
-       />
-    </composition>
 
 
-    <box name="sideTileR1EdgeGreaterEnv" 
+    <box name="sideTileR1EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight1Op"
@@ -932,32 +817,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR1EdgeGreater" 
-                 envelope="sideTileR1EdgeGreaterEnv">
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dtn"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dt"
-              ZREF="side1Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dtn"
-              ZREF="side1Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideGreaterScrew_dt"
-              ZREF="side1Screw_dz"
-       />
-    </composition>
 
 <!--       side row 2 -->
-    <box name="sideTileR2EdgeLesserEnv" 
+    <box name="sideTileR2EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight2Op"
@@ -965,31 +827,8 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR2EdgeLesser" 
-                 envelope="sideTileR2EdgeLesserEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dtn"
-              ZREF="side2Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideLesserScrew_dt"
-              ZREF="side2Screw_dz"
-       />
-    </composition>
 
-    <box name="sideTileR2MidEnv" 
+    <box name="sideTileR2Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight2Op"
@@ -997,31 +836,8 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR2Mid" 
-                 envelope="sideTileR2MidEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side2Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side2Screw_dz"
-       />
-    </composition>
 
-    <box name="sideTileR2EdgeGreaterEnv" 
+    <box name="sideTileR2EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight2Op"
@@ -1029,62 +845,10 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="sideTileR2EdgeGreater" 
-                 envelope="sideTileR2EdgeGreaterEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side2Screw_dzn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dtn"
-              ZREF="side2Screw_dz"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="sideMidScrew_dt"
-              ZREF="side2Screw_dz"
-       />
-    </composition>
 
-<!-- Make  a little composition with envelope made of tileMat containing
-     an array of 4 screws -->
-    <box name="ACDScrewSqEnv"
-         XREF="ACDScrewSqSide"
-         YREF="tileThicknessOp"
-         ZREF="ACDScrewSqSide"
-         materialREF="tileMat"
-         sensitive="posHit" 
-         detectorTypeREF="eDTypeACDTile"
-    />
-
-    <composition name="ACDScrewSq" envelope="ACDScrewSqEnv" >
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="screwInSq_dn"
-              ZREF="screwInSq_dn"  />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="screwInSq_d"
-              ZREF="screwInSq_dn"  />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="screwInSq_dn"
-              ZREF="screwInSq_d"  />
-      <posXYZ volume="ACDScrewNormal" 
-              xrot="90"
-              XREF="screwInSq_d"
-              ZREF="screwInSq_d"  />
-     </composition>
 
 <!-- Single tile in row 3 contains 6 of the screw squares defined above -->
-    <box name="sideTileR3Env" 
+    <box name="sideTileR3" 
          XREF="ACDTotalTransSideOp"
          YREF="tileThicknessOp"
          ZREF="sideTileHeight3Op"
@@ -1093,26 +857,6 @@
          detectorTypeREF="eDTypeACDTile"
      />
 
-    <composition name="sideTileR3" envelope="sideTileR3Env" >
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin5_dn"
-      />
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin3_dn"
-      />
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin_dn"
-      />
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin_d"
-      />
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin3_d"
-      />
-      <posXYZ volume="ACDScrewSq"
-          XREF="ACDScrewSqMin5_d"
-      />
-   </composition>
 
    <!-- now rotate them all 90 degrees for X tiles (flip x and y dimensions) 
         Do the rotation on individual tiles rather than assembling a side,
