@@ -22,7 +22,8 @@
 <!-- Rename "regular" tile boxes to envelopes, since they will become
      envelopes for compositions including screws
  -->
-    <box name="topTileRedgeCedgeEnv"
+    <!-- e.g. row 0, col 0 -->
+    <box name="topTileRedgeCedge"
          XREF="topTileXEdge_lOp"
          YREF="topTileYEdge_lOp"
          ZREF="tileThicknessOp"
@@ -30,29 +31,10 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <!-- e.g. row 0, col 0 -->
-    <composition name="topTileRedgeCedge" envelope="topTileRedgeCedgeEnv">
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dxn"
-              YREF="topScrewYEdge_dyn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dx"
-              YREF="topScrewYEdge_dyn"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dxn"
-              YREF="topScrewYEdge_dy"
-       />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dx"
-              YREF="topScrewYEdge_dy"
-       />
-    </composition>
 
     <!-- e.g. row 2, col 0 -->
     
-    <box name="topTileRcentCedgeEnv"
+    <box name="topTileRcentCedge"
          XREF="topTileXEdge_lOp"
          YREF="topTileYCentral_lOp"
          ZREF="tileThicknessOp"
@@ -60,24 +42,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="topTileRcentCedge"
-                 envelope="topTileRcentCedgeEnv">
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dxn"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dx"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dxn"
-              YREF="topScrewYCentral_dy" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXEdge_dx"
-              YREF="topScrewYCentral_dy" />
-    </composition>
 
     <!-- e.g. row 0, col 1 -->
-    <box name="topTileRedgeCmidEnv"
+    <box name="topTileRedgeCmid"
          XREF="topTileXMid_lOp"
          YREF="topTileYEdge_lOp"
          ZREF="tileThicknessOp"
@@ -85,23 +52,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="topTileRedgeCmid" envelope="topTileRedgeCmidEnv">
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dxn"
-              YREF="topScrewYEdge_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dx"
-              YREF="topScrewYEdge_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dxn"
-              YREF="topScrewYEdge_dy" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dx"
-              YREF="topScrewYEdge_dy" />
-    </composition>
 
     <!-- e.g. row 2, col 1 -->
-    <box name="topTileRcentCmidEnv"
+    <box name="topTileRcentCmid"
          XREF="topTileXMid_lOp"
          YREF="topTileYCentral_lOp"
          ZREF="tileThicknessOp"
@@ -109,23 +62,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="topTileRcentCmid" envelope="topTileRcentCmidEnv">
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dxn"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dxn"
-              YREF="topScrewYCentral_dy" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dx"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewNormal" 
-              XREF="topScrewXMid_dx"
-              YREF="topScrewYCentral_dy" />
-    </composition>
 
     <!-- row 0, col 2 -->
-    <box name="topTileRedgeCcentEnv"
+    <box name="topTileRedgeCcent"
          XREF="topTileXCentral_lOp"
          YREF="topTileYEdge_lOp"
          ZREF="tileCenterThicknessOp"
@@ -133,23 +72,9 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="topTileRedgeCcent" envelope="topTileRedgeCcentEnv">
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dxn"
-              YREF="topScrewYEdge_dyn" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dx"
-              YREF="topScrewYEdge_dyn" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dxn"
-              YREF="topScrewYEdge_dy" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dx"
-              YREF="topScrewYEdge_dy" />
-    </composition>
 
     <!-- row 2, column 2 -->
-    <box name="topTileRcentCcentEnv"
+    <box name="topTileRcentCcent"
          XREF="topTileXCentral_lOp"
          YREF="topTileYCentral_lOp"
          ZREF="tileCenterThicknessOp"
@@ -157,71 +82,7 @@
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
 
-    <composition name="topTileRcentCcent" envelope="topTileRcentCcentEnv">
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dxn"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dx"
-              YREF="topScrewYCentral_dyn" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dxn"
-              YREF="topScrewYCentral_dy" />
-      <posXYZ volume="ACDScrewThick" 
-              XREF="topScrewXCentral_dx"
-              YREF="topScrewYCentral_dy" />
-    </composition>
 
-<!-- Make 4 little composition volumes: each is a vacuum cylinder with a part
-     of a screw in it.
-          * part of screw embedded in normal-thickness tile
-          * part of screw embedded in thick tile
-          * part of screw sticking out of normal-thickness tile
-          * part of screw sticking out of thick tile
- -->
-     <tubs name="ACDScrewNormal" ROutREF="ACDScrewRad" ZREF="tileThicknessOp"
-           materialREF="ACDScrewMat" />
-
-     <tubs name="ACDScrewNormalEnv" ROutREF="ACDHoleRad" ZREF="tileThicknessOp"
-           materialREF="vacuumMat" />
-
-     <composition name="ACDScrewNormalVol" envelope="ACDScrewNormalEnv" >
-        <posXYZ volume="ACDScrewNormal" />
-     </composition>
-
-     <tubs name="ACDScrewThick" ROutREF="ACDScrewRad" 
-           ZREF="tileCenterThicknessOp"
-           materialREF="ACDScrewMat" />
-
-     <tubs name="ACDScrewThickEnv" ROutREF="ACDHoleRad" 
-           ZREF="tileCenterThicknessOp"
-           materialREF="vacuumMat" />
-
-     <composition name="ACDScrewThickVol" envelope="ACDScrewThickEnv" >
-        <posXYZ volume="ACDScrewThick" />
-     </composition>
-<!--   extra pieces -->
-     <tubs name="ACDScrewExt" ROutREF="ACDScrewRad" ZREF="screwExtLen"
-           materialREF="ACDScrewMat" />
-
-     <tubs name="ACDScrewExtEnv" ROutREF="ACDHoleRad" ZREF="screwExtLen"
-           materialREF="vacuumMat" />
-
-     <composition name="ACDScrewExtVol" envelope="ACDScrewExtEnv" >
-        <posXYZ volume="ACDScrewExt" />
-     </composition>
-
-     <tubs name="ACDScrewExtThick" ROutREF="ACDScrewRad" 
-           ZREF="screwExtThickLen"
-           materialREF="ACDScrewMat" />
-
-     <tubs name="ACDScrewExtThickEnv" ROutREF="ACDHoleRad" 
-           ZREF="screwExtThickLen"
-           materialREF="vacuumMat" />
-
-     <composition name="ACDScrewExtThickVol" envelope="ACDScrewExtThickEnv" >
-        <posXYZ volume="ACDScrewExtThick" />
-     </composition>
 
      
 <!-- Box definitions for top ribbons.  Ribbons at (more or less)
