@@ -226,11 +226,6 @@ if __name__ == '__main__':
     coarseThresholds = adcThresholds[srcTwr,:,:,:,64:]
     log.debug('coarseThresholds:[0,0,0,:]:%s', str(coarseThresholds[0,0,0,:]))
 
-    # extrapolate data for upper end of coarse DAC range
-
-    calFitsXML.adcExtrapolate(coarseThresholds)
-    log.debug('coarseThresholds (extrapolated):[0,0,0,:]:%s', str(coarseThresholds[0,0,0,:]))
-
     # calculate thresholds in ADC units from energy    
 
     adcs = Numeric.ones((calConstant.NUM_ROW,calConstant.NUM_END,calConstant.NUM_FE),Numeric.Float) * float(MeV)

@@ -925,39 +925,3 @@ class calFitsXML(calXML.calXML):
         
         return i    
 
-
-
-def adcExtrapolate(adcData):
-    """
-    Extrapolate ADC values beyond testing range.
-
-    Param: adcData - A Numeric array of shape (8, 2, 12, 64) containing one range of ADC
-    data.  The last good segment before saturation is used to extrapolate the remaining
-    values in the range.  The data is changed in place.
-    """
-
-    for row in range(calConstant.NUM_ROW):
-        for end in range(calConstant.NUM_END):
-            for fe in range(calConstant.NUM_FE):
-                
-                # find data before saturation
-
-                dac = 63
-                sat = adc = adcData[row, end, fe, dac]
-                while adc == sat:
-                    dac -= 1
-                    adc = adcData[row, end, fe, dac]
-
-                # get slope of last good segment
-                
-                a0 = adcData[row, end, fe, (dac - 1)]
-                a1 = adcData[row, end, fe, dac]
-                m = (a1 - a0)
-
-                # extrapolate remaining values
-
-                for d in range((dac + 1), 64):
-                    adcData[row, end, fe, d] = a1 + m
-                    a1 = adcData[row, end, fe, d]
-
-                    
