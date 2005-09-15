@@ -279,9 +279,19 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             // Create a point which we hope is "just over the boundary"
             G4ThreeVector overPoint = curPoint + stepOverDist * curDir;
 
-            //Use the G4 navigator to locate the current point, then compute the distance
-            //to the volume boundary
+            //Use the G4 navigator to locate the current point
             G4VPhysicalVolume* pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, false);
+
+            // Let's be sure that we are inside a valid volume (ie inside of GLAST - it can happen!)
+            if (!pCurVolume) 
+            {
+                std::stringstream errorStream;
+                errorStream << "StepAnArcLength cannot find position within GLAST. pos: " 
+                    << overPoint << " dir: " << curDir << " step: " << stepInfo.size();
+                throw std::domain_error(errorStream.str());
+            }
+
+            // If ok, compute the distance to the volume boundary
             G4AffineTransform  globalToLocal = navigator->GetGlobalToLocalTransform();
             double             trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
