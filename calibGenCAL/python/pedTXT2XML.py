@@ -35,8 +35,9 @@ import calConstant
 if __name__ == '__main__':
 
     # constants
-    usage = "pedTXT2XML [-doptional.dtd] input.txt output.xml"
-    dtdName = "calCalib_v2r2.dtd" #default value
+    usage      = "pedTXT2XML [-doptional.dtd] input.txt output.xml"
+    dtdName    = "calCalib_v2r2.dtd" #default value
+    nTXTFields = 7
 
     # setup logger
     logging.basicConfig()
