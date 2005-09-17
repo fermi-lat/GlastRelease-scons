@@ -60,5 +60,10 @@ use CRflux         * -no_auto_imports
 
 public
 
+
+
 apply_pattern package_test
 set TESTJOBOPTIONS ${ONBOARDFILTERROOT}/src/test/jobOptions.txt
+
+include_dirs "$(ONBOARDFILTERROOT)/flight/EFC" $(ONBOARDFILTERROOT)/flight/EDS"
+
