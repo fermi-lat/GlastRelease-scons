@@ -91,8 +91,8 @@ void PointingInfo::setFT2Tuple(INTupleWriterSvc* tuple, const std::string& tname
 void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
 {
 
-       /** @page point_info pointing information
-     These items are added to the merit tuple in MeritAlg, to give the current instrument orientation 
+       /** @page MeritTuple Pt: pointing information
+     These items are added to the merit tuple  to give the current instrument orientation 
 
 
     - PtTime (s) Current time, same as the elapsed time
