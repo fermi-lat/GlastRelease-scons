@@ -155,7 +155,7 @@ Algorithm(name, pSvcLocator)
     // 0 = skip all, 1 = do cluster, 2 = and patrec, 3 = and fit, 4 = and vertex
     declareProperty("lastStage", m_lastStage=100);
     // This will abort reconstruction if too many clusters found
-    declareProperty("maxAllowedClusters", m_maxClusters=500);
+    declareProperty("maxAllowedClusters", m_maxClusters=2000);
 }
 
 // Initialization method
