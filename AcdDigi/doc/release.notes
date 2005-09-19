@@ -3,6 +3,9 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r13   19-Sep-2005 HMK Take new screw volumes into account for bottom side
+         tiles.  Should be completely backward compatible to geometries
+         without screw volumes.
  v1r12p2 19-Aug-2005 jrb Changes for compatibility with modified IGeometry interface
  v1r12p1 27-Jun-2005 HMK Add author
  v1r12p0 23-Jun-2005  TU upping Event version number to compile with new code

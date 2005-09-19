@@ -3,6 +3,7 @@
 // Description:
 
 #include "AcdTileList.h"
+#include <iostream>
 
 IGeometry::VisitorRet 
 AcdTileList::pushShape(ShapeType s, const UintVector& idvec, 
@@ -22,8 +23,15 @@ AcdTileList::pushShape(ShapeType s, const UintVector& idvec,
         return AbortSubtree;
     } else if (name.substr(0,8)=="sideTile" ) {
         if (name.substr(0,11) == "sideTileRow") return More;
+        if (name.substr(0,10) == "sideTileR3") {
+            this->push_back(getId());
+            return More;
+        }
         this->push_back(getId());
         return AbortSubtree;
+    } else if (name.substr(0,10) == "ACDScrewSq") {
+        this->push_back(getId());
+        return AbortSubtree; 
     } else if (name.substr(0,10) == "sideRibbon" ) {
         if (name.substr(0,11) == "sideRibbons" ) return More;
         // ignore top ribbons - we just want a count of whole ribbons not the segments

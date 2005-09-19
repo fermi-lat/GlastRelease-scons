@@ -86,11 +86,46 @@ StatusCode AcdDigiAlg::initialize() {
     // get the list of layers, to be used to add noise to otherwise empty layers
     m_tiles.setPrefix(m_glastDetSvc->getIDPrefix());
     
-	// Find all the tiles in our geometry
+	// Find all the ACD detectors in our geometry
     m_glastDetSvc->accept(m_tiles);
     if (m_tiles.size() > 0) 
-        log << MSG::INFO << "will add noise to "<< m_tiles.size() << " ACD tiles, ids from "
+        log << MSG::INFO << "Located  "<< m_tiles.size() << " ACD volumes, ids from "
         << m_tiles.front().name() << " to " << m_tiles.back().name() << endreq;
+
+
+
+    
+    for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it)
+{
+    std::string str;
+    std::vector<double> dim;
+    idents::VolumeIdentifier volId = *it;
+    idents::AcdId tileId(volId);
+    int iFace = volId[1];
+
+    // retrieve the dimensions of this volume from the GlastDetSvc
+    sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
+    if ( sc.isFailure() ) {
+        log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+        return sc;
+    }
+    HepTransform3D transform;
+    sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+    if (sc.isFailure() ) {
+        log << MSG::WARNING << "Failed to get transformation" << endreq;
+        return sc;
+     }
+
+     HepPoint3D center(0., 0., 0.);
+     HepPoint3D acdCenter = transform * center;
+
+    log << MSG::DEBUG << "VolId " << volId.name() << " AcdId " 
+        << tileId.id() << endreq;
+    log << MSG::DEBUG << "Dimensions:  " << dim[0] << " " << dim[1] << " " << dim[2] << endreq;
+    log << MSG::DEBUG << "Center: " << acdCenter.x() << " " << acdCenter.y()
+        << " " << acdCenter.z() << endreq;
+
+}
 
     return StatusCode::SUCCESS;
 }
@@ -131,6 +166,7 @@ StatusCode AcdDigiAlg::execute() {
 
    // std::map<idents::VolumeIdentifier, double> energyVolIdMap;
     std::map<idents::AcdId, double> energyIdMap;
+    std::map<idents::VolumeIdentifier, double> energyScrewMap;
     
     // Create the new AcdDigi collection for the TDS
     Event::AcdDigiCol* digiCol = new Event::AcdDigiCol;
@@ -146,29 +182,50 @@ StatusCode AcdDigiAlg::execute() {
 
         idents::AcdId id(volId);
         double energy;
-        // No edge effects for ribbons, tiles only
-        energy = (m_edge_effect && id.tile()) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
-        if (energyIdMap.find(id) != energyIdMap.end()) {
-            energyIdMap[id] += energy;
+        // check for volumes that contain screws in bottom side tiles
+        // ignoring the potential for edge effects, as it stands it should
+        // not affect the areas containing the screws.
+        if (id.tile() && (volId.size() == 6)) { 
+            if (energyScrewMap.find(volId) != energyScrewMap.end()) 
+                energyScrewMap[volId] += (*hit)->depositedEnergy();
+            else
+                energyScrewMap[volId] = (*hit)->depositedEnergy();
         } else {
-            energyIdMap[id] = energy;
-        }
-        
+            // No edge effects for ribbons, tiles only
+            energy = (m_edge_effect && id.tile()) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
+            log << MSG::DEBUG << "AcdId " << id.id() << " E: " << energy << endreq;
+            if (energyIdMap.find(id) != energyIdMap.end()) {
+                energyIdMap[id] += energy;
+            } else {
+                energyIdMap[id] = energy;
+            }
+         } 
     }
 	}
 
-	// Add noise to all tiles if requested
+    // Add noise to all tiles if requested
     if (m_apply_noise) addNoise();
 
     // Now loop over the map of AcdId and their corresponding energies deposited
     std::map<idents::AcdId, double>::const_iterator acdIt;
     for (acdIt = energyIdMap.begin(); acdIt != energyIdMap.end(); acdIt++) {
 
-        //idents::VolumeIdentifier volId = acdIt->first;
         idents::AcdId id = acdIt->first; //(volId);
 
         double energyMevDeposited = acdIt->second;
         m_energyDepMap[id] = energyMevDeposited;
+        // check for hits in the volumes containing screws
+        if (id.side() && id.row()==3) {
+            std::map<idents::VolumeIdentifier, double>::const_iterator screwVolIt;
+            for (screwVolIt = energyScrewMap.begin(); 
+                                 screwVolIt != energyScrewMap.end(); screwVolIt++) {
+                if (AcdDigiUtil::compareVolIds(id.volId(), screwVolIt->first)) {
+                    log << MSG::DEBUG << "Found screwVol " << screwVolIt->first.name() << " Belonging to tile: " << id.volId().name() << endreq;
+                    m_energyDepMap[id] += screwVolIt->second;
+                }
+            }
+
+        }
 
         log << MSG::DEBUG << "tile id found: " << id.id() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
@@ -403,13 +460,15 @@ void AcdDigiAlg::addNoise()  {
 
         // Number of photoelectrons for each PMT, A and B
         unsigned int pmtA_pe, pmtB_pe;
-        util.convertMipsToPhotoElectrons(tileId, m_pmtA_phaMipsMap[tileId], pmtA_pe, m_pmtB_phaMipsMap[tileId], pmtB_pe);
+        util.convertMipsToPhotoElectrons(tileId, m_pmtA_phaMipsMap[tileId], 
+                                pmtA_pe, m_pmtB_phaMipsMap[tileId], pmtB_pe);
         // If in auto calibrate mode, determine the conversion factor from MIPs
         // to PHA now, at runtime
         double pmtA_mipsToFullScale, pmtB_mipsToFullScale;
         if (m_auto_calibrate) {
-            util.calcMipsToFullScale(tileId, m_pmtA_phaMipsMap[tileId], pmtA_pe, 
-                pmtA_mipsToFullScale, m_pmtB_phaMipsMap[tileId], pmtB_pe, pmtB_mipsToFullScale);
+            util.calcMipsToFullScale(tileId, m_pmtA_phaMipsMap[tileId], 
+                pmtA_pe, pmtA_mipsToFullScale, m_pmtB_phaMipsMap[tileId], 
+                pmtB_pe, pmtB_mipsToFullScale);
         } else {
             util.applyGains(tileId, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }

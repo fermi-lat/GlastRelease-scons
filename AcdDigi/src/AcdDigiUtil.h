@@ -6,6 +6,7 @@
 #include "Event/Digi/AcdDigi.h"
 
 #include "idents/AcdId.h"
+#include "idents/VolumeIdentifier.h"
 
 #include "facilities/Util.h"
 #include "xmlBase/IFile.h"
@@ -76,6 +77,9 @@ public:
     /// Returns a value sampled from a Gaussian distribution
     /// @param std_dev Standard Deviation to be  used when sampling
     static double shootGaussian(double std_dev);
+
+    static bool compareVolIds(const idents::VolumeIdentifier &tileId,
+                              const idents::VolumeIdentifier &screwId);
     
 private:
             
