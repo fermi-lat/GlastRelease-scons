@@ -165,8 +165,8 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                  tower->m_data[ilayerEnd][ihits] = stripId;
                  tower->m_maps[xy][loHi]        |= (1 << bilayer);
                } else{
-			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
-                         towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
+//			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
+//                         towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
 			      }
            }
        }
