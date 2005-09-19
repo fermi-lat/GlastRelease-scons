@@ -47,6 +47,8 @@ $Header$
 
 #include <cassert>
 #include <vector>
+#include <iomanip>
+#include <fstream>
 
 
 // Include files
@@ -124,6 +126,10 @@ private:
     bool m_insideSAA; 
 
     IntegerProperty m_prescale;
+    StringProperty m_source_info_filename;
+    std::map<int, std::string> m_flux_names;
+    void summary(std::ostream& log, std::string indent);
+
 
 };
 //------------------------------------------------------------------------
@@ -153,6 +159,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("save_pointing_info",  m_save_tuple=false);
     declareProperty("AvoidSAA",   m_avoidSAA=false);
     declareProperty("Prescale",   m_prescale=1);
+    declareProperty("source_info", m_source_info_filename="source_info.txt");
 
 }
 //------------------------------------------------------------------------
@@ -318,7 +325,7 @@ StatusCode FluxAlg::execute()
 
     log << MSG::DEBUG ;
     if( log.isActive()){
-        log<< particleName
+        log<< particleName << ", flux("<<m_flux->name() << ") "
         << "(" << m_flux->energy()
         << " MeV), Launch: " 
         << "(" << p.x() <<", "<< p.y() <<", "<<p.z()<<")" 
@@ -409,6 +416,7 @@ StatusCode FluxAlg::execute()
     h->setTime(currentTime);
     int numEvents = ++m_sequence;
     m_counts[m_flux->numSource()]++; // update count
+    m_flux_names[m_flux->numSource()]= m_flux->name(); // save (or resave!) name 
 
     m_currentRate=numEvents/(currentTime-m_initialTime);
     return StatusCode::SUCCESS;
@@ -422,17 +430,31 @@ StatusCode FluxAlg::finalize(){
     if( done || m_counts.empty() ) return sc;
     done=true;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "Computed Rate: "<< currentRate() << " Hz"
-        << "\n\t\t\t  Source ID    counts";
-    for(std::map<int,int>::const_iterator im=m_counts.begin(); im !=m_counts.end(); ++im) {
-        log << "\n\t\t\t\t" << im->first << "\t" << im->second;
-    }
+    log << MSG::INFO << "Computed Rate: "<< currentRate() << " Hz" ;
+    summary(log.stream(), "\n\t\t\t");
     log  << endreq;
 
+    if( !m_source_info_filename.value().empty() ){
+        summary(std::ofstream(m_source_info_filename.value().c_str()), "\n");
+    }
+
+    
     if( m_avoidSAA && m_SAAreject>0 ){
         log << "\t\tRejected by SAA: " << m_SAAreject << endreq;
             log << "\t\t(note that this may invalidate the rate calculation)" << endreq;
     }
     return sc;
+}
+
+void FluxAlg::summary(std::ostream& log, std::string indent)
+{
+    log << indent << " Source ID   Source Name                  counts";
+    for(std::map<int,int>::const_iterator im=m_counts.begin(); im !=m_counts.end(); ++im) {
+        log << indent
+            << std::setw(10) <<im->first 
+            << "   "  << std::setw(25) << std::left<< m_flux_names[im->first]
+            << std::setw(10)<< std::right << im->second;
+    }
+    log << std::endl;
 }
 
