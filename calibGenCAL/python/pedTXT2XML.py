@@ -2,7 +2,6 @@
 Tool to generate CAL offline pedestal calibration XML file from space delimited TXT file.
 Note: pedTXT2XML attempts to autodetect if input data is for partial LAT only (<16 towers).
 
-
 pedTXT2XML [-doptional.dtd] input.txt output.xml
 
 where:
@@ -30,7 +29,10 @@ import array
 import calCalibXML
 import calConstant
 
-#######################################################################################3
+# Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
+offline_face_to_online = {0:1,1:0}
+
+#######################################################################################
 
 if __name__ == '__main__':
 
@@ -102,7 +104,6 @@ if __name__ == '__main__':
             vals[i] = float(vals[i])
 
         (twr, lyr, col, face, rng, ped, sig) = vals
-
         
         # convert array index values to integer.
         twr = int(twr)
@@ -110,6 +111,9 @@ if __name__ == '__main__':
         col = int(col)
         face = int(face)
         rng = int(rng)
+
+        # convert offline face numbering to online face numbering
+        face = offline_face_to_online[face]
 
         # make sure current tower is on list
         twrSet.add(twr)
