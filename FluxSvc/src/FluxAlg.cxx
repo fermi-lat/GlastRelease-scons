@@ -435,7 +435,8 @@ StatusCode FluxAlg::finalize(){
     log  << endreq;
 
     if( !m_source_info_filename.value().empty() ){
-        summary(std::ofstream(m_source_info_filename.value().c_str()), std::string("\n"));
+        std::ofstream infofile(m_source_info_filename.value().c_str());
+        summary( infofile, std::string("\n") );
     }
 
     

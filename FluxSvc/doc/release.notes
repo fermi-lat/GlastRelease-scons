@@ -4,7 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
-   19-sep-05  v6r26p1 THB  workaround gcc bug
+   19-sep-05  v6r26p1,2 THB  workaround gcc bug(s)
    19-sep-05  v6r26   THB  Generate file with source id and name information at end of a run
    21-aug-05  v6r25p1 THB  Fix bug to properly enable StartTimeEnvVar, provide for it to be comma-separated pair
    26-jul-05  v6r25   THB  Define new property "FluxSvc.StartTimeEnvVar" to extract the (relative) start time
