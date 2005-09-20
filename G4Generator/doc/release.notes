@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r11   20-Sep-05 Longo fix infinite loop
  v5r10p2 19-Aug-05 jrb Changes for compatibility with modified IGeometry interface
  v5r10p1 21-Jul-05 THB Fix test program failure; add defaultOptions.txt for inclusion by Gleam apps
  v5r10p0 23-Jun-05  TU New McPositionHits, order McTrajectories by generation 
