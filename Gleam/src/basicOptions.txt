@@ -33,6 +33,7 @@ Top.Members={
 
 Generator.Members = {
     "FluxAlg", 
+    "PointInfoAlg",
     "G4Generator",
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
