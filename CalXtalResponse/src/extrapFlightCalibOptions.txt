@@ -1,0 +1,8 @@
+/////////////////// CalXtalResponse - extrapFlightCalibOptions.txt //////////////////////
+// loads CAL flight calibrations, extracted from preship ground calibrations.
+// note - see CalXtalResponse/customOptions.txt for details on all available options
+
+// Start service needed for all Cal calibrations
+ApplicationMgr.ExtSvc += {"CalCalibSvc"};
+CalibDataSvc.CalibFlavorList += {"CAL_flight_extrap"};
+CalCalibSvc.DefaultFlavor = "CAL_flight_extrap"; // default for all calib types
