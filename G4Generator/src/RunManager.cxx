@@ -24,6 +24,7 @@
 #include "PhysicsList.h"
 #include "PrimaryGeneratorAction.h"
 #include "TrackingAction.h"
+#include "SteppingAction.h"
 #include "G4Generator/IG4GeometrySvc.h"
 #include "Randomize.hh"
 
@@ -103,6 +104,7 @@ RunManager::RunManager(std::ostream& log,
 
   // Set the TrackingAction to track the McParticle
   eventManager->SetUserAction(new TrackingAction(gsv));
+  eventManager->SetUserAction(new SteppingAction());
 
   // G4 Messenger stuff
   G4ParticleTable::GetParticleTable()->CreateMessenger();
