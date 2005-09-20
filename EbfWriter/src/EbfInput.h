@@ -14,7 +14,7 @@ class EbfInput
 {
   public:
 
-   inline EbfInput () { return; }
+    EbfInput::EbfInput () { m_fp=0; };
  
          
    int          open   (const char    *fileName,
