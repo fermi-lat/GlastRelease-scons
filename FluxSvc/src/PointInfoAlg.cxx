@@ -16,6 +16,7 @@ $Header$
 // Event for access to time
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
+#include "Event/MonteCarlo/Exposure.h"
 
 // to write a Tree with pointing info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
@@ -117,6 +118,17 @@ StatusCode PointInfoAlg::execute()
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){
         m_rootTupleSvc->storeRowFlag(this->m_root_tree.value(), m_save_tuple);
     }
+
+
+    // Here the TDS receives the exposure data
+    Event::ExposureCol* exposureDBase = new Event::ExposureCol;
+    sc=eventSvc()->registerObject(EventModel::MC::ExposureCol , exposureDBase);
+    if(sc.isFailure()) {
+        log << MSG::ERROR << EventModel::MC::ExposureCol  
+            <<" could not be entered into existing data store" << endreq;
+        return sc;
+    }
+    exposureDBase->push_back(m_pointing_info.forTDS());
 
     return StatusCode::SUCCESS;
 }

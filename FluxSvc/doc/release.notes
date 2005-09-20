@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   20-sep-05  v6r27p1 THB  forgot to also move TDS setting, needed by merit to set Pt vars.
    20-sep-05  v6r27   THB  split Pt merit stuff into separate alg, PointInfoAlg
    19-sep-05  v6r26p1,2 THB  workaround gcc bug(s)
    19-sep-05  v6r26   THB  Generate file with source id and name information at end of a run

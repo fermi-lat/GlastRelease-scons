@@ -395,7 +395,7 @@ StatusCode FluxAlg::execute()
     TimeStamp currentTime=m_flux->time();
 
     m_pointing_info.set(currentTime);
-
+#if 0 // moved this to PointInfoAlg --THB
     // Here the TDS receives the exposure data
     Event::ExposureCol* exposureDBase = new Event::ExposureCol;
     sc=eventSvc()->registerObject(EventModel::MC::ExposureCol , exposureDBase);
@@ -405,7 +405,7 @@ StatusCode FluxAlg::execute()
         return sc;
     }
     exposureDBase->push_back(m_pointing_info.forTDS());
-
+#endif
     
     // put pointing stuff into the root tree
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){
