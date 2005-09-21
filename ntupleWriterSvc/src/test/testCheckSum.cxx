@@ -36,19 +36,23 @@ int main() {
 
     TFile f(ntupleFileName.c_str());
     TTree* meritTuple = (TTree*)f.Get("MeritTuple");
+    const int treeSize = meritTuple->GetEntries();
+    if ( INFO )
+        std::cout << "TTree " << meritTuple->GetName() << " has " << treeSize
+                  << " entries." << std::endl;
 
     const TObjArray* leafCol = meritTuple->GetListOfLeaves();
-    const int size = leafCol->GetEntries();
-    if ( DEBUG )
-        std::cout << "TTree " << meritTuple->GetName() << " has " << size << " leaves "
-                  << std::endl;
+    const int leafSize = leafCol->GetEntries();
+    if ( INFO )
+        std::cout << "TTree " << meritTuple->GetName() << " has " << leafSize
+                  << " leaves." << std::endl;
 
     checkSum mySum(checkSumFileName);
 
-    for ( int event=0; event<10; ++event ) {
+    for ( int event=0; event<treeSize; ++event ) {
         TTree* newTree = new TTree("newTree", "newTree");
 
-        for ( int item=0; item<size; ++item ) {
+        for ( int item=0; item<leafSize; ++item ) {
             // there exists a TTreeFriendLeafIter, but how to use it?
 
             TLeaf* leaf = dynamic_cast<TLeaf*>(leafCol->At(item));
