@@ -2,6 +2,9 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r11p1 21-Sep-05 TU  Add more error handling, similar to Cal and Tkr Recon, also implement
+                       a G4 exception handler to properly access "our" run manager in case of
+                       errors. 
  v5r11   20-Sep-05 Longo fix infinite loop
  v5r10p2 19-Aug-05 jrb Changes for compatibility with modified IGeometry interface
  v5r10p1 21-Jul-05 THB Fix test program failure; add defaultOptions.txt for inclusion by Gleam apps
