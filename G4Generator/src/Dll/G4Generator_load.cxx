@@ -8,8 +8,10 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES(G4Generator) {
+DECLARE_FACTORY_ENTRIES(G4Generator) 
+{
     DECLARE_ALGORITHM( G4Generator);
     DECLARE_SERVICE(   G4GeometrySvc);
-    DECLARE_TOOL(   G4GeneratorRandom);
+    DECLARE_SERVICE(   G4GenErrorSvc);
+    DECLARE_TOOL(      G4GeneratorRandom);
 } 

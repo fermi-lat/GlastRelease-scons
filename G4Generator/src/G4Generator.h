@@ -9,6 +9,7 @@
 
 class RunManager;
 class IParticlePropertySvc;
+class IG4GenErrorSvc;
 
 
 /** 
@@ -34,6 +35,9 @@ class G4Generator : public Algorithm {
  private:
   /// a pointer to the service for particle properties
   IParticlePropertySvc* m_ppsvc;
+
+  /// a pointer to the Error handling service
+  IG4GenErrorSvc* m_ErrorSvc;
 
   /// set of UI commands for setup; this is a property of the algorithm and can
   /// be set in the jobOptions file

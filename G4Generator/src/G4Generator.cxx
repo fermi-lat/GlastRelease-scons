@@ -39,11 +39,8 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
-
-
 //special to setup the TdGlastData structure
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-
 
 //montecarlo data structures 
 #include "Event/MonteCarlo/McParticle.h"
@@ -56,6 +53,9 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
+// Error stuff
+#include "src/Utilities/IG4GenErrorSvc.h"
+#include "src/Utilities/G4GenException.h"
 
 static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;
@@ -127,6 +127,13 @@ StatusCode G4Generator::initialize()
   if( service( "G4GeometrySvc", geosv, true).isFailure() ) {
     log << MSG::ERROR << "Couldn't set up G4GeometrySvc!" << endreq;
     return StatusCode::FAILURE;
+  }
+
+  // Error handling service 
+  if (service("G4GenErrorSvc",m_ErrorSvc, true).isFailure())
+  {
+      log << MSG::ERROR << "Could not find G4GenErrorSvc"<<endreq ;
+      return StatusCode::FAILURE ;
   }
 
   // Get the GlastDetService Service
@@ -246,14 +253,27 @@ StatusCode G4Generator::execute()
   // we get the primaryGenerator from the RunManager
   PrimaryGeneratorAction* primaryGenerator = 
     (PrimaryGeneratorAction*)m_runManager->GetUserPrimaryGeneratorAction();
-  
-  // we set the primary particle by passing the pointer of the McParticle to the
-  // primaryGenerator class
-  primaryGenerator->init(primary, m_ppsvc, zOffset);
 
-  McParticleManager::getPointer()->addMcParticle(0,primary);   
-  // Run geant4
-  m_runManager->BeamOn(); 
+  // Put the following in a try-catch block to catch errors which might happen during this phase
+  try 
+  {
+      // we set the primary particle by passing the pointer of the McParticle to the
+      // primaryGenerator class
+      primaryGenerator->init(primary, m_ppsvc, zOffset);
+
+      McParticleManager::getPointer()->addMcParticle(0,primary);
+
+      // Run geant4
+      m_runManager->BeamOn(); 
+  }
+  catch(G4GenException& e)
+  {
+      return m_ErrorSvc->handleError(name()+" CalException",e.what());
+  }
+  catch(...)
+  {
+      return m_ErrorSvc->handleError(name(),"unknown exception");
+  }
     
   // If we set the pruneCal mode than we remove all the not TKR interacting
   // particles that does not touch the TKR zone (z>0)
@@ -321,6 +341,7 @@ StatusCode G4Generator::execute()
       {
           maxGenerations = maxGenNum - 2;
           if (maxGenerations > m_numGenerations) maxGenerations = m_numGenerations;
+          if (maxGenerations < 2)                maxGenerations = 2;
       }
 
       // Now go through the map and set up generation related display
