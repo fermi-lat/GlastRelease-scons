@@ -16,6 +16,7 @@ $Header$
 // Event for access to time
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/MCEvent.h"
 #include "Event/MonteCarlo/Exposure.h"
 
 // to write a Tree with pointing info
@@ -106,11 +107,22 @@ StatusCode PointInfoAlg::execute()
 
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
     if(0==header) {
-            log << MSG::ERROR << " could not find or register the event header" << endreq;
+            log << MSG::ERROR << " could not be found on data store" << endreq;
      }
 
     TimeStamp currentTime=header->time();
 
+    if( currentTime==-1) { // not set!
+
+        SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
+        if (mcheader == 0) {
+            log << MSG::ERROR << EventModel::MC::Event  <<" could not be found on data store" << endreq;
+            return sc;
+        }
+
+        currentTime = mcheader->time();
+
+    }
     m_pointing_info.set(currentTime);
 
     
