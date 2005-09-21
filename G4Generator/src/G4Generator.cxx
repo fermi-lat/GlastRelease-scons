@@ -268,7 +268,7 @@ StatusCode G4Generator::execute()
   }
   catch(G4GenException& e)
   {
-      return m_ErrorSvc->handleError(name()+" CalException",e.what());
+      return m_ErrorSvc->handleError(name()+" G4Exception",e.what());
   }
   catch(...)
   {
