@@ -1,9 +1,9 @@
 package OnboardFilter
 
-version v2r0
+version v2r0p1
 # $Header$
 
-author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
+author Richard Hughes <HUGHES@mps.ohio-state.edu>
 
 use EbfWriter           *
 use TkrUtil             *
