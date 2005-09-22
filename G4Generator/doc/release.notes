@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r11p2 22-Sep-05 TU  Fix requirements file to include code in Utilities subfolder
  v5r11p1 21-Sep-05 TU  Add more error handling, similar to Cal and Tkr Recon, also implement
                        a G4 exception handler to properly access "our" run manager in case of
                        errors. 
