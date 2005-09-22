@@ -900,10 +900,12 @@ StatusCode reconRootReaderAlg::readAcdRecon() {
     }
     std::vector<double> energyColTds = acdRecRoot->getEnergyCol();
     Event::AcdRecon *acdRecTds = new Event::AcdRecon(acdRecRoot->getEnergy(), 
-                                 acdRecRoot->getTileCount(),
-         acdRecRoot->getGammaDoca(), acdRecRoot->getDoca(), docaIdTds,
+        acdRecRoot->getRibbonEnergy(), acdRecRoot->getTileCount(),
+        acdRecRoot->getRibbonCount(),
+        acdRecRoot->getGammaDoca(), acdRecRoot->getDoca(), docaIdTds,
         acdRecRoot->getActiveDist(), actDistIdTds, 
-        acdRecRoot->getRowDocaCol(), acdRecRoot->getRowActDistCol(), idColTds, energyColTds);
+        acdRecRoot->getRowDocaCol(), acdRecRoot->getRowActDistCol(), idColTds, 
+        energyColTds);
     
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecTds);
     if (sc.isFailure()) {

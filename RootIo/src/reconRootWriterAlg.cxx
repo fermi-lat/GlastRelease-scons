@@ -748,7 +748,8 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
                     docaIdTds.row(), docaIdTds.column());
     AcdId actDistIdRoot(actDistIdTds.layer(), actDistIdTds.face(), 
                        actDistIdTds.row(), actDistIdTds.column());
-    acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getTileCount(),
+    acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getRibbonEnergy(),
+        acdRecTds->getTileCount(), acdRecTds->getRibbonCount(),
         acdRecTds->getGammaDoca(), acdRecTds->getDoca(), docaIdRoot, 
         acdRecTds->getActiveDist(), actDistIdRoot, 
         acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol(),
