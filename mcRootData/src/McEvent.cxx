@@ -15,6 +15,7 @@
 TObjArray *McEvent::m_staticParticleCol = 0;
 TObjArray *McEvent::m_staticPositionHitCol = 0;
 TObjArray *McEvent::m_staticIntegratingHitCol = 0;
+TObjArray *McEvent::m_staticTrajectoryCol = 0;
 
 ClassImp(McEvent)
 
@@ -29,6 +30,9 @@ m_eventId(0), m_runId(0)
     
     if (!m_staticIntegratingHitCol) m_staticIntegratingHitCol = new TObjArray();
     m_integratingHitCol = m_staticIntegratingHitCol;
+    
+    if (!m_staticTrajectoryCol) m_staticTrajectoryCol = new TObjArray();
+    m_trajectoryCol = m_staticTrajectoryCol;
 }
 
 McEvent::~McEvent() {
@@ -47,6 +51,11 @@ McEvent::~McEvent() {
     m_integratingHitCol->Delete();
     delete m_integratingHitCol;
     m_integratingHitCol = 0;
+
+    if (m_trajectoryCol == m_staticTrajectoryCol) m_staticTrajectoryCol = 0;
+    m_trajectoryCol->Delete();
+    delete m_trajectoryCol;
+    m_trajectoryCol = 0;
 
 	Clear();
 }
@@ -69,13 +78,16 @@ void McEvent::Clear(Option_t *option) {
     m_runId = 0;
     const Int_t ndpos = 150000;
     const Int_t nd = 150000;
+    const Int_t ndtraj = 150000;
     static Int_t limit=100;
     static Int_t indpart=0;
     static Int_t indpos=0;
     static Int_t indint=0;
+    static Int_t indtraj=0;
     static McParticle* keeppart[nd];
     static McPositionHit* keeppos[ndpos];
     static McIntegratingHit* keepint[nd];
+    static McTrajectory* keeptraj[nd];
     
     if (m_particleCol) {
       //      m_particleCol->Delete();
@@ -138,6 +150,30 @@ void McEvent::Clear(Option_t *option) {
       }
       m_integratingHitCol->Clear();
     }
+
+    if (m_trajectoryCol) 
+    {
+        Int_t n = m_trajectoryCol->GetEntries();
+        if (n>limit) 
+        {
+            //std::cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
+	        limit=n+10;
+            if (limit > ndtraj)
+                std::cout << "!!!Warning:  limit for McTrajectory is greater than " << ndtraj << std::endl;
+            for (Int_t j=0;j<indtraj;j++) delete keeptraj[j];
+	        indtraj = 0;
+        }
+
+        for (Int_t i=0;i<n;i++) keeptraj[indtraj+i] = (McTrajectory*)m_trajectoryCol->At(i);
+        indtraj += n;
+        if (indtraj > ndtraj-limit) 
+        {
+            for (Int_t j=0;j<indtraj;j++) delete keeptraj[j];
+	        indtraj = 0;
+        }
+        m_trajectoryCol->Clear();
+        m_trajectoryCol->Expand(10000);  //temporary
+    }
 }
 
 void McEvent::Print(Option_t *option) const {
@@ -149,6 +185,7 @@ void McEvent::Print(Option_t *option) const {
     std::cout << m_positionHitCol->GetEntries() << " McPositionHits" << std::endl;
     std::cout << m_integratingHitCol->GetEntries() 
         << " McIntegratingHits" << std::endl;
+    std::cout << m_trajectoryCol->GetEntries() << " McTrajectories" << std::endl;
 }
 
 
@@ -178,4 +215,14 @@ void McEvent::addMcIntegratingHit(McIntegratingHit *hit) {
 
 McIntegratingHit* McEvent::getMcIntegratingHit(UInt_t index) const {
     return ((McIntegratingHit*)m_integratingHitCol->At(index));
+}
+
+void McEvent::addMcTrajectory(McTrajectory *hit) {
+    m_trajectoryCol->Add(hit);
+    return;
+}
+
+McTrajectory* McEvent::getMcTrajectory(UInt_t index) const {
+
+    return ((McTrajectory*)m_trajectoryCol->At(index));
 }

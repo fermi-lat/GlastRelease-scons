@@ -14,7 +14,8 @@ apply_pattern root_package headers="\
  ../mcRootData/McIntegratingHit.h\
  ../mcRootData/McParticle.h\
  ../mcRootData/McPositionHit.h\
- ../mcRootData/McEvent.h"\
+ ../mcRootData/McEvent.h\
+ ../mcRootData/McTrajectory.h"\
  includes="-I${COMMONROOTDATAROOT}"\
  test_source="test/testMcClasses.cxx"
 

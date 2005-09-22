@@ -7,7 +7,7 @@
 #include "McParticle.h"
 #include "McPositionHit.h"
 #include "McIntegratingHit.h"
-
+#include "McTrajectory.h"
 
 /** @class McEvent
 * @brief GLAST Monte Carlo Event class.
@@ -84,6 +84,19 @@ public:
     const TObjArray* getMcIntegratingHitCol() const { return m_integratingHitCol; };
     /// clear of the array (necessary for converters)
     void clearMcIntegratingHitCol()  { m_integratingHitCol->Clear(); };
+   
+    /// store a new McTrajectory in the collection
+    void addMcTrajectory(McTrajectory *trajectory);
+    /// return a MMcTrajectory corresponding to index
+    McTrajectory* getMcTrajectory(UInt_t index) const;
+    /// return the number of McTrajectories stored in the collection
+    inline UInt_t getMcTrajectoryCount() const { 
+        return ((m_trajectoryCol) ? m_trajectoryCol->GetEntries() : 0); 
+    };
+    /// return the full TObjArray containing McPositionHits
+    const TObjArray* getMcTrajectoryCol() const { return m_trajectoryCol; };
+    /// clear of the array (necessary for converters)
+    void clearMcTrajectoryCol()  { m_trajectoryCol->Clear(); };
  
 /// time stamp stuff here
     inline Double_t getTimeStamp() { return m_timeStamp; };
@@ -122,6 +135,11 @@ private:
     TObjArray *m_positionHitCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
+    
+    /// Collection of McTrajectories
+    TObjArray *m_trajectoryCol; //->
+    /// static array to allow one-time array creation
+    static TObjArray *m_staticTrajectoryCol; //!
     
     ClassDef(McEvent,5) // Monte Carlo Event Class
 };
