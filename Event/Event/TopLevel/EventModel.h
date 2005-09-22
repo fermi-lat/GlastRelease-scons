@@ -58,6 +58,7 @@ public:
         static std::string McParticleCol;
         static std::string McPositionHitCol;
         static std::string McIntegratingHitCol;
+        static std::string McTrajectoryCol;
         static std::string McTkrStripCol;
         static std::string D2EntryCol;
         static std::string ExposureCol;

@@ -52,7 +52,7 @@ class McTrajectory : virtual public ContainedObject {
     McParticle* getMcParticle();
 
     /// Get the 3d points
-    std::vector<Hep3Vector>& getPoints(){return m_points;}
+    const std::vector<Hep3Vector>& getPoints() const {return m_points;}
 
     /// get, set charge
     int getCharge() const { return m_charge; }
