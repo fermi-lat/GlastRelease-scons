@@ -28,6 +28,8 @@ using namespace std;
 * -# Collection of minimum Active Distance values organized by geometry:  top
 *    and side rows.
 * -# Total reconstructed energy detected in ACD detector elements.
+* -# MC Energy in MeV deposited in the ribbons
+* -# Ribbon Count
 *
 * @author Heather Kelly
 *
@@ -40,7 +42,8 @@ class AcdRecon : public TObject
 public:
     AcdRecon();
  
-    AcdRecon(Double_t e, Int_t count, Double_t gDoca, Double_t doca, 
+    AcdRecon(Double_t e, Double_t ribbonE, Int_t count, Int_t ribbonCount, 
+            Double_t gDoca, Double_t doca, 
             const AcdId &minDocaId, Double_t actDist, const AcdId &maxActDistId,
             const std::vector<Double_t> &rowDoca,
             const std::vector<Double_t> &rowActDist,
@@ -56,12 +59,15 @@ public:
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
             m_idCol(idCol),
-            m_energyCol(energyCol)
+            m_energyCol(energyCol),
+            m_totRibbonEnergy(ribbonE),
+            m_ribbonCount(ribbonCount)
         {};
      
     virtual ~AcdRecon();
     
-    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, 
+    void initialize(Double_t e, Double_t ribbonE, Int_t count, 
+        Int_t ribbonCount, Double_t gDoca, Double_t doca, 
         const AcdId &minDocaId, Double_t actDist,
         const AcdId &maxActDistId, const std::vector<Double_t> &rowDoca, 
         const std::vector<Double_t> &rowActDist, 
@@ -69,7 +75,8 @@ public:
         const std::vector<Double_t> &energyCol);
 
     /// overload initialize for interactive root where we cannot use std::vector
-    void initialize(Double_t e, Int_t count, Double_t gDoca, Double_t doca, 
+    void initialize(Double_t e, Double_t ribbonE, Int_t count, 
+                    Int_t ribbonCount, Double_t gDoca, Double_t doca, 
                     const AcdId &minDocaId,
                     Double_t actDist, const AcdId &maxActDistId);
     
@@ -78,7 +85,9 @@ public:
     void Print(Option_t *option="") const;
     
     inline const Double_t getEnergy() const { return m_totEnergy; };
+    inline const Double_t getRibbonEnergy() const { return m_totRibbonEnergy; };
     inline const Int_t getTileCount() const { return m_tileCount; };
+    inline const Int_t getRibbonCount() const { return m_ribbonCount; };
     inline const Double_t getGammaDoca() const { return m_gammaDoca; };
     inline const Double_t getDoca() const { return m_doca; };
     inline const Double_t getActiveDist() const { return m_actDist; };
@@ -129,8 +138,12 @@ private:
     
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
+    /// Total MC Energy (MeV) deposited in the ribbons
+    Double_t m_totRibbonEnergy;
+    /// Total number of hit ribbons
+    Int_t m_ribbonCount;
 
-    ClassDef(AcdRecon,5) // Acd Reconstruction data
+    ClassDef(AcdRecon,6) // Acd Reconstruction data
 };
 
 #endif

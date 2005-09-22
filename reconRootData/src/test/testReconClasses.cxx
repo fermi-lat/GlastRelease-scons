@@ -601,9 +601,17 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         std::cout << "AcdRecon energy is wrong: " << acd->getEnergy() << std::endl;
         return -1;
     }
+    if (!floatInRange(acd->getRibbonEnergy(), f)) {
+        std::cout << "AcdRecon ribbon energy is wrong: " << acd->getRibbonEnergy() << std::endl;
+        return -1;
+    }
 
     if (acd->getTileCount() != 5) {
         std::cout << "AcdRecon tile count is wrong: " << acd->getTileCount() << std::endl;
+        return -1;
+    }
+    if (acd->getRibbonCount() != 2) {
+        std::cout << "AcdRecon ribbon count is wrong: " << acd->getRibbonCount() << std::endl;
         return -1;
     }
 
@@ -766,7 +774,9 @@ int write(char* fileName, int numEvents) {
         // Create AcdRecon object
         AcdRecon *acdRec = new AcdRecon();
         Double_t energy = f;
+        Double_t ribbonE = energy;
         Int_t count = 5;
+        Int_t ribbonCount = 2;
         Double_t gDoca = f*randNum;
         Double_t doca = randNum;
         Double_t actDist = 2.*f;
@@ -784,7 +794,8 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> energyCol;
         energyCol.push_back(f);
         energyCol.push_back(2.*f);
-        acdRec->initialize(energy, count, gDoca, doca, minDocaId,
+        acdRec->initialize(energy, ribbonE, count, ribbonCount, gDoca, doca, 
+            minDocaId,
             actDist, maxActDistId, rowDocaCol, rowActDistCol,
             idCol, energyCol);
 

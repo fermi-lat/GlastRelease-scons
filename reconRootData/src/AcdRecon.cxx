@@ -11,7 +11,8 @@ AcdRecon::~AcdRecon() {
     Clear();
 }
 
-void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, 
+void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
+                          Int_t ribbonCount, Double_t gDoca, 
                           Double_t doca, const AcdId &minDocaId, 
                           Double_t actDist,
                           const AcdId &maxActDistId, 
@@ -21,7 +22,9 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca,
                           const std::vector<Double_t> &energyCol) {
     Clear();
     m_totEnergy = e;
+    m_totRibbonEnergy = ribbonE;
     m_tileCount = count;
+    m_ribbonCount = ribbonCount;
     m_gammaDoca = gDoca;
     m_doca = doca;
     m_actDist = actDist;
@@ -33,12 +36,15 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca,
     m_energyCol = energyCol;
 }
 
-void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca, 
+void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
+                Int_t ribbonCount, Double_t gDoca, 
                 Double_t doca, const AcdId &minDocaId, Double_t actDist,
                 const AcdId &maxActDistId) {
     Clear();
     m_totEnergy = e;
+    m_totRibbonEnergy = ribbonE;
     m_tileCount = count;
+    m_ribbonCount = ribbonCount;
     m_gammaDoca = gDoca;
     m_doca = doca;
     m_actDist = actDist;
@@ -48,7 +54,9 @@ void AcdRecon::initialize(Double_t e, Int_t count, Double_t gDoca,
 
 void AcdRecon::Clear(Option_t* /*option*/) {
     m_totEnergy = 0.0;
+    m_totRibbonEnergy = 0.0;
     m_tileCount = 0;
+    m_ribbonCount = 0;
     m_gammaDoca = -200.;
     m_doca = -200.;
     m_actDist = -200.0;
@@ -62,6 +70,7 @@ void AcdRecon::Print(Option_t *option) const {
     TObject::Print(option);
     using namespace std;
     cout << "TileCount: " << m_tileCount;
+    cout << "RibbonCount: " << m_ribbonCount;
     cout << " DOCA: " << m_doca << endl;
     m_minDocaId.Print();
     cout << " Act_Dist: " << m_actDist << endl;

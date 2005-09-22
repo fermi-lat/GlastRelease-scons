@@ -58,7 +58,7 @@ public:
     inline const UInt_t   getNumVecLinks()         const {return m_numVecLinks;}
     inline const UInt_t   getnLinksNonZeroLayers() const {return m_nLinksNonZeroLayers;}
     inline const UInt_t   getAveNumLinksLayer()    const {return m_aveNumLinksLayer;}
-    inline const Double32_t getNumLinkCombinations() const {return m_numLinkCombinations;}
+    inline const Double_t getNumLinkCombinations() const {return m_numLinkCombinations;}
     inline const UInt_t   getNumTrackElements()    const {return m_numTrackElements;}
     inline const UInt_t   getNumTkrTracks()        const {return m_numTkrTracks;}
     
@@ -69,11 +69,11 @@ private:
     UInt_t   m_numVecLinks;          // Number of links between VecPoints
     UInt_t   m_nLinksNonZeroLayers;  // Number of layers with links
     UInt_t   m_aveNumLinksLayer;     // Average number of links per layer
-    Double32_t m_numLinkCombinations;  // Keep track of expected number of combinations
+    Double_t m_numLinkCombinations;  // Keep track of expected number of combinations
     UInt_t   m_numTrackElements;     // Number of found TrackElements
     UInt_t   m_numTkrTracks;         // Number of tracks created 
 
-    ClassDef(TkrDiagnostics,2)
+    ClassDef(TkrDiagnostics,1)
 };
 
 
