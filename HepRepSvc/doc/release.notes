@@ -26,4 +26,5 @@
  * v0r14p3  13-08-05 LR Change the color of the TkrEventParams axis
  * v0r14p4  19-08-05 jb Changes for compatibility with modified IGeometry interface 
  * v0r14p5  23-08-05 LR Display info for TkrTrackHits without clusters 
- * v0r14p6  02-09-05 LR Display truncated-hit info if available
+ * v0r14p6  02-09-05 LR Display truncated-hit info if available 
+ * v0r14p7  22-09-05 LR Bullet-proof TrackFiller for bad TkrId's
