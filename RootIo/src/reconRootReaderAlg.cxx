@@ -637,19 +637,28 @@ Event::TkrTrackParams reconRootReaderAlg::convertTkrTrackParams(const TkrTrackPa
 Event::TkrTrackHit* reconRootReaderAlg::convertTkrTrackHit(const TkrTrackHit* trackHitRoot)
 {
     Event::TkrTrackHit* trackHitTds = new Event::TkrTrackHit();
+    commonRootData::TkrId hitId  = trackHitRoot->getTkrId();
 
-    // Fill cluster and hit id only if they exist
+    // Fill cluster id only if it exists
     if (const TkrCluster* clusRoot   = trackHitRoot->getClusterPtr())
     {
         const Event::TkrCluster* clusTds = m_common.m_rootTkrClusterMap[clusRoot];
-
         trackHitTds->setClusterPtr(clusTds);
+    }
 
-        // Convert the TkrId
-        commonRootData::TkrId hitId  = trackHitRoot->getTkrId();
-        idents::TkrId         hitTdsId(hitId.getTowerX(),hitId.getTowerY(),hitId.getTray(),
-                                       hitId.getBotTop(), hitId.getView());
-
+    if(hitId.hasTowerX()&&hitId.hasTowerY()&&hitId.hasTray()&&hitId.hasBotTop()) {
+        if(hitId.hasView()) {
+            idents::TkrId hitTdsId(hitId.getTowerX(), hitId.getTowerY(),
+                hitId.getTray(), hitId.getBotTop(), hitId.getView());
+            trackHitTds->setTkrID(hitTdsId);
+        } else { // no view if no cluster
+            idents::TkrId hitTdsId(hitId.getTowerX(), hitId.getTowerY(),
+                hitId.getTray(), hitId.getBotTop());
+            trackHitTds->setTkrID(hitTdsId);
+        }
+    }
+    else {
+        idents::TkrId hitTdsId = idents::TkrId();
         trackHitTds->setTkrID(hitTdsId);
     }
     
