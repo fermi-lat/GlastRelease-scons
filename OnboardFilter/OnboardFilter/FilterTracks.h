@@ -120,6 +120,7 @@ class FilterTracks : public Algorithm{
   double m_theta, m_theta_rad;
   double m_length;
 
+  int m_run;
   int m_usenumhits;
   int m_writehits;
   int m_scattering;
