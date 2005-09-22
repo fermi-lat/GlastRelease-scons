@@ -20,6 +20,7 @@ static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 2, 0);
 *
 * The reconstruction data consists of:
 * - Number of Acd Tiles over veto threshold.
+* - Number of Acd Ribbons over veto threshold.
 * - Minimum Distance of Closest Approach (DOCA)
 * - List of minimum DOCAs for top and side rows.
 * - Minimum Active Distance quantities (2)
@@ -28,6 +29,7 @@ static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 2, 0);
 * - Collection of reconstructed energies detected by each ACD Tile.
 * - Active Distance quantity for ribbons (2)
 * - Total MC Energy (MeV) deposited in the whole ACD system.
+* - Total MC Energy (MeV) deposited in the ribbons.
 
 *                                 
 * @author Heather Kelly
@@ -41,12 +43,15 @@ namespace Event {
     public:
         AcdRecon()
             : m_totEnergy(0.0),
+            m_totRibbonEnergy(0.0),
             m_tileCount(0),
+            m_ribbonCount(0),
             m_gammaDoca(-99999.0),
             m_doca(-99999.0)
         {};
         
-        AcdRecon(double e, int count, double gDoca, double doca, 
+        AcdRecon(double e, double ribbonEng, int count, 
+            int ribbonCount, double gDoca, double doca, 
             const idents::AcdId &minDocaId, double actDist,
             const idents::AcdId &maxActDistId, 
             const std::vector<double> &rowDoca,
@@ -54,7 +59,9 @@ namespace Event {
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol)
             : m_totEnergy(e),
+            m_totRibbonEnergy(ribbonEng),
             m_tileCount(count),
+            m_ribbonCount(ribbonCount),
             m_gammaDoca(gDoca),
             m_doca(doca),
             m_minDocaId(minDocaId),
@@ -69,7 +76,8 @@ namespace Event {
         {};
 
 
-        AcdRecon(double e, int count, double gDoca, double doca, 
+        AcdRecon(double e, double ribbonE, int count, int ribbonCount, 
+            double gDoca, double doca, 
             const idents::AcdId &minDocaId, double actDist,
             const idents::AcdId &maxActDistId, 
             const std::vector<double> &rowDoca,
@@ -78,7 +86,9 @@ namespace Event {
             const std::vector<double>& energyCol,
             double ribbon_actDist, const idents::AcdId ribbon_actDist_id)
             : m_totEnergy(e),
+            m_totRibbonEnergy(ribbonE),
             m_tileCount(count),
+            m_ribbonCount(ribbonCount),
             m_gammaDoca(gDoca),
             m_doca(doca),
             m_minDocaId(minDocaId),
@@ -97,7 +107,8 @@ namespace Event {
         virtual ~AcdRecon() { };
 
 
-        void init(double e, int count, double gDoca, double doca, 
+        void init(double e, double ribbonE, int count, 
+            int ribbonCount, double gDoca, double doca, 
             const idents::AcdId &minDocaId, double actDist,
             const idents::AcdId &maxActDistId, 
             const std::vector<double> &rowDoca,
@@ -114,7 +125,9 @@ namespace Event {
         static const  CLID& classID()       { return CLID_AcdRecon; }
         
         inline const double getEnergy()     const { return m_totEnergy; };
+        inline const double getRibbonEnergy() const { return m_totRibbonEnergy; };
         inline const int    getTileCount()  const { return m_tileCount; };
+        inline const int    getRibbonCount()  const { return m_ribbonCount; };
         inline const double getGammaDoca()  const { return m_gammaDoca; };
         inline const double getDoca()       const { return m_doca; };
         inline const double getActiveDist() const { return m_actDist; };
@@ -146,8 +159,12 @@ namespace Event {
         /// Total MC energy in MeV deposited in the whole ACD system
         /// This remains as a check on MC runs
         double m_totEnergy;
+        /// Total MeV energy deposited in the ribbons
+        double m_totRibbonEnergy;
         /// Total number of ACD tiles above threshold
         int    m_tileCount;
+        /// Total number of ACD ribbons above threshold 
+        int m_ribbonCount;
 
         /// Distance of Closest Approach for the reconstructed gamma, if there is one
         double m_gammaDoca;
@@ -193,7 +210,8 @@ namespace Event {
     }
 
 
-    inline void AcdRecon::init(double e, int count, double gDoca, double doca, 
+    inline void AcdRecon::init(double e, double ribbonE, int count, 
+            int ribbonCount, double gDoca, double doca, 
             const idents::AcdId &minDocaId, double actDist,
             const idents::AcdId &maxActDistId, 
             const std::vector<double> &rowDoca,
@@ -202,7 +220,9 @@ namespace Event {
             const std::vector<double>& energyCol, double ribbon_actDist, const idents::AcdId &ribbonId)
     {
         m_totEnergy  = e;
+        m_totRibbonEnergy = ribbonE;
         m_tileCount  = count;
+        m_ribbonCount  = ribbonCount;
         m_gammaDoca  = gDoca;
         m_doca       = doca;
         m_actDist    = actDist;
@@ -223,6 +243,7 @@ namespace Event {
         DataObject::serialize(s);
         return s
             << m_totEnergy
+            << m_totRibbonEnergy
             << m_tileCount
             << m_gammaDoca
             << m_doca;
