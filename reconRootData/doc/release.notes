@@ -3,7 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
-v8r2      12-Sep-95  : HMK Store AcdId for ActiveDistance in AcdRecon
+v8r3      22-Sep-05  : HMK add ACD ribbon count and energy
+v8r2      12-Sep-05  : HMK Store AcdId for ActiveDistance in AcdRecon
 v8r1p1    06-Sep-05  : NG  use GlastPolicy so lib directory is included
 v8r1      02-Sep-05  : HMK use latest RootcintPolicy that implements new
                        build structure
