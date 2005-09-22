@@ -19,6 +19,7 @@
 * - Collection of McParticle
 * - Collection of McPositionHit
 * - Collection of McIntegratingHit
+* - Collection of McTrajectories
 * The MC data stored to ROOT files mirrors the data available within the Gaudi 
 * TDS.
 *  
@@ -141,7 +142,7 @@ private:
     /// static array to allow one-time array creation
     static TObjArray *m_staticTrajectoryCol; //!
     
-    ClassDef(McEvent,5) // Monte Carlo Event Class
+    ClassDef(McEvent,6) // Monte Carlo Event Class
 };
 
 #endif
