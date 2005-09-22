@@ -219,14 +219,17 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         if (log.isActive()) log.stream() << "AcdRecon data already on TDS!";
         log << endreq;
         checkAcdRecTds->clear();
-        checkAcdRecTds->init(m_totEnergy, m_tileCount, m_gammaDoca, m_doca, 
+        checkAcdRecTds->init(m_totEnergy, m_totRibbonEnergy, m_tileCount, 
+            m_ribbonCount, m_gammaDoca, m_doca, 
             m_minDocaId, m_act_dist, m_maxActDistId, m_rowDocaCol, 
             m_rowActDistCol, m_idCol, m_energyCol,
             m_ribbon_act_dist, m_ribbon_act_dist_id);
     } else {
         // create the TDS location for the AcdRecon
         Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, 
-                                   m_tileCount, m_gammaDoca, m_doca, 
+                                   m_totRibbonEnergy,
+                                   m_tileCount, m_ribbonCount, m_gammaDoca, 
+                                   m_doca, 
                                    m_minDocaId, m_act_dist, m_maxActDistId, 
                            m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
                            m_ribbon_act_dist, m_ribbon_act_dist_id);
