@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r4p1 24-Sep-05 TU  Minor changes to support I/O of McTrajectory's
  * v11r4   22-Sep-05 HMK Store ribbon count and energy in AcdRecon
  * v11r3   12-Sep-05 HMK Store AcdId for ActiveDistance and clean up AcdDigi
  * v11r2   02-Sep-05 LSR Add new classes for truncated-hits info
