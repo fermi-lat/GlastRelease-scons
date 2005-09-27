@@ -29,7 +29,7 @@ int main(int argc , char * argv[])
     std::string // defaults for development
         rootpath("D:\\common\\DC2\\"),
         treepath("..\\data"),
-        name("gamma"); //"psf"); //goodcal_high");//"all");
+        name("all");
     if( argc==1) {
         // no args: check env vars
         const char* env = ::getenv("ROOTPATH");
