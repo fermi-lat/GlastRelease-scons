@@ -102,11 +102,11 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
     }
     // Now use the global mean_pe_per_mip
     if (id.tile()) {
-        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip * 2.);
-        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip * 2.);
+        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip );
+        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip );
     } else if (id.ribbon()) {
-        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip_ribbon * 2.);
-        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip_ribbon * 2.);
+        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip_ribbon );
+        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip_ribbon );
     }
     return;
 }
@@ -142,11 +142,11 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
     }
     // Now use the global mean_pe_per_mip
     if (id.tile()) {
-        pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip);
-        pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip);
+        pmtA_mips = ((double) pmtA_pe) / ( m_mean_pe_per_mip);
+        pmtB_mips = ((double) pmtB_pe) / ( m_mean_pe_per_mip);
     } else if (id.ribbon()) {
-        pmtA_mips = ((double) pmtA_pe) / (2. * m_mean_pe_per_mip_ribbon);
-        pmtB_mips = ((double) pmtB_pe) / (2. * m_mean_pe_per_mip_ribbon);
+        pmtA_mips = ((double) pmtA_pe) / ( m_mean_pe_per_mip_ribbon);
+        pmtB_mips = ((double) pmtB_pe) / ( m_mean_pe_per_mip_ribbon);
     }
 
     return;
@@ -176,11 +176,11 @@ void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id,
                                      double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
     
     if (id.tile()) {
-        pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
+        pmtA_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
     } else if (id.ribbon()) {
-        pmtA_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip_ribbon) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * ((2. * m_mean_pe_per_mip_ribbon) / (pmtB_pe / pmtB_mips) );
+        pmtA_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip_ribbon) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip_ribbon) / (pmtB_pe / pmtB_mips) );
 
     }
     

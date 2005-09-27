@@ -232,9 +232,9 @@ StatusCode AcdDigiAlg::execute() {
         
         double mips = util.convertMevToMips(energyMevDeposited);
                 
-        // split the signal evenly between the 2 PMTs (A and B)
-        double pmtA_mips = mips * 0.5;
-        double pmtB_mips = mips - pmtA_mips;
+        // apply the signal to the two PMT's
+        double pmtA_mips = mips;
+        double pmtB_mips = mips;
         
         // Number of photoelectrons for each PMT, A and B
         unsigned int pmtA_pe, pmtB_pe;
