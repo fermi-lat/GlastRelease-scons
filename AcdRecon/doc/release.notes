@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r9p1    28-Sep-2005 THB Analyze all tiles that were readout, not just those above veto threshold.
 v1r9      22-Sep-2005 HMK Store ribbon count and MC energy
 v1r8      12-Sep-2005 HMK store AcdId for ActiveDistance
 v1r7p10   27-Jun-2005 HMK Add author keyword in requirements

@@ -180,8 +180,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         //if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
         // Use Veto Discrim instead
         // Skip this ACD detector if neither PMT has veto discrim set
+#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
         if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-
+#endif
         m_tileCount++;
         double tileEnergy = (*acdDigiIt)->getEnergy();
         m_totEnergy += tileEnergy;
@@ -315,8 +316,9 @@ StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, const HepPoint3D 
         // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
         // Use Veto Discrim instead
         // Skip this ACD detector if neither PMT has veto discrim set
+#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
         if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-		
+#endif		
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
         std::vector<double> dim;
@@ -385,8 +387,9 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, const HepP
         // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
         // Use Veto Discrim instead
         // Skip this ACD detector if neither PMT has veto discrim set
+#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
         if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-
+#endif
 
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         std::string str;
@@ -497,8 +500,9 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const He
         idents::AcdId acdId = (*acdDigiIt)->getId();
         // if a tile - skip we want ribbons
         if (acdId.tile()) continue;
+#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* ribbons with signals
         if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-
+#endif
         // Need to reconstruct the required volume ids to retrieve the geometry information
         // For now we brute force it.. and construct what we need
         int topSegment;
