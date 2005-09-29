@@ -480,7 +480,8 @@ if __name__ == '__main__':
                         while id < 0:
                             id = intData[f.destTwr, row, end, fe, (dLen - 1)]
                             dLen -= 1
-                        uld = uldAdcData[erng, f.destTwr, row, end, fe, -1]
+                        dac = int(uldDacData[f.destTwr, row, end, fe])
+                        uld = uldAdcData[erng, f.destTwr, row, end, fe, dac]
                         if uld > id:
                             log.warning("ULD %0.3f > INTNONLIN %0.3f for T%d,%s%s,%d,%s", uld, id, f.destTwr,
                                         calConstant.CROW[row], calConstant.CPM[end], fe, calConstant.CRNG[erng])
