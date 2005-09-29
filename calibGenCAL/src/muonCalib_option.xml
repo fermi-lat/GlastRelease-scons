@@ -19,7 +19,7 @@
     <item name="INTNONLINFILE_TXT" 	value="D:\GLAST\DEV\TEMP\calibGenCAL\v3r5p5\output\ci_intnonlin.050414193500_FM115_TVAC_calu_collect_ci_singlex16.T00.txt"> Input integral non-linearity text file</item>
     <item name="DTD_FILE" 		value="$(CALIBUTILROOT)/xml/calCalib_v2r2.dtd"> Data description file for XML ouptut ).</item>
 
-    <item name="OUTPUT_FOLDER" 		value="../output/"> Folder for auto-named output files </item>
+    <item name="OUTPUT_FOLDER" 		value="./"> Folder for auto-named output files </item>
  
     <item name="PEDFILE_XML" 		value=""> Optional path for output ADC pedestal xml file (default "" autogenerates filename from input filename) </item>
     <item name="ASYMFILE_XML" 		value=""> Optional path for output asymmetry xml file (default "" autogenerates filename from input filename)    </item>

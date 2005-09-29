@@ -28,6 +28,9 @@
     
     <item name="ROOTFILE_LE1" 		value="$(CGC_INTLIN_ROOT_LE)"> input DIGIROOT file LE </item>
     <item name="ROOTFILE_HE1" 		value="$(CGC_INTLIN_ROOT_HE)"> input DIGIROOT file HE </item>
+
+    <item name="HISTPATH_LE"            value=""> Optional path for output .root LE histograms (default "" autogenerates filename from input filename)</item>
+    <item name="HISTPATH_HE"            value=""> Optional path for output .root HE histograms (default "" autogenerates filename from input filename)</item>
   </section>
 
   <section name="SPLINE_CFG">
@@ -42,6 +45,7 @@
     <item name="GENERATE_XML" 		value="true"> (boolean) generate xml output</item>
     <item name="GENERATE_TXT" 		value="true"> (boolean) generate text output</item>
     <item name="GENERATE_LOGFILE" 	value="true"> (boolean) generate logfile which duplicates stdout </item>
+    <item name="GENERATE_HISTOGRAM_FILES" value="true"> (boolean) generate histogram rootfiles w/ adc2dac profiles for each channel</item>
   </section>  
 </ifile>
 
