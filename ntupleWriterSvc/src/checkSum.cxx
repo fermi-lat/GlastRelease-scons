@@ -47,7 +47,9 @@ void checkSum::write(TTree* t) {
         std::cout << "TTree " << t->GetName() << " has " << lsize << " leaves "
                   << std::endl;
     std::vector<unsigned char> charCol;
-    Double_t EvtEventId = -1;     // initialize with something unreasonable
+    Float_t EvtRun = -1;     // initialize with something unreasonable
+    Float_t EvtEventId = -1;
+    Float_t McSourceId = -1;
     Double_t EvtElapsedTime = -1;
 
     for ( int i=0; i<lsize; ++i ) {
@@ -93,8 +95,12 @@ void checkSum::write(TTree* t) {
                               << (unsigned short)p[ip] << std::endl;
                 charCol.push_back(p[ip]);
             }
-            if ( leafName == "EvtEventId" )
+            if ( leafName == "EvtRun" )
+                EvtRun = v;
+            else if ( leafName == "EvtEventId" )
                 EvtEventId = v;
+            else if ( leafName == "McSourceId" )
+                McSourceId = v;
         }
         else if ( className == "TLeafI" ) {
             const Int_t v = static_cast<Int_t>(
@@ -124,21 +130,35 @@ void checkSum::write(TTree* t) {
     }
     const unsigned long theSum = simple(&charCol);
 
-    if ( DEBUG )
-        std::cout << "checksum: "
-                  << std::setprecision(25)
-                  <<std::resetiosflags(std::ios::scientific)<< EvtEventId << ' '
-                  <<std::setiosflags(std::ios::scientific)<<EvtElapsedTime <<' '
-                  << theSum << ' '
-                  << charCol.size()
-                  << std::endl;
     m_out.precision(25);
-    m_out << std::setw(10)
-          << std::resetiosflags(std::ios::scientific) << EvtEventId << "     "
-          << std::setw(25)
-          << std::setiosflags(std::ios::scientific) << EvtElapsedTime << "     "
-          << std::setw(25) << theSum
-          << std::endl;
+    if ( DEBUG )
+        std::cout << "checksum: " << std::setprecision(25);
+
+    m_out
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << EvtRun << ' '
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << McSourceId << ' '
+        << std::setw(25)
+        << std::setiosflags(std::ios::scientific) << EvtElapsedTime << ' '
+        << std::setw(10) << theSum;
+    if ( DEBUG )
+        std::cout
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << EvtRun << ' '
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
+        << std::setw(7)
+        << std::resetiosflags(std::ios::scientific) << McSourceId << ' '
+        << std::setw(25)
+        << std::setiosflags(std::ios::scientific) << EvtElapsedTime << ' '
+        << std::setw(10) << theSum;
+
+    m_out << std::endl;
+    if ( DEBUG )
+        std::cout << ' ' << std::setw(7) << charCol.size() << std::endl;
 }
 
 
