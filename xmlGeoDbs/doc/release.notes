@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r25p1 29-Sep-2005  jrb Add alternate latIntegration geometry with 
+                            unshrunk tiles
    v1r25   14-Sep-2005  jrb No more screws.  Tiles are shrunken.
    v1r24   14-Sep-2005  jrb Eliminate all side screws.  Still have top screws
                             (and shrunken tiles)
