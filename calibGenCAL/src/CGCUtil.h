@@ -12,6 +12,11 @@
 #include <vector>
 #include <ostream>
 
+/** @file CGCUtil.h
+    @author Zachary Fewtrell
+    \brief Generic utility functions for calibGenCAL pkg
+*/
+
 using namespace std;
 
 namespace CGCUtil {

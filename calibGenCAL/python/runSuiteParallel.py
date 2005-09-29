@@ -1,5 +1,5 @@
 """
-This script will run calibGenCAL C++ analysis on REM  parallelized calibration data w/ proper calibGain settings.
+This script will run calibGenCAL C++ analysis on parallel calibration data.
 
 runSuiteParallel <cfg_file>
 
@@ -7,6 +7,15 @@ where:
     <cfg_file>      = .ini style configuration file.  see calibGenCAL/python/cfg/runSuiteParallel.cfg for example/documentation
 
 """
+
+__facility__  = "Offline"
+__abstract__  = "Process full set of GLAST CAL ground calibration event files."
+__author__    = "Z.Fewtrell"
+__date__      = "$Date$"
+__version__   = "$Revision$, $Author$"
+__release__   = "$Name$"
+__credits__   = "NRL code 7650"
+
 
 import sys, os
 import ConfigParser
