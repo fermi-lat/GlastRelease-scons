@@ -233,7 +233,11 @@ namespace rdbModel {
     using xmlBase::Dom;
 
     Datatype* newType = new Datatype;
-    newType->setType(Dom::getAttribute(e, "typename"));
+    bool isUnsigned = false;
+    if (Dom::hasAttribute(e, "unsigned")) {
+      isUnsigned = (Dom::getAttribute(e, "unsigned") == "true");
+    }
+    newType->setType(Dom::getAttribute(e, "typename"), isUnsigned);
 
     if (Dom::hasAttribute(e, "size")) {
       try {
