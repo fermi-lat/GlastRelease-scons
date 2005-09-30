@@ -1,23 +1,30 @@
-import sys, os
-import logging
-import string
-import ConfigParser
+/"""/
+/given the calibDAC suitesummary run number for each module of interest, retrieve all calibDAC files from slac using scp/
 
-"""
-given the calibDAC suitesummary run number for each module of interest, retrieve all calibDAC files from slac using scp and build gensettings.py configuration file
-
-note:
-    currently only runs on windows
-"""
+/note:/
+/    currently only runs on windows/
+/"""/
 
 __facility__  = "Offline"
-__abstract__  = "Retrieve DAC settings files from SLAC using FTP & generate cfg file for gensettings script"
+__abstract__  = "Retrieve DAC settings files from SLAC using SCP"
 __author__    = "M.Strickman"
 __date__      = "$Date$"
 __version__   = "$Revision$, $Author$"
 __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
+
+
+
+
+import sys, os
+import logging
+import string
+import ConfigParser
+
+# given the calibDAC suitesummary run number for each module of interest,
+# retreive all calibDAC files from slac using scp and build gensettings.py
+# configuration file
 
 # set up logging
 
