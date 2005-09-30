@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   30-sep-05  v6r28p1 THB  finish the job by adding the genericSources sources the the xml list
    29-sep-05  v6r28   THB  make use of celestialSources public, to give access to the Science Tools sources
    20-sep-05  v6r27p1,2 THB  forgot to also move TDS setting, needed by merit to set Pt vars.
    20-sep-05  v6r27   THB  split Pt merit stuff into separate alg, PointInfoAlg
