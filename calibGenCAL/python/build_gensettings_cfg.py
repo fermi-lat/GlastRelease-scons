@@ -2,7 +2,9 @@
 Identifies files required for each gensettings script and uses the filenames to build the configuration file for the gensettings.py script
 
 note:
-    currently only runs on windows
+    Linux use currently 'unsupported'
+    see calibGenCAL/doc/gensettings_scripts.html for more information.
+
 """
 
 __facility__  = "Offline"

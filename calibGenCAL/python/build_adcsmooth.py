@@ -2,7 +2,9 @@
 build batch file containing commands to run adcsmooth script for filtering configuration files for each module and setting specified in setup file
 
 note:
-    currently only runs on windows
+    Linux use currently 'unsupported'
+    see calibGenCAL/doc/gensettings_scripts.html for more information.
+
 """
 
 __facility__  = "Offline"

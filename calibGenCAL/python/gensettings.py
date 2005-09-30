@@ -2,7 +2,9 @@
 Builds configuration file for each gensettings run (for each setting and module).  Builds batch file of commands to run gensettings scripts
 
 note:
-    currently only runs on windows
+    Linux use currently 'unsupported'
+    see calibGenCAL/doc/gensettings_scripts.html for more information.
+
 """
 
 __facility__  = "Offline"
