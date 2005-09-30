@@ -1,9 +1,9 @@
-/"""/
-/Builds configuration file for each gensettings run (for each setting and module).  Builds batch file of commands to run gensettings scripts/
+"""
+Builds configuration file for each gensettings run (for each setting and module).  Builds batch file of commands to run gensettings scripts
 
-/note:/
-/    currently only runs on windows/
-/"""/
+note:
+    currently only runs on windows
+"""
 
 __facility__  = "Offline"
 __abstract__  = "Prepares config and commands to run gensettings scripts"

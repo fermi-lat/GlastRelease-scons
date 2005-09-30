@@ -1,9 +1,9 @@
-/"""/
-/Identifies files required for each gensettings script and uses the filenames to build the configuration file for the gensettings.py script/
+"""
+Identifies files required for each gensettings script and uses the filenames to build the configuration file for the gensettings.py script
 
-/note:/
-/    currently only runs on windows/
-/"""/
+note:
+    currently only runs on windows
+"""
 
 __facility__  = "Offline"
 __abstract__  = "Identifies files and builds config file for gensettings.py"

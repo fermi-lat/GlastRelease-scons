@@ -1,9 +1,9 @@
-/"""/
-/given the calibDAC suitesummary run number for each module of interest, retrieve all calibDAC files from slac using scp/
+"""
+given the calibDAC suitesummary run number for each module of interest, retrieve all calibDAC files from slac using scp
 
-/note:/
-/    currently only runs on windows/
-/"""/
+note:
+    currently only runs on windows
+"""
 
 __facility__  = "Offline"
 __abstract__  = "Retrieve DAC settings files from SLAC using SCP"

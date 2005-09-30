@@ -1,9 +1,9 @@
-/"""/
-/build batch file containing commands to run adcsmooth script for filtering configuration files for each module and setting specified in setup file/
+"""
+build batch file containing commands to run adcsmooth script for filtering configuration files for each module and setting specified in setup file
 
-/note:/
-/    currently only runs on windows/
-/"""/
+note:
+    currently only runs on windows
+"""
 
 __facility__  = "Offline"
 __abstract__  = "Build batch file containing commands to run adcsmooth filtering script"
