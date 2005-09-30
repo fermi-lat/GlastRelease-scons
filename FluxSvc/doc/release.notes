@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   29-sep-05  v6r28   THB  make use of celestialSources public, to give access to the Science Tools sources
    20-sep-05  v6r27p1,2 THB  forgot to also move TDS setting, needed by merit to set Pt vars.
    20-sep-05  v6r27   THB  split Pt merit stuff into separate alg, PointInfoAlg
    19-sep-05  v6r26p1,2 THB  workaround gcc bug(s)

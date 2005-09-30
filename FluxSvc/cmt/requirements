@@ -1,8 +1,8 @@
 package FluxSvc
-version v6r27p2
+version v6r28
 
 # $Id$
-author  T. Kozanecki <hansl$slac.stanford.edu> T. Burnett
+author  T. Burnett <tburnett@u.washington.edu>
 
 branches FluxSvc cmt doc cdf 
 
@@ -14,6 +14,9 @@ apply_pattern package_include
 use GaudiInterface * IExternal
 use CLHEP * IExternal
 use facilities *
+# declare external sources
+use celestialSources * 
+
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
@@ -23,8 +26,6 @@ set LHCBDBASE  "${FLUXSVCROOT}"
 # _____________________________________________________________
 
 private
-# declare external sources
-use celestialSources * 
 use Event       v*
 use GlastSvc    v*
 use astro       v*
