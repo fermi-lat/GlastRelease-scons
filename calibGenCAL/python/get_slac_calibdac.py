@@ -13,14 +13,12 @@ __version__   = "$Revision$, $Author$"
 __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
-
-
-
-
 import sys, os
 import logging
 import string
 import ConfigParser
+
+usage = 'get_slac_calibdac'
 
 # given the calibDAC suitesummary run number for each module of interest,
 # retreive all calibDAC files from slac using scp and build gensettings.py

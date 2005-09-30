@@ -21,6 +21,8 @@ import ConfigParser
 import glob
 from optparse import OptionParser
 
+usage = 'build_gensettings_cfg [-f fileroot][--file fileroot]'
+
 # finds files for gensettings and creates cfg file
 # NOTE:  folder must contain only one file for ea module and type
 # for the desired gensettings cfg file. Script has no way of distinguishing
