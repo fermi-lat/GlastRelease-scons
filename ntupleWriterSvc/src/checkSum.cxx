@@ -47,10 +47,10 @@ void checkSum::write(TTree* t) {
         std::cout << "TTree " << t->GetName() << " has " << lsize << " leaves "
                   << std::endl;
     std::vector<unsigned char> charCol;
-    Float_t EvtRun = -1;     // initialize with something unreasonable
-    Float_t EvtEventId = -1;
-    Float_t McSourceId = -1;
-    Double_t EvtElapsedTime = -1;
+    Float_t EvtRun = -3.14;     // initialize with something unreasonable
+    Float_t EvtEventId = -3.14;
+    Float_t McId = -3.14;
+    Double_t EvtElapsedTime = -3.14;
 
     for ( int i=0; i<lsize; ++i ) {
         // there exists a TTreeFriendLeafIter, but how to use it?
@@ -99,8 +99,8 @@ void checkSum::write(TTree* t) {
                 EvtRun = v;
             else if ( leafName == "EvtEventId" )
                 EvtEventId = v;
-            else if ( leafName == "McSourceId" )
-                McSourceId = v;
+            else if ( leafName == "McId" )
+                McId = v;
         }
         else if ( className == "TLeafI" ) {
             const Int_t v = static_cast<Int_t>(
@@ -140,7 +140,7 @@ void checkSum::write(TTree* t) {
         << std::setw(7)
         << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
         << std::setw(7)
-        << std::resetiosflags(std::ios::scientific) << McSourceId << ' '
+        << std::resetiosflags(std::ios::scientific) << McId << ' '
         << std::setw(25)
         << std::setiosflags(std::ios::scientific) << EvtElapsedTime << ' '
         << std::setw(10) << theSum;
@@ -151,7 +151,7 @@ void checkSum::write(TTree* t) {
         << std::setw(7)
         << std::resetiosflags(std::ios::scientific) << EvtEventId << ' '
         << std::setw(7)
-        << std::resetiosflags(std::ios::scientific) << McSourceId << ' '
+        << std::resetiosflags(std::ios::scientific) << McId << ' '
         << std::setw(25)
         << std::setiosflags(std::ios::scientific) << EvtElapsedTime << ' '
         << std::setw(10) << theSum;
