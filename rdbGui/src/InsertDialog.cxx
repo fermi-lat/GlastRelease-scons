@@ -299,6 +299,9 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     case rdbModel::Datatype::TYPEint :
     case rdbModel::Datatype::TYPEmediumint :
     case rdbModel::Datatype::TYPEsmallint :
+    case rdbModel::Datatype::TYPEintUnsigned :
+    case rdbModel::Datatype::TYPEmediumintUnsigned :
+    case rdbModel::Datatype::TYPEsmallintUnsigned :
     {
         colWidget = m_factory->createIntWidget(m_matrix, column);
         break;
