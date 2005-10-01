@@ -8,26 +8,26 @@
 // Message Map RdbGUIWindow class
 FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
 
-  //__Message_Type____________________ID_______________________________________Message_Handler_____
-  FXMAPFUNC(SEL_UPDATE,           RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onUpdTitle),
-  FXMAPFUNC(SEL_UPDATE,           RdbGUIWindow::ID_OVERSTRIKE,         RdbGUIWindow::onUpdOverstrike),
-  FXMAPFUNC(SEL_CHANGED,          RdbGUIWindow::ID_SQLEDIT,            RdbGUIWindow::onSQLEdit),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_OPENXML,            RdbGUIWindow::onOpenXMLFile),
-  FXMAPFUNC(SEL_CLOSE,            RdbGUIWindow::ID_TITLE,              RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_SIGNAL,           RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_QUIT,               RdbGUIWindow::onQuit),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_OPENCONNECTION,     RdbGUIWindow::onOpenConnection),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_CLOSECONNECTION,    RdbGUIWindow::onCloseConnection), 
-  FXMAPFUNC(SEL_COMMAND,          TableColumnList::ID_TBLLIST,         RdbGUIWindow::onQueryFrameUpdate), 
-  FXMAPFUNC(SEL_SELECTED,         TableColumnList::ID_TBLLIST,         RdbGUIWindow::onUpdResTableCols),
-  FXMAPFUNC(SEL_DESELECTED,       TableColumnList::ID_TBLLIST,         RdbGUIWindow::onUpdResTableCols),
-  FXMAPFUNC(SEL_COMMAND,          QueryFrame::ID_QUERY,                RdbGUIWindow::onSendQuery),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERT,             RdbGUIWindow::onInsert),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_MULTI,              RdbGUIWindow::onMultiInsert),  
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_UPDATELAST,         RdbGUIWindow::onUpdateLastRow),
-  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_UPDATEROW,           RdbGUIWindow::onUpdateRowByKey),
-  FXMAPFUNC(SEL_COMMAND,          ResultTable::ID_COPYROW,             RdbGUIWindow::onCopyRowByKey),
-  FXMAPFUNC(SEL_COMMAND,          RdbGUIWindow::ID_INSERTLATEST,       RdbGUIWindow::onInsertLatest),
+  //__Message_Type____________________ID______________________________Message_Handler_____
+  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_TITLE,           RdbGUIWindow::onUpdTitle),
+  FXMAPFUNC(SEL_UPDATE,   RdbGUIWindow::ID_OVERSTRIKE,      RdbGUIWindow::onUpdOverstrike),
+  FXMAPFUNC(SEL_CHANGED,  RdbGUIWindow::ID_SQLEDIT,         RdbGUIWindow::onSQLEdit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENXML,         RdbGUIWindow::onOpenXMLFile),
+  FXMAPFUNC(SEL_CLOSE,    RdbGUIWindow::ID_TITLE,           RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_SIGNAL,   RdbGUIWindow::ID_QUIT,            RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_QUIT,            RdbGUIWindow::onQuit),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_OPENCONNECTION,  RdbGUIWindow::onOpenConnection),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_CLOSECONNECTION, RdbGUIWindow::onCloseConnection), 
+  FXMAPFUNC(SEL_COMMAND,  TableColumnList::ID_TBLLIST,      RdbGUIWindow::onQueryFrameUpdate),
+  FXMAPFUNC(SEL_SELECTED, TableColumnList::ID_TBLLIST,      RdbGUIWindow::onUpdResTableCols),
+  FXMAPFUNC(SEL_DESELECTED, TableColumnList::ID_TBLLIST,    RdbGUIWindow::onUpdResTableCols),
+  FXMAPFUNC(SEL_COMMAND,  QueryFrame::ID_QUERY,             RdbGUIWindow::onSendQuery),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERT,          RdbGUIWindow::onInsert),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_MULTI,           RdbGUIWindow::onMultiInsert),  
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_UPDATELAST,      RdbGUIWindow::onUpdateLastRow),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_UPDATEROW,        RdbGUIWindow::onUpdateRowByKey),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_COPYROW,          RdbGUIWindow::onCopyRowByKey),
+  FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERTLATEST,    RdbGUIWindow::onInsertLatest),
 
 };
 
