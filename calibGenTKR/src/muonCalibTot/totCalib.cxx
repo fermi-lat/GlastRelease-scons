@@ -1488,7 +1488,7 @@ void totCalib::selectGoodClusters(){
   std::cout << "selectGoodClusters start" << std::endl;
 #endif
 
-  bool display = true;
+  bool display = false;
   m_clusters.clear();
   //
   // register new raw clusters if it is close to the track position
