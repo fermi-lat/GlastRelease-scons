@@ -1,8 +1,7 @@
 """
-Builds configuration file for each gensettings run (for each setting and module).  Builds batch file of commands to run gensettings scripts
+Builds configuration file for each gensettings run (for each setting and module).  Builds .bat && .sh file of commands to run gensettings scripts
 
 note:
-    Linux use currently 'unsupported'
     see calibGenCAL/doc/gensettings_scripts.html for more information.
 
 """
