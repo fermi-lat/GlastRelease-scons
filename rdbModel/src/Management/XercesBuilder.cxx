@@ -191,6 +191,7 @@ namespace rdbModel {
     if (Dom::checkTagName(child, "default")) {
       newCol->m_from = Column::FROMdefault;
       newCol->m_default = Dom::getAttribute(child, "value");
+      newCol->m_defaultInterp = Dom::getAttribute(child, "interp");
     }
     else if (Dom::checkTagName(child, "from")) {
       std::string agent = Dom::getAttribute(child, "agent");

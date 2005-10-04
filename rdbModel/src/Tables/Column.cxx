@@ -18,6 +18,17 @@ namespace rdbModel {
     return m_myTable->getName();
   }
 
+  const std::string& Column::getDefault(std::string* pInt) const {
+    if (!pInt) return m_default;
+    *pInt = m_default;
+    // Special handling if interp is time
+    if (m_defaultInterp.size() > 0  ) {
+      Datatype::TYPES dtype = m_type->getType();
+      interpret(m_defaultInterp, *pInt);
+    }
+    return m_default;
+  }
+
   bool Column::okValue(const std::string& val, bool set) const {
     // auto increment and datetime values are established by rdbms
     if (set) {
@@ -38,7 +49,7 @@ namespace rdbModel {
     return (m_from == FROMautoIncrement);
   }
 
-  bool Column::interpret(const std::string& interpType, std::string& val) {
+  bool Column::interpret(const std::string& interpType, std::string& val) const {
     // Currently only interpretation is for timestamp-like columns.
     // Value of interpType must be "time" and val must be "NOW".
     // In this case, substitute ascii current time
