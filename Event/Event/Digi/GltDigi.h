@@ -45,7 +45,21 @@ class GltDigi : virtual public DataObject {
   inline void setCAL_HI(std::vector<bool> value)
     {m_CAL_HI = value;}
 
+
+    inline bool getCALLOtrigger()const { return triggerOR(m_CAL_LO);}
+        
+
+    inline bool getCALHItrigger()const {return triggerOR(m_CAL_HI);}
+
  private:
+     inline bool triggerOR(const std::vector<bool>& bits)const{
+        for( std::vector<bool>::const_iterator bit = bits.begin(); 
+            bit!=bits.end(); ++ bit){
+                if( *bit) { return true;}
+            }
+        return false;
+     }
+
   std::vector<bool> m_TKR_threeinRow;
   std::vector<bool> m_CAL_LO;
   std::vector<bool> m_CAL_HI;
