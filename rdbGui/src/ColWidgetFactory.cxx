@@ -44,13 +44,9 @@ ColWidget* ColWidgetFactory::createColWidget(FXComposite* parent, rdbModel::Colu
 
   switch(dt->getType()){
   case rdbModel::Datatype::TYPEdatetime :
-  {
-      colWidget = createDateWidget(parent, column);
-      break;
-  };
   case rdbModel::Datatype::TYPEtimestamp :
   {
-      colWidget = createStringWidget(parent, column);
+      colWidget = createDateWidget(parent, column);
       break;
   };
   case rdbModel::Datatype::TYPEenum :

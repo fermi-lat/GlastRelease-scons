@@ -274,15 +274,10 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
 
     switch(dt->getType()){
     case rdbModel::Datatype::TYPEdatetime :
+    case rdbModel::Datatype::TYPEtimestamp :
     {
       	// label->setIcon(new FXICOIcon(getApp(), calImg));	
       	colWidget = m_factory->createDateWidget(m_matrix, column);
-        break;
-    };
-    case rdbModel::Datatype::TYPEtimestamp :
-    {
-      	//label->setIcon(new FXICOIcon(getApp(), clockImg));
-        colWidget = m_factory->createStringWidget(m_matrix, column);
         break;
     };
     case rdbModel::Datatype::TYPEenum :
@@ -325,9 +320,11 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
     if (!column->nullAllowed())
       label->setTextColor(FXRGB(255,0,0));
 
-    if ((source == rdbModel::Column::FROMdefault)) 
-      colWidget->setValue(column->getDefault());
-      
+    if ((source == rdbModel::Column::FROMdefault)) {
+      std::string interpreted("");
+      column->getDefault(&interpreted);
+      colWidget->setValue(interpreted);
+    }
     m_widgets.push_back(colWidget);
   } 
   
