@@ -246,11 +246,6 @@ StatusCode CalDigiAlg::createDigis() {
     }
   }
   
-
-  // create new blank vector of triggers (1 LE & HE per tower)
-  Event::GltDigi::CalTriggerMap fle_trigs;
-  Event::GltDigi::CalTriggerMap fhe_trigs;
-  
   /* Loop through (installed) towers and crystals; collect up the McIntegratingHits by 
      xtal Id and send them off to xtalDigiTool to be digitized. Unhit crystals 
      can have noise added, so a null vector is sent in in that case.
@@ -303,11 +298,10 @@ StatusCode CalDigiAlg::createDigis() {
         if (sc.isFailure()) continue;   // bad hit
 
         // set trigger values (before LAC, allows for FHE trig independent of LAC/FLE
-        //   (small diode deposit)
-        fle_trigs[CalXtalId(twr,lyr,col,NEG_FACE)] = fleN;
-        fle_trigs[CalXtalId(twr,lyr,col,POS_FACE)] = fleP;
-        fhe_trigs[CalXtalId(twr,lyr,col,NEG_FACE)] = fheN;
-        fhe_trigs[CalXtalId(twr,lyr,col,POS_FACE)] = fheP;
+        if (fleN) glt->setCALLOtrigger(CalXtalId(twr,lyr,col,NEG_FACE));
+        if (fleP) glt->setCALLOtrigger(CalXtalId(twr,lyr,col,POS_FACE));
+        if (fheN) glt->setCALHItrigger(CalXtalId(twr,lyr,col,NEG_FACE));
+        if (fheP) glt->setCALHItrigger(CalXtalId(twr,lyr,col,POS_FACE));
 
         if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
         
@@ -323,10 +317,6 @@ StatusCode CalDigiAlg::createDigis() {
       } // col loop
     } // lyr loop
   } // twr loop
-
-  //-- populate GltDigi trigger data --//
-  glt->setCAL_LO(fle_trigs);
-  glt->setCAL_HI(fhe_trigs);
 
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
   if (sc.isFailure()) {
