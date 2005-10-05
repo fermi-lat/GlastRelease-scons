@@ -11,7 +11,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 #include <vector>
-#include <map>
+#include <set>
 
 /*!
  * \class GltDigi
@@ -35,41 +35,50 @@ namespace Event {
 
     inline std::vector<bool> getTkrThreeInRow()const{return m_TKR_threeinRow;}
 
-    /** \brief represents per xtal face Cal trigger info
-        \note CalXtalId indeces should have optional face info set.
-    */
-    typedef std::map<idents::CalXtalId,bool> CalTriggerMap;
-    inline const CalTriggerMap& getCAL_LO()const{return m_CAL_LO;}
-    inline const CalTriggerMap& getCAL_HI()const{return m_CAL_HI;}
-
     inline void setTkrThreeInRow(std::vector<bool> value)
       {m_TKR_threeinRow = value;}
 
-    inline void setCAL_LO(const CalTriggerMap &value)
-      {m_CAL_LO = value;}
+    /// return true if any Cal FLE trigger bit was set
+    bool getCALLOtrigger() const {return (m_CAL_LO.size() > 0);}
+    /// return true if any Cal FHE trigger bit was set
+    bool getCALHItrigger() const {return (m_CAL_HI.size() > 0);}
 
-    inline void setCAL_HI(const CalTriggerMap &value)
-      {m_CAL_HI = value;}
-
-
-    inline bool getCALLOtrigger()const { return triggerOR(m_CAL_LO);}
-        
-
-    inline bool getCALHItrigger()const {return triggerOR(m_CAL_HI);}
-
-  private:
-    inline bool triggerOR(const CalTriggerMap& bits) const {
-      for( CalTriggerMap::const_iterator bit = bits.begin(); 
-           bit!=bits.end(); 
-           ++ bit)
-        {if( bit->second) { return true;}}
-
-      return false;
+    /** \brief return true if specified Cal FLE trigger bit was set
+        \param xtalFaceId CalXtalId should include optional face information
+     */
+    bool getCALLOtrigger(idents::CalXtalId xtalFaceId) const {
+      return (m_CAL_LO.find(xtalFaceId) != m_CAL_LO.end());
     }
 
+    /** \brief return true if specified Cal FHE trigger bit was set
+        \param xtalFaceId CalXtalId should include optional face information
+     */
+    bool getCALHItrigger(idents::CalXtalId xtalFaceId) const {
+      return (m_CAL_HI.find(xtalFaceId) != m_CAL_HI.end());
+    }
+
+
+    /** \brief set specified Cal FLE trigger bit
+        \param xtalFaceId CalXtalId should include optional face information
+     */
+    void setCALLOtrigger(idents::CalXtalId xtalFaceId) {m_CAL_LO.insert(xtalFaceId);}
+
+    /** \brief set specifiec Cal FHE trigger bit
+        \param xtalFaceId CalXtalId should include optional face information
+     */
+    void setCALHItrigger(idents::CalXtalId xtalFaceId) {m_CAL_HI.insert(xtalFaceId);}
+
+
+  private:
+
     std::vector<bool> m_TKR_threeinRow;
-    CalTriggerMap m_CAL_LO;
-    CalTriggerMap m_CAL_HI;
+    
+    /** \brief contains set of all xtal faces with trigger = true
+        \note CalXtalId should include optional face information
+    */
+    typedef std::set<idents::CalXtalId> CalTriggerSet;
+    CalTriggerSet m_CAL_LO;
+    CalTriggerSet m_CAL_HI;
   };
   
 } //Namespace Event
