@@ -22,7 +22,7 @@
  * 
  */
 
-static const CLID& CLID_GltDigi = InterfaceID("GltDigi", 1, 0);
+static const CLID& CLID_GltDigi = InterfaceID("GltDigi", 2, 0);
 
 namespace Event {
 
