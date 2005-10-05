@@ -43,7 +43,7 @@ using namespace std;
 using idents::CalXtalId;
 using namespace CalDefs;
 
-/// construct object & delcare jobOptions
+/// construct object & declare jobOptions
 CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_rangeMode(CalXtalId::BESTRANGE)
