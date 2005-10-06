@@ -8,6 +8,7 @@
 #ifndef Event_GltDigi_H
 #define Event_GltDigi_H 1
 
+#include "idents/CalXtalId.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 #include <vector>
