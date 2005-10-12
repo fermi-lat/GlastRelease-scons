@@ -60,8 +60,13 @@ class CalibItemMgr {
   void invalidate() {m_isValid = false;} 
 
  protected:
-  /// check calib validity period, (re)build local store if necessary
-  virtual StatusCode updateLocalStore();          
+  /** \brief check calib validity period, (re)build local store if necessary
+
+  needs to be called once per event (_before_ processing calibration data ;).
+  Subsequent calls in same event will return immediately.
+
+  */
+  virtual StatusCode updateCalib();          
 
   /// load ideal (fake) calibration vals for my calib_type if db is down
   virtual StatusCode loadIdealVals() = 0;

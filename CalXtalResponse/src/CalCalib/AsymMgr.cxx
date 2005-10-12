@@ -46,6 +46,12 @@ StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
     xVals    = &m_idealXVals;
     return StatusCode::SUCCESS;
   }
+
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
   
   CalibData::CalAsym *asym = 
 	  (CalibData::CalAsym *)getRangeBase(xtalId);

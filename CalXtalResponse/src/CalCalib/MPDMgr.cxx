@@ -27,6 +27,11 @@ StatusCode MPDMgr::getMPD(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
   // Get generic pointer to rng specific data
   CalibData::CalMevPerDac *mpd = 
 	  (CalibData::CalMevPerDac *)getRangeBase(xtalId);

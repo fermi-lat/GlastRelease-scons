@@ -52,7 +52,7 @@ StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::updateLocalStore() {
+StatusCode CalibItemMgr::updateCalib() {
   StatusCode sc;
 
   // ideal mode never requires update, is never invalid
@@ -112,7 +112,7 @@ StatusCode CalibItemMgr::evalSpline(int calibType, const CalXtalId &xtalId,
   StatusCode sc;
 
   // make sure we have valid calib data for this event.
-  sc = updateLocalStore();
+  sc = updateCalib();
   if (sc.isFailure()) return sc;
 
   LATWideIndex idx = genIdx(xtalId);

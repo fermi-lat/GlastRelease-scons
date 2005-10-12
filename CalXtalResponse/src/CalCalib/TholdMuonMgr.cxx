@@ -21,6 +21,12 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
+
   CalibData::CalTholdMuon *tholdMuon 
 	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
@@ -42,6 +48,12 @@ StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
     ped = m_idealPed[xtalId.getRange()];
     return StatusCode::SUCCESS;
   }
+
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
 
   CalibData::CalTholdMuon *tholdMuon 
 	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);

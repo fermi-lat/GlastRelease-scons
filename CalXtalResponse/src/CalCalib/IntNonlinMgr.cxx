@@ -44,6 +44,12 @@ StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
     error = m_idealErr;
     return StatusCode::SUCCESS;
   }
+
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
   
   CalibData::IntNonlin *intNonlin 
     = (CalibData::IntNonlin *)getRangeBase(xtalId);

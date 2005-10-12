@@ -26,6 +26,12 @@ StatusCode PedMgr::getPed(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   } 
 
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
+
   CalibData::Ped *ped 
 	  = (CalibData::Ped *)getRangeBase(xtalId);
   if (!ped) return StatusCode::FAILURE;

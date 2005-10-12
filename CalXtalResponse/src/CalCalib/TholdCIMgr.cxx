@@ -24,6 +24,12 @@ StatusCode TholdCIMgr::getTholds(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
+
   CalibData::CalTholdCI *tholdCI 
 	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
   if (!tholdCI) return StatusCode::FAILURE;
@@ -46,6 +52,11 @@ StatusCode TholdCIMgr::getULD(const CalXtalId &xtalId,
     return StatusCode::SUCCESS;
   }
 
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
   CalibData::CalTholdCI *tholdCI 
 	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
   if (!tholdCI) return StatusCode::FAILURE;
@@ -65,6 +76,12 @@ StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
     ped = m_idealPed[xtalId.getRange()];
     return StatusCode::SUCCESS;
   }
+
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return sc;
+
 
   CalibData::CalTholdCI *tholdCI 
 	  = (CalibData::CalTholdCI *)getRangeBase(xtalId);
