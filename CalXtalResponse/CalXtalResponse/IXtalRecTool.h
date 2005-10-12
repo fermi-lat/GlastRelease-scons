@@ -1,5 +1,5 @@
 #ifndef _IXtalRecTool_H
-#define _IXtalRecTool_H 1
+#define _IXtalRecTool_H
 /*! @class IXtalRecTool
  *
  * \author Zach Fewtrell

@@ -75,35 +75,17 @@ StatusCode TholdCIMgr::getPed(const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-StatusCode TholdCIMgr::fillRangeBases() {
-  m_rngBases.resize(FaceIdx::N_VALS,0);
-
-  for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
-    CalXtalId xtalId = faceIdx.getCalXtalId();
-    CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) continue; // support parial LAT inst
-
-    // support missing towers & missing crystals
-    // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(rngBase)) continue;
-
-    m_rngBases[faceIdx] = rngBase;
-  }
-
-  return StatusCode::SUCCESS;
-}
-
 StatusCode TholdCIMgr::loadIdealVals() {
   
   //-- SANITY CHECKS --//
   if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
-    // create MsgStream only when needed for performance
+    // create MsgStream only when needed (for performance)
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endreq;
     return StatusCode::FAILURE;;
   }
   if (owner->m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
-    // create MsgStream only when needed for performance
+    // create MsgStream only when needed (for performance)
     MsgStream msglog(owner->msgSvc(), owner->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endreq;
     return StatusCode::FAILURE;;
@@ -132,43 +114,4 @@ StatusCode TholdCIMgr::loadIdealVals() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
-  CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)(rngBase);
-
-  if (!tholdCI->getFLE()) {
-    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
-    // however, if tholdCI->getFLE() is successful & following checks fail
-    // then we have a problem b/c we have calib data which is only good for
-    // partial xtal.
-    return false;
-  }
-  if (!tholdCI->getFHE() ||
-      !tholdCI->getLAC()) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-	msglog << endreq;
-    return false;
-  }
-
-  const vector<ValSig> *peds = tholdCI->getPeds();
-  const vector<ValSig> *ulds = tholdCI->getULDs();
-  if (!peds || !ulds) {
-    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
-    return false;
-  }
-
-  if (peds->size() != (unsigned)RngNum::N_VALS ||
-      ulds->size() != (unsigned)RngNum::N_VALS) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-	msglog << endreq;
-    return false;
-  }
-  return true;
 }

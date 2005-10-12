@@ -240,7 +240,7 @@ StatusCode XtalRecTool::calculate(const Event::EventHeader &evtHdr,
   
   // check for invalid dac vals (i need to take the sqrt AND the log)
   if (m_dat.dac[POS_FACE] <= 0 || m_dat.dac[NEG_FACE] <= 0) {
-    // create MsgStream only when needed for performance
+    // create MsgStream only when needed (for performance)
     MsgStream msglog(msgSvc(), name()); 
     msglog << MSG::VERBOSE;
     // need to use .stream() to get xtalId to pretty print.

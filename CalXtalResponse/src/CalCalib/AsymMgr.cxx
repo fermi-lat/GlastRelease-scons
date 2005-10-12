@@ -28,46 +28,6 @@ AsymMgr::AsymMgr() :
   }
 }
 
-bool AsymMgr::validateRangeBase(CalibData::RangeBase *rngBase) {
-  const vector<CalibData::ValSig> *asymLrg;
-  const vector<CalibData::ValSig> *asymSm;
-  const vector<CalibData::ValSig> *asymNSPB;
-  const vector<CalibData::ValSig> *asymPSNB;
-
-  CalibData::CalAsym *asym = (CalibData::CalAsym*)(rngBase);
-
-  if (!(asymLrg = asym->getBig())) {
-    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
-    // however, if asym->getBig() is successful & following checks fail
-    // then we have a problem b/c we have calib data which is only good for
-    // partial xtal.
-    return false;
-  }
-  if (!(asymSm = asym->getSmall())        ||
-      !(asymNSPB = asym->getNSmallPBig()) ||
-      !(asymPSNB = asym->getPSmallNBig())) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-    msglog << endreq;
-    return false;
-  }
-
-  // get Xpos vals.
-  unsigned XposSize= m_calibBase->getXpos()->getVals()->size();
-  if (XposSize != asymLrg->size() ||
-      XposSize != asymSm->size() ||
-      XposSize != asymNSPB->size() ||
-      XposSize != asymPSNB->size()) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Invalid # of vals for " << m_calibPath << endreq;
-    return false;
-  }
-  return true;
-}
-
 /// get Asymmetry calibration information for one xtal
 StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
                             const vector<CalibData::ValSig> *&asymLrg,
@@ -108,7 +68,7 @@ inline double extrap(double p1, double p2) {
   return 2*p2 - p1;
 }
 
-StatusCode AsymMgr::genSplines() {
+StatusCode AsymMgr::genLocalStore() {
   StatusCode sc;
 
   // vector<double> arrays for input into genSpline
@@ -194,7 +154,7 @@ StatusCode AsymMgr::genSplines() {
     dblXpos    [n+3] = extrap(dblXpos    [n+1], dblXpos    [n+2]);
 
     if (owner->m_superVerbose) {
-      // create MsgStream only when needed for performance
+      // create MsgStream only when needed (for performance)
       MsgStream msglog(owner->msgSvc(), owner->name()); 
       msglog << MSG::VERBOSE << "xpos ";
       for (unsigned i = 0; i < dblXpos.size(); i++) 
@@ -232,25 +192,6 @@ StatusCode AsymMgr::genSplines() {
               dblAsymPSNB,  dblXpos);
   }  
   
-  return StatusCode::SUCCESS;
-}
-
-StatusCode AsymMgr::fillRangeBases() {
-  m_rngBases.resize(XtalIdx::N_VALS,0);
-
-  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
-    CalXtalId xtalId = xtalIdx.getCalXtalId();
-
-    CalibData::RangeBase *rngBase = m_calibBase->getRange(xtalId);
-    if (!rngBase) continue; // support partial LAT inst
-
-    // support missing towers & missing crystals
-    // keep moving if we're missing a particular calibration
-    if (!validateRangeBase(rngBase)) continue;
-
-    m_rngBases[xtalIdx] = rngBase;
-  }
-
   return StatusCode::SUCCESS;
 }
 

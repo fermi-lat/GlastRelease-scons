@@ -1,5 +1,5 @@
 #ifndef _IXtalDigiTool_H
-#define _IXtalDigiTool_H 1
+#define _IXtalDigiTool_H
 /*! @class IXtalDigiTool
  *
  * \author Zach Fewtrell
@@ -34,25 +34,25 @@ class IXtalDigiTool : virtual public IAlgTool {
   /** \brief calculate Adc response for one cal xtalId.  also select best rng.
       \param CalXtalId specify xtal log
       \param hitList input vector of energy depositions.  (const *) is used to save space.
-	  \param evt pointer to current event (used for runid & evtid)
-	  \param calDigi output empty CalDigi object to be populated
+      \param evt pointer to current event (used for runid & evtid)
+      \param calDigi output empty CalDigi object to be populated
       \param fleP output FLE trigger Pos face
-	  \param fleN output FLE trigger Pos face
-	  \param fheP output FHE trigger Neg face
-	  \param fheN output FHE trigger Neg face
+      \param fleN output FLE trigger Pos face
+      \param fheP output FHE trigger Neg face
+      \param fheN output FHE trigger Neg face
       \param lacP output boolean for log accept on Positive xtal face
       \param lacN output boolean for log accept on Negative xtal face
   */
   virtual StatusCode calculate(const CalXtalId &xtalId, 
                                const vector<const Event::McIntegratingHit*> &hitList,
-							   const Event::EventHeader &evtHdr,            
-							   Event::CalDigi &calDigi,     // output 
+                               const Event::EventHeader &evtHdr,            
+                               Event::CalDigi &calDigi,     // output 
                                bool &lacP,                  // output 
                                bool &lacN,                  // output 
-							   bool &fleP,                  // output 
-							   bool &fleN,                  // output 
-							   bool &fheP,                  // output 
-							   bool &fheN                   // output 
+                               bool &fleP,                  // output 
+                               bool &fleN,                  // output 
+                               bool &fheP,                  // output 
+                               bool &fheN                   // output 
                                ) = 0;
 
 };

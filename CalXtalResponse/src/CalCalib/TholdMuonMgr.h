@@ -1,5 +1,5 @@
 #ifndef TholdMuonMgr_H
-#define TholdMuonMgr_H 1
+#define TholdMuonMgr_H
 
 // LOCAL
 #include "CalibItemMgr.h"
@@ -18,6 +18,12 @@ using CalibData::ValSig;
 
 class CalCalibSvc;
 
+/** @class TholdMuonMgr
+    @author Zachary Fewtrell
+    
+    \brief Manage GLAST Cal muon-measured threshold calibration data.
+*/
+
 class TholdMuonMgr : public CalibItemMgr {
  public:
   TholdMuonMgr() : 
@@ -34,10 +40,6 @@ class TholdMuonMgr : public CalibItemMgr {
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:
-  bool validateRangeBase(CalibData::RangeBase*);
-  
-  StatusCode fillRangeBases();
-  
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validFace())
       throw invalid_argument("TholdMuon calib_type requires valid face info."

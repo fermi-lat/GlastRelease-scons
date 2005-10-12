@@ -1,6 +1,7 @@
 // Mainpage for doxygen
 
 /** @mainpage package CalXtalResponse
+ *
  * @section CalCalibSvc CalCalibSvc
  * 
  *
@@ -45,7 +46,7 @@
  *
  * CalResponseTools consists of 3 interfaces.
  * -  IXtalRecTool  reconstructs energy deposit intensity & centroid from digi information
- * -  IXtalDigiTool allows for the calculation of the digital response of one cal crystal given a list of enery depositions for that crystal.
+ * -  IXtalDigiTool allows for the calculation of the digital response of one cal crystal given a list of enery depositions for that crystal. Includes trigger response.
  *
  * Currently there is only one concrete implementation of each of the CalResponseTools:  XtalRecTool, XtalDigiTool
  *

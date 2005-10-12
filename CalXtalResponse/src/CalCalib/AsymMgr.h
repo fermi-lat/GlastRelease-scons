@@ -1,5 +1,5 @@
 #ifndef AsymMgr_H
-#define AsymMgr_H 1
+#define AsymMgr_H
 
 // LOCAL
 #include "CalibItemMgr.h"
@@ -18,6 +18,12 @@ using namespace idents;
 using CalibData::ValSig;
 
 class CalCalibSvc;
+
+/** @class AsymMgr
+    @author Zachary Fewtrell
+    
+    \brief Manage GLAST Cal asymmetry calibration data
+*/
 
 class AsymMgr : public CalibItemMgr {
  public:
@@ -95,11 +101,7 @@ class AsymMgr : public CalibItemMgr {
     N_SPLINE_TYPES
   } SPLINE_TYPE;
 
-  bool validateRangeBase(CalibData::RangeBase *rngBase);
-
-  StatusCode fillRangeBases();
-
-  StatusCode genSplines();
+  StatusCode genLocalStore();
 
   bool checkXtalId(const CalXtalId&) {return true;}
 

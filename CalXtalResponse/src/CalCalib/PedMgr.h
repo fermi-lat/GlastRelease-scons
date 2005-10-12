@@ -1,5 +1,5 @@
 #ifndef PedMgr_H
-#define PedMgr_H 1
+#define PedMgr_H
 
 // LOCAL
 #include "CalibItemMgr.h"
@@ -16,6 +16,12 @@ using namespace idents;
 
 class CalCalibSvc;
 
+/** @class PedMgr
+    @author Zachary Fewtrell
+    
+    \brief Manage GLAST Cal pedestal calibration data
+*/
+
 class PedMgr : public CalibItemMgr {
  public:
   PedMgr() : 
@@ -31,11 +37,6 @@ class PedMgr : public CalibItemMgr {
                     float &sig,
                     float &cos);
  private:
-  bool validateRangeBase(CalibData::RangeBase*)
-    {return true;}
-  
-  StatusCode fillRangeBases();
-  
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())
       throw invalid_argument("Ped calib_type requires valid range & face info in CalXtalId");
@@ -46,9 +47,12 @@ class PedMgr : public CalibItemMgr {
 
   LATWideIndex genIdx(const CalXtalId &xtalId) {return RngIdx(xtalId);}
 
-  CalVec<RngNum,float> m_idealPeds;   ///< ped vals to use when calib db is down
-  CalVec<RngNum,float> m_idealPedSig; ///< ped sigma vals to use when calib db is down
-  CalVec<RngNum,float> m_idealCos;    ///< correlated ped cosine vals to use when calib db is down
+  /// ped vals to use when calib db is down
+  CalVec<RngNum,float> m_idealPeds;   
+  /// ped sigma vals to use when calib db is down
+  CalVec<RngNum,float> m_idealPedSig; 
+  /// correlated ped cosine vals to use when calib db is down
+  CalVec<RngNum,float> m_idealCos;    
 };
 
 #endif

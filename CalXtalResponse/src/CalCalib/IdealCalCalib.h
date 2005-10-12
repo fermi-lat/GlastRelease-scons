@@ -14,12 +14,12 @@
 
 using namespace std;
 
-/**
-   \brief Contains all values necessary to generate full set of ideal cal
-   calibration constants
-
-   contains code to read constants in from IFile XML file.
-
+/** @class IdealCalCalib
+    @author Zachary Fewtrell
+    \brief Contains all values necessary to generate full set of ideal cal
+    calibration constants
+    
+    contains code to read constants in from IFile XML file.
 */
 class IdealCalCalib {
  public:

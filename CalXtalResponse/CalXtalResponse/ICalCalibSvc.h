@@ -1,5 +1,5 @@
 #ifndef ICalCalibSvc_H
-#define ICalCalibSvc_H 1
+#define ICalCalibSvc_H
 
 // LOCAL INCLUDES
 
@@ -50,7 +50,7 @@ class ICalCalibSvc : virtual public IInterface {
   */
   virtual StatusCode getIntNonlin(const CalXtalId &xtalId,
                                   const vector< float > *&adcs,
-                                  const vector< unsigned > *&dacs,
+                                  const vector< float > *&dacs,
                                   float &error) = 0;
 
   /** \brief get pedestal vals for given xtal/face/rng

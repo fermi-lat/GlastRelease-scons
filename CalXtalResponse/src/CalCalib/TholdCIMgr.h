@@ -1,5 +1,5 @@
 #ifndef TholdCIMgr_H
-#define TholdCIMgr_H 1
+#define TholdCIMgr_H
 
 // LOCAL
 #include "CalibItemMgr.h"
@@ -17,6 +17,12 @@ using namespace idents;
 using CalibData::ValSig;
 
 class CalCalibSvc;
+
+/** @class TholdCIMgr
+    @author Zachary Fewtrell
+    
+    \brief Manage GLAST Cal charge-injection measured threshold data.
+*/
 
 class TholdCIMgr : public CalibItemMgr {
  public:
@@ -39,10 +45,6 @@ class TholdCIMgr : public CalibItemMgr {
   StatusCode getPed(const CalXtalId &xtalId,
                     CalibData::ValSig &ped);
  private:
-  bool validateRangeBase(CalibData::RangeBase*);
-  
-  StatusCode fillRangeBases();
-  
   bool checkXtalId(const CalXtalId &xtalId) {
     if (!xtalId.validFace())
       throw invalid_argument("TholdCI calib_type requires valid face information."

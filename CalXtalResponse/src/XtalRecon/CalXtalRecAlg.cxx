@@ -205,7 +205,7 @@ StatusCode CalXtalRecAlg::retrieve()
                                           EventModel::Digi::CalDigiCol);
   if (!m_calDigiCol) {
     if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
-      // create msglog only when needed for performance
+      // create msglog only when needed (for performance)
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::VERBOSE << "No CalDigi data found"
              << endreq;
@@ -224,7 +224,7 @@ StatusCode CalXtalRecAlg::retrieve()
     sc = eventSvc()->registerObject( EventModel::CalRecon::Event, new DataObject);
     if( sc.isFailure() ) {
       // if cannot create the directory - write an error message
-      // create msglog only when needed for performance
+      // create msglog only when needed (for performance)
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::ERROR << "Could not create CalRecon directory"
              << endreq;

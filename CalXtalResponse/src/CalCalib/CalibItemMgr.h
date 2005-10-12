@@ -1,5 +1,5 @@
 #ifndef CalibItemMgr_H
-#define CalibItemMgr_H 1
+#define CalibItemMgr_H
 
 // LOCAL
 #include "IdealCalCalib.h"
@@ -26,8 +26,16 @@ using namespace idents;
 
 class CalCalibSvc;
 
-////////////////////////// GENERIC UTILITIES ///////////////////////////////////
+/** @class CalibItemMgr
+    @author Zach Fewtrell
+    \brief abstract class for handling a single Cal calibration data type.
 
+    provides the following services: 
+    - TDS calibration data retrieval & indexing
+    - validation period checking
+    - configurable 'flavor'
+    - support for optional spline functions & other local data store.
+*/
 class CalibItemMgr {
  public:
   CalibItemMgr(const string &calibTypePath,
@@ -39,8 +47,8 @@ class CalibItemMgr {
     m_splineXMin(nSplineTypes),
     m_splineXMax(nSplineTypes),
     m_isValid(false),
-    m_serNo(-1),
-    m_inUpdate(false) {}
+    m_serNo(-1)
+    {}
 
   virtual ~CalibItemMgr() {};
 
@@ -48,20 +56,18 @@ class CalibItemMgr {
                         const CalCalibSvc &ccs);
 
   /// data should be invalidated at beginning of each event.
+  /// just in case there is a change in validity period
   void invalidate() {m_isValid = false;} 
 
  protected:
-  /// check & update serno, delete & repopulate cache if necessary.
-  virtual StatusCode updateCache();          
+  /// check calib validity period, (re)build local store if necessary
+  virtual StatusCode updateLocalStore();          
+
   /// load ideal (fake) calibration vals for my calib_type if db is down
   virtual StatusCode loadIdealVals() = 0;
-  /// retireve pointers to full set of calib_data in TDS
-  virtual StatusCode fillRangeBases() = 0;
-  /// generate full set of splines (if applicable for calib_type)
-  virtual StatusCode genSplines() {return StatusCode::SUCCESS;}   
 
-  /// make sure that data for one rng is sane/complete
-  virtual bool validateRangeBase(CalibData::RangeBase *rngBase) = 0; 
+  /// generate full set of spline f()'s or other local data (if applicable for calib_type)
+  virtual StatusCode genLocalStore() {return StatusCode::SUCCESS;}   
 
   /// check that xtalId has optional range & face information (if applicable for calib_type)
   virtual bool checkXtalId(const CalXtalId &xtalId) = 0;
@@ -91,30 +97,28 @@ class CalibItemMgr {
   /// boolean if we're in ideal 'fake' mode
   bool m_idealMode;
 
-  /// pointers to each data member for my calib_type
-  CalVec<LATWideIndex, CalibData::RangeBase* > m_rngBases;
-  /// 2d vector of all splines used for my calib_type
-  vector<CalVec<LATWideIndex,TSpline3* > >     m_splineLists;
+  /// 2d vector of all (optional) splines in local data store
+  vector<CalVec<LATWideIndex, TSpline3* > >    m_splineLists;
+  /// min X val for each (optional) spline in local data store
   vector<CalVec<LATWideIndex, float> >         m_splineXMin;
+  /// max X val for each (optional) spline in local data store
   vector<CalVec<LATWideIndex, float> >         m_splineXMax;
 
   /** retrieve spec'd rangeBase object, update if necessary
    \return NULL if there is no data 
    */
-  CalibData::RangeBase *getRangeBase(const CalXtalId &xtalId);
+  CalibData::RangeBase *getRangeBase(const CalXtalId &xtalId)
+    {return m_calibBase->getRange(xtalId);}
   
  private:
-  /// wipe out all cached data.
-  virtual void flushCache();      
+  /// wipe out locally stored data (e.g. splines)
+  virtual void clearLocalStore();      
   /// calib flavor
   string            m_flavor;     
   /// validity state of CalibItemMgr data
   bool              m_isValid;    
   /// serial # for current calibration source
   int               m_serNo;      
-
-  /// set to true during update process to avoid recursive checking
-  bool              m_inUpdate;
 
   ///////////////////////// UTILS ///////////////////////////////////////////
   /**

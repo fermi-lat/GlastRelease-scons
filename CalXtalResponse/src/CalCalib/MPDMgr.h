@@ -1,5 +1,5 @@
 #ifndef MPDMgr_H
-#define MPDMgr_H 1
+#define MPDMgr_H
 
 // LOCAL
 #include "CalibItemMgr.h"
@@ -29,10 +29,6 @@ class MPDMgr : public CalibItemMgr {
                     ValSig &mpdSm);
 
  private:
-  bool validateRangeBase(CalibData::RangeBase*);
-
-  StatusCode fillRangeBases();
-
   bool checkXtalId(const CalXtalId&) {return true;}
 
   StatusCode loadIdealVals();

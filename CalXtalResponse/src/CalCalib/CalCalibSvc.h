@@ -23,6 +23,7 @@
 using namespace CalDefs;
 
 /** @class CalCalibSvc
+    @author Zachary Fewtrell
  * \brief Instatiates ICalCalibSvc interface, gets data from CalibDataSvc
  *
  * handles:
@@ -30,7 +31,7 @@ using namespace CalDefs;
  * - communication with Gleam lower level services
  * - checking of data validity period  
  * - extraction of cal-specific constants out of generic data objects
- * - creation/caching of spline function objects where needed.
+ * - creation/caching of local meta-data objects where needed (e.g. splines)
  *
  * \author  Zachary Fewtrell
  *
@@ -67,7 +68,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   /// get integral non-linearity vals for given xtal/face/rng
   StatusCode getIntNonlin(const CalXtalId &xtalId,
                           const vector< float > *&adcs,
-                          const vector< unsigned > *&dacs,
+                          const vector< float > *&dacs,
                           float &error) {
     return m_intNonlinMgr.getIntNonlin(xtalId, adcs, dacs, error);
   }
@@ -207,7 +208,8 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   BooleanProperty m_superVerbose;
 
   // GAUDI RESOURCES
-  IService         *m_calibDataSvc;     ///< pointer to CalibDataSvc
+  /// pointer to CalibDataSvc
+  IService         *m_calibDataSvc;     
 
   /// pointer to IDataProviderSvc interface of CalibDataSvc
   IDataProviderSvc *m_dataProviderSvc;  
