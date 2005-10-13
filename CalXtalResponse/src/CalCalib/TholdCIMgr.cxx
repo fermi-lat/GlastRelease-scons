@@ -1,10 +1,12 @@
-// LOCAL
+// LOCAL INCLUDES
 #include "TholdCIMgr.h"
 #include "CalCalibSvc.h"
 
-// GLAST
-// EXTLIB
-// STD
+// GLAST INCLUDES
+
+// EXTLIB INCLUDES
+
+// STD INCLUDES
 
 using namespace CalDefs;
 using namespace idents;
@@ -69,8 +71,13 @@ StatusCode TholdCIMgr::getULD(CalXtalId xtalId,
   sc = updateCalib();
   if (sc.isFailure()) return sc;
 
+  // need to create an xtalId object w/out range info...
+  CalXtalId faceXtalId(xtalId.getTower(),
+                       xtalId.getLayer(),
+                       xtalId.getColumn(),
+                       xtalId.getFace());
   CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI *)getRangeBase(xtalId);
+    = (CalibData::CalTholdCI *)getRangeBase(faceXtalId);
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
@@ -101,8 +108,13 @@ StatusCode TholdCIMgr::getPed(CalXtalId xtalId,
   if (sc.isFailure()) return sc;
 
 
+  // need to create an xtalId object w/out range info...
+  CalXtalId faceXtalId(xtalId.getTower(),
+                       xtalId.getLayer(),
+                       xtalId.getColumn(),
+                       xtalId.getFace());
   CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI *)getRangeBase(xtalId);
+    = (CalibData::CalTholdCI *)getRangeBase(faceXtalId);
   if (!tholdCI) return StatusCode::FAILURE;
 
   ped = *(tholdCI->getPed(xtalId.getRange()));

@@ -67,8 +67,13 @@ StatusCode TholdMuonMgr::getPed(CalXtalId xtalId,
   if (sc.isFailure()) return sc;
 
 
+  // need to create an xtalId object w/out range info...
+  CalXtalId faceXtalId(xtalId.getTower(),
+                       xtalId.getLayer(),
+                       xtalId.getColumn(),
+                       xtalId.getFace());
   CalibData::CalTholdMuon *tholdMuon 
-    = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
+    = (CalibData::CalTholdMuon *)getRangeBase(faceXtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
 
   ped = *(tholdMuon->getPed(xtalId.getRange()));
