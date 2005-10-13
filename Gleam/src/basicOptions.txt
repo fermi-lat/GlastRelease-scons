@@ -162,17 +162,17 @@ ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 // *** it should be done in TkrRecon ***
 TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 
+// -------------------------------------------
+//  Calibration sevices
+//
+#include "$CALIBSVCROOT/src/defaultOptions.txt"
+
 
 // -------------------------------------------
 //  Calorimeter services
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
-
-// -------------------------------------------
-//  Calibration sevices
-//
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
 
 
 // ----------------------------
