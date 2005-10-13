@@ -32,20 +32,21 @@ class PedMgr : public CalibItemMgr {
     {};
 
   /// get pedestal vals for given xtal/face/rng
-  StatusCode getPed(const CalXtalId &xtalId,
+  StatusCode getPed(CalXtalId xtalId,
                     float &avr,
                     float &sig,
                     float &cos);
  private:
-  bool checkXtalId(const CalXtalId &xtalId) {
+  bool checkXtalId(CalXtalId xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())
-      throw invalid_argument("Ped calib_type requires valid range & face info in CalXtalId");
+      throw invalid_argument("Ped calib_type requires valid range & face info in CalXtalId."
+                             " Programmer error");
     return true;
   }
 
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(const CalXtalId &xtalId) {return RngIdx(xtalId);}
+  LATWideIndex genIdx(CalXtalId xtalId) {return RngIdx(xtalId);}
 
   /// ped vals to use when calib db is down
   CalVec<RngNum,float> m_idealPeds;   

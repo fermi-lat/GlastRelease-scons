@@ -171,7 +171,7 @@ StatusCode XtalDigiTool::initialize() {
   return sc;
 }
 
-StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId, 
+StatusCode XtalDigiTool::calculate(CalXtalId xtalId, 
                                    const vector<const Event::McIntegratingHit*> &hitList,
                                    const Event::EventHeader &evtHdr,            
                                    Event::CalDigi &calDigi,     
@@ -402,7 +402,7 @@ StatusCode XtalDigiTool::calculate(const CalXtalId &xtalId,
 }
 
 
-StatusCode XtalDigiTool::retrieveCalib(const CalXtalId &xtalId) {
+StatusCode XtalDigiTool::retrieveCalib(CalXtalId xtalId) {
   StatusCode sc;
 
   //-- RETRIEVE MEV PER DAC--// 
@@ -445,7 +445,7 @@ StatusCode XtalDigiTool::retrieveCalib(const CalXtalId &xtalId) {
 }
 
 
-StatusCode XtalDigiTool::sumCsIHit(const CalXtalId &xtalId, const Event::McIntegratingHit &hit) {
+StatusCode XtalDigiTool::sumCsIHit(CalXtalId xtalId, const Event::McIntegratingHit &hit) {
   StatusCode sc;
 
   float ene = hit.totalEnergy();
@@ -515,7 +515,7 @@ float XtalDigiTool::hit2pos(const Event::McIntegratingHit &hit) {
   return (relpos-0.5)*m_CsILength;
 }
 
-StatusCode XtalDigiTool::sumDiodeHit(const CalXtalId &xtalId, const Event::McIntegratingHit &hit) {
+StatusCode XtalDigiTool::sumDiodeHit(CalXtalId xtalId, const Event::McIntegratingHit &hit) {
   StatusCode sc;
         
   float ene = hit.totalEnergy();
@@ -677,7 +677,7 @@ StatusCode XtalDigiTool::rangeSelect() {
 
 }
 
-StatusCode XtalDigiTool::fillDigi(const CalXtalId &xtalId, Event::CalDigi &calDigi) {
+StatusCode XtalDigiTool::fillDigi(CalXtalId xtalId, Event::CalDigi &calDigi) {
   //-- How many readouts ? --//
   int roLimit;
   short rangeMode = calDigi.getMode();

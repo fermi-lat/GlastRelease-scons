@@ -472,7 +472,7 @@ void XtalRecTool::pos2Point(float pos, Point &pXtal) {
 
 }
 
-StatusCode XtalRecTool::retrieveCalib(const CalXtalId &xtalId) {
+StatusCode XtalRecTool::retrieveCalib(CalXtalId xtalId) {
   StatusCode sc;
 
   //-- RETRIEVE MEV PER DAC--// 

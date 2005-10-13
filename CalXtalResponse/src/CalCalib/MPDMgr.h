@@ -24,16 +24,16 @@ class MPDMgr : public CalibItemMgr {
     CalibItemMgr(CalibData::CAL_MevPerDac) {};
 
   /// get MeVPerDac ratios for given xtal
-  StatusCode getMPD(const CalXtalId &xtalId,
+  StatusCode getMPD(CalXtalId xtalId,
                     ValSig &mpdLrg,
                     ValSig &mpdSm);
 
  private:
-  bool checkXtalId(const CalXtalId&) {return true;}
+  bool checkXtalId(CalXtalId);
 
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(const CalXtalId &xtalId) {return XtalIdx(xtalId);}
+  LATWideIndex genIdx(CalXtalId xtalId) {return XtalIdx(xtalId);}
 
   ValSig m_idealMPDLrg;
   ValSig m_idealMPDSm;

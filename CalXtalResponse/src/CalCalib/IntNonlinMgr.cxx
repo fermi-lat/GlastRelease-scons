@@ -31,7 +31,7 @@ IntNonlinMgr::IntNonlinMgr() :
 }
 
 /// get integral non-linearity vals for given xtal/face/rng
-StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
+StatusCode IntNonlinMgr::getIntNonlin(CalXtalId xtalId,
                                       const vector< float > *&adcs,
                                       const vector< float > *&dacs,
                                       float &error) {
@@ -73,10 +73,8 @@ StatusCode IntNonlinMgr::getIntNonlin(const CalXtalId &xtalId,
 }
 
 StatusCode IntNonlinMgr::genLocalStore() {
-  StatusCode sc;
   const vector<float> *adc;
   vector<float> *dac;
-
 
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
 

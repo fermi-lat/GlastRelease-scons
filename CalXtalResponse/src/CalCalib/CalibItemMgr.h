@@ -75,16 +75,16 @@ class CalibItemMgr {
   virtual StatusCode genLocalStore() {return StatusCode::SUCCESS;}   
 
   /// check that xtalId has optional range & face information (if applicable for calib_type)
-  virtual bool checkXtalId(const CalXtalId &xtalId) = 0;
+  virtual bool checkXtalId(CalXtalId xtalId) = 0;
 
   /// convert xtalId to appropriate LATWideIndex for current calib type
-  virtual LATWideIndex genIdx(const CalXtalId &xtalId) = 0;
+  virtual LATWideIndex genIdx(CalXtalId xtalId) = 0;
 
   /// generic spline evaluation f() works for any calib_type
-  StatusCode evalSpline(int calibType, const CalXtalId &xtalId, double x, double &y);
+  StatusCode evalSpline(int calibType, CalXtalId xtalId, double x, double &y);
 
   /// generate new spline from 2 STL vecs & insert into appropriate splineList
-  StatusCode genSpline(int calibType, const CalXtalId &xtalId, const string &name,
+  StatusCode genSpline(int calibType, CalXtalId xtalId, const string &name,
                        const vector<double> &x, const vector<double> &y);
 
   /// TDS path to calib data for my calib_type
@@ -112,7 +112,7 @@ class CalibItemMgr {
   /** retrieve spec'd rangeBase object, update if necessary
    \return NULL if there is no data 
    */
-  CalibData::RangeBase *getRangeBase(const CalXtalId &xtalId)
+  CalibData::RangeBase *getRangeBase(CalXtalId xtalId)
     {return m_calibBase->getRange(xtalId);}
   
  private:

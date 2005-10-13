@@ -32,24 +32,19 @@ class TholdMuonMgr : public CalibItemMgr {
     {};
 
   /// get threshold calibration constants as measured w/ muon calibration
-  StatusCode getTholds(const CalXtalId &xtalId,
+  StatusCode getTholds(CalXtalId xtalId,
                        CalibData::ValSig &FLE,
                        CalibData::ValSig &FHE);
 
   /// get pedestal calibration constants as measured during muon calibration threshold testing.
-  StatusCode getPed(const CalXtalId &xtalId,
+  StatusCode getPed(CalXtalId xtalId,
                     CalibData::ValSig &ped);
  private:
-  bool checkXtalId(const CalXtalId &xtalId) {
-    if (!xtalId.validFace())
-      throw invalid_argument("TholdMuon calib_type requires valid face info."
-                             " Programmer error");
-    return true;
-  }
+  bool checkXtalId(CalXtalId xtalId);
 
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(const CalXtalId &xtalId) {return FaceIdx(xtalId);}
+  LATWideIndex genIdx(CalXtalId xtalId) {return FaceIdx(xtalId);}
 
   ValSig m_idealFLE;
   ValSig m_idealFHE;

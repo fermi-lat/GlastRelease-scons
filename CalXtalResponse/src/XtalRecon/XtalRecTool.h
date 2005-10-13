@@ -60,7 +60,7 @@ virtual public IXtalRecTool
   void pos2Point(float pos, Point &pXtal);
 
   /// retrieve needed calibration constants for this xtal load into m_dat
-  StatusCode retrieveCalib(const CalXtalId &xtalId);
+  StatusCode retrieveCalib(CalXtalId xtalId);
 
 
   /// name of CalCalibSvc to use for calib constants.

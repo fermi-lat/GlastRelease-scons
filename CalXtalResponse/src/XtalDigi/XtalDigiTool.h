@@ -36,7 +36,7 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   virtual StatusCode finalize();
 
   /// calculate xtal Adc response for all rngs basedon collection of McHits in xtal & diode regions
-  StatusCode calculate(const CalXtalId &xtalId, 
+  StatusCode calculate(CalXtalId xtalId, 
                        const vector<const Event::McIntegratingHit*> &hitList,
                        const Event::EventHeader &evtHdr,            
                        Event::CalDigi &calDigi,     // output 
@@ -49,13 +49,13 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
                        );
  private:
   /// retrieve needed calibration constants for this xtal load into m_dat
-  StatusCode retrieveCalib(const CalXtalId &xtalId);
+  StatusCode retrieveCalib(CalXtalId xtalId);
 
   /// take CsI MC integrated hit & sum deposited energy to all xtal diodes
-  StatusCode XtalDigiTool::sumCsIHit(const CalXtalId &xtalId, const Event::McIntegratingHit &hit);
+  StatusCode XtalDigiTool::sumCsIHit(CalXtalId xtalId, const Event::McIntegratingHit &hit);
 
   /// sum direct diode deposit energy
-  StatusCode XtalDigiTool::sumDiodeHit(const CalXtalId &xtalId, const Event::McIntegratingHit &hit);
+  StatusCode XtalDigiTool::sumDiodeHit(CalXtalId xtalId, const Event::McIntegratingHit &hit);
   
   /// simulate FLE & FHE triggers
   StatusCode XtalDigiTool::simTriggers();
@@ -64,7 +64,7 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   StatusCode XtalDigiTool::rangeSelect();
 
   /// populate Digi TDS class
-  StatusCode XtalDigiTool::fillDigi(const CalXtalId &xtalId, Event::CalDigi &calDigi);
+  StatusCode XtalDigiTool::fillDigi(CalXtalId xtalId, Event::CalDigi &calDigi);
 
   /// convert mcHit to longitudinal mm from xtal center
   float XtalDigiTool::hit2pos(const Event::McIntegratingHit &hit);

@@ -32,29 +32,24 @@ class TholdCIMgr : public CalibItemMgr {
     m_idealPed(RngNum::N_VALS) {};
 
   /// get threshold calibration constants as measured w/ charge injection
-  StatusCode getTholds(const CalXtalId &xtalId,
+  StatusCode getTholds(CalXtalId xtalId,
                        CalibData::ValSig &FLE,
                        CalibData::ValSig &FHE,
                        CalibData::ValSig &LAC);
 
   /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
-  StatusCode getULD(const CalXtalId &xtalId,
+  StatusCode getULD(CalXtalId xtalId,
                     CalibData::ValSig &ULDThold);
 
   /// get pedestal calibration constants as measured during charge injection threshold testing.
-  StatusCode getPed(const CalXtalId &xtalId,
+  StatusCode getPed(CalXtalId xtalId,
                     CalibData::ValSig &ped);
  private:
-  bool checkXtalId(const CalXtalId &xtalId) {
-    if (!xtalId.validFace())
-      throw invalid_argument("TholdCI calib_type requires valid face information."
-                             " Programmer error");
-    return true;
-  }
+  bool checkXtalId(CalXtalId xtalId);
 
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(const CalXtalId &xtalId) {return FaceIdx(xtalId);}
+  LATWideIndex genIdx(CalXtalId xtalId) {return FaceIdx(xtalId);}
 
   ValSig m_idealFLE;
   ValSig m_idealFHE;

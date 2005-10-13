@@ -10,10 +10,16 @@ using namespace CalDefs;
 using namespace idents;
 
 /// get threshold calibration constants as measured w/ muon calibration
-StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
+StatusCode TholdMuonMgr::getTholds(CalXtalId xtalId,
                                    CalibData::ValSig &FLE,
                                    CalibData::ValSig &FHE) {
+  // generic xtalId check
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
+  
+  // getTholds() specific xtalId check
+  if (xtalId.validRange())
+    throw invalid_argument("TholdMuon::getTholds() cannot accept range info in CalXtalId."
+                           " Programmer error.");
 
   if (m_idealMode) {
     FLE = m_idealFLE;
@@ -28,7 +34,7 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
 
 
   CalibData::CalTholdMuon *tholdMuon 
-	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
+    = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
 
   //vals
@@ -40,9 +46,15 @@ StatusCode TholdMuonMgr::getTholds(const CalXtalId &xtalId,
 
 /** \brief get pedestal calibration constants as measured with muons
  */
-StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
+StatusCode TholdMuonMgr::getPed(CalXtalId xtalId,
                                 CalibData::ValSig &ped) {
+  // generic xtalId check
   if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
+
+  // getPed() specific xtalId check
+  if (!xtalId.validRange())
+    throw invalid_argument("ThodMuon::getPed() requires range info in CalXtalId."
+                          " Programmer error.");
 
   if (m_idealMode) {
     ped = m_idealPed[xtalId.getRange()];
@@ -56,7 +68,7 @@ StatusCode TholdMuonMgr::getPed(const CalXtalId &xtalId,
 
 
   CalibData::CalTholdMuon *tholdMuon 
-	  = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
+    = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
   if (!tholdMuon) return StatusCode::FAILURE;
 
   ped = *(tholdMuon->getPed(xtalId.getRange()));
@@ -91,3 +103,11 @@ StatusCode TholdMuonMgr::loadIdealVals() {
   return StatusCode::SUCCESS;
 }
 
+
+bool TholdMuonMgr::checkXtalId(CalXtalId xtalId) {
+  // all queries require face info (leave range optional)
+  if (!xtalId.validFace())
+    throw invalid_argument("TholdMuon calib_type requires valid face info."
+                           " Programmer error");
+  return true;
+}

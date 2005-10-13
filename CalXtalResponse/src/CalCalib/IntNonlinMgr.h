@@ -28,19 +28,19 @@ class IntNonlinMgr : public CalibItemMgr {
   IntNonlinMgr();
 
   /// get integral non-linearity vals for given xtal/face/rng
-  StatusCode getIntNonlin(const CalXtalId &xtalId,
+  StatusCode getIntNonlin(CalXtalId xtalId,
                           const vector< float > *&adcs,
                           const vector< float > *&dacs,
                           float &error);
 
   /// convert adc -> dac for given channel
-  StatusCode evalDAC(const CalXtalId &xtalId, double adc, double &dac) {
+  StatusCode evalDAC(CalXtalId xtalId, double adc, double &dac) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
     return evalSpline(INL_SPLINE, xtalId, adc, dac);
   }
   
   /// convert dac -> adc for given channel
-  StatusCode evalADC(const CalXtalId &xtalId, double dac, double &adc) {
+  StatusCode evalADC(CalXtalId xtalId, double dac, double &adc) {
     if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
     return evalSpline(INV_INL_SPLINE, xtalId, dac, adc);
   }
@@ -51,10 +51,10 @@ class IntNonlinMgr : public CalibItemMgr {
   StatusCode genLocalStore();
 
   /// generate appropriate index for this calib_type
-  LATWideIndex genIdx(const CalXtalId &xtalId) {return RngIdx(xtalId);}
+  LATWideIndex genIdx(CalXtalId xtalId) {return RngIdx(xtalId);}
 
   /// check that CalXtalId has all required fields populated
-  bool checkXtalId(const CalXtalId &xtalId) {
+  bool checkXtalId(CalXtalId xtalId) {
     if (!xtalId.validRange() || !xtalId.validFace())
       throw invalid_argument("IntNonlin calib_type requires valid range "
                              "& face info in CalXtalId");

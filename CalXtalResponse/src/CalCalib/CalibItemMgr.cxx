@@ -107,7 +107,7 @@ StatusCode CalibItemMgr::updateCalib() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::evalSpline(int calibType, const CalXtalId &xtalId, 
+StatusCode CalibItemMgr::evalSpline(int calibType, CalXtalId xtalId, 
                                     double x, double &y) {
   StatusCode sc;
 
@@ -151,7 +151,7 @@ StatusCode CalibItemMgr::evalSpline(int calibType, const CalXtalId &xtalId,
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::genSpline(int calibType, const CalXtalId &xtalId, const string &name, 
+StatusCode CalibItemMgr::genSpline(int calibType, CalXtalId xtalId, const string &name, 
                                    const vector<double> &x, const vector<double> &y) {
 
   LATWideIndex idx = genIdx(xtalId);

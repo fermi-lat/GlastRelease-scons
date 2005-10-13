@@ -29,7 +29,7 @@ AsymMgr::AsymMgr() :
 }
 
 /// get Asymmetry calibration information for one xtal
-StatusCode AsymMgr::getAsym(const CalXtalId &xtalId,
+StatusCode AsymMgr::getAsym(CalXtalId xtalId,
                             const vector<CalibData::ValSig> *&asymLrg,
                             const vector<CalibData::ValSig> *&asymSm,
                             const vector<CalibData::ValSig> *&asymNSPB,
@@ -244,4 +244,10 @@ StatusCode AsymMgr::loadIdealVals() {
   m_idealXVals[1] = csiLength/2.0;
   
   return StatusCode::SUCCESS;
+}
+
+bool AsymMgr::checkXtalId(CalXtalId xtalId) {
+  if (xtalId.validRange() || xtalId.validFace())
+    throw invalid_argument("Asym calib_type cannot accept range or face info in CalXtalId");
+  return true;
 }

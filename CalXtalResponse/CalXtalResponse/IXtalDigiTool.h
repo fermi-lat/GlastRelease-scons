@@ -43,7 +43,7 @@ class IXtalDigiTool : virtual public IAlgTool {
       \param lacP output boolean for log accept on Positive xtal face
       \param lacN output boolean for log accept on Negative xtal face
   */
-  virtual StatusCode calculate(const CalXtalId &xtalId, 
+  virtual StatusCode calculate(CalXtalId xtalId, 
                                const vector<const Event::McIntegratingHit*> &hitList,
                                const Event::EventHeader &evtHdr,            
                                Event::CalDigi &calDigi,     // output 

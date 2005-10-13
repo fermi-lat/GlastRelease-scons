@@ -38,7 +38,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param mpdLrg output MeVPerDac for large diode on both faces
       \param mpdSm output MeVPerDac for small diode on both faces
   */
-  virtual StatusCode getMeVPerDac(const CalXtalId &xtalId,
+  virtual StatusCode getMeVPerDac(CalXtalId xtalId,
                                   CalibData::ValSig &mpdLrg,
                                   CalibData::ValSig &mpdSm) = 0;
 
@@ -48,7 +48,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param dacs output const ref to vector of associated DAC vals (x).
       \param error error vals on ADC
   */
-  virtual StatusCode getIntNonlin(const CalXtalId &xtalId,
+  virtual StatusCode getIntNonlin(CalXtalId xtalId,
                                   const vector< float > *&adcs,
                                   const vector< float > *&dacs,
                                   float &error) = 0;
@@ -58,7 +58,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param avr output ped (adc units)
       \param sig output sigma on avr
   */
-  virtual StatusCode getPed(const CalXtalId &xtalId,
+  virtual StatusCode getPed(CalXtalId xtalId,
                             float &avr,
                             float &sig,
                             float &cos) = 0;
@@ -71,7 +71,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param PlrgMsmall asymmetry array over position for small diode on Plus face and lrg diode on Minus face
       \param xVals corresponding xvals for all of the accompanying asymmetry arrays
   */
-  virtual StatusCode getAsym(const CalXtalId &xtalId,
+  virtual StatusCode getAsym(CalXtalId xtalId,
                              const vector<CalibData::ValSig> *&asymLrg,
                              const vector<CalibData::ValSig> *&asymSm,
                              const vector<CalibData::ValSig> *&asymNSPB,
@@ -84,7 +84,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param FHE Fast High Energy shaper threshold (Dac units)
       \param LAC Log accept threshold (Adc units)
   */
-  virtual StatusCode getTholdCI(const CalXtalId &xtalId,
+  virtual StatusCode getTholdCI(CalXtalId xtalId,
                                 CalibData::ValSig &FLE,
                                 CalibData::ValSig &FHE,
                                 CalibData::ValSig &LAC
@@ -94,14 +94,14 @@ class ICalCalibSvc : virtual public IInterface {
       \param CalXtalId specify xtal log
       \param output ULD threshold.
   */
-  virtual StatusCode getULDCI(const CalXtalId &xtalId,
+  virtual StatusCode getULDCI(CalXtalId xtalId,
                               CalibData::ValSig &ULDThold) = 0;
 
   /** \brief get pedestal calibration constants as measured during charge injection threshold testing.
       \param CalXtalId specify xtal log
       \param ped output ped val (Adc units)
   */
-  virtual StatusCode getPedCI(const CalXtalId &xtalId,
+  virtual StatusCode getPedCI(CalXtalId xtalId,
                               CalibData::ValSig &ped) = 0;
 
   /** \brief get threshold calibration constants as measured w/ muon calibration
@@ -109,7 +109,7 @@ class ICalCalibSvc : virtual public IInterface {
       \param FLE Fast Low Energy shaper threshold (Dac units)
       \param FHE Fast High Energy shaper threshold (Dac units)
   */
-  virtual StatusCode getTholdMuon(const CalXtalId &xtalId,
+  virtual StatusCode getTholdMuon(CalXtalId xtalId,
                                   CalibData::ValSig &FLE,
                                   CalibData::ValSig &FHE
                                   ) = 0;
@@ -118,19 +118,19 @@ class ICalCalibSvc : virtual public IInterface {
       \param CalXtalId specify xtal log
       \param ped output ped val (Adc units)
   */
-  virtual StatusCode getPedMuon(const CalXtalId &xtalId,
+  virtual StatusCode getPedMuon(CalXtalId xtalId,
                                 CalibData::ValSig &ped) = 0;
 
-  virtual StatusCode evalDAC      (const CalXtalId &xtalId, double adc,   double &dac)  = 0;
-  virtual StatusCode evalADC      (const CalXtalId &xtalId, double dac,   double &adc)  = 0;
-  virtual StatusCode evalAsymLrg  (const CalXtalId &xtalId, double pos,   double &asym) = 0;
-  virtual StatusCode evalPosLrg   (const CalXtalId &xtalId, double asym,  double &pos)  = 0;
-  virtual StatusCode evalAsymSm   (const CalXtalId &xtalId, double pos,   double &asym) = 0;
-  virtual StatusCode evalPosSm    (const CalXtalId &xtalId, double asym,  double &pos)  = 0;
-  virtual StatusCode evalAsymNSPB (const CalXtalId &xtalId, double pos,   double &asym) = 0;
-  virtual StatusCode evalPosNSPB  (const CalXtalId &xtalId, double asym,  double &pos)  = 0;
-  virtual StatusCode evalAsymPSNB (const CalXtalId &xtalId, double pos,   double &asym) = 0;
-  virtual StatusCode evalPosPSNB  (const CalXtalId &xtalId, double asym,  double &pos)  = 0;
+  virtual StatusCode evalDAC      (CalXtalId xtalId, double adc,   double &dac)  = 0;
+  virtual StatusCode evalADC      (CalXtalId xtalId, double dac,   double &adc)  = 0;
+  virtual StatusCode evalAsymLrg  (CalXtalId xtalId, double pos,   double &asym) = 0;
+  virtual StatusCode evalPosLrg   (CalXtalId xtalId, double asym,  double &pos)  = 0;
+  virtual StatusCode evalAsymSm   (CalXtalId xtalId, double pos,   double &asym) = 0;
+  virtual StatusCode evalPosSm    (CalXtalId xtalId, double asym,  double &pos)  = 0;
+  virtual StatusCode evalAsymNSPB (CalXtalId xtalId, double pos,   double &asym) = 0;
+  virtual StatusCode evalPosNSPB  (CalXtalId xtalId, double asym,  double &pos)  = 0;
+  virtual StatusCode evalAsymPSNB (CalXtalId xtalId, double pos,   double &asym) = 0;
+  virtual StatusCode evalPosPSNB  (CalXtalId xtalId, double asym,  double &pos)  = 0;
 
 };
 

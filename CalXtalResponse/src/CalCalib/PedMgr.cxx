@@ -10,7 +10,7 @@ using namespace CalDefs;
 using namespace idents;
 
 /// get pedestal vals for given xtal/face/rng
-StatusCode PedMgr::getPed(const CalXtalId &xtalId,
+StatusCode PedMgr::getPed(CalXtalId xtalId,
                           float &avr,
                           float &sig,
                           float &cos) {

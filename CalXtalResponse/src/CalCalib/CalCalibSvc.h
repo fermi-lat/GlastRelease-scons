@@ -59,14 +59,14 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   const IID&  CalCalibSvc::type () const {return IID_ICalCalibSvc;}
 
   /// get MeVPerDac ratios for given xtal
-  StatusCode getMeVPerDac(const CalXtalId &xtalId,
+  StatusCode getMeVPerDac(CalXtalId xtalId,
                           CalibData::ValSig &asymLrg,
                           CalibData::ValSig &asymSm) {
     return m_mpdMgr.getMPD(xtalId, asymLrg, asymSm);
   }
 
   /// get integral non-linearity vals for given xtal/face/rng
-  StatusCode getIntNonlin(const CalXtalId &xtalId,
+  StatusCode getIntNonlin(CalXtalId xtalId,
                           const vector< float > *&adcs,
                           const vector< float > *&dacs,
                           float &error) {
@@ -74,7 +74,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   }
 
   /// get pedestal vals for given xtal/face/rng
-  StatusCode getPed(const CalXtalId &xtalId,
+  StatusCode getPed(CalXtalId xtalId,
                     float &avr,
                     float &sig,
                     float &cos) {
@@ -82,7 +82,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   }
 
   /// get Asymmetry calibration information for one xtal
-  StatusCode getAsym(const CalXtalId &xtalId,
+  StatusCode getAsym(CalXtalId xtalId,
                      const vector<CalibData::ValSig> *&asymLrg,
                      const vector<CalibData::ValSig> *&asymSm,
                      const vector<CalibData::ValSig> *&AsymNSPB,
@@ -92,7 +92,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   }
 
   /// get threshold calibration constants as measured w/ charnge injection
-  StatusCode getTholdCI(const CalXtalId &xtalId,
+  StatusCode getTholdCI(CalXtalId xtalId,
                         CalibData::ValSig &FLE,
                         CalibData::ValSig &FHE,
                         CalibData::ValSig &LAC
@@ -101,19 +101,19 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   }
 
   /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
-  StatusCode getULDCI(const CalXtalId &xtalId,
+  StatusCode getULDCI(CalXtalId xtalId,
                       CalibData::ValSig &ULDThold) {
     return m_tholdCIMgr.getULD(xtalId, ULDThold);
   }
 
   /// get pedestal calibration constants as measured during charge injection threshold testing.
-  StatusCode getPedCI(const CalXtalId &xtalId,
+  StatusCode getPedCI(CalXtalId xtalId,
                       CalibData::ValSig &ped) {
     return m_tholdCIMgr.getPed(xtalId, ped);
   }
 
   /// get threshold calibration constants as measured w/ muon calibration
-  StatusCode getTholdMuon(const CalXtalId &xtalId,
+  StatusCode getTholdMuon(CalXtalId xtalId,
                           CalibData::ValSig &FLE,
                           CalibData::ValSig &FHE
                           ) {
@@ -121,48 +121,48 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   }
 
   /// get pedestal calibration constants as measured during muon calibration threshold testing.
-  StatusCode getPedMuon(const CalXtalId &xtalId,
+  StatusCode getPedMuon(CalXtalId xtalId,
                         CalibData::ValSig &ped) {
     return m_tholdMuonMgr.getPed(xtalId, ped);
   }
 
-  StatusCode evalDAC(const CalXtalId &xtalId, double adc, double &dac) {
+  StatusCode evalDAC(CalXtalId xtalId, double adc, double &dac) {
     return m_intNonlinMgr.evalDAC(xtalId, adc, dac);
   }
   
-  StatusCode evalADC(const CalXtalId &xtalId, double dac, double &adc) {
+  StatusCode evalADC(CalXtalId xtalId, double dac, double &adc) {
     return m_intNonlinMgr.evalADC(xtalId, dac, adc);
   }
   
-  StatusCode evalAsymLrg(const CalXtalId &xtalId, double pos, double &asymLrg) {
+  StatusCode evalAsymLrg(CalXtalId xtalId, double pos, double &asymLrg) {
     return m_asymMgr.evalAsymLrg(xtalId, pos, asymLrg);
   }
   
-  StatusCode evalPosLrg(const CalXtalId &xtalId, double asymLrg, double &pos) {
+  StatusCode evalPosLrg(CalXtalId xtalId, double asymLrg, double &pos) {
     return m_asymMgr.evalPosLrg(xtalId, asymLrg, pos);
   }
   
-  StatusCode evalAsymSm(const CalXtalId &xtalId, double pos, double &asymSm) {
+  StatusCode evalAsymSm(CalXtalId xtalId, double pos, double &asymSm) {
     return m_asymMgr.evalAsymSm(xtalId, pos, asymSm);
   }
   
-  StatusCode evalPosSm(const CalXtalId &xtalId, double asymSm, double &pos) {
+  StatusCode evalPosSm(CalXtalId xtalId, double asymSm, double &pos) {
     return m_asymMgr.evalPosSm(xtalId, asymSm, pos);
   }
   
-  StatusCode evalAsymNSPB(const CalXtalId &xtalId, double pos, double &asymNSPB) {
+  StatusCode evalAsymNSPB(CalXtalId xtalId, double pos, double &asymNSPB) {
     return m_asymMgr.evalAsymNSPB(xtalId, pos, asymNSPB);
   }
   
-  StatusCode evalPosNSPB(const CalXtalId &xtalId, double asymNSPB, double &pos) {
+  StatusCode evalPosNSPB(CalXtalId xtalId, double asymNSPB, double &pos) {
     return m_asymMgr.evalPosNSPB(xtalId, asymNSPB, pos);
   }
   
-  StatusCode evalAsymPSNB(const CalXtalId &xtalId, double pos, double &asymPSNB) {
+  StatusCode evalAsymPSNB(CalXtalId xtalId, double pos, double &asymPSNB) {
     return m_asymMgr.evalAsymPSNB(xtalId, pos, asymPSNB);
   }
   
-  StatusCode evalPosPSNB(const CalXtalId &xtalId, double asymPSNB, double &pos) {
+  StatusCode evalPosPSNB(CalXtalId xtalId, double asymPSNB, double &pos) {
     return m_asymMgr.evalPosPSNB(xtalId, asymPSNB, pos);
   }
 
