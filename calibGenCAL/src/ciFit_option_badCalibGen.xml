@@ -20,7 +20,7 @@
     NOTE: All environment variables will be expanded with facilities::Util::expandEnvVar()
     <item name="OUTPUT_FOLDER" 		value="./"> Folder for auto-named output files </item>
     
-    <item name="DTD_FILE" 		value="$(CALIBUTILROOT)/xml/calCalib_v2r1.dtd"> description file for output .xml file </item>
+    <item name="DTD_FILE" 		value="$(CALIBUTILROOT)/xml/calCalib_v2r3.dtd"> description file for output .xml file </item>
     <item name="XMLPATH" 		value=""> Optional path for output .xml file (default "" autogenerates filename from input filename)</item>
     <item name="TXTPATH" 		value=""> Optional path for output .txt file (default "" autogenerates filename from input filename)</item>
     <item name="HISTPATH"               value=""> Optional path for output .root histograms (default "" autogenerates filename from input filename)</item>
