@@ -352,7 +352,7 @@ void CfData::WriteSplinesXML(const string &filename, const string &dtdPath) {
             xmlFile << "\"" << endl;
 
             // DAC VALS //
-            xmlFile << "             sdac=\"";
+            xmlFile << "             sdacs=\"";
             for (unsigned i = 0; i < m_splineDAC[rngIdx].size(); i++)
               xmlFile << fixed << m_splineDAC[rngIdx][i] << " ";
             xmlFile << "\"" << endl;
