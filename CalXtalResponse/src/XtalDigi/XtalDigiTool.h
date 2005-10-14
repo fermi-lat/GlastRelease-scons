@@ -105,9 +105,10 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   int m_maxAdc;  
 
   
-  /** \brief filename of XtalDigiToolTuple.  No file created if set to default=""         
-   */
+  /// filename of XtalDigiToolTuple.  No file created if set to default=""
   StringProperty m_tupleFilename;
+  /// If true, only output tuple row if LAC=true (saves much disk space, default = true)
+  BooleanProperty m_tupleLACOnly;
   /// pointer to XtalDigiToolTuple (TTree actually).  tuple is ignored if pointer is NULL
   TTree *m_tuple;
   /// pointer to XtalDigiToolTuple file.

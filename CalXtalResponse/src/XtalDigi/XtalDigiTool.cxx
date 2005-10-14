@@ -71,10 +71,12 @@ XtalDigiTool::XtalDigiTool( const string& type,
 {
   declareInterface<IXtalDigiTool>(this);
 
-  declareProperty("CalCalibSvc",        m_calCalibSvcName         = "CalCalibSvc");
-  declareProperty("NoRandomNoise",      m_noRandNoise             = false);
-  declareProperty("tupleFilename",          m_tupleFilename               = "");
+  declareProperty("CalCalibSvc",        m_calCalibSvcName    = "CalCalibSvc");
+  declareProperty("NoRandomNoise",      m_noRandNoise        = false);
+  declareProperty("tupleFilename",      m_tupleFilename      = "");
   declareProperty("AllowNoiseOnlyTrig", m_allowNoiseOnlyTrig = true);
+  declareProperty("tupleLACOnly",       m_tupleLACOnly       = true);
+  
 }
 
 StatusCode XtalDigiTool::initialize() {
@@ -367,18 +369,25 @@ StatusCode XtalDigiTool::calculate(CalXtalId xtalId,
   //-- STEP 9: Populate XtalDigiTuple vars --//
   /////////////////////////////////////////////
   
+  // following steps only needed if tuple output is selected
   if (m_tuple) {
-    m_dat.RunID                   = evtHdr.run();
-    m_dat.EventID                   = evtHdr.event();
-    m_dat.success                = true;
 
-    // calculate ene weighted pos
-    if (m_dat.sumEneCsI) {// no divide-by-zero
-      m_dat.csiWeightedPos /= m_dat.sumEneCsI;
-    }
+    // if lac_only, then only continue if one of 2 lac flags is high
+    if ((m_tupleLACOnly && (m_dat.lac[0] || m_dat.lac[1])) ||
+        !m_tupleLACOnly) {
+         
+      m_dat.RunID   = evtHdr.run();
+      m_dat.EventID = evtHdr.event();
+      m_dat.success = true;
+
+      // calculate ene weighted pos
+      if (m_dat.sumEneCsI) {// no divide-by-zero
+        m_dat.csiWeightedPos /= m_dat.sumEneCsI;
+      }
     
-    // fill
-    m_tuple->Fill();
+      // fill
+      m_tuple->Fill();
+    }
   }
 
   
