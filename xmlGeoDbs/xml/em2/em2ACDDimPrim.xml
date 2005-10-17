@@ -107,6 +107,29 @@ dimension of side tiles in columns 1,2 and 3.  From
 <prim name="em2ACDSideTile_x" value="-306.324">EM2 side ACD tile absolute x</prim>
 <prim name="em2ACDSideTile_y" value="0.0">EM2 side ACD tile absolute y</prim>
 <prim name="em2ACDSideTile_z" value="196.30">EM2 side ACD tile absolute z</prim>
+
+
+<prim name="ACDTileScale" value = "1.0" uType="none">For em2
+don't want to shrink tiles.</prim>
+
+<!-- Not used for em2, but needed to make ACDDerived happy -->
+<prim name="ACDHoleRad" value="1.59">Radius of hole in tile.
+Added July 2005 </prim>
+<prim name="ACDScrewRad" value="1.4">Radius of screw in tile.
+Added July 2005</prim>
+<prim name="ACDScrewLen" value="25.4">Length of screw in tile.
+Added July 2005</prim>
+<prim name="ACDScrewFromEdge" value="50.0">
+   Distance of (most) screws from edge of tile
+</prim>
+
+<prim name="ACDScrewCenterDiff" value="50.0">
+Distance between centers of screws in a screw square (in bottom side
+tiles)
+</prim>
+
+
+
 <!-- End EM2 ACD -->
 
 
@@ -115,6 +138,7 @@ dimension of side tiles in columns 1,2 and 3.  From
  dimension of side tiles neither in the middle nor central;
   i.e., tiles in columns 1 or 3.  Revised July '03 to use value
 from 3-d model 6-23-03.</prim>
+
 
 
 <prim name="sideTileTransCentral" value="332.0">Transverse 
