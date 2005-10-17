@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r25p2 17-Oct-2005  jrb Add some technically required but unused constants
+                            to em2ACDDimPrim.xml
    v1r25p1 29-Sep-2005  jrb Add alternate latIntegration geometry with 
                             unshrunk tiles
    v1r25   14-Sep-2005  jrb No more screws.  Tiles are shrunken.
