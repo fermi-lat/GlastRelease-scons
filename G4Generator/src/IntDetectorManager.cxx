@@ -126,6 +126,11 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
   // fill the energy and position    
   hit->addEnergyItem(edep, p, (prePos+postPos)/2);
 
+  // Fill the ID array?
+  int particlePDGId = aStep->GetTrack()->GetDefinition()->GetPDGEncoding();
+  std::pair<Event::McParticle::StdHepId, double> idEnePair(particlePDGId,edep);
+  hit->itemizedEnergyId().push_back(idEnePair);
+
   return true;
 }
 
