@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r25p3 17-Oct-2005  jrb Only shrink bottom row of side tiles. In real 
+                            instrument, other shrinkage would be covered by
+                            shingling.
    v1r25p2 17-Oct-2005  jrb Add some technically required but unused constants
                             to em2ACDDimPrim.xml
    v1r25p1 29-Sep-2005  jrb Add alternate latIntegration geometry with 
