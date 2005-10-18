@@ -19,7 +19,9 @@
      those in 1,2,3.
  -->
 <!-- Scale tile dimensions for operating temperature. July 20, 2005 -->
-
+<!-- But *don't* scale Z dimension of side tiles except for bottom row.  
+     Shrinkage of other tiles makes no difference in real instrument
+     because of shingling.                   Oct 17, 2005  -->
     <!-- e.g. row 0, col 0 -->
     <box name="topTileRedgeCedge"
          XREF="topTileXEdge_lOp"
@@ -623,14 +625,14 @@
     <box name="sideTileR0EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight0Op"
+         ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
     <box name="sideTileR0Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight0Op"
+         ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -640,7 +642,7 @@
     <box name="sideTileR0EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight0Op"
+         ZREF="sideTileHeight0"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -651,7 +653,7 @@
     <box name="sideTileR1EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight1Op"
+         ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -661,7 +663,7 @@
     <box name="sideTileR1Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight1Op"
+         ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -671,7 +673,7 @@
     <box name="sideTileR1EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight1Op"
+         ZREF="sideTileHeight1"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -681,7 +683,7 @@
     <box name="sideTileR2EdgeLesser" 
          XREF="sideTileTransLesserOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight2Op"
+         ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -690,7 +692,7 @@
     <box name="sideTileR2Mid" 
          XREF="sideTileTransMidOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight2Op"
+         ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
@@ -699,7 +701,7 @@
     <box name="sideTileR2EdgeGreater" 
          XREF="sideTileTransGreaterOp"
          YREF="tileThicknessOp"
-         ZREF="sideTileHeight2Op"
+         ZREF="sideTileHeight2"
          materialREF="tileMat"
          sensitive="posHit" 
          detectorTypeREF="eDTypeACDTile"/>
