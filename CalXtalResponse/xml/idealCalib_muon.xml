@@ -20,6 +20,8 @@ LEX1  0.27    3850    958.5            210      0.6, 0.162
 HEX8  0.17    3550    569.5            510      6.0, 1.02                                  176,30
 HEX1  1.53    3850    5890             210      0.6, 0.92                 
 
+
+
 it incoperates the following improvements over the prievous version.
 
 - ULD values for all ranges and HEX1 saturation level are set to very close to 4095.  The previous values were lower in an effort to avoid problems caused by channels w/ higher pedestals which is not an issue in ideal mode
@@ -39,17 +41,19 @@ it incoperates the following improvements over the prievous version.
   </section>
 
   <section name = "ASYMMETRY"> 
-	<item name  = "LARGE_NEG" value = "-0.33"> POS value for Large Diode asymetry spline </item>
-	<item name  = "LARGE_POS" value = "0.33">  NEG value for Large Diode asymetry spline </item>
+	<item name  = "LARGE_NEG" value = "-0.3"> POS value for Large Diode asymetry spline </item>
+	<item name  = "LARGE_POS" value = "0.3">  NEG value for Large Diode asymetry spline </item>
  	
-	<item name  = "SMALL_NEG" value = "-0.31"> POS value for Small Diode asymetry spline </item>
-	<item name  = "SMALL_POS" value = "0.31">  NEG value for Small Diode asymetry spline </item>
+	<item name  = "SMALL_NEG" value = "-0.3"> POS value for Small Diode asymetry spline </item>
+	<item name  = "SMALL_POS" value = "0.3">  NEG value for Small Diode asymetry spline </item>
 	
-	<item name  = "PSNB_NEG"  value = "-2.0"> POS value for PSNB asymetry spline        </item>
-	<item name  = "PSNB_POS"  value = "-1.4"> NEG value for PSNB asymetry spline        </item>
+
+        <!-- for mixed diode asym, apply difference of ln(mpdLrg/mpdSm) = ln(2.0/0.36) = 1.7148 to same diode asym (above) -->
+       	<item name  = "PSNB_NEG"  value = "-2.0148"> POS value for PSNB asymetry spline        </item>
+	<item name  = "PSNB_POS"  value = "-1.4148"> NEG value for PSNB asymetry spline        </item>
 	
-	<item name  = "NSPB_NEG"  value = "1.4">  POS value for NSPB asymetry spline        </item>
-	<item name  = "NSPB_POS"  value = "2.0">  NEG value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_NEG"  value = "1.4148">  POS value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_POS"  value = "2.0148">  NEG value for NSPB asymetry spline        </item>
 	
 	<item name  = "SIG_PCT"   value = "0.003"> sigma/val for all vals in asymetry group </item>
   </section>
@@ -64,21 +68,21 @@ it incoperates the following improvements over the prievous version.
   <section name = "THOLD_CI">
     <item name = "FLE"     value = "333">   FLE threshold </item>
     <item name = "FHE"     value = "176">   FHE threshold </item>
-    <item name = "LAC"     value = "43">  LAC threshold </item>
-    <item name = "ULD"     value = "3550, 3850, 3550, 3850"> 1 ULD threshold per ADC range</item>
-    <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_CI group    </item>
-    <item name = "PEDS"    value = "510, 210, 510, 210"> 1 pedestal value per ADC range       </item>
+    <item name = "LAC"     value = "43">  LAC threshold   </item>
+    <item name = "ULD"     value = "3550, 3850, 3550, 3850"> 1 ULD threshold per ADC range </item>
+    <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_CI group        </item>
+    <item name = "PEDS"    value = "510, 210, 510, 210"> 1 pedestal value per ADC range    </item>
   </section>
   
   <section name = "THOLD_MUON">
     <item name = "FLE"     value = "0">   FLE threshold </item>
     <item name = "FHE"     value = "0">   FHE threshold </item>
-    <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_MUON group </item>
-    <item name = "PEDS"    value = "510, 210, 510, 210"> 1 pedestal value per ADC range      </item>
+    <item name = "SIG_PCT" value = "0.01"> sigma/val for all vals in THOLD_MUON group     </item>
+    <item name = "PEDS"    value = "510, 210, 510, 210"> 1 pedestal value per ADC range   </item>
   </section>
   
   <section name = "INT_NONLIN">
-    <item name = "ADC_PER_DAC" value = "11.2, 1.3, 11.5, 1.3"> ADC/DAC for each ADC range            </item>
+    <item name = "ADC_PER_DAC" value = "11.2, 1.3, 11.5, 1.3"> ADC/DAC for each ADC range </item>
     <item name = "SIG_PCT"     value = "0.01"> sigma/val for all vals in INT_NONLIN group </item>
   </section>
     

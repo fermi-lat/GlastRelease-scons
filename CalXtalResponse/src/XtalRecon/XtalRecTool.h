@@ -52,7 +52,14 @@ virtual public IXtalRecTool
                        );
 
  private:
-  StatusCode largeDAC2Small(FaceNum face, float largeDAC, float &smallDAC);
+  /** \brief convert large diode DAC scale to small diode DAC scale for given xtal face & pos 
+      
+  \param face which xtal face to process (uses current xtal from m_dat struct)
+  \param pos longitudinal position along xtal (mm)
+  \param largeDAC input large diode DAC value
+  \param smallDAC output small diode DAC value
+   */
+  StatusCode largeDAC2Small(FaceNum face, float pos, float largeDAC, float &smallDAC);
 
   /** \brief convert scalar position in mm from xtal center (longitudinal
       to 3d vector position

@@ -310,9 +310,9 @@ StatusCode XtalRecTool::calculate(const Event::EventHeader &evtHdr,
   // if diodes on each face differ convert to small on both faces
   if (m_dat.diode[POS_FACE] != m_dat.diode[NEG_FACE]) {
     if (m_dat.diode[POS_FACE] == LRG_DIODE)
-      sc = largeDAC2Small(POS_FACE,mpdDac[POS_FACE],mpdDac[POS_FACE]);
+      sc = largeDAC2Small(POS_FACE, m_dat.pos, mpdDac[POS_FACE], mpdDac[POS_FACE]);
     else // m_dat.diode[NEG_FACE] == LRG_DIODE
-      sc = largeDAC2Small(NEG_FACE,mpdDac[NEG_FACE],mpdDac[NEG_FACE]);
+      sc = largeDAC2Small(NEG_FACE, m_dat.pos, mpdDac[NEG_FACE], mpdDac[NEG_FACE]);
     
     if (sc.isFailure()) return sc;
     
@@ -376,8 +376,15 @@ StatusCode XtalRecTool::calculate(const Event::EventHeader &evtHdr,
   return StatusCode::SUCCESS;
 }
 
-StatusCode XtalRecTool::largeDAC2Small(FaceNum face, float largeDAC, float &smallDAC) {
+StatusCode XtalRecTool::largeDAC2Small(FaceNum face, float pos, float largeDAC, float &smallDAC) {
   StatusCode sc;
+
+  // small diode asymmetry is used for both if() cases
+  double asymSm;
+  sc = m_calCalibSvc->evalAsymSm(CalXtalId(m_dat.twr,m_dat.lyr,m_dat.col), 
+                                 pos, asymSm);
+  if (sc.isFailure()) return sc;
+
 
   if (face == POS_FACE) {
     // STRATEGY:
@@ -390,10 +397,10 @@ StatusCode XtalRecTool::largeDAC2Small(FaceNum face, float largeDAC, float &smal
       
     double asymNSPB;    
     sc = m_calCalibSvc->evalAsymNSPB(CalXtalId(m_dat.twr,m_dat.lyr,m_dat.col), 
-                                     0.0, asymNSPB);
+                                     pos, asymNSPB);
     if (sc.isFailure()) return sc;
 
-    smallDAC = largeDAC * exp(m_dat.asymCtr[SM_DIODE] - asymNSPB);
+    smallDAC = largeDAC * exp(asymSm - asymNSPB);
   } 
   else { 
     // STRATEGY:
@@ -406,10 +413,10 @@ StatusCode XtalRecTool::largeDAC2Small(FaceNum face, float largeDAC, float &smal
 
     double asymPSNB;
     sc = m_calCalibSvc->evalAsymPSNB(CalXtalId(m_dat.twr,m_dat.lyr,m_dat.col), 
-                                     0.0, asymPSNB);
+                                     pos, asymPSNB);
     if (sc.isFailure()) return sc;
 
-    smallDAC = largeDAC * exp(asymPSNB - m_dat.asymCtr[SM_DIODE]);
+    smallDAC = largeDAC * exp(asymPSNB - asymSm);
   }
 
   return StatusCode::SUCCESS;

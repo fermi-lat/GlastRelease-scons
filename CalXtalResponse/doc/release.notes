@@ -1,3 +1,7 @@
+v0r7p5  10/19/05 fewtrell  fixed bug reported by philippe: only visible in ideal-mode high-asymmetry xtal deposits near 1050 MeV
+                           - asymmetry had to be tweaked by a few percent in order to make all calibrations truly consistent.
+                           - in order to be doubly safe I modified the largeDAC->smalDAC conversion routine in XtalRecTool to accout for the actual energy deposit position.
+
 v0r7p4  10/12/05 fewtrell  support new intNonlin data w/ optional per-channel dac values.  removed local caching of TDS RangeBase pointers in order to simplify the code.
 v0r7p3  8/18/05  chekhtman fixed bug, found by Richard Dubois. when few lines of code were moved from computeEnergy function to execute function, the return when below_threshold flag is set became invalid, because it caused skipping of all subsequent digis - now replaced by continue statment. 
 v0r7p2  8/02/05  fewtrell  fixed bug where wild hit positions were not clipped to xtal boundaries.  

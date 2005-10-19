@@ -17,6 +17,7 @@ LEX1  0.27    3850    941              210      1.48, 0.4
 HEX8  2.16    3550    7676             510      6.0,  12.96                               463,1000
 HEX1  19.23   3850    74,016           210      0.6,  11.5   
 
+
 it incoperates the following improvements over the prievous version.
 
 pedestal noise & LAC settings higher to accomodate expected higher noise levels in flight.
@@ -34,26 +35,27 @@ pedestal noise & LAC settings higher to accomodate expected higher noise levels 
   </section>
 
   <section name = "ASYMMETRY"> 
-	<item name  = "LARGE_NEG" value = "-0.33"> POS value for Large Diode asymetry spline </item>
-	<item name  = "LARGE_POS" value = "0.33">  NEG value for Large Diode asymetry spline </item>
+	<item name  = "LARGE_NEG" value = "-0.3"> POS value for Large Diode asymetry spline </item>
+	<item name  = "LARGE_POS" value = "0.3">  NEG value for Large Diode asymetry spline </item>
  	
-	<item name  = "SMALL_NEG" value = "-0.31"> POS value for Small Diode asymetry spline </item>
-	<item name  = "SMALL_POS" value = "0.31">  NEG value for Small Diode asymetry spline </item>
+	<item name  = "SMALL_NEG" value = "-0.3"> POS value for Small Diode asymetry spline </item>
+	<item name  = "SMALL_POS" value = "0.3">  NEG value for Small Diode asymetry spline </item>
 	
-	<item name  = "PSNB_NEG"  value = "-4.48"> POS value for PSNB asymetry spline        </item>
-	<item name  = "PSNB_POS"  value = "-3.88"> NEG value for PSNB asymetry spline        </item>
+        <!-- for mixed diode asym, apply difference of ln(mpdLrg/mpdSm) = ln(25/0.36) = 4.2405 to same diode asym (above)-->
+	<item name  = "PSNB_NEG"  value = "-4.5405"> POS value for PSNB asymetry spline        </item>
+	<item name  = "PSNB_POS"  value = "-3.9405"> NEG value for PSNB asymetry spline        </item>
 	
-	<item name  = "NSPB_NEG"  value = "3.88">  POS value for NSPB asymetry spline        </item>
-	<item name  = "NSPB_POS"  value = "4.48">  NEG value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_NEG"  value = "3.9405">  POS value for NSPB asymetry spline        </item>
+	<item name  = "NSPB_POS"  value = "4.5405">  NEG value for NSPB asymetry spline        </item>
 	
 	<item name  = "SIG_PCT"   value = "0.003"> sigma/val for all vals in asymetry group </item>
   </section>
   
   <section name = "MEV_PER_DAC">
 	<item name  = "LARGE"      value = "0.36"> Large diode MevPerDac </item>
-
         <!-- using highest energy setting for flight mode -->
 	<item name  = "SMALL"      value = "25.0"> Small diode MevPerDac </item>
+
 	<item name  = "SIG_PCT"    value = "0.07"> sigma/val for all vals in MPD group </item>
   </section>
   
