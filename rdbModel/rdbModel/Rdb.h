@@ -70,6 +70,8 @@ namespace rdbModel {
     // Do we want an unset as well?  Or just call this with arg == 0 ?
     void setConnection(Connection* connection);
 
+    Connection* getConnection() const {return m_connection;}
+
     /**
        insertRow has only one value-added feature as compared to 
        an SQL insert:  it will take care of fields intended to be
