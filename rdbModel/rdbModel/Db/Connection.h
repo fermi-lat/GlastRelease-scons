@@ -145,6 +145,17 @@ namespace rdbModel{
                                  int   rowOffset=0)=0;
 
     /**
+      Alternate form of select, where condition is just a string
+    */
+    virtual ResultHandle* select(const std::string& tableName,
+                                 const StringVector& getCols,
+                                 const StringVector& orderCols,
+                                 const std::string& where,
+                                 int   rowLimit=0,
+                                 int   rowOffset=0)=0;
+
+
+    /**
       Turn select and update into no-ops: output SQL string for
       debugging but don't change db 
     */
