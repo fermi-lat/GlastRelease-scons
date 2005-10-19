@@ -12,6 +12,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
+#include "geometry/Ray.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
@@ -70,19 +71,33 @@ class AcdReconAlg : public Algorithm
       StatusCode hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
           const HepVector3D &dir, std::vector<double> &row_values, double &dist);
 
+      StatusCode tileActDist(const Event::AcdDigiCol& digiCol, 
+                             const HepPoint3D &x0, const HepVector3D &dir, 
+                             std::vector<double> &row_values, double &dist);
+
       /// Bill Atwood's new calculation for Active Distance - applied to ribbons
       StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
           const HepVector3D &dir, double &dist);
 
       StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, std::vector<double> &dims, HepPoint3D &xT);
 
+      StatusCode getCorners(const std::vector<double> &dim, 
+                    const HepPoint3D &center, HepPoint3D *corner);
+
+      bool withinTileEdge(const Ray& edge, const HepPoint3D& pos);
+
+      StatusCode docaActDist(const std::vector<double> dim,
+                                const HepPoint3D &center,
+                                const HepPoint3D &x0, const HepVector3D &t0,
+                                double &return_dist);
 
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
       static unsigned int s_numSideRows;
 
       // record of the tile with the minimum Distance of Closest Approach
-      idents::AcdId m_minDocaId, m_ribbon_act_dist_id, m_maxActDistId;
+      idents::AcdId m_minDocaId, m_ribbon_act_dist_id, m_maxActDistId,  
+                    m_maxActDist3DId;
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
@@ -94,15 +109,16 @@ class AcdReconAlg : public Algorithm
       /// Minimun Distance of Closest Approach
       double m_doca;
       /// Minimum Active Distance
-      double m_act_dist, m_ribbon_act_dist;
+      double m_act_dist, m_ribbon_act_dist, m_act_dist3D;
       /// list of DOCA values for top and each side row
       std::vector<double> m_rowDocaCol;
       /// list of active distance values for top and each side row
       std::vector<double> m_rowActDistCol;
+      std::vector<double> m_rowActDist3DCol;
       /// map of AcdId and their corresponding energies
       //std::map<idents::AcdId, double> m_energyCol;
-	  std::vector<idents::AcdId> m_idCol, m_idRibbonCol;
-	  std::vector<double> m_energyCol, m_energyRibbonCol;
+      std::vector<idents::AcdId> m_idCol, m_idRibbonCol;
+      std::vector<double> m_energyCol, m_energyRibbonCol;
 };
 
 #endif
