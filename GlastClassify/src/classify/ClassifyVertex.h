@@ -32,12 +32,12 @@ public:
 
     virtual bool isgood()
     {
-        return VtxAngle > 0 && McDirErr < McTkr1DirErr;
+        return  McDirErr < McTkr1DirErr;
     }
 
     virtual bool accept()
     {
-        if( CTgoodCal< 0.25) return false;
+        if( CTgoodCal< 0.25 || VtxAngle==0) return false;
 
         bool thin(Tkr1FirstLayer > 5);
         return thin==m_isThin;
