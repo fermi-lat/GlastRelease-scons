@@ -20,31 +20,32 @@ public:
     ClassifyVertex(const std::string& info_path, layer isThin)
         : GlastClassify(info_path)
         , m_isThin(isThin)
+        , VtxAngle      ( "VtxAngle")
+        , Tkr1FirstLayer( "Tkr1FirstLayer")
+        , McDirErr      ( "McDirErr")
+        , McTkr1DirErr  ( "McTkr1DirErr")
     {
-        m_vtxangleIndex = find_index( "VtxAngle");
-        m_firstlayer =     add_index( "Tkr1FirstLayer");
-        m_direrr =         add_index( "McDirErr");
-        m_tkrdirerr =      add_index( "McTkr1DirErr");
     }
 
     //function to generate good test
 
     virtual bool isgood()
     {
-        return datum(m_vtxangleIndex) > 0 && datum(m_direrr) < datum(m_tkrdirerr);
+        return VtxAngle > 0 && McDirErr < McTkr1DirErr;
     }
 
     virtual bool accept()
     {
-        bool thin(datum(m_firstlayer) > 5);
+        bool thin(Tkr1FirstLayer > 5);
         return thin==m_isThin;
     }
 
 private:
-    int m_vtxangleIndex;
-    int m_firstlayer;
-    int m_direrr;
-    int m_tkrdirerr;
+    Entry VtxAngle;      
+    Entry Tkr1FirstLayer;
+    Entry McDirErr;
+    Entry McTkr1DirErr;
+
     bool m_isThin; 
 };
 

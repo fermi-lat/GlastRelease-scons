@@ -27,13 +27,30 @@ std::string GlastClassify::s_rootpath;
     /// path to tree data, input and output
 std::string GlastClassify::s_treepath;
 
+bool GlastClassify::s_train(true); /// set false for test mode.
+
+namespace {
+    GlastClassify* s_current;
+}
+
+
+GlastClassify::Entry::Entry( const std::string& name)
+: m_cl(s_current) // avoid warning with kluge
+, m_index(m_cl->find_index(name))
+{
+}
+
+
+
 
 GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
 : m_info(s_treepath+"/"+info_path, s_rootpath)
 , m_all_names(m_info.vars()) 
 , m_mixed(mixed)
 {
-    std::ofstream* logfile = new std::ofstream(m_info.log().c_str());
+    s_current= this; // for communication of pointer during setup
+
+    std::ofstream* logfile = new std::ofstream(m_info.log().c_str(), std::ofstream::app);
     if( ! logfile->is_open() ) {
         throw std::runtime_error("log file "+  m_info.log() + " did not open");
     }
@@ -41,8 +58,9 @@ GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
     m_log = logfile;
     std::ifstream titlefile((m_info.filepath()+"/title.txt").c_str());
     titlefile >> m_title;
-    log() << "Starting classification of " << m_title << std::endl;  
-    std::cout << "Starting classification of " << m_title << std::endl;  
+    log() << "=======================================================================\n"
+        <<"Starting "<<(s_train? "classification ":"testing of " )<< m_title << std::endl;  
+    std::cout << "Starting "<<(s_train? "classification ":"testng of " )<< m_title << std::endl;  
 }
 
 void GlastClassify::run( unsigned int max_events, Subset set)
@@ -54,11 +72,14 @@ void GlastClassify::run( unsigned int max_events, Subset set)
     load(max_events, set);
 
     current_time();
-    std::cout << "begin classification" << std::endl;
 
-    // run the classification
+    // run the train or test
 
-    classify();
+    if( s_train) {
+        classify();
+    }else{
+        test();
+    }
     current_time();
     current_time(log());
 }
@@ -133,14 +154,17 @@ void GlastClassify::classify()
     log() << "======================================\n";
     BackgroundVsEfficiency plot(tree);
     log() << "\nFigure of merit sigma: " <<  plot.sigma() << std::endl;
-    plot.print(log());
-    std::ofstream plotfile((m_info.filepath()+"/efficiencyplot.txt").c_str());
 
-    // a table of the background for a given efficiency
+    std::string plotfilename(m_info.filepath()+"/train_efficiency.txt");
+    log()<<" writing to file " << plotfilename << std::endl;
+
+    std::ofstream plotfile(plotfilename.c_str());
     plot.print(plotfile);
-    
+   
+#if 0 // generates a lot of output, need a special option
     // print the node list, and the variables used
     tree.printTree(log());
+#endif
 
     // make simple tree and print it to a local file
     DecisionTree& dtree = *tree.createTree(m_info.title());
@@ -155,8 +179,11 @@ int GlastClassify::find_index(const std::string& name)
         b = m_info.vars().end(),
 
         x = std::find(a, b, name);
-    if( x== b ) throw std::runtime_error(std::string("could not find variable ")+name);
-    return x  - a;
+    if( x!= b ){
+        return x  - a;
+    } else {
+        return add_index(name);
+    }
 }
 
 void GlastClassify::current_time(std::ostream& out)
@@ -172,5 +199,23 @@ void GlastClassify::current_time(std::ostream& out)
         << " ( "<< ::difftime( aclock, start) <<" s elapsed)" << std::endl;
 }
 
+void GlastClassify::test()
+{
+    // create the tree from by reading the dtree file
+    std::ifstream treefile((m_info.filepath()+"/dtree.txt").c_str());
+    DecisionTree& dtree = *new DecisionTree(treefile);
+    log() << "======================================\n";
+    BackgroundVsEfficiency plot(dtree, m_data);
+    log() << "\nFigure of merit sigma: " <<  plot.sigma() << std::endl;
+
+    std::string plotfilename(m_info.filepath()+"/test_efficiency.txt");
+    log()<<" writing to file " << plotfilename << std::endl;
+
+    std::ofstream plotfile(plotfilename.c_str());
+
+    // a table of the background for a given efficiency
+    plot.print(plotfile);
+
+}
 
 

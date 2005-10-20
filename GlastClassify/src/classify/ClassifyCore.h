@@ -18,13 +18,15 @@ public:
         : GlastClassify(info_path)
         , m_isVertex(isVertex)
         , m_isThin(isThin)
+
+        , Tkr1FirstLayer("Tkr1FirstLayer")
+        , McDirErr      ("McDirErr")
+        , McTkr1DirErr  ("McTkr1DirErr")
+        , EvtEnergyCorr ("EvtEnergyCorr")
+        , CTgoodCal     ("CTgoodCal")
+        , CTvertex      ("CTvertex")
+
     {
-        m_firstlayer    = add_index( "Tkr1FirstLayer");
-        m_direrr        = add_index( "McDirErr");
-        m_tkrdirerr     = add_index( "McTkr1DirErr");
-        m_energy        = add_index( "EvtEnergyCorr");
-        m_CTgoodCal     = add_index( "CTgoodCal");
-        m_CTvertex      = add_index( "CTvertex");
     }
 
     //function to generate good test
@@ -39,7 +41,7 @@ public:
     virtual bool accept()
     {
         // test for good energy etc first: goodCal includes this 
-        if( datum(m_CTgoodCal)< 0.25) return false;
+        if( CTgoodCal< 0.25) return false;
 
         // now do this if it is in the correct class
         return ( m_isThin== isThin()) && (useVertex()==m_isVertex);
@@ -48,25 +50,25 @@ public:
     /// function that 
     static double scaleFactor(double energy, bool thin);
 
-    double energy()const{return datum(m_energy);}
+    double energy()const{return EvtEnergyCorr;}
 
     /// check to see if vertex is in thin or thick (front or back) sections
-    bool isThin() const { return datum(m_firstlayer) > 5;}
+    bool isThin() const { return Tkr1FirstLayer > 5;}
 
     /// true if CT for vertex says to use it.
-    bool useVertex() const { return datum(m_CTvertex)>0.2; }
+    bool useVertex() const { return CTvertex>0.2; }
 
 
     ///
-    double direrror() const{ return useVertex()? datum(m_direrr) : datum(m_tkrdirerr);} 
+    double direrror() const{ return useVertex()? McDirErr : McTkr1DirErr;} 
 
 private:
-    int m_firstlayer;
-    int m_direrr;
-    int m_tkrdirerr;
-    int m_energy;
+    Entry Tkr1FirstLayer;
+    Entry McDirErr;
+    Entry McTkr1DirErr;
+    Entry EvtEnergyCorr;
+    Entry CTgoodCal;
+    Entry CTvertex;
     bool m_isVertex;
     bool m_isThin;
-    int m_CTgoodCal;
-    int m_CTvertex;
 };

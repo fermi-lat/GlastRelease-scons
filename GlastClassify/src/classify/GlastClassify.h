@@ -22,7 +22,13 @@ public:
 
     virtual ~GlastClassify(){} 
 
-    /// do it!
+    /**
+    @brief operate on the given subset
+    @param max_events limit to number of events
+    @param set     subset of each file to use
+    @param train   train if true, evaluate if false
+
+    */
     void run( unsigned int max_events=0, Subset set=ALL);
 
     static void setPaths(std::string rootpath, std::string treepath){
@@ -33,6 +39,8 @@ public:
     static std::string s_rootpath;
     /// path to tree data, input and output
     static std::string s_treepath;
+
+    static bool s_train;
 
 protected:
     /// subclasses may implement this to define the good, or signal events
@@ -56,6 +64,15 @@ protected:
 
     void setbkgnd (bool v=false){ m_nobkgnd=v;}; 
 
+    class Entry{
+    public:
+        Entry( const std::string& name="");
+        operator double()const{ return m_cl->datum(m_index);}
+    private:
+        GlastClassify* m_cl;
+        int m_index;
+    };
+    
     
 private:
 
@@ -64,6 +81,7 @@ private:
     void load(TrainingInfo::StringList input, unsigned int max_events=0, bool good=true);
 
     void classify();
+    void test();
 
     void current_time(std::ostream& out=std::cout);
 
@@ -76,6 +94,7 @@ private:
     bool m_nobkgnd;
     std::vector<std::string> m_all_names;
     bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
+
 };
 
 #endif

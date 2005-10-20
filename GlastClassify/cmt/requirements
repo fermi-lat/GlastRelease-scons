@@ -1,6 +1,6 @@
 package GlastClassify
 
-version v0r5
+version v1r0
 author T. Burnett <tburnett@u.washington.edu>
 # $Header$
 use GlastPolicy *
@@ -28,9 +28,9 @@ macro OUTPUT "../data"
 # this app creates the classification trees
 macro txt "" WIN32 " *.txt"
 application classify -s=../src/classify $(source)\
-    -s=$(OUTPUT)/goodcal_lo $(txt) \
+    -s=$(OUTPUT)/goodcal_low $(txt) \
     -s=$(OUTPUT)/goodcal_med $(txt) \
-    -s=$(OUTPUT)/goodcal_hi $(txt) \
+    -s=$(OUTPUT)/goodcal_high $(txt) \
     -s=$(OUTPUT)/vertex_thin $(txt)\
     -s=$(OUTPUT)/vertex_thick $(txt)\
     -s=$(OUTPUT)/psf_thin_vertex $(txt)\
