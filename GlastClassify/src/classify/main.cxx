@@ -67,17 +67,17 @@ int main(int argc , char * argv[])
         using ClassifyCore::VERTEX;
         using ClassifyCore::TRACK;
 #endif
-        if( name=="goodcal_low"  || all || energy) ClassifyCal("goodcal_low", ClassifyCal::LOW).run();
-        if( name=="goodcal_med"  || all || energy) ClassifyCal("goodcal_med", ClassifyCal::MED).run();
-        if( name=="goodcal_high" || all || energy) ClassifyCal("goodcal_high",ClassifyCal::HIGH).run();
+        if( name=="goodcal_low"  || all || energy) ClassifyCal("energy/low", ClassifyCal::LOW).run();
+        if( name=="goodcal_med"  || all || energy) ClassifyCal("energy/med", ClassifyCal::MED).run();
+        if( name=="goodcal_high" || all || energy) ClassifyCal("energy/high",ClassifyCal::HIGH).run();
 
-        if( name=="vertex_thin"     || all|| vertex) ClassifyVertex("vertex_thin",  ClassifyVertex::THIN).run();
-        if( name=="vertex_thick"    || all|| vertex) ClassifyVertex("vertex_thick", ClassifyVertex::THICK).run();
+        if( name=="vertex_thin"     || all|| vertex) ClassifyVertex("vertex/thin",  ClassifyVertex::THIN).run();
+        if( name=="vertex_thick"    || all|| vertex) ClassifyVertex("vertex/thick", ClassifyVertex::THICK).run();
 
-        if( name=="psf_thin_vertex" || all || psf) ClassifyCore("psf_thin_vertex", ClassifyCore::VERTEX, ClassifyVertex::THIN).run(max_events);
-        if( name=="psf_thick_vertex"|| all || psf) ClassifyCore("psf_thick_vertex",ClassifyCore::VERTEX, ClassifyVertex::THICK).run();
-        if( name=="psf_thin_track"  || all || psf) ClassifyCore("psf_thin_track",  ClassifyCore::TRACK,  ClassifyVertex::THIN).run();
-        if( name=="psf_thick_track" || all || psf) ClassifyCore("psf_thick_track", ClassifyCore::TRACK,  ClassifyVertex::THICK).run();
+        if( name=="psf_thin_vertex" || all || psf) ClassifyCore("psf/vertex/thin", ClassifyCore::VERTEX, ClassifyVertex::THIN).run();
+        if( name=="psf_thick_vertex"|| all || psf) ClassifyCore("psf/vertex/thick",ClassifyCore::VERTEX, ClassifyVertex::THICK).run();
+        if( name=="psf_thin_track"  || all || psf) ClassifyCore("psf/track/thin",  ClassifyCore::TRACK,  ClassifyVertex::THIN).run();
+        if( name=="psf_thick_track" || all || psf) ClassifyCore("psf/track/thick", ClassifyCore::TRACK,  ClassifyVertex::THICK).run();
 
         if( name.substr(0,6)=="gamma/" || all) ClassifyGamma(name).run();
         if( name=="gamma" || all ) {
