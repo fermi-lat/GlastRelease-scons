@@ -110,7 +110,7 @@ void XmltorootHandler::guts(std::string outname) {
     std::cout << "Writing new file " << outname << std::endl;
   }
   else {  // close; reopen as TFile, mode UPDATE
-    close(oldOut);
+    fclose(oldOut);
 
     m_updateFile = true;
 
