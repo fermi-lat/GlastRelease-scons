@@ -310,8 +310,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         }
 
         if ((m_startEventIndex > 0) && (!findFirstMarkerFive)) {
-            log << MSG::WARNING << "Since StartEventIndex is non-zero, skipping
-              search for first sweep event" << endreq;
+            log << MSG::WARNING << "Since StartEventIndex is non-zero, skipping search for first sweep event" << endreq;
             findFirstMarkerFive = true;
         }
         
