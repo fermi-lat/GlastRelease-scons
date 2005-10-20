@@ -125,7 +125,7 @@ public:
     public:
         /** @param signal total signal
         @param background 
-        @return value of the criterioin, which is to be minimized
+        @return value of the criterion, which is to be minimized
         */
        virtual double operator()(double signal, double background)const=0;
          virtual std::string name()const=0;
@@ -143,8 +143,8 @@ public:
     class Node {
     public:
     /**  create a Node from Table iterators
-        @param begin beginning  or range of Table entries
-        @param end   end  or range
+        @param begin beginning of range of Table entries
+        @param end   end of range
         @param id [1] identifier: 1 is root, left is 2*parent id, right is left+1.
 
         A particular element of the Record sequence is expected to be used for sorting and 

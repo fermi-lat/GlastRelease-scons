@@ -82,6 +82,14 @@ TrainingInfo::TrainingInfo( const std::string& title,  const std::string& varstr
         while( ! input.eof() ){
             input.getline(buf,sizeof(buf));
             if( buf[0]=='#' || buf[0]=='\0' ) continue;
+            if( buf[0]=='@'){
+                // indirection: expect first char to be @
+                std::stringstream str(buf+1);
+                std::string name;
+                str >> name;
+                readnames(name, output);
+                continue;
+            }
             std::stringstream str(buf);
             std::string name;
             str >> name;
