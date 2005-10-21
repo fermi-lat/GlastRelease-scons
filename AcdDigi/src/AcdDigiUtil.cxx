@@ -30,8 +30,9 @@ unsigned short AcdDigiUtil::m_mean_pe_per_mip;
 unsigned short AcdDigiUtil::m_mean_pe_per_mip_ribbon;
 double AcdDigiUtil::m_mips_full_scale;
 double AcdDigiUtil::m_mev_per_mip;
-std::map< unsigned int, std::pair<int, int> > AcdDigiUtil::m_pePerMipMap;
+std::map< unsigned int, std::pair<float, float> > AcdDigiUtil::m_pePerMipMap;
 std::map< unsigned int, std::pair<double, double> > AcdDigiUtil::m_gainMap;
+
 
 AcdDigiUtil::AcdDigiUtil() {    
     
@@ -67,6 +68,17 @@ void AcdDigiUtil::getParameters(const std::string &xmlFile) {
 }
 
 
+void AcdDigiUtil::dumpMeanPePerPmt() const {
+
+    printf("Dump All Mean PE per PMT values read in from XML\n");
+    std::map< unsigned int, std::pair<float, float> >::const_iterator mapIt;
+    for (mapIt = m_pePerMipMap.begin(); mapIt != m_pePerMipMap.end(); mapIt++) {
+        std::pair<float, float> pePerMip = (*mapIt).second;
+        printf("ID: %d   PMTA: %f, PMTB: %f\n", (*mapIt).first, pePerMip.first, pePerMip.second);
+
+    }
+}
+
 double AcdDigiUtil::convertMevToMips(double energy_mev) {
     return energy_mev / m_mev_per_mip;
 }
@@ -84,7 +96,7 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
     
     // Check the map
     if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
-        std::pair<int, int> pePerMip = m_pePerMipMap[id.id()];
+        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
         pmtA_pe = (unsigned int) floor(pmtA_mips * pePerMip.first);
         pmtB_pe = (unsigned int) floor(pmtB_mips * pePerMip.second);
         return;
@@ -92,9 +104,9 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
     // Check the XML file
     std::string idStr;
     facilities::Util::itoa(id.id(), idStr);
-    std::string pmtIdStr = "PMT" + idStr;
-    if (m_ifile->contains("pePerMip", pmtIdStr.c_str())) {
-        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("pePerMip", pmtIdStr.c_str());
+    std::string pmtIdStr = idStr;
+    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
+        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
         m_pePerMipMap[id.id()] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
         pmtA_pe = (unsigned int) floor(pmtA_mips * pePerMipVec[0]);
         pmtB_pe = (unsigned int) floor(pmtB_mips * pePerMipVec[1]);
@@ -124,7 +136,7 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
     
     // Check the map
     if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
-        std::pair<int, int> pePerMip = m_pePerMipMap[id.id()];
+        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
         pmtA_mips = pmtA_pe / pePerMip.first;
         pmtB_mips = pmtB_pe / pePerMip.second;
         return;
@@ -132,9 +144,9 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
     // Check the XML file
     std::string idStr;
     facilities::Util::itoa(id.id(), idStr);
-    std::string pmtIdStr = "PMT" + idStr;
-    if (m_ifile->contains("pePerMip", pmtIdStr.c_str())) {
-        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("pePerMip", pmtIdStr.c_str());
+    std::string pmtIdStr = idStr;
+    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
+        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
         m_pePerMipMap[id] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
         pmtA_mips = pmtA_pe / pePerMipVec[0];
         pmtB_mips = pmtB_pe / pePerMipVec[1];
@@ -175,6 +187,32 @@ void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id,
                                      double pmtA_mips, unsigned int pmtA_pe, double &pmtA_mipsToFullScale, 
                                      double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
     
+    // Check the map
+    if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
+        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
+
+        pmtA_mipsToFullScale = m_mips_full_scale * (( pePerMip.first) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * (( pePerMip.second) / (pmtB_pe / pmtB_mips) );
+
+        return;
+    } 
+    // Check the XML file
+    std::string idStr;
+    facilities::Util::itoa(id.id(), idStr);
+    std::string pmtIdStr = idStr;
+    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
+        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
+        m_pePerMipMap[id] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
+
+
+        pmtA_mipsToFullScale = m_mips_full_scale * (( pePerMipVec[0] ) / (pmtA_pe / pmtA_mips) );
+        pmtB_mipsToFullScale = m_mips_full_scale * (( pePerMipVec[1] ) / (pmtB_pe / pmtB_mips) );
+
+        return;
+    }
+
+    // Or use the global mean_pe_per_mip
+
     if (id.tile()) {
         pmtA_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
         pmtB_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );

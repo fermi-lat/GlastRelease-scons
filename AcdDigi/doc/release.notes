@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r14   21-Oct-2005 HMK Use Experimenal mean PE per MIP values for each PMT
  v1r13p1 27-Sep-2005 THB Fix signal normalization by removing "split" and subsequent factors of 2
  v1r13   19-Sep-2005 HMK Take new screw volumes into account for bottom side
          tiles.  Should be completely backward compatible to geometries
