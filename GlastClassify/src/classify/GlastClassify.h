@@ -10,6 +10,7 @@ $Header$
 #include "classifier/Classifier.h"
 #include "classifier/TrainingInfo.h"
 
+class DecisionTree;
 
 class GlastClassify
 {
@@ -23,13 +24,9 @@ public:
     virtual ~GlastClassify(){} 
 
     /**
-    @brief operate on the given subset
-    @param max_events limit to number of events
-    @param set     subset of each file to use
-    @param train   train if true, evaluate if false
-
+    @brief operate on the 
     */
-    void run( unsigned int max_events=0, Subset set=ALL);
+    void run();
 
     static void setPaths(std::string rootpath, std::string treepath){
         s_rootpath = rootpath+"/";
@@ -40,7 +37,12 @@ public:
     /// path to tree data, input and output
     static std::string s_treepath;
 
-    static bool s_train;
+    static bool s_train; ///< true if in training mode, false only test
+    static int s_boost; ///< number of boost cycles
+    static int s_events; /// maximum number of events
+    static int s_normalize; ///< if non-zero, normalize signal and background to this
+    static Subset s_train_sample; ///< subset to train on
+    static Subset s_test_sample; ///< subset to test with
 
 protected:
     /// subclasses may implement this to define the good, or signal events
@@ -78,10 +80,13 @@ private:
 
     void load( unsigned int max_events, Subset set);
 
-    void load(TrainingInfo::StringList input, unsigned int max_events=0, bool good=true);
+    void load(TrainingInfo::StringList input, 
+        unsigned int max_events,Subset set, bool good=true);
 
     void classify();
     void test();
+    void boost(Classifier & classify);
+
 
     void current_time(std::ostream& out=std::cout);
 
@@ -94,6 +99,10 @@ private:
     bool m_nobkgnd;
     std::vector<std::string> m_all_names;
     bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
+
+    DecisionTree * m_dtree;
+
+    unsigned m_total_good, m_total_bad;
 
 };
 

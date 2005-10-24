@@ -1,5 +1,6 @@
 /**@file main.cxx
 @brief main program for application to create GLAST classification trees
+
 $Header$
 */
 
@@ -7,77 +8,54 @@ $Header$
 #include "ClassifyVertex.h"
 #include "ClassifyCore.h"
 #include "ClassifyGamma.h"
+#include "classifier/AdaBoost.h"
+#include "classifier/Classifier.h"
+
+#include "ParseOptions.h"
 
 
-/** @page applications classify
-Run one or more classifications from MeritTuple root files
-
-classify [rootpath] [treepath] [case]
-
-@param rootpath path to the root data
-@param treepath path to tree parameters, place to put results
-@param case One of: all, goodcal, vertex_thin, vertex_thick, psf_thin_vertex, 
-                    psf_thick_vertex, psf_thin_track, psf_thick_track, gamma
-
-If no args, check for the environment variables ROOTPATH, TREEPATH, and CLASSIFY_TYPE
-Otherwise use development defaults.
-
-*/
 int main(int argc , char * argv[])
 {
     int rc=0;
-    std::string // defaults for development
-        rootpath("F:\\glast\\data"),
-        treepath("..\\data"),
-        name("all");
-    bool train(true);
-    if( argc==1) {
-        // no args: check env vars
-        const char* env = ::getenv("ROOTPATH");
-        if (env!=0) rootpath = std::string(env);
-        env = ::getenv("TREEPATH");
-        if( env!=0) treepath = std::string(env);
-        env = ::getenv("CLASSIFY_TYPE");
-        if( env!=0) name = std::string(env);
-    }else {
-        if( argc>1 && std::string(argv[1]) !="-") rootpath=argv[1];
-        if( argc>2 && std::string(argv[2]) !="-") treepath=argv[2];
-        if( argc>3) name   = argv[3];
-        if( argc>4) GlastClassify::s_train = false; //any char triggers test:assume tree exists
-    }
-    bool all(name=="all"); 
-    bool psf(name=="psf");
-    bool energy(name=="energy");
-    bool vertex(name=="vertex");
+    ParseOptions opts(argc, argv);
+    if( ! opts.valid) return 2;
 
-    GlastClassify::setPaths(rootpath, treepath);
+    std::string name(opts.casename);
+    GlastClassify::setPaths(opts.datapath, opts.infopath);
+    GlastClassify::s_train = opts.train;
+    GlastClassify::s_boost = opts.n_boosts;
+    GlastClassify::s_events = opts.events;
+    GlastClassify::s_normalize = opts.normalize;
+    AdaBoost::set_purity(opts.leaf_purity);
+    Classifier::Node::s_improvement_minimum = opts.improv_min;
+    GlastClassify::s_train_sample= opts.train_sample; 
+    GlastClassify::s_test_sample= opts.test_sample; 
 
-    std::cout << "classifier invoked with root, tree paths: "<< rootpath << ", " << treepath << std::endl;
-    std::cout << " \tIn "<< (GlastClassify::s_train? " training" : "testing") << " mode" << std::endl;
-    int max_events=0; //400000; // limit for development
+
+    std::cout << "classifier invoked with data, tree paths: "<< opts.datapath << ", " << opts.infopath ;
+    std::cout << "  In "<< (GlastClassify::s_train? " training" : "testing") << " mode" ;
+    if( opts.train && opts.n_boosts>0) std::cout << ", boosting "<< opts.n_boosts<< " times";
+    std::cout << std::endl;
+
     try {
+        bool all(name=="all"); 
+        bool psf(name=="psf");
+        bool energy(name=="energy");
+        bool vertex(name=="vertex");
+
+
         // the categories
-#if 0 // gcc objects?
-        using ClassifyCal::LOW;
-        using ClassifyCal::MED;
-        using ClassifyCal::HIGH;
-        using ClassifyCal::ALL;
-        using ClassifyVertex::THIN;
-        using ClassifyVertex::THICK;
-        using ClassifyCore::VERTEX;
-        using ClassifyCore::TRACK;
-#endif
-        if( name=="goodcal_low"  || all || energy) ClassifyCal("energy/low", ClassifyCal::LOW).run();
-        if( name=="goodcal_med"  || all || energy) ClassifyCal("energy/med", ClassifyCal::MED).run();
-        if( name=="goodcal_high" || all || energy) ClassifyCal("energy/high",ClassifyCal::HIGH).run();
+        if( name=="energy/low"      || all || energy) ClassifyCal("energy/low").run();
+        if( name=="energy/med"      || all || energy) ClassifyCal("energy/med").run();
+        if( name=="energy/high"     || all || energy) ClassifyCal("energy/high").run();
 
-        if( name=="vertex_thin"     || all|| vertex) ClassifyVertex("vertex/thin",  ClassifyVertex::THIN).run();
-        if( name=="vertex_thick"    || all|| vertex) ClassifyVertex("vertex/thick", ClassifyVertex::THICK).run();
+        if( name=="vertex/thin"     || all || vertex) ClassifyVertex("vertex/thin" ).run();
+        if( name=="vertex/thick"    || all || vertex) ClassifyVertex("vertex/thick").run();
 
-        if( name=="psf_thin_vertex" || all || psf) ClassifyCore("psf/vertex/thin", ClassifyCore::VERTEX, ClassifyVertex::THIN).run();
-        if( name=="psf_thick_vertex"|| all || psf) ClassifyCore("psf/vertex/thick",ClassifyCore::VERTEX, ClassifyVertex::THICK).run();
-        if( name=="psf_thin_track"  || all || psf) ClassifyCore("psf/track/thin",  ClassifyCore::TRACK,  ClassifyVertex::THIN).run();
-        if( name=="psf_thick_track" || all || psf) ClassifyCore("psf/track/thick", ClassifyCore::TRACK,  ClassifyVertex::THICK).run();
+        if( name=="psf/vertex/thin" || all || psf)    ClassifyCore("psf/vertex/thin" ).run();
+        if( name=="psf/vertex/thick"|| all || psf)    ClassifyCore("psf/vertex/thick").run();
+        if( name=="psf/track/thin"  || all || psf)    ClassifyCore("psf/track/thin"  ).run();
+        if( name=="psf/track/thick" || all || psf)    ClassifyCore("psf/track/thick" ).run();
 
         if( name.substr(0,6)=="gamma/" || all) ClassifyGamma(name).run();
         if( name=="gamma" || all ) {

@@ -12,12 +12,11 @@
 class ClassifyCore : public GlastClassify
 {
 public:
-    typedef enum {TRACK, VERTEX} etype;
 
-    ClassifyCore(const std::string& info_path, etype isVertex, ClassifyVertex::layer isThin)
-        : GlastClassify(info_path)
-        , m_isVertex(isVertex)
-        , m_isThin(isThin)
+    ClassifyCore(const std::string& info_path)
+        : GlastClassify (info_path)
+        , m_isVertex    (info_path.find("vertex")>0)
+        , m_isThin      (info_path.find("thin")>0)
 
         , Tkr1FirstLayer("Tkr1FirstLayer")
         , McDirErr      ("McDirErr")

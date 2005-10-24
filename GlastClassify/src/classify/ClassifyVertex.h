@@ -15,11 +15,10 @@ $Header$
 class ClassifyVertex : public GlastClassify
 {
 public:
-	typedef enum {THICK, THIN} layer;
 
-    ClassifyVertex(const std::string& info_path, layer isThin)
-        : GlastClassify(info_path)
-        , m_isThin(isThin)
+    ClassifyVertex(const std::string& info_path)
+        : GlastClassify ( info_path)
+        , m_isThin      ( info_path.find("thin")>0)
         , VtxAngle      ( "VtxAngle")
         , Tkr1FirstLayer( "Tkr1FirstLayer")
         , McDirErr      ( "McDirErr")

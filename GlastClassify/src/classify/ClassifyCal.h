@@ -15,6 +15,10 @@ public:
         : GlastClassify(info_path)
         , m_energyrange(energyrange)
     {
+        if     ( info_path.find("high")>=0) m_energyrange=HIGH;
+        else if( info_path.find("med")>=0) m_energyrange=MED;
+        else if( info_path.find("low")>=0) m_energyrange=LOW;
+        else    throw std::invalid_argument("unrecognized enegy range");
         m_energyIndex   =find_index("EvtEnergyCorr");
         m_calEnergyIndex= find_index("CalEnergyRaw");
         m_CalTotRLnIndex = find_index("CalTotRLn");
