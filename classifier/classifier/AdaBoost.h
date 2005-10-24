@@ -24,9 +24,15 @@ public:
     Classifier::Table& data() {return m_data;};
     ~AdaBoost();
 
+    static inline void set_purity (double p)
+    {
+        s_purity = p;
+    }
+
 private:
     Classifier::Table& m_data;
     double m_beta;
+	static double s_purity;
 };
 #endif
 
