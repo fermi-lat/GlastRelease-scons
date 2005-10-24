@@ -63,6 +63,7 @@ private:
     double* m_goodPsfProb; 
     double* m_vtxProb ; // vertex or track choice
     double* m_gammaProb ;
+    double* m_gammaType;
     
 
     std::ostream& m_log;
