@@ -81,7 +81,9 @@ namespace rdbModel{
                            const StringVector& colNames, 
                            const StringVector& values,
                            int* auto_value=0,
-                           const StringVector* nullCols = 0);
+                           const StringVector* nullCols = 0,
+                           unsigned int* u_auto_value=0);
+
 
     /**
       Generic UPDATE. Return value is number of rows changed.

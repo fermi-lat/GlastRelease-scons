@@ -94,7 +94,8 @@ namespace rdbModel{
                            const StringVector& colNames, 
                            const StringVector& values,
                            int* auto_value=0,
-                           const StringVector* nullCols = 0) = 0;
+                           const StringVector* nullCols = 0,
+                           unsigned int* u_auto_value=0) = 0;
 
     /*
        So far anticipated uses of UPDATE would just modify a single row

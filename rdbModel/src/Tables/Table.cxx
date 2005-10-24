@@ -258,7 +258,7 @@ namespace rdbModel {
     return (ok) ?  0 : -1;
   }
 
-  int Table::insertRow(Row& row, int* serial) const {
+  int Table::insertRow(Row& row, int* serial, unsigned int* unserial) const {
 
     if (!m_connect) {
       throw RdbException("Table::insertRow Need matching connection");

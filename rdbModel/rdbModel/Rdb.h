@@ -77,7 +77,9 @@ namespace rdbModel {
        an SQL insert:  it will take care of fields intended to be
        filled by the service (e.g., insert and update timestamps)
      */
-    int insertRow(const std::string& tName, Row& row, int* serial=0) const;
+    int insertRow(const std::string& tName, Row& row, int* serial=0,
+                  unsigned int* unserial=0) const;
+
 
     /**
        The two forms of smart insert, in addition to filling in the

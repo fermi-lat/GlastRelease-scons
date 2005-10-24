@@ -66,7 +66,7 @@ namespace rdbModel {
        checks.
        Good return value is 0
      */
-    int insertRow(Row& row, int* serial=0) const;
+    int insertRow(Row& row, int* serial=0, unsigned int* unserial=0) const;
 
     /**
        Given some input values and primary key of an existing row,
