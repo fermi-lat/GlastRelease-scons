@@ -220,6 +220,11 @@ public:
         // keep track of the total number of nodes, leaves
         static int s_nodes;
         static int s_leaves;
+
+        /// global to limit the gini improvement allowed, avoiding many insignificant cuts.
+        static double s_improvement_minimum;
+
+
     private:
         /// the id: 1 for root, 2*parent for left, 2*parent+1 for right
         int m_id;
