@@ -125,7 +125,7 @@ float Layer::activeAreaDist(const float x, const float y) const {
     //------+
     //
     //
-    return ( dx>0 && dy>0 ) ? std::sqrt(dx*dx+dy*dy) : std::max(dx, dy);
+    return ( dx>0 && dy>0 ) ? sqrt(dx*dx+dy*dy) : std::max(dx, dy);
 }
 
 void Layer::DrawLayer() {

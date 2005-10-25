@@ -1,4 +1,5 @@
 #include "Residual.h"
+#include <algorithm>
 
 ClassImp(Residual)
 
@@ -34,7 +35,7 @@ void Residual::Go(int numEntries, int firstEntry) {
     TTree resTree("residualTree", "residualTree");
     Char_t charPlaneName[4];
     Float_t posHorAbs, posHorOrdExt, posVert, posHorAbsExt, invSlope;
-    resTree.Branch("name", charPlaneName, "name of plane[4]/C");
+    resTree.Branch("name", charPlaneName, "name of plane[4]/C",32000,99);
     resTree.Branch("h_abs", &posHorAbs, "horizontal position of cluster/F");
     resTree.Branch("h_ord", &posHorOrdExt,
                    "from the other view: horizontal position of cluster/F");

@@ -25,7 +25,7 @@ void Efficiency::Go(int lastEntry) {
     TTree effTree("efficiencyTree", "efficiencyTree");
     struct Ntuple ntuple0;
     effTree.Branch("eventId", &ntuple0.eventId, "event id/I");
-    effTree.Branch("plane", ntuple0.charPlaneName, "name of plane[4]/C");
+    effTree.Branch("plane", ntuple0.charPlaneName, "name of plane[4]/C",32000,99);
     effTree.Branch("xExt", &ntuple0.xExt, "extrapolated x position of hit/F");
     effTree.Branch("yExt", &ntuple0.yExt, "extrapolated y position of hit/F");
     effTree.Branch("siDist", &ntuple0.siDist, "distance to active area/F");
@@ -282,15 +282,15 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
 
     cut.Print();
 
-    std::ostream* stdout;
+    ostream* mystdout;
     if ( outfile != TString() ) {
-        stdout = new std::ofstream(outfile.Data());
+        mystdout = new ofstream(outfile.Data());
         std::cout << "Printing to file " << outfile << std::endl;
     }
     else
-        stdout = &std::cout;
+        mystdout = &std::cout;
 
-    *stdout << " Object   Plane/L/W  Efficiency  Inefficiency     "
+    *mystdout << " Object   Plane/L/W  Efficiency  Inefficiency     "
            << "hits  missed     all" << std::endl;
 
     const bool makeSummary = planeName == "all" || planeName == "plane";
@@ -325,7 +325,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
                         const TCut waferCut(ladderCut&&ymin&&ymax);
                         const Long64_t numMiss =
                             t->Draw("eventId", waferCut&&isMissingHit, "goff");
-                        *stdout << PrintEfficiency(thePlaneName+'/'+ladderName
+                        *mystdout << PrintEfficiency(thePlaneName+'/'+ladderName
                                                    +'/'+waferName,
                                                    t->Draw("eventId",
                                                            waferCut&&isHit,
@@ -334,7 +334,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
                     }
                     const Long64_t numMiss =
                         t->Draw("eventId", ladderCut&&isMissingHit, "goff");
-                    *stdout << PrintEfficiency(thePlaneName+'/'+ladderName+"  ",
+                    *mystdout << PrintEfficiency(thePlaneName+'/'+ladderName+"  ",
                                                t->Draw("eventId",
                                                        ladderCut&&isHit,"goff")
                                                +numMiss,
@@ -343,7 +343,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
             }
             const Long64_t numMiss =
                 t->Draw("eventId", planeCut&&isMissingHit, "goff");
-            *stdout << PrintEfficiency(thePlaneName+"    ",
+            *mystdout << PrintEfficiency(thePlaneName+"    ",
                                        t->Draw("eventId",planeCut&&isHit,"goff")
                                        + numMiss,
                                        numMiss,
@@ -353,7 +353,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
     }
     if ( makeSummary ) {
         const Long64_t numMiss = t->Draw("eventId", cut&&isMissingHit, "goff");
-        *stdout << PrintEfficiency("           ",
+        *mystdout << PrintEfficiency("           ",
                                    t->Draw("eventId",cut&&isHit,"goff")+numMiss,
                                    numMiss,
                                    t->Draw("eventId", cut, "goff")
@@ -361,7 +361,7 @@ void Efficiency::GetEfficiency(const TString planeName, const TCut cut,
     }
 
     if ( outfile != TString() ) {
-        delete stdout;
+        delete mystdout;
     }
     f.Close();
 }

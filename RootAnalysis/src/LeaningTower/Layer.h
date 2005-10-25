@@ -16,7 +16,7 @@
 // We have 36 of these.
 //////// HISTORICAL //////////
 
-const float TOWERPITCH        = 374.5;
+const float TOWERPITCH        = (float)374.5;
 const float SIWAFERSIDE       = 89.5;
 const float SIWAFERACTIVESIDE = 87.552;
 const float STRIPPITCH        =  0.228;
