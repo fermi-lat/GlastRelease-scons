@@ -16,6 +16,8 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
                           Double_t doca, const AcdId &minDocaId, 
                           Double_t actDist,
                           const AcdId &maxActDistId, 
+                          Double32_t ribbonActDist, 
+                          const AcdId &ribbonActDistId,
                           const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
 			  const std::vector<AcdId> &idCol,
@@ -32,6 +34,8 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
     m_maxActDistId = maxActDistId;
     m_rowDocaCol = rowDoca;
     m_rowActDistCol = rowActDist;
+    m_ribbonActDist = ribbonActDist;
+    m_ribbonActDistId = ribbonActDistId;
     m_idCol = idCol;
     m_energyCol = energyCol;
 }

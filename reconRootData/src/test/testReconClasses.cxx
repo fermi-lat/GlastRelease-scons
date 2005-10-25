@@ -630,6 +630,21 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         return -1;
     }
 
+    if (!floatInRange(acd->getRibbonActiveDist(), 3.*f) ) {
+        std::cout << "AcdRecon Ribbon Active Dist is wrong: " << acd->getRibbonActiveDist() << std::endl;
+        return -1;
+    }
+
+    AcdId ribActDistId = acd->getRibbonActDistId();
+    if ((ribActDistId.getLayer() != 0) || (ribActDistId.getFace() != 1) ||
+        (ribActDistId.getRow() != 4) || (ribActDistId.getColumn() != 3) ) {
+            std::cout << "ribbonActDist AcdID is wrong: " 
+                << ribActDistId.getLayer() << " "
+                << ribActDistId.getFace() << " " << ribActDistId.getRow() << " "
+                << ribActDistId.getColumn() << std::endl;
+            return -1;
+     }
+
     AcdId acdMinDocaId = acd->getMinDocaId();
     if ((acdMinDocaId.getLayer() != 0) || (acdMinDocaId.getFace() != 0) ||
         (acdMinDocaId.getRow() != 3) || (acdMinDocaId.getColumn() != 2) ) {
@@ -780,8 +795,10 @@ int write(char* fileName, int numEvents) {
         Double_t gDoca = f*randNum;
         Double_t doca = randNum;
         Double_t actDist = 2.*f;
+        Double_t ribActDist = 3.*f;
         AcdId minDocaId(0, 0, 3, 2);
         AcdId maxActDistId(0,0,2,2);
+        AcdId ribActDistId(0,1,4,3);
         std::vector<Double_t> rowDocaCol;
         rowDocaCol.push_back(randNum);
         rowDocaCol.push_back(f);
@@ -796,7 +813,7 @@ int write(char* fileName, int numEvents) {
         energyCol.push_back(2.*f);
         acdRec->initialize(energy, ribbonE, count, ribbonCount, gDoca, doca, 
             minDocaId,
-            actDist, maxActDistId, rowDocaCol, rowActDistCol,
+            actDist, maxActDistId, ribActDist, ribActDistId, rowDocaCol, rowActDistCol,
             idCol, energyCol);
 
         // Create CalRecon object

@@ -68,8 +68,9 @@ public:
     
     void initialize(Double_t e, Double_t ribbonE, Int_t count, 
         Int_t ribbonCount, Double_t gDoca, Double_t doca, 
-        const AcdId &minDocaId, Double_t actDist,
-        const AcdId &maxActDistId, const std::vector<Double_t> &rowDoca, 
+        const AcdId &minDocaId, Double_t actDist, 
+        const AcdId &maxActDistId, Double32_t ribbonActDist,
+        const AcdId &ribbonActDistId, const std::vector<Double_t> &rowDoca, 
         const std::vector<Double_t> &rowActDist, 
         const std::vector<AcdId> &idCol,
         const std::vector<Double_t> &energyCol);
@@ -91,8 +92,11 @@ public:
     inline const Double_t getGammaDoca() const { return m_gammaDoca; };
     inline const Double_t getDoca() const { return m_doca; };
     inline const Double_t getActiveDist() const { return m_actDist; };
+    inline const Double32_t getRibbonActiveDist() const { return m_ribbonActDist; };
     inline const AcdId& getMinDocaId() const { return m_minDocaId; };
     inline const AcdId& getMaxActDistId() const { return m_maxActDistId; };
+    inline const AcdId& getRibbonActDistId() const { return m_ribbonActDistId; }
+
     inline const std::vector<Double_t>& getRowDocaCol() const { return m_rowDocaCol; };
     inline const Double_t getRowDoca(UInt_t i) const { 
         return ((i < m_rowDocaCol.size()) ? m_rowDocaCol[i] : -1.); };
@@ -143,7 +147,10 @@ private:
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
 
-    ClassDef(AcdRecon,6) // Acd Reconstruction data
+    Double32_t m_ribbonActDist;
+    AcdId m_ribbonActDistId;
+
+    ClassDef(AcdRecon,7) // Acd Reconstruction data
 };
 
 #endif

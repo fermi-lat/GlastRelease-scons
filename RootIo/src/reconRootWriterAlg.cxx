@@ -723,6 +723,7 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
     if (!acdRecTds) return StatusCode::SUCCESS;
     idents::AcdId docaIdTds = acdRecTds->getMinDocaId();
     idents::AcdId actDistIdTds = acdRecTds->getMaxActDistId();
+    idents::AcdId ribActDistIdTds = acdRecTds->getRibbonActiveDistId();
     std::vector<AcdId> idRootCol;
     std::vector<idents::AcdId>::const_iterator idTdsIt;
     for (idTdsIt = acdRecTds->getIdCol().begin(); idTdsIt != acdRecTds->getIdCol().end(); idTdsIt++) {
@@ -733,11 +734,17 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
                     docaIdTds.row(), docaIdTds.column());
     AcdId actDistIdRoot(actDistIdTds.layer(), actDistIdTds.face(), 
                        actDistIdTds.row(), actDistIdTds.column());
+    AcdId ribActDistIdRoot(ribActDistIdTds.layer(), ribActDistIdTds.face(),
+                             ribActDistIdTds.row(), ribActDistIdTds.column());
+
+  
+    // Note that we're storing the new 3D ActiveDistance values
     acdRec->initialize(acdRecTds->getEnergy(), acdRecTds->getRibbonEnergy(),
         acdRecTds->getTileCount(), acdRecTds->getRibbonCount(),
         acdRecTds->getGammaDoca(), acdRecTds->getDoca(), docaIdRoot, 
-        acdRecTds->getActiveDist(), actDistIdRoot, 
-        acdRecTds->getRowDocaCol(), acdRecTds->getRowActDistCol(),
+        acdRecTds->getActiveDist3D(), actDistIdRoot, 
+        acdRecTds->getRibbonActiveDist(), ribActDistIdRoot,
+        acdRecTds->getRowDocaCol(), acdRecTds->getRowActDist3DCol(),
         idRootCol, acdRecTds->getEnergyCol());
     
     return sc;
