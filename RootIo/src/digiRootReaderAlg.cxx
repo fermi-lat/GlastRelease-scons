@@ -433,6 +433,9 @@ StatusCode digiRootReaderAlg::readGem() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+    // Skip GEM if this is simulated data
+    if (m_digiEvt->getFromMc()) return sc;
+
     const Gem &gemRoot = m_digiEvt->getGem();
     GemTileList tileListRoot = gemRoot.getTileList();
     LdfEvent::Gem *gemTds = new LdfEvent::Gem();
