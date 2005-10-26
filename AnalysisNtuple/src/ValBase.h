@@ -111,7 +111,7 @@ protected:
 
     static double circleFraction(double r) {
         double rl = (fabs(r) < 1.) ? fabs(r):1.; 
-        double a_slice = 2.*(M_PI/4. - rl*sqrt(1.-rl*rl)/2. - asin(rl)/2.);
+        double a_slice = 2.*(M_PI/4. - rl*sqrt(std::max(0.0,1.-rl*rl))/2. - asin(rl)/2.);
         double in_frac = 1.-a_slice/M_PI;
         if(r < 0.) in_frac = a_slice/M_PI;
         return in_frac;

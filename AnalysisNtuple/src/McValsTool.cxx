@@ -175,6 +175,8 @@ StatusCode McValsTool::calculate()
         MC_SourceId = pMcEvent->getSourceId();
     }
     
+    MC_Energy = -1;
+    
     if (pMcParticle) {
         
         Event::McParticleCol::const_iterator pMCPrimary = pMcParticle->begin();
