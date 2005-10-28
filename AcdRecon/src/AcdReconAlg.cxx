@@ -34,6 +34,7 @@ double AcdReconAlg::s_vetoThresholdMeV;
 
 unsigned int AcdReconAlg::s_numSideRows;
 
+// Rogue value returned for DOCAs and Active Dist. calcs. when not Tile present
 static double maxDoca = 2000.0;
 
 
@@ -379,7 +380,7 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol,
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
-    return_dist = -200.;
+    return_dist = -maxDoca;
 	
     // iterate over all digis
     Event::AcdDigiCol::const_iterator acdDigiIt;
@@ -488,7 +489,7 @@ StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol,
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
-    return_dist = -200.;
+    return_dist = -maxDoca;
 	
     // iterate over all digis
     Event::AcdDigiCol::const_iterator acdDigiIt;
@@ -597,7 +598,7 @@ StatusCode AcdReconAlg::docaActDist(const std::vector<double> dim,
 
     // Initially, we set this to maxDoca, since we are in search of a min value
     // At the end of the method, we negate the final return value
-    return_dist = maxDoca;
+    return_dist = maxDoca; //Note: this must be positive - sign flipped at end
     bool noSolution = true;
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -690,9 +691,9 @@ StatusCode AcdReconAlg::getCorners(const std::vector<double> &dim,
     unsigned int iCorner;
     // Ignore short dimension - only interested in 4 corners
 
-    if ((dim[0] < dim[1]) && (dim[0] < dim[2])) {
+    if ((dim[0] < dim[1]) && (dim[0] < dim[2])) { //X smallest - X Face
         for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setX(dim[0]);
+            corner[iCorner].setX(center.x());
             corner[iCorner].setY(center.y() + 
                      ( (iCorner < 2) ? -1 : 1) * dim[1]*0.5);
             corner[iCorner].setZ(center.z() +
@@ -701,7 +702,7 @@ StatusCode AcdReconAlg::getCorners(const std::vector<double> &dim,
 
     } else if ((dim[1] < dim[0]) && (dim[1] < dim[2])) {
         for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setY(dim[1]);
+            corner[iCorner].setY(center.y());
             corner[iCorner].setX(center.x() + 
                      ( (iCorner < 2) ? -1 : 1) * dim[0]*0.5);
             corner[iCorner].setZ(center.z() +
@@ -710,7 +711,7 @@ StatusCode AcdReconAlg::getCorners(const std::vector<double> &dim,
 
     } else {
         for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setZ(dim[2]);
+            corner[iCorner].setZ(center.z());
             corner[iCorner].setX(center.x() + 
                      ( (iCorner < 2) ? -1 : 1) * dim[0]*0.5);
             corner[iCorner].setY(center.y() +
