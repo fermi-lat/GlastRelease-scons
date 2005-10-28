@@ -98,6 +98,11 @@ namespace rdbModel {
      */
     int updateRows(const std::string& tName, Row& row, Assertion* where) const;
 
+    /**
+      Fills in service fields, then invokes Connection::update 
+    */
+    int updateRows(const std::string& tName, Row& row, 
+                   const std::string& where) const;
 
     /// This is the recursive accept for the visitor pattern
     unsigned int  accept(Visitor* v);

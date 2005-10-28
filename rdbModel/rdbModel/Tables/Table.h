@@ -83,6 +83,8 @@ namespace rdbModel {
      */
     int updateRows(Row &row, Assertion* where) const;
 
+    int updateRows(Row &row, const std::string& where) const;
+
     // Do we need these for anything?  
     InsertNew* getInsertNew() const {return m_iNew;}
     Supersede* getSupersede() const {return m_sup;}

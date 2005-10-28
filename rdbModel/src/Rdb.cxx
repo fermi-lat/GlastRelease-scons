@@ -60,6 +60,17 @@ namespace rdbModel {
     return (t->insertRow(row, serial, unserial));
   }
 
+  int Rdb::updateRows(const std::string& tName, Row& row, 
+                      const std::string& where) const {
+    Table* t = getTable(tName);
+    if (!t) {
+      std::string msg("Rdb::insertRow unknown table ");
+      msg = msg + tName;
+      throw RdbException(msg);
+    }
+    return (t->updateRows(row, where));
+  }
+
   int Rdb::updateRows(const std::string& tName, Row& row, Assertion* where) const {
     Table* t = getTable(tName);
     if (!t) {

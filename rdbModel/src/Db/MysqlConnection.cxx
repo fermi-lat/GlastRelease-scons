@@ -266,11 +266,25 @@ namespace rdbModel {
     return true;
   }
 
-
   unsigned int MysqlConnection::update(const std::string& tableName, 
                                        const StringVector& colNames, 
                                        const StringVector& values,
                                        const Assertion* where,
+                                       const StringVector* nullCols) {
+    
+    std::string whereString("");
+    if (where) {
+      whereString += " WHERE ";
+      bool ret = compileAssertion(where, whereString);
+      if (!ret) return 0;
+    }
+    return update(tableName, colNames, values, whereString, nullCols);
+  }
+
+  unsigned int MysqlConnection::update(const std::string& tableName, 
+                                       const StringVector& colNames, 
+                                       const StringVector& values,
+                                       const std::string& where,
                                        const StringVector* nullCols) {
 
     unsigned int nCol = colNames.size();
@@ -292,11 +306,8 @@ namespace rdbModel {
       }
     }
 
-    if (where) {
-      sqlString += " WHERE ";
-      bool ret = compileAssertion(where, sqlString);
-      if (!ret) return 0;
-    }
+    sqlString += where;
+
     (*m_out) << std::endl << "#  UPDATE to be issued:" << std::endl;
     (*m_out) << sqlString << std::endl;
     m_out->flush();
@@ -318,8 +329,6 @@ namespace rdbModel {
     // Not much chance that we'll change more rows than will fit in just long
     unsigned nMod = nModLong;
     return nMod;
-
-
   }
 
   // This should now just do the compileAssertion on the 'where'

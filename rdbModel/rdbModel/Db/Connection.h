@@ -125,6 +125,12 @@ namespace rdbModel{
                                 const Assertion* where=0,
                                 const StringVector* nullCols = 0) = 0;
 
+    virtual unsigned int update(const std::string& tableName, 
+                                const StringVector& colNames, 
+                                const StringVector& values,
+                                const std::string& where="",
+                                const StringVector* nullCols = 0) = 0;
+
     /**
       Support only for relatively simple SELECT, involving just
       one table.  

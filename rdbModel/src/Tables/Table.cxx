@@ -465,6 +465,25 @@ namespace rdbModel {
     return m_connect->update(m_name, colNames, colValues, where, &nullCols);
   }
 
+  int Table::updateRows(Row &row, const std::string& where) const {
+
+    if (!m_connect) {
+      throw RdbException("Table::insertLatest Need matching connection");
+    }
+    row.rowSort();
+
+    // Fill in columns in m_programCols list
+    fillProgramCols(row, false);
+
+    std::vector<std::string> colNames;
+    std::vector<std::string> colValues;
+    std::vector<std::string> nullCols;
+
+    row.regroup(colNames, colValues, nullCols);
+
+    return m_connect->update(m_name, colNames, colValues, where, &nullCols);
+  }
+
   bool Table::fillProgramCols(Row& row, bool newRow) const {
     std::string val;
 
