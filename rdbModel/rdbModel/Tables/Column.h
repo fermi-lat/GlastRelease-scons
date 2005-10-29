@@ -53,6 +53,8 @@ namespace rdbModel {
     // Column(Table* myTable=0) : m_myTable(myTable), m_type(0), m_source(0) {};
     ~Column();
 
+    /// Return true if val was changed.  For now handle "NOW" and "EOT"
+    static bool interpretTime(std::string& val);
 
     const std::string& getName() const {return m_name; };
     const std::string& getComment() const {return m_comment;};

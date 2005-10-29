@@ -60,6 +60,20 @@ namespace rdbModel {
         (dtype != Datatype::TYPEtimestamp)) {
       return false;
     }
+    return interpretTime(val);  /*
+    if (val.compare(std::string("NOW")) == 0) {
+      val = facilities::Timestamp().getString();
+      return true;
+    }
+    else if (val.compare(std::string("EOT")) == 0) {
+      val = "2037-12-31";
+      return true;
+    }
+    else return false;
+                                */
+  }
+
+  bool Column::interpretTime(std::string& val) {
     if (val.compare(std::string("NOW")) == 0) {
       val = facilities::Timestamp().getString();
       return true;
