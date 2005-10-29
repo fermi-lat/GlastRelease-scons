@@ -42,10 +42,7 @@ public:
     bool useVertex()const;
 
 private:
-    // forward declaration and reference to object of special class to analyze tuple
-    class BackgroundCut;
-    BackgroundCut & m_background;
-
+ 
     GlastClassify::TreeFactory* m_factory;
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
     const TupleItem*  m_calTotRLn; 
