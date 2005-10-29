@@ -234,7 +234,6 @@
     </col>
 
     <col name="enter_time" >
-      <!-- proper handling not yet implemented in code -->
       <src null="true" >
         <from agent="service" contents="insert_time" />         
       </src>
