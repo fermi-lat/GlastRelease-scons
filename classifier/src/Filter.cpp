@@ -7,6 +7,7 @@ $Header$
 
 #include "classifier/Filter.h"
 #include <algorithm>
+#include <stdexcept>
 
 
 Filter::Filter(std::vector<std::string>& vars, DecisionTree& tree)

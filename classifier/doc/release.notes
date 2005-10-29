@@ -4,7 +4,7 @@
 $Id$
 @verbatim
  
- 29-oct-05  v1r4   allow filter tree 
+ 29-oct-05  v1r4,p1   allow filter tree 
  23-oct-05  v1r3   gini improvement limit
  20-oct-05  v1r2   better minimization; indirection in variable and file files
  27-jul-05  v1r1p1,2 improvements for GLAST
