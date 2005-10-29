@@ -69,6 +69,11 @@ public:
          return (m_value < id.getValue())
 	   || (m_value==id.getValue() && (m_size < id.size()));
       }
+  
+    bool operator==(const VolumeIdentifier& id)const
+    {
+        return ((m_value == id.getValue()) && (m_size==id.size()));
+    }
 
     /// return true iff VolumeIdentifier fields say "tracker"
     bool isTkr() {return ( (m_size > (int) fTowerObj) &&
