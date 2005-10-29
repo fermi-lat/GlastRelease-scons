@@ -308,7 +308,7 @@ namespace rdbModel {
 
     row.regroup(colNames, colValues, nullCols);
     bool ok = m_connect->insertRow(m_name, colNames, colValues,
-                                   serial, &nullCols);
+                                   serial, &nullCols, unserial);
     return (ok) ?  0 : -1;
   }    
 
