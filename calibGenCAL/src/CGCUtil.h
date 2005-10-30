@@ -82,7 +82,7 @@ namespace CGCUtil {
   /// Output string w/ username, hostname, time, relevant CMT package versions & paths
   /// to ostream
   /// output is in multi line text format
-  void output_env_banner(ostream &ostr);
+  void output_env_banner(ostream &ostrm);
 
   /** \brief convert string to uppercase
       \return ref to converted string
