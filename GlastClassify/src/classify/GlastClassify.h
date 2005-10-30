@@ -100,7 +100,8 @@ private:
     std::vector<std::string> m_all_names;
     bool m_mixed;       ///< true in file has mixed good/bad: uses isGood() in this case
 
-    DecisionTree * m_dtree;
+    DecisionTree * m_dtree; ///< the tree to create
+    DecisionTree * m_filter; ///< may be used to select events
 
     unsigned m_total_good, m_total_bad;
 

@@ -12,6 +12,7 @@ $Header$
 #include "classifier/RootTuple.h"
 #include "classifier/Trainer.h"
 #include "classifier/AdaBoost.h"
+#include "classifier/Filter.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -49,13 +50,12 @@ GlastClassify::Entry::Entry( const std::string& name)
 }
 
 
-
-
 GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
 : m_info(s_treepath+"/"+info_path, s_rootpath)
 , m_all_names(m_info.vars()) 
 , m_mixed(mixed)
 , m_total_good(0), m_total_bad(0)
+, m_filter(0)
 {
     s_current= this; // for communication of pointer during setup
 
@@ -70,6 +70,31 @@ GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
     log() << "=======================================================================\n"
         <<"Starting "<<(s_train? "classification and testing ":"testing only of " )<< m_title << std::endl;  
     std::cout << "Starting "<<(s_train? "classification and testing ":"testing of " )<< m_title << std::endl;  
+
+    std::string filterfilename(m_info.filepath()+"/filter.txt");
+    std::ifstream filterstream(filterfilename.c_str());
+
+    if( filterstream.is_open() ){
+        filterstream.close();
+        // filter file exists: set it up
+
+        m_filter = new DecisionTree("filter");
+        Filter createfilter(m_all_names, *m_filter);
+        createfilter.addCutsFrom(filterfilename); // do it
+        log() << "Using filter: " << std::endl;
+#if 0
+        filterstream.clear();
+        std::ifstream copystream(filterfilename.c_str());
+        while( !copystream.eof()){
+            std::string line; std::getline(copystream,line);
+            log() << "\t" << line << std::endl;
+        }
+#else
+        createfilter.print(log());
+
+#endif
+    }
+
 }
 
 void GlastClassify::run()
@@ -140,7 +165,7 @@ void GlastClassify::load(TrainingInfo::StringList input,
 
     RootTuple t(input, "MeritTuple");
     t.selectColumns(m_all_names, false); // not weighted
-    double good=0, bad=0, rejected=0, nan=0;
+    double good=0, bad=0, rejected=0, nan=0, filtered=0;
     Classifier::Record::setup();
     log() << "\tsize = " << t.size() << std::endl;
     int nvars = m_all_names.size();
@@ -159,7 +184,13 @@ void GlastClassify::load(TrainingInfo::StringList input,
             ++rejected;
             continue;
         }
-        if( accept() ) {
+
+        // If there is a filter, invoke it 
+        bool filter_reject = m_filter!=0 && ( (*m_filter)(*m_row)==0 );
+        if ( filter_reject )  ++filtered;
+
+        // invoke virtual accepance function to select subset to train with
+        if(! filter_reject && accept() ) {
            // copy to local
             bool signal = m_mixed ? isgood() : isSignal;
             if (signal) ++good; else ++bad;
@@ -173,7 +204,10 @@ void GlastClassify::load(TrainingInfo::StringList input,
             ++rit; if( rit >= t.end() )break;
         }
     }
-    log() << "\tgood, bad, rejected records: " << good << ",  " << bad <<", " << rejected << std::endl;
+    log() << "\tgood, bad, rejected records: " << good << ",  " << bad <<", " << rejected ;
+    if( filtered>0) {log() << " (by the filter: "<< filtered<< ")";}
+    log() << std::endl;
+
     if( nan>0) log() << "\tWARNING: found "<< nan << " events with non-finite values " << std::endl;
     log() << "Loaded " << (good+bad) << " records"<< std::endl;
     m_total_good += good;

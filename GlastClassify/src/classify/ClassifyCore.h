@@ -15,8 +15,8 @@ public:
 
     ClassifyCore(const std::string& info_path)
         : GlastClassify (info_path)
-        , m_isVertex    (info_path.find("vertex")>0)
-        , m_isThin      (info_path.find("thin")>0)
+        , m_isVertex    (info_path.find("vertex")!=std::string::npos)
+        , m_isThin      (info_path.find("thin")!=std::string::npos)
 
         , Tkr1FirstLayer("Tkr1FirstLayer")
         , McDirErr      ("McDirErr")
