@@ -4,6 +4,7 @@
 $Id$
 @verbatim
  
+ 30-oct-05  v1r5   Implement filters in GlastClassify.
  29-oct-05  v1r4,p1,p2   allow filter tree 
  23-oct-05  v1r3   gini improvement limit
  20-oct-05  v1r2   better minimization; indirection in variable and file files
