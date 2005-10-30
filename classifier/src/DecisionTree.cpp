@@ -39,7 +39,9 @@ class DecisionTree::Node {
 public:
     Node(int index, double value)
         :m_index(index), m_value(value), m_left(0), m_right(0)
-    {}
+    {
+        assert(index>=-10 && index<100); // check for bad logic
+    }
     ~Node(){ 
         delete m_left; delete m_right;
     }

@@ -23,14 +23,14 @@ class Filter {
 public:
     /** ctor
     @param vars Array of variable names. Will append variables not found
-    @param Should be a new tree: nodes will be added.
-
+    @param tree Should be a new tree: nodes will be added.
 
     */
     Filter(std::vector<std::string>& vars, DecisionTree& tree);
 
+    ~Filter();
 
-    /** @brief append a filter tree from the file
+    /** @brief create the filter tree from the file
 
     */
     void makeTree(std::ifstream& input);
@@ -38,8 +38,10 @@ public:
     /// append a new cut
     /// @param name variable name: will be appended to the vars if not there
     /// @param op one of "<", or ">=". 
-
     void addCut(std::string name, std::string op, double value);
+
+    /// optional finisher
+    void finish();
 
 private:
 
