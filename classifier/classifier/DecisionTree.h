@@ -87,6 +87,15 @@ public:
     void print(std::ostream& out=std::cout)const;
     std::string title()const{ return m_title;}
 
+
+    /** @brief formatted print of the tree, assuming it is a filter.
+        @param varnames list of corresponding variable names
+        @param out [cout] output stream
+        @param indent ["\t"] string to precede each line.
+
+    */
+    void printFilter(const std::vector<std::string>& varnames, std::ostream& out=std::cout, std::string indent="\t")const;
+
     /// forward declaration of nested class representing a node.
     class Node;
 
