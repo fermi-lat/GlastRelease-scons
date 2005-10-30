@@ -9,7 +9,7 @@ $Header$
 
 #include <string>
 #include <vector>
-#include <fstream>
+#include <ostream>
 
 #include "classifier/DecisionTree.h"
 
@@ -30,18 +30,20 @@ public:
 
     ~Filter();
 
-    /** @brief create the filter tree from the file
-
-    */
-    void makeTree(std::ifstream& input);
-
+ 
     /// append a new cut
     /// @param name variable name: will be appended to the vars if not there
     /// @param op one of "<", or ">=". 
     void addCut(std::string name, std::string op, double value);
 
+    /// add cuts from the file
+    void addCutsFrom(const std::string& filename);
+
     /// optional finisher
-    void finish();
+    void close();
+
+    /// dump
+    void print(std::ostream& out)const;
 
 private:
 
