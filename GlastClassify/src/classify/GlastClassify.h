@@ -68,7 +68,7 @@ protected:
 
     class Entry{
     public:
-        Entry( const std::string& name="");
+        Entry( const std::string& name="GlastClassify::Entry name not set!");
         operator double()const{ return m_cl->datum(m_index);}
     private:
         GlastClassify* m_cl;

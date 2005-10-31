@@ -10,6 +10,7 @@ $Header$
 #include "ClassifyGamma.h"
 #include "classifier/AdaBoost.h"
 #include "classifier/Classifier.h"
+#include "ClassifyEnergy.h"
 
 #include "ParseOptions.h"
 
@@ -45,9 +46,11 @@ int main(int argc , char * argv[])
 
 
         // the categories
-        if( name=="energy/low"      || all || energy) ClassifyCal("energy/low").run();
-        if( name=="energy/med"      || all || energy) ClassifyCal("energy/med").run();
-        if( name=="energy/high"     || all || energy) ClassifyCal("energy/high").run();
+
+        if( name=="energy/param"    || all || energy) ClassifyEnergy("energy/param").run();
+        if( name=="energy/lastlayer"|| all || energy) ClassifyEnergy("energy/lastlayer").run();
+        if( name=="energy/profile"  || all || energy) ClassifyEnergy("energy/profile").run();
+        if( name=="energy/tracker"  || all || energy) ClassifyEnergy("energy/tracker").run();
 
         if( name=="vertex/thin"     || all || vertex) ClassifyVertex("vertex/thin" ).run();
         if( name=="vertex/thick"    || all || vertex) ClassifyVertex("vertex/thick").run();
