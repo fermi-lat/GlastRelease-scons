@@ -55,12 +55,18 @@ private:
     const TupleItem*  m_calLRmsRatio;
     const TupleItem*  m_vtxAngle;
 
+    const TupleItem * m_CalEnergyCorr;
+    const TupleItem * m_CalCfpEnergy;
+    const TupleItem  *m_CalLllEnergy;
+    const TupleItem * m_CalTklEnergy;
+
     // output quantities: pointers to corresponding tuple items
     double* m_goodCalProb; 
     double* m_goodPsfProb; 
     double* m_vtxProb ; // vertex or track choice
     double* m_gammaProb ;
     double* m_gammaType;
+    double* m_EvtEnergyCorr;
     
 
     std::ostream& m_log;
