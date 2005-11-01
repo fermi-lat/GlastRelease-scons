@@ -139,8 +139,8 @@ StdMipFindingTool::StdMipFindingTool(const std::string & type,
 { 
     declareInterface<IMipFindingTool>(this) ; 
 
-    declareProperty("MIPEne1",       m_e1         =  8.0      );
-    declareProperty("MIPEne2",       m_e2         = 25.0      );
+    declareProperty("MIPEne1",       m_e1         =  7.0      );
+    declareProperty("MIPEne2",       m_e2         = 30.0      );
     //50% of Landau area
     //     declareProperty("Ecor1",       m_ecor1         = 11.05      );
     //     declareProperty("Ecor2",       m_ecor2         = 13.05     );
@@ -151,8 +151,8 @@ StdMipFindingTool::StdMipFindingTool(const std::string & type,
     //declareProperty("Ecor1",       m_ecor1         = 10.25      );
     //declareProperty("Ecor2",       m_ecor2         = 15.50     );
 
-    declareProperty("Ecor1",       m_ecor1         =  9.0      );
-    declareProperty("Ecor2",       m_ecor2         = 16.0      );
+    declareProperty("Ecor1",       m_ecor1         =  7.0      );
+    declareProperty("Ecor2",       m_ecor2         = 30.0      );
 
     return;
 }
