@@ -774,6 +774,7 @@ StatusCode TkrValsTool::calculate()
             case SUPER:
                 thisRad = radThick;
                 thick_hits += numHits;
+                break;
             case NOCONV:
                 thisRad = 0.0;
                 blank_hits += numHits;
