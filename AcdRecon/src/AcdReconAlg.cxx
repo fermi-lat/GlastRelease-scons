@@ -290,10 +290,9 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
 
         // New Active Distance Calc
         sc = tileActDist(digiCol, trackTds->getInitialPosition(), 
-            -(trackTds->getInitialDirection()), m_rowActDist3DCol, newActDist);
+                 -(trackTds->getInitialDirection()), m_rowActDist3DCol, newActDist);
         if (sc.isFailure()) return sc;
         if(newActDist > m_act_dist3D) m_act_dist3D = newActDist;
-
 
         sc = hitRibbonDist(digiCol, trackTds->getInitialPosition(), 
                             -(trackTds->getInitialDirection()), ribDist);
@@ -404,11 +403,13 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol,
         if (sc.isFailure()) return sc;
         
         int iFace = acdId.face();
-		
+
+		// Beware: these dimensions are in some sort of local system and for
+		// iFace = 1 || 3  x<->y 		
         double dX = dim[0];
         double dY = dim[1];
         double dZ = dim[2];
-        
+
         // Figure out where in the plane of this face the trajectory hits
         double arc_dist = -1.; 
         if(iFace == 0) {// Top Tile. 
@@ -514,9 +515,16 @@ StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol,
         
         int iFace = acdId.face();
 		
+		// Beware: these dimensions are in some sort of local system and for
+		// iFace = 1 || 3  x<->y 
         double dX = dim[0];
         double dY = dim[1];
         double dZ = dim[2];
+		// The following is required to get the corners to come out correctly
+		if(iFace == 1 || iFace == 3) {
+			dim[0] = dY;
+			dim[1] = dX;
+		}
         
         // Figure out where in the plane of this face the trajectory hits
         double arc_dist = -1.; 
@@ -567,8 +575,7 @@ StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol,
             test_dist = (dist_z < dist_x) ? dist_z : dist_x;
 
             if (test_dist < 0) docaActDist(dim, xT, x0, t0, test_dist);
-
-            if(test_dist > return_dist) {
+			if(test_dist > return_dist) {
                 return_dist = test_dist;
                 m_maxActDist3DId = acdId;
             }
@@ -599,7 +606,6 @@ StatusCode AcdReconAlg::docaActDist(const std::vector<double> dim,
     // Initially, we set this to maxDoca, since we are in search of a min value
     // At the end of the method, we negate the final return value
     return_dist = maxDoca; //Note: this must be positive - sign flipped at end
-    bool noSolution = true;
     StatusCode sc = StatusCode::SUCCESS;
 
     // Get four corners associated with the tile.
@@ -610,17 +616,35 @@ StatusCode AcdReconAlg::docaActDist(const std::vector<double> dim,
     HepPoint3D corner[4];
     getCorners(dim, center, corner);
 
+	// First find the nearest corner and the distance to it. 
+	 unsigned int iCorner, i_near_corner = 4; 
+	 for (iCorner = 0; iCorner<4; iCorner++) {
+        HepVector3D dX = corner[iCorner] - x0;
+        double prod = dX * t0;
+        double dist = sqrt(dX.mag2() - prod*prod);
+		if(dist < return_dist) {
+			return_dist = dist;
+			i_near_corner = iCorner;
+		}
+     }
+
+	// Loop over all edges allowing only the edges which intersect to form
+	// the nearest corner participate.
     // For each pair of corners, make a ray and calculate doca from track
+    // Note: this could be done at the end - if no edge solution was found however
+    //       doing the full monte does not use much more cpu
     Point trackPos(x0.x(), x0.y(), x0.z());
     Vector trackDir(t0.x(), t0.y(), t0.z());
     Ray track(trackPos, trackDir);
-    unsigned int iCorner;
     for (iCorner = 0; iCorner<4; iCorner++) {
 
+	//  WBA: Naively I thought one could limit the edges investigated - not so!
+	//	if(iCorner != i_near_corner && (iCorner+1)%4 != i_near_corner) continue;
+		
         Point pos0(corner[iCorner].x(), corner[iCorner].y(), 
                    corner[iCorner].z());
         Point pos1;
-        if(iCorner==3) 
+		if(iCorner==3)
             pos1.set(corner[0].x(), corner[0].y(), corner[0].z());
         else
             pos1.set(corner[iCorner+1].x(), corner[iCorner+1].y(), 
@@ -628,44 +652,25 @@ StatusCode AcdReconAlg::docaActDist(const std::vector<double> dim,
         Vector dir = pos1 - pos0;
         Ray edge(pos0, dir);
 
-        // Will need this to determine limit of the tile edge
-        edge.setArcLength(dir.magnitude());
-
+        // Will need this to determine limit of the tile edge 
+        double edge_length = dir.magnitude();
 
         // Compute DOCA and DOCA location between the track and edge
         RayDoca doca = RayDoca(track, edge);
 
-        Point posAlongEdge = doca.docaPointRay2();
-
-        // Check if x,y,z along edge falls within limits of tile edge
-        HepPoint3D posAlongEdgeHep(posAlongEdge.x(), posAlongEdge.y(), posAlongEdge.z());
-        if (withinTileEdge(edge, posAlongEdgeHep)) {
-            // if the doca vector is within the tile edge limits, we have a 
-            // potential solution
-            double dist = doca.docaRay1Ray2();
-            if (dist < return_dist) {
-                return_dist = dist;
-                noSolution = false;
-            }
-        } 
+        // Check if x,y,z along edge falls within limits of tile edge.
+		double length_2_intersect = doca.arcLenRay2();
+		if (length_2_intersect > 0 && length_2_intersect < edge_length) {
+			double test_dist = doca.docaRay1Ray2();
+			return_dist = (return_dist > test_dist) ? test_dist : return_dist;
+		}
     }
-
-    // If DOCA calculation fails for ALL tile edges - meaning the doca vectors
-    // all fell outside of the tile edge limits
-    if (noSolution) { // Calculate the DOCA to each corner and take min
-        for (iCorner = 0; iCorner<4; iCorner++) {
-            HepVector3D dX = corner[iCorner] - x0;
-            double prod = dX * t0;
-            double dist = sqrt(dX.mag2() - prod*prod);
-            if(dist < return_dist) return_dist = dist;
-         }
-     }
+	if(return_dist > maxDoca) return_dist = maxDoca; 
 
     // Negate the return distance, because we call this function in the case
     // where the track fails to pierce a tile
     return_dist = -return_dist;
     return sc;
-
 }
 
 bool AcdReconAlg::withinTileEdge(const Ray& edge, const HepPoint3D& pos) {
@@ -673,6 +678,8 @@ bool AcdReconAlg::withinTileEdge(const Ray& edge, const HepPoint3D& pos) {
     //                      a Ray.  This is done by determining the distance
     //                      between the point and the two "endpoints".  If
     //                      either is greater than the arcLength, return false.
+	// Note: This function is not used - its simpler to ask if the arc-length 
+	//       along the edge is within the edge...  
  
     HepPoint3D start = edge.position(0);
     double distFromStartToPos = start.distance(pos);
