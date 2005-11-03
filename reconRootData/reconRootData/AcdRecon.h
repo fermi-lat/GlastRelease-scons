@@ -3,7 +3,15 @@
 
 #include "TObject.h"
 #include "commonRootData/idents/AcdId.h"
+
+#include "AcdTkrIntersection.h"
+#include "TClonesArray.h"
+
 #include <vector>
+#include "TClonesArray.h"
+
+#include "AcdTkrIntersection.h"
+
 #ifndef R__GLOBALSTL
 #ifndef WIN32
 using std::vector;
@@ -36,9 +44,8 @@ using namespace std;
 * $Header$
 */
 
-class AcdRecon : public TObject
+class AcdRecon : public TObject 
 {
-    
 public:
     AcdRecon();
  
@@ -114,8 +121,24 @@ public:
            return ( (i < m_idCol.size()) ? &m_idCol[i] : 0); };
     inline void addId(const AcdId &id) { m_idCol.push_back(id); };
     Double_t getEnergy(const AcdId &id) const;
+
+    // for ROI stuff
+    Bool_t hasHit(UInt_t acdId) const;
+    inline UInt_t nId() { return m_idCol.size(); };
+  
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdTkrIntersection* addAcdTkrIntersection(AcdTkrIntersection& inter);
+    
+    inline UInt_t nAcdIntersections() const { return m_acdTkrIntersectionCol != 0 ? 
+						m_acdTkrIntersectionCol->GetEntriesFast() : 0; };
+  
+    inline const AcdTkrIntersection* getAcdTkrIntersection(UInt_t i) const { 
+      return i < nAcdIntersections() ? 
+	static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
+    }  
     
 private:
+
     /// Total energy in MeV deposited in the whole ACD system
     Double_t m_totEnergy;
     /// Distance of Closest Approach for the reconstructed gamma, 
@@ -138,19 +161,22 @@ private:
     
     // Stores reconstructed energy per ACD digi
     vector<AcdId> m_idCol;
-    vector<Double_t> m_energyCol;
-    
+    vector<Double_t> m_energyCol;  
+
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
     /// Total MC Energy (MeV) deposited in the ribbons
     Double_t m_totRibbonEnergy;
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
-
+ 
     Double32_t m_ribbonActDist;
     AcdId m_ribbonActDistId;
 
-    ClassDef(AcdRecon,7) // Acd Reconstruction data
+    // Store the expected track intersection points
+    TClonesArray *m_acdTkrIntersectionCol;
+
+    ClassDef(AcdRecon,8) // Acd Reconstruction data
 };
 
 #endif

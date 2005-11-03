@@ -38,7 +38,7 @@ public:
 
     void Print(Option_t *option="") const;
 
-    /// provide access to the list of clusters
+    /// provide access to the list of clusters    
     TObjArray *getClusterCol() { return m_clusterCol; };
     void addCluster(TkrCluster *cluster) { m_clusterCol->Add(cluster); };
 
@@ -47,6 +47,16 @@ public:
 
     TObjArray *getVertexCol() { return m_vertexCol; };
     void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
+
+    // Added for macros & interactive access - EAC
+    Int_t nCluster() const { return m_clusterCol->GetEntries() ; }    
+    Int_t nTrack() const { return m_trackCol->GetEntries() ; }
+    Int_t nVertex() const { return m_vertexCol->GetEntries() ; }
+
+    TkrCluster* getCluster(Int_t i) { return i < nCluster() ? dynamic_cast<TkrCluster*>(m_clusterCol->At(i)) : 0; };
+    TkrTrack* getTrack(Int_t i) { return i < nTrack() ? dynamic_cast<TkrTrack*>(m_trackCol->At(i)) : 0; };
+    TkrVertex* getVertex(Int_t i) { return i < nVertex() ? dynamic_cast<TkrVertex*>(m_vertexCol->At(i)) : 0; };
+    
 
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
     void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};

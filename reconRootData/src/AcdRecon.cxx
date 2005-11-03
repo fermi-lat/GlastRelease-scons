@@ -4,11 +4,17 @@
 ClassImp(AcdRecon)
 
 AcdRecon::AcdRecon() {
-    Clear();
+  m_acdTkrIntersectionCol = 0;
+  Clear();
 }
 
 AcdRecon::~AcdRecon() {
-    Clear();
+  Clear();
+  if ( m_acdTkrIntersectionCol != 0 ) {
+    m_acdTkrIntersectionCol->Delete();
+  }
+  delete m_acdTkrIntersectionCol;
+  m_acdTkrIntersectionCol = 0;
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -68,6 +74,9 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     m_rowActDistCol.clear();
     m_idCol.clear();
     m_energyCol.clear();
+    if ( m_acdTkrIntersectionCol ) {
+      m_acdTkrIntersectionCol->Clear();
+    }
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -109,3 +118,25 @@ Double_t AcdRecon::getEnergy(const AcdId& id) const {
 	if (index >= m_energyCol.size()) return -1.0;
 	return m_energyCol[index];
 }
+
+
+Bool_t AcdRecon::hasHit(UInt_t acdId) const {  
+  std::vector<AcdId>::const_iterator idIt;
+  for (idIt = m_idCol.begin(); idIt != m_idCol.end(); idIt++) {
+    if ( idIt->getId() == acdId ) return kTRUE;
+  }
+  return kFALSE;
+}
+
+
+AcdTkrIntersection* AcdRecon::addAcdTkrIntersection(AcdTkrIntersection& inter) {
+  UInt_t numInter = nAcdIntersections();
+  if ( m_acdTkrIntersectionCol == 0 ) {
+    m_acdTkrIntersectionCol = new TClonesArray( AcdTkrIntersection::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& intersects = *m_acdTkrIntersectionCol;
+  new (intersects[numInter]) AcdTkrIntersection(inter);  
+  return (AcdTkrIntersection*)(intersects[numInter]);
+}
+

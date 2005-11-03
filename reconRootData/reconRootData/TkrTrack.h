@@ -138,6 +138,8 @@ public:
 	inline void   clearStatusBits()                      {m_statusBits        = 0;}
     inline void   clearEnergyStatusBits()                {m_statusBits       &= 0xff0f;}
 
+    TkrTrackHit*        getHit(UInt_t iHit)      const {return iHit < Size() ? dynamic_cast<TkrTrackHit*>(At(iHit)) : 0; }
+
 private:
     /// Status
     UInt_t       m_statusBits;
