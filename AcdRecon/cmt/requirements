@@ -7,6 +7,7 @@ branches src doc
 
 use GlastPolicy v*
 use GlastSvc v9r*
+use TkrUtil  v*
 use Event    v*
 use GuiSvc   v3*
 

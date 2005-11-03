@@ -18,6 +18,7 @@
 #include "GaudiKernel/StatusCode.h"
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -43,7 +44,7 @@ static double maxDoca = 2000.0;
 // This should be done in the constructor
 AcdReconAlg::AcdReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
-	
+  declareProperty("intersectionToolName", m_intersectionToolName="AcdTkrIntersectTool");
 }
 
 
@@ -66,6 +67,12 @@ StatusCode AcdReconAlg::initialize ( ) {
     if( sc.isFailure() ) {
         log << MSG::ERROR << "AcdReconAlg failed to get the GlastDetSvc" << endreq;
         return sc;
+    }
+
+    sc = toolSvc()->retrieveTool(m_intersectionToolName,  m_intersectionTool);
+    if (sc.isFailure() ) {
+      log << MSG::ERROR << "  Unable to create " << m_intersectionToolName << endreq;
+      return sc;
     }
 	
     getParameters();
@@ -154,6 +161,8 @@ void AcdReconAlg::clear() {
     m_act_dist = -maxDoca;
     m_act_dist3D = -maxDoca;  // for new active distance
     m_ribbon_act_dist = -maxDoca;
+
+    m_hitMap.clear();
 }
 
 
@@ -179,6 +188,12 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         
         idents::AcdId id = (*acdDigiIt)->getId();
+
+	// caculate the hitMask and stick it in the map
+	unsigned char hitMask = 1;
+	hitMask |= (*acdDigiIt)->getVeto(Event::AcdDigi::A) ? 2 : 0;
+	hitMask |= (*acdDigiIt)->getVeto(Event::AcdDigi::A) ? 4 : 0;
+	m_hitMap[id] = hitMask;
 
         if (id.tile()) {
         // toss out hits below threshold -- OLD
@@ -219,29 +234,46 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         << "ActDist: " << m_act_dist;
     log << endreq;
 	
+    
+    static Event::AcdTkrIntersectionCol acdIntersections;
+
+    // get pointer to the tracker vertex collection
+    SmartDataPtr<Event::TkrTrackCol> trackCol(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
+    // if reconstructed tracker data doesn't exist - put the debugging message    
+    if (trackCol==0) {
+      log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
+    } else {
+      sc = m_intersectionTool->findIntersections(trackCol,&acdIntersections,m_hitMap);
+      if ( sc.isFailure() ) return sc;
+    }
+
     SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (checkAcdRecTds) {
         log << MSG::DEBUG;
         if (log.isActive()) log.stream() << "AcdRecon data already on TDS!";
         log << endreq;
         checkAcdRecTds->clear();
-        checkAcdRecTds->init(m_totEnergy, m_totRibbonEnergy, m_tileCount, 
-            m_ribbonCount, m_gammaDoca, m_doca, 
-            m_minDocaId, m_act_dist, m_maxActDistId, m_rowDocaCol, 
-            m_rowActDistCol, m_idCol, m_energyCol,
-            m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
-            m_ribbon_act_dist, m_ribbon_act_dist_id);
+        checkAcdRecTds->init(m_totEnergy, m_totRibbonEnergy, 
+			     m_tileCount, m_ribbonCount, 
+			     m_gammaDoca, m_doca, m_minDocaId,  
+			     m_act_dist, m_maxActDistId, 
+			     m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
+			     m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
+			     acdIntersections, m_ribbon_act_dist, m_ribbon_act_dist_id);
+	// ownership handed to TDS, clear local copy
+	acdIntersections.clear();
     } else {
         // create the TDS location for the AcdRecon
-        Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, 
-                                   m_totRibbonEnergy,
-                                   m_tileCount, m_ribbonCount, m_gammaDoca, 
-                                   m_doca, 
-                                   m_minDocaId, m_act_dist, m_maxActDistId, 
-                           m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
-                           m_ribbon_act_dist, m_ribbon_act_dist_id,
-                           m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol);
-        
+        Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, m_totRibbonEnergy, 
+							m_tileCount, m_ribbonCount, 
+							m_gammaDoca, m_doca, m_minDocaId, 
+							m_act_dist, m_maxActDistId, 
+							m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
+							m_ribbon_act_dist, m_ribbon_act_dist_id, 
+							acdIntersections,
+							m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol);
+	// ownership handed to TDS, clear local copy
+	acdIntersections.clear();
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
             log << "Failed to register AcdRecon" << endreq;
