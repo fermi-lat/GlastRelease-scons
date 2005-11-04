@@ -21,7 +21,7 @@ using namespace GlastClassify;
 */
 class TreeFactory::GleamValues : public DecisionTree::Values {
 public:
-    GleamValues(const TrainingInfo::StringList & names,ILookupData& lookup)
+    GleamValues(const TrainingInfo::StringList & names, ITreeFactory::ILookupData& lookup)
     {
         for( TrainingInfo::StringList::const_iterator it = names.begin();
             it != names.end(); ++it)
@@ -50,7 +50,7 @@ private:
 
 double TreeFactory::evaluate(int i)const {return (*m_trees[i])();}
 
-const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
+const ITreeFactory::ITree& TreeFactory::operator()(const std::string& name)
 {
     m_trees.push_back(new Tree(m_path+"/"+name, m_lookup));
     return *m_trees.back();

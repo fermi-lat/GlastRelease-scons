@@ -16,6 +16,7 @@ macro source "*.cxx " WIN32 "*.h *.cxx"
 library  GlastClassify -no_share  -s=../GlastClassify $(source) -s=../src $(source)
 
 use classifier *
+use xmlBase v5r*
 
 use ROOT * IExternal
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
