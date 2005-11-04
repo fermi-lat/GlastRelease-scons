@@ -12,7 +12,7 @@ $Header$
 
 class TupleItem;
 class Tuple;
-namespace GlastClassify { class TreeFactory; }
+namespace GlastClassify { class ITreeFactory; }
 
 /** @class ClassificationTree
     @brief Manage Atwood-inspired classification trees, creating new tuple variables
@@ -40,8 +40,9 @@ public:
     bool useVertex()const;
 
 private:
- 
-    GlastClassify::TreeFactory* m_factory;
+
+    GlastClassify::ITreeFactory* m_factory;
+
     const TupleItem*  m_firstLayer; /// access to the first layer in the tuple
     const TupleItem*  m_calTotRLn; 
     const TupleItem*  m_calEnergyRaw;
