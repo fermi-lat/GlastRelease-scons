@@ -59,7 +59,7 @@ void Filter::addCut(std::string name, std::string op, double value)
         m_tree.addNode(0, -10, 0.);  //the tree node, flagged as such by zero weight
         m_id = 1; 
     }
-    int left = 0, index=-1;
+    int left = 0;
     if( op == ">=" ){
         left =0;
     }else if( op=="<") {

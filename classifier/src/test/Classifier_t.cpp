@@ -131,13 +131,11 @@ public:
         ftext << "y >= -1" << std::endl;
         ftext.close();
 
-
-        std::ifstream iftext(testfile.c_str());
-
         DecisionTree& ftree= *new DecisionTree("test_classifier"); // make a new tree
         
         Filter f(m_names, ftree);
-        f.makeTree(iftext);
+        f.addCutsFrom(testfile);
+        f.close();
 
         std::cout << "print of the test tree"<< std::endl;
 
