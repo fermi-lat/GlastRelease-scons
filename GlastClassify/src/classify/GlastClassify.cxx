@@ -24,6 +24,7 @@ $Header$
 #include <cmath>
 #include <time.h>
 #include <stdio.h>
+#include <set>
 
 /// path to the root files
 std::string GlastClassify::s_rootpath;
@@ -82,17 +83,7 @@ GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
         Filter createfilter(m_all_names, *m_filter);
         createfilter.addCutsFrom(filterfilename); // do it
         log() << "Using filter: " << std::endl;
-#if 0
-        filterstream.clear();
-        std::ifstream copystream(filterfilename.c_str());
-        while( !copystream.eof()){
-            std::string line; std::getline(copystream,line);
-            log() << "\t" << line << std::endl;
-        }
-#else
         createfilter.print(log());
-
-#endif
     }
 
 }
@@ -221,6 +212,13 @@ void GlastClassify::classify()
 
     // create the tree from the data
     Classifier ctree(m_data, m_info.vars());
+    std::set<std::string> varset(m_info.vars().begin(), m_info.vars().end());
+
+    log() << "Variables used for trainging:\n\t";
+    std::copy( varset.begin(), varset.end(),
+        std::ostream_iterator<std::string>(log(), "\n\t"));
+    log() << std::endl;
+    
     ctree.makeTree();
 
     // summary stuff at the top of the file
@@ -242,7 +240,7 @@ void GlastClassify::classify()
     log()<<" writing to file " << plotfilename << std::endl;
 
     std::ofstream plotfile(plotfilename.c_str());
-    plot.print(plotfile);
+    plot.print(plotfile, m_info.title());
 
 #ifdef VERBOSE // generates a lot of output, need a special option
     // print the node list, and the variables used

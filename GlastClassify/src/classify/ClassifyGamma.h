@@ -66,17 +66,10 @@ public:
         bool  keep=false;
         switch  (m_case)
         {
-        case 0: keep = vertex() && highcal()
-#if 0 
-                    && AcdActiveDist < -10 
-                    && CalTrackAngle < .5
-                    && CalTrackDoca > 40
-#endif
-                    ;
-                        break;
-        case 1: keep = vertex() && medcal(); break;
-        case 2: keep = vertex() && lowcal() && thin(); break;
-        case 3: keep = vertex() && lowcal() && !thin(); break; 
+        case 0: keep = vertex()  && highcal(); break;
+        case 1: keep = vertex()  && medcal(); break;
+        case 2: keep = vertex()  && lowcal() && thin(); break;
+        case 3: keep = vertex()  && lowcal() && !thin(); break; 
         case 4: keep = !vertex() && highcal(); break;
         case 5: keep = !vertex() && medcal(); break;
         case 6: keep = !vertex() && lowcal() && thin(); break;

@@ -1,10 +1,16 @@
 /**@file ClassifyEnergy.h
-@brief 
+@brief Define ClassifyEnergy
 
+$Header$
 */
 #include "GlastClassify.h"
 
 #include <cmath>
+
+/** @class GlastClassify
+    @brief Manage classification of the various energy estimates
+
+*/
 
 class ClassifyEnergy : public GlastClassify
 {
@@ -17,10 +23,11 @@ public:
         , EvtEnergyCorr("EvtEnergyCorr")
         , McEnergy("McEnergy")
         , McLogEnergy("McLogEnergy")
-        , CalEnergyCorr("CalEnergyCorr")
+        , CalEnergyRaw("CalEnergyRaw")
         , CalTklEnergy("CalTklEnergy")
         , CalCfpEnergy("CalCfpEnergy")
         , CalLllEnergy("CalLllEnergy")
+        , CalTotRLn("CalTotRLn")
     { 
         if( info_path.find("param")!=std::string::npos) m_type=PARAM;
         else if( info_path.find("lastlayer")!=std::string::npos) m_type=LASTLAYER;
@@ -37,11 +44,13 @@ public:
     {
         double energyRatio = m_energy/McEnergy;
         double tolerance = 2.* energyResModel();
-        return fabs(energyRatio-1)> tolerance; 
+        return fabs(energyRatio-1) < tolerance; 
     }
 
     virtual bool accept()
     {
+        if(CalEnergyRaw<5. || CalTotRLn<4.) return false; 	 
+ 
         switch( m_type )
         {
         case PARAM: m_energy = EvtEnergyCorr; break;
@@ -62,9 +71,10 @@ private:
     Entry EvtEnergyCorr;
     Entry McEnergy;
     Entry McLogEnergy;
-    Entry CalEnergyCorr;
+    Entry CalEnergyRaw;
     Entry CalTklEnergy;
     Entry CalCfpEnergy;
     Entry CalLllEnergy;
+    Entry CalTotRLn;
 };
 

@@ -47,6 +47,9 @@ int main(int argc , char * argv[])
 
         // the categories
 
+        if( name=="energy/param/low" || all || energy) ClassifyEnergy("energy/param/low").run();
+        if( name=="energy/param/med" || all || energy) ClassifyEnergy("energy/param/med").run();
+        if( name=="energy/param/high"|| all || energy) ClassifyEnergy("energy/param/high").run();
         if( name=="energy/param"    || all || energy) ClassifyEnergy("energy/param").run();
         if( name=="energy/lastlayer"|| all || energy) ClassifyEnergy("energy/lastlayer").run();
         if( name=="energy/profile"  || all || energy) ClassifyEnergy("energy/profile").run();
