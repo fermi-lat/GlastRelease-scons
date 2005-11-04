@@ -101,7 +101,8 @@ public:
 
     Tuple& m_t;
 };
-#
+
+
 }  // anonymous namespace
 
 
@@ -157,7 +158,7 @@ ClassificationTree::ClassificationTree( Tuple& t, std::ostream& log, std::string
         @param CTvertex   The vertex measure of the incoming direction is better than the first track 
         @param CTgoodPsf  The incoming direction is well measured  (PSF is good)    
         @param CTgamma    The event is a gamma, not background
-        @param CTgammaType     integer type for the background rejection tree
+        @param CTgammaType  integer type for the background rejection tree
         @param BestEnergy 
         */
 

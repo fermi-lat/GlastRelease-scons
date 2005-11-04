@@ -68,6 +68,11 @@ int main(int argc, char* argv[])
         tuple->setTitle(title.str());
         tuple->loadBranches();
 
+
+        const char* ctree = ::getenv("CTREE_PATH");
+        // create the ct: pass in the tuple.
+        ClassificationTree pct(*tuple, std::cout, ctree!=0? std::string(ctree) : "");
+
         // set up the output Root file, branch
 
         TFile out_file(output_filename.c_str(), "recreate");
@@ -78,10 +83,6 @@ int main(int argc, char* argv[])
             std::string leaf_name = item.isFloat() ? item.name() : item.name()+"/D";
             out_tree->Branch(item.name().c_str(), (void*)val, leaf_name.c_str());
         }
-
-        const char* ctree = ::getenv("CTREE_PATH");
-        // create the ct: pass in the tuple.
-        ClassificationTree pct(*tuple, std::cout, ctree!=0? std::string(ctree) : "");
 
         int k=0;
 
