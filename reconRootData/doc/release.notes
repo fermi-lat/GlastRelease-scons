@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r5      03-Nov-05  : HMK Prepare to tag Eric's new AcdTkrIntersectTool
 v8r4      25-Oct-05  : HMK Store ribbon values in AcdRecon
 v8r3      22-Sep-05  : HMK add ACD ribbon count and energy
 v8r2      12-Sep-05  : HMK Store AcdId for ActiveDistance in AcdRecon
