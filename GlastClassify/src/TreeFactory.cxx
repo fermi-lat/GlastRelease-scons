@@ -48,6 +48,8 @@ private:
 };
 
 
+double TreeFactory::evaluate(int i)const {return (*m_trees[i])();}
+
 const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
 {
     m_trees.push_back(new Tree(m_path+"/"+name, m_lookup));
@@ -55,17 +57,21 @@ const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
 }
 
 TreeFactory::Tree::Tree( const std::string& path, ILookupData& lookup)
+: m_filter_tree()
 {
     TrainingInfo info(path);
     TrainingInfo::StringList vars(info.vars()); // local copy to extend perhaps
 
-    // make sure can open the classification tree file
+    // see if we have a local  classification tree file
+    DecisionTree* localTree(0);
     std::string dtfile(path+"/dtree.txt");
     std::ifstream dtstream(dtfile.c_str());
     if(! dtstream.is_open()){
-        throw std::runtime_error("failed to open file "+dtfile);
+
+        //throw std::runtime_error("failed to open file "+dtfile);
+    }else{
+        localTree = new DecisionTree(dtstream);
     }
-    DecisionTree* theTree = new DecisionTree(dtstream);
 
     // see if there is a filter
 
@@ -79,31 +85,51 @@ TreeFactory::Tree::Tree( const std::string& path, ILookupData& lookup)
         Filter filter(vars,*dt); 
         filter.addCutsFrom(filterfile);
         filter.close();
+        
+        if( localTree!=0){
 
-        // and add the rest here
-        dt->addTree(theTree);
-        delete theTree; // done with this one
-        m_dt=dt;        // copy pointer: now it is const.
+            // there is a local tree: append it to the filter
+            dt->addTree(localTree);
+            delete localTree; // done with this one
+            m_filter_tree = dt;
+        }else {
+            // no local tree, so only filter.
+           m_filter_tree=dt;        
+        }
 
     }else{
 
         // no filter: this is it.
-        m_dt=theTree;
+        m_filter_tree = localTree;
     }
+    // todo: read the file listing paths to nested trees, 
+    // call this constructor recursively on each, add to 
+    // m_exclusive_trees
     m_vals = new GleamValues(vars, lookup);
 }
 
 double TreeFactory::Tree::operator()()const
 {
-    return (*m_dt)(*m_vals);
+    double test = (*m_filter_tree)(*m_vals);
+    // either failed filter, or no nested trees
+    if( m_exclusive_trees.size()==0 || test==0) return test;
+
+    // now loop over the nested trees, return result of first non-zero evaluation
+    for( std::vector<const TreeFactory::Tree*>::const_iterator it = m_exclusive_trees.begin();
+        it!= m_exclusive_trees.end(); ++it)
+    {
+        test = (**it)();
+        if( test>0) return test;
+    }
+    return 0; // no filter passed, or pure background.
 }
 std::string TreeFactory::Tree::title()const
 {
-    return m_dt->title();
+    return m_filter_tree->title();
 }
 TreeFactory::Tree::~Tree()
 {
-    delete m_dt;
+    delete m_filter_tree;
     delete m_vals;
 }
 TreeFactory::~TreeFactory()
