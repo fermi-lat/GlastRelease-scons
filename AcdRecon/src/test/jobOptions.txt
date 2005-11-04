@@ -5,7 +5,8 @@
 // $Header$
 
 //  -------------- basic Glast/Gaudi run enviornment -----------
-ApplicationMgr.DLLs = { "GlastSvc", "AcdRecon", "RootIo"};
+ApplicationMgr.DLLs = { "GlastSvc", "AcdRecon", "RootIo", "TkrUtil", 
+            "G4Propagator", "G4Generator", "CalibSvc"};
 
 ApplicationMgr.ExtSvc = { 
     "GlastEventSelector/EventSelector" , 
