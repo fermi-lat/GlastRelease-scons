@@ -238,15 +238,16 @@ TupleItem::TupleItem(const std::string& iname, double x)
 TupleItem::TupleItem(const std::string& name, float* x)
 : m_name(name), m_pdatum((double*)x),m_isFloat(true)
 {
-    Tuple::s_currentTuple->push_back(this);
+    Tuple::s_currentTuple->replaceOrAdd(this);
+//    Tuple::s_currentTuple->push_back(this);
 }
 
 TupleItem::TupleItem(const std::string& iname, double* px)
 : m_name(iname), m_pdatum(px), m_isFloat(false)
 {
-    Tuple::s_currentTuple->push_back(this);
+    Tuple::s_currentTuple->replaceOrAdd(this);
+//    Tuple::s_currentTuple->push_back(this);
 }
-
 
 
 std::ostream& operator<< (std::ostream& out, const TupleItem& t)
@@ -291,6 +292,20 @@ Tuple::tupleItem(const std::string& name)const
     throw std::runtime_error(errmsg.str());
     return *it;
 }
+
+void Tuple::replaceOrAdd(TupleItem * item)
+{
+
+    int i = index(item->name());
+    if( i == -1 ) {
+        push_back(item);
+    }else{
+        //? delete (*this)[i];
+        this->at(i) = item;
+    }
+}
+
+
 
 Tuple::~Tuple()
 {

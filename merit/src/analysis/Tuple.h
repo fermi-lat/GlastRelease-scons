@@ -111,6 +111,8 @@ private:
    virtual const TupleItem* tupleItem(const std::string& name)const;
    // return pointer to the tuple item by name. Error if not found
 
+   void Tuple::replaceOrAdd(TupleItem * item);
+
    virtual bool nextEvent(){return false;};  // for subclasses
  private:
 
