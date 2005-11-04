@@ -30,19 +30,14 @@ int main(int, char**) {
 
   std::string infile("$(RDBMODELROOT)/xml/calib_test.xml");
 
-  rdbModel::Manager* man = rdbModel::Manager::getManager();
-
-  man->setBuilder(new rdbModel::XercesBuilder);
-  man->setInputSource(infile);
-
-  // good errcode is 0
-  int errcode = man->build();
+  rdbModel::Builder* b = new rdbModel::XercesBuilder;
+  rdbModel::Rdb* rdb = new rdbModel::Rdb;
+  int errcode = rdb->build(infile, b);
 
   if (errcode) {
     std::cerr << "Build failed with error code " << errcode << std::endl;
     return errcode;
   }
-  rdbModel::Rdb* rdb = man->getRdb();
 
   rdbModel::Table* t = rdb->getTable("metadata_v2r1");
 

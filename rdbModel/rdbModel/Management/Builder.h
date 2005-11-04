@@ -34,7 +34,7 @@ namespace rdbModel{
      *  Return is number of tables built.  If negative, indicates
      *  error.
      */
-    virtual int buildRdb() = 0;
+    virtual int buildRdb(rdbModel::Rdb* rdb=0) = 0;
 
 
     void setRdb(Rdb* pRdb){m_currentRdb = pRdb;}

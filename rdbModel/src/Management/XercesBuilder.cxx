@@ -38,13 +38,18 @@ namespace rdbModel {
     return (m_doc == 0) ? 0xffffffff : 0;
   }
 
-  int XercesBuilder::buildRdb() {
+  int XercesBuilder::buildRdb(Rdb* rdb) {
     using xmlBase::Dom;
 
-    Manager* man = Manager::getManager();
 
     if (m_doc == 0 ) return 0;
-    m_rdb = man->getRdb();
+    if (rdb) {
+      m_rdb = rdb;
+    }
+    else {
+      Manager* man = Manager::getManager();
+      m_rdb = man->getRdb();
+    }
     DOMElement* docElt = m_doc->getDocumentElement();
 
     

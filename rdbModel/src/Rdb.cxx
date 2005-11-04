@@ -2,6 +2,7 @@
 #include "rdbModel/Rdb.h"
 #include "rdbModel/Tables/Table.h"
 #include "rdbModel/RdbException.h"
+#include "rdbModel/Management/Builder.h"
 
 namespace rdbModel {
 
@@ -11,6 +12,17 @@ namespace rdbModel {
       m_tables.pop_back();
       delete table;
     }
+  }
+
+  int Rdb::build(const std::string& description, Builder* b) {
+    m_descrip = description;
+    m_builder = b;
+    int errCode = m_builder->parseInput(m_descrip);
+
+    if (!errCode) {
+      return m_builder->buildRdb(this);
+    }
+    else return errCode;
   }
 
   Table* Rdb::getTable(const std::string& name) const {

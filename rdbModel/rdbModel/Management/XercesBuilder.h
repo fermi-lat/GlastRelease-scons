@@ -40,7 +40,7 @@ namespace rdbModel{
     virtual unsigned int parseInput(const std::string& inputPath);
 
     /** Concrete implementation of pure virtual Builder::buildRdb */
-    virtual int buildRdb();
+    virtual int buildRdb(rdbModel::Rdb* rdb=0);
 
   private:
     // A bunch of private methods to handle the details of creating an

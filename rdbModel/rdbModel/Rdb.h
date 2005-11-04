@@ -13,6 +13,7 @@ namespace rdbModel {
   class Column;
   class Index;
   //  class Assertion;
+  class Builder;
   class XercesBuilder;
   class Connection;
   class Row;
@@ -39,14 +40,16 @@ namespace rdbModel {
    * @author J. Bogart
    */
   class Rdb {    
+
   public:
     /** This is the destructor; it should be called only by the manager
      * destructor. It starts the destruction of all the objects created
      * by the builder
      */
     virtual ~Rdb();
-    Rdb() : m_connection(0) { }
+    Rdb() : m_connection(0), m_builder(0), m_descrip("") { }
 
+    int build(const std::string& description, Builder* b);
 
     unsigned getMajorVersion(){return m_majorVersion;};
     unsigned getMinorVersion(){return m_minorVersion;};
@@ -141,7 +144,8 @@ namespace rdbModel {
     /// The CVSid from the input xml description
     std::string m_CVSid;
     Connection* m_connection;
-
+    Builder*    m_builder;
+    std::string m_descrip;
   };
 }
 
