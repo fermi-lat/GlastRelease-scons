@@ -28,6 +28,7 @@ the subsequent trees.
 
 
 */
+
 class DecisionTree {
 public:
     typedef long long Identifier_t;
@@ -64,9 +65,10 @@ public:
     @param row
     @param tree_count [0] if nonzero, maximum trees to evaluate
     */
-    double operator()(const std::vector<float>& row, int tree_count=0)const;
+    double operator()(const std::vector<float>& row, int tree_count=0) const;
 
-    double operator()(const Values& vals)const;
+    double operator()(const Values& vals) const;
+
     ~DecisionTree();
 
     

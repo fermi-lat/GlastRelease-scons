@@ -86,7 +86,7 @@ double DecisionTree::operator()(const std::vector<float>& row, int tree_count)co
 
     return (*this)(vals);
 }
-double DecisionTree::operator ()(const Values& vals)const
+double DecisionTree::operator ()(const Values& vals) const
 {
     double weighted_sum=0, sum_of_weights=0;
     std::vector<std::pair<double, Node*> >::const_iterator it= m_rootlist.begin();
