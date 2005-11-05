@@ -106,8 +106,14 @@ const Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::Par
             if (!validMaterial()) throw std::invalid_argument("Invalid Material TkrTrackParams requested");
             return m_Qmaterial;
         }
-
-        throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        case UNKNOWN:
+        {
+            throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        }
+        default:
+        {
+            throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        }
     }
 
     return m_hitMeas;
