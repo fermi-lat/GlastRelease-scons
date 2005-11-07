@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r7p3
+version v3r8
 
 #$Id$
 author H. Kelly <heather@heapop.gsfc.nasa.gov>
