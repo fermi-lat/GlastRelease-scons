@@ -7,7 +7,6 @@ $Header$
 
 // Include files
 
-
 #include "ValBase.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -97,9 +96,24 @@ StatusCode TkrHitValsTool::initialize()
     
     // load up the map
 
-    addItem("TkrNumHits",        &Tkr_Cnv_Lyr_Hits);       
-    addItem("TkrMaxControllerHits", &Tkr_Max_controller_hits);
-    addItem("Tkr1stLayer",         &Tkr_Fst_Cnv_Lyr);        
+/** @page anatup_vars_optional 
+    @section tkrhitvalstool TkrHitValsTool Variables
+
+<table>
+<tr><th> Variable </th> <th> Description					
+<tr><td> TkrNumHits 	
+<td>        Total number of TKR clusters 
+<tr><td> TkrFirstLayer
+<td>        First layer containing a cluster 
+<tr><td> TkrNumLayersHit
+<td>        Total number of hit layers 
+<tr><td> TkrHitsInLyrNN, NN=(00,17)   
+<td>        Number of clusters in (bi)layer NN 
+           (numbered from the bottom of the tracker) 
+</table>
+*/
+    addItem("TkrNumHits",            &Tkr_Cnv_Lyr_Hits);       
+    addItem("TkrFirstLayer",         &Tkr_Fst_Cnv_Lyr);        
     addItem("TkrNumLayersHit",       &Tkr_NCnv_Lyrs_Hit);      
     
     addItem("TkrHitsInLyr00",      &Tkr_HitsPerLyr[0]);      
