@@ -1162,6 +1162,7 @@ StatusCode TkrValsTool::calculate()
                 isXY[tower] = (clusCount[0][tower]>0 && clusCount[1][tower]>0);
                 //std::cout << "tower " << tower << ", " << clusCount[0][tower] 
                 //    << " " << clusCount[1][tower] << ", " << isXY[tower] << std::endl;
+            }
             // make sure *this* tower is included!
             isXY[thisTower] = true;
 
