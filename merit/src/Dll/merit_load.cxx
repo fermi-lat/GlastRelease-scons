@@ -11,6 +11,7 @@
 DECLARE_FACTORY_ENTRIES(merit) {
     DECLARE_ALGORITHM( meritAlg );
 
+    DECLARE_ALGORITHM( FT1Alg );
 } 
 
 
