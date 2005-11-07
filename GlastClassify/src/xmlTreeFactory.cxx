@@ -7,7 +7,8 @@ $Header$
 
 #include "GlastClassify/xmlTreeFactory.h"
 #include "classifier/DecisionTree.h"
-#include "classifier/ImSheetBuilder.h"
+#include "ImActivityNodes/PredictEngineNode.h"
+#include "xmlBuilders/ImSheetBuilder.h"
 #include <fstream>
 #include <cassert>
 #include <stdexcept>
@@ -24,15 +25,12 @@ XERCES_CPP_NAMESPACE_USE
 
 /** @class GleamValues
 @brief local definition of class which handles pointers to values
+       NOTE: this needs modification - separate out into own class
+       (in progress for next check in)
 */
 class xmlTreeFactory::GleamValues : public DecisionTree::Values 
 {
 public:
-//    GleamValues(const DecisionTreeBuilder::StringList& names, 
-//                const xmlTreeFactory::LocalTupleValues& localVals,
-//                const std::map<std::string,std::string>& imToTobyMap,
-//                ITreeFactory::ILookupData& lookup) :
-//                m_localVals(localVals)
     GleamValues(const ImSheetBuilder::StringList& names, 
                 const xmlTreeFactory::LocalTupleValues& localVals,
                 const std::map<std::string,std::string>& imToTobyMap,
@@ -135,11 +133,9 @@ xmlTreeFactory::xmlTreeFactory(const std::string& path, ITreeFactory::ILookupDat
     m_imSheet = new ImSheetBuilder(m_domDocument);
 
     //Testing...
-    //std::ofstream outFile("IMsheetTest.txt");
-    //m_imSheet->print(outFile);
-    //outFile.close();
-
-    //m_builder = new DecisionTreeBuilder(m_domDocument); //, std::ostream& log=std::cout,  int iVerbosity=0);
+    std::ofstream outFile("IMsheetTest.txt");
+    m_imSheet->print(outFile);
+    outFile.close();
 
     // Make a map between the names Toby has for the trees, and Bill's names...
     m_TobyToBillMap.clear();
@@ -167,28 +163,6 @@ xmlTreeFactory::xmlTreeFactory(const std::string& path, ITreeFactory::ILookupDat
     m_TobyToBillMap["gamma/track/thin"]     = "CT: BKG 1Tkr CAL-Low Thin";    
     m_TobyToBillMap["gamma/track/thick"]    = "CT: BKG Bkg 1Tkr CAL-Low Thick";
 
-
-/* 
-        //Bill's list of CT's in the imw file:
-        "CT: PSF CORE VTX Thick"x
-        "CT: PSF VTX/1Tkr Thin"x
-        "CT: PSF VTX/1Tkr Thick"x
-        "CT: PSF CORE VTX Thin"x
-        "CT: PSF CORE 1TKR Thin"x
-        "CT:  PSF CORE 1TKR Thick"x
-        "CT: Energy Param"
-        "CT: Energy Tracker"
-        "CT: Energy Profile"
-        "CT: Energy Last Layer"
-        "CT: BKG VTX CAL-Low Thick"x
-        "CT: BKG VTX CAL-Low Thin  "x
-        "CT: BKG VTX CAL-Med"x
-        "CT: BKG 1Tkr CAL-Med"x
-        "CT: BKG 1Tkr CAL-Low Thin"x
-        "CT: BKG Bkg 1Tkr CAL-Low Thick"x
-        "CT: BKG 1Tkr CAL-Hi CT "x
-*/
-
     // Mapping between the CT output value names in Toby's scheme to IM's
     m_ImToTobyOutMap.clear();
     m_ImToTobyOutMap["Pr(GoodEnergy)"] = "CTgoodCal";
@@ -206,23 +180,23 @@ const ITreeFactory::ITree& xmlTreeFactory::operator()(const std::string& name)
         std::string predEng = "PredictEngineNode";
 
         // Retrieve vector of PredictEngineNodes 
-        std::vector<ImActivityNode*> nodeVec = m_imSheet->getActivityNodeVec(predEng);
+        std::vector<IImActivityNode*> nodeVec = m_imSheet->getActivityINodeVec(predEng);
 
-        for (std::vector<ImActivityNode*>::iterator nodeIter = nodeVec.begin(); nodeIter != nodeVec.end(); nodeIter++)
+        for (std::vector<IImActivityNode*>::iterator nodeIter = nodeVec.begin(); nodeIter != nodeVec.end(); nodeIter++)
         {
-            ImActivityNode* node = *nodeIter;
+            IImActivityNode* iNode = *nodeIter;
 
-            if (node->getName() != newName) continue;
+            if (iNode->getName() != newName) continue;
+
+            // Convert to a PredictEngineNode
+            PredictEngineNode* node = dynamic_cast<PredictEngineNode*>(iNode);
 
             // Parse the desired tree from the xml document
-            //DecisionTree* tree = m_builder->buildTree(newName);
             DecisionTree* tree = node->getDecisionTree();
 
             // Retrieve the list of variables used by this tree
-            //const DecisionTreeBuilder::StringList& tmpVarNames = m_builder->getVarNames();
             const ImSheetBuilder::StringList& tmpVarNames = node->getInputVarList();
 
-            //DecisionTreeBuilder::StringList& varNames = const_cast<DecisionTreeBuilder::StringList&>(tmpVarNames);
             ImSheetBuilder::StringList& varNames = const_cast<ImSheetBuilder::StringList&>(tmpVarNames);
 
             GleamValues* gleamVals = new GleamValues(varNames, m_localVals, m_ImToTobyOutMap, m_lookup);
@@ -307,7 +281,10 @@ double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const
     if (name == "BestEnergy")
     {
         value = *(m_tupleVals.find("EvtEnergyCorr")->second);
-        //m_valsMap["BestEnergy"] = value;
+
+        // Here is what we are supposed to do... currently can't?
+        //BestEnergy = ifelse(ProfileProb > ParamProb & ProfileProb > LastLayerProb & 
+        //                    ProfileProb > TrackerProb,  CalCfpEnergy, BestEnergy)
     }
     //BestLogEnergy
     else if (name == "BestLogEnergy")
@@ -315,48 +292,41 @@ double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const
         std::string sBestEnergy = "BestEnergy";
         double BestEnergy = getValue(sBestEnergy);
         value = log(BestEnergy) / 2.3026;
-        //m_valsMap["BestLogEnergy"] = value;
     }
     //BestEnergyProb
     else if (name == "BestEnergyProb")
     {
         value = *(m_tupleVals.find("EvtEnergyCorr")->second);
-        //m_valsMap["BestEnergyProb"] = value;
     }
 
     //TkrEnergyFrac 
     else if (name == "TkrEnergyFrac")
     {
         value = *(m_tupleVals.find("TkrEnergyCorr")->second) / *(m_tupleVals.find("EvtEnergyCorr")->second);
-        //m_valsMap["TkrEnergyFrac"] = value;
     }
 
     //TkrTotalHitsNorm
     else if (name == "TkrTotalHitsNorm")
     {
         value = *(m_tupleVals.find("TkrTotalHits")->second) / sqrt(*(m_tupleVals.find("Tkr1FirstLayer")->second) - 1);
-        //m_valsMap["TkrTotalHitsNorm"] = value;
     }
 
     //TkrTotalHitRatio
     else if (name == "TkrTotalHitRatio")
     {
         value = (*(m_tupleVals.find("Tkr1Hits")->second) + *(m_tupleVals.find("Tkr2Hits")->second))/ *(m_tupleVals.find("TkrTotalHits")->second);
-        //m_valsMap["TkrTotalHitRatio"] = value;
     }
 
     //Tkr12DiffHits
     else if (name == "Tkr12DiffHits")
     {
         value = *(m_tupleVals.find("Tkr1Hits")->second) - *(m_tupleVals.find("Tkr2Hits")->second);
-        //m_valsMap["Tkr12DiffHits"] = value;
     }
 
     //TkrLATEdge
     else if (name == "TkrLATEdge")
     {
         value = 740. - std::max(abs(*(m_tupleVals.find("Tkr1X0")->second)), abs(*(m_tupleVals.find("Tkr1Y0")->second)));
-        //m_valsMap["TkrLATEdge"] = value;
     }
 
     //PSFEneProbPrd
@@ -366,14 +336,12 @@ double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const
         std::string sBestEnergyProb = "BestEnergyProb";
         double      BestEnergyProb  = getValue(sBestEnergyProb);
         value = sqrt(BestEnergyProb*BestEnergyProb + CTgoodPsf*CTgoodPsf);
-        //m_valsMap["PSFEneProbPrd"] = value;
     }
 
     //CalMaxXtalRatio
     else if (name == "CalMaxXtalRatio")
     {
         value = *(m_tupleVals.find("CalXtalMaxEne")->second) / *(m_tupleVals.find("CalEnergyRaw")->second);
-        //m_valsMap["CalMaxXtalRatio"] = value;
     }
 
     return value;

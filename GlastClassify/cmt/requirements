@@ -13,7 +13,11 @@ apply_pattern package_stamps
 private
 #-----------------------------------------------------------------
 macro source "*.cxx " WIN32 "*.h *.cxx"
-library  GlastClassify -no_share  -s=../GlastClassify $(source) -s=../src $(source)
+library  GlastClassify -no_share  \
+                       -s=../GlastClassify $(source) \
+                       -s=../src $(source) \
+                       -s=../src/ImActivityNodes $(source) \
+                       -s=../src/xmlBuilders $(source)
 
 use classifier *
 use xmlBase v5r*
