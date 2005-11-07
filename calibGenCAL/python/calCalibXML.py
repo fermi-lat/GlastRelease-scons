@@ -414,7 +414,7 @@ class calTholdCICalibXML(calCalibXML):
                         
                         tcr.setAttribute('range', 'HEX1')
 
-                        size = intNonlinLength[tem, row, end, fe, 0]
+                        size = int(intNonlinLength[tem, row, end, fe, 0])
                         adc = intNonlinData[tem, row, end, fe, (size - 1)]
                         tcr.setAttribute('ULDVal', '%0.3f' % adc)
                         tcr.setAttribute('ULDSig', '30')
