@@ -107,6 +107,9 @@ public:
     /// retrieve the flag that denotes whether or not to store a row
     virtual bool storeRowFlag() { return m_storeAll; }
 
+    virtual bool getItem(const std::string & tupleName, 
+        const std::string& itemName, void*& pval)const;
+
     /** store row flag by tuple Name option, retrive currrent
     @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
     @param flag new value
@@ -419,3 +422,34 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
     m_storeTree[tupleName] = flag;
     return t;
 }
+
+
+
+bool RootTupleSvc::getItem(const std::string & tupleName, 
+                                   const std::string& itemName, void*& pval)const
+{
+    MsgStream log(msgSvc(),name());
+    StatusCode status = StatusCode::SUCCESS;
+    std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+//    TDirectory *saveDir = gDirectory;
+    std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(treename);
+    if( treeit==m_tree.end()){
+        log << MSG::ERROR << "Did not find tree" << treename << endreq;
+        throw std::invalid_argument("RootTupleSvc::getItem: did not find tuple or leaf");
+    }
+    TTree* t = treeit->second;
+    TLeaf* leaf = t->GetLeaf(itemName.c_str());
+    if( leaf==0){
+        log << MSG::ERROR << "Did not find leaf " <<itemName << endreq;
+        throw std::invalid_argument("RootTupleSvc::getItem: did not find tuple or leaf");
+    }
+    pval = leaf->GetValuePointer();
+    std::string type_name(leaf->GetTypeName());
+    if( type_name == "Float_t") return true;
+    if( type_name == "Double_t") return false;
+
+    throw std::invalid_argument("RootTupleSvc::getItem: type is not float or double");
+    return false;
+}
+
+

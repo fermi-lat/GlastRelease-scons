@@ -43,6 +43,8 @@ private:
 
     INTupleWriterSvc *m_rootTupleSvc;
 
+    float* m_float_test;
+
 };
 
 static const AlgFactory<writeJunkAlg>  Factory;
@@ -80,6 +82,19 @@ StatusCode writeJunkAlg::initialize() {
     // test of a second tree in the same file
     m_rootTupleSvc->addItem("tree_2","count", &m_count);
     m_rootTupleSvc->addItem("tree_2","square", &m_square);
+
+    // check that we can find a previous item
+
+    float* test;
+
+    bool isFloat = m_rootTupleSvc->getItem("","float",  (void*&)test);
+    if( !isFloat || test!=&m_float){
+        log << MSG::ERROR << "Did not retrieve a float" << endreq;
+        sc = StatusCode::FAILURE;
+    }else{
+        log << MSG::INFO << "Found previous entry OK" << endreq;
+    }
+
     return sc;
 }
 
