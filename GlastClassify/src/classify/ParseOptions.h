@@ -28,10 +28,11 @@ public:
     int n_boosts;
     int events;
     int normalize;
-    std::string datapath, infopath, casename;
+    std::string datapath;
     std::vector<std::string> file_paths;
     bool train;
     bool valid;
+    std::string casename, infopath;
     double leaf_purity ;
     double improv_min;
     GlastClassify::Subset train_sample;
@@ -48,10 +49,10 @@ public:
         : n_boosts( 0)
         , events(0)
         , normalize(100)
+        , train(true)
         , valid(false)
         , casename("all")
         , infopath("../treeinfo")
-        , train(true)
         , leaf_purity(0.5)
         , improv_min(0.0)
         , train_sample(GlastClassify::EVEN)

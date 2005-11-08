@@ -326,7 +326,7 @@ double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const
     //TkrLATEdge
     else if (name == "TkrLATEdge")
     {
-        value = 740. - std::max(abs(*(m_tupleVals.find("Tkr1X0")->second)), abs(*(m_tupleVals.find("Tkr1Y0")->second)));
+        value = 740. - std::max(fabs(*(m_tupleVals.find("Tkr1X0")->second)), fabs(*(m_tupleVals.find("Tkr1Y0")->second)));
     }
 
     //PSFEneProbPrd

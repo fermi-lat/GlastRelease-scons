@@ -15,7 +15,7 @@ class RootTuple : public GlastClassify::ITupleInterface {
 
 public:
     ///
-    RootTuple::RootTuple(std::string title, std::string file, std::string treeName);
+    RootTuple::RootTuple( std::string file, std::string treeName);
     ~RootTuple(){};
 
     //! acccess to an item (interface to the leaf)

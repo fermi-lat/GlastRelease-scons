@@ -76,7 +76,7 @@ private:
 } // anonymous namespace
 using namespace GlastClassify;
 
-RootTuple::RootTuple(std::string title, std::string file, std::string treeName)
+RootTuple::RootTuple( std::string file, std::string treeName)
 :  m_event(0) {
 
     // Initialize Root

@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
         std::cerr << "Converting CT variables from: \"" << input_filename << "\" to\n\t\"" 
             << output_filename << "\"" << std::endl;
 
-        RootTuple tuple("unknown", input_filename, tree_name);
+        RootTuple tuple(input_filename, tree_name);
 
         std::stringstream title; 
         title << "gen(" << tuple.numEvents() << ")";
