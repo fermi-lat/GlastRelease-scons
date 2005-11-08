@@ -21,42 +21,40 @@ using namespace GlastClassify;
 */
 class TreeFactory::GleamValues : public DecisionTree::Values {
 public:
-    GleamValues(const TrainingInfo::StringList & names, ITreeFactory::ILookupData& lookup)
+    GleamValues(const TrainingInfo::StringList & names, ITupleInterface& tuple)
     {
         for( TrainingInfo::StringList::const_iterator it = names.begin();
             it != names.end(); ++it)
         {
-            std::pair<bool, const void*> entry = lookup(*it);
-            if( entry.second == 0 ){
+            const Item * item = tuple.getItem(*it);
+            if( item==0){
                 throw std::invalid_argument("TreeFactory::GleamValues: did not find variable "+*it);
             }
 
-            m_pval.push_back( entry);
+            m_pval.push_back( item);
         }
 
     }
     /// @brief callback from tree evaluation
 
     double operator[](int index)const{
-        std::pair<bool, const void*> entry = m_pval[index];
-        // now dereference either as a float or a double
-        double v = entry.first? *(const float*)entry.second : *(const double*)entry.second;
-        return v;
+
+        return *(m_pval[index]);
     }
 private:
-    std::vector<std::pair<bool, const void*> >m_pval;
+    std::vector<const Item *  >m_pval;
 };
 
 
 double TreeFactory::evaluate(int i)const {return (*m_trees[i])();}
 
-const ITreeFactory::ITree& TreeFactory::operator()(const std::string& name)
+const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
 {
-    m_trees.push_back(new Tree(m_path+"/"+name, m_lookup));
+    m_trees.push_back(new Tree(m_path+"/"+name, m_tuple));
     return *m_trees.back();
 }
 
-TreeFactory::Tree::Tree( const std::string& path, ILookupData& lookup)
+TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple)
 : m_filter_tree()
 {
     TrainingInfo info(path);
@@ -105,7 +103,7 @@ TreeFactory::Tree::Tree( const std::string& path, ILookupData& lookup)
     // todo: read the file listing paths to nested trees, 
     // call this constructor recursively on each, add to 
     // m_exclusive_trees
-    m_vals = new GleamValues(vars, lookup);
+    m_vals = new GleamValues(vars, tuple);
 }
 
 double TreeFactory::Tree::operator()()const

@@ -3,6 +3,8 @@
 
 $Id$
 @verbatim
+05-nov-05  v2r0   THB for TU add xml stuff for IM import
+05-nov-05  v1r0   new filter capability
 27-sep-05  v0r5   train with GR v7r0p2
 31-jul-05  v0r4p1,2 gcc fix
 31-jul-05  v0r4   back to 3 goodcal trees; new trees from HEAD1.612 runs

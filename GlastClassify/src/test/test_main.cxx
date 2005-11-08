@@ -1,5 +1,6 @@
 /**@file main.cxx
 @brief main program for application to test GLAST classification trees
+
 $Header$
 
 */
@@ -7,24 +8,38 @@ $Header$
 #include "GlastClassify/TreeFactory.h"
 #include <stdexcept>
 #include <iostream>
-#include <fstream>
 
 #include <string>
 #include <vector>
+
 using namespace GlastClassify;
 
-static std::vector<std::pair<bool, const void *> > values;
-double value;
-class TestLookup : public TreeFactory::ILookupData {
+static std::vector<float> values;
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// example of a ITem subclass that dereferences a pointer
+class TestItem : public Item {
+public:
+    TestItem(float * val): m_value(val){}
+    operator double()const { return *m_value;}
+private:
+    float * m_value;
+};
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class TestTuple : public ITupleInterface{
 public:
     TestLookup(){}
-    std::pair<bool, const void *> operator()(const std::string& name){
+    const Item * getItem(const std::string& name)const
+    {
         std::cout << "Looking up: " << name << std::endl;
-        value = values.size(); // very klugy, just exercise logic
-        values.push_back(std::make_pair(false, &value));
-        return values.back();
+        float value = values.size(); // very klugy, just exercise logic
+        values.push_back( value);
+        const TestItem* item = new TestItem(&values.back());
+        return item;
     }
 };
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 class ClassifyTest {
@@ -34,8 +49,8 @@ public:
     {
         log() << "Creating the factory:" << std::endl;
 
-        TreeFactory::ILookupData& looker = *new TestLookup();
-        TreeFactory factory(info_path, looker);
+        ITupleInterface& tuple = *new TestTuple();
+        TreeFactory factory(info_path, tuple);
 
         log() << "Ask factory for a tree: " << std::endl;
         const TreeFactory::Tree& goodcal= factory(name);
@@ -50,7 +65,7 @@ private:
     std::ostream& log(){return * m_log;}
 };
 
-
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 int main(int, char ** )
 {
