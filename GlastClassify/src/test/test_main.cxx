@@ -29,7 +29,6 @@ private:
 
 class TestTuple : public ITupleInterface{
 public:
-    TestLookup(){}
     const Item * getItem(const std::string& name)const
     {
         std::cout << "Looking up: " << name << std::endl;
@@ -38,6 +37,7 @@ public:
         const TestItem* item = new TestItem(&values.back());
         return item;
     }
+    void addItem(const std::string&, float & ){}
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

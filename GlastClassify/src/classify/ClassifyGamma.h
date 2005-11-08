@@ -7,6 +7,7 @@ $Header$
 #include "GlastClassify.h"
 
 #include <cmath>
+#include <stdexcept>
 
 class ClassifyGamma : public GlastClassify
 {
