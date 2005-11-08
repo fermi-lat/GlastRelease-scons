@@ -28,7 +28,8 @@ Triggered.Members={
     "FilterTracks","FilterAlg",
     "meritAlg" };
     
-meritAlg.IM_filename=""; // disable IM decision tree processing
+Triggered.Members+={"FT1Alg"}; // testing!!
+    
 meritAlg.cuts="LnA";     // remove or set to "LntA" to reenable tree-based tail cuts
 
 // How to pause the GUI with a list of events of interest
