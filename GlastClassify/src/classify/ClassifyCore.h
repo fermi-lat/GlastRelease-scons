@@ -62,12 +62,12 @@ public:
     double direrror() const{ return useVertex()? McDirErr : McTkr1DirErr;} 
 
 private:
+    bool m_isVertex;
+    bool m_isThin;
     Entry Tkr1FirstLayer;
     Entry McDirErr;
     Entry McTkr1DirErr;
     Entry EvtEnergyCorr;
     Entry CTgoodCal;
     Entry CTvertex;
-    bool m_isVertex;
-    bool m_isThin;
 };

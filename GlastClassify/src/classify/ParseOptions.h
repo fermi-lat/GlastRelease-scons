@@ -46,12 +46,12 @@ public:
 
     ParseOptions(int argc, char* argv[])
         : n_boosts( 0)
-        , train(true)
         , events(0)
         , normalize(100)
         , valid(false)
         , casename("all")
         , infopath("../treeinfo")
+        , train(true)
         , leaf_purity(0.5)
         , improv_min(0.0)
         , train_sample(GlastClassify::EVEN)

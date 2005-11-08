@@ -55,8 +55,8 @@ GlastClassify::GlastClassify(const std::string& info_path, bool mixed)
 : m_info(s_treepath+"/"+info_path, s_rootpath)
 , m_all_names(m_info.vars()) 
 , m_mixed(mixed)
-, m_total_good(0), m_total_bad(0)
 , m_filter(0)
+, m_total_good(0), m_total_bad(0)
 {
     s_current= this; // for communication of pointer during setup
 
@@ -156,7 +156,7 @@ void GlastClassify::load(TrainingInfo::StringList input,
 
     RootTuple t(input, "MeritTuple");
     t.selectColumns(m_all_names, false); // not weighted
-    double good=0, bad=0, rejected=0, nan=0, filtered=0;
+    int good=0, bad=0, rejected=0, nan=0, filtered=0;
     Classifier::Record::setup();
     log() << "\tsize = " << t.size() << std::endl;
     int nvars = m_all_names.size();

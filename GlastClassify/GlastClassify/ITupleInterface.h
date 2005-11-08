@@ -19,7 +19,7 @@ namespace GlastClassify{
     */
     class Item {
     public:
-        Item(std::string name){};
+        virtual ~Item(){};
         virtual operator double()const = 0;
     protected:
         Item(){};
@@ -31,6 +31,8 @@ namespace GlastClassify{
     class ITupleInterface 
     {
     public:
+        virtual ~ITupleInterface(){}
+
         // set an object that evaluates at run-time to the current value of the item
         virtual const Item* getItem(const std::string& name)const=0;
 

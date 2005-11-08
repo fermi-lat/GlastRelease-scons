@@ -8,7 +8,7 @@ $Header$
 #include "GlastClassify/TreeFactory.h"
 #include "classifier/DecisionTree.h"
 #include "classifier/TrainingInfo.h"
-#include "Classifier/Filter.h"
+#include "classifier/Filter.h"
 
 #include <fstream>
 #include <cassert>
