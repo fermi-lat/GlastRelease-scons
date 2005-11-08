@@ -20,7 +20,8 @@ public:
 
     CreateColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) 
-                     {m_nodeVec.clear(); m_columnNames.clear(); m_columnExpressions.clear();}
+                     {m_nodeVec.clear(); m_columnNames.clear(); 
+                      m_columnExpressions.clear(); m_parsedColExps.clear();}
     ~CreateColumnsEngineNode() {}
 
     // 
@@ -33,6 +34,7 @@ public:
 
     void setColumnNames(StringList& colNames)     {m_columnNames       = colNames;}
     void setColumnExpressions(StringList& colExp) {m_columnExpressions = colExp;}
+    void setParsedColExps(std::vector<StringList>& colExps) {m_parsedColExps = colExps;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
@@ -44,6 +46,7 @@ private:
 
     StringList         m_columnNames;
     StringList         m_columnExpressions;
+    std::vector<StringList> m_parsedColExps;
 };
 
 #endif // ifdef CreateColumnsEngineNode_h

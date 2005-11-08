@@ -40,8 +40,8 @@ public:
 
 private:
 
-    std::ostream&                m_log;         //! output to this stream
-    int                          m_outputLevel; //! output level (verbosity)
+    std::ostream& m_log;         //! output to this stream
+    int           m_outputLevel; //! output level (verbosity)
 
 };
 

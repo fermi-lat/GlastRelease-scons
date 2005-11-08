@@ -49,6 +49,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
     // Need to find the list of variables...
     StringList columnNames;
     StringList colExpressions;
+    std::vector<StringList> parsedColExps;
 
     DOMEvector xmlColumnsVec = getXTSubPropVec(xmlActivityNode, "newColumns");
 
@@ -59,24 +60,32 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
         DOMEvector xmlColVarVec;
         xmlBase::Dom::getChildrenByTagName(xmlColVar, "Property", xmlColVarVec);
 
-        std::string sVarName = xmlBase::Dom::getAttribute(xmlColVar, "name");
+        std::string sVarName    = xmlBase::Dom::getAttribute(xmlColVar, "name");
+        std::string sExpression = "";
 
         columnNames.push_back(sVarName);
 
         try
         {
             DOMElement* xmlComplex = xmlBase::Dom::findFirstChildByName(xmlColVarVec[1], "Complex");
-            std::string expression = xmlBase::Dom::getTextContent(xmlComplex);
-            
-            colExpressions.push_back(expression);
+            sExpression = xmlBase::Dom::getTextContent(xmlComplex);
         }
         //catch(xmlBase::WrongNodeType& e)
         catch(...)
         {
-            std::string expression = xmlBase::Dom::getAttribute(xmlColVarVec[1], "value");
-
-            colExpressions.push_back(expression);
+            sExpression = xmlBase::Dom::getAttribute(xmlColVarVec[1], "value");
         }
+
+        // Trim the blank spaces
+        sExpression = trimBlanks(sExpression);
+            
+        colExpressions.push_back(sExpression);
+
+        // Parse
+        StringList parsedExpression;
+        parseExpression(parsedExpression, sExpression);
+
+        parsedColExps.push_back(parsedExpression);
     }
 
     // Set the expressions
@@ -84,6 +93,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
     {
         node->setColumnNames(columnNames);
         node->setColumnExpressions(colExpressions);
+        node->setParsedColExps(parsedColExps);
     }
 
     return node;

@@ -19,7 +19,8 @@ public:
     typedef std::vector<std::string> StringList;
 
     FilterRowsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
-                     m_type(type), m_name(name), m_id(id), m_expression("") {m_nodeVec.clear();}
+                     m_type(type), m_name(name), m_id(id), m_expression("") 
+                     {m_nodeVec.clear(); m_parsedExpression.clear();}
     ~FilterRowsEngineNode() {}
 
     // 
@@ -30,7 +31,8 @@ public:
 
     virtual void setNodeLink(IImActivityNode* linkToNode) {m_nodeVec.push_back(linkToNode);}
 
-    void setExpression(std::string exp) {m_expression = exp;}
+    void setExpression(std::string& exp)      {m_expression = exp;}
+    void setParsedExpression(StringList& exp) {m_parsedExpression = exp;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
@@ -41,6 +43,7 @@ private:
     IImActivityNodeVec m_nodeVec;
 
     std::string        m_expression;
+    StringList         m_parsedExpression;
 };
 
 #endif // ifdef FilterRowsEngineNode_h

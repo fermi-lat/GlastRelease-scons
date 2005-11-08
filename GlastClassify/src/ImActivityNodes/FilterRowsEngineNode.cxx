@@ -30,7 +30,15 @@ void FilterRowsEngineNode::print(std::ostream& out, int depth) const
     out << indent(depth) << "ID: " << m_id << ", Type: " << m_type << ", Label: " << m_name << std::endl;
 
     // What is the expression
-    out << indent(depth+2) << "Filter expression = " << m_expression << std::endl;
+    //out << indent(depth+2) << "Filter expression = " << m_expression << std::endl;
+
+    // And again...
+    out << indent(depth+2) << "Filter expression: ";
+    for(StringList::const_iterator expIter = m_parsedExpression.begin(); expIter != m_parsedExpression.end(); expIter++)
+    {
+        out << *expIter;
+    }
+    out << std::endl;
 
     // What do we set depth to?
     depth = m_nodeVec.size() > 1 ? depth + 1 : depth;

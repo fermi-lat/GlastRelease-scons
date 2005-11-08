@@ -49,20 +49,30 @@ IImActivityNode* xmlFilterRowsEngineFactory::operator()(const DOMElement* xmlAct
 
     DOMElement* xmlProperty = getXTProperty(xmlActivityNode, "testExpression");
 
+    std::string sExpression;
+
     try
     {
         DOMElement* xmlComplex  = xmlBase::Dom::findFirstChildByName(xmlProperty, "Complex");
-        std::string sExpression = xmlBase::Dom::getTextContent(xmlComplex);
-
-        node->setExpression(sExpression);
+        sExpression = xmlBase::Dom::getTextContent(xmlComplex);
     }
     //catch(xmlBase::WrongNodeType& e)
     catch(...)
     {
-        std::string sExpression = xmlBase::Dom::getAttribute(xmlProperty, "value");
-        
-        node->setExpression(sExpression);
+        sExpression = xmlBase::Dom::getAttribute(xmlProperty, "value");
     }
+
+    // Trim the blank spaces
+    sExpression = trimBlanks(sExpression);
+
+    // Store
+    node->setExpression(sExpression);
+
+    // Parse
+    StringList parsedExpression;
+    parseExpression(parsedExpression, sExpression);
+
+    node->setParsedExpression(parsedExpression);
 
     return node;
 }
