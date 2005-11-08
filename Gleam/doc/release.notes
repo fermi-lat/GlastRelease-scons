@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r6   THB 09-nov-05   add FT1Alg to triggered sequence
 * v6r5   THB 21-oct-05   fix order of calib stuff in basicOptions.
 * v6r4p4 THB 20-sep-05   move Pt info to new alg
 * v6r4p3 THB 18-aug-05   restore backoff CalXtalResponse include
