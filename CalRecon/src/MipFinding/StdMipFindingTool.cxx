@@ -921,10 +921,13 @@ int StdMipFindingTool::propagate(Point xStart, Vector dir)
     else             cosphi=1;
     Vector p(costheta/cosphi, 0., -sintheta);
     p=p.unit();
-    int nRad=5;
+//     int nRad=5;
+//     int nAng1=3;
+//     double deltaRadius=4;
+    int nRad=2;
     int nAng1=3;
-    double deltaRadius=4;
-
+    double deltaRadius=10;
+    
     for (int iRad=1; iRad<=nRad; iRad++)
     {
         double radius = iRad * deltaRadius;
