@@ -69,6 +69,8 @@ StatusCode TestAcdUtil::initialize() {
         return sc;
     }
 
+    m_acdGeoSvc->findCornerGaps();
+
     return sc;
 }
 

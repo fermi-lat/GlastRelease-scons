@@ -59,6 +59,9 @@ public:
 
 
     virtual bool findDetector(const idents::VolumeIdentifier &volId) const = 0;
+
+    virtual StatusCode findCornerGaps() = 0;
+    virtual const Ray getCornerGapRay(unsigned int i) const = 0;
 };
 
 #endif
