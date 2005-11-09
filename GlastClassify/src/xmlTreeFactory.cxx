@@ -140,9 +140,9 @@ xmlTreeFactory::xmlTreeFactory(const std::string& path, ITupleInterface& tuple)
     m_imSheet = new ImSheetBuilder(m_domDocument);
 
     //Testing...
-    std::ofstream outFile("IMsheetTest.txt");
-    m_imSheet->print(outFile);
-    outFile.close();
+    //std::ofstream outFile("IMsheetTest.txt");
+    //m_imSheet->print(outFile);
+    //outFile.close();
 
     // Make a map between the names Toby has for the trees, and Bill's names...
     m_TobyToBillMap.clear();
