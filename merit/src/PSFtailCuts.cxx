@@ -32,6 +32,9 @@ class AbsValueCut : public Analyze {
 
 PSFtailCuts::PSFtailCuts(const Tuple& t): AnalysisList("CT PSF tail cuts")
 {
+    try {
     push_back( new Cut(t, "CTgoodCal>0.25") );
+    }catch(...){}
+
     push_back( new Cut(t, "Tkr1Zdir<-0.25") );
 }
