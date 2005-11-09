@@ -27,7 +27,8 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
                           const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
 			  const std::vector<AcdId> &idCol,
-                          const std::vector<Double_t> &energyCol) {
+                          const std::vector<Double_t> &energyCol,
+                          Double32_t cornerDoca) {
     Clear();
     m_totEnergy = e;
     m_totRibbonEnergy = ribbonE;
@@ -44,6 +45,7 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
     m_ribbonActDistId = ribbonActDistId;
     m_idCol = idCol;
     m_energyCol = energyCol;
+    m_cornerDoca = cornerDoca;
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -77,6 +79,7 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     if ( m_acdTkrIntersectionCol ) {
       m_acdTkrIntersectionCol->Clear();
     }
+    m_cornerDoca = 2000.;
 }
 
 void AcdRecon::Print(Option_t *option) const {

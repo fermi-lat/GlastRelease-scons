@@ -38,6 +38,7 @@ using namespace std;
 * -# Total reconstructed energy detected in ACD detector elements.
 * -# MC Energy in MeV deposited in the ribbons
 * -# Ribbon Count
+* -# Corner DOCA
 *
 * @author Heather Kelly
 *
@@ -55,7 +56,7 @@ public:
             const std::vector<Double_t> &rowDoca,
             const std::vector<Double_t> &rowActDist,
             const std::vector<AcdId> &idCol, 
-            const std::vector<Double_t> &energyCol)       
+            const std::vector<Double_t> &energyCol, Double32_t cornerDoca)       
             : m_totEnergy(e),
             m_gammaDoca(gDoca),
             m_doca(doca),
@@ -68,7 +69,8 @@ public:
             m_idCol(idCol),
             m_energyCol(energyCol),
             m_totRibbonEnergy(ribbonE),
-            m_ribbonCount(ribbonCount)
+            m_ribbonCount(ribbonCount),
+            m_cornerDoca(cornerDoca)
         {};
      
     virtual ~AcdRecon();
@@ -80,7 +82,7 @@ public:
         const AcdId &ribbonActDistId, const std::vector<Double_t> &rowDoca, 
         const std::vector<Double_t> &rowActDist, 
         const std::vector<AcdId> &idCol,
-        const std::vector<Double_t> &energyCol);
+        const std::vector<Double_t> &energyCol, Double32_t cornerDoca);
 
     /// overload initialize for interactive root where we cannot use std::vector
     void initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -136,6 +138,8 @@ public:
       return i < nAcdIntersections() ? 
 	static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
     }  
+
+    inline Double32_t getCornerDoca() const { return m_cornerDoca; };
     
 private:
 
@@ -176,7 +180,9 @@ private:
     // Store the expected track intersection points
     TClonesArray *m_acdTkrIntersectionCol;
 
-    ClassDef(AcdRecon,8) // Acd Reconstruction data
+    Double32_t m_cornerDoca;
+
+    ClassDef(AcdRecon,9) // Acd Reconstruction data
 };
 
 #endif

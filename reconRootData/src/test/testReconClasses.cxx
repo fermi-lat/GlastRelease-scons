@@ -619,6 +619,10 @@ int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
         std::cout << "AcdRecon Gamma Doca is wrong: " << acd->getGammaDoca() << std::endl;
         return -1;
     }
+    if (!floatInRange(acd->getCornerDoca(), fr)) {
+        std::cout << "AcdRecon Corner Doca is wrong: " << acd->getCornerDoca() << std::endl;
+        return -1;
+    }
 
     if (!floatInRange(acd->getDoca(), randNum) ){
         std::cout << "AcdRecon Doca is wrong: " << acd->getDoca() << std::endl;
@@ -811,10 +815,11 @@ int write(char* fileName, int numEvents) {
         std::vector<Double_t> energyCol;
         energyCol.push_back(f);
         energyCol.push_back(2.*f);
+        Double32_t cornerDoca = f*randNum;
         acdRec->initialize(energy, ribbonE, count, ribbonCount, gDoca, doca, 
             minDocaId,
-            actDist, maxActDistId, ribActDist, ribActDistId, rowDocaCol, rowActDistCol,
-            idCol, energyCol);
+            actDist, maxActDistId, ribActDist, ribActDistId, rowDocaCol, 
+            rowActDistCol, idCol, energyCol, cornerDoca);
 
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
