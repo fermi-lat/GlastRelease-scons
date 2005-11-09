@@ -298,6 +298,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // tile and a bottom side row tile.
     std::vector<double> dim040, dim430;
     HepPoint3D centerZ, cornerZ[4];
+    // Using new function that automatically handles flipping X and Y for
+    // Faces 1 and 3
     sc = getDetectorDimensions(volId040, dim040, centerZ);
     getCorners(dim040, centerZ, cornerZ);
     double zMax = cornerZ[0].z();
@@ -340,6 +342,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     std::vector<double> dim300, dim204;
     HepPoint3D center300, center204;
     HepPoint3D corner300[4], corner204[4];
+    // Using new function that automatically handles flipping X and Y for
+    // Faces 1 and 3
     sc = getDetectorDimensions(volId300, dim300, center300);
     getCorners(dim300, center300, corner300);
     // use corner with minY and maxZ which should be index 1
@@ -377,10 +381,10 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // use corner with maxY and maxZ which should be index 2
 
     sc = getDetectorDimensions(volId404, dim404, center404);
-    getCorners(dim304, center404, corner404);
+    getCorners(dim404, center404, corner404);
     // use corner with maxX and maxZ which should be index 2
     // Construct the Ray with the x and y position in the middle of the gap
-    xDiff = fabs(corner304[2].x() - corner404[2].x());
+    xDiff = fabs(corner304[2].x() - corner404[2].x())*0.5;
     yDiff = fabs(corner304[2].y() - corner404[2].y())*0.5;
 
     // Create the start and end of the ray using the position half-way between
