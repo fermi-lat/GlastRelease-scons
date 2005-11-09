@@ -1000,6 +1000,11 @@ StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &
 
     return_dist = maxDoca;
 
+    // Use this flag to determine whether to apply sign or not.. if we never
+    // find a corner DOCA where the intersection is within the limits of the 
+    // side, the return distance should remain at maxDoca
+    bool foundOne = false;
+
     // Form a Ray using the input track
     Point trackPos(x0.x(), x0.y(), x0.z());
     Vector trackDir(t0.x(), t0.y(), t0.z());
@@ -1018,10 +1023,14 @@ StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &
         double length_2_intersect = doca.arcLenRay2();
         if (length_2_intersect > 0 && length_2_intersect < gapRay.getArcLength()) {
 
+            foundOne = true;
             double test_dist = doca.docaRay1Ray2();
             return_dist = (return_dist > test_dist) ? test_dist : return_dist;
         }
     }
+
+    // If no DOCAs were found, just return, and skip the sign calculation
+    if(!foundOne) return StatusCode::SUCCESS;
 
     // Now we have DOCA to the corners
     // Next compute sign based on (Tkr1X0*Tkr1YDir - Tkr1Y0*Tkr1XDir)
