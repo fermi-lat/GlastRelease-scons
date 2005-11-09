@@ -31,7 +31,7 @@ public:
     /// Read data from the input XML file
     void getParameters(const std::string &xmlFile);
 
-    void dumpMeanPePerPmt() const;
+    std::ostream& dumpMeanPePerPmt(std::ostream& s) const;
 
     /// Convert from energy (MeV) to MIPs
     static double convertMevToMips(double energy_mev);

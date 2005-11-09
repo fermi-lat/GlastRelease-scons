@@ -67,17 +67,18 @@ void AcdDigiUtil::getParameters(const std::string &xmlFile) {
     return;
 }
 
+std::ostream& AcdDigiUtil::dumpMeanPePerPmt(std::ostream& s) const {
 
-void AcdDigiUtil::dumpMeanPePerPmt() const {
-
-    printf("Dump All Mean PE per PMT values read in from XML\n");
+    s  << "Dump All Mean PE per PMT values read in from XML" << std::endl;
     std::map< unsigned int, std::pair<float, float> >::const_iterator mapIt;
     for (mapIt = m_pePerMipMap.begin(); mapIt != m_pePerMipMap.end(); mapIt++) {
         std::pair<float, float> pePerMip = (*mapIt).second;
-        printf("ID: %d   PMTA: %f, PMTB: %f\n", (*mapIt).first, pePerMip.first, pePerMip.second);
-
+        s << "ID: " << (*mapIt).first << " PMTA: " << pePerMip.first 
+          << " PMTB: " << pePerMip.second << std::endl;
     }
+    return s;
 }
+
 
 double AcdDigiUtil::convertMevToMips(double energy_mev) {
     return energy_mev / m_mev_per_mip;

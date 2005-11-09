@@ -365,7 +365,10 @@ StatusCode AcdDigiAlg::execute() {
 
 
 StatusCode AcdDigiAlg::finalize() {
-    util.dumpMeanPePerPmt();
+    MsgStream   log( msgSvc(), name() );
+    log << MSG::DEBUG;
+    if (log.isActive()) util.dumpMeanPePerPmt(log.stream());
+    log << endreq;
     return StatusCode::SUCCESS;
 }
 
