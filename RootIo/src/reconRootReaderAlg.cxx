@@ -992,7 +992,8 @@ StatusCode reconRootReaderAlg::readAcdRecon() {
         acdRecRoot->getRowDocaCol(), acdRecRoot->getRowActDistCol(), idColTds, 
         energyColTds, acdRecRoot->getRibbonActiveDist(), ribActDistIdTds, 
         acdTkrIntersections,
-	acdRecRoot->getActiveDist(), actDistIdTds,acdRecRoot->getRowActDistCol());
+	acdRecRoot->getActiveDist(), 
+        actDistIdTds,acdRecRoot->getRowActDistCol(), acdRecRoot->getCornerDoca());
     
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecTds);
     if (sc.isFailure()) {

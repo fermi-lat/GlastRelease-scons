@@ -746,7 +746,7 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
 	acdRecTds->getActiveDist3D(), actDistIdRoot, 
         acdRecTds->getRibbonActiveDist(), ribActDistIdRoot,
         acdRecTds->getRowDocaCol(), acdRecTds->getRowActDist3DCol(),
-        idRootCol, acdRecTds->getEnergyCol());
+        idRootCol, acdRecTds->getEnergyCol(), acdRecTds->getCornerDoca());
 
     const Event::AcdTkrIntersectionCol& acdTkrIntersectsTDS = acdRecTds->getAcdTkrIntersectionCol();
 
