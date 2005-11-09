@@ -4,7 +4,9 @@
  * package manager:T.Burnett
  *
  *
- * v11r6   25-oct-05  HMK Merge branch into main - storing both old and new
+ * v11r7   08-nov-05 HMK Add AcdRecon::CornerDoca and 
+ *                   merge in Eric's TkrIntersect
+ * v11r6   25-oct-05 HMK Merge branch into main - storing both old and new
                         versions of ActDistance in AcdRecon for now
  * v11r5p1gr1 20-oct-05 HMK patch that initializes row act dist col to have 
                             content - makes test_AnalysisNtuple.exe work
