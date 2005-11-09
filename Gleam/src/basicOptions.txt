@@ -186,7 +186,7 @@ Acd.Members = {"AcdReconAlg"};
 //
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-Triggered.Members +=     { "meritAlg" , "FT1Alg"};
+Triggered.Members +=     { "meritAlg"};
 
 //-------------------------------------
 //   Merit configuration --  (use defaults)
