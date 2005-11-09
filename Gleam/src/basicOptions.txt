@@ -178,7 +178,7 @@ ApplicationMgr.Dlls += {"CalXtalResponse"};
 // ----------------------------
 //   ACD recon
 //
-ApplicationMgr.DLLs += {"AcdUtil", AcdRecon"};
+ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
 // ----------------------------
