@@ -22,6 +22,8 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
+#include "AcdUtil/AcdDetectorList.h"
+
 #include "geometry/Ray.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
@@ -67,6 +69,26 @@ StatusCode AcdReconAlg::initialize ( ) {
     if( sc.isFailure() ) {
         log << MSG::ERROR << "AcdReconAlg failed to get the GlastDetSvc" << endreq;
         return sc;
+    }
+
+    sc = service("AcdGeometrySvc", m_acdGeoSvc, true);
+    if (sc.isSuccess() ) {
+        sc = m_acdGeoSvc->queryInterface(IID_IAcdGeometrySvc, (void**)&m_acdGeoSvc);
+    }
+    if (sc.isFailure()) {
+        log << MSG::ERROR << "AcdReconAlg failed to get the AcdGeometerySvc" 
+            << endreq;
+        return sc;
+    }
+  
+    // Determine the rays for corner gaps once and for all
+    m_calcCornerDoca = true;
+    sc = m_acdGeoSvc->findCornerGaps();
+    if (sc.isFailure()) {
+        log << MSG::WARNING << "Could not construct corner gap rays,"
+            << " will not calculate AcdCornerDoca" << endreq;
+        m_calcCornerDoca = false;
+        sc = StatusCode::SUCCESS;
     }
 
     sc = toolSvc()->retrieveTool(m_intersectionToolName,  m_intersectionTool);
@@ -161,6 +183,8 @@ void AcdReconAlg::clear() {
     m_act_dist = -maxDoca;
     m_act_dist3D = -maxDoca;  // for new active distance
     m_ribbon_act_dist = -maxDoca;
+
+    m_cornerDoca = maxDoca;
 
     m_hitMap.clear();
 }
@@ -259,7 +283,8 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 			     m_act_dist, m_maxActDistId, 
 			     m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
 			     m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
-			     acdIntersections, m_ribbon_act_dist, m_ribbon_act_dist_id);
+			     acdIntersections, m_ribbon_act_dist, 
+                             m_ribbon_act_dist_id, m_cornerDoca);
 	// ownership handed to TDS, clear local copy
 	acdIntersections.clear();
     } else {
@@ -271,7 +296,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 							m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
 							m_ribbon_act_dist, m_ribbon_act_dist_id, 
 							acdIntersections,
-							m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol);
+							m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol, m_cornerDoca);
 	// ownership handed to TDS, clear local copy
 	acdIntersections.clear();
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
@@ -302,6 +327,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
         return StatusCode::SUCCESS;
     }
 	
+    bool firstPassDone = false;
     double testDoca, test_dist, ribDist, newActDist;
     Event::TkrTrackColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
@@ -330,6 +356,15 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol) {
                             -(trackTds->getInitialDirection()), ribDist);
         if (ribDist > m_ribbon_act_dist) m_ribbon_act_dist = ribDist;
         if (sc.isFailure()) return sc;
+
+        if ((!firstPassDone) && (m_calcCornerDoca)) {
+            // take the first track, since it is the best track ignore the rest
+            calcCornerDoca(trackTds->getInitialPosition(), 
+                          -(trackTds->getInitialDirection()), m_cornerDoca);
+            // First track in the list, is the reconstructed gamma
+            firstPassDone = true;
+            log << MSG::DEBUG << "AcdCornerDoca = " << m_cornerDoca << endreq;
+        }
     }
 	
     return sc;
@@ -436,8 +471,8 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol,
         
         int iFace = acdId.face();
 
-		// Beware: these dimensions are in some sort of local system and for
-		// iFace = 1 || 3  x<->y 		
+        // Beware: these dimensions are in some sort of local system and for
+        // iFace = 1 || 3  x<->y 		
         double dX = dim[0];
         double dY = dim[1];
         double dZ = dim[2];
@@ -959,4 +994,40 @@ StatusCode AcdReconAlg::getDetectorDimensions(const idents::VolumeIdentifier &vo
     HepPoint3D center(0., 0., 0.);
     xT = transform * center;
     return sc;
+}
+
+StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &t0, double &return_dist) {
+
+    return_dist = maxDoca;
+
+    // Form a Ray using the input track
+    Point trackPos(x0.x(), x0.y(), x0.z());
+    Vector trackDir(t0.x(), t0.y(), t0.z());
+    Ray track(trackPos, trackDir);
+
+    // iterate over all corner gaps
+    unsigned int iCorner;
+    for (iCorner=0; iCorner<4; iCorner++) {
+        const Ray gapRay = m_acdGeoSvc->getCornerGapRay(iCorner);
+        // Compute DOCA between the track and gap ray 
+        RayDoca doca = RayDoca(track, gapRay);
+
+        // Check if x,y,z along corner gap ray falls within limits of LAT.
+        // where the top is defined as the top ACD tiles and bottom is the
+        // base of the bottom row of ACD side tiles
+        double length_2_intersect = doca.arcLenRay2();
+        if (length_2_intersect > 0 && length_2_intersect < gapRay.getArcLength()) {
+
+            double test_dist = doca.docaRay1Ray2();
+            return_dist = (return_dist > test_dist) ? test_dist : return_dist;
+        }
+    }
+
+    // Now we have DOCA to the corners
+    // Next compute sign based on (Tkr1X0*Tkr1YDir - Tkr1Y0*Tkr1XDir)
+    double sign = trackPos.x()*trackDir.y() - trackPos.y()*trackDir.x();
+    if (sign < 0) return_dist = -return_dist;
+ 
+    return StatusCode::SUCCESS;
+  
 }

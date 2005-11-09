@@ -12,6 +12,7 @@
 #include "AcdITkrIntersectTool.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
 #include "geometry/Ray.h"
@@ -93,6 +94,9 @@ class AcdReconAlg : public Algorithm
                                 const HepPoint3D &x0, const HepVector3D &t0,
                                 double &return_dist);
 
+      StatusCode calcCornerDoca(const HepPoint3D &x0, const HepVector3D &dir,
+                                double &dist);
+
       /// the tool to calculate the Track intersections w/ the ACD
       /// pointer to actual tool for finding clusters
       AcdITkrIntersectTool* m_intersectionTool;
@@ -110,6 +114,9 @@ class AcdReconAlg : public Algorithm
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
+      IAcdGeometrySvc *m_acdGeoSvc;
+    
+      bool m_calcCornerDoca;
 
       /// Number of Acd Tiles above threshold
       unsigned int m_tileCount, m_ribbonCount;
@@ -117,6 +124,8 @@ class AcdReconAlg : public Algorithm
       double m_totEnergy, m_gammaDoca, m_totRibbonEnergy;
       /// Minimun Distance of Closest Approach
       double m_doca;
+      /// DOCA to corner gaps
+      double m_cornerDoca;
       /// Minimum Active Distance
       double m_act_dist, m_ribbon_act_dist, m_act_dist3D;
       /// list of DOCA values for top and each side row

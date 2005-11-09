@@ -1,5 +1,5 @@
 package AcdRecon
-version v1r11p1
+version v1r12
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -10,6 +10,7 @@ use GlastSvc v9r*
 use TkrUtil  v*
 use Event    v*
 use GuiSvc   v3*
+use AcdUtil  v*
 
 # no use of default_include_path (no public headers)
 

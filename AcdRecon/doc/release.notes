@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r12     08-Nov-2005 HMK Bill's new corner DOCA
 v1r11p1   04-Nov-2005 HMK Patch test jobOptions to include more dlls for 
              TkrGeoSvc
 v1r11     03-Nov-2005 HMK Tag Eric's new AcdTkrIntersectTool
