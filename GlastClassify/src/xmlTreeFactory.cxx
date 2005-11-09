@@ -34,7 +34,7 @@ public:
     GleamValues(const ImSheetBuilder::StringList& names, 
                 const xmlTreeFactory::LocalTupleValues& localVals,
                 const std::map<std::string,std::string>& imToTobyMap,
-                ITreeFactory::ILookupData& lookup) :
+                ITupleInterface&  tuple) :
                 m_localVals(localVals)
     {
         // Loop over list of variable names given to us in names
@@ -53,21 +53,22 @@ public:
             // Use a "try" to catch the exception if not in the tuple
             try
             {
-                std::pair<bool, const void*> entry = lookup(varName);
-                if( entry.second == 0 ){
-                    throw std::invalid_argument("xmlTreeFactory: did not find variable "+varName);
+                const Item* item = tuple.getItem(varName);
+                if( item==0)
+                {
+                    throw std::invalid_argument("TreeFactory::GleamValues: did not find variable "+varName);
                 }
 
                 m_varAction.push_back(std::pair<std::string, bool>(varName, true));
-                m_pval.push_back( entry);
+                m_pval.push_back(std::pair<bool, const Item*>(true,item));
             }
-            catch (std::runtime_error&)
+            catch (std::invalid_argument&)
             {
                 // Is this value a valid variable to be computed?
                 if (localVals.isValue(varName))
                 {
                     //Need a place holder for indexing to work
-                    std::pair<bool, const void*> entry(false, (const void*)0);
+                    std::pair<bool, const Item*> entry(false, (const Item*)0);
                     
                     m_varAction.push_back(std::pair<std::string, bool>(varName, false));
                     m_pval.push_back(entry);
@@ -91,9 +92,7 @@ public:
 
         if (varActionPair.second)
         {
-            std::pair<bool, const void*> entry = m_pval[index];
-            // now dereference either as a float or a double
-            val = entry.first? *(const float*)entry.second : *(const double*)entry.second;
+            val = *((m_pval[index]).second);
         }
         else
         {
@@ -102,15 +101,23 @@ public:
 
         return val;
     }
-//private:
+    void print(std::ostream& out=std::cout)const
+    {
+        for(std::vector<std::pair<std::string, bool> >::const_iterator varIter = m_varAction.begin();
+            varIter != m_varAction.end(); varIter++)
+        {
+            out << (*varIter).first << std::endl;
+        }
+    }
+private:
     std::vector<std::pair<std::string, bool> > m_varAction;
-    std::vector<std::pair<bool, const void*> > m_pval;
+    std::vector<std::pair<bool, const Item*> > m_pval;
     const xmlTreeFactory::LocalTupleValues&    m_localVals;
 };
 
 
-xmlTreeFactory::xmlTreeFactory(const std::string& path, ITreeFactory::ILookupData& lookup)
-                               : m_lookup(lookup), m_localVals(lookup)
+xmlTreeFactory::xmlTreeFactory(const std::string& path, ITupleInterface& tuple)
+                               : m_lookup(tuple), m_localVals(tuple)
 {
     std::string sFileName = path+"/"+"DC2_Analysis.imw";
     
@@ -224,17 +231,33 @@ xmlTreeFactory::Tree::~Tree()
     delete m_dt;
     delete m_vals;
 }
+void xmlTreeFactory::Tree::printFile(std::string treeName) const
+{
+    std::string sFileName = treeName + ".txt";
+
+    std::ofstream treeFile(sFileName.c_str());
+    m_dt->print(treeFile);
+    treeFile.close();
+
+    sFileName = treeName + "_var.txt";
+    std::ofstream varFile(sFileName.c_str());
+    m_vals->print(varFile);
+    varFile.close();
+
+    return;
+}
+
 xmlTreeFactory::~xmlTreeFactory()
 {
     ///@TODO: delete trees
 }
 
-xmlTreeFactory::LocalTupleValues::LocalTupleValues(ITreeFactory::ILookupData& lookup) 
+xmlTreeFactory::LocalTupleValues::LocalTupleValues(ITupleInterface& lookup) 
 {
     m_valsMap.clear();
 
     // Create the entries in the local variables map
-    m_valsMap["BestEnergy"]       = 0.;
+    //m_valsMap["BestEnergy"]       = 0.;
     m_valsMap["BestLogEnergy"]    = 0.;
     m_valsMap["BestEnergyProb"]   = 0.;
     m_valsMap["TkrEnergyFrac"]    = 0.;
@@ -245,31 +268,17 @@ xmlTreeFactory::LocalTupleValues::LocalTupleValues(ITreeFactory::ILookupData& lo
     m_valsMap["PSFEneProbPrd"]    = 0.;
     m_valsMap["CalMaxXtalRatio"]  = 0.;
 
-    // Extract the locations for the ntuple variables
-    std::pair<bool, const void*> EvtEnergyCorrPair  = lookup("EvtEnergyCorr");
-    std::pair<bool, const void*> TkrEnergyCorrPair  = lookup("TkrEnergyCorr");
-    std::pair<bool, const void*> TkrTotalHitsPair   = lookup("TkrTotalHits");
-    std::pair<bool, const void*> Tkr1FirstLayerPair = lookup("Tkr1FirstLayer");
-    std::pair<bool, const void*> Tkr1HitsPair       = lookup("Tkr1Hits");
-    std::pair<bool, const void*> Tkr2HitsPair       = lookup("Tkr2Hits");
-    std::pair<bool, const void*> Tkr1X0Pair         = lookup("Tkr1X0");
-    std::pair<bool, const void*> Tkr1Y0Pair         = lookup("Tkr1Y0");
-    std::pair<bool, const void*> CTgoodPsfPair      = lookup("CTgoodPsf");
-    std::pair<bool, const void*> CalXtalMaxEnePair  = lookup("CalXtalMaxEne");
-    std::pair<bool, const void*> CalEnergyRawPair   = lookup("CalEnergyRaw");
-    
-    m_tupleVals["EvtEnergyCorr"]  = (float*)EvtEnergyCorrPair.second;
-    m_tupleVals["TkrEnergyCorr"]  = (float*)TkrEnergyCorrPair.second;
-    m_tupleVals["TkrTotalHits"]   = (float*)TkrTotalHitsPair.second;
-    m_tupleVals["Tkr1FirstLayer"] = (float*)Tkr1FirstLayerPair.second;
-    m_tupleVals["Tkr1Hits"]       = (float*)Tkr1HitsPair.second;
-    m_tupleVals["Tkr2Hits"]       = (float*)Tkr2HitsPair.second;
-    m_tupleVals["Tkr1X0"]         = (float*)Tkr1X0Pair.second;
-    m_tupleVals["Tkr1Y0"]         = (float*)Tkr1Y0Pair.second;
-    m_tupleVals["CTgoodPsf"]      = (float*)CTgoodPsfPair.second;
-    m_tupleVals["CalXtalMaxEne"]  = (float*)CalXtalMaxEnePair.second;
-    m_tupleVals["CalEnergyRaw"]   = (float*)CalEnergyRawPair.second;
-
+    m_tupleVals["EvtEnergyCorr"]  = lookup.getItem("EvtEnergyCorr");
+    m_tupleVals["TkrEnergyCorr"]  = lookup.getItem("EvtEnergyCorr");
+    m_tupleVals["TkrTotalHits"]   = lookup.getItem("TkrTotalHits");
+    m_tupleVals["Tkr1FirstLayer"] = lookup.getItem("Tkr1FirstLayer");
+    m_tupleVals["Tkr1Hits"]       = lookup.getItem("Tkr1Hits");
+    m_tupleVals["Tkr2Hits"]       = lookup.getItem("Tkr2Hits");
+    m_tupleVals["Tkr1X0"]         = lookup.getItem("Tkr1X0");
+    m_tupleVals["Tkr1Y0"]         = lookup.getItem("Tkr1Y0");
+    m_tupleVals["CTgoodPsf"]      = lookup.getItem("CTgoodPsf");
+    m_tupleVals["CalXtalMaxEne"]  = lookup.getItem("CalXtalMaxEne");
+    m_tupleVals["CalEnergyRaw"]   = lookup.getItem("CalEnergyRaw");
 }
 
 double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const

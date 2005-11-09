@@ -48,7 +48,7 @@ private:
 
 double TreeFactory::evaluate(int i)const {return (*m_trees[i])();}
 
-const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
+const ITreeFactory::ITree& TreeFactory::operator()(const std::string& name)
 {
     m_trees.push_back(new Tree(m_path+"/"+name, m_tuple));
     return *m_trees.back();

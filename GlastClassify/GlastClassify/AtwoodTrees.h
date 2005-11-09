@@ -7,7 +7,7 @@ $Header$
 #define GlastClassify_AtwoodTrees_h
 
 #include "GlastClassify/ITupleInterface.h"
-#include "GlastClassify/TreeFactory.h"
+#include "GlastClassify/ITreeFactory.h"
 
 #include <string>
 #include <iostream>
@@ -67,10 +67,7 @@ private:
 
     std::ostream& m_log;
 
-    GlastClassify::TreeFactory* m_factory;
-
-
-    std::vector<GlastClassify::TreeFactory::Tree> m_trees;
+    GlastClassify::ITreeFactory* m_factory;
  };
 
 } // namespace GlastClassify
