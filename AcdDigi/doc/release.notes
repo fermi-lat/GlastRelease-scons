@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r14p2 09-Nov-2005 HMK Fix up printing of Mean PE per PMT values
  v1r14p1 21-Oct-2005 HMK Patch to completely remove AcdDigiMcIntAlg.cxx
  v1r14   21-Oct-2005 HMK Use Experimenal mean PE per MIP values for each PMT
  v1r13p1 27-Sep-2005 THB Fix signal normalization by removing "split" and subsequent factors of 2
