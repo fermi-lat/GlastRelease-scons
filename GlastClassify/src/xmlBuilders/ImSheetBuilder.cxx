@@ -35,6 +35,18 @@
 #include <set> 
 
 namespace {
+  
+    /** @class Exception 
+        @brief hold a string
+    */
+    class Exception : public std::exception
+    {
+    public: 
+        Exception(std::string error):m_what(error){}
+        ~Exception() throw() {;}
+        virtual const char *what( ) const  throw() { return m_what.c_str();} 
+        std::string m_what;
+    };
 
     // Helper function creates a std::string from a DOMString
     // Usage:
@@ -51,7 +63,7 @@ namespace {
         {
             // Serious error when you don't initialize iDelimPos=-1
             // before calling this function!
-            throw std::exception("Error with getNextWord!");
+            throw Exception("Error with getNextWord!");
         }
         cList = sList.c_str();
         while((cList[iStart] == cDELIM) && cList[iStart] != 0)
@@ -61,7 +73,7 @@ namespace {
         iEnd = sList.find(cDELIM, iStart);
         if(iEnd > (int)sList.length())
         {
-            throw std::exception("Error with getNextWord");
+            throw Exception("Error with getNextWord");
         }
         return sList.substr(iStart, iEnd - iStart);
     }
@@ -106,7 +118,7 @@ ImSheetBuilder::ImSheetBuilder(const DOMDocument* document, std::ostream& log) :
         // in poorly formed html, not xml.
         // When we get a schema for UserLibrary, we'll
         // be able to use that as a validator also.
-        throw std::exception( "Error: invalid input file ");
+        throw Exception( "Error: invalid input file ");
     }
 
     // Clear everything just to be sure
@@ -255,7 +267,7 @@ int ImSheetBuilder::linkActivityNodes(const DOMDocument* document)
     }
     else
     {
-        throw std::exception("ImSheetBuilder did not find a HEAD node!");
+        throw Exception("ImSheetBuilder did not find a HEAD node!");
     }
 
     //done

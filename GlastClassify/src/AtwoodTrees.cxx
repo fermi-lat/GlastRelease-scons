@@ -6,7 +6,7 @@ $Header$
 */
 #include "GlastClassify/AtwoodTrees.h"
 #include "GlastClassify/TreeFactory.h"
-#include "Glastclassify/xmlTreeFactory.h"
+#include "GlastClassify/xmlTreeFactory.h"
 
 #include "classifier/DecisionTree.h"
 
@@ -102,8 +102,8 @@ AtwoodTrees::AtwoodTrees(
     tuple.addItem("CTgammaType",m_gammaType);
     tuple.addItem("BestEnergy", m_BestEnergy);
 
-    m_factory = new GlastClassify::TreeFactory(treepath, tuple);
-    //m_factory = new GlastClassify::xmlTreeFactory(treepath, tuple);
+    //m_factory = new GlastClassify::TreeFactory(treepath, tuple);
+    m_factory = new GlastClassify::xmlTreeFactory(treepath, tuple);
 
     for( unsigned int i=0; i<NODE_COUNT; ++i)
     {

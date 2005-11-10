@@ -24,6 +24,17 @@ XERCES_CPP_NAMESPACE_USE
 
 
 namespace {
+    /** @class Exception 
+        @brief hold a string
+    */
+    class Exception : public std::exception
+    {
+    public: 
+        Exception(std::string error):m_what(error){}
+        ~Exception() throw() {;}
+        virtual const char *what( ) const  throw() { return m_what.c_str();} 
+        std::string m_what;
+    };
 
     // output errors to console. (note: m_ prefex for data members )
     // only for statistics to show in debug output
@@ -115,7 +126,7 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
     // This canna happen so must be worthy of an exception
     if (xmlTreeModelVec.empty())
     {
-        throw std::exception("ActivityNode/ModelProperties/IMML/TreeList/TreeModel not found.");
+        throw Exception("ActivityNode/ModelProperties/IMML/TreeList/TreeModel not found.");
     }
 
     // Retrieve the name of this tree again...
@@ -187,7 +198,7 @@ void xmlPredictEngineFactory::parseTree(DOMElement* xmlTreeModel, DecisionTree* 
     //			  </MiningSchema>
     if( !xmlTreeModel->hasChildNodes() )   
     {
-        throw std::exception(" <TreeModel> is not correct.");	
+        throw Exception(" <TreeModel> is not correct.");	
     }
     // xmlTreeModel == <TreeModel>
     // xmlFirstNode ==  <Node>
@@ -305,11 +316,11 @@ void xmlPredictEngineFactory::parseNode(DOMElement* xmlElement, int nodeId, Deci
         decisionTree->addNode(nodeId, index, value);
 
         // how many nodes?
-        if (xmlNodeVec.size() != 2)
-        {
-            int j = xmlNodeVec.size();
-            int i = 0;
-        }
+        //if (xmlNodeVec.size() != 2)
+        //{
+        //    int j = xmlNodeVec.size();
+        //    int i = 0;
+        //}
 
         // Retrieve the node ID's
         std::string sNodeIdLeft = xmlBase::Dom::getAttribute(xmlNodeVec[0], "id");
