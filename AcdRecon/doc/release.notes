@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r12p2   10-Nov-2005 THB Added AcdTkrIntersect Tool to load routine
 v1r12p1   08-Nov-2005 HMK Patch to new corner DOCA to retain maxDoca value
           when no intersecction are found to occur along the length of side gaps
 v1r12     08-Nov-2005 HMK Bill's new corner DOCA
