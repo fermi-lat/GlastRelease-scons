@@ -140,6 +140,8 @@ namespace Event
         /// Retrieve readout mode
         inline const idents::CalXtalId::CalTrigMode getMode() const
         { return m_mode; };
+
+        inline int getNReadouts() const { return m_recData.size(); }
         
         /// Retrieve crystal identifier
         inline const idents::CalXtalId getPackedId() const
