@@ -143,7 +143,7 @@ public:
     }
     
     /// Retrieve ranges and pulse heights from both ends of selected readout
-    inline const CalXtalReadout* getXtalReadout(short readoutIndex)
+    inline const CalXtalReadout* getXtalReadout(short readoutIndex) const
     {
         if ( readoutIndex < (short)m_readout.size() )
             return &(m_readout[readoutIndex]);
