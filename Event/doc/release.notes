@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  *
  *
+ * v11r8   10-nov-05 HMK Add in some minor mods requested by Zach in CalDigi
+ *                   and CalXtalRecData
  * v11r7   08-nov-05 HMK Add AcdRecon::CornerDoca and 
  *                   merge in Eric's TkrIntersect
  * v11r6   25-oct-05 HMK Merge branch into main - storing both old and new
