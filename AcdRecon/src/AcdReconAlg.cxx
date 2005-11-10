@@ -40,7 +40,10 @@ unsigned int AcdReconAlg::s_numSideRows;
 // Rogue value returned for DOCAs and Active Dist. calcs. when not Tile present
 static double maxDoca = 2000.0;
 
+//------------------------------------------------------------------------
 
+static const AlgFactory<AcdReconAlg>  Factory;
+const IAlgFactory& AcdReconAlgFactory = Factory;
 
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor
