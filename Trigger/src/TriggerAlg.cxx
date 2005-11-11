@@ -360,6 +360,7 @@ unsigned int TriggerAlg::tracker(const Event::TkrDigiCol&  planes)
     // this loop sorts the hits by setting appropriate bits in the tower-plane hit map
     for( Event::TkrDigiCol::const_iterator it = planes.begin(); it != planes.end(); ++it){
         const TkrDigi& t = **it;
+        if( t.getNumHits()== 0) continue; // this can happen if there are dead strips 
         layer_bits[std::make_pair(t.getTower(), t.getView())] |= layer_bit(t.getBilayer());
     }
 
