@@ -38,6 +38,7 @@ public:
         return item;
     }
     void addItem(const std::string&, float & ){}
+    void addItem(const std::string&, double & ){}
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

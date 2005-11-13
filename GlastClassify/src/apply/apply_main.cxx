@@ -6,16 +6,13 @@ $Header$
 
 #include "RootTuple.h"
 
-#include "GlastClassify/AtwoodTrees.h"
+#include "GlastClassify/AtwoodLikeTrees.h"
 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <cassert>
 #include <stdexcept>
-
-#include "TFile.h"
-#include "TTree.h"
 
 /** 
 @page applications apply
@@ -59,44 +56,46 @@ int main(int argc, char* argv[])
             }
         }
 
-
         std::cerr << "Converting CT variables from: \"" << input_filename << "\" to\n\t\"" 
             << output_filename << "\"" << std::endl;
 
         RootTuple tuple(input_filename, tree_name);
 
-        std::stringstream title; 
-        title << "gen(" << tuple.numEvents() << ")";
-
-
         const char* ctree = ::getenv("CTREE_PATH");
-        if (ctree==0) ctree = "D:\\common\\ctree\\GlastClassify\\v1r0\\treeinfo";
+        if (ctree==0){
+            ctree = "D:\\common\\ctree\\GlastClassify\\v2r1\\treeinfo-v4";
+            std::cout << "Setting CTREE_PATH to  " << ctree << std::endl;
+        }else{
+            std::cout << "CTREE_PATH: " << ctree << std::endl;
+            }
+
         // create the ct: pass in the tuple.
-        AtwoodTrees ctrees(tuple, std::cout, ctree!=0? std::string(ctree) : "");
+        AtwoodLikeTrees ctrees(tuple, std::cout, std::string(ctree) );
 
         // set up the output Root file, branch
 
-        TFile out_file(output_filename.c_str(), "recreate");
-        TTree* out_tree = tuple.tree()->CloneTree();
-
-        int k(0);
+        tuple.setOutputFile(output_filename);
+        int k(0), total(tuple.numEvents()), fraction(0);
+        for( int i = 0; i<51; ++i)std::cout << " ";
+        std::cout << "]\r[";
         while ( tuple.nextEvent() ) { 
             ctrees.execute();   // fill in the classification (testing here)
-            out_file.cd();
-            out_tree->Fill();
+            tuple.fill();
             ++k;
+            if(  (50*k)% total == 0 ) {
+                std::cout << ".";
+            }
         }
-        out_file.Write();
-        std::cout << "Wrote " << k << " entries" << std::endl;
+        std::cout << "]\nWrote " << k << " entries" << std::endl;
 
-    }catch(std::exception& e){
+    }catch(const std::exception& e){
         std::cerr << "Caught: " << e.what( ) << std::endl;
         std::cerr << "Type: " << typeid( e ).name( ) << std::endl;
         rc=1;
     }catch(...) {
         std::cerr << "Unknown exception from classification " << std::endl;
         rc=2;
-    }
+    }    
     return rc;
 }
 

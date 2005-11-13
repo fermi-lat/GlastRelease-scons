@@ -38,6 +38,7 @@ namespace GlastClassify{
 
         /// create a new item (float only for now) in the tuple, which will take the given value
         virtual void addItem(const std::string& name, float & value)=0;
+        virtual void addItem(const std::string& name, double & value)=0;
     protected:
         ITupleInterface(){};
     };

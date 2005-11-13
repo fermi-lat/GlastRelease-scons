@@ -77,7 +77,7 @@ private:
 using namespace GlastClassify;
 
 RootTuple::RootTuple( std::string file, std::string treeName)
-:  m_event(0) {
+:  m_event(0), m_output_tree(0), m_output_file(0) {
 
     // Initialize Root
     if ( 0 == gROOT )   {
@@ -104,6 +104,12 @@ RootTuple::RootTuple( std::string file, std::string treeName)
     m_numEvents = m_tree->GetEntries();
 }
 
+RootTuple::~RootTuple()
+{
+    if( m_output_file) m_output_file->Write();
+    delete m_output_file;
+}
+
 const Item* RootTuple::getItem(const std::string& name)const
 {
     TLeaf* leaf = m_tree->GetLeaf(name.c_str());
@@ -113,7 +119,29 @@ const Item* RootTuple::getItem(const std::string& name)const
 
 void RootTuple::addItem(const std::string& name, float& value)
 {
-    m_tree->Branch(name.c_str(), (void*)&value, name.c_str());
+    TLeaf* leaf = m_tree->GetLeaf(name.c_str());
+    if( leaf!=0) {
+        std::cout << "Adding item "<< name << ", which already exists" << std::endl;
+        if( std::string(leaf->GetTypeName()) !="Float_t") {
+            throw std::invalid_argument("RootTuple::addItem replacing wrong type");
+        }
+        leaf->SetAddress(&value);
+    }else {
+        m_tree->Branch(name.c_str(), (void*)&value, name.c_str());
+    }
+}
+void RootTuple::addItem(const std::string& name, double& value)
+{
+    TLeaf* leaf = m_tree->GetLeaf(name.c_str());
+    if( leaf!=0) {
+        std::cout << "Adding item "<< name << ", which already exists" << std::endl;
+        if( std::string(leaf->GetTypeName()) !="Double_t") {
+            throw std::invalid_argument("RootTuple::addItem replacing wrong type");
+        }
+        leaf->SetAddress(&value);
+    }else {
+        m_tree->Branch(name.c_str(), (void*)&value, (name+"/D").c_str());
+    }
 }
 
 
@@ -136,4 +164,16 @@ bool RootTuple::getEvent(int idx)
         return true;
     }
     return false;
+}
+
+void RootTuple::setOutputFile(const std::string & output_filename)
+{
+    m_output_file =new TFile(output_filename.c_str(), "recreate");
+    m_output_tree = tree()->CloneTree(0); // do not copy events
+}
+
+void RootTuple::fill()
+{
+    assert(m_output_tree); 
+    m_output_tree->Fill();
 }

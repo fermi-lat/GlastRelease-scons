@@ -5,7 +5,7 @@ $Header$
 
 */
 #include "GlastClassify/AtwoodTrees.h"
-#include "GlastClassify/TreeFactory.h"
+//THB#include "GlastClassify/TreeFactory.h"
 #include "GlastClassify/xmlTreeFactory.h"
 
 #include "classifier/DecisionTree.h"
