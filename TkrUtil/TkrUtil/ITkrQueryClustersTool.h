@@ -18,7 +18,7 @@
 
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 3 , 0); 
+static const InterfaceID IID_ITkrQueryClustersTool("ITkrQueryClustersTool", 3 , 1); 
 
 /** @class ITkrQueryClustersTool
 * @brief Abstract interface for methods to query TkrClusters
