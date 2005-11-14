@@ -252,7 +252,7 @@ const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
     return (CalDigi*)m_calDigiCloneCol->At(i);
 }
 
-const TClonesArray* DigiEvent::getCalDigiCol() { 
+const TClonesArray* DigiEvent::getCalDigiCol() const { 
     // Purpose and Method:  Provide access to the collection of CalDigis.
     // For backward compatibilty, we must handle the case where the m_calDigiCol
     // (a TObjArray*) exists - in that case, we fill up the TClonesArray to allow the

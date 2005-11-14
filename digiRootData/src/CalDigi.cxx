@@ -78,7 +78,7 @@ Short_t CalDigi::getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const
         ? (m_readoutArr[readoutIndex]).getAdc(face) : (Short_t)-1;
 }
 
-const CalXtalReadout* CalDigi::getXtalReadout(UShort_t readoutIndex)
+const CalXtalReadout* CalDigi::getXtalReadout(UShort_t readoutIndex) const
 {
     // Maintain Backward Compatibility
     if (m_readoutCol) {
@@ -124,7 +124,7 @@ Short_t CalDigi::getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) con
 }
 
 
-const CalXtalReadout* CalDigi::getReadoutCol() { 
+const CalXtalReadout* CalDigi::getReadoutCol() const { 
     // Purpose and Method:  Provide access to the full array of CalXtalReadouts
     // For backward compatibility - we handle the possibility that the TClonesArray* version
     // is available - in which case we fill the fixed array using the quantities in the 

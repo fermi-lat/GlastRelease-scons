@@ -120,7 +120,7 @@ public:
     /** @ingroup AcdDigiGroup */
     /*@{*/
     /// Returns the Monte Carlo energy deposited in this ACD detector
-    Float_t getEnergy() { return m_energy; };
+    Float_t getEnergy() const { return m_energy; };
 
     /// Returns the proper AcdId corresponding to the official numbering scheme
     const AcdId& getId() const { return m_id; };

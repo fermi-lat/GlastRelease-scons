@@ -70,15 +70,15 @@ public:
     /** @defgroup DigiEventGroup DigiEvent End-User Interface */
     /*@{*/
     /// Access the DigiEvent event ID 
-    inline UInt_t getEventId() { return m_eventId; };
+    inline UInt_t getEventId() const { return m_eventId; };
     /// Access the run number
-    inline UInt_t getRunId() { return m_runId; };
+    inline UInt_t getRunId() const { return m_runId; };
 
     /// Valid for real or simulated data, in seconds since mission start 
-    inline Double_t getTimeStamp() { return m_timeStamp; };
+    inline Double_t getTimeStamp() const { return m_timeStamp; };
 
     /// Valid for both real or simulated data
-    inline Double_t getLiveTime() { return m_liveTime; };
+    inline Double_t getLiveTime() const { return m_liveTime; };
 
     /// Seconds as reported by original 30 Hz clock (real data only)
     inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
@@ -106,7 +106,7 @@ public:
     inline Double_t getPpcTimeSeconds() const { return getEbfPpcTimeSeconds(); };
 
     /// Flag denoting if this event was generated from a Monte Carlo Simulation
-    inline Bool_t getFromMc() { return m_fromMc; };
+    inline Bool_t getFromMc() const { return m_fromMc; };
 
     /// retrieve the whole TClonesArray of Acd Digi data
     const TClonesArray* getAcdDigiCol() const { return m_acdDigiCol; };
@@ -116,7 +116,7 @@ public:
     const AcdDigi* getAcdDigi(const AcdId &id) const;
 
     /// retrieve the whole CalDigi collection
-    const TClonesArray* getCalDigiCol();
+    const TClonesArray* getCalDigiCol() const;
     /// retrieve one CalDigi object from the collection, using the index into the array
     const CalDigi* getCalDigi(UInt_t i) const;
 
@@ -136,12 +136,12 @@ public:
     inline EventSummaryData& getEventSummaryData() { return m_summary; };
 
     /// Returns the whole CalDiagnostic Collection
-    const TClonesArray *getCalDiagnosticCol() { return m_calDiagnosticCloneCol;};
+    const TClonesArray *getCalDiagnosticCol() const { return m_calDiagnosticCloneCol;};
     /// Returns one CalDiagnostic object located at index i in the collection
     const CalDiagnosticData* getCalDiagnostic(UInt_t i) const;
 
     /// Returns the whole TkrDiagnostic Collection
-    const TClonesArray *getTkrDiagnosticCol() { return m_tkrDiagnosticCloneCol;};
+    const TClonesArray *getTkrDiagnosticCol() const { return m_tkrDiagnosticCloneCol;};
     /// Returns one TkrDiagnostic object located at index i in the collection
     const TkrDiagnosticData* getTkrDiagnostic(UInt_t i) const;
 
@@ -152,7 +152,7 @@ public:
     const Tem* getTem(Int_t i) const;
 
     /// Returns whole Tem Collection
-    const TClonesArray *getTemCol() { return m_temCloneCol;};
+    const TClonesArray *getTemCol() const { return m_temCloneCol;};
 	/*@}*/
 
 

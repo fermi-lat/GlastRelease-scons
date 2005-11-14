@@ -50,7 +50,7 @@ public:
     const CalXtalId getPackedId() const { return m_xtalId; };
     
     /// Returns the whole collection of readouts
-    const CalXtalReadout* getReadoutCol();
+    const CalXtalReadout* getReadoutCol() const;
 
     /// Number of readouts in this CalDigi (1 or 4)
     const UInt_t getNumReadouts() const { 
@@ -67,7 +67,7 @@ public:
     Short_t getAdc(UShort_t readoutIndex, CalXtalId::XtalFace face) const;
     
     /// Retrieve ranges and pulse heights from both ends of selected readout
-    const CalXtalReadout* getXtalReadout(UShort_t readoutIndex);
+    const CalXtalReadout* getXtalReadout(UShort_t readoutIndex) const;
     
     /// Retrieve pulse height from selected range
     Short_t getAdcSelectedRange(Char_t range, CalXtalId::XtalFace face) const;
