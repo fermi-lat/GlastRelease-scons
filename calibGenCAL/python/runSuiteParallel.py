@@ -297,7 +297,7 @@ if int(merge_enabled):
     mergeConfig = ConfigParser.SafeConfigParser()
     # - defaults
     mergeConfig.add_section('dtdfiles')
-    mergeConfig.set('dtdfiles','dtdfile','calCalib_v2r2.dtd')
+    mergeConfig.set('dtdfiles','dtdfile','calCalib_v2r3.dtd')
     
     mergeConfig.add_section('infiles')
     for tower in tower_bays:
