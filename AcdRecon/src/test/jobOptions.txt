@@ -36,6 +36,8 @@ MessageSvc.OutputLevel      = 2;
 
 ApplicationMgr.EvtMax =10;
 
+AcdReconAlg.intersectionToolName = "";
+
 //==============================================================
 //
 // End of job options file

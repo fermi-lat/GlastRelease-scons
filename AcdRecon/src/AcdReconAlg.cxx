@@ -94,10 +94,14 @@ StatusCode AcdReconAlg::initialize ( ) {
         sc = StatusCode::SUCCESS;
     }
 
-    sc = toolSvc()->retrieveTool(m_intersectionToolName,  m_intersectionTool);
-    if (sc.isFailure() ) {
-      log << MSG::ERROR << "  Unable to create " << m_intersectionToolName << endreq;
-      return sc;
+    if (m_intersectionToolName == "") 
+        m_intersectionTool = 0;
+    else {
+        sc = toolSvc()->retrieveTool(m_intersectionToolName,  m_intersectionTool);
+        if (sc.isFailure() ) {
+            log << MSG::ERROR << "  Unable to create " << m_intersectionToolName << endreq;
+            return sc;
+        }
     }
 	
     getParameters();
@@ -269,7 +273,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     // if reconstructed tracker data doesn't exist - put the debugging message    
     if (trackCol==0) {
       log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
-    } else {
+    } else if (m_intersectionTool != 0) {
       sc = m_intersectionTool->findIntersections(trackCol,&acdIntersections,m_hitMap);
       if ( sc.isFailure() ) return sc;
     }

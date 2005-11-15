@@ -102,7 +102,7 @@ class AcdReconAlg : public Algorithm
       AcdITkrIntersectTool* m_intersectionTool;
 
       /// name of Tool for finding last layer energy leakage
-      StringProperty m_intersectionToolName;
+      std::string m_intersectionToolName;
 
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
