@@ -91,11 +91,12 @@ int main(int argn, char** argc) {
   
   
   int numFiles=listFiles.size();
-  char *fileList[numFiles];
+  //char **fileList;//[numFiles];
+  char **fileList = (char**)calloc(numFiles, sizeof(char *));
   int i=0;
   for(i=0;i<numFiles;i++)
     {
-      fileList[i] =  listFiles[i].c_str();
+      fileList[i] =  const_cast<char*> (listFiles[i].c_str());
     }
 
   ///  can handle up to 50 TTrees per file
@@ -116,7 +117,7 @@ int main(int argn, char** argc) {
     char* atree="TTree";
     //       if (strcmp(keyClassName,atree)==0)  {
     printf(" Found %s %d : %s;",keyClassName,numTrees,key->GetName());
-    listTrees[numTrees] = key->GetName();
+    listTrees[numTrees] = const_cast<char*>(key->GetName());
     numTrees++;
     
   }
