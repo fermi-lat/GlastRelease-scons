@@ -47,11 +47,15 @@ public:
     }
 
     /// create a new item (float only for now) in the tuple, which will take the given value
-    void addItem(const std::string& name, float & value)
+   void addItem(const std::string& name, float & value)
     {
         m_tuple->addItem(m_treename, name, &value);
     }
 
+    void addItem(const std::string& name, double & value)
+    {
+        m_tuple->addItem(m_treename, name, &value);
+    }
 private:
     INTupleWriterSvc* m_tuple;
     const std::string& m_treename;
