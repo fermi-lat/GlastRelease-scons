@@ -86,7 +86,7 @@ class calCalibXML(calXML.calXML):
         g = self.getDoc().createElement('generic')
         g.setAttribute('instrument', 'LAT')
         g.setAttribute('calibType', str(type))
-        g.setAttribute('fmtVersion', 'v2r2')
+        g.setAttribute('fmtVersion', 'v2r3')
         g.setAttribute('creator', 'myname')
         ts = time.strftime('%Y-%m-%d-%H:%M', time.gmtime())
         g.setAttribute('timestamp', ts)
