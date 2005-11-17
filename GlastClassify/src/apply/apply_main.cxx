@@ -63,7 +63,11 @@ int main(int argc, char* argv[])
 
         const char* ctree = ::getenv("CTREE_PATH");
         if (ctree==0){
+#if 1
             ctree = "D:\\common\\ctree\\GlastClassify\\v2r1\\treeinfo-v4";
+#else
+            ctree = "D:\\common\\ctree\\IMtreeinfo";
+#endif
             std::cout << "Setting CTREE_PATH to  " << ctree << std::endl;
         }else{
             std::cout << "CTREE_PATH: " << ctree << std::endl;

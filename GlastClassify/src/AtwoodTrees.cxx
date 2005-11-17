@@ -91,7 +91,8 @@ AtwoodTrees::AtwoodTrees(
     m_CalCfpEnergy=   tuple.getItem("CalCfpEnergy"   );
     m_CalLllEnergy =  tuple.getItem("CalLllEnergy"   );
     m_CalTklEnergy=   tuple.getItem("CalTklEnergy"   );
-    
+
+
 
     // New items to create or override
     // create new float TupleItem objects: will be automatically added to the overall tuple
@@ -146,6 +147,7 @@ AtwoodTrees::AtwoodTrees(
                 m_BestEnergy = energymeasure[i];
             }
         }
+
         // assign tuple items
         m_goodCalProb = bestprob;
 

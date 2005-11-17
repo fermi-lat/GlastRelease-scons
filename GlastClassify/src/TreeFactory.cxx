@@ -12,38 +12,52 @@ $Header$
 
 #include <fstream>
 #include <cassert>
+#include <cmath>
 #include <stdexcept>
 
 using namespace GlastClassify;
 
-/** @class GleamValues
-@brief local definition of class which handles pointers to values
-*/
-class TreeFactory::GleamValues : public DecisionTree::Values {
-public:
-    GleamValues(const TrainingInfo::StringList & names, ITupleInterface& tuple)
-    {
-        for( TrainingInfo::StringList::const_iterator it = names.begin();
-            it != names.end(); ++it)
-        {
-            const Item * item = tuple.getItem(*it);
-            if( item==0){
-                throw std::invalid_argument("TreeFactory::GleamValues: did not find variable "+*it);
-            }
 
-            m_pval.push_back( item);
+
+    /** @class GleamValues
+    @brief local definition of class which handles pointers to values
+    */
+
+    class TreeFactory::GleamValues : public DecisionTree::Values {
+    public:
+
+        GleamValues(const TrainingInfo::StringList & names,
+            ITupleInterface& tuple,
+            const LocalDictionary& dict)
+        {
+            for( TrainingInfo::StringList::const_iterator it = names.begin();
+                it != names.end(); ++it)
+            {
+                const Item * item = tuple.getItem(*it);
+                if( item==0){
+                    LocalDictionary::const_iterator im = dict.find(*it);
+                    if(im!= dict.end()) {
+                        item = im->second;
+                    }
+                }
+                if( item==0 ){
+                    throw std::invalid_argument("TreeFactory::GleamValues: did not find variable "+*it);
+                }
+
+                m_pval.push_back( item);
+    
+            }
         }
 
-    }
-    /// @brief callback from tree evaluation
+        /// @brief callback from tree evaluation
 
-    double operator[](int index)const{
+        double operator[](int index)const{
 
-        return *(m_pval[index]);
-    }
-private:
-    std::vector<const Item *  >m_pval;
-};
+            return *(m_pval[index]);
+        }
+    private:
+        std::vector<const Item *  >m_pval;
+    };
 
 
 double TreeFactory::evaluate(int i)const {return (*m_trees[i])();}
@@ -55,11 +69,11 @@ const TreeFactory::Tree& TreeFactory::operator()(const std::string& name)
 
 #endif
 {
-    m_trees.push_back(new Tree(m_path+"/"+name, m_tuple));
+    m_trees.push_back(new Tree(m_path+"/"+name, m_tuple, m_dict));
     return *m_trees.back();
 }
 
-TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple)
+TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple, const LocalDictionary& dict)
 : m_filter_tree()
 {
     TrainingInfo info(path);
@@ -88,7 +102,7 @@ TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple)
         Filter filter(vars,*dt); 
         filter.addCutsFrom(filterfile);
         filter.close();
-        
+
         if( localTree!=0){
 
             // there is a local tree: append it to the filter
@@ -97,7 +111,7 @@ TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple)
             m_filter_tree = dt;
         }else {
             // no local tree, so only filter.
-           m_filter_tree=dt;        
+            m_filter_tree=dt;        
         }
 
     }else{
@@ -108,7 +122,7 @@ TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple)
     // todo: read the file listing paths to nested trees, 
     // call this constructor recursively on each, add to 
     // m_exclusive_trees
-    m_vals = new GleamValues(vars, tuple);
+    m_vals = new GleamValues(vars, tuple, dict);
 }
 
 double TreeFactory::Tree::operator()()const

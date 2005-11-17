@@ -51,7 +51,8 @@ public:
         log() << "Creating the factory:" << std::endl;
 
         ITupleInterface& tuple = *new TestTuple();
-        TreeFactory factory(info_path, tuple);
+        TreeFactory::LocalDictionary dict; // empty
+        TreeFactory factory(info_path, tuple, dict);
 
         log() << "Ask factory for a tree: " << std::endl;
         const TreeFactory::Tree& goodcal= factory(name);

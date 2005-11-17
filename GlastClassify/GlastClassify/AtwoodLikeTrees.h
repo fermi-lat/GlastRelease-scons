@@ -56,15 +56,34 @@ private:
     const Item * m_CalCfpEnergy;  
     const Item * m_CalLllEnergy;  
     const Item * m_CalTklEnergy;  
+    const Item * m_TkrEnergyCorr;
+    const Item * m_Tkr1Hits     ;
+    const Item * m_Tkr2Hits     ;
+    const Item * m_Tkr1X0       ;
+    const Item * m_Tkr1Y0       ;
+    const Item * m_TkrTotalHits ;
+    const Item * m_CalXtalMaxEne;
 
     // output quantities: corresponding tuple items
-    // (double for now since in order to replace pointer in tuple)
+    // (double for now in order to replace pointer in tuple)
     double m_goodCalProb; 
     double m_goodPsfProb; 
     double m_vtxProb; // vertex or track choice
     double m_gammaProb;
     double m_gammaType;
     double m_BestEnergy;
+
+    // additional values that need to be set for real atwood trees
+    float m_BestLogEnergy;
+    float m_EvtLogEnergyRaw;
+    float m_TkrEnergyFrac;
+    float m_TkrTotalHitsNorm;
+    float m_TkrTotalHitRatio;
+    float m_BestEnergyProb;
+    float m_Tkr12DiffHits;
+    float m_PSFEneProbPrd;
+    float m_CalMaxXtalRatio;
+    float m_TkrLATEdge;
 
     std::ostream& m_log;
 

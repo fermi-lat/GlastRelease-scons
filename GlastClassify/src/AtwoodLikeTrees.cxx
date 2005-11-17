@@ -11,6 +11,8 @@ $Header$
 
 #include <sstream>
 #include <cassert>
+#include <map>
+#include <cmath>
 
 /* 
 */
@@ -67,6 +69,16 @@ namespace {
         { GAMMA_TRACK_THICK, "gamma/track/thick"},
     };
 
+    template< typename T>
+    class LocalValue : public GlastClassify::Item {
+    public:
+        LocalValue(const T & val):m_val(val){}
+        operator double()const{return m_val;}
+    private:
+        const T& m_val;
+    };
+
+    inline double sqr(double x){return x*x;}
 
 }  // anonymous namespace
 
@@ -91,17 +103,57 @@ AtwoodLikeTrees::AtwoodLikeTrees(
     m_CalLllEnergy =  tuple.getItem("CalLllEnergy"   );
     m_CalTklEnergy=   tuple.getItem("CalTklEnergy"   );
     
+        // for evaluation of local variables
+    m_TkrEnergyCorr = tuple.getItem("TkrEnergyCorr"  );
+    m_Tkr1Hits      = tuple.getItem("Tkr1Hits");
+    m_Tkr2Hits      = tuple.getItem("Tkr1Hits");
+    m_Tkr1X0        = tuple.getItem("Tkr1X0");
+    m_Tkr1Y0        = tuple.getItem("Tkr1Y0");
+    m_TkrTotalHits  = tuple.getItem("TkrTotalHits");
+    m_CalXtalMaxEne = tuple.getItem("CalXtalMaxEne");
+    
 
     // New items to create or override
     // create new float TupleItem objects: will be automatically added to the overall tuple
-    tuple.addItem("CTgoodCal",  m_goodCalProb);
-    tuple.addItem("CTvertex",   m_vtxProb);
-    tuple.addItem("CTgoodPsf",  m_goodPsfProb);
-    tuple.addItem("CTgamma" ,   m_gammaProb);
-    tuple.addItem("CTgammaType",m_gammaType);
-    tuple.addItem("BestEnergy", m_BestEnergy);
+#if 0
+    std::string prefix("IM"); 
+#else
+    std::string prefix("CT"); 
+#endif
+    tuple.addItem(prefix+"goodCal",  m_goodCalProb);
+    tuple.addItem(prefix+"vertex",   m_vtxProb);
+    tuple.addItem(prefix+"goodPsf",  m_goodPsfProb);
+    tuple.addItem(prefix+"gamma" ,   m_gammaProb);
+    tuple.addItem(prefix+"gammaType",m_gammaType);
+    tuple.addItem(prefix+"BestEnergy", m_BestEnergy);
 
-    m_factory = new GlastClassify::TreeFactory(treepath, tuple);
+    // set up list of locally defined  variables for access by the trees
+                    
+    std::map<std::string, const Item*> localvals;
+    localvals["EvtLogEnergyRaw"] = new LocalValue<float>(m_EvtLogEnergyRaw);
+    localvals["BestLogEnergy"]   = new LocalValue<float>(m_BestLogEnergy);
+    localvals["TkrEnergyFrac"]   = new LocalValue<float>(m_TkrEnergyFrac);
+    localvals["TkrTotalHitsNorm"]= new LocalValue<float>(m_TkrTotalHitsNorm);
+    localvals["TkrTotalHitRatio"]= new LocalValue<float>(m_TkrTotalHitRatio);
+    localvals["BestEnergyProb"]  = new LocalValue<float>(m_BestEnergyProb);
+    localvals["Tkr12DiffHits"]   = new LocalValue<float>(m_Tkr12DiffHits);
+    localvals["PSFEneProbPrd"]   = new LocalValue<float>(m_PSFEneProbPrd);
+    localvals["CalMaxXtalRatio"] = new LocalValue<float>(m_CalMaxXtalRatio);
+    localvals["TkrLATEdge"]      = new LocalValue<float>(m_TkrLATEdge);
+
+    // these are aliases -- Tracy has the following maping
+    /*
+    m_ImToTobyOutMap["Pr(GoodEnergy)"] = "CTgoodCal";
+    m_ImToTobyOutMap["Pr(CORE)"]       = "CTgoodPsf";
+    m_ImToTobyOutMap["Pr(VTX)"]        = "CTvertex";
+    m_ImToTobyOutMap["Pr(GAM)"]        = "CTgamma";
+    */
+
+    localvals["CTvertex"]        = new LocalValue<double>(m_vtxProb);
+    localvals["CTgoodPsf"]       = new LocalValue<double>(m_goodPsfProb);
+    // only seem to need these
+
+    m_factory = new GlastClassify::TreeFactory(treepath, tuple, localvals);
 
     for( unsigned int i=0; i<NODE_COUNT; ++i){
         (*m_factory)(imNodeInfo[i].name);
@@ -132,18 +184,31 @@ AtwoodLikeTrees::AtwoodLikeTrees(
         int ctree_index[] = {ENERGY_PARAM, ENERGY_PROFILE, ENERGY_LASTLAYER, ENERGY_TRACKER};
         double bestprob(0);
         // ============> wire in only param here (for now) <===================
-        for( int i =0; i<1; ++i){
+        for( int i =0; i<4; ++i){
             double prob = energymeasure[i]>0? m_factory->evaluate(ctree_index[i]) : 0;
             if( prob>bestprob){
                 bestprob = prob;
                 m_BestEnergy = energymeasure[i];
             }
         }
+//        BestLogEnergy = log10(m_BestEnergy);
+
         // assign tuple items
         m_goodCalProb = bestprob;
 
         // evaluate the rest only if cal prob ok (should this be wired in??? (Bill now has 0.1)
         if( m_goodCalProb<0.25 )   return;
+
+        m_BestLogEnergy = log10(m_BestEnergy);
+        m_BestEnergyProb = bestprob;
+        m_TkrEnergyFrac = *m_TkrEnergyCorr/ *m_EvtEnergyCorr;
+        m_TkrTotalHitsNorm = *m_TkrTotalHits/(*m_Tkr1FirstLayer-1);
+        m_TkrTotalHitRatio = (*m_Tkr1Hits+*m_Tkr2Hits) / (*m_TkrTotalHits);
+        m_Tkr12DiffHits = *m_Tkr1Hits - *m_Tkr2Hits;
+        m_TkrLATEdge = 740. - std::max(fabs(*m_Tkr1X0), fabs(*m_Tkr1Y0));
+        m_CalMaxXtalRatio = *m_CalXtalMaxEne / *m_CalEnergyRaw;
+
+
 
         // selection of energy range for gamma trees
         enum {CAL_LOW, CAL_MED, CAL_HIGH};
@@ -189,6 +254,8 @@ AtwoodLikeTrees::AtwoodLikeTrees(
 
         // now evalute the appropriate trees
         m_goodPsfProb = m_factory->evaluate(psfType);
+
+        m_PSFEneProbPrd = sqrt(sqr(m_BestEnergyProb)+sqr(m_goodPsfProb));
 
         m_gammaProb   = m_factory->evaluate(gammaType);
         m_gammaType   = gammaType-GAMMA_VERTEX_HIGH; // will be 0-7
