@@ -3,6 +3,8 @@
 
 ClassImp(AcdRecon)
 
+static const maxDoca = 2000.0;
+
 AcdRecon::AcdRecon() {
   m_acdTkrIntersectionCol = 0;
   Clear();
@@ -69,9 +71,9 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     m_totRibbonEnergy = 0.0;
     m_tileCount = 0;
     m_ribbonCount = 0;
-    m_gammaDoca = -200.;
-    m_doca = -200.;
-    m_actDist = -200.0;
+    m_gammaDoca = maxDoca;
+    m_doca = maxDoca;
+    m_actDist = -maxDoca;
     m_rowDocaCol.clear();
     m_rowActDistCol.clear();
     m_idCol.clear();
@@ -79,7 +81,8 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     if ( m_acdTkrIntersectionCol ) {
       m_acdTkrIntersectionCol->Clear();
     }
-    m_cornerDoca = 2000.;
+    m_ribbonActDist = -maxDoca;
+    m_cornerDoca = maxDoca;
 }
 
 void AcdRecon::Print(Option_t *option) const {
