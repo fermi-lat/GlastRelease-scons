@@ -85,12 +85,12 @@ outfilepath = None
 outfilename = None
 
 if cfile.has_section(outputsection):
-	outoptions = cfile.options(outputsection)
-	for opt in outoptions:
-		if opt == 'outfilepath':
-			outfilepath = cfile.get(outputsection,opt)
-		if opt == 'outfilename':
-			outfilename = cfile.get(outputsection,opt)
+    outoptions = cfile.options(outputsection)
+    for opt in outoptions:
+        if opt == 'outfilepath':
+            outfilepath = cfile.get(outputsection,opt)
+        if opt == 'outfilename':
+           outfilename = cfile.get(outputsection,opt)
 
 if outfilepath is None:
     outfilepath = '.'
@@ -176,14 +176,16 @@ for idet in detsections:
 # either change them or use override
 
     if biasname is None:
-        biasname = glob.glob(filepath+'/*'+idet+'*[bB]ias*.xml')
+        biasname = glob.glob(filepath+'/*T'+towerstr+'*[bB]ias*.xml')
     if adc2nrgname is None:
         adc2nrgname = glob.glob(filepath+'/*T'+towerstr+'*adc2nrg*.xml')
 
 # in case adc2nrg uses module number rather than tower...
 
-        if len(adc2nrgname) == 0:
-            adc2nrgname = glob.glob(filepath+'/*'+idet+'*adc2nrg*.xml')    
+    if len(biasname) == 0:
+        biasname = glob.glob(filepath+'/*'+idet+'*[bB]ias*.xml')
+    if len(adc2nrgname) == 0:
+        adc2nrgname = glob.glob(filepath+'/*'+idet+'*adc2nrg*.xml')    
     if relgainname is None:
         relgainname = glob.glob(filepath+'/*'+idet+'*relgain*.xml')
     if flename is None:
