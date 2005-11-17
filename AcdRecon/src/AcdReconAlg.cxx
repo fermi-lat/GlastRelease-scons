@@ -194,6 +194,14 @@ void AcdReconAlg::clear() {
     m_cornerDoca = maxDoca;
 
     m_hitMap.clear();
+
+    idents::AcdId resetId;
+    resetId.na(1);
+    m_minDocaId = resetId;
+    m_ribbon_act_dist_id = resetId;
+    m_maxActDistId = resetId;
+    m_maxActDist3DId = resetId;
+
 }
 
 
