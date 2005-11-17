@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r12p5   17-Nov-2005 EC  Fix to hitMap bits
 v1r12p4   17-Nov-2005 HMK Initialize id data members in clear method
 v1r12p3   15-Nov-2005 HMK Make AcdTkrIntersectionTool options via JO
 v1r12p2   10-Nov-2005 THB Added AcdTkrIntersect Tool to load routine
