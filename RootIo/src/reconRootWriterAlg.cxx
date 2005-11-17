@@ -723,7 +723,7 @@ StatusCode reconRootWriterAlg::writeAcdRecon()
     SmartDataPtr<Event::AcdRecon> acdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (!acdRecTds) return StatusCode::SUCCESS;
     idents::AcdId docaIdTds = acdRecTds->getMinDocaId();
-    idents::AcdId actDistIdTds = acdRecTds->getMaxActDistId();
+    idents::AcdId actDistIdTds = acdRecTds->getMaxActDist3DId();
     idents::AcdId ribActDistIdTds = acdRecTds->getRibbonActiveDistId();
     std::vector<AcdId> idRootCol;
     std::vector<idents::AcdId>::const_iterator idTdsIt;
