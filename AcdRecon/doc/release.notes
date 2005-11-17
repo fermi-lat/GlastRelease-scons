@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r12p4   17-Nov-2005 HMK Initialize id data members in clear method
 v1r12p3   15-Nov-2005 HMK Make AcdTkrIntersectionTool options via JO
 v1r12p2   10-Nov-2005 THB Added AcdTkrIntersect Tool to load routine
 v1r12p1   08-Nov-2005 HMK Patch to new corner DOCA to retain maxDoca value
