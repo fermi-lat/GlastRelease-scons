@@ -10,7 +10,7 @@
 #include "ResultTable.h"
 #include "ConnectionDialog.h"
 
-#include "rdbModel/Management/Manager.h"      // includes Rdb.h
+#include "rdbModel/Rdb.h"
 #include "rdbModel/Management/XercesBuilder.h"
 #include "rdbModel/Db/MysqlConnection.h"
 
@@ -40,7 +40,6 @@ private:
   ConnectionDialog               *m_dgNewCon;              // Connection Dialog
   InsertDialog                   *m_dgInsert;              // Insert Dialog
   
-  rdbModel::Manager              *m_rdbManager;            // Manager for the rdb
   rdbModel::XercesBuilder        *m_rdbBuilder;            // Builder of the rdb from the xml file
   rdbModel::MysqlConnection      *m_connect;               // Object to connect to a mysql db
   FXString                        m_lastDbSchema;          // last DB schema opened

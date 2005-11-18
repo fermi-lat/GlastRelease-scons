@@ -175,15 +175,13 @@ FXIMPLEMENT(RdbGUIWindow,FXMainWindow,RdbGUIWindowMap,ARRAYNUMBER(RdbGUIWindowMa
   // Initialize connection dialog and mysql connection
   m_dgNewCon = new ConnectionDialog(this);
   m_connect = new rdbModel::MysqlConnection(uiLog->getOutStream(), uiLog->getErrStream());
-
+  
   // Initialize insert dialog 
   m_dgInsert = new InsertDialog(getApp());
 
   
-  // Initialize the rdb manager and it's builder
+  // Initialize the rdb builder
   m_rdbBuilder = new rdbModel::XercesBuilder();
-  m_rdbManager = rdbModel::Manager::getManager();
-  m_rdbManager->setBuilder(m_rdbBuilder);
   
   m_lastDbSchema = "";
 }
@@ -251,12 +249,11 @@ long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
     {
       if (onCloseConnection(NULL,0,NULL))
         {
-          if (m_rdbManager->getRdb())
-            {    
-              m_rdbManager->cleanRdb();
-              uiTblColList->reset();
-              m_rdb = 0;
-            }
+          if (m_rdb) {
+            delete m_rdb;
+          }
+          m_rdb = new rdbModel::Rdb;
+
           loadXMLFile(opendialog->getFilename());        
         }
     }
@@ -269,8 +266,7 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
 {
   if (FXFile::exists(fileName))
     {
-      m_rdbManager->setInputSource(fileName.text());
-      if (m_rdbManager->build())
+      if (m_rdb->build(fileName.text(), m_rdbBuilder)) 
         {
           FXMessageBox::error(this, MBOX_OK, "Error: rdbModel building", 
               "an error as occurred during the construction of the rdb model");
@@ -278,7 +274,7 @@ void RdbGUIWindow::loadXMLFile(FXString fileName)
         }
       else
         {
-          m_rdbManager->startVisitor(uiTblColList);
+          m_rdb->accept(uiTblColList);
           m_cmdOpenConn->enable();
           m_lastDbSchema = fileName;
         }
@@ -311,31 +307,36 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
           m_uiDBSelection->appendItem(data[0]+" ("+data[2]+"@"+data[1]+")");
           m_uiDBSelection->setCurrentItem(0);   // this line will have to be changed
           
-          rdbModel::MATCH match = m_connect->matchSchema(m_rdbManager->getRdb(), false);
+          rdbModel::MATCH match = m_connect->matchSchema(m_rdb, false);
         
           switch (match) {
           case rdbModel::MATCHequivalent:
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
             searchFrame->setConnection(m_connect);
-            m_rdb = m_rdbManager->getRdb();
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHcompatible:
             uiLog->logText("XML schema and MySQL database are compatible\n");
             searchFrame->setConnection(m_connect);
-            m_rdb = m_rdbManager->getRdb();
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHfail:
             uiLog->logText("XML schema and MySQL database are NOT compatible\n");
-            m_rdb = 0;
+
+            if (m_rdb) {
+              delete m_rdb;
+              m_rdb = 0;
+            }
             m_connect->close();
             break;
           case rdbModel::MATCHnoConnection:
             uiLog->logText("Connection failed while attempting match\n");
-            m_rdb = 0;
+            if (m_rdb) {
+              delete m_rdb;
+              m_rdb = 0;
+            }
             m_connect->close();
             break;
           }
@@ -449,7 +450,7 @@ long RdbGUIWindow::onMultiInsert(FXObject*,FXSelector, void*)
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
   // Fill the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
   // Fill the form with the sticky values of the last row inserted in the DB
   m_dgInsert->fillStickyWithLastRow();
   // Set the mode of the dialog to Insert
@@ -479,7 +480,8 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
   // Fill the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
+
   // Set the mode of the dialog to Insert
   m_dgInsert->setInsertMode(1);
   
@@ -507,7 +509,7 @@ long RdbGUIWindow::onInsertLatest(FXObject*,FXSelector, void*)
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   m_dgInsert->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
   // Fill the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
   // Set the mode of the dialog to InsertLatest
   m_dgInsert->setInsertMode(2);
   
@@ -539,7 +541,7 @@ long RdbGUIWindow::onUpdateLastRow(FXObject*,FXSelector, void*)
 
   m_dgInsert->setTableName(m_dgInsert->getLastTblName());
   // Build the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
   // Fill the form with the last row inserted in the DB
   m_dgInsert->fillWithLastRow();
   // Set the mode of the dialog to Update Last Row
@@ -569,7 +571,7 @@ long RdbGUIWindow::onUpdateRowByKey(FXObject*,FXSelector, void* ptr)
 
   m_dgInsert->setTableName(uiTable->getTableName());
   // Build the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
   // Fill the form with the last row inserted in the DB
   m_dgInsert->fillWithRowByKey(uiTable->getItemText(row, 0).text());
   // Set the mode of the dialog to Update Last Row
@@ -599,7 +601,7 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
 
   m_dgInsert->setTableName(uiTable->getTableName());
   // Build the form
-  m_rdbManager->startVisitor(m_dgInsert);
+  m_rdb->accept(m_dgInsert);
   // Fill the form with the last row inserted in the DB
   m_dgInsert->fillWithRowByKey(uiTable->getItemText(row, 0).text());
   // Set the mode of the dialog to Insert 
@@ -621,7 +623,7 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
 void RdbGUIWindow::closeConnection()
 {
   m_connect->close();
-  m_rdb = 0;      // only useful when compatible with db we're connected to
+
   m_uiDBSelection->removeItem(m_uiDBSelection->getCurrentItem());
   searchFrame->reset();
   uiTable->clearItems();
