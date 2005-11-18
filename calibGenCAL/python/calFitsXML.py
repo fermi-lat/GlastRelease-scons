@@ -49,7 +49,7 @@ class calFitsXML(calXML.calXML):
     def __init__(self, filePath = None, fileName = None, mode = MODE_READONLY, labels = None, \
                 calSNs = None, dataset = None, lrefgain = None, hrefgain = None, pedFile = None, \
                 erng = None, reportName = None, runId = None, comment = None, fitsName = None, \
-                fitsTime = None, type = None):
+                fitsTime = None, type = None, version = 2):
         """
         Open a CAL FITS data XML file
 
@@ -73,6 +73,7 @@ class calFitsXML(calXML.calXML):
         Param: comment The table header \e COMMENT string value.
         Param: fitsName The name of the FITS file from which the XML file is derived.
         Param: fitsName The creation time of the FITS file from which the XML file is derived.
+        Param: version The format version number of the CAL XML file.
         """
 
         self.__numAxes = 7
@@ -99,7 +100,7 @@ class calFitsXML(calXML.calXML):
         self.__erng = erng   #LEX8/LEX1/HEX8/HEX1
         self.__fitsName = fitsName
         self.__fitsTime = fitsTime
-        self.__xmlVersion = 1
+        self.__xmlVersion = version
         self.__reportName = reportName
         self.__runId = runId
         self.__comment = comment
