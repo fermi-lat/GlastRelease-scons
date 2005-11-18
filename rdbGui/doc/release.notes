@@ -5,6 +5,8 @@
    Coordinators: M. Frailis and R. Giannitrapani
               EOH
 
+   v1r10   17-Nov-2005  jrb      Use new, Manager-less mode of rdbModel.
+                                 Requires rdbModel v2r4 or later
    v1r9    12-Sep-2005  jrb      1) Add insertLatest to Action menu. 
                                  2)catch exceptions from Connection class
                                  3) make "=" the default for query conditions
