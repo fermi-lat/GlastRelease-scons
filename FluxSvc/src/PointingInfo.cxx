@@ -50,6 +50,9 @@ void PointingInfo::set(double time)
     rad_geo = loc.altitude(); 
     L=loc.L();
     B=loc.B();
+    in_saa=0;
+    bool inside = loc.insideSAA();
+    if(inside)in_saa=1;
 
 }
 Event::Exposure* PointingInfo::forTDS()const
@@ -85,6 +88,7 @@ void PointingInfo::setFT2Tuple(INTupleWriterSvc* tuple, const std::string& tname
     tuple->addItem(tname, "dec_scz",   &dec_scz);
     tuple->addItem(tname, "ra_scx",    &ra_scx);
     tuple->addItem(tname, "dec_scx",   &dec_scx);
+    tuple->addItem(tname, "in_saa",   &in_saa);
     tuple->addItem(tname, "livetime",  &livetime);
 }
 //------------------------------------------------------------------------
