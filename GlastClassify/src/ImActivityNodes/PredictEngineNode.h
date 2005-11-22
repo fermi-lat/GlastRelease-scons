@@ -22,7 +22,7 @@ public:
     typedef std::vector<std::string> StringList;
 
     PredictEngineNode(const std::string& type, const std::string& name, const std::string& id);
-    ~PredictEngineNode() {}
+    virtual ~PredictEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

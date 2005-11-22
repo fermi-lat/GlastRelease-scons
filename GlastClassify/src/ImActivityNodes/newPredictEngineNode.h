@@ -24,7 +24,7 @@ public:
     typedef std::vector<TreePair>             TreePairVector;
 
     newPredictEngineNode(const std::string& type, const std::string& name, const std::string& id);
-    ~newPredictEngineNode() {}
+    virtual ~newPredictEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

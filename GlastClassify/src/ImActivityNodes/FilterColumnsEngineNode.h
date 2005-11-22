@@ -19,7 +19,7 @@ public:
 
     FilterColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id), m_expression("") {m_nodeMap.clear();}
-    ~FilterColumnsEngineNode() {}
+    virtual ~FilterColumnsEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

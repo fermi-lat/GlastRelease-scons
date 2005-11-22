@@ -61,7 +61,7 @@ void newPredictEngineNode::execute()
     double weightSum   = 0.;
     double runningWght = 0.;
 
-    int treeNum = 0;
+    //int treeNum = 0;
 
     for(TreePairVector::iterator treeItr = m_trees.begin(); treeItr != m_trees.end(); treeItr++)
     {
@@ -69,7 +69,8 @@ void newPredictEngineNode::execute()
 
         double result = *(reinterpret_cast<const double*>((*tree)()));
 
-        const XTIfElseNode<double>& ifElseNode = dynamic_cast<const XTIfElseNode<double>& >(*tree);
+        // For printing during running, leaving here to remember how to do it
+        //const XTIfElseNode<double>& ifElseNode = dynamic_cast<const XTIfElseNode<double>& >(*tree);
         //std::cout << "Tree #" << treeNum++ << " evaluates to: " << result << std::endl;
         //ifElseNode.printExp(std::cout);
 

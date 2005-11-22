@@ -20,7 +20,7 @@ public:
 
     ShuffleEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) {m_nodeMap.clear();}
-    ~ShuffleEngineNode() {}
+    virtual ~ShuffleEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

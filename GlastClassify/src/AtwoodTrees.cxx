@@ -84,7 +84,7 @@ bool AtwoodTrees::execute()
     double tkrNumTracks = *m_TkrNumTracks;
     double calenergy    = *m_CalEnergyRaw;
     double calCsiRln    = *m_CalCsIRLn;
-    double eventId      = *m_EvtEventId;
+    //double eventId      = *m_EvtEventId;
 
     // These are the "standard" selection cuts
     if( calenergy <5. || calCsiRln < 4. || tkrNumTracks < 1) return false; 

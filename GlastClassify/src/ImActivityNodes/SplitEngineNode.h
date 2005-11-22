@@ -23,7 +23,7 @@ public:
     SplitEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id), m_expression("") 
                      {m_nodeMap.clear();}
-    ~SplitEngineNode() {}
+    virtual ~SplitEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

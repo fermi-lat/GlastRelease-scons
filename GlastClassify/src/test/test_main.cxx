@@ -55,7 +55,7 @@ public:
         TreeFactory factory(info_path, tuple, dict);
 
         log() << "Ask factory for a tree: " << std::endl;
-        const ITreeFactory::ITree& goodcal= factory(name);
+        const TreeFactory::Tree& goodcal= factory(name);
         log() << "Tree's title: " << goodcal.title() << std::endl;
         
 

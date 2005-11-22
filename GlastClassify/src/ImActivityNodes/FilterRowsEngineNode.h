@@ -28,7 +28,7 @@ public:
                          m_includeRows(false),
                          m_xprsnNode(0)
                      {m_nodeMap.clear();}
-    ~FilterRowsEngineNode() {}
+    virtual ~FilterRowsEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

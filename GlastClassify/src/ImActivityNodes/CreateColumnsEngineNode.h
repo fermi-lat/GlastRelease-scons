@@ -25,7 +25,7 @@ public:
     CreateColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) 
                      {m_nodeMap.clear(); m_columnNames.clear(); m_xprsnNodeMap.clear();}
-    ~CreateColumnsEngineNode() {}
+    virtual ~CreateColumnsEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}

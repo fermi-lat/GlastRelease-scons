@@ -184,7 +184,6 @@ int GlastClassify::xmlTreeAnalysisFactory::linkActivityNodes(GlastClassify::Tree
         int         fromPort  = xmlBase::Dom::getIntAttribute(xmlLink, "fromPort");  
         std::string sToNode   = xmlBase::Dom::getAttribute(xmlLink, "toNode");
         std::string sToPort   = xmlBase::Dom::getAttribute(xmlLink, "toPort");
-        int         toPort    = xmlBase::Dom::getIntAttribute(xmlLink, "toPort");
 
         // Comment out for now... (fix in print statement?)
         //if (sFromPort == "1" && sToPort == "1") continue;
