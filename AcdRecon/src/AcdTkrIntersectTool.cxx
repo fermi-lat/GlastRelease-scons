@@ -129,6 +129,9 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   const double arcLength = sToXIntersection < sToYIntersection ?
     ( sToXIntersection < sToZIntersection ? sToXIntersection : sToZIntersection ) :
     ( sToYIntersection < sToZIntersection ? sToYIntersection : sToZIntersection ) ;
+  
+  // protect against negative arcLenghts
+  if ( arcLength < 0. ) return -1;
 
   // setup the G4Propagator
   bool downwards = initialDirection.z() < 0.0;
