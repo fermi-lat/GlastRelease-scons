@@ -5,6 +5,7 @@
  */
 
 #include "PredictEngineNode.h"
+#include "src/XT/XTtupleVars.h"
 
 #include <iostream>
 #include <iomanip>
@@ -26,7 +27,7 @@ namespace
 PredictEngineNode::PredictEngineNode(const std::string& type, const std::string& name, const std::string& id) : 
                                      m_type(type), m_name(name), m_id(id), m_decisionTree(0)  
 {
-    m_nodeVec.clear();
+    m_nodeMap.clear();
     m_inputVar.clear();
     m_outputVar.clear();
 }
@@ -38,12 +39,29 @@ void PredictEngineNode::print(std::ostream& out, int depth) const
     out << indent(depth) << "ID: " << m_id << ", Type: " << m_type << ", Label: " << m_name << std::endl;
 
     // What do we set depth to?
-    depth = m_nodeVec.size() > 1 ? depth + 1 : depth;
+    depth = m_nodeMap.size() > 1 ? depth + 1 : depth;
 
     // Now follow through with all the nodes we point to
-    for(IImActivityNodeVec::const_iterator nodeIter = m_nodeVec.begin(); nodeIter != m_nodeVec.end(); nodeIter++)
+    for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
     {
-        (*nodeIter)->print(out, depth);
+        nodeIter->second->print(out, depth);
+    }
+
+    return;
+}
+
+// Does the "real" work... 
+void PredictEngineNode::execute()
+{
+    // Evaluate...
+    double value = 0.5;
+    
+    m_xtColumnVal->setDataValue(value);
+    
+    // Now follow through with all the daughter nodes we point to
+    for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
+    {
+        nodeIter->second->execute();
     }
 
     return;

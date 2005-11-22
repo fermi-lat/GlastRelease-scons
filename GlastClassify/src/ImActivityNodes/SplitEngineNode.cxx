@@ -5,13 +5,13 @@
  */
 
 #include "SplitEngineNode.h"
+#include "src/XT/XprsnTree.h"
 
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
 #include <sstream>
 #include <set> 
-
 
 namespace 
 {
@@ -30,24 +30,56 @@ void SplitEngineNode::print(std::ostream& out, int depth) const
     out << indent(depth) << "ID: " << m_id << ", Type: " << m_type << ", Label: " << m_name << std::endl;
 
     // What is the expression
-    //out << indent(depth+2) << "Filter expression = " << m_expression << std::endl;
 
-    // And again...
-    out << indent(depth+2) << "Filter expression: ";
-    for(StringList::const_iterator expIter = m_parsedExpression.begin(); expIter != m_parsedExpression.end(); expIter++)
-    {
-        out << *expIter;
-    }
-    out << std::endl;
+    // What is the expression
+    out << indent(depth) << indent(2) << "Split Expression: ";
+
+    m_xprsnNode->print(out);
 
     // What do we set depth to?
-    depth = m_nodeVec.size() > 1 ? depth + 1 : depth;
+    depth = m_nodeMap.size() > 1 ? depth + 1 : depth;
+
+    if (m_nodeMap.size() != 2)
+    {
+        out << indent(depth) << "--> Does not have two nodes! # nodes = " << m_nodeMap.size() << std::endl;
+    }
 
     // Now follow through with all the nodes we point to
-    for(IImActivityNodeVec::const_iterator nodeIter = m_nodeVec.begin(); nodeIter != m_nodeVec.end(); nodeIter++)
+    for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
     {
-        (*nodeIter)->print(out, depth);
+        nodeIter->second->print(out, depth);
     }
+
+    return;
+}
+
+// Does the "real" work... 
+void SplitEngineNode::execute()
+{
+    // If only one node then execute it, otherwise evaluate expression
+    if (m_nodeMap.size() == 1)
+    {
+        m_nodeMap.begin()->second->execute();
+    }
+    else
+    {
+        // Evaluate the expression
+        bool result = *(reinterpret_cast<const bool*>((*m_xprsnNode)()));
+
+        if (result)
+        {
+            m_nodeMap[0]->execute();
+        }
+        else
+        {
+            m_nodeMap[1]->execute();
+        }
+    }
+    // Now follow through with all the daughter nodes we point to
+    //for(IImActivityNodeVec::const_iterator nodeIter = m_nodeVec.begin(); nodeIter != m_nodeVec.end(); nodeIter++)
+    //{
+    //    (*nodeIter)->execute();
+    //}
 
     return;
 }

@@ -5,8 +5,9 @@ $Header$
 
 */
 #include "GlastClassify/AtwoodTrees.h"
-//THB#include "GlastClassify/TreeFactory.h"
-#include "GlastClassify/xmlTreeFactory.h"
+#include "GlastClassify/TreeFactory.h"
+#include "TreeAnalysis.h"
+#include "src/xmlBuilders/xmlTreeAnalysisFactory.h"
 
 #include "classifier/DecisionTree.h"
 
@@ -17,195 +18,123 @@ $Header$
 */
 using namespace GlastClassify;
 
-namespace {
+//_________________________________________________________________________
 
-    // Convenient identifiers used for the nodes
-    enum{
-        ENERGY_PARAM,     
-        ENERGY_LASTLAYER, 
-        ENERGY_PROFILE,   
-        ENERGY_TRACKER,   
-        VERTEX_THIN, VERTEX_THICK,
-        PSF_VERTEX_THIN, 
-        PSF_VERTEX_THICK,
-        PSF_TRACK_THIN,  
-        PSF_TRACK_THICK, 
-        GAMMA_VERTEX_HIGH, GAMMA_VERTEX_MED, GAMMA_VERTEX_THIN, GAMMA_VERTEX_THICK,
-        GAMMA_TRACK_HIGH,  GAMMA_TRACK_MED,  GAMMA_TRACK_THIN,  GAMMA_TRACK_THICK,
-        NODE_COUNT, // stop here
-    };
+AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string treepath)
+                       : m_log(log)
+{
+    // these are used for preliminary cuts to select the tree to use
+    m_TkrNumTracks = tuple.getItem("TkrNumTracks");
+    m_CalEnergyRaw = tuple.getItem("CalEnergyRaw");
+    m_CalCsIRLn    = tuple.getItem("CalCsIRLn");
+    m_EvtEventId   = tuple.getItem("EvtEventId");
 
-    /** table to correlate indeces with 
-      */
-    //___________________________________________________________________________
+    // New items to create or override
+    // Add Bill's tuple items so we can start some comparisons
+    tuple.addItem("CTBbestEneProb",   m_bestEnergyProb);
+    tuple.addItem("CTBprofileProb",   m_profileProb);
+    tuple.addItem("CTBlastLayerProb", m_lastLayerProb);
+    tuple.addItem("CTBtrackerProb" ,  m_trackerProb);
+    tuple.addItem("CTBparamProb",     m_paramProb);
+    tuple.addItem("CTBBestEnergy",    m_CTBestEnergy);
+    tuple.addItem("CTBdeltaEoE",      m_CTBdeltaEoE);
+    tuple.addItem("CTBVTX",           m_VTX);
+    tuple.addItem("CTBCORE",          m_CORE);
+    tuple.addItem("CTBGAM",           m_GAM);
+    
+    m_executeTreeCnt = 0;
+    m_goodVals       = 0;
+    m_caughtVals     = 0;
 
-    class CTinfo { 
-    public:
-        int id;           // unique ID for local identification
-        std::string name; // the name of the DecisionTree
-    };
-    // these have to correspond to the folder names
-    CTinfo imNodeInfo[] = {
-        { ENERGY_PARAM,      "energy/param" },
-        { ENERGY_LASTLAYER,  "energy/lastlayer" },
-        { ENERGY_PROFILE,    "energy/profile" },
-        { ENERGY_TRACKER,    "energy/tracker" },
+    //m_xmlFactory = new GlastClassify::xmlTreeFactory(treepath, tuple);
+    xmlTreeAnalysisFactory treeFactory(treepath, tuple);
 
-        { VERTEX_THIN,       "vertex/thin"},
-        { VERTEX_THICK,      "vertex/thick"},
+    m_treeAnalysis = treeFactory.buildTreeAnalysis();
 
-        { PSF_VERTEX_THIN,   "psf/vertex/thin"}, 
-        { PSF_VERTEX_THICK,  "psf/vertex/thick"},
-        { PSF_TRACK_THIN,    "psf/track/thin"},
-        { PSF_TRACK_THICK,   "psf/track/thick"},
-        { GAMMA_VERTEX_HIGH, "gamma/vertex/highcal"},
-        { GAMMA_VERTEX_MED,  "gamma/vertex/medcal"},
-        { GAMMA_VERTEX_THIN, "gamma/vertex/thin"},
-        { GAMMA_VERTEX_THICK,"gamma/vertex/thick"},
-        { GAMMA_TRACK_HIGH,  "gamma/track/highcal"},
-        { GAMMA_TRACK_MED,   "gamma/track/medcal"},
-        { GAMMA_TRACK_THIN,  "gamma/track/thin"},
-        { GAMMA_TRACK_THICK, "gamma/track/thick"},
-    };
+    //Testing...
+    std::ofstream outFile("IMsheetTest.txt");
+    m_treeAnalysis->print(outFile);
+    outFile.close();
 
+    return;
+}
 
-}  // anonymous namespace
+AtwoodTrees::~AtwoodTrees() 
+{
+    delete m_treeAnalysis;
+}
+
 
 //_________________________________________________________________________
 
-AtwoodTrees::AtwoodTrees( 
-     ITupleInterface& tuple, 
-     std::ostream&             log,       
-     std::string               treepath
-     )
-     : m_log(log)
+bool AtwoodTrees::execute()
 {
-    // these are used for preliminary cuts to select the tree to use
-    m_Tkr1FirstLayer = tuple.getItem("Tkr1FirstLayer");
-    m_CalEnergyRaw=tuple.getItem("CalEnergyRaw"     );
-    m_CalTotRLn   =tuple.getItem("CalTotRLn"        );
-    m_VtxAngle    =tuple.getItem("VtxAngle"         ); 
+    // initialize CT output variables
+    m_bestEnergyProb =  0.;
+    m_profileProb    =  0.;
+    m_lastLayerProb  =  0.;
+    m_trackerProb    =  0.;
+    m_paramProb      =  0.;
+    m_CTBestEnergy   =  0.;
+    m_CTBdeltaEoE    = -2.;
+    m_VTX            =  0.;
+    m_CORE           =  0.;
+    m_GAM            =  0.;
 
-    // the energy estimates
-    m_EvtEnergyCorr = tuple.getItem("EvtEnergyCorr"  );
-    m_CalCfpEnergy=   tuple.getItem("CalCfpEnergy"   );
-    m_CalLllEnergy =  tuple.getItem("CalLllEnergy"   );
-    m_CalTklEnergy=   tuple.getItem("CalTklEnergy"   );
+    double tkrNumTracks = *m_TkrNumTracks;
+    double calenergy    = *m_CalEnergyRaw;
+    double calCsiRln    = *m_CalCsIRLn;
+    double eventId      = *m_EvtEventId;
 
+    // These are the "standard" selection cuts
+    if( calenergy <5. || calCsiRln < 4. || tkrNumTracks < 1) return false; 
 
+    m_treeAnalysis->execute();
 
-    // New items to create or override
-    // create new float TupleItem objects: will be automatically added to the overall tuple
-    tuple.addItem("CTgoodCal",  m_goodCalProb);
-    tuple.addItem("CTvertex",   m_vtxProb);
-    tuple.addItem("CTgoodPsf",  m_goodPsfProb);
-    tuple.addItem("CTgamma" ,   m_gammaProb);
-    tuple.addItem("CTgammaType",m_gammaType);
-    tuple.addItem("BestEnergy", m_BestEnergy);
+    m_executeTreeCnt++;
 
-    //m_factory = new GlastClassify::TreeFactory(treepath, tuple);
-    m_factory = new GlastClassify::xmlTreeFactory(treepath, tuple);
-
-    for( unsigned int i=0; i<NODE_COUNT; ++i)
+    // Recover the results?
+    try
     {
-        const ITreeFactory::ITree& tree = (*m_factory)(imNodeInfo[i].name);
+        // Retrieve the energy classification results
+        double bestEnergyProb = m_treeAnalysis->getTupleVal("BestEnergyProb");
+        double ProfileProb    = m_treeAnalysis->getTupleVal("ProfileProb");
+        double lastLayerProb  = m_treeAnalysis->getTupleVal("LastLayerProb");
+        double trackerProb    = m_treeAnalysis->getTupleVal("TrackerProb");
+        double ParamProb      = m_treeAnalysis->getTupleVal("ParamProb");
+        double ctBestEnergy   = m_treeAnalysis->getTupleVal("BestEnergy");
+        double ctDeltaEoE     = m_treeAnalysis->getTupleVal("BestDeltaEoE");
+        m_bestEnergyProb      = bestEnergyProb;
+        m_profileProb         = ProfileProb;
+        m_lastLayerProb       = lastLayerProb;
+        m_trackerProb         = trackerProb;
+        m_paramProb           = ParamProb;
+        m_CTBestEnergy        = ctBestEnergy;
+        m_CTBdeltaEoE         = ctDeltaEoE;
 
-        //std::string sOutFileRoot = treepath + "/" + imNodeInfo[i].name;
+        // Probability that event was vertexed
+        double VTX            = m_treeAnalysis->getTupleVal("VTX");
+        m_VTX                 = VTX;
 
-        //dynamic_cast<const xmlTreeFactory::Tree&>(tree).printFile(sOutFileRoot);
+        // Probability that event was "in the core"
+        double CORE           = m_treeAnalysis->getTupleVal("CORE");
+        m_CORE                = CORE;
+
+        // Background rejection probability
+        double GAM            = m_treeAnalysis->getTupleVal("GAM");
+        m_GAM                 = GAM;
+
+        m_goodVals++;
     }
+    catch(...)
+    {
+        // Keeps on executing;
+        m_caughtVals++;
+    }
+
+    double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
+
+    bool writeTupleRow = dWriteTupleRow != 0. ? true : false;
+
+    return writeTupleRow;
 }
-
-    //_________________________________________________________________________ 
-
-    bool AtwoodTrees::useVertex()const
-    {
-        return *m_VtxAngle>0 && m_vtxProb >0.5;
-    }
-
-    //_________________________________________________________________________
-
-    void AtwoodTrees::execute()
-    {
-
-        // initialize CT output variables
-        m_goodPsfProb=0;
-        m_vtxProb  = m_gammaProb = m_goodCalProb= 0;
-        m_gammaType = -1;
-
-        double calenergy = *m_CalEnergyRaw;
-        if( calenergy <5. || *m_CalTotRLn < 4.) return; // the "NoCAL" case that we cannot deal with
-
-        double energymeasure[] = {*m_EvtEnergyCorr, *m_CalCfpEnergy, *m_CalLllEnergy, *m_CalTklEnergy};
-        int ctree_index[] = {ENERGY_PARAM, ENERGY_PROFILE, ENERGY_LASTLAYER, ENERGY_TRACKER};
-        double bestprob(0);
-        // ============> wire in only param here (for now) <===================
-        for( int i =0; i<1; ++i){
-            double prob = energymeasure[i]>0? m_factory->evaluate(ctree_index[i]) : 0;
-            if( prob>bestprob){
-                bestprob = prob;
-                m_BestEnergy = energymeasure[i];
-            }
-        }
-
-        // assign tuple items
-        m_goodCalProb = bestprob;
-
-        // evaluate the rest only if cal prob ok (should this be wired in??? (Bill now has 0.1)
-        if( m_goodCalProb<0.25 )   return;
-
-        // selection of energy range for gamma trees
-        enum {CAL_LOW, CAL_MED, CAL_HIGH};
-        int cal_type;
-        if(     calenergy <  350) cal_type = CAL_LOW;
-        else if(calenergy < 3500) cal_type = CAL_MED;
-        else                      cal_type = CAL_HIGH;
-
-
-        // select vertex-vs-track, and corresponding trees for good psf, background rejection
-
-        int psfType=0, gammaType=0;
-        if( *m_Tkr1FirstLayer > 5 ) { // thin
-
-            m_vtxProb = m_factory->evaluate(VERTEX_THIN); 
-            if( useVertex() ) {
-                psfType = PSF_VERTEX_THIN ;
-                if(      cal_type==CAL_HIGH) gammaType=GAMMA_VERTEX_HIGH;
-                else if( cal_type==CAL_MED)  gammaType=GAMMA_VERTEX_MED;
-                else                         gammaType=GAMMA_VERTEX_THIN;
-
-            }else{ //track
-                psfType = PSF_TRACK_THIN;
-                if(      cal_type==CAL_HIGH) gammaType=GAMMA_TRACK_HIGH;
-                else if( cal_type==CAL_MED)  gammaType=GAMMA_TRACK_MED;
-                else                         gammaType=GAMMA_TRACK_THIN;
-            }
-        }else { //thick
-            m_vtxProb = m_factory->evaluate(VERTEX_THICK);
-           if( useVertex() ) {
-                psfType = PSF_VERTEX_THICK ;
-                if(      cal_type==CAL_HIGH) gammaType=GAMMA_VERTEX_HIGH;
-                else if( cal_type==CAL_MED)  gammaType=GAMMA_VERTEX_MED;
-                else                         gammaType=GAMMA_VERTEX_THICK;
-
-            }else{ //track
-                psfType = PSF_TRACK_THICK;
-                if(      cal_type==CAL_HIGH) gammaType=GAMMA_TRACK_HIGH;
-                else if( cal_type==CAL_MED)  gammaType=GAMMA_TRACK_MED;
-                else                         gammaType=GAMMA_TRACK_THICK;
-            }
-        }
-
-        // now evalute the appropriate trees
-        m_goodPsfProb = m_factory->evaluate(psfType);
-
-        m_gammaProb   = m_factory->evaluate(gammaType);
-        m_gammaType   = gammaType-GAMMA_VERTEX_HIGH; // will be 0-7
-    }
-
-    //_________________________________________________________________________
-
-    AtwoodTrees::~AtwoodTrees()
-    {
-        delete m_factory;
-    }

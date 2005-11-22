@@ -17,6 +17,7 @@ library  GlastClassify -no_share  \
                        -s=../GlastClassify $(source) \
                        -s=../src $(source) \
                        -s=../src/ImActivityNodes $(source) \
+                       -s=../src/XT $(source) \
                        -s=../src/xmlBuilders $(source)
 
 use classifier *

@@ -30,9 +30,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlFilterColumnsEngineFactory::xmlFilterColumnsEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlFilterColumnsEngineFactory::xmlFilterColumnsEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -40,7 +38,7 @@ IImActivityNode* xmlFilterColumnsEngineFactory::operator()(const DOMElement* xml
 {
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "PredictEngineNode";
+    std::string sType       = "FilterColumnsEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
 

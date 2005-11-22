@@ -6,7 +6,7 @@ $Header$
 */
 
 #include "xmlWriteTextFileEngineFactory.h"
-#include "../ImActivityNodes/CreateColumnsEngineNode.h"
+#include "../ImActivityNodes/WriteTextFileEngineNode.h"
 #include "xmlBase/XmlParser.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMElement.hpp>
@@ -30,9 +30,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlWriteTextFileEngineFactory::xmlWriteTextFileEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlWriteTextFileEngineFactory::xmlWriteTextFileEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -40,12 +38,24 @@ IImActivityNode* xmlWriteTextFileEngineFactory::operator()(const DOMElement* xml
 {
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "PredictEngineNode";
+    std::string sType       = "WriteTextFileEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
 
     // Create the node
-    CreateColumnsEngineNode* node = new CreateColumnsEngineNode(sType, sName, sId);
+    WriteTextFileEngineNode* node = new WriteTextFileEngineNode(sType, sName, sId);
+
+    // Set up to be able to output the ntuple
+    std::string sVarName = "WriteTupleRow";
+    XTcolumnVal<double>* xtColumnVal = XprsnParser().getXtTupleVars()[sVarName];
+
+    if (xtColumnVal == 0)
+    {
+        new XTcolumnVal<double>(sVarName);
+        XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
+    }
+
+    node->setXtColumnVal(xtColumnVal);
 
     return node;
 }

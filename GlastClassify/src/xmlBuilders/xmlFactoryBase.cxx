@@ -28,24 +28,9 @@ namespace {
     
 } // anonomous namespace
 
-xmlFactoryBase::xmlFactoryBase(std::ostream& log, int iVerbosity )
-                         :  m_log(log), m_outputLevel(iVerbosity)
-{
-    m_delimiters.clear();
-
-    m_delimiters.push_back(" ");
-    m_delimiters.push_back("(");
-    m_delimiters.push_back(")");
-    m_delimiters.push_back("&");
-    m_delimiters.push_back("|");
-    m_delimiters.push_back(">");
-    m_delimiters.push_back("<");
-    m_delimiters.push_back(">=");
-    m_delimiters.push_back("<=");
-    m_delimiters.push_back("+");
-    m_delimiters.push_back("-");
-    m_delimiters.push_back("get(");
-}
+xmlFactoryBase::xmlFactoryBase(XTExprsnParser& parser)
+                         :  m_parser(parser)
+{}
 
 xmlFactoryBase::~xmlFactoryBase()
 {
@@ -177,79 +162,4 @@ std::string xmlFactoryBase::indent(int depth)
     std::string ret(" ");; 
     for( int i =0; i < depth;++i) ret += " ";
     return ret;
-}
-
-void xmlFactoryBase::parseExpression(StringList& parsedExpression, std::string& expression)
-{
-    std::string localString = expression;
-
-    int  stringLen  = localString.length();
-
-    bool noDelFound = true;
-
-    // Look for occurance of first delimiter
-    for(StringList::iterator delIter = m_delimiters.begin(); delIter != m_delimiters.end(); delIter++)
-    {
-        int subStrPos = localString.find(*delIter, 0);
-
-        // position in string > -1 if we have a match
-        if (subStrPos > -1)
-        {
-            // Attempt to catch special case of unary + or - operator
-            if (subStrPos == 0 && (*delIter == "-" || *delIter == "+")) continue;
-
-            // Found a delimiter
-            noDelFound = false;
-
-            // If the delimiter is not the first character then process 
-            // the string to the left of the delimiter
-            if (subStrPos > 0)
-            {
-                // Substring to left of delimiter
-                std::string temp = localString.substr(0, subStrPos);
-
-                // Parse it
-                parseExpression(parsedExpression, temp);
-            }
-
-            // Process the delimiter (better name: operator
-            std::string delim = localString.substr(subStrPos, 1);
-            parsedExpression.push_back(delim);
-            
-            // If the delimiter (e.g. a ")") is not the last character
-            // then process to the right of the delimiter
-            if (subStrPos < stringLen)
-            {
-                // Substring to right of delimiter
-                std::string temp = localString.erase(0, subStrPos+1);
-
-                // Parse it
-                parseExpression(parsedExpression, temp);
-            }
-
-            break;
-        }
-    }
-
-    if (noDelFound) parsedExpression.push_back(localString);
-
-    return;
-}
-
-// Remove all blank spaces from a given string
-std::string xmlFactoryBase::trimBlanks(std::string& expression)
-{
-    std::string trimmedString = expression;
-
-    int nPos     = trimmedString.size();
-    int blankPos = trimmedString.find(" ",0);
-
-    if (blankPos > -1) 
-    {
-        std::string temp = trimmedString.erase(blankPos, 1);
-
-        trimmedString = trimBlanks(trimmedString);
-    }
-
-    return trimmedString;
 }

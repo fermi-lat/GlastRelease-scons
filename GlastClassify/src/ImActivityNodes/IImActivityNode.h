@@ -7,6 +7,7 @@
 */
 
 #include <vector>
+#include <map>
 #include <string>
 #include <iostream>
 
@@ -14,15 +15,18 @@ class IImActivityNode
 {
 public:
     // Typedef for the a vector of activity nodes
-    typedef std::vector<IImActivityNode*> IImActivityNodeVec;
+    typedef std::map<int, IImActivityNode*> IImActivityNodeMap;
 
     // Minimal set of virtual functions
     virtual const std::string& getType()           const = 0;  // Node type
     virtual const std::string& getName()           const = 0;  // Node name
     virtual const std::string& getId()             const = 0;  // Node ID
-    virtual const IImActivityNodeVec& getNodeVec() const = 0;  // Vector of child nodes
+    virtual const IImActivityNodeMap& getNodeMap() const = 0;  // Map of child nodes
     
-    virtual void setNodeLink(IImActivityNode* linkToNode) = 0;
+    virtual void setNodeLink(int port, IImActivityNode* linkToNode) = 0;
+
+    // Execute the node and its daughters
+    virtual void execute() = 0;
 
     // output
     virtual void print(std::ostream& out=std::cout, int depth=0) const = 0;

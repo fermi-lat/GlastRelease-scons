@@ -1,28 +1,30 @@
-#ifndef PredictEngineNode_h
-#define PredictEngineNode_h
+#ifndef newPredictEngineNode_h
+#define newPredictEngineNode_h
 
 #include "IImActivityNode.h"
-#include "classifier/DecisionTree.h"
 
 #include <vector>
 #include <map>
 #include <string>
 #include <iostream>
 
+class IXTExprsnNode;
 template <class T> class XTcolumnVal;
 
-/** @class PredictEngineNode
+/** @class newPredictEngineNode
 *  @brief  Describes an ActivityNode encountered in reading an IM xml file
 *
 */
 
-class PredictEngineNode : public IImActivityNode
+class newPredictEngineNode : public IImActivityNode
 {
 public:
-    typedef std::vector<std::string> StringList;
+    typedef std::vector<std::string>          StringList;
+    typedef std::pair<IXTExprsnNode*, double> TreePair;
+    typedef std::vector<TreePair>             TreePairVector;
 
-    PredictEngineNode(const std::string& type, const std::string& name, const std::string& id);
-    ~PredictEngineNode() {}
+    newPredictEngineNode(const std::string& type, const std::string& name, const std::string& id);
+    ~newPredictEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}
@@ -36,14 +38,13 @@ public:
     const StringList&  getOutputVarList()          const {return m_outputVar;}
     const StringList&  getInputVarList()           const {return m_inputVar;}
 
-    DecisionTree*      getDecisionTree()  const {return m_decisionTree;}
-
     virtual void setNodeLink(int port, IImActivityNode* linkToNode) {m_nodeMap[port] = linkToNode;}
-    void setDecisionTree(DecisionTree* decision)          {m_decisionTree = decision;}
     void setInputVar(const StringList& inVars)            {m_inputVar = inVars;}
     void setOutputVar(const StringList& outVars)          {m_outputVar = outVars;}
     void addOutputVar(const std::string& outVar)          {m_outputVar.push_back(outVar);}
     void setXTcolumnVal(XTcolumnVal<double>* colVal)      {m_xtColumnVal = colVal;}
+    void setTreePairVector(TreePairVector& treeVec)       {m_trees = treeVec;}
+    void addTree(TreePair& treePair)                      {m_trees.push_back(treePair);}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
@@ -54,8 +55,8 @@ private:
     IImActivityNodeMap   m_nodeMap;
     StringList           m_outputVar;
     StringList           m_inputVar;
-    DecisionTree*        m_decisionTree;
     XTcolumnVal<double>* m_xtColumnVal;
+    TreePairVector       m_trees;
 };
 
-#endif // ifdef PredictEngineNode_h
+#endif // ifdef newPredictEngineNode_h

@@ -19,12 +19,13 @@ XERCES_CPP_NAMESPACE_END
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
 
 class DecisionTree;
-//class DecisionTreeBuilder;
 class ImSheetBuilder;
 
 #include <vector>
 #include <utility>
 #include <map>
+
+#include "src/XT/XTtupleVars.h"
 
 namespace GlastClassify {
 
@@ -51,12 +52,18 @@ namespace GlastClassify {
          */
         const ITreeFactory::ITree& operator()(const std::string& name);
 
+        /** @brief Look up the value of a variable stored in the local tuple
+        */
+        virtual double getTupleVal(const std::string& name);
 
         /// @return value of Tree # i for current set of values
         virtual double evaluate(int i) const {return (*m_trees[i])();}
 
         /// index does the evaluate.
         virtual double operator[](int i) const{return evaluate(i);}
+
+        /// Testing: execute the im trees
+        virtual void execute();
 
         virtual ~xmlTreeFactory();
 
@@ -107,11 +114,9 @@ namespace GlastClassify {
         DOMDocument*                       m_domDocument;
 
         // The "builder" for our Decision Trees
-        //DecisionTreeBuilder*               m_builder;
         ImSheetBuilder*                    m_imSheet;
 
         // This looks up the values in the output ntuple
-        //ITreeFactory::ILookupData&         m_lookup;
         ITupleInterface&                   m_lookup;
 
         // Our collection of Classification Trees
@@ -119,14 +124,16 @@ namespace GlastClassify {
 
         // Class needed to calcluate local variables used in CT's
         LocalTupleValues                   m_localVals;
-        //ITupleInterface&                   m_tuple;
+        XTcolumnVal<double>::XTtupleMap    m_xtTupleMap;
+
+        // Try a lookup class here...
+        std::map<std::string,const GlastClassify::Item*> m_nTupleMap;
 
         // Mapping between Toby's CT naming convention and Bill's
         std::map<std::string,std::string>  m_TobyToBillMap;
 
         // Mapping between from IM's CT output variable names and Toby's
         std::map<std::string,std::string>  m_ImToTobyOutMap;
-
     };
 
 

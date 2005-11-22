@@ -5,6 +5,8 @@
  */
 
 #include "CreateColumnsEngineNode.h"
+#include "src/XT/XprsnTree.h"
+#include "src/XT/XTtupleVars.h"
 
 #include <iostream>
 #include <iomanip>
@@ -29,30 +31,48 @@ void CreateColumnsEngineNode::print(std::ostream& out, int depth) const
     // Output our node ID, type and name
     out << indent(depth) << "ID: " << m_id << ", Type: " << m_type << ", Label: " << m_name << std::endl;
 
-    // Output the variable names and expressions
-    std::vector<StringList>::const_iterator colExpIter = m_parsedColExps.begin();
-
-    for(StringList::const_iterator nameIter = m_columnNames.begin(); nameIter != m_columnNames.end(); nameIter++)
+    for(XprsnNodeMap::const_iterator nodeIter = m_xprsnNodeMap.begin(); nodeIter != m_xprsnNodeMap.end(); nodeIter++)
     {
-        //out << indent(depth) << indent(2) << *nameIter << " = " << *expIter++ << std::endl;
-        out << indent(depth) << indent(2) << *nameIter << " = ";
-        
-        for(StringList::const_iterator expIter = (*colExpIter).begin(); expIter != (*colExpIter).end(); expIter++)
-        {
-            out << *expIter;
-        }
-        out << std::endl;
+        out << indent(depth) << indent(2) << nodeIter->first->getName() << " = ";
 
-        colExpIter++;
+        nodeIter->second->print(out);
     }
 
     // What do we set depth to?
-    depth = m_nodeVec.size() > 1 ? depth + 1 : depth;
+    depth = m_nodeMap.size() > 1 ? depth + 1 : depth;
 
     // Now follow through with all the nodes we point to
-    for(IImActivityNodeVec::const_iterator nodeIter = m_nodeVec.begin(); nodeIter != m_nodeVec.end(); nodeIter++)
+    for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
     {
-        (*nodeIter)->print(out, depth);
+        nodeIter->second->print(out, depth);
+    }
+
+    return;
+}
+
+// Does the "real" work... 
+void CreateColumnsEngineNode::execute()
+{
+    // Iterate over the "action" nodes and execute them
+    for(XprsnNodeMap::const_iterator nodeIter = m_xprsnNodeMap.begin(); nodeIter != m_xprsnNodeMap.end(); nodeIter++)
+    {
+        XTcolumnVal<double>* xtTupleVal = nodeIter->first;
+        IXTExprsnNode*       xprsnNode  = nodeIter->second;
+
+        double result = *(reinterpret_cast<const double*>((*xprsnNode)()));
+
+        xtTupleVal->setDataValue(result);
+
+        //std::cout << "Value: " << xtTupleVal->getName() << " = ";
+        //xprsnNode->print(std::cout, false);
+        //std::cout << " = " << result << std::endl;
+        //double res2 = result*result;
+    }
+
+    // Now follow through with all the daughter nodes we point to
+    for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
+    {
+        nodeIter->second->execute();
     }
 
     return;

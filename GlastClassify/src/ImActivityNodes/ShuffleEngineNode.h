@@ -19,16 +19,19 @@ public:
     typedef std::vector<std::string> StringList;
 
     ShuffleEngineNode(const std::string& type, const std::string& name, const std::string& id) :
-                     m_type(type), m_name(name), m_id(id) {m_nodeVec.clear();}
+                     m_type(type), m_name(name), m_id(id) {m_nodeMap.clear();}
     ~ShuffleEngineNode() {}
 
     // 
     virtual const std::string& getType()           const {return m_type;}
     virtual const std::string& getName()           const {return m_name;}
     virtual const std::string& getId()             const {return m_id;}
-    virtual const IImActivityNodeVec& getNodeVec() const {return m_nodeVec;}
+    virtual const IImActivityNodeMap& getNodeMap() const {return m_nodeMap;}
+    
+    // Execute the node and its daughters
+    virtual void execute();
 
-    virtual void setNodeLink(IImActivityNode* linkToNode) {m_nodeVec.push_back(linkToNode);}
+    virtual void setNodeLink(int port, IImActivityNode* linkToNode) {m_nodeMap[port] = linkToNode;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
@@ -36,7 +39,7 @@ private:
     std::string        m_type;
     std::string        m_name;
     std::string        m_id;
-    IImActivityNodeVec m_nodeVec;
+    IImActivityNodeMap m_nodeMap;
 };
 
 #endif // ifdef ShuffleEngineNode_h

@@ -22,6 +22,8 @@ using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 #include <map>
 #include <iostream>
 
+#include "src/XT/XTExprsnParser.h"
+
 /** @class xmFactoryBase
 @brief A factory for accessing decision trees
 
@@ -38,14 +40,11 @@ public:
     @param lookup Instance of a class supplied to by user, which is called back 
     to find address of each variable
     */
-    xmlFactoryBase(std::ostream& log=std::cout, int iVerbosity=0);
+    xmlFactoryBase(XTExprsnParser& parser);
 
     DOMEvector  getXTPropertyVec(const DOMElement* element)                             const;
     DOMElement* getXTProperty(const DOMElement* element, const std::string& property)   const;
     DOMEvector  getXTSubPropVec(const DOMElement* element, const std::string& property) const;
-
-    void        parseExpression(StringList& parsedExpression, std::string& expression);
-    std::string trimBlanks(std::string& expression);
 
     std::string getNextWord(std::string &sList, int &iEnd);
     
@@ -53,18 +52,19 @@ public:
 
     std::string indent(int depth=0);
 
+    //IXTExprsnNode* parseExpression(StringList& parsedExpression, std::string& expression)
+    //    {return m_parser.parseExpression(parsedExpression, expression);}
+    //std::string trimBlanks(std::string& expression)
+    //    {return m_parser.trimBlanks(expression);}
+    /// Provide derived class access to the Expression Parser
+    XTExprsnParser& XprsnParser() {return m_parser;}
+
     virtual ~xmlFactoryBase();
 
     /// Finds first child given path
     const DOMElement* findXPath(const DOMElement* xmlParent, const std::vector<std::string>& nodeNames);
-
 private:
-
-    StringList    m_delimiters;
-
-    std::ostream& m_log;         //! output to this stream
-    int           m_outputLevel; //! output level (verbosity)
-
+    XTExprsnParser& m_parser;
 };
 
 

@@ -29,7 +29,7 @@ public:
     @param lookup Instance of a class supplied to by user, which is called back 
     to find address of each variable
     */
-    xmlReadTextFileEngineFactory(std::ostream& log=std::cout, int iVerbosity=0);
+    xmlReadTextFileEngineFactory(XTExprsnParser& parser);
 
     /** @param name a folder name completing the path to the folder containing the tree data   
      @return a reference to a new tree. See also the evaluate() method.
@@ -39,10 +39,6 @@ public:
     virtual ~xmlReadTextFileEngineFactory();
 
 private:
-
-    std::ostream&                m_log;         //! output to this stream
-    int                          m_outputLevel; //! output level (verbosity)
-
 };
 
 

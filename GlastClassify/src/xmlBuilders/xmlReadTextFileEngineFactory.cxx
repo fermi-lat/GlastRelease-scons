@@ -6,7 +6,7 @@ $Header$
 */
 
 #include "xmlReadTextFileEngineFactory.h"
-#include "../ImActivityNodes/CreateColumnsEngineNode.h"
+#include "../ImActivityNodes/ReadTextFileEngineNode.h"
 #include "xmlBase/XmlParser.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMElement.hpp>
@@ -30,9 +30,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlReadTextFileEngineFactory::xmlReadTextFileEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlReadTextFileEngineFactory::xmlReadTextFileEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -40,12 +38,20 @@ IImActivityNode* xmlReadTextFileEngineFactory::operator()(const DOMElement* xmlA
 {
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "PredictEngineNode";
+    std::string sType       = "ReadTextFileEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
 
     // Create the node
-    CreateColumnsEngineNode* node = new CreateColumnsEngineNode(sType, sName, sId);
+    ReadTextFileEngineNode* node = new ReadTextFileEngineNode(sType, sName, sId);
+
+    // Create a flag for determining whether to keep a row in the end of processing
+    // @TODO need to change this to a bool value (implement storage maps for bool and categorical vars)
+    std::string sVarName = "WriteTupleRow";
+    XTcolumnVal<double>* xtColumnVal = new XTcolumnVal<double>(sVarName);
+    XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
+
+    node->setXtColumnVal(xtColumnVal);
 
     return node;
 }

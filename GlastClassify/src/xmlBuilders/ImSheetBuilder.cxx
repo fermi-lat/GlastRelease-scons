@@ -15,6 +15,7 @@
 #include "xmlMissingValuesEngineFactory.h"
 #include "xmlModifyColumnsEngineFactory.h"
 #include "xmlPredictEngineFactory.h"
+#include "xmlNewPredictEngineFactory.h"
 #include "xmlReadTextFileEngineFactory.h"
 #include "xmlShuffleEngineFactory.h"
 #include "xmlSplitEngineFactory.h"
@@ -107,7 +108,12 @@ XERCES_CPP_NAMESPACE_USE
 */
 
 
-ImSheetBuilder::ImSheetBuilder(const DOMDocument* document, std::ostream& log) : m_headNode(0), m_log(log)
+//ImSheetBuilder::ImSheetBuilder(const DOMDocument*   document, 
+//                               XTtupleVars<double>& tuple,
+//                               std::ostream& log) : m_headNode(0), m_tuple(tuple), m_log(log)
+ImSheetBuilder::ImSheetBuilder(const DOMDocument*   document, 
+                               XTcolumnVal<double>::XTtupleMap& tuple,
+                               std::ostream& log) : m_headNode(0), m_tuple(tuple), m_log(log)
 {
     // Check document validity
     if(document == 0)
@@ -152,22 +158,27 @@ int ImSheetBuilder::findAllActivityNodes(const DOMDocument* document)
     // Build map between types and implementation of that type
     std::map<std::string, IxmlEngineFactory*> nodeFactoryMap;
 
-    nodeFactoryMap["AppendEngineNode"]        = new xmlAppendEngineFactory(m_log, 0);
-    nodeFactoryMap["CreateColumnsEngineNode"] = new xmlCreateColumnsEngineFactory(m_log, 0);
-    nodeFactoryMap["FilterColumnsEngineNode"] = new xmlFilterColumnsEngineFactory(m_log, 0);
-    nodeFactoryMap["FilterRowsEngineNode"]    = new xmlFilterRowsEngineFactory(m_log, 0);
-    nodeFactoryMap["MissingValuesEngineNode"] = new xmlMissingValuesEngineFactory(m_log, 0);
-    nodeFactoryMap["ModifyColumnsEngineNode"] = new xmlModifyColumnsEngineFactory(m_log, 0);
-    nodeFactoryMap["PredictEngineNode"]       = new xmlPredictEngineFactory(m_log, 0);
-    nodeFactoryMap["ReadTextFileEngineNode"]  = new xmlReadTextFileEngineFactory(m_log, 0);
-    nodeFactoryMap["ShuffleEngineNode"]       = new xmlShuffleEngineFactory(m_log, 0);
-    nodeFactoryMap["SplitEngineNode"]         = new xmlSplitEngineFactory(m_log, 0);
-    nodeFactoryMap["WriteTextFileEngineNode"] = new xmlWriteTextFileEngineFactory(m_log, 0);
+    XTExprsnParser parser(m_tuple);
+
+    nodeFactoryMap["AppendEngineNode"]        = new xmlAppendEngineFactory(parser);
+    nodeFactoryMap["CreateColumnsEngineNode"] = new xmlCreateColumnsEngineFactory(parser);
+    nodeFactoryMap["FilterColumnsEngineNode"] = new xmlFilterColumnsEngineFactory(parser);
+    nodeFactoryMap["FilterRowsEngineNode"]    = new xmlFilterRowsEngineFactory(parser);
+    nodeFactoryMap["MissingValuesEngineNode"] = new xmlMissingValuesEngineFactory(parser);
+    nodeFactoryMap["ModifyColumnsEngineNode"] = new xmlModifyColumnsEngineFactory(parser);
+    nodeFactoryMap["PredictEngineNode"]       = new xmlNewPredictEngineFactory(parser);
+    nodeFactoryMap["Toby"]                    = new xmlPredictEngineFactory(parser, m_log, 0);
+    nodeFactoryMap["ReadTextFileEngineNode"]  = new xmlReadTextFileEngineFactory(parser);
+    nodeFactoryMap["ShuffleEngineNode"]       = new xmlShuffleEngineFactory(parser);
+    nodeFactoryMap["SplitEngineNode"]         = new xmlSplitEngineFactory(parser);
+    nodeFactoryMap["WriteTextFileEngineNode"] = new xmlWriteTextFileEngineFactory(parser);
 
     // We now need to ensure that we're getting 
     // ActivityNode[@engineClass=='com.insightful.miner.PredictEngineNode']
     std::vector<DOMElement *> xmlActivityNodes;
     xmlBase::Dom::getDescendantsByTagName(domRoot, "ActivityNode", xmlActivityNodes);
+
+    int cntem = 0;
 
     // Loop over the ActivityNodes in the input xml file
     for(DOMEvector::iterator actNodeIter = xmlActivityNodes.begin();
@@ -204,12 +215,25 @@ int ImSheetBuilder::findAllActivityNodes(const DOMDocument* document)
         // Get this node
         IImActivityNode* iActivityNode = (*nodeFactoryMap[sNewType])(xmlActivityNode);
 
+        cntem++;
+
         // Add to the list
         m_iNodeVec.push_back(iActivityNode);
 
         // Store in maps
         m_idToINodeMap[sId] = iActivityNode;
         m_typeToINodeVecMap[sNewType].push_back(iActivityNode);
+
+        // Preserve Toby style for a bit longer
+        if (sNewType == "PredictEngineNode")
+        {
+            IImActivityNode* iActivityNode = (*nodeFactoryMap["Toby"])(xmlActivityNode);
+
+            cntem++;
+
+            // Store in maps
+            m_typeToINodeVecMap["Toby"].push_back(iActivityNode);
+        }
     }
 
     //done
@@ -239,15 +263,18 @@ int ImSheetBuilder::linkActivityNodes(const DOMDocument* document)
 
         std::string sFromNode = xmlBase::Dom::getAttribute(xmlLink, "fromNode");  
         std::string sFromPort = xmlBase::Dom::getAttribute(xmlLink, "fromPort");  
+        int         fromPort  = xmlBase::Dom::getIntAttribute(xmlLink, "fromPort");  
         std::string sToNode   = xmlBase::Dom::getAttribute(xmlLink, "toNode");
         std::string sToPort   = xmlBase::Dom::getAttribute(xmlLink, "toPort");
+        int         toPort    = xmlBase::Dom::getIntAttribute(xmlLink, "toPort");
 
-        if (sFromPort == "1" && sToPort == "1") continue;
+        // Comment out for now... (fix in print statement?)
+        //if (sFromPort == "1" && sToPort == "1") continue;
 
         IImActivityNode* fromINode = m_idToINodeMap[sFromNode];
         IImActivityNode* toINode   = m_idToINodeMap[sToNode];
 
-        fromINode->setNodeLink(toINode);
+        fromINode->setNodeLink(fromPort, toINode);
 
         // Find the "to" node in what remains of the vector of node pointers
         std::vector<IImActivityNode*>::iterator toNodeIter = std::find(headVec.begin(), headVec.end(), toINode);

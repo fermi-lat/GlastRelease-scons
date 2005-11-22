@@ -6,7 +6,8 @@ $Header$
 
 #include "RootTuple.h"
 
-#include "GlastClassify/AtwoodLikeTrees.h"
+#include "GlastClassify/AtwoodTrees.h"
+#include "facilities/Util.h"
 
 #include <iostream>
 #include <string>
@@ -61,36 +62,60 @@ int main(int argc, char* argv[])
 
         RootTuple tuple(input_filename, tree_name);
 
+        std::string CTFilePath = "";
         const char* ctree = ::getenv("CTREE_PATH");
-        if (ctree==0){
-#if 1
-            ctree = "D:\\common\\ctree\\GlastClassify\\v2r1\\treeinfo-v4";
-#else
-            ctree = "D:\\common\\ctree\\IMtreeinfo";
-#endif
-            std::cout << "Setting CTREE_PATH to  " << ctree << std::endl;
-        }else{
+        if (ctree==0)
+        {
+            std::string rootPath = ::getenv("GLASTCLASSIFYROOT");
+            //facilities::Util::expandEnvVar(&rootPath);
+
+            CTFilePath = rootPath + "/xml/DC2_Analysis_v2r1.xml";
+            std::cout << "Setting file to  " << CTFilePath << std::endl;
+        }
+        else
+        {
             std::cout << "CTREE_PATH: " << ctree << std::endl;
-            }
+            CTFilePath = std::string(ctree);
+        }
+
+        // Expand the environment variable name
+        facilities::Util::expandEnvVar(&CTFilePath);
 
         // create the ct: pass in the tuple.
-        AtwoodLikeTrees ctrees(tuple, std::cout, std::string(ctree) );
+        AtwoodTrees ctrees(tuple, std::cout, CTFilePath);
 
         // set up the output Root file, branch
 
         tuple.setOutputFile(output_filename);
-        int k(0), total(tuple.numEvents()), fraction(0);
-        for( int i = 0; i<51; ++i)std::cout << " ";
+
+        int numInputRows  = 0;
+        int numOutputRows = 0;
+        
+        int numIntervals  = 50;
+        int total(tuple.numEvents());
+        int fraction = total / numIntervals;
+
+        if (fraction < 2) fraction = 2;
+
+        for( int i = 0; i < numIntervals+2; i++) std::cout << " ";
         std::cout << "]\r[";
-        while ( tuple.nextEvent() ) { 
-            ctrees.execute();   // fill in the classification (testing here)
-            tuple.fill();
-            ++k;
-            if(  (50*k)% total == 0 ) {
-                std::cout << ".";
+
+        while ( tuple.nextEvent() ) 
+        {
+            // Execute the tree analysis on this tuple row
+            // If good result then also write out the new row
+            if (ctrees.execute())   // fill in the classification (testing here)
+            {
+                tuple.fill();
+                numOutputRows++;
             }
+
+            if( (numInputRows++ % fraction) == 0 ) std::cout << ".";
         }
-        std::cout << "]\nWrote " << k << " entries" << std::endl;
+
+        std::cout << "]" << std::endl;
+        std::cout << "Read  " << numInputRows << " entries" << std::endl;
+        std::cout << "Wrote " << numOutputRows << " entries" << std::endl;
 
     }catch(const std::exception& e){
         std::cerr << "Caught: " << e.what( ) << std::endl;

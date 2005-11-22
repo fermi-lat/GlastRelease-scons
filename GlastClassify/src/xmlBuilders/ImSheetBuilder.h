@@ -13,6 +13,7 @@
 #include <iostream>
 #include <xercesc/util/XercesDefs.hpp>
 #include "../ImActivityNodes/IImActivityNode.h"
+#include "src/XT/XTtupleVars.h"
 
 XERCES_CPP_NAMESPACE_BEGIN
 class  DOMDocument;
@@ -42,11 +43,19 @@ public:
         @param log  [cout]  ostream for output
         @param iVerbosity [0] -1 no output; 0 errors only; 1 info 2 debug
     */
-    ImSheetBuilder(const DOMDocument* document, std::ostream& log=std::cout);
+    //ImSheetBuilder(const DOMDocument*   document, 
+    //               XTtupleVars<double>& tuple, 
+    //               std::ostream&        log=std::cout);
+    ImSheetBuilder(const DOMDocument*   document, 
+                   XTcolumnVal<double>::XTtupleMap& tuple, 
+                   std::ostream&        log=std::cout);
     ~ImSheetBuilder();
 
     // Return a list of activity nodes
     std::vector<IImActivityNode*> getActivityINodeVec(std::string& type);
+
+    // Testing: return head node
+    IImActivityNode* getHeadNode() {return m_headNode;}
 
     // For output
     void print(std::ostream& out=std::cout) const;
@@ -66,22 +75,25 @@ private:
     int linkActivityNodes(const DOMDocument* document);
 
     // Vector of Activity Nodes
-    std::vector<IImActivityNode*> m_iNodeVec;
+    std::vector<IImActivityNode*>    m_iNodeVec;
 
     // The "head" ActivityNode
-    IImActivityNode*              m_headNode;
+    IImActivityNode*                 m_headNode;
 
     // Map between the node ID and the Activity Node object
-    idToINodeMap                  m_idToINodeMap;
+    idToINodeMap                     m_idToINodeMap;
 
     // Map between ActivityNode type and vector of pointers to objects
-    typeToINodeVecMap             m_typeToINodeVecMap;
+    typeToINodeVecMap                m_typeToINodeVecMap;
 
     // Pointer to DecisionTreeBuilder until better idea 
-    DecisionTreeBuilder*          m_builder;
+    DecisionTreeBuilder*             m_builder;
 
+    //XTtupleVars<double>&          m_tuple;
+    XTcolumnVal<double>::XTtupleMap& m_tuple;
+    
     // output related info
-    std::ostream&                 m_log;         //! output to this stream
+    std::ostream&                    m_log;         //! output to this stream
 };
 
 #endif // ifdef CLASSIFY_H_

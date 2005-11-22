@@ -6,7 +6,7 @@ $Header$
 */
 
 #include "xmlShuffleEngineFactory.h"
-#include "../ImActivityNodes/CreateColumnsEngineNode.h"
+#include "../ImActivityNodes/ShuffleEngineNode.h"
 #include "xmlBase/XmlParser.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMElement.hpp>
@@ -30,9 +30,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlShuffleEngineFactory::xmlShuffleEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlShuffleEngineFactory::xmlShuffleEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -40,12 +38,12 @@ IImActivityNode* xmlShuffleEngineFactory::operator()(const DOMElement* xmlActivi
 {
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "PredictEngineNode";
+    std::string sType       = "ShuffleEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
 
     // Create the node
-    CreateColumnsEngineNode* node = new CreateColumnsEngineNode(sType, sName, sId);
+    ShuffleEngineNode* node = new ShuffleEngineNode(sType, sName, sId);
 
     return node;
 }

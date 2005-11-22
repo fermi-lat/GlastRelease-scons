@@ -6,7 +6,7 @@ $Header$
 */
 
 #include "xmlCreateColumnsEngineFactory.h"
-#include "../ImActivityNodes/CreateColumnsEngineNode.h"
+#include "src/ImActivityNodes/CreateColumnsEngineNode.h"
 #include "xmlBase/XmlParser.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMElement.hpp>
@@ -29,9 +29,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlCreateColumnsEngineFactory::xmlCreateColumnsEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlCreateColumnsEngineFactory::xmlCreateColumnsEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -50,6 +48,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
     StringList columnNames;
     StringList colExpressions;
     std::vector<StringList> parsedColExps;
+    CreateColumnsEngineNode::XprsnNodeMap xprsnNodeMap;
 
     DOMEvector xmlColumnsVec = getXTSubPropVec(xmlActivityNode, "newColumns");
 
@@ -60,14 +59,27 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
         DOMEvector xmlColVarVec;
         xmlBase::Dom::getChildrenByTagName(xmlColVar, "Property", xmlColVarVec);
 
-        std::string sVarName    = xmlBase::Dom::getAttribute(xmlColVar, "name");
-        std::string sExpression = "";
+        std::string sVarName = xmlBase::Dom::getAttribute(xmlColVar, "name");
+
+        // Special code to strip off "Pr(" from the name
+        int prPos = sVarName.find("Pr(",0);
+        if (prPos > -1)
+        {
+            sVarName = sVarName.substr(prPos+3, sVarName.length()-prPos-4);
+        }
+
+        // Look to see what type of variable is being created here
+        std::string sVarType = xmlBase::Dom::getAttribute(xmlColVarVec[0], "value");
+        if (sVarType == "categorical") continue;
 
         columnNames.push_back(sVarName);
+
+        std::string sExpression = "";
 
         try
         {
             DOMElement* xmlComplex = xmlBase::Dom::findFirstChildByName(xmlColVarVec[1], "Complex");
+            if (xmlComplex == 0) throw XTENexception("xmlCreateColumnsFactory finds zero pointer to xmlComplex");
             sExpression = xmlBase::Dom::getTextContent(xmlComplex);
         }
         //catch(xmlBase::WrongNodeType& e)
@@ -75,25 +87,31 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
         {
             sExpression = xmlBase::Dom::getAttribute(xmlColVarVec[1], "value");
         }
-
-        // Trim the blank spaces
-        sExpression = trimBlanks(sExpression);
             
         colExpressions.push_back(sExpression);
 
         // Parse
-        StringList parsedExpression;
-        parseExpression(parsedExpression, sExpression);
+        IXTExprsnNode* xprsn = XprsnParser().parseExpression(sExpression);
 
-        parsedColExps.push_back(parsedExpression);
+        // Get the tuple column value pointer
+        XTcolumnVal<double>* xtColumnVal = 0;
+        XTcolumnVal<double>::XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sVarName);
+            
+        if (dataIter != XprsnParser().getXtTupleVars().end()) xtColumnVal = dataIter->second;
+        else
+        {
+            xtColumnVal = new XTcolumnVal<double>(sVarName);
+            XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
+        }
+
+        xprsnNodeMap[xtColumnVal] = xprsn;
     }
 
     // Set the expressions
     if (!columnNames.empty())
     {
         node->setColumnNames(columnNames);
-        node->setColumnExpressions(colExpressions);
-        node->setParsedColExps(parsedColExps);
+        node->setXprsnNodeMap(xprsnNodeMap);
     }
 
     return node;

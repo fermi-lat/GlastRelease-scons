@@ -30,9 +30,7 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlSplitEngineFactory::xmlSplitEngineFactory(std::ostream& log, int iVerbosity )
-                        : xmlFactoryBase(log,iVerbosity), 
-                          m_log(log), m_outputLevel(iVerbosity)
+xmlSplitEngineFactory::xmlSplitEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser)
 {
 }
 
@@ -54,6 +52,7 @@ IImActivityNode* xmlSplitEngineFactory::operator()(const DOMElement* xmlActivity
     try
     {
         DOMElement* xmlComplex = xmlBase::Dom::findFirstChildByName(xmlProperty, "Complex");
+        if (xmlComplex == 0) throw XTENexception("xmlCreateColumnsFactory finds zero pointer to xmlComplex");
         sExpression = xmlBase::Dom::getTextContent(xmlComplex);
     }
     //catch(xmlBase::WrongNodeType& e)
@@ -61,18 +60,14 @@ IImActivityNode* xmlSplitEngineFactory::operator()(const DOMElement* xmlActivity
     {
         sExpression = xmlBase::Dom::getAttribute(xmlProperty, "value");
     }
-
-    // Trim the blank spaces
-    sExpression = trimBlanks(sExpression);
         
     // Store
     node->setExpression(sExpression);
 
     // Parse
-    StringList parsedExpression;
-    parseExpression(parsedExpression, sExpression);
+    IXTExprsnNode* xprsnNode = XprsnParser().parseExpression(sExpression);
 
-    node->setParsedExpression(parsedExpression);
+    node->setXTExprsnNode(xprsnNode);
 
     return node;
 }

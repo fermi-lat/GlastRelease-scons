@@ -38,7 +38,6 @@ public:
                 m_localVals(localVals)
     {
         // Loop over list of variable names given to us in names
-        //for( DecisionTreeBuilder::StringList::const_iterator it = names.begin();
         for( ImSheetBuilder::StringList::const_iterator it = names.begin();
             it != names.end(); ++it)
         {
@@ -117,7 +116,9 @@ private:
 
 
 xmlTreeFactory::xmlTreeFactory(const std::string& path, ITupleInterface& tuple)
-                               : m_lookup(tuple), m_localVals(tuple)
+                               : m_lookup(tuple), 
+                                 m_localVals(tuple),
+                                 m_xtTupleMap()
 {
     std::string sFileName = path+"/"+"DC2_Analysis.imw";
     
@@ -137,12 +138,34 @@ xmlTreeFactory::xmlTreeFactory(const std::string& path, ITupleInterface& tuple)
     }
 
     // Testing
-    m_imSheet = new ImSheetBuilder(m_domDocument);
+    m_xtTupleMap.clear();
+
+    m_imSheet = new ImSheetBuilder(m_domDocument, m_xtTupleMap);
+
+    // Set up cross reference to the ntuple
+    for(XTcolumnVal<double>::XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); 
+        dataIter != m_xtTupleMap.end(); dataIter++)
+    {
+        const std::string& varName = dataIter->first;
+
+        try
+        {
+            const GlastClassify::Item* item = m_lookup.getItem(varName);
+
+            if (item != 0) m_nTupleMap[varName] = item;
+        }
+        catch (std::invalid_argument&)
+        {
+            int j = 0;
+        }
+    }
+
+//    m_xtTupleVals.print();
 
     //Testing...
-    //std::ofstream outFile("IMsheetTest.txt");
-    //m_imSheet->print(outFile);
-    //outFile.close();
+    std::ofstream outFile("IMsheetTest.txt");
+    m_imSheet->print(outFile);
+    outFile.close();
 
     // Make a map between the names Toby has for the trees, and Bill's names...
     m_TobyToBillMap.clear();
@@ -184,7 +207,8 @@ const ITreeFactory::ITree& xmlTreeFactory::operator()(const std::string& name)
 
     if (newName != "")
     {
-        std::string predEng = "PredictEngineNode";
+        //std::string predEng = "PredictEngineNode";
+        std::string predEng = "Toby";
 
         // Retrieve vector of PredictEngineNodes 
         std::vector<IImActivityNode*> nodeVec = m_imSheet->getActivityINodeVec(predEng);
@@ -215,6 +239,52 @@ const ITreeFactory::ITree& xmlTreeFactory::operator()(const std::string& name)
     }
 
     return *m_trees.back();
+}
+
+double xmlTreeFactory::getTupleVal(const std::string& name) 
+{
+    double value = 0;
+
+    //XTcolumnVal<double>* xtValue = m_xtTupleVals.getColumnVal(name);
+    //if (xtValue) value = *(*xtValue)();
+        
+    XTcolumnVal<double>::XTtupleMap::iterator dataIter = m_xtTupleMap.find(name);       
+    if (dataIter != m_xtTupleMap.end()) value = *(*(dataIter->second))();
+
+    return value;
+}
+
+
+void xmlTreeFactory::execute()
+{
+    // Transfer tuple variables to local tuple
+    for(XTcolumnVal<double>::XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); 
+        dataIter != m_xtTupleMap.end(); dataIter++)
+    {
+        const std::string& varName = dataIter->first;
+
+        std::map<std::string,const GlastClassify::Item*>::const_iterator nTupleIter = m_nTupleMap.find(varName);
+
+        if (nTupleIter != m_nTupleMap.end()) dataIter->second->setDataValue(*(nTupleIter->second));
+        else
+        {
+            dataIter->second->setDataValue(0.);
+            dataIter->second->clearValidFlag();
+        }
+    }
+
+    // Execute the sheet
+    m_imSheet->getHeadNode()->execute();
+
+    // Make a pass through to clear out the "invalid" variables
+    for(XTcolumnVal<double>::XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); 
+        dataIter != m_xtTupleMap.end(); dataIter++)
+    {
+        if (!(dataIter->second->dataIsValid())) dataIter->second->setDataValue(0.);
+    }
+
+    // Done
+    return;
 }
 
 
@@ -258,6 +328,7 @@ xmlTreeFactory::LocalTupleValues::LocalTupleValues(ITupleInterface& lookup)
 
     // Create the entries in the local variables map
     //m_valsMap["BestEnergy"]       = 0.;
+    m_valsMap["EvtLogEnergyRaw"]  = 0.;
     m_valsMap["BestLogEnergy"]    = 0.;
     m_valsMap["BestEnergyProb"]   = 0.;
     m_valsMap["TkrEnergyFrac"]    = 0.;
@@ -294,6 +365,12 @@ double xmlTreeFactory::LocalTupleValues::getValue(const std::string& name) const
         // Here is what we are supposed to do... currently can't?
         //BestEnergy = ifelse(ProfileProb > ParamProb & ProfileProb > LastLayerProb & 
         //                    ProfileProb > TrackerProb,  CalCfpEnergy, BestEnergy)
+    }
+    // EvtLogEnergyRaw here
+    else if (name == "EvtLogEnergyRaw")
+    {
+        double CalEnergy = *(m_tupleVals.find("EvtEnergyCorr")->second);
+        value = log(CalEnergy) / 2.3026;
     }
     //BestLogEnergy
     else if (name == "BestLogEnergy")

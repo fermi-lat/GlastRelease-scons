@@ -53,12 +53,19 @@ namespace GlastClassify {
          @return a reference to a new tree. See also the evaluate() method.
          */
         virtual const ITreeFactory::ITree& operator()(const std::string& name) = 0;
+        
+        /** @brief Look up the value of a variable stored in the local tuple
+        */
+        virtual double getTupleVal(const std::string& name) = 0;
 
         /// @return value of Tree # i for current set of values
         virtual double evaluate(int i) const = 0;
 
         /// index does the evaluate.
         virtual double operator[](int i) const = 0;
+
+        /// Testing: execute the im trees
+        virtual void execute() = 0;
 
         virtual ~ITreeFactory() {};
     };

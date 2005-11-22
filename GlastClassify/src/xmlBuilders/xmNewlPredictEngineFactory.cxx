@@ -1,13 +1,11 @@
-/**@file xmlPredictEngineFactory.cxx
+/**@file xmlNewPredictEngineFactory.cxx
 
-@brief implementation of class xmlPredictEngineFactory
+@brief implementation of class xmlNewPredictEngineFactory
 
 $Header$
 */
 
-#include "xmlPredictEngineFactory.h"
-#include "../ImActivityNodes/PredictEngineNode.h"
-#include "classifier/DecisionTree.h"
+#include "xmlNewPredictEngineFactory.h"
 #include "xmlBase/XmlParser.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMElement.hpp>
@@ -42,29 +40,24 @@ namespace {
     double min_prob, max_prob;
 } // anonomous namespace
 
-xmlPredictEngineFactory::xmlPredictEngineFactory(XTExprsnParser& parser, 
-                                                 std::ostream&   log, 
-                                                 int             iVerbosity )
-                                               : xmlFactoryBase(parser),
-                                                 m_yProbIndex(0), 
-                                                 m_numProbVals(0), 
-                                                 m_log(log), 
-                                                 m_outputLevel(iVerbosity)
+xmlNewPredictEngineFactory::xmlNewPredictEngineFactory(XTExprsnParser& parser) : xmlFactoryBase(parser),
+                                                        m_yProbIndex(0), 
+                                                        m_numProbVals(0)
 {
 }
 
-IImActivityNode* xmlPredictEngineFactory::operator()(const DOMElement* xmlActivityNode)
+IImActivityNode* xmlNewPredictEngineFactory::operator()(const DOMElement* xmlActivityNode)
 {
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "PredictEngineNode";
+    std::string sType       = "NewPredictEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
 
     // Create the node
-    PredictEngineNode* node = new PredictEngineNode(sType, sName, sId);
+    newPredictEngineNode* node = new newPredictEngineNode(sType, sName, sId);
 
-    DecisionTree* tree = parseForest(xmlActivityNode);
+    newPredictEngineNode::TreePairVector forest = parseForest(xmlActivityNode);
 
     // Get the tuple column value pointer
     //XTcolumnVal<double>* xtColumnVal = XprsnParser().getXtTupleVars().addNewDataItem(m_outVarName);
@@ -78,21 +71,26 @@ IImActivityNode* xmlPredictEngineFactory::operator()(const DOMElement* xmlActivi
         XprsnParser().getXtTupleVars()[m_outVarName] = xtColumnVal;
     }
 
-    node->setDecisionTree(tree);
     node->setInputVar(m_varNames);
     node->addOutputVar(m_outVarName);
     node->setXTcolumnVal(xtColumnVal);
+    node->setTreePairVector(forest);
 
     return node;
 }
 
-xmlPredictEngineFactory::~xmlPredictEngineFactory()
+xmlNewPredictEngineFactory::~xmlNewPredictEngineFactory()
 {
     ///@TODO: delete trees
 }
 
-DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivityNode)
+newPredictEngineNode::TreePairVector xmlNewPredictEngineFactory::parseForest(const DOMElement* xmlActivityNode)
 {
+    // Define the vector to return
+    newPredictEngineNode::TreePairVector treePairVec;
+
+    treePairVec.clear();
+
     // Recover the output variable name
     m_specCatName = getCTOutputName(xmlActivityNode); 
     //m_outVarName  = "Pr(" + m_specCatName + ")";
@@ -130,12 +128,7 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
             break;
         }
     }
-
-    // Build the independent variable map
-    //tupleVarIndexMap tupleVarMap = buildVarIndexMap(xmlTreeList);
-    tupleVarIndexMap tupleVarMap;
-
-    tupleVarMap.clear();
+    
     m_varNames.clear();
 
     // Retrieve all instances of "TreeModel" in this "TreeList"
@@ -152,9 +145,6 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
     std::string label_name  = xmlBase::Dom::getAttribute(displayInfo, "labelText");
 
-    // Create a new DecisionTree object
-    DecisionTree* decisionTree = new DecisionTree(label_name);
-
     // Create a weight for each tree (based on the number of trees)
     double treeWeight = 1. / xmlTreeModelVec.size();
 
@@ -164,24 +154,12 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
     {
         DOMElement* xmlTreeModel = *xmlTreeModelItr;
 
-        if( m_outputLevel>0)
-        {
-            std::string sId = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
-            m_log << std::setw(10) << sId << std::setw(30) << label_name ;
-        }
-
-        // Create top node for DecisionTree:
-        decisionTree->addNode(0, -10, treeWeight);
-
         // Ok, now parse the decision tree....
-        parseTree(xmlTreeModel, decisionTree, tupleVarMap);
+        IXTExprsnNode* treeNode = parseTree(xmlTreeModel);
 
-        if (m_outputLevel>1) 
-        {
-            m_log << std::setw(10) << node_count <<std::setw(10) << max_depth 
-                  << std::setw(12) << std::setprecision(3)<< min_prob
-                  << std::setw(12) << std::setprecision(3)<< max_prob << std::endl;
-        }
+        newPredictEngineNode::TreePair treePair(treeNode, treeWeight);
+
+        treePairVec.push_back(treePair);
 
         node_count = 0;
         max_depth  = 0;
@@ -189,14 +167,7 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
         max_prob   = 0;
     }
 
-    int numTreeModels = xmlTreeModelVec.size();
-
-    if (m_outputLevel > 1)
-    {
-        m_log << "Number of trees: " << numTreeModels << std::endl;
-    }
-
-    return decisionTree;
+    return treePairVec;
 }
 
   // This function takes a TreeModel Root node and parses its children
@@ -208,7 +179,7 @@ DecisionTree* xmlPredictEngineFactory::parseForest(const DOMElement* xmlActivity
   // This could be handled by having the root have a child for each node, but 
   // I am going to wait until I get a better view of what is going on.
 
-void xmlPredictEngineFactory::parseTree(DOMElement* xmlTreeModel, DecisionTree* decisionTree, std::map<std::string, int>& varIndexMap)
+IXTExprsnNode*  xmlNewPredictEngineFactory::parseTree(DOMElement* xmlTreeModel)
 {
     // xmlMiningSchema == <MiningSchema>
     //				<MiningField name=""/>
@@ -233,10 +204,9 @@ void xmlPredictEngineFactory::parseTree(DOMElement* xmlTreeModel, DecisionTree* 
 
     // determine the node ID (done this way to comply with Toby's DecisionTree class...
     std::string sID = xmlBase::Dom::getAttribute(xmlFirstNode, "id");
-    if(m_outputLevel>2) m_log <<  indent(nesting_level) <<  "Node " << sID << ": ";
     int nodeId = atoi(sID.c_str());
 
-    parseNode(xmlFirstNode, nodeId, decisionTree, varIndexMap);
+    return parseNode(xmlFirstNode);
 }
 
   // This is a recursive function that parses xmlElement into oNode
@@ -249,18 +219,18 @@ void xmlPredictEngineFactory::parseTree(DOMElement* xmlTreeModel, DecisionTree* 
      Operator == greaterOrEqual
   */
 
-void xmlPredictEngineFactory::parseNode(DOMElement* xmlElement, int nodeId, DecisionTree* decisionTree, std::map<std::string, int>& varIndexMap)
+IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
 {
+    IXTExprsnNode* node = 0;
+
     // Set the depth and node count
     ++nesting_level; 
     ++node_count;
     max_depth = max_depth> nesting_level? max_depth : nesting_level;
-/*
+    
     // determine the node ID
-    std::string sID = xmlBase::Dom::getAttribute(xmlElement, "id");
-    if(m_outputLevel>2) m_log <<  indent() <<  "Node " << sID << ": ";
-    int nodeId = atoi(sID.c_str());
-*/
+    std::string sNodeId = xmlBase::Dom::getAttribute(xmlElement, "id");
+    
     // The first child of the node will be the "predicate" describing the node
     DOMElement* xmlPredicate = xmlBase::Dom::getFirstChildElement(xmlElement);
     std::string sNode = xmlBase::Dom::getTagName(xmlPredicate);
@@ -288,7 +258,6 @@ void xmlPredictEngineFactory::parseNode(DOMElement* xmlElement, int nodeId, Deci
             }
             else
             {
-                if( m_outputLevel>2 ) m_log << "yprob: '" << sList << "';" << std::endl;
                 int iDelimPos = -1;
                 //while((iDelimPos > -1) ^ (m_yprob.size() == 0))
                 //{ 
@@ -307,7 +276,11 @@ void xmlPredictEngineFactory::parseNode(DOMElement* xmlElement, int nodeId, Deci
             }
 
             // Create the node
-            decisionTree->addNode(nodeId, -1, weight[m_yProbIndex]);
+            double* pValue = new double;
+
+            *pValue = weight[m_yProbIndex];;
+        
+            node = new XTExprsnValue<double>(sNodeId, pValue);
 
             min_prob = std::min(min_prob, weight[m_yProbIndex]);
             max_prob = std::max(max_prob, weight[m_yProbIndex]);
@@ -316,60 +289,30 @@ void xmlPredictEngineFactory::parseNode(DOMElement* xmlElement, int nodeId, Deci
     // Otherwise we are at a branch point
     else
     {
-        std::string varname   = xmlBase::Dom::getAttribute(xmlPredicate, "field");
-        double      value     = xmlBase::Dom::getDoubleAttribute(xmlPredicate, "value");
-        std::string sOperator = xmlBase::Dom::getAttribute(xmlPredicate, "operator");
+        std::string varname    = xmlBase::Dom::getAttribute(xmlPredicate, "field");
+        std::string valname    = xmlBase::Dom::getAttribute(xmlPredicate, "value");
+        double      value      = xmlBase::Dom::getDoubleAttribute(xmlPredicate, "value");
+        std::string sOperator  = xmlBase::Dom::getAttribute(xmlPredicate, "operator");
 
-        // Check to see if the variable is in our map already
-        if (varIndexMap.find(varname) == varIndexMap.end())
-        {
-            // New variable so add to the list of variables and add to map
-            m_varNames.push_back(varname);
-            varIndexMap[varname] = varIndexMap.size();
-        }
+        // ugliness for now, figure out what to do here...
+        if (sOperator == "greaterOrEqual") sOperator = ">=";
+        else                               sOperator = "<";
 
-        // Index of variable for the node
-        int index = varIndexMap[varname];
+        std::string expression = varname + " " + sOperator + " " + valname;
 
-        // Add a new node
-        decisionTree->addNode(nodeId, index, value);
+        IXTExprsnNode* xprsnNode = XprsnParser().parseExpression(expression);
+        IXTExprsnNode* ifNode    = parseNode(xmlNodeVec[0]);
+        IXTExprsnNode* elseNode  = parseNode(xmlNodeVec[1]);
 
-        // how many nodes?
-        //if (xmlNodeVec.size() != 2)
-        //{
-        //    int j = xmlNodeVec.size();
-        //    int i = 0;
-        //}
-
-        // Retrieve the node ID's
-        std::string sNodeIdLeft = xmlBase::Dom::getAttribute(xmlNodeVec[0], "id");
-        int nodeIdLeft = atoi(sNodeIdLeft.c_str());
-        std::string sNodeIdRight = xmlBase::Dom::getAttribute(xmlNodeVec[1], "id");
-        int nodeIdRight = atoi(sNodeIdRight.c_str());
-
-        // Forget all the above... scheme is:
-        nodeIdLeft  = 2 * nodeId;
-        nodeIdRight = nodeIdLeft + 1;
-
-        // Order of children depends on the operator
-        if (sOperator == "lessThan")
-        {
-            parseNode(xmlNodeVec[0], nodeIdLeft,  decisionTree, varIndexMap);
-            parseNode(xmlNodeVec[1], nodeIdRight, decisionTree, varIndexMap);
-        }
-        else
-        {
-            parseNode(xmlNodeVec[1], nodeIdLeft,  decisionTree, varIndexMap);
-            parseNode(xmlNodeVec[0], nodeIdRight, decisionTree, varIndexMap);
-        }
+        node = new XTIfElseNode<double>(sNodeId, *xprsnNode, *ifNode, *elseNode);
     }
 
     --nesting_level;
 
-    return;
+    return node;
 }
 
-std::string xmlPredictEngineFactory::getCTOutputName(const DOMElement* xmlActivityNode)
+std::string xmlNewPredictEngineFactory::getCTOutputName(const DOMElement* xmlActivityNode)
 {
     std::string output;
 
@@ -423,42 +366,4 @@ std::string xmlPredictEngineFactory::getCTOutputName(const DOMElement* xmlActivi
     }
 
     return output;
-}
-
-xmlPredictEngineFactory::tupleVarIndexMap xmlPredictEngineFactory::buildVarIndexMap(DOMElement* xmlTreeList)
-{
-    // Tuple variable index map
-    tupleVarIndexMap tupleVarMap;
-    int              index = 0;
-
-    m_varNames.clear();
-            
-    // Look for the list of variables used by this tree
-    DOMElement* xmlVarList = xmlBase::Dom::findFirstChildByName(xmlTreeList, "MiningSchema");
-
-    if (xmlVarList)
-    {
-        // Can we get a vector of entries for the variables?
-        std::vector<DOMElement*> xmlVarListVec;
-        xmlBase::Dom::getChildrenByTagName(xmlVarList, "MiningField", xmlVarListVec);
-        
-        for(std::vector<DOMElement*>::iterator xmlVarListVecItr = xmlVarListVec.begin();
-            xmlVarListVecItr != xmlVarListVec.end(); xmlVarListVecItr++)
-        {
-            DOMElement* xmlVarList = *xmlVarListVecItr;
-
-            std::string varListTag  = xmlBase::Dom::getTagName(xmlVarList);
-            std::string varName     = xmlBase::Dom::getAttribute(xmlVarList, "name");
-            std::string varListAttr = xmlBase::Dom::getAttribute(xmlVarList, "usageType");
-
-            if (varListAttr == "")
-            {
-                m_varNames.push_back(varName);
-
-                tupleVarMap[varName] = index++;
-            }
-        }
-    }
-
-    return tupleVarMap;
 }
