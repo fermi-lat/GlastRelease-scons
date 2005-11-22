@@ -289,7 +289,8 @@ public:
     virtual void printExp(std::ostream& out=std::cout, bool first=true) const
     {
         out << "Node: " << m_name << " ";
-        m_condNode.printExp(out, true);
+        m_condNode.printExp(out, first);
+        if (first) out << std::endl;
 
         bool condition = *(reinterpret_cast<const bool*>(m_condNode()));
         if (condition) m_ifNode.printExp(out,true);
