@@ -203,8 +203,8 @@ IXTExprsnNode*  xmlNewPredictEngineFactory::parseTree(DOMElement* xmlTreeModel)
     DOMElement* xmlFirstNode = xmlBase::Dom::getFirstChildElement(xmlTreeModel);
 
     // determine the node ID (done this way to comply with Toby's DecisionTree class...
-    std::string sID = xmlBase::Dom::getAttribute(xmlFirstNode, "id");
-    int nodeId = atoi(sID.c_str());
+    //std::string sID = xmlBase::Dom::getAttribute(xmlFirstNode, "id");
+    //int nodeId = atoi(sID.c_str());
 
     return parseNode(xmlFirstNode);
 }
@@ -291,7 +291,7 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
     {
         std::string varname    = xmlBase::Dom::getAttribute(xmlPredicate, "field");
         std::string valname    = xmlBase::Dom::getAttribute(xmlPredicate, "value");
-        double      value      = xmlBase::Dom::getDoubleAttribute(xmlPredicate, "value");
+        //double      value      = xmlBase::Dom::getDoubleAttribute(xmlPredicate, "value");
         std::string sOperator  = xmlBase::Dom::getAttribute(xmlPredicate, "operator");
 
         // ugliness for now, figure out what to do here...

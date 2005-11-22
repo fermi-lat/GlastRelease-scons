@@ -479,50 +479,58 @@ private:
     {
         double left = *(reinterpret_cast<const double*>(arg()));
         double rght = *(reinterpret_cast<const double*>(m_right()));
-        *m_value = std::pow(*(reinterpret_cast<const double*>(arg())),*(reinterpret_cast<const double*>(m_right())));
+        *m_value = std::pow(left,rght);
+        //*m_value = std::pow(*(reinterpret_cast<const double*>(arg())),*(reinterpret_cast<const double*>(m_right())));
         return m_value;
     }
     const T* log10(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
+        *m_value = std::log(left);
         //*m_value = std::log10(*(reinterpret_cast<const double*>(arg())));
-        *m_value = std::log(*(reinterpret_cast<const double*>(arg())));
+        //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* loge(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::log(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::log(left);
+        //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* sqrt(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::sqrt(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::sqrt(left);
+        //*m_value = std::sqrt(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* sin(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::sin(left);
+        //*m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* cos(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::cos(left);
+        //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* tan(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::tan(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::tan(left);
+        //*m_value = std::tan(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* exp(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::exp(*(reinterpret_cast<const double*>(arg())));
+        *m_value = std::exp(left);
+        //*m_value = std::exp(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* abs(IXTExprsnNode& arg) const 
