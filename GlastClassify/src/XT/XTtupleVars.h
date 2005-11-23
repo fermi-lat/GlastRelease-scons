@@ -24,6 +24,11 @@ public:
     std::string m_what;
 };
 
+// Forward declaration for compiler issues
+template <class T> class XTcolumnVal;
+template <class T> std::ostream& operator <<(std::ostream& stream, const XTcolumnVal<T>& tupleVal);
+
+// Real stuff
 template <class T> class XTcolumnVal
 {
 public:
@@ -61,7 +66,7 @@ private:
     T           m_data;
 
     // This is for making a fancy output... I'm not necessarily proud of it...
-    friend std::ostream& operator <<(std::ostream& stream, const XTcolumnVal<T>& node);
+    friend std::ostream& operator <<<T>(std::ostream& stream, const XTcolumnVal<T>& node);
 };
 
 template <class T> std::ostream& operator <<(std::ostream& stream, const XTcolumnVal<T>& tupleVal)
@@ -71,101 +76,4 @@ template <class T> std::ostream& operator <<(std::ostream& stream, const XTcolum
     return stream;
 }
 
-/*
-// Define the class to contain the above objects
-template <class T> class XTtupleVars
-{
-public:
-    typedef typename std::map<std::string,XTcolumnVal<T>* > XTtupleMap;
-
-    XTtupleVars(const GlastClassify::ITupleInterface& tuple) : m_iTuple(tuple) {m_tupleMap.clear();}
-    ~XTtupleVars() {}
-
-    inline void initEvent();
-
-    inline XTcolumnVal<T>* getColumnVal(const std::string& name);
-
-    inline XTcolumnVal<T>* addNewDataItem(const std::string& name); 
-    
-    inline void print(std::ostream& out=std::cout) const;
-
-private:
-    const GlastClassify::ITupleInterface& m_iTuple;
-    XTtupleMap                            m_tupleMap;
-};
-
-template <class T> inline void XTtupleVars<T>::initEvent() 
-{
-    // Loop over entries in the map
-    for(XTtupleMap::iterator dataIter = m_tupleMap.begin(); dataIter != m_tupleMap.end(); dataIter++)
-    {
-        XTcolumnVal<T>*    colVal = dataIter->second;
-        const std::string& name   = colVal->getName();
-
-        // Use a "try" to catch the exception if not in the tuple
-        try
-        {
-            const Item* item = m_iTuple.getItem(name);
-
-            if (item != 0)
-            {
-                double value = (*item);
-                colVal->setDataValue(value);
-            }
-            else
-            {
-                // Set the "value"
-                colVal->setDataValue(0.);
-                colVal->clearValidFlag();
-            }
-        }
-        catch (std::invalid_argument&)
-        {
-            int j = 0;
-        }
-    }
-    return;
-}
-
-template <class T> inline XTcolumnVal<T>* XTtupleVars<T>::getColumnVal(const std::string& name)
-{
-    XTcolumnVal<T>* dataPtr = 0;
-
-    XTtupleMap::iterator dataIter = m_tupleMap.find(name);
-
-    if (dataIter != m_tupleMap.end())
-    {
-        dataPtr = dataIter->second;
-    }
-
-    return dataPtr;
-}
-
-template <class T> inline XTcolumnVal<T>*  XTtupleVars<T>::addNewDataItem(const std::string& name) 
-{
-    // Let's make sure the item doesn't already exist
-    XTcolumnVal<T>* colValPtr = getColumnVal(name);
-
-    if (colValPtr == 0)
-    {
-        colValPtr = new XTcolumnVal<T>(name);
-    
-        m_tupleMap[name] = colValPtr;
-    }
-
-    return colValPtr;
-}
-    
-template <class T> inline void XTtupleVars<T>::print(std::ostream& out=std::cout) const
-{
-    int numVars = m_tupleMap.size();
-    out << "Local Tuple Map size: " << numVars << std::endl;
-
-    for(XTtupleMap::const_iterator dataIter = m_tupleMap.begin(); dataIter != m_tupleMap.end(); dataIter++)
-    {
-        out << dataIter->first << ",  " << dataIter->second->getName() << std::endl;
-    }
-    return;
-}
-*/
 #endif

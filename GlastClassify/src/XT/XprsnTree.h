@@ -51,6 +51,11 @@ public:
        The Template parameter deterimes the type of output we are. 
        In actual use this will be either bool or double
 */
+// Forward declaration as we dance around this compiler problem
+template <class T> class XTExprsnNode;
+template <class T> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T>& node);
+
+// Now the real stuff...
 template <class T> class XTExprsnNode : virtual public IXTExprsnNode
 {
 public:
@@ -224,11 +229,11 @@ private:
 
     // This is for making a fancy output... I'm not necessarily proud of it...
     //template <class T> friend std::ostream& operator <<(std::ostream& stream, const XTExprsnNode<T>& node);
-    friend std::ostream& operator <<(std::ostream& stream, const XTExprsnNode<T>& node);
+    friend std::ostream& operator <<<T>(std::ostream& stream, const XTExprsnNode<T>& node);
 };
 
 // Override the ostream << operator. Keeping here as an example....
-template <class T> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T>& node)
+template <typename T> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T>& node)
 {
     node.printExp(out,false);
     return stream;
