@@ -35,6 +35,8 @@ int main(int argc, char* argv[])
     int rc = 0;
     try {
 
+        bool keepAllRows = true; // Eventually provide ability to set this true/false...
+
         std::string  input_filename(""), output_filename(""), tree_name("MeritTuple");
         int n=0;
         if( argc>++n ) input_filename = argv[n];		// required
@@ -104,7 +106,7 @@ int main(int argc, char* argv[])
         {
             // Execute the tree analysis on this tuple row
             // If good result then also write out the new row
-            if (ctrees.execute())   // fill in the classification (testing here)
+            if (ctrees.execute() || keepAllRows)   // fill in the classification (testing here)
             {
                 tuple.fill();
                 numOutputRows++;
