@@ -80,6 +80,10 @@ class CalibItemMgr {
   /// convert xtalId to appropriate LATWideIndex for current calib type
   virtual LATWideIndex genIdx(CalXtalId xtalId) = 0;
 
+  /// supplied by each calib_type for checking a TDS data item
+  virtual bool validateRangeBase(CalibData::RangeBase *rangeBase) = 0;
+
+
   /// generic spline evaluation f() works for any calib_type
   StatusCode evalSpline(int calibType, CalXtalId xtalId, double x, double &y);
 
@@ -112,8 +116,12 @@ class CalibItemMgr {
   /** retrieve spec'd rangeBase object, update if necessary
    \return NULL if there is no data 
    */
-  CalibData::RangeBase *getRangeBase(CalXtalId xtalId)
-    {return m_calibBase->getRange(xtalId);}
+  CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
+    CalibData::RangeBase* rangeBase = m_calibBase->getRange(xtalId);
+    if (!validateRangeBase(rangeBase)) rangeBase = NULL;
+
+    return rangeBase;
+  }
   
  private:
   /// wipe out locally stored data (e.g. splines)

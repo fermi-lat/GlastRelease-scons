@@ -56,6 +56,8 @@ class TholdCIMgr : public CalibItemMgr {
   ValSig m_idealLAC;
   CalVec<RngNum, ValSig> m_idealULD;
   CalVec<RngNum, ValSig> m_idealPed;
+
+  bool validateRangeBase(CalibData::RangeBase *rangeBase);
   
 };
 

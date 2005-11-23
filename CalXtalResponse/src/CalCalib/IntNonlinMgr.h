@@ -86,6 +86,8 @@ class IntNonlinMgr : public CalibItemMgr {
   of all floats, one set for every channel, regardless of the original data format.
    */
   CalVec<RngIdx, vector<float> > m_DACs;
+
+  bool validateRangeBase(CalibData::RangeBase *rangeBase);
   
 };
 

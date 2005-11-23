@@ -204,3 +204,14 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
   return StatusCode::SUCCESS;
 }
+
+bool IntNonlinMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
+  CalibData::IntNonlin* intNonlin = (CalibData::IntNonlin*)(rangeBase);
+
+  //get vector of vals
+  const vector<float> *intNonlinVec = intNonlin->getValues();
+  if (!intNonlinVec)    
+    return false;
+
+  return true;
+}

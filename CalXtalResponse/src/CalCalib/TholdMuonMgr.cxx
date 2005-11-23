@@ -116,3 +116,39 @@ bool TholdMuonMgr::checkXtalId(CalXtalId xtalId) {
                            " Programmer error");
   return true;
 }
+
+bool TholdMuonMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
+  CalibData::CalTholdMuon *tholdMuon = (CalibData::CalTholdMuon*)rangeBase;
+
+  if (!tholdMuon->getFLE()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if tholdMuon->getFLE() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!tholdMuon->getFHE()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+
+  const vector<ValSig> *peds = tholdMuon->getPeds();
+  if (!peds) {
+    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
+    return false;
+  }
+
+  if (peds->size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+  return true;
+}

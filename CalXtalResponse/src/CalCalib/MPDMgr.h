@@ -37,6 +37,9 @@ class MPDMgr : public CalibItemMgr {
 
   ValSig m_idealMPDLrg;
   ValSig m_idealMPDSm;
+
+  bool validateRangeBase(CalibData::RangeBase *rangeBase) {return true;}
+
 };
 
 #endif

@@ -54,6 +54,9 @@ class PedMgr : public CalibItemMgr {
   CalVec<RngNum,float> m_idealPedSig; 
   /// correlated ped cosine vals to use when calib db is down
   CalVec<RngNum,float> m_idealCos;    
+
+  bool validateRangeBase(CalibData::RangeBase *rangeBase) {return true;}
+
 };
 
 #endif

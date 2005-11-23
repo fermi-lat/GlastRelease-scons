@@ -170,3 +170,42 @@ bool TholdCIMgr::checkXtalId(CalXtalId xtalId) {
                            " Programmer error");
   return true;
 }
+
+bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
+  CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)rangeBase;
+
+  if (!tholdCI->getFLE()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if tholdCI->getFLE() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!tholdCI->getFHE() ||
+      !tholdCI->getLAC()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+
+  const vector<ValSig> *peds = tholdCI->getPeds();
+  const vector<ValSig> *ulds = tholdCI->getULDs();
+  if (!peds || !ulds) {
+    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
+    return false;
+  }
+
+  if (peds->size() != (unsigned)RngNum::N_VALS ||
+      ulds->size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+  return true;
+}

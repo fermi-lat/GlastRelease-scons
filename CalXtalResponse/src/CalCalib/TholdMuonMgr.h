@@ -50,6 +50,7 @@ class TholdMuonMgr : public CalibItemMgr {
   ValSig m_idealFHE;
   CalVec<RngNum, ValSig> m_idealPed;
 
+  bool validateRangeBase(CalibData::RangeBase *rangeBase);
 };
 
 #endif
