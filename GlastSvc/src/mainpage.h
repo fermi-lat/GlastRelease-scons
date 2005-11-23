@@ -35,6 +35,11 @@
 * for the random number generators for each Dll on a per incident
 * particle basis.
 *
+* @section CurrentEventAlg CurrentEventAlg
+* An algorithm which creates an output ASCII file and writes the run and event
+* ids for the event currently being processed.  The file is flushed for each
+* event, in case a crash occurs during processing.
+*
 * @section Interfaces Interfaces
 * A number of interfaces are defined in this package:
 * - IEventCnvSvc
@@ -87,6 +92,10 @@
 * that overrides individually set run and initial sequence 
 * numbers.
 * Default:0
+* @param CurrentEventAlg.fileName
+* Name of the output ASCII file which will contain the run and event ids 
+* written by the CurrentEventAlg algorithm.  This JO parameter can handle
+* environment variables as part of the input.
 *
 * @section Testing test_GlastSvc
 * The test routine contains one main algorithm called CreateEvent.
