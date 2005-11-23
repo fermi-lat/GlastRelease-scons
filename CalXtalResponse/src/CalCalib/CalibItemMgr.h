@@ -118,6 +118,7 @@ class CalibItemMgr {
    */
   CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
     CalibData::RangeBase* rangeBase = m_calibBase->getRange(xtalId);
+    if (rangeBase == NULL) return NULL;
     if (!validateRangeBase(rangeBase)) rangeBase = NULL;
 
     return rangeBase;
