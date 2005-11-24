@@ -35,7 +35,7 @@ public:
 
     virtual ~TkrDiagnostics() {}
 
-    void Clear(Option_t *option="")
+    void Clear(Option_t * /* option= "" */)
     {
         initializeInfo(0,0,0,0,0,0.,0,0);
     }
