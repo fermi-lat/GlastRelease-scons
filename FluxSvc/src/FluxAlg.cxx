@@ -203,11 +203,11 @@ StatusCode FluxAlg::initialize(){
             facilities::Timestamp jt(m_pointingHistory.value()[1]);
             offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
         }
+
+        log << MSG::INFO << "Loading Pointing History File : " << filename 
+            << " with MET offset "<< offset <<  endreq;
+
         GPS::instance()->setPointingHistoryFile(filename, offset);
-
-        log << MSG::INFO << "Loading Pointing History File : " << filename << endreq;
-
-        m_fluxSvc->setPointingHistoryFile(filename);
         if(m_pointing_mode){
             //problem - two kinds of pointing are being used!
             log << MSG::WARNING << "Pointing History and rocking mode both specified!" << endreq;

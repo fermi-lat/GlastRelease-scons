@@ -30,6 +30,7 @@
 #include "flux/FluxMgr.h"
 #include "flux/rootplot.h"
 #include "flux/ISpectrumFactory.h"
+#include "flux/Spectrum.h"
 
 #include <algorithm>
 #include <iterator>
@@ -340,10 +341,14 @@ StatusCode FluxSvc::initialize ()
     setProperties ();
 
 
+ 
     // open the message log
     MsgStream log( msgSvc(), name() );
 
     m_times.initialize(log);
+
+    // set starting, or "launch" time for easy access by sources
+    Spectrum::setStartTime(m_times.launch());
 
     status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
 
