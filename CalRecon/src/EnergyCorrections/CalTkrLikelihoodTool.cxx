@@ -37,7 +37,7 @@ public:
     *\author
     */
            
-    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
 };
 
 #include <GaudiKernel/DeclareFactoryEntries.h>
@@ -54,7 +54,7 @@ CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type,
                     m_dataFile="$(CALRECONROOT)/xml/CalTkrLikelihood.data");
 };
 
-Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
 //Purpose and method:
 //
 //   This function performs:
@@ -75,6 +75,14 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
             << endreq;
         return corResult;
     }
+
+    if (clusters->empty())
+    {
+        log << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
+            << endreq;
+        return corResult;
+    }
+    Event::CalCluster * cluster = clusters->front() ;
 
     const Vector& trackDirection = vertex->getDirection();
     const Point&  trackPosition  = vertex->getPosition();

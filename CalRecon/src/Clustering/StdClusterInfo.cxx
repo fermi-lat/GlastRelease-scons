@@ -50,10 +50,18 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
         pCluster += ptmp;
     }
 
+    // construct the cluster
+    Event::CalCluster* cl = new Event::CalCluster(0);
+    cl->setProducerName("StdClusterInfo") ;
+    cl->clear();
+
     // Now take the means
 
     // if energy sum is not zero - normalize cluster position
-    if(ene > 0.) pCluster /= ene; 
+    if(ene > 0.) {
+        pCluster /= ene; 
+        cl->setStatusBit(Event::CalCluster::CENTROID) ;
+    }
  	// if energy is zero - set cluster position to non-physical value
     else pCluster = Vector(-1000., -1000., -1000.);
     
@@ -125,10 +133,6 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
                                          caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
     // Fill CalCluster data
-    Event::CalCluster* cl = new Event::CalCluster(0);
-
-    cl->clear();
-
     cl->initialize(params, 0., 0., 0., 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)

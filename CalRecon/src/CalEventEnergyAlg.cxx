@@ -47,12 +47,13 @@ private:
     //! correction tools
     std::vector<ICalEnergyCorr*> m_corrTools ;
 
-    //! Type of correction for primary corrected parameters
-    std::string                  m_corrType;
-
-    //! Set status bits depending on which iteration of algorithm
-    Event::CalEventEnergy::StatusBits m_passBits ;
-    
+// DC: useless ?
+//    //! Type of correction for primary corrected parameters
+//    std::string                  m_corrType;
+//
+//    //! Set status bits depending on which iteration of algorithm
+//    Event::CalEventEnergy::StatusBits m_passBits ;
+//    
     //! package service
     ICalReconSvc *      m_calReconSvc ;
 } ;
@@ -76,9 +77,11 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
     {
         corrToolVec.push_back("CalRawEnergyTool");
 
-        //corrType   = Event::CalCorToolResult::RAWENERGY;
-        corrType   = "CalRawEnergyTool";
-        m_passBits = Event::CalEventEnergy::PASS_ONE;
+// DC: redundant with correctionName
+//        corrType   = Event::CalCorToolResult::RAWENERGY;
+// DC: useless ?
+//        corrType   = "CalRawEnergyTool";
+//        m_passBits = Event::CalEventEnergy::PASS_ONE;
     }
     // This the default for the second iteration of CalRecon
     else
@@ -88,16 +91,18 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
         corrToolVec.push_back("CalLastLayerLikelihoodTool");
         corrToolVec.push_back("CalFullProfileTool");
         corrToolVec.push_back("CalTkrLikelihoodTool");
-        corrToolVec.push_back("CalTransvOffsetTool");
+// DC: probably useless
+//        corrToolVec.push_back("CalTransvOffsetTool");
 
         //corrType   = Event::CalCorToolResult::CALVALS;
-        corrType   = "CalValsCorrTool";
-        m_passBits = Event::CalEventEnergy::PASS_TWO;
+// DC: useless ?
+//        corrType   = "CalValsCorrTool";
+//        m_passBits = Event::CalEventEnergy::PASS_TWO;
     }
 
     // Declare the properties with these defaults
     declareProperty("corrToolNames", m_corrToolNames = corrToolVec);
-    declareProperty("finalCorrType", m_corrType      = corrType);
+//    declareProperty("finalCorrType", m_corrType      = corrType);
 }
 
 
@@ -169,38 +174,37 @@ StatusCode CalEventEnergyAlg::execute()
 
     // Retrieve our TDS objects, we use Clusters to output corrected energy in CalEventEnergy
     Event::CalClusterCol*  calClusters = SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol);
+    Event::CalEventEnergyCol* calEnergyCol   = SmartDataPtr<Event::CalEventEnergyCol>(eventSvc(),EventModel::CalRecon::CalEventEnergyCol);
+    Event::TkrVertexCol*   tkrVertices = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
 
-    // No clusters no work...
-    if (calClusters != 0 && !calClusters->empty())
+    // If no CalEnergyCol object (yet) then create one and register in TDS
+    if (calEnergyCol == 0) {       
+        calEnergyCol = new Event::CalEventEnergyCol() ;
+        if ((eventSvc()->registerObject(EventModel::CalRecon::CalEventEnergyCol, calEnergyCol)).isFailure()) {
+            log<<MSG::ERROR<<"Cannot register CalEventEnergyCol"<<endreq ;
+            return StatusCode::FAILURE ;
+        }
+    }
+        
+    // No clusters no work
+    if (calClusters->size() > 0)
     {
-        // Look up the CalEventEnergy collection
-        Event::CalEventEnergy* calEnergy = 
-            SmartDataPtr<Event::CalEventEnergy>(eventSvc(),EventModel::CalRecon::CalEventEnergy);
-
-        // If no CalEnergy object (yet) then create one and register in TDS
-        if (calEnergy == 0) 
-        {
-            calEnergy = new Event::CalEventEnergy();
-
-            if ((eventSvc()->registerObject(EventModel::CalRecon::CalEventEnergy, calEnergy)).isFailure())
-            {
-                log<<MSG::ERROR<<"Cannot register CalEventEnergy"<<endreq ;
-                return StatusCode::FAILURE ;
-            }
-            // Else reset CalEventEnergy
-            // NO! Do not reset as we want to keep the original energy sum in the collection
-        } //else {
-        //    calEnergy->clear() ;
-        //    calEnergy->setStatusBits(0) ;
-        //}
-
-        // Do we have any Tracker Vertices?
-        Event::TkrVertexCol* tkrVertices = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
+        // If no CalEnergy object (yet) then create one
+        Event::CalEventEnergy * calEnergy ;
+        if (calEnergyCol->size()==0) {       
+            calEnergy = new Event::CalEventEnergy ;
+            calEnergyCol->push_back(calEnergy) ;
+        // Else reset CalEventEnergy
+// NO! Do not reset as we want to keep the original energy sum in the collection
+//        } else {
+//            calEnergy = calEnergyCol->front() ;
+//            calEnergy->clear() ;
+        }
         
         // Set pointer to first vertex if it exists
-        Event::TkrVertex* vertex = 0;
-
-        if (tkrVertices != 0 && !tkrVertices->empty()) vertex = tkrVertices->front();
+        Event::TkrVertex * vertex = 0 ;
+        if ((tkrVertices!=0) && !(tkrVertices->empty()))
+            vertex = tkrVertices->front() ;
 
         // apply corrections according to vector of tools
         std::vector<ICalEnergyCorr *>::const_iterator tool ;
@@ -211,18 +215,18 @@ StatusCode CalEventEnergyAlg::execute()
                 log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
     
                 // Loop over clusters 	 
-                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
-                      cluster != calClusters->end(); 	 
-                      cluster++) { 	 
-                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(*cluster, vertex); 	 
+//                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
+//                      cluster != calClusters->end(); 	 
+//                      cluster++) { 	 
+                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters, vertex); 	 
                     if (corResult != 0) {
                         calEnergy->push_back(corResult);
-                        if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
-                            // Need set the status bit in the CalCluster  
-                            (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
-                        }
+//                        if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
+//                            // Need set the status bit in the CalCluster  
+//                            (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
+//                        }
                     }
-                }
+//                }
                 
             } catch( CalException & e ) {
                 sc = sc && m_calReconSvc->handleError(name()+" CalException",(*tool)->type()+", "+e.what()) ;
@@ -233,26 +237,37 @@ StatusCode CalEventEnergyAlg::execute()
             }
         }
         
-        // Set the pass number bits
-        calEnergy->setStatusBit(m_passBits);
-
+ // DC: useless ?
+//        // Set the pass number bits
+//        calEnergy->setStatusBit(m_passBits);
+//
         // Go through and pick the "best" energy
         // For now this consists of choosing the value from CalValsCorrTool
         // It is envisaged that this will be replaced by a call to a tool/method which examines all 
         // possibilites and chooses the best for the given event
-        for(Event::CalCorToolResultCol::iterator corIter = calEnergy->begin(); corIter != calEnergy->end(); corIter++)
-        {
-            Event::CalCorToolResult* corResult = *corIter;
-
-            //if ((corResult->getStatusBits() & m_corrType) == m_corrType)
-            if (corResult->getCorrectionName() == m_corrType)
-            {
-                // Set the main energy parameters to the selected correction tool values
-                // Should also be setting a bit in CalEventEnergy to describe this?
-                calEnergy->setParams(corResult->getParams());
-                break;
-            }
-        }
+        
+        const Event::CalCorToolResult * bestCorResult = calEnergy->findLast("CalValsCorrTool") ;
+        if (bestCorResult==0) {
+            bestCorResult = calEnergy->findLast("CalRawEnergyTool") ;
+        }    
+        if (bestCorResult!=0) {
+            calEnergy->setParams(bestCorResult->getParams()) ;
+            calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
+        }    
+        
+//        for (Event::CalCorToolResultCol::iterator corIter = calEnergy->begin(); corIter != calEnergy->end(); corIter++)
+//        {
+//            Event::CalCorToolResult * corResult = *corIter;
+//
+//            //if (corResult->checkStatusBits(m_corrType))
+//            if (corResult->getCorrectionName() == m_corrType)
+//            {
+//                // Set the main energy parameters to the selected correction tool values
+//                // Should also be setting a bit in CalEventEnergy to describe this?
+//                calEnergy->setParams(corResult->getParams());
+//                break;
+//            }
+//        }
     }
     
     log<<MSG::DEBUG<<"End execute()"<<endreq ;

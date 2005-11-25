@@ -43,6 +43,7 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVe
     if (!xTalVec->empty())
     {
         cluster = new Event::CalCluster(0);
+        cluster->setProducerName("MomentsClusterInfo") ;
 
         cluster->clear();
 
@@ -191,8 +192,9 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     Point  centroid = cluster->getCalParams().getCentroid();
     Vector axis     = cluster->getCalParams().getAxis();
 
-    double maxDist = 0;
-    double aveDist = 0;
+// DC: unused !
+//    double maxDist = 0;
+//    double aveDist = 0;
 
     XtalDataVec::const_iterator xTalMax = xTalVec->end();
 /*
@@ -226,7 +228,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 
         CalMomentsData momentsData(recData->getPosition(), recData->getEnergy(), 0.);
 
-        double distToAxis = momentsData.calcDistToAxis(centroid, axis);
+        // DC: unused !
+        //double distToAxis = momentsData.calcDistToAxis(centroid, axis);
                 
         m_dataVec.push_back(momentsData);
     }

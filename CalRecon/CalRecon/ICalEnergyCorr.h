@@ -35,8 +35,7 @@ public:
      *  - Energy per layer is computed and stored in CalEnergyCorr in MeV
      *  - Barycenter per layer is also computed and stored in CalEnergyCorr
      */        
-    //virtual StatusCode doEnergyCorr(Event::CalCluster*, Event::TkrVertex* ) =0 ;
-    virtual Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* ) = 0;
+    virtual Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol *, Event::TkrVertex* ) = 0;
 
 } ;
 

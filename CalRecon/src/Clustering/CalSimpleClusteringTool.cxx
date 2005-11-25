@@ -128,7 +128,10 @@ StatusCode CalSimpleClusteringTool::findClusters(Event::CalClusterCol* calCluste
         XtalDataVec* xTalClus = *xTalClusIter;
 
         Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
-		cluster->setStatusBit(Event::CalCluster::SIMPLECLUSTER);
+        std::string producerName("CalSimpleClusteringTool/") ;
+        producerName += cluster->getProducerName() ;
+        cluster->setProducerName(producerName) ;
+		cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
 
         calClusterCol->push_back(cluster);
 

@@ -8,8 +8,8 @@
 
 #include <algorithm>
 
-CalMomentsAnalysis::CalMomentsAnalysis() : m_moment(0.,0.,0.), 
-                                           m_centroid(0.,0.,0.), 
+CalMomentsAnalysis::CalMomentsAnalysis() : m_centroid(0.,0.,0.), 
+                                           m_moment(0.,0.,0.), 
                                            m_rmsLong(0.),
                                            m_rmsTrans(0.),
                                            m_rmsLongAsym(0.)

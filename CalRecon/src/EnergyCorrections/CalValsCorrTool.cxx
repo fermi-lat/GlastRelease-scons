@@ -52,7 +52,7 @@ public:
     StatusCode initialize();
 
     // worker function to get the corrected energy      
-    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
 
 
 
@@ -254,7 +254,7 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
 {
     //Purpose and method:
     //
@@ -264,23 +264,28 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
     // TDS input: none
     // TDS output: CalClusters
 
-	m_cluster = cluster;
-	m_vertex  = vertex; 
-
     Event::CalCorToolResult* corResult = 0;
-
     MsgStream lm(msgSvc(), name());
+
+    if (clusters->empty())
+    {
+        lm << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
+            << endreq;
+        return corResult;
+    }
+	m_cluster = clusters->front() ;
+	m_vertex  = vertex; 
 
 	//Make sure we have valid cluster data
     if (!m_cluster) return corResult;
 
 	// Put here a place holder for Event Axis Calculation!!!!!!!!!!!!!
-	if((m_cluster->getStatusBits()& Event::CalCluster::CENTROID) == 0) return corResult;
+	if(!m_cluster->checkStatusBit(Event::CalCluster::CENTROID)) return corResult;
 	m_cal_pos = m_cluster->getPosition();
 	Point x0  = m_cal_pos;
 
 	Vector t0 = m_cluster->getDirection();
-	if((m_cluster->getStatusBits()& Event::CalCluster::MOMENTS) == 0 ||
+	if( !m_cluster->checkStatusBit(Event::CalCluster::MOMENTS) ||
 		m_cluster->getRmsLong() < .1) { // Trap NaN condition caused by Moments failure
 		t0 = Vector(0., 0., 1.);
 	}
@@ -322,7 +327,7 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
 	}
 	// Now do the energy correction and calculation of several vars. used in bkg. rejection
     calculate(x0, t0, tkr_RLn, tkr_Energy);
-    if(m_status_bits != 0) corResult = loadResults();
+    if (m_status_bits != Event::CalCorToolResult::ZERO) corResult = loadResults();
 
     return corResult;
 }
@@ -355,7 +360,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
 	m_t_Pred             = 0.;
 	m_t                  = 0.;
 	m_t_total            = 0.;
-	m_status_bits        = 0.;
+	m_status_bits        = 0;
     m_raw_energy   = m_cluster->getCalParams().getEnergy();
     m_corr_energy = m_raw_energy;
 	m_cal_pos  = m_cluster->getPosition();
@@ -363,7 +368,8 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
 
     if(m_raw_energy < m_minEnergy) return;  
 	m_status_bits |=  Event::CalCorToolResult::VALIDPARAMS;
-    m_status_bits |=  Event::CalCorToolResult::CALVALS;
+// DC: redundant with correctionName
+//    m_status_bits |=  Event::CalCorToolResult::CALVALS;
 
     // Construct Event Axis along which the shower will be evaluated 
     Ray axis(x0, t0); 
@@ -395,12 +401,12 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     double gap_loss_factor = .30 + .45*costh;
 
     // Get the lower and upper limits for the CAL in the installed towers
-    double deltaX = 0.5*(m_xNum*m_towerPitch - m_calXWidth);
-    double deltaY = 0.5*(m_yNum*m_towerPitch - m_calYWidth);
-    double calXLo = m_tkrGeom->getLATLimit(0,LOW)  + deltaX;
-    double calXHi = m_tkrGeom->getLATLimit(0,HIGH) - deltaX;
-    double calYLo = m_tkrGeom->getLATLimit(1,LOW)  + deltaY;
-    double calYHi = m_tkrGeom->getLATLimit(1,HIGH) - deltaY;
+//    double deltaX = 0.5*(m_xNum*m_towerPitch - m_calXWidth);
+//    double deltaY = 0.5*(m_yNum*m_towerPitch - m_calYWidth);
+//    double calXLo = m_tkrGeom->getLATLimit(0,LOW)  + deltaX;
+//    double calXHi = m_tkrGeom->getLATLimit(0,HIGH) - deltaX;
+//    double calYLo = m_tkrGeom->getLATLimit(1,LOW)  + deltaY;
+//    double calYHi = m_tkrGeom->getLATLimit(1,HIGH) - deltaY;
 
     // Apply circle correction layer by layer in the calorimeter
     // This is a essentially just a geometric correction which is 
@@ -409,7 +415,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     Event::CalClusterLayerDataVec& lyrDataVec = *m_cluster;
 	m_corr_energy = 0.; 
 	m_gap_fraction = 0.; 
-    double edge_corr = 0.; 
+//    double edge_corr = 0.; 
     double good_layers = 0.;
 	double layer_energy_sum = 0.; 
     for(int i=0; i<8; i++){
@@ -671,7 +677,7 @@ StatusCode CalValsCorrTool::aveRadLens(Point /* x0 */, Vector t0, double radius,
 	p  = p.unit();
 
 	// Set the number of inner samples 
-	int numInner = numSamples/2.; 
+	int numInner = (int)(numSamples/2.) ; 
 
 	// Loop over samples
 	int is = 0;

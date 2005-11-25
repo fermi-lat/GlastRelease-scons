@@ -95,9 +95,10 @@ def key_values(filename) :
     if regexp.search(line) :
       words = line.split()
       if words[2] == 'Energy' :
-        if words[3] != '0' :
+        energy = string.atof(words[3])
+        if energy >= 100 :
           nb_clusters += 1
-          raw_energy += string.atof(words[3])
+          raw_energy += energy
       elif words[2] == 'NbTruncXtals' :
         if words[3] != '0' :
           nb_xtals += string.atof(words[3])

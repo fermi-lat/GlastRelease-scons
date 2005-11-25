@@ -38,7 +38,7 @@ public:
     *\author
     */
            
-    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
 private:
     int m_calNLayers;
 };
@@ -70,7 +70,7 @@ StatusCode CalLastLayerLikelihoodTool::initialize()
 }
 
 
-Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
 //Purpose and method:
 //
 //   This function performs:
@@ -91,6 +91,14 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
             << endreq;
         return corResult;
     }
+
+    if (clusters->empty())
+    {
+        log << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
+            << endreq;
+        return corResult;
+    }
+    Event::CalCluster * cluster = clusters->front() ;
 
     const Vector& trackDirection = vertex->getDirection();
     const Point&  trackPosition  = vertex->getPosition();

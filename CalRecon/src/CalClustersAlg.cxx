@@ -142,7 +142,19 @@ StatusCode CalClustersAlg::execute()
         if (m_clusteringTool->findClusters(calClusterCol).isFailure()) 
         {
             sc = m_calReconSvc->handleError(name(),"clustering tool failure") ;
-        } 
+        }
+        
+        // display cluster energies
+        Event::CalClusterCol::const_iterator cluster ;
+        for ( cluster = calClusterCol->begin() ; 	 
+              cluster != calClusterCol->end() ; 	 
+              cluster++) { 	 
+            log<<MSG::DEBUG<<"CalCluster Energy: "
+              <<(*cluster)->getCalParams().getEnergy()
+              <<endreq ;
+        }
+        
+
     // Catch any exceptions here
     } catch( CalException & e ) {
         sc = m_calReconSvc->handleError(name()+" CalException",e.what()) ;

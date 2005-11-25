@@ -95,6 +95,9 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     calClusterCol->clear() ;
 
     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
+    std::string producerName("CalSingleClusteringTool/") ;
+    producerName += cluster->getProducerName() ;
+    cluster->setProducerName(producerName) ;
     cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
     calClusterCol->push_back(cluster);
 

@@ -67,7 +67,7 @@ StatusCode test_CalRecon::execute() {
 
     // First, the collection of CalRecons is retrieved from the TDS
     SmartDataPtr<Event::CalClusterCol> clusCol(eventSvc(),EventModel::CalRecon::CalClusterCol) ;
-    SmartDataPtr<Event::CalEventEnergy> calEnergy(eventSvc(),EventModel::CalRecon::CalEventEnergy);
+    SmartDataPtr<Event::CalEventEnergyCol> calEnergyCol(eventSvc(),EventModel::CalRecon::CalEventEnergyCol);
 
     if ((clusCol == 0) || (clusCol->size()) == 0) {
         throw std::runtime_error("no/incorrect number calorimeter clusters found") ;
@@ -76,69 +76,67 @@ StatusCode test_CalRecon::execute() {
     Event::CalClusterCol::const_iterator cluster ;
     for ( cluster = clusCol->begin() ;
           cluster != clusCol->end() ;
-          ++cluster )
-    {
-      log<<MSG::INFO<<"Energy "<<(*cluster)->getCalParams().getEnergy()<<endreq ;
-      log<<MSG::INFO<<"NbTruncXtals " <<(*cluster)->getNumTruncXtals()<<endreq ;
-      log<<MSG::INFO<<"Position"
-        <<" "<<(*cluster)->getPosition().x() 
-        <<" "<<(*cluster)->getPosition().y() 
-        <<" "<<(*cluster)->getPosition().z()
-        <<endreq ;
-      log<<MSG::INFO<<"Direction"
-        <<" "<<(*cluster)->getDirection().x() 
-        <<" "<<(*cluster)->getDirection().y() 
-        <<" "<<(*cluster)->getDirection().z()
-        <<endreq ;
+          ++cluster ) {
+        log<<MSG::INFO<<"Energy "<<(*cluster)->getCalParams().getEnergy()<<endreq ;
+        log<<MSG::INFO<<"NbTruncXtals " <<(*cluster)->getNumTruncXtals()<<endreq ;
+        log<<MSG::INFO<<"Position"
+          <<" "<<(*cluster)->getPosition().x() 
+          <<" "<<(*cluster)->getPosition().y() 
+          <<" "<<(*cluster)->getPosition().z()
+          <<endreq ;
+        log<<MSG::INFO<<"Direction"
+          <<" "<<(*cluster)->getDirection().x() 
+          <<" "<<(*cluster)->getDirection().y() 
+          <<" "<<(*cluster)->getDirection().z()
+          <<endreq ;
     }
-
-    Event::CalCorToolResultCol::iterator corIter ;
-    for( corIter= calEnergy->begin(); corIter != calEnergy->end(); ++corIter )
-    {
-        Event::CalCorToolResult * corResult = *corIter;
-        if (corResult->getCorrectionName() == "CalProfileTool" )
-        {
-            log<<MSG::INFO<<"Profile Corr Energy "
-              <<corResult->getParams().getEnergy()
-              <<endreq ; 
-        }
-        else if (corResult->getCorrectionName() == "CalFullProfileTool" )
-        {
-            log<<MSG::INFO<<"FullProfile Corr Energy "
-	       <<corResult->getParams().getEnergy()
-	       << " alpha = " << (*corResult)["alpha"] 
-	       << " tmax = " << (*corResult)["tmax"] 
-	       << " tkrrln = " << (*corResult)["tkrrln"] 
-	       << " lastx0 = " << (*corResult)["lastx0"] 
-	       << " totchisq = " << (*corResult)["totchisq"] 
-	       << " chisq = " << (*corResult)["chisq"] 
-	       << " parcf = " << (*corResult)["parcf"] 
-	       << " parc = " << (*corResult)["parc"] 
-              <<endreq ; 
-        }
-        else if (corResult->getCorrectionName() == "CalLastLayerLikelihoodTool" )
-        {
-            double llStatus = (*corResult)["llStatus"] ;
-            if (llStatus==0)
-              log<<MSG::INFO<<"Last Layer Corr Energy "
-                <<corResult->getParams().getEnergy()
-                <<endreq ; 
-            else
-              log<<MSG::INFO<<"Last Layer Corr Energy "
-                <<llStatus
-                <<endreq ; 
-        }
-        else if (corResult->getCorrectionName() == "CalValsCorrTool" )
-        {
-            log<<MSG::INFO<<"CalValsCorrTool Energy "
-              <<corResult->getParams().getEnergy()
-              <<endreq ; 
-        }
-        else
-        {
-            log<<MSG::WARNING<<"UNKNOWN CORRECTION NAME: "
-              <<corResult->getCorrectionName()
-              <<endreq ; 
+    
+    
+    if ((calEnergyCol!=0)&&(!calEnergyCol->empty())) {
+        
+        Event::CalEventEnergy * calEnergy = calEnergyCol->front() ;
+        Event::CalCorToolResultCol::iterator corIter ;
+        for( corIter= calEnergy->begin(); corIter != calEnergy->end(); ++corIter ) {
+            Event::CalCorToolResult * corResult = *corIter;
+            if (corResult->getCorrectionName() == "CalProfileTool" ) {
+                log<<MSG::INFO<<"Profile Corr Energy "
+                  <<corResult->getParams().getEnergy()
+                  <<endreq ; 
+            }
+            else if (corResult->getCorrectionName() == "CalFullProfileTool" ) {
+                log<<MSG::INFO<<"FullProfile Corr Energy "
+               <<corResult->getParams().getEnergy()
+               << " alpha = " << (*corResult)["alpha"] 
+               << " tmax = " << (*corResult)["tmax"] 
+               << " tkrrln = " << (*corResult)["tkrrln"] 
+               << " lastx0 = " << (*corResult)["lastx0"] 
+               << " totchisq = " << (*corResult)["totchisq"] 
+               << " chisq = " << (*corResult)["chisq"] 
+               << " parcf = " << (*corResult)["parcf"] 
+               << " parc = " << (*corResult)["parc"] 
+                  <<endreq ; 
+            }
+            else if (corResult->getCorrectionName() == "CalLastLayerLikelihoodTool" ) {
+                double llStatus = (*corResult)["llStatus"] ;
+                if (llStatus==0)
+                  log<<MSG::INFO<<"Last Layer Corr Energy "
+                    <<corResult->getParams().getEnergy()
+                    <<endreq ; 
+                else
+                  log<<MSG::INFO<<"Last Layer Corr Energy "
+                    <<llStatus
+                    <<endreq ; 
+            }
+            else if (corResult->getCorrectionName() == "CalValsCorrTool" ) {
+                log<<MSG::INFO<<"CalValsCorrTool Energy "
+                  <<corResult->getParams().getEnergy()
+                  <<endreq ; 
+            }
+            else {
+                log<<MSG::WARNING<<"UNKNOWN CORRECTION NAME: "
+                  <<corResult->getCorrectionName()
+                  <<endreq ; 
+            }
         }
     }
         
