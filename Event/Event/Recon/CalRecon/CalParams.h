@@ -26,8 +26,11 @@ class CalParams
 {
 public:
     /// Default constructor
-    CalParams() {initDataMembers();}
+    CalParams() { clear() ; }
 
+    /// reset method
+    void clear() ;
+  
     /// Constructor given Points, Vectors and matrices
     CalParams(double energy, double eneError,
               const Point&  centroid, const HepMatrix& centroidErr,
@@ -120,9 +123,7 @@ public:
     }
 
 private:
-    /// Private intialization method
-    void initDataMembers();
-  
+
     /// Energy and associated error
     double m_energy;
     double m_eneError;

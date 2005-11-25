@@ -49,7 +49,7 @@ Event::CalParams::CalParams(double energy, double eneError,
     m_clusterAxis     = Vector(xAxis,yAxis,zAxis);
     return;
 }
-void Event::CalParams::initDataMembers()
+void Event::CalParams::clear()
 {
     m_clusterCentroid = Point(0.,0.,0.);
     m_clusterAxis     = Vector(0.,0.,0.);

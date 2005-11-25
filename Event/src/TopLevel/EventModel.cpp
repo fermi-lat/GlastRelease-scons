@@ -65,7 +65,7 @@ std::string EventModel::CalRecon::CalXtalRecCol       = EventModel::CalRecon::Ev
 //@@@FP 07/09/05
 std::string EventModel::CalRecon::CalMipTrackCol      = EventModel::CalRecon::Event + "/CalMipTrackCol";
 std::string EventModel::CalRecon::CalClusterCol       = EventModel::CalRecon::Event + "/CalClusterCol";
-std::string EventModel::CalRecon::CalEventEnergy      = EventModel::CalRecon::Event + "/CalEventEnergy";
+std::string EventModel::CalRecon::CalEventEnergyCol   = EventModel::CalRecon::Event + "/CalEventEnergyCol";
 std::string EventModel::CalRecon::CalClusterHitTab    = EventModel::CalRecon::Event + "/CalClusterHitTab";
 //@@@FP 07/09/05
 //std::string EventModel::CalRecon::CalXtalMIPsTab      = EventModel::CalRecon::Event + "/CalXtalMIPsTab";

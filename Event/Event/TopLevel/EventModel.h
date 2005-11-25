@@ -122,7 +122,7 @@ public:
        //@@@FP 07/09/05
        static std::string CalMipTrackCol;
        static std::string CalClusterCol;
-       static std::string CalEventEnergy;
+       static std::string CalEventEnergyCol;
        static std::string CalClusterHitTab;
        //@@@FP 07/09/05
        // idem

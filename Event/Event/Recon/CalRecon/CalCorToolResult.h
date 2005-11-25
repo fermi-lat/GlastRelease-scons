@@ -5,12 +5,11 @@
 #include <map>
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/RelTable/RelTable.h"
 
-static const CLID& CLID_CalCorToolResult = InterfaceID("CalCorToolResult", 1, 0);
+// static const CLID& CLID_CalCorToolResult = InterfaceID("CalCorToolResult", 1, 0);
 
 /**
 *  @class CalCorToolResult
@@ -30,7 +29,7 @@ namespace Event
 typedef std::map<std::string,double> CalCorEneValueMap;
 typedef std::pair<std::string,double> CalCorEneValuePair;
     
-class CalCorToolResult: public CalCorEneValueMap, virtual public ContainedObject
+class CalCorToolResult: public CalCorEneValueMap
 {     
 public:
         
@@ -43,27 +42,30 @@ public:
     ///         < volume info  >  <   hit type    > <    Energy Correction Status      >
     /// high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     ///         <            Correction Algorithm Used             >  < more hit type >
-    /// @param VALIDENERGY Bit set means particular energy correction is valid
-    enum StatusBits {VALIDPARAMS  = 0x00000001, 
-    /// @param CALVALS    Bit set means Profile performed this correction
-                     CALVALS      = 0x00100000,  
-    /// @param PROFILE    Bit set means Profile performed this correction
-                     PROFILE      = 0x00200000,  
-    /// @param LASTLAYER  Bit set means Profile performed this correction
-                     LASTLAYER    = 0x00400000,  
-    /// @param RAWENERGY  Bit set means raw energy sum over all clusters
-                     RAWENERGY    = 0x20000000,  
-    /// @param GODOGSGO    Bit set means GODOGSGO performed this correction
-                     GODOGSGO     = 0x40000000};  
+    enum StatusBits {
+    /// @param ZERO
+                     ZERO         = 0x00000000, 
+    /// @param VALIDPARAMS Bit set means particular energy correction is valid
+                     VALIDPARAMS  = 0x00000001, 
+// DC: redundant with correctionName
+//    /// @param CALVALS    Bit set means Profile performed this correction
+//                     CALVALS      = 0x00100000,  
+//    /// @param PROFILE    Bit set means Profile performed this correction
+//                     PROFILE      = 0x00200000,  
+//    /// @param LASTLAYER  Bit set means Profile performed this correction
+//                     LASTLAYER    = 0x00400000,  
+//    /// @param RAWENERGY  Bit set means raw energy sum over all clusters
+//                     RAWENERGY    = 0x20000000,  
+//    /// @param GODOGSGO    Bit set means GODOGSGO performed this correction
+//                     GODOGSGO     = 0x40000000
+                                                  };  
+// DC : better use checkStatusBit(VALIDPARAMS)
+//    /// Answer quick questions based on status bits
+//    inline bool validParams() const {return (m_statusBits & VALIDPARAMS)  == VALIDPARAMS;}
 
-    /// Answer quick questions based on status bits
-    inline bool validParams() const {return (m_statusBits & VALIDPARAMS)  == VALIDPARAMS;}
-
-    /// Access the status bits to determine details of the hit
-    inline unsigned int getStatusBits()     const {return m_statusBits;}
     /// Retrieve corrected information
-    const std::string&  getCorrectionName() const {return m_correctionName;}
-    const CalParams&    getParams()         const {return m_params;}
+    const std::string &  getCorrectionName() const {return m_correctionName;}
+    const CalParams &    getParams()         const {return m_params;}
     double              getChiSquare()      const {return m_chiSquare;}
 
     /// 
@@ -77,12 +79,16 @@ public:
     /// setChiSquare for setting the chisquare of the correction "fit"
     /// @param chiSquare the chiSquare resulting from this correction 
     inline void setChiSquare(double chiSquare)             {m_chiSquare = chiSquare;}
-    /// setStatusBits
-    /// @param StatusBits : the status bits
-    inline void setStatusBits(unsigned int statusBits )    {m_statusBits = statusBits ; }
-    /// setStatusBit and ClearStatusBit for setting and clearing bits
-    inline void setStatusBit(StatusBits bitToSet)          {m_statusBits |=  bitToSet;}
-    inline void clearStatusBit(StatusBits bitToClear)      {m_statusBits &= ~bitToClear;}
+
+	/// Access individual status bits
+    inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
+    inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
+    inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
+
+    /// Access the status bits globally
+    inline unsigned int getStatusBits() const { return m_statusBits ; }
+    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
+
 
 private:
     std::string    m_correctionName;
@@ -92,13 +98,12 @@ private:
 };
 
 //typedef for the Gaudi TDS Container
-typedef ObjectVector<CalCorToolResult>      CalCorToolResultCol;
-typedef CalCorToolResultCol::iterator       CalCorToolResultColItr;
+typedef std::vector<CalCorToolResult *> CalCorToolResultCol;
+typedef CalCorToolResultCol::iterator CalCorToolResultColItr;
 typedef CalCorToolResultCol::const_iterator CalCorToolResultColConItr;
 
-class CalCluster;
-
 // Define the relational table taking us back to CalCluster objects
+class CalCluster;
 typedef Event::RelTable<Event::CalCluster, Event::CalCorToolResult>               CalClusToCorToolHitTab;
 typedef Event::Relation<Event::CalCluster, Event::CalCorToolResult>               CalClusToCorToolHitRel;
 typedef ObjectList< Event::Relation<Event::CalCluster, Event::CalCorToolResult> > CalClustToCorToolHitTabList;
