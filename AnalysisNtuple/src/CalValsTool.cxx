@@ -385,9 +385,12 @@ StatusCode CalValsTool::calculate()
     SmartDataPtr<Event::CalXtalRecCol> 
         pxtalrecs(m_pEventSvc,EventModel::CalRecon::CalXtalRecCol);
 
-	// Recover pointer to CalEventEnergy info  
-    Event::CalEventEnergy* calEventEnergy = 
-                 SmartDataPtr<Event::CalEventEnergy>(m_pEventSvc, EventModel::CalRecon::CalEventEnergy);
+    // Recover pointer to CalEventEnergy
+    Event::CalEventEnergyCol * calEventEnergyCol = 
+        SmartDataPtr<Event::CalEventEnergyCol>(m_pEventSvc,EventModel::CalRecon::CalEventEnergyCol) ;
+    Event::CalEventEnergy * calEventEnergy = 0 ;
+    if ((calEventEnergyCol!=0)&&(!calEventEnergyCol->empty()))
+        calEventEnergy = calEventEnergyCol->front() ;
 
     // If calEventEnergy then fill TkrEventParams
     // Note: TkrEventParams initializes to zero in the event of no CalEventEnergy
