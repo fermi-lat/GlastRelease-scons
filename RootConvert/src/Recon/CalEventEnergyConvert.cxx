@@ -73,6 +73,8 @@ void convert( const Event::CalEventEnergy & tdsEventEnergy, CalEventEnergy & roo
  
 void convert( const CalEventEnergy & rootEventEnergy, Event::CalEventEnergy & tdsEventEnergy ) {
     
+    tdsEventEnergy.clear() ;
+    
     Event::CalParams tdsParams ;
     convert(rootEventEnergy.getParams(),tdsParams) ;    
     tdsEventEnergy.setParams(tdsParams) ;
@@ -80,7 +82,6 @@ void convert( const CalEventEnergy & rootEventEnergy, Event::CalEventEnergy & td
     UInt_t rootStatusBits = rootEventEnergy.getStatusBits() ;
     tdsEventEnergy.setStatusBits(rootStatusBits) ;
 
-    tdsEventEnergy.clear() ;
     TIter rootResultsIter(&rootEventEnergy.getToolsResults()) ;
     CalCorToolResult * rootResult ;
     while ((rootResult=(CalCorToolResult *)rootResultsIter.Next())) {
