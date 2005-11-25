@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r6p2    25-Nov-05  : DC reorder inits to avoid painful warnings
 v8r6p1    17-Nov-05  : HMK Make sure to init DOCA and ActDist properly
 v8r6      08-Nov-05  : HMK Add new AcdRecon cornerDoca
 v8r5      03-Nov-05  : HMK Prepare to tag Eric's new AcdTkrIntersectTool
