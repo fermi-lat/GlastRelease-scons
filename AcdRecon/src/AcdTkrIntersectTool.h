@@ -48,7 +48,8 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
   
  protected:
 
-  virtual int doTrack(const Event::TkrTrack& aTrack, int iTrack, std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log);
+  virtual int doTrack(const Event::TkrTrack& aTrack, int iTrack, std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log,
+		      bool forward = true);
 
   void errorAtXPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;
   void errorAtYPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;

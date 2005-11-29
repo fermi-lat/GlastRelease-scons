@@ -73,18 +73,24 @@ StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tr
     const Event::TkrTrack* aTrack = *it;
     if ( aTrack == 0 ) return StatusCode::FAILURE ;
     // do the intersections for this track
-    int numberIntersections = doTrack(*aTrack,iTrack,hitMap,log);    
-    if ( numberIntersections < 0 ) {
+    int numberIntersectionsForward = doTrack(*aTrack,iTrack,hitMap,log,true);    
+    if ( numberIntersectionsForward < 0 ) {
       // negative return values indicate failure
       return StatusCode::FAILURE;
     }
+    int numberIntersectionsBackward = doTrack(*aTrack,iTrack,hitMap,log,false);
+    if ( numberIntersectionsBackward < 0 ) {
+      // negative return values indicate failure
+      return StatusCode::FAILURE;
+    }  
   }
   // done
   return StatusCode::SUCCESS ;
 }
 
 int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack, 
-				 std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log) {
+				 std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log,
+				 bool forward) {
   
   // Define the fiducial volume of the LAT
   // FIXME -- this should come for some xml reading service
@@ -95,14 +101,24 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   static double top_distance = 854.6;     // center of tiles in cols 1 and 3
   static double side_distance = 940.14;   // center of tiles in sides
 
+  // the bottom of the ACD is at the z=0 plane
+  static double bottom_distance = -10.; 
+
   // we will return the number of intersection w/ the Acd for this track
   int returnValue(0);
 
   // Get the start point & direction of the track & the params & energy also
-  const Point initialPosition = aTrack.getInitialPosition();
-  const Vector initialDirection = aTrack.getInitialDirection();
-  const Event::TkrTrackParams& trackPars = aTrack[0]->getTrackParams(Event::TkrTrackHit::SMOOTHED);
-  double startEnergy = aTrack[0]->getEnergy();
+  const unsigned int hitIndex = forward ? 0 : aTrack.getNumHits() - 1;
+  
+  const Event::TkrTrackHit* theHit = aTrack[hitIndex];
+
+  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+  const Vector initialDirection = forward ? 
+    theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
+    -1.*  theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+ 
+  const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED);
+  double startEnergy = theHit->getEnergy();
 
   // hits -x or +x side ?
   const double normToXIntersection =  initialDirection.x() > 0 ?  
@@ -120,10 +136,16 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
     -1. / initialDirection.y() : 1e9;
   const double sToYIntersection = normToYIntersection * slopeToYIntersection;
 
-  // hits top
-  const double normToZIntersection = top_distance - initialPosition.z();
+  // hits top or bottom
+  const double normToZIntersection = forward ? 
+    top_distance - initialPosition.z() :
+    bottom_distance - initialPosition.z();
   const double slopeToZIntersection = -1. / initialDirection.z();
   const double sToZIntersection = normToZIntersection * slopeToZIntersection;
+
+  if ( (forward && initialDirection.z() > 0) || (!forward && initialDirection.z() < 0) ) {
+    log << MSG::ERROR << "Downgoing track " << forward << ' ' << initialDirection.z()  << endreq;
+  }
 
   // pick closest plane
   const double arcLength = sToXIntersection < sToYIntersection ?
@@ -131,11 +153,15 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
     ( sToYIntersection < sToZIntersection ? sToYIntersection : sToZIntersection ) ;
   
   // protect against negative arcLenghts
-  if ( arcLength < 0. ) return -1;
+  //if ( arcLength < 0. ) return -1;
+  // protect against negative arcLenghts
+  if ( arcLength < 0. ) {
+    log << MSG::ERROR << "Negative Arclength to intersection " << arcLength << endreq;
+    return -1;
+  }
 
   // setup the G4Propagator
-  bool downwards = initialDirection.z() < 0.0;
-  m_G4PropTool->setStepStart(trackPars,initialPosition.z(),downwards); 
+  m_G4PropTool->setStepStart(trackPars,initialPosition.z(),forward); 
   m_G4PropTool->step(arcLength);  
 
   // setup some of the variables for the step loop
@@ -245,7 +271,8 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
       new Event::AcdTkrIntersection(acdId,iTrack,
 				    x_step,
 				    localPosition,localCovMatrix,
-				    arcLengthToIntersection,arcLen_step,
+				    forward ? arcLengthToIntersection : -1. * arcLengthToIntersection,
+				    arcLen_step,
 				    hitMask);
     // print to the log if debug level is set
     theIntersection->writeOut(log);
@@ -264,7 +291,7 @@ void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrac
   // want the x and y and the normal to the plane
   const double m_x = pars.getxSlope();
   const double inv_m_x = fabs(m_x) > 1e-9 ? 1./ m_x : 1e9;
-  const double m_y = pars.getySlope();
+  /* not used */ //const double m_y = pars.getySlope();
 
   // ok input the jacobian
   //
@@ -315,7 +342,7 @@ void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrac
 
   // get the tk params.  
   // want the x and y and the normal to the plane
-  const double m_x = pars.getxSlope();
+  /* not used */ //const double m_x = pars.getxSlope();
   const double m_y = pars.getySlope();
   const double inv_m_y = fabs(m_y) > 1e-9 ? 1./ m_y : 1e9;
 
