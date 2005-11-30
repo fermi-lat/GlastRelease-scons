@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r26   29-Nov-2005  jrb Try again.  Mysteriously, MRvcmt rtag didn't tag
    v1r26   29-Nov-2005  jrb Make top tiles overlap in the correct direction.
                             One row overlaps another. Row 2 is at lowest Z.
    v1r25p4 24-Oct-2005  hmk tagging to fix my unfortunate branch name..no
