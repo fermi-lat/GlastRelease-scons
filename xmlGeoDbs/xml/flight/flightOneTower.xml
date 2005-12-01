@@ -157,3 +157,76 @@
       </posXYZ>
 
     </composition>
+
+
+
+
+<!-- Single CAL module -->
+    <composition name="oneCalTower" envelope="oneTowerEnv">
+      <!-- Flange pieces -->
+      <posXYZ volume="towerGridFlangeLong"
+              ZREF="gridFlange_dz"
+              YREF="gridFlange_dt" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridFlangeLong"
+              ZREF="gridFlange_dz"
+              YREF="gridFlange_dtn" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridFlangeShort"
+              zrot="90"
+              ZREF="gridFlange_dz"
+              XREF="gridFlange_dt" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridFlangeShort"
+              zrot="90"
+              ZREF="gridFlange_dz"
+              XREF="gridFlange_dtn" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="3" />
+      </posXYZ>
+
+<!-- grid web pieces -->
+      <posXYZ volume="towerGridWebLong"
+              ZREF="gridWeb_dz"
+              YREF="gridWeb_dt" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridWebLong"
+              ZREF="gridWeb_dz"
+              YREF="gridWeb_dtn" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridWebShort"
+              zrot="90"
+              ZREF="gridWeb_dz"
+              XREF="gridWeb_dt" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="towerGridWebShort"
+              zrot="90"
+              ZREF="gridWeb_dz"
+              XREF="gridWeb_dtn" >
+        <idField name="fTowerObjects" valueREF="eTowerGrid" />
+        <idField name="fGridObjects" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="oneCAL"
+              ZREF="CAL_dz" >
+        <idField name="fTowerObjects" valueREF="eTowerCAL" />
+      </posXYZ>
+    </composition>
