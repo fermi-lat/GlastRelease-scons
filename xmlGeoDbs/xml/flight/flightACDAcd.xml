@@ -721,7 +721,12 @@
      detectorTypeREF="eDTypeACDTile" />
 
 <!-- Side ribbons are all congruent.  Define one with width in x,
-     thickness in y.  Rotate for the opposite. -->
+     thickness in y.  Rotate for the opposite. 
+     Well, actually they're not.  X ribbons are longer than
+     Y ribbons.  And neither goes all the way to the bottom of the
+     side tiles: they're about 30 mm short.  Tiles go down to
+     -45.5 mm; ribbons go down to -15.67.
+-->
 <box name="sideRibbon"
      XREF="ribbonWidth"
      YREF="ribbonThickness"

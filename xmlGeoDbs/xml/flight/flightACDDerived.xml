@@ -1015,7 +1015,13 @@
          <const name="ribbonsSideZ">
            <notes>Height of envelope volume to contain 4 side
                   ribbons. The envelope extends from bottom of 
-                  ACDTop volume to back edge of side tiles.</notes>
+                  ACDTop volume to back edge of side tiles.
+                  But this isn't quite right!  They only go
+                  down to a Z of -15.67 mm, whereas tiles go
+                  down to -45.5.  Furthermore, the side parts
+                  of X-ribbons should go higher:  nearly up to
+                  underside of the top tiles.
+           </notes>
            <minus>
               <minus>
                 <refer refTo="ACDTop_d" />
