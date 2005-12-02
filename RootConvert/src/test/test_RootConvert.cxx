@@ -2,6 +2,7 @@
 #include <RootConvert/MonteCarlo/McPositionHitConvert.h>
 #include <RootConvert/Recon/CalClusterConvert.h>
 #include <RootConvert/Recon/CalEventEnergyConvert.h>
+#include <RootConvert/Recon/AcdReconConvert.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TRandom.h"
 #include <iostream>
@@ -41,6 +42,7 @@ int main( int /* argc */, char ** /* argv */ ) {
     result = result && rootdatautil::CompareInRange(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
     result = result && check<Event::CalCluster,CalCluster>(randNum) ;
     result = result && check<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
+    result = result && check<Event::AcdRecon,AcdRecon>(randNum) ;
     
     if (result) {
       std::cout<<"RootConvert test succeeded"<<std::endl ;
