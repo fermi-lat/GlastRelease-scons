@@ -50,7 +50,7 @@
 &oneTower;
 
     <box name="allTowersEnv"
-         XREF="towersTrans" YREF="towersTrans" ZREF="towersTotalZ" />
+         XREF="towersTrans" YREF="towerPitch" ZREF="towersTotalZ" />
 
     <composition name="allTowers" envelope="allTowersEnv" > 
 
