@@ -1,9 +1,10 @@
 #include "reconRootData/AcdRecon.h"
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(AcdRecon)
 
-static const maxDoca = 2000.0;
+static const Double_t maxDoca = 2000.0;
 
 AcdRecon::AcdRecon() {
   m_acdTkrIntersectionCol = 0;
@@ -144,5 +145,79 @@ AcdTkrIntersection* AcdRecon::addAcdTkrIntersection(AcdTkrIntersection& inter) {
   TClonesArray& intersects = *m_acdTkrIntersectionCol;
   new (intersects[numInter]) AcdTkrIntersection(inter);  
   return (AcdTkrIntersection*)(intersects[numInter]);
+}
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void AcdRecon::Fake( UInt_t rank, Float_t randNum ) {
+
+    Float_t f = Float_t(rank);
+    Double_t energy = f ;
+    Double_t ribbonE = energy;
+    Int_t count = 5;
+    Int_t ribbonCount = 2;
+    Double_t gDoca = f*randNum;
+    Double_t doca = randNum;
+    Double_t actDist = 2.*f;
+    Double_t ribActDist = 3.*f;
+    AcdId minDocaId(0, 0, 3, 2);
+    AcdId maxActDistId(0,0,2,2);
+    AcdId ribActDistId(0,1,4,3);
+    ribActDistId.setReadoutIndex(rank) ;
+    std::vector<Double_t> rowDocaCol;
+    rowDocaCol.push_back(randNum);
+    rowDocaCol.push_back(f);
+    std::vector<Double_t> rowActDistCol ;
+    rowActDistCol.push_back(randNum) ;
+    rowActDistCol.push_back(f) ;
+    std::vector<AcdId> idCol ;
+    idCol.push_back(AcdId(0, 0, 3, 2)) ;
+    idCol.push_back(AcdId(0, 2, 2, 1)) ;
+    std::vector<Double_t> energyCol ;
+    energyCol.push_back(f) ;
+    energyCol.push_back(2.*f) ;
+    Double32_t cornerDoca = f*randNum ;
+    
+    initialize(
+        energy, ribbonE, count, ribbonCount, gDoca, doca, 
+        minDocaId, actDist, maxActDistId,
+        ribActDist, ribActDistId,
+        rowDocaCol, rowActDistCol,
+        idCol, energyCol, cornerDoca
+    ) ;
+ }
+
+#define UTIL_COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),a.get ## att(),#att)
+#define ID_COMPARE_IN_RANGE(att) get ## att().CompareInRange(a.get ## att(),#att)
+
+Bool_t AcdRecon::CompareInRange( const AcdRecon & a ) const {
+
+    bool result = true ;
+
+    result = result && UTIL_COMPARE_IN_RANGE(Energy) ;
+    result = result && UTIL_COMPARE_IN_RANGE(RibbonEnergy) ;
+    result = result && UTIL_COMPARE_IN_RANGE(TileCount) ;
+    result = result && UTIL_COMPARE_IN_RANGE(RibbonCount) ;
+    result = result && UTIL_COMPARE_IN_RANGE(GammaDoca) ;
+    result = result && UTIL_COMPARE_IN_RANGE(Doca) ;
+    result = result && ID_COMPARE_IN_RANGE(MinDocaId) ;
+    result = result && UTIL_COMPARE_IN_RANGE(ActiveDist) ;
+    result = result && UTIL_COMPARE_IN_RANGE(RibbonActiveDist) ;
+    result = result && ID_COMPARE_IN_RANGE(MinDocaId) ;
+    result = result && ID_COMPARE_IN_RANGE(MaxActDistId) ;
+    result = result && ID_COMPARE_IN_RANGE(RibbonActDistId) ;
+    result = result && UTIL_COMPARE_IN_RANGE(RowDocaCol) ;
+    result = result && UTIL_COMPARE_IN_RANGE(RowActDistCol) ;
+    result = result && UTIL_COMPARE_IN_RANGE(EnergyCol) ;
+    result = result && UTIL_COMPARE_IN_RANGE(IdCol) ;
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+    }
+    return result ;
+
 }
 

@@ -563,7 +563,6 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
         return -1;
     }
     TIter trackIt(trackCol);
-    TObject *trackObj = 0;
     while ( TkrTrack* track = (TkrTrack*) trackIt.Next() ) 
     {
         if (checkTrack(track, ievent, iTrack) < 0) return -1;
@@ -594,144 +593,13 @@ int checkTkrRecon(TkrRecon *tkr, UInt_t ievent) {
 
 int checkAcdRecon(AcdRecon *acd, UInt_t ievent) {
 
-    Float_t f = Float_t (ievent);
-    Float_t fr = f*randNum;
+    AcdRecon acdReconRef ;
+    acdReconRef.Fake(ievent,randNum) ;
+    if (acd->CompareInRange(acdReconRef))
+      return 0 ;
+    else
+      return -1 ;
 
-    if (!floatInRange(acd->getEnergy(), f)) {
-        std::cout << "AcdRecon energy is wrong: " << acd->getEnergy() << std::endl;
-        return -1;
-    }
-    if (!floatInRange(acd->getRibbonEnergy(), f)) {
-        std::cout << "AcdRecon ribbon energy is wrong: " << acd->getRibbonEnergy() << std::endl;
-        return -1;
-    }
-
-    if (acd->getTileCount() != 5) {
-        std::cout << "AcdRecon tile count is wrong: " << acd->getTileCount() << std::endl;
-        return -1;
-    }
-    if (acd->getRibbonCount() != 2) {
-        std::cout << "AcdRecon ribbon count is wrong: " << acd->getRibbonCount() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(acd->getGammaDoca(), fr)) {
-        std::cout << "AcdRecon Gamma Doca is wrong: " << acd->getGammaDoca() << std::endl;
-        return -1;
-    }
-    if (!floatInRange(acd->getCornerDoca(), fr)) {
-        std::cout << "AcdRecon Corner Doca is wrong: " << acd->getCornerDoca() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(acd->getDoca(), randNum) ){
-        std::cout << "AcdRecon Doca is wrong: " << acd->getDoca() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(acd->getActiveDist(), 2.*f) ) {
-        std::cout << "AcdRecon Active Dist is wrong: " << acd->getActiveDist() << std::endl;
-        return -1;
-    }
-
-    if (!floatInRange(acd->getRibbonActiveDist(), 3.*f) ) {
-        std::cout << "AcdRecon Ribbon Active Dist is wrong: " << acd->getRibbonActiveDist() << std::endl;
-        return -1;
-    }
-
-    AcdId ribActDistId = acd->getRibbonActDistId();
-    if ((ribActDistId.getLayer() != 0) || (ribActDistId.getFace() != 1) ||
-        (ribActDistId.getRow() != 4) || (ribActDistId.getColumn() != 3) ) {
-            std::cout << "ribbonActDist AcdID is wrong: " 
-                << ribActDistId.getLayer() << " "
-                << ribActDistId.getFace() << " " << ribActDistId.getRow() << " "
-                << ribActDistId.getColumn() << std::endl;
-            return -1;
-     }
-
-    AcdId acdMinDocaId = acd->getMinDocaId();
-    if ((acdMinDocaId.getLayer() != 0) || (acdMinDocaId.getFace() != 0) ||
-        (acdMinDocaId.getRow() != 3) || (acdMinDocaId.getColumn() != 2) ) {
-            std::cout << "MinDoca AcdID is wrong: " << acdMinDocaId.getLayer() << " "
-                << acdMinDocaId.getFace() << " " << acdMinDocaId.getRow() << " "
-                << acdMinDocaId.getColumn() << std::endl;
-            return -1;
-        }
-
-  AcdId acdMaxActDistId = acd->getMaxActDistId();   
-     if ((acdMaxActDistId.getLayer() != 0) || (acdMaxActDistId.getFace() != 0) ||   
-         (acdMaxActDistId.getRow() != 2) || (acdMaxActDistId.getColumn() != 2) )   
-     {   
-             std::cout << "MaxActDist AcdID is wrong: "   
-                 << acdMaxActDistId.getLayer() << " "   
-                 << acdMaxActDistId.getFace() << " "   
-                 << acdMaxActDistId.getRow() << " "   
-                 << acdMaxActDistId.getColumn() << std::endl;   
-             return -1;   
-      } 
-
-
-        std::vector<Double_t> rowCol = acd->getRowDocaCol();
-        if (rowCol.size() != 2) {
-            std::cout << "AcdRecon number of row entries is wrong: " << rowCol.size() << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange(rowCol[0], randNum) ) {
-            std::cout << "AcdRecon row doca 0 is wrong: " << rowCol[0] << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange(rowCol[1], f) ) {
-            std::cout << "AcdRecon row doca 1 is wrong: " << rowCol[1] << std::endl;
-            return -1;
-        }
-
-        std::vector<Double_t> rowActDistCol = acd->getRowActDistCol();
-        if (rowActDistCol.size() != 2) {
-            std::cout << "AcdRecon number of row actDist entries is wrong: " << rowActDistCol.size() << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange(rowActDistCol[0], randNum) ) {
-            std::cout << "AcdRecon row actdist 0 is wrong: " << rowActDistCol[0] << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange(rowActDistCol[1], f) ) {
-            std::cout << "AcdRecon row actdist 1 is wrong: " << rowActDistCol[1] << std::endl;
-            return -1;
-        }
-
-        std::vector<AcdId> idCol = acd->getIdCol();
-        if (idCol.size() != 2) {
-            std::cout << "AcdRecon number of ids is wrong: " << acd->getIdCol().size() << std::endl;
-            return -1;
-        }
-        if ( !(idCol[0] == AcdId(0, 0, 3, 2)) ) {
-
-        }
-
-        if ( !(idCol[1] == AcdId(0, 2, 2, 1))) {
-
-        }
-
-        std::vector<Double_t> energyCol = acd->getEnergyCol();
-        if (energyCol.size() != 2) {
-            std::cout << "AcdRecon number of energies is wrong: " << acd->getEnergyCol().size() << std::endl;
-            return -1;
-        }
-        if (!floatInRange(energyCol[0], f) ) {
-            std::cout << "AcdRecon first energy is wrong: " << energyCol[0] << std::endl;
-            return -1;
-        }
-
-        if (!floatInRange(energyCol[1], f*2.) ) {
-            std::cout << "AcdRecon 2nd energy is wrong: " << energyCol[1] << std::endl;
-            return -1;
-        }
-
-        return 0;
 }
 
 
@@ -788,39 +656,12 @@ int write(char* fileName, int numEvents) {
     randNum = randGen.Rndm();
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        Float_t f = Float_t(ievent);
+        Float_t f = Float_t(ievent) ;
 
         // Create AcdRecon object
-        AcdRecon *acdRec = new AcdRecon();
-        Double_t energy = f;
-        Double_t ribbonE = energy;
-        Int_t count = 5;
-        Int_t ribbonCount = 2;
-        Double_t gDoca = f*randNum;
-        Double_t doca = randNum;
-        Double_t actDist = 2.*f;
-        Double_t ribActDist = 3.*f;
-        AcdId minDocaId(0, 0, 3, 2);
-        AcdId maxActDistId(0,0,2,2);
-        AcdId ribActDistId(0,1,4,3);
-        std::vector<Double_t> rowDocaCol;
-        rowDocaCol.push_back(randNum);
-        rowDocaCol.push_back(f);
-        std::vector<Double_t> rowActDistCol;
-        rowActDistCol.push_back(randNum);
-        rowActDistCol.push_back(f);
-        std::vector<AcdId> idCol;
-        idCol.push_back(AcdId(0, 0, 3, 2));
-        idCol.push_back(AcdId(0, 2, 2, 1));
-        std::vector<Double_t> energyCol;
-        energyCol.push_back(f);
-        energyCol.push_back(2.*f);
-        Double32_t cornerDoca = f*randNum;
-        acdRec->initialize(energy, ribbonE, count, ribbonCount, gDoca, doca, 
-            minDocaId,
-            actDist, maxActDistId, ribActDist, ribActDistId, rowDocaCol, 
-            rowActDistCol, idCol, energyCol, cornerDoca);
-
+        AcdRecon * acdRec = new AcdRecon() ;
+        acdRec->Fake(ievent,randNum) ;
+        
         // Create CalRecon object
         CalRecon *calRec = new CalRecon();
         calRec->initialize();
@@ -876,7 +717,7 @@ int write(char* fileName, int numEvents) {
             UInt_t rawTot = 50;
             Double_t tot =  f;
             UInt_t flag = 1;
-            UInt_t tower = 8;
+            //unused UInt_t tower = 8;
             UInt_t nBad  = 0;
             TkrCluster *cluster = new TkrCluster(tkrId, strip0, stripf, pos, rawTot, tot, flag, nBad);
             tkrRec->addCluster(cluster);

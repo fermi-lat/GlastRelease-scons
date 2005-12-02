@@ -41,6 +41,15 @@ CalCluster::CalCluster
    Int_t numTruncXtals, UInt_t statusBits )
  { init(layers,params,rmsLong,rmsLongAsym,rmsTrans,numTruncXtals,statusBits) ; }
 
+void CalCluster::Print( Option_t * ) const
+ {
+  m_params.Print() ;
+  std::cout
+    <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
+    <<"RMS Long: "<<m_rmsLong<<"RMS Long Asym: "<<m_rmsLongAsym<<"  RMS Trans: "<<m_rmsTrans<<"\n"
+    <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
+ }
+
 // dummy data, just for tests
 void CalCluster::Fake( UInt_t rank, Float_t randNum )
  {
@@ -54,15 +63,6 @@ void CalCluster::Fake( UInt_t rank, Float_t randNum )
         clusLayerData.push_back(layer) ;
     }
     init(clusLayerData,p,1.0,2.0,3.0,4,5) ;
- }
-
-void CalCluster::Print( Option_t * ) const
- {
-  m_params.Print() ;
-  std::cout
-    <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
-    <<"RMS Long: "<<m_rmsLong<<"RMS Long Asym: "<<m_rmsLongAsym<<"  RMS Trans: "<<m_rmsTrans<<"\n"
-    <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
  }
 
 Bool_t CalCluster::CompareInRange( const CalCluster & c ) const {
