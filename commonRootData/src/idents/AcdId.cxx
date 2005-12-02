@@ -8,21 +8,25 @@
 // Dec 1999 Daniel Flath - Rewrite for GLAST
 // Version 1.1 25 Oct 1999 R.Dubois Clone from LCD towerID
 
-#include "commonRootData/idents/AcdId.h"
+#include <commonRootData/idents/AcdId.h>
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(AcdId)
 
 UShort_t AcdId::badId = 3799;
 
-AcdId::AcdId() : m_id(0), m_used(1) {
+AcdId::AcdId()
+ : m_id(0), m_used(1) {
 }
 
-AcdId::AcdId(const AcdId& id) : TObject(id), m_id(id.m_id), m_used(id.m_used) 
+AcdId::AcdId(const AcdId& id)
+ : TObject(id), m_id(id.m_id), m_used(id.m_used) 
 { 
 }
 
-AcdId::AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c) {
+AcdId::AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c)
+ : m_id(0), m_used(1) {
     m_used = 1;
     m_id = 0;
     setLayer(l);
@@ -31,7 +35,8 @@ AcdId::AcdId(UShort_t l, UShort_t f, UShort_t r, UShort_t c) {
     setColumn(c);
 }
 
-AcdId::AcdId(UShort_t ribbonOrient, UShort_t r) {
+AcdId::AcdId(UShort_t ribbonOrient, UShort_t r)
+ : m_id(0), m_used(1) {
     m_used = 1;
     m_id = 0;
     setRibbonNumber(r);
@@ -39,7 +44,8 @@ AcdId::AcdId(UShort_t ribbonOrient, UShort_t r) {
 }
 
 
-AcdId::AcdId(UInt_t i, Short_t base, Short_t used) {
+AcdId::AcdId(UInt_t i, Short_t base, Short_t used)
+ : m_id(0), m_used(1) {
     setId(i, used, base);
 }
 
@@ -59,9 +65,25 @@ void AcdId::initialize(UShort_t ribOrient, UShort_t ribNum) {
     setRibbonOrientation(ribOrient);
 }
 
-void AcdId::Clear(Option_t *option) {
+void AcdId::Clear(Option_t *) {
     m_used = 1;
     m_id = 0;
+}
+
+Bool_t AcdId::CompareInRange( const AcdId & id, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = result && rootdatautil::CompareInRange(m_id,id.m_id,"Id") ;
+    result = result && rootdatautil::CompareInRange(m_used,id.m_used,"Used") ;
+    // apparently readoutIndex is obsolete
+    //result = result && rootdatautil::CompareInRange(m_readoutIndex,id.m_readoutIndex,"ReadoutIndex") ;
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+    return result ;
+
 }
 
 void AcdId::Print(Option_t *option) const {

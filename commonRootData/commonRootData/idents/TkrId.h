@@ -59,7 +59,7 @@ namespace commonRootData {
 
     ~TkrId() {};
 
-    void Clear(Option_t *option ="") {m_packedId = 0;}
+    void Clear(Option_t * ="") {m_packedId = 0;}
 
     bool isEqual(const TkrId& other) {
       return ((m_packedId == other.m_packedId));

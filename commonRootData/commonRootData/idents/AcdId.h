@@ -3,6 +3,7 @@
 #define commonRootData_AcdId_H
 
 #include "TObject.h"
+#include <string>
 
 /** @class AcdId
  @brief encapsulate the id for an ACD detector.
@@ -74,7 +75,7 @@ public:
     virtual ~AcdId() { };
 
     void Clear(Option_t *option ="");
-
+    Bool_t CompareInRange( const AcdId &, const std::string & ="unknown AcdId" ) const ; // for tests
     void Print(Option_t *option="") const;
 
     /// retrieve the id, either in base 2

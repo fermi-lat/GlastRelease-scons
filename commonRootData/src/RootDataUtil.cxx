@@ -42,7 +42,13 @@ bool DirectCompareInRangeRefs( const T & v1, const T & v2, const std::string & n
   return false ;
 }
 
-bool CompareInRange( Double_t v1, Double_t v2, const std::string & name ) {
+template <class T>
+bool DelegatedCompareInRangeRefs( const T & v1, const T & v2, const std::string & name ) {
+  return v1.CompareInRange(v2) ;
+}
+
+template <class T>
+bool RealCompareInRangeVals( T v1, T v2, const std::string & name ) {
   const Double_t fudge=0.00001 ;
   if ((v1>=(v2-fudge))&&(v1<=(v2+fudge)) ){
     return true ;
@@ -52,6 +58,34 @@ bool CompareInRange( Double_t v1, Double_t v2, const std::string & name ) {
     <<v1<<" != "<<v2
     <<std::endl ;
   return false ;
+}
+
+template <class StdCollection>
+bool StdCollectionCompareInRange(
+    const StdCollection & col1,
+    const StdCollection & col2,
+    const std::string & name ) {
+    
+    bool res = CompareInRange(col1.size(),col2.size(),name+" size") ;
+    if (!res) return res ;
+     
+    typename StdCollection::const_iterator itr1 ;
+    typename StdCollection::const_iterator itr2 ;
+    for ( itr1 = col1.begin(), itr2 =col2.begin() ;
+          ( itr1 != col1.end() ) && ( itr2 != col2.end() ) ;
+          ++itr1, ++itr2 )
+        res = res && CompareInRange(*itr1,*itr2,name+" element") ;
+    
+    return res ;
+}
+
+
+//============================================================
+// Interface Implementation
+//============================================================
+
+bool CompareInRange( Double_t v1, Double_t v2, const std::string & name ) {
+    return RealCompareInRangeVals(v1,v2,name) ;
 }
 
 bool CompareInRange( Int_t v1, Int_t v2, const std::string & name ) {
@@ -95,4 +129,22 @@ bool CompareInRange( void * v1, void * v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;
 }
  
+bool CompareInRange( const AcdId & v1, const AcdId & v2, const std::string & name ) {
+    return DelegatedCompareInRangeRefs(v1,v2,name) ;
+}
+ 
+bool CompareInRange(
+    const std::vector<Double_t> & col1,
+    const std::vector<Double_t> & col2,
+    const std::string & name ) {
+    return StdCollectionCompareInRange(col1,col2,name) ;
+}
+
+bool CompareInRange(
+    const std::vector<AcdId> & col1,
+    const std::vector<AcdId> & col2,
+    const std::string & name ) {
+    return StdCollectionCompareInRange(col1,col2,name) ;
+}
+
 }
