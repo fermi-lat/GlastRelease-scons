@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r27   1-Dec-2005   jrb (for Leon) Add cu06 geometry with proper 4x1 
+                            (long in X dimension) grid
    v1r26   29-Nov-2005  jrb Try again.  Mysteriously, MRvcmt rtag didn't tag
    v1r26   29-Nov-2005  jrb Make top tiles overlap in the correct direction.
                             One row overlaps another. Row 2 is at lowest Z.
