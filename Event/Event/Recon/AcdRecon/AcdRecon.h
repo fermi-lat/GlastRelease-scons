@@ -83,6 +83,9 @@ namespace Event {
             m_rowActDist3DCol.resize(4, -2000.0);
         };
 
+        // DC: this was, as compared to the previous one,
+        // has two additionnal ribbon* arguments, and
+        // three 
         AcdRecon(double e, double ribbonE, int count, int ribbonCount, 
             double gDoca, double doca, 
             const idents::AcdId &minDocaId, double actDist,
@@ -91,10 +94,11 @@ namespace Event {
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
-            double ribbon_actDist, const idents::AcdId ribbon_actDist_id,
-	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-	    double actDist3D, const idents::AcdId &maxActDist3DId, 
-	    const std::vector<double> &rowActDist3D, double cornerDoca)
+            double ribbon_actDist, const idents::AcdId ribbon_actDist_id, // additionnal
+            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+            double actDist3D, const idents::AcdId &maxActDist3DId,        // additionnal
+            const std::vector<double> &rowActDist3D,                      // additionnal
+            double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonE),
             m_tileCount(count),
