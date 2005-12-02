@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r27p1 1-Dec-2005   jrb Merge new stuff from v1r26 ACD upgrade into 
+                            latAssembly/latACDDimPrimUnshrunk.xml 
    v1r27   1-Dec-2005   jrb (for Leon) Add cu06 geometry with proper 4x1 
                             (long in X dimension) grid
    v1r26   29-Nov-2005  jrb Try again.  Mysteriously, MRvcmt rtag didn't tag
