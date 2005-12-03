@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   24-nov-05  v6r29   THB  Allow partial suppression of ExposureAlg tick message
    24-nov-05  v6r28p2 THB  fix bug in setting up history file; set startdate for sources
    30-sep-05  v6r28p1 THB  finish the job by adding the genericSources sources the the xml list
    29-sep-05  v6r28   THB  make use of celestialSources public, to give access to the Science Tools sources
