@@ -58,6 +58,7 @@ private:
     StringProperty m_root_tree;
     StringProperty m_pointing_history_input_file;
 
+    IntegerProperty m_print_frequency;
     IFluxSvc*   m_fluxSvc;
 
     int         m_tickCount; // number of ticks processed
@@ -80,6 +81,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("root_tree",m_root_tree="pointing_history"); //doesn't work???
 
+    declareProperty("PrintFrequency", m_print_frequency=1);
 }
 
 //------------------------------------------------------------------------
@@ -149,20 +151,22 @@ StatusCode ExposureAlg::execute()
     }
     m_history.set(m_lasttime);
 
-    log << MSG::INFO;
-    if( log.isActive() ){
-        std::stringstream t;
-        t   << "tick at " << std::setprecision(10)
-            << m_lasttime - m_initial_time << " sec"
-            << std::setprecision(3)
-            << ", lat, lon, B, L = " 
-            << m_history.lat_geo << ", " 
-            << m_history.lon_geo << ", "
-            << m_history.B << ", " 
-            << m_history.L;
-        log << t.str();
+    if(  m_tickCount% m_print_frequency==0){
+        log << MSG::INFO;
+        if( log.isActive() ){
+            std::stringstream t;
+            t   << "tick at " << std::setprecision(10)
+                << m_lasttime - m_initial_time << " sec"
+                << std::setprecision(3)
+                << ", lat, lon, B, L = " 
+                << m_history.lat_geo << ", " 
+                << m_history.lon_geo << ", "
+                << m_history.B << ", " 
+                << m_history.L;
+            log << t.str();
+        }
+        log << endreq;
     }
-    log << endreq;
 
     m_tickCount++;
     return sc;
