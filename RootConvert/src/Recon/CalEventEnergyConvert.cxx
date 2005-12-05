@@ -55,7 +55,7 @@ void convert( const CalCorToolResult & rootResult, Event::CalCorToolResult & tds
 void convert( const Event::CalEventEnergy & tdsEventEnergy, CalEventEnergy & rootEventEnergy ) {
 
     TObjArray rootResults ;
-    ObjectVector<Event::CalCorToolResult>::const_iterator tdsResult ;
+    Event::CalCorToolResultCol::const_iterator tdsResult ;
     for ( tdsResult=tdsEventEnergy.begin() ;
           tdsResult!=tdsEventEnergy.end() ;
           ++tdsResult ) {
