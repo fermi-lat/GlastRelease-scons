@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r2p1     05-Dec-05 DC  bug fix in CalEventEnergyAlg, and upgrade reference outputs for unit tests
   v6r2       25-Nov-05 DC  review status bits, CalEventEnergyCol, doEnergyCorr receive all
                            the clusters once, and reimplement selection of "best" without explicit steps.
   v6r1p14    18-Aug-05 PA  bug in previous change: incorrect access to data tables for CalTkrLikelihoodTool
