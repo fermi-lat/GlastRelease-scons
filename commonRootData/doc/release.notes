@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r5    05-Dec-2005 DC  Unit tests utilities for AcdDigi and collections
 v2r4    09-Sep-2005 HMK Replace layer with n/a in AcdId
 v2r3    02-Sep-2005 HMK Use any RootcintPolicy
 v2r2    08-Jul-2005 DC  Introduce new CompareInRange methods

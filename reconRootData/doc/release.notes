@@ -3,6 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r6p3    05-Dec-05  : DC move AcdRecon fake and test code into the class
+                       so that it can be reused in RootConvert
 v8r6p2    25-Nov-05  : DC reorder inits to avoid painful warnings
 v8r6p1    17-Nov-05  : HMK Make sure to init DOCA and ActDist properly
 v8r6      08-Nov-05  : HMK Add new AcdRecon cornerDoca
