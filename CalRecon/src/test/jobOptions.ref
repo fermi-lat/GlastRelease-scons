@@ -36,12 +36,13 @@ CalCalibSvc.DefaultFlavor  = "ideal" ;
 
 // algorithms skeleton
 ApplicationMgr.DLLs += { "GaudiAlg", "RootIo" } ;
-ApplicationMgr.TopAlg = { "PropertiesCheckAlg" } ;  
-ApplicationMgr.TopAlg += { "TkrCalibAlg" } ;
-ApplicationMgr.TopAlg += { "Sequencer/Simulation" } ;
-ApplicationMgr.TopAlg += { "Sequencer/Reconstruction" } ;
+ApplicationMgr.TopAlg += { "Sequencer/Top" } ;
+Top.Members = { "PropertiesCheckAlg" } ;  
+Top.Members += { "TkrCalibAlg" } ;
+Top.Members += { "Sequencer/Simulation" } ;
+Top.Members += { "Sequencer/Reconstruction" } ;
 PropertiesCheckAlg.exclude = {
-  "ApplicationMgr", "EventSelector", "MessageSvc", "", "", "",
+  "ApplicationMgr", "EventSelector", "MessageSvc", "FluxSvc",
   "GlastDetSvc", "DetectorPersistencySvc", "EventPersistencySvc",
   "CalibDataSvc", "CalCalibSvc",
   "PropertiesCheckAlg" } ;
@@ -61,13 +62,13 @@ reconRootReaderAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/re
 // calo reconstruction second pass
 ApplicationMgr.DLLs += { "CalRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg" } ;
-ApplicationMgr.TopAlg += { "test_CalRecon" } ;
+Reconstruction.Members += { "CalClustersAlg", "CalEventEnergyAlg" } ;
+Top.Members += { "test_CalRecon" } ;
 
 
 
 
-Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/v5r999/src/test/jobOptions.txt
+Job options successfully read in from /home/chamont/Glast/CalReconDev/CalRecon/v6r999/src/test/jobOptions.txt
 ApplicationMgr      DEBUG Getting my own properties
 DllClassManager     DEBUG Found factory Algorithm SetSeeds
 DllClassManager     DEBUG Found factory MCEventCnv
@@ -81,10 +82,11 @@ DllClassManager     DEBUG Found factory EventCnv
 ConverterFactory    DEBUG Added converter for class:EventCnv Storage id:1 clID:110
 DllClassManager     DEBUG Loaded 8 factories from module GlastSvc
 DllClassManager     DEBUG Found factory Service G4GeometrySvc
+DllClassManager     DEBUG Found factory Service G4GenErrorSvc
 DllClassManager     DEBUG Found factory G4GeneratorRandom
 ObjectManager       DEBUG Added object factory for class:G4GeneratorRandom
 DllClassManager     DEBUG Found factory Algorithm G4Generator
-DllClassManager     DEBUG Loaded 3 factories from module G4Generator
+DllClassManager     DEBUG Loaded 4 factories from module G4Generator
 DllClassManager     DEBUG Found factory G4PropagatorTool
 ObjectManager       DEBUG Added object factory for class:G4PropagatorTool
 DllClassManager     DEBUG Found factory G4PropagationTool
@@ -98,10 +100,12 @@ DllClassManager     DEBUG Found factory TkrMakeClustersTool
 ObjectManager       DEBUG Added object factory for class:TkrMakeClustersTool
 DllClassManager     DEBUG Found factory Service TkrGeometrySvc
 DllClassManager     DEBUG Found factory Service TkrFailureModeSvc
+DllClassManager     DEBUG Found factory TkrEnergyTool
+ObjectManager       DEBUG Added object factory for class:TkrEnergyTool
 DllClassManager     DEBUG Found factory Algorithm TkrCalibAlg
 DllClassManager     DEBUG Found factory Service TkrBadStripsSvc
 DllClassManager     DEBUG Found factory Service TkrAlignmentSvc
-DllClassManager     DEBUG Loaded 9 factories from module TkrUtil
+DllClassManager     DEBUG Loaded 10 factories from module TkrUtil
 DllClassManager     DEBUG Found factory Service CalFailureModeSvc
 DllClassManager     DEBUG Loaded 1 factories from module CalUtil
 DllClassManager     DEBUG Found factory XmlTkrSplitsCnv
@@ -146,14 +150,13 @@ DllClassManager     DEBUG Found factory Service CalibMySQLCnvSvc
 DllClassManager     DEBUG Found factory Algorithm CalibEvtClock
 DllClassManager     DEBUG Found factory Service CalibDataSvc
 DllClassManager     DEBUG Loaded 23 factories from module CalibSvc
-DllClassManager     DEBUG Found factory XtalPosTool
-ObjectManager       DEBUG Added object factory for class:XtalPosTool
-DllClassManager     DEBUG Found factory XtalEneTool
-ObjectManager       DEBUG Added object factory for class:XtalEneTool
-DllClassManager     DEBUG Found factory XtalADCTool
-ObjectManager       DEBUG Added object factory for class:XtalADCTool
+DllClassManager     DEBUG Found factory XtalRecTool
+ObjectManager       DEBUG Added object factory for class:XtalRecTool
+DllClassManager     DEBUG Found factory XtalDigiTool
+ObjectManager       DEBUG Added object factory for class:XtalDigiTool
 DllClassManager     DEBUG Found factory CalXtalRespRandom
 ObjectManager       DEBUG Added object factory for class:CalXtalRespRandom
+DllClassManager     DEBUG Found factory Algorithm CalXtalRecAlg
 DllClassManager     DEBUG Found factory Service CalCalibSvc
 DllClassManager     DEBUG Loaded 5 factories from module CalXtalResponse
 DllClassManager     DEBUG Found factory Algorithm EventCounter
@@ -161,29 +164,26 @@ DllClassManager     DEBUG Found factory Algorithm Prescaler
 DllClassManager     DEBUG Found factory Algorithm Sequencer
 DllClassManager     DEBUG Found factory Algorithm GaudiAlgorithm
 DllClassManager     DEBUG Loaded 4 factories from module GaudiAlg
+DllClassManager     DEBUG Found factory Service RootIoSvc
+DllClassManager     DEBUG Found factory RootIoRandom
+ObjectManager       DEBUG Added object factory for class:RootIoRandom
 DllClassManager     DEBUG Found factory Algorithm relationRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm relationRootReaderAlg
 DllClassManager     DEBUG Found factory Algorithm reconRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm reconRootReaderAlg
 DllClassManager     DEBUG Found factory Algorithm mcRootWriterAlg
 DllClassManager     DEBUG Found factory Algorithm mcRootReaderAlg
-DllClassManager     DEBUG Found factory Algorithm digiRootWriterAlg
-DllClassManager     DEBUG Found factory Algorithm digiRootReaderAlg
-DllClassManager     DEBUG Found factory Service RootIoSvc
-DllClassManager     DEBUG Found factory RootIoRandom
-ObjectManager       DEBUG Added object factory for class:RootIoRandom
 DllClassManager     DEBUG Found factory FhTool
 ObjectManager       DEBUG Added object factory for class:FhTool
 DllClassManager     DEBUG Found factory Algorithm FhSetAlg
 DllClassManager     DEBUG Found factory Algorithm FhDemoGetAlg
 DllClassManager     DEBUG Found factory Algorithm FhDemoCaloSetAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootWriterAlg
+DllClassManager     DEBUG Found factory Algorithm digiRootReaderAlg
 DllClassManager     DEBUG Loaded 14 factories from module RootIo
+DllClassManager     DEBUG Found factory StdMipFindingTool
+ObjectManager       DEBUG Added object factory for class:StdMipFindingTool
 DllClassManager     DEBUG Found factory Algorithm PropertiesCheckAlg
-DllClassManager     DEBUG Found factory ProfileTool
-ObjectManager       DEBUG Added object factory for class:ProfileTool
-DllClassManager     DEBUG Found factory LastLayerCorrTool
-ObjectManager       DEBUG Added object factory for class:LastLayerCorrTool
-DllClassManager     DEBUG Found factory Algorithm CalXtalRecAlg
 DllClassManager     DEBUG Found factory CalValsCorrTool
 ObjectManager       DEBUG Added object factory for class:CalValsCorrTool
 DllClassManager     DEBUG Found factory CalTransvOffsetTool
@@ -194,11 +194,20 @@ DllClassManager     DEBUG Found factory CalSingleClusteringTool
 ObjectManager       DEBUG Added object factory for class:CalSingleClusteringTool
 DllClassManager     DEBUG Found factory CalSimpleClusteringTool
 ObjectManager       DEBUG Added object factory for class:CalSimpleClusteringTool
-DllClassManager     DEBUG Found factory CalReconKernel
-ObjectManager       DEBUG Added object factory for class:CalReconKernel
+DllClassManager     DEBUG Found factory Service CalReconSvc
+DllClassManager     DEBUG Found factory CalRawEnergyTool
+ObjectManager       DEBUG Added object factory for class:CalRawEnergyTool
+DllClassManager     DEBUG Found factory CalProfileTool
+ObjectManager       DEBUG Added object factory for class:CalProfileTool
+DllClassManager     DEBUG Found factory Algorithm CalMipFinderAlg
+DllClassManager     DEBUG Found factory CalLastLayerLikelihoodTool
+ObjectManager       DEBUG Added object factory for class:CalLastLayerLikelihoodTool
+DllClassManager     DEBUG Found factory CalFullProfileTool
+ObjectManager       DEBUG Added object factory for class:CalFullProfileTool
+DllClassManager     DEBUG Found factory Algorithm CalEventEnergyAlg
 DllClassManager     DEBUG Found factory Algorithm CalDisplay
 DllClassManager     DEBUG Found factory Algorithm CalClustersAlg
-DllClassManager     DEBUG Loaded 12 factories from module CalRecon
+DllClassManager     DEBUG Loaded 16 factories from module CalRecon
 ApplicationMgr       INFO Successfully loaded modules: GlastSvc, G4Generator, G4Propagator, TkrUtil, CalUtil, CalibSvc, CalXtalResponse, GaudiAlg, RootIo, CalRecon
 ApplicationMgr       INFO Application Manager Configured successfully
 ServiceManager      DEBUG Initializing service EventSelector
@@ -216,7 +225,7 @@ detModel Doc Client: registered the materials!
 detModel Doc Client: registered the id dictionary!
 detModel Doc Client: registered the sections!
 GlastDetSvc          INFO  geometry setup: 
-    document = /home/chamont/Glast/LATEST1.1460//xmlGeoDbs/v1r22p2/xml/flight/flightSegVols.xml
+    document = /home/chamont/Glast/GlastRelease/v7r3/xmlGeoDbs/v1r25p4/xml/flight/flightSegVols.xml
         mode = recon
       topvol = LAT
 Summary of IDmap contents:
@@ -252,7 +261,7 @@ sideTileR2EdgeLesser         4
 ServiceManager      DEBUG Initializing service G4GeometrySvc
 G4GeometrySvc        INFO G4GeometrySvc Initialization started
 G4GeometrySvc       DEBUG Service base class initialized successfully
-	DetectorConstruction created 407, 137 physical, logical volumes, using  mode from G4Generator job options: recon
+	DetectorConstruction created 406, 136 physical, logical volumes, using  mode from G4Generator job options: recon
 G4GeometrySvc        INFO G4GeometrySvc Initialization completed successfully
 ServiceManager      DEBUG Initializing service CalibDataSvc
 CalibDataSvc        DEBUG Service base class initialized successfully
@@ -304,11 +313,13 @@ ServiceManager      DEBUG Initializing service AppMgrRunable
 AppMgrRunable       DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service EventLoopMgr
 EventLoopMgr        DEBUG Service base class initialized successfully
-EventLoopMgr        DEBUG Creating Top Algorithm PropertiesCheckAlg with name PropertiesCheckAlg
-EventLoopMgr        DEBUG Creating Top Algorithm TkrCalibAlg with name TkrCalibAlg
-EventLoopMgr        DEBUG Creating Top Algorithm Sequencer with name Simulation
-EventLoopMgr        DEBUG Creating Top Algorithm Sequencer with name Reconstruction
-EventLoopMgr        DEBUG Creating Top Algorithm test_CalRecon with name test_CalRecon
+EventLoopMgr        DEBUG Creating Top Algorithm Sequencer with name Top
+Top                 DEBUG PropertiesCheckAlg doesn't exist - created and appended to member list
+Top                 DEBUG TkrCalibAlg doesn't exist - created and appended to member list
+Top                 DEBUG Simulation doesn't exist - created and appended to member list
+Top                 DEBUG Reconstruction doesn't exist - created and appended to member list
+Top                 DEBUG test_CalRecon doesn't exist - created and appended to member list
+Top                  INFO Member list: PropertiesCheckAlg, TkrCalibAlg, Sequencer/Simulation, Sequencer/Reconstruction, test_CalRecon
 TkrCalibAlg          INFO Initialize()
 TkrCalibAlg         DEBUG Retrieved IDetDataSvc interface of CalibDataSvc
 TkrBadStripsSvc     DEBUG Service base class initialized successfully
@@ -412,200 +423,135 @@ Simulation          DEBUG reconRootReaderAlg doesn't exist - created and appende
 Simulation           INFO Member list: digiRootReaderAlg, reconRootReaderAlg
 RootIoSvc           DEBUG Service base class initialized successfully
 digiRootReaderAlg    INFO Opened file: /home/chamont/Glast/CalReconDev/rootTestData/v3r999/data/gamma_5_gev_normal/digi.root
+digiRootReaderAlg    INFO Input file does not contain new style index, rebuilding
 ToolSvc             DEBUG Retrieved toolFhTool
 reconRootReaderAlg   INFO Opened file: /home/chamont/Glast/CalReconDev/rootTestData/v3r999/data/gamma_5_gev_normal/recon.root
-Reconstruction      DEBUG CalXtalRecAlg doesn't exist - created and appended to member list
+reconRootReaderAlg   INFO Input file does not contain new style index, rebuilding
 Reconstruction      DEBUG CalClustersAlg doesn't exist - created and appended to member list
-Reconstruction       INFO Member list: CalXtalRecAlg, CalClustersAlg
-ToolSvc.XtalEne...   INFO initialize
-ToolSvc.XtalPos...   INFO initialize
-ToolSvc             DEBUG Retrieved toolCalReconKernel
-ToolSvc             DEBUG Retrieved toolCalSingleClusteringTool
-ToolSvc             DEBUG Retrieved toolCalReconKernel
-ToolSvc.LastLay...   INFO Initializing LastLayerCorrTool
-ToolSvc.LastLay...   INFO  value for c0 -35.3747
-ToolSvc.LastLay...   INFO  value for c1 68.1653
-ToolSvc.LastLay...   INFO  value for c0 -32.4386
-ToolSvc.LastLay...   INFO  value for c3 0.9933
-ToolSvc.LastLay...   INFO  value for b0 0.793
-ToolSvc.LastLay...   INFO  value for b1 0.045
-ToolSvc.LastLay...   INFO  value for k0 -2778
-ToolSvc.LastLay...   INFO  value for k1 6576
-ToolSvc.LastLay...   INFO  value for k2 -3797
-ToolSvc             DEBUG Retrieved toolCalReconKernel
-ToolSvc.Profile...   INFO Initializing ProfileTool
-ToolSvc.Profile...   INFO  value for CosThetaLimit 0.3
-ToolSvc.Profile...   INFO  value for BiasParNb9
-ToolSvc.Profile...   INFO  value for CosThetaParNb 3
-ToolSvc.Profile...   INFO  value for bias0 0.0187272
-ToolSvc.Profile...   INFO  value for bias1 -0.0271244
-ToolSvc.Profile...   INFO  value for bias2 0.0145653
-ToolSvc.Profile...   INFO  value for bias3 -0.0709624
-ToolSvc.Profile...   INFO  value for bias4 0.118555
-ToolSvc.Profile...   INFO  value for bias5 -0.0962898
-ToolSvc.Profile...   INFO  value for bias6 0.273117
-ToolSvc.Profile...   INFO  value for bias7 -0.604589
-ToolSvc.Profile...   INFO  value for bias8 0.452359
-ToolSvc             DEBUG Retrieved toolCalReconKernel
+Reconstruction      DEBUG CalEventEnergyAlg doesn't exist - created and appended to member list
+Reconstruction       INFO Member list: CalClustersAlg, CalEventEnergyAlg
+CalReconSvc         DEBUG Service base class initialized successfully
+CalEventEnergyAlg    INFO CalEventEnergyAlg Initialization
 ToolSvc.CalVals...   INFO Initializing CalValsCorrTool
 ToolSvc             DEBUG Retrieved toolG4PropagationTool
-ToolSvc             DEBUG Retrieved toolCalReconKernel
-ToolSvc.CalTkrL...   INFO Initializing CalTkrLikelihoodTool
-ToolSvc.CalTkrL...  DEBUG Initializing LikelihoodTool with file $(CALRECONROOT)/xml/CalTkrLikelihood.data
-ToolSvc.CalTkrL...  DEBUG File must contain 48, for 5 parameters
+ToolSvc.CalProf...   INFO Initializing CalProfileTool
+ToolSvc.CalProf...   INFO  value for CosThetaLimit 0.3
+ToolSvc.CalProf...   INFO  value for BiasParNb9
+ToolSvc.CalProf...   INFO  value for CosThetaParNb 3
+ToolSvc.CalProf...   INFO  value for bias0 0.0187272
+ToolSvc.CalProf...   INFO  value for bias1 -0.0271244
+ToolSvc.CalProf...   INFO  value for bias2 0.0145653
+ToolSvc.CalProf...   INFO  value for bias3 -0.0709624
+ToolSvc.CalProf...   INFO  value for bias4 0.118555
+ToolSvc.CalProf...   INFO  value for bias5 -0.0962898
+ToolSvc.CalProf...   INFO  value for bias6 0.273117
+ToolSvc.CalProf...   INFO  value for bias7 -0.604589
+ToolSvc.CalProf...   INFO  value for bias8 0.452359
+ToolSvc.CalLast...   INFO Initializing CalLikelihoodTool
+ToolSvc.CalLast...  DEBUG Initializing CalLikelihoodTool with file $(CALRECONROOT)/xml/CalLastLayerLikelihood.data
+ToolSvc.CalLast...  DEBUG File must contain 32, for 5 parameters
+ToolSvc.CalLast...  DEBUG Extracting Axes
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #0
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #1
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #2
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #3
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #4
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #5
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #6
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #7
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #8
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #9
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #10
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #11
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #12
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #13
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #14
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #15
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #16
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #17
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #18
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #19
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #20
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #21
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #22
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #23
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #24
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #25
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #26
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #27
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #28
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #29
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #30
+ToolSvc.CalLast...  DEBUG Extracting PDF Parameters for PDF #31
+ToolSvc.CalFull...  DEBUG Initializing CalFullProfileTool
+ToolSvc.CalTkrL...   INFO Initializing CalLikelihoodTool
+ToolSvc.CalTkrL...  DEBUG Initializing CalLikelihoodTool with file $(CALRECONROOT)/xml/CalTkrLikelihood.data
+ToolSvc.CalTkrL...  DEBUG File must contain 64, for 5 parameters
 ToolSvc.CalTkrL...  DEBUG Extracting Axes
-ToolSvc.CalTkrL...  DEBUG Reading Axes 	9	5
-ToolSvc.CalTkrL...  DEBUG 2 Axes for a total of 45 bins
-ToolSvc.CalTkrL...  DEBUG Reading Centers for Axis 0:
-ToolSvc.CalTkrL...  DEBUG (0:50)(1:60)(2:100)(3:200)(4:300)(5:500)(6:900)(7:1000)(8:2000)
-ToolSvc.CalTkrL...  DEBUG Reading Centers for Axis 1:
-ToolSvc.CalTkrL...  DEBUG (0:0.848048)(1:0.898794)(2:0.951057)(3:0.984808)(4:1)
-ToolSvc.CalTkrL...  DEBUG Read 14 values
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #0
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #1
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #2
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #3
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #4
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #5
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #6
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #7
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #8
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #9
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #10
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #11
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #12
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #13
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #14
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #15
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #16
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #17
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #18
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #19
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #20
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #21
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #22
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #23
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #24
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #25
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #26
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #27
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #28
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #29
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #30
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #31
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #32
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #33
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #34
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #35
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #36
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #37
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #38
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #39
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #40
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #41
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #42
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #43
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #44
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #45
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #46
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
 ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #47
-ToolSvc.CalTkrL...  DEBUG Reading 5 parameters per bin for 45 bins
-ToolSvc.CalTkrL...  DEBUG Read 45 bins
-ToolSvc             DEBUG Retrieved toolCalReconKernel
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #48
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #49
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #50
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #51
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #52
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #53
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #54
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #55
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #56
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #57
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #58
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #59
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #60
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #61
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #62
+ToolSvc.CalTkrL...  DEBUG Extracting PDF Parameters for PDF #63
 test_CalRecon        INFO initialize
 EventSelector       DEBUG Using Simple counter GlastEventSelector
 EventSelector        INFO No input file selected for GlastEventSelector
@@ -619,279 +565,652 @@ EventPersistenc...   INFO Added successfully Conversion service:EventCnvSvc
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
 AuditorSvc          DEBUG Service base class initialized successfully
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 6
-CalReconKernel:...  DEBUG Track direction = 0.993584
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 3871.04 90.9441 142.964 -133.43 0.0410797 0.0474641 0.998028
-CalClustersAlg      DEBUG CalValsCorrTool Energy 4884.51
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3673.64
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Starting Calculations
+CalLastLayerLik...  DEBUG End of Calculations:
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 123.816 159.044 208.265 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.08905 -0.0366254 -0.995354 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0.757108
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0.757108 totx0cal = 7.90469 lastx0 = 9.05924
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0.757108 totx0cal = 8.08226 lastx0 = 9.14968
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0.757108 totx0cal = 8.29821 lastx0 = 9.2572
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0.757108 totx0cal = 8.40529 lastx0 = 9.31179
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0.757108 totx0cal = 8.45053 lastx0 = 9.32339
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0.757108 totx0cal = 8.50481 lastx0 = 9.34861
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0.757108 totx0cal = 8.56653 lastx0 = 9.38052
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0.757108 totx0cal = 8.58457 lastx0 = 9.38597
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0.757108 totx0cal = 8.60473 lastx0 = 9.39581
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0.757108 totx0cal = 8.62757 lastx0 = 9.40585
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0.757108 totx0cal = 8.6329 lastx0 = 9.40849
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0.757108 totx0cal = 8.63533 lastx0 = 9.40968
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0.757108 totx0cal = 8.64183 lastx0 = 9.41225
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0.757108 totx0cal = 8.64268 lastx0 = 9.41268
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0.757108 totx0cal = 8.64398 lastx0 = 9.41333
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11398 meanposx0lay = 1.26454
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.00898 meanposx0lay = 2.33402
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.10192 meanposx0lay = 3.39713
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.07722 meanposx0lay = 4.49427
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.03547 meanposx0lay = 5.55672
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.08153 meanposx0lay = 6.62703
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.02007 meanposx0lay = 7.68951
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :1.04255 meanposx0lay = 8.73547
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.93385 4.53129 3.67364
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 2.19601 = 1.61685 + 3 * 0.193055
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.57955 tmax = 4.65812 energy = 4.64607 fit flag 0 totchisq = 2.19601
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Starting Calculations
+CalTkrLikelihoo...  DEBUG End of Calculations:
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 1 time
-test_CalRecon        INFO Energy 3871.04
-test_CalRecon        INFO Position 90.9441 142.964 -133.43
-test_CalRecon        INFO Direction 0.0410797 0.0474641 0.998028
-test_CalRecon        INFO CalValsCorrTool Energy 4884.51
-test_CalRecon        INFO Profile Corr Energy 5549.61
-test_CalRecon        INFO Last Layer Corr Energy 5345.01
+test_CalRecon        INFO Energy 3673.64
+test_CalRecon        INFO NbTruncXtals 18
+test_CalRecon        INFO Position 90.3724 139.61 -134.266
+test_CalRecon        INFO Direction 0.0447177 0.0259079 0.998664
+test_CalRecon        INFO CalValsCorrTool Energy 4669
+test_CalRecon        INFO Profile Corr Energy 3673.64
+test_CalRecon        INFO Last Layer Corr Energy 4868.29
+test_CalRecon        INFO FullProfile Corr Energy 4737.23 alpha = 3.57955 tmax = 4.65812 tkrrln = 0 lastx0 = 9.29313 totchisq = 2.19601 chisq = 1.61685 parcf = 3 parc = 0.193055
+test_CalRecon     WARNING UNKNOWN CORRECTION NAME: CalTkrLikelihoodTool
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 1
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 2904.59 Corrected 2904.59 223.742 196.744 -159.845 0.0231424 0.0229697 0.999468
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3454.88
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 223.399 194.677 -154.048 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = 0.0288303 -0.02891 -0.999166 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 8.29062 lastx0 = 8.45674
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 8.2942 lastx0 = 8.45695
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 8.36417 lastx0 = 8.48848
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.25728 lastx0 = 8.42755
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.44083 lastx0 = 8.52537
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.42741 lastx0 = 8.51813
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.43022 lastx0 = 8.52171
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.47557 lastx0 = 8.54577
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.48861 lastx0 = 8.55371
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.50688 lastx0 = 8.56385
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.5154 lastx0 = 8.56859
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.51495 lastx0 = 8.5686
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.52155 lastx0 = 8.5721
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.54231 lastx0 = 8.58257
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.5336 lastx0 = 8.56317
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11652 meanposx0lay = 0.509017
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.01453 meanposx0lay = 1.57652
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.10859 meanposx0lay = 2.64347
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.01266 meanposx0lay = 3.7107
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.08853 meanposx0lay = 4.77038
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.01726 meanposx0lay = 5.8358
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.06896 meanposx0lay = 6.88948
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :1.01318 meanposx0lay = 7.94739
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.89748 4.46432 3.45488
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 6.90914 = 5.90709 + 3 * 0.334018
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 4.01557 tmax = 5.2259 energy = 5.16341 fit flag 0 totchisq = 6.90914
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 2 time
-test_CalRecon        INFO Energy 2904.59
-test_CalRecon        INFO Position 223.742 196.744 -159.845
-test_CalRecon        INFO Direction 0.0231424 0.0229697 0.999468
-test_CalRecon        INFO CalValsCorrTool Energy 2904.59
-test_CalRecon        INFO Profile Corr Energy 5310.87
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3454.88
+test_CalRecon        INFO NbTruncXtals 12
+test_CalRecon        INFO Position 223.399 194.677 -154.048
+test_CalRecon        INFO Direction -0.0288303 0.02891 0.999166
+test_CalRecon        INFO CalValsCorrTool Energy 5618.64
+test_CalRecon        INFO Profile Corr Energy 5935.92
+test_CalRecon        INFO FullProfile Corr Energy 5263.18 alpha = 4.01557 tmax = 5.2259 tkrrln = 0 lastx0 = 8.44967 totchisq = 6.90914 chisq = 5.90709 parcf = 3 parc = 0.334018
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 2
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 8
-CalReconKernel:...  DEBUG Track direction = 0.993232
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 2349.9 Corrected 2962.27 153.534 74.4801 -140.201 -0.022349 0.186661 0.98217
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3636.41
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Starting Calculations
+CalLastLayerLik...  DEBUG End of Calculations:
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 170.33 115.427 241.365 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.0413214 -0.107532 -0.993343 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0.880349
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0.880349 totx0cal = 7.61607 lastx0 = 9.03596
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0.880349 totx0cal = 7.8245 lastx0 = 9.14272
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0.880349 totx0cal = 7.87952 lastx0 = 9.16143
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0.880349 totx0cal = 7.86516 lastx0 = 9.15283
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0.880349 totx0cal = 7.75409 lastx0 = 9.0931
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0.880349 totx0cal = 7.84581 lastx0 = 9.14101
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0.880349 totx0cal = 7.89892 lastx0 = 9.16706
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0.880349 totx0cal = 7.89504 lastx0 = 9.15205
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0.880349 totx0cal = 7.92059 lastx0 = 9.16536
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0.880349 totx0cal = 7.97722 lastx0 = 9.19581
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0.880349 totx0cal = 7.97438 lastx0 = 9.19418
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0.880349 totx0cal = 7.98655 lastx0 = 9.19517
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0.880349 totx0cal = 8.02747 lastx0 = 9.2171
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0.880349 totx0cal = 8.02656 lastx0 = 9.21544
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0.880349 totx0cal = 8.03991 lastx0 = 9.22246
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.1018 meanposx0lay = 1.38449
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :0.885083 meanposx0lay = 2.43001
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :0.94398 meanposx0lay = 3.40188
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.03286 meanposx0lay = 4.45481
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :0.877377 meanposx0lay = 5.47215
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.04319 meanposx0lay = 6.48264
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.03973 meanposx0lay = 7.55374
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :0.978095 meanposx0lay = 8.58524
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.92782 4.52018 3.63641
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 10.3321 = 9.38373 + 3 * 0.316106
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.77133 tmax = 5.44421 energy = 5.3533 fit flag 0 totchisq = 10.332
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Starting Calculations
+CalTkrLikelihoo...  DEBUG End of Calculations:
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 3 time
-test_CalRecon        INFO Energy 2349.9
-test_CalRecon        INFO Position 153.534 74.4801 -140.201
-test_CalRecon        INFO Direction -0.022349 0.186661 0.98217
-test_CalRecon        INFO CalValsCorrTool Energy 2962.27
-test_CalRecon        INFO Profile Corr Energy 3117.97
-test_CalRecon        INFO Last Layer Corr Energy 3450.48
+test_CalRecon        INFO Energy 3636.41
+test_CalRecon        INFO NbTruncXtals 15
+test_CalRecon        INFO Position 153.154 72.1269 -144.005
+test_CalRecon        INFO Direction 0.0583039 0.156568 0.985945
+test_CalRecon        INFO CalValsCorrTool Energy 5236.45
+test_CalRecon        INFO Profile Corr Energy 3636.41
+test_CalRecon        INFO Last Layer Corr Energy 5047.52
+test_CalRecon        INFO FullProfile Corr Energy 5456.19 alpha = 3.77133 tmax = 5.44421 tkrrln = 0 lastx0 = 9.12628 totchisq = 10.3321 chisq = 9.38373 parcf = 3 parc = 0.316106
+test_CalRecon     WARNING UNKNOWN CORRECTION NAME: CalTkrLikelihoodTool
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 3
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 3365.93 Corrected 3365.93 130.311 309.656 -149.651 0.219219 -0.0315052 0.975167
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3248.75
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 131.008 311.123 -144.617 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.117327 0.0441745 -0.99211 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 7.61433 lastx0 = 8.16365
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 7.95251 lastx0 = 8.34114
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 8.11725 lastx0 = 8.41606
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.21345 lastx0 = 8.45938
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.22167 lastx0 = 8.46121
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.15208 lastx0 = 8.4194
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.22087 lastx0 = 8.45486
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.20363 lastx0 = 8.44503
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.22989 lastx0 = 8.45973
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.23735 lastx0 = 8.46415
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.24685 lastx0 = 8.45496
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.26836 lastx0 = 8.46681
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.29069 lastx0 = 8.47908
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.30073 lastx0 = 8.48452
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.31237 lastx0 = 8.49068
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11022 meanposx0lay = 0.508278
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.08571 meanposx0lay = 1.60935
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.04712 meanposx0lay = 2.67938
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :0.920179 meanposx0lay = 3.70106
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.03503 meanposx0lay = 4.73637
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :0.9472 meanposx0lay = 5.77353
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.05983 meanposx0lay = 6.8175
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :0.966844 meanposx0lay = 7.85143
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.86102 4.39722 3.24875
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 4.38439 = 4.16425 + 3 * 0.0733815
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.46298 tmax = 4.67395 energy = 4.54134 fit flag 0 totchisq = 4.38439
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 4 time
-test_CalRecon        INFO Energy 3365.93
-test_CalRecon        INFO Position 130.311 309.656 -149.651
-test_CalRecon        INFO Direction 0.219219 -0.0315052 0.975167
-test_CalRecon        INFO CalValsCorrTool Energy 3365.93
-test_CalRecon        INFO Profile Corr Energy 5259.08
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3248.75
+test_CalRecon        INFO NbTruncXtals 15
+test_CalRecon        INFO Position 131.008 311.123 -144.617
+test_CalRecon        INFO Direction 0.117327 -0.0441745 0.99211
+test_CalRecon        INFO CalValsCorrTool Energy 4471.62
+test_CalRecon        INFO Profile Corr Energy 4923.77
+test_CalRecon        INFO FullProfile Corr Energy 4630.74 alpha = 3.46298 tmax = 4.67395 tkrrln = 0 lastx0 = 8.44526 totchisq = 4.38439 chisq = 4.16425 parcf = 3 parc = 0.0733815
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 4
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 2
-CalReconKernel:...  DEBUG Track direction = 0.991863
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 3856.87 Corrected 4973.32 54.4056 193.664 -127.145 0.177291 0.0823787 0.980705
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3798.02
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Starting Calculations
+CalLastLayerLik...  DEBUG End of Calculations:
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 96.2355 196.19 208.265 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.129326 -0.00275461 -0.991598 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0.759449
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0.759449 totx0cal = 6.82912 lastx0 = 8.41819
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0.759449 totx0cal = 7.1594 lastx0 = 8.57839
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0.759449 totx0cal = 7.4875 lastx0 = 8.76641
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0.759449 totx0cal = 7.7718 lastx0 = 8.91538
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0.759449 totx0cal = 7.89728 lastx0 = 8.98996
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0.759449 totx0cal = 8.11436 lastx0 = 9.11596
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0.759449 totx0cal = 8.02439 lastx0 = 9.07819
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0.759449 totx0cal = 8.24037 lastx0 = 9.19723
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0.759449 totx0cal = 8.29531 lastx0 = 9.22949
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0.759449 totx0cal = 8.18693 lastx0 = 9.17445
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0.759449 totx0cal = 8.18233 lastx0 = 9.17147
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0.759449 totx0cal = 8.22639 lastx0 = 9.19291
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0.759449 totx0cal = 8.21325 lastx0 = 9.18493
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0.759449 totx0cal = 8.19289 lastx0 = 9.1704
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0.759449 totx0cal = 8.19051 lastx0 = 9.16746
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.10511 meanposx0lay = 1.26719
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.09272 meanposx0lay = 2.36763
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.03793 meanposx0lay = 3.43649
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.04508 meanposx0lay = 4.494
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.00825 meanposx0lay = 5.55056
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :0.730438 meanposx0lay = 6.51736
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.00311 meanposx0lay = 7.45276
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :0.911488 meanposx0lay = 8.46102
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.95358 4.56761 3.79802
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 9.87834 = 6.5291 + 3 * 1.11641
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.30506 tmax = 4.22062 energy = 4.91318 fit flag 0 totchisq = 9.87833
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Starting Calculations
+CalTkrLikelihoo...  DEBUG End of Calculations:
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 5 time
-test_CalRecon        INFO Energy 3856.87
-test_CalRecon        INFO Position 54.4056 193.664 -127.145
-test_CalRecon        INFO Direction 0.177291 0.0823787 0.980705
-test_CalRecon        INFO CalValsCorrTool Energy 4973.32
-test_CalRecon        INFO Profile Corr Energy 5194.11
-test_CalRecon        INFO Last Layer Corr Energy 4999.43
+test_CalRecon        INFO Energy 3798.02
+test_CalRecon        INFO NbTruncXtals 15
+test_CalRecon        INFO Position 53.55 196.646 -125.679
+test_CalRecon        INFO Direction 0.156629 0.0209695 0.987435
+test_CalRecon        INFO CalValsCorrTool Energy 4929.41
+test_CalRecon        INFO Profile Corr Energy 3798.02
+test_CalRecon        INFO Last Layer Corr Energy 4942.09
+test_CalRecon        INFO FullProfile Corr Energy 5008.81 alpha = 3.30506 tmax = 4.22062 tkrrln = 0 lastx0 = 8.79931 totchisq = 9.87834 chisq = 6.5291 parcf = 3 parc = 1.11641
+test_CalRecon     WARNING UNKNOWN CORRECTION NAME: CalTkrLikelihoodTool
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 5
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 2759.34 Corrected 2759.34 68.835 263.114 -156.445 0.218223 -0.0287678 0.975475
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 2774.73
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 69.5102 263.827 -151.762 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.150034 0.0657855 -0.98649 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 7.57371 lastx0 = 8.15938
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 7.87913 lastx0 = 8.32448
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 7.972 lastx0 = 8.38061
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.10483 lastx0 = 8.43868
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.18189 lastx0 = 8.47484
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.16062 lastx0 = 8.45837
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.24898 lastx0 = 8.49288
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.23019 lastx0 = 8.48124
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.24576 lastx0 = 8.48653
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.2566 lastx0 = 8.49072
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.2659 lastx0 = 8.48843
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.29971 lastx0 = 8.50546
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.30961 lastx0 = 8.51088
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.31866 lastx0 = 8.51571
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.32539 lastx0 = 8.51917
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.08255 meanposx0lay = 0.507144
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.06759 meanposx0lay = 1.58996
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.04319 meanposx0lay = 2.66087
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :0.839272 meanposx0lay = 3.6866
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.07148 meanposx0lay = 4.68289
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.05498 meanposx0lay = 5.76732
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :0.978313 meanposx0lay = 6.81173
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :1.02082 meanposx0lay = 7.84163
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.76757 4.2252 2.77473
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 17.5313 = 16.8378 + 3 * 0.231164
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.36369 tmax = 5.05381 energy = 4.26672 fit flag 0 totchisq = 17.5313
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 6 time
-test_CalRecon        INFO Energy 2759.34
-test_CalRecon        INFO Position 68.835 263.114 -156.445
-test_CalRecon        INFO Direction 0.218223 -0.0287678 0.975475
-test_CalRecon        INFO CalValsCorrTool Energy 2759.34
-test_CalRecon        INFO Profile Corr Energy 4410.53
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 2774.73
+test_CalRecon        INFO NbTruncXtals 12
+test_CalRecon        INFO Position 69.5102 263.827 -151.762
+test_CalRecon        INFO Direction 0.150034 -0.0657855 0.98649
+test_CalRecon        INFO CalValsCorrTool Energy 4315.97
+test_CalRecon        INFO Profile Corr Energy 4024.75
+test_CalRecon        INFO FullProfile Corr Energy 4351.46 alpha = 3.36369 tmax = 5.05381 tkrrln = 0 lastx0 = 8.44064 totchisq = 17.5313 chisq = 16.8378 parcf = 3 parc = 0.231164
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 6
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 2934.02 Corrected 2934.02 118.644 56.154 -161.856 0.0586444 0.0573498 0.99663
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3748.1
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 119.836 56.7996 -156.007 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.00359136 -0.127358 -0.99185 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 7.56629 lastx0 = 8.13449
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 7.9052 lastx0 = 8.31163
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 8.17234 lastx0 = 8.43093
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.40247 lastx0 = 8.54992
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.45697 lastx0 = 8.58017
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.45121 lastx0 = 8.57471
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.50757 lastx0 = 8.60328
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.50847 lastx0 = 8.60642
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.58561 lastx0 = 8.64826
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.59057 lastx0 = 8.65118
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.60203 lastx0 = 8.65772
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.58994 lastx0 = 8.6518
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.57778 lastx0 = 8.63091
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.57476 lastx0 = 8.62932
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.57841 lastx0 = 8.63133
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.09238 meanposx0lay = 0.505966
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.09664 meanposx0lay = 1.60403
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.0488 meanposx0lay = 2.67651
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.09454 meanposx0lay = 3.75234
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.03121 meanposx0lay = 4.82446
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.06271 meanposx0lay = 5.88379
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.00763 meanposx0lay = 6.94879
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :0.970708 meanposx0lay = 7.97174
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.94574 4.55318 3.7481
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 10.6179 = 7.52325 + 3 * 1.03155
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 4.46915 tmax = 5.58335 energy = 5.75502 fit flag 0 totchisq = 10.6179
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 7 time
-test_CalRecon        INFO Energy 2934.02
-test_CalRecon        INFO Position 118.644 56.154 -161.856
-test_CalRecon        INFO Direction 0.0586444 0.0573498 0.99663
-test_CalRecon        INFO CalValsCorrTool Energy 2934.02
-test_CalRecon        INFO Profile Corr Energy 5593.95
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3748.1
+test_CalRecon        INFO NbTruncXtals 11
+test_CalRecon        INFO Position 119.836 56.7996 -156.007
+test_CalRecon        INFO Direction 0.00359136 0.127358 0.99185
+test_CalRecon        INFO CalValsCorrTool Energy 6318.3
+test_CalRecon        INFO Profile Corr Energy 6525.77
+test_CalRecon        INFO FullProfile Corr Energy 5864.46 alpha = 4.46915 tmax = 5.58335 tkrrln = 0 lastx0 = 8.56758 totchisq = 10.6179 chisq = 7.52325 parcf = 3 parc = 1.03155
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 7
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 3
-CalReconKernel:...  DEBUG Track direction = 0.999445
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 4069.71 Corrected 5669.34 161.946 207.535 -127.198 0.0738356 0.00604591 0.997252
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3414.81
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Starting Calculations
+CalLastLayerLik...  DEBUG End of Calculations:
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 174.865 204.626 208.265 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.0347571 0.00277685 -0.999392 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0.753491
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0.753491 totx0cal = 8.19793 lastx0 = 9.15805
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0.753491 totx0cal = 8.3751 lastx0 = 9.2507
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0.753491 totx0cal = 8.24278 lastx0 = 9.17987
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0.753491 totx0cal = 8.04622 lastx0 = 9.07095
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0.753491 totx0cal = 8.28474 lastx0 = 9.19649
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0.753491 totx0cal = 8.32963 lastx0 = 9.2215
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0.753491 totx0cal = 8.17585 lastx0 = 9.13962
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0.753491 totx0cal = 8.07306 lastx0 = 9.08333
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0.753491 totx0cal = 8.01686 lastx0 = 9.03848
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0.753491 totx0cal = 8.05558 lastx0 = 9.05879
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0.753491 totx0cal = 8.09764 lastx0 = 9.08283
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0.753491 totx0cal = 8.15315 lastx0 = 9.11363
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0.753491 totx0cal = 8.19835 lastx0 = 9.13834
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0.753491 totx0cal = 8.20587 lastx0 = 9.14253
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0.753491 totx0cal = 8.23622 lastx0 = 9.1592
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11451 meanposx0lay = 1.26096
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :0.995519 meanposx0lay = 2.32428
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.10653 meanposx0lay = 3.38602
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :0.948782 meanposx0lay = 4.43439
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.09572 meanposx0lay = 5.48064
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :0.87803 meanposx0lay = 6.50419
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.0834 meanposx0lay = 7.53153
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :0.956778 meanposx0lay = 8.57012
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.89056 4.4516 3.41481
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 14.1453 = 11.8932 + 3 * 0.750691
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 3.9405 tmax = 5.63166 energy = 4.99682 fit flag 0 totchisq = 14.1453
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Starting Calculations
+CalTkrLikelihoo...  DEBUG End of Calculations:
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: Reconstruction Done
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 8 time
-test_CalRecon        INFO Energy 4069.71
-test_CalRecon        INFO Position 161.946 207.535 -127.198
-test_CalRecon        INFO Direction 0.0738356 0.00604591 0.997252
-test_CalRecon        INFO CalValsCorrTool Energy 5669.34
-test_CalRecon        INFO Profile Corr Energy 5403.88
-test_CalRecon        INFO Last Layer Corr Energy 5355.24
+test_CalRecon        INFO Energy 3414.81
+test_CalRecon        INFO NbTruncXtals 14
+test_CalRecon        INFO Position 165.071 203.599 -149.016
+test_CalRecon        INFO Direction 0.0744985 -0.0235967 0.996942
+test_CalRecon        INFO CalValsCorrTool Energy 5274.78
+test_CalRecon        INFO Profile Corr Energy 3414.81
+test_CalRecon        INFO Last Layer Corr Energy 4799.9
+test_CalRecon        INFO FullProfile Corr Energy 5093.84 alpha = 3.9405 tmax = 5.63166 tkrrln = 0 lastx0 = 9.1503 totchisq = 14.1453 chisq = 11.8932 parcf = 3 parc = 0.750691
+test_CalRecon     WARNING UNKNOWN CORRECTION NAME: CalTkrLikelihoodTool
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 8
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 2978.43 Corrected 2978.43 95.7967 95.4985 -169.23 0.176647 -0.0353011 0.983641
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3308.05
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 95.8539 93.8353 -166.832 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = -0.0577782 -0.0143067 -0.998227 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 7.77668 lastx0 = 8.2126
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 8.01847 lastx0 = 8.33791
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 8.23819 lastx0 = 8.4543
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.18355 lastx0 = 8.42078
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.36745 lastx0 = 8.51409
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.39615 lastx0 = 8.52793
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.42248 lastx0 = 8.54073
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.4393 lastx0 = 8.54873
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.45293 lastx0 = 8.55535
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.46555 lastx0 = 8.56144
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.4734 lastx0 = 8.56518
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.48373 lastx0 = 8.57034
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.48966 lastx0 = 8.57323
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.49365 lastx0 = 8.57521
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.49823 lastx0 = 8.57756
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11346 meanposx0lay = 0.508311
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :0.92462 meanposx0lay = 1.5569
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.10777 meanposx0lay = 2.59499
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :0.994899 meanposx0lay = 3.6586
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.0939 meanposx0lay = 4.71547
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.02181 meanposx0lay = 5.78649
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.06146 meanposx0lay = 6.8413
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :1.0287 meanposx0lay = 7.90565
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.87174 4.41696 3.30805
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 15.1426 = 6.07591 + 3 * 3.02224
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 4.89895 tmax = 6.47059 energy = 5.98781 fit flag 0 totchisq = 15.1426
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 9 time
-test_CalRecon        INFO Energy 2978.43
-test_CalRecon        INFO Position 95.7967 95.4985 -169.23
-test_CalRecon        INFO Direction 0.176647 -0.0353011 0.983641
-test_CalRecon        INFO CalValsCorrTool Energy 2978.43
-test_CalRecon        INFO Profile Corr Energy 6430.24
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3308.05
+test_CalRecon        INFO NbTruncXtals 10
+test_CalRecon        INFO Position 95.8539 93.8353 -166.832
+test_CalRecon        INFO Direction 0.0577782 0.0143067 0.998227
+test_CalRecon        INFO CalValsCorrTool Energy 7603
+test_CalRecon        INFO Profile Corr Energy 6916.93
+test_CalRecon        INFO FullProfile Corr Energy 6101.02 alpha = 4.89895 tmax = 6.47059 tkrrln = 0 lastx0 = 8.52061 totchisq = 15.1426 chisq = 6.07591 parcf = 3 parc = 3.02224
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 9
 CalibDataSvc        DEBUG New incident received
 CalibDataSvc        DEBUG Incident source: EventLoopMgr
 CalibDataSvc        DEBUG Incident type: BeginEvent
+CalReconSvc         DEBUG Incident BeginEvent
+Top                 DEBUG Top Sequencer::execute( )
 Simulation          DEBUG Simulation Sequencer::execute( )
+ToolSvc.FhTool    WARNING No file header found
+ToolSvc.FhTool    WARNING No file header found
 Reconstruction      DEBUG Reconstruction Sequencer::execute( )
-CalClustersAlg      DEBUG Begin
-CalReconKernel:...  DEBUG Number of tracks = 0
-CalReconKernel:...  DEBUG No reconstructed tracks 
-CalClustersAlg      DEBUG Clustering
-CalClustersAlg      DEBUG Corrections
-CalClustersAlg      DEBUG Correction 0
-CalClustersAlg      DEBUG Correction 1
-CalClustersAlg      DEBUG Correction 2
-CalClustersAlg      DEBUG Correction 3
-CalClustersAlg      DEBUG Correction 4
-CalClustersAlg      DEBUG  --- CalClusterCol  --- 1
-CalClustersAlg      DEBUG Energy 3751.64 Corrected 3751.64 232.044 256.151 -136.573 -0.0285299 -0.020285 0.999387
-CalClustersAlg      DEBUG End
+CalClustersAlg      DEBUG Begin execute()
+CalClustersAlg      DEBUG CalCluster Energy: 3214.22
+CalClustersAlg      DEBUG End execute()
+CalEventEnergyAlg   DEBUG Begin execute()
+CalEventEnergyAlg   DEBUG CalValsCorrTool
+CalEventEnergyAlg   DEBUG CalProfileTool
+CalEventEnergyAlg   DEBUG CalLastLayerLikelihoodTool
+CalLastLayerLik...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG CalFullProfileTool
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : pp = 233.427 258.028 -159.527 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : vv = 0.0262065 0.0462471 -0.998586 
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : tkr_RLn = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[0] : startx0 = 0 totx0cal = 8.19134 lastx0 = 8.43188
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[1] : startx0 = 0 totx0cal = 8.35802 lastx0 = 8.51737
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[2] : startx0 = 0 totx0cal = 8.376 lastx0 = 8.52554
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[3] : startx0 = 0 totx0cal = 8.45749 lastx0 = 8.56279
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[4] : startx0 = 0 totx0cal = 8.51094 lastx0 = 8.58654
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[5] : startx0 = 0 totx0cal = 8.53531 lastx0 = 8.59898
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[6] : startx0 = 0 totx0cal = 8.56495 lastx0 = 8.61362
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[7] : startx0 = 0 totx0cal = 8.57417 lastx0 = 8.61732
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[8] : startx0 = 0 totx0cal = 8.57986 lastx0 = 8.62003
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[9] : startx0 = 0 totx0cal = 8.58836 lastx0 = 8.62413
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[10] : startx0 = 0 totx0cal = 8.59442 lastx0 = 8.62706
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[11] : startx0 = 0 totx0cal = 8.60066 lastx0 = 8.63007
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[12] : startx0 = 0 totx0cal = 8.60394 lastx0 = 8.63178
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[13] : startx0 = 0 totx0cal = 8.60612 lastx0 = 8.63282
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[14] : startx0 = 0 totx0cal = 8.60829 lastx0 = 8.63397
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[0] :1.11663 meanposx0lay = 0.509068
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[1] :1.02661 meanposx0lay = 1.58041
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[2] :1.11275 meanposx0lay = 2.65078
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[3] :1.02218 meanposx0lay = 3.72101
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[4] :1.10315 meanposx0lay = 4.7883
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[5] :1.01782 meanposx0lay = 5.85737
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[6] :1.07816 meanposx0lay = 6.91691
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[7] :1.03935 meanposx0lay = 7.99057
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : Initial parameters : 2.85469 4.38557 3.21422
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : ierflg = 0
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : totchisq = 21.9241 = 13.2604 + 3 * 2.8879
+ToolSvc.CalFull...  DEBUG CalFullProfileTool::doEnergyCorr : results : alpha = 4.8363 tmax = 6.32434 energy = 5.38191 fit flag 0 totchisq = 21.9241
+CalEventEnergyAlg   DEBUG CalTkrLikelihoodTool
+CalTkrLikelihoo...  DEBUG Ending doEnergyCorr: No TKR Reconstruction
+CalEventEnergyAlg   DEBUG End execute()
 test_CalRecon        INFO executing 10 time
-test_CalRecon        INFO Energy 3751.64
-test_CalRecon        INFO Position 232.044 256.151 -136.573
-test_CalRecon        INFO Direction -0.0285299 -0.020285 0.999387
-test_CalRecon        INFO CalValsCorrTool Energy 3751.64
-test_CalRecon        INFO Profile Corr Energy 5098.28
-test_CalRecon        INFO Last Layer Corr Energy -4
+test_CalRecon        INFO Energy 3214.22
+test_CalRecon        INFO NbTruncXtals 12
+test_CalRecon        INFO Position 233.427 258.028 -159.527
+test_CalRecon        INFO Direction -0.0262065 -0.0462471 0.998586
+test_CalRecon        INFO CalValsCorrTool Energy 6009.3
+test_CalRecon        INFO Profile Corr Energy 5979.5
+test_CalRecon        INFO FullProfile Corr Energy 5485.27 alpha = 4.8363 tmax = 6.32434 tkrrln = 0 lastx0 = 8.59058 totchisq = 21.9241 chisq = 13.2604 parcf = 3 parc = 2.8879
+CalReconSvc         DEBUG Incident EndEvent
 EventSelector       DEBUG Reading Event 10
 TkrCalibAlg          INFO           Finalize TkrCalibAlg 
 test_CalRecon        INFO finalize after 10 calls.
 EventLoopMgr         INFO Histograms converted successfully according to request.
+CalReconSvc          INFO 
+CalReconSvc          INFO ====>> 0 events failed in this run
+CalReconSvc          INFO 
 TkrGeometrySvc       INFO TkrGeometrySvc finalize called
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc             DEBUG Removing tool ToolSvc.CalTransvOffsetTool
 ToolSvc             DEBUG Removing tool ToolSvc.CalTkrLikelihoodTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalFullProfileTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalLastLayerLikelihoodTool
+ToolSvc             DEBUG Removing tool ToolSvc.CalProfileTool
 ToolSvc             DEBUG Removing tool ToolSvc.CalValsCorrTool
-ToolSvc             DEBUG Removing tool ToolSvc.ProfileTool
-ToolSvc             DEBUG Removing tool ToolSvc.LastLayerCorrTool
 ToolSvc             DEBUG Removing tool ToolSvc.CalSingleClusteringTool
-ToolSvc             DEBUG Removing tool ToolSvc.CalReconKernel
-ToolSvc             DEBUG Removing tool ToolSvc.XtalPosTool
-ToolSvc             DEBUG Removing tool ToolSvc.XtalEneTool
 ToolSvc             DEBUG Removing tool ToolSvc.FhTool
 ToolSvc             DEBUG Removing tool ToolSvc.G4PropagationTool
 ToolSvc             DEBUG Removing tool ToolSvc.G4PropagatorTool
