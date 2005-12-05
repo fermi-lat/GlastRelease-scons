@@ -186,9 +186,9 @@ StatusCode CalEventEnergyAlg::execute()
         }
     }
         
-    // No clusters no work
-    if (calClusters->size() > 0)
-    {
+    // there could be no clusters collection, if there was no hits
+    if ((calClusters!=0)&&(calClusters->size()>0)) {
+
         // If no CalEnergy object (yet) then create one
         Event::CalEventEnergy * calEnergy ;
         if (calEnergyCol->size()==0) {       
