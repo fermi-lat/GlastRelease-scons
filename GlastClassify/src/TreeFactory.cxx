@@ -14,6 +14,7 @@ $Header$
 #include <cassert>
 #include <cmath>
 #include <stdexcept>
+#include <sstream>
 
 using namespace GlastClassify;
 
@@ -119,9 +120,20 @@ TreeFactory::Tree::Tree( const std::string& path, ITupleInterface& tuple, const 
         // no filter: this is it.
         m_filter_tree = localTree;
     }
-    // todo: read the file listing paths to nested trees, 
     // call this constructor recursively on each, add to 
     // m_exclusive_trees
+    std::ifstream nestedstream((path+"/nested.txt").c_str());
+    if( nestedstream.is_open() ){
+        while( ! nestedstream.eof()){
+            std::string line, dirname;
+            std::getline(nestedstream, line);
+            std::stringstream ss(line);
+            ss >> dirname;
+            if(dirname.empty() || dirname[0]=='#') continue;
+            m_exclusive_trees.push_back( new Tree(path+"/"+dirname, tuple, dict));
+        }
+    }
+
     m_vals = new GleamValues(vars, tuple, dict);
 }
 
