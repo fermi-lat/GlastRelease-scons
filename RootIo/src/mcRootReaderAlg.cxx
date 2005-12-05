@@ -439,6 +439,7 @@ StatusCode mcRootReaderAlg::readMcParticles() {
         }
         
         
+/* Daughters are handled in McParticle::init
         // Process the list of daughters
         const TRefArray daughterArr = pRoot->getDaughterList();
         const McParticle *daughterPartRoot;
@@ -465,6 +466,8 @@ StatusCode mcRootReaderAlg::readMcParticles() {
             }
             
         }
+
+*/
         
 
         // Add the TDS McParticle to the TDS collection of McParticles
