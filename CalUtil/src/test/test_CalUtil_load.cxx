@@ -12,10 +12,10 @@
 #define DLL_DECL_OBJECT(x)     extern const IFactory& x##Factory; x##Factory.addRef();
 //! Load all  services: 
 void test_CalUtil_load() {
-    DLL_DECL_ALGORITHM( test_CalUtil );
+  DLL_DECL_ALGORITHM( test_CalUtil );
 } 
 
 extern "C" void test_CalUtil_loadRef()    {
-    test_CalUtil_load();
+  test_CalUtil_load();
 }
 

@@ -7,24 +7,28 @@
 
 // STD INCLUDES
 #include <sstream>
-#include <stdexcept>
+#include <iomanip>
 
 using namespace std;
 
 //populate static arrays.
 
-namespace CalDefs {
-  static const string _face_mnem[]= {"POS",
-                                     "NEG"};
+namespace CalUtil {
+  static const string _face_mnem[] = {"POS",
+                                      "NEG"};
 
-  const vector<string> FaceNum::MNEM(_face_mnem,_face_mnem+
+  const vector<string> FaceNum::MNEM(_face_mnem,_face_mnem +
                                      sizeof(_face_mnem)/sizeof(string));
 
   static const string _diode_mnem[] = {"LARGE",
                                        "SMALL"};
 
-  const vector<string> DiodeNum::MNEM(_diode_mnem,_diode_mnem+
+  const vector<string> DiodeNum::MNEM(_diode_mnem,_diode_mnem +
                                       sizeof(_diode_mnem)/sizeof(string));
+
+  static const string _thx_mnem[] = {"X8", "X1"};
+  const vector<string> THXNum::MNEM(_thx_mnem, _thx_mnem +
+                                    sizeof(_thx_mnem)/sizeof(string));
 
   static const string _rng_mnem[] = {"LEX8",
                                      "LEX1",

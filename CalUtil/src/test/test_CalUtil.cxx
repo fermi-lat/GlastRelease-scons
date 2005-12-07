@@ -12,6 +12,14 @@
 
 #include "src/CalFailureModeSvc.h"
 
+#include "CalUtil/CalDefs.h"
+#include "CalUtil/CalVec.h"
+#include "CalUtil/CalArray.h"
+
+#include <vector>
+
+using namespace CalUtil;
+
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
 /** 
@@ -32,7 +40,14 @@ private:
 
   /// pointer to failure mode service
   ICalFailureModeSvc* m_FailSvc;
+
+  StatusCode testCalFailureModeSvc();
+  /// test all index & conversion classes in caldefs
+  StatusCode testCalDefs();
+  StatusCode testCalVec();
+  StatusCode testCalArray();
 };
+
 //------------------------------------------------------------------------
 
 // necessary to define a Factory for this algorithm
@@ -74,6 +89,34 @@ StatusCode test_CalUtil::execute()
   MsgStream   log( msgSvc(), name() );
   log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
 
+  sc = testCalFailureModeSvc();
+  if (sc.isFailure()) return sc;
+  sc = testCalDefs();
+  if (sc.isFailure()) return sc;
+  sc = testCalVec();
+  if (sc.isFailure()) return sc;
+  sc = testCalArray();
+  if (sc.isFailure()) return sc;
+
+  
+  return StatusCode::SUCCESS;
+}
+
+//------------------------------------------------------------------------
+//! clean up, summarize
+StatusCode test_CalUtil::finalize(){
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
+    
+  return sc;
+}
+
+StatusCode test_CalUtil::testCalFailureModeSvc() {
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << "testCalFailureModeSvc" << endreq;
   idents::CalXtalId id1(10,2,2);  // tower 10, layer 3(y)
   idents::CalXtalId id2(11,1,2);  // tower 11, layer 1(y)
   idents::CalXtalId id3(3,5,3);   // tower 3, layer 5(y)
@@ -111,16 +154,192 @@ StatusCode test_CalUtil::execute()
     log << MSG::ERROR << "erroneously removed channel (4,1,3) NEG" << endreq;
     return StatusCode::FAILURE;
   }
-  
-  return sc;
+
+  return StatusCode::SUCCESS;
 }
 
-//------------------------------------------------------------------------
-//! clean up, summarize
-StatusCode test_CalUtil::finalize(){
+StatusCode test_CalUtil::testCalDefs(){
   StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
+
+
+  log << MSG::INFO << "testCalDefs" << endreq;
+
+  //-- TEST CALDEFS CONVERSION ROUTINES --//
+  // try to test all conversions & constructors for
+  // consistency.
+  for (short tRow=0; tRow < 4 ; tRow++)
+    for (short tCol=0; tCol < 4; tCol++) {
+
+      TwrNum twr(tRow, tCol);
+      if (tRow != twr.getRow()) return StatusCode::FAILURE;
+      if (tCol != twr.getCol()) return StatusCode::FAILURE;
+      
+      for (DirNum dir; dir.isValid(); dir++)
+        for (short dLyr=0; dLyr < 4; dLyr++) {
+
+          LyrNum lyr(dir, dLyr);
+          if (dir != lyr.getDir()) return StatusCode::FAILURE;
+
+          for (ColNum col; col.isValid(); col++) {
+            CalXtalId xtalId(twr,lyr,col);
+
+            XtalIdx xtalIdx(twr,lyr,col);
+            if (xtalId != xtalIdx.getCalXtalId()) return StatusCode::FAILURE;
+            if (twr != xtalIdx.getTwr()) return StatusCode::FAILURE;
+            if (lyr != xtalIdx.getLyr()) return StatusCode::FAILURE;
+            if (col != xtalIdx.getCol()) return StatusCode::FAILURE;
+
+            // alt-constructor(s)
+            if (XtalIdx(xtalId) != xtalIdx) return StatusCode::FAILURE;
+
+            for (FaceNum face; face.isValid(); face++) {
+              FaceIdx faceIdx(twr,lyr,col,face);
+              CalXtalId faceId(twr,lyr,col,face);
+              if (faceId != faceIdx.getCalXtalId()) return StatusCode::FAILURE;
+              if (twr != faceIdx.getTwr()) return StatusCode::FAILURE;
+              if (lyr != faceIdx.getLyr()) return StatusCode::FAILURE;
+              if (col != faceIdx.getCol()) return StatusCode::FAILURE;
+              if ((short)face != faceIdx.getFace()) return StatusCode::FAILURE;
+              if (xtalIdx != faceIdx.getXtalIdx()) return StatusCode::FAILURE;
+
+              // alt-constructor(s)
+              if (FaceIdx(faceId) != faceIdx) return StatusCode::FAILURE;
+              if (FaceIdx(xtalIdx, face) != faceIdx) return StatusCode::FAILURE;
+
+              
+              for (DiodeNum diode; diode.isValid(); diode++) {
+                if ((short)RngNum(diode,THX8) != diode.getX8Rng()) return StatusCode::FAILURE;
+                if ((short)RngNum(diode,THX1) != diode.getX1Rng()) return StatusCode::FAILURE;
+
+                XtalDiode xDiode(face,diode);
+                if ((short)diode != xDiode.getDiode()) return StatusCode::FAILURE;
+                if ((short)face  != xDiode.getFace()) return StatusCode::FAILURE;
+
+                DiodeIdx diodeIdx(twr,lyr,col,face,diode);
+                if (twr != diodeIdx.getTwr()) return StatusCode::FAILURE;
+                if (lyr != diodeIdx.getLyr()) return StatusCode::FAILURE;
+                if (col != diodeIdx.getCol()) return StatusCode::FAILURE;
+                if ((short)face != diodeIdx.getFace()) return StatusCode::FAILURE;
+                if ((short)diode != diodeIdx.getDiode()) return StatusCode::FAILURE;
+                if (xtalIdx != diodeIdx.getXtalIdx()) return StatusCode::FAILURE;
+                if (faceIdx != diodeIdx.getFaceIdx()) return StatusCode::FAILURE;
+
+                //alt-constructor(s)
+                if (DiodeIdx(xtalIdx, face, diode) != diodeIdx) return StatusCode::FAILURE;
+                if (DiodeIdx(xtalIdx, xDiode) != diodeIdx) return StatusCode::FAILURE;
+                if (DiodeIdx(faceIdx, diode) != diodeIdx) return StatusCode::FAILURE;
+                
+              
+                
+                for (THXNum thx; thx.isValid(); thx++) {
+
+                  RngNum rng(diode,thx);
+                  if ((short)diode != rng.getDiode()) return StatusCode::FAILURE;
+
+                  XtalRng xRng(face, rng);
+                  if ((short)face != xRng.getFace()) return StatusCode::FAILURE;
+                  if ((short)rng != xRng.getRng()) return StatusCode::FAILURE;
+                  if (xDiode != xRng.getXtalDiode()) return StatusCode::FAILURE;
+
+                  RngIdx rngIdx(twr,lyr,col,face,rng);
+                  CalXtalId rngId(twr,lyr,col,face,rng);
+                  if (twr != rngIdx.getTwr()) return StatusCode::FAILURE;
+                  if (lyr != rngIdx.getLyr()) return StatusCode::FAILURE;
+                  if (col != rngIdx.getCol()) return StatusCode::FAILURE;
+                  if ((short)face != rngIdx.getFace()) return StatusCode::FAILURE;
+                  if ((short)rng != rngIdx.getRng()) return StatusCode::FAILURE;
+                  if (xtalIdx != rngIdx.getXtalIdx()) return StatusCode::FAILURE;
+                  if (faceIdx != rngIdx.getFaceIdx()) return StatusCode::FAILURE;
+                  
+                  //alt-constructor(s)
+                  if (RngIdx(xtalIdx, face, rng) != rngIdx) return StatusCode::FAILURE;
+                  if (RngIdx(xtalIdx, xRng) != rngIdx) return StatusCode::FAILURE;
+                  if (RngIdx(faceIdx, rng) != rngIdx) return StatusCode::FAILURE;
+
+
+                } // thx/rng
+              } // diode
+            } // face
+          } // col
+        } // dLyr
+    } // twr
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode test_CalUtil::testCalVec(){
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << "testCalVec" << endreq;
+
+  // creats vector of size 8, which is
+  // enought to test functionality
+  CalVec<XtalRng, int> testVec;
+
+  testVec.resize(XtalRng::N_VALS);
+  
+  if (testVec.size() != (unsigned)XtalRng::N_VALS)
+    return StatusCode::FAILURE;
+
+  for (XtalRng idx; idx.isValid(); idx++) {
+    testVec[idx] = idx.getInt();
+  }
+
+  for (XtalRng idx; idx.isValid(); idx++) {
+    if (testVec[idx] != idx.getInt())
+      return StatusCode::FAILURE;
     
-  return sc;
+    if (testVec.find(idx.getInt()) - testVec.begin() 
+        != idx.getInt())
+      return StatusCode::FAILURE;
+  }
+
+  testVec.fill(3);
+  for (XtalRng idx; idx.isValid(); idx++) {
+    if (testVec[idx] != 3)
+      return StatusCode::FAILURE;
+  }
+
+  testVec.clear();
+  if (testVec.size() != (unsigned)0) 
+    return StatusCode::FAILURE;
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode test_CalUtil::testCalArray(){
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << "testCalArray" << endreq;
+
+  // creats array of size 8, which is
+  // enough to test functionality
+  CalArray<XtalRng, int> testArr;
+
+  if (testArr.size() != (unsigned)XtalRng::N_VALS)
+    return StatusCode::FAILURE;
+
+  for (XtalRng idx; idx.isValid(); idx++) {
+    testArr[idx] = idx.getInt();
+  }
+
+  for (XtalRng idx; idx.isValid(); idx++) {
+    if (testArr[idx] != idx.getInt())
+      return StatusCode::FAILURE;
+    
+    if ((testArr.find(idx.getInt()) - testArr.begin()) 
+        != idx.getInt())
+      return StatusCode::FAILURE;
+  }
+
+  testArr.fill(3);
+  for (XtalRng idx; idx.isValid(); idx++) {
+    if (testArr[idx] != 3)
+      return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
 }

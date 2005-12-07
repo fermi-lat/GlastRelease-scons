@@ -1,10 +1,10 @@
 /** 
-* @file CalUtil_load.cpp
-* @brief This is needed for forcing the linker to load all components
-* of the library.
-*
-*  $Header$
-*/
+ * @file CalUtil_load.cpp
+ * @brief This is needed for forcing the linker to load all components
+ * of the library.
+ *
+ *  $Header$
+ */
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IToolFactory.h"
@@ -15,5 +15,5 @@
 
 
 DECLARE_FACTORY_ENTRIES(CalUtil) {
-    DECLARE_SERVICE( CalFailureModeSvc );
+  DECLARE_SERVICE( CalFailureModeSvc );
 } 
