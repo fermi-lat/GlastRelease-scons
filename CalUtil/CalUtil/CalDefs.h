@@ -87,7 +87,7 @@ namespace CalUtil {
     static const short N_ROWS = 4;
 
     bool operator==(const TwrNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const TwrNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const TwrNum &that) const {return m_data != that.m_data;}
   };
 
   /// id class for GLAST Cal xtal layer w/in Cal module
@@ -106,7 +106,7 @@ namespace CalUtil {
     short getYLyr() const {return (m_data-1)/2;}
 
     bool operator==(const LyrNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const LyrNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const LyrNum &that) const {return m_data != that.m_data;}
 
   };
 
@@ -120,7 +120,7 @@ namespace CalUtil {
     bool isValid() const {return m_data < N_VALS;}
 
     bool operator==(const DirNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const DirNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const DirNum &that) const {return m_data != that.m_data;}
 
   };
   const DirNum X_DIR(0);
@@ -136,7 +136,7 @@ namespace CalUtil {
     bool isValid() const {return m_data < N_VALS;}
 
     bool operator==(const ColNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const ColNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const ColNum &that) const {return m_data != that.m_data;}
 
   };
 
@@ -157,7 +157,7 @@ namespace CalUtil {
     }
 
     bool operator==(const FaceNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const FaceNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const FaceNum &that) const {return m_data != that.m_data;}
 
   };
   const FaceNum POS_FACE(idents::CalXtalId::POS);
@@ -184,7 +184,7 @@ namespace CalUtil {
     }
 
     bool operator==(const DiodeNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const DiodeNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const DiodeNum &that) const {return m_data != that.m_data;}
 
   };
   const DiodeNum LRG_DIODE(idents::CalXtalId::LARGE);
@@ -202,7 +202,7 @@ namespace CalUtil {
     static const short N_VALS=2;
 
     bool operator==(const THXNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const THXNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const THXNum &that) const {return m_data != that.m_data;}
 
   };
 
@@ -231,7 +231,7 @@ namespace CalUtil {
     }
 
     bool operator==(const RngNum &that) const {return m_data == that.m_data;}
-    bool operator!=(const RngNum &that) const {return m_data == that.m_data;}
+    bool operator!=(const RngNum &that) const {return m_data != that.m_data;}
 
   };
 
