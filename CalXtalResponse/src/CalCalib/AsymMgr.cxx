@@ -4,22 +4,19 @@
 
 // GLAST INCLUDES
 #include "CalibData/Cal/Xpos.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // EXTLIB INCLUDES
 
 // STD
-#include <algorithm>
-#include <typeinfo>
 
 using namespace std;
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 AsymMgr::AsymMgr() : 
   CalibItemMgr(CalibData::CAL_Asym, 
-               N_SPLINE_TYPES) {
-
+               N_SPLINE_TYPES) 
+{
   // set size of spline lists (1 per xtal)
   for (unsigned i = 0; i < m_splineLists.size(); i++) {
     m_splineLists[i].resize(XtalIdx::N_VALS, 0);
@@ -29,14 +26,12 @@ AsymMgr::AsymMgr() :
 }
 
 /// get Asymmetry calibration information for one xtal
-StatusCode AsymMgr::getAsym(CalXtalId xtalId,
+StatusCode AsymMgr::getAsym(XtalIdx xtalIdx,
                             const vector<CalibData::ValSig> *&asymLrg,
                             const vector<CalibData::ValSig> *&asymSm,
                             const vector<CalibData::ValSig> *&asymNSPB,
                             const vector<CalibData::ValSig> *&asymPSNB,
                             const vector<float>  *&xVals) {
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-
   if (m_idealMode) {
     // return default vals if we're in ideal (fake) mode
     asymLrg  = &m_idealAsymLrg;
@@ -53,16 +48,22 @@ StatusCode AsymMgr::getAsym(CalXtalId xtalId,
   if (sc.isFailure()) return sc;
 
   
+<<<<<<< AsymMgr.cxx
+  CalibData::CalAsym *asym = (CalibData::CalAsym*)m_rngBases[xtalIdx];
+  if (!asym) return StatusCode::FAILURE;  // failure type 1: null ptr
+=======
   CalibData::CalAsym *asym = 
 	  (CalibData::CalAsym *)getRangeBase(xtalId);
   if (!asym) return StatusCode::FAILURE; // failure type 1: null ptr
+>>>>>>> 1.5
   
   // get main data arrays
   asymLrg = asym->getBig();
   asymSm = asym->getSmall();
   asymNSPB = asym->getNSmallPBig();
   asymPSNB = asym->getPSmallNBig();
-  CalibData::Xpos *tmpXpos = m_calibBase->getXpos();
+  CalibData::Xpos *tmpXpos;
+  tmpXpos = m_calibBase->getXpos();
   xVals = tmpXpos->getVals();
 
   return StatusCode::SUCCESS;
@@ -70,21 +71,31 @@ StatusCode AsymMgr::getAsym(CalXtalId xtalId,
 
 /** return p3 such that p3 - p2 = p2 - p1
  */
-inline double extrap(double p1, double p2) {
+inline float extrap(float p1, float p2) {
   return 2*p2 - p1;
 }
 
 StatusCode AsymMgr::genLocalStore() {
+  m_rngBases.resize(XtalIdx::N_VALS,0);
+
   StatusCode sc;
 
-  // vector<double> arrays for input into genSpline
-  vector<double> dblAsymLrg;
-  vector<double> dblAsymSm;
-  vector<double> dblAsymNSPB;
-  vector<double> dblAsymPSNB;
-  vector<double> dblXpos;
+  // vector<float> arrays for input into genSpline
+  vector<float> dblAsymLrg;
+  vector<float> dblAsymSm;
+  vector<float> dblAsymNSPB;
+  vector<float> dblAsymPSNB;
+  vector<float> dblXpos;
 
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
+    if (!m_idealMode) {
+      // RETRIEVE & VALIDATE RangeBase object from TDS
+      CalibData::CalAsym *asym = (CalibData::CalAsym*)getRangeBase(xtalIdx.getCalXtalId());
+      if (!validateRangeBase(asym)) continue;
+      m_rngBases[xtalIdx] = asym;
+    }
+
+
     // needed params for getAsym
     const vector<CalibData::ValSig> *asymLrg;
     const vector<CalibData::ValSig> *asymSm;
@@ -92,13 +103,15 @@ StatusCode AsymMgr::genLocalStore() {
     const vector<CalibData::ValSig> *asymPSNB;
     const vector<float> *Xpos;
 
+
     // support missing towers & missing crystals
     // keep moving if we're missing a particular calibration
-    sc = getAsym(xtalIdx.getCalXtalId(), 
+    sc = getAsym(xtalIdx, 
                  asymLrg, asymSm, 
                  asymNSPB, asymPSNB, 
                  Xpos);
     if (sc.isFailure()) continue; //support partial LATs
+
 
     int n = Xpos->size();
     
@@ -159,42 +172,26 @@ StatusCode AsymMgr::genLocalStore() {
     dblAsymPSNB[n+3] = extrap(dblAsymPSNB[n+1], dblAsymPSNB[n+2]);
     dblXpos    [n+3] = extrap(dblXpos    [n+1], dblXpos    [n+2]);
 
-    if (owner->m_superVerbose) {
-      // create MsgStream only when needed (for performance)
-      MsgStream msglog(owner->msgSvc(), owner->name()); 
-      msglog << MSG::VERBOSE << "xpos ";
-      for (unsigned i = 0; i < dblXpos.size(); i++) 
-        msglog << dblXpos[i] << ' ';
-      msglog << endreq;
-
-      msglog << MSG::VERBOSE << "asymLL ";
-      for (unsigned i = 0; i < dblAsymLrg.size(); i++) 
-        msglog << dblAsymLrg[i] << ' ';
-      msglog << endreq;
-    }
-
-	CalXtalId xtalId = xtalIdx.getCalXtalId();
-	
-	// put xtal id string into spline name
+    // put xtal id string into spline name
     ostringstream xtalStr;
-    xtalStr << '[' << xtalId << ']';
+    xtalStr << '[' << xtalIdx.getCalXtalId() << ']';
 
-    genSpline(ASYMLRG_SPLINE,   xtalId, "asymLrg"     + xtalStr.str(),   
+    genSpline(ASYMLRG_SPLINE,   xtalIdx, "asymLrg"     + xtalStr.str(),   
               dblXpos, dblAsymLrg);
-    genSpline(ASYMSM_SPLINE,    xtalId, "asymSm"      + xtalStr.str(),    
+    genSpline(ASYMSM_SPLINE,    xtalIdx, "asymSm"      + xtalStr.str(),    
               dblXpos, dblAsymSm);
-    genSpline(ASYMNSPB_SPLINE,  xtalId, "asymNSPB"    + xtalStr.str(),  
+    genSpline(ASYMNSPB_SPLINE,  xtalIdx, "asymNSPB"    + xtalStr.str(),  
               dblXpos, dblAsymNSPB);
-    genSpline(ASYMPSNB_SPLINE,  xtalId, "asymPSNB"    + xtalStr.str(),  
+    genSpline(ASYMPSNB_SPLINE,  xtalIdx, "asymPSNB"    + xtalStr.str(),  
               dblXpos, dblAsymPSNB);
 
-    genSpline(INV_ASYMLRG_SPLINE,   xtalId, "invAsymLrg"  + xtalStr.str(),   
+    genSpline(INV_ASYMLRG_SPLINE,   xtalIdx, "invAsymLrg"  + xtalStr.str(),   
               dblAsymLrg,   dblXpos);
-    genSpline(INV_ASYMSM_SPLINE,    xtalId, "invAsymSm"   + xtalStr.str(),    
+    genSpline(INV_ASYMSM_SPLINE,    xtalIdx, "invAsymSm"   + xtalStr.str(),    
               dblAsymSm,    dblXpos);
-    genSpline(INV_ASYMNSPB_SPLINE,  xtalId, "invAsymNSPB" + xtalStr.str(),  
+    genSpline(INV_ASYMNSPB_SPLINE,  xtalIdx, "invAsymNSPB" + xtalStr.str(),  
               dblAsymNSPB,  dblXpos);
-    genSpline(INV_ASYMPSNB_SPLINE,  xtalId, "invAsymPSNB" + xtalStr.str(),  
+    genSpline(INV_ASYMPSNB_SPLINE,  xtalIdx, "invAsymPSNB" + xtalStr.str(),  
               dblAsymPSNB,  dblXpos);
   }  
   
@@ -246,11 +243,48 @@ StatusCode AsymMgr::loadIdealVals() {
   return StatusCode::SUCCESS;
 }
 
-bool AsymMgr::checkXtalId(CalXtalId xtalId) {
-  if (xtalId.validRange() || xtalId.validFace())
-    throw invalid_argument("Asym calib_type cannot accept range or face info in CalXtalId");
+bool AsymMgr::validateRangeBase(CalibData::CalAsym *asym) {
+  if (!asym) return false;
+
+  const vector<CalibData::ValSig> *asymLrg;
+  const vector<CalibData::ValSig> *asymSm;
+  const vector<CalibData::ValSig> *asymNSPB;
+  const vector<CalibData::ValSig> *asymPSNB;
+
+  if (!(asymLrg = asym->getBig())) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if asym->getBig() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!(asymSm = asym->getSmall())        ||
+      !(asymNSPB = asym->getNSmallPBig()) ||
+      !(asymPSNB = asym->getPSmallNBig())) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+
+  // get Xpos vals.
+  unsigned XposSize= m_calibBase->getXpos()->getVals()->size();
+  if (XposSize != asymLrg->size() ||
+      XposSize != asymSm->size() ||
+      XposSize != asymNSPB->size() ||
+      XposSize != asymPSNB->size()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "Invalid # of vals for " << m_calibPath << endreq;
+    return false;
+  }
   return true;
 }
+<<<<<<< AsymMgr.cxx
+
+=======
 
 
 
@@ -293,3 +327,4 @@ bool AsymMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
   }
   return true;
 }
+>>>>>>> 1.5

@@ -8,23 +8,15 @@
 
 // STD INCLUDES
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 /// get threshold calibration constants as measured w/ charnge injection
-StatusCode TholdCIMgr::getTholds(CalXtalId xtalId,
+StatusCode TholdCIMgr::getTholds(FaceIdx faceIdx,
                                  CalibData::ValSig &FLE,
                                  CalibData::ValSig &FHE,
                                  CalibData::ValSig &LAC
                                  ) {
-  // generic xtalId check
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-
-  // getTolds() specific xtalId check.
-  if (xtalId.validRange())
-    throw invalid_argument("TholdCI::getTholds() cannot accept range info in CalXtalId."
-                           " Programmer error.");
-
   if (m_idealMode) {
     FLE = m_idealFLE;
     FHE = m_idealFHE;
@@ -39,7 +31,7 @@ StatusCode TholdCIMgr::getTholds(CalXtalId xtalId,
 
 
   CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI *)getRangeBase(xtalId);
+    = (CalibData::CalTholdCI*)m_rngBases[faceIdx];
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
@@ -51,18 +43,10 @@ StatusCode TholdCIMgr::getTholds(CalXtalId xtalId,
 }
 
 /// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
-StatusCode TholdCIMgr::getULD(CalXtalId xtalId,
+StatusCode TholdCIMgr::getULD(RngIdx rngIdx,
                               CalibData::ValSig &ULDThold) {
-  // generic xtalId check
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-
-  // getULD() specific xtalId check
-  if (!xtalId.validRange())
-    throw invalid_argument("ThodCI::getULD() requires range info in CalXtalId."
-                          " Programmer error.");
-
   if (m_idealMode) {
-    ULDThold = m_idealULD[xtalId.getRange()];
+    ULDThold = m_idealULD[rngIdx.getRng()];
     return StatusCode::SUCCESS;
   }
 
@@ -72,33 +56,22 @@ StatusCode TholdCIMgr::getULD(CalXtalId xtalId,
   if (sc.isFailure()) return sc;
 
   // need to create an xtalId object w/out range info...
-  CalXtalId faceXtalId(xtalId.getTower(),
-                       xtalId.getLayer(),
-                       xtalId.getColumn(),
-                       xtalId.getFace());
+  FaceIdx faceIdx(rngIdx.getFaceIdx());
   CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI *)getRangeBase(faceXtalId);
+    = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
-  ULDThold = *(tholdCI->getULD(xtalId.getRange()));
+  ULDThold = *(tholdCI->getULD((short)rngIdx.getRng()));
 
   return StatusCode::SUCCESS;
 }
 
 /// get pedestal calibration constants as measured during charge injection threshold testing.
-StatusCode TholdCIMgr::getPed(CalXtalId xtalId,
+StatusCode TholdCIMgr::getPed(RngIdx rngIdx,
                               CalibData::ValSig &ped) {
-  // generic xtalId check
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-  
-  // getPed() specific xtalId check
-  if (!xtalId.validRange())
-    throw invalid_argument("ThodCI::getPed() requires range info in CalXtalId."
-                          " Programmer error.");
-
   if (m_idealMode) {
-    ped = m_idealPed[xtalId.getRange()];
+    ped = m_idealPed[RngNum(rngIdx.getRng())];
     return StatusCode::SUCCESS;
   }
 
@@ -109,15 +82,12 @@ StatusCode TholdCIMgr::getPed(CalXtalId xtalId,
 
 
   // need to create an xtalId object w/out range info...
-  CalXtalId faceXtalId(xtalId.getTower(),
-                       xtalId.getLayer(),
-                       xtalId.getColumn(),
-                       xtalId.getFace());
+  FaceIdx faceIdx(rngIdx.getFaceIdx());
   CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI *)getRangeBase(faceXtalId);
+    = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
   if (!tholdCI) return StatusCode::FAILURE;
 
-  ped = *(tholdCI->getPed(xtalId.getRange()));
+  ped = *(tholdCI->getPed((short)rngIdx.getRng()));
 
   return StatusCode::SUCCESS;
 }
@@ -151,25 +121,74 @@ StatusCode TholdCIMgr::loadIdealVals() {
     owner->m_idealCalib.ciSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[rng];
-    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[rng] *
+    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[(short)rng];
+    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[(short)rng] *
       owner->m_idealCalib.ciSigPct;
 
-    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[rng];
-    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[rng] *
+    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[(short)rng];
+    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[(short)rng] *
       owner->m_idealCalib.ciSigPct;
   }
 
   return StatusCode::SUCCESS;
 }
 
-bool TholdCIMgr::checkXtalId(CalXtalId xtalId) {
-  // all queries require face info (leave range optional)
-  if (!xtalId.validFace())
-    throw invalid_argument("TholdCI calib_type requires valid face information in CalXtalId."
-                           " Programmer error");
+bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
+  if (!tholdCI) return false;
+  if (!tholdCI->getFLE()) {
+    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
+    // however, if tholdCI->getFLE() is successful & following checks fail
+    // then we have a problem b/c we have calib data which is only good for
+    // partial xtal.
+    return false;
+  }
+  if (!tholdCI->getFHE() ||
+      !tholdCI->getLAC()) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
+
+  const vector<ValSig> *peds = tholdCI->getPeds();
+  const vector<ValSig> *ulds = tholdCI->getULDs();
+  if (!peds || !ulds) {
+    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
+    return false;
+  }
+
+  if (peds->size() != (unsigned)RngNum::N_VALS ||
+      ulds->size() != (unsigned)RngNum::N_VALS) {
+    // create MsgStream only when needed for performance
+    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    msglog << MSG::ERROR << "can't get calib data for " 
+           << m_calibPath;
+    msglog << endreq;
+    return false;
+  }
   return true;
 }
+<<<<<<< TholdCIMgr.cxx
+
+StatusCode  TholdCIMgr::genLocalStore() {
+  m_rngBases.resize(FaceIdx::N_VALS,0);
+
+  if (!m_idealMode) {
+    for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
+      CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
+      if (!tholdCI) continue;
+      if (!validateRangeBase(tholdCI)) continue;
+
+      m_rngBases[faceIdx] = tholdCI;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+=======
 
 bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
   CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)rangeBase;
@@ -209,3 +228,4 @@ bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
   }
   return true;
 }
+>>>>>>> 1.6

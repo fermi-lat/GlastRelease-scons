@@ -5,14 +5,14 @@
 #include "IdealCalCalib.h"
 
 // GLAST
-#include "idents/CalXtalId.h"
 #include "CalibData/RangeBase.h"
 #include "CalibData/Cal/CalCalibBase.h"
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 
 // EXTLIB
 #include "GaudiKernel/IService.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 #include "TSpline.h"
 
@@ -21,7 +21,7 @@
 #include <algorithm>
 
 using namespace std;
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 class CalCalibSvc;
@@ -71,25 +71,20 @@ class CalibItemMgr {
   /// load ideal (fake) calibration vals for my calib_type if db is down
   virtual StatusCode loadIdealVals() = 0;
 
-  /// generate full set of spline f()'s or other local data (if applicable for calib_type)
-  virtual StatusCode genLocalStore() {return StatusCode::SUCCESS;}   
-
-  /// check that xtalId has optional range & face information (if applicable for calib_type)
-  virtual bool checkXtalId(CalXtalId xtalId) = 0;
-
-  /// convert xtalId to appropriate LATWideIndex for current calib type
-  virtual LATWideIndex genIdx(CalXtalId xtalId) = 0;
+  /// generate full set of spline f()'s or other local data (if
+  /// applicable for calib_type)
+  virtual StatusCode genLocalStore() = 0;
 
   /// supplied by each calib_type for checking a TDS data item
   virtual bool validateRangeBase(CalibData::RangeBase *rangeBase) = 0;
 
 
   /// generic spline evaluation f() works for any calib_type
-  StatusCode evalSpline(int calibType, CalXtalId xtalId, double x, double &y);
+  StatusCode evalSpline(int calibType, LATWideIndex idx, float x, float &y);
 
   /// generate new spline from 2 STL vecs & insert into appropriate splineList
-  StatusCode genSpline(int calibType, CalXtalId xtalId, const string &name,
-                       const vector<double> &x, const vector<double> &y);
+  StatusCode genSpline(int calibType, LATWideIndex idx, const string &name,
+                       const vector<float> &x, const vector<float> &y);
 
   /// TDS path to calib data for my calib_type
   string                       m_calibTypePath;
@@ -97,7 +92,7 @@ class CalibItemMgr {
   /// TDS path to calib data for my calib_type and path
   string                       m_calibPath;
 
- /// TDS location for root of my calib_type and path
+  /// TDS location for root of my calib_type and path
   CalibData::CalCalibBase     *m_calibBase;
 
   /// ref to owner->CalCalibSvc object
@@ -113,7 +108,17 @@ class CalibItemMgr {
   /// max X val for each (optional) spline in local data store
   vector<CalVec<LATWideIndex, float> >         m_splineXMax;
 
+  /// pointers to each data member for my calib_type                                                                                                                                                       
+  CalVec<LATWideIndex, CalibData::RangeBase* > m_rngBases;
+
   /** retrieve spec'd rangeBase object, update if necessary
+<<<<<<< CalibItemMgr.h
+      \return NULL if there is no data 
+  */
+  CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
+    return m_calibBase->getRange(xtalId);
+  }
+=======
    \return NULL if there is no data 
    */
   CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
@@ -123,10 +128,11 @@ class CalibItemMgr {
 
     return rangeBase;
   }
+>>>>>>> 1.6
   
  private:
   /// wipe out locally stored data (e.g. splines)
-  virtual void clearLocalStore();      
+  void clearLocalStore();      
   /// calib flavor
   string            m_flavor;     
   /// validity state of CalibItemMgr data

@@ -12,7 +12,7 @@
 
 // STD
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 using CalibData::ValSig;
@@ -30,59 +30,51 @@ class AsymMgr : public CalibItemMgr {
   AsymMgr();
 
   /// get Asymmetry calibration information for one xtal
-  StatusCode getAsym(CalXtalId xtalId,
+  StatusCode getAsym(XtalIdx xtalIdx,
                      const vector<ValSig> *&asymLrg,
                      const vector<ValSig> *&asymSm,
                      const vector<ValSig> *&asymNSPB,
                      const vector<ValSig> *&asymPSNB,
                      const vector<float>  *&xVals);
 
-  StatusCode evalAsymLrg(CalXtalId xtalId, 
-                         double Xpos, double &asymLrg){
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMLRG_SPLINE, xtalId, Xpos, asymLrg);
+  StatusCode evalAsymLrg(XtalIdx xtalIdx, 
+                         float Xpos, float &asymLrg){
+    return evalSpline(ASYMLRG_SPLINE, xtalIdx, Xpos, asymLrg);
   }
 
-  StatusCode evalPosLrg(CalXtalId xtalId, 
-                        double asymLrg, double &Xpos) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMLRG_SPLINE, xtalId, asymLrg, Xpos);
+  StatusCode evalPosLrg(XtalIdx xtalIdx, 
+                        float asymLrg, float &Xpos) {
+    return evalSpline(INV_ASYMLRG_SPLINE, xtalIdx, asymLrg, Xpos);
   }
 
-  StatusCode evalAsymSm(CalXtalId xtalId, 
-                        double Xpos, double &asymSm) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMSM_SPLINE, xtalId, Xpos, asymSm);
+  StatusCode evalAsymSm(XtalIdx xtalIdx, 
+                        float Xpos, float &asymSm) {
+    return evalSpline(ASYMSM_SPLINE, xtalIdx, Xpos, asymSm);
   }
 
-  StatusCode evalPosSm(CalXtalId xtalId, 
-                       double asymSm, double &Xpos) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMSM_SPLINE, xtalId, asymSm, Xpos);
+  StatusCode evalPosSm(XtalIdx xtalIdx, 
+                       float asymSm, float &Xpos) {
+    return evalSpline(INV_ASYMSM_SPLINE, xtalIdx, asymSm, Xpos);
   }
 
-  StatusCode evalAsymNSPB(CalXtalId xtalId, 
-                          double Xpos, double &asymNSPB) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMNSPB_SPLINE, xtalId, Xpos, asymNSPB);
+  StatusCode evalAsymNSPB(XtalIdx xtalIdx, 
+                          float Xpos, float &asymNSPB) {
+    return evalSpline(ASYMNSPB_SPLINE, xtalIdx, Xpos, asymNSPB);
   }
 
-  StatusCode evalPosNSPB(CalXtalId xtalId, 
-                         double asymNSPB, double &Xpos) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMNSPB_SPLINE, xtalId, asymNSPB, Xpos);
+  StatusCode evalPosNSPB(XtalIdx xtalIdx, 
+                         float asymNSPB, float &Xpos) {
+    return evalSpline(INV_ASYMNSPB_SPLINE, xtalIdx, asymNSPB, Xpos);
   }
 
-  StatusCode evalAsymPSNB(CalXtalId xtalId, 
-                          double Xpos, double &asymPSNB) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(ASYMPSNB_SPLINE, xtalId, Xpos, asymPSNB);
+  StatusCode evalAsymPSNB(XtalIdx xtalIdx, 
+                          float Xpos, float &asymPSNB) {
+    return evalSpline(ASYMPSNB_SPLINE, xtalIdx, Xpos, asymPSNB);
   }
 
-  StatusCode evalPosPSNB(CalXtalId xtalId, 
-	                     double asymPSNB, double &Xpos) {
-    if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-    return evalSpline(INV_ASYMPSNB_SPLINE, xtalId, asymPSNB, Xpos);
+  StatusCode evalPosPSNB(XtalIdx xtalIdx, 
+                         float asymPSNB, float &Xpos) {
+    return evalSpline(INV_ASYMPSNB_SPLINE, xtalIdx, asymPSNB, Xpos);
   }
 
 
@@ -103,27 +95,39 @@ class AsymMgr : public CalibItemMgr {
 
   StatusCode genLocalStore();
 
-  bool checkXtalId(CalXtalId xtalId);
-
-  LATWideIndex genIdx(CalXtalId xtalId) {return XtalIdx(xtalId);}
-
   StatusCode loadIdealVals();
   /// Store ideal (fake) vals for large diode asym (used when db is down)
   vector<ValSig> m_idealAsymLrg;
   /// Store ideal (fake) vals for small diode asym (used when db is down)
   vector<ValSig> m_idealAsymSm;
+<<<<<<< AsymMgr.h
+  /// Store ideal (fake) vals for NegSmall diode PosBig diode asym 
+  /// (used when db is down)
+
+=======
   /// \brief Store ideal (fake) vals for NegSmall diode PosBig diode asym 
   ///
   /// (used when mysql (inet) db is down)
+>>>>>>> 1.4
   vector<ValSig> m_idealAsymNSPB;
+<<<<<<< AsymMgr.h
+  /// Store ideal (fake) vals for PosSmall diode NegBig diode asym 
+  /// (used when db is down)
+=======
   /// \brief Store ideal (fake) vals for PosSmall diode NegBig diode asym 
   ///
   /// (used when mysql (inet) db is down)
+>>>>>>> 1.4
   vector<ValSig> m_idealAsymPSNB;
   
   vector<float> m_idealXVals;
 
+<<<<<<< AsymMgr.h
+  /// validate data ptr from TDS
+  bool validateRangeBase(CalibData::CalAsym *asym);
+=======
   bool validateRangeBase(CalibData::RangeBase *rangeBase);
+>>>>>>> 1.4
 
 };
 #endif

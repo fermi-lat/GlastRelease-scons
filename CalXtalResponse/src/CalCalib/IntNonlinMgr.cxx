@@ -10,18 +10,14 @@
 // STD
 #include <algorithm>
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 IntNonlinMgr::IntNonlinMgr() : 
   CalibItemMgr(CalibData::CAL_IntNonlin, 
                N_SPLINE_TYPES),
-  m_idealADCs(RngNum::N_VALS), // one spline per range
-  m_idealDACs(RngNum::N_VALS),  // one spline per range
-  m_idealErr(0),
-  m_DACs(RngIdx::N_VALS)
+  m_idealErr(0)
 {
-
   // set size of spline lists (1 per range)
   for (unsigned i = 0; i < m_splineLists.size(); i++) {
     m_splineLists[i].resize(RngIdx::N_VALS, 0);
@@ -31,14 +27,12 @@ IntNonlinMgr::IntNonlinMgr() :
 }
 
 /// get integral non-linearity vals for given xtal/face/rng
-StatusCode IntNonlinMgr::getIntNonlin(CalXtalId xtalId,
+StatusCode IntNonlinMgr::getIntNonlin(RngIdx rngIdx,
                                       const vector< float > *&adcs,
                                       const vector< float > *&dacs,
                                       float &error) {
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-
   if (m_idealMode) {
-    RngNum rng = xtalId.getRange();
+    RngNum rng(rngIdx.getRng());
     adcs = &m_idealADCs[rng];
     dacs = &m_idealDACs[rng];
     error = m_idealErr;
@@ -52,14 +46,13 @@ StatusCode IntNonlinMgr::getIntNonlin(CalXtalId xtalId,
 
   
   CalibData::IntNonlin *intNonlin 
-    = (CalibData::IntNonlin *)getRangeBase(xtalId);
+	  = (CalibData::IntNonlin*)m_rngBases[rngIdx];
   if (!intNonlin) return StatusCode::FAILURE;
 
   //-- retrieve ADC vals
   adcs = intNonlin->getValues();
   
   //-- retrieve DAC vals
-  RngIdx rngIdx(xtalId);
   dacs = &(m_DACs[rngIdx]);
 
   // check array lens
@@ -76,12 +69,13 @@ StatusCode IntNonlinMgr::genLocalStore() {
   const vector<float> *adc;
   vector<float> *dac;
 
-  for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
+  m_rngBases.resize(RngIdx::N_VALS, 0);
 
-    CalXtalId xtalId = rngIdx.getCalXtalId();
+  for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
+    RngNum rng = rngIdx.getRng();
+
     //-- IDEAL MODE --//
     if (m_idealMode) {
-      RngNum rng = rngIdx.getRng();
       adc = &m_idealADCs[rng];
       dac = &m_idealDACs[rng];
     }
@@ -91,9 +85,11 @@ StatusCode IntNonlinMgr::genLocalStore() {
       dac = &m_DACs[rngIdx];
       
       CalibData::IntNonlin *intNonlin 
-        = (CalibData::IntNonlin *)getRangeBase(xtalId);
+        = (CalibData::IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
       // support partial LAT
       if (!intNonlin) continue;
+      if (!validateRangeBase(intNonlin)) continue;
+      m_rngBases[rngIdx] = intNonlin;
 
       // quick check that ADC data is present 
       adc = intNonlin->getValues();
@@ -114,7 +110,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
       else {
         //get collection of associated DAC vals
         CalibData::DacCol *intNonlinDacCol = 
-          m_calibBase->getDacCol(xtalId.getRange());
+          m_calibBase->getDacCol((short)rng);
         
         const vector<unsigned> *globalDACs;
         globalDACs = intNonlinDacCol->getDacs();
@@ -139,26 +135,26 @@ StatusCode IntNonlinMgr::genLocalStore() {
     }
 
     //-- PHASE 2: generate splines
-    vector<double> dblDac;
-    vector<double> dblAdc;
+    vector<float> dblDac;
+    vector<float> dblAdc;
     
     int n = min(adc->size(),dac->size());
 
     dblDac.resize(n);
     dblAdc.resize(n);
 
-    // create double vector for input to genSpline()
+    // create float vector for input to genSpline()
     copy(adc->begin(), adc->begin() + n, dblAdc.begin());
     copy(dac->begin(), dac->begin() + n, dblDac.begin());
 
     // put rng id string into spline name
     ostringstream rngStr;
-    rngStr << '[' << xtalId
+    rngStr << '[' << rngIdx.getCalXtalId()
            << ']';
 
-    genSpline(INL_SPLINE, xtalId, "INL"    + rngStr.str(),    
+    genSpline(INL_SPLINE, rngIdx, "INL"    + rngStr.str(),    
               dblAdc, dblDac);
-    genSpline(INV_INL_SPLINE, xtalId, "invINL" + rngStr.str(), 
+    genSpline(INV_INL_SPLINE, rngIdx, "invINL" + rngStr.str(), 
               dblDac, dblAdc);
   }
 
@@ -195,7 +191,7 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
     m_idealDACs[rng][0] = 0;
     m_idealDACs[rng][1] = 
-      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[rng]);
+      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[(short)rng]);
   }
 
   // we don't have this info at this point
@@ -204,6 +200,20 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
   return StatusCode::SUCCESS;
 }
+<<<<<<< IntNonlinMgr.cxx
+
+
+bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
+  if (!intNonlin) return false;
+
+  //get vector of vals
+  const vector<float> *intNonlinVec = intNonlin->getValues();
+  if (!intNonlinVec)    
+    return false;
+
+  return true;
+}
+=======
 
 bool IntNonlinMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
   CalibData::IntNonlin* intNonlin = (CalibData::IntNonlin*)(rangeBase);
@@ -215,3 +225,4 @@ bool IntNonlinMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
 
   return true;
 }
+>>>>>>> 1.5
