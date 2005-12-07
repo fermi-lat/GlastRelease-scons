@@ -7,11 +7,12 @@
 // GLAST
 #include "CalibData/Cal/CalTholdMuon.h"
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalArray.h"
 
 // EXTLIB
 // STD
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 using CalibData::ValSig;
@@ -27,28 +28,29 @@ class CalCalibSvc;
 class TholdMuonMgr : public CalibItemMgr {
  public:
   TholdMuonMgr() : 
-    CalibItemMgr(CalibData::CAL_TholdMuon),
-    m_idealPed(RngNum::N_VALS)
+    CalibItemMgr(CalibData::CAL_TholdMuon)
     {};
 
   /// get threshold calibration constants as measured w/ muon calibration
-  StatusCode getTholds(CalXtalId xtalId,
+  StatusCode getTholds(FaceIdx faceIdx,
                        CalibData::ValSig &FLE,
                        CalibData::ValSig &FHE);
 
   /// get pedestal calibration constants as measured during muon calibration threshold testing.
-  StatusCode getPed(CalXtalId xtalId,
+  StatusCode getPed(RngIdx rngIdx,
                     CalibData::ValSig &ped);
  private:
-  bool checkXtalId(CalXtalId xtalId);
-
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(CalXtalId xtalId) {return FaceIdx(xtalId);}
+  
+  StatusCode genLocalStore();
 
   ValSig m_idealFLE;
   ValSig m_idealFHE;
-  CalVec<RngNum, ValSig> m_idealPed;
+  CalArray<RngNum, ValSig> m_idealPed;
+
+  /// Validate TDS data entry (for empty ptrs & fun stuff like that)
+  bool validateRangeBase(CalibData::CalTholdMuon *tholdMuon); 
 
   bool validateRangeBase(CalibData::RangeBase *rangeBase);
 };

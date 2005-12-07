@@ -1,5 +1,5 @@
-#ifndef _IXtalRecTool_H
-#define _IXtalRecTool_H
+#ifndef IXtalRecTool_H
+#define IXtalRecTool_H
 /*! @class IXtalRecTool
  *
  * \author Zach Fewtrell
@@ -15,44 +15,65 @@
 
 
 // GLAST INCLUDES
-#include "idents/CalXtalId.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/CalDigi.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "CalUtil/CalArray.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
 
 // STD INCLUDES
 
-using namespace idents;
+static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 0);
 
-static const InterfaceID IID_XtalRecTool("IXtalRecTool", 1 , 0);
+using namespace idents;
+using namespace std;
+using namespace CalUtil;
 
 class IXtalRecTool : virtual public IAlgTool {
- public:
-  static const InterfaceID& interfaceID() { return IID_XtalRecTool; }
 
-  /** \brief estimate total deposited energy given the digital response for both faces
-      \param xtalId specify xtal log
-      \param readout single input digi readout 
-      \param evt pointer to current event (used for runid & evtid)
-      \param rngRec output recon readout.
-      \param belowThreshP returns TRUE if POS face signal is below noise (for all ranges)
-      \param belowThreshN returns TRUE if NEG face signal is below noise (for all ranges)
-      \param saturatedP POS face ADC is saturated (for all ranges)
-      \param saturatedN NEG face ADC is saturated (for all ranges)
-      \param calTupleEnt pointer to optional tuple entry (NULL pointer is ignored)
+ public:
+  static const InterfaceID& interfaceID() { return IID_IXtalRecTool; }
+
+  /** \brief estimate total deposited energy given the digital
+      response for both faces
+
+      \param digi single input digi readout 
+
+      \param xtalRec expected to contain calxtalid field but no 
+      CalRangeRecData objects.  calculate() will attempt 
+      to create 1 rangeRec object, but this will not always be possible.
+      Caller should check xtalRec.getNReadouts() to see if xtal recon 
+      was successful.  It _is_ possible for this function to return 
+      StatusCode::SUCCESS along w/ 0 CalRangeRecData objects.
+
+      \param belowThresh returns TRUE for each face signal below noise for any 
+      adc range
+
+      \param xtalBelowThresh returns TRUE if either face signal below LEX8 noise level
+
+      \param saturated returns TRUE for each face signal that is >= HEX1 
+      saturation level
+
+      \param calTupleEnt pointer to optional tuple entry (NULL pointer is 
+      ignored)
+
+      \param evtHdr (optional) pointer to current event header (used for RunID 
+      & EventID in optional XtalRecTuple)
+
+      \return It _is_ possible for this function to return 
+      StatusCode::SUCCESS along w/ 0 CalRangeRecData objects.
+
+
   */
-  virtual StatusCode calculate(const Event::EventHeader &evtHdr,
-                               const Event::CalDigi &digi,
-                               Event::CalXtalRecData &xtalRec, // output
-                               bool &belowThreshP,    // output
-                               bool &belowThreshN,    // output
+  virtual StatusCode calculate(const Event::CalDigi &digi,
+                               Event::CalXtalRecData &xtalRec,
+                               CalArray<FaceNum, bool> &belowThresh,
                                bool &xtalBelowThresh,
-                               bool &saturatedP,      // output
-                               bool &saturatedN,       // output
-                               CalTupleEntry *calTupleEnt
+                               CalArray<FaceNum, bool> &saturated,
+                               CalTupleEntry *calTupleEnt=0,
+                               const Event::EventHeader *evtHdr=0
                                ) = 0;
 };
 

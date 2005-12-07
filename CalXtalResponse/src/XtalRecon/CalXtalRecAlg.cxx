@@ -6,6 +6,7 @@
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalArray.h"
 #include "Event/Digi/CalDigi.h"
 #include "Event/TopLevel/EventModel.h"
 
@@ -19,36 +20,27 @@
 using namespace Event;
 using namespace idents;
 using namespace std;
-using namespace CalDefs;
+using namespace CalUtil;
 
 static const AlgFactory<CalXtalRecAlg>  Factory;
 const IAlgFactory& CalXtalRecAlgFactory = Factory;
-
-const char *CalTupleEntry::m_tupleDesc = "RunID/i:EventID/i:CalXtalAdcPed[16][8][12][2]/F:CalXtalFaceSignal[16][8][12][2]/F";
-
 
 CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   Algorithm(name, pSvcLocator),
   m_calDigiCol(0),
   m_calXtalRecCol(0),
   m_xtalRecTool(0),
-  m_tupleFile(0),
-  m_tupleBranch(0),
-  m_tupleTree(0)
+  m_evtHdr(0),
+  m_tupleWriterSvc(0)
 {
   declareProperty("XtalRecToolName", m_recToolName="XtalRecTool");
-  declareProperty("tupleFilename",   m_tupleFilename="");
+  declareProperty("tupleName",   m_tupleName="");
 }
 
 /** 
     This function sets values to private data members,
     representing the calorimeter geometry and digitization
-    constants. Information  from xml files is obtained using 
-    GlastdetSvc::getNumericConstByName() function.
-    To make this constant extraction in a loop, the pairs
-    'constant pointer, constant name' are stored in
-    map container. <p>
-    Double and integer constants are extracted separatly,
+    constants. Double and integer constants are extracted separatly,
     because constants of both types are returned
     by getNumericConstByName() as double.
 */      
@@ -63,38 +55,49 @@ StatusCode CalXtalRecAlg::initialize()
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
+  
+  //-- tuple setup --//
+  if (m_tupleName.value().length() > 0 ) {
+    sc = service("RootTupleSvc", m_tupleWriterSvc);
+    // if we can't retrieve the tuple svc just pretend we never wanted
+    // it and continue anyway
+    if (sc.isFailure()) {
+      msglog << MSG::ERROR << "Could not locate the ntupleSvc" << endreq;
+      m_tupleWriterSvc = 0;
+    }
+
+    else { // tuple svc was successfully found
+      // keep track of any branch creation errors
+      bool branchFailure = false;
+      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                     "RunID", 
+                                     &m_tupleEntry.m_runId);
+      if (sc.isFailure()) branchFailure |= true;
+      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                     "EventID", 
+                                     &m_tupleEntry.m_eventId);
+      if (sc.isFailure()) branchFailure |= true;
+      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                     "CalXtalAdcPed[16][8][12][2]",
+                                     (float*)m_tupleEntry.m_calXtalAdcPed);
+      if (sc.isFailure()) branchFailure |= true;
+      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                     "CalXtalFaceSignal[16][8][12][2]",
+                                     (float*)m_tupleEntry.m_calXtalFaceSignal);
+      if (sc.isFailure()) branchFailure |= true;
+      
+      if (branchFailure) {
+        msglog << MSG::ERROR << "Failure creating tuple branches" << endl;
+        return StatusCode::FAILURE;
+      }
+    }
+  }
 
   //-- Xtal Recon Tool --//
   sc = toolSvc()->retrieveTool(m_recToolName, m_xtalRecTool, this);
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  Unable to create " << m_recToolName << endreq;
     return sc;
-  }
-
-  //-- Open Tuple File (Optional) --//
-  if (m_tupleFilename.value() != "") {
-    m_tupleFile = new TFile(m_tupleFilename.value().c_str(),"RECREATE","CalTuple");
-    if (!m_tupleFile) {
-      msglog << MSG::ERROR << "Unable to create TFile object: " << m_tupleFilename << endreq;
-      return StatusCode::FAILURE;
-    }
-         
-    m_tupleTree = new TTree("CalTuple","CalTuple");
-    if (!m_tupleTree) {
-      msglog << MSG::ERROR << "Unable to create CalTuple TTree object" << endreq;
-      return StatusCode::FAILURE;
-    }
-         
-    m_tupleBranch = m_tupleTree->Branch("CalTupleEntry",      // branch name
-                                        &m_tupleEntry,        // fill object
-                                        m_tupleEntry.m_tupleDesc);
-    if (!m_tupleBranch) { 
-      // dunno how big to make it so i made it small, enough for one
-      // object + any overhead.
-         
-      msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
-      return StatusCode::FAILURE;
-    }
   }
 
   return StatusCode::SUCCESS;
@@ -119,11 +122,13 @@ StatusCode CalXtalRecAlg::execute()
   // fatal error  if (sc.isFailure()) return sc;
 
   // reset optional tuple entry
-  if (m_tupleTree) {
+  if (m_tupleWriterSvc) {
     m_tupleEntry.Clear();
     
-    m_tupleEntry.m_runId   = m_evtHdr->run();
-    m_tupleEntry.m_eventId = m_evtHdr->event();
+    if (m_evtHdr) {
+      m_tupleEntry.m_runId   = m_evtHdr->run();
+      m_tupleEntry.m_eventId = m_evtHdr->event();
+    }
   }
        
   // loop over all calorimeter digis in CalDigiCol
@@ -135,6 +140,7 @@ StatusCode CalXtalRecAlg::execute()
     if ((*digiIter)->getReadoutCol().size() < 1) continue;
     
     CalXtalId xtalId = (*digiIter)->getPackedId();
+    XtalIdx xtalIdx(xtalId);
     
     // create new object to store crystal reconstructed data  
     // use auto_ptr so it is autmatically deleted when we exit early
@@ -143,28 +149,27 @@ StatusCode CalXtalRecAlg::execute()
                                      
     // calculate energy in the crystal
     // used for current range only
-    bool belowThreshP    = false;
-    bool belowThreshM    = false;
+    CalArray<FaceNum, bool> belowThresh;
+    CalArray<FaceNum, bool> saturated;
+    belowThresh.fill(false);
+    saturated.fill(false);
     bool xtalBelowThresh = false;
-    bool saturatedP      = false;
-    bool saturatedM      = false;
 
     // convert adc values into energy/pos
-    sc = m_xtalRecTool->calculate(*m_evtHdr,
-                                  **digiIter,
+    sc = m_xtalRecTool->calculate(**digiIter,
                                   *recData,
-                                  belowThreshP,
-                                  belowThreshM,
+                                  belowThresh,
                                   xtalBelowThresh,
-                                  saturatedP,
-                                  saturatedM,
-                                  (m_tupleFile) ? &m_tupleEntry : 0 // optional tuple entry
-                                  );
+                                  saturated,
+                                  (m_tupleWriterSvc) ? &m_tupleEntry : 0);
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 
     // skip any xtal w/ at least one LEX8 range below threshold
     if (xtalBelowThresh) continue;
+    
+    // skip if recData contains no entries
+    if (recData->getNReadouts() == 0) continue;
 
     // add new reconstructed data to the collection
     // release it from the auto_ptr so it is not deleted
@@ -172,8 +177,8 @@ StatusCode CalXtalRecAlg::execute()
   }
 
   // fill optional tuple
-  if (m_tupleTree)
-    m_tupleTree->Fill();
+  if (m_tupleWriterSvc)
+    m_tupleWriterSvc->storeRowFlag(true);
 
   return StatusCode::SUCCESS;
 }
@@ -192,12 +197,14 @@ StatusCode CalXtalRecAlg::retrieve()
   StatusCode sc = StatusCode::SUCCESS;
 
 
-  // Retrieve the Event data for this event
-  m_evtHdr = SmartDataPtr<Event::EventHeader>(eventSvc(), EventModel::EventHeader);
-  if (!m_evtHdr) {
-    MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
-    return StatusCode::FAILURE;
+  // only needed if we are generating a tuple
+  if (m_tupleWriterSvc) {
+    // Retrieve the Event data for this event
+    m_evtHdr = SmartDataPtr<EventHeader>(eventSvc(), EventModel::EventHeader);
+    if (!m_evtHdr) {
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
+    }
   }
          
   // get a pointer to the input TDS data collection
@@ -246,13 +253,6 @@ StatusCode CalXtalRecAlg::retrieve()
 
 
 StatusCode CalXtalRecAlg::finalize() {    
-  // make sure optional tuple is closed out
-  if (m_tupleFile) {
-    m_tupleFile->Write();
-    m_tupleFile->Close(); // trees deleted
-    delete m_tupleFile;
-  }
-
   if (m_xtalRecTool)
     m_xtalRecTool->finalize();
 

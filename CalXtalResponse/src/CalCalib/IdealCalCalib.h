@@ -42,54 +42,54 @@ class IdealCalCalib {
   //// ASYMMETRY ///
   //////////////////
   /// val for Large Diode asym spline at neg face
-  double asymLrgNeg;            
+  float asymLrgNeg;            
   /// val for Large Diode asym spline at pos face
-  double asymLrgPos;            
+  float asymLrgPos;            
         
   /// val for Small Diode asym spline at neg face
-  double asymSmNeg;             
+  float asymSmNeg;             
   /// val for Small Diode asym spline at pos face
-  double asymSmPos;             
+  float asymSmPos;             
         
   /// val for PSNB asym spline at neg face
-  double asymPSNBNeg;           
+  float asymPSNBNeg;           
   /// val for PSNB asym spline at pos face
-  double asymPSNBPos;           
+  float asymPSNBPos;           
         
   /// val for NSPB asym spline at neg face
-  double asymNSPBNeg;           
+  float asymNSPBNeg;           
   /// val for NSPB asym spline at pos face
-  double asymNSPBPos;           
+  float asymNSPBPos;           
         
   /// sigma/val for all vals in asym group 
-  double asymSigPct;            
+  float asymSigPct;            
   
 
   ///////////////////
   //// MEVPERDAC ////
   ///////////////////
   /// Large diode MevPerDac 
-  double mpdLrg;                
+  float mpdLrg;                
   /// Small diode MevPerDac 
-  double mpdSm;                 
+  float mpdSm;                 
         
   /// sigma/val for all vals in MPD group 
-  double mpdSigPct;             
+  float mpdSigPct;             
   
 
   /////////////////
   //// THOLD_CI ///
   /////////////////
   /// FLE threshold 
-  double ciFLE;                 
+  float ciFLE;                 
   /// FHE threshold 
-  double ciFHE;                 
+  float ciFHE;                 
   /// LAC threshold 
-  double ciLAC;                 
+  float ciLAC;                 
   /// 1 ULD threshold per ADC range
   vector<double> ciULD;         
   /// sigma/val for all vals in THOLD_CI group
-  double ciSigPct;              
+  float ciSigPct;              
   /// 1 pedestal value per ADC range           
   vector<double> ciPeds;        
   
@@ -98,11 +98,11 @@ class IdealCalCalib {
   //// THOLD_MUON ///
   ///////////////////
   /// FLE threshold 
-  double muonFLE;               
+  float muonFLE;               
   /// FHE threshold 
-  double muonFHE;               
+  float muonFHE;               
   /// sigma/val for all vals in THOLD_MUON group 
-  double muonSigPct;            
+  float muonSigPct;            
   /// 1 pedestal value per ADC range      
   vector<double> muonPeds;      
 
@@ -112,7 +112,7 @@ class IdealCalCalib {
   /// ADC/DAC for each ADC range 
   vector<double> inlADCPerDAC;          
   /// sigma/val for all vals in INT_NONLIN group
-  double inlSigPct;             
+  float inlSigPct;             
 
  private:
 

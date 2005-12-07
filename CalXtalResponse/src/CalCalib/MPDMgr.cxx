@@ -8,18 +8,15 @@
 // EXTLIB
 
 // STD
-#include <algorithm>
 
 using namespace std;
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 /// get MeVPerDac ratios for given xtal
-StatusCode MPDMgr::getMPD(CalXtalId xtalId,
+StatusCode MPDMgr::getMPD(XtalIdx xtalIdx,
                           CalibData::ValSig &mpdLrg,
                           CalibData::ValSig &mpdSm) {
-
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
 
   if (m_idealMode) {
     mpdLrg = m_idealMPDLrg;
@@ -34,7 +31,7 @@ StatusCode MPDMgr::getMPD(CalXtalId xtalId,
 
   // Get generic pointer to rng specific data
   CalibData::CalMevPerDac *mpd = 
-    (CalibData::CalMevPerDac *)getRangeBase(xtalId);
+    (CalibData::CalMevPerDac*)m_rngBases[xtalIdx];
   if (!mpd) return StatusCode::FAILURE;
 
   mpdLrg = *(mpd->getBig());
@@ -55,9 +52,28 @@ StatusCode MPDMgr::loadIdealVals() {
   return StatusCode::SUCCESS;
 }
 
-bool MPDMgr::checkXtalId(CalXtalId xtalId) {
-  if (xtalId.validRange() || xtalId.validFace())
-    throw invalid_argument("MevPerDAC calib_type cannot accept range/face information in CalXtalId."
-                           " Programmer error");
+
+StatusCode MPDMgr::genLocalStore() {
+  m_rngBases.resize(XtalIdx::N_VALS,0);
+
+  if (!m_idealMode) {
+    for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
+      CalibData::CalMevPerDac *mpd = (CalibData::CalMevPerDac*)getRangeBase(xtalIdx.getCalXtalId());
+      if (!mpd) continue;
+      if (!validateRangeBase(mpd)) continue;
+      
+      m_rngBases[xtalIdx] = mpd;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+bool MPDMgr::validateRangeBase(CalibData::CalMevPerDac *mpd) {
+  const ValSig *big = mpd->getBig();
+  const ValSig *small = mpd->getSmall();
+  if (!big || !small) return false;
+  if (big->getVal() <= 0) return false;
+  if (small->getVal() <=0) return false;
+
   return true;
 }

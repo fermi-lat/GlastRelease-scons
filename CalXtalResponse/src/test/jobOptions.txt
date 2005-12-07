@@ -30,6 +30,10 @@ ApplicationMgr.TopAlg = {
 //  Geometry definition
 //
 ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="LAT"; 
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
@@ -44,16 +48,50 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType    = 14;
 CalibDataSvc.CalibRootName       = "Calib";
-CalibDataSvc.CalibFlavorList     = {"ideal"};
+CalibDataSvc.CalibFlavorList     = {"ideal","CAL_flight_extrap","CAL_8tower_test"};
 
-// use modular default options (as gleam will, so's good to test!)
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
-//XtalDigiTool.SuperVerbose = true;
-//CalCalibSvc.SuperVerbose = true;
+/////////////////////////////////////////
+//-- for tests w/ ideal calibrations --//
+/////////////////////////////////////////
+ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvcIdeal"};
+CalCalibSvcIdeal.DefaultFlavor = "ideal"; // default for all calib types
+ToolSvc.XtalDigiToolIdeal.CalCalibSvc  = "CalCalibSvcIdeal";
+ToolSvc.XtalDigiToolIdeal.CalTrigTool  = "CalTrigToolIdeal";
+ToolSvc.XtalRecToolIdeal.CalCalibSvc   = "CalCalibSvcIdeal";
+ToolSvc.CalTrigToolIdeal.CalCalibSvc = "CalCalibSvcIdeal";
+ToolSvc.XtalDigiToolIdeal.NoRandomNoise = true; // default to no random noise
+ToolSvc.XtalDigiToolIdealNoise.CalCalibSvc  = "CalCalibSvcIdeal";
+ToolSvc.XtalDigiToolIdealNoise.CalTrigTool  = "CalTrigToolIdeal";
+
+/////////////////////////////////////////
+//-- for test w/ real calibrations   --//
+/////////////////////////////////////////
+ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvcReal"};
+CalCalibSvcReal.DefaultFlavor  = "CAL_flight_extrap";
+ToolSvc.XtalDigiToolReal.CalCalibSvc   = "CalCalibSvcReal";
+ToolSvc.XtalDigiToolReal.CalTrigTool   = "CalTrigToolReal";
+ToolSvc.XtalRecToolReal.CalCalibSvc    = "CalCalibSvcReal";
+ToolSvc.CalTrigToolReal.CalCalibSvc    = "CalCalibSvcReal";
+ToolSvc.XtalDigiToolReal.NoRandomNoise = true; // default to no random noise
+ToolSvc.XtalDigiToolRealNoise.CalCalibSvc   = "CalCalibSvcReal";
+ToolSvc.XtalDigiToolRealNoise.CalTrigTool   = "CalTrigToolReal";
+
+/////////////////////////////////////////
+//-- for test w/ 8Tower calibrations   --//
+/////////////////////////////////////////
+ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvc8Tower"};
+CalCalibSvc8Tower.DefaultFlavor  = "CAL_8tower_test";
+ToolSvc.XtalDigiTool8Tower.CalCalibSvc   = "CalCalibSvc8Tower";
+ToolSvc.XtalDigiTool8Tower.CalTrigTool   = "CalTrigTool8Tower";
+ToolSvc.XtalRecTool8Tower.CalCalibSvc    = "CalCalibSvc8Tower";
+ToolSvc.CalTrigTool8Tower.CalCalibSvc    = "CalCalibSvc8Tower";
+ToolSvc.XtalDigiTool8Tower.NoRandomNoise = true; // default to no random noise
+ToolSvc.XtalDigiTool8TowerNoise.CalCalibSvc   = "CalCalibSvc8Tower";
+ToolSvc.XtalDigiTool8TowerNoise.CalTrigTool   = "CalTrigTool8Tower";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 2;
-ApplicationMgr.EvtMax  = 2;
+MessageSvc.OutputLevel = 4;
+ApplicationMgr.EvtMax  = 1;
 
 //==============================================================
 //

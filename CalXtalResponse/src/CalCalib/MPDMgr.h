@@ -11,29 +11,31 @@
 
 // STD
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 using CalibData::ValSig;
 
 class CalCalibSvc;
 
+/// \brief Manage MevPerDAC calibration type
 class MPDMgr : public CalibItemMgr {
  public:
   MPDMgr() : 
     CalibItemMgr(CalibData::CAL_MevPerDac) {};
 
   /// get MeVPerDac ratios for given xtal
-  StatusCode getMPD(CalXtalId xtalId,
+  StatusCode getMPD(XtalIdx xtalIdx,
                     ValSig &mpdLrg,
                     ValSig &mpdSm);
 
  private:
-  bool checkXtalId(CalXtalId);
-
   StatusCode loadIdealVals();
 
-  LATWideIndex genIdx(CalXtalId xtalId) {return XtalIdx(xtalId);}
+  
+  StatusCode genLocalStore();
+
+  bool validateRangeBase(CalibData::CalMevPerDac *mpd);
 
   ValSig m_idealMPDLrg;
   ValSig m_idealMPDSm;

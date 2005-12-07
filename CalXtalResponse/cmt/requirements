@@ -10,6 +10,7 @@ use CLHEP          * IExternal
 use CalUtil
 use CalibData
 use GlastSvc
+use ntupleWriterSvc
 
 # Additional ROOT libraries Needed for TSpline3 object
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
@@ -20,7 +21,8 @@ apply_pattern package_include
 apply_pattern package_headers
 
 library CalXtalResponse *.cxx *.h Dll/*.cxx Dll/*.h ${CalXtalResponse_headers} \
-        CalCalib/*.cxx CalCalib/*.h XtalDigi/*.cxx XtalDigi/*.h XtalRecon/*.cxx XtalRecon/*.h
+        CalCalib/*.cxx CalCalib/*.h XtalDigi/*.cxx XtalDigi/*.h XtalRecon/*.cxx XtalRecon/*.h \
+        CalTrig/*.cxx CalTrig/*.h
 
 #=============================================================
 private

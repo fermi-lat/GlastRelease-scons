@@ -12,7 +12,7 @@
 #include <sstream>
 #include <algorithm>
 
-using namespace CalDefs;
+using namespace CalUtil;
 
 using namespace std;
 ///////////////// GENERIC UTILITIES //////////////////////////////////
@@ -107,15 +107,13 @@ StatusCode CalibItemMgr::updateCalib() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::evalSpline(int calibType, CalXtalId xtalId, 
-                                    double x, double &y) {
+StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx, 
+                                    float x, float &y) {
   StatusCode sc;
 
   // make sure we have valid calib data for this event.
   sc = updateCalib();
   if (sc.isFailure()) return sc;
-
-  LATWideIndex idx = genIdx(xtalId);
 
   // check that we have a spline for this particular xtal
   // (i.e. when LAT is not fully populated)
@@ -133,29 +131,33 @@ StatusCode CalibItemMgr::evalSpline(int calibType, CalXtalId xtalId,
 
   // bounds check input to spline function to avoid
   // weird behavior
-  x = max<double>(m_splineXMin[calibType][idx],x);
-  x = min<double>(m_splineXMax[calibType][idx],x);
+  x = max<float>(m_splineXMin[calibType][idx],x);
+  x = min<float>(m_splineXMax[calibType][idx],x);
 
   y = spline->Eval(x);
-  
-  if (owner->m_superVerbose) {
-    // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::VERBOSE << "Evaluating spline: "
-           << spline->GetName()
-           << " X=" << x
-           << " Y=" << y
-           << endreq;
+
+#if 0
+  //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
+  // create MsgStream only when needed (for performance)
+  if (idx.getInt()==48) {
+  MsgStream msglog(owner->msgSvc(), owner->name()); 
+  msglog << MSG::VERBOSE << "Evaluating spline: "
+         << spline->GetName()
+		 << " " << spline
+         << " idx=" << idx.getInt()
+         << " X=" << x
+         << " Y=" << y
+         << endreq;
   }
+#endif
+
   
   return StatusCode::SUCCESS;
 }
 
-StatusCode CalibItemMgr::genSpline(int calibType, CalXtalId xtalId, const string &name, 
-                                   const vector<double> &x, const vector<double> &y) {
+StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string &name, 
+                                   const vector<float> &x, const vector<float> &y) {
 
-  LATWideIndex idx = genIdx(xtalId);
-                                                                           
   int n = min(x.size(),y.size());
 
   // create tmp arrays for TSpline ctor
@@ -166,9 +168,26 @@ StatusCode CalibItemMgr::genSpline(int calibType, CalXtalId xtalId, const string
   copy(x.begin(),x.begin()+n,xp);
   copy(y.begin(),y.begin()+n,yp);
 
+
   TSpline3 *mySpline = new TSpline3(name.c_str(),
                                     xp,yp,n);
   mySpline->SetName(name.c_str());
+
+#if 0
+  //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
+  // create MsgStream only when needed (for performance)
+  if (idx.getInt()==48) {
+  MsgStream msglog(owner->msgSvc(), owner->name()); 
+  msglog << MSG::VERBOSE << "Generating spline: "
+         << mySpline->GetName()
+		 << " " << mySpline
+         << " idx=" << idx.getInt();
+  for (int i = 0; i < n; i++)
+    msglog << "\tX=" << xp[i]
+           << " Y=" << yp[i];
+  msglog << endreq;
+  }
+#endif
 
   
   // put spline in list
@@ -177,21 +196,6 @@ StatusCode CalibItemMgr::genSpline(int calibType, CalXtalId xtalId, const string
   m_splineXMin[calibType][idx] = xp[0];
   m_splineXMax[calibType][idx] = xp[n-1];
 
-  if (owner->m_superVerbose) {
-    // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::VERBOSE << "Gen spline " << name.c_str() 
-           << " t="  << calibType 
-           << " i="  << idx.getInt()
-           << " nx=" << n
-           << " ("   << m_splineXMin[calibType][idx] 
-           << "->"   << m_splineXMax[calibType][idx] << ')'
-           << " ny=" << n
-           << " ("   << yp[0]
-           << "->"   << yp[n-1]
-           << ')'    << endreq;
-  }
-  
   // clear heap variables
   delete xp;
   delete yp;
@@ -205,6 +209,8 @@ template <class T> static void fill_zero(T &container) {
 }
 
 void CalibItemMgr::clearLocalStore() {   
+  m_rngBases.clear();
+
   // m_splineLists is the 'owner' of the splines, so i need to delete
   // the objects themselves as well as the pointers.
   for (unsigned i = 0; i < m_splineLists.size(); i++) {

@@ -6,19 +6,17 @@
 // EXTLIB
 // STD
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 /// get pedestal vals for given xtal/face/rng
-StatusCode PedMgr::getPed(CalXtalId xtalId,
+StatusCode PedMgr::getPed(RngIdx rngIdx,
                           float &avr,
                           float &sig,
                           float &cos) {
 
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-  
   if (m_idealMode) {
-    RngNum rng = xtalId.getRange();
+    RngNum rng(rngIdx.getRng());
     // return default vals if we're in ideal (fake) mode
     avr = m_idealPeds[rng];
     sig = m_idealPedSig[rng];
@@ -33,7 +31,7 @@ StatusCode PedMgr::getPed(CalXtalId xtalId,
 
 
   CalibData::Ped *ped 
-	  = (CalibData::Ped *)getRangeBase(xtalId);
+    = (CalibData::Ped*)m_rngBases[rngIdx];
   if (!ped) return StatusCode::FAILURE;
 
   //vals
@@ -67,10 +65,34 @@ StatusCode PedMgr::loadIdealVals() {
   }
 
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealPeds[rng]   = owner->m_idealCalib.pedVals[rng];
-    m_idealPedSig[rng] = owner->m_idealCalib.pedSigs[rng];
-    m_idealCos[rng]    = owner->m_idealCalib.pedCos[rng];
+    m_idealPeds[rng]   = owner->m_idealCalib.pedVals[(short)rng];
+    m_idealPedSig[rng] = owner->m_idealCalib.pedSigs[(short)rng];
+    m_idealCos[rng]    = owner->m_idealCalib.pedCos[(short)rng];
   }
   
   return StatusCode::SUCCESS;
+}
+
+
+
+StatusCode PedMgr::genLocalStore() {
+  m_rngBases.resize(RngIdx::N_VALS,0);
+
+  if (!m_idealMode) {
+    for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
+      CalibData::Ped *ped = (CalibData::Ped*)getRangeBase(rngIdx.getCalXtalId());
+      if (!ped) continue;
+      if (!validateRangeBase(ped)) continue;
+
+      m_rngBases[rngIdx] = ped;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+bool PedMgr::validateRangeBase(CalibData::Ped *ped) {
+  if (!ped) return false;
+  if (ped->getAvr() <= 0) return false;
+  return true;
 }

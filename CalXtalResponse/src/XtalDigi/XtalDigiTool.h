@@ -4,6 +4,7 @@
 // LOCAL
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
+#include "CalXtalResponse/ICalTrigTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
@@ -19,62 +20,56 @@
 
 /*! \class XtalDigiTool
   \author Zachary Fewtrell
-  \brief Official implementation of IXtalDigiTool.  sums IntMcHits into digital response for one Cal xtalId.
+  \brief Official implementation of IXtalDigiTool.  
+  sums IntMcHits into digital response for one Cal xtalIdx.
 
 */
 
 class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
  public:
   /// default ctor, declares jobOptions
-  XtalDigiTool::XtalDigiTool( const string& type, 
-                              const string& name, 
-                              const IInterface* parent);
+  XtalDigiTool( const string& type, 
+                const string& name, 
+                const IInterface* parent);
 
   /// gets needed parameters and pointers to required services
   virtual StatusCode initialize();
 
   virtual StatusCode finalize();
 
-  /// calculate xtal Adc response for all rngs basedon collection of McHits in xtal & diode regions
-  StatusCode calculate(CalXtalId xtalId, 
-                       const vector<const Event::McIntegratingHit*> &hitList,
-                       const Event::EventHeader &evtHdr,            
-                       Event::CalDigi &calDigi,     // output 
-                       bool &lacP,                  // output 
-                       bool &lacN,                  // output 
-                       bool &fleP,                  // output 
-                       bool &fleN,                  // output 
-                       bool &fheP,                  // output 
-                       bool &fheN                   // output 
-                       );
+  /// calculate xtal Adc response for all rngs basedon collection of
+  /// McHits in xtal & diode regions
+  
+  StatusCode calculate(const vector<const Event::McIntegratingHit*> &hitList,
+                       const Event::EventHeader *evtHdr,            
+                       Event::CalDigi &calDigi,
+                       CalArray<FaceNum, bool> &lacBits,
+                       CalArray<XtalDiode, bool> &trigBits,
+                       Event::GltDigi *glt);
  private:
-  /// retrieve needed calibration constants for this xtal load into m_dat
-  StatusCode retrieveCalib(CalXtalId xtalId);
+  /// retrieve needed calib constants for this xtal, load into m_dat struct
+  StatusCode retrieveCalib();
 
   /// take CsI MC integrated hit & sum deposited energy to all xtal diodes
-  StatusCode XtalDigiTool::sumCsIHit(CalXtalId xtalId, const Event::McIntegratingHit &hit);
+  StatusCode sumCsIHit(const Event::McIntegratingHit &hit);
 
   /// sum direct diode deposit energy
-  StatusCode XtalDigiTool::sumDiodeHit(CalXtalId xtalId, const Event::McIntegratingHit &hit);
+  StatusCode sumDiodeHit(const Event::McIntegratingHit &hit);
   
-  /// simulate FLE & FHE triggers
-  StatusCode XtalDigiTool::simTriggers();
-
   /// select best adc range for both faces
-  StatusCode XtalDigiTool::rangeSelect();
+  StatusCode rangeSelect();
 
   /// populate Digi TDS class
-  StatusCode XtalDigiTool::fillDigi(CalXtalId xtalId, Event::CalDigi &calDigi);
+  StatusCode fillDigi(Event::CalDigi &calDigi);
 
   /// convert mcHit to longitudinal mm from xtal center
-  float XtalDigiTool::hit2pos(const Event::McIntegratingHit &hit);
+  float hit2pos(const Event::McIntegratingHit &hit);
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
   
-  /// \brief
-  ///
-  /// skip randomly generated noise & signal fluctuations, makes certain debug & testing comparisons easier.
+  /// skip randomly generated noise & signal fluctuations, makes
+  /// certain debug & testing comparisons easier.
   BooleanProperty m_noRandNoise;        
     
   /// pointer to CalCalibSvc object.
@@ -83,6 +78,12 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   /// pointer to failure mode service
   ICalFailureModeSvc* m_FailSvc;
 
+  /// name of ICalTrigTool member
+  StringProperty m_calTrigToolName;
+
+  /// ICalTrigTool for calculating trigger response.
+  ICalTrigTool *m_calTrigTool;
+  
   //-- Gaudi supplId constants --//
   /// number of geometric segments per Xtal
   int m_nCsISeg;                         
@@ -107,14 +108,15 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   
   /// filename of XtalDigiToolTuple.  No file created if set to default=""
   StringProperty m_tupleFilename;
-  /// If true, only output tuple row if LAC=true (saves much disk space, default = true)
+  /// If true, only output tuple row if LAC=true (saves much disk
+  /// space, default = true)
   BooleanProperty m_tupleLACOnly;
-  /// pointer to XtalDigiToolTuple (TTree actually).  tuple is ignored if pointer is NULL
+  /// pointer to XtalDigiToolTuple (TTree actually).  tuple is ignored
+  /// if pointer is NULL
   TTree *m_tuple;
   /// pointer to XtalDigiToolTuple file.
   TFile *m_tupleFile;
-  /// pointer to main branch in XtalRecTuple
-  TBranch *m_tupleBranch;
+
 
   BooleanProperty m_allowNoiseOnlyTrig;
 
@@ -125,64 +127,64 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   struct AlgData {
     void Clear() {memset(this,0,sizeof(AlgData));}
 
-    UInt_t   RunID;
-    UInt_t   EventID;
-    Float_t  adc[2][4];
-	/// ped subtracted adc.
-	Float_t  adcPed[2][4];
+    unsigned   RunID;
+    unsigned   EventID;
+
+    CalArray<XtalRng, float> adc;
+    /// ped subtracted adc.
+    CalArray<XtalRng, float> adcPed;
     
-	/// total # of MC int hits
-    UInt_t   nMCHits;
+    /// total # of MC int hits
+    unsigned   nMCHits;
     /// # of MC int hits in CsI xtal
-    UInt_t   nCsIHits;
+    unsigned   nCsIHits;
     /// # of MC int hits each diode
-    UInt_t   nDiodeHits[2][2];
+    CalArray<XtalDiode, unsigned> nDiodeHits;
+
     /// total ene deposited in xtal
-    Float_t  sumEneCsI;
+    float  sumEneCsI;
     /// total ene from xtal and diodes
-    Float_t  sumEne;
+    float  sumEne;
     /// dac values for eachdiode
-    Float_t  diodeDAC[2][2];
+    CalArray<XtalDiode, float> diodeDAC;
     /// average energy deposit position weighted by ene of each deposit
-    Float_t  csiWeightedPos;
+    float  csiWeightedPos;
     
     /// calibration constant
-    Float_t  ped[2][4];
+    CalArray<XtalRng, float> ped;
+    
     /// calibration constant
-    Float_t  pedSig[2][4];
-    /// calibration constant
-    Float_t  lacThresh[2];
-    /// calibration constant
-    Float_t  fleThresh[2];
-    /// calibration constant
-    Float_t  fheThresh[2];
-    /// calibration constant
-    Float_t  uldThold[2][4];
-    /// calibration constant
-    Float_t  mpd[2];
+    CalArray<XtalRng, float> pedSig;
 
+    CalArray<XtalDiode, float> trigThresh;
 
-	// Move char types to end of structure to help ROOT treealignment issues.
-	UChar_t  twr;
-    UChar_t  lyr;
-    UChar_t  col;
-    UChar_t  success;
-    UChar_t  rng[2];
-	/// lac threshold flag
-    UChar_t   lac[2];
-    /// fle trigger flag
-    UChar_t   fle[2];
-    /// fhe trigger flag
-    UChar_t   fhe[2];
+    /// calibration constant
+    CalArray<FaceNum, float> lacThresh;
+
+    /// calibration constant
+    CalArray<XtalRng, float> uldThold;
+
+    /// calibration constant
+    CalArray<DiodeNum, float> mpd;
+
+    TwrNum  twr;
+    LyrNum  lyr;
+    ColNum  col;
+
+    CalArray<FaceNum, RngNum> rng;
+
+    /// lac threshold flag
+    CalArray<FaceNum, unsigned char> lac;
+    
+    CalArray<XtalDiode, unsigned char> trigBits;
+
     /// HEX1 range in xtal is saturated
-    UChar_t   saturated[2];
-    
-    
+    CalArray<FaceNum, unsigned char> saturated;
+
+    XtalIdx xtalIdx;
   };
 
   AlgData m_dat;
-  
-  static const char *m_tupleDesc;
 };
 
 

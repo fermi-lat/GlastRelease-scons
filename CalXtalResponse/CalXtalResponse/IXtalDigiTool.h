@@ -1,19 +1,22 @@
-#ifndef _IXtalDigiTool_H
-#define _IXtalDigiTool_H
+#ifndef IXtalDigiTool_H
+#define IXtalDigiTool_H
 /*! @class IXtalDigiTool
  *
  * \author Zach Fewtrell
  *
- * \brief Abstract interface class for estimation of the digital response of one calorimeter crystal to a set of energy depositions.
+ * \brief Abstract interface class for estimation of the digital response of 
+ one calorimeter crystal to a set of energy depositions.
  * 
  *
  */
 
 // GLAST INCLUDES
-#include "idents/CalXtalId.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/Digi/CalDigi.h"
+#include "Event/Digi/GltDigi.h"
+#include "CalUtil/CalDefs.h"
+#include "CalUtil/CalArray.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -21,38 +24,34 @@
 // STD INCLUDES
 #include <vector>
 
-static const InterfaceID IID_XtalDigiTool("IXtalDigiTool", 1 , 0);
+static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 0);
 
 using namespace std;
 using namespace idents;
+using namespace CalUtil;
+
 
 class IXtalDigiTool : virtual public IAlgTool {
  public:
 
-  static const InterfaceID& interfaceID() { return IID_XtalDigiTool; }
+  static const InterfaceID& interfaceID() { return IID_IXtalDigiTool; }
 
-  /** \brief calculate Adc response for one cal xtalId.  also select best rng.
-      \param CalXtalId specify xtal log
-      \param hitList input vector of energy depositions.  (const *) is used to save space.
-      \param evt pointer to current event (used for runid & evtid)
-      \param calDigi output empty CalDigi object to be populated
-      \param fleP output FLE trigger Pos face
-      \param fleN output FLE trigger Pos face
-      \param fheP output FHE trigger Neg face
-      \param fheN output FHE trigger Neg face
-      \param lacP output boolean for log accept on Positive xtal face
-      \param lacN output boolean for log accept on Negative xtal face
+  /** \brief calculate Adc response for one cal xtalIdx.  also select best rng.
+
+  \param hitList input vector of energy depositions.  
+  \param evtHdr optional pointer to current event header (used for runid & evtid)
+  \param calDigi output empty CalDigi object to be populated (xtalId & rangeMode expected populated)
+  \param lacBits output boolean for log accept on each xtal face
+  \param trigBits output booleans for triggers for each xtal diode.
+  \param glt optional output GltDigi class.  Will populate if (glt != 0).
+
   */
-  virtual StatusCode calculate(CalXtalId xtalId, 
-                               const vector<const Event::McIntegratingHit*> &hitList,
-                               const Event::EventHeader &evtHdr,            
-                               Event::CalDigi &calDigi,     // output 
-                               bool &lacP,                  // output 
-                               bool &lacN,                  // output 
-                               bool &fleP,                  // output 
-                               bool &fleN,                  // output 
-                               bool &fheP,                  // output 
-                               bool &fheN                   // output 
+  virtual StatusCode calculate(const vector<const Event::McIntegratingHit*> &hitList,
+                               const Event::EventHeader *evtHdr,            
+                               Event::CalDigi &calDigi,
+                               CalArray<FaceNum, bool> &lacBits,
+                               CalArray<XtalDiode, bool> &trigBits,
+                               Event::GltDigi *glt
                                ) = 0;
 
 };
