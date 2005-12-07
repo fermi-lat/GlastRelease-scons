@@ -129,7 +129,7 @@ StatusCode DigiHitsTestAlg::execute() {
   // each primary particle to its total energy
 
   for (itDigis = digiCol->begin(); itDigis != digiCol->end(); itDigis++) {
-      std::vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
+    std::vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
     for (itRels = relations.begin(); itRels != relations.end(); itRels++) {
       EnergyDepositMapId& energyItemId = (*itRels)->getSecond()->itemizedEnergyId();
       for (itEn = energyItemId.begin(); itEn != energyItemId.end(); itEn++) {

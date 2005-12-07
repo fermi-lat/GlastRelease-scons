@@ -19,10 +19,10 @@
 
 //! Load all  services: 
 void test_CalDigi_load() {
-    DLL_DECL_ALGORITHM( test_CalDigi );
+  DLL_DECL_ALGORITHM( test_CalDigi );
 } 
 
 extern "C" void test_CalDigi_loadRef()    {
-    test_CalDigi_load();
+  test_CalDigi_load();
 }
 

@@ -1,10 +1,10 @@
 /** 
-* @file GlastDigi_load.cpp
-* @brief This is needed for forcing the linker to load all components
-* of the library.
-*
-*  $Header$
-*/
+ * @file GlastDigi_load.cpp
+ * @brief This is needed for forcing the linker to load all components
+ * of the library.
+ *
+ *  $Header$
+ */
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IToolFactory.h"
@@ -13,6 +13,6 @@
 
 
 DECLARE_FACTORY_ENTRIES(CalDigi) {
-    DECLARE_ALGORITHM( CalDigiAlg );
+  DECLARE_ALGORITHM( CalDigiAlg );
 } 
 
