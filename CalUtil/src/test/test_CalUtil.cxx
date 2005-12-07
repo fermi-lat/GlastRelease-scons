@@ -113,7 +113,6 @@ StatusCode test_CalUtil::finalize(){
 }
 
 StatusCode test_CalUtil::testCalFailureModeSvc() {
-  StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "testCalFailureModeSvc" << endreq;
@@ -159,7 +158,6 @@ StatusCode test_CalUtil::testCalFailureModeSvc() {
 }
 
 StatusCode test_CalUtil::testCalDefs(){
-  StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
 
@@ -195,12 +193,12 @@ StatusCode test_CalUtil::testCalDefs(){
 
             for (FaceNum face; face.isValid(); face++) {
               FaceIdx faceIdx(twr,lyr,col,face);
-              CalXtalId faceId(twr,lyr,col,face);
+              CalXtalId faceId(twr,lyr,col,(CalXtalId::XtalFace)face);
               if (faceId != faceIdx.getCalXtalId()) return StatusCode::FAILURE;
               if (twr != faceIdx.getTwr()) return StatusCode::FAILURE;
               if (lyr != faceIdx.getLyr()) return StatusCode::FAILURE;
               if (col != faceIdx.getCol()) return StatusCode::FAILURE;
-              if ((short)face != faceIdx.getFace()) return StatusCode::FAILURE;
+              if (face.getInt() != faceIdx.getFace().getInt()) return StatusCode::FAILURE;
               if (xtalIdx != faceIdx.getXtalIdx()) return StatusCode::FAILURE;
 
               // alt-constructor(s)
@@ -209,19 +207,19 @@ StatusCode test_CalUtil::testCalDefs(){
 
               
               for (DiodeNum diode; diode.isValid(); diode++) {
-                if ((short)RngNum(diode,THX8) != diode.getX8Rng()) return StatusCode::FAILURE;
-                if ((short)RngNum(diode,THX1) != diode.getX1Rng()) return StatusCode::FAILURE;
+                if (RngNum(diode,THX8).getInt() != diode.getX8Rng().getInt()) return StatusCode::FAILURE;
+                if (RngNum(diode,THX1) != diode.getX1Rng()) return StatusCode::FAILURE;
 
                 XtalDiode xDiode(face,diode);
-                if ((short)diode != xDiode.getDiode()) return StatusCode::FAILURE;
-                if ((short)face  != xDiode.getFace()) return StatusCode::FAILURE;
+                if (diode != xDiode.getDiode()) return StatusCode::FAILURE;
+                if (face  != xDiode.getFace()) return StatusCode::FAILURE;
 
                 DiodeIdx diodeIdx(twr,lyr,col,face,diode);
                 if (twr != diodeIdx.getTwr()) return StatusCode::FAILURE;
                 if (lyr != diodeIdx.getLyr()) return StatusCode::FAILURE;
                 if (col != diodeIdx.getCol()) return StatusCode::FAILURE;
-                if ((short)face != diodeIdx.getFace()) return StatusCode::FAILURE;
-                if ((short)diode != diodeIdx.getDiode()) return StatusCode::FAILURE;
+                if (face != diodeIdx.getFace()) return StatusCode::FAILURE;
+                if (diode != diodeIdx.getDiode()) return StatusCode::FAILURE;
                 if (xtalIdx != diodeIdx.getXtalIdx()) return StatusCode::FAILURE;
                 if (faceIdx != diodeIdx.getFaceIdx()) return StatusCode::FAILURE;
 
@@ -235,20 +233,20 @@ StatusCode test_CalUtil::testCalDefs(){
                 for (THXNum thx; thx.isValid(); thx++) {
 
                   RngNum rng(diode,thx);
-                  if ((short)diode != rng.getDiode()) return StatusCode::FAILURE;
+                  if (diode != rng.getDiode()) return StatusCode::FAILURE;
 
                   XtalRng xRng(face, rng);
-                  if ((short)face != xRng.getFace()) return StatusCode::FAILURE;
-                  if ((short)rng != xRng.getRng()) return StatusCode::FAILURE;
+                  if (face != xRng.getFace()) return StatusCode::FAILURE;
+                  if (rng != xRng.getRng()) return StatusCode::FAILURE;
                   if (xDiode != xRng.getXtalDiode()) return StatusCode::FAILURE;
 
                   RngIdx rngIdx(twr,lyr,col,face,rng);
-                  CalXtalId rngId(twr,lyr,col,face,rng);
+                  CalXtalId rngId(twr, lyr, col, face.getInt(), rng.getInt());
                   if (twr != rngIdx.getTwr()) return StatusCode::FAILURE;
                   if (lyr != rngIdx.getLyr()) return StatusCode::FAILURE;
                   if (col != rngIdx.getCol()) return StatusCode::FAILURE;
-                  if ((short)face != rngIdx.getFace()) return StatusCode::FAILURE;
-                  if ((short)rng != rngIdx.getRng()) return StatusCode::FAILURE;
+                  if (face != rngIdx.getFace()) return StatusCode::FAILURE;
+                  if (rng != rngIdx.getRng()) return StatusCode::FAILURE;
                   if (xtalIdx != rngIdx.getXtalIdx()) return StatusCode::FAILURE;
                   if (faceIdx != rngIdx.getFaceIdx()) return StatusCode::FAILURE;
                   
@@ -269,7 +267,6 @@ StatusCode test_CalUtil::testCalDefs(){
 }
 
 StatusCode test_CalUtil::testCalVec(){
-  StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "testCalVec" << endreq;
@@ -310,7 +307,6 @@ StatusCode test_CalUtil::testCalVec(){
 }
 
 StatusCode test_CalUtil::testCalArray(){
-  StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "testCalArray" << endreq;

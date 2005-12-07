@@ -49,21 +49,21 @@ namespace CalUtil {
   ostream&  operator<< 
     (ostream&  strm, const FaceIdx &idx) {
     strm << idx.getXtalIdx();
-    strm << "F" << setw(1) << idx.getFace();
+    strm << "F" << setw(1) << idx.getFace().getInt();
     return strm;
   }
     
   ostream&  operator<< 
     (ostream& strm, const DiodeIdx &idx) {
     strm << idx.getFaceIdx();
-    strm << "D" << setw(1) << idx.getDiode();
+    strm << "D" << setw(1) << idx.getDiode().getInt();
     return strm;
   }
     
   ostream& operator<< 
     (ostream& strm, const RngIdx &idx) {
     strm << idx.getFaceIdx();
-    strm << "R" << setw(1) << idx.getRng();
+    strm << "R" << setw(1) << idx.getRng().getInt();
     return strm;
   }
 }
