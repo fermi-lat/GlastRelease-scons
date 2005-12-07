@@ -14,4 +14,5 @@ DECLARE_FACTORY_ENTRIES(G4Generator)
     DECLARE_SERVICE(   G4GeometrySvc);
     DECLARE_SERVICE(   G4GenErrorSvc);
     DECLARE_TOOL(      G4GeneratorRandom);
+    DECLARE_ALGORITHM( BeamTransform);
 } 
