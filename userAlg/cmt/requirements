@@ -1,5 +1,5 @@
 package userAlg
-version v6r4p6
+version v6r4p7
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 
@@ -27,3 +27,5 @@ application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource}
 # build a batch-oriented version from the same source, for RM testing
 set TESTJOBOPTIONS $(USERALGROOT)/src/test/jobOptions.txt
 application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${other_source}
+
+

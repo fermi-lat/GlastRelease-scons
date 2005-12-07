@@ -28,9 +28,11 @@ Triggered.Members={
     "FilterTracks","FilterAlg",
     "meritAlg" };
     
-Triggered.Members+={
-    "ClassifyAlg", 
-    "FT1Alg"}; // testing!!  
+// disable this since broken
+//Triggered.Members+={ "ClassifyAlg"};
+
+// testing this
+Triggered.Members+={ "FT1Alg"};
     
 meritAlg.cuts="LnA";     // remove or set to "LntA" to reenable tree-based tail cuts
 
