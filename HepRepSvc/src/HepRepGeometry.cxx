@@ -135,11 +135,11 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
           
       double x=params[0], y=params[1], z=params[2];
       double rx=params[3], ry=params[4], rz=params[5];  
-
-      HepRotationX xrot(rx*M_PI/180);
-      HepRotationY yrot(ry*M_PI/180);
-      HepRotationZ zrot(rz*M_PI/180);
-      HepRotation rot = xrot*yrot*zrot;
+      
+      HepRotation rot;
+      rot.rotateX(rx*M_PI/180);
+      rot.rotateY(ry*M_PI/180);
+      rot.rotateZ(rz*M_PI/180);
 
       Hep3Vector t(x, y, z);  
       HepTransform3D tr(rot,t);
