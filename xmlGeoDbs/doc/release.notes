@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r28   7-Dec-2005   jrb Add ACD tiles in cu06; minor reorg. changes to flight
    v1r27p1 1-Dec-2005   jrb Merge new stuff from v1r26 ACD upgrade into 
                             latAssembly/latACDDimPrimUnshrunk.xml 
    v1r27   1-Dec-2005   jrb (for Leon) Add cu06 geometry with proper 4x1 
