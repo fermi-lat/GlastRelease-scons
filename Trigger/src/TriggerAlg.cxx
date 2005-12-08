@@ -237,11 +237,8 @@ StatusCode TriggerAlg::execute()
       return sc;
     }
       
-    if (newGlt)
-      trigger_bits |= calorimeter(*newGlt);
-    else // odd case that we can't create glt class
-      trigger_bits |= (calTrigBits[LRG_DIODE] ? enums::b_LO_CAL:0) 
-        |  (calTrigBits[SM_DIODE] ? enums::b_HI_CAL:0);
+    trigger_bits |= (calTrigBits[LRG_DIODE] ? enums::b_LO_CAL:0) 
+      |  (calTrigBits[SM_DIODE] ? enums::b_HI_CAL:0);
   }
 
   SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
