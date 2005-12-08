@@ -88,6 +88,10 @@ namespace CalUtil {
 
     bool operator==(const TwrNum &that) const {return m_data == that.m_data;}
     bool operator!=(const TwrNum &that) const {return m_data != that.m_data;}
+    bool operator>=(const TwrNum &that) const {return m_data >= that.m_data;}
+    bool operator<=(const TwrNum &that) const {return m_data <= that.m_data;}
+    bool operator>(const TwrNum &that) const {return m_data > that.m_data;}
+    bool operator<(const TwrNum &that) const {return m_data < that.m_data;}
   };
 
   /// id class for GLAST Cal xtal layer w/in Cal module
@@ -107,6 +111,10 @@ namespace CalUtil {
 
     bool operator==(const LyrNum &that) const {return m_data == that.m_data;}
     bool operator!=(const LyrNum &that) const {return m_data != that.m_data;}
+    bool operator>=(const LyrNum &that) const {return m_data >= that.m_data;}
+    bool operator<=(const LyrNum &that) const {return m_data <= that.m_data;}
+    bool operator>(const LyrNum &that) const {return m_data > that.m_data;}
+    bool operator<(const LyrNum &that) const {return m_data < that.m_data;}
 
   };
 
@@ -137,6 +145,10 @@ namespace CalUtil {
 
     bool operator==(const ColNum &that) const {return m_data == that.m_data;}
     bool operator!=(const ColNum &that) const {return m_data != that.m_data;}
+    bool operator>=(const ColNum &that) const {return m_data >= that.m_data;}
+    bool operator<=(const ColNum &that) const {return m_data <= that.m_data;}
+    bool operator>(const ColNum &that) const {return m_data > that.m_data;}
+    bool operator<(const ColNum &that) const {return m_data < that.m_data;}
 
   };
 
@@ -232,6 +244,10 @@ namespace CalUtil {
 
     bool operator==(const RngNum &that) const {return m_data == that.m_data;}
     bool operator!=(const RngNum &that) const {return m_data != that.m_data;}
+    bool operator>=(const RngNum &that) const {return m_data >= that.m_data;}
+    bool operator<=(const RngNum &that) const {return m_data <= that.m_data;}
+    bool operator>(const RngNum &that) const {return m_data > that.m_data;}
+    bool operator<(const RngNum &that) const {return m_data < that.m_data;}
 
   };
 
