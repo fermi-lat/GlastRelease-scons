@@ -49,43 +49,80 @@
 &NADGeo;
 &oneTower;
 
-    <box name="allTowersEnv"
+<box name="allTowersEnv"
          XREF="towersTrans" YREF="towerPitch" ZREF="towersTotalZ" />
 
-    <composition name="allTowers" envelope="allTowersEnv" > 
+<composition name="allTowers" envelope="allTowersEnv" > 
 
-      <posXYZ volume="oneCalTower" XREF="outerTowers_dtn" >
-        <idField name="fTowerY" value="0" />
-        <idField name="fTowerX" value="0" />
-      </posXYZ>
+  <posXYZ volume="oneNoTKR" XREF="outerTowers_dtn" ZREF="oneNoTKR_dz">
+    <idField name="fTowerY" value="0" />
+    <idField name="fTowerX" value="0" />
+  </posXYZ>
 
-      <posXYZ volume="oneCalTower" XREF="innerTowers_dtn" >
-        <idField name="fTowerY" value="0" />
-        <idField name="fTowerX" value="1" />
-      </posXYZ>
+  <posXYZ volume="oneNoTKR" XREF="innerTowers_dtn" ZREF="oneNoTKR_dz">
+    <idField name="fTowerY" value="0" />
+    <idField name="fTowerX" value="1" />
+  </posXYZ>
 
-      <posXYZ volume="oneTower" XREF="innerTowers_dt" >
-        <idField name="fTowerY" value="0" />
-        <idField name="fTowerX" value="2" />
-      </posXYZ>
 
-      <posXYZ volume="oneTower" XREF="outerTowers_dt" >
-        <idField name="fTowerY" value="0" />
-        <idField name="fTowerX" value="3" />
-      </posXYZ>
+  <posXYZ volume="topTileACD"
+          yrot="-58.028964"
+          XREF="ACDTile_0_x"
+          YREF="ACDTile_0_y"
+          ZREF="ACDTile_0_z" >
+    <idField name="fLATObjects" valueREF="eLATACD"/>
+    <idField name="fACDFace" value="0"/>
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="0" />
+  </posXYZ>
 
-    </composition>
+
+<!--  yrot="-58.028964"         rotation is back -->
+  <posXYZ volume="topTileACD"
+          yrot="-58.028964"
+          XREF="ACDTile_1_x"
+          YREF="ACDTile_1_y"
+          ZREF="ACDTile_1_z" >
+    <idField name="fLATObjects" valueREF="eLATACD"/>
+    <idField name="fACDFace" value="0"/>
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="1" />
+  </posXYZ>
+
+
+
+  <posXYZ volume="oneTower" XREF="innerTowers_dt" >
+    <idField name="fLATObjects" valueREF="eLATTowers" />
+    <idField name="fTowerY" value="0" />
+    <idField name="fTowerX" value="2" />
+  </posXYZ>
+
+  <posXYZ volume="oneTower" XREF="outerTowers_dt" >
+    <idField name="fLATObjects" valueREF="eLATTowers" />
+    <idField name="fTowerY" value="0" />
+    <idField name="fTowerX" value="3" />
+  </posXYZ>
+
+</composition>
+
+&ACDAcd;
 
 <!-- Make a LATInner. This is just the usual LAT
      Missing id fields for various non-sensitive components.  
      Do we care? -->
     <composition name="LATInner" envelope="LATenv" >
 
-      <!--posXYZ volume="allTowers" 
-              ZREF="allTowers_d" -->
+      <!-- Top ACD tile -->
+
+<!--  yrot="-58.028964"       take out rotation for now -->
+<!-- put tiles inside allTowers volume instead of here -->
+
+
       <posXYZ volume="allTowers" 
               ZREF="towers_dz" >
-        <idField name="fLATObjects" valueREF="eLATTowers" />
+<!--        <idField name="fLATObjects" valueREF="eLATTowers" />   -->
       </posXYZ>
 
 <!-- Add in the rest of the grid web and flange (outside the towers) -->

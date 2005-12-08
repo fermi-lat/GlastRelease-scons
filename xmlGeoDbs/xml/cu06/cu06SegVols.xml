@@ -15,7 +15,7 @@
     <!ENTITY globalMatPrim   SYSTEM "../flight/flightGlobalMatPrim.xml">
     <!ENTITY globalCountPrim SYSTEM "cu06GlobalCountPrim.xml">
     <!ENTITY globalDimPrim   SYSTEM "../flight/flightGlobalDimPrim.xml">
-    <!ENTITY extraPrim       SYSTEM "../empty.xml">
+    <!ENTITY extraPrim       SYSTEM "cu06Primary.xml">
 
     <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
@@ -33,7 +33,7 @@
     <!ENTITY ACDCountPrim   SYSTEM "../flight/flightACDCountPrim.xml">
     <!ENTITY ACDDimPrim     SYSTEM "../flight/flightACDDimPrim.xml">
     <!ENTITY ACDResponse    SYSTEM "../flight/flightACDResponse.xml">
-    <!ENTITY ACDAcd         SYSTEM "../flight/flightACDAcd.xml">
+    <!ENTITY ACDAcd         SYSTEM "cu06ACDAcd.xml">
 
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "cu06NADGeo.xml">
@@ -43,12 +43,12 @@
 
     <!ENTITY Trigger        SYSTEM "../flight/flightTrigger.xml">
 
-    <!ENTITY Derived        SYSTEM "cu06DerivedConstants.xml">
+    <!ENTITY Derived        SYSTEM "../flight/flightDerivedConstants.xml">
     <!ENTITY TKRDerived     SYSTEM "../flight/flightTKRDerived.xml">
     <!ENTITY CALDerived     SYSTEM "../flight/flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "../flight/flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "../flight/flightNADDerived.xml">
-    <!ENTITY extraDerived   SYSTEM "../empty.xml">
+    <!ENTITY extraDerived   SYSTEM "cu06DerivedConstants.xml">
     <!ENTITY Primary        SYSTEM "../flight/flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">

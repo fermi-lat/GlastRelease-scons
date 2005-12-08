@@ -80,19 +80,28 @@ Also add gap between CAL and
             <const value="2" uType = "count" />
           </quo>
         </const>
-<!--
-        <const name="calFlangeGap" value="1.0" >
-          <notes>Gap between grid flange (back) and CAL top frame (front).
-          Just approximate until true number is confirmed.
-          </notes>
-        </const>
-    -->
-<!-- use the following instead if calTrackerGap can be believed
-          <minus>
-            <refer refTo="calTrackerGap" />
+
+
+        <const name="oneNoTKR_z" >
+          <notes> Height of a CAL-only tower (CAL + grid)</notes>
+          <add>
             <refer refTo="NADGridFlangeZ" />
-          </minus>
- -->
+            <refer refTo="CALGridFrameGap" />
+            <refer refTo="CALVertStayClear" />
+          </add>
+        </const>
+
+        <const name="oneNoTKR_dz" >
+          <notes> Z-displacement of a oneCalTower (no tracker) w.r.t 
+                  allTowers volume.  It's at the bottom </notes>
+          <half>
+            <minus>
+              <refer refTo="oneNoTKR_z" />
+              <refer refTo="towersTotalZ" />
+            </minus>
+          </half>
+
+        </const>
 
 
         <const name="CAL_dz" >
@@ -556,6 +565,33 @@ Also add gap between CAL and
           <uminus>
             <refer refTo="ribbonsSide_dt" />
           </uminus>
+        </const>
+
+        <!-- define a bunch of displacements for elements inside oneNoTKR
+             in terms of their displacements in oneTower.  Everybody
+             has to move up. -->
+        <const name="gridFlangeNoTKR_dz" >
+          <notes> adjust for placement in smaller envelop</notes>
+          <minus>
+            <refer refTo="gridFlange_dz" />
+            <refer refTo="oneNoTKR_dz" />
+          </minus>
+        </const>
+
+        <const name="gridWebNoTKR_dz" >
+          <notes> adjust for placement in smaller envelop</notes>
+          <minus>
+            <refer refTo="gridWeb_dz" />
+            <refer refTo="oneNoTKR_dz" />
+          </minus>
+        </const>
+
+        <const name="CALNoTKR_dz" >
+          <notes> adjust for placement in smaller envelop</notes>
+          <minus>
+            <refer refTo="CAL_dz" />
+            <refer refTo="oneNoTKR_dz" />
+          </minus>
         </const>
 
       </derCategory>

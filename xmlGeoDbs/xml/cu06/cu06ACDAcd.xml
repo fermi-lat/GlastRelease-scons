@@ -1,0 +1,8 @@
+<box name="topTileACD"
+XREF="ACDTileX"
+YREF="ACDTileY"
+ZREF="tileThickness"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+

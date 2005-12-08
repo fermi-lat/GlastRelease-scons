@@ -1,0 +1,15 @@
+<!-- $Header$ -->
+<primCategory name="cu06ACDDimPrim">
+  <overview>Extra primary constants needed for cu06 ACD description</overview>
+  <prim name="ACDTileX" value = "353.641856">ACD tile X</prim> 
+  <prim name="ACDTileY" value = "336.55">ACD tile Y</prim>
+
+  <prim name="ACDTile_0_x" value="-280.875000"> top ACD tile absolute x</prim>
+  <prim name="ACDTile_0_y" value="0.0"> top ACD tile absolute y</prim>
+  <prim name="ACDTile_0_z" value="150.000000"> top ACD tile absolute z</prim>
+
+  <prim name="ACDTile_1_x" value="-93.625000"> top ACD tile absolute x</prim>
+  <prim name="ACDTile_1_y" value="0.0"> top ACD tile absolute y</prim>
+  <prim name="ACDTile_1_z" value="450.000000"> top ACD tile absolute z</prim>
+</primCategory>
+
