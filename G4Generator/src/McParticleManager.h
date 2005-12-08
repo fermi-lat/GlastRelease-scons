@@ -38,6 +38,11 @@ class McParticleManager {
   /// This method add an McParticle to the map with id as an index
   /// @param id The Geant4 id (a progressive integer)
   /// @param particle The pointer to the McParticle to be added
+  void addMcParticle(Event::McParticleCol *pcol);
+
+  /// This method add an McParticle to the map with id as an index
+  /// @param id The Geant4 id (a progressive integer)
+  /// @param particle The pointer to the McParticle to be added
   void addMcParticle(unsigned int id, Event::McParticle *particle);
 
   /// Retrive an McParticle giving an id

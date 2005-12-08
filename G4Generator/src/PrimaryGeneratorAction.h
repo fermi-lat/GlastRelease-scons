@@ -7,9 +7,10 @@
 
 class G4Event;
 class IParticlePropertySvc;
-namespace Event{
-class McParticle;
-}
+//namespace Event{
+//class McParticle;
+//}
+#include "Event/MonteCarlo/McParticle.h"
 
 /** 
  * @class PrimaryGeneratorAction
@@ -36,6 +37,13 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     /// this is the main trigger to particle production in the detector and is
     /// called automatically by Geant4
     void GeneratePrimaries(G4Event*);
+
+    /// This method initializes the generator from a collection of incoming
+    /// McParticles
+    /// @param pcol Pointer to the collection of initial McParticles
+    /// @param ppsvc The pointer to the ParticlePropertySvc of GAUDI
+    /// @param dz Z offset of primary particle, to match LAT offset (optional)
+    void init(Event::McParticleCol* pcol, IParticlePropertySvc* ppsvc, double dz = 0.0);
 
     /// This method init the generator with an McParticle coming from the
     /// FluxSvc.
@@ -82,7 +90,11 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     }
 
   private:
-    G4ParticleGun* particleGun;
+    /// This method adds a new G4PrimaryParticle to the vertex
+    G4PrimaryParticle* convertToG4Primary(const Event::McParticle* mcPart, IParticlePropertySvc* ppsvc);
+
+    G4ParticleGun*   particleGun;     // This for single particles
+    G4PrimaryVertex* m_primaryVertex; // This for collections
 };
 
 #endif

@@ -9,7 +9,7 @@
 
 #include "PrimaryGeneratorAction.h"
 
-#include "Event/MonteCarlo/McParticle.h"
+//#include "Event/MonteCarlo/McParticle.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -40,11 +40,93 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   particleGun->SetParticleEnergy(30.*MeV);
   particleGun->SetParticlePosition(G4ThreeVector(0.*mm,0.*mm,0.*mm));
+
+  m_primaryVertex = 0;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete particleGun;
+}
+
+void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertySvc* ppsvc, double dz)
+{
+    // Purpose and Method: this method sets the particle by passing an
+    // Event::McParticle pointer and the ParticlePropertySvc; 
+    // Inputs: part is the pointer to the Event::McParticle
+    // Inputs: ppsvc is the pointer to the IParticlePropertySvc
+    // Inputs: dz is an optional z offset of the particle, to match LAT offset
+        
+    // Count the number of particles input
+    int numParts = pcol->size();
+
+    // First particle is the "generator" particle... 
+    // This particle defines the event vertex
+    Event::McParticle* primary    = pcol->front();
+    HepPoint3D         primVtxPos = primary->initialPosition();
+
+    // Adjust by the delta z input
+    primVtxPos = Hep3Vector(primVtxPos.x(), primVtxPos.y(), primVtxPos.z() + dz);
+
+    // Create the vertex for this primary particle
+    m_primaryVertex = new G4PrimaryVertex(primVtxPos, 0.);
+
+    // Is the first particle to be added to the list of particles to be tracked?
+    if (!(primary->statusFlags() & Event::McParticle::NOTTRACK)) 
+    {
+        m_primaryVertex->SetPrimary(convertToG4Primary(primary,ppsvc));
+    }
+    
+    // Retrieve the vector of daughter particles
+    const SmartRefVector<Event::McParticle>& daughterVec = primary->daughterList();
+    
+    SmartRefVector<Event::McParticle>::const_iterator dIter = daughterVec.begin();
+
+    int numDaughters = daughterVec.size();
+
+    //for(Event::McParticleCol::iterator colIter = pcol->begin(); colIter != pcol->end(); colIter++)
+    for(dIter = daughterVec.begin(); dIter != daughterVec.end(); dIter++)
+    {
+        const Event::McParticle* mcPart  = *dIter;
+
+        m_primaryVertex->SetPrimary(convertToG4Primary(mcPart, ppsvc));
+    }
+
+    return;
+}
+    
+G4PrimaryParticle* PrimaryGeneratorAction::convertToG4Primary(const Event::McParticle* mcPart, IParticlePropertySvc* ppsvc)
+{
+    // Retrieve and convert the particle definition
+    Event::McParticle::StdHepId hepid   = mcPart->particleProperty();
+    G4ParticleDefinition*       partDef = 0;
+
+    if (isIon(hepid))
+    {
+        //      std::cout << " Ion " << (int)ppty->charge() << " " << (int)ppty->mass()/931.49 << std::endl;
+        int z=0;
+        int a=0;
+        a = (hepid - 1e9)/1e6;
+        z = (hepid - 1e9 -a*1e6)/1e3;
+
+        partDef = G4ParticleTable::GetParticleTable()->GetIon(z, a, 0.0);
+    }
+    else
+    {
+        ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
+        partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->particle());
+    }
+
+    // Position and momentum
+    const HepLorentzVector& pinitial = mcPart->initialFourMomentum();
+
+    // New Primary Particle
+    G4PrimaryParticle* primPart = new G4PrimaryParticle(partDef, pinitial.px(), pinitial.py(), pinitial.pz());
+  
+    primPart->SetMass(partDef->GetPDGMass());
+    primPart->SetCharge(partDef->GetPDGCharge());
+
+    return primPart;
 }
 
 void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc* ppsvc, double dz)
@@ -137,7 +219,15 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // Purpose and Method: this method is automatically called by the internal
   // mechanisms of Geant4 and it generates a primary particle in the simulation
   // Inputs: the G4Event pointer anEvent that represent the actual event
-  particleGun->GeneratePrimaryVertex(anEvent);
+  //if (m_primaryVertexVec.empty()) particleGun->GeneratePrimaryVertex(anEvent);
+  //else
+  //{
+  //    for(std::vector<G4PrimaryVertex*>::iterator vtxIter = m_primaryVertexVec.begin();
+  //        vtxIter != m_primaryVertexVec.end(); vtxIter++)
+  //    {
+  //        anEvent->AddPrimaryVertex(*vtxIter);
+  //    }
+    anEvent->AddPrimaryVertex(m_primaryVertex);
 }
 
 

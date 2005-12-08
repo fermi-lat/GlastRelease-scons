@@ -47,8 +47,37 @@ Event::McParticle* McParticleManager::getMcParticle(unsigned int id)
 
   return particle;
 }
-void McParticleManager::addMcParticle(unsigned int id, 
-                                      Event::McParticle *particle){
+void McParticleManager::addMcParticle(Event::McParticleCol *pcol)
+{
+    // Purpose and Method: with that method we add a new McParticle to the map of
+    // particles, using as the index an unsigned integer (that is the Geant4 id)
+    // McParticle counter...
+    int idx = 0;
+
+    // The primary particle
+    Event::McParticle* primary = pcol->front();
+
+    // Add the primary to our McParticle <--> id map
+    addMcParticle(idx++, primary);
+
+    // If the primary has daughters then we need to add em too!
+    // Retrieve the vector of daughter particles
+    const SmartRefVector<Event::McParticle>& daughterVec = primary->daughterList();
+  
+    SmartRefVector<Event::McParticle>::const_iterator dIter = daughterVec.begin();
+
+    int numDaughters = daughterVec.size();
+
+    //for(Event::McParticleCol::iterator colIter = pcol->begin(); colIter != pcol->end(); colIter++)
+    for(dIter = daughterVec.begin(); dIter != daughterVec.end(); dIter++)
+    {
+        const Event::McParticle* mcPart  = *dIter;
+
+        addMcParticle(idx++, const_cast<Event::McParticle*>(mcPart));
+    }
+}
+
+void McParticleManager::addMcParticle(unsigned int id, Event::McParticle *particle){
   // Purpose and Method: with that method we add a new McParticle to the map of
   // particles, using as the index an unsigned integer (that is the Geant4 id)
 
@@ -68,28 +97,28 @@ McParticleManager* McParticleManager::getPointer()
 
 void McParticleManager::save()
 {
-  // Purpose and Method: this one save the McParticle hierarchy in the TDS
-  // TDS Outputs: the McParticle hierarchy is saved in the
-  // /Event/MC/McParticleCol folder of the TDS
+    // Purpose and Method: this one save the McParticle hierarchy in the TDS
+    // TDS Outputs: the McParticle hierarchy is saved in the
+    // /Event/MC/McParticleCol folder of the TDS
 
-  // if running FluxAlg, collection will already have parent 
-  Event::McParticleCol*  pcol=  
-    SmartDataPtr<Event::McParticleCol>(m_esv, EventModel::MC::McParticleCol);
+    // if running FluxAlg, collection will already have parent 
+    Event::McParticleCol*  pcol=  
+        SmartDataPtr<Event::McParticleCol>(m_esv, EventModel::MC::McParticleCol);
 
-  if( pcol==0) {
-    // create the TDS stuff
-    pcol = new Event::McParticleCol;
-    m_esv->registerObject(EventModel::MC::McParticleCol, pcol);
-  }
+    if( pcol==0) 
+    {
+        // create the TDS stuff
+        pcol = new Event::McParticleCol;
+        m_esv->registerObject(EventModel::MC::McParticleCol, pcol);
+    }
   
-  // fill the McParticleCol with McParticles
-  std::map <unsigned int, Event::McParticle*>::iterator it;
+    // fill the McParticleCol with McParticles
+    std::map <unsigned int, Event::McParticle*>::iterator it;
   
-  for(it=m_particles.begin();it != m_particles.end() ; it++){
-    if(it->second)
-      pcol->push_back(it->second);
-  }
-
+    for(it=m_particles.begin();it != m_particles.end() ; it++)
+    {
+        if(it->second) pcol->push_back(it->second);
+    }
 }
 
 void McParticleManager::pruneCal()
