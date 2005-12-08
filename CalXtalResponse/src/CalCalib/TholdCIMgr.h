@@ -57,19 +57,12 @@ class TholdCIMgr : public CalibItemMgr {
   ValSig m_idealFLE;
   ValSig m_idealFHE;
   ValSig m_idealLAC;
-<<<<<<< TholdCIMgr.h
   CalArray<RngNum, ValSig> m_idealULD;
   CalArray<RngNum, ValSig> m_idealPed;
 
   
   /// Validate TDS data entry (for empty ptrs & fun stuff like that)
   bool validateRangeBase(CalibData::CalTholdCI *tholdCI);
-=======
-  CalVec<RngNum, ValSig> m_idealULD;
-  CalVec<RngNum, ValSig> m_idealPed;
-
-  bool validateRangeBase(CalibData::RangeBase *rangeBase);
->>>>>>> 1.4
   
 };
 

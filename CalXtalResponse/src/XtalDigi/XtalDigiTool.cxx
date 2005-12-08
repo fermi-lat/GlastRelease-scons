@@ -265,7 +265,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         float meVXtal = m_dat.diodeDAC[xDiode]*m_dat.mpd[diode];
         
         // MeV in xtal -> electrons in diode
-        float eDiode = meVXtal * m_ePerMeV[diode];
+        float eDiode = meVXtal * m_ePerMeV[diode.getInt()];
         
         // apply poissonic fluctuation to # of electrons.
         float noise = sqrt(eDiode)*RandGauss::shoot();
@@ -274,7 +274,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         eDiode += noise;
         
         // convert back to dac in diode
-        meVXtal = eDiode/m_ePerMeV[diode];
+        meVXtal = eDiode/m_ePerMeV[diode.getInt()];
         m_dat.diodeDAC[xDiode] = meVXtal/m_dat.mpd[diode];
       } // poissonic noise
         
@@ -526,7 +526,7 @@ StatusCode XtalDigiTool::sumDiodeHit(const McIntegratingHit &hit) {
   else throw invalid_argument("VolId is not in xtal or diode.  Programmer error.");
       
   // convert e-in-diode to MeV-in-xtal-center
-  float meVXtal = eDiode/m_ePerMeV[diode]; 
+  float meVXtal = eDiode/m_ePerMeV[diode.getInt()]; 
 
   // convert MeV deposition to Dac val.
   // use asymmetry to determine how much of mean dac to apply to diode in question
@@ -560,8 +560,6 @@ StatusCode XtalDigiTool::rangeSelect() {
     RngNum rng;
     for (rng=0; rng.isValid(); rng++) {
       // get ULD threshold
-      RngIdx rngIdx(m_dat.twr, m_dat.lyr, m_dat.col,
-                    face, rng);
       XtalRng xRng(face,rng);
 
       // case of HEX1 range 
@@ -584,7 +582,7 @@ StatusCode XtalDigiTool::rangeSelect() {
     }
     
     // assign range selection
-    m_dat.rng[face] = (CalXtalId::AdcRange)(short)rng;
+    m_dat.rng[face] = (CalXtalId::AdcRange)rng;
   }  // per face, range selection
   return StatusCode::SUCCESS;
 
@@ -625,8 +623,8 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   // set up the digi
   for (int nRo=0; nRo < roLimit; nRo++) {
     // represents ranges used for current readout in loop
-    short roRangeP = (m_dat.rng[POS_FACE] + nRo)%RngNum::N_VALS; 
-    short roRangeN = (m_dat.rng[NEG_FACE] + nRo)%RngNum::N_VALS; 
+    short roRangeP = (m_dat.rng[POS_FACE].getInt() + nRo)%RngNum::N_VALS; 
+    short roRangeN = (m_dat.rng[NEG_FACE].getInt() + nRo)%RngNum::N_VALS; 
           
     CalDigi::CalXtalReadout ro = CalDigi::CalXtalReadout(roRangeP, 
                                                          (short)m_dat.adc[XtalRng(POS_FACE, roRangeP)], 

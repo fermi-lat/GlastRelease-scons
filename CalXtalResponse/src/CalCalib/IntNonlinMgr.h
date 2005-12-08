@@ -72,19 +72,11 @@ class IntNonlinMgr : public CalibItemMgr {
   TDS data can either store DAC values as integers or floats, either per channel or global, 
   depending on the version of the calibration file....  This allows me to keep a homogenous array
   of all floats, one set for every channel, regardless of the original data format.
-<<<<<<< IntNonlinMgr.h
   */
   CalArray<RngIdx, vector<float> > m_DACs;
 
   /// check ptr to TDS data
   bool validateRangeBase(CalibData::IntNonlin *intNonlin);
-=======
-   */
-  CalVec<RngIdx, vector<float> > m_DACs;
-
-  bool validateRangeBase(CalibData::RangeBase *rangeBase);
-  
->>>>>>> 1.4
 };
 
 #endif

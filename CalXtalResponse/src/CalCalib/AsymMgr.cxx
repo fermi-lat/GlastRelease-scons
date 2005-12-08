@@ -48,14 +48,8 @@ StatusCode AsymMgr::getAsym(XtalIdx xtalIdx,
   if (sc.isFailure()) return sc;
 
   
-<<<<<<< AsymMgr.cxx
   CalibData::CalAsym *asym = (CalibData::CalAsym*)m_rngBases[xtalIdx];
   if (!asym) return StatusCode::FAILURE;  // failure type 1: null ptr
-=======
-  CalibData::CalAsym *asym = 
-	  (CalibData::CalAsym *)getRangeBase(xtalId);
-  if (!asym) return StatusCode::FAILURE; // failure type 1: null ptr
->>>>>>> 1.5
   
   // get main data arrays
   asymLrg = asym->getBig();
@@ -282,49 +276,4 @@ bool AsymMgr::validateRangeBase(CalibData::CalAsym *asym) {
   }
   return true;
 }
-<<<<<<< AsymMgr.cxx
 
-=======
-
-
-
-bool AsymMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
-  const vector<CalibData::ValSig> *asymLrg;
-  const vector<CalibData::ValSig> *asymSm;
-  const vector<CalibData::ValSig> *asymNSPB;
-  const vector<CalibData::ValSig> *asymPSNB;
-
-  CalibData::CalAsym *asym = (CalibData::CalAsym*)(rangeBase);
-
-  if (!(asymLrg = asym->getBig())) {
-    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
-    // however, if asym->getBig() is successful & following checks fail
-    // then we have a problem b/c we have calib data which is only good for
-    // partial xtal.
-    return false;
-  }
-  if (!(asymSm = asym->getSmall())        ||
-      !(asymNSPB = asym->getNSmallPBig()) ||
-      !(asymPSNB = asym->getPSmallNBig())) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-    msglog << endreq;
-    return false;
-  }
-
-  // get Xpos vals.
-  unsigned XposSize= m_calibBase->getXpos()->getVals()->size();
-  if (XposSize != asymLrg->size() ||
-      XposSize != asymSm->size() ||
-      XposSize != asymNSPB->size() ||
-      XposSize != asymPSNB->size()) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Invalid # of vals for " << m_calibPath << endreq;
-    return false;
-  }
-  return true;
-}
->>>>>>> 1.5

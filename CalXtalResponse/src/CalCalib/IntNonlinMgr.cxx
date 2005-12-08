@@ -110,7 +110,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
       else {
         //get collection of associated DAC vals
         CalibData::DacCol *intNonlinDacCol = 
-          m_calibBase->getDacCol((short)rng);
+          m_calibBase->getDacCol((CalXtalId::AdcRange)rng);
         
         const vector<unsigned> *globalDACs;
         globalDACs = intNonlinDacCol->getDacs();
@@ -191,7 +191,7 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
     m_idealDACs[rng][0] = 0;
     m_idealDACs[rng][1] = 
-      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[(short)rng]);
+      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[rng.getInt()]);
   }
 
   // we don't have this info at this point
@@ -200,7 +200,6 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 
   return StatusCode::SUCCESS;
 }
-<<<<<<< IntNonlinMgr.cxx
 
 
 bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
@@ -213,16 +212,3 @@ bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
 
   return true;
 }
-=======
-
-bool IntNonlinMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
-  CalibData::IntNonlin* intNonlin = (CalibData::IntNonlin*)(rangeBase);
-
-  //get vector of vals
-  const vector<float> *intNonlinVec = intNonlin->getValues();
-  if (!intNonlinVec)    
-    return false;
-
-  return true;
-}
->>>>>>> 1.5

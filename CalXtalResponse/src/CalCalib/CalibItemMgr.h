@@ -75,10 +75,6 @@ class CalibItemMgr {
   /// applicable for calib_type)
   virtual StatusCode genLocalStore() = 0;
 
-  /// supplied by each calib_type for checking a TDS data item
-  virtual bool validateRangeBase(CalibData::RangeBase *rangeBase) = 0;
-
-
   /// generic spline evaluation f() works for any calib_type
   StatusCode evalSpline(int calibType, LATWideIndex idx, float x, float &y);
 
@@ -112,23 +108,11 @@ class CalibItemMgr {
   CalVec<LATWideIndex, CalibData::RangeBase* > m_rngBases;
 
   /** retrieve spec'd rangeBase object, update if necessary
-<<<<<<< CalibItemMgr.h
       \return NULL if there is no data 
   */
   CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
     return m_calibBase->getRange(xtalId);
   }
-=======
-   \return NULL if there is no data 
-   */
-  CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
-    CalibData::RangeBase* rangeBase = m_calibBase->getRange(xtalId);
-    if (rangeBase == NULL) return NULL;
-    if (!validateRangeBase(rangeBase)) rangeBase = NULL;
-
-    return rangeBase;
-  }
->>>>>>> 1.6
   
  private:
   /// wipe out locally stored data (e.g. splines)

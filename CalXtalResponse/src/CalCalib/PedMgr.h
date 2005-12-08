@@ -44,16 +44,9 @@ class PedMgr : public CalibItemMgr {
   /// ped sigma vals to use when calib db is down
   CalArray<RngNum,float> m_idealPedSig; 
   /// correlated ped cosine vals to use when calib db is down
-<<<<<<< PedMgr.h
   CalArray<RngNum,float> m_idealCos;    
 
   StatusCode genLocalStore();
-=======
-  CalVec<RngNum,float> m_idealCos;    
-
-  bool validateRangeBase(CalibData::RangeBase *rangeBase) {return true;}
-
->>>>>>> 1.4
 };
 
 #endif

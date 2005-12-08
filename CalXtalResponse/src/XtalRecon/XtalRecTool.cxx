@@ -265,8 +265,8 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
     //-- STEP 6: POPULATE CalTuple (OPTIONAL)  --//
     ///////////////////////////////////////////////
     if (calTupleEnt) {
-      calTupleEnt->m_calXtalAdcPed[m_dat.twr][m_dat.lyr][m_dat.col][face] = m_dat.adcPed[face];
-      calTupleEnt->m_calXtalFaceSignal[m_dat.twr][m_dat.lyr][m_dat.col][face] = m_dat.faceSignal[face];
+      calTupleEnt->m_calXtalAdcPed[m_dat.twr][m_dat.lyr][m_dat.col][face.getInt()] = m_dat.adcPed[face];
+      calTupleEnt->m_calXtalFaceSignal[m_dat.twr][m_dat.lyr][m_dat.col][face.getInt()] = m_dat.faceSignal[face];
     }
 
   }
@@ -351,8 +351,8 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
   ////////////////////////////////////
   //-- STEP 10: POPULATE TDS CLASS --//
   ////////////////////////////////////
-  CalXtalRecData::CalRangeRecData rngRec((short)m_dat.rng[POS_FACE], m_dat.ene, 
-                                         (short)m_dat.rng[NEG_FACE], m_dat.ene);
+  CalXtalRecData::CalRangeRecData rngRec((CalXtalId::AdcRange)m_dat.rng[POS_FACE], m_dat.ene, 
+                                         (CalXtalId::AdcRange)m_dat.rng[NEG_FACE], m_dat.ene);
   rngRec.setPosition(pXtal);
 
   xtalRec.addRangeRecData(rngRec);
@@ -464,7 +464,6 @@ StatusCode XtalRecTool::retrieveCalib() {
   StatusCode sc;
 
   //-- RETRIEVE MEV PER DAC--// 
-  CalibData::ValSig mpdLrg, mpdSm;
   sc = m_calCalibSvc->getMPD(m_dat.xtalIdx, m_dat.mpd);
   if (sc.isFailure()) return sc;
 

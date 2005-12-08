@@ -983,7 +983,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
         XtalRng xRng(face,rng);
 
         // tuple test1: adcPed
-        float adcPedTpl = calTupleEnt.m_calXtalAdcPed[twr][lyr][col][face];
+        float adcPedTpl = calTupleEnt.m_calXtalAdcPed[twr][lyr][col][face.getInt()];
         if (floor(adcPedTpl) != floor(curTest.adcPed[xRng])) {
           msglog << MSG::ERROR << "TESTFAIL, bad CALTUPLE.adcPed, "
                  << adcPedTpl << ", "
@@ -1114,8 +1114,6 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
 
   //-- DIGI VERIFICATION: --//
   for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(curTest.xtalIdx, face);
-
     RngNum rng = ro->getRange(face);
     XtalRng xRng(face,rng);
 
@@ -1152,13 +1150,13 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
     if (rng > LEX8) {
       if (!curTest.noiseOn) //noise can mess up this test b/c it differs per channel
         if (!trig_test_margin(curTest.fsignl[xRng], 
-                              curCalib.uldMeV[XtalRng(face,rng-1)], 
+                              curCalib.uldMeV[XtalRng(face,rng.getInt()-1)], 
                               true, 
                               // xtra 1% margin for possible variation in faceSignal per channel
                               curCalib.mevPerADC[xRng] + .01*curTest.fsignl[xRng])) {
           msglog << MSG::ERROR << "TESTFAIL, BAD ULD, "
                  << curTest.fsignl[xRng] << ", "
-                 << curCalib.uldMeV[XtalRng(face,rng-1)] << ", "
+                 << curCalib.uldMeV[XtalRng(face,rng.getInt()-1)] << ", "
                  << curTest.testDesc << endreq;
           return StatusCode::FAILURE;
         }
@@ -1197,7 +1195,6 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
 StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
                                                 CalArray<XtalDiode, bool> &trigBits,
                                                 Event::GltDigi *glt) {
-  StatusCode sc;
   MsgStream msglog(msgSvc(), name()); 
 
   // currently allways using 1st readout
@@ -1794,8 +1791,8 @@ StatusCode test_CalXtalResponse::testNoise() {
   for (XtalRng xRng; xRng.isValid(); xRng++) {
     // do not look at ranges for which the ene level is too high
     if (curTest.meV > curCalib.uldMeV[xRng]*.90) continue;
-	// do not look at ranges for which the ene level is too low
-	if (curTest.meV < curCalib.pedNoise[xRng]) continue;
+    // do not look at ranges for which the ene level is too low
+    if (curTest.meV < curCalib.pedNoise[xRng]) continue;
 
     float adcMean = adcSum[xRng]/curTest.nHits;
     float meanSq  = adcSumSq[xRng]/curTest.nHits;
@@ -1816,8 +1813,8 @@ StatusCode test_CalXtalResponse::testNoise() {
              << fsignlMean << ", "
              << curTest.meV << ", "
              << curTest.testDesc 
-			 << xRng.getFace() << ", "
-			 << xRng.getRng()  << ", " << endreq;
+             << xRng.getFace().getInt() << ", "
+             << xRng.getRng().getInt()  << ", " << endreq;
       //return StatusCode::FAILURE;
     }
   }

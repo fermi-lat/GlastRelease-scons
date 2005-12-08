@@ -140,7 +140,6 @@ StatusCode CalXtalRecAlg::execute()
     if ((*digiIter)->getReadoutCol().size() < 1) continue;
     
     CalXtalId xtalId = (*digiIter)->getPackedId();
-    XtalIdx xtalIdx(xtalId);
     
     // create new object to store crystal reconstructed data  
     // use auto_ptr so it is autmatically deleted when we exit early

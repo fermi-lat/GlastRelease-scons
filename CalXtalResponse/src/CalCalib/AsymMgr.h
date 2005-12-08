@@ -100,34 +100,18 @@ class AsymMgr : public CalibItemMgr {
   vector<ValSig> m_idealAsymLrg;
   /// Store ideal (fake) vals for small diode asym (used when db is down)
   vector<ValSig> m_idealAsymSm;
-<<<<<<< AsymMgr.h
   /// Store ideal (fake) vals for NegSmall diode PosBig diode asym 
   /// (used when db is down)
 
-=======
-  /// \brief Store ideal (fake) vals for NegSmall diode PosBig diode asym 
-  ///
-  /// (used when mysql (inet) db is down)
->>>>>>> 1.4
   vector<ValSig> m_idealAsymNSPB;
-<<<<<<< AsymMgr.h
   /// Store ideal (fake) vals for PosSmall diode NegBig diode asym 
   /// (used when db is down)
-=======
-  /// \brief Store ideal (fake) vals for PosSmall diode NegBig diode asym 
-  ///
-  /// (used when mysql (inet) db is down)
->>>>>>> 1.4
   vector<ValSig> m_idealAsymPSNB;
   
   vector<float> m_idealXVals;
 
-<<<<<<< AsymMgr.h
   /// validate data ptr from TDS
   bool validateRangeBase(CalibData::CalAsym *asym);
-=======
-  bool validateRangeBase(CalibData::RangeBase *rangeBase);
->>>>>>> 1.4
 
 };
 #endif

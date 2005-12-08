@@ -6,21 +6,13 @@
 // EXTLIB
 // STD
 
-using namespace CalDefs;
+using namespace CalUtil;
 using namespace idents;
 
 /// get threshold calibration constants as measured w/ muon calibration
-StatusCode TholdMuonMgr::getTholds(CalXtalId xtalId,
+StatusCode TholdMuonMgr::getTholds(FaceIdx faceIdx,
                                    CalibData::ValSig &FLE,
                                    CalibData::ValSig &FHE) {
-  // generic xtalId check
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-  
-  // getTholds() specific xtalId check
-  if (xtalId.validRange())
-    throw invalid_argument("TholdMuon::getTholds() cannot accept range info in CalXtalId."
-                           " Programmer error.");
-
   if (m_idealMode) {
     FLE = m_idealFLE;
     FHE = m_idealFHE;
@@ -34,8 +26,9 @@ StatusCode TholdMuonMgr::getTholds(CalXtalId xtalId,
 
 
   CalibData::CalTholdMuon *tholdMuon 
-    = (CalibData::CalTholdMuon *)getRangeBase(xtalId);
+    = (CalibData::CalTholdMuon*)m_rngBases[faceIdx];
   if (!tholdMuon) return StatusCode::FAILURE;
+
 
   //vals
   FLE = *(tholdMuon->getFLE());
@@ -46,18 +39,10 @@ StatusCode TholdMuonMgr::getTholds(CalXtalId xtalId,
 
 /** \brief get pedestal calibration constants as measured with muons
  */
-StatusCode TholdMuonMgr::getPed(CalXtalId xtalId,
+StatusCode TholdMuonMgr::getPed(RngIdx rngIdx,
                                 CalibData::ValSig &ped) {
-  // generic xtalId check
-  if (!checkXtalId(xtalId)) return StatusCode::FAILURE;
-
-  // getPed() specific xtalId check
-  if (!xtalId.validRange())
-    throw invalid_argument("ThodMuon::getPed() requires range info in CalXtalId."
-                          " Programmer error.");
-
   if (m_idealMode) {
-    ped = m_idealPed[xtalId.getRange()];
+    ped = m_idealPed[rngIdx.getRng()];
     return StatusCode::SUCCESS;
   }
 
@@ -66,17 +51,14 @@ StatusCode TholdMuonMgr::getPed(CalXtalId xtalId,
   sc = updateCalib();
   if (sc.isFailure()) return sc;
 
+  // need to create an rngIdx object w/out range info...
+  FaceIdx faceIdx(rngIdx.getFaceIdx());
 
-  // need to create an xtalId object w/out range info...
-  CalXtalId faceXtalId(xtalId.getTower(),
-                       xtalId.getLayer(),
-                       xtalId.getColumn(),
-                       xtalId.getFace());
   CalibData::CalTholdMuon *tholdMuon 
-    = (CalibData::CalTholdMuon *)getRangeBase(faceXtalId);
+    = (CalibData::CalTholdMuon*)m_rngBases[faceIdx];
   if (!tholdMuon) return StatusCode::FAILURE;
 
-  ped = *(tholdMuon->getPed(xtalId.getRange()));
+  ped = *(tholdMuon->getPed((CalXtalId::AdcRange)rngIdx.getRng()));
 
   return StatusCode::SUCCESS;
 }
@@ -100,26 +82,16 @@ StatusCode TholdMuonMgr::loadIdealVals() {
     owner->m_idealCalib.muonSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealPed[rng].m_val = owner->m_idealCalib.muonPeds[rng];
-    m_idealPed[rng].m_sig = owner->m_idealCalib.muonPeds[rng] *
+    m_idealPed[rng].m_val = owner->m_idealCalib.muonPeds[rng.getInt()];
+    m_idealPed[rng].m_sig = owner->m_idealCalib.muonPeds[rng.getInt()] *
       owner->m_idealCalib.muonSigPct;
   }
 
   return StatusCode::SUCCESS;
 }
 
-
-bool TholdMuonMgr::checkXtalId(CalXtalId xtalId) {
-  // all queries require face info (leave range optional)
-  if (!xtalId.validFace())
-    throw invalid_argument("TholdMuon calib_type requires valid face info."
-                           " Programmer error");
-  return true;
-}
-
-bool TholdMuonMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
-  CalibData::CalTholdMuon *tholdMuon = (CalibData::CalTholdMuon*)rangeBase;
-
+bool TholdMuonMgr::validateRangeBase(CalibData::CalTholdMuon *tholdMuon) {
+  if (!tholdMuon) return false;
   if (!tholdMuon->getFLE()) {
     // no error print out req'd b/c we're supporting LAT configs w/ empty bays
     // however, if tholdMuon->getFLE() is successful & following checks fail
@@ -152,3 +124,20 @@ bool TholdMuonMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
   }
   return true;
 }
+
+StatusCode  TholdMuonMgr::genLocalStore() {
+  m_rngBases.resize(FaceIdx::N_VALS,0);
+
+  if (!m_idealMode) {
+    for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
+      CalibData::CalTholdMuon *tholdMuon = (CalibData::CalTholdMuon*)getRangeBase(faceIdx.getCalXtalId());
+      if (!tholdMuon) continue;
+      if (!validateRangeBase(tholdMuon)) continue;
+
+      m_rngBases[faceIdx] = tholdMuon;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+

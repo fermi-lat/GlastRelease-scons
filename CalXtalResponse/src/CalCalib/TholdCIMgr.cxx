@@ -56,13 +56,12 @@ StatusCode TholdCIMgr::getULD(RngIdx rngIdx,
   if (sc.isFailure()) return sc;
 
   // need to create an xtalId object w/out range info...
-  FaceIdx faceIdx(rngIdx.getFaceIdx());
   CalibData::CalTholdCI *tholdCI 
     = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
   if (!tholdCI) return StatusCode::FAILURE;
 
   //vals
-  ULDThold = *(tholdCI->getULD((short)rngIdx.getRng()));
+  ULDThold = *(tholdCI->getULD((CalXtalId::AdcRange)rngIdx.getRng()));
 
   return StatusCode::SUCCESS;
 }
@@ -82,12 +81,11 @@ StatusCode TholdCIMgr::getPed(RngIdx rngIdx,
 
 
   // need to create an xtalId object w/out range info...
-  FaceIdx faceIdx(rngIdx.getFaceIdx());
   CalibData::CalTholdCI *tholdCI 
     = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
   if (!tholdCI) return StatusCode::FAILURE;
 
-  ped = *(tholdCI->getPed((short)rngIdx.getRng()));
+  ped = *(tholdCI->getPed((CalXtalId::AdcRange)rngIdx.getRng()));
 
   return StatusCode::SUCCESS;
 }
@@ -121,12 +119,12 @@ StatusCode TholdCIMgr::loadIdealVals() {
     owner->m_idealCalib.ciSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[(short)rng];
-    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[(short)rng] *
+    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[rng.getInt()];
+    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[rng.getInt()] *
       owner->m_idealCalib.ciSigPct;
 
-    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[(short)rng];
-    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[(short)rng] *
+    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[rng.getInt()];
+    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[rng.getInt()] *
       owner->m_idealCalib.ciSigPct;
   }
 
@@ -170,7 +168,6 @@ bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
   }
   return true;
 }
-<<<<<<< TholdCIMgr.cxx
 
 StatusCode  TholdCIMgr::genLocalStore() {
   m_rngBases.resize(FaceIdx::N_VALS,0);
@@ -188,44 +185,3 @@ StatusCode  TholdCIMgr::genLocalStore() {
   return StatusCode::SUCCESS;
 }
 
-=======
-
-bool TholdCIMgr::validateRangeBase(CalibData::RangeBase *rangeBase) {
-  CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)rangeBase;
-
-  if (!tholdCI->getFLE()) {
-    // no error print out req'd b/c we're supporting LAT configs w/ empty bays
-    // however, if tholdCI->getFLE() is successful & following checks fail
-    // then we have a problem b/c we have calib data which is only good for
-    // partial xtal.
-    return false;
-  }
-  if (!tholdCI->getFHE() ||
-      !tholdCI->getLAC()) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-    msglog << endreq;
-    return false;
-  }
-
-  const vector<ValSig> *peds = tholdCI->getPeds();
-  const vector<ValSig> *ulds = tholdCI->getULDs();
-  if (!peds || !ulds) {
-    // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
-    return false;
-  }
-
-  if (peds->size() != (unsigned)RngNum::N_VALS ||
-      ulds->size() != (unsigned)RngNum::N_VALS) {
-    // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "can't get calib data for " 
-           << m_calibPath;
-    msglog << endreq;
-    return false;
-  }
-  return true;
-}
->>>>>>> 1.6

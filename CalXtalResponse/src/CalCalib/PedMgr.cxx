@@ -65,9 +65,9 @@ StatusCode PedMgr::loadIdealVals() {
   }
 
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealPeds[rng]   = owner->m_idealCalib.pedVals[(short)rng];
-    m_idealPedSig[rng] = owner->m_idealCalib.pedSigs[(short)rng];
-    m_idealCos[rng]    = owner->m_idealCalib.pedCos[(short)rng];
+    m_idealPeds[rng]   = owner->m_idealCalib.pedVals[rng.getInt()];
+    m_idealPedSig[rng] = owner->m_idealCalib.pedSigs[rng.getInt()];
+    m_idealCos[rng]    = owner->m_idealCalib.pedCos[rng.getInt()];
   }
   
   return StatusCode::SUCCESS;
