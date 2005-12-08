@@ -18,7 +18,7 @@
 #include "astro/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IFluxSvc("FluxSvc", 5 , 1); 
+static const InterfaceID IID_IFluxSvc("FluxSvc", 6, 0); 
 
 // forward declarations
 class IFlux;
@@ -52,10 +52,7 @@ public:
 
     /// pass a specific amount of time
     virtual void pass (double t)=0;    
-#if 0
-    /// create a set of display windows using rootplot.
-    virtual void rootDisplay(std::vector<const char*> arguments)=0;
-#endif
+
     /// create a set of display windows using rootplot.
     virtual void rootDisplay(std::vector<std::string> arguments)=0;
 
@@ -76,9 +73,6 @@ public:
 
     /// get the angular values of the satellite
     virtual std::pair<double,double> getExplicitRockingAngles()=0;
-
-    /// set the desired pointing history file to use:
-    virtual void setPointingHistoryFile(std::string fileName)=0;
 
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual HepRotation transformGlastToGalactic(double time)const=0;

@@ -87,10 +87,6 @@ public:
 
     /// return pointer to the random engine that FluxSvc uses
     virtual HepRandomEngine* getRandomEngine();
-#if 0
-    /// create a set of display windows using rootplot.
-    void rootDisplay(std::vector<const char*> arguments);
-#endif
     virtual void rootDisplay(std::vector<std::string> arguments);;
 
     /// attach an external observer to GPS
@@ -131,9 +127,6 @@ public:
     ///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
     ///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
     std::vector<double> setRockType(int rockType, double rockAngle = 35.);
-
-    /// set the desired pointing history file to use:
-    void setPointingHistoryFile(std::string fileName);
 
     ///this should return the source file names, along with the contained sources.
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
@@ -285,7 +278,6 @@ static std::string default_dtd_file("$(FLUXROOT)/xml/source.dtd");
 /// Standard Constructor
 FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc), m_currentFlux(0), m_insideSAA(false)
-, m_expansionFactor(1.0)
 {
 
     declareProperty("source_lib" , m_source_lib); 
@@ -300,9 +292,6 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("StartTimeEnvVar", m_times.m_startTimeEnvVar="");
 
 
-#if 0 // disable this for now, it is not consistent with CompositeSource
-    declareProperty("ExpansionFactor"   , m_expansionFactor=1.0);
-#endif
 
 }
 
@@ -497,11 +486,6 @@ void FluxSvc::addFactory(std::string name, const ISpectrumFactory* factory ){
 void FluxSvc::pass ( double t){
     m_fluxMgr->pass(t);
 }
-#if 0
-void FluxSvc::rootDisplay(std::vector<const char*> arguments){
-    rootplot abc(arguments, m_fluxMgr);
-}
-#endif
 
 void FluxSvc::rootDisplay(std::vector<std::string> arguments){
     rootplot abc(arguments, m_fluxMgr);   
@@ -545,9 +529,6 @@ std::pair<double,double> FluxSvc::getExplicitRockingAngles(){
     return m_fluxMgr->getExplicitRockingAngles();
 }
 
-void FluxSvc::setPointingHistoryFile(std::string fileName){
-    m_fluxMgr->setPointingHistoryFile(fileName);
-}
 
 HepRotation FluxSvc::transformToGlast(double seconds,GPS::CoordSystem index)const{
     return m_fluxMgr->transformToGlast(seconds,index);
