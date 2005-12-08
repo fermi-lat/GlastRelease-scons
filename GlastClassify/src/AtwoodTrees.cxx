@@ -31,16 +31,27 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
 
     // New items to create or override
     // Add Bill's tuple items so we can start some comparisons
-    tuple.addItem("CTBbestEneProb",   m_bestEnergyProb);
-    tuple.addItem("CTBprofileProb",   m_profileProb);
-    tuple.addItem("CTBlastLayerProb", m_lastLayerProb);
-    tuple.addItem("CTBtrackerProb" ,  m_trackerProb);
-    tuple.addItem("CTBparamProb",     m_paramProb);
-    tuple.addItem("CTBBestEnergy",    m_CTBestEnergy);
-    tuple.addItem("CTBdeltaEoE",      m_CTBdeltaEoE);
-    tuple.addItem("CTBVTX",           m_VTX);
-    tuple.addItem("CTBCORE",          m_CORE);
-    tuple.addItem("CTBGAM",           m_GAM);
+    tuple.addItem("CTBAcdLowerTileCount",  m_acdLowerTileCount);
+    tuple.addItem("CTBAcdUpperTileCount",  m_acdUpperTileCount);
+    tuple.addItem("CTBBestPSFerr",         m_bestPsfErr);
+    tuple.addItem("CTBBestXDir",           m_bestXDir);
+    tuple.addItem("CTBBestYDir",           m_bestYDir);
+    tuple.addItem("CTBBestZDir",           m_bestZDir);
+    tuple.addItem("CTBBestDeltaEoE",       m_bestDeltaEoE);
+    tuple.addItem("CTBBestEnergy",         m_bestEnergy);
+    tuple.addItem("CTBBestEnergyProb",     m_bestEnergyProb);
+    tuple.addItem("CTBCORE",               m_CORE);
+    tuple.addItem("CTBCalFrontBackRatio",  m_calFrontBackRatio);
+    tuple.addItem("CTBCalMaxXtalRatio",    m_calMaxXtalRatio);
+    tuple.addItem("CTBGAM",                m_GAM);
+    tuple.addItem("CTBGoodEnergy",         m_goodEnergy);
+    tuple.addItem("CTBLastLayerProb",      m_lastLayerProb);
+    tuple.addItem("CTBParamProb",          m_paramProb);
+    tuple.addItem("CTBProfileProb",        m_profileProb);
+    tuple.addItem("CTBTkrEnergyFrac",      m_tkrEnergyFrac);
+    tuple.addItem("CTBTkrLATEdge",         m_tkrLATEdge);
+    tuple.addItem("CTBTrackerProb" ,       m_trackerProb);
+    tuple.addItem("CTBVTX",                m_VTX);
     
     m_executeTreeCnt = 0;
     m_goodVals       = 0;
@@ -70,16 +81,28 @@ AtwoodTrees::~AtwoodTrees()
 bool AtwoodTrees::execute()
 {
     // initialize CT output variables
-    m_bestEnergyProb =  0.;
-    m_profileProb    =  0.;
-    m_lastLayerProb  =  0.;
-    m_trackerProb    =  0.;
-    m_paramProb      =  0.;
-    m_CTBestEnergy   =  0.;
-    m_CTBdeltaEoE    = -2.;
-    m_VTX            =  0.;
-    m_CORE           =  0.;
-    m_GAM            =  0.;
+    m_acdLowerTileCount   = 0.;
+    m_acdUpperTileCount   = 0.;
+    m_bestPsfErr          = 0.;
+    m_bestXDir            = 0.;
+    m_bestYDir            = 0.;
+    m_bestZDir            = 0.;
+    m_bestDeltaEoE        = 0.;
+    m_bestEnergy          = 0.;
+    m_bestEnergyProb      = 0.;
+    m_CORE                = 0.;
+    m_calFrontBackRatio   = 0.;
+    m_calMaxXtalRatio     = 0.;
+    m_evtLogEnergyRaw     = 0.;
+    m_GAM                 = 0.;
+    m_goodEnergy          = 0.;
+    m_lastLayerProb       = 0.;
+    m_paramProb           = 0.;
+    m_profileProb         = 0.;
+    m_tkrEnergyFrac       = 0.;
+    m_tkrLATEdge          = 0.;
+    m_trackerProb         = 0.;
+    m_VTX                 = 0.;
 
     double tkrNumTracks = *m_TkrNumTracks;
     double calenergy    = *m_CalEnergyRaw;
@@ -97,32 +120,28 @@ bool AtwoodTrees::execute()
     try
     {
         // Retrieve the energy classification results
-        double bestEnergyProb = m_treeAnalysis->getTupleVal("BestEnergyProb");
-        double ProfileProb    = m_treeAnalysis->getTupleVal("ProfileProb");
-        double lastLayerProb  = m_treeAnalysis->getTupleVal("LastLayerProb");
-        double trackerProb    = m_treeAnalysis->getTupleVal("TrackerProb");
-        double ParamProb      = m_treeAnalysis->getTupleVal("ParamProb");
-        double ctBestEnergy   = m_treeAnalysis->getTupleVal("BestEnergy");
-        double ctDeltaEoE     = m_treeAnalysis->getTupleVal("BestDeltaEoE");
-        m_bestEnergyProb      = bestEnergyProb;
-        m_profileProb         = ProfileProb;
-        m_lastLayerProb       = lastLayerProb;
-        m_trackerProb         = trackerProb;
-        m_paramProb           = ParamProb;
-        m_CTBestEnergy        = ctBestEnergy;
-        m_CTBdeltaEoE         = ctDeltaEoE;
-
-        // Probability that event was vertexed
-        double VTX            = m_treeAnalysis->getTupleVal("VTX");
-        m_VTX                 = VTX;
-
-        // Probability that event was "in the core"
-        double CORE           = m_treeAnalysis->getTupleVal("CORE");
-        m_CORE                = CORE;
-
-        // Background rejection probability
-        double GAM            = m_treeAnalysis->getTupleVal("GAM");
-        m_GAM                 = GAM;
+        m_acdLowerTileCount   = m_treeAnalysis->getTupleVal("AcdLowerTileCount");
+        m_acdUpperTileCount   = m_treeAnalysis->getTupleVal("AcdUpperTileCount");
+        m_bestPsfErr          = m_treeAnalysis->getTupleVal("Best.PSF.err");
+        m_bestXDir            = m_treeAnalysis->getTupleVal("Best.XDir");
+        m_bestYDir            = m_treeAnalysis->getTupleVal("Best.YDir");
+        m_bestZDir            = m_treeAnalysis->getTupleVal("Best.ZDir");
+        m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("BestDeltaEoE");
+        m_bestEnergy          = m_treeAnalysis->getTupleVal("BestEnergy");
+        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("BestEnergyProb");
+        m_CORE                = m_treeAnalysis->getTupleVal("CORE");
+        m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CalFrontBackRatio");
+        m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CalMaxXtalRatio");
+        m_evtLogEnergyRaw     = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
+        m_GAM                 = m_treeAnalysis->getTupleVal("GAM");
+        m_goodEnergy          = m_treeAnalysis->getTupleVal("GoodEnergy");
+        m_lastLayerProb       = m_treeAnalysis->getTupleVal("LastLayerProb");
+        m_paramProb           = m_treeAnalysis->getTupleVal("ParamProb");
+        m_profileProb         = m_treeAnalysis->getTupleVal("ProfileProb");
+        m_tkrEnergyFrac       = m_treeAnalysis->getTupleVal("TkrEnergyFrac");
+        m_tkrLATEdge          = m_treeAnalysis->getTupleVal("TkrLATEdge");
+        m_trackerProb         = m_treeAnalysis->getTupleVal("TrackerProb");
+        m_VTX                 = m_treeAnalysis->getTupleVal("VTX");
 
         m_goodVals++;
     }

@@ -51,7 +51,7 @@ typedef std::vector<DOMElement*> DOMEvector;
 GlastClassify::xmlTreeAnalysisFactory::xmlTreeAnalysisFactory(const std::string& path, ITupleInterface& tuple)
                                                             : m_lookup(tuple), m_log(std::cout)
 {
-    //std::string sFileName = path+"/"+"DC2_Analysis_v2r1.imw";
+    //std::string sFileName = path+"/"+"DC2_Analysis_v2r1.xml";
     std::string sFileName = path;
     
     xmlBase::XmlParser xmlParser;
@@ -156,6 +156,9 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllActivityNodes(GlastClassify::T
         m_idToINodeMap[sId] = iActivityNode;
         m_typeToINodeVecMap[sNewType].push_back(iActivityNode);
     }
+
+    // Cross reference the local tuple variables to those in the input ntuple
+    tree->crossRefNtupleVars();
 
     //done
     return m_iNodeVec.size();

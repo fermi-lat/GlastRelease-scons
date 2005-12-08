@@ -27,6 +27,7 @@
 #include <stdexcept>
 
 namespace {
+/*
     // convenient utility from Heather
 TTree* getTree(TFile *f) {
   // Create an iterator on the list of keys
@@ -63,7 +64,7 @@ TTree* getTree(TFile *f) {
   }
   return t;
 }
-
+*/
 class RootItem : public GlastClassify::Item {
 public:
     RootItem(TLeaf * leaf) : m_leaf(leaf){}

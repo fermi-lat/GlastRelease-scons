@@ -298,7 +298,8 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
         if (sOperator == "greaterOrEqual") sOperator = ">=";
         else                               sOperator = "<";
 
-        std::string expression = varname + " " + sOperator + " " + valname;
+        //std::string expression = varname + " " + sOperator + " " + valname;
+        std::string expression(varname + sOperator + valname);
 
         IXTExprsnNode* xprsnNode = XprsnParser().parseExpression(expression);
         IXTExprsnNode* ifNode    = parseNode(xmlNodeVec[0]);

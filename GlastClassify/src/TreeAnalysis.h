@@ -57,6 +57,10 @@ public:
     */
     void addNewNode(IImActivityNode* node);
 
+    /** @brief Used by the TreeAnalysisBuilder to cross reference the ntuple vars
+    */
+    void crossRefNtupleVars();
+
     /** @brief Used by the TreeAnalysisBuilder, once all nodes have been added,
                to set the "head" node (the first to be executed
     */
@@ -79,7 +83,8 @@ private:
     // Class needed to calcluate local variables used in CT's
     XTcolumnVal<double>::XTtupleMap    m_xtTupleMap;
 
-    // Try a lookup class here...
+    // Provide map between "local" variables in analysis and 
+    // those existing in the input ntuple
     std::map<std::string,const GlastClassify::Item*> m_nTupleMap;
 
     // Vector of Activity Nodes
