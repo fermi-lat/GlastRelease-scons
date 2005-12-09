@@ -72,17 +72,17 @@ FESOutput::FESOutput() :
         }
 } 
          
-   int          open   (const char    *fileName);
+   int          open   (const char    *fileName, const char *desc);
 
    unsigned int dumpTKR (const EbfTkrData *tkr, int nDeltaTime);
-   unsigned int dumpCAL (const EbfCalData *cal, const EbfCalConstants &calConst,int nDeltaTime);
+   unsigned int dumpCAL (const EbfCalData *cal, const Event::GltDigi &glt,int nDeltaTime);
    unsigned int dumpACD (const EbfAcdData *acd, int nDeltaTime);
 
    void         print  ()  const;
    int * writeTKR  (int tower, unsigned int *buff, int nBytes);
    int * writeCAL  (int tower, unsigned int *buff, int nBytes);
    int * writeACD  (int corner, unsigned int *buff, int nBytes);
-   unsigned int  *writeFileHead(unsigned int *buff, int det, int tower);
+   unsigned int  *writeFileHead(unsigned int *buff, int det, int tower, const char *desc);
 
    void  completeCAL(int nDelta);
    void  completeTKR(int nDelta);
@@ -142,17 +142,19 @@ FESOutput::FESOutput() :
     FILE               *m_fpCAL[16]; /*!< The file handle for CAL files    */   
     unsigned int    *m_evtBufferCAL[16]; /*!< The event buffer                     */
     unsigned int     bLengthCAL[16];
+    unsigned int     m_CAL_evtCount[16];
 
 /* Files and counters for TKR file*/
     FILE               *m_fpTKR[16]; /*!< The file handle for TKR files    */
     unsigned int    *m_evtBufferTKR[16]; /*!< The event buffer                     */
     unsigned int     bLengthTKR[16];
+    unsigned int     m_TKR_evtCount[16];
 
 /* Files and counters for ACD file*/
     FILE                *m_fpACD[4]; /*!< The file handle for ACD files    */
     unsigned int    *m_evtBufferACD[4]; /*!< The event buffer                     */
     unsigned int     bLengthACD[4];
-
+    unsigned int     m_ACD_evtCount[4];
 
 };
 

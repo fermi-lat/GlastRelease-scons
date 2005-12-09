@@ -42,15 +42,19 @@ static void printData (const unsigned int *beg,
  *  @param maxEvtSize The maximum size of a given event.
  *
  */
-int FESOutput::open (const char     *fileName)
+int FESOutput::open (const char     *fileName, const char *desc)
 {
 
    debug = false;
    if (debug) printf("FESOutput::openning TKR file %s\n",fileName);
 
+
      
-   /* Open the CAL output files */
+   /* Open the TKR output files */
    for(int tower=0; tower<16; tower++){
+
+   /* initialize counter */
+    m_TKR_evtCount[tower]=0;
 
    /* Initialize a chunk of memory to hold data for 1 tower */   
      m_evtBufferTKR[tower]  = (unsigned int *)malloc (2*FES_TKR_MRLENG);
@@ -63,14 +67,14 @@ int FESOutput::open (const char     *fileName)
      if (!m_fpTKR[tower])
      {
        /* Error in opening the output file.. */
-       printf("ERROR Openning File for tower %i\n",tower);
+       printf("FESOutput::ERROR Openning FES File for tower %i\n",tower);
        free (m_evtBufferTKR);
        return -2;
      }
 
-/* Write CAL File Header */
+/* Write TKR File Header */
      unsigned int *beg = m_evtBufferTKR[tower]; 
-     m_evtBufferTKR[tower] = writeFileHead(m_evtBufferTKR[tower],1,tower);
+     m_evtBufferTKR[tower] = writeFileHead(m_evtBufferTKR[tower],1,tower,desc);
 //     printData(beg,m_evtBufferTKR[tower],80);
      writeTKR(tower,beg,FES_FILEHEAD_SIZE);
      m_evtBufferTKR[tower] = beg;        
@@ -85,13 +89,18 @@ int FESOutput::open (const char     *fileName)
    /* Open the CAL output files */
    for(int tower=0; tower<16; tower++){
 
+
+   /* initialize counter */
+    m_CAL_evtCount[tower]=0;
+
+
    /* Initialize a chunk of memory to hold data for 1 tower */   
      m_evtBufferCAL[tower]  = (unsigned int *)malloc (2*FES_CAL_MRLENG);
      if (m_evtBufferCAL[tower] == 0) { return -1;  }
 
      char fileCAL[120];
      sprintf(fileCAL,"%s.cal%i",fileName,tower);
-     m_fpCAL[tower] = fopen (fileCAL, "wb");
+     m_fpCAL[tower] = fopen (fileCAL, "wb+");
      if (!m_fpCAL[tower])
      {
        /* Error in opening the output file.. */
@@ -102,7 +111,7 @@ int FESOutput::open (const char     *fileName)
 
 /* Write CAL File Header */
      unsigned int *beg = m_evtBufferCAL[tower]; 
-     m_evtBufferCAL[tower] = writeFileHead(m_evtBufferCAL[tower],2,tower);
+     m_evtBufferCAL[tower] = writeFileHead(m_evtBufferCAL[tower],2,tower,desc);
 //     printData(beg,m_evtBufferCAL[tower],80);
      writeCAL(tower,beg,FES_FILEHEAD_SIZE);
      m_evtBufferCAL[tower] = beg;        
@@ -115,6 +124,9 @@ int FESOutput::open (const char     *fileName)
      
    /* Open the ACD output (4) files */
    for(int corner=0; corner<4; corner++){ 
+
+   /* initialize counter */
+     m_ACD_evtCount[corner]=0;
 
    /* Initialize a chunk of memory to hold data for 1 tower */   
      m_evtBufferACD[corner]  = (unsigned int *)malloc (2*FES_CAL_MRLENG);
@@ -133,7 +145,7 @@ int FESOutput::open (const char     *fileName)
 
 /* Write ACD File Header */
      unsigned int *beg = m_evtBufferACD[corner]; 
-     m_evtBufferACD[corner] = writeFileHead(m_evtBufferACD[corner],3,corner);
+     m_evtBufferACD[corner] = writeFileHead(m_evtBufferACD[corner],3,corner,desc);
 //     printData(beg,m_evtBufferACD[corner],80);
      writeACD(corner,beg,FES_FILEHEAD_SIZE);
      m_evtBufferACD[corner] = beg;        
@@ -142,7 +154,7 @@ int FESOutput::open (const char     *fileName)
    return 0;
 }
 
-unsigned int * FESOutput::writeFileHead(unsigned int *buff, int det, int tower)
+unsigned int * FESOutput::writeFileHead(unsigned int *buff, int det, int tower, const char *desc)
 /*
    DESCRIPTION
    -----------
@@ -158,11 +170,11 @@ unsigned int * FESOutput::writeFileHead(unsigned int *buff, int det, int tower)
 */
 {
 
-   int evtCount = 1;
+   unsigned int evtCount = 0;
    bool debug = false;
 /* Form standard record header for File Head */
    unsigned int recHead = (FES_FILEHEAD_SIZE<<16) | (fesVersion<<8) | FES_RTYP_HEADER;
-//    printf("Wd 0: %8.8x  %8.8x \n",(int)buff,recHead);
+   if(debug) printf("Wd 0: %8.8x  %8.8x \n",(int)buff,recHead);
    *buff++ = recHead;
 
 /* Form the detector Mask  (TKR or CAL)*/
@@ -192,12 +204,15 @@ unsigned int * FESOutput::writeFileHead(unsigned int *buff, int det, int tower)
    *buff++ = wd;
    
 /* Store last two bytes of event count and first two bytes of description field (blank)*/
-   wd = ((evtCount & 0xffff0000) >> 16);
+   char descTot[80];
+   sprintf(descTot,"%s",desc);
+   for(int i=strlen(descTot); i<80; i++ ) strcat(descTot," ");
+   wd = (descTot[1]<<24) | (descTot[0] << 16) | ((evtCount & 0xffff0000) >> 16);
    if (debug) printf("Wd 4: %8.8x %8.8x \n",(int)buff,wd);
    *buff++ = wd;
    
 /* Store rest of description field plus padding (8 bytes) */
-   for(int i=0; i<19; i++) *buff++ = 0;  
+   for(int i=0; i<19; i++) *buff++ = descTot[4*i+2] | descTot[(4*i)+3]<<8 | descTot[(4*i)+4]<<16 | descTot[(4*i)+5]<<24 ;  
    *buff++ = 0xffff4321;   
       
    return (unsigned int *)buff;
@@ -714,6 +729,11 @@ void FESOutput::completeTKR(int nDeltaTime){
      } 
   
      writeTKR(tower,m_evtBufferTKR[tower],bLengthTKR[tower]);
+
+// Keep the number of events written into this file. At the end of the job
+// we will rewind the file and put the info in the header.
+     m_TKR_evtCount[tower]++;     
+
      
   }
 
@@ -728,7 +748,7 @@ void FESOutput::completeTKR(int nDeltaTime){
  *  @return     ???
  *
  */
-unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const EbfCalConstants      &calConst, int nDeltaTime){
+unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt, int nDeltaTime){
 
 
 // Before dealing with this event complete the time stamp on the
@@ -738,8 +758,6 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const EbfCalConstants    
    bool debug = false;
    bool encode = false;
    if (debug) printf("FES dumpCAL Routine\n");
-
-   if(firstEvt) printf("FES uses Cal High Threshold %f and Cal Low Threshold %f\n",calConst.m_hiThreshold,calConst.m_loThreshold);
 
    for(int tower=0; tower<16; tower++) {
 
@@ -924,9 +942,8 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const EbfCalConstants    
                     if (debug) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x\n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    double  energyPos = calConst.convertToMev (rangeP, adcP);
-                    if(energyPos > calConst.m_loThreshold)  treq[FESCable] |= (1 << FESlayer);
-                    if(energyPos > calConst.m_hiThreshold)  treq[FESCable] |= (1 << (FESlayer+4));
+                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,0)))  treq[FESCable] |= (1 << FESlayer);
+                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,0)))  treq[FESCable] |= (1 << (FESlayer+4));
                  }
                  if(adcN != 0 || encode) {
                     dav[FESCable+2][FESlayer] |= (0x1 << log);
@@ -936,9 +953,8 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const EbfCalConstants    
                     if (debug && adcP == 0) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x \n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    double  energyNeg = calConst.convertToMev (rangeN, adcN);
-                    if(energyNeg > calConst.m_loThreshold)  treq[FESCable+2] |= (1 << FESlayer);
-                    if(energyNeg > calConst.m_hiThreshold) treq[FESCable+2] |= (1 << (FESlayer+4));                
+                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,1)))  treq[FESCable+2] |= (1 << FESlayer);
+                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,1)))  treq[FESCable+2] |= (1 << (FESlayer+4));                
                  } 
 //                 debug = false;         
                }// readoutRange==0
@@ -1192,6 +1208,9 @@ void FESOutput::completeCAL(int nDeltaTime){
 //     printf("Writing CAL Tower %i Buffer Length %i\n",tower,bLengthCAL[tower]);     
      writeCAL(tower,m_evtBufferCAL[tower],bLengthCAL[tower]);
      
+// Keep the number of events written into this file. At the end of the job
+// we will rewind the file and put the info in the header.
+     m_CAL_evtCount[tower]++;     
   }
 
   return;
@@ -1501,6 +1520,10 @@ void FESOutput::completeACD(int nDeltaTime){
      
 // Write the file       
      writeACD(cnr,m_evtBufferACD[cnr],bLengthACD[cnr]);
+
+// Keep the number of events written into this file. At the end of the job
+// we will rewind the file and put the info in the header.
+     m_ACD_evtCount[cnr]++;     
      
   }
 
@@ -1696,10 +1719,24 @@ unsigned int FESOutput::close ()
       completeACD(0);
    }
 
-   printf("Closing the FES Files\n");
+//   printf("Closing the FES Files\n");
    /* If not already closed */
    for(int tower=0; tower<16; tower++){
      if (m_fpTKR[tower]) {
+
+// For each file, rewind and look at top of file
+           rewind(m_fpTKR[tower]);
+           char wrds[10];
+              
+// Read to point where event/transition count should be stored
+          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpTKR[tower]);
+
+//          printf("Event count %i \n",m_CAL_evtCount[tower]);
+          unsigned int ntran = 2*m_TKR_evtCount[tower];
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpTKR[tower]);
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_TKR_evtCount[tower]>>(8*nbyte))&0xff),m_fpTKR[tower]);
+
+// Close the file
           status = fclose (m_fpTKR[tower]);
           m_fpTKR[tower] = 0;
      } 
@@ -1708,6 +1745,20 @@ unsigned int FESOutput::close ()
    /* If not already closed */
    for(int tower=0; tower<16; tower++){
      if (m_fpCAL[tower]) {
+     
+// For each file, rewind and look at top of file
+           rewind(m_fpCAL[tower]);
+           char wrds[10];
+              
+// Read to point where event/transition count should be stored
+          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpCAL[tower]);
+
+//          printf("Event count %i \n",m_CAL_evtCount[tower]);
+          unsigned int ntran = 2*m_CAL_evtCount[tower];
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpCAL[tower]);
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_CAL_evtCount[tower]>>(8*nbyte))&0xff),m_fpCAL[tower]);
+
+// close the file               
           status = fclose (m_fpCAL[tower]);
           m_fpCAL[tower] = 0;
      } 
@@ -1715,6 +1766,20 @@ unsigned int FESOutput::close ()
    /* If not already closed */
    for(int corner=0; corner<4; corner++){
        if (m_fpACD[corner]) {
+       
+// For each file, rewind and look at top of file
+           rewind(m_fpACD[corner]);
+           char wrds[10];
+              
+// Read to point where event/transition count should be stored
+          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpACD[corner]);
+
+//          printf("Event count %i \n",m_CAL_evtCount[tower]);
+          unsigned int ntran = 2*m_ACD_evtCount[corner];
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpACD[corner]);
+          for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_ACD_evtCount[corner]>>(8*nbyte))&0xff),m_fpACD[corner]);
+       
+// Close the file       
             status = fclose (m_fpACD[corner]);
             m_fpACD[corner] = 0;
        }       
@@ -1748,7 +1813,7 @@ FESOutput::~FESOutput ()
     | to free the memory associated with the top of this block. This
     | is the event buffer.
    */
-   printf("In the destructor of FESOutput\n");
+//   printf("In the destructor of FESOutput\n");
 //   close ();
 /*
    free (m_evtBufferTKR);
