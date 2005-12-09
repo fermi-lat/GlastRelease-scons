@@ -62,11 +62,12 @@ public:
 private: 
     int m_count;
     DoubleProperty  m_transy, m_transz; // move in plane
+    DoubleProperty m_pivot_distance, m_beam_plane; // locations of pivot and beam plane, in glast coordinates
     DoubleProperty  m_angle; // rotation about instrument y-axis (deg)
     double m_c, m_s;       // cos, sin of rot
 
     void transform(Event::McParticle& mcp );
-    Hep3Vector m_translation;
+    Hep3Vector m_translation, m_pivot;
     HepRotationY m_rot;  // the table rotation
 };
 
@@ -80,9 +81,10 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     declareProperty("vertical_translation",  m_transy=0);
-    declareProperty("horizontal_translation",  m_transz=0);
+    declareProperty("horizontal_translation",m_transz=0);
     declareProperty("table_rotation", m_angle=0);
-
+    declareProperty("pivot_location", m_pivot_distance=4280-4130);
+    declareProperty("beam_plane",     m_beam_plane=4280);
     
 }
 
@@ -99,6 +101,9 @@ StatusCode BeamTransform::initialize(){
 
     // this is the rotation matrix
     m_rot = HepRotationY(m_angle*M_PI/180);
+
+    // location of pivot
+    m_pivot = Hep3Vector( 0,0, m_pivot_distance);
 
     return sc;
 }
@@ -118,12 +123,13 @@ void BeamTransform::transform(Event::McParticle& mcp )
     rbeam += m_translation;
 
     // convert to unrotated instrument coordinates
-    Hep3Vector r(rbeam.z(), rbeam.y(), rbeam.x());
+    Hep3Vector r(rbeam.z(), rbeam.y(), m_beam_plane);
     HepLorentzVector p(-pbeam.z(), pbeam.y(), -pbeam.x(), pbeam.e());
 
     mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
         mcp.particleProperty(), mcp.statusFlags(),
-        m_rot*p, m_rot*r,
+        m_rot*p, 
+        m_rot*(r-m_pivot) + m_pivot,
         mcp.getProcess());
 
 }
