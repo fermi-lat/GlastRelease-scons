@@ -40,6 +40,12 @@ These are needed to specify the position and direction of the incoming particles
 For concreteness, and until we know better, default the point of rotation of the table to x = 4280 
 (1 meter downstream from the reporting plane), and the z=0 point of the CU to x = 4090 (z position of the center of the CU).
 
+More wisdom from Leon:
+
+the point of rotation won't necessarily be at  z  = 0
+and we will have to adjust the distance between the reporting plane (x in the beam frame) and the CU.
+I don't have any real  number yet, but I'm assuming that the CU will be somewhat behind the reporting plane... so say we set the x-beam of the z-CU at 4280, one meter downstream of the reporting plane.
+the point of rotation, I have no idea, but it should not be at the z=0 of the CU, so we can see if it's handled correctly, so maybe 150 mm upstream of the z=0 point?
 */
 class BeamTransform : public Algorithm {
 public:
