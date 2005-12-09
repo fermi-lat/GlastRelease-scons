@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   09-dec-05  v6r31   THB  (For Julie) add pointing info entry for lat_geo.
    08-dec-05  v6r30   THB  Remove obsolute entry to set pointing history file
    24-nov-05  v6r29   THB  Allow partial suppression of ExposureAlg tick message
    24-nov-05  v6r28p2 THB  fix bug in setting up history file; set startdate for sources
