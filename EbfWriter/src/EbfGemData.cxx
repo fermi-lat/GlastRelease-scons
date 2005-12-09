@@ -139,15 +139,15 @@ void EbfGemData::fill (Event::EventHeader *header,
 */
 
     /* Collapse the triggering information into the trigger request vector */
-    reqVec      = ((threeInARow)              ? (1 << TKR)            : 0)
-                | ((threeInARow & throttled)  ? (1 << TKR_NOT_VETOED) : 0)
+    reqVec      = ((threeInARow & throttled)  ? (1 << TKR_NOT_VETOED) : 0)
+                | ((threeInARow)              ? (1 << TKR)            : 0)
                 | ((calHi)                    ? (1 << CAL_HI)         : 0)
                 | ((calLo)                    ? (1 << CAL_LO)         : 0)
                 | ((cno)                      ? (1 << CNO)            : 0);
 
 
-    unsigned int dif = (reqVec&0xff^header->trigger()&0xff); 
-//    if(dif!=0)printf("Cond. Sum Difference:  EBF 0x%2.2x    Header 0x%2.2x  XOR 0x%2.2x\n",reqVec,header->trigger(),dif);
+    unsigned int dif = (reqVec&0xff^( (header->trigger()&0xff00)>>8) ); 
+//    if(dif>0) printf("Cond. Sum Difference:  EBF 0x%2.2x    Header 0x%2.2x  HeaderGlt 0x%2.2x  XOR 0x%2.2x\n",reqVec,header->trigger(),(header->trigger()&0xff00)>>8,dif);
 
     /* Copy the trigger information to the GEM */
     m_thrTkr    = ((throttled & 0xffff)<< 16) | (threeInARow & 0xffff) ;
