@@ -24,7 +24,7 @@ use Geant4Runtime v2r* IExternal
 #=============================================================
 private
 #this is private to avoid passing on build info to clients
-use Geant4   v2r7* IExternal
+use Geant4   v2r6* IExternal
 
 # special code to replace the standared multiple scattering 
 use GlastMS
