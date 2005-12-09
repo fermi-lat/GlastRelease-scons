@@ -26,6 +26,20 @@
 
 /** @class BeamTransform
 @brief alg to transform the beam particle(s)
+
+The requirements are:
+
+- One degree of freedom, the rotation of the scanning table around some z-axis, 
+  probably specified as plus and minus degrees,
+
+- Cordinates in the beam frame: The x-coordinate of the point of rotation of the scanning table, and
+The x-coordinate of the z=0 plane of the CU, for the table in the unrotated orientation.
+
+These are needed to specify the position and direction of the incoming particles in the CU frame.
+
+For concreteness, and until we know better, default the point of rotation of the table to x = 4280 
+(1 meter downstream from the reporting plane), and the z=0 point of the CU to x = 4090 (z position of the center of the CU).
+
 */
 class BeamTransform : public Algorithm {
 public:
@@ -40,11 +54,12 @@ public:
 private: 
     int m_count;
     DoubleProperty  m_transy, m_transz; // move in plane
-    DoubleProperty  m_rotx, m_roty; //??
+    DoubleProperty  m_angle; // rotation about instrument y-axis (deg)
+    double m_c, m_s;       // cos, sin of rot
 
     void transform(Event::McParticle& mcp );
-    HepRotation m_rotation;
     Hep3Vector m_translation;
+    HepRotationY m_rot;  // the table rotation
 };
 
 
@@ -56,8 +71,10 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 ,m_count(0)
 {
     // declare properties with setProperties calls
-    declareProperty("delta_y",  m_transy=0);
-    declareProperty("delta_z",  m_transz=0);
+    declareProperty("vertical_translation",  m_transy=0);
+    declareProperty("horizontal_translation",  m_transz=0);
+    declareProperty("table_rotation", m_angle=0);
+
     
 }
 
@@ -71,33 +88,39 @@ StatusCode BeamTransform::initialize(){
     
     // define the transformation matrix here.
     m_translation = Hep3Vector(0, m_transy, m_transz);
+
+    // this is the rotation matrix
+    m_rot = HepRotationY(m_angle*M_PI/180);
+
     return sc;
 }
 void BeamTransform::transform(Event::McParticle& mcp )
 {
-    
+
+    // special treatment if it is a mother (code from Leon)
+    if(&mcp.mother()!=&mcp) {
+        const_cast<Event::McParticle*>(&mcp.mother())->removeDaughter(&mcp);
+    }
+
     // get the initial position and momentum
-    HepLorentzVector initialMomentum = mcp.initialFourMomentum();
-    HepPoint3D initialPosition = mcp.initialPosition();
+    HepLorentzVector pbeam = mcp.initialFourMomentum();
+    Hep3Vector rbeam = mcp.initialPosition();
 
-    // transform them
-    HepPoint3D newPosition = initialPosition + m_translation;
+    // translate in beam frame
+    rbeam += m_translation;
 
-    HepLorentzVector newMomentum = initialMomentum;
+    // convert to unrotated instrument coordinates
+    Hep3Vector r(rbeam.z(), rbeam.y(), rbeam.x());
+    HepLorentzVector p(-pbeam.z(), pbeam.y(), -pbeam.x(), pbeam.e());
 
     mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
         mcp.particleProperty(), mcp.statusFlags(),
-        newMomentum, newPosition,
+        m_rot*p, m_rot*r,
         mcp.getProcess());
-#if 0
-    HepLorentzVector finalMomentum = mcp.finalFourMomentum();
-    HepPoint3D finalPosition = mcp.finalPosition();
-#endif
 
 }
 
-StatusCode BeamTransform::execute()
-{
+StatusCode BeamTransform::execute(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     ++m_count;
