@@ -350,7 +350,7 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
            printf("------------------------------\n");
 */
 //  cno on side B never seems to be set; so do it to match side A
-           cno_b = cno_a;           
+///           cno_b = cno_a;           
 
 
            int             oface;
