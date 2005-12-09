@@ -6,8 +6,14 @@
 #include "GaudiKernel/Algorithm.h"
 
 #include "Event/Digi/CalDigi.h"
+#include "CalUtil/CalDefs.h"
+#include "CLHEP/Random/RandGauss.h"
 #include "EbfCalData.h"
 
+#include <map>
+
+
+using idents::CalXtalId;
 
 static StatusCode           get (IGlastDetSvc *detSvc, 
                                  MsgStream       &log,
@@ -184,6 +190,9 @@ StatusCode EbfCalConstants::initialize (IGlastDetSvc *detSvc, MsgStream &log)
 **/
 void EbfCalData::initialize ()
 {
+
+   StatusCode sc;
+
    unsigned int      itower;
    EbfCalTowerData   *tower;
 
@@ -217,7 +226,7 @@ void EbfCalData::initialize ()
            layer->m_nhits = 0;
        }
    }
-   
+  
    return;
 }
 
@@ -239,6 +248,8 @@ void EbfCalData::initialize ()
  *
 **/ 
 void EbfCalData::fill (const Event::CalDigiCol &logs,
+                       const Event::GltDigi &glt,
+                       ICalCalibSvc   *calCalibSvc,
                        const EbfCalConstants      &c)
 {
    int print = 0;
@@ -290,7 +301,7 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
 // For testing set this 4 range readout to true
 //            m_range4 = true;
            
-            if(m_range4) printf("EbfCalData: Found 4 Range ReadOut\n");
+//            if(m_range4) printf("EbfCalData: Found 4 Range ReadOut\n");
            
 // Get the ID for this digi (tower,layer,log)           
            idents::CalXtalId                id = digi.getPackedId();
@@ -300,12 +311,12 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
            for(int readoutRange=0; readoutRange<lastRange; readoutRange++) { 
 
 // Get the Readout (request which range)
-//              const Event::CalDigi::CalXtalReadout 
-//                            *readout = digi.getXtalReadout(readoutRange);
+              const Event::CalDigi::CalXtalReadout 
+                            *readout = digi.getXtalReadout(readoutRange);
 
 // Get the Readout (force range 0 for tests)
-              const Event::CalDigi::CalXtalReadout 
-                            *readout = digi.getXtalReadout(0);
+//              const Event::CalDigi::CalXtalReadout 
+//                            *readout = digi.getXtalReadout(0);
 
 
 
@@ -425,33 +436,48 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
               */
               double  energyPos = c.convertToMev (rangePos, adcPos);
               double  energyNeg = c.convertToMev (rangeNeg, adcNeg);
-	      /*
-	        if (print)
-	        {
-	        printf (" %1.1x %1.1x %1.1x %3d %8d %10.3f %3d %8d %10.3f",
-	        towerId,  layerId, xtalId,
-	        rangePos,  adcPos, energyPos,
-	        rangeNeg,  adcNeg, energyNeg);
-	        }
-	      */
+	      
+//	        if (print)
+//	        {
+//	        printf (" %1.1x %1.1x %1.1x %3d %8d %10.3f %3d %8d %10.3f \n",
+//	        towerId,  layerId, xtalId,
+//	        rangePos,  adcPos, energyPos,
+//	        rangeNeg,  adcNeg, energyNeg);
+//	        }
+	      
+
+
+
 
            if(readoutRange==0) {
+           
+
+// Get the information from the GltDigi
+              bool fhe_n = glt.getCALHItrigger(idents::CalXtalId(towerId,layerId,xtalId,1));           
+              bool fhe_p = glt.getCALHItrigger(idents::CalXtalId(towerId,layerId,xtalId,0));           
+//              if(fhe_n || fhe_p)printf("GLT/EBF CAL Hi twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,NcalHi,PcalHi);
+
+              bool fle_n = glt.getCALLOtrigger(idents::CalXtalId(towerId,layerId,xtalId,1));           
+              bool fle_p = glt.getCALLOtrigger(idents::CalXtalId(towerId,layerId,xtalId,0));           
+//              if(fle_n || fle_p)printf("GLT/EBF CAL Lo twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,NcalLo,PcalLo);
+  
+              
 // Store total energy in the event
               m_TotalEnergy += (energyPos+energyNeg)/2;
               
               /* Check if either end is above the CAL LO threshold */ 
-              if ( (energyPos > loThreshold) || (energyNeg > loThreshold) )
+              if ( fle_n || fle_p )
               {
                   /* Fill the masks for the low threshold */
                   m_lo        |= towerMsk;
                   tower->m_lo |= layerMsk;
                   layer->m_lo |=  xtalMsk;
 
-                  //if (print) printf (" Lo: %8.8x", tower->m_lo);
+//                  printf (" Cal Low Found twr %i lay %i col %i\n",towerId,layerId,xtalId);
 
 
                   /* Check if either end is above the CAL HI threshold */ 
-                  if ( (energyPos > hiThreshold) || (energyNeg > hiThreshold) )
+                  if ( fhe_n || fhe_p )
                   {
                       /* Fill the masks for the high threshold */
                       m_hi        |= towerMsk;
@@ -459,18 +485,199 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
                       layer->m_hi |=  xtalMsk;
 
                       //if (print) printf (" Hi: %8.8x", tower->m_hi);
+//                  printf (" Cal High Found twr %i lay %i col %i\n",towerId,layerId,xtalId);
+
                   }
               }
              } //primary readout range only. 
            } //loop over readout ranges.
            //if (print) printf ("\n");
-       }
+       } // loop over calDigi entries
+
+// If we are in 4-range readout we should fill in pedestals in channels without hits.
+// This is no zero suppression. Seems like CalDig should do this.
+      if(m_range4) fillWithPedestals(calCalibSvc);
+
+       
    }
 
 
    return;
 }
 
+
+StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc) {
+
+    StatusCode sc;
+  
+// Loop over towers
+   for(int twr=0; twr<16; twr++) {
+      for(int lyr=0; lyr<8; lyr++) {
+         for(int col=0; col<12; col++) {
+
+              EbfCalTowerData *tower = &m_towers[twr];
+              EbfCalLayerData *layer = &tower->m_layers[lyr];
+              unsigned int      ihit = layer->m_nhits;
+// Check to see if this channel was already filled
+              if((layer->m_msk >> col) & 0x1) {
+//                 printf("twr %i layer %i col %i already filled \n",twr,lyr,col);
+              } else {
+
+// Get pedestal values for each range
+                for(int rng = 0; rng<4; rng++) {
+                  float ped[2];
+                  for(int face=0; face<2; face++) {
+                      idents::CalXtalId rngXtalId(twr,lyr,col,face,rng);
+
+                      float tmpPed, tmpPedSig, tmp;
+                    //-- RETRIEVE PEDS --//
+                      sc = calCalibSvc->getPed(rngXtalId,
+                                               tmpPed,
+                                               tmpPedSig,
+                                               tmp);                     
+                      
+                      float rnd = RandGauss::shoot();
+                      ped[face] = tmpPed+(tmpPedSig*rnd);
+                  }                         
+//                  printf("twr %i lyr %i col %i Range %i Ped_N %f Ped_P %f\n",twr,lyr,col,rng,ped[1],ped[0]);
+
+// fill in the values for the pedestals
+                  m_msk        |= (1<<twr);
+                  tower->m_msk |= (1<<lyr);
+                  layer->m_msk |= (1<<col);
+
+
+                  /* Add the data for this log to the output stream */
+                  /* Only count the hits once per log */
+                  if(rng==0) layer->m_nhits   = ihit + 1;
+
+// Store the hits by packing the information
+                  layer->m_xtals[col][rng] = pack (idents::CalXtalId(twr,lyr,col),
+                                                           rng, (int)ped[0],
+                                                           rng, (int)ped[1]);
+
+
+                } 
+              }
+             
+         }
+      }
+   }
+
+   return StatusCode::SUCCESS;
+} 
+
+/*
+StatusCode EbfCalData::retrieveCalib(ICalCalibSvc   *calCalibSvc,
+                                     unsigned int twr, int lyr, unsigned int col) {
+  StatusCode sc;
+
+  using namespace CalDefs;
+
+   float uldThold[2][4];
+   
+// Loop over faces
+  for (FaceNum face; face.isValid(); face++) {
+
+
+// Note: These thresholds are for the specific ranges
+//       fle is assumed to be range 0  (LEX8)
+//       fhe is assumed to be range 2  (HEX8)
+//  Since we are going to look at a specific (best) range, we need to
+//  adjust these for the range that we are interested in.  First get the
+//  default values.  
+     CalXtalId faceXtalId(twr,lyr,col,face);
+     CalibData::ValSig fle,fhe,lac;
+     sc = calCalibSvc->getTholdCI(faceXtalId,fle,fhe,lac);
+     if (sc.isFailure()) return sc;
+     float fleTh = fle.getVal();
+     float fheTh = fhe.getVal();
+//   lacThresh[face] = lac.getVal();
+
+
+     for (RngNum rng; rng.isValid(); rng++) {
+      CalXtalId rngXtalId(twr,lyr,col,face,rng);
+
+      float tmpPed, tmpPedSig, tmp;
+      //-- RETRIEVE PEDS --//
+      sc = calCalibSvc->getPed(rngXtalId,
+                                 tmpPed,
+                                 tmpPedSig,
+                                 tmp);                           
+      if (sc.isFailure()) return sc;
+      m_ped[face][rng] = (float)tmpPed;
+      
+      //-- RETRIEVE ULD --//
+      CalibData::ValSig uld;
+      sc = calCalibSvc->getULDCI(rngXtalId,uld);
+      if (sc.isFailure()) return sc;
+      uldThold[face][rng] = uld.getVal();
+//      printf("Face %i Range %i uld %f\n",(int)face,(int)rng,uld.getVal());
+
+// Ok now adjust the thresholds for the range that we have
+// Start with the fle range.
+      if(rng == LEX1) {
+      
+        double x8ADC = uldThold[face][0];
+        double tmpDAC;
+      // 1st convert to dac
+        sc = calCalibSvc->evalDAC(CalXtalId(twr, lyr, col, face, LEX8),
+                                  x8ADC, tmpDAC);
+        if (sc.isFailure()) return sc;
+      
+        // 2nd convert to next range adc
+        double newADC;
+        sc = calCalibSvc->evalADC(CalXtalId(twr, lyr, col, face, rng),
+                                  tmpDAC, newADC);
+        if (sc.isFailure()) return sc;
+      
+      
+        float rat = newADC/x8ADC;
+        m_fleThresh[face][rng] = rat*fleTh;
+//        printf("New fle found %f for rng %i ( newADC %f  x8ADC %f rat = %f)\n",m_fleThresh[face][rng],(int)rng,newADC,x8ADC,rat);
+      } else if(rng==LEX8) {
+         m_fleThresh[face][rng] = fleTh;  //LEX8 Threshold
+//         printf("Standard fle Threshold %f\n",fleTh);
+      } else {
+         m_fleThresh[face][rng] = 0x0;  //These high ranges should automatically set low threshold
+                                        // This assumes these ranges have saturated.
+      }
+      
+
+// End with the fhe range.
+      if(rng == HEX1) {
+      
+        double x8ADC = uldThold[face][2];
+        double tmpDAC;
+      // 1st convert to dac
+        sc = calCalibSvc->evalDAC(CalXtalId(twr, lyr, col, face, HEX8),
+                                  x8ADC, tmpDAC);
+        if (sc.isFailure()) return sc;
+      
+        // 2nd convert to next range adc
+        double newADC;
+        sc = calCalibSvc->evalADC(CalXtalId(twr, lyr, col, face, rng),
+                                  tmpDAC, newADC);
+        if (sc.isFailure()) return sc;
+      
+      
+        float rat = newADC/x8ADC;
+        m_fheThresh[face][rng] = rat*fheTh;
+//        printf("New fhe found %f for rng %i ( newADC %f  x8ADC %f rat = %f)\n",m_fheThresh[face][rng],(int)rng,newADC,x8ADC,rat);
+      } else if (rng==HEX8) {
+         m_fheThresh[face][HEX8] = fheTh;  //HEX8 Threshold
+//         printf("Standard fhe Threshold %f\n",fheTh);
+      } else {
+         m_fheThresh[face][rng] = 0xfffffff; // these ranges not used for high threshold
+      }
+
+    } //over ranges
+   }  // over faces
+   
+      return StatusCode::SUCCESS;
+  
+}
+*/
 
 
 /**
@@ -844,7 +1051,7 @@ void EbfCalData::parseInput(unsigned int *contrib, unsigned int itower, unsigned
      1, 3, 5, 7 
    };
 
-   bool debug = false;
+   bool debug = true;
    unsigned int *data = contrib;
    if(debug) {
       printf("Tower %i Contribution:\n",itower);

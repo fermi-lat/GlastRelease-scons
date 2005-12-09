@@ -9,6 +9,9 @@
 //
 #include "GaudiKernel/MsgStream.h"
 #include "Event/Digi/CalDigi.h"
+#include "Event/Digi/GltDigi.h"
+#include "CalXtalResponse/ICalCalibSvc.h"
+#include "CalUtil/CalDefs.h"
 
 class IGlastDetSvc;
 
@@ -133,12 +136,18 @@ class EbfCalData
     
     void      initialize ();
     void            fill (const Event::CalDigiCol &calDigiCol,
+                          const Event::GltDigi &glt,
+                          ICalCalibSvc   *calCalibSvc,
                           const EbfCalConstants   &constants);
     void            fillEncode (int encodeFlag, const EbfCalConstants   &constants, int event);
     void            parseInput (unsigned int *contrib, unsigned int tower, unsigned int lcbWords, const EbfCalConstants *calCon);
     
     unsigned int *format (unsigned int  *dst)              const;       
     unsigned int *format (unsigned int  *dst, int towerId) const;
+    StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc);
+//    StatusCode retrieveCalib(ICalCalibSvc   *calCalibSvc,
+//                             unsigned int twr, int lyr, unsigned int col); 
+
     void          print  ();
 
     /**
@@ -204,6 +213,12 @@ class EbfCalData
     bool                       m_range4; /*!< TRUE=4 range readout enabled*/
     bool                    m_calStrobe; /*!< calStrobe set */
     double                m_TotalEnergy; /*!< Total Energy deposited in cal */                            
+ 
+    float  m_ped[2][4];
+    float  m_fleThresh[2][4];
+    float  m_fheThresh[2][4];
+
+
 };
 
 
