@@ -46,6 +46,8 @@ the point of rotation won't necessarily be at  z  = 0
 and we will have to adjust the distance between the reporting plane (x in the beam frame) and the CU.
 I don't have any real  number yet, but I'm assuming that the CU will be somewhat behind the reporting plane... so say we set the x-beam of the z-CU at 4280, one meter downstream of the reporting plane.
 the point of rotation, I have no idea, but it should not be at the z=0 of the CU, so we can see if it's handled correctly, so maybe 150 mm upstream of the z=0 point?
+
+so the z=0 plane of the cu on an unrotated table should be at xbeam = 4280, and the rotation point should be at xbeam = 4130.
 */
 class BeamTransform : public Algorithm {
 public:
