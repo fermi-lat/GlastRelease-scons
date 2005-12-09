@@ -2,12 +2,16 @@ package EbfWriter
 version v0r0p9
 # $Header$
 
-author Navid Golpayegani <golpa@milkyway.gsfc.nasa.gov>
+author Brian Winer <winer@mps.ohio-state.edu>
 
 use Event          *
 use astro          *
 use GlastSvc       *
-use LdfEvent       *
+use CalXtalResponse *
+use CalUtil         *
+use Trigger        *
+use FluxSvc         *
+use flux            *
 
 # Use this pattern for shareable libraries that Gaudi must load
 apply_pattern packageShr
