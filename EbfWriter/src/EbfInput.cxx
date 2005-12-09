@@ -506,7 +506,7 @@ unsigned int EbfInput::read (bool ldfFormat)
 {
     
    int toRead = 0;
-   bool debug = false;
+   bool debug = true;
    
    if(!ldfFormat) {
        if(debug) printf("EbfInput: Reading from File...EBF format\n");
@@ -578,7 +578,7 @@ void EbfInput::parse(   EbfTkrData *tkr,
 
     unsigned int *evt = m_evtBuffer++;
     bool more = true;
-    bool debug = false;
+    bool debug = true;
 
 // Cycle through the Contributions
    while (more) { 
@@ -678,7 +678,7 @@ EbfInput::~EbfInput ()
     | to free the memory associated with the top of this block. This
     | is the event buffer.
    */
-   printf("In the Destructor for EbfInput\n");
+//   printf("In the Destructor for EbfInput\n");
    if (m_fp) close ();
 
 //   free (m_evtBuffer);

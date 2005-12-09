@@ -342,6 +342,7 @@ destinationId: A small integer giving the identity of the destination,
 
    /* Final Length Reported is in 128 bit (16 byte) words */
    int lcbWords = length/16;
+   if(lcbWords > 0x255) printf("lcbWords > 255 on Contributor %i sourceId\n",sourceId);
 
    int err = 0; /* Error word...no meaning in GLEAM...hardware bits */
    int seq = 0; /* Bit field for truncated events...set to 0 as initial packet*/
@@ -491,6 +492,7 @@ int EbfOutput::open (const char     *fileName,
      if (!m_fp)
      {
        /* Error in opening the output file.. */
+       printf("EbfOutput::Error cannot open Ebf output file\n");
        free (ptr);
        return -2;
      }
