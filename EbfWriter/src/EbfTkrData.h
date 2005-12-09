@@ -7,7 +7,7 @@
 // that one can no longer forward reference TkrDigiCol
 //
 #include "Event/Digi/TkrDigi.h"
-
+#include "Trigger/TriRowBits.h"
 
 /**
  *
@@ -71,7 +71,7 @@ class EbfTkrData
 {
   public:
     void                 initialize ();
-    void                       fill (const Event::TkrDigiCol &tkr);
+    void                       fill (const Event::TkrDigiCol &tkr, TriRowBitsTds::TriRowBits *rowbits);
     void                       fillEncode (int encodeFlag, int event);    
     unsigned int            *format (unsigned int *dst)              const;
     unsigned int            *format (unsigned int *dst, int towerId) const;

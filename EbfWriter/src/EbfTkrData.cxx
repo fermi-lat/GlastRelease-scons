@@ -28,7 +28,8 @@ static int
 static int packLayerHits (unsigned int                  *dst, 
                           int                           boff, 
                           const unsigned short int *stripIds,
-                          int                          nhits);
+                          int                          nhits,
+                          int                      cableHits);
 
 static int packTots      (unsigned int                  *dst,
                           int                           boff,
@@ -93,7 +94,7 @@ void EbfTkrData::initialize ()
  *  @param  tkr  The GLEAM representation of the hit strips + TOTs
  *
 **/
-void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
+void EbfTkrData::fill (const Event::TkrDigiCol &tkr, TriRowBitsTds::TriRowBits *rowbits)
 {
    /*
     | Within this routine layer ends are defined as:
@@ -124,6 +125,7 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
            int                lastStrip = digi.getLastController0Strip();
            unsigned int         numHits = digi.getNumHits();
 
+//           printf("Ebf:Tower %i Layer Hit %i  View %i numHits %i ToT %i %i\n",digi.getTower().id(),digi.getBilayer(),digi.getView(),numHits,digi.getToT(0),digi.getToT(1));
            /* 
             | The layers are numbered 
             |    X layers:  0-17
@@ -136,6 +138,7 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
 
            tower->m_tots[2*ilayer]   = digi.getToT (0);
            tower->m_tots[2*ilayer+1] = digi.getToT (1);
+          
            
            bool reported=false;
            /* Loop through all the hits on this bi_layer */
@@ -164,9 +167,10 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
                  tower->m_nhits[ilayerEnd]       = ihits + 1;
                  tower->m_data[ilayerEnd][ihits] = stripId;
                  tower->m_maps[xy][loHi]        |= (1 << bilayer);
+//                 printf("Adding Hit in Tower %i and Layer %i and view %i map %5.5x\n",towerId.id(),bilayer,xy,tower->m_maps[xy][loHi]);
                } else{
-//			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
-//                         towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
+			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
+                         towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
 			      }
            }
        }
@@ -175,6 +179,13 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr)
        m_trigger = completeTkrTrg (m_towers,  
                                    sizeof (m_towers) / sizeof (*m_towers));
 
+
+/*         for(int twr=0; twr<16; twr++) {
+           unsigned int rwbits = rowbits->getDigiTriRowBits(twr);
+           unsigned int rwbitsTrg = rowbits->getTrgReqTriRowBits(twr);
+           printf("Tower %i  DigiTkr %4.4x  TrgReg %4.4x\n",twr,rwbits,rwbitsTrg);
+         }
+*/      
    }
    
    return;
@@ -487,14 +498,15 @@ unsigned int *EbfTkrData::format (unsigned int *dst, int itower) const
            boff = packLayerHits (dst, 
                                  boff, 
                                  tower->m_data[ilayerEnd],
-                                 tower->m_nhits[ilayerEnd]);
+                                 tower->m_nhits[ilayerEnd],
+                                 totalHits[ocable]);
            totalHits[ocable] +=tower->m_nhits[ilayerEnd]; 
 //           printf(" %4i",tower->m_nhits[ilayerEnd]);
        }
-//       printf(" %4i \n",totalHits[ocable]); 
+//       if(totalHits[ocable]>100) printf("EbfTrkData:: Tower %i Cable %i Hits = %4i \n",itower,ocable,totalHits[ocable]); 
        if(totalHits[ocable]>EbfTkrTowerData::MaxStripsPerCable) {
-//            printf("EbfTrkData:: Tower %i Cable %i has too many hits %i \n",itower,ocable,totalHits[ocable]);
-//          tower->m_Truncated[ocable] = true;
+            printf("EbfTrkData:: Tower %i Cable %i has too many hits %i \n",itower,ocable,totalHits[ocable]);
+//            tower->m_Truncated[ocable] = true;
        } 
    }
 
@@ -797,10 +809,16 @@ static unsigned int completeTkrTrg (const EbfTkrTowerData *tower,
        y = tower->m_maps[EbfTkrTowerData::Y][EbfTkrTowerData::LO]
          | tower->m_maps[EbfTkrTowerData::Y][EbfTkrTowerData::HI];
 
-
+   
        xy  = x & y;
        tir = (xy >> 2) & (xy >> 1) & (xy >> 0);
        if (tir) trigger |= (1 << itower);
+
+//               printf("Maps twr %i: xh %4.4x xl %4.4x  yh %4.4x  yl %4.4x  x=%4.4x y=%4.4x  xy=%4.4x tir=%4.4x\n",
+//               itower,tower->m_maps[EbfTkrTowerData::X][EbfTkrTowerData::HI],tower->m_maps[EbfTkrTowerData::X][EbfTkrTowerData::LO],
+//               tower->m_maps[EbfTkrTowerData::Y][EbfTkrTowerData::HI],tower->m_maps[EbfTkrTowerData::Y][EbfTkrTowerData::LO],
+//               x,y,xy,tir);
+
    }
    
    return trigger;
@@ -891,14 +909,18 @@ static int
 static int packLayerHits (unsigned int                  *dst, 
                           int                           boff, 
                           const unsigned short int *stripIds,
-                          int                          nhits)
+                          int                          nhits,
+                          int                       cableHits)
 {
    /*
     |  Loop over the hits, packing the strip ids 12  bits at a time
-   */ 
+   */
+   
+   // Keep track of cable hits for truncation of Ebf 
+   int totcableHits = cableHits;
    
 //   printf("Packing the strip IDs: nhits = %i\n",nhits);
-   while (nhits > 0)
+   while (nhits > 0 && (totcableHits++)<EbfTkrTowerData::MaxStripsPerCable)
    {
        int              idx;
        int              bdx;
@@ -907,7 +929,7 @@ static int packLayerHits (unsigned int                  *dst,
        stripId = *stripIds++;
 
        /* If at the end of a layer, add the terminator bit */
-       if (--nhits <= 0) stripId |= 0x800;
+       if (--nhits <= 0 || (totcableHits+1)==EbfTkrTowerData::MaxStripsPerCable) stripId |= 0x800;
 
 
        /* 
