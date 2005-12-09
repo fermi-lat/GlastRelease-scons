@@ -50,6 +50,7 @@ void PointingInfo::set(double time)
     rad_geo = loc.altitude(); 
     L=loc.L();
     B=loc.B();
+    lat_mag = loc.geolat();
     in_saa=0;
     bool inside = loc.insideSAA();
     if(inside)in_saa=1;
@@ -78,6 +79,7 @@ void PointingInfo::setFT2Tuple(INTupleWriterSvc* tuple, const std::string& tname
     tuple->addItem(tname, "stop",      &stop);
     tuple->addItem(tname, "sc_position[3]", sc_position);
     tuple->addItem(tname, "lat_geo",   &lat_geo);
+    tuple->addItem(tname, "lat_mag",   &lat_mag);
     tuple->addItem(tname, "lon_geo",   &lon_geo);
     tuple->addItem(tname, "rad_geo",   &rad_geo);
     tuple->addItem(tname, "ra_zenith", &ra_zenith);
@@ -102,6 +104,7 @@ void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
     - PtTime (s) Current time, same as the elapsed time
     - PtLat,PtLon (deg) lattitude and longitude
     - PtAlt (km) altitude
+    - PtMagLat magnetic latitude
     - PtPos[3] (m) current orbit position
     - PtRax,PtDecx (deg) equatorial coordinates for orientation of S/C x-axis
     - PtRaz,PtDecz (deg) equatorial coordinates for orientation of S/C z-axis 
@@ -112,6 +115,7 @@ void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
     tuple->addItem(tname, "PtPos[3]", sc_position);
     tuple->addItem(tname, "PtLat",    &lat_geo);
     tuple->addItem(tname, "PtLon",    &lon_geo);
+    tuple->addItem(tname, "PtMagLat", &lat_mag);
     tuple->addItem(tname, "PtAlt",    &rad_geo);
     tuple->addItem(tname, "PtRaz",    &ra_scz);
     tuple->addItem(tname, "PtDecz",   &dec_scz);

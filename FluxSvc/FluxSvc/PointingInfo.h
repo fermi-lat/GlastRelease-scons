@@ -42,6 +42,7 @@ public:
     double start, stop;
     float sc_position[3];
     float lat_geo, lon_geo;
+    float lat_mag;
     float rad_geo;
     float ra_zenith, dec_zenith;
     float ra_scz, dec_scz;
