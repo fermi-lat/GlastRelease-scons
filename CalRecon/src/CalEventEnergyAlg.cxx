@@ -195,10 +195,10 @@ StatusCode CalEventEnergyAlg::execute()
             calEnergy = new Event::CalEventEnergy ;
             calEnergyCol->push_back(calEnergy) ;
         // Else reset CalEventEnergy
+        } else {
+            calEnergy = calEnergyCol->front() ;
 // NO! Do not reset as we want to keep the original energy sum in the collection
-//        } else {
-//            calEnergy = calEnergyCol->front() ;
-//            calEnergy->clear() ;
+            //calEnergy->clear() ;
         }
         
         // Set pointer to first vertex if it exists
