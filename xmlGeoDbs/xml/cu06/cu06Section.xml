@@ -55,11 +55,13 @@
 <composition name="allTowers" envelope="allTowersEnv" > 
 
   <posXYZ volume="oneNoTKR" XREF="outerTowers_dtn" ZREF="oneNoTKR_dz">
+    <idField name="fLATObjects" valueREF="eLATTowers" />
     <idField name="fTowerY" value="0" />
     <idField name="fTowerX" value="0" />
   </posXYZ>
 
   <posXYZ volume="oneNoTKR" XREF="innerTowers_dtn" ZREF="oneNoTKR_dz">
+    <idField name="fLATObjects" valueREF="eLATTowers" />
     <idField name="fTowerY" value="0" />
     <idField name="fTowerX" value="1" />
   </posXYZ>
