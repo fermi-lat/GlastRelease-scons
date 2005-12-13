@@ -202,7 +202,7 @@ StatusCode McAnalValsTool::initialize()
     @section mcanalvalstool McAnalValsTool Variables
 
 <table>
-<tr><th> Variable </th><th> Description
+<tr><th> Variable <th> Type <th> Description
 <tr><td> McaNumCalls <td> Tracy will fill all this out at some point 
 <tr><td> McaPrmEnergy <td> tbd 
 <tr><td> McaPrmDecEne <td> tbd 

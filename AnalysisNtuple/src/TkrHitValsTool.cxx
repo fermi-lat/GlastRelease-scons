@@ -100,15 +100,15 @@ StatusCode TkrHitValsTool::initialize()
     @section tkrhitvalstool TkrHitValsTool Variables
 
 <table>
-<tr><th> Variable </th> <th> Description					
+<tr><th> Variable <th> Type  <th> Description					
 <tr><td> TkrNumHits 	
-<td>        Total number of TKR clusters 
+<td>F<td>   Total number of TKR clusters 
 <tr><td> TkrFirstLayer
-<td>        First layer containing a cluster 
+<td>F<td>   First layer containing a cluster 
 <tr><td> TkrNumLayersHit
-<td>        Total number of hit layers 
+<td>F<td>   Total number of hit layers 
 <tr><td> TkrHitsInLyrNN, NN=(00,17)   
-<td>        Number of clusters in (bi)layer NN 
+<td>F<td>   Number of clusters in (bi)layer NN 
            (numbered from the bottom of the tracker) 
 </table>
 */
