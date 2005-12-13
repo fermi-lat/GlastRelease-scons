@@ -1414,7 +1414,8 @@ unsigned int FESOutput::dumpACD(const EbfAcdData *acd, int nDeltaTime){
 
 // Pad out the Cable Data
             int n16BitWds = 5+NHit;
-            int nPad = 16 - n16BitWds%16;
+            int nPad = 0;
+            if(n16BitWds%16!=0) nPad = 16 - n16BitWds%16;
             for(int np=0; np<nPad; np++) addWord(0,16,m_evtBufferACD[corner],FES_ACD_MRLENG,&byteOff,&bitOff);            
             if(debug) printf("Padding Cable %i from %i 16 bit wds to %i 16 bit words\n",FESCable,n16BitWds,n16BitWds+nPad);
 
