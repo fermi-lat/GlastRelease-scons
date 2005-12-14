@@ -76,24 +76,6 @@ between (rows of?) side tiles</prim>
 gap at the corners between adjacent sides of tiles  (July 03; revised
 according to 3-d model 6-23-03, from old value of 3.0)</prim>
 
-<!--
-  <prim name="sideTileTransOuter" value="344.0">Transverse 
- dimension of side tiles closest to the other (perpendicular)
-  sides; i.e., tiles in columns 0 or 4</prim> -->
-
-  <prim name="sideTileTransLesser" value="329.67">Transverse 
- dimension of one edge side tile tile per side: column 4 for
- sides 1 and 4; column 0 for sides 2 and 3. From 3-d model (6-23-03)
-top side row dimensions</prim>
-
-  <prim name="sideTileTransGreater" value="342.97">Transverse 
- dimension of one edge side tile tile per side: column 0 for
- sides 1 and 4; column 4 for sides 2 and 3. From 3-d model
-(6-23-03) top side row dimensions</prim>
-
-<prim name="sideTileTransMid" value = "332.0">Transverse
-dimension of side tiles in columns 1,2 and 3.  From
-3-d model 6-23-03</prim>
 
 <!-- EM2 ACD -->
 <prim name="em2ACDTileX" value = "336.55">EM2 ACD tile X</prim>
@@ -218,45 +200,33 @@ for sides to dovetail around top support, from 3-d model 6-23-03</prim>
 
 <!-- ribbon stuff -->
   <prim name="ribbonWidth" value="14.0">Width of scintillating ribbon
-(from 3-d model 6-23-03)</prim>
+(from 3-d model 6-23-03, still ok Nov. 05)</prim>
 
   <prim name="ribbonThickness" value="5">
-Thickness of scintillating ribbon, confirmed 30 July 2003</prim>
+Thickness of scintillating ribbon, confirmed 30 July 2003, Nov. 05</prim>
 
 
-  <prim name="ribbonGap" value= "0.0" >Distance between ribbon and the adjacent
+  <prim name="ribbonGap" value= "1.5" >Distance between ribbon and the adjacent
  top tile, as of Oct. 2002.  
 As of new 3-d model 6-23-03 old value of 2.5 caused overlap.  With
-no official blessing, try something smaller.  According to model there
-is no gap between ribbon and topmost tiles.</prim>
+no official blessing, try something smaller.  According to (old) model there
+is no gap between ribbon and topmost tiles. As of Nov. 05, gap
+appears to be about 1.5 or 2 mm</prim>
   <prim name="ribbonOverlap" value="15.0">Amount X ribbon segment overshoots
      tile edge of tile it's under. (This is a figment of the simulated
 model.  Real ribbons don't come in disconnected segments.)</prim>
 
- <!-- old number with new name (was "topStandoff"  
-    No guarantee it's correct. -->
-<!-- obsolete??
-  <prim name="TKRACDSupportGap" value="10.0"> distance between bottom of
-ACD support and top of TKR.  
-</prim>
--->
+  <prim name="xRibbonOuter_dx" value="501.8">X displacement of outer
+   X-ribbon (contained in YZ plane): ribbon #3 (Nov 05)</prim>
+  <prim name="xRibbonInner_dx" value="166">X displacement for X-ribbon
+   #2 (Nov 05)</prim>
 
-<!-- following is probably obsolete 
-  <prim name="tapeTopExt" value="15.0">Distance tape should extend
-beyond the end of a top tile (see Heather's first diagram)</prim>
--->
+  <prim name="yRibbonOuter_dy" value="502">Y displacement of outer
+   Y-ribbon (contained in XZ plane): ribbon #3 (Nov 05)</prim>
+  <prim name="yRibbonInner_dy" value="168.4">Y displacement for Y-ribbon
+   #2 (Nov 05)</prim>
 
-<!-- maybe these as well, as of Oct, 2002 reworking
-  <prim name="ACDSideStandoff" value="35.75">This one is right if
-side_standoff is another name for side_tile_standoff, the distance
-between the side of the tracker and the ACD tiles.  [Deprecated.  ]</prim>
-  <prim name="ACDSideSupToTile" value = "35.75"> Distance from inside edge of
-side support structure to inside edge of side tiles.  This is temporary, to
-be replaced probably with a derived ACD constant which is the sum of the
-support thickness and gap between support and side tile.</prim>
+  <prim name="yRibbonTopAbs_dz" value="724">Z displacement (w.r.t. origin)
+    of top segment of Y ribbons (the flat ones) as of Nov. 05</prim>
 
-  <prim name="totalTopAvail" value="91.9">This is the total amount of space
-    available to top section of the ACD, includes tiles and support structure
-(Heather).</prim>
--->
 </primCategory>
