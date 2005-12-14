@@ -39,6 +39,7 @@
 #include "Event/MonteCarlo/Exposure.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 
 #include "Event/Digi/TkrDigi.h"
 #include "Event/Digi/CalDigi.h"
@@ -341,8 +342,24 @@ StatusCode EbfWriter::execute()
         if(level <= MSG::DEBUG) gem.print();   
 
 
+        // Get the Observed Calorimeter Energy
+        // This is the old method...single pedestal etc.
+//        double obsEn = cal.getTotalEnergy();
+        
+        // This is new way that let's CalRecon deal with all the peds and gains
+        double obsEn = 0.;
+        SmartDataPtr<Event::CalClusterCol> pCals(eventSvc(),EventModel::CalRecon::CalClusterCol);
+        if(pCals) {
+           if(!(pCals->empty())){
+               Event::CalCluster* calCluster = pCals->front();
+               obsEn  = calCluster->getCalParams().getEnergy();
+           }
+        } else {
+//           log << MSG::WARNING << "No calCluster found: No Obs. will be stored in EBF file header" << endreq; 
+        }
+
+        
         // Dump MC Information if it exists
-        double obsEn = cal.getTotalEnergy();
         getMcEvent(obsEn);
 //        getPointingInfo();
 
