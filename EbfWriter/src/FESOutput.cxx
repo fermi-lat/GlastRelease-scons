@@ -213,7 +213,7 @@ unsigned int * FESOutput::writeFileHead(unsigned int *buff, int det, int tower, 
    
 /* Store rest of description field plus padding (8 bytes) */
    for(int i=0; i<19; i++) *buff++ = descTot[4*i+2] | descTot[(4*i)+3]<<8 | descTot[(4*i)+4]<<16 | descTot[(4*i)+5]<<24 ;  
-   *buff++ = 0xffff4321;   
+   *buff++ = 0x000;   
       
    return (unsigned int *)buff;
 }
@@ -1726,13 +1726,8 @@ unsigned int FESOutput::close ()
      if (m_fpTKR[tower]) {
 
 // For each file, rewind and look at top of file
-           rewind(m_fpTKR[tower]);
-           char wrds[10];
-              
-// Read to point where event/transition count should be stored
-          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpTKR[tower]);
-
-//          printf("Event count %i \n",m_CAL_evtCount[tower]);
+          fseek(m_fpTKR[tower],10,SEEK_SET);
+          
           unsigned int ntran = 2*m_TKR_evtCount[tower];
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpTKR[tower]);
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_TKR_evtCount[tower]>>(8*nbyte))&0xff),m_fpTKR[tower]);
@@ -1748,13 +1743,8 @@ unsigned int FESOutput::close ()
      if (m_fpCAL[tower]) {
      
 // For each file, rewind and look at top of file
-           rewind(m_fpCAL[tower]);
-           char wrds[10];
+          fseek(m_fpCAL[tower],10,SEEK_SET);
               
-// Read to point where event/transition count should be stored
-          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpCAL[tower]);
-
-//          printf("Event count %i \n",m_CAL_evtCount[tower]);
           unsigned int ntran = 2*m_CAL_evtCount[tower];
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpCAL[tower]);
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_CAL_evtCount[tower]>>(8*nbyte))&0xff),m_fpCAL[tower]);
@@ -1769,13 +1759,8 @@ unsigned int FESOutput::close ()
        if (m_fpACD[corner]) {
        
 // For each file, rewind and look at top of file
-           rewind(m_fpACD[corner]);
-           char wrds[10];
+          fseek(m_fpACD[corner],10,SEEK_SET);
               
-// Read to point where event/transition count should be stored
-          unsigned int val = fread (wrds, sizeof (*wrds), 10, m_fpACD[corner]);
-
-//          printf("Event count %i \n",m_CAL_evtCount[tower]);
           unsigned int ntran = 2*m_ACD_evtCount[corner];
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((ntran>>(8*nbyte))&0xff),m_fpACD[corner]);
           for(int nbyte=0; nbyte<4; nbyte++) fputc(((m_ACD_evtCount[corner]>>(8*nbyte))&0xff),m_fpACD[corner]);
