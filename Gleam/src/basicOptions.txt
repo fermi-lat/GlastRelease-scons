@@ -182,18 +182,15 @@ ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
 // ----------------------------
-//   Atwood's tuple and merit
+//  tuple generation 
 //
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-Triggered.Members +=     { "meritAlg", "FT1Alg" };
 
-// ----------------------------
-//   Atwood's Insightful Miner analysis (translated by Tracy)
-Triggered.Members +=     {"ClassifyAlg"};
+Triggered.Members +=     {"meritAlg" }; // AnaTup and Filter stuff into the tuple
+Triggered.Members +=     {"ClassifyAlg"};// Atwood's Insightful Miner analysis 
+Triggered.Members +=     {"FT1Alg"};     // generate stuff to go into FT1.
 
-//-------------------------------------
-//   Merit configuration --  (use defaults)
 
 // ---------------------------- 
 //   Output
