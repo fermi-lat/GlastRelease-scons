@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r28p2 13-Dec-2005  jrb Bring em2 geometry up to date
    v1r28p1 12-Dec-2005  jrb Include outermost id field for oneNoTkr volumes
    v1r28   7-Dec-2005   jrb Add ACD tiles in cu06; minor reorg. changes to flight
    v1r27p1 1-Dec-2005   jrb Merge new stuff from v1r26 ACD upgrade into 
