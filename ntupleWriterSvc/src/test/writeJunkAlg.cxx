@@ -38,6 +38,8 @@ private:
     int   m_int;
     double m_count; // special value to put into tuples
     double m_square; // another
+   
+    float m_float2;
 
     double m_array[2]; // test an array
 
@@ -73,13 +75,19 @@ StatusCode writeJunkAlg::initialize() {
         log << MSG::ERROR << "writeJunkAlg failed to get the RootTupleSvc" << endreq;
         return sc;
     }
+
+    m_count = 0;
+
     m_rootTupleSvc->addItem("","count", &m_count);
     m_rootTupleSvc->addItem("","square", &m_square);
     m_rootTupleSvc->addItem("","int", &m_int);
     m_rootTupleSvc->addItem("","float", &m_float);
     m_rootTupleSvc->addItem("", "array[2]", m_array);
 
-    // test of a second tree in the same file
+    // test creation of a second ROOT file
+    m_rootTupleSvc->addItem("t2", "float2", &m_float2, "other.root");
+
+    // test of a second tree in original file
     m_rootTupleSvc->addItem("tree_2","count", &m_count);
     m_rootTupleSvc->addItem("tree_2","square", &m_square);
 
@@ -109,11 +117,16 @@ StatusCode writeJunkAlg::execute() {
     // note that setting these variables is all that is necessary to have it changed in the tuple itself
     ++m_count;
     m_square= m_count*m_count;
-    // test int and float values
-    m_int=m_float=m_count;
+    // test int value
+    m_int=m_count;
     // see that array really works
     m_array[0]= m_int;
     m_array[1]= 2*m_int;
+
+    m_float2 = m_count;
+
+    // check finite test routines
+    m_float = m_count/0.0;
 
     // Test the ability to turn off a row
     if (callCount != 5)  { m_rootTupleSvc->storeRowFlag(true);}

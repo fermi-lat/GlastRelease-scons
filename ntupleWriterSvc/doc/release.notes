@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r9   14-dec-2005 HMK : add ability to create multiple ROOT output files
  * v3r8   05-oct-2005 THB : Add access function to an existing tuple item. 
  * v3r7p3 24-jul-2005 THB : Clean up table of bad values a bit
  * v3r7p1 23-jul-2005 THB : Make a table of bad values; provide property to allow bad entries anyway

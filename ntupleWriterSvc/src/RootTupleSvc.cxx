@@ -73,34 +73,42 @@ public:
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
     @param pval - pointer to a double value
+    @param fileName - name of ROOT file: if it does not exist, it will be created
     */
     virtual StatusCode addItem(const std::string & tupleName, 
-        const std::string& itemName, const double* pval);
+        const std::string& itemName, const double* pval, 
+        const std::string& fileName=std::string(""));
 
     /** @brief Adds a pointer to a float
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
     @param pval - pointer to a float value
+    @param fileName - name of ROOT file: if it does not exist, it will be created
     */
     virtual StatusCode addItem(const std::string & tupleName, 
-        const std::string& itemName, const float* pval);
+        const std::string& itemName, const float* pval,
+        const std::string& fileName=std::string(""));
 
     /** @brief Adds a pointer to an int 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
     @param pval - pointer to a int value
+    @param fileName - name of ROOT file: if it does not exist, it will be created
     */
     virtual StatusCode addItem(const std::string & tupleName, 
-        const std::string& itemName, const int* pval);
+        const std::string& itemName, const int* pval,
+        const std::string& fileName=std::string(""));
 
     /** @brief interface to ROOT to add any item
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
     @param type  - ROOT-specific type qualifier ("/F", for example)
     @param pval - pointer to a void value or array
+    @param fileName - name of ROOT file: if it does not exist, it will be created
     */
     StatusCode addAnyItem(const std::string & tupleName, 
-               const std::string& itemName, const std::string type, const void* pval);
+               const std::string& itemName, const std::string type, 
+               const void* pval, const std::string& fileName=std::string(""));
 
     /// Set a flag to denote whether or not to store a row at the end of this event,
     virtual void storeRowFlag(bool flag) { m_storeAll = flag; }
@@ -131,13 +139,17 @@ private:
     /// routine that is called when we reach the end of an event
     StatusCode endEvent();
 
+    // Associated with the name of the first output ROOT file
     StringProperty m_filename;
     StringProperty m_checksumfilename;
     StringProperty m_treename;
     StringProperty m_title;
 
     /// the ROOT stuff: a file and a a set of trees to put into it
-    TFile * m_tf;
+    // replaced with m_fileCol, so we can handle multiple ROOT output files
+    //TFile * m_tf;
+
+    std::map<std::string, TFile*> m_fileCol;
 
     /// the checksum object
     checkSum* m_checkSum;
@@ -145,6 +157,7 @@ private:
     std::map<std::string, TTree *> m_tree;
 
     /// the flags, one per tree, for storing at the end of an event
+    // assumes each TTree has a unique name
     std::map<std::string, bool> m_storeTree;
 
     /// if set, store all ttrees 
@@ -156,6 +169,7 @@ private:
 
     /// keep track of how many events had non-finite values
     int m_badEventCount;
+    // assumes each leaf has a uniue name across all trees and files
     std::map<std::string, int> m_badMap; ///< map of counts for individual values
     BooleanProperty m_rejectIfBad; ///< set true to reject the tuple entry if bad values
 
@@ -208,18 +222,19 @@ StatusCode RootTupleSvc::initialize ()
     incsvc->addListener(this, "BeginEvent", 100);
     incsvc->addListener(this, "EndEvent", 0);
 
+    m_fileCol.clear();
+    m_tree.clear();
+    m_badMap.clear();
+
     // -- set up the tuple ---
-    m_tf   = new TFile( m_filename.value().c_str(), "RECREATE");
-    if (!m_tf->IsOpen()) {
+    TFile *tf   = new TFile( m_filename.value().c_str(), "RECREATE");
+    if (!tf->IsOpen()) {
         log << MSG::ERROR 
             << "cannot open ROOT file: " << m_filename.value() << endreq;
-        delete m_tf;
+        delete tf;
         return StatusCode::FAILURE;
     }
-    // with the default treename, and default title
-    //TTree* t = new TTree( m_treename.value().c_str(),  m_title.value().c_str() );
-    //m_tree[m_treename.value().c_str()] = t;
-    //t->SetAutoSave(m_autoSave); 
+    m_fileCol[m_filename.value()] = tf;
 
     // set up the check sum ofstream
     m_checkSum = new checkSum(m_checksumfilename);
@@ -234,15 +249,34 @@ StatusCode RootTupleSvc::initialize ()
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName, 
-                                    const std::string& itemName, const std::string type,  const void* pval)
+                                    const std::string& itemName, 
+                                    const std::string type,  
+                                    const void* pval, 
+                                    const std::string& fileName)
 {
     MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+    std::string rootFileName = fileName.empty() ? m_filename.value() : fileName;
     TDirectory *saveDir = gDirectory;
-    if( m_tree.find(treename)==m_tree.end()){
+
+    if ( m_fileCol.find(rootFileName) == m_fileCol.end()) {
+        // create a new TFile
+        TFile *tf = new TFile(rootFileName.c_str(), "RECREATE");
+        if (!tf->IsOpen()) {
+            log << MSG::ERROR 
+                << "cannot open ROOT file: " << rootFileName << endreq;
+            delete tf;
+            return StatusCode::FAILURE;
+        }
+        m_fileCol[rootFileName] = tf;
+        TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
+        t->SetAutoSave(m_autoSave);
+        m_tree[treename]=t;
+        log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
+    } else if( m_tree.find(treename)==m_tree.end()){
         // create new tree
-        m_tf->cd();
+        m_fileCol[rootFileName]->cd();
         TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
         t->SetAutoSave(m_autoSave);
         m_tree[treename]=t;
@@ -256,23 +290,29 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
-                                 const std::string& itemName, const double* pval)
+                                 const std::string& itemName, 
+                                 const double* pval, 
+                                 const std::string& fileName)
 {
-    return addAnyItem(tupleName, itemName, "/D", (void*)pval);
+    return addAnyItem(tupleName, itemName, "/D", (void*)pval, fileName);
 
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
-                                 const std::string& itemName, const float* pval)
+                                 const std::string& itemName, 
+                                 const float* pval, 
+                                 const std::string& fileName)
 {
-    return addAnyItem(tupleName, itemName, "/F", (void*)pval);
+    return addAnyItem(tupleName, itemName, "/F", (void*)pval, fileName);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
-                                 const std::string& itemName, const int* pval)
+                                 const std::string& itemName, 
+                                 const int* pval, 
+                                 const std::string& fileName)
 {
-    return addAnyItem(tupleName, itemName, "/I", (void*)pval);
+    return addAnyItem(tupleName, itemName, "/I", (void*)pval, fileName);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::handle(const Incident &inc)
@@ -300,12 +340,14 @@ StatusCode RootTupleSvc::endEvent()
 {         
     MsgStream log(msgSvc(),name());
     StatusCode sc = SUCCESS;
+    TDirectory *saveDir = gDirectory;
 
     ++m_trials;
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin();
          it!=m_tree.end(); ++it){
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
+            t->GetCurrentFile()->cd();
             sc = checkForNAN(t, log);
             // check the tuple for non-finite entries, do not fill the tuple if found (unless overriden)
             if( sc.isFailure() ){ 
@@ -325,11 +367,14 @@ StatusCode RootTupleSvc::endEvent()
         }
     }
         
+    saveDir->cd();
     return sc;
 
 }
 StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
 {
+    TDirectory *saveDir = gDirectory;
+    t->GetCurrentFile()->cd();
     TObjArray* ta = t->GetListOfBranches();
     StatusCode sc = SUCCESS;
 
@@ -345,6 +390,7 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
             sc = StatusCode::FAILURE;
         }
     }
+    saveDir->cd();
     return sc;
 }
 
@@ -368,6 +414,7 @@ StatusCode RootTupleSvc::finalize ()
 
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
         TTree* t = it->second; 
+        t->GetCurrentFile()->cd();
         if( m_storeTree[it->first] ) t->Fill(); // In case the algorithm did an entry during its finalize
 
         if( t->GetEntries() ==0 ) {
@@ -375,7 +422,7 @@ StatusCode RootTupleSvc::finalize ()
             log << MSG::INFO << "No entries added to the TTree \"" << it->first <<"\" : not writing it" << endreq;
 
         }else{
-            log << MSG::INFO << "Writing the TTree \"" << it->first<< "\" in file "<<m_filename.value() 
+            log << MSG::INFO << "Writing the TTree \"" << it->first<< "\" in file "<< t->GetCurrentFile()->GetName() //m_filename.value() 
                 << " with " 
                 << t->GetEntries() << " rows (" << m_trials << " total events)"<< endreq;
             log << MSG::DEBUG;
@@ -402,11 +449,21 @@ StatusCode RootTupleSvc::finalize ()
         } 
     }
 
-    TDirectory *saveDir = gDirectory; 
-    m_tf->cd(); 
-    m_tf->Write(0,TObject::kOverwrite); 
-    m_tf->Close(); 
-    saveDir->cd();
+    for( std::map<std::string, TFile*>::iterator it = m_fileCol.begin(); it!=m_fileCol.end(); ++it){
+        TFile* f = it->second; 
+        if ((!f) || (!f->IsOpen())) {
+            log << MSG::WARNING << "ROOT File: " << f->GetName() 
+                << " is not open - skipping write" << endreq;
+        } else {
+            f->cd();
+            f->Write(0,TObject::kOverwrite);
+            f->Close();
+        }
+        if (f) {
+            delete f;
+            f=0;
+        }
+    }
 
     // deleting the checksum object
     if ( m_checkSum )
@@ -431,13 +488,14 @@ bool RootTupleSvc::getItem(const std::string & tupleName,
     MsgStream log(msgSvc(),name());
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
-//    TDirectory *saveDir = gDirectory;
+    TDirectory *saveDir = gDirectory;
     std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(treename);
     if( treeit==m_tree.end()){
         log << MSG::ERROR << "Did not find tree" << treename << endreq;
         throw std::invalid_argument("RootTupleSvc::getItem: did not find tuple or leaf");
     }
     TTree* t = treeit->second;
+    t->GetCurrentFile()->cd();
     TLeaf* leaf = t->GetLeaf(itemName.c_str());
     if( leaf==0){
         log << MSG::ERROR << "Did not find leaf " <<itemName << endreq;
@@ -445,6 +503,7 @@ bool RootTupleSvc::getItem(const std::string & tupleName,
     }
     pval = leaf->GetValuePointer();
     std::string type_name(leaf->GetTypeName());
+    saveDir->cd();
     if( type_name == "Float_t") return true;
     if( type_name == "Double_t") return false;
 

@@ -6,7 +6,7 @@
  *
  * @section intro Introduction
  
- * Defines the service RootTupleSvc, which implements INTupleWriterSvc. It allows for multiple trees, and has only a setup phase:
+ * Defines the service RootTupleSvc, which implements INTupleWriterSvc. It allows for multiple trees and multiple files, and has only a setup phase:
  one defines the tuple at initialization time, with pointers to the tuple values. 
 
  <br> Usage example: (see writeJunkAlg for a complete example)
@@ -21,6 +21,8 @@
     // during setup
     sc = service("RootTupleSvc", m_rootTupleSvc);
     m_rootTupleSvc->addItem("","test", &test);
+    or
+    m_rootTupleSvc->addItem("","test", &test, "myFile.root");
  ...
     // each event
     m_rootTupleSvc->storeRowFlag(true); 
