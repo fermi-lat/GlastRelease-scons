@@ -1,0 +1,12 @@
+/** @file release.notes
+@brief Interleave package relase notes
+
+  package Interleave
+  Package coordinators: T. Burnett
+$Id$
+
+@verbatim
+
+14-Dec-05 v0    THB Initial check-in of development version 
+@endverbatim
+*/
