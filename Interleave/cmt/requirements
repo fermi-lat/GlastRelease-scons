@@ -1,0 +1,37 @@
+package Interleave
+
+author T. Burnett <tburnett@u.washington.edu>
+# $Id$
+
+use FluxSvc v*
+
+use CLHEP v* IExternal
+use ntupleWriterSvc *
+
+apply_pattern packageShr
+
+#=============================================================
+
+private
+use astro *
+use Event *
+use Trigger *
+use GlastSvc *
+
+# libraries that are only linked locally
+use ROOT * IExternal
+
+# get flags to build shared library
+apply_pattern package_Cshlibflags
+
+macro source "*.cxx" WIN32 "*.h *.cxx"
+
+library Interleave \
+ -s=../src $(source) \
+ -s=Dll *.cxx
+
+# test program, using local joboptions
+public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt
+apply_pattern package_test
+
+

@@ -1,0 +1,14 @@
+<!-- $Header$
+-->
+<source_library title="pseudo_background">    
+
+    <source name="sampled_background">
+        <spectrum escale="GeV"> 
+            <SpectrumClass name="SampledBackground" /> 
+            <use_spectrum/>
+        </spectrum>
+    </source>
+
+ </source_library>
+
+
