@@ -48,10 +48,14 @@ int FESOutput::open (const char     *fileName, const char *desc)
    debug = false;
    if (debug) printf("FESOutput::openning TKR file %s\n",fileName);
 
-
+   m_eventTrigger = 0;
+   
      
    /* Open the TKR output files */
    for(int tower=0; tower<16; tower++){
+    
+   /* Clear Trigger Counters */
+   m_eventCount[tower]=0; 
 
    /* initialize counter */
     m_TKR_evtCount[tower]=0;
@@ -331,6 +335,9 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
          }
       }
 
+      int trackTrigX = 0;
+      int trackTrigY = 0;
+      
       const EbfTkrTowerData *tkrTower = tkr->tower(itower);   
 
       /* 
@@ -363,7 +370,7 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
           /* Pack the 9 layer accept bits for this cable */
           int layNum = 0;
 	  
-	  bool encode = false;
+	       bool encode = false;
 	  
           for (int ilayerEnd = ilayerEndMin;
                ilayerEnd     < ilayerEndMax;
@@ -378,17 +385,25 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
                | are sorted into an array so they can by jammed out in
                | the correct order.
               */
-	      if(debug) printf("Checking LayerEnd Number %i which is layer %i on cable %i \n",ilayerEnd,layNum,ocable);
+	           if(debug) printf("Checking LayerEnd Number %i which is layer %i on cable %i \n",ilayerEnd,layNum,ocable);
               if (tkrTower->m_nhits[ilayerEnd] || encode) 
               {
                   if (debug) printf("Hit found in tower %d cable %d [%d] tot %d hits %d\n",
                      itower,ocable,ilayerEnd,tkrTower->m_tots[ilayerEnd],
                      tkrTower->m_nhits[ilayerEnd]);
-	       /* As far as I can tell these next three lines are not used BLW 17-Aug */	     
-                  tots[nlayerEnds] = tkrTower->m_tots[ilayerEnd];
-                  nlayerEnds      += 1;
-                  list            |= mlayer;
+	       	     
+                     tots[nlayerEnds] = tkrTower->m_tots[ilayerEnd];
+                     nlayerEnds      += 1;
+                     list            |= mlayer;
 
+                  /* 
+                   | Determine hits for three in a row calculation
+                   | 
+                  */
+                    int trigLay = (ilayerEnd<36) ? ilayerEnd/2 : (ilayerEnd-36)/2;
+//                    printf("Layer End %i trigLay %i\n",ilayerEnd,trigLay);
+                    if(ilayerEnd<36) trackTrigX |=  (1 << trigLay);
+                    if(ilayerEnd>35) trackTrigY |=  (1 << trigLay);
 
                  /*
                   | Have some hits.
@@ -401,17 +416,17 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
 
                  /* Loop over all the strip hits on this layer end */
                  nw_gtrc[ocable][layNum] = tkrTower->m_nhits[ilayerEnd];
-	         if(encode) nw_gtrc[ocable][layNum] = 64;
+	              if(encode) nw_gtrc[ocable][layNum] = 64;
                  gtrc_addr[ocable][layNum] = layNum;
                  tot_gtrc[ocable][layNum] = tkrTower->m_tots[ilayerEnd];
-		 /* if(encode) tot_gtrc[ocable][layNum] = */
+		           /* if(encode) tot_gtrc[ocable][layNum] = */
                  for (int ihits = 0; ihits < nw_gtrc[ocable][layNum]; ihits++)
                  {
                      unsigned short int stripId = stripIds[ihits];
                      hit_gtrc[ocable][layNum][ihits] = stripId;
-		     if(encode) hit_gtrc[ocable][layNum][ihits] = ( (ocable & 0x7) << 8 |
+		               if(encode) hit_gtrc[ocable][layNum][ihits] = ( (ocable & 0x7) << 8 |
 		     						    (layNum & 0xf) <<4  |
-								    (ihits  & 0xf) ) ;
+								       (ihits  & 0xf) ) ;
                      if (debug) printf("Tower %i Cable %i Layer %i hit %i   strip id %d\n",itower,ocable,layNum,ihits,hit_gtrc[ocable][layNum][ihits]);
                  }
 
@@ -440,6 +455,21 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
       timer = 2*20;  // 2 x [20  x (50nsec)] = 2 microsec
       bLengthTKR[itower] = fesFormatTKR(timer,nw_gtrcEmpty,gtrc_addr,tot_gtrc,hit_gtrc,nBytes,itower);
  
+ 
+// Print out the track trigger word
+//      printf("trackTrig Tower %i 0x%8.8x  0x%8.8x\n",itower,trackTrigX,trackTrigY);
+      int n=0;
+      bool trig = false;
+      int trackTrig = trackTrigX & trackTrigY;
+      while(!trig && n<19) {
+         if((trackTrig & 0x7)==0x7) trig=true;
+         trackTrig >>= 1;
+         n++;
+      }  
+      if(trig) {
+//        printf("Three in a Row Found in Tower %i\n",itower);
+        m_eventTrigger |= 1 << 1;
+      }
 //
 // Write out the event Transition vector
 /*      int detNumber = itower;
@@ -680,6 +710,10 @@ int FESOutput::fesFormatTKR(int timer,
 
 // Put the Transition Vector at the beginning of the record
    for(int i=0; i<FES_TKR_TRAN_SIZE; i++) addWord(transVector[i],32,m_evtBufferTKR[twr],FES_TKR_MRLENG,&TranVbyteOff,&TranVbitOff);   
+
+
+// Check for three in a row trigger
+   
 
    return recLength;
 }
@@ -942,8 +976,14 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt
                     if (debug) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x\n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,0)))  treq[FESCable] |= (1 << FESlayer);
-                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,0)))  treq[FESCable] |= (1 << (FESlayer+4));
+                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,0)))  {
+                       treq[FESCable] |= (1 << FESlayer);
+                       m_eventTrigger |= (1 << 2);
+                    }
+                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,0)))  { 
+                       treq[FESCable] |= (1 << (FESlayer+4));
+                       m_eventTrigger |= (1 << 3);
+                    }  
                  }
                  if(adcN != 0 || encode) {
                     dav[FESCable+2][FESlayer] |= (0x1 << log);
@@ -953,8 +993,14 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt
                     if (debug && adcP == 0) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x \n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,1)))  treq[FESCable+2] |= (1 << FESlayer);
-                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,1)))  treq[FESCable+2] |= (1 << (FESlayer+4));                
+                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,1)))  {
+                       treq[FESCable] |= (1 << FESlayer);
+                       m_eventTrigger |= (1 << 2);
+                    }
+                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,1)))  { 
+                       treq[FESCable] |= (1 << (FESlayer+4));
+                       m_eventTrigger |= (1 << 3);
+                    }  
                  } 
 //                 debug = false;         
                }// readoutRange==0
@@ -1376,6 +1422,9 @@ unsigned int FESOutput::dumpACD(const EbfAcdData *acd, int nDeltaTime){
             }
             TVec[FESCable][0]|= ((acd->cno() >> cornerCable[corner][FESCable]) &0x1) <<18;
 
+// Mark the trigger for the CNO
+            if((acd->cno() >> cornerCable[corner][FESCable]) &0x1) m_eventTrigger |= 0x10;
+
 // Put in the timer value (0 for true event) and event flag
             int time =0;
             TVec[FESCable][1] = (1 << 14) | (time & 0x3fff);  
@@ -1770,12 +1819,26 @@ unsigned int FESOutput::close ()
             m_fpACD[corner] = 0;
        }       
    }
+   
+   
 /* FEATURE: Only status on last closing...need to fix */   
    return status;
 }
 
+void FESOutput::dumpTriggerInfo() {
+   
+   for(int i=0; i<32; i++) 
+     if(m_eventCount[i]!=0) printf("      FES:Trigger Mask 0x%4.4x : %i\n",i,m_eventCount[i]);
+   
+   return;
+}
 
-
+void FESOutput::countTrigger() {
+  
+    m_eventCount[m_eventTrigger]++;
+    m_eventTrigger = 0;
+    return;
+}
 
 
 

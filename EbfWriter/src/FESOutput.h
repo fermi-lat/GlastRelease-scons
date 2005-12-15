@@ -87,6 +87,8 @@ FESOutput::FESOutput() :
    void  completeCAL(int nDelta);
    void  completeTKR(int nDelta);
    void  completeACD(int nDelta);
+   void  countTrigger();
+   void  dumpTriggerInfo();
    
    int fesFormatTKR(int timer, int nw_gtrc[8][9],
                                  int gtrc_addr[8][9],
@@ -137,6 +139,8 @@ FESOutput::FESOutput() :
     int                  EvtTimebyteOffACD; /* ptr to timing word for ACD data */
     int                  EvtTimebitOffACD;  /* ptr to timing word for ACD data */
 
+    int                  m_eventTrigger; /*Trigger Mask for event as determined by the FES */
+    int                  m_eventCount[32]; /*Trigger Mask Counter*/
 
 /* Files and counters for CAL file*/
     FILE               *m_fpCAL[16]; /*!< The file handle for CAL files    */   
