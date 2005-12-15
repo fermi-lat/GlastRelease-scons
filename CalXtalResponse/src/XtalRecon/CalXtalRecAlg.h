@@ -56,8 +56,10 @@ class CalXtalRecAlg : public Algorithm
   /// name of IXtalRecTool instantiation
   StringProperty m_recToolName;
 
-  /// name of CalXtalRecTuple file.  Default = "" (no file).
+  /// name of CalXtalRecTuple tree.  Default = "" (no file).
   StringProperty m_tupleName;
+  /// optional name of CalXtalRecTuple file.  Defaul = "" (use ntupleWriterSvc default)
+  StringProperty m_tupleFilename;
   /// store current entry for CalTuple
   CalTupleEntry m_tupleEntry;
   /// pointer to tupleWriterSvc

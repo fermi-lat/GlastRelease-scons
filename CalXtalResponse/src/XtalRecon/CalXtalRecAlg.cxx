@@ -35,6 +35,7 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
 {
   declareProperty("XtalRecToolName", m_recToolName="XtalRecTool");
   declareProperty("tupleName",   m_tupleName="");
+  declareProperty("tupleFilename", m_tupleFilename="");
 }
 
 /** 
@@ -71,19 +72,23 @@ StatusCode CalXtalRecAlg::initialize()
       bool branchFailure = false;
       sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                      "RunID", 
-                                     &m_tupleEntry.m_runId);
+                                     &m_tupleEntry.m_runId,
+                                     m_tupleFilename);
       if (sc.isFailure()) branchFailure |= true;
       sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                      "EventID", 
-                                     &m_tupleEntry.m_eventId);
+                                     &m_tupleEntry.m_eventId,
+                                     m_tupleFilename);
       if (sc.isFailure()) branchFailure |= true;
       sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                      "CalXtalAdcPed[16][8][12][2]",
-                                     (float*)m_tupleEntry.m_calXtalAdcPed);
+                                     (float*)m_tupleEntry.m_calXtalAdcPed,
+                                     m_tupleFilename);
       if (sc.isFailure()) branchFailure |= true;
       sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                      "CalXtalFaceSignal[16][8][12][2]",
-                                     (float*)m_tupleEntry.m_calXtalFaceSignal);
+                                     (float*)m_tupleEntry.m_calXtalFaceSignal,
+                                     m_tupleFilename);
       if (sc.isFailure()) branchFailure |= true;
       
       if (branchFailure) {

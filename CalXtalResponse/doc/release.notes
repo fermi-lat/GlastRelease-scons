@@ -1,4 +1,5 @@
-v0r8    12/-5/05 fewtrell  new CalTrigTool can be called either by caldigi or by triggeralg.  new unit_test.  caltuple is now same format as other tuples, easier to merge.
+v0r8p1  12/14/05 fewtrell  new CalXtalRecAlg.tupleFilename jobOption allows CalTuple to be created in separate file from other tuples.
+v0r8    12/05/05 fewtrell  new CalTrigTool can be called either by caldigi or by triggeralg.  new unit_test.  caltuple is now same format as other tuples, easier to merge.
 v0r7p6  11/22/05 fewtrell  fixed old bug back to bite me.  crash on partial LAT's.  try to access tower data that's not there.
 v0r7p5  10/19/05 fewtrell  fixed bug reported by philippe: only visible in ideal-mode high-asymmetry xtal deposits near 1050 MeV
                            - asymmetry had to be tweaked by a few percent in order to make all calibrations truly consistent.

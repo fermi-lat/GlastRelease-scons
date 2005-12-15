@@ -113,9 +113,12 @@ documentation in CalXtalResponse for details.
 name of CalXtalResponse/IXtalRecTool based tool performing
 xtal digi->energy conversion (default is "XtalRecTool")
 
-@param CalXtalRecAlg.tupleName
-name of optional CalReconTuple 
-file. (default is "", which generates no tuple).
+@param CalXtalRecAlg.tupleName name of optional CalTuple tree. 
+   (default is "", which generates no tuple).
+@param CalXtalRecAlg.tupleFilename optional name of CalTuple file.
+   instructs ntupleWriterSvc to create CalTuple in it's own file
+   instead of sharing the default file w/ other modules.  The
+   default ("") will use the shared file
 
 @section unit_test
 - CalXtalResponse unit_test thoroughly tests CalCalibSvc, XtalDigiTool

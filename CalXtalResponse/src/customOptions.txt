@@ -35,7 +35,8 @@
 
 
 /////////////////////// CALTUPLE ////////////////////////////////////////////////
-//CalXtalRecAlg.tupleName = "CalTuple";
+//CalXtalRecAlg.tupleName = "CalTuple"; // enable CalTuple
+//CalXtalRecAlg.tupleFilename = "CalTuple.root"; // optional filename
 
 /////////////////////// MISC OPTIONS //////////////////////////////////////////
 //-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
