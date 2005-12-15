@@ -107,6 +107,7 @@ private:
 
     int m_sourceId;
     int m_sequence;
+    int m_countEbfEvents;
 
      std::map<std::string, double> getCelestialCoords(const Hep3Vector glastDir);
 
@@ -227,6 +228,7 @@ StatusCode EbfWriter::initialize()
     if(m_FesFiles>0) f_output.open(m_FileName.c_str(),m_FileDesc.c_str());
 
     PreEvtTime = 0.;
+    m_countEbfEvents =0;
 
 //    printf("EbfWriter: Initialization done\n");
         
@@ -380,8 +382,10 @@ StatusCode EbfWriter::execute()
        unsigned int length;
        unsigned int *TdsBuffer;
        if(m_storeOnTds) TdsBuffer = (unsigned int *)malloc(m_maxEvtSize*5);
-       if(evtSize != 0) data=m_output.write  (m_WriteEbf, length, TdsBuffer);
-
+       if(evtSize != 0) {
+          data=m_output.write  (m_WriteEbf, length, TdsBuffer);
+          m_countEbfEvents++;
+       }
 
 // If  we are writing EBF put it into the Tds
        if(evtSize !=0 & m_storeOnTds) {
@@ -407,14 +411,16 @@ StatusCode EbfWriter::execute()
        int nDeltaTime = m_latcounters.deltaTicks(deltaTime);
 
 // Put the contributor's data into FES format and write it out      
-      if(m_FesFiles>0) {
+      if(m_FesFiles>0 && evtSize!=0) {
       
 // If this is a gamma event, set a flag to go into FES Files      
         m_McInfo.sourceType == 22 ? f_output.setGammaFlag(true) : f_output.setGammaFlag(false); 
-
+ 
         f_output.dumpTKR (&tkr,nDeltaTime);
         f_output.dumpCAL (&cal,glt,nDeltaTime);
         f_output.dumpACD (&acd,nDeltaTime);
+        f_output.countTrigger();
+        
         f_output.setFirstEvtFlag(false);
       } 
 
@@ -451,6 +457,10 @@ StatusCode EbfWriter::finalize()
 //    printf("EbfWriter: Finalize\n");
     f_output.close();
     m_ReadFile == 1 ? m_input.close() : m_output.close();
+    
+    printf("EbfWriter:: Wrote %i Total Events\n",m_countEbfEvents);
+    f_output.dumpTriggerInfo();
+    
     return StatusCode::SUCCESS;
 }
 
