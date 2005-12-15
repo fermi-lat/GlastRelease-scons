@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r28p3 14-Dec-2005  jrb Eliminate allTowers volume in cu06 geometry, 
+                            allowing freer placement of tiles
    v1r28p2 13-Dec-2005  jrb Bring em2 geometry up to date
    v1r28p1 12-Dec-2005  jrb Include outermost id field for oneNoTkr volumes
    v1r28   7-Dec-2005   jrb Add ACD tiles in cu06; minor reorg. changes to flight
