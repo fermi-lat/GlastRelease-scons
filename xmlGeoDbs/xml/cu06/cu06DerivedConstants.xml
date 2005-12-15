@@ -40,7 +40,14 @@
           </uminus>
         </const>
 
-
+        <const name="oneNoTKRAbs_dz" >
+          <notes>Z of CAL+grid w.r.t. Ritz origin.  Top of it is at Z=0</notes>
+          <half>
+            <uminus>
+              <refer refTo="oneNoTKR_z" />
+            </uminus>
+          </half>
+        </const>
 
       </derCategory>
 

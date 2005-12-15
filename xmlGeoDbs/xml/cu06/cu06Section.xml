@@ -49,83 +49,66 @@
 &NADGeo;
 &oneTower;
 
-<box name="allTowersEnv"
-         XREF="towersTrans" YREF="towerPitch" ZREF="towersTotalZ" />
-
-<composition name="allTowers" envelope="allTowersEnv" > 
-
-  <posXYZ volume="oneNoTKR" XREF="outerTowers_dtn" ZREF="oneNoTKR_dz">
-    <idField name="fLATObjects" valueREF="eLATTowers" />
-    <idField name="fTowerY" value="0" />
-    <idField name="fTowerX" value="0" />
-  </posXYZ>
-
-  <posXYZ volume="oneNoTKR" XREF="innerTowers_dtn" ZREF="oneNoTKR_dz">
-    <idField name="fLATObjects" valueREF="eLATTowers" />
-    <idField name="fTowerY" value="0" />
-    <idField name="fTowerX" value="1" />
-  </posXYZ>
-
-
-  <posXYZ volume="topTileACD"
-          yrot="-58.028964"
-          XREF="ACDTile_0_x"
-          YREF="ACDTile_0_y"
-          ZREF="ACDTile_0_z" >
-    <idField name="fLATObjects" valueREF="eLATACD"/>
-    <idField name="fACDFace" value="0"/>
-    <idField name="fACDCmp" valueREF="eACDTile"/>
-    <idField name="fRow" value="0" />
-    <idField name="fCol" value="0" />
-  </posXYZ>
-
-
-<!--  yrot="-58.028964"         rotation is back -->
-  <posXYZ volume="topTileACD"
-          yrot="-58.028964"
-          XREF="ACDTile_1_x"
-          YREF="ACDTile_1_y"
-          ZREF="ACDTile_1_z" >
-    <idField name="fLATObjects" valueREF="eLATACD"/>
-    <idField name="fACDFace" value="0"/>
-    <idField name="fACDCmp" valueREF="eACDTile"/>
-    <idField name="fRow" value="0" />
-    <idField name="fCol" value="1" />
-  </posXYZ>
-
-
-
-  <posXYZ volume="oneTower" XREF="innerTowers_dt" >
-    <idField name="fLATObjects" valueREF="eLATTowers" />
-    <idField name="fTowerY" value="0" />
-    <idField name="fTowerX" value="2" />
-  </posXYZ>
-
-  <posXYZ volume="oneTower" XREF="outerTowers_dt" >
-    <idField name="fLATObjects" valueREF="eLATTowers" />
-    <idField name="fTowerY" value="0" />
-    <idField name="fTowerX" value="3" />
-  </posXYZ>
-
-</composition>
-
-&ACDAcd;
+  &ACDAcd;  
 
 <!-- Make a LATInner. This is just the usual LAT
      Missing id fields for various non-sensitive components.  
      Do we care? -->
     <composition name="LATInner" envelope="LATenv" >
 
-      <!-- Top ACD tile -->
-
-<!--  yrot="-58.028964"       take out rotation for now -->
-<!-- put tiles inside allTowers volume instead of here -->
-
-
-      <posXYZ volume="allTowers" 
-              ZREF="towers_dz" >
-<!--        <idField name="fLATObjects" valueREF="eLATTowers" />   -->
+    <!--  old contents of allTowers -->
+      <posXYZ volume="oneNoTKR" XREF="outerTowers_dtn" ZREF="oneNoTKRAbs_dz">
+        <idField name="fLATObjects" valueREF="eLATTowers" />
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="0" />
       </posXYZ>
+
+      <posXYZ volume="oneNoTKR" XREF="innerTowers_dtn" ZREF="oneNoTKRAbs_dz">
+        <idField name="fLATObjects" valueREF="eLATTowers" />
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="1" />
+      </posXYZ>
+
+
+      <posXYZ volume="topTileACD"
+              yrot="-58.028964"
+              XREF="ACDTile_0_x"
+              YREF="ACDTile_0_y"
+              ZREF="ACDTile_0_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="0"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="0" />
+        <idField name="fCol" value="0" />
+      </posXYZ>
+
+      <posXYZ volume="topTileACD"
+              yrot="-58.028964"
+              XREF="ACDTile_1_x"
+              YREF="ACDTile_1_y"
+              ZREF="ACDTile_1_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="0"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="0" />
+        <idField name="fCol" value="1" />
+      </posXYZ>
+
+
+
+      <posXYZ volume="oneTower" XREF="innerTowers_dt" ZREF="towers_dz">
+        <idField name="fLATObjects" valueREF="eLATTowers" />
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="oneTower" XREF="outerTowers_dt" ZREF="towers_dz">
+        <idField name="fLATObjects" valueREF="eLATTowers" />
+        <idField name="fTowerY" value="0" />
+        <idField name="fTowerX" value="3" />
+      </posXYZ>
+
+    <!-- end old contents of allTowers -->
 
 <!-- Add in the rest of the grid web and flange (outside the towers) -->
       <posXYZ volume="LATGridFlangeLong" 
