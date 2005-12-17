@@ -46,6 +46,8 @@ FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 
 FluxAlg.sources = {"sampled_background"};
 
+// the background to sample for mixing
+InterleaveAlg.RootFile = "F:/glast/data/root_files/v7r3/full_background/backgndDC2-GR-v7r3-merit--500M-SLAC-FULL.root";
 
 ApplicationMgr.EvtMax = 10; 
 
