@@ -29,6 +29,12 @@ namespace rdbModel{
     MATCHnoConnection
   };
 
+  // Add more if they become interesting
+  enum DBOPTIONS {
+    DBreadDefaultFile,   
+    DBreadDefaultGroup
+  };
+
   class ResultHandle;
   class Assertion;
   class Rdb;
@@ -59,9 +65,20 @@ namespace rdbModel{
   public:
     Connection() {};
     virtual ~Connection() {};
+
+    /**
+       Call init explicitly in order to set options.  Otherwise, open
+       will take care of it
+    */
+    virtual bool init() = 0;
+    virtual bool setOption(DBOPTIONS option, const char* value) = 0;
     virtual bool open(const std::string& host, const std::string& userid,
                       const std::string& password,
                       const std::string& dbName) = 0;
+
+    virtual bool open(const std::string& host, const char* userid,
+                      const char* password,
+                      const char* dbName) = 0;
                       //,                      unsigned int       port) = 0;
     /** Close the current open connection , if any.  Return true if there
      was a connection to close and it was closed successfully */

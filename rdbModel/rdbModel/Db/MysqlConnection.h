@@ -37,9 +37,25 @@ namespace rdbModel{
     */
     MysqlConnection(std::ostream* out=0, std::ostream* errOut=0);
     virtual ~MysqlConnection();
+
+    /**
+       Call init explicitly in order to set options.  Otherwise, open
+       will take care of it
+    */
+    virtual bool init();
+    virtual bool setOption(DBOPTIONS option, const char* value);
+
     virtual bool open(const std::string& host, const std::string& userid,
                       const std::string& password,
                       const std::string& dbName);
+
+    /**
+       Alternate form of open allows NULL arguments, so that
+       values may be taken from my.cnf 
+     */
+    virtual bool open(const std::string& host, const char* userid,
+                      const char* password,
+                      const char* dbName);
                       //                      ,unsigned int       port=0);
 
     /** Parameter is normally path for an xml file descrbing the 
