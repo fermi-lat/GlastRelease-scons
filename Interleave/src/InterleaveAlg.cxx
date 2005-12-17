@@ -48,7 +48,8 @@ double InterleaveAlg::s_downlinkRate;
 //! ctor
 InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
-, m_count(0), m_downlink(0), m_event(0), m_meritTuple(0)
+, m_selector(0)
+, m_count(0), m_downlink(0),  m_meritTuple(0)
 {
     // declare properties with setProperties calls
     declareProperty("TriggerRate",  s_triggerRate=10000.);
@@ -73,14 +74,12 @@ StatusCode InterleaveAlg::initialize(){
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
         return sc;
     }
-    TFile* m_tfile = new TFile(m_rootFile.value().c_str(), "readonly");
-    if( 0==m_tfile || !m_tfile->IsOpen()){
-        log << MSG::ERROR << "Could not open the root file " << m_rootFile << endreq;
-        return StatusCode::FAILURE;
-    }
-    m_backgroundTuple =  static_cast<TTree*>(m_tfile->Get(m_treeName.value().c_str()));
-    if( 0==m_backgroundTuple) {
-        log << MSG::ERROR << "Did not find the tree in the root file " << m_rootFile << endreq;
+    try {
+
+        m_selector = new BackgroundSelection(m_rootFile, m_treeName);
+    
+    }catch( const std::exception& e){
+        log << MSG::ERROR << e.what() << endl;
         return StatusCode::FAILURE;
     }
 
@@ -92,7 +91,13 @@ StatusCode InterleaveAlg::initialize(){
             return StatusCode::FAILURE;
         }
         m_meritTuple = static_cast<TTree*>(ptr);
+        m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat");
+        if(m_magLatLeaf==0) {
+            log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
+            return StatusCode::FAILURE;
+        }
     }
+
     return sc;
 }
 
@@ -124,19 +129,17 @@ StatusCode InterleaveAlg::execute()
     ++m_count;
     ++m_downlink;
 
-    if( ++m_event > m_backgroundTuple->GetEntries() ) {
-        log << MSG::WARNING << "Ran out of event to mix: restarting" << endreq;
-        m_event = 0;
-    }
-    m_backgroundTuple->GetEvent(m_event);
+    // ask for a tree corresponding to our current position
+
+    TTree* backgnd = m_selector->selectEvent(magneticLatitude());
+    
     
     // revise stuff in the background tuple to agree with the current event heaader
-    copyEventInfo(m_backgroundTuple);
+    copyEventInfo(backgnd);
 
 
-    // now copy every value from the background tree to the local merit tree
-    copyTreeData(m_backgroundTuple, m_meritTuple);
-
+    // now copy (almost) every value from the background tree to the local merit tree
+    m_selector->copyTreeData(m_meritTuple);
 
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
 
@@ -185,10 +188,10 @@ void InterleaveAlg::copyEventInfo(TTree * tree)
     setLeafValue(tree->GetLeaf("EvtLiveTime"),   EvtLiveTime);
 
 }
-//------------------------------------------------------------------------
-void InterleaveAlg::copyTreeData(TTree * in, TTree* out)
-{
-    // TODO: fill this
-    copyEventInfo(out); // the full copy would do this.
 
+//------------------------------------------------------------------------
+double InterleaveAlg::magneticLatitude()
+{
+    return m_magLatLeaf->GetValue();
 }
+
