@@ -190,7 +190,7 @@ namespace calibUtil {
                                  //false, true);
     Assertion::Operator startOp(OPTYPElessOrEqual, update_start->getString(),
                                 "update_time", 
-                                FIELDTYPEold, FIELDTYPElit);
+                                FIELDTYPElit, FIELDTYPEold);
                                 // true, false);
     
     conditions.push_back(&completeOp);
