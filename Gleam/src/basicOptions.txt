@@ -46,7 +46,8 @@ Generator.BranchMembers = {"FluxAlg", "ExposureAlg"};
 
 // the sequence that is triggered with data
 Triggered.Members={
-    "Sequencer/Trigger",
+    "TriggerAlg",       // can reject following
+    "Sequencer/Filter",
     "Sequencer/Reconstruction",
     "Sequencer/RecoDisplay",
     "Sequencer/Output" };
@@ -103,16 +104,17 @@ Digitization.Members = {
 //  Trigger calculation
 //
 ApplicationMgr.DLLs +={ "Trigger"};
-Trigger.Members = {"TriggerAlg"};
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // ----------------------------
 //  onboard filter 
 //
-ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
-Trigger.Members += {"EbfWriter", "OnboardFilter"};
-Triggered.Members += {"FilterTracks","FilterAlg"};
+ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
+Digitization.Members += { "EbfWriter"};  // makes digi stuff available for OnboardFilter
+Filter.Members       += {"EbfWriter", "OnboardFilter"}; // this guy can cause rejection
 OnboardFilter.mask=0; // all bits off by default: no rejection
+
+Reconstruction.Members += {"FilterTracks", "FilterAlg"}; // for study of performance
 
 // ----------------------------
 //   Reconstruction
@@ -187,9 +189,9 @@ Acd.Members = {"AcdReconAlg"};
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
-Triggered.Members +=     {"meritAlg" }; // AnaTup and Filter stuff into the tuple
-Triggered.Members +=     {"ClassifyAlg"};// Atwood's Insightful Miner analysis 
-Triggered.Members +=     {"FT1Alg"};     // generate stuff to go into FT1.
+Reconstruction.Members +=     {"meritAlg" }; // AnaTup and Filter stuff into the tuple
+Reconstruction.Members +=     {"ClassifyAlg"};// Atwood's Insightful Miner analysis 
+Reconstruction.Members +=     {"FT1Alg"};     // generate stuff to go into FT1.
 
 
 // ---------------------------- 
