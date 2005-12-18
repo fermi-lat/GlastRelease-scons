@@ -21,6 +21,10 @@ ApplicationMgr.ExtSvc = {
     "ParticlePropertySvc",
     "GlastRandomSvc",
     "FluxSvc" };
+
+// These needed to define CalTrigTool for TriggerAlg. 
+ApplicationMgr.DLLs   += {"CalXtalResponse"}; 
+ApplicationMgr.ExtSvc += {"CalXtalResponse"}; //needed to define CalTrigTool for TriggerAlg. 
     
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";

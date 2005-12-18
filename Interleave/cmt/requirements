@@ -1,6 +1,6 @@
 package Interleave
 
-version v0r1
+version v0r1p1
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -14,10 +14,12 @@ apply_pattern packageShr
 #=============================================================
 
 private
-use astro *
+
 use Event *
 use Trigger *
 use GlastSvc *
+use CalUtil *
+use CalXtalResponse * 
 use rootTestData *
 
 # libraries that are only linked locally
@@ -35,5 +37,6 @@ library Interleave \
 # test program, using local joboptions
 public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt
 apply_pattern package_test
+
 
 

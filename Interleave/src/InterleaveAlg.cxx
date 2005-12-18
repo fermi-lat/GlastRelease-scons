@@ -91,12 +91,12 @@ StatusCode InterleaveAlg::initialize(){
             return StatusCode::FAILURE;
         }
         m_meritTuple = static_cast<TTree*>(ptr);
+    }
         m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat");
         if(m_magLatLeaf==0) {
             log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
             return StatusCode::FAILURE;
         }
-    }
 
     // set initial default values
     s_triggerRate = m_selector->triggerRate(0.);
@@ -112,7 +112,6 @@ StatusCode InterleaveAlg::execute()
     MsgStream   log( msgSvc(), name() );
 
     setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
-
     // check that the TDS has an appropriate pseudo-background 
 
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);

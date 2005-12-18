@@ -13,8 +13,7 @@
 
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& filename, const std::string& treename)
-: m_file(0)
-, m_event(0)
+: m_event(0)
 {
 
     TFile* m_file = new TFile(filename.c_str(), "readonly");
