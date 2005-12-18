@@ -1,32 +1,30 @@
-// $Header$
+/** @file TestAlg.cxx
+    @brief Used for test program
 
+ $Header$
 
+*/
 
 // Include files
 #include "FluxSvc/IFluxSvc.h"
-#include "FluxSvc/IFlux.h"
 
-#include "astro/GPS.h"
-
-
-// GlastEvent for creating the McEvent stuff
 #include "Event/TopLevel/Event.h"
-#include "Event/TopLevel/MCEvent.h"
-#include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/EventModel.h"
+
+// access to the tuple
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 // Gaudi system includes
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Algorithm.h"
-#include <list>
+
+
 #include <string>
-#include <vector>
-#include "GaudiKernel/ParticleProperty.h"
+
 
 /*! \class TestAlg
 \brief 
@@ -45,13 +43,18 @@ public:
 
 
 private:
-    IFlux* m_flux;
     IFluxSvc* m_fsvc; /// pointer to the flux Service 
-    std::string m_source_name;
-    IParticlePropertySvc * m_partSvc;
-    DoubleProperty m_latitude;
-    DoubleProperty m_longitude;
-    StringArrayProperty m_rootplot;
+    
+
+    /// access the ntupleWriter service to write out to ROOT ntuples
+    INTupleWriterSvc * m_rootTupleSvc;
+
+    // event id stuff to set, since normally done in AnalysisNtuple.
+    float EvtRun;
+    float EvtEventId;
+    double EvtElapsedTime;
+    float EvtLiveTime;
+
 };
 
 
@@ -60,10 +63,13 @@ const IAlgFactory& CRTestAlgFactory = Factory;
 
 //------------------------------------------------------------------------------
 //
-TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator) :
-Algorithm(name, pSvcLocator){
-
-    declareProperty("source_name", m_source_name="default");
+TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator) 
+: Algorithm(name, pSvcLocator)
+, EvtRun(99)
+, EvtEventId(0)
+, EvtElapsedTime(0)
+, EvtLiveTime(0)
+{
 
 }
 
@@ -73,7 +79,6 @@ StatusCode TestAlg::initialize() {
 
 
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initializing..." << endreq;
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -82,6 +87,19 @@ StatusCode TestAlg::initialize() {
     StatusCode sc = service("FluxSvc", m_fsvc);
     m_fsvc->GPSinstance()->notifyObservers();
 
+    // get a pointer to RootTupleSvc
+    sc = service("RootTupleSvc", m_rootTupleSvc);
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
+        return sc;
+    }
+
+    std::string treename("MeritTuple");
+
+    m_rootTupleSvc->addItem(treename, "EvtRun",         &EvtRun );
+    m_rootTupleSvc->addItem(treename, "EvtEventId",     &EvtEventId );
+    m_rootTupleSvc->addItem(treename, "EvtElapsedTime", &EvtElapsedTime );
+    m_rootTupleSvc->addItem(treename, "EvtLiveTime",    &EvtLiveTime );
     return sc;
 }
 
@@ -92,6 +110,13 @@ StatusCode TestAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );    
 
+    SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
+
+    EvtRun           = header->run();
+    EvtEventId       = header->event();
+    EvtElapsedTime   = header->time();
+    EvtLiveTime      = header->livetime();
+    
     return sc;
 }
 

@@ -1,5 +1,6 @@
 package Interleave
 
+version v0r1
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -17,6 +18,7 @@ use astro *
 use Event *
 use Trigger *
 use GlastSvc *
+use rootTestData *
 
 # libraries that are only linked locally
 use ROOT * IExternal
