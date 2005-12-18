@@ -36,6 +36,7 @@ BackgroundSelection::~BackgroundSelection()
 void BackgroundSelection::copyTreeData( TTree* out)
 {
     // TODO: fill this
+    // note that we do not want to copy any leaf value if the corresponding branch is inactive
 
 }
 
@@ -54,5 +55,12 @@ TTree* BackgroundSelection::selectEvent(double /* maglat */)
 double BackgroundSelection::triggerRate(double/* maglat */)
 {
     //TODO
-    return 2000.;
+    return 20.; // testing
+}
+
+//------------------------------------------------------------------------
+double BackgroundSelection::downlinkRate(double/* maglat */)
+{
+    //TODO
+    return 1.; //testing
 }

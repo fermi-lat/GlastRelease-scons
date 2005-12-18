@@ -12,6 +12,11 @@
   - SampledBackground Spectrum to insert flag particles at the trigger rate
   - BackgroundSelection Manage selection of background events from external database
 
+  @section job JobOptions
+
+@param RootFile     set root file name to pass to the backgroundSelection object  
+@param TreeName     ["MeritTuple"] name of tree
+
   <hr>
   \section notes release notes
   release.notes

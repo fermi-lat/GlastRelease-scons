@@ -1,4 +1,4 @@
-/** @file InterleaveAlgcxx
+/** @file InterleaveAlg.h
 
 @brief declaration  of the class InterleaveAlg
 
@@ -18,14 +18,14 @@ class TTree;
 class TFile;
 class TLeaf;
 
+
 /** @class InterleaveAlg
     @brief Gaudi Alg that will fill the ntuple with a background event
  
     It is expected to be invoked for every non-triggering event, on a branch for the Trigger
     algorithm sequence.
 
- 
-*/
+ */
 
 
 class InterleaveAlg : public Algorithm {
@@ -61,7 +61,6 @@ private:
 
 
     static double s_triggerRate;
-    static double s_downlinkRate;
 
 
 };

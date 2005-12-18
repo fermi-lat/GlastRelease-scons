@@ -1,4 +1,4 @@
-/** @file InterleaveAlgcxx
+/** @file InterleaveAlg.cxx
 
 @brief declaration and definition of the class InterleaveAlg
 
@@ -9,25 +9,27 @@ $Header$
 
 #include "InterleaveAlg.h"
 
-// Gaudi system includes
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/SmartRefVector.h"
-
 // TDS class declarations: input data, and McParticle tree
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
 
-// to write a Tree with entryosure info
+// access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-  
+
+#include "CLHEP/Random/RandFlat.h"
+
 // ROOT includes
 #include "TTree.h"
 #include "TFile.h"
 #include "TLeaf.h"
+
+// Gaudi system includes
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartRefVector.h"
 
 
 #include <cassert>
@@ -41,8 +43,8 @@ $Header$
 static const AlgFactory<InterleaveAlg>  Factory;
 const IAlgFactory& InterleaveAlgFactory = Factory;
 
+
 double InterleaveAlg::s_triggerRate=1;
-double InterleaveAlg::s_downlinkRate;
 
 //------------------------------------------------------------------------
 //! ctor
@@ -52,8 +54,6 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , m_count(0), m_downlink(0),  m_meritTuple(0)
 {
     // declare properties with setProperties calls
-    declareProperty("TriggerRate",  s_triggerRate=10000.);
-    declareProperty("DownLinkRate", s_downlinkRate=400.);
     declareProperty("RootFile",     m_rootFile="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
 
@@ -98,6 +98,8 @@ StatusCode InterleaveAlg::initialize(){
         }
     }
 
+    // set initial default values
+    s_triggerRate = m_selector->triggerRate(0.);
     return sc;
 }
 
@@ -108,6 +110,8 @@ StatusCode InterleaveAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+
+    setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
     // check that the TDS has an appropriate pseudo-background 
 
@@ -123,27 +127,33 @@ StatusCode InterleaveAlg::execute()
     log << MSG::DEBUG << "Primary particle energy: " << ke << endreq;
 
     if( ke>1. ) return sc; // not a flagged sampled_background 
+    ++m_count;
 
     // Found a sampled_background particle
+    // perhaps modify its rate
+    s_triggerRate = m_selector->triggerRate(magneticLatitude());
+    double fraction = m_selector->downlinkRate(magneticLatitude())/s_triggerRate;
+    double r = RandFlat::shoot();
+    if( r>fraction ) return sc;
 
-    ++m_count;
+
     ++m_downlink;
 
     // ask for a tree corresponding to our current position
-
     TTree* backgnd = m_selector->selectEvent(magneticLatitude());
     
     
-    // revise stuff in the background tuple to agree with the current event heaader
+    // revise stuff in the background tuple to agree with the current event header
     copyEventInfo(backgnd);
 
-
     // now copy (almost) every value from the background tree to the local merit tree
+    backgnd->SetBranchStatus("Pt*", 0); // do not want to modify these
     m_selector->copyTreeData(m_meritTuple);
 
+    // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
 
-    return StatusCode::SUCCESS;
+    return sc;
 }
 
 //------------------------------------------------------------------------

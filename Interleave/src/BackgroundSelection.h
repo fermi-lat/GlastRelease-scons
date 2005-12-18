@@ -42,6 +42,10 @@ public:
     */
     double triggerRate(double maglat);
 
+    /**@brief the downlink rate for the given magnetic latitude
+    */
+    double downlinkRate(double maglat);
+
 private:
     unsigned int m_event;
     TTree* m_tree;
