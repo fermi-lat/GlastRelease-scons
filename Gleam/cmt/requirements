@@ -1,6 +1,6 @@
 	package Gleam
 
-version  v6r8p1
+version  v6r9
 author T. Burnett <tburnett@u.washington.edu>
 
 # $Id$
@@ -14,6 +14,7 @@ use GlastSvc    v*
 
 use FluxSvc     v*
 use CRflux      v*
+use Interleave  v*
 
 use G4Generator v*
 use G4Propagator v*
@@ -43,6 +44,7 @@ use RootDisplay v*
 #diagnostic and summary of bottom line
 use merit       v*
 use AnalysisNtuple v*
+
 
 # Allow FRED option -- see fredOptions.txt
 use  Fred * IExternal

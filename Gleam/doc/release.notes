@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r9   THB 18-dec-05   Added Interleave
 * v6r8p1 THB 14-dec-05   Needed to make FT1Alg follow GlastClassify.
 * v6r8   THB 10-dec-05   (For TU): implement Atwood trees (only) in GlastClassify
 * v6r7p3 HMK 09-nov-05   Put FT1Alg back in

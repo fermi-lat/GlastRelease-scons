@@ -8,18 +8,35 @@
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel=3;
-AcdDigi.OutputLevel=2;
 
 Output.Members={}; // turn off any root ouptut
 
 // mix in ticks to generate pointing and livetime tree
-FluxAlg.sources={"gamma_1_gev_normal","timetick30s"};
+FluxAlg.sources={"gamma_1_gev_normal","clock"};
 
 TriggerAlg.throttle = false;   // set true to test this option
- 
+
+//--------------------------------------------------------
+//       stuff for testing interleave
+
+FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+
+ApplicationMgr.DLLs   += {"Interleave" }; 
+Triggered.BranchMembers =  {"TriggerAlg" , "InterleaveAlg"};
+
+FluxAlg.sources       += {"sampled_background"};
+OnboardFilter.mask     = -1;  // set to reject 
+
+// the background to sample for mixing
+InterleaveAlg.RootFile = "F:/glast/data/root_files/v7r3/full_background/backgndDC2-GR-v7r3-merit--500M-SLAC-FULL.root";
+
+InterleaveAlg.OutputLevel=3;
+TriggerAlg.OutputLevel=3;
+
+//-------------------------------------------------------- 
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
-MeritAlg.generated = 1000; // for estima/ IM variable
+MeritAlg.generated = 100; 
 
 
 //==============================================================
