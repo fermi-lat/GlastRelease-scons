@@ -1,3 +1,8 @@
+/** @file INTupleWriterSvc.h
+    @brief declare abstract INtupleWriterSvc
+
+    $Header$
+*/
 #ifndef _H_INTupleWriterSvc_
 #define _H_INTupleWriterSvc_
 
@@ -5,7 +10,7 @@
 #include "GaudiKernel/NTuple.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  3 ,2); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  4 ,0); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -49,10 +54,16 @@ public:
     */
     virtual bool storeRowFlag(const std::string& tupleName, bool flag)=0;
 
-    /** @brief Access the pointer to the value of an existing item.
+    /** @brief Set the pointer to the value of an existing item.
+    @param tupleName  Name of the tuple
+    @param itemName   Name of the item (or perhaps blank, see below)
+    @param pointer    point pointer that will be set  
 
     Expect to throw exception if not found.
     @return true if float type, false if double (client then must cast)
+
+    Note that the RootTupleSvc subclass implements a variation that it the name is empty,
+    it will set the pointer to the TTree.
     
     */
     virtual bool getItem(const std::string & tupleName, 

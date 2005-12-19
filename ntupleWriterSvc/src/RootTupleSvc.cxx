@@ -496,6 +496,12 @@ bool RootTupleSvc::getItem(const std::string & tupleName,
     }
     TTree* t = treeit->second;
     t->GetCurrentFile()->cd();
+
+    if( itemName.empty()){
+        // assume this is a request for the tree
+        pval = (void *)t;
+        return false;
+    }
     TLeaf* leaf = t->GetLeaf(itemName.c_str());
     if( leaf==0){
         log << MSG::ERROR << "Did not find leaf " <<itemName << endreq;
