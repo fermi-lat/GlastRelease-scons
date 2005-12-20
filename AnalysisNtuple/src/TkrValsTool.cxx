@@ -1267,7 +1267,7 @@ StatusCode TkrValsTool::calculate()
             int numHits = 0, numHitsOut = 0;
             for(tower=0;tower<numTowers;++tower) {
                 numHitsOut += (int)layerOutCount[tower];
-                numHits    += (int)layerInCount[tower]*factor;
+                numHits    += (int)(layerInCount[tower]*factor);
             }
             Tkr_SurplusHCOutside += numHitsOut;
             Tkr_SurplusHCInside  += numHits;

@@ -79,6 +79,8 @@ public:
   
 private:
 
+    typedef typename RelationList<T1,T2>::iterator RelationListIter;
+
     typedef typename RelKeyMultiMap<T1,T1,T2>::iterator    mapT1RelIter;
     typedef typename std::pair<mapT1RelIter, mapT1RelIter> mapT1RelIterPair;
 

@@ -393,7 +393,7 @@ StatusCode ComboFindTrackTool::findTracks()
 
         // find the charge
         Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
-        double MC_Id = (double)hepid;
+        //double MC_Id = (double)hepid;
         ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
         double MC_Charge = 0;
         if (ppty) {

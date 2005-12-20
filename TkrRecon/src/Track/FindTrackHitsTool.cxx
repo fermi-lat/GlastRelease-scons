@@ -613,14 +613,14 @@ TkrTrackHit* FindTrackHitsTool::findNextHit(TkrTrackHit* last_hit, bool reverse)
         TkrTruncationInfo::TkrTruncationMap::iterator iter = truncMap->find(id);
         if (iter!=truncMap->end() ) {
             TkrTruncatedPlane item = iter->second;
-            SortId sortId = iter->first;
+            //SortId sortId = iter->first;
             //std::cout << " FTT: T/T/F "<< sortId.getTower() << " " << sortId.getTray() << " " << sortId.getFace() << std::endl;
             if (item.isTruncated()) {
                 // here's where the work begins!!
                 // first try: compare extrapolated position to missing strip locations
                 // check for RC truncation
                 int status = item.getStatus();
-                const intVector&  stripNum = item.getStripNumber();
+                //const intVector&  stripNum = item.getStripNumber();
                 int splitPoint  = m_splitsSvc->getSplitPoint(tower, layer, view);
                 double stripPitch = m_tkrGeom->siStripPitch();
                 int nStrips = m_tkrGeom->ladderNStrips()*m_tkrGeom->nWaferAcross();
@@ -628,7 +628,7 @@ TkrTrackHit* FindTrackHitsTool::findNextHit(TkrTrackHit* last_hit, bool reverse)
                 //double splitPos = (splitPoint - (nStrips-1)*0.5)/stripPitch;             
                 bool lowSet  = ((status & TkrTruncatedPlane::END0SET)!=0);
                 bool RCHighSet = ((status & TkrTruncatedPlane::RC1SET)!=0);
-                bool CCHighSet = ((status & TkrTruncatedPlane::CC1SET)!=0);
+                //bool CCHighSet = ((status & TkrTruncatedPlane::CC1SET)!=0);
                 double lowPos = splitPos, highPos = splitPos;
 
                 // need a sigma as well as a position

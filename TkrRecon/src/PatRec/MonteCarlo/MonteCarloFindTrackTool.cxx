@@ -361,7 +361,7 @@ Event::TkrTrack* MonteCarloFindTrackTool::buildTrackFromMcPart(const Event::McPa
         // Set up variables needed during the loop over hits
         int    numGaps      =  0;
         int    maxGapSize   =  0;
-        int    lastHitPlane =  0;
+        //int    lastHitPlane =  0;
         double trackDir     = -1.;
         bool   firstTrack   = true;
 

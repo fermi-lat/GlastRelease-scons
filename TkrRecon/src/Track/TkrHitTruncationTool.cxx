@@ -1,6 +1,5 @@
-/* @file TkrHitTruncationTool.cxx
+/** @file TkrHitTruncationTool.cxx
 
-/**
 * @class TkrHitTruncationTool
 *
 * @brief Generates hit truncation information for an event
@@ -110,8 +109,8 @@ StatusCode TkrHitTruncationTool::analyzeDigis()
         Event::TkrDigi* pDigi = *pTkrDigi;
 
         TowerId towerId = pDigi->getTower();
-        int towerX = towerId.ix();
-        int towerY = towerId.iy();
+        //int towerX = towerId.ix();
+        //int towerY = towerId.iy();
         int tower  = towerId.id();
 
         int layer = pDigi->getBilayer();
@@ -224,7 +223,7 @@ StatusCode TkrHitTruncationTool::analyzeDigis()
     }
     // finish up:
     // set the truncation counts and deal with planes with no truncations
-    int sizeBefore = truncMap->size();
+    //int sizeBefore = truncMap->size();
     int nRCTrunc = 0;
     int nCCTrunc = 0;
     

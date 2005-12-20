@@ -228,8 +228,7 @@ StatusCode TkrFilterTool::doFilterStep()
 
             if (chiSq == 0.) break;
 
-            double cosTheta = curAxis.dot(m_dirCos);
-
+            //double cosTheta = curAxis.dot(m_dirCos);
             //if ((1. - cosTheta) < 0.001) break;
             
             deltaChi = (chiOld - chiSq) / chiOld;

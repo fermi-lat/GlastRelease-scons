@@ -341,6 +341,7 @@ StatusCode TkrReconAlg::execute()
             } else if(m_eventCount%exceptionTestTypes==5) {
                 int* pInt = 0;
                 int x = *pInt;
+                log << MSG::INFO << "Test x = " << x << endreq;
             }
         }
 
