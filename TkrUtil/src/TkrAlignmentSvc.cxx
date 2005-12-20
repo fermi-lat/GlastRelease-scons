@@ -652,7 +652,7 @@ StatusCode TkrAlignmentSvc::fillLadderConsts()
     std::vector<bool> done(m_nLadders, false);
 
     AlignmentItem item;
-    int nLadders = m_tkrGeom->nWaferAcross();
+    //int nLadders = m_tkrGeom->nWaferAcross();
     while (getNextItem(LADDER,item)) {
         m_ladder = item.getNumber();
         if (m_ladder>=m_nLadders) {

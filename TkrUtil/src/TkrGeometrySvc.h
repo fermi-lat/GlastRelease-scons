@@ -294,7 +294,7 @@ private:
     /// the two planes in a layer are separated by more than this:
     double m_layerSeparation;
     /// number that distinguishes STANDARD from SUPER converter trays
-    int    m_radLenCut;
+    double m_radLenCut;
     /// radiation lengths of converter, by recon layer *** really digi layer, I think!
     std::vector<double> m_radLenConv;
     /// radiation lengths of remainder of layer
