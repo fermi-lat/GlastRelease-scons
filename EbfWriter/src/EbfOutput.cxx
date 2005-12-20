@@ -651,7 +651,7 @@ unsigned int EbfOutput::format (const EbfAcdData *acd,
    /             Bit 0-16:  Circular Buffer Offset
    /             Bit 17-26: Size of Contributors in 32 bit words
    /             Bit 27-29: Transmit Status
-   /             Bit 30-21: Receive Status
+   /             Bit 30-31: Receive Status
     */
 //   unsigned int length = (unsigned char *)dst - (unsigned char *)evtBeg;
 //   int contribLength = length - 4*(EVT_HEADER_SIZE-1);  
