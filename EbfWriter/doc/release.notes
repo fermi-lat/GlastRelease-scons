@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r0p2 20-Dec-2005 BLW Bug Fixes on trigger calc and max cable hits
  * v1r0p1 09-Dec-2005 BLW Fix Trigger bit calculations (now from GltDigi)
  * v1r0p0  20-sep-2005  BLW Major changes to structure and Front-End Simulator Output
  * v0r0p10 09-aug-2004  THB oops, it declares the TDS class Ebf, dummy--add a comment
