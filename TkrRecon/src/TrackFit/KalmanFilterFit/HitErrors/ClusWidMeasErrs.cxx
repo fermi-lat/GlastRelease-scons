@@ -18,8 +18,6 @@ ClusWidMeasErrs::ClusWidMeasErrs(ITkrGeometrySvc* tkrGeom) :
     return;
 }
 
-const double oneOverSqrt12 = 1. / sqrt(12.);
-
 TkrCovMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrTrackParams& /*newPars*/, 
                                               const TkrCovMatrix&          oldCovMat, 
                                               const Event::TkrCluster&     cluster)

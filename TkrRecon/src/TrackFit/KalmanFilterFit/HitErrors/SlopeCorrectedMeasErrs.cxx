@@ -81,7 +81,7 @@ double SlopeCorrectedMeasErrs::getError(double strips, double slope) const
     
     Hits at the extremes are in principle measured with zero error, whereas
     those halfway between typically can be anywhere in the strip, and so are measured
-    with the precision of siResolution (stripWidth/sqrt(12)).
+    with the precision of siResolution (default: stripWidth/sqrt(12)).
 
     In practice, because of thresholds, and other effects, the actual parameters differ.
 
