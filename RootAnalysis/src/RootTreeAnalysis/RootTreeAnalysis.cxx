@@ -12,38 +12,40 @@ void RootTreeAnalysis::McHistDefine() {
     // Must cd into the histFile to be sure the histograms are created within
     // this histogram file.
     histFile->cd();
+
+    // uncomment the statement if you want to use the pointer
     
-    TH1F *EVENTMC = new TH1F("EVENTMC", "MC Event Id",
+    /* TH1F *EVENTMC = */ new TH1F("EVENTMC", "MC Event Id",
         2000, 0, 2000);
     
-    TH1F *RUNMC = new TH1F("RUNMC", "MC Run Id",
+    /* TH1F *RUNMC = */ new TH1F("RUNMC", "MC Run Id",
         2000, 0, 2000);
     
-    TH1F *PARTCOUNTMC = new TH1F("PARTCOUNTMC", "MC Part Count",
+    /* TH1F *PARTCOUNTMC = */ new TH1F("PARTCOUNTMC", "MC Part Count",
         20, 0, 600);
-    TH1F *POSCOUNTMC = new TH1F("POSCOUNTMC", "MC Pos Count",
+    /* TH1F *POSCOUNTMC = */ new TH1F("POSCOUNTMC", "MC Pos Count",
         20, 0, 100);
     
-    TH1F *POSENERGYDEP = new TH1F("POSENERGYDEP", "MC Pos Edep",
+    /* TH1F *POSENERGYDEP = */ new TH1F("POSENERGYDEP", "MC Pos Edep",
         25, 0, 0.5);
     
-    TH1F *POSMCTYPE = new TH1F("POSMCTYPE", "MC Pos MC pTypes",
+    /* TH1F *POSMCTYPE = */ new TH1F("POSMCTYPE", "MC Pos MC pTypes",
         40, -20, 20);
     
-    TH1F *INTCOUNTMC = new TH1F("INTCOUNTMC", "MC Int Count",
+    /* TH1F *INTCOUNTMC = */ new TH1F("INTCOUNTMC", "MC Int Count",
         20, 0, 40);
     
-    TH1F *INTENERGYDEPCAL = new TH1F("INTENERGYDEPCAL", "MC Int Xtal Etot",
+    /* TH1F *INTENERGYDEPCAL = */ new TH1F("INTENERGYDEPCAL", "MC Int Xtal Etot",
         20, 0, 20);
-    TH1F *INTCALMCTYPE = new TH1F("INTCALMCTYPE", "MC Int MC pTypes",
+    /* TH1F *INTCALMCTYPE = */ new TH1F("INTCALMCTYPE", "MC Int MC pTypes",
         100, -100, 100);
     
-    TH1F *INTENERGYDEPACD = new TH1F("INTENERGYDEPACD", "MC Int Scint Etot",
+    /* TH1F *INTENERGYDEPACD = */ new TH1F("INTENERGYDEPACD", "MC Int Scint Etot",
         20, 0, 20);
-    TH1F *INTENERGYTOT = new TH1F("INTENERGYTOT", "MC Int Etot",
+    /* TH1F *INTENERGYTOT = */ new TH1F("INTENERGYTOT", "MC Int Etot",
         20, 0, 500);
     
-    TH1F *ENERGYMC = new TH1F("ENERGYMC", "MC Part Energy (MeV)",
+    /* TH1F *ENERGYMC = */ new TH1F("ENERGYMC", "MC Part Energy (MeV)",
         500, 0, 50000);   
     
 }
@@ -54,76 +56,76 @@ void RootTreeAnalysis::DigiHistDefine() {
     // this histogram ROOT file
     histFile->cd();
     
-    TNtuple *tkrDigiTup= new TNtuple("tkrDigiTup", "example Ntuple", "TkrDigiCount:TotalHits");
-    TNtuple *calDigiTup= new TNtuple("calDigiTup", "example Ntuple", "CalDigiCount:CalEAveTotal");
+    /* TNtuple *tkrDigiTup= */ new TNtuple("tkrDigiTup", "example Ntuple", "TkrDigiCount:TotalHits");
+    /* TNtuple *calDigiTup= */ new TNtuple("calDigiTup", "example Ntuple", "CalDigiCount:CalEAveTotal");
 
-    TH1F *NUMTKRDIGI = new TH1F("NUMTKRDIGI", "Number of Tkr Digis",
+    /* TH1F *NUMTKRDIGI = */ new TH1F("NUMTKRDIGI", "Number of Tkr Digis",
         200, 0, 200);
 
-    TH1F *TKRSTRIPSLYR5 = new TH1F("TKRSTRIPSLYR5", "Hit Tkr Strips BiLayer 5", 800, 0, 1600);
+    /* TH1F *TKRSTRIPSLYR5 = */ new TH1F("TKRSTRIPSLYR5", "Hit Tkr Strips BiLayer 5", 800, 0, 1600);
 
-    TH1F *CALDIGICOUNT = new TH1F("CALDIGICOUNT", "Cal Digi multiplicity",
+    /* TH1F *CALDIGICOUNT = */ new TH1F("CALDIGICOUNT", "Cal Digi multiplicity",
         50, 0, 50);
     
-    TH1F *CALADC = new TH1F("CALADC", "Cal Digi ADC - both faces",
+    /* TH1F *CALADC = */ new TH1F("CALADC", "Cal Digi ADC - both faces",
         200, 0, 1000);
-    TH1F *CALRANGE = new TH1F("CALRANGE", "Cal Digi Range - both faces",
+    /* TH1F *CALRANGE = */ new TH1F("CALRANGE", "Cal Digi Range - both faces",
         10, 0, 10);
-    TH1F *CALEAVE = new TH1F("CALEAVE", "Cal Digi Energy - faces/2",
+    /* TH1F *CALEAVE = */ new TH1F("CALEAVE", "Cal Digi Energy - faces/2",
         200, 0, 1000);
     
-    TH1F *CALEAVETOTAL = new TH1F("CALEAVETOTAL", "Cal Digi Energy - faces/2 summed",
+    /* TH1F *CALEAVETOTAL = */ new TH1F("CALEAVETOTAL", "Cal Digi Energy - faces/2 summed",
         200, 0, 10000);
     
-    TH1F *CALLAYER = new TH1F("CALLAYER", "Cal Digi Layer",
+    /* TH1F *CALLAYER = */ new TH1F("CALLAYER", "Cal Digi Layer",
         15, 0, 15);
-    TH1F *CALTOWER = new TH1F("CALTOWER", "Cal Digi Tower",
+    /* TH1F *CALTOWER = */ new TH1F("CALTOWER", "Cal Digi Tower",
         20, 0, 20);
-    TH1F *CALCOLUMN = new TH1F("CALCOLUMN", "Cal Digi Column",
+    /* TH1F *CALCOLUMN = */ new TH1F("CALCOLUMN", "Cal Digi Column",
         20, 0, 20);
     
-    TH1F *CALELYR0 = new TH1F("CALELYR0", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR0 = */ new TH1F("CALELYR0", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR1 = new TH1F("CALELYR1", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR1 = */ new TH1F("CALELYR1", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR2 = new TH1F("CALELYR2", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR2 = */ new TH1F("CALELYR2", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR3 = new TH1F("CALELYR3", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR3 = */ new TH1F("CALELYR3", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR4 = new TH1F("CALELYR4", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR4 = */ new TH1F("CALELYR4", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR5 = new TH1F("CALELYR5", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR5 = */ new TH1F("CALELYR5", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR6 = new TH1F("CALELYR6", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR6 = */ new TH1F("CALELYR6", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
-    TH1F *CALELYR7 = new TH1F("CALELYR7", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALELYR7 = */ new TH1F("CALELYR7", "Cal Digi Energy - faces/2 - Layer 0",
         200, 0, 1000);
     
     
-    TH1F *CALNLYR0 = new TH1F("CALNLYR0", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR0 = */ new TH1F("CALNLYR0", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR1 = new TH1F("CALNLYR1", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR1 = */ new TH1F("CALNLYR1", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR2 = new TH1F("CALNLYR2", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR2 = */ new TH1F("CALNLYR2", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR3 = new TH1F("CALNLYR3", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR3 = */ new TH1F("CALNLYR3", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR4 = new TH1F("CALNLYR4", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR4 = */ new TH1F("CALNLYR4", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR5 = new TH1F("CALNLYR5", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR5 = */ new TH1F("CALNLYR5", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR6 = new TH1F("CALNLYR6", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR6 = */ new TH1F("CALNLYR6", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
-    TH1F *CALNLYR7 = new TH1F("CALNLYR7", "Cal Digi Energy - faces/2 - Layer 0",
+    /* TH1F *CALNLYR7 = */ new TH1F("CALNLYR7", "Cal Digi Energy - faces/2 - Layer 0",
         10, 0, 10);
 
-    TH1F *ACDPHATILE41 = new TH1F ("ACDPHATILE41", "PHA for Tile 041", 
+    /* TH1F *ACDPHATILE41 = */ new TH1F ("ACDPHATILE41", "PHA for Tile 041", 
         50, 0, 500);
 
-    TH1F *ACDTOTE = new TH1F("ACDTOTE", "ACD Total Energy",
+    /* TH1F *ACDTOTE = */ new TH1F("ACDTOTE", "ACD Total Energy",
         20, 0, 10);
     
-    TH1F *GEMCONDSUM = new TH1F("GEMCONDSUM", "Gem Condition Summary",
+    /* TH1F *GEMCONDSUM = */ new TH1F("GEMCONDSUM", "Gem Condition Summary",
         129, -0.5, 128.5);
 }
 
@@ -133,28 +135,28 @@ void RootTreeAnalysis::ReconHistDefine() {
     // within this histogram ROOT file.
     histFile->cd();
 
-    TNtuple *TKRRECONTUP = new TNtuple("TKRRECONTUP", "example Ntuple", "TkrNumFitTracks:TkrNumClusters");
+    /* TNtuple *TKRRECONTUP = */ new TNtuple("TKRRECONTUP", "example Ntuple", "TkrNumFitTracks:TkrNumClusters");
 
-    TNtuple *CALRECONTUP = new TNtuple("CALRECONTUP", "example Ntuple", "NumClusters:NumXtalRec");
+    /* TNtuple *CALRECONTUP = */ new TNtuple("CALRECONTUP", "example Ntuple", "NumClusters:NumXtalRec");
 
-    TH1F *TKRNUMFITTRACKS = new TH1F("TKRNUMFITTRACKS", "Number of Fit Tracks",
+    /* TH1F *TKRNUMFITTRACKS = */ new TH1F("TKRNUMFITTRACKS", "Number of Fit Tracks",
         30, 0, 30);
 
-    TH1F *TKRNUMHITSPERTRACK = new TH1F("TKRNUMHITSPERTRACK", "Number of Hits/Tracks", 40, 0, 40);
+    /* TH1F *TKRNUMHITSPERTRACK = */ new TH1F("TKRNUMHITSPERTRACK", "Number of Hits/Tracks", 40, 0, 40);
 
 
-   TH1F *CALXTALCOUNT = new TH1F("CALXTALCOUNT", "Cal Xtal multiplicity",
+    /* TH1F *CALXTALCOUNT = */ new TH1F("CALXTALCOUNT", "Cal Xtal multiplicity",
         50, 0, 200);
-    TH1F* CALXTALTOTE = new TH1F("CALXTALTOTE","Total Xtal Energy in CAL",50,0,20000);
+    /* TH1F*CALXTALTOTE = */ new TH1F("CALXTALTOTE","Total Xtal Energy in CAL",50,0,20000);
     
-    TH1F* CALXTALE = new TH1F("CALXTALE","Xtal Energy in CAL",50,0,7500);
+    /* TH1F*CALXTALE = */ new TH1F("CALXTALE","Xtal Energy in CAL",50,0,7500);
 
 
-    TH1F* CALNUMCLUS = new TH1F("CALNUMCLUS","Number of clusters",20,0,20);
-    TH1F* CALECLUS = new TH1F("CALECLUS","Energy per cluster",50,0,20000);
-    TH1F* CALTOTE = new TH1F("CALTOTE","Total Energy in CAL",50,0,20000);
-    TH1F* CALEFRAC = new TH1F("CALEFRAC","Energy fraction per cluster",50,0,1.);
-   TH1F *CALRECESUM = new TH1F("CALRECESUM", "Cal Cluster Energy Sum",
+    /* TH1F*CALNUMCLUS = */ new TH1F("CALNUMCLUS","Number of clusters",20,0,20);
+    /* TH1F*CALECLUS = */ new TH1F("CALECLUS","Energy per cluster",50,0,20000);
+    /* TH1F*CALTOTE = */ new TH1F("CALTOTE","Total Energy in CAL",50,0,20000);
+    /* TH1F*CALEFRAC = */ new TH1F("CALEFRAC","Energy fraction per cluster",50,0,1.);
+    TH1F *CALRECESUM = new TH1F("CALRECESUM", "Cal Cluster Energy Sum",
         50, 0, 25000);
     CALRECESUM->SetXTitle("Energy (MeV)");
 
@@ -167,10 +169,10 @@ void RootTreeAnalysis::ReconHistDefine() {
     CALRECECORR->SetXTitle("Energy (MeV)");
 
 
-    TH1F *ACDDOCA = new TH1F("ACDDOCA", "ACD DOCA",
+    /* TH1F *ACDDOCA = */ new TH1F("ACDDOCA", "ACD DOCA",
         40, 0, 200);
 
-    TH1F *ACDACTDIST = new TH1F("ACDACTDIST", "ACD Active Distance",
+    /* TH1F *ACDACTDIST = */ new TH1F("ACDACTDIST", "ACD Active Distance",
         40, 0, 200);
 
     return;
