@@ -167,7 +167,7 @@ void EbfTkrData::fill (const Event::TkrDigiCol &tkr, TriRowBitsTds::TriRowBits *
                  tower->m_nhits[ilayerEnd]       = ihits + 1;
                  tower->m_data[ilayerEnd][ihits] = stripId;
                  tower->m_maps[xy][loHi]        |= (1 << bilayer);
-//                 printf("Adding Hit in Tower %i and Layer %i and view %i map %5.5x\n",towerId.id(),bilayer,xy,tower->m_maps[xy][loHi]);
+//                 printf("Adding Hit in Tower %i and Layer %i and view %i StripID 0x%4.4x map %5.5x\n",towerId.id(),bilayer,xy,stripId,tower->m_maps[xy][loHi]);
                } else{
 			        printf("EbfTrkData:: MaxStripHits exceed in Tower %i BiLayer %i xy  %i Split %i iLayerEnd %i Hit %i StripId 0x%3.3x\n",
                          towerId.id(),bilayer,xy,loHi,ilayerEnd,iHit,stripId); 
@@ -929,8 +929,10 @@ static int packLayerHits (unsigned int                  *dst,
        stripId = *stripIds++;
 
        /* If at the end of a layer, add the terminator bit */
-       if (--nhits <= 0 || (totcableHits+1)==EbfTkrTowerData::MaxStripsPerCable) stripId |= 0x800;
-
+       if (--nhits <= 0 || totcableHits>=EbfTkrTowerData::MaxStripsPerCable) {
+//          printf("Adding a termination bit nhits %i  totalCableHits %i\n",nhits,totcableHits);
+          stripId |= 0x800;
+       }
 
        /* 
         | Determine where the current offset within a 32 bit word
