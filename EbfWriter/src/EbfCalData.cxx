@@ -455,11 +455,11 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
 // Get the information from the GltDigi
               bool fhe_n = glt.getCALHItrigger(idents::CalXtalId(towerId,layerId,xtalId,1));           
               bool fhe_p = glt.getCALHItrigger(idents::CalXtalId(towerId,layerId,xtalId,0));           
-//              if(fhe_n || fhe_p)printf("GLT/EBF CAL Hi twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,NcalHi,PcalHi);
+//              if(fhe_n || fhe_p)printf("GLT/EBF CAL Hi twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,fhe_n,fhe_p);
 
               bool fle_n = glt.getCALLOtrigger(idents::CalXtalId(towerId,layerId,xtalId,1));           
               bool fle_p = glt.getCALLOtrigger(idents::CalXtalId(towerId,layerId,xtalId,0));           
-//              if(fle_n || fle_p)printf("GLT/EBF CAL Lo twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,NcalLo,PcalLo);
+//              if(fle_n || fle_p)printf("GLT/EBF CAL Lo twr %i layer %i col %i Trigger Neg %i Pos %i\n",towerId,layerId,xtalId,fle_n,fle_p);
   
               
 // Store total energy in the event
@@ -475,20 +475,20 @@ void EbfCalData::fill (const Event::CalDigiCol &logs,
 
 //                  printf (" Cal Low Found twr %i lay %i col %i\n",towerId,layerId,xtalId);
 
-
+               }
                   /* Check if either end is above the CAL HI threshold */ 
-                  if ( fhe_n || fhe_p )
-                  {
-                      /* Fill the masks for the high threshold */
-                      m_hi        |= towerMsk;
-                      tower->m_hi |= layerMsk;
-                      layer->m_hi |=  xtalMsk;
+               if ( fhe_n || fhe_p )
+               {
+                   /* Fill the masks for the high threshold */
+                   m_hi        |= towerMsk;
+                   tower->m_hi |= layerMsk;
+                   layer->m_hi |=  xtalMsk;
 
-                      //if (print) printf (" Hi: %8.8x", tower->m_hi);
-//                  printf (" Cal High Found twr %i lay %i col %i\n",towerId,layerId,xtalId);
+                   //if (print) printf (" Hi: %8.8x", tower->m_hi);
+//                   if(!(fle_n || fle_p ))printf (" Cal High Found with no Cal Lo twr %i lay %i col %i\n",towerId,layerId,xtalId);
 
-                  }
-              }
+               }
+              
              } //primary readout range only. 
            } //loop over readout ranges.
            //if (print) printf ("\n");
