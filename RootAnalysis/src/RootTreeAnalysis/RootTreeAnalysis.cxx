@@ -6,6 +6,10 @@
 UInt_t digiEventId, reconEventId, mcEventId;
 UInt_t digiRunNum, reconRunNum, mcRunNum;
 
+namespace {
+    bool verbose = false;
+}
+
 void RootTreeAnalysis::McHistDefine() {
     // Purpose and Method:  Monte Carlo histogram definitions
     
@@ -272,8 +276,13 @@ void RootTreeAnalysis::DigiTkr() {
       UInt_t ihit;
       for (ihit = 0; ihit < numHits; ihit++) {
         // Retrieve the strip number
-        Int_t stripNum = tkr->getStrip(ihit);
-        if (layer == 5) ((TH1F*)GetObjectPtr("TKRSTRIPSLYR5"))->Fill(stripNum);
+          Int_t stripNum = tkr->getStrip(ihit);
+          // this is mainly to use the local vars
+          if (verbose) {
+              std::cout << "DigiTkr " << tower << " " << tot0 <<  " " << tot1
+                  << " " << lastController0 << " " << view << std::endl;
+          }
+          if (layer == 5) ((TH1F*)GetObjectPtr("TKRSTRIPSLYR5"))->Fill(stripNum);
       }
     }
 
@@ -403,7 +412,10 @@ void RootTreeAnalysis::DigiGem() {
     UInt_t liveTime = gem.getLiveTime();
 
     const GemCondArrivalTime& condArrTime = gem.getCondArrTime();
-
+    if(verbose) {
+        std::cout << "DigiGem " << deadZone << " " << liveTime << " " 
+            << condArrTime.external() << std::endl;
+    }
 }
 
 void RootTreeAnalysis::DigiDiagnostic() {
@@ -467,6 +479,10 @@ void RootTreeAnalysis::ReconTkr() {
             Double_t quality = track->getQuality();
             Double_t kalEnergy = track->getKalEnergy();
 
+            if(verbose) {
+                std::cout << costh << " " << quality << " " << kalEnergy << std::endl;
+            }
+
             // loop over hits in this track
             TkrTrackHit *hit = 0;
             UInt_t i;
@@ -486,6 +502,10 @@ void RootTreeAnalysis::ReconTkr() {
                 // get the tower from the TkrId
                 Int_t towerX = id.getTowerX();
                 Int_t towerY = id.getTowerY();
+                if (verbose) {
+                    std::cout << planeZ << " " << layer << " " << plane << " "
+                        << view << " " << towerX << " " << towerY << " " << std::endl;
+                }
 
            }
 
@@ -520,6 +540,10 @@ void RootTreeAnalysis::ReconCal() {
 	        const CalRangeRecData* rData = xtal->getRangeRecData(0);
 	        CalXtalId::AdcRange range = (CalXtalId::AdcRange) (rData->getRange(CalXtalId::POS));
 	        double ph0 = xtal->getEnergySelectedRange(range,CalXtalId::POS);
+            if (verbose) {
+                std::cout << "ReconCal " << lyr << " " << twr << " " << col << " " 
+                    << ph0 << std::endl;
+            }
   	        continue;
              }
           totXE += xtalEnergy;

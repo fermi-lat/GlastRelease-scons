@@ -26,18 +26,18 @@ void RootTreeAnalysis::McHistDefine() {
     /* TH1F *POSCOUNTMC = */ new TH1F("POSCOUNTMC", "MC Pos Count",
         20, 0, 100);
     
-    /* /* TH1F *POSENERGYDEP = */ new TH1F("POSENERGYDEP", "MC Pos Edep",
+    /* TH1F *POSENERGYDEP = */ new TH1F("POSENERGYDEP", "MC Pos Edep",
         25, 0, 0.5);
     
-    /* /* TH1F *POSMCTYPE = */ new TH1F("POSMCTYPE", "MC Pos MC pTypes",
+    /* TH1F *POSMCTYPE = */ new TH1F("POSMCTYPE", "MC Pos MC pTypes",
         40, -20, 20);
     
-    /* /* TH1F *INTCOUNTMC = */ new TH1F("INTCOUNTMC", "MC Int Count",
+    /* TH1F *INTCOUNTMC = */ new TH1F("INTCOUNTMC", "MC Int Count",
         20, 0, 40);
     
-    /* /* TH1F *INTENERGYDEPCAL = */ new TH1F("INTENERGYDEPCAL", "MC Int Xtal Etot",
+    /* TH1F *INTENERGYDEPCAL = */ new TH1F("INTENERGYDEPCAL", "MC Int Xtal Etot",
         20, 0, 20);
-    /* /* TH1F *INTCALMCTYPE = */ new TH1F("INTCALMCTYPE", "MC Int MC pTypes",
+    /* TH1F *INTCALMCTYPE = */ new TH1F("INTCALMCTYPE", "MC Int MC pTypes",
         100, -100, 100);
     
     /* TH1F *INTENERGYDEPACD = */ new TH1F("INTENERGYDEPACD", "MC Int Scint Etot",
@@ -468,7 +468,7 @@ void RootTreeAnalysis::Go(Long64_t numEvents)
 
       for(runEventVector::iterator it=m_runEvents.begin(); it!=m_runEvents.end();it++){
 
-	if((*it).first == reconRunNum && (*it).second == reconEventId) { 
+	if((*it).first == (Int_t)reconRunNum && (*it).second == (Int_t)reconEventId) { 
 	CopyEntry(ievent);
 	pruned++;
 	break;
@@ -540,7 +540,7 @@ void RootTreeAnalysis::Peel(Long64_t numEvents) {
     if (nentries <= 0) return;
     
     // Keep track of how many bytes we have read in from the data files
-    Int_t nbytes = 0, nb = 0;
+    //Int_t nbytes = 0 , nb = 0;
     
     // BEGINNING OF EVENT LOOP
     for (Long64_t ievent=m_StartEvent; ievent<nMax; ievent++, curI=ievent) {
@@ -586,7 +586,7 @@ void RootTreeAnalysis::Peel(Long64_t numEvents) {
 
       for(runEventVector::iterator it=m_runEvents.begin(); 
 	  it!=m_runEvents.end();it++){
-	if((*it).first == reconRunNum && (*it).second == reconEventId) { 
+	if((*it).first == (Int_t)reconRunNum && (*it).second == (Int_t)reconEventId) { 
           if ((digiRunNum != reconRunNum) && (digiEventId != reconEventId)) continue;
           if ((mcRunNum != reconRunNum) && (mcEventId != reconEventId)) continue;
           // read in full event
