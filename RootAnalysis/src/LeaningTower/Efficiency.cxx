@@ -208,7 +208,7 @@ void Efficiency::Draw2D(const TString planeName, TCut cut,
 
     TFile f(myEffFileName, "READ");
     TTree* t = (TTree*)f.Get("efficiencyTree");
-    t->SetMarkerSize(0.7);
+    t->SetMarkerSize(0.7f);
 
     // draw all hits found in the active area:
     // ... not close to the edge

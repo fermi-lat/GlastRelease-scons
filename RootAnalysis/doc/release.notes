@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
   
  @verbatim
+ v8r8p3   20-Dec-2005: LSR: more
  v8r8p2   20-Dec-2005: LSR: get rid of unix warnings
  v8r8p1   15-Nov-2005: HMK: patches for windows
  v8r8     11-Oct-2005: HMK: patch chainTrees and get updates to geo in

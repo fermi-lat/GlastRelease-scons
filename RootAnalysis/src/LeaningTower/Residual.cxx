@@ -165,7 +165,7 @@ void Residual::DrawResidual(TString plane, TCut cut) {
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
-    t->SetMarkerSize(0.3);
+    t->SetMarkerSize(0.3f);
 
     c->cd(1);
     gPad->SetTicks(1,1);
@@ -211,7 +211,7 @@ void Residual::DrawResSlope(TString plane, TCut cut) {
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
-    t->SetMarkerSize(0.3);
+    t->SetMarkerSize(0.3f);
 
     c->cd(1);
     gPad->SetTicks(1,1);
@@ -258,7 +258,7 @@ void Residual::DrawResOrd(TString plane, TCut cut) {
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
-    t->SetMarkerSize(0.3);
+    t->SetMarkerSize(0.3f);
 
     c->cd(1);
     gPad->SetTicks(1,1);
@@ -304,7 +304,7 @@ void Residual::DrawResPos(TString plane, TCut cut) {
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
-    t->SetMarkerSize(0.3);
+    t->SetMarkerSize(0.3f);
 
     c->cd(1);
     gPad->SetTicks(1,1);
@@ -342,7 +342,7 @@ void Residual::DrawResSlopeAll(TCut cut) {
 
     gStyle->Reset();
     gStyle->SetOptFit(11);
-    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleFontSize(0.1f);
     gStyle->SetFitFormat(".3f");
     gStyle->SetStatBorderSize(1);
 
@@ -406,7 +406,7 @@ void Residual::DrawResOrdAll(TCut cut) {
 
     gStyle->Reset();
     gStyle->SetOptFit(11);
-    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleFontSize(0.1f);
     gStyle->SetFitFormat(".3g");
     gStyle->SetStatBorderSize(1);
 
@@ -470,7 +470,7 @@ void Residual::DrawResPosAll(TCut cut) {
 
     gStyle->Reset();
     gStyle->SetOptFit(11);
-    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleFontSize(0.1f);
     gStyle->SetFitFormat(".3g");
     gStyle->SetStatBorderSize(1);
 
@@ -538,7 +538,7 @@ void Residual::DrawResOrdCorr(TString plane, TCut cut) {
     TFile f(myResFileName);
     TTree* t = (TTree*)f.Get("residualTree");
     t->SetMarkerStyle(20);
-    t->SetMarkerSize(0.3);
+    t->SetMarkerSize(0.3f);
 
     TH1F* htemp;
 
@@ -555,7 +555,7 @@ void Residual::DrawResOrdCorr(TString plane, TCut cut) {
     gStyle->SetOptFit(11);
     gStyle->SetStatBorderSize(1);
     gStyle->SetStatH(0.25);
-    gStyle->SetStatW(0.35);
+    gStyle->SetStatW(0.35f);
 
     c->cd(1);
     gPad->SetTicks(1,1);

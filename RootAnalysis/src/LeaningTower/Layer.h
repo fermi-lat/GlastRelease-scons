@@ -16,12 +16,12 @@
 // We have 36 of these.
 //////// HISTORICAL //////////
 
-const float TOWERPITCH        = (float)374.5;
-const float SIWAFERSIDE       = 89.5;
-const float SIWAFERACTIVESIDE = 87.552;
-const float STRIPPITCH        =  0.228;
-const float LADDERGAP         =  0.2; 
-const float SSDGAP            =  0.025;
+const float TOWERPITCH        = 374.5f;
+const float SIWAFERSIDE       = 89.5f;
+const float SIWAFERACTIVESIDE = 87.552f;
+const float STRIPPITCH        =  0.228f;
+const float LADDERGAP         =  0.2f; 
+const float SSDGAP            =  0.025f;
 
 const float INACTIVEBORDERWIDTH = 0.5 * ( SIWAFERSIDE - SIWAFERACTIVESIDE );
 const float TOWERPITCH2         = 0.5 * TOWERPITCH;

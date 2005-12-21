@@ -16,7 +16,7 @@
 #include "Recon.h"
 #include "Progress.h"
 
-const float damp = 0.63;
+const float damp = 0.63f;
 
 class Residual {
  private:

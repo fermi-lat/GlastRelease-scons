@@ -24,7 +24,7 @@ Layer::Layer(TString name, float pz, float py, float px,
     LayerLine  = new TLine(GetCoordinate(0), Z, GetCoordinate(1535), Z);
     LayerLabel = new TText(400, Z, fName);
     LayerLabel->SetTextAlign(02);
-    LayerLabel->SetTextSize(0.02);
+    LayerLabel->SetTextSize(0.02f);
 }
 
 //////////////////////////////////////////////////
@@ -102,14 +102,14 @@ float Layer::activeAreaDist(const float x, const float y) const {
     // ToDo:
     //   Also correct for rotations!
 
-    float dx = 1E15;
+    float dx = 1000000.f;
     for ( int i=0; i<4; ++i ) {
         // x dist to ladder center
         const float dist = std::abs(GetLadderCenX(i)-x);
         if ( dist < dx )
             dx = dist;
     }
-    float dy = 1E15;
+    float dy = 1000000.f;
     for ( int i=0; i<4; ++i ) {
         // y dist to wafer center
         const float dist = std::abs(GetWaferCenY(i)-y);

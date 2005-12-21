@@ -426,7 +426,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (anaTupFile) {
-        delete anaTup; 
+        //delete anaTup; 
         anaTupTree = 0;
         delete anaTupFile; 
         anaTupFile = 0;
@@ -522,7 +522,7 @@ inline void RootTreeAnalysis::MakeHistList() {
     
     TObject* obj = 0;
     
-    while (obj=iter.Next()) {
+    while ( (obj=iter.Next()) ) {
         m_histList->Add(obj);
     }
 }
@@ -536,7 +536,7 @@ inline void RootTreeAnalysis::HistClear() {
     
     TObject* obj = 0;
     
-    while ( obj=(TObject*)iter.Next() ) {
+    while ( (obj=(TObject*)iter.Next()) ) {
         ((TH1*)obj)->Reset();        
     }
 }
