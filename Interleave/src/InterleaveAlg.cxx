@@ -74,15 +74,6 @@ StatusCode InterleaveAlg::initialize(){
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
         return sc;
     }
-    try {
-
-        m_selector = new BackgroundSelection(m_rootFile, m_treeName);
-    
-    }catch( const std::exception& e){
-        log << MSG::ERROR << e.what() << endl;
-        return StatusCode::FAILURE;
-    }
-
     if( m_meritTuple==0){
         void * ptr= 0;
         m_rootTupleSvc->getItem(m_treeName.value().c_str(),"", ptr);
@@ -92,11 +83,23 @@ StatusCode InterleaveAlg::initialize(){
         }
         m_meritTuple = static_cast<TTree*>(ptr);
     }
-        m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat");
-        if(m_magLatLeaf==0) {
-            log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
-            return StatusCode::FAILURE;
-        }
+    m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat");
+    if(m_magLatLeaf==0) {
+        log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    // initialize the background selection
+    try {
+
+        m_selector = new BackgroundSelection(m_rootFile, m_treeName);
+
+    }catch( const std::exception& e){
+        log << MSG::ERROR << e.what() << endl;
+        return StatusCode::FAILURE;
+    }
+
+    m_selector->disable("Pt*");
 
     // set initial default values
     s_triggerRate = m_selector->triggerRate(0.);
@@ -135,20 +138,16 @@ StatusCode InterleaveAlg::execute()
     double r = RandFlat::shoot();
     if( r>fraction ) return sc;
 
-
     ++m_downlink;
 
-    // ask for a tree corresponding to our current position
-    TTree* backgnd = m_selector->selectEvent(magneticLatitude());
-    
-    
-    // revise stuff in the background tuple to agree with the current event header
-    copyEventInfo(backgnd);
+    // ask for a tree corresponding to our current position: it will set all the tuple
 
-    // now copy (almost) every value from the background tree to the local merit tree
-    backgnd->SetBranchStatus("Pt*", 0); // do not want to modify these
-    m_selector->copyTreeData(m_meritTuple);
+    m_selector->setLeafPointers(m_meritTuple);
+    m_selector->selectEvent(magneticLatitude());
 
+    // overwrite the event info
+    copyEventInfo(m_meritTuple);
+    
     // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
 

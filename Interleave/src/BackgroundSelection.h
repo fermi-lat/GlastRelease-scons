@@ -1,5 +1,8 @@
-/**
+/** @file BackgroundSelection.h
 
+    @brief declaration of the BackGroundSelection class
+
+$Header$
 
 */
 
@@ -27,6 +30,11 @@ public:
 
     ~BackgroundSelection();
 
+    /**@brief Set the addresses of active leaves
+
+    */
+    void setLeafPointers(TTree* other);
+
     /** @param maglat the current magnetic latitude
         @return a TTree, with the event select
     */
@@ -45,6 +53,8 @@ public:
     /**@brief the downlink rate for the given magnetic latitude
     */
     double downlinkRate(double maglat);
+
+    void disable(const char* pattern);
 
 private:
     unsigned int m_event;

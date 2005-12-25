@@ -24,7 +24,6 @@ ApplicationMgr.ExtSvc = {
 
 // These needed to define CalTrigTool for TriggerAlg. 
 ApplicationMgr.DLLs   += {"CalXtalResponse"}; 
-ApplicationMgr.ExtSvc += {"CalXtalResponse"}; //needed to define CalTrigTool for TriggerAlg. 
     
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
@@ -52,7 +51,7 @@ FluxAlg.sources = {"sampled_background"};
 
 // the "background" to sample for mixing
 InterleaveAlg.RootFile = "$(ROOTTESTDATAROOT)/data/default/merit.root";
-ApplicationMgr.EvtMax = 10; 
+ApplicationMgr.EvtMax = 100; 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
