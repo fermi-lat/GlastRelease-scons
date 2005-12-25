@@ -99,7 +99,13 @@ StatusCode InterleaveAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
+    // these will not be copied from the old tuple.
+    m_selector->disable("EvtRun");       
+    m_selector->disable("EvtEventId");   
+    m_selector->disable("EvtElapsedTime");
+    m_selector->disable("EvtLiveTime");  
     m_selector->disable("Pt*");
+
 
     // set initial default values
     s_triggerRate = m_selector->triggerRate(0.);
@@ -164,6 +170,7 @@ StatusCode InterleaveAlg::finalize(){
     MsgStream log(msgSvc(), name());
 
     log << MSG::INFO << "Processed "<< m_count << " sampled background events, of which "<< m_downlink<< " were passed." << endreq; 
+    delete m_selector;
     return sc;
 }
 
