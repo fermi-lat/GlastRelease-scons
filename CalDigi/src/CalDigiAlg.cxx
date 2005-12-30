@@ -308,7 +308,7 @@ StatusCode CalDigiAlg::createDigis() {
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
   if (sc.isFailure()) return sc;
 
-  return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
 }
 
 /** \brief collect deposited energies from McIntegratingHits and store in map sorted by XtalID. 
