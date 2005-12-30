@@ -1,3 +1,4 @@
+v0r8p2  12/30/05 fewtrell  CalTuple now saves an entry for _every_ event regardless of whether there is cal data or not.  This is basically a merge from v0r7p7 branch update.
 v0r8p1  12/14/05 fewtrell  new CalXtalRecAlg.tupleFilename jobOption allows CalTuple to be created in separate file from other tuples.
 v0r8    12/05/05 fewtrell  new CalTrigTool can be called either by caldigi or by triggeralg.  new unit_test.  caltuple is now same format as other tuples, easier to merge.
 v0r7p6  11/22/05 fewtrell  fixed old bug back to bite me.  crash on partial LAT's.  try to access tower data that's not there.

@@ -117,24 +117,27 @@ StatusCode CalXtalRecAlg::initialize()
 */
 StatusCode CalXtalRecAlg::execute()
 {
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc;
 
   //get access to TDS data collections
   sc = retrieve(); 
-  // non-fatal error:
-  /// if there's no CalDigiCol then CalXtalRecAlg is not happening, go on w/ other algs
-  if (!m_calDigiCol) return StatusCode::SUCCESS;
-  // fatal error  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return sc;
 
   // reset optional tuple entry
   if (m_tupleWriterSvc) {
     m_tupleEntry.Clear();
     
-    if (m_evtHdr) {
-      m_tupleEntry.m_runId   = m_evtHdr->run();
-      m_tupleEntry.m_eventId = m_evtHdr->event();
-    }
+    m_tupleEntry.m_runId   = m_evtHdr->run();
+    m_tupleEntry.m_eventId = m_evtHdr->event();
+    
+    m_tupleWriterSvc->storeRowFlag(true);
+
   }
+
+  // non-fatal error:
+  /// if there's no CalDigiCol then CalXtalRecAlg is not happening, go on w/ other algs
+  if (!m_calDigiCol) return StatusCode::SUCCESS;
+
        
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
@@ -180,9 +183,6 @@ StatusCode CalXtalRecAlg::execute()
     m_calXtalRecCol->push_back(recData.release());
   }
 
-  // fill optional tuple
-  if (m_tupleWriterSvc)
-    m_tupleWriterSvc->storeRowFlag(true);
 
   return StatusCode::SUCCESS;
 }
@@ -198,7 +198,7 @@ StatusCode CalXtalRecAlg::execute()
 */
 StatusCode CalXtalRecAlg::retrieve()
 {
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc;
 
 
   // only needed if we are generating a tuple
