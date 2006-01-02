@@ -3,7 +3,6 @@
 #define commonRootData_VOLUMEIDENTIFIER_H
 
 #include "TObject.h"
-
 #include <string>
 
 /** @class VolumeIdentifier
@@ -28,6 +27,8 @@ public:
 
     void Clear(Option_t *option ="");
     
+    Bool_t CompareInRange( const VolumeIdentifier &, const std::string & ="unknown VolumeIdentifier" ) const ; // for tests
+
     void Print(Option_t *option="") const;
 
     /** 

@@ -44,7 +44,7 @@ bool DirectCompareInRangeRefs( const T & v1, const T & v2, const std::string & n
 
 template <class T>
 bool DelegatedCompareInRangeRefs( const T & v1, const T & v2, const std::string & name ) {
-  return v1.CompareInRange(v2) ;
+  return v1.CompareInRange(v2,name) ;
 }
 
 template <class T>
@@ -84,8 +84,16 @@ bool StdCollectionCompareInRange(
 // Interface Implementation
 //============================================================
 
+bool CompareInRange( Float_t v1, Float_t v2, const std::string & name ) {
+    return RealCompareInRangeVals(v1,v2,name) ;
+}
+
 bool CompareInRange( Double_t v1, Double_t v2, const std::string & name ) {
     return RealCompareInRangeVals(v1,v2,name) ;
+}
+
+bool CompareInRange( Short_t v1, Short_t v2, const std::string & name ) {
+    return DirectCompareInRangeVals(v1,v2,name) ;
 }
 
 bool CompareInRange( Int_t v1, Int_t v2, const std::string & name ) {
@@ -97,6 +105,10 @@ bool CompareInRange( UInt_t v1, UInt_t v2, const std::string & name ) {
 }
  
 bool CompareInRange( Bool_t v1, Bool_t v2, const std::string & name ) {
+    return DirectCompareInRangeVals(v1,v2,name) ;
+}
+ 
+bool CompareInRange( Char_t v1, Char_t v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;
 }
  
@@ -129,10 +141,35 @@ bool CompareInRange( void * v1, void * v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;
 }
  
+bool CompareInRange( const TParameter<Double_t> & v1, const TParameter<Double_t> & v2, const std::string & name ) {
+    return ( CompareInRange(v1.GetName(),v2.GetName(),name+" Parameter Name") &&
+             CompareInRange(v1.GetVal(),v2.GetVal(),name+" Parameter Value") ) ;
+}
+
 bool CompareInRange( const AcdId & v1, const AcdId & v2, const std::string & name ) {
     return DelegatedCompareInRangeRefs(v1,v2,name) ;
 }
  
+bool CompareInRange( const CalXtalId & v1, const CalXtalId & v2, const std::string & name ) {
+    return DelegatedCompareInRangeRefs(v1,v2,name) ;
+}
+ 
+bool CompareInRange( const CalXtalId::CalTrigMode & v1, const CalXtalId::CalTrigMode & v2, const std::string & name ) {
+    return DirectCompareInRangeVals(v1,v2,name) ;
+}
+
+bool CompareInRange( const commonRootData::TkrId & v1, const commonRootData::TkrId & v2, const std::string & name ) {
+    return DelegatedCompareInRangeRefs(v1,v2,name) ;
+}
+
+bool CompareInRange( const TowerId & v1, const TowerId & v2, const std::string & name ) {
+    return DelegatedCompareInRangeRefs(v1,v2,name) ;
+}
+
+bool CompareInRange( const VolumeIdentifier & v1, const VolumeIdentifier & v2, const std::string & name ) {
+    return DelegatedCompareInRangeRefs(v1,v2,name) ;
+}
+
 bool CompareInRange(
     const std::vector<Double_t> & col1,
     const std::vector<Double_t> & col2,

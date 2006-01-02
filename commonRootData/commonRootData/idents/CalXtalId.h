@@ -2,6 +2,7 @@
 #define commonRootData_CalXtalId_H 1
 
 #include "TObject.h"
+#include <string>
 
 /* @class CalXtalId        
 * @brief ID class for CAL logs   
@@ -77,6 +78,7 @@ public:
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
+    Bool_t CompareInRange( const CalXtalId &, const std::string & ="unknown CalXtalId" ) const ; // for tests
 
     void init(Short_t tower, Short_t layer, Short_t column, 
               Short_t face=FACE_UNUSED, Short_t range=RANGE_UNUSED);
@@ -116,16 +118,16 @@ private:
     UInt_t m_packedId;
     
     inline void packId(Short_t tower, Short_t layer, Short_t column,
-                       Short_t face, Short_t range) 
-    {m_packedId = (((tower<<3) + layer)<<4) + column;
-    if (face != FACE_UNUSED) {
-        m_packedId += ((1 << FACE_VALID_SHIFT) + (face << FACE_SHIFT));
-    }
-    if (range != RANGE_UNUSED) {
-        m_packedId += ((1 << RANGE_VALID_SHIFT) + (range << RANGE_SHIFT));
-    }
+                       Short_t face, Short_t range) {
+        m_packedId = (((tower<<3) + layer)<<4) + column;
+        if (face != FACE_UNUSED) {
+            m_packedId += ((1 << FACE_VALID_SHIFT) + (face << FACE_SHIFT));
+        }
+        if (range != RANGE_UNUSED) {
+            m_packedId += ((1 << RANGE_VALID_SHIFT) + (range << RANGE_SHIFT));
+        }
 
-};
+    } ;
     
 
     ClassDef(CalXtalId,1) // Cal Xtal Identifier

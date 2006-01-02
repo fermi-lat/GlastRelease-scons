@@ -1,4 +1,7 @@
+
 #include "commonRootData/idents/TkrId.h"
+#include <commonRootData/RootDataUtil.h>
+#include <iostream>
 
 ClassImp(commonRootData::TkrId)
 
@@ -22,6 +25,31 @@ namespace commonRootData {
     }
   }
         
+void TkrId::Fake( Int_t /* ievent */, UInt_t rank, Float_t /* randNum */ ) {
 
+    UInt_t towerX = rank % 4 ;
+    UInt_t towerY = ( rank / 4 ) % 4 ;
+    UInt_t tray   = rank % 15 ;
+    init(towerX,towerY,tray,true,eMeasureX ) ;
+
+}
+
+#define COMPARE_IN_RANGE(att,text) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),text)
+
+Bool_t TkrId::CompareInRange( const TkrId & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = COMPARE_IN_RANGE(View,"Axes") && result ;
+    result = COMPARE_IN_RANGE(TowerX,"TowerX") && result ;
+    result = COMPARE_IN_RANGE(TowerY,"TowerY") && result ;
+    result = isEqual(ref) && result ; // this single one would be enough !
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+    return result ;
+
+}
 
 }

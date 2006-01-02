@@ -1,4 +1,6 @@
+
 #include "commonRootData/idents/CalXtalId.h"
+#include <commonRootData/RootDataUtil.h>
 
 ClassImp(CalXtalId)
 
@@ -36,7 +38,7 @@ CalXtalId::~CalXtalId() {
 
 }
 
-void CalXtalId::Clear(Option_t *option) {
+void CalXtalId::Clear( Option_t * /*option*/ ) {
     m_packedId = 0;
 }
 
@@ -92,3 +94,20 @@ void CalXtalId::getUnpackedId(Short_t& tower, Short_t& layer, Short_t& column)
     column = getColumn();
 }
 
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t CalXtalId::CompareInRange( const CalXtalId & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = COMPARE_IN_RANGE(Tower) && result ;
+    result = COMPARE_IN_RANGE(Layer) && result ;
+    result = COMPARE_IN_RANGE(Column) && result ;
+    result = COMPARE_IN_RANGE(PackedId) && result ;
+
+    if (!result) {
+        std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+    return result ;
+
+}

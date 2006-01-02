@@ -2,6 +2,7 @@
 #define commonRootData_TKRID_H 1
 
 #include <stdexcept>
+#include <string>
 #include "TObject.h"
 
 namespace commonRootData {
@@ -61,7 +62,10 @@ namespace commonRootData {
 
     void Clear(Option_t * ="") {m_packedId = 0;}
 
-    bool isEqual(const TkrId& other) {
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const TkrId &, const std::string & ="unknown TkrId" ) const ; // for tests
+
+    bool isEqual(const TkrId& other) const {
       return ((m_packedId == other.m_packedId));
     }
     

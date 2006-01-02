@@ -74,10 +74,10 @@ Bool_t AcdId::CompareInRange( const AcdId & id, const std::string & name ) const
 
     bool result = true ;
 
-    result = result && rootdatautil::CompareInRange(m_id,id.m_id,"Id") ;
-    result = result && rootdatautil::CompareInRange(m_used,id.m_used,"Used") ;
+    result = rootdatautil::CompareInRange(m_id,id.m_id,"Id") && result ;
+    result = rootdatautil::CompareInRange(m_used,id.m_used,"Used") && result ;
     // apparently readoutIndex is obsolete
-    //result = result && rootdatautil::CompareInRange(m_readoutIndex,id.m_readoutIndex,"ReadoutIndex") ;
+    //result = rootdatautil::CompareInRange(m_readoutIndex,id.m_readoutIndex,"ReadoutIndex") && result ;
 
     if (!result) {
         std::cout<<"Comparison ERROR for "<<name<<std::endl ;
