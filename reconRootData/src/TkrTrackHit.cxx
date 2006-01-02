@@ -1,4 +1,5 @@
 #include "reconRootData/TkrTrackHit.h"
+#include <iostream>
 
 ClassImp(TkrTrackHit)
 
@@ -255,4 +256,33 @@ double TkrTrackHit::getCoordinate(const TkrTrackParams& params, int coord)
 
 const double TkrTrackHit::getCoordinate(const TkrTrackParams& params, int coord) const 
               {return params(coord);}
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void TkrTrackHit::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t TkrTrackHit::CompareInRange( const TkrTrackHit & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    //result = COMPARE_IN_RANGE(Energy) && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
 

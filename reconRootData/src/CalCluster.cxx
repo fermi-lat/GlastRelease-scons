@@ -51,38 +51,43 @@ void CalCluster::Print( Option_t * ) const
  }
 
 // dummy data, just for tests
-void CalCluster::Fake( UInt_t rank, Float_t randNum )
+void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
  {
     CalParams p ;
-    p.Fake(rank,randNum) ;
+    p.Fake(ievent,rank,randNum) ;
     CalClusterLayerData layer ;
     std::vector<CalClusterLayerData> clusLayerData ;
     UInt_t iclusLayer;
     for ( iclusLayer = 0; iclusLayer<ROOT_NUMCALLAYERS ; ++iclusLayer ) {
-        layer.Fake(rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
+        layer.Fake(ievent,rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
         clusLayerData.push_back(layer) ;
     }
     init(clusLayerData,p,1.0,2.0,3.0,4,5) ;
  }
 
-Bool_t CalCluster::CompareInRange( const CalCluster & c ) const {
+Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & name ) const {
 
     bool result = true ;
 
-    result = result && getParams().CompareInRange(c.getParams()) ;
+    result = getParams().CompareInRange(c.getParams()) && result ;
     int i ;
     for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {
-        result = result && getLayer(i).CompareInRange(c.getLayer(i)) ;
+        result = getLayer(i).CompareInRange(c.getLayer(i)) && result ;
     }
 
-    result = result && rootdatautil::CompareInRange(getRmsLong(),c.getRmsLong(),"RmsLong") ;
-    result = result && rootdatautil::CompareInRange(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") ;
-    result = result && rootdatautil::CompareInRange(getRmsTrans(),c.getRmsTrans(),"RmsTrans") ;
-    result = result && rootdatautil::CompareInRange(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") ;
-    result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
+    result = rootdatautil::CompareInRange(getRmsLong(),c.getRmsLong(),"RmsLong") && result ;
+    result = rootdatautil::CompareInRange(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") && result ;
+    result = rootdatautil::CompareInRange(getRmsTrans(),c.getRmsTrans(),"RmsTrans") && result ;
+    result = rootdatautil::CompareInRange(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") && result ;
+    result = rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") && result ;
 
     if (!result) {
-        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
     }
     return result ;
 

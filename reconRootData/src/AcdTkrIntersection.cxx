@@ -98,3 +98,33 @@ void AcdTkrIntersection::initialize(const AcdTkrIntersection& params)
 	     params.getArcLengthToIntersection(),params.getPathLengthInTile(),params.tileHit());
 }  
 
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void AcdTkrIntersection::Fake( Int_t ievent, UInt_t /*rank*/, Float_t /*randNum*/ ) {
+
+   // NOT TESTED YET
+
+ }
+
+Bool_t AcdTkrIntersection::CompareInRange( const AcdTkrIntersection & /*ref*/, const std::string & name ) const {
+
+    bool result = true ;
+
+    // NOT TESTED YET
+    //result = ... && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+

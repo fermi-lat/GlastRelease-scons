@@ -33,9 +33,10 @@ public:
 
     void initialize();
     
-    void Clear(Option_t *option="");
     static void CleanUp();
-
+    void Clear(Option_t *option="");
+    void Fake( Int_t ievent, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( TkrRecon &, const std::string & name = "" ) ; // for tests
     void Print(Option_t *option="") const;
 
     /// provide access to the list of clusters    

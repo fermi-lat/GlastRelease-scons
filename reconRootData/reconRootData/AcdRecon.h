@@ -91,8 +91,8 @@ public:
                     Double_t actDist, const AcdId &maxActDistId);
     
     void Clear(Option_t *option="");
-    void Fake( UInt_t rank, Float_t randNum ) ; // for tests
-    Bool_t CompareInRange( const AcdRecon & ) const ; // for tests
+    void Fake( Int_t ievent, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const AcdRecon &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
     
     inline const Double_t getEnergy() const { return m_totEnergy; };

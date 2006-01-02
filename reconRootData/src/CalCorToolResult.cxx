@@ -36,10 +36,10 @@ void CalCorToolResult::Clear( Option_t * )
  }
 
 // dummy data, just for tests
-void CalCorToolResult::Fake( UInt_t rank, Float_t randNum )
+void CalCorToolResult::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
  {
   CalParams p ;
-  p.Fake(rank,randNum) ;
+  p.Fake(ievent,rank,randNum) ;
   TObjArray freeAttributes ;
   freeAttributes.Add(new TParameter<Double_t>("Param 1",1.)) ;
   freeAttributes.Add(new TParameter<Double_t>("Param 2",2.)) ;
@@ -47,27 +47,38 @@ void CalCorToolResult::Fake( UInt_t rank, Float_t randNum )
  }
  
 // for tests
-Bool_t CalCorToolResult::CompareInRange( const CalCorToolResult & res ) const
+Bool_t CalCorToolResult::CompareInRange( const CalCorToolResult & res, const std::string & name ) const
  {
   Bool_t result = true ;
-  result = result && rootdatautil::CompareInRange(getCorrectionName(),res.getCorrectionName(),"CorrectionName") ;
-  result = result && rootdatautil::CompareInRange(getStatusBits(),res.getStatusBits(),"StatusBits") ;
-  result = result && rootdatautil::CompareInRange(getChiSquare(),res.getChiSquare(),"ChiSquare") ;
-  result = result && getParams().CompareInRange(res.getParams()) ;
-  const TObjArray & fp1 = getFreeAttributes() ;
-  const TObjArray & fp2 = res.getFreeAttributes() ;
-  result = result && rootdatautil::CompareInRange(fp1.GetEntries(),fp2.GetEntries(),"Number of free params") ;
-  TIter fp1Iter(&fp1), fp2Iter(&fp2) ;
-  const TParameter<Double_t> * p1, * p2 ;
-  while ( ((p1=(const TParameter<Double_t> *)fp1Iter.Next())!=0) &&
-          ((p2=(const TParameter<Double_t> *)fp2Iter.Next())!=0) )
-   {
-    result = result && rootdatautil::CompareInRange(p1->GetName(),p2->GetName(),"Parameter Name") ;
-    result = result && rootdatautil::CompareInRange(p1->GetVal(),p2->GetVal(),"Parameter Value") ;
-   }
-  if (!result)
-   { std::cout<<"Comparison ERROR for CalCorToolResult"<<std::endl ; }
-  return result ;
+  result = rootdatautil::CompareInRange(getCorrectionName(),res.getCorrectionName(),"CorrectionName") && result ;
+  result = rootdatautil::CompareInRange(getStatusBits(),res.getStatusBits(),"StatusBits") && result ;
+  result = rootdatautil::CompareInRange(getChiSquare(),res.getChiSquare(),"ChiSquare") && result ;
+  result = getParams().CompareInRange(res.getParams()) && result ;
+  result = result &&
+    rootdatautil::TObjArrayCompareInRange< TParameter<Double_t> >(
+      &getFreeAttributes(),&res.getFreeAttributes(),
+      "FreeAttributes"
+    ) ;
+//  const TObjArray & fp1 = getFreeAttributes() ;
+//  const TObjArray & fp2 = res.getFreeAttributes() ;
+//  result = rootdatautil::CompareInRange(fp1.GetEntries(),fp2.GetEntries(),"Number of free params")  && result ;
+//  TIter fp1Iter(&fp1), fp2Iter(&fp2) ;
+//  const TParameter<Double_t> * p1, * p2 ;
+//  while ( ((p1=(const TParameter<Double_t> *)fp1Iter.Next())!=0) &&
+//          ((p2=(const TParameter<Double_t> *)fp2Iter.Next())!=0) )
+//   {
+//    result = rootdatautil::CompareInRange(p1->GetName(),p2->GetName(),"Parameter Name")  && result ;
+//    result = rootdatautil::CompareInRange(p1->GetVal(),p2->GetVal(),"Parameter Value")  && result ;
+//   }
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
  }
 
 CalCorToolResult::CalCorToolResult

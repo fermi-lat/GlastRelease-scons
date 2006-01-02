@@ -65,7 +65,8 @@ public:
     virtual ~TkrTrack();
 
     void Clear(Option_t *option="");
-
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const TkrTrack &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
 
     //! Define two initialization methods

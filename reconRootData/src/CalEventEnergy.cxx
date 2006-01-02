@@ -35,17 +35,17 @@ CalEventEnergy::CalEventEnergy
  { init(params,statusBits,toolsResults) ; }
 
 // dummy data, just for tests
-void CalEventEnergy::Fake( UInt_t rank, Float_t randNum )
+void CalEventEnergy::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
  {
   CalParams p ;
-  p.Fake(rank,randNum) ;
+  p.Fake(ievent,rank,randNum) ;
   TObjArray toolsResults ;
   CalCorToolResult * result ;
   result = new CalCorToolResult ;
-  result->Fake(rank*2,randNum) ;
+  result->Fake(ievent,rank*2,randNum) ;
   toolsResults.Add(result) ;
   result = new CalCorToolResult ;
-  result->Fake(rank*2+1,randNum) ;
+  result->Fake(ievent,rank*2+1,randNum) ;
   toolsResults.Add(result) ;
   init(p,1,toolsResults) ;
  }
@@ -56,22 +56,33 @@ void CalEventEnergy::Print( Option_t * ) const
   m_toolsResults.Print() ;
  }
 
-Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c ) const 
+Bool_t CalEventEnergy::CompareInRange( const CalEventEnergy & c, const std::string & name ) const 
  {
   bool result = true ;
-  result = result && getParams().CompareInRange(c.getParams()) ;
-  result = result && rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") ;
-  const TObjArray & res1 = getToolsResults() ;
-  const TObjArray & res2 = c.getToolsResults() ;
-  result = result && rootdatautil::CompareInRange(res1.GetEntries(),res2.GetEntries(),"Number of results") ;
-  TIter res1Iter(&res1), res2Iter(&res2) ;
-  const CalCorToolResult * r1, * r2 ;
-  while ( ((r1=(const CalCorToolResult *)res1Iter.Next())!=0) &&
-          ((r2=(const CalCorToolResult *)res2Iter.Next())!=0) )
-   { result = result && r1->CompareInRange(*r2) ; }
-  if (!result)
-   { std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ; }
-  return result ;
+  result = getParams().CompareInRange(c.getParams()) && result ;
+  result = rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") && result ;
+  result = result &&
+    rootdatautil::TObjArrayCompareInRange<CalCorToolResult>(
+      &getToolsResults(),&c.getToolsResults(),
+      "ToolsResults"
+    ) ;
+//  const TObjArray & res1 = getToolsResults() ;
+//  const TObjArray & res2 = c.getToolsResults() ;
+//  result = rootdatautil::CompareInRange(res1.GetEntries(),res2.GetEntries(),"Number of results")  && result ;
+//  TIter res1Iter(&res1), res2Iter(&res2) ;
+//  const CalCorToolResult * r1, * r2 ;
+//  while ( ((r1=(const CalCorToolResult *)res1Iter.Next())!=0) &&
+//          ((r2=(const CalCorToolResult *)res2Iter.Next())!=0) )
+//   { result = r1->CompareInRange(*r2) && result ; }
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
 
  }
 

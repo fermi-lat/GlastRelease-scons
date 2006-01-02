@@ -1,4 +1,5 @@
 #include "reconRootData/TkrCluster.h"
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 
@@ -62,3 +63,54 @@ void TkrCluster::Print(Option_t *option) const
 		<< m_position.X() << ", " << m_position.Y() << ", " << m_position.Z() 
 		<< ")" << endl;
 }
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void TkrCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
+
+    Float_t f = Float_t(ievent) ;
+    
+    m_tkrId.Fake(ievent,rank,randNum) ;  
+    m_strip0 = 4 ;
+    m_stripf = 10 ;
+    m_nBad = 0 ;
+    m_position = TVector3(f,2.*f,3.*f) ;
+    m_rawToT = 50 ;
+    m_ToT = f ;    
+    m_status = 1 ;
+
+}
+
+#define COMPARE_IN_RANGE(att,text) rootdatautil::CompareInRange(att,ref.att,text)
+
+Bool_t TkrCluster::CompareInRange( const TkrCluster & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = COMPARE_IN_RANGE(m_tkrId,"volume id") && result ;
+    result = COMPARE_IN_RANGE(m_strip0,"Initial Strip Address") && result ;
+    result = COMPARE_IN_RANGE(m_stripf,"Final Strip Address") && result ;
+    result = COMPARE_IN_RANGE(m_nBad,"Number of Bad Strips")  && result ;
+    result = COMPARE_IN_RANGE(m_position,"Space Position")  && result ;
+    result = COMPARE_IN_RANGE(m_rawToT,"Raw ToT")  && result ;
+    result = COMPARE_IN_RANGE(m_ToT,"ToT") && result ;
+    result = COMPARE_IN_RANGE(m_status,"Status") && result ;
+    result = COMPARE_IN_RANGE(getStrip(),"Center") && result ; // redundant
+    result = COMPARE_IN_RANGE(getSize(),"Size") && result ; // redundant
+    result = COMPARE_IN_RANGE(hitFlagged(),"Flag") && result ; // redundant
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+

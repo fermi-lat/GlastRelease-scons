@@ -1,4 +1,5 @@
 #include "reconRootData/TkrTrackParams.h"
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(TkrTrackParams)
@@ -154,5 +155,66 @@ const Double_t& TkrTrackParams::operator()(const int &i, const int &j) const
     else if ((i == yPosIdx && j == ySlpIdx) || (i == ySlpIdx && j == yPosIdx)) return m_yPos_ySlp;
 
     return m_ySlp_ySlp;
+}
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void TkrTrackParams::Fake( Int_t ievent, UInt_t /*rank*/, Float_t randNum ) {
+
+    Float_t f = Float_t(ievent) ;
+
+    (*this)(1) = f ;
+    (*this)(2) = f*f ;
+    (*this)(3) = f*randNum ;
+    (*this)(4) = randNum*randNum ;
+    
+    (*this)(1,1) = f ;
+    (*this)(1,2) = f*2.  ;
+    (*this)(1,3) = f*3.  ;
+    (*this)(1,4) = f*4.  ;
+    (*this)(2,2) = f*5.  ;
+    (*this)(2,3) = f*6.  ;
+    (*this)(2,4) = f*7.  ;
+    (*this)(3,3) = f*8.  ;
+    (*this)(3,4) = f*9.  ;
+    (*this)(4,4) = f*10. ;
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t TkrTrackParams::CompareInRange( const TkrTrackParams & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = COMPARE_IN_RANGE(xPosition) && result ;
+    result = COMPARE_IN_RANGE(xSlope) && result ;
+    result = COMPARE_IN_RANGE(yPosition) && result ;
+    result = COMPARE_IN_RANGE(ySlope) && result ;
+
+    result = COMPARE_IN_RANGE(xPosxPos) && result ;
+    result = COMPARE_IN_RANGE(xPosxSlp) && result ;
+    result = COMPARE_IN_RANGE(xPosyPos) && result ;
+    result = COMPARE_IN_RANGE(xPosySlp) && result ;
+    result = COMPARE_IN_RANGE(xSlpxSlp) && result ;
+    result = COMPARE_IN_RANGE(xSlpyPos) && result ;
+    result = COMPARE_IN_RANGE(xSlpySlp) && result ;
+    result = COMPARE_IN_RANGE(yPosyPos) && result ;
+    result = COMPARE_IN_RANGE(yPosySlp) && result ;
+    result = COMPARE_IN_RANGE(ySlpySlp) && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
 }
 

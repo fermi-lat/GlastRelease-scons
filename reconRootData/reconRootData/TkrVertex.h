@@ -47,7 +47,8 @@ public:
     virtual ~TkrVertex();
 
     void Clear(Option_t *option="");
-
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const TkrVertex &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
 
     /// Access to primary quantities on track quality and scattering info

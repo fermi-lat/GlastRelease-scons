@@ -64,3 +64,33 @@ void ReconEvent::Print(Option_t* /* option */) const {
     cout << "(Run, Event): (" << m_runId << ", " << m_eventId << ")" << endl;
     cout << "EventFlags: " << m_eventFlags << endl;
 }
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void ReconEvent::Fake( Int_t /*ievent*/, Float_t /*randNum*/ ) {
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t ReconEvent::CompareInRange( const ReconEvent & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    //result = COMPARE_IN_RANGE(Energy) && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+

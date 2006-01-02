@@ -40,7 +40,8 @@ public:
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
 
     void Clear(Option_t *option="");
-
+    void Fake( Int_t ievent, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const ReconEvent &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
 
     UInt_t getEventId() { return m_eventId; };

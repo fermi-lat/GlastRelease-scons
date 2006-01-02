@@ -86,6 +86,9 @@ private:
   
     void print() const;
   
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const CalMipTrack &, const std::string & name = "" ) const ; // for tests
+
     ClassDef(CalMipTrack,1)
 };
     

@@ -18,8 +18,8 @@ public:
     const TVector3 getRmsSpread() const { return m_rmsSpread ; }
 
     void Clear( Option_t * option ="" ) ;
-    void Fake( UInt_t rank, Float_t randNum ) ; // for tests
-    Bool_t CompareInRange( const CalClusterLayerData & ) const ; // for tests
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const CalClusterLayerData &, const std::string & name = "" ) const ; // for tests
     void Print( Option_t * option ="" ) const ;
 
 private:

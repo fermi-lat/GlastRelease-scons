@@ -1,4 +1,6 @@
+
 #include "reconRootData/TkrRecon.h"
+#include <commonRootData/RootDataUtil.h>
 #include <iostream>
 
 ClassImp(TkrRecon)
@@ -131,3 +133,71 @@ void TkrRecon::Print(Option_t *option) const {
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
     cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
 }
+
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
+    
+    initialize() ;
+    
+    const UInt_t NUM_CLUSTERS = 20;
+    const UInt_t NUM_TRACKS = 15;
+    const UInt_t NUM_VERTICES = 11;
+
+    UInt_t icluster;
+    for ( icluster = 0 ; icluster < NUM_CLUSTERS ; icluster++ ) 
+     {
+      TkrCluster * cluster = new TkrCluster ;
+      cluster->Fake(ievent,icluster,randNum) ;
+      addCluster(cluster);
+     }
+
+    TkrTrack *track;
+    UInt_t itrack;
+    for (itrack=0; itrack < NUM_TRACKS; itrack++) 
+    {
+        track = new TkrTrack() ;
+        track->Fake(ievent,itrack,randNum) ;
+        addTrack(track);
+    }
+
+    UInt_t ivertex;
+    TkrVertex *vertex;
+    for (ivertex=0; ivertex < NUM_VERTICES; ivertex++) {
+        vertex = new TkrVertex();
+        vertex->Fake(ievent,ivertex,randNum) ;
+        addVertex(vertex);
+    }
+
+    TkrDiagnostics * diag = new TkrDiagnostics ;
+    diag->Fake(ievent,ivertex,randNum) ;
+    addDiagnostics(diag) ;
+
+}
+
+#define COMPARE_TOBJ_ARRAY_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m,ref.m)
+
+Bool_t TkrRecon::CompareInRange( TkrRecon & ref, const std::string & name ) {
+
+    bool result = true ;
+
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrCluster,getClusterCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getTrackCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrVertex,getVertexCol()) && result ;
+    result = rootdatautil::CompareInRange(*getDiagnostics(),*ref.getDiagnostics(),"Diagnostics") && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+

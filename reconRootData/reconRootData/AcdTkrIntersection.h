@@ -36,10 +36,11 @@ public:
 
     /// resets all member variables to default values
     void Clear(Option_t *option="");
-	
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const AcdTkrIntersection &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
 
-    AcdTkrIntersection& operator=(const AcdTkrIntersection& old);
+    AcdTkrIntersection & operator=(const AcdTkrIntersection& old);
 
     /// Provide an initialization method (in case of default constructor)
     void initialize(const AcdId& tileId, Int_t trackIndex, 

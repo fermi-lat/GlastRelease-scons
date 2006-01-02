@@ -1,4 +1,6 @@
 #include "reconRootData/TkrTrack.h"
+#include <commonRootData/RootDataUtil.h>
+#include <iostream>
 
 ClassImp(TkrTrack)
 
@@ -74,3 +76,64 @@ void TkrTrack::initializeQual(Double_t chiSq, Double_t ChiSqSmooth, Double_t rms
     m_kalThetaMS  = ms;
 }
 */
+
+//======================================================
+// For Unit Tests
+//======================================================
+
+void TkrTrack::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
+
+        Float_t f = Float_t(ievent) ;
+
+        UInt_t xgaps = rank * rank ;
+        UInt_t ygaps = rank+rank;
+        UInt_t x1st = ievent+rank;
+        UInt_t y1st = ievent+ievent;
+        setNumXGaps(xgaps);
+        setNumYGaps(ygaps);
+        setNumXFirstGaps(x1st);
+        setNumYFirstGaps(y1st);
+        Double_t chiSq = f;
+        Double_t chiSqSmooth = f*randNum;
+        Double_t rms = randNum*randNum;
+        Double_t qual = f*f;
+        Double_t e = f*2.0;
+        Double_t ms = f*6.0;
+        setChiSquareFilter(chiSq);
+        setChiSquareSmooth(chiSqSmooth);
+        setScatter(rms);
+        setQuality(qual);
+        setKalEnergy(e);
+        setKalThetaMS(ms);
+        
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t TkrTrack::CompareInRange( const TkrTrack & ref, const std::string & name ) const {
+
+    bool result = true ;
+
+    result = COMPARE_IN_RANGE(NumXGaps) && result ;
+    result = COMPARE_IN_RANGE(NumYGaps) && result ;
+    result = COMPARE_IN_RANGE(NumXFirstGaps) && result ;
+    result = COMPARE_IN_RANGE(NumYFirstGaps) && result ;
+    result = COMPARE_IN_RANGE(ChiSquareFilter) && result ;
+    result = COMPARE_IN_RANGE(ChiSquareSmooth) && result ;
+    result = COMPARE_IN_RANGE(Scatter) && result ;
+    result = COMPARE_IN_RANGE(Quality) && result ;
+    result = COMPARE_IN_RANGE(KalEnergy) && result ;
+    result = COMPARE_IN_RANGE(KalThetaMS) && result ;
+
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+

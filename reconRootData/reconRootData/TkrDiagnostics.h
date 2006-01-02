@@ -2,6 +2,7 @@
 #define ROOT_TkrDiagnostics_H
 
 #include "TObject.h"
+#include <string>
 
 /** 
  * @class TkrDiagnostics
@@ -39,6 +40,9 @@ public:
     {
         initializeInfo(0,0,0,0,0,0.,0,0);
     }
+    
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const TkrDiagnostics &, const std::string & name = "" ) const ; // for tests
 
     inline void Print(Option_t *option="") const {TObject::Print(option);};
 

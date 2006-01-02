@@ -152,9 +152,9 @@ AcdTkrIntersection* AcdRecon::addAcdTkrIntersection(AcdTkrIntersection& inter) {
 // For Unit Tests
 //======================================================
 
-void AcdRecon::Fake( UInt_t rank, Float_t randNum ) {
+void AcdRecon::Fake( Int_t ievent, Float_t randNum ) {
 
-    Float_t f = Float_t(rank);
+    Float_t f = Float_t(ievent);
     Double_t energy = f ;
     Double_t ribbonE = energy;
     Int_t count = 5;
@@ -166,7 +166,7 @@ void AcdRecon::Fake( UInt_t rank, Float_t randNum ) {
     AcdId minDocaId(0, 0, 3, 2);
     AcdId maxActDistId(0,0,2,2);
     AcdId ribActDistId(0,1,4,3);
-    ribActDistId.setReadoutIndex(rank) ;
+    ribActDistId.setReadoutIndex(ievent) ;
     std::vector<Double_t> rowDocaCol;
     rowDocaCol.push_back(randNum);
     rowDocaCol.push_back(f);
@@ -193,29 +193,34 @@ void AcdRecon::Fake( UInt_t rank, Float_t randNum ) {
 #define UTIL_COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),a.get ## att(),#att)
 #define ID_COMPARE_IN_RANGE(att) get ## att().CompareInRange(a.get ## att(),#att)
 
-Bool_t AcdRecon::CompareInRange( const AcdRecon & a ) const {
+Bool_t AcdRecon::CompareInRange( const AcdRecon & a, const std::string & name ) const {
 
     bool result = true ;
 
-    result = result && UTIL_COMPARE_IN_RANGE(Energy) ;
-    result = result && UTIL_COMPARE_IN_RANGE(RibbonEnergy) ;
-    result = result && UTIL_COMPARE_IN_RANGE(TileCount) ;
-    result = result && UTIL_COMPARE_IN_RANGE(RibbonCount) ;
-    result = result && UTIL_COMPARE_IN_RANGE(GammaDoca) ;
-    result = result && UTIL_COMPARE_IN_RANGE(Doca) ;
-    result = result && ID_COMPARE_IN_RANGE(MinDocaId) ;
-    result = result && UTIL_COMPARE_IN_RANGE(ActiveDist) ;
-    result = result && UTIL_COMPARE_IN_RANGE(RibbonActiveDist) ;
-    result = result && ID_COMPARE_IN_RANGE(MinDocaId) ;
-    result = result && ID_COMPARE_IN_RANGE(MaxActDistId) ;
-    result = result && ID_COMPARE_IN_RANGE(RibbonActDistId) ;
-    result = result && UTIL_COMPARE_IN_RANGE(RowDocaCol) ;
-    result = result && UTIL_COMPARE_IN_RANGE(RowActDistCol) ;
-    result = result && UTIL_COMPARE_IN_RANGE(EnergyCol) ;
-    result = result && UTIL_COMPARE_IN_RANGE(IdCol) ;
+    result = UTIL_COMPARE_IN_RANGE(Energy) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RibbonEnergy) && result ;
+    result = UTIL_COMPARE_IN_RANGE(TileCount) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RibbonCount) && result ;
+    result = UTIL_COMPARE_IN_RANGE(GammaDoca) && result ;
+    result = UTIL_COMPARE_IN_RANGE(Doca) && result ;
+    result = ID_COMPARE_IN_RANGE(MinDocaId) && result ;
+    result = UTIL_COMPARE_IN_RANGE(ActiveDist) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RibbonActiveDist) && result ;
+    result = ID_COMPARE_IN_RANGE(MinDocaId) && result ;
+    result = ID_COMPARE_IN_RANGE(MaxActDistId) && result ;
+    result = ID_COMPARE_IN_RANGE(RibbonActDistId) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RowDocaCol) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RowActDistCol) && result ;
+    result = UTIL_COMPARE_IN_RANGE(EnergyCol) && result ;
+    result = UTIL_COMPARE_IN_RANGE(IdCol) && result ;
 
     if (!result) {
-        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
     }
     return result ;
 
