@@ -16,9 +16,11 @@
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& filename, const std::string& treename)
 : m_event(0)
+, m_tree(0)
+, m_file(0)
 {
 
-    TFile* m_file = new TFile(filename.c_str(), "readonly");
+    m_file = new TFile(filename.c_str(), "readonly");
     if( 0==m_file || !m_file->IsOpen()){
         throw std::invalid_argument( "Could not open the root file ");
     }
