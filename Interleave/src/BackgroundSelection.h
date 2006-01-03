@@ -26,26 +26,17 @@ public:
         @param rootFileName name of root file (or files) to open
         @param treename name of the TTree containing the tuple data
     */
-    BackgroundSelection(const std::string& rootFileName, const std::string& treename);
+    BackgroundSelection(const std::string& rootFileName, const std::string& treename, TTree* other);
 
     ~BackgroundSelection();
 
-    /**@brief Set the addresses of active leaves
 
+    /** @brief select an event and copy the contents to the other tree
+        @param maglat the current magnetic latitude
     */
-    void setLeafPointers(TTree* other);
+    void selectEvent(double maglat);
 
-    /** @param maglat the current magnetic latitude
-        @return a TTree, with the event select
-    */
-    TTree* selectEvent(double maglat);
-
-    /**@brief copy the contents of the current tree to another, except for inactive branches 
-       @param other the other tree
-
-    */
-    void copyTreeData(TTree* other);
-
+ 
     /**@brief the trigger rate for the given magnetic latitude
     */
     double triggerRate(double maglat);
@@ -54,12 +45,21 @@ public:
     */
     double downlinkRate(double maglat);
 
+    /** @brief disable leaves matching the pattern
+
+    */
     void disable(const char* pattern);
 
 private:
+    /**@brief Set the addresses of active leaves, so that a GetEvent will perform a copy
+
+    */
+    void setLeafPointers();
+
     unsigned int m_event;
     TTree* m_tree;
     TFile* m_file;
+    TTree* m_outputTree; ///< the tree to copy data to
 };
 
 

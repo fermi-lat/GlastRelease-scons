@@ -92,7 +92,7 @@ StatusCode InterleaveAlg::initialize(){
     // initialize the background selection
     try {
 
-        m_selector = new BackgroundSelection(m_rootFile, m_treeName);
+        m_selector = new BackgroundSelection(m_rootFile, m_treeName, m_meritTuple);
 
     }catch( const std::exception& e){
         log << MSG::ERROR << e.what() << endl;
@@ -150,7 +150,6 @@ StatusCode InterleaveAlg::execute()
 
     // ask for a tree corresponding to our current position: it will set all the tuple
 
-    m_selector->setLeafPointers(m_meritTuple);
     m_selector->selectEvent(magneticLatitude());
 
     // overwrite the event info

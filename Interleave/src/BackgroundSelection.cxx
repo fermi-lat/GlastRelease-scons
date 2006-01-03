@@ -14,10 +14,13 @@
 #include <cassert>
 
 //------------------------------------------------------------------------
-BackgroundSelection::BackgroundSelection(const std::string& filename, const std::string& treename)
+BackgroundSelection::BackgroundSelection(const std::string& filename, 
+                                         const std::string& treename
+                                         , TTree* outputTree)
 : m_event(0)
 , m_tree(0)
 , m_file(0)
+, m_outputTree(outputTree)
 {
 
     m_file = new TFile(filename.c_str(), "readonly");
@@ -35,14 +38,9 @@ BackgroundSelection::~BackgroundSelection()
 {
     delete m_file;
 }
-//------------------------------------------------------------------------
-void BackgroundSelection::copyTreeData( TTree* out)
-{
-
-}
 
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers(TTree* other)
+void BackgroundSelection::setLeafPointers()
 {
 
     // iteration over active leaves -- copied from Ttree::Show()
@@ -57,7 +55,7 @@ void BackgroundSelection::setLeafPointers(TTree* other)
         if (len <= 0) continue;
 
         // here copy the value pointer from the merit tuple
-        TLeaf* otherleaf = other->GetLeaf(leaf->GetName());
+        TLeaf* otherleaf = m_outputTree->GetLeaf(leaf->GetName());
         if( otherleaf==0){
             std::cout << "No leaf " << leaf->GetName() << std::endl;
         }else{
@@ -67,15 +65,16 @@ void BackgroundSelection::setLeafPointers(TTree* other)
 }
 
 //------------------------------------------------------------------------
-TTree* BackgroundSelection::selectEvent(double /* maglat */)
+void BackgroundSelection::selectEvent(double /* maglat */)
 {
     // TODO: have this depend on magnetic latitude
+
+    setLeafPointers(); // may only have to be done once
+
     if( ++m_event > m_tree->GetEntries() ) {
         m_event = 0;
     }
-    // note: if this overrites the other TTree, a GetEvent should be deferred
     m_tree->GetEvent(m_event);
-    return m_tree;
 }
 
 //------------------------------------------------------------------------
