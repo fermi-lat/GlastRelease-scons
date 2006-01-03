@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+ 3-Jan-06  v3r1   TU  Incorporate updates for "new" style IM Analysis sheets
 10-dec-05  v3r0   THB, for TU; convert to Atwood trees only
 14-nov-05  v2r2   THB New trees, special AtwoodLikeTrees class for non-atwood trees
 08-nov-05  v2r1p1 THB fixes for unix
