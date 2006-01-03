@@ -20,6 +20,7 @@ $Header$
 #include "xmlReadTextFileEngineFactory.h"
 #include "xmlShuffleEngineFactory.h"
 #include "xmlSplitEngineFactory.h"
+#include "xmlTwoDimChartEngineFactory.h"
 #include "xmlWriteTextFileEngineFactory.h"
 
 #include <fstream>
@@ -111,6 +112,7 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllActivityNodes(GlastClassify::T
     nodeFactoryMap["ReadTextFileEngineNode"]  = new xmlReadTextFileEngineFactory(parser);
     nodeFactoryMap["ShuffleEngineNode"]       = new xmlShuffleEngineFactory(parser);
     nodeFactoryMap["SplitEngineNode"]         = new xmlSplitEngineFactory(parser);
+    nodeFactoryMap["TwoDimChartEngineNode"]   = new xmlTwoDimChartEngineFactory(parser);
     nodeFactoryMap["WriteTextFileEngineNode"] = new xmlWriteTextFileEngineFactory(parser);
 
     // We now need to ensure that we're getting 

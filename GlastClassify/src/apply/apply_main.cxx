@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
             std::string rootPath = ::getenv("GLASTCLASSIFYROOT");
             //facilities::Util::expandEnvVar(&rootPath);
 
-            CTFilePath = rootPath + "/xml/DC2_Analysis_v2r1.xml";
+            CTFilePath = rootPath + "/xml/DC2_Analysis.xml";
             std::cout << "Setting file to  " << CTFilePath << std::endl;
         }
         else
