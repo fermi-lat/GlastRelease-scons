@@ -63,7 +63,6 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 StatusCode InterleaveAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -74,6 +73,7 @@ StatusCode InterleaveAlg::initialize(){
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
         return sc;
     }
+
     if( m_meritTuple==0){
         void * ptr= 0;
         m_rootTupleSvc->getItem(m_treeName.value().c_str(),"", ptr);
@@ -109,6 +109,8 @@ StatusCode InterleaveAlg::initialize(){
 
     // set initial default values
     s_triggerRate = m_selector->triggerRate(0.);
+    log << MSG::INFO << "initialized OK: initial trigger rate is " << s_triggerRate << " Hz"<< endreq;
+
     return sc;
 }
 
@@ -129,7 +131,7 @@ StatusCode InterleaveAlg::execute()
         log << MSG::ERROR << "No MC particles!" << endreq;
         return StatusCode::FAILURE;
     }   
-        
+
     const Event::McParticle& primary = **particles->begin();
     double ke = primary.initialFourMomentum().e()-primary.initialFourMomentum().m();
     log << MSG::DEBUG << "Primary particle energy: " << ke << endreq;
@@ -178,12 +180,12 @@ StatusCode InterleaveAlg::finalize(){
 namespace {
     //! Utility to set a scalar value in a ROOT tree. 
     //! Assume that the type is known!
-template <typename  Type> 
-void setLeafValue(TLeaf* leaf, Type newvalue)
-{
-    Type& rval = *static_cast<Type*>(leaf->GetValuePointer());
-    rval = newvalue;
-}
+    template <typename  Type> 
+        void setLeafValue(TLeaf* leaf, Type newvalue)
+    {
+        Type& rval = *static_cast<Type*>(leaf->GetValuePointer());
+        rval = newvalue;
+    }
 
 }
 //------------------------------------------------------------------------
@@ -191,7 +193,7 @@ void InterleaveAlg::copyEventInfo(TTree * tree)
 {
 
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
-// these types *must* correspond with those in EvtValsTool
+    // these types *must* correspond with those in EvtValsTool
     float EvtRun           = header->run();
     float EvtEventId       = header->event();
     double EvtElapsedTime  = header->time();
