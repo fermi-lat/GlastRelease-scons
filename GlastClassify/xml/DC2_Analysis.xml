@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <IMML version="7.0">
-	<Worksheet lastNodeID="1615" linkType="orthogonal">
+	<Worksheet lastNodeID="1617" linkType="orthogonal">
 		<FileInfo>
-			<FileName>C:\GLAST Analysis\DC2\DC2_Analysis_v3r1.imw</FileName>
+			<FileName>C:\GLAST Analysis\DC2\DC2_Analysis_v3r2.imw</FileName>
 			<FileDateCreated>1034799439398</FileDateCreated>
 		</FileInfo>
 		<WorksheetProperties>
@@ -148,7 +148,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="useCache" value="global" />
 						<Property name="includeRows" value="true" />
 						<Property name="testExpression" complex="true">
-							<Complex>BestEnergyProb   &gt;  .10
+							<Complex>CTBBestEnergyProb   &gt;  .10
 
 </Complex>
 						</Property>
@@ -187,7 +187,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="Best.PSF.err">
+							<Property name="CTBBestPSFerr">
 								<Property name="type" value="continuous" />
 								<Property name="expression" complex="true">
 									<Complex>McDirErr	 </Complex>
@@ -197,17 +197,25 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="categorical" />
 								<Property name="expression" value="&quot;Thin-VTX&quot;" />
 							</Property>
-							<Property name="Best.XDir">
+							<Property name="CTBBestXDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxXDir" />
 							</Property>
-							<Property name="Best.YDir">
+							<Property name="CTBBestYDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxYDir" />
 							</Property>
-							<Property name="Best.ZDir">
+							<Property name="CTBBestZDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxZDir" />
+							</Property>
+							<Property name="CTBVTX">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(VTX)&quot;)" />
+							</Property>
+							<Property name="CTBCORE">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(CORE)&quot;)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -241,7 +249,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="Best.PSF.err">
+							<Property name="CTBBestPSFerr">
 								<Property name="type" value="continuous" />
 								<Property name="expression" complex="true">
 									<Complex>McTkr1DirErr		 </Complex>
@@ -251,17 +259,25 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="categorical" />
 								<Property name="expression" value="&quot;Thin-1Tkr&quot;" />
 							</Property>
-							<Property name="Best.XDir">
+							<Property name="CTBBestXDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1XDir" />
 							</Property>
-							<Property name="Best.YDir">
+							<Property name="CTBBestYDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1YDir" />
 							</Property>
-							<Property name="Best.ZDir">
+							<Property name="CTBBestZDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1ZDir" />
+							</Property>
+							<Property name="CTBVTX">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(VTX)&quot;)" />
+							</Property>
+							<Property name="CTBCORE">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(CORE)&quot;)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -328,7 +344,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="Best.PSF.err">
+							<Property name="CTBBestPSFerr">
 								<Property name="type" value="continuous" />
 								<Property name="expression" complex="true">
 									<Complex>McDirErr	 </Complex>
@@ -338,17 +354,25 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="categorical" />
 								<Property name="expression" value="&quot;Thick-VTX&quot;" />
 							</Property>
-							<Property name="Best.XDir">
+							<Property name="CTBBestXDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxXDir" />
 							</Property>
-							<Property name="Best.YDir">
+							<Property name="CTBBestYDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxYDir" />
 							</Property>
-							<Property name="Best.ZDir">
+							<Property name="CTBBestZDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="VtxZDir" />
+							</Property>
+							<Property name="CTBVTX">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(VTX)&quot;)" />
+							</Property>
+							<Property name="CTBCORE">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(CORE)&quot;)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -410,7 +434,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="Best.PSF.err">
+							<Property name="CTBBestPSFerr">
 								<Property name="type" value="continuous" />
 								<Property name="expression" complex="true">
 									<Complex>McTkr1DirErr		 </Complex>
@@ -420,17 +444,25 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="categorical" />
 								<Property name="expression" value="&quot;Thick-1Tkr&quot;" />
 							</Property>
-							<Property name="Best.XDir">
+							<Property name="CTBBestXDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1XDir" />
 							</Property>
-							<Property name="Best.YDir">
+							<Property name="CTBBestYDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1YDir" />
 							</Property>
-							<Property name="Best.ZDir">
+							<Property name="CTBBestZDir">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="Tkr1ZDir" />
+							</Property>
+							<Property name="CTBVTX">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(VTX)&quot;)" />
+							</Property>
+							<Property name="CTBCORE">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(CORE)&quot;)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -623,8 +655,8 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="maxLineWidth" value="" />
 						<Property name="lookMaxLines" value="" />
 						<Property name="rowsToPreview" value="100" />
-						<Property name="startRow" value="" />
-						<Property name="endRow" value="" />
+						<Property name="startRow" value="1" />
+						<Property name="endRow" value="100" />
 						<Property name="defaultStringColumnType" value="categorical" />
 						<Property name="specifiedRowsToChunk" value="0" />
 						<Property name="rowsToChunk" value="10000" />
@@ -637,11 +669,6 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="userDelimiter" value="" />
 						<Property name="timeDateFormat" value="%m[/][.]%d[/][,]%y [%H[:%M[:%S[.%N]]]] [%p]" />
 						<Property name="textEncoding" value="ASCII" />
-						<Property name="columns">
-							<Property name="BestEnergy">
-								<Property name="newName" value="GleamBestEnergy" />
-							</Property>
-						</Property>
 					</XTProps>
 				</ArgumentList>
 				<ComponentComments>
@@ -1211,7 +1238,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 							<Property name="EvtETkr1FirstChisq" value="true" />
 							<Property name="EvtETkr1Qual" value="true" />
 							<Property name="EvtEVtxAngle" value="true" />
-							<Property name="BestLogEnergy" value="true" />
+							<Property name="CTBBestLogEnergy" value="true" />
 							<Property name="GltTower" value="true" />
 							<Property name="GltLayer" value="true" />
 						</Property>
@@ -1257,7 +1284,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<ColumnInfo name="EvtETkr1FirstChisq" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtETkr1Qual" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtEVtxAngle" type="continuous" role="independent"/>
-								<ColumnInfo name="BestLogEnergy" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBBestLogEnergy" type="continuous" role="independent"/>
 								<ColumnInfo name="GltTower" type="continuous" role="independent"/>
 								<ColumnInfo name="GltLayer" type="continuous" role="independent"/>
 							</ColumnDefinitions>
@@ -1284,7 +1311,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<MiningField name="EvtETkr1FirstChisq"/>
 								<MiningField name="EvtETkr1Qual"/>
 								<MiningField name="EvtEVtxAngle"/>
-								<MiningField name="BestLogEnergy"/>
+								<MiningField name="CTBBestLogEnergy"/>
 								<MiningField name="GltTower"/>
 								<MiningField name="GltLayer"/>
 							</MiningSchema>
@@ -1496,7 +1523,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																</Node>
 															</Node>
 															<Node id="213" score="VTX" recordCount="168" group="2" deviance="202.82211650411" risk="49" yprob="0.291666666666667 0.708333333333333">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.83729074149293" improvement="3.68950198354324"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.83729074149293" improvement="3.68950198354324"/>
 																<Node id="426" score="VTX" recordCount="129" group="1" deviance="165.572198937151" risk="44" yprob="0.341085271317829 0.65891472868217">
 																	<SimplePredicate field="EvtETkr1Qual" operator="greaterOrEqual" value="1.12594" improvement="4.95037059338046"/>
 																	<Node id="852" score="1TKR" recordCount="36" group="1" deviance="49.4612335150073" risk="16" yprob="0.555555555555556 0.444444444444444">
@@ -1884,7 +1911,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																	<True/>
 																</Node>
 																<Node id="437" score="VTX" recordCount="145" group="2" deviance="179.61912402502" risk="45" yprob="0.310344827586207 0.689655172413793">
-																	<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.53646418856121" improvement="3.96932269160153"/>
+																	<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.53646418856121" improvement="3.96932269160153"/>
 																	<Node id="874" score="1TKR" recordCount="33" group="1" deviance="45.7174062472034" risk="16" yprob="0.515151515151515 0.484848484848485">
 																		<True/>
 																	</Node>
@@ -2117,7 +2144,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											</Node>
 										</Node>
 										<Node id="5" score="VTX" recordCount="708" group="2" deviance="972.885719280919" risk="315" yprob="0.444915254237288 0.555084745762712">
-											<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="2.01741152426689" improvement="6.86916204503018"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="2.01741152426689" improvement="6.86916204503018"/>
 											<Node id="10" score="VTX" recordCount="686" group="1" deviance="945.743406907492" risk="313" yprob="0.456268221574344 0.543731778425656">
 												<SimplePredicate field="Tkr1ZDir" operator="lessThan" value="-0.638162" improvement="5.79176998130873"/>
 												<Node id="20" score="VTX" recordCount="503" group="1" deviance="697.256361035497" risk="249" yprob="0.495029821073559 0.504970178926441">
@@ -2357,7 +2384,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																				<True/>
 																			</Node>
 																			<Node id="3807" score="VTX" recordCount="215" group="2" deviance="187.725911102767" risk="34" yprob="0.158139534883721 0.841860465116279">
-																				<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.65058151487495" improvement="3.63040223090096"/>
+																				<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.65058151487495" improvement="3.63040223090096"/>
 																				<Node id="7614" score="VTX" recordCount="195" group="1" deviance="180.465106640965" risk="34" yprob="0.174358974358974 0.825641025641026">
 																					<SimplePredicate field="EvtETkr1Qual" operator="greaterOrEqual" value="1.084585" improvement="2.6088947289041"/>
 																					<Node id="15228" score="VTX" recordCount="116" group="1" deviance="123.446163700112" risk="26" yprob="0.224137931034483 0.775862068965517">
@@ -2760,7 +2787,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															<True/>
 														</Node>
 														<Node id="123" score="VTX" recordCount="247" group="2" deviance="225.23949891167" risk="42" yprob="0.17004048582996 0.82995951417004">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.81446756285247" improvement="5.14997563380848"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.81446756285247" improvement="5.14997563380848"/>
 															<Node id="246" score="VTX" recordCount="221" group="1" deviance="214.939547644054" risk="42" yprob="0.190045248868778 0.809954751131222">
 																<SimplePredicate field="Tkr2Chisq" operator="greaterOrEqual" value="1.687535" improvement="4.95892061625125"/>
 																<Node id="492" score="VTX" recordCount="176" group="1" deviance="188.657881004108" risk="40" yprob="0.227272727272727 0.772727272727273">
@@ -2841,7 +2868,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												<Node id="18" score="1TKR" recordCount="332" group="1" deviance="453.285587580806" risk="142" yprob="0.572289156626506 0.427710843373494">
 													<SimplePredicate field="Tkr2Chisq" operator="lessThan" value="32.6946" improvement="4.55668392119935"/>
 													<Node id="36" score="1TKR" recordCount="312" group="1" deviance="421.678813953655" risk="127" yprob="0.592948717948718 0.407051282051282">
-														<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="2.68794561544396" improvement="4.22382907402067"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="2.68794561544396" improvement="4.22382907402067"/>
 														<Node id="72" score="1TKR" recordCount="204" group="1" deviance="263.659546841587" risk="71" yprob="0.651960784313726 0.348039215686274">
 															<SimplePredicate field="EvtTkr1EFrac" operator="lessThan" value="0.6488655" improvement="3.1374560678386"/>
 															<Node id="144" score="1TKR" recordCount="49" group="1" deviance="49.5888789568481" risk="10" yprob="0.795918367346939 0.204081632653061">
@@ -3095,7 +3122,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															<True/>
 														</Node>
 														<Node id="119" score="VTX" recordCount="258" group="2" deviance="262.042111536282" risk="53" yprob="0.205426356589147 0.794573643410853">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.02942199781075" improvement="6.42817142530788"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.02942199781075" improvement="6.42817142530788"/>
 															<Node id="238" score="VTX" recordCount="29" group="1" deviance="40.1680468769219" risk="14" yprob="0.482758620689655 0.517241379310345">
 																<True/>
 															</Node>
@@ -3216,12 +3243,12 @@ get("Pr(VTX)") &gt; .5</Complex>
 										<True/>
 									</Node>
 									<Node id="3" score="1TKR" recordCount="1702" group="2" deviance="2109.62176244269" risk="529" yprob="0.689189189189189 0.310810810810811">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.47317743694176" improvement="114.648477040885"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.47317743694176" improvement="114.648477040885"/>
 										<Node id="6" score="1TKR" recordCount="300" group="1" deviance="24.0291781142598" risk="2" yprob="0.993333333333333 0.00666666666666667">
 											<True/>
 										</Node>
 										<Node id="7" score="1TKR" recordCount="1402" group="2" deviance="1856.29563024666" risk="527" yprob="0.624108416547789 0.375891583452211">
-											<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.98752178672748" improvement="53.3289543140035"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.98752178672748" improvement="53.3289543140035"/>
 											<Node id="14" score="1TKR" recordCount="151" group="1" deviance="50.4646117854039" risk="6" yprob="0.960264900662252 0.0397350993377483">
 												<SimplePredicate field="EvtTkr1EFrac" operator="greaterOrEqual" value="0.5155555" improvement="5.43003689577334"/>
 												<Node id="28" score="1TKR" recordCount="118" group="1" deviance="11.5328706312219" risk="1" yprob="0.991525423728814 0.00847457627118644">
@@ -3266,7 +3293,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																	<True/>
 																</Node>
 																<Node id="495" score="VTX" recordCount="87" group="2" deviance="120.320094699148" risk="41" yprob="0.471264367816092 0.528735632183908">
-																	<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.16677831610939" improvement="2.42788437846342"/>
+																	<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.16677831610939" improvement="2.42788437846342"/>
 																	<Node id="990" score="1TKR" recordCount="36" group="1" deviance="48.1138903918468" risk="14" yprob="0.611111111111111 0.388888888888889">
 																		<True/>
 																	</Node>
@@ -3369,7 +3396,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																						<True/>
 																					</Node>
 																					<Node id="16245" score="1TKR" recordCount="109" group="2" deviance="150.656234564687" risk="51" yprob="0.532110091743119 0.467889908256881">
-																						<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.46910980756692" improvement="3.76238638687209"/>
+																						<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.46910980756692" improvement="3.76238638687209"/>
 																						<Node id="32490" score="1TKR" recordCount="60" group="1" deviance="77.6935966841559" risk="21" yprob="0.65 0.35">
 																							<SimplePredicate field="VtxDOCA" operator="greaterOrEqual" value="0.0574916" improvement="1.91028806710372"/>
 																							<Node id="64980" score="1TKR" recordCount="21" group="1" deviance="20.4503337975133" risk="4" yprob="0.80952380952381 0.19047619047619">
@@ -3455,12 +3482,12 @@ get("Pr(VTX)") &gt; .5</Complex>
 										<True/>
 									</Node>
 									<Node id="3" score="1TKR" recordCount="1239" group="2" deviance="1476.97864224988" risk="351" yprob="0.716707021791768 0.283292978208232">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.45051837858015" improvement="97.4131800793066"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.45051837858015" improvement="97.4131800793066"/>
 										<Node id="6" score="1TKR" recordCount="255" group="1" deviance="0" risk="0" yprob="1 0">
 											<True/>
 										</Node>
 										<Node id="7" score="1TKR" recordCount="984" group="2" deviance="1282.15228209127" risk="351" yprob="0.643292682926829 0.356707317073171">
-											<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.97940061846126" improvement="30.9036481616504"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.97940061846126" improvement="30.9036481616504"/>
 											<Node id="14" score="1TKR" recordCount="114" group="1" deviance="52.6251335723227" risk="7" yprob="0.93859649122807 0.0614035087719298">
 												<SimplePredicate field="VtxDOCA" operator="greaterOrEqual" value="0.0418317" improvement="4.21934276109888"/>
 												<Node id="28" score="1TKR" recordCount="50" group="1" deviance="0" risk="0" yprob="1 0">
@@ -3580,7 +3607,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												<Node id="31" score="VTX" recordCount="287" group="2" deviance="397.27742994024" risk="137" yprob="0.477351916376307 0.522648083623693">
 													<SimplePredicate field="TkrNumTracks" operator="greaterOrEqual" value="2.5" improvement="4.74633049670967"/>
 													<Node id="62" score="1TKR" recordCount="153" group="1" deviance="209.737457992092" risk="67" yprob="0.562091503267974 0.437908496732026">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.7150172281559" improvement="4.31997933866306"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.7150172281559" improvement="4.31997933866306"/>
 														<Node id="124" score="1TKR" recordCount="20" group="1" deviance="16.9083635122396" risk="3" yprob="0.85 0.15">
 															<True/>
 														</Node>
@@ -3615,7 +3642,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="63" score="VTX" recordCount="134" group="2" deviance="178.047310954728" risk="51" yprob="0.380597014925373 0.619402985074627">
 														<SimplePredicate field="Tkr1ToTFirst" operator="lessThan" value="3.15625" improvement="5.09220767839946"/>
 														<Node id="126" score="VTX" recordCount="113" group="1" deviance="154.65422314411" risk="49" yprob="0.433628318584071 0.566371681415929">
-															<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.58150577436727" improvement="2.76953579982371"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.58150577436727" improvement="2.76953579982371"/>
 															<Node id="252" score="1TKR" recordCount="29" group="1" deviance="38.4960788533894" risk="11" yprob="0.620689655172414 0.379310344827586">
 																<True/>
 															</Node>
@@ -3701,7 +3728,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 							<Property name="EvtETkr1FirstChisq" value="true" />
 							<Property name="EvtETkr1Qual" value="true" />
 							<Property name="EvtEVtxAngle" value="true" />
-							<Property name="BestLogEnergy" value="true" />
+							<Property name="CTBBestLogEnergy" value="true" />
 							<Property name="GltTower" value="true" />
 							<Property name="GltLayer" value="true" />
 						</Property>
@@ -3745,7 +3772,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<ColumnInfo name="EvtETkr1FirstChisq" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtETkr1Qual" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtEVtxAngle" type="continuous" role="independent"/>
-								<ColumnInfo name="BestLogEnergy" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBBestLogEnergy" type="continuous" role="independent"/>
 								<ColumnInfo name="GltTower" type="continuous" role="independent"/>
 								<ColumnInfo name="GltLayer" type="continuous" role="independent"/>
 							</ColumnDefinitions>
@@ -3772,13 +3799,13 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<MiningField name="EvtETkr1FirstChisq"/>
 								<MiningField name="EvtETkr1Qual"/>
 								<MiningField name="EvtEVtxAngle"/>
-								<MiningField name="BestLogEnergy"/>
+								<MiningField name="CTBBestLogEnergy"/>
 								<MiningField name="GltTower"/>
 								<MiningField name="GltLayer"/>
 							</MiningSchema>
 							<TreeModel name="MC.VtxType" splitCharacteristic="binarySplit" criterion="entropy">
 								<Node id="1" score="VTX" recordCount="2339" group="0" deviance="2918.02683659015" risk="739" yprob="0.315946985891407 0.684053014108593">
-									<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.14729671818341" improvement="73.3776397246679"/>
+									<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.14729671818341" improvement="73.3776397246679"/>
 									<Node id="2" score="1TKR" recordCount="539" group="1" deviance="744.670773437439" risk="251" yprob="0.534322820037106 0.465677179962894">
 										<SimplePredicate field="EvtETkr1FirstChisq" operator="lessThan" value="0.663258" improvement="14.4024483288173"/>
 										<Node id="4" score="1TKR" recordCount="365" group="1" deviance="486.957347797517" risk="141" yprob="0.613698630136986 0.386301369863014">
@@ -3882,7 +3909,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													</Node>
 												</Node>
 												<Node id="25" score="VTX" recordCount="422" group="2" deviance="561.092626898951" risk="161" yprob="0.381516587677725 0.618483412322275">
-													<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="1.67963004871846" improvement="4.64214275556651"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="1.67963004871846" improvement="4.64214275556651"/>
 													<Node id="50" score="VTX" recordCount="401" group="1" deviance="538.599668933999" risk="159" yprob="0.396508728179551 0.603491271820449">
 														<SimplePredicate field="EvtETkr1FirstChisq" operator="lessThan" value="0.558493" improvement="5.0104265899792"/>
 														<Node id="100" score="VTX" recordCount="314" group="1" deviance="430.187016142341" risk="137" yprob="0.436305732484076 0.563694267515924">
@@ -4051,7 +4078,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																<Node id="483" score="VTX" recordCount="237" group="2" deviance="198.445992843706" risk="35" yprob="0.147679324894515 0.852320675105485">
 																	<SimplePredicate field="EvtETkr1Chisq" operator="lessThan" value="0.0313496" improvement="4.51321951057075"/>
 																	<Node id="966" score="VTX" recordCount="94" group="1" deviance="102.293629980683" risk="22" yprob="0.234042553191489 0.765957446808511">
-																		<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.62930270545567" improvement="3.32259462382292"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.62930270545567" improvement="3.32259462382292"/>
 																		<Node id="1932" score="VTX" recordCount="73" group="1" deviance="87.6077892908129" risk="21" yprob="0.287671232876712 0.712328767123288">
 																			<SimplePredicate field="EvtETkr1Qual" operator="lessThan" value="1.1398" improvement="2.90542505417343"/>
 																			<Node id="3864" score="VTX" recordCount="26" group="1" deviance="35.8896551529778" risk="12" yprob="0.461538461538462 0.538461538461538">
@@ -4084,7 +4111,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															</Node>
 														</Node>
 														<Node id="121" score="VTX" recordCount="376" group="2" deviance="302.199890863303" risk="52" yprob="0.138297872340426 0.861702127659574">
-															<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="2.32454397714668" improvement="6.99630551445668"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="2.32454397714668" improvement="6.99630551445668"/>
 															<Node id="242" score="VTX" recordCount="298" group="1" deviance="269.604759316575" risk="50" yprob="0.167785234899329 0.832214765100671">
 																<SimplePredicate field="Tkr2Chisq" operator="lessThan" value="0.415033" improvement="5.10576110594235"/>
 																<Node id="484" score="VTX" recordCount="47" group="1" deviance="60.2838287709934" risk="16" yprob="0.340425531914894 0.659574468085106">
@@ -4217,7 +4244,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<Node id="13" score="1TKR" recordCount="156" group="2" deviance="213.148989451145" risk="67" yprob="0.57051282051282 0.429487179487179">
 												<SimplePredicate field="EvtTkr1EFrac" operator="greaterOrEqual" value="0.6778805" improvement="3.52364501571611"/>
 												<Node id="26" score="1TKR" recordCount="91" group="1" deviance="116.747876041336" risk="31" yprob="0.659340659340659 0.340659340659341">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.49531987781856" improvement="4.98741924717315"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.49531987781856" improvement="4.98741924717315"/>
 													<Node id="52" score="1TKR" recordCount="61" group="1" deviance="65.7191316391712" risk="14" yprob="0.770491803278688 0.229508196721311">
 														<SimplePredicate field="EvtETkr1FirstChisq" operator="lessThan" value="0.6067435" improvement="3.47631869400505"/>
 														<Node id="104" score="1TKR" recordCount="36" group="1" deviance="25.1159109006983" risk="4" yprob="0.888888888888889 0.111111111111111">
@@ -4327,7 +4354,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															<Node id="242" score="VTX" recordCount="149" group="1" deviance="206.013904595047" risk="70" yprob="0.469798657718121 0.530201342281879">
 																<SimplePredicate field="EvtTkr1EFrac" operator="greaterOrEqual" value="0.6301765" improvement="2.77337674751067"/>
 																<Node id="484" score="1TKR" recordCount="128" group="1" deviance="177.414426951656" risk="63" yprob="0.5078125 0.4921875">
-																	<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.36856568471033" improvement="2.98409646761746"/>
+																	<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.36856568471033" improvement="2.98409646761746"/>
 																	<Node id="968" score="1TKR" recordCount="37" group="1" deviance="46.6263746973506" risk="12" yprob="0.675675675675676 0.324324324324324">
 																		<True/>
 																	</Node>
@@ -4436,7 +4463,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																				<Node id="7957" score="VTX" recordCount="193" group="2" deviance="250.46693068776" risk="68" yprob="0.352331606217617 0.647668393782383">
 																					<SimplePredicate field="VtxDOCA" operator="greaterOrEqual" value="0.07939105" improvement="4.84491268530192"/>
 																					<Node id="15914" score="VTX" recordCount="126" group="1" deviance="172.092842384519" risk="54" yprob="0.428571428571429 0.571428571428571">
-																						<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.863914271415" improvement="4.55154886211399"/>
+																						<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.863914271415" improvement="4.55154886211399"/>
 																						<Node id="31828" score="VTX" recordCount="102" group="1" deviance="141.362806634708" risk="50" yprob="0.490196078431373 0.509803921568627">
 																							<SimplePredicate field="EvtTkr1EFrac" operator="lessThan" value="0.406298" improvement="3.05538236761637"/>
 																							<Node id="63656" score="1TKR" recordCount="24" group="1" deviance="28.9745880720157" risk="7" yprob="0.708333333333333 0.291666666666667">
@@ -4547,7 +4574,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 										<Node id="5" score="1TKR" recordCount="1188" group="2" deviance="1538.58068204045" risk="416" yprob="0.64983164983165 0.35016835016835">
 											<SimplePredicate field="EvtTkrComptonRatio" operator="greaterOrEqual" value="0.515625" improvement="10.794305306477"/>
 											<Node id="10" score="1TKR" recordCount="951" group="1" deviance="1188.782162185" risk="302" yprob="0.682439537329127 0.317560462670873">
-												<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.42134722860255" improvement="6.41748484193784"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.42134722860255" improvement="6.41748484193784"/>
 												<Node id="20" score="1TKR" recordCount="43" group="1" deviance="26.6150466625748" risk="4" yprob="0.906976744186046 0.0930232558139535">
 													<True/>
 												</Node>
@@ -4793,7 +4820,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															</Node>
 														</Node>
 														<Node id="123" score="VTX" recordCount="572" group="2" deviance="779.367994734705" risk="242" yprob="0.423076923076923 0.576923076923077">
-															<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="2.00806487755107" improvement="5.15493839961323"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="2.00806487755107" improvement="5.15493839961323"/>
 															<Node id="246" score="VTX" recordCount="541" group="1" deviance="741.666310358858" risk="237" yprob="0.438077634011091 0.561922365988909">
 																<SimplePredicate field="EvtEVtxAngle" operator="greaterOrEqual" value="2.976485" improvement="4.22615162233188"/>
 																<Node id="492" score="1TKR" recordCount="82" group="1" deviance="111.274143830281" risk="34" yprob="0.585365853658537 0.414634146341463">
@@ -4947,7 +4974,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<True/>
 												</Node>
 												<Node id="19" score="1TKR" recordCount="1131" group="2" deviance="1481.26910405712" risk="410" yprob="0.637488947833775 0.362511052166225">
-													<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.60984828031672" improvement="11.2862844408909"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.60984828031672" improvement="11.2862844408909"/>
 													<Node id="38" score="1TKR" recordCount="283" group="1" deviance="316.623147586947" risk="70" yprob="0.752650176678445 0.247349823321555">
 														<SimplePredicate field="EvtETkr1FirstChisq" operator="greaterOrEqual" value="0.384955" improvement="6.46038802001971"/>
 														<Node id="76" score="1TKR" recordCount="71" group="1" deviance="45.7207657830544" risk="7" yprob="0.901408450704225 0.0985915492957746">
@@ -5071,7 +5098,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																		</Node>
 																	</Node>
 																	<Node id="637" score="VTX" recordCount="69" group="2" deviance="95.5238350087942" risk="33" yprob="0.478260869565217 0.521739130434783">
-																		<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.23931963283541" improvement="2.82569890990554"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.23931963283541" improvement="2.82569890990554"/>
 																		<Node id="1274" score="1TKR" recordCount="20" group="1" deviance="24.4345720821957" risk="6" yprob="0.7 0.3">
 																			<True/>
 																		</Node>
@@ -5598,7 +5625,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																		<True/>
 																	</Node>
 																	<Node id="1019" score="VTX" recordCount="229" group="2" deviance="276.83465401416" risk="67" yprob="0.292576419213974 0.707423580786026">
-																		<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.91688133914476" improvement="6.11812451396489"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.91688133914476" improvement="6.11812451396489"/>
 																		<Node id="2038" score="VTX" recordCount="191" group="1" deviance="243.607894883292" risk="64" yprob="0.335078534031414 0.664921465968586">
 																			<SimplePredicate field="Tkr2FirstChisq" operator="greaterOrEqual" value="0.3116125" improvement="5.63974818710805"/>
 																			<Node id="4076" score="VTX" recordCount="125" group="1" deviance="169.742009185442" risk="52" yprob="0.416 0.584">
@@ -6966,7 +6993,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 							<Property name="EvtETkr1Qual" value="true" />
 							<Property name="EvtTkr1PSFMdRat" value="true" />
 							<Property name="EvtECalTrackAngle" value="true" />
-							<Property name="BestLogEnergy" value="true" />
+							<Property name="CTBBestLogEnergy" value="true" />
 							<Property name="GltLayer" value="true" />
 							<Property name="GltTower" value="true" />
 						</Property>
@@ -7013,7 +7040,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<ColumnInfo name="EvtETkr1Qual" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtTkr1PSFMdRat" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtECalTrackAngle" type="continuous" role="independent"/>
-								<ColumnInfo name="BestLogEnergy" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBBestLogEnergy" type="continuous" role="independent"/>
 								<ColumnInfo name="GltLayer" type="continuous" role="independent"/>
 								<ColumnInfo name="GltTower" type="continuous" role="independent"/>
 							</ColumnDefinitions>
@@ -7041,7 +7068,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<MiningField name="EvtETkr1Qual"/>
 								<MiningField name="EvtTkr1PSFMdRat"/>
 								<MiningField name="EvtECalTrackAngle"/>
-								<MiningField name="BestLogEnergy"/>
+								<MiningField name="CTBBestLogEnergy"/>
 								<MiningField name="GltLayer"/>
 								<MiningField name="GltTower"/>
 							</MiningSchema>
@@ -7178,7 +7205,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																			<True/>
 																		</Node>
 																		<Node id="1833" score="CORE" recordCount="117" group="2" deviance="156.813149725811" risk="46" yprob="0.393162393162393 0.606837606837607">
-																			<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.27997140640795" improvement="3.41267040892375"/>
+																			<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.27997140640795" improvement="3.41267040892375"/>
 																			<Node id="3666" score="TAIL" recordCount="44" group="1" deviance="60.632812985946" risk="20" yprob="0.545454545454545 0.454545454545455">
 																				<True/>
 																			</Node>
@@ -7343,7 +7370,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												<True/>
 											</Node>
 											<Node id="9" score="TAIL" recordCount="191" group="2" deviance="184.893299700006" risk="36" yprob="0.81151832460733 0.18848167539267">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.67400105110271" improvement="4.37805123946073"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.67400105110271" improvement="4.37805123946073"/>
 												<Node id="18" score="TAIL" recordCount="50" group="1" deviance="22.6967522500604" risk="3" yprob="0.94 0.06">
 													<True/>
 												</Node>
@@ -7379,7 +7406,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															<True/>
 														</Node>
 														<Node id="85" score="TAIL" recordCount="94" group="2" deviance="99.8623982747119" risk="21" yprob="0.776595744680851 0.223404255319149">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.5374970562145" improvement="2.38417486835523"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.5374970562145" improvement="2.38417486835523"/>
 															<Node id="170" score="TAIL" recordCount="31" group="1" deviance="19.712080376259" risk="3" yprob="0.903225806451613 0.0967741935483871">
 																<True/>
 															</Node>
@@ -7406,7 +7433,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															</Node>
 														</Node>
 														<Node id="87" score="CORE" recordCount="121" group="2" deviance="167.534947285694" risk="58" yprob="0.479338842975207 0.520661157024793">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.22344847074729" improvement="7.40659345605359"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.22344847074729" improvement="7.40659345605359"/>
 															<Node id="174" score="TAIL" recordCount="40" group="1" deviance="47.0535021883353" risk="11" yprob="0.725 0.275">
 																<True/>
 															</Node>
@@ -7495,7 +7522,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 										</Node>
 									</Node>
 									<Node id="3" score="CORE" recordCount="938" group="2" deviance="1198.66834998121" risk="316" yprob="0.336886993603412 0.663113006396588">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.02729452257072" improvement="62.0690517781479"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.02729452257072" improvement="62.0690517781479"/>
 										<Node id="6" score="CORE" recordCount="575" group="1" deviance="794.736742296307" risk="269" yprob="0.467826086956522 0.532173913043478">
 											<SimplePredicate field="EvtTkr1PSFMdRat" operator="greaterOrEqual" value="0.478581" improvement="16.7877712571017"/>
 											<Node id="12" score="TAIL" recordCount="207" group="1" deviance="273.240588327944" risk="77" yprob="0.628019323671498 0.371980676328502">
@@ -7505,7 +7532,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="48" score="TAIL" recordCount="153" group="1" deviance="171.523066283332" risk="38" yprob="0.751633986928105 0.248366013071895">
 														<SimplePredicate field="EvtTkr1EFrac" operator="lessThan" value="0.5906485" improvement="8.06405150848802"/>
 														<Node id="96" score="TAIL" recordCount="102" group="1" deviance="85.1849352310274" risk="15" yprob="0.852941176470588 0.147058823529412">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.78295083948207" improvement="5.21423555827031"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.78295083948207" improvement="5.21423555827031"/>
 															<Node id="192" score="TAIL" recordCount="82" group="1" deviance="47.8359974341166" risk="7" yprob="0.914634146341463 0.0853658536585366">
 																<True/>
 															</Node>
@@ -7607,7 +7634,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 									<Node id="2" score="TAIL" recordCount="649" group="1" deviance="720.423502351168" risk="158" yprob="0.756548536209553 0.243451463790447">
 										<SimplePredicate field="Tkr1FirstChisq" operator="greaterOrEqual" value="2.84575" improvement="31.3018579576179"/>
 										<Node id="4" score="TAIL" recordCount="199" group="1" deviance="90.6629379418206" risk="12" yprob="0.939698492462312 0.0603015075376884">
-											<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.62399907004095" improvement="4.93154551043259"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.62399907004095" improvement="4.93154551043259"/>
 											<Node id="8" score="TAIL" recordCount="149" group="1" deviance="36.8328589808211" risk="4" yprob="0.973154362416107 0.0268456375838926">
 												<True/>
 											</Node>
@@ -7757,7 +7784,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											</Node>
 										</Node>
 										<Node id="7" score="CORE" recordCount="915" group="2" deviance="1036.15292082734" risk="232" yprob="0.253551912568306 0.746448087431694">
-											<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.55430059771889" improvement="26.9349149578272"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.55430059771889" improvement="26.9349149578272"/>
 											<Node id="14" score="CORE" recordCount="313" group="1" deviance="421.945534022748" risk="126" yprob="0.402555910543131 0.597444089456869">
 												<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="2.5" improvement="10.9224736738056"/>
 												<Node id="28" score="TAIL" recordCount="113" group="1" deviance="154.084004895399" risk="48" yprob="0.575221238938053 0.424778761061947">
@@ -7793,7 +7820,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														</Node>
 													</Node>
 													<Node id="59" score="CORE" recordCount="117" group="2" deviance="123.951250579491" risk="26" yprob="0.222222222222222 0.777777777777778">
-														<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.3333618175092" improvement="4.33581164424545"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.3333618175092" improvement="4.33581164424545"/>
 														<Node id="118" score="CORE" recordCount="24" group="1" deviance="33.1042045611373" risk="11" yprob="0.458333333333333 0.541666666666667">
 															<True/>
 														</Node>
@@ -7818,7 +7845,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														<Node id="120" score="CORE" recordCount="111" group="1" deviance="153.148142686805" risk="51" yprob="0.459459459459459 0.540540540540541">
 															<SimplePredicate field="EvtETkrComptonRatio" operator="greaterOrEqual" value="0.328582" improvement="4.79015150989741"/>
 															<Node id="240" score="TAIL" recordCount="83" group="1" deviance="114.471368675701" risk="38" yprob="0.542168674698795 0.457831325301205">
-																<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.10284430041371" improvement="4.17866166500418"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.10284430041371" improvement="4.17866166500418"/>
 																<Node id="480" score="TAIL" recordCount="53" group="1" deviance="67.923195248004" risk="18" yprob="0.660377358490566 0.339622641509434">
 																	<True/>
 																</Node>
@@ -8050,7 +8077,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														</Node>
 													</Node>
 													<Node id="59" score="CORE" recordCount="237" group="2" deviance="297.376833649533" risk="76" yprob="0.320675105485232 0.679324894514768">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.30280078224218" improvement="3.48392610206901"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.30280078224218" improvement="3.48392610206901"/>
 														<Node id="118" score="CORE" recordCount="61" group="1" deviance="84.1536598025449" risk="28" yprob="0.459016393442623 0.540983606557377">
 															<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="2.5" improvement="2.82686497281662"/>
 															<Node id="236" score="TAIL" recordCount="25" group="1" deviance="32.6709097396851" risk="9" yprob="0.64 0.36">
@@ -8097,13 +8124,13 @@ get("Pr(VTX)") &gt; .5</Complex>
 												</Node>
 											</Node>
 											<Node id="15" score="CORE" recordCount="501" group="2" deviance="443.324592757072" risk="81" yprob="0.161676646706587 0.838323353293413">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.28887043743061" improvement="24.7523125764026"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.28887043743061" improvement="24.7523125764026"/>
 												<Node id="30" score="CORE" recordCount="227" group="1" deviance="271.875750234832" risk="65" yprob="0.286343612334802 0.713656387665198">
 													<SimplePredicate field="Tkr1Gaps" operator="lessThan" value="2.5" improvement="6.78697323462367"/>
 													<Node id="60" score="CORE" recordCount="166" group="1" deviance="214.828211452156" risk="58" yprob="0.349397590361446 0.650602409638554">
 														<SimplePredicate field="EvtETkr1FirstChisq" operator="greaterOrEqual" value="0.1461005" improvement="4.85494570635133"/>
 														<Node id="120" score="CORE" recordCount="123" group="1" deviance="166.911215745422" risk="51" yprob="0.414634146341463 0.585365853658537">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.33620633139892" improvement="8.76255168076965"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.33620633139892" improvement="8.76255168076965"/>
 															<Node id="240" score="TAIL" recordCount="48" group="1" deviance="62.3988366711671" risk="17" yprob="0.645833333333333 0.354166666666667">
 																<True/>
 															</Node>
@@ -8180,7 +8207,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															<True/>
 														</Node>
 														<Node id="89" score="TAIL" recordCount="67" group="2" deviance="73.6597573488352" risk="16" yprob="0.761194029850746 0.238805970149254">
-															<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.16198728516995" improvement="2.51315743343373"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.16198728516995" improvement="2.51315743343373"/>
 															<Node id="178" score="TAIL" recordCount="23" group="1" deviance="13.5902028261173" risk="2" yprob="0.91304347826087 0.0869565217391304">
 																<True/>
 															</Node>
@@ -8311,7 +8338,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<Node id="14" score="CORE" recordCount="505" group="1" deviance="654.23008113698" risk="177" yprob="0.35049504950495 0.64950495049505">
 												<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="2.5" improvement="9.73979937035017"/>
 												<Node id="28" score="CORE" recordCount="154" group="1" deviance="213.463356856299" risk="76" yprob="0.493506493506494 0.506493506493506">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.65887892804527" improvement="9.58165512301733"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.65887892804527" improvement="9.58165512301733"/>
 													<Node id="56" score="TAIL" recordCount="117" group="1" deviance="158.406706061096" risk="48" yprob="0.58974358974359 0.41025641025641">
 														<SimplePredicate field="EvtETkrComptonRatio" operator="lessThan" value="2.34124" improvement="5.76295208675634"/>
 														<Node id="112" score="TAIL" recordCount="97" group="1" deviance="124.387396102831" risk="33" yprob="0.65979381443299 0.34020618556701">
@@ -8362,7 +8389,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														<Node id="119" score="CORE" recordCount="167" group="2" deviance="147.774864252357" risk="27" yprob="0.161676646706587 0.838323353293413">
 															<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="0.980746" improvement="5.45502438817994"/>
 															<Node id="238" score="CORE" recordCount="139" group="1" deviance="136.864815475997" risk="27" yprob="0.194244604316547 0.805755395683453">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.48694845149596" improvement="6.04829887354376"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.48694845149596" improvement="6.04829887354376"/>
 																<Node id="476" score="CORE" recordCount="47" group="1" deviance="61.5127779631048" risk="17" yprob="0.361702127659574 0.638297872340426">
 																	<True/>
 																</Node>
@@ -8425,7 +8452,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="39" score="TAIL" recordCount="150" group="2" deviance="179.742007704382" risk="43" yprob="0.713333333333333 0.286666666666667">
 														<SimplePredicate field="TkrTrackLength" operator="lessThan" value="832.231" improvement="2.44758369578059"/>
 														<Node id="78" score="TAIL" recordCount="119" group="1" deviance="132.162492561881" risk="29" yprob="0.756302521008403 0.243697478991597">
-															<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.86318077733494" improvement="3.43050087847312"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.86318077733494" improvement="3.43050087847312"/>
 															<Node id="156" score="TAIL" recordCount="21" group="1" deviance="8.04065144222413" risk="1" yprob="0.952380952380952 0.0476190476190476">
 																<True/>
 															</Node>
@@ -8457,7 +8484,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<True/>
 												</Node>
 												<Node id="23" score="CORE" recordCount="177" group="2" deviance="244.69004537014" risk="83" yprob="0.468926553672316 0.531073446327684">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.64844789133446" improvement="10.0975738165532"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.64844789133446" improvement="10.0975738165532"/>
 													<Node id="46" score="TAIL" recordCount="128" group="1" deviance="174.906018780185" risk="55" yprob="0.5703125 0.4296875">
 														<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.7478005" improvement="5.44928894532669"/>
 														<Node id="92" score="TAIL" recordCount="56" group="1" deviance="65.0849738595172" risk="15" yprob="0.732142857142857 0.267857142857143">
@@ -8481,7 +8508,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 										</Node>
 									</Node>
 									<Node id="3" score="CORE" recordCount="1323" group="2" deviance="1794.22915507417" risk="547" yprob="0.413454270597128 0.586545729402872">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.86612751896925" improvement="82.4433318413064"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.86612751896925" improvement="82.4433318413064"/>
 										<Node id="6" score="TAIL" recordCount="745" group="1" deviance="1020.64215939819" risk="325" yprob="0.563758389261745 0.436241610738255">
 											<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="2.5" improvement="22.4103878977466"/>
 											<Node id="12" score="TAIL" recordCount="278" group="1" deviance="329.983815629203" risk="78" yprob="0.719424460431655 0.280575539568345">
@@ -8777,7 +8804,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<Node id="14" score="CORE" recordCount="735" group="1" deviance="934.283406405568" risk="244" yprob="0.331972789115646 0.668027210884354">
 												<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="3.5" improvement="17.6201954824353"/>
 												<Node id="28" score="TAIL" recordCount="91" group="1" deviance="121.262676519471" risk="35" yprob="0.615384615384615 0.384615384615385">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.79365025449992" improvement="6.57732331724116"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.79365025449992" improvement="6.57732331724116"/>
 													<Node id="56" score="TAIL" recordCount="30" group="1" deviance="23.5604680336531" risk="4" yprob="0.866666666666667 0.133333333333333">
 														<True/>
 													</Node>
@@ -8811,7 +8838,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																		<True/>
 																	</Node>
 																	<Node id="939" score="CORE" recordCount="225" group="2" deviance="278.994060860112" risk="70" yprob="0.311111111111111 0.688888888888889">
-																		<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.99061199605027" improvement="4.86675262932246"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.99061199605027" improvement="4.86675262932246"/>
 																		<Node id="1878" score="CORE" recordCount="56" group="1" deviance="77.5610404588874" risk="27" yprob="0.482142857142857 0.517857142857143">
 																			<True/>
 																		</Node>
@@ -8934,7 +8961,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														<True/>
 													</Node>
 													<Node id="35" score="TAIL" recordCount="204" group="2" deviance="199.073142703136" risk="39" yprob="0.808823529411765 0.191176470588235">
-														<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.84737912577817" improvement="6.19798143675084"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.84737912577817" improvement="6.19798143675084"/>
 														<Node id="70" score="TAIL" recordCount="27" group="1" deviance="0" risk="0" yprob="1 0">
 															<True/>
 														</Node>
@@ -9008,7 +9035,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												</Node>
 											</Node>
 											<Node id="11" score="CORE" recordCount="207" group="2" deviance="286.726172639397" risk="100" yprob="0.483091787439614 0.516908212560386">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.47896593787457" improvement="8.77998249868895"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.47896593787457" improvement="8.77998249868895"/>
 												<Node id="22" score="TAIL" recordCount="112" group="1" deviance="149.173839586033" risk="43" yprob="0.616071428571429 0.383928571428571">
 													<SimplePredicate field="GltTower" operator="lessThan" value="10.5" improvement="3.59833522164175"/>
 													<Node id="44" score="TAIL" recordCount="90" group="1" deviance="113.135971091088" risk="29" yprob="0.677777777777778 0.322222222222222">
@@ -9049,7 +9076,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 										</Node>
 									</Node>
 									<Node id="3" score="CORE" recordCount="1222" group="2" deviance="1643.36978777857" risk="487" yprob="0.398527004909984 0.601472995090016">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.73415896070694" improvement="83.2212317283423"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.73415896070694" improvement="83.2212317283423"/>
 										<Node id="6" score="TAIL" recordCount="636" group="1" deviance="869.467960906115" risk="274" yprob="0.569182389937107 0.430817610062893">
 											<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="2.5" improvement="21.5150980222032"/>
 											<Node id="12" score="TAIL" recordCount="284" group="1" deviance="341.375260974141" risk="82" yprob="0.711267605633803 0.288732394366197">
@@ -9128,7 +9155,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="55" score="CORE" recordCount="106" group="2" deviance="113.400547543719" risk="24" yprob="0.226415094339623 0.773584905660377">
 														<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="0.9753795" improvement="7.12828203623393"/>
 														<Node id="110" score="CORE" recordCount="82" group="1" deviance="99.1439834712515" risk="24" yprob="0.292682926829268 0.707317073170732">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.74142700337664" improvement="5.94459100827711"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.74142700337664" improvement="5.94459100827711"/>
 															<Node id="220" score="TAIL" recordCount="31" group="1" deviance="42.9428615333398" risk="15" yprob="0.516129032258065 0.483870967741936">
 																<True/>
 															</Node>
@@ -9199,7 +9226,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<Node id="15" score="CORE" recordCount="255" group="2" deviance="84.3761830040002" risk="10" yprob="0.0392156862745098 0.96078431372549">
 												<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="1.586895" improvement="9.36860950754087"/>
 												<Node id="30" score="CORE" recordCount="103" group="1" deviance="65.6389639889184" risk="10" yprob="0.0970873786407767 0.902912621359223">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.42748496784372" improvement="4.74781463182395"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.42748496784372" improvement="4.74781463182395"/>
 													<Node id="60" score="CORE" recordCount="66" group="1" deviance="56.1433347252705" risk="10" yprob="0.151515151515152 0.848484848484849">
 														<SimplePredicate field="EvtETkr1Chisq" operator="lessThan" value="0.3000165" improvement="4.23488840504082"/>
 														<Node id="120" score="CORE" recordCount="45" group="1" deviance="47.6735579151889" risk="10" yprob="0.222222222222222 0.777777777777778">
@@ -9225,7 +9252,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Node id="1" score="TAIL" recordCount="2000" group="0" deviance="2771.43661162229" risk="976" yprob="0.512 0.488">
 									<SimplePredicate field="Tkr1FirstChisq" operator="greaterOrEqual" value="5.359425" improvement="109.530980581883"/>
 									<Node id="2" score="TAIL" recordCount="440" group="1" deviance="423.198184868591" risk="82" yprob="0.813636363636364 0.186363636363636">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.79520850118221" improvement="13.3957335950266"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.79520850118221" improvement="13.3957335950266"/>
 										<Node id="4" score="TAIL" recordCount="88" group="1" deviance="19.0909556703212" risk="2" yprob="0.977272727272727 0.0227272727272727">
 											<True/>
 										</Node>
@@ -9327,7 +9354,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																</Node>
 															</Node>
 															<Node id="203" score="TAIL" recordCount="64" group="2" deviance="87.1539183701316" risk="27" yprob="0.578125 0.421875">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.41916239932939" improvement="2.0530796658286"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.41916239932939" improvement="2.0530796658286"/>
 																<Node id="406" score="TAIL" recordCount="40" group="1" deviance="50.4464822708812" risk="13" yprob="0.675 0.325">
 																	<True/>
 																</Node>
@@ -9389,7 +9416,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											</Node>
 										</Node>
 										<Node id="7" score="CORE" recordCount="903" group="2" deviance="1035.40073997836" risk="235" yprob="0.260243632336656 0.739756367663344">
-											<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.10074909599147" improvement="34.2559377221109"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.10074909599147" improvement="34.2559377221109"/>
 											<Node id="14" score="TAIL" recordCount="193" group="1" deviance="267.549630325805" risk="96" yprob="0.50259067357513 0.49740932642487">
 												<SimplePredicate field="TkrHDCount" operator="greaterOrEqual" value="3.5" improvement="12.6129578104203"/>
 												<Node id="28" score="TAIL" recordCount="42" group="1" deviance="37.8471415447696" risk="7" yprob="0.833333333333333 0.166666666666667">
@@ -9422,7 +9449,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												<Node id="30" score="CORE" recordCount="306" group="1" deviance="380.694066731696" risk="96" yprob="0.313725490196078 0.686274509803922">
 													<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="4.069725" improvement="7.02185445228352"/>
 													<Node id="60" score="CORE" recordCount="143" group="1" deviance="194.524675893446" risk="60" yprob="0.41958041958042 0.58041958041958">
-														<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="3.75622295905661" improvement="3.62536940650972"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="3.75622295905661" improvement="3.62536940650972"/>
 														<Node id="120" score="CORE" recordCount="111" group="1" deviance="153.653372631429" risk="53" yprob="0.477477477477477 0.522522522522523">
 															<SimplePredicate field="EvtECalTrackAngle" operator="lessThan" value="0.377505" improvement="3.34244275401315"/>
 															<Node id="240" score="TAIL" recordCount="35" group="1" deviance="45.0038707766061" risk="12" yprob="0.657142857142857 0.342857142857143">
@@ -9469,7 +9496,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="62" score="CORE" recordCount="305" group="1" deviance="244.472914869214" risk="42" yprob="0.137704918032787 0.862295081967213">
 														<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.6341565" improvement="7.11493755163632"/>
 														<Node id="124" score="CORE" recordCount="95" group="1" deviance="107.389483007535" risk="24" yprob="0.252631578947368 0.747368421052632">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.6773740194706" improvement="5.34703023406789"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.6773740194706" improvement="5.34703023406789"/>
 															<Node id="248" score="TAIL" recordCount="20" group="1" deviance="27.5255525485435" risk="9" yprob="0.55 0.45">
 																<True/>
 															</Node>
@@ -9528,7 +9555,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												</Node>
 											</Node>
 											<Node id="11" score="CORE" recordCount="71" group="2" deviance="93.2798984834209" risk="26" yprob="0.366197183098592 0.633802816901408">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.28485037373604" improvement="5.81937186469479"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.28485037373604" improvement="5.81937186469479"/>
 												<Node id="22" score="TAIL" recordCount="28" group="1" deviance="37.5205028703359" risk="11" yprob="0.607142857142857 0.392857142857143">
 													<True/>
 												</Node>
@@ -9654,7 +9681,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 							<Property name="EvtETkr1Qual" value="true" />
 							<Property name="EvtTkr1PSFMdRat" value="true" />
 							<Property name="EvtECalTrackAngle" value="true" />
-							<Property name="BestLogEnergy" value="true" />
+							<Property name="CTBBestLogEnergy" value="true" />
 							<Property name="GltLayer" value="true" />
 							<Property name="GltTower" value="true" />
 						</Property>
@@ -9701,7 +9728,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<ColumnInfo name="EvtETkr1Qual" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtTkr1PSFMdRat" type="continuous" role="independent"/>
 								<ColumnInfo name="EvtECalTrackAngle" type="continuous" role="independent"/>
-								<ColumnInfo name="BestLogEnergy" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBBestLogEnergy" type="continuous" role="independent"/>
 								<ColumnInfo name="GltLayer" type="continuous" role="independent"/>
 								<ColumnInfo name="GltTower" type="continuous" role="independent"/>
 							</ColumnDefinitions>
@@ -9729,7 +9756,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<MiningField name="EvtETkr1Qual"/>
 								<MiningField name="EvtTkr1PSFMdRat"/>
 								<MiningField name="EvtECalTrackAngle"/>
-								<MiningField name="BestLogEnergy"/>
+								<MiningField name="CTBBestLogEnergy"/>
 								<MiningField name="GltLayer"/>
 								<MiningField name="GltTower"/>
 							</MiningSchema>
@@ -9810,7 +9837,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															</Node>
 														</Node>
 														<Node id="119" score="CORE" recordCount="176" group="2" deviance="223.117405656148" risk="58" yprob="0.329545454545455 0.670454545454545">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.24765406222779" improvement="6.76190267035867"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.24765406222779" improvement="6.76190267035867"/>
 															<Node id="238" score="TAIL" recordCount="50" group="1" deviance="68.9943758458399" risk="23" yprob="0.54 0.46">
 																<True/>
 															</Node>
@@ -9840,7 +9867,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												</Node>
 											</Node>
 											<Node id="15" score="CORE" recordCount="1111" group="2" deviance="1273.62524937791" risk="289" yprob="0.26012601260126 0.73987398739874">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.05190998112454" improvement="24.5973327696761"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.05190998112454" improvement="24.5973327696761"/>
 												<Node id="30" score="CORE" recordCount="451" group="1" deviance="595.568699085848" risk="168" yprob="0.372505543237251 0.627494456762749">
 													<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.3879635" improvement="12.51707695815"/>
 													<Node id="60" score="TAIL" recordCount="70" group="1" deviance="91.2459185641714" risk="25" yprob="0.642857142857143 0.357142857142857">
@@ -9878,7 +9905,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																	<Node id="984" score="CORE" recordCount="157" group="1" deviance="210.659909729675" risk="62" yprob="0.394904458598726 0.605095541401274">
 																		<SimplePredicate field="EvtTkr1EFrac" operator="lessThan" value="0.836256" improvement="3.20803621061029"/>
 																		<Node id="1968" score="CORE" recordCount="106" group="1" deviance="146.342854203778" risk="49" yprob="0.462264150943396 0.537735849056604">
-																			<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.29062294187557" improvement="3.90937603686368"/>
+																			<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.29062294187557" improvement="3.90937603686368"/>
 																			<Node id="3936" score="TAIL" recordCount="56" group="1" deviance="75.8371563728081" risk="23" yprob="0.589285714285714 0.410714285714286">
 																				<True/>
 																			</Node>
@@ -9947,7 +9974,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														<Node id="127" score="CORE" recordCount="441" group="2" deviance="315.896909089757" risk="51" yprob="0.115646258503401 0.884353741496599">
 															<SimplePredicate field="TkrRadLength" operator="lessThan" value="0.733999" improvement="7.68428040791738"/>
 															<Node id="254" score="CORE" recordCount="327" group="1" deviance="272.782480463324" risk="48" yprob="0.146788990825688 0.853211009174312">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.92777211650746" improvement="5.25168563527552"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.92777211650746" improvement="5.25168563527552"/>
 																<Node id="508" score="CORE" recordCount="265" group="1" deviance="244.608381636074" risk="46" yprob="0.173584905660377 0.826415094339623">
 																	<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.740522" improvement="5.24283959943573"/>
 																	<Node id="1016" score="CORE" recordCount="99" group="1" deviance="116.018618424103" risk="27" yprob="0.272727272727273 0.727272727272727">
@@ -10078,7 +10105,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<Node id="13" score="TAIL" recordCount="166" group="2" deviance="217.209510315962" risk="60" yprob="0.63855421686747 0.36144578313253">
 												<SimplePredicate field="EvtETkr1FirstChisq" operator="greaterOrEqual" value="1.400905" improvement="6.90303280102087"/>
 												<Node id="26" score="TAIL" recordCount="127" group="1" deviance="151.433726205576" risk="36" yprob="0.716535433070866 0.283464566929134">
-													<SimplePredicate field="BestLogEnergy" operator="greaterOrEqual" value="4.26320757407897" improvement="4.08563382480642"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="greaterOrEqual" value="4.26320757407897" improvement="4.08563382480642"/>
 													<Node id="52" score="TAIL" recordCount="31" group="1" deviance="19.712080376259" risk="3" yprob="0.903225806451613 0.0967741935483871">
 														<True/>
 													</Node>
@@ -10103,7 +10130,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												<True/>
 											</Node>
 											<Node id="15" score="CORE" recordCount="1179" group="2" deviance="1304.13008270375" risk="285" yprob="0.241730279898219 0.758269720101781">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.0947930890229" improvement="19.6754662568076"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.0947930890229" improvement="19.6754662568076"/>
 												<Node id="30" score="CORE" recordCount="739" group="1" deviance="903.365237368434" risk="222" yprob="0.300405953991881 0.699594046008119">
 													<SimplePredicate field="EvtETkr1Qual" operator="lessThan" value="0.906369" improvement="14.8129458335509"/>
 													<Node id="60" score="TAIL" recordCount="92" group="1" deviance="126.449974169389" risk="41" yprob="0.554347826086957 0.445652173913043">
@@ -10415,7 +10442,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														</Node>
 													</Node>
 													<Node id="61" score="CORE" recordCount="171" group="2" deviance="211.716422113488" risk="53" yprob="0.309941520467836 0.690058479532164">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.59489753430416" improvement="5.248493540063"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.59489753430416" improvement="5.248493540063"/>
 														<Node id="122" score="CORE" recordCount="121" group="1" deviance="160.723086526968" risk="46" yprob="0.380165289256198 0.619834710743802">
 															<SimplePredicate field="EvtTkr1PSFMdRat" operator="greaterOrEqual" value="0.3637245" improvement="5.35322731072961"/>
 															<Node id="244" score="TAIL" recordCount="51" group="1" deviance="70.2100280353289" risk="23" yprob="0.549019607843137 0.450980392156863">
@@ -10464,7 +10491,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														<Node id="125" score="CORE" recordCount="188" group="2" deviance="197.202088041359" risk="41" yprob="0.218085106382979 0.781914893617021">
 															<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="0.261873" improvement="6.66678348151126"/>
 															<Node id="250" score="CORE" recordCount="163" group="1" deviance="183.868521078337" risk="41" yprob="0.251533742331288 0.748466257668712">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.56582787522177" improvement="10.3422463245972"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.56582787522177" improvement="10.3422463245972"/>
 																<Node id="500" score="CORE" recordCount="74" group="1" deviance="100.631217166492" risk="31" yprob="0.418918918918919 0.581081081081081">
 																	<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.8120795" improvement="5.10043646982267"/>
 																	<Node id="1000" score="TAIL" recordCount="39" group="1" deviance="52.8022353536985" risk="16" yprob="0.58974358974359 0.41025641025641">
@@ -10490,7 +10517,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														</Node>
 													</Node>
 													<Node id="63" score="CORE" recordCount="423" group="2" deviance="359.514353868529" risk="64" yprob="0.151300236406619 0.848699763593381">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.93010459760469" improvement="7.84508590027087"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.93010459760469" improvement="7.84508590027087"/>
 														<Node id="126" score="CORE" recordCount="378" group="1" deviance="343.824182067987" risk="64" yprob="0.169312169312169 0.830687830687831">
 															<SimplePredicate field="Tkr1DieEdge" operator="lessThan" value="7.130005" improvement="4.17800851807036"/>
 															<Node id="252" score="CORE" recordCount="92" group="1" deviance="107.636495935224" risk="25" yprob="0.271739130434783 0.728260869565217">
@@ -10681,7 +10708,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																	<True/>
 																</Node>
 																<Node id="489" score="CORE" recordCount="60" group="2" deviance="69.5898205701721" risk="16" yprob="0.266666666666667 0.733333333333333">
-																	<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.2599921547607" improvement="3.25068128701013"/>
+																	<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.2599921547607" improvement="3.25068128701013"/>
 																	<Node id="978" score="CORE" recordCount="33" group="1" deviance="44.2515248206281" risk="13" yprob="0.393939393939394 0.606060606060606">
 																		<True/>
 																	</Node>
@@ -10782,7 +10809,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																<Node id="508" score="CORE" recordCount="103" group="1" deviance="133.311997008076" risk="36" yprob="0.349514563106796 0.650485436893204">
 																	<SimplePredicate field="TkrRadLength" operator="lessThan" value="0.692373" improvement="5.07116937470378"/>
 																	<Node id="1016" score="CORE" recordCount="62" group="1" deviance="85.6920065495882" risk="29" yprob="0.467741935483871 0.532258064516129">
-																		<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.90083081521322" improvement="4.73841749875487"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.90083081521322" improvement="4.73841749875487"/>
 																		<Node id="2032" score="TAIL" recordCount="30" group="1" deviance="38.1908500976888" risk="10" yprob="0.666666666666667 0.333333333333333">
 																			<True/>
 																		</Node>
@@ -11078,7 +11105,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<Node id="63" score="CORE" recordCount="290" group="2" deviance="150.706270718528" risk="21" yprob="0.0724137931034483 0.927586206896552">
 														<SimplePredicate field="Tkr1PrjTwrEdge" operator="greaterOrEqual" value="82.70885" improvement="5.97756271612531"/>
 														<Node id="126" score="CORE" recordCount="91" group="1" deviance="78.1367899913722" risk="14" yprob="0.153846153846154 0.846153846153846">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.17132634915749" improvement="5.447830546688"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.17132634915749" improvement="5.447830546688"/>
 															<Node id="252" score="CORE" recordCount="64" group="1" deviance="67.2411288979961" risk="14" yprob="0.21875 0.78125">
 																<SimplePredicate field="EvtTkrComptonRatio" operator="lessThan" value="0.4833335" improvement="1.93979021778434"/>
 																<Node id="504" score="CORE" recordCount="31" group="1" deviance="38.9855624338144" risk="10" yprob="0.32258064516129 0.67741935483871">
@@ -11197,7 +11224,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 												</Node>
 											</Node>
 											<Node id="15" score="CORE" recordCount="1276" group="2" deviance="1538.4067253333" risk="371" yprob="0.290752351097179 0.709247648902821">
-												<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.59750971990929" improvement="17.126231811752"/>
+												<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.59750971990929" improvement="17.126231811752"/>
 												<Node id="30" score="CORE" recordCount="341" group="1" deviance="463.153644908252" risk="142" yprob="0.416422287390029 0.583577712609971">
 													<SimplePredicate field="Tkr1Chisq" operator="greaterOrEqual" value="0.810956" improvement="12.8845737238135"/>
 													<Node id="60" score="TAIL" recordCount="233" group="1" deviance="322.967958464172" risk="115" yprob="0.506437768240343 0.493562231759657">
@@ -11275,7 +11302,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 															</Node>
 														</Node>
 														<Node id="125" score="CORE" recordCount="269" group="2" deviance="285.537657437846" risk="60" yprob="0.223048327137546 0.776951672862453">
-															<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.84771860554785" improvement="6.72935550362985"/>
+															<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.84771860554785" improvement="6.72935550362985"/>
 															<Node id="250" score="CORE" recordCount="223" group="1" deviance="255.625214460637" risk="58" yprob="0.260089686098655 0.739910313901345">
 																<SimplePredicate field="Tkr1PrjTwrEdge" operator="lessThan" value="24.8784" improvement="6.38846606465694"/>
 																<Node id="500" score="CORE" recordCount="59" group="1" deviance="80.9588993469701" risk="26" yprob="0.440677966101695 0.559322033898305">
@@ -11583,7 +11610,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																<Node id="506" score="CORE" recordCount="236" group="1" deviance="248.902906439513" risk="52" yprob="0.220338983050847 0.779661016949153">
 																	<SimplePredicate field="TkrTrackLength" operator="greaterOrEqual" value="289.502" improvement="6.25123381333307"/>
 																	<Node id="1012" score="CORE" recordCount="66" group="1" deviance="87.5777252343249" risk="25" yprob="0.378787878787879 0.621212121212121">
-																		<SimplePredicate field="BestLogEnergy" operator="lessThan" value="2.59078950851544" improvement="2.94021621387277"/>
+																		<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="2.59078950851544" improvement="2.94021621387277"/>
 																		<Node id="2024" score="TAIL" recordCount="20" group="1" deviance="26.9204666803703" risk="8" yprob="0.6 0.4">
 																			<True/>
 																		</Node>
@@ -11650,7 +11677,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Node id="1" score="CORE" recordCount="2000" group="0" deviance="2750.07444939208" risk="894" yprob="0.447 0.553">
 									<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.647609" improvement="194.190875886808"/>
 									<Node id="2" score="TAIL" recordCount="639" group="1" deviance="701.128958474779" risk="152" yprob="0.762128325508607 0.237871674491393">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.15316261105125" improvement="66.3120914888995"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.15316261105125" improvement="66.3120914888995"/>
 										<Node id="4" score="TAIL" recordCount="221" group="1" deviance="22.8019076889796" risk="2" yprob="0.990950226244344 0.00904977375565611">
 											<True/>
 										</Node>
@@ -11746,9 +11773,9 @@ get("Pr(VTX)") &gt; .5</Complex>
 													<True/>
 												</Node>
 												<Node id="31" score="CORE" recordCount="1035" group="2" deviance="977.904199791219" risk="187" yprob="0.180676328502415 0.819323671497585">
-													<SimplePredicate field="BestLogEnergy" operator="lessThan" value="1.99252237187733" improvement="17.5499782543057"/>
+													<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="1.99252237187733" improvement="17.5499782543057"/>
 													<Node id="62" score="CORE" recordCount="72" group="1" deviance="99.5908573252077" risk="34" yprob="0.472222222222222 0.527777777777778">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="1.74324412201683" improvement="2.93166361594281"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="1.74324412201683" improvement="2.93166361594281"/>
 														<Node id="124" score="TAIL" recordCount="20" group="1" deviance="24.4345720821957" risk="6" yprob="0.7 0.3">
 															<True/>
 														</Node>
@@ -11835,7 +11862,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																	</Node>
 																</Node>
 																<Node id="509" score="CORE" recordCount="206" group="2" deviance="131.277927977837" risk="20" yprob="0.0970873786407767 0.902912621359223">
-																	<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.03933106653575" improvement="5.93614220518428"/>
+																	<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.03933106653575" improvement="5.93614220518428"/>
 																	<Node id="1018" score="CORE" recordCount="103" group="1" deviance="92.2771829217903" risk="17" yprob="0.16504854368932 0.83495145631068">
 																		<SimplePredicate field="EvtTkr1PSFMdRat" operator="greaterOrEqual" value="0.360708" improvement="5.69674484130042"/>
 																		<Node id="2036" score="CORE" recordCount="41" group="1" deviance="51.2207736059419" risk="13" yprob="0.317073170731707 0.682926829268293">
@@ -11895,7 +11922,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Node id="1" score="CORE" recordCount="2000" group="0" deviance="2760.40835376293" risk="922" yprob="0.461 0.539">
 									<SimplePredicate field="Tkr1ZDir" operator="greaterOrEqual" value="-0.657496" improvement="195.756509297034"/>
 									<Node id="2" score="TAIL" recordCount="658" group="1" deviance="708.865021264551" risk="151" yprob="0.770516717325228 0.229483282674772">
-										<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.13501040696297" improvement="60.9995750987156"/>
+										<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.13501040696297" improvement="60.9995750987156"/>
 										<Node id="4" score="TAIL" recordCount="217" group="1" deviance="22.7285106194246" risk="2" yprob="0.990783410138249 0.00921658986175115">
 											<True/>
 										</Node>
@@ -12039,7 +12066,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																</Node>
 															</Node>
 															<Node id="253" score="CORE" recordCount="283" group="2" deviance="226.947041724878" risk="39" yprob="0.137809187279152 0.862190812720848">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="4.49137398084657" improvement="7.44744919606052"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="4.49137398084657" improvement="7.44744919606052"/>
 																<Node id="506" score="CORE" recordCount="218" group="1" deviance="201.718832916362" risk="38" yprob="0.174311926605505 0.825688073394495">
 																	<SimplePredicate field="Tkr1PrjTwrEdge" operator="lessThan" value="129.027" improvement="4.68336804753726"/>
 																	<Node id="1012" score="CORE" recordCount="195" group="1" deviance="192.352096821287" risk="38" yprob="0.194871794871795 0.805128205128205">
@@ -12121,7 +12148,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 											<True/>
 										</Node>
 										<Node id="5" score="TAIL" recordCount="419" group="2" deviance="294.164928754785" risk="47" yprob="0.887828162291169 0.112171837708831">
-											<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.13051735951284" improvement="14.5529080865812"/>
+											<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.13051735951284" improvement="14.5529080865812"/>
 											<Node id="10" score="TAIL" recordCount="130" group="1" deviance="11.72735679314" risk="1" yprob="0.992307692307692 0.00769230769230769">
 												<True/>
 											</Node>
@@ -12241,7 +12268,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 														</Node>
 													</Node>
 													<Node id="63" score="CORE" recordCount="434" group="2" deviance="581.130060540807" risk="170" yprob="0.391705069124424 0.608294930875576">
-														<SimplePredicate field="BestLogEnergy" operator="lessThan" value="1.76302508666694" improvement="18.8537705513249"/>
+														<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="1.76302508666694" improvement="18.8537705513249"/>
 														<Node id="126" score="TAIL" recordCount="24" group="1" deviance="8.3138499239605" risk="1" yprob="0.958333333333333 0.0416666666666667">
 															<True/>
 														</Node>
@@ -12275,7 +12302,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 																</Node>
 															</Node>
 															<Node id="255" score="CORE" recordCount="242" group="2" deviance="287.44156742923" risk="68" yprob="0.28099173553719 0.71900826446281">
-																<SimplePredicate field="BestLogEnergy" operator="lessThan" value="3.30280340555009" improvement="5.55694495250148"/>
+																<SimplePredicate field="CTBBestLogEnergy" operator="lessThan" value="3.30280340555009" improvement="5.55694495250148"/>
 																<Node id="510" score="CORE" recordCount="78" group="1" deviance="106.27745382746" risk="33" yprob="0.423076923076923 0.576923076923077">
 																	<SimplePredicate field="Tkr1PrjTwrEdge" operator="lessThan" value="77.26385" improvement="3.23913520890058"/>
 																	<Node id="1020" score="TAIL" recordCount="49" group="1" deviance="67.7446353049835" risk="23" yprob="0.530612244897959 0.469387755102041">
@@ -12361,15 +12388,15 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="0." />
 							</Property>
-							<Property name="BestEnergy">
+							<Property name="CTBBestEnergy">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="EvtEnergyCorr" />
 							</Property>
-							<Property name="BestEnergyMethod">
+							<Property name="CTBBestEnergyMethod">
 								<Property name="type" value="categorical" />
 								<Property name="expression" value="&quot;Param&quot;" />
 							</Property>
-							<Property name="BestEnergyProb">
+							<Property name="CTBBestEnergyProb">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="0." />
 							</Property>
@@ -18423,13 +18450,13 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="BestDeltaEoE">
+							<Property name="CTBBestDeltaEoE">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="(BestEnergy - McEnergy)/McEnergy" />
+								<Property name="expression" value="(CTBBestEnergy - McEnergy)/McEnergy" />
 							</Property>
-							<Property name="BestLogEnergy">
+							<Property name="CTBBestLogEnergy">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="log(BestEnergy)/2.3026" />
+								<Property name="expression" value="log(CTBBestEnergy)/2.3026" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -18490,17 +18517,17 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="BestEnergy">
+							<Property name="CTBBestEnergy">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  CalTklEnergy, BestEnergy)" />
+								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  CalTklEnergy, CTBBestEnergy)" />
 							</Property>
-							<Property name="BestEnergyProb">
+							<Property name="CTBBestEnergyProb">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  TrackerProb, BestEnergyProb)" />
+								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  TrackerProb, CTBBestEnergyProb)" />
 							</Property>
-							<Property name="BestEnergyMethod">
+							<Property name="CTBBestEnergyMethod">
 								<Property name="type" value="categorical" />
-								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  &quot;Tracker&quot;, BestEnergyMethod)" />
+								<Property name="expression" value="ifelse(TrackerProb &gt; ParamProb &amp; TrackerProb &gt; LastLayerProb &amp; TrackerProb &gt; ParamProb,  &quot;Tracker&quot;, CTBBestEnergyMethod)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -18600,17 +18627,17 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="BestEnergy">
+							<Property name="CTBBestEnergy">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  CalLllEnergy, BestEnergy)" />
+								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  CalLllEnergy, CTBBestEnergy)" />
 							</Property>
-							<Property name="BestEnergyProb">
+							<Property name="CTBBestEnergyProb">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  LastLayerProb, BestEnergyProb)" />
+								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  LastLayerProb, CTBBestEnergyProb)" />
 							</Property>
-							<Property name="BestEnergyMethod">
+							<Property name="CTBBestEnergyMethod">
 								<Property name="type" value="categorical" />
-								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  &quot;LastLayer&quot;, BestEnergyMethod)" />
+								<Property name="expression" value="ifelse(LastLayerProb &gt; ParamProb &amp; LastLayerProb &gt; ProfileProb &amp; LastLayerProb &gt; TrackerProb,  &quot;LastLayer&quot;, CTBBestEnergyMethod)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -18644,17 +18671,17 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="BestEnergy">
+							<Property name="CTBBestEnergy">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  CalCfpEnergy, BestEnergy)" />
+								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  CalCfpEnergy, CTBBestEnergy)" />
 							</Property>
-							<Property name="BestEnergyProb">
+							<Property name="CTBBestEnergyProb">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  ProfileProb, BestEnergyProb)" />
+								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  ProfileProb, CTBBestEnergyProb)" />
 							</Property>
-							<Property name="BestEnergyMethod">
+							<Property name="CTBBestEnergyMethod">
 								<Property name="type" value="categorical" />
-								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  &quot;Profile&quot;, BestEnergyMethod)" />
+								<Property name="expression" value="ifelse(ProfileProb &gt; ParamProb &amp; ProfileProb &gt; LastLayerProb &amp; ProfileProb &gt; TrackerProb,  &quot;Profile&quot;, CTBBestEnergyMethod)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -18868,7 +18895,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="get(&quot;Pr(GoodEnergy)&quot;) " />
 							</Property>
-							<Property name="BestEnergyProb">
+							<Property name="CTBBestEnergyProb">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="get(&quot;Pr(GoodEnergy)&quot;) " />
 							</Property>
@@ -20665,7 +20692,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 						<Property name="useCache" value="global" />
 						<Property name="includeRows" value="true" />
 						<Property name="testExpression" complex="true">
-							<Complex>get("Pr(CORE)") &gt; .1
+							<Complex>CTBCORE &gt; .1
 
 </Complex>
 						</Property>
@@ -20693,7 +20720,7 @@ get("Pr(VTX)") &gt; .5</Complex>
 				</ComponentComments>
 			</ActivityNode>
 			<ActivityNode engineClass="com.insightful.miner.WriteTextFileEngineNode" guiClass="com.insightful.miner.WriteTextFileNodeModel" numInputs="1" numOutputs="0" id="1470">
-				<DisplayInfo labelText="Write Text File " defaultLabelText="Write Text File" smallIcon="read_text_small.gif" largeIcon="read_text_large.gif" x="1740" y="1030" />
+				<DisplayInfo labelText="Write Text File " defaultLabelText="Write Text File" smallIcon="read_text_small.gif" largeIcon="read_text_large.gif" x="1820" y="1030" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28236,10 +28263,6 @@ CalMIPRatio &gt; 1. |
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="CTBCalFrontBackRatio">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="(CalELayer0+CalELayer1+CalELayer2+CalELayer3)/max((CalELayer4+CalELayer5+CalELayer6+CalELayer7), 1)" />
-							</Property>
 							<Property name="CTBTkrCoreCalDoca">
 								<Property name="type" value="continuous" />
 								<Property name="expression" value="CalTrackDoca - 2.5*Tkr1CoreHC" />
@@ -28431,99 +28454,99 @@ CTBTkrCoreCalDoca &gt; 30
 				<ModelProperties>
 					<IMML version="3.0">
 						<Header copyright="Insightful" name="Event.Type">
-							<Application name="Insightful Miner" version="3.0" />
+							<Application name="Insightful Miner" version="3.0"/>
 							<Timestamp>2006/01/01 16:39:31</Timestamp>
 						</Header>
 						<XTMetaData>
 							<ColumnDefinitions fieldCount="31">
 								<ColumnInfo name="Event.Type" type="categorical" role="dependent">
-									<Level value="BKG" />
-									<Level value="GAM" />
+									<Level value="BKG"/>
+									<Level value="GAM"/>
 								</ColumnInfo>
-								<ColumnInfo name="TkrSumKalEne" type="continuous" role="independent" />
-								<ColumnInfo name="TkrHDCount" type="continuous" role="independent" />
-								<ColumnInfo name="TkrTotalHits" type="continuous" role="independent" />
-								<ColumnInfo name="TkrSurplusHitRatio" type="continuous" role="independent" />
-								<ColumnInfo name="TkrUpstreamHC" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1Chisq" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1FirstChisq" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1ToTFirst" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1ToTAve" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1ToTAsym" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1ChisqAsym" type="continuous" role="independent" />
-								<ColumnInfo name="Tkr1CoreHC" type="continuous" role="independent" />
-								<ColumnInfo name="VtxAngle" type="continuous" role="independent" />
-								<ColumnInfo name="VtxDOCA" type="continuous" role="independent" />
-								<ColumnInfo name="CalEnergyRaw" type="continuous" role="independent" />
-								<ColumnInfo name="CalTrackDoca" type="continuous" role="independent" />
-								<ColumnInfo name="CalLyr0Ratio" type="continuous" role="independent" />
-								<ColumnInfo name="AcdTotalEnergy" type="continuous" role="independent" />
-								<ColumnInfo name="AcdActiveDist3D" type="continuous" role="independent" />
-								<ColumnInfo name="CTBTkrLATEdge" type="continuous" role="independent" />
-								<ColumnInfo name="CTBTkrEnergyFrac" type="continuous" role="independent" />
-								<ColumnInfo name="CTBCalMaxXtalRatio" type="continuous" role="independent" />
-								<ColumnInfo name="CTBCalFrontBackRatio" type="continuous" role="independent" />
-								<ColumnInfo name="CTBTkrCoreCalDoca" type="continuous" role="independent" />
-								<ColumnInfo name="CTBTkrSHRCalAngle" type="continuous" role="independent" />
-								<ColumnInfo name="CTBBestEnergyProb" type="continuous" role="independent" />
-								<ColumnInfo name="CTBAcdLowerTileCount" type="continuous" role="independent" />
-								<ColumnInfo name="CTBAcdUpperTileCount" type="continuous" role="independent" />
-								<ColumnInfo name="CTBCalTransTCCD" type="continuous" role="independent" />
-								<ColumnInfo name="CTBCalDocaAngle" type="continuous" role="independent" />
+								<ColumnInfo name="TkrSumKalEne" type="continuous" role="independent"/>
+								<ColumnInfo name="TkrHDCount" type="continuous" role="independent"/>
+								<ColumnInfo name="TkrTotalHits" type="continuous" role="independent"/>
+								<ColumnInfo name="TkrSurplusHitRatio" type="continuous" role="independent"/>
+								<ColumnInfo name="TkrUpstreamHC" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1Chisq" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1FirstChisq" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1ToTFirst" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1ToTAve" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1ToTAsym" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1ChisqAsym" type="continuous" role="independent"/>
+								<ColumnInfo name="Tkr1CoreHC" type="continuous" role="independent"/>
+								<ColumnInfo name="VtxAngle" type="continuous" role="independent"/>
+								<ColumnInfo name="VtxDOCA" type="continuous" role="independent"/>
+								<ColumnInfo name="CalEnergyRaw" type="continuous" role="independent"/>
+								<ColumnInfo name="CalTrackDoca" type="continuous" role="independent"/>
+								<ColumnInfo name="CalLyr0Ratio" type="continuous" role="independent"/>
+								<ColumnInfo name="AcdTotalEnergy" type="continuous" role="independent"/>
+								<ColumnInfo name="AcdActiveDist3D" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBTkrLATEdge" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBTkrEnergyFrac" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBCalMaxXtalRatio" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBCalFrontBackRatio" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBTkrCoreCalDoca" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBTkrSHRCalAngle" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBBestEnergyProb" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBAcdLowerTileCount" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBAcdUpperTileCount" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBCalTransTCCD" type="continuous" role="independent"/>
+								<ColumnInfo name="CTBCalDocaAngle" type="continuous" role="independent"/>
 							</ColumnDefinitions>
 						</XTMetaData>
 						<TreeList modelType="classification">
 							<MiningSchema>
-								<MiningField name="Event.Type" usageType="predicted" />
-								<MiningField name="TkrSumKalEne" />
-								<MiningField name="TkrHDCount" />
-								<MiningField name="TkrTotalHits" />
-								<MiningField name="TkrSurplusHitRatio" />
-								<MiningField name="TkrUpstreamHC" />
-								<MiningField name="Tkr1Chisq" />
-								<MiningField name="Tkr1FirstChisq" />
-								<MiningField name="Tkr1ToTFirst" />
-								<MiningField name="Tkr1ToTAve" />
-								<MiningField name="Tkr1ToTAsym" />
-								<MiningField name="Tkr1ChisqAsym" />
-								<MiningField name="Tkr1CoreHC" />
-								<MiningField name="VtxAngle" />
-								<MiningField name="VtxDOCA" />
-								<MiningField name="CalEnergyRaw" />
-								<MiningField name="CalTrackDoca" />
-								<MiningField name="CalLyr0Ratio" />
-								<MiningField name="AcdTotalEnergy" />
-								<MiningField name="AcdActiveDist3D" />
-								<MiningField name="CTBTkrLATEdge" />
-								<MiningField name="CTBTkrEnergyFrac" />
-								<MiningField name="CTBCalMaxXtalRatio" />
-								<MiningField name="CTBCalFrontBackRatio" />
-								<MiningField name="CTBTkrCoreCalDoca" />
-								<MiningField name="CTBTkrSHRCalAngle" />
-								<MiningField name="CTBBestEnergyProb" />
-								<MiningField name="CTBAcdLowerTileCount" />
-								<MiningField name="CTBAcdUpperTileCount" />
-								<MiningField name="CTBCalTransTCCD" />
-								<MiningField name="CTBCalDocaAngle" />
+								<MiningField name="Event.Type" usageType="predicted"/>
+								<MiningField name="TkrSumKalEne"/>
+								<MiningField name="TkrHDCount"/>
+								<MiningField name="TkrTotalHits"/>
+								<MiningField name="TkrSurplusHitRatio"/>
+								<MiningField name="TkrUpstreamHC"/>
+								<MiningField name="Tkr1Chisq"/>
+								<MiningField name="Tkr1FirstChisq"/>
+								<MiningField name="Tkr1ToTFirst"/>
+								<MiningField name="Tkr1ToTAve"/>
+								<MiningField name="Tkr1ToTAsym"/>
+								<MiningField name="Tkr1ChisqAsym"/>
+								<MiningField name="Tkr1CoreHC"/>
+								<MiningField name="VtxAngle"/>
+								<MiningField name="VtxDOCA"/>
+								<MiningField name="CalEnergyRaw"/>
+								<MiningField name="CalTrackDoca"/>
+								<MiningField name="CalLyr0Ratio"/>
+								<MiningField name="AcdTotalEnergy"/>
+								<MiningField name="AcdActiveDist3D"/>
+								<MiningField name="CTBTkrLATEdge"/>
+								<MiningField name="CTBTkrEnergyFrac"/>
+								<MiningField name="CTBCalMaxXtalRatio"/>
+								<MiningField name="CTBCalFrontBackRatio"/>
+								<MiningField name="CTBTkrCoreCalDoca"/>
+								<MiningField name="CTBTkrSHRCalAngle"/>
+								<MiningField name="CTBBestEnergyProb"/>
+								<MiningField name="CTBAcdLowerTileCount"/>
+								<MiningField name="CTBAcdUpperTileCount"/>
+								<MiningField name="CTBCalTransTCCD"/>
+								<MiningField name="CTBCalDocaAngle"/>
 							</MiningSchema>
 							<TreeModel name="Event.Type" splitCharacteristic="binarySplit" criterion="entropy">
 								<Node id="1" score="BKG" recordCount="110" group="0" deviance="152.346893104668" entropy="152.346893104668" gini="0.499338842975207" risk="53" yprob="0.518181818181818 0.481818181818182">
-									<SimplePredicate field="CTBCalDocaAngle" operator="greaterOrEqual" value="51.57715" improvement="54.5596152806576" />
+									<SimplePredicate field="CTBCalDocaAngle" operator="greaterOrEqual" value="51.57715" improvement="54.5596152806576"/>
 									<Node id="2" score="BKG" recordCount="50" group="1" deviance="0" entropy="0" gini="0" risk="0" yprob="1 0">
-										<True />
+										<True/>
 									</Node>
 									<Node id="3" score="GAM" recordCount="60" group="2" deviance="43.2276625433528" entropy="43.2276625433528" gini="0.206111111111111" risk="7" yprob="0.116666666666667 0.883333333333333">
-										<SimplePredicate field="CTBTkrCoreCalDoca" operator="greaterOrEqual" value="-0.78905" improvement="13.7822189916293" />
+										<SimplePredicate field="CTBTkrCoreCalDoca" operator="greaterOrEqual" value="-0.78905" improvement="13.7822189916293"/>
 										<Node id="6" score="BKG" recordCount="7" group="1" deviance="5.74162845603773" entropy="5.74162845603773" gini="0.244897959183674" risk="1" yprob="0.857142857142857 0.142857142857143">
-											<True />
+											<True/>
 										</Node>
 										<Node id="7" score="GAM" recordCount="53" group="2" deviance="9.92159610405647" entropy="9.92159610405647" gini="0.0370238519045925" risk="1" yprob="0.0188679245283019 0.981132075471698">
-											<SimplePredicate field="TkrSumKalEne" operator="lessThan" value="713.3755" improvement="2.08998382400937" />
+											<SimplePredicate field="TkrSumKalEne" operator="lessThan" value="713.3755" improvement="2.08998382400937"/>
 											<Node id="14" score="GAM" recordCount="7" group="1" deviance="5.74162845603773" entropy="5.74162845603773" gini="0.244897959183674" risk="1" yprob="0.142857142857143 0.857142857142857">
-												<True />
+												<True/>
 											</Node>
 											<Node id="15" score="GAM" recordCount="46" group="2" deviance="0" entropy="0" gini="0" risk="0" yprob="0 1">
-												<True />
+												<True/>
 											</Node>
 										</Node>
 									</Node>
@@ -28531,23 +28554,23 @@ CTBTkrCoreCalDoca &gt; 30
 							</TreeModel>
 							<TreeModel name="Event.Type" splitCharacteristic="binarySplit" criterion="entropy">
 								<Node id="1" score="BKG" recordCount="95" group="0" deviance="131.6874377962" entropy="131.6874377962" gini="0.49994459833795" risk="47" yprob="0.505263157894737 0.494736842105263">
-									<SimplePredicate field="CTBTkrCoreCalDoca" operator="greaterOrEqual" value="-1.89563" improvement="49.7401731963479" />
+									<SimplePredicate field="CTBTkrCoreCalDoca" operator="greaterOrEqual" value="-1.89563" improvement="49.7401731963479"/>
 									<Node id="2" score="BKG" recordCount="46" group="1" deviance="9.63538439766796" entropy="9.63538439766796" gini="0.0425330812854443" risk="1" yprob="0.978260869565217 0.0217391304347826">
-										<SimplePredicate field="TkrTotalHits" operator="lessThan" value="28.5" improvement="1.94687797081512" />
+										<SimplePredicate field="TkrTotalHits" operator="lessThan" value="28.5" improvement="1.94687797081512"/>
 										<Node id="4" score="BKG" recordCount="39" group="1" deviance="0" entropy="0" gini="0" risk="0" yprob="1 0">
-											<True />
+											<True/>
 										</Node>
 										<Node id="5" score="BKG" recordCount="7" group="2" deviance="5.74162845603773" entropy="5.74162845603773" gini="0.244897959183674" risk="1" yprob="0.857142857142857 0.142857142857143">
-											<True />
+											<True/>
 										</Node>
 									</Node>
 									<Node id="3" score="GAM" recordCount="49" group="2" deviance="22.571707005836" entropy="22.571707005836" gini="0.114952103290296" risk="3" yprob="0.0612244897959184 0.938775510204082">
-										<SimplePredicate field="CTBCalTransTCCD" operator="greaterOrEqual" value="37.8639715" improvement="6.5054967700147" />
+										<SimplePredicate field="CTBCalTransTCCD" operator="greaterOrEqual" value="37.8639715" improvement="6.5054967700147"/>
 										<Node id="6" score="GAM" recordCount="7" group="1" deviance="9.5607134658066" entropy="9.5607134658066" gini="0.489795918367347" risk="3" yprob="0.428571428571429 0.571428571428571">
-											<True />
+											<True/>
 										</Node>
 										<Node id="7" score="GAM" recordCount="42" group="2" deviance="0" entropy="0" gini="0" risk="0" yprob="0 1">
-											<True />
+											<True/>
 										</Node>
 									</Node>
 								</Node>
@@ -28560,6 +28583,74 @@ CTBTkrCoreCalDoca &gt; 30
 						<AuthorName>atwood</AuthorName>
 						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
 						<AuthorCommentDateCreated>December 28, 2005</AuthorCommentDateCreated>
+						<AuthorCommentText>Not Provided</AuthorCommentText>
+					</AuthorComments>
+					<DiscussionComments>
+						<Comment>
+							<CommentAuthor>Not Provided</CommentAuthor>
+							<CommentDateCreated>Not Provided</CommentDateCreated>
+							<CommentTitle>Not Provided</CommentTitle>
+							<CommentText>Not Provided</CommentText>
+						</Comment>
+					</DiscussionComments>
+				</ComponentComments>
+			</ActivityNode>
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1616">
+				<DisplayInfo labelText="CTBGAM" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1660" y="1030" />
+				<ArgumentList>
+					<XTProps>
+						<Property name="useGlobal" value="true" />
+						<Property name="useCache" value="global" />
+						<Property name="stringSize" value="" />
+						<Property name="specifiedRowsToChunk" value="0" />
+						<Property name="rowsToChunk" value="10000" />
+						<Property name="randomSeed" value="newSeedEveryTime" />
+						<Property name="randomSeedValue" value="5" />
+						<Property name="newColumns">
+							<Property name="CTBGAM">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(GAM)&quot;)" />
+							</Property>
+						</Property>
+					</XTProps>
+				</ArgumentList>
+				<ComponentComments>
+					<AuthorComments>
+						<AuthorName>atwood</AuthorName>
+						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
+						<AuthorCommentDateCreated>January 05, 2006</AuthorCommentDateCreated>
+						<AuthorCommentText>Not Provided</AuthorCommentText>
+					</AuthorComments>
+					<DiscussionComments>
+						<Comment>
+							<CommentAuthor>Not Provided</CommentAuthor>
+							<CommentDateCreated>Not Provided</CommentDateCreated>
+							<CommentTitle>Not Provided</CommentTitle>
+							<CommentText>Not Provided</CommentText>
+						</Comment>
+					</DiscussionComments>
+				</ComponentComments>
+			</ActivityNode>
+			<ActivityNode engineClass="com.insightful.miner.FilterColumnsEngineNode" guiClass="com.insightful.miner.FilterColumnsNodeModel" numInputs="1" numOutputs="1" id="1617">
+				<DisplayInfo labelText="Delete IM Vars" defaultLabelText="Filter Columns" smallIcon="filter_cols_small.gif" largeIcon="filter_cols_large.gif" x="1718" y="971" />
+				<ArgumentList>
+					<XTProps>
+						<Property name="useGlobal" value="true" />
+						<Property name="useCache" value="global" />
+						<Property name="specifiedRowsToChunk" value="0" />
+						<Property name="rowsToChunk" value="10000" />
+						<Property name="excludeColumns">
+							<Property name="Pr(VTX)" value="true" />
+							<Property name="Pr(CORE)" value="true" />
+							<Property name="Pr(GAM)" value="true" />
+						</Property>
+					</XTProps>
+				</ArgumentList>
+				<ComponentComments>
+					<AuthorComments>
+						<AuthorName>atwood</AuthorName>
+						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
+						<AuthorCommentDateCreated>January 05, 2006</AuthorCommentDateCreated>
 						<AuthorCommentText>Not Provided</AuthorCommentText>
 					</AuthorComments>
 					<DiscussionComments>
@@ -28586,7 +28677,6 @@ CTBTkrCoreCalDoca &gt; 30
 			<Link fromNode="1611" fromPort="0" toNode="1612" toPort="0" orthogonal="true" />
 			<Link fromNode="1613" fromPort="0" toNode="1611" toPort="0" orthogonal="true" />
 			<Link fromNode="1397" fromPort="0" toNode="1613" toPort="0" orthogonal="true" />
-			<Link fromNode="1590" fromPort="0" toNode="1470" toPort="0" orthogonal="true" />
 			<Link fromNode="1563" fromPort="1" toNode="1565" toPort="0" orthogonal="true" />
 			<Link fromNode="1563" fromPort="0" toNode="1566" toPort="0" orthogonal="true" />
 			<Link fromNode="1553" fromPort="1" toNode="1563" toPort="0" orthogonal="true" />
@@ -28706,6 +28796,9 @@ CTBTkrCoreCalDoca &gt; 30
 			<Link fromNode="787" fromPort="0" toNode="1333" toPort="0" orthogonal="true" />
 			<Link fromNode="451" fromPort="0" toNode="1397" toPort="0" orthogonal="true" />
 			<Link fromNode="1340" fromPort="0" toNode="120" toPort="0" orthogonal="true" />
+			<Link fromNode="1590" fromPort="0" toNode="1616" toPort="0" orthogonal="true" />
+			<Link fromNode="1616" fromPort="0" toNode="1617" toPort="0" orthogonal="true" />
+			<Link fromNode="1617" fromPort="0" toNode="1470" toPort="0" orthogonal="true" />
 		</LinkList>
 	</Worksheet>
 </IMML>
