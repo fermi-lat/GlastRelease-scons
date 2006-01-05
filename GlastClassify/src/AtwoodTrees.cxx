@@ -134,19 +134,19 @@ bool AtwoodTrees::execute()
     try
     {
         // Retrieve the energy classification results
-        m_acdLowerTileCount   = m_treeAnalysis->getTupleVal("AcdLowerTileCount");
-        m_acdUpperTileCount   = m_treeAnalysis->getTupleVal("AcdUpperTileCount");
+        m_acdLowerTileCount   = m_treeAnalysis->getTupleVal("CTBAcdLowerTileCount");
+        m_acdUpperTileCount   = m_treeAnalysis->getTupleVal("CTBAcdUpperTileCount");
         m_bestPsfErr          = m_treeAnalysis->getTupleVal("Best.PSF.err");
         m_bestXDir            = m_treeAnalysis->getTupleVal("Best.XDir");
         m_bestYDir            = m_treeAnalysis->getTupleVal("Best.YDir");
         m_bestZDir            = m_treeAnalysis->getTupleVal("Best.ZDir");
         m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("BestDeltaEoE");
         m_bestEnergy          = m_treeAnalysis->getTupleVal("BestEnergy");
-        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("BestEnergyProb");
-        m_CORE                = m_treeAnalysis->getTupleVal("CORE");
+        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+        m_CORE                = m_treeAnalysis->getTupleVal("CTBCORE");
         m_calDocaAngle        = m_treeAnalysis->getTupleVal("CTBCalDocaAngle");        // Added 1/3/06
-        m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CalFrontBackRatio");
-        m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CalMaxXtalRatio");
+        m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CTBCalFrontBackRatio");
+        m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CTBCalMaxXtalRatio");
         m_calTransTCCD        = m_treeAnalysis->getTupleVal("CTBCalTransTCCD");        // Added 1/3/06
         m_evtLogEnergyRaw     = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
         m_GAM                 = m_treeAnalysis->getTupleVal("GAM");
@@ -155,8 +155,8 @@ bool AtwoodTrees::execute()
         m_paramProb           = m_treeAnalysis->getTupleVal("ParamProb");
         m_profileProb         = m_treeAnalysis->getTupleVal("ProfileProb");
         m_tkrCoreCalDoca      = m_treeAnalysis->getTupleVal("CTBTkrCoreCalDoca");      // Added 1/3/06
-        m_tkrEnergyFrac       = m_treeAnalysis->getTupleVal("TkrEnergyFrac");
-        m_tkrLATEdge          = m_treeAnalysis->getTupleVal("TkrLATEdge");
+        m_tkrEnergyFrac       = m_treeAnalysis->getTupleVal("CTBTkrEnergyFrac");
+        m_tkrLATEdge          = m_treeAnalysis->getTupleVal("CTBTkrLATEdge");
         m_tkrSHRCalAngle      = m_treeAnalysis->getTupleVal("CTBTkrSHRCalAngle");      // Added 1/3/06
         m_trackerProb         = m_treeAnalysis->getTupleVal("TrackerProb");
         m_VTX                 = m_treeAnalysis->getTupleVal("VTX");
