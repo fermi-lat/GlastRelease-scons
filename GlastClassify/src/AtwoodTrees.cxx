@@ -169,26 +169,31 @@ bool AtwoodTrees::execute()
         m_caughtVals++;
     }
 
-//    double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
-//
-//    bool writeTupleRow = dWriteTupleRow != 0. ? true : false;
 
     // Cuts for Special Bill Run
     bool writeTupleRow = false;
 
     double FilterStatus_HI = *m_FilterStatus_HI;
 
+    // First cuts on Filter status and failures for energy and tails
     if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
     {
         double AcdActiveDist3D  = *m_AcdActiveDist3D;
         double AcdRibbonActDist = *m_AcdRibbonActDist;
         double Tkr1SSDVeto      = *m_Tkr1SSDVeto;
 
+        // A series of selections on the ACD 
         if (!((AcdActiveDist3D > 0 || AcdRibbonActDist > 0) && Tkr1SSDVeto < 2))
         {
             double AcdCornerDoca = *m_AcdCornerDoca;
 
-            if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50 && m_tkrLATEdge < 100)) writeTupleRow = true;
+            if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50 && m_tkrLATEdge < 100))
+            {
+                // Finally, check the result of running the Analysis Sheet
+                double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
+
+                if (dWriteTupleRow != 0.) writeTupleRow = true;
+            }
         }
     }
 

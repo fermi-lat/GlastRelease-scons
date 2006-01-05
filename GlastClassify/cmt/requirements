@@ -32,6 +32,8 @@ macro_append ROOT_cppflags "" WIN32 " /wd4800 "
 macro txt "" WIN32 " *.txt"
 application classify -s=../src/classify $(source)
 
+set PRUNEROWS "false"
+
 application apply -s=../src/apply $(source)
 
 # app to run tests on the training data

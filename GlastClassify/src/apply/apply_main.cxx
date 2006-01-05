@@ -35,8 +35,6 @@ int main(int argc, char* argv[])
     int rc = 0;
     try {
 
-        bool keepAllRows = true; // Eventually provide ability to set this true/false...
-
         std::string  input_filename(""), output_filename(""), tree_name("MeritTuple");
         int n=0;
         if( argc>++n ) input_filename = argv[n];		// required
@@ -86,8 +84,18 @@ int main(int argc, char* argv[])
         // create the ct: pass in the tuple.
         AtwoodTrees ctrees(tuple, std::cout, CTFilePath);
 
-        // set up the output Root file, branch
+        // Are we pruning as well?
+        bool keepAllRows = true; // Eventually provide ability to set this true/false...
 
+        const char* pruneRows = ::getenv("PRUNEROWS");
+        if (pruneRows)
+        {
+            std::string pruneEm(pruneRows);
+
+            if (pruneEm == "true") keepAllRows = false;
+        }
+
+        // set up the output Root file, branch
         tuple.setOutputFile(output_filename);
 
         int numInputRows  = 0;
