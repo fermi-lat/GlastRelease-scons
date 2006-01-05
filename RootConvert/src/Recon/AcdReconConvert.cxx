@@ -39,8 +39,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
     tdsAcdRec.getRowDocaCol(), tdsAcdRec.getRowActDist3DCol(),
 	rootIdCol, tdsAcdRec.getEnergyCol(), tdsAcdRec.getCornerDoca());
     
-  const Event::AcdTkrIntersectionCol& tdsAcdTkrIntersects
-   = tdsAcdRec.getAcdTkrIntersectionCol() ;
+  const Event::AcdTkrIntersectionCol& tdsAcdTkrIntersects = tdsAcdRec.getAcdTkrIntersectionCol() ;
 
   TVector3 globalPosition;
   Double_t localPosition[2];
@@ -67,6 +66,32 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
     rootAcdRec.addAcdTkrIntersection(rootAcdInter);
   }
 
+  const Event::AcdTkrPocaCol& tdsAcdTkrPocas = tdsAcdRec.getAcdTkrPocaCol() ;
+  TVector3 poca;
+  TkrTrackParams paramsAtPoca;
+  for ( Event::AcdTkrPocaCol::const_iterator itr = tdsAcdTkrPocas.begin();
+	itr != tdsAcdTkrPocas.end(); itr++ ) {
+    const Event::AcdTkrPoca* acdTrkPocaTDS = *itr;
+    const Point& pocaTDS = acdTrkPocaTDS->poca();
+    AcdId acdIdRoot(acdTrkPocaTDS->acdId().id());
+    poca.SetXYZ(pocaTDS.x(),pocaTDS.y(),pocaTDS.z());
+    AcdTkrPoca rootAcdPoca( acdIdRoot, acdTrkPocaTDS->trackIndex(),
+			    acdTrkPocaTDS->doca(),acdTrkPocaTDS->docaErr(),acdTrkPocaTDS->docaRegion(),
+			    poca,paramsAtPoca);
+    rootAcdRec.addAcdTkrPoca(rootAcdPoca);
+  }  
+  
+  const Event::AcdHitCol& tdsAcdHits = tdsAcdRec.getAcdHitCol() ;  
+  AcdId acdId;
+  for ( Event::AcdHitCol::const_iterator itr = tdsAcdHits.begin();
+	itr != tdsAcdHits.end(); itr++ ) {
+    const Event::AcdHit* acdHitTDS = *itr;
+    AcdHit rootAcdHit( acdId,
+		       acdHitTDS->getFlags(Event::AcdHit::A), acdHitTDS->getFlags(Event::AcdHit::B),
+		       acdHitTDS->getPha(Event::AcdHit::A), acdHitTDS->getPha(Event::AcdHit::B),
+		       acdHitTDS->mips(Event::AcdHit::A), acdHitTDS->mips(Event::AcdHit::B) ); 
+    rootAcdRec.addAcdHit(rootAcdHit);
+  }  
 }
  
 void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
@@ -97,6 +122,43 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
                 ) ;
         acdTkrIntersections.push_back(tdsAcdInter) ;
     }
+
+    std::vector<Event::AcdTkrPoca*> acdTkrPocas;
+    Point poca;
+    Event::TkrTrackParams paramsAtPoca;
+    
+    int nPoca = rootAcdRec.nAcdTkrPoca();
+    for ( int iPoca(0); iPoca < nPoca; iPoca++ ) {
+      const AcdTkrPoca* acdPocaRoot = rootAcdRec.getAcdTkrPoca(iPoca);
+      
+      const TVector3& rootPoca = acdPocaRoot->getPoca();
+      poca.set(rootPoca.X(),rootPoca.Y(),rootPoca.Z());    
+      
+      idents::AcdId acdIdTds(acdPocaRoot->getId().getId());
+      
+      Event::AcdTkrPoca* acdPocaTds = new
+	Event::AcdTkrPoca(acdIdTds,acdPocaRoot->getTkrIndex(),
+			  acdPocaRoot->getDoca(),acdPocaRoot->getDocaErr(),acdPocaRoot->getDocaRegion(),
+			  poca,paramsAtPoca);
+      acdTkrPocas.push_back(acdPocaTds);
+    }
+    
+    // do the same w/ the hits   
+    std::vector<Event::AcdHit*> acdHits;
+    idents::AcdId theId;
+    
+    int nHit = rootAcdRec.nAcdHit();
+    for ( int iHit(0); iHit < nHit; iHit++ ) {
+      const AcdHit* acdHitRoot = rootAcdRec.getAcdHit(iHit);    
+      Event::AcdHit* acdHitTds = new
+	Event::AcdHit( theId, 
+		       acdHitRoot->getFlags(AcdHit::A), acdHitRoot->getFlags(AcdHit::B),
+		       acdHitRoot->getPha(AcdHit::A), acdHitRoot->getPha(AcdHit::B),
+		       acdHitRoot->getMips(AcdHit::A), acdHitRoot->getMips(AcdHit::B) ); 
+      acdHits.push_back(acdHitTds);
+    }
+    
+
 
     const AcdId rootDocaId = rootAcdRec.getMinDocaId();
     const idents::AcdId tdsDocaId(rootDocaId.getLayer(), rootDocaId.getFace(), 
@@ -148,6 +210,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
         tdsActDistId,
         rootAcdRec.getRowActDistCol(),
         acdTkrIntersections,
+	acdTkrPocas,
+	acdHits,
         rootAcdRec.getRibbonActiveDist(),
         tdsRibActDistId, 
         rootAcdRec.getCornerDoca()

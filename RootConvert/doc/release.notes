@@ -3,6 +3,7 @@
  author Ursula Berthon
  @verbatim
 
+ v1r3   04-Jan-2006 EAC Added AcdHit, AcdTkrPoca to AcdRecon.
  v1r2   05-Dec-2005 DC A bug fix in CalEventEnergyConvert, and support for AcdRecon.
  v1r1p1 25-Nov-2005 DC Almost nothing.
  v1r1p0 24-Sep-2005 TU New converter for McTrajectory and CalMipTracks
