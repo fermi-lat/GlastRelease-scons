@@ -11,6 +11,8 @@
 #include "TClonesArray.h"
 
 #include "AcdTkrIntersection.h"
+#include "AcdTkrPoca.h"
+#include "AcdHit.h"
 
 #ifndef R__GLOBALSTL
 #ifndef WIN32
@@ -132,16 +134,44 @@ public:
     // does "deep" copy onto TClonesArray (w/ placement new)
     AcdTkrIntersection* addAcdTkrIntersection(AcdTkrIntersection& inter);
     
+    /// returns the number of intersections
     inline UInt_t nAcdIntersections() const { return m_acdTkrIntersectionCol != 0 ? 
 						m_acdTkrIntersectionCol->GetEntriesFast() : 0; };
   
+    /// returns a single intersection by number
     inline const AcdTkrIntersection* getAcdTkrIntersection(UInt_t i) const { 
       return i < nAcdIntersections() ? 
 	static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
     }  
 
     inline Double32_t getCornerDoca() const { return m_cornerDoca; };
+
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdTkrPoca* addAcdTkrPoca(AcdTkrPoca& poca);
     
+    /// return the number or POCA objects
+    inline UInt_t nAcdTkrPoca() const { return m_acdTkrPocaCol != 0 ? 
+					  m_acdTkrPocaCol->GetEntriesFast() : 0; };
+  
+    /// returns a single poca object by number
+    inline const AcdTkrPoca* getAcdTkrPoca(UInt_t i) const { 
+      return i < nAcdTkrPoca() ? 
+	static_cast<const AcdTkrPoca*>((*m_acdTkrPocaCol)[i]) : 0;  
+    }  
+    
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdHit* addAcdHit(AcdHit& poca);
+    
+    /// returns the number of hits
+    inline UInt_t nAcdHit() const { return m_acdHitCol != 0 ? 
+				      m_acdHitCol->GetEntriesFast() : 0; };
+  
+    /// gets a single hit by number
+    inline const AcdHit* getAcdHit(UInt_t i) const { 
+      return i < nAcdHit() ? 
+	static_cast<const AcdHit*>((*m_acdHitCol)[i]) : 0;  
+    }  
+        
 private:
 
     /// Total energy in MeV deposited in the whole ACD system
@@ -183,7 +213,13 @@ private:
 
     Double32_t m_cornerDoca;
 
-    ClassDef(AcdRecon,9) // Acd Reconstruction data
+    // Store the track-tile( or ribbon) pocas
+    TClonesArray *m_acdTkrPocaCol;
+   
+    // Store the calibrated hits
+    TClonesArray *m_acdHitCol;    
+
+    ClassDef(AcdRecon,10) // Acd Reconstruction data
 };
 
 #endif

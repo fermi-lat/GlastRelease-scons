@@ -8,6 +8,8 @@ static const Double_t maxDoca = 2000.0;
 
 AcdRecon::AcdRecon() {
   m_acdTkrIntersectionCol = 0;
+  m_acdTkrPocaCol = 0;
+  m_acdHitCol = 0;
   Clear();
 }
 
@@ -18,6 +20,17 @@ AcdRecon::~AcdRecon() {
   }
   delete m_acdTkrIntersectionCol;
   m_acdTkrIntersectionCol = 0;
+  if ( m_acdTkrPocaCol != 0 ) {
+    m_acdTkrPocaCol->Delete();
+  }
+  delete m_acdTkrPocaCol;
+  m_acdTkrPocaCol = 0;
+  if ( m_acdHitCol != 0 ) {
+    m_acdHitCol->Delete();
+  }
+  delete m_acdHitCol;
+  m_acdHitCol = 0;
+
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -49,6 +62,7 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
     m_idCol = idCol;
     m_energyCol = energyCol;
     m_cornerDoca = cornerDoca;
+    std::cout << "corner doca is " << m_cornerDoca << std::endl;
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -82,7 +96,13 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     if ( m_acdTkrIntersectionCol ) {
       m_acdTkrIntersectionCol->Clear();
     }
-    m_ribbonActDist = -maxDoca;
+    if ( m_acdTkrPocaCol ) {
+      m_acdTkrPocaCol->Clear();
+    }
+    if ( m_acdHitCol ) {
+      m_acdHitCol->Clear();
+    }
+     m_ribbonActDist = -maxDoca;
     m_cornerDoca = maxDoca;
 }
 
@@ -147,6 +167,30 @@ AcdTkrIntersection* AcdRecon::addAcdTkrIntersection(AcdTkrIntersection& inter) {
   return (AcdTkrIntersection*)(intersects[numInter]);
 }
 
+
+AcdTkrPoca* AcdRecon::addAcdTkrPoca(AcdTkrPoca& poca) {
+  UInt_t numPoca = nAcdTkrPoca();
+  if ( m_acdTkrPocaCol == 0 ) {
+    m_acdTkrPocaCol = new TClonesArray( AcdTkrPoca::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& pocas = *m_acdTkrPocaCol;
+  new (pocas[numPoca]) AcdTkrPoca(poca);
+  return (AcdTkrPoca*)(pocas[numPoca]);
+}
+    
+
+AcdHit* AcdRecon::addAcdHit(AcdHit& hit) {
+  UInt_t numHit = nAcdHit();
+  if ( m_acdHitCol == 0 ) {
+    m_acdHitCol = new TClonesArray( AcdHit::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& hits = *m_acdHitCol;
+  new (hits[numHit]) AcdHit(hit);
+  return (AcdHit*)(hits[numHit]);
+}
+    
 
 //======================================================
 // For Unit Tests
@@ -222,6 +266,7 @@ Bool_t AcdRecon::CompareInRange( const AcdRecon & a, const std::string & name ) 
             std::cout<<"Comparison ERROR for "<<name<<std::endl ;
         }
     }
+
     return result ;
 
 }

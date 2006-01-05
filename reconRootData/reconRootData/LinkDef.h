@@ -14,6 +14,9 @@
 #pragma link C++ class ReconEvent+;
 
 #pragma link C++ class AcdTkrIntersection+;
+#pragma link C++ class AcdTkrPoca+;
+#pragma link C++ class AcdHit+;
+
 #pragma link C++ class AcdRecon+;
 
 #pragma link C++ class CalRecon+;

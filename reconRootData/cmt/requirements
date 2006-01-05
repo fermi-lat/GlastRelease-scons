@@ -20,6 +20,8 @@ apply_pattern root_package headers="\
  ../reconRootData/CalXtalRecData.h\
  ../reconRootData/ReconEvent.h\
  ../reconRootData/AcdTkrIntersection.h\
+ ../reconRootData/AcdHit.h\
+ ../reconRootData/AcdTkrPoca.h\
  ../reconRootData/TkrCluster.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrTrackHit.h\
