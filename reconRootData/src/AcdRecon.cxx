@@ -62,7 +62,6 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
     m_idCol = idCol;
     m_energyCol = energyCol;
     m_cornerDoca = cornerDoca;
-    std::cout << "corner doca is " << m_cornerDoca << std::endl;
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
