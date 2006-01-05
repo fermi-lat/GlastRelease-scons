@@ -58,6 +58,7 @@ private:
     float         m_bestDeltaEoE;
     float         m_bestEnergy;
     float         m_bestEnergyProb;
+    float         m_bestLogEnergy;
     float         m_CORE;
     float         m_calDocaAngle;        // Added 1/3/06
     float         m_calFrontBackRatio;
