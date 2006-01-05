@@ -19,6 +19,8 @@
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
+#include "Event/Recon/AcdRecon/AcdHit.h"
+#include "Event/Recon/AcdRecon/AcdTkrPoca.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -280,7 +282,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     log << endreq;
 	
     
-    static Event::AcdTkrIntersectionCol acdIntersections;
+    static Event::AcdTkrIntersectionCol acdIntersections;    
+    static Event::AcdHitCol acdHits;
+    static Event::AcdTkrPocaCol acdPocas;
 
     // get pointer to the tracker vertex collection
     SmartDataPtr<Event::TkrTrackCol> trackCol(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
@@ -307,7 +311,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 			     m_act_dist, m_maxActDistId, 
 			     m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
 			     m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
-			     acdIntersections, m_ribbon_act_dist, 
+			     acdIntersections, acdPocas, acdHits, m_ribbon_act_dist, 
                              m_ribbon_act_dist_id, m_cornerDoca);
 	// ownership handed to TDS, clear local copy
 	acdIntersections.clear();
@@ -319,7 +323,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 							m_act_dist, m_maxActDistId, 
 							m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
 							m_ribbon_act_dist, m_ribbon_act_dist_id, 
-							acdIntersections,
+							acdIntersections, acdPocas, acdHits,
 							m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol, m_cornerDoca);
 	// ownership handed to TDS, clear local copy
 	acdIntersections.clear();

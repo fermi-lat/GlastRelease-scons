@@ -4,6 +4,8 @@ package manager:H.Kelly
 
 @verbatim
 
+v1r13     05-Jan-2006 EAC Added (empty) AcdHit and AcdTkrPoca collection to AcdRecon
+	  This is to test the data structures without actually adding in all the new code.
 v1r12p6   23-Nov-2005 HMK Eric's patch to catch negative arclengths in 
           AcdTkrIntersectionTool and update to AcdReconAlg to avoid returning
           failure to gaudi if that tool fails.
