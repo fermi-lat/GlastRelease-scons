@@ -142,8 +142,8 @@ bool AtwoodTrees::execute()
         m_bestZDir            = m_treeAnalysis->getTupleVal("Best.ZDir");
         m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("BestDeltaEoE");
         m_bestEnergy          = m_treeAnalysis->getTupleVal("BestEnergy");
-        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
-        m_CORE                = m_treeAnalysis->getTupleVal("CTBCORE");
+        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("BestEnergyProb");
+        m_CORE                = m_treeAnalysis->getTupleVal("CORE");
         m_calDocaAngle        = m_treeAnalysis->getTupleVal("CTBCalDocaAngle");        // Added 1/3/06
         m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CTBCalFrontBackRatio");
         m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CTBCalMaxXtalRatio");
