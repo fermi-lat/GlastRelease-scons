@@ -46,6 +46,7 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     tuple.addItem("CTBBestDeltaEoE",       m_bestDeltaEoE);
     tuple.addItem("CTBBestEnergy",         m_bestEnergy);
     tuple.addItem("CTBBestEnergyProb",     m_bestEnergyProb);
+    tuple.addItem("CTBBestLogEnergy",      m_bestLogEnergy);
     tuple.addItem("CTBCORE",               m_CORE);
     tuple.addItem("CTBCalDocaAngle",       m_calDocaAngle);
     tuple.addItem("CTBCalFrontBackRatio",  m_calFrontBackRatio);
@@ -100,6 +101,7 @@ bool AtwoodTrees::execute()
     m_bestDeltaEoE        = 0.;
     m_bestEnergy          = 0.;
     m_bestEnergyProb      = 0.;
+    m_bestLogEnergy       = 0.;
     m_CORE                = 0.;
     m_calDocaAngle        = 0.;        // Added 1/3/06
     m_calFrontBackRatio   = 0.;
@@ -136,20 +138,21 @@ bool AtwoodTrees::execute()
         // Retrieve the energy classification results
         m_acdLowerTileCount   = m_treeAnalysis->getTupleVal("CTBAcdLowerTileCount");
         m_acdUpperTileCount   = m_treeAnalysis->getTupleVal("CTBAcdUpperTileCount");
-        m_bestPsfErr          = m_treeAnalysis->getTupleVal("Best.PSF.err");
-        m_bestXDir            = m_treeAnalysis->getTupleVal("Best.XDir");
-        m_bestYDir            = m_treeAnalysis->getTupleVal("Best.YDir");
-        m_bestZDir            = m_treeAnalysis->getTupleVal("Best.ZDir");
-        m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("BestDeltaEoE");
-        m_bestEnergy          = m_treeAnalysis->getTupleVal("BestEnergy");
-        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("BestEnergyProb");
-        m_CORE                = m_treeAnalysis->getTupleVal("CORE");
+        m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("CTBBestDeltaEoE");
+        m_bestEnergy          = m_treeAnalysis->getTupleVal("CTBBestEnergy");
+        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+        m_bestLogEnergy       = m_treeAnalysis->getTupleVal("CTBBestLogEnergy");
+        m_bestPsfErr          = m_treeAnalysis->getTupleVal("CTBBestPSFerr");
+        m_bestXDir            = m_treeAnalysis->getTupleVal("CTBBestXDir");
+        m_bestYDir            = m_treeAnalysis->getTupleVal("CTBBestYDir");
+        m_bestZDir            = m_treeAnalysis->getTupleVal("CTBBestZDir");
+        m_CORE                = m_treeAnalysis->getTupleVal("CTBCORE");
         m_calDocaAngle        = m_treeAnalysis->getTupleVal("CTBCalDocaAngle");        // Added 1/3/06
         m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CTBCalFrontBackRatio");
         m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CTBCalMaxXtalRatio");
         m_calTransTCCD        = m_treeAnalysis->getTupleVal("CTBCalTransTCCD");        // Added 1/3/06
         m_evtLogEnergyRaw     = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
-        m_GAM                 = m_treeAnalysis->getTupleVal("GAM");
+        m_GAM                 = m_treeAnalysis->getTupleVal("CTBGAM");
 //        m_goodEnergy          = m_treeAnalysis->getTupleVal("GoodEnergy");
         m_lastLayerProb       = m_treeAnalysis->getTupleVal("LastLayerProb");
         m_paramProb           = m_treeAnalysis->getTupleVal("ParamProb");
@@ -159,7 +162,7 @@ bool AtwoodTrees::execute()
         m_tkrLATEdge          = m_treeAnalysis->getTupleVal("CTBTkrLATEdge");
         m_tkrSHRCalAngle      = m_treeAnalysis->getTupleVal("CTBTkrSHRCalAngle");      // Added 1/3/06
         m_trackerProb         = m_treeAnalysis->getTupleVal("TrackerProb");
-        m_VTX                 = m_treeAnalysis->getTupleVal("VTX");
+        m_VTX                 = m_treeAnalysis->getTupleVal("CTBVTX");
 
         m_goodVals++;
     }
