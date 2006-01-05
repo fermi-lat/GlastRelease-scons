@@ -9,6 +9,8 @@
 
 #include "Event/TopLevel/Definitions.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
+#include "Event/Recon/AcdRecon/AcdTkrPoca.h"
+#include "Event/Recon/AcdRecon/AcdHit.h"
 
 #include <vector>
 
@@ -60,6 +62,8 @@ namespace Event {
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
 	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
+	    const std::vector<AcdHit*>& acdHits,
             double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonEng),
@@ -77,7 +81,9 @@ namespace Event {
             m_ribbon_actDist(-2000.0),
   	    m_ribbon_actDist_id(idents::AcdId(0,0)),            
 	    m_acdTkrIntersections(acdTkrIntersections),
-            m_cornerDoca(cornerDoca)
+            m_acdTkrPocas(acdTkrPocas),
+   	  m_acdHits(acdHits),
+	    m_cornerDoca(cornerDoca)
         {
             m_actDist3D = -2000.0;
             m_rowActDist3DCol.resize(4, -2000.0);
@@ -94,11 +100,12 @@ namespace Event {
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
-            double ribbon_actDist, const idents::AcdId ribbon_actDist_id, // additionnal
-            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-            double actDist3D, const idents::AcdId &maxActDist3DId,        // additionnal
-            const std::vector<double> &rowActDist3D,                      // additionnal
-            double cornerDoca)
+            double ribbon_actDist, const idents::AcdId ribbon_actDist_id,
+	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
+		 const std::vector<AcdHit*>& acdHits,
+	    double actDist3D, const idents::AcdId &maxActDist3DId, 
+	    const std::vector<double> &rowActDist3D, double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonE),
             m_tileCount(count),
@@ -118,6 +125,8 @@ namespace Event {
             m_ribbon_actDist(ribbon_actDist),
 	  m_ribbon_actDist_id(ribbon_actDist_id),
 	  m_acdTkrIntersections(acdTkrIntersections),
+	  m_acdTkrPocas(acdTkrPocas),
+	  m_acdHits(acdHits),
             m_cornerDoca(cornerDoca)
         {};
 
@@ -137,7 +146,9 @@ namespace Event {
             double actDist3D, const idents::AcdId &maxActDist3DId,
             const std::vector<double> &rowActDist3D,
 	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-            double ribbonActDist=2000.0, 
+		  const std::vector<AcdTkrPoca*>& acdTkrPocas,
+		  const std::vector<AcdHit*>& acdHits,
+	    double ribbonActDist=2000.0, 
 	    const idents::AcdId &ribActDistId=idents::AcdId(0,0),
             double cornerDoca=2000.0) ;
 
@@ -167,6 +178,8 @@ namespace Event {
 	inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
         inline const std::vector<double>& getEnergyCol()     const { return m_energyCol; };
 	inline const AcdTkrIntersectionCol& getAcdTkrIntersectionCol() const { return m_acdTkrIntersections; };
+	inline const AcdTkrPocaCol& getAcdTkrPocaCol() const { return m_acdTkrPocas; };
+	inline const AcdHitCol& getAcdHitCol() const { return m_acdHits; };
 
         /// Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -234,6 +247,12 @@ namespace Event {
 	/// the vector of track intersections w/ the acd
 	AcdTkrIntersectionCol m_acdTkrIntersections;
 
+	/// the vector of track poca w/ the acd
+	AcdTkrPocaCol m_acdTkrPocas;	
+
+	/// the vector of track poca w/ the acd
+	AcdHitCol m_acdHits;	
+
         /// Bill's variable to measure DOCA to rays along corner side gaps
         double m_cornerDoca;
 
@@ -246,7 +265,9 @@ namespace Event {
         m_rowActDist3DCol.clear();
         m_idCol.clear();
         m_energyCol.clear();
-	
+	m_acdTkrIntersections.clear();
+	m_acdTkrPocas.clear();
+	m_acdHits.clear();
     }
 
 
@@ -261,7 +282,9 @@ namespace Event {
             double actDist3D, const idents::AcdId &maxActDist3DId,
             const std::vector<double> &rowActDist3D,
 	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-            double ribbon_actDist, const idents::AcdId &ribbonId, 
+	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
+			       const std::vector<AcdHit*>& acdHits,			       
+	    double ribbon_actDist, const idents::AcdId &ribbonId, 
             double cornerDoca)
     {
         m_totEnergy  = e;
@@ -288,8 +311,21 @@ namespace Event {
 	  AcdTkrIntersection* iSect = const_cast<AcdTkrIntersection*>(*itr);
 	  m_acdTkrIntersections.add(iSect);
 	}
-        m_cornerDoca = cornerDoca;
+	m_acdTkrPocas.clear();
+	for ( std::vector<AcdTkrPoca*>::const_iterator itrPoca = acdTkrPocas.begin();
+	      itrPoca != acdTkrPocas.end(); itrPoca++ ) {
+	  AcdTkrPoca* poca = const_cast<AcdTkrPoca*>(*itrPoca);
+	  m_acdTkrPocas.add(poca);
+	}
+	m_acdHits.clear();
+	for ( std::vector<AcdHit*>::const_iterator itrHit = acdHits.begin();
+	      itrHit != acdHits.end(); itrHit++ ) {
+	  AcdHit* hit = const_cast<AcdHit*>(*itrHit);
+	  m_acdHits.add(hit);
+	}	
+	
 
+        m_cornerDoca = cornerDoca;
     }
 
     
