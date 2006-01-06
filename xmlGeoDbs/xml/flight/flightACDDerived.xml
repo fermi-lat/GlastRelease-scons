@@ -776,7 +776,8 @@
     <notes>Displacement w.r.t. center of ACD top envelope of
           highest tiles, those in row [was col before Nov 05] 0 and 4</notes>
     <minus>
-      <refer refTo="ACDTopZHalf" />
+<!--      <refer refTo="ACDTopZHalf" />   -->
+      <refer refTo="ACDTileMaxZ" />
       <refer refTo="tileHalfThickness" />
     </minus>
   </const>
@@ -905,10 +906,13 @@
     <notes>Z displacement rel. to containing envelope 
           for long ribbon segments running || to
           X-axis along top.</notes>
+    <refer refTo="yRibbonTopAbs_dz" />
+<!--
     <minus>
       <refer refTo="yRibbonTopAbs_dz" />
       <refer refTo="ACDTop_d" />
     </minus>
+-->
   </const>
 
 <!-- Ribbon stuff -->

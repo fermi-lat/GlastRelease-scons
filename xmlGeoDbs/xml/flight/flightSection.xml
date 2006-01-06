@@ -145,12 +145,19 @@
      Missing id fields for various non-sensitive components.  
      Do we care? -->
     <composition name="LATInner" envelope="LATenv" >
+
+<!-- no longer have an explicit ACDTop.  Instead all its contents
+     are positioned directly in LATInner.  To avoid cluttering up
+     this global file, everything is done in an included file
+  -->
+&ACDTop;
+<!--
       <posXYZ volume="ACDTop"
               ZREF="ACDTop_d" >
         <idField name="fLATObjects" valueREF="eLATACD" />
         <idField name="fACDFace" valueREF="eACDTopFace" />
       </posXYZ>
-
+-->
       <posXYZ volume="ACDTopSupport"
               ZREF="ACDTopSupport_dz">
         <idField name="fLATObjects" valueREF="eLATACD" />
