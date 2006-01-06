@@ -81,14 +81,14 @@ void BackgroundSelection::selectEvent(double /* maglat */)
 double BackgroundSelection::triggerRate(double/* maglat */)
 {
     //TODO
-    return 20.; // testing
+    return 2000.; // testing
 }
 
 //------------------------------------------------------------------------
 double BackgroundSelection::downlinkRate(double/* maglat */)
 {
     //TODO
-    return 1.; //testing
+    return 300.; //testing
 }
 void BackgroundSelection::disable(const char* pattern)
 {
