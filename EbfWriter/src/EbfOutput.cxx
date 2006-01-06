@@ -45,7 +45,9 @@
 #define LDF_HEADER_SIZE 4
 
 /* Size of the circular buff in the LCB in Bytes 512*1024 = 524288 = 2^19 */
-#define CIRC_BUFFER_SIZE 5242888
+/* Circular Buffer offset is in units of 32 bit words (4 bytes), so divide the */
+/* size by 4:  2^19 --> 2^17 = 131072 */
+#define CIRC_BUFFER_SIZE 131072
 
 /* Maximum size of the EBF contribution 4096 - 128 + 32 = 4000 bytes */
 #define EBF_MAX_PACKET_SIZE 4000
@@ -668,7 +670,8 @@ unsigned int EbfOutput::format (const EbfAcdData *acd,
         m_evtDescriptor = evtBeg; /* Save position of event descriptor */
         m_evtEnd        = dst; /* Save position of the end of the event */
 //        printf("Contribution Length %i (0x%8.8x)\n",contribLength/4,contribLength/4);
-       *evtBeg++      = ( (contribLength/4) << 17) | m_circBuffOff;
+       if(m_circBuffOff > (m_circBuffOff & 0x1ffff) ) printf("WARNING: Circular Buffer Too Large\n");
+       *evtBeg++      = ( (contribLength/4) << 17) | (m_circBuffOff & 0x1ffff);
         m_evtHead     = evtBeg;
   
 //   printf("contribLength 0x%8.8x 0x%8.8x\n",evtBeg,contribLength); 
@@ -838,15 +841,17 @@ char * EbfOutput::write (bool writeEbf, unsigned int &length, unsigned int *TdsB
        if(truncate & !LdfFormat) {
           
             unsigned int Descriptor = *m_evtDescriptor; 
-//            printf("Event Desc 0x%8.8x\n",Descriptor);
+//            printf("Event Desc 0x%8.8x...truncation\n",Descriptor);
 // Make sure the RSTATUS and XSTATUS bits are zeroed, then set by hand.
             *m_evtDescriptor = (Descriptor & 0x0001ffff) | ((EBF_MAX_PACKET_SIZE-EVT_HEADER_SIZE*4)/4<<17) | (0x3 << 30);
+//            printf("New Event Descriptor 0x%8.8x....truncation\n",*m_evtDescriptor);
             packetSize = EBF_MAX_PACKET_SIZE;
+            
 
 // Keep running count of circular buffer postion
-            m_totEvtSize += packetSize; 
-            m_circBuffOff = m_totEvtSize%CIRC_BUFFER_SIZE; 
-
+            m_totEvtSize += packetSize;
+// Total event size is in bytes. Circular Buffer Offset is in 32-bit words             
+            m_circBuffOff = (m_totEvtSize/4)%CIRC_BUFFER_SIZE; 
 
        } else if (!truncate & !LdfFormat) {
 
@@ -865,13 +870,19 @@ char * EbfOutput::write (bool writeEbf, unsigned int &length, unsigned int *TdsB
 
 // Keep running count of circular buffer postion
             m_totEvtSize += packetSize; 
-            m_circBuffOff = m_totEvtSize%CIRC_BUFFER_SIZE; 
+// Total event size is in bytes. Circular Buffer Offset is in 32-bit words             
+            m_circBuffOff = (m_totEvtSize/4)%CIRC_BUFFER_SIZE;  
+// Don't let the totEvtSize overflow; this is the integrated size over
+// all events
+            if(m_totEvtSize > 4*CIRC_BUFFER_SIZE) m_totEvtSize -= 4*CIRC_BUFFER_SIZE; 
+
+
 
 // Make sure truncation bits are not set
             unsigned int Descriptor = *m_evtDescriptor; 
 //            printf("Event Desc 0x%8.8x ...setting for no truncation\n",Descriptor);
             *m_evtDescriptor = (Descriptor & 0x3801ffff)| ((toWrite-EVT_HEADER_SIZE*4)/4) << 17;       
-            
+//            printf("New Event Descriptor 0x%8.8x....no truncation\n",*m_evtDescriptor);            
        }
 
 // now write out the packet.
