@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r29    5-Jan-2006  jrb Get rid of ACDTop composition; put contents
+                            in new fragment ACDTop.xml
    v1r28p3 14-Dec-2005  jrb Eliminate allTowers volume in cu06 geometry, 
                             allowing freer placement of tiles
    v1r28p2 13-Dec-2005  jrb Bring em2 geometry up to date
