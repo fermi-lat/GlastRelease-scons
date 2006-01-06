@@ -31,6 +31,7 @@ $Header$
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartRefVector.h"
 
+#include "facilities/Util.h"
 
 #include <cassert>
 #include <vector>
@@ -91,8 +92,9 @@ StatusCode InterleaveAlg::initialize(){
 
     // initialize the background selection
     try {
-
-        m_selector = new BackgroundSelection(m_rootFile, m_treeName, m_meritTuple);
+        std::string file(m_rootFile.value());
+        facilities::Util::expandEnvVar(&file);
+        m_selector = new BackgroundSelection(file, m_treeName, m_meritTuple);
 
     }catch( const std::exception& e){
         log << MSG::ERROR << e.what() << endl;
@@ -202,6 +204,10 @@ void InterleaveAlg::copyEventInfo(TTree * tree)
     setLeafValue(tree->GetLeaf("EvtEventId"),    EvtEventId);
     setLeafValue(tree->GetLeaf("EvtElapsedTime"),EvtElapsedTime);
     setLeafValue(tree->GetLeaf("EvtLiveTime"),   EvtLiveTime);
+
+    // finally, make the source id negative; make zero -1 by offset. (2's complement)
+    float & sourceid = *static_cast<float*>(tree->GetLeaf("McSourceId")->GetValuePointer());
+    sourceid=-1-sourceid;
 
 }
 
