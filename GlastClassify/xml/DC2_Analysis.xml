@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <IMML version="7.0">
-	<Worksheet lastNodeID="1617" linkType="orthogonal">
+	<Worksheet lastNodeID="1679" linkType="orthogonal">
 		<FileInfo>
-			<FileName>C:\GLAST Analysis\DC2\DC2_Analysis_v3r2.imw</FileName>
+			<FileName>C:\GLAST Analysis\DC2\DC2_Analysis_v3r3.imw</FileName>
 			<FileDateCreated>1034799439398</FileDateCreated>
 		</FileInfo>
 		<WorksheetProperties>
@@ -20755,8 +20755,132 @@ get("Pr(VTX)") &gt; .5</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1553">
-				<DisplayInfo labelText="VTX (1553)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="370" y="1610" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1613">
+				<DisplayInfo labelText="Aux Variables (1613)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1350" y="720" />
+				<ArgumentList>
+					<XTProps>
+						<Property name="useGlobal" value="true" />
+						<Property name="useCache" value="global" />
+						<Property name="stringSize" value="" />
+						<Property name="specifiedRowsToChunk" value="0" />
+						<Property name="rowsToChunk" value="10000" />
+						<Property name="randomSeed" value="newSeedEveryTime" />
+						<Property name="randomSeedValue" value="5" />
+						<Property name="newColumns">
+							<Property name="CTBCalMaxXtalRatio">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="CalXtalMaxEne/CalEnergyRaw" />
+							</Property>
+							<Property name="CTBTkrEnergyFrac">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="TkrEnergyCorr/EvtEnergyCorr" />
+							</Property>
+							<Property name="CTBTkrLATEdge">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="742. - max(abs(Tkr1X0) , abs(Tkr1Y0))" />
+							</Property>
+							<Property name="CTBCalFrontBackRatio">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="(CalELayer0+CalELayer1+CalELayer2+CalELayer3)/max((CalELayer4+CalELayer5+CalELayer6+CalELayer7),1.)" />
+							</Property>
+							<Property name="CTBAcdUpperTileCount">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="AcdNoTop + AcdNoSideRow0 + AcdNoSideRow1 + AcdNoSideRow2" />
+							</Property>
+							<Property name="CTBAcdLowerTileCount">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="AcdNoSideRow3" />
+							</Property>
+						</Property>
+					</XTProps>
+				</ArgumentList>
+				<ComponentComments>
+					<AuthorComments>
+						<AuthorName>atwood</AuthorName>
+						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
+						<AuthorCommentDateCreated>September 09, 2005</AuthorCommentDateCreated>
+						<AuthorCommentText>Not Provided</AuthorCommentText>
+					</AuthorComments>
+					<DiscussionComments>
+						<Comment>
+							<CommentAuthor>Not Provided</CommentAuthor>
+							<CommentDateCreated>Not Provided</CommentDateCreated>
+							<CommentTitle>Not Provided</CommentTitle>
+							<CommentText>Not Provided</CommentText>
+						</Comment>
+					</DiscussionComments>
+				</ComponentComments>
+			</ActivityNode>
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1616">
+				<DisplayInfo labelText="CTBGAM" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1660" y="1030" />
+				<ArgumentList>
+					<XTProps>
+						<Property name="useGlobal" value="true" />
+						<Property name="useCache" value="global" />
+						<Property name="stringSize" value="" />
+						<Property name="specifiedRowsToChunk" value="0" />
+						<Property name="rowsToChunk" value="10000" />
+						<Property name="randomSeed" value="newSeedEveryTime" />
+						<Property name="randomSeedValue" value="5" />
+						<Property name="newColumns">
+							<Property name="CTBGAM">
+								<Property name="type" value="continuous" />
+								<Property name="expression" value="get(&quot;Pr(GAM)&quot;)" />
+							</Property>
+						</Property>
+					</XTProps>
+				</ArgumentList>
+				<ComponentComments>
+					<AuthorComments>
+						<AuthorName>atwood</AuthorName>
+						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
+						<AuthorCommentDateCreated>January 05, 2006</AuthorCommentDateCreated>
+						<AuthorCommentText>Not Provided</AuthorCommentText>
+					</AuthorComments>
+					<DiscussionComments>
+						<Comment>
+							<CommentAuthor>Not Provided</CommentAuthor>
+							<CommentDateCreated>Not Provided</CommentDateCreated>
+							<CommentTitle>Not Provided</CommentTitle>
+							<CommentText>Not Provided</CommentText>
+						</Comment>
+					</DiscussionComments>
+				</ComponentComments>
+			</ActivityNode>
+			<ActivityNode engineClass="com.insightful.miner.FilterColumnsEngineNode" guiClass="com.insightful.miner.FilterColumnsNodeModel" numInputs="1" numOutputs="1" id="1617">
+				<DisplayInfo labelText="Delete IM Vars" defaultLabelText="Filter Columns" smallIcon="filter_cols_small.gif" largeIcon="filter_cols_large.gif" x="1718" y="971" />
+				<ArgumentList>
+					<XTProps>
+						<Property name="useGlobal" value="true" />
+						<Property name="useCache" value="global" />
+						<Property name="specifiedRowsToChunk" value="0" />
+						<Property name="rowsToChunk" value="10000" />
+						<Property name="excludeColumns">
+							<Property name="Pr(VTX)" value="true" />
+							<Property name="Pr(CORE)" value="true" />
+							<Property name="Pr(GAM)" value="true" />
+						</Property>
+					</XTProps>
+				</ArgumentList>
+				<ComponentComments>
+					<AuthorComments>
+						<AuthorName>atwood</AuthorName>
+						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
+						<AuthorCommentDateCreated>January 05, 2006</AuthorCommentDateCreated>
+						<AuthorCommentText>Not Provided</AuthorCommentText>
+					</AuthorComments>
+					<DiscussionComments>
+						<Comment>
+							<CommentAuthor>Not Provided</CommentAuthor>
+							<CommentDateCreated>Not Provided</CommentDateCreated>
+							<CommentTitle>Not Provided</CommentTitle>
+							<CommentText>Not Provided</CommentText>
+						</Comment>
+					</DiscussionComments>
+				</ComponentComments>
+			</ActivityNode>
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1618">
+				<DisplayInfo labelText="VTX (1618)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="340" y="1610" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -20786,8 +20910,8 @@ get("Pr(VTX)") &gt; .5</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1554">
-				<DisplayInfo labelText="!Bin1 (1554)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="470" y="1460" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1619">
+				<DisplayInfo labelText="!Bin1 (1619)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="440" y="1460" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -20820,8 +20944,8 @@ get("Pr(VTX)") &gt; .5</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1555">
-				<DisplayInfo labelText="Path VTX E1 (1555)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1460" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1620">
+				<DisplayInfo labelText="Path VTX E1 (1620)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1460" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -20856,8 +20980,8 @@ get("Pr(VTX)") &gt; .5</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1556">
-				<DisplayInfo labelText="FILTER: BKG VTX  E1Thick (1556)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="610" y="1550" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1621">
+				<DisplayInfo labelText="FILTER: BKG VTX  E1Thick (1621)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="580" y="1550" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -20893,8 +21017,8 @@ Tkr1CoreHC &lt; 2.5
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1557">
-				<DisplayInfo labelText="Thin/Thick (1557)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="460" y="1540" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1622">
+				<DisplayInfo labelText="Thin/Thick (1622)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="430" y="1540" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -20924,8 +21048,8 @@ Tkr1CoreHC &lt; 2.5
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1558">
-				<DisplayInfo labelText="FILTER: BKG VTX E1 Thin (1558)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="600" y="1460" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1623">
+				<DisplayInfo labelText="FILTER: BKG VTX E1 Thin (1623)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="570" y="1460" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -20960,8 +21084,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1559">
-				<DisplayInfo labelText="!Bin2 (1559)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="470" y="1370" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1624">
+				<DisplayInfo labelText="!Bin2 (1624)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="440" y="1370" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -20991,8 +21115,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1560">
-				<DisplayInfo labelText="!Bin3 (1560)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="470" y="1280" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1625">
+				<DisplayInfo labelText="!Bin3 (1625)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="440" y="1280" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21022,8 +21146,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1561">
-				<DisplayInfo labelText="!Bin4 (1561)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="470" y="1200" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1626">
+				<DisplayInfo labelText="!Bin4 (1626)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="440" y="1200" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21053,8 +21177,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1562">
-				<DisplayInfo labelText="!Bin5 (1562)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="470" y="1110" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1627">
+				<DisplayInfo labelText="!Bin5 (1627)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="440" y="1110" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21084,8 +21208,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1563">
-				<DisplayInfo labelText="!Bin1 (1563)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="920" y="1620" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1628">
+				<DisplayInfo labelText="!Bin1 (1628)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="890" y="1620" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21118,8 +21242,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1564">
-				<DisplayInfo labelText="Path 1Tkr  E1 (1564)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1510" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1629">
+				<DisplayInfo labelText="Path 1Tkr  E1 (1629)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1510" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21154,8 +21278,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1565">
-				<DisplayInfo labelText="Thin/Thick (1565)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="1020" y="1590" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1630">
+				<DisplayInfo labelText="Thin/Thick (1630)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="990" y="1590" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21185,8 +21309,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1566">
-				<DisplayInfo labelText="!Bin2 (1566)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="1000" y="1420" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1631">
+				<DisplayInfo labelText="!Bin2 (1631)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="970" y="1420" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21216,8 +21340,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1567">
-				<DisplayInfo labelText="!Bin3 (1567)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="1010" y="1330" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1632">
+				<DisplayInfo labelText="!Bin3 (1632)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="980" y="1330" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21247,8 +21371,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1568">
-				<DisplayInfo labelText="!Bin4 (1568)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="1010" y="1250" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1633">
+				<DisplayInfo labelText="!Bin4 (1633)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="980" y="1250" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21278,8 +21402,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1569">
-				<DisplayInfo labelText="!Bin5 (1569)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="1010" y="1160" />
+			<ActivityNode engineClass="com.insightful.miner.SplitEngineNode" guiClass="com.insightful.miner.SplitNodeModel" numInputs="1" numOutputs="2" id="1634">
+				<DisplayInfo labelText="!Bin5 (1634)" defaultLabelText="Split" smallIcon="split_small.gif" largeIcon="split_large.gif" x="980" y="1160" />
 				<OutputPortToolTips port1="Rows matching qualifier" port2="Non-matching rows" />
 				<ArgumentList>
 					<XTProps>
@@ -21309,8 +21433,8 @@ CalTrackDoca &gt; 300</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1570">
-				<DisplayInfo labelText="FILTER: BKG VTX E2 (1570)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="600" y="1380" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1635">
+				<DisplayInfo labelText="FILTER: BKG VTX E2  (1635)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="570" y="1380" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21347,8 +21471,8 @@ CTBTkrCoreCalDoca &gt; 100</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1571">
-				<DisplayInfo labelText="Path  VTX E2 (1571)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1380" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1636">
+				<DisplayInfo labelText="Path  VTX E2 (1636)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1380" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21383,8 +21507,8 @@ CTBTkrCoreCalDoca &gt; 100</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1572">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E2 (1572)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1110" y="1430" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1637">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E2  (1637)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1080" y="1430" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21419,8 +21543,8 @@ CTBTkrCoreCalDoca &gt; 40
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1573">
-				<DisplayInfo labelText="Path 1Tkr E2 (1573)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1430" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1638">
+				<DisplayInfo labelText="Path 1Tkr E2 (1638)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1430" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21455,8 +21579,8 @@ CTBTkrCoreCalDoca &gt; 40
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1574">
-				<DisplayInfo labelText="FILTER: BKG VTX E3 (1574)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="600" y="1290" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1639">
+				<DisplayInfo labelText="FILTER: BKG VTX E3  (1639)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="570" y="1290" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21496,8 +21620,8 @@ CTBTkrCoreCalDoca &gt; 50
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1575">
-				<DisplayInfo labelText="Path VTX E3 (1575)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1290" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1640">
+				<DisplayInfo labelText="Path VTX E3 (1640)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1290" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21532,8 +21656,8 @@ CTBTkrCoreCalDoca &gt; 50
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1576">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E3 (1576)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1110" y="1340" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1641">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E3  (1641)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1080" y="1340" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21570,8 +21694,8 @@ CTBTkrCoreCalDoca &gt; 50
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1577">
-				<DisplayInfo labelText="Path 1Tkr E3 (1577)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1340" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1642">
+				<DisplayInfo labelText="Path 1Tkr E3 (1642)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1340" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21606,8 +21730,8 @@ CTBTkrCoreCalDoca &gt; 50
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1579">
-				<DisplayInfo labelText="Path VTX E4 (1579)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1210" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1643">
+				<DisplayInfo labelText="Path VTX E4 (1643)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1210" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21642,8 +21766,8 @@ CTBTkrCoreCalDoca &gt; 50
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1580">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E4 (1580)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1110" y="1260" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1644">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E4  (1644)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1080" y="1260" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21680,8 +21804,8 @@ CTBTkrCoreCalDoca &gt; 25
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1581">
-				<DisplayInfo labelText="Path 1Tkr E4 (1581)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1260" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1645">
+				<DisplayInfo labelText="Path 1Tkr E4 (1645)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1260" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21716,8 +21840,8 @@ CTBTkrCoreCalDoca &gt; 25
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1582">
-				<DisplayInfo labelText="FILTER: BKG VTX E5 (1582)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="600" y="1120" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1646">
+				<DisplayInfo labelText="FILTER: BKG VTX E5  (1646)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="570" y="1120" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21754,8 +21878,8 @@ CTBTkrCoreCalDoca &gt; 25
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1583">
-				<DisplayInfo labelText="Path VTX E5 (1583)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1120" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1647">
+				<DisplayInfo labelText="Path VTX E5 (1647)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1120" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21790,15 +21914,15 @@ CTBTkrCoreCalDoca &gt; 25
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1584">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E5 (1584)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1110" y="1170" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1648">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E5  (1648)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1080" y="1170" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
 						<Property name="useCache" value="useCache" />
 						<Property name="includeRows" value="false" />
 						<Property name="testExpression" complex="true">
-							<Complex>(AcdActiveDist3D &gt; -5 | AcdRibbonActDist &gt; -5) &amp; Tkr1SSDVeto &lt; 3 |
+							<Complex>((AcdActiveDist3D &gt; -5 | AcdRibbonActDist &gt; -5) &amp; Tkr1SSDVeto &lt; 3) |
 (AcdActiveDist3D &gt; -150 &amp; AcdActDistTileEnergy &gt; .5) |
 TkrSurplusHitRatio &gt; 1.5 | TkrUpstreamHC &gt; 5 |
 CTBTkrCoreCalDoca &gt; 10
@@ -21827,8 +21951,8 @@ CTBTkrCoreCalDoca &gt; 10
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1585">
-				<DisplayInfo labelText="Path 1Tkr E5 (1585)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1170" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1649">
+				<DisplayInfo labelText="Path 1Tkr E5 (1649)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1170" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21863,15 +21987,15 @@ CTBTkrCoreCalDoca &gt; 10
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1586">
-				<DisplayInfo labelText="FILTER: BKG VTX E6 (1586)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="600" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1650">
+				<DisplayInfo labelText="FILTER: BKG VTX E6  (1650)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="570" y="1030" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
 						<Property name="useCache" value="useCache" />
 						<Property name="includeRows" value="false" />
 						<Property name="testExpression" complex="true">
-							<Complex>(AcdActiveDist3D &gt; 0 | AcdRibbonActDist &gt; 0) &amp; Tkr1SSDVeto &lt; 3 |
+							<Complex>((AcdActiveDist3D &gt; 0 | AcdRibbonActDist &gt; 0) &amp; Tkr1SSDVeto &lt; 3) |
 (AcdActiveDist3D &gt; -10  &amp; AcdActDistTileEnergy &gt; 1 ) |
 (AcdActiveDist3D &gt; -50  &amp; AcdActDistTileEnergy &gt; 2 &amp; Tkr1SSDVeto == 0 ) |
 CTBCalTransTCCD &gt; 35
@@ -21902,8 +22026,8 @@ CTBCalTransTCCD &gt; 35
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1587">
-				<DisplayInfo labelText="Path VTX E6 (1587)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1651">
+				<DisplayInfo labelText="Path VTX E6 (1651)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1030" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -21938,15 +22062,15 @@ CTBCalTransTCCD &gt; 35
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1588">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E6 (1588)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1110" y="1080" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1652">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E6  (1652)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1080" y="1080" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
 						<Property name="useCache" value="useCache" />
 						<Property name="includeRows" value="false" />
 						<Property name="testExpression" complex="true">
-							<Complex>(AcdActiveDist3D &gt; 0 | AcdRibbonActDist &gt; 0) &amp; Tkr1SSDVeto &lt; 3 |
+							<Complex>((AcdActiveDist3D &gt; 0 | AcdRibbonActDist &gt; 0) &amp; Tkr1SSDVeto &lt; 3) |
 (AcdActiveDist3D &gt; -10  &amp; AcdActDistTileEnergy &gt; 1 ) |
 (AcdActiveDist3D &gt; -50  &amp; AcdActDistTileEnergy &gt; 2 &amp; Tkr1SSDVeto == 0 ) |
 CTBTkrCoreCalDoca &gt; 10</Complex>
@@ -21974,8 +22098,8 @@ CTBTkrCoreCalDoca &gt; 10</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1589">
-				<DisplayInfo labelText="Path 1Tkr E6 (1589)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1080" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1653">
+				<DisplayInfo labelText="Path 1Tkr E6 (1653)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1080" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22010,8 +22134,8 @@ CTBTkrCoreCalDoca &gt; 10</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="2" numOutputs="1" id="1590">
-				<DisplayInfo labelText=" (1590)" defaultLabelText="Append" smallIcon="append_small.gif" largeIcon="append_large.gif" x="1570" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="2" numOutputs="1" id="1654">
+				<DisplayInfo labelText=" (1654)" defaultLabelText="Append" smallIcon="append_small.gif" largeIcon="append_large.gif" x="1540" y="1030" />
 				<InputPortToolTips port1="Top" port2="Bottom" />
 				<ArgumentList>
 					<XTProps>
@@ -22043,8 +22167,8 @@ CTBTkrCoreCalDoca &gt; 10</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1591">
-				<DisplayInfo labelText="Pr(GAM)=1 (1591)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="720" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1655">
+				<DisplayInfo labelText="Pr(GAM)=1 (1655)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="690" y="1030" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22079,8 +22203,8 @@ CTBTkrCoreCalDoca &gt; 10</Complex>
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1592">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E1Thin (1592)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1120" y="1510" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1656">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E1Thin (1656)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1090" y="1510" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22117,8 +22241,8 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="-1" numOutputs="1" id="1593">
-				<DisplayInfo labelText="Append (1593)" defaultLabelText="Append" smallIcon="multi_append_small.gif" largeIcon="multi_append_large.gif" x="1480" y="1280" />
+			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="-1" numOutputs="1" id="1657">
+				<DisplayInfo labelText="Append (1657)" defaultLabelText="Append" smallIcon="multi_append_small.gif" largeIcon="multi_append_large.gif" x="1450" y="1280" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22154,8 +22278,8 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1594">
-				<DisplayInfo labelText="Path 1Tkr  E1 (1594)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1360" y="1600" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1658">
+				<DisplayInfo labelText="Path 1Tkr  E1 (1658)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1330" y="1600" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22190,8 +22314,8 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="-1" numOutputs="1" id="1595">
-				<DisplayInfo labelText="Append (1595)" defaultLabelText="Append" smallIcon="multi_append_small.gif" largeIcon="multi_append_large.gif" x="990" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.AppendEngineNode" guiClass="com.insightful.miner.AppendNodeModel" numInputs="-1" numOutputs="1" id="1659">
+				<DisplayInfo labelText="Append (1659)" defaultLabelText="Append" smallIcon="multi_append_small.gif" largeIcon="multi_append_large.gif" x="960" y="1030" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22227,8 +22351,8 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1596">
-				<DisplayInfo labelText="Path VTX E1 (1596)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="810" y="1550" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1660">
+				<DisplayInfo labelText="Path VTX E1 (1660)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="780" y="1550" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -22263,8 +22387,8 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1597">
-				<DisplayInfo labelText="CT: BKG 1Tkr E1Thick (1597)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1240" y="1600" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1661">
+				<DisplayInfo labelText="CT: BKG 1Tkr E1Thick  (1661)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1210" y="1600" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="newColumns">
@@ -23483,15 +23607,15 @@ CalTrackDoca &gt; 200 | Tkr1FirstChisq &gt; 8 |Tkr1ToTFirst &gt; 6
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1598">
-				<DisplayInfo labelText="FILTER: BKG 1Tkr  E1Thick (1598)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1120" y="1600" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1662">
+				<DisplayInfo labelText="FILTER: BKG 1Tkr  E1Thick (1662)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="1090" y="1600" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
 						<Property name="useCache" value="useCache" />
 						<Property name="includeRows" value="false" />
 						<Property name="testExpression" complex="true">
-							<Complex>(AcdTileCount+AcdRibbonCount) &gt; 0 |
+							<Complex>AcdTileCount &gt; 0 | AcdRibbonCount &gt; 0 |
 CalEdgeEnergy &gt; 10 | CalELayer7 &gt; 10 |
 CalTrackDoca &gt; 250 | CalBkHalfRatio &gt; .3 |
 TkrSurplusHitRatio &gt; 1 | TkrUpstreamHC &gt; 5 |
@@ -23499,7 +23623,7 @@ Tkr1ToTFirst &gt; 4 | Tkr1ToTTrAve &gt; 2.2 |
 Tkr1FirstChisq &gt; 20 | TkrNumTracks &gt; 2 |
 abs(CalLongRms) &gt; 75 | CalTransRms &gt; 60 | CalLyr0Ratio &gt; .95 |
 CalMIPRatio &gt; 1. |
-(CTBBestEnergyProb + 1.5*CTBCORE)  &lt; 1.
+CombinedProb  &lt; 1.
 </Complex>
 						</Property>
 						<Property name="specifiedRowsToChunk" value="0" />
@@ -23525,8 +23649,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1599">
-				<DisplayInfo labelText="CT: BKG 1Tkr E1Thin (1599)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1240" y="1510" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1663">
+				<DisplayInfo labelText="CT: BKG 1Tkr E1Thin  (1663)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1210" y="1510" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -24149,8 +24273,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1600">
-				<DisplayInfo labelText="CT: BKG VTX E1 Thick  (1600)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="710" y="1550" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1664">
+				<DisplayInfo labelText="CT: BKG VTX E1 Thick  (1664)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="680" y="1550" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -25037,8 +25161,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1601">
-				<DisplayInfo labelText="CT: BKG VTX E1 Thin (1601)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="700" y="1460" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1665">
+				<DisplayInfo labelText="CT: BKG VTX E1 Thin  (1665)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="670" y="1460" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -25559,8 +25683,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1602">
-				<DisplayInfo labelText="CT: BKG 1Tkr E2 (1602)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1250" y="1430" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1666">
+				<DisplayInfo labelText="CT: BKG 1Tkr E2  (1666)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1220" y="1430" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="newColumns">
@@ -26319,8 +26443,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1603">
-				<DisplayInfo labelText="CT: BKG VTX E2 (1603)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="710" y="1380" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1667">
+				<DisplayInfo labelText="CT: BKG VTX E2  (1667)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="680" y="1380" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -26722,8 +26846,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1604">
-				<DisplayInfo labelText="CT: BKG 1Tkr E3 (1604)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1250" y="1340" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1668">
+				<DisplayInfo labelText="CT: BKG 1Tkr E3  (1668)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1220" y="1340" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -26988,8 +27112,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1605">
-				<DisplayInfo labelText="CT: BKG VTX E3 (1605)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="710" y="1290" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1669">
+				<DisplayInfo labelText="CT: BKG VTX E3  (1669)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="680" y="1290" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -27177,8 +27301,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1606">
-				<DisplayInfo labelText="CT: BKG 1Tkr E4 (1606)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1250" y="1260" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1670">
+				<DisplayInfo labelText="CT: BKG 1Tkr E4  (1670)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1220" y="1260" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -27505,8 +27629,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1608">
-				<DisplayInfo labelText="CT: BKG 1Tkr E5 (1608)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1250" y="1170" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1671">
+				<DisplayInfo labelText="CT: BKG 1Tkr E5  (1671)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1220" y="1170" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -27689,8 +27813,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1609">
-				<DisplayInfo labelText="CT: BKG VTX E5 (1609)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="710" y="1120" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1672">
+				<DisplayInfo labelText="CT: BKG VTX E5  (1672)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="680" y="1120" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -27855,8 +27979,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1610">
-				<DisplayInfo labelText="CT: BKG 1Tkr E6 (1610)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1250" y="1080" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1673">
+				<DisplayInfo labelText="CT: BKG 1Tkr E6  (1673)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="1220" y="1080" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -28217,8 +28341,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1611">
-				<DisplayInfo labelText="Corners &amp; ACD Veto (1611)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="320" y="1200" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1674">
+				<DisplayInfo labelText="Corners &amp; ACD Veto  (1674)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="290" y="1200" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28251,8 +28375,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1612">
-				<DisplayInfo labelText="Aux Variables (1612)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="340" y="1370" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1675">
+				<DisplayInfo labelText="Aux Variables (1675)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="310" y="1370" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28299,64 +28423,8 @@ CalMIPRatio &gt; 1. |
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1613">
-				<DisplayInfo labelText="Aux Variables (1613)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1350" y="720" />
-				<ArgumentList>
-					<XTProps>
-						<Property name="useGlobal" value="true" />
-						<Property name="useCache" value="global" />
-						<Property name="stringSize" value="" />
-						<Property name="specifiedRowsToChunk" value="0" />
-						<Property name="rowsToChunk" value="10000" />
-						<Property name="randomSeed" value="newSeedEveryTime" />
-						<Property name="randomSeedValue" value="5" />
-						<Property name="newColumns">
-							<Property name="CTBCalMaxXtalRatio">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="CalXtalMaxEne/CalEnergyRaw" />
-							</Property>
-							<Property name="CTBTkrEnergyFrac">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="TkrEnergyCorr/EvtEnergyCorr" />
-							</Property>
-							<Property name="CTBTkrLATEdge">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="742. - max(abs(Tkr1X0) , abs(Tkr1Y0))" />
-							</Property>
-							<Property name="CTBCalFrontBackRatio">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="(CalELayer0+CalELayer1+CalELayer2+CalELayer3)/max((CalELayer4+CalELayer5+CalELayer6+CalELayer7),1.)" />
-							</Property>
-							<Property name="CTBAcdUpperTileCount">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="AcdNoTop + AcdNoSideRow0 + AcdNoSideRow1 + AcdNoSideRow2" />
-							</Property>
-							<Property name="CTBAcdLowerTileCount">
-								<Property name="type" value="continuous" />
-								<Property name="expression" value="AcdNoSideRow3" />
-							</Property>
-						</Property>
-					</XTProps>
-				</ArgumentList>
-				<ComponentComments>
-					<AuthorComments>
-						<AuthorName>atwood</AuthorName>
-						<AuthorCommentTitle>Not Provided</AuthorCommentTitle>
-						<AuthorCommentDateCreated>September 09, 2005</AuthorCommentDateCreated>
-						<AuthorCommentText>Not Provided</AuthorCommentText>
-					</AuthorComments>
-					<DiscussionComments>
-						<Comment>
-							<CommentAuthor>Not Provided</CommentAuthor>
-							<CommentDateCreated>Not Provided</CommentDateCreated>
-							<CommentTitle>Not Provided</CommentTitle>
-							<CommentText>Not Provided</CommentText>
-						</Comment>
-					</DiscussionComments>
-				</ComponentComments>
-			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1614">
-				<DisplayInfo labelText="FILTER: BKG VTX E4 (1614)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="580" y="1210" />
+			<ActivityNode engineClass="com.insightful.miner.FilterRowsEngineNode" guiClass="com.insightful.miner.FilterRowsNodeModel" numInputs="1" numOutputs="1" id="1676">
+				<DisplayInfo labelText="FILTER: BKG VTX E4  (1676)" defaultLabelText="Filter Rows" smallIcon="filter_rows_small.gif" largeIcon="filter_rows_large.gif" x="550" y="1210" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28394,8 +28462,8 @@ CTBTkrCoreCalDoca &gt; 30
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1615">
-				<DisplayInfo labelText="CT: BKG VTX E4 (1615)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="690" y="1210" />
+			<ActivityNode engineClass="com.insightful.miner.PredictEngineNode" guiClass="com.insightful.miner.PredictNodeModel" numInputs="1" numOutputs="1" id="1677">
+				<DisplayInfo labelText="CT: BKG VTX E4  (1677)" defaultLabelText="Predict: Classification Tree" smallIcon="predict_small.gif" largeIcon="predict_large.gif" x="660" y="1210" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="modelIndependentVar">
@@ -28595,8 +28663,8 @@ CTBTkrCoreCalDoca &gt; 30
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1616">
-				<DisplayInfo labelText="CTBGAM" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1660" y="1030" />
+			<ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" numInputs="1" numOutputs="1" id="1678">
+				<DisplayInfo labelText="Create Columns (1678)" defaultLabelText="Create Columns" smallIcon="create_cols_small.gif" largeIcon="create_cols_large.gif" x="1050" y="1680" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28607,9 +28675,9 @@ CTBTkrCoreCalDoca &gt; 30
 						<Property name="randomSeed" value="newSeedEveryTime" />
 						<Property name="randomSeedValue" value="5" />
 						<Property name="newColumns">
-							<Property name="CTBGAM">
+							<Property name="CombinedProb">
 								<Property name="type" value="continuous" />
-								<Property name="expression" value="get(&quot;Pr(GAM)&quot;)" />
+								<Property name="expression" value="(CTBBestEnergyProb + 1.5*CTBCORE)" />
 							</Property>
 						</Property>
 					</XTProps>
@@ -28631,8 +28699,8 @@ CTBTkrCoreCalDoca &gt; 30
 					</DiscussionComments>
 				</ComponentComments>
 			</ActivityNode>
-			<ActivityNode engineClass="com.insightful.miner.FilterColumnsEngineNode" guiClass="com.insightful.miner.FilterColumnsNodeModel" numInputs="1" numOutputs="1" id="1617">
-				<DisplayInfo labelText="Delete IM Vars" defaultLabelText="Filter Columns" smallIcon="filter_cols_small.gif" largeIcon="filter_cols_large.gif" x="1718" y="971" />
+			<ActivityNode engineClass="com.insightful.miner.FilterColumnsEngineNode" guiClass="com.insightful.miner.FilterColumnsNodeModel" numInputs="1" numOutputs="1" id="1679">
+				<DisplayInfo labelText="Filter Columns (1679)" defaultLabelText="Filter Columns" smallIcon="filter_cols_small.gif" largeIcon="filter_cols_large.gif" x="1173" y="1673" />
 				<ArgumentList>
 					<XTProps>
 						<Property name="useGlobal" value="true" />
@@ -28640,9 +28708,7 @@ CTBTkrCoreCalDoca &gt; 30
 						<Property name="specifiedRowsToChunk" value="0" />
 						<Property name="rowsToChunk" value="10000" />
 						<Property name="excludeColumns">
-							<Property name="Pr(VTX)" value="true" />
-							<Property name="Pr(CORE)" value="true" />
-							<Property name="Pr(GAM)" value="true" />
+							<Property name="CombinedProb" value="true" />
 						</Property>
 					</XTProps>
 				</ArgumentList>
@@ -28671,80 +28737,83 @@ CTBTkrCoreCalDoca &gt; 30
 		</TextNodeList>
 		<CollapsedNodeList />
 		<LinkList>
-			<Link fromNode="1561" fromPort="1" toNode="1614" toPort="0" orthogonal="true" />
-			<Link fromNode="1615" fromPort="0" toNode="1579" toPort="0" orthogonal="true" />
-			<Link fromNode="1614" fromPort="0" toNode="1615" toPort="0" orthogonal="true" />
-			<Link fromNode="1611" fromPort="0" toNode="1612" toPort="0" orthogonal="true" />
-			<Link fromNode="1613" fromPort="0" toNode="1611" toPort="0" orthogonal="true" />
+			<Link fromNode="1679" fromPort="0" toNode="1661" toPort="0" orthogonal="true" />
+			<Link fromNode="1662" fromPort="0" toNode="1679" toPort="0" orthogonal="true" />
+			<Link fromNode="1654" fromPort="0" toNode="1616" toPort="0" orthogonal="true" />
+			<Link fromNode="1613" fromPort="0" toNode="1674" toPort="0" orthogonal="true" />
+			<Link fromNode="1678" fromPort="0" toNode="1662" toPort="0" orthogonal="true" />
+			<Link fromNode="1630" fromPort="1" toNode="1678" toPort="0" orthogonal="true" />
+			<Link fromNode="1630" fromPort="0" toNode="1656" toPort="0" orthogonal="true" />
+			<Link fromNode="1661" fromPort="0" toNode="1658" toPort="0" orthogonal="true" />
+			<Link fromNode="1669" fromPort="0" toNode="1640" toPort="0" orthogonal="true" />
+			<Link fromNode="1667" fromPort="0" toNode="1636" toPort="0" orthogonal="true" />
+			<Link fromNode="1665" fromPort="0" toNode="1620" toPort="0" orthogonal="true" />
+			<Link fromNode="1664" fromPort="0" toNode="1660" toPort="0" orthogonal="true" />
+			<Link fromNode="1672" fromPort="0" toNode="1647" toPort="0" orthogonal="true" />
+			<Link fromNode="1652" fromPort="0" toNode="1673" toPort="0" orthogonal="true" />
+			<Link fromNode="1646" fromPort="0" toNode="1672" toPort="0" orthogonal="true" />
+			<Link fromNode="1648" fromPort="0" toNode="1671" toPort="0" orthogonal="true" />
+			<Link fromNode="1641" fromPort="0" toNode="1668" toPort="0" orthogonal="true" />
+			<Link fromNode="1635" fromPort="0" toNode="1667" toPort="0" orthogonal="true" />
+			<Link fromNode="1637" fromPort="0" toNode="1666" toPort="0" orthogonal="true" />
+			<Link fromNode="1623" fromPort="0" toNode="1665" toPort="0" orthogonal="true" />
+			<Link fromNode="1656" fromPort="0" toNode="1663" toPort="0" orthogonal="true" />
+			<Link fromNode="1660" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1620" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1636" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1640" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1643" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1647" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1651" fromPort="0" toNode="1659" toPort="0" orthogonal="true" />
+			<Link fromNode="1657" fromPort="0" toNode="1654" toPort="1" orthogonal="true" />
+			<Link fromNode="1658" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1629" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1638" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1642" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1645" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1649" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1653" fromPort="0" toNode="1657" toPort="0" orthogonal="true" />
+			<Link fromNode="1650" fromPort="0" toNode="1655" toPort="0" orthogonal="true" />
+			<Link fromNode="1655" fromPort="0" toNode="1651" toPort="0" orthogonal="true" />
+			<Link fromNode="1634" fromPort="1" toNode="1648" toPort="0" orthogonal="true" />
+			<Link fromNode="1627" fromPort="1" toNode="1646" toPort="0" orthogonal="true" />
+			<Link fromNode="1633" fromPort="1" toNode="1644" toPort="0" orthogonal="true" />
+			<Link fromNode="1632" fromPort="1" toNode="1641" toPort="0" orthogonal="true" />
+			<Link fromNode="1625" fromPort="1" toNode="1639" toPort="0" orthogonal="true" />
+			<Link fromNode="1633" fromPort="0" toNode="1634" toPort="0" orthogonal="true" />
+			<Link fromNode="1632" fromPort="0" toNode="1633" toPort="0" orthogonal="true" />
+			<Link fromNode="1631" fromPort="0" toNode="1632" toPort="0" orthogonal="true" />
+			<Link fromNode="1626" fromPort="0" toNode="1627" toPort="0" orthogonal="true" />
+			<Link fromNode="1625" fromPort="0" toNode="1626" toPort="0" orthogonal="true" />
+			<Link fromNode="1624" fromPort="0" toNode="1625" toPort="0" orthogonal="true" />
+			<Link fromNode="1619" fromPort="0" toNode="1624" toPort="0" orthogonal="true" />
+			<Link fromNode="1619" fromPort="1" toNode="1622" toPort="0" orthogonal="true" />
+			<Link fromNode="1622" fromPort="0" toNode="1623" toPort="0" orthogonal="true" />
+			<Link fromNode="1622" fromPort="1" toNode="1621" toPort="0" orthogonal="true" />
+			<Link fromNode="1618" fromPort="0" toNode="1619" toPort="0" orthogonal="true" />
+			<Link fromNode="1624" fromPort="1" toNode="1635" toPort="0" orthogonal="true" />
+			<Link fromNode="1631" fromPort="1" toNode="1637" toPort="0" orthogonal="true" />
+			<Link fromNode="1634" fromPort="0" toNode="1652" toPort="0" orthogonal="true" />
+			<Link fromNode="1627" fromPort="0" toNode="1650" toPort="0" orthogonal="true" />
+			<Link fromNode="1621" fromPort="0" toNode="1664" toPort="0" orthogonal="true" />
+			<Link fromNode="1639" fromPort="0" toNode="1669" toPort="0" orthogonal="true" />
+			<Link fromNode="1644" fromPort="0" toNode="1670" toPort="0" orthogonal="true" />
+			<Link fromNode="1663" fromPort="0" toNode="1629" toPort="0" orthogonal="true" />
+			<Link fromNode="1666" fromPort="0" toNode="1638" toPort="0" orthogonal="true" />
+			<Link fromNode="1668" fromPort="0" toNode="1642" toPort="0" orthogonal="true" />
+			<Link fromNode="1670" fromPort="0" toNode="1645" toPort="0" orthogonal="true" />
+			<Link fromNode="1671" fromPort="0" toNode="1649" toPort="0" orthogonal="true" />
+			<Link fromNode="1673" fromPort="0" toNode="1653" toPort="0" orthogonal="true" />
+			<Link fromNode="1659" fromPort="0" toNode="1654" toPort="0" orthogonal="true" />
+			<Link fromNode="1675" fromPort="0" toNode="1618" toPort="0" orthogonal="true" />
+			<Link fromNode="1618" fromPort="1" toNode="1628" toPort="0" orthogonal="true" />
+			<Link fromNode="1628" fromPort="0" toNode="1631" toPort="0" orthogonal="true" />
+			<Link fromNode="1628" fromPort="1" toNode="1630" toPort="0" orthogonal="true" />
+			<Link fromNode="1674" fromPort="0" toNode="1675" toPort="0" orthogonal="true" />
+			<Link fromNode="1676" fromPort="0" toNode="1677" toPort="0" orthogonal="true" />
+			<Link fromNode="1677" fromPort="0" toNode="1643" toPort="0" orthogonal="true" />
+			<Link fromNode="1626" fromPort="1" toNode="1676" toPort="0" orthogonal="true" />
 			<Link fromNode="1397" fromPort="0" toNode="1613" toPort="0" orthogonal="true" />
-			<Link fromNode="1563" fromPort="1" toNode="1565" toPort="0" orthogonal="true" />
-			<Link fromNode="1563" fromPort="0" toNode="1566" toPort="0" orthogonal="true" />
-			<Link fromNode="1553" fromPort="1" toNode="1563" toPort="0" orthogonal="true" />
-			<Link fromNode="1612" fromPort="0" toNode="1553" toPort="0" orthogonal="true" />
-			<Link fromNode="1595" fromPort="0" toNode="1590" toPort="0" orthogonal="true" />
-			<Link fromNode="1610" fromPort="0" toNode="1589" toPort="0" orthogonal="true" />
-			<Link fromNode="1608" fromPort="0" toNode="1585" toPort="0" orthogonal="true" />
-			<Link fromNode="1606" fromPort="0" toNode="1581" toPort="0" orthogonal="true" />
-			<Link fromNode="1604" fromPort="0" toNode="1577" toPort="0" orthogonal="true" />
-			<Link fromNode="1602" fromPort="0" toNode="1573" toPort="0" orthogonal="true" />
-			<Link fromNode="1599" fromPort="0" toNode="1564" toPort="0" orthogonal="true" />
-			<Link fromNode="1580" fromPort="0" toNode="1606" toPort="0" orthogonal="true" />
-			<Link fromNode="1574" fromPort="0" toNode="1605" toPort="0" orthogonal="true" />
-			<Link fromNode="1556" fromPort="0" toNode="1600" toPort="0" orthogonal="true" />
-			<Link fromNode="1565" fromPort="0" toNode="1598" toPort="0" orthogonal="true" />
-			<Link fromNode="1598" fromPort="0" toNode="1597" toPort="0" orthogonal="true" />
-			<Link fromNode="1562" fromPort="0" toNode="1586" toPort="0" orthogonal="true" />
-			<Link fromNode="1569" fromPort="0" toNode="1588" toPort="0" orthogonal="true" />
-			<Link fromNode="1566" fromPort="1" toNode="1572" toPort="0" orthogonal="true" />
-			<Link fromNode="1559" fromPort="1" toNode="1570" toPort="0" orthogonal="true" />
-			<Link fromNode="1553" fromPort="0" toNode="1554" toPort="0" orthogonal="true" />
-			<Link fromNode="1557" fromPort="1" toNode="1556" toPort="0" orthogonal="true" />
-			<Link fromNode="1557" fromPort="0" toNode="1558" toPort="0" orthogonal="true" />
-			<Link fromNode="1554" fromPort="1" toNode="1557" toPort="0" orthogonal="true" />
-			<Link fromNode="1554" fromPort="0" toNode="1559" toPort="0" orthogonal="true" />
-			<Link fromNode="1559" fromPort="0" toNode="1560" toPort="0" orthogonal="true" />
-			<Link fromNode="1560" fromPort="0" toNode="1561" toPort="0" orthogonal="true" />
-			<Link fromNode="1561" fromPort="0" toNode="1562" toPort="0" orthogonal="true" />
-			<Link fromNode="1566" fromPort="0" toNode="1567" toPort="0" orthogonal="true" />
-			<Link fromNode="1567" fromPort="0" toNode="1568" toPort="0" orthogonal="true" />
-			<Link fromNode="1568" fromPort="0" toNode="1569" toPort="0" orthogonal="true" />
-			<Link fromNode="1560" fromPort="1" toNode="1574" toPort="0" orthogonal="true" />
-			<Link fromNode="1567" fromPort="1" toNode="1576" toPort="0" orthogonal="true" />
-			<Link fromNode="1568" fromPort="1" toNode="1580" toPort="0" orthogonal="true" />
-			<Link fromNode="1562" fromPort="1" toNode="1582" toPort="0" orthogonal="true" />
-			<Link fromNode="1569" fromPort="1" toNode="1584" toPort="0" orthogonal="true" />
-			<Link fromNode="1591" fromPort="0" toNode="1587" toPort="0" orthogonal="true" />
-			<Link fromNode="1586" fromPort="0" toNode="1591" toPort="0" orthogonal="true" />
-			<Link fromNode="1565" fromPort="1" toNode="1592" toPort="0" orthogonal="true" />
-			<Link fromNode="1589" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1585" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1581" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1577" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1573" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1564" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1594" fromPort="0" toNode="1593" toPort="0" orthogonal="true" />
-			<Link fromNode="1593" fromPort="0" toNode="1590" toPort="1" orthogonal="true" />
-			<Link fromNode="1587" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1583" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1579" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1575" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1571" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1555" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1596" fromPort="0" toNode="1595" toPort="0" orthogonal="true" />
-			<Link fromNode="1592" fromPort="0" toNode="1599" toPort="0" orthogonal="true" />
-			<Link fromNode="1558" fromPort="0" toNode="1601" toPort="0" orthogonal="true" />
-			<Link fromNode="1572" fromPort="0" toNode="1602" toPort="0" orthogonal="true" />
-			<Link fromNode="1570" fromPort="0" toNode="1603" toPort="0" orthogonal="true" />
-			<Link fromNode="1576" fromPort="0" toNode="1604" toPort="0" orthogonal="true" />
-			<Link fromNode="1584" fromPort="0" toNode="1608" toPort="0" orthogonal="true" />
-			<Link fromNode="1582" fromPort="0" toNode="1609" toPort="0" orthogonal="true" />
-			<Link fromNode="1588" fromPort="0" toNode="1610" toPort="0" orthogonal="true" />
-			<Link fromNode="1609" fromPort="0" toNode="1583" toPort="0" orthogonal="true" />
-			<Link fromNode="1600" fromPort="0" toNode="1596" toPort="0" orthogonal="true" />
-			<Link fromNode="1601" fromPort="0" toNode="1555" toPort="0" orthogonal="true" />
-			<Link fromNode="1603" fromPort="0" toNode="1571" toPort="0" orthogonal="true" />
-			<Link fromNode="1605" fromPort="0" toNode="1575" toPort="0" orthogonal="true" />
-			<Link fromNode="1597" fromPort="0" toNode="1594" toPort="0" orthogonal="true" />
 			<Link fromNode="1333" fromPort="0" toNode="1351" toPort="0" orthogonal="true" />
 			<Link fromNode="1346" fromPort="0" toNode="1345" toPort="0" orthogonal="true" />
 			<Link fromNode="1348" fromPort="0" toNode="1355" toPort="0" orthogonal="true" />
@@ -28796,7 +28865,6 @@ CTBTkrCoreCalDoca &gt; 30
 			<Link fromNode="787" fromPort="0" toNode="1333" toPort="0" orthogonal="true" />
 			<Link fromNode="451" fromPort="0" toNode="1397" toPort="0" orthogonal="true" />
 			<Link fromNode="1340" fromPort="0" toNode="120" toPort="0" orthogonal="true" />
-			<Link fromNode="1590" fromPort="0" toNode="1616" toPort="0" orthogonal="true" />
 			<Link fromNode="1616" fromPort="0" toNode="1617" toPort="0" orthogonal="true" />
 			<Link fromNode="1617" fromPort="0" toNode="1470" toPort="0" orthogonal="true" />
 		</LinkList>
