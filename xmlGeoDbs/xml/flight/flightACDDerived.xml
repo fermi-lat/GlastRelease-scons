@@ -229,6 +229,15 @@
     </mul>
   </const>
 
+<!-- Z dimension of extra piece for bent tiles -->
+  <const name="topTileBentZOp">
+    <notes>Scaled for operating temperature</notes>
+    <mul>
+      <refer refTo="topTileBentZ" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
 <!-- Scaled versions of side tile dimensions -->
   <const name="sideTileHeight0Op">
     <notes>Scaled for operating temperature 
@@ -783,7 +792,7 @@
   </const>
 
   <const name="topTileMid_dz">
-    <notes>Displacement w.r.t. center of ACD top envelope of
+    <notes>Displacement w.r.t. LAT origin for
           tiles in rows [was cols before Nov 05] 1 and 3</notes>
     <minus>
       <refer refTo="topTileEdge_dz" />
@@ -795,7 +804,7 @@
   </const>
 
   <const name="topTileCent_dz">
-    <notes>Displacement w.r.t. center of ACD top envelope of
+    <notes>Displacement w.r.t. LAT origin for
           tiles in row [was col before Nov 05] 2</notes>
     <minus>
       <refer refTo="topTileMid_dz" />
@@ -901,6 +910,48 @@
     </uminus>
   </const>
 
+ <!-- Displacements for extra pieces stuck on to make bent tiles of the
+      top tiles in row 0 and row 4.  Z is the same for all.  X-displacement
+      depends on column (5 possible values, one being zero) and 
+      Y-displacement on row (2 possible values).  Don't bother to define
+      the X-displacements since they're the same as main pieces -->
+  <const name="topTileBent_dz" >
+    <notes>Z displacement w.r.t origin of extra pieces needed to make
+           bent tiles</notes>
+    <minus>
+      <refer refTo="topTileEdge_dz" />
+      <half>
+        <add>
+          <refer refTo="tileThicknessOp" />
+          <refer refTo="topTileBentZOp" />
+        </add>
+      </half>
+    </minus>
+  </const>
+
+  <const name="topTileBentR0_dy">
+    <notes>Y displacement w.r.t origin of extra pieces needed to make
+           bent tiles in row 0</notes>
+    <minus>
+      <refer refTo="topTileEdge_dyn" />
+      <half>
+        <minus>
+          <refer refTo="topTileYEdge_lOp" />
+          <refer refTo="tileThicknessOp" />
+        </minus>
+      </half>
+    </minus>
+  </const>
+
+  <const name="topTileBentR4_dy">
+    <notes>Y displacement w.r.t origin of extra pieces needed to make
+           bent tiles in row 0</notes>
+    <uminus>
+      <refer refTo="topTileBentR0_dy" />
+    </uminus>
+  </const>
+
+
 
   <const name="topYRibbon_dz" >
     <notes>Z displacement rel. to containing envelope 
@@ -968,12 +1019,13 @@
 
   <const name="xRibbonTopEdge_l">
     <notes>length of ribbon segments running under rows 0,4
-      of top tiles</notes>
+      of top tiles.  Shorten up to avoid bent tile pieces (Jan '06)</notes>
     <minus>
-      <refer refTo="topTileYEdge_l" />
+      <refer refTo="topTileYEdge_lOp" />
       <add>
         <refer refTo="topOverlap" />
         <refer refTo="ribbonGap" />
+        <refer refTo="tileThicknessOp" />
       </add>
     </minus>
   </const>            
@@ -1016,29 +1068,42 @@
      </add>
    </const>
 
-         <const name="ribbonsSideZ">
-           <notes>Height of envelope volume to contain 4 side
-                  ribbons. The envelope extends from bottom of 
-                  ACDTop volume to back edge of side tiles.
-                  But this isn't quite right!  They only go
-                  down to a Z of -15.67 mm, whereas tiles go
-                  down to -45.5.  Furthermore, the side parts
-                  of X-ribbons should go higher:  nearly up to
-                  underside of the top tiles.
-           </notes>
-           <minus>
-              <minus>
-                <refer refTo="ACDTop_d" />
-                <refer refTo="ACDTopZHalf" />
-              </minus>
-              <minus>
-                <refer refTo="tileSide_dz" />
-                <half>
-                  <refer refTo="ACDSide_z" />
-                </half>
-              </minus>
-            </minus>
-          </const>
+   <const name="ribbonsSideZ">
+     <notes>Height of envelope volume to contain 4 side
+            ribbons. The envelope extends from bottom of 
+            ACDTop volume to back edge of side tiles.
+            But this isn't quite right!  They only go
+            down to a Z of -15.67 mm, whereas tiles go
+            down to -45.5.  Furthermore, the side parts
+            of X-ribbons should go higher:  nearly up to
+            underside of the top tiles.
+     </notes>
+     <minus>
+       <minus>
+         <refer refTo="ACDTop_d" />
+         <refer refTo="ACDTopZHalf" />
+       </minus>
+       <minus>
+         <refer refTo="tileSide_dz" />
+         <half>
+           <refer refTo="ACDSide_z" />
+         </half>
+       </minus>
+     </minus>
+  </const>
+
+<!-- Length of little extra pieces of X-ribbon behind bent tiles -->
+  <const name="ribbonBentZ">
+    <notes>Length (Z) of pieces of ribbon behind extra bent tile pieces
+    </notes>
+    <minus>
+      <refer refTo="topTileBentZ" />
+      <add>
+        <refer refTo="ribbonThickness" />
+        <refer refTo="ribbonGap" />
+      </add>
+    </minus>
+  </const>
 
 <!-- z displacements for the different segments of the X ribbons. Make
      them a fixed distance (ribbonGap) underneath the corresponding top
@@ -1050,6 +1115,10 @@
            as xRibbonInner_dx, xRibbonOuter_dx
        * 2 Y displacements, their negatives, and 0 displacement for center
          piece
+
+     Also compute Z-displacement of ribbonBent pieces (they are just
+     below XRibbonEdge pieces) and transverse (Y) displacement: leave
+     gap 'ribbonGap' between these pieces and bent tile pieces.
  -->
   <const name="topXRibbonEdge_dz">
     <notes>Z displacement for outer segments (1 and 5) of top ribbons
@@ -1062,6 +1131,47 @@
         <refer refTo="ribbonGap" />
       </add>
     </minus>
+  </const>
+
+  <const name="ribbonBent_dz">
+    <notes>Z displacement of extra little pieces of ribbon behind bent tiles
+    </notes>
+    <minus>
+      <refer refTo="topTileEdge_dz" />
+      <add>
+        <refer refTo="ribbonThickness" />
+        <refer refTo="ribbonGap" />
+        <half>
+          <add>
+            <refer refTo="ribbonBentZ" />
+            <refer refTo="tileThickness" />
+          </add>
+        </half>
+      </add>
+    </minus>
+  </const>
+
+  <const name="ribbonBentR4_dy">
+    <notes>Y displacement for ribbons behind bent tiles in row 4</notes>
+    <minus>
+      <refer refTo="topTileBentR4_dy" />
+      <add>
+        <refer refTo="ribbonGap" />
+        <half>
+          <add>
+            <refer refTo="tileThickness" />
+            <refer refTo="ribbonThickness" />
+          </add>
+        </half>
+      </add>
+    </minus>
+  </const>
+
+  <const name="ribbonBentR0_dy">
+    <notes>Y displacement for ribbons behind bent tiles in row. 0</notes>
+    <uminus>
+      <refer refTo="ribbonBentR4_dy" />
+    </uminus>
   </const>
 
   <const name="topXRibbonMid_dz">

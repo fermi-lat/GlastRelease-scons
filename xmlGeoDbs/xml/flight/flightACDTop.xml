@@ -10,7 +10,8 @@ Assemble as
        Each extends across the entire top.  All have same Z-displacement.
        Then the 20 X-ribbons.
 -->
-  <!-- Row 0. Has largest negative y displacement -->
+  <!-- Row 0. Has largest negative y displacement.  It takes two
+    volumes to make each tile in row 0-->
   <posXYZ volume="topTileRedgeCedge"
           XREF="topTileEdge_dxn"
           YREF="topTileEdge_dyn"
@@ -20,6 +21,20 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/>
     <idField name="fRow" value="0" />
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileEdgeBent"
+          XREF="topTileEdge_dxn"
+          YREF="topTileBentR0_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="1" />
   </posXYZ>
 
   <posXYZ volume="topTileRedgeCmid"
@@ -31,6 +46,20 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile" /> 
     <idField name="fRow" value="0" />
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileMidBent"
+          XREF="topTileMid_dxn"
+          YREF="topTileBentR0_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="1" />
   </posXYZ>
 
   <posXYZ volume="topTileRedgeCcent"
@@ -41,8 +70,20 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile" /> 
     <idField name="fRow" value="0"/>
     <idField name="fCol" value="2"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileCentBent"
+          YREF="topTileBentR0_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="1" />
+  </posXYZ>
 
 
   <posXYZ volume="topTileRedgeCmid"
@@ -54,7 +95,22 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/>
     <idField name="fRow" value="0"/>
     <idField name="fCol" value="3"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileMidBent"
+          XREF="topTileMid_dx"
+          YREF="topTileBentR0_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="1" />
+  </posXYZ>
+
 
   <posXYZ volume="topTileRedgeCedge"
           XREF="topTileEdge_dx"
@@ -65,6 +121,20 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="0"/>
     <idField name="fCol" value="4"/>
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileEdgeBent"
+          XREF="topTileEdge_dx"
+          YREF="topTileBentR0_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="0" />
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="1" />
   </posXYZ>
 
   <!-- row 1. Y displacement is topTileMid_dyn   child #5 -->
@@ -238,6 +308,20 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="4"/>
     <idField name="fCol" value="0"/>
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileEdgeBent"
+          XREF="topTileEdge_dxn"
+          YREF="topTileBentR4_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="4" />
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="1" />
   </posXYZ>
 
   <posXYZ volume="topTileRedgeCmid"
@@ -249,7 +333,22 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="4"/>
     <idField name="fCol" value="1"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
+
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileMidBent"
+          XREF="topTileMid_dxn"
+          YREF="topTileBentR4_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="4" />
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="1" />
+  </posXYZ>
+
 
   <posXYZ volume="topTileRedgeCcent"
           YREF="topTileEdge_dy"
@@ -259,6 +358,18 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="4"/>
     <idField name="fCol" value="2"/>
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileCentBent"
+          YREF="topTileBentR4_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="4" />
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="1" />
   </posXYZ>
 
   <posXYZ volume="topTileRedgeCmid"
@@ -270,7 +381,21 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="4"/>
     <idField name="fCol" value="3"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileMidBent"
+          XREF="topTileMid_dx"
+          YREF="topTileBentR4_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="4" />
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="1" />
+  </posXYZ>
+
 
   <posXYZ volume="topTileRedgeCedge"
           XREF="topTileEdge_dx"
@@ -281,7 +406,21 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile" /> 
     <idField name="fRow" value="4"/>
     <idField name="fCol" value="4"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
+  <!-- companion to make it a bent tile -->
+  <posXYZ volume="topTileEdgeBent"
+          XREF="topTileEdge_dx"
+          YREF="topTileBentR4_dy"
+          ZREF="topTileBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDTopFace" />
+    <idField name="fACDCmp" valueREF="eACDTile"/>
+    <idField name="fRow" value="4" />
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="1" />
+  </posXYZ>
+
 
 <!-- now for y-ribbons (the easy ones) -->
   <posXYZ volume="yRibbonTop"
@@ -557,4 +696,108 @@ Assemble as
         <idField name="fMeasure" valueREF="eMeasureX" />
         <idField name="fRibbon"  value="3" />
         <idField name="fRibbonSegment" value="5" />    
+  </posXYZ>
+
+<!-- Place 8 little pieces of ribbon behind (toward origin, relative to) bent
+     tiles.  X displacements are identical to side ribbons and top x ribbons.
+     Pieces near row 0 tiles get id field value of 6; those near row 4 have
+     id field value of 7.
+     Start with ribbon 0, row 0, then ribbon 1, row 0,... (all with
+     fRibbonSegment=6) then do row 4. 
+  -->
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dxn"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="6" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dxn"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="6" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dx"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="6" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dx"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="6" />    
+  </posXYZ>
+
+<!-- now for YPosFace ribbon bits  -->
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dxn"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dxn"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dx"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dx"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="7" />    
   </posXYZ>

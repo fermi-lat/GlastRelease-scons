@@ -97,6 +97,33 @@
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
+<!-- Extra boxes located adjacent to bottom (outer edge) of top tiles in 
+     rows 0 and 4 to simulate a bent tile.                            -->
+<box name="topTileCentBent"
+     XREF="topTileXCentral_lOp"
+     YREF="tileThicknessOp"
+     ZREF="topTileBentZOp"
+     materialREF="tileMat"
+     sensitive="posHit" 
+     detectorTypeREF="eDTypeACDTile"/>
+
+<box name="topTileMidBent"
+     XREF="topTileXMid_lOp"
+     YREF="tileThicknessOp"
+     ZREF="topTileBentZOp"
+     materialREF="tileMat"
+     sensitive="posHit" 
+     detectorTypeREF="eDTypeACDTile"/>
+
+<box name="topTileEdgeBent"
+     XREF="topTileXEdge_lOp"
+     YREF="tileThicknessOp"
+     ZREF="topTileBentZOp"
+     materialREF="tileMat"
+     sensitive="posHit" 
+     detectorTypeREF="eDTypeACDTile"/>
+
+
 <!-- Boxes for top ribbons. Y ribbons just have one top piece -->
 <box name="yRibbonTop"
      XREF="yRibbonTop_l"
@@ -269,11 +296,20 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      Y ribbons.  And neither goes all the way to the bottom of the
      side tiles: they're about 30 mm short.  Tiles go down to
      -45.5 mm; ribbons go down to -15.67.
+     Also (Jan 06) define extra side ribbon piece to go behind bent tiles.
 -->
 <box name="sideRibbon"
      XREF="ribbonWidth"
      YREF="ribbonThickness"
      ZREF="ribbonsSideZ"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="ribbonBent"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribbonBentZ"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />

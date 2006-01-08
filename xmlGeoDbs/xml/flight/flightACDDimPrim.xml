@@ -56,6 +56,8 @@ Last revised Nov. 2005 (swap col for row; value now 2.6)</prim>
   <prim name="sideTileR0_dt" value="839.97">Transverse displacement
    of top row of side tiles, last revised Nov 2005 from new 3-d model</prim>
 
+<prim name="topTileBentZ" value="50.0">Z dimension for extra box stuck onto
+ the bottom of top tiles in rows 0 and 4 to simulate a bent tile. </prim>
  
 <!-- side tile stuff -->
   <prim name="sideTileHeight0" value="366">Height of top row 
