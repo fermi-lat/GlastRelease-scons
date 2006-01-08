@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+07-jan-05 v0r3  THB uses Trigger/LivetimeSvc to manage live, deadtime.
 05-jan-05 v0r2  THB getting closer, but still test mode
 18-dec-05 v0r1  THB Functional test program  
 14-Dec-05 v0    THB Initial check-in of development version 
