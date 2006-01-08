@@ -6,8 +6,10 @@ $Header$
 
 */
 
-
 #include "InterleaveAlg.h"
+
+// this service manages livetime calculations
+#include "Trigger/ILivetimeSvc.h"
 
 // TDS class declarations: input data, and McParticle tree
 #include "Event/MonteCarlo/McParticle.h"
@@ -17,8 +19,6 @@ $Header$
 
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-
-#include "CLHEP/Random/RandFlat.h"
 
 // ROOT includes
 #include "TTree.h"
@@ -45,7 +45,7 @@ static const AlgFactory<InterleaveAlg>  Factory;
 const IAlgFactory& InterleaveAlgFactory = Factory;
 
 
-double InterleaveAlg::s_triggerRate=1;
+double InterleaveAlg::s_rate=1;
 
 //------------------------------------------------------------------------
 //! ctor
@@ -72,6 +72,12 @@ StatusCode InterleaveAlg::initialize(){
     sc = service("RootTupleSvc", m_rootTupleSvc);
     if( sc.isFailure() ) {
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
+        return sc;
+    }
+
+    sc = service("LivetimeSvc", m_LivetimeSvc);
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "failed to get the LivetimeSvc" << endreq;
         return sc;
     }
 
@@ -109,9 +115,10 @@ StatusCode InterleaveAlg::initialize(){
     m_selector->disable("Pt*");
 
 
-    // set initial default values
-    s_triggerRate = m_selector->triggerRate(0.);
-    log << MSG::INFO << "initialized OK: initial trigger rate is " << s_triggerRate << " Hz"<< endreq;
+    // set initial default values for downlink rate to fold in
+    s_rate = m_selector->downlinkRate(0.);
+    log << MSG::INFO << "initialized OK: initial downlink rate to merge is " << s_rate << " Hz"<< endreq;
+    m_LivetimeSvc->setTriggerRate(m_selector->triggerRate(0));
 
     return sc;
 }
@@ -124,7 +131,6 @@ StatusCode InterleaveAlg::execute()
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
     // check that the TDS has an appropriate pseudo-background 
 
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
@@ -138,15 +144,22 @@ StatusCode InterleaveAlg::execute()
     double ke = primary.initialFourMomentum().e()-primary.initialFourMomentum().m();
     log << MSG::DEBUG << "Primary particle energy: " << ke << endreq;
 
-    if( ke>1. ) return sc; // not a flagged sampled_background 
+    if( ke>1. ){
+        setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
+        return sc; // not a flagged sampled_background 
+    }
     ++m_count;
 
-    // Found a sampled_background particle
-    // perhaps modify its rate
-    s_triggerRate = m_selector->triggerRate(magneticLatitude());
-    double fraction = m_selector->downlinkRate(magneticLatitude())/s_triggerRate;
-    double r = RandFlat::shoot();
-    if( r>fraction ) return sc;
+
+    m_selector->downlinkRate(magneticLatitude());
+    m_LivetimeSvc->setTriggerRate(m_selector->triggerRate(magneticLatitude()));
+
+    SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
+    double time  = header->time();
+
+    bool ok = m_LivetimeSvc->isLive(time);
+
+    header->setLivetime( m_LivetimeSvc->livetime());
 
     ++m_downlink;
 

@@ -14,6 +14,7 @@ $Header$
 #include "GaudiKernel/Property.h"
 class BackgroundSelection;
 class INTupleWriterSvc;
+class ILivetimeSvc;
 class TTree;
 class TFile;
 class TLeaf;
@@ -35,8 +36,8 @@ public:
     StatusCode execute();
     StatusCode finalize();
 
-    static double triggerRate(){
-        return s_triggerRate;
+    static double rate(){
+        return s_rate;
     }
 
     
@@ -50,6 +51,8 @@ private:
     /// access the ntupleWriter service to write out to ROOT ntuples
     INTupleWriterSvc * m_rootTupleSvc;
 
+    ILivetimeSvc * m_LivetimeSvc;
+
     StringProperty m_treeName; ///< name of the tree to process
     StringProperty m_rootFile; ///< root file to sample events from
     int m_count;   ///< number of processed events
@@ -60,7 +63,7 @@ private:
     TLeaf * m_magLatLeaf;
 
 
-    static double s_triggerRate;
+    static double s_rate;
 
 
 };
