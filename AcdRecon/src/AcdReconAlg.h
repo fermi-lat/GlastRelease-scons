@@ -6,12 +6,19 @@
 #include "Event/Digi/AcdDigi.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
+#include "Event/Recon/AcdRecon/AcdPocaMap.h"
 
 #include "GaudiKernel/ObjectVector.h"
 
 #include "AcdITkrIntersectTool.h"
+#include "AcdIPha2MipTool.h"
+#include "AcdIPocaTool.h"
 
+#include "GlastSvc/Reco/IPropagatorTool.h"
+#include "GlastSvc/Reco/IPropagatorSvc.h"
+#include "GlastSvc/Reco/IPropagator.h" 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
 #include "AcdUtil/IAcdGeometrySvc.h"
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
@@ -63,46 +70,58 @@ class AcdReconAlg : public Algorithm
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
       /// retrieves tracks and calls the DOCA and Active Distance routines
-      StatusCode trackDistances(const Event::AcdDigiCol& digiCol);
+      StatusCode trackDistances(const Event::AcdDigiCol& digiCol, Event::AcdPocaSet& pocaSet);
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles
-      StatusCode doca (const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
-          const HepVector3D &dir, std::vector<double> &doca_values, double &minDoca);
+      StatusCode doca (const Event::AcdDigiCol& digiCol,
+		       const Event::TkrTrack& aTrack,
+		       std::vector<double> &doca_values, double &minDoca, idents::AcdId& minDocaId);
 
       /// Bill Atwood's new calculation for Active Distance
-      StatusCode hitTileDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
-          const HepVector3D &dir, std::vector<double> &row_values, double &dist);
+      StatusCode hitTileDist(const Event::AcdDigiCol& digiCol, 
+			     const Event::TkrTrack& aTrack,
+			     std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId);
 
+      /// Bill Atwood's new calculation for Active Distance, in 3D
       StatusCode tileActDist(const Event::AcdDigiCol& digiCol, 
-                             const HepPoint3D &x0, const HepVector3D &dir, 
-                             std::vector<double> &row_values, double &dist);
+			     const Event::TkrTrack& aTrack,
+                             std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId,
+			     Event::AcdPocaSet& pocaSet);
 
       /// Bill Atwood's new calculation for Active Distance - applied to ribbons
-      StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, const HepPoint3D &x0, 
-          const HepVector3D &dir, double &dist);
+      StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, 
+			       const Event::TkrTrack& aTrack,
+			       double &dist, idents::AcdId& maxActDistId,
+			       Event::AcdPocaSet& pocaSet);
 
-      StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, std::vector<double> &dims, HepPoint3D &xT);
-
-      StatusCode getCorners(const std::vector<double> &dim, 
-			    const HepPoint3D &center, HepPoint3D *corner);
 
       bool withinTileEdge(const Ray& edge, const HepPoint3D& pos);
-
-      StatusCode docaActDist(const std::vector<double> dim,
-                                const HepPoint3D &center,
-                                const HepPoint3D &x0, const HepVector3D &t0,
-                                double &return_dist);
 
       StatusCode calcCornerDoca(const HepPoint3D &x0, const HepVector3D &dir,
                                 double &dist);
 
       /// the tool to calculate the Track intersections w/ the ACD
-      /// pointer to actual tool for finding clusters
       AcdITkrIntersectTool* m_intersectionTool;
 
-      /// name of Tool for finding last layer energy leakage
+      /// name of Tool for finding the Track intersections
       std::string m_intersectionToolName;
+
+      /// the tool to calculate the AcdHits in terms on MIPS
+      AcdIPha2MipTool* m_hitTool;
+
+      /// name of Tool for makeint the hits
+      std::string m_hitToolName;
+
+      /// the tool to calculate the AcdTkrPocas
+      AcdIPocaTool* m_pocaTool;
+      
+      /// name of Tool for makeint the hits
+      std::string m_pocaToolName;
+
+      IPropagator *    m_G4PropTool; 
+
+      std::string m_propToolName;
 
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
@@ -115,6 +134,7 @@ class AcdReconAlg : public Algorithm
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
       IAcdGeometrySvc *m_acdGeoSvc;
+  
     
       bool m_calcCornerDoca;
 

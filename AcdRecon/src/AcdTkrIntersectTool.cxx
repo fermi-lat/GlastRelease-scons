@@ -38,16 +38,9 @@ StatusCode AcdTkrIntersectTool::initialize()
     return StatusCode::FAILURE ;
   } 
   
-  // TkrGeometrySvc
-  sc = service("TkrGeometrySvc", m_tkrGeom, true);
-  if ( sc.isFailure()) {
-    log << MSG::ERROR << "Couldn't find the TkrGeometrySvc!" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // G4Propagator
   if( ! toolSvc()->retrieveTool("G4PropagationTool", m_G4PropTool)) {
-    log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
+    log << MSG::ERROR << "Couldn't find the G4Propagator!" << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -63,7 +56,6 @@ StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tr
   // TDS input: TkrTrackCol
   // TDS output: AcdTkrIntersectionCol
 {
-  MsgStream log(msgSvc(),name()) ;
   output = intersects;
 
   // loop on tracks
@@ -73,12 +65,12 @@ StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tr
     const Event::TkrTrack* aTrack = *it;
     if ( aTrack == 0 ) return StatusCode::FAILURE ;
     // do the intersections for this track
-    int numberIntersectionsForward = doTrack(*aTrack,iTrack,hitMap,log,true);    
+    int numberIntersectionsForward = doTrack(*aTrack,iTrack,hitMap,true);    
     if ( numberIntersectionsForward < 0 ) {
       // negative return values indicate failure
       return StatusCode::FAILURE;
     }
-    int numberIntersectionsBackward = doTrack(*aTrack,iTrack,hitMap,log,false);
+    int numberIntersectionsBackward = doTrack(*aTrack,iTrack,hitMap,false);
     if ( numberIntersectionsBackward < 0 ) {
       // negative return values indicate failure
       return StatusCode::FAILURE;
@@ -89,7 +81,7 @@ StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tr
 }
 
 int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack, 
-				 std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log,
+				 std::map<idents::AcdId,unsigned char>& hitMap, 
 				 bool forward) {
   
   // Define the fiducial volume of the LAT
@@ -103,6 +95,8 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
 
   // the bottom of the ACD is at the z=0 plane
   static double bottom_distance = -10.; 
+
+  MsgStream log(msgSvc(),name()) ;
 
   // we will return the number of intersection w/ the Acd for this track
   int returnValue(0);

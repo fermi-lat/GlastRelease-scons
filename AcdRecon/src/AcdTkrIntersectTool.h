@@ -8,8 +8,6 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GlastSvc/Reco/IPropagatorTool.h"
-#include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "GlastSvc/Reco/IPropagator.h" 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
@@ -48,7 +46,7 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
   
  protected:
 
-  virtual int doTrack(const Event::TkrTrack& aTrack, int iTrack, std::map<idents::AcdId,unsigned char>& hitMap, MsgStream& log,
+  virtual int doTrack(const Event::TkrTrack& aTrack, int iTrack, std::map<idents::AcdId,unsigned char>& hitMap, 
 		      bool forward = true);
 
   void errorAtXPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;
@@ -61,7 +59,6 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
 
   IPropagator *    m_G4PropTool; 
   IGlastDetSvc*    m_detSvc; 
-  ITkrGeometrySvc* m_tkrGeom;
 
 } ;
 
