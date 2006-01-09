@@ -849,10 +849,6 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   StatusCode  sc;
   MsgStream msglog(msgSvc(), name()); 
 
-  TwrNum twr = curTest.xtalIdx.getTwr();
-  LyrNum lyr = curTest.xtalIdx.getLyr();
-  ColNum col = curTest.xtalIdx.getCol();
-
   /////////////////////////////////////////////////
   // SECTION 0: GENERATE TEST DESCRIPTION STRING //
   /////////////////////////////////////////////////

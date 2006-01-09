@@ -212,12 +212,12 @@ StatusCode CalTupleAlg::execute() {
 
         // ped subtracted ADC
         // get reference to 'real' location in big array
-        float &adcPed = m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face];
+        float &adcPed = m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.getInt()];
         adcPed =  adc - ped; 
 
         // face signal
         // get reference to 'real' location in big array
-        float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face];
+        float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.getInt()];
         sc = m_calCalibSvc->evalFaceSignal(rngIdx,adcPed, faceSignal);
         if (sc.isFailure()) return sc;
       }
