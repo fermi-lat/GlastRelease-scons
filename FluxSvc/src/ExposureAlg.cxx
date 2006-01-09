@@ -1,4 +1,9 @@
+/*** @file ExposureAlg.cxx
+    @brief declaration and implementation of class ExposureAlg
 
+    $Header$
+
+*/
 // Include files
 #include "FluxSvc/PointingInfo.h"
 
@@ -22,6 +27,8 @@
 // to write a Tree with entryosure info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "facilities/Util.h"
+#include "facilities/Observer.h"
+
 
 #include <cassert>
 #include <vector>
@@ -65,6 +72,12 @@ private:
     INTupleWriterSvc* m_rootTupleSvc;;
 
     PointingInfo m_history;
+
+    // this to support detection of SAA boundary
+    bool m_insideSAA;
+    ObserverAdapter< ExposureAlg > m_observer; //obsever tag
+    int askGPS(); ///< notified when position changes
+
 };
 //------------------------------------------------------------------------
 
@@ -121,11 +134,32 @@ StatusCode ExposureAlg::initialize(){
 
     m_history.setFT2Tuple(m_rootTupleSvc, m_root_tree.value());
 
+    // attach an observer to be notified when orbital position changes
+        // set callback to be notified when the position changes
+    m_observer.setAdapter( new ActionAdapter<ExposureAlg>
+        (this, &ExposureAlg::askGPS) );
+
+    m_fluxSvc->attachGpsObserver(&m_observer);
+
     return sc;
+}
+//------------------------------------------------------------------------
+int ExposureAlg::askGPS()
+{
+    // callback from GPS when position has been updated
+    astro::EarthCoordinate pos = astro::GPS::instance()->earthpos();
+    bool inside = pos.insideSAA();
+    if( inside != m_insideSAA){
+        // changed: will notify pointingInfo
+
+        m_insideSAA= inside;
+    }
+
+    return 0; // can't be void in observer pattern
 }
 
 //------------------------------------------------------------------------
-//! process an event
+//! process a tick
 StatusCode ExposureAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
@@ -140,8 +174,6 @@ StatusCode ExposureAlg::execute()
     if(particleName != "TimeTick" && particleName != "Clock"){
         return sc;
     }
-
-
 
     if( m_tickCount!=0){
         double interval = m_lasttime - m_history.start_time();
