@@ -95,6 +95,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     G4ParticleGun*   particleGun;     // This for single particles
     G4PrimaryVertex* m_primaryVertex; // This for collections
+
+    std::vector<G4PrimaryVertex*> m_secondaryVertexVec;
 };
 
 #endif

@@ -42,6 +42,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   particleGun->SetParticlePosition(G4ThreeVector(0.*mm,0.*mm,0.*mm));
 
   m_primaryVertex = 0;
+  m_secondaryVertexVec.clear();
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -84,12 +85,25 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
 
     int numDaughters = daughterVec.size();
 
+    m_secondaryVertexVec.clear();
+
     //for(Event::McParticleCol::iterator colIter = pcol->begin(); colIter != pcol->end(); colIter++)
     for(dIter = daughterVec.begin(); dIter != daughterVec.end(); dIter++)
     {
         const Event::McParticle* mcPart  = *dIter;
 
-        m_primaryVertex->SetPrimary(convertToG4Primary(mcPart, ppsvc));
+        HepPoint3D scndVtxPos = mcPart->initialPosition();
+
+        // Adjust by the delta z input
+        scndVtxPos = Hep3Vector(scndVtxPos.x(), scndVtxPos.y(), scndVtxPos.z() + dz);
+
+        G4PrimaryVertex* scndParticle = new G4PrimaryVertex(scndVtxPos, 0.);
+
+        scndParticle->SetPrimary(convertToG4Primary(mcPart, ppsvc));
+
+        m_secondaryVertexVec.push_back(scndParticle);
+
+        //m_primaryVertex->SetPrimary(convertToG4Primary(mcPart, ppsvc));
     }
 
     return;
@@ -228,6 +242,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //        anEvent->AddPrimaryVertex(*vtxIter);
   //    }
     anEvent->AddPrimaryVertex(m_primaryVertex);
+
+    // If secondaries then add those as well
+    for(std::vector<G4PrimaryVertex*>::iterator vtxIter = m_secondaryVertexVec.begin();
+        vtxIter != m_secondaryVertexVec.end(); vtxIter++)
+    {
+        anEvent->AddPrimaryVertex(*vtxIter);
+    }
 }
 
 
