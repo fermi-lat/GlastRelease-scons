@@ -1,6 +1,6 @@
 package Interleave
 
-version v0r3
+version v0r3p1
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -8,7 +8,7 @@ use FluxSvc v*
 
 use CLHEP v* IExternal
 use ntupleWriterSvc *
-use trigger *
+use Trigger *
 apply_pattern packageShr
 
 #=============================================================
