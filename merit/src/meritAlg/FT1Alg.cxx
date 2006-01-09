@@ -89,6 +89,7 @@ private:
 
     // tuple items expect to find
     Item EvtRun, EvtEventId;
+    Item EvtLiveTime;
     Item EvtEnergyCorr;
     Item VtxXDir, VtxYDir, VtxZDir;
     Item VtxX0, VtxY0, VtxZ0;
@@ -164,6 +165,7 @@ FT1worker::FT1worker()
 // initialize pointers to current items
 : EvtRun("EvtRun")
 , EvtEventId("EvtEventId")
+, EvtLiveTime("EvtLivetime")
 , EvtEnergyCorr("EvtEnergyCorr")
 , VtxXDir("VtxXDir")
 , VtxYDir("VtxYDir")
@@ -239,6 +241,7 @@ void FT1worker::evaluate(const Event::Exposure& exp)
     Hep3Vector glastDir(CTBBestXDir, CTBBestYDir, CTBBestZDir);
 
     m_ft1convlayer   = Tkr1FirstLayer;
+    m_ft1livetime = EvtLiveTime;
 
     glastDir = - glastDir.unit();
 
