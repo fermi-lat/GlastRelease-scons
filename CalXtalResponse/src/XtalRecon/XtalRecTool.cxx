@@ -1,3 +1,8 @@
+// $Header$
+/** @file
+    @author Zach Fewtrell
+ */
+
 // LOCAL
 #include "XtalRecTool.h"
 
@@ -147,14 +152,12 @@ StatusCode XtalRecTool::initialize() {
    - convert adc readouts to DAC scale
    - compute centroid position & intesity from DAC scale
    - check for noise threshold & xtal saturation
-   - optionally populate calTupleEnt
 */
 StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
                                   Event::CalXtalRecData &xtalRec,
                                   CalArray<FaceNum, bool> &belowThresh,
                                   bool &xtalBelowThresh,
                                   CalArray<FaceNum, bool> &saturated,
-                                  CalTupleEntry *calTupleEnt,
                                   const Event::EventHeader *evtHdr) {
   StatusCode sc;
 
@@ -254,21 +257,12 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
     ////////////////////////////////////////////
     
     // need face signal for either tuple
-    if (m_tuple || calTupleEnt) {
+    if (m_tuple) {
       sc = m_calCalibSvc->evalFaceSignal(rngIdx,
                                          m_dat.adcPed[face], 
                                          m_dat.faceSignal[face]);
       if (sc.isFailure()) return sc;
     }
-
-    ///////////////////////////////////////////////
-    //-- STEP 6: POPULATE CalTuple (OPTIONAL)  --//
-    ///////////////////////////////////////////////
-    if (calTupleEnt) {
-      calTupleEnt->m_calXtalAdcPed[m_dat.twr][m_dat.lyr][m_dat.col][face.getInt()] = m_dat.adcPed[face];
-      calTupleEnt->m_calXtalFaceSignal[m_dat.twr][m_dat.lyr][m_dat.col][face.getInt()] = m_dat.faceSignal[face];
-    }
-
   }
 
 

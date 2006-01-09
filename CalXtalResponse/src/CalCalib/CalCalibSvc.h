@@ -1,5 +1,6 @@
 #ifndef CalCalibSvc_H
 #define CalCalibSvc_H
+// $Header$
 
 // LOCAL 
 #include "AsymMgr.h"

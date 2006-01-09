@@ -1,6 +1,6 @@
 #ifndef TholdMuonMgr_H
 #define TholdMuonMgr_H
-
+// $Header$
 // LOCAL
 #include "CalibItemMgr.h"
 

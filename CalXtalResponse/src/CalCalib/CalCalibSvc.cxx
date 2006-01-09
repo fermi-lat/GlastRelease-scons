@@ -1,6 +1,9 @@
-// Implementation file for CalCalibSvc
-//
 // $Header $
+/** @file
+    @author Zach Fewtrell
+ */
+// @file
+//
 //
 // Author: Zachary Fewtrell
 

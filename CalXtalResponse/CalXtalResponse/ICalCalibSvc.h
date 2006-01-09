@@ -1,5 +1,6 @@
 #ifndef ICalCalibSvc_H
 #define ICalCalibSvc_H
+//  $Header$
 
 // LOCAL INCLUDES
 

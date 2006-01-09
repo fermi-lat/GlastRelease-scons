@@ -1,5 +1,6 @@
 #ifndef IXtalRecTool_H
 #define IXtalRecTool_H
+// $Header$
 /*! @class IXtalRecTool
  *
  * \author Zach Fewtrell
@@ -9,10 +10,6 @@
  * 
  *
  */
-
-// LOCAL INCLUDES
-#include "CalXtalResponse/CalTupleEntry.h"
-
 
 // GLAST INCLUDES
 #include "Event/TopLevel/Event.h"
@@ -25,7 +22,7 @@
 
 // STD INCLUDES
 
-static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 0);
+static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 1);
 
 using namespace idents;
 using namespace std;
@@ -56,9 +53,6 @@ class IXtalRecTool : virtual public IAlgTool {
       \param saturated returns TRUE for each face signal that is >= HEX1 
       saturation level
 
-      \param calTupleEnt pointer to optional tuple entry (NULL pointer is 
-      ignored)
-
       \param evtHdr (optional) pointer to current event header (used for RunID 
       & EventID in optional XtalRecTuple)
 
@@ -72,7 +66,6 @@ class IXtalRecTool : virtual public IAlgTool {
                                CalArray<FaceNum, bool> &belowThresh,
                                bool &xtalBelowThresh,
                                CalArray<FaceNum, bool> &saturated,
-                               CalTupleEntry *calTupleEnt=0,
                                const Event::EventHeader *evtHdr=0
                                ) = 0;
 };

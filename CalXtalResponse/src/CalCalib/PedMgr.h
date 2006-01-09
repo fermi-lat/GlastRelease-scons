@@ -1,6 +1,6 @@
 #ifndef PedMgr_H
 #define PedMgr_H
-
+// $Header$
 // LOCAL
 #include "CalibItemMgr.h"
 

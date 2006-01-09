@@ -1,4 +1,9 @@
+// $Header$
+
 // Include files
+/** @file
+    @author Zach Fewtrell
+ */
 
 // LOCAL
 #include "CalTrigTool.h"

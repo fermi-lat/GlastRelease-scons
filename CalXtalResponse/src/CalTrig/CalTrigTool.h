@@ -1,3 +1,4 @@
+//  $Header$
 #ifndef CalTrigTool_h
 #define CalTrigTool_h
 
@@ -21,6 +22,7 @@
   \author Zachary Fewtrell
   \brief Official implementation of ICalTrigTool.  Simulates GLAST Cal trigger
   response based on Cal xtal digi response.
+
 
 */
 

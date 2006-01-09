@@ -1,5 +1,6 @@
 #ifndef XtalDigiTool_h
 #define XtalDigiTool_h
+//  $Header$
 
 // LOCAL
 #include "CalXtalResponse/IXtalDigiTool.h"
@@ -22,6 +23,7 @@
   \author Zachary Fewtrell
   \brief Official implementation of IXtalDigiTool.  
   sums IntMcHits into digital response for one Cal xtalIdx.
+
 
 */
 

@@ -1,5 +1,6 @@
 #ifndef IXtalDigiTool_H
 #define IXtalDigiTool_H
+// $Header$
 /*! @class IXtalDigiTool
  *
  * \author Zach Fewtrell

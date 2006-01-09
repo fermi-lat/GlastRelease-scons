@@ -1,5 +1,6 @@
 #ifndef IntNonlinMgr_H
 #define IntNonlinMgr_H
+// $Header$
 
 // LOCAL
 #include "CalibItemMgr.h"

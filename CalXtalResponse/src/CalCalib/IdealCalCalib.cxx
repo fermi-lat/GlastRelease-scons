@@ -1,3 +1,9 @@
+// $Header$
+
+/** @file
+    @author Zach Fewtrell
+ */
+
 // LOCAL INCLUDES
 #include "IdealCalCalib.h"
 // LOCAL

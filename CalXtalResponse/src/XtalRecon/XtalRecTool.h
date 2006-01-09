@@ -1,5 +1,6 @@
 #ifndef XtalRecTool_h
 #define XtalRecTool_h
+// $Header$
 
 // LOCAL
 #include "CalXtalResponse/IXtalRecTool.h"
@@ -48,7 +49,6 @@ virtual public IXtalRecTool
                        CalArray<FaceNum, bool> &belowThresh,
                        bool &xtalBelowThresh,
                        CalArray<FaceNum, bool> &saturated,
-                       CalTupleEntry *calTupleEnt=0,
                        const Event::EventHeader *evtHdr=0
                        );
 

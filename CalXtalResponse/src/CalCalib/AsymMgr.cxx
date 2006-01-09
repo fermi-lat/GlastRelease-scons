@@ -1,3 +1,7 @@
+// $Header$
+/** @file
+    @author Zach Fewtrell
+*/
 // LOCAL INCLUDES
 #include "AsymMgr.h"
 #include "CalCalibSvc.h"

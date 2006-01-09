@@ -1,6 +1,6 @@
 #ifndef TholdCIMgr_H
 #define TholdCIMgr_H
-
+// $Header$
 // LOCAL
 #include "CalibItemMgr.h"
 

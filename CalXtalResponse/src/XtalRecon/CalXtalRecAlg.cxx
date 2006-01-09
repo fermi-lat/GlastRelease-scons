@@ -1,5 +1,7 @@
-// File and version Information:
 //   $Header$
+/** @file
+    @author Zach Fewtrell
+ */
 
 // LOCAL INCLUDES
 #include "CalXtalRecAlg.h"
@@ -30,72 +32,22 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   m_calDigiCol(0),
   m_calXtalRecCol(0),
   m_xtalRecTool(0),
-  m_evtHdr(0),
-  m_tupleWriterSvc(0)
+  m_evtHdr(0)
 {
+  // declare jobOptions.txt properties
   declareProperty("XtalRecToolName", m_recToolName="XtalRecTool");
-  declareProperty("tupleName",   m_tupleName="");
-  declareProperty("tupleFilename", m_tupleFilename="");
 }
 
-/** 
-    This function sets values to private data members,
-    representing the calorimeter geometry and digitization
-    constants. Double and integer constants are extracted separatly,
-    because constants of both types are returned
-    by getNumericConstByName() as double.
-*/      
 StatusCode CalXtalRecAlg::initialize()
 {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name());
-        
+
   //-- JOB OPTIONS --//
   sc = setProperties();
   if (sc.isFailure()) {
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
-  }
-  
-  //-- tuple setup --//
-  if (m_tupleName.value().length() > 0 ) {
-    sc = service("RootTupleSvc", m_tupleWriterSvc);
-    // if we can't retrieve the tuple svc just pretend we never wanted
-    // it and continue anyway
-    if (sc.isFailure()) {
-      msglog << MSG::ERROR << "Could not locate the ntupleSvc" << endreq;
-      m_tupleWriterSvc = 0;
-    }
-
-    else { // tuple svc was successfully found
-      // keep track of any branch creation errors
-      bool branchFailure = false;
-      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                     "RunID", 
-                                     &m_tupleEntry.m_runId,
-                                     m_tupleFilename);
-      if (sc.isFailure()) branchFailure |= true;
-      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                     "EventID", 
-                                     &m_tupleEntry.m_eventId,
-                                     m_tupleFilename);
-      if (sc.isFailure()) branchFailure |= true;
-      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                     "CalXtalAdcPed[16][8][12][2]",
-                                     (float*)m_tupleEntry.m_calXtalAdcPed,
-                                     m_tupleFilename);
-      if (sc.isFailure()) branchFailure |= true;
-      sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                     "CalXtalFaceSignal[16][8][12][2]",
-                                     (float*)m_tupleEntry.m_calXtalFaceSignal,
-                                     m_tupleFilename);
-      if (sc.isFailure()) branchFailure |= true;
-      
-      if (branchFailure) {
-        msglog << MSG::ERROR << "Failure creating tuple branches" << endl;
-        return StatusCode::FAILURE;
-      }
-    }
   }
 
   //-- Xtal Recon Tool --//
@@ -109,11 +61,11 @@ StatusCode CalXtalRecAlg::initialize()
 }
 
 /**
-   This function is called to do reconstruction
-   for all hitted crystals in one event.
+   This function is called to do reconstruction for all cal xtals.
+   for all hit crystals in one event.
    It calls retrieve() method to get access to input and output TDS data.
    It iterates over all elements in CalDigiCol and calls
-   computeXtal() and computePosition() methods doing real reconstruction.
+   XtalRecTool::calculate() method for each xtal reconstruction.
 */
 StatusCode CalXtalRecAlg::execute()
 {
@@ -122,17 +74,6 @@ StatusCode CalXtalRecAlg::execute()
   //get access to TDS data collections
   sc = retrieve(); 
   if (sc.isFailure()) return sc;
-
-  // reset optional tuple entry
-  if (m_tupleWriterSvc) {
-    m_tupleEntry.Clear();
-    
-    m_tupleEntry.m_runId   = m_evtHdr->run();
-    m_tupleEntry.m_eventId = m_evtHdr->event();
-    
-    m_tupleWriterSvc->storeRowFlag(true);
-
-  }
 
   // non-fatal error:
   /// if there's no CalDigiCol then CalXtalRecAlg is not happening, go on w/ other algs
@@ -167,8 +108,7 @@ StatusCode CalXtalRecAlg::execute()
                                   *recData,
                                   belowThresh,
                                   xtalBelowThresh,
-                                  saturated,
-                                  (m_tupleWriterSvc) ? &m_tupleEntry : 0);
+                                  saturated);
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 
@@ -200,17 +140,6 @@ StatusCode CalXtalRecAlg::retrieve()
 {
   StatusCode sc;
 
-
-  // only needed if we are generating a tuple
-  if (m_tupleWriterSvc) {
-    // Retrieve the Event data for this event
-    m_evtHdr = SmartDataPtr<EventHeader>(eventSvc(), EventModel::EventHeader);
-    if (!m_evtHdr) {
-      MsgStream msglog(msgSvc(), name());
-      msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
-    }
-  }
-         
   // get a pointer to the input TDS data collection
   m_calDigiCol = SmartDataPtr<CalDigiCol>(eventSvc(),
                                           EventModel::Digi::CalDigiCol);

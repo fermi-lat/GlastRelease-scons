@@ -1,3 +1,9 @@
+//    $Header$
+
+/** @file
+    @author Zach Fewtrell
+ */
+
 // Include files
 
 // LOCAL

@@ -1,5 +1,6 @@
 #ifndef IdealCalCalib_H
 #define IdealCalCalib_H
+// $Header$
 
 // LOCAL INCLUDES
 

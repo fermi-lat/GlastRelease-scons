@@ -1,5 +1,6 @@
 #ifndef ICalTrigTool_H
 #define ICalTrigTool_H
+// $Header$
 /*! @class ICalTrigTool
  *
  * \author Zach Fewtrell

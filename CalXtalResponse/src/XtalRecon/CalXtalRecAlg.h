@@ -1,5 +1,6 @@
 #ifndef CalXtalRecAlg_h
 #define CalXtalRecAlg_h 
+//    $Header$
 
 // LOCAL INCLUDES
 #include "CalXtalResponse/IXtalRecTool.h"
@@ -7,7 +8,6 @@
 // GLAST INCLUDES
 #include "Event/Digi/CalDigi.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 
 // EXTLIB INCLUDES
@@ -24,7 +24,6 @@
     @author           A.Chekhtman
     @author           Zach Fetwrell
 
-    $Header$
 */
 class CalXtalRecAlg : public Algorithm
 {
@@ -55,15 +54,6 @@ class CalXtalRecAlg : public Algorithm
 
   /// name of IXtalRecTool instantiation
   StringProperty m_recToolName;
-
-  /// name of CalXtalRecTuple tree.  Default = "" (no file).
-  StringProperty m_tupleName;
-  /// optional name of CalXtalRecTuple file.  Defaul = "" (use ntupleWriterSvc default)
-  StringProperty m_tupleFilename;
-  /// store current entry for CalTuple
-  CalTupleEntry m_tupleEntry;
-  /// pointer to tupleWriterSvc
-  INTupleWriterSvc *m_tupleWriterSvc;
 };
 
 #endif

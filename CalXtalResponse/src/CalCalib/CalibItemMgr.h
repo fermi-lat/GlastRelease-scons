@@ -1,5 +1,6 @@
 #ifndef CalibItemMgr_H
 #define CalibItemMgr_H
+// $Header $
 
 // LOCAL
 #include "IdealCalCalib.h"

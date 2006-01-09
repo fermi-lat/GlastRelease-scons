@@ -1,4 +1,8 @@
-// Mainpage for doxygen
+/** @file
+    Mainpage for doxygen
+    @author Zach Fewtrell
+*/
+// $Header$
 
 /** @mainpage package CalXtalResponse
 
@@ -109,16 +113,26 @@ used for the estimation of energy & position from digi info.  See
 documentation in CalXtalResponse for details.
  
 @subsection jobOptions jobOptions
-@param CalXtalRecAlg.xtalRecTool
+@param CalXtalRecAlg.XtalRecToolName
 name of CalXtalResponse/IXtalRecTool based tool performing
 xtal digi->energy conversion (default is "XtalRecTool")
 
-@param CalXtalRecAlg.tupleName name of optional CalTuple tree. 
-   (default is "", which generates no tuple).
-@param CalXtalRecAlg.tupleFilename optional name of CalTuple file.
-   instructs ntupleWriterSvc to create CalTuple in it's own file
-   instead of sharing the default file w/ other modules.  The
-   default ("") will use the shared file
+@section CalTupleAlg CalTupleAlg
+CalTupleAlg generates CalTuple entries from TDS digi data.  Current entries
+include faceSignal and pedestal-subtracted-adc values per xtal face.
+
+@subsection jobOptions jobOptions
+@param CalTupleAlg.tupleName name of optional CalTuple tree. 
+(default is "CalTuple")
+
+@param CalTupleAlg.tupleFilename optional name of CalTuple file.
+instructs ntupleWriterSvc to create CalTuple in it's own file
+instead of sharing the default file w/ other modules.  The
+default ("") will use the shared file
+
+@param CalCalibSvc CalCalibSvc
+specifies which ICalCalibSvc object should be used by CalTupleAlg.  
+default is "CalCalibSvc"
 
 @section unit_test
 - CalXtalResponse unit_test thoroughly tests CalCalibSvc, XtalDigiTool

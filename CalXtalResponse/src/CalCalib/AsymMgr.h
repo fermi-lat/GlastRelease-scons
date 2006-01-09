@@ -1,6 +1,6 @@
 #ifndef AsymMgr_H
 #define AsymMgr_H
-
+// $Header$
 // LOCAL
 #include "CalibItemMgr.h"
 

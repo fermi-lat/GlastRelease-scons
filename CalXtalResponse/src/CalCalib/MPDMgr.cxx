@@ -1,3 +1,7 @@
+// $Header$
+/** @file
+    @author Zach Fewtrell
+ */
 // LOCAL
 #include "MPDMgr.h"
 #include "CalCalibSvc.h"

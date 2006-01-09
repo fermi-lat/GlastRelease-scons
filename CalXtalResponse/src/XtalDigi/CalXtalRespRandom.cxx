@@ -1,3 +1,4 @@
+// $Header$
 
 #include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 #include "GlastSvc/GlastRandomSvc/RandomAccess.h"
@@ -20,7 +21,6 @@
  *
  * @authors Toby Burnett, Karl Young
  *
- * $Header
  */
 
 class CalXtalRespRandom : public RandomAccess {

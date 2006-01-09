@@ -1,3 +1,7 @@
+// $Header$
+/** @file
+    @author Zach Fewtrell
+ */
 // LOCAL
 #include "IntNonlinMgr.h"
 #include "CalCalibSvc.h"

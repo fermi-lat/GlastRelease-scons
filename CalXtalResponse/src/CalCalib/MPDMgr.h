@@ -1,6 +1,6 @@
 #ifndef MPDMgr_H
 #define MPDMgr_H
-
+// $Header$
 // LOCAL
 #include "CalibItemMgr.h"
 
@@ -18,7 +18,9 @@ using CalibData::ValSig;
 
 class CalCalibSvc;
 
-/// \brief Manage MevPerDAC calibration type
+/** \brief Manage MevPerDAC calibration type
+    \author Zach Fewtrell
+    */
 class MPDMgr : public CalibItemMgr {
  public:
   MPDMgr() : 

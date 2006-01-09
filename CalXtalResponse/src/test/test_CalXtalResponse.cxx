@@ -83,44 +83,15 @@ bool trig_test_pct_margin(float signal, float thresh, bool result, double margin
 
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
-/** 
-    A simple algorithm.
+/** \class test_CalXtalRepsonse
+    \brif Algorithm for unit_testing CalXtalResponse pkg functnionality
+    
+    \author Zach Fewtrell
 
 */
 
-/// test ideal calibrations
-ICalCalibSvc *m_calCalibSvcIdeal=0;
-/// test ideal calibrations
-IXtalDigiTool *m_digiToolIdeal=0;
-IXtalDigiTool *m_digiToolIdealNoise=0;
-
-/// test ideal calibrations
-IXtalRecTool *m_recToolIdeal=0;
-/// test ideal calibrations
-ICalTrigTool *m_trigToolIdeal=0;
-
-
-/// test real calibrations
-ICalCalibSvc *m_calCalibSvcReal=0;
-/// test real calibrations
-IXtalDigiTool *m_digiToolReal=0;
-IXtalDigiTool *m_digiToolRealNoise=0;
-/// test real calibrations
-IXtalRecTool *m_recToolReal=0;
-/// test real calibrations
-ICalTrigTool *m_trigToolReal=0;
-
-/// test real calibrations
-ICalCalibSvc *m_calCalibSvc8Tower=0;
-/// test 8Tower calibrations
-IXtalDigiTool *m_digiTool8Tower=0;
-IXtalDigiTool *m_digiTool8TowerNoise=0;
-/// test 8Tower calibrations
-IXtalRecTool *m_recTool8Tower=0;
-/// test 8Tower calibrations
-ICalTrigTool *m_trigTool8Tower=0;
-
-class test_CalXtalResponse : public Algorithm {
+class test_CalXtalResponse : 
+  public Algorithm {
 public:
   test_CalXtalResponse(const string& name, ISvcLocator* pSvcLocator);
   StatusCode initialize();
@@ -210,8 +181,11 @@ private:
 private:
   /// store parameters for current test 
   /// so that i don't have to pass them from function to function
-  struct CurrentTest {
-    void CurentTest() {clear();}
+  class CurrentTest {
+  public:
+    CurrentTest(test_CalXtalResponse &_parent) :
+      parent(_parent)
+    {clear();}
 
     /// zero out all values for new test
     void clear();
@@ -225,7 +199,6 @@ private:
 
     CalXtalId::CalTrigMode trigMode;
 
-    unsigned char tupleOn;
     unsigned char gltOn;
     unsigned char noiseOn;
 
@@ -266,6 +239,8 @@ private:
     IXtalRecTool  *recTool;
     ICalTrigTool  *trigTool;
 
+    // use for reference to parent members.
+    test_CalXtalResponse &parent;
   } curTest;
 
   struct CurrentCalib {
@@ -305,6 +280,37 @@ private:
   set<TwrNum> m_testTwrs;
   set<LyrNum> m_testLyrs;
   set<ColNum> m_testCols;
+
+  /// test ideal calibrations
+  ICalCalibSvc *m_calCalibSvcIdeal;
+  /// test ideal calibrations
+  IXtalDigiTool *m_digiToolIdeal;
+  IXtalDigiTool *m_digiToolIdealNoise;
+
+  /// test ideal calibrations
+  IXtalRecTool *m_recToolIdeal;
+  /// test ideal calibrations
+  ICalTrigTool *m_trigToolIdeal;
+
+  /// test real calibrations
+  ICalCalibSvc *m_calCalibSvcReal;
+  /// test real calibrations
+  IXtalDigiTool *m_digiToolReal;
+  IXtalDigiTool *m_digiToolRealNoise;
+  /// test real calibrations
+  IXtalRecTool *m_recToolReal;
+  /// test real calibrations
+  ICalTrigTool *m_trigToolReal;
+
+  /// test real calibrations
+  ICalCalibSvc *m_calCalibSvc8Tower;
+  /// test 8Tower calibrations
+  IXtalDigiTool *m_digiTool8Tower;
+  IXtalDigiTool *m_digiTool8TowerNoise;
+  /// test 8Tower calibrations
+  IXtalRecTool *m_recTool8Tower;
+  /// test 8Tower calibrations
+  ICalTrigTool *m_trigTool8Tower;
 };
 
 const float test_CalXtalResponse::m_singleHitEneMrgn = (float).01; // percent of input ene
@@ -318,7 +324,6 @@ void test_CalXtalResponse::CurrentTest::clear() {
 
   testDesc    = "";
   trigMode    = CalXtalId::BESTRANGE;
-  tupleOn     = true;
   gltOn       = true;
   noiseOn     = false;
 
@@ -337,25 +342,25 @@ void test_CalXtalResponse::CurrentTest::setCalibSrc(CalibSrc src) {
   calibSrc = src;
   switch (src) {
   case FLIGHT_LAT:
-    calCalibSvc   = m_calCalibSvcReal;
-    digiTool      = m_digiToolReal;
-    digiToolNoise = m_digiToolRealNoise;
-    recTool       = m_recToolReal;
-    trigTool      = m_trigToolReal;
+    calCalibSvc   = parent.m_calCalibSvcReal;
+    digiTool      = parent.m_digiToolReal;
+    digiToolNoise = parent.m_digiToolRealNoise;
+    recTool       = parent.m_recToolReal;
+    trigTool      = parent.m_trigToolReal;
     break;
   case PARTIAL_LAT:
-    calCalibSvc   = m_calCalibSvc8Tower;
-    digiTool      = m_digiTool8Tower;
-    digiToolNoise = m_digiTool8TowerNoise;
-    recTool       = m_recTool8Tower;
-    trigTool      = m_trigTool8Tower;
+    calCalibSvc   = parent.m_calCalibSvc8Tower;
+    digiTool      = parent.m_digiTool8Tower;
+    digiToolNoise = parent.m_digiTool8TowerNoise;
+    recTool       = parent.m_recTool8Tower;
+    trigTool      = parent.m_trigTool8Tower;
     break;
   case IDEAL:
-    calCalibSvc   = m_calCalibSvcIdeal;
-    digiTool      = m_digiToolIdeal;
-    digiToolNoise = m_digiToolIdealNoise;
-    recTool       = m_recToolIdeal;
-    trigTool      = m_trigToolIdeal;
+    calCalibSvc   = parent.m_calCalibSvcIdeal;
+    digiTool      = parent.m_digiToolIdeal;
+    digiToolNoise = parent.m_digiToolIdealNoise;
+    recTool       = parent.m_recToolIdeal;
+    trigTool      = parent.m_trigToolIdeal;
     break;
   default:
     assert(src >= 0 && src < N_CALIB_SRC);
@@ -377,8 +382,24 @@ test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvc
   : Algorithm(name, pSvcLocator),
     m_count(0),
     m_detSvc(0),
+    curTest(*this),
     m_tuple(0),
-    m_tupleFile(0)
+    m_tupleFile(0),
+    m_calCalibSvcIdeal(0),
+    m_digiToolIdeal(0),
+    m_digiToolIdealNoise(0),
+    m_recToolIdeal(0),
+    m_trigToolIdeal(0),
+    m_calCalibSvcReal(0),
+    m_digiToolReal(0),
+    m_digiToolRealNoise(0),
+    m_recToolReal(0),
+    m_trigToolReal(0),
+    m_calCalibSvc8Tower(0),
+    m_digiTool8Tower(0),
+    m_digiTool8TowerNoise(0),
+    m_recTool8Tower(0),
+    m_trigTool8Tower(0)
 {
   m_8towerSet.insert(0);
   m_8towerSet.insert(1);
@@ -579,7 +600,6 @@ StatusCode test_CalXtalResponse::initialize(){
           !m_tuple->Branch("meV", &curTest.meV, "meV/F") ||
           !m_tuple->Branch("xtalPos", &curTest.xtalPos, "xtalPos/F") ||
           !m_tuple->Branch("trigMode", &curTest.trigMode, "trigMode/b") ||
-          !m_tuple->Branch("tupleOn", &curTest.tupleOn, "tupleOn/b") ||
           !m_tuple->Branch("gltOn", &curTest.gltOn, "gltOn/b") ||
           !m_tuple->Branch("noiseOn", &curTest.noiseOn, "noiseOn/b") ||
           !m_tuple->Branch("recEne", &curTest.recEne, "recEne/F") ||
@@ -698,14 +718,6 @@ StatusCode test_CalXtalResponse::execute()
           curTest.trigMode= CalXtalId::BESTRANGE;
           sc = testSingleHit();
           if (sc.isFailure()) return sc;     
-
-          //////////////////////
-          //-- CalTuple OFF --//
-          //////////////////////
-          curTest.tupleOn = false;
-          sc = testSingleHit();
-          if (sc.isFailure()) return sc;
-          curTest.tupleOn = true;
 
           /////////////////
           //-- GLT OFF --//
@@ -855,10 +867,6 @@ StatusCode test_CalXtalResponse::testSingleHit() {
       tmpStream << "BESTRANGE, ";
     else tmpStream << "ALLRANGE, ";
 
-    if (curTest.tupleOn) 
-      tmpStream << "TUPLEON, " ;
-    else tmpStream << "TUPLEOFF, ";
-
     if (curTest.gltOn)   
       tmpStream << "GLTON, " ;
     else tmpStream << "GLTOFF, ";
@@ -887,9 +895,6 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   ////////////////////////////////////////////
   // SECTION 1: GENERATE MC INTEGRATING HIT //
   ////////////////////////////////////////////
-
-  // used as output for xtalRecTuple
-  CalTupleEntry calTupleEnt;
 
   Event::McIntegratingHit hit;
   fillMcHit(curTest.xtalIdx, 
@@ -932,8 +937,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
                                        recData,
                                        belowThresh,
                                        xtalBelowThresh,
-                                       saturated,
-                                       curTest.tupleOn ? &calTupleEnt : 0);
+                                       saturated);
   if (sc.isFailure()) return sc;
 
   // only process if ptr is non-null
@@ -971,49 +975,10 @@ StatusCode test_CalXtalResponse::testSingleHit() {
         //return StatusCode::FAILURE;
       }
     }
-
-    //--------- OPTIONAL CAL TUPLE TEST -----------------//
-    if (curTest.tupleOn) {
-      // currently allways using 1st readout
-      Event::CalDigi::CalXtalReadoutCol::const_iterator ro = 
-        calDigi.getReadoutCol().begin();
-
-      for (FaceNum face; face.isValid(); face++) {
-        RngNum rng = ro->getRange(face);
-        XtalRng xRng(face,rng);
-
-        // tuple test1: adcPed
-        float adcPedTpl = calTupleEnt.m_calXtalAdcPed[twr][lyr][col][face.getInt()];
-        if (floor(adcPedTpl) != floor(curTest.adcPed[xRng])) {
-          msglog << MSG::ERROR << "TESTFAIL, bad CALTUPLE.adcPed, "
-                 << adcPedTpl << ", "
-                 << curTest.adcPed[xRng] << ", "
-                 << curTest.testDesc << endreq;
-          return StatusCode::FAILURE;
-        }
-      }
-
-      //-- these answers may vary too much w/ the noise on
-      if (!curTest.noiseOn) {
-        // tuple test2: faceSignal
-        float fsigPos = calTupleEnt.m_calXtalFaceSignal[twr][lyr][col][POS_FACE];
-        float fsigNeg = calTupleEnt.m_calXtalFaceSignal[twr][lyr][col][NEG_FACE];
-        
-        float meanSig = sqrt(fsigPos*fsigNeg);
-
-        float fsigDiff = pct_diff(meanSig, curTest.meV);
-        if ( fsigDiff > .05) {
-          msglog << MSG::ERROR << "TESTFAIL, BAD CALTUPLE.faceSignal, "
-                 << meanSig << ", "
-                 << curTest.meV << ", "
-                 << curTest.testDesc << endreq;
-          return StatusCode::FAILURE;
-        }
-      }
-    }
   }
 
-  if (m_tuple) m_tuple->Fill();
+  if (m_tuple) 
+    m_tuple->Fill();
 
   return StatusCode::SUCCESS;
 }
@@ -1830,7 +1795,6 @@ StatusCode test_CalXtalResponse::testMultiHit() {
   curTest.nHits   = 10;
   curTest.gltOn   = false;
   curTest.noiseOn = false;
-  curTest.tupleOn = false;
 
   int nPosPts = 5;
 
@@ -2092,7 +2056,6 @@ StatusCode test_CalXtalResponse::testSaturation() {
   curTest.nHits = 1;
   curTest.gltOn = false;
   curTest.noiseOn = false;
-  curTest.tupleOn = false;
   
 
   /////////////////////////////////////////////////
