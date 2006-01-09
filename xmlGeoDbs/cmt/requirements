@@ -1,7 +1,7 @@
 # $Header$
 
 package xmlGeoDbs
-version v1r29
+version v1r30
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
