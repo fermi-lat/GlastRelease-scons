@@ -68,16 +68,24 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
 
   const Event::AcdTkrPocaCol& tdsAcdTkrPocas = tdsAcdRec.getAcdTkrPocaCol() ;
   TVector3 poca;
-  TkrTrackParams paramsAtPoca;
   for ( Event::AcdTkrPocaCol::const_iterator itr = tdsAcdTkrPocas.begin();
 	itr != tdsAcdTkrPocas.end(); itr++ ) {
     const Event::AcdTkrPoca* acdTrkPocaTDS = *itr;
     const Point& pocaTDS = acdTrkPocaTDS->poca();
     AcdId acdIdRoot(acdTrkPocaTDS->acdId().id());
     poca.SetXYZ(pocaTDS.x(),pocaTDS.y(),pocaTDS.z());
+    const Event::TkrTrackParams& trkParTds = acdTrkPocaTDS->paramsAtPoca();
+    TkrTrackParams paramsAtPoca(trkParTds.getxPosition(), trkParTds.getxSlope(), 
+				trkParTds.getyPosition(), trkParTds.getySlope(),
+				trkParTds.getxPosxPos(),  trkParTds.getxPosxSlp(), 
+				trkParTds.getxPosyPos(),  trkParTds.getxPosySlp(),
+				trkParTds.getxSlpxSlp(),  trkParTds.getxSlpyPos(), 
+				trkParTds.getxSlpySlp(),  trkParTds.getyPosyPos(), 
+				trkParTds.getyPosySlp(),  trkParTds.getySlpySlp() );
     AcdTkrPoca rootAcdPoca( acdIdRoot, acdTrkPocaTDS->trackIndex(),
 			    acdTrkPocaTDS->doca(),acdTrkPocaTDS->docaErr(),acdTrkPocaTDS->docaRegion(),
 			    poca,paramsAtPoca);
+
     rootAcdRec.addAcdTkrPoca(rootAcdPoca);
   }  
   
@@ -125,8 +133,6 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
 
     std::vector<Event::AcdTkrPoca*> acdTkrPocas;
     Point poca;
-    Event::TkrTrackParams paramsAtPoca;
-    
     int nPoca = rootAcdRec.nAcdTkrPoca();
     for ( int iPoca(0); iPoca < nPoca; iPoca++ ) {
       const AcdTkrPoca* acdPocaRoot = rootAcdRec.getAcdTkrPoca(iPoca);
@@ -135,6 +141,15 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       poca.set(rootPoca.X(),rootPoca.Y(),rootPoca.Z());    
       
       idents::AcdId acdIdTds(acdPocaRoot->getId().getId());
+
+      const TkrTrackParams& paramsRoot = acdPocaRoot->getParamsAtPoca();
+      Event::TkrTrackParams paramsAtPoca(paramsRoot.getxPosition(), paramsRoot.getxSlope(), 
+					 paramsRoot.getyPosition(), paramsRoot.getySlope(),
+					 paramsRoot.getxPosxPos(),  paramsRoot.getxPosxSlp(), 
+					 paramsRoot.getxPosyPos(),  paramsRoot.getxPosySlp(),
+					 paramsRoot.getxSlpxSlp(),  paramsRoot.getxSlpyPos(), 
+					 paramsRoot.getxSlpySlp(),  paramsRoot.getyPosyPos(), 
+					 paramsRoot.getyPosySlp(),  paramsRoot.getySlpySlp() );
       
       Event::AcdTkrPoca* acdPocaTds = new
 	Event::AcdTkrPoca(acdIdTds,acdPocaRoot->getTkrIndex(),
