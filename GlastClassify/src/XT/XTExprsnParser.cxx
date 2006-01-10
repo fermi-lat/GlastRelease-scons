@@ -15,14 +15,14 @@ XTExprsnParser::XTExprsnParser(XTcolumnVal<double>::XTtupleMap& tuple) : m_tuple
     //m_delimiters.push_back(" ");
     //m_delimiters.push_back("(");
     //m_delimiters.push_back(")");
+    m_delimiters.push_back(DelimPair("|",7));
     m_delimiters.push_back(DelimPair("&",6));
-    m_delimiters.push_back(DelimPair("|",6));
-    m_delimiters.push_back(DelimPair(">=",5));
-    m_delimiters.push_back(DelimPair("<=",5));
-    m_delimiters.push_back(DelimPair(">",5));
-    m_delimiters.push_back(DelimPair("<",5));
-    m_delimiters.push_back(DelimPair("==",4));
-    m_delimiters.push_back(DelimPair("!=",4));
+    m_delimiters.push_back(DelimPair("==",5));
+    m_delimiters.push_back(DelimPair("!=",5));
+    m_delimiters.push_back(DelimPair(">=",4));
+    m_delimiters.push_back(DelimPair("<=",4));
+    m_delimiters.push_back(DelimPair(">",4));
+    m_delimiters.push_back(DelimPair("<",4));
     m_delimiters.push_back(DelimPair("+",3));
     m_delimiters.push_back(DelimPair("-",3));
     m_delimiters.push_back(DelimPair("*",2));
@@ -329,6 +329,29 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
             {
                 // Attempt to catch special case of unary + or - operator
                 if (subStrPos == 0 && (delimOp.first == "-" || delimOp.first == "+")) continue;
+
+                // Ugliness to check for exponential notation
+                if (subStrPos > 0 && (delimOp.first == "-" || delimOp.first == "+"))
+                {
+                    // Ok, this will fix the problem for when we have just an exponentiated number
+                    // lying around. It does not fix the problem when we have arithmetic involving
+                    // exponentiated numbers... So, here is a place that needs more work.
+                    int expPos = inString.find("e", subStrPos-1);
+
+                    // Possible exponentiated number
+                    if (expPos >= 0)
+                    {
+                        try
+                        {
+                            double value = facilities::Util::stringToDouble(inString);
+
+                            // Was able to read number so "continue" past this delimiter
+                            continue;
+                        }
+                        // Was not a valid number, catch here and go to next step
+                        catch(facilities::WrongType&) {}
+                    }
+                }
                 
                 // Valid delimiter! 
                 fndDelim = delimOp;
