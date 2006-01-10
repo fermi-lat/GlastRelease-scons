@@ -54,12 +54,14 @@ private:
     /**@brief Set the addresses of active leaves, so that a GetEvent will perform a copy
 
     */
-    void setLeafPointers();
+    void setLeafPointers(TTree* pTree);
 
     unsigned int m_event;
     TTree* m_tree;
     TFile* m_file;
     TTree* m_outputTree; ///< the tree to copy data to
+    TTree* m_inputTrees[84];
+    Long64_t m_inputTreeIndexes[84];
 };
 
 

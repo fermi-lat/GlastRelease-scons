@@ -12,6 +12,7 @@
 
 #include <stdexcept>
 #include <cassert>
+#include <math.h>
 
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& filename, 
@@ -28,24 +29,38 @@ BackgroundSelection::BackgroundSelection(const std::string& filename,
         throw std::invalid_argument( "Could not open the root file ");
     }
 
-    m_tree =  dynamic_cast<TTree*>(m_file->Get(treename.c_str()));
-    if( 0==m_tree) {
-        throw std::invalid_argument("Did not find the tree in the root file " );
+    for (int latBin=-42; latBin<42; latBin++) {
+      int binIndex = latBin + 42;
+      m_inputTreeIndexes[binIndex] = 0;
+      TString tree_name;
+      tree_name += latBin;
+      tree_name += "to";
+      tree_name += (latBin + 1);
+      m_inputTrees[binIndex] = dynamic_cast<TTree*>(m_file->Get(tree_name.Data()));
+      if (0 == m_inputTrees[binIndex]) {
+	TString error = "Did not find tree[" + tree_name + "] in root file";
+        throw std::invalid_argument(error.Data());
+      }
     }
 }
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
+    for (int latBin=-42; latBin<42; latBin++) {
+      int binIndex = latBin + 42;
+      if (m_inputTrees[binIndex] != 0)
+	delete m_inputTrees[binIndex];
+    }
     delete m_file;
 }
 
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers()
+void BackgroundSelection::setLeafPointers(TTree* /*pTree*/)
 {
 
     // iteration over active leaves -- copied from Ttree::Show()
 
-    TObjArray *leaves  = m_tree->GetListOfLeaves();
+    TObjArray *leaves  = pTree->GetListOfLeaves();
     Int_t nleaves = leaves->GetEntriesFast();
     for (Int_t i=0;i<nleaves;i++) {
         TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(i);
@@ -69,12 +84,17 @@ void BackgroundSelection::selectEvent(double /* maglat */)
 {
     // TODO: have this depend on magnetic latitude
 
-    setLeafPointers(); // may only have to be done once
+    int binIndex = (int)(floor(maglat)) + 42;
 
-    if( ++m_event > m_tree->GetEntries() ) {
-        m_event = 0;
-    }
-    m_tree->GetEvent(m_event);
+    TTree* pTree = m_inputTrees[binIndex];
+    if (m_inputTreeIndexes[binIndex] >= pTree->GetEntries())
+      m_inputTreeIndexes[binIndex] = 0;
+
+    Long64_t nEvent = m_inputTreeIndexes[binIndex++];
+    
+    setLeafPointers(pTree); // may only have to be done once
+
+    pTree->GetEvent(nEvent);
 }
 
 //------------------------------------------------------------------------
