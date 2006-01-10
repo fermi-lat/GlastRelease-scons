@@ -426,9 +426,12 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
     Event::TkrTrackColPtr trkPtr = tracksTds->begin();
     idents::AcdId tempId;
 
+    int iTrack(-1);
+
     while(trkPtr != tracksTds->end())
     {
         const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
+	iTrack++;
 
         sc = doca(digiCol, *trackTds, m_rowDocaCol, testDoca, tempId);
         if (sc.isFailure()) return sc;
@@ -447,7 +450,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
 	}
 
         // New Active Distance Calc
-        sc = tileActDist(digiCol, *trackTds, m_rowActDist3DCol, newActDist, tempId, pocaSet);
+        sc = tileActDist(digiCol, *trackTds, iTrack, m_rowActDist3DCol, newActDist, tempId, pocaSet);
         if (sc.isFailure()) return sc;
         if(newActDist > m_act_dist3D) {
 	  m_act_dist3D = newActDist;
@@ -455,7 +458,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
 	}
 
 	// "Active Distance" from ribbons
-        sc = hitRibbonDist(digiCol, *trackTds, ribDist, tempId, pocaSet);
+        sc = hitRibbonDist(digiCol, *trackTds, iTrack, ribDist, tempId, pocaSet);
         if (ribDist > m_ribbon_act_dist) {
 	  m_ribbon_act_dist = ribDist;
 	  m_ribbon_act_dist_id = tempId;
@@ -604,7 +607,7 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol,
 }
 
 StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol, 
-				    const Event::TkrTrack& aTrack,
+				    const Event::TkrTrack& aTrack, int iTrack,
 				    std::vector<double> &row_values, 
 				    double &return_dist, idents::AcdId& maxActDistId,
 				    Event::AcdPocaSet& pocaSet) {
@@ -657,7 +660,7 @@ StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol,
 	
 	Event::AcdTkrPoca* aPoca(0);
 
-	sc = m_pocaTool->makePoca(aTrack,data,acdId,*m_G4PropTool,aPoca);
+	sc = m_pocaTool->makePoca(aTrack,iTrack,data,acdId,*m_G4PropTool,aPoca);
 	if ( sc.isFailure() ) {
 	  log << MSG::ERROR << "Failed to make a AcdTkrPoca object" << acdId.id() << endreq;
 	  return sc;
@@ -700,7 +703,7 @@ bool AcdReconAlg::withinTileEdge(const Ray& edge, const HepPoint3D& pos) {
     return true;
 }
 
-StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const Event::TkrTrack& aTrack, 
+StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const Event::TkrTrack& aTrack, int iTrack,
 				      double &return_dist, idents::AcdId& maxActDistId, Event::AcdPocaSet& pocaSet) {
     //Purpose and Method:  Calculate ActiveDistance for Ribbons
     // To simplify the situation - we assume the ribbons are merely lines 
@@ -740,7 +743,7 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const Ev
 	}
 
 	Event::AcdTkrPoca* aPoca(0);
-	sc = m_pocaTool->makePoca(aTrack,data,acdId,*m_G4PropTool,aPoca);
+	sc = m_pocaTool->makePoca(aTrack,iTrack,data,acdId,*m_G4PropTool,aPoca);
 	if ( sc.isFailure() ) {
 	  log << MSG::ERROR << "Failed to make a AcdTkrPoca object" << acdId.id() << endreq;
 	  return sc;

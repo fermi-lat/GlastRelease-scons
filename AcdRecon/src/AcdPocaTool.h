@@ -76,7 +76,8 @@ public:
 				   PocaData& data);
 
   // @brief Make an AcdTrkPoca object, given the PocaData and the G4Propagator
-  virtual StatusCode makePoca(const Event::TkrTrack& track, const PocaData& poca, const idents::AcdId& acdId,
+  virtual StatusCode makePoca(const Event::TkrTrack& track, int iTrack,
+			      const PocaData& poca, const idents::AcdId& acdId,
 			      IPropagator& g4PropTool, Event::AcdTkrPoca*& pocaCol);
 
 protected:

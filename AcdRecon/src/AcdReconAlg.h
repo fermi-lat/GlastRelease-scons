@@ -85,13 +85,13 @@ class AcdReconAlg : public Algorithm
 
       /// Bill Atwood's new calculation for Active Distance, in 3D
       StatusCode tileActDist(const Event::AcdDigiCol& digiCol, 
-			     const Event::TkrTrack& aTrack,
+			     const Event::TkrTrack& aTrack, int iTrack,
                              std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId,
 			     Event::AcdPocaSet& pocaSet);
 
       /// Bill Atwood's new calculation for Active Distance - applied to ribbons
       StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, 
-			       const Event::TkrTrack& aTrack,
+			       const Event::TkrTrack& aTrack, int iTrack,
 			       double &dist, idents::AcdId& maxActDistId,
 			       Event::AcdPocaSet& pocaSet);
 

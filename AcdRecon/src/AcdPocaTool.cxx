@@ -404,7 +404,8 @@ StatusCode AcdPocaTool::hitRibbonDist(const AcdRibbonDim& ribbon,
 }
 
 
-StatusCode AcdPocaTool::makePoca(const Event::TkrTrack& aTrack, const PocaData& poca, const idents::AcdId& acdId,
+StatusCode AcdPocaTool::makePoca(const Event::TkrTrack& aTrack, int iTrack,
+				 const PocaData& poca, const idents::AcdId& acdId,
 				 IPropagator& g4PropTool, Event::AcdTkrPoca*& thePoca) {
 
 
@@ -427,7 +428,7 @@ StatusCode AcdPocaTool::makePoca(const Event::TkrTrack& aTrack, const PocaData& 
   double sigma = poca.m_dist / pocaError;
   if ( sigma < -1.*m_sigmaCut ) return sc;
   
-  thePoca = new Event::AcdTkrPoca(acdId,&aTrack,poca.m_dist,pocaError,poca.m_region,poca.m_poca,paramsAtPoca);
+  thePoca = new Event::AcdTkrPoca(acdId,iTrack,poca.m_dist,pocaError,poca.m_region,poca.m_poca,paramsAtPoca);
   return sc;
 					      
 }
