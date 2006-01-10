@@ -428,10 +428,10 @@ unsigned int TriggerAlg::anticoincidence(const Event::AcdDigiCol& tiles)
     for( AcdDigiCol::const_iterator it = tiles.begin(); it !=tiles.end(); ++it){
         // check if hitMapBit is set (veto) which will correspond to 0.3 MIP.
         // 20060109 Agreed at Analysis Meeting that onboard threshold is 0.3 MIP
+        const AcdDigi& digi = **it;
         if ( digi.getHitMapBit(Event::AcdDigi::A)
             || digi.getHitMapBit(Event::AcdDigi::B) ) ret |= enums::b_ACDL; 
         // now trigger high if either PMT is above threshold
-        const AcdDigi& digi = **it;
         if (   digi.getCno(Event::AcdDigi::A) 
             || digi.getCno(Event::AcdDigi::B) ) ret |= enums::b_ACDH;
     } 
