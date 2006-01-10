@@ -61,7 +61,7 @@ private:
     TFile* m_file;
     TTree* m_outputTree; ///< the tree to copy data to
     TTree* m_inputTrees[84];
-    Long64_t m_inputTreeIndexes[84];
+    int m_inputTreeIndexes[84];
 };
 
 

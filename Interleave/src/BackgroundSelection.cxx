@@ -55,7 +55,7 @@ BackgroundSelection::~BackgroundSelection()
 }
 
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers(TTree* /*pTree*/)
+void BackgroundSelection::setLeafPointers(TTree* pTree)
 {
 
     // iteration over active leaves -- copied from Ttree::Show()
@@ -80,7 +80,7 @@ void BackgroundSelection::setLeafPointers(TTree* /*pTree*/)
 }
 
 //------------------------------------------------------------------------
-void BackgroundSelection::selectEvent(double /* maglat */)
+void BackgroundSelection::selectEvent(double maglat )
 {
     // TODO: have this depend on magnetic latitude
 
