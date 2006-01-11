@@ -1,5 +1,5 @@
 package Trigger
-version v4r3p2
+version v4r3p3
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -20,6 +20,8 @@ apply_pattern package_include
 
 #=============================================================
 private
+#needed only for the test app
+use CalibSvc *
 
 use Event *
 use GlastSvc *
