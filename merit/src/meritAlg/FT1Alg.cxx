@@ -165,7 +165,7 @@ FT1worker::FT1worker()
 // initialize pointers to current items
 : EvtRun("EvtRun")
 , EvtEventId("EvtEventId")
-, EvtLiveTime("EvtLivetime")
+, EvtLiveTime("EvtLiveTime")
 , EvtEnergyCorr("EvtEnergyCorr")
 , VtxXDir("VtxXDir")
 , VtxYDir("VtxYDir")
