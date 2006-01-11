@@ -22,6 +22,7 @@ $Header$
 // to write a Tree with pointing info
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
+
 //flux
 #include "FluxSvc/PointingInfo.h"
 
@@ -81,14 +82,16 @@ StatusCode PointInfoAlg::initialize(){
     setProperties();
 
 
-    // get a pointer to RootTupleSvc, use only if available 
+    // get a pointer to RootTupleSvc
     if( (service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
-        log << MSG::WARNING << " RootTupleSvc is not available, will not write Pt tuple" << endreq;
+        log << MSG::ERROR << " RootTupleSvc is not available" << endreq;
         m_rootTupleSvc=0;
+        sc = StatusCode::FAILURE;
     }else if( !m_root_tree.value().empty() ) {
         
         m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
     }
+
 
     return sc;
 }
@@ -123,7 +126,7 @@ StatusCode PointInfoAlg::execute()
         currentTime = mcheader->time();
 
     }
-    m_pointing_info.set(currentTime);
+    m_pointing_info.set(currentTime, false);
 
     
     // put pointing stuff into the root tree

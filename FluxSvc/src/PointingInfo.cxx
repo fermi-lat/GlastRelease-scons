@@ -5,6 +5,8 @@
 $Header$
 
 */
+class MsgStream; // needed for Exposure.
+#include "Event/MonteCarlo/Exposure.h"
 #include "FluxSvc/PointingInfo.h"
 #include "astro/GPS.h"
 #include "astro/SkyDir.h"
@@ -12,10 +14,9 @@ $Header$
 #include "astro/EarthCoordinate.h"
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
-#include "Event/MonteCarlo/Exposure.h"
 
 
-void PointingInfo::set(double time)
+void PointingInfo::set(double time, bool insideSAA)
 {
     // Purpose: save the current status until the next tick
     using namespace astro;
@@ -51,11 +52,10 @@ void PointingInfo::set(double time)
     L=loc.L();
     B=loc.B();
     lat_mag = loc.geolat();
-    in_saa=0;
-    bool inside = loc.insideSAA();
-    if(inside)in_saa=1;
+    in_saa= insideSAA? 1:0;
 
 }
+//------------------------------------------------------------------------
 Event::Exposure* PointingInfo::forTDS()const
 {
 
@@ -70,6 +70,7 @@ void PointingInfo::finish(double stop_time, double live)
 {
     stop = stop_time;
     livetime = live;
+
 }
 //------------------------------------------------------------------------
 void PointingInfo::setFT2Tuple(INTupleWriterSvc* tuple, const std::string& tname)
