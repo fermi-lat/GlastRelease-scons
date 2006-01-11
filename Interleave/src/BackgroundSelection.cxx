@@ -112,5 +112,7 @@ double BackgroundSelection::downlinkRate(double/* maglat */)
 }
 void BackgroundSelection::disable(const char* pattern)
 {
-    m_tree->SetBranchStatus( pattern, 0);
+  for (int i=0; i<84; i++) {
+    m_inputTrees[i]->SetBranchStatus( pattern, 0);
+  }
 }
