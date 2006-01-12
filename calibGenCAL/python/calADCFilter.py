@@ -242,7 +242,7 @@ class calADCFilter:
         while adc == sat:
             dac -= 1
             adc = data[dac]
-        dac -= 5
+        dac -= 10
 
         # get slope of last good segment
                     
