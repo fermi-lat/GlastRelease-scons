@@ -26,7 +26,7 @@ public:
         @param rootFileName name of root file (or files) to open
         @param treename name of the TTree containing the tuple data
     */
-    BackgroundSelection(const std::string& rootFileName,  TTree* other);
+    BackgroundSelection(const std::string& rootFileDirectory,  TTree* outputTree);
 
     ~BackgroundSelection();
 
@@ -57,10 +57,10 @@ private:
     void setLeafPointers(TTree* pTree);
 
     unsigned int m_event;
-    TFile* m_file;
     TTree* m_outputTree; ///< the tree to copy data to
-    TTree* m_inputTrees[84];
-    int m_inputTreeIndexes[84];
+    TFile* m_inputFiles[42];
+    TTree* m_inputTrees[42];
+    int m_inputTreeIndexes[42];
 };
 
 

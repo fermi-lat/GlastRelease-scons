@@ -15,26 +15,33 @@
 #include <math.h>
 
 //------------------------------------------------------------------------
-BackgroundSelection::BackgroundSelection(const std::string& filename, 
+BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory, 
                                           TTree* outputTree)
 : m_event(0)
-, m_file(0)
 , m_outputTree(outputTree)
 {
-
-    m_file = new TFile(filename.c_str(), "readonly");
-    if( 0==m_file || !m_file->IsOpen()){
-        throw std::invalid_argument( "Could not open the root file ");
-    }
-
-    for (int latBin=-42; latBin<42; latBin++) {
-      int binIndex = latBin + 42;
+   
+    for (int latBin=0; latBin<42; latBin++) {
+      int binIndex = latBin;
       m_inputTreeIndexes[binIndex] = 0;
+      
       TString tree_name;
       tree_name += latBin;
       tree_name += "to";
       tree_name += (latBin + 1);
-      m_inputTrees[binIndex] = dynamic_cast<TTree*>(m_file->Get(tree_name.Data()));
+
+      TString file_name(rootFileDirectory);
+      file_name+="/";
+      file_name+=tree_name;
+      file_name+=".root";
+
+      m_inputFiles[binIndex] = new TFile(file_name.Data(), "readonly");
+      if (0 == m_inputFiles[binIndex]) {
+	TString error = "Did not find file[" + file_name + "]";
+        throw std::invalid_argument(error.Data());
+      }
+
+      m_inputTrees[binIndex] = dynamic_cast<TTree*>(m_inputFiles[binIndex]->Get(tree_name.Data()));
       if (0 == m_inputTrees[binIndex]) {
 	TString error = "Did not find tree[" + tree_name + "] in root file";
         throw std::invalid_argument(error.Data());
@@ -44,14 +51,10 @@ BackgroundSelection::BackgroundSelection(const std::string& filename,
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
-#if 0 // should not delete the trees
-    for (int latBin=-42; latBin<42; latBin++) {
-      int binIndex = latBin + 42;
-      if (m_inputTrees[binIndex] != 0)
-	delete m_inputTrees[binIndex];
-    }
-#endif
-    delete m_file;
+  // Delete the file objects, the trees will go with them.
+  for (int i=0; i<42; i++) {
+    delete m_inputFiles[i];
+  }
 }
 
 //------------------------------------------------------------------------
@@ -84,7 +87,7 @@ void BackgroundSelection::selectEvent(double maglat )
 {
     // TODO: have this depend on magnetic latitude
 
-    int binIndex = (int)(floor(maglat)) + 42;
+    int binIndex = (int)(floor(abs(maglat)));
 
     TTree* pTree = m_inputTrees[binIndex];
     if (m_inputTreeIndexes[binIndex] >= pTree->GetEntries())
@@ -112,7 +115,7 @@ double BackgroundSelection::downlinkRate(double/* maglat */)
 }
 void BackgroundSelection::disable(const char* pattern)
 {
-  for (int i=0; i<84; i++) {
+  for (int i=0; i<42; i++) {
     m_inputTrees[i]->SetBranchStatus( pattern, 0);
   }
 }
