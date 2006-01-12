@@ -53,6 +53,8 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 , m_selector(0)
 , m_count(0), m_downlink(0),  m_meritTuple(0)
+, m_magLatLeaf(0) 
+
 {
     // declare properties with setProperties calls
     declareProperty("RootFile",     m_rootFile="");
@@ -65,6 +67,7 @@ StatusCode InterleaveAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
 
+    if( name()=="interleave_filter") return sc;
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
@@ -90,17 +93,11 @@ StatusCode InterleaveAlg::initialize(){
         }
         m_meritTuple = static_cast<TTree*>(ptr);
     }
-    m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat");
-    if(m_magLatLeaf==0) {
-        log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
-        return StatusCode::FAILURE;
-    }
-
     // initialize the background selection
     try {
         std::string file(m_rootFile.value());
         facilities::Util::expandEnvVar(&file);
-        m_selector = new BackgroundSelection(file, m_treeName, m_meritTuple);
+        m_selector = new BackgroundSelection(file,  m_meritTuple);
 
     }catch( const std::exception& e){
         log << MSG::ERROR << e.what() << endl;
@@ -113,6 +110,7 @@ StatusCode InterleaveAlg::initialize(){
     m_selector->disable("EvtElapsedTime");
     m_selector->disable("EvtLiveTime");  
     m_selector->disable("Pt*");
+    m_selector->disable("FT1*");
 
 
     // set initial default values for downlink rate to fold in
@@ -134,6 +132,13 @@ StatusCode InterleaveAlg::execute()
     // check that the TDS has an appropriate pseudo-background 
 
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
+    
+    if( m_magLatLeaf==0){
+        if( (m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat"))==0){
+            log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
+            return StatusCode::FAILURE;
+        }
+    }
 
     if (0==particles) {
         log << MSG::ERROR << "No MC particles!" << endreq;
@@ -144,6 +149,11 @@ StatusCode InterleaveAlg::execute()
     double ke = primary.initialFourMomentum().e()-primary.initialFourMomentum().m();
     log << MSG::DEBUG << "Primary particle energy: " << ke << endreq;
 
+    // A special instance of this alg can be used as a filter to kill a sequence
+    if( name()=="interleave_filter") {
+        if( ke==0) setFilterPassed(false);
+        return sc;
+    }
     if( ke>1. ){
         setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
         return sc; // not a flagged sampled_background 
@@ -180,10 +190,11 @@ StatusCode InterleaveAlg::execute()
 //! clean up, summarize
 StatusCode InterleaveAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
-    static bool done = false;
-    if( done ) return sc;
-    done=true;
     MsgStream log(msgSvc(), name());
+
+    if( name()=="interleave_filter") {
+        return sc;
+    }
 
     log << MSG::INFO << "Processed "<< m_count << " sampled background events, of which "<< m_downlink<< " were passed." << endreq; 
     delete m_selector;

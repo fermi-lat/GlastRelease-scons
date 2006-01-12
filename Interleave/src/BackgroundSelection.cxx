@@ -16,10 +16,8 @@
 
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& filename, 
-                                         const std::string& treename
-                                         , TTree* outputTree)
+                                          TTree* outputTree)
 : m_event(0)
-, m_tree(0)
 , m_file(0)
 , m_outputTree(outputTree)
 {
@@ -46,11 +44,13 @@ BackgroundSelection::BackgroundSelection(const std::string& filename,
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
+#if 0 // should not delete the trees
     for (int latBin=-42; latBin<42; latBin++) {
       int binIndex = latBin + 42;
       if (m_inputTrees[binIndex] != 0)
 	delete m_inputTrees[binIndex];
     }
+#endif
     delete m_file;
 }
 
@@ -90,7 +90,7 @@ void BackgroundSelection::selectEvent(double maglat )
     if (m_inputTreeIndexes[binIndex] >= pTree->GetEntries())
       m_inputTreeIndexes[binIndex] = 0;
 
-    Long64_t nEvent = m_inputTreeIndexes[binIndex++];
+    Long64_t nEvent = m_inputTreeIndexes[binIndex]++;
     
     setLeafPointers(pTree); // may only have to be done once
 
