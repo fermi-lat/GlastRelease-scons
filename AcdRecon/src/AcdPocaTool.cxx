@@ -1,9 +1,7 @@
 #include "AcdPocaTool.h"
 
-//#include "AcdUtil/AcdTileDim.h"
-//#include "AcdUtil/AcdRibbonDim.h"
-#include "AcdTileDim.h"
-#include "AcdRibbonDim.h"
+#include "AcdUtil/AcdTileDim.h"
+#include "AcdUtil/AcdRibbonDim.h"
 
 #include "GaudiKernel/MsgStream.h"
 
