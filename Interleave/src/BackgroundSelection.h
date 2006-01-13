@@ -39,11 +39,11 @@ public:
  
     /**@brief the trigger rate for the given magnetic latitude
     */
-    double triggerRate(double maglat);
+    static double triggerRate(double maglat);
 
     /**@brief the downlink rate for the given magnetic latitude
     */
-    double downlinkRate(double maglat);
+    static double downlinkRate(double maglat);
 
     /** @brief disable leaves matching the pattern
 

@@ -20,7 +20,8 @@ ApplicationMgr.ExtSvc = {
     "RootTupleSvc",
     "ParticlePropertySvc",
     "GlastRandomSvc",
-    "FluxSvc" };
+    "FluxSvc",
+    "LivetimeSvc" };
 
 // These needed to define CalTrigTool for TriggerAlg. 
 ApplicationMgr.DLLs   += {"CalXtalResponse"}; 
@@ -37,10 +38,10 @@ ApplicationMgr.TopAlg = {"Sequencer/Top" };
 //the top sequence loop
 Top.Members={"Sequencer/Generator"};
 
-Generator.Members     = {"FluxAlg", "PointInfoAlg", "TestAlg", "Sequencer/Trigger"};
+Generator.Members     = {"FluxAlg", "PointInfoAlg",  "Sequencer/Trigger"};
 
 Trigger.Members       = {"TriggerAlg"};
-Trigger.BranchMembers = {"TriggerAlg", "InterleaveAlg"};
+Trigger.BranchMembers = {"TriggerAlg", "InterleaveAlg", "TestAlg"};
     
 
 // -----------------------------------------------

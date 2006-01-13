@@ -14,6 +14,7 @@
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
+#include "../BackgroundSelection.h"
 // Gaudi system includes
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -24,7 +25,30 @@
 
 
 #include <string>
+// copy here for testing.
+//------------------------------------------------------------------------
+double BackgroundSelection::triggerRate(double maglat)
+{
+    //y = 0.0481x3 - 0.9295x2 - 27.72x + 2082.2
+    static double c[]={2082.2, -27.72, -0.9295, 0.0481};
 
+    double x = fabs(maglat);
+    if( x< 8) x=8;
+    return  ((c[3]*x + c[2])*x +c[1])*x + c[0];
+}
+
+//------------------------------------------------------------------------
+double BackgroundSelection::downlinkRate(double  maglat )
+{
+    //y = 0.0094x3 - 0.1951x2 - 5.4218x + 508.48
+    static double c[]={508.48, -5.4218, -0.1951, 0.0094};
+
+    double x = fabs(maglat);
+    if( x< 8) x=8;
+    return ((c[3]*x + c[2])*x +c[1])*x + c[0];
+
+}
+//----
 
 /*! \class TestAlg
 \brief 
@@ -100,6 +124,11 @@ StatusCode TestAlg::initialize() {
     m_rootTupleSvc->addItem(treename, "EvtEventId",     &EvtEventId );
     m_rootTupleSvc->addItem(treename, "EvtElapsedTime", &EvtElapsedTime );
     m_rootTupleSvc->addItem(treename, "EvtLiveTime",    &EvtLiveTime );
+
+    std::cout << "Testing the rates\n\t lat     trigger     downlink\n"<< std::endl;
+    for( double lat = 0; lat<45; lat+=5){
+        std::cout << "\t" << lat << " "<< BackgroundSelection::triggerRate(lat) << "   " << BackgroundSelection::downlinkRate(lat) << std::endl;
+    }
     return sc;
 }
 
