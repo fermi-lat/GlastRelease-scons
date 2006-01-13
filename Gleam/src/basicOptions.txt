@@ -33,6 +33,7 @@ Top.Members={
 
 Generator.Members = {
     "FluxAlg", 
+    "CurrentEventAlg",
     "PointInfoAlg",
     "G4Generator",
     "Sequencer/CalibrationUpdate",
@@ -104,6 +105,7 @@ Digitization.Members = {
 //  Trigger calculation
 //
 ApplicationMgr.DLLs +={ "Trigger"};
+ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // ----------------------------

@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r10  THB 13-jan-06   Add CurrentEventAlg to Generator sequence
 * v6r9p1 THB 19-dec-05   Fix test
 * v6r9   THB 18-dec-05   Added Interleave
 * v6r8p1 THB 14-dec-05   Needed to make FT1Alg follow GlastClassify.
