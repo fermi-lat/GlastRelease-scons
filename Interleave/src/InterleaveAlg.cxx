@@ -45,7 +45,7 @@ static const AlgFactory<InterleaveAlg>  Factory;
 const IAlgFactory& InterleaveAlgFactory = Factory;
 
 
-double InterleaveAlg::s_rate=1;
+double InterleaveAlg::s_rate=0;
 
 //------------------------------------------------------------------------
 //! ctor
@@ -96,12 +96,20 @@ StatusCode InterleaveAlg::initialize(){
     // initialize the background selection
     try {
         std::string file(m_rootFile.value());
-        facilities::Util::expandEnvVar(&file);
-        m_selector = new BackgroundSelection(file,  m_meritTuple);
+        if( !file.empty()){
+            facilities::Util::expandEnvVar(&file);
+            log << MSG::INFO << "Using file " << file << " for interleave." << endreq;
+            m_selector = new BackgroundSelection(file,  m_meritTuple);
+        }else{
+            log << MSG::INFO<< "No file specified for interleave" << endreq;
+            return sc;
+        }
 
     }catch( const std::exception& e){
-        log << MSG::ERROR << e.what() << endl;
-        return StatusCode::FAILURE;
+        log << MSG::WARNING << e.what() << endreq;
+        log << MSG::WARNING << "Continuing without background" << endreq;
+            return sc;
+        //return StatusCode::FAILURE;
     }
 
     // these will not be copied from the old tuple.
@@ -127,6 +135,8 @@ StatusCode InterleaveAlg::initialize(){
 StatusCode InterleaveAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
+
+    if( m_selector==0) return sc;
     MsgStream   log( msgSvc(), name() );
 
     // check that the TDS has an appropriate pseudo-background 
@@ -190,6 +200,7 @@ StatusCode InterleaveAlg::execute()
 //! clean up, summarize
 StatusCode InterleaveAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
+    if( m_selector==0) return sc;
     MsgStream log(msgSvc(), name());
 
     if( name()=="interleave_filter") {

@@ -12,7 +12,7 @@
 
 #include <stdexcept>
 #include <cassert>
-#include <math.h>
+#include <cmath>
 
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory, 
@@ -87,7 +87,7 @@ void BackgroundSelection::selectEvent(double maglat )
 {
     // TODO: have this depend on magnetic latitude
 
-    int binIndex = (int)(floor(abs(maglat)));
+    int binIndex = (int)(floor(fabs(maglat)));
 
     TTree* pTree = m_inputTrees[binIndex];
     if (m_inputTreeIndexes[binIndex] >= pTree->GetEntries())
@@ -104,7 +104,7 @@ void BackgroundSelection::selectEvent(double maglat )
 double BackgroundSelection::triggerRate(double/* maglat */)
 {
     //TODO
-    return 2000.; // testing
+    return 1700.; // testing
 }
 
 //------------------------------------------------------------------------
