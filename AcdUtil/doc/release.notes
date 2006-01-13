@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v0r2     12-Jan-2006 EC  Add AcdTileDim and AcdRibbonDim
  v0r1p1   08-Nov-2005 HMK Small patches to AcdGeometrySvc
  v0r1     08-Nov-2005 HMK Add methods for corner gap rays
  v0       08-Nov-2005 HMK initial import 
