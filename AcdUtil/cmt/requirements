@@ -1,5 +1,5 @@
 package AcdUtil
-version v0r2
+version v0r2p1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -20,11 +20,20 @@ apply_pattern package_include
 
 apply_pattern package_headers
 
+# buncho'patterns for non-component library
+apply_pattern ld_library_path
+apply_pattern library_Llinkopts   library=AcdUtilCommon
+apply_pattern library_shlibflags  library=AcdUtilCommon 
+apply_pattern library_stamps      library=AcdUtilCommon
+
 #=============================================================
 private
 
+# build a separate shared library to contain non-Gaudi-component items
+library AcdUtilCommon AcdTileDim.cxx AcdRibbonDim.cxx
 
-library AcdUtil *.cxx \
+
+library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
                 ${AcdUtil_headers}               
