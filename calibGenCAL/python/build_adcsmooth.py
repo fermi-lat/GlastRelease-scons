@@ -142,13 +142,13 @@ for idet in detsections:
 	if flename != 'skip':
 # Write out run command to batch file
 		filesplit = os.path.splitext(flename)
-		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py -V "+\
+		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py  "+\
 			flename+" "+filesplit[0]+"_filtered.xml\n"
 		log.info(cmdline)
 		cmdbat.write(cmdline)
 # Write out run command to .sh file
 		filesplit = os.path.splitext(flename)
-		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py -V "+\
+		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py  "+\
 			flename+" "+filesplit[0]+"_filtered.xml\n"
 		log.info(cmdline)
 		cmdsh.write(cmdline)
@@ -156,12 +156,12 @@ for idet in detsections:
 	if fhename != 'skip':
 # Write out run command to batch file
 		filesplit = os.path.splitext(fhename)
-		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py -V "+\
+		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py  "+\
 			fhename+" "+filesplit[0]+"_filtered.xml\n"
 		cmdbat.write(cmdline)
 # Write out run command to .sh file
 		filesplit = os.path.splitext(fhename)
-		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py -V "+\
+		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py  "+\
 			fhename+" "+filesplit[0]+"_filtered.xml\n"
 		cmdsh.write(cmdline)
 
@@ -169,24 +169,24 @@ for idet in detsections:
 	if lacname != 'skip':
 # Write out run command to batch file
 		filesplit = os.path.splitext(lacname)
-		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py -V "+\
+		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py  "+\
 			lacname+" "+filesplit[0]+"_filtered.xml\n"
 		cmdbat.write(cmdline)
 # Write out run command to .sh file
 		filesplit = os.path.splitext(lacname)
-		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py -V "+\
+		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py  "+\
 			lacname+" "+filesplit[0]+"_filtered.xml\n"
 		cmdsh.write(cmdline)
 
 	if uldname != 'skip':
 # Write out run command to batch file
 		filesplit = os.path.splitext(uldname)
-		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py -V "+\
+		cmdline = r"python %CALIBGENCALROOT%/python/adcsmooth.py  "+\
 			uldname+" "+filesplit[0]+"_filtered.xml\n"
 		cmdbat.write(cmdline)
 # Write out run command to .sh file
 		filesplit = os.path.splitext(uldname)
-		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py -V "+\
+		cmdline = r"python $CALIBGENCALROOT/python/adcsmooth.py  "+\
 			uldname+" "+filesplit[0]+"_filtered.xml\n"
 		cmdsh.write(cmdline)
 
