@@ -1,6 +1,10 @@
 #ifndef CGCUtil_H
 #define CGCUtil_H
 
+/** @file
+    $Header$
+ */
+
 // LOCAL INCLUDES
 
 // GLAST INCLUDES

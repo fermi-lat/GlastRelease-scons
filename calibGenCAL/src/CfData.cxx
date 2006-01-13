@@ -1,3 +1,6 @@
+/** @file
+    $Header$
+*/
 // LOCAL INCLUDES
 #include "CfData.h"
 
