@@ -49,12 +49,13 @@ public:
 
     */
     void disable(const char* pattern);
+    void setLeafPointers();
+    void setLeafPointers(TTree*);
 
 private:
     /**@brief Set the addresses of active leaves, so that a GetEvent will perform a copy
 
     */
-    void setLeafPointers(TTree* pTree);
 
     unsigned int m_event;
     TTree* m_outputTree; ///< the tree to copy data to

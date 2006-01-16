@@ -41,11 +41,12 @@ BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
         throw std::invalid_argument(error.Data());
       }
 
-      m_inputTrees[binIndex] = dynamic_cast<TTree*>(m_inputFiles[binIndex]->Get(tree_name.Data()));
+      m_inputTrees[binIndex] =  dynamic_cast<TTree*>(m_inputFiles[binIndex]->Get(tree_name.Data()));
       if (0 == m_inputTrees[binIndex]) {
 	TString error = "Did not find tree[" + tree_name + "] in root file";
         throw std::invalid_argument(error.Data());
       }
+
     }
 }
 //------------------------------------------------------------------------
@@ -94,9 +95,6 @@ void BackgroundSelection::selectEvent(double maglat )
       m_inputTreeIndexes[binIndex] = 0;
 
     Long64_t nEvent = m_inputTreeIndexes[binIndex]++;
-    
-    setLeafPointers(pTree); // may only have to be done once
-
     pTree->GetEvent(nEvent);
 }
 
@@ -128,4 +126,11 @@ void BackgroundSelection::disable(const char* pattern)
   for (int i=0; i<42; i++) {
     m_inputTrees[i]->SetBranchStatus( pattern, 0);
   }
+}
+//------------------------------------------------------------------------
+void BackgroundSelection::setLeafPointers()
+{
+    for (int i=0; i<42; i++) {
+        setLeafPointers(m_inputTrees[i]);
+    }
 }
