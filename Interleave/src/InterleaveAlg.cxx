@@ -77,7 +77,6 @@ StatusCode InterleaveAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
 
-    if( name()=="interleave_filter") return sc;
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
@@ -130,7 +129,6 @@ StatusCode InterleaveAlg::initialize(){
     return sc;
 }
 
-
 //------------------------------------------------------------------------
 //! process an event
 StatusCode InterleaveAlg::execute()
@@ -149,6 +147,14 @@ StatusCode InterleaveAlg::execute()
             log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
             return StatusCode::FAILURE;
         }
+        if( (m_runLeaf = m_meritTuple->GetLeaf("EvtRun"))==0){
+            log << MSG::ERROR << "EvtRun leaf not found in the tuple" << endreq;
+            return StatusCode::FAILURE;
+        }
+        if( (m_eventLeaf = m_meritTuple->GetLeaf("EvtEventId"))==0){
+            log << MSG::ERROR << "EvtEventId leaf not found in the tuple" << endreq;
+            return StatusCode::FAILURE;
+        }
     }
 
     if (0==particles) {
@@ -160,11 +166,6 @@ StatusCode InterleaveAlg::execute()
     double ke = primary.initialFourMomentum().e()-primary.initialFourMomentum().m();
     log << MSG::DEBUG << "Primary particle energy: " << ke << endreq;
 
-    // A special instance of this alg can be used as a filter to kill a sequence
-    if( name()=="interleave_filter") {
-        if( ke==0) setFilterPassed(false);
-        return sc;
-    }
     if( ke>1. ){
         setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
         return sc; // not a flagged sampled_background 
@@ -202,10 +203,6 @@ StatusCode InterleaveAlg::finalize(){
     if( m_selector==0) return sc;
     MsgStream log(msgSvc(), name());
 
-    if( name()=="interleave_filter") {
-        return sc;
-    }
-
     log << MSG::INFO << "Processed "<< m_count << " sampled background events, of which "<< m_downlink<< " were passed." << endreq; 
     delete m_selector;
     return sc;
@@ -227,14 +224,12 @@ namespace {
 void InterleaveAlg::copyEventInfo()
 {
     
-    static TLeaf * runLeaf=0,* eventLeaf=0,* timeLeaf=0,* liveLeaf=0, *sourceLeaf=0;
-    if( runLeaf==0){
-        runLeaf =   m_meritTuple->GetLeaf("EvtRun");
-        eventLeaf = m_meritTuple->GetLeaf("EvtEventId");
+    static TLeaf *  timeLeaf=0,* liveLeaf=0, *sourceLeaf=0;
+    if( timeLeaf==0){
         timeLeaf =  m_meritTuple->GetLeaf("EvtElapsedTime");
         liveLeaf =  m_meritTuple->GetLeaf("EvtLiveTime");
         sourceLeaf =m_meritTuple->GetLeaf("McSourceId");
-        assert(runLeaf!=0);
+        assert(timeLeaf!=0);
     }
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     // these types *must* correspond with those in EvtValsTool, which this code replaces for interleaved events
@@ -243,13 +238,13 @@ void InterleaveAlg::copyEventInfo()
     double EvtElapsedTime  = header->time();
     float EvtLiveTime      = header->livetime();
 
-    float backRun = runLeaf->GetValue(), backevent = eventLeaf->GetValue();
+    float backRun = m_runLeaf->GetValue(), backevent = m_eventLeaf->GetValue();
 
     // these have to be done here, since there is no algorithm 
-    setLeafValue(runLeaf,     EvtRun);
-    setLeafValue(eventLeaf,   EvtEventId);
-    setLeafValue(timeLeaf,    EvtElapsedTime);
-    setLeafValue(liveLeaf,    EvtLiveTime);
+    setLeafValue(m_runLeaf,     EvtRun);
+    setLeafValue(m_eventLeaf,   EvtEventId);
+    setLeafValue(timeLeaf,      EvtElapsedTime);
+    setLeafValue(liveLeaf,      EvtLiveTime);
 
     // finally, make the source id negative; make zero -1 by offset. (2's complement)
     float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());

@@ -62,6 +62,8 @@ private:
     TTree * m_meritTuple;
 
     TLeaf * m_magLatLeaf;
+    TLeaf * m_runLeaf;
+    TLeaf * m_eventLeaf;
 
 
     static double s_rate;

@@ -157,7 +157,7 @@ void BackgroundSelection::setCurrentTree(double maglat)
       }
 
       // start at a random location in the tree:
-      m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1))
+      m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1));
 
       // point tree to buffer for copying events:
       setLeafPointers(m_inputTree);
