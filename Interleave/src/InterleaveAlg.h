@@ -42,7 +42,7 @@ public:
 
     
 private: 
-    void copyEventInfo(TTree* t);
+    void copyEventInfo(); ///< set up 
 
     double magneticLatitude();
 
@@ -55,6 +55,7 @@ private:
 
     StringProperty m_treeName; ///< name of the tree to process
     StringProperty m_rootFile; ///< root file to sample events from
+    StringArrayProperty m_disableList;
     int m_count;   ///< number of processed events
     int m_downlink;
 

@@ -13,12 +13,15 @@
 #include <stdexcept>
 #include <cassert>
 #include <cmath>
+#include <vector>
 
 //------------------------------------------------------------------------
-BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory, 
-                                          TTree* outputTree)
+BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
+        std::vector<std::string> disableList,
+        TTree* outputTree)
 : m_event(0)
 , m_outputTree(outputTree)
+, m_disableList(disableList)
 {
    
     for (int latBin=0; latBin<42; latBin++) {
@@ -46,6 +49,7 @@ BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
 	TString error = "Did not find tree[" + tree_name + "] in root file";
         throw std::invalid_argument(error.Data());
       }
+      setLeafPointers(m_inputTrees[binIndex]);
 
     }
 }
@@ -61,6 +65,9 @@ BackgroundSelection::~BackgroundSelection()
 //------------------------------------------------------------------------
 void BackgroundSelection::setLeafPointers(TTree* pTree)
 {
+
+    // first disable the branches
+    disableBranches(pTree);
 
     // iteration over active leaves -- copied from Ttree::Show()
 
@@ -86,7 +93,6 @@ void BackgroundSelection::setLeafPointers(TTree* pTree)
 //------------------------------------------------------------------------
 void BackgroundSelection::selectEvent(double maglat )
 {
-    // TODO: have this depend on magnetic latitude
 
     int binIndex = (int)(floor(fabs(maglat)));
 
@@ -121,11 +127,13 @@ double BackgroundSelection::downlinkRate(double  maglat )
 
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::disable(const char* pattern)
+void BackgroundSelection::disableBranches(TTree* t) //const char* pattern)
 {
-  for (int i=0; i<42; i++) {
-    m_inputTrees[i]->SetBranchStatus( pattern, 0);
-  }
+    std::vector<std::string>::const_iterator it= m_disableList.begin();
+    for( ; it != m_disableList.end();  ++it) {
+        t->SetBranchStatus((*it).c_str(), false);
+    }
+
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::setLeafPointers()

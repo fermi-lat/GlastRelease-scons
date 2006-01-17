@@ -59,6 +59,16 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("RootFile",     m_rootFile="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
+    declareProperty("DisableList",  m_disableList);
+
+    // initialize the disable list, which can be added to, or replaced in the JO
+    std::vector<std::string> tlist;
+    tlist.push_back("EvtElapsedTime");
+    tlist.push_back("EvtLiveTime");
+    tlist.push_back("Pt*");
+    tlist.push_back("FT1*");
+    tlist.push_back("CT*");
+    m_disableList = tlist;
 
 }
 //------------------------------------------------------------------------
@@ -72,7 +82,7 @@ StatusCode InterleaveAlg::initialize(){
     setProperties();
 
     // get a pointer to RootTupleSvc
-    sc = service("RootTupleSvc", m_rootTupleSvc);
+    sc = service("RootTupleSvc", m_rootTupleSvc);       
     if( sc.isFailure() ) {
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
         return sc;
@@ -98,8 +108,8 @@ StatusCode InterleaveAlg::initialize(){
         std::string file(m_rootFile.value());
         if( !file.empty()){
             facilities::Util::expandEnvVar(&file);
-            log << MSG::INFO << "Using file " << file << " for interleave." << endreq;
-            m_selector = new BackgroundSelection(file,  m_meritTuple);
+            log << MSG::INFO << "Using directory " << file << " for interleave." << endreq;
+            m_selector = new BackgroundSelection(file, m_disableList, m_meritTuple);
         }else{
             log << MSG::INFO<< "No file specified for interleave" << endreq;
             return sc;
@@ -111,20 +121,6 @@ StatusCode InterleaveAlg::initialize(){
             return sc;
         //return StatusCode::FAILURE;
     }
-
-    // these will not be copied from the old tuple.
-#if 0 // try it without these two, so that we have access to the original values
-    m_selector->disable("EvtRun");       
-    m_selector->disable("EvtEventId");   
-#endif
-    m_selector->disable("EvtElapsedTime");
-    m_selector->disable("EvtLiveTime");  
-    m_selector->disable("Pt*");
-    m_selector->disable("FT1*");
-    m_selector->disable("CT*");
-
-    // now modify all leaves to point to our tuple
-    m_selector->setLeafPointers();
 
     // set initial default values for downlink rate to fold in
     s_rate = m_selector->downlinkRate(0.);
@@ -175,15 +171,13 @@ StatusCode InterleaveAlg::execute()
     }
     ++m_count;
 
+    // set current downlink rate for access by the source
+    s_rate = m_selector->downlinkRate(magneticLatitude());
 
-    m_selector->downlinkRate(magneticLatitude());
+    // let the livetime service know about the current trigger rate,
+    // and set the current accumulated live time in the header
     m_LivetimeSvc->setTriggerRate(m_selector->triggerRate(magneticLatitude()));
-
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
-    double time  = header->time();
-
-    bool ok = m_LivetimeSvc->isLive(time);
-
     header->setLivetime( m_LivetimeSvc->livetime());
 
     ++m_downlink;
@@ -193,7 +187,7 @@ StatusCode InterleaveAlg::execute()
     m_selector->selectEvent(magneticLatitude());
 
     // overwrite the event info
-    copyEventInfo(m_meritTuple);
+    copyEventInfo();
     
     // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
@@ -230,23 +224,24 @@ namespace {
 
 }
 //------------------------------------------------------------------------
-void InterleaveAlg::copyEventInfo(TTree * tree)
+void InterleaveAlg::copyEventInfo()
 {
 
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
-    // these types *must* correspond with those in EvtValsTool
+    // these types *must* correspond with those in EvtValsTool, which this code replaces for interleaved events
     float EvtRun           = header->run();
     float EvtEventId       = header->event();
     double EvtElapsedTime  = header->time();
     float EvtLiveTime      = header->livetime();
 
-    setLeafValue(tree->GetLeaf("EvtRun"),        EvtRun);
-    setLeafValue(tree->GetLeaf("EvtEventId"),    EvtEventId);
-    setLeafValue(tree->GetLeaf("EvtElapsedTime"),EvtElapsedTime);
-    setLeafValue(tree->GetLeaf("EvtLiveTime"),   EvtLiveTime);
+    // these have to be done here, since there is no algorithm 
+    setLeafValue(m_meritTuple->GetLeaf("EvtRun"),        EvtRun);
+    setLeafValue(m_meritTuple->GetLeaf("EvtEventId"),    EvtEventId);
+    setLeafValue(m_meritTuple->GetLeaf("EvtElapsedTime"),EvtElapsedTime);
+    setLeafValue(m_meritTuple->GetLeaf("EvtLiveTime"),   EvtLiveTime);
 
     // finally, make the source id negative; make zero -1 by offset. (2's complement)
-    float & sourceid = *static_cast<float*>(tree->GetLeaf("McSourceId")->GetValuePointer());
+    float & sourceid = *static_cast<float*>(m_meritTuple->GetLeaf("McSourceId")->GetValuePointer());
     sourceid=-1-sourceid;
 
 }
