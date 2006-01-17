@@ -10,6 +10,8 @@
 #include "TTree.h"
 #include "TLeaf.h"
 
+#include "CLHEP/Random/RandFlat.h"
+
 #include <stdexcept>
 #include <cassert>
 #include <cmath>
@@ -20,46 +22,22 @@ BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
         std::vector<std::string> disableList,
         TTree* outputTree)
 : m_event(0)
+, m_treeInitialized(0)
+, m_eventOffset(0)
+, m_currentBinLower(0.)
 , m_outputTree(outputTree)
+, m_inputTree(0)
+, m_inputFile(0)
 , m_disableList(disableList)
+, m_rootFileDirectory(rootFileDirectory)
 {
-   
-    for (int latBin=0; latBin<42; latBin++) {
-      int binIndex = latBin;
-      m_inputTreeIndexes[binIndex] = 0;
-      
-      TString tree_name;
-      tree_name += latBin;
-      tree_name += "to";
-      tree_name += (latBin + 1);
-
-      TString file_name(rootFileDirectory);
-      file_name+="/";
-      file_name+=tree_name;
-      file_name+=".root";
-
-      m_inputFiles[binIndex] = new TFile(file_name.Data(), "readonly");
-      if (0 == m_inputFiles[binIndex]) {
-	TString error = "Did not find file[" + file_name + "]";
-        throw std::invalid_argument(error.Data());
-      }
-
-      m_inputTrees[binIndex] =  dynamic_cast<TTree*>(m_inputFiles[binIndex]->Get(tree_name.Data()));
-      if (0 == m_inputTrees[binIndex]) {
-	TString error = "Did not find tree[" + tree_name + "] in root file";
-        throw std::invalid_argument(error.Data());
-      }
-      setLeafPointers(m_inputTrees[binIndex]);
-
-    }
 }
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
-  // Delete the file objects, the trees will go with them.
-  for (int i=0; i<42; i++) {
-    delete m_inputFiles[i];
-  }
+  // Delete the file object if it's been initialized:
+  if (m_treeInitialized && m_inputTree)
+    delete m_inputTree;
 }
 
 //------------------------------------------------------------------------
@@ -91,17 +69,17 @@ void BackgroundSelection::setLeafPointers(TTree* pTree)
 }
 
 //------------------------------------------------------------------------
-void BackgroundSelection::selectEvent(double maglat )
+void BackgroundSelection::selectEvent(double maglat)
 {
+    // make sure we have the right tree selected for new maglat
+    setCurrentTree(maglat);    
 
-    int binIndex = (int)(floor(fabs(maglat)));
+    // check event offset for overflow:
+    if (m_eventOffset >= m_inputTree->GetEntries())
+      m_eventOffset = 0;
 
-    TTree* pTree = m_inputTrees[binIndex];
-    if (m_inputTreeIndexes[binIndex] >= pTree->GetEntries())
-      m_inputTreeIndexes[binIndex] = 0;
-
-    Long64_t nEvent = m_inputTreeIndexes[binIndex]++;
-    pTree->GetEvent(nEvent);
+    // grab the event:
+    m_inputTree->GetEvent(m_eventOffset++);
 }
 
 //------------------------------------------------------------------------
@@ -136,9 +114,53 @@ void BackgroundSelection::disableBranches(TTree* t) //const char* pattern)
 
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers()
+void BackgroundSelection::setCurrentTree(double maglat) 
 {
-    for (int i=0; i<42; i++) {
-        setLeafPointers(m_inputTrees[i]);
-    }
+    double binLower = floor(fabs(maglat));
+    if ( !m_treeInitialized  || (binLower != m_currentBinLower) ) {
+      if (m_treeInitialized) {
+	// need to clean up current file:
+	m_inputFile->Close();  // not sure if we need to close a readonly file
+	delete m_inputFile;
+      } else {
+	// we will be initialized now:
+	m_treeInitialized = 1;
+      }
+      
+      // save current bin lower bound for next comparison:
+      m_currentBinLower = binLower; 
+
+      // construct tree name from current geolat:
+      TString tree_name;
+      tree_name += (int)binLower;
+      tree_name += "to";
+      tree_name += ((int)binLower + 1);
+	
+      // and then construct file name:
+      TString file_name(m_rootFileDirectory);
+      file_name+="/";
+      file_name+=tree_name;
+      file_name+=".root";
+
+      // open file for reading:
+      m_inputFile = new TFile(file_name.Data(), "readonly");
+      if (0 == m_inputFile) {
+	TString error = "Did not find file[" + file_name + "]";
+	throw std::invalid_argument(error.Data());
+      }
+      
+      // get the tree:
+      m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.Data()));
+      if (0 == m_inputTree) {
+	TString error = "Did not find tree[" + tree_name + "] in root file";
+	throw std::invalid_argument(error.Data());
+      }
+
+      // start at a random location in the tree:
+      m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1))
+
+      // point tree to buffer for copying events:
+      setLeafPointers(m_inputTree);
+      
+    }  
 }
