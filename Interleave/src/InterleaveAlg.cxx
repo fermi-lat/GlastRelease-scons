@@ -226,7 +226,16 @@ namespace {
 //------------------------------------------------------------------------
 void InterleaveAlg::copyEventInfo()
 {
-
+    
+    static TLeaf * runLeaf=0,* eventLeaf=0,* timeLeaf=0,* liveLeaf=0, *sourceLeaf=0;
+    if( runLeaf==0){
+        runLeaf =   m_meritTuple->GetLeaf("EvtRun");
+        eventLeaf = m_meritTuple->GetLeaf("EvtEventId");
+        timeLeaf =  m_meritTuple->GetLeaf("EvtElapsedTime");
+        liveLeaf =  m_meritTuple->GetLeaf("EvtLiveTime");
+        sourceLeaf =m_meritTuple->GetLeaf("McSourceId");
+        assert(runLeaf!=0);
+    }
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     // these types *must* correspond with those in EvtValsTool, which this code replaces for interleaved events
     float EvtRun           = header->run();
@@ -234,14 +243,16 @@ void InterleaveAlg::copyEventInfo()
     double EvtElapsedTime  = header->time();
     float EvtLiveTime      = header->livetime();
 
+    float backRun = runLeaf->GetValue(), backevent = eventLeaf->GetValue();
+
     // these have to be done here, since there is no algorithm 
-    setLeafValue(m_meritTuple->GetLeaf("EvtRun"),        EvtRun);
-    setLeafValue(m_meritTuple->GetLeaf("EvtEventId"),    EvtEventId);
-    setLeafValue(m_meritTuple->GetLeaf("EvtElapsedTime"),EvtElapsedTime);
-    setLeafValue(m_meritTuple->GetLeaf("EvtLiveTime"),   EvtLiveTime);
+    setLeafValue(runLeaf,     EvtRun);
+    setLeafValue(eventLeaf,   EvtEventId);
+    setLeafValue(timeLeaf,    EvtElapsedTime);
+    setLeafValue(liveLeaf,    EvtLiveTime);
 
     // finally, make the source id negative; make zero -1 by offset. (2's complement)
-    float & sourceid = *static_cast<float*>(m_meritTuple->GetLeaf("McSourceId")->GetValuePointer());
+    float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());
     sourceid=-1-sourceid;
 
 }
