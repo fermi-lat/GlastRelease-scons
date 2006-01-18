@@ -126,6 +126,11 @@ StatusCode RootBaseCnv::openRead(const std::string& fname) {
         << "could not be opened for reading " << endreq;
     delete m_inFile;
     m_inFile = 0;
+    // if (m_crash)  {   don't have an m_crash
+    log << MSG::FATAL << std::endl << "Exiting... " << std::endl << endreq;
+    exit(1);
+    // }
+
     return StatusCode::FAILURE;
   }
   else {

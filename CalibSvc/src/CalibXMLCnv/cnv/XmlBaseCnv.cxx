@@ -112,6 +112,10 @@ StatusCode XmlBaseCnv::createObj(IOpaqueAddress* addr,
     log << MSG::FATAL 
         << "Unable to parse document " << par[0] << " aka " 
         << par0 << endreq;
+    // if (m_crash)  {   don't have an m_crash
+    log << MSG::FATAL << std::endl << "Exiting... " << std::endl << endreq;
+    exit(1);
+    // }
     return StatusCode::FAILURE;
   }
   else {
