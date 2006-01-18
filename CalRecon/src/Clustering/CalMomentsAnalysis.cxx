@@ -12,7 +12,9 @@ CalMomentsAnalysis::CalMomentsAnalysis() : m_centroid(0.,0.,0.),
                                            m_moment(0.,0.,0.), 
                                            m_rmsLong(0.),
                                            m_rmsTrans(0.),
-                                           m_rmsLongAsym(0.)
+                                           m_rmsLongAsym(0.),
+                                           m_numIterations(0),
+                                           m_numDroppedPoints(0)
 {
     m_axis[0] = Vector(0.,0.,0.);
     m_axis[1] = Vector(0.,0.,1.);
@@ -32,9 +34,12 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
     double chisq = -1.;
     if (dataVec.size() < 2) return chisq;
         
-    double Ixx       = 0.,  Iyy  = 0.,  Izz  = 0.,
-           Ixy       = 0.,  Ixz  = 0.,  Iyz  = 0.;
-    double Rsq_mean  = 0.;
+    double Ixx       = 0.,  
+           Iyy       = 0.,  
+           Izz       = 0.,
+           Ixy       = 0.,  
+           Ixz       = 0.,  
+           Iyz       = 0.;
     double weightSum = 0.;
     Point  centroid(0.,0.,0.);
 
@@ -55,8 +60,6 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         double yprm = hit.y();
         double zprm = hit.z();
 
-        Rsq_mean += Rsq;
-
         Ixx += (Rsq - xprm*xprm) * weight;
         Iyy += (Rsq - yprm*yprm) * weight;
         Izz += (Rsq - zprm*zprm) * weight;
@@ -67,8 +70,6 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         weightSum += weight;
         centroid  += weight * dataPoint.getPoint();
     }
-
-    Rsq_mean /= dataVec.size();
 
     // Render determinant of Inertia Tensor into cubic form.
     double p = - (Ixx + Iyy + Izz);
@@ -112,10 +113,10 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
             double D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
 
             m_axis[iroot] = Vector(D*C/A, D*C/B, D);
+
+            // Set axis to "point up"
+            if (m_axis[iroot].z() < 0.) m_axis[iroot] = -m_axis[iroot];
         }
-        
-        // Set axis to "point up" 
-        if (m_axis[1].z() < 0.) m_axis[1] = -m_axis[1];
 
         // "Chi-squared" = sum of residuals about principal axis, through centroid, using input weight
         chisq = 0.;
@@ -148,6 +149,9 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
 {
     double chiSq   = -1.;
     bool   iterate = true;
+
+    m_numIterations    = 0;
+    m_numDroppedPoints = 0;
 
     // Set the data centroid
     Point centroid = inputCentroid;
@@ -184,6 +188,8 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
         // Assume all data within range
         iterate = false;
 
+        m_numIterations++;
+
         // Check the last element in the now sorted list of data points
         // and see if it is out of range
         while(!dataVec.empty())
@@ -195,6 +201,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
             {
                 dataVec.pop_back();
                 iterate = true;
+                m_numDroppedPoints++;
             }
             else break;
         }

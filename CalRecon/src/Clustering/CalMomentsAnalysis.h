@@ -81,6 +81,9 @@ public:
     const double getLongitudinalRms()       const {return m_rmsLong;}
     const double getTransverseRms()         const {return m_rmsTrans;}
     const double getLongAsymmetry()         const {return m_rmsLongAsym;}
+    const double getWeightSum()             const {return m_weightSum;}
+    const double getNumIterations()         const {return m_numIterations;}
+    const double getNumDroppedPoints()      const {return m_numDroppedPoints;}
 
 private:
 
@@ -99,5 +102,8 @@ private:
     double m_rmsLongAsym;
     // Sum of weights in moments analysis 
     double m_weightSum;
+    // Statistics on iterations (if done)
+    int    m_numIterations;
+    int    m_numDroppedPoints;
 };
 

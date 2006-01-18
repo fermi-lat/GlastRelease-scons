@@ -192,33 +192,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     Point  centroid = cluster->getCalParams().getCentroid();
     Vector axis     = cluster->getCalParams().getAxis();
 
-// DC: unused !
-//    double maxDist = 0;
-//    double aveDist = 0;
-
     XtalDataVec::const_iterator xTalMax = xTalVec->end();
-/*
-    // Loop through the xtals and try to look for outliers
-    for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
-    {
-        Event::CalXtalRecData* recData = *xTalIter;
 
-        Vector distToXtalVec = recData->getPosition() - centroid;
-        double distToXtal    = distToXtalVec.mag();
-
-        aveDist += distToXtal;
-        
-        if (distToXtal > maxDist) 
-        {
-            maxDist = distToXtal;
-            xTalMax = xTalIter;
-        }
-    }
-
-    aveDist /= xTalVec->size();
-
-    if (maxDist < 2. * aveDist) xTalMax = xTalVec->end();
-*/
     // Loop through the xtals setting the hits to analyze
     for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
@@ -240,13 +215,17 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 
     if (chiSq >= 0.)
     {
-        // Get the iterative moments centroid and axis
+        // Get info on iterations
+        int nIterations = momentsAnalysis.getNumIterations();
+        int nDropped    = momentsAnalysis.getNumDroppedPoints();
+
+        // Get the iterative moments centroid and axis from iterations
         centroid = momentsAnalysis.getMomentsCentroid();
         axis     = momentsAnalysis.getMomentsAxis();
 
         // Recalculate the moments going back to using all the data points but with
         // the iterated moments centroid
-        chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
+        if (nIterations > 1) chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
 
         // Extract the values for the moments with all hits present
         double rms_long  = momentsAnalysis.getLongitudinalRms();
