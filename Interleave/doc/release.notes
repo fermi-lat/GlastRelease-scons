@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+18-jan-06 v0r5   THB final version of background interleave
 12-jan-06 v0r4   THB almost final version of the background interleave
 08-jan-05 v0r3p1 THB uses Trigger/LivetimeSvc to manage live, deadtime.
 05-jan-05 v0r2   THB getting closer, but still test mode
