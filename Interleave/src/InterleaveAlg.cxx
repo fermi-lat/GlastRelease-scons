@@ -60,6 +60,7 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("RootFile",     m_rootFile="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
     declareProperty("DisableList",  m_disableList);
+    declareProperty("MapName",      m_mapName="interleave_map");
 
     // initialize the disable list, which can be added to, or replaced in the JO
     std::vector<std::string> tlist;
@@ -86,6 +87,11 @@ StatusCode InterleaveAlg::initialize(){
         log << MSG::ERROR << "failed to get the RootTupleSvc" << endreq;
         return sc;
     }
+    m_rootTupleSvc->addItem(m_mapName.value(), "run",    &m_run);
+    m_rootTupleSvc->addItem(m_mapName.value(), "event",  &m_event);
+    m_rootTupleSvc->addItem(m_mapName.value(), "irun",   &m_irun);
+    m_rootTupleSvc->addItem(m_mapName.value(), "ievent", &m_ievent);
+
 
     sc = service("LivetimeSvc", m_LivetimeSvc);
     if( sc.isFailure() ) {
@@ -238,7 +244,12 @@ void InterleaveAlg::copyEventInfo()
     double EvtElapsedTime  = header->time();
     float EvtLiveTime      = header->livetime();
 
-    float backRun = m_runLeaf->GetValue(), backevent = m_eventLeaf->GetValue();
+    // load the map entries and save the row
+    m_run = header->run();
+    m_event = header->event();
+    m_irun= static_cast<int>(m_runLeaf->GetValue());
+    m_ievent = static_cast<int>( m_eventLeaf->GetValue());
+    m_rootTupleSvc->saveRow(m_mapName.value());
 
     // these have to be done here, since there is no algorithm 
     setLeafValue(m_runLeaf,     EvtRun);
@@ -246,9 +257,10 @@ void InterleaveAlg::copyEventInfo()
     setLeafValue(timeLeaf,      EvtElapsedTime);
     setLeafValue(liveLeaf,      EvtLiveTime);
 
-    // finally, make the source id negative; make zero -1 by offset. (2's complement)
+    //  make the source id negative; make zero -1 by offset. (2's complement)
     float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());
     sourceid=-1-sourceid;
+
 
 }
 
