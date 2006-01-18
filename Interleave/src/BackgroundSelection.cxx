@@ -85,23 +85,25 @@ void BackgroundSelection::selectEvent(double maglat)
 //------------------------------------------------------------------------
 double BackgroundSelection::triggerRate(double maglat)
 {
-    //y = 0.0481x3 - 0.9295x2 - 27.72x + 2082.2
-    static double c[]={2082.2, -27.72, -0.9295, 0.0481};
-
+    // configuration 2: (TKR&&(!VETO||CAL-LO))||CAL-HI:
+    // see http://confluence.slac.stanford.edu/display/SCIGRPS/Resulting+Trigger+and+Filter+Rates
+    //             y = 0.0981x3 - 2.6109x2 + 7.0757x + 2420.3
+    static double c[]={0.0981,   -2.6109,    7.0757,   2420.3};
     double x = fabs(maglat);
-    if( x< 8) x=8;
-    return  ((c[3]*x + c[2])*x +c[1])*x + c[0];
+    if( x< 9) x=9;
+    return  ((c[0]*x + c[1])*x +c[2])*x + c[3];
 }
 
 //------------------------------------------------------------------------
 double BackgroundSelection::downlinkRate(double  maglat )
 {
-    //y = 0.0094x3 - 0.1951x2 - 5.4218x + 508.48
-    static double c[]={508.48, -5.4218, -0.1951, 0.0094};
+    // configuration 2: (TKR&&(!VETO||CAL-LO))||CAL-HI:
 
+    //             y = 0.0117x3 - 0.3342x2 - 2.2632x + 498.74
+    static double c[]={0.0117,   -0.3342,   -2.2632,   498.74};
     double x = fabs(maglat);
-    if( x< 8) x=8;
-    return ((c[3]*x + c[2])*x +c[1])*x + c[0];
+    if( x< 9) x=9;
+    return  ((c[0]*x + c[1])*x +c[2])*x + c[3];
 
 }
 //------------------------------------------------------------------------
