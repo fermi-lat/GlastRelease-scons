@@ -9,7 +9,34 @@
 #include <iostream>
 
 template <class TdsClass, class RootClass>
-bool check( Float_t randNum ) {
+bool checkTopObject( Float_t randNum ) {
+    TdsClass tdsObj ;
+    RootClass rootObj1, rootObj2 ;
+    Int_t ievent ;
+    for ( ievent=0 ; ievent<2 ; ++ievent ) {
+    
+            rootObj1.Fake(ievent,randNum) ;
+            RootPersistence::convert(rootObj1,tdsObj) ;
+            RootPersistence::convert(tdsObj,rootObj2) ;
+            Bool_t theSame = rootObj1.CompareInRange(rootObj2) ;
+            if (!theSame) {
+                std::cout
+                  <<"RootConvert test FAILED for "
+                  <<rootObj1.ClassName()
+                  <<std::endl ;
+                return false ;
+            }
+
+    }
+    std::cout
+      <<"RootConvert test succeeded for "
+      <<rootObj1.ClassName()
+      <<std::endl ;
+    return true ;
+}
+
+template <class TdsClass, class RootClass>
+bool checkElements( Float_t randNum ) {
     TdsClass tdsObj ;
     RootClass rootObj1, rootObj2 ;
     Int_t ievent ;
@@ -42,12 +69,12 @@ int main( int /* argc */, char ** /* argv */ ) {
     bool result = true ;
     TRandom randGen ;
     Float_t randNum = randGen.Rndm() ;
-    result = result && check<Event::McPositionHit,McPositionHit>(randNum) ;
+    result = result && checkElements<Event::McPositionHit,McPositionHit>(randNum) ;
     result = result && rootdatautil::CompareInRange(ROOT_NUMCALLAYERS,NUMCALLAYERS,"NUMCALLAYERS") ;
-    result = result && check<Event::CalCluster,CalCluster>(randNum) ;
-    result = result && check<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
-    result = result && check<Event::CalXtalRecData,CalXtalRecData>(randNum) ;
-    result = result && check<Event::AcdRecon,AcdRecon>(randNum) ;
+    result = result && checkElements<Event::CalCluster,CalCluster>(randNum) ;
+    result = result && checkElements<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
+    result = result && checkElements<Event::CalXtalRecData,CalXtalRecData>(randNum) ;
+    result = result && checkTopObject<Event::AcdRecon,AcdRecon>(randNum) ;
     
     if (result) {
       std::cout<<"RootConvert test succeeded"<<std::endl ;

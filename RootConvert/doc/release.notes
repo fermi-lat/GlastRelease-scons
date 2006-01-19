@@ -3,6 +3,8 @@
  author Ursula Berthon
  @verbatim
 
+ v1r4p1 20-Jan-2006 DC  Fix test bug : make the difference between
+                        top objects and low level elements.
  v1r4   19-Jan-2006 DC  Added CalXtalRecDataConvert.
  v1r3   04-Jan-2006 EAC Added AcdHit, AcdTkrPoca to AcdRecon.
  v1r2   05-Dec-2005 DC A bug fix in CalEventEnergyConvert, and support for AcdRecon.
