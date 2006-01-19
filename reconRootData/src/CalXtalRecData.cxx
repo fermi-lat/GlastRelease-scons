@@ -77,6 +77,7 @@ Double_t CalXtalRecData::getEnergySelectedRange(CalXtalId::AdcRange range, CalXt
 
 void CalXtalRecData::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
 
+    Clear() ;
     CalXtalId id;
     id.init(1, 2, 3);
     initialize(CalXtalId::BESTRANGE,id) ;

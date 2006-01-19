@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r9p1    19-Jan-06  : DC  Fix  a small bug and standardize Fake methods
 v8r9      12-Jan-06  : EAC minor tweaking of the new ACD classes
 v8r8      04-Jan-06  : EAC Added AcdHit AcdTkrPoca to AcdRecon
 v8r7      02-Jan-06  : DC complete rewrite of unit tests
