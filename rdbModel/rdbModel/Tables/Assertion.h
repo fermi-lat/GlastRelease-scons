@@ -135,6 +135,9 @@ namespace rdbModel{
       /// Handling specific to integer data
       bool compareInt(const std::string* vals, OPTYPE type) const;
 
+      /// Handling specific to unsigned integer data
+      bool compareUnsigned(const std::string* vals, OPTYPE type) const;
+
       /// Handling specific to floating point data
       bool compareFloat(const std::string* vals, OPTYPE type) const;
 

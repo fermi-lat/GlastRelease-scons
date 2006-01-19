@@ -36,13 +36,15 @@ namespace rdbModel{
       TYPEint,
       TYPEmediumint,
       TYPEsmallint,
+      TYPEtinyint,
       TYPEreal,
       TYPEdouble,
       TYPEvarchar,
       TYPEchar,
       TYPEintUnsigned,
       TYPEmediumintUnsigned,
-      TYPEsmallintUnsigned
+      TYPEsmallintUnsigned,
+      TYPEtinyintUnsigned
     };
     enum RESTRICT {
       RESTRICTnone = 0,

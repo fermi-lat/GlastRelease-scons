@@ -322,6 +322,7 @@ namespace rdbModel {
       case Datatype::TYPEint:
       case Datatype::TYPEmediumint:
       case Datatype::TYPEsmallint:
+      case Datatype::TYPEtinyint:
         return compareInt(&values[0], m_opType);
       case Datatype::TYPEreal:
       case Datatype::TYPEdouble:
@@ -406,6 +407,22 @@ namespace rdbModel {
     }
     return compareFloat(vals, type);
   }
+
+  bool Assertion::Operator::compareUnsigned(const std::string* vals, 
+                                            OPTYPE type)   const   {
+    using facilities::Util;
+
+    try {
+      unsigned i= Util::stringToUnsigned(*vals);
+      i = Util::stringToUnsigned(*(vals + 1));
+    }
+    catch (facilities::WrongType ex) {
+      throw
+        RdbException("Assertion::Operator::compareInt illegal input");
+    }
+    return compareFloat(vals, type);
+  }
+
 
   /// Handling specific to floating point data
   bool Assertion::Operator::compareFloat(const std::string* vals, 
