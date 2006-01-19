@@ -193,6 +193,8 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 Reconstruction.Members +=     {"meritAlg" }; // AnaTup and Filter stuff into the tuple
 Reconstruction.Members +=     {"ClassifyAlg"};// Atwood's Insightful Miner analysis 
+ClassifyAlg.xmlFileName="DC2_Analysis.xml";  // override default
+
 Reconstruction.Members +=     {"FT1Alg"};     // generate stuff to go into FT1.
 
 
