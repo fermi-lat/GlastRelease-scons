@@ -29,7 +29,7 @@ void McPositionHit::Clear(Option_t *)
 }
 
 // dummy data, just for tests
-void McPositionHit::Fake( UInt_t rank, Float_t randNum ) {
+void McPositionHit::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
 
     Float_t f = Float_t(rank);
     Float_t fr = f*randNum;
