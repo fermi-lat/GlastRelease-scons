@@ -14,6 +14,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 #include "checkSum.h"
@@ -125,6 +126,10 @@ public:
     If service does not implement, it is ignored (return false)
     */
     virtual bool storeRowFlag(const std::string& tupleName, bool flag);
+
+
+    //! Save the row in the output file
+    virtual void saveRow(const std::string& tupleName);
 
 private:
     /// Allow only SvcFactory to instantiate the service.
@@ -472,7 +477,6 @@ StatusCode RootTupleSvc::finalize ()
     return StatusCode::SUCCESS;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
 {
     bool t = m_storeTree[tupleName];
@@ -481,7 +485,7 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
 }
 
 
-
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool RootTupleSvc::getItem(const std::string & tupleName, 
                                    const std::string& itemName, void*& pval)const
 {
@@ -504,8 +508,7 @@ bool RootTupleSvc::getItem(const std::string & tupleName,
     }
     TLeaf* leaf = t->GetLeaf(itemName.c_str());
     if( leaf==0){
-        log << MSG::ERROR << "Did not find leaf " <<itemName << endreq;
-        throw std::invalid_argument("RootTupleSvc::getItem: did not find tuple or leaf");
+        throw std::invalid_argument(std::string("RootTupleSvc::getItem: did not find tuple or leaf")+ itemName);
     }
     pval = leaf->GetValuePointer();
     std::string type_name(leaf->GetTypeName());
@@ -517,4 +520,18 @@ bool RootTupleSvc::getItem(const std::string & tupleName,
     return false;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void RootTupleSvc::saveRow(const std::string& tupleName)
+{
+    std::map<std::string, TTree*>::iterator treeit=m_tree.find(tupleName);
+    if( treeit==m_tree.end()){
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Did not find tree " << tupleName << endreq;
+        throw std::invalid_argument("RootTupleSvc::saveRow: did not find tupleName");
+    }
 
+    TTree* t= treeit->second;
+    t->Fill();
+    m_storeTree[treeit->first]=false;
+
+}

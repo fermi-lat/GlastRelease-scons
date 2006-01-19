@@ -2,6 +2,9 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r12  18-jan-2006 THB  : merge with new branch
+ * v3r8gr3 12-jan-2006 THB : [on GRv7r3p1 branch] Add saveRow() function
+ * v3r8gr1 18-dec-2005 THB : [on GRv7r3p1 branch] Modify getItem to give access to root TTree 
  * v3r10  18-dec-2005 THB : merge with branch, and change interface ID for previous change
  * v3r9   14-dec-2005 HMK : add ability to create multiple ROOT output files
  * v3r8   05-oct-2005 THB : Add access function to an existing tuple item. 
