@@ -151,14 +151,16 @@ StatusCode AcdGeometrySvc::getDimensions(
     sc = m_glastDetSvc->getShapeByID(volId, &str, &dims);
     if ( sc.isFailure() ) {
         MsgStream   log( msgSvc(), name() );
-        log << MSG::WARNING << "Failed to retrieve Shape by Id" << endreq;
+        log << MSG::WARNING << "Failed to retrieve Shape by Id: " 
+            << volId.name() << endreq;
         return sc;
     }
     HepTransform3D transform;
     sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
     if (sc.isFailure() ) {
         MsgStream   log( msgSvc(), name() );
-        log << MSG::WARNING << "Failed to get transformation" << endreq;
+        log << MSG::WARNING << "Failed to get transformation: " 
+            << volId.name() << endreq;
         return sc;
     }
     HepPoint3D center(0., 0., 0.);
