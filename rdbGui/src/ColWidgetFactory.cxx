@@ -66,6 +66,8 @@ ColWidget* ColWidgetFactory::createColWidget(FXComposite* parent, rdbModel::Colu
   case rdbModel::Datatype::TYPEmediumintUnsigned :
   case rdbModel::Datatype::TYPEsmallint :
   case rdbModel::Datatype::TYPEsmallintUnsigned :
+  case rdbModel::Datatype::TYPEtinyint :
+  case rdbModel::Datatype::TYPEtinyintUnsigned :
   {
       colWidget = createIntWidget(parent, column);
       break;
