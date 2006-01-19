@@ -8,6 +8,7 @@
 
 $Header$
 
+v2r19p2   20-Jan-2006 DC  up-to-date test
 v2r19p1   19-Jan-2006 DC  Standardize McPositionHit::Fake() signature
 v2r19p0   24-Sep-2005 TU  Introduce McTrajectory into I/O, implement readback of CalMipTracks
 v2r18p1   06-Sep-2005 NG  Include GlastPolicy so lib directory is created

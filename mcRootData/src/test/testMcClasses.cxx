@@ -123,7 +123,7 @@ int checkMcPositionHit(const McPositionHit* mcPosHit, Int_t ipart, UInt_t ievent
     // Purpose and Method: Check the contents of the McPositionHit read in from 
     //   the ROOT file
     McPositionHit hitRef ;
-    hitRef.Fake(ipart,randNum) ;
+    hitRef.Fake(ievent,ipart,randNum) ;
     if (mcPosHit->CompareInRange(hitRef))
       return 0 ;
     else
@@ -339,7 +339,7 @@ int write(char* fileName, UInt_t numEvents) {
             ev->addMcParticle(mcPart);
             
             McPositionHit *posHit = new McPositionHit();
-            posHit->Fake(ipart,randNum) ;
+            posHit->Fake(ievent,ipart,randNum) ;
             ev->addMcPositionHit(posHit);
             
             McIntegratingHit *intHit = new McIntegratingHit();
