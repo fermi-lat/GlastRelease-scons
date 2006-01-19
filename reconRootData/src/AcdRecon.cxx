@@ -195,7 +195,7 @@ AcdHit* AcdRecon::addAcdHit(AcdHit& hit) {
 // For Unit Tests
 //======================================================
 
-void AcdRecon::Fake( Int_t ievent, UInt_t /*rank*/, Float_t randNum ) {
+void AcdRecon::Fake( Int_t ievent, Float_t randNum ) {
 
     Float_t f = Float_t(ievent);
     Double_t energy = f ;
