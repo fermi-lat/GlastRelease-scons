@@ -5,8 +5,53 @@
 namespace RootPersistence {
 
 //============================================================
-// Conversion
+// idents conversions
 //============================================================
+
+idents::AcdId convert( const AcdId & ) {
+
+
+}
+
+
+AcdId convert( const idents::AcdId & ) {
+
+
+}
+
+
+idents::CalXtalId convert( const CalXtalId & rootId ) {
+    return idents::CalXtalId(rootId.getTower(),rootId.getLayer(),rootId.getColumn()) ;
+}
+
+
+CalXtalId convert( const idents::CalXtalId & tdsId ) {
+    return CalXtalId(tdsId.getTower(),tdsId.getLayer(),tdsId.getColumn()) ;
+}
+
+
+idents::TkrId convert( const commonRootData::TkrId & ) {
+
+
+}
+
+
+commonRootData::TkrId convert( const idents::TkrId & ) {
+
+
+}
+
+
+idents::TowerId convert( const TowerId & ) {
+
+
+}
+
+
+TowerId convert( const idents::TowerId & ) {
+
+
+}
 
 VolumeIdentifier convert( const idents::VolumeIdentifier & tdsVolId ) {
     
@@ -45,6 +90,11 @@ idents::VolumeIdentifier convert( const VolumeIdentifier & rootVolId ) {
     return tdsVolId ;
     
 }
+
+
+//============================================================
+// Conversion math
+//============================================================
 
 HepPoint3D convert( const TVector3 & v ) {
     return HepPoint3D(v.X(),v.Y(),v.Z()) ;
