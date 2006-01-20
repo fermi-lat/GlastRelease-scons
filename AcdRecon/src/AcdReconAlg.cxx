@@ -500,7 +500,8 @@ StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol,
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         idents::AcdId acdId = (*acdDigiIt)->getId();
         if (acdId.ribbon()) continue;
-	
+	if (acdId.na()) continue;
+
         idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
         AcdTileDim tileDim(acdId,volId,*m_glastDetSvc);
         sc = tileDim.statusCode();
@@ -563,6 +564,7 @@ StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol,
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         idents::AcdId acdId = (*acdDigiIt)->getId();
         if (acdId.ribbon()) continue;
+	if (acdId.na()) continue;
 
 	idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
 	AcdTileDim tileDim(acdId,volId,*m_glastDetSvc);
@@ -627,6 +629,7 @@ StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol,
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         idents::AcdId acdId = (*acdDigiIt)->getId();
         if (acdId.ribbon()) continue;
+	if (acdId.na()) continue;
 
         // toss out hits below threshold -- OLD
         // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
@@ -721,6 +724,7 @@ StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const Ev
         idents::AcdId acdId = (*acdDigiIt)->getId();
         // if a tile - skip we want ribbons
         if (acdId.tile()) continue;
+	if (acdId.na()) continue;
 #if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* ribbons with signals
         if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
 #endif

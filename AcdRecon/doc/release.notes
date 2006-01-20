@@ -4,7 +4,8 @@ package manager:H.Kelly
 
 @verbatim
 
-v2r0p2    !2-Jan-2006 EAC Get AcdReconAlg and AcdPocaTool to include AcdTileDim and AcdRibbonDim from AcdUtil
+v2r0p3    19-Jan-2006 EAC Protect against NA channels in AcdRecon
+v2r0p2    12-Jan-2006 EAC Get AcdReconAlg and AcdPocaTool to include AcdTileDim and AcdRibbonDim from AcdUtil
 v2r0p1    12-Jan-2006 EAC Remove AcdTileDim and AcdRibbonDim, which are now in AcdUtil.
 v2r0p0    09-Jan-2006 EAC Cleanup a few loose ends on previous commit.
 v2r0      09-Jan-2006 EAC Re-structure AcdRecon to use AcdPocaTool for calculations.  This is a pretty major re-write.
