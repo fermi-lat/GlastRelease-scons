@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v2r0p4    19-Jan-2006 HMK Patch ribbon orientation change
 v2r0p3    19-Jan-2006 EAC Protect against NA channels in AcdRecon
 v2r0p2    12-Jan-2006 EAC Get AcdReconAlg and AcdPocaTool to include AcdTileDim and AcdRibbonDim from AcdUtil
 v2r0p1    12-Jan-2006 EAC Remove AcdTileDim and AcdRibbonDim, which are now in AcdUtil.

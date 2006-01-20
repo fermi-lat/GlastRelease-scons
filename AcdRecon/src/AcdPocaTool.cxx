@@ -340,11 +340,11 @@ StatusCode AcdPocaTool::hitRibbonDist(const AcdRibbonDim& ribbon,
 
   // check orientation to determine which segment number to retrieve for top
   if ( acdId.ribbonOrientation() == ribbonX) {
-    topSegment = 2;
+    topSegment = 1;
     // ribbons that are along x-axis on the top go down faces 1,3
     sideFace[0] = 1; sideFace[1] = 3;
   } else {
-    topSegment = 1;
+    topSegment = 2;
     // ribbons that are along the y-axis on the top go down faces 2,4
     sideFace[0] = 2; sideFace[1] = 4;
   }
