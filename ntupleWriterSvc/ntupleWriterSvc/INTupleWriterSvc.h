@@ -7,6 +7,7 @@
 #define _H_INTupleWriterSvc_
 
 #include "GaudiKernel/IInterface.h"
+#include <string>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  5 ,0); 

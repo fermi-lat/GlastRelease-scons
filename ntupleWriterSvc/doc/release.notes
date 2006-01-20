@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r12p1 20-jan-2006 HMK : patch to include <string> in INtupleWriterSvc.h
  * v3r12  18-jan-2006 THB  : merge with new branch
  * v3r8gr3 12-jan-2006 THB : [on GRv7r3p1 branch] Add saveRow() function
  * v3r8gr1 18-dec-2005 THB : [on GRv7r3p1 branch] Modify getItem to give access to root TTree 
