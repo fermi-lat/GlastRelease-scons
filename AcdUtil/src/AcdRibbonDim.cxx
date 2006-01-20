@@ -35,11 +35,11 @@ StatusCode AcdRibbonDim::getVals() {
   int sideFace[2];
   // check orientation to determine which segment number to retrieve for top
   if (m_acdId.ribbonOrientation() == ribbonX) {
-    topSegment = 2;
+    topSegment = 1;
     // ribbons that are along x-axis on the top go down faces 1,3
     sideFace[0] = 1; sideFace[1] = 3;
   } else {
-    topSegment = 1;
+    topSegment = 2;
     // ribbons that are along the y-axis on the top go down faces 2,4
     sideFace[0] = 2; sideFace[1] = 4;
   }
@@ -71,7 +71,7 @@ StatusCode AcdRibbonDim::getVals() {
     
     // in this case, we need to extract the dimensions from 3 other top segments
     // to extend an imaginary ribbon across the whole top of the instrument
-    if (m_acdId.ribbonOrientation() == ribbonX && isegment == 1) {
+    if (m_acdId.ribbonOrientation() == ribbonY && isegment == 1) {
       int iseg;
       for(iseg = 1; iseg <= 3; iseg++) {
 	idents::VolumeIdentifier volId1;
@@ -107,7 +107,7 @@ StatusCode AcdRibbonDim::getVals() {
 	  x2 = center.x() + dim1[0]/2.;
 	}
       }
-    } else if (m_acdId.ribbonOrientation() == ribbonY && isegment == 1) {
+    } else if (m_acdId.ribbonOrientation() == ribbonX && isegment == 1) {
       std::vector<double> dim;
       sc = getDetectorDimensions(segmentVolId, m_detSvc, dim, center);
       if (sc.isFailure()) {
