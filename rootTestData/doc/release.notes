@@ -3,6 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
+v3r6p1    21-Jan-06  DC  Update also data/default.
 v3r6      19-Jan-06  DC  Update files after some RootIo=>RootConvert moves.
 v3r5      25-Nov-05  DC  Update gamma files for new CalRecon after DC2
 v3r4      15-Jul-05  HMK Update recon and merit ROOT files for CalMipTracks
