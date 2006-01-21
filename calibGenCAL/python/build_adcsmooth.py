@@ -117,21 +117,21 @@ for idet in detsections:
 	if fhename is None:
 		fhenamelist = glob.glob('*'+idet+'*fhe2adc*.xml')
 		if len(fhenamelist) != 1:
-			log.error(' %s entries in flenamelist',len(fhenamelist))
+			log.error(' %s entries in fhenamelist',len(fhenamelist))
 			sys.exit(1)
 		else:
 			fhename = fhenamelist[0]
 	if lacname is None:
 		lacnamelist = glob.glob('*'+idet+'*lac2adc*.xml')
 		if len(lacnamelist) != 1:
-			log.error(' %s entries in flenamelist',len(lacnamelist))
+			log.error(' %s entries in lacnamelist',len(lacnamelist))
 			sys.exit(1)
 		else:
 			lacname = lacnamelist[0]
 	if uldname is None:
 		uldnamelist = glob.glob('*'+idet+'*uld2adc*.xml')
 		if len(uldnamelist) != 1:
-			log.error(' %s entries in flenamelist',len(uldnamelist))
+			log.error(' %s entries in uldnamelist',len(uldnamelist))
 			sys.exit(1)
 		else:
 			uldname = uldnamelist[0]
