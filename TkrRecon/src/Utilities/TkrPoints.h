@@ -49,6 +49,7 @@ public:
         for (; ip!=this->end(); ++ip) {
             delete *ip;
         }
+        this->clear();
     }
 
     /// Sequential access by closest to x0 outside dist
@@ -72,6 +73,8 @@ private:
     public:
         sortByClosest(const Point& theRef) : myRef(theRef) {}
         bool operator() (const TkrPoint* left, const TkrPoint* right) const {
+	//std::cout << "dists: " << left->getDistanceSquaredTo(myRef) << " " <<
+	  //right->getDistanceSquaredTo(myRef) << std::endl;
             return left->getDistanceSquaredTo(myRef)<right->getDistanceSquaredTo(myRef);
         } 
     };        
