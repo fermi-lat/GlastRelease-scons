@@ -227,7 +227,7 @@ void ExposureAlg::createEntry()
 //! clean up, summarize
 StatusCode ExposureAlg::finalize(){
     // finish up
-    if( m_tickCount>0 ) execute();
+    if( m_tickCount>0 ) createEntry();
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "Processed " << m_tickCount << " ticks" << endreq;

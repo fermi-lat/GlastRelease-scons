@@ -8,6 +8,8 @@ ApplicationMgr.DLLs   += { "FluxSvc" };
  
 FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
+ApplicationMgr.ExtSvc += {"LivetimeSvc" };
+
 
 ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
 //ApplicationMgr.TopAlg = {"FluxAlg","ExposureAlg","FluxTestAlg"};

@@ -11,8 +11,8 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
 // these for root tuples.
-ApplicationMgr.DLLs += {"ntupleWriterSvc"};
-ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+ApplicationMgr.DLLs += {"ntupleWriterSvc", "Trigger"};
+ApplicationMgr.ExtSvc += {"RootTupleSvc", "LivetimeSvc"};
 
 // put this in to test that the random engine gets set properly
 ApplicationMgr.ExtSvc += { "GlastRandomSvc" };
