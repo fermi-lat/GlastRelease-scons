@@ -19,8 +19,10 @@ AcdRibbonDim::AcdRibbonDim(const idents::AcdId& acdId, const idents::VolumeIdent
 			   IGlastDetSvc &detSvc) 
   :m_acdId(acdId),
    m_volId(volId),
-   m_detSvc(detSvc) {
-  m_sc = getVals();
+   m_detSvc(detSvc) 
+{
+    m_sc = getVals();
+
 }  
 
 /// this function access the detector service to get the geometry information
@@ -94,19 +96,20 @@ StatusCode AcdRibbonDim::getVals() {
 	  return sc;
 	}
 	// pick up the beginning from the first segment
-	if (iseg == 1) x1 = center.x() - dim1[0]/2.;
+	if (iseg == 1) y1 = center.y() - dim1[1]/2.;
 	if (iseg == topSegment){
 	  // pick up the other 2 dimensions from a ribbon in the middle
-	  y1 = center.y(); 
+	  x1 = center.x(); 
 	  z1 = center.z();
-	  y2 = center.y();
+	  x2 = center.x();
 	  z2 = center.z();
-	  ribbonHalfWidth = dim1[1]/2.;
+	  ribbonHalfWidth = dim1[0]/2.;
 	} else if (iseg == 3) {
 	  // Pick up the ending point from the last segment
-	  x2 = center.x() + dim1[0]/2.;
+	  y2 = center.y() + dim1[1]/2.;
 	}
       }
+
     } else if (m_acdId.ribbonOrientation() == ribbonX && isegment == 1) {
       std::vector<double> dim;
       sc = getDetectorDimensions(segmentVolId, m_detSvc, dim, center);
@@ -116,13 +119,14 @@ StatusCode AcdRibbonDim::getVals() {
 	sc = StatusCode::SUCCESS;
 	continue;
       }
-      x1 = center.x();
-      y1 = center.y() - dim[1]/2.;
+      x1 = center.x() - dim[0]/2.;
+      y1 = center.y();
       z1 = center.z();
-      x2 = center.x();
-      y2 = center.y() + dim[1]/2.;
+      x2 = center.x() + dim[0]/2.;
+      y2 = center.y();
       z2 = center.z();
-      ribbonHalfWidth = dim[0]/2.;
+      ribbonHalfWidth = dim[1]/2.;
+
     } else { // side ribbons - which are in one segment
       std::vector<double> dim;
       sc = getDetectorDimensions(segmentVolId, m_detSvc, dim, center);
@@ -151,6 +155,7 @@ StatusCode AcdRibbonDim::getVals() {
     m_start[isegment] = HepPoint3D(x1, y1, z1);
     m_end[isegment] = HepPoint3D(x2, y2, z2);    
     m_halfWidth[isegment] = ribbonHalfWidth;
+
   }
   
   return sc;

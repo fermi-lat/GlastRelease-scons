@@ -19,6 +19,7 @@
 
 #include "AcdUtil/IAcdGeometrySvc.h"
 #include "AcdUtil/AcdDetectorList.h"
+#include "AcdUtil/AcdRibbonDim.h"
 
 
 /** @class TestAcdUtil
@@ -42,6 +43,7 @@ public:
 
 private:
 
+  IGlastDetSvc    *m_glastDetSvc;
   IAcdGeometrySvc *m_acdGeoSvc;
 
 };
@@ -62,6 +64,12 @@ StatusCode TestAcdUtil::initialize() {
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
+
+    m_glastDetSvc = 0;
+    sc = service("GlastDetSvc", m_glastDetSvc, true);
+    if (sc.isSuccess() ) {
+        sc = m_glastDetSvc->queryInterface(IID_IGlastDetSvc, (void**)&m_glastDetSvc);
+    }
 
     sc = service("AcdGeometrySvc", m_acdGeoSvc, true);
     if (sc.isFailure() ) {
@@ -125,6 +133,19 @@ StatusCode TestAcdUtil::execute() {
             log << "Corner " << iCorner << " " << corner[iCorner].x() 
                 << ", " << corner[iCorner].y() << ", " << corner[iCorner].z()
                 << endreq;
+        }
+
+        if (acdId.ribbon()) {
+            // Test Creation of RibbonDim
+            AcdRibbonDim ribbonDim(acdId, volid, *m_glastDetSvc);
+            const HepPoint3D* start = ribbonDim.ribbonStart();
+            const HepPoint3D* end = ribbonDim.ribbonEnd();
+            const double* halfWidth = ribbonDim.halfWidth();
+     
+            log << MSG::DEBUG << "ID: " << acdId.id() << " start:(" 
+                << start[1].x() << "," << start[1].y() << "," << start[1].z()
+                << ") end:(" << end[1].x() << "," << end[1].y() << ","
+                << end[1].z() << ") halfWid: " << halfWidth[1] << std::endl;
         }
 
     }
