@@ -837,6 +837,11 @@ namespace rdbModel {
       base = "smallint";
       break;
     }
+    case Datatype::TYPEtinyint: 
+    case Datatype::TYPEtinyintUnsigned:   {
+      base = "tinyint";
+      break;
+    }
     case Datatype::TYPEreal: 
     case Datatype::TYPEdouble: {
       base = "double";
