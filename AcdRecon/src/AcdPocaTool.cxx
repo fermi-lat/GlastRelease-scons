@@ -257,7 +257,12 @@ StatusCode AcdPocaTool::docaActiveDist(const AcdTileDim& tile,
     if(dist < data.m_dist) {
       data.m_dist = dist;
       i_near_corner = iCorner;
-      data.m_region = 1;
+      data.m_region = 3;
+      data.m_arcLength = prod;
+      HepPoint3D x_isec = x0 + prod*t0;
+      data.m_poca.set(x_isec.x(),x_isec.y(),x_isec.z());
+      HepVector3D pocaVect = x_isec - corner[iCorner];
+      data.m_pocaVector.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
     }
   }
 
