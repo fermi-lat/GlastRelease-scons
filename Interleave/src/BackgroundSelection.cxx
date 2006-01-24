@@ -74,12 +74,22 @@ void BackgroundSelection::selectEvent(double maglat)
     // make sure we have the right tree selected for new maglat
     setCurrentTree(maglat);    
 
-    // check event offset for overflow:
-    if (m_eventOffset >= m_inputTree->GetEntries())
-      m_eventOffset = 0;
+    do {
 
-    // grab the event:
-    m_inputTree->GetEvent(m_eventOffset++);
+        // check event offset for overflow:
+        if (m_eventOffset >= m_inputTree->GetEntries())
+            m_eventOffset = 0;
+
+        // grab the event:
+        m_inputTree->GetEvent(m_eventOffset++);
+        
+    }while( zenithTheta()>100.);
+}
+//------------------------------------------------------------------------
+double BackgroundSelection::zenithTheta()
+{
+    double x= m_inputTree->GetLeaf("FT1ZenithTheta")->GetValue();
+    return x;
 }
 
 //------------------------------------------------------------------------
@@ -114,6 +124,8 @@ void BackgroundSelection::disableBranches(TTree* t) //const char* pattern)
         t->SetBranchStatus((*it).c_str(), false);
     }
 
+    // restore this, if needed, for cuts
+    t->SetBranchStatus("FT1ZenithTheta", 1);
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::setCurrentTree(double maglat) 
