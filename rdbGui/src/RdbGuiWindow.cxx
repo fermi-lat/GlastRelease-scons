@@ -311,18 +311,21 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
         
           switch (match) {
           case rdbModel::MATCHequivalent:
+            uiLog->update();   
             uiLog->logText("XML schema and MySQL database are equivalent!\n");
             searchFrame->setConnection(m_connect);
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHcompatible:
+            uiLog->update();   
             uiLog->logText("XML schema and MySQL database are compatible\n");
             searchFrame->setConnection(m_connect);
             m_cmdOpenConn->disable();
             m_cmdCloseConn->enable();
             break;
           case rdbModel::MATCHfail:
+            uiLog->update();   
             uiLog->logText("XML schema and MySQL database are NOT compatible\n");
 
             if (m_rdb) {
@@ -332,6 +335,7 @@ long RdbGUIWindow::onOpenConnection(FXObject*,FXSelector, void*)
             m_connect->close();
             break;
           case rdbModel::MATCHnoConnection:
+            uiLog->update();   
             uiLog->logText("Connection failed while attempting match\n");
             if (m_rdb) {
               delete m_rdb;
