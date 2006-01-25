@@ -32,25 +32,25 @@ CalXtalId convert( const idents::CalXtalId & tdsId ) {
 
 idents::TkrId convert( const commonRootData::TkrId & ) {
     throw "idents::TkrId convert( const commonRootData::TkrId & ) NOT IMPLEMENTED" ;
-    return idents::TkrId ;
+    return idents::TkrId() ;
 }
 
 
 commonRootData::TkrId convert( const idents::TkrId & ) {
     throw "commonRootData::TkrId convert( const idents::TkrId & ) NOT IMPLEMENTED" ;
-    return commonRootData::TkrId ;
+    return commonRootData::TkrId() ;
 }
 
 
 idents::TowerId convert( const TowerId & ) {
     throw "idents::TowerId convert( const TowerId & ) NOT IMPLEMENTED" ;
-    return idents::TowerId ;
+    return idents::TowerId() ;
 }
 
 
 TowerId convert( const idents::TowerId & ) {
     throw "TowerId convert( const idents::TowerId & ) NOT IMPLEMENTED" ;
-    return TowerId ;
+    return TowerId() ;
 }
 
 VolumeIdentifier convert( const idents::VolumeIdentifier & tdsVolId ) {
