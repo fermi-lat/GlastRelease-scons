@@ -25,7 +25,7 @@ DigiEvent::DigiEvent() {
     m_calDigiCloneCol = s_calDigiStaticCol;
     m_numCalDigis = -1;
 
-    m_calDigiCol = 0;
+    //m_calDigiCol = 0;
 
     if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
     m_tkrDigiCol = s_staticTkrDigiCol;
@@ -68,11 +68,11 @@ DigiEvent::~DigiEvent() {
     delete m_calDigiCloneCol;
     m_calDigiCloneCol = 0;
 
-    if (m_calDigiCol) {
+    /*if (m_calDigiCol) {
         m_calDigiCol->Delete();
         delete m_calDigiCol;
         m_calDigiCol = 0;
-    }
+    }*/
 
 
     if (m_calDiagnosticCloneCol == s_calDiagnosticStaticCol) s_calDiagnosticStaticCol = 0;
@@ -133,11 +133,11 @@ void DigiEvent::Clear(Option_t *option) {
     m_levelOneTrigger.Clear();
     m_summary.Clear();
     m_calDigiCloneCol->Clear("C");
-    if (m_calDigiCol) {
+    /*if (m_calDigiCol) {
         m_calDigiCol->Delete();
         delete m_calDigiCol;
         m_calDigiCol = 0;
-    }
+    }*/
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
     m_numCalDigis = -1;
@@ -181,9 +181,9 @@ void DigiEvent::Print(Option_t *option) const {
         << " Time: " << m_timeStamp << " LiveTime: " << m_liveTime << endl;
     m_levelOneTrigger.Print();
     m_summary.Print();
-    if ( (m_calDigiCol) && (m_calDigiCol->GetEntries() > 0)) {
-      cout << "Number of CalDigis " << m_calDigiCol->GetEntries() << endl;
-    } else 
+    //if ( (m_calDigiCol) && (m_calDigiCol->GetEntries() > 0)) {
+    //  cout << "Number of CalDigis " << m_calDigiCol->GetEntries() << endl;
+    //} else 
       cout << "Number of CalDigis " << (m_numCalDigis+1) << endl;
     if (m_tkrDigiCol) 
       cout << "Number of TkrDigis " << m_tkrDigiCol->GetEntries() << endl;
@@ -247,7 +247,7 @@ CalDigi* DigiEvent::addCalDigi() {
 }
 
 const CalDigi* DigiEvent::getCalDigi(UInt_t i) const {
-    if ((m_calDigiCol) && (m_calDigiCol->GetEntries()>0)) return (CalDigi*)m_calDigiCol->At(i);
+    //if ((m_calDigiCol) && (m_calDigiCol->GetEntries()>0)) return (CalDigi*)m_calDigiCol->At(i);
     if (Int_t(i) > m_numCalDigis) return 0;
     return (CalDigi*)m_calDigiCloneCol->At(i);
 }
@@ -262,7 +262,7 @@ const TClonesArray* DigiEvent::getCalDigiCol() const {
     // called for a particular event.
 
     // Maintain Backward compatibility
-    if ((m_calDigiCol) && (m_calDigiCloneCol->GetEntries()==0)) {
+   /* if ((m_calDigiCol) && (m_calDigiCloneCol->GetEntries()==0)) {
         TIter objIter(m_calDigiCol);
         CalDigi *calDigiObj = 0;
         while ((calDigiObj = (CalDigi*)objIter.Next())!=0) {
@@ -287,7 +287,7 @@ const TClonesArray* DigiEvent::getCalDigiCol() const {
                 }
             }
         }
-    }
+    } */
     // Now return the TClonesArray*
     return m_calDigiCloneCol; 
 }
