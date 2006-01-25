@@ -54,9 +54,9 @@ public:
 
     /// Number of readouts in this CalDigi (1 or 4)
     const UInt_t getNumReadouts() const { 
-        if (m_readoutCol) 
-            return m_readoutCol->GetEntries(); 
-        else 
+        //if (m_readoutCol) 
+        //    return m_readoutCol->GetEntries(); 
+        //else 
             return m_numReadouts;
     }
     

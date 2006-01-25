@@ -12,7 +12,7 @@ ClassImp(CalDigi)
 //
 
 CalDigi::CalDigi() {
-//    m_readoutCol = 0;
+    m_readoutCol = 0;
     Clear();
 }
 

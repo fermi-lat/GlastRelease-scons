@@ -25,7 +25,7 @@ DigiEvent::DigiEvent() {
     m_calDigiCloneCol = s_calDigiStaticCol;
     m_numCalDigis = -1;
 
-    //m_calDigiCol = 0;
+    m_calDigiCol = 0;
 
     if (!s_staticTkrDigiCol) s_staticTkrDigiCol = new TObjArray();
     m_tkrDigiCol = s_staticTkrDigiCol;
