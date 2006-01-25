@@ -3,6 +3,7 @@
  author Ursula Berthon
  @verbatim
 
+ v1r4p3 26-Jan-2006 DC  Bug Fix
  v1r4p2 25-Jan-2006 DC  Fake implementation for some methods not yet implemented,
                         so that the package compiles on windows.
  v1r4p1 20-Jan-2006 DC  Fix test bug : make the difference between
