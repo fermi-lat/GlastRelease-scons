@@ -12,7 +12,6 @@ __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
 
-import os, copy
 import logging
 
 import Numeric
@@ -87,25 +86,28 @@ class calADCFilter:
 
                         self.__log.debug("T%d,%s%s,%d" %
                                          (tem, calConstant.CROW[row], calConstant.CPM[end], fe))
+
+                        fineData = outData[tem,row,end,fe,0:64]
+                        coarseData = outData[tem,row,end,fe,64:128]
                         
-                        self.__floor(outData[tem,row,end,fe,0:64])
-                        self.__floor(outData[tem,row,end,fe,64:128])
+                        self.__floor(fineData)
+                        self.__floor(coarseData)
 
-                        self.__extrapolateLow(outData[tem, row, end, fe, 0:64])
-                        self.__extrapolateLow(outData[tem, row, end, fe, 64:128])
+                        self.__extrapolateLow(fineData)
+                        self.__extrapolateLow(coarseData)
 
-                        self.__restore(outData[tem,row,end,fe,0:64])
-                        self.__restore(outData[tem,row,end,fe,64:128])                    
+                        self.__restore(fineData)
+                        self.__restore(coarseData)                    
 
-                        self.__filter(outData[tem,row,end,fe,0:64])
-                        self.__filter(outData[tem,row,end,fe,64:128])
+                        self.__filter(fineData)
+                        self.__filter(coarseData)
 
                         if self.__type == DAC_TYPE_FLE:
-                            self.__extrapolateHigh(outData[tem,row,end,fe,64:128])
+                            self.__extrapolateHigh(coarseData)
                     
                         if self.__smoothing:
-                            self.__smooth(outData[tem,row,end,fe,0:64])
-                            self.__smooth(outData[tem,row,end,fe,64:128])                            
+                            self.__smooth(fineData)
+                            self.__smooth(coarseData)                            
 
 
     def __runULD(self, outData, tems):
@@ -119,18 +121,21 @@ class calADCFilter:
                                              (tem, calConstant.CROW[row], calConstant.CPM[end],
                                               fe, calConstant.CRNG[erng]))
 
-                            self.__floor(outData[erng,tem,row,end,fe,0:64])
-                            self.__floor(outData[erng,tem,row,end,fe,64:128])
+                            fineData = outData[erng,tem,row,end,fe,0:64]
+                            coarseData = outData[erng,tem,row,end,fe,64:128]
 
-                            self.__restore(outData[erng,tem,row,end,fe,0:64])
-                            self.__restore(outData[erng,tem,row,end,fe,64:128])                    
+                            self.__floor(fineData)
+                            self.__floor(coarseData)
 
-                            self.__filter(outData[erng,tem,row,end,fe,0:64])
-                            self.__filter(outData[erng,tem,row,end,fe,64:128])
+                            self.__restore(fineData)
+                            self.__restore(coarseData)                    
+
+                            self.__filter(fineData)
+                            self.__filter(coarseData)
 
                             if self.__smoothing:
-                                self.__smooth(outData[erng,tem,row,end,fe,0:64])
-                                self.__smooth(outData[erng,tem,row,end,fe,64:128])                            
+                                self.__smooth(fineData)
+                                self.__smooth(coarseData)                            
 
         
     def __floor(self, data):
