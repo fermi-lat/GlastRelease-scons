@@ -5,6 +5,8 @@
  package manager:T.Burnett
            EOH
 
+ v9r17p1 25-Jan-2006  hmk   Richard's fix to CurrentEventAlg to print only one
+                            line
  v9r17   22-Nov-2005  hmk   Add CurrentEventAlg which outputs the run/event ids
                             of the current event being processed
  v9r16   19-Aug-2005  jrb   Modify calling sequence for IGeometry::pushShape so
