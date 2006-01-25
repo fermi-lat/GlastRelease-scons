@@ -8,6 +8,8 @@
 
 $Header$
 
+v2r19p3   24-Jan-2006 HMK Update McEvent::Clear to add ALL option, where the
+                          static arrays are cleared out
 v2r19p2   20-Jan-2006 DC  up-to-date test
 v2r19p1   19-Jan-2006 DC  Standardize McPositionHit::Fake() signature
 v2r19p0   24-Sep-2005 TU  Introduce McTrajectory into I/O, implement readback of CalMipTracks

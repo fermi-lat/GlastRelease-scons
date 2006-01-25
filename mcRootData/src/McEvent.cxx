@@ -57,16 +57,16 @@ McEvent::~McEvent() {
     delete m_trajectoryCol;
     m_trajectoryCol = 0;
 
-	Clear();
+    Clear("ALL");
 }
 
 void McEvent::initialize(UInt_t nEvent, UInt_t nRun, 
-						 Int_t sourceId, UInt_t sequence, Double_t timestamp) {
+                         Int_t sourceId, UInt_t sequence, Double_t timestamp) {
     m_eventId = nEvent;
     m_runId = nRun;
-	m_sourceId = sourceId;
-	m_sequence = sequence;
-        m_timeStamp = timestamp;
+    m_sourceId = sourceId;
+    m_sequence = sequence;
+    m_timeStamp = timestamp;
     return;
 }
 
@@ -89,6 +89,25 @@ void McEvent::Clear(Option_t *option) {
     static McIntegratingHit* keepint[nd];
     static McTrajectory* keeptraj[nd];
     
+
+    if (option == "ALL") {
+        Int_t j;
+        for (j=0;j<indpart;j++) delete keeppart[j];
+        indpart = 0;
+        for (j=0;j<indpos;j++) delete keeppos[j];
+        indpos = 0;
+	for (j=0;j<indint;j++) delete keepint[j];
+	indint = 0;
+        for (j=0;j<indtraj;j++) delete keeptraj[j];
+        indtraj = 0;
+        if (m_particleCol) m_particleCol->Delete();
+        if (m_positionHitCol) m_positionHitCol->Delete();
+        if (m_integratingHitCol) m_integratingHitCol->Delete();
+        if (m_trajectoryCol) m_trajectoryCol->Delete();
+        return;
+    }
+
+
     if (m_particleCol) {
       //      m_particleCol->Delete();
       Int_t n = m_particleCol->GetEntries();
