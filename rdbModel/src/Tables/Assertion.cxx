@@ -324,7 +324,7 @@ namespace rdbModel {
       case Datatype::TYPEsmallint:
       case Datatype::TYPEtinyint:
         return compareInt(&values[0], m_opType);
-      case Datatype::TYPEreal:
+      case Datatype::TYPEfloat:
       case Datatype::TYPEdouble:
         return compareFloat(&values[0], m_opType);
       default:  // do nothing

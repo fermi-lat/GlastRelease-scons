@@ -37,7 +37,7 @@ namespace rdbModel{
       TYPEmediumint,
       TYPEsmallint,
       TYPEtinyint,
-      TYPEreal,
+      TYPEfloat,
       TYPEdouble,
       TYPEvarchar,
       TYPEchar,

@@ -20,7 +20,7 @@ namespace {
       typenames[Datatype::TYPEmediumint] = std::string("mediumint");
       typenames[Datatype::TYPEsmallint] = std::string("smallint");
       typenames[Datatype::TYPEtinyint] = std::string("tinyint");
-      typenames[Datatype::TYPEreal] = std::string("real");
+      typenames[Datatype::TYPEfloat] = std::string("float");
       typenames[Datatype::TYPEdouble] = std::string("double");
       typenames[Datatype::TYPEvarchar] = std::string("varchar");
       typenames[Datatype::TYPEchar] = std::string("char");
@@ -61,7 +61,7 @@ namespace {
         (aType == Datatype::TYPEsmallintUnsigned)  ||
         (aType == Datatype::TYPEtinyintUnsigned)    ) 
       return TOTinteger;
-    else if ((aType == Datatype::TYPEreal) || (aType == Datatype::TYPEdouble))
+    else if ((aType == Datatype::TYPEfloat) || (aType == Datatype::TYPEdouble))
       return TOTreal;
     else if ((aType == Datatype::TYPEdatetime) || 
              (aType == Datatype::TYPEtimestamp))
@@ -180,7 +180,7 @@ namespace rdbModel {
     }
     // Don't expect to encounter interval restriction for floating point,
     // so don't bother to cache values, but at least check for validity
-    if ((m_type == TYPEdouble) || (m_type == TYPEreal)) {
+    if ((m_type == TYPEdouble) || (m_type == TYPEfloat)) {
       try {
         double minFloat = facilities::Util::stringToDouble(min);
         double maxFloat = facilities::Util::stringToDouble(max);
@@ -222,7 +222,7 @@ namespace rdbModel {
     using facilities::Util;
 
     switch (m_type) {
-    case TYPEreal:
+    case TYPEfloat:
     case TYPEdouble: {
       double doubleVal;
       try {

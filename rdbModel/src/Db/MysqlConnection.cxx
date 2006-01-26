@@ -852,7 +852,11 @@ namespace rdbModel {
       base = "tinyint";
       break;
     }
-    case Datatype::TYPEreal: 
+    case Datatype::TYPEfloat: {
+      base = "float";
+      break;
+    }
+
     case Datatype::TYPEdouble: {
       base = "double";
       break;
