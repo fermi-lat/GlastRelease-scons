@@ -106,7 +106,7 @@ def plotDAC(rawData, filterData, info, twrs):
 
                     g = ROOT.TGraph(len(x), x, y)
 
-                    g.SetLineColor(3)
+                    g.SetLineColor(4)
                     g.SetLineStyle(2)
                     g.SetLineWidth(2)
                     lineGraph.append(g)
@@ -138,7 +138,7 @@ def plotDAC(rawData, filterData, info, twrs):
 
                     g = ROOT.TGraph(len(x), x, y)
 
-                    g.SetLineColor(3)
+                    g.SetLineColor(4)
                     g.SetLineStyle(2)
                     g.SetLineWidth(2)
                     lineGraph.append(g)                    
