@@ -200,7 +200,7 @@ class calADCFilter:
                 a0 = data[d0]
                 a1 = data[d1]
                 m = (a1 - a0) / (d1 - d0)
-                if m < 20.0 and a0 < 100.0:
+                if m < 20.0 and (a0 < 30.0 or a1 < 100.0):
                     data[d0] = 0.0
                     self.__log.debug('floor: replacing %d,%d,%f', d0, d1, m)
                     break
