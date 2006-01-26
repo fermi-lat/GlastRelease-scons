@@ -1,5 +1,12 @@
 """
 Generate ROOT plots for CAL ADC/DAC characerization data.
+
+adcplot [-V] <xml_file> <root_file>
+
+Where:
+    -V          = if present, run in verbose mode
+    xml_file    = DAC/ADC characterization table XML data file
+    root_file   = ROOT file to store output graphs
 """
 
 
