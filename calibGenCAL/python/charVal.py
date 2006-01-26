@@ -157,8 +157,9 @@ if __name__ == '__main__':
 
     log.debug('Validating file type %s', type)
 
-    pi = {'fixed' : 0, 'limited' : [0, 0], 'mpprint' : 0}
+    pi = {'fixed' : 0, 'limited' : (0, 0), 'mpprint' : 0}
     pinfo = [pi, pi]
+    x0 = Numeric.arange(0.0, 64.0, 1.0)
 
     errData = ([], [])    
 
@@ -168,15 +169,14 @@ if __name__ == '__main__':
                 for fe in range(calConstant.NUM_FE):
 
                     fineData = data[tem, row, end, fe, 0:64]
-                    coarseData = data[tem, row, end, fe, 64:128]
-                    x0 = Numeric.arange(0.0, 64.0, 1.0)                    
+                    coarseData = data[tem, row, end, fe, 64:128]                    
 
                     # fit FINE range data                    
                     
                     z = Numeric.nonzero(fineData)
                     y = Numeric.take(fineData, z)
                     x = Numeric.take(x0, z)
-                    p0 = [20.0, -200.0]
+                    p0 = (20.0, -200.0)
                     fkw = {'x': x, 'y' : y}
 
                     if len(x) < 3:
@@ -208,7 +208,7 @@ if __name__ == '__main__':
                     z = Numeric.nonzero(coarseData)
                     y = Numeric.take(coarseData, z)
                     x = Numeric.take(x0, z)
-                    p0 = [40, -400]
+                    p0 = (40, -400)
                     fkw = {'x': x, 'y' : y}
                     
                     if len(x) < 3:
