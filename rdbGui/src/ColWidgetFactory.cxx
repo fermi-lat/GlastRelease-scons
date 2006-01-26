@@ -54,7 +54,7 @@ ColWidget* ColWidgetFactory::createColWidget(FXComposite* parent, rdbModel::Colu
       colWidget = createEnumWidget(parent, column);
       break;
   };
-  case rdbModel::Datatype::TYPEreal :
+  case rdbModel::Datatype::TYPEfloat :
   case rdbModel::Datatype::TYPEdouble :
   {
       colWidget = createRealWidget(parent, column);

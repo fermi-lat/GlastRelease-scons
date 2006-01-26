@@ -285,7 +285,7 @@ rdbModel::Visitor::VisitorState InsertDialog::visitColumn(rdbModel::Column *colu
       	colWidget = m_factory->createEnumWidget(m_matrix, column);
         break;
     };
-    case rdbModel::Datatype::TYPEreal :
+    case rdbModel::Datatype::TYPEfloat :
     case rdbModel::Datatype::TYPEdouble :
     {
         colWidget = m_factory->createRealWidget(m_matrix, column);
