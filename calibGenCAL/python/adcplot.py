@@ -87,7 +87,10 @@ def plotULD(data, info, twrs):
                     graphs = []
                     leg = ROOT.TLegend(0.91, 0.50, 0.98, 0.60)
 
+                    gMax = []
                     for erng in range(3):                    
+
+                        gMax.append(max(data[erng, tem, layer, end, fe, :]))
                         
                         x = array.array('f')
                         y = array.array('f')
@@ -105,6 +108,7 @@ def plotULD(data, info, twrs):
 
                     hist = g.GetHistogram()
                     hist.SetTitle(title)
+                    hist.SetMaximum(max(gMax) + 200)
                     hist.Draw()
                     leg.Draw()
                     c.Update()
