@@ -203,6 +203,7 @@ FT1worker::FT1worker()
     <tr><td> FT1Ra,FT1Dec </td><td> (deg) reconstructed direction in equatorial coordinates       
     <tr><td> FT1ZenithTheta,FT1EarthAzimuth </td><td>(deg) reconstucted direction with respect to local zenith system
     <tr><td> FT1ConvPointX,FT1ConvPointY,FT1ConvPointZ</td><td> (m) conversion point of event, whether single track or vertex, 999 if no tracks
+    <tr><td> FT1Livetime</td><td> (s) Cumulative live time, from start of run, or mission
 </table>
     */
     addItem( "FT1EventId",       m_ft1eventid);
@@ -232,7 +233,7 @@ void FT1worker::evaluate(const Event::Exposure& exp)
 
     // Give default "guard" values in case there are no tracks in the event
     m_ft1energy = CTBBestEnergy;
-    if( m_ft1energy=0) m_ft1energy = EvtEnergyCorr;
+    if( m_ft1energy==0) m_ft1energy = EvtEnergyCorr;
 
     m_ft1theta = 666; m_ft1phi = 666; m_ft1ra   = 666;
     m_ft1dec   = 666; m_ft1zen = 666; m_ft1azim = 666;
