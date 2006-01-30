@@ -139,6 +139,8 @@ class calADCFilter:
                             self.__floor(fineData)
                             self.__floor(coarseData)
 
+                            self.__saturateULD(coarseData)                            
+
                             self.__restore(fineData)
                             self.__restore(coarseData)                    
 
@@ -410,14 +412,62 @@ class calADCFilter:
             data[d] = a
             a0 = a
             
-                
+
+    def __saturateULD(self, data):
+        """
+        Extrapolate ULD values from sparse data.  Restore saturation plateau of
+        full characterization table.
+
+        Param: data - A Numeric array containing one range of ADC data.  The last good
+                      segment is used to extrapolate the remaining values in the range.
+                      data[63] should contain the saturation value for the data.  This is
+                      used to limit the extrapolation values. The data is changed in place.              
+        """
+
+        # get saturation value
+
+        sat = data[63]
+
+        # find data before saturation
+
+        d1 = 63
+        sat = a1 = data[d1]
+        while a1 == sat or a1 == 0:
+            d1 -= 1
+            a1 = data[d1]
+
+        # get last good segment            
+
+        for d0 in range(d1 - 1, 0, -1):
+            a0 = data[d0]
+            if a0 != 0:
+                break
+
+        # extrapolate remaining values
+
+        m = (a1 - a0) / (d1 - d0)
+        
+        for dac in range(d1 + 1, 63):
+            a = a1 = (a1 + m)
+            if a > sat:
+                a = sat
+            data[dac] = a       
+         
+        
 
     def __smooth(self, data):        
         """
         Run 5-point boxcar digital filter on data.
         """
+
+        sat = data[63]        
                         
         for dac in range(2, 62):
+
+            # break out early for ULD so the plateau is not smoothed
+
+            if self.__type == DAC_TYPE_ULD and data[dac + 2] >= sat:
+                return
 
             adc = data[dac]
             if adc == 0.0:
