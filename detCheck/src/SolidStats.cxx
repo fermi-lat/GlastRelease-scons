@@ -450,8 +450,10 @@ namespace detCheck {
     std::string cvsId = m_gdd->getCVSid();
     (*m_out) <<  "<hrule /><br />This page created " 
              <<  ctime((time_t*)(&secs))
-             << "<br /> from XML input: " 
-             << cvsId << std::endl;
+             << "<br /> from XML input cvs version: " 
+             << cvsId << std::endl
+             << "<br /> file path: "
+             << detModel::Manager::getPointer()->getNameFile() << std::endl;
   }
 
   unsigned SolidStats::getCopyCount() {
