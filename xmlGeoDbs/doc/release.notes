@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r30p2 30-Jan-2006  jrb Fix thickness of top tile in row 3, col 4
    v1r30p1 30-Jan-2006  jrb Bring latAssembly/latACDDimPrimUnshrunk.xml up to date
    v1r30    8-Jan-2006  jrb Add extra pieces to top tiles in rows 0 and 4 to 
                             simulate bent tiles; add extra bits of ribbon 
