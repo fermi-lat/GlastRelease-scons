@@ -332,6 +332,8 @@ def plotULD(rawData, filterData, info, twrs):
                     h = markerGraph[-1].GetHistogram()
                     h.SetMaximum(max(gMax) + 200)
                     h.Draw()
+                    leg.Draw()
+                    c.Update()
 
                     for g in lineGraph:
                         g.Draw('L')
