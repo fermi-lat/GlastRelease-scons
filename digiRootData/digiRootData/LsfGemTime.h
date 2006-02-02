@@ -5,7 +5,7 @@
 
 #include "TObject.h"
 
-/** @class TimeHack
+/** @class GemTime
 * @brief encapsulate the time hack markers that come down with the event context
 *
 * 
@@ -13,24 +13,24 @@
 * $Header$
 */
 
-class TimeHack : public TObject {
+class GemTime : public TObject {
     
 public:
   
-  TimeHack()
+  GemTime()
     : m_hacks(0), m_ticks(0){}
   
-  TimeHack( UInt_t hacks, UInt_t ticks )
+  GemTime( UInt_t hacks, UInt_t ticks )
     : m_hacks(hacks), m_ticks(ticks){}
   
-  TimeHack( const TimeHack& other )
+  GemTime( const GemTime& other )
     : TObject(other), m_hacks(other.hacks()), m_ticks(other.ticks()){}
     
-  ~TimeHack() {
+  ~GemTime() {
   }
   
   /// Assignement operator
-  inline TimeHack& operator=( const TimeHack& other ) {
+  inline GemTime& operator=( const GemTime& other ) {
     initialize(other.hacks(),other.ticks());
     return *this;
   }
@@ -65,7 +65,7 @@ public:
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
 
   /// Compare to another in tests
-  Bool_t CompareInRange( const TimeHack &, const std::string & name = "" ) const ; // for tests
+  Bool_t CompareInRange( const GemTime &, const std::string & name = "" ) const ; // for tests
     
 private:
   
@@ -75,7 +75,7 @@ private:
   /// Number of ticks of 20MhZ clock
   UInt_t m_ticks;  
 
-  ClassDef(TimeHack,1) 
+  ClassDef(GemTime,1) 
   
 }; 
 

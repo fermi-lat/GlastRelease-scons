@@ -24,7 +24,7 @@
 #pragma link C++ class CalDiagnosticData+; //class name different from filename!
 
 /// LSF stuff
-#pragma link C++ class TimeHack+;  //class name different from filename!  (LsfTimeHack)
+#pragma link C++ class GemTime+;  //class name different from filename!  (LsfGemTime)
 #pragma link C++ class TimeTone+;  //class name different from filename!  (LsfTimeTone)
 #pragma link C++ class Time+;  //class name different from filename! (LsfTime)
 #pragma link C++ class Configuration+;  //class name different from filename! (LsfConfiguration)

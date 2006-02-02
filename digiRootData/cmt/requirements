@@ -18,7 +18,7 @@ apply_pattern root_package headers="\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
- ../digiRootData/LsfTimeHack.h\
+ ../digiRootData/LsfGemTime.h\
  ../digiRootData/LsfTimeTone.h\
  ../digiRootData/LsfTime.h\
  ../digiRootData/LsfRunInfo.h\

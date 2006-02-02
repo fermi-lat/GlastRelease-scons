@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r0r1    02-Feb-2006 EAC Updated lsf stuff to match dfi header files instead of doc
 v9r0      01-Feb-2006 EAC Added implementation of a missing function
 v9        01-Feb-2006 EAC Added Lsf stuff for lsf data 
 v8r7p2    24-Jan-2006 HMK Remove deprecated CalDigi TObjArray and calReadoutCol, so that methods which should be 

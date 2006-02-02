@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "TObject.h"
-#include "LsfTimeHack.h"
+#include "LsfGemTime.h"
 
 /** @class TimeTone
 * @brief encapsulate the time tone markers that come down with the 
@@ -30,7 +30,7 @@ public:
     
   TimeTone( UInt_t incomplete, UInt_t timeSecs,
 	    UInt_t flywheeling, UChar_t flags,
-	    const TimeHack& timeHack )
+	    const GemTime& timeHack )
     :m_incomplete(incomplete), m_timeSecs(timeSecs), 
      m_flywheeling(flywheeling), m_flags(flags), m_timeHack(timeHack) {
   }
@@ -76,12 +76,12 @@ public:
   inline Bool_t missingTimeTone() const  { return (m_flags & MISSING_TIMETONE_MASK) != 0; }
 
   /// The time hack at the time tone
-  inline const TimeHack& timeHack() const { return m_timeHack; }
+  inline const GemTime& timeHack() const { return m_timeHack; }
   
   /// set everything at once
   inline void initialize( UInt_t incomplete, UInt_t timeSecs,
 			  UInt_t flywheeling, UChar_t flags,
-			  const TimeHack& timeHack ) {
+			  const GemTime& timeHack ) {
     m_incomplete = incomplete;
     m_timeSecs = timeSecs;
     m_flywheeling = flywheeling;
@@ -136,7 +136,7 @@ private:
   UInt_t m_flywheeling; // # of timetones since last complete once
   unsigned char m_flags;       // missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) ]
   
-  TimeHack m_timeHack;          
+  GemTime m_timeHack;          
 
   ClassDef(TimeTone,1) ;
   

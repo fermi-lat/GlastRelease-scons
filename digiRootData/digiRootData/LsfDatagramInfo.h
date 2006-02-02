@@ -16,26 +16,23 @@
 
     
 class DatagramInfo : public TObject {
-  
-public:
-  
-
+    
 public:
   
   DatagramInfo( )
-    : m_openReason(enums::Lsf::NoOpenReason), m_openRequester(enums::Lsf::NoOpenRequest), 
+    : m_openAction(enums::Lsf::Open::Unspecified), m_openReason(enums::Lsf::Open::Unknown), 
       m_crate(enums::Lsf::NoCrate), m_mode(enums::Lsf::NoMode), 
-      m_closeReason(enums::Lsf::NoCloseReason), m_closeRequester(enums::Lsf::NoCloseRequest),
+      m_closeAction(enums::Lsf::Close::Unspecified), m_closeReason(enums::Lsf::Close::Unknown), 
       m_datagrams(0),m_modeChanges(0){
-  }
+  };
   
-  DatagramInfo( enums::Lsf::OpenReason oReason, enums::Lsf::OpenRequester oReq, 
+  DatagramInfo( enums::Lsf::Open::Action oAction, enums::Lsf::Open::Reason oReason, 
 		enums::Lsf::Crate c, enums::Lsf::Mode m, 
-		enums::Lsf::CloseReason cReason, enums::Lsf::CloseRequester cReq,
+		enums::Lsf::Close::Action cAction, enums::Lsf::Close::Reason cReason, 
 		UInt_t datagrams, UInt_t modeChanges)
-    : m_openReason(oReason), m_openRequester(oReq), 
+    : m_openAction(oAction), m_openReason(oReason), 
       m_crate(c), m_mode(m), 
-      m_closeReason(cReason), m_closeRequester(cReq),
+      m_closeAction(cAction), m_closeReason(cReason),
       m_datagrams(datagrams),m_modeChanges(modeChanges){
   }
   
@@ -44,16 +41,16 @@ public:
   
   DatagramInfo( const DatagramInfo& other ) 
     : TObject(other),
-      m_openReason(other.openReason()), m_openRequester(other.openRequester()),
-      m_crate(other.crate()), m_mode(other.mode()), 
-      m_closeReason(other.closeReason()), m_closeRequester(other.closeRequester()),
-      m_datagrams(other.datagrams()),m_modeChanges(other.modeChanges()){
+    m_openAction(other.openAction()), m_openReason(other.openReason()),
+    m_crate(other.crate()), m_mode(other.mode()), 
+    m_closeAction(other.closeAction()), m_closeReason(other.closeReason()),
+    m_datagrams(other.datagrams()),m_modeChanges(other.modeChanges()){
   }
   
   inline DatagramInfo& operator=(const DatagramInfo& other) {
-    initialize(other.openReason(),other.openRequester(),
+    initialize(other.openAction(),other.openReason(),
 	       other.crate(),other.mode(),
-	       other.closeReason(),other.closeRequester(),
+	       other.closeAction(),other.closeReason(),
 	       other.datagrams(),other.modeChanges());
     return *this;
   }
@@ -65,37 +62,35 @@ public:
   /// this is identical to the datagram sequence number
   inline UInt_t datagrams() const { return m_datagrams; };
   
-  /// Reason that this datagram was opened
-  /// FIXME: should this be LsfEvent::DatagramInfo::Start for the first datagram in a run? 
-  inline enums::Lsf::OpenReason openReason() const { return m_openReason; }
+  /// The action that caused the datagram to be opened
+  inline enums::Lsf::Open::Action openAction() const { return m_openAction; }
   
-  /// Method used to open this datagram
-  inline enums::Lsf::OpenRequester openRequester() const { return m_openRequester; }
+  ///The reason this datagram was opened
+  inline enums::Lsf::Open::Reason openReason() const { return m_openReason; }
   
   /// Source that this datagram came from
   inline enums::Lsf::Crate crate() const { return m_crate; }
   
-    /// Operating mode the LAT was in when the data for this data were acquired
+  /// Operating mode the LAT was in when the data for this data were acquired
   inline enums::Lsf::Mode mode() const { return m_mode; } 
   
-  /// Reason that this datagram was opened
-  /// FIXME: should this be LsfEvent::DatagramInfo::Stop for the last datagram in a run?
-  inline enums::Lsf::CloseReason closeReason() const { return m_closeReason; }
+  /// The action that caused the datagram to be closed
+  inline enums::Lsf::Close::Action closeAction() const { return m_closeAction; }
   
-  /// Method used to close this datagram
-  inline enums::Lsf::CloseRequester closeRequester() const { return m_closeRequester; }
+  ///The reason this datagram was closed
+  inline enums::Lsf::Close::Reason closeReason() const { return m_closeReason; }
   
   /// set everything at once
-  inline void initialize(enums::Lsf::OpenReason oReason, enums::Lsf::OpenRequester oReq, 
+  inline void initialize(enums::Lsf::Open::Action oAction, enums::Lsf::Open::Reason oReason,
 			 enums::Lsf::Crate c, enums::Lsf::Mode m, 
-			 enums::Lsf::CloseReason cReason, enums::Lsf::CloseRequester cReq,
+			 enums::Lsf::Close::Action cAction, enums::Lsf::Close::Reason cReason,
 			 UInt_t datagrams, UInt_t modeChanges) {
+    m_openAction = oAction;
     m_openReason = oReason;
-    m_openRequester = oReq;
     m_crate = c;
     m_mode = m;
+    m_closeAction = cAction;
     m_closeReason = cReason;
-    m_closeRequester = cReq;
     m_datagrams = datagrams;
     m_modeChanges = modeChanges;
   }
@@ -103,24 +98,25 @@ public:
   // set the individual data members
   inline void setModeChanges( UInt_t val ) { m_modeChanges = val; };
   inline void setDatagrams( UInt_t val ) { m_datagrams = val; }; 
-  inline void setOpenReason( enums::Lsf::OpenReason val ) { m_openReason = val; };
-  inline void setOpenRequester( enums::Lsf::OpenRequester val ) { m_openRequester = val; };
+  inline void setOpenAction( enums::Lsf::Open::Action val ) { m_openAction = val; };
+  inline void setOpenReason( enums::Lsf::Open::Reason val ) { m_openReason = val; };
   inline void setCrate( enums::Lsf::Crate val ) { m_crate = val; };
   inline void setMode( enums::Lsf::Mode val ) { m_mode = val; }; 
-  inline void setCloseReason( enums::Lsf::CloseReason val ) { m_closeReason = val; };
-  inline void setCloseRequester( enums::Lsf::CloseRequester val ) { m_closeRequester = val; };
-  
+  inline void setCloseAction( enums::Lsf::Close::Action val ) { m_closeAction = val; };
+  inline void setCloseReason( enums::Lsf::Close::Reason val ) { m_closeReason = val; };
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
-    m_openReason = enums::Lsf::NoOpenReason;
-    m_openRequester = enums::Lsf::NoOpenRequest;
-    m_crate = enums::Lsf::NoCrate;
-    m_mode = enums::Lsf::NoMode;
-    m_closeReason = enums::Lsf::NoCloseReason;
-    m_closeRequester = enums::Lsf::NoCloseRequest;
-    m_datagrams = 0xffffffff;
-    m_modeChanges = 0xffffffff;
+     m_openAction = enums::Lsf::Open::Unspecified; 
+     m_openReason = enums::Lsf::Open::Unknown;
+     m_crate = enums::Lsf::NoCrate; 
+     m_mode = enums::Lsf::NoMode;
+     m_closeAction = enums::Lsf::Close::Unspecified; 
+     m_closeReason = enums::Lsf::Close::Unknown; 
+     m_datagrams = 0;
+     m_modeChanges = 0;
   }
+
   /// ROOT print function
   void Print(Option_t* /* option="" */) const;
 
@@ -128,24 +124,23 @@ public:
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
 
   /// Compare to another in tests
-  Bool_t CompareInRange( const DatagramInfo&, const std::string & name = "" ) const ; // for tests
-  
+  Bool_t CompareInRange( const DatagramInfo&, const std::string & name = "" ) const ; 
+
 private:
   
-  enums::Lsf::OpenReason m_openReason;
-  enums::Lsf::OpenRequester m_openRequester;
+  enums::Lsf::Open::Action m_openAction;
+  enums::Lsf::Open::Reason m_openReason;
   enums::Lsf::Crate m_crate;
   enums::Lsf::Mode m_mode;    
-  enums::Lsf::CloseReason m_closeReason;
-  enums::Lsf::CloseRequester m_closeRequester;
+  
+  enums::Lsf::Close::Action m_closeAction;
+  enums::Lsf::Close::Reason m_closeReason;
   
   UInt_t m_datagrams;    
   UInt_t m_modeChanges; 
 
-  ClassDef(DatagramInfo,1) ;
+  ClassDef(DatagramInfo,1);
 
 };
-
-
 
 #endif    // ROOT_DATAGRAMINFO_H
