@@ -175,33 +175,33 @@ public:
 private:
 
     /// Total energy in MeV deposited in the whole ACD system
-    Double_t m_totEnergy;
+    Double32_t m_totEnergy;
     /// Distance of Closest Approach for the reconstructed gamma, 
     /// if there is one
-    Double_t m_gammaDoca;
+    Double32_t m_gammaDoca;
     /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
-    Double_t m_doca;
+    Double32_t m_doca;
     /// New Bill Atwood DOCA calculation using edge of tiles
-    Double_t m_actDist;
+    Double32_t m_actDist;
     /// Total number of ACD tiles above threshold
     Int_t m_tileCount;
     /// Collection of distance of closest approach calculations
     /// for each side row of the ACD
-    vector<Double_t> m_rowDocaCol;
+    vector<Double32_t> m_rowDocaCol;
     /// Collection of Active Distance calc for each side row of ACD
-    vector<Double_t> m_rowActDistCol;
+    vector<Double32_t> m_rowActDistCol;
 
     /// record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
     vector<AcdId> m_idCol;
-    vector<Double_t> m_energyCol;  
+    vector<Double32_t> m_energyCol;  
 
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
     /// Total MC Energy (MeV) deposited in the ribbons
-    Double_t m_totRibbonEnergy;
+    Double32_t m_totRibbonEnergy;
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
  
@@ -219,7 +219,7 @@ private:
     // Store the calibrated hits
     TClonesArray *m_acdHitCol;    
 
-    ClassDef(AcdRecon,10) // Acd Reconstruction data
+    ClassDef(AcdRecon,11) // Acd Reconstruction data
 };
 
 #endif

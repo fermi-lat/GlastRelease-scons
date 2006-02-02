@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r11     02-Feb-06  : HMK Mve to Double32 in ACD classes
 v8r10     02-Feb-06  : HMK Move to Double32 in TKR classes
 v8r9p2    20-Jan-06  : DC  Fake methods for high level do not include rank argument
 v8r9p1    19-Jan-06  : DC  Fix  a small bug and standardize Fake methods
