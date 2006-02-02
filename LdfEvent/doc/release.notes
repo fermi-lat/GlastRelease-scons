@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v3      01-Feb-2005 EAC Added stuff for Lsf support
 v2r13p2 26-Jul-2005 HMK Fix up VC++ warnings in EventSummaryData
 v2r13p1 27-Jun-2005 HMK add author
 v2r13   03-Jun-2005 HMK Store Error summary
