@@ -6,7 +6,7 @@
 #include "Event/TopLevel/Definitions.h"
 
 #include "LdfEvent/LsfTimeTone.h"
-#include "LdfEvent/LsfTimeHack.h"
+#include "LdfEvent/LsfGemTime.h"
 
 /** @class Time
 *
@@ -20,7 +20,7 @@ namespace LsfEvent {
   public:
     
     Time( const TimeTone& current, const TimeTone& previous,
-	  const TimeHack& timeHack, unsigned int timeTicks)
+	  const GemTime& timeHack, unsigned int timeTicks)
       :m_current(current),m_previous(previous),
        m_timeHack(timeHack),m_timeTicks(timeTicks){
     }
@@ -51,15 +51,15 @@ namespace LsfEvent {
     /// The TimeTone that was "active" at event capture time
     inline const TimeTone& previous() const { return m_previous; }
 
-    /// The TimeHack at event capture time
-    inline const TimeHack& timeHack() const { return m_timeHack; } 
+    /// The GemTime at event capture time
+    inline const GemTime& timeHack() const { return m_timeHack; } 
 
     /// The number of 50ns ticks since last the last time hack
     inline unsigned int timeTicks() const { return m_timeTicks; }
 
     /// set everything at once
     inline void set(const TimeTone& current, const TimeTone& previous,
-		    const TimeHack& timeHack, unsigned int timeTicks) {
+		    const GemTime& timeHack, unsigned int timeTicks) {
       m_current = current;
       m_previous = previous;      
       m_timeHack = timeHack; 
@@ -69,7 +69,7 @@ namespace LsfEvent {
     // set the individual data members
     inline void setCurrent( const TimeTone& val) { m_current = val; }; 
     inline void setPrevious( const TimeTone& val) { m_previous = val; };
-    inline void setTimeHack( const TimeHack& val) { m_timeHack = val; }; 
+    inline void setGemTime( const GemTime& val) { m_timeHack = val; }; 
     inline void setTimeTicks( unsigned int val) { m_timeTicks = val; };
     
     /// Serialize the object for writing
@@ -109,7 +109,7 @@ namespace LsfEvent {
     /// 
     TimeTone m_current;
     TimeTone m_previous;
-    TimeHack m_timeHack;
+    GemTime m_timeHack;
     unsigned int m_timeTicks;
      
   };

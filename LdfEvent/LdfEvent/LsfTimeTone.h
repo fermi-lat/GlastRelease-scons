@@ -5,7 +5,7 @@
 
 #include "GaudiKernel/StreamBuffer.h"
 #include "Event/TopLevel/Definitions.h"
-#include "LdfEvent/LsfTimeHack.h"
+#include "LdfEvent/LsfGemTime.h"
 
 /** @class TimeTone
 * @brief FIXME
@@ -33,7 +33,7 @@ namespace LsfEvent {
     
     TimeTone( unsigned int incomplete, unsigned int timeSecs,
 	      unsigned int flywheeling, unsigned char flags,
-	      const TimeHack& timeHack )
+	      const GemTime& timeHack )
     :m_incomplete(incomplete), m_timeSecs(timeSecs), 
      m_flywheeling(flywheeling), m_flags(flags), m_timeHack(timeHack) {
     }
@@ -78,12 +78,12 @@ namespace LsfEvent {
     inline bool missingTimeTone() const  { return (m_flags & MISSING_TIMETONE_MASK) != 0; }
 
     /// The time hack
-    inline const TimeHack& timeHack() const { return m_timeHack; }
+    inline const GemTime& timeHack() const { return m_timeHack; }
     
     /// set everything at once
     inline void set( unsigned int incomplete, unsigned int timeSecs,
 		     unsigned int flywheeling, unsigned char flags,
-		     const TimeHack& timeHack ) {
+		     const GemTime& timeHack ) {
       m_incomplete = incomplete;
       m_timeSecs = timeSecs;
       m_flywheeling = flywheeling;
@@ -143,7 +143,7 @@ namespace LsfEvent {
     unsigned int m_flywheeling; // # of timetones since last complete once
     unsigned char m_flags;       // missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) ]
     
-    TimeHack m_timeHack;          
+    GemTime m_timeHack;          
     
   };
 

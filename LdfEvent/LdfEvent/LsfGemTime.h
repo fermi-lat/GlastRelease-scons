@@ -1,5 +1,5 @@
-#ifndef LSF_TIMEHACK_H
-#define LSF_TIMEHACK_H 1
+#ifndef LSF_GEMTIME_H
+#define LSF_GEMTIME_H 1
 
 #include <iostream>
 #include "GaudiKernel/StreamBuffer.h"
@@ -13,24 +13,24 @@
 
 namespace LsfEvent {
  
-  class TimeHack {
+  class GemTime {
     
   public:
     
-    TimeHack()
+    GemTime()
       : m_hacks(0), m_ticks(0){}
     
-    TimeHack( unsigned int hacks, unsigned int ticks )
+    GemTime( unsigned int hacks, unsigned int ticks )
       : m_hacks(hacks), m_ticks(ticks){}
 
-    TimeHack( const TimeHack& other )
+    GemTime( const GemTime& other )
       : m_hacks(other.hacks()), m_ticks(other.ticks()){}
     
-    ~TimeHack() {
+    ~GemTime() {
     }
 
     /// Assignement operator
-    inline TimeHack& operator=( const TimeHack& other ) {
+    inline GemTime& operator=( const GemTime& other ) {
       set(other.hacks(),other.ticks());
       return *this;
     }
@@ -54,21 +54,21 @@ namespace LsfEvent {
     inline void setHacks( unsigned int value ) { m_hacks = value; }
     
     /// Serialize the object for writing
-    friend StreamBuffer& operator<< ( StreamBuffer& s, const TimeHack& obj )    {
+    friend StreamBuffer& operator<< ( StreamBuffer& s, const GemTime& obj )    {
       return s << obj.m_hacks << ' ' << obj.m_ticks;
     }
     /// Serialize the object for reading
-    friend StreamBuffer& operator>> ( StreamBuffer& s, TimeHack& obj )          {
+    friend StreamBuffer& operator>> ( StreamBuffer& s, GemTime& obj )          {
       return s >> obj.m_hacks >> obj.m_ticks;
     }
 
     /// Output operator (ASCII)
-    friend std::ostream& operator<< ( std::ostream& s, const TimeHack& obj )    {
+    friend std::ostream& operator<< ( std::ostream& s, const GemTime& obj )    {
       return obj.fillStream(s);
     }
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const                            {
-      return s << "class TimeHack : "
+      return s << "class GemTime : "
 	       << EventField( EventFormat::field12 )
 	       << m_hacks << ':' << m_ticks;
     }

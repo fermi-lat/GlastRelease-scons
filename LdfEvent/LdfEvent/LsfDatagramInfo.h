@@ -22,19 +22,19 @@ namespace LsfEvent {
   public:
 
     DatagramInfo( )
-      : m_openReason(enums::Lsf::NoOpenReason), m_openRequester(enums::Lsf::NoOpenRequest), 
+      : m_openAction(enums::Lsf::Open::Unspecified), m_openReason(enums::Lsf::Open::Unknown), 
 	m_crate(enums::Lsf::NoCrate), m_mode(enums::Lsf::NoMode), 
-	m_closeReason(enums::Lsf::NoCloseReason), m_closeRequester(enums::Lsf::NoCloseRequest),
+	m_closeAction(enums::Lsf::Close::Unspecified), m_closeReason(enums::Lsf::Close::Unknown), 
 	m_datagrams(0),m_modeChanges(0){
     };
         
-    DatagramInfo( enums::Lsf::OpenReason oReason, enums::Lsf::OpenRequester oReq, 
+    DatagramInfo( enums::Lsf::Open::Action oAction, enums::Lsf::Open::Reason oReason, 
 		  enums::Lsf::Crate c, enums::Lsf::Mode m, 
-		  enums::Lsf::CloseReason cReason, enums::Lsf::CloseRequester cReq,
+		  enums::Lsf::Close::Action cAction, enums::Lsf::Close::Reason cReason, 
 		  unsigned int datagrams, unsigned int modeChanges)
-      : m_openReason(oReason), m_openRequester(oReq), 
+      : m_openAction(oAction), m_openReason(oReason), 
 	m_crate(c), m_mode(m), 
-	m_closeReason(cReason), m_closeRequester(cReq),
+	m_closeAction(cAction), m_closeReason(cReason),
 	m_datagrams(datagrams),m_modeChanges(modeChanges){
     }
     
@@ -42,16 +42,16 @@ namespace LsfEvent {
     }
 
     DatagramInfo( const DatagramInfo& other ) 
-      : m_openReason(other.openReason()), m_openRequester(other.openRequester()),
+      : m_openAction(other.openAction()), m_openReason(other.openReason()),
 	m_crate(other.crate()), m_mode(other.mode()), 
-	m_closeReason(other.closeReason()), m_closeRequester(other.closeRequester()),
+	m_closeAction(other.closeAction()), m_closeReason(other.closeReason()),
 	m_datagrams(other.datagrams()),m_modeChanges(other.modeChanges()){
     }
     
     inline DatagramInfo& operator=(const DatagramInfo& other) {
-      set(other.openReason(),other.openRequester(),
+      set(other.openAction(),other.openReason(),
 	  other.crate(),other.mode(),
-	  other.closeReason(),other.closeRequester(),
+	  other.closeAction(),other.closeReason(),
 	  other.datagrams(),other.modeChanges());
       return *this;
     }
@@ -63,12 +63,11 @@ namespace LsfEvent {
     /// this is identical to the datagram sequence number
     inline unsigned int datagrams() const { return m_datagrams; };
 
-    /// Reason that this datagram was opened
-    /// FIXME: 
-    inline enums::Lsf::OpenReason openReason() const { return m_openReason; }
+    /// The action that caused the datagram to be opened
+    inline enums::Lsf::Open::Action openAction() const { return m_openAction; }
 
-    /// Method used to open this datagram
-    inline enums::Lsf::OpenRequester openRequester() const { return m_openRequester; }
+    ///The reason this datagram was opened
+    inline enums::Lsf::Open::Reason openReason() const { return m_openReason; }
 
     /// Source that this datagram came from
     inline enums::Lsf::Crate crate() const { return m_crate; }
@@ -76,24 +75,23 @@ namespace LsfEvent {
     /// Operating mode the LAT was in when the data for this data were acquired
     inline enums::Lsf::Mode mode() const { return m_mode; } 
 
-    /// Reason that this datagram was opened
-    /// FIXME: should this be LsfEvent::DatagramInfo::Stop for the last datagram in a run?
-    inline enums::Lsf::CloseReason closeReason() const { return m_closeReason; }
+    /// The action that caused the datagram to be closed
+    inline enums::Lsf::Close::Action closeAction() const { return m_closeAction; }
 
-    /// Method used to close this datagram
-    inline enums::Lsf::CloseRequester closeRequester() const { return m_closeRequester; }
+    ///The reason this datagram was closed
+    inline enums::Lsf::Close::Reason closeReason() const { return m_closeReason; }
 
     /// set everything at once
-    inline void set(enums::Lsf::OpenReason oReason, enums::Lsf::OpenRequester oReq, 
+    inline void set(enums::Lsf::Open::Action oAction, enums::Lsf::Open::Reason oReason,
 		    enums::Lsf::Crate c, enums::Lsf::Mode m, 
-		    enums::Lsf::CloseReason cReason, enums::Lsf::CloseRequester cReq,
+		    enums::Lsf::Close::Action cAction, enums::Lsf::Close::Reason cReason,
 		    unsigned int datagrams, unsigned int modeChanges) {
+      m_openAction = oAction;
       m_openReason = oReason;
-      m_openRequester = oReq;
       m_crate = c;
       m_mode = m;
+      m_closeAction = cAction;
       m_closeReason = cReason;
-      m_closeRequester = cReq;
       m_datagrams = datagrams;
       m_modeChanges = modeChanges;
     }
@@ -101,27 +99,26 @@ namespace LsfEvent {
     // set the individual data members
     inline void setModeChanges( unsigned int val ) { m_modeChanges = val; };
     inline void setDatagrams( unsigned int val ) { m_datagrams = val; }; 
-    inline void setOpenReason( enums::Lsf::OpenReason val ) { m_openReason = val; };
-    inline void setOpenRequester( enums::Lsf::OpenRequester val ) { m_openRequester = val; };
+    inline void setOpenAction( enums::Lsf::Open::Action val ) { m_openAction = val; };
+    inline void setOpenReason( enums::Lsf::Open::Reason val ) { m_openReason = val; };
     inline void setCrate( enums::Lsf::Crate val ) { m_crate = val; };
     inline void setMode( enums::Lsf::Mode val ) { m_mode = val; }; 
-    inline void setCloseReason( enums::Lsf::CloseReason val ) { m_closeReason = val; };
-    inline void setCloseRequester( enums::Lsf::CloseRequester val ) { m_closeRequester = val; };
-
+    inline void setCloseAction( enums::Lsf::Close::Action val ) { m_closeAction = val; };
+    inline void setCloseReason( enums::Lsf::Close::Reason val ) { m_closeReason = val; };
     
     /// Serialize the object for writing
     friend StreamBuffer& operator<< ( StreamBuffer& s, const DatagramInfo& obj )    {
-      return s << obj.m_openReason << ' ' << obj.m_openRequester << ' ' 
+      return s << obj.m_openAction << ' ' << obj.m_openReason << ' ' 
 	       << obj.m_crate << ' ' << obj.m_mode << ' '
-	       << obj.m_closeReason << ' ' << obj.m_closeRequester << ' ' 
+	       << obj.m_closeAction << ' ' << obj.m_closeReason << ' '
 	       << obj.m_modeChanges << ' ' << obj.m_datagrams;
 	}
     /// Serialize the object for reading
     friend StreamBuffer& operator>> ( StreamBuffer& s, DatagramInfo& obj )          {
       // FIXME StreamBuffer can't read enums
-      //return s >> obj.m_openReason  >> obj.m_openRequester 
+      //return s >>  obj.m_openAction >> obj.m_openReason 
       //       >> obj.m_crate >> obj.m_mode 
-      //       >> obj.m_closeReason >> obj.m_closeRequester
+      //       >> obj.m_closeAction >> obj.m_closeReason
       //       >> obj.m_modeChanges>> obj.m_datagrams;
       return s;
     }
@@ -134,21 +131,22 @@ namespace LsfEvent {
     std::ostream& fillStream( std::ostream& s ) const                            {
       s << "class DatagramInfo : "
 	<< EventField( EventFormat::field12 )
-	<< m_openReason << ' ' << m_openRequester << ' ' 
+	<< m_openAction << ' ' << m_openReason << ' ' 
 	<< m_crate << ' ' << m_mode << ' '
-	<< m_closeReason << ' ' << m_closeRequester << ' ' 
+	<< m_closeAction << ' ' << m_closeReason << ' ' 
 	<< m_modeChanges << ' ' << m_datagrams;      
       return s;
     }
     
   private:
 
-    enums::Lsf::OpenReason m_openReason;
-    enums::Lsf::OpenRequester m_openRequester;
+    enums::Lsf::Open::Action m_openAction;
+    enums::Lsf::Open::Reason m_openReason;
     enums::Lsf::Crate m_crate;
     enums::Lsf::Mode m_mode;    
-    enums::Lsf::CloseReason m_closeReason;
-    enums::Lsf::CloseRequester m_closeRequester;
+
+    enums::Lsf::Close::Action m_closeAction;
+    enums::Lsf::Close::Reason m_closeReason;
 
     unsigned int m_datagrams;    
     unsigned int m_modeChanges; 
