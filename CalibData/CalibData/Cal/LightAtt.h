@@ -10,8 +10,8 @@ namespace CalibData {
   public:
     LightAtt(float att = 0.0, float norm = 0.0) : m_lightAtt(att), m_lightNorm(norm) {}
     ~LightAtt() {}
-    float getAtt() { return m_lightAtt; }
-    float getNorm() { return m_lightNorm; }
+    float getAtt() const { return m_lightAtt; }
+    float getNorm() const { return m_lightNorm; }
 
     virtual void update(RangeBase* other);
 

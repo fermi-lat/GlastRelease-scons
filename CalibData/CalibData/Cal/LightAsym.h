@@ -18,7 +18,7 @@ namespace CalibData {
     ~LightAsym() {if (m_values) delete m_values;}
 
     const std::vector<float>* getValues() const {return m_values;}
-    float getError() {return m_error;}
+    float getError() const {return m_error;}
 
     virtual void update(RangeBase* other);
 

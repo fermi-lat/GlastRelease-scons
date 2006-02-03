@@ -12,8 +12,8 @@ namespace CalibData {
     m_error(error) {}
     ~MuSlope() {}
 
-    float getSlope() {return m_muSlope;}
-    float getError() {return m_error;}
+    float getSlope() const {return m_muSlope;}
+    float getError() const {return m_error;}
 
     virtual void update(RangeBase* other);
 

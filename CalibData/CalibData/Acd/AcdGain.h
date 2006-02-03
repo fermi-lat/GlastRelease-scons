@@ -11,8 +11,8 @@ namespace CalibData {
     AcdGain(float gain = 0.0, float sig = 0.0) : m_gain(gain), m_sig(sig) {}
     ~AcdGain() {}
 
-    float getGain() {return m_gain;}
-    float getSig() {return m_sig;}
+    float getGain() const {return m_gain;}
+    float getSig() const {return m_sig;}
 
     virtual void update(RangeBase* other);
 

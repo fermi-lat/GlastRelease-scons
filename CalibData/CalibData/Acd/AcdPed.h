@@ -11,8 +11,8 @@ namespace CalibData {
     AcdPed(float ped = 0.0, float sig = 0.0) : m_ped(ped), m_sig(sig) {}
     ~AcdPed() {}
 
-    float getPed() {return m_ped;}
-    float getSig() {return m_sig;}
+    float getPed() const {return m_ped;}
+    float getSig() const {return m_sig;}
 
     virtual void update(RangeBase* other);
 
