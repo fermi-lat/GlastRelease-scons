@@ -1,5 +1,5 @@
 package AcdUtil
-version v0r2p4
+version v0r2p5
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -30,7 +30,9 @@ apply_pattern library_stamps      library=AcdUtilCommon
 private
 
 # build a separate shared library to contain non-Gaudi-component items
-library AcdUtilCommon AcdTileDim.cxx AcdRibbonDim.cxx
+# Temporary kludge to get around MRvcmt problem choosing to build libraries
+# in alphabetical order
+library AacdUtilCommon AcdTileDim.cxx AcdRibbonDim.cxx
 
 
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
