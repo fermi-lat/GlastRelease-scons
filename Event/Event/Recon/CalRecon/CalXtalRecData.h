@@ -132,10 +132,10 @@ namespace Event
         
         virtual ~CalXtalRecData() { };
         
-        /// function initializing crystal identification and readout mode
+        /// function initializing crystal identification, readout mode, and clearing rec data
         void initialize (idents::CalXtalId::CalTrigMode m,
                          idents::CalXtalId id)
-        {m_mode = m; m_xtalId = id; }
+        {m_mode = m; m_xtalId = id; m_recData.clear() ; }
         
         /// Retrieve readout mode
         inline const idents::CalXtalId::CalTrigMode getMode() const
