@@ -52,7 +52,7 @@ class calCalibXML(calXML.calXML):
         \param mode The file access mode (MODE_READONLY or MODE_CREATE).
         """
 
-        calXML.calXML.__init__(self, fileName, mode)
+        calXML.calXML.__init__(self, fileName, mode, validating = True)
 
 
     def info(self):
