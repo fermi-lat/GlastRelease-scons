@@ -12,7 +12,6 @@ __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
 
-import logging
 import xml.dom.ext
 import xml.dom.ext.reader.Sax2
 
@@ -40,8 +39,6 @@ class calXML:
         Param: mode The file access mode (MODE_READONLY or MODE_CREATE).
         Param: validating - True/False do document DTD validation.
         """
-
-        self.__log = logging.getLogger()    
 
         self.__xmlName = fileName
         self.__doc = None
