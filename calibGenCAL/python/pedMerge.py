@@ -179,13 +179,7 @@ if __name__ == '__main__':
 
     for f in inFiles:
         pedData = f.pedData
-        for row in range(calConstant.NUM_ROW):
-            for end in range(calConstant.NUM_END):
-                for fe in range(calConstant.NUM_FE):
-                    for erng in range(calConstant.NUM_RNG):
-                        for val in range(3):
-                            x = pedData[f.srcTwr, row, end, fe, erng, val]
-                            outData[f.destTwr, row, end, fe, erng, val] = x
+        outData[f.destTwr, :] = pedData[f.srcTwr, :]
 
     log.info('Writing output file %s', outName)
 
@@ -202,4 +196,5 @@ if __name__ == '__main__':
 
     calCalibXML.insertDTD(outName, dtdName)
 
-    sys.exit(0)                            
+    sys.exit(0)
+    

@@ -178,11 +178,7 @@ if __name__ == '__main__':
 
     for f in inFiles:
         energyData = f.energyData
-        for row in range(calConstant.NUM_ROW):
-            for fe in range(calConstant.NUM_FE):
-                for val in range(8):
-                            x = energyData[f.srcTwr, row, fe, val]
-                            outData[f.destTwr, row, fe, val] = x
+        outData[f.destTwr, :] = energyData[f.srcTwr, :]
 
     log.info('Writing output file %s', outName)
 

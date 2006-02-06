@@ -188,12 +188,7 @@ if __name__ == '__main__':
 
     for f in inFiles:
         asymData = f.asymData
-        for row in range(calConstant.NUM_ROW):
-            for fe in range(calConstant.NUM_FE):
-                for val in range(8):
-                    for pos in range(xposLen):
-                        x = asymData[f.srcTwr, row, fe, val, pos]
-                        outData[f.destTwr, row, fe, val, pos] = x
+        outData[f.destTwr, :] = asymData[f.srcTwr, :]
                             
             
     log.info('Writing output file %s', outName)
