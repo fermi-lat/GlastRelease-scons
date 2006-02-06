@@ -78,7 +78,8 @@ class calXML:
         """
         Close a CAL XML file
         """
-        
+
+        xml.dom.ext.ReleaseNode(self.__doc)        
         self.__xmlFile.close()
     
 
