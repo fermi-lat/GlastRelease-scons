@@ -36,6 +36,7 @@ private:
     std::string m_tupleName;
     float m_float;
     int   m_int;
+    unsigned int m_uint;
     double m_count; // special value to put into tuples
     double m_square; // another
    
@@ -78,15 +79,16 @@ StatusCode writeJunkAlg::initialize() {
 
     m_count = 0;
 
-    m_rootTupleSvc->addItem("","count", &m_count);
-    m_rootTupleSvc->addItem("","square", &m_square);
-    m_rootTupleSvc->addItem("","int", &m_int);
-    m_rootTupleSvc->addItem("","float", &m_float);
-    m_rootTupleSvc->addItem("", "array[2]", m_array);
-
+    m_rootTupleSvc->addItem("tree_1","count", &m_count);
+    m_rootTupleSvc->addItem("tree_1","square", &m_square);
+    m_rootTupleSvc->addItem("tree_1","int", &m_int);
+    m_rootTupleSvc->addItem("tree_1","uint", &m_uint);
+    m_rootTupleSvc->addItem("tree_1","float", &m_float);
+    m_rootTupleSvc->addItem("tree_1", "array[2]", m_array);
+#if 1
     // test creation of a second ROOT file
     m_rootTupleSvc->addItem("t2", "float2", &m_float2, "other.root");
-
+#endif
     // test of a second tree in original file
     m_rootTupleSvc->addItem("tree_2","count", &m_count);
     m_rootTupleSvc->addItem("tree_2","square", &m_square);
@@ -95,7 +97,7 @@ StatusCode writeJunkAlg::initialize() {
 
     float* test;
 
-    bool isFloat = m_rootTupleSvc->getItem("","float",  (void*&)test);
+    bool isFloat = m_rootTupleSvc->getItem("tree_1","float",  (void*&)test);
     if( !isFloat || test!=&m_float){
         log << MSG::ERROR << "Did not retrieve a float" << endreq;
         sc = StatusCode::FAILURE;
@@ -118,7 +120,7 @@ StatusCode writeJunkAlg::execute() {
     ++m_count;
     m_square= m_count*m_count;
     // test int value
-    m_int=m_count;
+    m_int=m_uint=m_count;
     // see that array really works
     m_array[0]= m_int;
     m_array[1]= 2*m_int;
@@ -126,10 +128,10 @@ StatusCode writeJunkAlg::execute() {
     m_float2 = m_count;
 
     // check finite test routines
-    m_float = m_count/0.0;
+    m_float = m_count==5? m_count/0.0 : m_count;
 
     // Test the ability to turn off a row
-    if (callCount != 5)  { m_rootTupleSvc->storeRowFlag(true);}
+    m_rootTupleSvc->storeRowFlag("tree_1",true) ; //callCount == 5);
     ++callCount;
 
 

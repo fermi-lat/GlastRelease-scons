@@ -100,6 +100,16 @@ public:
         const std::string& itemName, const int* pval,
         const std::string& fileName=std::string(""));
 
+    /** @brief Adds a pointer to an unsigned int 
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param pval - pointer to a int value
+    @param fileName - name of ROOT file: if it does not exist, it will be created
+    */
+    virtual StatusCode addItem(const std::string & tupleName, 
+        const std::string& itemName, const unsigned int* pval,
+        const std::string& fileName=std::string(""));
+
     /** @brief interface to ROOT to add any item
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
@@ -292,6 +302,22 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     saveDir->cd();
     return status;
 }
+/* about these codes:
+
+            - C : a character string terminated by the 0 character
+            - B : an 8 bit signed integer (Char_t)
+            - b : an 8 bit unsigned integer (UChar_t)
+            - S : a 16 bit signed integer (Short_t)
+            - s : a 16 bit unsigned integer (UShort_t)
+            - I : a 32 bit signed integer (Int_t)
+            - i : a 32 bit unsigned integer (UInt_t)
+            - F : a 32 bit floating point (Float_t)
+            - D : a 64 bit floating point (Double_t)
+            - L : a 64 bit signed integer (Long64_t)
+            - l : a 64 bit unsigned integer (ULong64_t)
+            - O : a boolean (Bool_t)
+
+  */
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
@@ -318,6 +344,14 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
                                  const std::string& fileName)
 {
     return addAnyItem(tupleName, itemName, "/I", (void*)pval, fileName);
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                                 const std::string& itemName, 
+                                 const unsigned int* pval, 
+                                 const std::string& fileName)
+{
+    return addAnyItem(tupleName, itemName, "/i", (void*)pval, fileName);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::handle(const Incident &inc)

@@ -10,7 +10,7 @@
 #include <string>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  5 ,0); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  6 ,0); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -42,6 +42,12 @@ public:
             const std::string& fileName=std::string(""))=0;
  
    
+    /// add a pointer to a uint (32 bits) or an array
+    virtual StatusCode addItem(const std::string & tupleName, 
+            const std::string& itemName, const unsigned int* val,
+            const std::string& fileName=std::string(""))=0;
+ 
+
     virtual void storeRowFlag(bool flag)=0;
 
     virtual bool storeRowFlag()=0;
