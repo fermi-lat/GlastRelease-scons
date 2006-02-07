@@ -83,7 +83,7 @@ StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tr
 int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack, 
 				 std::map<idents::AcdId,unsigned char>& hitMap, 
 				 bool forward) {
-  
+
   // Define the fiducial volume of the LAT
   // FIXME -- this should come for some xml reading service
   //
@@ -119,7 +119,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
     -1.*side_distance - initialPosition.x() :    // hits -x side
     1.*side_distance - initialPosition.x();      // hits +x side  
   const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
-    -1. / initialDirection.x() : 1e9;
+    -1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
   const double sToXIntersection = normToXIntersection * slopeToXIntersection;
 
   // hits -y or +y side ?
@@ -127,7 +127,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
     -1.*side_distance - initialPosition.y() :    // hits -y side
     1.*side_distance - initialPosition.y();      // hits +y side
   const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
-    -1. / initialDirection.y() : 1e9;
+    -1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
   const double sToYIntersection = normToYIntersection * slopeToYIntersection;
 
   // hits top or bottom
@@ -145,7 +145,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   const double arcLength = sToXIntersection < sToYIntersection ?
     ( sToXIntersection < sToZIntersection ? sToXIntersection : sToZIntersection ) :
     ( sToYIntersection < sToZIntersection ? sToYIntersection : sToZIntersection ) ;
-  
+
   // protect against negative arcLenghts
   //if ( arcLength < 0. ) return -1;
   // protect against negative arcLenghts

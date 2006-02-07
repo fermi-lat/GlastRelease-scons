@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v2r0p6    06-Feb-2006 EAC Fix bug that was losing losing intersections at the 10-4 level when track was || to x or y axis.
 v2r0p5    23-Jan-2006 EAC Add calculation of POCA for misses off the corners of tiles.
 v2r0p4    19-Jan-2006 HMK Patch ribbon orientation change
 v2r0p3    19-Jan-2006 EAC Protect against NA channels in AcdRecon
