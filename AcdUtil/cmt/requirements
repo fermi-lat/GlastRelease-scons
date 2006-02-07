@@ -1,5 +1,5 @@
 package AcdUtil
-version v0r2p6
+version v0r2p7
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -18,6 +18,11 @@ apply_pattern packageShr
 apply_pattern package_include
 
 apply_pattern package_headers
+
+# special guy to allow AcdRecon to link in the common_files below
+macro_append AcdUtil_linkopts \
+        "${AcdUtil_root}/${BINDIR}/libAcdUtilCommon.a"\
+  WIN32 "${AcdUtil_root}/${BINDIR}/AcdUtilCommon.lib "
 
 
 #=============================================================
