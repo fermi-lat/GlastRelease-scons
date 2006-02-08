@@ -22,7 +22,7 @@ class GleamItem : public GlastClassify::Item {
 public:
     GleamItem(const std::string& treename, const std::string& name, INTupleWriterSvc* tuplesvc)
     {
-        m_isFloat = tuplesvc->getItem(treename, name, m_pdata);
+        m_isFloat = tuplesvc->getItem(treename, name, m_pdata)=="Float_t";
     }
     operator double()const{
         return m_isFloat? *(float*) m_pdata : *(double*)m_pdata;

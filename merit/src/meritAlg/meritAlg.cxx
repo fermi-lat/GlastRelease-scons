@@ -424,7 +424,7 @@ StatusCode meritAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
 
-#if 0
+#if 1
     calculate(); // setup Bill's tuple items
 #endif
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
