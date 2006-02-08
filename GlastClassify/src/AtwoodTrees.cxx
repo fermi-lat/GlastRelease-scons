@@ -27,7 +27,6 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_TkrNumTracks    = tuple.getItem("TkrNumTracks");
     m_CalEnergyRaw    = tuple.getItem("CalEnergyRaw");
     m_CalCsIRLn       = tuple.getItem("CalCsIRLn");
-    m_EvtEventId      = tuple.getItem("EvtEventId");
     m_FilterStatus_HI = tuple.getItem("FilterStatus_HI");
 
     m_AcdActiveDist3D  = tuple.getItem("AcdActiveDist3D");

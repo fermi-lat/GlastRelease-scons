@@ -44,7 +44,6 @@ private:
     const Item*   m_TkrNumTracks;
     const Item*   m_CalEnergyRaw  ;
     const Item*   m_CalCsIRLn   ;  
-    const Item*   m_EvtEventId;
     const Item*   m_FilterStatus_HI;
 
     // These are variables to be output to the ntuple 
