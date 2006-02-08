@@ -10,7 +10,7 @@
 #include <string>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  6 ,0); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  6 ,1); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -66,13 +66,13 @@ public:
     @param pointer    point pointer that will be set  
 
     Expect to throw exception if not found.
-    @return true if float type, false if double (client then must cast)
+    @return a string describing the type (client then must cast)
 
     Note that the RootTupleSvc subclass implements a variation that it the name is empty,
     it will set the pointer to the TTree.
     
     */
-    virtual bool getItem(const std::string & tupleName, 
+    virtual std::string getItem(const std::string & tupleName, 
         const std::string& itemName, void*& pointer)const =0;
 
     //! Save the row in the output file
