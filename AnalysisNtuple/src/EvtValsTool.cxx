@@ -42,8 +42,8 @@ public:
 private:
 
     //Global Items
-    float EvtRun;
-    float EvtEventId;
+    unsigned int EvtRun;
+    unsigned int EvtEventId;
     double EvtElapsedTime;
     float EvtLiveTime;
 
@@ -201,9 +201,9 @@ NOTE
 <table>
 <tr><th> Variable <th> Type <th> Description
 <tr><td> EvtRun 
-<td>F<td>   Run number, copied from the event header NEW: replaces Run in the merit ntuple  
+<td>UI<td>   Run number, copied from the event header NEW: replaces Run in the merit ntuple  
 <tr><td> EvtEventId 
-<td>F<td>   Sequence number of event in the run (as generated) NEW: replaces Event_ID in the merit ntuple 
+<td>UI<td>   Sequence number of event in the run (as generated) NEW: replaces Event_ID in the merit ntuple 
 <tr><td> EvtElapsedTime 
 <td>D<td>   Elapsed time in seconds since t0 (for DC1: 18-July-2005, 
             for the future: mission start 1-Jan-2001) 

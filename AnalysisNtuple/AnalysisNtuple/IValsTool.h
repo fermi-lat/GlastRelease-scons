@@ -35,10 +35,12 @@ public:
     virtual StatusCode getVal(std::string varName, double& value, int check = CALC) = 0;
     virtual StatusCode getVal(std::string varName, float& value, int check = CALC) = 0;
     virtual StatusCode getVal(std::string varName, int& value, int check = CALC) = 0;
+    virtual StatusCode getVal(std::string varName, unsigned int& value, int check = CALC) = 0;
     /// get a particular value, using ntuple name, with calc checking
     virtual StatusCode getValCheck(std::string varName, double& value) =0;
     virtual StatusCode getValCheck(std::string varName, float& value) =0;
     virtual StatusCode getValCheck(std::string varName, int& value) =0;
+    virtual StatusCode getValCheck(std::string varName, unsigned int& value) =0;
     /// output the names and values, either all (default) or just one;
     virtual StatusCode browse(std::string varName = "") =0;
     /// let the user trigger her own calculation
@@ -73,6 +75,8 @@ public:
             const float& value) const =0;
         virtual Visitor::eVisitorRet analysisValue(std::string varName,
             const int& value) const =0;
+        virtual Visitor::eVisitorRet analysisValue(std::string varName,
+            const unsigned int& value) const =0;
     }; 
     
     

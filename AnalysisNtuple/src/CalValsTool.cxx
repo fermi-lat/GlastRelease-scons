@@ -6,6 +6,8 @@
   $Header$
 */
 
+#define POST_CAL_MOD 1
+
 // Include files
 
 
@@ -397,13 +399,17 @@ StatusCode CalValsTool::calculate()
     SmartDataPtr<Event::CalXtalRecCol> 
         pxtalrecs(m_pEventSvc,EventModel::CalRecon::CalXtalRecCol);
 
-    // Recover pointer to CalEventEnergy
+	// Recover pointer to CalEventEnergy info  
+#ifdef POST_CAL_MOD
     Event::CalEventEnergyCol * calEventEnergyCol = 
         SmartDataPtr<Event::CalEventEnergyCol>(m_pEventSvc,EventModel::CalRecon::CalEventEnergyCol) ;
     Event::CalEventEnergy * calEventEnergy = 0 ;
     if ((calEventEnergyCol!=0)&&(!calEventEnergyCol->empty()))
         calEventEnergy = calEventEnergyCol->front() ;
-
+#else
+    Event::CalEventEnergy* calEventEnergy = 
+                 SmartDataPtr<Event::CalEventEnergy>(m_pEventSvc, EventModel::CalRecon::CalEventEnergy);
+#endif
     // If calEventEnergy then fill TkrEventParams
     // Note: TkrEventParams initializes to zero in the event of no CalEventEnergy
 	double m_radLen_Stuff     = 0.;
