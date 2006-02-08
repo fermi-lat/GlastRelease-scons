@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r12  THB 08-feb-06   Add AnalysisNtupleAlg to Triggered sequence 
 * v6r11  THB 19-jan-06   Add LiveTimeSvc to basicOptions; specify correct Insightful Miner file
 * v6r10  THB 13-jan-06   Add CurrentEventAlg to Generator sequence
 * v6r9p1 THB 19-dec-05   Fix test
