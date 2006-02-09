@@ -61,10 +61,13 @@ public:
     
 private: 
     int m_count;
-    DoubleProperty  m_transy, m_transz; // move in plane
-    DoubleProperty m_pivot_distance, m_beam_plane; // locations of pivot and beam plane, in glast coordinates
-    DoubleProperty  m_angle; // rotation about instrument y-axis (deg)
-    double m_c, m_s;       // cos, sin of rot
+    DoubleProperty m_pivot_distance;    // z position of pivot in glast frame
+    DoubleProperty m_pivot_offset;      // x position of pivot in glast frame
+    DoubleProperty m_beam_plane; // z position of reporting plane in beam frame
+    DoubleProperty m_beam_plane_glast;  // z position of reporting plane in glast frame
+    DoubleProperty  m_transy, m_transz; // translation in x-y table plane
+    DoubleProperty  m_angle; // rotation about table pivot (y-axis in instr.) (deg)
+    double m_c, m_s;                    // cos, sin of rot
 
     void transform(Event::McParticle& mcp );
     Hep3Vector m_translation, m_pivot;
@@ -80,12 +83,18 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 ,m_count(0)
 {
     // declare properties with setProperties calls
+    // translations and rotation of x-y table
     declareProperty("vertical_translation",  m_transy=0);
     declareProperty("horizontal_translation",m_transz=0);
     declareProperty("table_rotation", m_angle=0);
-    declareProperty("pivot_location", m_pivot_distance=4280-4130);
-    declareProperty("beam_plane",     m_beam_plane=4280);
-    
+    // z position of pivot in glast frame
+    declareProperty("pivot_location", m_pivot_distance=150);
+    // x position of pivot in glast frame
+    declareProperty("pivot_offset", m_pivot_offset=0);
+    // z position of reporting plane in beam frame
+    declareProperty("beam_plane",     m_beam_plane=3280);
+    // z coordinate of reporting plane in instrument frame
+    declareProperty("beam_plane_glast" , m_beam_plane_glast=1200);
 }
 
 StatusCode BeamTransform::initialize(){
@@ -103,7 +112,7 @@ StatusCode BeamTransform::initialize(){
     m_rot = HepRotationY(m_angle*M_PI/180);
 
     // location of pivot
-    m_pivot = Hep3Vector( 0,0, m_pivot_distance);
+    m_pivot = Hep3Vector( m_pivot_offset,0, m_pivot_distance);
 
     return sc;
 }
@@ -116,21 +125,34 @@ void BeamTransform::transform(Event::McParticle& mcp )
     }
 
     // get the initial position and momentum
-    HepLorentzVector pbeam = mcp.initialFourMomentum();
-    Hep3Vector rbeam = mcp.initialPosition();
+    HepLorentzVector pbeam  = mcp.initialFourMomentum();
+    Hep3Vector rbeam  = mcp.initialPosition();
+    // ditto final
+    HepLorentzVector pbeam1 = mcp.finalFourMomentum();
+    Hep3Vector rbeam1 = mcp.finalPosition();
 
     // translate in beam frame
-    rbeam += m_translation;
+    rbeam  += m_translation;
+    rbeam1 += m_translation;
 
     // convert to unrotated instrument coordinates
-    Hep3Vector r(rbeam.z(), rbeam.y(), m_beam_plane);
-    HepLorentzVector p(-pbeam.z(), pbeam.y(), -pbeam.x(), pbeam.e());
+    Hep3Vector r (rbeam.z(),  rbeam.y(), 
+        rbeam.x()  - m_beam_plane + m_beam_plane_glast);
+    Hep3Vector r1(rbeam1.z(), rbeam1.y(), 
+        rbeam1.x() - m_beam_plane + m_beam_plane_glast);
+
+    HepLorentzVector p (-pbeam.z(),  pbeam.y(),  -pbeam.x(),  pbeam.e());
+    HepLorentzVector p1(-pbeam1.z(), pbeam1.y(), -pbeam1.x(), pbeam1.e());
 
     mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
         mcp.particleProperty(), mcp.statusFlags(),
         m_rot*p, 
-        m_rot*(r-m_pivot) + m_pivot,
+        m_rot*(r-m_pivot) + m_pivot, 
         mcp.getProcess());
+
+    mcp.finalize(
+        m_rot*p1, 
+        m_rot*(r1-m_pivot) + m_pivot);
 
 }
 
@@ -139,6 +161,7 @@ StatusCode BeamTransform::execute(){
     MsgStream   log( msgSvc(), name() );
     ++m_count;
 
+
     // Retrieving pointers from the TDS
     
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
@@ -146,7 +169,11 @@ StatusCode BeamTransform::execute(){
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
 
     double t = header->time();
-    log << MSG::DEBUG << "Event time: " << t << endreq;;
+    log << MSG::DEBUG;
+    bool debug = log.isActive();
+    //debug = true;
+    if (debug) {log << "Event time: " << t;}
+    log << endreq;;
   
     // loop over the monte carlo particle collection
     if (particles) {
@@ -156,12 +183,20 @@ StatusCode BeamTransform::execute(){
         for (piter = particles->begin(); piter != particles->end(); piter++) {
             Event::McParticle& mcp = **piter;
             
-            log << MSG::DEBUG ; log.stream() << mcp; log << endreq;
+            if (debug) {
+                log << MSG::DEBUG;
+                log.stream() << mcp;
+                log << endreq;
+            }
             
             // translate position
             transform(mcp);
 
-            log << MSG::DEBUG << "after transform: "; log.stream() << mcp; log << endreq;
+            if (debug) {
+                log << MSG::DEBUG << "after transform: "; 
+                log.stream() << mcp; 
+                log << endreq;
+            }
         }
     }
 
