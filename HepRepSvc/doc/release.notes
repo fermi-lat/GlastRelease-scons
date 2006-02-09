@@ -33,3 +33,4 @@
                         depending on discriminator settings.  Also update
                         McPosHit to include volId and global entry position.
  * v0r16p1  18-01-06 LR Fixed decoding of tower in TrackFiller
+ * v0r16p2  09-02-06 LR Beefed up MC text info
