@@ -97,7 +97,7 @@ StatusCode writeJunkAlg::initialize() {
 
     float* test;
 
-    bool isFloat = m_rootTupleSvc->getItem("tree_1","float",  (void*&)test);
+    bool isFloat = m_rootTupleSvc->getItem("tree_1","float",  (void*&)test)=="Float_t";
     if( !isFloat || test!=&m_float){
         log << MSG::ERROR << "Did not retrieve a float" << endreq;
         sc = StatusCode::FAILURE;
