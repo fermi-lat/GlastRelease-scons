@@ -58,6 +58,7 @@ private:
     
     //Pure MC Tuple Items
     float MC_SourceId;
+    float MC_NumIncident;
     float MC_Id;
     float MC_Charge;
     float MC_Energy;
@@ -134,6 +135,9 @@ StatusCode McValsTool::initialize()
 <tr><td> McSourceId 
 <td>F<td>   Unique integer associated with each MC source type; 
             from McEvent header replaces Mc_src_Id in merit ntuple 
+<tr><td> McNumIncident
+<td>F<td>   Number of incident particles, usually 1
+            can be zero to N for test beam
 <tr><td> McId 
 <td>F<td>   StdHepId of primary (-13 = mu+, 22 = gamma, etc.) 
 <tr><td> McCharge 
@@ -170,6 +174,7 @@ StatusCode McValsTool::initialize()
 
 
     addItem("McSourceId",     &MC_SourceId);
+    addItem("McNumIncident", &MC_NumIncident);
     addItem("McId",           &MC_Id);  
     addItem("McCharge",       &MC_Charge);
     addItem("McEnergy",       &MC_Energy);  
@@ -225,7 +230,18 @@ StatusCode McValsTool::calculate()
         Event::McParticleCol::const_iterator pMCPrimary = pMcParticle->begin();
         // Skip the first particle... it's for bookkeeping.
         // The second particle is the first real propagating particle.
-        pMCPrimary++;
+        // except in the case of beamtest data!!!
+        MC_NumIncident = (*pMCPrimary)->daughterList().size();
+
+        // if there are no incident particles
+        if (MC_NumIncident==0) return sc;
+
+        // if there is one incident particle, it's okay to use it as before
+        // if there are more than one, I don't know what to do, for now
+        //     use the mother particle. That way, at least the energy will
+        //     be correct.
+
+        if(MC_NumIncident == 1) pMCPrimary++;
 
         Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
         MC_Id = (double)hepid;
