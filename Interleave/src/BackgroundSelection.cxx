@@ -35,9 +35,6 @@ BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
-  // Delete the file object if it's been initialized:
-  if (m_treeInitialized && m_inputTree)
-    delete m_inputTree;
 }
 
 //------------------------------------------------------------------------
@@ -71,6 +68,10 @@ void BackgroundSelection::setLeafPointers(TTree* pTree)
 //------------------------------------------------------------------------
 void BackgroundSelection::selectEvent(double maglat)
 {
+
+    // this is necessary due to the poor design of ROOT :-(
+    TDirectory *saveDir = gDirectory;
+ 
     // make sure we have the right tree selected for new maglat
     setCurrentTree(maglat);    
 
@@ -84,6 +85,9 @@ void BackgroundSelection::selectEvent(double maglat)
         m_inputTree->GetEvent(m_eventOffset++);
         
     }while( zenithTheta()>100.);
+
+    // this is necessary due to the poor design of ROOT :-(
+    saveDir->cd();
 }
 //------------------------------------------------------------------------
 double BackgroundSelection::zenithTheta()
