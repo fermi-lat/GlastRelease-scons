@@ -402,9 +402,9 @@ const unsigned LdfParser::BufferSize = 64*1024;
             return 0;
     }
 
-    bool LdfParser::setDebug(bool on) {
-        return EbfDebug::setDebug(on);
-    }
+    //bool LdfParser::setDebug(bool on) {
+    //    return EbfDebug::setDebug(on);
+   // }
 
     bool LdfParser::end() {
         return (m_datagram < m_end);
