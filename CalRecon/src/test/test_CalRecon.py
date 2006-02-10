@@ -84,8 +84,10 @@ def key_values(filename) :
   nb_profiles = 0
   nb_ll = 0
   nb_calvals = 0
+  nb_likelihood = 0
   raw_energy = 0
   calvals_energy = 0
+  likelihood_energy = 0
   corrected_energy = 0
   ll_energy = 0
   fit_energy = 0
@@ -122,6 +124,11 @@ def key_values(filename) :
         if energy > 0 :
           nb_calvals += 1
           calvals_energy += energy
+      elif words[2] == 'CalLikelihoodManagerTool' :
+        energy = string.atof(words[4])
+        if energy > 0 :
+          nb_likelihood += 1
+          likelihood_energy += energy
      
   # result
   if nb_clusters>0 :
@@ -134,12 +141,15 @@ def key_values(filename) :
     ll_energy = ll_energy/nb_ll
   if nb_calvals>0 :
     calvals_energy = calvals_energy/nb_calvals
+  if nb_likelihood>0 :
+    likelihood_energy = likelihood_energy/nb_likelihood
   ft_count = '%d'
   ft_mean = '%g'
   all_values = [ (ft_count % nb_clusters)+'*'+ (ft_mean % raw_energy) ]
   all_values = all_values + [ (ft_count % nb_ll)+'*'+ (ft_mean % ll_energy) ]
   all_values = all_values + [ (ft_count % nb_profiles)+'*'+ (ft_mean % fit_energy) ]
   all_values = all_values + [ (ft_count % nb_calvals)+'*'+ (ft_mean % calvals_energy) ]
+  all_values = all_values + [ (ft_count % nb_likelihood)+'*'+ (ft_mean % likelihood_energy) ]
   all_values = all_values + [ ft_mean % hashed_posdir ]
   return all_values
 

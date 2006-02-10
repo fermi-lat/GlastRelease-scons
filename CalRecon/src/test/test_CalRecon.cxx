@@ -132,6 +132,11 @@ StatusCode test_CalRecon::execute() {
                   <<corResult->getParams().getEnergy()
                   <<endreq ; 
             }
+            else if (corResult->getCorrectionName() == "CalLikelihoodManagerTool" ) {
+                log<<MSG::INFO<<"CalLikelihoodManagerTool Energy "
+                  <<corResult->getParams().getEnergy()
+                  <<endreq ; 
+            }
             else {
                 log<<MSG::WARNING<<"UNKNOWN CORRECTION NAME: "
                   <<corResult->getCorrectionName()
