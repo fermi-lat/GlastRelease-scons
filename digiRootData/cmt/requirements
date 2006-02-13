@@ -23,7 +23,7 @@ apply_pattern root_package headers="\
  ../digiRootData/LsfTime.h\
  ../digiRootData/LsfRunInfo.h\
  ../digiRootData/LsfDatagramInfo.h\
- ../digiRootData/LsfGemScalars.h\
+ ../digiRootData/LsfGemScalers.h\
  ../digiRootData/LsfConfiguration.h\
  ../digiRootData/LsfMetaEvent.h\
  ../digiRootData/TkrDiagnosticData.h\

@@ -28,7 +28,7 @@
 #pragma link C++ class TimeTone+;  //class name different from filename!  (LsfTimeTone)
 #pragma link C++ class Time+;  //class name different from filename! (LsfTime)
 #pragma link C++ class Configuration+;  //class name different from filename! (LsfConfiguration)
-#pragma link C++ class GemScalars+;  //class name different from filename! (LsfGemScalars)
+#pragma link C++ class GemScalers+;  //class name different from filename! (LsfGemScalers)
 #pragma link C++ class RunInfo+;  //class name different from filename! (LsfRunInfo)
 #pragma link C++ class DatagramInfo+;  //class name different from filename! (LsfDatagramInfo)
 #pragma link C++ class Configuration+;  //class name different from filename! (LsfConfiguration)

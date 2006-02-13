@@ -15,28 +15,32 @@
 class Time : public TObject {
   
 public:
+
+  /// Default c'tor.  Assigns sentinel values to all fields
+  Time()
+    :m_current(),m_previous(),
+    m_timeHack(),m_timeTicks(LSF_INVALID_UINT){
+  }
   
+  /// Standard c'tor.  Takes input values for all fields
   Time( const TimeTone& current, const TimeTone& previous,
 	const GemTime& timeHack, UInt_t timeTicks)
     :m_current(current),m_previous(previous),
      m_timeHack(timeHack),m_timeTicks(timeTicks){
   }
   
-  Time()
-    :m_current(),m_previous(),
-     m_timeHack(),m_timeTicks(0){
-  }
-  
+  /// Copy c'tor.  Nothing fancy, just copy all values.
   Time( const Time& other )
     :TObject(other),
      m_current(other.current()),m_previous(other.previous()),
      m_timeHack(other.timeHack()),m_timeTicks(other.timeTicks()){
   }
-  
+
+  /// D'tor.  Nothing special.
   virtual ~Time(){
   }
     
-  /// Assignement operator
+  /// Assignement operator.  Nothing fancy, just copy all values.
   inline Time& operator=( const Time& other ) {
     initialize(other.current(),other.previous(),
 	       other.timeHack(),other.timeTicks());
@@ -49,7 +53,7 @@ public:
   /// The TimeTone that was "active" at event capture time
   inline const TimeTone& previous() const { return m_previous; }
   
-  /// The GemTime at event capture time
+  /// The value of the GemTime registers at event capture time
   inline const GemTime& timeHack() const { return m_timeHack; } 
   
   /// The number of 50ns ticks since last the last time hack
@@ -75,7 +79,7 @@ public:
     m_current.Clear("");
     m_previous.Clear("");
     m_timeHack.Clear("");      
-    m_timeTicks = 0;
+    m_timeTicks = LSF_INVALID_UINT;
   }
 
   /// ROOT print function
@@ -89,13 +93,17 @@ public:
   
 private:
   
-  /// 
-  TimeTone m_current;
+  /// The TimeTone that was "active" at event capture time
+  TimeTone m_current;  
+  /// The TimeTone right before the "active" one at event capture time
   TimeTone m_previous;
+  /// The value of the GemTime registers at event capture time
   GemTime m_timeHack;
+
+  /// The number of 50ns ticks since last the last time hack
   UInt_t m_timeTicks;
   
-  ClassDef(Time,1) ;
+  ClassDef(Time,1)   // Information about various time counters at event capture
   
 };
 

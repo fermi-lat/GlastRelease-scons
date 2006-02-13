@@ -6,9 +6,13 @@
 #include "enums/Lsf.h"
 
 /** @class RunInfo
-* @brief encapsulate the run id parts of the event context
+* @brief Encapsulate information about the run that an event was taken in
 *
-* 
+*        The RunInfo consists of:
+*            platform    -> the type of platfrom that made the data ( One of enums::Lsf::Platform )
+*            dataOrigin  -> to distinguish ground, flight and MC ( One of enums::Lsf::DataOrigin )
+*            id          -> run number assigned on the ground. 
+*            startTime   -> number of seconds since start of GLAST epoch at which the run started
 *
 * $Header$
 */
@@ -17,43 +21,48 @@ class RunInfo : public TObject {
     
 public:
   
+  /// Default c'tor.  Assigns sentinel values to all fields
   RunInfo( )
-    : m_platform(enums::Lsf::NoPlatform), m_origin(enums::Lsf::NoOrigin), m_id(0), m_startTime(0) {
+    : m_platform(enums::Lsf::NoPlatform), m_origin(enums::Lsf::NoOrigin), 
+      m_id(LSF_INVALID_UINT), m_startTime(LSF_INVALID_UINT) {
   }
   
+  /// Standard c'tor.  Takes input values for all fields
   RunInfo( enums::Lsf::Platform p, enums::Lsf::DataOrigin d, UInt_t id, UInt_t startTime )
     : m_platform(p), m_origin(d), m_id(id), m_startTime(startTime) {
   }
   
+  /// Copy c'tor.  Nothing fancy, just copy all values.
   RunInfo( const RunInfo& other )
     : TObject(other), 
       m_platform(other.platform()), m_origin(other.dataOrigin()), 
       m_id(other.id()), m_startTime(other.startTime()) {
   }
   
-  ~RunInfo() {
+  /// D'tor.  Nothing special.
+  virtual ~RunInfo() {
   }
   
-  /// Assignement operator
+  /// Assignement operator.  Nothing fancy, just copy all values.
   inline RunInfo& operator=( const RunInfo& other ) {
     initialize(other.platform(),other.dataOrigin(),
 	       other.id(),other.startTime());
     return *this;
   }
   
-  /// The platform this run was taken on
+  /// The platform type this run was taken on.
   inline enums::Lsf::Platform platform() const { 
     return m_platform;
   }
   
-  /// The type of data from this run (Orbit, MC or ground) data
+  /// The type of data from this run (Orbit, MC or ground)
   inline enums::Lsf::DataOrigin dataOrigin() const {
     return m_origin;
   }
     
   /// The ground based ID of this run
-  /// This is usually defined on the ground, but if the LAT DAQ reboots on-orbit, the 
-  /// Ground ID can be reset
+  /// This is usually defined on the ground, but if the LAT DAQ reboots on-orbit, 
+  /// The Ground ID can be reset
   inline UInt_t id() const {
     return m_id;
   }
@@ -101,8 +110,8 @@ public:
   void Clear(Option_t* /* option="" */) {
     m_platform = enums::Lsf::NoPlatform;
     m_origin = enums::Lsf::NoOrigin;
-    m_id = 0;
-    m_startTime = 0;
+    m_id = LSF_INVALID_UINT;
+    m_startTime = LSF_INVALID_UINT;
   }
 
   /// ROOT print function
@@ -112,7 +121,7 @@ public:
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
 
   /// Compare to another in tests
-  Bool_t CompareInRange( const RunInfo&, const std::string & name = "" ) const ; // for tests
+  Bool_t CompareInRange( const RunInfo&, const std::string & name = "" ) const ; 
 
   /// For sorting, override TObject::Compare()
   virtual Int_t Compare(const TObject *obj) const; 
@@ -122,19 +131,19 @@ public:
   
 private:
   
-  ///
+  /// The platform type this run was taken on.
   enums::Lsf::Platform m_platform;
   
-  /// 
+  /// The type of data from this run (Orbit, MC or ground)
   enums::Lsf::DataOrigin m_origin;
   
-  ///
+  /// The ground ID for the run
   UInt_t m_id;
   
-  ///
+  /// The time the run started (in seconds since the start of the GLAST epoch)
   UInt_t m_startTime;
 
-  ClassDef(RunInfo,1) ;
+  ClassDef(RunInfo,1) // Unique Run Identifier
 
 };
 

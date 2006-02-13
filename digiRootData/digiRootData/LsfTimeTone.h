@@ -7,7 +7,9 @@
 #include "LsfGemTime.h"
 
 /** @class TimeTone
-* @brief encapsulate the time tone markers that come down with the 
+* @brief encapsulate the TimeTone Markers that are put in the science data stream.
+*
+*       
 *
 * $Header$
 */
@@ -15,35 +17,32 @@
 class TimeTone : public TObject {
   
 public:
-  
-  enum { MISSING_GPS_MASK = 1, 
-	 MISSING_CPU_MASK = 2,
-	 MISSING_LAT_MASK = 4,
-	 MISSING_TIMETONE_MASK = 8 } MASKS;
 
-public:
-  
+  /// Default c'tor.  Assigns sentinel values to all fields
   TimeTone()
-    :m_incomplete(0), m_timeSecs(0),
-     m_flywheeling(0), m_flags(0), m_timeHack() {
+    :m_incomplete(LSF_INVALID_UINT), m_timeSecs(LSF_INVALID_UINT),
+     m_flywheeling(LSF_INVALID_UINT), m_flags(LSF_INVALID_UCHAR), m_timeHack() {
   }
-    
+
+  /// Standard c'tor.  Takes input values for all fields
   TimeTone( UInt_t incomplete, UInt_t timeSecs,
 	    UInt_t flywheeling, UChar_t flags,
 	    const GemTime& timeHack )
     :m_incomplete(incomplete), m_timeSecs(timeSecs), 
      m_flywheeling(flywheeling), m_flags(flags), m_timeHack(timeHack) {
   }
-  
+
+  /// Copy c'tor.  Nothing fancy, just copy all values.
   TimeTone(const TimeTone& other)
     :TObject(other), 
      m_incomplete(other.incomplete()), m_timeSecs(timeSecs()), 
      m_flywheeling(other.flywheeling()), m_flags(flags()), m_timeHack(other.timeHack()){
   }
+
+  /// D'tor.  Nothing special.
+  virtual ~TimeTone() {}
   
-  ~TimeTone() {}
-  
-  /// Assignement operator
+  /// Assignement operator.  Nothing fancy, just copy all values.
   inline TimeTone& operator=( const TimeTone& other ) {
     initialize(other.incomplete(),other.timeSecs(),
 	       other.flywheeling(),other.flags(),
@@ -54,7 +53,7 @@ public:
   /// If this is non-zero part of the time tone is missing, check status bits 
   inline UInt_t incomplete() const { return m_incomplete; }
   
-  /// Number of seconds since Epoch start at time hack
+  /// Number of seconds since Epoch start at most recent time hack
   inline UInt_t timeSecs() const { return m_timeSecs; }
   
   /// Number of time tones since last complete time tone
@@ -63,19 +62,22 @@ public:
   /// All the flags at once
   inline UChar_t flags() const { return m_flags; }
   
+  /// Make sure that the flags are valid
+  inline Bool_t flagsValid() const { return m_flags != LSF_INVALID_UCHAR; }
+
   /// NO GPS lock, message w.r.t. LAT clock
-  inline Bool_t missingGps() const { return (m_flags & MISSING_GPS_MASK) != 0; }
+  inline Bool_t missingGps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_GPS_MASK) != 0; }
   
   /// NO 1-PPS signal at CPU level
-  inline Bool_t missingCpuPps() const { return (m_flags & MISSING_CPU_MASK) != 0; }
+  inline Bool_t missingCpuPps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_CPU_MASK) != 0; }
   
   /// NO 1-PPS signal at LAT level
-  inline Bool_t missingLatPps() const {  return (m_flags & MISSING_LAT_MASK) != 0; }
+  inline Bool_t missingLatPps() const {  return (m_flags & enums::Lsf::TimeTone::MISSING_LAT_MASK) != 0; }
   
   /// NO 1-PPS signal at Spacecraft 
-  inline Bool_t missingTimeTone() const  { return (m_flags & MISSING_TIMETONE_MASK) != 0; }
+  inline Bool_t missingTimeTone() const  { return (m_flags & enums::Lsf::TimeTone::MISSING_TIMETONE_MASK) != 0; }
 
-  /// The time hack at the time tone
+  /// The value of the GemTime registers at the time tone
   inline const GemTime& timeHack() const { return m_timeHack; }
   
   /// set everything at once
@@ -95,28 +97,32 @@ public:
   inline void setFlywheeling( UInt_t value ) { m_flywheeling = value; }  
   inline void setFlags( UChar_t value ) { m_flags = value; }
   inline void setMissingGps( Bool_t value ) { 
-    if ( value ) { m_flags |= MISSING_GPS_MASK; }
-    else { m_flags &= ~(MISSING_GPS_MASK) ; }
+    if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
+    if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_GPS_MASK; }
+    else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_GPS_MASK) ; }
   }
   inline void setMissingCpu( Bool_t value ) {
-    if ( value ) { m_flags |= MISSING_CPU_MASK; }
-    else { m_flags &= ~(MISSING_CPU_MASK) ; }
+    if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
+    if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_CPU_MASK; }
+    else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_CPU_MASK) ; }
   }
   inline void setMissingLAT( Bool_t value ) {
-    if ( value ) { m_flags |= MISSING_LAT_MASK; }
-    else { m_flags &= ~(MISSING_LAT_MASK); }
+    if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
+    if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_LAT_MASK; }
+    else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_LAT_MASK); }
   }
   inline void setMissingTimeTone( Bool_t value ) {
-    if ( value ) { m_flags |= MISSING_TIMETONE_MASK; }
-    else { m_flags &= ~(MISSING_TIMETONE_MASK); }
+    if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
+    if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_TIMETONE_MASK; }
+    else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_TIMETONE_MASK); }
   }
 
   /// Reset function
   void Clear(Option_t* /* option="" */) {
-    m_incomplete = 0;
-    m_timeSecs = 0;
-    m_flywheeling = 0;
-    m_flags = 0;
+    m_incomplete = LSF_INVALID_UINT;
+    m_timeSecs = LSF_INVALID_UINT;
+    m_flywheeling = LSF_INVALID_UINT;
+    m_flags = LSF_INVALID_UCHAR;
     m_timeHack.Clear("");
   }
   /// ROOT print function
@@ -130,15 +136,19 @@ public:
 
 private:
   
-  /// Time
-  UInt_t m_incomplete;  // 0 -> ok
-  UInt_t m_timeSecs;    // # of secs since epoch @ time hack
-  UInt_t m_flywheeling; // # of timetones since last complete once
-  unsigned char m_flags;       // missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) ]
-  
+  /// If this is non-zero part of the time tone is missing, check status bits 
+  UInt_t m_incomplete;
+  /// Number of seconds since Epoch start at most recent time hack
+  UInt_t m_timeSecs;
+  /// Number of time tones since last complete time tone
+  UInt_t m_flywheeling;
+  /// missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) ]
+  UChar_t m_flags;
+
+  /// The value of the GemTime registers at the time tone
   GemTime m_timeHack;          
 
-  ClassDef(TimeTone,1) ;
+  ClassDef(TimeTone,1) //   Information about the 1-PPS TimeTone and GPS signal status
   
 };
 
