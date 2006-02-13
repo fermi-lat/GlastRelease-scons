@@ -18,45 +18,49 @@ namespace LsfEvent {
   class Time {
     
   public:
+
+    /// Default c'tor.  Assigns sentinel values to all fields
+    Time()
+      :m_current(),m_previous(),
+       m_timeHack(),m_timeTicks(LSF_INVALID_UINT){
+    }
     
+    /// Standard c'tor.  Takes input values for all fields
     Time( const TimeTone& current, const TimeTone& previous,
 	  const GemTime& timeHack, unsigned int timeTicks)
       :m_current(current),m_previous(previous),
        m_timeHack(timeHack),m_timeTicks(timeTicks){
     }
     
-    Time()
-      :m_current(),m_previous(),
-       m_timeHack(),m_timeTicks(0){
-    }
-    
+    /// Copy c'tor.  Nothing fancy, just copy all values.
     Time( const Time& other )
       :m_current(other.current()),m_previous(other.previous()),
        m_timeHack(other.timeHack()),m_timeTicks(other.timeTicks()){
     }
     
+    /// D'tor.  Nothing special.
     virtual ~Time(){
     }
     
-    /// Assignement operator
+    /// Assignement operator.  Nothing fancy, just copy all values.
     inline Time& operator=( const Time& other ) {
       set(other.current(),other.previous(),
 	  other.timeHack(),other.timeTicks());
       return *this;
     }
-
+    
     /// The TimeTone right before the "active" one at event capture time
     inline const TimeTone& current() const { return m_current; } 
-
+    
     /// The TimeTone that was "active" at event capture time
     inline const TimeTone& previous() const { return m_previous; }
-
-    /// The GemTime at event capture time
+    
+    /// The value of the GemTime registers at event capture time
     inline const GemTime& timeHack() const { return m_timeHack; } 
-
+    
     /// The number of 50ns ticks since last the last time hack
     inline unsigned int timeTicks() const { return m_timeTicks; }
-
+    
     /// set everything at once
     inline void set(const TimeTone& current, const TimeTone& previous,
 		    const GemTime& timeHack, unsigned int timeTicks) {
@@ -65,13 +69,13 @@ namespace LsfEvent {
       m_timeHack = timeHack; 
       m_timeTicks = timeTicks;
     }
-
+    
     // set the individual data members
     inline void setCurrent( const TimeTone& val) { m_current = val; }; 
     inline void setPrevious( const TimeTone& val) { m_previous = val; };
     inline void setGemTime( const GemTime& val) { m_timeHack = val; }; 
     inline void setTimeTicks( unsigned int val) { m_timeTicks = val; };
-    
+
     /// Serialize the object for writing
     friend StreamBuffer& operator<< ( StreamBuffer& s, const Time& obj )    {
       s << obj.m_current; 

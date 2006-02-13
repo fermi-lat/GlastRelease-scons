@@ -12,7 +12,7 @@
 #include "LdfEvent/LsfTime.h"
 #include "LdfEvent/LsfRunInfo.h"
 #include "LdfEvent/LsfDatagramInfo.h"
-#include "LdfEvent/LsfGemScalars.h"
+#include "LdfEvent/LsfGemScalers.h"
 #include "LdfEvent/LsfConfiguration.h"
 
 /** @class MetaEvent
@@ -28,27 +28,31 @@ namespace LsfEvent {
     
   public:
     
+    /// Default c'tor.  Assigns sentinel or null values to all fields
+    MetaEvent()
+      :m_config(0),
+       m_type(enums::Lsf::NoRunType){
+    }
+
+    /// Standard c'tor.  Takes input values for all fields
     MetaEvent( const RunInfo& run, const DatagramInfo& datagram, 
-	       const GemScalars& scalars,
+	       const GemScalers& scalers,
 	       const Time& time,
 	       const Configuration& configuration )
       :m_run(run),m_datagram(datagram),
-       m_scalars(scalars),
+       m_scalers(scalers),
        m_time(time),
        m_config(configuration.clone()),
        m_type(configuration.type()){
     }
 
-    MetaEvent()
-      :m_config(0),
-       m_type(enums::Lsf::NoRunType){
-    }
-    
+    /// Copy c'tor.  Just copy all values.  
+    /// Does a deep copy of the configuration and uses the configuration type to deduce the run type
     MetaEvent( const MetaEvent& other )
       :DataObject(other),
        m_run(other.run()),
        m_datagram(other.datagram()),
-       m_scalars(other.scalars()),
+       m_scalers(other.scalers()),
        m_time(other.time()),
        m_config(0),
        m_type(enums::Lsf::NoRunType){
@@ -58,6 +62,7 @@ namespace LsfEvent {
       }
     }
     
+    /// D'tor.  Delete the configuration, which had been deep-copied
     virtual ~MetaEvent(){
       delete m_config;
     }
@@ -73,7 +78,7 @@ namespace LsfEvent {
     inline const DatagramInfo& datagram() const { return m_datagram; }
 
     /// The extended context records
-    inline const GemScalars& scalars() const { return m_scalars; }
+    inline const GemScalers& scalers() const { return m_scalers; }
 
     /// Information about the time markers associated with this event
     inline const Time& time() const { return m_time; } 
@@ -83,12 +88,12 @@ namespace LsfEvent {
 
     /// set everything at once
     inline void set(const RunInfo& run, const DatagramInfo& datagram, 
-		    const GemScalars& scalars,
+		    const GemScalers& scalers,
 		    const Time& time,
 		    const Configuration& configuration) {
       m_run = run;
       m_datagram = datagram;
-      m_scalars = scalars;
+      m_scalers = scalers;
       m_time = time;
       delete m_config;
       m_config = configuration.clone();
@@ -98,7 +103,7 @@ namespace LsfEvent {
     // set the individual data members
     inline void setRun( const RunInfo& val) { m_run = val; };
     inline void setDatagram( const DatagramInfo& val) { m_datagram = val; };
-    inline void setScalars( const GemScalars& val) { m_scalars = val; };
+    inline void setScalers( const GemScalers& val) { m_scalers = val; };
     inline void setTime( const Time& val) { m_time = val; }; 
     inline void setConfiguration( const Configuration& configuration ) {
       delete m_config;
@@ -110,7 +115,7 @@ namespace LsfEvent {
     friend StreamBuffer& operator<< ( StreamBuffer& s, const MetaEvent& obj )    {
       s << obj.m_run;
       s << obj.m_datagram;
-      s << obj.m_scalars;
+      s << obj.m_scalers;
       s << obj.m_time;
       s << obj.m_type; 
       if ( obj.m_config != 0) {
@@ -123,7 +128,7 @@ namespace LsfEvent {
     friend StreamBuffer& operator>> ( StreamBuffer& s, MetaEvent& obj )          {
       s >> obj.m_run;
       s >> obj.m_datagram;
-      s >> obj.m_scalars;
+      s >> obj.m_scalers;
       s >> obj.m_time;
       // FIXME can't read enums
       // s >> obj.m_type;
@@ -154,7 +159,7 @@ namespace LsfEvent {
 	<< EventField( EventFormat::field12 )
 	<< m_run 
 	<< m_datagram 
-	<< m_scalars 
+	<< m_scalers 
 	<< m_time 
 	<< m_type;
       if ( m_config != 0 ) {
@@ -166,13 +171,22 @@ namespace LsfEvent {
     
   private:
     
-    /// 
+    /// Information about the run this event is from
     RunInfo m_run;
+    
+    /// Information about the datagram this event came in
     DatagramInfo m_datagram;
-    GemScalars m_scalars;
+    
+    /// The extended context records
+    GemScalers m_scalers;
+
+    /// Information about the time markers associated with this event  
     Time m_time;
-    Configuration* m_config;
-     
+    
+    /// Information about the configuration keys associated with this event
+    Configuration* m_config;    //-> 
+    
+    /// Which type of run was this, particle data or charge injection 
     enums::Lsf::RunType m_type;
 
   };

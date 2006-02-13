@@ -27,12 +27,15 @@ namespace LsfEvent {
   class Configuration {
          
   public:
-    
+
+    /// Default c'tor.
     Configuration() {;}    
     
+    /// D'tor.  Nothing special.
     virtual ~Configuration() {
     }
 
+    /// Virtual clone function.  Should be overridden to copy and return correct subclass
     virtual Configuration* clone() const {
       return 0;
     }
@@ -53,29 +56,34 @@ namespace LsfEvent {
   class LpaConfiguration : public Configuration {
 
   public:
-    
+
+    /// Default c'tor.  Assigns sentinel values to all fields
     LpaConfiguration() 
-      :Configuration(),m_hardwareKey(0),m_softwareKey(0){
+      :Configuration(),m_hardwareKey(LSF_INVALID_UINT),m_softwareKey(LSF_INVALID_UINT){
     }
-    
+
+    /// Standard c'tor.  Takes input values for all fields
     LpaConfiguration(unsigned int hardwareKey, unsigned int softwareKey) 
       :Configuration(),m_hardwareKey(hardwareKey),m_softwareKey(softwareKey){
     }
     
+    /// Copy c'tor.  Nothing fancy, just copy all values.
     LpaConfiguration(const LpaConfiguration& other) 
       :Configuration(),m_hardwareKey(other.hardwareKey()),m_softwareKey(other.softwareKey()){
     }
 
+    /// D'tor.  Nothing special.
     virtual ~LpaConfiguration() {
     }
 
-    /// assignment operator
+    /// assignment operator.  Nothing fancy, just copy all values.
     LpaConfiguration& operator=(const LpaConfiguration& other) {
       m_hardwareKey = other.hardwareKey();
       m_softwareKey = other.softwareKey();
       return *this;
     }
 
+    /// Override of clone function.  Copies self and returns copy.
     virtual Configuration* clone() const {
       return new LpaConfiguration(*this);
     }
@@ -124,10 +132,11 @@ namespace LsfEvent {
     
   private:
     
-    /// 
+    /// the hardware key is the LAT-C configuration master key
     unsigned int m_hardwareKey;
-    unsigned int m_softwareKey;
     
+    /// the software key is the key of the FSW boot file
+    unsigned int m_softwareKey;
   };
 
 
@@ -140,31 +149,35 @@ namespace LsfEvent {
 
   public:
     
+    /// Default c'tor.  Assigns sentinel values to all fields
     LciConfiguration() 
-      :m_softwareKey(0),m_writeCfg(0),m_readCfg(0),
-       m_period(0),m_flags(0){
+      :m_softwareKey(LSF_INVALID_UINT),m_writeCfg(LSF_INVALID_UINT),m_readCfg(LSF_INVALID_UINT),
+      m_period(LSF_INVALID_UINT),m_flags(LSF_INVALID_UINT){
     }
      
+    /// Standard c'tor.  Takes input values for all fields
     LciConfiguration(unsigned int softwareKey, unsigned int writeCfg, unsigned int readCfg, 
 		     unsigned int period, unsigned char flags) 
       :Configuration(),
        m_softwareKey(softwareKey),m_writeCfg(writeCfg),m_readCfg(readCfg),
        m_period(period),m_flags(flags){
     }
-    
+
+    /// Copy c'tor.  Nothing fancy, just copy all values.
     LciConfiguration(const LciConfiguration& other) 
       :Configuration(),
        m_softwareKey(other.softwareKey()),m_writeCfg(other.writeCfg()),m_readCfg(other.readCfg()),
        m_period(other.period()),m_flags(other.flags()){
     }
 
+    /// D'tor.  Nothing special.
     virtual ~LciConfiguration(){
     }
 
     /// This is a poor-man's dynamic cast
     virtual const LciConfiguration* castToLciConfig() const { return this; };    
     
-    /// FIXME
+    ///  the software key is the key of the FSW boot file
     inline unsigned int softwareKey() const { return m_softwareKey; }
     
     /// FIXME
