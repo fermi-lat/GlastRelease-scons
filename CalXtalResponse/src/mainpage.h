@@ -117,11 +117,22 @@ documentation in CalXtalResponse for details.
 name of CalXtalResponse/IXtalRecTool based tool performing
 xtal digi->energy conversion (default is "XtalRecTool")
 
+
+
 @section CalTupleAlg CalTupleAlg
+
 CalTupleAlg generates CalTuple entries from TDS digi data.  Current entries
-include faceSignal and pedestal-subtracted-adc values per xtal face.
+include:
+- CalXtalAdcPed: pedestal subtraced adc values per cahnnel.
+- CalXtalAdcRng: adc range selection per channel
+- CalXtalFaceSignal: Signal @ each crystal face in units of MeV deposited at center
+of xtal
+
+Each Ntuple branch is a multi-dimensional array matching CAL geometry ([16][8][12][2], 
+representing tower, layer, xtal & xtal face respectively)
 
 @subsection jobOptions jobOptions
+
 @param CalTupleAlg.tupleName name of optional CalTuple tree. 
 (default is "CalTuple")
 
@@ -129,6 +140,12 @@ include faceSignal and pedestal-subtracted-adc values per xtal face.
 instructs ntupleWriterSvc to create CalTuple in it's own file
 instead of sharing the default file w/ other modules.  The
 default ("") will use the shared file
+
+@param CalTupleAlg.fourRangeMode Save all 4 adc ranges instead of just best range. (default=false)
+\note if this option is chosen, then the array shape is altered to support the extra range information
+([16][8][12][2][4])
+\note TDS Digi data must be in ALLRANGE mode, not the default BEST.  Otherwise
+the additional CalTuple entries will be zero.
 
 @param CalCalibSvc CalCalibSvc
 specifies which ICalCalibSvc object should be used by CalTupleAlg.  

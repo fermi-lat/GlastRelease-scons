@@ -7,7 +7,7 @@
 #include "Event/Digi/CalDigi.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
-
+#include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
@@ -18,15 +18,19 @@
 // STD INCLUDES
 #include <cstring>
 
+
 using namespace std;
 using namespace CalUtil;
+using namespace Event;
 
 /** @class CalTupleAlg
     @brief populates CalTuple entry w/ info derived from CalDigis & calibrations
 
     CalTuple contains 1 row per GLAST event w/ the following 2 values for each xtal face
-    - m_calXtalAdcPed     - pedestal subtracted adc values
+    - m_calXtalAdcRng     - adc range for matching AdcPed val
     - m_calXtalFaceSignal - energy deposit estimated from single face adc value if deposit centroid is assumed to be at center of xtal.
+    - m_calXtalAdcPed     - pedestal subtracted adc values. 
+    \note in 4 range mode, readouts are stored in order of adc range # regardless of range selection.
 
     @author Zach Fewtrell
 */
@@ -38,21 +42,56 @@ public:
   ///  Reconstruct ene & pos for all xtal hits in event
   StatusCode execute();
   /// required by Gaudi Algorithm class
-  StatusCode finalize() {return StatusCode::SUCCESS;};
+  StatusCode finalize() {return StatusCode::SUCCESS;}
   
 private:
   /// Single entry in CalTuple
   struct CalTupleEntry {
-    void Clear() {memset(this,0,sizeof(CalTupleEntry));}
+    CalTupleEntry() : 
+      m_calXtalAdcPed(0),
+      m_nAdcPed(0) {}
+
+    ~CalTupleEntry() { if (m_calXtalAdcPed) delete m_calXtalAdcPed; }
+
+    StatusCode initialize() {
+      
+      if (m_fourRngMode)
+        m_nAdcPed = RngIdx::N_VALS;
+      else 
+        m_nAdcPed = FaceIdx::N_VALS;
+
+      m_calXtalAdcPed = new float[m_nAdcPed];
+      
+      return StatusCode::SUCCESS;
+    }
+
+    void Clear() {
+      m_runId = 0;
+      m_eventId = 0;
+
+      memset(m_calXtalAdcRng,     0, sizeof(m_calXtalAdcRng));
+      memset(m_calXtalFaceSignal, 0, sizeof(m_calXtalFaceSignal));
+      if (m_calXtalAdcPed)
+        memset(m_calXtalAdcPed,     0, 
+               sizeof(*m_calXtalAdcPed) * m_nAdcPed);
+    }
 
     int m_runId;
     int m_eventId;
 
-    /// ped subtracted adcs
-    float m_calXtalAdcPed[16][8][12][2];
+    /// \brief ped subtracted adcs
+    /// 
+    /// stored as a pointer b/c array size changes based on fourRngMode
+    float *m_calXtalAdcPed;
+    unsigned m_nAdcPed;
+
+    /// adc range selection
+    int m_calXtalAdcRng[16][8][12][2];
         
     /// Cal Xtal Face signal in scintillated MeV units.
     float m_calXtalFaceSignal[16][8][12][2];
+
+    BooleanProperty m_fourRngMode;
   };
 
   /// reusable store for CalTuple entries.
@@ -64,6 +103,7 @@ private:
   StringProperty m_tupleName;
   /// name of file to which i write tuple
   StringProperty m_tupleFilename;
+  
 
   /// pointer to CalCalibSvc object.
   ICalCalibSvc *m_calCalibSvc;  
@@ -85,6 +125,7 @@ CalTupleAlg::CalTupleAlg(const string& name, ISvcLocator* pSvcLocator) :
   declareProperty("CalCalibSvc",   m_calCalibSvcName="CalCalibSvc");
   declareProperty("tupleName",     m_tupleName="CalTuple");
   declareProperty("tupleFilename", m_tupleFilename="");
+  declareProperty("fourRangeMode",   m_tupleEntry.m_fourRngMode=false);
 }
 
 StatusCode CalTupleAlg::initialize() {
@@ -97,6 +138,8 @@ StatusCode CalTupleAlg::initialize() {
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
+
+  m_tupleEntry.initialize();
 
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
@@ -122,16 +165,32 @@ StatusCode CalTupleAlg::initialize() {
                                    &m_tupleEntry.m_runId,
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
+
     sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                    "EventID", 
                                    &m_tupleEntry.m_eventId,
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
+
+    const char *adcPedStr;
+    if (m_tupleEntry.m_fourRngMode)
+      adcPedStr = "CalXtalAdcPed[16][8][12][2][4]";
+    else
+      adcPedStr = "CalXtalAdcPed[16][8][12][2]";
+
     sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                   "CalXtalAdcPed[16][8][12][2]",
+                                   adcPedStr,
                                    (float*)m_tupleEntry.m_calXtalAdcPed,
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
+
+    sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                   "CalXtalAdcRng[16][8][12][2]",
+                                   (int*)(&m_tupleEntry.m_calXtalAdcRng),
+                                   m_tupleFilename);
+    if (sc.isFailure()) branchFailure |= true;
+
+
     sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
                                    "CalXtalFaceSignal[16][8][12][2]",
                                    (float*)m_tupleEntry.m_calXtalFaceSignal,
@@ -157,7 +216,7 @@ StatusCode CalTupleAlg::execute() {
   m_tupleEntry.Clear();
 
   // Retrieve the Event data for this event
-  SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
+  SmartDataPtr<EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
   if (!evtHdr) {
     MsgStream msglog(msgSvc(), name());
     msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
@@ -168,7 +227,7 @@ StatusCode CalTupleAlg::execute() {
   }
          
   // get a pointer to the input TDS data collection
-  SmartDataPtr<Event::CalDigiCol> calDigiCol(eventSvc(), EventModel::Digi::CalDigiCol);
+  SmartDataPtr<CalDigiCol> calDigiCol(eventSvc(), EventModel::Digi::CalDigiCol);
 
   if (!calDigiCol) {
     if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
@@ -180,7 +239,7 @@ StatusCode CalTupleAlg::execute() {
   }  
   else {
     // loop over all calorimeter digis in CalDigiCol
-    for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); 
+    for (CalDigiCol::const_iterator digiIter = calDigiCol->begin(); 
          digiIter != calDigiCol->end(); digiIter++) {
 
       // get CalXtalId
@@ -191,8 +250,8 @@ StatusCode CalTupleAlg::execute() {
       LyrNum lyr = xtalIdx.getLyr();
       ColNum col = xtalIdx.getCol();
 
-      // currently allways using 1st readout
-      Event::CalDigi::CalXtalReadoutCol::const_iterator ro = 
+      // usually using only 1st readout
+      CalDigi::CalXtalReadoutCol::const_iterator ro = 
         (*digiIter)->getReadoutCol().begin();
 
       // PER FACE LOOP
@@ -201,25 +260,58 @@ StatusCode CalTupleAlg::execute() {
         RngNum rng((*ro).getRange(face)); 
         // get adc values 
         float adc = (*ro).getAdc(face);   
+        RngIdx rngIdx(xtalIdx, face, rng);
+
+        // adc range
+        m_tupleEntry.m_calXtalAdcRng[twr][lyr][col][face.getInt()] = rng.getInt();
 
         // get pedestals
         // pedestals
         float ped;
         float sig, cos; // not used
-        RngIdx rngIdx(xtalIdx, face, rng);
         sc = m_calCalibSvc->getPed(rngIdx, ped, sig, cos);
         if (sc.isFailure()) return sc;
 
         // ped subtracted ADC
-        // get reference to 'real' location in big array
-        float &adcPed = m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.getInt()];
-        adcPed =  adc - ped; 
+        float adcPed = adc - ped;
 
         // face signal
         // get reference to 'real' location in big array
         float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.getInt()];
-        sc = m_calCalibSvc->evalFaceSignal(rngIdx,adcPed, faceSignal);
+        sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
         if (sc.isFailure()) return sc;
+
+        if (m_tupleEntry.m_fourRngMode) {
+          // fill in 1st readout which i already have
+          m_tupleEntry.m_calXtalAdcPed[rngIdx.getInt()] = adcPed;
+
+          // loop through remaining 3 readouts
+          for (unsigned char nRO = 1; nRO < 4; nRO++) {
+            // create my own local vars, sos i don't mess up the 
+            // ones used only for 1st readout
+            const CalDigi::CalXtalReadout *ro = (*digiIter)->getXtalReadout(nRO);
+            if (!ro) continue;
+
+            RngNum rng = ro->getRange(face);
+            short adc = ro->getAdc(face);
+            
+            // get pedestals
+            // pedestals
+            float ped;
+            float sig, cos; // not used
+            RngIdx rngIdx(xtalIdx, face, rng);
+            sc = m_calCalibSvc->getPed(rngIdx, ped, sig, cos);
+            if (sc.isFailure()) return sc;
+
+            float adcPed = adc - ped;
+            
+            m_tupleEntry.m_calXtalAdcPed[rngIdx.getInt()] = adcPed;
+          }
+        }
+        else {
+          FaceIdx faceIdx(xtalIdx, face);
+          m_tupleEntry.m_calXtalAdcPed[faceIdx.getInt()] = adcPed;
+        }
       }
     }
   }

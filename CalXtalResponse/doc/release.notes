@@ -1,5 +1,6 @@
-v0r9p1  01/09/05 fewtrell  small edits to remove warnings on linux compile
-v0r9    01/09/05 fewtrell  New CalTupleAlg is separated out from CalXtalRecAlg, only way to ensure that CalTuple code is called on every event.
+v0r9p2  02/13/06 fewtrell  CalTuple now outputs adc_range info.  Also optionally CalTuple outputs 4-range adc data.
+v0r9p1  01/09/06 fewtrell  small edits to remove warnings on linux compile
+v0r9    01/09/06 fewtrell  New CalTupleAlg is separated out from CalXtalRecAlg, only way to ensure that CalTuple code is called on every event.
 v0r8p2  12/30/05 fewtrell  CalTuple now saves an entry for _every_ event regardless of whether there is cal data or not.  This is basically a merge from v0r7p7 branch update.
 v0r8p1  12/14/05 fewtrell  new CalXtalRecAlg.tupleFilename jobOption allows CalTuple to be created in separate file from other tuples.
 v0r8    12/05/05 fewtrell  new CalTrigTool can be called either by caldigi or by triggeralg.  new unit_test.  caltuple is now same format as other tuples, easier to merge.
