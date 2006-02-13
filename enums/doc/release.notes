@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r3p2  13-Feb-2006 EAC Added sentinel values to catch undefined states to Lsf.h.  Improved comments.
 v0r3p1  02-Feb-2006 EAC Updated Lsf.h to match Dfi header files instead of documentation.
 v0r3    01-Feb-2006 EAC Add Lsf.h for Lsf enums.
 v0r2p1  27-Jun-2005 HMK add author
