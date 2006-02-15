@@ -14,7 +14,7 @@ use xmlBase    v5r*
 use rdbModel v2r*
 
 
-set MYSQL_HOST       centaurusa.slac.stanford.edu
+set MYSQL_HOST       glastCalibDB.slac.stanford.edu
 set MYSQL_METATABLE  metadata_v2r1
 
 apply_pattern shared_library
