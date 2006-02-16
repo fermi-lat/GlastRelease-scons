@@ -52,7 +52,7 @@ def rootHists(energyData):
     for eng in range(2):
 
         hName = "h_Summary_%s" % calConstant.CLEHE[eng]      
-        hs = ROOT.TH1F(hName, 'adc2nrg', 100, 0.0, errLimit)
+        hs = ROOT.TH1F(hName, 'adc2nrg', 100, 0.0, heErrLimit)
         hs.SetLineColor(eng + 1)
         hs.SetStats(False)
         
