@@ -4,7 +4,7 @@ version v1r7p4
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use GlastPolicy
-use RootcintPolicy v6r* GlastPolicy
+use RootcintPolicy v5r* GlastPolicy
 use commonRootData v2r*
 
 # See RootPolicy for discussion of this pattern
