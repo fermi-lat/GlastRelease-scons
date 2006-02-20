@@ -24,7 +24,10 @@ ApplicationMgr.ExtSvc = {
     "LivetimeSvc" };
 
 // These needed to define CalTrigTool for TriggerAlg. 
-ApplicationMgr.DLLs   += {"CalXtalResponse"}; 
+ApplicationMgr.DLLs   += {"CalXtalResponse", "CalibSvc"}; 
+ApplicationMgr.ExtSvc += {"CalCalibSvc", "CalibDataSvc"};
+#include "$CALIBSVCROOT/src/defaultOptions.txt"
+#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
     
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
@@ -41,7 +44,7 @@ Top.Members={"Sequencer/Generator"};
 Generator.Members     = {"FluxAlg", "PointInfoAlg",  "Sequencer/Trigger"};
 
 Trigger.Members       = {"TriggerAlg"};
-Trigger.BranchMembers = {"TriggerAlg", "InterleaveAlg", "TestAlg"};
+Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
     
 
 // -----------------------------------------------
@@ -52,7 +55,8 @@ FluxAlg.sources = {"sampled_background"};
 
 // the "background" to sample for mixing
 InterleaveAlg.RootFile = "$(ROOTTESTDATAROOT)/data/default/merit.root";
-ApplicationMgr.EvtMax = 100; 
+InterleaveAlg.DisableList += {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*"};
+ApplicationMgr.EvtMax = 50; 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 

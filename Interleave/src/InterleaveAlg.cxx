@@ -258,6 +258,7 @@ void InterleaveAlg::copyEventInfo()
     setLeafValue(liveLeaf,      EvtLiveTime);
 
     //  make the source id negative; make zero -1 by offset. (2's complement)
+    if( sourceLeaf==0 ) return; // testing mode
     float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());
     sourceid=-1-sourceid;
 

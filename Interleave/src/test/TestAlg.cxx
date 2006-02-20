@@ -79,6 +79,8 @@ private:
     double EvtElapsedTime;
     float EvtLiveTime;
 
+    float McSourceId; // for testing
+
 };
 
 
@@ -93,6 +95,7 @@ TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , EvtEventId(0)
 , EvtElapsedTime(0)
 , EvtLiveTime(0)
+, McSourceId(0)
 {
 
 }
@@ -103,6 +106,7 @@ StatusCode TestAlg::initialize() {
 
 
     MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "initialize" << endreq;
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -120,10 +124,12 @@ StatusCode TestAlg::initialize() {
 
     std::string treename("MeritTuple");
 
+    // a minimal set of items to test mechanism.
     m_rootTupleSvc->addItem(treename, "EvtRun",         &EvtRun );
     m_rootTupleSvc->addItem(treename, "EvtEventId",     &EvtEventId );
     m_rootTupleSvc->addItem(treename, "EvtElapsedTime", &EvtElapsedTime );
     m_rootTupleSvc->addItem(treename, "EvtLiveTime",    &EvtLiveTime );
+    m_rootTupleSvc->addItem(treename, "McSourceId",     &McSourceId );
 
     std::cout << "Testing the rates\n\t lat     trigger     downlink\n"<< std::endl;
     for( double lat = 0; lat<45; lat+=5){

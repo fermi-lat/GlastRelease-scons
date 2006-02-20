@@ -31,6 +31,23 @@ BackgroundSelection::BackgroundSelection(const std::string& rootFileDirectory,
 , m_disableList(disableList)
 , m_rootFileDirectory(rootFileDirectory)
 {
+    // if is is root file, set it up
+    if( rootFileDirectory.find(".root")==std::string::npos) return;
+    m_inputFile = new TFile(rootFileDirectory.c_str(), "readonly");
+    if (0 == m_inputFile) {
+        TString error = "Did not find file[" + rootFileDirectory + "]";
+        throw std::invalid_argument(error.Data());
+    }
+    // get the tree:
+    m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get("MeritTuple"));
+    if (0 == m_inputTree) {
+        throw std::invalid_argument("Did not find the TTree MeritTuple");
+    }
+
+    m_treeInitialized = 2; // for single-file mode
+
+    setLeafPointers(m_inputTree);
+
 }
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
@@ -58,7 +75,7 @@ void BackgroundSelection::setLeafPointers(TTree* pTree)
         // here copy the value pointer from the merit tuple
         TLeaf* otherleaf = m_outputTree->GetLeaf(leaf->GetName());
         if( otherleaf==0){
-            std::cout << "No leaf " << leaf->GetName() << std::endl;
+            std::cout << "BackgroundSelection::setLeafPointesrs: did not find the leaf " << leaf->GetName() << std::endl;
         }else{
             leaf->SetAddress(otherleaf->GetValuePointer());
         }
@@ -130,55 +147,58 @@ void BackgroundSelection::disableBranches(TTree* t) //const char* pattern)
 
     // restore this, if needed, for cuts
     t->SetBranchStatus("FT1ZenithTheta", 1);
+    t->SetBranchStatus("McSourceId", 1);
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::setCurrentTree(double maglat) 
 {
+    if( m_treeInitialized ==2) return; // single file mode, it was initialized in the constructor
+
     double binLower = floor(fabs(maglat));
     if ( !m_treeInitialized  || (binLower != m_currentBinLower) ) {
-      if (m_treeInitialized) {
-	// need to clean up current file:
-	m_inputFile->Close();  // not sure if we need to close a readonly file
-	delete m_inputFile;
-      } else {
-	// we will be initialized now:
-	m_treeInitialized = 1;
-      }
-      
-      // save current bin lower bound for next comparison:
-      m_currentBinLower = binLower; 
+        if (m_treeInitialized) {
+            // need to clean up current file:
+            m_inputFile->Close();  // not sure if we need to close a readonly file
+            delete m_inputFile;
+        } else {
+            // we will be initialized now:
+            m_treeInitialized = 1;
+        }
 
-      // construct tree name from current geolat:
-      TString tree_name;
-      tree_name += (int)binLower;
-      tree_name += "to";
-      tree_name += ((int)binLower + 1);
-	
-      // and then construct file name:
-      TString file_name(m_rootFileDirectory);
-      file_name+="/";
-      file_name+=tree_name;
-      file_name+=".root";
+        // save current bin lower bound for next comparison:
+        m_currentBinLower = binLower; 
 
-      // open file for reading:
-      m_inputFile = new TFile(file_name.Data(), "readonly");
-      if (0 == m_inputFile) {
-	TString error = "Did not find file[" + file_name + "]";
-	throw std::invalid_argument(error.Data());
-      }
-      
-      // get the tree:
-      m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.Data()));
-      if (0 == m_inputTree) {
-	TString error = "Did not find tree[" + tree_name + "] in root file";
-	throw std::invalid_argument(error.Data());
-      }
+        // construct tree name from current geolat:
+        TString tree_name;
+        tree_name += (int)binLower;
+        tree_name += "to";
+        tree_name += ((int)binLower + 1);
 
-      // start at a random location in the tree:
-      m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1));
+        // and then construct file name:
+        TString file_name(m_rootFileDirectory);
+        file_name+="/";
+        file_name+=tree_name;
+        file_name+=".root";
 
-      // point tree to buffer for copying events:
-      setLeafPointers(m_inputTree);
-      
+        // open file for reading:
+        m_inputFile = new TFile(file_name.Data(), "readonly");
+        if (0 == m_inputFile) {
+            TString error = "Did not find file[" + file_name + "]";
+            throw std::invalid_argument(error.Data());
+        }
+
+        // get the tree:
+        m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.Data()));
+        if (0 == m_inputTree) {
+            TString error = "Did not find tree[" + tree_name + "] in root file";
+            throw std::invalid_argument(error.Data());
+        }
+
+        // start at a random location in the tree:
+        m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1));
+
+        // point tree to buffer for copying events:
+        setLeafPointers(m_inputTree);
+
     }  
 }
