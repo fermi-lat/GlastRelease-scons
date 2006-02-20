@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r13p3 10-feb-2006  THB: same interface to find pointers also gets a tree: fix that
  * v3r13p1,2 08-feb-2006  THB: minor tweak to find pointers to other than float or double
  * v3r13  07-feb-2006  THB: implement uint
  * v3r12p1 20-jan-2006 HMK : patch to include <string> in INtupleWriterSvc.h
