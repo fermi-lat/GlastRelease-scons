@@ -538,7 +538,8 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
     if( itemName.empty()){
         // assume this is a request for the tree
         pval = (void *)t;
-        return false;
+        saveDir->cd();
+        return itemName;
     }
     TLeaf* leaf = t->GetLeaf(itemName.c_str());
     if( leaf==0){
