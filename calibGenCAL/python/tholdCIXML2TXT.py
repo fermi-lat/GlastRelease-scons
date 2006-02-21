@@ -66,20 +66,22 @@ if __name__ == '__main__':
     # print out txt file.
     for twr in towers:
         for lyr in range(0,8):
+            # calCalibXML uses 'row' indexing, not layer
+            row = calCalibXML.layerToRow(lyr)
             for col in range(0,12):
                 for face in range(0,2):
                     print delim.join([str(x) for x in twr, lyr, col, face,\
-                                     adcData[twr][lyr][face][col][0],
-                                     adcData[twr][lyr][face][col][1],\
-                                     adcData[twr][lyr][face][col][2],\
-                                     uldData[twr][lyr][face][col][0],\
-                                     uldData[twr][lyr][face][col][1],\
-                                     uldData[twr][lyr][face][col][2],\
-                                     uldData[twr][lyr][face][col][3],\
-                                     pedData[twr][lyr][face][col][0],\
-                                     pedData[twr][lyr][face][col][1],\
-                                     pedData[twr][lyr][face][col][2],\
-                                     pedData[twr][lyr][face][col][3]])
+                                     adcData[twr][row][face][col][0],
+                                     adcData[twr][row][face][col][1],\
+                                     adcData[twr][row][face][col][2],\
+                                     uldData[twr][row][face][col][0],\
+                                     uldData[twr][row][face][col][1],\
+                                     uldData[twr][row][face][col][2],\
+                                     uldData[twr][row][face][col][3],\
+                                     pedData[twr][row][face][col][0],\
+                                     pedData[twr][row][face][col][1],\
+                                     pedData[twr][row][face][col][2],\
+                                     pedData[twr][row][face][col][3]])
 
  
 

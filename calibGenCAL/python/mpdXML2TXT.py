@@ -65,11 +65,11 @@ if __name__ == '__main__':
 
     # print out txt file.
     for twr in towers:
-        for lyr in range(0,8):
+        for lyr in range(8):
             # calCalibXML uses 'row' indexing, not layer
             row = calCalibXML.layerToRow(lyr)
-            for col in range(0,12):
-                for diode in range(0,1):
+            for col in range(12):
+                for diode in range(2):
                     # from calCalibXML doc, array layout is as follows
                     #Returns: A Numeric array containing the energy conversion data
                     #         of shape (16, 8, 12, 8) The last dimension contains
