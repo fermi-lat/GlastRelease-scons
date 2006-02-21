@@ -13,6 +13,7 @@
 #include "LdfEvent/DiagnosticData.h"
 #include "LdfEvent/EventSummaryData.h"
 #include "LdfEvent/Gem.h"
+#include "LdfEvent/LsfMetaEvent.h"
 #include "idents/CalXtalId.h"
 
 //static const AlgFactory<test_LdfConverterAlg> Factory;
@@ -83,28 +84,37 @@ StatusCode test_LdfConverterAlg::execute()
 
   //  sc = readDigiData();
 
-    SmartDataPtr<Event::EventHeader> evt(eventSvc(), EventModel::EventHeader);
-    if (!evt) {
-        log << MSG::ERROR << "Did not retrieve event" << endreq;
-        return StatusCode::FAILURE;
-    }
+    //SmartDataPtr<Event::EventHeader> evt(eventSvc(), EventModel::EventHeader);
+    //if (!evt) {
+   //     log << MSG::ERROR << "Did not retrieve event" << endreq;
+   //     return StatusCode::FAILURE;
+   // }
     //Check event header
-    int eventId = evt->event();
-    int run = evt->run();
-    log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
-	double time = evt->time();
-	log << MSG::INFO << "Time (Seconds since Mission Start): " << time << endreq;
-	log << MSG::INFO << "Livetime (seconds) " << evt->livetime() << endreq;
+   // int eventId = evt->event();
+   // int run = evt->run();
+   // log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
+//	double time = evt->time();
+//	log << MSG::INFO << "Time (Seconds since Mission Start): " << time << endreq;
+//	log << MSG::INFO << "Livetime (seconds) " << evt->livetime() << endreq;
 
-    SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
-    if (!gem) {
-        log << MSG::INFO << "No GEM available" << endreq;
-    } else {
-       log << MSG::INFO;
-       (*gem).fillStream(log.stream());
-	   log << endreq;
-    }
+  //  SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
+  //  if (!gem) {
+  //      log << MSG::INFO << "No GEM available" << endreq;
+  //  } else {
+  //     log << MSG::INFO;
+  //     (*gem).fillStream(log.stream());
+//	   log << endreq;
+//    }
   
+
+ //   SmartDataPtr<LsfEvent::MetaEvent> metaEvent(eventSvc(), "/Event/MetaEvent");
+ //   if (!metaEvent) 
+  //    log << MSG::INFO << "No MetaEvent on TDS" << endreq;
+   // else {
+   //   log << MSG::INFO;
+   //   metaEvent->fillStream(log.stream());
+   //   log << endreq;
+   // }
 
     /*SmartDataPtr<LdfEvent::DiagnosticData> diag(eventSvc(), "/Event/Diagnostic");
     if (!diag) {
@@ -117,10 +127,10 @@ StatusCode test_LdfConverterAlg::execute()
     log << endreq;
 */
 
-    sc = readEventSummaryData();
-    if (sc.isFailure()) {
-        return sc;
-    }
+ //   sc = readEventSummaryData();
+ //   if (sc.isFailure()) {
+ //       return sc;
+ //   }
 
     sc = readTkrDigiData();
     if (sc.isFailure()) {
