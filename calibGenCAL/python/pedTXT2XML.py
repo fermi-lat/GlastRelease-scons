@@ -106,11 +106,11 @@ if __name__ == '__main__':
         (twr, lyr, col, face, rng, ped, sig) = vals
         
         # convert array index values to integer.
-        twr = int(twr)
-        lyr = int(lyr)
-        col = int(col)
+        twr  = int(twr)
+        lyr  = int(lyr)
+        col  = int(col)
         face = int(face)
-        rng = int(rng)
+        rng  = int(rng)
 
         # convert offline face numbering to online face numbering
         face = offline_face_to_online[face]
