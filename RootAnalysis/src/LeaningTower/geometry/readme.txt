@@ -11,7 +11,34 @@ values are assumed to be 0.
 Z, the vertical position, is centered in the material (the substrate has a
 thickness of 400um).
 
-********************************************************************************
+For historical reasons, what is called tower here, is in reality a TkrFM.
+Instead, bay describes the position of a real tower (TkrFM + CAL) in the grid.
+The corresponces are:
+
+Bay position   TkrFM
+       0         A
+       1         2
+       2        14
+       3        15
+       4         B
+       5         1
+       6        12
+       7        13
+       8         5
+       9         3
+      10         7
+      11         9
+      12         6
+      13         4
+      14        10
+      15        11
+
+Full LAT **********************************************************************
+
+Bay*geometry135005524.txt are retrieved from the cat of runs 135005518, 20, 22,
+and 24.
+
+*******************************************************************************
 
 stack2geometry.txt
     describes the geometry of "stack2".
@@ -75,7 +102,7 @@ TowerBgeometry306000517.txt
 
 
 
-fitting files: *****************************************************************
+fitting files: ****************************************************************
 
 Tower0FittingPlanes.txt
     contains a setup where the residuals of a particular plane is being
