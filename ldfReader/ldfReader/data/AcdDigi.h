@@ -45,7 +45,7 @@ namespace ldfReader {
                     printf("Channel\tPHA\trange\tside\toddParity\theaderParity\tmore\tVeto\tAccept\n");
                     printf("\t\t\t\terror\n");
                 }
-                printf("%d\t%d\t%d\t%c\t%d\t%d\t%d\t%d\n", m_channel, m_pha, m_range, side, m_oddError, m_headerParity, m_more, m_hit, m_accept);
+                printf("%d\t%d\t%d\t%c\t%d\t%d\t%d\t%d\t%d\n", m_channel, m_pha, m_range, side, m_oddError, m_headerParity, m_more, m_hit, m_accept);
             };
 
             /// Pulse Height Analysis

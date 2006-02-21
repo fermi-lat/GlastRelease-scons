@@ -17,6 +17,9 @@ $Header$
 
 #include "eventRet/LPA_Merger.h"
 
+#include "lsfDataStore/LsfTime.h"
+#include "./ccsds2lsf.h"
+
 namespace ldfReader {
 
 DfiParser::DfiParser() {
@@ -113,6 +116,40 @@ int DfiParser::nextEvent() {
 
 }
 
+int DfiParser::readContextAndInfo() {
+
+    //m_context.dump();
+    //m_info.dump();
+    lsfDataStore::MetaEvent *metaEvent = ldfReader::LatData::instance()->getMetaEventPtr();
+
+    lsfDataStore::TimeTone current;
+    m_cnv.timeToneCnv(m_context.current, current);
+    lsfDataStore::TimeTone previous;
+    m_cnv.timeToneCnv(m_context.previous, previous);
+
+    lsfDataStore::GemTime gemTime(m_info.timeHack.hacks, m_info.timeHack.tics);
+    lsfDataStore::Time lsfTime(current, previous, gemTime, m_info.timeTics);
+    lsfTime.set(current,previous, gemTime, m_info.timeTics);
+    metaEvent->setTime(lsfTime);
+
+    lsfDataStore::RunInfo run;
+    m_cnv.runInfoCnv(m_context.run, run);
+    metaEvent->setRun(run);
+
+    lsfDataStore::DatagramInfo datagramInfo;
+    m_cnv.datagramInfoCnv(m_context.open, m_context.close, datagramInfo);
+    metaEvent->setDatagram(datagramInfo);
+
+    lsfDataStore::GemScalers scalers;
+    m_cnv.scalerCnv(m_context.scalers, scalers);
+    metaEvent->setScalers(scalers);
+
+    lsfDataStore::LpaConfiguration config(m_info.hardwareKey, m_info.softwareKey);
+    metaEvent->setConfiguration(config);
+
+    return 0;
+}
+
 int DfiParser::loadData() {
 // Purpose and Method:  This routine loads the data from one event
 // The current event in the EBF file.
@@ -130,6 +167,9 @@ int DfiParser::loadData() {
 //      ldfReader::LatData::instance()->setRunId(m_runId);
 
         ldfReader::LatData::instance()->setEventSizeInBytes(m_eventSize);
+
+        readContextAndInfo();
+
 
         EbfEventParser ldf;
         ldf.iterate(m_start, m_end);

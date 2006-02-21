@@ -25,6 +25,39 @@ namespace ldfReader {
         return m_instance;
     }
 
+    void LatData::print() const {
+      std::cout << "MetaEvent:\n";
+      const lsfDataStore::RunInfo run = m_metaEvent.run();
+      const lsfDataStore::DatagramInfo dgm = m_metaEvent.datagram();
+      const lsfDataStore::GemScalers scalers = m_metaEvent.scalers();
+      const lsfDataStore::Time time = m_metaEvent.time();
+
+/*
+      printf("MetaEvent: \n");
+      time.print();
+      scalers.print();
+      run.print();
+      dgm.print();
+      time.printHack("LSE_Info:  ");
+
+      const lsfDataStore::Configuration *cfg = m_metaEvent.configuration();
+      if (cfg) 
+          cfg->print("LPA_Info:");
+
+      printf("\n");
+*/
+      std::cout << time << scalers << run << dgm 
+                << "LSE_Info:  timeTicks = 0x" << std::hex << std::setfill('0')
+                << time.timeTicks() << " (" << std::dec << time.timeTicks()
+                << ")\nLSE_Info:  " << time.timeHack() << std::endl;
+      const lsfDataStore::Configuration *cfg = m_metaEvent.configuration();
+      if (cfg) {
+          const lsfDataStore::LpaConfiguration* lpa = cfg->castToLpaConfig();
+          //std::cout << "LPA_Info:" << *lpa << std::endl;
+      }
+
+  }
+
 
     TowerData* LatData::getTower(unsigned int id) {
         if (m_towerMap.find(id) != m_towerMap.end()) {
@@ -68,6 +101,7 @@ namespace ldfReader {
         m_aem.clear();
         m_flags = 0;
         m_eventSize = 0;
+        m_metaEvent.clear();
     }
 
 
