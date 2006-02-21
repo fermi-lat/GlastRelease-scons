@@ -1,11 +1,12 @@
 package LdfEvent
-version v2r13p2
+version v3r2
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use GaudiInterface * IExternal
 use GlastPolicy v*
 use ldfExt v* IExternal
 use enums v*
+use lsfDataStore v*
 
 apply_pattern package_include
 apply_pattern package_linkopts
