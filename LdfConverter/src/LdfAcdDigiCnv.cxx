@@ -62,7 +62,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
 
         unsigned short pha[2] = {0,0};
         bool hitMapArr[2] = {false, false};
-        bool acceptMapArr[2] = {true, true};
+        bool acceptMapArr[2] = {false, false};
         bool cnoArr[2] = {false, false};
         Event::AcdDigi::Range range[2] = {Event::AcdDigi::LOW, Event::AcdDigi::LOW};
         Event::AcdDigi::ParityError error[4] = { Event::AcdDigi::NOERROR, Event::AcdDigi::NOERROR, Event::AcdDigi::NOERROR, Event::AcdDigi::NOERROR};

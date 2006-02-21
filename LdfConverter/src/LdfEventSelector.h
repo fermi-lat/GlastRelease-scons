@@ -7,7 +7,8 @@
 #include "GaudiKernel/Service.h"
 #include "src/LdfEvtIterator.h"
 
-#include "ldfReader/LdfParser.h"
+#include "ldfReader/EbfParser.h"
+//#include "ldfReader/DfiParser.h"
 
 #include <list>
 #include <vector>
@@ -64,6 +65,8 @@ private:
     EBFFITS,
     LDFFILE, //When the input is a raw file
     LDFFITS, //When the input is fitsified raw ldf
+    LSFFILE, // New LSF file 
+    CCSDSFILE, // Access to packet archive setup through XML file
     NONE     //When there is no input
   };
     
@@ -72,7 +75,7 @@ private:
   //! Used internally to get the MaxEvent from the ApplicationMgr
   StatusCode LdfEventSelector::getMaxEvent();
 
-  /// Job options parameter. Options are LDFFILE, LDFFITS
+  /// Job options parameter. Options are LDFFILE, LDFFITS, LSFFILE
   StringProperty        m_storageType;
 
   /// Job options parameter. List of input data files
@@ -88,7 +91,8 @@ private:
   IntegerProperty       m_evtMax;
   std::string           m_instrument;  // for now should be EM or LAT
   std::string           m_fileName;
-  ldfReader::LdfParser*            m_ebfParser;
+  ldfReader::EbfParser* m_ebfParser;
+//  ldfReader::DfiParser* m_dfiParser;
   IntegerProperty       m_ebfDebugLevel;  // If 0 (the default) no debug.
   IntegerProperty       m_sweepSearch; // If 0, skip search
   IAddressCreator*      m_addrCreator;

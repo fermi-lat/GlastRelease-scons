@@ -18,7 +18,10 @@
 #include "ldfReader/data/LatData.h"
 #include "ldfReader/LdfException.h"
 #include <exception>
+#include <fstream>
 #include "facilities/Util.h"
+#include "ldfReader/LdfParser.h"
+#include "ldfReader/DfiParser.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -96,6 +99,15 @@ LdfEventSelector::~LdfEventSelector() {
 
 }
 
+bool fileExists(const std::string &fileName) {
+
+    std::fstream checkFile;
+    checkFile.open(fileName.c_str(), std::fstream::in);
+    checkFile.close();
+    if (checkFile.fail()) return false;
+    return true;
+}
+
 /*
    Judging by the name setCriteria (part of IEvtSelector interface),
    we're not using this is the expected way.  "criteria" seems like
@@ -107,20 +119,45 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     StatusCode sc;
     MsgStream log(msgSvc(), name());
 
-    if ( (storageType == "LDFFILE") || (storageType == "EBFFILE") ) {
-      m_criteriaType = LDFFILE;
-
+    if (storageType == "CCSDSFILE") {
+      try {
+      m_criteriaType = CCSDSFILE;
       m_fileName = (m_inputList.value())[0];
-
-      // More files could be specified in the list.  Don't know what
-      // Heather had in mind, so for now ignore any files beyond the
-      // first one.
-
       facilities::Util::expandEnvVar(&m_fileName);
 
-      // 2nd arg. is true if FITS file, false if raw ebf
+      if (!fileExists(m_fileName)) {
+          log << MSG::ERROR << "Input file " << m_fileName 
+              << " does not exist" << endreq;
+          return(StatusCode::FAILURE);
+      }
+      
+      log << MSG::DEBUG << "ctor DfiParser " << m_fileName << endreq;
+      m_ebfParser = new ldfReader::DfiParser(m_fileName);
+      log << MSG::DEBUG << "return from ctor" << endreq;
+      } catch(...) {
+        log << MSG::ERROR << "failed to setup DfiParser" << endreq;
+        return(StatusCode::FAILURE);
+      }
+    } else if ( (storageType == "LDFFILE") || (storageType == "EBFFILE") ) {
       try {
+          m_criteriaType = LDFFILE;
+
+          m_fileName = (m_inputList.value())[0];
+
+          // More files could be specified in the list.  Don't know what
+          // Heather had in mind, so for now ignore any files beyond the
+          // first one.
+
+          facilities::Util::expandEnvVar(&m_fileName);
+          if (!fileExists(m_fileName)) {
+              log << MSG::ERROR << "Input file " << m_fileName 
+                  << " does not exist" << endreq;
+              return(StatusCode::FAILURE);
+          }
+
+          // 2nd arg. is true if FITS file, false if raw ebf
           m_ebfParser = new ldfReader::LdfParser(m_fileName, false, m_instrument);
+          m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
       } catch(LdfException &e) {
          log << MSG::ERROR << "LdfException: " << e.what() << endreq;
          return(StatusCode::FAILURE);
@@ -128,20 +165,24 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
         log << MSG::ERROR << "failed to setup LdfParser" << endreq;
         return(StatusCode::FAILURE);
       }
-      m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
 
     } else if ((storageType == "LDFFITS") || (storageType == "EBFFITS")) {
-      m_criteriaType = LDFFITS;
-
-      m_fileName = (m_inputList.value())[0];
-
-      // More files could be specified in the list.  Don't know what
-      // Heather had in mind, so for now ignore any files beyond the
-      // first one.
-
-      facilities::Util::expandEnvVar(&m_fileName);
-
       try {
+          m_criteriaType = LDFFITS;
+
+          m_fileName = (m_inputList.value())[0];
+
+          // More files could be specified in the list.  Don't know what
+          // Heather had in mind, so for now ignore any files beyond the
+          // first one.
+
+          facilities::Util::expandEnvVar(&m_fileName);
+          if (!fileExists(m_fileName)) {
+              log << MSG::ERROR << "Input file " << m_fileName 
+                  << " does not exist" << endreq;
+              return(StatusCode::FAILURE);
+          }
+
           m_ebfParser = new ldfReader::LdfParser(m_fileName, true, m_instrument);
       } catch(LdfException &e) {
          log << MSG::ERROR << "LdfException: " << e.what() << endreq;
@@ -171,87 +212,21 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     return sc;
 }
 
-/*
-// Doesn't look like this is needed
-StatusCode LdfEventSelector::parseStringInList( const std::string& namelist, 
-                                                 ListName* inputDataList ) {
-    // Purpose and Method: Parse criteria string: Fill in the list of input 
-    //  files or Job Id's.  Also parse out an environment variable and 
-    //  substitute for it.
-    if(m_criteriaType != NONE)
-    {
-        std::string rest = namelist;
-        std::string substitute;
-        while(true) {
-            int ipos = rest.find_first_not_of(" ,");
-            if (ipos == -1 ) break;
-            rest = rest.substr(ipos, -1);            // remove blanks before
-            int lpos  = rest.find_first_of(" ,");    // locate next blank
-            if (lpos == -1 ) {
-                rest = rest.substr(0,lpos );
-                
-                //now pull out and substitute for environment vaiables
-                int envStart = rest.find_first_of("$(");
-                int envEnd = rest.find_first_of(")");
-                
-                // add 2 characters to get rid of $(
-                int afterBracket = envStart + 2;
-                
-                if(!((envStart==-1)||(envEnd==-1)))
-                {
-                    std::string envVariable = rest.substr(afterBracket,(envEnd-afterBracket));
-                    const char * instruPath = ::getenv(envVariable.data());
-                    substitute = rest.replace(envStart,(envEnd+1), instruPath);
-                    inputDataList->push_back(substitute);       // insert last item in list and
-                    break;
-                }
-                inputDataList->push_back(rest);    
-                break;                                 
-            }
-            inputDataList->push_back( rest.substr(0,lpos ));   // insert in list
-            rest = rest.substr(lpos, -1);                      // get the rest
-        }
-        
-        return StatusCode::SUCCESS;
-    } else {
-        return StatusCode::FAILURE;
-    }
-}
-*/
 
 StatusCode LdfEventSelector::setCriteria( const SelectionCriteria& ) {
     return StatusCode::SUCCESS;
 }
 
 
-/*
-StatusCode LdfEventSelector::getFileName(ListName::const_iterator* inputIt, 
-                                           std::string& fName) const {
-    // Purpose and Method:  Find out the name of the file from list of files 
-    //  or Jobs
-
-    MsgStream log(msgSvc(), name());
-    
-    if( m_criteriaType == LDFFILE){                 // If CRITERIA = FILE Get File name
-        fName = **inputIt;
-    } else if(m_criteriaType == NONE)  {
-        log << MSG::ERROR << "Selection Criteria set to NONE can't get file Name" << endreq;
-        return StatusCode::FAILURE;
-    } else {
-        log << MSG::ERROR << "Wrong Selection Criteria, either NONE or IRFFILE" << endreq;
-        return StatusCode::FAILURE;
-    }
-    
-    return StatusCode::SUCCESS;
-}
-*/
 
 IEvtSelector::Iterator* LdfEventSelector::begin() const {
     // Purpose and Method:  Called by ApplicationMgr::initialize( )
     MsgStream log(msgSvc(), name());
     //    StatusCode sc;       [unused for now]
 
-    if ((m_criteriaType == LDFFILE) || (m_criteriaType == LDFFITS) ) {
+    if ((m_criteriaType == CCSDSFILE) || 
+        (m_criteriaType == LDFFILE) || 
+        (m_criteriaType == LDFFITS) ) {
         
         log << MSG::DEBUG << " Input data set is " << m_fileName << endreq;
         m_it->m_recId = 0;                           
@@ -280,17 +255,17 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
   const {
     MsgStream log(msgSvc(), name());
 
+    log << MSG::DEBUG << "next" << endreq;
     // static counter for use when we want to skip to event N
     static unsigned int counter = 0;
     
     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
     unsigned marker;
     try {
-    if  ((m_criteriaType == LDFFILE) ||
+    if  ((m_criteriaType == CCSDSFILE) ||
+         (m_criteriaType == LDFFILE) ||
          (m_criteriaType == LDFFITS) )
     {
-   //     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
-        
         
         irfIt->m_evtCount++;
         counter++;  //increment skip counter too
