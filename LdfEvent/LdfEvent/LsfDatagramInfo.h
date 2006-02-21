@@ -7,6 +7,8 @@
 
 #include "enums/Lsf.h"
 
+#include "lsfDataStore/LsfDatagramInfo.h"
+
 /** @class DatagramInfo
 * @brief encapsulate the Datagram id parts of the event context
 *
@@ -38,6 +40,17 @@ namespace LsfEvent {
 	m_closeAction(cAction), m_closeReason(cReason),
 	m_datagrams(datagrams),m_modeChanges(modeChanges){
     }
+    
+    DatagramInfo(const lsfDataStore::DatagramInfo &datagram)
+     : m_openAction(datagram.openAction()), m_openReason(datagram.openReason()),
+       m_crate(datagram.crate()), m_mode(datagram.mode()),
+       m_closeAction(datagram.closeAction()), 
+       m_closeReason(datagram.closeReason()), 
+       m_datagrams(datagram.datagrams()), 
+       m_modeChanges(datagram.modeChanges()) {
+
+     }
+
 
     /// Copy c'tor.  Nothing fancy, just copy all values.
     DatagramInfo( const DatagramInfo& other ) 
@@ -133,11 +146,13 @@ namespace LsfEvent {
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const                            {
       s << "class DatagramInfo : "
-	<< EventField( EventFormat::field12 )
-	<< m_openAction << ' ' << m_openReason << ' ' 
-	<< m_crate << ' ' << m_mode << ' '
-	<< m_closeAction << ' ' << m_closeReason << ' ' 
-	<< m_modeChanges << ' ' << m_datagrams;      
+	<< "openAction " << m_openAction << "\n"
+        << "openReason " << m_openReason << "\n" 
+	<< "crate " << m_crate << "\n"
+        << "mode " << m_mode << "\n" 
+	<< "closeAction " << m_closeAction << "\n"
+        << "closeReason " << m_closeReason << "\n" 
+	<< "nmodes = " << m_modeChanges << ", ndgms = " << m_datagrams;      
       return s;
     }
     

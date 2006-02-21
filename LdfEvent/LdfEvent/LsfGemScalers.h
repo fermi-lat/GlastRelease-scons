@@ -6,6 +6,7 @@
 #include "Event/TopLevel/Definitions.h"
 
 #include "enums/Lsf.h"
+#include "lsfDataStore/LsfGemScalers.h"
 
 /** @class GemScalers
 * @brief FIXME
@@ -36,6 +37,13 @@ namespace LsfEvent {
        m_prescaled(prescaled),m_discarded(discarded),
        m_sequence(sequence),m_deadzone(deadzone){
     }
+
+    GemScalers(const lsfDataStore::GemScalers& scalers)
+      :m_elapsed(scalers.elapsed()),m_livetime(scalers.livetime()),
+       m_prescaled(scalers.prescaled()),m_discarded(scalers.discarded()),
+       m_sequence(scalers.sequence()),m_deadzone(scalers.deadzone()){
+    }
+
     
     /// Copy c'tor.  Nothing fancy, just copy all values.
     GemScalers(const GemScalers& other)
@@ -115,9 +123,12 @@ namespace LsfEvent {
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const                            {
       return s << "class GemScalers : "
-	       << EventField( EventFormat::field12 )
-	       << m_elapsed << ' ' << m_livetime << ' ' << m_prescaled << ' ' 
-	       << m_discarded << ' ' << m_sequence << ' ' << m_deadzone;
+	       << "elapsed = " << m_elapsed << "\n" 
+               << "livetime = " << m_livetime << "\n" 
+               << "prescaled = " << m_prescaled << "\n" 
+	       << "dicarded = " << m_discarded << "\n"
+               << "sequence = " << m_sequence << "\n"
+               << "deadzone = " << m_deadzone;
     }
       
     

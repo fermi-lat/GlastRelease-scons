@@ -8,6 +8,8 @@
 #include "LdfEvent/LsfTimeTone.h"
 #include "LdfEvent/LsfGemTime.h"
 
+#include "lsfDataStore/LsfTime.h"
+
 /** @class Time
 *
 * $Header$
@@ -38,6 +40,12 @@ namespace LsfEvent {
        m_timeHack(other.timeHack()),m_timeTicks(other.timeTicks()){
     }
     
+    Time( const lsfDataStore::Time &time )
+      :m_current(time.current()), m_previous(time.previous()),
+       m_timeHack(time.timeHack()), m_timeTicks(time.timeTicks()) {
+
+    }
+
     /// D'tor.  Nothing special.
     virtual ~Time(){
     }
@@ -100,11 +108,10 @@ namespace LsfEvent {
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const                            {
       return s << "class Time : " << std::endl
-	       << EventField( EventFormat::field12 )
-	       << m_current << std::endl
-	       << m_previous << std::endl
-	       << m_timeHack << std::endl
-	       << m_timeTicks;
+	       << "CurrentTimeTone: " <<  m_current << "\n" 
+	       << "PreviousTimeTone: " << m_previous << "\n"
+	       << "TimeHack: " << m_timeHack << "\n" 
+	       << "TimeTicks: " << m_timeTicks;
     }
       
     
