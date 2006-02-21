@@ -1,5 +1,5 @@
 package HepRepCorba
-version v1r6
+version v1r6dc1
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
