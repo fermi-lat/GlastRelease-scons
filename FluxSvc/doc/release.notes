@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   21-feb-06  v6r32p3 THB  Test program needed calibUtil, required by Trigger. (unfortunate dependency) 
    22-jan-06  v6r32p2 THB  Fix test program and get the last pointing history entry
    11-jan-06  v6r32p1 THB  Implement breaks for SAA boundaries, and livetime in the pointing history
    09-dec-05  v6r31   THB  (For Julie) add pointing info entry for lat_geo.

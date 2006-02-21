@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r32p2
+version v6r32p3
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -31,6 +31,10 @@ private
 use Event       v*
 use GlastSvc    v*
 use astro       v*
+use CalibSvc *
+use CalUtil *
+use CalXtalResponse * 
+use rootTestData *
 
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
