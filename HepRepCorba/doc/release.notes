@@ -14,5 +14,5 @@
  * v1r5p1   31-03-05 RG Fixed a bug that prevent FRED to start on Windows.
  * v1r5p2   03-04-05 THB set TMP to %TEMP% on windows
  * v1r6     07-07-05 RG Set some env variables in the requirements file to fix Linux problems
-
+ * v1r6dc2  21-02-05 RG A tag for the DC2 branch with changes for wired
 */
