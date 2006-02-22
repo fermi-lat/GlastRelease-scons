@@ -94,24 +94,14 @@ if __name__ == '__main__':
     nLine = -1
     for line in lines:
         nLine+=1
-        vals = line.split()
-        if (len(vals) != nTXTFields):
-            log.error("input line# %d expecting %d column input, got %d" % (nLine, nTXTFields, len(vals)) +
-                      "fmt=[twr lyr col diode mevPerDAC sigma]")
-            sys.exit(-1)
-
-        # convert vals array to floats instead of strings
-        for i in range(len(vals)):
-            vals[i] = float(vals[i])
-
-        (twr, lyr, col, diode, mpd, sig) = vals
-
-        
+        (twr, lyr, col, diode, mpd, sig)= line.split()
         # convert array index values to integer.
         twr = int(twr)
         lyr = int(lyr)
         col = int(col)
         diode = int(diode)
+        mpd = float(mpd)
+        sig = float(sig)
 
         # make sure current tower is on list
         twrSet.add(twr)

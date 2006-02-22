@@ -63,6 +63,9 @@ if __name__ == '__main__':
     towers = xmlFile.getTowers()
     xmlFile.close()
 
+    # Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
+    offline_face_to_online = {0:1,1:0}
+
     # print out txt file.
     for twr in towers:
         for lyr in range(0,8):
@@ -70,18 +73,19 @@ if __name__ == '__main__':
             row = calCalibXML.layerToRow(lyr)
             for col in range(0,12):
                 for face in range(0,2):
+                    online_face = offline_face_to_online[face]
                     print delim.join([str(x) for x in twr, lyr, col, face,\
-                                     adcData[twr][row][face][col][0],
-                                     adcData[twr][row][face][col][1],\
-                                     adcData[twr][row][face][col][2],\
-                                     uldData[twr][row][face][col][0],\
-                                     uldData[twr][row][face][col][1],\
-                                     uldData[twr][row][face][col][2],\
-                                     uldData[twr][row][face][col][3],\
-                                     pedData[twr][row][face][col][0],\
-                                     pedData[twr][row][face][col][1],\
-                                     pedData[twr][row][face][col][2],\
-                                     pedData[twr][row][face][col][3]])
+                                     adcData[twr][row][online_face][col][0],
+                                     adcData[twr][row][online_face][col][1],\
+                                     adcData[twr][row][online_face][col][2],\
+                                     uldData[twr][row][online_face][col][0],\
+                                     uldData[twr][row][online_face][col][1],\
+                                     uldData[twr][row][online_face][col][2],\
+                                     uldData[twr][row][online_face][col][3],\
+                                     pedData[twr][row][online_face][col][0],\
+                                     pedData[twr][row][online_face][col][1],\
+                                     pedData[twr][row][online_face][col][2],\
+                                     pedData[twr][row][online_face][col][3]])
 
  
 

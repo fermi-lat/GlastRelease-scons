@@ -63,6 +63,9 @@ if __name__ == '__main__':
     towers = xmlFile.getTowers()
     xmlFile.close()
 
+    # Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
+    offline_face_to_online = {0:1,1:0}
+
     # print out txt file.
     for twr in towers:
         for lyr in range(8):
@@ -70,11 +73,12 @@ if __name__ == '__main__':
             row = calCalibXML.layerToRow(lyr)
             for col in range(12):
                 for face in range(2):
+                    online_face = offline_face_to_online[face]
                     for rng in range(4):
                         for pt in range(lenData[rng][twr][row][face][col]):
                             print delim.join([str(x) for x in twr, lyr, col, face, rng,
-                                              dacData[rng][twr][row][face][col][pt],
-                                              adcData[rng][twr][row][face][col][pt]])
+                                              dacData[rng][twr][row][online_face][col][pt],
+                                              adcData[rng][twr][row][online_face][col][pt]])
                                           
 
  

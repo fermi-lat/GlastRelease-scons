@@ -104,7 +104,7 @@ if __name__ == '__main__':
                     for ndiode in range(2):
                         for pt in range (0,len(xpos)):
                             print delim.join([str(x) for x in twr, lyr, col,
-                                              pdiode, ndiode, 
+                                              pdiode, ndiode, xpos[pt],
                                               asymData[twr][row][col][asymIdx[(pdiode,ndiode,False)]][pt], #asym val
                                               asymData[twr][row][col][asymIdx[(pdiode,ndiode,True)]][pt]])   #sigma
                                               
