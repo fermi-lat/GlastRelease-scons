@@ -1,5 +1,5 @@
 package AcdUtil
-version v0r2p7
+version v0r2p9
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -17,26 +17,26 @@ apply_pattern packageShr
 
 apply_pattern package_include
 
-apply_pattern package_headers
-
-#=============================================================
-private
-
 # pattern of the sort that should be in GlastPatternPolicy
 # this version implements Navid's common lib strategy
 
 pattern add_lib_to_linkopts \
-  macro_append <package>_linkopts " "\
+  macro_prepend <package>_linkopts " "\
   Linux "$(<package>_cmtpath)/lib/lib<name>_${tag}_<version>.a "\
   WIN32 "$(<package>_cmtpath)\lib\<name>_${tag}_<version>.lib "
+
 #
 # now use it to add the static library to this package's link options
 
 apply_pattern add_lib_to_linkopts name=AcdUtilCommon
+#=============================================================
+private
+
 
 library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx
 
 
+apply_pattern package_headers
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
