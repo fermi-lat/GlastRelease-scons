@@ -19,21 +19,25 @@ apply_pattern package_include
 
 apply_pattern package_headers
 
-# special guy to allow AcdRecon to link in the common_files below
-macro_append AcdUtil_linkopts \
-        "${AcdUtil_root}/${BINDIR}/libAcdUtilCommon.a"\
-  WIN32 "${AcdUtil_root}/${BINDIR}/AcdUtilCommon.lib "
-
-
 #=============================================================
 private
 
-macro common_files "AcdTileDim.cxx AcdRibbonDim.cxx"
+# pattern of the sort that should be in GlastPatternPolicy
+# this version implements Navid's common lib strategy
 
-library AcdUtilCommon -no_share $(common_files)
+pattern add_lib_to_linkopts \
+  macro_append <package>_linkopts " "\
+  Linux "$(<package>_cmtpath)/lib/lib<name>_${tag}_<version>.a "\
+  WIN32 "$(<package>_cmtpath)\lib\<name>_${tag}_<version>.lib "
+#
+# now use it to add the static library to this package's link options
 
-library AcdUtil $(common_files)\
-		AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
+apply_pattern add_lib_to_linkopts name=AcdUtilCommon
+
+library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx
+
+
+library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
                 ${AcdUtil_headers}               
@@ -44,5 +48,3 @@ public
 
 apply_pattern package_test
 
-#application test_AcdUtil test/*.cxx \
-#                         $(TestGlastMain) ${AcdUtil_headers}
