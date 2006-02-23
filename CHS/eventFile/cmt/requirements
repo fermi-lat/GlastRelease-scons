@@ -1,0 +1,24 @@
+package eventFile
+version v0
+
+author Bryson Lee <blee@slac.stanford.edu>
+
+use ldfExt * IExternal
+
+use GlastPolicy v*
+
+apply_pattern package_include
+apply_pattern package_headers
+
+library eventFile *.cxx ${eventFile_headers}
+
+set LDFROOT ${ldfExt_DIR}
+
+apply_pattern package_linkopts
+apply_pattern package_stamps
+
+apply_pattern ld_library_path
+
+#application test_lpamerge ../test/test_LpaMerge.cxx ../test/LDFdump.cc
+
+#application test_RetDef   test/test_RetDef.cxx
