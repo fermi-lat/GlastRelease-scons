@@ -33,6 +33,64 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_AcdRibbonActDist = tuple.getItem("AcdRibbonActDist");
     m_AcdCornerDoca    = tuple.getItem("AcdCornerDoca");
     m_Tkr1SSDVeto      = tuple.getItem("Tkr1SSDVeto");
+    
+/** @page merittuple
+@section ctbVars CTB Variables
+<table>
+    <tr><th> Variable <th> Type  <th> Description				                 
+    <tr><td> CTBAcdLowerTileCount
+    <td>F<td>  AcdNoSideRow3
+    <tr><td> CTBAcdUpperTileCount
+    <td>F<td>  AcdNoTop+AcdNoSideRow0+AcdNoSideRow1+AcdSideRow2    
+    <tr><td> CTBBestPSFerr
+    <td>F<td>  The angle between the best direction and the MC direction (radians)
+    <tr><td> CTBBest[X/Y/Z]Dir
+    <td>F<td>  Best direction, chosen from vertex and track-1 Solutions (3 direction cosines)  
+    <tr><td> CTBBestDeltaEoE
+    <td>F<td>  Best Energy Error relative to MC energy D(E)/E    
+    <tr><td> CTBBestEnergy
+    <td>F<td>  Best Estimated energy from among the 4 methods    
+    <tr><td> CTBBestEnergyProb
+    <td>F<td>  Energy probability knob.
+               Tunes the energy resolution for the selected method    
+    <tr><td> CTBBestLogEnergy
+    <td>F<td>  Log(CTBBestEnergy) – base 10    
+    <tr><td> CTBCORE
+    <td>F<td>  Image probability knob. Tunes the image resolution  
+    <tr><td> CTBCalDocaAngle
+    <td>F<td>  CalTrackDoca + 80*CalTrackAngle    
+    <tr><td> CTBCalFrontBackRatio
+    <td>F<td>  Probably the ratio of the energies in the front and back halves of the CAL.
+    <tr><td> CTBCalMaxXtalRatio
+    <td>F<td>  CalXtalMaxEne/CalEnergyRaw    
+    <tr><td> CTBCalTransTCCD
+    <td>F<td>  CalTransRms + 0.1*(CalTrackDoca - 2.5*Tkr1CoreHC)    
+    <tr><td> CTBGAM
+    <td>F<td>  Background rejection probability knob. Tunes the background contamination
+    <tr><td> CTBLastLayerProb
+    <td>F<td>  Probibility for the "corrections" of LastLayer energy method 
+               against a fixed functional standard   
+    <tr><td> CTBParamProb
+    <td>F<td>  Same for Parameter energy method  
+    <tr><td> CTBProfileProb
+    <td>F<td>  Same for Profile energy method 
+    <tr><td> CTBTrackerProb
+    <td>F<td>  Same for Tracker energy method
+    <tr><td> CTBTkrCoreCalDoca
+    <td>F<td>  CalTrackDoca - 2.5*Tkr1CoreHC. Ad hoc background rejection variable    
+    <tr><td> CTBTkrEnergyFrac
+    <td>F<td>  TkrEnergyCorr/EvtEnergyCorr –  Ad hoc background rejection variable       
+    <tr><td> CTBTkrLATEdge
+    <td>F<td>  742. - max(abs(Tkr1X0) , abs(Tkr1Y0)). 
+               Fiducial Volume Variable, more accurately calculated as Tkr1LATEdge
+    <tr><td> CTBTkrSHRCalAngle
+    <td>F<td>  CalTrackAngle - 0.2*TkrSurplusHitRatio. Ad hoc background rejection variable
+    <tr><td> CTBVTX
+    <td>F<td>  Internal probability to select between track-1 and vertex
+</table>
+*/
+
+
 
     // New items to create or override
     // Add Bill's tuple items so we can start some comparisons
