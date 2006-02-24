@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r21p8 24-Feb-2006  jrb  Eliminate (unused) mention of LdfEvent in code
+                             and specific version dependence in requirements
    v0r21p7 18-Jan-2006  jrb  Exit with fatal error if rqsted file can't be read
    v0r21p6  2-Aug-2005  jrb  Bring main branch up to snuff wrt intNonlin calibs
    v0r21p5 10-Jul-2005  jrb  Minor correction to job options doc. in mainpage
