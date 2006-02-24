@@ -9,7 +9,7 @@ public
 use GlastPolicy v*
 use GlastSvc v9r*
 use Event v*
-use ldfReader v*
+#use ldfReader v*
 use LdfEvent v*
 
 apply_pattern packageShr
@@ -17,6 +17,7 @@ apply_pattern package_include
 apply_pattern ld_library_path
 
 private
+use ldfReader v*
 use astro v*
 use facilities v*
 apply_pattern package_Cshlibflags
