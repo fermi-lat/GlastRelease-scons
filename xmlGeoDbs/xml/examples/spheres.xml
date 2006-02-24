@@ -1,0 +1,147 @@
+<?xml version="1.0"  ?>
+
+<!--  $Header$        -->
+
+<!DOCTYPE gdd SYSTEM "../gdd.dtd"
+  [
+    <!-- This is so tiny, just use separate file for materials;
+           do everything else inline. -->
+
+    <!ENTITY Materials         SYSTEM "../materials.xml">
+    <!ENTITY extraMaterials SYSTEM "empty.xml">
+
+
+  ]
+>
+<gdd CVSid="$Id$"
+     DTDversion="2.0" >
+  <constants>
+    <version major="0" minor="0" />
+    <primary>
+      <primCategory name="SpherePrim">
+         <overview>Fundamental dimensions of solids and offsets,
+             materials definition for spheres geometry: small
+             solid sphere inside partial sphere shell, same
+             origin.</overview>
+
+         <prim name="solidMat" value="CsI" type="string" uType="mat">
+           Material for the solid spheres.  For now it's a CsI crystal. </prim>
+         <prim name="shellMat" value="Si" type="string" uType="mat">
+           Material for the sphere shell.  For now it's silicon. </prim>
+         <prim name="vacuumMat" value="Vacuum" type="string" uType="mat">Need
+           vacuum for some 'solids'</prim>
+
+         <prim name="solidR" value="100.0">Radius of solid sphere</prim>
+         <prim name="shellInnerR" value="400.0">Inner radius of 
+                   sphere shell</prim>
+         <prim name="shellOuterR" value="420.0"> Outer radius of 
+                   sphere shell</prim>
+         
+         <prim name="shellMinPhi" value="0.0" uType="angle">
+          Min phi for sphere shell</prim>
+         <prim name="shellMaxPhi" value="120.0" uType="angle">
+               Max phi in degrees for sphere shell</prim>
+
+         <prim name="shellMinTheta" value="90.0" uType="angle">Min theta for 
+               sphere shell</prim>
+         <prim name="shellMaxTheta" value="120.0" uType="angle">
+                Max theta in degrees for sphere shell</prim>
+         <prim name="envXExtra" value="30.0">Used to derive envelope
+           size from sphere shell outer radius</prim>
+         <prim name="envYExtra" value="50.0">Used to derive envelope
+           size from sphere shell outer radius</prim>
+         <prim name="envZExtra" value="10.0">Used to derive envelope
+           size from sphere shell outer radius</prim>
+      </primCategory>
+
+<!-- uncomment for Tracker Detector Service  - but that probably isn't
+      all that's needed
+      &TkrDimPrim;
+      &TkrCountPrim;
+ -->
+
+    </primary>
+    <derived>
+      <derCategory name="SpheresDerived">
+        <overview>make envelope size dependent on shell size</overview>
+        <const name="envX">
+          <notes>X-dimension for envelope</notes>
+          <add>
+            <refer refTo="shellOuterR" />
+            <refer refTo="envXExtra" />
+          </add>
+        </const>
+
+        <const name="envY">
+          <notes>Y-dimension for envelope</notes>
+          <add>
+            <refer refTo="shellOuterR" />
+            <refer refTo="envYExtra" />
+          </add>
+        </const>
+
+        <const name="envZ">
+          <notes>Z-dimension for envelope</notes>
+          <add>
+            <refer refTo="shellOuterR" />
+            <refer refTo="envZExtra" />
+          </add>
+        </const>
+      </derCategory>
+    </derived>
+
+  </constants>
+ 
+  &Materials;
+
+  <!-- idDict goes here -->
+  <idDict name="SphereDict" major="0" minor="0">
+    <field name="aField" />
+    <dictRoot fieldName="aField">
+      <vMinMax max="30" />
+    </dictRoot>
+  </idDict>
+
+  <section name="spheresSection"
+           version="1.0" date="2006/2/24" author="J.Bogart"
+           topVolume="sphereComp">
+
+    <!-- Define an envelope to put the spheres in so we can have an
+         idField -->
+    <box name="spheresEnv"
+         XREF="envX" YREF="envY" 
+         ZREF="envZ" materialREF="vacuumMat" />
+
+    <!-- Define inner solid sphere -->
+    <!-- the "sensitive" attribute may be removed or its value
+         may be changed to "posHit" for position rather than integrating
+         hits. -->
+    <sphere name="solidSphere" 
+         ROutREF="solidR" PhiMax="360" ThetaMax="180"
+         sensitive="intHit"
+         materialREF="solidMat" />
+
+    <sphere name="sphereShell" 
+         RInREF="shellInnerR" ROutREF="shellOuterR" 
+         PhiMinREF="shellMinPhi" PhiMaxREF="shellMaxPhi" 
+         ThetaMinREF="shellMinTheta" ThetaMaxREF="shellMaxTheta"
+         sensitive="posHit"
+         materialREF="shellMat" />
+
+    <composition name="sphereComp" envelope="spheresEnv">
+      <posXYZ volume="solidSphere">
+        <idField name="aField" value="1" />
+      </posXYZ>
+      <posXYZ volume="sphereShell">
+        <idField name="aField" value="2" />
+      </posXYZ>
+    </composition>
+
+ </section>
+
+</gdd>
+
+
+
+
+

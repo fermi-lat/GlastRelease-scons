@@ -612,7 +612,7 @@
 
 
 
-<!ELEMENT  section  ( box | tubs | cons |
+<!ELEMENT  section  ( box | tubs | sphere | cons |
                       composition | choice |
                       stackX | stackY | stackZ |
                       parameters )+>
@@ -679,6 +679,7 @@
            %solidProperties;
            %units;>
 
+<!-- Cone segment -->
 <!ELEMENT  cons   EMPTY >
 <!ATTLIST  cons
            RIn1      NMTOKEN  "0"
@@ -697,6 +698,24 @@
            PhiEndREF IDREF  #IMPLIED
            %solidProperties;
            %units;>
+
+<!-- spherical shell -->
+<!ELEMENT sphere EMPTY>
+<!ATTLIST sphere
+          RIn         NMTOKEN "0"
+          ROut        NMTOKEN "0"
+          PhiMin      NMTOKEN "0"
+          PhiMax      NMTOKEN "0"
+          ThetaMin    NMTOKEN "0"
+          ThetaMax    NMTOKEN "0"
+          RInREF      IDREF   #IMPLIED
+          ROutREF     IDREF   #IMPLIED
+          PhiMinREF   IDREF   #IMPLIED
+          PhiMaxREF   IDREF   #IMPLIED
+          ThetaMinREF IDREF   #IMPLIED
+          ThetaMaxREF IDREF   #IMPLIED
+          %solidProperties;
+          %units;>
 
 <!ELEMENT  seg EMPTY >
 <!ATTLIST  seg  axis (X|Y|Z) #REQUIRED 
