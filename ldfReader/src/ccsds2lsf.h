@@ -2,8 +2,8 @@
 #define CCSDS2LSF_H 1
 
 
-#include "eventRet/LSE_Context.h"
-#include "eventRet/LSE_Info.h"
+#include "eventFile/LSE_Context.h"
+#include "eventFile/LSE_Info.h"
 #include "lsfDataStore/LsfTimeTone.h"
 #include "lsfDataStore/LsfRunInfo.h"
 #include "lsfDataStore/LsfDatagramInfo.h"
@@ -28,17 +28,17 @@ namespace ldfReader {
 
         ~ccsds2lsf();
 
-        void timeToneCnv(eventRet::LSE_Context::FromTimetone ccsds, 
+        void timeToneCnv(eventFile::LSE_Context::FromTimetone ccsds, 
                          lsfDataStore::TimeTone &timetone);
 
-        void runInfoCnv(eventRet::LSE_Context::FromRun ccsds,
+        void runInfoCnv(eventFile::LSE_Context::FromRun ccsds,
                         lsfDataStore::RunInfo &run);
 
-        void datagramInfoCnv(eventRet::LSE_Context::FromOpen open, 
-                             eventRet::LSE_Context::FromClose close, 
+        void datagramInfoCnv(eventFile::LSE_Context::FromOpen open, 
+                             eventFile::LSE_Context::FromClose close, 
                              lsfDataStore::DatagramInfo &datagram);
 
-        void scalerCnv(eventRet::LSE_Context::FromScalers ccsds, 
+        void scalerCnv(eventFile::LSE_Context::FromScalers ccsds, 
                        lsfDataStore::GemScalers& scalers);
 
     private:

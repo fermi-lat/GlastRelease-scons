@@ -10,11 +10,12 @@
 //#include "../src/iterators/EbfDatagramParser.h"
 #include "../src/ccsds2lsf.h"
 
-#include "eventRet/RetDef.h"
-#include "eventRet/LSE_Context.h"
-#include "eventRet/LSE_Info.h"
-#include "eventRet/EBF_Data.h"
-#include "eventRet/LPA_Merger.h"
+//#include "eventRet/RetDef.h"
+#include "eventFile/LPA_File.h"
+#include "eventFile/LSE_Context.h"
+#include "eventFile/LSE_Info.h"
+#include "eventFile/EBF_Data.h"
+//#include "eventRet/LPA_Merger.h"
 
 #include <vector>
 
@@ -30,8 +31,8 @@ namespace ldfReader {
     public:
 
         DfiParser();
-        DfiParser(const std::string &arch, int scid, 
-                  std::vector<eventRet::ApidSpan*> &spans);
+//        DfiParser(const std::string &arch, int scid, 
+//                  std::vector<eventRet::ApidSpan*> &spans);
 
         DfiParser(const std::string &filename);
 
@@ -63,8 +64,9 @@ namespace ldfReader {
 
         int readContextAndInfo();
 
-        eventRet::RetDef *m_retDef; // packet retrieval interface
-        eventRet::LPA_Merger *m_eventMerger; // Interface to merging library
+        eventFile::LPA_File *m_file;
+ //       eventRet::RetDef *m_retDef; // packet retrieval interface
+ //       eventRet::LPA_Merger *m_eventMerger; // Interface to merging library
 
         //long            m_evtCount;
 
@@ -76,9 +78,11 @@ namespace ldfReader {
 
         EBFevent *m_end, *m_start;
 
-        eventRet::LSE_Context m_context;
-        eventRet::EBF_Data m_ebf;
-        eventRet::LPA_Info m_info;
+        eventFile::LSE_Context m_context;
+        eventFile::EBF_Data m_ebf;
+        eventFile::LPA_Info m_info;
+
+        bool m_more;
 
         ldfReader::ccsds2lsf m_cnv;
 

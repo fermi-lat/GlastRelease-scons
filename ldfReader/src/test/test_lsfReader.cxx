@@ -1,5 +1,5 @@
-#ifndef TEST_dfiReader_CXX
-#define TEST_dfiReader_CXX 1
+#ifndef TEST_lsfReader_CXX
+#define TEST_lsfReader_CXX 1
 
 
 /** @file test_dfiReader.cxx
@@ -20,7 +20,7 @@ $Header$
 int main(int argn, char** argc) {
   try {
     using namespace ldfReader;
-    std::string fileName("$(EVENTRETROOT)/test/LSEP_ret.xml");
+    std::string fileName("$(EVENTFILEROOT)/src/test/events.lpa");
 
 
     if( argn>1 ) fileName = argc[1];
