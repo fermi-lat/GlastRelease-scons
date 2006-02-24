@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v2r1    24-Feb-2005 HMK Use LSF binary file as input
 v2r0    24-Feb-2005 HMK Move to handle LSF
 v1r17p1 20-Oct-2005 HMK Fix up broken string in LdfEventSelector.cxx
 v1r17   09-Sep-2005 HMK Set n/a for AcdIds
