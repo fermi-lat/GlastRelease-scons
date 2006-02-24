@@ -37,12 +37,22 @@ StatusCode LdfEventSelector::initialize()     {
         log << MSG::ERROR << "Unable to initialize service " << endreq;
     }
     
+    if ((m_inputList.value()).empty()) {
+        log << MSG::ERROR << "No input files specified - terminating job"
+            << endreq;
+        return StatusCode::FAILURE;
+    }
+
     if(m_storageType.value() != " "){
         sc = setCriteria(m_storageType);
         if(sc.isFailure()){
             log << MSG::ERROR << "Unable to parse string of input files" << endreq;
             return sc;
         }
+    } else {
+        log << MSG::ERROR << "No Storage Type specified - terminating job"
+            << endreq;
+         return StatusCode::FAILURE;
     }
 
     // Retrieve conversion service handling event iteration
@@ -206,7 +216,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     if( sc.isFailure() ) {
         log << MSG::ERROR << "Invalid Event Selection Criteria: " 
             << m_criteriaType << endreq;
-        return sc;
+        return StatusCode::FAILURE;
     }
         
     return sc;
@@ -278,11 +288,15 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             log << MSG::DEBUG << "Starting Processing on Index " << m_startEventIndex << endreq;
 
         static bool findFirstMarkerFive = false;
+        static bool findSecondMarkerFive = false;
         // Allows JO to skip the search for the sweep events
-        if (m_sweepSearch == 0) {
+        // no skipping for LSF (CCSDSFILEs)
+        if ((m_sweepSearch == 0) && (m_criteriaType != CCSDSFILE) ){
             log << MSG::WARNING << "Skipping check for first Sweep Event - ARE YOU SURE YOU WANT TO DO THIS???" << endreq;
             findFirstMarkerFive = true;
         }
+        if (m_criteriaType == CCSDSFILE)
+            findFirstMarkerFive = true;
 
         if ((m_startEventIndex > 0) && (!findFirstMarkerFive)) {
             log << MSG::WARNING << "Since StartEventIndex is non-zero, skipping search for first sweep event" << endreq;
@@ -336,8 +350,16 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                 }
             }
 
+            if ( (m_criteriaType != CCSDSFILE) && (findFirstMarkerFive) 
+                 && (m_sweepSearch == 1) && (marker == 5) ) {
+                log << MSG::WARNING << "Found second marker 5 sweep event in"
+                    << " non-LSF file - terminating run" << endreq;
+                *(irfIt) = m_evtEnd;
+                return *irfIt;
+            }
 
-            if ((marker != 0) || (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
+            //if ((marker != 0) || (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
+            if ( (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
 
               // Always increment skip counter, no matter what type of data was
               // loaded.
@@ -351,7 +373,8 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                 return *irfIt;
               }
              }
-            if ( (marker == 0) && (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
+            //if ( (marker == 0) && (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
+            if ( (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
           }
         }
         
@@ -373,7 +396,7 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             *(irfIt) = m_evtEnd;
             log << MSG::INFO << "Stopping loop at user maxEvent Request" 
                 << endreq;
-            if (marker != 5) 
+            if ( (m_criteriaType != CCSDSFILE) && (marker != 5) )
                 log << MSG::WARNING << "Last Event was not a sweep event with"
                     << " marker == 5" << endreq;
         }
