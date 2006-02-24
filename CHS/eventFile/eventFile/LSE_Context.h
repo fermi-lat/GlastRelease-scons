@@ -8,8 +8,8 @@
  * $Header$
  */
 
-#ifndef LSE_CONTEXT_HH
-#define LSE_CONTEXT_HH
+#ifndef EVENTFILE_LSE_CONTEXT_HH
+#define EVENTFILE_LSE_CONTEXT_HH
 
 #include "eventFile/LSE_GemTime.h"
 
@@ -62,7 +62,6 @@ namespace eventFile {
 
     struct FromOpen {
       FromOpen() {};
-      FromOpen( const DfiEvent::OpenInfo& open );
       void dump( const char* pre, const char* post ) const;
       unsigned modeChanges;
       unsigned datagrams;
@@ -78,7 +77,6 @@ namespace eventFile {
 
     struct FromClose {
       FromClose() {};
-      FromClose( const DfiEvent::CloseInfo& close );
       void dump( const char* pre, const char* post ) const;
       int action;
       int reason;
@@ -87,7 +85,6 @@ namespace eventFile {
     };
 
     LSE_Context() {};
-    LSE_Context( int scid, int apid, double utc, const DfiEvent::MetaEvent& meta );
     void dump() const;
 
     // from the enclosing CCSDS packet stream

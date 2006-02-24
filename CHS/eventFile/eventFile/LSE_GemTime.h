@@ -11,8 +11,8 @@
  * $Header$
  */
 
-#ifndef LSE_GEMTIME_HH
-#define LSE_GEMTIME_HH
+#ifndef EVENTFILE_LSE_GEMTIME_HH
+#define EVENTFILE_LSE_GEMTIME_HH
 
 namespace eventFile {
   

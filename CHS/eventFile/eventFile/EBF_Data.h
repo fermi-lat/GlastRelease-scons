@@ -12,8 +12,10 @@
  * $Header$
  */
 
-#ifndef EBF_DATA_HH
-#define EBF_DATA_HH
+#ifndef EVENTFILE_EBF_DATA_HH
+#define EVENTFILE_EBF_DATA_HH
+
+#include <stdio.h>
 
 class EBFevent;
 
@@ -27,17 +29,13 @@ namespace eventFile {
     const EBFevent* start() const { return reinterpret_cast< const EBFevent* >( &data[0] ); };
     const EBFevent* end() const { return reinterpret_cast< const EBFevent* >( &data[len] ); };
     unsigned size() const { return len; };
+    void init( unsigned nbytes, const void* payload );
+    void write( FILE* ) const;
+    void read( FILE* );
 
   private:
     unsigned char data[128*1024];
     unsigned      len;
-    void init( unsigned nbytes, const void* payload ) {
-      *( reinterpret_cast< int* >( &data[0] ) ) = 0x104f0010  ;
-      *( reinterpret_cast< int* >( &data[4] ) ) = nbytes +  8 ;
-      memcpy( &data[8], payload, nbytes );
-      len = nbytes + 8;
-    };
-
   };
 
 };

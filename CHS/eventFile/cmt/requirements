@@ -1,11 +1,12 @@
 package eventFile
-version v0
+version v0r1
 
 author Bryson Lee <blee@slac.stanford.edu>
 
 use ldfExt * IExternal
 
 use GlastPolicy v*
+use facilities v*
 
 apply_pattern package_include
 apply_pattern package_headers
@@ -19,6 +20,4 @@ apply_pattern package_stamps
 
 apply_pattern ld_library_path
 
-#application test_lpamerge ../test/test_LpaMerge.cxx ../test/LDFdump.cc
-
-#application test_RetDef   test/test_RetDef.cxx
+application test_LPA_File test/test_LPA_File.cxx test/LDFdump.cc

@@ -8,8 +8,8 @@
  * $Header$
  */
 
-#ifndef LSE_INFO_HH
-#define LSE_INFO_HH
+#ifndef EVENTFILE_LSE_INFO_HH
+#define EVENTFILE_LSE_INFO_HH
 
 #include "eventFile/LSE_GemTime.h"
 

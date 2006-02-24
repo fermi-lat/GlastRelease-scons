@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v0r1   23-Feb-2006 RBL first working version -- writes/reads binary event files.
  * v0     23-Feb-2006 RBL Initial revision
  * @endverbatim
  */
