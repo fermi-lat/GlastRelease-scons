@@ -16,7 +16,6 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "LdfEvent/LdfTime.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/TopLevel/Event.h"
 #include "astro/JulianDate.h"
@@ -534,27 +533,6 @@ StatusCode CalibDataSvc::fetchEventTime() {
   return StatusCode::SUCCESS; 
 }
 
-/*  --- */
-StatusCode CalibDataSvc::fetchDataTime() {
-  MsgStream log(msgSvc(), name());
-
-  SmartDataPtr<LdfEvent::LdfTime> timeTds(m_eventSvc, "/Event/Time");
-  if (!timeTds) {
-    log << MSG::ERROR << "Unable to retrieve ldf time " << endreq;
-
-    return StatusCode::FAILURE;
-  }
-  int secs = (int) timeTds->timeSec();
-  int  nano = (int) timeTds->timeNanoSec();
-  
-  m_time = CalibData::CalibTime(facilities::Timestamp(secs,nano));
-  
-  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) )) {
-    log << MSG::DEBUG << "Processing event " << m_nEvent 
-        << " found time " << m_time.getString() << endreq;
-  }
-  return StatusCode::SUCCESS;
-}
 
 StatusCode CalibDataSvc::fetchMcTime() {
 
@@ -589,35 +567,6 @@ StatusCode CalibDataSvc::fetchMcTime() {
   return StatusCode::SUCCESS; 
 }
 
-StatusCode CalibDataSvc::fetchDigiTime() {
-
-  MsgStream log(msgSvc(), name());
-
-  static const facilities::Timestamp missionStart("2001-1-1 00:00");
-  static const unsigned missionSec = (unsigned) missionStart.getClibTime();
-  static const int missionNano = missionStart.getNano();
-
-  SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
-  
-  if (!eventHeader) {
-    log << MSG::ERROR << "Unable to retrieve event timestamp for digis" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
-  double fromMissionStart = (eventHeader->time()).time();
-  unsigned fromSec = (unsigned) fromMissionStart;
-  unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
-
-  if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-
-    log << MSG::DEBUG << "(digi) seconds/nano from mission start: " << fromSec 
-        << "/" << fromNano << endreq;
-  }
-  facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
-  m_time = CalibData::CalibTime(absTime);
-
-  return StatusCode::SUCCESS; 
-}
 
 StatusCode CalibDataSvc::fetchFakeClockTime() {
 

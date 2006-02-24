@@ -176,17 +176,13 @@ public:
 
   TIMESOURCE m_timeSourceEnum;
 
-  /// Fetch time from real data, store in m_time
-  StatusCode fetchDataTime();
-
   /// Fetch time from mc data (no digis)
   StatusCode fetchMcTime();
 
-  /// Fetch time from simulated digis
-  StatusCode fetchDigiTime();
 
-  // Supersedes all of above.  For data, digi and mc always fetch time
-  // from the same place
+  // Supersedes above.  For data, digi and mc *should* always fetch time
+  // from the same place.  
+  // TODO - determine if I can get rid of fetchMcTime 
   /// Fetch time from Event
   StatusCode fetchEventTime();
 
