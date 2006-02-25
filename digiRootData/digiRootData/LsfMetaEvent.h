@@ -95,7 +95,7 @@ public:
     m_datagram = datagram;
     m_scalers = scalers;
     m_time = time;
-    delete m_config;
+    if (m_config) delete m_config;
     m_config = configuration.clone();
     m_type = configuration.runType();
   }
@@ -106,7 +106,7 @@ public:
   inline void setScalers( const GemScalers& val) { m_scalers = val; }
   inline void setTime( const Time& val) { m_time = val; }
   inline void setConfiguration( const Configuration& configuration ) {
-    delete m_config;
+    if (m_config) delete m_config;
     m_config = configuration.clone();
     m_type = configuration.runType();
   }  
@@ -117,7 +117,7 @@ public:
     m_datagram.Clear("");
     m_scalers.Clear("");
     m_time.Clear("");
-    delete m_config;
+    if (m_config) delete m_config;
     m_config = 0;
     m_type = enums::Lsf::NoRunType;
   }
