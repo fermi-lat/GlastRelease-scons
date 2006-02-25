@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v3r2    25-Feb-2005 HMK use lsfData package
 v3r1    13-Feb-2005 EAC Changed scalar to scaler, added comments 
 v3r0    02-Feb-2005 EAC Updated Lsf stuff to match header files instead of doc 
 v3      01-Feb-2005 EAC Added stuff for Lsf support
