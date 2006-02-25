@@ -16,7 +16,7 @@
 //#include "LdfEvent/LsfGemScalers.h"
 //#include "LdfEvent/LsfConfiguration.h"
 
-#include "lsfDataStore/LsfMetaEvent.h"
+#include "lsfData/LsfMetaEvent.h"
 
 /** @class MetaEvent
 *
@@ -38,11 +38,11 @@ namespace LsfEvent {
     }
 
     /// Standard c'tor.  Takes input values for all fields
-    MetaEvent( const lsfDataStore::RunInfo& run, 
-               const lsfDataStore::DatagramInfo& datagram, 
-	       const lsfDataStore::GemScalers& scalers,
-	       const lsfDataStore::Time& time,
-	       const lsfDataStore::Configuration& configuration )
+    MetaEvent( const lsfData::RunInfo& run, 
+               const lsfData::DatagramInfo& datagram, 
+	       const lsfData::GemScalers& scalers,
+	       const lsfData::Time& time,
+	       const lsfData::Configuration& configuration )
       :m_run(run),m_datagram(datagram),
        m_scalers(scalers),
        m_time(time),
@@ -66,7 +66,7 @@ namespace LsfEvent {
       }
     }
     
-    MetaEvent( const lsfDataStore::MetaEvent& other )
+    MetaEvent( const lsfData::MetaEvent& other )
        :m_run(other.run()),
        m_datagram(other.datagram()),
        m_scalers(other.scalers()),
@@ -90,26 +90,26 @@ namespace LsfEvent {
     static const CLID& classID()       { return CLID_MetaEvent; }
     
     /// Information about the run this event is from
-    inline const lsfDataStore::RunInfo& run() const { return m_run; };
+    inline const lsfData::RunInfo& run() const { return m_run; };
 
     /// Information about the datagram this event came in
-    inline const lsfDataStore::DatagramInfo& datagram() const { return m_datagram; }
+    inline const lsfData::DatagramInfo& datagram() const { return m_datagram; }
 
     /// The extended context records
-    inline const lsfDataStore::GemScalers& scalers() const { return m_scalers; }
+    inline const lsfData::GemScalers& scalers() const { return m_scalers; }
 
     /// Information about the time markers associated with this event
-    inline const lsfDataStore::Time& time() const { return m_time; } 
+    inline const lsfData::Time& time() const { return m_time; } 
 
     /// Information about the configuration keys associated with this event
-    inline const lsfDataStore::Configuration* configuration() const { return m_config; }
+    inline const lsfData::Configuration* configuration() const { return m_config; }
 
     /// set everything at once
-    inline void set(const lsfDataStore::RunInfo& run, 
-                    const lsfDataStore::DatagramInfo& datagram, 
-		    const lsfDataStore::GemScalers& scalers,
-		    const lsfDataStore::Time& time,
-		    const lsfDataStore::Configuration& configuration) {
+    inline void set(const lsfData::RunInfo& run, 
+                    const lsfData::DatagramInfo& datagram, 
+		    const lsfData::GemScalers& scalers,
+		    const lsfData::Time& time,
+		    const lsfData::Configuration& configuration) {
       m_run = run;
       m_datagram = datagram;
       m_scalers = scalers;
@@ -120,11 +120,11 @@ namespace LsfEvent {
     }
 
     // set the individual data members
-    inline void setRun( const lsfDataStore::RunInfo& val) { m_run = val; };
-    inline void setDatagram( const lsfDataStore::DatagramInfo& val) { m_datagram = val; };
-    inline void setScalers( const lsfDataStore::GemScalers& val) { m_scalers = val; };
-    inline void setTime( const lsfDataStore::Time& val) { m_time = val; }; 
-    inline void setConfiguration( const lsfDataStore::Configuration& configuration ) {
+    inline void setRun( const lsfData::RunInfo& val) { m_run = val; };
+    inline void setDatagram( const lsfData::DatagramInfo& val) { m_datagram = val; };
+    inline void setScalers( const lsfData::GemScalers& val) { m_scalers = val; };
+    inline void setTime( const lsfData::Time& val) { m_time = val; }; 
+    inline void setConfiguration( const lsfData::Configuration& configuration ) {
       delete m_config;
       m_config = configuration.clone();
       m_type = configuration.type();
@@ -191,19 +191,19 @@ namespace LsfEvent {
   private:
     
     /// Information about the run this event is from
-    lsfDataStore::RunInfo m_run;
+    lsfData::RunInfo m_run;
     
     /// Information about the datagram this event came in
-    lsfDataStore::DatagramInfo m_datagram;
+    lsfData::DatagramInfo m_datagram;
     
     /// The extended context records
-    lsfDataStore::GemScalers m_scalers;
+    lsfData::GemScalers m_scalers;
 
     /// Information about the time markers associated with this event  
-    lsfDataStore::Time m_time;
+    lsfData::Time m_time;
     
     /// Information about the configuration keys associated with this event
-    lsfDataStore::Configuration* m_config;    //-> 
+    lsfData::Configuration* m_config;    //-> 
     
     /// Which type of run was this, particle data or charge injection 
     enums::Lsf::RunType m_type;

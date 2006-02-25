@@ -30,7 +30,7 @@ MetaEventCnv::MetaEventCnv(ISvcLocator* svc)
 StatusCode MetaEventCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {
     // Purpose and Method:  This converter will store LDF Gem on the TDS.
-    const lsfDataStore::MetaEvent& lsfMetaEvent = ldfReader::LatData::instance()->getMetaEvent();
+    const lsfData::MetaEvent& lsfMetaEvent = ldfReader::LatData::instance()->getMetaEvent();
     LsfEvent::MetaEvent *me = new LsfEvent::MetaEvent(lsfMetaEvent);
     refpObject = me;
 

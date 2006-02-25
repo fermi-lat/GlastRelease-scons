@@ -27,10 +27,10 @@ namespace ldfReader {
 
     void LatData::print() const {
       std::cout << "MetaEvent:\n";
-      const lsfDataStore::RunInfo run = m_metaEvent.run();
-      const lsfDataStore::DatagramInfo dgm = m_metaEvent.datagram();
-      const lsfDataStore::GemScalers scalers = m_metaEvent.scalers();
-      const lsfDataStore::Time time = m_metaEvent.time();
+      const lsfData::RunInfo run = m_metaEvent.run();
+      const lsfData::DatagramInfo dgm = m_metaEvent.datagram();
+      const lsfData::GemScalers scalers = m_metaEvent.scalers();
+      const lsfData::Time time = m_metaEvent.time();
 
 /*
       printf("MetaEvent: \n");
@@ -40,7 +40,7 @@ namespace ldfReader {
       dgm.print();
       time.printHack("LSE_Info:  ");
 
-      const lsfDataStore::Configuration *cfg = m_metaEvent.configuration();
+      const lsfData::Configuration *cfg = m_metaEvent.configuration();
       if (cfg) 
           cfg->print("LPA_Info:");
 
@@ -50,9 +50,9 @@ namespace ldfReader {
                 << "LSE_Info:  timeTicks = 0x" << std::hex << std::setfill('0')
                 << time.timeTicks() << " (" << std::dec << time.timeTicks()
                 << ")\nLSE_Info:  " << time.timeHack() << std::endl;
-      const lsfDataStore::Configuration *cfg = m_metaEvent.configuration();
+      const lsfData::Configuration *cfg = m_metaEvent.configuration();
       if (cfg) {
-          const lsfDataStore::LpaConfiguration* lpa = cfg->castToLpaConfig();
+          const lsfData::LpaConfiguration* lpa = cfg->castToLpaConfig();
           //std::cout << "LPA_Info:" << *lpa << std::endl;
       }
 

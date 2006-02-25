@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v2r2    25-Feb-2006 HMK Use lsfData package
 v2r1p3  24-Feb-2006 HMK Yes it's still Feb24, fix up second sweep event
         handling for non-LSF data files
 v2r1p2  24-Feb-2006 HMK don't bother trying to make ldfReader private
