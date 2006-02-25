@@ -49,6 +49,9 @@ private:
     StatusCode readAcdDigiData();
 
     int m_count;
+
+    IntegerProperty m_header, m_metaEvent, m_summary, m_gem;
+    IntegerProperty m_tkr, m_cal, m_acd, m_diagnostic;
     
 };
 
@@ -59,6 +62,14 @@ const IAlgFactory& test_LdfConverterAlgFactory = Factory;
 test_LdfConverterAlg::test_LdfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
 Algorithm(name, pSvcLocator)
 {
+    declareProperty("PrintEventHeader", m_header = 1);
+    declareProperty("PrintMetaEvent", m_metaEvent = 1);
+    declareProperty("PrintEventSummary", m_summary = 0);
+    declareProperty("PrintGem", m_gem = 1);
+    declareProperty("PrintTkr", m_tkr = 1);
+    declareProperty("PrintCal", m_cal = 1);
+    declareProperty("PrintAcd", m_acd = 1);
+    declareProperty("PrintDiagnostic", m_diagnostic = 0);
 }
 
 StatusCode test_LdfConverterAlg::initialize()
@@ -82,64 +93,83 @@ StatusCode test_LdfConverterAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-  //  sc = readDigiData();
+   if (m_metaEvent) {
+       SmartDataPtr<LsfEvent::MetaEvent> meta(eventSvc(), "/Event/MetaEvent");
+       if (!meta) 
+           log << MSG::INFO << "No MetaEvent on TDS" << endreq;
+       else {
+           log << MSG::INFO;
+           meta->fillStream(log.stream());
+           log << endreq;
+       }
+   }
 
-    //SmartDataPtr<Event::EventHeader> evt(eventSvc(), EventModel::EventHeader);
-    //if (!evt) {
-   //     log << MSG::ERROR << "Did not retrieve event" << endreq;
-   //     return StatusCode::FAILURE;
-   // }
-    //Check event header
-   // int eventId = evt->event();
-   // int run = evt->run();
-   // log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
-//	double time = evt->time();
-//	log << MSG::INFO << "Time (Seconds since Mission Start): " << time << endreq;
-//	log << MSG::INFO << "Livetime (seconds) " << evt->livetime() << endreq;
 
-  //  SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
-  //  if (!gem) {
-  //      log << MSG::INFO << "No GEM available" << endreq;
-  //  } else {
-  //     log << MSG::INFO;
-  //     (*gem).fillStream(log.stream());
-//	   log << endreq;
-//    }
+   if (m_header) {
+      SmartDataPtr<Event::EventHeader> evt(eventSvc(), EventModel::EventHeader);
+      if (!evt) {
+         log << MSG::ERROR << "Did not retrieve event" << endreq;
+          return StatusCode::FAILURE;
+      }
+      int eventId = evt->event();
+      int run = evt->run();
+      log << MSG::INFO << "runId: " << run << " eventId: " << eventId << endreq;
+      double time = evt->time();
+      log << MSG::INFO << "Time (Seconds since Mission Start): " << time 
+          << endreq;
+      log << MSG::INFO << "Livetime (seconds) " << evt->livetime() << endreq;
+
+   }
+
+   if (m_gem) {
+      SmartDataPtr<LdfEvent::Gem> gem(eventSvc(), "/Event/Gem");
+      if (!gem) {
+        log << MSG::INFO << "No GEM available" << endreq;
+      } else {
+        log << MSG::INFO;
+        (*gem).fillStream(log.stream());
+        log << endreq;
+      }
+   }
   
 
- //   SmartDataPtr<LsfEvent::MetaEvent> metaEvent(eventSvc(), "/Event/MetaEvent");
- //   if (!metaEvent) 
-  //    log << MSG::INFO << "No MetaEvent on TDS" << endreq;
-   // else {
-   //   log << MSG::INFO;
-   //   metaEvent->fillStream(log.stream());
-   //   log << endreq;
-   // }
-
-    /*SmartDataPtr<LdfEvent::DiagnosticData> diag(eventSvc(), "/Event/Diagnostic");
-    if (!diag) {
-        log << MSG::ERROR << "Did not retrieve diagnostic data" << endreq;
-        return StatusCode::FAILURE;
-    }
-    // Check diagnostic Data
-    log << MSG::INFO;
-    diag->fillStream(log.stream());
-    log << endreq;
-*/
-
- //   sc = readEventSummaryData();
- //   if (sc.isFailure()) {
- //       return sc;
- //   }
-
-    sc = readTkrDigiData();
-    if (sc.isFailure()) {
-        return sc;
+    if (m_summary) {
+        sc = readEventSummaryData();
+        if (sc.isFailure()) {
+            return sc;
+        }
     }
 
-    sc = readCalDigiData();
+    if (m_tkr) {
+        sc = readTkrDigiData();
+        if (sc.isFailure()) 
+            return sc;
+    }
 
-    sc = readAcdDigiData();
+    if (m_cal) {
+        sc = readCalDigiData();
+        if (sc.isFailure()) 
+            return sc;
+    }
+
+    if (m_acd) {
+        sc = readAcdDigiData();
+        if (sc.isFailure()) 
+            return sc;
+    }
+
+   if (m_diagnostic) {
+        SmartDataPtr<LdfEvent::DiagnosticData> diag(eventSvc(), 
+                                                    "/Event/Diagnostic");
+        if (!diag) {
+            log << MSG::ERROR << "Did not retrieve diagnostic data" << endreq;
+            return StatusCode::FAILURE;
+        }
+        // Check diagnostic Data
+        log << MSG::INFO;
+        diag->fillStream(log.stream());
+        log << endreq;
+    }
 
     return sc;
 }

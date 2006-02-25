@@ -33,9 +33,19 @@ EventSelector.EbfDebugLevel = 0;
 
 ApplicationMgr.TopAlg = { "test_LdfConverterAlg" };
 
+test_LdfConverterAlg.PrintMetaEvent = 1;
+test_LdfConverterAlg.PrintGem = 0;
+test_LdfConverterAlg.PrintDiagnostic = 0;
+test_LdfConverterAlg.PrintEventSummary = 0;
+test_LdfConverterAlg.PrintTkr = 0;
+test_LdfConverterAlg.PrintCal = 0;
+test_LdfConverterAlg.PrintAcd = 0;
+
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
 ApplicationMgr.EvtMax  = 10;
+
+
 //==============================================================
 //
 // End of job options file
