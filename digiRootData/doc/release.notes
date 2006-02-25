@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r0p3    14-Feb-2006 HMK Clear m_metaEvent in DigiEvent
 v9r0p2    13-Feb-2006 EAC Added comments, changed Scalar to Scaler.
 v9r0p1    02-Feb-2006 EAC Updated lsf stuff to match dfi header files instead of doc
 v9r0      01-Feb-2006 EAC Added implementation of a missing function
