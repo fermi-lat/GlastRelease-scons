@@ -333,9 +333,15 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             // Check marker to see if this is a data event
             unsigned int summary = ldfReader::LatData::instance()->summaryData().summary();
             marker = EventSummary::marker(summary);
-        //    log << MSG::DEBUG << "Marker = " << marker << endreq;
             static unsigned int skippedEvents = 0;
-            if (!findFirstMarkerFive) {
+  
+            if ( (m_criteriaType != CCSDSFILE) && (findFirstMarkerFive) 
+                 && (m_sweepSearch == 1) && (marker == 5) ) {
+                log << MSG::WARNING << "Found second marker 5 sweep event in"
+                    << " non-LSF file - terminating run" << endreq;
+                *(irfIt) = m_evtEnd;
+                return *irfIt;
+            } else if (!findFirstMarkerFive) {
                 if (marker == 5) { 
                     if (skippedEvents > 0)
                         log << MSG::WARNING << "Skipped " << skippedEvents 
@@ -348,14 +354,6 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
                         << "sweep event is found" << endreq;
                     ++skippedEvents;
                 }
-            }
-
-            if ( (m_criteriaType != CCSDSFILE) && (findFirstMarkerFive) 
-                 && (m_sweepSearch == 1) && (marker == 5) ) {
-                log << MSG::WARNING << "Found second marker 5 sweep event in"
-                    << " non-LSF file - terminating run" << endreq;
-                *(irfIt) = m_evtEnd;
-                return *irfIt;
             }
 
             //if ((marker != 0) || (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
