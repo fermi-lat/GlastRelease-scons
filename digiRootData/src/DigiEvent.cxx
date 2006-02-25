@@ -130,8 +130,11 @@ void DigiEvent::Clear(Option_t *option) {
     m_ebfTimeNanoSec = 0;
     m_ebfUpperPpcTimeBase = 0;
     m_ebfLowerPpcTimeBase = 0;
-    m_levelOneTrigger.Clear();
-    m_summary.Clear();
+    m_levelOneTrigger.Clear("");
+    m_summary.Clear("");
+    m_metaEvent.Clear("");
+
+
     m_calDigiCloneCol->Clear("C");
     /*if (m_calDigiCol) {
         m_calDigiCol->Delete();
