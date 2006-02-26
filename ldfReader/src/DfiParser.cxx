@@ -96,8 +96,6 @@ int DfiParser::nextEvent() {
 
 int DfiParser::readContextAndInfo() {
 
-    //m_context.dump();
-    //m_info.dump();
     lsfData::MetaEvent *metaEvent = ldfReader::LatData::instance()->getMetaEventPtr();
 
     lsfData::TimeTone current;
@@ -124,7 +122,7 @@ int DfiParser::readContextAndInfo() {
 
     lsfData::LpaConfiguration config(m_info.hardwareKey, m_info.softwareKey);
     metaEvent->setConfiguration(config);
-
+ 
     return 0;
 }
 
