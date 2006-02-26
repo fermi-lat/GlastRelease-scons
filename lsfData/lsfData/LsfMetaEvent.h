@@ -89,7 +89,7 @@ namespace lsfData {
       m_datagram = datagram;
       m_scalers = scalers;
       m_time = time;
-      delete m_config;
+      if(m_config) delete m_config;
       m_config = configuration.clone();
       m_type = configuration.type();
     }

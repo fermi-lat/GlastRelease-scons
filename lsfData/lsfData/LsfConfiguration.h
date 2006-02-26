@@ -113,7 +113,7 @@ namespace lsfData {
     }
 
     /// This is a poor-man's dynamic cast
-    virtual LpaConfiguration* castToLpaConfig() { return this; };
+    virtual const LpaConfiguration* castToLpaConfig() const { return this; };
     
     /// What type of configuration is this?
     virtual enums::Lsf::RunType type() const { return enums::Lsf::LPA; }    
@@ -132,7 +132,7 @@ namespace lsfData {
     
     //  Set individual values
     void setHardwareKey( unsigned int value ) { m_hardwareKey = value; }
-    void setSoftwareKey( unsigned int value ) { m_hardwareKey = value; }  
+    void setSoftwareKey( unsigned int value ) { m_softwareKey = value; }  
     
     
   private:

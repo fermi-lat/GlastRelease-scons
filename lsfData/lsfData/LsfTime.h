@@ -67,9 +67,17 @@ namespace lsfData {
     std::ostream& fillStream( std::ostream& s ) const {
 
       s << " current:  secs = " << m_current.timeSecs() << "\n"
-        << m_current.timeHack()
+        << "   tics  = 0x" << std::hex << std::uppercase << std::setfill('0') 
+        << std::setw(8)
+        << m_current.timeHack().ticks() << " (" 
+        << std::dec << m_current.timeHack().ticks() << ")" << std::endl
+        << "   hacks = 0x" << std::hex << m_current.timeHack().hacks() << " ("
+        << std::dec << m_current.timeHack().hacks() << ")" << std::endl
         << " previous:  secs = " << m_previous.timeSecs() << "\n"
-        << m_previous.timeHack();
+        << "   tics  = 0x" << std::hex << m_previous.timeHack().ticks() << " (" 
+        << std::dec << m_previous.timeHack().ticks() << ")" << std::endl
+        << "   hacks = 0x" << std::hex << m_previous.timeHack().hacks() << " ("
+        << std::dec << m_previous.timeHack().hacks() << ")" << std::endl;
 
       return s;
     }

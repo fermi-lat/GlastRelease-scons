@@ -53,7 +53,8 @@ namespace lsfData {
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const {
       
-      s << "tics  = 0x" << std::hex << std::setfill('0') << m_ticks 
+      s << "tics  = 0x" << std::hex << std::setfill('0') << std::setw(8)
+        << m_ticks 
         << " (" << std::dec << m_ticks << ")\n"
         << "hacks = 0x" << std::hex << m_hacks << " (" << std::dec
         << m_hacks << ")\n";

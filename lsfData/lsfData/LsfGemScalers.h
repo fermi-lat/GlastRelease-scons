@@ -73,7 +73,8 @@ namespace lsfData {
 
     /// Fill the output stream (ASCII)
     std::ostream& fillStream( std::ostream& s ) const {
-      s << " scalers:  elapsed   = 0x" << std::hex << std::setfill('0')
+      s << " scalers:  elapsed   = 0x" << std::hex << std::nouppercase
+        << std::setfill('0') << std::setw(8)
         << elapsed() << " = " << std::dec << elapsed() << "\n"
         << " scalers:  livetime  = 0x" << std::hex << livetime() << " = "
         << std::dec << livetime() << "\n"
