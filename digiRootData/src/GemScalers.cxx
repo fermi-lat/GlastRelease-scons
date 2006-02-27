@@ -1,4 +1,4 @@
-#include "digiRootData/LsfGemScalers.h"
+#include "digiRootData/GemScalers.h"
 #include <iostream>
 
 ClassImp(GemScalers) ;

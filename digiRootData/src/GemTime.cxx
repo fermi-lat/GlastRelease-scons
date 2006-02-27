@@ -1,4 +1,4 @@
-#include "digiRootData/LsfGemTime.h"
+#include "digiRootData/GemTime.h"
 #include <iostream>
 
 ClassImp(GemTime) ;

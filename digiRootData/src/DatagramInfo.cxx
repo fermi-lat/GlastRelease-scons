@@ -1,4 +1,4 @@
-#include "digiRootData/LsfDatagramInfo.h"
+#include "digiRootData/DatagramInfo.h"
 #include <iostream>
 
 ClassImp(DatagramInfo) ;

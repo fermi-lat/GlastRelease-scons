@@ -1,4 +1,4 @@
-#include "digiRootData/LsfRunInfo.h"
+#include "digiRootData/RunInfo.h"
 #include <iostream>
 
 ClassImp(RunInfo) ;

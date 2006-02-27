@@ -5,10 +5,10 @@
 #include "TObject.h"
 
 #include "LsfTime.h"
-#include "LsfRunInfo.h"
-#include "LsfDatagramInfo.h"
-#include "LsfGemScalers.h"
-#include "LsfConfiguration.h"
+#include "RunInfo.h"
+#include "DatagramInfo.h"
+#include "GemScalers.h"
+#include "Configuration.h"
 
 /** @class MetaEvent
 * @brief Encapsulate information about the State of the LAT when a particular event was captured.
@@ -38,7 +38,7 @@ public:
   /// Standard c'tor.  Takes input values for all fields
   MetaEvent( const RunInfo& run, const DatagramInfo& datagram, 
 	     const GemScalers& scalers,
-	     const Time& time,
+	     const LsfTime& time,
 	     const Configuration& configuration )
     :m_run(run),m_datagram(datagram),
      m_scalers(scalers),
@@ -78,7 +78,7 @@ public:
   inline const GemScalers& scalers() const { return m_scalers; }
   
   /// Information about the time markers associated with this event
-  inline const Time& time() const { return m_time; } 
+  inline const LsfTime& time() const { return m_time; } 
   
   /// Information about the configuration keys associated with this event
   inline const Configuration* configuration() const { return m_config; }
@@ -89,7 +89,7 @@ public:
   /// set everything at once
   inline void initialize(const RunInfo& run, const DatagramInfo& datagram, 
 			 const GemScalers& scalers,
-			 const Time& time,
+			 const LsfTime& time,
 			 const Configuration& configuration) {
     m_run = run;
     m_datagram = datagram;
@@ -104,7 +104,7 @@ public:
   inline void setRun( const RunInfo& val) { m_run = val; }
   inline void setDatagram( const DatagramInfo& val) { m_datagram = val; }
   inline void setScalers( const GemScalers& val) { m_scalers = val; }
-  inline void setTime( const Time& val) { m_time = val; }
+  inline void setLsfTime( const LsfTime& val) { m_time = val; }
   inline void setConfiguration( const Configuration& configuration ) {
     if (m_config) delete m_config;
     m_config = configuration.clone();
@@ -143,7 +143,7 @@ private:
   GemScalers m_scalers;
 
   /// Information about the time markers associated with this event  
-  Time m_time;
+  LsfTime m_time;
 
   /// Information about the configuration keys associated with this event
   Configuration* m_config;    //-> 

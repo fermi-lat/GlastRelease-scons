@@ -16,7 +16,7 @@
 #include "Gem.h"
 #include "Tem.h"
 
-#include "LsfMetaEvent.h"
+#include "MetaEvent.h"
 
 /** @class DigiEvent
  * @brief This is the top-level event class to store the Digi data.

@@ -1,4 +1,4 @@
-#include "digiRootData/LsfMetaEvent.h"
+#include "digiRootData/MetaEvent.h"
 #include <iostream>
 
 ClassImp(MetaEvent) ;

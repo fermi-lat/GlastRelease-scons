@@ -1,5 +1,5 @@
 package digiRootData
-version v9r0p3
+version v9r1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
 # $Id$
@@ -18,14 +18,14 @@ apply_pattern root_package headers="\
  ../digiRootData/DigiEvent.h\
  ../digiRootData/GlastAxis.h\
  ../digiRootData/L1T.h\
- ../digiRootData/LsfGemTime.h\
- ../digiRootData/LsfTimeTone.h\
+ ../digiRootData/GemTime.h\
+ ../digiRootData/TimeTone.h\
  ../digiRootData/LsfTime.h\
- ../digiRootData/LsfRunInfo.h\
- ../digiRootData/LsfDatagramInfo.h\
- ../digiRootData/LsfGemScalers.h\
- ../digiRootData/LsfConfiguration.h\
- ../digiRootData/LsfMetaEvent.h\
+ ../digiRootData/RunInfo.h\
+ ../digiRootData/DatagramInfo.h\
+ ../digiRootData/GemScalers.h\
+ ../digiRootData/Configuration.h\
+ ../digiRootData/MetaEvent.h\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/Gem.h\

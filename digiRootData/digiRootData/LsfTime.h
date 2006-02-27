@@ -1,47 +1,47 @@
-#ifndef ROOT_TIME_H
-#define ROOT_TIME_H 1
+#ifndef ROOT_LSFTIME_H
+#define ROOT_LSFTIME_H 1
 
 #include <iostream>
 
-#include "LsfTimeTone.h"
-#include "LsfGemTime.h"
+#include "TimeTone.h"
+#include "GemTime.h"
 
-/** @class Time
+/** @class LsfTime
 *
 * $Header$
 */
 
 
-class Time : public TObject {
+class LsfTime : public TObject {
   
 public:
 
   /// Default c'tor.  Assigns sentinel values to all fields
-  Time()
+  LsfTime()
     :m_current(),m_previous(),
     m_timeHack(),m_timeTicks(LSF_INVALID_UINT){
   }
   
   /// Standard c'tor.  Takes input values for all fields
-  Time( const TimeTone& current, const TimeTone& previous,
+  LsfTime( const TimeTone& current, const TimeTone& previous,
 	const GemTime& timeHack, UInt_t timeTicks)
     :m_current(current),m_previous(previous),
      m_timeHack(timeHack),m_timeTicks(timeTicks){
   }
   
   /// Copy c'tor.  Nothing fancy, just copy all values.
-  Time( const Time& other )
+  LsfTime( const LsfTime& other )
     :TObject(other),
      m_current(other.current()),m_previous(other.previous()),
      m_timeHack(other.timeHack()),m_timeTicks(other.timeTicks()){
   }
 
   /// D'tor.  Nothing special.
-  virtual ~Time(){
+  virtual ~LsfTime(){
   }
     
   /// Assignement operator.  Nothing fancy, just copy all values.
-  inline Time& operator=( const Time& other ) {
+  inline LsfTime& operator=( const LsfTime& other ) {
     initialize(other.current(),other.previous(),
 	       other.timeHack(),other.timeTicks());
     return *this;
@@ -89,7 +89,7 @@ public:
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
 
   /// Compare to another in tests
-  Bool_t CompareInRange( const Time &, const std::string & name = "" ) const ; // for tests
+  Bool_t CompareInRange( const LsfTime &, const std::string & name = "" ) const ; // for tests
   
 private:
   
@@ -103,7 +103,7 @@ private:
   /// The number of 50ns ticks since last the last time hack
   UInt_t m_timeTicks;
   
-  ClassDef(Time,1)   // Information about various time counters at event capture
+  ClassDef(LsfTime,1)   // Information about various time counters at event capture
   
 };
 

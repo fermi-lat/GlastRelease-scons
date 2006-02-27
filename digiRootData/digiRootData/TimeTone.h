@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "TObject.h"
-#include "LsfGemTime.h"
+#include "GemTime.h"
 
 /** @class TimeTone
 * @brief encapsulate the TimeTone Markers that are put in the science data stream.

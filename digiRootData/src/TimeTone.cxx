@@ -1,4 +1,4 @@
-#include "digiRootData/LsfTimeTone.h"
+#include "digiRootData/TimeTone.h"
 #include <iostream>
 
 ClassImp(TimeTone) ;

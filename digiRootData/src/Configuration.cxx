@@ -1,4 +1,4 @@
-#include "digiRootData/LsfConfiguration.h"
+#include "digiRootData/Configuration.h"
 #include <iostream>
 
 ClassImp(Configuration) ;
