@@ -17,7 +17,7 @@ public:
   typedef std::vector<unsigned int>UintVector;
   enum VolumeType{ Simple, Composite, Xstack, Ystack, Zstack };
   enum SenseType {posSensitive, intSensitive, Nonsensitive};
-  enum ShapeType{ Box, Tube };
+  enum ShapeType{ Box, Tube, Sphere };
   enum VisitorRet { More, AbortSubtree};
 
   /** Notification of a new shape

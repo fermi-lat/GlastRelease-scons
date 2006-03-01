@@ -32,6 +32,8 @@ public:
 
     virtual void visitTube(detModel::Tube*);
 
+    virtual void visitSphere(detModel::Sphere*);
+
     virtual void visitPosXYZ(detModel::PosXYZ*);
     
     virtual void visitAxisMPos(detModel::AxisMPos*);

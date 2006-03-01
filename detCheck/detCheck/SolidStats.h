@@ -53,6 +53,7 @@ namespace detCheck {
     virtual void visitEnsemble(detModel::Ensemble* ens);
     virtual void visitBox(detModel::Box* box);
     virtual void visitTube(detModel::Tube* tube);
+    virtual void visitSphere(detModel::Sphere* tube);
     virtual void visitPosXYZ(detModel::PosXYZ* pos);
     virtual void visitAxisMPos(detModel::AxisMPos* axisPos);
     virtual void visitIdField(detModel::IdField* field);
