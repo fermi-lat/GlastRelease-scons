@@ -15,8 +15,8 @@ static const char* ModeStr[] = { "rb", "wb" };
 
 namespace eventFile {
 
-  LPA_File::LPA_File( const std::string& filename, LPA_File::Mode openmode )
-    : m_name( filename ), m_mode( ModeStr[openmode] )
+  LPA_File::LPA_File( const std::string& filename, LPA_File::Mode openmode, unsigned runid )
+    : m_name( filename ), m_mode( ModeStr[openmode] ), m_runid( runid )
   {
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );
@@ -28,6 +28,16 @@ namespace eventFile {
       ess << " with mode '" << m_mode << "' ";
       ess << "(" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
+    }
+
+    // if we're reading, read the runid; if writing, write the runid
+    switch ( openmode ) {
+    case Read:
+      fread( &m_runid, sizeof( unsigned ), 1, m_FILE );
+      break;
+    case Write:
+      fwrite( &m_runid, sizeof( unsigned ), 1, m_FILE );
+      break;
     }
   }
 

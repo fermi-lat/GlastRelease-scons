@@ -41,6 +41,8 @@ int main( int argc, char* argv[] )
     std::cout << e.what() << std::endl;
   }
 
+  std::cout << "Data file for run " << pLPA->runid() << std::endl;
+
   // declare objects to receive the event information
   eventFile::LSE_Context ctx;
   eventFile::EBF_Data    ebf;

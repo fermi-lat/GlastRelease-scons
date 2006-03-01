@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v0r2   01-Feb-2006 RBL added runid to files and runid() accessor to LPA_File object.
  * v0r1   23-Feb-2006 RBL first working version -- writes/reads binary event files.
  * v0     23-Feb-2006 RBL Initial revision
  * @endverbatim
