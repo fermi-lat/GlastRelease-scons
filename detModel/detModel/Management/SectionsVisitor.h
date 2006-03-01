@@ -8,6 +8,7 @@ namespace detModel{
   class Section;
   class Box;
   class Tube;
+  class Sphere;
   class Ensemble;
   class PosXYZ;
   class AxisMPos;
@@ -41,6 +42,10 @@ namespace detModel{
      * This is the visitor for the Tube 
      */
     virtual void visitTube(Tube*) = 0;
+    /**
+     * This is the visitor for the Tube 
+     */
+    virtual void visitSphere(Sphere*) = 0;
     /**
      * This is the visitor for the PosXYZ 
      */

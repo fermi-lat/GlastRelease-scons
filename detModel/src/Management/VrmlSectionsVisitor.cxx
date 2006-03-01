@@ -11,6 +11,7 @@
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -225,6 +226,22 @@ namespace detModel{
     numVol++;
   }
 
+  void  VrmlSectionsVisitor::visitSphere(Sphere* sphere)
+  {
+    out << "Transform { " << std::endl;
+    out << "rotation " << " 1 0 0 " <<  3.141927/2 << std::endl;  
+    out << "children [ " << std::endl;
+    out << "Shape {   #" << sphere->getName() << std::endl;
+    out << "appearance USE " << sphere->getMaterial() << std::endl;
+    out << "  geometry Sphere { " << std::endl;
+    out << "                     radius " << sphere->getRout() << std::endl; 
+    out << "                    }" << std::endl;  
+    out << "   }" << std::endl;
+    out << "] " << std::endl; 
+    out << "} " << std::endl;
+    numVol++;
+  }
+  
   void  VrmlSectionsVisitor::visitPosXYZ(PosXYZ* pos)
   {
     out << "Transform { " << std::endl;

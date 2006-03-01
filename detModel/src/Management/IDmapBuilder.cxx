@@ -11,6 +11,7 @@
 #include "detModel/Sections/Choice.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -111,6 +112,10 @@ void  IDmapBuilder::visitBox(Box*)
 }
 
 void  IDmapBuilder::visitTube(Tube*)
+{
+}
+
+void  IDmapBuilder::visitSphere(Sphere*)
 {
 }
 

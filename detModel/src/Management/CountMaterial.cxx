@@ -7,6 +7,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -109,6 +110,11 @@ namespace detModel{
     m_matNumber[t->getMaterial()]++;
   }
 
+  void CountMaterial::visitSphere(Sphere* s)
+  {
+    m_matNumber[s->getMaterial()]++;
+  }
+  
   void CountMaterial::printTable()
   {
     std::cout << "Materials usage summary: " << std::endl;

@@ -1,11 +1,13 @@
 #ifndef COUNTMATERIAL_H
 #define COUNTMATERIAL_H
 #include "detModel/Management/SectionsVisitor.h"
-#include "detModel/Sections/Box.h"
-#include "detModel/Sections/Tube.h"
 #include <map>
 
 namespace detModel{
+
+  class Sphere;
+  class Tube;
+  class Box;
 
   /**
    *  This visitor counts the number of volumes that has
@@ -23,6 +25,7 @@ namespace detModel{
     virtual void visitEnsemble(Ensemble*);
     virtual void visitBox(Box*);
     virtual void visitTube(Tube*);
+    virtual void visitSphere(Sphere*);
     virtual void visitPosXYZ(PosXYZ*);
     virtual void visitAxisMPos(AxisMPos*);
     virtual void visitIdField(IdField*){};

@@ -18,6 +18,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -427,6 +428,7 @@ namespace detModel{
 
       if (tagName == "box") s->addVolume(buildBox(children[i]));
       else if (tagName == "tubs") s->addVolume(buildTube(children[i]));
+      else if (tagName == "sphere") s->addVolume(buildSphere(children[i]));      
       else if (tagName == "choice") s->addVolume(buildChoice(children[i]));
       else if (tagName == "composition") {
         s->addVolume(buildComposition(children[i]));
@@ -559,6 +561,42 @@ namespace detModel{
     else if (sensAtt == "intHit") t->setSensitive(2);
     else t->setSensitive(0);
     return t;
+  }
+
+  Sphere* XercesBuilder::buildSphere(DOMElement* e)
+  {
+    using xmlBase::Dom;
+
+    Sphere* s = new Sphere(Dom::getAttribute(e, "name"));
+
+
+    try {
+      double attVal = Dom::getDoubleAttribute(e, "RIn");
+      if (attVal != 0) s->setRin(attVal);
+      attVal = Dom::getDoubleAttribute(e, "ROut");
+      if (attVal != 0) s->setRout(attVal);
+      attVal = Dom::getDoubleAttribute(e, "PhiMin");
+      if (attVal != 0) s->setPhiMin(attVal);
+      attVal = Dom::getDoubleAttribute(e, "PhiMax");
+      if (attVal != 0) s->setPhiMax(attVal);
+      attVal = Dom::getDoubleAttribute(e, "ThetaMin");
+      if (attVal != 0) s->setThetaMin(attVal);
+      attVal = Dom::getDoubleAttribute(e, "ThetaMax");
+      if (attVal != 0) s->setThetaMax(attVal);
+    }
+    catch (xmlBase::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildSphere" << std::endl
+                << ex.getMsg() << std::endl;
+      throw ex;
+    }
+
+    s->setMaterial(Dom::getAttribute(e, "material"));
+
+    std::string sensAtt = Dom::getAttribute(e, "sensitive");
+    if (sensAtt == "posHit") s->setSensitive(1);
+    else if (sensAtt == "intHit") s->setSensitive(2);
+    else s->setSensitive(0);
+    return s;
   }
 
 
