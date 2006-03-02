@@ -565,6 +565,9 @@ namespace detModel{
 
   Sphere* XercesBuilder::buildSphere(DOMElement* e)
   {
+    static const double PI=3.14159265358979323846;
+    static const double toRadians = PI/180;
+
     using xmlBase::Dom;
 
     Sphere* s = new Sphere(Dom::getAttribute(e, "name"));
@@ -576,13 +579,13 @@ namespace detModel{
       attVal = Dom::getDoubleAttribute(e, "ROut");
       if (attVal != 0) s->setRout(attVal);
       attVal = Dom::getDoubleAttribute(e, "PhiMin");
-      if (attVal != 0) s->setPhiMin(attVal);
+      if (attVal != 0) s->setPhiMin(attVal*toRadians);
       attVal = Dom::getDoubleAttribute(e, "PhiMax");
-      if (attVal != 0) s->setPhiMax(attVal);
+      if (attVal != 0) s->setPhiMax(attVal*toRadians);
       attVal = Dom::getDoubleAttribute(e, "ThetaMin");
-      if (attVal != 0) s->setThetaMin(attVal);
+      if (attVal != 0) s->setThetaMin(attVal*toRadians);
       attVal = Dom::getDoubleAttribute(e, "ThetaMax");
-      if (attVal != 0) s->setThetaMax(attVal);
+      if (attVal != 0) s->setThetaMax(attVal*toRadians);
     }
     catch (xmlBase::DomException ex) {
       std::cerr << "From detModel::XercesBuilder::buildSphere" << std::endl
