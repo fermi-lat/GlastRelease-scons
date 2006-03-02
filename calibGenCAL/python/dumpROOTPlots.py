@@ -89,7 +89,7 @@ for k in rootFile.GetListOfKeys():
     if cls.InheritsFrom("TH1"):
         hist = k.ReadObj()
         # Draw me to a canvas before printing....
-        cvs = TCanvas(rootPath, hist.GetName(),-1)
+        cvs = TCanvas(hist.GetTitle(), hist.GetName(),-1)
         hist.Draw()
         cvs.Update()
 
