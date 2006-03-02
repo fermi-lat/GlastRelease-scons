@@ -4,7 +4,7 @@
 
 ClassImp(CalXtalId)
 
-#include <iostream>
+#include "Riostream.h"
 using namespace std;
 
 #include "TObject.h"

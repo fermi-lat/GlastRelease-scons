@@ -6,7 +6,7 @@
 // Author:  Heather Kelly                       
 
 #include "commonRootData/RelTable.h"
-#include <iostream>
+#include "Riostream.h"
 #include "TCollection.h"  // Declares TIter
 
 ClassImp(RelTable)

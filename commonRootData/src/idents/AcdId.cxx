@@ -10,7 +10,7 @@
 
 #include <commonRootData/idents/AcdId.h>
 #include <commonRootData/RootDataUtil.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(AcdId)
 

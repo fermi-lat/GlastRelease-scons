@@ -6,7 +6,7 @@
 // Author:  Heather Kelly                       
 
 #include "commonRootData/Relation.h"
-#include <iostream>
+#include "Riostream.h"
 #include "TCollection.h"  // Declares TIter
 
 ClassImp(Relation)

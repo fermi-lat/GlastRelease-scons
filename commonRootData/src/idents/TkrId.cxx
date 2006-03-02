@@ -1,7 +1,7 @@
 
 #include "commonRootData/idents/TkrId.h"
 #include <commonRootData/RootDataUtil.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(commonRootData::TkrId)
 

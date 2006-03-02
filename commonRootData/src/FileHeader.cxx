@@ -3,7 +3,7 @@
 #include "commonRootData/RootObj.h"
 #include <TObjString.h>
 #include <TNamed.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(FileHeader)
 

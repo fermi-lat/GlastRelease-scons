@@ -1,7 +1,7 @@
 
 #include "commonRootData/idents/VolumeIdentifier.h"
 #include <commonRootData/RootDataUtil.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(VolumeIdentifier)
 
