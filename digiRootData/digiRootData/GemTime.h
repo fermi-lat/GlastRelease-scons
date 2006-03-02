@@ -1,8 +1,7 @@
 #ifndef ROOT_GEMTIME_H
 #define ROOT_GEMTIME_H 1
 
-#include <iostream>
-
+#include "Riostream.h"
 #include "TObject.h"
 #include "enums/Lsf.h"
 
@@ -72,6 +71,14 @@ public:
   }
   /// ROOT print function
   void Print(Option_t* /* option="" */) const;
+
+   /// Output operator (ASCII)
+   friend std::ostream& operator<< ( std::ostream& s, const GemTime& obj )    {
+      return obj.fillStream(s);
+   }
+
+    /// Fill the output stream (ASCII)
+   std::ostream& fillStream( std::ostream& s ) const;
 
   /// Create a fake for tests
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 

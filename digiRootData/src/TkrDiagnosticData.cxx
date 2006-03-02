@@ -4,7 +4,7 @@
 //                                                                       
 
 #include "digiRootData/TkrDiagnosticData.h"
-#include <iostream>
+#include "Riostream.h"
 // Online EBF Library
 #include "TKRdiagnostic.h"
 

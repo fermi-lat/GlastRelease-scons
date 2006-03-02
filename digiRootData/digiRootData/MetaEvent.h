@@ -1,7 +1,7 @@
 #ifndef ROOT_METAEVENT_H
 #define ROOT_METAEVENT_H 1
 
-#include <iostream>
+#include "Riostream.h"
 #include "TObject.h"
 
 #include "LsfTime.h"

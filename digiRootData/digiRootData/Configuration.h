@@ -1,7 +1,7 @@
 #ifndef ROOT_CONFIGURATION_H
 #define ROOT_CONFIGURATION_H 1
 
-#include <iostream>
+#include "Riostream.h"
 #include "TObject.h"
 
 #include "enums/Lsf.h"
@@ -93,7 +93,7 @@ public:
   }
   
   /// This is a poor-man's dynamic cast
-  virtual LpaConfiguration* castToLpaConfig() { return this; };
+  virtual const LpaConfiguration* castToLpaConfig() const { return this; };
     
   /// What type of configuration is this?
   virtual enums::Lsf::RunType runType() const { return  enums::Lsf::LPA; }    
@@ -122,6 +122,15 @@ public:
 
   /// ROOT print function
   void Print(Option_t* /* option="" */) const;
+
+  /// Output operator (ASCII)
+  friend std::ostream& operator<< ( std::ostream& s, const LpaConfiguration& obj )
+  {
+      return obj.fillStream(s);
+  }
+
+  /// Fill the output stream (ASCII)
+  std::ostream& fillStream( std::ostream& s ) const;
 
   /// Create a fake for tests
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 

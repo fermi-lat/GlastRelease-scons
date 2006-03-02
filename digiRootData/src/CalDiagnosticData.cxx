@@ -3,7 +3,7 @@
 //                                                                       
 
 #include "digiRootData/CalDiagnosticData.h"
-#include <iostream>
+#include "Riostream.h"
 // From Online EBF library
 #include "CALdiagnostic.h"
 

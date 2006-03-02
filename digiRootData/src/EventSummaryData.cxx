@@ -4,7 +4,7 @@
 //
 
 #include "digiRootData/EventSummaryData.h"
-#include <iostream>
+#include "Riostream.h"
 #include "eventSummary.h"
 
 using namespace std;

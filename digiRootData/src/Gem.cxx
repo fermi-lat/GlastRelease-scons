@@ -4,7 +4,7 @@
 //
 
 #include "digiRootData/Gem.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(GemTileList)
 ClassImp(GemOnePpsTime)

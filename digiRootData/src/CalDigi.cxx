@@ -1,5 +1,5 @@
 #include "digiRootData/CalDigi.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(CalDigi)
 

@@ -1,5 +1,5 @@
 #include "digiRootData/TkrDigi.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(TkrDigi)
 

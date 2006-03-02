@@ -4,7 +4,7 @@
 //                                                                       
 
 #include "digiRootData/Tem.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(Tem)
 

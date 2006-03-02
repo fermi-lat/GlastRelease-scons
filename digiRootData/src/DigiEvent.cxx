@@ -4,7 +4,7 @@
 //
 
 #include "digiRootData/DigiEvent.h"
-#include <iostream>
+#include "Riostream.h"
 #include "TCollection.h"  // Declares TIter
 
 using namespace std;

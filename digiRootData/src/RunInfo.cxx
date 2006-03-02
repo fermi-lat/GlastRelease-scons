@@ -1,5 +1,5 @@
 #include "digiRootData/RunInfo.h"
-#include <iostream>
+#include <iomanip>
 
 ClassImp(RunInfo) ;
 
@@ -41,4 +41,14 @@ Int_t RunInfo::Compare(const TObject *obj) const {
   if ( m_origin != other->dataOrigin() ) return m_origin > other->dataOrigin() ? 1 : -1;
   // they are equivalent
   return 0;  
+}
+
+std::ostream& RunInfo::fillStream( std::ostream& s ) const {
+    s << " run:      groundid = 0x" << std::hex << std::uppercase
+      << std::setfill('0') << std::setw(8)
+      << id() << std::dec << ", started = 0x" << std::hex
+      << startTime() << std::dec << " (" << startTime() << ")\n"
+      << " run:      platform = (" << platform() << ")\n"
+      << " run:      origin = (" << dataOrigin() << ")\n";
+    return s;
 }

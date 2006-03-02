@@ -4,7 +4,7 @@
 //                                                                       
 
 #include "digiRootData/ErrorData.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(ErrorData)
 

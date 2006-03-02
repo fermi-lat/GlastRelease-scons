@@ -1,5 +1,5 @@
 #include "digiRootData/CalXtalReadout.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(CalXtalReadout)
 

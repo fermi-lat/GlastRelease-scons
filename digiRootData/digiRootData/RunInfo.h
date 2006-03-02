@@ -1,7 +1,7 @@
 #ifndef ROOT_RUNINFO_H
 #define ROOT_RUNINFO_H 1
 
-#include <iostream>
+#include "Riostream.h"
 #include "TObject.h"
 #include "enums/Lsf.h"
 
@@ -128,6 +128,15 @@ public:
   
   /// Specify that this class is sortable
   virtual Bool_t IsSortable() const { return kTRUE; };
+
+
+   /// Output operator (ASCII)
+   friend std::ostream& operator<< ( std::ostream& s, const RunInfo& obj )    {
+      return obj.fillStream(s);
+   }
+
+    /// Fill the output stream (ASCII)
+   std::ostream& fillStream( std::ostream& s ) const;
   
 private:
   

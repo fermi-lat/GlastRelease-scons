@@ -1,5 +1,4 @@
 #include "digiRootData/Configuration.h"
-#include <iostream>
 
 ClassImp(Configuration) ;
 
@@ -9,6 +8,13 @@ void LpaConfiguration::Print(Option_t* /*option*/) const {
   /// FIXME
   using namespace std;
   cout << "Configuration FIXME" << endl; 
+}
+
+std::ostream& LpaConfiguration::fillStream( std::ostream& s ) const {
+    s << " softwareKey = 0x" << std::hex << std::setfill('0')
+      << m_softwareKey << "\n"
+      << " hardwareKey = 0x" << m_hardwareKey << std::endl;
+    return s;
 }
 
 void LpaConfiguration::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */ ) {
