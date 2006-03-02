@@ -364,6 +364,16 @@ bool IDmapBuilder::getShapeByID(idents::VolumeIdentifier id,
         params->push_back(tube->getRin());
         params->push_back(tube->getRout());
       }
+      else if (Sphere* sphere = dynamic_cast<Sphere*>(volume) )
+      {
+        *s="sphere";
+        params->push_back(sphere->getRin());
+        params->push_back(sphere->getRout());
+        params->push_back(sphere->getPhiMin());
+        params->push_back(sphere->getPhiMax());
+        params->push_back(sphere->getThetaMin());
+        params->push_back(sphere->getThetaMax());
+      }      
       return true;
     }
   else return false;
