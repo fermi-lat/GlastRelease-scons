@@ -1,5 +1,4 @@
 package EbfWriter
-version v0r0p9
 # $Header$
 
 author Brian Winer <winer@mps.ohio-state.edu>
