@@ -13,7 +13,8 @@ xx/** @mainpage package LdfConverter
   @section jobOptions jobOptions
   @param LdfEventSelector.StorageType
   REQUIRED. String which must be one of supported types, currently 
-  "LDFFILE for raw ldf or  "LDFFITS" for FITSified ldf or
+  "CCSDSFILE" for LSF
+  "LDFFILE" for raw ldf or  "LDFFITS" for FITSified ldf or
   "EBFFILE" for raw ebf or "EBFFITS" for (slightly) FITSified ebf or
   "NONE" for no real input at all.
   @param InputList
@@ -23,6 +24,12 @@ xx/** @mainpage package LdfConverter
   REQUIRED  Integer. Max. number of events to be processed
   @param  LdfEventSelector.Instrument
   String. Unused for now (with external EBF library v3 and later)
+  @param LdfEventSelector.StartEventIndex
+  Integer.  Allows user to request a specific event identified by its index
+  (placement) within the input.
+  @param LdfEventSelector.StartEventNumber
+  Integer.  Allows user to request a specific event number (as reflected in 
+  the data) as the stating event.
   @param LdfEventSelector.EbfDebugLevel
   Integer.  Defaults to 0 (no debug output).  Anything else enables 
   debug output

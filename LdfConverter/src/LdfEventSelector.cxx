@@ -304,8 +304,8 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         }
         
         bool DONE=false;
-        static bool foundEventNumber = false;  // Once we find the eventNumber
-        // we carry on from there
+        static bool foundEventNumber = false;  
+        // Once we find the eventNumber, we carry on from there
 
         while ((!DONE) || (!findFirstMarkerFive)) {
           int status = m_ebfParser->loadData();
@@ -357,22 +357,32 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
             }
 
             //if ((marker != 0) || (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
-            if ( (!findFirstMarkerFive) || (counter < m_startEventIndex) || (!foundEventNumber) ) {
 
-              // Always increment skip counter, no matter what type of data was
-              // loaded.
-              counter++;
+          // If we haven't found first Sweep event, or haven't located the
+          // event index we're searching for or found the event number or
+          // we're reading LDF and have marker == 5
+          // THEN read in next event and continue
+            if ( (!findFirstMarkerFive) ||
+                 (counter < m_startEventIndex) ||
+                 (!foundEventNumber) ||
+                 ( (m_criteriaType != CCSDSFILE) && (marker == 5) ) ) {
 
-              // Move file pointer for the next event
-              int ret = m_ebfParser->nextEvent();
-              if (ret != 0) {
-                log << MSG::INFO << "Input event source exhausted" << endreq;
-                *(irfIt) = m_evtEnd;
-                return *irfIt;
-              }
-             }
-            //if ( (marker == 0) && (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
-            if ( (findFirstMarkerFive) && (counter >= m_startEventIndex) && (foundEventNumber) ) DONE = true;
+                // Always increment skip counter, no matter what type of data 
+                // was loaded.
+                counter++;
+
+                // Move file pointer for the next event
+                int ret = m_ebfParser->nextEvent();
+                if (ret != 0) {
+                  log << MSG::INFO << "Input event source exhausted" << endreq;
+                  *(irfIt) = m_evtEnd;
+                  return *irfIt;
+                }
+            // Otherwise, check to see if we found an event to process
+             } else if ( (findFirstMarkerFive) && 
+                         (counter >= m_startEventIndex) && 
+                         (foundEventNumber) ) 
+                 DONE = true;
           }
         }
         
