@@ -27,9 +27,9 @@ segment tile</prim>
    spherical segment tile </prim>
   <prim name="sphereTileMaxPhi" value="360" uType="angle">
 Max phi for spherical segment tile </prim>
-  <prim name="sphereTileMinTheta" value="169.61114" uType="angle">  
+  <prim name="sphereTileMinTheta" value="0" uType="angle">  
 Min theta for spherical segment tile</prim>
-  <prim name="sphereTileMaxTheta" value="180.0" uType="angle"> 
+  <prim name="sphereTileMaxTheta" value="10.39995" uType="angle"> 
 Max theta for spherical segment tile</prim>
   <prim name="topTileXEdge_l" value="329.667">X dimension of outermost (in X)
   top tiles, i.e., columns 0 and 4. Modified November 05 from new (2005) 
