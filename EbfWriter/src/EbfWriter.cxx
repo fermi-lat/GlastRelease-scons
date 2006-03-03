@@ -348,7 +348,7 @@ StatusCode EbfWriter::execute()
         // This is the old method...single pedestal etc.
 //        double obsEn = cal.getTotalEnergy();
         
-        // This is new way that let's CalRecon deal with all the peds and gains
+        // This is new way that lets CalRecon deal with all the peds and gains
         double obsEn = 0.;
         SmartDataPtr<Event::CalClusterCol> pCals(eventSvc(),EventModel::CalRecon::CalClusterCol);
         if(pCals) {
@@ -544,7 +544,11 @@ StatusCode EbfWriter::getMcEvent(double oEn)
          Event::McParticleCol::const_iterator pMCPrimary = mcParticle->begin();
         // Skip the first particle... it's for bookkeeping.
         // The second particle is the first real propagating particle.
-        pMCPrimary++;
+        // except for beam test data. (Why does beam data have an mcParticle??)
+        unsigned  int numIncident = (*pMCPrimary)->daughterList().size();
+        if(numIncident==0) return StatusCode::SUCCESS;
+        
+        if(numIncident==1) pMCPrimary++;
 
         Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
         m_McInfo.sourceType = (unsigned short int)hepid;
