@@ -527,7 +527,8 @@ StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc) {
                 for(int rng = 0; rng<4; rng++) {
                   float ped[2];
                   for(int face=0; face<2; face++) {
-                      idents::CalXtalId rngXtalId(twr,lyr,col,face,rng);
+//                      idents::CalXtalId rngXtalId(twr,lyr,col,face,rng);
+                      RngIdx rngXtalId(twr,lyr,col,face,rng);
 
                       float tmpPed, tmpPedSig, tmp;
                     //-- RETRIEVE PEDS --//
@@ -535,6 +536,9 @@ StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc) {
                                                tmpPed,
                                                tmpPedSig,
                                                tmp);                     
+                       tmpPed = 1.0;
+                       tmpPedSig=1.0;
+                       tmp=1.0;
                       
                       float rnd = RandGauss::shoot();
                       ped[face] = tmpPed+(tmpPedSig*rnd);
