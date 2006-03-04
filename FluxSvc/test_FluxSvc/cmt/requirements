@@ -1,0 +1,25 @@
+package test_FluxSvc
+
+version v0
+author T. Burnett <tburnett@u.washington.edu>
+
+use FluxSvc *
+
+use Event       v*
+use GlastSvc    v*
+use astro       v*
+use rootTestData *
+use ntupleWriterSVc *
+
+private
+
+macro_append source "" WIN32 " *.xml"
+
+#new pattern for Gaudi test packages
+
+pattern Gaudi_package_test \
+  set TESTJOBOPTIONS ${<package>_root}/src/jobOptions.txt ; \
+  macro source "*.cxx"   WIN32 "*.h *.cxx jobOptions.txt" ; \
+  application <package> -group=test -import=<import> $(TestGlastMain) $(source) 
+
+apply_pattern  Gaudi_package_test
