@@ -2,8 +2,10 @@
 //-------------------------------------
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
-FluxSvc.source_lib  = {"$(FLUXROOT)/xml/source_library.xml"};
-FluxSvc.source_lib  +={"$(GENERICSOURCESROOT)/xml/source_library.xml"};
+//FluxSvc.source_lib  = {"$(FLUXROOT)/xml/source_library.xml"};
+FluxSvc.source_lib  = {"$(FLUX_XML)/source_library.xml"};
+
+FluxSvc.source_lib  +={"$(GENERICSOURCEs_XML)/source_library.xml"};
 // DC2 launch, for reference here
 // FluxSvc.StartDate = "2007-05-01 00:00:00";
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };

@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r32p3
+version v6r33
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -7,6 +7,7 @@ author  T. Burnett <tburnett@u.washington.edu>
 branches FluxSvc cmt doc cdf 
 
 use GlastPolicy v*
+
 # this is a Gaudi shrared component package
 apply_pattern packageShr
 apply_pattern package_include
@@ -14,14 +15,21 @@ apply_pattern package_include
 use GaudiInterface * IExternal
 use CLHEP * IExternal
 use facilities *
+
 # for livetime
 use Trigger *
-# declare external sources
-use celestialSources * 
 
+# libraries that are only linked locally
+use flux             * -no_auto_imports
+use celestialSources * -no_auto_imports
+
+#this is needed to find the path to the source xml files
+#set FLUX_XML $(flux_root)/xml
+
+# and this makes 
+set GENERICSOURCES_XML $(genericSources_root)/xml
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
-#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE  "${FLUXSVCROOT}"
 
 
@@ -30,35 +38,29 @@ set LHCBDBASE  "${FLUXSVCROOT}"
 private
 use Event       v*
 use GlastSvc    v*
-use astro       v*
-use CalibSvc *
-use CalUtil *
-use CalXtalResponse * 
-use rootTestData *
 
 use ntupleWriterSvc v3r*
 use XMLEXT * IExternal
-# libraries that are only linked locally
-use flux        v8*  -no_auto_imports
 
-macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
-macro_append includes  ' $(ppcmd)"$(FLUXROOT)" '
+
+macro_append includes ' $(ppcmd)"$(flux_root)" '
+macro_append includes ' $(ppcmd)"$(celestialSources_root)" ' 
+
 #  shared component library 
 apply_pattern package_Cshlibflags
 
 private
-macro_append ROOT_libs " -lHist -lGraf "\
-                 WIN32 " libHist.lib libGraf.lib " 
+#macro_append ROOT_libs " -lHist -lGraf "\
+#                 WIN32 " libHist.lib libGraf.lib " 
 
-library  FluxSvc   -import=flux -import=GRB \
+macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
+
+
+library  FluxSvc \
+    -import=flux -import=GRB  -import=tip -import=celestialSources -import=f2c \
      -s=../FluxSvc $(source) \
      -s=Dll *.cxx\
      -s=../src $(source)
-
-
-#  build the test 
-apply_pattern  package_test  import=flux 
-macro_append   jobOptions ""    WIN32 " test/*.xml test/*.txt"
 
 
 
