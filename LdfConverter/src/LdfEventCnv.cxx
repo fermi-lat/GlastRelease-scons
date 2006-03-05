@@ -47,36 +47,37 @@ StatusCode LdfEventCnv::createObj(IOpaqueAddress* ,
     header->setRun(ldfReader::LatData::instance()->runId());
 	
     // Also set the time in the Event::EventHeader
-    unsigned upperPpcTime = ldfReader::LatData::instance()->summaryData().upperPpcTimeBaseWord();
-    unsigned lowerPpcTime = ldfReader::LatData::instance()->summaryData().lowerPpcTimeBaseWord();
-    const double sixteenMHz = 16000000.;
+//    unsigned upperPpcTime = ldfReader::LatData::instance()->summaryData().upperPpcTimeBaseWord();
+//    unsigned lowerPpcTime = ldfReader::LatData::instance()->summaryData().lowerPpcTimeBaseWord();
+//    const double sixteenMHz = 16000000.;
     // To handle th 64-bit value - we separate the computation
     // The upper 32 bits would have to be shifted by 31 (or multiplied)
     // by 2^32 - we divide this by 16000000 to get the upperMultiplier
-    const double upperMultiplier = 268.435456; 
-    double lower = lowerPpcTime / sixteenMHz;
-    double upper = upperPpcTime * upperMultiplier;
-    double ppcSeconds =  upper + lower;
-    float ppcWholeSeconds = floor(ppcSeconds);
-    double frac = ppcSeconds - ppcWholeSeconds;
-    int ppcNanoSec = frac / 0.000000001;
-    log << MSG::DEBUG << "ppcSeconds: " << ppcSeconds << " frace = " << frac << endreq;
-    log << MSG::DEBUG << "ppcNanoSec: " << ppcNanoSec << endreq;
+//    const double upperMultiplier = 268.435456; 
+//    double lower = lowerPpcTime / sixteenMHz;
+//    double upper = upperPpcTime * upperMultiplier;
+//    double ppcSeconds =  upper + lower;
+//    float ppcWholeSeconds = floor(ppcSeconds);
+//    double frac = ppcSeconds - ppcWholeSeconds;
+//    int ppcNanoSec = frac / 0.000000001;
+//    log << MSG::DEBUG << "ppcSeconds: " << ppcSeconds << " frace = " << frac << endreq;
+ //   log << MSG::DEBUG << "ppcNanoSec: " << ppcNanoSec << endreq;
 
     // To eliminate duplicate times, we make use of the PPC time as suggested 
     // by Jim Panetta.  Here we ignore the fractional seconds from the "real"
     // absolute time and add in the fractional seconds as computed by the PPC
     // word.  This should produce a unique time stamp for each event.
-    log << MSG::DEBUG << "seconds: " << ldfReader::LatData::instance()->summaryData().timeSec() << endreq;
-    log << MSG::DEBUG << "nanosec: " << ldfReader::LatData::instance()->summaryData().timeNanoSec() << endreq;
-    facilities::Timestamp facTimeStamp(
-             ldfReader::LatData::instance()->summaryData().timeSec(), 
-             ppcNanoSec);
-    double julTimeStamp = facTimeStamp.getJulian();
-    astro::JulianDate julDate(julTimeStamp);
+//    log << MSG::DEBUG << "seconds: " << ldfReader::LatData::instance()->summaryData().timeSec() << endreq;
+//    log << MSG::DEBUG << "nanosec: " << ldfReader::LatData::instance()->summaryData().timeNanoSec() << endreq;
+//    facilities::Timestamp facTimeStamp(
+//             ldfReader::LatData::instance()->summaryData().timeSec(), 
+//             ppcNanoSec);
+//    double julTimeStamp = facTimeStamp.getJulian();
+//    astro::JulianDate julDate(julTimeStamp);
     // Find number of seconds since missionStart
-    double tdsTimeInSeconds = julDate.seconds() - astro::JulianDate::missionStart().seconds();
-    TimeStamp tdsTimeStamp(tdsTimeInSeconds);
+//    double tdsTimeInSeconds = julDate.seconds() - astro::JulianDate::missionStart().seconds();
+//    TimeStamp tdsTimeStamp(tdsTimeInSeconds);
+    TimeStamp tdsTimeStamp(ldfReader::LatData::instance()->getTimeInSecTds());
     header->setTime(tdsTimeStamp);
 
     // Also set the LiveTime using the LDF.  LiveTime in LDF is in counts
