@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+04-mar-06 v0r8p3 THB Change to FluxSvc implies new uses
 19-feb-06 v0r8p1 THB Extensive modification of test program required by change to implementation
 08-feb-06 v0r8   THB fixes to two ROOT pitfalls
 24-jan-06 v0r7   THB kluge a small feature: do not accept background with limb events
