@@ -41,9 +41,12 @@ int main(int argn, char** argc) {
 
     DfiParser *ebfP = new DfiParser(fileName);
 
+    std::cout << "DfiParser is set up" << std::endl;
+
     int status = 0;
     do {
         status = ebfP->loadData();
+        std::cout << "After loading" << std::endl;
         if (status < 0) {
             std::cout << "Failed to Load data - EOF" << std::endl;
             break;

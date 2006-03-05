@@ -16,6 +16,9 @@ $Header$
 #include <exception>
 #include <iostream>
 
+#include "facilities/Timestamp.h"
+#include "astro/JulianDate.h"
+
 #include "fitsio.h" 
 // so that we can use longer, more descriptive names for FITS routines
 #include "longnam.h"
@@ -392,6 +395,8 @@ const unsigned LdfParser::BufferSize = 64*1024;
             ldfReader::LatData::instance()->checkPacketError();
             ldfReader::LatData::instance()->checkTrgParityError();
 
+            ldfReader::LatData::instance()->setTimeInSecTds(timeForTds());
+
          } catch (LdfException& e) {
             std::cerr << "Caught LdfException: " << e.what() << std::endl;
            throw;
@@ -476,6 +481,36 @@ unsigned* LdfParser::evtremaining(char* buffer)
 {
   static const unsigned EvtRemaining = 2<<2;
   return (unsigned*)(buffer+EvtRemaining);
+}
+
+double LdfParser::timeForTds() {
+    unsigned upperPpcTime = ldfReader::LatData::instance()->summaryData().upperPpcTimeBaseWord();
+    unsigned lowerPpcTime = ldfReader::LatData::instance()->summaryData().lowerPpcTimeBaseWord();
+    const double sixteenMHz = 16000000.;
+    // To handle th 64-bit value - we separate the computation
+    // The upper 32 bits would have to be shifted by 31 (or multiplied)
+    // by 2^32 - we divide this by 16000000 to get the upperMultiplier
+    const double upperMultiplier = 268.435456;
+    double lower = lowerPpcTime / sixteenMHz;
+    double upper = upperPpcTime * upperMultiplier;
+    double ppcSeconds =  upper + lower;
+    float ppcWholeSeconds = floor(ppcSeconds);
+    double frac = ppcSeconds - ppcWholeSeconds;
+    int ppcNanoSec = frac / 0.000000001;
+
+    // To eliminate duplicate times, we make use of the PPC time as suggested
+    // by Jim Panetta.  Here we ignore the fractional seconds from the "real"
+    // absolute time and add in the fractional seconds as computed by the PPC
+    // word.  This should produce a unique time stamp for each event.
+    facilities::Timestamp facTimeStamp(
+             ldfReader::LatData::instance()->summaryData().timeSec(),
+             ppcNanoSec);
+    double julTimeStamp = facTimeStamp.getJulian();
+    astro::JulianDate julDate(julTimeStamp);
+    // Find number of seconds since missionStart
+    double tdsTimeInSeconds = julDate.seconds() - astro::JulianDate::missionStart().seconds();
+
+    return tdsTimeInSeconds;
 }
 
 

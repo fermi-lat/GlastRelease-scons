@@ -100,6 +100,7 @@ namespace ldfReader {
         m_flags = 0;
         m_eventSize = 0;
         m_metaEvent.clear();
+        m_ccsds.clear();
     }
 
 

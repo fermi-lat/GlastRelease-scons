@@ -58,6 +58,8 @@ namespace ldfReader {
         //class Exception{ };
 
     private:
+        double timeForTds();
+
         std::string m_fileName;
         bool        m_fitsWrap;
 

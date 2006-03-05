@@ -61,6 +61,7 @@ namespace ldfReader {
         //class Exception{ };
 
     private:
+        double timeForTds(double utc);
 
         int readContextAndInfo();
 
