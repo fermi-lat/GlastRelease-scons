@@ -38,6 +38,7 @@ DfiParser::DfiParser(const std::string &filename) {
        m_file = NULL;
        m_file = new eventFile::LPA_File(filename, eventFile::LPA_File::Read);
        std::cout << "Created eventFile" << std::endl;
+       m_runId = m_file->runid();
        m_more = m_file->read(m_context, m_info, m_ebf);
        std::cout<< "After first read " << std::endl;
        if (!m_more) {
@@ -164,8 +165,7 @@ int DfiParser::loadData() {
         // First clear the LatData
         ldfReader::LatData::instance()->clearTowers();
 
- // FIXME -  need a run id
-//      ldfReader::LatData::instance()->setRunId(m_runId);
+        ldfReader::LatData::instance()->setRunId(m_runId);
 
         ldfReader::LatData::instance()->setEventSizeInBytes(m_eventSize);
 
