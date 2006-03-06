@@ -2,6 +2,8 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r0p2 05-Mar-2006 LSR fix charge for heavy ions, a la McValsTool
+ * v1r0p1 02-Mar-2006 BLW Changes to accomodate beamtest mc                    
  *        20-Dec-2005 BLW Bug Fixes on trigger calc and max cable hits
  *        09-Dec-2005 BLW Fix Trigger bit calculations (now from GltDigi)
  * v1r0p0  20-sep-2005  BLW Major changes to structure and Front-End Simulator Output

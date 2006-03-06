@@ -388,7 +388,7 @@ StatusCode EbfWriter::execute()
        }
 
 // If  we are writing EBF put it into the Tds
-       if(evtSize !=0 & m_storeOnTds) {
+       if(evtSize !=0 && m_storeOnTds) {
 
 // register object
          EbfWriterTds::Ebf *newEbf=new EbfWriterTds::Ebf;
@@ -544,18 +544,20 @@ StatusCode EbfWriter::getMcEvent(double oEn)
          Event::McParticleCol::const_iterator pMCPrimary = mcParticle->begin();
         // Skip the first particle... it's for bookkeeping.
         // The second particle is the first real propagating particle.
-        // except for beam test data. (Why does beam data have an mcParticle??)
+        // (except for beam test mc!)
+
         unsigned  int numIncident = (*pMCPrimary)->daughterList().size();
         if(numIncident==0) return StatusCode::SUCCESS;
         
-        if(numIncident==1) pMCPrimary++;
-
-        Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
-        m_McInfo.sourceType = (unsigned short int)hepid;
-        ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-        if (ppty) {
-            std::string name = ppty->particle(); 
-            MC_Charge = ppty->charge();          
+        if(numIncident == 1) {
+            Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
+            MC_Id = (double)hepid;
+            ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+            if (ppty) {
+                std::string name = ppty->particle(); 
+                MC_Charge = ppty->charge();          
+            }
+            pMCPrimary++;
         }
         
         HepPoint3D Mc_x0;
