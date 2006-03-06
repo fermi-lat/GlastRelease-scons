@@ -241,14 +241,17 @@ StatusCode McValsTool::calculate()
         //     use the mother particle. That way, at least the energy will
         //     be correct.
 
-        if(MC_NumIncident == 1) pMCPrimary++;
+        if(MC_NumIncident == 1) {
 
-        Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
-        MC_Id = (double)hepid;
-        ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
-        if (ppty) {
-            std::string name = ppty->particle(); 
-            MC_Charge = ppty->charge();          
+            Event::McParticle::StdHepId hepid= (*pMCPrimary)->particleProperty();
+            MC_Id = (double)hepid;
+            ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+            if (ppty) {
+                std::string name = ppty->particle(); 
+                MC_Charge = ppty->charge();          
+            }
+
+            pMCPrimary++;
         }
         
         HepPoint3D Mc_x0;

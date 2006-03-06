@@ -9,9 +9,10 @@ $Header$
 #define _H_IValsTool
 
 #include "GaudiKernel/IAlgTool.h"
+#include "GaudiKernel/MsgStream.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IValsTool("IValsTool", 5 , 0); 
+static const InterfaceID IID_IValsTool("IValsTool", 6 , 0); 
 
 /** @class IValsTool
 * @brief Abstract interface for the XxxValsTools, including visitor
@@ -42,11 +43,14 @@ public:
     virtual StatusCode getValCheck(std::string varName, int& value) =0;
     virtual StatusCode getValCheck(std::string varName, unsigned int& value) =0;
     /// output the names and values, either all (default) or just one;
-    virtual StatusCode browse(std::string varName = "") =0;
+    virtual StatusCode browse(MsgStream log, std::string varName = "") =0;
     /// let the user trigger her own calculation
     virtual StatusCode doCalcIfNotDone() = 0;
     /// number of times a tool did its calculation for this event
     virtual int getCalcCount() = 0;
+    /// return a string containing the value, as above
+    virtual StatusCode getVal(std::string varName, std::string& value, int check = CALC) = 0;
+    virtual StatusCode getValCheck(std::string varName, std::string& value) =0;
     
     /** @class Visitor 
     @brief calls the client successively with the names and (ref to) values
