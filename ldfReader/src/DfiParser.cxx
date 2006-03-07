@@ -134,6 +134,7 @@ int DfiParser::readContextAndInfo() {
                           m_context.ccsds.utc);
 
     ldfReader::LatData::instance()->setTimeInSecTds(timeForTds(m_context.ccsds.utc));
+    ldfReader::LatData::instance()->setEventId(scalers.sequence());
  
     return 0;
 }

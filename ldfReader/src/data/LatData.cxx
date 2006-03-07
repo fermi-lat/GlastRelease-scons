@@ -101,6 +101,7 @@ namespace ldfReader {
         m_eventSize = 0;
         m_metaEvent.clear();
         m_ccsds.clear();
+        m_eventId = 0;
     }
 
 

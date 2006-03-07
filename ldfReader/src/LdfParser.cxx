@@ -396,6 +396,7 @@ const unsigned LdfParser::BufferSize = 64*1024;
             ldfReader::LatData::instance()->checkTrgParityError();
 
             ldfReader::LatData::instance()->setTimeInSecTds(timeForTds());
+            ldfReader::LatData::instance()->setEventId(ldfReader::LatData::instance()->getOsw().evtSequence());
 
          } catch (LdfException& e) {
             std::cerr << "Caught LdfException: " << e.what() << std::endl;
