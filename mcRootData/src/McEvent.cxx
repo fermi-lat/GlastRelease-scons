@@ -90,7 +90,7 @@ void McEvent::Clear(Option_t *option) {
     static McTrajectory* keeptraj[nd];
     
 
-    if (option == "ALL") {
+    if ( (option) && (option[0] == 'A') ) {
         Int_t j;
         for (j=0;j<indpart;j++) delete keeppart[j];
         indpart = 0;

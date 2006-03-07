@@ -8,6 +8,7 @@
 
 $Header$
 
+v2r19p4   06-Mar-2006 HMK Fix handling of ALL option
 v2r19p3   24-Jan-2006 HMK Update McEvent::Clear to add ALL option, where the
                           static arrays are cleared out
 v2r19p2   20-Jan-2006 DC  up-to-date test
