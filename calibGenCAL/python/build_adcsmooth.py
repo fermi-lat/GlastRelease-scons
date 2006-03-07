@@ -1,5 +1,6 @@
 """
 build batch file containing commands to run adcsmooth script for filtering configuration files for each module and setting specified in setup file
+also runs validation & plotting scripts.
 
 note:
     Linux use currently 'unsupported'
