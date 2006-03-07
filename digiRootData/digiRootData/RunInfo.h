@@ -130,14 +130,6 @@ public:
   virtual Bool_t IsSortable() const { return kTRUE; };
 
 
-   /// Output operator (ASCII)
-   friend std::ostream& operator<< ( std::ostream& s, const RunInfo& obj )    {
-      return obj.fillStream(s);
-   }
-
-    /// Fill the output stream (ASCII)
-   std::ostream& fillStream( std::ostream& s ) const;
-  
 private:
   
   /// The platform type this run was taken on.

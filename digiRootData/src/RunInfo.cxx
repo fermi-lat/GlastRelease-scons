@@ -4,9 +4,13 @@
 ClassImp(RunInfo) ;
 
 void RunInfo::Print(Option_t* /*option*/) const {
-  /// FIXME
   using namespace std;
-  cout << "RunInfo FIXME" << endl; 
+  cout << " run:      groundid = 0x" << std::hex << std::uppercase
+      << std::setfill('0') << std::setw(8)
+      << id() << std::dec << ", started = 0x" << std::hex
+      << startTime() << std::dec << " (" << startTime() << ")\n"
+      << " run:      platform = (" << platform() << ")\n"
+      << " run:      origin = (" << dataOrigin() << ")\n";
 }
 
 void RunInfo::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */ ) {
@@ -43,12 +47,3 @@ Int_t RunInfo::Compare(const TObject *obj) const {
   return 0;  
 }
 
-std::ostream& RunInfo::fillStream( std::ostream& s ) const {
-    s << " run:      groundid = 0x" << std::hex << std::uppercase
-      << std::setfill('0') << std::setw(8)
-      << id() << std::dec << ", started = 0x" << std::hex
-      << startTime() << std::dec << " (" << startTime() << ")\n"
-      << " run:      platform = (" << platform() << ")\n"
-      << " run:      origin = (" << dataOrigin() << ")\n";
-    return s;
-}

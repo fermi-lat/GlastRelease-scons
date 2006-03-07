@@ -3,21 +3,24 @@
 ClassImp(MetaEvent) ;
 
 void MetaEvent::Print(Option_t* /*option*/) const {
-  /// FIXME
   using namespace std;
-  cout << m_run << m_datagram << endl;
   cout << "=========================================="
             << std::endl << std::endl << "Event "
             << m_scalers.sequence() << " context:" << std::endl;
 
-  cout << m_time << m_scalers << m_run << m_datagram << std::endl
-       << "Event " << m_scalers.sequence() << " info:" << std::endl
+       m_time.Print("");
+       m_scalers.Print("");
+       m_run.Print("");
+       m_datagram.Print("");
+       cout << "Event " << m_scalers.sequence() << " info:" << std::endl
        << "---------------" << std::endl
        << "LSE_Info:  timeTicks = 0x" << std::uppercase << std::hex
        << std::setfill('0') << std::setw(8)
        << m_time.timeTicks() << " (" << std::dec
        << m_time.timeTicks()
-       << ")\nLSE_Info:  " << m_time.timeHack() << std::endl;
+       << ")\nLSE_Info:  ";
+       m_time.timeHack().Print("");
+       cout << std::endl;
       if (m_config) {
           const LpaConfiguration* lpa = m_config->castToLpaConfig();
           if (lpa) {

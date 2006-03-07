@@ -110,14 +110,6 @@ public:
   /// ROOT print function
   void Print(Option_t* /* option="" */) const;
 
-  /// Output operator (ASCII)
-  friend std::ostream& operator<< ( std::ostream& s, const GemScalers& obj ) { 
-      return obj.fillStream(s); 
-  }
-
-    /// Fill the output stream (ASCII)
-   std::ostream& fillStream( std::ostream& s ) const;
-
   /// Create a fake for tests
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
 

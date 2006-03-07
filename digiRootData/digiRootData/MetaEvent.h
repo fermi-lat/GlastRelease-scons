@@ -13,14 +13,14 @@
 /** @class MetaEvent
 * @brief Encapsulate information about the State of the LAT when a particular event was captured.
 *
-*        The MetaEvent consists of:
-*            runInfo       -> information about the run (aka commanded acquisition) these data were take during
-*            datagramInfo  -> information about the 64K datagram these data we sent down in.
-*                          ->   information about autonomous mode changes are contained in the datagramInfo
-*            scalers       -> extend versions of the counters in the GEM that tally data during a run
-*                          ->   information about the elapsed time and deadtime are stored here
-*            time          -> information about various time markers associated with the event are stored here
-*            configuration -> information about configuration keys and charge injection parameters are stored here
+*  The MetaEvent consists of:
+*  - RunInfo  run (aka commanded acquisition) these data were take during
+*  - DatagramInfo information about the 64K datagram these data we sent down in.
+*                 information about autonomous mode changes 
+*  - GemScalers extend versions of the counters in the GEM that tally data 
+*               during a run information about the elapsed time and deadtime 
+* - LsfTime various time markers associated with the event 
+* - Configuration configuration keys and charge injection parameters
 *
 * $Header$
 */
@@ -42,9 +42,9 @@ public:
 	     const Configuration& configuration )
     :m_run(run),m_datagram(datagram),
      m_scalers(scalers),
-     m_time(time),
-     m_config(configuration.clone()),
-     m_type(configuration.runType()){
+     m_time(time) {
+     //m_config(configuration.clone()),
+     //m_type(configuration.runType()){
   }
  
   /// Copy c'tor.  Just copy all values.  
@@ -56,16 +56,17 @@ public:
      m_scalers(other.scalers()),
      m_time(other.time()),
      m_config(0),
-     m_type(enums::Lsf::NoRunType){
-    if ( other.configuration() != 0 ) {
-      m_config = other.configuration()->clone();
-      m_type = other.configuration()->runType();
-    }
+     m_type(enums::Lsf::NoRunType) {
+    //if ( other.configuration() != 0 ) {
+    //  setConfiguration(*(other.configuration()));
+      //m_config = other.configuration()->clone();
+      //m_type = other.configuration()->runType();
+    //}
   }
 
   /// D'tor.  Delete the configuration, which had been deep-copied
   virtual ~MetaEvent(){
-    delete m_config;
+    if (m_config) delete m_config;
   }
   
   /// Information about the run this event is from
@@ -95,9 +96,10 @@ public:
     m_datagram = datagram;
     m_scalers = scalers;
     m_time = time;
-    if (m_config) delete m_config;
-    m_config = configuration.clone();
-    m_type = configuration.runType();
+    setConfiguration(configuration);
+    //if (m_config) delete m_config;
+    //m_config = configuration.clone();
+    //m_type = configuration.runType();
   }
   
   // set the individual data members
@@ -106,9 +108,15 @@ public:
   inline void setScalers( const GemScalers& val) { m_scalers = val; }
   inline void setLsfTime( const LsfTime& val) { m_time = val; }
   inline void setConfiguration( const Configuration& configuration ) {
-    if (m_config) delete m_config;
-    m_config = configuration.clone();
+    /*if (m_config) delete m_config;
+    const LpaConfiguration* ptr(0);
+    switch ( configuration.runType() ) {
+        case enums::Lsf::LPA:
+          ptr = configuration.castToLpaConfig(); 
+    }
+    if (ptr) m_config = ptr->clone();
     m_type = configuration.runType();
+    */
   }  
 
   /// Reset function
@@ -146,7 +154,7 @@ private:
   LsfTime m_time;
 
   /// Information about the configuration keys associated with this event
-  Configuration* m_config;    //-> 
+  Configuration* m_config;
   
   /// Which type of run was this, particle data or charge injection 
   enums::Lsf::RunType m_type;
