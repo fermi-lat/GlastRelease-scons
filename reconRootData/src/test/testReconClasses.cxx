@@ -7,7 +7,7 @@
 #include "TRandom.h"
 #include "TCollection.h"
 #include "TVector3.h"
-#include <iostream>
+#include "Riostream.h"
 
 /** @file testReconClasses.cxx
 * @brief This defines a test routine for the Reconstruction ROOT classes.

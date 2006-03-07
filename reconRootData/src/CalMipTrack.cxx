@@ -1,7 +1,7 @@
 
 #include <reconRootData/CalMipTrack.h>
 #include <commonRootData/RootDataUtil.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(CalMipTrack)
 

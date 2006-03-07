@@ -1,5 +1,5 @@
 #include "reconRootData/AcdHit.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(AcdHit)
 

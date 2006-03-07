@@ -2,7 +2,7 @@
 #include <reconRootData/CalCorToolResult.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TParameter.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(CalCorToolResult)
 

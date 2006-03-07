@@ -1,5 +1,5 @@
 #include "reconRootData/TkrTrackHit.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(TkrTrackHit)
 

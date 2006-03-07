@@ -1,7 +1,7 @@
 
 #include "reconRootData/TkrRecon.h"
 #include <commonRootData/RootDataUtil.h>
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(TkrRecon)
 
