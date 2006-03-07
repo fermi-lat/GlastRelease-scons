@@ -104,6 +104,8 @@ private:
     std::string m_treeName;
     /// Number of Events in the input ROOT TTree
     Long64_t m_numEvents;
+    /// Option string which will be passed to McEvent::Clear
+    std::string m_clearOption;
 
     commonData m_common;
 
@@ -136,6 +138,7 @@ mcRootReaderAlg::mcRootReaderAlg(const std::string& name,
     declareProperty("mcRootFileList", m_fileList=initList);
     // ROOT TTree name
     declareProperty("mcTreeName", m_treeName="Mc");
+    declareProperty("clearOption", m_clearOption="");
     
     initVec.clear();
     m_particleMap.clear();
@@ -231,7 +234,7 @@ StatusCode mcRootReaderAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    if (m_mcEvt) m_mcEvt->Clear();
+    if (m_mcEvt) m_mcEvt->Clear(m_clearOption.c_str());
    
     if (!m_mcTree) {
       log << MSG::WARNING << "MC Root unreadable" << endreq;
