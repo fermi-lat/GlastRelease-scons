@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v2r4    06-Mar-2006 HMK handle event id
 v2r3    04-Mar-2006 HMK get generic tds time from ldfReader
 v2r2p1  03-Mar-2006 HMK Patch to continue skipping first marker==5 for LDF
 v2r2    25-Feb-2006 HMK Use lsfData package
