@@ -5,7 +5,7 @@
 // $Header$
 
 #include "mcRootData/McParticle.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(McParticle)
 

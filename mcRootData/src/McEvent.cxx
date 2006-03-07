@@ -9,7 +9,8 @@
 // Authors:  Dan Flath and Heather Kelly                       
 
 #include "mcRootData/McEvent.h"
-#include <iostream>
+#include "TString.h"
+#include "Riostream.h"
 
 // Allocate the TObjArrays just once
 TObjArray *McEvent::m_staticParticleCol = 0;
@@ -89,22 +90,24 @@ void McEvent::Clear(Option_t *option) {
     static McIntegratingHit* keepint[nd];
     static McTrajectory* keeptraj[nd];
     
-
-    if ( (option) && (option[0] == 'A') ) {
-        Int_t j;
-        for (j=0;j<indpart;j++) delete keeppart[j];
-        indpart = 0;
-        for (j=0;j<indpos;j++) delete keeppos[j];
-        indpos = 0;
-	for (j=0;j<indint;j++) delete keepint[j];
-	indint = 0;
-        for (j=0;j<indtraj;j++) delete keeptraj[j];
-        indtraj = 0;
-        if (m_particleCol) m_particleCol->Delete();
-        if (m_positionHitCol) m_positionHitCol->Delete();
-        if (m_integratingHitCol) m_integratingHitCol->Delete();
-        if (m_trajectoryCol) m_trajectoryCol->Delete();
-        return;
+    if (option) {
+        TString optStr(option);
+        if (optStr.CompareTo("ALL")==0) {
+            Int_t j;
+            for (j=0;j<indpart;j++) delete keeppart[j];
+            indpart = 0;
+            for (j=0;j<indpos;j++) delete keeppos[j];
+            indpos = 0;
+            for (j=0;j<indint;j++) delete keepint[j];
+            indint = 0;
+            for (j=0;j<indtraj;j++) delete keeptraj[j];
+            indtraj = 0;
+            if (m_particleCol) m_particleCol->Delete();
+            if (m_positionHitCol) m_positionHitCol->Delete();
+            if (m_integratingHitCol) m_integratingHitCol->Delete();
+            if (m_trajectoryCol) m_trajectoryCol->Delete();
+            return;
+        }
     }
 
 

@@ -8,7 +8,7 @@
 // Author:  Tracy Usher                    
 
 #include "mcRootData/McTrajectory.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(McTrajectory)
 

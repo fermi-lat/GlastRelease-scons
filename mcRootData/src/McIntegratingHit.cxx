@@ -1,6 +1,6 @@
 #include "mcRootData/McIntegratingHit.h"
 #include "TRefArray.h"
-#include <iostream>
+#include "Riostream.h"
 
 ClassImp(McIntegratingHit)
 
