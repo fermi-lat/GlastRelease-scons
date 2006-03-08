@@ -1,11 +1,7 @@
 """
 given the calibDAC suitesummary run number for each module of interest, retrieve all calibDAC files from slac using scp
 
-
-
-
 note:
-    Linux use currently 'unsupported'
     see calibGenCAL/doc/gensettings_scripts.html for more information.
 
 """

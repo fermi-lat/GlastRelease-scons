@@ -24,7 +24,7 @@
     <item name="PEDFILE_XML" 			value="$(CGC_PED_XML)"> Optional path for output ADC pedestal xml file (default "" autogenerates filename from input filename) </item>
     <item name="ASYMFILE_XML" 			value="$(CGC_ASYM_XML)"> Optional path for output asymmetry xml file (default "" autogenerates filename from input filename)    </item>
     <item name="MPDFILE_XML" 			value="$(CGC_MPD_XML)"> Optional path for output MevPerDac  xml  file (default "" autogenerates filename from input filename)  </item>
-    <item name="ADC2NRGFILE_XML" 		value=""> Optional path for output adc2nrg  xml  file (default "" autogenerates filename from input filename)    </item>
+    <item name="ADC2NRGFILE_XML" 		value="$(CGC_ADC2NRG_XML)"> Optional path for output adc2nrg  xml  file (default "" autogenerates filename from input filename)    </item>
 
 
     <item name="PED_HISTFILE" 			value=""> Optional path for ROOT histogram filename for pedestal calibration phase. (default "" autogenerates filename from input filename)</item>
