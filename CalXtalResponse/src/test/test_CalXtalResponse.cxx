@@ -19,6 +19,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
+
+#include "TFile.h"
 #include "TTree.h"
 
 // STD

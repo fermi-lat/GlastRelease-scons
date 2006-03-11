@@ -13,6 +13,7 @@
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
+#include "TFile.h"
 #include "TTree.h"
 
 // STD
