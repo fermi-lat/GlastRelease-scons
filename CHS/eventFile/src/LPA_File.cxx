@@ -16,7 +16,8 @@ static const char* ModeStr[] = { "rb", "wb" };
 namespace eventFile {
 
   LPA_File::LPA_File( const std::string& filename, LPA_File::Mode openmode, unsigned runid )
-    : m_name( filename ), m_mode( ModeStr[openmode] ), m_runid( runid )
+    : m_name( filename ), m_mode( ModeStr[openmode] ), m_runid( runid ),
+      m_evtcnt( 0 ), m_GEMseq_beg( 0 ), m_GEMseq_end( 0 )
   {
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );

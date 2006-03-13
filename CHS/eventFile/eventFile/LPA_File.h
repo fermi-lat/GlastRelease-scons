@@ -32,10 +32,20 @@ namespace eventFile {
     void close();
     unsigned runid() const { return m_runid; };
 
+    void evtcnt( unsigned long long evt ) { m_evtcnt = evt; };
+    void begGEM( unsigned long long gem ) { m_GEMseq_beg = gem; };
+    void endGEM( unsigned long long gem ) { m_GEMseq_end = gem; };
+    unsigned long long evtcnt() const { return m_evtcnt; };
+    unsigned long long begGEM() const { return m_GEMseq_beg; };
+    unsigned long long endGEM() const { return m_GEMseq_end; };
+
   private:
     std::string m_name;
     std::string m_mode;
     unsigned m_runid;
+    unsigned long long m_evtcnt;
+    unsigned long long m_GEMseq_beg;
+    unsigned long long m_GEMseq_end;
     FILE* m_FILE;
 
   };
