@@ -414,7 +414,8 @@ if __name__ == '__main__':
         if f.srcTwr not in twrs:
             log.error("Src twr %d data not found in file %s", f.srcTwr, f.name)
             sys.exit(1)
-        pedData[f.destTwr,...] = pedFile.read()
+        adcData = pedFile.read()
+        pedData[f.destTwr,...] = adcData
         pedFile.close()
 
     # read bias correction file
