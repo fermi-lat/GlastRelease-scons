@@ -13,6 +13,7 @@ branches src cmt doc
 
 use GlastPolicy *
 use enums *
+
 apply_pattern packageShr
 use CalXtalResponse
 
@@ -30,8 +31,10 @@ use LdfEvent *
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
-apply_pattern package_headers
+macro source "*.cxx" WIN32 "*.h *.cxx"
 
-library Trigger  *.cxx ${Trigger_headers}
+library Trigger  \
+  -s=../Trigger $(source)\
+  -s=../src $(source)
 
 apply_pattern package_test
