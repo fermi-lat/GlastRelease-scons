@@ -77,7 +77,6 @@ StatusCode LdfEventSelector::initialize()     {
     
     m_rootCLID = eds->rootCLID();
     
-    
     return sc;
 }
 
@@ -263,6 +262,7 @@ IEvtSelector::Iterator* LdfEventSelector::begin() const {
 
 IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it) 
   const {
+    static bool lastEventFlag = false;
     MsgStream log(msgSvc(), name());
 
     log << MSG::DEBUG << "next" << endreq;
@@ -272,6 +272,14 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
     LdfEvtIterator* irfIt = dynamic_cast<LdfEvtIterator*>(&it);
     unsigned marker;
     try {
+
+    if ( (lastEventFlag) && (m_criteriaType == CCSDSFILE) ) {
+        // We've already found the last event, terminate loop
+        *(irfIt) = m_evtEnd;
+        return *irfIt;
+    } 
+
+
     if  ((m_criteriaType == CCSDSFILE) ||
          (m_criteriaType == LDFFILE) ||
          (m_criteriaType == LDFFITS) )
@@ -410,7 +418,10 @@ IEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it)
         }
         // Move file pointer for the next event
         int ret = m_ebfParser->nextEvent();
-        if (ret != 0) {
+        if ( (ret !=0 ) && (m_criteriaType == CCSDSFILE) ) { 
+          log << MSG::INFO << "Last event found: source exhausted" << endreq;
+          lastEventFlag = true;
+        } else if (ret != 0) {
           log << MSG::INFO << "Input event source exhausted" << endreq;
           if (marker != 5) 
               log << MSG::WARNING << "Last Event was not a sweep event with"
