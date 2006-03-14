@@ -58,7 +58,8 @@ StatusCode TkrDisplayAlg::initialize()
     if( sc.isFailure() )  
     {
         MsgStream   log( msgSvc(), name() );
-        log << MSG::WARNING << "No GuiSvc: so, no event display " << endreq;
+        log << MSG::WARNING << "GuiSvc not found; " 
+            << "the \"old\" single event display will not be activated." << endreq;
         return StatusCode::SUCCESS;
     }
     
