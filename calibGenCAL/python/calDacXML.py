@@ -15,7 +15,6 @@ __credits__   = "NRL code 7650"
 
 import time
 import logging
-import xml.dom.minidom
 
 import Numeric
 
