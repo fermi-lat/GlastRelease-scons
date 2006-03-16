@@ -139,10 +139,11 @@ class calSnapshotXML(calXML.calXML):
                             raise calFileReadExcept, "<GCFE> ID attribute value %d, expected (0 - 11)" % fe
                         dacList = f.getElementsByTagName(dacName)
                         dacLen = len(dacList)
-                        if dacLen == 0:
-                            continue
-                        elif dacLen > 1:
-                            raise calFileReadExcept, "found %d %s elements, expected 1" % (dacLen, dacName)
+                        if dacLen != 1:
+                            if dacLen == 0:
+                                continue
+                            else:
+                                raise calFileReadExcept, "found %d %s elements, expected 1" % (dacLen, dacName)
                         d = dacList[0]
                         dd = d.childNodes[0]
                         dac = int(dd.data.strip(), 16)
