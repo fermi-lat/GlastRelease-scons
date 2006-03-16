@@ -391,12 +391,13 @@ const unsigned LdfParser::BufferSize = 64*1024;
                 if (eventSeqNum == maxEventSeqNum) eventSeqNum = -1;
             }
 
+            ldfReader::LatData::instance()->setTimeInSecTds(timeForTds());
+            ldfReader::LatData::instance()->setEventId(ldfReader::LatData::instance()->getOsw().evtSequence());
+
             ldfReader::LatData::instance()->checkTemError();
             ldfReader::LatData::instance()->checkPacketError();
             ldfReader::LatData::instance()->checkTrgParityError();
 
-            ldfReader::LatData::instance()->setTimeInSecTds(timeForTds());
-            ldfReader::LatData::instance()->setEventId(ldfReader::LatData::instance()->getOsw().evtSequence());
 
          } catch (LdfException& e) {
             std::cerr << "Caught LdfException: " << e.what() << std::endl;
