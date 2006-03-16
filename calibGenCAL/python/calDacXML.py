@@ -14,7 +14,6 @@ __credits__   = "NRL code 7650"
 
 
 import time
-import logging
 
 import Numeric
 
@@ -50,9 +49,7 @@ class calSnapshotXML(calXML.calXML):
         \param mode The file access mode (MODE_READONLY or MODE_CREATE).
         """
         
-        calXML.calXML.__init__(self, fileName, mode)
-
-        self.__log = logging.getLogger('calSnapshotXML')        
+        calXML.calXML.__init__(self, fileName, mode)       
 
 
     def getTowers(self):
