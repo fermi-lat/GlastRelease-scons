@@ -172,6 +172,10 @@ if __name__ == '__main__':
     
     log.info("reading FLE ADC file %s", fleName)
     fio = calFitsXML.calFitsXML(fileName = fleName, mode = calFitsXML.MODE_READONLY)
+    i = fio.info()
+    if i['TTYPE1'] != 'fle_dac':
+        log.error("File %s is not an FLE ADC file.", fheName)
+        sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, fleName)
@@ -183,6 +187,10 @@ if __name__ == '__main__':
 
     log.info("reading relgain file %s", relName)
     fio = calFitsXML.calFitsXML(fileName = relName, mode = calFitsXML.MODE_READONLY)
+    i = fio.info()
+    if i['TTYPE1'] != 'relative gain factor':
+        log.error("File %s is not a relgain ADC file", relName)
+        sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, relName)

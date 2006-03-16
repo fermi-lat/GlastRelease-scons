@@ -161,6 +161,10 @@ if __name__ == '__main__':
 
     log.info("Reading LAC ADC file %s", lacName)
     fio = calFitsXML.calFitsXML(fileName = lacName, mode = calFitsXML.MODE_READONLY)
+    i = fio.info()
+    if i['TTYPE1'] != 'log_acpt':
+        log.error("File %s is not an LAC ADC file.", lacName)
+        sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, lacName)
@@ -173,6 +177,10 @@ if __name__ == '__main__':
 
     log.info("Reading relgain file %s", relName)
     fio = calFitsXML.calFitsXML(fileName = relName, mode = calFitsXML.MODE_READONLY)
+    i = fio.info()
+    if i['TTYPE1'] != 'relative gain factor':
+        log.error("File %s is not a relgain ADC file", relName)
+        sys.exit(1) 
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, relName)

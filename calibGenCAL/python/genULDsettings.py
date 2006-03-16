@@ -149,6 +149,10 @@ if __name__ == '__main__':
 
     log.info("Reading ULD ADC file %s", uldName)
     fio = calFitsXML.calFitsXML(fileName = uldName, mode = calFitsXML.MODE_READONLY)
+    i = fio.info()
+    if i['TTYPE1'] != 'rng_uld_dac':
+        log.error("File %s is not an ULD ADC file.", uldName)
+        sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, uldName)
