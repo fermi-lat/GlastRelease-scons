@@ -75,7 +75,7 @@ if __name__ == '__main__':
                 for face in range(2):
                     online_face = offline_face_to_online[face]
                     for rng in range(4):
-                        for pt in range(lenData[rng][twr][row][face][col]):
+                        for pt in range(lenData[rng][twr][row][online_face][col]):
                             print delim.join([str(x) for x in twr, lyr, col, face, rng,
                                               dacData[rng][twr][row][online_face][col][pt],
                                               adcData[rng][twr][row][online_face][col][pt]])
