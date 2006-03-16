@@ -176,20 +176,13 @@ int DfiParser::loadData() {
             throw LdfException("LDF EBFeventParser reported a bad status");
    
 
-        // Only do this check on the event sequence if we have a recent
-        // enough file..  I believe we want one where they started to store the
-        // event summary in each contribution separately
-//        if (ldfReader::LatData::instance()->getFormatIdentity() >= 
-//            LatComponentParser::ID_WITH_OSW) {
+        if (!ldfReader::LatData::instance()->eventSeqConsistent()) {
+            printf("Event Sequence numbers are not consistent within all contributions\n");
+            printf("Setting event flag\n");
+            ldfReader::LatData::instance()->setBadEventSeqFlag();
+            return 0;
+         }
 
-//            if (!ldfReader::LatData::instance()->eventSeqConsistent()) {
-//                printf("Event Sequence numbers are not consistent within all contributions\n");
-//                printf("Setting event flag\n");
-//                ldfReader::LatData::instance()->setBadEventSeqFlag();
-//                return 0;
-//            }
-
-//        }
 
         ldfReader::LatData::instance()->checkTemError();
         ldfReader::LatData::instance()->checkPacketError();
