@@ -328,6 +328,8 @@ class calTholdCICalibXML(calCalibXML):
                         
                     for end in range(calConstant.NUM_END):
 
+                        cs = ""                        
+
                         # insert <face> elements
 
                         f = doc.createElement('face')
@@ -340,39 +342,34 @@ class calTholdCICalibXML(calCalibXML):
                         
                         dac = int(lacDac[tem, row, end, fe])
                         adc = lacAdc[tem, row, end, fe, dac]
-                        c = doc.createComment('LAC DAC = %d' % dac)
-                        tc.appendChild(c)
+                        cs += 'LAC DAC = %d, ' % dac
                         tc.setAttribute('LACVal', "%0.3f" % adc)
                         tc.setAttribute('LACSig', '1')
                         
                         dac = int(fleDac[tem, row, end, fe])
                         adc = fleAdc[tem, row, end, fe, dac]
                         adc += biasData[tem, row, end, fe, 0]
-                        c = doc.createComment('FLE DAC = %d' % dac)
-                        tc.appendChild(c)
+                        cs += 'FLE DAC = %d, ' % dac
                         tc.setAttribute('FLEVal', "%0.3f" % adc)
                         tc.setAttribute('FLESig', '1')
 
                         dac = int(fheDac[tem, row, end, fe])
                         adc = fheAdc[tem, row, end, fe, dac]
                         adc += biasData[tem, row, end, fe, 0]
-                        c = doc.createComment('FHE DAC = %d' % dac)
-                        tc.appendChild(c)
+                        cs += 'FHE DAC = %d, ' % dac
                         tc.setAttribute('FHEVal', "%0.3f" % adc)
                         tc.setAttribute('FHESig', '1')
 
                         dac = int(uldDac[tem, row, end, fe])    
-                        c = doc.createComment('ULD DAC = %d' % dac)
-                        tc.appendChild(c)
+                        cs += 'ULD DAC = %d, ' % dac
 
-                        c = doc.createComment('LE gain = %d' % lrefGain[tem, row, end, fe])
-                        tc.appendChild(c)
-                        c = doc.createComment('HE gain = %d' % hrefGain[tem, row, end, fe])
-                        tc.appendChild(c)
+                        cs += 'LE gain = %d, ' % lrefGain[tem, row, end, fe]
+                        cs += 'HE gain = %d, ' % hrefGain[tem, row, end, fe]
 
-                        c = doc.createComment('LE bias = %0.3f' % biasData[tem, row, end, fe, 0])
-                        tc.appendChild(c)
-                        c = doc.createComment('HE bias = %0.3f' % biasData[tem, row, end, fe, 1])
+                        cs += 'LE bias = %0.3f, ' % biasData[tem, row, end, fe, 0]
+                        cs += 'HE bias = %0.3f' % biasData[tem, row, end, fe, 1]
+
+                        c = doc.createComment(cs)                        
                         tc.appendChild(c)
                         
                         f.appendChild(tc)
