@@ -29,7 +29,9 @@ MODE_READONLY   = calXML.MODE_READONLY
 
 POSNEG = ('NEG', 'POS')
 
-ERNG_MAP = {'LEX8' : 0, 'LEX1' : 1, 'HEX8' : 2, 'HEX1' : 3}
+ERNG_MAP = {'LEX8' : calConstant.CRNG_LEX8, 'LEX1' : calConstant.CRNG_LEX1, 
+    'HEX8' : calConstant.CRNG_HEX8, 'HEX1' : calConstant.CRNG_HEX1}
+
 POSNEG_MAP = {'NEG' : 0, 'POS' : 1}
 
 
@@ -409,7 +411,7 @@ class calTholdCICalibXML(calCalibXML):
 
                         tcr = doc.createElement('tholdCIRange')
                         
-                        tcr.setAttribute('range', 'HEX1')
+                        tcr.setAttribute('range', calConstant.CRNG[calConstant.CRNG_HEX1])
 
                         size = int(intNonlinLength[tem, row, end, fe, 0])
                         adc = intNonlinData[tem, row, end, fe, (size - 1)]
