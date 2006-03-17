@@ -397,6 +397,7 @@ const unsigned LdfParser::BufferSize = 64*1024;
             ldfReader::LatData::instance()->checkTemError();
             ldfReader::LatData::instance()->checkPacketError();
             ldfReader::LatData::instance()->checkTrgParityError();
+            ldfReader::LatData::instance()->checkAemError();
 
 
          } catch (LdfException& e) {

@@ -187,6 +187,7 @@ int DfiParser::loadData() {
         ldfReader::LatData::instance()->checkTemError();
         ldfReader::LatData::instance()->checkPacketError();
         ldfReader::LatData::instance()->checkTrgParityError();
+        ldfReader::LatData::instance()->checkAemError();
 
     } catch (LdfException& e) {
        std::cerr << "Caught LdfException: " << e.what() << std::endl;
