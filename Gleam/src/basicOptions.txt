@@ -102,17 +102,17 @@ Digitization.Members = {
 
 
 // ----------------------------
-//  Trigger calculation
+//  Trigger and livetime
 //
 ApplicationMgr.DLLs +={ "Trigger"};
 ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
+LivetimeSvc.Deadtime=0;  // default is now to disable this
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // ----------------------------
 //  onboard filter 
 //
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
-Digitization.Members += { "EbfWriter"};  // makes digi stuff available for OnboardFilter
 Filter.Members       += {"EbfWriter", "OnboardFilter"}; // this guy can cause rejection
 OnboardFilter.mask=0; // all bits off by default: no rejection
 
