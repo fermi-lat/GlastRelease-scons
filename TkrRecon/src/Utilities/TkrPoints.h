@@ -66,8 +66,7 @@ public:
 
 private:
     
-    
-    //! 
+    // Not used for the moment, this is done by the map now
     class sortByClosest : public std::binary_function <TkrPoint*, TkrPoint*, bool> {
         Point myRef;
     public:
@@ -79,7 +78,6 @@ private:
         } 
     };        
     
-
     /// sets up TkrPointList
     void ini();   
     /// layer number for convenience 
@@ -92,7 +90,6 @@ private:
     Point m_refPoint;
     /// exclude beyond this (squared) distance if ordering by refPoint (default = big!)
     double m_maxDist2;
-
 
 };
 

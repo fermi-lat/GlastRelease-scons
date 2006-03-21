@@ -412,7 +412,7 @@ StatusCode ComboFindTrackTool::findTracks()
         double arclen = (m_calPos.z() - calZ)/m_calDir.z();
         m_calPos -= arclen*m_calDir;
 
-        HepLorentzVector Mc_p0 = (*pMCPrimary)->initialFourMomentum();
+        CLHEP::HepLorentzVector Mc_p0 = (*pMCPrimary)->initialFourMomentum();
         m_calDir = Vector(Mc_p0.x(),Mc_p0.y(), Mc_p0.z()).unit();
 
         // there's a method v.m(), but it does something tricky if m2<0

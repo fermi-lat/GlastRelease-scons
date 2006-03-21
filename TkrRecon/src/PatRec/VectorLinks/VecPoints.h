@@ -25,6 +25,9 @@
 
 class VecPoint;
 
+namespace {
+    double _big = 100000.0;
+}
 
 class VecPoints : public VecPointList
 {
@@ -32,6 +35,7 @@ class VecPoints : public VecPointList
 public:
     
     VecPoints(int layer, ITkrQueryClustersTool* clusTool);
+
     ~VecPoints() {
         // remove VecPoints on heap
         VecPointListConItr ip = this->begin();

@@ -51,6 +51,12 @@ public:
             0.5*(m_pXCluster->position().z() + m_pYCluster->position().z())); }
     /// Tower of this point... (x and y clusters are guaranteed to be in the same tower)
     int getTower() const { return m_pXCluster->tower(); }
+    /// x/y distance to a reference point
+    double getDistanceSquaredTo(Point refPoint) const {
+        Vector diff = refPoint - getPosition();
+        return diff.x()*diff.x() + diff.y()*diff.y();    
+    }
+
     //@}
 
     /// @name other methods

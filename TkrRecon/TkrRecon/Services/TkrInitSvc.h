@@ -37,12 +37,12 @@ public:
     ITkrGeometrySvc* getGeometrySvc() {return m_tkrGeom;}
         
     /// queryInterface - for implementing a Service this is necessary
-    StatusCode       queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode       queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     static const InterfaceID& interfaceID() { return IID_ITkrInitSvc; }
 
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
  
 private:
 

@@ -393,6 +393,12 @@ StatusCode TkrReconAlg::execute()
     }
 
     m_lastTime = m_header->time();
+
+    log << MSG::DEBUG;
+    if (name() != "Iteration") log << "------- Finish of Tkr Recon of new Event --------";
+    else                       log << "-------   Finish of Tkr Recon iteration  --------";
+    log << endreq;
+
     return sc;
 }
 

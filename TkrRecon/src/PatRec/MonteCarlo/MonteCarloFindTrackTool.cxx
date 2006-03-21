@@ -398,7 +398,7 @@ Event::TkrTrack* MonteCarloFindTrackTool::buildTrackFromMcPart(const Event::McPa
                 {
                     // Get sense of track
                     Event::McPositionHit* posHit   = mcHitRel->getSecond();
-                    Hep3Vector            mcHitVec = posHit->globalExitPoint() - posHit->globalEntryPoint();
+                    CLHEP::Hep3Vector     mcHitVec = posHit->globalExitPoint() - posHit->globalEntryPoint();
 
                     if (mcHitVec.z() > 0.) trackDir = 1.;
 
@@ -495,16 +495,16 @@ Event::TkrTrack* MonteCarloFindTrackTool::createNewTrack(ClusMcPosHitRelVec&    
 
     // Get the info to fill the candidate track
     idents::TkrId tkrId       = cluster->getTkrId();
-    Point         measHitPos  = cluster->position();
-    Hep3Vector    mcHitAvePos = 0.5 * (posHit->globalEntryPoint() + posHit->globalExitPoint());
-    Hep3Vector    mcHitVec    = posHit->globalExitPoint() - posHit->globalEntryPoint();
-    double        energy      = posHit->particleEnergy() - partProp->mass();
-    double        startX      = tkrId.getView() == idents::TkrId::eMeasureX
-                              ? measHitPos.x() : mcHitAvePos.x();
-    double        startY      = tkrId.getView() == idents::TkrId::eMeasureY
-                              ? measHitPos.y() : mcHitAvePos.y();
-    Point         trackPos(startX,startY,measHitPos.z());
-    Vector        trackDir = mcHitVec.unit();
+    Point             measHitPos  = cluster->position();
+    CLHEP::Hep3Vector mcHitAvePos = 0.5 * (posHit->globalEntryPoint() + posHit->globalExitPoint());
+    CLHEP::Hep3Vector mcHitVec    = posHit->globalExitPoint() - posHit->globalEntryPoint();
+    double            energy      = posHit->particleEnergy() - partProp->mass();
+    double            startX      = tkrId.getView() == idents::TkrId::eMeasureX
+                                  ? measHitPos.x() : mcHitAvePos.x();
+    double            startY      = tkrId.getView() == idents::TkrId::eMeasureY
+                                  ? measHitPos.y() : mcHitAvePos.y();
+    Point             trackPos(startX,startY,measHitPos.z());
+    Vector            trackDir = mcHitVec.unit();
 
     std::vector<const Event::TkrCluster*> clusVec;
     clusVec.clear();

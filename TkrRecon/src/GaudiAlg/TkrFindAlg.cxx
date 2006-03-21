@@ -157,6 +157,9 @@ StatusCode TkrFindAlg::execute()
     
     MsgStream log(msgSvc(), name());
 
+    // Message to acknowledge at this stage
+    log << MSG::DEBUG << "------- TkrFindAlg - looking for tracks -------" << endreq;
+
     sc = m_truncTool->analyzeDigis();
 
     // Call the tool defined in the intialization
@@ -195,6 +198,8 @@ StatusCode TkrFindAlg::execute()
     }
     log << endreq;
     */
+
+    log << MSG::DEBUG << "------- TkrFindAlg - done looking for tracks -------" << endreq;
 
     return sc;
 }
