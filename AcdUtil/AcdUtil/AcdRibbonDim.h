@@ -9,7 +9,11 @@
 #include "idents/VolumeIdentifier.h"
 
 class IGlastDetSvc;
-class HepPoint3D;
+
+// TU: Hacks for CLHEP 1.9.2.2 and beyond
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
 
 /**
 *  @class AcdRibbonDim
