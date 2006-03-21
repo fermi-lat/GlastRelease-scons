@@ -37,7 +37,7 @@ public:
     virtual StatusCode finalize ();
 
     /// Query interface - required of all Gaudi services
-    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+    virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
 
     ///check if valid trigger, and set last trigger time
@@ -143,7 +143,7 @@ double LivetimeSvc::setTriggerRate(double rate)
     return old;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-StatusCode LivetimeSvc::queryInterface(const IID& riid, void** ppvInterface)
+StatusCode LivetimeSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)
 {
     if ( IID_ILivetimeSvc.versionMatch(riid) )  {
         *ppvInterface = (ILivetimeSvc*)this;
