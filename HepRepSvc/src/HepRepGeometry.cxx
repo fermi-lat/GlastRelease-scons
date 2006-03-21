@@ -158,8 +158,8 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
       rot.rotateZ(rz*M_PI/180);
 
       CLHEP::Hep3Vector t(x, y, z);  
-      HepGeom::HepTransform3D tr(rot,t);
-      HepGeom::HepTransform3D atr = (m_actualTransform.back())*tr;
+      HepGeom::Transform3D tr(rot,t);
+      HepGeom::Transform3D atr = (m_actualTransform.back())*tr;
 
       std::string father;
       if (m_actualInstance.size() == 0)
