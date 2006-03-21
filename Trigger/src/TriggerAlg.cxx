@@ -109,8 +109,8 @@ private:
     IntegerProperty m_vetobits;
     IntegerProperty m_vetomask;
 
-    double m_lastTriggerTime; //! time of last trigger, for calculated live time
-    double m_liveTime; //! cumulative live time
+    IntegerProperty m_vetobits;
+    IntegerProperty m_vetomask;
 
     // for statistics
     int m_total;
@@ -196,15 +196,6 @@ StatusCode TriggerAlg::initialize()
     return sc;
 }
 
-
-bool TriggerAlg::alive(double current_time)
-{ 
-    // this is the case when reading back.
-    if (m_deadtime<=0) return true;
-    // ok we actually want to apply a deadtime: in this case *assume* time is increasing!
-
-    return (current_time-m_lastTriggerTime >=m_deadtime);
-}
 
 //------------------------------------------------------------------------------
 StatusCode TriggerAlg::execute() 
