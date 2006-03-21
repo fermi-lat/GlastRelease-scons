@@ -4,6 +4,7 @@
 $Id$
 @verbatim
  
+ 31-Jan-06  v1r5cl0 Tag development branch for new externals
  30-oct-05  v1r5,p1   Implement filters in GlastClassify.
  29-oct-05  v1r4,p1,p2   allow filter tree 
  23-oct-05  v1r3   gini improvement limit

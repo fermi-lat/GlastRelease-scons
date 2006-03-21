@@ -29,7 +29,7 @@ CalibXmlCnvSvc::CalibXmlCnvSvc(const std::string& name,
   // xml files.
 }
 
-StatusCode CalibXmlCnvSvc::queryInterface(const IID& riid,
+StatusCode CalibXmlCnvSvc::queryInterface(const InterfaceID& riid,
                                           void** ppvInterface) {
   if (IID_ICalibXmlSvc.versionMatch(riid))  {
     *ppvInterface = (ICalibXmlSvc*)this;

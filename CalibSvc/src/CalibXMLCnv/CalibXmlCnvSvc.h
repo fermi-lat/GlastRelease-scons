@@ -42,7 +42,7 @@ class CalibXmlCnvSvc : public ConversionSvc, virtual public ICalibXmlSvc
   
   // Reimplemented from IInterface
 
-  virtual StatusCode queryInterface( const IID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
 				     void** ppvInterface);  
 
  public:

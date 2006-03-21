@@ -31,17 +31,17 @@ class CalFailureModeSvc : public Service, virtual public ICalFailureModeSvc {
   /// look for crystal in list of dead towers
   bool matchChannel(idents::CalXtalId id, idents::CalXtalId::XtalFace face);
 
-  /// queryInterface - for implementing a Service this is necessary
-  StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    /// queryInterface - for implementing a Service this is necessary
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   static const InterfaceID& interfaceID() {
     return ICalFailureModeSvc::interfaceID(); 
   }
 
-  /// return the service type
-  const IID&  type () const {
-    return IID_ICalFailureModeSvc;
-  }
+    /// return the service type
+    const InterfaceID&  type () const {
+      return IID_ICalFailureModeSvc;
+    }
 
  protected:
 

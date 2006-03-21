@@ -106,6 +106,9 @@ protected:
   // the base converter.
   virtual StatusCode readHeader(const DOMElement*);
 
+  /// Retrieve the class type of the data store the converter uses.
+  virtual long repSvcType() const {return Converter::i_repSvcType();}
+
 
   /// Find first range element.  Derived classes which need it
   /// must define their own implementation.

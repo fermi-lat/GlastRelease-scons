@@ -89,10 +89,10 @@ Event::CalCorToolResult* CalRawEnergyTool::doEnergyCorr(Event::CalClusterCol* ca
     // Set up to loop over all clusters to get total raw energy
     double     rawEnergy   = 0.;
     double     rawEneError = 0.;
-    HepVector  posSum(3);
-    HepMatrix  posWghtSum(3,3,0);
-    HepVector  axisSum(3);
-    HepMatrix  axisWghtSum(3,3,0);
+    CLHEP::HepVector  posSum(3);
+    CLHEP::HepMatrix  posWghtSum(3,3,0.);
+    CLHEP::HepVector  axisSum(3);
+    CLHEP::HepMatrix  axisWghtSum(3,3,0.);
 
     // Do the loop and accumulate information
     for(Event::CalClusterCol::iterator clusIter = calClusters->begin(); clusIter != calClusters->end(); clusIter++)
@@ -100,12 +100,12 @@ Event::CalCorToolResult* CalRawEnergyTool::doEnergyCorr(Event::CalClusterCol* ca
         Event::CalCluster*       cluster = *clusIter;
         const Event::CalParams&  params  = cluster->getCalParams();
 
-        HepVector centroid(3);
+        CLHEP::HepVector centroid(3);
         centroid[0] = params.getCentroid().x();
         centroid[1] = params.getCentroid().y();
         centroid[2] = params.getCentroid().z();
 
-        HepVector axis(3);
+        CLHEP::HepVector axis(3);
         axis[0] = params.getAxis().x();
         axis[1] = params.getAxis().y();
         axis[2] = params.getAxis().z();
@@ -113,14 +113,14 @@ Event::CalCorToolResult* CalRawEnergyTool::doEnergyCorr(Event::CalClusterCol* ca
         rawEnergy   += params.getEnergy();
         rawEneError += params.getEnergyErr() * params.getEnergyErr();
 
-        HepMatrix posCovInv = params.getCentroidErrs();
+        CLHEP::HepMatrix posCovInv = params.getCentroidErrs();
         int       matInvErr = 0;
         posCovInv.invert(matInvErr);
         posWghtSum += posCovInv;
         posSum     += posCovInv * centroid;
 
 
-        HepMatrix axisCovInv = params.getAxisErrs();
+        CLHEP::HepMatrix axisCovInv = params.getAxisErrs();
         axisCovInv.invert(matInvErr);
         axisWghtSum += axisCovInv;
         axisSum     += axisCovInv * axis;

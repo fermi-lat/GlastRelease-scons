@@ -275,7 +275,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         float eDiode = meVXtal * m_ePerMeV[diode.getInt()];
         
         // apply poissonic fluctuation to # of electrons.
-        float noise = sqrt(eDiode)*RandGauss::shoot();
+        float noise = sqrt(eDiode)*CLHEP::RandGauss::shoot();
         
         // add noise
         eDiode += noise;
@@ -285,7 +285,6 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         m_dat.diodeDAC[xDiode] = meVXtal/m_dat.mpd[diode];
       } // poissonic noise
         
-
       ///////////////////////////////
       // Stage 3: convert dac->adc //
       ///////////////////////////////
@@ -320,7 +319,6 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         
           m_dat.adcPed[xRng] += sig*rnd;
         }
-
 
       }  // thx (x8,x1)
 

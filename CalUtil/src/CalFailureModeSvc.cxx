@@ -42,16 +42,16 @@ CalFailureModeSvc::CalFailureModeSvc(const std::string& name,ISvcLocator* svc) :
 
 
 
-StatusCode  CalFailureModeSvc::queryInterface (const IID& riid, void **ppvIF) {
-        
-        
-  if (IID_ICalFailureModeSvc == riid) {
-    *ppvIF = dynamic_cast<ICalFailureModeSvc*> (this);
-    return StatusCode::SUCCESS;
-  }
-  else {
-    return Service::queryInterface (riid, ppvIF);
-  }
+StatusCode  CalFailureModeSvc::queryInterface (const InterfaceID& riid, void **ppvIF) {
+	
+	
+    if (IID_ICalFailureModeSvc == riid) {
+        *ppvIF = dynamic_cast<ICalFailureModeSvc*> (this);
+        return StatusCode::SUCCESS;
+    }
+    else {
+        return Service::queryInterface (riid, ppvIF);
+    }
 }
 
 

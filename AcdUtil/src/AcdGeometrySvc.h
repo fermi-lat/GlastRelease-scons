@@ -39,13 +39,13 @@ public:
     StatusCode initialize();
     StatusCode finalize();
     
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     static const InterfaceID& interfaceID() {
         return IAcdGeometrySvc::interfaceID(); 
     }
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
 
     StatusCode getConstants();
     StatusCode getDetectorListFromGeometry();

@@ -92,6 +92,9 @@ public:
                                  const std::string& branch, TObject*& pCalib,
                                  unsigned index=0);
 
+  /// Retrieve the class type of the data store the converter uses.
+  virtual long repSvcType() const {return Converter::i_repSvcType();}
+
 protected:
   /** This creates the transient representation of an object from the
    *  corresponding ROOT object it, then fills it and process it.

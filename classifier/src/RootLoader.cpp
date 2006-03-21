@@ -23,7 +23,7 @@ RootLoader::RootLoader(
                        , m_background_files(background_files)
                        , m_names(names)
                        , m_use_weights(use_weights)
-                       , m_rand(new RandFlat(HepRandom::getTheEngine()))
+                       , m_rand(new CLHEP::RandFlat(CLHEP::HepRandom::getTheEngine()))
 
 {
     if(m_names.size()<2) { throw std::invalid_argument(

@@ -270,7 +270,7 @@ StatusCode CalibDataSvc::finalize()
   return DataSvc::finalize();
 }
 
-StatusCode CalibDataSvc::queryInterface(const IID& riid, void** ppvInterface)
+StatusCode CalibDataSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)
 {
   // With the highest priority return the specific interfaces
   // If interfaces are not directly available, try out a base class

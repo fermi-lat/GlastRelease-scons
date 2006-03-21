@@ -288,7 +288,7 @@ StatusCode CalDisplay::initialize()
     topLayerId.append(eXtal);
     topLayerId.append(0);
     
-    HepTransform3D transfTop;
+    HepGeom::Transform3D transfTop;
     detSvc->getTransform3DByID(topLayerId,&transfTop);
     Vector vecTop = transfTop.getTranslation();
     
@@ -304,7 +304,7 @@ StatusCode CalDisplay::initialize()
     bottomLayerId.append(eXtal);
     bottomLayerId.append(0);
     
-    HepTransform3D transfBottom;
+    HepGeom::Transform3D transfBottom;
     detSvc->getTransform3DByID(bottomLayerId,&transfBottom);
     Vector vecBottom = transfBottom.getTranslation();
     

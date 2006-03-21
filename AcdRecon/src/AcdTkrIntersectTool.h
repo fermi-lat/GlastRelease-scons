@@ -15,7 +15,7 @@
 #include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
 class MsgStream;
-class HepMatrix;
+namespace CLHEP {class HepMatrix;}
 
 /**   
 * @class AcdTkrIntersectTool
@@ -49,9 +49,9 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
   virtual int doTrack(const Event::TkrTrack& aTrack, int iTrack, std::map<idents::AcdId,unsigned char>& hitMap, 
 		      bool forward = true);
 
-  void errorAtXPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;
-  void errorAtYPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;
-  void errorAtZPlane(double delta, const Event::TkrTrackParams& track, HepMatrix& covAtPlane) const;
+  void errorAtXPlane(double delta, const Event::TkrTrackParams& track, CLHEP::HepMatrix& covAtPlane) const;
+  void errorAtYPlane(double delta, const Event::TkrTrackParams& track, CLHEP::HepMatrix& covAtPlane) const;
+  void errorAtZPlane(double delta, const Event::TkrTrackParams& track, CLHEP::HepMatrix& covAtPlane) const;
 
  private:
 

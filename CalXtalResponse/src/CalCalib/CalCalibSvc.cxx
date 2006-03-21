@@ -46,7 +46,7 @@ CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc)
   declareProperty("FlavorTholdMuon", m_flavorTholdMuon  = "");
 }
 
-StatusCode  CalCalibSvc::queryInterface (const IID& riid, void **ppvIF) {
+StatusCode  CalCalibSvc::queryInterface (const InterfaceID& riid, void **ppvIF) {
   if (IID_ICalCalibSvc == riid) {
     *ppvIF = (ICalCalibSvc*)(this);
     return StatusCode::SUCCESS;

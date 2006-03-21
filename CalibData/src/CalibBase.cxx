@@ -42,7 +42,7 @@ namespace CalibData {
     return StatusCode::SUCCESS;
   }
 
-  bool CalibBase::isValid() {
+  bool CalibBase::isValid() const {
     return ((m_validSince != 0) && (m_validTill != 0)
             && (validSince() <= validTill())   );
   }
@@ -57,16 +57,16 @@ namespace CalibData {
   // In our case, we assume that the underlying class implementing
   // ITime is always CalibTime.
 
-  bool CalibBase::isValid (const ITime& t) {
+  bool CalibBase::isValid (const ITime& t) const {
     if (!isValid()) return false;
     return validSince() <= t &&  t <= validTill();
   };
 
-  const ITime& CalibBase::validSince() {
+  const ITime& CalibBase::validSince() const {
     return *m_validSince;
   }
 
-  const ITime& CalibBase::validTill() {
+  const ITime& CalibBase::validTill() const {
     return *m_validTill;
   }
 

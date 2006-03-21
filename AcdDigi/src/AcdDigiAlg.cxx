@@ -21,6 +21,7 @@
 
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandGauss.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 // for min and floor functions
 #include <algorithm>
@@ -109,7 +110,7 @@ StatusCode AcdDigiAlg::initialize() {
         log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
         return sc;
     }
-    HepTransform3D transform;
+    HepGeom::Transform3D transform;
     sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
     if (sc.isFailure() ) {
         log << MSG::WARNING << "Failed to get transformation" << endreq;

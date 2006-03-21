@@ -9,7 +9,7 @@
 
 #include "Classifier.h"
 #include <iostream>
-class RandFlat;
+namespace CLHEP {class RandFlat;}
 
 /** @class RootLoader
     @brief subclass of Classifier::LoadData to load from a set of ROOT files 
@@ -47,7 +47,7 @@ private:
     bool m_use_weights;
     double m_signal_total;
     double m_bkgnd_total;
-    RandFlat* m_rand;
+    CLHEP::RandFlat* m_rand;
 };
 
 #endif

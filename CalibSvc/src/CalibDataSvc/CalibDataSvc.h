@@ -69,7 +69,7 @@ public:
   // Reimplemented from IInterface
 
   /// Query the interface of the service
-  virtual StatusCode queryInterface( const IID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
 				     void** ppvInterface );  
 
 public:

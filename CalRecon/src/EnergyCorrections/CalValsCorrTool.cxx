@@ -27,6 +27,8 @@ $Header$
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "geometry/Ray.h"
 
+#include "CLHEP/Vector/Rotation.h"
+
 #include "TMath.h"
 #include <stdexcept>
 
@@ -689,7 +691,7 @@ StatusCode CalValsCorrTool::aveRadLens(Point /* x0 */, Vector t0, double radius,
 		//       samples are rotated by  M_PI/numSamples w.r.t. each other
 		if(is <numInner) {
 			double rotAng = (is-1)*2.*M_PI/numInner; 
-			HepRotation rot(t0, rotAng);
+            CLHEP::HepRotation rot(t0, rotAng);
 			Vector delta = rot*p;
 			Point xI = x0 + .25*radius*delta;
 			double s = (m_cal_top.z() - xI.z())/costheta;
@@ -698,7 +700,7 @@ StatusCode CalValsCorrTool::aveRadLens(Point /* x0 */, Vector t0, double radius,
 		}
 		else {
 			double rotAng = (is-1)*2.*M_PI/numSamples + M_PI/numSamples; 
-			HepRotation rot(t0, rotAng);
+			CLHEP::HepRotation rot(t0, rotAng);
 			Vector delta = rot*p;
 			Point xI = x0 + radius*delta;
 			double s = (m_cal_top.z() - xI.z())/costheta;

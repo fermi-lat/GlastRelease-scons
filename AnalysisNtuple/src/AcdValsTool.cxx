@@ -24,7 +24,8 @@ $Header$
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 // Point used by AcdDigi
-#include "CLHEP/Geometry/Point3D.h"  //<=== check this
+//#include "CLHEP/Geometry/Point3D.h"  //<=== check this
+#include "CLHEP/Geometry/Transform3D.h"
 // Point used by TKR
 //#include "geometry/Point.h"  <=== check this
 
@@ -380,7 +381,7 @@ void AcdValsTool::tkrHitsCount() {
             log << MSG::WARNING << "Failed to retrieve Shape by Id" << endreq;
             continue;
         }
-        HepTransform3D transform;
+        HepGeom::Transform3D transform;
         sc = m_detSvc->getTransform3DByID(volId, &transform);
         if (sc.isFailure() ) {
             log << MSG::WARNING << "Failed to get transformation" << endreq;

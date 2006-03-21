@@ -12,6 +12,11 @@
 
 #include "CLHEP/Geometry/Point3D.h"
 
+// TU: Hacks for CLHEP 1.9.2.2 and beyond
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
+
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
 #include "geometry/Ray.h"

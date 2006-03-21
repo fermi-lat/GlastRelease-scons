@@ -51,7 +51,7 @@ class CalibRootCnvSvc : public ConversionSvc, virtual public ICalibRootSvc
   
   // Reimplemented from IInterface
 
-  virtual StatusCode queryInterface( const IID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
 				     void** ppvInterface);  
 
   // Reimplemented from ICalibRootSvc

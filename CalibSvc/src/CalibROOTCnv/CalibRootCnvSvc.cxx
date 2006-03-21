@@ -27,7 +27,7 @@ CalibRootCnvSvc::CalibRootCnvSvc(const std::string& name,
   // xml files.
 }
 
-StatusCode CalibRootCnvSvc::queryInterface(const IID& riid,
+StatusCode CalibRootCnvSvc::queryInterface(const InterfaceID& riid,
                                           void** ppvInterface) {
   /* Uncomment if choose to derive from abstract root conv. interface */
   if (IID_ICalibRootSvc.versionMatch(riid))  {

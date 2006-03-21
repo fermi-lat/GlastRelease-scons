@@ -520,7 +520,7 @@ StatusCode CalValsTool::calculate()
         for( jlog=pxtalrecs->begin(); jlog != pxtalrecs->end(); ++jlog) {
             const Event::CalXtalRecData& recLog = **jlog;    
             double eneLog = recLog.getEnergy();
-            if(eneLog > CAL_Xtal_maxEne) CAL_Xtal_maxEne = eneLog; 
+            if(eneLog > CAL_Xtal_maxEne) CAL_Xtal_maxEne = eneLog;
         }
 
         // Number of Xtals

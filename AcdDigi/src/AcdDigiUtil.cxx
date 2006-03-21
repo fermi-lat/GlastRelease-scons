@@ -172,7 +172,7 @@ long AcdDigiUtil::shootPoisson(double pmtPhotoElectrons) {
     // Input:
     // Output: 
     
-    return RandPoisson::shoot(pmtPhotoElectrons);
+    return CLHEP::RandPoisson::shoot(pmtPhotoElectrons);
 }
 
 double AcdDigiUtil::shootGaussian(double std_dev) {
@@ -181,7 +181,7 @@ double AcdDigiUtil::shootGaussian(double std_dev) {
     // Input:  Standard Deviation
     // Output:  A value obtained from the the Gaussian distribution.
     
-    return RandGauss::shoot(0.0, std_dev);
+    return CLHEP::RandGauss::shoot(0.0, std_dev);
 }
 
 void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id, 

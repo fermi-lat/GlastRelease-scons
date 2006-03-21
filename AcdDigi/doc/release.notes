@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r14cl0 31-Jan-2006 TU First tag on new externals branch GR-v7r3p20-newext
  v1r14p2 09-Nov-2005 HMK Fix up printing of Mean PE per PMT values
                      Fixed up edge effects for Face 1 and 3
  v1r14p1 21-Oct-2005 HMK Patch to completely remove AcdDigiMcIntAlg.cxx

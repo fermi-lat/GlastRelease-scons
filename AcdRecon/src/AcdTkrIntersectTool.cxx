@@ -11,6 +11,8 @@
 
 #include "idents/AcdId.h"
 
+#include "CLHEP/Geometry/Transform3D.h"
+
 DECLARE_TOOL_FACTORY(AcdTkrIntersectTool)
 
 AcdTkrIntersectTool::AcdTkrIntersectTool
@@ -206,7 +208,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
     HepPoint3D xT = transform * center;
     
     double localPosition[2];
-    HepMatrix localCovMatrix(2,2);
+    CLHEP::HepMatrix localCovMatrix(2,2);
     double check(0.);  // this should usually be 1/2 the tile thickness
     double delta(0.);
 
@@ -279,7 +281,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   return returnValue;
 }
 
-void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) const {
+void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
   
   // get the tk params.  
   // want the x and y and the normal to the plane
@@ -298,7 +300,7 @@ void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrac
   //     The jacobian terms are defined as:
   //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
   //  
-  HepMatrix jacobian(2,4);
+  CLHEP::HepMatrix jacobian(2,4);
   //jacobian[0][0] = 0.;                           // dI_y / dx_0  = 0
   //jacobian[0][1] = -delta * inv_m_x;             // dI_y / dm_x  = -d / m_x
   //jacobian[0][2] = 1.;                           // dI_y / dy_0  = 1
@@ -332,7 +334,7 @@ void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrac
   }
 }
 
-void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) const {
+void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
 
   // get the tk params.  
   // want the x and y and the normal to the plane
@@ -351,7 +353,7 @@ void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrac
   //     The jacobian terms are defined as:
   //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
   //  
-  HepMatrix jacobian(2,4);
+  CLHEP::HepMatrix jacobian(2,4);
   //jacobian[0][0] = 1.;                           // dI_x / dx_0  = 1                        
   //jacobian[0][1] = delta * m_x * inv_m_y;        // dI_x / dm_x  = d m_x / m_y
   //jacobian[0][2] = 0.;                           // dI_x / dy_0  = 0
@@ -385,7 +387,7 @@ void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrac
   }
 }
 
-void AcdTkrIntersectTool::errorAtZPlane(const double delta, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) const {
+void AcdTkrIntersectTool::errorAtZPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
 
   // ok input the jacobian
   //
@@ -398,7 +400,7 @@ void AcdTkrIntersectTool::errorAtZPlane(const double delta, const Event::TkrTrac
   //     The jacobian terms are defined as:
   //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
   //  
-  HepMatrix jacobian(2,4);
+  CLHEP::HepMatrix jacobian(2,4);
   
   //jacobian[0][0] = 1.;            // dI_x / dx_0 = 1
   //jacobian[0][1] = -delta;        // dI_x / dm_x = -d
