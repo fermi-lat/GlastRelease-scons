@@ -26,24 +26,24 @@ namespace detModel{
     Volume* getVolume()const{return m_volume;};
 
     /// Set and get methods for the translation vector
-    void setTranslation(Hep3Vector t){m_translation = t;};
-    Hep3Vector getTranslation()const{return m_translation;};
+    void setTranslation(CLHEP::Hep3Vector t){m_translation = t;};
+    CLHEP::Hep3Vector getTranslation()const{return m_translation;};
 
     /** 
        Set and get methods for the rotation matrix (to be changed 
        in order to return a reference or pointer       
     */
-    void setRotation(HepRotation r){m_rotation = r;};
-    HepRotation getRotation()const{return m_rotation;};
+    void setRotation(CLHEP::HepRotation r){m_rotation = r;};
+    CLHEP::HepRotation getRotation()const{return m_rotation;};
 
   private:
     
     /// This is the Volume pointer of this positioned volume
     Volume* m_volume;
     /// The 3D translation
-    Hep3Vector m_translation;
+    CLHEP::Hep3Vector m_translation;
     /// The 3D rotation
-    HepRotation m_rotation;
+    CLHEP::HepRotation m_rotation;
   };
 }
 

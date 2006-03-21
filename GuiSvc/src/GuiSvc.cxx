@@ -313,7 +313,7 @@ StatusCode GuiSvc::finalize ()
 // Query interface
 // ___________________________________________________________
 
-StatusCode GuiSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode GuiSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_IGuiSvc.versionMatch(riid) )  {
         *ppvInterface = (IGuiSvc*)this;
     }

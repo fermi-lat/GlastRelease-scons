@@ -530,9 +530,9 @@ namespace GlastMS{
 
     newDirection.rotateUz(ParticleDirection) ;
 
-    fParticleChange.SetMomentumChange(newDirection.x(),
-                                      newDirection.y(),
-                                      newDirection.z()) ;
+    fParticleChange.ProposeMomentumDirection(newDirection.x(),
+                                             newDirection.y(),
+                                             newDirection.z()) ;
 
     if(fLatDisplFlag)
     {
@@ -587,7 +587,7 @@ namespace GlastMS{
 				   ->GetNavigatorForTracking();
 	  navigator->LocateGlobalPointWithinVolume( newPosition );
 
-	  fParticleChange.SetPositionChange(newPosition) ;
+	  fParticleChange.ProposePosition(newPosition) ;
         }
       }
     }

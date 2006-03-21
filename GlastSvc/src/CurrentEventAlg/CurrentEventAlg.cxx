@@ -85,7 +85,8 @@ StatusCode CurrentEventAlg::execute()
     }
 
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
-    if(0==header) {
+    //if(0==header) {
+    if(!header) {
         MsgStream   log( msgSvc(), name() );
         log << MSG::WARNING << " could not find the event header" << endreq;
         return StatusCode::SUCCESS;

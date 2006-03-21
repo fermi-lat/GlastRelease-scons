@@ -171,13 +171,13 @@ public:
     bool alignRec() const {return ((m_fileFlag&(1<<REC_SHIFT))>0); }
     
     /// queryInterface - required for a service
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
     /// required for a service
     static const InterfaceID& interfaceID() { 
         return ITkrAlignmentSvc::interfaceID(); 
     }
     /// returns the service type
-    const IID& type() const;    
+    const InterfaceID& type() const;    
     
 private:   
     

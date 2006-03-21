@@ -12,13 +12,14 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 // ----------------------------
 // setup basic event loop stuff
 //
-ApplicationMgr.ExtSvc = { 
-    "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc"
-    };
+ApplicationMgr.ExtSvc = { "EventSelector/EventSelector" };
+    //"GlastEventSelector/EventSelector" , 
+    //"EventCnvSvc"
+    //};
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
+EventSelector.Input = "SVC='DbEvtSelector'";
 
 
 // ----------------------------

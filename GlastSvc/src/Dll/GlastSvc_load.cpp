@@ -15,7 +15,7 @@ DECLARE_FACTORY_ENTRIES(GlastSvc) {
     DECLARE_SERVICE( GlastDetSvc);
     DECLARE_SERVICE( GlastPropagatorSvc);
     DECLARE_SERVICE( GlastRandomSvc);
-    DECLARE_SERVICE( GlastEventSelector );
+    DECLARE_SERVICE( DbEvtSelector );
     DECLARE_SERVICE( EventCnvSvc );
     DECLARE_CONVERTER( EventCnv );
     DECLARE_CONVERTER( MCEventCnv );

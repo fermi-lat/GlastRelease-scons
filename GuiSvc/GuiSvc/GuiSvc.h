@@ -69,7 +69,7 @@ public:
     virtual void handle(const Incident& inc);    
  
    /// Query interface
-   virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+   virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
    // for the IRunnable interfce
    virtual StatusCode run();

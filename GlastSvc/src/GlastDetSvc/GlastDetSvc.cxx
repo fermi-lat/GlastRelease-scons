@@ -23,10 +23,10 @@
 #include "GeometryVisitor.h"
 
 // define the class-id (unique) for the GlastDetSvc
-// moved to Kernel! const IID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
+// moved to Kernel! const InterfaceID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
 
 // define the class-id (unique) for the GlastIRFSvc
-//const IID&  IID_IGlastIRFLoadSvc  =  402;   // Unique to GLAST
+//const InterfaceID&  IID_IGlastIRFLoadSvc  =  402;   // Unique to GLAST
 
 
 // declare the service factories for the GlastDetSvc
@@ -34,7 +34,7 @@ static SvcFactory<GlastDetSvc> a_factory;
 const ISvcFactory& GlastDetSvcFactory = a_factory;
 
 // external declarations of the service identifiers
-// HSG - not necessary from the Gaudi example - extern const IID& IID_IGlastDetSvc;
+// HSG - not necessary from the Gaudi example - extern const InterfaceID& IID_IGlastDetSvc;
 
 GlastDetSvc::GlastDetSvc(const std::string& name,ISvcLocator* svc)
 : Service(name,svc)
@@ -63,7 +63,7 @@ GlastDetSvc::~GlastDetSvc()
     finalize();
 }
 
-StatusCode  GlastDetSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  GlastDetSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_IGlastDetSvc == riid) {
         *ppvIF = dynamic_cast<IGlastDetSvc*> (this);
@@ -117,7 +117,7 @@ StatusCode GlastDetSvc::finalize ()
     return status;
 }
 
-const IID&  GlastDetSvc::type () const {
+const InterfaceID&  GlastDetSvc::type () const {
     return IID_IGlastDetSvc;
 }
 

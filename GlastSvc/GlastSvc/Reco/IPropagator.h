@@ -53,9 +53,9 @@ public:
                                                  bool   forward  = true)    const = 0;
 
     //! Return multiple scattering matrix after stepping, arcLen can be less than step taken
-    virtual HepMatrix getMscatCov(double arcLen   = -1.,
-                                  double momentum = 1.,
-                                  bool   forward  = true)   const = 0;
+    virtual CLHEP::HepMatrix getMscatCov(double arcLen   = -1.,
+                                         double momentum = 1.,
+                                         bool   forward  = true)   const = 0;
 
     //! Return volume identifer after stepping
     virtual idents::VolumeIdentifier getVolumeId(double arcLen = -1.) const = 0;

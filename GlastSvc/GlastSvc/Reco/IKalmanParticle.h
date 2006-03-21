@@ -51,7 +51,7 @@ public:
          asked for.  
  
     */
-    virtual HepMatrix mScat_Covr(double momentum, double arcLen) const=0;
+    virtual CLHEP::HepMatrix mScat_Covr(double momentum, double arcLen) const=0;
 
     virtual double arcLength() const=0; 
 

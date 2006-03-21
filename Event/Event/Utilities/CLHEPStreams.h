@@ -24,6 +24,11 @@
 //------------------------------------------------------------------------------
 // <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/config/CLHEP.h"
+// Hack for CLHEP 1.9.2.2
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
 //------------------------------------------------------------------------------
 // Output operator
 inline StreamBuffer& operator<< ( StreamBuffer& s, const HepPoint3D& value)    {
@@ -43,6 +48,10 @@ inline StreamBuffer& operator>> ( StreamBuffer& s, HepPoint3D& value )         {
 //------------------------------------------------------------------------------
 // <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepVector3D.html">class HepVector3D</A>
 #include "CLHEP/Geometry/Vector3D.h"
+// Hack for CLHEP 1.9.2.2
+#ifndef HepVector3D
+typedef HepGeom::Vector3D<double> HepVector3D;
+#endif
 //------------------------------------------------------------------------------
 // Output operator
 inline StreamBuffer& operator<< ( StreamBuffer& s, const HepVector3D& value)   {
@@ -64,14 +73,14 @@ inline StreamBuffer& operator>> ( StreamBuffer& s, HepVector3D& value )        {
 #include "CLHEP/Vector/LorentzVector.h"
 //------------------------------------------------------------------------------
 // Output operator
-inline StreamBuffer& operator<< ( StreamBuffer& s, const HepLorentzVector& value) {
+inline StreamBuffer& operator<< ( StreamBuffer& s, const CLHEP::HepLorentzVector& value) {
   return s  << HepDouble(value.px()) 
             << HepDouble(value.py())
             << HepDouble(value.pz())
             << HepDouble(value.e());
 }
 // Input operator
-inline StreamBuffer& operator>> ( StreamBuffer& s, HepLorentzVector& value )   {
+inline StreamBuffer& operator>> ( StreamBuffer& s, CLHEP::HepLorentzVector& value )   {
   HepDouble   px, py, pz, E;
   s  >> px >> py >> pz >> E;
   value.setPx(px);
@@ -87,7 +96,7 @@ inline StreamBuffer& operator>> ( StreamBuffer& s, HepLorentzVector& value )   {
 #include "CLHEP/Matrix/SymMatrix.h"
 //------------------------------------------------------------------------------
 // Output operator
-inline StreamBuffer& operator<< ( StreamBuffer& s, const HepSymMatrix& value ) {
+inline StreamBuffer& operator<< ( StreamBuffer& s, const CLHEP::HepSymMatrix& value ) {
   int   nrow = value.num_row();
   for( int i=1; i<=nrow; i++ ) {
     for( int j=1; j<=i; j++ ) {
@@ -97,7 +106,7 @@ inline StreamBuffer& operator<< ( StreamBuffer& s, const HepSymMatrix& value ) {
   return s;
 }
 // Input operator
-inline StreamBuffer& operator>> ( StreamBuffer& s, HepSymMatrix& value )       {
+inline StreamBuffer& operator>> ( StreamBuffer& s, CLHEP::HepSymMatrix& value )       {
   int   nrow = value.num_row();
   for( int i=1; i<=nrow; i++ ) {
     for( int j=1; j<=i; j++ ) {

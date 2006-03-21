@@ -30,7 +30,7 @@ void McTrajectory::setMcParticle( SmartRef<McParticle> value )
 }
 
 
-void McTrajectory::addPoints(std::vector<Hep3Vector>& points)
+void McTrajectory::addPoints(std::vector<CLHEP::Hep3Vector>& points)
 {
   m_points = points;
 }

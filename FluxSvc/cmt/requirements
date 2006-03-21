@@ -30,7 +30,9 @@ use celestialSources * -no_auto_imports
 set GENERICSOURCES_XML $(genericSources_root)/xml
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
-set LHCBDBASE  "${FLUXSVCROOT}"
+#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
+set LHCBDBASE       "${FLUXSVCROOT}"
+set PARAMFILESROOT  "${FLUXSVCROOT}"
 
 
 # _____________________________________________________________

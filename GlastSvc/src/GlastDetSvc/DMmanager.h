@@ -11,7 +11,8 @@ namespace detModel{
 
 namespace idents{class VolumeIdentifier;}
 
-class HepTransform3D;
+namespace HepGeom {class Transform3D;}
+typedef HepGeom::Transform3D HepTransform3D;
 
 #include <string>
 #include "detModel/Management/IDmapBuilder.h"

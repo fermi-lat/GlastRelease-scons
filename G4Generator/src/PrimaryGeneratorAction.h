@@ -80,11 +80,11 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     }
     
     /// @return The four momentum as a Lorentz vector
-    HepLorentzVector GetFourMomentum(){
+    CLHEP::HepLorentzVector GetFourMomentum(){
         double mass = GetParticleDefinition()->GetPDGMass(),
             e = particleGun->GetParticleEnergy()+mass,
             p = sqrt(e*e-mass*mass);
-        HepLorentzVector p4(e, 
+        CLHEP::HepLorentzVector p4(e, 
             p*particleGun->GetParticleMomentumDirection());
         return p4;
     }

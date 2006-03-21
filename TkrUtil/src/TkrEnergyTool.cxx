@@ -169,7 +169,7 @@ double TkrEnergyTool::getTotalEnergy(const Event::TkrTrack* track, double CalEne
     while(layer--) 
 
     {
-        //HepMatrix Q = m_propagator->getMscatCov(arc_len, CalEnergy/2.);
+        //CLHEP::HepMatrix Q = m_propagator->getMscatCov(arc_len, CalEnergy/2.);
         //double xms = Q(1,1);
         //double yms = Q(3,3);
 

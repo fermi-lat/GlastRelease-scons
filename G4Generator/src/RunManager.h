@@ -73,7 +73,9 @@ class G4Timer;
 class G4DCtable;
 class G4Run;
 
-class Hep3Vector;
+namespace CLHEP {class Hep3Vector;}
+using namespace CLHEP;
+
 class IG4GeometrySvc;
 
 class G4GenExceptionHandler;
@@ -211,6 +213,9 @@ class RunManager
     G4double defaultCut;
     G4double TkrCutValue;
     G4double CalCutValue;
+
+    /// Keep the geometry service for now
+    IG4GeometrySvc* m_gsv;
 
   public:
     virtual void StoreRandomNumberStatus(G4int eventID=-1);

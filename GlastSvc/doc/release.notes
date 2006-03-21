@@ -5,6 +5,9 @@
  package manager:T.Burnett
            EOH
 
+ v9r17cl2 15-Feb-2006  TU   one more attempt to remove "old school" selector methods
+ v9r17cl1 14-Feb-2006  TU   Updates for new Gaudi
+ v9r17cl0 31-Jan-2006  TU   Tag development branch for new externals
  v9r17p1 25-Jan-2006  hmk   Richard's fix to CurrentEventAlg to print only one
                             line
  v9r17   22-Nov-2005  hmk   Add CurrentEventAlg which outputs the run/event ids

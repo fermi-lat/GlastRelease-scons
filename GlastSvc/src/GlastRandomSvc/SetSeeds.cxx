@@ -75,7 +75,8 @@ StatusCode SetSeeds::execute()
     MsgStream   log( msgSvc(), name() );
 
     SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
-    if (mcheader == 0) {
+    //if (mcheader == 0) {
+    if (!mcheader) {
             log << MSG::ERROR << " no MC header" << endreq;
             return StatusCode::FAILURE;
     }
@@ -108,7 +109,8 @@ StatusCode SetSeeds::execute()
     Event::EventHeader* h = 0; 
 
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
-    if(0==header) {
+    //if(0==header) {
+    if(!header) {
         // not already there: try to register instead
         sc = eventSvc()->registerObject(EventModel::EventHeader, h=new Event::EventHeader);
         if( sc.isFailure()) {

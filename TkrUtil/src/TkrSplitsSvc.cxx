@@ -48,7 +48,7 @@ TkrSplitsSvc::TkrSplitsSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("cableBufferSize",  m_cableBuffer=128);
 }
 
-StatusCode  TkrSplitsSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  TkrSplitsSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_ITkrSplitsSvc == riid) {
         *ppvIF = dynamic_cast<ITkrSplitsSvc*> (this);
@@ -58,7 +58,7 @@ StatusCode  TkrSplitsSvc::queryInterface (const IID& riid, void **ppvIF)
     }
 }
 
-const IID&  TkrSplitsSvc::type () const {
+const InterfaceID&  TkrSplitsSvc::type () const {
     return IID_ITkrSplitsSvc;
 }
 

@@ -87,7 +87,8 @@ RunManager::RunManager(std::ostream& log,
  defaultCut(defaultCutValue),
  TkrCutValue(defaultTkrCutValue),
  CalCutValue(defaultCalCutValue),
- storeRandomNumberStatus(0)
+ storeRandomNumberStatus(0),
+ m_gsv(gsv)
 {
   // Create a (singleton) Run Manager
   if(fRunManager)
@@ -105,8 +106,8 @@ RunManager::RunManager(std::ostream& log,
   timer = new G4Timer();
 
   // Set the TrackingAction to track the McParticle
-  eventManager->SetUserAction(new TrackingAction(gsv));
-  eventManager->SetUserAction(new SteppingAction());
+  //eventManager->SetUserAction(new TrackingAction(gsv));
+  //eventManager->SetUserAction(new SteppingAction());
 
   // G4 Messenger stuff
   G4ParticleTable::GetParticleTable()->CreateMessenger();
@@ -115,7 +116,7 @@ RunManager::RunManager(std::ostream& log,
 
   // The user stuff
   physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory, eLossFactory);
-  userPrimaryGeneratorAction = new PrimaryGeneratorAction;
+  //userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 
 }
 
@@ -257,6 +258,12 @@ void RunManager::Initialize()
   if(!cutoffInitialized) InitializeCutOff();
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
 
+  userPrimaryGeneratorAction = new PrimaryGeneratorAction;
+
+  // Set the TrackingAction to track the McParticle
+  eventManager->SetUserAction(new TrackingAction(m_gsv));
+  eventManager->SetUserAction(new SteppingAction());
+
   pUImanager->SetCoutDestination(new G4UIsession);
 
   // Set the exception handler
@@ -353,9 +360,9 @@ void RunManager::InitializePhysics()
   if(physicsList)
   {
     if(verboseLevel>1) G4cout << "physicsList->Construct() start." << G4endl;
-    kernel->InitializePhysics(physicsList);   // Use this for G4 v6
-    //kernel->SetPhysics(physicsList);        // Use this for G4 v7
-    //kernel->InitializePhysics();
+    //kernel->InitializePhysics(physicsList);   // Use this for G4 v6
+    kernel->SetPhysics(physicsList);        // Use this for G4 v7
+    kernel->InitializePhysics();
   }
   else
   {

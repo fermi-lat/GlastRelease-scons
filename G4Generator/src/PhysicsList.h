@@ -36,6 +36,10 @@ class PhysicsList: public G4VModularPhysicsList
   ~PhysicsList();
   
  public:
+
+  // Construct particle and physics process
+  virtual void ConstructParticle();
+  virtual void ConstructProcess();
   
   /// This method set all the physics cuts for the simulation
   virtual void SetCuts();
@@ -47,7 +51,11 @@ class PhysicsList: public G4VModularPhysicsList
   std::string m_physicsTable;
   std::string m_physicsDir;
 
-
+  G4VPhysicsConstructor* m_GeneralPhysics;
+  G4VPhysicsConstructor* m_EMPhysics;
+  G4VPhysicsConstructor* m_MuonPhysics;
+  G4VPhysicsConstructor* m_HadronPhysics;
+  G4VPhysicsConstructor* m_IonPhysics;
 };
 
 #endif

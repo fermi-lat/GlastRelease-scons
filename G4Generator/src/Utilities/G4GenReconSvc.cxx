@@ -32,7 +32,7 @@ public:
 
     virtual StatusCode initialize() ;
     virtual StatusCode finalize() ;
-    StatusCode queryInterface( const IID &, void** ) ;
+    StatusCode queryInterface( const InterfaceID &, void** ) ;
         
     //! G4Genled when an event begin and end
     void handle( const Incident & ) ;
@@ -63,7 +63,7 @@ private :
 
 DECLARE_SERVICE_FACTORY(G4GenErrorSvc) ;
 
-StatusCode G4GenErrorSvc::queryInterface( const IID & riid, void** ppvIF ) 
+StatusCode G4GenErrorSvc::queryInterface( const InterfaceID & riid, void** ppvIF ) 
 {
     if (IID_IG4GenErrorSvc == riid)
     {

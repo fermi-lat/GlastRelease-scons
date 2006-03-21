@@ -332,11 +332,11 @@ StatusCode mcRootWriterAlg::writeMcParticles() {
         HepPoint3D finalPosTds = (*p)->finalPosition();
         TVector3 finalPosRoot(finalPosTds.x(), finalPosTds.y(), finalPosTds.z());
         
-        HepLorentzVector initMomTds = (*p)->initialFourMomentum();
+        CLHEP::HepLorentzVector initMomTds = (*p)->initialFourMomentum();
         TLorentzVector initMomRoot(initMomTds.x(), initMomTds.y(), 
             initMomTds.z(), initMomTds.t());
         
-        HepLorentzVector finalMomTds = (*p)->finalFourMomentum();
+        CLHEP::HepLorentzVector finalMomTds = (*p)->finalFourMomentum();
         TLorentzVector finalMomRoot(finalMomTds.x(), finalMomTds.y(), 
             finalMomTds.z(), finalMomTds.t());
 

@@ -9,6 +9,14 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Vector/Rotation.h"
 
+// TU: Hacks for CLHEP 1.9.2.2 and beyond
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
+#ifndef HepVector3D
+typedef HepGeom::Vector3D<double> HepVector3D;
+#endif
+
 class ParticleProperty;
 class EventSource;
 
@@ -76,17 +84,17 @@ public:
     virtual void pass ( double t)=0;
     
     ///get the transformation matrix due to orientation of the Galaxy 
-    virtual HepRotation CELTransform(double time)const=0;
+    virtual CLHEP::HepRotation CELTransform(double time)const=0;
     
     ///get the transformation matrix due to orientation of the spacecraft.
-    virtual HepRotation orientTransform(double time)const=0;
+    virtual CLHEP::HepRotation orientTransform(double time)const=0;
     
     virtual void addFactory(std::string name, const ISpectrumFactory* factory )=0;
     
     virtual /*int*/double gpsTime()const=0;
     
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
-    virtual HepRotation transformGlastToGalactic(double time)const=0;
+    virtual CLHEP::HepRotation transformGlastToGalactic(double time)const=0;
     
     virtual EventSource* currentEvent()=0;
     virtual EventSource* currentFlux()=0;
@@ -95,7 +103,7 @@ public:
     virtual void writeSourceCharacteristic(std::ostream& out)=0;
 
     //get the transformtation matrix - the rest of these functions are now deprecated
-    virtual HepRotation transformToGlast(double seconds,int  index)const=0;
+    virtual CLHEP::HepRotation transformToGlast(double seconds,int  index)const=0;
 };
 
 

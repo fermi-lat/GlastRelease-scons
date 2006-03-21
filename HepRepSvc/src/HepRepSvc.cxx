@@ -455,7 +455,7 @@ bool HepRepSvc::replayAlgorithm(std::string algName)
 }
 
 /// Query interface
-StatusCode HepRepSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode HepRepSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_IHepRepSvc.versionMatch(riid) )  {
         *ppvInterface = (IHepRepSvc*)this;
     }

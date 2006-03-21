@@ -5,7 +5,10 @@
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 
+namespace CLHEP
+{
 class HepRandomEngine;
+};
 
 /** @class IRandomAccess
 * @brief Abstract definition of a tool to be called from the
@@ -22,7 +25,7 @@ public:
     static const InterfaceID& interfaceID() { return IID_IRandomAccess;}
 
     /// set the local engine, return previous pointer
-    virtual HepRandomEngine* setTheEngine( HepRandomEngine* engine)=0;
+    virtual CLHEP::HepRandomEngine* setTheEngine( CLHEP::HepRandomEngine* engine)=0;
 
     /// return pointer to a static function that sets the flag in the RandGauss
     typedef void(*SetFlag)(bool);

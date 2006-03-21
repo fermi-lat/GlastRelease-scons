@@ -37,14 +37,14 @@ public:
     StatusCode finalize();
 
     /// queryInterface - for implementing a Service this is necessary
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     static const InterfaceID& interfaceID() {
         return ITkrSplitsSvc::interfaceID(); 
     }
 
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
 
     /// get the last C0 strip for this plane
     int getSplitPoint(int tower, int layer, int view) const;

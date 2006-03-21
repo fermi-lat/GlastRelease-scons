@@ -2,15 +2,15 @@
 #define ROOTIO_COMMONDATA_H 1
 
 
+//#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/EventModel.h"
+
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
-
-//#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/TopLevel/Event.h"
-#include "Event/TopLevel/EventModel.h"
 
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"

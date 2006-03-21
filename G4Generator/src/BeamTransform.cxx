@@ -20,6 +20,10 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
 
+// TU: Hack for CLHEP 1.9.2.2
+typedef HepGeom::Point3D<double>  HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
 
 #include <cassert>
 #include <sstream>
@@ -70,8 +74,8 @@ private:
     double m_c, m_s;                    // cos, sin of rot
 
     void transform(Event::McParticle& mcp );
-    Hep3Vector m_translation, m_pivot;
-    HepRotationY m_rot;  // the table rotation
+    CLHEP::Hep3Vector m_translation, m_pivot;
+    CLHEP::HepRotationY m_rot;  // the table rotation
 };
 
 
@@ -106,13 +110,13 @@ StatusCode BeamTransform::initialize(){
     setProperties();
     
     // define the transformation matrix here.
-    m_translation = Hep3Vector(0, m_transy, m_transz);
+    m_translation = CLHEP::Hep3Vector(0, m_transy, m_transz);
 
     // this is the rotation matrix
-    m_rot = HepRotationY(m_angle*M_PI/180);
+    m_rot = CLHEP::HepRotationY(m_angle*M_PI/180);
 
     // location of pivot
-    m_pivot = Hep3Vector( m_pivot_offset,0, m_pivot_distance);
+    m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_distance);
 
     return sc;
 }
@@ -125,24 +129,24 @@ void BeamTransform::transform(Event::McParticle& mcp )
     }
 
     // get the initial position and momentum
-    HepLorentzVector pbeam  = mcp.initialFourMomentum();
-    Hep3Vector rbeam  = mcp.initialPosition();
+    CLHEP::HepLorentzVector pbeam  = mcp.initialFourMomentum();
+    CLHEP::Hep3Vector rbeam  = mcp.initialPosition();
     // ditto final
-    HepLorentzVector pbeam1 = mcp.finalFourMomentum();
-    Hep3Vector rbeam1 = mcp.finalPosition();
+    CLHEP::HepLorentzVector pbeam1 = mcp.finalFourMomentum();
+    CLHEP::Hep3Vector rbeam1 = mcp.finalPosition();
 
     // translate in beam frame
     rbeam  += m_translation;
     rbeam1 += m_translation;
 
     // convert to unrotated instrument coordinates
-    Hep3Vector r (rbeam.z(),  rbeam.y(), 
+    CLHEP::Hep3Vector r (rbeam.z(),  rbeam.y(), 
         rbeam.x()  - m_beam_plane + m_beam_plane_glast);
-    Hep3Vector r1(rbeam1.z(), rbeam1.y(), 
+    CLHEP::Hep3Vector r1(rbeam1.z(), rbeam1.y(), 
         rbeam1.x() - m_beam_plane + m_beam_plane_glast);
 
-    HepLorentzVector p (-pbeam.z(),  pbeam.y(),  -pbeam.x(),  pbeam.e());
-    HepLorentzVector p1(-pbeam1.z(), pbeam1.y(), -pbeam1.x(), pbeam1.e());
+    CLHEP::HepLorentzVector p (-pbeam.z(),  pbeam.y(),  -pbeam.x(),  pbeam.e());
+    CLHEP::HepLorentzVector p1(-pbeam1.z(), pbeam1.y(), -pbeam1.x(), pbeam1.e());
 
     mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
         mcp.particleProperty(), mcp.statusFlags(),

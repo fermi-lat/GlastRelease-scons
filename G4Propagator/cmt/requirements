@@ -15,7 +15,7 @@ use G4Generator *
 private
 
 #this is private to avoid passing on build info to clients
-use Geant4   v2r* IExternal
+use Geant4   v3r* IExternal
 
 # get flags to build shared library
 

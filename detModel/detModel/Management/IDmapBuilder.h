@@ -56,23 +56,23 @@ namespace detModel{
     /// (using all fields, from world volume on down) and transform
     /// will also be relative to world volume
     /// Returns false if fails to find the id
-    bool getTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
+    bool getTransform3DByID(idents::VolumeIdentifier, HepGeom::Transform3D*);
 
     /// Retrieve the HepTransform3D from an ID.  ID should be relative
     /// to top volume.  However transform will be relative to world volume. 
     /// See getTopTransformById to retrieve transform relative to top volume
     /// Returns false if fails to find the id
-    bool getTransform3DByTopID(idents::VolumeIdentifier, HepTransform3D*);
+    bool getTransform3DByTopID(idents::VolumeIdentifier, HepGeom::Transform3D*);
 
     /// Retrieve the HepTransform3D from an ID.  ID should be relative
     /// to top volume.  Transform will also be relative to top volume.
     /// Returns false if fails to find the id
-    bool getTopTransform3DByTopID(idents::VolumeIdentifier, HepTransform3D*);
+    bool getTopTransform3DByTopID(idents::VolumeIdentifier, HepGeom::Transform3D*);
 
     /// Retrieve the HepTransform3D from an ID.  ID should be complete,
     /// but transform will be relative to top volume.
     /// Returns false if fails to find the id
-    bool getTopTransform3DByID(idents::VolumeIdentifier, HepTransform3D*);
+    bool getTopTransform3DByID(idents::VolumeIdentifier, HepGeom::Transform3D*);
 
     /// Retrieve the shape parameters and type from an ID
     /// Returns false if fails to find the id
@@ -89,7 +89,7 @@ namespace detModel{
     idents::VolumeIdentifier getIDPrefix() const {return m_IDPrefix;}
 
     /// Return transform of top volume relative to world
-    const HepTransform3D& getTransform3DPrefix() const 
+    const HepGeom::Transform3D& getTransform3DPrefix() const 
     {return m_transformPrefix;}
 
     /** 
@@ -118,9 +118,9 @@ namespace detModel{
     /// This is the identifiers used during the m_volMap building
     idents::VolumeIdentifier m_actualID;    
     /// This is the actual position of the volume
-    Hep3Vector m_actualPos;
+    CLHEP::Hep3Vector m_actualPos;
     /// This is the actual rotation of the volume
-    HepRotation m_actualRot;
+    CLHEP::HepRotation m_actualRot;
     /// This is the map of PositionedVolume pointers indexed by ids
     PVmap m_volMap;
 
@@ -135,8 +135,8 @@ namespace detModel{
     /// the full geometry (using top volume specified by section element)
     idents::VolumeIdentifier m_IDPrefix;
 
-    HepTransform3D m_transformPrefix;
-    HepTransform3D m_inverseTransformPrefix; // avoid recomputing
+    HepGeom::Transform3D m_transformPrefix;
+    HepGeom::Transform3D m_inverseTransformPrefix; // avoid recomputing
 
     Gdd*  m_gdd;
   };

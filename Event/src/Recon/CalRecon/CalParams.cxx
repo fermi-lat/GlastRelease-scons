@@ -14,8 +14,8 @@
 
 
 Event::CalParams::CalParams(double energy, double eneError,
-                            const Point&  centroid, const HepMatrix& centroidErr,
-                            const Vector& axis,     const HepMatrix& axisErr) :
+                            const Point&  centroid, const CLHEP::HepMatrix& centroidErr,
+                            const Vector& axis,     const CLHEP::HepMatrix& axisErr) :
                             m_energy(energy),
                             m_eneError(eneError),
                             m_clusterCentroid(centroid),
@@ -72,7 +72,7 @@ void Event::CalParams::clear()
     m_eneError = 0.;
 }
 
-void Event::CalParams::setCentroidErrs(const HepMatrix& errs)
+void Event::CalParams::setCentroidErrs(const CLHEP::HepMatrix& errs)
 {
     m_cenxx = errs(1,1);
     m_cenxy = errs(1,2);
@@ -82,7 +82,7 @@ void Event::CalParams::setCentroidErrs(const HepMatrix& errs)
     m_cenzz = errs(3,3);
 }
 
-void Event::CalParams::setAxisErrs(const HepMatrix& errs)
+void Event::CalParams::setAxisErrs(const CLHEP::HepMatrix& errs)
 {
     m_axisxx = errs(1,1);
     m_axisxy = errs(1,2);
@@ -92,9 +92,9 @@ void Event::CalParams::setAxisErrs(const HepMatrix& errs)
     m_axiszz = errs(3,3);
 }
 
-HepMatrix Event::CalParams::getCentroidErrs() const
+CLHEP::HepMatrix Event::CalParams::getCentroidErrs() const
 {
-    HepMatrix errs(3,3,0);
+    CLHEP::HepMatrix errs(3,3,0);
 
     errs(1,1) = m_cenxx;
     errs(1,2) = errs(2,1) = m_cenxy;
@@ -106,9 +106,9 @@ HepMatrix Event::CalParams::getCentroidErrs() const
     return errs;
 }
 
-HepMatrix Event::CalParams::getAxisErrs() const
+CLHEP::HepMatrix Event::CalParams::getAxisErrs() const
 {
-    HepMatrix errs(3,3,0);
+    CLHEP::HepMatrix errs(3,3,0);
 
     errs(1,1) = m_axisxx;
     errs(1,2) = errs(2,1) = m_axisxy;

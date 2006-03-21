@@ -5,12 +5,17 @@
 // #include "$GLEAMROOT/src/default.txt"
 
 // List of required services
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc",
- "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" ,
+ "EventSelector/EventSelector" };
+ //"EventSelector/EventSelector" , "EventCnvSvc" };
+ //  "GlastEventSelectorNew/EventSelector" , "EventCnvSvc" };
+//ApplicationMgr.EvtSel  = "NONE" ;
 
 // For Event loop
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
+//EventSelector.Input = "SVC='GlastEventSelector'";
+EventSelector.Input = "SVC='DbEvtSelector' ConversionSvc='EventCnvSvc' ";
 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc" };

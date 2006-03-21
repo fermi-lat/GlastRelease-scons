@@ -39,7 +39,7 @@ TkrFailureModeSvc::TkrFailureModeSvc(const std::string& name,ISvcLocator* svc) :
     m_existsList = false;
 }
 
-StatusCode  TkrFailureModeSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  TkrFailureModeSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_ITkrFailureModeSvc == riid) {
         *ppvIF = dynamic_cast<ITkrFailureModeSvc*> (this);
@@ -53,7 +53,7 @@ StatusCode  TkrFailureModeSvc::queryInterface (const IID& riid, void **ppvIF)
     }
 }
 
-const IID&  TkrFailureModeSvc::type () const {
+const InterfaceID&  TkrFailureModeSvc::type () const {
     return IID_ITkrFailureModeSvc;
 }
 

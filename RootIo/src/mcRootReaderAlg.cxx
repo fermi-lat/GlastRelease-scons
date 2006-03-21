@@ -386,11 +386,11 @@ StatusCode mcRootReaderAlg::readMcParticles() {
         
         TLorentzVector initialMomRoot = pRoot->getInitialFourMomentum();
         
-        HepLorentzVector initialMomTds(initialMomRoot.X(), initialMomRoot.Y(),
+        CLHEP::HepLorentzVector initialMomTds(initialMomRoot.X(), initialMomRoot.Y(),
             initialMomRoot.Z(), initialMomRoot.T());
         
         TLorentzVector finalMomRoot = pRoot->getFinalFourMomentum();
-        HepLorentzVector finalMomTds(finalMomRoot.X(), finalMomRoot.Y(), 
+        CLHEP::HepLorentzVector finalMomTds(finalMomRoot.X(), finalMomRoot.Y(), 
             finalMomRoot.Z(), finalMomRoot.T());
         
         TVector3 initPosRoot = pRoot->getInitialPosition();

@@ -43,7 +43,7 @@ class McTrajectory : virtual public ContainedObject {
     ~McTrajectory(){}
     
     /// Add the 3d points to the trajectory
-    void addPoints(std::vector<Hep3Vector>& points);
+    void addPoints(std::vector<CLHEP::Hep3Vector>& points);
     /// Set the pointer to the McParticle
     void setMcParticle(SmartRef<McParticle> value);
     void setMcParticle( McParticle* value );
@@ -52,7 +52,7 @@ class McTrajectory : virtual public ContainedObject {
     McParticle* getMcParticle();
 
     /// Get the 3d points
-    const std::vector<Hep3Vector>& getPoints() const {return m_points;}
+    const std::vector<CLHEP::Hep3Vector>& getPoints() const {return m_points;}
 
     /// get, set charge
     int getCharge() const { return m_charge; }
@@ -68,7 +68,7 @@ class McTrajectory : virtual public ContainedObject {
     /// Pointer to McParticle of this trajectory
     SmartRef<McParticle>    m_mcParticle;
     /// The point of the trajectory
-    std::vector<Hep3Vector> m_points;
+    std::vector<CLHEP::Hep3Vector> m_points;
     /// the (redundant?) charge
     int m_charge;
 

@@ -34,14 +34,14 @@ public:
     StatusCode finalize();
 
     /// queryInterface - for implementing a Service this is necessary
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     static const InterfaceID& interfaceID() {
         return ITkrToTSvc::interfaceID(); 
     }
 
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
 
     double getGain(int tower, int layer, int view, int strip) const;
     double getQuad(int tower, int layer, int view, int strip) const; 

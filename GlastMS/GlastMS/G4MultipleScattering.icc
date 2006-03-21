@@ -174,7 +174,7 @@ inline G4VParticleChange* G4MultipleScattering::AlongStepDoIt(
                                      alpha1)) ;
   }
 
-  fParticleChange.SetTrueStepLength(truePathLength) ;
+  fParticleChange.ProposeTrueStepLength(truePathLength) ;
 
   return &fParticleChange ;
   

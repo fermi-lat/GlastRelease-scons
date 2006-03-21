@@ -18,6 +18,7 @@
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "idents/VolumeIdentifier.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 // Geant4 interface
 #include "G4Step.hh"
@@ -26,7 +27,6 @@
 #include "G4SDManager.hh"
 
 #include <algorithm>
-
 
 
 PosDetectorManager::PosDetectorManager(DetectorConstruction *det,
@@ -92,12 +92,12 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     Event::McPositionHit *hit = new Event::McPositionHit;
 
     // this rotates the hits to local coordinates with respect to the center  
-    HepRotation local(*(theTouchable->GetRotation()));
+    CLHEP::HepRotation local(*(theTouchable->GetRotation()));
     HepPoint3D center=theTouchable->GetTranslation();
 
     // this is the global transformation from world to the topVolume; it is the
     // identity if topVolume is equal to LAT
-    HepTransform3D global = m_gsv->getTransform3DPrefix();
+    HepGeom::Transform3D global = m_gsv->getTransform3DPrefix();
 
     McParticleManager* partMan =  McParticleManager::getPointer();
   
@@ -106,9 +106,9 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
 
     // Track energy at this point
-    G4double         trkEnergy   = aStep->GetTrack()->GetTotalEnergy();
-    Hep3Vector       trkMomentum = aStep->GetTrack()->GetMomentum();
-    HepLorentzVector trk4Mom     = HepLorentzVector(trkMomentum, trkEnergy);
+    G4double                trkEnergy   = aStep->GetTrack()->GetTotalEnergy();
+    CLHEP::Hep3Vector       trkMomentum = aStep->GetTrack()->GetMomentum();
+    CLHEP::HepLorentzVector trk4Mom     = CLHEP::HepLorentzVector(trkMomentum, trkEnergy);
     hit->setParticle4Momentum(trk4Mom);
 
     // Retrieve the particle causing the hit and the ancestor and set the corresponding

@@ -95,7 +95,7 @@ GlastRandomSvc::~GlastRandomSvc()
 class RanGenFactoryBase {
 public:
   virtual ~RanGenFactoryBase(){}
-    virtual HepRandomEngine * create() =0;
+    virtual CLHEP::HepRandomEngine * create() =0;
     virtual std::string name()const =0;
 };
 
@@ -106,14 +106,14 @@ public:
 template <class T> class RanGenFactory : public RanGenFactoryBase{ 
 public:
     RanGenFactory(std::string name):m_name(name){}
-    virtual HepRandomEngine * create(){return new T;}
+    virtual CLHEP::HepRandomEngine * create(){return new T;}
     std::string name()const { return m_name;}
 private:
     std::string m_name;
 
 };
 
-HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName) 
+CLHEP::HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName) 
 {
     // Purpose and Method: Given a string containing a valid CLHEP
     //                     random engine type returns an instance 
@@ -124,19 +124,19 @@ HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName)
     // Restrictions and Caveats:  None
 
     static RanGenFactoryBase*  factories[] = { 
-        new RanGenFactory<DRand48Engine>("DRand48Engine")   ,
-        new RanGenFactory<DualRand>("DualRand")             ,
-        new RanGenFactory<TripleRand>("TripleRand")         ,
-        new RanGenFactory<RandEngine>("RandEngine")         ,
-        new RanGenFactory<HepJamesRandom>("HepJamesRandom") ,
-        new RanGenFactory<HepJamesRandom>("JamesRandom")    ,
-        new RanGenFactory<Hurd160Engine>("Hurd160Engine")   ,
-        new RanGenFactory<Hurd288Engine>("Hurd288Engine")   ,
-        new RanGenFactory<MTwistEngine>("MTwistEngine")     ,
-        new RanGenFactory<RanecuEngine>("RanecuEngine")     ,
-        new RanGenFactory<RanshiEngine>("RanshiEngine")     ,
-        new RanGenFactory<RanluxEngine>("RanluxEngine")     ,
-        new RanGenFactory<Ranlux64Engine>("Ranlux64Engine") 
+        new RanGenFactory<CLHEP::DRand48Engine>("DRand48Engine")   ,
+        new RanGenFactory<CLHEP::DualRand>("DualRand")             ,
+        new RanGenFactory<CLHEP::TripleRand>("TripleRand")         ,
+        new RanGenFactory<CLHEP::RandEngine>("RandEngine")         ,
+        new RanGenFactory<CLHEP::HepJamesRandom>("HepJamesRandom") ,
+        new RanGenFactory<CLHEP::HepJamesRandom>("JamesRandom")    ,
+        new RanGenFactory<CLHEP::Hurd160Engine>("Hurd160Engine")   ,
+        new RanGenFactory<CLHEP::Hurd288Engine>("Hurd288Engine")   ,
+        new RanGenFactory<CLHEP::MTwistEngine>("MTwistEngine")     ,
+        new RanGenFactory<CLHEP::RanecuEngine>("RanecuEngine")     ,
+        new RanGenFactory<CLHEP::RanshiEngine>("RanshiEngine")     ,
+        new RanGenFactory<CLHEP::RanluxEngine>("RanluxEngine")     ,
+        new RanGenFactory<CLHEP::Ranlux64Engine>("Ranlux64Engine") 
     };
 
     for(unsigned int i=0; i< sizeof(factories)/sizeof(void*); ++i){
@@ -285,7 +285,7 @@ StatusCode GlastRandomSvc::initialize ()
             if( status.isSuccess() )
             {
                 // Set the Random engine by name
-                HepRandomEngine* hr =createEngine(m_randomEngine);
+                CLHEP::HepRandomEngine* hr =createEngine(m_randomEngine);
                 if( hr==0) 
                 {
                     log << MSG::ERROR << "Could not set up the random engine " 
@@ -294,7 +294,7 @@ StatusCode GlastRandomSvc::initialize ()
                 }
                 log << MSG::INFO << "Setting CLHEP Engine "<< m_randomEngine
                         << " for " << tooltype << " at " << hr << endreq;
-                HepRandomEngine* old = ranacc->setTheEngine(hr);
+                CLHEP::HepRandomEngine* old = ranacc->setTheEngine(hr);
                 // make sure that the old one was not already stored
                 for( EngineMap::iterator eit = m_engineMap.begin(); eit != m_engineMap.end(); ++eit)
                 {
@@ -335,7 +335,8 @@ void GlastRandomSvc::handle(const Incident &inc)
 
         // See if MCEvent was set up properly
         SmartDataPtr<Event::MCEvent> mcevt(m_eventSvc, EventModel::MC::Event);
-        if (mcevt == 0) {
+        //if (mcevt == 0) {
+        if (!mcevt) {
             log << MSG::ERROR << "Error accessing MCEvent" << endreq;
             return;
         }
@@ -374,7 +375,8 @@ void GlastRandomSvc::handle(const Incident &inc)
         // with run number in MCEvent
         SmartDataPtr<Event::EventHeader> header(m_eventSvc, 
             EventModel::EventHeader);
-        if (header == 0) {
+        //if (header == 0) {
+        if (!header) {
             log << MSG::ERROR << "Error accessing Event Header: not setting seed" << endreq;
             return;
         }    
@@ -427,7 +429,7 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo)
         // Gaussian are always produced in pairs, one of them being returned,
         // the other one being cached for a second call.  Setting the seed
         // doesn't flush the cache!
-        RandGauss::setFlag(false);
+        CLHEP::RandGauss::setFlag(false);
 
         // now make sure the external ones (if any) are done too!
         for( std::vector< IRandomAccess::SetFlag>::iterator it = m_setFlagPointers.begin();

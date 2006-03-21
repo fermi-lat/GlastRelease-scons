@@ -2,8 +2,9 @@
 #ifndef SiliconPlaneGeometry_H
 #define SiliconPlaneGeometry_H
 
-#include "CLHEP/Geometry/Vector3D.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Point3D.h"
 #include "idents/VolumeIdentifier.h"
 
 /** @class SiliconPlaneGeometry

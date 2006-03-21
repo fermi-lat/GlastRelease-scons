@@ -120,11 +120,11 @@ TVector3 convertVector( const Vector & v ) {
     return TVector3(v.getX(),v.getY(),v.getZ()) ;
 }
 
-HepLorentzVector convert( const TLorentzVector & v ) {
-    return HepLorentzVector(v.X(),v.Y(),v.Z(),v.T()) ;
+CLHEP::HepLorentzVector convert( const TLorentzVector & v ) {
+    return CLHEP::HepLorentzVector(v.X(),v.Y(),v.Z(),v.T()) ;
 }
 
-TLorentzVector convert( const HepLorentzVector & v ) {
+TLorentzVector convert( const CLHEP::HepLorentzVector & v ) {
     return TLorentzVector(v.x(),v.y(),v.z(),v.t()) ;
 }
 

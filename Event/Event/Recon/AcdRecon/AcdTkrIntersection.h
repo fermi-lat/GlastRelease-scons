@@ -12,7 +12,9 @@
 #include "GaudiKernel/IInterface.h"
 
 class MsgStream;
+namespace CLHEP {
 class HepMatrix;
+};
 
 static const CLID& CLID_AcdTkrIntersectionCol = InterfaceID("AcdTkrIntersectionCol", 1, 0);
 
@@ -39,7 +41,7 @@ namespace Event
     
     AcdTkrIntersection(const idents::AcdId& acdId, int trackIndex, 
 		       const Point& globalPosition, 
-		       const double localPosition[2], const HepMatrix& localCovMatrix,
+               const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
 		       double arcLengthToIntersection, double pathLengthInTile,
 		       unsigned char tileHit);
 

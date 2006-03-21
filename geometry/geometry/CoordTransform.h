@@ -9,7 +9,7 @@
 #include "geometry/Vector.h"
 class Point;
 
-typedef HepRotation Rotation;
+typedef CLHEP::HepRotation Rotation;
 
 /**
   Define basic coordinate transformations 
@@ -28,7 +28,7 @@ class CoordTransform
    CoordTransform(const Rotation& _R, const Vector& t):X(t),R(_R){}
 
    //! initialize from newer HepTransform3D (allows auto conversion)
-   CoordTransform(const HepTransform3D& T):X(T.getTranslation()),R(T.getRotation()){};
+   CoordTransform(const HepGeom::Transform3D& T):X(T.getTranslation()),R(T.getRotation()){};
    // constructors: specify either or both rotation matrix, translation
 
    /// return inverse transformation
@@ -51,7 +51,7 @@ class CoordTransform
 // simple little inline to get around conversion problems with some compilers
 inline Vector operator*(const Rotation& R, const Vector& p)
 {
-  Hep3Vector q(p);
+  CLHEP::Hep3Vector q(p);
   return Vector(R*q);
 }
 #endif

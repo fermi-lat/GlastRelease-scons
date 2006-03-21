@@ -22,6 +22,10 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 
+// TU: Hack for CLHEP 1.9.2.2
+typedef HepGeom::Point3D<double>  HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
   
@@ -67,7 +71,7 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     HepPoint3D         primVtxPos = primary->initialPosition();
 
     // Adjust by the delta z input
-    primVtxPos = Hep3Vector(primVtxPos.x(), primVtxPos.y(), primVtxPos.z() + dz);
+    primVtxPos = CLHEP::Hep3Vector(primVtxPos.x(), primVtxPos.y(), primVtxPos.z() + dz);
 
     // Create the vertex for this primary particle
     m_primaryVertex = new G4PrimaryVertex(primVtxPos, 0.);
@@ -95,7 +99,7 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
         HepPoint3D scndVtxPos = mcPart->initialPosition();
 
         // Adjust by the delta z input
-        scndVtxPos = Hep3Vector(scndVtxPos.x(), scndVtxPos.y(), scndVtxPos.z() + dz);
+        scndVtxPos = CLHEP::Hep3Vector(scndVtxPos.x(), scndVtxPos.y(), scndVtxPos.z() + dz);
 
         G4PrimaryVertex* scndParticle = new G4PrimaryVertex(scndVtxPos, 0.);
 
@@ -132,7 +136,7 @@ G4PrimaryParticle* PrimaryGeneratorAction::convertToG4Primary(const Event::McPar
     }
 
     // Position and momentum
-    const HepLorentzVector& pinitial = mcPart->initialFourMomentum();
+    const CLHEP::HepLorentzVector& pinitial = mcPart->initialFourMomentum();
 
     // New Primary Particle
     G4PrimaryParticle* primPart = new G4PrimaryParticle(partDef, pinitial.px(), pinitial.py(), pinitial.pz());
@@ -154,10 +158,10 @@ void PrimaryGeneratorAction::init(Event::McParticle* part, IParticlePropertySvc*
   Event::McParticle::StdHepId hepid= part->particleProperty();
   ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
 
-  const HepLorentzVector& pfinal = part->finalFourMomentum();
-  Hep3Vector dir=    pfinal.vect().unit();
-  HepPoint3D p =   part->finalPosition();
-  p = Hep3Vector(p.x(), p.y(), p.z()+dz);
+  const CLHEP::HepLorentzVector& pfinal = part->finalFourMomentum();
+  CLHEP::Hep3Vector dir = pfinal.vect().unit();
+  HepPoint3D        p   = part->finalPosition();
+  p = CLHEP::Hep3Vector(p.x(), p.y(), p.z()+dz);
   // note possibility of truncation error here! especially with MeV.
   double ke =   pfinal.e() - pfinal.m(); 
   

@@ -27,8 +27,6 @@ public:
     // once we have an official release, the version number can be used
     //  to allow backward compatibility
 
-    enum {VERSION = 3};
-
     // fields and shifts of the status word, which together make a mask
     //  
 

@@ -76,11 +76,11 @@ public:
 private:  
     static GlastRandomSvc* s_instance;
 
-    HepRandomEngine* createEngine(std::string  engineName) ;
+    CLHEP::HepRandomEngine* createEngine(std::string  engineName) ;
 
     /// Data members
     // store Engine names and addresses in a map
-    typedef   std::map< std::string, HepRandomEngine* > EngineMap;
+    typedef   std::map< std::string, CLHEP::HepRandomEngine* > EngineMap;
     EngineMap m_engineMap;
     StringProperty    m_randomEngine;
     std::string    m_RunNumberString;

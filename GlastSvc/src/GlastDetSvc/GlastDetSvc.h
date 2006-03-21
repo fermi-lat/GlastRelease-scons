@@ -10,8 +10,6 @@ class Instrument;
 class GlastDetector;
 namespace xml { class IFile; }
 class DMmanager;
-class HepTransform3D;
-class HepPoint3D;
 namespace idents{class VolumeIdentifier;}
 
 /** @class GlastDetSvc
@@ -34,10 +32,10 @@ public:
     virtual ~GlastDetSvc ();
     
     /// queryInterface - for implementing a Service this is necessary
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
     
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
     
     /// perform initializations for this service. This will
     ///    read in and create the GlastDetector hierarchy from the file
@@ -72,7 +70,7 @@ public:
         HepTransform3D*);
     
     /// Return transform of top volume relative to world
-    virtual const HepTransform3D& getTransform3DPrefix();    
+    virtual const HepGeom::Transform3D& getTransform3DPrefix();    
     
     /// retrieve the type and dimensions of a volume given a valid ID
     virtual StatusCode  getShapeByID(idents::VolumeIdentifier id,

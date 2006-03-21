@@ -68,7 +68,7 @@ public:
     virtual void handle(const Incident& inc);    
 
     /// Query interface - required of all Gaudi services
-    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+    virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
     /** @brief Adds a pointer to a double, or an array of doubles
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -434,7 +434,7 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-StatusCode RootTupleSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode RootTupleSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_INTupleWriterSvc.versionMatch(riid) )  {
         *ppvInterface = (INTupleWriterSvc*)this;
     }
@@ -564,5 +564,4 @@ void RootTupleSvc::saveRow(const std::string& tupleName)
     TTree* t= treeit->second;
     t->Fill();
     m_storeTree[treeit->first]=false;
-
 }

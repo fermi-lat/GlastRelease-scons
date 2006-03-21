@@ -120,13 +120,13 @@ double McPositionHit::particleEnergy() const
 }
 
 /// Retrieve depositing particle's momentum
-Hep3Vector McPositionHit::particleMomentum() const
+CLHEP::Hep3Vector McPositionHit::particleMomentum() const
 {
     return m_particleFourMomentum.vect();
 }
 
 /// Retrieve depositing particle's four momentum
-HepLorentzVector McPositionHit::particleFourMomentum() const
+CLHEP::HepLorentzVector McPositionHit::particleFourMomentum() const
 {
     return m_particleFourMomentum;
 }
@@ -136,7 +136,7 @@ HepLorentzVector McPositionHit::particleFourMomentum() const
 //{
 //    m_particleEnergy = value;
 //}
-void McPositionHit::setParticle4Momentum( const HepLorentzVector& fourMom)
+void McPositionHit::setParticle4Momentum( const CLHEP::HepLorentzVector& fourMom)
 {
     m_particleFourMomentum = fourMom;
 }

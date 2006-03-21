@@ -25,8 +25,8 @@ void PointingInfo::set(double time, bool insideSAA)
     // The GPS singleton has current time and orientation
     GPS* gps = GPS::instance();
     gps->getPointingCharacteristics(time); // sets time for other functions
-    Hep3Vector pos_km = gps->position(time);
-    Hep3Vector location = 1.e3* pos_km; // special, needs its own time
+    CLHEP::Hep3Vector pos_km = gps->position(time);
+    CLHEP::Hep3Vector location = 1.e3* pos_km; // special, needs its own time
     
     // cartesian location of the LAT (in m)
     sc_position[0] = location.x();

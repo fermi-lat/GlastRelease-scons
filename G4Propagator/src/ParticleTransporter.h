@@ -5,6 +5,10 @@
 #include <float.h>
 #endif
 
+// Do this for CLHEP 1.9.2.2 and G4 8.0
+namespace CLHEP {}
+using namespace CLHEP;
+
 //Necessary G4 stuff
 #include "G4TransportationManager.hh"
 #include "G4VSensitiveDetector.hh"

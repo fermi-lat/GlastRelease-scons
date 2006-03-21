@@ -80,8 +80,8 @@ class McParticle  : virtual public ContainedObject  {
     void init( McParticle* mother, 
         StdHepId id, 
         unsigned int statusBits,
-        const HepLorentzVector& initialMomentum,
-        const HepLorentzVector& finalMomentum,
+        const CLHEP::HepLorentzVector& initialMomentum,
+        const CLHEP::HepLorentzVector& finalMomentum,
         const HepPoint3D& initialPosition,
         const HepPoint3D& finalPosition,
         const std::string process = "");
@@ -90,12 +90,12 @@ class McParticle  : virtual public ContainedObject  {
     void initialize( McParticle* mother, 
         StdHepId id, 
         unsigned int statusBits,
-        const HepLorentzVector& initialMomentum,
+        const CLHEP::HepLorentzVector& initialMomentum,
         const HepPoint3D& initialPosition,
         const std::string process = "");
 
     //! Set the final attributes of the McParticle
-    void finalize( const HepLorentzVector& finalMomentum,
+    void finalize( const CLHEP::HepLorentzVector& finalMomentum,
         const HepPoint3D& finalPosition);
 
 
@@ -115,8 +115,8 @@ class McParticle  : virtual public ContainedObject  {
     const HepPoint3D& initialPosition() const;
     const HepPoint3D& finalPosition() const;
 
-    const HepLorentzVector&  initialFourMomentum()const;
-    const HepLorentzVector&  finalFourMomentum()const;
+    const CLHEP::HepLorentzVector&  initialFourMomentum()const;
+    const CLHEP::HepLorentzVector&  finalFourMomentum()const;
 
     /// access to the mother particle
     const McParticle& mother()const; 
@@ -157,9 +157,9 @@ class McParticle  : virtual public ContainedObject  {
   private:
 
     /// particle property (such as electron or proton or ....) ID
-    StdHepId                  m_particleID;
+    StdHepId                   m_particleID;
     /// Bit-field status flag
-    unsigned long             m_statusFlags;
+    unsigned long              m_statusFlags;
     /// Initial position
     HepPoint3D                 m_initialPosition;
     /// Final position
@@ -167,9 +167,9 @@ class McParticle  : virtual public ContainedObject  {
     /// 4-momentum vectors:
     /// <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
     /// Initial 4-momentum
-    HepLorentzVector           m_initialFourMomentum;
+    CLHEP::HepLorentzVector    m_initialFourMomentum;
     /// Final 4-momentum
-    HepLorentzVector           m_finalFourMomentum;
+    CLHEP::HepLorentzVector    m_finalFourMomentum;
     /// Pointer to mother particle
     SmartRef<McParticle>       m_mother;
     /// Vector of pointers to daughter particles

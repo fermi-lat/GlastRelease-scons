@@ -1,5 +1,6 @@
 package G4Generator
 version v5r12p1
+
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
 author  Francesco Longo <Francesco.Longo@ts.infn.it>
@@ -19,12 +20,12 @@ use geometry  v3*
 use geomrep   v4r*
 
 # for linux execution clients to get the LD_LIBRARY_PATH set.
-use Geant4Runtime v2r* IExternal
+use Geant4Runtime v3r* IExternal
 
 #=============================================================
 private
 #this is private to avoid passing on build info to clients
-use Geant4   v2r6* IExternal
+use Geant4   v3r8* IExternal
 
 # special code to replace the standared multiple scattering 
 use GlastMS

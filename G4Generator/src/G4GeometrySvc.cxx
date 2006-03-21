@@ -46,7 +46,7 @@ class G4GeometrySvc : public Service, virtual public IG4GeometrySvc
   virtual StatusCode finalize();
         
   /// queryInterface - for implementing a Service this is necessary
-  StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   /// Return pointer to the constructed Detector
   virtual G4VUserDetectorConstruction* getDetector() {return m_UserDetector;}
@@ -160,7 +160,7 @@ StatusCode G4GeometrySvc::finalize()
   return sc;
 }
 
-StatusCode G4GeometrySvc::queryInterface(const IID& riid, void** ppvInterface)  
+StatusCode G4GeometrySvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  
 {
   // Purpose and Method:  Gaudi service query interface routine 
   // Inputs:  None

@@ -54,8 +54,8 @@ class McIntegratingHit : virtual public ContainedObject {
   /// McParticleID -> deposited energy map
   typedef std::vector< std::pair<McParticle::StdHepId, double> > energyDepositMapId;
 
-    McIntegratingHit() : m_totalEnergy(0),m_moment1seed(0),
-        m_moment2seed(0),m_packedFlags(0)
+    McIntegratingHit() : m_totalEnergy(0),m_moment1seed(0.),
+        m_moment2seed(0.),m_packedFlags(0)
     {m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=0;}
 
     ~McIntegratingHit(){}
@@ -124,9 +124,9 @@ class McIntegratingHit : virtual public ContainedObject {
       /// total deposited energy: set automatically when m_energyInfo is modified.
       double                        m_totalEnergy;
       /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
-      HepPoint3D                    m_moment1seed;
+      HepPoint3D           m_moment1seed;
       /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
-      HepPoint3D                    m_moment2seed;
+      HepPoint3D           m_moment2seed;
       /// Packed flags for particle property
       unsigned long                 m_packedFlags;
 

@@ -655,7 +655,7 @@ G4VParticleChange* G4MultipleScatteringFL::AlongStepDoIt(
 
   //VI truePath length cannot be smaller than geomPathLength
   if (truePathLength < geomPathLength) truePathLength = geomPathLength;
-  fParticleChange.SetTrueStepLength(truePathLength);
+  fParticleChange.ProposeTrueStepLength(truePathLength);
 
   return &fParticleChange;
 
@@ -875,9 +875,9 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
 
   G4ThreeVector newDirection(dirx,diry,dirz);
   newDirection.rotateUz(ParticleDirection);
-  fParticleChange.SetMomentumChange(newDirection.x(),
-                                    newDirection.y(),
-                                    newDirection.z());
+  fParticleChange.ProposeMomentumDirection(newDirection.x(),
+                                           newDirection.y(),
+                                           newDirection.z());
 
   if (fLatDisplFlag)
     {
@@ -922,7 +922,7 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
 			   ->GetNavigatorForTracking();
 	  navigator->LocateGlobalPointWithinVolume(newPosition);
 
-	  fParticleChange.SetPositionChange(newPosition);
+	  fParticleChange.ProposePosition(newPosition);
         }
       }
     }

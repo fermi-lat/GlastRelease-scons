@@ -105,7 +105,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
     }
 
   // this rotates the hit to local coordinates with respect to the center  
-  HepRotation local(*(theTouchable->GetRotation()));
+  CLHEP::HepRotation local(*(theTouchable->GetRotation()));
   HepPoint3D center=theTouchable->GetTranslation();
 
   prePos = local * (prePos-center);

@@ -37,10 +37,10 @@ public:
     virtual IKalmanParticle* getPropagator() const {return m_PropagatorTool->getPropagator();}
  
     /// Provide service interface
-    StatusCode queryInterface(const IID& riid, void** ppvUnknown);
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     /// return the service type
-    const IID& type() const;
+    const InterfaceID& type() const;
     
 private:
 
@@ -116,7 +116,7 @@ StatusCode GlastPropagatorSvc::finalize()
     return StatusCode::SUCCESS;
 }
 
-StatusCode  GlastPropagatorSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  GlastPropagatorSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_IPropagatorSvc == riid) {
         *ppvIF = dynamic_cast<IPropagatorSvc*> (this);
@@ -128,7 +128,7 @@ StatusCode  GlastPropagatorSvc::queryInterface (const IID& riid, void **ppvIF)
 }
 
 
-const IID&  GlastPropagatorSvc::type () const {
+const InterfaceID&  GlastPropagatorSvc::type () const {
     return IID_IPropagatorSvc;
 }
 

@@ -35,8 +35,8 @@ namespace detModel{
 
   IDmapBuilder::IDmapBuilder(std::string nvol) 
     : m_topSeen(false), 
-    m_transformPrefix(HepTransform3D::Identity),
-    m_inverseTransformPrefix(HepTransform3D::Identity)
+    m_transformPrefix(HepGeom::Transform3D::Identity),
+    m_inverseTransformPrefix(HepGeom::Transform3D::Identity)
   {
     setRecursive(0);
     m_actualVolume = nvol;
@@ -121,13 +121,13 @@ void  IDmapBuilder::visitSphere(Sphere*)
 
 void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
 {
-  HepRotation tempRotation = m_actualRot;
-  Hep3Vector tempPos = m_actualPos;
+  CLHEP::HepRotation tempRotation = m_actualRot;
+  CLHEP::Hep3Vector tempPos = m_actualPos;
   unsigned int i;
   idents::VolumeIdentifier tempID = m_actualID;
 
   m_actualPos = m_actualPos + 
-    m_actualRot*Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
+    m_actualRot*CLHEP::Hep3Vector(pos->getX(), pos->getY(), pos->getZ());
 
   m_actualRot.rotateX(pos->getXRot()*GDDPI/180);
   m_actualRot.rotateY(pos->getYRot()*GDDPI/180);
@@ -146,7 +146,7 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
       //  Try including identifier(s) & transform for top volume as
       //  part of "prefix"
       m_IDPrefix = m_actualID;
-      m_transformPrefix = HepTransform3D(m_actualRot, m_actualPos);
+      m_transformPrefix = HepGeom::Transform3D(m_actualRot, m_actualPos);
       m_inverseTransformPrefix = m_transformPrefix.inverse();
     }
   }
@@ -164,34 +164,34 @@ void  IDmapBuilder::visitPosXYZ(PosXYZ* pos)
 void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
 {
   unsigned int i, j;
-  HepRotation tempRotation = m_actualRot;
-  Hep3Vector tempPos = m_actualPos;
+  CLHEP::HepRotation tempRotation = m_actualRot;
+  CLHEP::Hep3Vector tempPos = m_actualPos;
   idents::VolumeIdentifier tempID = m_actualID;
 
-  Hep3Vector stackDir; // unit vector to set 
+  CLHEP::Hep3Vector stackDir; // unit vector to set 
   
   switch(pos->getAxisDir()){
   case (detModel::Stack::xDir):
     {    
       m_actualRot.rotateX(pos->getRotation()*GDDPI/180); 
-      stackDir=Hep3Vector(1,0,0); 
+      stackDir=CLHEP::Hep3Vector(1,0,0); 
     }
       break;
   case (detModel::Stack::yDir):
     {
       m_actualRot.rotateY(pos->getRotation()*GDDPI/180); 
-      stackDir=Hep3Vector(0,1,0); 
+      stackDir=CLHEP::Hep3Vector(0,1,0); 
     }
     break;
   case (detModel::Stack::zDir):
     {
       m_actualRot.rotateZ(pos->getRotation()*GDDPI/180); 
-      stackDir=Hep3Vector(0,0,1); 
+      stackDir=CLHEP::Hep3Vector(0,0,1); 
     }
     break;
   }
 
-  Hep3Vector origin(pos->getDx(),pos->getDy(),pos->getDz());
+  CLHEP::Hep3Vector origin(pos->getDx(),pos->getDy(),pos->getDz());
   
 
   for(i=0;i<pos->getNcopy();i++)
@@ -211,7 +211,7 @@ void  IDmapBuilder::visitAxisMPos(AxisMPos* pos)
         if (vol->getName() == m_actualVolume) {
           m_topSeen = true;
           m_IDPrefix = m_actualID;
-          m_transformPrefix = HepTransform3D(m_actualRot, m_actualPos);
+          m_transformPrefix = HepGeom::Transform3D(m_actualRot, m_actualPos);
           m_inverseTransformPrefix = m_transformPrefix.inverse();
         }
       }
@@ -295,12 +295,12 @@ IDmapBuilder::getPositionedVolumeByID(idents::VolumeIdentifier id) const
 
 
 bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id, 
-                                      HepTransform3D* tr)
+                                      HepGeom::Transform3D* tr)
 {
   const PositionedVolume* pv = getPositionedVolumeByID(id);
   if (pv)
     {
-      HepTransform3D temp(pv->getRotation(), pv->getTranslation());
+      HepGeom::Transform3D temp(pv->getRotation(), pv->getTranslation());
       *tr = temp;
       return true;
     }
@@ -308,7 +308,7 @@ bool IDmapBuilder::getTransform3DByID(idents::VolumeIdentifier id,
 }
 
 bool IDmapBuilder::getTransform3DByTopID(idents::VolumeIdentifier id, 
-                                         HepTransform3D* tr)
+                                         HepGeom::Transform3D* tr)
 {
   idents::VolumeIdentifier fullId = m_IDPrefix;
   fullId.append(id);
@@ -316,7 +316,7 @@ bool IDmapBuilder::getTransform3DByTopID(idents::VolumeIdentifier id,
 }
 
 bool IDmapBuilder::getTopTransform3DByTopID(idents::VolumeIdentifier id, 
-                                            HepTransform3D* tr) {
+                                            HepGeom::Transform3D* tr) {
 
   // Don't do unnecessary algebra for common case of top volume = world
   if (m_IDPrefix.size() == 0) return getTransform3DByID(id, tr);
@@ -328,7 +328,7 @@ bool IDmapBuilder::getTopTransform3DByTopID(idents::VolumeIdentifier id,
 }
 
 bool IDmapBuilder::getTopTransform3DByID(idents::VolumeIdentifier id, 
-                                         HepTransform3D* tr) {
+                                         HepGeom::Transform3D* tr) {
   // Don't do unnecessary algebra for common case of top volume = world
   if (m_IDPrefix.size() == 0) return getTransform3DByID(id, tr);
 

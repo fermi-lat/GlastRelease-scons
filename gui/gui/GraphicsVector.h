@@ -9,9 +9,15 @@
 
 class SpacePoint;
 class SpaceVector;
-class Hep3Vector;
-class HepPoint3D;
-class BasicVector3D;
+namespace CLHEP {class Hep3Vector;}
+namespace HepGeom {
+    template <class T> class Point3D;
+    template <class T> class BasicVector3D;
+}
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
+
 namespace gui {
 
 
@@ -31,9 +37,9 @@ public:
 
     GraphicsVector(const SpaceVector& v);
 #endif
-    GraphicsVector(const Hep3Vector & v);
+    GraphicsVector(const CLHEP::Hep3Vector & v);
     GraphicsVector(const HepPoint3D & v);
-    GraphicsVector(const BasicVector3D & v);
+    GraphicsVector(const HepGeom::BasicVector3D<double> & v);
 
     float x()const{return m_x;}
     float y()const{return m_y;}

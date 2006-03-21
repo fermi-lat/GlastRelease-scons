@@ -8,7 +8,6 @@
 //    Eric Charles
 //
 //
-
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -19,7 +18,7 @@ using namespace Event;
 
 AcdTkrIntersection::AcdTkrIntersection(const idents::AcdId& acdId, int trackIndex,
 				       const Point& globalPosition, 
-				       const double localPosition[2], const HepMatrix& localCovMatrix,
+				       const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
 				       double arcLengthToIntersection, double pathLengthInTile,
 				       unsigned char tileHit) {
   

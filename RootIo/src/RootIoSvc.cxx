@@ -67,7 +67,7 @@ public:
     virtual StatusCode finalize ();
     
     /// Query interface
-    virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+    virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
     /// Handles incidents, implementing IIncidentListener interface
     virtual void handle(const Incident& inc);    
@@ -225,7 +225,7 @@ StatusCode RootIoSvc::finalize ()
 }
 
 /// Query interface
-StatusCode RootIoSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode RootIoSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_IRootIoSvc.versionMatch(riid) )  {
         *ppvInterface = (IRootIoSvc*)this;
     }else if (IID_IRunable.versionMatch(riid) ) {

@@ -61,7 +61,7 @@ TkrToTSvc::TkrToTSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("baseTower",             m_baseTower             = 0);
 }
 
-StatusCode  TkrToTSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  TkrToTSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_ITkrToTSvc == riid) {
         *ppvIF = dynamic_cast<ITkrToTSvc*> (this);
@@ -71,7 +71,7 @@ StatusCode  TkrToTSvc::queryInterface (const IID& riid, void **ppvIF)
     }
 }
 
-const IID&  TkrToTSvc::type () const {
+const InterfaceID&  TkrToTSvc::type () const {
     return IID_ITkrToTSvc;
 }
 

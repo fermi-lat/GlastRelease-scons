@@ -13,13 +13,13 @@ void convert( const Event::McTrajectory & tdsTrajectory, McTrajectory & rootTraj
     rootTrajectory.initialize(mcPartRoot, tdsTrajectory.getCharge());
 
     // Retrieve points on trajectory
-    const std::vector<Hep3Vector> tdsPoints = tdsTrajectory.getPoints();
-    std::vector<Hep3Vector>::const_iterator tdsPointsIter;
+    const std::vector<CLHEP::Hep3Vector> tdsPoints = tdsTrajectory.getPoints();
+    std::vector<CLHEP::Hep3Vector>::const_iterator tdsPointsIter;
 
     // Loop through hits creating root equivalents
     for(tdsPointsIter = tdsPoints.begin(); tdsPointsIter != tdsPoints.end(); tdsPointsIter++)
     {
-        const Hep3Vector tdsPoint = *tdsPointsIter;
+        const CLHEP::Hep3Vector tdsPoint = *tdsPointsIter;
         TVector3* rootPoint = new TVector3(tdsPoint.x(),tdsPoint.y(),tdsPoint.z());
 
         rootTrajectory.addMcPoint(rootPoint);
@@ -43,14 +43,14 @@ void convert( const McTrajectory & rootTrajectory, Event::McTrajectory & tdsTraj
     TObjArray* rootPoints = rootTrajectory.getMcPointCol();
 
     // std vector to store points
-    std::vector<Hep3Vector> tdsPoints;
+    std::vector<CLHEP::Hep3Vector> tdsPoints;
 
     // Loop through root points and convert
     for(int idx = 0; idx < rootPoints->GetEntries(); idx++)
     {
         TVector3*  rootPoint = (TVector3 *)rootPoints->At(idx);
         
-        tdsPoints.push_back(Hep3Vector(rootPoint->x(), rootPoint->y(), rootPoint->z()));
+        tdsPoints.push_back(CLHEP::Hep3Vector(rootPoint->x(), rootPoint->y(), rootPoint->z()));
     }
 
     // Add these points to TDS object

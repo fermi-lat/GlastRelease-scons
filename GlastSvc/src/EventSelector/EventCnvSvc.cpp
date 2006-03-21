@@ -12,7 +12,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/HashTable.h"
+//#include "GaudiKernel/HashTable.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -151,7 +151,7 @@ StatusCode EventCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
     return status;
 }
 
-StatusCode EventCnvSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode EventCnvSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_IBaseCnv == riid )  {
         *ppvInterface = (IEventCnvSvc*)this;
     }
@@ -163,11 +163,11 @@ StatusCode EventCnvSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     return StatusCode::SUCCESS;
 }
 
-StatusCode EventCnvSvc::createAddress(unsigned char svc_type,
-                                      const CLID& clid,
-                                      const std::string* par, 
-                                      const unsigned long* ip,
-                                      IOpaqueAddress*& refpAddress)                                       
+StatusCode EventCnvSvc::createAddress( long svc_type,
+                                       const CLID& clid,
+                                       const std::string* par, 
+                                       const unsigned long* ip,
+                                       IOpaqueAddress*& refpAddress)
 {
     if ( svc_type == repSvcType() )   
     {

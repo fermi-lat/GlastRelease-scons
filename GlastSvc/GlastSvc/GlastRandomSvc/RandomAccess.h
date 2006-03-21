@@ -43,15 +43,15 @@ public:
 
     //! Pass on a pointer to a new engine to be used by the local static instance of HepRandom
     //! return pointer to the old one 
-    virtual HepRandomEngine* setTheEngine( HepRandomEngine* newEngine){
-        HepRandomEngine* oldEngine = HepRandom::getTheEngine();
-        HepRandom::setTheEngine(newEngine);
+    virtual CLHEP::HepRandomEngine* setTheEngine( CLHEP::HepRandomEngine* newEngine){
+        CLHEP::HepRandomEngine* oldEngine = CLHEP::HepRandom::getTheEngine();
+        CLHEP::HepRandom::setTheEngine(newEngine);
         return oldEngine;
     }
 
     typedef void(*SetFlag)(bool);
     virtual  SetFlag getRandSet(){
-        return &RandGauss::setFlag;
+        return &CLHEP::RandGauss::setFlag;
     }
 
 };

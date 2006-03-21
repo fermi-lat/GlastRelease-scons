@@ -386,7 +386,7 @@ StatusCode TkrBadStripsSvc::makeBadDigiCol(Event::TkrDigiCol* pDigis)
 
 // queryInterface
 
-StatusCode  TkrBadStripsSvc::queryInterface (const IID& riid, void **ppvIF)
+StatusCode  TkrBadStripsSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
     if (IID_ITkrBadStripsSvc == riid) {
         *ppvIF = dynamic_cast<ITkrBadStripsSvc*> (this);
@@ -400,7 +400,7 @@ StatusCode  TkrBadStripsSvc::queryInterface (const IID& riid, void **ppvIF)
 
 // access the type of this service
 
-const IID&  TkrBadStripsSvc::type () const {
+const InterfaceID&  TkrBadStripsSvc::type () const {
     return IID_ITkrBadStripsSvc;
 }
 

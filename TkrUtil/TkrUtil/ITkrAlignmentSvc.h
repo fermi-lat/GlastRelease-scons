@@ -14,14 +14,22 @@ $Header$
 
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 
 #include <string>
 #include <vector>
 #include <iostream>
 
-static const InterfaceID IID_ITkrAlignmentSvc("ITkrAlignmentSvc", 6, 0); 
+// TU: Hacks for CLHEP 1.9.2.2 and beyond
+#ifndef HepPoint3D
+typedef HepGeom::Point3D<double> HepPoint3D;
+#endif
+#ifndef HepVector3D
+typedef HepGeom::Vector3D<double> HepVector3D;
+#endif
 
+static const InterfaceID IID_ITkrAlignmentSvc("ITkrAlignmentSvc", 6, 0); 
 
 namespace {
     enum constType {SIM=0, REC=1, UNKNOWN_TYPE=2};

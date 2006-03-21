@@ -45,7 +45,7 @@ class HepRepSvc : virtual public Service,
   virtual StatusCode finalize ();
   
   /// Query interface
-  virtual StatusCode queryInterface( const IID& riid, void** ppvUnknown );
+  virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
   /// for the IRunnable interfce
   virtual StatusCode run();

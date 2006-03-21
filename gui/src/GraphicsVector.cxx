@@ -8,11 +8,11 @@ using namespace gui;
 
 // implement conversion constructors here
 
-GraphicsVector::GraphicsVector(const Hep3Vector& v)
+GraphicsVector::GraphicsVector(const CLHEP::Hep3Vector& v)
     : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
 
 GraphicsVector::GraphicsVector(const HepPoint3D& v)
     : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}
 
-GraphicsVector::GraphicsVector(const BasicVector3D& v)
+GraphicsVector::GraphicsVector(const HepGeom::BasicVector3D<double>& v)
     : m_x(v.x()), m_y(v.y()), m_z(v.z()) {}

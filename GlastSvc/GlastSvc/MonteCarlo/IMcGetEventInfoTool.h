@@ -66,7 +66,7 @@ class IMcGetEventInfoTool : virtual public IAlgTool
 
     /// @brief Returns the "straightness" of a given track
     virtual const double                getTrackStraightness(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40)=0;
-    virtual const Hep3Vector            getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40)=0;
+    virtual const CLHEP::Hep3Vector     getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40)=0;
 
     /// @brief Returns energy loss information within the tracker volume
     virtual const double                getTrackTotEneLoss(const Event::McParticleRef mcPart)= 0;

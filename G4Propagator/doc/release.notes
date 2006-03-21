@@ -3,31 +3,32 @@
     $Id$
  @verbatim
 
- v2r1p11 15-Sep-05 TU   Introduce fix for jira issue GEANT-5
- v2r1p10 26-Jul-05 TU   Will the test program ever work?
- v2r1p9  25-Jul-05 TU   Fix the fix to the test program
- v2r1p8  24-Jul-05 TU   Fix test program
- v2r1p7  22-Jul-05 TU   Mods to requirements file to include flux stuff
- v2r1p6  15-Jul-05 TU   Never say finally, I guess... but this does seem to fix it
- v2r1p5  13-Jul-05 TU   Finally fix the problem with ray parallel to surface...
- v2r1p4   1-Mar-05 TU   More work on distanceToEdge, limit "outside" to 400 mm
- v2r1p3  28-Feb-05 TU   Fix an apparant pathology in distanceToEdge where arclen can be unreasonable
- v2r1p2  27-Feb-05 TU   Ok, "really" fix bug affecting cal energy determination now
- v2r1p1  27-Feb-05 TU   Further attempts are improving performance, fix active distance bug
- v2r1p0  24-Feb-05 TU   Revamp to reduce calls to G4 Locate and Global setup
- v2r0p2  20-Feb-05 TU   Fix ParticlePropagator for "stuck" particles
- v2r0p1  28-Jan-05 LSR  More info on exception
- v2r0p0  16-Dec-04 TU   Upgrade to new Tracker TDS classes
- v1r3p1  30-Nov-04 TU   Fix compile bugs in interim tag version...
- v1r3p0  26-Nov-04 TU   Interim tag for G4 6.2 patch 2
- v1r2p4  21-jul-04 LSR  Fix req. file according to Traudl's suggestion
- v1r2p3  19-feb-04 THB  gcc code compliance fix
- v1r2p2  16-Jun-03 TU   Add test for transportation manager to fix init problems
- v1r2p1  22-Apr-03 TU   fix unix error (works fine on windows)
- v1r2    21-Apr-03 TU   Modifications for new G4PropagationTool
- v1r1     6-Mar-03 TU   Really first release version for general use
- v0r0    23-Jan-03 TU   Inital version  
- v1r0     7-Feb-03 TU   Tag first release version
+ v2r11cl0 31-Jan-06 TU   Tag development branch for new externals
+ v2r1p11  15-Sep-05 TU   Introduce fix for jira issue GEANT-5
+ v2r1p10  26-Jul-05 TU   Will the test program ever work?
+ v2r1p9   25-Jul-05 TU   Fix the fix to the test program
+ v2r1p8   24-Jul-05 TU   Fix test program
+ v2r1p7   22-Jul-05 TU   Mods to requirements file to include flux stuff
+ v2r1p6   15-Jul-05 TU   Never say finally, I guess... but this does seem to fix it
+ v2r1p5   13-Jul-05 TU   Finally fix the problem with ray parallel to surface...
+ v2r1p4    1-Mar-05 TU   More work on distanceToEdge, limit "outside" to 400 mm
+ v2r1p3   28-Feb-05 TU   Fix an apparant pathology in distanceToEdge where arclen can be unreasonable
+ v2r1p2   27-Feb-05 TU   Ok, "really" fix bug affecting cal energy determination now
+ v2r1p1   27-Feb-05 TU   Further attempts are improving performance, fix active distance bug
+ v2r1p0   24-Feb-05 TU   Revamp to reduce calls to G4 Locate and Global setup
+ v2r0p2   20-Feb-05 TU   Fix ParticlePropagator for "stuck" particles
+ v2r0p1   28-Jan-05 LSR  More info on exception
+ v2r0p0   16-Dec-04 TU   Upgrade to new Tracker TDS classes
+ v1r3p1   30-Nov-04 TU   Fix compile bugs in interim tag version...
+ v1r3p0   26-Nov-04 TU   Interim tag for G4 6.2 patch 2
+ v1r2p4   21-jul-04 LSR  Fix req. file according to Traudl's suggestion
+ v1r2p3   19-feb-04 THB  gcc code compliance fix
+ v1r2p2   16-Jun-03 TU   Add test for transportation manager to fix init problems
+ v1r2p1   22-Apr-03 TU   fix unix error (works fine on windows)
+ v1r2     21-Apr-03 TU   Modifications for new G4PropagationTool
+ v1r1      6-Mar-03 TU   Really first release version for general use
+ v0r0     23-Jan-03 TU   Inital version  
+ v1r0      7-Feb-03 TU   Tag first release version
 
  @endverbatim
 */

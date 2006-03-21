@@ -68,6 +68,11 @@ using astro::GPS;
 * $Header$
 */
 
+// TU: CLHEP 1.9.2.2 hack
+typedef HepGeom::Point3D<double>  HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
+
 
 class FluxAlg : public Algorithm {
 public:
@@ -370,7 +375,7 @@ StatusCode FluxAlg::execute()
     double mass = prop->mass() , 
         energy = (ke+mass),
         momentum=sqrt(energy*energy - mass*mass); 
-    HepLorentzVector pin(d*momentum,energy);
+    CLHEP::HepLorentzVector pin(d*momentum,energy);
 
     // This parent particle decay at the start in the first particle, 
     // so initial momentum and final one are the same
@@ -385,7 +390,8 @@ StatusCode FluxAlg::execute()
     SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
     if(0==header) {
         // not already there: try to register instead
-        sc = eventSvc()->registerObject(EventModel::EventHeader, h=new Event::EventHeader);
+        //sc = eventSvc()->registerObject(EventModel::EventHeader, h=new Event::EventHeader);
+        sc = eventSvc()->registerObject(EventModel::EventHeader, EventModel::EventHeader, h=new Event::EventHeader);
         if( sc.isFailure()) {
             log << MSG::WARNING << " could not find or register the event header" << endreq;
         }
