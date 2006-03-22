@@ -3,7 +3,7 @@ version v3r6p8
 author T.Burnett <tburnett@u.washington.edu>
 
 use GlastPolicy v6r*
-use CLHEP       v2r* IExternal
+use CLHEP       v3r* IExternal
 
 
 apply_pattern package_include
