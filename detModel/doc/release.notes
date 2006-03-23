@@ -3,6 +3,8 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+   v2r19   23-Mar-2006 jrb 1. Support spherical section volumes
+                           2. Updates for new CLHEP external library
    v2r18cl0 31-Jan-2006 TU tag developement branch for new externals
    v2r18p2 20-Aug-2005 jrb Patch so that compositions in id map will be fetched
                            back out upon request
