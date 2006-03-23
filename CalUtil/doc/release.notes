@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v2r3       22-Mar-2006 TU Updates for new externals (CLHEP, Gaudi,etc.)
  * v2r2p1      7-Dec-2005 ZF few tweaks after building & testing on linux
  * v2r2        7-Dec-2005 ZF new system test.  new CalArray.h. broke CalVec.h off of CalDefs.h
  * v2r1p1     14-Jun-2005 ZF getCol() & getRow() added to TwrNum class
