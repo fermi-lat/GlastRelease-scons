@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r22   23-Mar-2006  jrb  Updates for new Gaudi external library
    v0r21p8 24-Feb-2006  jrb  Eliminate (unused) mention of LdfEvent in code
                              and specific version dependence in requirements
    v0r21p7 18-Jan-2006  jrb  Exit with fatal error if rqsted file can't be read
