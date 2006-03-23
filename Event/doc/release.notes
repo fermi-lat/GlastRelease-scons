@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r11   23-Mar-06 TU  Tagging for new externals (CLHEP, Gaudi, etc.)
  * v11r10p1 04-feb-06 DC  Small fix in CalXtalRecData::initialize
  * v11r10p0 05-jan-06 EAC Added missing cxx files for Acd stuff
  * v11r10  05-jan-06 EAC Added AcdHit, AcdTkrPoca, AcdPocaMap
