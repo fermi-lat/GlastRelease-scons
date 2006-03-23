@@ -7,6 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r4       23-Mar-06 TU  Tag for next external packages (CLHEP, Gaudi, etc.)
   v6r3p1     14-Mar-06 DC  forgotten to upgrade CalRecon_load.cpp
   v6r3       10-Feb-06 PA  new correction tool CalLikelihoodManagerTool
   v6r2p2     09-Dec-05 DC  bug fix in CalEventEnergyAlg, when instanciated twice in job options
