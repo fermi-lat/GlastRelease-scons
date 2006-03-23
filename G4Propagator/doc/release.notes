@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r2     23-Mar-06 TU   Tagging for new externals (CLHEP, Gaudi, G4, tec.)
  v2r11cl0 31-Jan-06 TU   Tag development branch for new externals
  v2r1p11  15-Sep-05 TU   Introduce fix for jira issue GEANT-5
  v2r1p10  26-Jul-05 TU   Will the test program ever work?
