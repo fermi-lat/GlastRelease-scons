@@ -34,3 +34,4 @@
                         McPosHit to include volId and global entry position.
  * v0r16p1  18-01-06 LR Fixed decoding of tower in TrackFiller
  * v0r16p2  09-02-06 LR Beefed up MC text info
+ * v0r17    23-03-06 TU Tagging for new externals (CLHEP, Gaudi, etc.)
