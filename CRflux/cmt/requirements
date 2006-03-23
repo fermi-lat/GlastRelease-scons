@@ -6,7 +6,7 @@ author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
 use FluxSvc v6*
 
-use CLHEP v2* IExternal
+use CLHEP v3* IExternal
 
 apply_pattern packageShr
 

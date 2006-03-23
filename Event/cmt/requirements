@@ -7,7 +7,7 @@ branches Event cmt doc src
 
 use geometry       v3r*
 use idents         v2r*
-use CLHEP          v2r* IExternal
+use CLHEP          v3r* IExternal
 use GaudiInterface v*   IExternal 
 
 apply_pattern shared_library
