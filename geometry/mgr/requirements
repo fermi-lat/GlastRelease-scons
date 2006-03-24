@@ -1,6 +1,7 @@
 package geometry
 version v3r1p2
 author T.Burnett <tburnett@u.washington.edu>
+# $Header$
 
 use GlastPolicy
 use CLHEP v3r* IExternal
