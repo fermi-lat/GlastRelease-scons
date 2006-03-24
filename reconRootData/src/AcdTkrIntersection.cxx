@@ -2,7 +2,6 @@
 #include "Riostream.h"
 
 #include "TVector3.h"
-#include "TMatrixD.h"
 
 ClassImp(AcdTkrIntersection)
 

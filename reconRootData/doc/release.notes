@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v8r11p2   25-Mar-06  : HMK no forward declaration of TMatrixD for 5.10.00
 v8r11p1   07-Mar-06  : HMK use Riostream.h consistently 
 v8r11     02-Feb-06  : HMK Move to Double32 in ACD classes
 v8r10     02-Feb-06  : HMK Move to Double32 in TKR classes
