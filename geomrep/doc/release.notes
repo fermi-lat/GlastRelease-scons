@@ -1,9 +1,12 @@
-package geomrep
-package manager:T.Burnett
+/** @file release.notes
+ * @brief package geomrep
+@verbatim
 
+ v4r3 24-mar-06 THB  New CLHEP 
 ! 20060131    - TU : Tag development branch for new externals
 ! 20050715    - NG : Added author line fixed version number
 ! 20010113    - THB: tag as v4r1
 ! 20000903    - THB: tag as v1r1
 ! 20000903    - THB: move source under src; now depend on graphics v1r1
 !======================================================================
+*/
