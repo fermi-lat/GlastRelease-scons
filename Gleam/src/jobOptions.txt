@@ -20,6 +20,9 @@ ApplicationMgr.EvtMax  = 1000;
 // turn off output
 Output.Members = {};
 
+//Filter.Members  = {};
+
+//MessageSvc.OutputLevel = 2;
 //==============================================================
 //
 // End of job options file

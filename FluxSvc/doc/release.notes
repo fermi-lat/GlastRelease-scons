@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   24-mar-06  v6r34   HMK  Updates for CLHEP 1.9.2.2 and the new Gaudi
    05-mar-06  v6r33p1 THB  fix basicOptions typo
    04-mar-06  v6r33   THB  Move test to sub package
    21-feb-06  v6r32p3 THB  Test program needed calibUtil, required by Trigger. (unfortunate dependency) 
