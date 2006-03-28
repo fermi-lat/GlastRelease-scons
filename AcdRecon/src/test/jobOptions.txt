@@ -9,7 +9,7 @@ ApplicationMgr.DLLs = { "GlastSvc", "AcdRecon", "RootIo", "TkrUtil", "AcdUtil",
             "G4Propagator", "G4Generator", "CalibSvc"};
 
 ApplicationMgr.ExtSvc = { 
-    "GlastEventSelector/EventSelector" , 
+//    "GlastEventSelector/EventSelector" , 
     "EventCnvSvc", 
     "GlastDetSvc" 
     };
