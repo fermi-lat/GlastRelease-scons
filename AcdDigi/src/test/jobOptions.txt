@@ -4,8 +4,8 @@
 ApplicationMgr.DLLs   = { "GlastSvc", "AcdDigi" };
 
 // List of required services
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
-
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "EventSelector/EventSelector" };
+EventSelector.Input = "SVC='DbEvtSelector'";
 
 ApplicationMgr.TopAlg = { "ReadDigi" };
 
@@ -15,7 +15,6 @@ MessageSvc.OutputLevel      = 2;
 //=========================================================================
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
 
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
