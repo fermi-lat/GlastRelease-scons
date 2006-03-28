@@ -7,7 +7,7 @@ JobOptionsSvc        INFO
 
 // event loop
 ApplicationMgr.DLLs += { "GlastSvc" } ;
-ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
+//ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
 EventSelector.Input = "NONE" ;
 ApplicationMgr.ExtSvc += { "EventCnvSvc" } ;
 EventPersistencySvc.CnvServices = { "EventCnvSvc" } ;

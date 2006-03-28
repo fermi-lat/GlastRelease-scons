@@ -15,7 +15,7 @@ ApplicationMgr.DLLs+= {
 
 ApplicationMgr.ExtSvc = { 
     "GlastDetSvc", 
-    "GlastEventSelector/EventSelector" , 
+//    "GlastEventSelector/EventSelector" , 
     "EventCnvSvc",
     "RootTupleSvc",
     "ParticlePropertySvc",

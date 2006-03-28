@@ -8,7 +8,7 @@
 ApplicationMgr.DLLs   = {  "GlastSvc","G4Generator","G4Propagator"};
 
 ApplicationMgr.ExtSvc = { 
-    "GlastEventSelector/EventSelector" , 
+//    "GlastEventSelector/EventSelector" , 
     "EventCnvSvc"};
 
 //----------------- local algorithms to run -------------------

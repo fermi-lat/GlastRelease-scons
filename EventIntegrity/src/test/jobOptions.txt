@@ -7,7 +7,7 @@
 ApplicationMgr.DLLs += { "GlastSvc", "EventIntegrity"};
 
 ApplicationMgr.ExtSvc = {
-    "GlastEventSelector/EventSelector" ,
+//    "GlastEventSelector/EventSelector" ,
     "EventCnvSvc"
     };
 
