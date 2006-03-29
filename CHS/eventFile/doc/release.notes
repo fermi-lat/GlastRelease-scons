@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v0r3p1 29-Mar-2006 RBL added include of errno.h to fix gcc 343 compile problem
  * v0r3   13-Mar-2006 RBL added event-count and first/last GEM seq counter with accessors
                                 and mutators.  No change to file format yet.
  * v0r2   01-Mar-2006 RBL added runid to files and runid() accessor to LPA_File object.
