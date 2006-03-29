@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r6
+version v3r6p1
 author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src
@@ -17,7 +17,7 @@ library GuiSvc -no_share  *.cxx ${GuiSvc_headers}
 apply_pattern package_include
 
 macro GuiSvc_lib " -L ${GuiSvc_cmtpath}/lib -lGuiSvc "\
-    WIN32 "${GuiSvc_cmtpath}/lib/GuiSvc.lib "
+    WIN32 "${GUISVCROOT}/${BINDIR}/GuiSvc.lib "
 
 # *No* linkopts.
 
