@@ -165,6 +165,9 @@ if __name__ == '__main__':
     if i['TTYPE1'] != 'log_acpt':
         log.error("File %s is not an LAC ADC file.", lacName)
         sys.exit(1)
+    if i['ERNG'] != 'LEX8':
+        log.error("Only LEX8 energy range is supported for LAC DAC")
+        sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
         log.error("Src twr %d data not found in file %s", srcTwr, lacName)

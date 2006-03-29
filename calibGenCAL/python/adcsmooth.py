@@ -77,7 +77,9 @@ if __name__ == '__main__':
     tlist = inFile.getTowers()
     info = inFile.info()
     version = inFile.getVersion()
-    inFile.close()
+    inFile.close()    
+
+    # get DAC type    
 
     type = info['TTYPE1']
     if type == 'fhe_dac':
@@ -92,6 +94,18 @@ if __name__ == '__main__':
         log.error('file type %s not supported', str(type))
         sys.exit(1)
 
+    # verify energy range for use as calibration data
+
+    erng = info['ERNG']
+    if type == 'fle_dac' or type == 'log_acpt':
+        if erng != 'LEX8':
+            log.error("Only LEX8 energy range is supported for DAC type %s", type)
+            sys.exit(1)
+    if type == 'fhe_dac':
+        if erng != 'HEX8':
+            log.error("Only HEX8 energy range is supported for DAC type %s", type)
+            sys.exit(1)
+
     # run smoothing algorithm
 
     log.info("smoothing data for towers: %s", str(tlist))
@@ -100,7 +114,7 @@ if __name__ == '__main__':
                                        verbose = debug)
     outData = filter.run(inData, tlist)
 
-    # create output FITS file
+    # create output XML file
 
     log.info("writing file %s", outName)
 

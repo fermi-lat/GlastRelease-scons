@@ -170,11 +170,14 @@ if __name__ == '__main__':
 
     # read FLE DAC ADC characterization file
     
-    log.info("reading FLE ADC file %s", fleName)
+    log.info("Reading FLE ADC file %s", fleName)
     fio = calFitsXML.calFitsXML(fileName = fleName, mode = calFitsXML.MODE_READONLY)
     i = fio.info()
     if i['TTYPE1'] != 'fle_dac':
         log.error("File %s is not an FLE ADC file.", fheName)
+        sys.exit(1)
+    if i['ERNG'] != 'LEX8':
+        log.error("Only LEX8 energy range is supported for FLE DAC")
         sys.exit(1)
     twrs = fio.getTowers()
     if srcTwr not in twrs:
