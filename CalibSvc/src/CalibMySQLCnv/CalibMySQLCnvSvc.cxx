@@ -441,7 +441,7 @@ StatusCode CalibMySQLCnvSvc::updateRepRefs (IOpaqueAddress* /*pAddress*/,
 /// Overload ConversionSvc implementation of createAddress.  
 /// Create an address using explicit arguments to identify a single object.
 /// Par[0] is full path in calibration TDS
-StatusCode CalibMySQLCnvSvc::createAddress(unsigned long svc_type,
+StatusCode CalibMySQLCnvSvc::createAddress(long svc_type,
                                            const CLID& clid,
                                            const std::string* par, 
                                            const unsigned long* /*ipar*/,
@@ -536,7 +536,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   //   * pathname or similar identifying information so the data can be found
   ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
-  unsigned long storageType;
+  long storageType;
   StatusCode sc = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
@@ -688,7 +688,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   //   * pathname or similar identifying information so the data can be found
   ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
-  unsigned long storageType;
+  long storageType;
   status = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
@@ -753,7 +753,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 }
 
 StatusCode  CalibMySQLCnvSvc::decodeDescription(const std::string& description,
-                                                unsigned long& type )
+                                                long& type )
 {
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc");
 

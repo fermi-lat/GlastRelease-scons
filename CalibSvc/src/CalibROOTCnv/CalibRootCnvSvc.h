@@ -78,7 +78,7 @@ class CalibRootCnvSvc : public ConversionSvc, virtual public ICalibRootSvc
    * @param refpAddress the new address created
    * @return a StatusCode giving the status of the address creation
    */
-  virtual StatusCode createAddress(unsigned long svc_type,
+  virtual StatusCode createAddress(long svc_type,
                                    const CLID& clid,
                                    const std::string* par, 
                                    const unsigned long* ip,
