@@ -114,7 +114,7 @@ StatusCode CalibRootCnvSvc::finalize() {
   return ConversionSvc::finalize();
 }
 
-StatusCode CalibRootCnvSvc::createAddress(unsigned char svc_type,
+StatusCode CalibRootCnvSvc::createAddress(unsigned long svc_type,
                                           const CLID& clid,
                                           const std::string* par, 
                                           const unsigned long* ip,

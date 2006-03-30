@@ -441,7 +441,7 @@ StatusCode CalibMySQLCnvSvc::updateRepRefs (IOpaqueAddress* /*pAddress*/,
 /// Overload ConversionSvc implementation of createAddress.  
 /// Create an address using explicit arguments to identify a single object.
 /// Par[0] is full path in calibration TDS
-StatusCode CalibMySQLCnvSvc::createAddress(unsigned char svc_type,
+StatusCode CalibMySQLCnvSvc::createAddress(unsigned long svc_type,
                                            const CLID& clid,
                                            const std::string* par, 
                                            const unsigned long* /*ipar*/,
@@ -536,7 +536,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   //   * pathname or similar identifying information so the data can be found
   ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
-  unsigned char storageType;
+  unsigned long storageType;
   StatusCode sc = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
@@ -688,7 +688,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   //   * pathname or similar identifying information so the data can be found
   ret = m_meta->getReadInfo(ser, physFmt, fmtVersion, dataIdent);
 
-  unsigned char storageType;
+  unsigned long storageType;
   status = decodeDescription(physFmt, storageType);
 
   // Depending on value of eDataFmt, figure out which private
@@ -753,7 +753,7 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
 }
 
 StatusCode  CalibMySQLCnvSvc::decodeDescription(const std::string& description,
-                                                unsigned char& type )
+                                                unsigned long& type )
 {
   MsgStream log(msgSvc(), "CalibMySQLCnvSvc");
 
@@ -770,25 +770,6 @@ StatusCode  CalibMySQLCnvSvc::decodeDescription(const std::string& description,
   return StatusCode::SUCCESS;
 }
 
-/*
-StatusCode  CalibMySQLCnvSvc::decodeDescription(unsigned int description,
-                                                unsigned char& type )
-{
-  MsgStream log(msgSvc(), "CalibMySQLCnvSvc");
-
-  if (description == calibUtil::Metadata::FMTXml) {
-    type = XML_StorageType;
-  }
-  else if (description == calibUtil::Metadata::FMTRoot) {
-    type = CALIBROOT_StorageType;
-  }
-  else {       // unsupported
-    log << MSG::ERROR << "unsupported storage type " << description << endreq;
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
-}
-*/
 /// Handle to the MySQL metadata database
 calibUtil::Metadata* CalibMySQLCnvSvc::getMeta( ) {
   return m_meta;

@@ -110,7 +110,7 @@ public:
  private:
   //properties
   /// Calibration Data Persistency Storage type
-  int              m_calibStorageType;
+  long int              m_calibStorageType;
 
   /// Name of the root node of the calib store
   std::string      m_calibRootName;

@@ -17,7 +17,7 @@
 // Persistency service will get confused.  Instead give an alias
 // to one we can be pretty sure is unused for GLAST
 
-unsigned const char CALIBROOT_StorageType  = CDF_StorageType;
+unsigned const long CALIBROOT_StorageType  = CDF_StorageType;
 
 
 static const InterfaceID IID_ICalibRootSvc("ICalibRootSvc", 1, 0);

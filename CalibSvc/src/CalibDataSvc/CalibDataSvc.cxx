@@ -48,6 +48,7 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
 
   m_eventTimeDefined = false;
   m_eventTime = 0;
+  m_nEvent = 0;
   declareProperty("CalibInstrumentName", m_instrumentName = "LAT" );
 
   // choices could be "data", "clock", "mc", "none", "digi"
@@ -481,6 +482,7 @@ StatusCode  CalibDataSvc::updateTime() {
     }
     case TIMESOURCEmc: {
       sc = fetchMcTime();
+      //      sc = fetchEventTime();
       break;
     }
     case TIMESOURCEclock: {

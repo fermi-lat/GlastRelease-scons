@@ -129,7 +129,7 @@ StatusCode CalibXmlCnvSvc::finalize() {
   return ConversionSvc::finalize();
 }
 
-StatusCode CalibXmlCnvSvc::createAddress(unsigned char svc_type,
+StatusCode CalibXmlCnvSvc::createAddress(unsigned long svc_type,
                                          const CLID& clid,
                                          const std::string* par, 
                                          const unsigned long* ip,

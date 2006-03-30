@@ -63,7 +63,7 @@ class CalibXmlCnvSvc : public ConversionSvc, virtual public ICalibXmlSvc
    * @param refpAddress the new address created
    * @return a StatusCode giving the status of the address creation
    */
-  virtual StatusCode createAddress(unsigned char svc_type,
+  virtual StatusCode createAddress(unsigned long svc_type,
                                    const CLID& clid,
                                    const std::string* par, 
                                    const unsigned long* ip,
