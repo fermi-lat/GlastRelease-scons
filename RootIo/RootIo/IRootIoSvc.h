@@ -10,9 +10,10 @@
 // includes
 #include "GaudiKernel/IInterface.h"
 #include <TChain.h>
+#include <string>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IRootIoSvc("RootIoSvc", 2 , 0); 
+static const InterfaceID IID_IRootIoSvc("RootIoSvc", 3 , 0); 
 
 /** 
 * \class IRootIoSvc
@@ -24,6 +25,13 @@ static const InterfaceID IID_IRootIoSvc("RootIoSvc", 2 , 0);
 */
 class  IRootIoSvc : virtual public IInterface {
 public:
+
+    virtual bool setRootFile(const char *mc, const char *digi, 
+                             const char *rec) = 0;
+    virtual std::string getMcFile() const = 0;
+    virtual std::string getDigiFile() const = 0;
+    virtual std::string getReconFile() const = 0;
+    virtual bool fileChange() const = 0;
     
     virtual Long64_t getEvtMax() = 0;
     virtual void setRootEvtMax(Long64_t max) = 0;
