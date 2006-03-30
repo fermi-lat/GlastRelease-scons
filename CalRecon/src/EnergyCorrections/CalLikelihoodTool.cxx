@@ -8,9 +8,9 @@ StatusCode CalLikelihoodTool::initialize()
 {
     // This function does following initialization actions:
     //    - extracts geometry constants from xml file using GlastDetSvc
-    MsgStream log(msgSvc(), name());
+    MsgStream log(msgSvc(), "CalLikelihoodTool::initialise");
     StatusCode sc = StatusCode::SUCCESS;
-      log << MSG::INFO << "Initializing CalLikelihoodTool" <<endreq;
+    log << MSG::INFO << "Initializing CalLikelihoodTool" <<endreq;
 
     typedef std::map<double*,std::string> PARAMAP;
     PARAMAP param;
@@ -36,6 +36,27 @@ StatusCode CalLikelihoodTool::initialize()
             throw GaudiException("Bad constant name ", name(), StatusCode::FAILURE);
         }
     }
+
+    // get the number of towers
+    if(!m_detSvc->getNumericConstByName("xNum", &m_numX))
+      {
+	log<<MSG::ERROR<<" constant "<< "xNum" <<" not defined"<<endreq;
+	throw GaudiException("Bad constant name ", name(), StatusCode::FAILURE);
+      }
+    if(!m_detSvc->getNumericConstByName("yNum", &m_numY))
+      {
+	log<<MSG::ERROR<<" constant "<< "yNum" <<" not defined"<<endreq;
+	throw GaudiException("Bad constant name ", name(), StatusCode::FAILURE);
+      }
+    m_flight_geom = true;
+    if(m_numX==4 && m_numY==1) m_flight_geom = false;
+
+    log << MSG::INFO << "m_numX = " << m_numX << endreq;  
+    log << MSG::INFO << "m_numY = " << m_numY << endreq;  
+    if(m_flight_geom)
+      log << MSG::INFO << "flight mode" << endreq;  
+    else
+      log << MSG::INFO << "calibration unit mode" << endreq;  
 
     m_calZorigin    = -47.395;
     m_ratioCDEHeighTowerPitch /= m_towerPitch;
@@ -359,33 +380,61 @@ double CalLikelihoodTool::findGeometricCut( const Point &x,
   
   for ( Event::CalCluster::const_iterator layer= cluster->begin(); 
         layer!=cluster->end(); ++layer )
-  {
-    weight+= (*layer).getEnergy();
-    if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+    {
+      weight+= (*layer).getEnergy();
+      if(m_flight_geom)
+	{
+	  if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+	}
+      else
+	{
+	  if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
+	}
+
     double val= 0.;
     for( int ii=0; ii<10; ++ii )
-    {
-      double towerX[2]= { xT[0], xT[1] };
-      for( int ax=0; ax<2; ++ax )
       {
-        // find position relative to tower center
-        // the tower being whichever one xT is now at
-        if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-        else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-        else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-        else towerX[ax]= fabs(towerX[ax]-1.5);
-
-        // normalisation for the trajectory slant
-        towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-
-        // moving along the trajectory
-        xT[ax]-= slopes[ax];
-      }
-
+	double towerX[2]= { xT[0], xT[1] };
+	if(m_flight_geom)
+	  {
+	    for( int ax=0; ax<2; ++ax )
+	      {
+		// find position relative to tower center
+		// the tower being whichever one xT is now at
+		if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+		else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+		else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+		else towerX[ax]= fabs(towerX[ax]-1.5);
+		
+		// normalisation for the trajectory slant
+		towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+		
+		// moving along the trajectory
+		xT[ax]-= slopes[ax];
+	      }
+	  }
+	else
+	  {
+	    // X axis
+	    ax = 0;
+	    // find position relative to tower center
+	    // the tower being whichever one xT is now at
+	    if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+	    else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+	    else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+	    else towerX[ax]= fabs(towerX[ax]-1.5);
+	    // normalisation for the trajectory slant
+	    towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+	    // moving along the trajectory
+	    xT[ax]-= slopes[ax];
+	    // Y axis
+	    towerX[1]= fabs(towerX[1]);
+	    towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
+	    xT[1]-= slopes[1];
+	  }
       // adding minimum distance to the tower edge
-
-      val+= towerX[towerX[0]>towerX[1]];
-    }
+	val+= towerX[towerX[0]>towerX[1]];
+      }
     geometricCut+= val*(*layer).getEnergy();
   }
   geometricCut*= .2*sqrt(.5/(pX[2]*pX[2])+.5)/weight;

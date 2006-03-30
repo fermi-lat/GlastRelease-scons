@@ -10,8 +10,7 @@
 
 #include "idents/TowerId.h"
 #include "idents/VolumeIdentifier.h"
-//#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "CLHEP/Geometry/Point3D.h"
 
 #include "TMath.h"
 
@@ -65,7 +64,7 @@ void FullShowerGeometryManager::Initialize()
   topLayerId.append(0);  // layer
   topLayerId.append(0);  // x view
   StatusCode sc;
-  HepGeom::Transform3D transfTop;
+  HepTransform3D transfTop;
   int count;
   for (count=0;count<3;++count) {
     topLayerId.append(0);
@@ -86,6 +85,12 @@ void FullShowerGeometryManager::Initialize()
   FSGM_CalSafeBoundaries[1][1] = +2*FSGM_towerPitch+safedistance;
   FSGM_CalSafeBoundaries[2][0] = FSGM_calZBot-safedistance;
   FSGM_CalSafeBoundaries[2][1] = FSGM_calZTop+safedistance;
+
+  // get the number of towers
+  m_detSvc->getNumericConstByName("xNum", &FSGM_numX);
+  m_detSvc->getNumericConstByName("yNum", &FSGM_numY);
+  FSGM_flight_geom = true;
+  if(FSGM_numX==4 && FSGM_numY==1) FSGM_flight_geom = false;
 
   // Fill the look-up table for even layers
   geom_xy_step = (4*FSGM_towerPitch)/(double)(FSGM_XY_MAX);
@@ -227,7 +232,38 @@ void FullShowerGeometryManager::WhereInCalForGeom(double *xyz, int *whereincal)
   whereincal[1] = ilayer;
 }
 
-void FullShowerGeometryManager::WhereInCal(double *xyz, int *whereincal)
+void FullShowerGeometryManager::WhereInCalForGeomCU(double *xyz, int *whereincal)
+{
+  whereincal[0] = 0;
+  whereincal[1] = 0;
+  if(xyz[2]>=FSGM_calZTop) return;
+  if(xyz[2]<FSGM_calZBot) return;
+  if(fabs(xyz[0])>2*FSGM_towerPitch) return;
+  if(fabs(xyz[1])>FSGM_towerPitch/2) return;
+  double xmod = xyz[0]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
+  double ymod = xyz[1]+FSGM_towerPitch/2;
+  if(FSGM_towerPitch-ymod<ymod) ymod = FSGM_towerPitch-ymod;
+  if(xmod<FSGM_crackHalfWidth || ymod<FSGM_crackHalfWidth)
+    {
+      whereincal[0] = 2;
+      return;
+    }
+  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
+  double xy = ymod;
+  if(ilayer%2==1) xy = xmod;
+  xy -= (FSGM_towerPitch/2-6*FSGM_cellHorPitch);
+  double xymod = xy-FSGM_cellHorPitch*floor(xy/FSGM_cellHorPitch);
+  if(FSGM_cellHorPitch-xymod<xymod) xymod = FSGM_cellHorPitch-xymod;
+  if(xymod<(FSGM_cellHorPitch-FSGM_CsIWidth)/2) return;
+/*   double zlayer = (FSGM_calZTop-xyz[2])-FSGM_cellVertPitch*(double)ilayer; */
+/*   if(FSGM_cellVertPitch-zlayer>zlayer) zlayer = FSGM_cellVertPitch-zlayer; */
+/*   if(zlayer<(FSGM_cellVertPitch-FSGM_CsIHeight)/2) return; */
+  whereincal[0] = 1;
+  whereincal[1] = ilayer;
+}
+
+void FullShowerGeometryManager::WhereInCalLT(double *xyz, int *whereincal)
 {
   whereincal[0] = 0;
   whereincal[1] = 0;
@@ -262,6 +298,14 @@ void FullShowerGeometryManager::WhereInCal(double *xyz, int *whereincal)
       else
 	whereincal[0] = (int)(geom_y_mat[i][0] && geom_x_mat[j][0]);
     }
+}
+
+void FullShowerGeometryManager::WhereInCal(double *xyz, int *whereincal)
+{
+  if(FSGM_flight_geom)
+    WhereInCalLT(xyz,whereincal);
+  else
+    WhereInCalForGeomCU(xyz,whereincal);
 }
 
 double FullShowerGeometryManager::RCore(double t)

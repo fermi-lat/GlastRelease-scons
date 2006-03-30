@@ -266,6 +266,10 @@ class CalLikelihoodManagerTool: public AlgTool, virtual public ICalEnergyCorr,
     void getParameters(std::map<double*,std::string>&, MsgStream&) const;
     const Event::TkrDigiCol *getTkrDigiCol(void) const;
     
+    int m_numX;
+    int m_numY;
+    bool m_flight_geom;
+
   private:
     double m_minTrialEnergy;
     double m_maxTrialEnergy;

@@ -38,6 +38,9 @@ class FullShowerGeometryManager{
   bool geom_y_mat[FSGM_XY_MAX][2];
  public:
   // Geometry variables
+  int FSGM_numX;
+  int FSGM_numY;
+  bool FSGM_flight_geom;
   double FSGM_towerPitch;
   double FSGM_calZTop;
   double FSGM_calZBot;
@@ -88,6 +91,8 @@ class FullShowerGeometryManager{
   double RadialProfile(double t, double r);
  public:
   void WhereInCal(double *xyz, int *whereincal);
+  void WhereInCalLT(double *xyz, int *whereincal);
+  void WhereInCalForGeomCU(double *xyz, int *whereincal);
   double GetEffectiveRadius(double z, double radialcontainedfraction);
   double GetRadialProfile(double t, double r);
 };

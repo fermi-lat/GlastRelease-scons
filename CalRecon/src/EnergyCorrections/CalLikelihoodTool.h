@@ -111,6 +111,10 @@ public:
     */
            
 protected:
+    int m_numX;
+    int m_numY;
+    bool m_flight_geom;
+
     Event::CalCorToolResult *calculateEvent(const Event::CalCluster*, 
                                             MsgStream& );
     

@@ -68,6 +68,20 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
     MsgStream log(msgSvc(), "CalTkrLikelihoodTool::doEnergyCorr");
     Event::CalCorToolResult* corResult = 0;
 
+    // CALCULATE
+    //    - get number of hits in TKR
+    int nHits= 0;
+    if( hasCorrelation() )
+    {
+      Event::TkrDigiCol *tkrDigiData =
+                  SmartDataPtr<Event::TkrDigiCol>(m_dataSvc, 
+                                                  EventModel::Digi::TkrDigiCol);
+
+      for ( Event::TkrDigiCol::iterator it= tkrDigiData->begin(); 
+            it!=tkrDigiData->end(); ++it )
+        nHits+= (*it)->getNumHits();
+    }
+
     // if reconstructed tracker data doesn't exist or number of tracks is 0:
     if (vertex == 0)
     {
@@ -134,20 +148,11 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
         << endreq;
         return corResult;
     }
-    // CALCULATE
-    //    - get number of hits in TKR
-    int nHits= 0;
-    if( hasCorrelation() )
-    {
-      Event::TkrDigiCol *tkrDigiData =
-                  SmartDataPtr<Event::TkrDigiCol>(m_dataSvc, 
-                                                  EventModel::Digi::TkrDigiCol);
 
-      for ( Event::TkrDigiCol::iterator it= tkrDigiData->begin(); 
-            it!=tkrDigiData->end(); ++it )
-        nHits+= (*it)->getNumHits();
-    }
-
+    if(!m_flight_geom)
+      {
+	nHits += 40; // 45.3*14/16
+      }
 
     int iData= vertexPos;
     if( geometricCut>.4 ) iData+= 16*(geometricCut>.60)+32;

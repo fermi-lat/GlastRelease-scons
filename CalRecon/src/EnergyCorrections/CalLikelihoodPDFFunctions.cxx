@@ -167,6 +167,12 @@ bool PDFFunction::getFWHM(PDFParameters *table, const double mpv[2],
 /******************************************************************************/
 /***********************  PDFLikelihood ***************************************/
 /******************************************************************************/
+PDFLikelihood::PDFLikelihood(const CalLikelihoodManagerTool*manager,
+			     MsgStream &log )
+  : PDFFunction(2, 7, 3){
+  m_manager = manager;
+}
+
 void PDFLikelihood::setEvt(const Event::CalCluster*cluster,
                            const Event::TkrVertex*vertex) {
   tkr1ZDir()= fabs(vertex->getDirection()[2]);
@@ -176,8 +182,14 @@ void PDFLikelihood::setEvt(const Event::CalCluster*cluster,
   const Event::TkrDigiCol *digi= m_manager->getTkrDigiCol();
   int nHits= 0;
   for(Event::TkrDigiCol::const_iterator hit= digi->begin(); hit!=digi->end();
-       ++hit)
+      ++hit)
     nHits+= (*hit)->getNumHits();
+  // PhB
+  if(!m_manager->m_flight_geom)
+    {
+      nHits += 40; // 45.3*14/16
+    }
+
   tkrSumHits()= nHits;
 }
 bool PDFLikelihood::value(double result[1]) const{
@@ -216,6 +228,7 @@ bool PDFLikelihood::value(double result[1]) const{
 PDFLowEnergyCuts::PDFLowEnergyCuts(const CalLikelihoodManagerTool*manager,
                                    MsgStream &log )
     : PDFFunction(2, 2, 2){
+  m_manager = manager;
   typedef std::map<double*,std::string> PARAMAP;
   PARAMAP param;
   param[&m_towerPitch]  = std::string("towerPitch");
@@ -280,31 +293,61 @@ double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
   for(Event::CalCluster::const_iterator layer= cluster->begin();
       layer!=cluster->end(); ++layer ){
     weight+= (*layer).getEnergy();
-    if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+    // PhB
+    if(m_manager->m_flight_geom)
+      {
+	if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+      }
+    else
+      {
+	if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
+      }
+    
     double val= 0.;
     for( int ii=0; ii<10; ++ii )
-    {
-      double towerX[2]= { xT[0], xT[1] };
-      for( int ax=0; ax<2; ++ax )
       {
-        // find position relative to tower center
-        // the tower being whichever one xT is now at
-        if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-        else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-        else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-        else towerX[ax]= fabs(towerX[ax]-1.5);
-
-        // normalisation for the trajectory slant
-        towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-
-        // moving along the trajectory
-        xT[ax]-= slopes[ax];
+	double towerX[2]= { xT[0], xT[1] };
+	if(m_manager->m_flight_geom)
+	  {
+	    for( int ax=0; ax<2; ++ax )
+	      {
+		// find position relative to tower center
+		// the tower being whichever one xT is now at
+		if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+		else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+		else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+		else towerX[ax]= fabs(towerX[ax]-1.5);
+		
+		// normalisation for the trajectory slant
+		towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+		
+		// moving along the trajectory
+		xT[ax]-= slopes[ax];
+	      }
+	  }
+	else
+	  {
+	    // X axis
+	    ax = 0;
+	    // find position relative to tower center
+	    // the tower being whichever one xT is now at
+	    if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+	    else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+	    else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+	    else towerX[ax]= fabs(towerX[ax]-1.5);
+	    // normalisation for the trajectory slant
+	    towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+	    // moving along the trajectory
+	    xT[ax]-= slopes[ax];
+	    // Y axis
+	    towerX[1]= fabs(towerX[1]);
+	    towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
+	    xT[1]-= slopes[1];
+	  }
+	// adding minimum distance to the tower edge
+	
+	val+= towerX[towerX[0]>towerX[1]];
       }
-
-      // adding minimum distance to the tower edge
-
-      val+= towerX[towerX[0]>towerX[1]];
-    }
     geometricCut+= val*(*layer).getEnergy();
   }
   geometricCut*= .2*sqrt(.5/(pX[2]*pX[2])+.5)/weight;
@@ -317,11 +360,12 @@ double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
 PDFHighEnergyCuts::PDFHighEnergyCuts(const CalLikelihoodManagerTool*manager,
                                      MsgStream &log )
     : PDFFunction(2, 7, 3){
+  m_manager = manager;
   std::map<double*,std::string> param;
   param[&m_towerPitch]  = std::string("towerPitch");
-
   manager->getParameters(param, log);
 }
+
 bool PDFHighEnergyCuts::value(double result[1]) const{
   result[0]-= 1.;
   

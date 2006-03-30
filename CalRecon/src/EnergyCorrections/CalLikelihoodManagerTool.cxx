@@ -52,10 +52,32 @@ StatusCode CalLikelihoodManagerTool::initialize(void)
 
   if ((sc = service("GlastDetSvc", m_detSvc, true)).isFailure())
   { 
-      throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
+    throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
   }
 
-  
+  //Get geometry info
+  m_numX = 4;
+  m_numY = 4;
+  m_flight_geom = true;
+  if(!m_detSvc->getNumericConstByName("xNum", &m_numX))
+    {
+      log<< MSG::ERROR << "constant " << "xNum" << " not defined" <<endreq;
+      throw GaudiException("Bad constant name ", name(),StatusCode::FAILURE);
+    }
+  if(!m_detSvc->getNumericConstByName("yNum", &m_numY))
+    {
+      log<< MSG::ERROR << "constant " << "yNum" << " not defined" <<endreq;
+      throw GaudiException("Bad constant name ", name(),StatusCode::FAILURE);
+    }
+  if(m_numX==4 && m_numY==1) m_flight_geom = false;
+
+  log << MSG::INFO << "m_numX = " << m_numX << endreq;  
+  log << MSG::INFO << "m_numY = " << m_numY << endreq;  
+  if(m_flight_geom)
+    log << MSG::INFO << "flight mode" << endreq;  
+  else
+    log << MSG::INFO << "calibration unit mode" << endreq;  
+
   m_minTrialEnergy= 1.e30;
   m_maxTrialEnergy= -1.e30;
   m_minTkr1ZDir= 2.;
