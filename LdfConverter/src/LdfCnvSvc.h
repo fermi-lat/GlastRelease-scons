@@ -41,7 +41,7 @@ public:
   virtual StatusCode declareObject(const ILdfCnvSvc::Leaf& leaf);
 
   /// Override inherited queryInterface due to enhanced interface
-  virtual StatusCode queryInterface(const IID& riid, void** ppvInterface);
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
   /** IAddressCreator implementation: Address creation.
     Create an address using the link infotmation together with
@@ -53,7 +53,7 @@ public:
     @param refpAddress    Opaque address information to retrieve object
     @return               StatusCode indicating SUCCESS or failure
   */
-  virtual StatusCode createAddress( unsigned char svc_type,
+  virtual StatusCode createAddress( long svc_type,
                                     const CLID& clid,
                                     const std::string* par, 
                                     const unsigned long* ip,

@@ -157,7 +157,7 @@ StatusCode LdfCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
     return status;
 }
 
-StatusCode LdfCnvSvc::queryInterface(const IID& riid, void** ppvInterface)  {
+StatusCode LdfCnvSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_ILdfBaseCnv == riid )  {
         *ppvInterface = (ILdfCnvSvc*)this;
     }
@@ -169,7 +169,7 @@ StatusCode LdfCnvSvc::queryInterface(const IID& riid, void** ppvInterface)  {
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfCnvSvc::createAddress(unsigned char svc_type,
+StatusCode LdfCnvSvc::createAddress(long svc_type,
                                       const CLID& clid,
                                       const std::string* , 
                                       const unsigned long* ,
