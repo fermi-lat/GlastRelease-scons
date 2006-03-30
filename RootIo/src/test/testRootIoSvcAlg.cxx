@@ -60,26 +60,50 @@ StatusCode testRootIoSvcAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
-	static int flag = 0;
+
+    static int flag = 0;
 	
-	if (flag % 2) {
-            bool good = m_rootIoSvc->setRunEventPair(std::pair<int,int>(20,400));
-            if (good) {
-                log << MSG::INFO << "Failed test, Found run/event 20,400 - which does not exist" << endreq;
-            } else {
-                log << MSG::INFO << "Passed test, could not find run/event 20,400" << endreq;
-            }
-            m_rootIoSvc->setIndex(flag);
-        } else {
-            m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,48));
-            log << MSG::INFO << "Requesting run/event (10,48) randomly" << endreq;
-         }
-        //m_rootIoSvc->setIndex(flag);
+    if (flag % 2) {
+       bool good = m_rootIoSvc->setRunEventPair(std::pair<int,int>(20,400));
+       if (good) {
+          log << MSG::INFO << "Failed test, Found run/event 20,400 - which does not exist" << endreq;
+       } else {
+          log << MSG::INFO << "Passed test, could not find run/event 20,400" << endreq;
+       }
+       m_rootIoSvc->setIndex(flag);
+    } else {
+       bool stat = m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,2));
+       if (stat)
+           log << MSG::INFO << "Requesting run/event (10,2) randomly" << endreq;
+    }
 
-	flag++;
+    if (flag == 3) {
+        bool retVal = m_rootIoSvc->setRootFile("","noFile.root","");
+        if (retVal == false) {
+            log << MSG::INFO << "Passed ROOT file open test "
+                << "failed to open non-existant file" 
+                << endreq;
+        }
+        retVal = m_rootIoSvc->setRootFile( 
+                 "",
+                 "$(ROOTTESTDATAROOT)/data/vertical_surface_muons/digi.root", 
+                 "$(ROOTTESTDATAROOT)/data//vertical_surface_muons/recon.root");
+        if (retVal)
+             log << MSG::INFO << "Passed ROOT file open test "
+                 << "Succeeded in opening new files" << endreq;
+             bool good = m_rootIoSvc->setRunEventPair(std::pair<int,int>(10,1));
+             if (good) 
+                 log << MSG::INFO << "Requesting event 10,1 in new files" << endreq;
+        else {
+             log << MSG::INFO << "Failed to open new files" << endreq;
+             return StatusCode::FAILURE;
+        }
+    }
+
+    flag++;
 
 
-	return sc;
+    return sc;
 }
 
 
