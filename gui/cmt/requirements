@@ -21,7 +21,7 @@ macro guiapp_linkopts ""\
       Linux "${gui_cmtpath}/lib/libguisystem.a ${gui_X_linkopts} "\
       WIN32 "${gui_root}/${BINDIR}/guisystem.lib user32.lib gdi32.lib winspool.lib comdlg32.lib shell32.lib /subsystem:windows "
 
-
+apply_pattern library_Llinkopts library=AcdUtilCommon
 # application command should include this to define dialog boxes in Windows app.
 
 macro Win32Resource ""\
