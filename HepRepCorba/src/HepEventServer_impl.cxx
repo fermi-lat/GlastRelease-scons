@@ -143,6 +143,30 @@ char* HepEventServer_impl::setEvent(const char* command)
     else
       nextEventMsg = "error:The requested Event index seems to non exist";      
   }  
+  else if (cmd.substr(0,18) == "open:rootfilename:") {
+    std::string temp = cmd.substr(18,cmd.size());   
+    std::string temp2;
+    std::string mc;
+    std::string digi;
+    std::string recon;
+
+    int i = temp.find(";");
+    if(i >=0 )
+    {
+      mc=temp.substr(0,i);
+      temp2 = temp.substr(i+1,temp.size());
+      i = temp2.find(";");
+      digi=temp2.substr(0,i);
+      recon = temp2.substr(i+1,temp2.size());
+    } 
+    else 
+      nextEventMsg = "error:Incorrect command format";      
+
+    if (m_svcAdapter->openFile(mc.c_str(), digi.c_str(), recon.c_str()))
+      nextEventMsg = "ok:Set ROOT files";
+    else
+      nextEventMsg = "error:The requested ROOT files seem to non exist";      
+  }
   else if (cmd == "fluxes")
     {
       nextEventMsg = m_svcAdapter->getSources();

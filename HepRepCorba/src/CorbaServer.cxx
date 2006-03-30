@@ -51,7 +51,10 @@ void CorbaServer::run()
   }
   iorFileName = iorFileName + "hepeventserver.ior";
   std::cout << "CORBA set up the ior file to " << iorFileName << std::endl;
-      
+
+  // Added to run server from ssh and report IOR via stdout
+  std::cout << "CORBAHepRepServerIOR=" << (char*)sior << std::endl;
+    
   std::ofstream fout(iorFileName.c_str());
   if (fout.good()) {
     fout << (char*)sior << std::endl;
