@@ -82,7 +82,7 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       // the shape
       G4VSolid* shape;
       // Get the material
-      G4Material* ptMaterial = G4Material::GetMaterial(material);
+	  G4Material* ptMaterial = material.empty()? 0 : G4Material::GetMaterial(material);
       if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
     
       // Build a box or a tube
