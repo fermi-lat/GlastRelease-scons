@@ -3,6 +3,7 @@
  * Manager T Burnett
  * @verbatim
  *
+ * v3r7    29-mar-2006 THB Reversion to prevous library strategy for Windows
  * v3r6    24-mar-2006 HMK Updates for new CLHEP 1.9.2.2 and Gaudi
  * v3r5p10 29-aug-2005  NG  Carry forward library name changes
  * v3r5p8 25-aug-2005  NG  Linking against correct version
