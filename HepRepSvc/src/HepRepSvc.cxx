@@ -321,7 +321,7 @@ std::string HepRepSvc::getCommands()
     sNames << ",fluxes,source";
   
   if (m_rootIoSvc)
-    sNames << ",back,eventId,eventIdx";
+    sNames << ",back,eventId,eventIdx,openfile";
   
   return sNames.str();     
 }
@@ -366,6 +366,14 @@ bool HepRepSvc::previousEvent(int i)
   else return 0;
 }
 
+bool HepRepSvc::openFile(const char* mc, const char *digi, const char *rec) 
+{
+  if (m_rootIoSvc)
+  {
+    return m_rootIoSvc->setRootFile(mc, digi, rec);
+  } 
+  else return 0;
+}
 
 // This is to retrive event and run number from the event
 std::string HepRepSvc::getEventId()
