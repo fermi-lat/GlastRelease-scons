@@ -48,7 +48,9 @@ namespace ldfReader {
         }
 
         const char* prefix = "  ";
+
         ldfReader::LatData::instance()->setSummary(event->summary());
+
         ldfReader::OswData osw(ldfReader::EventSummaryCommon(((EBFcontribution*)contribution)->summary()));
         ldfReader::LatData::instance()->setOsw(osw);
         ldfReader::LatData::instance()->getOsw().initPacketError(contribution->packetError());
@@ -76,6 +78,9 @@ namespace ldfReader {
 
         //if (EbfDebug::getDebug())  printf("\nGEM:\n");
         ldfReader::GemData gem;
+
+        // Set EventSummary here - in case there is no OSW
+        ldfReader::LatData::instance()->setSummary(event->summary());
 
         ldfReader::EventSummaryCommon summary(((EBFcontribution*)contribution)->summary());
         gem.setExist();

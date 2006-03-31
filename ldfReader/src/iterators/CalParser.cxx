@@ -89,7 +89,7 @@ namespace ldfReader {
         unsigned int offlineLayer = layer;
         unsigned int offlineColumn = theLog.column();
         // Determine the mode
-        unsigned readout4 = EventSummary::readout4(contribution()->summary());
+        unsigned readout4 = EventSummary::readout4(event()->summary());
         ldfReader::CalDigi::CalTrigMode mode = (readout4 == 0) ? ldfReader::CalDigi::BESTRANGE : ldfReader::CalDigi::ALLRANGE;
 
         // Retrieve the CalDigi object for this layer and column - or create a new one
