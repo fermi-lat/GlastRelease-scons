@@ -644,7 +644,7 @@ StatusCode CalValsTool::calculate()
     //double x_diff_t0 = x_diff*t0;
     //CAL_Track_DOCA = sqrt(std::max(0.0, x_diff_sq - x_diff_t0*x_diff_t0));
     Doca track1(x1, t1);
-    double CAL_Track_DOCA = track1.docaOfPoint(cal_pos);
+    CAL_Track_DOCA = (float)track1.docaOfPoint(cal_pos);
 
     // try Bill's new vars... 
     if (pxtalrecs) {
