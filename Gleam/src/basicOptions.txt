@@ -13,13 +13,10 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 // setup basic event loop stuff
 //
 ApplicationMgr.ExtSvc = { "EventSelector/EventSelector" };
-    //"GlastEventSelector/EventSelector" , 
-    //"EventCnvSvc"
-    //};
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-//EventSelector.Input = "NONE";
 EventSelector.Input = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq = -1;
 
 
 // ----------------------------
@@ -35,7 +32,7 @@ Top.Members={
 Generator.Members = {
     "FluxAlg", 
     "CurrentEventAlg",
-    "PointInfoAlg",
+    "PointInfoAlg", 
     "G4Generator",
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
