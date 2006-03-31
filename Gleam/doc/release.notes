@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r14p1 THB 30mar-06   Apply advice from TU.
 * v6r14   TU 24-mar-06   Updates for new CLHEP 1.9.2.2 and Gaudi
 * v6r13  THB 19-mar-06   Disable livetime; fix bug in basicoptions for onboard filter
 * v6r12  THB 08-feb-06   Add AnalysisNtupleAlg to Triggered sequence 
