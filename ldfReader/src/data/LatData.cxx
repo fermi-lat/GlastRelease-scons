@@ -280,20 +280,25 @@ bool LatData::checkAemError() {
 
         const std::vector<ldfReader::AcdDigi::AcdPmt> readoutCol = thisAcdDigi->
 second->getReadout();
-        if ( (readoutCol[0].getParityError() == AcdDigi::ERROR) ||
-             (readoutCol[1].getParityError() == AcdDigi::ERROR) ) {
-            std::cout << "AEM Parity Error tile " << tileName
+        std::vector<ldfReader::AcdDigi::AcdPmt>::const_iterator curReadout;
+        for (curReadout = readoutCol.begin(); curReadout != readoutCol.end();
+             ++curReadout) {
+
+        if (curReadout->getParityError() == AcdDigi::ERROR) {
+            std::cout << "AEM Parity Error tile " << tileName << " Side: "
+                      << curReadout->getSide()
                       << " event: " << m_eventId << std::endl;
             err = true;
         }
   
     
-        if ( (readoutCol[0].getHeaderParity() == AcdDigi::ERROR) ||
-             (readoutCol[1].getHeaderParity() == AcdDigi::ERROR) ) {
+        if (curReadout->getHeaderParity() == AcdDigi::ERROR) {
             std::cout << "AEM Header Parity Error tile " << tileName
+                      << " Side: " << curReadout->getSide()
                      << " event: " << m_eventId << std::endl;
             err = true;
         }
+      }
 
    }
    return err;
