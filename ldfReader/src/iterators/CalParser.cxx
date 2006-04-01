@@ -100,9 +100,13 @@ namespace ldfReader {
             tData->addCalDigi(digi);
         } else {
             // If the digi already exists for this tower - we should be in AllRange mode
-            if (readout4 != 1) 
+            if (readout4 != 1) {
                 fprintf(stderr, 
-                "Two CalDigis with the same layer/column combination - yet we are in BESTRANGE mode\n");
+                "Two CalDigis with the same layer/column combination ");
+                fprintf(stderr,
+                " - yet we are in BESTRANGE mode.  Event %llu \n",
+                ldfReader::LatData::instance()->eventId()); 
+            }
         }
 
         // Add the readout data
