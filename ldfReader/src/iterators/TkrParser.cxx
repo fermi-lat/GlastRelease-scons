@@ -207,12 +207,16 @@ namespace ldfReader {
         switch (code)
         {
             case TKRcontributionIterator::ERR_WrongOrder:
-            {
                 fprintf(stderr, "TKRiterator.iterateTOTs: TOTs can not be accessed before TKRiterator.iterateStrips has executed.\n");
                return 0;
-              break;
-            }
-            default: break;
+            case TKRcontributionIterator::ERR_PastEnd:
+                fprintf(stderr, "TKRcontributionIterator.iterateStrips:"
+                "Iterated past the end of the contribution by %d words\n", p1);
+                return 0;
+            default: 
+                fprintf(stderr, "TKRcontributionIterator.iterate:"
+                "Unrecognized error code found: %d\n", code);
+                return 0;
         }
         return 0;
    }

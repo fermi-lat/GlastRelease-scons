@@ -20,9 +20,19 @@ namespace ldfReader {
 
         virtual int handleError(TEMcontribution* contribution, unsigned code, unsigned p1=0, unsigned p2=0) const {
 
-            fprintf(stderr, "MyERRiterator::handleError:  Somehow an error occured. \n ");
-            fprintf(stderr, "  code=%d, p1=%d, p2=%d\n", code, p1, p2);
-            return 0;
+           switch (code) { 
+               case ERRcontributionIterator::ERR_PastEnd: 
+                   fprintf(stderr, 
+                   "ERRcontributionIterator.handleError:  Iterated past the "
+                   "end of the contribution by %d words at stage %d", 
+                    p1, p2); 
+                   return 0; 
+               default: 
+                   fprintf(stderr, 
+                   "MyERRiterator::handleError:  Somehow an error occured. \n ");
+                    fprintf(stderr, "  code=%d, p1=%d, p2=%d\n", code, p1, p2);
+               }
+           return 0;
         }
 
 
