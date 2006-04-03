@@ -204,7 +204,9 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
         CalMomentsData momentsData(recData->getPosition(), recData->getEnergy(), 0.);
 
         // DC: unused !
+        // TU: Actually... bad design on my part but this method must be called. 
         //double distToAxis = momentsData.calcDistToAxis(centroid, axis);
+        momentsData.calcDistToAxis(centroid, axis);
                 
         m_dataVec.push_back(momentsData);
     }

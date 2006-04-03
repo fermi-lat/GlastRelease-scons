@@ -328,7 +328,7 @@ double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
 	else
 	  {
 	    // X axis
-	    ax = 0;
+	    int ax = 0;
 	    // find position relative to tower center
 	    // the tower being whichever one xT is now at
 	    if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
