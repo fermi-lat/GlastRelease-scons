@@ -3,3 +3,20 @@
      <natoms n="1" />
    </addmaterial>
 </composite>
+
+<element name="Pb"
+         symbol="Pb"
+         z="82"
+         aweight="207.2" />
+
+<composite name="Lead" density="11.34">
+  <addmaterial material="Pb">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
+
+<composite name="VDGShieldMatLead" density="11.34">
+   <addmaterial material="Pb">
+     <natoms n="1" />
+   </addmaterial>
+</composite>

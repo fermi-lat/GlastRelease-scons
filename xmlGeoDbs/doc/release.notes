@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r32    3-Apr-2006  awb Updated VDG geometry in latAssembly.
    v1r31    3-Mar-2006  jrb Support spheres and spherical segments
    v1r30p2 30-Jan-2006  jrb Fix thickness of top tile in row 3, col 4
    v1r30p1 30-Jan-2006  jrb Bring latAssembly/latACDDimPrimUnshrunk.xml up to date
