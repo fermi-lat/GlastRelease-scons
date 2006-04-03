@@ -31,7 +31,7 @@ extern "C" {
 #include <errno.h>
 }
 
-#include "DFC/DFC_endianness.h"
+#include "DFC_endianness.h"
 #include "EBF_swap.h"
 
 #include "LATp.h"
@@ -65,8 +65,8 @@ extern "C" {
 #include "OSWtimeContribution.h"
 #include "OSWcontributionIterator.h"
 #include "OSWtimeBase.h"
-//#include "ASCtileContributionIterator.h"
-//#include "ASCcontributionIterator.h"
+#include "ASCtileContributionIterator.h"
+#include "ASCcontributionIterator.h"
 
 class MyLATPcellHeader : public LATPcellHeader
 {
@@ -101,7 +101,7 @@ void MyEventSummary::dump(const unsigned summary, const char* pfx)
   unsigned tag   = EventSummary::tag        (summary);
   unsigned seq   = (evtNo << 2) | tag;
 
-  printf("%s eventSequence = %d = 0x%08x = ((eventNumber << 2) | tag)\n",
+  printf("%s eventSequence = 0x%08x = %d = ((eventNumber << 2) | tag)\n",
          pfx, seq, seq);
   printf("%s   eventNumber = %d\n", pfx, evtNo);
   printf("%s           tag = %d\n", pfx, tag);
@@ -130,7 +130,7 @@ void MyEBFevent::dump(const char* prefix)
          prefix, identity().value());
   printf("%sEvent status            = 0x%04x = %d\n",
          prefix, status(), status());
-  printf("%sEvent length            = 0x%04x = %d Bytes\n",
+  printf("%sEvent length            = 0x%08x = %d Bytes\n",
          prefix, length(), length());
   printf("%sEvent summary           = 0x%08x\n",
          prefix, summary());
@@ -565,13 +565,18 @@ int MyTKRiterator::handleError(TKRcontribution* contribution,
   switch (code)
   {
     case TKRcontributionIterator::ERR_WrongOrder:
-    {
       fprintf(stderr, "%sTKRiterator.iterateTOTs: TOTs can not be accessed before"
                       "TKRiterator.iterateStrips has executed.\n", _prefix);
       return 0;
-      break;
-    }
-    default: break;
+    case TKRcontributionIterator::ERR_PastEnd:
+      fprintf(stderr, "%sTKRcontributionIterator.iterateStrips: "
+                      "Iterated past the end of the contribution by %d words\n",
+              _prefix, p1);
+      return 0;
+    default:
+      fprintf(stderr, "%sTKRcontributionIterator.iterate*: "
+                      "Unrecognized error code found: %d\n", _prefix, code);
+      return 0;
   }
   return 0;
 }
@@ -681,9 +686,19 @@ MyERRiterator::MyERRiterator(EBFevent* event, TEMcontribution* contribution,
 int MyERRiterator::handleError(TEMcontribution* contrib,
                                unsigned code, unsigned p1, unsigned p2) const
 {
-  fprintf(stderr, "%sMyERRiterator::handleError:  Somehow an error occured. \n",
-         _prefix);
-  fprintf(stderr, "%s  code=%d, p1=%d, p2=%d\n", _prefix, code, p1, p2);
+  switch (code)
+  {
+    case ERRcontributionIterator::ERR_PastEnd:
+      fprintf(stderr,
+              "%sERRcontributionIterator.handleError:  "
+              "Iterated past the end of the contribution by %d words at stage %d",
+              _prefix, p1, p2);
+      return 0;
+    default:
+      fprintf(stderr, "%sMyERRiterator::handleError:  Somehow an error occured. \n",
+              _prefix);
+      fprintf(stderr, "%s  code=%d, p1=%d, p2=%d\n", _prefix, code, p1, p2);
+  }
   return 0;
 }
 
@@ -1164,120 +1179,120 @@ int MyEBFeventIterator::process(EBFevent* event)
   return 0;
 }
 
-// class MyASCtileContributionIterator : public ASCtileContributionIterator {
-// public:
-//   MyASCtileContributionIterator() :
-//     ASCtileContributionIterator()  {}
-//   virtual ~MyASCtileContributionIterator() {}
-//   virtual int handleError(ASCtileContribution* contrib, unsigned code, unsigned p1=0, unsigned p2=0) const;
-//   virtual void tile(unsigned channel, const ASCtile& tile);
-// };
+class MyASCtileContributionIterator : public ASCtileContributionIterator {
+public:
+  MyASCtileContributionIterator() :
+    ASCtileContributionIterator()  {}
+  virtual ~MyASCtileContributionIterator() {}
+  virtual int handleError(ASCtileContribution* contrib, unsigned code, unsigned p1=0, unsigned p2=0) const;
+  virtual void tile(unsigned channel, const ASCtile& tile);
+};
 
-// int MyASCtileContributionIterator::handleError(ASCtileContribution* contrib, unsigned code, unsigned p1, unsigned p2) const {
-//   return 0;
-// }
+int MyASCtileContributionIterator::handleError(ASCtileContribution* contrib, unsigned code, unsigned p1, unsigned p2) const {
+  return 0;
+}
 
-// void MyASCtileContributionIterator::tile(unsigned channel, const ASCtile& tile) {
-//   static const char* prefix("  ");
-//   const ACDmap* theACDmap = map();
-//   const char* tileName = theACDmap->tileNameFromGemIndex(channel);
-//   printf("%s%sTile %s: ",prefix,prefix,tileName);
-//   for ( unsigned i(0); i < 32; i++ ) {
-//     printf("%10i ",tile.ptr()[i]);
-//   }
-//   printf("\n");
-// }
+void MyASCtileContributionIterator::tile(unsigned channel, const ASCtile& tile) {
+  static const char* prefix("  ");
+  const ACDmap* theACDmap = map();
+  const char* tileName = theACDmap->tileNameFromGemIndex(channel);
+  printf("%s%sTile %s: ",prefix,prefix,tileName);
+  for ( unsigned i(0); i < 32; i++ ) {
+    printf("%10i ",tile.ptr()[i]);
+  }
+  printf("\n");
+}
 
-// class MyASCcontributionIterator : public ASCcontributionIterator
-// {
-// public:
-//   MyASCcontributionIterator() :
-//     ASCcontributionIterator() {}
-//   virtual ~MyASCcontributionIterator() {}
+class MyASCcontributionIterator : public ASCcontributionIterator
+{
+public:
+  MyASCcontributionIterator() :
+    ASCcontributionIterator() {}
+  virtual ~MyASCcontributionIterator() {}
 
-//   virtual int handleError(ASCcontribution* asc, unsigned code, unsigned p1=0, unsigned p2=0) const;
-//   virtual int process(ASCcontribution*);
+  virtual int handleError(ASCcontribution* asc, unsigned code, unsigned p1=0, unsigned p2=0) const;
+  virtual int process(ASCcontribution*);
 
-//   /*!
-//    * \brief override virtual method for calling the application back with an ACSsummary object
-//    * \param summary   - The summary object
-//    */
-//   virtual void summary(ASCsummary& summary);
-//   /*!
-//    * \brief override virtual method for calling the application back with an ACDcno object
-//    * \param cno     - The cno object
-//    */
-//   virtual void cno(ASCcno& cno);
-//   /*!
-//    * \brief override virtual method for calling the application back with an ACDtileContribution object
-//    * \param tiles     - The tile contribution object
-//    */  
-//   virtual void tiles(ASCtileContribution& tiles);
+  /*!
+   * \brief override virtual method for calling the application back with an ACSsummary object
+   * \param summary   - The summary object
+   */
+  virtual void summary(ASCsummary& summary);
+  /*!
+   * \brief override virtual method for calling the application back with an ACDcno object
+   * \param cno     - The cno object
+   */
+  virtual void cno(ASCcno& cno);
+  /*!
+   * \brief override virtual method for calling the application back with an ACDtileContribution object
+   * \param tiles     - The tile contribution object
+   */
+  virtual void tiles(ASCtileContribution& tiles);
 
-// private:
+private:
 
-//   MyASCtileContributionIterator _tci;
-// };
+  MyASCtileContributionIterator _tci;
+};
 
-// int MyASCcontributionIterator::handleError(ASCcontribution* asc, unsigned code, unsigned p1, unsigned p2) const {
-//   return 0;
-// }
+int MyASCcontributionIterator::handleError(ASCcontribution* asc, unsigned code, unsigned p1, unsigned p2) const {
+  return 0;
+}
 
-// int MyASCcontributionIterator::process(ASCcontribution*) {
-//   return 0;
-// }
+int MyASCcontributionIterator::process(ASCcontribution*) {
+  return 0;
+}
 
-// void MyASCcontributionIterator::summary(ASCsummary& summary) {
+void MyASCcontributionIterator::summary(ASCsummary& summary) {
 
-//   static const char* prefix("  ");
-//   printf("\n");
-//   printf("ASC\n");
-//   printf("%sError Summary\n",prefix);
-//   printf("%s%s      GEM           OK      Error    Missing\n",prefix,prefix);
-//   printf("%s%sAEM OK      %10i %10i %10i\n",prefix,prefix,
-// 	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_Ok),
-// 	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_InError),
-// 	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_Missing));
-//   printf("%s%sAEM Error   %10i %10i %10i\n",prefix,prefix,
-// 	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_Ok),
-// 	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_InError),
-// 	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_Missing));
-//   printf("%s%sAEM Missing %10i %10i %10i\n",prefix,prefix,
-// 	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_Ok),
-// 	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_InError),
-// 	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_Missing));
-//   printf("\n");
-// }
+  static const char* prefix("  ");
+  printf("\n");
+  printf("ASC\n");
+  printf("%sError Summary\n",prefix);
+  printf("%s%s      GEM           OK      Error    Missing\n",prefix,prefix);
+  printf("%s%sAEM OK      %10i %10i %10i\n",prefix,prefix,
+	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_Ok),
+	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_InError),
+	 summary.counts(ASCsummary::AEM_Ok,ASCsummary::GEM_Missing));
+  printf("%s%sAEM Error   %10i %10i %10i\n",prefix,prefix,
+	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_Ok),
+	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_InError),
+	 summary.counts(ASCsummary::AEM_InError,ASCsummary::GEM_Missing));
+  printf("%s%sAEM Missing %10i %10i %10i\n",prefix,prefix,
+	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_Ok),
+	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_InError),
+	 summary.counts(ASCsummary::AEM_Missing,ASCsummary::GEM_Missing));
+  printf("\n");
+}
 
-// void MyASCcontributionIterator::cno(ASCcno& cno) {
-//   static const char* prefix("  ");
-//   printf("%sCNO Summary\n",prefix);
-//   printf("%s%s             A Only     B Only       Both\n",prefix,prefix);
-//   printf("%s%s1LA+1RB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::One,ASCcno::AOnly),cno.counts(ASCcno::One,ASCcno::BOnly),cno.counts(ASCcno::One,ASCcno::Both));
-//   printf("%s%s2LA+2LB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::TwoL,ASCcno::AOnly),cno.counts(ASCcno::TwoL,ASCcno::BOnly),cno.counts(ASCcno::TwoL,ASCcno::Both));
-//   printf("%s%s2RA+2RB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::TwoR,ASCcno::AOnly),cno.counts(ASCcno::TwoR,ASCcno::BOnly),cno.counts(ASCcno::TwoR,ASCcno::Both));
-//   printf("%s%s3LA+3RB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::Three,ASCcno::AOnly),cno.counts(ASCcno::Three,ASCcno::BOnly),cno.counts(ASCcno::Three,ASCcno::Both));
-//   printf("%s%s4LA+4LB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::FourL,ASCcno::AOnly),cno.counts(ASCcno::FourL,ASCcno::BOnly),cno.counts(ASCcno::FourL,ASCcno::Both));
-//   printf("%s%s4RA+4RB: %10i %10i %10i\n",prefix,prefix,
-// 	 cno.counts(ASCcno::FourR,ASCcno::AOnly),cno.counts(ASCcno::FourR,ASCcno::BOnly),cno.counts(ASCcno::FourR,ASCcno::Both));
-//   printf("\n");
-// }
+void MyASCcontributionIterator::cno(ASCcno& cno) {
+  static const char* prefix("  ");
+  printf("%sCNO Summary\n",prefix);
+  printf("%s%s             A Only     B Only       Both\n",prefix,prefix);
+  printf("%s%s1LA+1RB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::One,ASCcno::AOnly),cno.counts(ASCcno::One,ASCcno::BOnly),cno.counts(ASCcno::One,ASCcno::Both));
+  printf("%s%s2LA+2LB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::TwoL,ASCcno::AOnly),cno.counts(ASCcno::TwoL,ASCcno::BOnly),cno.counts(ASCcno::TwoL,ASCcno::Both));
+  printf("%s%s2RA+2RB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::TwoR,ASCcno::AOnly),cno.counts(ASCcno::TwoR,ASCcno::BOnly),cno.counts(ASCcno::TwoR,ASCcno::Both));
+  printf("%s%s3LA+3RB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::Three,ASCcno::AOnly),cno.counts(ASCcno::Three,ASCcno::BOnly),cno.counts(ASCcno::Three,ASCcno::Both));
+  printf("%s%s4LA+4LB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::FourL,ASCcno::AOnly),cno.counts(ASCcno::FourL,ASCcno::BOnly),cno.counts(ASCcno::FourL,ASCcno::Both));
+  printf("%s%s4RA+4RB: %10i %10i %10i\n",prefix,prefix,
+	 cno.counts(ASCcno::FourR,ASCcno::AOnly),cno.counts(ASCcno::FourR,ASCcno::BOnly),cno.counts(ASCcno::FourR,ASCcno::Both));
+  printf("\n");
+}
 
-// void MyASCcontributionIterator::tiles(ASCtileContribution& tileContrib) {
-//   static const char* prefix("  ");
-//   printf("%sTile Histograms\n",prefix);
-//   printf("%s%sMask           00000      00001      00010      00011      00100      00101      00110      00111",prefix,prefix);
-//   printf("      01000      01001      01010      01011      01100      01101      01110      01111");
-//   printf("      10000      10001      10010      10011      10100      10101      10110      10111");
-//   printf("      11000      11001      11010      11011      11100      11101      11110      11111\n");
-//   _tci.iterate(contribution(),&tileContrib,map());
-//   printf("\n");
-// }
+void MyASCcontributionIterator::tiles(ASCtileContribution& tileContrib) {
+  static const char* prefix("  ");
+  printf("%sTile Histograms\n",prefix);
+  printf("%s%sMask           00000      00001      00010      00011      00100      00101      00110      00111",prefix,prefix);
+  printf("      01000      01001      01010      01011      01100      01101      01110      01111");
+  printf("      10000      10001      10010      10011      10100      10101      10110      10111");
+  printf("      11000      11001      11010      11011      11100      11101      11110      11111\n");
+  _tci.iterate(contribution(),&tileContrib,map());
+  printf("\n");
+}
 
 
 class MyLATcontributionIterator : public LATcontributionIterator
@@ -1289,10 +1304,10 @@ public:
   virtual int handleError(LATcontribution* contrib, unsigned code, unsigned p1=0, unsigned p2=0) const;
 
   virtual int EBF(EBFevent* start, EBFevent* end);
-  //  virtual int ASC(ASCcontribution* start, LATcontribution* end);
+  virtual int ASC(ASCcontribution* start, LATcontribution* end);
   virtual int UDF(LATcontribution* start, LATcontribution* end);
 private:
-  //  MyASCcontributionIterator _asci;
+  MyASCcontributionIterator _asci;
   MyEBFeventIterator _eei;
 };
 
@@ -1324,14 +1339,14 @@ int MyLATcontributionIterator::EBF(EBFevent* event,
 }
 
 
-// int MyLATcontributionIterator::ASC(ASCcontribution* event, LATcontribution* end)
-                                   
-// {
-//   // Iterate over a list of EBF events
-//   _asci.iterate(event);
+int MyLATcontributionIterator::ASC(ASCcontribution* event, LATcontribution* end)
 
-//   return _asci.status();
-// }
+{
+  // Iterate over a list of EBF events
+  _asci.iterate(event);
+
+  return _asci.status();
+}
 
 int MyLATcontributionIterator::UDF(LATcontribution* contribution,
                                    LATcontribution* /* end */)
@@ -1345,26 +1360,16 @@ int MyLATcontributionIterator::UDF(LATcontribution* contribution,
 class MyLATdatagramIterator : public LATdatagramIterator
 {
 public:
-  MyLATdatagramIterator(LATdatagram* start, LATdatagram* end);
-  virtual ~MyLATdatagramIterator();
+  MyLATdatagramIterator(LATdatagram* start, LATdatagram* end) :
+    LATdatagramIterator(start, end) {}
+  virtual ~MyLATdatagramIterator()  {}
 
   virtual int handleError(LATdatagram* datagram, unsigned code, unsigned p1=0, unsigned p2=0) const;
 
   virtual int process(LATdatagram*);
 private:
-  MyLATcontributionIterator* _lci;
+  MyLATcontributionIterator _lci;
 };
-
-MyLATdatagramIterator::MyLATdatagramIterator( LATdatagram* start, LATdatagram* end ) : LATdatagramIterator( start, end )
-{
-  _lci = new MyLATcontributionIterator();
-}
-
-MyLATdatagramIterator::~MyLATdatagramIterator()
-{
-  delete _lci;
-}
-
 
 int MyLATdatagramIterator::handleError(LATdatagram* datagram,
                                        unsigned code, unsigned p1, unsigned p2) const
@@ -1387,21 +1392,21 @@ int MyLATdatagramIterator::handleError(LATdatagram* datagram,
 int MyLATdatagramIterator::process(LATdatagram* datagram)
 {
   // Iterate over a list of datagram contributions
-  _lci->iterate(datagram);
+  _lci.iterate(datagram);
 
-  unsigned status = _lci->status();
+  unsigned status = _lci.status();
   if (status) {
     printf("Datagram iteration returned status 0x%08x = %d\n",
     status, status);
   }
-  
-//   char response;
-//   printf("\n<Return> for next event, 'q' to quit: ");
-//   response=getchar();
-//   printf("\n");
-//   if (response=='' || response=='q' || response=='Q')  return 1;
 
-  return _lci->status();
+  char response;
+  printf("\n<Return> for next event, 'q' to quit: ");
+  response=getchar();
+  printf("\n");
+  if (response=='' || response=='q' || response=='Q')  return 1;
+
+  return _lci.status();
 }
 
 

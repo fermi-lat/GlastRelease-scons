@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v0r3p2 03-Apr-2006 RBL updated to LDF 6.0.1
  * v0r3p1 29-Mar-2006 RBL added include of errno.h to fix gcc 343 compile problem
  * v0r3   13-Mar-2006 RBL added event-count and first/last GEM seq counter with accessors
                                 and mutators.  No change to file format yet.

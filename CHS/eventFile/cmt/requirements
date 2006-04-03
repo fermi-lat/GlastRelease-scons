@@ -1,5 +1,5 @@
 package eventFile
-version v0r3p1
+version v0r3p2
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -20,4 +20,4 @@ apply_pattern package_stamps
 
 apply_pattern ld_library_path
 
-application test_LPA_File test/test_LPA_File.cxx test/LDFdump.cc
+application test_LPA_File test/test_LPA_File.cxx test/LDFdump.cxx
