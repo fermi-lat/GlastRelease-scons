@@ -10,11 +10,13 @@ AcdRecon::AcdRecon() {
   m_acdTkrIntersectionCol = 0;
   m_acdTkrPocaCol = 0;
   m_acdHitCol = 0;
+  m_acdTkrHitPocaCol = 0;
+  m_acdTkrGapPocaCol = 0;
+  m_acdTkrPointCol = 0;
   Clear();
 }
 
 AcdRecon::~AcdRecon() {
-  Clear();
   if ( m_acdTkrIntersectionCol != 0 ) {
     m_acdTkrIntersectionCol->Delete();
   }
@@ -30,7 +32,24 @@ AcdRecon::~AcdRecon() {
   }
   delete m_acdHitCol;
   m_acdHitCol = 0;
+  if ( m_acdTkrHitPocaCol != 0 ) {
+    m_acdTkrHitPocaCol->Delete();
+  }
+  delete m_acdTkrHitPocaCol;
+  m_acdTkrHitPocaCol = 0;
+  if ( m_acdTkrGapPocaCol != 0 ) {
+    m_acdTkrGapPocaCol->Delete();
+  }
+  delete m_acdTkrGapPocaCol;
+  m_acdTkrGapPocaCol = 0;
 
+  if ( m_acdTkrPointCol != 0 ) {
+    m_acdTkrPointCol->Delete();
+  }
+  delete m_acdTkrPointCol;
+  m_acdTkrPointCol = 0;
+
+  Clear();
 }
 
 void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -101,8 +120,17 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     if ( m_acdHitCol ) {
       m_acdHitCol->Clear();
     }
-     m_ribbonActDist = -maxDoca;
+    m_ribbonActDist = -maxDoca;
     m_cornerDoca = maxDoca;
+    if ( m_acdTkrHitPocaCol ) {
+      m_acdTkrHitPocaCol->Clear();
+    }
+    if ( m_acdTkrGapPocaCol ) {
+      m_acdTkrGapPocaCol->Clear();
+    }
+    if ( m_acdTkrPointCol != 0 ) {
+      m_acdTkrPointCol->Clear();
+    }
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -190,7 +218,39 @@ AcdHit* AcdRecon::addAcdHit(AcdHit& hit) {
   return (AcdHit*)(hits[numHit]);
 }
     
+AcdTkrHitPoca* AcdRecon::addAcdTkrHitPoca(AcdTkrHitPoca& poca) {
+  UInt_t numPoca = nAcdTkrHitPoca();
+  if ( m_acdTkrHitPocaCol == 0 ) {
+    m_acdTkrHitPocaCol = new TClonesArray( AcdTkrHitPoca::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& pocas = *m_acdTkrHitPocaCol;
+  new (pocas[numPoca]) AcdTkrHitPoca(poca);
+  return (AcdTkrHitPoca*)(pocas[numPoca]);
+}
+     
+AcdTkrGapPoca* AcdRecon::addAcdTkrGapPoca(AcdTkrGapPoca& poca) {
+  UInt_t numPoca = nAcdTkrGapPoca();
+  if ( m_acdTkrGapPocaCol == 0 ) {
+    m_acdTkrGapPocaCol = new TClonesArray( AcdTkrGapPoca::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& pocas = *m_acdTkrGapPocaCol;
+  new (pocas[numPoca]) AcdTkrGapPoca(poca);
+  return (AcdTkrGapPoca*)(pocas[numPoca]);
+}
 
+AcdTkrPoint* AcdRecon::addAcdTkrPoint(AcdTkrPoint& poca) {
+  UInt_t numPoca = nAcdTkrPoint();
+  if ( m_acdTkrPointCol == 0 ) {
+    m_acdTkrPointCol = new TClonesArray( AcdTkrPoint::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& points = *m_acdTkrPointCol;
+  new (points[numPoca]) AcdTkrPoint(poca);
+  return (AcdTkrPoint*)(points[numPoca]);
+}
+    
 //======================================================
 // For Unit Tests
 //======================================================
@@ -270,3 +330,19 @@ Bool_t AcdRecon::CompareInRange( const AcdRecon & a, const std::string & name ) 
 
 }
 
+Bool_t AcdRecon::checkAcdRecon() {
+  for ( UInt_t i(0); i < nAcdTkrPoca(); i++ ) {
+    const AcdTkrPoca* poca = getAcdTkrPoca(i);
+    int id = poca->getId().getId();
+    if ( id < 0 || id > 700) {
+      std::cout << id << std::endl;
+      return kFALSE;
+    }
+    int tkId = poca->getTkrIndex();
+    if ( tkId < 0 || tkId > 10 ) {
+      std::cout << tkId << std::endl;
+      return kFALSE;
+    }
+  }
+  return kTRUE;
+}

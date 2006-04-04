@@ -6,7 +6,7 @@
 #include "commonRootData/idents/AcdId.h"
 #include "TVector3.h"
 
-#include "TMatrixD.h"
+class TMatrixD;
 
 /** 
  * @class AcdTkrIntersection
@@ -28,7 +28,8 @@ public:
     AcdTkrIntersection(const AcdId& tileId, int trackIndex, 
 		       const TVector3& globalPosition, 
 		       const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-		       Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit);
+		       Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
+		       Double_t cosTheta);
 
     AcdTkrIntersection(const AcdTkrIntersection& params);
 
@@ -46,7 +47,8 @@ public:
     void initialize(const AcdId& tileId, Int_t trackIndex, 
 		    const TVector3& globalPostion, 
 		    const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-		    Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit);
+		    Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
+		    Double_t cosTheta);
     void initialize(const AcdTkrIntersection& params);
 
     /// Direct access to parameters
@@ -73,6 +75,9 @@ public:
 
     // is this tile hit
     inline UChar_t tileHit() const { return m_tileHit; };
+
+    // the angle between the track and the detector plane
+    inline Double_t getCosTheta() const { return m_cosTheta; }
 
 private:
   
@@ -103,7 +108,10 @@ private:
     ///  Mask to say if the tile has a signal, and if it fired discriminators
     UChar_t       m_tileHit;
 
-    ClassDef(AcdTkrIntersection,1)
+    //   Angle between the track and the detector element plane
+    Double32_t    m_cosTheta;
+
+    ClassDef(AcdTkrIntersection,2)
 
 };
 

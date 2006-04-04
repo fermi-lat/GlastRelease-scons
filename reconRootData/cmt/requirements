@@ -1,7 +1,6 @@
 package reconRootData
-version v8r11p2
+version v8r6p1em0
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
-author David Chamont <chamont@poly.in2p3.fr>
 # $Id$
 
 use commonRootData v2r*
@@ -21,8 +20,13 @@ apply_pattern root_package headers="\
  ../reconRootData/CalXtalRecData.h\
  ../reconRootData/ReconEvent.h\
  ../reconRootData/AcdTkrIntersection.h\
- ../reconRootData/AcdHit.h\
  ../reconRootData/AcdTkrPoca.h\
+ ../reconRootData/AcdHit.h\
+ ../reconRootData/AcdPocaData.h\
+ ../reconRootData/AcdTkrLocalCoords.h\
+ ../reconRootData/AcdTkrPoint.h\
+ ../reconRootData/AcdTkrHitPoca.h\
+ ../reconRootData/AcdTkrGapPoca.h\
  ../reconRootData/TkrCluster.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrTrackHit.h\

@@ -70,14 +70,22 @@ public:
 	 UShort_t phaA, UShort_t phaB, 
 	 Float_t mipsA, Float_t mipsB)
     :TObject() {
-    m_acdId = id;
-    m_flags[0] = flagsA; m_flags[1] = flagsB;
-    m_pha[0] = phaA; m_pha[1] = phaB;
-    m_mipsPmt[0] = mipsA; m_mipsPmt[1] = mipsB;
+    set(id,flagsA,flagsB,phaA,phaB,mipsA,mipsB);
   }
 
   /// Destructor is trivial  
   virtual ~AcdHit() {
+  }
+
+  /// set everything at once
+  void set(const AcdId& id, 
+	   UShort_t flagsA, UShort_t flagsB, 
+	   UShort_t phaA, UShort_t phaB, 
+	   Float_t mipsA, Float_t mipsB){
+    m_acdId = id;
+    m_flags[0] = flagsA; m_flags[1] = flagsB;
+    m_pha[0] = phaA; m_pha[1] = phaB;
+    m_mipsPmt[0] = mipsA; m_mipsPmt[1] = mipsB;
   }
 
   /// Returns the id of the tile or ribbon
@@ -151,7 +159,7 @@ public:
   };
   
   /// Print out this structure
-  virtual void Print(Option_t* option) const { TObject::Print(option) ;}
+  virtual void Print(Option_t* option) const;
 
 protected:
 

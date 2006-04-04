@@ -13,6 +13,9 @@
 #include "AcdTkrIntersection.h"
 #include "AcdTkrPoca.h"
 #include "AcdHit.h"
+#include "AcdTkrHitPoca.h"
+#include "AcdTkrGapPoca.h"
+#include "AcdTkrPoint.h"
 
 #ifndef R__GLOBALSTL
 #ifndef WIN32
@@ -171,37 +174,78 @@ public:
       return i < nAcdHit() ? 
 	static_cast<const AcdHit*>((*m_acdHitCol)[i]) : 0;  
     }  
-        
+
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdTkrHitPoca* addAcdTkrHitPoca(AcdTkrHitPoca& poca);
+    
+    /// return the number or POCA objects
+    inline UInt_t nAcdTkrHitPoca() const { return m_acdTkrHitPocaCol != 0 ? 
+					     m_acdTkrHitPocaCol->GetEntriesFast() : 0; };
+  
+    /// returns a single poca object by number
+    inline const AcdTkrHitPoca* getAcdTkrHitPoca(UInt_t i) const { 
+      return i < nAcdTkrHitPoca() ? 
+	static_cast<const AcdTkrHitPoca*>((*m_acdTkrHitPocaCol)[i]) : 0;  
+    }  
+
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdTkrGapPoca* addAcdTkrGapPoca(AcdTkrGapPoca& poca);
+    
+    /// return the number or POCA objects
+    inline UInt_t nAcdTkrGapPoca() const { return m_acdTkrGapPocaCol != 0 ? 
+					     m_acdTkrGapPocaCol->GetEntriesFast() : 0; };
+  
+    /// returns a single poca object by number
+    inline const AcdTkrGapPoca* getAcdTkrGapPoca(UInt_t i) const { 
+      return i < nAcdTkrGapPoca() ? 
+	static_cast<const AcdTkrGapPoca*>((*m_acdTkrGapPocaCol)[i]) : 0;  
+    }  
+
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdTkrPoint* addAcdTkrPoint(AcdTkrPoint& poca);
+    
+    /// return the number or POCA objects
+    inline UInt_t nAcdTkrPoint() const { return m_acdTkrPointCol != 0 ? 
+					   m_acdTkrPointCol->GetEntriesFast() : 0; };
+    
+    /// returns a single poca object by number
+    inline const AcdTkrPoint* getAcdTkrPoint(UInt_t i) const { 
+      return i < nAcdTkrPoint() ? 
+	static_cast<const AcdTkrPoint*>((*m_acdTkrPointCol)[i]) : 0;  
+    }  
+ 
+
+    bool checkAcdRecon();        
 private:
 
     /// Total energy in MeV deposited in the whole ACD system
-    Double32_t m_totEnergy;
+    Double_t m_totEnergy;
     /// Distance of Closest Approach for the reconstructed gamma, 
     /// if there is one
-    Double32_t m_gammaDoca;
+    Double_t m_gammaDoca;
     /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
-    Double32_t m_doca;
+    Double_t m_doca;
     /// New Bill Atwood DOCA calculation using edge of tiles
-    Double32_t m_actDist;
+    Double_t m_actDist;
     /// Total number of ACD tiles above threshold
     Int_t m_tileCount;
     /// Collection of distance of closest approach calculations
     /// for each side row of the ACD
-    vector<Double32_t> m_rowDocaCol;
+    vector<Double_t> m_rowDocaCol;
     /// Collection of Active Distance calc for each side row of ACD
-    vector<Double32_t> m_rowActDistCol;
+    vector<Double_t> m_rowActDistCol;
 
     /// record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
     vector<AcdId> m_idCol;
-    vector<Double32_t> m_energyCol;  
+    vector<Double_t> m_energyCol;  
 
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
     /// Total MC Energy (MeV) deposited in the ribbons
-    Double32_t m_totRibbonEnergy;
+    Double_t m_totRibbonEnergy;
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
  
@@ -218,6 +262,15 @@ private:
    
     // Store the calibrated hits
     TClonesArray *m_acdHitCol;    
+
+    // Store the track-tile( or ribbon) pocas
+    TClonesArray *m_acdTkrHitPocaCol;
+
+    // Store the gap pocas
+    TClonesArray *m_acdTkrGapPocaCol;
+
+    // Store the nominal ACD exit points
+    TClonesArray *m_acdTkrPointCol;
 
     ClassDef(AcdRecon,11) // Acd Reconstruction data
 };

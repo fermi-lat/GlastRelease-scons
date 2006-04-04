@@ -16,6 +16,11 @@
 #pragma link C++ class AcdTkrIntersection+;
 #pragma link C++ class AcdTkrPoca+;
 #pragma link C++ class AcdHit+;
+#pragma link C++ class AcdPocaData+;
+#pragma link C++ class AcdTkrPoint+;
+#pragma link C++ class AcdTkrLocalCoords+;
+#pragma link C++ class AcdTkrHitPoca+;
+#pragma link C++ class AcdTkrGapPoca+;
 
 #pragma link C++ class AcdRecon+;
 
