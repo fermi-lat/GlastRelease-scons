@@ -14,6 +14,8 @@
 #define LSF_INVALID_ULONG 0xFFFFFFFFFFFFFFFF
 #define LSF_INVALID_UINT 0xFFFFFFFF
 #define LSF_INVALID_UCHAR 0xFF
+#define LSF_INVALID_USHORT 0xFFFF
+#define LSF_UNDEFINED 0xFFFF
 
 namespace enums {
 
@@ -115,6 +117,10 @@ namespace enums {
 		   TkrLCI, ///> Charge injection to Tkr
 		   NumRunTypes
     } RunType;
+
+    typedef enum { AUTORANGE = 1, 
+                   ZERO_SUPPRESSION = 2 
+    } Masks;
 
   }//namespace lsf
 }//namespace enums
