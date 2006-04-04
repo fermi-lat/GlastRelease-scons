@@ -1,5 +1,5 @@
 package commonRootData
-version v2r6p1
+version v2r7
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use RootcintPolicy v* GlastPolicy
@@ -14,6 +14,7 @@ apply_pattern root_package headers="\
  ../commonRootData/Exception.h\
  ../commonRootData/idents/VolumeIdentifier.h\
  ../commonRootData/idents/AcdId.h\
+ ../commonRootData/idents/AcdGapId.h\
  ../commonRootData/idents/CalXtalId.h\
  ../commonRootData/idents/TkrId.h\
  ../commonRootData/idents/TowerId.h"\

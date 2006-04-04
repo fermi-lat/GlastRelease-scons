@@ -16,6 +16,7 @@
 #pragma link C++ class BaseException;
 #pragma link C++ class IndexOutOfBoundsException;
 #pragma link C++ class AcdId+;
+#pragma link C++ class AcdGapId+;
 #pragma link C++ class CalXtalId+;
 #pragma link C++ class TowerId+;
 #pragma link C++ class commonRootData::TkrId+;
