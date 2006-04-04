@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r3    04-Apr-2006 HMK Add ACD, CAL, TKR Lci classes to LsfConfiguration.h
 v0r2    04-Mar-2006 HMK Store CCSDS items
 v0r1    25-Feb-2006 HMK fix LsfConfiguration dynamic cast for LPA
 v0      25-Feb-2006 HMK initial import
