@@ -226,11 +226,11 @@ class calDacXML(calSnapshotXML):
 
         ce = doc.createElement('configuration')
         
-        s = '[\'GTEM\',\'GCCC\',\'GCRC\',\'GCFE\',\'%s\']' % self.__dacName
+        s = '[\'GCCC\',\'GCRC\',\'GCFE\',\'%s\']' % self.__dacName
         ce.setAttribute('name', 'NA')
         ce.setAttribute('hierarchy', s)
         ce.setAttribute('type', 's')
-        ce.setAttribute('shape', '(%d,8,2,12)' % len(tems))
+        ce.setAttribute('shape', '(8,2,12)')
         ce.setAttribute('version', 'NA')
         ts = time.strftime('%Y-%m-%d-%H:%M', time.gmtime())
         ce.setAttribute('time', ts)
