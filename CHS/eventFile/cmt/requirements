@@ -11,6 +11,8 @@ use facilities v*
 apply_pattern package_include
 apply_pattern package_headers
 
+macro_append cppflags "-D_FILE_OFFSET_BITS=64"
+
 library eventFile *.cxx ${eventFile_headers}
 
 set LDFROOT ${ldfExt_DIR}

@@ -16,6 +16,15 @@
 namespace eventFile {
 
   struct LSE_Info {
+    enum InfoType {
+      NONE = -1,
+      LPA  =  0,
+      LCI_ACD,
+      LCI_CAL,
+      LCI_TKR,
+      NumLSEInfoTypes,
+    };
+
     LSE_Info() {};
     void dump( const char* pre, const char* post ) const;
     unsigned timeTics;
@@ -29,77 +38,76 @@ namespace eventFile {
     unsigned hardwareKey;
   };
 
-//   struct LCI_Info : public LSE_Info {
-//     LCI_Info() {};
-//     LCI_Info( const DfiLci::MetaEvent& );
-//     void dump( const char* pre, const char* post ) const;
-//     bool autoRange;
-//     bool zeroSupression;
-//     unsigned periodicPrescale;
-//     unsigned softwareKey;
-//     unsigned writeCfg;
-//     unsigned readCfg;
-//   };
+  struct LCI_Info : public LSE_Info {
+    LCI_Info() {};
+    void dump( const char* pre, const char* post ) const;
+    bool autoRange;
+    bool zeroSupression;
+    unsigned periodicPrescale;
+    unsigned softwareKey;
+    unsigned writeCfg;
+    unsigned readCfg;
+  };
 
-//   struct LCI_Channel {
-//     LCI_Channel() {};
-//     LCI_Channel( const DfiLci::Channel& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short single;
-//     bool all;
-//     bool latc;
-//   };
+  struct LCI_Channel {
+    LCI_Channel() {};
+    LCI_Channel( unsigned short s, bool a, bool l ) :
+      single(s), all(a), latc(l) {};
+    void dump( const char* pre, const char* post ) const;
+    unsigned short single;
+    bool all;
+    bool latc;
+  };
 
-//   struct LCI_AcdTrigger {
-//     LCI_AcdTrigger() {};
-//     LCI_AcdTrigger( const DfiLci::AcdTrigger& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short veto;
-//     unsigned short vetoVernier;
-//     unsigned short hld;
-//   };
+  struct LCI_AcdTrigger {
+    LCI_AcdTrigger() {};
+    LCI_AcdTrigger( unsigned short v, unsigned short vV, unsigned short h ) :
+      veto(v), vetoVernier(vV), hld(h) {};
+    void dump( const char* pre, const char* post ) const;
+    unsigned short veto;
+    unsigned short vetoVernier;
+    unsigned short hld;
+  };
 
-//   struct LCI_CalTrigger {
-//     LCI_CalTrigger() {};
-//     LCI_CalTrigger( const DfiLci::CalTrigger& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short le;
-//     unsigned short he;
-//   };
+  struct LCI_CalTrigger {
+    LCI_CalTrigger() {};
+    LCI_CalTrigger( unsigned short l, unsigned short h ) :
+      le(l), he(h) {};
+    void dump( const char* pre, const char* post ) const;
+    unsigned short le;
+    unsigned short he;
+  };
 
-//   struct LCI_ACD_Info : public LCI_Info {
-//     ACD_LCI_Info() {};
-//     ACD_LCI_Info( const DfiLci::AcdMetaEvent& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short injected;
-//     unsigned short threshold;
-//     unsigned short biasDac;
-//     unsigned short holdDelay;
-//     LCI_AcdTrigger     trigger;
-//     LCI_Channel        channel;
-//   };
+  struct LCI_ACD_Info : public LCI_Info {
+    LCI_ACD_Info() {};
+    void dump() const;
+    unsigned short injected;
+    unsigned short threshold;
+    unsigned short biasDac;
+    unsigned short holdDelay;
+    LCI_AcdTrigger     trigger;
+    LCI_Channel        channel;
+  };
 
-//   struct LCI_CAL_Info : public LCI_Info {
-//     CAL_LCI_Info() {};
-//     CAL_LCI_Info( const DfiLci::CalMetaEvent& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short uld;
-//     unsigned short injected;
-//     unsigned short delay;
-//     unsigned short threshold;
-//     LCI_CalTrigger     trigger;
-//     LCI_Channel        channel;
-//   };
+  struct LCI_CAL_Info : public LCI_Info {
+    LCI_CAL_Info() {};
+    void dump() const;
+    unsigned short uld;
+    unsigned short injected;
+    unsigned short delay;
+    unsigned short threshold;
+    LCI_CalTrigger     trigger;
+    LCI_Channel        channel;
+  };
 
-//   struct LCI_TKR_Info : public LCI_Info {
-//     TKR_LCI_Info() {};
-//     TKR_LCI_Info( const DfiLci::TkrMetaEvent& );
-//     void dump( const char* pre, const char* post ) const;
-//     unsigned short injected;
-//     unsigned short delay;
-//     unsigned short threshold;
-//     Channel        channel;
-//   };
+  struct LCI_TKR_Info : public LCI_Info {
+    LCI_TKR_Info() {};
+    void dump() const;
+    unsigned short injected;
+    unsigned short delay;
+    unsigned short threshold;
+    LCI_Channel        channel;
+  };
 
 };
 
