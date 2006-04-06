@@ -147,6 +147,9 @@ private:
     float CAL_lll_energyErr;   // Chisquare from the Last Layer Likelihood
     float CAL_tkl_energy;      // Energy from the tracker Likelihood tool
     float CAL_tkl_energyErr;   // Chisquare from the tracker likelihood
+	float CAL_LkHd_energy;     // Energy from the Likelihood tool
+    float CAL_LkHd_energyErr;  // Chisquare from the likelihood
+
 
     //Calimeter items with Recon - Tracks
     float CAL_Track_DOCA;
@@ -402,6 +405,8 @@ StatusCode CalValsTool::initialize()
     addItem("CalLllEneErr",  &CAL_lll_energyErr);
     addItem("CalTklEnergy",  &CAL_tkl_energy);
     addItem("CalTklEneErr",  &CAL_tkl_energyErr);
+    addItem("CalLkHdEnergy",  &CAL_LkHd_energy);
+    addItem("CalLkHdEneErr",  &CAL_LkHd_energyErr);
 
     zeroVals();
 
@@ -483,6 +488,11 @@ StatusCode CalValsTool::calculate()
             {
                 CAL_tkl_energy    = corResult.getParams().getEnergy();
                 CAL_tkl_energyErr = corResult.getParams().getEnergyErr();
+            }
+			else if (corResult.getCorrectionName() == "CalLikelihoodManagerTool")
+            {
+                CAL_LkHd_energy    = corResult.getParams().getEnergy();
+                CAL_LkHd_energyErr = corResult.getParams().getEnergyErr();
             }
         }
     }
