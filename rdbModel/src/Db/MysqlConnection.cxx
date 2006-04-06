@@ -157,8 +157,18 @@ namespace rdbModel {
       }
 
     }
-    //    mysql_init(m_mysql);
-    MYSQL *connected = mysql_real_connect(m_mysql, hostOnly.c_str(), 
+
+    return open(hostOnly.c_str(), port, user, password, dbName);
+  }
+  
+  bool MysqlConnection::open(const char* host, 
+                             int         port,
+                             const char* user,
+                             const char* password,
+                             const char* dbName) {
+  
+  //    mysql_init(m_mysql);
+    MYSQL *connected = mysql_real_connect(m_mysql, host,
                                           user,
                                           password, dbName,
                                           port, NULL, 0);

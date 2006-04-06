@@ -58,6 +58,11 @@ namespace rdbModel{
                       const char* dbName);
                       //                      ,unsigned int       port=0);
 
+    virtual bool open(const char* host, int port, const char* userid,
+                      const char* password,
+                      const char* dbName);
+
+
     /** Parameter is normally path for an xml file descrbing the 
         connection parameters */
      virtual bool open(const std::string& parms);
