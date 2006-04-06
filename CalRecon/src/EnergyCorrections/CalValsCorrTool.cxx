@@ -297,7 +297,9 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalClusterCol* clu
 		x0 = m_vertex->getPosition();
 
 		Vector x_diff = x0 - m_cal_pos;
-        t0            = x_diff.unit(); // Using "event" axis. Alternative: t0 = -m_vertex->direction()
+		t0 = -m_vertex->getDirection();  // Swithed to this after P. Bruel's obs. that this choice minimized
+		                              // the low energy tail
+                                      // "event" axis alternative was: t0 = x_diff.unit();
 		double costh  = fabs(t0.z());
 
 	    // Get the First Track - from vertex - THIS IS BAD - NEED A BETTER WAY HERE
