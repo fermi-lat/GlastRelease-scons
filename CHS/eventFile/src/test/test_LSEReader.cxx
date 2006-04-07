@@ -41,7 +41,19 @@ int main( int argc, char* argv[] )
     std::cout << e.what() << std::endl;
   }
 
-  std::cout << "Data file for run " << pLSE->runid() << std::endl;
+  // print the header summary information
+  printf( "retrieved %llu events for run %09u\n", pLSE->evtcnt(), pLSE->runid() );
+  printf( "first Spacecraft clock value = %u\n", pLSE->begSec() );
+  printf( "last  Spacecraft clock value = %u\n", pLSE->endSec() );
+  printf( "first GEM sequence counter value = %llu\n", pLSE->begGEM() );
+  printf( "last  GEM sequence counter value = %llu\n", pLSE->endGEM() );
+  for ( int i=0; i<LSEHEADER_MAX_APIDS; i++ ) {
+    std::pair<unsigned, unsigned> err = pLSE->seqErr( i );
+    if ( err.first > 0 ) {
+      printf( "apid %04u had %10u sequence errors\n", err.first, err.second );
+    }
+  }
+  printf( "\n" );
 
   // declare objects to receive the event information
   eventFile::LSE_Context ctx;
@@ -90,9 +102,10 @@ int main( int argc, char* argv[] )
     // iterate over the contributions and print them out
     printf( "\nEvent %lld data:", ctx.scalers.sequence );
     printf( "\n---------------\n" );
-    MyEBFeventIterator eei;
-    eei.iterate( const_cast< EBFevent* >( ebf.start() ), 
-		 const_cast< EBFevent* >( ebf.end() ) );
+    printf( "%d bytes of EBF\n", ebf.size() );
+//     MyEBFeventIterator eei;
+//     eei.iterate( const_cast< EBFevent* >( ebf.start() ), 
+// 		 const_cast< EBFevent* >( ebf.end() ) );
     printf( "\n" );
 
   } while ( true );

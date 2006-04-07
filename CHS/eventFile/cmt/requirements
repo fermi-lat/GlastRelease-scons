@@ -19,6 +19,7 @@ library eventFile ${eventFile_headers} \
 	LSE_Context.cxx \
 	LSE_GemTime.cxx \
 	LSE_Info.cxx \
+	LSEHeader.cxx \
 	LSEReader.cxx \
 	LSEWriter.cxx 
 	

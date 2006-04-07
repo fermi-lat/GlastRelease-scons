@@ -14,6 +14,9 @@
 #include <stdio.h>
 
 #include <string>
+#include <utility>
+
+#include "eventFile/LSEHeader.h"
 
 namespace eventFile {
 
@@ -36,21 +39,39 @@ namespace eventFile {
 
     void close();
 
-    void evtcnt( unsigned long long evt ) { m_evtcnt = evt; };
-    void begGEM( unsigned long long gem ) { m_GEMseq_beg = gem; };
-    void endGEM( unsigned long long gem ) { m_GEMseq_end = gem; };
-    unsigned long long evtcnt() const { return m_evtcnt; };
-    unsigned long long begGEM() const { return m_GEMseq_beg; };
-    unsigned long long endGEM() const { return m_GEMseq_end; };
-    unsigned runid() const { return m_runid; };
+    // header mutators
+    void runid( unsigned rid ) { m_hdr.m_runid = rid; };
+    void begSec( unsigned sec ) { m_hdr.m_secs_beg = sec; };
+    void endSec( unsigned sec ) { m_hdr.m_secs_end = sec; };
+    void evtcnt( unsigned long long evt ) { m_hdr.m_evtcnt = evt; };
+    void begGEM( unsigned long long gem ) { m_hdr.m_GEMseq_beg = gem; };
+    void endGEM( unsigned long long gem ) { m_hdr.m_GEMseq_end = gem; };
+    void seqErr( unsigned apid, unsigned seqerr, int islot )
+      {
+	if ( islot >= LSEHEADER_MAX_APIDS ) return;
+	m_hdr.m_src_apids[islot]  = apid;
+	m_hdr.m_src_seqerr[islot] = seqerr;
+      };
 
+    // header accessors
+    unsigned runid() const { return m_hdr.m_runid; };
+    unsigned begSec() const { return m_hdr.m_secs_beg; };
+    unsigned endSec() const { return m_hdr.m_secs_end; };
+    unsigned long long evtcnt() const { return m_hdr.m_evtcnt; };
+    unsigned long long begGEM() const { return m_hdr.m_GEMseq_beg; };
+    unsigned long long endGEM() const { return m_hdr.m_GEMseq_end; };
+    std::pair<unsigned, unsigned> seqErr( int islot ) const
+      {
+	if ( islot < LSEHEADER_MAX_APIDS ) {
+	  return std::pair<unsigned, unsigned>( m_hdr.m_src_apids[islot], m_hdr.m_src_seqerr[islot] );
+	} else {
+	  return std::pair<unsigned, unsigned>( 0, 0 );
+	}
+      };
 
   private:
     std::string m_name;
-    unsigned m_runid;
-    unsigned long long m_evtcnt;
-    unsigned long long m_GEMseq_beg;
-    unsigned long long m_GEMseq_end;
+    LSEHeader m_hdr;
     FILE* m_FILE;
 
     void write( const LSE_Context&, const EBF_Data& );

@@ -14,9 +14,11 @@
 namespace eventFile {
 
   LSEWriter::LSEWriter( const std::string& filename, unsigned runid )
-    : m_name( filename ), m_runid( runid ),
-      m_evtcnt( 0 ), m_GEMseq_beg( 0 ), m_GEMseq_end( 0 )
+    : m_name( filename ), m_hdr()
   {
+    // stash the runid in the header
+    m_hdr.m_runid = runid;
+
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );
 
@@ -52,17 +54,8 @@ namespace eventFile {
     off_t ofst = 0;
     fseeko( m_FILE, ofst, SEEK_SET );
 
-    // write out the header-marker value 0xFAF32000
-    unsigned marker = 0xFAF32000;
-    fwrite( &marker, sizeof(unsigned), 1, m_FILE );
-
-    // write out the run ID
-    fwrite( &m_runid, sizeof(unsigned), 1, m_FILE );
-
-    // write out the event statistics
-    fwrite( &m_evtcnt,     sizeof(unsigned long long), 1, m_FILE );
-    fwrite( &m_GEMseq_beg, sizeof(unsigned long long), 1, m_FILE );
-    fwrite( &m_GEMseq_end, sizeof(unsigned long long), 1, m_FILE );
+    // write out the header data
+    m_hdr.write( m_FILE );
 
     // return the location to the end of the file
     fseeko( m_FILE, ofst, SEEK_END );

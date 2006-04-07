@@ -14,8 +14,7 @@
 namespace eventFile {
 
   LSEReader::LSEReader( const std::string& filename )
-    : m_name( filename ), m_runid( 0 ),
-      m_evtcnt( 0 ), m_GEMseq_beg( 0 ), m_GEMseq_end( 0 )
+    : m_name( filename ), m_hdr()
   {
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );
@@ -51,23 +50,8 @@ namespace eventFile {
     off_t ofst = 0;
     fseeko( m_FILE, ofst, SEEK_SET ); 
 
-    // check for the correct file marker value
-    unsigned marker(0);
-    fread( &marker, sizeof(unsigned), 1, m_FILE );
-    if ( marker != 0xFAF32000 ) {
-      std::ostringstream ess;
-      ess << "LSEReader::readHeader: invalid header in " << m_name;
-      ess << "; not an LSE file";
-      throw std::runtime_error( ess.str() );
-    }
-
-    // read in the run ID
-    fread( &m_runid, sizeof(unsigned), 1, m_FILE );
-
-    // read in the event statistics
-    fread( &m_evtcnt,     sizeof(unsigned long long), 1, m_FILE );
-    fread( &m_GEMseq_beg, sizeof(unsigned long long), 1, m_FILE );
-    fread( &m_GEMseq_end, sizeof(unsigned long long), 1, m_FILE );
+    // read in the header data
+    m_hdr.read( m_FILE );
   }
 
   bool LSEReader::read( LSE_Context& ctx, EBF_Data& ebf )
