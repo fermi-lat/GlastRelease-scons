@@ -27,7 +27,7 @@ namespace eventFile {
   class LSEReader {
   public:
     LSEReader( const std::string& filename );
-    ~LSEReader();
+    virtual ~LSEReader();
 
     bool read( LSE_Context&, EBF_Data&, LSE_Info::InfoType&, LPA_Info&, LCI_ACD_Info&, LCI_CAL_Info&, LCI_TKR_Info& );
     void close();

@@ -7,6 +7,8 @@ use ldfExt * IExternal
 
 use GlastPolicy v*
 use facilities v*
+use lsfData v*
+use enums v*
 
 apply_pattern package_include
 apply_pattern package_headers
@@ -21,6 +23,7 @@ library eventFile ${eventFile_headers} \
 	LSE_Info.cxx \
 	LSEHeader.cxx \
 	LSEReader.cxx \
+	LSFReader.cxx \
 	LSEWriter.cxx 
 	
 set LDFROOT ${ldfExt_DIR}
@@ -30,3 +33,5 @@ apply_pattern package_stamps
 apply_pattern ld_library_path
 
 application test_LSEReader test/test_LSEReader.cxx test/LDFdump.cxx
+
+application test_LSFReader test/test_LSFReader.cxx test/LDFdump.cxx

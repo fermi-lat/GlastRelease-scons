@@ -150,5 +150,4 @@ namespace eventFile {
 
     return true;
   }
-
 }
