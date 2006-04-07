@@ -256,7 +256,7 @@
 
 ]>
 <calCalib>
-  <generic instrument='LAT' calibType='CAL_Ped' fmtVersion='v2r3' timestamp='2005-11-17-06:16' creator='myname'/>
+  <generic instrument='LAT' calibType='CAL_Ped' fmtVersion='v2r3' timestamp='2006-04-07-18:39' creator='myname'/>
   <dimension nXpos='0' nDacCol='0' nFace='2' nRow='4' exact='false' nRange='4' nCol='4' nLayer='8' nXtal='12'/>
   <tower iCol='1' iRow='3'>
     <layer iLayer='0'>
