@@ -24,9 +24,12 @@ namespace lsfData {
             m_utc = 0.0;
         };
 
-       void print() const {
+       void print(const std::string &str="") const {
+	 printf("%s scid = %d\n", str.c_str(), m_scid );
+	 printf("%s apid = %d\n", str.c_str(), m_apid );
+	 printf("%s utc  = %18.6f\n", str.c_str(), m_utc );
         }
-      
+
        void initialize(int scid, int apid, double utc) {
            m_scid = scid;
            m_apid = apid;

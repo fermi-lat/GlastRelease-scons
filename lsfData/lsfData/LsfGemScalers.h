@@ -58,11 +58,12 @@ namespace lsfData {
     }
 
     void print() const {
-      printf(" scalers:  elapsed   = 0x%08x = %lld \n", elapsed(), elapsed());
-      printf(" scalers:  livetime  = 0x%08x = %lld \n", livetime(), livetime());
-      printf(" scalers:  prescaled = 0x%08x = %lld \n", prescaled(), prescaled());
-      printf(" scalers:  discarded = 0x%08x = %lld \n", discarded(), discarded());
-      printf(" scalers:  deadzone  = 0x%08x = %lld \n", deadzone(), deadzone());
+      printf(" scalers:  elapsed   = 0x%016llx = %llu \n", elapsed(), elapsed());
+      printf(" scalers:  livetime  = 0x%016llx = %llu \n", livetime(), livetime());
+      printf(" scalers:  prescaled = 0x%016llx = %llu \n", prescaled(), prescaled());
+      printf(" scalers:  discarded = 0x%016llx = %llu \n", discarded(), discarded());
+      printf(" scalers:  sequence  = 0x%016llx = %llu \n", sequence(), sequence());
+      printf(" scalers:  deadzone  = 0x%016llx = %llu \n", deadzone(), deadzone());
     }
 
   /// Output operator (ASCII)
