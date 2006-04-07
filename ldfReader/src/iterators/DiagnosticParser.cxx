@@ -10,6 +10,7 @@ $Header$
 #include "DiagnosticParser.h"
 
 //#include "ldfReader/EbfException.h"
+#include "ldfReader/data/LatData.h"
 #include "../EbfDebug.h"
 
 namespace ldfReader {
@@ -48,6 +49,9 @@ namespace ldfReader {
  {
    fprintf(stderr, "MyDIAGiterator::handleError:  Somehow an error occured. \n");
    fprintf(stderr, "  code=%d, p1=%d, p2=%d\n", code, p1, p2);
+   fprintf(stderr, "Event %llu ApId: %d\n", 
+           ldfReader::LatData::instance()->eventId(), 
+           ldfReader::LatData::instance()->getCcsds().getApid());
    return 0;
  }
 

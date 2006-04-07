@@ -34,8 +34,10 @@ int LatContributionParser::handleError(LATcontribution* contribution,
     case LATcontributionIterator::ERR_UDFcontribution:
     {
       fprintf(stderr, "LATcontributionIterator::UDF: "
-        "Found unrecognized LATdatagram contribution type 0x%08X\n",
-        p1);
+        "Found unrecognized LATdatagram contribution type 0x%08X\n", p1);
+      fprintf(stderr, " Event: %llu Apid: %d\n", 
+         ldfReader::LatData::instance()->eventId(), 
+         ldfReader::LatData::instance()->getCcsds().getApid());
       return -1;
       break;
     }
