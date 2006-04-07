@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "eventFile/LPA_File.h"
+#include "eventFile/LSEReader.h"
 
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
@@ -30,29 +30,33 @@ private:
 int main( int argc, char* argv[] )
 {
   // create the LPA_File object from which input will be read
-  eventFile::LPA_File* pLPA = NULL;
-  std::string lpafile( "$(EVENTFILEROOT)/src/test/events.lpa" );
+  eventFile::LSEReader* pLSE = NULL;
+  std::string lsefile( "$(EVENTFILEROOT)/src/test/events.lpa" );
   if ( argc >= 2 ) {
-    lpafile = argv[1];
+    lsefile = argv[1];
   }
   try {
-    pLPA = new eventFile::LPA_File( lpafile, eventFile::LPA_File::Read );
+    pLSE = new eventFile::LSEReader( lsefile );
   } catch( std::runtime_error e ) {
     std::cout << e.what() << std::endl;
   }
 
-  std::cout << "Data file for run " << pLPA->runid() << std::endl;
+  std::cout << "Data file for run " << pLSE->runid() << std::endl;
 
   // declare objects to receive the event information
   eventFile::LSE_Context ctx;
   eventFile::EBF_Data    ebf;
-  eventFile::LPA_Info    info;
+  eventFile::LSE_Info::InfoType infotype;
+  eventFile::LPA_Info    pinfo;
+  eventFile::LCI_ACD_Info ainfo;
+  eventFile::LCI_CAL_Info cinfo;
+  eventFile::LCI_TKR_Info tinfo;
 
   // retrieve each event in turn
   bool bmore = true;
   do {
     try {
-      bmore = pLPA->read( ctx, info, ebf );
+      bmore = pLSE->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo );
     } catch( std::runtime_error e ) {
       std::cout << e.what() << std::endl;
       break;
@@ -68,7 +72,20 @@ int main( int argc, char* argv[] )
     // print out the event-type-specific information
     printf( "\nEvent %lld info:", ctx.scalers.sequence );
     printf( "\n---------------\n" );
-    info.dump();
+    switch ( infotype ) {
+    case eventFile::LSE_Info::LPA:
+      pinfo.dump();
+      break;
+    case eventFile::LSE_Info::LCI_ACD:
+      ainfo.dump();
+      break;
+    case eventFile::LSE_Info::LCI_CAL:
+      cinfo.dump();
+      break;
+    case eventFile::LSE_Info::LCI_TKR:
+      tinfo.dump();
+      break;
+    }
 
     // iterate over the contributions and print them out
     printf( "\nEvent %lld data:", ctx.scalers.sequence );
@@ -79,7 +96,7 @@ int main( int argc, char* argv[] )
     printf( "\n" );
 
   } while ( true );
-  delete pLPA;
+  delete pLSE;
 
   // all done
   return 0;

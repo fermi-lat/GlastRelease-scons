@@ -1,53 +1,51 @@
 /**
- * @class eventFile::LPA_File
+ * @class eventFile::LSEReader
  *
- * @brief Class encapsulating a file containing merged LPA data
+ * @brief Class for reading a file containing per-event context, meta-info, and EBF data
  *
  * @author Bryson Lee <blee@slac.stanford.edu>
  *
  * $Header$
  */
 
-#ifndef LPA_FILE_HH
-#define LPA_FILE_HH
+#ifndef LSEREADER_H
+#define LSEREADER_H
 
 #include <stdio.h>
 
 #include <string>
 
+#include "eventFile/LSE_Info.h"
+
 namespace eventFile {
 
   class LSE_Context;
-  class LPA_Info;
   class EBF_Data;
   
-  class LPA_File {
+  class LSEReader {
   public:
-    enum Mode { Read = 0, Write };
-    LPA_File( const std::string& filename, Mode openmode, unsigned runid = 0 );
-    ~LPA_File();
+    LSEReader( const std::string& filename );
+    ~LSEReader();
 
-    void write( const LSE_Context&, const LPA_Info&, const EBF_Data& );
-    bool read( LSE_Context&, LPA_Info&, EBF_Data& );
+    bool read( LSE_Context&, EBF_Data&, LSE_Info::InfoType&, LPA_Info&, LCI_ACD_Info&, LCI_CAL_Info&, LCI_TKR_Info& );
     void close();
     unsigned runid() const { return m_runid; };
 
-    void evtcnt( unsigned long long evt ) { m_evtcnt = evt; };
-    void begGEM( unsigned long long gem ) { m_GEMseq_beg = gem; };
-    void endGEM( unsigned long long gem ) { m_GEMseq_end = gem; };
     unsigned long long evtcnt() const { return m_evtcnt; };
     unsigned long long begGEM() const { return m_GEMseq_beg; };
     unsigned long long endGEM() const { return m_GEMseq_end; };
 
   private:
     std::string m_name;
-    std::string m_mode;
     unsigned m_runid;
     unsigned long long m_evtcnt;
     unsigned long long m_GEMseq_beg;
     unsigned long long m_GEMseq_end;
     FILE* m_FILE;
 
+    bool read( LSE_Context&, EBF_Data& );
+    void read( int&, unsigned char*, size_t& );
+    void readHeader();
   };
   
 };
