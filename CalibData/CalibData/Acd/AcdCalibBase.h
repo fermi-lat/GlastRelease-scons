@@ -1,6 +1,6 @@
 // $Header$
 
-/// @file CalCalibBase
+/// @file AcdCalibBase
 /// @author J. Bogart
 #ifndef CalibData_CalCalibBase_h
 #define CalibData_CalCalibBase_h
@@ -12,7 +12,6 @@
 namespace CalibData {
   class AcdFinder;
   class RangeBase;
-  //  class DacCol;
 
   /**
        Base class for ACD calibration data, at least for those
@@ -26,8 +25,8 @@ namespace CalibData {
 
   public:
     AcdCalibBase(unsigned nFace=5, unsigned nRow=5, unsigned nCol=5, 
-                 unsigned nPmt=2, unsigned nRange=2,
-                 unsigned nDacCol=0);
+                 unsigned nNA=11, unsigned nPmt=2);
+
     virtual ~AcdCalibBase();
 
     /** 
@@ -36,18 +35,14 @@ namespace CalibData {
         May need to be overridden in case same data should be associated
         with more than one range (e.g., light asym)
      */
-    virtual RangeBase* getRange(idents::AcdId id, 
-                                unsigned pmt=0, unsigned range=0);
+    virtual RangeBase* getPmt(idents::AcdId id, unsigned pmt=0);
 
-    bool putRange(idents::AcdId id, unsigned pmt, unsigned range, 
-                  RangeBase* data);
+    bool putPmt(idents::AcdId id, unsigned pmt, RangeBase* data);
 
-    bool putRange(unsigned face, unsigned row, unsigned col, 
-                  unsigned pmt, unsigned range, RangeBase* data);
+    /* Do we need this version?  I hope not - doesn't cover NAs */
+    bool putPmt(unsigned face, unsigned row, unsigned col, 
+                  unsigned pmt, RangeBase* data);
 
-    // bool putDacCol(unsigned range, DacCol* dacs);
-
-    //    DacCol* getDacCol(unsigned range);
 
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called
@@ -57,9 +52,10 @@ namespace CalibData {
     
   protected:
     AcdFinder* m_finder;
-    //    std::vector<RangeBase* >* m_pR;
-    std::vector<RangeBase* > m_ranges;
-    //    std::vector<DacCol*> m_dacCols; // often there aren't any
+
+    std::vector<RangeBase* > m_pmts;  // tiles and ribbons
+    std::vector<RangeBase* > m_NAs;   // no detector
+
   private:
     static const CLID noCLID;
 
@@ -67,7 +63,7 @@ namespace CalibData {
         method is called by the constructor and does most of the work
     */
     void cGuts(unsigned nFace, unsigned nRow, unsigned nCol, 
-               unsigned nPmt, unsigned nRange /*, unsigned nDacCol */);
+               unsigned nNA, unsigned nPmt);
 
   };
 

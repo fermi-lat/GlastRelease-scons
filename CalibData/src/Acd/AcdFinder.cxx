@@ -6,44 +6,42 @@
       AcdFinder implementation.  Class "knows" how to find acd. data
       for a particular tile-or-ribbon, pmt, range.
 
-       Calibration data is kept in what is logically a 5-dimensional
+       Calibration data for real detectors (tiles and ribbons) is kept 
+       in what is logically a 4-dimensional
        array,
-                   data[iFace, iRow, iCol, iPmt, iRange]
+                   data[iFace, iRow, iCol, iPmt]   for tile
+                   data[iOrient, 0, iRibbon, iPmt] for ribbon
+       
        but will be stored as a singly-dimensioned array or
        perhaps vector.  
+       Data for NA (not-attached) is kept in a separate singly-dimensioned
+       array
 */
-#include "CalibData/Acd/AcdFinder.h"
+#include "AcdFinder.h"
 
 namespace CalibData {
   AcdFinder::AcdFinder(unsigned nFace, unsigned nRow, unsigned nCol, 
-                       unsigned nPmt, unsigned nRange,
-                       unsigned /* nDacCol */) : 
-    m_face(nFace), m_row(nRow), m_col(nCol), 
-    m_pmt(nPmt), m_range(nRange)
+                       unsigned nNA, unsigned nPmt /*, unsigned  nDacCol */)
+    : m_face(nFace), m_row(nRow), m_col(nCol), m_NA(nNA), m_pmt(nPmt)
     /* ,m_dacCol(nDacCol) */ {
     // Compute constants needed to find our way quickly in the array.
-    m_c0 = m_range;
-    m_c1 = m_c0 * m_pmt;
-    m_c2 = m_c1 * m_col;
-    m_c3 = m_c2 * m_row;
+    m_c0 = m_pmt;
+    m_c1 = m_c0 * m_col;
+    m_c2 = m_c1 * m_row;
   }
 
-  unsigned AcdFinder::findIx(idents::AcdId id, unsigned pmt, 
-                             unsigned range) const { 
+  int AcdFinder::findIx(idents::AcdId id, unsigned pmt) const {
 
-    unsigned face = id.face();
-    unsigned row=0;
-    unsigned col;
-    if (id.tile() ) {
-      row = id.row();
-      col = id.column();
+    if (id.na() == 1) {
+      return pmt + m_pmt * NAencoded(id.colLike());
     }
-    else {
-      col = id.ribbonNum();
-    }
+
+    unsigned face = id.faceLike();
+    unsigned row = id.rowLike();
+    unsigned col = id.colLike();
 
     return 
-      findIx(face, row, col, pmt, range);
+      findIx(face, row, col, pmt);
     }
 
   bool AcdFinder::equals(const AcdFinder& other) const {
@@ -51,9 +49,8 @@ namespace CalibData {
       ((m_face    == other.m_face)    &&
        (m_row     == other.m_row)     &&
        (m_col     == other.m_col)     &&
-       (m_pmt     == other.m_pmt)     &&
-       (m_range    == other.m_range) );
-    /*  && (m_dacCol   == other.m_dacCol) ); */
+       (m_NA      == other.m_NA)     &&
+       (m_pmt     == other.m_pmt)   );
   }
 }
 

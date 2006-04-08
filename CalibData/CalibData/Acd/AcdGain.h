@@ -8,18 +8,20 @@ namespace CalibData {
 
   class AcdGain : public RangeBase {
   public:
-    AcdGain(float gain = 0.0, float sig = 0.0) : m_gain(gain), m_sig(sig) {}
+    AcdGain(float peak = 0.0, float width = 0.0, unsigned status=0) :
+      m_peak(peak), m_width(width), m_status(status) {}
     ~AcdGain() {}
 
-    float getGain() const {return m_gain;}
-    float getSig() const {return m_sig;}
+    float getPeak() const {return m_peak;}
 
+    float getWidth() const {return m_width;}
+    unsigned getStatus() const {return m_status;}
     virtual void update(RangeBase* other);
 
   private:
-    float m_gain;
-    float m_sig;
-
+    float m_peak;
+    float m_width;
+    unsigned m_status;
   };
 }
 

@@ -1,20 +1,20 @@
 // $Header$
-#ifndef CalibData_AcdCalibPed_h
-#define CalibData_AcdCalibPed_h
+#ifndef CalibData_AcdCalibVeto_h
+#define CalibData_AcdCalibVeto_h
 
 #include "CalibData/Acd/AcdCalibBase.h"
-#include "CalibData/Acd/AcdPed.h"
+#include "CalibData/Acd/AcdVeto.h"
 #include "CalibData/CalibModel.h"
 
 namespace CalibData {
 
-  class AcdCalibPed : public AcdCalibBase {
+  class AcdCalibVeto : public AcdCalibBase {
 
   public:
-    AcdCalibPed(unsigned nFace=7, unsigned nRow=5, unsigned nCol=5, 
-                unsigned nNA=11, unsigned nPmt=2);
+    AcdCalibVeto(unsigned nFace=7, unsigned nRow=5, unsigned nCol=5, 
+                 unsigned nNA=11, unsigned nPmt=2);
 
-    ~AcdCalibPed();
+    ~AcdCalibVeto();
 
     /// Override putRange implementation in order to add consistency
     /// check
