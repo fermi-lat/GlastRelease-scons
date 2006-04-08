@@ -6,7 +6,7 @@
 #include <iostream>
 
 /** @class AcdId 
-@brief Encapsulate the id for an ACD tile.
+@brief Encapsulate the id for an ACD tile, ribbon or not-attached electronics
 
 @verbatim
  ACD tile numbering
@@ -99,6 +99,15 @@ public:
     /// Does this ribbon extend along the X or Y axis?
     inline short ribbonOrientation() const;
 
+    /// returns face or ribbon orientation (value = 5 or 6 for the latter)
+    inline short faceLike() const;
+
+    /// returns row for tiles, 0 for ribbons
+    inline short rowLike() const; 
+
+    /// returns col for tiles, ribbon # for ribbons
+    inline short colLike() const; 
+
     /// Allow client to set the na bit
     inline void na( unsigned int val );
 
@@ -126,6 +135,9 @@ private:
         _ribbonmask = 0x0007,
         _ribbonorientmask = 0x0700,
         layerShift = 11,
+        colShift = 0,
+        rowShift = 4,
+        faceShift = 8,
         naShift = 11,
         maxAcdTileFace = 4,
         tileVolId = 40,
@@ -235,6 +247,26 @@ inline short AcdId::column () const
     if (tile()) return bitmanip::word (0, m_id); 
     return -1;
 }
+
+inline short AcdId::faceLike() const 
+{
+  if (!na()) return ((m_id && _facemask) >> faceShift);
+  return -1;
+}
+
+inline short AcdId::rowLike() const
+{
+  if (!na()) return ((m_id && _rowmask) >> rowShift);
+  return -1;
+}
+
+// This one makes sense even for N/A
+inline short AcdId::colLike() const
+{
+  return ((m_id && _colmask) >> colShift);
+}
+
+// set routines
 
 inline void AcdId::layer( unsigned int val)
 { 
