@@ -215,41 +215,7 @@ StatusCode GlastRandomSvc::initialize ()
     incsvc->addListener(this, "BeginEvent", 0);
     incsvc->addListener(this, "EndEvent", 0);
 
-#if 0 // disable this
 
-    if(m_endSeedFile.value() != "") {
-      m_output.open(m_endSeedFile.value().c_str());
-    }
-
-    // read seeds from file
-    if(m_seedFile.value() != "") {
-
-        std::ifstream input(m_seedFile.value().c_str());
-        if(!input) {
-            log << MSG::ERROR << "Unable to find seed file: " << m_seedFile
-                << endreq;
-            status = StatusCode::FAILURE;
-            return status;
-        }
-
-        std::istream_iterator<GlastRandomSeed> begin(input);
-        std::istream_iterator<GlastRandomSeed> end;
-        std::copy(begin, end, std::back_inserter(m_seeds));
-
-        // set no of events
-        IProperty* propMgr=0;
-        status = serviceLocator()->service("ApplicationMgr", propMgr );
-        if( status.isFailure()) {
-            log << MSG::ERROR << 
-                "Unable to locate PropertyManager Service" << endreq;
-            return status;
-        }
-
-        IntegerProperty evtMax("EvtMax", m_seeds.size());
-        status = propMgr->setProperty(evtMax);
-        if (status.isFailure()) return status;
-    }
-#endif
     // Look for a factory of an AlgTool that implements the
     // IRandomAccess interface:
     // if found, make one and call the special method
@@ -315,6 +281,11 @@ StatusCode GlastRandomSvc::initialize ()
             itool->release();
         }
     }
+    // now initialize seeds to be unique for each run 
+
+    applySeeds(m_RunNumber,0);
+
+
     return StatusCode::SUCCESS;
 }
 
@@ -345,28 +316,6 @@ void GlastRandomSvc::handle(const Incident &inc)
         int runNo = m_RunNumber, 
             seqNo = m_SequenceNumber++;
 
-#if 0 // disable all this -- we do not use it now (THB)
-        if(m_seedFile.value() == "") {
-        // allow user to put in a run number by string (allowing environment variables)
-            if (m_RunNumberString != "") {
-            facilities::Util::expandEnvVar(&m_RunNumberString);
-                runNo = facilities::Util::atoi(m_RunNumberString);
-            }
-      else runNo = m_RunNumber;
-            seqNo = m_SequenceNumber;
-            ++m_SequenceNumber;
-        }
-        else {
-
-            // index of which event is being generated, only used when reading seeds
-            // from a file to generate a set of events
-            static int iEvent = 0;
-
-            runNo = m_seeds[iEvent].m_run;
-            seqNo = m_seeds[iEvent].m_seqNo;
-            ++iEvent; 
-        }
-#endif
 
         // recorde seeds to TDS
         mcevt->initialize(runNo, -1, seqNo, 0); // last arg is timestamp, will be set in FluxAlg
