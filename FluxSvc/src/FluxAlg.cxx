@@ -38,12 +38,11 @@ $Header$
 #include "FluxSvc/IFluxSvc.h"
 #include "flux/IFlux.h"
 #include "flux/Spectrum.h"
-//#include "flux/SpectrumFactory.h"
 
 #include "flux/EventSource.h"
-//#include "flux/CompositeSource.h"
 
 #include "CLHEP/Vector/LorentzVector.h"
+#include "CLHEP/Random/Random.h"
 
 #include <cassert>
 #include <vector>
@@ -295,6 +294,10 @@ StatusCode FluxAlg::execute()
     // then change our m_flux pointer to be the new one.
     // Output:  a staturCode to ensure the function executed properly.
     m_flux = m_fluxSvc->currentFlux();
+
+    // check the current random number seed
+    int seed = CLHEP::HepRandom::getTheSeed();
+    log << MSG::DEBUG << "random seed: " << seed << endreq;
 
     std::string particleName;
     if( m_avoidSAA) m_SAAreject--;
