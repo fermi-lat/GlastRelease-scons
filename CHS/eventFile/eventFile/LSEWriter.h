@@ -52,6 +52,12 @@ namespace eventFile {
 	m_hdr.m_src_apids[islot]  = apid;
 	m_hdr.m_src_seqerr[islot] = seqerr;
       };
+    void dfiErr( unsigned apid, unsigned dfierr, int islot )
+      {
+	if ( islot >= LSEHEADER_MAX_APIDS ) return;
+	m_hdr.m_dfi_apids[islot]  = apid;
+	m_hdr.m_dfi_dfierr[islot] = dfierr;
+      };
 
     // header accessors
     unsigned runid() const { return m_hdr.m_runid; };
@@ -64,6 +70,14 @@ namespace eventFile {
       {
 	if ( islot < LSEHEADER_MAX_APIDS ) {
 	  return std::pair<unsigned, unsigned>( m_hdr.m_src_apids[islot], m_hdr.m_src_seqerr[islot] );
+	} else {
+	  return std::pair<unsigned, unsigned>( 0, 0 );
+	}
+      };
+    std::pair<unsigned, unsigned> dfiErr( int islot ) const
+      {
+	if ( islot < LSEHEADER_MAX_APIDS ) {
+	  return std::pair<unsigned, unsigned>( m_hdr.m_dfi_apids[islot], m_hdr.m_dfi_dfierr[islot] );
 	} else {
 	  return std::pair<unsigned, unsigned>( 0, 0 );
 	}

@@ -31,6 +31,8 @@ namespace eventFile {
     unsigned long long m_GEMseq_end;
     unsigned m_src_apids[LSEHEADER_MAX_APIDS];
     unsigned m_src_seqerr[LSEHEADER_MAX_APIDS];
+    unsigned m_dfi_apids[LSEHEADER_MAX_APIDS];
+    unsigned m_dfi_dfierr[LSEHEADER_MAX_APIDS];
 
     // read-write routines
     void read( FILE* );

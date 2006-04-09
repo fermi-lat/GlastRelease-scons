@@ -53,6 +53,12 @@ int main( int argc, char* argv[] )
       printf( "apid %04u had %10u sequence errors\n", err.first, err.second );
     }
   }
+  for ( int i=0; i<LSEHEADER_MAX_APIDS; i++ ) {
+    std::pair<unsigned, unsigned> err = pLSE->dfiErr( i );
+    if ( err.first > 0 ) {
+      printf( "apid %04u had %10u DFI errors\n", err.first, err.second );
+    }
+  }
   printf( "\n" );
 
   // declare objects to receive the event information

@@ -47,6 +47,14 @@ namespace eventFile {
 	  return std::pair<unsigned, unsigned>( 0, 0 );
 	}
       };
+    std::pair<unsigned, unsigned> dfiErr( int islot ) const
+      {
+	if ( islot < LSEHEADER_MAX_APIDS ) {
+	  return std::pair<unsigned, unsigned>( m_hdr.m_dfi_apids[islot], m_hdr.m_dfi_dfierr[islot] );
+	} else {
+	  return std::pair<unsigned, unsigned>( 0, 0 );
+	}
+      };
 
   private:
     std::string m_name;

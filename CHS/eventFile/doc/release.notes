@@ -3,6 +3,8 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v1r0   09-Apr-2006 RBL added DFI error counts to file header
+ * v1     07-Apr-2006 RBL new file format, including LCI support
  * v0r3p2 03-Apr-2006 RBL updated to LDF 6.0.1
  * v0r3p1 29-Mar-2006 RBL added include of errno.h to fix gcc 343 compile problem
  * v0r3   13-Mar-2006 RBL added event-count and first/last GEM seq counter with accessors
