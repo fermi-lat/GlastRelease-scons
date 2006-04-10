@@ -23,14 +23,14 @@ class CalMipTrack: public TObject
 private:
     TVector3   m_point;
     TVector3   m_dir;
-    Double_t   m_d2C;
-    Double_t   m_d2Edge;
+    Double32_t   m_d2C;
+    Double32_t   m_d2Edge;
     Int_t      m_calEdge;
-    Double_t   m_arcLen;
-    Double_t   m_ecor;
-    Double_t   m_ecorRms;
-    Double_t   m_chi2;   
-    Double_t   m_erm;   
+    Double32_t   m_arcLen;
+    Double32_t   m_ecor;
+    Double32_t   m_ecorRms;
+    Double32_t   m_chi2;   
+    Double32_t   m_erm;   
   
  public:
   
@@ -89,7 +89,7 @@ private:
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalMipTrack &, const std::string & name = "" ) const ; // for tests
 
-    ClassDef(CalMipTrack,1)
+    ClassDef(CalMipTrack,2)
 };
     
 #endif

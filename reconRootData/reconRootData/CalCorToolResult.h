@@ -49,11 +49,11 @@ private:
 
     TString m_correctionName ;
     UInt_t m_statusBits ;
-    Double_t m_chiSquare ;
+    Double32_t m_chiSquare ;
     CalParams m_params ;
     TObjArray m_freeAttributes ;
 
-    ClassDef(CalCorToolResult,1)
+    ClassDef(CalCorToolResult,2)
 
 } ;
     

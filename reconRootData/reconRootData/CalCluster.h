@@ -68,13 +68,13 @@ private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
     CalParams m_params ;
-    Double_t m_rmsLong ;
-    Double_t m_rmsLongAsym ;
-    Double_t m_rmsTrans ;
+    Double32_t m_rmsLong ;
+    Double32_t m_rmsLongAsym ;
+    Double32_t m_rmsTrans ;
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
 
-    ClassDef(CalCluster,4)
+    ClassDef(CalCluster,5)
 };
 
 

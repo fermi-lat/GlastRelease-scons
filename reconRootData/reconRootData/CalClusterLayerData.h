@@ -25,11 +25,11 @@ public:
 private:
 
 
-    Double_t m_energy ; // Energy deposition in crystals in this cluster and layer
+    Double32_t m_energy ; // Energy deposition in crystals in this cluster and layer
     TVector3 m_position ; // Average position in this layer
     TVector3 m_rmsSpread ; // Quadratic position spread for this layer
 
-    ClassDef(CalClusterLayerData,1)
+    ClassDef(CalClusterLayerData,2)
 
 } ;
     

@@ -61,7 +61,7 @@ public:
             const std::vector<Double_t> &rowDoca,
             const std::vector<Double_t> &rowActDist,
             const std::vector<AcdId> &idCol, 
-            const std::vector<Double_t> &energyCol, Double32_t cornerDoca)       
+            const std::vector<Double_t> &energyCol, Double_t cornerDoca)       
             : m_totEnergy(e),
             m_gammaDoca(gDoca),
             m_doca(doca),
@@ -83,11 +83,11 @@ public:
     void initialize(Double_t e, Double_t ribbonE, Int_t count, 
         Int_t ribbonCount, Double_t gDoca, Double_t doca, 
         const AcdId &minDocaId, Double_t actDist, 
-        const AcdId &maxActDistId, Double32_t ribbonActDist,
+        const AcdId &maxActDistId, Double_t ribbonActDist,
         const AcdId &ribbonActDistId, const std::vector<Double_t> &rowDoca, 
         const std::vector<Double_t> &rowActDist, 
         const std::vector<AcdId> &idCol,
-        const std::vector<Double_t> &energyCol, Double32_t cornerDoca);
+        const std::vector<Double_t> &energyCol, Double_t cornerDoca);
 
     /// overload initialize for interactive root where we cannot use std::vector
     void initialize(Double_t e, Double_t ribbonE, Int_t count, 
@@ -107,7 +107,7 @@ public:
     inline const Double_t getGammaDoca() const { return m_gammaDoca; };
     inline const Double_t getDoca() const { return m_doca; };
     inline const Double_t getActiveDist() const { return m_actDist; };
-    inline const Double32_t getRibbonActiveDist() const { return m_ribbonActDist; };
+    inline const Double_t getRibbonActiveDist() const { return m_ribbonActDist; };
     inline const AcdId& getMinDocaId() const { return m_minDocaId; };
     inline const AcdId& getMaxActDistId() const { return m_maxActDistId; };
     inline const AcdId& getRibbonActDistId() const { return m_ribbonActDistId; }
@@ -138,8 +138,8 @@ public:
     AcdTkrIntersection* addAcdTkrIntersection(AcdTkrIntersection& inter);
     
     /// returns the number of intersections
-    inline UInt_t nAcdIntersections() const { return m_acdTkrIntersectionCol != 0 ? 
-						m_acdTkrIntersectionCol->GetEntriesFast() : 0; };
+    inline UInt_t nAcdIntersections() const { 
+            return m_acdTkrIntersectionCol != 0 ? m_acdTkrIntersectionCol->GetEntriesFast() : 0; };
   
     /// returns a single intersection by number
     inline const AcdTkrIntersection* getAcdTkrIntersection(UInt_t i) const { 
@@ -219,33 +219,33 @@ public:
 private:
 
     /// Total energy in MeV deposited in the whole ACD system
-    Double_t m_totEnergy;
+    Double32_t m_totEnergy;
     /// Distance of Closest Approach for the reconstructed gamma, 
     /// if there is one
-    Double_t m_gammaDoca;
+    Double32_t m_gammaDoca;
     /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
-    Double_t m_doca;
+    Double32_t m_doca;
     /// New Bill Atwood DOCA calculation using edge of tiles
-    Double_t m_actDist;
+    Double32_t m_actDist;
     /// Total number of ACD tiles above threshold
     Int_t m_tileCount;
     /// Collection of distance of closest approach calculations
     /// for each side row of the ACD
-    vector<Double_t> m_rowDocaCol;
+    vector<Double32_t> m_rowDocaCol;
     /// Collection of Active Distance calc for each side row of ACD
-    vector<Double_t> m_rowActDistCol;
+    vector<Double32_t> m_rowActDistCol;
 
     /// record of the tile with the minimum Distance of Closest Approach
     AcdId m_minDocaId;
     
     // Stores reconstructed energy per ACD digi
     vector<AcdId> m_idCol;
-    vector<Double_t> m_energyCol;  
+    vector<Double32_t> m_energyCol;  
 
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
     /// Total MC Energy (MeV) deposited in the ribbons
-    Double_t m_totRibbonEnergy;
+    Double32_t m_totRibbonEnergy;
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
  
@@ -272,7 +272,7 @@ private:
     // Store the nominal ACD exit points
     TClonesArray *m_acdTkrPointCol;
 
-    ClassDef(AcdRecon,11) // Acd Reconstruction data
+    ClassDef(AcdRecon,12) // Acd Reconstruction data
 };
 
 #endif

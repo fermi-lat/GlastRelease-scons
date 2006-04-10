@@ -6,7 +6,7 @@
 #include "commonRootData/idents/AcdId.h"
 #include "TVector3.h"
 
-class TMatrixD;
+#include "TMatrixD.h";
 
 /** 
  * @class AcdTkrIntersection
