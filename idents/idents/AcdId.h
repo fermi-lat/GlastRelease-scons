@@ -4,6 +4,7 @@
 #include "facilities/bitmanip.h"
 #include "idents/VolumeIdentifier.h"
 #include <iostream>
+#include <string>
 
 /** @class AcdId 
 @brief Encapsulate the id for an ACD tile, ribbon or not-attached electronics
@@ -53,6 +54,23 @@ public:
     AcdId ( unsigned int id ) : m_id (id) { }
     AcdId (short l, short f, short r, short c);
     AcdId (short ribOrient, short ribbonNum);
+
+    /** 
+        AcdId's may be represented by a 4 (or fewer) digit base 10 number
+        where the digits have the following meanings:
+        1000's place:  0 for tiles and ribbons; 1 for N/A 
+         100's place:  0-4 for tiles (face); 5 or 6 for ribbons (orientation);
+                       not used for N/A (0)
+          10's place:  0-4 for tiles (row); not used for ribbons; 0 or 1
+                       for N/A 
+           1's place:  0-4 for tiles (col); 0-3 for ribbons (ribbon 3);
+                       0-9 for N/A
+  
+          N/A use the 10's and 1's place together to represent N/A channel,
+          which ranges from 0 to 10.
+    */
+    AcdId (const std::string& base10);
+
     virtual ~AcdId ();
 
     /// Allows user to check a volumeId to see if it is a valid tile or ribbon
@@ -250,20 +268,20 @@ inline short AcdId::column () const
 
 inline short AcdId::faceLike() const 
 {
-  if (!na()) return ((m_id && _facemask) >> faceShift);
+  if (!na()) return ((m_id & _facemask) >> faceShift);
   return -1;
 }
 
 inline short AcdId::rowLike() const
 {
-  if (!na()) return ((m_id && _rowmask) >> rowShift);
+  if (!na()) return ((m_id & _rowmask) >> rowShift);
   return -1;
 }
 
 // This one makes sense even for N/A
 inline short AcdId::colLike() const
 {
-  return ((m_id && _colmask) >> colShift);
+  return ((m_id & _colmask) >> colShift);
 }
 
 // set routines
