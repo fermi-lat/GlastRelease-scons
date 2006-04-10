@@ -19,7 +19,7 @@ namespace CalibData {
     }
 
     // and similarly for NAs
-    size = m_finder->getNNA();
+    size = m_finder->getNNASize();
     AcdPed* pNAs = new AcdPed[size];
     for (ix = 0; ix < size; ix++) {
       m_NAs[ix] = pNAs; 

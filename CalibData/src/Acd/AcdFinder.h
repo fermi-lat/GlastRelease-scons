@@ -51,7 +51,7 @@ namespace CalibData {
     int findIx(idents::AcdId id, unsigned pmt) const;
 
     unsigned getSize() const {return m_c2*m_face;}
-    unsigned getNNA() const {return m_NA;}
+    unsigned getNNASize() const {return (m_NA*m_pmt);}
 
     bool equals(const AcdFinder& other) const;
 

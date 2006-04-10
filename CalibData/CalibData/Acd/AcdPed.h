@@ -14,13 +14,13 @@ namespace CalibData {
 
     float getMean() const {return m_mean;}
     float getWidth() const {return m_width;}
-    unsigned getStatus() const {return m_status;}
+    int getStatus() const {return m_status;}
     virtual void update(RangeBase* other);
 
   private:
     float m_mean;
     float m_width;
-    unsigned m_status;
+    int m_status;
   };
 }
 

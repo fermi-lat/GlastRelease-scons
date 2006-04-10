@@ -15,13 +15,13 @@ namespace CalibData {
     float getVeto() const {return m_veto;}
 
     float getWidth() const {return m_width;}
-    unsigned getStatus() const {return m_status;}
+    int getStatus() const {return m_status;}
     virtual void update(RangeBase* other);
 
   private:
     float m_veto;
     float m_width;
-    unsigned m_status;
+    int m_status;
   };
 }
 
