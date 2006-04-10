@@ -8,7 +8,8 @@ ApplicationMgr.DLLs   = { "GlastSvc", "RootIo" };
 ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // List of required services
- ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ ApplicationMgr.ExtSvc   = {"GlastDetSvc", "EventCnvSvc" };
+// "GlastEventSelector/EventSelector" , 
 
 // Use the new RootIoSvc, implementing IRunable
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
@@ -56,12 +57,12 @@ CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 // from most to least likely.
 // Storage type of 14 corresponds to MYSQL
 // CalibDataSvc.CalibInstrumentName = "LAT";
-CalibDataSvc.CalibInstrumentName = "EM2";
+CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType = 14;
 CalibDataSvc.CalibRootName = "Calib";
 
-// Value of "*" means 'use default MySQL host', so currently (July, 2004)
-// equivalent to value of "centaurusa.slac.stanford.edu".
+// Value of "*" means 'use default MySQL host', so currently (April, 2006)
+// equivalent to value of "glastDB.slac.stanford.edu".
 // For local MySQL server, use value "localhost"
 CalibMySQLCnvSvc.Host = "*";
 
@@ -80,7 +81,7 @@ CalibDataSvc.delayTime = 3000;
 
 // CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
 // CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
-
+CalibMySQLCnvSvc.DbName = "calib_test";
 
 //==============================================================
 //

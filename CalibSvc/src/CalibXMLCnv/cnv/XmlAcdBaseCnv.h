@@ -13,7 +13,7 @@
 */
 
 #include "XmlBaseCnv.h"
-
+#include "idents/AcdId.h"
 class XmlAcdBaseCnv : public XmlBaseCnv {
 
 public:
@@ -23,28 +23,38 @@ public:
   virtual ~XmlAcdBaseCnv() {};
 
 
-  /// Convenience routine used by most ACD calibration types, which
-  /// have a <dimension> element describing how the remainder of the
-  /// data is laid out.
-  StatusCode readAcdDimension(const DOMElement* docElt,
+  /** Convenience routine used by most ACD calibration types, which
+   have a <dimension> element describing how the remainder of the
+   data is laid out.
+   @a nDet  number of tiles + ribbons
+   @a nFace actually tile faces + ribbon orientations (7 for LAT)
+   @a nRow  max row value to appear (5 for LAT)
+   @a nCol  max col value or ribbon number (5 for LAT)
+   @a nPmt  always = 2
+   @a nNA   max number of unconnected electronics channels 
+  */
+  StatusCode readAcdDimension(const DOMElement* docElt, unsigned& nDet,
                               unsigned& nFace, unsigned& nRow,
-                              unsigned& nCol, unsigned& nPmt,
-                              unsigned& nRange);
+                              unsigned& nCol, unsigned& nNA,
+                              unsigned& nPmt);
 
 
-  /// Another one to find first range element
-  DOMElement* findFirstRange(const DOMElement* docElt);
+  /// Another one to find first ped, gain, etc. (depending on calib. type)
+  DOMElement* findFirstPmt(const DOMElement* docElt);
 
-  /// Still another one to navigate XML file and find next set of range data
-  DOMElement* findNextRange(const DOMElement* rangeElt);
+  /// Still another one to navigate XML file and find next set of pmt data
+  DOMElement* findNextPmt(const DOMElement* rangeElt);
 
 protected:
   /// A place to keep track of where we are within ACD data
-  unsigned m_nFace;
-  unsigned m_nRow;
-  unsigned m_nCol;
+  unsigned m_nDet;             // new
   unsigned m_nPmt;
-  unsigned m_nRange;
+  idents::AcdId  m_id;
+  // don't think we need these
+  //  unsigned m_nFace;
+  //  unsigned m_nRow;
+  //  unsigned m_nCol;
+  //  unsigned m_nNA;
 
 };
 

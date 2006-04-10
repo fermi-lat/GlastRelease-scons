@@ -3,19 +3,19 @@
 #include "XmlAcdBaseCnv.h"
 #include "xmlBase/Dom.h"
 #include <xercesc/dom/DOMNode.hpp>
+#include "facilities/Util.h"
 
 // #include "idents/AcdId.h"
 
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMNode;
 
 XmlAcdBaseCnv::XmlAcdBaseCnv(ISvcLocator* svc, const CLID& clid) :
-  XmlBaseCnv(svc, clid), m_nFace(10000), m_nRow(10000), m_nCol(10000), 
-  m_nPmt(10000), m_nRange(10000) {}
+  XmlBaseCnv(svc, clid),  m_nDet(10000), m_nPmt(10000), m_id(0) {}
 
 StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt, 
-                                        unsigned& nFace,
+                                        unsigned& nDet, unsigned& nFace,
                                         unsigned& nRow, unsigned& nCol, 
-                                        unsigned& nPmt, unsigned& nRange) {
+                                        unsigned& nNA, unsigned& nPmt) {
   using xmlBase::Dom;
 
   MsgStream log(msgSvc(), "XmlBaseCnv" );
@@ -23,11 +23,12 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt,
   if (dimElt == 0) return StatusCode::FAILURE;
 
   try {
+    nDet = Dom::getIntAttribute(dimElt, "nTile");
     nFace = Dom::getIntAttribute(dimElt, "nFace");
     nRow = Dom::getIntAttribute(dimElt, "nRow");
     nCol = Dom::getIntAttribute(dimElt, "nCol");
     nPmt = Dom::getIntAttribute(dimElt, "nPmt");
-    nRange = Dom::getIntAttribute(dimElt, "nRange");
+    nNA = Dom::getIntAttribute(dimElt, "nNA");
   }
   catch (xmlBase::DomException ex) {
     std::cerr << "From CalibSvc::XmlAcdBaseCnv::readAcdDimension" << std::endl;
@@ -37,164 +38,70 @@ StatusCode XmlAcdBaseCnv::readAcdDimension(const DOMElement* docElt,
   return StatusCode::SUCCESS;
 }
 
-DOMElement* XmlAcdBaseCnv::findFirstRange(const DOMElement* docElt) {
+DOMElement* XmlAcdBaseCnv::findFirstPmt(const DOMElement* docElt) {
   using xmlBase::Dom;
-  //  using idents::CalXtalId;
 
-  /*  Rewrite for ACD */
-  DOMElement* faceElt = Dom::findFirstChildByName(docElt, "face");
-  // If no <face> elements, this file is useless
-  if (faceElt == 0) return faceElt;
-  DOMElement* rowElt = Dom::getFirstChildElement(faceElt);
-  if (rowElt == 0) return rowElt;
-  DOMElement* colElt = Dom::getFirstChildElement(rowElt);
-  if (colElt == 0) return colElt;
-  DOMElement* pmtElt = Dom::getFirstChildElement(colElt);
+  // note that so-called <tile> may be ribbon or NA
+  DOMElement* tileElt = Dom::findFirstChildByName(docElt, "tile");
+  // If no <tile> elements, this file is useless
+  if (tileElt == 0) return tileElt;
+  DOMElement* pmtElt = Dom::getFirstChildElement(tileElt);
   if (pmtElt == 0) return pmtElt;
 
-  DOMElement* rangeElt = Dom::getFirstChildElement(pmtElt);
-  if (rangeElt == 0) return rangeElt;
-  
   try {
-    m_nFace = Dom::getIntAttribute(faceElt, "iFace");
-    m_nRow = Dom::getIntAttribute(rowElt, "iRow");
-    m_nCol = Dom::getIntAttribute(colElt, "iCol");
+    std::string idString = Dom::getAttribute(tileElt, "tileId");
+    m_id = idents::AcdId(idString);
     m_nPmt = Dom::getIntAttribute(pmtElt, "iPmt");
-    m_nRange = Dom::getIntAttribute(rangeElt, "range");
   }
-  catch (xmlBase::DomException ex) {
-    std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstRange" << std::endl;
-    std::cerr << ex.getMsg() << std::endl;
-    throw ex;
+  catch (xmlBase::DomException ex1) {
+    std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstPmt" << std::endl;
+    std::cerr << ex1.getMsg() << std::endl;
+    throw ex1;
+  }
+  catch (facilities::WrongType ex2) {
+    std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstPmt" << std::endl;
+    std::cerr << ex2.what() << std::endl;
+    throw ex2;
   }
 
-  return rangeElt;
+  return pmtElt;
 }
 
-/// Still another one to navigate XML file and find next set of range data
-DOMElement* XmlAcdBaseCnv::findNextRange(const DOMElement* rangeElt) {
+/// Still another one to navigate XML file and find next set of pmt data
+DOMElement* XmlAcdBaseCnv::findNextPmt(const DOMElement* pmtElt) {
   using xmlBase::Dom;
 
 
-  DOMElement* elt = Dom::getSiblingElement(rangeElt);
+  DOMElement* elt = Dom::getSiblingElement(pmtElt);
 
   if (elt != 0) {
-    m_nRange = Dom::getIntAttribute(elt, "range");
+    m_nPmt = Dom::getIntAttribute(elt, "iPmt");
     return elt;
   }
-
 
   // Done with this pmt; look for sibling
-  DOMNode* node = rangeElt->getParentNode();
-  elt = static_cast<DOMElement* >(node);   // current pmt
-  elt = Dom::getSiblingElement(elt);          // next pmt
+  DOMNode* node = pmtElt->getParentNode();
+  DOMElement* tileElt = static_cast<DOMElement* >(node);   // current tile
+  tileElt = Dom::getSiblingElement(tileElt);          // next tile
 
-  if (elt != 0) {
-    m_nPmt = Dom::getIntAttribute(elt, "iPmt");
-
-    elt = Dom::getFirstChildElement(elt);
-    m_nRange = Dom::getIntAttribute(elt, "range");
-    return elt;
-  }
-
-
-  // Done with this <col>
-  node = node->getParentNode();  // current <col> element
-  elt = static_cast<DOMElement* >(node);
-  elt = Dom::getSiblingElement(elt);         // next <col>
-
-  if (elt != 0) {
+  if (tileElt != 0) {
     try {
-      m_nCol = Dom::getIntAttribute(elt, "iCol");
-    }
-    catch (xmlBase::DomException ex) {
-      std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
-      std::cerr << ex.getMsg() << std::endl;
-      throw ex;
-    }
+      std::string idString = Dom::getAttribute(tileElt, "tileId");
+      m_id = idents::AcdId(idString);
 
-    // All child elements of col are pmt elements
-    elt = Dom::getFirstChildElement(elt);
-    m_nPmt = Dom::getIntAttribute(elt, "iPmt");
-
-    elt = Dom::getFirstChildElement(elt);
-    m_nRange = Dom::getIntAttribute(elt, "range");
-    return elt;
+      elt = Dom::getFirstChildElement(tileElt);
+      m_nPmt = Dom::getIntAttribute(elt, "iPmt");
+    }
+    catch (xmlBase::DomException ex1) {
+      std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextPmt" << std::endl;
+      std::cerr << ex1.getMsg() << std::endl;
+      throw ex1;
+    }
+    catch (facilities::WrongType ex2) {
+      std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextPmt" << std::endl;
+      std::cerr << ex2.what() << std::endl;
+      throw ex2;
+    }
   }
-
-  // Done with this row
-  node = node->getParentNode();  // current row
-  elt = static_cast<DOMElement* >(node);
-  elt = Dom::getSiblingElement(elt);         // next row
-
-  if (elt != 0) {              // find first range in row
-    try {
-      m_nRow = Dom::getIntAttribute(elt, "iRow");
-    }
-    catch (xmlBase::DomException ex) {
-      std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
-      std::cerr << ex.getMsg() << std::endl;
-      throw ex;
-    }
-    
-
-    // All child elements of row elements are column elements
-    elt = Dom::getFirstChildElement(elt);
-
-    try {
-      m_nCol = Dom::getIntAttribute(elt, "iCol");
-    }
-    catch (xmlBase::DomException ex) {
-      std::cerr << "From CalibSvc::XmlAcdBaseCnv::findNextRange" << std::endl;
-      std::cerr << ex.getMsg() << std::endl;
-      throw ex;
-    }
-
-    // All child elements of col are pmt elements
-    elt = Dom::getFirstChildElement(elt);
-    m_nPmt = Dom::getIntAttribute(elt, "iPmt");
-    
-    elt = Dom::getFirstChildElement(elt);
-    m_nRange = Dom::getIntAttribute(elt, "range");
-    return elt;
-  }
-
-  // Done with this face
-  node = node->getParentNode();  // current face
-  elt = static_cast<DOMElement*>(node);
-  elt = Dom::getSiblingElement(elt);         // next face
-
-  if (elt == 0) return elt;
-
-  // otherwise we've got a new face; go through the whole
-  // rigamarole
-
-
-  try {
-    m_nFace = Dom::getIntAttribute(elt, "iFace");
-
-    // All child elements of a face are row elements
-    elt = Dom::getFirstChildElement(elt);
-    m_nRow = Dom::getIntAttribute(elt, "iRow");
-
-    // All child elements of row elements are col elements
-    elt = Dom::getFirstChildElement(elt);
-    m_nCol = Dom::getIntAttribute(elt, "iCol");
-
-
-    // All child elements of col are pmt elements
-    elt = Dom::getFirstChildElement(elt);
-    m_nPmt = Dom::getIntAttribute(elt, "iPmt");
-  }
-  catch (xmlBase::DomException ex) {
-    std::cerr << "From CalibSvc::XmlAcdBaseCnv::findFirstRange" << std::endl;
-    std::cerr << ex.getMsg() << std::endl;
-    throw ex;
-  }
-
-  // All child elements of pmt elements are the thing we actually want!
-  elt = Dom::getFirstChildElement(elt);
-  m_nRange = Dom::getIntAttribute(elt, "range");
-
   return elt;
 }

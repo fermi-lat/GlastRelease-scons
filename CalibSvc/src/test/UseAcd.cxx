@@ -182,44 +182,66 @@ void UseAcd::processNew(CalibData::AcdCalibGain* pNewGain,
     short iRow = 1;
     short iCol = 2;
     unsigned pmt = 1;
-    unsigned range = 0;
-    //    CalXtalId id(iTower, iLayer, iXtal);
-    // First arg. to constructor is "layer"
+
+    // First arg is na (0 if real tile or ribbon; 1 if unconnected)
     idents::AcdId id(0, iFace, iRow, iCol);
     
-    CalibData::RangeBase* pRangeGain = pNewGain->getRange(id, pmt, range);
-    CalibData::RangeBase* pRangePed = pNewPed->getRange(id, pmt, range);
+    CalibData::RangeBase* pPmtGain = pNewGain->getPmt(id, pmt);
+    CalibData::RangeBase* pPmtPed = pNewPed->getPmt(id, pmt);
     
-    AcdGain* pGain = dynamic_cast<AcdGain * >(pRangeGain);
-    AcdPed* pPed = dynamic_cast<AcdPed * >(pRangePed);
+    AcdGain* pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    AcdPed* pPed = dynamic_cast<AcdPed * >(pPmtPed);
     log << MSG::INFO << "For face = " << iFace << " row = " << iRow
         << " column = " << iCol << endreq;
-    log << MSG::INFO << " pmt = " << pmt 
-        << "    range = " << range << endreq;
+    log << MSG::INFO << " pmt = " << pmt  << endreq;
     
-    log << MSG::INFO << " gain = " << pGain->getGain() << endreq;
-    log << MSG::INFO << " sigma gain = " << pGain->getSig() << endreq;
-    log << MSG::INFO << " ped = " << pPed->getPed() << endreq;
-    log << MSG::INFO << " sigma ped = " << pPed->getSig() << endreq;
+    log << MSG::INFO << " gain = " << pGain->getPeak() << endreq;
+    log << MSG::INFO << " width gain = " << pGain->getWidth() << endreq;
+    log << MSG::INFO << " status gain = " << pGain->getStatus() << endreq;
+    log << MSG::INFO << " ped = " << pPed->getMean() << endreq;
+    log << MSG::INFO << " with ped = " << pPed->getWidth() << endreq;
+    log << MSG::INFO << " status ped = " << pPed->getStatus() << endreq;
 
     iFace = 1;
 
     idents::AcdId idf1(0, iFace, iRow, iCol);
     
-    pRangeGain = pNewGain->getRange(idf1, pmt, range);
-    pRangePed = pNewPed->getRange(idf1, pmt, range);
+    pPmtGain = pNewGain->getPmt(idf1, pmt);
+    pPmtPed = pNewPed->getPmt(idf1, pmt);
     
-    pGain = dynamic_cast<AcdGain * >(pRangeGain);
-    pPed = dynamic_cast<AcdPed * >(pRangePed);
+    pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    pPed = dynamic_cast<AcdPed * >(pPmtPed);
     log << MSG::INFO << "For face = " << iFace << " row = " << iRow
         << " column = " << iCol << endreq;
     log << MSG::INFO << " pmt = " << pmt 
-        << "    range = " << range << endreq;
-    
-    log << MSG::INFO << " gain = " << pGain->getGain() << endreq;
-    log << MSG::INFO << " sigma gain = " << pGain->getSig() << endreq;
-    log << MSG::INFO << " ped = " << pPed->getPed() << endreq;
-    log << MSG::INFO << " sigma ped = " << pPed->getSig() << endreq;
+        << "    pmt = " << pmt << endreq;
+
+    log << MSG::INFO << " gain = " << pGain->getPeak() << endreq;
+    log << MSG::INFO << " width gain = " << pGain->getWidth() << endreq;
+    log << MSG::INFO << " status gain = " << pGain->getStatus() << endreq;
+    log << MSG::INFO << " ped = " << pPed->getMean() << endreq;
+    log << MSG::INFO << " with ped = " << pPed->getWidth() << endreq;
+    log << MSG::INFO << " status ped = " << pPed->getStatus() << endreq;
+
+
+    // get a non-attached channel
+    iFace=0; iRow=0, iCol=9;
+    idents::AcdId idNA(1, iFace, iRow, iCol);
+    pPmtGain = pNewGain->getPmt(idNA, pmt);
+    pPmtPed = pNewPed->getPmt(idNA, pmt);
+
+    pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    pPed = dynamic_cast<AcdPed * >(pPmtPed);
+
+    log << MSG::INFO << "For NA channel " << iCol << " and pmt = " 
+        << pmt << endreq;
+
+    log << MSG::INFO << " gain = " << pGain->getPeak() << endreq;
+    log << MSG::INFO << " width gain = " << pGain->getWidth() << endreq;
+    log << MSG::INFO << " status gain = " << pGain->getStatus() << endreq;
+    log << MSG::INFO << " ped = " << pPed->getMean() << endreq;
+    log << MSG::INFO << " with ped = " << pPed->getWidth() << endreq;
+    log << MSG::INFO << " status ped = " << pPed->getStatus() << endreq;
 
 
   }
