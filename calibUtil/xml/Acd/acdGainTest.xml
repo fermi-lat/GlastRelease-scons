@@ -1,0 +1,871 @@
+<!DOCTYPE acdCalib SYSTEM "../acdCalib_v1r1.dtd" [] >
+<acdCalib>
+<generic instrument="LAT" timestamp="Wed Jan 18 16:35:58 2006" calibType="ACD_Gain" algorithm="P7" fmtVersion="v1r0p0">
+  <inputSample startTime="135005345:1" stopTime="135005389:466011" triggers="9796697/10799542" source="0" mode="0"/>
+</generic>
+<dimension nTile="108"/>
+  <tile tileId="000">
+    <pmt iPmt="0">
+      <acdGain peak="831.939" width="375.561" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="687.027" width="328.473" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="001">
+    <pmt iPmt="0">
+      <acdGain peak="787.055" width="356.445" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="737.05" width="342.45" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="002">
+    <pmt iPmt="0">
+      <acdGain peak="647.599" width="303.901" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="651.886" width="299.614" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="003">
+    <pmt iPmt="0">
+      <acdGain peak="933.556" width="273.944" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="965.4" width="306.1" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="004">
+    <pmt iPmt="0">
+      <acdGain peak="850.633" width="356.867" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="984.511" width="414.989" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="010">
+    <pmt iPmt="0">
+      <acdGain peak="609.222" width="278.278" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1510.78" width="80.7191" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="011">
+    <pmt iPmt="0">
+      <acdGain peak="615.535" width="335.965" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="635.461" width="252.039" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="012">
+    <pmt iPmt="0">
+      <acdGain peak="798.427" width="345.073" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1035.53" width="363.972" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="013">
+    <pmt iPmt="0">
+      <acdGain peak="672.267" width="279.233" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="785.703" width="357.797" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="014">
+    <pmt iPmt="0">
+      <acdGain peak="1082.6" width="316.9" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1223.38" width="432.12" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="020">
+    <pmt iPmt="0">
+      <acdGain peak="1094.18" width="305.315" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1117.9" width="473.603" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="021">
+    <pmt iPmt="0">
+      <acdGain peak="867.38" width="340.12" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1268.12" width="387.384" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="022">
+    <pmt iPmt="0">
+      <acdGain peak="1081.47" width="318.031" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1132.54" width="394.959" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="023">
+    <pmt iPmt="0">
+      <acdGain peak="633.313" width="254.187" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="670.969" width="280.531" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="024">
+    <pmt iPmt="0">
+      <acdGain peak="606.823" width="280.677" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="817.547" width="389.953" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="030">
+    <pmt iPmt="0">
+      <acdGain peak="834.609" width="372.891" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="812.1" width="331.4" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="031">
+    <pmt iPmt="0">
+      <acdGain peak="1137.86" width="325.64" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="607.852" width="279.648" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="032">
+    <pmt iPmt="0">
+      <acdGain peak="798.128" width="345.372" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1365.14" width="418.361" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="033">
+    <pmt iPmt="0">
+      <acdGain peak="607.264" width="280.236" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="657.108" width="294.392" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="034">
+    <pmt iPmt="0">
+      <acdGain peak="703.097" width="248.403" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1191.85" width="335.645" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="040">
+    <pmt iPmt="0">
+      <acdGain peak="987.844" width="347.656" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="764.459" width="315.041" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="041">
+    <pmt iPmt="0">
+      <acdGain peak="601.872" width="285.628" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1157.6" width="369.904" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="042">
+    <pmt iPmt="0">
+      <acdGain peak="792.095" width="351.405" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="917.509" width="289.991" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="043">
+    <pmt iPmt="0">
+      <acdGain peak="668.193" width="283.307" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1180.38" width="347.117" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="044">
+    <pmt iPmt="0">
+      <acdGain peak="652.762" width="234.738" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1071.45" width="328.046" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="100">
+    <pmt iPmt="0">
+      <acdGain peak="911.486" width="680.014" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1343.66" width="759.838" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="101">
+    <pmt iPmt="0">
+      <acdGain peak="930.588" width="660.912" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="679.754" width="463.746" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="102">
+    <pmt iPmt="0">
+      <acdGain peak="857.125" width="478.375" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="988.784" width="730.716" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="103">
+    <pmt iPmt="0">
+      <acdGain peak="685.642" width="457.858" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1105.51" width="677.991" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="104">
+    <pmt iPmt="0">
+      <acdGain peak="1557.69" width="801.81" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="926.452" width="601.048" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="110">
+    <pmt iPmt="0">
+      <acdGain peak="961.114" width="566.386" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1179.12" width="732.379" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="111">
+    <pmt iPmt="0">
+      <acdGain peak="891.126" width="508.374" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1152.48" width="695.024" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="112">
+    <pmt iPmt="0">
+      <acdGain peak="1013.38" width="450.12" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1289.99" width="685.508" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="113">
+    <pmt iPmt="0">
+      <acdGain peak="1171.58" width="547.916" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1032.97" width="558.526" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="114">
+    <pmt iPmt="0">
+      <acdGain peak="1019.02" width="572.483" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1408.01" width="823.488" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="120">
+    <pmt iPmt="0">
+      <acdGain peak="848.307" width="487.193" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1149.86" width="633.642" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="121">
+    <pmt iPmt="0">
+      <acdGain peak="1010.35" width="581.155" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1402.29" width="701.207" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="122">
+    <pmt iPmt="0">
+      <acdGain peak="1006.9" width="648.602" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1794.3" width="821.204" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="123">
+    <pmt iPmt="0">
+      <acdGain peak="1163.74" width="683.759" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1119.37" width="728.129" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="124">
+    <pmt iPmt="0">
+      <acdGain peak="749.334" width="522.166" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1159.44" width="560.061" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="130">
+    <pmt iPmt="0">
+      <acdGain peak="890.85" width="764.65" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1102.46" width="937.043" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="200">
+    <pmt iPmt="0">
+      <acdGain peak="953.815" width="637.685" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1014.44" width="705.062" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="201">
+    <pmt iPmt="0">
+      <acdGain peak="893.463" width="634.037" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="957.286" width="506.214" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="202">
+    <pmt iPmt="0">
+      <acdGain peak="694.702" width="512.798" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="943.087" width="776.413" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="203">
+    <pmt iPmt="0">
+      <acdGain peak="867.065" width="532.435" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1284.93" width="690.572" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="204">
+    <pmt iPmt="0">
+      <acdGain peak="1341.41" width="634.089" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1124.01" width="595.493" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="210">
+    <pmt iPmt="0">
+      <acdGain peak="1027.27" width="564.232" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="944.341" width="647.159" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="211">
+    <pmt iPmt="0">
+      <acdGain peak="877.216" width="586.284" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1174.05" width="545.45" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="212">
+    <pmt iPmt="0">
+      <acdGain peak="1016.02" width="575.478" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="928.188" width="599.312" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="213">
+    <pmt iPmt="0">
+      <acdGain peak="932.72" width="530.78" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1040.66" width="614.842" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="214">
+    <pmt iPmt="0">
+      <acdGain peak="1269.85" width="449.649" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1362.03" width="677.47" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="220">
+    <pmt iPmt="0">
+      <acdGain peak="934.696" width="528.804" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1173.4" width="738.103" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="221">
+    <pmt iPmt="0">
+      <acdGain peak="756.347" width="515.153" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="995.351" width="532.149" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="222">
+    <pmt iPmt="0">
+      <acdGain peak="969.497" width="622.003" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1552.27" width="679.235" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="223">
+    <pmt iPmt="0">
+      <acdGain peak="1266.74" width="708.761" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1146" width="637.504" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="224">
+    <pmt iPmt="0">
+      <acdGain peak="895.781" width="567.719" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1196.41" width="715.09" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="230">
+    <pmt iPmt="0">
+      <acdGain peak="1018.28" width="829.225" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1001.52" width="909.979" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="300">
+    <pmt iPmt="0">
+      <acdGain peak="1016.95" width="638.554" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="920.281" width="607.219" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="301">
+    <pmt iPmt="0">
+      <acdGain peak="1230.78" width="680.72" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1558.49" width="929.012" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="302">
+    <pmt iPmt="0">
+      <acdGain peak="859.092" width="668.408" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1389.5" width="585.998" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="303">
+    <pmt iPmt="0">
+      <acdGain peak="1097.95" width="621.547" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="697.938" width="509.562" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="304">
+    <pmt iPmt="0">
+      <acdGain peak="940.286" width="523.214" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="885.371" width="642.129" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="310">
+    <pmt iPmt="0">
+      <acdGain peak="950.886" width="512.614" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1047.98" width="543.521" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="311">
+    <pmt iPmt="0">
+      <acdGain peak="788.869" width="482.631" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="751.56" width="455.94" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="312">
+    <pmt iPmt="0">
+      <acdGain peak="1047.41" width="608.091" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="865.152" width="534.348" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="313">
+    <pmt iPmt="0">
+      <acdGain peak="1424.88" width="870.621" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1141.77" width="641.727" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="314">
+    <pmt iPmt="0">
+      <acdGain peak="990.624" width="600.876" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="930.916" width="596.584" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="320">
+    <pmt iPmt="0">
+      <acdGain peak="1104.42" width="743.078" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1201.28" width="710.223" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="321">
+    <pmt iPmt="0">
+      <acdGain peak="963.835" width="627.665" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1196.61" width="778.886" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="322">
+    <pmt iPmt="0">
+      <acdGain peak="1204.62" width="898.885" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1421.86" width="745.635" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="323">
+    <pmt iPmt="0">
+      <acdGain peak="1234.08" width="677.423" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1623.95" width="863.551" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="324">
+    <pmt iPmt="0">
+      <acdGain peak="1550.7" width="1256.8" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1131.6" width="715.898" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="330">
+    <pmt iPmt="0">
+      <acdGain peak="1042.18" width="869.316" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1394.21" width="901.286" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="400">
+    <pmt iPmt="0">
+      <acdGain peak="1324.92" width="906.584" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1480.28" width="623.224" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="401">
+    <pmt iPmt="0">
+      <acdGain peak="995.055" width="660.445" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1054.42" width="537.084" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="402">
+    <pmt iPmt="0">
+      <acdGain peak="1369.43" width="926.07" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1033.63" width="749.865" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="403">
+    <pmt iPmt="0">
+      <acdGain peak="955.575" width="699.925" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="852.649" width="674.851" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="404">
+    <pmt iPmt="0">
+      <acdGain peak="730.944" width="476.556" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="936.887" width="654.613" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="410">
+    <pmt iPmt="0">
+      <acdGain peak="768.95" width="438.55" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1032.62" width="558.877" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="411">
+    <pmt iPmt="0">
+      <acdGain peak="1346.22" width="629.284" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="960.544" width="502.956" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="412">
+    <pmt iPmt="0">
+      <acdGain peak="1131.09" width="652.413" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1073.11" width="646.392" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="413">
+    <pmt iPmt="0">
+      <acdGain peak="1205.96" width="513.54" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="958.628" width="504.872" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="414">
+    <pmt iPmt="0">
+      <acdGain peak="816.292" width="519.208" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="807.949" width="463.551" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="420">
+    <pmt iPmt="0">
+      <acdGain peak="1519.75" width="1543.75" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="983.28" width="608.22" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="421">
+    <pmt iPmt="0">
+      <acdGain peak="1026.69" width="500.812" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="657.858" width="421.642" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="422">
+    <pmt iPmt="0">
+      <acdGain peak="1298.21" width="805.294" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1092.14" width="691.361" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="423">
+    <pmt iPmt="0">
+      <acdGain peak="401.793" width="293.707" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="642.629" width="372.871" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="424">
+    <pmt iPmt="0">
+      <acdGain peak="1709.88" width="1545.62" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="900.683" width="626.817" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="430">
+    <pmt iPmt="0">
+      <acdGain peak="1628.26" width="923.238" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="860.159" width="731.341" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="500">
+    <pmt iPmt="0">
+      <acdGain peak="2487.5" width="704" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="395.65" width="363.85" status="4"/>
+    </pmt>
+  </tile>
+  <tile tileId="501">
+    <pmt iPmt="0">
+      <acdGain peak="385.271" width="246.229" status="4"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1015.5" width="256" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="502">
+    <pmt iPmt="0">
+      <acdGain peak="1335.5" width="512" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1655.5" width="768" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="503">
+    <pmt iPmt="0">
+      <acdGain peak="2167.5" width="704" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="2487.5" width="576" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="600">
+    <pmt iPmt="0">
+      <acdGain peak="1783.5" width="512" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="2679.5" width="768" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="601">
+    <pmt iPmt="0">
+      <acdGain peak="1591.5" width="512" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1975.5" width="704" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="602">
+    <pmt iPmt="0">
+      <acdGain peak="1911.5" width="512" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1783.5" width="576" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="603">
+    <pmt iPmt="0">
+      <acdGain peak="1847.5" width="576" status="2"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="1271.5" width="512" status="2"/>
+    </pmt>
+  </tile>
+  <tile tileId="1000">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1001">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1002">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1003">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1004">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1005">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1006">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1007">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1008">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1009">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+  <tile tileId="1010">
+    <pmt iPmt="0">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+    <pmt iPmt="1">
+      <acdGain peak="0" width="0" status="-1"/>
+    </pmt>
+  </tile>
+</acdCalib>
