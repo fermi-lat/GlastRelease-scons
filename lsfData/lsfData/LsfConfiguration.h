@@ -185,6 +185,9 @@ namespace lsfData {
         m_flags = 0;
     }
 
+    /// What type of configuration is this?
+    virtual enums::Lsf::RunType type() const { return enums::Lsf::NoRunType; }    
+
     /// This is a poor-man's dynamic cast
     virtual const LciConfiguration* castToLciConfig() const { return this; };    
     /// Returns true if autorange is enabled
@@ -450,6 +453,10 @@ namespace lsfData {
 
     virtual Configuration* clone() const { return new LciAcdConfiguration( *this ); };
 
+
+    /// What type of configuration is this?
+    virtual enums::Lsf::RunType type() const { return enums::Lsf::AcdLCI; }    
+
     /// This is a poor-man's dynamic cast
     virtual const LciAcdConfiguration* castToLciAcdConfig() const { return this; };    
 
@@ -621,6 +628,9 @@ namespace lsfData {
 
     virtual Configuration* clone() const { return new LciCalConfiguration( *this ); };
 
+    /// What type of configuration is this?
+    virtual enums::Lsf::RunType type() const { return enums::Lsf::CalLCI; }    
+
     /// This is a poor-man's dynamic cast
     virtual const LciCalConfiguration* castToLciCalConfig() const { return this; };    
 
@@ -743,6 +753,9 @@ namespace lsfData {
     }
 
     virtual Configuration* clone() const { return new LciTkrConfiguration( *this ); };
+
+    /// What type of configuration is this?
+    virtual enums::Lsf::RunType type() const { return enums::Lsf::TkrLCI; }    
 
     /// This is a poor-man's dynamic cast
     virtual const LciTkrConfiguration* castToLciTkrConfig() const { return this; };    
