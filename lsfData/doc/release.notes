@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r4    11-Apr-2006 BL  Patch up LCI classes to include clone method
 v0r3    04-Apr-2006 HMK Add ACD, CAL, TKR Lci classes to LsfConfiguration.h
 v0r2    04-Mar-2006 HMK Store CCSDS items
 v0r1    25-Feb-2006 HMK fix LsfConfiguration dynamic cast for LPA
