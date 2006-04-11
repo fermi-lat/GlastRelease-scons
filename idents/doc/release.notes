@@ -1,6 +1,8 @@
 /*
 package manager:T.Burnett 
  *         EOH
+
+ * v2r17   11-Apr-06 jrb Add a constructor and some get fctns to AcdId
  * v2r16   04-Mar-06 eac add AcdGapId
  * v2r15   28-Oct-05 hmk add operator== to VolumeIdentifier
  * v2r14   09-Sep-05 hmk Replace layer with n/a in AcdId
