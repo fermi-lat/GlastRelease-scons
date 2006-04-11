@@ -97,11 +97,14 @@ if __name__ == '__main__':
     # verify energy range for use as calibration data
 
     erng = info['ERNG']
-    if type == 'fle_dac' or type == 'log_acpt':
+    if type == 'fle_dac':
+        if erng != 'LEX1' and erng != 'LEX8':
+            log.error("Only LEX8 and LEX1 energy ranges supported for DAC type %s", type)
+    if type == 'log_acpt':
         if erng != 'LEX8':
             log.error("Only LEX8 energy range is supported for DAC type %s", type)
             sys.exit(1)
-    if type == 'fhe_dac':
+    elif type == 'fhe_dac':
         if erng != 'HEX8':
             log.error("Only HEX8 energy range is supported for DAC type %s", type)
             sys.exit(1)
