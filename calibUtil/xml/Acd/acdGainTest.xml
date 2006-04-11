@@ -1,6 +1,6 @@
 <!DOCTYPE acdCalib SYSTEM "../acdCalib_v1r1.dtd" [] >
 <acdCalib>
-<generic instrument="LAT" timestamp="Wed Jan 18 16:35:58 2006" calibType="ACD_Gain" algorithm="P7" fmtVersion="v1r0p0">
+<generic instrument="LAT" timestamp="Wed Jan 18 16:35:58 2006" calibType="ACD_Gain" algorithm="P7" fmtVersion="v1r1">
   <inputSample startTime="135005345:1" stopTime="135005389:466011" triggers="9796697/10799542" source="0" mode="0"/>
 </generic>
 <dimension nTile="108"/>

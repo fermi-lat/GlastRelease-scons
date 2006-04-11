@@ -53,7 +53,7 @@
    timestamp   CDATA #REQUIRED
    calibType ( ACD_Pedestal | ACD_Gain | ACD_Veto | ACD_Cno | ACD_HighRange ) #REQUIRED              
    algorithm   CDATA #REQUIRED
-   DTDVersion  NMTOKEN "v0"       
+   DTDVersion  NMTOKEN "v1r1"       
    fmtVersion  NMTOKEN #REQUIRED>
 
 <!-- Description of events used as input to the procedure 
