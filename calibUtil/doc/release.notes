@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r6   11-Apr-2006 jrb Add new dtd for Acd calibs & a couple sample files
    v1r5p4 15-Feb-2006 jrb Use alias glastCalibDB for MySQL host rather than
                           soon-to-be-obsolete centaurusa
    v1r5p3 16-Dec-2005 jrb Bug fix to Metadata::findSoonAfter (not used by
