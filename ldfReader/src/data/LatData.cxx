@@ -43,16 +43,10 @@ namespace ldfReader {
                 << time.timeTicks() << " (" << std::dec 
                 << time.timeTicks()
                 << ")\nLSE_Info:  " << time.timeHack() << std::endl;
+
       const lsfData::Configuration *cfg = m_metaEvent.configuration();
-      if (cfg) {
-          const lsfData::LpaConfiguration* lpa = cfg->castToLpaConfig();
-          if (lpa) {
-          std::cout << "LPA_Info: softwareKey = 0x" << std::hex
-                    << lpa->softwareKey() << std::endl
-                    << "LPA_Info: hardwareKey = 0x" << lpa->hardwareKey() 
-                    << std::dec << std::endl;
-          }
-      }
+      if (cfg) 
+          cfg->print();
 
   }
 
