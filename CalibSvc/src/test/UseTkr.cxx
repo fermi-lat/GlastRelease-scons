@@ -168,8 +168,8 @@ void UseTkr::processNew(CalibData::TkrSplitsCalib* pNew,
     unsigned iTray = 1;
 
 
-    TkrId idTop(iRow, iCol, iTray, true);
-    TkrId idBot(iRow, iCol, iTray, false);
+    TkrId idTop(iCol, iRow, iTray, true);
+    TkrId idBot(iCol, iRow, iTray, false);
     
     CalibData::RangeBase* pTop = pNew->getChannel(idTop);
     CalibData::RangeBase* pBot = pNew->getChannel(idBot);
