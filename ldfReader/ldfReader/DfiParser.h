@@ -38,6 +38,8 @@ namespace ldfReader {
 
         virtual ~DfiParser();
 
+        virtual void printHeader() const;
+
         virtual void clear();
 
         /// Load data for the current event in the EBF file

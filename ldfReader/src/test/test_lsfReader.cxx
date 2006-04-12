@@ -42,6 +42,7 @@ int main(int argn, char** argc) {
     DfiParser *ebfP = new DfiParser(fileName);
 
     std::cout << "DfiParser is set up" << std::endl;
+    ebfP->printHeader();
 
     int status = 0;
     do {

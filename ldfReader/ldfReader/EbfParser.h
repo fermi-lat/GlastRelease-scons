@@ -24,6 +24,8 @@ namespace ldfReader {
         /// Moves event pointer to the next event in the EBF file
         virtual int nextEvent() = 0;
 
+        virtual void printHeader() const = 0;
+
         /// Turn on or off debug output.  Returns old value of flag
         virtual bool setDebug(bool on);
 
