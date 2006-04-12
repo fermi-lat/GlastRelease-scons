@@ -48,6 +48,7 @@ namespace ldfReader {
       if (cfg) 
           cfg->print();
 
+      m_ccsds.print();
   }
 
 
