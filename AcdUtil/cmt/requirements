@@ -1,5 +1,5 @@
 package AcdUtil
-version v0r3
+version v1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -10,6 +10,8 @@ use facilities v*
 use geometry v*
 
 use xmlBase v*         
+
+use CalibData v*
 
 use GlastPolicy v*
 
@@ -28,6 +30,7 @@ library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx
 
 apply_pattern package_headers
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
+	        AcdCalibMgr.cxx AcdCalibSvc.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
                 ${AcdUtil_headers}               

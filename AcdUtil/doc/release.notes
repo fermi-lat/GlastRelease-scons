@@ -3,6 +3,9 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1       12-apr-2006 EAC Added AcdCalibSvc
+		So far this handles pedestals and gains (aka mip peaks)
+		Adds a dependency of CalibData
  v0r3     24-mar-2006 HMK updates for CLHEP 1.9.2.2
  v0r2p10  06-mar-2006 THB use the proper pattern
  v0r2p9   23-Feb-2006 THB make use of static lib constistent with Navid's lib folder
