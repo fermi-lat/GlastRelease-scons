@@ -124,8 +124,11 @@ void ThrottleAlg::setACDTileList(const Event::AcdDigiCol& digiCol,  double thres
 
         // if it is a tile...
 		if (id.tile()==true) {
-        // toss out hits below threshold
-        if ((*acdDigiIt)->getEnergy() < threshold) continue;
+
+            // check that this tile is above the veto on either readout
+                   if( !((*acdDigiIt)->getVeto(Event::AcdDigi::A)) && 
+                       !((*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue;
+        
            //get the face, row, and column numbers
 		   s_face = id.face();
 		   s_row  = id.row();
