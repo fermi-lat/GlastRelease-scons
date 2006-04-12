@@ -156,7 +156,7 @@ int TkrSplitsSvc::getLastC0Strip(int tower, int layer, int view) const
         idents::TowerId twr(tower);
         int towerX = twr.ix();
         int towerY = twr.iy();
-        idents::TkrId thisPlane(towerY, towerX, tray, isTop);
+        idents::TkrId thisPlane(towerX, towerY, tray, isTop);
         CalibData::RangeBase* pPlane = m_pSplits->getChannel(thisPlane);
         CalibData::TkrSplit* pSplit = dynamic_cast<CalibData::TkrSplit*>(pPlane);
         /*
