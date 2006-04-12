@@ -176,6 +176,11 @@ ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 //
 #include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/calibrations.txt"
 
+// allow "ideal" as a legal flavour for MC
+CalibDataSvc.CalibFlavorList = {"vanilla","ideal"};
+// use "ideal" for the ACD
+AcdCalibSvc.DefaultFlavor = "ideal"
+
 //
 // The user should change the start time to pick up whatever 
 // calibrations she wants:

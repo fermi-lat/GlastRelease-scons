@@ -1,6 +1,6 @@
 package Gleam
 
-version  v6r14p1
+version  v6r15
 author T. Burnett <tburnett@u.washington.edu>
 
 # $Id$

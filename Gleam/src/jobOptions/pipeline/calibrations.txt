@@ -59,6 +59,15 @@ TkrCalibAlg.calibFlavor = "vanilla";
 //
 TkrBadStripsSvc.OutputLevel = 2;
 
+ 
+// Start up an AcdCalibSvc:
+ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
+ 
+// for real data
+AcdCalibSvc.DefaultFlavor = "vanilla"
+
+
+
 //
 // General calibration flavor list:
 //
