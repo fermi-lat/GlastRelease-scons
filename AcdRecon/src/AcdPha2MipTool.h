@@ -8,6 +8,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ISvcLocator.h"
 
+#include "AcdUtil/IAcdCalibSvc.h"
 
 class MsgStream;
 class HepMatrix;
@@ -42,9 +43,17 @@ protected:
   
   bool getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB) const;
 
+  bool getPeds(const idents::AcdId& id, float& valA, float& valB) const;
+  bool getMips(const idents::AcdId& id, float& valA, float& valB) const;
+
 private:
 
   Event::AcdHitCol* output;
+
+  std::string  m_calibSvcName;
+
+  AcdUtil::IAcdCalibSvc* m_calibSvc;
+  
 
 } ;
 

@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v2r2      12-Apr-2006 EAC Uses calibration for AcdHits
 v2r1      24-Mar-2006 HMK updates for CLHEP 1.9.2.2
 v2r0p7    06-Feb-2006 THB Add the tools AcdPha2MipTool and AcdPocaTool to the AcdRecon_load list, apparently needed for Windows
 v2r0p6    06-Feb-2006 EAC Fix bug that was losing losing intersections at the 10-4 level when track was || to x or y axis.
