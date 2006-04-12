@@ -32,6 +32,7 @@
 #pragma link C++ class LpaConfiguration+; 
 #pragma link C++ class LciConfiguration+; 
 #pragma link C++ class MetaEvent+;
+#pragma link C++ class Ccsds+;
 
 #pragma link C++ class EventSummaryData+;
 #pragma link C++ class GemTileList+;

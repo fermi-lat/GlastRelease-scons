@@ -1,5 +1,5 @@
 package digiRootData
-version v9r2
+version v9r3
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
 # $Id$
@@ -26,6 +26,7 @@ apply_pattern root_package headers="\
  ../digiRootData/GemScalers.h\
  ../digiRootData/Configuration.h\
  ../digiRootData/MetaEvent.h\
+ ../digiRootData/Ccsds.h\
  ../digiRootData/TkrDiagnosticData.h\
  ../digiRootData/TkrDigi.h\
  ../digiRootData/Gem.h\

@@ -133,6 +133,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_levelOneTrigger.Clear("");
     m_summary.Clear("");
     m_metaEvent.Clear("");
+    m_ccsds.Clear("");
 
 
     m_calDigiCloneCol->Clear("C");
@@ -193,6 +194,9 @@ void DigiEvent::Print(Option_t *option) const {
     else 
       cout << "Number of TkrDigis 0" << endl;
     cout << "Number of AcdDigis " << m_acdDigiCol->GetEntries() << endl;
+   
+    m_metaEvent.Print(option);
+    m_ccsds.Print(option);
 }
 
 AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, const VolumeIdentifier& volId,

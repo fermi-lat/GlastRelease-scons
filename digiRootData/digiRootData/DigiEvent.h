@@ -17,6 +17,7 @@
 #include "Tem.h"
 
 #include "MetaEvent.h"
+#include "Ccsds.h"
 
 /** @class DigiEvent
  * @brief This is the top-level event class to store the Digi data.
@@ -45,6 +46,10 @@
  *   -# Extended context records (aka scalars) with software counters data
  *   -# Event timing information
  *   -# Configuration keys
+ * - CCSDS data
+ *   -# SCID
+ *   -# APID
+ *   -# UTC
  *
  * @li Jun 2001 Heather Kelly - revised to use TClonesArray
  * @li Jan 2000 Daniel Flath - ROOT HTML comments added
@@ -169,6 +174,10 @@ public:
     /// Copies in the MetaEvent
     void setMetaEvent(const MetaEvent& meta) { m_metaEvent = meta; }
 
+    const Ccsds& getCcsds() const { return m_ccsds; }
+
+    void setCcsds(const Ccsds& c) { m_ccsds = c; }
+
     /// clear the whole array (necessary because of the consts-s)
     void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
     /// Add a TkrDigi into the TKR data collection
@@ -258,7 +267,9 @@ private:
 
     MetaEvent m_metaEvent; 
 
-    ClassDef(DigiEvent,15) // Storage for Raw(Digi) event and subsystem data
+    Ccsds m_ccsds;
+
+    ClassDef(DigiEvent,16) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif
