@@ -279,8 +279,7 @@ StatusCode reconRootReaderAlg::execute()
             m_numEvents = m_reconTree->GetEntries();
             m_rootIoSvc->setRootEvtMax(m_numEvents);
             if (!m_reconTree->GetTreeIndex()) {
-                log << MSG::INFO << "Input file does not contain new style index
-, rebuilding" << endreq;
+                log << MSG::INFO << "Input file does not contain new style index, rebuilding" << endreq;
                 m_reconTree->BuildIndex("m_runId", "m_eventId");
             }
             m_rootIoSvc->registerRootTree(m_reconTree);
