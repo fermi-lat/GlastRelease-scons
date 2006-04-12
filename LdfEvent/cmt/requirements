@@ -7,6 +7,7 @@ use GlastPolicy v*
 use ldfExt v* IExternal
 use enums v*
 use lsfData v*
+use Event v*
 
 apply_pattern package_include
 apply_pattern package_linkopts
