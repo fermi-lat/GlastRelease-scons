@@ -167,8 +167,8 @@ bool PDFFunction::getFWHM(PDFParameters *table, const double mpv[2],
 /******************************************************************************/
 /***********************  PDFLikelihood ***************************************/
 /******************************************************************************/
-PDFLikelihood::PDFLikelihood(const CalLikelihoodManagerTool*manager,
-			     MsgStream &log )
+PDFLikelihood::PDFLikelihood(const CalLikelihoodManagerTool*manager, 
+                             MsgStream &)
   : PDFFunction(2, 7, 3){
   m_manager = manager;
 }
@@ -367,8 +367,8 @@ PDFHighEnergyCuts::PDFHighEnergyCuts(const CalLikelihoodManagerTool*manager,
 }
 
 bool PDFHighEnergyCuts::value(double result[1]) const{
-  result[0]-= 1.;
-  
+  result[0]=- 1.;
+ 
   const double *cuts= getFunctionParameters();
   double bottom_out= 3*(-220)-2*cuts[cZECNTR_BOTTOM];
   double core_out= 1.5*cuts[cZECNTR_BOTTOM]-.5*cuts[cZECNTR_CORE];
@@ -376,24 +376,23 @@ bool PDFHighEnergyCuts::value(double result[1]) const{
   if( calZEcntr()>top_out ) return true;
   if( calZEcntr()<bottom_out ) return true;
   if( calTwrEdgeCntr()>cuts[cTOWER_CENTER] && calELayer7()>cuts[cE7] ) {
-    if( calZEcntr()<core_out ) result[0]= 1.;
-    else result[0]= 3.; 
+    if( calZEcntr()<core_out ) result[0]= 0.;
+    result[0]= 2.; 
     return false;
   }
 
   if( calELayer7()>cuts[cE7] ){
     if( calTwrEdgeCntr()>cuts[cTOWER_BORDER] )
-      result[0]= 1.+(calZEcntr()>cuts[cZECNTR_BOTTOM]);
+      result[0]= calZEcntr()>cuts[cZECNTR_BOTTOM];
     
     else if( calTwrEdgeCntr()>cuts[cTOWER_EDGE] )
-      result[0]= 1.+(calZEcntr()>cuts[cZECNTR_CORE]);
+      result[0]= calZEcntr()>cuts[cZECNTR_CORE];
 
-    else result[0]= (calZEcntr()<cuts[cZECNTR_TOP]);
+    else if(calZEcntr()<cuts[cZECNTR_TOP]) result[0]= 0.;
+    else return true;
     return false;
   }
-  if( calZEcntr()>cuts[cZECNTR_BOTTOM]) result[0]= 0.;
-  else return true;
-  return false;
+  return true;
 }
 void PDFHighEnergyCuts::setEvt(const Event::CalCluster*cluster,
                               const Event::TkrVertex*vertex) {
@@ -416,4 +415,3 @@ double PDFHighEnergyCuts::calTwrEdgeCntr(const Event::CalCluster *cluster)const{
 
   return x<y?x:y;
 }
-
