@@ -36,3 +36,4 @@
  * v0r16p2  09-02-06 LR Beefed up MC text info
  * v0r17    23-03-06 TU Tagging for new externals (CLHEP, Gaudi, etc.)
  * v0r18    27-03-06 HMK Prepare for tag after merging DC2 branch
+ * v0r18p1  13-04-06 LSR remove hardwired "4", requested by Brian
