@@ -381,7 +381,7 @@ if __name__ == '__main__':
     # convert to LEX8 ADC units
     
     adcs = adcs * nrgRangeMultiplier
-    log.debug('adcs[0,0,0]:%6.3f nrgRangeMultiplier:%6.3f', adcs[0,0,0], nrgRangeMultiplier)
+    log.debug('adcs[0,0,0]:%6.3f nrgRangeMultiplier:%6.3f', adcs[0,0,0], nrgRangeMultiplier[0,0,0])
     
     # convert to MeV
     
