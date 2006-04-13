@@ -238,6 +238,7 @@ if options.no_cifit:
 os.environ['CGC_CALIBGEN_TIMESTAMP'] = calibGen_timestamp
 os.environ['CGC_INTLIN_ROOT_LE']     = ci_rootfile_le
 os.environ['CGC_INTLIN_ROOT_HE']     = ci_rootfile_he
+os.environ['CGC_CALIBGEN_BCAST']     = "0"
 
 if int(cifit_enabled):
     for tower in tower_bays:
