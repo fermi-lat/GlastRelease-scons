@@ -14,7 +14,7 @@
 #include <sstream>
 
 // CONSTANTS //
-const float mu2ci_thr_rat = 1.7;
+const float mu2ci_thr_rat = (float)1.7;
 
 CfData::CfData(CfCfg &cfg,
                const string &histFilename) :

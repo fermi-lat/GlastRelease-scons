@@ -40,6 +40,9 @@ void CfCfg::readCfgFile(const string& path) {
 
   dacVals        = ifile.getIntVector(TEST_INFO.c_str(), "DAC_SETTINGS");
   nPulsesPerDAC  = ifile.getInt(TEST_INFO.c_str(), "N_PULSES_PER_DAC");
+  tmpStr         = ifile.getString(TEST_INFO.c_str(), "BROADCAST_MODE");
+  Util::expandEnvVar(&tmpStr);
+  broadcastMode = stringToBool(tmpStr);
 
   // PATHS
   outputDir = ifile.getString(PATHS.c_str(), "OUTPUT_FOLDER");
@@ -87,7 +90,11 @@ void CfCfg::readCfgFile(const string& path) {
   // Geneate derived config quantities.
   nDACs          = dacVals.size();
   nPulsesPerXtal = nPulsesPerDAC * nDACs;
-  nPulsesPerRun  = ColNum::N_VALS*nPulsesPerXtal;
+  nPulsesPerRun  = nPulsesPerXtal;
+  // we need more events when not in broadcast mode since 
+  // we only pulse one column at a time.
+  if (!broadcastMode)
+    nPulsesPerRun*=ColNum::N_VALS;
 
   baseFilename = rootFileLE;
   path_remove_dir(baseFilename);
