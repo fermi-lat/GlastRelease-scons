@@ -25,7 +25,7 @@ class HepMatrix;
 class AcdPha2MipTool : public AcdIPha2MipTool,  public AlgTool {
 	
 public:
-    
+  
   AcdPha2MipTool
   ( const std::string & type, 
     const std::string & name,
@@ -34,11 +34,16 @@ public:
   
   /// @brief Intialization of the tool
   virtual StatusCode initialize();
-
-  /// @brief Default cluster finding framework
-  virtual StatusCode makeAcdHits ( const Event::AcdDigiCol *,
-				   Event::AcdHitCol* );
   
+  /// @brief Make collection of hits and fill the hit map
+  virtual StatusCode makeAcdHits ( const Event::AcdDigiCol&,
+				   Event::AcdHitCol&,
+				   AcdRecon::AcdHitMap&);
+  
+  /// @brief Make a single hit
+  virtual StatusCode makeAcdHit ( const Event::AcdDigi&,
+				  Event::AcdHit*& );
+
 protected:
   
   bool getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB) const;
@@ -58,6 +63,5 @@ private:
 } ;
 
 #endif
-	
 	
 	

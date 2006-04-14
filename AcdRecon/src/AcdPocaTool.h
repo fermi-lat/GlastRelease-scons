@@ -16,7 +16,6 @@ class AcdTileDim;
 class AcdRibbonDim;
 class MsgStream;
 class IGlastDetSvc;
-class IPropagator;
 
 class Point;
 class Vector;
@@ -50,55 +49,30 @@ public:
   // @brief Intialization of the tool
   virtual StatusCode initialize();
   
-  // @brief calculate the distance of closest approach between the track and the tile center
-  virtual StatusCode doca (const AcdTileDim& tile,
-			   const Event::TkrTrack& aTrack, 
-			   PocaData& data);
+  // @brief calculate the distance of closest approach between the track and the tile
+  //   This includes the distance of closest approach to the center of the tile
+  //   and both the 2d and 3d distances to the closest edge or corner
+  virtual StatusCode tileDistances (const AcdTileDim& tile,
+				    const AcdRecon::TrackData& aTrack, 
+				    AcdRecon::PocaData& data);
   
-  // @brief calculate the distance in the plane of the tile to the nearest edge of the tile
-  //  this calculation is positive if the track hits the tile and negative otherwise
-  //  the returned value is the largest number for any of the four tile edges
-  virtual StatusCode hitTileDist(const AcdTileDim& tile,
-				 const Event::TkrTrack& aTrack, 
-				 PocaData& data);
-
-  // @brief calculate the 3D distance to the nearest edge of the tile.  This calculation is 
-  //  positive if the track hits the tile and negative otherwise
-  //  the returned value is the largest number for any of the tile edges or corners
-  virtual StatusCode tileActiveDist(const AcdTileDim& tile,
-				    const Event::TkrTrack& aTrack, 
-				    PocaData& data);
-  
-  // @brief calculate the 3D distance ribbon.  This calculation is 
-  //  positive if the track hits the ribbon and negative otherwise
-  virtual StatusCode hitRibbonDist(const AcdRibbonDim& ribbon,
-				   const Event::TkrTrack& aTrack, 
-				   PocaData& data);
+  // @brief calculate the distance of closest approach between the track and the ribbon
+  //   This includes both the 2d and 3d distances to the ray defining the ribbon segement
+  virtual StatusCode ribbonDistances(const AcdRibbonDim& ribbon,
+				     const AcdRecon::TrackData& aTrack, 
+				     AcdRecon::PocaData& data);
 
   // @brief Make an AcdTrkPoca object, given the PocaData and the G4Propagator
-  virtual StatusCode makePoca(const Event::TkrTrack& track, int iTrack,
-			      const PocaData& poca, const idents::AcdId& acdId,
-			      IPropagator& g4PropTool, Event::AcdTkrPoca*& pocaCol);
+  virtual StatusCode makePoca(const AcdRecon::TrackData& aTrack, 
+			      const AcdRecon::PocaData& data, 
+			      Event::AcdTkrHitPoca*& poca);
 
-protected:
-
-  // @brief calculate the 3D distance to the nearest edge or corner of the tile when the track 
-  //  does not hit the tile.  This value should always be negative
-  virtual StatusCode docaActiveDist(const AcdTileDim& tile,
-				    const Event::TkrTrack& aTrack, 
-				    PocaData& data);
-
-  // @brief calculate the track parameters at the POCA
-  virtual StatusCode getParamsAtPoca(const Event::TkrTrack& aTrack, bool forward, double arcLength,
-				     IPropagator& g4PropTool,
-				     Event::TkrTrackParams& paramsAtPoca);
+  // @brief put the pocas onto a list, subject to filtering cuts
+  virtual StatusCode filter(const AcdRecon::PocaDataMap& in, AcdRecon::PocaDataPtrMap& out);
   
-  // @brief project the track error along the doca line
-  virtual StatusCode projectError(const PocaData& poca, const Event::TkrTrackParams& paramsAtPoca,
-				  double& pocaError);  
-
 private:
 
+  // parameters
   float m_distanceCut;
   float m_sigmaCut;
 

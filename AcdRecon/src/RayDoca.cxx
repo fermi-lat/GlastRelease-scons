@@ -1,7 +1,7 @@
 //
 // Code to implement the RayDoca utility
 //
-#include "./RayDoca.h"
+#include "../AcdRecon/RayDoca.h"
 
 //
 // Constructor is where all the real work gets done...
@@ -10,6 +10,12 @@
 
 RayDoca::RayDoca(const Ray& ray1, const Ray& ray2)
 {
+  recompute(ray1,ray2);
+}
+
+
+void 
+RayDoca::recompute(const Ray& ray1, const Ray& ray2) {
     //Copy the input rays to the class
     P = ray1.position();
     u = ray1.direction().unit();

@@ -7,12 +7,17 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 #include "Event/Recon/AcdRecon/AcdPocaMap.h"
+#include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 
 #include "GaudiKernel/ObjectVector.h"
 
 #include "AcdITkrIntersectTool.h"
 #include "AcdIPha2MipTool.h"
 #include "AcdIPocaTool.h"
+
+#include "AcdGeomMap.h"
+
+#include "../AcdRecon/AcdReconStruct.h"
 
 #include "GlastSvc/Reco/IPropagatorTool.h"
 #include "GlastSvc/Reco/IPropagatorSvc.h"
@@ -34,6 +39,7 @@ typedef HepGeom::Vector3D<double> HepVector3D;
 #endif
 
 #include <map>
+#include <vector>
 
 /** @class AcdReconAlg
  * @brief ACD reconstruction using the AcdDigi collection from the TDS.
@@ -77,33 +83,46 @@ class AcdReconAlg : public Algorithm
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
       /// retrieves tracks and calls the DOCA and Active Distance routines
-      StatusCode trackDistances(const Event::AcdDigiCol& digiCol, Event::AcdPocaSet& pocaSet);
+      StatusCode trackDistances(const Event::AcdDigiCol& digiCol, 
+				Event::AcdPocaSet& pocaSet,
+				Event::AcdTkrIntersectionCol& acdIntersections,
+				Event::AcdTkrGapPocaCol& gapPocas,
+				Event::AcdTkrPointCol& exitPoints);
+
+      /// Calculates the point where the paritcle crosses the nominal ACD 
+      StatusCode exitPoint(const AcdRecon::TrackData& aTrack, bool forward,
+			   AcdRecon::ExitData& data, double tolerance = 0.);
+
+      /// get the all the distances to hit tiles & ribbons for track in one direction
+      StatusCode hitDistances(const AcdRecon::TrackData& aTrack, const Event::AcdDigiCol& digiCol, 
+			      AcdRecon::PocaDataMap& pocaMap);				  
 
       /// Old style - distance of closest approach calculation
       /// Finds minimum perpendicular distance from tracks to the center of the tiles
-      StatusCode doca (const Event::AcdDigiCol& digiCol,
-		       const Event::TkrTrack& aTrack,
+      StatusCode doca (const AcdRecon::PocaDataMap& pocaMap,
 		       std::vector<double> &doca_values, double &minDoca, idents::AcdId& minDocaId);
 
       /// Bill Atwood's new calculation for Active Distance
-      StatusCode hitTileDist(const Event::AcdDigiCol& digiCol, 
-			     const Event::TkrTrack& aTrack,
+      StatusCode hitTileDist(const AcdRecon::PocaDataMap& pocaMap,
 			     std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId);
 
       /// Bill Atwood's new calculation for Active Distance, in 3D
-      StatusCode tileActDist(const Event::AcdDigiCol& digiCol, 
-			     const Event::TkrTrack& aTrack, int iTrack,
-                             std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId,
-			     Event::AcdPocaSet& pocaSet);
+      StatusCode tileActDist(const AcdRecon::PocaDataMap& pocaMap,
+			     std::vector<double> &row_values, double &dist, idents::AcdId& maxActDistId);
 
       /// Bill Atwood's new calculation for Active Distance - applied to ribbons
-      StatusCode hitRibbonDist(const Event::AcdDigiCol& digiCol, 
-			       const Event::TkrTrack& aTrack, int iTrack,
-			       double &dist, idents::AcdId& maxActDistId,
-			       Event::AcdPocaSet& pocaSet);
+      StatusCode hitRibbonDist(const AcdRecon::PocaDataMap& pocaMap,
+			       double &dist, idents::AcdId& maxActDistId);
 
-
-      bool withinTileEdge(const Ray& edge, const HepPoint3D& pos);
+      /// Extrapolate track as far as needed, add error to AcdTkrPoca, make AcdTkrIntersections
+      StatusCode extrapolateTrack(const Event::TkrTrack& aTrack,
+				  const AcdRecon::TrackData& trackData,
+				  const AcdRecon::PocaDataPtrMap& pocaDataMap,
+				  const AcdRecon::ExitData& isectData,
+				  Event::AcdPocaSet& pocaSet,
+				  Event::AcdTkrIntersectionCol& acdIntersections,
+				  Event::AcdTkrGapPocaCol& gapPocas,
+				  Event::AcdTkrPointCol& points);
 
       StatusCode calcCornerDoca(const HepPoint3D &x0, const HepVector3D &dir,
                                 double &dist);
@@ -125,7 +144,7 @@ class AcdReconAlg : public Algorithm
       
       /// name of Tool for makeint the hits
       std::string m_pocaToolName;
-
+      
       IPropagator *    m_G4PropTool; 
 
       std::string m_propToolName;
@@ -166,7 +185,11 @@ class AcdReconAlg : public Algorithm
       std::vector<double> m_energyCol, m_energyRibbonCol;
    
       /// map of AcdId and the corresponding hit status 
-      std::map<idents::AcdId,unsigned char> m_hitMap;
+      AcdRecon::AcdHitMap m_hitMap;
+
+      /// map to keep track to the tile and ribbon geoms
+      AcdGeomMap m_geomMap;
+
 };
 
 #endif

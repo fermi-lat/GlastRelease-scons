@@ -24,6 +24,10 @@
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
+#include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
+#include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
+#include "Event/Recon/AcdRecon/AcdTkrPoca.h"
+
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -32,7 +36,8 @@
 #include "geometry/Ray.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-#include "./RayDoca.h"
+#include "../AcdRecon/RayDoca.h"
+#include "../AcdRecon/AcdReconFuncs.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -244,6 +249,8 @@ void AcdReconAlg::clear() {
     m_maxActDistId = resetId;
     m_maxActDist3DId = resetId;
 
+
+    m_geomMap.reset();
 }
 
 
@@ -262,24 +269,21 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 	
     // reset all member variables to their defaults
     clear();
+
+    // make the hits (with MIP peak data) and fill the hitMap
+    static Event::AcdHitCol acdHits;
+    if (m_hitTool != 0) {
+      sc = m_hitTool->makeAcdHits(digiCol,acdHits,m_hitMap);
+      if ( sc.isFailure() ) {
+	log << MSG::WARNING << "AcdHitTool Failed - we'll bravely carry on" << endreq;
+	sc = StatusCode::SUCCESS;
+      }
+    }
 	
-	
-    Event::AcdDigiCol::const_iterator acdDigiIt;
-    
+    Event::AcdDigiCol::const_iterator acdDigiIt;    
     for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
         
         idents::AcdId id = (*acdDigiIt)->getId();
-
-	// caculate the hitMask and stick it in the map
-	unsigned char hitMask = 0;
-	
-	hitMask |= (*acdDigiIt)->getAcceptMapBit(Event::AcdDigi::A) ? 1 : 0;
-	hitMask |= (*acdDigiIt)->getAcceptMapBit(Event::AcdDigi::B) ? 2 : 0;
-	hitMask |= (*acdDigiIt)->getVeto(Event::AcdDigi::A) ? 4 : 0;
-	hitMask |= (*acdDigiIt)->getVeto(Event::AcdDigi::B) ? 8 : 0;
-	hitMask |= (*acdDigiIt)->getCno(Event::AcdDigi::A) ? 16 : 0;
-	hitMask |= (*acdDigiIt)->getCno(Event::AcdDigi::B) ? 32 : 0;	
-	m_hitMap[id] = hitMask;
 
         if (id.tile()) {
         // toss out hits below threshold -- OLD
@@ -287,74 +291,54 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
         // Use Veto Discrim instead
         // Skip this ACD detector if neither PMT has veto discrim set
 #if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
-        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
+	  if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
 #endif
-        m_tileCount++;
-        double tileEnergy = (*acdDigiIt)->getEnergy();
-        m_totEnergy += tileEnergy;
-        
-        // Temporarily populate reconstructed energy collection with digi energy
-        m_idCol.push_back(id);
-        m_energyCol.push_back(tileEnergy);
+	  m_tileCount++;
+	  double tileEnergy = (*acdDigiIt)->getEnergy();
+	  m_totEnergy += tileEnergy;
+	  
+	  // Temporarily populate reconstructed energy collection with digi energy
+	  m_idCol.push_back(id);
+	  m_energyCol.push_back(tileEnergy);
         } else { // otherwise this is a ribbon
-            m_ribbonCount++;
-            m_totRibbonEnergy += (*acdDigiIt)->getEnergy();
-            m_idRibbonCol.push_back(id);
-            m_energyRibbonCol.push_back((*acdDigiIt)->getEnergy());
+	  m_ribbonCount++;
+	  m_totRibbonEnergy += (*acdDigiIt)->getEnergy();
+	  m_idRibbonCol.push_back(id);
+	  m_energyRibbonCol.push_back((*acdDigiIt)->getEnergy());
         }
     }
 	
     log << MSG::DEBUG;
     if ( log.isActive()) 
-        log.stream() << "num Tiles = " << m_tileCount 
+      log.stream() << "num Tiles = " << m_tileCount 
             << " total energy = " << m_totEnergy
             << "  numRibbons = " << m_ribbonCount
             << " total Ribbon energy = " << m_totRibbonEnergy;
     log << endreq;
 
     Event::AcdPocaSet acdPocaSet;
-    sc = trackDistances(digiCol,acdPocaSet);
+    static Event::AcdTkrIntersectionCol acdIntersections;
+    static Event::AcdTkrGapPocaCol acdGapPocas;
+    static Event::AcdTkrPocaCol acdPocas;
+    static Event::AcdTkrHitPocaCol acdHitPocas;
+    static Event::AcdTkrPointCol acdPoints;
+
+    sc = trackDistances(digiCol,acdPocaSet,acdIntersections,acdGapPocas,acdPoints);
     if (sc.isFailure()) return sc;
 
     static Event::AcdPocaMap acdPocaMap;
-    static Event::AcdTkrPocaCol acdPocas;
     for (  Event::AcdPocaSet::iterator itrPoca = acdPocaSet.begin(); itrPoca != acdPocaSet.end();
 	   itrPoca++ ) {
-      Event::AcdTkrPoca* sortPoca = const_cast<Event::AcdTkrPoca*>(*itrPoca);
+      Event::AcdTkrHitPoca* sortPoca = const_cast<Event::AcdTkrHitPoca*>(*itrPoca);
       if ( sortPoca == 0 ) continue;
       acdPocaMap.add(*sortPoca);
-      acdPocas.push_back(sortPoca);
+      acdHitPocas.push_back(sortPoca);
     }
 
     log << MSG::DEBUG;
     if (log.isActive()) log.stream() << "DOCA: " << m_doca << " "
         << "ActDist: " << m_act_dist;
     log << endreq;
-	
-    
-    static Event::AcdTkrIntersectionCol acdIntersections;
-
-    // get pointer to the tracker vertex collection
-    SmartDataPtr<Event::TkrTrackCol> trackCol(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
-    // if reconstructed tracker data doesn't exist - put the debugging message    
-    if (trackCol==0) {
-      log << MSG::DEBUG << "No TKR Reconstruction available " << endreq;
-    } else if (m_intersectionTool != 0) {
-      sc = m_intersectionTool->findIntersections(trackCol,&acdIntersections,m_hitMap);
-      if ( sc.isFailure() ) {
-          log << MSG::WARNING << "AcdIntersectionTool Failed - we'll bravely carry on" << endreq;
-          sc = StatusCode::SUCCESS;
-      }
-    }
-
-    static Event::AcdHitCol acdHits;
-    if (m_hitTool != 0) {
-      sc = m_hitTool->makeAcdHits(&digiCol,&acdHits);
-      if ( sc.isFailure() ) {
-	log << MSG::WARNING << "AcdHitTool Failed - we'll bravely carry on" << endreq;
-	sc = StatusCode::SUCCESS;
-      }
-    }
 
     SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
     if (checkAcdRecTds) {
@@ -368,13 +352,8 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 			     m_act_dist, m_maxActDistId, 
 			     m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol,
 			     m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
-			     acdIntersections, acdPocas, acdHits, m_ribbon_act_dist, 
+			     acdIntersections, acdPocas, acdHits, acdHitPocas, acdGapPocas, acdPoints, m_ribbon_act_dist, 
                              m_ribbon_act_dist_id, m_cornerDoca);
-	// ownership handed to TDS, clear local copies
-	acdIntersections.clear();
-	acdPocas.clear();
-	acdPocaMap.clear();
-	acdHits.clear();	
     } else {
         // create the TDS location for the AcdRecon
         Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, m_totRibbonEnergy, 
@@ -383,33 +362,40 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 							m_act_dist, m_maxActDistId, 
 							m_rowDocaCol, m_rowActDistCol, m_idCol, m_energyCol, 
 							m_ribbon_act_dist, m_ribbon_act_dist_id, 
-							acdIntersections, acdPocas, acdHits,
+							acdIntersections, acdPocas, acdHits, acdHitPocas, acdGapPocas, acdPoints, 
 							m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol, m_cornerDoca);
-	// ownership handed to TDS, clear local copies	
-	acdIntersections.clear();
-	acdPocas.clear();
-	acdPocaMap.clear();
-	acdHits.clear();
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
             log << "Failed to register AcdRecon" << endreq;
             return StatusCode::FAILURE;
         }
     }
-
+    // ownership handed to TDS, clear local copies	
+    acdIntersections.clear();
+    acdPocas.clear();
+    acdPocaMap.clear();
+    acdHits.clear();	
+    acdGapPocas.clear();
+    acdHitPocas.clear();
+    acdPoints.clear();
     return sc;
 }
 
 
-StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::AcdPocaSet& pocaSet) {
+StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, 
+				       Event::AcdPocaSet& pocaSet,
+				       Event::AcdTkrIntersectionCol& acdIntersections,
+				       Event::AcdTkrGapPocaCol& gapPocas,
+				       Event::AcdTkrPointCol& exitPoints) {
+
     // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
     //  calculates the DOCA and Active Distance quantities.  Updates the
     // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
-    // TDS Input: EventModel::TkrRecon::TkrFitTrackCol
+    // TDS Input: EventModel::TkrRecon::TkrFitTrackCole
 	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    
+     
     // Retrieve the information on fit tracks
     SmartDataPtr<Event::TkrTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrTrackCol);
 	
@@ -419,48 +405,136 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
     }
 	
     bool firstPassDone = false;
-    double testDoca, test_dist, ribDist, newActDist;
-    Event::TkrTrackColPtr trkPtr = tracksTds->begin();
-    idents::AcdId tempId;
+
+    // Places to store the track endpoint and direction
+    AcdRecon::TrackData upwardExtend;
+    AcdRecon::TrackData downwardExtend;
+    
+    // where does this track leave the LAT?
+    AcdRecon::ExitData upwardExit;
+    AcdRecon::ExitData downwardExit;
 
     int iTrack(-1);
-
+    Event::TkrTrackColPtr trkPtr = tracksTds->begin();
     while(trkPtr != tracksTds->end())
     {
+
         const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
 	iTrack++;
 
-        sc = doca(digiCol, *trackTds, m_rowDocaCol, testDoca, tempId);
+	//std::cout << std::endl;
+	//std::cout << "Next Track " << iTrack << std::endl;
+
+	// grap the track direction information
+	const Event::TkrTrackHit* firstHit = (*trackTds)[0];
+	upwardExtend.m_point = firstHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+	upwardExtend.m_dir   = -(firstHit->getDirection(Event::TkrTrackHit::SMOOTHED));
+	upwardExtend.m_energy = firstHit->getEnergy();
+	upwardExtend.m_index = iTrack;
+	upwardExtend.m_upward = true;
+
+	const unsigned int lastHitIdx = trackTds->getNumHits() - 1;
+	const Event::TkrTrackHit* lastHit = (*trackTds)[lastHitIdx];
+	downwardExtend.m_point = lastHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+	downwardExtend.m_dir   = lastHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+	downwardExtend.m_energy = lastHit->getEnergy();
+	downwardExtend.m_index = iTrack;
+	downwardExtend.m_upward = false;
+
+	// get the LAT exit points
+	if ( m_intersectionTool != 0 ) {
+	  sc = m_intersectionTool->exitsLAT(*trackTds,true,upwardExit);
+	  if (sc.isFailure()) {
+	    log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
+	    return StatusCode::SUCCESS;
+	  }
+	  sc = m_intersectionTool->exitsLAT(*trackTds,false,downwardExit);
+	  if (sc.isFailure()) { 
+	    log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
+	    return StatusCode::SUCCESS;
+	  }
+	}	  
+
+	// keep track of all the pocas to hit tiles
+	AcdRecon::PocaDataMap upwardPocas;
+	AcdRecon::PocaDataMap downwardPocas;
+
+	// calculate all the distances to the hit tiles at once
+	sc = hitDistances(upwardExtend,digiCol,upwardPocas);
+	if (sc.isFailure()) return sc;
+
+	sc = hitDistances(downwardExtend,digiCol,downwardPocas);
+	if (sc.isFailure()) return sc;
+
+	// grap the best DOCA to the tile center
+        sc = doca(upwardPocas, m_rowDocaCol, m_doca, m_minDocaId);
         if (sc.isFailure()) return sc;
-        if(testDoca < m_doca) {
-	  m_minDocaId = tempId;
-	  m_doca = testDoca;
+
+        // grap the best Original Active Distance Calc(2D) values
+        sc = hitTileDist(upwardPocas, m_rowActDistCol, m_act_dist, m_maxActDistId);
+        if (sc.isFailure()) return sc;
+
+        // grap the best New Active Distance Calc (3D) values
+        sc = tileActDist(upwardPocas, m_rowActDist3DCol, m_act_dist3D, m_maxActDist3DId);
+        if (sc.isFailure()) return sc;
+
+	// grap the best "Active Distance" from ribbons
+        sc = hitRibbonDist(upwardPocas, m_ribbon_act_dist, m_ribbon_act_dist_id);
+        if (sc.isFailure()) return sc;
+
+	// filter the lists for further procsessing
+	AcdRecon::PocaDataPtrMap upPocasCut;
+	AcdRecon::PocaDataPtrMap downPocasCut;
+
+	if ( m_pocaTool != 0 ) {
+	  sc = m_pocaTool->filter(upwardPocas,upPocasCut);
+	  if (sc.isFailure()) return sc;
+	  
+	  sc = m_pocaTool->filter(downwardPocas,downPocasCut);
+	  if (sc.isFailure()) return sc;
 	}
 
+	// Now extrapolate the track as far as needed, 
+	// this makes the AcdTkrPoca and AcdTkrIntersection objects
+	Event::AcdTkrIntersectionCol upwardIntersections;
+	Event::AcdTkrIntersectionCol downwardIntersections;
 
-        // Original Active Distance Calc
-        sc = hitTileDist(digiCol, *trackTds, m_rowActDistCol, test_dist, tempId);
-        if (sc.isFailure()) return sc;
-        if(test_dist > m_act_dist) {
-	  m_act_dist = test_dist;
-	  m_maxActDistId = tempId;
+	Event::AcdTkrGapPocaCol upGapPocas;
+	Event::AcdTkrGapPocaCol downGapPocas;
+
+	// extrapolate the track upwards
+	sc = extrapolateTrack(*trackTds, upwardExtend, upPocasCut, upwardExit, 
+			      pocaSet, upwardIntersections, upGapPocas, exitPoints);
+	if (sc.isFailure()) return sc;
+	for ( Event::AcdTkrIntersectionCol::iterator itrU = upwardIntersections.begin(); 
+	      itrU != upwardIntersections.end(); ++itrU ) {
+	  acdIntersections.push_back(*itrU);
+	}
+	for ( std::vector<Event::AcdTkrGapPoca*>::iterator itrGU = upGapPocas.begin();
+	      itrGU != upGapPocas.end(); ++itrGU ) {
+	  gapPocas.push_back(*itrGU);
 	}
 
-        // New Active Distance Calc
-        sc = tileActDist(digiCol, *trackTds, iTrack, m_rowActDist3DCol, newActDist, tempId, pocaSet);
-        if (sc.isFailure()) return sc;
-        if(newActDist > m_act_dist3D) {
-	  m_act_dist3D = newActDist;
-	  m_maxActDist3DId = tempId;
+	//std::cout << std::endl;
+
+	// extrapolate the track downwards
+	sc = extrapolateTrack(*trackTds, downwardExtend, downPocasCut, downwardExit, 
+			      pocaSet, downwardIntersections, downGapPocas, exitPoints);
+	if (sc.isFailure()) return sc;
+	for ( Event::AcdTkrIntersectionCol::iterator itrD = downwardIntersections.begin(); 
+	      itrD != downwardIntersections.end(); ++itrD ) {
+	  acdIntersections.push_back(*itrD);
+	}
+	for ( std::vector<Event::AcdTkrGapPoca*>::iterator itrGD = downGapPocas.begin();
+	      itrGD != downGapPocas.end(); ++itrGD ) {
+	  gapPocas.push_back(*itrGD);
 	}
 
-	// "Active Distance" from ribbons
-        sc = hitRibbonDist(digiCol, *trackTds, iTrack, ribDist, tempId, pocaSet);
-        if (ribDist > m_ribbon_act_dist) {
-	  m_ribbon_act_dist = ribDist;
-	  m_ribbon_act_dist_id = tempId;
-	}
-        if (sc.isFailure()) return sc;
+	// clean up
+	upwardIntersections.clear();
+	upGapPocas.clear();	
+	downwardIntersections.clear();
+	downGapPocas.clear();
 
         if ((!firstPassDone) && (m_calcCornerDoca)) {
             // take the first track, since it is the best track ignore the rest
@@ -468,6 +542,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
                           -(trackTds->getInitialDirection()), m_cornerDoca);
             // First track in the list, is the reconstructed gamma
             firstPassDone = true;
+	    //std::cout << "CornerDoca: " << m_cornerDoca << std::endl;
             log << MSG::DEBUG << "AcdCornerDoca = " << m_cornerDoca << endreq;
         }
     }
@@ -477,291 +552,312 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, Event::
 }
 
 
-StatusCode AcdReconAlg::doca(const Event::AcdDigiCol& digiCol, 
-			     const Event::TkrTrack& aTrack,
+
+StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack, const Event::AcdDigiCol& digiCol,
+				     AcdRecon::PocaDataMap& pocaMap) {
+  /// get the all the distances to hit tiles for track in one direction
+
+  StatusCode sc = StatusCode::SUCCESS;
+
+  MsgStream   log( msgSvc(), name() );
+
+  for (Event::AcdDigiCol::const_iterator acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
+    // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
+    // Use Veto Discrim instead
+    // Skip this ACD detector if neither PMT has veto discrim set
+#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
+    if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
+#endif		    
+    idents::AcdId acdId = (*acdDigiIt)->getId();
+    idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
+    // get the data object to store all the computations
+    AcdRecon::PocaData& pocaData = pocaMap[acdId];
+    if (acdId.na()) continue;
+    if (acdId.tile()) {      
+      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,volId,*m_glastDetSvc);
+      sc = tileDim->statusCode();
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << endreq;
+	return sc;
+      }
+      if ( m_pocaTool != 0 ) {
+	sc = m_pocaTool->tileDistances(*tileDim,aTrack,pocaData);
+      }
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Failed to get hit distances for a tile" << acdId.id() << endreq;
+	return sc;
+      }
+    } else if ( acdId.ribbon() ) {
+      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,volId,*m_glastDetSvc);
+      sc = ribbonDim->statusCode();
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << endreq;
+	return sc;
+      }
+      if ( m_pocaTool != 0 ) {
+	sc = m_pocaTool->ribbonDistances(*ribbonDim,aTrack,pocaData);
+      }
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Failed to get hit distances for a ribbon" << acdId.id() << endreq;
+	return sc;
+      }
+    }
+  }
+  return sc;
+}
+
+
+StatusCode AcdReconAlg::doca(const AcdRecon::PocaDataMap& pocaMap,
                              std::vector<double> &doca_values, double &minDoca, idents::AcdId& minDocaId) {
-    // Purpose and Method:  This method looks for close-by hits to the ACD tiles
-    //        Calculates the minimum distance between the track and the center
-    //        of all ACD tiles above veto threshold.
-    // Inputs:  (x0, t0) defines a track
-    // Outputs: doca_values represent the DOCA for regions of the ACD: top, s0, s1, s2,...
-    //          returns minimum DOCA value
+    // Purpose and Method: 
+    // Inputs: 
+    // Outputs:
     // Dependencies: None
     // Restrictions and Caveats:  None
 	
-    minDoca = maxDoca;
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-	
-    Event::AcdDigiCol::const_iterator acdDigiIt;
+  
+    // loop on all the pocas we computed
+    for ( AcdRecon::PocaDataMap::const_iterator it = pocaMap.begin(); it != pocaMap.end(); it++ ) {
     
-    AcdPocaTool::PocaData data;
-
-    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-        idents::AcdId acdId = (*acdDigiIt)->getId();
+        const idents::AcdId& acdId = it->first;
         if (acdId.ribbon()) continue;
-	if (acdId.na()) continue;
+        if (acdId.na()) continue;
+	const AcdRecon::PocaData& data = it->second;
 
-        idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
-        AcdTileDim tileDim(acdId,volId,*m_glastDetSvc);
-        sc = tileDim.statusCode();
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << endreq;
-	  return sc;
-	}
-
-        // toss out hits below threshold -- OLD
-        // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue;
-        // Use Veto Discrim instead
-        // Skip this ACD detector if neither PMT has veto discrim set
-#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
-        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-#endif		
-
-	sc = m_pocaTool->doca(tileDim,aTrack,data);
-	if ( data.m_region != 0 && data.m_dist < minDoca ) {
-	  minDoca = data.m_dist;
+	// compare to current best and latch the values if they are better
+	if ( data.m_docaCenter < minDoca ) {
+	  minDoca = data.m_docaCenter;
 	  minDocaId = acdId;
 	}
 		
         // Pick up the min. distance from each type of tile
         // i.e. top, and each type of side row tile
-        if (acdId.top() && data.m_dist < doca_values[0]) doca_values[0] = data.m_dist;
+        if (acdId.top() && data.m_docaCenter < doca_values[0]) doca_values[0] = data.m_docaCenter;
         if (acdId.side()) {
             unsigned int k = acdId.row()+1;
             if( k >= doca_values.size()){
-	        log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << endreq;
+	      log << MSG::WARNING << "rejecting bad ACD id, row = " << k-1 << ' ' << doca_values.size() << endreq;
             }else
-	      if (data.m_dist < doca_values[k]) doca_values[k] = data.m_dist;
-        }
-		
+	      if (data.m_docaCenter < doca_values[k]) doca_values[k] = data.m_docaCenter;
+        }		
     }
 	
-    return StatusCode::SUCCESS;
+    return sc;
 }
 
 
-StatusCode AcdReconAlg::hitTileDist(const Event::AcdDigiCol& digiCol, 
-				    const Event::TkrTrack& aTrack,
+StatusCode AcdReconAlg::hitTileDist(const AcdRecon::PocaDataMap& pocaMap,
 				    std::vector<double> &row_values, 
 				    double &return_dist, idents::AcdId& maxActDistId) {
-    // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
-    // Determines minimum distance between a track and the edges of ACD
-    // tiles above veto threshold.
-    // Inputs:  (x0, t0) defines a track
-    // Outputs: Returns minimum distance
+    // Purpose and Method: 
+    // Inputs:  
+    // Outputs:
 	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    // this is an active dist caculation, we want to pick larger numbers
-    return_dist = -maxDoca;
-	
-    AcdPocaTool::PocaData data;
-
-    // iterate over all digis
-    Event::AcdDigiCol::const_iterator acdDigiIt;
-    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-        idents::AcdId acdId = (*acdDigiIt)->getId();
+    // loop on all the pocas we computed
+    for ( AcdRecon::PocaDataMap::const_iterator it = pocaMap.begin(); it != pocaMap.end(); it++ ) {
+     
+        const idents::AcdId& acdId = it->first;
         if (acdId.ribbon()) continue;
-	if (acdId.na()) continue;
+        if (acdId.na()) continue;
+	const AcdRecon::PocaData& data = it->second;
 
-	idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
-	AcdTileDim tileDim(acdId,volId,*m_glastDetSvc);
-	sc = tileDim.statusCode();
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << endreq;
-	  return sc;
-	}
-
-        // toss out hits below threshold -- OLD
-        // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
-        // Use Veto Discrim instead
-        // Skip this ACD detector if neither PMT has veto discrim set
-#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
-        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-#endif
-
-	sc = m_pocaTool->hitTileDist(tileDim,aTrack,data);
-	if ( data.m_region != 0 && data.m_dist > return_dist ) {
-	  return_dist = data.m_dist;
+	if ( data.m_active2D > return_dist ) {
+	  return_dist = data.m_active2D;
 	  maxActDistId = acdId;
 	}
 	     
         // Pick up the max. distance from each type of tile
         // i.e. top, and each type of side row tile	
-        if (acdId.top() && data.m_region != 0 && data.m_dist > row_values[0]) row_values[0] = data.m_dist;
+        if (acdId.top() && data.m_active2D > row_values[0]) row_values[0] = data.m_active2D;
         if (acdId.side()) {
             unsigned int k = acdId.row()+1;
             if( k >= row_values.size()){
                 log << MSG::WARNING << "rejecting bad ACD id, row = " 
-                                    << k-1 << endreq;
+		    << k-1 << ' ' << row_values.size() << endreq;
             } else
-	      if (data.m_region != 0 && data.m_dist > row_values[k]) row_values[k] = data.m_dist;
+	      if (data.m_active2D > row_values[k]) row_values[k] = data.m_active2D;
         }
 		
     }
 	
-    return StatusCode::SUCCESS;    
+    return sc;
 }
 
-StatusCode AcdReconAlg::tileActDist(const Event::AcdDigiCol& digiCol, 
-				    const Event::TkrTrack& aTrack, int iTrack,
+StatusCode AcdReconAlg::tileActDist(const AcdRecon::PocaDataMap& pocaMap,
 				    std::vector<double> &row_values, 
-				    double &return_dist, idents::AcdId& maxActDistId,
-				    Event::AcdPocaSet& pocaSet) {
-    // Purpose and Method:  Bill Atwood's edge DOCA algorithm called active distance
-    // Determines minimum distance between a track and the edges of ACD
-    // tiles above veto threshold.
-    // Inputs:  (x0, t0) defines a track
-    // Outputs: Returns minimum distance
+				    double &return_dist, idents::AcdId& maxActDistId){
+    // Purpose and Method:  
+    // Inputs: 
+    // Outputs: 
 	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
-    // this is an active dist caculation, we want to pick larger numbers
-    return_dist = -maxDoca;
-
-    AcdPocaTool::PocaData data;
-	
-    // iterate over all digis
-    Event::AcdDigiCol::const_iterator acdDigiIt;
-    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-        idents::AcdId acdId = (*acdDigiIt)->getId();
+    // loop on all the pocas we computed
+    for ( AcdRecon::PocaDataMap::const_iterator it = pocaMap.begin(); it != pocaMap.end(); it++ ) {
+     
+        const idents::AcdId& acdId = it->first;
         if (acdId.ribbon()) continue;
-	if (acdId.na()) continue;
+        if (acdId.na()) continue;
+	const AcdRecon::PocaData& data = it->second;
 
-        // toss out hits below threshold -- OLD
-        // if ((*acdDigiIt)->getEnergy() < s_vetoThresholdMeV) continue; 
-        // Use Veto Discrim instead
-        // Skip this ACD detector if neither PMT has veto discrim set
-#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* tiles with signals
-        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-#endif
-
-        idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
-	AcdTileDim tileDim(acdId,volId,*m_glastDetSvc);
-	sc = tileDim.statusCode();
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << endreq;
-	  return sc;
-	}
-
-	sc = m_pocaTool->tileActiveDist(tileDim,aTrack,data);
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get tile active distance " << acdId.id() << endreq;
-	  return sc;
-	}
+	// use the original definition of active dist, 2D inside plane, 3D outside plane
+	double dist = data.m_active3D > 0. ? data.m_active2D : data.m_active3D;
 	
-	if ( data.m_region != 0 && data.m_dist > return_dist ) {
-	  return_dist = data.m_dist;
+	if ( dist > return_dist ) {
+	  return_dist = dist;
 	  maxActDistId = acdId;
-	}
-	
-	Event::AcdTkrPoca* aPoca(0);
-
-	sc = m_pocaTool->makePoca(aTrack,iTrack,data,acdId,*m_G4PropTool,aPoca);
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to make a AcdTkrPoca object" << acdId.id() << endreq;
-	  return sc;
-	}
-	if (aPoca != 0) {
-	  pocaSet.insert(aPoca);
 	}
 	
         // Pick up the max. distance from each type of tile
         // i.e. top, and each type of side row tile
-        if (acdId.top() && data.m_region != 0 && data.m_dist > row_values[0]) row_values[0] = data.m_dist;
+        if (acdId.top() && dist > row_values[0]) row_values[0] = dist;
         if (acdId.side()) {
             unsigned int k = acdId.row()+1;
             if( k >= row_values.size()){
                 log << MSG::WARNING << "rejecting bad ACD id, row = " 
-                                    << k-1 << endreq;
+		    << k-1 << ' ' << row_values.size() << endreq;
             } else
-	      if (data.m_region != 0 && data.m_dist > row_values[k]) row_values[k] = data.m_dist;
+	      if ( data.m_active3D > row_values[k]) row_values[k] = dist;
         }
     }
 	
-    return StatusCode::SUCCESS;    
+    return sc;
 }
 		
-bool AcdReconAlg::withinTileEdge(const Ray& edge, const HepPoint3D& pos) {
-    // Purpose and Method:  Determine if a point occurs within the limits of
-    //                      a Ray.  This is done by determining the distance
-    //                      between the point and the two "endpoints".  If
-    //                      either is greater than the arcLength, return false.
-	// Note: This function is not used - its simpler to ask if the arc-length 
-	//       along the edge is within the edge...  
- 
-    HepPoint3D start = edge.position(0);
-    double distFromStartToPos = start.distance(pos);
-    if (distFromStartToPos > edge.getArcLength()) return false;
-
-    HepPoint3D end = edge.position(edge.getArcLength());
-    double distFromEndToPos = end.distance(pos);
-    if (distFromEndToPos > edge.getArcLength()) return false;
-    return true;
-}
-
-StatusCode AcdReconAlg::hitRibbonDist(const Event::AcdDigiCol& digiCol, const Event::TkrTrack& aTrack, int iTrack,
-				      double &return_dist, idents::AcdId& maxActDistId, Event::AcdPocaSet& pocaSet) {
-    //Purpose and Method:  Calculate ActiveDistance for Ribbons
-    // To simplify the situation - we assume the ribbons are merely lines 
-    // Since the ribbons are segmented in the geometry - we treat the side segments and 
-    // top segments separately, taking the minimum distance over all hit segments
+StatusCode AcdReconAlg::hitRibbonDist(const AcdRecon::PocaDataMap& pocaMap,
+				      double &return_dist, idents::AcdId& maxActDistId) {
+    // Purpose and Method: 
+    // 
 
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    // this is an active dist caculation, we want to pick larger numbers
-    return_dist = -maxDoca;
-
-    AcdPocaTool::PocaData data;
-
-    // iterate over all digis and search for ribbons
-    Event::AcdDigiCol::const_iterator acdDigiIt;
-    for (acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-        idents::AcdId acdId = (*acdDigiIt)->getId();
-        // if a tile - skip we want ribbons
+    // loop on all the pocas we computed
+    for ( AcdRecon::PocaDataMap::const_iterator it = pocaMap.begin(); it != pocaMap.end(); it++ ) {
+     
+        const idents::AcdId& acdId = it->first;
         if (acdId.tile()) continue;
-	if (acdId.na()) continue;
-#if 0 //THB: for analysis, as opposed to a hardware veto, we want to see *all* ribbons with signals
-        if ( (!(*acdDigiIt)->getVeto(Event::AcdDigi::A)) && (!(*acdDigiIt)->getVeto(Event::AcdDigi::B)) ) continue; 
-#endif
-
-	idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
-	AcdRibbonDim ribbonDim(acdId,volId,*m_glastDetSvc);
-	sc = ribbonDim.statusCode();
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get geom for a ribbon " << acdId.id() << endreq;
-	  return sc;
-	}
-
-	sc = m_pocaTool->hitRibbonDist(ribbonDim,aTrack,data);	
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to get hitRibbonDist " << acdId.id() << endreq;
-	  return sc;
-	}
-
-	Event::AcdTkrPoca* aPoca(0);
-	sc = m_pocaTool->makePoca(aTrack,iTrack,data,acdId,*m_G4PropTool,aPoca);
-	if ( sc.isFailure() ) {
-	  log << MSG::ERROR << "Failed to make a AcdTkrPoca object" << acdId.id() << endreq;
-	  return sc;
-	}
-	if (aPoca != 0) {
-	  pocaSet.insert(aPoca);
-	}
-
-	if ( data.m_region != 0 && data.m_dist > return_dist ) {
-	  return_dist = data.m_dist;
+        if (acdId.na()) continue;
+	const AcdRecon::PocaData& data = it->second;
+	
+	if ( data.m_active2D > return_dist ) {
+	  return_dist = data.m_active2D;
 	  maxActDistId = acdId;
 	}
 
     }  // end loop over AcdDigis
-    return StatusCode::SUCCESS;    
+    return sc;
 }
 
+StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
+					 const AcdRecon::TrackData& trackData,
+					 const AcdRecon::PocaDataPtrMap& pocaDataMap,
+					 const AcdRecon::ExitData& isectData,
+					 Event::AcdPocaSet& pocaSet,
+					 Event::AcdTkrIntersectionCol& acdIntersections,
+					 Event::AcdTkrGapPocaCol& gapPocas,
+					 Event::AcdTkrPointCol& points) {
+
+  MsgStream   log( msgSvc(), name() );
+  StatusCode sc = StatusCode::SUCCESS;  
+
+  // first figure out how far to extrapolate track
+  double maxArcLength(0.);
+
+  // figure out which direction we are going in
+  bool forward = isectData.m_arcLength > 0;
+  
+  // take the furtherest POCA
+  AcdRecon::PocaDataPtrMap::const_iterator itr;
+  for ( itr = pocaDataMap.begin(); itr != pocaDataMap.end(); itr++ ) {
+    const AcdRecon::PocaData& pocaData = *(itr->second);
+    if ( (forward && pocaData.m_arcLength > maxArcLength) || 
+	 ((!forward) && pocaData.m_arcLength < maxArcLength ) ) {
+      maxArcLength = pocaData.m_arcLength;
+    }
+  }
+  
+  // compare that to direct calculation
+  double arcToIsect = isectData.m_arcLength;
+  arcToIsect += forward ? 100. : -100;  
+  if ( (forward && arcToIsect > maxArcLength) || 
+       ((!forward) &&  arcToIsect < maxArcLength) ) {
+    maxArcLength = arcToIsect;
+  }
+
+  // protect against negative arcLengths
+  if ( forward && maxArcLength < 0 ) {
+    log << MSG::ERROR << "Negative Arclength to upper intersection " << maxArcLength << endreq;
+    return sc;
+  }
+  if ( !forward && maxArcLength > 0 ) {
+    log << MSG::ERROR << "Positive Arclength to lower intersection " << maxArcLength << endreq;
+    return sc;
+  }
+
+  // run the propagator out to the right arclength
+  if ( !forward ) maxArcLength *= -1.;
+
+  // Get the start point & direction of the track & the params & energy also
+  const unsigned int hitIndex = forward ? 0 : aTrack.getNumHits() - 1;
+  const Event::TkrTrackHit* theHit = aTrack[hitIndex];
+  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+  const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
+  double startEnergy = trackData.m_energy;
+
+  // setup the propagator
+  m_G4PropTool->setStepStart(trackPars,initialPosition.z(),forward); 
+  m_G4PropTool->step(maxArcLength);  
+  
+  // build all the intersections
+  if ( m_intersectionTool != 0 ) {
+    sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackData,isectData,pocaDataMap,m_hitMap,m_geomMap,
+					       acdIntersections,gapPocas);
+  }
+  if ( sc.isFailure() ) return sc;
+
+  
+  acdIntersections.writeOut(log);
+  gapPocas.writeOut(log);
+
+  // build all the pocas
+  for ( itr = pocaDataMap.begin(); itr != pocaDataMap.end(); itr++ ) {
+    AcdRecon::PocaData& pocaData = *(itr->second);
+    float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+    Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(pocaArcLength,startEnergy,true);
+    AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_pocaVector,pocaData.m_active3DErr);
+    Event::AcdTkrHitPoca* aPoca(0);
+    if ( m_pocaTool != 0 ) {
+      sc = m_pocaTool->makePoca(trackData,pocaData,aPoca);
+    }
+    if ( sc.isFailure() ) return sc;
+    if ( aPoca != 0 ) {
+      aPoca->writeOut(log);
+      pocaSet.insert(aPoca);
+    }
+  }
+
+  // build the TrkPoint
+  Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(isectData.m_arcLength,startEnergy,true);
+  Event::AcdTkrPoint* exitPoint(0);
+  if ( m_intersectionTool != 0 ) {
+    sc = m_intersectionTool->makeTkrPoint(trackData,isectData,next_params,exitPoint);
+    if ( sc.isFailure() ) return sc;
+    if ( exitPoint != 0 ) {
+      exitPoint->writeOut(log);
+      points.push_back(exitPoint);      
+    }
+  }
+
+  return sc;
+
+}
 
 StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &t0, double &return_dist) {
 

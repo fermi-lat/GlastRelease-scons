@@ -1,4 +1,6 @@
 #include "AcdTkrIntersectTool.h"
+
+#include "AcdIPocaTool.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include "GaudiKernel/ToolFactory.h"
@@ -6,8 +8,12 @@
 
 #include "Event/Recon/TkrRecon/TkrTrackHit.h"
 
+#include "CLHEP/Matrix/Matrix.h"
+
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
+
+#include "../AcdRecon/AcdReconFuncs.h"
 
 #include "idents/AcdId.h"
 
@@ -45,77 +51,201 @@ StatusCode AcdTkrIntersectTool::initialize()
     log << MSG::ERROR << "Couldn't find the G4Propagator!" << endreq;
     return StatusCode::FAILURE;
   }
-  
+
+  // AcdPocaTool  
+  if( ! toolSvc()->retrieveTool("AcdPocaTool", m_pocaTool)) {
+    log << MSG::ERROR << "Couldn't find the AcdPocaTool!" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   log<<MSG::INFO<<"END initialize()"<<endreq ;
   return StatusCode::SUCCESS ;
  }
 
-StatusCode AcdTkrIntersectTool::findIntersections (const Event::TkrTrackCol * tracks,
-						   Event::AcdTkrIntersectionCol * intersects,
-						   std::map<idents::AcdId,unsigned char>& hitMap)
-  //Purpose and method:
-  //
-  // TDS input: TkrTrackCol
-  // TDS output: AcdTkrIntersectionCol
-{
-  output = intersects;
+StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop, 
+						   const AcdRecon::TrackData& track,
+						   const AcdRecon::ExitData& data,						   
+						   const AcdRecon::PocaDataPtrMap& pocaMap,
+						   const AcdRecon::AcdHitMap& hitMap,
+						   AcdGeomMap& geomMap,
+						   Event::AcdTkrIntersectionCol& intersections,
+						   Event::AcdTkrGapPocaCol& gapPocas) {
+  
+  MsgStream log(msgSvc(),name()) ;
+  
+  // figure out the direction
+  bool forward = data.m_arcLength > 0.;
+  
+  // setup some of the variables for the step loop
+  idents::VolumeIdentifier volId;
+  idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
 
-  // loop on tracks
-  int iTrack(0);
-  for ( Event::TkrTrackCol::const_iterator it = tracks->begin();
-	it != tracks->end(); it++, iTrack++ ) {
-    const Event::TkrTrack* aTrack = *it;
-    if ( aTrack == 0 ) return StatusCode::FAILURE ;
-    // do the intersections for this track
-    int numberIntersectionsForward = doTrack(*aTrack,iTrack,hitMap,true);    
-    if ( numberIntersectionsForward < 0 ) {
-      // negative return values indicate failure
-      return StatusCode::FAILURE;
+  // storage inside the loop
+  double arcLength(0.);
+
+  // latch which intersection we use for the gap
+  AcdRecon::PocaData* ribbonDataForGap(0);
+  AcdRecon::PocaData* tileDataForGap(0);
+  double bestTileActDist(-2000.);
+
+  // this is in case we have to make any new pocas
+  std::list<AcdRecon::PocaData> ownedPocaData;
+
+  // loop over the GEANT steps
+  int numSteps = m_G4PropTool->getNumberSteps();  
+  int istep(0);
+  for(istep = 0; istep < numSteps; ++istep) {
+
+    // running sums of arcLength, this has to be before the check on volume id
+    double pathLength = m_G4PropTool->getStepArcLen(istep); 
+    arcLength  += pathLength;
+
+    // check to see if this step is in the Acd
+    volId = prop.getStepVolumeId(istep);
+    volId.prepend(prefix);
+    if ( ! checkVolId(volId) ) continue;
+    
+    // which face of detector (0=top,1=-x,2=-y,3=+x,4=+y)
+    int face = volId[1];
+    idents::AcdId acdId = idents::AcdId(volId);
+ 
+    // propgate the postion and error matrix to the intersection
+    Point x_step = prop.getPosition( arcLength );
+    Event::TkrTrackParams next_params = prop.getTrackParams(arcLength,track.m_energy,true);
+    
+    // query the detector service for the local frame    
+    HepTransform3D transform; 
+    HepPoint3D center(0., 0., 0.);
+    StatusCode sc = m_detSvc->getTransform3DByID(volId, &transform);
+      
+    if ( sc.isFailure() ) {
+      MsgStream log(msgSvc(),name()) ;
+      log << MSG::ERROR << "Could not get transform for id " << volId.name() << endreq;
+      return sc;
+    }        
+    HepPoint3D xT = transform * center;
+
+    // was this tile hit or not
+    AcdRecon::AcdHitMap::const_iterator findHit = hitMap.find(acdId);
+    unsigned char hitMask = findHit != hitMap.end() ? (unsigned char)(findHit->second) : 0; 
+
+    AcdRecon::PocaData* pocaData(0);
+    AcdRecon::PocaDataPtrMap::const_iterator itrFind = pocaMap.find(acdId);
+    if ( itrFind != pocaMap.end() ) {
+      // already did this tile, just get the values we already computed
+      pocaData = itrFind->second;
+    } else {            
+      // haven't done this tile yet.  
+      ownedPocaData.push_back( AcdRecon::PocaData() );
+      pocaData = &( ownedPocaData.back() );
+      pocaData->m_id = acdId;
+      if ( acdId.ribbon() ) { 	
+	const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,volId,*m_detSvc);
+	if ( ribbon->statusCode().isFailure() ) {
+	  log << MSG::ERROR << "Failed to get geom for a ribbon " << acdId.id() << ' ' << volId.name() << endreq;
+	  return StatusCode::FAILURE;
+	}
+	HepPoint3D p;
+	AcdRecon::ribbonPlane(track,*ribbon,
+			      pocaData->m_arcLengthPlane,pocaData->m_active2D,p);
+	pocaData->m_inPlane.set(p.x(),p.y(),p.z());
+	AcdRecon::ribbonPoca(track,*ribbon,
+			     pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
+      } else if ( acdId.tile() ) {
+	const AcdTileDim* tile = geomMap.getTile(acdId,volId,*m_detSvc);
+	if ( tile->statusCode().isFailure() ) {
+	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << ' ' << volId.name() << endreq;
+	  return StatusCode::FAILURE;
+	}
+	HepPoint3D p;
+	AcdRecon::tilePlane(track,*tile,
+			    pocaData->m_arcLengthPlane,pocaData->m_localX,pocaData->m_localY,
+			    pocaData->m_activeX,pocaData->m_activeY,pocaData->m_active2D,p);
+	pocaData->m_inPlane.set(p.x(),p.y(),p.z());
+	AcdRecon::tileEdgePoca(track,*tile,
+			       pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
+	sc = holePoca(track,*pocaData,*tile,gapPocas);
+	if ( sc.isFailure() ) return sc;
+      }
     }
-    int numberIntersectionsBackward = doTrack(*aTrack,iTrack,hitMap,false);
-    if ( numberIntersectionsBackward < 0 ) {
-      // negative return values indicate failure
-      return StatusCode::FAILURE;
-    }  
+    AcdRecon::projectToPlane(track,next_params,face,xT,*pocaData);
+
+    if ( acdId.ribbon() ) {
+      // cull out the top Y - ribbons
+      if ( face != 0 || acdId.ribbonOrientation() != 5 ) {
+	ribbonDataForGap = pocaData;
+      }
+    } else if ( acdId.tile() ) {
+      float testDist = face == 0 ? pocaData->m_activeY : pocaData->m_activeX;
+      if ( testDist > bestTileActDist ) {
+	tileDataForGap = pocaData;
+	bestTileActDist = testDist;
+      }    
+    }
+        
+    HepMatrix localCovMatrix(2,2);
+    localCovMatrix[0][0] = pocaData->m_localCovXX;
+    localCovMatrix[1][1] = pocaData->m_localCovYY;
+    localCovMatrix[0][1] = localCovMatrix[1][0] = pocaData->m_localCovXY;
+
+    double localPosition[2]; 
+    localPosition[0] = pocaData->m_localX;
+    localPosition[1] = pocaData->m_localY;
+    
+    // ok, we have everything we need, build the AcdTkrIntersection 
+    Event::AcdTkrIntersection* iSect = 
+      new Event::AcdTkrIntersection(acdId,track.m_index,
+				    x_step,
+				    localPosition,localCovMatrix,
+				    (forward ? arcLength : -1.*arcLength), pathLength,
+				    hitMask, pocaData->m_cosTheta);
+    
+    // print to the log if debug level is set
+    iSect->writeOut(log);
+    
+    // append to collection and increment counter
+    intersections.push_back(iSect);
   }
-  // done
+
+  if ( tileDataForGap != 0 ) {
+    gapPocaTile(track,data,*tileDataForGap,gapPocas);
+  } else if ( ribbonDataForGap != 0 ) {
+    gapPocaRibbon(track,data,*ribbonDataForGap,gapPocas);
+  } else {
+    fallbackToNominal(track,data,gapPocas);
+  } 
+
   return StatusCode::SUCCESS ;
 }
 
-int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack, 
-				 std::map<idents::AcdId,unsigned char>& hitMap, 
-				 bool forward) {
+
+StatusCode AcdTkrIntersectTool::exitsLAT(const Event::TkrTrack& aTrack, bool upward,
+					 AcdRecon::ExitData& data) {
 
   // Define the fiducial volume of the LAT
   // FIXME -- this should come for some xml reading service
   //
   // top is defined by planes at + 754.6 -> up to stacking of tiles
   // sides are defined by planes at +-840.14
-  // add 10 cm to make sure that we catch everything
-  static double top_distance = 854.6;     // center of tiles in cols 1 and 3
-  static double side_distance = 940.14;   // center of tiles in sides
-
-  // the bottom of the ACD is at the z=0 plane
-  static double bottom_distance = -10.; 
-
-  MsgStream log(msgSvc(),name()) ;
-
-  // we will return the number of intersection w/ the Acd for this track
-  int returnValue(0);
-
-  // Get the start point & direction of the track & the params & energy also
-  const unsigned int hitIndex = forward ? 0 : aTrack.getNumHits() - 1;
+  // Later we add 10 cm to make sure that we catch everything
+  static double top_distance = 754.6;     // center of tiles in cols 1 and 3
+  static double side_distance = 840.14;   // center of tiles in sides
   
+  // the bottom of the ACD is at the z=-50 plane
+  static double bottom_distance = -50.; 
+
+  MsgStream log(msgSvc(),name()) ;   
+
+  // which end of track to get hit from
+  const unsigned int hitIndex = upward ? 0 : aTrack.getNumHits() - 1;
   const Event::TkrTrackHit* theHit = aTrack[hitIndex];
 
+  // get position, direction
   const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-  const Vector initialDirection = forward ? 
+  const Vector initialDirection = upward ? 
     theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
     -1.*  theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
- 
-  const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED);
-  double startEnergy = theHit->getEnergy();
-
+  
   // hits -x or +x side ?
   const double normToXIntersection =  initialDirection.x() > 0 ?  
     -1.*side_distance - initialPosition.x() :    // hits -x side
@@ -123,7 +253,7 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
     -1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
   const double sToXIntersection = normToXIntersection * slopeToXIntersection;
-
+  
   // hits -y or +y side ?
   const double normToYIntersection = initialDirection.y() > 0 ?  
     -1.*side_distance - initialPosition.y() :    // hits -y side
@@ -131,306 +261,302 @@ int AcdTkrIntersectTool::doTrack(const Event::TkrTrack& aTrack, int iTrack,
   const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
     -1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
   const double sToYIntersection = normToYIntersection * slopeToYIntersection;
-
+  
   // hits top or bottom
-  const double normToZIntersection = forward ? 
+  const double normToZIntersection = upward ? 
     top_distance - initialPosition.z() :
     bottom_distance - initialPosition.z();
   const double slopeToZIntersection = -1. / initialDirection.z();
   const double sToZIntersection = normToZIntersection * slopeToZIntersection;
-
-  if ( (forward && initialDirection.z() > 0) || (!forward && initialDirection.z() < 0) ) {
-    log << MSG::ERROR << "Downgoing track " << forward << ' ' << initialDirection.z()  << endreq;
+  
+  if ( (upward && initialDirection.z() > 0) || (!upward && initialDirection.z() < 0) ) {
+    log << MSG::ERROR << "Downgoing track " << upward << ' ' << initialDirection.z()  << endreq;
   }
 
-  // pick closest plane
-  const double arcLength = sToXIntersection < sToYIntersection ?
-    ( sToXIntersection < sToZIntersection ? sToXIntersection : sToZIntersection ) :
-    ( sToYIntersection < sToZIntersection ? sToYIntersection : sToZIntersection ) ;
-
-  // protect against negative arcLenghts
-  //if ( arcLength < 0. ) return -1;
-  // protect against negative arcLenghts
-  if ( arcLength < 0. ) {
-    log << MSG::ERROR << "Negative Arclength to intersection " << arcLength << endreq;
-    return -1;
+  // pick the closest place
+  if ( sToXIntersection < sToYIntersection ) {
+    if ( sToXIntersection < sToZIntersection ) {
+      // hits X side
+      data.m_arcLength = sToXIntersection;
+      data.m_face = initialDirection.x() > 0 ? 1 : 3;
+    } else {
+      // hits Z side
+      data.m_arcLength = sToZIntersection;
+      data.m_face = upward ? 0 : 5;
+    }     
+  } else {
+    if ( sToYIntersection < sToZIntersection ) {
+      // hits X side
+      data.m_arcLength = sToYIntersection;
+      data.m_face = initialDirection.y() > 0 ? 2 : 4;
+    } else {
+      // hits Z side
+      data.m_arcLength = sToZIntersection;
+      data.m_face = upward ? 0 : 5;
+    }     
   }
 
-  // setup the G4Propagator
-  m_G4PropTool->setStepStart(trackPars,initialPosition.z(),forward); 
-  m_G4PropTool->step(arcLength);  
+  // protect against negative arcLengths
+  if ( data.m_arcLength < 0. ) {
+    log << MSG::ERROR << "Negative Arclength to intersection " << data.m_arcLength << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  // setup some of the variables for the step loop
-  idents::VolumeIdentifier volId;
-  idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
-  double arcLengthToIntersection(0.);
+  // extrapolate to the i-sect
+  data.m_x = initialPosition - data.m_arcLength*initialDirection;
 
-  // do the step loop
-  int numSteps = m_G4PropTool->getNumberSteps();  
-  for(int istep = 0; istep < numSteps; ++istep) {
-    // running sums of arcLength
-    double arcLen_step = m_G4PropTool->getStepArcLen(istep); 
-    arcLengthToIntersection += arcLen_step;
-    // check to see if this step is in the Acd
-    volId = m_G4PropTool->getStepVolumeId(istep);
-    volId.prepend(prefix);
-    if ( ! volId.isAcd() ) continue;
-    switch ( volId[2] ) {
-    case 40: // Acd Tile
-    case 41: // Acd ribbon
-      if ( volId.size() < 5 ) {
-	// FIXME -- need to verify that this is really dead material
-	continue;
-      }
-      break;
-    default:
-      // Dead Acd material
-      continue;
+  // flip the sign of the arclength for downgoing side
+  data.m_arcLength *= upward ? 1. : -1.;
+
+  return StatusCode::SUCCESS;
+}
+ 
+bool AcdTkrIntersectTool::checkVolId(idents::VolumeIdentifier& volId) {
+  if ( ! volId.isAcd() ) return false;
+  switch ( volId[2] ) {
+  case 40: // Acd Tile
+  case 41: // Acd ribbon
+    if ( volId.size() < 5 ) {
+      // FIXME -- need to verify that this is really dead material
+      return false;
+    }      
+    break;
+  default:
+    // Dead Acd material
+    return false;
+  }    
+  return true;
+}
+
+StatusCode AcdTkrIntersectTool::fallbackToNominal(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
+						  Event::AcdTkrGapPocaCol& gapPocas) {
+  // FIXME -- do this right  
+  static std::vector<float> gapListX;
+  static std::vector<float> gapListY;
+  static bool ready(false);
+
+  if ( !ready ) {
+    gapListX.push_back(-835.);    gapListY.push_back(-835.);
+    gapListX.push_back(-502.);    gapListY.push_back(-502.);
+    gapListX.push_back(-166.);    gapListY.push_back(-168.);
+    gapListX.push_back(166.);    gapListY.push_back(168.);
+    gapListX.push_back(502.);    gapListY.push_back(502.);
+    gapListX.push_back(835.);    gapListY.push_back(835.);
+    ready = true;
+  }
+
+  double hit(0.);
+  std::vector<float>* gapList(0);
+
+  // Make a pocaData struct to pass the info around
+  AcdRecon::PocaData pocaData;
+
+  AcdRecon::AcdGapType gapType(AcdRecon::None);
+
+  switch ( data.m_face ) {
+  case 0:
+    // top
+    hit = data.m_x.x();
+    gapList = &gapListX;
+    break;
+  case 1:
+  case 3:
+    hit = data.m_x.y();
+    gapList = &gapListY;
+    break;
+  case 2:
+  case 4:
+    hit = data.m_x.x();
+    gapList = &gapListX;
+    break;
+  case 5:
+    return StatusCode::SUCCESS ;
+    break;
+  }
+
+  // compare to the known gaps
+  float maxDoca(-2000.);
+  int whichGap(-1);
+  
+  for ( unsigned int i(0); i < gapList->size(); i++ ) {
+    float doca = 5. - fabs( hit - (*gapList)[i] );
+    if ( doca > maxDoca ) {
+      maxDoca = doca;
+      whichGap = i;
     }
-    idents::AcdId acdId(volId);
+  }
 
-    // check if this tile was hit or not
-    unsigned char hitMask(0);    
-    std::map<idents::AcdId,unsigned char>::const_iterator findHit = hitMap.find(acdId);
-    if ( findHit != hitMap.end() ) { hitMask = findHit->second; }
+  switch ( data.m_face ) {
+  case 0:
+    // top
+    gapType = ( whichGap == 0 || whichGap == 5 ) ? AcdRecon::TopCornerEdge : AcdRecon::X_RibbonSide;
+    break;
+  case 1:
+  case 3:
+    gapType = ( whichGap == 0 || whichGap == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
+    break;
+  case 2:
+  case 4:
+    gapType = ( whichGap == 0 || whichGap == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
+    break;
+  default:
+    break;
+  }
+  int row(0); int col(0);
+  int gapIndex = whichGap -1;
+  if ( gapIndex == -1 ) gapIndex = 0;
+  if ( gapIndex == 4 ) gapIndex = 1;
 
-    // which face of detector (0=top,1=-x,2=-y,3=+x,4=+y)
-    int face = volId[1];
 
-    // query the detector service for the local frame
-    HepTransform3D transform; 
-    StatusCode sc = m_detSvc->getTransform3DByID(volId, &transform);
-    if ( sc.isFailure() ) {
-      log << MSG::ERROR << "Could not get transform for id " << volId.name() << endreq;
-      return -1;
-    }
-    HepPoint3D center(0., 0., 0.);
-    HepPoint3D xT = transform * center;
-    
-    double localPosition[2];
-    CLHEP::HepMatrix localCovMatrix(2,2);
-    double check(0.);  // this should usually be 1/2 the tile thickness
-    double delta(0.);
+  idents::AcdGapId gapId(gapType,gapIndex,data.m_face,row,col);
 
-    // propgate the postion and error matrix to the intersection
-    Point x_step       = m_G4PropTool->getStepPosition(istep);
-    Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(arcLengthToIntersection,startEnergy,true);
+  if ( false ) {
+    std::cout << "ToGap: [" << data.m_x.x() << ' ' <<  data.m_x.y() << ' ' <<  data.m_x.z() << "] " 
+	      << gapType << ' ' << data.m_face << ' ' << gapIndex << ' ' << maxDoca << std::endl;
+  }
 
-    // which face of the ACD was hit?
-    // calcluate the local variable correctly for that face
+  Event::AcdTkrGapPoca* poca(0);
+  StatusCode sc = makeGapPoca(gapId,track,pocaData,maxDoca,poca);
+  if ( sc.isFailure() ) return sc;
+
+  gapPocas.push_back(poca);
+  return sc;
+}
+  
+StatusCode AcdTkrIntersectTool::holePoca(const AcdRecon::TrackData& /* track */, 
+					 const AcdRecon::PocaData& /* pocaData */, const AcdTileDim& /* tile */,
+					 Event::AcdTkrGapPocaCol& /* gapPocas */) {
+
+  return StatusCode::SUCCESS ;
+}
+
+StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
+					      const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas) {
+
+  AcdRecon::AcdGapType gapType(AcdRecon::None);  
+  unsigned char face = (unsigned char)(data.m_face);
+  unsigned char gap = 0;
+  switch ( face ) {
+  case 0:
+    gapType = AcdRecon::Y_RibbonTop;
+    gap = 2;
+    break;
+  case 1:
+  case 3:
+    gapType = AcdRecon::Y_RibbonSide;
+    gap = 2;
+    break;
+  case 2:
+  case 4:
+    gapType = AcdRecon::X_RibbonSide;
+    gap = 2;
+    break;
+  case 5:
+    return StatusCode::SUCCESS;
+  }
+
+  std::cout << "gapPocaRibbon( " << gapType << ',' << gap << ")" << std::endl;
+
+  unsigned char col = (unsigned char) ( pocaData.m_id.ribbonNum() );
+  unsigned char row = 0;
+  
+  idents::AcdGapId gapId(gapType,gap,face,row,col);
+
+  double distance = pocaData.m_active2D;
+
+  Event::AcdTkrGapPoca* poca(0);
+  StatusCode sc = makeGapPoca(gapId,track,pocaData,distance,poca);
+  if ( sc.isFailure() ) return sc;
+
+  gapPocas.push_back(poca);
+  return StatusCode::SUCCESS;
+  
+}
+  
+StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, const AcdRecon::ExitData& /* data */,
+					    const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas) {
+  
+  signed char gapType = (unsigned char)(AcdRecon::None);
+  unsigned char face = (unsigned char)(pocaData.m_id.face());
+  unsigned char row = (unsigned char)(pocaData.m_id.row());
+  unsigned char col = (unsigned char)(pocaData.m_id.column());
+  unsigned char gap = 0;
+
+  double distance(0.);
+
+  // bottow side tile have gaps only at the ends
+  if ( face != 0 && row == 3 ) {
+    gapType = AcdRecon::SideCornerEdge;
+    if ( pocaData.m_localX > 0 ) { gap = 1; }    
+    distance = -1.*pocaData.m_activeX;
+  } else {
+    if ( pocaData.m_localX > 0 ) { col++; }
+    if ( pocaData.m_localY > 0 ) { row++; }    
     switch ( face ) {
     case 0:
-      // top: x,y,z are same for local and global
-      localPosition[0] = x_step.x() - xT.x();
-      localPosition[1] = x_step.y() - xT.y();
-      check = x_step.z() - xT.z();
-      delta = xT.z() - initialPosition.z();
-      errorAtZPlane(delta,next_params,localCovMatrix);
+      gapType = ( col == 0 || col == 6 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
+      if ( pocaData.m_localY > 0 ) gap = 1;
+      distance = -1.*pocaData.m_activeY;
       break;
     case 1:
-    case 3:
-      // +-x sides: y -> local x, z -> local y
-      localPosition[0] = x_step.y() - xT.y();
-      localPosition[1] = x_step.z() - xT.z();
-      check = x_step.x() - xT.x();
-      delta = xT.x() - initialPosition.x();
-      errorAtXPlane(delta,next_params,localCovMatrix);
+    case 3:    
+      gapType = ( col == 0 || col == 6 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
+      if ( pocaData.m_localX > 0 ) gap = 1;
+      distance = -1.*pocaData.m_activeX;
       break;
     case 2:
     case 4:
-      // +-y sides: x -> local x, z -> local y
-      localPosition[0] = x_step.x() - xT.x();
-      localPosition[1] = x_step.z() - xT.z();
-      check = x_step.y() - xT.y();	    
-      delta = xT.y() - initialPosition.y();
-      errorAtYPlane(delta,next_params,localCovMatrix);
+      gapType = ( col == 0 || col == 6 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
+      if ( pocaData.m_localX > 0 ) gap = 1;
+      distance = -1.*pocaData.m_activeX;
       break;
-    } 
+    case 5:
+      return StatusCode::SUCCESS;
+    }
+    if ( pocaData.m_localX > 0 ) { col--; }
+    if ( pocaData.m_localY > 0 ) { row--; }
+  }
 
-    if ( false ) {
-      double localXErr = sqrt(localCovMatrix[0][0]);
-      double localYErr = sqrt(localCovMatrix[1][1]);
-      double correl =  localCovMatrix[0][1] / ( localXErr * localYErr );    
-      
-      std::cout << istep << ' ' << volId.name() << ' ' << acdId.id() << ' ' << acdId.volId().name() << ' '
-		<< arcLen_step 
-		<< " (" << x_step.x() << ',' << x_step.y() << ',' << x_step.z() 
-		<< ") [" << localPosition[0] << ',' << localPosition[1] << ',' << check << "] " 
-		<< delta << ' ' << arcLengthToIntersection << ' ' << startEnergy
-		<< " {" << localXErr << ',' << localYErr << ',' << correl << "}. "
-		<< hitMask
-		<< std::endl;
-    }      
+ 
+  idents::AcdGapId gapId(gapType,gap,face,row,col);
+ 
+  Event::AcdTkrGapPoca* poca(0);
+  StatusCode sc = makeGapPoca(gapId,track,pocaData,distance,poca);
+  if ( sc.isFailure() ) return sc;
 
-    // ok, we have everything we need, build the AcdTkrIntersection 
-    Event::AcdTkrIntersection* theIntersection = 
-      new Event::AcdTkrIntersection(acdId,iTrack,
-				    x_step,
-				    localPosition,localCovMatrix,
-				    forward ? arcLengthToIntersection : -1. * arcLengthToIntersection,
-				    arcLen_step,
-				    hitMask);
-    // print to the log if debug level is set
-    theIntersection->writeOut(log);
+  gapPocas.push_back(poca);
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AcdTkrIntersectTool::makeGapPoca(idents::AcdGapId& gapId, const AcdRecon::TrackData& track, const AcdRecon::PocaData& pocaData,
+					    double distance, Event::AcdTkrGapPoca*& poca) {
+
+  poca = 0;
+  double arcLength = track.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     
-    // append to collection and increment counter
-    output->push_back(theIntersection);
-    returnValue++;
-  }
+  float local[2];
+  local[0] = pocaData.m_activeX;
+  local[1] = pocaData.m_activeY;
+  HepMatrix localCov(2,2);
+  localCov[0][0] = pocaData.m_localCovXX;
+  localCov[1][1] = pocaData.m_localCovYY;
+  localCov[0][1] = localCov[1][0] = pocaData.m_localCovXY;
 
-  return returnValue;
+  // temp storage
+  static Event::AcdTkrLocalCoords localCoords;
+  static Event::AcdPocaData pd;
+
+  localCoords.set(local,pocaData.m_path,pocaData.m_cosTheta,pocaData.m_region,localCov);
+  pd.set(arcLength,distance,pocaData.m_active3DErr,pocaData.m_poca,pocaData.m_pocaVector);
+  poca = new Event::AcdTkrGapPoca(gapId,track.m_index,localCoords,pd);
+
+  return StatusCode::SUCCESS;
 }
 
-void AcdTkrIntersectTool::errorAtXPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
+StatusCode AcdTkrIntersectTool::makeTkrPoint(const AcdRecon::TrackData& /*track*/, const AcdRecon::ExitData& data,
+					     const Event::TkrTrackParams& params, Event::AcdTkrPoint*& tkrPoint ) {
+  tkrPoint = 0;
   
-  // get the tk params.  
-  // want the x and y and the normal to the plane
-  const double m_x = pars.getxSlope();
-  const double inv_m_x = fabs(m_x) > 1e-9 ? 1./ m_x : 1e9;
-  /* not used */ //const double m_y = pars.getySlope();
-
-  // ok input the jacobian
-  //
-  //     The intersection occurs at:
-  //       I_y = y_0 - delta * m_y / m_x
-  //       I_z = z_0 - delta * 1. / m_x
-  //     where: 
-  //       delta = xPlane - x_0
-  //
-  //     The jacobian terms are defined as:
-  //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-  //  
-  CLHEP::HepMatrix jacobian(2,4);
-  //jacobian[0][0] = 0.;                           // dI_y / dx_0  = 0
-  //jacobian[0][1] = -delta * inv_m_x;             // dI_y / dm_x  = -d / m_x
-  //jacobian[0][2] = 1.;                           // dI_y / dy_0  = 1
-  //jacobian[0][3] = delta * m_y * inv_m_x;        // dI_y / dm_y  = -d * m_y / m_x
-
-  //jacobian[1][0] = - inv_m_x;                    // dI_z / dx_0  = -1 / m_x
-  //jacobian[1][1] = delta * inv_m_x * inv_m_x;    // dI_z / dm_x  = -d / m_x * m_x
-  //jacobian[1][2] = 0.;                           // dI_z / dy_0  = 0
-  //jacobian[1][3] = 0.;                           // dI_z / dm_y  = 0
-
-  jacobian[0][0] = 0.;                           // dI_y / dx_0  = 0
-  jacobian[0][1] = 0.;
-  jacobian[0][2] = 1.;                           // dI_y / dy_0  = 1
-  jacobian[0][3] = 0.;
-
-  jacobian[1][0] = - inv_m_x;                    // dI_z / dx_0  = -1 / m_x
-  jacobian[1][1] = delta * inv_m_x * inv_m_x;    // dI_z / dm_x  = -d / m_x * m_x
-  jacobian[1][2] = 0.;                           // dI_z / dy_0  = 0
-  jacobian[1][3] = 0.;                           // dI_z / dm_y  = 0  
-
-  for ( unsigned int i(0);  i < 2; i++ ) {
-    for ( unsigned int j(0);  j < 2; j++ ) {
-      double currentSum = 0.;
-      for ( unsigned int k(1);  k < 5; k++ ) {
-	for ( unsigned int l(1);  l < 5; l++ ) {
-	  currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
-	}
-      }
-      covAtPlane[i][j] = currentSum;
-    }
-  }
-}
-
-void AcdTkrIntersectTool::errorAtYPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
-
-  // get the tk params.  
-  // want the x and y and the normal to the plane
-  /* not used */ //const double m_x = pars.getxSlope();
-  const double m_y = pars.getySlope();
-  const double inv_m_y = fabs(m_y) > 1e-9 ? 1./ m_y : 1e9;
-
-  // ok input the jacobian
-  //
-  //     The intersection occurs at:
-  //       I_x = x_0 - delta * m_x / m_y
-  //       I_z = z_0 - delta * 1. / m_y
-  //     where:
-  //       delta = yPlane - y_0
-  //
-  //     The jacobian terms are defined as:
-  //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-  //  
-  CLHEP::HepMatrix jacobian(2,4);
-  //jacobian[0][0] = 1.;                           // dI_x / dx_0  = 1                        
-  //jacobian[0][1] = delta * m_x * inv_m_y;        // dI_x / dm_x  = d m_x / m_y
-  //jacobian[0][2] = 0.;                           // dI_x / dy_0  = 0
-  //jacobian[0][3] = -delta * inv_m_y;             // dI_x / dm_y  = -d / m_y
-
-  //jacobian[1][0] = 0.;                           // dI_z / dx_0  = 0                    
-  //jacobian[1][1] = 0.;                           // dI_z / dm_x  = 0                    
-  //jacobian[1][2] = - inv_m_y;                    // dI_z / dy_0  = -1 / m_y
-  //jacobian[1][3] = delta * inv_m_y * inv_m_y;    // dI_z / dm_y  = d / m_y * m_y
-  
-  jacobian[0][0] = 1.;                           // dI_x / dx_0  = 1                        
-  jacobian[0][1] = 0.;
-  jacobian[0][2] = 0.;                           // dI_x / dy_0  = 0
-  jacobian[0][3] = 0.;
-
-  jacobian[1][0] = 0.;                           // dI_z / dx_0  = 0                    
-  jacobian[1][1] = 0.;                           // dI_z / dm_x  = 0                    
-  jacobian[1][2] = - inv_m_y;                    // dI_z / dy_0  = -1 / m_y
-  jacobian[1][3] = delta * inv_m_y * inv_m_y;    // dI_z / dm_y  = d / m_y * m_y  
-
-  for ( unsigned int i(0);  i < 2; i++ ) {
-    for ( unsigned int j(0);  j < 2; j++ ) {
-      double currentSum = 0.;
-      for ( unsigned int k(1);  k < 5; k++ ) {
-	for ( unsigned int l(1);  l < 5; l++ ) {
-	  currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
-	}
-      }
-      covAtPlane[i][j] = currentSum;
-    }
-  }
-}
-
-void AcdTkrIntersectTool::errorAtZPlane(const double delta, const Event::TkrTrackParams& pars, CLHEP::HepMatrix& covAtPlane) const {
-
-  // ok input the jacobian
-  //
-  //     The intersection occurs at:
-  //       I_x = x_0 - delta * m_x
-  //       I_y = y_0 - delta * m_y
-  //     where:
-  //       delta = zPlane - z_0
-  //
-  //     The jacobian terms are defined as:
-  //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-  //  
-  CLHEP::HepMatrix jacobian(2,4);
-  
-  //jacobian[0][0] = 1.;            // dI_x / dx_0 = 1
-  //jacobian[0][1] = -delta;        // dI_x / dm_x = -d
-  //jacobian[0][2] = 0.;            // dI_x / dy_0 = 0
-  //jacobian[0][3] = 0.;            // dI_x / dm_y = 0
-
-  //jacobian[1][0] = 0.;            // dI_y / dx_0 = 0
-  //jacobian[1][1] = 0.;            // dI_y / dm_x = 0
-  //jacobian[1][2] = 1.;            // dI_y / dy_0 = 1
-  //jacobian[1][3] = -delta;        // dI_y / dm_y = -d
-
-  jacobian[0][0] = 1.;            // dI_x / dx_0 = 1
-  jacobian[0][1] = 0.;        // dI_x / dm_x = -d
-  jacobian[0][2] = 0.;            // dI_x / dy_0 = 0
-  jacobian[0][3] = 0.;            // dI_x / dm_y = 0
-
-  jacobian[1][0] = 0.;            // dI_y / dx_0 = 0
-  jacobian[1][1] = 0.;            // dI_y / dm_x = 0
-  jacobian[1][2] = 1.;            // dI_y / dy_0 = 1
-  jacobian[1][3] = 0.;        // dI_y / dm_y = -d  
-
-  for ( unsigned int i(0);  i < 2; i++ ) {
-    for ( unsigned int j(0);  j < 2; j++ ) {
-      double currentSum = 0.;
-      for ( unsigned int k(1);  k < 5; k++ ) {
-	for ( unsigned int l(1);  l < 5; l++ ) {
-	  currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
-	}
-      }
-      covAtPlane[i][j] = currentSum;
-    }
-  }
+  tkrPoint = new Event::AcdTkrPoint(/* track.m_index, */ data.m_arcLength,data.m_face,data.m_x,params);
+  return StatusCode::SUCCESS;
 }

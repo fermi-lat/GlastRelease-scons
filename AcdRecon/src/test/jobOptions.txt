@@ -36,7 +36,6 @@ MessageSvc.OutputLevel      = 2;
 
 ApplicationMgr.EvtMax =10;
 
-AcdReconAlg.intersectionToolName = "";
 
 //==============================================================
 //
