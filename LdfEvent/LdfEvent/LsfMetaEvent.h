@@ -104,6 +104,8 @@ namespace LsfEvent {
     /// Information about the configuration keys associated with this event
     inline const lsfData::Configuration* configuration() const { return m_config; }
 
+    inline const enums::Lsf::RunType runType() const { return m_type; }
+
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
                     const lsfData::DatagramInfo& datagram, 
@@ -130,44 +132,6 @@ namespace LsfEvent {
       m_type = configuration.type();
     }
 
-    /// Serialize the object for writing
-    //friend StreamBuffer& operator<< ( StreamBuffer& s, const MetaEvent& obj )    {
-    //  s << obj.m_run;
-    //  s << obj.m_datagram;
-    //  s << obj.m_scalers;
-    //  s << obj.m_time;
-    //  s << obj.m_type; 
-    //  if ( obj.m_config != 0) {
-	// FIXME cast to correct type
-	// s << *obj.m_config;
-    //  };
-    //  return s;
-   // }
-    /// Serialize the object for reading
-   // friend StreamBuffer& operator>> ( StreamBuffer& s, MetaEvent& obj )          {
-   //   s >> obj.m_run;
-   //   s >> obj.m_datagram;
-   //   s >> obj.m_scalers;
-   //   s >> obj.m_time;
-      // FIXME can't read enums
-      // s >> obj.m_type;
-  //    obj.m_config = 0;
-  //    switch ( obj.m_type ) {
-   //   case enums::Lsf::NoRunType: break;
-   //   case enums::Lsf::LPA: 
-//	obj.m_config = new LpaConfiguration(); break;
-  //    case enums::Lsf::AcdLCI: 
-   //   case enums::Lsf::CalLCI:
-    //  case enums::Lsf::TkrLCI:
-//	break;
-  //    }
-   //   if ( obj.m_config != 0 ) {
-//	// FIXME cast to correct type
-	// s >> *obj.m_config;
-  //    }
-    //  return s;
-   // }
-    
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
       return obj.fillStream(s);
@@ -182,8 +146,14 @@ namespace LsfEvent {
 	<< m_time << "\n"
 	<< m_type << "\n";
       if ( m_config != 0 ) {
-	// FIXME cast to correct type
-	// s << *m_config 
+          if (m_type == enums::Lsf::LPA)
+              s << *(m_config->castToLpaConfig());
+          else if (m_type == enums::Lsf::AcdLCI)
+              s << *(m_config->castToLciAcdConfig());
+          else if (m_type == enums::Lsf::CalLCI)
+              s << *(m_config->castToLciCalConfig());
+          else if (m_type == enums::Lsf::TkrLCI)
+              s << *(m_config->castToLciTkrConfig());
       }
       return s;
     }
