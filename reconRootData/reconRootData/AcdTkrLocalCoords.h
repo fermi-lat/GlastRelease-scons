@@ -4,7 +4,7 @@
 #include "Rtypes.h"
 #include <string>
 
-class TMatrixD;
+#include "TMatrixD.h"
 
 /**
 *  @class AcdTkrLocalCoords

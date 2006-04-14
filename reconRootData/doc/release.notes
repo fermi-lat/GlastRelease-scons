@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r1p2    14-Apr-06  : EAC remove forward declaration of TMatrixD in AcdTkrLocalData
 v9r1p1    11-Apr-06  : HMK patch to remove extra ; in #include
 v9r1      10-Apr-06  : HMK Finish move to Double for CAL
 v9r0      04-Apr-06  : EAC Added various ACD data structures
