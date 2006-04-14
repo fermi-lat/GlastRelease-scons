@@ -477,6 +477,7 @@ namespace lsfData {
 
      /// Fill the output stream (ASCII)
      std::ostream& fillStream( std::ostream& s ) const {
+         LciConfiguration::fillStream(s);
          return s << " injected = " << m_injected << std::endl 
                   << " threshold = " << m_threshold << std::endl 
                   << " biasDac = " << m_biasDac << std::endl
@@ -651,6 +652,7 @@ namespace lsfData {
 
      /// Fill the output stream (ASCII)
      std::ostream& fillStream( std::ostream& s ) const {
+         LciConfiguration::fillStream(s);
          return s << " uld = " << m_uld << std::endl 
                   << " injected = " << m_injected << std::endl
                   << " delay = " << m_delay << std::endl
@@ -775,6 +777,7 @@ namespace lsfData {
 
      /// Fill the output stream (ASCII)
      std::ostream& fillStream( std::ostream& s ) const {
+         LciConfiguration::fillStream(s);
          return s << " injected = " << m_injected << std::endl
                   << " delay = " << m_delay << std::endl
                   << " threshold = " << m_threshold << std::endl
