@@ -377,7 +377,7 @@ bool PDFHighEnergyCuts::value(double result[1]) const{
   if( calZEcntr()<bottom_out ) return true;
   if( calTwrEdgeCntr()>cuts[cTOWER_CENTER] && calELayer7()>cuts[cE7] ) {
     if( calZEcntr()<core_out ) result[0]= 0.;
-    result[0]= 2.; 
+    else result[0]= 2.; 
     return false;
   }
 
