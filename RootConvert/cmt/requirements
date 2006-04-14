@@ -1,9 +1,10 @@
 package RootConvert
-version v1r5
+version v1r6
 author David Chamont <chamont@poly.in2p3.fr>
 #branches RootConvert cmt doc src
 
 use Event v*
+use LdfEvent v*
 use commonRootData v*
 use mcRootData v*
 use digiRootData v*

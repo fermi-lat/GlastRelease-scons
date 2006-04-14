@@ -8,15 +8,16 @@ namespace RootPersistence {
 // idents conversions
 //============================================================
 
-idents::AcdId convert( const AcdId & ) {
-    throw "idents::AcdId convert( const AcdId & ) NOT IMPLEMENTED" ;
-    return idents::AcdId() ;
+idents::AcdId convert( const AcdId & rootId ) {
+  //throw "idents::AcdId convert( const AcdId & ) NOT IMPLEMENTED" ;    
+    return idents::AcdId(rootId.getId(2));
 }
 
 
-AcdId convert( const idents::AcdId & ) {
-    throw "AcdId convert( const idents::AcdId & ) NOT IMPLEMENTED" ;
-    return AcdId() ;
+AcdId convert( const idents::AcdId & tdsId ) {
+  //throw "AcdId convert( const idents::AcdId & ) NOT IMPLEMENTED" ;
+    AcdId root;  root.setId( tdsId.id() );
+    return root;
 }
 
 
