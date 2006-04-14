@@ -11,7 +11,6 @@
 
 #include "AcdUtil/AcdRibbonDim.h"
 
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
 /// Constructor: takes the ribbon id, the volume id, and the detector service
@@ -19,10 +18,8 @@ AcdRibbonDim::AcdRibbonDim(const idents::AcdId& acdId, const idents::VolumeIdent
 			   IGlastDetSvc &detSvc) 
   :m_acdId(acdId),
    m_volId(volId),
-   m_detSvc(detSvc) 
-{
-    m_sc = getVals();
-
+   m_detSvc(detSvc) {
+  m_sc = getVals();
 }  
 
 /// this function access the detector service to get the geometry information
@@ -48,6 +45,8 @@ StatusCode AcdRibbonDim::getVals() {
   
   for (int isegment = 0; isegment < 3; isegment++) {
     idents::VolumeIdentifier& segmentVolId = m_segId[isegment];
+    segmentVolId = idents::VolumeIdentifier();
+
     segmentVolId.append(m_volId[0]);
     short face;
     if (isegment == 1) {
@@ -87,12 +86,12 @@ StatusCode AcdRibbonDim::getVals() {
 	}
 	
 	std::vector<double> dim1;
-	sc = getDetectorDimensions(volId1, m_detSvc, dim1, center);
+	sc = getDetectorDimensions(isegment, volId1, m_detSvc, dim1, center);
 	
 	if (sc.isFailure()) {
-	  std::cout << "Failed to get dimensions for " << volId1.name() << std::endl;
+	  std::cout << "Failed to get dimensions for " << volId1.name() << " toppart segment " << iseg <<  std::endl;
 	   // catch errors
-	  sc = StatusCode::SUCCESS;
+	  sc = StatusCode::FAILURE;
 	  return sc;
 	}
 	// pick up the beginning from the first segment
@@ -109,14 +108,13 @@ StatusCode AcdRibbonDim::getVals() {
 	  y2 = center.y() + dim1[1]/2.;
 	}
       }
-
     } else if (m_acdId.ribbonOrientation() == ribbonX && isegment == 1) {
       std::vector<double> dim;
-      sc = getDetectorDimensions(segmentVolId, m_detSvc, dim, center);
+      sc = getDetectorDimensions(isegment, segmentVolId, m_detSvc, dim, center);
       if (sc.isFailure()) {
-	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << std::endl;
+	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << " top segment " << isegment << std::endl;
 	// catch errors
-	sc = StatusCode::SUCCESS;
+	sc = StatusCode::FAILURE;
 	continue;
       }
       x1 = center.x() - dim[0]/2.;
@@ -126,14 +124,13 @@ StatusCode AcdRibbonDim::getVals() {
       y2 = center.y();
       z2 = center.z();
       ribbonHalfWidth = dim[1]/2.;
-
     } else { // side ribbons - which are in one segment
       std::vector<double> dim;
-      sc = getDetectorDimensions(segmentVolId, m_detSvc, dim, center);
+      sc = getDetectorDimensions(isegment, segmentVolId, m_detSvc, dim, center);
       if (sc.isFailure()) {
-	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << std::endl;
+	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << " side segment " << isegment << std::endl;
 	// catch errors
-	sc = StatusCode::SUCCESS;
+	sc = StatusCode::FAILURE;
 	continue;
       }       
       x1 = center.x();
@@ -155,14 +152,14 @@ StatusCode AcdRibbonDim::getVals() {
     m_start[isegment] = HepPoint3D(x1, y1, z1);
     m_end[isegment] = HepPoint3D(x2, y2, z2);    
     m_halfWidth[isegment] = ribbonHalfWidth;
-
   }
   
   return sc;
 }
 
 
-StatusCode AcdRibbonDim::getDetectorDimensions( const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc,
+StatusCode AcdRibbonDim::getDetectorDimensions( int isegment, 
+						const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc,
 						std::vector<double>& dim, HepPoint3D& center) {
 
   std::string str;
@@ -173,14 +170,18 @@ StatusCode AcdRibbonDim::getDetectorDimensions( const idents::VolumeIdentifier& 
     return sc;
   } 
 
-  HepTransform3D transform;
-  sc = detSvc.getTransform3DByID(volId, &transform);
+  sc = detSvc.getTransform3DByID(volId, &(m_transform[isegment]));
   if (sc.isFailure() ) {
     //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
     return sc;
   } 
 
   HepPoint3D theCenter(0., 0., 0.);
-  center = transform * theCenter;
+  center = m_transform[isegment] * theCenter;
   return sc;
+}
+
+
+void AcdRibbonDim::toLocal(const HepPoint3D& global, int isegment, HepPoint3D& local) {
+  local = m_transform[isegment] * global;
 }

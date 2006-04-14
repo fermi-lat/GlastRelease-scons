@@ -36,14 +36,13 @@ StatusCode AcdTileDim::getVals() {
   } 
 
   /// get the tile position
-  HepTransform3D transform;
-  sc = m_detSvc.getTransform3DByID(m_volId, &transform);
+  sc = m_detSvc.getTransform3DByID(m_volId, &m_transform);
   if (sc.isFailure() ) {
     //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
     return sc;
   } 
   HepPoint3D center(0., 0., 0.);
-  m_tileCenter = transform * center;
+  m_tileCenter = m_transform * center;
 
   /// calculate the corners of the tile
   sc = getCorners(m_dim,m_tileCenter,m_corners);
@@ -91,3 +90,7 @@ StatusCode AcdTileDim::getCorners(const std::vector<double> &dim, const HepPoint
   }  
   return sc;
 } 
+
+void AcdTileDim::toLocal(const HepPoint3D& global, HepPoint3D& local) {
+  local = m_transform * global;
+}
