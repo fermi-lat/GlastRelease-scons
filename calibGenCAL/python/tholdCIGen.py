@@ -55,9 +55,12 @@ class inputFile:
         self.destTwr = destTwr
         self.name = name
         self.version = version
+	
+
 
 
 ##################################################################################        
+
 
 
 if __name__ == '__main__':
@@ -377,15 +380,18 @@ if __name__ == '__main__':
         if i['TTYPE1'] != 'fle_dac':
             log.error("File %s not a FLE ADC file", f.name)
             sys.exit(1)
-        if i['ERNG'] != 'LEX8':
-            log.error("Only LEX8 energy range is supported for FLE DAC")
+	erng = i['ERNG']    
+        if erng != 'LEX8' and erng != 'LEX1':
+            log.error("Only LEX8 and LEX1 energy ranges supported for FLE DAC")
             sys.exit(1)
         twrs = fleAdcFile.getTowers()
         if f.srcTwr not in twrs:
             log.error("Src twr %d data not found in file %s", f.srcTwr, f.name)
             sys.exit(1)
         adcData = fleAdcFile.read()
-        fleAdcData[f.destTwr,...] = adcData[f.srcTwr,...]
+	if erng == 'LEX1':
+	    adcData = adcData * 9.0
+        fleAdcData[f.destTwr,...] = adcData[f.srcTwr,...].astype(Numeric.Float32)
         fleAdcFile.close()
         
     # read FHE/ADC characterization files
