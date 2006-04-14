@@ -368,7 +368,9 @@ if __name__ == '__main__':
 	  
     if engRange == 'LEX8':
       nrgIdx = calConstant.CRNG_LEX8
-    else:
+    elif engRange == 'HEX8':
+      nrgIdx = calConstant.CRNG_HEX8
+    elif engRange == 'LEX1':
       nrgIdx = calConstant.CRNG_LEX1
       nrgRangeMultiplier *= 9.0	
                 
