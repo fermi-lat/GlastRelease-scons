@@ -36,14 +36,16 @@ namespace Event
   
   class AcdTkrIntersection 
   {
-
+    
   public:
+
+    AcdTkrIntersection();
     
     AcdTkrIntersection(const idents::AcdId& acdId, int trackIndex, 
 		       const Point& globalPosition, 
                const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
 		       double arcLengthToIntersection, double pathLengthInTile,
-		       unsigned char tileHit);
+		       unsigned char tileHit, double cosTheta);
 
     virtual ~AcdTkrIntersection() {};
     
@@ -69,10 +71,19 @@ namespace Event
     inline double  getArcLengthToIntersection() const { return m_arcLengthToIntersection; } ;
     /// Path length of track through tile
     inline double  getPathLengthInTile()    const { return m_pathlengthInTile; } ;
+    /// Angle of track w.r.t. detector element
+    inline double getCosTheta() const { return m_cosTheta; }
 
     /// mask to say if the tile was hit
     inline unsigned char tileHit() const { return m_tileHit; };
     
+    /// set everything at once
+    void set(const idents::AcdId& acdId, int trackIndex, 
+	     const Point& globalPosition, 
+	     const double localPosition[2], const HepMatrix& localCovMatrix,
+	     double arcLengthToIntersection, double pathLengthInTile,
+	     unsigned char tileHit, double cosTheta);
+
     virtual void writeOut(MsgStream& stream) const;
     
   protected:
@@ -108,6 +119,9 @@ namespace Event
     ///  Mask to store tile hit
     unsigned char m_tileHit;
 
+    /// Angle of track w.r.t. detector element
+    double    m_cosTheta;
+
   };
 
    
@@ -129,7 +143,7 @@ namespace Event
    *       changes in AcdTrkIntersectionAlg
    */
     
-
+    
   class AcdTkrIntersectionCol : public DataObject, public std::vector<AcdTkrIntersection*> 
   {
   public:
@@ -169,7 +183,7 @@ namespace Event
     virtual void ini();
         
   };
-
-}
+    
+};
 
 #endif

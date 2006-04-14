@@ -23,14 +23,7 @@ AcdTkrPoca::AcdTkrPoca() {
 AcdTkrPoca::AcdTkrPoca(const idents::AcdId& acdId, int trackIndex,
 		       double doca, double docaErr, unsigned docaRegion,
 		       const Point& poca, const Event::TkrTrackParams& paramsAtPoca) {
-  m_acdId = acdId;
-  m_trackIdx = trackIndex;
-  m_doca = doca;
-  m_docaErr = docaErr;
-  m_docaRegion = docaRegion;
-  
-  m_poca = poca;
-  m_paramsAtPoca = paramsAtPoca;
+  set(acdId,trackIndex,doca,docaErr,docaRegion,poca,paramsAtPoca);
 }
 
 void AcdTkrPoca::writeOut(MsgStream& /* stream */ ) const
@@ -42,6 +35,21 @@ void AcdTkrPoca::writeOut(MsgStream& /* stream */ ) const
 
 }
 
+void AcdTkrPoca::set(const idents::AcdId& acdId, int trackIndex,
+		     double doca, double docaErr, unsigned docaRegion,
+		     const Point& poca, const Event::TkrTrackParams& paramsAtPoca)
+// Purpose: set all data members at once
+//
+{
+  m_acdId = acdId;
+  m_trackIdx = trackIndex;
+  m_doca = doca;
+  m_docaErr = docaErr;
+  m_docaRegion = docaRegion;
+  
+  m_poca = poca;
+  m_paramsAtPoca = paramsAtPoca;
+}
 
 
 void AcdTkrPoca::ini()

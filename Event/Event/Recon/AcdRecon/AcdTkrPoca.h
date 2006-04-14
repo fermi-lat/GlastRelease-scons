@@ -68,6 +68,14 @@ namespace Event
     /// Destructor is trivial
     virtual ~AcdTkrPoca() {;}
 
+    /// set all the values
+    void set(const idents::AcdId& acdId, int trackIndex,
+	     double doca, double docaErr, unsigned docaRegion,
+	     const Point& poca, const Event::TkrTrackParams& paramsAtPoca);
+
+    /// set only some of the values
+    inline void setDocaErr(double val) { m_docaErr = val; };
+
     /// Return the AcdId of the hit tile or ribbon
     inline const idents::AcdId& acdId() const {
       return m_acdId;

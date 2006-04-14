@@ -93,6 +93,11 @@ namespace Event
     
     /// Direct access to parameters
 
+    /// set everything at oncer
+    void set(const idents::AcdId&, unsigned short flagsA, unsigned short flagsB, 
+	     unsigned short phaA, unsigned short phaB,
+	     float mipsPmtA, float mipsPmtB);
+
     /// Returns the id of the tile or ribbon
     inline const idents::AcdId& getAcdId() const { return m_acdId; };
 

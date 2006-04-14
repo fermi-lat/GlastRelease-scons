@@ -34,12 +34,17 @@ AcdHit::AcdHit(const Event::AcdDigi& digi, float mipsPmtA, float mipsPmtB) {
 
 /// Constructor for use in persistent -> transient conversion, 
 /// Takes arguements as they are stored in ROOT
-AcdHit::AcdHit(const idents::AcdId& id, 
-	       unsigned short flagsA, unsigned short flagsB, 
+AcdHit::AcdHit(const idents::AcdId& id, unsigned short flagsA, unsigned short flagsB, 
 	       unsigned short phaA, unsigned short phaB,
 	       float mipsPmtA, float mipsPmtB) {
-  //ini();
-  
+  set(id,flagsA,flagsB,phaA,phaB,mipsPmtA,mipsPmtB);
+}
+
+
+void AcdHit::set(const idents::AcdId& id, 
+		 unsigned short flagsA, unsigned short flagsB, 
+		 unsigned short phaA, unsigned short phaB,
+		 float mipsPmtA, float mipsPmtB) {
   // just copy everything
   m_acdId = id;
   m_flags[A] = flagsA;
@@ -50,8 +55,6 @@ AcdHit::AcdHit(const idents::AcdId& id,
   m_mipsPmt[B] = mipsPmtB;
 }
 
-
-
 void AcdHit::writeOut(MsgStream& stream) const
 // Purpose: provide ascii output of some data members for
 //          debugging purposes
@@ -60,7 +63,11 @@ void AcdHit::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-	 << "Tile: " << m_acdId.id()	
+	 << "Tile: " << m_acdId.id()
+	 << "Phas: (" << m_pha[A] << ',' << m_pha[B] 
+	 << "). Flags: (" << m_flags[A] << ',' << m_flags[B] 
+	 << "). Mips: (" << m_mipsPmt[A] << ',' <<  m_mipsPmt[B]
+	 << ")."
 	 << endreq;
 }
 

@@ -16,12 +16,25 @@
 
 using namespace Event;
 
+AcdTkrIntersection::AcdTkrIntersection(){
+  ini();
+}
+
 AcdTkrIntersection::AcdTkrIntersection(const idents::AcdId& acdId, int trackIndex,
 				       const Point& globalPosition, 
 				       const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
 				       double arcLengthToIntersection, double pathLengthInTile,
-				       unsigned char tileHit) {
-  
+				       unsigned char tileHit, double cosTheta) {
+  set(acdId,trackIndex, 
+      globalPosition,localPosition, localCovMatrix,
+      arcLengthToIntersection, pathLengthInTile,tileHit,cosTheta);
+}
+
+void AcdTkrIntersection::set(const idents::AcdId& acdId, int trackIndex, 
+			     const Point& globalPosition, 
+			     const double localPosition[2], const HepMatrix& localCovMatrix,
+			     double arcLengthToIntersection, double pathLengthInTile,
+			     unsigned char tileHit, double cosTheta) {
   m_tileId = acdId;
   m_trackIndex = trackIndex;
   m_location = globalPosition;
@@ -36,7 +49,9 @@ AcdTkrIntersection::AcdTkrIntersection(const idents::AcdId& acdId, int trackInde
   m_pathlengthInTile = pathLengthInTile;
 
   m_tileHit = tileHit;
+  m_cosTheta = cosTheta;
 }
+        
 
 void AcdTkrIntersection::writeOut(MsgStream& stream) const
 
@@ -51,7 +66,7 @@ void AcdTkrIntersection::writeOut(MsgStream& stream) const
   double correl =  m_localXYCov / ( localXErr * localYErr );
 
   stream << MSG::DEBUG
-	 << "Tile: " << m_tileId.id()
+	 << "AcdTkrIntersection.  Tile: " << m_tileId.id()
 	 << ".  Track: " << m_trackIndex
 	 << ".  Global: (" << m_location.getX() << ',' << m_location.getY() << ',' << m_location.getZ()
 	 << ").  Local: [" << m_localX << ',' << m_localY
@@ -83,6 +98,7 @@ void AcdTkrIntersection::ini()
   m_pathlengthInTile = 0.;
 
   m_tileHit = 0;
+  m_cosTheta = 0;
 }
 
 AcdTkrIntersectionCol::AcdTkrIntersectionCol(const std::vector<AcdTkrIntersection*>& acdTkrIntersections) {

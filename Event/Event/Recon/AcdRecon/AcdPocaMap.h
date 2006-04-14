@@ -10,7 +10,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 
-#include "Event/Recon/AcdRecon/AcdTkrPoca.h"
+#include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 
 class MsgStream;
 
@@ -20,27 +20,26 @@ static const CLID& CLID_AcdPocaMap = InterfaceID("AcdPocaMap", 1, 0);
 *  @class AcdPocaMap
 *
 *
-*  @brief This class stores the relations between TkrTracks, AcdIds and AcdTkrPocas.
+*  @brief This class stores the relations between TkrTracks, AcdIds and AcdTkrHitPocas.
 *  
 *  \author Eric Charles
 *
-* $Header$
-*/
+* $Header$ */
 
 namespace Event
 {
   
-  /// This allows us to sort sets of AcdTkrPoca by the doca value
+  /// This allows us to sort sets of AcdTkrHitPoca by the doca value
   struct AcdPocaMore {
-    bool operator()(const AcdTkrPoca* ptr1, const AcdTkrPoca* ptr2) const {	
-      return ptr1->doca() > ptr2->doca();
+    bool operator()(const AcdTkrHitPoca* ptr1, const AcdTkrHitPoca* ptr2) const {	
+      return ptr1->getDoca() > ptr2->getDoca();
     }
   };   
   
   //
   // Define an AcdPocaSet as an stl set, sorted by doca
   // The sorting is done so the large value occurs first.
-  typedef std::set<const Event::AcdTkrPoca*, Event::AcdPocaMore> AcdPocaSet;
+  typedef std::set<const Event::AcdTkrHitPoca*, Event::AcdPocaMore> AcdPocaSet;
 
 
   
@@ -57,20 +56,20 @@ namespace Event
     }
 
     /// adds a single poca to the map
-    void add(const Event::AcdTkrPoca& poca);
+    void add(const Event::AcdTkrHitPoca& poca);
 
     /// get all the pocas associated with a single tile
     const Event::AcdPocaSet& getPocas(const idents::AcdId& acdId) const;
     /// get the best poca associated with a single tile (can return null)
-    const Event::AcdTkrPoca* getBestPoca(const idents::AcdId& acdId) const;
+    const Event::AcdTkrHitPoca* getBestPoca(const idents::AcdId& acdId) const;
 
     /// get all the pocas associated with a single track
     const Event::AcdPocaSet& getPocas(int track) const;
     /// get the best poca associated with a single track (can return null)
-    const Event::AcdTkrPoca* getBestPoca(int track) const;
+    const Event::AcdTkrHitPoca* getBestPoca(int track) const;
 
     /// get the poca between a track and a tile (can return null)
-    const Event::AcdTkrPoca* getPoca(const idents::AcdId& acdId, int track) const;
+    const Event::AcdTkrHitPoca* getPoca(const idents::AcdId& acdId, int track) const;
 
   protected:
 

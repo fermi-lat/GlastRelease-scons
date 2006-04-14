@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r12   13-Apr-06 EAC Merge in Acd stuff from branch EM-v6r070329p0, tag v11r8em3
  * v11r11   23-Mar-06 TU  Tagging for new externals (CLHEP, Gaudi, etc.)
  * v11r10p1 04-feb-06 DC  Small fix in CalXtalRecData::initialize
  * v11r10p0 05-jan-06 EAC Added missing cxx files for Acd stuff
@@ -11,6 +12,13 @@
  *                      to store more information about Acd-Tkr correlations
  * v11r9   25-nov-05 DC review CalRecon status bits
  *                      replace CalEventEnergy singleton with a collection
+ *
+ *
+ * Updates along branch EM-v6r070329p0
+ * v11r8em3 07-apr-06 EAC updates writeOut methods in AcdTkr data classes 
+ * v11r8em2 07-apr-06 EAC add AcdTkr data class to AcdRecon
+ *
+ *
  * v11r8   10-nov-05 HMK Add in some minor mods requested by Zach in CalDigi
  *                   and CalXtalRecData
  * v11r7   08-nov-05 HMK Add AcdRecon::CornerDoca and 
