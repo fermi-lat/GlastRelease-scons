@@ -42,6 +42,10 @@ namespace ldfReader {
 
         virtual void clear();
 
+        virtual unsigned long long eventCount() const { 
+            return m_file->evtcnt(); 
+        }
+
         /// Load data for the current event in the EBF file
         virtual int loadData();
 

@@ -37,6 +37,8 @@ namespace ldfReader {
 
         virtual void printHeader() const { };
 
+        virtual unsigned long long eventCount() const { return m_evtCount; }
+
         /// Turn on or off debug output.  Returns old value of flag
         //bool setDebug(bool on);
 
