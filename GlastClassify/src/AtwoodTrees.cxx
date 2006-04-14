@@ -131,9 +131,9 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_treeAnalysis = treeFactory.buildTreeAnalysis();
 
     //Testing...
-    std::ofstream outFile("IMsheetTest.txt");
-    m_treeAnalysis->print(outFile);
-    outFile.close();
+    //std::ofstream outFile("IMsheetTest.txt");
+    //m_treeAnalysis->print(outFile);
+    //outFile.close();
 
     return;
 }
