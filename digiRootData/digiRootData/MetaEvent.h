@@ -32,7 +32,9 @@ public:
   /// Default c'tor.  Assigns sentinel or null values to all fields
   MetaEvent()
     :m_config(0),
-     m_type(enums::Lsf::NoRunType){
+     m_type(enums::Lsf::NoRunType),m_lpaConfig(0),m_lciAcdConfig(0),
+     m_lciCalConfig(0),m_lciTkrConfig(0){
+     Clear("");
   }
   
   /// Standard c'tor.  Takes input values for all fields
@@ -42,21 +44,46 @@ public:
 	     const Configuration& configuration )
     :m_run(run),m_datagram(datagram),
      m_scalers(scalers),
-     m_time(time) {
+     m_time(time),
+     m_config(0),m_type(enums::Lsf::NoRunType),
+     m_lpaConfig(0),m_lciAcdConfig(0),m_lciCalConfig(0),
+     m_lciTkrConfig(0) {
      //m_config(configuration.clone()),
      //m_type(configuration.runType()){
   }
  
   /// Copy c'tor.  Just copy all values.  
-  /// Does a deep copy of the configuration and uses the configuration type to deduce the run type
   MetaEvent( const MetaEvent& other )
     :TObject(other),
      m_run(other.run()),
      m_datagram(other.datagram()),
      m_scalers(other.scalers()),
      m_time(other.time()),
-     m_config(0),
-     m_type(enums::Lsf::NoRunType) {
+     m_type(other.runType()) {
+
+     if (m_config) delete m_config;
+     m_config = 0;
+     if (m_lpaConfig) delete m_lpaConfig;
+     m_lpaConfig = 0;
+     if (m_lciAcdConfig) delete m_lciAcdConfig;
+     m_lciAcdConfig = 0;
+     if (m_lciCalConfig) delete m_lciCalConfig;
+     m_lciCalConfig = 0;
+     if (m_lciTkrConfig) delete m_lciTkrConfig;
+     m_lciTkrConfig = 0;
+
+     if (other.configuration())
+        setConfiguration(*(other.configuration()));
+     if (other.lpaConfiguration()) 
+         setLpaConfiguration(*(other.lpaConfiguration()));
+     if (other.lciAcdConfiguration())
+         setLciAcdConfiguration(*(other.lciAcdConfiguration()));
+     if (other.lciCalConfiguration())
+         setLciCalConfiguration(*(other.lciCalConfiguration()));
+     if (other.lciTkrConfiguration())
+         setLciTkrConfiguration(*(other.lciTkrConfiguration()));
+
+
     //if ( other.configuration() != 0 ) {
     //  setConfiguration(*(other.configuration()));
       //m_config = other.configuration()->clone();
@@ -66,7 +93,40 @@ public:
 
   /// D'tor.  Delete the configuration, which had been deep-copied
   virtual ~MetaEvent(){
-    if (m_config) delete m_config;
+      Clear("");
+  }
+
+ /// define assignment operator
+ MetaEvent& operator=(const MetaEvent& other) {
+
+     m_run = other.run();
+     m_datagram = other.datagram();
+     m_scalers = other.scalers();
+     m_time = other.time();
+     m_type = other.runType();
+
+     if (m_config) delete m_config;
+     m_config = 0;
+     if (m_lpaConfig) delete m_lpaConfig;
+     m_lpaConfig = 0;
+     if (m_lciAcdConfig) delete m_lciAcdConfig;
+     m_lciAcdConfig = 0;
+     if (m_lciCalConfig) delete m_lciCalConfig;
+     m_lciCalConfig = 0;
+     if (m_lciTkrConfig) delete m_lciTkrConfig;
+     m_lciTkrConfig = 0;
+
+     if (other.configuration())
+        setConfiguration(*(other.configuration()));
+     if (other.lpaConfiguration())
+         setLpaConfiguration(*(other.lpaConfiguration()));
+     if (other.lciAcdConfiguration())
+         setLciAcdConfiguration(*(other.lciAcdConfiguration()));
+     if (other.lciCalConfiguration())
+         setLciCalConfiguration(*(other.lciCalConfiguration()));
+     if (other.lciTkrConfiguration())
+         setLciTkrConfiguration(*(other.lciTkrConfiguration()));
+     return *this;
   }
   
   /// Information about the run this event is from
@@ -84,6 +144,18 @@ public:
   /// Information about the configuration keys associated with this event
   inline const Configuration* configuration() const { return m_config; }
 
+  /// Information about the configuration keys associated with this event
+  inline const LpaConfiguration* lpaConfiguration() const { return m_lpaConfig; }
+
+  /// Information about the configuration keys associated with this event
+  inline const LciAcdConfiguration* lciAcdConfiguration() const { return m_lciAcdConfig; }
+
+  /// Information about the configuration keys associated with this event
+  inline const LciCalConfiguration* lciCalConfiguration() const { return m_lciCalConfig; }
+
+  /// Information about the configuration keys associated with this event
+  inline const LciTkrConfiguration* lciTkrConfiguration() const { return m_lciTkrConfig; }
+
   /// Which type of run was this, particle data or charge injection 
   inline enums::Lsf::RunType runType() const { return m_type; }
   
@@ -92,11 +164,12 @@ public:
 			 const GemScalers& scalers,
 			 const LsfTime& time,
 			 const Configuration& configuration) {
+    Clear("");
     m_run = run;
     m_datagram = datagram;
     m_scalers = scalers;
     m_time = time;
-    setConfiguration(configuration);
+    //setConfiguration(configuration);
     //if (m_config) delete m_config;
     //m_config = configuration.clone();
     //m_type = configuration.runType();
@@ -107,6 +180,7 @@ public:
   inline void setDatagram( const DatagramInfo& val) { m_datagram = val; }
   inline void setScalers( const GemScalers& val) { m_scalers = val; }
   inline void setLsfTime( const LsfTime& val) { m_time = val; }
+  inline void setRunType( const enums::Lsf::RunType& type) { m_type = type; }
   inline void setConfiguration( const Configuration& configuration ) {
     /*if (m_config) delete m_config;
     const LpaConfiguration* ptr(0);
@@ -119,6 +193,37 @@ public:
     */
   }  
 
+  inline void setLpaConfiguration( const LpaConfiguration& config) {
+      if (m_lpaConfig) delete m_lpaConfig;
+      m_lpaConfig = new LpaConfiguration(config);
+  }
+
+  inline void setLciAcdConfiguration( const LciAcdConfiguration& config) {
+      if (m_lciAcdConfig) delete m_lciAcdConfig;
+      m_lciAcdConfig = new LciAcdConfiguration(config);
+/*
+      m_lciAcdConfig = new LciAcdConfiguration();
+      m_lciAcdConfig->initialize(
+         config.injected(),
+         config.threshold(),
+         config.biasDac(), 
+         config.holdDelay(), 
+         config.trigger(),
+         config.channel()); 
+*/
+      
+  }
+
+  inline void setLciCalConfiguration( const LciCalConfiguration& config) {
+      if (m_lciCalConfig) delete m_lciCalConfig;
+      m_lciCalConfig = new LciCalConfiguration(config);
+  }
+
+  inline void setLciTkrConfiguration( const LciTkrConfiguration& config) {
+      if (m_lciTkrConfig) delete m_lciTkrConfig;
+      m_lciTkrConfig = new LciTkrConfiguration(config);
+  }
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
     m_run.Clear("");
@@ -127,6 +232,14 @@ public:
     m_time.Clear("");
     if (m_config) delete m_config;
     m_config = 0;
+    if (m_lpaConfig) delete m_lpaConfig;
+    m_lpaConfig = 0;
+    if (m_lciAcdConfig) delete m_lciAcdConfig;
+    m_lciAcdConfig = 0;
+    if (m_lciCalConfig) delete m_lciCalConfig;
+    m_lciCalConfig = 0;
+    if (m_lciTkrConfig) delete m_lciTkrConfig;
+    m_lciTkrConfig = 0;
     m_type = enums::Lsf::NoRunType;
   }
 
@@ -158,6 +271,14 @@ private:
   
   /// Which type of run was this, particle data or charge injection 
   enums::Lsf::RunType m_type;
+
+  LpaConfiguration *m_lpaConfig;
+
+  LciAcdConfiguration *m_lciAcdConfig;
+
+  LciCalConfiguration *m_lciCalConfig;
+
+  LciTkrConfiguration *m_lciTkrConfig;
   
   ClassDef(MetaEvent,1) // information about the State of the LAT when a particular event was captured
 

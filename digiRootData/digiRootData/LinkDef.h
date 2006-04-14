@@ -30,7 +30,13 @@
 #pragma link C++ class DatagramInfo+; 
 #pragma link C++ class Configuration+;  
 #pragma link C++ class LpaConfiguration+; 
+#pragma link C++ class Channel+; 
 #pragma link C++ class LciConfiguration+; 
+#pragma link C++ class LciAcdConfiguration+;
+#pragma link C++ class LciCalConfiguration+;
+#pragma link C++ class LciTkrConfiguration+;
+#pragma link C++ class LciAcdConfiguration::AcdTrigger+;
+#pragma link C++ class LciCalConfiguration::CalTrigger+;
 #pragma link C++ class MetaEvent+;
 #pragma link C++ class Ccsds+;
 

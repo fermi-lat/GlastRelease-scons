@@ -519,6 +519,9 @@ int read(char* fileName, int numEvents) {
         while ((curTem = (Tem*)temIt.Next())) {
             if (checkTem(curTem) < 0) return -1;
         }
+
+        MetaEvent meta = evt->getMetaEvent();
+        LciAcdConfiguration *acd = meta.lciAcdConfiguration();
  }
     
     f->Close();
@@ -623,6 +626,14 @@ int write(char* fileName, int numEvents) {
             ErrorData err(1, 2, true, false);
             curTem->init(item, err);
         }
+
+        MetaEvent meta;
+        LciAcdConfiguration::AcdTrigger acdTrig(1,2,3);
+        Channel ch(4,true,false);
+        LciAcdConfiguration acdConfig(1,2,3,4,acdTrig,ch);
+        meta.setLciAcdConfiguration(acdConfig);
+        meta.Print("");
+        ev->setMetaEvent(meta);
 
         t->Fill();
         ev->Clear();
