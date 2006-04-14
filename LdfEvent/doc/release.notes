@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v3r5    14-Apr-2006 HMK Allow setting of Configuration separately for MC runs
 v3r4    14-Apr-2006 HMK handle LCI
 v3r3    25-Feb-2005 HMK use lsfData package
 v3r2    25-Feb-2005 HMK testing for eventRet 

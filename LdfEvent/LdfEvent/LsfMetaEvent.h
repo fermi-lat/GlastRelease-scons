@@ -82,7 +82,7 @@ namespace LsfEvent {
 
     /// D'tor.  Delete the configuration, which had been deep-copied
     virtual ~MetaEvent(){
-      delete m_config;
+      if (m_config) delete m_config;
     }
 
     /// Retrieve reference to class definition structure
@@ -116,9 +116,21 @@ namespace LsfEvent {
       m_datagram = datagram;
       m_scalers = scalers;
       m_time = time;
-      delete m_config;
+      if (m_config) delete m_config;
+      m_type = enums::Lsf::NoRunType;
       m_config = configuration.clone();
       m_type = configuration.type();
+    }
+
+    /// set everything except configuration
+    inline void set(const lsfData::RunInfo& run, 
+                    const lsfData::DatagramInfo& datagram, 
+		    const lsfData::GemScalers& scalers,
+		    const lsfData::Time& time) {
+      m_run = run;
+      m_datagram = datagram;
+      m_scalers = scalers;
+      m_time = time;
     }
 
     // set the individual data members
@@ -126,8 +138,10 @@ namespace LsfEvent {
     inline void setDatagram( const lsfData::DatagramInfo& val) { m_datagram = val; };
     inline void setScalers( const lsfData::GemScalers& val) { m_scalers = val; };
     inline void setTime( const lsfData::Time& val) { m_time = val; }; 
-    inline void setConfiguration( const lsfData::Configuration& configuration ) {
-      delete m_config;
+    inline void setConfiguration( const lsfData::Configuration& configuration )
+    {
+      if (m_config) delete m_config;
+      m_type = enums::Lsf::NoRunType;
       m_config = configuration.clone();
       m_type = configuration.type();
     }
