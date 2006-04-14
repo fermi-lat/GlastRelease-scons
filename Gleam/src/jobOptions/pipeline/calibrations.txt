@@ -64,7 +64,7 @@ TkrBadStripsSvc.OutputLevel = 2;
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
  
 // for real data
-AcdCalibSvc.DefaultFlavor = "vanilla"
+AcdCalibSvc.DefaultFlavor = "vanilla";
 
 
 

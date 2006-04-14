@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r15p1 EAC 13-apr-06  Add a missing semicolon in src/jobOptions/pipeline/calibrations.txt
 * v6r15  EAC 12-apr-06   Added AcdCalibSvc in src/jobOptions/pipeline/calibrations.txt
 * v6r14p1 THB 30mar-06   Apply advice from TU.
 * v6r14   TU 24-mar-06   Updates for new CLHEP 1.9.2.2 and Gaudi
