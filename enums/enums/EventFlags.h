@@ -10,7 +10,8 @@ namespace enums {
             TKRRECON = 2,
             PACKETERROR = 4,
             SUMMARYERROR = 8,
-            TRGPARITYERROR = 16
+            TRGPARITYERROR = 16,
+            BADLDFSTATUS = 32
         } EventFlags;
 
 

@@ -51,7 +51,8 @@ public:
 
     void initEventSizeInBytes(ULong_t size) { m_eventSizeInBytes = size; }
 
-    void initTemContribLen(unsigned int *len, unsigned int *diag, unsigned int *err) {
+    void initTemContribLen(unsigned int *len, unsigned int *diag, 
+                           unsigned int *err) {
         unsigned int i;
         for (i = 0; i < 16; i++) { 
             m_temLen[i] = len[i]; 
@@ -104,10 +105,15 @@ public:
     Bool_t packetError() const { return (m_flags & enums::PACKETERROR)!=0; };
     Bool_t temError() const { return (m_flags & enums::SUMMARYERROR)!=0; };
     // old name for temError method
-    Bool_t errorEventSummary() const { return (m_flags & enums::SUMMARYERROR)!=0; };
-    Bool_t trgParityError() const { return (m_flags & enums::TRGPARITYERROR)!=0; };
+    Bool_t errorEventSummary() const { 
+        return (m_flags & enums::SUMMARYERROR)!=0; };
+    Bool_t trgParityError() const { 
+        return (m_flags & enums::TRGPARITYERROR)!=0; };
+    Bool_t badLdfStatus() const {
+        return (m_flags & enums::BADLDFSTATUS) != 0; };
     
-    /// Returns the length in bytes of the TEM contribution identified by a value in [0,15]
+    /// Returns the length in bytes of the TEM contribution identified by 
+    /// a value in [0,15]
     UInt_t temLength(unsigned int tem) const { return m_temLen[tem]; }
     const UInt_t* temLength() const { return m_temLen; };
     /// Returns the length in bytes of the GEM contribution
