@@ -91,8 +91,10 @@ namespace LdfEvent{
         void initEventSizeInBytes(unsigned long size) { m_evtSizeInBytes = size; };
         
         unsigned int temLength(unsigned int tem) const { return m_temLen[tem]; }
-        unsigned int diagnosticLength(unsigned int tem) const { return m_diagLen[tem]; }
-        unsigned int errorLength(unsigned int tem) const { return m_errLen[tem]; }
+        unsigned int diagnosticLength(unsigned int tem) const { 
+            return m_diagLen[tem]; }
+        unsigned int errorLength(unsigned int tem) const { 
+            return m_errLen[tem]; }
         unsigned int gemLength() const { return m_otherContribLen[GEM]; }
         unsigned int oswLength() const { return m_otherContribLen[OSW]; }
         unsigned int aemLength() const { return m_otherContribLen[AEM]; }
@@ -108,9 +110,14 @@ namespace LdfEvent{
         bool badEventSeq() const { return ((m_flags & enums::EVTSEQ) != 0); };
         bool badTkrRecon() const { return ((m_flags & enums::TKRRECON) != 0); };
         bool badEvent() const { return (m_flags != 0); } ;
-        bool packetError() const { return ((m_flags & enums::PACKETERROR) != 0); };
-        bool temError() const { return ((m_flags & enums::SUMMARYERROR) != 0); };
-        bool trgParityErrorOr() const { return ((m_flags & enums::TRGPARITYERROR) != 0); };
+        bool packetError() const { 
+            return ((m_flags & enums::PACKETERROR) != 0); };
+        bool temError() const { 
+            return ((m_flags & enums::SUMMARYERROR) != 0); };
+        bool trgParityErrorOr() const { 
+            return ((m_flags & enums::TRGPARITYERROR) != 0); };
+        bool badLdfStatus() const { 
+            return ( (m_flags & enums::BADLDFSTATUS) != 0); };
 
         //unsigned int eventSequence() const { return m_evtSequence; }
  
