@@ -380,12 +380,13 @@ int LatComponentParser::cleanup (EBFevent*        /*event*/,
 
         while (mbz < (unsigned*)contribEnd)
         {
-            if (*mbz)
+            if (*mbz) {
                 printf("%sNon-zero bytes beyond end of TEM: 0x%08x\n",
                        prefix,*mbz);
                 printf("Event: %llu Apid: %d\n", 
                     ldfReader::LatData::instance()->eventId(),
                     ldfReader::LatData::instance()->getCcsds().getApid());
+            }
             mbz++;
         }
         return 0;

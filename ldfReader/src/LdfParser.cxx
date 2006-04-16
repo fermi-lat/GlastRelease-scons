@@ -14,6 +14,7 @@ $Header$
 #include "EbfDebug.h"
 #include "ldfReader/LdfException.h"
 #include <exception>
+#include <sstream>
 #include <iostream>
 
 #include "facilities/Timestamp.h"
@@ -349,7 +350,17 @@ const unsigned LdfParser::BufferSize = 64*1024;
         } else {
             EbfDatagramParser ldf(m_start, m_end);
             ldf.iterate();
-            if (ldf.status()) throw LdfException("LDF LatDatagramIterator reported a bad status");
+            if (ldf.status()) {
+                std::ostringstream errMsg;
+                errMsg.str("LDF EBFeventParser reported a bad status 0x");
+                errMsg << std::hex << ldf.status() << " = " << std::dec
+                      << ldf.status() << " EventId: " 
+                      << ldfReader::LatData::instance()->getOsw().evtSequence();
+                std::cout << errMsg << std::endl;
+                ldfReader::LatData::instance()->setBadLdfStatusFlag();
+                //throw LdfException(
+                //"LDF LatDatagramIterator reported a bad status");
+            }
    
         }
 
