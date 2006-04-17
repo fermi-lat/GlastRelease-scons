@@ -280,7 +280,7 @@ private:
 
   LciTkrConfiguration *m_lciTkrConfig;
   
-  ClassDef(MetaEvent,1) // information about the State of the LAT when a particular event was captured
+  ClassDef(MetaEvent,2) // information about the State of the LAT when a particular event was captured
 
 };
 
