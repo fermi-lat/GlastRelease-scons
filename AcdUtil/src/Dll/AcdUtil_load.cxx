@@ -10,6 +10,7 @@
 
 DECLARE_FACTORY_ENTRIES(AcdUtil) {
     DECLARE_SERVICE( AcdGeometrySvc );
+    DECLARE_SERVICE( AcdCalibSvc );
     DECLARE_ALGORITHM( TestAcdUtil );
 } 
 
