@@ -13,6 +13,8 @@ namespace eventFile {
   {
     memset( m_src_apids,  0, LSEHEADER_MAX_APIDS*sizeof(unsigned) );
     memset( m_src_seqerr, 0, LSEHEADER_MAX_APIDS*sizeof(unsigned) );
+    memset( m_dfi_apids,  0, LSEHEADER_MAX_APIDS*sizeof(unsigned) );
+    memset( m_dfi_dfierr, 0, LSEHEADER_MAX_APIDS*sizeof(unsigned) );
   }
 
   void LSEHeader::read( FILE* fp )
