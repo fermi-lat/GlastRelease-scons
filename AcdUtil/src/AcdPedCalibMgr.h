@@ -29,7 +29,13 @@ public:
   /// get pedestal vals for given channel
   StatusCode getPed(idents::AcdId id, unsigned pmt,
 		    CalibData::AcdPed*& pedestal) {
-    
+
+    static CalibData::AcdPed nullPed(0.,0.,0); // all pedestals are null
+    if ( m_ideal ) {
+      pedestal = &nullPed;
+      return StatusCode::SUCCESS;
+    }
+  
     // make sure we have valid calib data for this event.
     StatusCode sc;
     sc = updateCalib();

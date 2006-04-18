@@ -25,6 +25,15 @@ StatusCode AcdCalibMgr::initialize(const std::string &flavor, const AcdCalibSvc 
   m_flavor = flavor;
 
   m_calibPath = m_calibTypePath + '/' + flavor;
+
+  static std::string idealName("ideal");
+  if ( flavor == idealName ) {
+    MsgStream msglog(owner->msgSvc(), owner->name());     
+    // else return error (can't find calib)
+    msglog << MSG::WARNING << "Overriding calibration to 'ideal' from"
+           << m_calibPath << ".  Calib db will not be used" << endreq;
+    m_ideal = true;
+  }
     
   return StatusCode::SUCCESS;
 }
@@ -34,6 +43,12 @@ StatusCode AcdCalibMgr::updateCalib() {
 
   // if event is already validated return quickly
   if (m_isValid) return StatusCode::SUCCESS;
+  
+  // ideal is valid by definition
+  if (m_ideal) {    
+    m_isValid = true;    
+    return StatusCode::SUCCESS;
+  }
 
   /////////////////////////////////
   //-- CHECK TDS DATA VALIDITY --//

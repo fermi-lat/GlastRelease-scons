@@ -29,6 +29,26 @@ public:
   StatusCode getMipPeak(idents::AcdId id, unsigned pmt,
 			CalibData::AcdGain*& mipPeak) {
 
+    // four kinds of channels
+    static CalibData::AcdGain ribbonGain(56.875,25.4,0);   // ribbons
+    static CalibData::AcdGain tileGain(204.75,50.,0);      // most tiles
+    static CalibData::AcdGain tile_12mmGain(245.7,50.,0);  // 12mm thick tiles
+    static CalibData::AcdGain naGain(-1.,0.,0);            // NA channels
+    if ( m_ideal ) {
+      if ( id.ribbon() ) {
+	mipPeak = &ribbonGain;
+      } else if ( id.tile() ) {
+	if ( id.face() == 0 && id.row() == 2 ) {
+	  mipPeak = &tile_12mmGain;
+	} else {
+	  mipPeak = &tileGain;
+	}
+      } else {
+	mipPeak = &naGain;
+      }
+      return StatusCode::SUCCESS;
+    }
+
     // make sure we have valid calib data for this event.
     StatusCode sc;
     sc = updateCalib();

@@ -31,7 +31,8 @@ class AcdCalibMgr {
 public:
   AcdCalibMgr(const std::string &calibTypePath)
     :m_calibTypePath(calibTypePath),
-     owner(0),
+     m_ideal(false),
+     owner(0),     
      m_isValid(false),
      m_serNo(-1)
   {}
@@ -69,6 +70,9 @@ protected:
 
   /// TDS location for root of my calib_type and path
   CalibData::AcdCalibBase     *m_calibBase;
+
+  /// Should we use the "ideal" calibration instead of the database
+  bool                         m_ideal;
 
   /// ref to owner->CalCalibSvc object
   const AcdCalibSvc           *owner;
