@@ -1,15 +1,29 @@
 <!-- $Header$ -->
 <primCategory name="cu06ACDDimPrim">
   <overview>Extra primary constants needed for cu06 ACD description</overview>
-  <prim name="ACDTileX" value = "353.641856">ACD tile X</prim> 
-  <prim name="ACDTileY" value = "336.55">ACD tile Y</prim>
 
-  <prim name="ACDTile_0_x" value="-285.125000"> top ACD tile absolute x</prim>
-  <prim name="ACDTile_0_y" value="0.0"> top ACD tile absolute y</prim>
-  <prim name="ACDTile_0_z" value="152.650000"> top ACD tile absolute z</prim>
+<prim name="ACDTileMX" value = "170.000000">ACD medium tile X</prim>
+<prim name="ACDTileMY" value = "332.000000">ACD medium tile Y</prim>
+<prim name="ACDTileSX" value = "166.000000">ACD small tile X</prim>
+<prim name="ACDTileSY" value = "170.000000">ACD small tile Y</prim>
+<prim name="ACDTile_0_x" value="38.200000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_0_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_0_z" value="689.000000"> top ACD tile absolute z</prim>
+<prim name="ACDTile_1_x" value="-75.800000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_1_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_1_z" value="622.800000"> top ACD tile absolute z</prim>
+<prim name="ACDTile_2_x" value="-60.800000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_2_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_2_z" value="452.800000"> top ACD tile absolute z</prim>
+<prim name="ACDTile_3_x" value="-60.800000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_3_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_3_z" value="282.800000"> top ACD tile absolute z</prim>
+<prim name="ACDTile_4_x" value="-60.800000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_4_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_4_z" value="114.800000"> top ACD tile absolute z</prim>
+<prim name="ACDTile_5_x" value="809.800000"> top ACD tile absolute x</prim>
+<prim name="ACDTile_5_y" value="0.000000"> top ACD tile absolute y</prim>
+<prim name="ACDTile_5_z" value="103.000000"> top ACD tile absolute z</prim>
 
-  <prim name="ACDTile_1_x" value="-97.875000"> top ACD tile absolute x</prim>
-  <prim name="ACDTile_1_y" value="0.0"> top ACD tile absolute y</prim>
-  <prim name="ACDTile_1_z" value="452.650000"> top ACD tile absolute z</prim>
 </primCategory>
 
