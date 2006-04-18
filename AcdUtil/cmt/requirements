@@ -1,5 +1,5 @@
 package AcdUtil
-version v1r1p1
+version v1r1p2
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -24,6 +24,7 @@ apply_pattern library_Llinkopts library=AcdUtilCommon
 #=============================================================
 private
 
+apply_pattern use_CalibData_symbols
 
 library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx
 
