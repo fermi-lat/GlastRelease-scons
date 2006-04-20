@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r1p1    20-Apr-2006 EAC Fix bug in active distance calculation.
 v3r1      13-Apr-2006 EAC Pull in updates from branch EM-v6r070329p0, tag v3r0em3
 v2r2      12-Apr-2006 EAC Uses calibration for AcdHits
 v2r1      24-Mar-2006 HMK updates for CLHEP 1.9.2.2

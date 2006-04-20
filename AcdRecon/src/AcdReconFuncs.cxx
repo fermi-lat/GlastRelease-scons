@@ -190,6 +190,8 @@ namespace AcdRecon {
       x = pEdge;
       v = vEdge;
     }
+    // Make this an Active Distance calculation 
+    dist *= -1.;
   }
 
   void ribbonPlane(const AcdRecon::TrackData& aTrack, const AcdRibbonDim& ribbon,
@@ -239,7 +241,7 @@ namespace AcdRecon {
     
       double test_dist = sqrt(delta.mag2() - prod*prod);
 
-      // Make this an Active Distance calculation    
+      // Make this an Active Distance calculation 
       test_dist = ribbon.halfWidth()[segment] - test_dist;
 
       // test against the best value
