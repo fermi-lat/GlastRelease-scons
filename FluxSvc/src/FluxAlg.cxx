@@ -321,7 +321,7 @@ StatusCode FluxAlg::execute()
     double ke = m_flux->energy(); // kinetic energy in MeV
 
     //here's where we get the particleID and mass for later.
-    if( particleName=="p") particleName="proton";
+    if( particleName=="p" || particleName=="proton") particleName="p+";
     ParticleProperty* prop = m_partSvc->find(particleName);
 
     if( prop==0) {
