@@ -167,6 +167,8 @@ class calADCFilter:
             dac = 63
             while data[dac] == 0.0:
                 dac -= 1
+	        if dac < 0:
+	            return	
             data[-1] = data[dac]
             self.__log.debug('floor: replacing (63,%f)', data[dac])
 
