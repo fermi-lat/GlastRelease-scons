@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r16  THB 22-apr-06   Remove CalMipFinder from Cal1 Sequencer
 * v6r15p1 EAC 13-apr-06  Add a missing semicolon in src/jobOptions/pipeline/calibrations.txt
 * v6r15  EAC 12-apr-06   Added AcdCalibSvc in src/jobOptions/pipeline/calibrations.txt
 * v6r14p1 THB 30mar-06   Apply advice from TU.
