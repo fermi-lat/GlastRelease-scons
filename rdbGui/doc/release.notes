@@ -5,6 +5,7 @@
    Coordinators: M. Frailis and R. Giannitrapani
               EOH
 
+   v1r10p4 23-Apr-2006  jrb      Bug fix for tables without primary keys
    v1r10p3 25-Jan-2006  jrb      Small change for compatibility with new rdbModel
    v1r10p2 24-Jan-2006  jrb      Update output area before issuing matchSchema
                                  summary message
