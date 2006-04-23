@@ -66,6 +66,7 @@ long TableColumnList::onSelectTable(FXObject*,FXSelector,void*)
 {
   m_tableSelected = true;
   m_colList->clearItems();
+  m_target->setPrimaryName("");
   rdbModel::Table *table = (rdbModel::Table*)(m_tblList->getItemData(m_tblList->getCurrentItem()));
   table->accept(this);
   m_tableSelected = false;
