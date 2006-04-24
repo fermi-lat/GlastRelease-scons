@@ -32,10 +32,10 @@ namespace CalUtil {
     class CalArray {
     public:
     val_type& operator[](const idx_type &idx) {
-      return m_dat[idx.getInt()];}
+      return m_dat[idx.val()];}
 
     const val_type& operator[](const idx_type &idx) const {
-      return m_dat[idx.getInt()];
+      return m_dat[idx.val()];
     }
       
     /// return size of array

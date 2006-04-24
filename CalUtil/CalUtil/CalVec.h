@@ -44,17 +44,17 @@ namespace CalUtil {
     CalVec(size_type sz, const val_type &val) : parent_type(sz,val) {}
 
     reference operator[] (const idx_type &idx) {
-      return parent_type::operator[](idx.getInt());
+      return parent_type::operator[](idx.val());
     }
     const_reference operator[] (const idx_type &idx) const {
-      return parent_type::operator[](idx.getInt());
+      return parent_type::operator[](idx.val());
     }
 
     reference at(const idx_type &idx) {
-      return parent_type::at(idx.getInt());
+      return parent_type::at(idx.val());
     }
     const_reference at(const idx_type &idx) const {
-      return parent_type::at(idx.getInt());
+      return parent_type::at(idx.val());
     }
 
     void resize(size_type sz) {

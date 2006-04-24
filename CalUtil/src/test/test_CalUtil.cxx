@@ -198,7 +198,7 @@ StatusCode test_CalUtil::testCalDefs(){
               if (twr != faceIdx.getTwr()) return StatusCode::FAILURE;
               if (lyr != faceIdx.getLyr()) return StatusCode::FAILURE;
               if (col != faceIdx.getCol()) return StatusCode::FAILURE;
-              if (face.getInt() != faceIdx.getFace().getInt()) return StatusCode::FAILURE;
+              if (face.val() != faceIdx.getFace().val()) return StatusCode::FAILURE;
               if (xtalIdx != faceIdx.getXtalIdx()) return StatusCode::FAILURE;
 
               // alt-constructor(s)
@@ -207,7 +207,7 @@ StatusCode test_CalUtil::testCalDefs(){
 
               
               for (DiodeNum diode; diode.isValid(); diode++) {
-                if (RngNum(diode,THX8).getInt() != diode.getX8Rng().getInt()) return StatusCode::FAILURE;
+                if (RngNum(diode,THX8).val() != diode.getX8Rng().val()) return StatusCode::FAILURE;
                 if (RngNum(diode,THX1) != diode.getX1Rng()) return StatusCode::FAILURE;
 
                 XtalDiode xDiode(face,diode);
@@ -241,7 +241,7 @@ StatusCode test_CalUtil::testCalDefs(){
                   if (xDiode != xRng.getXtalDiode()) return StatusCode::FAILURE;
 
                   RngIdx rngIdx(twr,lyr,col,face,rng);
-                  CalXtalId rngId(twr, lyr, col, face.getInt(), rng.getInt());
+                  CalXtalId rngId(twr, lyr, col, face.val(), rng.val());
                   if (twr != rngIdx.getTwr()) return StatusCode::FAILURE;
                   if (lyr != rngIdx.getLyr()) return StatusCode::FAILURE;
                   if (col != rngIdx.getCol()) return StatusCode::FAILURE;
@@ -273,7 +273,7 @@ StatusCode test_CalUtil::testCalVec(){
 
   // creats vector of size 8, which is
   // enought to test functionality
-  CalVec<XtalRng, int> testVec;
+  CalVec<XtalRng, unsigned> testVec;
 
   testVec.resize(XtalRng::N_VALS);
   
@@ -281,15 +281,15 @@ StatusCode test_CalUtil::testCalVec(){
     return StatusCode::FAILURE;
 
   for (XtalRng idx; idx.isValid(); idx++) {
-    testVec[idx] = idx.getInt();
+    testVec[idx] = idx.val();
   }
 
   for (XtalRng idx; idx.isValid(); idx++) {
-    if (testVec[idx] != idx.getInt())
+    if (testVec[idx] != idx.val())
       return StatusCode::FAILURE;
     
-    if (testVec.find(idx.getInt()) - testVec.begin() 
-        != idx.getInt())
+    if (testVec.find(idx.val()) - testVec.begin() 
+        != (int)idx.val())
       return StatusCode::FAILURE;
   }
 
@@ -313,21 +313,21 @@ StatusCode test_CalUtil::testCalArray(){
 
   // creats array of size 8, which is
   // enough to test functionality
-  CalArray<XtalRng, int> testArr;
+  CalArray<XtalRng, unsigned> testArr;
 
   if (testArr.size() != (unsigned)XtalRng::N_VALS)
     return StatusCode::FAILURE;
 
   for (XtalRng idx; idx.isValid(); idx++) {
-    testArr[idx] = idx.getInt();
+    testArr[idx] = idx.val();
   }
 
   for (XtalRng idx; idx.isValid(); idx++) {
-    if (testArr[idx] != idx.getInt())
+    if (testArr[idx] != idx.val())
       return StatusCode::FAILURE;
     
-    if ((testArr.find(idx.getInt()) - testArr.begin()) 
-        != idx.getInt())
+    if ((testArr.find(idx.val()) - testArr.begin()) 
+        != (int)idx.val())
       return StatusCode::FAILURE;
   }
 
