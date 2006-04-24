@@ -132,7 +132,8 @@ G4PrimaryParticle* PrimaryGeneratorAction::convertToG4Primary(const Event::McPar
     else
     {
         ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
-        partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->particle());
+        //partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->particle());
+        partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->pdgID());
     }
 
     // Position and momentum
