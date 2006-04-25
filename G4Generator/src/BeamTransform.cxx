@@ -140,13 +140,13 @@ void BeamTransform::transform(Event::McParticle& mcp )
     rbeam1 += m_translation;
 
     // convert to unrotated instrument coordinates
-    Hep3Vector r (-rbeam.z(),  -rbeam.y(), 
+    CLHEP::Hep3Vector r (-rbeam.z(),  -rbeam.y(), 
         -rbeam.x()  + m_beam_plane + m_beam_plane_glast);
-    Hep3Vector r1(-rbeam1.z(), -rbeam1.y(), 
+    CLHEP::Hep3Vector r1(-rbeam1.z(), -rbeam1.y(), 
         -rbeam1.x() + m_beam_plane + m_beam_plane_glast);
 
-    HepLorentzVector p (-pbeam.z(),  -pbeam.y(),  -pbeam.x(),  pbeam.e());
-    HepLorentzVector p1(-pbeam1.z(), -pbeam1.y(), -pbeam1.x(), pbeam1.e());
+    CLHEP::HepLorentzVector p (-pbeam.z(),  -pbeam.y(),  -pbeam.x(),  pbeam.e());
+    CLHEP::HepLorentzVector p1(-pbeam1.z(), -pbeam1.y(), -pbeam1.x(), pbeam1.e());
 
     mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
         mcp.particleProperty(), mcp.statusFlags(),
