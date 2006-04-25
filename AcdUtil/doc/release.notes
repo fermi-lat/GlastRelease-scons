@@ -13,8 +13,8 @@
  v0r3     24-mar-2006 HMK updates for CLHEP 1.9.2.2
 
 Along Branch EM-v6r070329p0
- v0r2p10em0 04-Apr-2006 EAC Cache transform to local coords in AcdTileDim and i
-           AcdRibbonDim
+ v1r1p3em0 24-Apr-2006 EAC pull in calibration stuff for main branch
+ v0r2p10em0 04-Apr-2006 EAC Cache transform to local coords in AcdTileDim and AcdRibbonDim
 
  v0r2p10  06-mar-2006 THB use the proper pattern
  v0r2p9   23-Feb-2006 THB make use of static lib constistent with Navid's lib folder
