@@ -279,8 +279,8 @@ StatusCode CalDigiAlg::createDigis() {
                                        *curDigi,
                                        lacBits,
                                        trigBits,
-                                       glt
-                                       );
+                                       glt,
+                                       true);
         if (sc.isFailure()) continue;   // bad hit
 
         // move on to next xtal if there is no log-accept.
@@ -317,8 +317,6 @@ multimap used to associate mcIntegratingHit to id. There can be multiple
 hits for the same id.  
 */
 StatusCode CalDigiAlg::fillSignalEnergies() {
-  StatusCode  sc = StatusCode::SUCCESS;
-
   // get McIntegratingHit collection. Abort if empty.
   SmartDataPtr<Event::McIntegratingHitVector> 
     McCalHits(eventSvc(), EventModel::MC::McIntegratingHitCol );
