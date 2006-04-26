@@ -4,7 +4,6 @@
  */
 // LOCAL INCLUDES
 #include "TholdCIMgr.h"
-#include "CalCalibSvc.h"
 
 // GLAST INCLUDES
 
@@ -16,126 +15,62 @@ using namespace CalUtil;
 using namespace idents;
 
 /// get threshold calibration constants as measured w/ charnge injection
-StatusCode TholdCIMgr::getTholds(FaceIdx faceIdx,
-                                 CalibData::ValSig &FLE,
-                                 CalibData::ValSig &FHE,
-                                 CalibData::ValSig &LAC
-                                 ) {
-  if (m_idealMode) {
-    FLE = m_idealFLE;
-    FHE = m_idealFHE;
-    LAC = m_idealLAC;
-    return StatusCode::SUCCESS;
-  }
-
+const CalTholdCI *TholdCIMgr::getTholdCI(FaceIdx faceIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return NULL;
 
-
-  CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI*)m_rngBases[faceIdx];
-  if (!tholdCI) return StatusCode::FAILURE;
-
-  //vals
-  FLE = *(tholdCI->getFLE());
-  FHE = *(tholdCI->getFHE());
-  LAC = *(tholdCI->getLAC());
-
-  return StatusCode::SUCCESS;
-}
-
-/// get Upper Level Discriminator threshold as measured w/ charnge injection for given xtal/face/rng
-StatusCode TholdCIMgr::getULD(RngIdx rngIdx,
-                              CalibData::ValSig &ULDThold) {
-  if (m_idealMode) {
-    ULDThold = m_idealULD[rngIdx.getRng()];
-    return StatusCode::SUCCESS;
-  }
-
-  // make sure we have valid calib data for this event.
-  StatusCode sc;
-  sc = updateCalib();
-  if (sc.isFailure()) return sc;
-
-  // need to create an xtalId object w/out range info...
-  CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
-  if (!tholdCI) return StatusCode::FAILURE;
-
-  //vals
-  ULDThold = *(tholdCI->getULD((CalXtalId::AdcRange)rngIdx.getRng()));
-
-  return StatusCode::SUCCESS;
-}
-
-/// get pedestal calibration constants as measured during charge injection threshold testing.
-StatusCode TholdCIMgr::getPed(RngIdx rngIdx,
-                              CalibData::ValSig &ped) {
-  if (m_idealMode) {
-    ped = m_idealPed[RngNum(rngIdx.getRng())];
-    return StatusCode::SUCCESS;
-  }
-
-  // make sure we have valid calib data for this event.
-  StatusCode sc;
-  sc = updateCalib();
-  if (sc.isFailure()) return sc;
-
-
-  // need to create an xtalId object w/out range info...
-  CalibData::CalTholdCI *tholdCI 
-    = (CalibData::CalTholdCI*)m_rngBases[rngIdx.getFaceIdx()];
-  if (!tholdCI) return StatusCode::FAILURE;
-
-  ped = *(tholdCI->getPed((CalXtalId::AdcRange)rngIdx.getRng()));
-
-  return StatusCode::SUCCESS;
+  return (CalTholdCI*)m_rngBases[faceIdx];
 }
 
 StatusCode TholdCIMgr::loadIdealVals() {
   
   //-- SANITY CHECKS --//
-  if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+  if (m_ccsShared.m_idealCalib.ciULD.size() != RngNum::N_VALS) {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ULD vals." << endreq;
     return StatusCode::FAILURE;;
   }
-  if (owner->m_idealCalib.ciPeds.size() != (unsigned)RngNum::N_VALS) {
+  if (m_ccsShared.m_idealCalib.ciPeds.size() != RngNum::N_VALS) {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR << "Wrong # of ideal ci Pedestal vals." << endreq;
     return StatusCode::FAILURE;;
   }
 
-  m_idealFLE.m_val = owner->m_idealCalib.ciFLE;
-  m_idealFLE.m_sig = owner->m_idealCalib.ciFLE *
-    owner->m_idealCalib.ciSigPct;
+  ValSig FLE, FHE, LAC;
+  vector<ValSig> ULD(4), Ped(4);
 
-  m_idealFHE.m_val = owner->m_idealCalib.ciFHE;
-  m_idealFHE.m_sig = owner->m_idealCalib.ciFHE *
-    owner->m_idealCalib.ciSigPct;
+  FLE.m_val = m_ccsShared.m_idealCalib.ciFLE;
+  FLE.m_sig = m_ccsShared.m_idealCalib.ciFLE *
+    m_ccsShared.m_idealCalib.ciSigPct;
 
-  m_idealLAC.m_val = owner->m_idealCalib.ciLAC;
-  m_idealLAC.m_sig = owner->m_idealCalib.ciLAC *
-    owner->m_idealCalib.ciSigPct;
+  FHE.m_val = m_ccsShared.m_idealCalib.ciFHE;
+  FHE.m_sig = m_ccsShared.m_idealCalib.ciFHE *
+    m_ccsShared.m_idealCalib.ciSigPct;
+
+  LAC.m_val = m_ccsShared.m_idealCalib.ciLAC;
+  LAC.m_sig = m_ccsShared.m_idealCalib.ciLAC *
+    m_ccsShared.m_idealCalib.ciSigPct;
   
   for (RngNum rng; rng.isValid(); rng++) {
-    m_idealULD[rng].m_val = owner->m_idealCalib.ciULD[rng.getInt()];
-    m_idealULD[rng].m_sig = owner->m_idealCalib.ciULD[rng.getInt()] *
-      owner->m_idealCalib.ciSigPct;
+    ULD[rng.val()].m_val = m_ccsShared.m_idealCalib.ciULD[rng.val()];
+    ULD[rng.val()].m_sig = m_ccsShared.m_idealCalib.ciULD[rng.val()] *
+      m_ccsShared.m_idealCalib.ciSigPct;
 
-    m_idealPed[rng].m_val = owner->m_idealCalib.ciPeds[rng.getInt()];
-    m_idealPed[rng].m_sig = owner->m_idealCalib.ciPeds[rng.getInt()] *
-      owner->m_idealCalib.ciSigPct;
+    Ped[rng.val()].m_val = m_ccsShared.m_idealCalib.ciPeds[rng.val()];
+    Ped[rng.val()].m_sig = m_ccsShared.m_idealCalib.ciPeds[rng.val()] *
+      m_ccsShared.m_idealCalib.ciSigPct;
   }
+
+  m_idealTholdCI.reset(new CalTholdCI(&ULD, &FLE, &FHE, &LAC, &Ped));
 
   return StatusCode::SUCCESS;
 }
 
-bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
+bool TholdCIMgr::validateRangeBase(CalTholdCI *tholdCI) {
   if (!tholdCI) return false;
   if (!tholdCI->getFLE()) {
     // no error print out req'd b/c we're supporting LAT configs w/ empty bays
@@ -147,7 +82,7 @@ bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
   if (!tholdCI->getFHE() ||
       !tholdCI->getLAC()) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR << "can't get calib data for " 
            << m_calibPath;
     msglog << endreq;
@@ -161,10 +96,10 @@ bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
     return false;
   }
 
-  if (peds->size() != (unsigned)RngNum::N_VALS ||
-      ulds->size() != (unsigned)RngNum::N_VALS) {
+  if (peds->size() != RngNum::N_VALS ||
+      ulds->size() != RngNum::N_VALS) {
     // create MsgStream only when needed for performance
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR << "can't get calib data for " 
            << m_calibPath;
     msglog << endreq;
@@ -176,15 +111,15 @@ bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
 StatusCode  TholdCIMgr::genLocalStore() {
   m_rngBases.resize(FaceIdx::N_VALS,0);
 
-  if (!m_idealMode) {
-    for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
-      CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
+  for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
+    if (!m_idealMode) {
+      CalTholdCI *tholdCI = (CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
       if (!tholdCI) continue;
       if (!validateRangeBase(tholdCI)) continue;
-
+      
       m_rngBases[faceIdx] = tholdCI;
-    }
-  }
+    } else m_rngBases[faceIdx] = m_idealTholdCI.get();
+  } 
 
   return StatusCode::SUCCESS;
 }

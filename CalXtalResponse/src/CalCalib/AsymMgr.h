@@ -3,10 +3,12 @@
 // $Header$
 // LOCAL
 #include "CalibItemMgr.h"
+#include "CalXtalResponse/CalCalibDefs.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
 #include "CalibData/Cal/CalAsym.h"
+#include "CalibData/Cal/Xpos.h"
 
 // EXTLIB
 
@@ -14,8 +16,8 @@
 
 using namespace CalUtil;
 using namespace idents;
-
-using CalibData::ValSig;
+using namespace CalXtalResponse;
+using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -27,91 +29,64 @@ class CalCalibSvc;
 
 class AsymMgr : public CalibItemMgr {
  public:
-  AsymMgr();
+  AsymMgr(CalCalibShared &ccsShared);
+
+  StatusCode initialize(const string &flavor);
 
   /// get Asymmetry calibration information for one xtal
-  StatusCode getAsym(XtalIdx xtalIdx,
-                     const vector<ValSig> *&asymLrg,
-                     const vector<ValSig> *&asymSm,
-                     const vector<ValSig> *&asymNSPB,
-                     const vector<ValSig> *&asymPSNB,
-                     const vector<float>  *&xVals);
+  CalAsym *getAsym(XtalIdx xtalIdx);
 
-  StatusCode evalAsymLrg(XtalIdx xtalIdx, 
-                         float Xpos, float &asymLrg){
-    return evalSpline(ASYMLRG_SPLINE, xtalIdx, Xpos, asymLrg);
+  Xpos *getXpos();
+
+  StatusCode evalAsym(XtalIdx xtalIdx, AsymType asymType,
+                      float Xpos, float &asym){
+    return evalSpline(splineIdx(asymType, POS2ASYM), xtalIdx, Xpos, asym);
   }
 
-  StatusCode evalPosLrg(XtalIdx xtalIdx, 
-                        float asymLrg, float &Xpos) {
-    return evalSpline(INV_ASYMLRG_SPLINE, xtalIdx, asymLrg, Xpos);
+  StatusCode evalPos(XtalIdx xtalIdx, AsymType asymType,
+                     float asym, float &Xpos) {
+    return evalSpline(splineIdx(asymType, ASYM2POS), xtalIdx, asym, Xpos);
   }
 
-  StatusCode evalAsymSm(XtalIdx xtalIdx, 
-                        float Xpos, float &asymSm) {
-    return evalSpline(ASYMSM_SPLINE, xtalIdx, Xpos, asymSm);
-  }
-
-  StatusCode evalPosSm(XtalIdx xtalIdx, 
-                       float asymSm, float &Xpos) {
-    return evalSpline(INV_ASYMSM_SPLINE, xtalIdx, asymSm, Xpos);
-  }
-
-  StatusCode evalAsymNSPB(XtalIdx xtalIdx, 
-                          float Xpos, float &asymNSPB) {
-    return evalSpline(ASYMNSPB_SPLINE, xtalIdx, Xpos, asymNSPB);
-  }
-
-  StatusCode evalPosNSPB(XtalIdx xtalIdx, 
-                         float asymNSPB, float &Xpos) {
-    return evalSpline(INV_ASYMNSPB_SPLINE, xtalIdx, asymNSPB, Xpos);
-  }
-
-  StatusCode evalAsymPSNB(XtalIdx xtalIdx, 
-                          float Xpos, float &asymPSNB) {
-    return evalSpline(ASYMPSNB_SPLINE, xtalIdx, Xpos, asymPSNB);
-  }
-
-  StatusCode evalPosPSNB(XtalIdx xtalIdx, 
-                         float asymPSNB, float &Xpos) {
-    return evalSpline(INV_ASYMPSNB_SPLINE, xtalIdx, asymPSNB, Xpos);
-  }
+  StatusCode getAsymCtr(XtalIdx xtalIdx, 
+                        AsymType asymType, 
+                        float &asymCtr);
 
 
  private:
+    typedef enum {
+      POS2ASYM,
+      ASYM2POS,
+      N_ASYM_DIR
+    } ASYM_DIR;
 
-  /// List of each type of spline for asym calib_type
-  typedef enum {
-    ASYMLRG_SPLINE,
-    INV_ASYMLRG_SPLINE,
-    ASYMSM_SPLINE,
-    INV_ASYMSM_SPLINE,
-    ASYMNSPB_SPLINE,
-    INV_ASYMNSPB_SPLINE,
-    ASYMPSNB_SPLINE,
-    INV_ASYMPSNB_SPLINE,
-    N_SPLINE_TYPES
-  } SPLINE_TYPE;
+    static const unsigned short N_SPLINE_TYPES = N_ASYM_DIR*AsymType::N_VALS;
+
+    unsigned short splineIdx(AsymType asymType, ASYM_DIR asymDir) {
+      return asymType.val()*N_ASYM_DIR + asymDir;
+    }
+
 
   StatusCode genLocalStore();
 
   StatusCode loadIdealVals();
-  /// Store ideal (fake) vals for large diode asym (used when db is down)
-  vector<ValSig> m_idealAsymLrg;
-  /// Store ideal (fake) vals for small diode asym (used when db is down)
-  vector<ValSig> m_idealAsymSm;
-  /// Store ideal (fake) vals for NegSmall diode PosBig diode asym 
-  /// (used when db is down)
 
-  vector<ValSig> m_idealAsymNSPB;
-  /// Store ideal (fake) vals for PosSmall diode NegBig diode asym 
-  /// (used when db is down)
-  vector<ValSig> m_idealAsymPSNB;
+  /// store ideal asymmetry splines (same for every xtal)
+  auto_ptr<CalAsym> m_idealAsym;
+
+  /// store position values for ideal asym splines.
+  auto_ptr<Xpos> m_idealXpos;
+
+  /// store precalcuated asymmetry for deposits @ ctr of xtal.
+  /// measures 'overall' optical asymmetry
+  CalArray<AsymType, CalArray<XtalIdx, float> > m_asymCtr;
   
-  vector<float> m_idealXVals;
-
   /// validate data ptr from TDS
-  bool validateRangeBase(CalibData::CalAsym *asym);
+  bool validateRangeBase(CalAsym *asym);
+
+  /// geometry constant
+  float m_csiLength;
 
 };
 #endif
+

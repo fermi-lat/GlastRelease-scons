@@ -25,12 +25,7 @@
 // STD INCLUDES
 #include <vector>
 
-static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 0);
-
-using namespace std;
-using namespace idents;
-using namespace CalUtil;
-
+static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 1);
 
 class IXtalDigiTool : virtual public IAlgTool {
  public:
@@ -45,14 +40,16 @@ class IXtalDigiTool : virtual public IAlgTool {
   \param lacBits output boolean for log accept on each xtal face
   \param trigBits output booleans for triggers for each xtal diode.
   \param glt optional output GltDigi class.  Will populate if (glt != 0).
+  \param zeroSuppress.  if zero suppression is on, i can make many optimizations by not fully evaluating xtals which will not be recorded.
 
   */
   virtual StatusCode calculate(const vector<const Event::McIntegratingHit*> &hitList,
                                const Event::EventHeader *evtHdr,            
                                Event::CalDigi &calDigi,
-                               CalArray<FaceNum, bool> &lacBits,
-                               CalArray<XtalDiode, bool> &trigBits,
-                               Event::GltDigi *glt
+                               CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
+                               CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
+                               Event::GltDigi *glt,
+                               bool zeroSuppress
                                ) = 0;
 
 };

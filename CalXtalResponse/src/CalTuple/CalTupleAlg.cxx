@@ -22,6 +22,7 @@
 using namespace std;
 using namespace CalUtil;
 using namespace Event;
+using namespace CalibData;
 
 /** @class CalTupleAlg
     @brief populates CalTuple entry w/ info derived from CalDigis & calibrations
@@ -144,7 +145,7 @@ StatusCode CalTupleAlg::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get " << m_calCalibSvcName << endreq;
     return sc;
   }
 
@@ -263,27 +264,25 @@ StatusCode CalTupleAlg::execute() {
         RngIdx rngIdx(xtalIdx, face, rng);
 
         // adc range
-        m_tupleEntry.m_calXtalAdcRng[twr][lyr][col][face.getInt()] = rng.getInt();
+        m_tupleEntry.m_calXtalAdcRng[twr][lyr][col][face.val()] = rng.val();
 
         // get pedestals
         // pedestals
-        float ped;
-        float sig, cos; // not used
-        sc = m_calCalibSvc->getPed(rngIdx, ped, sig, cos);
-        if (sc.isFailure()) return sc;
+        const Ped* ped= m_calCalibSvc->getPed(rngIdx);
+        if (!ped) return StatusCode::FAILURE;
 
         // ped subtracted ADC
-        float adcPed = adc - ped;
+        float adcPed = adc - ped->getAvr();
 
         // face signal
         // get reference to 'real' location in big array
-        float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.getInt()];
+        float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()];
         sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
         if (sc.isFailure()) return sc;
 
         if (m_tupleEntry.m_fourRngMode) {
           // fill in 1st readout which i already have
-          m_tupleEntry.m_calXtalAdcPed[rngIdx.getInt()] = adcPed;
+          m_tupleEntry.m_calXtalAdcPed[rngIdx.val()] = adcPed;
 
           // loop through remaining 3 readouts
           for (unsigned char nRO = 1; nRO < 4; nRO++) {
@@ -297,20 +296,19 @@ StatusCode CalTupleAlg::execute() {
             
             // get pedestals
             // pedestals
-            float ped;
-            float sig, cos; // not used
             RngIdx rngIdx(xtalIdx, face, rng);
-            sc = m_calCalibSvc->getPed(rngIdx, ped, sig, cos);
-            if (sc.isFailure()) return sc;
-
-            float adcPed = adc - ped;
+            const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+            if (!ped) return StatusCode::FAILURE;
             
-            m_tupleEntry.m_calXtalAdcPed[rngIdx.getInt()] = adcPed;
+            // ped subtracted ADC
+            float adcPed = adc - ped->getAvr();
+            
+            m_tupleEntry.m_calXtalAdcPed[rngIdx.val()] = adcPed;
           }
         }
         else {
           FaceIdx faceIdx(xtalIdx, face);
-          m_tupleEntry.m_calXtalAdcPed[faceIdx.getInt()] = adcPed;
+          m_tupleEntry.m_calXtalAdcPed[faceIdx.val()] = adcPed;
         }
       }
     }

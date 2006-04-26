@@ -29,13 +29,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 // STD INCLUDES
-#include <vector>
 
-static const InterfaceID IID_ICalTrigTool("ICalTrigTool", 1, 0);
-
-using namespace std;
-using namespace idents;
-using namespace CalUtil;
+static const InterfaceID IID_ICalTrigTool("ICalTrigTool", 1, 1);
 
 class ICalTrigTool : virtual public IAlgTool {
  public:
@@ -51,13 +46,13 @@ class ICalTrigTool : virtual public IAlgTool {
   \param glt optional output GltDigi class.  Will populate if (glt != 0).
 
   */
-  virtual StatusCode calcXtalTrig(XtalIdx xtalIdx,
-                                  const CalArray<XtalRng, float> &adcPed,
-                                  CalArray<XtalDiode, bool> &trigBits,
+  virtual StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
+                                  const CalUtil::CalArray<CalUtil::XtalRng, float> &adcPed,
+                                  CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                                   Event::GltDigi *glt
                                   ) = 0;
 
-  /** \brief calc Trigger response for single cal xtal
+  /** \brief calc Trigger response for single cal xtal digi
   
   \param calDigi input ADC readout info
   \param trigBits output trigger bits.. 1 per xtal diode.
@@ -68,7 +63,7 @@ class ICalTrigTool : virtual public IAlgTool {
   trigger on a crystal w/ low range ULD readout.
   */
   virtual StatusCode calcXtalTrig(const Event::CalDigi& calDigi,
-                                  CalArray<XtalDiode, bool> &trigBits,
+                                  CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                                   Event::GltDigi *glt
                                   ) = 0;
 
@@ -84,9 +79,23 @@ class ICalTrigTool : virtual public IAlgTool {
   certain rare - direct diode deposit related results such as a high FHE 
   trigger on a crystal w/ low range ULD readout.
   */
-  virtual StatusCode calcXtalTrig(XtalIdx xtalIdx,
+  virtual StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
                                   const Event::CalDigi::CalXtalReadout &ro,
-                                  CalArray<XtalDiode, bool> &trigBits,
+                                  CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
+                                  Event::GltDigi *glt
+                                  ) = 0;
+
+  /** \brief calc Trigger response for single cal xtal, given CIDAC values for each diode.
+
+  \param xtalIdx specify Cal xtal log
+  \param cidac input xtal digi readout, 1 cidac value per xtal diode.
+  \param trigBits output trigger bits.. 1 per xtal diode.
+  \param glt optional output GltDigi class.  Will populate if (glt != 0).
+
+  */
+  virtual StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
+                                  const CalUtil::CalArray<CalUtil::XtalDiode, float> &cidac,
+                                  CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                                   Event::GltDigi *glt
                                   ) = 0;
 
@@ -103,7 +112,7 @@ class ICalTrigTool : virtual public IAlgTool {
       trigger on a crystal w/ low range ULD readout.
   */
   virtual StatusCode calcGlobalTrig(const Event::CalDigiCol& calDigiCol,
-                                    CalArray<DiodeNum, bool> &trigBits,
+                                    CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
                                     Event::GltDigi *glt
                                     ) = 0;
 

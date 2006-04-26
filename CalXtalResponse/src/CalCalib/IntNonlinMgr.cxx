@@ -1,10 +1,9 @@
 // $Header$
 /** @file
     @author Zach Fewtrell
- */
+*/
 // LOCAL
 #include "IntNonlinMgr.h"
-#include "CalCalibSvc.h"
 
 // GLAST
 #include "CalibData/DacCol.h"
@@ -17,10 +16,10 @@
 using namespace CalUtil;
 using namespace idents;
 
-IntNonlinMgr::IntNonlinMgr() : 
-  CalibItemMgr(CalibData::CAL_IntNonlin, 
-               N_SPLINE_TYPES),
-  m_idealErr(0)
+IntNonlinMgr::IntNonlinMgr(CalCalibShared &ccsShared) : 
+  CalibItemMgr(CAL_IntNonlin, 
+               ccsShared,
+               N_SPLINE_TYPES)
 {
   // set size of spline lists (1 per range)
   for (unsigned i = 0; i < m_splineLists.size(); i++) {
@@ -30,66 +29,63 @@ IntNonlinMgr::IntNonlinMgr() :
   }
 }
 
-/// get integral non-linearity vals for given xtal/face/rng
-StatusCode IntNonlinMgr::getIntNonlin(RngIdx rngIdx,
-                                      const vector< float > *&adcs,
-                                      const vector< float > *&dacs,
-                                      float &error) {
-  if (m_idealMode) {
-    RngNum rng(rngIdx.getRng());
-    adcs = &m_idealADCs[rng];
-    dacs = &m_idealDACs[rng];
-    error = m_idealErr;
-    return StatusCode::SUCCESS;
-  }
-
+const vector<float> *IntNonlinMgr::getInlAdc(CalUtil::RngIdx rngIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return NULL;
 
-  
-  CalibData::IntNonlin *intNonlin 
-	  = (CalibData::IntNonlin*)m_rngBases[rngIdx];
-  if (!intNonlin) return StatusCode::FAILURE;
+  const IntNonlin *inl = (IntNonlin*)m_rngBases[rngIdx];
 
-  //-- retrieve ADC vals
-  adcs = intNonlin->getValues();
-  
-  //-- retrieve DAC vals
-  dacs = &(m_DACs[rngIdx]);
+  if (!inl) return NULL;
 
-  // check array lens
-  if (adcs->size() > dacs->size())
-    return StatusCode::FAILURE;
+  return inl->getValues();
 
-  //whew, we made it this far... let's assign our outputs & leave!
-  error = intNonlin->getError();
-
-  return StatusCode::SUCCESS;
 }
 
+const vector<float> *IntNonlinMgr::getInlCIDAC(CalUtil::RngIdx rngIdx) {
+  // make sure we have valid calib data for this event.
+  StatusCode sc;
+  sc = updateCalib();
+  if (sc.isFailure()) return NULL;
+
+  return &(m_CIDACs[rngIdx]);
+}
+
+
+/** return y3 such that (y2 - y1)/(x2 - x1) = (y3 - y2)/(x3 - x2)
+ */
+template <class Ty>
+inline Ty extrap(Ty x1, Ty x2, Ty x3, Ty y1, Ty y2) {
+  return (x3-x2)*(y2-y1)/(x2-x1) + y2;
+}
+
+
 StatusCode IntNonlinMgr::genLocalStore() {
-  const vector<float> *adc;
-  vector<float> *dac;
 
   m_rngBases.resize(RngIdx::N_VALS, 0);
 
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
+    const vector<float> *adc;
     RngNum rng = rngIdx.getRng();
 
     //-- IDEAL MODE --//
     if (m_idealMode) {
-      adc = &m_idealADCs[rng];
-      dac = &m_idealDACs[rng];
+      adc = m_idealINL[rng].get()->getValues();
+      const vector<float> *cidac = m_idealINL[rng].get()->getSdacs();
+
+      m_CIDACs[rngIdx].resize(cidac->size());
+      copy(cidac->begin(),
+           cidac->end(),
+           m_CIDACs[rngIdx].begin());
+
+	  m_rngBases[rngIdx] = m_idealINL[rng].get();
     }
     
     //-- NORMAL (NON-IDEAL) MODE -//
     else {
-      dac = &m_DACs[rngIdx];
-      
-      CalibData::IntNonlin *intNonlin 
-        = (CalibData::IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
+      IntNonlin *intNonlin 
+        = (IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
       // support partial LAT
       if (!intNonlin) continue;
       if (!validateRangeBase(intNonlin)) continue;
@@ -100,66 +96,83 @@ StatusCode IntNonlinMgr::genLocalStore() {
       // support partial LAT
       if (!adc) continue;
     
-      //-- PHASE 1: populate DAC values (needed for spline generation )
+      //-- PHASE 1: populate CIDAC values (needed for spline generation )
       //-- 1st choice, use per-channel 'sdac' info if present
-      const vector<float> *sdacs = intNonlin->getSdacs();
-      if (sdacs) {
-        dac->resize(sdacs->size());
-        copy(sdacs->begin(),
-             sdacs->end(),
-             dac->begin());
+      const vector<float> *cidac = intNonlin->getSdacs();
+      if (cidac) {
+        m_CIDACs[rngIdx].resize(cidac->size());
+        copy(cidac->begin(),
+             cidac->end(),
+             m_CIDACs[rngIdx].begin());
       }
 
       //-- 2nd choise, fall back to global 'DacCol' info
       else {
         //get collection of associated DAC vals
-        CalibData::DacCol *intNonlinDacCol = 
+        DacCol *intNonlinDacCol = 
           m_calibBase->getDacCol((CalXtalId::AdcRange)rng);
         
-        const vector<unsigned> *globalDACs;
-        globalDACs = intNonlinDacCol->getDacs();
+        const vector<unsigned> *globalCIDACs;
+        globalCIDACs = intNonlinDacCol->getDacs();
 
         // if we've gotten this far, then we need 
         // the data to be present. can't have ADC
         // values for a channel w/ no matchin DAC
         // info
-        if (!globalDACs) {
+        if (!globalCIDACs) {
           // create MsgStream only when needed (for performance)
-          MsgStream msglog(owner->msgSvc(), owner->name()); 
-          msglog << MSG::ERROR << "ADC data w/ no matching DAC data (either per-channel or global"
+          MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+          msglog << MSG::ERROR << "ADC data w/ no matching CIDAC data (either per-channel or global) ADC channel: "
+                 << rngIdx.val() 
                  << endreq;
           return StatusCode::FAILURE;
         }
         
-        dac->resize(globalDACs->size());
-        copy(globalDACs->begin(),
-             globalDACs->end(),
-             dac->begin());
+        m_CIDACs[rngIdx].resize(globalCIDACs->size());
+        copy(globalCIDACs->begin(),
+             globalCIDACs->end(),
+             m_CIDACs[rngIdx].begin());
       }
     }
 
-    //-- PHASE 2: generate splines
-    vector<float> dblDac;
-    vector<float> dblAdc;
-    
-    int n = min(adc->size(),dac->size());
+    //-- check that we have enough points
+    const vector<float> &cidac = m_CIDACs[rngIdx];
+    if (cidac.size() < adc->size()) {
+      MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+      msglog << MSG::ERROR << "Not enough CIDAC points for ADC channel: " << rngIdx.val()
+             << endreq;
+      return StatusCode::FAILURE;
+    }
 
-    dblDac.resize(n);
-    dblAdc.resize(n);
+    //-- PHASE 2: generate splines
+    vector<float> sp_cidac;
+    vector<float> sp_adc;
+    
+    int n = min(adc->size(),cidac.size());
+
+    // we need extra point for low end extrapolation
+    sp_cidac.resize(n+1);
+    sp_adc.resize(n+1);
 
     // create float vector for input to genSpline()
-    copy(adc->begin(), adc->begin() + n, dblAdc.begin());
-    copy(dac->begin(), dac->begin() + n, dblDac.begin());
+    // leave point at beginning of vector for low end extrapolation
+    copy(adc->begin(),  adc->begin() + n,  sp_adc.begin()+1);
+    copy(cidac.begin(), cidac.begin() + n, sp_cidac.begin()+1);
+
+    // EXTRAPOLATE
+    sp_cidac[0] = -200;
+    sp_adc[0] = extrap(sp_cidac[2], sp_cidac[1], sp_cidac[0],
+                       sp_adc[2], sp_adc[1]);
 
     // put rng id string into spline name
     ostringstream rngStr;
     rngStr << '[' << rngIdx.getCalXtalId()
            << ']';
 
-    genSpline(INL_SPLINE, rngIdx, "INL"    + rngStr.str(),    
-              dblAdc, dblDac);
+    genSpline(INL_SPLINE, rngIdx, "INL" + rngStr.str(),    
+              sp_adc, sp_cidac);
     genSpline(INV_INL_SPLINE, rngIdx, "invINL" + rngStr.str(), 
-              dblDac, dblAdc);
+              sp_cidac, sp_adc);
   }
 
   return StatusCode::SUCCESS;
@@ -169,44 +182,34 @@ StatusCode IntNonlinMgr::loadIdealVals() {
   const int maxADC = 4095;
 
   //-- SANITY CHECKS --//
-  if (owner->m_idealCalib.ciULD.size() != (unsigned)RngNum::N_VALS) {
+  if (m_ccsShared.m_idealCalib.inlADCPerCIDAC.size() != RngNum::N_VALS) {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Bad # of ULD vals in ideal CalCalib xml file" 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+    msglog << MSG::ERROR << "Bad # of ADCPerCIDAC vals in ideal CalCalib xml file" 
            << endreq;
     return StatusCode::FAILURE;
   }
-  if (owner->m_idealCalib.inlADCPerDAC.size() != (unsigned)RngNum::N_VALS) {
-    // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
-    msglog << MSG::ERROR << "Bad # of ADCPerDAC vals in ideal CalCalib xml file" 
-           << endreq;
-    return StatusCode::FAILURE;
-  }
-  
+
+  // ideal mode just uses straigt line so we only
+  // need 2 points per spline
+  vector<float> idealADCs(2);
+  vector<float> idealCIDACs(2);
   for (RngNum rng; rng.isValid(); rng++) {
-    // ideal mode just uses straigt line so we only
-    // need 2 points per spline
-    m_idealDACs[rng].resize(2);
-    m_idealADCs[rng].resize(2);
-    
-    m_idealADCs[rng][0] = 0;
-    m_idealADCs[rng][1] = maxADC;
+    idealADCs[0] = 0;
+    idealADCs[1] = maxADC;
 
-    m_idealDACs[rng][0] = 0;
-    m_idealDACs[rng][1] = 
-      (unsigned int)(maxADC / owner->m_idealCalib.inlADCPerDAC[rng.getInt()]);
+    idealCIDACs[0] = 0;
+    idealCIDACs[1] = 
+      (unsigned int)(maxADC / m_ccsShared.m_idealCalib.inlADCPerCIDAC[rng.val()]);
+
+    m_idealINL[rng].reset(new IntNonlin(&idealADCs, 0, &idealCIDACs));
   }
-
-  // we don't have this info at this point
-  // so why fake it?
-  m_idealErr = 0;
 
   return StatusCode::SUCCESS;
 }
 
 
-bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
+bool IntNonlinMgr::validateRangeBase(IntNonlin *intNonlin) {
   if (!intNonlin) return false;
 
   //get vector of vals

@@ -1,3 +1,8 @@
+v0r11   04/26/06 fewtrell  large restucturing for performance gain..
+                           - addition of PreCalcCalibTool for precalculated calibration data
+                           - in ZeroSuppress mode, XtalDigi can exit processing early after running LAC & trigger checks
+                           - many checks run in dac scale to avoid unecessary dac->adc spline evaluations.
+                           - CalCalibSvc now returns pointers directly to TDS CalibData objects rather than extracting calibration values for caller.  this simplifies code somewhat
 v0r10   03/23/06 usher     Tagging for new externals (CLHEP, Gaudi, etc.)
 v0r9p2  02/13/06 fewtrell  CalTuple now outputs adc_range info.  Also optionally CalTuple outputs 4-range adc data.
 v0r9p1  01/09/06 fewtrell  small edits to remove warnings on linux compile

@@ -1,7 +1,7 @@
 // $Header$
 /** @file
     @author Zach Fewtrell
- */
+*/
 // LOCAL
 #include "CalibItemMgr.h"
 #include "CalCalibSvc.h"
@@ -9,6 +9,7 @@
 // GLAST
 #include "CalibData/DacCol.h"
 #include "CalibData/Cal/Xpos.h"
+
 
 // EXTLIB
 
@@ -27,13 +28,38 @@ template<typename T> const T& max_val(const vector<T> &vec) {
 template<typename T> const T& min_val(const vector<T> &vec) {
   return *(min_element(vec.begin(),vec.end()));
 }
+
+
+/**
+   functional class deletes a pointer
+   fun to use w/ for_each template
+     
+   I got it from here - Z.F.
+   Newsgroups: comp.lang.c++.moderated
+   From: Didier Trosset <didier-dot-tros...@acqiris.com>
+   Date: 21 Oct 2004 15:39:18 -0400
+   Subject: Re: Standard way to delete container of pointers
+*/
+struct delete_ptr
+{
+  template <class P>
+  void operator() (P p)
+  {
+    delete p;
+    p = 0;
+  }
+};
+
+/// template function calls delete on all pointers stored in a STL container
+template<class T> void del_all_ptrs(T &container) {
+  for_each(container.begin(),container.end(),delete_ptr());
+}
+
 //////////////////////////////////////////////////////////////////////
 
-StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs) {
+StatusCode CalibItemMgr::initialize(const string &flavor) {
   StatusCode sc;
 
-  owner = &ccs;
-  
   m_flavor = flavor;
 
   m_calibPath = m_calibTypePath + '/' + flavor;
@@ -50,6 +76,8 @@ StatusCode CalibItemMgr::initialize(const string &flavor, const CalCalibSvc &ccs
     // so we have to call this ourselves.
     // it's a hack, but so be it.
     sc = genLocalStore();
+
+    m_serNo = SERNO_IDEAL;
     if (sc.isFailure()) return sc;
   }
 
@@ -74,12 +102,12 @@ StatusCode CalibItemMgr::updateCalib() {
   // if it fails then we have no valid calib data
   // for the current event.
   DataObject *pObject;
-  sc = owner->m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
+  sc = m_ccsShared.m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
   if (!sc.isFailure())
-    m_calibBase = (CalibData::CalCalibBase *)(pObject);
+    m_calibBase = (CalCalibBase *)(pObject);
   else {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     
     // else return error (can't find calib)
     msglog << MSG::ERROR << "can't get " 
@@ -95,7 +123,7 @@ StatusCode CalibItemMgr::updateCalib() {
   int curSerNo = m_calibBase->getSerNo();
   if (curSerNo != m_serNo) {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::INFO << "Updating " << m_calibPath << endreq;
     m_serNo = curSerNo;
     clearLocalStore();
@@ -124,10 +152,10 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
   TSpline3 *spline = m_splineLists[calibType][idx];
   if (!spline) {
     ostringstream msg;
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR 
            << "No spline data found for " << m_calibPath 
-           << " xtal=" << idx.getInt()
+           << " xtal=" << idx.val()
            << endreq;
 
     return StatusCode::FAILURE;
@@ -143,15 +171,15 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
 #if 0
   //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
   // create MsgStream only when needed (for performance)
-  if (idx.getInt()==48) {
-  MsgStream msglog(owner->msgSvc(), owner->name()); 
-  msglog << MSG::VERBOSE << "Evaluating spline: "
-         << spline->GetName()
-		 << " " << spline
-         << " idx=" << idx.getInt()
-         << " X=" << x
-         << " Y=" << y
-         << endreq;
+  if (idx.val()==48) {
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+    msglog << MSG::VERBOSE << "Evaluating spline: "
+           << spline->GetName()
+           << " " << spline
+           << " idx=" << idx.val()
+           << " X=" << x
+           << " Y=" << y
+           << endreq;
   }
 #endif
 
@@ -180,16 +208,16 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 #if 0
   //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
   // create MsgStream only when needed (for performance)
-  if (idx.getInt()==48) {
-  MsgStream msglog(owner->msgSvc(), owner->name()); 
-  msglog << MSG::VERBOSE << "Generating spline: "
-         << mySpline->GetName()
-		 << " " << mySpline
-         << " idx=" << idx.getInt();
-  for (int i = 0; i < n; i++)
-    msglog << "\tX=" << xp[i]
-           << " Y=" << yp[i];
-  msglog << endreq;
+  if (idx.val()==48) {
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+    msglog << MSG::VERBOSE << "Generating spline: "
+           << mySpline->GetName()
+           << " " << mySpline
+           << " idx=" << idx.val();
+    for (int i = 0; i < n; i++)
+      msglog << "\tX=" << xp[i]
+             << " Y=" << yp[i];
+    msglog << endreq;
   }
 #endif
 
@@ -223,3 +251,4 @@ void CalibItemMgr::clearLocalStore() {
     fill_zero(m_splineXMax[i]);
   }
 }
+

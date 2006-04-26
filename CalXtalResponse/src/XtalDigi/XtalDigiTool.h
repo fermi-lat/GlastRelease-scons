@@ -6,10 +6,10 @@
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
 #include "CalXtalResponse/ICalTrigTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/ICalFailureModeSvc.h"
 
 
 // EXTLIB
@@ -23,12 +23,14 @@
 /*! \class XtalDigiTool
   \author Zachary Fewtrell
   \brief Official implementation of IXtalDigiTool.  
+
   sums IntMcHits into digital response for one Cal xtalIdx.
-
-
+  
 */
 
-class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
+class XtalDigiTool : public AlgTool, 
+             virtual public IXtalDigiTool
+{
  public:
   /// default ctor, declares jobOptions
   XtalDigiTool( const string& type, 
@@ -36,9 +38,9 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
                 const IInterface* parent);
 
   /// gets needed parameters and pointers to required services
-  virtual StatusCode initialize();
+  StatusCode initialize();
 
-  virtual StatusCode finalize();
+  StatusCode finalize();
 
   /// calculate xtal Adc response for all rngs basedon collection of
   /// McHits in xtal & diode regions
@@ -48,11 +50,9 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
                        Event::CalDigi &calDigi,
                        CalArray<FaceNum, bool> &lacBits,
                        CalArray<XtalDiode, bool> &trigBits,
-                       Event::GltDigi *glt);
+                       Event::GltDigi *glt,
+                       bool zeroSuppress);
  private:
-  /// retrieve needed calib constants for this xtal, load into m_dat struct
-  StatusCode retrieveCalib();
-
   /// take CsI MC integrated hit & sum deposited energy to all xtal diodes
   StatusCode sumCsIHit(const Event::McIntegratingHit &hit);
 
@@ -78,15 +78,12 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
   /// pointer to CalCalibSvc object.
   ICalCalibSvc   *m_calCalibSvc; 
 
-  /// pointer to failure mode service
-  ICalFailureModeSvc* m_FailSvc;
-
   /// name of ICalTrigTool member
   StringProperty m_calTrigToolName;
 
   /// ICalTrigTool for calculating trigger response.
   ICalTrigTool *m_calTrigTool;
-  
+
   //-- Gaudi supplId constants --//
   /// number of geometric segments per Xtal
   int m_nCsISeg;                         
@@ -133,7 +130,6 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
     unsigned   RunID;
     unsigned   EventID;
 
-    CalArray<XtalRng, float> adc;
     /// ped subtracted adc.
     CalArray<XtalRng, float> adcPed;
     
@@ -148,31 +144,28 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
     float  sumEneCsI;
     /// total ene from xtal and diodes
     float  sumEne;
-    /// dac values for eachdiode
-    CalArray<XtalDiode, float> diodeDAC;
+    /// cidac values for each adc range
+    CalArray<XtalDiode, float> diodeCIDAC;
     /// average energy deposit position weighted by ene of each deposit
     float  csiWeightedPos;
     
     /// calibration constant
     CalArray<XtalRng, float> ped;
     
-    /// calibration constant
-    CalArray<XtalRng, float> pedSig;
+    /// calibration constant CIDAC
+    CalArray<XtalRng, float> pedSigCIDAC;
 
-    CalArray<XtalDiode, float> trigThresh;
-
-    /// calibration constant
-    CalArray<FaceNum, float> lacThresh;
+    /// trigger threholds in CIDAC units
+    CalArray<XtalDiode, float> trigThreshCIDAC;
 
     /// calibration constant
-    CalArray<XtalRng, float> uldThold;
+    CalArray<FaceNum, float> lacThreshCIDAC;
+
+    /// calibration constant
+    CalArray<XtalRng, float> uldTholdADC;
 
     /// calibration constant
     CalArray<DiodeNum, float> mpd;
-
-    TwrNum  twr;
-    LyrNum  lyr;
-    ColNum  col;
 
     CalArray<FaceNum, RngNum> rng;
 
@@ -186,8 +179,15 @@ class XtalDigiTool : public AlgTool, virtual public IXtalDigiTool {
 
     XtalIdx xtalIdx;
   };
-
   AlgData m_dat;
+
+
+  /// name of precalc calib tool
+  StringProperty m_precalcCalibName;
+  
+  /// pointer to precalcCalibTool
+  IPrecalcCalibTool *m_precalcCalib;
+
 };
 
 

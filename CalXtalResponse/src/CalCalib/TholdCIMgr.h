@@ -15,7 +15,7 @@
 using namespace CalUtil;
 using namespace idents;
 
-using CalibData::ValSig;
+using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -27,42 +27,22 @@ class CalCalibSvc;
 
 class TholdCIMgr : public CalibItemMgr {
  public:
-  TholdCIMgr() 
-    : CalibItemMgr(CalibData::CAL_TholdCI)
+  TholdCIMgr(CalCalibShared &ccsShared) 
+    : CalibItemMgr(CAL_TholdCI, ccsShared)
     {};
 
-  /// get threshold calibration constants as measured w/ charge injection
-  StatusCode getTholds(FaceIdx faceIdx,
-                       CalibData::ValSig &FLE,
-                       CalibData::ValSig &FHE,
-                       CalibData::ValSig &LAC);
+  const CalTholdCI *getTholdCI(FaceIdx faceIdx);
 
-  /// get Upper Level Discriminator threshold as measured w/ charnge
-  /// injection for given xtal/face/rng
-
-  StatusCode getULD(RngIdx rngIdx,
-                    CalibData::ValSig &ULDThold);
-
-  /// get pedestal calibration constants as measured during charge
-  /// injection threshold testing.
-
-  StatusCode getPed(RngIdx rngIdx,
-                    CalibData::ValSig &ped);
  private:
   StatusCode loadIdealVals();
 
   
   StatusCode genLocalStore();
-
-  ValSig m_idealFLE;
-  ValSig m_idealFHE;
-  ValSig m_idealLAC;
-  CalArray<RngNum, ValSig> m_idealULD;
-  CalArray<RngNum, ValSig> m_idealPed;
-
   
   /// Validate TDS data entry (for empty ptrs & fun stuff like that)
-  bool validateRangeBase(CalibData::CalTholdCI *tholdCI);
+  bool validateRangeBase(CalTholdCI *tholdCI);
+
+  auto_ptr<CalTholdCI> m_idealTholdCI;
   
 };
 

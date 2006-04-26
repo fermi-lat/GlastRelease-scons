@@ -76,7 +76,7 @@ pedestal noise & LAC settings higher to accomodate expected higher noise levels 
   </section>
   
   <section name = "INT_NONLIN">
-    <item name = "ADC_PER_DAC" value = "11.2, 1.3, 11.5, 1.3"> ADC/DAC for each ADC range            </item>
+    <item name = "ADC_PER_CIDAC" value = "11.2, 1.3, 11.5, 1.3"> ADC/DAC for each ADC range            </item>
     <item name = "SIG_PCT"     value = "0.01"> sigma/val for all vals in INT_NONLIN group </item>
   </section>
     

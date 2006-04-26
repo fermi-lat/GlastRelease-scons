@@ -29,9 +29,8 @@ using namespace Event;
 
 */
 
-class XtalRecTool : 
-public AlgTool, 
-virtual public IXtalRecTool 
+class XtalRecTool : public AlgTool, 
+                    virtual public IXtalRecTool 
 {
  public:
 
@@ -41,9 +40,9 @@ virtual public IXtalRecTool
                const IInterface* parent);
 
   /// gets needed parameters and pointers to required services
-  virtual StatusCode initialize();
+  StatusCode initialize();
 
-  virtual StatusCode finalize();
+  StatusCode finalize();
 
   StatusCode calculate(const Event::CalDigi &digi,
                        Event::CalXtalRecData &xtalRec,
@@ -55,7 +54,7 @@ virtual public IXtalRecTool
 
 
  private:
-  /** \brief convert large diode DAC scale to small diode DAC scale
+  /** \brief convert large diode CIDAC scale to small diode CIDAC scale
       for given xtal face & pos 
 
       
@@ -63,11 +62,11 @@ virtual public IXtalRecTool
       m_dat struct)
 
       \param pos longitudinal position along xtal (mm)
-      \param largeDAC input large diode DAC value
-      \param smallDAC output small diode DAC value
+      \param largeCIDAC input large diode CIDAC value
+      \param smallCIDAC output small diode CIDAC value
   */
-  StatusCode largeDAC2Small(FaceNum face, float pos, float largeDAC, 
-                            float &smallDAC);
+  StatusCode largeCIDAC2Small(FaceNum face, float pos, float largeCIDAC, 
+                            float &smallCIDAC);
 
 
   /** \brief convert scalar position in mm from xtal center (longitudinal
@@ -127,10 +126,10 @@ virtual public IXtalRecTool
     CalArray<DiodeNum, float> asymCtr;
 
     float  pos;
-    CalArray<FaceNum, float> dac;
+    CalArray<FaceNum, float> cidac;
 
     float  asym;
-    float  meanDAC;
+    float  meanCIDAC;
 
     /// calibration constant
     CalArray<FaceNum, float> ped;
@@ -143,7 +142,6 @@ virtual public IXtalRecTool
 
     /// calibration constant
     CalArray<FaceNum, float> h1Limit;
-
 
     TwrNum  twr;
     LyrNum  lyr;

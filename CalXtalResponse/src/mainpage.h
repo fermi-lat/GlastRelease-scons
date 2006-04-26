@@ -18,13 +18,6 @@ CalCalibSvc supports the following features:
 - Simple interface: requires only specification of unique Cal xtal
 and range as input.  
 
-- Values are returned for the most part as C primitives (float, int,
-etc..) C++ std::vectors are used where appropriate.
-
--  Gleam/Gaudi mechanics such as TDS access, validity checking,
-calibration data format, database access, and data storage are
-all transparent to the user.
-
 - Some calibration types are vectors which represent the 'knots' on
 a spline curve.  
 
@@ -67,8 +60,6 @@ override calib flavor for pedestal data.
 override calib flavor for MeVPerDac data.
 @param FlavorTholdCI
 override calib flavor for tholdCI data.
-@param FlavorTholdMuon
-override calib flavor for tholdMuon data.
 
 @section CalResponseTools CalResponseTools
  

@@ -21,6 +21,7 @@
 
 using namespace CalUtil;
 using namespace Event;
+using namespace CalibData;
 
 
 static ToolFactory<CalTrigTool> s_factory;
@@ -34,7 +35,8 @@ CalTrigTool::CalTrigTool( const string& type,
 {
   declareInterface<ICalTrigTool>(this);
 
-  declareProperty("CalCalibSvc", m_calCalibSvcName = "CalCalibSvc");
+  declareProperty("CalCalibSvc",      m_calCalibSvcName = "CalCalibSvc");
+  declareProperty("PrecalcCalibTool", m_precalcCalibName = "PrecalcCalibTool");
 }
 
 StatusCode CalTrigTool::initialize() {
@@ -52,7 +54,14 @@ StatusCode CalTrigTool::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get " << m_calCalibSvcName << endreq;
+    return sc;
+  }
+
+  // this tool may also be shared by CalTrigTool, global ownership
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool", m_precalcCalibName, m_precalcCalibTool);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  Unable to create " << m_precalcCalibName << endreq;
     return sc;
   }
 
@@ -74,11 +83,6 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
                                      ) {
   StatusCode sc;
 
-  m_dat.Clear();
-  m_dat.twr = xtalIdx.getTwr();
-  m_dat.lyr = xtalIdx.getLyr();
-  m_dat.col = xtalIdx.getCol();
-
   trigBits.fill(false);
   
   for (FaceNum face; face.isValid(); face++) {
@@ -86,62 +90,26 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     XtalDiode xDiodeLrg(face, LRG_DIODE);
     XtalDiode xDiodeSm(face,  SM_DIODE);
 
+    // FLE //
     //-- RETRIEVE THESHOLD CALIB (per-face) --//
-    CalibData::ValSig fle, fhe, lac,
-      uldTholdL8, uldTholdH8;
-    sc = m_calCalibSvc->getTholdCI(faceIdx,fle,fhe,lac);
+    float fleMeV;
+    DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
+    sc = m_precalcCalibTool->getTrigMeV(diodeIdx, fleMeV);
     if (sc.isFailure()) return sc;
-    m_dat.trigThresh[xDiodeLrg] = fle.getVal();
-    m_dat.trigThresh[xDiodeSm]  = fhe.getVal();
-
-    sc = m_calCalibSvc->getULDCI(RngIdx(faceIdx,LEX8), uldTholdL8);
-    if (sc.isFailure()) return sc;
-    sc = m_calCalibSvc->getULDCI(RngIdx(faceIdx, HEX8), uldTholdH8);
-    if (sc.isFailure()) return sc;
-
-    m_dat.uldThold[XtalRng(face,LEX8)] = uldTholdL8.getVal();
-    m_dat.uldThold[XtalRng(face,HEX8)] = uldTholdH8.getVal();
-
 
     //-- CONVERT ADC READOUT TO MeV --//
     RngNum rng(ro.getRange(face));
     short adc = ro.getAdc(face);
     float ene;
-
-    //-- retrieve pedestals --//
-    float ped;
-    float sig, cos;  // placeholders
+    //-- retrieve pedestals 
     RngIdx rngIdx(xtalIdx,
                   face, rng);
-
-    sc = m_calCalibSvc->getPed(rngIdx,
-                               ped,
-                               sig, cos);
-    if (sc.isFailure()) return sc;
-    float adcPed = adc - ped;
-
-
+    const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+    if (!ped) return StatusCode::FAILURE;
+    float adcPed = adc - ped->getAvr();
+    //-- eval faceSignal 
     sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, ene);
     if (sc.isFailure()) return StatusCode::FAILURE;
-
-    //-- FLE --//
-    // thresholds are in X8 units, but may need conversion to X1 units if they
-    // are past hardware range.
-    RngNum fleRng = (m_dat.trigThresh[xDiodeLrg] > uldTholdL8.getVal()) ?
-      LEX1 : LEX8;
-    
-    // convert to LEX1 range if needed
-    if (fleRng == LEX1) {
-      sc = lex8_to_lex1(faceIdx, 
-                        m_dat.trigThresh[xDiodeLrg], 
-                        m_dat.trigThresh[xDiodeLrg]);
-      if (sc.isFailure()) return sc;
-    }
-    // convert FLE thresh to MeV
-    float fleMeV;
-    sc = m_calCalibSvc->evalFaceSignal(RngIdx(faceIdx,fleRng),
-                                       m_dat.trigThresh[xDiodeLrg], fleMeV);
-    if (sc.isFailure()) return sc;
 
     // set trigger bit
     if (ene >= fleMeV) {
@@ -151,27 +119,13 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
         glt->setCALLOtrigger(faceIdx.getCalXtalId());
     }
 
-
-    //-- FHE --//
-    // thresholds are in X8 units, but may need conversion to X1 units if they
-    // are past hardware range.
-    RngNum fheRng = (m_dat.trigThresh[xDiodeSm] > uldTholdH8.getVal()) ?
-      HEX1 : HEX8;
-    
-    // convert to HEX1 range if needed
-    if (fheRng == HEX1) {
-      sc = hex8_to_hex1(faceIdx,                         
-                        m_dat.trigThresh[xDiodeSm], 
-                        m_dat.trigThresh[xDiodeSm]);
-
-      if (sc.isFailure()) return sc;
-    }
-    // convert FHE thresh to MeV
+    // FHE //
+    //-- RETRIEVE THESHOLD CALIB (per-face) --//
     float fheMeV;
-    sc = m_calCalibSvc->evalFaceSignal(RngIdx(faceIdx,fheRng),
-                                       m_dat.trigThresh[xDiodeSm], fheMeV);
+    diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
+    sc = m_precalcCalibTool->getTrigMeV(diodeIdx, fheMeV);
+    if (sc.isFailure()) return sc;
 
-    // set trigger bit
     // set trigger bit
     if (ene >= fheMeV) {
       trigBits[xDiodeSm] = true;
@@ -179,7 +133,6 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
       if (glt)
         glt->setCALHItrigger(faceIdx.getCalXtalId());
     }
-
   } // face loop
   
   return StatusCode::SUCCESS;
@@ -197,11 +150,6 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
                                      ) {
   StatusCode sc;
 
-  m_dat.Clear();
-  m_dat.twr = xtalIdx.getTwr();
-  m_dat.lyr = xtalIdx.getLyr();
-  m_dat.col = xtalIdx.getCol();
-
   trigBits.fill(false);
 
   //-- RETRIEVE CALIB --//
@@ -210,72 +158,35 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     XtalDiode xDiodeLrg(face, LRG_DIODE);
     XtalDiode xDiodeSm(face,  SM_DIODE);
 
-    //-- THESHOLDS (per-face) --//
-    CalibData::ValSig fle,fhe,lac,
-      uldTholdL8, uldTholdH8;
-
-    sc = m_calCalibSvc->getTholdCI(faceIdx,fle,fhe,lac);
+    // FLE //
+	DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
+    float fleADC;
+    RngNum fleRng;
+    sc = m_precalcCalibTool->getTrigRngADC(diodeIdx, fleRng, fleADC);
     if (sc.isFailure()) return sc;
-    m_dat.trigThresh[xDiodeLrg] = fle.getVal();
-    m_dat.trigThresh[xDiodeSm]  = fhe.getVal();
-
-    sc = m_calCalibSvc->getULDCI(RngIdx(faceIdx,LEX8),
-                                 uldTholdL8);
-    if (sc.isFailure()) return sc;
-    sc = m_calCalibSvc->getULDCI(RngIdx(faceIdx,HEX8),
-                                 uldTholdH8);
-    if (sc.isFailure()) return sc;
-
-    m_dat.uldThold[XtalRng(face,LEX8)] = uldTholdL8.getVal();
-    m_dat.uldThold[XtalRng(face,HEX8)] = uldTholdH8.getVal();
-
-
-    //-- FLE --//
-    // thresholds are in X8 units, but may need conversion to X1 units if they
-    // are past hardware range.
-    RngNum fleRng = (m_dat.trigThresh[xDiodeLrg] > uldTholdL8.getVal()) ?
-      LEX1 : LEX8;
-    
-    // convert to LEX1 range if needed
-    if (fleRng == LEX1) {
-      sc = lex8_to_lex1(faceIdx, 
-                        m_dat.trigThresh[xDiodeLrg], 
-                        m_dat.trigThresh[xDiodeLrg]);
-      if (sc.isFailure()) return sc;
-    }
 
     // set trigger bit
-    if (adcPed[XtalRng(face,fleRng)] >= m_dat.trigThresh[xDiodeLrg] ) {
+    if (adcPed[XtalRng(face,fleRng)] >= fleADC) {
       trigBits[xDiodeLrg] = true;
       // optionally populate GltDigi
       if (glt)
         glt->setCALLOtrigger(faceIdx.getCalXtalId());
     }
 
-
-    //-- FHE --//
-    // thresholds are in X8 units, but may need conversion to X1 units if they
-    // are past hardware range.
-    RngNum fheRng = (m_dat.trigThresh[xDiodeSm] > uldTholdH8.getVal()) ?
-      HEX1 : HEX8;
-    
-    // convert to HEX1 range if needed
-    if (fheRng == HEX1) {
-      sc = hex8_to_hex1(faceIdx,                         
-                        m_dat.trigThresh[xDiodeSm], 
-                        m_dat.trigThresh[xDiodeSm]);
-      if (sc.isFailure()) return sc;
-    }
+    // FHE //
+	diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
+    float fheADC;
+    RngNum fheRng;
+    sc = m_precalcCalibTool->getTrigRngADC(diodeIdx, fheRng, fheADC);
+    if (sc.isFailure()) return sc;
 
     // set trigger bit
-    if (adcPed[XtalRng(face,fheRng)] >= m_dat.trigThresh[xDiodeSm]) {
+    if (adcPed[XtalRng(face,fheRng)] >= fheADC) {
       trigBits[xDiodeSm] = true;
       // optionally populate GltDigi
       if (glt)
         glt->setCALHItrigger(faceIdx.getCalXtalId());
     }
-
-    
   }
 
   return StatusCode::SUCCESS;
@@ -289,8 +200,6 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
                                      CalArray<XtalDiode, bool> &trigBits,
                                      Event::GltDigi *glt
                                      ) {
-  StatusCode sc;
-
   XtalIdx xtalIdx(calDigi.getPackedId());
 
   //-- CASE 1: SINGLE READOUT MODE --//
@@ -323,24 +232,50 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
         RngNum rng((*ro).getRange(face));
       
         //-- retrieve pedestals --//
-        float ped;
-        float sig, cos;  // placeholders
         RngIdx rngIdx(xtalIdx,
                       face, rng);
 
-        sc = m_calCalibSvc->getPed(rngIdx,
-                                   ped,
-                                   sig, cos);
-        if (sc.isFailure()) return sc;
+        const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+        if (!ped) return StatusCode::FAILURE;
         
         adcPed[XtalRng(face, rng)]  = 
-          (*ro).getAdc(face) - ped;
+          (*ro).getAdc(face) - ped->getAvr();
       }
 
     return calcXtalTrig(xtalIdx, adcPed, trigBits, glt);
   }
 }
 
+StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
+                                     const CalArray<XtalDiode, float> &cidac,
+                                     CalArray<XtalDiode, bool> &trigBits,
+                                     Event::GltDigi *glt
+                                     ) {
+  StatusCode sc;
+
+  trigBits.fill(false);
+
+  // get threholds
+  for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+    float thresh;
+    sc = m_precalcCalibTool->getTrigCIDAC(DiodeIdx(xtalIdx, xDiode), thresh);
+    if (sc.isFailure()) return sc;
+
+    if (cidac[xDiode] >= thresh) {
+      trigBits[xDiode] = true;
+      
+      // set glt digi info (optional)
+      if (glt)
+        if (xDiode.getDiode() == LRG_DIODE)
+          glt->setCALLOtrigger(FaceIdx(xtalIdx, xDiode.getFace()).getCalXtalId());
+        else
+          glt->setCALHItrigger(FaceIdx(xtalIdx, xDiode.getFace()).getCalXtalId());
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+									 
 /**
    Loop through digiCol & call calcXtalTrig() on each digi readout.
    Save to optional GltDigi if glt input param is non-null.
@@ -403,65 +338,4 @@ GltDigi* CalTrigTool::setupGltDigi(IDataProviderSvc *eventSvc) {
   return glt;
 }
 
-StatusCode CalTrigTool::lex8_to_lex1(FaceIdx faceIdx, float l8adc, float &l1adc) {
-
-  float tmpDAC;
-  StatusCode sc;
-
-  FaceNum face = faceIdx.getFace();
-
-  // use this point to generate LEX8/LEX1 ratio
-  float x8tmp = m_dat.uldThold[XtalRng(face,LEX8)];
-
-  // 1st convert to dac
-  sc = m_calCalibSvc->evalDAC(RngIdx(faceIdx, LEX8),
-                              x8tmp, tmpDAC);
-  if (sc.isFailure()) return sc;
-      
-  // 2nd convert to LEX1 adc
-  float x1tmp;
-  sc = m_calCalibSvc->evalADC(RngIdx(faceIdx, LEX1),
-                              tmpDAC, x1tmp);
-  if (sc.isFailure()) return sc;
-      
-  float rat = x1tmp/x8tmp;
-
-  l1adc = l8adc*rat;
-
-  return StatusCode::SUCCESS;
-
-}
-
-StatusCode CalTrigTool::hex8_to_hex1(FaceIdx faceIdx, float h8adc, float &h1adc) {
-
-  float tmpDAC;
-  StatusCode sc;
-
-  FaceNum face = faceIdx.getFace();
-
-  // use this point to generate HEX8/HEX1 ratio
-  float x8tmp = m_dat.uldThold[XtalRng(face,HEX8)];
-
-  // 1st convert to dac
-  sc = m_calCalibSvc->evalDAC(RngIdx(faceIdx, HEX8),
-                              x8tmp, tmpDAC);
-  if (sc.isFailure()) return sc;
-      
-  // 2nd convert to LEX1 adc
-  float x1tmp;
-  sc = m_calCalibSvc->evalADC(RngIdx(faceIdx, HEX1),
-                              tmpDAC, x1tmp);
-  if (sc.isFailure()) return sc;
-      
-  float rat = x1tmp/x8tmp;
-
-  h1adc = h8adc*rat;
-
-  return StatusCode::SUCCESS;
-
-}
-
-StatusCode CalTrigTool::finalize() {
-  return StatusCode::SUCCESS;
-}
 

@@ -1,13 +1,11 @@
 // $Header$
 /** @file
     @author Zach Fewtrell
- */
+*/
 // LOCAL
 #include "MPDMgr.h"
-#include "CalCalibSvc.h"
 
 // GLAST
-#include "CalibData/Cal/Xpos.h"
 
 // EXTLIB
 
@@ -18,40 +16,26 @@ using namespace CalUtil;
 using namespace idents;
 
 /// get MeVPerDac ratios for given xtal
-StatusCode MPDMgr::getMPD(XtalIdx xtalIdx,
-                          CalibData::ValSig &mpdLrg,
-                          CalibData::ValSig &mpdSm) {
-
-  if (m_idealMode) {
-    mpdLrg = m_idealMPDLrg;
-    mpdSm  = m_idealMPDSm;
-    return StatusCode::SUCCESS;
-  }
-
+const CalMevPerDac *MPDMgr::getMPD(XtalIdx xtalIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return NULL;
 
   // Get generic pointer to rng specific data
-  CalibData::CalMevPerDac *mpd = 
-    (CalibData::CalMevPerDac*)m_rngBases[xtalIdx];
-  if (!mpd) return StatusCode::FAILURE;
-
-  mpdLrg = *(mpd->getBig());
-  mpdSm = *(mpd->getSmall());
-
-  return StatusCode::SUCCESS;
+  return (CalMevPerDac*)m_rngBases[xtalIdx];
 }
 
 StatusCode MPDMgr::loadIdealVals() {
-  m_idealMPDLrg.m_val = owner->m_idealCalib.mpdLrg;
-  m_idealMPDLrg.m_sig = owner->m_idealCalib.mpdLrg * 
-    owner->m_idealCalib.mpdSigPct;
+  ValSig mpdLrg(m_ccsShared.m_idealCalib.mpdLrg,
+                m_ccsShared.m_idealCalib.mpdLrg * 
+                m_ccsShared.m_idealCalib.mpdSigPct);
 
-  m_idealMPDSm.m_val = owner->m_idealCalib.mpdSm;
-  m_idealMPDSm.m_sig = owner->m_idealCalib.mpdSm * 
-    owner->m_idealCalib.mpdSigPct;
+  ValSig mpdSm(m_ccsShared.m_idealCalib.mpdSm,
+               m_ccsShared.m_idealCalib.mpdSm * 
+               m_ccsShared.m_idealCalib.mpdSigPct);
+
+  m_idealMPD.reset(new CalMevPerDac(&mpdLrg, &mpdSm));
   
   return StatusCode::SUCCESS;
 }
@@ -60,19 +44,21 @@ StatusCode MPDMgr::loadIdealVals() {
 StatusCode MPDMgr::genLocalStore() {
   m_rngBases.resize(XtalIdx::N_VALS,0);
 
-  if (!m_idealMode) {
-    for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
-      CalibData::CalMevPerDac *mpd = (CalibData::CalMevPerDac*)getRangeBase(xtalIdx.getCalXtalId());
+  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
+    if (!m_idealMode) {
+      CalMevPerDac *mpd = (CalMevPerDac*)getRangeBase(xtalIdx.getCalXtalId());
       if (!mpd) continue;
       if (!validateRangeBase(mpd)) continue;
       
       m_rngBases[xtalIdx] = mpd;
-    }
+    } else m_rngBases[xtalIdx] = m_idealMPD.get();
   }
+  
+
   return StatusCode::SUCCESS;
 }
 
-bool MPDMgr::validateRangeBase(CalibData::CalMevPerDac *mpd) {
+bool MPDMgr::validateRangeBase(CalMevPerDac *mpd) {
   const ValSig *big = mpd->getBig();
   const ValSig *small = mpd->getSmall();
   if (!big || !small) return false;

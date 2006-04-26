@@ -10,11 +10,12 @@
 // EXTLIB
 
 // STD
+#include <memory>
 
 using namespace CalUtil;
 using namespace idents;
+using namespace CalibData;
 
-using CalibData::ValSig;
 
 class CalCalibSvc;
 
@@ -23,27 +24,23 @@ class CalCalibSvc;
     */
 class MPDMgr : public CalibItemMgr {
  public:
-  MPDMgr() : 
-    CalibItemMgr(CalibData::CAL_MevPerDac) {};
+  MPDMgr(CalCalibShared &ccsShared) : 
+    CalibItemMgr(CAL_MevPerDac, ccsShared) {};
 
-  /// get MeVPerDac ratios for given xtal
-  StatusCode getMPD(XtalIdx xtalIdx,
-                    ValSig &mpdLrg,
-                    ValSig &mpdSm);
+  const CalMevPerDac *getMPD(XtalIdx xtalIdx);
 
  private:
   StatusCode loadIdealVals();
-
   
   StatusCode genLocalStore();
 
-  bool validateRangeBase(CalibData::CalMevPerDac *mpd);
+  bool validateRangeBase(CalMevPerDac *mpd);
 
-  ValSig m_idealMPDLrg;
-  ValSig m_idealMPDSm;
+  bool validateRangeBase(RangeBase *rangeBase) {return true;}
 
-  bool validateRangeBase(CalibData::RangeBase *rangeBase) {return true;}
-
+  /// ideal data is not available till after construction & I will be responsible
+  /// for memory, hence use of auto_ptr<>
+  auto_ptr<CalMevPerDac> m_idealMPD;
 };
 
 #endif

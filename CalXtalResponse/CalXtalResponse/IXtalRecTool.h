@@ -24,10 +24,6 @@
 
 static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 1);
 
-using namespace idents;
-using namespace std;
-using namespace CalUtil;
-
 class IXtalRecTool : virtual public IAlgTool {
 
  public:
@@ -63,9 +59,9 @@ class IXtalRecTool : virtual public IAlgTool {
   */
   virtual StatusCode calculate(const Event::CalDigi &digi,
                                Event::CalXtalRecData &xtalRec,
-                               CalArray<FaceNum, bool> &belowThresh,
+                               CalUtil::CalArray<CalUtil::FaceNum, bool> &belowThresh,
                                bool &xtalBelowThresh,
-                               CalArray<FaceNum, bool> &saturated,
+                               CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
                                const Event::EventHeader *evtHdr=0
                                ) = 0;
 };

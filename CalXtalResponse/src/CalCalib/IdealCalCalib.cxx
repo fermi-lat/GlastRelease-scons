@@ -83,7 +83,7 @@ StatusCode IdealCalCalib::readCfgFile(const string &path) {
   muonSigPct    = ifile.getDouble(THOLD_MUON.c_str(), "SIG_PCT");
   muonPeds      = ifile.getDoubleVector(THOLD_MUON.c_str(), "PEDS");
 
-  inlADCPerDAC  = ifile.getDoubleVector(INL.c_str(), "ADC_PER_DAC");
+  inlADCPerCIDAC  = ifile.getDoubleVector(INL.c_str(), "ADC_PER_CIDAC");
   inlSigPct     = ifile.getDouble(INL.c_str(), "SIG_PCT");
 
   return StatusCode::SUCCESS;

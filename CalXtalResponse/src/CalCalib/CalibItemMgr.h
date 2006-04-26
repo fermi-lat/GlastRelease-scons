@@ -4,6 +4,7 @@
 
 // LOCAL
 #include "IdealCalCalib.h"
+#include "CalCalibShared.h"
 
 // GLAST
 #include "CalibData/RangeBase.h"
@@ -24,6 +25,7 @@
 using namespace std;
 using namespace CalUtil;
 using namespace idents;
+using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -40,25 +42,32 @@ class CalCalibSvc;
 class CalibItemMgr {
  public:
   CalibItemMgr(const string &calibTypePath,
+               CalCalibShared &ccsShared,
                int nSplineTypes=0) : 
     m_calibTypePath(calibTypePath),
-    owner(0),
+    m_ccsShared(ccsShared),
     m_idealMode(false),
     m_splineLists(nSplineTypes),
     m_splineXMin(nSplineTypes),
     m_splineXMax(nSplineTypes),
     m_isValid(false),
-    m_serNo(-1)
+    m_serNo(SERNO_NODATA)
     {}
 
   virtual ~CalibItemMgr() {};
 
-  StatusCode initialize(const string &flavor,
-                        const CalCalibSvc &ccs);
+  /// \brief initialization code which must be done during Gaudi init() period
+  /// 
+  /// some data is not available at construction time
+  virtual StatusCode initialize(const string &flavor);
 
   /// data should be invalidated at beginning of each event.
   /// just in case there is a change in validity period
   void invalidate() {m_isValid = false;} 
+
+  /// return serial # for current calib data
+  /// return calibration data serial number from CalibSvc, or SERNO_IDEAL, SERNO_NODATA
+  int getSerNo() {return m_serNo;}
 
  protected:
   /** \brief check calib validity period, (re)build local store if necessary
@@ -84,16 +93,16 @@ class CalibItemMgr {
                        const vector<float> &x, const vector<float> &y);
 
   /// TDS path to calib data for my calib_type
-  string                       m_calibTypePath;
+  string m_calibTypePath;
 
   /// TDS path to calib data for my calib_type and path
-  string                       m_calibPath;
+  string m_calibPath;
 
   /// TDS location for root of my calib_type and path
-  CalibData::CalCalibBase     *m_calibBase;
+  CalCalibBase *m_calibBase;
 
-  /// ref to owner->CalCalibSvc object
-  const CalCalibSvc           *owner;
+  /// ref to data shared by all classes used by CalibDataSvc
+  CalCalibShared &m_ccsShared;
 
   /// boolean if we're in ideal 'fake' mode
   bool m_idealMode;
@@ -106,14 +115,19 @@ class CalibItemMgr {
   vector<CalVec<LATWideIndex, float> >         m_splineXMax;
 
   /// pointers to each data member for my calib_type                                                                                                                                                       
-  CalVec<LATWideIndex, CalibData::RangeBase* > m_rngBases;
+  CalVec<LATWideIndex, RangeBase* > m_rngBases;
 
   /** retrieve spec'd rangeBase object, update if necessary
       \return NULL if there is no data 
   */
-  CalibData::RangeBase *getRangeBase(CalXtalId xtalId) {
+  RangeBase *getRangeBase(CalXtalId xtalId) {
     return m_calibBase->getRange(xtalId);
   }
+    
+  /// m_serNo has this value when data has not yet been loaded
+  static const int SERNO_NODATA = -1;
+  /// m_serNo has this value when ideal mode data has been loaded
+  static const int SERNO_IDEAL  = 1;
   
  private:
   /// wipe out locally stored data (e.g. splines)
@@ -122,33 +136,11 @@ class CalibItemMgr {
   string            m_flavor;     
   /// validity state of CalibItemMgr data
   bool              m_isValid;    
+
   /// serial # for current calibration source
+  /// may be set to SERNO_IDEAL, or SERNO_NODATA
   int               m_serNo;      
+  
 
-  ///////////////////////// UTILS ///////////////////////////////////////////
-  /**
-     functional class deletes a pointer
-     fun to use w/ for_each template
-     
-     I got it from here - Z.F.
-     Newsgroups: comp.lang.c++.moderated
-     From: Didier Trosset <didier-dot-tros...@acqiris.com>
-     Date: 21 Oct 2004 15:39:18 -0400
-     Subject: Re: Standard way to delete container of pointers
-  */
-  struct delete_ptr
-  {
-    template <class P>
-    void operator() (P p)
-    {
-      delete p;
-      p = 0;
-    }
-  };
-
-  /// template function calls delete on all pointers stored in a STL container
-  template<class T> void del_all_ptrs(T &container) {
-    for_each(container.begin(),container.end(),delete_ptr());
-  }
 };
 #endif

@@ -2,7 +2,7 @@
 
 /** @file
     @author Zach Fewtrell
- */
+*/
 
 // Include files
 
@@ -19,24 +19,24 @@
 
 #include "CLHEP/Random/RandGauss.h"
 
-
 // STD
 
 using namespace CalUtil;
 using namespace Event;
+using namespace CalXtalResponse;
+using namespace CalibData;
 
 
 static ToolFactory<XtalDigiTool> s_factory;
 const IToolFactory& XtalDigiToolFactory = s_factory;
 
-static float rint(float in) { return floor(in + 0.5);}
+static float round_int(float in) { return floor(in + 0.5);}
 
 XtalDigiTool::XtalDigiTool( const string& type,
                             const string& name,
                             const IInterface* parent)
   : AlgTool(type,name,parent),
     m_calCalibSvc(0),
-    m_FailSvc(0),
     m_CsILength(0),
     m_eDiodeMSm(0),
     m_eDiodePSm(0),
@@ -55,6 +55,7 @@ XtalDigiTool::XtalDigiTool( const string& type,
   declareProperty("tupleFilename",      m_tupleFilename      = "");
   declareProperty("AllowNoiseOnlyTrig", m_allowNoiseOnlyTrig = true);
   declareProperty("tupleLACOnly",       m_tupleLACOnly       = true);
+  declareProperty("PrecalcCalibTool",   m_precalcCalibName   = "PrecalcCalibTool");
 }
 
 StatusCode XtalDigiTool::initialize() {
@@ -70,13 +71,6 @@ StatusCode XtalDigiTool::initialize() {
   if ((sc = setProperties()).isFailure()) {
     msglog << MSG::ERROR << "Failed to set properties" << endreq;
     return sc;
-  }
-
-  // retrieve cal failure service
-  sc = service("CalFailureModeSvc", m_FailSvc);
-  if (sc.isFailure() ) {
-    msglog << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
-    m_FailSvc = 0;
   }
 
   // try to find the GlastDevSvc service
@@ -101,7 +95,7 @@ StatusCode XtalDigiTool::initialize() {
 
   for(PARAMAP::iterator it=param.begin(); it!=param.end();it++)
     if(!detSvc->getNumericConstByName((*it).second, &val)) {
-      msglog << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
+      msglog << MSG::ERROR << " constant " <<(*it).second <<" not defiPed" << endreq;
       return StatusCode::FAILURE;
     } else *((*it).first)=(int)val;
 
@@ -110,7 +104,7 @@ StatusCode XtalDigiTool::initialize() {
   sc = detSvc->getNumericConstByName("CsILength", &tmp);
   m_CsILength = tmp;
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
+    msglog << MSG::ERROR << " constant CsILength not defiPed" << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -121,7 +115,7 @@ StatusCode XtalDigiTool::initialize() {
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
+    msglog << MSG::ERROR << "can't get " << m_calCalibSvcName  << endreq;
     return sc;
   }
 
@@ -142,24 +136,20 @@ StatusCode XtalDigiTool::initialize() {
       //-- Add Branches to tree --//
       if (!m_tuple->Branch("RunID",          &m_dat.RunID,             "RunID/i")            ||
           !m_tuple->Branch("EventID",        &m_dat.EventID,           "EventID/i")          ||
-          !m_tuple->Branch("adc",            m_dat.adc.begin(),        "adc[2][4]/F")        ||
           !m_tuple->Branch("adcPed",         m_dat.adcPed.begin(),     "adcPed[2][4]/F")     ||
           !m_tuple->Branch("nMCHits",        &m_dat.nMCHits,           "nMCHits/i")          ||
           !m_tuple->Branch("nCsIHits",       &m_dat.nCsIHits,          "nCsIHits/i")         ||
           !m_tuple->Branch("nDiodeHits",     m_dat.nDiodeHits.begin(), "nDiodeHits[2][2]/i") ||
           !m_tuple->Branch("sumEneCsI",      &m_dat.sumEneCsI,         "sumEneCsI/F")        ||
           !m_tuple->Branch("sumEne",         &m_dat.sumEne,            "sumEne/F")           ||
-          !m_tuple->Branch("diodeDAC",       m_dat.diodeDAC.begin(),   "diodeDAC[2][2]/F")   ||
+          !m_tuple->Branch("diodeCIDAC",      m_dat.diodeCIDAC.begin(),"diodeCIDAC[2][2]/F") ||
           !m_tuple->Branch("csiWeightedPos", &m_dat.csiWeightedPos,    "csiWeightedPos/F")   ||
           !m_tuple->Branch("ped",            m_dat.ped.begin(),        "ped[2][4]/F")        ||
-          !m_tuple->Branch("pedSig",         m_dat.pedSig.begin(),     "pedSig[2][4]/F")     ||
-          !m_tuple->Branch("lacThresh",      m_dat.lacThresh.begin(),  "lacThresh[2]/F")     ||
-          !m_tuple->Branch("trigThresh",     m_dat.trigThresh.begin(), "trigThresh[2][2]/F") ||
-          !m_tuple->Branch("uldThold",       m_dat.uldThold.begin(),   "uldThold[2][4]/F")   ||
+          !m_tuple->Branch("pedSigCIDAC",    m_dat.pedSigCIDAC.begin(),"pedSigCIDAC[2][4]/F")     ||
+          !m_tuple->Branch("lacThreshCIDAC", m_dat.lacThreshCIDAC.begin(),  "lacThreshCIDAC[2]/F")     ||
+          !m_tuple->Branch("trigThreshCIDAC", m_dat.trigThreshCIDAC.begin(), "trigThreshCIDAC[2][2]/F") ||
+          !m_tuple->Branch("uldTholdADC",    m_dat.uldTholdADC.begin(),   "uldTholdADC[2][4]/F")   ||
           !m_tuple->Branch("mpd",            m_dat.mpd.begin(),        "mpd[2]/F")           ||
-          !m_tuple->Branch("twr",            &m_dat.twr,               "twr/b")              ||
-          !m_tuple->Branch("lyr",            &m_dat.lyr,               "lyr/b")              ||
-          !m_tuple->Branch("col",            &m_dat.col,               "col/b")              ||
           !m_tuple->Branch("rng",            m_dat.rng.begin(),        "rng[2]/b")           ||
           !m_tuple->Branch("lac",            m_dat.lac.begin(),        "lac[2]/b")           ||
           !m_tuple->Branch("trigBits",       m_dat.trigBits.begin(),   "trigBits[2][2]/b")   ||
@@ -181,12 +171,19 @@ StatusCode XtalDigiTool::initialize() {
     msglog << MSG::ERROR << "  Unable to create " << m_calTrigToolName << endreq;
     return sc;
   }
+  
+  // this tool may also be shared by CalTrigTool, global ownership
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool", m_precalcCalibName, m_precalcCalib);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  Unable to create " << m_precalcCalibName << endreq;
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
 }
 
 /**
-   - Loop through hitList & sum energies in DAC scale for each diode.
+   - Loop through hitList & sum energies in CIDAC scale for each diode.
    - Apply direct diode deposits when specified by hit position.
    - Add noise, calculate adc output, range select, log accept & trigger output.
    - populate GltDigi class if glt != 0
@@ -196,83 +193,77 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
                                    CalDigi &calDigi,     
                                    CalArray<FaceNum, bool> &lacBits,
                                    CalArray<XtalDiode, bool> &trigBits,
-                                   Event::GltDigi *glt) {
+                                   Event::GltDigi *glt,
+                                   bool zeroSuppress) {
   StatusCode sc;
 
   m_dat.Clear();
 
-  m_dat.xtalIdx = XtalIdx(calDigi.getPackedId());
-  m_dat.twr = m_dat.xtalIdx.getTwr();
-  m_dat.lyr = m_dat.xtalIdx.getLyr();
-  m_dat.col = m_dat.xtalIdx.getCol();
-
-  /////////////////////////////////////
-  // STAGE 0: retrieve calibrations ///
-  /////////////////////////////////////
-  sc = retrieveCalib();
-  if (sc.isFailure()) return sc;
-
-  // only need MeVPerDAC if we have a deposit.
-  if (hitList.size()) 
-    sc = m_calCalibSvc->getMPD(m_dat.xtalIdx, m_dat.mpd);
-  if (sc.isFailure()) return sc;
-
+  CalXtalId xtalId = calDigi.getPackedId();
+  m_dat.xtalIdx = XtalIdx(xtalId);
 
   /////////////////////////////////////
   // STAGE 1: fill signal energies ////
   /////////////////////////////////////
-
-
+  
   // loop over hits.
-  for (vector<const McIntegratingHit*>::const_iterator it = hitList.begin();
-       it != hitList.end(); it++) {
-    const McIntegratingHit &hit = *(*it); // use ref to avoid ugly '->' operator
-
-    // get volume identifier.
-    VolumeIdentifier volId = ((VolumeIdentifier)hit.volumeID());
-
-    // make sure the hits are cal hits
-    if (!volId.isCal())
-      throw invalid_argument("volume id is not Cal.  Programmer error");
-
-    // make sure volumeid matches CalXtalId
-    CalXtalId volXtalId(volId);
-    if (volXtalId != m_dat.xtalIdx.getCalXtalId())
-      throw invalid_argument("volume id does not match xtalId.  Programmer error.");
+  if (hitList.size()) {
+    for (vector<const McIntegratingHit*>::const_iterator it = hitList.begin();
+         it != hitList.end(); it++) {
+      
+      // only need MeVPerDAC if we have a deposit.
+      const CalMevPerDac *mpd = m_calCalibSvc->getMPD(m_dat.xtalIdx);
+      if (!mpd) return StatusCode::FAILURE;
+      m_dat.mpd[LRG_DIODE] = mpd->getBig()->getVal();
+      m_dat.mpd[SM_DIODE]  = mpd->getSmall()->getVal();
+      
+      const McIntegratingHit &hit = *(*it); // use ref to avoid ugly '->' operator
+      
+      // get volume identifier.
+      VolumeIdentifier volId = ((VolumeIdentifier)hit.volumeID());
+      
+      // make sure the hits are cal hits
+      if (!volId.isCal())
+        throw invalid_argument("volume id is not Cal.  Programmer error");
+      
+      // make sure volumeid matches CalXtalId
+      CalXtalId volXtalId(volId);
+      if (volXtalId != xtalId)
+        throw invalid_argument("volume id does not match xtalId.  Programmer error.");
     
-    m_dat.sumEne += hit.totalEnergy();;
+      m_dat.sumEne += hit.totalEnergy();;
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////// SUM DAC VALS FOR EACH HIT /////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
+      ///////////////////// SUM CIDAC VALS FOR EACH HIT /////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
+      
+      //--XTAL DEPOSIT--//
+      if((int)volId[fCellCmp] ==  m_eXtal ) {
+        sc = sumCsIHit(hit);
+        if (sc.isFailure()) return sc;
+      } 
+      //--DIODE DEPOSIT--//
+      else {
+        sc = sumDiodeHit(hit);
+        if (sc.isFailure()) return sc;
+      }
+      m_dat.nMCHits++;
+    } // per hit
 
-    //--XTAL DEPOSIT--//
-    if((int)volId[fCellCmp] ==  m_eXtal ) {
-      sc = sumCsIHit(hit);
-      if (sc.isFailure()) return sc;
-    } 
-    //--DIODE DEPOSIT--//
-    else {
-      sc = sumDiodeHit(hit);
-      if (sc.isFailure()) return sc;
-    }
-    m_dat.nMCHits++;
-  } // per hit
-
-  for (FaceNum face; face.isValid(); face++) {
-    for (DiodeNum diode; diode.isValid(); diode++) {
-      XtalDiode xDiode(face,diode);
-
-      //////////////////////////////////////////////
-      // STAGE 2:  add poissonic noise to signals //
-      //////////////////////////////////////////////
-      // -- poissonic noise is only added if we have hits.
-      if (hitList.size() > 0 && !m_noRandNoise) {
-        // convert dac in diode to MeV in xtal
-        float meVXtal = m_dat.diodeDAC[xDiode]*m_dat.mpd[diode];
+    if (!m_noRandNoise)
+      for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+        DiodeNum diode = xDiode.getDiode();
+      
+        //////////////////////////////////////////////
+        // STAGE 2:  add poissonic noise to signals //
+        //////////////////////////////////////////////
+        // -- poissonic noise is only added if we have hits.
+        
+        // convert cidac in diode to MeV in xtal
+        float meVXtal = m_dat.diodeCIDAC[xDiode]*m_dat.mpd[diode];
         
         // MeV in xtal -> electrons in diode
-        float eDiode = meVXtal * m_ePerMeV[diode.getInt()];
+        float eDiode = meVXtal * m_ePerMeV[diode.val()];
         
         // apply poissonic fluctuation to # of electrons.
         float noise = sqrt(eDiode)*CLHEP::RandGauss::shoot();
@@ -280,177 +271,145 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
         // add noise
         eDiode += noise;
         
-        // convert back to dac in diode
-        meVXtal = eDiode/m_ePerMeV[diode.getInt()];
-        m_dat.diodeDAC[xDiode] = meVXtal/m_dat.mpd[diode];
-      } // poissonic noise
-        
-      ///////////////////////////////
-      // Stage 3: convert dac->adc //
-      ///////////////////////////////
-      for (THXNum thx; thx.isValid(); thx++) {
-        RngNum rng(diode,thx);
-        RngIdx rngIdx(m_dat.twr,m_dat.lyr,m_dat.col,
-                      face, rng);
-                  
-        XtalRng xRng(face,rng);          
-        // calcuate adc val from dac
-        sc = m_calCalibSvc->evalADC(rngIdx, 
-                                    m_dat.diodeDAC[xDiode],
-                                    m_dat.adcPed[xRng]);
-        if (sc.isFailure()) return sc;   
+        // convert back to cidac in diode
+        meVXtal = eDiode/m_ePerMeV[diode.val()];
+        m_dat.diodeCIDAC[xDiode] = 
+          meVXtal/m_dat.mpd[diode];
 
-        ///////////////////////////////
-        // STAGE 4: electronic noise //
-        ///////////////////////////////
-        // electronic noise is calculated on a per-diode basis
-        // uses sigmas from ADC ped data
-        // adc vals need not include peds for this calculation
-        if (!m_noRandNoise) {
-          // only add electronic nose to sm diodes if we have
-          // hits, otherwise may cause false signals?
-          if (diode == SM_DIODE && !hitList.size()) continue;
+      } // for (xDiode)
+  } // if (hitList.size())  
+    
+  
+  ///////////////////////////////
+  // STAGE 3: electronic noise //
+  ///////////////////////////////
+  // electronic noise is calculated with sigmas from pedestal data
+  // this calculation is required before LAC test & theoretically
+  // should be done before trigger test as well.
+  //
+  // electronic noise is calculated in CIDAC units.  This allows
+  // us to perform threhold checks before invoking dac2adc
+  // spline functions.  In zero suppression mode, this should
+  // allow a significant optimization.
+  //
+  // same noise is applied to both x1 && x8 range on single diode.
+  for (FaceNum face; face.isValid(); face++) {
+    if (!m_noRandNoise) 
+      for (DiodeNum diode; diode.isValid(); diode++){
+        // only add electronic nose to sm diodes if we have
+        // hits, otherwise may cause false signals?
+        if (diode == SM_DIODE && !hitList.size()) continue;
         
-          float sig = m_dat.pedSig[xRng];
-          
-          // use same rand for both since the X1 & X8 noise
-          // is strongly correlated
-          float rnd = RandGauss::shoot();
+        XtalRng xRng(face, diode.getX8Rng());
+        RngIdx rngIdx(m_dat.xtalIdx, xRng);
         
-          m_dat.adcPed[xRng] += sig*rnd;
-        }
-
-      }  // thx (x8,x1)
-
-    } // diode
+        // get pedestal sigma
+        sc = m_precalcCalib->getPedSigCIDAC(rngIdx, m_dat.pedSigCIDAC[xRng]);
+        if (sc.isFailure()) return sc;
+        
+        // use same rand for both ranges 
+        // since the X1 & X8 noise
+        float rnd = CLHEP::RandGauss::shoot();
+        
+        m_dat.diodeCIDAC[XtalDiode(face, diode)] += m_dat.pedSigCIDAC[xRng]*rnd;
+      }
     
     ////////////////////////
-    // Stage 6: LAC TESTS //
+    // Stage 4: LAC TESTS //
     ////////////////////////
     
     // test LACs against ped-subtracted adc values.
     if (m_allowNoiseOnlyTrig ||  // noise CAN set lac trigger even if not hits.
         hitList.size() > 0) {
+      FaceIdx faceIdx(m_dat.xtalIdx, face);
+      sc = m_precalcCalib->getLacCIDAC(faceIdx, m_dat.lacThreshCIDAC[face]);
+      if (sc.isFailure()) return sc;
+      
       // set log-accept flags
-      m_dat.lac[face] = m_dat.adcPed[XtalRng(face, LEX8)] >= 
-        m_dat.lacThresh[face];
+      lacBits[face] = m_dat.diodeCIDAC[XtalDiode(face, LRG_DIODE)] >= 
+        m_dat.lacThreshCIDAC[face];
     }
-
-  } // face loop
+  }
 
   ///////////////////////
-  // Stage 7: Triggers //
+  // Stage 5: Triggers //
   ///////////////////////
   sc = m_calTrigTool->calcXtalTrig(m_dat.xtalIdx,
-                                   m_dat.adcPed,
+                                   m_dat.diodeCIDAC,
                                    trigBits,
                                    glt);
   if (sc.isFailure()) return sc;
 
-    
+  //-- Quick Exit --//
+  // once LAC & triggers have been processed (in CIDAC scale
+  // I can now exit and save rest of processing including adc->dac
+  // calculations
+  if (zeroSuppress && !lacBits[POS_FACE] && !lacBits[NEG_FACE])
+    return StatusCode::SUCCESS;
+
+  
+  ///////////////////////////////
+  // Stage 6: convert cidac->adc //
+  ///////////////////////////////
+  for (XtalRng xRng; xRng.isValid(); xRng++) {
+    XtalDiode xDiode(xRng.getFace(), xRng.getRng().getDiode());
+    // calcuate adc val from cidac
+    sc = m_calCalibSvc->evalADC(RngIdx(m_dat.xtalIdx, xRng), 
+                                m_dat.diodeCIDAC[xDiode],
+                                m_dat.adcPed[xRng]);
+    if (sc.isFailure()) return sc;   
+  } // xRng
+  
   //////////////////////////////
-  // Stage 8: Range Selection //
+  // Stage 7: Range Selection //
   //////////////////////////////
   sc = rangeSelect();
   if (sc.isFailure()) return sc;
-
   
-  ////////////////////////////////////////
-  // Stage 5: ADD PEDS, CHECK ADC RANGE //
-  ////////////////////////////////////////
-  // double check that ADC vals are all >= 0
-  // double check that ADC vals are all < maxadc(4095)
-
-  // must be after rangeSelect()  b/c rangeSelect()
-  // may clip HEX1 to HEX1 saturation point
-  for (XtalRng xRng; xRng.isValid(); xRng++) {
-    m_dat.adc[xRng] = 
-      m_dat.adcPed[xRng] + m_dat.ped[xRng];
-    m_dat.adc[xRng] = 
-      max<float>(0,m_dat.adc[xRng]);
-    m_dat.adc[xRng] = 
-      min<float>(m_maxAdc,m_dat.adc[xRng]);
-
-    //-- round adc values to nearest int.
-    m_dat.adc[xRng] = rint(m_dat.adc[xRng]);
-  }
-
-  
-  /////////////////////////////////////////////
-  //-- STEP 9: Populate XtalDigiTuple vars --//
-  /////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
+  //-- STEP 8: Populate XtalDigiTuple vars (optional) --//
+  ////////////////////////////////////////////////////////
   
   // following steps only needed if tuple output is selected
   if (m_tuple) {
-
     // if lac_only, then only continue if one of 2 lac flags is high
-    if ((m_tupleLACOnly && (m_dat.lac[NEG_FACE] || 
-                            m_dat.lac[POS_FACE])) ||
+    if ((m_tupleLACOnly && (lacBits[NEG_FACE] || 
+                            lacBits[POS_FACE])) ||
         !m_tupleLACOnly) {
-         
       
       if (evtHdr) {
         m_dat.RunID   = evtHdr->run();
         m_dat.EventID = evtHdr->event();
       }
-
+      
       // calculate ene weighted pos
-      if (m_dat.sumEneCsI) {// no divide-by-zero
+      if (m_dat.sumEneCsI)// no divide-by-zero
         m_dat.csiWeightedPos /= m_dat.sumEneCsI;
-      }
-
+      
       copy(trigBits.begin(),
            trigBits.end(),
            m_dat.trigBits.begin());
-    
+      
       // instruct tuple to fill
       m_tuple->Fill();
     }
+    
+    // wack MSVC warning doesn't like me cast bool to int.
+    m_dat.lac[POS_FACE] = lacBits[POS_FACE] != 0;
+    m_dat.lac[NEG_FACE] = lacBits[NEG_FACE] != 0;
   }
-
   
   ///////////////////////////////////////
   //-- STEP 10: Populate Return Vars --//
   ///////////////////////////////////////
-
-
   // generate xtalDigReadouts.
   sc = fillDigi(calDigi);
-  if (sc.isFailure()) return sc;
-
-  copy(m_dat.lac.begin(), 
-       m_dat.lac.end(), 
-       lacBits.begin());
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode XtalDigiTool::retrieveCalib() {
-  StatusCode sc;
-
-  //-- RETRIEVE PEDS --//
-  sc = m_calCalibSvc->getPed(m_dat.xtalIdx,
-                             m_dat.ped,
-                             m_dat.pedSig);
-  if (sc.isFailure()) return sc;
-
-  //-- RETRIEVE ULD --//
-  sc = m_calCalibSvc->getULDCI(m_dat.xtalIdx,
-                               m_dat.uldThold);
-  if (sc.isFailure()) return sc;
-                               
-
-  //-- RETRIEVE THOLDCI --//
-  sc = m_calCalibSvc->getTholdCI(m_dat.xtalIdx,
-                                 m_dat.trigThresh,
-                                 m_dat.lacThresh);
   if (sc.isFailure()) return sc;
   
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode XtalDigiTool::sumCsIHit(const McIntegratingHit &hit) {
+StatusCode XtalDigiTool::sumCsIHit(const Event::McIntegratingHit &hit) {
   StatusCode sc;
 
   float ene = hit.totalEnergy();
@@ -460,16 +419,16 @@ StatusCode XtalDigiTool::sumCsIHit(const McIntegratingHit &hit) {
   //--ASYMMETRY--//
   float asymL, asymS;
       
-  sc = m_calCalibSvc->evalAsymLrg(m_dat.xtalIdx, realpos, asymL);
+  sc = m_calCalibSvc->evalAsym(m_dat.xtalIdx, ASYM_LL, realpos, asymL);
   if (sc.isFailure()) return sc;
 
-  sc = m_calCalibSvc->evalAsymSm(m_dat.xtalIdx, realpos, asymS);
+  sc = m_calCalibSvc->evalAsym(m_dat.xtalIdx, ASYM_SS, realpos, asymS);
   if (sc.isFailure()) return sc;
 
-  float meanDacS = ene/m_dat.mpd[SM_DIODE];
-  float meanDacL = ene/m_dat.mpd[LRG_DIODE];
+  float meanCIDACS = ene/m_dat.mpd[SM_DIODE];
+  float meanCIDACL = ene/m_dat.mpd[LRG_DIODE];
 
-  //  calc dacSmP, dacSmN, dacLrgP, dacLrgN - here are quick notes
+  //  calc cidacSmP, cidacSmN, cidacLrgP, cidacLrgN - here are quick notes
   //   asym=log(p/n)
   //   mean=sqrt(p*N)
   //   exp(asym)*mean^2=p/n*p*n=p^2
@@ -477,10 +436,10 @@ StatusCode XtalDigiTool::sumCsIHit(const McIntegratingHit &hit) {
   //   n=exp(-asym/2)*mean
 
   // sum energy to each diode
-  m_dat.diodeDAC[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * meanDacL;
-  m_dat.diodeDAC[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanDacL;
-  m_dat.diodeDAC[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanDacS;
-  m_dat.diodeDAC[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanDacS;
+  m_dat.diodeCIDAC[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * meanCIDACL;
+  m_dat.diodeCIDAC[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanCIDACL;
+  m_dat.diodeCIDAC[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanCIDACS;
+  m_dat.diodeCIDAC[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanCIDACS;
 
   // update summary vals
   if (m_tuple) {
@@ -531,29 +490,29 @@ StatusCode XtalDigiTool::sumDiodeHit(const McIntegratingHit &hit) {
   else throw invalid_argument("VolId is not in xtal or diode.  Programmer error.");
       
   // convert e-in-diode to MeV-in-xtal-center
-  float meVXtal = eDiode/m_ePerMeV[diode.getInt()]; 
+  float meVXtal = eDiode/m_ePerMeV[diode.val()]; 
 
-  // convert MeV deposition to Dac val.
-  // use asymmetry to determine how much of mean dac to apply to diode in question
+  // convert MeV deposition to CIDAC val.
+  // use asymmetry to determine how much of mean cidac to apply to diode in question
   // remember we are treating mevXtal as at the xtal center (pos=0.0)
-  float meanDAC;
+  float meanCIDAC;
   float asym;
-  meanDAC = meVXtal/m_dat.mpd[diode];
+  meanCIDAC = meVXtal/m_dat.mpd[diode];
   if (diode == LRG_DIODE)
-    sc = m_calCalibSvc->evalAsymLrg(m_dat.xtalIdx,0.0,asym);
+    sc = m_calCalibSvc->getAsymCtr(m_dat.xtalIdx, ASYM_LL, asym);
   else
-    sc = m_calCalibSvc->evalAsymSm(m_dat.xtalIdx,0.0,asym);
+    sc = m_calCalibSvc->getAsymCtr(m_dat.xtalIdx, ASYM_SS, asym);
   if (sc.isFailure()) return sc;
 
-  // meanDAC = sqrt(dacP*dacN), exp(asym)=P/N, P=N*exp(asym), N=P/exp(asym)
+  // meanCIDAC = sqrt(cidacP*cidacN), exp(asym)=P/N, P=N*exp(asym), N=P/exp(asym)
   // mean^2 = P*N, mean^2=P*P/exp(asym), mean^2*exp(asym)=P^2
-  float dacP;
-  dacP = sqrt(meanDAC*meanDAC*exp(asym));
-  float dac = (face==POS_FACE) ? dacP : dacP/exp(asym);
+  float cidacP;
+  cidacP = sqrt(meanCIDAC*meanCIDAC*exp(asym));
+  float cidac = (face==POS_FACE) ? cidacP : cidacP/exp(asym);
 
-  // sum dac val to running total
+  // sum cidac val to running total
   XtalDiode xDiode(face,diode);
-  m_dat.diodeDAC[xDiode] += dac;
+  m_dat.diodeCIDAC[xDiode] += cidac;
   m_dat.nDiodeHits[xDiode]++;
 
   return StatusCode::SUCCESS;
@@ -561,18 +520,26 @@ StatusCode XtalDigiTool::sumDiodeHit(const McIntegratingHit &hit) {
 
 StatusCode XtalDigiTool::rangeSelect() {
   for (FaceNum face; face.isValid(); face++) {
+    // retrieve calibration
+
+    //-- TholdCI --//
+    FaceIdx faceIdx(m_dat.xtalIdx, face);
+    const CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
+    if (!tholdCI) return StatusCode::FAILURE;;
+
     // BEST RANGE
     RngNum rng;
     for (rng=0; rng.isValid(); rng++) {
       // get ULD threshold
       XtalRng xRng(face,rng);
+      m_dat.uldTholdADC[xRng] = tholdCI->getULD(rng.val())->getVal();
 
       // case of HEX1 range 
       // adc vals have a ceiling in HEX1
       if (rng == HEX1) {
-        if (m_dat.adcPed[xRng] >= m_dat.uldThold[xRng]) {
+        if (m_dat.adcPed[xRng] >= m_dat.uldTholdADC[xRng]) {
           // set ADC to max val
-          m_dat.adcPed[xRng] =  m_dat.uldThold[xRng];
+          m_dat.adcPed[xRng] =  m_dat.uldTholdADC[xRng];
           
           // set 'pegged' flag
           m_dat.saturated[face] = true;
@@ -582,18 +549,19 @@ StatusCode XtalDigiTool::rangeSelect() {
         break; 
       } else { // 1st 3 ranges
         // break on 1st energy rng that is < threshold
-        if (m_dat.adcPed[xRng] <= m_dat.uldThold[xRng]) break;
+        if (m_dat.adcPed[xRng] <= m_dat.uldTholdADC[xRng]) break;
       }
     }
     
     // assign range selection
     m_dat.rng[face] = (CalXtalId::AdcRange)rng;
   }  // per face, range selection
-  return StatusCode::SUCCESS;
 
+  return StatusCode::SUCCESS;
 }
 
 StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
+  
   //-- How many readouts ? --//
   int roLimit;
   short rangeMode = calDigi.getMode();
@@ -610,36 +578,41 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
     return StatusCode::FAILURE;
   }
 
-  // set status to ok for POS and NEG if no other bits set.
-  unsigned short status = 0;
-  // check for failure mode. If killed, set to zero and set DEAD bit
-  if (m_FailSvc != 0) {  
-    if (m_FailSvc->matchChannel(m_dat.xtalIdx.getCalXtalId(), (CalXtalId::POS)))
-      if (m_dat.lac[POS_FACE]) (status = status | CalDigi::CalXtalReadout::DEAD_P);
-    if (m_FailSvc->matchChannel(m_dat.xtalIdx.getCalXtalId(), (CalXtalId::NEG)))
-      if (m_dat.lac[NEG_FACE]) (status = status | CalDigi::CalXtalReadout::DEAD_N);
-  }
-
-  if ((status & 0x00FF) == 0) status = 
-                                (status | CalDigi::CalXtalReadout::OK_P);
-  if ((status & 0xFF00) == 0) status = 
-                                (status | CalDigi::CalXtalReadout::OK_N);
-
   // set up the digi
+  CalArray<FaceNum, RngNum> roRange;
+  CalArray<FaceNum, float> adc;
   for (int nRo=0; nRo < roLimit; nRo++) {
-    // represents ranges used for current readout in loop
-    short roRangeP = (m_dat.rng[POS_FACE].getInt() + nRo)%RngNum::N_VALS; 
-    short roRangeN = (m_dat.rng[NEG_FACE].getInt() + nRo)%RngNum::N_VALS; 
-          
-    CalDigi::CalXtalReadout ro = CalDigi::CalXtalReadout(roRangeP, 
-                                                         (short)m_dat.adc[XtalRng(POS_FACE, roRangeP)], 
-                                                         roRangeN, 
-                                                         (short)m_dat.adc[XtalRng(NEG_FACE, roRangeN)], 
-                                                         status);
+    for (FaceNum face; face.isValid(); face++) {
+      // represents ranges used for current readout in loop
+      roRange[face] = (m_dat.rng[face].val() + nRo) % RngNum::N_VALS; 
+
+      XtalRng xRng(face,roRange[face]);
+	  RngIdx rngIdx(m_dat.xtalIdx, face, roRange[face]);
+	  const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
+	  if (!ped) return StatusCode::FAILURE;
+	  m_dat.ped[xRng] = ped->getAvr();
+  
+      ////////////////////////////////////////
+      // Stage 5: ADD PEDS, CHECK ADC RANGE //
+      ////////////////////////////////////////
+      // double check that ADC vals are all >= 0
+      // double check that ADC vals are all < maxadc(4095)
+  
+      // must be after rangeSelect()  b/c rangeSelect()
+      // may clip HEX1 to HEX1 saturation point
+      adc[face] = max<float>(0, m_dat.adcPed[xRng] + m_dat.ped[xRng]);
+      adc[face] = round_int(min<float>(m_maxAdc, adc[face]));
+    }
+      
+    CalDigi::CalXtalReadout ro = CalDigi::CalXtalReadout(roRange[POS_FACE].val(), 
+                                                         (short)adc[POS_FACE], 
+                                                         roRange[NEG_FACE].val(), 
+                                                         (short)adc[NEG_FACE], 
+                                                         0);
     calDigi.addReadout(ro);
   }
-
-
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -655,3 +628,5 @@ StatusCode XtalDigiTool::finalize() {
   return StatusCode::SUCCESS;
 }
 
+  
+  

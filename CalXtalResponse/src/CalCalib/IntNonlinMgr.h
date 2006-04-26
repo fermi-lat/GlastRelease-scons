@@ -13,9 +13,11 @@
 // EXTLIB
 
 // STD
+#include <memory>
 
 using namespace CalUtil;
 using namespace idents;
+using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -27,22 +29,18 @@ class CalCalibSvc;
 
 class IntNonlinMgr : public CalibItemMgr {
  public:
-  IntNonlinMgr();
+  IntNonlinMgr(CalCalibShared &ccsShared);
 
-  /// get integral non-linearity vals for given xtal/face/rng
-  StatusCode getIntNonlin(RngIdx rngIdx,
-                          const vector< float > *&adcs,
-                          const vector< float > *&dacs,
-                          float &error);
+  const vector<float> *getInlAdc(CalUtil::RngIdx rngIdx);
 
-  /// convert adc -> dac for given channel
-  StatusCode evalDAC(RngIdx rngIdx, float adc, float &dac) {
-    return evalSpline(INL_SPLINE, rngIdx, adc, dac);
+  const vector<float> *getInlCIDAC(CalUtil::RngIdx rngIdx);
+
+  StatusCode evalCIDAC(RngIdx rngIdx, float adc, float &cidac) {
+    return evalSpline(INL_SPLINE, rngIdx, adc, cidac);
   }
   
-  /// convert dac -> adc for given channel
-  StatusCode evalADC(RngIdx rngIdx, float dac, float &adc) {
-    return evalSpline(INV_INL_SPLINE, rngIdx, dac, adc);
+  StatusCode evalADC(RngIdx rngIdx, float cidac, float &adc) {
+    return evalSpline(INV_INL_SPLINE, rngIdx, cidac, adc);
   }
 
  private:
@@ -60,24 +58,19 @@ class IntNonlinMgr : public CalibItemMgr {
   /// load ideal calibration values (in lieu of measured calibrations)
   StatusCode loadIdealVals();
 
-  /// ideal ADC values for each energy range (shared by each channel)
-  CalArray<RngNum, vector<float> >    m_idealADCs;
-  /// ideal DAC values for each energy range (shared by each channel)
-  CalArray<RngNum, vector<float> >    m_idealDACs;
-  /// error value used throughout ideal intNonlin calibrations
-  float                             m_idealErr;
-  
   //-- LOCAL DATA STORE --//
-  /** \brief Local copy of DAC values for each channel in consistent format
+  /** \brief Local copy of CIDAC values for each channel in consistent format
 
-  TDS data can either store DAC values as integers or floats, either per channel or global, 
+  TDS data can either store CIDAC values as integers or floats, either per channel or global, 
   depending on the version of the calibration file....  This allows me to keep a homogenous array
   of all floats, one set for every channel, regardless of the original data format.
   */
-  CalArray<RngIdx, vector<float> > m_DACs;
+  CalArray<RngIdx, vector<float> > m_CIDACs;
+
+  CalArray<RngNum, auto_ptr<IntNonlin> > m_idealINL;
 
   /// check ptr to TDS data
-  bool validateRangeBase(CalibData::IntNonlin *intNonlin);
+  bool validateRangeBase(IntNonlin *intNonlin);
 };
 
 #endif

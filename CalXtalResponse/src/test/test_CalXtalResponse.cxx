@@ -8,6 +8,7 @@
 #include "CalXtalResponse/IXtalRecTool.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalTrigTool.h"
+#include "src/CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
@@ -26,19 +27,19 @@
 // STD
 #include <vector>
 #include <string>
-#include <map>
 #include <cmath>
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
 #include <set>
 #include <cassert>
-#include <cstring>
+#include <map>
 #include <memory>
 
 using namespace CalUtil;
 using namespace std;
 using namespace CalibData;
+using namespace CalXtalResponse;
 
 /// return % diff (abs) between 2 floats avoid divide-by-zero errros
 float pct_diff(float a, float b) {
@@ -69,22 +70,6 @@ bool trig_test_margin(float signal, float thresh, bool result, double margin) {
   return true;
 }
 
-/// \brief ensure that a threshold test is correct (given a certain relative margin for error)
-/// \param test threshold level
-/// \param input signal
-/// \param measured test result
-/// \param margin threhold to ignore if signal is close to margin. (as a fraction of the threhold
-
-bool trig_test_pct_margin(float signal, float thresh, bool result, double margin) {
-  // return false if the trigger should have gone high, but it didn't
-  if (signal >= thresh + margin * thresh && !result) return false;
-  // return true if it should have gone low but fired anyway
-  if (signal < thresh - thresh * margin && result) return false;
-
-  // otherwise return true
-  return true;
-}
-
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
 /** \class test_CalXtalRepsonse
@@ -103,11 +88,8 @@ public:
   StatusCode finalize();
 
 private: 
-  /// count each invokation of execute() function.
-  int m_count;
-
-  /// length of one Cal xtal
-  float m_CsILength;
+  /// len of one Cal xtal
+  float m_csiLength;
 
   /// the value of fLATObjects field, defining LAT towers 
   int m_eLATTowers; 
@@ -121,15 +103,8 @@ private:
 
   /// used for constants & conversion routines.
   IGlastDetSvc* m_detSvc;
-  
-
 
   void pos2Point(XtalIdx xtalIdx, float xtalPos, Point &pXtal);
-  StatusCode hex8_to_hex1(FaceIdx faceIdx, float h8adc, float &h1adc, 
-                          ICalCalibSvc &calCalibSvc);
-  StatusCode lex8_to_lex1(FaceIdx faceIdx, float l8adc, float &l1adc, 
-                          ICalCalibSvc &calCaibSvc);
-
 
   /// create single Mc hit & run it through full digi & recon
   /// check for expected output & accurate recon.
@@ -151,7 +126,9 @@ private:
                             CalArray<XtalDiode, bool> &trigBits,
                             Event::GltDigi *glt);
 
-  /// test calCalibSvc for current xtal & calib_src
+  /// \brief test calCalibSvc for current xtal & calib_src
+  ///
+  /// also load up calib values for use in analyzing higher level tests.
   StatusCode testCalCalibSvc();
 
   /// test all ULD, LAC, FLE/FHE threshold levels w/ series of hits
@@ -187,12 +164,10 @@ private:
   /// so that i don't have to pass them from function to function
   class CurrentTest {
   public:
-    CurrentTest(test_CalXtalResponse &_parent) :
-      parent(_parent)
-    {clear();}
+    CurrentTest(test_CalXtalResponse &test_cxr);
 
     /// zero out all values for new test
-    void clear();
+    void reset();
 
     XtalIdx xtalIdx;
     float meV;
@@ -205,6 +180,7 @@ private:
 
     unsigned char gltOn;
     unsigned char noiseOn;
+    unsigned char zeroSuppress;
 
     /// output lac threshold bits
     CalArray<FaceNum, bool> lacBits;
@@ -221,7 +197,6 @@ private:
     float posDiff;
 
     enum CalibSrc {
-      FLIGHT_LAT,
       PARTIAL_LAT,
       IDEAL,
       N_CALIB_SRC
@@ -234,27 +209,38 @@ private:
                                           digiToolNoise : digiTool;}
     IXtalRecTool  *getRecTool() const {return recTool;}
     ICalTrigTool  *getTrigTool() const {return trigTool;}
+    IPrecalcCalibTool *getPrecalcCalib() const {return precalcCalibTool;}
 
     CalibSrc calibSrc;
   private:    
+    /// \brief used by constructor && reset f()'s
+    ///
+    /// clears out non-pointer primitives.
+    /// \note does not set calibSrc
+    void clear();
+
     ICalCalibSvc  *calCalibSvc;
     IXtalDigiTool *digiTool;
     IXtalDigiTool *digiToolNoise;
     IXtalRecTool  *recTool;
     ICalTrigTool  *trigTool;
+    IPrecalcCalibTool *precalcCalibTool;
 
     // use for reference to parent members.
     test_CalXtalResponse &parent;
   };
 
+  /// point to current test info
   auto_ptr<CurrentTest> curTest;
 
   struct CurrentCalib {
     CurrentCalib() {clear();}
-    void clear() {memset(this,0,sizeof(this));}
+
+    // zero out all data members.
+    void clear();
+
     CalArray<XtalRng, float>   ped;
     CalArray<XtalRng, float>   pedSig;
-    CalArray<XtalDiode, float> trigThresh;
     CalArray<FaceNum, float>   lacThresh;
     CalArray<XtalRng, float>   uldThresh;
 
@@ -263,8 +249,6 @@ private:
     CalArray<XtalRng, float> uldMeV;
     /// mev value of 1 adc unit for each adc range.
     CalArray<XtalRng, float> mevPerADC;
-    /// pedestal noise in MeV
-    CalArray<XtalRng, float> pedNoise;
   } curCalib;
 
   /// filename of output tuple.  No file created if set to default=""
@@ -279,6 +263,9 @@ private:
   /// by testing them all you can characterize a particular 
   /// calibration set.
   BooleanProperty m_testAllXtals;
+
+  /// skip any tests w/ random generators, so we get same results every time.
+  BooleanProperty m_skipNoise;
 
   /// 1000 per test would be perfect, but 100 per test is probably more practical.
   IntegerProperty m_nNoiseHits;
@@ -297,18 +284,10 @@ private:
   IXtalRecTool *m_recToolIdeal;
   /// test ideal calibrations
   ICalTrigTool *m_trigToolIdeal;
+  /// test ideal calibrations
+  IPrecalcCalibTool *m_precalcCalibToolIdeal;
 
-  /// test real calibrations
-  ICalCalibSvc *m_calCalibSvcReal;
-  /// test real calibrations
-  IXtalDigiTool *m_digiToolReal;
-  IXtalDigiTool *m_digiToolRealNoise;
-  /// test real calibrations
-  IXtalRecTool *m_recToolReal;
-  /// test real calibrations
-  ICalTrigTool *m_trigToolReal;
-
-  /// test real calibrations
+  /// test 8Tower calibrations
   ICalCalibSvc *m_calCalibSvc8Tower;
   /// test 8Tower calibrations
   IXtalDigiTool *m_digiTool8Tower;
@@ -317,10 +296,37 @@ private:
   IXtalRecTool *m_recTool8Tower;
   /// test 8Tower calibrations
   ICalTrigTool *m_trigTool8Tower;
+  /// test 8Tower calibrations
+  IPrecalcCalibTool *m_precalcCalibTool8Tower;
 };
 
 const float test_CalXtalResponse::m_singleHitEneMrgn = (float).01; // percent of input ene
 const float test_CalXtalResponse::m_singleHitPosMrgn = 3; // (mm)
+
+void test_CalXtalResponse::CurrentCalib::clear() {
+  ped.fill(0);
+  pedSig.fill(0);
+  lacThresh.fill(0);
+  uldThresh.fill(0);
+
+  trigMeV.fill(0);
+  lacMeV.fill(0);
+  uldMeV.fill(0);
+  mevPerADC.fill(0);
+}
+
+
+test_CalXtalResponse::CurrentTest::CurrentTest(test_CalXtalResponse &cxr) :
+  calCalibSvc(0),
+  digiTool(0),
+  digiToolNoise(0),
+  recTool(0),
+  trigTool(0),
+  precalcCalibTool(0),
+  parent(cxr)
+{
+  clear();
+}
 
 void test_CalXtalResponse::CurrentTest::clear() {
   xtalIdx     = XtalIdx(0);
@@ -328,10 +334,11 @@ void test_CalXtalResponse::CurrentTest::clear() {
   xtalPos     = 0;
   nHits       = 1;
 
-  testDesc    = "";
-  trigMode    = CalXtalId::BESTRANGE;
-  gltOn       = true;
-  noiseOn     = false;
+  testDesc     = "";
+  trigMode     = CalXtalId::BESTRANGE;
+  gltOn        = true;
+  noiseOn      = false;
+  zeroSuppress = false;
 
   lacBits.fill(false);
   trigBits.fill(false);
@@ -340,26 +347,24 @@ void test_CalXtalResponse::CurrentTest::clear() {
 
   recEne = 0;
   posDiff = 0;
+}
 
-  calibSrc = FLIGHT_LAT;
+void test_CalXtalResponse::CurrentTest::reset() {
+  clear();
+
+  setCalibSrc(PARTIAL_LAT);
 }
 
 void test_CalXtalResponse::CurrentTest::setCalibSrc(CalibSrc src) {
   calibSrc = src;
   switch (src) {
-  case FLIGHT_LAT:
-    calCalibSvc   = parent.m_calCalibSvcReal;
-    digiTool      = parent.m_digiToolReal;
-    digiToolNoise = parent.m_digiToolRealNoise;
-    recTool       = parent.m_recToolReal;
-    trigTool      = parent.m_trigToolReal;
-    break;
   case PARTIAL_LAT:
     calCalibSvc   = parent.m_calCalibSvc8Tower;
     digiTool      = parent.m_digiTool8Tower;
     digiToolNoise = parent.m_digiTool8TowerNoise;
     recTool       = parent.m_recTool8Tower;
     trigTool      = parent.m_trigTool8Tower;
+    precalcCalibTool = parent.m_precalcCalibTool8Tower;
     break;
   case IDEAL:
     calCalibSvc   = parent.m_calCalibSvcIdeal;
@@ -367,6 +372,7 @@ void test_CalXtalResponse::CurrentTest::setCalibSrc(CalibSrc src) {
     digiToolNoise = parent.m_digiToolIdealNoise;
     recTool       = parent.m_recToolIdeal;
     trigTool      = parent.m_trigToolIdeal;
+    precalcCalibTool = parent.m_precalcCalibToolIdeal;
     break;
   default:
     assert(src >= 0 && src < N_CALIB_SRC);
@@ -386,7 +392,6 @@ const IAlgFactory& test_CalXtalResponseFactory = Factory;
 //! ctor
 test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvcLocator)
   : Algorithm(name, pSvcLocator),
-    m_count(0),
     m_detSvc(0),
     m_tuple(0),
     m_tupleFile(0),
@@ -395,16 +400,14 @@ test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvc
     m_digiToolIdealNoise(0),
     m_recToolIdeal(0),
     m_trigToolIdeal(0),
-    m_calCalibSvcReal(0),
-    m_digiToolReal(0),
-    m_digiToolRealNoise(0),
-    m_recToolReal(0),
-    m_trigToolReal(0),
+    m_precalcCalibToolIdeal(0),
     m_calCalibSvc8Tower(0),
     m_digiTool8Tower(0),
     m_digiTool8TowerNoise(0),
     m_recTool8Tower(0),
-    m_trigTool8Tower(0)
+    m_trigTool8Tower(0),
+    m_precalcCalibTool8Tower(0)
+
 {
   m_8towerSet.insert(0);
   m_8towerSet.insert(1);
@@ -418,9 +421,9 @@ test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvc
   declareProperty("tupleFilename",      m_tupleFilename      = "");
   declareProperty("testAllXtals",       m_testAllXtals       = false);
   declareProperty("nNoiseHits",         m_nNoiseHits         = 100);
+  declareProperty("skipNoiseTests",     m_skipNoise          = false);
 
   curTest.reset(new CurrentTest(*this));
-
 }
 
 //------------------------------------------------------------------------
@@ -464,7 +467,7 @@ StatusCode test_CalXtalResponse::initialize(){
 
   // DOUBLE CONSTANTS
   sc = m_detSvc->getNumericConstByName("CsILength", &tmp);
-  m_CsILength = tmp;
+  m_csiLength = tmp;
   if (sc.isFailure()) {
     msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
     return StatusCode::FAILURE;
@@ -478,12 +481,6 @@ StatusCode test_CalXtalResponse::initialize(){
     return sc;
   }
 
-  sc = service("CalCalibSvcReal", m_calCalibSvcReal);
-  if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvcReal." << endreq;
-    return sc;
-  }
-  
   sc = service("CalCalibSvc8Tower", m_calCalibSvc8Tower);
   if (sc.isFailure()) {
     msglog << MSG::ERROR << "can't get CalCalibSvc8Tower." << endreq;
@@ -520,46 +517,30 @@ StatusCode test_CalXtalResponse::initialize(){
     msglog << MSG::ERROR << "  can't create " << "CalTrigToolIdeal" << endreq;
     return sc;
   }
+
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool", 
+                               "PrecalcCalibToolIdeal",
+                               m_precalcCalibToolIdeal);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create " << "PrecalcCalibToolIdeal" << endreq;
+    return sc;
+  }
  
 
-
-  sc = toolSvc()->retrieveTool("CalTrigTool", 
-                               "CalTrigToolReal",
-                               m_trigToolReal);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalTrigToolReal" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("XtalDigiTool", 
-                               "XtalDigiToolReal",
-                               m_digiToolReal);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalDigiToolReal" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("XtalDigiTool", 
-                               "XtalDigiToolRealNoise",
-                               m_digiToolRealNoise);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalDigiToolReal" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("XtalRecTool", 
-                               "XtalRecToolReal",
-                               m_recToolReal);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalRecToolReal" << endreq;
-    return sc;
-  }
 
   sc = toolSvc()->retrieveTool("CalTrigTool", 
                                "CalTrigTool8Tower",
                                m_trigTool8Tower);
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  can't create " << "CalTrigTool8Tower" << endreq;
+    return sc;
+  }
+
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool", 
+                               "PrecalcCalibTool8Tower",
+                               m_precalcCalibTool8Tower);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create " << "PrecalcCalibTool8Tower" << endreq;
     return sc;
   }
 
@@ -608,6 +589,7 @@ StatusCode test_CalXtalResponse::initialize(){
           !m_tuple->Branch("xtalPos", &curTest->xtalPos, "xtalPos/F") ||
           !m_tuple->Branch("trigMode", &curTest->trigMode, "trigMode/b") ||
           !m_tuple->Branch("gltOn", &curTest->gltOn, "gltOn/b") ||
+          !m_tuple->Branch("zeroSuppress", &curTest->zeroSuppress, "zeroSuppress/b") ||
           !m_tuple->Branch("noiseOn", &curTest->noiseOn, "noiseOn/b") ||
           !m_tuple->Branch("recEne", &curTest->recEne, "recEne/F") ||
           !m_tuple->Branch("posDiff", &curTest->posDiff, "posDiff/F") ||
@@ -644,7 +626,6 @@ StatusCode test_CalXtalResponse::initialize(){
 StatusCode test_CalXtalResponse::execute()
 {
   MsgStream msglog(msgSvc(), name());
-  msglog << MSG::INFO << "executing " << ++m_count << " time" << endreq;
   StatusCode sc;
   
 
@@ -653,6 +634,7 @@ StatusCode test_CalXtalResponse::execute()
   
   // -- test out following energy levels (in a single deposit
   vector<float> testMeV;
+  testMeV.push_back(0);
   testMeV.push_back(1);
   testMeV.push_back(1e1);
   testMeV.push_back(1e2);
@@ -671,7 +653,7 @@ StatusCode test_CalXtalResponse::execute()
       //////////////////////////
       //-- TEST CalCalibSvc --//
       //////////////////////////
-      curTest->clear();
+      curTest->reset();
       curTest->xtalIdx = xtalIdx;
       curTest->setCalibSrc((CurrentTest::CalibSrc)calibSrc);
       sc = testCalCalibSvc();
@@ -702,27 +684,27 @@ StatusCode test_CalXtalResponse::execute()
       for (vector<float>::const_iterator mevIt = testMeV.begin(); mevIt != testMeV.end(); mevIt++) {
         float meV = *mevIt;
         for (int posIdx = 0; posIdx < nXtalPos; posIdx++) {
-          // longitudinal distance from ctr of xtal in mm
-          curTest->xtalPos = m_CsILength*posIdx/(nXtalPos-1) - m_CsILength/2;
-
 
           //-- SHARED SETUP --//
-          curTest->clear();
+          curTest->reset();
           curTest->xtalIdx = xtalIdx;
           curTest->meV     = meV;
           curTest->setCalibSrc((CurrentTest::CalibSrc)calibSrc);
+          // longitudinal distance from ctr of xtal in mm
+          curTest->xtalPos = m_csiLength*posIdx/(nXtalPos-1) - m_csiLength/2;
+
 
           ////////////////////////
           //-- 4RANGE READOUT --//
           ////////////////////////
-          curTest->trigMode= CalXtalId::ALLRANGE;
+          curTest->trigMode = CalXtalId::ALLRANGE;
           sc = testSingleHit();
           if (sc.isFailure()) return sc;
                   
           ///////////////////
           //-- BESTRANGE --//
           ///////////////////
-          curTest->trigMode= CalXtalId::BESTRANGE;
+          curTest->trigMode = CalXtalId::BESTRANGE;
           sc = testSingleHit();
           if (sc.isFailure()) return sc;     
 
@@ -733,20 +715,32 @@ StatusCode test_CalXtalResponse::execute()
           sc = testSingleHit();
           if (sc.isFailure()) return sc;
           curTest->gltOn = true;
-          
-          //////////////////
-          //-- NOISE ON --//
-          //////////////////
-          curTest->noiseOn = true;
+
+          ///////////////////////
+          //-- ZERO SUPPRESS --//
+          ///////////////////////
+          curTest->zeroSuppress = true;
           sc = testSingleHit();
           if (sc.isFailure()) return sc;
-          curTest->noiseOn = false;
+          curTest->zeroSuppress = false;
+          
+          if (!m_skipNoise) {
+            //////////////////
+            //-- NOISE ON --//
+            //////////////////
+            curTest->noiseOn = true;
+            sc = testSingleHit();
+            if (sc.isFailure()) return sc;
+            curTest->noiseOn = false;
+          }
 
         } // xtalPos loop
 
-        //-- NOISE TEST --//
-        sc = testNoise();
-        if (sc.isFailure()) return sc;
+        if (!m_skipNoise) {
+          //-- NOISE TEST --//
+          sc = testNoise();
+          if (sc.isFailure()) return sc;
+        }
 
         //-- MULTI-HIT SUMMING TESTS --//
         sc = testMultiHit();
@@ -766,11 +760,9 @@ StatusCode test_CalXtalResponse::execute()
   
   //-- TODO --//
   // EMPTY MC & DIGI TEST
-  // ZERO ENE TEST
   // DIODE DEPOSIT TEST
-  // CALXTALRECALG TEST
-  // CALDIGIALG TEST
-  // CALXTALRESP W/ OUT LAC CUT
+  // ALG TESTS
+  // ZERO SUPPRESS TEST
   return StatusCode::SUCCESS;
 }
 
@@ -778,7 +770,6 @@ StatusCode test_CalXtalResponse::execute()
 //! clean up, summarize
 StatusCode test_CalXtalResponse::finalize(){
   MsgStream msglog(msgSvc(), name());
-  msglog << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
 
   // make sure optional tuple is closed out                                                        
   if (m_tupleFile) {
@@ -847,7 +838,7 @@ void test_CalXtalResponse::pos2Point(XtalIdx xtalIdx, float xtalPos, Point &pXta
 
   // put 1D position info into 3D vector
   // 'xtalPos' is in units of xtal Length, convert to rel units (-1->1)
-  xtalPos /= m_CsILength; 
+  xtalPos /= m_csiLength; 
   pXtal = pCenter+dirXtal*xtalPos;
 
 }
@@ -862,7 +853,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   {
     ostringstream tmpStream;
     tmpStream << "TEST_SINGLE_HIT, ";
-    tmpStream << curTest->xtalIdx.getInt() << ", ";
+    tmpStream << curTest->xtalIdx.val() << ", ";
     tmpStream << curTest->meV << ", ";
     tmpStream << curTest->xtalPos << ", ";
 
@@ -874,14 +865,15 @@ StatusCode test_CalXtalResponse::testSingleHit() {
       tmpStream << "GLTON, " ;
     else tmpStream << "GLTOFF, ";
 
+    if (curTest->zeroSuppress)
+      tmpStream << "ZEROSUPPRESS, ";
+    else tmpStream << "NOSUPPRESS, ";
+
     if (curTest->noiseOn) 
       tmpStream << "NOISEON, " ;
     else tmpStream << "NOISEOFF, ";
 
     switch (curTest->getCalibSrc()) {
-    case CurrentTest::FLIGHT_LAT:
-      tmpStream << "FLIGHT_CALIB, ";
-      break;
     case CurrentTest::PARTIAL_LAT:
       tmpStream << "8TOWER_CALIB, ";
       break;
@@ -892,6 +884,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
       short src = curTest->getCalibSrc();
       assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
     }
+
     curTest->testDesc = tmpStream.str();
   }
 
@@ -914,11 +907,12 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   hitVec.push_back(&hit);
   Event::GltDigi glt;
   sc = curTest->getDigiTool()->calculate(hitVec,
-                                        NULL,
-                                        calDigi,
-                                        curTest->lacBits,
-                                        curTest->trigBits,
-                                        (curTest->gltOn) ? &glt : NULL);
+                                         NULL,
+                                         calDigi,
+                                         curTest->lacBits,
+                                         curTest->trigBits,
+                                         (curTest->gltOn) ? &glt : NULL,
+                                         curTest->zeroSuppress != 0);
   if (sc.isFailure()) return sc;
   
   
@@ -937,10 +931,10 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   //-- SECTION 3: RUN XTAL RECON --//
   ///////////////////////////////////
   sc = curTest->getRecTool()->calculate(calDigi,
-                                       recData,
-                                       belowThresh,
-                                       xtalBelowThresh,
-                                       saturated);
+                                        recData,
+                                        belowThresh,
+                                        xtalBelowThresh,
+                                        saturated);
   if (sc.isFailure()) return sc;
 
   // only process if ptr is non-null
@@ -986,81 +980,31 @@ StatusCode test_CalXtalResponse::testSingleHit() {
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode test_CalXtalResponse::lex8_to_lex1(FaceIdx faceIdx, float l8adc, float &l1adc, ICalCalibSvc &calCalibSvc) {
-
-  float tmpDAC;
-  StatusCode sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  FaceNum face = faceIdx.getFace();
-
-  // use this point to generate LEX8/LEX1 ratio
-  ValSig l8ULD;
-  sc = calCalibSvc.getULDCI(RngIdx(faceIdx,LEX8), l8ULD);
-  if (sc.isFailure()) return sc;
-
-  // 1st convert to dac
-  float x8tmp = curCalib.uldThresh[XtalRng(face,LEX8)];
-  sc = calCalibSvc.evalDAC(RngIdx(faceIdx, LEX8),
-                           x8tmp, tmpDAC);
-  if (sc.isFailure()) return sc;
-      
-  // 2nd convert to LEX1 adc
-  float x1tmp;
-  sc = calCalibSvc.evalADC(RngIdx(faceIdx, LEX1),
-                           tmpDAC, x1tmp);
-  if (sc.isFailure()) return sc;
-      
-  float rat = x1tmp/x8tmp;
-
-  l1adc = l8adc*rat;
-
-  return StatusCode::SUCCESS;
-
-}
-
-StatusCode test_CalXtalResponse::hex8_to_hex1(FaceIdx faceIdx, float h8adc, float &h1adc, ICalCalibSvc &calCalibSvc) {
-
-  float tmpDAC;
-  StatusCode sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  FaceNum face = faceIdx.getFace();
-
-  // use this point to generate HEX8/HEX1 ratio
-  ValSig h8ULD;
-  sc = calCalibSvc.getULDCI(RngIdx(faceIdx,HEX8), h8ULD);
-  if (sc.isFailure()) return sc;
-
-  // 1st convert to dac
-  float x8tmp = curCalib.uldThresh[XtalRng(face,HEX8)];
-  sc = calCalibSvc.evalDAC(RngIdx(faceIdx, HEX8),
-                           x8tmp, tmpDAC);
-  if (sc.isFailure()) return sc;
-      
-  // 2nd convert to HEX1 adc
-  float x1tmp;
-  sc = calCalibSvc.evalADC(RngIdx(faceIdx, HEX1),
-                           tmpDAC, x1tmp);
-  if (sc.isFailure()) return sc;
-      
-  float rat = x1tmp/x8tmp;
-
-  h1adc = h8adc*rat;
-
-  return StatusCode::SUCCESS;
-
-}
-
 StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
                                                 Event::GltDigi *glt) {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name()); 
 
+  
       
   //-- DIGI VERIFICTION: N READOUTS --//
   short nRO = calDigi.getReadoutCol().size();
+
+  //-- QUICK CHECK FOR ZERO SUPPRESSION (Exit early if need be) --//
+  if (curTest->zeroSuppress) {
+    // test that readout is only present if lacBits are true
+    if ((curTest->lacBits.find(true) != curTest->lacBits.end()) !=
+        (nRO != 0)) {
+      msglog << MSG::ERROR << "TESTFAIL, BAD ZERO SUPPRESS, "
+             << curTest->testDesc << endreq;
+    }
+
+    // quit early if we (rightly so) have no readouts
+    // as there is nothing left to test
+    if (nRO == 0) 
+      return StatusCode::SUCCESS;
+  }
+
   CalXtalId::CalTrigMode trigMode = calDigi.getMode();
   if ((trigMode == CalXtalId::BESTRANGE && nRO != 1) ||
       (trigMode == CalXtalId::ALLRANGE && nRO != 4)) {
@@ -1118,13 +1062,13 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
     if (rng > LEX8) {
       if (!curTest->noiseOn) //noise can mess up this test b/c it differs per channel
         if (!trig_test_margin(curTest->fsignl[xRng], 
-                              curCalib.uldMeV[XtalRng(face,rng.getInt()-1)], 
+                              curCalib.uldMeV[XtalRng(face,rng.val()-1)], 
                               true, 
                               // xtra 1% margin for possible variation in faceSignal per channel
                               curCalib.mevPerADC[xRng] + .01*curTest->fsignl[xRng])) {
           msglog << MSG::ERROR << "TESTFAIL, BAD ULD, "
                  << curTest->fsignl[xRng] << ", "
-                 << curCalib.uldMeV[XtalRng(face,rng.getInt()-1)] << ", "
+                 << curCalib.uldMeV[XtalRng(face,rng.val()-1)] << ", "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
         }
@@ -1138,8 +1082,8 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
   CalArray<XtalDiode, bool> trigBitsTest;
   Event::GltDigi glt2;
   sc = curTest->getTrigTool()->calcXtalTrig(calDigi,
-                                           trigBitsTest,
-                                           (curTest->gltOn) ? &glt2 : NULL);
+                                            trigBitsTest,
+                                            (curTest->gltOn) ? &glt2 : NULL);
   if (sc.isFailure()) return sc;
   sc = verifyXtalTrig(calDigi, trigBitsTest, (curTest->gltOn) ? &glt2 : NULL);
   if (sc.isFailure()) return sc;
@@ -1148,11 +1092,11 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
   trigBitsTest.fill(false);
   Event::GltDigi glt3;
   sc = curTest->getTrigTool()->calcXtalTrig(curTest->xtalIdx,
-                                           *ro,
-                                           trigBitsTest,
-                                           (curTest->gltOn) ? &glt3 : NULL);
+                                            *ro,
+                                            trigBitsTest,
+                                            (curTest->gltOn) ? &glt3 : NULL);
   if (sc.isFailure()) return sc;
-  sc = verifyXtalTrig(calDigi,trigBitsTest, (curTest->gltOn) ? &glt3 : NULL);
+  sc = verifyXtalTrig(calDigi, trigBitsTest, (curTest->gltOn) ? &glt3 : NULL);
   if (sc.isFailure()) return sc;
                                            
 
@@ -1285,12 +1229,14 @@ StatusCode test_CalXtalResponse::preprocXtalDigi(const Event::CalDigi &calDigi) 
       curTest->adcPed[xRng] = adc - curCalib.ped[xRng];
 
 
+      // calculate face signal from adc values
       sc = curTest->getCalCalibSvc()->evalFaceSignal(rngIdx, curTest->adcPed[xRng],
-                                                    curTest->fsignl[xRng]);
+                                                     curTest->fsignl[xRng]);
       if (sc.isFailure()) return sc;
+
+          
     }
   }
-
 
   return StatusCode::SUCCESS;
 }
@@ -1300,6 +1246,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
   StatusCode  sc;
   MsgStream msglog(msgSvc(), name()); 
 
+  // get ready for new xtal's calibration
   curCalib.clear();
 
   /////////////////////////////////////////////////
@@ -1308,12 +1255,9 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
   {
     ostringstream tmpStream;
     tmpStream << "TEST_CALCALIBSVC, ";
-    tmpStream << curTest->xtalIdx.getInt() << ", ";
+    tmpStream << curTest->xtalIdx.val() << ", ";
 
     switch (curTest->getCalibSrc()) {
-    case CurrentTest::FLIGHT_LAT:
-      tmpStream << "FLIGHT_CALIB, ";
-      break;
     case CurrentTest::PARTIAL_LAT:
       tmpStream << "8TOWER_CALIB, ";
       break;
@@ -1324,182 +1268,110 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
       short src = curTest->getCalibSrc();
       assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
     }
+
     curTest->testDesc = tmpStream.str();
   }
 
 
   //-- MPD --//
-  ValSig mpdLrg, mpdSm;
-  sc = curTest->getCalCalibSvc()->getMPD(curTest->xtalIdx,
-                                        mpdLrg, mpdSm);
-  if (sc.isFailure()) return sc;
-
-  CalArray<DiodeNum, float> mpd;
-  sc = curTest->getCalCalibSvc()->getMPD(curTest->xtalIdx, mpd);
-  if (sc.isFailure()) return sc;
-
-  if (mpd[LRG_DIODE] != mpdLrg.getVal()) {
-    msglog << MSG::ERROR << "TESTFAIL, BAD MPD, "
-           << curTest->testDesc << endreq;
-    return StatusCode::FAILURE;
-  }
-
-
-  //-- PEDS --//
-  sc = curTest->getCalCalibSvc()->getPed(curTest->xtalIdx,
-                                        curCalib.ped, 
-                                        curCalib.pedSig);
-  if (sc.isFailure()) return sc;
+  const CalMevPerDac *mpd;
+  mpd = curTest->getCalCalibSvc()->getMPD(curTest->xtalIdx);
+  if (!mpd) return StatusCode::FAILURE;
 
   //-- ASYM --//
-  const vector<CalibData::ValSig> *asymLrg;
-  const vector<CalibData::ValSig> *asymSm;
-  const vector<CalibData::ValSig> *asymNSPB;
-  const vector<CalibData::ValSig> *asymPSNB;
-  const vector<float>  *xVals;
-  sc = curTest->getCalCalibSvc()->getAsym(curTest->xtalIdx,
-                                         asymLrg,
-                                         asymSm,
-                                         asymNSPB,
-                                         asymPSNB,
-                                         xVals);
-  if (sc.isFailure()) return sc;
+  const CalAsym *asym;
+  asym = curTest->getCalCalibSvc()->getAsym(curTest->xtalIdx);
+  if (!asym) return StatusCode::FAILURE;
+
+  CalArray<AsymType, const vector<ValSig> *> asymVals;
+
+  asymVals[ASYM_LL] = asym->getBig();
+  asymVals[ASYM_LS] = asym->getNSmallPBig();
+  asymVals[ASYM_SL] = asym->getPSmallNBig();
+  asymVals[ASYM_SS] = asym->getSmall();
+
+  const Xpos *xpos = curTest->getCalCalibSvc()->getAsymXpos();
+  if (!xpos) return StatusCode::FAILURE;
+
+  const vector<float> *xvals = xpos->getVals();
   
-  if (asymLrg->size()  <= 0 ||
-      asymSm->size()   <= 0 ||
-      asymNSPB->size() <= 0 ||
-      asymPSNB->size() <= 0 ||
-      xVals->size()     <= 0 ||
-      xVals->size() != asymLrg->size() ||
-      xVals->size() != asymSm->size() ||
-      xVals->size() != asymPSNB->size() ||
-      xVals->size() != asymNSPB->size()) {
+  if (xvals->size()   <= 0) {
     msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
            << curTest->testDesc << endreq;
     return StatusCode::FAILURE;
   }
 
-  for (unsigned i = 0; i < xVals->size(); i++) {
-    float testAsym, testPos;
+  for (unsigned i = 0; i < xvals->size(); i++) {
+    for (AsymType asymType; asymType.isValid(); asymType++) {
+      float testAsym, testPos;
 
-    sc = curTest->getCalCalibSvc()->evalPosLrg(curTest->xtalIdx, asymLrg->at(i).getVal(), testPos);
-    if (sc.isFailure()) return sc;
-    sc = curTest->getCalCalibSvc()->evalAsymLrg(curTest->xtalIdx, xVals->at(i), testAsym);
-    if (sc.isFailure()) return sc;
-    if (pct_diff(asymLrg->at(i).getVal(), testAsym) > .01 ||
-        pct_diff(xVals->at(i), testPos) > .01) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-
-    sc = curTest->getCalCalibSvc()->evalPosSm(curTest->xtalIdx, asymSm->at(i).getVal(), testPos);
-    if (sc.isFailure()) return sc;
-    sc = curTest->getCalCalibSvc()->evalAsymSm(curTest->xtalIdx, xVals->at(i), testAsym);
-    if (sc.isFailure()) return sc;
-    if (pct_diff(asymSm->at(i).getVal(), testAsym) > .01 ||
-        pct_diff(xVals->at(i), testPos) > .01) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    sc = curTest->getCalCalibSvc()->evalPosNSPB(curTest->xtalIdx, asymNSPB->at(i).getVal(), testPos);
-    if (sc.isFailure()) return sc;
-    sc = curTest->getCalCalibSvc()->evalAsymNSPB(curTest->xtalIdx, xVals->at(i), testAsym);
-    if (sc.isFailure()) return sc;
-    if (pct_diff(asymNSPB->at(i).getVal(), testAsym) > .01 ||
-        pct_diff(xVals->at(i), testPos) > .01) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    sc = curTest->getCalCalibSvc()->evalPosPSNB(curTest->xtalIdx, asymPSNB->at(i).getVal(), testPos);
-    if (sc.isFailure()) return sc;
-    sc = curTest->getCalCalibSvc()->evalAsymPSNB(curTest->xtalIdx, xVals->at(i), testAsym);
-    if (sc.isFailure()) return sc;
-    if (pct_diff(asymPSNB->at(i).getVal(), testAsym) > .01 ||
-        pct_diff(xVals->at(i), testPos) > .01) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-  } // xVals
-
-    //-- THOLDCI --//
-  sc = curTest->getCalCalibSvc()->getTholdCI(curTest->xtalIdx,
-                                            curCalib.trigThresh,
-                                            curCalib.lacThresh);
-  if (sc.isFailure()) return sc;
-  
-  sc = curTest->getCalCalibSvc()->getULDCI(curTest->xtalIdx,
-                                          curCalib.uldThresh);
-  if (sc.isFailure()) return sc;
-  
-                                            
-
-  //-- INTNONLIN && THOLDCI--//
-  for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(curTest->xtalIdx, face);
-    ValSig fle, fhe, lac;
-    sc = curTest->getCalCalibSvc()->getTholdCI(faceIdx, fle, fhe, lac);
-    if (sc.isFailure()) return sc;
-    
-    if (fle.getVal() != curCalib.trigThresh[XtalDiode(face, LRG_DIODE)] ||
-        fhe.getVal() != curCalib.trigThresh[XtalDiode(face, SM_DIODE)] ||
-        lac.getVal() != curCalib.lacThresh[face]) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD THOLDCI, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    for (RngNum rng; rng.isValid(); rng++) {
-      XtalRng xRng(face,rng);
-      RngIdx rngIdx(curTest->xtalIdx, xRng);
-      
-      ValSig uld;
-      sc = curTest->getCalCalibSvc()->getULDCI(rngIdx, uld);
-      if (sc.isFailure()) return sc;
-      if (curCalib.uldThresh[xRng] != uld.getVal()) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD THOLDCI, "
+      if (asymVals[asymType]->size() != xvals->size()) {
+        msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
       }
 
-      const vector<float> *adcs;
-      const vector<float> *dacs;
-      float err;
-
-      sc = curTest->getCalCalibSvc()->getIntNonlin(rngIdx, adcs, dacs, err);
+      sc = curTest->getCalCalibSvc()->evalPos(curTest->xtalIdx, asymType, (*asymVals[asymType])[i].getVal(), testPos);
+      if (sc.isFailure()) return sc;
+      sc = curTest->getCalCalibSvc()->evalAsym(curTest->xtalIdx, asymType, (*xvals)[i], testAsym);
       if (sc.isFailure()) return sc;
 
-      if (adcs->size() <=0 || 
-          dacs->size() <= 0 || 
-          adcs->size() > dacs->size()) {
+      if (pct_diff((*asymVals[asymType])[i].getVal(), testAsym) > .01 ||
+          pct_diff((*xvals)[i], testPos) > .01) {
+        msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
+               << curTest->testDesc << endreq;
+        return StatusCode::FAILURE;
+      }
+    
+    } // asymtype
+  }  // xVals
+
+  //-- INTNONLIN && THOLDCI--//
+  for (FaceNum face; face.isValid(); face++) {
+    FaceIdx faceIdx(curTest->xtalIdx, face);
+
+    const CalTholdCI *tholdCI = curTest->getCalCalibSvc()->getTholdCI(faceIdx);
+    if (!tholdCI) return StatusCode::FAILURE;
+
+    // load up new current calibrations
+    curCalib.lacThresh[face]  = tholdCI->getLAC()->getVal();
+        
+    
+    for (RngNum rng; rng.isValid(); rng++) {
+      XtalRng xRng(face,rng);
+      RngIdx rngIdx(curTest->xtalIdx, xRng);
+
+      // load up new calibs
+      curCalib.uldThresh[xRng] = tholdCI->getULD(rng.val())->getVal();
+      
+      const vector<float> *adcs = curTest->getCalCalibSvc()->getInlAdc(rngIdx);
+      if (!adcs) return StatusCode::FAILURE;
+      const vector<float> *cidacs = curTest->getCalCalibSvc()->getInlCIDAC(rngIdx);
+      if (!cidacs) return StatusCode::FAILURE;
+
+      if (cidacs->size() <= 0 || 
+          adcs->size() > cidacs->size()) {
         msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
       }
 
       for (unsigned i = 0; i < adcs->size(); i++) {
-        float testDAC;
-        sc = curTest->getCalCalibSvc()->evalDAC(rngIdx, adcs->at(i), testDAC);
+        float testCIDAC;
+        sc = curTest->getCalCalibSvc()->evalCIDAC(rngIdx, (*adcs)[i], testCIDAC);
         if (sc.isFailure()) return sc;
 
-        if (pct_diff(testDAC, dacs->at(i)) > .01) {
+        if (pct_diff(testCIDAC, (*cidacs)[i]) > .01 && abs(testCIDAC - (*cidacs)[i] > .01)) {
           msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
         }
 
         float testADC;
-        sc = curTest->getCalCalibSvc()->evalADC(rngIdx, dacs->at(i), testADC);
+        sc = curTest->getCalCalibSvc()->evalADC(rngIdx, (*cidacs)[i], testADC);
         if (sc.isFailure()) return sc;
 
-        if (pct_diff(testADC, adcs->at(i)) > .01) {
+        if (pct_diff(testADC, (*adcs)[i]) > .01 && abs(testADC - (*adcs)[i] > .01)) {
           msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
@@ -1507,19 +1379,15 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
 
       } // inl points
 
-      float ped, sig, cos;
-      sc = curTest->getCalCalibSvc()->getPed(rngIdx, ped,sig,cos);
-      if (sc.isFailure()) return sc;
+      const Ped *ped = curTest->getCalCalibSvc()->getPed(rngIdx);
+      if (!ped) return StatusCode::FAILURE;
 
-      if (curCalib.ped[xRng] != ped ||
-          curCalib.pedSig[xRng] != sig) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD PEDS, "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
+      // load up new calibs
+      curCalib.ped[xRng]    = ped->getAvr();
+      curCalib.pedSig[xRng] = ped->getSig();
     }
   } // xRng
-
+    
   return StatusCode::SUCCESS;
 }
 
@@ -1529,55 +1397,36 @@ StatusCode test_CalXtalResponse::preprocCalCalib() {
   MsgStream msglog(msgSvc(), name()); 
   
   for (FaceNum face; face.isValid(); face++) {
+    // lacMeV
     FaceIdx faceIdx(curTest->xtalIdx, face);
     sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(faceIdx,LEX8),
-                                                  curCalib.lacThresh[face],
-                                                  curCalib.lacMeV[face]);
+                                                   curCalib.lacThresh[face],
+                                                   curCalib.lacMeV[face]);
     if (sc.isFailure()) return sc;
 
-    RngNum fleRng(LEX8);
-    float tmpThresh = curCalib.trigThresh[XtalDiode(face,LRG_DIODE)];
-    if (tmpThresh >= curCalib.uldThresh[XtalRng(face,LEX8)]) {
-      fleRng = LEX1;
-      sc = lex8_to_lex1(faceIdx, 
-                        tmpThresh, 
-                        tmpThresh, 
-                        *curTest->getCalCalibSvc());
+    // FLE & FHE MeV
+    for (DiodeNum diode; diode.isValid(); diode++) {
+      XtalDiode xDiode(face, diode);
+      DiodeIdx diodeIdx(faceIdx, diode);
+                                                   
+      sc = curTest->getPrecalcCalib()->getTrigMeV(diodeIdx,
+                                                  curCalib.trigMeV[xDiode]);
       if (sc.isFailure()) return sc;
     }
-    sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(faceIdx,fleRng),
-                                                  tmpThresh,
-                                                  curCalib.trigMeV[XtalDiode(face, LRG_DIODE)]);
-    if (sc.isFailure()) return sc;
-
-    RngNum fheRng(HEX8);
-    tmpThresh = curCalib.trigThresh[XtalDiode(face,SM_DIODE)];
-    if (tmpThresh>= curCalib.uldThresh[XtalRng(face,HEX8)]) {
-      fheRng = HEX1;
-      sc = hex8_to_hex1(faceIdx, tmpThresh, tmpThresh, *curTest->getCalCalibSvc());
-      if (sc.isFailure()) return sc;
-    }
-    sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(faceIdx,fheRng),
-                                                  tmpThresh,
-                                                  curCalib.trigMeV[XtalDiode(face, SM_DIODE)]);
-    if (sc.isFailure()) return sc;
                                                   
     for (RngNum rng; rng.isValid(); rng++) {
       RngIdx rngIdx(faceIdx,rng);
       XtalRng xRng(face, rng);
       
       sc = curTest->getCalCalibSvc()->evalFaceSignal(rngIdx,
-                                                    curCalib.uldThresh[xRng],
-                                                    curCalib.uldMeV[xRng]);
+                                                     curCalib.uldThresh[xRng],
+                                                     curCalib.uldMeV[xRng]);
       if (sc.isFailure()) return sc;
       
       // adcpermev - use last point in adc range
       curCalib.mevPerADC[xRng] = curCalib.uldMeV[xRng] / 
         curCalib.uldThresh[xRng];
 
-      // calculate pedestal noise in MeV
-      curCalib.pedNoise[xRng] = curCalib.pedSig[xRng] *
-        curCalib.mevPerADC[xRng];
     }
   }
   return StatusCode::SUCCESS;
@@ -1599,7 +1448,7 @@ StatusCode test_CalXtalResponse::testTholds() {
   // run meV up to 95% of saturation for lowest saturating face
   // should work fine.
   curTest->meV = min(curCalib.uldMeV[XtalRng(POS_FACE,HEX1)],
-                    curCalib.uldMeV[XtalRng(NEG_FACE,HEX1)])*.95;
+                     curCalib.uldMeV[XtalRng(NEG_FACE,HEX1)])*.95;
   sc = testSingleHit();
   if (sc.isFailure()) return sc;
   
@@ -1665,8 +1514,8 @@ void test_CalXtalResponse::fillMcHit(XtalIdx xtalIdx,
   segmId.append(m_eXtal);
 
   //-- calculate xtal segment #
-  short nSeg = (short)floor(((xtalPos + m_CsILength/2)  // range 0->CsILen(mm)
-                             / m_CsILength)             // range 0->1
+  short nSeg = (short)floor(((xtalPos + m_csiLength/2)  // range 0->CsILen(mm)
+                             / m_csiLength)             // range 0->1
                             * m_nCsISeg);               // range 0->nCsISeg
             
   //-- make sure we clip the edges to segments 0 && (nSeg - 1)
@@ -1679,9 +1528,9 @@ void test_CalXtalResponse::fillMcHit(XtalIdx xtalIdx,
   //-- calc 1st moment (distance from segment ctr)
   float segCtr = (((float)nSeg+.5) // range 0.5 -> 11.5
                   / m_nCsISeg)     // range 0 -> 1
-    * m_CsILength;   // range 0 -> csiLen
+    * m_csiLength;   // range 0 -> csiLen
             
-  float xDiff = xtalPos + m_CsILength/2 - segCtr;
+  float xDiff = xtalPos + m_csiLength/2 - segCtr;
 
   HepPoint3D mom1(xDiff,0,0);
 
@@ -1698,18 +1547,29 @@ StatusCode test_CalXtalResponse::testNoise() {
   StatusCode  sc;
   MsgStream msglog(msgSvc(), name()); 
 
-  curTest->noiseOn = true;
-  curTest->nHits = m_nNoiseHits;
   // test all ranges simultaneously
   curTest->trigMode = CalXtalId::ALLRANGE;
+  curTest->nHits = m_nNoiseHits;
   curTest->xtalPos = 0;
-
+  
   Event::McIntegratingHit hit;
   fillMcHit(curTest->xtalIdx, 
             curTest->xtalPos, 
             curTest->meV,
             hit);
 
+  // -- first get 'noiseless' answer for comparison--//
+  curTest->noiseOn = false;
+  sc = testSingleHit();
+  if (sc.isFailure()) return sc;
+  CalArray<XtalRng, float> adcNoNoise;
+  copy(curTest->adcPed.begin(), curTest->adcPed.end(),
+       adcNoNoise.begin());
+  
+  //-- now run noise test --//
+  curTest->noiseOn = true;
+  curTest->xtalPos = 0;
+  
   // for calculating stdev & mean
   CalArray<XtalRng, float> adcSum;
   CalArray<XtalRng, float> adcSumSq;
@@ -1734,13 +1594,10 @@ StatusCode test_CalXtalResponse::testNoise() {
   {
     ostringstream tmpStream;
     tmpStream << "TEST_SINGLE_HIT, ";
-    tmpStream << curTest->xtalIdx.getInt() << ", ";
+    tmpStream << curTest->xtalIdx.val() << ", ";
     tmpStream << curTest->meV << ", ";
 
     switch (curTest->getCalibSrc()) {
-    case CurrentTest::FLIGHT_LAT:
-      tmpStream << "FLIGHT_CALIB, ";
-      break;
     case CurrentTest::PARTIAL_LAT:
       tmpStream << "8TOWER_CALIB, ";
       break;
@@ -1751,6 +1608,7 @@ StatusCode test_CalXtalResponse::testNoise() {
       short src = curTest->getCalibSrc();
       assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
     }
+
     curTest->testDesc = tmpStream.str();
   }
 
@@ -1758,31 +1616,34 @@ StatusCode test_CalXtalResponse::testNoise() {
   // calc & check 
   for (XtalRng xRng; xRng.isValid(); xRng++) {
     // do not look at ranges for which the ene level is too high
-    if (curTest->meV > curCalib.uldMeV[xRng]*.90) continue;
-    // do not look at ranges for which the ene level is too low
-    if (curTest->meV < curCalib.pedNoise[xRng]) continue;
-
+    // as saturation my bias results
+    if (adcNoNoise[xRng] > curCalib.uldThresh[xRng]*.90) continue;
+    // nor too low, as clipping may bias results
+    if (adcNoNoise[xRng] < curCalib.pedSig[xRng]*3) continue;
+    
     float adcMean = adcSum[xRng]/curTest->nHits;
     float meanSq  = adcSumSq[xRng]/curTest->nHits;
-    float adcSig  = sqrt(meanSq - pow(adcMean,2));
+    float adcRMS  = sqrt(meanSq - pow(adcMean,2));
 
-    if (pct_diff(adcSig, curCalib.pedSig[xRng]) > .1) {
+    if (abs(adcRMS-curCalib.pedSig[xRng]) > 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits)) {
       msglog << MSG::WARNING << "TESTFAIL, BAD NOISE SIGMA, "
-             << adcSig << ", " 
+             << adcRMS << ", " 
              << curCalib.pedSig[xRng] << ", "
              << curTest->testDesc << endreq;
       //return StatusCode::FAILURE;
     }
 
-    float fsignlMean;
-    sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(curTest->xtalIdx,xRng), adcMean, fsignlMean);
-    if (pct_diff(fsignlMean, curTest->meV) > .05) {
+    float thresh = 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits);
+    float diff =  abs(adcMean-adcNoNoise[xRng]);
+    if ( diff > thresh) {
       msglog << MSG::WARNING << "TESTFAIL, BAD NOISE MEAN, "
-             << fsignlMean << ", "
-             << curTest->meV << ", "
+             << adcMean << ", "
+             << adcNoNoise[xRng] << ", "
+             << diff << ", "
+             << thresh << ", "
              << curTest->testDesc 
-             << xRng.getFace().getInt() << ", "
-             << xRng.getRng().getInt()  << ", " << endreq;
+             << xRng.getFace().val() << ", "
+             << xRng.getRng().val()  << ", " << endreq;
       //return StatusCode::FAILURE;
     }
   }
@@ -1798,6 +1659,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
   curTest->nHits   = 10;
   curTest->gltOn   = false;
   curTest->noiseOn = false;
+  curTest->trigMode = CalXtalId::BESTRANGE;
 
   ////////////////////////
   // TEST B: ALONG XTAL //
@@ -1811,7 +1673,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
 
   // create individual hits
   for (int nHit = 0; nHit < curTest->nHits; nHit++) {
-    float xtalPos = m_CsILength*nHit/(curTest->nHits-1) - m_CsILength/2;
+    float xtalPos = m_csiLength*nHit/(curTest->nHits-1) - m_csiLength/2;
     Event::McIntegratingHit hit;
     fillMcHit(curTest->xtalIdx, 
               xtalPos, 
@@ -1826,13 +1688,10 @@ StatusCode test_CalXtalResponse::testMultiHit() {
   {
     ostringstream tmpStream;
     tmpStream << "TEST_MULTIHIT_MULTIPOS, ";
-    tmpStream << curTest->xtalIdx.getInt() << ", ";
+    tmpStream << curTest->xtalIdx.val() << ", ";
     tmpStream << curTest->meV << ", ";
 
     switch (curTest->getCalibSrc()) {
-    case CurrentTest::FLIGHT_LAT:
-      tmpStream << "FLIGHT_CALIB, ";
-      break;
     case CurrentTest::PARTIAL_LAT:
       tmpStream << "8TOWER_CALIB, ";
       break;
@@ -1843,6 +1702,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
       short src = curTest->getCalibSrc();
       assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
     }
+
     curTest->testDesc = tmpStream.str();
   }
 
@@ -1854,11 +1714,12 @@ StatusCode test_CalXtalResponse::testMultiHit() {
   for (unsigned i = 0; i < hitVec.size(); i++)
     hitVecPtr.push_back(&(hitVec[i]));
   sc = curTest->getDigiTool()->calculate(hitVecPtr,
-                                        NULL,
-                                        calDigi,
-                                        curTest->lacBits,
-                                        curTest->trigBits,
-                                        NULL);
+                                         NULL,
+                                         calDigi,
+                                         curTest->lacBits,
+                                         curTest->trigBits,
+                                         NULL,
+                                         curTest->zeroSuppress != 0);
   if (sc.isFailure()) return sc;
 
   //-- VERIFY XTAL DIGI OUTPUT --//
@@ -1875,11 +1736,11 @@ StatusCode test_CalXtalResponse::testMultiHit() {
   //-- SECTION 3: RUN XTAL RECON --//
   ///////////////////////////////////
   sc = curTest->getRecTool()->calculate(calDigi,
-                                       recData,
-                                       belowThresh,
-                                       xtalBelowThresh,
-                                       saturated,
-                                       0);
+                                        recData,
+                                        belowThresh,
+                                        xtalBelowThresh,
+                                        saturated,
+                                        0);
   if (sc.isFailure()) return sc;
 
   // only process if ptr is non-null
@@ -1929,7 +1790,7 @@ StatusCode test_CalXtalResponse::testSaturation() {
 
   /// inject 5% more energy than highest HEX1 saturation point for both faces.
   curTest->meV = 1.05*max(curCalib.uldMeV[XtalRng(POS_FACE, HEX1)],
-                         curCalib.uldMeV[XtalRng(NEG_FACE, HEX1)]);
+                          curCalib.uldMeV[XtalRng(NEG_FACE, HEX1)]);
   // face signals are measured at center of xtal, so that's what we have to use.
   curTest->xtalPos = 0; 
   curTest->nHits = 1;
@@ -1943,13 +1804,10 @@ StatusCode test_CalXtalResponse::testSaturation() {
   {
     ostringstream tmpStream;
     tmpStream << "TEST_HEX1_SATURATION, ";
-    tmpStream << curTest->xtalIdx.getInt() << ", ";
+    tmpStream << curTest->xtalIdx.val() << ", ";
     tmpStream << curTest->meV << ", ";
 
     switch (curTest->getCalibSrc()) {
-    case CurrentTest::FLIGHT_LAT:
-      tmpStream << "FLIGHT_CALIB, ";
-      break;
     case CurrentTest::PARTIAL_LAT:
       tmpStream << "8TOWER_CALIB, ";
       break;
@@ -1978,11 +1836,12 @@ StatusCode test_CalXtalResponse::testSaturation() {
   vector<const Event::McIntegratingHit*> hitVec;
   hitVec.push_back(&hit);
   sc = curTest->getDigiTool()->calculate(hitVec,
-                                        NULL,
-                                        calDigi,
-                                        curTest->lacBits,
-                                        curTest->trigBits,
-                                        NULL);
+                                         NULL,
+                                         calDigi,
+                                         curTest->lacBits,
+                                         curTest->trigBits,
+                                         NULL,
+                                         curTest->zeroSuppress != 0);
   if (sc.isFailure()) return sc;
   
   

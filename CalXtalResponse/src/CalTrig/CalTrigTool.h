@@ -5,10 +5,10 @@
 // LOCAL
 #include "CalXtalResponse/ICalTrigTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/ICalFailureModeSvc.h"
 #include "CalUtil/CalArray.h"
 
 
@@ -34,9 +34,9 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
                const IInterface* parent);
 
   /// gets needed parameters and pointers to required services
-  virtual StatusCode initialize();
+  StatusCode initialize();
 
-  virtual StatusCode finalize();
+  StatusCode finalize() {return StatusCode::SUCCESS;}
 
   StatusCode calcXtalTrig(XtalIdx xtalIdx,
                           const CalArray<XtalRng, float> &adcPed,
@@ -53,6 +53,11 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
                           CalArray<XtalDiode, bool> &trigBits,
                           Event::GltDigi *glt);
 
+  StatusCode calcXtalTrig(XtalIdx xtalIdx,
+                          const CalArray<XtalDiode, float> &cidac,
+                          CalArray<XtalDiode, bool> &trigBits,
+                          Event::GltDigi *glt
+                          );
 
 
   StatusCode calcGlobalTrig(const Event::CalDigiCol& calDigiCol,
@@ -63,19 +68,6 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
   Event::GltDigi* setupGltDigi(IDataProviderSvc *eventSvc);
 
  private:
-  /// \brief Convert LEX8 adc value to LEX1 scale for given xtal face
-  /// \note support LEX8 values > 4095 via extrapolation
-  /// \param uldTholdX8 is needed for the calculation.  i know you already
-  /// have it, so there's no sense in me retrieving it again.
-  StatusCode lex8_to_lex1(FaceIdx faceIdx, 
-                          float l8adc, float &l1adc);
-
-  /// \brief Convert HEX8 adc value to HEX1 scale for given xtal face
-  /// \note support HEX8 values > 4095 via extrapolation
-  /// \param uldTholdX8 is needed for the calculation.  i know you already
-  /// have it, so there's no sense in me retrieving it again.
-  StatusCode hex8_to_hex1(FaceIdx faceIdx, 
-                          float h8adc, float &h1adc);
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
@@ -83,22 +75,10 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
   /// pointer to CalCalibSvc object.
   ICalCalibSvc   *m_calCalibSvc; 
 
-  /// used to hold interim variables for current xtal calc
-  struct AlgData {
-    void Clear() {memset(this, 0, sizeof(AlgData));}
+  /// name of precalc calib tool
+  StringProperty m_precalcCalibName;
 
-    TwrNum twr;
-    LyrNum lyr;
-    ColNum col;
-
-    CalArray<XtalDiode, float> trigThresh;
-    CalArray<XtalRng, float> uldThold;
-    
-    
-  };
-
-  /// used to hold interim variables for current xtal calc
-  AlgData m_dat;
+  IPrecalcCalibTool *m_precalcCalibTool;
 
 };
 

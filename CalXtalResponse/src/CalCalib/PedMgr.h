@@ -14,6 +14,7 @@
 
 using namespace CalUtil;
 using namespace idents;
+using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -25,26 +26,18 @@ class CalCalibSvc;
 
 class PedMgr : public CalibItemMgr {
  public:
-  PedMgr() : 
-    CalibItemMgr(CalibData::CAL_Ped)
+  PedMgr(CalCalibShared &ccsShared) : 
+    CalibItemMgr(CAL_Ped, ccsShared)
     {};
 
   /// get pedestal vals for given xtal/face/rng
-  StatusCode getPed(RngIdx rngIdx,
-                    float &avr,
-                    float &sig,
-                    float &cos);
+  const Ped *getPed(RngIdx rngIdx);
  private:
   StatusCode loadIdealVals();
 
-  bool validateRangeBase(CalibData::Ped *ped);
-
-  /// ped vals to use when calib db is down
-  CalArray<RngNum,float> m_idealPeds;   
-  /// ped sigma vals to use when calib db is down
-  CalArray<RngNum,float> m_idealPedSig; 
-  /// correlated ped cosine vals to use when calib db is down
-  CalArray<RngNum,float> m_idealCos;    
+  bool validateRangeBase(Ped *ped);
+  
+  CalArray<RngNum, Ped> m_idealPeds;
 
   StatusCode genLocalStore();
 };

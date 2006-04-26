@@ -111,7 +111,7 @@ class IdealCalCalib {
   //// INT_NONLIN ///
   ///////////////////
   /// ADC/DAC for each ADC range 
-  vector<double> inlADCPerDAC;          
+  vector<double> inlADCPerCIDAC;          
   /// sigma/val for all vals in INT_NONLIN group
   float inlSigPct;             
 
