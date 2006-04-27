@@ -242,7 +242,7 @@ StatusCode TriggerAlg::execute()
     if (!newGlt)
       log << MSG::ERROR << "Failure to create new GltDigi in TDS." << endreq;
 
-    CalArray<DiodeNum, bool> calTrigBits;
+	CalUtil::CalArray<CalUtil::DiodeNum, bool> calTrigBits;
     calTrigBits.fill(false);
     sc = m_calTrigTool->calcGlobalTrig(cal, calTrigBits, newGlt);
     if (sc.isFailure()) {
@@ -250,8 +250,8 @@ StatusCode TriggerAlg::execute()
       return sc;
     }
       
-    trigger_bits |= (calTrigBits[LRG_DIODE] ? enums::b_LO_CAL:0) 
-      |  (calTrigBits[SM_DIODE] ? enums::b_HI_CAL:0);
+	trigger_bits |= (calTrigBits[CalUtil::LRG_DIODE] ? enums::b_LO_CAL:0) 
+      |  (calTrigBits[CalUtil::SM_DIODE] ? enums::b_HI_CAL:0);
   }
 
 
