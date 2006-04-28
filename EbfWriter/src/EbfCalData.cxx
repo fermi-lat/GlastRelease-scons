@@ -532,13 +532,10 @@ StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc) {
 
                       float tmpPed, tmpPedSig, tmp;
                     //-- RETRIEVE PEDS --//
-                      sc = calCalibSvc->getPed(rngXtalId,
-                                               tmpPed,
-                                               tmpPedSig,
-                                               tmp);                     
-                       tmpPed = 1.0;
-                       tmpPedSig=1.0;
-                       tmp=1.0;
+                       const CalibData::Ped *pedData = calCalibSvc->getPed(rngXtalId);
+                       tmpPed = pedData->getAvr();
+                       tmpPedSig = pedData->getSig();
+
                       
                       float rnd = RandGauss::shoot();
                       ped[face] = tmpPed+(tmpPedSig*rnd);
