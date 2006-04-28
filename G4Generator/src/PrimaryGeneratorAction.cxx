@@ -22,6 +22,8 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 
+#include "src/Utilities/G4GenException.h"
+
 // TU: Hack for CLHEP 1.9.2.2
 typedef HepGeom::Point3D<double>  HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
@@ -134,6 +136,15 @@ G4PrimaryParticle* PrimaryGeneratorAction::convertToG4Primary(const Event::McPar
         ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
         //partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->particle());
         partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->pdgID());
+    }
+
+    // Look for a null pointer
+    if (!partDef)
+    {
+        std::stringstream errorStr(" ");
+        errorStr << "PrimaryGeneratorAction failed to find particle id: " << hepid 
+            << " in the G4ParticleTable " << std::endl;
+        throw G4GenException(errorStr.str());
     }
 
     // Position and momentum
