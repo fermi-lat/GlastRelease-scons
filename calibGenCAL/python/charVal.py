@@ -145,6 +145,7 @@ if __name__ == '__main__':
 
     # open and read XML adc2nrg file
 
+    log.info('Reading file %s', xmlName)
     xmlFile = calFitsXML.calFitsXML(fileName = xmlName)
     data = xmlFile.read()
     towers = xmlFile.getTowers()
@@ -282,6 +283,7 @@ if __name__ == '__main__':
 
         import ROOT
 
+        log.info('Creating file %s' % rootName)
         ROOT.gROOT.Reset()
         rootFile = ROOT.TFile(rootName, "recreate")
 

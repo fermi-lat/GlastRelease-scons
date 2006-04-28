@@ -384,12 +384,14 @@ if __name__ == '__main__':
 
     # open and read XML/FITS raw characterization file
 
+    log.info('Reading file %s' % xmlNameRaw)
     xmlFileRaw = calFitsXML.calFitsXML(fileName = xmlNameRaw, mode = calFitsXML.MODE_READONLY)
     rawData = xmlFileRaw.read()
     xmlFileRaw.close()
 
     # open and read XML/FITS filtered characterization file
 
+    log.info('Reading file %s' % xmlNameFilter)
     xmlFileFilter = calFitsXML.calFitsXML(fileName = xmlNameFilter, mode = calFitsXML.MODE_READONLY)
     filterData = xmlFileFilter.read()
     filterInfo = xmlFileFilter.info()
@@ -398,6 +400,7 @@ if __name__ == '__main__':
 
     # create ROOT output file
 
+    log.info('Creating file %s' % rootName)
     ROOT.gROOT.Reset()
     rootFile = ROOT.TFile(rootName, "recreate")
 
