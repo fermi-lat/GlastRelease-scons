@@ -2,6 +2,8 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r0p4 28-APR-2006 BLW Fix for change in CalCalibSvc 
+ * v1r0p3 ???         Not sure who did this
  * v1r0p2 05-Mar-2006 LSR fix charge for heavy ions, a la McValsTool
  * v1r0p1 02-Mar-2006 BLW Changes to accomodate beamtest mc                    
  *        20-Dec-2005 BLW Bug Fixes on trigger calc and max cable hits
