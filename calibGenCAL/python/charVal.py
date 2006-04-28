@@ -355,14 +355,14 @@ if __name__ == '__main__':
 
     if dnormWarnLimit is None:
         if type == 'log_acpt':
-            dnormWarnLimit = 80.0
+            dnormWarnLimit = 200.0
         elif type == 'fhe_dac':
             dnormWarnLimit = 500.0    
         else:
             dnormWarnLimit = 400.0
     if dnormErrLimit is None:
         if type == 'log_acpt':
-            dnormErrLimit = 100.0
+            dnormErrLimit = 400.0
         elif type == 'fhe_dac':
             dnormErrLimit = 1000.0    
         else:
