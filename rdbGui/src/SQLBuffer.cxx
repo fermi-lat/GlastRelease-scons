@@ -73,7 +73,7 @@ SQLBuffer::SQLBuffer(FXComposite *p,FXObject* tgt,FXSelector sel,FXuint opts,FXi
 FXString SQLBuffer::getWordBefore()
 {
   FXint before = leftWord(cursorpos);
-  FXchar *text;
+  FXchar *text=0;
   extractText(text, before, cursorpos - before);
   FXString textString = text;
   delete text;
@@ -108,7 +108,7 @@ FXint* SQLBuffer::getCurrentSQL()
 FXString SQLBuffer::getCurrentSQLText(FXint *bound, FXbool atbegin)
 {
   bound = (atbegin) ? getSQLBoundaries(cursorpos) : getCurrentSQL();
-  FXchar *text;
+  FXchar *text=0;
   extractText(text, bound[0], bound[1] - bound[0]);
   FXString out = text;
   delete text;

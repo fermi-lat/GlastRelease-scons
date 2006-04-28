@@ -10,19 +10,35 @@ use FOX v0r125p*  IExternal
 use rdbModel v2r*
 use facilities v2r*
 
+apply_pattern shared_library
+
 private
 
+apply_pattern package_headers
+
+## Why do we need to redefine cppflags for Linux?  For Windows?
 macro cppflags   ""\
-      Linux      "-g -pipe -ansi -W -Wall  -fPIC -shared -D_GNU_SOURCE -Dlinux -Dunix " \ 
       vsnet      '$(includes) /nologo /DWIN32 /MT /Gy /W3 /GR /Ob2 /Zm500 /EHsc /D"_USE_MATH_DEFINES" /Zc:forScope /wd4267 /wd4244'\
       WIN32      '$(cppoptions) /nologo /DWIN32 /FD /c /GX /W3 /GR /Ob2 /Zm500 /FI"GlastPolicy\nt_config.h"'
+##      Linux      "-g -pipe -ansi -W -Wall  -fPIC -shared -D_GNU_SOURCE -Dlinux -Dunix " \ 
+
 
 macro cpplinkflags    "" \
-      Linux      "-Wl,-Bdynamic $(makeLinkMap)"   \
       WIN32      "/nologo $(makeLinkMap) kernel32.lib user32.lib ws2_32.lib advapi32.lib shell32.lib"
+##      Linux      "-Wl,-Bdynamic $(makeLinkMap)"   \
 
-application rdbGUI RdbGuiWindow.cxx FXCheckList.cxx TableColumnList.cxx \
-                   QueryFrame.cxx SQLBuffer.cxx LogText.cxx ResultTable.cxx \
-		   ConnectionDialog.cxx InsertDialog.cxx StringWidget.cxx \
-                   ColWidgetFactory.cxx DateWidget.cxx EnumWidget.cxx \
-                   RealWidget.cxx IntWidget.cxx FXDate.cxx FXDatePicker.cxx
+
+##application rdbGUI RdbGuiWindow.cxx FXCheckList.cxx TableColumnList.cxx \
+##                   QueryFrame.cxx SQLBuffer.cxx LogText.cxx ResultTable.cxx \
+##		   ConnectionDialog.cxx InsertDialog.cxx StringWidget.cxx \
+##                   ColWidgetFactory.cxx DateWidget.cxx EnumWidget.cxx \
+##                   RealWidget.cxx IntWidget.cxx FXDate.cxx FXDatePicker.cxx
+
+library rdbGui \
+                 RdbGuiWindow.cxx FXCheckList.cxx TableColumnList.cxx \
+                 QueryFrame.cxx SQLBuffer.cxx LogText.cxx ResultTable.cxx \
+                 ConnectionDialog.cxx InsertDialog.cxx StringWidget.cxx \
+                 ColWidgetFactory.cxx DateWidget.cxx EnumWidget.cxx \
+                 RealWidget.cxx IntWidget.cxx FXDate.cxx FXDatePicker.cxx
+
+application rdbGUI rdbGUI.cxx
