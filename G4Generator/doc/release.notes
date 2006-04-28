@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r13p5 28-Apr-06 TU  Check for null pointer when looking up particles, throw exception if one found
  v5r13p4 25-Apr-06 LSR Fix merge-mod that I messed up (but header file takes care of it for now)
  v5r13p3 24-Apr-06 TU  Modify particle lookup in PrimaryGeneratorAction to protect against Gaudi name changes
  v5r13p2 06-Apr-06 LSR More fixes for BeamTransform... get the signs of the
