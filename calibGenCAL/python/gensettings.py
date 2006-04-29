@@ -441,6 +441,15 @@ for idet in detsections:
                                                                         basename)
         cmdbat.write(cmdline)
         cmdsh.write(cmdline)
+        
+        # Write out dacVal command to batch file
+        cmdline = "python %s/python/uldVal.py -V -R %s.root -L %s.val.log %s %s.xml\n"%(CALIBGENCALROOT,
+                                                                                                basename,
+                                                                                                basename,
+                                                                                                cfgname,
+                                                                                                basename)
+        cmdbat.write(cmdline)
+        cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
         cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
