@@ -357,7 +357,7 @@ if __name__ == '__main__':
 
     # open and read XML Thold_CI file
 
-    log.debug('Reading file %s', xmlName) 
+    log.info('Reading file %s', xmlName) 
     xmlFile = calCalibXML.calTholdCICalibXML(xmlName)
     (adcData, uldData, pedData) = xmlFile.read()
     towers = xmlFile.getTowers()
