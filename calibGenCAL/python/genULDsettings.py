@@ -1,5 +1,5 @@
 """
-Generate ULD Discriminator settings selected by Energy.  The command line is:
+Generate ULD Discriminator settings selected by ADC saturation margin.  The command line is:
 
 genULDsettings [-V] <cfg_file> <out_xml_file>
 
@@ -38,8 +38,7 @@ if __name__ == '__main__':
 
     usage = "genULDsettings [-V] <cfg_file> <out_xml_file>"
 
-    margin = 50    
-
+ 
     # setup logger
 
     logging.basicConfig()

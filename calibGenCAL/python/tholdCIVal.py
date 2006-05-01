@@ -373,6 +373,7 @@ if __name__ == '__main__':
 
         import ROOT
 
+        log.info('Creating file %s' % rootName)
         ROOT.gROOT.Reset()
         rootFile = ROOT.TFile(rootName, "recreate")
 
