@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   01-may-06  v6r34p3 THB  Add HE names to data/ParticleTable.txt
    20-apr-06  v6r34p2 THB  Adjust to new name for the proton
    09-apr-06  v6r34p1 THB  Debug for FluxAlg will print seed
    24-mar-06  v6r34   HMK  Updates for CLHEP 1.9.2.2 and the new Gaudi
