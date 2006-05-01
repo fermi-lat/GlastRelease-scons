@@ -285,6 +285,7 @@ os.environ['CGC_NEVT_ROUGHPED']      = "10000"
 os.environ['CGC_NEVT_PED']           = "10000"
 os.environ['CGC_NEVT_ASYM']          = n_evt_asym
 os.environ['CGC_NEVT_MPD']           = n_evt_mpd
+os.environ['CGC_ADC2NRG_XML']        = ""
 
 
 
