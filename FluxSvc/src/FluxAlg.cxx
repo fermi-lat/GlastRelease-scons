@@ -325,10 +325,10 @@ StatusCode FluxAlg::execute()
     if( particleName=="p" || particleName=="proton") particleName="p+";
     ParticleProperty* prop = m_partSvc->find(particleName);
 
-    if( prop==0 && particleName=="He" ){
-        // If He didn't work (mystery!) try alpha instead
-        prop = m_partSvc->find("alpha");
-    }
+//    if( prop==0 && particleName=="He" ){
+//        // If He didn't work (mystery!) try alpha instead
+//        prop = m_partSvc->find("alpha");
+//    }
     if( prop==0) {
         log << MSG::ERROR << "Particle name " << particleName << " not found by particle properties" << endreq;
         return StatusCode::FAILURE;
