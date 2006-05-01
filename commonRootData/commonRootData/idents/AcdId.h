@@ -43,6 +43,14 @@ and set equal to 2.
 
 class AcdId : public TObject {
 
+public:
+
+  //
+  static void convertToTilePmt(UInt_t  cable, UInt_t  channel, UInt_t& tile, UInt_t& pmt);
+  static void convertToGarcGafe(UInt_t tile, UInt_t pmt, UInt_t& garc, UInt_t& gafe);
+  static UInt_t           tileFromGemIndex(UInt_t gemIndex);
+  static UInt_t           gemIndexFromTile(UInt_t tile);
+  
 private:
     // extend the notion of a layer to allow for more than 2 layers
     // for XGTs for example

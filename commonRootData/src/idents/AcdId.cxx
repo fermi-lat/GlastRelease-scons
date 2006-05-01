@@ -10,6 +10,9 @@
 
 #include <commonRootData/idents/AcdId.h>
 #include <commonRootData/RootDataUtil.h>
+
+#include <commonRootData/AcdMap.h>
+
 #include "Riostream.h"
 
 ClassImp(AcdId)
@@ -263,3 +266,20 @@ bool AcdId::operator== (const AcdId& i) const {
 	if (m_id == i.m_id) return true;
 	return false;
 }
+
+void AcdId::convertToTilePmt(UInt_t  cable, UInt_t  channel, UInt_t& tile, UInt_t& pmt) {
+  AcdMap::convertToTilePmt(cable,channel,tile,pmt);
+}
+void AcdId::convertToGarcGafe(UInt_t tile, UInt_t pmt, UInt_t& garc, UInt_t& gafe) {
+  AcdMap::convertToGarcGafe(tile,pmt,garc,gafe);
+}
+
+UInt_t AcdId::tileFromGemIndex(UInt_t gemIndex) {
+  return AcdMap::tileFromGemIndex(gemIndex);
+}
+
+UInt_t AcdId::gemIndexFromTile(UInt_t tile) {
+  return AcdMap::gemIndexFromTile(tile);
+}
+
+

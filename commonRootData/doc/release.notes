@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r8    30-Apr-2006 EAC Added AcdMap to convert back to electronics space
 v2r7    04-Apr-2006 EAC Added AcdGapId
 v2r6p1  02-Mar-2006 HMK Use Riostream rather than iostream
 v2r6    02-Jan-2006 DC  Other Unit tests utilities for reconRootData
