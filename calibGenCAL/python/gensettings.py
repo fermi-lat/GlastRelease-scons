@@ -270,8 +270,9 @@ for idet in detsections:
         cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
-        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
+        cmdline = "copy %s.xml %s.xml\n"%(basename, latest_base)
         cmdbat.write(cmdline)
+        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
         cmdsh.write(cmdline)
 
 
@@ -319,8 +320,9 @@ for idet in detsections:
         cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
-        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
+        cmdline = "copy %s.xml %s.xml\n"%(basename, latest_base)
         cmdbat.write(cmdline)
+        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
         cmdsh.write(cmdline)
 
 
@@ -359,8 +361,9 @@ for idet in detsections:
         cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
-        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
+        cmdline = "copy %s.xml %s.xml\n"%(basename, latest_base)
         cmdbat.write(cmdline)
+        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
         cmdsh.write(cmdline)
 
         
@@ -409,8 +412,9 @@ for idet in detsections:
         cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
-        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
+        cmdline = "copy %s.xml %s.xml\n"%(basename, latest_base)
         cmdbat.write(cmdline)
+        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
         cmdsh.write(cmdline)
 
 
@@ -452,8 +456,9 @@ for idet in detsections:
         cmdsh.write(cmdline)
 
         # Write out cp -> "latestXXX.xml" command to batch file
-        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
+        cmdline = "copy %s.xml %s.xml\n"%(basename, latest_base)
         cmdbat.write(cmdline)
+        cmdline = "cp %s.xml %s.xml\n"%(basename, latest_base)
         cmdsh.write(cmdline)
 
 
