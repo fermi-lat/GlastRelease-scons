@@ -248,9 +248,9 @@ for idet in detsections:
     outcfg.set("adcfiles","uld2adc_%d"%desttower,   uldname+",%d"%srctower)
     outcfg.set("adcfiles","pedestals_%d"%desttower, pedname+",%d"%srctower)
 
-    lac_adc_path = gen_basename(dacfile_timetag, legain,   lac, idet, "lac")+".xml"
-    fle_adc_path = gen_basename(dacfile_timetag, legain,   fle, idet, "fle")+".xml"
-    fhe_adc_path = gen_basename(dacfile_timetag, hegainmu, fhe, idet, "fhe")+".xml"
+    lac_adc_path = gen_basename(dacfile_timetag, legain,   float(lac), idet, "lac")+".xml"
+    fle_adc_path = gen_basename(dacfile_timetag, legain,   float(fle), idet, "fle")+".xml"
+    fhe_adc_path = gen_basename(dacfile_timetag, hegainmu, float(fhe) * 1000, idet, "fhe")+".xml"
     uld_adc_path = gen_basename_uld(dacfile_timetag, adcmargin, idet)+".xml"
 
     outcfg.set("dacfiles","lac_%d"%desttower,lac_adc_path+",%d"%desttower)
