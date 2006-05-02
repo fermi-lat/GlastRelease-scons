@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v1r0p2 01-May-2006 RBL added dumpEvent single-dump utility
  * v1r0   09-Apr-2006 RBL added DFI error counts to file header
  * v1     07-Apr-2006 RBL new file format, including LCI support
  * v0r3p2 03-Apr-2006 RBL updated to LDF 6.0.1

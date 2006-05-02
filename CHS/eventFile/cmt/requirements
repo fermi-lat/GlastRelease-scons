@@ -1,5 +1,5 @@
 package eventFile
-version v1r0p1
+version v1r0p2
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -35,3 +35,5 @@ apply_pattern ld_library_path
 application test_LSEReader test/test_LSEReader.cxx test/LDFdump.cxx
 
 application test_LSFReader test/test_LSFReader.cxx test/LDFdump.cxx
+
+application dumpEvent test/dumpEvent.cxx test/LDFdump.cxx
