@@ -174,7 +174,7 @@ if __name__ == '__main__':
                         adc = adcData[erng, srcTwr, row, end, fe, dac] + margin
                         if adc < adcmax:
                             break
-                    sat[erng] = (dac - 1)
+                    sat[erng] = dac
 
                 dacData[destTwr, row, end, fe] = min(sat)                        
                         
