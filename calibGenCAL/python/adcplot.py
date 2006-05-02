@@ -61,7 +61,15 @@ def plotDAC(data, info, twrs):
                     c.SetGridy()
                             
                     g.SetMarkerStyle(5)
-                    g.SetTitle(title)       
+                    g.SetTitle(title)
+                    
+                    h = g.GetHistogram()
+                    axis = h.GetXaxis()
+                    axis.SetTitle('DAC')
+                    axis.CenterTitle()
+                    axis = h.GetYaxis()
+                    axis.SetTitle('ADC')
+                    axis.CenterTitle()
                     
                     g.Draw('AP')
                     c.Write()
@@ -109,6 +117,12 @@ def plotULD(data, info, twrs):
                     hist = g.GetHistogram()
                     hist.SetTitle(title)
                     hist.SetMaximum(max(gMax) + 200)
+                    axis = hist.GetXaxis()
+                    axis.SetTitle('DAC')
+                    axis.CenterTitle()
+                    axis = hist.GetYaxis()
+                    axis.SetTitle('ADC')
+                    axis.CenterTitle()
                     hist.Draw()
                     leg.Draw()
                     c.Update()
@@ -157,6 +171,7 @@ if __name__ == '__main__':
 
     # open and read XML/FITS characterization file
 
+    log.info('Reading file %s', xmlName)
     xmlFile = calFitsXML.calFitsXML(fileName = xmlName, mode = calFitsXML.MODE_READONLY)
     data = xmlFile.read()
     info = xmlFile.info()
@@ -165,6 +180,7 @@ if __name__ == '__main__':
 
     # create ROOT output file
 
+    log.info('Creating file %s', rootName)
     ROOT.gROOT.Reset()
     rootFile = ROOT.TFile(rootName, "recreate")
 

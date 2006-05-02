@@ -174,6 +174,12 @@ def plotDAC(rawData, filterData, info, twrs):
                     # display plots
 
                     h = markerGraph[-1].GetHistogram()
+                    axis = h.GetXaxis()
+                    axis.SetTitle('DAC')
+                    axis.CenterTitle()
+                    axis = h.GetYaxis()
+                    axis.SetTitle('ADC')
+                    axis.CenterTitle()
                     h.Draw()
 
                     for g in lineGraph:
@@ -327,6 +333,12 @@ def plotULD(rawData, filterData, info, twrs):
 
                     h = markerGraph[-1].GetHistogram()
                     h.SetMaximum(max(gMax) + 200)
+                    axis = h.GetXaxis()
+                    axis.SetTitle('DAC')
+                    axis.CenterTitle()
+                    axis = h.GetYaxis()
+                    axis.SetTitle('ADC')
+                    axis.CenterTitle()
                     h.Draw()
                     leg.Draw()
                     c.Update()
