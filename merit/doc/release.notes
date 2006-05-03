@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r31p1 LSR  02-May-06 Fixed the bug I introduced in FT1Alg... caused it to return without doing anything
  *  v6r31   TU   24-Mar-06 Updates for CLHEP 1.9.2.2 and new Gaudi 
  *  v6r30p2 LSR  02-Mar-06 Update doc for FT1 and Filter ntuple variables
  *  v6r30p1 LSR  02-Mar-06 Remove "assert" from FT1Alg... just return quietly!
