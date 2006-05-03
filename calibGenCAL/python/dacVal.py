@@ -50,7 +50,14 @@ def rootHists(engData):
     cs.SetLogy()
 
     hName = "h_Summary"      
-    hs = ROOT.TH1F(hName, '', 100, MeV - (errLimit * 2), MeV + (errLimit * 2))
+    hs = ROOT.TH1F(hName, dacType, 100, MeV - (errLimit * 2), MeV + (errLimit * 2))
+    axis = hs.GetXaxis()
+    axis.SetTitle('Threshold Energy (MeV)')
+    axis.CenterTitle()
+    axis = hs.GetYaxis()
+    axis.SetTitle('Counts')
+    axis.CenterTitle()
+    
     for row in range(calConstant.NUM_ROW):
         for end in range(calConstant.NUM_END):
             for fe in range(calConstant.NUM_FE):
