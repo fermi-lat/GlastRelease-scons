@@ -39,6 +39,8 @@ namespace ldfReader {
         void setCurHeader(const AEMheader &header) { m_curHeader = header; };
         const AEMheader& getCurHeader() const { return m_curHeader; };
 
+        unsigned int constructTileNum(const char *name);
+
     private:
         const char *m_prefix;
         AEMheader m_curHeader;
