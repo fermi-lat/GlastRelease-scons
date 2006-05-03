@@ -135,6 +135,8 @@
 #include "OnboardFilter/FilterStatus.h"
 #include "OnboardFilter/OnboardFilterTDS.h"
 
+#include "facilities/Util.h" // for expandEnvVar
+
 //#include "CDM_prvdefs.h"
 
 
@@ -514,6 +516,9 @@ StatusCode OnboardFilter::initialize()
 //   loadLib ("$(ONBOARDFILTER)/$(BINDIR)/libOnboardFilter.so",1,0);
 //   loadLib ("libcal_db_gains.so",1,0);
 //   loadLib ("libcal_db_pedestals.so",1,0);
+   facilities::Util::expandEnvVar(&m_FileName_Filter);
+   facilities::Util::expandEnvVar(&m_FileName_Pedestals);
+   facilities::Util::expandEnvVar(&m_FileName_Gains);
    loadLib (m_FileName_Filter.c_str(),1,0);
    loadLib (m_FileName_Pedestals.c_str(),1,0);
    loadLib (m_FileName_Gains.c_str(),1,0);
