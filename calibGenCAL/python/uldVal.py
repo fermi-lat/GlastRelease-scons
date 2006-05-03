@@ -274,8 +274,8 @@ if __name__ == '__main__':
                     # calculate error
                     
                     err = sat - adc
-                    if err > warnLimit or err < 0:
-                        if err > errLimit or err < 0:
+                    if err > warnLimit or err < margin:
+                        if err > errLimit or err < margin:
                             log.error('err %0.2f > %0.2f for %s%s,%d,%s', err, errLimit, calConstant.CROW[row],
                                   calConstant.CPM[end], fe, calConstant.CRNG[erng])
                             valStatus = 1
