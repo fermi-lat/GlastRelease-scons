@@ -44,6 +44,7 @@ namespace eventFile {
     }
   }
 
+#ifdef _FILE_OFFSET_BITS
   void LSEReader::readHeader()
   {
     // seek to the beginning of the file
@@ -53,6 +54,17 @@ namespace eventFile {
     // read in the header data
     m_hdr.read( m_FILE );
   }
+#else
+  void LSEReader::readHeader()
+  {
+    // seek to the beginning of the file
+    __int64 ofst = 0;
+    _fseeki64( m_FILE, ofst, SEEK_SET ); 
+
+    // read in the header data
+    m_hdr.read( m_FILE );
+  }
+#endif
 
   bool LSEReader::read( LSE_Context& ctx, EBF_Data& ebf )
   {

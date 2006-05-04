@@ -62,18 +62,17 @@ namespace eventFile {
     fseeko( m_FILE, ofst, SEEK_END );
   }
 #else
-#warning "64-bit file operations unavailable, file size limited to 2GB"
   void LSEWriter::writeHeader()
   {
     // seek to the beginning of the file
-    long ofst = 0;
-    fseek( m_FILE, ofst, SEEK_SET );
+    __int64 ofst = 0;
+    _fseeki64( m_FILE, ofst, SEEK_SET );
 
     // write out the header data
     m_hdr.write( m_FILE );
 
     // return the location to the end of the file
-    fseek( m_FILE, ofst, SEEK_END );
+    _fseeki64( m_FILE, ofst, SEEK_END );
   }
 #endif
 
