@@ -494,19 +494,19 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
     if ( pocaData.m_localY > 0 ) { row++; }    
     switch ( face ) {
     case 0:
-      gapType = ( col == 0 || col == 6 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
+      gapType = ( col == 0 || col == 5 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
       if ( pocaData.m_localY > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeY;
       break;
     case 1:
     case 3:    
-      gapType = ( col == 0 || col == 6 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
       if ( pocaData.m_localX > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
     case 2:
     case 4:
-      gapType = ( col == 0 || col == 6 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
       if ( pocaData.m_localX > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
