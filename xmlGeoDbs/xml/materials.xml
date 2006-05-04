@@ -59,6 +59,11 @@
 	 aweight="26.892" 
 	 />
 
+<element name="Boron" 
+	 symbol="B"
+	 z="5" 
+	 aweight="10.81" 
+	 />
 
 <element name="Cesium" 
 	 symbol="Cs"
@@ -281,7 +286,31 @@
 </addmaterial>
 </composite>
 
-<composite name="blanket" density = "0.081">
+<composite name="blanket" density = "0.125">
+<addmaterial material="Aluminum">
+<fractionmass fraction="0.137" />
+</addmaterial>
+<addmaterial material ="Silicon">
+<fractionmass fraction="0.030" />
+</addmaterial>
+<addmaterial material ="Oxygen">
+<fractionmass fraction="0.284" />
+</addmaterial>
+<addmaterial material ="Carbon">
+<fractionmass fraction="0.451" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<fractionmass fraction="0.023" />
+</addmaterial>
+<addmaterial material = "Nitrogen">
+<fractionmass fraction="0.065"/>
+</addmaterial>
+<addmaterial material="Boron">
+<fractionmass fraction="0.010"/>
+</addmaterial>
+</composite>
+
+<composite name="blanket_old" density = "0.081">
 <addmaterial material="Aluminum">
 <fractionmass fraction="27" />
 </addmaterial>
