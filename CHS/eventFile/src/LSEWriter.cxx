@@ -48,6 +48,7 @@ namespace eventFile {
     }
   }
 
+#ifdef _FILE_OFFSET_BITS
   void LSEWriter::writeHeader()
   {
     // seek to the beginning of the file
@@ -60,6 +61,21 @@ namespace eventFile {
     // return the location to the end of the file
     fseeko( m_FILE, ofst, SEEK_END );
   }
+#else
+#warning "64-bit file operations unavailable, file size limited to 2GB"
+  void LSEWriter::writeHeader()
+  {
+    // seek to the beginning of the file
+    long ofst = 0;
+    fseek( m_FILE, ofst, SEEK_SET );
+
+    // write out the header data
+    m_hdr.write( m_FILE );
+
+    // return the location to the end of the file
+    fseek( m_FILE, ofst, SEEK_END );
+  }
+#endif
 
   void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf )
   {

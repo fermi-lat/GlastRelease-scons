@@ -1,5 +1,5 @@
 package eventFile
-version v1r0p3
+version v1r0p4
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -14,8 +14,8 @@ apply_pattern package_include
 apply_pattern package_headers
 apply_pattern package_linkopts
 
-macro_append cppflags "-D_FILE_OFFSET_BITS=64" \
-	WIN32	""
+macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
+	WIN32	'/D "__i386" '
 
 library eventFile ${eventFile_headers} \
 	EBF_Data.cxx \
