@@ -11,6 +11,11 @@
 
 #include "facilities/Util.h"
 
+#ifndef _FILE_OFFSET_BITS
+// declare the _fseeki64 function for WIN32
+extern "C" int __cdecl _fseeki64( FILE*, __int64, int );
+#endif
+
 namespace eventFile {
 
   LSEReader::LSEReader( const std::string& filename )
