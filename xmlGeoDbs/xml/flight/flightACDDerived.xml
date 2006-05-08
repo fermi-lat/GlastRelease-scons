@@ -782,10 +782,9 @@
                     topTileEdge_dz
 -->
   <const name="topTileEdge_dz">
-    <notes>Displacement w.r.t. center of ACD top envelope of
+    <notes>Displacement w.r.t. LAT origin of 
           highest tiles, those in row [was col before Nov 05] 0 and 4</notes>
     <minus>
-<!--      <refer refTo="ACDTopZHalf" />   -->
       <refer refTo="ACDTileMaxZ" />
       <refer refTo="tileHalfThickness" />
     </minus>

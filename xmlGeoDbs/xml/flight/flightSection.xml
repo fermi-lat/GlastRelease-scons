@@ -358,65 +358,53 @@
       </posXYZ>
 
 
-<!--
-      <posXYZ volume="sideRibbonsY"
-              XREF="ACDSideDovetail_dn"
-              YREF="ribbonYSide_dyn"
-              ZREF="ribbonSide_dz" >
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDYNegFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureY" />
-      </posXYZ>
-
-      <posXYZ volume="sideRibbonsX"
-              XREF="ribbonXSide_dx"
-              YREF="ACDSideDovetail_dn"
-              ZREF="ribbonSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDXPosFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureX" />
-      </posXYZ>
-
-      <posXYZ volume="sideRibbonsX"
-              XREF="ribbonXSide_dxn"
-              YREF="ACDSideDovetail_d"
-              ZREF="ribbonSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDXNegFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureX" />
-      </posXYZ>
--->
       <!-- Finally position blanket pieces -->
+<!--
       <posXYZ volume="blanketTop"
               ZREF="NADBlanketTop_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eCenter" />
       </posXYZ>
+-->
+      <posXYZ volume="NADBlanketTopTop"
+              ZREF="NADBlanketTopTop_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eFarTop" />
+      </posXYZ>
+
+      <posXYZ volume="NADBlanketTopMid"
+              ZREF="NADBlanketTopMid_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eCenter" />
+      </posXYZ>
+
+      <posXYZ volume="NADBlanketTopInterior"
+              ZREF="NADBlanketTopInterior_dz" >
+        <idField name="fLATObjects" valueREF="eLATBlanket" />
+        <idField name="fBorderCmp" valueREF="eFarBottom" />
+      </posXYZ>
 
       <posXYZ volume="blanketYSide"
-              YREF="NADBlanket_dy"
+              YREF="NADBlanketSide_dt"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eRight" />
       </posXYZ>
       <posXYZ volume="blanketYSide"
-              YREF="NADBlanket_dyn"
+              YREF="NADBlanketSide_dtn"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eLeft" />
       </posXYZ>
 
       <posXYZ volume="blanketXSide"
-              XREF="NADBlanket_dx"
+              XREF="NADBlanketSide_dt"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eTop" />
       </posXYZ>
       <posXYZ volume="blanketXSide"
-              XREF="NADBlanket_dxn"
+              XREF="NADBlanketSide_dtn"
               ZREF="NADBlanketSides_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eBottom" />

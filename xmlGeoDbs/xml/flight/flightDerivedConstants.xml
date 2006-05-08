@@ -62,9 +62,10 @@
               (which is the same as Z of a single outer tray)
 -->
 	<const name="towersTotalZ">  
-<notes>Height of cal (stay clear) + height of tracker (S-C) + gap between.
-Also add gap between CAL and
-</notes>
+          <notes>Height of cal (stay clear) + height of tracker (S-C) 
+                      + gap between.
+                  Also add gap between CAL and
+          </notes>
           <add>
             <refer refTo="CALVertStayClear" />
             <refer refTo="NADGridFlangeZ" />
@@ -100,9 +101,7 @@ Also add gap between CAL and
               <refer refTo="towersTotalZ" />
             </minus>
           </half>
-
         </const>
-
 
         <const name="CAL_dz" >
           <notes>Offset of CAL stay-cleaar within single-tower volume.
@@ -120,20 +119,6 @@ Also add gap between CAL and
             </add>
           </minus>
         </const>
-
-<!--
-          <minus>
-            <refer refTo="CALVertStayClear" />
-            <add>
-              <refer refTo="towersTotalHalfZ" />
-              <refer refTo="CALGridFrameGap" />
-              <refer refTo="NADGridFlangeZ" />
-              <half>
-                <refer refTo="CALFramedLayersZ" />
-              </half>
-            </add>
-          </minus>
--->
 
         <const name="TKR_dz" >
           <notes>Offset of TKR within single-tower volume</notes>
@@ -769,113 +754,128 @@ Also add gap between CAL and
             </mul>
           </minus>
         </const>
-
-        <const name="NADBlanketTopX" >
-          <notes>X dimension of top of thermal blanket</notes>
-          <add>
-            <refer refTo="ACDTotalX" />
+        <const name="NADBlanketTopHoleTrans">
+          <notes>Transverse distance between inner edges of crown
+              May, 2006.</notes>
+          <minus>
+            <refer refTo="NADBlanketTopTrans" />
             <mul>
               <const value="2" uType="count" />
-              <refer refTo="NADBlanketThick" />
+              <refer refTo="NADCrownWidth" />
+            </mul>
+          </minus>
+        </const>
+
+        <const name="NADBlanketTopInteriorTrans">
+          <notes>Transverse dimension of depressed part of top blanket,
+                May, 2006</notes>
+          <add>
+            <refer refTo="NADBlanketTopHoleTrans" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="NADBlanketTopThick" />
             </mul>
           </add>
         </const>
-
-        <const name="NADBlanketTopY" >
-          <notes>Y dimension of top of thermal blanket</notes>
-          <add>
-            <refer refTo="ACDTotalY" />
-            <mul>
-              <const value="2" uType="count" />
-              <refer refTo="NADBlanketThick" />
-            </mul>
-          </add>
+  
+        <const name="NADBlanketTopMidZ" >
+          <notes>Z of middle of three stacked volumes comprising blanket
+                 top.  </notes>
+          <minus>
+            <refer refTo="NADCrownDepth" />
+            <refer refTo="NADBlanketTopThick" />
+          </minus>
         </const>
 
         <const name="NADBlanketSideY_l" >
           <notes>length in long (x) dimension of Y-sides of blanket</notes>
-          <refer refTo="NADBlanketTopX" />
+          <refer refTo="NADBlanketTopTrans" />
         </const>
 
         <const name="NADBlanketSideX_l" >
           <notes>length in long (Y) dimension of X-sides of blanket, shorter
             than Y-sides because Y-sides cover corners</notes>
-          <refer refTo="ACDTotalY" />
+          <minus>
+            <refer refTo="NADBlanketTopTrans" />
+            <mul>
+              <const value="2" uType="count" />
+              <refer refTo="NADBlanketSideThick" />
+            </mul>
+          </minus>
         </const>
 
-        <const name="NADBlanketSideZ" >
-          <notes>height of a side piece of the blanket:  approx.
-             height of ACD side tiles + height of cal</notes>
+        <const name="NADBlanketSide_dt" >
+          <notes>Transverse + displacement of blanket side</notes>
+          <half>
+            <minus>
+              <refer refTo="NADBlanketTopTrans" />
+              <refer refTo="NADBlanketSideThick" />
+            </minus>
+          </half>
+        </const>
+
+
+
+        <const name="NADBlanketSide_dtn">
+          <notes>x (resp. y) displacement of neg. x (resp.y)
+               side of blanket</notes>
+          <uminus>
+            <refer refTo = "NADBlanketSide_dt" />
+          </uminus>
+        </const>
+
+        <const name="NADBlanketTopInterior_dz">
+          <notes>Z-displacement of blanket interior to crown</notes>
           <add>
-            <refer refTo="ACDSide_z" />
-            <refer refTo="CALVertStayClear"/>
+            <refer refTo="topTileEdge_dz" />
+            <refer refTo="NADBlanketToTopTile" />
+            <half>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="NADBlanketTopThick" />
+              </add>
+            </half>
           </add>
         </const>
-               
 
-        <const name="NADBlanket_dx">
-          <notes>x displacement of pos. x side of blanket</notes>
-          <quo>
-            <add>
-              <refer refTo = "ACDTotalX" />
-              <refer refTo = "NADBlanketThick" />
-            </add>
-            <const value="2" uType="count" />
-          </quo>
-        </const>             
-
-        <const name="NADBlanket_dxn">
-          <notes>x displacement of neg. x side of blanket</notes>
-          <uminus>
-            <refer refTo = "NADBlanket_dx" />
-          </uminus>
-        </const>
- 
-
-        <const name="NADBlanket_dy">
-          <notes>y displacement of pos. y side of blanket</notes>
-          <quo>
-            <add>
-              <refer refTo = "ACDTotalY" />
-              <refer refTo = "NADBlanketThick" />
-            </add>
-            <const value="2" uType="count" />
-          </quo>
-        </const>             
-
-        <const name="NADBlanket_dyn">
-          <notes>y displacement of neg. y side of blanket</notes>
-          <uminus>
-            <refer refTo = "NADBlanket_dy" />
-          </uminus>
-        </const>
- 
-        <const name="NADBlanketTop_dz">
-          <notes>z displacement of top of blanket</notes>
+        <const name="NADBlanketTopMid_dz" >
+          <notes>Z-displacement of middle section of blanket, above
+             interior, below outer crown piece</notes>
           <add>
-            <refer refTo="tileSide_dz" />
-            <quo> 
+            <refer refTo="NADBlanketTopInterior_dz" />
+            <half>
               <add>
-                <refer refTo="NADBlanketThick" />
-                <refer refTo="ACDSide_z" />
+                <refer refTo="NADBlanketTopThick" />
+                <refer refTo="NADBlanketTopMidZ" />
               </add>
-              <const value="2" uType="count" />
-            </quo>
+            </half>
+          </add>
+        </const>
+
+        <const name="NADBlanketTopTop_dz" >
+          <notes>Z-displacement of top crown sectio of blanket</notes>
+          <add>
+            <refer refTo="NADBlanketTopMid_dz" />
+            <half>
+              <add>
+                <refer refTo="NADBlanketTopThick" />
+                <refer refTo="NADBlanketTopMidZ" />
+              </add>
+            </half>
           </add>
         </const>
 
         <const name="NADBlanketSides_dz">
           <notes>z displacement of sides of blanket.  Sits
-                  just under blanket top.</notes>
+                  just under blanket crown piece.</notes>
             <minus>
-              <refer refTo="NADBlanketTop_dz" />
-              <quo>
+              <refer refTo="NADBlanketTopTop_dz" />
+              <half>
                 <add>
                   <refer refTo="NADBlanketSideZ" />
-                  <refer refTo="NADBlanketThick" />
+                  <refer refTo="NADBlanketTopThick" />
                 </add>
-                <const value="2" uType="count" />
-              </quo>
+              </half>
             </minus>
           </const>
               

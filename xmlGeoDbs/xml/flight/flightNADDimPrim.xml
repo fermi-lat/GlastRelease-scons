@@ -27,8 +27,31 @@ Verified against LAT-DS-01579 on 5 May 2004.
 grid flange. Verified against LAT-DS-01579 on 5 May 2004.</prim>
   <prim name="NADGridFlangeOverhang" value="25.0">Flange overhangs web.
 Verified against LAT-DS-01579 on 5 May 2004.</prim>
-  <prim name="NADBlanketThick" value="32.7">Blanket thickness (12/6/01)
-  This is the PDR value.  </prim>
+
+  <prim name="NADBlanketTopThick" value="30.22">Blanket thickness as of 
+May, 2006. See
+https://confluence.slac.stanford.edu/display/ACD/Thermal+Blanket</prim>
+  <prim name="NADBlanketSideThick" value="30.80">Blanket thickness as
+of May, 2006. See
+https://confluence.slac.stanford.edu/display/ACD/Thermal+Blanket</prim>
+  <prim name="NADCrownToTile" value="2.26">Distance from top of side tile
+    to bottom of crown of blanket (room temperature).  May, 2006.</prim>
+  <prim name="NADBlanketToTopTile" value="6.89">Distance from top tile
+  to bottom of blanket. May, 2006</prim>
+  <prim name="NADBlanketSideToSideTile" value="0.71">transverse distance
+     from outer edge of side tile to inner edge of side blanket</prim>
+  <prim name="NADCrownWidth" value="101.6">Transverse distance across
+crown.  May, 2006</prim>
+  <prim name="NADCrownDepth" value="31.75">Z-distance from top of crown
+to top of lower, central part of blanket.  May, 2006</prim>
+
+  <prim name="NADBlanketTopTrans" value="1798.0">Max transverse distance
+  across top blanket, from outside of crown.  May, 2006</prim>
+ 
+  <prim name="NADBlanketSideZ" value="918.0">Z-dimension of blanket
+    sides, from
+   https://confluence.slac.stanford.edu/display/ACD/Thermal+Blanket,
+   May, 2006</prim>
   <prim name="NADSpacecraftZ" value="1400.0">Height of spacecraft</prim>
   <prim name="NADSpacecraftR" value="817.775">Radius of spacecraft
 (800.0 * sqrt(1/(0.957)) to make mass equal to about 1000 kg</prim>

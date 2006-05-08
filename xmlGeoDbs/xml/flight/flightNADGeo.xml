@@ -2,18 +2,63 @@
 <!-- Define boxes, etc. not belonging to any detector -->
 
 <!-- Define boxes for blanket:  top, X-side and Y-side 
-     X-sides (Y-sides) are perp. to x-axis (y-axis) -->
-    <box name="blanketTop" 
-         XREF="NADBlanketTopX" YREF="NADBlanketTopY" 
-         ZREF="NADBlanketThick" materialREF="blanketMat" />
-      
+     X-sides (Y-sides) are perp. to x-axis (y-axis).
+     Top is done in three pieces: inside crown, can use
+     solid box.  Then stacked on top (not using stack element though)
+      two (square) rings: MMS material minus a vacuum box. -->
+    <!-- first define simple interior-to-crown piece -->
+    <box name="NADBlanketTopInterior"      
+         XREF="NADBlanketTopInteriorTrans"
+         YREF="NADBlanketTopInteriorTrans"
+         ZREF="NADBlanketTopThick"
+         materialREF="blanketMat" >
+    </box>
+
+    <!-- Next do top piece -->
+    <box name="blanketTopTopSolid"      
+         XREF="NADBlanketTopTrans"
+         YREF="NADBlanketTopTrans"
+         ZREF="NADBlanketTopThick"
+         materialREF="blanketMat" >
+    </box>
+    <box name="blanketTopTopHole"
+         XREF="NADBlanketTopHoleTrans"
+         YREF="NADBlanketTopHoleTrans"
+         ZREF="NADBlanketTopThick"
+         materialREF="vacuumMat" >
+    </box>
+    <composition name="NADBlanketTopTop" envelope="blanketTopTopSolid" >
+      <posXYZ volume="blanketTopTopHole" />
+    </composition>
+
+    <!-- Middle piece, also a composition. -->
+    <box name="blanketTopMidSolid"
+         XREF="NADBlanketTopInteriorTrans"
+         YREF="NADBlanketTopInteriorTrans"
+         ZREF="NADBlanketTopMidZ"
+         materialREF="blanketMat"  >
+    </box>
+
+    <box name="blanketTopMidHole" 
+         XREF="NADBlanketTopHoleTrans"
+         YREF="NADBlanketTopHoleTrans"
+         ZREF="NADBlanketTopMidZ"  
+         materialREF="vacuumMat" >
+    </box>
+
+    <composition name="NADBlanketTopMid" envelope="blanketTopMidSolid" >
+      <posXYZ volume="blanketTopMidHole" />
+    </composition>
+    
     <box name="blanketYSide" 
-         XREF="NADBlanketSideY_l" YREF="NADBlanketThick" 
-         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
+         XREF="NADBlanketSideY_l" YREF="NADBlanketSideThick" 
+         ZREF="NADBlanketSideZ" materialREF="blanketMat" >
+    </box>
       
     <box name="blanketXSide" 
-         XREF="NADBlanketThick" YREF="NADBlanketSideX_l" 
-         ZREF="NADBlanketSideZ" materialREF="blanketMat" />
+         XREF="NADBlanketSideThick" YREF="NADBlanketSideX_l" 
+         ZREF="NADBlanketSideZ" materialREF="blanketMat" >
+    </box>
       
 <!-- define cylinder for spacecraft -->
     <tubs name="spacecraft" ROutREF="NADSpacecraftR" ZREF="NADSpacecraftZ"
