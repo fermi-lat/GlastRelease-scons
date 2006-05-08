@@ -11,11 +11,6 @@
 
 #include "facilities/Util.h"
 
-#ifndef _FILE_OFFSET_BITS
-// declare the _fseeki64 function for WIN32
-extern "C" int __cdecl _fseeki64( FILE*, __int64, int );
-#endif
-
 namespace eventFile {
 
   LSEWriter::LSEWriter( const std::string& filename, unsigned runid )
@@ -70,14 +65,14 @@ namespace eventFile {
   void LSEWriter::writeHeader()
   {
     // seek to the beginning of the file
-    __int64 ofst = 0;
-    _fseeki64( m_FILE, ofst, SEEK_SET );
+    int ofst = 0;
+    fseek( m_FILE, ofst, SEEK_SET );
 
     // write out the header data
     m_hdr.write( m_FILE );
 
     // return the location to the end of the file
-    _fseeki64( m_FILE, ofst, SEEK_END );
+    fseek( m_FILE, ofst, SEEK_END );
   }
 #endif
 

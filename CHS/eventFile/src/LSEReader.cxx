@@ -1,3 +1,5 @@
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <errno.h>
 
 #include <sstream>
@@ -11,11 +13,6 @@
 
 #include "facilities/Util.h"
 
-#ifndef _FILE_OFFSET_BITS
-// declare the _fseeki64 function for WIN32
-extern "C" int __cdecl _fseeki64( FILE*, __int64, int );
-#endif
-
 namespace eventFile {
 
   LSEReader::LSEReader( const std::string& filename )
@@ -23,6 +20,20 @@ namespace eventFile {
   {
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );
+
+#ifndef _FILE_OFFSET_BITS
+    // on windows, check to see if the file is >2GB in size and
+    // throw an exception if so.
+    struct _stati64 stbuf;
+    if ( _stati64( m_name.c_str(), &stbuf ) == 0 ) {
+      if ( stbuf.st_size > 0x7FFFFFFFLL ) {
+	std::ostringstream ess;
+	ess << "LSEReader::LSEReader: " << m_name;
+	ess << " too large to open on Windows";
+	throw std::runtime_error( ess.str() );
+      }
+    }
+#endif
 
     // open the specified file
     if ( ( m_FILE = fopen( m_name.c_str(), "rb" ) ) == NULL ) {
@@ -63,8 +74,8 @@ namespace eventFile {
   void LSEReader::readHeader()
   {
     // seek to the beginning of the file
-    __int64 ofst = 0;
-    _fseeki64( m_FILE, ofst, SEEK_SET ); 
+    int ofst = 0;
+    fseek( m_FILE, ofst, SEEK_SET ); 
 
     // read in the header data
     m_hdr.read( m_FILE );
