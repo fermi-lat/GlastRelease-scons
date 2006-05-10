@@ -878,6 +878,23 @@
               </half>
             </minus>
           </const>
+
+          <const name="NADBlanketSideToSideTileComp" >
+            <notes>Compute distance from inner edge of side blanket
+                   to outer edge of side tile (top row)</notes>
+            <minus>
+              <refer refTo="NADBlanketSide_dt" />
+              <add>
+                <refer refTo="sideTileR0_dt" />
+                <half>
+                  <add>
+                    <refer refTo="tileThickness" />
+                    <refer refTo="NADBlanketSideThick" />
+                  </add>
+                </half>
+              </add>
+            </minus>
+          </const>
               
       </derCategory>
    </derived>

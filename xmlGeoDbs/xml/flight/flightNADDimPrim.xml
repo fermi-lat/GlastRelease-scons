@@ -38,15 +38,19 @@ https://confluence.slac.stanford.edu/display/ACD/Thermal+Blanket</prim>
     to bottom of crown of blanket (room temperature).  May, 2006.</prim>
   <prim name="NADBlanketToTopTile" value="6.89">Distance from top tile
   to bottom of blanket. May, 2006</prim>
-  <prim name="NADBlanketSideToSideTile" value="0.71">transverse distance
-     from outer edge of side tile to inner edge of side blanket</prim>
+<!--  <prim name="NADBlanketSideToSideTileNominal" 
+value="18.03">transverse distance
+     from outer edge of side tile to inner edge of side blanket.
+     See 
+https://confluence.slac.stanford.edu/display/ACD/Thermal+Blanket</prim> -->
   <prim name="NADCrownWidth" value="101.6">Transverse distance across
 crown.  May, 2006</prim>
   <prim name="NADCrownDepth" value="31.75">Z-distance from top of crown
 to top of lower, central part of blanket.  May, 2006</prim>
 
-  <prim name="NADBlanketTopTrans" value="1798.0">Max transverse distance
-  across top blanket, from outside of crown.  May, 2006</prim>
+  <prim name="NADBlanketTopTrans" value="1790.7">Max transverse distance
+  across top blanket, from outside of crown. From as-build document
+    ACD-RPT-000394 RevA  </prim>
  
   <prim name="NADBlanketSideZ" value="918.0">Z-dimension of blanket
     sides, from
