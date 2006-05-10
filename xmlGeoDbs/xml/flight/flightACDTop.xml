@@ -147,6 +147,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="1"/>
     <idField name="fCol" value="0"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCmid"
@@ -158,6 +159,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="1"/>
     <idField name="fCol" value="1"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCcent"
@@ -168,6 +170,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="1"/>
     <idField name="fCol" value="2"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCmid"
@@ -179,6 +182,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="1"/>
     <idField name="fCol" value="3"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCedge"
@@ -190,6 +194,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="1"/>
     <idField name="fCol" value="4"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
 
@@ -202,6 +207,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="2"/>
     <idField name="fCol" value="0"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRcentCmid"
@@ -212,6 +218,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="2"/>
     <idField name="fCol" value="1"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRcentCcent"
@@ -221,6 +228,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="2"/>
     <idField name="fCol" value="2"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRcentCmid"
@@ -231,6 +239,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="2"/>
     <idField name="fCol" value="3"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRcentCedge"
@@ -241,6 +250,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="2"/>
     <idField name="fCol" value="4"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <!-- row 3. Y displacement is topTileMid_dy -->
@@ -253,6 +263,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="3"/>
     <idField name="fCol" value="0"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCmid"
@@ -264,6 +275,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="3"/>
     <idField name="fCol" value="1"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCcent"
@@ -274,6 +286,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="3"/>
     <idField name="fCol" value="2"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCmid"
@@ -285,6 +298,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="3"/>
     <idField name="fCol" value="3"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <posXYZ volume="topTileRmidCedge"
@@ -296,6 +310,7 @@ Assemble as
     <idField name="fACDCmp" valueREF="eACDTile"/> 
     <idField name="fRow" value="3"/>
     <idField name="fCol" value="4"/>
+    <idField name="fTileSeg" value="0" />
   </posXYZ>
 
   <!-- Row 4.  y displacement is topTileEdge_dy -->

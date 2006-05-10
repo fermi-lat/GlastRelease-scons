@@ -320,36 +320,46 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <stackX name="sideTileRow0Face2" >
   <axisPos volume="sideTileR0EdgeLesser">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
 <stackX name="sideTileRow1Face2" >
   <axisPos volume="sideTileR1EdgeLesser">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
@@ -357,18 +367,23 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <stackX name="sideTileRow2Face2" >
   <axisPos volume="sideTileR2EdgeLesser">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
@@ -377,6 +392,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <stackX name="sideTileRowR3" >
   <axisPos volume="sideTileR3">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
@@ -385,36 +401,46 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <stackX name="sideTileRow0Face4" >
   <axisPos volume="sideTileR0EdgeGreater">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR0EdgeLesser" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
 <stackX name="sideTileRow1Face4" >
   <axisPos volume="sideTileR1EdgeGreater">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR1EdgeLesser" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
@@ -422,18 +448,23 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <stackX name="sideTileRow2Face4" >
   <axisPos volume="sideTileR2EdgeGreater">
     <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
   <axisPos volume="sideTileR2EdgeLesser" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
