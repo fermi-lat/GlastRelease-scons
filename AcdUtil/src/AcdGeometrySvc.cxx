@@ -20,7 +20,8 @@ const ISvcFactory& AcdGeometrySvcFactory = s_factory;
 /// This should be done in the constructor.
 
 AcdGeometrySvc::AcdGeometrySvc(const std::string& name, 
-                               ISvcLocator* pSvcLocator) : Service(name, pSvcLocator)
+                               ISvcLocator* pSvcLocator) 
+                              : Service(name, pSvcLocator)
 {   
     clear();
     return; 
@@ -62,6 +63,7 @@ void AcdGeometrySvc::clear() {
         m_cornerGapEndPoint[i] = Point(0.0, 0.0, 0.0);
         m_cornerGapVec[i] = Vector(0.0, 0.0, 0.0);
     }
+    m_acdId_volCount.clear();
 }
 
 StatusCode AcdGeometrySvc::finalize()
@@ -72,7 +74,7 @@ StatusCode AcdGeometrySvc::finalize()
 }
 
 
-StatusCode  AcdGeometrySvc::queryInterface (const InterfaceID& riid, void **ppvIF)
+StatusCode AcdGeometrySvc::queryInterface(const InterfaceID& riid, void **ppvIF)
 {
     if (IID_IAcdGeometrySvc == riid) {
         *ppvIF = dynamic_cast<IAcdGeometrySvc*> (this);
@@ -84,7 +86,6 @@ StatusCode  AcdGeometrySvc::queryInterface (const InterfaceID& riid, void **ppvI
 }
 
 // access the type of this service
-
 const InterfaceID&  AcdGeometrySvc::type () const {
     return IID_IAcdGeometrySvc;
 }
@@ -128,11 +129,32 @@ StatusCode AcdGeometrySvc::getDetectorListFromGeometry() {
    {
        idents::VolumeIdentifier volId = *it;
        idents::AcdId detectorId(volId);
-       if (detectorId.ribbon()) ++m_numRibbons;
-       else if (detectorId.tile()) ++m_numTiles;
+
+       // Keep a count of volumes associated with each AcdId
+       if (m_acdId_volCount.find(detectorId) != m_acdId_volCount.end()) {
+           m_acdId_volCount[detectorId] += 1;
+       } else {
+           m_acdId_volCount[detectorId] = 1;
+       }
    }
+
+
+   log << MSG::DEBUG << "Found " << m_acdId_volCount.size() << " volumes"
+       << endreq;
+   std::map<idents::AcdId, int>::const_iterator volColIt;
+   for (volColIt = m_acdId_volCount.begin(); volColIt != m_acdId_volCount.end();
+        volColIt++) {
+       idents::AcdId id = volColIt->first;
+       if (id.ribbon()) ++m_numRibbons;
+       else if (id.tile()) ++m_numTiles;
+       log << MSG::DEBUG << id.id() << " has " << volColIt->second 
+           << " volumes associated with it" << endreq;
+   }
+
    log << MSG::INFO << "Number of Tiles:  " << m_numTiles
        << " Number of Ribbons: " << m_numRibbons << endreq;
+
+
 
     return sc;
 }
@@ -450,3 +472,16 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
 }
 
 
+void AcdGeometrySvc::createVolId(const idents::VolumeIdentifier &orgVolId,
+                                 idents::VolumeIdentifier &newVolId,
+                                 bool bent) {
+    // Copy all but the last member of the original volId
+    int size = (orgVolId.size() - 1);
+    int i;
+    for (i = 0; i<size; i++) {
+        newVolId.append(orgVolId[i]);
+    }
+    int append = (bent == false) ? 0 : 1;
+    newVolId.append(append);
+
+}

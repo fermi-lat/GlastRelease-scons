@@ -27,6 +27,7 @@
 #include "geometry/Vector.h"
 
 #include "AcdUtil/AcdDetectorList.h"
+#include <map>
 
 class AcdGeometrySvc : public Service,
         virtual public IAcdGeometrySvc
@@ -53,6 +54,9 @@ public:
     const AcdUtil::AcdDetectorList& getDetectorList() const { 
         return m_detectorCol; };
 
+    const std::map<idents::AcdId, int>& getAcdIdVolCountCol() const { 
+        return m_acdId_volCount; };
+
     bool findDetector(const idents::VolumeIdentifier &volId) const;
 
     int numTiles() const { return m_numTiles; };
@@ -72,6 +76,13 @@ public:
     StatusCode findCornerGaps();
     const Ray getCornerGapRay(unsigned int index) const;
 
+
+   /// Creates a new volume identifier using the original as a template
+   /// If bent == false, will tack on the necessary value to volId for bent vol 
+   /// otherwise, a zero is appended for the main volume.
+   void createVolId(const idents::VolumeIdentifier &orgVolId,
+                     idents::VolumeIdentifier &newVolId, bool bent=false);
+
 private:
 
     void clear();
@@ -86,6 +97,9 @@ private:
     Vector m_cornerGapVec[4];
 
     AcdUtil::AcdDetectorList m_detectorCol;
+
+    /// A count of volumes associated with each AcdId
+    std::map<idents::AcdId, int> m_acdId_volCount;
 };
 
 #endif // ACDGEOMETRYSVC_H

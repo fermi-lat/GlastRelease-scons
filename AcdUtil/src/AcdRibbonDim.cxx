@@ -89,7 +89,8 @@ StatusCode AcdRibbonDim::getVals() {
 	sc = getDetectorDimensions(isegment, volId1, m_detSvc, dim1, center);
 	
 	if (sc.isFailure()) {
-	  std::cout << "Failed to get dimensions for " << volId1.name() << " toppart segment " << iseg <<  std::endl;
+	  std::cout << "Failed to get dimensions for " << volId1.name() 
+                    << " toppart segment " << iseg <<  std::endl;
 	   // catch errors
 	  sc = StatusCode::FAILURE;
 	  return sc;
@@ -112,7 +113,8 @@ StatusCode AcdRibbonDim::getVals() {
       std::vector<double> dim;
       sc = getDetectorDimensions(isegment, segmentVolId, m_detSvc, dim, center);
       if (sc.isFailure()) {
-	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << " top segment " << isegment << std::endl;
+	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() 
+                  << " top segment " << isegment << std::endl;
 	// catch errors
 	sc = StatusCode::FAILURE;
 	continue;
@@ -128,7 +130,8 @@ StatusCode AcdRibbonDim::getVals() {
       std::vector<double> dim;
       sc = getDetectorDimensions(isegment, segmentVolId, m_detSvc, dim, center);
       if (sc.isFailure()) {
-	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() << " side segment " << isegment << std::endl;
+	std::cout << "Failed to get dimensions for " <<  segmentVolId.name() 
+                  << " side segment " << isegment << std::endl;
 	// catch errors
 	sc = StatusCode::FAILURE;
 	continue;
@@ -147,8 +150,8 @@ StatusCode AcdRibbonDim::getVals() {
       }
     }
     
-    // After all that, we have the beginning and ending points for a line segment
-    // that defines a ribbon
+    // After all that, we have the beginning and ending points for a line 
+    // segment that defines a ribbon
     m_start[isegment] = HepPoint3D(x1, y1, z1);
     m_end[isegment] = HepPoint3D(x2, y2, z2);    
     m_halfWidth[isegment] = ribbonHalfWidth;
@@ -159,8 +162,8 @@ StatusCode AcdRibbonDim::getVals() {
 
 
 StatusCode AcdRibbonDim::getDetectorDimensions( int isegment, 
-						const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc,
-						std::vector<double>& dim, HepPoint3D& center) {
+                    const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc,
+                    std::vector<double>& dim, HepPoint3D& center) {
 
   std::string str;
   StatusCode sc = StatusCode::SUCCESS;

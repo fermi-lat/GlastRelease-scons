@@ -3,7 +3,9 @@
  Coordinator:H.Kelly
  @verbatim
 
- v1r1p3   18-Apr-2006 EAC "ideal" now uses built-in code instead of file in calibDB
+ v1r2     10-May-2006 HMK Updates to handle curved tiles
+ v1r1p3   18-Apr-2006 EAC "ideal" now uses built-in code instead of file in 
+          calibDB
  v1r1p2   17-Apr-2006 EAC Added apply_pattern use_CalibData_symbols for windows
  v1r1p1   17-Apr-2006 EAC Work some obscure magic so that windows understands what to do 
  v1r1     13-Apr-2006 EAC Pull in updates from branch EM-v6r070329p0, tag v0r2p10em0
