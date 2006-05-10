@@ -472,16 +472,3 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
 }
 
 
-void AcdGeometrySvc::createVolId(const idents::VolumeIdentifier &orgVolId,
-                                 idents::VolumeIdentifier &newVolId,
-                                 bool bent) {
-    // Copy all but the last member of the original volId
-    int size = (orgVolId.size() - 1);
-    int i;
-    for (i = 0; i<size; i++) {
-        newVolId.append(orgVolId[i]);
-    }
-    int append = (bent == false) ? 0 : 1;
-    newVolId.append(append);
-
-}

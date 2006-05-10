@@ -70,8 +70,6 @@ public:
     virtual StatusCode findCornerGaps() = 0;
     virtual const Ray getCornerGapRay(unsigned int i) const = 0;
 
-    virtual void createVolId(const idents::VolumeIdentifier &orgVolId,
-                     idents::VolumeIdentifier &newVolId, bool bent=false) = 0;
 };
 
 #endif

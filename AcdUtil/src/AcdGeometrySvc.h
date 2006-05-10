@@ -77,12 +77,6 @@ public:
     const Ray getCornerGapRay(unsigned int index) const;
 
 
-   /// Creates a new volume identifier using the original as a template
-   /// If bent == false, will tack on the necessary value to volId for bent vol 
-   /// otherwise, a zero is appended for the main volume.
-   void createVolId(const idents::VolumeIdentifier &orgVolId,
-                     idents::VolumeIdentifier &newVolId, bool bent=false);
-
 private:
 
     void clear();
