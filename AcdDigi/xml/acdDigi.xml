@@ -21,7 +21,7 @@
     <section name="thresholds">  ACD thresholds
 	<item name="low_threshold_mips"     value="0.1"> MIP threshold enables PHA</item>
         <item name="veto_threshold_mips"      value="0.3"> MIP nominal veto </item>
-        <item name="high_threshold_mips" value="10.5"> MIP threshold CNO </item>
+        <item name="high_threshold_mips" value="20.0"> MIP threshold CNO </item>
     </section>
 
     <section name="global_constants"> 

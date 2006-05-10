@@ -90,43 +90,54 @@ StatusCode AcdDigiAlg::initialize() {
     // Find all the ACD detectors in our geometry
     m_glastDetSvc->accept(m_tiles);
     if (m_tiles.size() > 0) 
-        log << MSG::INFO << "Located  "<< m_tiles.size() << " ACD volumes, ids from "
-        << m_tiles.front().name() << " to " << m_tiles.back().name() << endreq;
-
-
+        log << MSG::INFO << "Located  " << m_tiles.size() 
+            << " ACD volumes, ids from " << m_tiles.front().name() 
+            << " to " << m_tiles.back().name() << endreq;
 
     
-    for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it)
-{
-    std::string str;
-    std::vector<double> dim;
-    idents::VolumeIdentifier volId = *it;
-    idents::AcdId tileId(volId);
-    int iFace = volId[1];
+    for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); 
+                                        ++it) {
+        std::string str;
+        std::vector<double> dim;
+        idents::VolumeIdentifier volId = *it;
+        idents::AcdId tileId(volId);
+        int iFace = volId[1];
 
-    // retrieve the dimensions of this volume from the GlastDetSvc
-    sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
-    if ( sc.isFailure() ) {
-        log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
-        return sc;
+        // Keep a count of volumes associated with each AcdId
+        // This will help us determine bent tiles later during edgeEffects
+        if (m_acdId_volCount.find(tileId) != m_acdId_volCount.end()) {
+            m_acdId_volCount[tileId] += 1;
+        } else {
+           m_acdId_volCount[tileId] = 1;
+        }
+
+        // retrieve the dimensions of this volume from the GlastDetSvc
+        sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
+        if ( sc.isFailure() ) {
+            log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
+            return sc;
+        }
+        HepGeom::Transform3D transform;
+        sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+        if (sc.isFailure() ) {
+            log << MSG::WARNING << "Failed to get transformation" << endreq;
+            return sc;
+         }
+
+         HepPoint3D center(0., 0., 0.);
+         HepPoint3D acdCenter = transform * center;
+
+        log << MSG::DEBUG << "VolId " << volId.name() << " AcdId " 
+            << tileId.id() << endreq;
+        log << MSG::DEBUG << "Dimensions:  " << dim[0] << " " << dim[1] << " " 
+            << dim[2] << endreq;
+        log << MSG::DEBUG << "Center: " << acdCenter.x() << " " << acdCenter.y()
+            << " " << acdCenter.z() << endreq;
+
     }
-    HepGeom::Transform3D transform;
-    sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
-    if (sc.isFailure() ) {
-        log << MSG::WARNING << "Failed to get transformation" << endreq;
-        return sc;
-     }
 
-     HepPoint3D center(0., 0., 0.);
-     HepPoint3D acdCenter = transform * center;
-
-    log << MSG::DEBUG << "VolId " << volId.name() << " AcdId " 
-        << tileId.id() << endreq;
-    log << MSG::DEBUG << "Dimensions:  " << dim[0] << " " << dim[1] << " " << dim[2] << endreq;
-    log << MSG::DEBUG << "Center: " << acdCenter.x() << " " << acdCenter.y()
-        << " " << acdCenter.z() << endreq;
-
-}
+    log << MSG::INFO << "Located  " << m_acdId_volCount.size() 
+        << " ACD detectors" << endreq;
 
     return StatusCode::SUCCESS;
 }
@@ -158,43 +169,38 @@ StatusCode AcdDigiAlg::execute() {
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event , pNode);
     
     if (sc.isFailure()) {
-        sc = eventSvc()->registerObject(EventModel::Digi::Event ,new Event::DigiEvent);
+        sc = eventSvc()->registerObject(EventModel::Digi::Event, 
+                                        new Event::DigiEvent);
         if( sc.isFailure() ) {
-            log << MSG::ERROR << "could not register " << EventModel::Digi::Event << endreq;
+            log << MSG::ERROR << "could not register " 
+                << EventModel::Digi::Event << endreq;
             return sc;
         }
     }
 
-   // std::map<idents::VolumeIdentifier, double> energyVolIdMap;
     std::map<idents::AcdId, double> energyIdMap;
-    std::map<idents::VolumeIdentifier, double> energyScrewMap;
     
     // Create the new AcdDigi collection for the TDS
     Event::AcdDigiCol* digiCol = new Event::AcdDigiCol;
     
     // loop over hits, skip if hit is not in ACD
     // Accumulate the deposited energies, applying edge effects if requested
-	if (allhits) {
-    for (Event::McPositionHitVector::const_iterator hit = allhits->begin(); hit != allhits->end(); hit++) {
+    if (allhits) {
+        for (Event::McPositionHitVector::const_iterator hit = allhits->begin();
+              hit != allhits->end(); hit++) {
         
-        idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*hit)->volumeID());
-        // Check to see if this is an ACD volume
-        if(volId[0] != 1 ) continue; 
+            idents::VolumeIdentifier volId = 
+                                ((idents::VolumeIdentifier)(*hit)->volumeID());
+            // Check to see if this is an ACD volume
+            if(volId[0] != 1 ) continue; 
 
-        idents::AcdId id(volId);
-        double energy;
-        // check for volumes that contain screws in bottom side tiles
-        // ignoring the potential for edge effects, as it stands it should
-        // not affect the areas containing the screws.
-        if (id.tile() && (volId.size() == 6)) { 
-            if (energyScrewMap.find(volId) != energyScrewMap.end()) 
-                energyScrewMap[volId] += (*hit)->depositedEnergy();
-            else
-                energyScrewMap[volId] = (*hit)->depositedEnergy();
-        } else {
+            idents::AcdId id(volId);
+            double energy;
             // No edge effects for ribbons, tiles only
-            energy = (m_edge_effect && id.tile()) ? edgeEffect(*hit) : (*hit)->depositedEnergy();
-            log << MSG::DEBUG << "AcdId " << id.id() << " E: " << energy << endreq;
+            energy = (m_edge_effect && id.tile()) ? edgeEffect(*hit) : 
+                                                    (*hit)->depositedEnergy();
+            log << MSG::DEBUG << "AcdId " << id.id() << " E: " 
+                << energy << endreq;
             if (energyIdMap.find(id) != energyIdMap.end()) {
                 energyIdMap[id] += energy;
             } else {
@@ -202,7 +208,6 @@ StatusCode AcdDigiAlg::execute() {
             }
          } 
     }
-	}
 
     // Add noise to all tiles if requested
     if (m_apply_noise) addNoise();
@@ -215,18 +220,6 @@ StatusCode AcdDigiAlg::execute() {
 
         double energyMevDeposited = acdIt->second;
         m_energyDepMap[id] = energyMevDeposited;
-        // check for hits in the volumes containing screws
-        if (id.side() && id.row()==3) {
-            std::map<idents::VolumeIdentifier, double>::const_iterator screwVolIt;
-            for (screwVolIt = energyScrewMap.begin(); 
-                                 screwVolIt != energyScrewMap.end(); screwVolIt++) {
-                if (AcdDigiUtil::compareVolIds(id.volId(), screwVolIt->first)) {
-                    log << MSG::DEBUG << "Found screwVol " << screwVolIt->first.name() << " Belonging to tile: " << id.volId().name() << endreq;
-                    m_energyDepMap[id] += screwVolIt->second;
-                }
-            }
-
-        }
 
         log << MSG::DEBUG << "tile id found: " << id.id() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
@@ -239,7 +232,8 @@ StatusCode AcdDigiAlg::execute() {
         
         // Number of photoelectrons for each PMT, A and B
         unsigned int pmtA_pe, pmtB_pe;
-        util.convertMipsToPhotoElectrons(id, pmtA_mips, pmtA_pe, pmtB_mips, pmtB_pe);
+        util.convertMipsToPhotoElectrons(id, pmtA_mips, pmtA_pe, 
+                                         pmtB_mips, pmtB_pe);
         
         // Apply Poisson fluctuations to the number of pe's for each PMT
         if (m_apply_poisson) {
@@ -247,7 +241,8 @@ StatusCode AcdDigiAlg::execute() {
             pmtB_pe = util.shootPoisson(pmtB_pe);
         }
         
-        util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, pmtB_pe, pmtB_mips);
+        util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, 
+                                             pmtB_pe, pmtB_mips);
         
         double pmtA_mipsToFullScale, pmtB_mipsToFullScale;
         
@@ -305,28 +300,35 @@ StatusCode AcdDigiAlg::execute() {
     std::map<idents::AcdId, bool> doneMap;
 
     // Now fill the TDS with AcdDigis
-	// Loop over all tiles in the geometry
+    // Loop over all tiles in the geometry
     for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it){
         idents::VolumeIdentifier volId = *it;
         idents::AcdId tileId(volId);
 
-        // Check to see if we have already processed this AcdId - necessary since we also have
-        // ribbons in the mix.
+        // Check to see if we have already processed this AcdId - 
+        // necessary since we also have ribbons in the mix and curved tiles
+        // have muliple pieces (volumes)
         if (doneMap.find(tileId) != doneMap.end()) continue;
         
-        // First check to see if this tile Id has a PHA value associated with PMT A
-        // If not, we do not need add an AcdDigi in the TDS for this tile
+        // First check to see if this tile Id has a PHA value associated with 
+        // PMT A. If not, we do not need add an AcdDigi in the TDS for this tile
         if (m_pmtA_phaMipsMap.find(tileId) == m_pmtA_phaMipsMap.end()) continue;
 
-        // Next check that the PHA values from both PMTs combined results is a value above low 
-        // threshold
-		bool lowThresh = true, vetoThresh = true, cnoThresh = true;
-        if ((m_pmtA_phaMipsMap[tileId] < m_low_threshold_mips) && (m_pmtB_phaMipsMap[tileId] < m_low_threshold_mips)) lowThresh = false;
-		if ((m_pmtA_vetoMipsMap[tileId] < m_veto_threshold_mips) && (m_pmtB_vetoMipsMap[tileId] < m_veto_threshold_mips)) vetoThresh = false;
-		if ((m_pmtA_cnoMipsMap[tileId] < m_high_threshold_mips) && (m_pmtB_cnoMipsMap[tileId] < m_high_threshold_mips)) cnoThresh = false;
+        // Next check that the PHA values from both PMTs combined results is a i
+        // value above low threshold
+        bool lowThresh = true, vetoThresh = true, cnoThresh = true;
+        if ((m_pmtA_phaMipsMap[tileId] < m_low_threshold_mips) && 
+            (m_pmtB_phaMipsMap[tileId] < m_low_threshold_mips)) 
+                 lowThresh = false;
+        if ((m_pmtA_vetoMipsMap[tileId] < m_veto_threshold_mips) && 
+            (m_pmtB_vetoMipsMap[tileId] < m_veto_threshold_mips)) 
+                vetoThresh = false;
+        if ((m_pmtA_cnoMipsMap[tileId] < m_high_threshold_mips) && 
+            (m_pmtB_cnoMipsMap[tileId] < m_high_threshold_mips)) 
+                cnoThresh = false;
 
-		// If neither PMT is above any threshold - skip this one
-		if (!lowThresh && !vetoThresh && !cnoThresh) continue;
+        // If neither PMT is above any threshold - skip this one
+        if (!lowThresh && !vetoThresh && !cnoThresh) continue;
 
         // Initialize discriminators
         bool lowArr[2] = { false, false };
@@ -334,18 +336,24 @@ StatusCode AcdDigiAlg::execute() {
         bool highArr[2] = { false, false };
         
         // Set the discriminators if above threshold
-		if (m_pmtA_phaMipsMap[tileId] > m_low_threshold_mips) lowArr[0] = true;
-		if (m_pmtB_phaMipsMap[tileId] > m_low_threshold_mips) lowArr[1] = true;
+        if (m_pmtA_phaMipsMap[tileId] > m_low_threshold_mips) lowArr[0] = true;
+        if (m_pmtB_phaMipsMap[tileId] > m_low_threshold_mips) lowArr[1] = true;
 
-        if (m_pmtA_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[0] = true;
-        if (m_pmtB_vetoMipsMap[tileId] > m_veto_threshold_mips) vetoArr[1] = true;
+        if (m_pmtA_vetoMipsMap[tileId] > m_veto_threshold_mips) 
+            vetoArr[0] = true;
+        if (m_pmtB_vetoMipsMap[tileId] > m_veto_threshold_mips) 
+            vetoArr[1] = true;
         
-        if (m_pmtA_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[0] = true;
-        if (m_pmtB_cnoMipsMap[tileId] > m_high_threshold_mips) highArr[1] = true;
+        if (m_pmtA_cnoMipsMap[tileId] > m_high_threshold_mips) 
+            highArr[0] = true;
+        if (m_pmtB_cnoMipsMap[tileId] > m_high_threshold_mips) 
+            highArr[1] = true;
 
         // Now convert MIPs into PHA values for each PMT
-        unsigned short pmtA_pha = util.convertMipsToPha(m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId]);
-        unsigned short pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId]);
+        unsigned short pmtA_pha = util.convertMipsToPha(
+                      m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId]);
+        unsigned short pmtB_pha = util.convertMipsToPha(
+                      m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId]);
 
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
 
@@ -385,6 +393,8 @@ void AcdDigiAlg::clear() {
     m_pmtB_vetoMipsMap.clear();
     m_pmtB_cnoMipsMap.clear();
 
+    m_acdId_volCount.clear();
+
 }
 
 
@@ -397,38 +407,49 @@ void AcdDigiAlg::getParameters() {
  
     xmlBase::IFile xmlFilePtr(m_xmlFile.c_str());
     
-        // Perform some spot checking to see if our XML file contains our constants
+    // Perform some spot checking to see if our XML file contains our constants
     if (!xmlFilePtr.contains("thresholds", "low_threshold_mips")) {
         log << MSG::INFO << "XML file " << m_xmlFile
             << " does not contain low_threshold_mips using default" << endreq;
     }
 
-    m_low_threshold_mips_xml = xmlFilePtr.getDouble("thresholds", "low_threshold_mips", 0.1);
-    m_veto_threshold_mips = xmlFilePtr.getDouble("thresholds", "veto_threshold_mips", 0.3);
-    m_high_threshold_mips = xmlFilePtr.getDouble("thresholds", "high_threshold_mips", 10.5);
+    m_low_threshold_mips_xml = xmlFilePtr.getDouble(
+                                   "thresholds", "low_threshold_mips", 0.1);
+    m_veto_threshold_mips = xmlFilePtr.getDouble(
+                                   "thresholds", "veto_threshold_mips", 0.3);
+    m_high_threshold_mips = xmlFilePtr.getDouble(
+                                   "thresholds", "high_threshold_mips", 20.0);
     
     if (!xmlFilePtr.contains("global_constants", "mean_pe_per_mip")) {
         log << MSG::INFO << "XML file " << m_xmlFile
             << "does not contain mean_pe_per_mip using default" << endreq;
     }
 
-    m_mean_pe_per_mip = xmlFilePtr.getInt("global_constants", "mean_pe_per_mip", 18);
+    m_mean_pe_per_mip = xmlFilePtr.getInt(
+                            "global_constants", "mean_pe_per_mip", 18);
     
-    m_noise_std_dev_pha = xmlFilePtr.getDouble("global_constants", "noise_std_dev_pha", 0.02);
-    m_noise_std_dev_veto = xmlFilePtr.getDouble("global_constants", "noise_std_dev_veto", 0.02);
-    m_noise_std_dev_cno = xmlFilePtr.getDouble("global_constants", "noise_std_dev_cno", 0.02);
+    m_noise_std_dev_pha = xmlFilePtr.getDouble(
+                              "global_constants", "noise_std_dev_pha", 0.02);
+    m_noise_std_dev_veto = xmlFilePtr.getDouble(
+                               "global_constants", "noise_std_dev_veto", 0.02);
+    m_noise_std_dev_cno = xmlFilePtr.getDouble(
+                              "global_constants", "noise_std_dev_cno", 0.02);
     
     m_full_scale = xmlFilePtr.getInt("global_constants", "full_scale", 4095);
     
-    m_mips_full_scale = xmlFilePtr.getDouble("global_constants", "mips_full_scale", 20.0);
+    m_mips_full_scale = xmlFilePtr.getDouble(
+                            "global_constants", "mips_full_scale", 20.0);
     
-    m_mev_per_mip = xmlFilePtr.getDouble("global_constants", "mev_per_mip", 1.9);
+    m_mev_per_mip = xmlFilePtr.getDouble(
+                        "global_constants", "mev_per_mip", 1.9);
 
-    m_max_edge_dist = xmlFilePtr.getDouble("edge_effects", "max_edge_dist", 20.0);
+    m_max_edge_dist = xmlFilePtr.getDouble(
+                          "edge_effects", "max_edge_dist", 20.0);
 
     m_edge_slope = xmlFilePtr.getDouble("edge_effects", "edge_slope", 0.01);
 
-    m_edge_intercept = xmlFilePtr.getDouble("edge_effects", "edge_intercept", 0.8);
+    m_edge_intercept = xmlFilePtr.getDouble(
+                           "edge_effects", "edge_intercept", 0.8);
 
     return;
 }
@@ -451,7 +472,7 @@ void AcdDigiAlg::addNoise()  {
         idents::AcdId tileId(volId);
         
         // Check to see if we have processed this AcdId already
-        // due to presence of ribbons
+        // due to presence of ribbons and multiple volumes for curved tiles
         if (doneMap.find(tileId) != doneMap.end()) continue;
         
         
@@ -501,13 +522,16 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
     std::vector<double> dim;
 
     idents::VolumeIdentifier volId = hit->volumeID();
+    idents::AcdId tileId(volId);
     int iFace = volId[1];
 
     // retrieve the dimensions of this volume from the GlastDetSvc
     sc = m_glastDetSvc->getShapeByID(volId, &str, &dim);
     if ( sc.isFailure() ) {
-        log << MSG::DEBUG << "Failed to retrieve Shape by Id" << endreq;
-        return sc;
+        log << MSG::WARNING << "Failed to retrieve Shape by Id " 
+            << volId.name() << " will not apply edgeEffects for this volume" 
+            << endreq;
+        return hit->depositedEnergy();
     }
     
     // In local coordinates the box should be centered at (0,0,0)
@@ -519,26 +543,94 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
 
     double dist;
     
+    // Calculate distance from edges based on the type of tile and its
+    // location in the geometry.
     if(iFace == 0) { // Top Tile
         double dist_x = dX/2. - fabs(local_x0.x());
         double dist_y = dY/2. - fabs(local_x0.y());	                
         dist = (dist_x < dist_y) ? dist_x : dist_y;
-    }
-    else if(iFace == 1 || iFace == 3) { // X Side Tile
+
+        // Multi-volume tiles only occur for top bent tiles
+        // which currently are either on the +/- Y sides of the instrument
+        if (m_acdId_volCount[tileId] > 1) {
+            // First figure out if we're in the main part of the tile or 
+            // the bent part
+            if (volId[5] == 0) { // main part of tile
+                // Retrieve dimensions for the bent part of the tile
+                // we'll add the Z-length to the Y edge distance if appropriate
+                idents::VolumeIdentifier bentVolId;
+                createVolId(volId, bentVolId, true);
+                std::string strBent;
+                std::vector<double> dimBent;
+                sc = m_glastDetSvc->getShapeByID(bentVolId, &strBent, &dimBent);
+                if ( sc.isFailure() ) {
+                    log << MSG::WARNING << "Failed to retrieve Shape by Id " 
+                        << bentVolId.name()
+                        << " when applying edgeEffects to bent tiles "
+                        << " will ignore bent portion for edgeEffects."
+                        << endreq;
+                }
+                // Row 0 and along edge that is "covered" by bent tile
+                if ( (tileId.row() == 0) && (local_x0.y() < 0) )  
+                    dist_y += dimBent[2];
+                // Row 4 and along edge that is "covered" by bent tile
+                else if ( (tileId.row() == 4) && (local_x0.y() > 0) )  
+                    dist_y += dimBent[2];
+
+                // Recalculate the minimum distance from the edges
+                dist = (dist_x < dist_y) ? dist_x : dist_y;
+            
+
+            } else if (volId[5] == 1) { // bent part of tile that is vertical
+                // In this case, we add the local Z to the half-length because
+                // if we're located in the upper part (z > 0) we need to 
+                // measure the distance to the lower edge, if we're in (z < 0)
+                // we measure distance to lower edge, and we'll end up 
+                // subtracting as we should.
+                double dist_z = dZ/2. + local_x0.z();
+                // Using Z and X coordinates to check edges, recalc dist
+                dist = (dist_x < dist_z) ? dist_x : dist_z;
+            } else {
+                log << MSG::WARNING << "Unexpected volId for multi-volume "
+                    << " ACD tile detector " << volId.name() 
+                    << " applying edge effects as if this detector is not bent"
+                    << endreq;
+            }
+
+        } // end multi-volume handling
+
+    } else if(iFace == 1 || iFace == 3) { // X Side Tile
         double dist_z = dZ/2. - fabs(local_x0.z());
         double dist_y = dX/2. - fabs(local_x0.x()); // these faces are rotated
         dist = (dist_z < dist_y) ? dist_z : dist_y;
-    }
-    else if(iFace == 2 || iFace == 4) { // Y Side Tile
+
+    } else if(iFace == 2 || iFace == 4) { // Y Side Tile
         double dist_z = dZ/2. - fabs(local_x0.z());
         double dist_x = dX/2. - fabs(local_x0.x());	                
         dist = (dist_z < dist_x) ? dist_z : dist_x;
     }
     
+
+  
     // Apply edge correction if within m_max_edge_dist (mm) of the edge
     if (dist < m_max_edge_dist) {
-        return ( (m_edge_slope*dist + m_edge_intercept) * hit->depositedEnergy() );   
+        return ( 
+           (m_edge_slope*dist + m_edge_intercept) * hit->depositedEnergy() );   
     } else {
         return hit->depositedEnergy();
     }
+}
+
+void AcdDigiAlg::createVolId(const idents::VolumeIdentifier &orgVolId,
+                                     idents::VolumeIdentifier &newVolId,
+                                     bool bent) {
+    // Copy all but the last member of the original volId
+    int size = (orgVolId.size() - 1);
+    int i;
+    for (i = 0; i<size; i++) {
+        newVolId.append(orgVolId[i]);
+    }
+    int append = (bent == false) ? 0 : 1;
+    newVolId.append(append);
+
 }

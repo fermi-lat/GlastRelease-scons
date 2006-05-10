@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r16   10-May-2006 HMK Update AcdDigiAlg to handle bent tiles in the
+         edge effects - also updated threshold of CNO to 20 MIPs
  v1r15p1 27-Mar-2006 HMK Patch unit test jobOptions
  v1r15   24-Mar-2006 HMK Update to new CLHEP, Gaudi, ROOT
  v1r14cl0 31-Jan-2006 TU First tag on new externals branch GR-v7r3p20-newext
