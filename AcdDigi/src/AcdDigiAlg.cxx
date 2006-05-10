@@ -558,8 +558,7 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
             if (volId[5] == 0) { // main part of tile
                 // Retrieve dimensions for the bent part of the tile
                 // we'll add the Z-length to the Y edge distance if appropriate
-                idents::VolumeIdentifier bentVolId;
-                createVolId(volId, bentVolId, true);
+                idents::VolumeIdentifier bentVolId = tileId.volId(true);
                 std::string strBent;
                 std::vector<double> dimBent;
                 sc = m_glastDetSvc->getShapeByID(bentVolId, &strBent, &dimBent);
@@ -621,16 +620,3 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
     }
 }
 
-void AcdDigiAlg::createVolId(const idents::VolumeIdentifier &orgVolId,
-                                     idents::VolumeIdentifier &newVolId,
-                                     bool bent) {
-    // Copy all but the last member of the original volId
-    int size = (orgVolId.size() - 1);
-    int i;
-    for (i = 0; i<size; i++) {
-        newVolId.append(orgVolId[i]);
-    }
-    int append = (bent == false) ? 0 : 1;
-    newVolId.append(append);
-
-}
