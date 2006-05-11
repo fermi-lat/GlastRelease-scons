@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r17   11-May-2006 HMK Update acdDigi.xml with Alex's new light yields for
+         tiles from SLAC
  v1r16   10-May-2006 HMK Update AcdDigiAlg to handle bent tiles in the
          edge effects - also updated threshold of CNO to 20 MIPs
  v1r15p1 27-Mar-2006 HMK Patch unit test jobOptions
