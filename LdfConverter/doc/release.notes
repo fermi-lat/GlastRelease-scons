@@ -3,6 +3,10 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
  
+v3r0    15-May-2006 HMK Updated for new Gaudi v18r1
+v2r6    14-Apr-2006 HMK Check event count against CHS/eventFile's header
+v2r5p2
+v2r5p1  27-Mar-2006 HMK fix up StartEventNumber handling for LICOS events
 v2r5    15-Mar-2006 HMK Handle the last event in CCSDS
 v2r4    06-Mar-2006 HMK handle event id
 v2r3    04-Mar-2006 HMK get generic tds time from ldfReader

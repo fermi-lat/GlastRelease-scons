@@ -22,6 +22,7 @@ DECLARE_FACTORY_ENTRIES(LdfConverter) {
   DECLARE_CONVERTER(LdfGemCnv);
   DECLARE_CONVERTER( McEventCnv );
   DECLARE_CONVERTER( MetaEventCnv );
+  DECLARE_CONVERTER( CcsdsCnv );
 
 }
   
