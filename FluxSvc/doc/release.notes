@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   01-may-06  v6r35   THB  Change pointing default to rock; force build with fixed astro::EarthOrbit
    01-may-06  v6r34p5 TU   Re-order table so He shows up, comment out previous kludge
    01-may-06  v6r34p4 THB  Kluge name lookup to try alpha if He fails
    01-may-06  v6r34p3 THB  Add HE names to data/ParticleTable.txt
