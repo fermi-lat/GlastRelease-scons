@@ -46,7 +46,7 @@ void PointingInfo::set(double time, bool insideSAA)
     lon_geo = gps->lon(); 
 
     
-    // override altitude by using shape of earth.
+    // override altitude by using shape of earth; access magnetic stuff
     EarthCoordinate loc = gps->earthpos();
     rad_geo = loc.altitude(); 
     L=loc.L();

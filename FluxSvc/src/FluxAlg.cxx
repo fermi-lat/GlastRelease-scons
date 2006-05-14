@@ -153,8 +153,8 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("sources",     m_source_list);
     declareProperty("MCrun",        m_run=100);
     declareProperty("area",        m_area=6.0); // target area in m^2
-    declareProperty("pointing_mode", m_pointing_mode=0);
-    declareProperty("rocking_angle", m_rocking_angle=0); // in degrees
+    declareProperty("pointing_mode", m_pointing_mode=3);
+    declareProperty("rocking_angle", m_rocking_angle=35); // in degrees
     declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
 
     declareProperty("PointingHistory",  m_pointingHistory); // doublet, filename and launch date
