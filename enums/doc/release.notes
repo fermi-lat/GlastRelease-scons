@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r5    16-May-2006 HMK New eventflags for error contribution
 v0r4    16-Apr-2006 HMK Add flag for LDF status
 v0r3p3  04-Apr-2006 HMK Added Mask enum to Lsf.h for LCI
 v0r3p2  13-Feb-2006 EAC Added sentinel values to catch undefined states to Lsf.h.  Improved comments.

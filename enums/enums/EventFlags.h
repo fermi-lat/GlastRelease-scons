@@ -11,7 +11,19 @@ namespace enums {
             PACKETERROR = 4,
             SUMMARYERROR = 8,
             TRGPARITYERROR = 16,
-            BADLDFSTATUS = 32
+            BADLDFSTATUS = 32,
+            GTRCPHASE = 64,
+            GTFEPHASE = 128,
+            GTCCFIFO = 256,
+            GTCCHDRPARITY = 512,
+            GTCCWCPARITY = 1024,
+            GTRCSUMMARY = 2048,
+            GTCCDATAPARITY = 4096,
+            GTCCTIMEOUT = 8192,
+            GCCCERROR = 16384,
+            GTCCERROR = 32768,
+            PHASEERROR = 65536,
+            TIMEOUTERROR = 131072
         } EventFlags;
 
 
