@@ -340,7 +340,7 @@ int LatComponentParser::error(EBFevent* event, TEMcontribution* contribution) {
             offset=diagnosticEnd();
         else
             offset=TKRend();
-        ErrParser errParse(event,contribution,offset);
+        ErrParser errParse(event,contribution,offset,"");
         ErrorSummary theError = errParse.theError();
         tower->getTem().getErr()->initCal(theError.cal());
         tower->getTem().getErr()->initTkr(theError.tkr());
