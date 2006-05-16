@@ -60,7 +60,9 @@ public:
             m_diagLen[i] = diag[i];
         }
     }
-    void initContribLen(unsigned int *tem, unsigned int gemLen, unsigned int oswLen, unsigned int *errLen, unsigned int *diagLen, unsigned int aemLen) {
+    void initContribLen(unsigned int *tem, unsigned int gemLen, 
+                        unsigned int oswLen, unsigned int *errLen, 
+                        unsigned int *diagLen, unsigned int aemLen) {
 
         m_otherContribLen[GEM] = gemLen;
         m_otherContribLen[OSW] = oswLen;
@@ -111,6 +113,30 @@ public:
         return (m_flags & enums::TRGPARITYERROR)!=0; };
     Bool_t badLdfStatus() const {
         return (m_flags & enums::BADLDFSTATUS) != 0; };
+    Bool_t gtrcPhase() const {
+         return (m_flags & enums::GTRCPHASE); }
+    Bool_t gtfePhase() const {
+         return (m_flags & enums::GTFEPHASE); }
+    Bool_t gtccFifo() const {
+         return (m_flags & enums::GTCCFIFO); }
+    Bool_t gtccHdrParity() const {
+         return (m_flags & enums::GTCCHDRPARITY); }
+    Bool_t gtccWcParity() const {
+         return (m_flags & enums::GTCCWCPARITY); }
+    Bool_t gtrcSummary() const {
+         return (m_flags & enums::GTRCSUMMARY); }
+    Bool_t gtccDataParity() const {
+         return (m_flags & enums::GTCCDATAPARITY); }
+    Bool_t gtccTimeout() const {
+         return (m_flags & enums::GTCCTIMEOUT); }
+    Bool_t gcccError() const {
+         return (m_flags & enums::GCCCERROR); }
+    Bool_t gtccError() const {
+         return (m_flags & enums::GTCCERROR); }
+    Bool_t phaseError() const {
+         return (m_flags & enums::PHASEERROR); }
+    Bool_t timeoutError() const {
+         return (m_flags & enums::TIMEOUTERROR);}
     
     /// Returns the length in bytes of the TEM contribution identified by 
     /// a value in [0,15]

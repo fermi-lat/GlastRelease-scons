@@ -35,12 +35,24 @@ void ErrorData::init(UShort_t c, UShort_t t, Bool_t phs, Bool_t tmo) {
     m_tmo = tmo;
 }
 
+void ErrorData::setTkrFifoFull(UChar_t* tkrFifoFullCol) {
+    UInt_t i;
+    for (i=0;i<enums::numGtcc;i++)
+        m_tkrFifoFullCol[i] = tkrFifoFullCol[i];
+}
+
+void ErrorData::setTkrFifoFull(UInt_t gtcc, UChar_t val) {
+    if (gtcc < enums::numGtcc)
+        m_tkrFifoFullCol[gtcc] = val;
+}
 
 void ErrorData::Clear(Option_t *option) {
     m_cal = 0;
     m_tkr = 0;
     m_phs = kFALSE; 
     m_tmo = kFALSE;
+    UInt_t i;
+    for (i=0;i<enums::numGtcc;i++) m_tkrFifoFullCol[i] = 0;
 }
 
 void ErrorData::Print(Option_t *option) const {
@@ -49,6 +61,11 @@ void ErrorData::Print(Option_t *option) const {
     cout.precision(2);
     cout << "Cal: " << m_cal << " Tkr: " << m_tkr << endl;
     cout << "Phased Error: " << m_phs << " TimeOut: " << m_tmo << endl;
+    cout << "TKR FIFO Error: ";
+    UInt_t i;
+    for (i=0;i<enums::numGtcc;i++) 
+        cout << ((Int_t)m_tkrFifoFullCol[i]) << ":";
+    cout << endl;
    
 }
 

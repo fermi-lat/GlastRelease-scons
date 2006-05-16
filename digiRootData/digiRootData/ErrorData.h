@@ -2,6 +2,7 @@
 #define ROOT_ErrorData_H
 
 #include "TObject.h"
+#include "enums/DetectorConstants.h"
 
 
 /** @class ErrorData
@@ -24,6 +25,8 @@ public:
     virtual ~ErrorData() { };
 
     void init(UShort_t cal, UShort_t tkr, Bool_t phs, Bool_t tmo);
+    void setTkrFifoFull(UChar_t* tkrFifoFullCol);
+    void setTkrFifoFull(UInt_t gtcc, UChar_t val=1);
 
     void Clear(Option_t *option="");
  
@@ -37,6 +40,13 @@ public:
         UShort_t getTkr() const { return m_tkr; }
         Bool_t getPhs() const { return m_phs; }
         Bool_t getTmo() const { return m_tmo; } 
+        const UChar_t* getTkrFifoFullCol() const { return m_tkrFifoFullCol; }
+        Int_t getTkrFifoFull(UInt_t gtcc) const { 
+            if (gtcc < enums::numGtcc) 
+                return ((Int_t)m_tkrFifoFullCol[gtcc]);
+            else
+                return -1;
+        }
     /*@}*/
 
     private:
@@ -45,8 +55,9 @@ public:
         UShort_t m_tkr;
         Bool_t m_phs;
         Bool_t m_tmo;
+        UChar_t m_tkrFifoFullCol[8];
 
-    ClassDef(ErrorData,1) // Storage for TEM 
+    ClassDef(ErrorData,2) // Storage for TEM 
 }; 
  
 #endif

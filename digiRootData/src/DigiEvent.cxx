@@ -197,6 +197,7 @@ void DigiEvent::Print(Option_t *option) const {
    
     m_metaEvent.Print(option);
     m_ccsds.Print(option);
+    cout << dec;
 }
 
 AcdDigi* DigiEvent::addAcdDigi(const AcdId& id, const VolumeIdentifier& volId,
