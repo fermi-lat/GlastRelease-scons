@@ -12,12 +12,14 @@
 #include "Event/TopLevel/Definitions.h"
 #include "Event/TopLevel/EventModel.h"
 
+#include "enums/DetectorConstants.h"
+
 /**
 * @class ErrorData
 * @brief TDS for storing the error
 */
 
-static const CLID& CLID_LdfErrorData = InterfaceID("LdfErrorData", 1, 0);
+static const CLID& CLID_LdfErrorData = InterfaceID("LdfErrorData", 1, 1);
 
 namespace LdfEvent {
     class TowerErrorData {
@@ -27,13 +29,32 @@ namespace LdfEvent {
 
         virtual ~TowerErrorData();
         void clear();
-        void init(unsigned short tower, unsigned short cal, unsigned short tkr, bool phs, bool tmo);
+        void init(unsigned short tower, unsigned short cal, unsigned short tkr,
+                  bool phs, bool tmo);
+        void setTkrFifoFull(unsigned int gtcc, unsigned char val=1) {
+           if (gtcc < enums::numGtcc)
+               m_tkrFifoFullCol[gtcc] = val;
+        }
+        void setTkrFifoFullCol(const unsigned char* fifo) {
+            unsigned int i;
+            for (i=0; i<enums::numGtcc; i++) 
+                m_tkrFifoFullCol[i] = fifo[i];
+        }
 
         unsigned short tower() const { return m_tower; }
         unsigned short cal() const { return m_cal; }
         unsigned short tkr() const { return m_tkr; }
         bool phs() const { return m_phs; }
         bool tmo() const { return m_tmo; }
+        const unsigned char* tkrFifoFullCol() const { return m_tkrFifoFullCol; };
+        unsigned char tkrFifoFull(unsigned int gtcc) const {
+            if (gtcc < enums::numGtcc)
+                return m_tkrFifoFullCol[gtcc];
+        }
+        int tkrFifoFullAsInt(unsigned int gtcc) const { 
+            if (gtcc < enums::numGtcc)
+                return ((int)m_tkrFifoFullCol[gtcc]);
+        }
 
     private:
         unsigned short m_tower;
@@ -41,6 +62,7 @@ namespace LdfEvent {
         unsigned short m_tkr;  // TKR
         bool m_phs;  // Phasing Error
         bool m_tmo;  // Timeout Error
+        unsigned char m_tkrFifoFullCol[8]; // Set if GTCC has fifo full error bit
     };
 
     class ErrorData : public DataObject {
@@ -99,9 +121,9 @@ namespace LdfEvent {
         m_tkr = 0;
         m_phs = false;
         m_tmo = false;
+        unsigned int i;
+        for(i=0;i<enums::numGtcc;i++) m_tkrFifoFullCol[i] = 0;
     }
-
-
 
 
 
@@ -110,7 +132,16 @@ namespace LdfEvent {
         for (i = 0; i < getNumTowerError(); i++) {
             s<<"Error " << "CAL: " << m_errorCol[i].cal() << " TKR: " 
              << m_errorCol[i].tkr() << " Phase: " << m_errorCol[i].phs()
-             << " TimeOut: " << m_errorCol[i].tmo() <<std::endl;
+             << " TimeOut: " << m_errorCol[i].tmo() 
+             << " FIFO Full bits: " << ((int)m_errorCol[i].tkrFifoFull(0)) 
+             << ":" 
+             << ((int)m_errorCol[i].tkrFifoFull(1)) << ":" 
+             << ((int)m_errorCol[i].tkrFifoFull(2)) << ":" 
+             << ((int)m_errorCol[i].tkrFifoFull(3)) << ":" 
+             << ((int)m_errorCol[i].tkrFifoFull(4)) << ":"
+             << ((int)m_errorCol[i].tkrFifoFull(5)) << ":" 
+             << ((int)m_errorCol[i].tkrFifoFull(6)) << ":"
+             << ((int)m_errorCol[i].tkrFifoFull(7)) << std::endl;
         }
         return s;
     }
