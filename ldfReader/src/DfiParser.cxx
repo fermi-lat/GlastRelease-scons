@@ -181,6 +181,10 @@ int DfiParser::loadData() {
         unsigned long long eventId = ldfReader::LatData::instance()->eventId();
         int apid = ldfReader::LatData::instance()->getCcsds().getApid();
 
+        if (EbfDebug::getDebug()) 
+            std::cout << "Event: " << eventId << " APID: " << apid << std::endl;
+        
+
         if (ldf.status()) {
             std::ostringstream errMsg;
             errMsg.str("LDF EBFeventParser reported a bad status 0x");
