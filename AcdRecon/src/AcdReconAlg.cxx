@@ -107,6 +107,8 @@ StatusCode AcdReconAlg::initialize ( ) {
         m_calcCornerDoca = false;
         sc = StatusCode::SUCCESS;
     }
+    m_geomMap.setAcdGeomSvc(*m_acdGeoSvc);
+
 
     if (m_intersectionToolName == "") 
         m_intersectionTool = 0;
@@ -561,12 +563,11 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
 
   for (Event::AcdDigiCol::const_iterator acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
     idents::AcdId acdId = (*acdDigiIt)->getId();
-    idents::VolumeIdentifier volId = (*acdDigiIt)->getVolId();
     // get the data object to store all the computations
     AcdRecon::PocaData& pocaData = pocaMap[acdId];
     if (acdId.na()) continue;
     if (acdId.tile()) {      
-      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,volId,*m_glastDetSvc);
+      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_glastDetSvc);
       sc = tileDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
@@ -582,7 +583,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
 	return sc;
       }
     } else if ( acdId.ribbon() ) {
-      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,volId,*m_glastDetSvc);
+      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,*m_glastDetSvc);
       sc = ribbonDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 

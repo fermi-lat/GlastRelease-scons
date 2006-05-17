@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r3      15-May-2006 EAC More updates for curved tiles
 v3r2      10-May-2006 HMK Updates for curved tiles
 v3r1p3    10-May-2006 EAC Totally useless tag to demonstrate mrvmct to chuck.  identical to v3r1p2
 v3r1p2    04-May-2006 EAC Fix buy in gap type assignment.  This only affects tracks near the sides of the ACD and away from the ribbons

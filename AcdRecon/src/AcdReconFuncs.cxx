@@ -80,32 +80,75 @@ namespace AcdRecon {
 		 double& arcLength, double& localX, double& localY, 
 		 double& activeX, double& activeY, double& active2D, HepPoint3D& hitPoint) {
 
-    std::vector<double> dim = tile.dim();
-    // Beware: these dimensions are in some sort of local system and for
-    // iFace = 1 || 3  x<->y 		
-    double dX = dim[0];
-    double dY = dim[1];
-    double dZ = dim[2];
+    // loop over volumes of tile
+    for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
+      
+      
+      double testActiveX(-2000.);
+      double testActiveY(-2000.);
+      double testLocalX(2000.);
+      double testLocalY(2000.);
+      double testArcLength(-1.);
+      HepPoint3D testHitPoint;
+      
+      std::vector<double> dim = tile.dim(iVol);
+      // Beware: these dimensions are in some sort of local system and for
+      // iFace = 1 || 3  x<->y 		
+      double dX = dim[0];
+      double dY = dim[1];
+      double dZ = dim[2];
+      
+      const HepPoint3D& center = tile.tileCenter(iVol);
 
-    const HepPoint3D& center = tile.tileCenter();
-    int face = tile.acdId().face();
+      // fix this
+      int face = tile.face(iVol);
 
-    crossesPlane(track,center,face,arcLength,localX,localY,hitPoint);
+      crossesPlane(track,center,face,testArcLength,testLocalX,testLocalY,testHitPoint);
 
-    // If arcLength is negative... had to go backwards to hit plane... 
-    if ( arcLength < 0 ) return;
-    if(face == 0) {// Top Tile
-      activeX = dX/2. - fabs(localX);
-      activeY = dY/2. - fabs(localY);
-      // Choose which is furthest away from edge (edge @ 0.)
-    } else if(face == 1 || face == 3) {// X Side Tile
-      activeY = dZ/2  - fabs(localY);
-      activeX = dX/2. - fabs(localX);
-    } else if(face == 2 || face == 4) {// Y Side Tile
-      activeY = dZ/2. - fabs(localY);
-      activeX = dX/2. - fabs(localX);
+      int region(0);
+ 
+      // If arcLength is negative... had to go backwards to hit plane... 
+      if ( testArcLength < 0 ) continue;
+      if(face == 0) {// Top Tile
+	testActiveX = dX/2. - fabs(testLocalX);
+	testActiveY = dY/2. - fabs(testLocalY);
+	// check to see if this is one of the top-side tiles
+	if ( tile.nVol() == 2 ) {
+	  if ( tile.sharedEdge(0) == 1 && testLocalY > 0 ) {
+	    testActiveY += fabs(tile.sharedWidth(0));
+	  } else if (  tile.sharedEdge(0) == 3 && testLocalY < 0 ) {
+	    testActiveY += fabs(tile.sharedWidth(0));
+	  }	  
+	}
+      } else if(face == 1 || face == 3) {// X Side Tile
+	testActiveY = dZ/2  - fabs(testLocalY);
+	testActiveX = dX/2. - fabs(testLocalX);
+      } else if(face == 2 || face == 4) {// Y Side Tile
+	testActiveY = dZ/2. - fabs(testLocalY);
+	testActiveX = dX/2. - fabs(testLocalX);
+	// check to see if this is one of the extra pieces of the side tiles
+	if ( tile.nVol() == 2 ) {
+	  if ( tile.sharedEdge(1) == 1 && testLocalY > 0 ) {
+	    testActiveY += fabs(tile.sharedWidth(1));
+	  }	  
+	}
+      }
+
+      // check to see which active distance is more negative (ie, farther from the center of the tile)
+      double testActive2D =  testActiveX < testActiveY ? testActiveX : testActiveY;
+
+      // check to see if the track came closest to this volume
+      // if it did, grab the values
+      if ( testActive2D > active2D ) {
+	active2D = testActive2D;
+	activeX = testActiveX;
+	activeY = testActiveY;
+	localX = testLocalX;
+	localY = testLocalY;
+	arcLength = testArcLength;
+	hitPoint = testHitPoint;
+      }
     }
-    active2D =  activeX < activeY ? activeX : activeY;
   }
 
   void tileEdgePoca(const AcdRecon::TrackData& aTrack, const AcdTileDim& tile, 
@@ -116,35 +159,46 @@ namespace AcdRecon {
     // Note: this could be done at the end - if no edge solution was found however
     //       doing the full monte does not use much more cpu
 
-    const HepPoint3D* corner = tile.corner();
+    
     dist = 2000.;
     region = -1;
     
-    for (int iCorner = 0; iCorner<4; iCorner++) {
-      
-      //  WBA: Naively I thought one could limit the edges investigated - not so!
-      //	if(iCorner != i_near_corner && (iCorner+1)%4 != i_near_corner) continue;
-      int ic2 = iCorner == 3 ? 0 : iCorner + 1;
-      const HepPoint3D& c1 = corner[iCorner];
-      const HepPoint3D& c2 = corner[ic2];  
-      
-      // Will need this to determine limit of the tile edge 
-      double edge_length(0.);
-      
-      // Compute DOCA and DOCA location between the track and edge
-      RayDoca raydoca;
-      AcdRecon::rayDoca(aTrack,c1,c2,raydoca,edge_length);
+    // loop over volumes of tile
+    for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
 
-      // Check if x,y,z along edge falls within limits of tile edge.
-      double length_2_intersect = raydoca.arcLenRay2();
-      if (length_2_intersect > 0 && length_2_intersect < edge_length) {
-	double test_dist = raydoca.docaRay1Ray2();
-	if ( test_dist < dist ) {
-	  dist = test_dist;
-	  arcLength = raydoca.arcLenRay1();
-	  region = iCorner;
-	  x = raydoca.docaPointRay1();
-	  v = x - raydoca.docaPointRay2();
+      const HepPoint3D* corner = tile.corner(iVol);
+      for (int iCorner = 0; iCorner<4; iCorner++) {
+
+	// ignored shared edges
+	if ( iCorner == tile.sharedEdge(iVol) ) continue;
+
+	//  WBA: Naively I thought one could limit the edges investigated - not so!
+	//	if(iCorner != i_near_corner && (iCorner+1)%4 != i_near_corner) continue;
+	int ic2 = iCorner == 3 ? 0 : iCorner + 1;
+	const HepPoint3D& c1 = corner[iCorner];
+	const HepPoint3D& c2 = corner[ic2];  
+	
+	// Will need this to determine limit of the tile edge 
+	double edge_length(0.);
+	
+	// Compute DOCA and DOCA location between the track and edge
+	RayDoca raydoca;
+	AcdRecon::rayDoca(aTrack,c1,c2,raydoca,edge_length);
+	
+	// Check if x,y,z along edge falls within limits of tile edge.
+	double length_2_intersect = raydoca.arcLenRay2();
+	
+	if (length_2_intersect > 0 && length_2_intersect < edge_length) {
+	  double test_dist = raydoca.docaRay1Ray2();
+
+	  // check to see if this is a shared edge of a curved tile
+	  if ( test_dist < dist ) {
+	    dist = test_dist;
+	    arcLength = raydoca.arcLenRay1();
+	    region = iCorner + 10*iVol;
+	    x = raydoca.docaPointRay1();
+	    v = x - raydoca.docaPointRay2();
+	  }
 	}
       }          
     }
@@ -158,37 +212,43 @@ namespace AcdRecon {
     // The corners are returned in order (-,-), (-,+), (+,+), (+,-)
     // where third dimension is the one we ignore, since it is associated with
     // tile thickness.
-    const HepPoint3D* corner = tile.corner();
+    
     region = -1;
     dist = 2000;
     
-    // First find the nearest corner and the distance to it. 
-    double arclen(-1.);    
-    double test_dist(2000);
-    for (int iCorner = 0; iCorner<4; iCorner++) {      
-      HepPoint3D x_isec;
+    // loop over volumes of tile
+    for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
+
+      const HepPoint3D* corner = tile.corner(iVol);
+
+      // First find the nearest corner and the distance to it. 
+      double arclen(-1.);    
+      double test_dist(2000);
+      for (int iCorner = 0; iCorner<4; iCorner++) {      
+	HepPoint3D x_isec;
+	test_dist = 2000.;
+	AcdRecon::pointPoca(aTrack,corner[iCorner],arclen,test_dist,x_isec);
+	if ( test_dist < dist ) {
+	  dist = test_dist;
+	  region = iCorner+4 +(10*iVol);
+	  arcLength = arclen;
+	  x.set(x_isec.x(),x_isec.y(),x_isec.z());
+	  HepVector3D pocaVect = x_isec - corner[iCorner];
+	  v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+	}
+      }    
+      Point pEdge;
+      Vector vEdge;
       test_dist = 2000.;
-      AcdRecon::pointPoca(aTrack,corner[iCorner],arclen,test_dist,x_isec);
+      int test_region(-1);
+      AcdRecon::tileEdgePoca(aTrack,tile,arclen,test_dist,pEdge,vEdge,test_region);
       if ( test_dist < dist ) {
 	dist = test_dist;
-	region = iCorner+4;
+	region = test_region;
 	arcLength = arclen;
-	x.set(x_isec.x(),x_isec.y(),x_isec.z());
-	HepVector3D pocaVect = x_isec - corner[iCorner];
-	v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+	x = pEdge;
+	v = vEdge;
       }
-    }    
-    Point pEdge;
-    Vector vEdge;
-    test_dist = 2000.;
-    int test_region(-1);
-    AcdRecon::tileEdgePoca(aTrack,tile,arclen,test_dist,pEdge,vEdge,test_region);
-    if ( test_dist < dist ) {
-      dist = test_dist;
-      region = test_region;
-      arcLength = arclen;
-      x = pEdge;
-      v = vEdge;
     }
     // Make this an Active Distance calculation 
     dist *= -1.;

@@ -140,7 +140,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
       pocaData = &( ownedPocaData.back() );
       pocaData->m_id = acdId;
       if ( acdId.ribbon() ) { 	
-	const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,volId,*m_detSvc);
+	const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,*m_detSvc);
 	if ( ribbon->statusCode().isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a ribbon " << acdId.id() << ' ' << volId.name() << endreq;
 	  return StatusCode::FAILURE;
@@ -152,7 +152,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 	AcdRecon::ribbonPoca(track,*ribbon,
 			     pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
       } else if ( acdId.tile() ) {
-	const AcdTileDim* tile = geomMap.getTile(acdId,volId,*m_detSvc);
+	const AcdTileDim* tile = geomMap.getTile(acdId,*m_detSvc);
 	if ( tile->statusCode().isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << ' ' << volId.name() << endreq;
 	  return StatusCode::FAILURE;
