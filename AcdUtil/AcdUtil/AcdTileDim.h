@@ -1,6 +1,8 @@
 #ifndef ACDTILEDIM_H
 #define ACDTILEDIM_H
 
+#include <assert.h>
+
 #include <vector>
 
 #include "GaudiKernel/StatusCode.h"
@@ -33,6 +35,9 @@ public:
     
   /// Constructor: takes the tile id, the volume id, and the detector service
   AcdTileDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc);
+
+  /// Constructor: takes the tile id, both volume id, and the detector service
+  AcdTileDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volIdMain, const idents::VolumeIdentifier& volIdOther, IGlastDetSvc &detSvc);
   
   /// trivial destructor
   ~AcdTileDim() {;}
@@ -46,14 +51,42 @@ public:
 
   /// direct access functions
   inline IGlastDetSvc& detSvc() const { return m_detSvc; }
+  inline int nVol() const { return m_nVol; }
   inline const idents::AcdId& acdId() const { return m_acdId; }
-  inline const idents::VolumeIdentifier& volId() const { return m_volId; }
-  inline const std::vector<double>& dim() const { return m_dim; }
-  inline const HepPoint3D& tileCenter() const { return m_tileCenter; }
-  inline const HepPoint3D* corner() const { return m_corners; }
+  inline const idents::VolumeIdentifier& volId(int idx = 0) const { 
+    assert(idx < m_nVol);
+    return m_volId[idx]; 
+  }
+  inline const std::vector<double>& dim(int idx = 0) const { 
+    assert(idx < m_nVol);
+    return m_dim[idx]; 
+  }
+  inline const HepPoint3D& tileCenter(int idx =0) const { 
+    assert(idx < m_nVol);
+    return m_tileCenter[idx]; 
+  }
+  inline const HepPoint3D* corner(int idx = 0) const { 
+    assert(idx < m_nVol);
+    return m_corners[idx]; 
+  }
   inline StatusCode statusCode() const { return m_sc; }
 
-  void toLocal(const HepPoint3D& global, HepPoint3D& local);
+  inline int sharedEdge(int idx) const { 
+    assert(idx < m_nVol);
+    return m_shared[idx]; 
+  }
+
+  inline float sharedWidth(int idx) const { 
+    assert(idx < m_nVol);
+    return m_sharedWidth[idx]; 
+  }
+
+  inline int face(int idx) const {
+    assert(idx < m_nVol);
+    return (m_volId[idx])[1];    
+  }
+
+  void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0);
 
 protected:
   
@@ -65,8 +98,11 @@ private:
   /// The tile id
   const idents::AcdId             m_acdId;
 
+  /// The number of volumes in this tile
+  const int                 m_nVol;
+
   /// The volume id -> this is the key for the detector service
-  const idents::VolumeIdentifier  m_volId;
+  idents::VolumeIdentifier  m_volId[2];
   
   /// The detector service
   IGlastDetSvc&             m_detSvc;
@@ -75,17 +111,22 @@ private:
   StatusCode                m_sc;
 
   /// the tile dimensions
-  std::vector<double>       m_dim;
+  std::vector<double>       m_dim[2];
 
   /// the center of the tile (in global coordinates)
-  HepPoint3D                m_tileCenter;
+  HepPoint3D                m_tileCenter[2];
 
   /// the four corners of the tile (in global coordinates)
-  HepPoint3D                m_corners[4];  
+  HepPoint3D                m_corners[2][4];  
 
   /// the transformations to local coords
-  HepTransform3D            m_transform;
+  HepTransform3D            m_transform[2];
 
+  /// which (if any) edges are shared between tiles:
+  int                       m_shared[2];
+  
+  /// width extra of extra volume in curved tiles
+  float                     m_sharedWidth[2];
 
 };
    
