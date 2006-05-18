@@ -129,7 +129,10 @@ namespace AcdRecon {
 	// check to see if this is one of the extra pieces of the side tiles
 	if ( tile.nVol() == 2 ) {
 	  if ( tile.sharedEdge(1) == 1 && testLocalY > 0 ) {
-	    testActiveY += fabs(tile.sharedWidth(1));
+	    // is a shared piece.  but this is a short side, so take the distance to the
+	    // other side of this volume
+	    testActiveY =  dZ - testActiveY;
+	    // testActiveY += fabs(tile.sharedWidth(1));
 	  }	  
 	}
       }
