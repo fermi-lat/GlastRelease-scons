@@ -9,6 +9,7 @@
 // EXTLIB INCLUDES
 #include "TGraph.h"
 #include "TSpline.h"
+#include "TFile.h"
 
 // STD INCLUDES
 #include <sstream>
