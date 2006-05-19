@@ -41,7 +41,8 @@ public:
     AcdRibbonDim* retVal(0);    
     std::map<idents::AcdId,AcdRibbonDim*>::iterator itr = m_ribbonMap.find(id);
     if ( itr == m_ribbonMap.end() ) {
-      const idents::VolumeIdentifier volId = id.volId();
+      idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
+      const idents::VolumeIdentifier volId = ncid.volId();
       retVal = new AcdRibbonDim(id,volId,detSvc);
       m_ribbonMap[id] = retVal;
       m_updated.insert(id);
@@ -61,14 +62,15 @@ public:
     if ( itr == m_tileMap.end() ) {
       const std::map<idents::AcdId, int>::const_iterator itrCount = m_acdGeomSvc->getAcdIdVolCountCol().find(id);
       int nVol = itrCount->second;
-      idents::VolumeIdentifier volId = id.volId();
+      idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
+      idents::VolumeIdentifier volId = ncid.volId();
       idents::VolumeIdentifier volIdSide;
       switch (nVol){
       case 1:	
 	retVal = new AcdTileDim(id,volId,detSvc);
 	break;
       case 2:
-	volIdSide = id.volId(true);
+	volIdSide = ncid.volId(true);
 	retVal = new AcdTileDim(id,volId,volIdSide,detSvc);
 	break;
       }
