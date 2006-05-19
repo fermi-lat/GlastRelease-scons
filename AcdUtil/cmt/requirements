@@ -1,6 +1,7 @@
 package AcdUtil
 version v1r3
-author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
+author Heather Kelly <heather@slac.stanford.edu>
+author Eric Charles <echarles@slac.stanford.edu>
 # $Id$
 
 use GlastSvc v*
