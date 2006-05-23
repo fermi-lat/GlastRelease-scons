@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r3p3    23-May-2006 EAC yet another y->x fix for the ribbon orientation
 v3r3p2    19-May-2006 EAC Fix constness in AcdGeomMap::getTile and getRibbon for windows
 v3r3p1    17-May-2006 EAC Fix bug in case that the track hits the upper side of the bent piece of the curved tile (on the full moon)
 v3r3      15-May-2006 EAC More updates for curved tiles

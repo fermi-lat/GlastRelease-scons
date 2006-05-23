@@ -389,7 +389,7 @@ StatusCode AcdTkrIntersectTool::fallbackToNominal(const AcdRecon::TrackData& tra
   switch ( data.m_face ) {
   case 0:
     // top
-    gapType = ( whichGap == 0 || whichGap == 5 ) ? AcdRecon::TopCornerEdge : AcdRecon::X_RibbonSide;
+    gapType = ( whichGap == 0 || whichGap == 5 ) ? AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;
     break;
   case 1:
   case 3:
@@ -496,7 +496,7 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
     case 0:
       gapType = ( col == 0 || col == 5 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
       if ( pocaData.m_localY > 0 ) gap = 1;
-      distance = -1.*pocaData.m_activeY;
+      distance = -1.*pocaData.m_activeX;
       break;
     case 1:
     case 3:    
