@@ -126,7 +126,7 @@ StatusCode HepRepSvc::initialize ()
 
     // get the Event Data Service
     IDataProviderSvc* esvc = 0;
-    status = service("EventDataSvc", esvc);
+    status = service("EventDataSvc", esvc, true);
     if( status.isFailure()) {
       log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
       return status;
