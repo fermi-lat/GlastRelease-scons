@@ -294,7 +294,7 @@ StatusCode AcdValsTool::calculate()
         ACD_DOCA          = pACD->getDoca();
         ACD_DOCA_Energy   = energyIdMap[tileId];
 
-        tileId            = pACD->getMaxActDistId();
+        tileId            = pACD->getMaxActDist3DId();
         ACD_ActiveDist    = pACD->getActiveDist();
         ACD_ActiveDist3D    = pACD->getActiveDist3D();
         ACD_ActiveDist_Energy = energyIdMap[tileId];
