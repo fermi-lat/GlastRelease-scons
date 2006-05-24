@@ -7,7 +7,7 @@
 #include "facilities/Util.h"
 #include "commonRootData/idents/TowerId.h"
 
-#include "TkrHits.cxx"
+#include "calibTkrUtil/TkrHits.h"
 
 using std::string;
 using std::cout;
