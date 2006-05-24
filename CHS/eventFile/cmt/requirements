@@ -1,5 +1,5 @@
 package eventFile
-version v1r0p8
+version v1r0p9
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -13,6 +13,8 @@ use enums v*
 apply_pattern package_include
 apply_pattern package_headers
 apply_pattern package_linkopts
+
+apply_pattern shared_library
 
 macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
 	WIN32	" /D __i386 "
