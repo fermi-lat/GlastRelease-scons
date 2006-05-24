@@ -5,10 +5,9 @@
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Service.h"
-#include "src/LdfEvtIterator.h"
+//#include "src/LdfEvtIterator.h"
 
 #include "ldfReader/EbfParser.h"
-//#include "ldfReader/DfiParser.h"
 
 #include <list>
 #include <vector>
@@ -17,6 +16,8 @@
 
 class IAddressCreator;
 class IDataProviderSvc;
+
+class LdfSelectorContext;
 
 /** @class LdfEventSelector
 * @brief LdfEventSelector performes the function of controlling the 
@@ -35,7 +36,119 @@ class LdfEventSelector : virtual public Service,
                          virtual public IEvtSelector,
                          virtual public IProperty {
 public:
-  static IService* createClassObject( const std::string& svcname, ISvcLocator* svcloc );
+
+ /// HMK Access "real" selector  try this out HMK :)
+  const IEvtSelector* selector()  const  {
+    return this;
+  }
+
+/// NEW from GaudiSvc's EventSelector.h that was required by IEvtSelector
+
+  void printEvtInfo(const LdfSelectorContext* iter) const;
+
+  /// Create a new event loop context
+  /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode createContext(Context*& refpCtxt) const;
+
+  /// Get next iteration item from the event loop context
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode next(Context& refCtxt) const;
+
+  /// Get next iteration item from the event loop context, but skip jump 
+  /// elements
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode next(Context& refCtxt,int jump) const;
+
+  /// Get previous iteration item from the event loop context
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    * @param jump      [IN]      Number of events to be skipped
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode previous(Context& refCtxt) const;
+
+  /// Get previous iteration item from the event loop context, but skip jump 
+  /// elements
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    * @param jump      [IN]      Number of events to be skipped
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode previous(Context& refCtxt,int jump) const;
+
+  /// Rewind the dataset
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode rewind(Context& refCtxt) const;
+
+  /// Create new Opaque address corresponding to the current record
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    * @param refpAddr  [OUT]     Reference to address pointer
+    *
+    * @return StatusCode indicating success or failure
+    */
+
+  /// Create new Opaque address corresponding to the current record
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    * @param refpAddr  [OUT]     Reference to address pointer
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode createAddress(const Context& refCtxt, IOpaqueAddress*& refpAddr) const;
+
+  /// Release existing event iteration context
+  /** @param refCtxt   [IN/OUT]  Reference to the context
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode releaseContext(Context*& refCtxt) const;
+
+  /** Will set a new criteria for the selection of the next list of events and 
+    *  will change
+    * the state of the context in a way to point to the new list.
+    *
+    * @param cr The new criteria string.
+    * @param c Reference pointer to the Context object.
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
+
+  /** Access last item in the iteration
+    * @param c Reference to the Context object.
+    *
+    * @return StatusCode indicating success or failure
+    */
+
+  /** Access last item in the iteration
+    * @param c Reference to the Context object.
+    *
+    * @return StatusCode indicating success or failure
+    */
+  virtual StatusCode last(Context& c) const;
+
+
+/// OLD
+//  static IService* createClassObject( const std::string& svcname, ISvcLocator* svcloc );
+
+
+  // IInterface implementation
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    
+  LdfEventSelector(const std::string& name, ISvcLocator* svcloc );
+  virtual ~LdfEventSelector();
+
   // IEvtSelector implementation
   virtual StatusCode initialize();
 
@@ -45,19 +158,18 @@ public:
   virtual StatusCode setCriteria(const std::string& storageType);
 
   // Also needed for IEvtSelector interface
-  virtual StatusCode setCriteria( const SelectionCriteria& criteria ); 
+  //virtual StatusCode setCriteria( const SelectionCriteria& criteria ); 
     
-  virtual IEvtSelector::Iterator* begin() const;
-  virtual IEvtSelector::Iterator* end() const;
-  virtual IEvtSelector::Iterator& next(IEvtSelector::Iterator& it) const;
-  virtual IEvtSelector::Iterator& previous(IEvtSelector::Iterator& it) const; 
-  IOpaqueAddress* reference(const IEvtSelector::Iterator& it) const;
+  //virtual IEvtSelector::Iterator* begin() const;
+ // virtual IEvtSelector::Iterator* end() const;
+ // virtual IEvtSelector::Iterator& next(IEvtSelector::Iterator& it) const;
+ // virtual IEvtSelector::Iterator& previous(IEvtSelector::Iterator& it) const; 
+ // IOpaqueAddress* reference(const IEvtSelector::Iterator& it) const;
     
-  // IInterface implementation
-  virtual StatusCode queryInterface(const IID& riid, void** ppvInterface);
-    
-  LdfEventSelector(const std::string& name, ISvcLocator* svcloc );
-  ~LdfEventSelector();
+// From gaudi v18r1 EventSelector in GaudiSvc
+ //HMK typedef std::vector<EventSelectorDataStream*>  Streams;
+  //HMKtypedef std::vector<std::string>               StreamSpecs;
+  //HMKtypedef std::vector<StringProperty>            Properties;
     
 private:
   enum CriteriaType { 
@@ -84,19 +196,18 @@ private:
   /// same info as m_storageType, but as enum
   CriteriaType          m_criteriaType;
 
-  LdfEvtIterator        m_evtEnd;
+  //LdfEvtIterator        m_evtEnd;
   ListName*             m_inputDataList;
   IDataProviderSvc*     m_eventDataSvc;
-  LdfEvtIterator*       m_it; 
-  IntegerProperty       m_evtMax;
+  //LdfEvtIterator*       m_it; 
+//  IntegerProperty       m_evtMax;  // see below
   std::string           m_instrument;  // for now should be EM or LAT
   std::string           m_fileName;
   ldfReader::EbfParser* m_ebfParser;
-//  ldfReader::DfiParser* m_dfiParser;
   IntegerProperty       m_ebfDebugLevel;  // If 0 (the default) no debug.
   IntegerProperty       m_sweepSearch; // If 0, skip search
   IAddressCreator*      m_addrCreator;
-  CLID                  m_rootCLID;
+  //HMKCLID                  m_rootCLID;
   IntegerProperty       m_gemCheck; // If 0 (default) no GEM condition summary
                                     // check, other check for zero and print
                                     // log message
@@ -106,6 +217,26 @@ private:
   IntegerProperty       m_startEventNumber; // used if we want to skip to event
                                             // with event number N as stored
                                             // in LDF
+
+
+// From gaudi v18r1 EventSelector in GaudiSvc
+  //IIncidentSvc*          m_incidentSvc;
+  /// Reconfigure occurred
+  bool                  m_reconfigure;
+  /// Input stream specifiers (for job options)
+  //HMKStreamSpecs           m_streamSpecs;
+  /// Input stream specifiers (last used)
+  //HMKStreamSpecs           m_streamSpecsLast;
+  /// Input streams
+  //HMKKStreams               m_streams;
+  /// Input stream counter (0..oo, monotonely increasing)
+  //HMKint                   m_streamCount;
+  /// First event to be processed
+  int                   m_firstEvent;
+  /// Maximum number of events to be processed
+  int                   m_evtMax; // Obsolete parameter
+  /// Printout frequency
+  int                   m_evtPrintFrequency;
 };
 
 #endif  // LdfEventSelector_H
