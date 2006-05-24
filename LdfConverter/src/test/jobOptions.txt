@@ -28,9 +28,14 @@ EventSelector.StorageType = "LDFFILE";
 //EventSelector.StorageType = "LDFFITS";
 
 //EventSelector.InputList = {"$GLAST_EXT/LDF/v05-01-02/test/data/muon-5.arch"};
-EventSelector.InputList = {"$GLAST_EXT/LDF/v06-00-01/test/data/muon-5.arch"};
+//EventSelector.InputList = {"$GLAST_EXT/LDF/v06-00-01/test/data/muon-5.arch"};
+//EventSelector.InputList = {"C:/muon-5.arch"};
+//EventSelector.fileName = "C:/muon-5.arch";
+EventSelector.fileName = "$GLAST_EXT/LDF/v06-00-01/test/data/muon-5.arch";
+EventSelector.SweepEventSearch = 0;
+
 // Turn off debugging messages by setting level to 0
-EventSelector.EbfDebugLevel = 0;
+EventSelector.EbfDebugLevel = 1;
 // EventSelector.EbfDebugLevel = 1;
 
 // ----------------------------
