@@ -1,37 +1,55 @@
 // ---------------------------------------------------------
 // Options for Gleam that are specific to reading ROOT files and using the GUI
 // $Id$
-#include "$GLEAMROOT/src/basicOptions.txt"
+//##############################################################
+//
+// Job options file for Reading in a ROOT file
+//
 
-// this necessary (for now) to see the event
-G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
-G4Generator.saveTrajectories=true;
+ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud", "FluxSvc", "GlastSvc"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
 
-ApplicationMgr.ExtSvc += {"GuiSvc"};
-ApplicationMgr.Runable = "GuiSvc";
-GuiSvc.size=-3000;  // set size, orientation
-ApplicationMgr.DLLs   += {"DetDisplay", "RootDisplay" };    
+ApplicationMgr.DLLs+=    {"HepRepSvc", "HepRepXml", "HepRepCorba"}; 
+ApplicationMgr.ExtSvc += {"HepRepSvc","EventSelector/EventSelector"}; 
+ApplicationMgr.Runable = "HepRepSvc";
 
-EventDisplay.Members = {   "CalDisplay",   "AcdDisplay"     };
+// Uncomment this if you want to save xml files with the event 
+//HepRepSvc.autoStream = "xml";
 
-Triggered.Members += {"GuiPause"};  // allow pause when triggered
+// The default value 4 is not enought for the integration geometry 
+HepRepSvc.geometryDepth = 6;
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"}; 
+EventSelector.Input = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq = -1;
+
+ApplicationMgr.TopAlg = {
+"Sequencer/Top" };
+ApplicationMgr.DLLs += { "RootIo" };
+Top.Members =  { "mcRootReaderAlg"}; 
+Top.Members += { "digiRootReaderAlg"}; 
+Top.Members += { "reconRootReaderAlg"};
+
+ApplicationMgr.ExtSvc += { "RootIoSvc", "ParticlePropertySvc", "GlastDetSvc" };
+
+// Stuff for detModel
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.topVolume="LAT"; // the whole schebang
+// select one of the following for a top volume
+
+ApplicationMgr.EvtMax = 100000;
+
+// tell it to automatically start the version of FRED 
+HepRepSvc.startFred = "$Fred_DIR";
 
 
-// Setup to read all - if you desire to read only Mc or Digi or Recon
-// Just set the corresponding sequence to null set for example:
-//Generator.Members = {};
-Generator.Members = {"mcRootReaderAlg"};
-Digitization.Members = {"digiRootReaderAlg"};
-Reconstruction.Members = {"reconRootReaderAlg" };
-
-// No full ROOT Output
-Output.Members = {};
-
+//##############################################################
 // Names of input ROOT files - note that you can supply a list of input files
 // comma delimited list
-mcRootReaderAlg.mcRootFileList = {"$(ROOTIOROOT)/src/test/mc.root"};
-digiRootReaderAlg.digiRootFileList = {"$(ROOTIOROOT)/src/test/digi.root"};
-reconRootReaderAlg.reconRootFileList = {"$(ROOTIOROOT)/src/test/recon.root"};
+mcRootReaderAlg.mcRootFileList = {"$(ROOTTESTDATAROOT)/data/default/mc.root"};
+digiRootReaderAlg.digiRootFileList = {"$(ROOTTESTDATAROOT)/data/default/digi.root"};
+reconRootReaderAlg.reconRootFileList = {"$(ROOTTESTDATAROOT)/data/default/recon.root"};
 
 ApplicationMgr.DLLs +=    { "RootIo" };
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
