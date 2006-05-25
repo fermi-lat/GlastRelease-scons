@@ -521,7 +521,7 @@ int read(char* fileName, int numEvents) {
         }
 
         MetaEvent meta = evt->getMetaEvent();
-        LciAcdConfiguration *acd = meta.lciAcdConfiguration();
+        const LciAcdConfiguration *acd = meta.lciAcdConfiguration();
  }
     
     f->Close();
