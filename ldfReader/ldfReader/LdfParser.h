@@ -22,7 +22,7 @@ namespace ldfReader {
     public:
 
         LdfParser();
-        LdfParser(std::string fileName, bool fitsWrap = false,
+        LdfParser(const std::string &fileName, bool fitsWrap = false,
             const std::string& instrument="LAT");
 
         virtual ~LdfParser();
