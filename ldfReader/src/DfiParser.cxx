@@ -16,6 +16,7 @@ $Header$
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <math.h> // for floor
 
 #include "facilities/Timestamp.h"
 #include "astro/JulianDate.h"

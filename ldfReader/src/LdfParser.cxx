@@ -16,6 +16,7 @@ $Header$
 #include <exception>
 #include <sstream>
 #include <iostream>
+#include <math.h> // for floor
 
 #include "facilities/Timestamp.h"
 #include "astro/JulianDate.h"
@@ -32,7 +33,7 @@ const unsigned LdfParser::BufferSize = 64*1024;
         clear();
     }
 
-    LdfParser::LdfParser(std::string fileName, bool fitsWrap, 
+    LdfParser::LdfParser(const std::string &fileName, bool fitsWrap, 
         const std::string& instrument) :
     m_fileName(fileName), m_fitsWrap(fitsWrap), m_ebf(0), m_fitsfile(0), 
         m_maxRow(0), m_currentRow(0), m_maxHdu(0), m_currentHdu(0),
