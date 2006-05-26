@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r5p1    25-May-2006 HMK Patch for windows in unit test
 v9r5      15-May-2006 HMK Add Tkr FIFO Full bits to Error class
 v9r4p1    17-Apr-2006 HMK patch to increment MetaEvent version number to 2
 v9r4      16-Apr-2006 HMK Add event flag for LDF status
