@@ -785,8 +785,8 @@ void TkrHits::setTowerInfo(){
   while ( ( tkrDigi = (TkrDigi*)tkrIter.Next() ) ) {
     Int_t tower = tkrDigi->getTower().id();
     // register tower id pointer if this is the first encounter
-    if(tower!=2 && tower!=3)
-      std::cout<<tower<<" "<<m_towerVar.size()<<std::endl;
+    //    if(tower!=2 && tower!=3)
+    //      std::cout<<tower<<" "<<m_towerVar.size()<<std::endl;
     if( m_towerPtr[ tower ] < 0 ){
       m_towerPtr[ tower ] = m_towerVar.size();
       m_towerVar.push_back( towerVar( tower, m_badStrips ) );
