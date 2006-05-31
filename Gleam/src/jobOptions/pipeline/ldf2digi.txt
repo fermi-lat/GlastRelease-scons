@@ -3,6 +3,10 @@
 //
 // $Header$
 
+//
+// Job Option file for fits2digi/ldf2digi: 
+//
+
 
 //
 // Things to be changed by the user can 
@@ -80,6 +84,7 @@ ApplicationMgr.ExtSvc += {"LdfEventSelector/EventSelector","LdfCnvSvc/EventCnvSv
 //
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
+EventSelector.PrintFreq = -1;
 
 //
 // Instrument:
@@ -91,6 +96,20 @@ EventSelector.Instrument = "LAT";
 // Checking for GEM Conditions Summary Word == 0:
 //
 EventSelector.GemZeroCheck = 1;
+
+//
+// For new CAL Trigger:
+//
+ApplicationMgr.DLLs += {"CalUtil","CalXtalResponse"};
+ApplicationMgr.DLLs += {"CalibSvc"};
+
+#include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
+
+//
+// Start up a CalFailureModeSvc:
+//
+ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
+
 
 
 //
@@ -114,7 +133,7 @@ ApplicationMgr.EvtMax = 1000000000;
 //
 // Geometry:
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
 
 
 //
@@ -127,7 +146,7 @@ EventSelector.StorageType = "LDFFITS";
 //
 // Input Fits/LDF file:
 //
-EventSelector.InputList = {"file.fits"};
+EventSelector.FileName = "file.fits";
 
 
 //
@@ -141,3 +160,5 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 //
 // The Doors .....
 //
+
+

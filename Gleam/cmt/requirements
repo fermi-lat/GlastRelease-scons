@@ -1,6 +1,6 @@
 package Gleam
 
-version  v6r16p1
+version  v6r17
 author T. Burnett <tburnett@u.washington.edu>
 
 # $Id$
@@ -52,8 +52,9 @@ use  HepRepSvc *
 use  HepRepXml *
 use  HepRepCorba *
 
-# for reading real data?
-### use LDFevent *
+# for reading real data
+use LdfEvent v*
+use LdfConverter v*
 
 ### define a simple executable wth GUI
 
