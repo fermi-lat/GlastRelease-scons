@@ -641,7 +641,7 @@ void reconRootWriterAlg::fillCalMipTrack(CalRecon *calRec, Event::CalMipTrackCol
 {   
     // Purpose and Method:  Given the CalMipTrack collection from the TDS, we fill the ROOT   
     //  CalMiptrack collection.   
-    StatusCode sc = StatusCode::SUCCESS;
+    //StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << " SG : fillCalMipTrack in reconRootWriterAlg.cxx" << endreq;
 

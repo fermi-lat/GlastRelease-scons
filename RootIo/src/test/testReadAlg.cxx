@@ -20,6 +20,8 @@
 #include "Event/Recon/CalRecon/CalXtalRecData.h"   
 
 #include "LdfEvent/Gem.h"
+#include "LdfEvent/LsfMetaEvent.h"
+#include "LdfEvent/LsfCcsds.h"
 
 #include <map>
 
@@ -43,8 +45,9 @@ public:
     StatusCode finalize();   
         
 private:
-	StatusCode readEvtHeader();
+    StatusCode readEvtHeader();
 
+    StatusCode readLsfData();
 
     StatusCode readMcData();
 
@@ -80,7 +83,9 @@ StatusCode testReadAlg::execute()
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-	sc = readEvtHeader();
+    sc = readEvtHeader();
+
+    sc = readLsfData();
 
     sc = readMcData();
 
@@ -103,11 +108,33 @@ StatusCode testReadAlg::readEvtHeader() {
     SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
     if (!mcEvt) return sc;
 
-	int sourceid = mcEvt->getSourceId();
-	int seq = mcEvt->getSequence();
-	double t = mcEvt->time();
+    int sourceid = mcEvt->getSourceId();
+    int seq = mcEvt->getSequence();
+    double t = mcEvt->time();
 
-	return sc;
+    return sc;
+}
+
+StatusCode testReadAlg::readLsfData() {
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
+    SmartDataPtr<LsfEvent::MetaEvent> metaTds(eventSvc(), "/Event/MetaEvent");
+    if (!metaTds)
+       log << MSG::DEBUG << "No MetaEvent data" << endreq;
+    else {
+        log << MSG::DEBUG;
+        metaTds->fillStream(log.stream());
+        log << endreq;
+     }
+
+    SmartDataPtr<LsfEvent::LsfCcsds> ccsdsTds(eventSvc(), "/Event/Ccsds");
+    if (!ccsdsTds)
+       log << MSG::DEBUG << "No CCSDS data" << endreq;
+    else {
+        log << MSG::DEBUG;
+        ccsdsTds->fillStream(log.stream());
+        log << endreq;
+     }
 }
 
 StatusCode testReadAlg::readMcData() {
@@ -128,6 +155,7 @@ StatusCode testReadAlg::readMcData() {
             log << MSG::DEBUG;
             (*p)->fillStream(log.stream());
             log << endreq;
+            log << MSG::DEBUG << "Number of daughters " << (*p)->daughterList().size() << endreq;
         }
 
     }

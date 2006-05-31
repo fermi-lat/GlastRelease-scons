@@ -470,7 +470,7 @@ StatusCode mcRootReaderAlg::readMcParticles() {
         }
         
         
-/* Daughters are handled in McParticle::init
+/* HMK No need to handle daughters Event::McParticle::init does it
         // Process the list of daughters
         const TRefArray daughterArr = pRoot->getDaughterList();
         const McParticle *daughterPartRoot;
@@ -500,7 +500,6 @@ StatusCode mcRootReaderAlg::readMcParticles() {
 
 */
         
-
         // Add the TDS McParticle to the TDS collection of McParticles
         pTdsCol->push_back(pTds);
         

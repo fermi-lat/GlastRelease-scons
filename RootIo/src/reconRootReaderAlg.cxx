@@ -938,17 +938,10 @@ StatusCode reconRootReaderAlg::readAcdRecon() {
         log << endreq;
         return StatusCode::SUCCESS;
     }
-    
-    SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), EventModel::AcdRecon::Event);  
-    if (checkAcdRecTds) {
-        log << MSG::INFO << "AcdRecon data already on TDS!" << endreq;
-        return StatusCode::SUCCESS;
-    }
 
-    Event::AcdRecon * acdRecTds = new Event::AcdRecon();
-    
+    Event::AcdRecon * acdRecTds = new Event::AcdRecon();    
     RootPersistence::convert(*acdRecRoot,*acdRecTds) ;
-    
+
     sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecTds);
     if (sc.isFailure()) {
         
