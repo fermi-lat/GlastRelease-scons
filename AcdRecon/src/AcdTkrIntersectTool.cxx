@@ -455,8 +455,6 @@ StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, 
     return StatusCode::SUCCESS;
   }
 
-  std::cout << "gapPocaRibbon( " << gapType << ',' << gap << ")" << std::endl;
-
   unsigned char col = (unsigned char) ( pocaData.m_id.ribbonNum() );
   unsigned char row = 0;
   
