@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
  
+v3r1    31-May-2006 HMK Fix releaseContext and clean up
 v3r0    15-May-2006 HMK Updated for new Gaudi v18r1
 v2r6    14-Apr-2006 HMK Check event count against CHS/eventFile's header
 v2r5p2

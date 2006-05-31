@@ -32,6 +32,7 @@ const ISvcFactory& LdfEventSelectorFactory = s_factory;
 
 ///NEW
 
+/// Not currently supported for LDF/LSF reading
 StatusCode LdfEventSelector::resetCriteria(const std::string& /* criteria */,
                                            Context& /* context  */)  const
 {
@@ -54,7 +55,6 @@ StatusCode LdfEventSelector::createContext(Context*& refpCtxt) const
     LdfSelectorContext* ctxt = new LdfSelectorContext(this);
     //HMKctxt->set(0, -1, 0, 0);
     ctxt->set(0,0,ctxt,0);
-    //HMK  firstOfNextStream(true, *ctxt);
     refpCtxt = ctxt;
     long nskip = m_firstEvent;
     while( --nskip > 0 )    {
@@ -118,7 +118,7 @@ StatusCode LdfEventSelector::previous(Context& it,int jump) const  {
     return StatusCode::FAILURE;
 }
 
-/// Access last item in the iteration
+/// Access last item in the iteration - not yet supported
 StatusCode LdfEventSelector::last(Context& refCtxt) const {
     LdfSelectorContext *pIt  = dynamic_cast<LdfSelectorContext*>(&refCtxt);
     if ( pIt )    {
@@ -182,20 +182,10 @@ StatusCode LdfEventSelector::releaseContext(Context*& refCtxt) const  {
     const LdfSelectorContext *cpIt = dynamic_cast<
         const LdfSelectorContext*>(refCtxt);
     LdfSelectorContext       *pIt  = const_cast<LdfSelectorContext*>(cpIt);
-    //HMKif ( pIt && pIt->ID() >= 0 && pIt->ID() < (long)m_streams.size() )    {
     if ( pIt && pIt->ID() >= 0 )    {
-        //HMKconst LdfEventSelectorDataStream* s = m_streams[pIt->ID()];
-        Context* it = pIt->context();
-        //HMKIEvtSelector* sel = s->selector();
-        const IEvtSelector* sel = this->selector();
-        if ( it && sel )    {
-            StatusCode sc = sel->releaseContext(it);
-            if ( sc.isSuccess() )  {
-                refCtxt = 0;
-                delete pIt;
-                return sc;
-            }
-        }
+       refCtxt = 0;
+       delete pIt;
+       return StatusCode::SUCCESS;
     }
     return StatusCode::FAILURE;
 }
@@ -242,11 +232,6 @@ StatusCode LdfEventSelector::initialize()     {
         log << MSG::ERROR << "Unable to initialize service " << endreq;
     }
 
-    //if ((m_inputList.value()).empty()) {
-    //    log << MSG::ERROR << "No input files specified - terminating job"
-    //        << endreq;
-    //    return StatusCode::FAILURE;
-    // }
     if (m_fileName.empty()) {
         log << MSG::ERROR << "No input file specified - terminating job"
             << endreq;
@@ -296,20 +281,15 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
                                    : Service( name, svcloc)
 {
     // From new Gaudi v18r1 EventSelector in GaudiSvc
-    //m_incidentSvc       = 0;
-    //HMK m_streamCount       = 0;
     m_firstEvent        = 0;
     m_evtPrintFrequency = 10;
     m_evtMax            = INT_MAX;  // Obsolete parameter
-    //HMKdeclareProperty( "Input",      m_streamSpecs);
     declareProperty( "FirstEvent", m_firstEvent);
     declareProperty( "EvtMax",     m_evtMax);
     declareProperty( "PrintFreq",  m_evtPrintFrequency);
     m_reconfigure = false;
 
     declareProperty("StorageType", m_storageType);
-    //declareProperty("InputList", m_inputList);
-    //declareProperty( "EvtMax", m_evtMax);  see above
     declareProperty("Instrument", m_instrument="LAT");
     declareProperty("EbfDebugLevel", m_ebfDebugLevel = 0);
     declareProperty("SweepEventSearch", m_sweepSearch = 1);
@@ -317,9 +297,6 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
     declareProperty("StartEventIndex", m_startEventIndex = 0);
     declareProperty("StartEventNumber", m_startEventNumber = 0);
     declareProperty("FileName", m_fileName="");
-
-    //m_inputDataList = new ListName; 
-    //m_it = new LdfEvtIterator(this, -1, m_inputDataList->begin());
 
     //Here we get the maxEvt number from the aplication mgr property;
     //Sets the environment variable m_evtMax;
@@ -354,7 +331,6 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     if (storageType == "CCSDSFILE") {
         try {
             m_criteriaType = CCSDSFILE;
-           // m_fileName = (m_inputList.value())[0];
             facilities::Util::expandEnvVar(&m_fileName);
 
             if (!fileExists(m_fileName)) {
@@ -388,10 +364,9 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 
             // 2nd arg. is true if FITS file, false if raw ebf
             m_ebfParser = new ldfReader::LdfParser(m_fileName, false, m_instrument);
-            if (!m_ebfParser) log << MSG::DEBUG << "Creating LdfParser failed" << endreq;
-            log << MSG::DEBUG << "calling set Debug " << m_ebfDebugLevel << endreq;
+            if (!m_ebfParser) 
+                log << MSG::DEBUG << "Creating LdfParser failed" << endreq;
             m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
-            log << MSG::DEBUG << "Done with settin gebug" << endreq;
 
         } catch(LdfException &e) {
             log << MSG::ERROR << "LdfException: " << e.what() << endreq;
@@ -404,8 +379,6 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     } else if ((storageType == "LDFFITS") || (storageType == "EBFFITS")) {
         try {
             m_criteriaType = LDFFITS;
-
-           // m_fileName = (m_inputList.value())[0];
 
             facilities::Util::expandEnvVar(&m_fileName);
             if (!fileExists(m_fileName)) {
@@ -444,46 +417,6 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 }
 
 
-//StatusCode LdfEventSelector::setCriteria( const SelectionCriteria& ) {
-//    return StatusCode::SUCCESS;
-//}
-
-
-/*  HMK Unnecessary now
-IEvtSelector::Iterator* LdfEventSelector::begin() const {
-// Purpose and Method:  Called by ApplicationMgr::initialize( )
-MsgStream log(msgSvc(), name());
-//    StatusCode sc;       [unused for now]
-
-if ((m_criteriaType == CCSDSFILE) || 
-(m_criteriaType == LDFFILE) || 
-(m_criteriaType == LDFFITS) ) {
-
-log << MSG::DEBUG << " Input data set is " << m_fileName << endreq;
-m_it->m_recId = 0;                           
-
-(*m_it)++;  // increment to the first event
-
-return m_it;
-
-} else if(m_criteriaType == NONE) {
-
-log << MSG::DEBUG << "Using Simple counter GlastEventSelector" << endreq;
-log << MSG::INFO << "No input file selected for GlastEventSelector" << endreq;
-(*m_it)++;
-return m_it;
-} 
-
-log << MSG::DEBUG << "Using Simple counter LdfEventSelector" << endreq;
-log << MSG::INFO << "No input file selected for LdfEventSelector" << endreq;
-(*m_it)++;
-return m_it;
-
-}
-*/
-
-//HMKIEvtSelector::Iterator& LdfEventSelector::next(IEvtSelector::Iterator& it) 
-//HMK  const {
 /// Get next iteration item from the event loop context, but skip jump elements
 StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
     static bool lastEventFlag = false;
@@ -527,15 +460,18 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                     // Allows JO to skip the search for the sweep events
                     // no skipping for LSF (CCSDSFILEs)
                     if ((m_sweepSearch == 0) && (m_criteriaType != CCSDSFILE) ){
-                        log << MSG::WARNING << "Skipping check for first Sweep Event - "
+                        log << MSG::WARNING 
+                            << "Skipping check for first Sweep Event - "
                             << " ARE YOU SURE YOU WANT TO DO THIS???" << endreq;
                         findFirstMarkerFive = true;
                     }
                     if (m_criteriaType == CCSDSFILE) findFirstMarkerFive = true;
 
                     if ((m_startEventIndex > 0) && (!findFirstMarkerFive)) {
-                        log << MSG::WARNING << "Since StartEventIndex is non-zero, "
-                            << "skipping search for first sweep event" << endreq;
+                        log << MSG::WARNING 
+                            << "Since StartEventIndex is non-zero, "
+                            << "skipping search for first sweep event" 
+                            << endreq;
                         findFirstMarkerFive = true;
                     }
 
@@ -547,7 +483,8 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                         int status = m_ebfParser->loadData();
                         if (status < 0) {
                             log << MSG::INFO << "Failed to get Event" << endreq;
-                            log << MSG::INFO << "This job will terminate after reading" 
+                            log << MSG::INFO 
+                                << "This job will terminate after reading" 
                                 << endreq;
                             return StatusCode::FAILURE; // HMK thnk I return failure here for context  - that will terminate loop
                             break;
@@ -710,52 +647,6 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
     }
     return StatusCode::SUCCESS;
 }
-
-/* HMK unnecessary now
-IEvtSelector::Iterator* LdfEventSelector::end() const {
-IEvtSelector::Iterator* it = (IEvtSelector::Iterator*)(&m_evtEnd);
-return it;
-
-}
-
-IEvtSelector::Iterator& LdfEventSelector::previous(IEvtSelector::Iterator& it) const {
-MsgStream log(msgSvc(), name());
-log << MSG::FATAL << " LdfEventSelector Iterator, operator -- "
-<< "not supported " << endreq;
-
-return it;
-}
-*/
-
-
-
-//IOpaqueAddress* LdfEventSelector::reference(const IEvtSelector::Iterator& it) const 
-//{
-// Purpose and Method:  Called from ApplicationMgr_i::nextEvent()       
-//   Create root address and assign address to data service
-//   IOpaqueAddress* addr = **m_evtIterator;
-// TO DO: understand what I need to do to in the simple case
-
-//    MsgStream log(msgSvc(), name());
-
-// convert to our iterator
-//    const LdfEvtIterator* irfIt = dynamic_cast<const LdfEvtIterator*>(&it);
-
-// get the file name and record id
-//    int recId = irfIt->m_recId;
-//    recId++;
-
-//    IOpaqueAddress* pAddr = 0;
-//    std::string str("");
-//    unsigned long temp = 0;
-//    if ( m_addrCreator->createAddress(TEST_StorageType, m_rootCLID, 
-//                                      &str, &temp, pAddr).isSuccess() ) 
-//    {
-//        return pAddr;
-//    }
-
-//    return 0;
-//}
 
 
 StatusCode LdfEventSelector::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
