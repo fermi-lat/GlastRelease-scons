@@ -1,8 +1,9 @@
 /** @file release.notes
- Package RootCnvSvc\n
- author Ursula Berthon
+ Package RootConvert\n
+ author David Chamont 
  @verbatim
 
+ v1r7   31-May-2006 HMK merge EM-v6r070329p0 branch
  v1r6   13-Apr-2006 EAC Merge in ACD stuff from Branch  EM-v6r070329p0, tag v1r5em0
  v1r5   04-Apr-2006 TU  Updates for new CLHEP 1.9.2.2
 
@@ -12,6 +13,12 @@ Along Branch  EM-v6r070329p0
  v1r5em0 06-Apr-2006 EAC Add converter for AcdTkr
 
  v1r5
+ end EM-v6r070329p0 branch
+ v1r5em2 14-Apr-2006 HMK patch to only set configuration when it exists
+ v1r5em1 12-Apr-2006 HMK add converters for LCI Configurations 
+ v1r5em0 06-Apr-2006 EAC Add converter for AcdTkr
+ v1r5
+ start EM-v6r070329p0 branch
  v1r4p3 26-Jan-2006 DC  Bug Fix
  v1r4p2 25-Jan-2006 DC  Fake implementation for some methods not yet implemented,
                         so that the package compiles on windows.
