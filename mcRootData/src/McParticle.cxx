@@ -5,6 +5,7 @@
 // $Header$
 
 #include "mcRootData/McParticle.h"
+#include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
 ClassImp(McParticle)
@@ -15,7 +16,8 @@ m_particleId(0), m_statusFlags(0)
     Clear();
 }
 
-McParticle::McParticle(const McParticle &p) {
+McParticle::McParticle(const McParticle &p)
+ : TObject(p) {
     // Purpose and Method:  The copy constructor.  This will make it easier to
     //    read in the McParticles within the simulation.
 
@@ -43,7 +45,7 @@ McParticle::~McParticle() {
     Clear();
 }
 
-void McParticle::Clear(Option_t *option) {
+void McParticle::Clear(Option_t *) {
     m_particleId = 0;
     m_statusFlags = 0;
     m_initialPosition = TVector3(0., 0., 0.);
@@ -51,6 +53,54 @@ void McParticle::Clear(Option_t *option) {
     m_initialFourMomentum = TLorentzVector(0., 0., 0., 0.);
     m_finalFourMomentum = TLorentzVector(0., 0., 0., 0.);
     m_daughters.Clear();
+}
+
+// dummy data, just for tests
+void McParticle::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
+
+    Clear() ;
+    Float_t f = Float_t(rank);
+    Float_t fr = f*randNum;
+    TLorentzVector initMom(f, f, f, f);
+    TLorentzVector finalMom(fr+ievent, fr+ievent, fr+ievent, fr+ievent);
+    TVector3 initPos(randNum, f*2.0*randNum, f*4.0*randNum);
+    TVector3 finalPos(f*randNum, f*randNum, f*randNum);
+    initialize(this, rank, 0, initMom, finalMom, initPos, finalPos);
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t McParticle::CompareInRange( const McParticle & ref, const std::string & name ) const {
+
+    Bool_t result = true ;
+    
+    result = COMPARE_IN_RANGE(ParticleId) && result ;
+    result = COMPARE_IN_RANGE(StatusFlags) && result ;
+    
+    result = COMPARE_IN_RANGE(InitialFourMomentum) && result ;
+    result = COMPARE_IN_RANGE(FinalFourMomentum) && result ;
+
+    result = COMPARE_IN_RANGE(InitialPosition) && result ;
+    result = COMPARE_IN_RANGE(FinalPosition) && result ;
+        
+    result = COMPARE_IN_RANGE(Process) && result ;
+    
+    // for fake data and comparison
+    // particles should point to themselves
+    rootdatautil::CompareInRange(ref.GetUniqueID(),ref.getMother()->GetUniqueID(),"Ref Mother") ;
+    rootdatautil::CompareInRange(GetUniqueID(),getMother()->GetUniqueID(),"Mother") ;
+      
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
 }
 
 void McParticle::Print(Option_t *option) const {

@@ -6,7 +6,7 @@ ClassImp(McPositionHit)
 
 McPositionHit::McPositionHit() :
 m_depositedEnergy(0.), m_timeOfFlight(0.), 
-m_particleFourMomentum(0.,0.,0.,0.), m_statusFlags(0)
+m_statusFlags(0), m_particleFourMomentum(0.,0.,0.,0.)
 {
 }
 
@@ -30,6 +30,8 @@ void McPositionHit::Clear(Option_t *)
 
 // dummy data, just for tests
 void McPositionHit::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
+
+    Clear() ;
 
     Float_t f = Float_t(rank);
     Float_t fr = f*randNum;
@@ -58,31 +60,37 @@ void McPositionHit::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
 
 }
 
-Bool_t McPositionHit::CompareInRange( const McPositionHit & hit ) const {
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t McPositionHit::CompareInRange( const McPositionHit & ref, const std::string & name ) const {
 
     Bool_t result = true ;
     
-    result = result && rootdatautil::CompareInRange(getMcParticleId(),hit.getMcParticleId(),"McParticleId") ;
-    result = result && rootdatautil::CompareInRange(getOriginMcParticleId(),hit.getOriginMcParticleId(),"OriginMcParticleId") ;
+    // the test comes before " && result" because we want to enforce all tests
+    result = COMPARE_IN_RANGE(McParticleId) && result ;
+    result = COMPARE_IN_RANGE(OriginMcParticleId) && result ;
 
-    VolumeIdentifier id1 = getVolumeId() ;
-    VolumeIdentifier id2 = hit.getVolumeId() ;
-    result = result && rootdatautil::CompareInRange(id1.name(),id2.name(),"VolumeId Name") ;
-    result = result && rootdatautil::CompareInRange(id1.size(),id2.size(),"VolumeId Size") ;
-    result = result && rootdatautil::CompareInRange(id1.getBits0to31(),id2.getBits0to31(),"VolumeId Bits0to31") ;
-    result = result && rootdatautil::CompareInRange(id1.getBits32to63(),id2.getBits32to63(),"VolumeId Bits32to63") ;
+    result = COMPARE_IN_RANGE(VolumeId) && result ;
+    // method above does not check name, which is probably redundat,
+    // but we wanted to add the additionnal test below.
+    result = rootdatautil::CompareInRange(getVolumeId().name(),ref.getVolumeId().name(),"VolumeId Name") && result ;
     
-    result = result && rootdatautil::CompareInRange(getEntryPosition(),hit.getEntryPosition(),"Entry") ;
-    result = result && rootdatautil::CompareInRange(getExitPosition(),hit.getExitPosition(),"Exit") ;
-    result = result && rootdatautil::CompareInRange(getGlobalEntryPosition(),hit.getGlobalEntryPosition(),"GlobalEntry") ;
-    result = result && rootdatautil::CompareInRange(getGlobalExitPosition(),hit.getGlobalExitPosition(),"GlobalExit") ;
+    result = COMPARE_IN_RANGE(EntryPosition) && result ;
+    result = COMPARE_IN_RANGE(ExitPosition) && result ;
+    result = COMPARE_IN_RANGE(GlobalEntryPosition) && result ;
+    result = COMPARE_IN_RANGE(GlobalExitPosition) && result ;
 
-    result = result && rootdatautil::CompareInRange(getDepositedEnergy(),hit.getDepositedEnergy(),"DepositedEnergy") ;
-    result = result && rootdatautil::CompareInRange(getParticleEnergy(),hit.getParticleEnergy(),"ParticleEnergy") ;
-    result = result && rootdatautil::CompareInRange(getTimeOfFlight(),hit.getTimeOfFlight(),"TimeOfFlight") ;
+    result = COMPARE_IN_RANGE(DepositedEnergy) && result ;
+    result = COMPARE_IN_RANGE(ParticleEnergy) && result ;
+    result = COMPARE_IN_RANGE(TimeOfFlight) && result ;
 
     if (!result) {
-        std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
     }
     return result ;
 

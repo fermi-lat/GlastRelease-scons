@@ -65,9 +65,10 @@ public:
     
     virtual ~McIntegratingHit();
 
-    void Clear(Option_t *option ="");
-
-    void Print(Option_t *option="") const;
+    void Clear(Option_t * ="");
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const McIntegratingHit &, const std::string & name = "" ) const ; // for tests
+    void Print(Option_t * ="") const;
 
     void initialize(const VolumeIdentifier& id);
     
@@ -84,14 +85,14 @@ public:
     /// Retrieve the next McParticle, energy pair
     /// Returns the pair corresponding to m_mapPtr
     /// If we have finished traversing the list - Next will return null (0).
-    const McParticle* itemizedEnergyNext(Double_t &energy);
+    const McParticle* itemizedEnergyNext (Double_t &energy) const ;
     /// Set the McParticle, energy map counter to zero - the beginning
-    void itemizedEnergyReset() { m_mapPtr = 0; };
+    void itemizedEnergyReset() const { m_mapPtr = 0; };
     /// Returns the size of the list of McParticle, energy pairs
     UInt_t itemizedEnergySize() const { return m_mcPartArr.GetEntries(); };
 
     /// Retrieve energy associated with PRIMARY, ELECTRON or POSITRON
-    Double_t getMcParticleEnergy(Particle p);
+    Double_t getMcParticleEnergy(Particle p) const;
 
     /// Retrieve the energy-weighted first moments of the position
     const TVector3 getMoment1 () const;
@@ -125,7 +126,7 @@ private:
     //energyDepositMap m_energyItem; //!
     
     /// transient data member to keep track of place in McParticle*, energy map
-    UInt_t m_mapPtr; //!
+    mutable UInt_t m_mapPtr; //!
 
     ClassDef(McIntegratingHit,2)  // Monte Carlo Integrating Hit Class
 };

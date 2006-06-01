@@ -30,7 +30,8 @@ public:
     
     /// clear lists, free pointers, etc., after read from / write to file
     void Clear(Option_t *option ="");
-
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const McTrajectory &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
     
     void initialize(McParticle* mcPart, UInt_t charge);

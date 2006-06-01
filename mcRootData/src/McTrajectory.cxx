@@ -9,6 +9,7 @@
 
 #include "mcRootData/McTrajectory.h"
 #include "Riostream.h"
+#include <commonRootData/RootDataUtil.h>
 
 ClassImp(McTrajectory)
 
@@ -37,7 +38,7 @@ void McTrajectory::initialize(McParticle* mcPart, UInt_t charge)
 }
 
 
-void McTrajectory::Clear(Option_t *option) 
+void McTrajectory::Clear(Option_t *) 
 {
     m_mcParticle = 0;
     m_charge     = 0;
@@ -47,7 +48,43 @@ void McTrajectory::Clear(Option_t *option)
     return;
 }
 
-void McTrajectory::Print(Option_t *option) const 
+// dummy data, just for tests
+void McTrajectory::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
+
+    Clear() ;
+    
+    Float_t f = Float_t(rank) ;
+    Float_t fr = f*randNum ;
+
+    setMcTrajectoryCharge((UInt_t)fr) ;
+    addMcPoint(new TVector3(fr,fr,fr)) ;
+    addMcPoint(new TVector3(fr*2.,fr*2.,fr*2.)) ;
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+
+Bool_t McTrajectory::CompareInRange( const McTrajectory & ref, const std::string & name ) const {
+
+    Bool_t result = true ;
+    
+    result = COMPARE_IN_RANGE(McTrajectoryCharge) && result ;
+    result = COMPARE_IN_RANGE(McParticle) && result ;
+    result = rootdatautil::TObjArrayCompareInRange<TVector3>(getMcPointCol(),ref.getMcPointCol(),"McPoint") && result ;
+      
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
+}
+
+void McTrajectory::Print(Option_t *) const 
 {
 /*
     using namespace std;

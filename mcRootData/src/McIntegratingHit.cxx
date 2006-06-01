@@ -1,4 +1,5 @@
-#include "mcRootData/McIntegratingHit.h"
+#include <mcRootData/McIntegratingHit.h>
+#include <commonRootData/RootDataUtil.h>
 #include "TRefArray.h"
 #include "Riostream.h"
 
@@ -20,7 +21,7 @@ void McIntegratingHit::initialize(const VolumeIdentifier& id) {
 }
 
 
-void McIntegratingHit::Clear(Option_t *option)
+void McIntegratingHit::Clear( Option_t * )
 {
     m_mcPartArr.Clear();
     m_energyPtrArr.clear();
@@ -31,6 +32,75 @@ void McIntegratingHit::Clear(Option_t *option)
     m_volumeId.Clear();
     m_mapPtr = 0;
     m_energyArray[0] = 0.; m_energyArray[1] = 0.; m_energyArray[2] = 0.;
+}
+
+// dummy data, just for tests
+void McIntegratingHit::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
+
+    Clear() ;
+    
+    VolumeIdentifier id ;
+    id.Clear() ;
+    id.append(0) ;
+    initialize(id) ;
+    
+    //TVector3 pos = mcPart->getFinalPosition();
+    //TVector3 pos2(1.3, 0.0, 12.0);
+    //addEnergyItem(1.5, mcPart, pos);
+    
+    double totE = 5.5;
+    double energyArr[3] = { 2.5, 3.0, 0.0 };
+    TVector3 moment1(1.0, 2.0, 3.0);
+    TVector3 moment2(2.0, 4.0, 6.0);
+    setEnergyItems(totE,energyArr,moment1,moment2) ;
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att,ref.get ## att,#att)
+
+Bool_t McIntegratingHit::CompareInRange( const McIntegratingHit & ref, const std::string & name ) const {
+
+    Bool_t result = true ;
+    
+    result = COMPARE_IN_RANGE(VolumeId()) && result ;
+    
+    result = COMPARE_IN_RANGE(TotalEnergy()) && result ;
+    result = COMPARE_IN_RANGE(Moment1()) && result ;
+    result = COMPARE_IN_RANGE(Moment2()) && result ;
+
+    result = COMPARE_IN_RANGE(McParticleEnergy(McIntegratingHit::PRIMARY)) && result ;
+    result = COMPARE_IN_RANGE(McParticleEnergy(McIntegratingHit::ELECTRON)) && result ;
+    result = COMPARE_IN_RANGE(McParticleEnergy(McIntegratingHit::POSITRON)) && result ;
+
+    itemizedEnergyReset() ;
+    ref.itemizedEnergyReset() ;
+    result = rootdatautil::CompareInRange(itemizedEnergySize(),ref.itemizedEnergySize(),"itemizedEnergySize") && result ;  
+    const McParticle * myPart, * refPart ;
+    double myEnergy, refEnergy ;
+    int count = 0 ;
+    while ( (myPart = itemizedEnergyNext(myEnergy)) ) {
+      ++count ;
+      refPart = ref.itemizedEnergyNext(refEnergy) ;
+      result = rootdatautil::CompareInRange(myPart,refPart,"itemizedEnergyNext Particle") && result ;
+      result = rootdatautil::CompareInRange(myEnergy,refEnergy,"itemizedEnergyNext Energy") && result ;
+    }
+    if (count==0) {
+      std::cout
+        <<"No Error : cannot read map which stores TRefs using " 
+        <<" compiled code and ROOT 3.02.07 "
+        <<std::endl ;
+    }
+      
+    if (!result) {
+        if ( name == "" ) {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+    return result ;
+
 }
 
 void McIntegratingHit::Print(Option_t *option) const {
@@ -66,12 +136,12 @@ void McIntegratingHit::Print(Option_t *option) const {
 } 
 
 
-const McParticle* McIntegratingHit::itemizedEnergyNext(Double_t &energy) {
+const McParticle* McIntegratingHit::itemizedEnergyNext(Double_t &energy) const {
     // Purpose and Method:  Access the next McParticle* and energy pair
     //   The transient data member, m_mapEntry, is used to access a specific
     //   pair.  If we have reached the end of the map, then a null McParticle*
     //   is returned.
-    if ( m_mapPtr < m_mcPartArr.GetEntries() ) {
+    if ( m_mapPtr < (UInt_t)m_mcPartArr.GetEntries() ) {
         energy = m_energyPtrArr[m_mapPtr];
         return (McParticle*) m_mcPartArr.At(m_mapPtr++);
     }
@@ -79,7 +149,7 @@ const McParticle* McIntegratingHit::itemizedEnergyNext(Double_t &energy) {
     return 0;
 }
 
-Double_t McIntegratingHit::getMcParticleEnergy(Particle p) {
+Double_t McIntegratingHit::getMcParticleEnergy(Particle p) const {
     return m_energyArray[p];
 }
 

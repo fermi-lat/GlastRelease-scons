@@ -36,7 +36,10 @@ public:
     
     /// clear lists, free pointers, etc., after read from / write to file
     void Clear(Option_t *option ="");
-
+    // DC: I CANNOT MAKE THE USUAL Fake() and CompareInRange(),
+    // because McEvent is designed as a singleton.
+    void Fake( Int_t ievent, Int_t irun, Float_t randNum ) ; // for tests
+    Bool_t CompareToFake( Int_t ievent, Int_t irun, Float_t randNum ) ; // for tests
     void Print(Option_t *option="") const;
     
     void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId, UInt_t sequence, Double_t timeStamp);
@@ -100,7 +103,7 @@ public:
     void clearMcTrajectoryCol()  { m_trajectoryCol->Clear(); };
  
 /// time stamp stuff here
-    inline Double_t getTimeStamp() { return m_timeStamp; };
+    inline Double_t getTimeStamp() const { return m_timeStamp; };
 
 private:
     /// unique event id for this run
