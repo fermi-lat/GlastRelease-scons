@@ -135,6 +135,8 @@ StatusCode testReadAlg::readLsfData() {
         ccsdsTds->fillStream(log.stream());
         log << endreq;
      }
+
+	return StatusCode::SUCCESS;
 }
 
 StatusCode testReadAlg::readMcData() {

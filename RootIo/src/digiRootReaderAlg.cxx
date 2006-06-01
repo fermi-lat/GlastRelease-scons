@@ -552,7 +552,7 @@ StatusCode digiRootReaderAlg::readError() {
         const ErrorData& errRoot = temCur->getError();
         LdfEvent::TowerErrorData err(temCur->getTowerId(), errRoot.getCal(), 
                    errRoot.getTkr(), errRoot.getPhs(), errRoot.getTmo());
-        UChar_t *tkrFifoCol = errRoot.getTkrFifoFullCol();
+        const UChar_t *tkrFifoCol = errRoot.getTkrFifoFullCol();
         unsigned int igtcc;
         for (igtcc=0;igtcc<enums::numGtcc;igtcc++)
             err.setTkrFifoFull(igtcc,tkrFifoCol[igtcc]);
