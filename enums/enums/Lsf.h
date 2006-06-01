@@ -87,7 +87,10 @@ namespace enums {
     typedef enum { NoMode = -1, 
 		   Normal,          ///> Standard operation
 		   TOO,             ///> Target Of Oppurtunity
-		   ARR,             ///> Autonomous repointing
+		   GRB0,            ///> GRB Suspected, but ARR not issued, not confirmed, or rejected
+		   GRB1,            ///> ARR issued and accepted
+		   GRB2,            ///> GRB is over, but Spacecraft still in ARR mode
+		   Solar,           ///> Solar physics mode
 		   Calibration,     ///> Charge injection for calibration
 		   Diagnostic,      ///> Operator control for diagnostic
 		   NumModes

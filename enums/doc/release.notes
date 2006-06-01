@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r6p1  01-Jun-2006 RBL Update mode enum in Lsf.h to match B0-6-9 DFI
 v0r6    16-May-2006 HMK Check in new include DetectorConstants.h
 v0r5    16-May-2006 HMK New eventflags for error contribution
 v0r4    16-Apr-2006 HMK Add flag for LDF status
