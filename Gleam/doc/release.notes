@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r17p1 HMK 01-jun-06  Minor patch to ldf2digi.txt to start LivetimeSvc
 * v6r17  HMK 31-may-06   Use LdfConverter and LdfEvent
 * v6r16p1THB 23-may-06   Fix 
 * v6r16  THB 22-apr-06   Remove CalMipFinder from Cal1 Sequencer

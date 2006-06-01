@@ -58,6 +58,9 @@ GlastDetSvc.visitorMode = "recon";
 ApplicationMgr.DLLs += {"Trigger"};
 Trigger.Members      = {"TriggerAlg"};
 
+ApplicationMgr.ExtSvc += { "LivetimeSvc"};
+LivetimeSvc.Deadtime=0;  // default is now to disable this
+
 
 //
 // Trigger mask: Accept all events!
