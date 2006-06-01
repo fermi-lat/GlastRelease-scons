@@ -10,7 +10,6 @@
 //
 
 
-
 //
 // Primary DLLs, including auditor:
 //
@@ -23,7 +22,7 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 //
 // Set up basic event loop: 
 //
-ApplicationMgr.ExtSvc = {"GlastEventSelector/EventSelector" , 
+ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" , 
                          "EventCnvSvc"};
 
 
@@ -31,7 +30,8 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
 
-
+EventSelector.Input = "SVC='DbEvtSelector'"; 
+EventSelector.PrintFreq = -1; 
 
 
 //
@@ -136,10 +136,14 @@ Reconstruction.Members = {"Sequencer/Cal1",
 //
 // Recon members:
 //
-Cal1.Members    = {"CalXtalRecAlg", 
-                   "CalClustersAlg/first"};
+Cal1.Members = {"CalXtalRecAlg",
+                "CalClustersAlg/first",
+                "CalMipFinderAlg",
+                "CalEventEnergyAlg/RawEnergy"};
+Cal2.Members = {"CalEventEnergyAlg/second"};
+
+
 Tkr.Members     = {"TkrReconAlg/FirstPass"};
-Cal2.Members    = {"CalClustersAlg/second"};
 TkrIter.Members = {"TkrReconAlg/Iteration"};
 
 
@@ -152,7 +156,7 @@ second.OutputLevel = 5;
 //
 // ACD recon:
 //
-ApplicationMgr.DLLs += {"AcdRecon"};
+ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
 
@@ -161,10 +165,10 @@ Acd.Members = {"AcdReconAlg"};
 //
 Output.Members  = {"meritAlg"};
 Output.Members += {"FhSetAlg","reconRootWriterAlg"};
+Output.Members += {"CalTupleAlg"};
+Output.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner analysis
 
-
-         
-
+ClassifyAlg.xmlFileName="DC2_Analysis.xml";
 
 //
 // Tracker geometry services:
@@ -196,9 +200,14 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 //
 // Merit configuration: Disable IM variables
 //
-MeritAlg.IM_filename = ""; 
-MeritAlg.cuts        = "LnA";
+//MeritAlg.IM_filename = ""; 
+//MeritAlg.cuts        = "LnA";
 
+
+//
+// Always fill ntuples:
+//
+RootTupleSvc.RejectIfBad = false;
 
 
 // 
@@ -206,6 +215,7 @@ MeritAlg.cuts        = "LnA";
 //
 ApplicationMgr.DLLs   += {"RootIo"};
 ApplicationMgr.ExtSvc += {"RootIoSvc"}; 
+
 
 //
 // Must use RootIo as executable, not Gaudi event loop!
@@ -234,7 +244,7 @@ ApplicationMgr.EvtMax = 10000000000;
 //
 // Geometry:
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
 
 
 //
@@ -256,5 +266,11 @@ reconRootWriterAlg.reconRootFile = "recon.root";
 
 
 //
+// Name of output CAL ntuple:
+//
+CalTupleAlg.tupleFilename = "caltuple.root";
+
+//
 // The Doors .....
 //
+

@@ -10,4 +10,6 @@
 ToolSvc.ComboFindTrackTool.MinEnergy = 2000.0;
 ToolSvc.ComboFindTrackTool.EnergyType = "User";
 ToolSvc.KalmanTrackFitTool.ParticleName  = "mu-";
-TkrInitSvc.TkrHitEnergyType = "MuRadLoss";
+ToolSvc.KalmanTrackFitTool.HitEnergyType = "BetheBloch";
+//TkrInitSvc.TkrHitEnergyType = "MuRadLoss";
+

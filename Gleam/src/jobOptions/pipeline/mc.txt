@@ -9,7 +9,6 @@
 //
 
 
-
 //
 // Primary DLLs, including auditor: 
 //
@@ -140,11 +139,21 @@ Digitization.Members = {"TkrDigiAlg",
                         "AcdDigiAlg"};
 
 
+//
+// Noise in Tracker (for ground):
+//
+ToolSvc.GeneralNoiseTool.occupancy = 4.e-7;
+
+
 // 
 // Trigger calculation:
 //
 ApplicationMgr.DLLs += {"Trigger"};
 Trigger.Members      = {"TriggerAlg"};
+
+ApplicationMgr.ExtSvc += { "LivetimeSvc"};
+LivetimeSvc.Deadtime=0;  // default is now to disable this
+
 
 
 // 
@@ -176,10 +185,17 @@ ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 //
 #include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/calibrations.txt"
 
-// allow "ideal" as a legal flavour for MC
+//
+// Add 'ideal' for ACD simulations (for now):
+//
 CalibDataSvc.CalibFlavorList = {"vanilla","ideal"};
-// use "ideal" for the ACD
-AcdCalibSvc.DefaultFlavor = "ideal"
+AcdCalibSvc.DefaultFlavor = "ideal";
+
+//
+// Start up a CalFailureModeSvc:
+//
+ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
+
 
 //
 // The user should change the start time to pick up whatever 
@@ -191,10 +207,14 @@ FluxSvc.startDate = "2007-1-10 23:59:59";
 // 
 // Output members:
 //
-Cal1.Members    = {"CalXtalRecAlg", 
-                   "CalClustersAlg/first"};
+Cal1.Members = {"CalXtalRecAlg",
+                "CalClustersAlg/first",
+                "CalMipFinderAlg",
+                "CalEventEnergyAlg/RawEnergy"};
+Cal2.Members = {"CalEventEnergyAlg/second"};
+
+
 Tkr.Members     = {"TkrReconAlg/FirstPass"};
-Cal2.Members    = {"CalClustersAlg/second"};
 TkrIter.Members = {"TkrReconAlg/Iteration"};
 
 
@@ -207,7 +227,7 @@ second.OutputLevel = 5;
 //
 // ACD recon:
 //
-ApplicationMgr.DLLs += {"AcdRecon"};
+ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members          = {"AcdReconAlg"};
 
 
@@ -220,7 +240,7 @@ ApplicationMgr.DLLs += {"AnalysisNtuple",
 
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
-Triggered.Members += {"meritAlg"};
+
 
 
 //
@@ -232,6 +252,12 @@ Output.Members = {"FhSetAlg",
                   "mcRootWriterAlg", 
                   "digiRootWriterAlg",
                   "reconRootWriterAlg"};
+Output.Members += {"meritAlg"};
+Output.Members += {"CalTupleAlg"};
+Output.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner analysis
+
+ClassifyAlg.xmlFileName="DC2_Analysis.xml";
+
 
 //
 // Output levels:
@@ -251,14 +277,10 @@ ToolSvc.OutputLevel                   = 4;
 CalXtalRecAlg.OutputLevel             = 4;
     
 
-
 //
-// To avoid exception in meritAlg:
+// Always fill ntuples:
 //
-MeritAlg.IM_filename = "";     // Disable IM decision tree processing
-MeritAlg.cuts        = "LnA";  // Remove or set to "LntA" to re-enable
-
-
+RootTupleSvc.RejectIfBad = false;
 
 
 //
@@ -281,7 +303,7 @@ ApplicationMgr.EvtMax = 200000;
 //
 // Geometry:
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
 
 
 //
@@ -327,12 +349,17 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 //
 // Output Merit tuple:
 //
-meritAlg.EventTreeName    = "MeritTuple"; 
-meritAlg.PointingTreeName = "Exposure"; 
 RootTupleSvc.TreeName     = "MeritTuple"; 
 RootTupleSvc.filename     = "merit.root";
 
 
 //
+// Name of output CAL ntuple:
+//
+CalTupleAlg.tupleFilename = "caltuple.root";
+
+
+//
 // The Doors ...
 //
+
