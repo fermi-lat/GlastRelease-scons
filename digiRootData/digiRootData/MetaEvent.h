@@ -59,8 +59,12 @@ public:
      m_datagram(other.datagram()),
      m_scalers(other.scalers()),
      m_time(other.time()),
-     m_type(other.runType()) {
+	 m_config(0),
+     m_type(other.runType()),
+     m_lpaConfig(0), m_lciAcdConfig(0),
+     m_lciCalConfig(0), m_lciTkrConfig(0) {
 
+		 /*
      if (m_config) delete m_config;
      m_config = 0;
      if (m_lpaConfig) delete m_lpaConfig;
@@ -71,6 +75,7 @@ public:
      m_lciCalConfig = 0;
      if (m_lciTkrConfig) delete m_lciTkrConfig;
      m_lciTkrConfig = 0;
+	 */
 
      if (other.configuration())
         setConfiguration(*(other.configuration()));
