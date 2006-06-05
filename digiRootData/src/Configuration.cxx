@@ -1,14 +1,14 @@
 #include "digiRootData/Configuration.h"
 
-ClassImp(Configuration) ;
+ClassImp(Configuration) 
 
-ClassImp(LpaConfiguration) ;
-ClassImp(LciConfiguration) ;
-ClassImp(LciAcdConfiguration) ;
-ClassImp(LciCalConfiguration) ;
-ClassImp(LciTkrConfiguration) ;
-ClassImp(LciAcdConfiguration::AcdTrigger);
-ClassImp(LciCalConfiguration::CalTrigger);
+ClassImp(LpaConfiguration) 
+ClassImp(LciConfiguration) 
+ClassImp(LciAcdConfiguration) 
+ClassImp(LciCalConfiguration) 
+ClassImp(LciTkrConfiguration) 
+ClassImp(LciAcdConfiguration::AcdTrigger)
+ClassImp(LciCalConfiguration::CalTrigger)
 
 void LpaConfiguration::Print(Option_t* /*option*/) const {
   /// FIXME

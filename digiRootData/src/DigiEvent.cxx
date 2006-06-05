@@ -134,6 +134,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_summary.Clear("");
     m_metaEvent.Clear("");
     m_ccsds.Clear("");
+    m_obf.Clear("");
 
 
     m_calDigiCloneCol->Clear("C");

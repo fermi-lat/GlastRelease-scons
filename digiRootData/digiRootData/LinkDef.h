@@ -17,8 +17,8 @@
 #pragma link C++ class AcdDigi+;
 #pragma link C++ class CalDigi+;
 #pragma link C++ class CalXtalReadout+;
-#pragma link C++ class TkrDiagnosticData+; //class name different from filename!
-#pragma link C++ class CalDiagnosticData+; //class name different from filename!
+#pragma link C++ class TkrDiagnosticData+; 
+#pragma link C++ class CalDiagnosticData+;
 
 /// LSF stuff
 #pragma link C++ class GemTime+;  
@@ -47,6 +47,14 @@
 #pragma link C++ class Gem+;
 #pragma link C++ class ErrorData+;
 #pragma link C++ class Tem+;
+
+// OBF
+#pragma link C++ class LogInfo+;
+#pragma link C++ class TFC_projection+;
+#pragma link C++ class TFC_projectionDir+;
+#pragma link C++ class TFC_projectionCol+;
+#pragma link C++ class ObfTrack+;
+#pragma link C++ class FilterStatus+;
 
 
 #endif

@@ -15,6 +15,7 @@
 #include "EventSummaryData.h"
 #include "Gem.h"
 #include "Tem.h"
+#include "FilterStatus.h"
 
 #include "MetaEvent.h"
 #include "Ccsds.h"
@@ -32,6 +33,7 @@
  * - Collection of AcdDigi objects
  * - Collection of CalDigi objects
  * - Collection of TkrDigi objects
+ * - Onboard Filter
  * - If this is real data, the following are possibly present as well
  *   -# PPC Time Base
  *   -# Original 30Hz clock seconds and nanoseconds
@@ -178,6 +180,9 @@ public:
 
     void setCcsds(const Ccsds& c) { m_ccsds = c; }
 
+    const FilterStatus& getFilterStatus() const { return m_obf; };
+    void setFilterStatus(const FilterStatus& obf) { m_obf = obf; };
+
     /// clear the whole array (necessary because of the consts-s)
     void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
     /// Add a TkrDigi into the TKR data collection
@@ -268,8 +273,10 @@ private:
     MetaEvent m_metaEvent; 
 
     Ccsds m_ccsds;
+ 
+    FilterStatus m_obf;
 
-    ClassDef(DigiEvent,16) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,17) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif

@@ -12,6 +12,8 @@ using namespace std;
 #endif
 #endif
 
+#include "enums/EfcGammaStatus.h"
+
 
 /** $Header$*/
 
@@ -33,7 +35,7 @@ private:
 
     Int_t m_valN;
     Int_t m_rangeN;
-    int_t m_eN;
+    Int_t m_eN;
     Int_t m_pedN;
     Int_t m_gainN;
     Int_t m_shiftN;
@@ -55,12 +57,16 @@ private:
 class TFC_projection : public TObject {
 public:
     TFC_projection() { };
-    TFC_projection(Int_t intercept, Int_t slope, Int_t acdTopMask, Int_t acdXMask, Int_t acdYMask, UInt_t layers,
-        Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max, UChar_t nhits);
+    TFC_projection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
+                   Int_t acdXMask, Int_t acdYMask, UInt_t layers, 
+                   Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max, 
+                   UChar_t nhits);
 
     virtual ~TFC_projection() {};
-    void initialize(Int_t intercept, Int_t slope, Int_t acdTopMask, Int_t acdXMask, Int_t acdYMask, UInt_t layers,
-        Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max, UChar_t nhits);
+    void initialize(Int_t intercept, Int_t slope, Int_t acdTopMask, 
+                    Int_t acdXMask, Int_t acdYMask, UInt_t layers,
+                    Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max,
+                    UChar_t nhits);
 
     void Clear(Option_t *option ="");
 
@@ -73,24 +79,34 @@ public:
     inline Int_t getAcdXMask() const { return m_acdXMask; }
     inline Int_t getAcdYMask() const { return m_acdYMask; }
     inline UInt_t getLayers() const { return m_layers; }
-    inline Short_t* getHits() const { return m_hits; }
+    inline const Short_t* getHits() const { return m_hits; }
     inline UChar_t getSkirtMask() const { return m_skirtMask; }
     inline UChar_t getMin() const { return m_min; }
     inline UChar_t getMax() const { return m_max; }
     inline UChar_t getNhits() const { return m_nhits; }
 
 private:
-    Int_t  m_intercept; /*!< Intercept at the beginning layer         */
-    Int_t  m_slope; /*!< Slope                                    */
-    Int_t  m_acdTopMask; /*!< ACD top tile candidates                  */
-    Int_t  m_acdXMask; /*!< ACD x facing candidates                  */
-    Int_t  m_acdYMask; /*!< ACD y facing candidates                  */
-    UInt_t m_layers; /*!< Bit mask representing the struck layers  */
-    Short_t m_hits[18]; /*!< Hits assigned to proj                    */
-    UChar_t m_skirtMask; /*!< Mask of which skirt region prj strikes   */
-    UChar_t m_min; /*!< Beginning layer number of the projection */
-    UChar_t m_max; /*!< Ending    layer number of the projection */
-    UChar_t m_nhits; /*!< Number of hits assigned                  */
+    /// intercept at beginning layer
+    Int_t  m_intercept;
+    Int_t  m_slope;
+    /// ACD top tile candidates
+    Int_t  m_acdTopMask; 
+    /// ACD x facing candidates
+    Int_t  m_acdXMask; 
+    /// ACD y facing candidates
+    Int_t  m_acdYMask; 
+    /// Bit mask representing the struck layers
+    UInt_t m_layers;
+    /// Hits assigned to projection
+    Short_t m_hits[18]; 
+    /// Mask of which skirt region projection strikes
+    UChar_t m_skirtMask; 
+    /// Beginning layer number of the projection
+    UChar_t m_min; 
+    /// Ending layer number of the projection
+    UChar_t m_max; 
+    /// Number of hits assigned
+    UChar_t m_nhits;
 
     ClassDef(TFC_projection,1) // TFC_projection
 };
@@ -117,45 +133,52 @@ public:
     inline UChar_t getYCount() const { return m_yCnt; }
 
 private:
-    UShort_t  m_idx; /*!< Index to the first projection            */
-    UChar_t   m_xCnt; /*!< Count of the X projections               */
-    UChar_t   m_yCnt; /*!< Count of the Y projections               */
+    /// Index to the first projection
+    UShort_t  m_idx; 
+    /// Count of the X projections
+    UChar_t   m_xCnt; 
+    /// Count of Y projections
+    UChar_t   m_yCnt; 
     ClassDef(TFC_projectionDir,1) // TFC_projectionDir
 };
-/** @class TFC_projections
+
+
+/** @class TFC_projectionCol
 @brief   
 */
 class TFC_projectionCol : public TObject {
 public:
-    TFC_projectionCol() { Clear(""); };
+    TFC_projectionCol():TObject() { Clear(""); };
     
     TFC_projectionCol(UShort_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
-        const TFC_projectionDir *dir, 
-        const TFC_projection* projectionCol);
+        const TFC_projectionDir *dir, const TFC_projection* projectionCol);
 
-    TFC_projectionCol::TFC_projectionCol(const TFC_projectionCol& other);
+    TFC_projectionCol(const TFC_projectionCol& other);
 
     virtual ~TFC_projectionCol();
 
     void initialize(UShort_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
-        const TFC_projectionDir *dir, 
-        const TFC_projection* projectionCol);
+        const TFC_projectionDir *dir, const TFC_projection* projectionCol);
 
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
 
-    inline UShort_t getMaxCount() const { returm m_maxCnt; };
-    inline UShort_t getCurrentCount() const { return m_currentCount; };
-    inline UShort_t m_twrMsk() const { return m_twrMsk; };
+    inline UShort_t getMaxCount() const { return m_maxCnt; };
+    inline UShort_t getCurrentCount() const { return m_curCnt; };
+    inline UShort_t getTwrMsk() const { return m_twrMsk; };
     inline const TFC_projectionDir* getProjectionDirCol() const { return m_dir; }
     inline const TFC_projection* getProjectionCol() { return m_prjs; }
 
 private:
-    UShort_t    m_maxCnt; /*!< Maximum # of projections available  */
-    UShort_t    m_curCnt; /*!< Current # of projections in use     */
-    UShort_t    m_twrMsk; /*!< Mask of the tower with projections  */
-    TFC_projectionDir    m_dir[16]; /*!< Directory of the projections by twr */
+    ///Maximum # of projections available
+    UShort_t    m_maxCnt; 
+    //Current # of projections in use   
+    UShort_t    m_curCnt;
+    ///Mask of the tower with projections  
+    UShort_t    m_twrMsk; 
+    /// Directory of the projections by twr 
+    TFC_projectionDir    m_dir[16];
     TFC_projection* m_prjs; //[m_maxCnt]
 
     ClassDef(TFC_projectionCol,1) // TFC_projectionCol
@@ -164,7 +187,7 @@ private:
 class ObfTrack : public TObject {
 public:
     ObfTrack(){ Clear(""); };
-    ObjTrack(Int_t numHits, Double_t phi, Double_t theta, Double_t len,
+    ObfTrack(Int_t numHits, Double_t phi, Double_t theta, Double_t len,
         const vector<Double_t>& lowCoord, const vector<Double_t> highCoord,
         const vector<Double_t>& exLowCoord, const vector<Double_t>& exHighCoord);
 
@@ -172,14 +195,14 @@ public:
     virtual ~ObfTrack();
 
     void initialize(Int_t numHits, Double_t phi, Double_t theta, Double_t len,
-        const vector<Double_t>& lowCoord, const vector<Double_t> highCoord,
+        const vector<Double_t>& lowCoord, const vector<Double_t>& highCoord,
         const vector<Double_t>& exLowCoord, const vector<Double_t>& exHighCoord);
 
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
 
-    inline Int_t getNumHits() const { return m_numhits; }
+    inline Int_t getNumHits() const { return m_numHits; }
     inline Double_t getPhi() const { return m_phi_rad; }
     inline Double_t getTheta() const { return m_theta_rad; }
     inline const vector<Double_t>& getLowCoord() const { return m_lowCoord; }
@@ -189,7 +212,7 @@ public:
     inline Double_t getLength() const { return m_length;};
 
 private:
-    Int_t m_numhits;
+    Int_t m_numHits;
     Double_t m_phi_rad;
     Double_t m_theta_rad;
     Double_t m_length;
@@ -213,15 +236,28 @@ public:
     FilterStatus(const FilterStatus& copy);
     virtual ~FilterStatus();
 
+
+    /// define assignment operator
+    FilterStatus& operator=(const FilterStatus& copy); 
+
+    /// For tests
+    void Fake( Int_t ievent, Float_t randNum ); 
+    Bool_t CompareInRange( FilterStatus &, const std::string & name = "" );
+
+
     void init(UInt_t status, Int_t stageEnergy, Int_t tcids, Int_t ebfSize);
 
-    void initGem(Int_t thrTkr, Int_t calHiLo, Int_t condsumCno, Int_t acd_vetoes_XZ, Int_t acd_vetoes_YZ, 
-        Int_t acd_vetoes_XY, Int_t acd_vetoes_RU, Int_t livetime, Int_t trgtime, Int_t ppstime,
-        Int_t discarded, Int_t prescaled, Int_t sent);
+    void initGem(Int_t thrTkr, Int_t calHiLo, Int_t condsumCno, 
+                 Int_t acd_vetoes_XZ, Int_t acd_vetoes_YZ, Int_t acd_vetoes_XY,
+                 Int_t acd_vetoes_RU, Int_t livetime, Int_t trgtime, 
+                 Int_t ppstime, Int_t discarded, Int_t prescaled, Int_t sent);
 
-    void initAcd(Int_t xz, Int_t yz, Int_t xy, Int_t vetoword, Int_t *status);
+    void initAcd(Int_t xz, Int_t yz, Int_t xy, Int_t vetoword, 
+                 const Int_t *status);
 
-    void initTkr(Int_t *xcapture, Int_t *ycapture, Int_t *xy00, Int_t *xy11, Int_t *xy22, Int_t *xy33, Int_t tmsk);
+    void initTkr(const Int_t *xcapture, const Int_t *ycapture, 
+                 const Int_t *xy00, const Int_t *xy11, const Int_t *xy22, 
+                 const Int_t *xy33, Int_t tmsk);
 
     void initCal(Int_t numLogsHit, Float_t *layerEnergy);
 
@@ -232,7 +268,7 @@ public:
     ///Projections for the towers
     void initProjectionCol(const TFC_projectionCol& projectionCol);
 
-    void initTracks(const TObjArray *tracks);
+    void initTracks(const TObjArray &tracks);
 
     //void initLogInfo(const LogInfo *logData); 
 
@@ -248,13 +284,14 @@ public:
     unsigned int getLow() const { return m_status & 0x7FFF; };
 
     ///Returns the value stored in CalEnergy
-    inline Float_t getCalEnergy() const{ return (Float_t)((m_stageEnergy & EFC_GAMMA_STAGE_M_ENERGY)/4.0);  }
+    inline Float_t getCalEnergy() const { 
+        return (Float_t)((m_stageEnergy & enums::EFC_GAMMA_STAGE_M_ENERGY)/4.0);  }
     inline Int_t getStageEnergy() const{ return m_stageEnergy;  }
     ///Return the Code specifying the towers with triggers or possible triggers
     inline Int_t getTcids()const{  return m_tcids; }
     inline Int_t getGemThrTkr()const { return m_gem_thrTkr; };
     inline Int_t getGemCalHiLo() const { return m_gem_calHiLo; };
-    inline Int_t getGemCondsumCno() const { return return m_gem_condsumCno;} ;
+    inline Int_t getGemCondsumCno() const { return m_gem_condsumCno;} ;
 
     inline Int_t getGemAcd_vetoes_XZ()const{ return m_gem_acd_vetoes_XZ;  }
     inline Int_t getGemAcd_vetoes_YZ()const{ return m_gem_acd_vetoes_YZ;  }
@@ -289,7 +326,7 @@ public:
     inline Double_t getSeparation() const{    return m_separation;  }
 
     inline Bool_t tracksExist() const{
-        if(m_tracks.size()!=0)
+        if(m_tracks.GetEntriesFast()!=0)
             return true;
         return false;
     }
@@ -341,7 +378,7 @@ private:
 
     ///ACD hit map
     Int_t m_acd_xz;
-    Int_ m_acd_yz;
+    Int_t m_acd_yz;
     Int_t m_acd_xy;
     Int_t m_vetoword;
     ///ACD faces
@@ -355,7 +392,7 @@ private:
     Int_t m_xy33[16];
     Int_t m_tmsk;
 
-    Int_t m_ebfsize;  /// In new OBF
+    Int_t m_ebfSize;  /// In new OBF
     Int_t m_numLogsHit; /// In new OBF
 
     ///Layers hit in each tower
