@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r34p1  6-Jun-2006  jrb Get rid of blanket, solar panels, spacecraft for cu
+                            - unnecessary, but can cause trouble
    v1r34   10-May-2006  jrb Make volids for all tiles the same length
    v1r33   10-May-2006  jrb Redid blanket material (Heather) & geometry (Joanne)
    v1r32p1 18-Apr-2006  jrb for Philippe: Update to ACD tile positions for
