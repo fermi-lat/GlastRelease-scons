@@ -163,12 +163,15 @@ Acd.Members = {"AcdReconAlg"};
 //
 // Define the output sequence:
 //
-Output.Members  = {"meritAlg"};
+Output.Members = {"AnalysisNtupleAlg"};
+AnalysisNtupleAlg.tupleName="MeritTuple";
+Output.Members += {"meritAlg"};
 Output.Members += {"FhSetAlg","reconRootWriterAlg"};
 Output.Members += {"CalTupleAlg"};
 Output.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner analysis
+Output.Members += {"FT1Alg"};
 
-ClassifyAlg.xmlFileName="DC2_Analysis.xml";
+//ClassifyAlg.xmlFileName="DC2_Analysis.xml";
 
 //
 // Tracker geometry services:
@@ -180,7 +183,7 @@ ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 //
 // Calibrations:
 //
-#include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/calibrations.txt"
+#include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
 
 
 //
@@ -195,13 +198,6 @@ ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 //
 ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","merit"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-
-
-//
-// Merit configuration: Disable IM variables
-//
-//MeritAlg.IM_filename = ""; 
-//MeritAlg.cuts        = "LnA";
 
 
 //

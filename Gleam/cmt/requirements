@@ -1,6 +1,6 @@
 package Gleam
 
-version  v6r17p1
+version  v6r18
 author T. Burnett <tburnett@u.washington.edu>
 
 # $Id$
@@ -55,6 +55,7 @@ use  HepRepCorba *
 # for reading real data
 use LdfEvent v*
 use LdfConverter v*
+use EventIntegrity v*
 
 ### define a simple executable wth GUI
 
