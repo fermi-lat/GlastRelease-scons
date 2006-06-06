@@ -2,6 +2,8 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
+ * v0r5   2006-Jun-05  HMK merge EM-v6r070329p2 into HEAD
+ * v0r4em0 2006-Apr-16 HMK Add new flag for LDF status
  * v0r4   2005-Apr-25  HMK Use EventHeader's event id rather than the event
           Sequence in the EventSummaryData on the TDS
  * v0r3   2005-Mar-15  HMK Updated for modification to LdfEvent for retrieving
