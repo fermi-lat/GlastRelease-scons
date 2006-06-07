@@ -35,7 +35,6 @@ XtalRecTool::XtalRecTool( const string& type,
   : AlgTool(type,name,parent),
     m_calCalibSvc(0),
     m_tuple(0),
-    m_tupleFile(0),
     m_CsILength(0),
     m_eLATTowers(-1),
     m_eTowerCAL(-1),
@@ -62,8 +61,8 @@ StatusCode XtalRecTool::initialize() {
 
   //-- tuple --//
   if (m_tupleFilename.value().length() > 0) {
-    m_tupleFile = new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalRecTuple");
-    if (!m_tupleFile)
+    m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalRecTuple"));
+    if (!m_tupleFile.get())
       // allow to continue w/out tuple file as it is not a _real_ failure
       msglog << MSG::ERROR << "Unable to create TFile object: " << m_tupleFilename << endreq;
     else {
@@ -494,11 +493,9 @@ StatusCode XtalRecTool::retrieveCalib() {
 
 StatusCode XtalRecTool::finalize() {
   // make sure optional tuple is closed out                                                        
-  if (m_tupleFile) {
+  if (m_tupleFile.get()) {
     m_tupleFile->Write();
     m_tupleFile->Close(); // trees deleted                                                         
-    delete m_tupleFile;
-    m_tupleFile = 0;
   }
 
   return StatusCode::SUCCESS;

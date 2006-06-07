@@ -52,7 +52,7 @@ private:
       m_calXtalAdcPed(0),
       m_nAdcPed(0) {}
 
-    ~CalTupleEntry() { if (m_calXtalAdcPed) delete m_calXtalAdcPed; }
+    ~CalTupleEntry() { if (m_calXtalAdcPed) delete [] m_calXtalAdcPed; }
 
     StatusCode initialize() {
       

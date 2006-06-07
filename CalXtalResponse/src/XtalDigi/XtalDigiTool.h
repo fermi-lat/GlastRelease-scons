@@ -115,7 +115,7 @@ class XtalDigiTool : public AlgTool,
   /// if pointer is NULL
   TTree *m_tuple;
   /// pointer to XtalDigiToolTuple file.
-  TFile *m_tupleFile;
+  auto_ptr<TFile> m_tupleFile;
 
 
   BooleanProperty m_allowNoiseOnlyTrig;

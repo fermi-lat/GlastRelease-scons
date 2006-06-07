@@ -92,7 +92,7 @@ class XtalRecTool : public AlgTool,
   /// if pointer is NULL
   TTree *m_tuple;
   /// pointer to XtalRecToolTuple file.
-  TFile *m_tupleFile;
+  auto_ptr<TFile> m_tupleFile;
 
 
   /// length of CsI xtal in mm

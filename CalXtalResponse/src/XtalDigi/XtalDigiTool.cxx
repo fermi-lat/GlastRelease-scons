@@ -44,8 +44,7 @@ XtalDigiTool::XtalDigiTool( const string& type,
     m_eDiodePLarge(0),
     m_ePerMeVInDiode(0),
     m_maxAdc(-1),
-    m_tuple(0),
-    m_tupleFile(0)
+    m_tuple(0)
 {
   declareInterface<IXtalDigiTool>(this);
 
@@ -121,8 +120,8 @@ StatusCode XtalDigiTool::initialize() {
 
   // open optional tuple file
   if (m_tupleFilename.value().length() > 0 ) {
-    m_tupleFile = new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalDigiTuple");
-    if (!m_tupleFile)
+    m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalDigiTuple"));
+    if (!m_tupleFile.get())
       // allow to continue w/out tuple file as it is not a _real_ failure
       msglog << MSG::ERROR << "Unable to create TTree object: " << m_tupleFilename << endreq;
     
@@ -618,11 +617,9 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
 
 StatusCode XtalDigiTool::finalize() {
   // make sure optional tuple is closed out                                                        
-  if (m_tupleFile) {
+  if (m_tupleFile.get()) {
     m_tupleFile->Write();
     m_tupleFile->Close(); // trees deleted                                                         
-    delete m_tupleFile;
-    m_tupleFile = 0;
   }
 
   return StatusCode::SUCCESS;
