@@ -1,3 +1,4 @@
+v0r11p1 06/07/06 fewtrell  v0r11p1 converted 'delete' to 'delete[]' where needed.  converted some pointers to auto_ptr.
 v0r11   04/26/06 fewtrell  large restucturing for performance gain..
                            - addition of PreCalcCalibTool for precalculated calibration data
                            - in ZeroSuppress mode, XtalDigi can exit processing early after running LAC & trigger checks
