@@ -40,7 +40,7 @@ CfData::CfData(CfCfg &cfg,
 CfData::~CfData() {
   closeHistfile();
 
-  delete m_testDAC;
+  delete [] m_testDAC;
 }
 
 void CfData::createHists() {
@@ -207,7 +207,7 @@ void CfData::FitData() {
     } // xtalFace lop
   } // range loop
 
-  delete tmpADC;
+  delete [] tmpADC;
 }
 
 void CfData::WriteSplinesTXT(const string &filename) {
@@ -433,8 +433,8 @@ void CfData::makeGraphs() {
   }
 
   // clean up memory
-  delete tmpADC;
-  delete tmpDAC;
+  delete [] tmpADC;
+  delete [] tmpDAC;
 }
 
 void CfData::closeHistfile() {

@@ -80,7 +80,9 @@ namespace CGCUtil {
       multiplexor_ostream() : ios(0), ostream(new multiplexor_streambuf()){}
       virtual ~multiplexor_ostream() { delete rdbuf(); }
   
-      streamvector& getostreams() { return ((multiplexor_streambuf*)rdbuf())->_streams; }
+      streamvector& getostreams() { 
+        return ((multiplexor_streambuf*)rdbuf())->_streams; 
+      }
     };
 
   /// Output string w/ username, hostname, time, relevant CMT package versions & paths
