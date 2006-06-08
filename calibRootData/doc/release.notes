@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
                               EOH
 
+   v1r7p7  8-Jun-2006 jrb    Add explicit destructors for Tot, ChargeScale
    v1r7p6 27-Feb-2006 jrb    Need v6r* of RootcintPolicy after all
    v1r7p5 17-Feb-2006 jrb    This time remember to commit modified requirements! 
    v1r7p4 16-Feb-2006 jrb    Back to v5 of RootcintPolicy (v6 wasn't meant to be)
