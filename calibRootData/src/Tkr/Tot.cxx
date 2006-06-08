@@ -80,16 +80,9 @@ namespace calibRootData {
     m_unilayerId = TkrId();
 
     m_strips->Clear("C");
-    /*
-    Int_t lastIx = m_strips->GetLast();
-    if (lastIx < 0) return;
-    UInt_t lastIxU = lastIx;
-    for (UInt_t ix = 0; ix <= lastIxU; ix++) {
-
-      TObject* pObj = m_strips->At(ix);
-      TotStrip* pStrip = (TotStrip* ) pObj;
-      if (pStrip) pStrip->Clear();
-    }
-    */
   }
+  TotUnilayer::~TotUnilayer() {
+    resize(0);
+  }
+
 }

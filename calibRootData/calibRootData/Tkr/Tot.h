@@ -32,6 +32,7 @@ namespace calibRootData {
       Float_t quad=0.0, Float_t chi2=0.0, Float_t df=0.0) : 
       m_stripId(id), m_slope(slope), m_intercept(intercept), m_quad(quad), 
       m_chi2(chi2), m_df(df) {}
+    ~TotStrip() {}
 
     UInt_t getStripId() const {return m_stripId;}
     Float_t getSlope() const {return m_slope;}
@@ -59,6 +60,7 @@ namespace calibRootData {
   public:
     TotUnilayer(const commonRootData::TkrId& id, UInt_t nStrips=1536);
     TotUnilayer() : m_unilayerId(), m_nStrips(0), m_strips(0) {};   
+    virtual ~TotUnilayer();
     void setId(const commonRootData::TkrId& id) {m_unilayerId = id;}
     const commonRootData::TkrId& getId() const {return m_unilayerId;}
     TClonesArray* getStrips() {return m_strips;}

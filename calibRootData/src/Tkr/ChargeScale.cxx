@@ -72,4 +72,7 @@ namespace calibRootData {
 
     m_children->Clear("C");
   }
+  ChargeScaleUnilayer::~ChargeScaleUnilayer() {
+    resize(0, childIsStrip());
+  }
 }

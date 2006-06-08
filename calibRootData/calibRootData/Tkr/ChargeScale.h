@@ -31,6 +31,7 @@ namespace calibRootData {
                      Float_t chi2 = 0.0, Float_t df = 0.0) :
       m_Id(id), m_scale(scale), m_error(error), m_chi2(chi2),
       m_df(df) {}
+    ~ChargeScaleObj() {}
 
     UInt_t getId() const {return m_Id;}
     Float_t getScale() const {return m_scale;}
@@ -66,6 +67,7 @@ namespace calibRootData {
 
     ChargeScaleUnilayer() : m_unilayerId(), m_nChildren(0), m_children(0),
                             m_childIsStrip(false) {};
+    virtual ~ChargeScaleUnilayer();
     void setId(const commonRootData::TkrId& id) {m_unilayerId = id;}
     const commonRootData::TkrId& getId() const {return m_unilayerId;}
     TClonesArray* getChildren() {return m_children;}
