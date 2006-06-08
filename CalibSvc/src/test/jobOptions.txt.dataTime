@@ -8,7 +8,8 @@ ApplicationMgr.DLLs   = { "GlastSvc", "RootIo" };
 ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // List of required services
- ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ ApplicationMgr.ExtSvc   = {"GlastDetSvc",  "EventCnvSvc" };
+// "GlastEventSelector/EventSelector" ,
 
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};

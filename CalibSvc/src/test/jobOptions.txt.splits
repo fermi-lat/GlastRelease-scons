@@ -8,7 +8,8 @@ ApplicationMgr.DLLs   = { "GlastSvc", "RootIo" };
 ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // List of required services
- ApplicationMgr.ExtSvc   = {"GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ ApplicationMgr.ExtSvc   = {"GlastDetSvc",  "EventCnvSvc" };
+// "GlastEventSelector/EventSelector" ,
 
 // Use the new RootIoSvc, implementing IRunable
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
