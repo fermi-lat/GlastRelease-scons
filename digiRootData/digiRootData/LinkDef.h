@@ -50,9 +50,9 @@
 
 // OBF
 #pragma link C++ class LogInfo+;
-#pragma link C++ class TFC_projection+;
-#pragma link C++ class TFC_projectionDir+;
-#pragma link C++ class TFC_projectionCol+;
+#pragma link C++ class TfcProjection+;
+#pragma link C++ class TfcProjectionDir+;
+#pragma link C++ class TfcProjectionCol+;
 #pragma link C++ class ObfTrack+;
 #pragma link C++ class FilterStatus+;
 

@@ -522,6 +522,13 @@ int read(char* fileName, int numEvents) {
 
         MetaEvent meta = evt->getMetaEvent();
         const LciAcdConfiguration *acd = meta.lciAcdConfiguration();
+
+        FilterStatus fs = evt->getFilterStatus();
+        FilterStatus fsRef;
+        fsRef.Fake(ievent,randNum);
+        if (!fs.CompareInRange(fsRef)) return -1;
+        fs.Print();
+   
  }
     
     f->Close();
@@ -634,6 +641,11 @@ int write(char* fileName, int numEvents) {
         meta.setLciAcdConfiguration(acdConfig);
         meta.Print("");
         ev->setMetaEvent(meta);
+
+        // create test OBF FilterStatus
+        FilterStatus fs;
+        fs.Fake(ievent, randNum);
+        ev->setFilterStatus(fs);
 
         t->Fill();
         ev->Clear();

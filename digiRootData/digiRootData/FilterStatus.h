@@ -51,22 +51,28 @@ private:
 };
 
 
-/** @class TFC_projection
+/** @class TfcProjection
 @brief   
 */
-class TFC_projection : public TObject {
+class TfcProjection : public TObject {
 public:
-    TFC_projection() { };
-    TFC_projection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
+    TfcProjection() { };
+
+    TfcProjection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
                    Int_t acdXMask, Int_t acdYMask, UInt_t layers, 
                    Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max, 
                    UChar_t nhits);
 
-    virtual ~TFC_projection() {};
+    TfcProjection(const TfcProjection& copy);
+
+    /// define assignment operator
+    TfcProjection& operator=(const TfcProjection& copy); 
+
+    virtual ~TfcProjection() {};
     void initialize(Int_t intercept, Int_t slope, Int_t acdTopMask, 
                     Int_t acdXMask, Int_t acdYMask, UInt_t layers,
-                    Short_t* hits, UChar_t skirtMask, UChar_t min, UChar_t max,
-                    UChar_t nhits);
+                    const Short_t* hits, UChar_t skirtMask, UChar_t min, 
+                    UChar_t max, UChar_t nhits);
 
     void Clear(Option_t *option ="");
 
@@ -108,19 +114,21 @@ private:
     /// Number of hits assigned
     UChar_t m_nhits;
 
-    ClassDef(TFC_projection,1) // TFC_projection
+    ClassDef(TfcProjection,1) // TfcProjection
 };
 
-/** @class TFC_projectionDir
+/** @class TfcProjectionDir
 @brief   
 */
-class TFC_projectionDir: public TObject {
+class TfcProjectionDir: public TObject {
 public:
-    TFC_projectionDir() { };
-    TFC_projectionDir(UShort_t idx, UChar_t x, UChar_t y);
-    TFC_projectionDir(const TFC_projectionDir& copy);
+    TfcProjectionDir() { };
+    TfcProjectionDir(UShort_t idx, UChar_t x, UChar_t y);
+    TfcProjectionDir(const TfcProjectionDir& copy);
+    /// define assignment operator
+    TfcProjectionDir& operator=(const TfcProjectionDir& copy); 
 
-    virtual ~TFC_projectionDir(){ };
+    virtual ~TfcProjectionDir(){ };
 
     void initialize(UShort_t idx, UChar_t x, UChar_t y);
 
@@ -139,49 +147,54 @@ private:
     UChar_t   m_xCnt; 
     /// Count of Y projections
     UChar_t   m_yCnt; 
-    ClassDef(TFC_projectionDir,1) // TFC_projectionDir
+    ClassDef(TfcProjectionDir,1) // TfcProjectionDir
 };
 
 
-/** @class TFC_projectionCol
+/** @class TfcProjectionCol
 @brief   
 */
-class TFC_projectionCol : public TObject {
+class TfcProjectionCol : public TObject {
 public:
-    TFC_projectionCol():TObject() { Clear(""); };
+    TfcProjectionCol():TObject() { m_maxCnt = 0; m_prjs = 0; Clear(""); };
     
-    TFC_projectionCol(UShort_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
-        const TFC_projectionDir *dir, const TFC_projection* projectionCol);
+    TfcProjectionCol(Int_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
+        const TfcProjectionDir *dir, const TfcProjection* projectionCol);
 
-    TFC_projectionCol(const TFC_projectionCol& other);
+    TfcProjectionCol(const TfcProjectionCol& other);
 
-    virtual ~TFC_projectionCol();
+    /// define assignment operator
+    TfcProjectionCol& operator=(const TfcProjectionCol& copy); 
 
-    void initialize(UShort_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
-        const TFC_projectionDir *dir, const TFC_projection* projectionCol);
+    virtual ~TfcProjectionCol();
+
+    void initialize(Int_t maxCnt, UShort_t curCnt, UShort_t twrMas, 
+        const TfcProjectionDir *dir, const TfcProjection* projectionCol);
 
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
 
-    inline UShort_t getMaxCount() const { return m_maxCnt; };
+    void Fake( Int_t ievent, Float_t randNum ); 
+
+    inline Int_t getMaxCount() const { return m_maxCnt; };
     inline UShort_t getCurrentCount() const { return m_curCnt; };
     inline UShort_t getTwrMsk() const { return m_twrMsk; };
-    inline const TFC_projectionDir* getProjectionDirCol() const { return m_dir; }
-    inline const TFC_projection* getProjectionCol() { return m_prjs; }
+    inline const TfcProjectionDir* getProjectionDirCol() const { return m_dir; }
+    inline const TfcProjection* getProjectionCol() { return m_prjs; }
 
 private:
     ///Maximum # of projections available
-    UShort_t    m_maxCnt; 
+    Int_t    m_maxCnt; 
     //Current # of projections in use   
     UShort_t    m_curCnt;
     ///Mask of the tower with projections  
     UShort_t    m_twrMsk; 
     /// Directory of the projections by twr 
-    TFC_projectionDir    m_dir[16];
-    TFC_projection* m_prjs; //[m_maxCnt]
+    TfcProjectionDir    m_dir[16];
+    TfcProjection* m_prjs; //[m_maxCnt]
 
-    ClassDef(TFC_projectionCol,1) // TFC_projectionCol
+    ClassDef(TfcProjectionCol,1) // TfcProjectionCol
 };
 
 class ObfTrack : public TObject {
@@ -259,14 +272,14 @@ public:
                  const Int_t *xy00, const Int_t *xy11, const Int_t *xy22, 
                  const Int_t *xy33, Int_t tmsk);
 
-    void initCal(Int_t numLogsHit, Float_t *layerEnergy);
+    void initCal(Int_t numLogsHit, const Float_t *layerEnergy);
 
-    void initLayers(Int_t *layers);
+    void initLayers(const Int_t *layers);
 
     void initSeparation(Double_t separation);
 
     ///Projections for the towers
-    void initProjectionCol(const TFC_projectionCol& projectionCol);
+    void initProjectionCol(const TfcProjectionCol& projectionCol);
 
     void initTracks(const TObjArray &tracks);
 
@@ -311,13 +324,14 @@ public:
         xy=m_acd_xy;
     }
     ///Return the ACD faces intersected by projections
-    //HMK check????? inline void getAcdStatus(int *copy) const {
-    //    memcpy(copy,m_acdStatus,sizeof(m_acdStatus)*16);
-    //  }
+    inline const Int_t* getAcdStatus() const {
+        return m_acdStatus;
+    }
+
     ///Return pointer to array of layers that were hit in each tower
     inline const Int_t* getLayers()const { return m_layers;  }
 
-    inline const TFC_projectionCol* getProjections(){  return &m_projectionCol;  }
+    inline const TfcProjectionCol* getProjections(){  return &m_projectionCol;  }
 
     ///Return all available tracks
     inline const TObjArray& getTracks()const { return m_tracks;   }
@@ -404,7 +418,7 @@ private:
     Float_t m_layerEnergy[8];
 
     ///Projections for the towers
-    TFC_projectionCol m_projectionCol;
+    TfcProjectionCol m_projectionCol;
 
     ///Tracks found for this event
     TObjArray m_tracks;

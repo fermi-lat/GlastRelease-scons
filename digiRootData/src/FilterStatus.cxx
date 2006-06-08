@@ -5,9 +5,9 @@
 #include "Riostream.h"
 
 ClassImp(LogInfo)
-ClassImp(TFC_projection)
-ClassImp(TFC_projectionDir)
-ClassImp(TFC_projectionCol)
+ClassImp(TfcProjection)
+ClassImp(TfcProjectionDir)
+ClassImp(TfcProjectionCol)
 ClassImp(ObfTrack)
 ClassImp(FilterStatus)
 
@@ -40,7 +40,7 @@ void LogInfo::Print(Option_t *option) const {
 
 
 
-TFC_projection::TFC_projection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
+TfcProjection::TfcProjection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
                                Int_t acdXMask, Int_t acdYMask, UInt_t layers, 
                                Short_t* hits, UChar_t skirtMask, UChar_t min, 
                                UChar_t max, UChar_t nhits)
@@ -49,10 +49,26 @@ TFC_projection::TFC_projection(Int_t intercept, Int_t slope, Int_t acdTopMask,
                skirtMask, min, max, nhits);
 }
 
-void TFC_projection::initialize(Int_t intercept, Int_t slope, Int_t acdTopMask,
+TfcProjection::TfcProjection(const TfcProjection& other):TObject(other) {
+
+    initialize(other.m_intercept, other.m_slope, other.m_acdTopMask, 
+               other.m_acdXMask, other.m_acdYMask, other.m_layers, 
+               other.m_hits, other.m_skirtMask, other.m_min, other.m_max,  
+               other.m_nhits);
+}
+
+TfcProjection& TfcProjection::operator=(const TfcProjection& other) {
+    initialize(other.m_intercept, other.m_slope, other.m_acdTopMask, 
+               other.m_acdXMask, other.m_acdYMask, other.m_layers, 
+               other.m_hits, other.m_skirtMask, other.m_min, other.m_max,  
+               other.m_nhits);
+    return *this;
+}
+
+void TfcProjection::initialize(Int_t intercept, Int_t slope, Int_t acdTopMask,
                                 Int_t acdXMask, Int_t acdYMask, UInt_t layers,
-                                Short_t* hits, UChar_t skirtMask, UChar_t min, 
-                                UChar_t max, UChar_t nhits) 
+                                const Short_t* hits, UChar_t skirtMask, 
+                                UChar_t min, UChar_t max, UChar_t nhits) 
 {
     m_intercept = intercept;
     m_slope = slope;
@@ -70,7 +86,7 @@ void TFC_projection::initialize(Int_t intercept, Int_t slope, Int_t acdTopMask,
     m_nhits = nhits;
 }
 
-void TFC_projection::Clear(Option_t *option) {
+void TfcProjection::Clear(Option_t *option) {
     m_intercept = 0;
     m_slope = 0;
     m_acdTopMask = '0';
@@ -87,7 +103,7 @@ void TFC_projection::Clear(Option_t *option) {
     m_nhits = 0;
 }
 
-void TFC_projection::Print(Option_t *option) const {
+void TfcProjection::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout << "Intercept: " << m_intercept << " Slope: " << m_slope 
@@ -103,54 +119,64 @@ void TFC_projection::Print(Option_t *option) const {
     cout << endl;
 }
 
-TFC_projectionDir::TFC_projectionDir(UShort_t idx, UChar_t x, UChar_t y) {
+TfcProjectionDir::TfcProjectionDir(UShort_t idx, UChar_t x, UChar_t y) {
     initialize(idx, x, y);
 }
 
-TFC_projectionDir::TFC_projectionDir(const TFC_projectionDir& other):TObject(other) {
-    m_idx = other.m_idx;
-    m_xCnt = other.m_xCnt;
-    m_yCnt = other.m_yCnt;
+TfcProjectionDir::TfcProjectionDir(const TfcProjectionDir& other):TObject(other) {
+    initialize(other.m_idx, other.m_xCnt, other.m_yCnt);
 }
 
 
+TfcProjectionDir& TfcProjectionDir::operator=(const TfcProjectionDir& other) {
+    initialize(other.m_idx, other.m_xCnt, other.m_yCnt);
+    return *this;
+}
 
 
-void TFC_projectionDir::initialize(UShort_t idx, UChar_t x, UChar_t y) {
+void TfcProjectionDir::initialize(UShort_t idx, UChar_t x, UChar_t y) {
     m_idx = idx;
     m_xCnt = x;
     m_yCnt = y;
 }
 
-void TFC_projectionDir::Clear(Option_t *option) {
+void TfcProjectionDir::Clear(Option_t *option) {
     m_idx = 0;
     m_xCnt = '0';
     m_yCnt = '0';
 }
 
-void TFC_projectionDir::Print(Option_t *option) const {
+void TfcProjectionDir::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout << "Idx: " << m_idx << " x: " << m_xCnt << " y: " << m_yCnt << endl;
 }
 
-TFC_projectionCol::TFC_projectionCol(UShort_t maxCnt, UShort_t curCnt, 
+TfcProjectionCol::TfcProjectionCol(Int_t maxCnt, UShort_t curCnt, 
                                      UShort_t twrMsk, 
-                                     const TFC_projectionDir *dir, 
-                                     const TFC_projection* projectionCol) 
+                                     const TfcProjectionDir *dir, 
+                                     const TfcProjection* projectionCol) 
 {
     initialize(maxCnt, curCnt, twrMsk, dir, projectionCol);
 }
 
-TFC_projectionCol::TFC_projectionCol(const TFC_projectionCol& copy):TObject(copy) {
+TfcProjectionCol::TfcProjectionCol(const TfcProjectionCol& copy):TObject(copy) {
 
-    initialize(copy.m_maxCnt, copy.m_curCnt, copy.m_twrMsk, copy.m_dir, copy.m_prjs);
+    initialize(copy.m_maxCnt, copy.m_curCnt, copy.m_twrMsk, copy.m_dir, 
+               copy.m_prjs);
 }
 
-void TFC_projectionCol::initialize(UShort_t maxCnt, UShort_t curCnt, 
+
+TfcProjectionCol& TfcProjectionCol::operator=(const TfcProjectionCol& copy) {
+    initialize(copy.m_maxCnt, copy.m_curCnt, copy.m_twrMsk, copy.m_dir, 
+               copy.m_prjs);
+    return *this;
+}
+
+void TfcProjectionCol::initialize(Int_t maxCnt, UShort_t curCnt, 
                                    UShort_t twrMsk, 
-                                   const TFC_projectionDir *dir, 
-                                   const TFC_projection* projectionCol)  
+                                   const TfcProjectionDir *dir, 
+                                   const TfcProjection* projectionCol)  
 {
     m_maxCnt = maxCnt;
     m_curCnt = curCnt;
@@ -159,23 +185,70 @@ void TFC_projectionCol::initialize(UShort_t maxCnt, UShort_t curCnt,
     for (iDir = 0; iDir < 16; iDir++) {
         m_dir[iDir] = dir[iDir];
     }
+    if (projectionCol) {
+    m_prjs = new TfcProjection[m_maxCnt];
     UInt_t iProj;
     for (iProj=0; iProj<m_maxCnt; iProj++) {
+        std::cout << "creating TfcProjection  " << iProj << std::endl;
+        if (!projectionCol) std::cout << "input col is null" << std::endl;
         m_prjs[iProj] = projectionCol[iProj];
     }
-}
-TFC_projectionCol::~TFC_projectionCol() {
-
-}
-void TFC_projectionCol::Clear(Option_t *option) {
-
+    } else {
+        m_prjs = 0;
+        m_maxCnt = 0;
+    }
 }
 
-void TFC_projectionCol::Print(Option_t *option) const {
+TfcProjectionCol::~TfcProjectionCol() {
+    Clear("");
+
+}
+void TfcProjectionCol::Clear(Option_t *option) {
+
+    if (m_maxCnt && m_prjs) {
+        delete [] m_prjs;
+    }
+    m_maxCnt = 0;
+    m_prjs = 0;
+    m_curCnt = 0;
+    m_twrMsk = 0;
+    UInt_t iDir;
+    for (iDir=0; iDir < 16; iDir++) {
+        m_dir[iDir].Clear("");
+    }
+
+}
+
+void TfcProjectionCol::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout << "maxCount: " << m_maxCnt << " curCnt: " << m_curCnt << " twrMsk: " 
          << m_twrMsk << endl;
+    Int_t i;
+    for (i=0; i<m_maxCnt; i++) {
+        cout << "TfcProjection: " << i << std::endl;
+        m_prjs[i].Print();
+    }
+}
+
+void TfcProjectionCol::Fake( Int_t ievent, Float_t randNum ) {
+
+    std::cout << "Called TfcProjectionColFake" << std::endl;
+    m_curCnt = 5;
+    m_twrMsk = 4;
+    UInt_t iDir;
+    for (iDir=0; iDir < 16; iDir++) {
+        m_dir[iDir].initialize(6, '1', '2');
+    }
+    m_maxCnt = 2;
+    m_prjs = new TfcProjection[m_maxCnt];
+    UInt_t iCnt;
+    const Short_t hits[18] = {10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27};
+    for (iCnt = 0; iCnt < m_maxCnt; iCnt++) {
+
+        m_prjs[iCnt].initialize(1, 2, 3, 4, 5, 6, hits, '8', '9', '0', '1');
+
+    }
 }
 
 ObfTrack::ObfTrack(Int_t numHits, Double_t phi, Double_t theta, Double_t len,
@@ -239,6 +312,7 @@ FilterStatus::FilterStatus(const FilterStatus& copy) : TObject(copy)
     init(copy.m_status, copy.m_stageEnergy, copy.m_tcids, copy.m_ebfSize);
 
     initTracks(copy.m_tracks);
+    initLayers(copy.m_layers);
 
     initGem(copy.m_gem_thrTkr, copy.m_gem_calHiLo, copy.m_gem_condsumCno, 
             copy.m_gem_acd_vetoes_XZ, copy.m_gem_acd_vetoes_YZ,
@@ -252,9 +326,11 @@ FilterStatus::FilterStatus(const FilterStatus& copy) : TObject(copy)
     initTkr(copy.m_xcapture, copy.m_ycapture, copy.m_xy00, copy.m_xy11, 
             copy.m_xy22, copy.m_xy33, copy.m_tmsk);
 
+    initCal(copy.m_numLogsHit, copy.m_layerEnergy);
 
     initSeparation(copy.m_separation);
 
+    initProjectionCol(copy.m_projectionCol);
 }
 
 FilterStatus::~FilterStatus() {
@@ -269,6 +345,8 @@ FilterStatus& FilterStatus::operator=(const FilterStatus& copy) {
 
     initTracks(copy.m_tracks);
 
+    initLayers(copy.m_layers);
+
     initGem(copy.m_gem_thrTkr, copy.m_gem_calHiLo, copy.m_gem_condsumCno, 
             copy.m_gem_acd_vetoes_XZ, copy.m_gem_acd_vetoes_YZ,
             copy.m_gem_acd_vetoes_XY, copy.m_gem_acd_vetoes_RU, 
@@ -282,7 +360,11 @@ FilterStatus& FilterStatus::operator=(const FilterStatus& copy) {
             copy.m_xy22, copy.m_xy33, copy.m_tmsk);
 
 
+    initCal(copy.m_numLogsHit, copy.m_layerEnergy);
+
     initSeparation(copy.m_separation);
+
+    initProjectionCol(copy.m_projectionCol);
 
     return *this;
   }
@@ -345,7 +427,7 @@ void FilterStatus::initTkr(const Int_t *xcapture, const Int_t *ycapture,
 
 }
 
-void FilterStatus::initCal(Int_t numLogsHit, Float_t *layerEnergy) 
+void FilterStatus::initCal(Int_t numLogsHit, const Float_t *layerEnergy) 
 {
    m_numLogsHit = numLogsHit;
    UInt_t iLayer;
@@ -356,7 +438,7 @@ void FilterStatus::initCal(Int_t numLogsHit, Float_t *layerEnergy)
 
 }
 
-void FilterStatus::initLayers(Int_t *layers) 
+void FilterStatus::initLayers(const Int_t *layers) 
 {
     UInt_t iLayer;
     for (iLayer = 0; iLayer<16; iLayer++) {
@@ -371,15 +453,15 @@ m_separation = separation;
 }
 
 ///Projections for the towers
-void FilterStatus::initProjectionCol(const TFC_projectionCol& projectionCol) 
+void FilterStatus::initProjectionCol(const TfcProjectionCol& projectionCol) 
 {
     m_projectionCol = projectionCol;
-}
+} 
 
 void FilterStatus::initTracks(const TObjArray &tracks) 
 {
     m_tracks.Delete();
-    UInt_t i;
+    Int_t i;
     for (i = 0; i<tracks.GetEntriesFast(); i++) {
         m_tracks.Add(tracks.At(i));
     }
@@ -435,7 +517,7 @@ void FilterStatus::Clear(Option_t *option)
         m_layerEnergy[i] = 0.0;
     }
 
-    m_projectionCol.Clear("");
+    //m_projectionCol.Clear("");
 
     m_tracks.Delete();
 
@@ -445,6 +527,59 @@ void FilterStatus::Print(Option_t *option) const
 {
     using namespace std;
     TObject::Print(option);
+
+    cout << "Status: " << m_status << " stageEnergy: " << m_stageEnergy
+         << " Tower Triggers: " << m_tcids << endl;
+
+    cout << "GEM: " << endl;
+    cout << "ThrTkr: " << m_gem_thrTkr << " calHiLo: " << m_gem_calHiLo
+         << " CondsumCno: " << m_gem_condsumCno << endl;
+    cout << "ACD Vetos:  XZ: " << m_gem_acd_vetoes_XZ << " YZ: "
+         << m_gem_acd_vetoes_YZ << " XY: " << m_gem_acd_vetoes_XY 
+         << " RU: " << m_gem_acd_vetoes_RU << endl;
+    cout << "LiveTime: " << m_gem_livetime << " TrgTime: " << m_gem_trgtime
+         << " PPSTime: " << m_gem_ppstime << endl;
+    cout << "Discarded: " << m_gem_discarded << " Prescaled: " 
+         << m_gem_prescaled << " Sent: " << m_gem_sent << endl;
+
+    cout << "ACD Hit Map: " << endl;
+    cout << "XZ: " << m_acd_xz << " YZ: " << m_acd_yz << " XY: " << m_acd_xy
+         << " vetoword: " << m_vetoword << endl;
+    UInt_t i;
+    for (i=0; i<16; i++) 
+        cout << m_acdStatus[i] << ":";
+    cout << endl;
+
+    cout << "Num\t" << "xCapture \t" << "yCapture\t" << "xy00\t" << "xy11\t" 
+         << "xy22\t" << "xy33\t" << endl;
+    for (i=0; i<16;i++) {
+        cout << i << "\t" << m_xcapture[i] << "\t" << m_ycapture[i] << "\t"
+             << m_xy00[i] << "\t" << m_xy11[i] << "\t" << m_xy22[i] << "\t"
+             << m_xy33[i] << endl;
+    }
+    cout << "TMSK: " << m_tmsk << endl;
+
+    cout << "ebfSize: " << m_ebfSize << " numLogsHit: " << m_numLogsHit << endl;
+
+    cout << "Layers: " << endl;
+    for (i=0; i<16; i++)
+        cout << m_layers[i] << ":";
+    cout << endl;
+
+    cout << "separation: " << m_separation << endl;
+
+    cout << "LayerEnergy:" <<endl;
+    for (i = 0; i < 8; i++) 
+        cout << m_layerEnergy[i] << ":";
+    cout << endl;
+
+    TIter trackIt(&m_tracks);
+    ObfTrack *curTrack;
+    while ((curTrack = ((ObfTrack*)trackIt.Next()))) {
+        curTrack->Print(option);
+    }
+
+    m_projectionCol.Print(option);
 }
 
 //======================================================
@@ -452,6 +587,29 @@ void FilterStatus::Print(Option_t *option) const
 //======================================================
 
 void FilterStatus::Fake( Int_t ievent, Float_t randNum ) {
+
+  init(1,2,3,0);
+  initGem(4,5,6,7,8,9,10,11,12,13,14,15,16);
+  const Int_t stat[16] = {30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45};
+  initAcd(17,18,19,20,stat);
+  Int_t xCapture[16] = {70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85};
+  Int_t yCapture[16] = {90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105};
+  Int_t xy00[16]={40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55};
+  Int_t xy11[16]={40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55};
+  Int_t xy22[16]={20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,55};
+  Int_t xy33[16]={10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+  initTkr(xCapture,yCapture,xy00,xy11,xy22,xy33,20);
+  Int_t layers[16] = {50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65};
+  initLayers(layers);
+  Float_t layerEnergy[8] = {1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8};
+  initCal(0,layerEnergy);
+  initSeparation(10.0);
+
+  TObjArray trackObf;
+  initTracks(trackObf);
+  TfcProjectionCol proj;
+  proj.Fake(ievent, randNum);
+  initProjectionCol(proj);
     
 }
 
@@ -460,6 +618,32 @@ void FilterStatus::Fake( Int_t ievent, Float_t randNum ) {
 Bool_t FilterStatus::CompareInRange( FilterStatus & ref, const std::string & name ) {
 
     bool result = true ;
+    result = rootdatautil::CompareInRange(getStatus(),ref.getStatus(),"Status") && result;
+    result = rootdatautil::CompareInRange(getHigh(),ref.getHigh(),"High") && result;
+    result = rootdatautil::CompareInRange(getLow(),ref.getLow(),"Low") && result;
+    result = rootdatautil::CompareInRange(getTcids(),ref.getTcids(),"Tcids") && result;
+    result = rootdatautil::CompareInRange(getCalEnergy(),ref.getCalEnergy(),"CalEnergy") && result;
+    result = rootdatautil::CompareInRange(getGemThrTkr(),ref.getGemThrTkr(),"GemThrTkr") && result;
+    result = rootdatautil::CompareInRange(getGemCalHiLo(),ref.getGemCalHiLo(),"GemCalHiLo") && result;
+    result = rootdatautil::CompareInRange(getGemCondsumCno(),ref.getGemCondsumCno(),"GemCondsumCno") && result;
+    result = rootdatautil::CompareInRange(getGemAcd_vetoes_XZ(),ref.getGemAcd_vetoes_XZ(),"GemAcd_vetoes_XZ") && result;
+    result = rootdatautil::CompareInRange(getGemAcd_vetoes_YZ(),ref.getGemAcd_vetoes_YZ(),"GemAcd_vetoes_YZ") && result;
+    result = rootdatautil::CompareInRange(getGemAcd_vetoes_XY(),ref.getGemAcd_vetoes_XY(),"GemAcd_vetoes_XY") && result;
+    result = rootdatautil::CompareInRange(getGemAcd_vetoes_RU(),ref.getGemAcd_vetoes_RU(),"GemAcd_vetoes_RU") && result;
+    result = rootdatautil::CompareInRange(getGemLivetime(),ref.getGemLivetime(),"GemLivetime") && result;
+    result = rootdatautil::CompareInRange(getGemTrgtime(),ref.getGemTrgtime(),"GemTrgtime") && result;
+    result = rootdatautil::CompareInRange(getGemPpstime(),ref.getGemPpstime(),"GemPpstime") && result;
+    result = rootdatautil::CompareInRange(getGemDiscarded(),ref.getGemDiscarded(),"GemDiscarded") && result;
+    result = rootdatautil::CompareInRange(getGemPrescaled(),ref.getGemPrescaled(),"GemPrescaled") && result;
+    result = rootdatautil::CompareInRange(getGemSent(),ref.getGemSent(),"GemSent") && result;
+
+    if (!result) {
+        if (name == "") {
+            std::cout<<"Comparison ERROR for " << ClassName() << std::endl;
+        } else {
+            std::cout << "Comparison ERROR for " << name<<std::endl;
+        }
+    }
 
     return result ;
 
