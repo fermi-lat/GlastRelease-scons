@@ -1,5 +1,5 @@
 package RootConvert
-version v1r7
+version v1r8
 author David Chamont <chamont@poly.in2p3.fr>
 author Heather Kelly <heather@slac.stanford.edu>
 #branches RootConvert cmt doc src
@@ -15,7 +15,13 @@ apply_pattern shared_library
 
 private
 
+use OnboardFilter v*
+
 apply_pattern package_headers
+
+# OBF includes
+macro_prepend includes "-I ../flight/EFC " \
+      WIN32 " /I ..\flight\EFC "
 
 macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Utilities/*.h \
