@@ -181,7 +181,7 @@ public:
     inline UShort_t getCurrentCount() const { return m_curCnt; };
     inline UShort_t getTwrMsk() const { return m_twrMsk; };
     inline const TfcProjectionDir* getProjectionDirCol() const { return m_dir; }
-    inline const TfcProjection* getProjectionCol() { return m_prjs; }
+    inline const TfcProjection* getProjectionCol() const { return m_prjs; }
 
 private:
     ///Maximum # of projections available
@@ -329,12 +329,12 @@ public:
     }
 
     ///Return pointer to array of layers that were hit in each tower
-    inline const Int_t* getLayers()const { return m_layers;  }
+    inline const Int_t* getLayerCol()const { return m_layers;  }
 
-    inline const TfcProjectionCol* getProjections(){  return &m_projectionCol;  }
+    inline const TfcProjectionCol* getTfcProjectionCol(){  return &m_projectionCol;  }
 
     ///Return all available tracks
-    inline const TObjArray& getTracks()const { return m_tracks;   }
+    inline const TObjArray& getTrackCol()const { return m_tracks;   }
 
     ///Return angular separation between best track and incomming particle
     inline Double_t getSeparation() const{    return m_separation;  }
