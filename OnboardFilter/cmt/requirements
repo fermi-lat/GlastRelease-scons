@@ -37,23 +37,6 @@ library OnboardFilter \
 # use this only for the test. TODO: make it cleaner
 apply_pattern package_Cshlibflags
 
-private
-##use TkrRecon       * -no_auto_imports
-##use FluxSvc        * -no_auto_imports
-##use flux   
-##use TkrDigi        * -no_auto_imports
-##use AcdDigi        * -no_auto_imports
-##use CalDigi        * -no_auto_imports
-##use Trigger        * -no_auto_imports
-##use CalUtil        * -no_auto_imports
-##use CalRecon       * -no_auto_imports
-##use AcdRecon       * -no_auto_imports
-##use RootIo         * -no_auto_imports
-##use AnalysisNtuple * -no_auto_imports
-##use ntupleWriterSvc * -no_auto_imports
-##use merit          * -no_auto_imports
-##use CRflux         * -no_auto_imports
-
 public
 
 #set LD_LIBRARY_PATH ${ONBOARDFILTERROOT}/rh9_gcc32

@@ -94,7 +94,7 @@
 //#include "EFC/RFC_stats.h"
 
 //#include "../flight/EFC/src/RFC_def.h"
-#include "../flight/EFC/src/RFC_resultDef.h"
+#include "EFC/src/RFC_resultDef.h"
 
 //#include "EDS/EBF_evt.h"
 //#include "EDS/EBF_pkt.h"
