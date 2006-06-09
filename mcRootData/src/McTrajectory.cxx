@@ -69,7 +69,16 @@ Bool_t McTrajectory::CompareInRange( const McTrajectory & ref, const std::string
     Bool_t result = true ;
     
     result = COMPARE_IN_RANGE(McTrajectoryCharge) && result ;
-    result = COMPARE_IN_RANGE(McParticle) && result ;
+
+
+
+    const McParticle *myPart = getMcParticle();
+    const McParticle *refPart = ref.getMcParticle();
+    result = rootdatautil::CompareInRange(*myPart,*refPart,"McParticle") && result ;
+
+
+    //result = COMPARE_IN_RANGE(McParticle) && result ;  need to pass reference
+
     result = rootdatautil::TObjArrayCompareInRange<TVector3>(getMcPointCol(),ref.getMcPointCol(),"McPoint") && result ;
       
     if (!result) {

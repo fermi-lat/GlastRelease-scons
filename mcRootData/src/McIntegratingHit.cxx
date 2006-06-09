@@ -81,7 +81,7 @@ Bool_t McIntegratingHit::CompareInRange( const McIntegratingHit & ref, const std
     while ( (myPart = itemizedEnergyNext(myEnergy)) ) {
       ++count ;
       refPart = ref.itemizedEnergyNext(refEnergy) ;
-      result = rootdatautil::CompareInRange(myPart,refPart,"itemizedEnergyNext Particle") && result ;
+      result = rootdatautil::CompareInRange(*myPart,*refPart,"itemizedEnergyNext Particle") && result ;
       result = rootdatautil::CompareInRange(myEnergy,refEnergy,"itemizedEnergyNext Energy") && result ;
     }
     if (count==0) {
