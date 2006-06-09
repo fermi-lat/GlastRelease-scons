@@ -80,11 +80,11 @@
 <!ATTLIST ancPed  ped NMTOKEN #REQUIRED
                   rNoise NMTOKEN #REQUIRED
                   sNoise NMTOKEN #REQUIRED
-                  isBad  (0 | 1) "0" > 
+                  isBad  NMTOKEN "0" > 
 
 <!ELEMENT ancGain EMPTY>
 <!ATTLIST ancGain gain NMTOKEN #REQUIRED
-                  isBad   (0 | 1) "0" > 
+                  isBad  NMTOKEN "0" > 
 
 
 
