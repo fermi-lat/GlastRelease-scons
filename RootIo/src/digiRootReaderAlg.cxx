@@ -363,10 +363,6 @@ StatusCode digiRootReaderAlg::execute()
         return sc;
     }
 
-    evtId = readInd+1;
-
-    saveDir->cd();
-
     sc = readMetaEvent();
     // do not terminate job due to missing MetaEvent in ROOT file
     // MC events and older runs will not have this branch filled.
