@@ -23,6 +23,8 @@
 #include "LdfEvent/LsfMetaEvent.h"
 #include "LdfEvent/LsfCcsds.h"
 
+#include "OnboardFilter/FilterStatus.h"
+
 #include <map>
 
 /** @class testReadAlg
@@ -56,6 +58,7 @@ private:
 
     StatusCode readReconData();
     
+    StatusCode readOnboardFilter();
 };
 
 static const AlgFactory<testReadAlg>  Factory;
@@ -93,6 +96,8 @@ StatusCode testReadAlg::execute()
     sc = readGemData();
 
     sc = readReconData();
+
+    sc = readOnboardFilter();
 
     return sc;
 }
@@ -278,6 +283,34 @@ StatusCode testReadAlg::readReconData() {
     return sc;
 }
 
+
+StatusCode testReadAlg::readOnboardFilter() {
+
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
+
+    SmartDataPtr<OnboardFilterTds::FilterStatus> obfTds(eventSvc(), "/Event/Filter/FilterStatus"); 
+
+    if (!obfTds) {
+        log << MSG::INFO << "No OBF on TDS" << endreq;
+        return StatusCode::SUCCESS;
+    }
+
+    log << MSG::DEBUG << "OnboardFilter: " << endreq;
+    log << MSG::DEBUG << "Status: " << obfTds->get() << " StageEnergy: "
+        << obfTds->getStageEnergy() << " TCIDS: " 
+        << obfTds->getTcids() << endreq;
+  
+    log << MSG::DEBUG << "  GEM: " << endreq;
+    log << " ThrTkr: " << obfTds->getGemThrTkr() << " CalHiLo: " 
+        << obfTds->getGemCalHiLo() << " Condsumcno: " 
+        << obfTds->getGemCondsumCno() << endreq;
+
+    log << MSG::DEBUG << "Separation: " << obfTds->getSeparation() << endreq;
+
+    return sc;
+
+}
 
 StatusCode testReadAlg::finalize()
 {    
