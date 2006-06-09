@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r24p2  9-Jun-2006  jrb  Small change to use ROOT in more
+                             standard manner, perhaps address memory leak
    v0r24p1  8-Jun-2006  jrb  Eliminate refs to GlastEventSelector/EventSelector
                              in a bunch of test job options files
    v0r24   12-Apr-2006  jrb  Add/refurbish classes for ACD calibration
