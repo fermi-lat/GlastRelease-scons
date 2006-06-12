@@ -6,7 +6,7 @@
 // $Header$
 ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
 ApplicationMgr.DLLs+= { "GlastSvc"};
-ApplicationMgr.ExtSvc = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ApplicationMgr.ExtSvc = { "GlastDetSvc",  "EventCnvSvc" };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 

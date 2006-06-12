@@ -15,6 +15,9 @@ private
 
 macro_append source "" WIN32 " *.xml"
 
+# needed since FluxSvc hides flux
+macro_append includes ' $(ppcmd)"$(flux_root)" '
+
 #new pattern for Gaudi test packages
 
 pattern Gaudi_package_test \

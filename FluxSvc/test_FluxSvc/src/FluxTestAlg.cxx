@@ -3,7 +3,7 @@
 // Include files
 #include "FluxSvc/IFluxSvc.h"
 #include "FluxSvc/IFlux.h"
-#include "flux/ISpectrumFactory.h"
+#include "FluxSvc/ISpectrumFactory.h"
 
 // Event for creating the McEvent stuff
 //#include "Event/TopLevel/Event.h"
