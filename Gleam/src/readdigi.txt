@@ -1,36 +1,50 @@
-//##############################################################
-//
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // Job options file for Gleam job to read default digi root file
-
 //$Header$
 
 // start with the basic program defined in Gleam
 #include "$GLEAMROOT/src/basicOptions.txt"
 
-ApplicationMgr.ExtSvc +={"RootIoSvc"};  // allow termination at end of root file
 
-// Allow RootIoSvc to control the event loop
-// If using the GUI - comment the following line out
-ApplicationMgr.Runable= "RootIoSvc";
+// --------------------------------------
+//      set up RootIo to control event loop
 
-Generator.Members = {} ; // turn off generation
+ApplicationMgr.ExtSvc +={"RootIoSvc"};  
+ApplicationMgr.Runable=  "RootIoSvc";
 
-Digitization.Members = {"digiRootReaderAlg"}; // replace digi algs.
+// ----------------------------------------------
+//         Algorithm sequence 
 
-digiRootReaderAlg.digiRootFile="$(ROOTTESTDATAROOT)/data/default/digi.root";
 
-Output.Members = {}; // turn off root output 
+Top.Members={
+    "mcRootReaderAlg",              // read mc
+    "PointInfoAlg",                 // set pointing info 
+    "digiRootReaderAlg",            // read digi
+    "Sequencer/CalibrationUpdate",  // defined in basicOptions
+    "Sequencer/Onboard",            // onboard processing, defined below
+    "Sequencer/Reconstruction"      // defined in basicOptions
+    };
+Onboard.Members={
+    "EbfWriter",            // sets up Ebf for OBF
+    "OnboardFilter",
+    "FilterTracks",
+    "FilterAlg"
+    };
 
-// setup up merit to monitor the output
-ApplicationMgr.DLLs   += {"merit"};
-MeritAlg.generated = 10000; // for estimation of Aeff
+mcRootReaderAlg.OutputLevel = 4;   // since it generates a line per event at INFO
 
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-CalClustersAlg.OutputLevel=4; // too much info
+// -------------------------------------------------
+//          input files
 
-// Number of events to process (in this case, must be greater than file)
+//mcRootReaderAlg.mcRootFile       ="$(mcInRootFileName)";
+//digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
+mcRootReaderAlg.mcRootFile       ="mc.root";
+digiRootReaderAlg.digiRootFile   ="digi.root";
+
+// ------------------------------------------------
+//          output
+RootTupleSvc.filename="remerit.root";
+
 ApplicationMgr.EvtMax = 10000;
 
-MessageSvc.OutputLevel      =3;
-
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
