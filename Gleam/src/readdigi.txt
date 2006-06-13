@@ -17,9 +17,10 @@ ApplicationMgr.Runable=  "RootIoSvc";
 
 
 Top.Members={
-    "mcRootReaderAlg",              // read mc
-    "PointInfoAlg",                 // set pointing info 
+    "mcRootReaderAlg",              // read mc, set time
+    "PointInfoAlg",                 // set pointing info from orbit, current time
     "digiRootReaderAlg",            // read digi
+    "TriggerAlg",                   // set trigger bits -- must be before EbfWriter
     "Sequencer/CalibrationUpdate",  // defined in basicOptions
     "Sequencer/Onboard",            // onboard processing, defined below
     "Sequencer/Reconstruction"      // defined in basicOptions
@@ -27,8 +28,8 @@ Top.Members={
 Onboard.Members={
     "EbfWriter",            // sets up Ebf for OBF
     "OnboardFilter",
-    "FilterTracks",
-    "FilterAlg"
+   // "FilterTracks",     // ? not needed?
+    "FilterAlg"            // set filter status for tuple
     };
 
 mcRootReaderAlg.OutputLevel = 4;   // since it generates a line per event at INFO
@@ -36,14 +37,16 @@ mcRootReaderAlg.OutputLevel = 4;   // since it generates a line per event at INF
 // -------------------------------------------------
 //          input files
 
-//mcRootReaderAlg.mcRootFile       ="$(mcInRootFileName)";
-//digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
-mcRootReaderAlg.mcRootFile       ="mc.root";
-digiRootReaderAlg.digiRootFile   ="digi.root";
+mcRootReaderAlg.mcRootFile       ="$(mcInRootFileName)";
+digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
+//mcRootReaderAlg.mcRootFile       ="mc.root";
+//digiRootReaderAlg.digiRootFile   ="digi.root";
 
 // ------------------------------------------------
 //          output
-RootTupleSvc.filename="remerit.root";
+RootTupleSvc.filename=           "$(meritRootFileName)";
+//RootTupleSvc.filename=           "remerit.root";
+
 
 ApplicationMgr.EvtMax = 10000;
 
