@@ -2,33 +2,14 @@
 
 /** @mainpage package CalUtil
  *
- * @authors R.Dubois, Zach Fewtrell
+ * @authors Zach Fewtrell
  *
  * @section description Description
  *
- * This package provides utilities for common use in the CAL.     
+ * This package provides utilities for common use in the CAL.
+ * Package intended for use by both Gaudi-based and non-Gaudi
+ * based code
  *
- * @section CalFailureModeSvc CalFailureModeSvc
- * CalFailureModeSvc creates a list of large-scale failures in the CAL, 
- * and utilities
- * to search the lists to allow digi and recon algorithms to ignore hits based
- * on those lists.
- *
- * It can take lists of towers, (tower,AFEE) or (tower, Controller) pairs
- * to create the lists of dead objects. It provides a method to see if a 
- * given CalXtalId is contained in the lists.
- *
- * @subsection jobOptions jobOptions
- *
- * @param CalFailureModeSvc.towerList
- * Provide a list of towers that will be made dead.
- * Format: "tower"
- * @param CalFailureModeSvc.towerAfeeList
- * Provide a list of (tower, AFEE) pairs that will be made dead.
- * Format: "tower_afee". Afee runs 0-3: x+,y+,x-,y-
- * @param CalFailureModeSvc.towerControllerList
- * Provide a list of (tower, controller) pairs that will be made dead.
- * Format: "tower_controller". Controller runs 0-3: x+,y+,x-,y-.
  *
  *
  * @subsection CalDefs

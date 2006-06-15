@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r0       15-Jun-2006 ZF Moved CalFailureModeSvc to CalXtalResponse pkg.  CalUtil is now a non-Gaudi library.  Also added in some CalDefs.h classes from calibGenCAL which now uses this pkg.
  * v2r3       22-Mar-2006 TU Updates for new externals (CLHEP, Gaudi,etc.)
  * v2r2p1      7-Dec-2005 ZF few tweaks after building & testing on linux
  * v2r2        7-Dec-2005 ZF new system test.  new CalArray.h. broke CalVec.h off of CalDefs.h

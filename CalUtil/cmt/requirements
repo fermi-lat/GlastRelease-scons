@@ -4,20 +4,14 @@ package CalUtil
 branches src cmt doc
 
 use GlastPolicy    
-use GaudiInterface * IExternal
 use idents
 
-apply_pattern packageShr
 apply_pattern package_include
 apply_pattern package_headers
 
-library CalUtil *.cxx Dll/*.cxx ${CalUtil_headers}
-
-#=============================================================
 private
 
-# only needed for test app
-use GlastSvc
-apply_pattern package_Cshlibflags 
+library CalUtil *.cxx ${CalUtil_headers}
 
-apply_pattern package_test
+application test_CalUtil test/test_CalUtil.cxx
+
