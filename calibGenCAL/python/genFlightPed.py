@@ -117,7 +117,7 @@ if __name__ == '__main__':
                     for erng in range(calConstant.NUM_RNG):
                         
                         p = peds[tem, row, end, fe, erng, 0]
-                        s = '#define PED_T%1X_%s_C%d_R%d_%s    %f\n' % (tem, calConstant.CROW[row], fe,
+                        s = '#define PED_T%1X_%s_C%1X_R%d_%s    %f\n' % (tem, calConstant.CROW[row], fe,
                             erng, END_MAP[end], p)
                         fio.write(s)
     
