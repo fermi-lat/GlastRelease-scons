@@ -17,6 +17,7 @@
 DECLARE_FACTORY_ENTRIES(CalXtalResponse) {
   
   DECLARE_SERVICE( CalCalibSvc );
+  DECLARE_SERVICE( CalFailureModeSvc );
   
   DECLARE_ALGORITHM( CalXtalRecAlg );
   DECLARE_ALGORITHM( CalTupleAlg );

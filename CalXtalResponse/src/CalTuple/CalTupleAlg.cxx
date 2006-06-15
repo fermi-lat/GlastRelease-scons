@@ -23,6 +23,7 @@ using namespace std;
 using namespace CalUtil;
 using namespace Event;
 using namespace CalibData;
+using namespace idents;
 
 /** @class CalTupleAlg
     @brief populates CalTuple entry w/ info derived from CalDigis & calibrations

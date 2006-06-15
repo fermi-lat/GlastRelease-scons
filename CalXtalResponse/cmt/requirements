@@ -22,7 +22,8 @@ apply_pattern package_headers
 
 library CalXtalResponse *.cxx *.h Dll/*.cxx Dll/*.h ${CalXtalResponse_headers} \
         CalCalib/*.cxx CalCalib/*.h XtalDigi/*.cxx XtalDigi/*.h XtalRecon/*.cxx XtalRecon/*.h \
-        CalTrig/*.cxx CalTrig/*.h *.txt CalTuple/*.cxx CalTuple/*.h
+        CalTrig/*.cxx CalTrig/*.h *.txt CalTuple/*.cxx CalTuple/*.h \
+	CalFailureMode/*.cxx CalFailureMode/*.h
 
 #=============================================================
 private

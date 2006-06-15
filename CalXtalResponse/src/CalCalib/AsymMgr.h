@@ -3,7 +3,7 @@
 // $Header$
 // LOCAL
 #include "CalibItemMgr.h"
-#include "CalXtalResponse/CalCalibDefs.h"
+
 
 // GLAST
 #include "CalUtil/CalDefs.h"
@@ -16,7 +16,6 @@
 
 using namespace CalUtil;
 using namespace idents;
-using namespace CalXtalResponse;
 using namespace CalibData;
 
 class CalCalibSvc;

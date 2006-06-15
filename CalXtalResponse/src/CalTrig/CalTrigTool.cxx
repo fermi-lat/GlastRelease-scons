@@ -22,6 +22,7 @@
 using namespace CalUtil;
 using namespace Event;
 using namespace CalibData;
+using namespace idents;
 
 
 static ToolFactory<CalTrigTool> s_factory;

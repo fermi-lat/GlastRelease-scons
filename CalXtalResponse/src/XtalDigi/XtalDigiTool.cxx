@@ -23,8 +23,8 @@
 
 using namespace CalUtil;
 using namespace Event;
-using namespace CalXtalResponse;
 using namespace CalibData;
+using namespace idents;
 
 
 static ToolFactory<XtalDigiTool> s_factory;

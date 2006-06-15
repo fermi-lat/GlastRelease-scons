@@ -21,10 +21,9 @@
 #include <algorithm>
 
 using namespace CalUtil;
-using Event::CalDigi;
-using Event::CalXtalRecData;
-using namespace CalXtalResponse;
+using namespace Event;
 using namespace CalibData;
+using namespace idents;
 
 static ToolFactory<XtalRecTool> s_factory;
 const IToolFactory& XtalRecToolFactory = s_factory;

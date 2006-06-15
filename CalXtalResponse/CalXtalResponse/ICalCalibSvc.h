@@ -3,7 +3,7 @@
 //  $Header$
 
 // LOCAL INCLUDES
-#include "CalCalibDefs.h"
+
 
 // GLAST INCLUDES
 #include "CalibData/RangeBase.h"  // for ValSig
@@ -91,7 +91,7 @@ class ICalCalibSvc : virtual public IInterface {
   \param faceId specify xtal log, face
   \return 0 on error
   */
-  virtual const CalibData::CalTholdCI *getTholdCI(FaceIdx faceIdx) = 0;
+  virtual const CalibData::CalTholdCI *getTholdCI(CalUtil::FaceIdx faceIdx) = 0;
 
   /// convert adc -> cicidac for given channel
   virtual StatusCode evalCIDAC (CalUtil::RngIdx rngIdx, float adc,   float &cidac)  
@@ -104,17 +104,17 @@ class ICalCalibSvc : virtual public IInterface {
   /// \brief convert xtal longitudinal pos -> signal asymmetry for given xtal & 
   /// diode pair
   virtual StatusCode evalAsym(CalUtil::XtalIdx xtalIdx, 
-                              CalXtalResponse::AsymType asymType, 
+                              CalUtil::AsymType asymType, 
                               float pos,   float &asym) = 0;
 
   /// convert xtal signal asymmetry -> longitudinal pos for given xtal & diodes
   virtual StatusCode evalPos (CalUtil::XtalIdx xtalIdx, 
-                              CalXtalResponse::AsymType asymType, 
+                              CalUtil::AsymType asymType, 
                               float asym,  float &pos)  = 0;
 
   /// evaluate optical signal asymmetry for deposit @ center of xtal
   virtual StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, 
-                                CalXtalResponse::AsymType asymType, 
+                                CalUtil::AsymType asymType, 
                                 float &asymCtr) = 0;                                
 
   /** \brief convert adc readout to MeV deposited at center of xtal

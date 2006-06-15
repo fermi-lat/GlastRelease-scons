@@ -13,6 +13,9 @@ using namespace CalUtil;
 
 static const InterfaceID IID_IPrecalcCalibTool("IPrecalcCalibTool", 1, 0);
 
+
+/** \brief Interface for tool which store precacalculated calibration constants for GLAST Cal
+*/
 class IPrecalcCalibTool : virtual public IAlgTool {
  public:
 

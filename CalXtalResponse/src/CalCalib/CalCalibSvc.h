@@ -22,7 +22,7 @@
 // STD
 
 using namespace CalUtil;
-using namespace CalXtalResponse;
+
 
 /** @class CalCalibSvc
     @author Zachary Fewtrell
@@ -94,7 +94,7 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
 
   StatusCode evalFaceSignal(RngIdx rngIdx, float adc, float &ene);
 
-  StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, CalXtalResponse::AsymType asymType, 
+  StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType, 
                         float &asymCtr) {
     return m_asymMgr.getAsymCtr(xtalIdx, asymType, asymCtr);
   }

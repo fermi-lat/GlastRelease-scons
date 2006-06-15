@@ -1,3 +1,4 @@
+v0r12   06/15/06 fewtrell  Stole CalFailureModeSvc from CalUtil, set up to use new CalUtil
 v0r11p1 06/07/06 fewtrell  v0r11p1 converted 'delete' to 'delete[]' where needed.  converted some pointers to auto_ptr.
 v0r11   04/26/06 fewtrell  large restucturing for performance gain..
                            - addition of PreCalcCalibTool for precalculated calibration data

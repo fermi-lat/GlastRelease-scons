@@ -282,8 +282,6 @@ StatusCode PrecalcCalibTool::lex8_to_lex1(FaceIdx faceIdx, float l8adc, float &l
   float tmpCIDAC;
   StatusCode sc;
 
-  FaceNum face = faceIdx.getFace();
-
   //-- TholdCI --//
   const CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
   if (!tholdCI) return StatusCode::SUCCESS;
@@ -314,8 +312,6 @@ StatusCode PrecalcCalibTool::hex8_to_hex1(FaceIdx faceIdx, float h8adc, float &h
 
   float tmpCIDAC;
   StatusCode sc;
-
-  FaceNum face = faceIdx.getFace();
 
   //-- TholdCI --//
   const CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);

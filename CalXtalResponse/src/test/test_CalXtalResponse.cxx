@@ -8,6 +8,7 @@
 #include "CalXtalResponse/IXtalRecTool.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalTrigTool.h"
+#include "CalXtalResponse/ICalFailureModeSvc.h"
 #include "src/CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
@@ -39,7 +40,7 @@
 using namespace CalUtil;
 using namespace std;
 using namespace CalibData;
-using namespace CalXtalResponse;
+using namespace idents;
 
 /// return % diff (abs) between 2 floats avoid divide-by-zero errros
 float pct_diff(float a, float b) {
@@ -143,11 +144,15 @@ private:
   /// test sum of multiple
   StatusCode testMultiHit();
 
+
   /// fill mcIntegrating hit w/ given xtal position & energy
   void fillMcHit(XtalIdx xtalIdx,
                  float xtalPos,
                  float meV,
                  Event::McIntegratingHit &hit);
+
+  /// test CalFailureModeSvc
+  StatusCode testCalFailureModeSvc();
 
 
   /// position estimation margin for single hit test (in mm)
@@ -298,6 +303,9 @@ private:
   ICalTrigTool *m_trigTool8Tower;
   /// test 8Tower calibrations
   IPrecalcCalibTool *m_precalcCalibTool8Tower;
+
+  /// pointer to failure mode service
+  ICalFailureModeSvc* m_calFailureModeSvc;
 };
 
 const float test_CalXtalResponse::m_singleHitEneMrgn = (float).01; // percent of input ene
@@ -616,7 +624,11 @@ StatusCode test_CalXtalResponse::initialize(){
   m_testCols.insert(4);  // somewhere in middle
   m_testCols.insert(11);  // last
 
-  
+  sc = service("CalFailureModeSvc", m_calFailureModeSvc);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  Unable to find CalFailureMode service" << endreq;
+    return sc;
+  }  
   return StatusCode::SUCCESS;
 }
 
@@ -627,6 +639,9 @@ StatusCode test_CalXtalResponse::execute()
   MsgStream msglog(msgSvc(), name());
   StatusCode sc;
   
+  //-- CalFailureModeSvc --//
+  sc = testCalFailureModeSvc();
+  if (sc.isFailure()) return sc;
 
   // -- test out following # of points evenly spaced along xtal
   int nXtalPos(5); // -- gets absolute ends, 1 in ctr & 2 others
@@ -1842,6 +1857,51 @@ StatusCode test_CalXtalResponse::testSaturation() {
   //-- VERIFY XTAL DIGI OUTPUT --//
   sc = verifyXtalDigi(calDigi, NULL);
   if (sc.isFailure()) return sc;
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode test_CalXtalResponse::testCalFailureModeSvc() {
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << "testCalFailureModeSvc" << endreq;
+  idents::CalXtalId id1(10,2,2);  // tower 10, layer 3(y)
+  idents::CalXtalId id2(11,1,2);  // tower 11, layer 1(y)
+  idents::CalXtalId id3(3,5,3);   // tower 3, layer 5(y)
+  idents::CalXtalId id4(4,6,3);   // tower 4, layer 6(x)
+  idents::CalXtalId id5(4,1,3);   // tower 4, layer 1(y)
+
+  if (m_calFailureModeSvc == 0) return StatusCode::FAILURE;
+  if (m_calFailureModeSvc->matchChannel(id1,idents::CalXtalId::NEG)) {
+    log << MSG::INFO << "removed channel (10,2,2) NEG" << endreq;
+  } else {
+    log << MSG::ERROR << "failed to remove channel (10,2,2) NEG" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (m_calFailureModeSvc->matchChannel(id2,idents::CalXtalId::NEG)) {
+    log << MSG::INFO << "removed channel (11,1,2) NEG" << endreq;
+  } else {
+    log << MSG::ERROR << "failed to remove channel (11,1,2) NEG" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (!m_calFailureModeSvc->matchChannel(id3,idents::CalXtalId::NEG)) {
+    log << MSG::INFO << "left channel (3,5,3) NEG" << endreq;
+  } else {
+    log << MSG::ERROR << "erroneously removed channel (3,5,3) NEG" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (m_calFailureModeSvc->matchChannel(id4,idents::CalXtalId::NEG)) {
+    log << MSG::INFO << "removed channel (4,6,3) NEG" << endreq;
+  } else {
+    log << MSG::ERROR << "erroneously left channel (4,6,3) NEG" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (!m_calFailureModeSvc->matchChannel(id5,idents::CalXtalId::NEG)) {
+    log << MSG::INFO << "left channel (4,1,3) NEG" << endreq;
+  } else {
+    log << MSG::ERROR << "erroneously removed channel (4,1,3) NEG" << endreq;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS;
 }
