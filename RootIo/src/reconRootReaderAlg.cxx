@@ -26,6 +26,9 @@
 #include "TDirectory.h"
 #include "TObjArray.h"
 #include "TCollection.h"  // Declares TIter
+#ifdef WIN32
+#include "TSystem.h" // To get TreePlayer loaded
+#endif
 
 #include "reconRootData/ReconEvent.h"
 
@@ -184,7 +187,11 @@ StatusCode reconRootReaderAlg::initialize()
     }
 
     facilities::Util::expandEnvVar(&m_fileName);
-    
+ 
+#ifdef WIN32
+	gSystem->Load("libTreePlayer.dll");
+#endif  
+   
     // Save the current directory for the ntuple writer service
     TDirectory *saveDir = gDirectory;   
     m_reconTree = new TChain(m_treeName.c_str());
@@ -967,7 +974,10 @@ void reconRootReaderAlg::close()
     //m_reconFile->cd();
     //m_reconFile->Close();
     //saveDir->cd();
-    if (m_reconTree) delete m_reconTree;
+	if (m_reconTree) {
+		delete m_reconTree;
+		m_reconTree = 0;
+	}
 }
 
 StatusCode reconRootReaderAlg::finalize()

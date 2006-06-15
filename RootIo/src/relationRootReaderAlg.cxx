@@ -24,6 +24,9 @@
 #include "TDirectory.h"
 #include "TObjArray.h"
 #include "TCollection.h"  // Declares TIter
+#ifdef WIN32
+#include "TSystem.h" // To get TreePlayer loaded
+#endif
 
 #include "mcRootData/McEvent.h"
 #include "digiRootData/DigiEvent.h"
@@ -155,7 +158,11 @@ StatusCode relationRootReaderAlg::initialize()
     }
 
     facilities::Util::expandEnvVar(&m_fileName);
-    
+
+#ifdef WIN32
+	gSystem->Load("libTreePlayer.dll");
+#endif  
+   
     // Save the current directory for the ntuple writer service
     TDirectory *saveDir = gDirectory;   
 
@@ -467,7 +474,10 @@ void relationRootReaderAlg::close()
     //m_relFile->cd();
     //m_relFile->Close();
     //saveDir->cd();
-    if (m_relTree) delete m_relTree;
+	if (m_relTree) {
+		delete m_relTree;
+		m_relTree = 0;
+	}
 }
 
 StatusCode relationRootReaderAlg::finalize()

@@ -32,6 +32,9 @@
 #include "TDirectory.h"
 #include "TObjArray.h"
 #include "TCollection.h"  // Declares TIter
+#ifdef WIN32
+#include "TSystem.h" // To get TreePlayer loaded
+#endif
 
 #include "digiRootData/DigiEvent.h"
 
@@ -181,7 +184,11 @@ StatusCode digiRootReaderAlg::initialize()
     } 
 
     facilities::Util::expandEnvVar(&m_fileName);
-    
+
+#ifdef WIN32
+	gSystem->Load("libTreePlayer.dll");
+#endif  
+
     // Save the current directory for the ntuple writer service
     TDirectory *saveDir = gDirectory;   
 
