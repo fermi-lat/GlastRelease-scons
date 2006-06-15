@@ -17,13 +17,13 @@ using namespace std;
 
 /** $Header$*/
 
-/** @class LogInfo
+/** @class CalLogInfo
 @brief Available in v3 of OBF  
 */
-class LogInfo : public TObject {
+class CalLogInfo : public TObject {
 public:
-    LogInfo() { Clear(""); };
-    virtual ~LogInfo() { Clear(""); };
+    CalLogInfo() { Clear(""); };
+    virtual ~CalLogInfo() { Clear(""); };
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
@@ -47,7 +47,7 @@ private:
     Int_t m_gainP;
     Int_t m_shiftP;
 
-    ClassDef(LogInfo, 1) // LogInfo
+    ClassDef(CalLogInfo, 1) // CalLogInfo
 };
 
 
@@ -283,7 +283,7 @@ public:
 
     void initTracks(const TObjArray &tracks);
 
-    //void initLogInfo(const LogInfo *logData); 
+    //void initCalLogInfo(const CalLogInfo *logData); 
 
     void Clear(Option_t *option ="");
 
@@ -423,7 +423,7 @@ private:
     ///Tracks found for this event
     TObjArray m_tracks;
 
-    //LogInfo m_logData[16*8*12];    // 16 towers * 8 layers * 12 logs  in newer version of OBF
+    //CalLogInfo m_calLogData[16*8*12];    // 16 towers * 8 layers * 12 logs  in newer version of OBF
 
     ClassDef(FilterStatus,1) // OBF Filter Status
 };

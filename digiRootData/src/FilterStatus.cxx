@@ -4,14 +4,14 @@
 #include "commonRootData/RootDataUtil.h"
 #include "Riostream.h"
 
-ClassImp(LogInfo)
+ClassImp(CalLogInfo)
 ClassImp(TfcProjection)
 ClassImp(TfcProjectionDir)
 ClassImp(TfcProjectionCol)
 ClassImp(ObfTrack)
 ClassImp(FilterStatus)
 
-void LogInfo::Clear(Option_t *option) {
+void CalLogInfo::Clear(Option_t *option) {
     m_tower = 0;
     m_layer = 0;
     m_column = 0;
@@ -32,10 +32,10 @@ void LogInfo::Clear(Option_t *option) {
 
 }
 
-void LogInfo::Print(Option_t *option) const {
+void CalLogInfo::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
-    cout << "LogInfo: " << endl;
+    cout << "CalLogInfo: " << endl;
 }
 
 
@@ -467,7 +467,7 @@ void FilterStatus::initTracks(const TObjArray &tracks)
     }
 }
 
-//void FilterStatus::initLogInfo(const LogInfo *logData); 
+//void FilterStatus::initCalLogInfo(const CalLogInfo *logData); 
 
 void FilterStatus::Clear(Option_t *option) 
 {

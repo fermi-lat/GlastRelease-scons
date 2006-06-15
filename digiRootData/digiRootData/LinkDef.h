@@ -49,7 +49,7 @@
 #pragma link C++ class Tem+;
 
 // OBF
-#pragma link C++ class LogInfo+;
+#pragma link C++ class CalLogInfo+;
 #pragma link C++ class TfcProjection+;
 #pragma link C++ class TfcProjectionDir+;
 #pragma link C++ class TfcProjectionCol+;
