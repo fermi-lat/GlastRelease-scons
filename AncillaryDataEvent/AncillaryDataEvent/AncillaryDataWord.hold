@@ -1,0 +1,59 @@
+#ifndef ANCILLARYDATAWORD_HH
+#define ANCILLARYDATAWORD_HH
+
+#include <iostream>
+#include <string>
+#include "TaggerParameters.h"
+
+// Definition of the relevant constants.
+// Based on ancillary data version 2.00
+const int ANCILLARY_DATA_VERSION = 200;
+const int ANCILLARY_WORD_LENGTH  = 4; 
+const int ANCILLARY_FILE_HEADER  = 0xf1040;
+const int ANCILLARY_START_RUN    = 15;
+const int ANCILLARY_EVENT_HEADER = 0xf1030;
+const int ANCILLARY_EVENT_ID     = 12;
+const int ANCILLARY_QDC_ID       = 1;
+const int ANCILLARY_FADC_ID      = 2;
+const int ANCILLARY_END_RUN      = 14;
+
+class AncillaryDataWord
+{
+ public:
+  
+  AncillaryDataWord(int word);
+  ~AncillaryDataWord();
+  int getVersion();
+  int getFileHeader();
+  int getFileHeaderBlockLenght();
+  int getRunNumber();
+  int getStartDateYear();
+  int getStartDateMonth();
+  int getStartDateDay();
+  int getStartDateHours();
+  int getStartDateMinutes();
+  int getStartDateSeconds();
+  int getCommentStringLength();
+  int getEventHeader();
+  int getEventLength();
+  int getEventNumber();
+  int getSpillNumber();
+  int getHeader();
+  int getData();
+  int getQdcFifo();
+  int getQdcChannel();
+  int getQdcValue();
+  int getFadcModule();
+  int getFadcFifo();
+  int getFadcChannel();
+  int getFadcValue();
+  int getTaggerModule();
+  int getTaggerLayer();
+  int getTaggerChannel();
+ 
+ private:
+  
+  int m_word;
+};
+#endif
+
