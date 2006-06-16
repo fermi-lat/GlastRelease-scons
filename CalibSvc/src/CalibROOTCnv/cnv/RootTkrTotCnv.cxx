@@ -92,13 +92,8 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
 
   for (unsigned ix = 0; ix < nEntries; ix++) {  // process a unilayer
 
-    calibRootData::TotUnilayer* rootUni = 0;
-    //  Because readRootObj expects a ref. to a pointer (not just a pointer)
-    //  the thing being pointed to must be of the correct type - TObject -
-    //  or the compiler will complain.  However, in this frame we need
-    // the pointer to be of type TotUnilayer*.  Declaration below, which
-    // just makes pObj an alias for RootUni, seems to do the right thing
-    TObject*& pObj = rootUni;
+    calibRootData::TotUnilayer* rootUni = new calibRootData::TotUnilayer();
+    TObject* pObj = rootUni;
 
     StatusCode ret = 
       readRootObj(tree, "calibRootData::TotUnilayer", pObj, ix);
