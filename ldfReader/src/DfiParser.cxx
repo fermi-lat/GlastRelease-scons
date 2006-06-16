@@ -212,6 +212,7 @@ int DfiParser::loadData() {
         ldfReader::LatData::instance()->checkPacketError();
         ldfReader::LatData::instance()->checkTrgParityError();
         ldfReader::LatData::instance()->checkAemError();
+        ldfReader::LatData::instance()->checkCalReadout();
 
     } catch (LdfException& e) {
        std::cerr << "Caught LdfException: " << e.what() << " Apid: "  
