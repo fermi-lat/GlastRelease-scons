@@ -1,0 +1,189 @@
+#include "AncillaryDataUtil/Tagger.h"
+#include "facilities/Util.h"
+
+Tagger::Tagger()
+{
+  m_DEBUG = 0;
+  // Create tagger modules.
+  for (int moduleId = 0; moduleId < N_MODULES; moduleId++){
+    m_modules[moduleId] = new TaggerModule(moduleId);
+  }
+}
+
+Tagger::~Tagger()
+{
+  // Delete all the pointers!
+  //delete m_modules;
+}
+
+TaggerModule *Tagger::getModule(int moduleId)
+{
+  return m_modules[moduleId];
+}
+
+TaggerLayer *Tagger::getLayer(int moduleId, int layerId)
+{
+  return getModule(moduleId)->getLayer(layerId);
+}
+
+TaggerChannel *Tagger::getChannel(int moduleId, int layerId, int channelId)
+{
+  return getModule(moduleId)->getLayer(layerId)->getChannel(channelId);
+}
+
+void Tagger::readPedestals(std::string pedestalFilePath)
+{
+  // Here the code should be refined. If the pedestal file does not exist it crashes...
+  std::cout << "Reading pedestals ASCII file..." << std::endl;
+  std::ifstream inputPedestalFile;
+  //facilities::Util::expandEnvVar(&pedestalFilePath);
+  inputPedestalFile.open(pedestalFilePath.c_str(), std::ios::in);
+  bool fileError = inputPedestalFile.bad();
+  if (fileError){
+    std::cout << "Could not open file " << pedestalFilePath << ". Exit " << fileError << std::endl;
+    exit(fileError);
+  }
+  // Skip the file header...
+  char fileHeader[30] = "";
+  for (int i = 0; i < 7; i++){
+    inputPedestalFile >> fileHeader;
+  }
+  // ...then read the actual pedestals.
+  while(!inputPedestalFile.eof()){
+    int    moduleId;
+    int    layerId;
+    int    channelId;
+    double pedestal;
+    double rawNoise;
+    double cmsNoise;
+    bool   badFlag;
+    inputPedestalFile >> moduleId >> layerId >> channelId >> pedestal >> rawNoise >> cmsNoise >> badFlag;
+    TaggerChannel *taggerChannel = getChannel(moduleId, layerId, channelId);
+    taggerChannel->setPedestal(pedestal);
+    taggerChannel->setRawNoise(rawNoise);
+    taggerChannel->setCmsNoise(cmsNoise);
+    taggerChannel->setBadFlag(badFlag);
+    if (badFlag){
+      std::cout << "Bad flag is set for module " << moduleId << ", layer " 
+                << layerId << ", channel " << channelId << std::endl;
+    }
+  }
+  std::cout << std::endl;
+  inputPedestalFile.close();
+  if (m_DEBUG){
+    std::cout << "Printing information for a subset of channels..." << std::endl;
+    std::cout << "Module\tLayer\tChannel\tPed\trNnoise\tsNoise\tbadFlag" << std::endl;
+    for (int moduleId = 0; moduleId < N_MODULES; moduleId++){
+      for (int layerId = 0; layerId < N_LAYERS_PER_MODULE; layerId++){
+        for (int channelId = 0; channelId < N_DEBUG_CHANNELS; channelId++){
+	  std::cout << moduleId  << "\t"; 
+	  std::cout << layerId   << "\t";
+          std::cout << channelId << "\t";
+	  TaggerChannel *taggerChannel = getModule(moduleId)->getLayer(layerId)->getChannel(channelId);
+          std::cout << taggerChannel->getPedestal() << "\t";
+	  std::cout << taggerChannel->getRawNoise() << "\t";
+          std::cout << taggerChannel->getCmsNoise() << "\t";
+	  std::cout << taggerChannel->isBad()       << std::endl;
+	}
+      }
+    }
+  }
+  std::cout << "Done." << std::endl << std::endl;
+}
+
+void Tagger::readEvent(AncillaryDataEvent *event)
+{
+  resetData();
+  std::vector<AncillaryDataWord>::iterator fadcIterator;
+  std::vector<AncillaryDataWord> fadcDataWords = event->getFadcDataWords();
+  for (fadcIterator = fadcDataWords.begin(); fadcIterator != fadcDataWords.end(); fadcIterator++){
+    int rawADC = (*fadcIterator).getFadcValue();
+    int moduleId  = (*fadcIterator).getTaggerModule();
+    int layerId   = (*fadcIterator).getTaggerLayer();
+    int channelId = (*fadcIterator).getTaggerChannel();
+    TaggerChannel *channel = getChannel(moduleId, layerId, channelId);
+    channel->reset();
+    channel->setRawADC(rawADC);
+    channel->processData();
+    if (channel->isHit()){
+      if(m_DEBUG) std::cout << "Channel " << moduleId << " " << layerId << " " << channelId << " hit!" << std::endl;
+      TaggerLayer *layer = getLayer(moduleId, layerId);
+      layer->m_hits.push_back(new TaggerHit(channel));
+    }
+  }
+}
+
+void Tagger::processData(AncillaryDataEvent *event)
+{
+  // Process all modules.
+  for (int moduleId = 0; moduleId < N_MODULES; moduleId++){
+    m_modules[moduleId]->processData();
+    if (m_modules[moduleId]->getXCrossingPosition() > -1.0 && m_modules[moduleId]->getYCrossingPosition() > -1.0){
+      m_trackX.push_back(m_modules[moduleId]->getXCrossingPosition());
+      m_trackY.push_back(m_modules[moduleId]->getYCrossingPosition());
+      m_trackZ.push_back(3.0*moduleId);
+    }
+  }
+  
+  int n = m_trackZ.size();
+  double thetaXZ = -1000;
+  double thetaYZ = -1000;
+  if (n>2){
+    double sx = 0;
+    double sy = 0;
+    double sxx = 0;
+    double sxy = 0;
+    for (int i=0; i<n; i++){
+      double x = m_trackZ[i];
+      double y = m_trackX[i];
+      sx += x;
+      sy += y;
+      sxx += x*x;
+      sxy += x*y;
+    }
+    thetaXZ = atan((n*sxy - sx*sy)/(n*sxx - sx*sx)); 
+    sx = 0;
+    sy = 0;
+    sxx = 0;
+    sxy = 0;
+    for (int i=0; i<n; i++){
+      double x = m_trackZ[i];
+      double y = m_trackY[i];
+      sx += x;
+      sy += y;
+      sxx += x*x;
+      sxy += x*y;
+    }
+    thetaYZ = atan((n*sxy - sx*sy)/(n*sxx - sx*sx)); 
+  }
+  event->m_thetaXZ = thetaXZ;
+  event->m_thetaYZ = thetaYZ;
+}
+
+void Tagger::resetData()
+{
+  for (int moduleId = 0; moduleId < N_MODULES; moduleId++){
+    m_modules[moduleId]->resetData();
+    for (int layerId = 0; layerId < N_LAYERS_PER_MODULE; layerId++){
+      m_modules[moduleId]->getLayer(layerId)->reset();
+    }
+  }
+  m_trackX.clear();
+  m_trackY.clear();
+  m_trackZ.clear();
+}
+
+void Tagger::writeOutputRootFile(std::string outputRootFilePath)
+{
+  std::cout << "Writing output ROOT file..." << std::endl;
+  TFile *outputRootFile = new TFile(outputRootFilePath.c_str(), "RECREATE");
+  // Write cumulative histograms to the ROOT file.
+  for (int moduleId = 0; moduleId < N_MODULES; moduleId++){  
+    for (int layerId = 0; layerId < N_LAYERS_PER_MODULE; layerId++){
+      getLayer(moduleId, layerId)->writeHistogramsToFile();
+    }
+  }
+  outputRootFile->Close();
+  std::cout << "Done." << std::endl << std::endl;  
+}
+

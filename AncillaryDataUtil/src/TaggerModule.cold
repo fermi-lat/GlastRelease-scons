@@ -1,0 +1,42 @@
+#include "AdUtil/TaggerModule.h"
+
+TaggerModule::TaggerModule(int moduleId)
+{
+  // Make constructor parameters class members.
+  m_moduleId   = moduleId;
+  // Create the two silicon layers.
+  for (int layerId = 0; layerId < N_LAYERS_PER_MODULE; layerId++){
+    m_layers[layerId] = new TaggerLayer(layerId, m_moduleId);
+  }
+}
+
+TaggerModule::~TaggerModule()
+{
+  // Delete all the pointers!
+  delete[] m_layers;
+}
+
+void TaggerModule::processData()
+{
+  //resetData();
+  // Process all layers.
+  for (int layerId = 0; layerId < N_LAYERS_PER_MODULE; layerId++){
+    m_layers[layerId]->processData();
+  }
+  if (m_layers[0]->getHighestCluster() != NULL){
+    m_xCrossingPosition = m_layers[0]->getHighestCluster()->getPosition();
+    m_xCrossingError    = (m_layers[0]->getHighestCluster()->getSize())*STRIPS_PITCH;
+  }
+  if (m_layers[1]->getHighestCluster() != NULL){
+    m_yCrossingPosition = m_layers[1]->getHighestCluster()->getPosition();
+    m_yCrossingError    = (m_layers[1]->getHighestCluster()->getSize())*STRIPS_PITCH;
+  }
+}
+
+void TaggerModule::resetData()
+{
+  m_xCrossingPosition = -1.0;
+  m_xCrossingError    = -1.0;
+  m_yCrossingPosition = -1.0;
+  m_yCrossingError    = -1.0;
+}
