@@ -2,7 +2,6 @@ package AncillaryDataUtil
 version v0
 author N.Omodei <nicola.omodei@pi.infn.it>
 
-use GaudiInterface * IExternal
 use GlastPolicy *
 use AdfEvent *
 use facilities *
