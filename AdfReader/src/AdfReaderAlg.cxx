@@ -79,8 +79,20 @@ StatusCode AdfReaderAlg::initialize()
 
 StatusCode AdfReaderAlg::execute()
 {  
-  RegisterAdf();
-  RegisterDigi();
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "initialize" << endreq;
+  sc = RegisterAdf();
+  if (sc.isFailure()) {
+    log << MSG::INFO << "Failed to register ADF" << endreq;
+    return sc;
+  }
+  sc = RegisterDigi();
+  if (sc.isFailure()) {
+    log << MSG::INFO << "Failed to register Digi" << endreq;
+    return sc;
+  }
+  return sc;
 }
 
 StatusCode AdfReaderAlg::RegisterAdf()

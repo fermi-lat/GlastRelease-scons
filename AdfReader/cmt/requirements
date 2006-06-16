@@ -1,5 +1,5 @@
 package AdfReader
-version v0
+version v0r0
 author N.Omodei <nicola.omodei@pi.infn.it>
 
 use GaudiInterface * IExternal
@@ -10,19 +10,17 @@ use AncillaryDataEvent *
 use AncillaryDataUtil *
 use facilities *
 
-apply_pattern package_include
-apply_pattern package_linkopts
-apply_pattern package_headers
 
-#apply_pattern packageShr
-#apply_pattern shared_library
-#apply_pattern package_include
-#macro_append package_linkopts
+apply_pattern packageShr
+apply_pattern package_include
+apply_pattern ld_library_path
 
 private
-# this build a static library:
-#library AdfReader -no_share \
-#	*.cxx ${AdfReader_headers}
+use GlastSvc v*
+
+apply_pattern package_Cshlibflags
+apply_pattern package_headers
+
 
 # this build the component dynamic library
 library AdfReader \
@@ -33,4 +31,6 @@ library AdfReader \
 #library AdfReader *.cxx \
 #        ${AdfReader_headers}
 
-application test_AdfReader test/testMain.cxx *.cxx
+apply_pattern package_test
+
+#application test_AdfReader test/testMain.cxx *.cxx
