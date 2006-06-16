@@ -23,7 +23,8 @@ namespace enums {
             GCCCERROR = 16384,
             GTCCERROR = 32768,
             PHASEERROR = 65536,
-            TIMEOUTERROR = 131072
+            TIMEOUTERROR = 131072,
+            MISSINGCALREADOUT= 262144
         } EventFlags;
 
 

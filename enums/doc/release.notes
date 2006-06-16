@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r8    16-Jun-2006 HMK Add flag for missing CAL readouts in ALLRANGE
 v0r7    09-Jun-2006 HMK Add constants for flight OBF
 v0r6p1  01-Jun-2006 RBL Update mode enum in Lsf.h to match B0-6-9 DFI
 v0r6    16-May-2006 HMK Check in new include DetectorConstants.h
