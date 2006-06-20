@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r7      20-Jun-2006 HMK Ancillary Digi data from beamtest
 v9r6p1    15-Jun-2006 HMK rename LogInfo in OBF to avoid name conflict
 v9r6      02-Jun-2006 HMK OnboardFilter storage
 v9r5p2    01-Jun-2006 HMK Patch for MetaEvent copy ctor to init properly

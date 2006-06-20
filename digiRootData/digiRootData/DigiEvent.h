@@ -20,6 +20,8 @@
 #include "MetaEvent.h"
 #include "Ccsds.h"
 
+#include "AdfDigi.h"
+
 /** @class DigiEvent
  * @brief This is the top-level event class to store the Digi data.
  *
@@ -208,6 +210,10 @@ public:
         m_ebfLowerPpcTimeBase = lowerPpcTimeBase;
     }
 
+    const AdfDigi& getAdfDigi() const { return m_adfDigi; }
+    void setAdfDigi(const AdfDigi& adf) { m_adfDigi = adf; }
+
+
 
 private:
     /// Time in seconds
@@ -275,8 +281,10 @@ private:
     Ccsds m_ccsds;
  
     FilterStatus m_obf;
+   
+    AdfDigi m_adfDigi;
 
-    ClassDef(DigiEvent,17) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,18) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif

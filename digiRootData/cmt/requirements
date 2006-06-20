@@ -1,5 +1,5 @@
 package digiRootData
-version v9r6p1
+version v9r7
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
 # $Id$
@@ -33,6 +33,9 @@ apply_pattern root_package headers="\
  ../digiRootData/ErrorData.h\
  ../digiRootData/Tem.h\
  ../digiRootData/FilterStatus.h\
+ ../digiRootData/TaggerHit.h\
+ ../digiRootData/QdcHit.h\
+ ../digiRootData/AdfDigi.h\
  ../digiRootData/EventSummaryData.h"\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
  test_source="test/testDigiClasses.cxx"

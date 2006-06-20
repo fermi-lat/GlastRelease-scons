@@ -56,6 +56,10 @@
 #pragma link C++ class ObfTrack+;
 #pragma link C++ class FilterStatus+;
 
+// Beamtest Ancillary Data 2006
+#pragma link C++ class TaggerHit;
+#pragma link C++ class QdcHit;
+#pragma link C++ class AdfDigi;
 
 #endif
 

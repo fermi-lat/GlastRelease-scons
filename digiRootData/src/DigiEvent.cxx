@@ -20,7 +20,6 @@ TClonesArray *DigiEvent::s_tkrDiagnosticStaticCol = 0;
 TClonesArray *DigiEvent::s_temStaticCol = 0;
 
 DigiEvent::DigiEvent() {
-    //if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",1536);
     if (!s_calDigiStaticCol) s_calDigiStaticCol = new TClonesArray("CalDigi",100);
     m_calDigiCloneCol = s_calDigiStaticCol;
     m_numCalDigis = -1;
@@ -138,11 +137,6 @@ void DigiEvent::Clear(Option_t *option) {
 
 
     m_calDigiCloneCol->Clear("C");
-    /*if (m_calDigiCol) {
-        m_calDigiCol->Delete();
-        delete m_calDigiCol;
-        m_calDigiCol = 0;
-    }*/
     m_acdDigiCol->Clear("C");
     m_numAcdDigis = -1;
     m_numCalDigis = -1;
@@ -176,6 +170,8 @@ void DigiEvent::Clear(Option_t *option) {
     }
     m_tkrDigiCol->Clear();
     m_gem.Clear();
+
+    m_adfDigi.Clear("");
 }
 
 void DigiEvent::Print(Option_t *option) const {
@@ -198,6 +194,7 @@ void DigiEvent::Print(Option_t *option) const {
    
     m_metaEvent.Print(option);
     m_ccsds.Print(option);
+    m_adfDigi.Print(option);
     cout << dec;
 }
 
