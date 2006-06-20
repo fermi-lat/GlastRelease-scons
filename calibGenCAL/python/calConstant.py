@@ -56,6 +56,11 @@ CLEHE = ('LE','HE', 'BOTH')
 
 CDAC = ('FINE', 'COARSE')
 
+# Calorimeter symbolic names for DAC range indicies
+
+CDAC_FINE   = 0
+CDAC_COARSE = 1
+
 # Number of calorimeter faces
 
 NUM_FACE = 8
