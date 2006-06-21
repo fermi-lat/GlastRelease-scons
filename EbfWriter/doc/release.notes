@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r0p5 21-JUN-2006 BLW Fix for RngIdx in EbfCalData 
  * v1r0p4 28-APR-2006 BLW Fix for change in CalCalibSvc 
  * v1r0p3 ???         Not sure who did this
  * v1r0p2 05-Mar-2006 LSR fix charge for heavy ions, a la McValsTool
