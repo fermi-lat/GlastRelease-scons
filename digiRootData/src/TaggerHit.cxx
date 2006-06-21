@@ -1,7 +1,3 @@
-//
-// The Event class is the top level class for the ASCII to ROOT
-// conversion. It contains all the information about a single event.
-//
 
 #include "digiRootData/TaggerHit.h"
 #include "commonRootData/RootDataUtil.h"
@@ -69,7 +65,7 @@ void TaggerHit::Print(Option_t *option) const {
     cout << dec;
 }
 
-Bool_t TaggerHit::CompareInRange( const TaggerHit &ref, const std::string& name ) {
+Bool_t TaggerHit::CompareInRange(const TaggerHit &ref, const std::string& name ) const{
     bool result = true;
 
     result = rootdatautil::CompareInRange(getModuleId(),ref.getModuleId(),"ModuleId") && result;

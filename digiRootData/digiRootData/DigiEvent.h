@@ -210,10 +210,8 @@ public:
         m_ebfLowerPpcTimeBase = lowerPpcTimeBase;
     }
 
-    const AdfDigi& getAdfDigi() const { return m_adfDigi; }
-    void setAdfDigi(const AdfDigi& adf) { m_adfDigi = adf; }
-
-
+    const AdfDigi& getAdfDigi() const { return m_adfDigi; };
+	AdfDigi& getAdfDigi() { return m_adfDigi; };
 
 private:
     /// Time in seconds

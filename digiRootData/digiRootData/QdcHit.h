@@ -34,7 +34,7 @@ public:
     UInt_t getPulseHeight() const { return m_pulseHeight; }
     Bool_t isPedestalSubtracted() const { return m_isPedestalSubtracted; }
 
-    Bool_t CompareInRange( const QdcHit &ref, const std::string& name="" );
+    Bool_t CompareInRange( const QdcHit &ref, const std::string& name="" ) const;
 
 private:
 

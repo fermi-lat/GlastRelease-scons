@@ -1,8 +1,3 @@
-//
-// The Event class is the top level class for the ASCII to ROOT
-// conversion. It contains all the information about a single event.
-//
-
 #include "digiRootData/QdcHit.h"
 #include "commonRootData/RootDataUtil.h"
 #include "Riostream.h"
@@ -61,7 +56,7 @@ void QdcHit::Print(Option_t *option) const {
     cout << dec;
 }
 
-Bool_t QdcHit::CompareInRange( const QdcHit &ref, const std::string& name ) {
+Bool_t QdcHit::CompareInRange( const QdcHit &ref, const std::string& name ) const {
     bool result = true;
 
     result = rootdatautil::CompareInRange(getChannel(),ref.getChannel(),"Channel") && result;

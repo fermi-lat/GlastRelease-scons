@@ -67,13 +67,6 @@ DigiEvent::~DigiEvent() {
     delete m_calDigiCloneCol;
     m_calDigiCloneCol = 0;
 
-    /*if (m_calDigiCol) {
-        m_calDigiCol->Delete();
-        delete m_calDigiCol;
-        m_calDigiCol = 0;
-    }*/
-
-
     if (m_calDiagnosticCloneCol == s_calDiagnosticStaticCol) s_calDiagnosticStaticCol = 0;
     m_calDiagnosticCloneCol->Delete();
     delete m_calDiagnosticCloneCol;

@@ -529,7 +529,7 @@ int read(char* fileName, int numEvents) {
         if (!fs.CompareInRange(fsRef)) return -1;
         fs.Print();
 
-        const AdfDigi adf = evt->getAdfDigi();
+        const AdfDigi& adf = evt->getAdfDigi();
         AdfDigi adfRef;
         adfRef.Fake(ievent, randNum);
         if (!adf.CompareInRange(adfRef)) return -1;
@@ -652,9 +652,8 @@ int write(char* fileName, int numEvents) {
         fs.Fake(ievent, randNum);
         ev->setFilterStatus(fs);
 
-        AdfDigi adf;
+        AdfDigi& adf = ev->getAdfDigi();
         adf.Fake(ievent,randNum);
-        ev->setAdfDigi(adf);
 
         t->Fill();
         ev->Clear();

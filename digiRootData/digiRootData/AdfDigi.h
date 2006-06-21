@@ -19,11 +19,6 @@ class AdfDigi: public TObject {
 public:
     
     AdfDigi();
-
-    AdfDigi(const AdfDigi &copy);
-
-    AdfDigi& operator=(const AdfDigi& copy);
-
     virtual ~AdfDigi();
 
     void Clear(Option_t *option ="");
@@ -48,7 +43,7 @@ public:
 
 
     void Fake( Int_t ievent, Float_t randNum );
-    Bool_t CompareInRange( AdfDigi &, const std::string & name = "" );
+    Bool_t CompareInRange( const AdfDigi &, const std::string & name = "" )const;
 
 private:
 
@@ -59,10 +54,8 @@ private:
     Int_t m_numQdcHit;
 
     TClonesArray *m_taggerHitCol;
-    static TClonesArray *s_taggerHitStaticCol; //!
 
     TClonesArray *m_qdcHitCol;
-    static TClonesArray *s_qdcHitStaticCol; //!
 
     ClassDef(AdfDigi,1) // Digitization Ancillary data beamtest 2006
 };
