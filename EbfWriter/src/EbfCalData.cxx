@@ -528,7 +528,7 @@ StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc) {
                   float ped[2];
                   for(int face=0; face<2; face++) {
 //                      idents::CalXtalId rngXtalId(twr,lyr,col,face,rng);
-                      RngIdx rngXtalId(twr,lyr,col,face,rng);
+                      CalUtil::RngIdx rngXtalId(twr,lyr,col,face,rng);
 
                       float tmpPed, tmpPedSig, tmp;
                     //-- RETRIEVE PEDS --//
