@@ -90,12 +90,12 @@ if len(configsections) == 0:
 cmdbat = open("run_"+fileroot+".bat","w")
 cmdbat.write("if not defined CALIBGENCALROOT goto :ERROR\n")
 cmdbat.write("setlocal\n")
-cmdbat.write("set PYTHONROOT=%CALIBGENCALROOT%\python;%PYTHONROOT%;"+"\n")
+cmdbat.write("set PYTHONPATH=%CALIBGENCALROOT%/python/lib;%PYTHONROOT%;"+"\n")
 
 # open .sh file for run commands
 cmdsh = open("run_"+fileroot+".sh", "w")
 cmdsh.write("#! /bin/sh\n")
-cmdsh.write("PYTHONPATH=${CALIBGENCALROOT}/python:${PYTHONPATH}\n")
+cmdsh.write("PYTHONPATH=${CALIBGENCALROOT}/python/lib:${PYTHONPATH}\n")
 cmdsh.write("export PYTHONPATH\n")
 
 CALIBGENCALROOT = os.environ["CALIBGENCALROOT"]
