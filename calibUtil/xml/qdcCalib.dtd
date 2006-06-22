@@ -73,7 +73,7 @@
 <!ELEMENT qdcChan (qdcPed) >
 <!ATTLIST qdcChan  iMod NMTOKEN #REQUIRED
                    iChan NMTOKEN #REQUIRED 
-                   device CDATA #REQUIRED
+                   device CDATA " "
 >
 
 
