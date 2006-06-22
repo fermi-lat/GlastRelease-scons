@@ -7,7 +7,6 @@
         dtd for tagger calibration data types
     */
  -->
-
 <!-- 
    Overall structure is some header information followed by
    a sequence of module data.  Module data is made up
@@ -78,6 +77,3 @@
 <!ELEMENT taggerGain EMPTY>
 <!ATTLIST taggerGain gain NMTOKEN #REQUIRED
                      isBad  NMTOKEN "0" > 
-
-
-

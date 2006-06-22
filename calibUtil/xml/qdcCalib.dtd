@@ -40,7 +40,7 @@
                             be implemented as enumeration rather than
                             NMTOKEN
             timestamp     - when the file was written (date and time)
-            calibType     - QDC_pedgain
+            calibType     - QDC_ped
             fmtVersion    - sufficient versioning information so that
                             software attempting to read the file can
                             determine if it supports this version. 
@@ -74,12 +74,10 @@
 <!ATTLIST qdcChan  iMod NMTOKEN #REQUIRED
                    iChan NMTOKEN #REQUIRED 
                    device CDATA #REQUIRED
+>
 
 
 <!ELEMENT qdcPed  EMPTY>
 <!ATTLIST qdcPed  ped NMTOKEN #REQUIRED
                   pedRms NMTOKEN #REQUIRED
                   isBad  NMTOKEN "0" > 
-
-
-
