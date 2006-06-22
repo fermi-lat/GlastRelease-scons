@@ -54,9 +54,9 @@ class RootFileAnalysis {
   /// by EventID field
   UInt_t getEvent(UInt_t iEvt);
 
-  const McEvent   *getMcEvent() const {return m_mcEvt;}
-  const DigiEvent *getDigiEvent() const {return m_digiEvt;}
-  const ReconEvent  *getRecEvent() const {return m_recEvt;}
+  McEvent   *getMcEvent() const {return m_mcEvt;}
+  DigiEvent *getDigiEvent() const {return m_digiEvt;}
+  ReconEvent  *getRecEvent() const {return m_recEvt;}
 
   TChain *getMcChain()   {return &m_mcChain;}
   TChain *getDigiChain() {return &m_digiChain;}

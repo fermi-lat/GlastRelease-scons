@@ -39,8 +39,9 @@ class RoughPed {
   /// Fill roughpedhist histograms w/ nEvt event data
   /// \param rootFilename.  input digi event file
   /// \param histFilename.  output root file for histograms.
-  void fillHists(unsigned nEvts, 
-                 const vector<string> &rootFileList); 
+  void fillHists(unsigned nEntries, 
+                 const vector<string> &rootFileList,
+                 bool periodicTrigger); 
 
   /// Fit roughpedhist[]'s, assign means to m_calRoughPed
   void fitHists(); 
@@ -74,6 +75,9 @@ class RoughPed {
  private:
   /// allocate & create rough pedestal histograms & pointer array
   void initHists(); 
+
+  /// count min number of entries in all enable histograms
+  unsigned getMinEntries();
 
   /// list of histograms for 'rough' pedestals
   CalVec<FaceIdx, TH1S*> m_histograms; 

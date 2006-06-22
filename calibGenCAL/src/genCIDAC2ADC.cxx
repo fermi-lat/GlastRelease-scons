@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
   // broadcast mode
   bool bcastMode = cfgFile.getVal("CIDAC2ADC",
                                   "BCAST_MODE",
-                                  false);
+                                  true);
 
   // txt output filename
   string outputTXTFile;

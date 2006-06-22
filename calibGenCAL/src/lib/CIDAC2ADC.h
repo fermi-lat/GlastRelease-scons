@@ -7,6 +7,7 @@
 
 // LOCAL INCLUDES
 #include "CGCUtil.h"
+#include "RootFileAnalysis.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
@@ -67,19 +68,19 @@ class CIDAC2ADC {
   void genSplines(); 
 
   /// uses intNonlin to convert adc 2 dac for specified xtal/adc range
-  float adc2dac(DiodeIdx diodeIdx, float adc) const {
-    if (!m_splinesADC2DAC[diodeIdx])
+  float adc2dac(RngIdx rngIdx, float adc) const {
+    if (!m_splinesADC2DAC[rngIdx])
       return INVALID_ADC;
 
-    return m_splinesADC2DAC[diodeIdx]->Eval(adc);
+    return m_splinesADC2DAC[rngIdx]->Eval(adc);
   }
 
   /// uses intNonlin to convert dac 2 adc for specified xtal/adc range
-  float dac2adc(DiodeIdx diodeIdx, float dac) const {
-    if (!m_splinesDAC2ADC[diodeIdx])
+  float dac2adc(RngIdx rngIdx, float dac) const {
+    if (!m_splinesDAC2ADC[rngIdx])
       return INVALID_ADC;
 
-    return m_splinesDAC2ADC[diodeIdx]->Eval(dac);
+    return m_splinesDAC2ADC[rngIdx]->Eval(dac);
   }
 
   static void genOutputFilename(const string outputDir,
@@ -109,8 +110,8 @@ class CIDAC2ADC {
   /// output DAC spline points
   CalVec<RngIdx, vector<float> >  m_splinePtsDAC;
 
-  CalVec<DiodeIdx, TSpline3*> m_splinesADC2DAC; 
-  CalVec<DiodeIdx, TSpline3*> m_splinesDAC2ADC; 
+  CalVec<RngIdx, TSpline3*> m_splinesADC2DAC; 
+  CalVec<RngIdx, TSpline3*> m_splinesDAC2ADC; 
 
   ostream &m_ostrm;
 

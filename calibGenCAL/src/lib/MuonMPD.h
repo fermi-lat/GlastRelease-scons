@@ -44,7 +44,7 @@ class MuonMPD {
   MuonMPD(ostream &ostrm = cout);
 
   /// populate histograms from digi root event file
-  void fillHists(unsigned nEvents,
+  void fillHists(unsigned nEntries,
                  const vector<string> &rootFileList, 
                  const MuonPed &peds,
                  const MuonAsym &asym,
@@ -72,10 +72,18 @@ class MuonMPD {
   /// skip event processing & load histograms from previous analysis
   void loadHists(const string &filename);
 
- private:
+  /// write ADC2MEV (4-range) factors to txt file
+  void writeADC2NRG(const string &filename,
+                    const MuonAsym &asym,
+                    const CIDAC2ADC &dac2adc);
 
+
+ private:
   /// allocate & create mpdmetry histograms & pointer arrays
   void initHists();
+
+  /// count min number of entries in all enable histograms
+  unsigned getMinEntries();
 
   /// 2d vector N_MPD_PTS lograt mpdvals per xtal/mpdType
   CalVec<DiodeNum, CalArray<XtalIdx, float> > m_mpd; 
@@ -98,13 +106,15 @@ class MuonMPD {
   
   /// profile X=bigdiodedac Y=smdiodedac 1 per xtal
   CalVec<XtalIdx, TH1S*> m_dacL2SHists;  
+
   /// profile X=bigdiodedac Y=smdiodedac 1 per xtal (not used in main calib, only for finding extra l2s slope info)
   CalVec<XtalIdx, TProfile*> m_dacL2SSlopeProfs;
   /// list of histograms of geometric mean for both ends on each xtal.
   CalVec<XtalIdx, TH1S*> m_dacLLHists; 
 
-};
-  
+  /// most likely vertical muon energy deposition in Cal CsI crystal
+  static const float MUON_ENERGY;
 
+};
 
 #endif

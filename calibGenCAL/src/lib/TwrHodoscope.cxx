@@ -57,12 +57,8 @@ void TwrHodoscope::addHit(const CalDigi &calDigi) {
 
   // check that we are in 4-range readout mode
   int nRO = calDigi.getNumReadouts();
-  if (nRO != 4) {
-    ostringstream tmp;
-    tmp << __FILE__  << ":"     << __LINE__ << " " 
-        << "Event# Not in 4-range readout mode";
-    throw tmp.str();
-  }
+  if (nRO != 4)
+    return;
 
   // load up all adc values for each xtal diode
   // also ped subtraced adc values.
