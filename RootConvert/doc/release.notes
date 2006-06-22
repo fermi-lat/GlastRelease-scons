@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r8   22-Jun-2006 EAC Added AcdSplashVars
  v1r7   31-May-2006 HMK merge EM-v6r070329p0 branch
  v1r6   13-Apr-2006 EAC Merge in ACD stuff from Branch  EM-v6r070329p0, tag v1r5em0
  v1r5   04-Apr-2006 TU  Updates for new CLHEP 1.9.2.2
