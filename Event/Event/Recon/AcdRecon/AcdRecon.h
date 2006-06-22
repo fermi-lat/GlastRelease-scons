@@ -14,6 +14,7 @@
 #include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrPoint.h"
+#include "Event/Recon/AcdRecon/AcdSplashVars.h"
 
 #include <vector>
 
@@ -70,6 +71,7 @@ namespace Event {
 	    const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
 	    const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
 		 const std::vector<AcdTkrPoint*>& acdTkrPoints,
+		 const std::vector<AcdSplashVars*>& acdSplashVars,
             double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonEng),
@@ -91,8 +93,9 @@ namespace Event {
    	    m_acdHits(acdHits),
     	    m_cornerDoca(cornerDoca),
 	    m_acdTkrHitPocas(acdTkrHitPocas),
-	  m_acdTkrGapPocas(acdTkrGapPocas),
-	  m_acdTkrPoints(acdTkrPoints)
+	  m_acdTkrGapPocas(acdTkrGapPocas),	  
+	  m_acdTkrPoints(acdTkrPoints),
+	  m_acdSplashVars(acdSplashVars)
 	  {
             m_actDist3D = -2000.0;
             m_rowActDist3DCol.resize(4, -2000.0);
@@ -116,6 +119,7 @@ namespace Event {
 		 const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
 	    const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
 		 const std::vector<AcdTkrPoint*>& acdTkrPoints,
+		 const std::vector<AcdSplashVars*>& acdSplashVars,
 	    double actDist3D, const idents::AcdId &maxActDist3DId, 
 	    const std::vector<double> &rowActDist3D, double cornerDoca)
             : m_totEnergy(e),
@@ -142,7 +146,8 @@ namespace Event {
 	  m_cornerDoca(cornerDoca),
 	  m_acdTkrHitPocas(acdTkrHitPocas),
 	  m_acdTkrGapPocas(acdTkrGapPocas),
-	  m_acdTkrPoints(acdTkrPoints)
+	  m_acdTkrPoints(acdTkrPoints),
+	  m_acdSplashVars(acdSplashVars)	  
         {};
 
 
@@ -166,6 +171,7 @@ namespace Event {
 		  const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
 		  const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
 		  const std::vector<AcdTkrPoint*>& acdTkrPoints,
+		  const std::vector<AcdSplashVars*>& acdSplashVars,
 	    double ribbonActDist=2000.0, 
 	    const idents::AcdId &ribActDistId=idents::AcdId(0,0),
             double cornerDoca=2000.0) ;
@@ -201,6 +207,7 @@ namespace Event {
 	inline const AcdTkrHitPocaCol& getAcdTkrHitPocaCol() const { return m_acdTkrHitPocas; };
 	inline const AcdTkrGapPocaCol& getAcdTkrGapPocaCol() const { return m_acdTkrGapPocas; };
 	inline const AcdTkrPointCol& getAcdTkrPointCol() const { return m_acdTkrPoints; }
+	inline const AcdSplashVarsCol& getAcdSplashVarsCol() const { return m_acdSplashVars; }
 
         /// Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -286,6 +293,10 @@ namespace Event {
 	/// points where the track cross the nomial ACD
 	AcdTkrPointCol m_acdTkrPoints;
 
+	/// Store the angles and such to study backsplash
+	AcdSplashVarsCol m_acdSplashVars;
+
+
     };
 
 
@@ -301,6 +312,7 @@ namespace Event {
 	m_acdTkrHitPocas.clear();
 	m_acdTkrGapPocas.clear();
 	m_acdTkrPoints.clear();
+	m_acdSplashVars.clear();
     }
 
 
@@ -320,6 +332,7 @@ namespace Event {
 			       const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
 			       const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,    
 			       const std::vector<AcdTkrPoint*>& acdTkrPoints,
+			       const std::vector<AcdSplashVars*>& acdSplashVars,
 	    double ribbon_actDist, const idents::AcdId &ribbonId, 
             double cornerDoca)
     {
@@ -376,6 +389,12 @@ namespace Event {
 	      itrPoint != acdTkrPoints.end(); itrPoint++ ) {
 	  AcdTkrPoint* point = const_cast<AcdTkrPoint*>(*itrPoint);
 	  m_acdTkrPoints.add(point);
+	}
+	m_acdSplashVars.clear();
+	for ( std::vector<AcdSplashVars*>::const_iterator itrSplash = acdSplashVars.begin();
+	      itrSplash != acdSplashVars.end(); itrSplash++ ) {
+	  AcdSplashVars* splash = const_cast<AcdSplashVars*>(*itrSplash);
+	  m_acdSplashVars.add(splash);
 	}
         m_cornerDoca = cornerDoca;
     }

@@ -319,6 +319,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     static Event::AcdTkrPocaCol acdPocas;
     static Event::AcdTkrHitPocaCol acdHitPocas;
     static Event::AcdTkrPointCol acdPoints;
+    static Event::AcdSplashVarsCol acdSplashVars;
 
     sc = trackDistances(digiCol,acdPocaSet,acdIntersections,acdGapPocas,acdPoints);
     if (sc.isFailure()) return sc;
@@ -353,7 +354,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
                              m_energyCol,
 			     m_act_dist3D, m_maxActDist3DId, m_rowActDist3DCol,
 			     acdIntersections, acdPocas, acdHits, acdHitPocas, 
-                             acdGapPocas, acdPoints, m_ribbon_act_dist, 
+                             acdGapPocas, acdPoints, acdSplashVars, m_ribbon_act_dist, 
                              m_ribbon_act_dist_id, m_cornerDoca);
     } else {
         // create the TDS location for the AcdRecon
@@ -365,7 +366,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
                                     m_energyCol, m_ribbon_act_dist, 
                                     m_ribbon_act_dist_id, acdIntersections, 
                                     acdPocas, acdHits, acdHitPocas, 
-                                    acdGapPocas, acdPoints, m_act_dist3D, 
+                                    acdGapPocas, acdPoints, acdSplashVars, m_act_dist3D, 
                                     m_maxActDist3DId, m_rowActDist3DCol, 
                                     m_cornerDoca);
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
@@ -382,6 +383,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     acdGapPocas.clear();
     acdHitPocas.clear();
     acdPoints.clear();
+    acdSplashVars.clear();
     return sc;
 }
 

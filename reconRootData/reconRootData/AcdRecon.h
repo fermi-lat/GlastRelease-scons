@@ -16,6 +16,9 @@
 #include "AcdTkrHitPoca.h"
 #include "AcdTkrGapPoca.h"
 #include "AcdTkrPoint.h"
+#include "AcdSplashVars.h"
+
+#include <iostream>
 
 #ifndef R__GLOBALSTL
 #ifndef WIN32
@@ -75,8 +78,15 @@ public:
             m_maxActDistId(maxActDistId),
             m_totRibbonEnergy(ribbonE),
             m_ribbonCount(ribbonCount),
-            m_cornerDoca(cornerDoca)
-        {};
+      m_acdTkrIntersectionCol(0),
+      m_cornerDoca(cornerDoca),
+      m_acdTkrPocaCol(0),
+      m_acdHitCol(0),
+      m_acdTkrHitPocaCol(0),
+      m_acdTkrPointCol(0),
+      m_acdSplashVarCol(0)
+      {
+      };
      
     virtual ~AcdRecon();
     
@@ -214,6 +224,18 @@ public:
 	static_cast<const AcdTkrPoint*>((*m_acdTkrPointCol)[i]) : 0;  
     }  
  
+    // does "deep" copy onto TClonesArray (w/ placement new)
+    AcdSplashVars* addAcdSplashVar(AcdSplashVars& splashVars);
+    
+    /// return the number or POCA objects
+    inline UInt_t nAcdSplash() const { return m_acdSplashVarCol != 0 ?
+					   m_acdSplashVarCol->GetEntriesFast() : 0; };
+    
+    /// returns a single poca object by number
+    inline const AcdSplashVars* getAcdSplashVars(UInt_t i) const { 
+      return i < nAcdSplash() ? 
+	static_cast<const AcdSplashVars*>((*m_acdSplashVarCol)[i]) : 0;  
+    }  
 
     bool checkAcdRecon();        
 private:
@@ -272,7 +294,10 @@ private:
     // Store the nominal ACD exit points
     TClonesArray *m_acdTkrPointCol;
 
-    ClassDef(AcdRecon,12) // Acd Reconstruction data
+    // Store the angles and such to study backsplash
+    TClonesArray *m_acdSplashVarCol;
+
+    ClassDef(AcdRecon,13) // Acd Reconstruction data
 };
 
 #endif

@@ -13,6 +13,7 @@ AcdRecon::AcdRecon() {
   m_acdTkrHitPocaCol = 0;
   m_acdTkrGapPocaCol = 0;
   m_acdTkrPointCol = 0;
+  m_acdSplashVarCol = 0;
   Clear();
 }
 
@@ -48,6 +49,12 @@ AcdRecon::~AcdRecon() {
   }
   delete m_acdTkrPointCol;
   m_acdTkrPointCol = 0;
+
+  if ( m_acdSplashVarCol != 0 ) {
+    m_acdSplashVarCol->Delete();
+  }
+  delete m_acdSplashVarCol;
+  m_acdSplashVarCol = 0;
 
   Clear();
 }
@@ -130,6 +137,9 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     }
     if ( m_acdTkrPointCol != 0 ) {
       m_acdTkrPointCol->Clear();
+    }
+    if ( m_acdSplashVarCol != 0 ) {
+      m_acdSplashVarCol->Clear();
     }
 }
 
@@ -249,6 +259,18 @@ AcdTkrPoint* AcdRecon::addAcdTkrPoint(AcdTkrPoint& poca) {
   TClonesArray& points = *m_acdTkrPointCol;
   new (points[numPoca]) AcdTkrPoint(poca);
   return (AcdTkrPoint*)(points[numPoca]);
+}
+    
+
+AcdSplashVars* AcdRecon::addAcdSplashVar(AcdSplashVars& splash) {
+  UInt_t numSplash = nAcdSplash();
+  if ( m_acdSplashVarCol == 0 ) {
+    m_acdSplashVarCol = new TClonesArray( AcdSplashVars::Class_Name() );
+  }
+  // fill the TClonesArray w/ a placement new call
+  TClonesArray& vals = *m_acdSplashVarCol;
+  new (vals[numSplash]) AcdSplashVars(splash);
+  return (AcdSplashVars*)(vals[numSplash]);
 }
     
 //======================================================

@@ -13,6 +13,9 @@
 #include <Event/Recon/AcdRecon/AcdTkrGapPoca.h>
 #include <reconRootData/AcdTkrGapPoca.h>
 
+#include <Event/Recon/AcdRecon/AcdSplashVars.h>   
+#include <reconRootData/AcdSplashVars.h>
+
 namespace RootPersistence {
 
   void convert( const Event::AcdRecon &, AcdRecon & ) ;
@@ -38,6 +41,9 @@ namespace RootPersistence {
 
   void convert( const Event::AcdTkrGapPoca&, AcdTkrGapPoca&);
   void convert( const AcdTkrGapPoca&, Event::AcdTkrGapPoca&);
+
+  void convert( const Event::AcdSplashVars&, AcdSplashVars&);
+  void convert( const AcdSplashVars&, Event::AcdSplashVars&);
 
 }
 

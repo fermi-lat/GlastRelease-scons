@@ -88,6 +88,15 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
     convert(*acdTkrPointTDS,rootAcdPoint);
     rootAcdRec.addAcdTkrPoint(rootAcdPoint);
   }  
+
+  const Event::AcdSplashVarsCol& tdsAcdSplashVars = tdsAcdRec.getAcdSplashVarsCol() ;
+  AcdSplashVars rootAcdSplash;
+  for ( Event::AcdSplashVarsCol::const_iterator itrSplash = tdsAcdSplashVars.begin();
+	itrSplash != tdsAcdSplashVars.end(); itrSplash++ ) {
+    const Event::AcdSplashVars* acdSplashVarsTDS = *itrSplash;
+    convert(*acdSplashVarsTDS,rootAcdSplash);
+    rootAcdRec.addAcdSplashVar(rootAcdSplash);
+  }  
 }
  
 void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
@@ -147,6 +156,16 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       acdTkrPoints.push_back(acdPocaTds);
     }
 
+    std::vector<Event::AcdSplashVars*> acdSplashVars;
+    int nSplash = rootAcdRec.nAcdSplash();
+    for ( int iSplash(0); iSplash < nSplash; iSplash++ ) {
+      const AcdSplashVars* acdSplashRoot = rootAcdRec.getAcdSplashVars(iSplash);
+      Event::AcdSplashVars* acdSplashTds = new Event::AcdSplashVars();
+      convert(*acdSplashRoot,*acdSplashTds);
+      acdSplashVars.push_back(acdSplashTds);
+    }
+   
+
     const AcdId rootDocaId = rootAcdRec.getMinDocaId();
     const idents::AcdId tdsDocaId(rootDocaId.getLayer(), rootDocaId.getFace(), 
         rootDocaId.getRow(), rootDocaId.getColumn());
@@ -202,6 +221,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
 	acdTkrHitPocas,
 	acdTkrGapPocas,
 	acdTkrPoints,
+	acdSplashVars,
         rootAcdRec.getRibbonActiveDist(),
         tdsRibActDistId, 
         rootAcdRec.getCornerDoca()
@@ -411,6 +431,24 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     tds.set(acdId,root.getTrackIndex(),local,pocaData); 
   }
 
+  void convert( const Event::AcdSplashVars& tds, AcdSplashVars& root) {
+    static TVector3 point;
+    static TVector3 vector;
+    point.SetXYZ(tds.calEntryPoint().x(),tds.calEntryPoint().y(),tds.calEntryPoint().z());
+    vector.SetXYZ(tds.calEntryVector().x(),tds.calEntryVector().y(),tds.calEntryVector().z());
+    AcdId acdId = convert(tds.getId());
+    root.set(acdId,tds.getTrackIndex(),point,vector,
+	     tds.tileSolidAngle(),tds.weightedTrackAngle(),tds.weightedPathlength());
+  }
+  void convert( const AcdSplashVars& root, Event::AcdSplashVars& tds) {
+    static Point point;
+    static Vector vector;
+    point.set(root.calEntryPoint().X(),root.calEntryPoint().Y(),root.calEntryPoint().Z());
+    vector.set(root.calEntryVector().X(),root.calEntryVector().Y(),root.calEntryVector().Z());
+    idents::AcdId acdId = convert(root.getId());
+    tds.set(acdId,root.getTrackIndex(),point,vector,
+	    root.tileSolidAngle(),root.weightedTrackAngle(),root.weightedPathlength());
+  }
 
 
 }

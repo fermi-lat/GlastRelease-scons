@@ -21,6 +21,7 @@
 #pragma link C++ class AcdTkrLocalCoords+;
 #pragma link C++ class AcdTkrHitPoca+;
 #pragma link C++ class AcdTkrGapPoca+;
+#pragma link C++ class AcdSplashVars+;
 
 #pragma link C++ class AcdRecon+;
 
@@ -41,5 +42,6 @@
 #pragma link C++ class TkrTrackParams+;
 #pragma link C++ class TkrVertex+;
 #pragma link C++ class TkrDiagnostics+;
+
 
 #endif
