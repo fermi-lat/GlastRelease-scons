@@ -21,6 +21,11 @@ namespace AncillaryData
       static const CLID& classID()       { return CLID_AncillaryDataDigiEvent; };
       void appendTaggerHit(TaggerHit h){TaggerHitColl.push_back(h);}
       void appendQdcHit(QdcHit h){QdcHitColl.push_back(h);}
+
+      unsigned getEventNumber() const { return m_eventNumber; }
+      void setEventNumber(unsigned evtNum) { m_eventNumber = evtNum; }
+      unsigned getSpillNumber() const { return m_spillNumber; }
+      void setSpillNumber(unsigned spillNum) { m_spillNumber = spillNum; }
       
       void print();
       

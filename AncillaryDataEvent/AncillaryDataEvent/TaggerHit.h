@@ -21,9 +21,13 @@ namespace AncillaryData
       ~TaggerHit(){;}
       
       unsigned    getModuleId()     const {return m_moduleId;}
+      void        setModuleId(unsigned moduleId) { m_moduleId = moduleId ; }
       unsigned    getStripId()      const {return m_stripId;}
+      void        setStripId(unsigned stripId) { m_stripId = stripId; }
       unsigned    getPulseHeight()  const {return m_pulseHeight;}
+      void setPulseHeight(unsigned pulseHeight) { m_pulseHeight = pulseHeight; }
       unsigned    getLayerId() const {return m_layerId;}
+      void        setLayerId(unsigned layerId) { m_layerId = layerId; }
       bool        getPedestalSubtract(){return m_IsPedestalSubtracted;}
       void        setPedestalSubtract(){m_IsPedestalSubtracted = true;}
       void        print(){std::cout<<"Tagger Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<std::endl;}

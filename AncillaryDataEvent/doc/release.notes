@@ -1,0 +1,10 @@
+/** @file release.notes
+ Package AncillaryDataEvent\n
+ Coordinator:N.Omodei
+ @verbatim
+
+ v0r0   21-Jun-2006 HMK add set routines for Digi, TaggerHit and QdcHit
+ v0     16-Jun-2006 NO  Initial import
+ @endverbatim
+*/
+
