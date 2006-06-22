@@ -2,6 +2,9 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r15   16-Jun-22 LSR Complete the fix... y and z needed to be swapped for table
+                          translations as well.
+                       Also put in canonical pivot and reporting plane positions as default
  v5r14   16-Jun-06 LSR Sigh... change the coordinate system in BeamTranfrom once more,
  v5r13p5 28-Apr-06 TU  Check for null pointer when looking up particles, throw exception if one found
  v5r13p4 25-Apr-06 LSR Fix merge-mod that I messed up (but header file takes care of it for now)

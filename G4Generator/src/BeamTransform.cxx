@@ -24,35 +24,32 @@
 typedef HepGeom::Point3D<double>  HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
 
-
-#include <cassert>
-#include <sstream>
-
 /** @class BeamTransform
-@brief alg to transform the beam particle(s)
+@brief alg to transform the beam particle(s) into the detector frame
 
-The requirements are:
+This involves a transformation of coordinates, and translation and rotation of the "x-y table."
 
-- One degree of freedom, the rotation of the scanning table around some z-axis, 
-  probably specified as plus and minus degrees,
+Here's the latest word:
 
-- Cordinates in the beam frame: The x-coordinate of the point of rotation of the scanning table, and
-The x-coordinate of the z=0 plane of the CU, for the table in the unrotated orientation.
+Beamline coordinate system:
+     x is along the beam
+     z is up
+     y completes the right-handed system
 
-These are needed to specify the position and direction of the incoming particles in the CU frame.
+CU coordinate system:
+     z is opposite to the beam direction
+     y is down
+     x completes the right-handed system
 
-For concreteness, and until we know better, default the point of rotation of the table to x = 4280 
-(1 meter downstream from the reporting plane), and the z=0 point of the CU to x = 4090 (z position of the center of the CU).
+The x-y table translations are specified in the beam system:
+     m_transz is the up-down direction
+     m_transy is the sideways direction
 
-More wisdom from Leon:
-
-the point of rotation won't necessarily be at  z  = 0
-and we will have to adjust the distance between the reporting plane (x in the beam frame) and the CU.
-I don't have any real  number yet, but I'm assuming that the CU will be somewhat behind the reporting plane... so say we set the x-beam of the z-CU at 4280, one meter downstream of the reporting plane.
-the point of rotation, I have no idea, but it should not be at the z=0 of the CU, so we can see if it's handled correctly, so maybe 150 mm upstream of the z=0 point?
-
-so the z=0 plane of the cu on an unrotated table should be at xbeam = 4280, and the rotation point should be at xbeam = 4130.
+The pivot position is specified in the CU system
+     m_pivot_height is in the z direction
+     m_pivot_offset is in the x direction
 */
+
 class BeamTransform : public Algorithm {
 public:
     BeamTransform(const std::string& name, ISvcLocator* pSvcLocator);
@@ -65,7 +62,7 @@ public:
     
 private: 
     int m_count;
-    DoubleProperty m_pivot_distance;    // z position of pivot in glast frame
+    DoubleProperty m_pivot_height;    // z position of pivot in glast frame
     DoubleProperty m_pivot_offset;      // x position of pivot in glast frame
     DoubleProperty m_beam_plane; // z position of reporting plane in beam frame
     DoubleProperty m_beam_plane_glast;  // z position of reporting plane in glast frame
@@ -78,7 +75,6 @@ private:
     CLHEP::HepRotationY m_rot;  // the table rotation
 };
 
-
 static const AlgFactory<BeamTransform>  Factory;
 const IAlgFactory& BeamTransformFactory = Factory;
 
@@ -88,17 +84,17 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 {
     // declare properties with setProperties calls
     // translations and rotation of x-y table
-    declareProperty("vertical_translation",  m_transy=0);
-    declareProperty("horizontal_translation",m_transz=0);
+    declareProperty("vertical_translation",  m_transz=0);
+    declareProperty("horizontal_translation",m_transy=0);
     declareProperty("table_rotation", m_angle=0);
-    // z position of pivot in glast frame
-    declareProperty("pivot_location", m_pivot_distance=150);
-    // x position of pivot in glast frame
-    declareProperty("pivot_offset", m_pivot_offset=0);
+    // z position of pivot in glast frame according to the Italians
+    declareProperty("pivot_location", m_pivot_height=-130);
+    // x position of pivot in glast frame according to the Italians
+    declareProperty("pivot_offset", m_pivot_offset=45);
     // z position of reporting plane in beam frame
-    declareProperty("beam_plane",     m_beam_plane=3280);
+    declareProperty("beam_plane",     m_beam_plane=3300);
     // z coordinate of reporting plane in instrument frame
-    declareProperty("beam_plane_glast" , m_beam_plane_glast=1200);
+    declareProperty("beam_plane_glast" , m_beam_plane_glast=1000);
 }
 
 StatusCode BeamTransform::initialize(){
@@ -116,13 +112,12 @@ StatusCode BeamTransform::initialize(){
     m_rot = CLHEP::HepRotationY(m_angle*M_PI/180);
 
     // location of pivot
-    m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_distance);
+    m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_height);
 
     return sc;
 }
 void BeamTransform::transform(Event::McParticle& mcp )
 {
-
     // special treatment if it is a mother (code from Leon)
     if(&mcp.mother()!=&mcp) {
         const_cast<Event::McParticle*>(&mcp.mother())->removeDaughter(&mcp);
@@ -136,8 +131,8 @@ void BeamTransform::transform(Event::McParticle& mcp )
     CLHEP::Hep3Vector rbeam1 = mcp.finalPosition();
 
     // translate in beam frame
-    rbeam  += m_translation;
-    rbeam1 += m_translation;
+    rbeam  -= m_translation;
+    rbeam1 -= m_translation;
 
     // convert to unrotated instrument coordinates
     CLHEP::Hep3Vector r (rbeam.y(),  -rbeam.z(), 
@@ -157,14 +152,12 @@ void BeamTransform::transform(Event::McParticle& mcp )
     mcp.finalize(
         m_rot*p1, 
         m_rot*(r1-m_pivot) + m_pivot);
-
 }
 
 StatusCode BeamTransform::execute(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     ++m_count;
-
 
     // Retrieving pointers from the TDS
     
