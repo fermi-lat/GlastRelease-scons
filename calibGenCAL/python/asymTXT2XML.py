@@ -125,7 +125,7 @@ if __name__ == '__main__':
     nLine = -1
     for line in lines:
         nLine+=1
-        [twr,lyr,col,pdiode,ndiode,xpos,asym,sig] = line.split()
+        [twr,lyr,col,pdiode,ndiode,asym,sig] = line.split()
 
         # convert array index values to integer.
         twr = int(twr)
@@ -133,7 +133,6 @@ if __name__ == '__main__':
         col = int(col)
         pdiode = int(pdiode)
         ndiode = int(ndiode)
-        xpos   = float(xpos)
         asym   = float(asym)
         sig    = float(sig)
 
