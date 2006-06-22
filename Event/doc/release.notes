@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  *
  *
+ * v11r13   22-Jun-06 EAC Added AcdSplashVars
  * v11r12   13-Apr-06 EAC Merge in Acd stuff from branch EM-v6r070329p0, tag v11r8em3
  * v11r11   23-Mar-06 TU  Tagging for new externals (CLHEP, Gaudi, etc.)
  * v11r10p1 04-feb-06 DC  Small fix in CalXtalRecData::initialize
