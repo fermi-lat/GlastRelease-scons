@@ -7,7 +7,7 @@ author Richard Hughes <HUGHES@mps.ohio-state.edu>
 use EbfWriter           *
 use TkrUtil             *
 use GuiSvc              *
-use flight v* IExternal 
+use obf v* IExternal 
 
 apply_pattern packageShr
 apply_pattern package_include
@@ -42,7 +42,6 @@ public
 #set LD_LIBRARY_PATH ${ONBOARDFILTERROOT}/rh9_gcc32
 
 apply_pattern package_test
-set TESTJOBOPTIONS ${ONBOARDFILTERROOT}/src/test/tempJobOptions.txt
+set TESTJOBOPTIONS ${ONBOARDFILTERROOT}/src/test/jobOptions.txt
 
-include_dirs "$(ONBOARDFILTERROOT)/flight/EFC" $(ONBOARDFILTERROOT)/flight/EDS"
 
