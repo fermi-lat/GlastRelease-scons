@@ -11,9 +11,15 @@ namespace AncillaryData
     {
     public:
       
+	  QdcHit() {
+		  m_IsPedestalSubtracted = false;
+		  m_channel = 0;
+		  m_pulseHeight = 0;
+	  } ;
+
       QdcHit(QdcDataWord qdcDw)
 	{
-	  m_IsPedestalSubtracted=0;
+	  m_IsPedestalSubtracted=false;
 	  m_channel  = qdcDw.getQdcChannel();
 	  m_pulseHeight=qdcDw.getQdcValue();
 	}
@@ -25,7 +31,7 @@ namespace AncillaryData
 
       void setPulseHeight(unsigned pulseHeight) { m_pulseHeight = pulseHeight; }
       
-      bool       getPedestalSubtract(){return m_IsPedestalSubtracted;}
+      bool       getPedestalSubtract() const {return m_IsPedestalSubtracted;}
       void       setPedestalSubtract(){m_IsPedestalSubtracted=true;}
       void        print(){std::cout<<"QCD Ch: "<<getQdcChannel()<<" PH "<<getPulseHeight()<<std::endl;}
     private:

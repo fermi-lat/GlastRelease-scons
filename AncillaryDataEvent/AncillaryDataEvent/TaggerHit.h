@@ -10,9 +10,17 @@ namespace AncillaryData
   class TaggerHit
     {
     public:
+		TaggerHit(){
+			m_IsPedestalSubtracted = false;
+			m_moduleId = 0;
+			m_stripId = 0;
+			m_layerId = 0;
+			m_pulseHeight = 0;
+		};
+
       TaggerHit(FadcDataWord fadcDw)
 	{
-	  m_IsPedestalSubtracted = 0;
+	  m_IsPedestalSubtracted = false;
 	  m_moduleId = fadcDw.getFadcModule();
 	  m_stripId  = fadcDw.getFadcChannel();
 	  m_layerId  = (m_stripId<384) ? 0 : 1 ;
@@ -28,7 +36,7 @@ namespace AncillaryData
       void setPulseHeight(unsigned pulseHeight) { m_pulseHeight = pulseHeight; }
       unsigned    getLayerId() const {return m_layerId;}
       void        setLayerId(unsigned layerId) { m_layerId = layerId; }
-      bool        getPedestalSubtract(){return m_IsPedestalSubtracted;}
+      bool        getPedestalSubtract()const {return m_IsPedestalSubtracted;}
       void        setPedestalSubtract(){m_IsPedestalSubtracted = true;}
       void        print(){std::cout<<"Tagger Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<std::endl;}
     private:
