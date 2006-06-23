@@ -1,5 +1,5 @@
 package merit
-version v6r31p1
+version v6r32
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 branches doc
@@ -21,7 +21,6 @@ use AnalysisNtuple v*
 use GlastSvc *
 use Event *
 use GuiSvc v*
-use OnboardFilter v*
 use facilities *
 use LdfEvent v*
 
