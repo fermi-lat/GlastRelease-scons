@@ -13,7 +13,6 @@ __credits__   = "NRL code 7650"
 
 
 
-import sys
 import time
 
 import Numeric
