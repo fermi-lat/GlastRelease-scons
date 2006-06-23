@@ -190,9 +190,10 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 Reconstruction.Members +=     {"AnalysisNtupleAlg" }; // AnaTup and Filter stuff into the tuple
 AnalysisNtupleAlg.tupleName = "MeritTuple";
-Reconstruction.Members +=     {"meritAlg" };  // Filter stuff, some analysis for PSF
+Reconstruction.Members +=     {"FilterAlgTuple"}; // FilterAlg vars
 Reconstruction.Members +=     {"ClassifyAlg"};// Atwood's Insightful Miner analysis 
 Reconstruction.Members +=     {"FT1Alg"};     // generate stuff to go into FT1.
+Reconstruction.Members +=     {"meritAlg" };  //   some analysis for PSF
 
 
 // ---------------------------- 
