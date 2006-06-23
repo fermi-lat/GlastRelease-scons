@@ -112,7 +112,7 @@ namespace RootPersistence {
   }
 
 
-  void convert( const OnboardFilterTds::FilterStatus& tdsObj, 
+  void convert( OnboardFilterTds::FilterStatus& tdsObj, 
                 FilterStatus& rootObj) {
 
     Int_t ebfSize = 0;

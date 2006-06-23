@@ -26,7 +26,7 @@ namespace RootPersistence {
   void convert ( const TObjArray*, std::vector<OnboardFilterTds::track>&);
 
   /// Fill persitent verison of FilterStatus 
-  void convert( const OnboardFilterTds::FilterStatus&, FilterStatus& ) ;
+  void convert( OnboardFilterTds::FilterStatus&, FilterStatus& ) ;
   /// Fill transient verison of FilterStatus 
   void convert( const FilterStatus&, OnboardFilterTds::FilterStatus*& ) ;
 
