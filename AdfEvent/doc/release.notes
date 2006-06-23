@@ -1,0 +1,10 @@
+/** @file release.notes
+ Package AdfEvent\n
+ Coordinator:N.Omodei
+ @verbatim
+
+ v0r0   21-Jun-2006 HMK remove extra semi-colon
+ v0     16-Jun-2006 NO  Initial import
+ @endverbatim
+*/
+
