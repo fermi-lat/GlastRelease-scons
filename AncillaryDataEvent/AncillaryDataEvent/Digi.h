@@ -1,3 +1,6 @@
+#ifndef ANCILLARYDATAEVENT_DIGI_H
+#define ANCILLARYDATAEVENT_DIGI_H
+
 #include "TaggerHit.h"
 #include <vector>
 #include "GaudiKernel/DataObject.h"
@@ -40,4 +43,6 @@ namespace AncillaryData
       unsigned m_eventNumber;
       unsigned m_spillNumber;
     };
-};
+}
+
+#endif

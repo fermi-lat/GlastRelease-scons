@@ -14,5 +14,5 @@ namespace AncillaryData
       static const CLID& classID()       { return CLID_AncillaryDataReconEvent; };
     private:
       std::vector<TaggerCluster> TaggerClusterColl;
-    } 
-};
+    }; 
+}

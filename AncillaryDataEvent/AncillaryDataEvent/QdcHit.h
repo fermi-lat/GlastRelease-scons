@@ -40,5 +40,5 @@ namespace AncillaryData
       unsigned m_channel;
       unsigned m_pulseHeight;  
     };
-};
+}
 #endif

@@ -47,6 +47,6 @@ namespace AncillaryData
       unsigned m_stripId;
       unsigned m_pulseHeight;  
     };
-};
+}
 #endif
   
