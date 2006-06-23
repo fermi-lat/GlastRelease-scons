@@ -357,7 +357,7 @@ class calTholdCICalibXML(calCalibXML):
 
                         dac = int(fheDac[tem, row, end, fe])
                         adc = fheAdc[tem, row, end, fe, dac]
-                        adc += biasData[tem, row, end, fe, 0]
+                        adc += biasData[tem, row, end, fe, 1]
                         cs += 'FHE DAC = %d, ' % dac
                         tc.setAttributeNS(None, 'FHEVal', "%0.3f" % adc)
                         tc.setAttributeNS(None, 'FHESig', '1')
