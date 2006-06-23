@@ -71,5 +71,5 @@ namespace AncillaryData
       std::vector<FadcDataWord> FadcData;
       std::vector<ScalerDataWord> ScalerData;
     };
-};
+}
 #endif
