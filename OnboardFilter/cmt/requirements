@@ -7,6 +7,7 @@ author Richard Hughes <HUGHES@mps.ohio-state.edu>
 use EbfWriter           *
 use TkrUtil             *
 use GuiSvc              *
+use ntupleWriterSvc     *
 use obf v* IExternal 
 
 apply_pattern packageShr

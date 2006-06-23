@@ -39,9 +39,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-
 #include "src/filter_rto.h"
-
 #include "EFC_DB/EFC_DB_schema.h"
 #include "GFC_DB/GFC_DB_schema.h"
 #include "GFC_DB/GFC_DB_instance.h"
