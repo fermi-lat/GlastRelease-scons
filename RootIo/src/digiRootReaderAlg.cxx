@@ -15,7 +15,7 @@
 
 #include "Trigger/TriRowBits.h"
 
-#include "OnboardFilter/FilterStatus.h"
+//#include "OnboardFilter/FilterStatus.h"
 
 #include "LdfEvent/DiagnosticData.h"
 #include "LdfEvent/EventSummaryData.h"
@@ -43,7 +43,7 @@
 #include "commonData.h"
 
 #include "RootConvert/Digi/LsfDigiConvert.h"
-#include "RootConvert/Digi/OnboardFilterConvert.h"
+//#include "RootConvert/Digi/OnboardFilterConvert.h"
 
 #include "RootIo/IRootIoSvc.h"
 
@@ -786,6 +786,7 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+/*
     const FilterStatus& filterStatusRoot = m_digiEvt->getFilterStatus();
 
 
@@ -806,6 +807,7 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
     }
 
     RootPersistence::convert(filterStatusRoot, obfTds);
+*/
     return sc;
 
 }

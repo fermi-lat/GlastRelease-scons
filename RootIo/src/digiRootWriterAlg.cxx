@@ -22,7 +22,7 @@
 
 #include "Trigger/TriRowBits.h"
 
-#include "OnboardFilter/FilterStatus.h"
+//#include "OnboardFilter/FilterStatus.h"
 
 #include "idents/CalXtalId.h"
 #include "idents/TowerId.h"
@@ -39,7 +39,7 @@
 #include "commonData.h"
 
 #include "RootConvert/Digi/LsfDigiConvert.h"
-#include "RootConvert/Digi/OnboardFilterConvert.h"
+//#include "RootConvert/Digi/OnboardFilterConvert.h"
 
 #include "RootIo/IRootIoSvc.h"
 
@@ -637,7 +637,7 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
 
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-
+/*
     SmartDataPtr<OnboardFilterTds::FilterStatus> obfTds(eventSvc(), "/Event/Filter/FilterStatus");
     if (!obfTds) {
         log << MSG::DEBUG << "No OBF FilterStatus" << endreq;
@@ -647,7 +647,7 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
     FilterStatus obfRoot;
     RootPersistence::convert(*obfTds,obfRoot);
     m_digiEvt->setFilterStatus(obfRoot);
-
+*/
     return sc;
 }
 

@@ -23,7 +23,7 @@
 #include "LdfEvent/LsfMetaEvent.h"
 #include "LdfEvent/LsfCcsds.h"
 
-#include "OnboardFilter/FilterStatus.h"
+//#include "OnboardFilter/FilterStatus.h"
 
 #include <map>
 
@@ -289,6 +289,7 @@ StatusCode testReadAlg::readOnboardFilter() {
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
 
+/*
     SmartDataPtr<OnboardFilterTds::FilterStatus> obfTds(eventSvc(), "/Event/Filter/FilterStatus"); 
 
     if (!obfTds) {
@@ -307,6 +308,7 @@ StatusCode testReadAlg::readOnboardFilter() {
         << obfTds->getGemCondsumCno() << endreq;
 
     log << MSG::DEBUG << "Separation: " << obfTds->getSeparation() << endreq;
+*/
 
     return sc;
 

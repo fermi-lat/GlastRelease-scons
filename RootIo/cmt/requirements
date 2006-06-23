@@ -1,5 +1,5 @@
 package RootIo
-version v17r17p1
+version v17r18
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -33,7 +33,7 @@ macro_append ROOT_libs " -lHist -lGraf -lGraf3d -lTreePlayer "\
 private
 use GlastSvc v*
 use Trigger v*
-use OnboardFilter v*
+#use OnboardFilter v*
 
 # for building this DLL, need includes from the rootData packages
 
