@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r18p2 THB 25-jun-06  CalUtil no longer a Gaudi module
 * v6r18p1 THB 23-jun-06   Invoke OnboardFilterTuple to set OBF tuple guys
 * v6r17p1 HMK 01-jun-06  Minor patch to ldf2digi.txt to start LivetimeSvc
 * v6r17  HMK 31-may-06   Use LdfConverter and LdfEvent
