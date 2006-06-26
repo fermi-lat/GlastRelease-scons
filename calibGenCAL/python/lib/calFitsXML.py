@@ -12,7 +12,7 @@ __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
 
-import sys, os, time
+import os, time
 import logging
 
 import Numeric
@@ -22,8 +22,10 @@ import calConstant
 from calExcept import *
 
 
+
 MODE_CREATE = calXML.MODE_CREATE
 MODE_READONLY = calXML.MODE_READONLY
+
 
 FILE_TYPES = ('fhe_dac', 'fle_dac', 'log_acpt', 'pedestal value', 'relative gain factor', 'rng_uld_dac')
 
