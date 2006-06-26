@@ -282,7 +282,7 @@ class calFitsXML(calXML.calXML):
                         f.setAttributeNS(None, 'num', str(fe))
                         l.appendChild(f)
 
-                        for erng in range(calConstant.NUM_ERNG):
+                        for erng in range(calConstant.NUM_RNG):
 
                             e = self.__doc.createElementNS(None, 'erng')
                             e.setAttributeNS(None, 'num', str(erng))
@@ -298,7 +298,7 @@ class calFitsXML(calXML.calXML):
 
     def __writeREL(self, data, tems):
 
-        shape = (9, 1, calConstant.NUM_ERNG, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE)
+        shape = (9, 1, calConstant.NUM_RNG, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE)
         if data.shape != shape:
             raise calFileWriteExcept, "ADC data wrong shape: %s (expected %s)" % (data.shape, shape)
 
