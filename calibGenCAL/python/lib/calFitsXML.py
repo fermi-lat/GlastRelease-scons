@@ -298,7 +298,8 @@ class calFitsXML(calXML.calXML):
 
     def __writeREL(self, data, tems):
 
-        shape = (9, 1, calConstant.NUM_RNG, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE)
+        shape = (9, calConstant.NUM_TEM, calConstant.NUM_RNG, calConstant.NUM_ROW, calConstant.NUM_END, 
+            calConstant.NUM_FE)
         if data.shape != shape:
             raise calFileWriteExcept, "ADC data wrong shape: %s (expected %s)" % (data.shape, shape)
 
