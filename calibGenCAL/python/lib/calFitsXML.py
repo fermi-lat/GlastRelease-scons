@@ -342,7 +342,7 @@ class calFitsXML(calXML.calXML):
 
                             s = ''                        
                             for gain in range(9):
-                                s += '%0.03f,' % data[gain, tem, erng, layer, end, fe]
+                                s += '%0.03f,' % data[gain, erng, tem, layer, end, fe]
                             
                             e.appendChild(self.__doc.createTextNode(s.rstrip(',')))
 
