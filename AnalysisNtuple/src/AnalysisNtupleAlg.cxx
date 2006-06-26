@@ -34,13 +34,13 @@ public:
     NtupleVisitor(INTupleWriterSvc* ntupleSvc=0, std::string ntupleName="") 
         : m_ntupleSvc(ntupleSvc), m_ntupleName(ntupleName) {}
     virtual IValsTool::Visitor::eVisitorRet 
-        analysisValue(const std::string varName, const double& value) const;
+        analysisValue(std::string varName, const double& value) const;
     virtual IValsTool::Visitor::eVisitorRet 
-        analysisValue(const std::string varName, const float& value) const;
+        analysisValue(std::string varName, const float& value) const;
     virtual IValsTool::Visitor::eVisitorRet 
-        analysisValue(const std::string varName, const int& value) const;
+        analysisValue(std::string varName, const int& value) const;
     virtual IValsTool::Visitor::eVisitorRet 
-        analysisValue(const std::string varName, const unsigned int& value) const;
+        analysisValue(std::string varName, const unsigned int& value) const;
     virtual ~NtupleVisitor() {}
     
 private:
@@ -50,7 +50,7 @@ private:
     std::string m_ntupleName;
 };
 
-IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string varName,
+IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName,
                                                              const double& value) const
 { 
     StatusCode sc;
@@ -61,7 +61,7 @@ IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string v
     return IValsTool::Visitor::CONT;
 }
 
-IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string varName,
+IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName,
                                                              const float& value) const
 { 
     StatusCode sc;
@@ -72,7 +72,7 @@ IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string v
     return IValsTool::Visitor::CONT;
 }
 
-IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string varName,
+IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName,
                                                              const int& value) const
 { 
     StatusCode sc;
@@ -83,7 +83,7 @@ IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string v
     return IValsTool::Visitor::CONT;
 }
 
-IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(const std::string varName,
+IValsTool::Visitor::eVisitorRet NtupleVisitor::analysisValue(std::string varName,
                                                              const unsigned int& value) const
 { 
     StatusCode sc;
