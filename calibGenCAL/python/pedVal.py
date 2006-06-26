@@ -66,7 +66,7 @@ def rootHists(errData, pedData):
                         hs = sumHists[erng]
                         ped = pedData[tem, row, end, fe, erng,0]
                         hs.Fill(ped)
-                        cs.Update() 
+                        
                         
     hMax = 0
     for erng in range(calConstant.NUM_RNG):
@@ -123,7 +123,7 @@ def rootHists(errData, pedData):
                         hs = sumHists[erng]
                         err = errData[tem, row, end, fe, erng]
                         hs.Fill(err)
-                        cs.Update()                       
+                                             
     
     for erng in range(0, 4, 2):
 
@@ -172,7 +172,7 @@ def rootHists(errData, pedData):
                         hs = sumHists[erng]
                         err = errData[tem, row, end, fe, erng]
                         hs.Fill(err)
-                        cs.Update()                       
+                                             
     
     for erng in range(1, 4, 2):
 
