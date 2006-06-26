@@ -242,7 +242,7 @@ if __name__ == '__main__':
 
     rootOutput = False
     x8ErrLimit = 10.0
-    x8WarnLimit = 6.0
+    x8WarnLimit = 7.0
 
     # setup logger
 
