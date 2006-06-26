@@ -13,7 +13,7 @@ where:
                      (default is 8.0; x1 ranges use this value / 5)
     -L <log_file>  - save console output to log text file
     -V             - verbose; turn on debug output
-    <xml_file> The CAL Int_Nonlin calibration XML file to validate.    
+    <xml_file> The CAL Ped calibration XML file to validate.    
 """
 
 
