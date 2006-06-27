@@ -2435,26 +2435,28 @@ class calDacSlopesCalibXML(calCalibXML):
                             dsrVal = ds.getAttributeNS(None, 'ULDRange')
                             rangeData[tem,row,end,fe,erng+3] = DRNG_MAP[str(dsrVal)]
                                         
+        return (dacData, uldData, rangeData)
+        
         
         
 def layerToRow(layer):
     """
     Translate CAL layer number to CAL row number
-
+    Param: layer - Layer number (0 - 7)
     Returns: The row number (0 - 7)
     """
 
     row = (layer / 2)
-    xy = (layer % 2)
-    if xy == 1:
+    if (layer % 2):
         row += 4
     return row
+
 
 
 def rowToLayer(row):
     """
     Translate CAL row number to CAL layer number
-
+    Param: row - Row number (0 - 7)
     Returns: The layer number (0 - 7)
     """
 
@@ -2464,6 +2466,7 @@ def rowToLayer(row):
         layer = (((row - 4) * 2) + 1)
     return layer
 
+    
     
 def towerToTem(twrCol, twrRow):
     """
@@ -2476,6 +2479,7 @@ def towerToTem(twrCol, twrRow):
     """
 
     return twrCol + (4 * twrRow)
+
 
 
 def temToTower(temNum):
