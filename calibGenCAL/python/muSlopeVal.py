@@ -37,7 +37,7 @@ import calConstant
 
 
 
-def rootHists(slopeData):
+def rootHists(slopeData, fileName):
 
     # create gain summary histogram
     
@@ -51,7 +51,7 @@ def rootHists(slopeData):
     for erng in range(calConstant.NUM_RNG):
     
         hName = "h_Summary_MuSlope_%s" % calConstant.CRNG[erng]
-        hs = ROOT.TH1F(hName, 'MuSlope_Summary', 100, 0.0, 2.0)
+        hs = ROOT.TH1F(hName, 'MuSlope_Summary: %s' % fileName, 100, 0.0, 2.0)
         hs.SetLineColor(erng + 1)
         hs.SetStats(False)
         sumHists[erng] = hs
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
         # write error histograms
         
-        rootHists(slopeData)
+        rootHists(slopeData, xmlName)
 
         # clean up
 
