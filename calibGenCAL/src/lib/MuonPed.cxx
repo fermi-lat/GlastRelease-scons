@@ -97,7 +97,7 @@ void MuonPed::fillHists(unsigned nEntries,
       // quick check if we are in 4-range mode
       EventSummaryData& summary = digiEvent->getEventSummaryData();
       if (&summary == 0) {
-        m_ostrm << "Warning, gem data not found for event: "
+        m_ostrm << "Warning, eventSummary data not found for event: "
                 << eventNum << endl;
         fourRange = true;
         continue;
