@@ -25,6 +25,8 @@ using namespace std;
 const string usage_str("genMuonMPD.exe cfg_file");
 
 int main(int argc, char **argv) {
+  // libCalibGenCAL will throw runtime_error         
+  try {
           
   //-- COMMAND LINE --//
   if (argc != 2) {
@@ -212,6 +214,9 @@ int main(int argc, char **argv) {
     logStrm << __FILE__ << ": writing histogram file: " << histFilename << endl;
     histFile->Write();
     histFile->Close();
+  }
+  } catch (exception e) {
+    cout << __FILE__ << ": exception thrown: " << e.what() << endl;
   }
 
   return 0;

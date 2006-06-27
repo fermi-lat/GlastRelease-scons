@@ -447,7 +447,7 @@ void MuonMPD::writeTXT(const string &filename) const{
   ofstream outfile(filename.c_str());
 
   if (!outfile.is_open())
-    throw string("Unable to open " + filename);
+    throw runtime_error(string("Unable to open " + filename));
 
   // PER XTAL LOOP
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) 
@@ -476,7 +476,7 @@ void MuonMPD::readTXT(const string &filename){
   // open file
   ifstream infile(filename.c_str());
   if (!infile.is_open())
-    throw string("Unable to open " + filename);
+    throw runtime_error(string("Unable to open " + filename));
   
   // loop through each line in file
   while (infile.good()) {
@@ -588,7 +588,7 @@ void MuonMPD::writeADC2NRG(const string &filename,
   ofstream outfile(filename.c_str());
 
   if (!outfile.is_open())
-    throw string("Unable to open " + filename);
+    throw runtime_error(string("Unable to open " + filename));
 
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     TwrNum twr = rngIdx.getTwr();

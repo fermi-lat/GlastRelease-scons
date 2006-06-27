@@ -188,7 +188,7 @@ void RoughPed::fitHists() {
 void RoughPed::writeTXT(const string &filename) const {
   ofstream outfile(filename.c_str());
   if (!outfile.is_open())
-    throw string("Unable to open " + filename);
+    throw runtime_error(string("Unable to open " + filename));
 
   for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++)
     if (m_peds[faceIdx] != INVALID_PED)
@@ -205,7 +205,7 @@ void RoughPed::writeTXT(const string &filename) const {
 void RoughPed::readTXT(const string &filename) {
   ifstream infile(filename.c_str());
   if (!infile.is_open())
-    throw string("Unable to open " + filename);
+    throw runtime_error(string("Unable to open " + filename));
 
   while(infile.good()) {
     float ped, sig;
