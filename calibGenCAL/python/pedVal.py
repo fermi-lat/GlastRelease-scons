@@ -131,7 +131,7 @@ def rootHists(errData, pedData, fileName):
         if erng == 0:
             dopt = ''
             axis = hs.GetXaxis()
-            axis.SetTitle('Pedestal Sigma')
+            axis.SetTitle('Pedestal Sigma (ADC)')
             axis.CenterTitle()
             axis = hs.GetYaxis()
             axis.SetTitle('Counts')
@@ -180,7 +180,7 @@ def rootHists(errData, pedData, fileName):
         if erng == 1:
             dopt = ''
             axis = hs.GetXaxis()
-            axis.SetTitle('Pedestal Sigma')
+            axis.SetTitle('Pedestal Sigma (ADC)')
             axis.CenterTitle()
             axis = hs.GetYaxis()
             axis.SetTitle('Counts')
