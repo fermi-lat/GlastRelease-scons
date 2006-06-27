@@ -63,7 +63,7 @@ CDAC_COARSE = 1
 
 # Number of calorimeter faces
 
-NUM_FACE = 8
+NUM_FACE = 4
 
 # Number of calorimeter layers
 
