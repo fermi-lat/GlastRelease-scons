@@ -26,6 +26,7 @@
 //                        we have calibrations spanning subsystems
 //     6500 - 6599        test 
 //     6600 - 6699        NAS: anything not associated with a single subsystem
+//     6700 - 6799        ANC: ancillary - not part of the LAT at all
 //                        
 
 const CLID CLID_Calib_CalibCLIDNode     = 6000;
@@ -73,6 +74,9 @@ const CLID CLID_Calib_CalibTest1       = 6500;
 
 const CLID CLID_Calib_NAS_TowerCfg     = 6600;
 
+const CLID CLID_Calib_ANC_TaggerPed    = 6700;
+const CLID CLID_Calib_ANC_TaggerGain   = 6701;
+const CLID CLID_Calib_ANC_QdcPed       = 6702;
 
 
 // For everybody except the CalibModel class implementation file,
@@ -124,10 +128,10 @@ const CLID CLID_Calib_NAS_TowerCfg     = 6600;
       _EXTERN_ std::string   CAL_TholdCI;
       _EXTERN_ std::string   CAL_TholdMuon;
       _EXTERN_ std::string   CAL_Asym;
-      //   ... more for CAL calib types
 
-      //   ... more for ACD calib types 
-
+      _EXTERN_ std::string   ANC_TaggerPed;
+      _EXTERN_ std::string   ANC_TaggerGain;
+      _EXTERN_ std::string   ANC_QdcPed;
       //   ... simple type whose "data" just come from MySQL metadata row
       //       for testing
       _EXTERN_ std::string   Test_Gen;

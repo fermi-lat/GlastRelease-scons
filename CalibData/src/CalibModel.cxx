@@ -42,7 +42,7 @@ std::string cal;
 std::string acd;
 std::string test;
 std::string nas;
-
+std::string anc;
 
 class CalibModel {
 public:
@@ -58,6 +58,7 @@ public:
     std::string tkr = root + "/TKR";
     std::string test = root + "/Test";
     std::string nas = root + "/NAS";
+    std::string anc = root + "/ANC";
 
     // Practically all of these don't exist in any shape or form,
     // but go ahead an reserve names anyway.
@@ -106,6 +107,10 @@ public:
     CalibData::CAL_Asym      = cal + "_Asym";
 
     CalibData::NAS_TowerCfg = nas + "_TowerCfg";
+
+    CalibData::ANC_TaggerPed = anc + "_TaggerPed";
+    CalibData::ANC_TaggerGain = anc + "_TaggerGain";
+    CalibData::ANC_QdcPed = anc + "_QdcPed";
 
     CalibData::Test_Gen = test + "_Gen";
     CalibData::Test_1   = test + "_1";
@@ -162,6 +167,15 @@ public:
 
     CalibData::pairs.push_back(std::make_pair(CalibData::NAS_TowerCfg,
                                               CLID_Calib_NAS_TowerCfg));
+
+    CalibData::pairs.push_back(std::make_pair(CalibData::ANC_TaggerPed,
+                                              CLID_Calib_ANC_TaggerPed));
+
+    CalibData::pairs.push_back(std::make_pair(CalibData::ANC_TaggerGain,
+                                              CLID_Calib_ANC_TaggerGain));
+
+    CalibData::pairs.push_back(std::make_pair(CalibData::ANC_QdcPed,
+                                              CLID_Calib_ANC_QdcPed));
 
 
   }
