@@ -39,7 +39,7 @@
                             be implemented as enumeration rather than
                             NMTOKEN
             timestamp     - when the file was written (date and time)
-            calibType     - one of "TAG_Ped" or TAG_Gain
+            calibType     - one of "ANC_TaggerPed" or ANC_TaggerGain
             fmtVersion    - sufficient versioning information so that
                             software attempting to read the file can
                             determine if it supports this version. 
@@ -49,7 +49,7 @@
 <!ATTLIST generic  
    instrument  (LAT | BFEM | BTEM | EM | EM2 | CU) #REQUIRED
    timestamp   CDATA #REQUIRED
-   calibType (TAG_Ped | TAG_Gain)   #REQUIRED
+   calibType (ANC_TaggerPed | ANC_TaggerGain)   #REQUIRED
    DTDVersion  NMTOKEN "v1r0"       
    fmtVersion  NMTOKEN #REQUIRED
    creator     CDATA #IMPLIED >
@@ -83,7 +83,7 @@
 
 <taggerCalib>
   <generic instrument="CU" timestamp="2005-06-21 20:57"
-           calibType="TAG_Ped"
+           calibType="ANC_TaggerPed"
            fmtVersion="v1r0"
            creator="jrb"
   />

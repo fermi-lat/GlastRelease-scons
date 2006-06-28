@@ -37,7 +37,7 @@
                             be implemented as enumeration rather than
                             NMTOKEN
             timestamp     - when the file was written (date and time)
-            calibType     - one of "TAG_Ped" or TAG_Gain
+            calibType     - one of "ANC_TaggerPed" or ANC_TaggerGain
             fmtVersion    - sufficient versioning information so that
                             software attempting to read the file can
                             determine if it supports this version. 
