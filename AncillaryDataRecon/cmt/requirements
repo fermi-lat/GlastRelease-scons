@@ -1,2 +1,27 @@
-package AdRecon
+package AncillaryDataRecon
+version v0
+author N.Omodei <nicola.omodei@pi.infn.it>
 
+use GaudiInterface * IExternal
+use GlastPolicy *
+
+use AncillaryDataEvent *
+use facilities *
+
+apply_pattern packageShr
+apply_pattern package_include
+apply_pattern ld_library_path
+
+private
+use GlastSvc v*
+
+apply_pattern package_Cshlibflags
+apply_pattern package_headers
+
+# this build the component dynamic library
+
+library AncillaryDataRecon \
+	Dll/*.cxx *.cxx \
+        ${AncillaryDataRecon_headers}
+
+apply_pattern package_test
