@@ -31,13 +31,13 @@ namespace AncillaryData {
   class EventSummaryData {
   public:
     EventSummaryData()  {m_word = 0;} 
-    ~EventSummaryData() {if (m_word) delete[] m_word;} 
+    ~EventSummaryData() {;}//if (m_word) delete[] m_word;} 
     void setData(const unsigned int *word) 
       {
-    m_word = new unsigned int[4];
+	m_word = new unsigned int[4];
 	unsigned int i;
 	for (i=0;i<4;i++)
-	    m_word[i] = word[i];
+	  m_word[i] = word[i];
 	
 	m_version     = (word[0] >> 20) & 0xfff;
 	m_eventLength =  word[1];
