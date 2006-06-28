@@ -233,9 +233,10 @@ void MuonAsym::fillHists(unsigned nEntries,
 void MuonAsym::summarizeHists(ostream &ostrm) {
   ostrm << "XTAL\tNHITS" << endl;
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++)
-    ostrm << xtalIdx.val() << "\t"
-          << m_histograms[ASYM_SS][xtalIdx]->GetEntries()
-          << endl;
+    if (m_histograms[ASYM_SS][xtalIdx]->GetEntries() > 0)
+      ostrm << xtalIdx.val() << "\t"
+            << m_histograms[ASYM_SS][xtalIdx]->GetEntries()
+            << endl;
   
 }
 
