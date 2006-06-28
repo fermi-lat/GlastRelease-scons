@@ -46,6 +46,7 @@ def rootHists(slopeData, fileName):
     cs.cd()
     cs.SetGrid()
     cs.SetLogy()
+    cs.SetLogx()
     sumLeg = ROOT.TLegend(0.88, 0.88, 0.99, 0.99)
     
     for erng in range(calConstant.NUM_RNG):
@@ -80,7 +81,7 @@ def rootHists(slopeData, fileName):
         if erng == 0:
             dopt = ''
             axis = hs.GetXaxis()
-            axis.SetTitle('Gain Value (Energy/ADC)')
+            axis.SetTitle('Gain Value (MeV/ADC)')
             axis.CenterTitle()
             axis = hs.GetYaxis()
             axis.SetTitle('Counts')
