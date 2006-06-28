@@ -51,7 +51,7 @@ def rootHists(slopeData, fileName):
     for erng in range(calConstant.NUM_RNG):
     
         hName = "h_Summary_MuSlope_%s" % calConstant.CRNG[erng]
-        hs = ROOT.TH1F(hName, 'MuSlope_Summary: %s' % fileName, 100, 0.0, 2.0)
+        hs = ROOT.TH1F(hName, 'MuSlope_Summary: %s' % fileName, 100, 0.0, 30.0)
         hs.SetLineColor(erng + 1)
         hs.SetStats(False)
         sumHists[erng] = hs
@@ -182,6 +182,17 @@ if __name__ == '__main__':
         # clean up
 
         rootFile.Close()
+        
+    # do simple stats 
+    
+    av = Numeric.average(slopeData[...,calConstant.CRNG_LEX8,0], axis = None)
+    log.info("LEX8 gain values average=%f", av)
+    av = Numeric.average(slopeData[...,calConstant.CRNG_LEX1,0], axis = None)
+    log.info("LEX1 gain values average=%f", av)
+    av = Numeric.average(slopeData[...,calConstant.CRNG_HEX8,0], axis = None)
+    log.info("HEX8 gain values average=%f", av)
+    av = Numeric.average(slopeData[...,calConstant.CRNG_HEX1,0], axis = None)
+    log.info("HEX1 gain values average=%f", av)    
 
     # report results
 
