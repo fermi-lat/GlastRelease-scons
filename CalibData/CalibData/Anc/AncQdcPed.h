@@ -8,7 +8,7 @@ namespace CalibData {
 
   class AncQdcPed : public RangeBase {
   public:
-    AncPed(float val = 0.0, float rms=0.0, unsigned isBad=0) : 
+    AncQdcPed(float val = 0.0, float rms=0.0, unsigned isBad=0) : 
       m_val(val), m_rms(rms), m_isBad(isBad) {}
     ~AncQdcPed() {}
 

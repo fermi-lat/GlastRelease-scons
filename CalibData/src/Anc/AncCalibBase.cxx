@@ -9,7 +9,8 @@ namespace CalibData {
 
   const CLID AncCalibBase::noCLID = 0;
   const CLID& AncCalibBase::classID() {return noCLID;}
-  AncCalibBase::AncCalibBase(unsigned nMod, nLay, nChan) : m_finder(0) {
+  AncCalibBase::AncCalibBase(unsigned nMod, unsigned nLay, unsigned nChan) 
+    : m_finder(0) {
     cGuts(nMod, nLay, nChan);
   }
 

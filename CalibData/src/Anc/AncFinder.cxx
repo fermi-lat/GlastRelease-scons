@@ -21,7 +21,7 @@
 
 namespace CalibData {
   AncFinder::AncFinder(unsigned nMod, unsigned nLay, unsigned nChan) :
-    : m_mod(nMod), m_lay(nLay), m_chan(nChan)
+    m_mod(nMod), m_lay(nLay), m_chan(nChan)
   {
     m_c0 = m_chan;
     m_c1 = m_c0 * m_lay;

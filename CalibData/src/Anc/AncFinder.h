@@ -8,7 +8,6 @@
    correct set of Anc calibration constants given module, layer, chan
 
    @author J. Bogart
-
 */
 
 namespace CalibData {
@@ -22,8 +21,7 @@ namespace CalibData {
     /**
        Find index of "regular" 
      */
-    int findIx(unsigned face, unsigned row, unsigned col, 
-                    unsigned pmt) const {
+    int findIx(unsigned mod, unsigned lay, unsigned chan) const {
       return chan + m_c0*lay + m_c1*mod;
     }
 
