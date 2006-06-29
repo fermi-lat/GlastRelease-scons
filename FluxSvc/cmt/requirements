@@ -4,8 +4,7 @@ version v6r36p1
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
 
-branches FluxSvc cmt doc cdf 
-
+branches FluxSvc cmt doc test_FluxSvc
 use GlastPolicy v*
 
 # this is a Gaudi shrared component package
