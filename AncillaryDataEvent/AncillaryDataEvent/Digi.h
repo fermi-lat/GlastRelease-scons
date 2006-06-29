@@ -22,10 +22,10 @@ namespace AncillaryData
       Digi(AncillaryData::AdfEvent *adfEvent);
       
       static const CLID& classID()       { return CLID_AncillaryDataDigiEvent; };
-	  
-	  const std::vector<TaggerHit>& getTaggerHitCol() const { return TaggerHitColl; }
-	  const std::vector<QdcHit>& getQdcHitCol() const { return QdcHitColl; } 
-
+      
+      const std::vector<TaggerHit>& getTaggerHitCol() const { return TaggerHitColl; }
+      const std::vector<QdcHit>& getQdcHitCol() const { return QdcHitColl; } 
+      
       void appendTaggerHit(TaggerHit h){TaggerHitColl.push_back(h);}
       void appendQdcHit(QdcHit h){QdcHitColl.push_back(h);}
 
