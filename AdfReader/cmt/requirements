@@ -31,6 +31,7 @@ library AdfReader \
 #library AdfReader *.cxx \
 #        ${AdfReader_headers}
 
-apply_pattern package_test
-
 #application test_AdfReader test/testMain.cxx *.cxx
+
+#apply_pattern package_test
+

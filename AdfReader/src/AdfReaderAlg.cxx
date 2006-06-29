@@ -25,6 +25,7 @@ public:
   StatusCode execute();
   StatusCode finalize();
 
+  StatusCode RegisterTDSDir();
   StatusCode RegisterDigi();
   StatusCode RegisterAdf();
 
@@ -53,7 +54,6 @@ StatusCode AdfReaderAlg::initialize()
   // This method:
   // 1) locates the Event Data Server.
   // 2) creates the AncillaryDataServer
-  
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "initialize" << endreq;
@@ -82,6 +82,7 @@ StatusCode AdfReaderAlg::execute()
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "initialize" << endreq;
+  sc = RegisterTDSDir();
   sc = RegisterAdf();
   if (sc.isFailure()) {
     log << MSG::INFO << "Failed to register ADF" << endreq;
@@ -95,28 +96,12 @@ StatusCode AdfReaderAlg::execute()
   return sc;
 }
 
-StatusCode AdfReaderAlg::RegisterAdf()
-{  
+StatusCode AdfReaderAlg::RegisterTDSDir()
+{
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "execute AdfReaderAlg " << endreq;
-  
-  AncillaryData::AdfEvent *currentEvent = m_dataServer->getNextEvent();
-  
-  if ( !currentEvent ) 
-    {
-      log << MSG::DEBUG << "current event NULL, exiting!" << endreq;
-      return sc;
-    }
-  
-  currentEvent->print();
-  
-  
-  // CREATE A DIGI EVENT
-  AncillaryData::Digi *digiEvent = new AncillaryData::Digi(currentEvent);
-  digiEvent->print();
-  // 1) test :create a sub dir (got from BariMcToolHitCol):
-  log << MSG::DEBUG << " ...create " << TDSdir << endreq;
+  log << MSG::DEBUG << "RegisterTDSDir " << endreq;
+  // 1) REGISTER THE DIRECTORY:
   DataObject* pNode = 0;
   sc = m_dataSvc->retrieveObject(TDSdir, pNode);
   
@@ -129,35 +114,28 @@ StatusCode AdfReaderAlg::RegisterAdf()
 	  log << MSG::ERROR << "could not register " << TDSdir << endreq;
 	  return sc;
 	}
-      else
-	{
-	  log << MSG::DEBUG << TDSdir << " registered " << endreq;
-	}
     }
-  const std::string TDSobj = TDSdir + "/AdfEvent";
-  
-  // 2) Check if a AdfReader is already stored:
-  /*
-    log << MSG::DEBUG << "Check if " << TDSobj << " is already stored" << endreq;
-    DataObject* dobj=0;
-    sc = m_dataSvc->retrieveObject(TDSobj, dobj);
-    if( sc.isFailure() )
-    log << MSG::DEBUG << "could not retrieve " << TDSobj << endreq;
-    else
-    log << MSG::DEBUG << TDSobj << " found!" << endreq;
-  */
-  // 3) Register an AdfEvent:
-  log << MSG::DEBUG << "currentEvent pointer: " << currentEvent << endreq;
-  //  return StatusCode::SUCCESS;
-  sc = m_dataSvc->registerObject(TDSobj, currentEvent);
-  if ( sc.isFailure() ) {
-    log << MSG::DEBUG << "failed to register " << TDSobj << endreq;
-    return sc;
-  }
-  //  log << MSG::DEBUG << "Ancillary Event: "<<currentEvent->getEventNumber()<<" processed and stored " << TDSobj << " on TDS" << endreq;
-  
   return sc;
 }
+
+StatusCode AdfReaderAlg::RegisterAdf()
+{  
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "RegisterAdf " << endreq;
+  //////////////////////////////////////////////////
+  AncillaryData::AdfEvent *currentEvent = m_dataServer->getNextEvent();
+  std::string TDSobj = TDSdir + "/AdfEvent";
+  // 2) REGISTER THE OBJECT:
+  sc = m_dataSvc->registerObject(TDSobj, currentEvent);
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "failed to register " << TDSobj << endreq;
+    return sc;
+  }
+  log << MSG::DEBUG <<" Event registered in "<<TDSobj<< endreq;
+  return sc;     
+}
+
 
 StatusCode AdfReaderAlg::RegisterDigi()
 {
@@ -167,31 +145,6 @@ StatusCode AdfReaderAlg::RegisterDigi()
   std::string TDSobj = TDSdir + "/AdfEvent";
   log << MSG::DEBUG << " Get "<<TDSobj<<" from the TDS " << endreq;
   //////////////////////////////////////////////////
-  // 1) test :create a sub dir (got from BariMcToolHitCol):
-  log << MSG::DEBUG << " RegisterDigi: ...create " << TDSdir << endreq;
-  DataObject* pNode = 0;
-  sc = m_dataSvc->retrieveObject(TDSdir, pNode);
-  if ( sc.isFailure() ) 
-    {
-      sc = m_dataSvc->registerObject(TDSdir, new DataObject);
-      log << MSG::DEBUG << " RegisterDigi: registering " << TDSdir << endreq;
-      if( sc.isFailure() ) 
-	{
-	  log << MSG::ERROR << "could not register " << TDSdir << endreq;
-	  return sc;
-	}
-      else
-	{
-	  log << MSG::DEBUG << TDSdir << "RegisterDigi: registered " << endreq;
-	}
-    }  
-  //////////////////////////////////////////////////
-  // 1) method:
-  /*DataObject* pNode = 0;
-    sc = m_dataSvc->retrieveObject(TDSobj, pNode);
-    AncillaryData::AdfEvent *currentEvent = dynamic_cast<AncillaryData::AdfEvent*>(pNode);
-  */
-  // 2) Method:
   SmartDataPtr<AncillaryData::AdfEvent> currentEvent(eventSvc(),TDSobj);
   if( !currentEvent) 
     {
@@ -205,11 +158,12 @@ StatusCode AdfReaderAlg::RegisterDigi()
   TDSobj = TDSdir + "/Digi";
   // Register a Digi:
   log << MSG::DEBUG << "current digiEvent pointer: " << digiEvent << endreq;
-  sc = m_dataSvc->registerObject(TDSobj, currentEvent);
+  sc = m_dataSvc->registerObject(TDSobj, digiEvent);
   if ( sc.isFailure() ) {
     log << MSG::DEBUG << "failed to register " << TDSobj << endreq;
     return sc;
   }
+  log << MSG::DEBUG <<" Digi event registered in "<<TDSobj<< endreq;
   return sc;
 }
 

@@ -29,9 +29,10 @@ Triggered.Members={
     "Sequencer/Trigger",
     "Sequencer/Reconstruction",
     "Sequencer/RecoDisplay",    
-    "AdfReaderAlg",
     "Sequencer/Output",
     "FilterTracks","FilterAlg",
+    "AdfReaderAlg",
+
     "meritAlg" };
     
 // disable this since broken
