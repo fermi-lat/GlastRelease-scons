@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # setup logger
 
     logging.basicConfig()
-    log = logging.getLogger('pedMerge')
+    log = logging.getLogger('calCalibApplyRelgain')
     log.setLevel(logging.INFO)
 
     # get environment settings
