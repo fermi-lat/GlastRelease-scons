@@ -60,10 +60,12 @@
 -->
 <!-- Describe how the data is dimensioned:
         number of modules (max; may be larger than actual)
+        for convenience put in fixed, invisible nLayer attribute
         number of channels per module  (max; may be larger than actual)
  -->
 <!ELEMENT dimension EMPTY>
 <!ATTLIST dimension nModule NMTOKEN  #REQUIRED
+                    nLayer  NMTOKEN  #FIXED "1"
                     nChannel NMTOKEN #REQUIRED >
 
 
