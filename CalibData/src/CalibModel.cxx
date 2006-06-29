@@ -36,14 +36,6 @@
             we've got below.
 */
 
-std::string root;
-std::string tkr;
-std::string cal;
-std::string acd;
-std::string test;
-std::string nas;
-std::string anc;
-
 class CalibModel {
 public:
   /** The constructor sets values into the externally-accessible
