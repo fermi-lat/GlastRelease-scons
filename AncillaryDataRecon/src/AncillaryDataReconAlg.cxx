@@ -9,6 +9,10 @@
 #include "facilities/Util.h"
 
 #include "AncillaryDataEvent/Digi.h"
+#include "AncillaryDataEvent/Recon.h"
+#include "AncillaryDataEvent/TaggerHit.h"
+#include "AncillaryDataEvent/TaggerCluster.h"
+#include "AncillaryDataEvent/QdcHit.h"
 
 //#include "AncillaryDataUtil/AncillaryDataServer.h"
 
@@ -27,9 +31,11 @@ public:
   
   
   AncillaryData::Digi *GetDigi();
-  StatusCode RegisterRecon();
-  StatusCode MakeClusters();
-  StatusCode Recon();
+  StatusCode RegisterTDSDir();
+
+  StatusCode RegisterRecon(AncillaryData::Recon *reconEvent);
+  StatusCode MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
+  StatusCode QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
 private:
   IDataProviderSvc    *m_dataSvc;
 };
@@ -62,13 +68,23 @@ StatusCode AncillaryDataReconAlg::initialize()
   //DEFAULT ARGS:
   return sc;
 }
+
 StatusCode AncillaryDataReconAlg::execute()
 {
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
+
   AncillaryData::Digi *digiEvent = GetDigi();
   log << MSG::DEBUG << "digiEvent "<< digiEvent << endreq;
-  if(digiEvent) digiEvent->print();
+  if(digiEvent) 
+    {
+      digiEvent->print();
+      AncillaryData::Recon *reconEvent = new AncillaryData::Recon(digiEvent);
+      sc = MakeClusters(digiEvent,reconEvent);
+      sc = QdcRecon(digiEvent,reconEvent);
+      sc = RegisterRecon(reconEvent);
+      reconEvent->print();
+    }
   return sc;
 }
 
@@ -110,29 +126,100 @@ AncillaryData::Digi *AncillaryDataReconAlg::GetDigi()
       log<<MSG::WARNING<<"AncillaryDataReconAlg::GetDigi : empty TDS!" <<endreq;
       return 0;
     }
-  log << MSG::DEBUG << "So far so good! " << endreq;
   return currentEvent;
   
 }
 
-StatusCode AncillaryDataReconAlg::RegisterRecon()
+StatusCode AncillaryDataReconAlg::RegisterTDSDir()
 {
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "RegisterTDSDir " << endreq;
+  // 1) REGISTER THE DIRECTORY:
+  DataObject* pNode = 0;
+  sc = m_dataSvc->retrieveObject(TDSdir, pNode);
+  
+  if ( sc.isFailure() ) 
+    {
+      sc = m_dataSvc->registerObject(TDSdir, new DataObject);
+      log << MSG::DEBUG << " registering " << TDSdir << endreq;
+      if( sc.isFailure() ) 
+	{
+	  log << MSG::ERROR << "could not register " << TDSdir << endreq;
+	  return sc;
+	}
+    }
   return sc;
 }
 
-StatusCode AncillaryDataReconAlg:: MakeClusters()
+StatusCode AncillaryDataReconAlg::RegisterRecon(AncillaryData::Recon *reconEvent)
 {
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
+  
+  std::string TDSobj = TDSdir + "/Recon";
+  sc = m_dataSvc->registerObject(TDSobj, reconEvent);
+  if ( sc.isFailure() ) {
+    log << MSG::DEBUG << "failed to register " << TDSobj << endreq;
+    return sc;
+  }
+  log << MSG::DEBUG <<" Recon event registered in "<<TDSobj<< endreq;
+  return sc;
+} 
+
+StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  // Get the tagger hits collection:
+  std::vector<AncillaryData::TaggerHit> taggerHits = digiEvent->getTaggerHitCol();
+  if (taggerHits.size()==0) return sc;
+  std::vector<AncillaryData::TaggerCluster> taggerClusters;
+  std::vector<AncillaryData::TaggerCluster>::iterator taggerClustersIterator;
+  //  std::vector<AncillaryData::TaggerHit>::iterator pos=taggerHits.begin();  
+  int i=0;
+  AncillaryData::TaggerHit nextHit=taggerHits[i];
+  nextHit.print();
+
+
+  AncillaryData::TaggerCluster aCluster;
+  aCluster.append(nextHit);
+  taggerClusters.push_back(aCluster);
+
+  AncillaryData::TaggerHit lastHit=nextHit;
+  for(i=1; i<taggerHits.size();i++)
+    {
+      nextHit=taggerHits[i];
+      nextHit.print();
+      
+      if(nextHit.getModuleId()==lastHit.getModuleId() && 
+	 nextHit.getLayerId()==lastHit.getLayerId() &&
+	 nextHit.getStripId()==lastHit.getStripId()+1)
+	{
+	  aCluster.append(nextHit);
+	  lastHit=nextHit;
+	}
+      else 
+	{
+	  taggerClusters.push_back(aCluster);
+	  aCluster.erase();
+	  aCluster.append(nextHit);
+	  lastHit=nextHit;
+	}
+    }  
+  reconEvent->setTaggerClusters(taggerClusters);
   return sc;
 }
 
-StatusCode AncillaryDataReconAlg::Recon()
+
+
+
+StatusCode AncillaryDataReconAlg::QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
+  
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
+  reconEvent->setQdcHitColl(digiEvent->getQdcHitCol());
   return sc;
 }
 
