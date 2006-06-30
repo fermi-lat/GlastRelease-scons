@@ -32,6 +32,9 @@ public:
 
     // All derived objects will be "named" so return their name here
     virtual const std::string& getName() const = 0;
+
+    // All derived objects have a data "type" so return it here
+    virtual const char* getTypeId() const = 0;
     
     // Basic print full expresssions to stream method
     virtual void print(std::ostream& out=std::cout, bool first=true) const = 0;
@@ -52,11 +55,11 @@ public:
        In actual use this will be either bool or double
 */
 // Forward declaration as we dance around this compiler problem
-template <class T> class XTExprsnNode;
-template <class T> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T>& node);
+template <class T1, class T2> class XTExprsnNode;
+template <class T1, class T2> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T1,T2>& node);
 
 // Now the real stuff...
-template <class T> class XTExprsnNode : virtual public IXTExprsnNode
+template <class T1, class T2> class XTExprsnNode : virtual public IXTExprsnNode
 {
 public:
 
@@ -64,24 +67,24 @@ public:
     XTExprsnNode(const std::string& name,
                  IXTExprsnNode&     left, 
                  IXTExprsnNode&     right) 
-                  : m_name(name), m_value(new T), m_left(left), m_right(right) 
+                  : m_name(name), m_value(new T1), m_left(left), m_right(right) 
     {
         // Set the function pointer to the type of operation we define
-        if      (name == "+")  mathOp = &XTExprsnNode<T>::operator+;  // Arithmetic addition
-        else if (name == "-")  mathOp = &XTExprsnNode<T>::operator-;  // Arithmetic subraction
-        else if (name == "*")  mathOp = &XTExprsnNode<T>::operator*;  // Arithmetic multiplication
-        else if (name == "/")  mathOp = &XTExprsnNode<T>::operator/;  // Arithmetic division
-        else if (name == "|")  mathOp = &XTExprsnNode<T>::operator||; // Logical "OR" (support IM mode)
-        else if (name == "||") mathOp = &XTExprsnNode<T>::operator||; // Logical "OR" 
-        else if (name == "&")  mathOp = &XTExprsnNode<T>::operator&&; // Logical "AND" (support IM mode)
-        else if (name == "&&") mathOp = &XTExprsnNode<T>::operator&&; // Logical "AND"
-        else if (name == ">")  mathOp = &XTExprsnNode<T>::operator>;  // Logical compare >
-        else if (name == ">=") mathOp = &XTExprsnNode<T>::operator>=; // Logical compare >=
-        else if (name == "<")  mathOp = &XTExprsnNode<T>::operator<;  // Logical compare <
-        else if (name == "<=") mathOp = &XTExprsnNode<T>::operator<=; // Logical compare <=
-        else if (name == "==") mathOp = &XTExprsnNode<T>::operator==; // Logical compare ==
-        else if (name == "!=") mathOp = &XTExprsnNode<T>::operator!=; // Logical compare != 
-        else if (name == "^")  mathOp = &XTExprsnNode<T>::pow;        // Raise x to power y 
+        if      (name == "+")  mathOp = &XTExprsnNode<T1,T2>::operator+;  // Arithmetic addition
+        else if (name == "-")  mathOp = &XTExprsnNode<T1,T2>::operator-;  // Arithmetic subraction
+        else if (name == "*")  mathOp = &XTExprsnNode<T1,T2>::operator*;  // Arithmetic multiplication
+        else if (name == "/")  mathOp = &XTExprsnNode<T1,T2>::operator/;  // Arithmetic division
+        else if (name == "|")  mathOp = &XTExprsnNode<T1,T2>::operator||; // Logical "OR" (support IM mode)
+        else if (name == "||") mathOp = &XTExprsnNode<T1,T2>::operator||; // Logical "OR" 
+        else if (name == "&")  mathOp = &XTExprsnNode<T1,T2>::operator&&; // Logical "AND" (support IM mode)
+        else if (name == "&&") mathOp = &XTExprsnNode<T1,T2>::operator&&; // Logical "AND"
+        else if (name == ">")  mathOp = &XTExprsnNode<T1,T2>::operator>;  // Logical compare >
+        else if (name == ">=") mathOp = &XTExprsnNode<T1,T2>::operator>=; // Logical compare >=
+        else if (name == "<")  mathOp = &XTExprsnNode<T1,T2>::operator<;  // Logical compare <
+        else if (name == "<=") mathOp = &XTExprsnNode<T1,T2>::operator<=; // Logical compare <=
+        else if (name == "==") mathOp = &XTExprsnNode<T1,T2>::operator==; // Logical compare ==
+        else if (name == "!=") mathOp = &XTExprsnNode<T1,T2>::operator!=; // Logical compare != 
+        else if (name == "^")  mathOp = &XTExprsnNode<T1,T2>::pow;        // Raise x to power y 
         else throw XTENexception("XTExprsnNode: Invalid math operation requested");
     }
     virtual ~XTExprsnNode() {delete m_value;}
@@ -89,6 +92,7 @@ public:
     // Overide the generic "retrieve" operator from the base class
     virtual const void* operator()() const     {return (this->*mathOp)(m_right);}
     virtual const std::string& getName() const {return m_name;}
+    virtual const char* getTypeId() const {return typeid(m_value).name();}
 
     // Provide mechanism for outputting to a standard stream
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -117,15 +121,15 @@ public:
 private:
 
     // The allowed operations:
-    const T* operator+ (IXTExprsnNode& rhs) const 
+    const T1* operator+ (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
-        *m_value = left +  rght;
+        double left   = *(reinterpret_cast<const double*>(m_left()));
+        double rght   = *(reinterpret_cast<const double*>(rhs()));
+        *m_value  = left + rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) +  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator- (IXTExprsnNode& rhs) const 
+    const T1* operator- (IXTExprsnNode& rhs) const 
     {
         double left = *(reinterpret_cast<const double*>(m_left()));
         double rght = *(reinterpret_cast<const double*>(rhs()));
@@ -133,7 +137,7 @@ private:
         //*m_value = *(reinterpret_cast<const double*>(m_left())) -  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator* (IXTExprsnNode& rhs) const 
+    const T1* operator* (IXTExprsnNode& rhs) const 
     {
         double left = *(reinterpret_cast<const double*>(m_left()));
         double rght = *(reinterpret_cast<const double*>(rhs()));
@@ -141,7 +145,7 @@ private:
         //*m_value = *(reinterpret_cast<const double*>(m_left())) *  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator/ (IXTExprsnNode& rhs) const 
+    const T1* operator/ (IXTExprsnNode& rhs) const 
     {
         double left = *(reinterpret_cast<const double*>(m_left()));
         double rght = *(reinterpret_cast<const double*>(rhs()));
@@ -149,65 +153,65 @@ private:
         //*m_value = *(reinterpret_cast<const double*>(m_left())) /  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator||(IXTExprsnNode& rhs) const 
+    const T1* operator||(IXTExprsnNode& rhs) const 
     {
         *m_value = *(reinterpret_cast<const bool*>(m_left())) ||  *(reinterpret_cast<const bool*>(rhs()));
         return m_value;
     }
-    const T* operator&&(IXTExprsnNode& rhs) const 
+    const T1* operator&&(IXTExprsnNode& rhs) const 
     {
         *m_value = *(reinterpret_cast<const bool*>(m_left())) &&  *(reinterpret_cast<const bool*>(rhs()));
         return m_value;
     }
-    const T* operator> (IXTExprsnNode& rhs) const 
+    const T1* operator> (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left > rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) >  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator>=(IXTExprsnNode& rhs) const 
+    const T1* operator>=(IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left >= rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) >=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator< (IXTExprsnNode& rhs) const 
+    const T1* operator< (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left < rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) <  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator<=(IXTExprsnNode& rhs) const 
+    const T1* operator<=(IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left <= rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) <=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator==(IXTExprsnNode& rhs) const 
+    const T1* operator==(IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left == rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) ==  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* operator!=(IXTExprsnNode& rhs) const 
+    const T1* operator!=(IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>(m_left()));
+        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
         *m_value = left != rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) !=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T* pow(IXTExprsnNode& rhs) const 
+    const T1* pow(IXTExprsnNode& rhs) const 
     {
         double left = *(reinterpret_cast<const double*>(m_left()));
         double rght = *(reinterpret_cast<const double*>(rhs()));
@@ -217,11 +221,11 @@ private:
     }
     
     // Function pointer to the particular operation defined for this node
-    const T* (XTExprsnNode<T>::*mathOp)(IXTExprsnNode& rhs) const;
+    const T1* (XTExprsnNode<T1,T2>::*mathOp)(IXTExprsnNode& rhs) const;
 
     // Our name and value
     std::string m_name;     // The name assigned to this node
-    T*          m_value;    // The "value" of this node 
+    T1*         m_value;    // The "value" of this node 
 
     // The left and right branches beneath the node 
     IXTExprsnNode& m_left;  // Left branch to follow
@@ -229,11 +233,11 @@ private:
 
     // This is for making a fancy output... I'm not necessarily proud of it...
     //template <class T> friend std::ostream& operator <<(std::ostream& stream, const XTExprsnNode<T>& node);
-    friend std::ostream& operator <<<T>(std::ostream& stream, const XTExprsnNode<T>& node);
+    friend std::ostream& operator <<<T1,T2>(std::ostream& stream, const XTExprsnNode<T1,T2>& node);
 };
 
 // Override the ostream << operator. Keeping here as an example....
-template <typename T> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T>& node)
+template <typename T1, typename T2> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T1,T2>& node)
 {
     node.printExp(out,false);
     return stream;
@@ -276,6 +280,7 @@ public:
         return m_value;
     }
     virtual const std::string& getName() const {return m_name;}
+    virtual const char* getTypeId() const {return typeid(m_value).name();}
 
     // Provide mechanism for outputting to a standard stream
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -356,6 +361,7 @@ public:
     // Return the value contained here (to be overidden at higher levels)
     virtual const void* operator()() const {return m_value;}
     virtual const std::string& getName() const {return m_name;}
+    virtual const char* getTypeId() const {return typeid(m_value).name();}
     
     // Basic print to stream method
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -394,6 +400,7 @@ public:
     // Return the value contained here (to be overidden at higher levels)
     virtual const void* operator()() const {return (*m_value)();}
     virtual const std::string& getName() const {return m_name;}
+    virtual const char* getTypeId() const {return typeid(m_value).name();}
     
     // Basic print to stream method
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -437,6 +444,7 @@ public:
         else if (name == "sqrt")  mathOp = &XTExprsnFunction<T>::sqrt;  // square root
         else if (name == "sin")   mathOp = &XTExprsnFunction<T>::sin;   // sine
         else if (name == "cos")   mathOp = &XTExprsnFunction<T>::cos;   // cosine
+        else if (name == "acos")  mathOp = &XTExprsnFunction<T>::acos;  // arc-cosine
         else if (name == "tan")   mathOp = &XTExprsnFunction<T>::tan;   // tangent
         else if (name == "exp")   mathOp = &XTExprsnFunction<T>::exp;   // e raised to power x
         else if (name == "abs")   mathOp = &XTExprsnFunction<T>::abs;   // absolute value
@@ -449,6 +457,7 @@ public:
     // Overide the generic "retrieve" operator from the base class
     virtual const void* operator()() const     {return (this->*mathOp)(m_left);}
     virtual const std::string& getName() const {return m_name;}
+    virtual const char* getTypeId() const {return typeid(m_value).name();}
 
     // Provide mechanism for outputting to a standard stream
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -518,10 +527,24 @@ private:
         //*m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
+    const T* asin(IXTExprsnNode& arg) const 
+    {
+        double left = *(reinterpret_cast<const double*>(arg()));
+        *m_value = std::asin(left);
+        //*m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
+        return m_value;
+    }
     const T* cos(IXTExprsnNode& arg) const 
     {
         double left = *(reinterpret_cast<const double*>(arg()));
         *m_value = std::cos(left);
+        //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
+        return m_value;
+    }
+    const T* acos(IXTExprsnNode& arg) const 
+    {
+        double left = *(reinterpret_cast<const double*>(arg()));
+        *m_value = std::acos(left);
         //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }

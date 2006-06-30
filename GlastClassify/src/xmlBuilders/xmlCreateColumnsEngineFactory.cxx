@@ -70,7 +70,6 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
 
         // Look to see what type of variable is being created here
         std::string sVarType = xmlBase::Dom::getAttribute(xmlColVarVec[0], "value");
-        if (sVarType == "categorical") continue;
 
         columnNames.push_back(sVarName);
 
@@ -88,19 +87,22 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
             sExpression = xmlBase::Dom::getAttribute(xmlColVarVec[1], "value");
         }
             
-        colExpressions.push_back(sExpression);
-
-        // Parse
+        // Pointer to expression node
         IXTExprsnNode* xprsn = XprsnParser().parseExpression(sExpression);
 
         // Get the tuple column value pointer
-        XTcolumnVal<double>* xtColumnVal = 0;
-        XTcolumnVal<double>::XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sVarName);
+        XTcolumnValBase*     xtColumnVal = 0;
+        XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sVarName);
             
-        if (dataIter != XprsnParser().getXtTupleVars().end()) xtColumnVal = dataIter->second;
+        if (dataIter != XprsnParser().getXtTupleVars().end())
+        {
+            xtColumnVal = dataIter->second;
+        }
         else
         {
-            xtColumnVal = new XTcolumnVal<double>(sVarName);
+            if (sVarType == "continuous") xtColumnVal = new XTcolumnVal<double>(sVarName);
+            else                          xtColumnVal = new XTcolumnVal<std::string>(sVarName,"categorical");
+
             XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
         }
 

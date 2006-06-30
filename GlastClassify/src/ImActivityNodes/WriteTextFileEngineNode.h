@@ -39,11 +39,11 @@ public:
     void setXtColumnVal(XTcolumnVal<double>* xtColumnVal) {m_WriteTupleRow = xtColumnVal;}
 
 private:
-    std::string        m_type;
-    std::string        m_name;
-    std::string        m_id;
+    std::string          m_type;
+    std::string          m_name;
+    std::string          m_id;
     XTcolumnVal<double>* m_WriteTupleRow;
-    IImActivityNodeMap m_nodeMap;
+    IImActivityNodeMap   m_nodeMap;
 };
 
 #endif // ifdef WriteTextFileEngineNode_h

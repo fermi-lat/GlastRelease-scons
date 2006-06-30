@@ -55,6 +55,7 @@ private:
 
     /// "specified category" name - for determining which "yprob" value to use
     std::string                  m_specCatName;
+    std::map<std::string,int>    m_catIndex;
 
     /// List of variable names used by this tree
     StringList                   m_varNames;

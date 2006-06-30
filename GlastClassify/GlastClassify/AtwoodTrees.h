@@ -50,31 +50,10 @@ private:
     // (in alphabetical order)
     float         m_acdLowerTileCount;
     float         m_acdUpperTileCount;
-    float         m_bestPsfErr;
-    float         m_bestXDir;
-    float         m_bestYDir;
-    float         m_bestZDir;
-    float         m_bestDeltaEoE;
-    float         m_bestEnergy;
     float         m_bestEnergyProb;
-    float         m_bestLogEnergy;
     float         m_CORE;
-    float         m_calDocaAngle;        // Added 1/3/06
-    float         m_calFrontBackRatio;
-    float         m_calMaxXtalRatio;
-    float         m_calTransTCCD;        // Added 1/3/06
     float         m_evtLogEnergyRaw;
-    float         m_GAM;
-    //float         m_goodEnergy;        // Removed 1/3/06
-    float         m_lastLayerProb;
-    float         m_paramProb;
-    float         m_profileProb;
-    float         m_tkrCoreCalDoca;      // Added 1/3/06
-    float         m_tkrEnergyFrac;
-    float         m_tkrSHRCalAngle;      // Added 1/3/06
     float         m_tkrLATEdge;
-    float         m_trackerProb;
-    float         m_VTX;
 
     const Item*   m_AcdActiveDist3D;
     const Item*   m_AcdRibbonActDist;

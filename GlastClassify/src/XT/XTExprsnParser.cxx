@@ -8,13 +8,10 @@ $Header$
 #include "XTExprsnParser.h"
 #include "facilities/Util.h"
     
-XTExprsnParser::XTExprsnParser(XTcolumnVal<double>::XTtupleMap& tuple) : m_tuple(tuple) 
+XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple) 
 {
     m_delimiters.clear();
 
-    //m_delimiters.push_back(" ");
-    //m_delimiters.push_back("(");
-    //m_delimiters.push_back(")");
     m_delimiters.push_back(DelimPair("|",7));
     m_delimiters.push_back(DelimPair("&",6));
     m_delimiters.push_back(DelimPair("==",5));
@@ -29,21 +26,21 @@ XTExprsnParser::XTExprsnParser(XTcolumnVal<double>::XTtupleMap& tuple) : m_tuple
     m_delimiters.push_back(DelimPair("/",2));
     m_delimiters.push_back(DelimPair("^",1));
 
-    m_delimMap["("]  = "  ";
-    m_delimMap[")"]  = "  ";
-    m_delimMap["&"]  = "BB";
-    m_delimMap["|"]  = "BB";
-    m_delimMap[">"]  = "BD";
-    m_delimMap[">="] = "BD";
-    m_delimMap["<"]  = "BD";
-    m_delimMap["<="] = "BD";
-    m_delimMap["=="] = "BD";
-    m_delimMap["!="] = "BD";
-    m_delimMap["^"]  = "DD";
-    m_delimMap["*"]  = "DD";
-    m_delimMap["/"]  = "DD";
-    m_delimMap["+"]  = "DD";
-    m_delimMap["-"]  = "DD";
+    m_delimMap["("]  = " ";
+    m_delimMap[")"]  = " ";
+    m_delimMap["&"]  = "B";
+    m_delimMap["|"]  = "B";
+    m_delimMap[">"]  = "B";
+    m_delimMap[">="] = "B";
+    m_delimMap["<"]  = "B";
+    m_delimMap["<="] = "B";
+    m_delimMap["=="] = "B";
+    m_delimMap["!="] = "B";
+    m_delimMap["^"]  = "D";
+    m_delimMap["*"]  = "D";
+    m_delimMap["/"]  = "D";
+    m_delimMap["+"]  = "D";
+    m_delimMap["-"]  = "D";
 }
 
 IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression)
@@ -116,18 +113,37 @@ IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression)
         // Otherwise create new Expression Node
         else
         {
+            // An expression node operates on a right and left node to produce 
+            // some output. The type of output will depend on the operator, the 
+            // type of input is extracted from the nodes (where it is assumed
+            // that both nodes have the same type)
             std::string& opType = m_delimMap[fndDelim];
+
+            std::string inputType = pNodeL->getTypeId();
 
             // Exact type of node depends on the operator
             // Logical operation node, input type: bool or double, output type: bool
-            if (opType == "BB" || opType == "BD")
+            if (opType == "B")
             {
-                pNode = new XTExprsnNode<bool>(fndDelim, *pNodeL, *pNodeR);
+                int pos = inputType.find("bool",0);
+
+                if ( pos > -1 )
+                {
+                    pNode = new XTExprsnNode<bool,bool>(fndDelim, *pNodeL, *pNodeR);
+                }
+                else if ( (pos = inputType.find("string",0)) > -1)
+                {
+                    pNode = new XTExprsnNode<bool,std::string>(fndDelim, *pNodeL, *pNodeR);
+                }
+                else
+                {
+                    pNode = new XTExprsnNode<bool,double>(fndDelim, *pNodeL, *pNodeR);
+                }
             }
             // Arithmetic operation node, input type: double, output type: double
             else 
             {
-                pNode = new XTExprsnNode<double>(fndDelim, *pNodeL, *pNodeR);
+                pNode = new XTExprsnNode<double,double>(fndDelim, *pNodeL, *pNodeR);
             }
         }
     }
@@ -169,18 +185,40 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression)
         {
             // Last posibility: an ntuple variable
             //XTcolumnVal<double>*  tupleVal = m_tuple.addNewDataItem(expression);
-            XTcolumnVal<double>* tupleVal = 0;
-            XTcolumnVal<double>::XTtupleMap::iterator dataIter = m_tuple.find(expression);
+            XTcolumnValBase* tupleVal = 0;
+            
+            XTtupleMap::iterator dataIter = m_tuple.find(expression);
 
-            if (dataIter != m_tuple.end()) tupleVal = dataIter->second;
+            if (dataIter != m_tuple.end())
+            {
+                tupleVal = dataIter->second;
+            }
             else
             {
-                tupleVal = new XTcolumnVal<double>(expression);
+                // Ok, last last possibility is that it is a string constant...
+                int stringLen  = expression.length();
+                int firstQuote = expression.find("\"", 0);
+                int secndQuote = expression.find("\"", firstQuote+1);
+
+                if (firstQuote == 0 && secndQuote == stringLen-1)
+                {
+                    std::string dataValue = expression.substr(firstQuote+1,secndQuote-1);
+                    XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(dataValue,"categorical");
+                    newValue->setDataValue(dataValue);
+                    tupleVal = newValue;
+                }
+                else
+                {
+                    tupleVal = new XTcolumnVal<double>(expression);
+                }
+
                 m_tuple[expression] = tupleVal;
             }
 
-            //XTcolumnVal<double>*  tupleVal = m_tuple.find(expression)
-            pNode = new XTExprsnTupleVal<XTcolumnVal<double> >(expression, tupleVal);
+            if (tupleVal->getType() == "continuous")
+                pNode = new XTExprsnTupleVal<XTcolumnVal<double> >(expression, dynamic_cast<XTcolumnVal<double>*>(tupleVal));
+            else
+                pNode = new XTExprsnTupleVal<XTcolumnVal<std::string> >(expression, dynamic_cast<XTcolumnVal<std::string>*>(tupleVal));
         }
     }
 
@@ -224,31 +262,49 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             IXTExprsnNode* ifNode   = parseNextExpression(ifResult);
             IXTExprsnNode* elseNode = parseNextExpression(elseResult);
 
-            pNode = new XTIfElseNode<double>(funcCand,*condNode,*ifNode,*elseNode);
+            // Output type of if else presumed same whether "if" or "else" taken
+            std::string inputType = ifNode->getTypeId();
+
+            int stringPos = inputType.find("string",0);
+
+            if (stringPos > -1)
+                pNode = new XTIfElseNode<std::string>(funcCand,*condNode,*ifNode,*elseNode);
+            else
+                pNode = new XTIfElseNode<double>(funcCand,*condNode,*ifNode,*elseNode);
         }
         // Otherwise, must be a function
         else
         {
-            // Check to see if this function has more than one operand
-            int firstPos = 0;
-            int commaPos = operand.find(",",firstPos);
             IXTExprsnNode* operandNode1 = 0;
             IXTExprsnNode* operandNode2 = 0;
 
-            if (commaPos > 0)
+            // First check to see if the operand is itself a function
+            // (e.g. acos(min(1.,angle))
+            if (operandNode1 = parseFunction(operand))
             {
-                std::string operand1 = operand.substr(firstPos, commaPos);
-                operandNode1 = parseNextExpression(operand1);
-
-                std::string operand2 = operand.substr(commaPos+1, operand.length()-commaPos);
-                operandNode2 = parseNextExpression(operand2);
-            }
-            else
-            {
-                operandNode1 = parseNextExpression(operand);
                 operandNode2 = new XTExprsnValue<double>("",0);
             }
+            // Ok, standard argument
+            else
+            {
+                // Check to see if this function has more than one operand
+                int firstPos = 0;
+                int commaPos = operand.find(",",firstPos);
 
+             if (commaPos > 0)
+                {
+                    std::string operand1 = operand.substr(firstPos, commaPos);
+                    operandNode1 = parseNextExpression(operand1);
+
+                    std::string operand2 = operand.substr(commaPos+1, operand.length()-commaPos);
+                    operandNode2 = parseNextExpression(operand2);
+                }
+                else
+                {
+                    operandNode1 = parseNextExpression(operand);
+                    operandNode2 = new XTExprsnValue<double>("",0);
+                }
+            }
 
             try
             {
@@ -275,6 +331,14 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
     int leftPos  = startPos;
     int rightPos = stringLen;
     std::string parenArg = findEnclosingParens(inString, leftPos, rightPos);
+
+    // if no parens then look for an embedded string value (a "categorical" variable value)
+    if (parenArg == "")
+    {
+        leftPos  = startPos;
+        rightPos = stringLen;
+        parenArg = findCategoricalVal(inString, leftPos, rightPos);
+    }
 
     // If enclosing parenthesis then check to the left and right
     if (parenArg != "")
@@ -406,6 +470,31 @@ std::string XTExprsnParser::findEnclosingParens(const std::string& expression, i
 
         // Set the return string minus enclosing parens
         subStr = expression.substr(startPos+1, endPos-startPos-1);
+    }
+
+    return subStr;
+}
+
+std::string XTExprsnParser::findCategoricalVal(const std::string& expression, int& startPos, int& endPos)
+{
+    // This method aims to return the location of a "categorical" value 
+    // contained within the string "expression". 
+    // null string in case we don't find anything
+    std::string subStr = "";
+    
+    // Initialize end... 
+    endPos = expression.length();
+
+    // Special section to handle parenthesis... (not pretty...)
+    startPos = expression.find("\"", startPos);
+
+    // if we find a left " then look for the next one following it
+    if (startPos > -1)
+    {
+        endPos = expression.find("\"",startPos+1);
+
+        // Set the return string including the surrounding quotes
+        subStr = expression.substr(startPos, endPos-startPos+1);
     }
 
     return subStr;

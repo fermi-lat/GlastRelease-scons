@@ -13,8 +13,6 @@ $Header$
 #include "IxmlEngineFactory.h"
 #include "../ImActivityNodes/IImActivityNode.h"
 
-class DecisionTree;
-
 /** @class xmlModifyColumnsEngineFactory
 @brief A factory for accessing decision trees
 

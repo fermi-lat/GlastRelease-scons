@@ -90,10 +90,14 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
 </table>
 */
 
-
-
+    // Unfortunately, the following is no longer the way "CTB" variables get added to the 
+    // output ntuple. At the request of Bill Atwood, ALL variables in the IM analysis which
+    // are prefixed by "CTB" are now output to the ntuple. Unfortunately, I have no idea 
+    // how we are going to document this... The list below is more or less what gets written
+    // out so perhaps it will still be useful...
     // New items to create or override
     // Add Bill's tuple items so we can start some comparisons
+    /*
     tuple.addItem("CTBAcdLowerTileCount",  m_acdLowerTileCount);
     tuple.addItem("CTBAcdUpperTileCount",  m_acdUpperTileCount);
     tuple.addItem("CTBBestPSFerr",         m_bestPsfErr);
@@ -120,6 +124,7 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     tuple.addItem("CTBTkrSHRCalAngle" ,    m_tkrSHRCalAngle);
     tuple.addItem("CTBTrackerProb" ,       m_trackerProb);
     tuple.addItem("CTBVTX",                m_VTX);
+    */
     
     m_executeTreeCnt = 0;
     m_goodVals       = 0;
@@ -151,36 +156,14 @@ bool AtwoodTrees::execute()
     // initialize CT output variables
     m_acdLowerTileCount   = 0.;
     m_acdUpperTileCount   = 0.;
-    m_bestPsfErr          = 0.;
-    m_bestXDir            = 0.;
-    m_bestYDir            = 0.;
-    m_bestZDir            = 0.;
-    m_bestDeltaEoE        = 0.;
-    m_bestEnergy          = 0.;
     m_bestEnergyProb      = 0.;
-    m_bestLogEnergy       = 0.;
     m_CORE                = 0.;
-    m_calDocaAngle        = 0.;        // Added 1/3/06
-    m_calFrontBackRatio   = 0.;
-    m_calMaxXtalRatio     = 0.;
-    m_calTransTCCD        = 0.;        // Added 1/3/06
     m_evtLogEnergyRaw     = 0.;
-    m_GAM                 = 0.;
-    //m_goodEnergy          = 0.;
-    m_lastLayerProb       = 0.;
-    m_paramProb           = 0.;
-    m_profileProb         = 0.;
-    m_tkrCoreCalDoca      = 0.;      // Added 1/3/06
-    m_tkrEnergyFrac       = 0.;
-    m_tkrSHRCalAngle      = 0.;      // Added 1/3/06
     m_tkrLATEdge          = 0.;
-    m_trackerProb         = 0.;
-    m_VTX                 = 0.;
 
     double tkrNumTracks = *m_TkrNumTracks;
     double calenergy    = *m_CalEnergyRaw;
     double calCsiRln    = *m_CalCsIRLn;
-    //double eventId      = *m_EvtEventId;
 
     // These are the "standard" selection cuts
     if( calenergy <= 5. || calCsiRln <= 4. || tkrNumTracks < 1) return false; 
@@ -192,34 +175,10 @@ bool AtwoodTrees::execute()
     // Recover the results?
     try
     {
-        // Retrieve the energy classification results
-        m_acdLowerTileCount   = m_treeAnalysis->getTupleVal("CTBAcdLowerTileCount");
-        m_acdUpperTileCount   = m_treeAnalysis->getTupleVal("CTBAcdUpperTileCount");
-        m_bestDeltaEoE        = m_treeAnalysis->getTupleVal("CTBBestDeltaEoE");
-        m_bestEnergy          = m_treeAnalysis->getTupleVal("CTBBestEnergy");
-        m_bestEnergyProb      = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
-        m_bestLogEnergy       = m_treeAnalysis->getTupleVal("CTBBestLogEnergy");
-        m_bestPsfErr          = m_treeAnalysis->getTupleVal("CTBBestPSFerr");
-        m_bestXDir            = m_treeAnalysis->getTupleVal("CTBBestXDir");
-        m_bestYDir            = m_treeAnalysis->getTupleVal("CTBBestYDir");
-        m_bestZDir            = m_treeAnalysis->getTupleVal("CTBBestZDir");
-        m_CORE                = m_treeAnalysis->getTupleVal("CTBCORE");
-        m_calDocaAngle        = m_treeAnalysis->getTupleVal("CTBCalDocaAngle");        // Added 1/3/06
-        m_calFrontBackRatio   = m_treeAnalysis->getTupleVal("CTBCalFrontBackRatio");
-        m_calMaxXtalRatio     = m_treeAnalysis->getTupleVal("CTBCalMaxXtalRatio");
-        m_calTransTCCD        = m_treeAnalysis->getTupleVal("CTBCalTransTCCD");        // Added 1/3/06
-        m_evtLogEnergyRaw     = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
-        m_GAM                 = m_treeAnalysis->getTupleVal("CTBGAM");
-//        m_goodEnergy          = m_treeAnalysis->getTupleVal("GoodEnergy");
-        m_lastLayerProb       = m_treeAnalysis->getTupleVal("LastLayerProb");
-        m_paramProb           = m_treeAnalysis->getTupleVal("ParamProb");
-        m_profileProb         = m_treeAnalysis->getTupleVal("ProfileProb");
-        m_tkrCoreCalDoca      = m_treeAnalysis->getTupleVal("CTBTkrCoreCalDoca");      // Added 1/3/06
-        m_tkrEnergyFrac       = m_treeAnalysis->getTupleVal("CTBTkrEnergyFrac");
-        m_tkrLATEdge          = m_treeAnalysis->getTupleVal("CTBTkrLATEdge");
-        m_tkrSHRCalAngle      = m_treeAnalysis->getTupleVal("CTBTkrSHRCalAngle");      // Added 1/3/06
-        m_trackerProb         = m_treeAnalysis->getTupleVal("TrackerProb");
-        m_VTX                 = m_treeAnalysis->getTupleVal("CTBVTX");
+        // Retrieve the energy classification results (needed below)
+        m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+        m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
+        m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
 
         m_goodVals++;
     }
@@ -234,6 +193,8 @@ bool AtwoodTrees::execute()
     bool writeTupleRow = false;
 
     double FilterStatus_HI = *m_FilterStatus_HI;
+
+    FilterStatus_HI = 0;
 
     // First cuts on Filter status and failures for energy and tails
     if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)

@@ -62,12 +62,18 @@ void newPredictEngineNode::execute()
     double runningWght = 0.;
 
     //int treeNum = 0;
+    std::string predict;
 
     for(TreePairVector::iterator treeItr = m_trees.begin(); treeItr != m_trees.end(); treeItr++)
     {
         IXTExprsnNode* tree = treeItr->first;
 
-        double result = *(reinterpret_cast<const double*>((*tree)()));
+        //double result = *(reinterpret_cast<const double*>((*tree)()));
+        const CTOutPut* ctOutPut = reinterpret_cast<const CTOutPut*>((*tree)());
+
+        double result = ctOutPut->getYProb();
+
+        predict = ctOutPut->getScore();
 
         // For printing during running, leaving here to remember how to do it
         //const XTIfElseNode<double>& ifElseNode = dynamic_cast<const XTIfElseNode<double>& >(*tree);
@@ -86,6 +92,7 @@ void newPredictEngineNode::execute()
     //std::cout << " gives: " << runningWght << std::endl;
     
     m_xtColumnVal->setDataValue(runningWght);
+    m_predict->setDataValue(predict);
     
     // Now follow through with all the daughter nodes we point to
     for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)
@@ -94,4 +101,10 @@ void newPredictEngineNode::execute()
     }
 
     return;
+}
+// Override the ostream << operator. Keeping here as an example....
+std::ostream& operator<<(std::ostream& stream, const CTOutPut& node)
+{
+    stream << node.getScore() << "=" << node.getYProb();
+    return stream;
 }

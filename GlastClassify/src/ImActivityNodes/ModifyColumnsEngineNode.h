@@ -13,10 +13,12 @@
 *
 */
 
+class XTcolumnValBase;
+
 class ModifyColumnsEngineNode : public IImActivityNode
 {
 public:
-    typedef std::vector<std::string> StringList;
+    typedef std::map<XTcolumnValBase*,XTcolumnValBase*> XprsnNodeMap;
 
     ModifyColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) {m_nodeMap.clear();}
@@ -33,6 +35,8 @@ public:
 
     virtual void setNodeLink(int port, IImActivityNode* linkToNode) {m_nodeMap[port] = linkToNode;}
 
+    void setXprsnNodeMap(XprsnNodeMap& nodeMap)   {m_xprsnNodeMap = nodeMap;}
+
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
 private:
@@ -40,6 +44,8 @@ private:
     std::string        m_name;
     std::string        m_id;
     IImActivityNodeMap m_nodeMap;
+
+    XprsnNodeMap       m_xprsnNodeMap;
 };
 
 #endif // ifdef ModifyColumnsEngineNode_h

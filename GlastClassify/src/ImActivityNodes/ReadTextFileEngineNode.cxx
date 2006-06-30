@@ -46,7 +46,8 @@ void ReadTextFileEngineNode::print(std::ostream& out, int depth) const
 void ReadTextFileEngineNode::execute()
 {
     // Reset the flag to determine whether to save this row
-    m_WriteTupleRow->setDataValue(0.);
+    XTcolumnVal<double>* colPtr = dynamic_cast<XTcolumnVal<double>*>(m_WriteTupleRow);
+    colPtr->setDataValue(0.);
 
     // Now follow through with all the daughter nodes we point to
     for(IImActivityNodeMap::const_iterator nodeIter = m_nodeMap.begin(); nodeIter != m_nodeMap.end(); nodeIter++)

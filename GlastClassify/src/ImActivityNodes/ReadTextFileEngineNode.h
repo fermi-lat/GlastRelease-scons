@@ -12,13 +12,12 @@
 *  @brief  Describes an ActivityNode encountered in reading an IM xml file
 *
 */
-template <class T> class XTcolumnVal;
+
+class XTcolumnValBase;
 
 class ReadTextFileEngineNode : public IImActivityNode
 {
 public:
-    typedef std::vector<std::string> StringList;
-
     ReadTextFileEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) {m_nodeMap.clear();}
     virtual ~ReadTextFileEngineNode() {}
@@ -36,14 +35,14 @@ public:
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
-    void setXtColumnVal(XTcolumnVal<double>* xtColumnVal) {m_WriteTupleRow = xtColumnVal;}
+    void setXtColumnVal(XTcolumnValBase* xtColumnVal) {m_WriteTupleRow = xtColumnVal;}
 
 private:
-    std::string          m_type;
-    std::string          m_name;
-    std::string          m_id;
-    XTcolumnVal<double>* m_WriteTupleRow;
-    IImActivityNodeMap   m_nodeMap;
+    std::string        m_type;
+    std::string        m_name;
+    std::string        m_id;
+    XTcolumnValBase*   m_WriteTupleRow;
+    IImActivityNodeMap m_nodeMap;
 };
 
 #endif // ifdef ReadTextFileEngineNode_h

@@ -44,6 +44,7 @@ xmlNewPredictEngineFactory::xmlNewPredictEngineFactory(XTExprsnParser& parser) :
                                                         m_yProbIndex(0), 
                                                         m_numProbVals(0)
 {
+    m_catIndex.clear();
 }
 
 IImActivityNode* xmlNewPredictEngineFactory::operator()(const DOMElement* xmlActivityNode)
@@ -62,18 +63,43 @@ IImActivityNode* xmlNewPredictEngineFactory::operator()(const DOMElement* xmlAct
     // Get the tuple column value pointer
     //XTcolumnVal<double>* xtColumnVal = XprsnParser().getXtTupleVars().addNewDataItem(m_outVarName);
     XTcolumnVal<double>* xtColumnVal = 0;
-    XTcolumnVal<double>::XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(m_outVarName);
+    
+    XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(m_outVarName);
             
-    if (dataIter != XprsnParser().getXtTupleVars().end()) xtColumnVal = dataIter->second;
+    if (dataIter != XprsnParser().getXtTupleVars().end())
+    {
+        XTcolumnValBase* basePtr = dataIter->second;
+        
+        if (basePtr->getType() == "continuous") xtColumnVal = dynamic_cast<XTcolumnVal<double>*>(basePtr);
+    }
     else
     {
         xtColumnVal = new XTcolumnVal<double>(m_outVarName);
         XprsnParser().getXtTupleVars()[m_outVarName] = xtColumnVal;
     }
 
+    // This creates a "predict node" output value
+    std::string               predClass = "PREDICT.class";
+    XTcolumnVal<std::string>* predict   = 0;
+    
+    dataIter = XprsnParser().getXtTupleVars().find(predClass);
+            
+    if (dataIter != XprsnParser().getXtTupleVars().end())
+    {
+        XTcolumnValBase* basePtr = dataIter->second;
+
+        if (basePtr->getType() == "categorical") predict = dynamic_cast<XTcolumnVal<std::string>*>(basePtr);
+    }
+    else
+    {
+        predict = new XTcolumnVal<std::string>(predClass, "categorical");
+        XprsnParser().getXtTupleVars()[predClass] = predict;
+    }
+
     node->setInputVar(m_varNames);
     node->addOutputVar(m_outVarName);
     node->setXTcolumnVal(xtColumnVal);
+    node->setPredictVal(predict);
     node->setTreePairVector(forest);
 
     return node;
@@ -102,6 +128,7 @@ newPredictEngineNode::TreePairVector xmlNewPredictEngineFactory::parseForest(con
 
     m_yProbIndex  = 0;
     m_numProbVals = 0;
+    m_catIndex.clear();
 
     // Loop through Info nodes to find output tags
     for(std::vector<DOMElement*>::iterator colInfoIter = xmlColInfoVec.begin(); 
@@ -121,6 +148,8 @@ newPredictEngineNode::TreePairVector xmlNewPredictEngineFactory::parseForest(con
                 std::string sLevelName = xmlBase::Dom::getAttribute(xmlLevel, "value");
                 
                 if (sLevelName == m_specCatName) m_yProbIndex = m_numProbVals;
+
+                m_catIndex[sLevelName] = m_numProbVals;
                 
                 xmlLevel = xmlBase::Dom::getSiblingElement(xmlLevel);
                 m_numProbVals++;
@@ -275,12 +304,46 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
                 while(iDelimPos > -1) weight[idx++] = getNextDouble(sList, iDelimPos);
             }
 
-            // Create the node
-            double* pValue = new double;
+            // Retrieve all the ancillary info
+            std::string sId  = xmlBase::Dom::getAttribute(xmlElement, "id");
+            int         id   = 0;
+            if (!sId.empty()) id = atoi(sId.c_str());
 
-            *pValue = weight[m_yProbIndex];;
+            std::string sRec = xmlBase::Dom::getAttribute(xmlElement, "recordCount");
+            int         rec  = 0;
+            if (!sRec.empty()) rec = atoi(sRec.c_str());
+
+            std::string sGrp = xmlBase::Dom::getAttribute(xmlElement, "group");
+            int         grp  = 0;
+            if (!sGrp.empty()) grp = atoi(sGrp.c_str());
+
+            std::string sDev = xmlBase::Dom::getAttribute(xmlElement, "deviance");
+            double      dev  = 0;
+            if (!sDev.empty()) dev = atof(sDev.c_str());
+
+            std::string sEnt = xmlBase::Dom::getAttribute(xmlElement, "entropy");
+            double      ent  = 0;
+            if (!sEnt.empty()) ent = atoi(sEnt.c_str());
+
+            std::string sIni = xmlBase::Dom::getAttribute(xmlElement, "gini");
+            double      ini  = 0;
+            if (!sIni.empty()) ini = atoi(sIni.c_str());
+
+            std::string sRsk = xmlBase::Dom::getAttribute(xmlElement, "risk");
+            int         rsk  = 0;
+            if (!sRsk.empty()) rsk = atoi(sRsk.c_str());
+
+            // Create the node
+            //double* pValue = new double;
+
+            //*pValue = weight[m_yProbIndex];
+
+            int         catIdx = m_catIndex[score];
+            double      yProb  = weight[catIdx];
         
-            node = new XTExprsnValue<double>(sNodeId, pValue);
+            //node = new XTExprsnValue<double>(sNodeId, pValue);
+            CTOutPut* ctOutPut = new CTOutPut(id,score,rec,grp,dev,ent,ini,rsk,yProb); 
+            node = new XTExprsnValue<CTOutPut>(sNodeId, ctOutPut);
 
             min_prob = std::min(min_prob, weight[m_yProbIndex]);
             max_prob = std::max(max_prob, weight[m_yProbIndex]);
@@ -305,7 +368,8 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
         IXTExprsnNode* ifNode    = parseNode(xmlNodeVec[0]);
         IXTExprsnNode* elseNode  = parseNode(xmlNodeVec[1]);
 
-        node = new XTIfElseNode<double>(sNodeId, *xprsnNode, *ifNode, *elseNode);
+        //node = new XTIfElseNode<double>(sNodeId, *xprsnNode, *ifNode, *elseNode);
+        node = new XTIfElseNode<CTOutPut>(sNodeId, *xprsnNode, *ifNode, *elseNode);
     }
 
     --nesting_level;

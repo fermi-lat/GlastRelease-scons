@@ -14,13 +14,13 @@
 */
 
 class IXTExprsnNode;
-template <class T> class XTcolumnVal;
+class XTcolumnValBase;
 
 class CreateColumnsEngineNode : public IImActivityNode
 {
 public:
-    typedef std::vector<std::string>                       StringList;
-    typedef std::map<XTcolumnVal<double>*, IXTExprsnNode*> XprsnNodeMap;
+    typedef std::vector<std::string>                   StringList;
+    typedef std::map<XTcolumnValBase*, IXTExprsnNode*> XprsnNodeMap;
 
     CreateColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) 
@@ -38,7 +38,7 @@ public:
 
     virtual void setNodeLink(int port, IImActivityNode* linkToNode) {m_nodeMap[port] = linkToNode;}
 
-    void setColumnNames(StringList& colNames)     {m_columnNames       = colNames;}
+    void setColumnNames(StringList& colNames)     {m_columnNames  = colNames;}
     void setXprsnNodeMap(XprsnNodeMap& nodeMap)   {m_xprsnNodeMap = nodeMap;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;

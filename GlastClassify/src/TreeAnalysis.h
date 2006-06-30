@@ -51,7 +51,7 @@ public:
                This is really intended to be used by the TreeAnalysis "Builder"
                not by casual users!
     */
-    XTcolumnVal<double>::XTtupleMap& xtTupleMap() {return m_xtTupleMap;}
+    XTtupleMap& xtTupleMap() {return m_xtTupleMap;}
 
     /** @brief Used by the TreeAnalysisBuilder to add a new node to our structure
     */
@@ -80,8 +80,11 @@ private:
     // This looks up the values in the output ntuple
     ITupleInterface&                   m_lookup;
 
+    // Vector to hold any CTB output variables
+    std::map<std::string, float*>      m_ctbVarMap;
+
     // Class needed to calcluate local variables used in CT's
-    XTcolumnVal<double>::XTtupleMap    m_xtTupleMap;
+    XTtupleMap    m_xtTupleMap;
 
     // Provide map between "local" variables in analysis and 
     // those existing in the input ntuple

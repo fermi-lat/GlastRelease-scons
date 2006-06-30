@@ -28,41 +28,55 @@ public:
 template <class T> class XTcolumnVal;
 template <class T> std::ostream& operator <<(std::ostream& stream, const XTcolumnVal<T>& tupleVal);
 
-// Real stuff
-template <class T> class XTcolumnVal
+// Define base class for storing in tuple map
+class XTcolumnValBase
 {
 public:
-    typedef typename std::map<std::string,XTcolumnVal<T>* > XTtupleMap;
-    
-    XTcolumnVal(const std::string& name) : m_name(name), m_valid(false), m_data(0.) {}
-    ~XTcolumnVal() {} //delete T;}
+    XTcolumnValBase(const std::string& name, const std::string& type) : m_name(name), m_type(type), m_valid(false) {}
+    virtual ~XTcolumnValBase() {}
 
     const bool         dataIsValid() const {return m_valid;}
+    const std::string& getType()     const {return m_type;}
     const std::string& getName()     const {return m_name;}
+
+    void               clearValidFlag() {m_valid = false;}
+    void               setValidFlag()   {m_valid = true;}
+private:
+    std::string m_name;
+    std::string m_type;
+    bool        m_valid;
+};
+
+// Typedef to define the overall container for our objects
+typedef std::map<std::string,XTcolumnValBase* > XTtupleMap;
+
+// Real stuff
+template <class T> class XTcolumnVal : public XTcolumnValBase
+{
+public: 
+    XTcolumnVal(const std::string& name, const std::string& type="continuous") : XTcolumnValBase(name,type) {}
+    ~XTcolumnVal() {} //delete T;}
 
     const T*           operator()()  const
     {
-        if (!m_valid)
+        if (!dataIsValid())
         {
-            throw XTexception("XTcolumnVal: Attempting to access invalid data");
+            throw XTexception("XTcolumnVal: Attempting to access invalid data: " + getName() + ", " + getType());
         }
         return &m_data;
     }
     
     T                  value()       const 
     {
-        if (!m_valid)
+        if (!dataIsValid())
         {
-            throw XTexception("XTcolumnVal: Attempting to access invalid data");
+            throw XTexception("XTcolumnVal: Attempting to access invalid data: " + getName() + ", " + getType());
         }
         return m_data;
     }
 
-    void clearValidFlag() {m_valid = false;}
-    void setDataValue(const T data) {m_data = data; m_valid = true;}
+    void setDataValue(const T data) {m_data = data; setValidFlag();}
 private:
-    std::string m_name;
-    bool        m_valid;
     T           m_data;
 
     // This is for making a fancy output... I'm not necessarily proud of it...
