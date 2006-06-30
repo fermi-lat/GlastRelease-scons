@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r34p3 30-Jun-2006  jrb Add final idfield to tiles in cu06 as Recon expects 
    v1r34p2 12-Jun-2006  jrb v1r34p1 didn't tag everything; try again
    v1r34p1  6-Jun-2006  jrb Get rid of blanket, solar panels, spacecraft for cu
                             - unnecessary, but can cause trouble
