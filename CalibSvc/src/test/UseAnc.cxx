@@ -121,7 +121,8 @@ StatusCode UseAnc::execute( ) {
   int newSerNoQdc = pQdcPeds->getSerNo();
   if ((newSerNoTagger != m_serTaggerPed) ||
       (newSerNoQdc != m_serQdcPed) )  {
-    log << MSG::INFO << "Processing new gains, peds after retrieveObject" 
+    log << MSG::INFO 
+        << "Processing new tagger and qdc peds after retrieveObject" 
         << endreq;
     m_serTaggerPed = newSerNoTagger;
     m_serQdcPed = newSerNoQdc;
