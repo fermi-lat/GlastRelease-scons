@@ -65,7 +65,7 @@
  -->
 <!ELEMENT dimension EMPTY>
 <!ATTLIST dimension nModule NMTOKEN  #REQUIRED
-                    nLayer  NMTOKEN  #FIXED "1"
+                    nLayer  NMTOKEN  #FIXED "0"
                     nChannel NMTOKEN #REQUIRED >
 
 

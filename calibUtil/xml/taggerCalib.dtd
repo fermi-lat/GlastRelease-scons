@@ -47,7 +47,7 @@
 <!ATTLIST generic  
    instrument  (LAT | BFEM | BTEM | EM | EM2 | CU) #REQUIRED
    timestamp   CDATA #REQUIRED
-   calibType (TAG_Ped | TAG_Gain)   #REQUIRED
+   calibType (ANC_TaggerPed | ANC_TaggerGain)   #REQUIRED
    DTDVersion  NMTOKEN "v1r0"       
    fmtVersion  NMTOKEN #REQUIRED
    creator     CDATA #IMPLIED >
