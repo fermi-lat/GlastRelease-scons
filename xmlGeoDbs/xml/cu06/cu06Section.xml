@@ -70,58 +70,63 @@
       </posXYZ>
 
 <posXYZ volume="topTileACDM"
-XREF="ACDTile_0_x"
-YREF="ACDTile_0_y"
-ZREF="ACDTile_0_z" >
-<idField name="fLATObjects" valueREF="eLATACD"/>
-<idField name="fACDFace" value="0"/>
-<idField name="fACDCmp" valueREF="eACDTile"/>
-<idField name="fRow" value="0" />
-<idField name="fCol" value="0" />
+        XREF="ACDTile_0_x"
+        YREF="ACDTile_0_y"
+        ZREF="ACDTile_0_z" >
+  <idField name="fLATObjects" valueREF="eLATACD"/>
+  <idField name="fACDFace" value="0"/>
+  <idField name="fACDCmp" valueREF="eACDTile"/>
+  <idField name="fRow" value="0" />
+  <idField name="fCol" value="0" />
+  <idField name="fTileSeg" value="0" />
 </posXYZ>
 <posXYZ volume="topTileACDM"
-yrot="90.0"
-XREF="ACDTile_1_x"
-YREF="ACDTile_1_y"
-ZREF="ACDTile_1_z" >
-<idField name="fLATObjects" valueREF="eLATACD"/>
-<idField name="fACDFace" value="0"/>
-<idField name="fACDCmp" valueREF="eACDTile"/>
-<idField name="fRow" value="0" />
-<idField name="fCol" value="1" />
+        yrot="90.0"
+        XREF="ACDTile_1_x"
+        YREF="ACDTile_1_y"
+        ZREF="ACDTile_1_z" >
+  <idField name="fLATObjects" valueREF="eLATACD"/>
+  <idField name="fACDFace" value="0"/>
+  <idField name="fACDCmp" valueREF="eACDTile"/>
+  <idField name="fRow" value="0" />
+  <idField name="fCol" value="1" />
+  <idField name="fTileSeg" value="0" />
 </posXYZ>
 <posXYZ volume="topTileACDM"
-yrot="90.0"
-XREF="ACDTile_2_x"
-YREF="ACDTile_2_y"
-ZREF="ACDTile_2_z" >
-<idField name="fLATObjects" valueREF="eLATACD"/>
-<idField name="fACDFace" value="0"/>
-<idField name="fACDCmp" valueREF="eACDTile"/>
-<idField name="fRow" value="0" />
-<idField name="fCol" value="2" />
+        yrot="90.0"
+        XREF="ACDTile_2_x"
+        YREF="ACDTile_2_y"
+        ZREF="ACDTile_2_z" >
+  <idField name="fLATObjects" valueREF="eLATACD"/>
+  <idField name="fACDFace" value="0"/>
+  <idField name="fACDCmp" valueREF="eACDTile"/>
+  <idField name="fRow" value="0" />
+  <idField name="fCol" value="2" />
+  <idField name="fTileSeg" value="0" />
 </posXYZ>
 <posXYZ volume="topTileACDS"
-yrot="90.0"
-XREF="ACDTile_3_x"
-YREF="ACDTile_3_y"
-ZREF="ACDTile_3_z" >
-<idField name="fLATObjects" valueREF="eLATACD"/>
-<idField name="fACDFace" value="0"/>
-<idField name="fACDCmp" valueREF="eACDTile"/>
-<idField name="fRow" value="0" />
-<idField name="fCol" value="3" />
+        yrot="90.0"
+        XREF="ACDTile_3_x"
+        YREF="ACDTile_3_y"
+        ZREF="ACDTile_3_z" >
+  <idField name="fLATObjects" valueREF="eLATACD"/>
+  <idField name="fACDFace" value="0"/>
+  <idField name="fACDCmp" valueREF="eACDTile"/>
+  <idField name="fRow" value="0" />
+  <idField name="fCol" value="3" />
+  <idField name="fTileSeg" value="0" />
 </posXYZ>
 <posXYZ volume="topTileACDS"
-yrot="90.0"
-XREF="ACDTile_4_x"
-YREF="ACDTile_4_y"
-ZREF="ACDTile_4_z" >
-<idField name="fLATObjects" valueREF="eLATACD"/>
-<idField name="fACDFace" value="0"/>
-<idField name="fACDCmp" valueREF="eACDTile"/>
-<idField name="fRow" value="0" />
-<idField name="fCol" value="4" />
+        yrot="90.0"
+        XREF="ACDTile_4_x"
+        YREF="ACDTile_4_y"
+        ZREF="ACDTile_4_z" >
+  <idField name="fLATObjects" valueREF="eLATACD"/>
+  <idField name="fACDFace" value="0"/>
+  <idField name="fACDCmp" valueREF="eACDTile"/>
+  <idField name="fRow" value="0" />
+  <idField name="fCol" value="4" />
+  <idField name="fTileSeg" value="0" />
 </posXYZ>
 
       <posXYZ volume="oneTower" XREF="innerTowers_dt" ZREF="towers_dz">
