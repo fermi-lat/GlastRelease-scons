@@ -52,11 +52,11 @@ double TreeAnalysis::getTupleVal(const std::string& name)
 void TreeAnalysis::execute()
 {
     // Initialize the output variables
-    for(std::map<std::string, float*>::iterator iter = m_ctbVarMap.begin(); iter != m_ctbVarMap.end(); iter++)
-    {
-        float* ctbVar = iter->second;
-        *ctbVar = 0;
-    }
+    //for(std::map<std::string, float*>::iterator iter = m_ctbVarMap.begin(); iter != m_ctbVarMap.end(); iter++)
+    //{
+    //    float* ctbVar = iter->second;
+    //    *ctbVar = 0;
+    //}
 
     // Transfer tuple variables to local tuple, if needed
     for(XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); dataIter != m_xtTupleMap.end(); dataIter++)
@@ -94,8 +94,16 @@ void TreeAnalysis::execute()
         // Check if CTB variable, if so then set data value for tuple
         if (dataIter->first.substr(0,3) == "CTB")
         {
+            // Currently only dealing with "continuous" variables
             if (dataIter->second->getType() == "continuous")
-                *(m_ctbVarMap[dataIter->first]) = *(*(dynamic_cast<XTcolumnVal<double>*>(dataIter->second)))();
+            {
+                XTcolumnVal<double>* colVal = dynamic_cast<XTcolumnVal<double>*>(dataIter->second);
+                double               result = 0.;
+
+                if (colVal->dataIsValid()) result = *(*colVal)();
+                
+                *(m_ctbVarMap[dataIter->first]) = result;
+            }
         }
     }
 
