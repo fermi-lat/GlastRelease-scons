@@ -1,6 +1,6 @@
 package GlastClassify
 
-version v3r3p0
+version v3r3p1
 author T. Burnett <tburnett@u.washington.edu>
 # $Header$
 use GlastPolicy *
