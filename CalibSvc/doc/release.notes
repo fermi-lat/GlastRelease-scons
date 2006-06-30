@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r25   30-Jun-2006  jrb  Converters, test program for anc. detector calibs
    v0r24p3  17-Jun-2006 jrb  Same as p1.  Windows compiler doesn't like p2
    v0r24p2  9-Jun-2006  jrb  Small change to use ROOT in more
                              standard manner, perhaps address memory leak
