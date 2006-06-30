@@ -10,5 +10,6 @@ namespace CalibData {
     m_val = otherPed->m_val;
     m_rms = otherPed->m_rms;
     m_isBad = otherPed->m_isBad;
+    m_device = otherPed->m_device;
   }
 }
