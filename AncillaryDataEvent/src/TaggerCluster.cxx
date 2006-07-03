@@ -26,13 +26,13 @@ void TaggerCluster::calculateProperties()
   // Evaluate Eta.
   double nextHighestPulseHeight = 0.0;
   if (getSize() > 1){
-    for (hitIterator = m_hits.begin(); hitIterator != m_hits.end(); hitIterator++){
-      if((abs((*hitIterator).getStripId() - m_highestHit.getStripId()) == 1) &&
-         ((*hitIterator).getPulseHeight() > nextHighestPulseHeight)){
-        nextHighestPulseHeight = (*hitIterator).getPulseHeight();
+      for (hitIterator = m_hits.begin(); hitIterator != m_hits.end(); hitIterator++){
+          const signed int stripDist = static_cast<signed int>((*hitIterator).getStripId()) - m_highestHit.getStripId();
+          if ( abs(stripDist) == 1 && (*hitIterator).getPulseHeight() > nextHighestPulseHeight ) {
+              nextHighestPulseHeight = (*hitIterator).getPulseHeight();
+          }
       }
-    }
-    m_eta = (highestPulseHeight - nextHighestPulseHeight)/(highestPulseHeight + nextHighestPulseHeight);
+      m_eta = (highestPulseHeight - nextHighestPulseHeight)/(highestPulseHeight + nextHighestPulseHeight);
   }
 }
 

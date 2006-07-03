@@ -1,7 +1,8 @@
 /** @file release.notes
- Package AncillaryDataEvent\n
+ Package AncillaryDataEvent
  Coordinator:N.Omodei
  @verbatim
+ v0r1p0 03-Jul-2006 MWK fix abs of unsigned int
  v0r1   29-Jun-2006 NO  implement recon
  v0r0   21-Jun-2006 HMK add set routines for Digi, TaggerHit and QdcHit
  v0     16-Jun-2006 NO  Initial import
