@@ -86,7 +86,14 @@ static string &trim_comment(string &str) {
 
 SimpleIniFile::SimpleIniFile(const string &filename) 
 {
-  openIniFile(filename);
+  if (!openIniFile(filename)) {
+    ostringstream tmp;
+    tmp << __FILE__ << ":" << __LINE__ << 
+      ": Cannot open cfg file: " << filename;
+    throw runtime_error(tmp.str());
+        
+  }
+    
 }
 
 bool SimpleIniFile::openIniFile(const string &filename)
