@@ -272,6 +272,17 @@ def calcError(pedData):
 
 
 
+
+def average(data, tems):
+
+    av = 0
+    for t in tems:
+        av += Numeric.average(data[t,...], axis = None)
+    return (av / len(tems))
+            
+
+
+
 if __name__ == '__main__':
 
     usage = "pedVal [-V] [-L <log_file>] [-R <root_file>] <xml_file>"
@@ -353,22 +364,22 @@ if __name__ == '__main__':
         
     # do simple stats 
     
-    av = Numeric.average(pedData[...,calConstant.CRNG_LEX8,0], axis = None)
+    av = average(pedData[...,calConstant.CRNG_LEX8,0], towers)
     log.info("LEX8 pedestal values average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_LEX1,0], axis = None)
+    av = average(pedData[...,calConstant.CRNG_LEX1,0], towers)
     log.info("LEX1 pedestal values average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_HEX8,0], axis = None)
+    av = average(pedData[...,calConstant.CRNG_HEX8,0], towers)
     log.info("HEX8 pedestal values average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_HEX1,0], axis = None)
+    av = average(pedData[...,calConstant.CRNG_HEX1,0], towers)
     log.info("HEX1 pedestal values average=%f", av)
     
-    av = Numeric.average(pedData[...,calConstant.CRNG_LEX8,1], axis = None)
+    av = average(pedData[...,calConstant.CRNG_LEX8,1], towers)
     log.info("LEX8 pedestal sigmas average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_LEX1,1], axis = None)
+    av = average(pedData[...,calConstant.CRNG_LEX1,1], towers)
     log.info("LEX1 pedestal sigmas average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_HEX8,1], axis = None)
+    av = average(pedData[...,calConstant.CRNG_HEX8,1], towers)
     log.info("HEX8 pedestal sigmas average=%f", av)
-    av = Numeric.average(pedData[...,calConstant.CRNG_HEX1,1], axis = None)
+    av = average(pedData[...,calConstant.CRNG_HEX1,1], towers)
     log.info("HEX1 pedestal sigmas average=%f", av)
 
     # report results
