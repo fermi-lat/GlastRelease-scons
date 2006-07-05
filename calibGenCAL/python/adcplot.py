@@ -34,7 +34,7 @@ import calConstant
 
 
 
-def plotDAC(data, info, twrs):
+def plotDAC(data, info, twrs, fileName):
     """
     Create ROOT plots from ADC/DAC data
     """
@@ -61,7 +61,7 @@ def plotDAC(data, info, twrs):
                     c.SetGridy()
                             
                     g.SetMarkerStyle(5)
-                    g.SetTitle(title)
+                    g.SetTitle("%s: %s" % (title, fileName))
                     
                     h = g.GetHistogram()
                     axis = h.GetXaxis()
@@ -76,7 +76,7 @@ def plotDAC(data, info, twrs):
 
 
 
-def plotULD(data, info, twrs):
+def plotULD(data, info, twrs, fileName):
     """
     Create ROOT plots from ADC/ULD data
     """
@@ -109,13 +109,12 @@ def plotULD(data, info, twrs):
                         g = ROOT.TGraph(128, x, y)
                         g.SetMarkerStyle(5)
                         g.SetMarkerColor(erng + 1)
-                        g.SetTitle('%s_%s' % (title, calConstant.CRNG[erng]))
-
+                        
                         graphs.append(g)
                         leg.AddEntry(g, calConstant.CRNG[erng], 'P')
 
                     hist = g.GetHistogram()
-                    hist.SetTitle(title)
+                    hist.SetTitle('%s: %s' % (title, fileName))
                     hist.SetMaximum(max(gMax) + 200)
                     axis = hist.GetXaxis()
                     axis.SetTitle('DAC')
@@ -188,9 +187,9 @@ if __name__ == '__main__':
 
     type = info['TTYPE1']
     if type == 'fhe_dac' or type == 'fle_dac' or type == 'log_acpt':
-        plotDAC(data, info, twrs)
+        plotDAC(data, info, twrs, xmlName)
     elif type == 'rng_uld_dac':
-        plotULD(data, info, twrs)
+        plotULD(data, info, twrs, xmlName)
     else:
         log.error("file type %s not supported", type)
         sys.exit(1)
