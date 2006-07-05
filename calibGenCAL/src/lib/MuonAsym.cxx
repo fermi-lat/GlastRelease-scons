@@ -464,7 +464,7 @@ unsigned MuonAsym::getMinEntries() {
   }
 
   m_ostrm << " Channels Detected: "  << n
-          << " Avg Hits/channel: " << (double)sum/n
+          << " Avg Hits/channel: " << ((n) ? (double)sum/n : 0)
           << " Max: " << maxHits
           << endl;
 
