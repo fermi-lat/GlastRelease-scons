@@ -2,8 +2,6 @@
 #include "AncillaryDataEvent/TaggerHit.h"
 #include "AncillaryDataEvent/QdcHit.h"
 
-#include "digiRootData/TaggerHit.h"
-#include "digiRootData/QdcHit.h"
 #include "digiRootData/AdfDigi.h"
 
 #include "TCollection.h"
@@ -14,11 +12,11 @@
 namespace RootPersistence {
 
   void convert( const AncillaryData::QdcHit* tdsObj,
-                QdcHit& rootObj) {
+                commonRootData::QdcHit& rootObj) {
        rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getPedestalSubtract());
   };
 
-  void convert( const QdcHit* rootObj,
+  void convert( const commonRootData::QdcHit* rootObj,
                 AncillaryData::QdcHit& tdsObj) {
       if (rootObj->isPedestalSubtracted()) tdsObj.setPedestalSubtract();
 	  tdsObj.setPulseHeight(rootObj->getPulseHeight());
@@ -26,12 +24,12 @@ namespace RootPersistence {
   };
 
   void convert( const AncillaryData::TaggerHit* tdsObj,
-                TaggerHit& rootObj) {
+                commonRootData::TaggerHit& rootObj) {
       rootObj.initialize(tdsObj->getModuleId(), tdsObj->getLayerId(), tdsObj->getStripId(),
 		                   tdsObj->getPulseHeight(), tdsObj->getPedestalSubtract());
   };
 
-  void convert( const TaggerHit* rootObj,
+  void convert( const commonRootData::TaggerHit* rootObj,
                 AncillaryData::TaggerHit& tdsObj) {
        tdsObj.setLayerId(rootObj->getLayerId());
 	   tdsObj.setModuleId(rootObj->getModuleId());
@@ -65,8 +63,8 @@ namespace RootPersistence {
 
 	  const TClonesArray* taggerHitColRoot = rootObj.getTaggerHitCol();
 	  TIter tagIt(taggerHitColRoot);
-	  TaggerHit *tagRoot;
-	  while ((tagRoot = (TaggerHit*)tagIt.Next())) {
+	  commonRootData::TaggerHit *tagRoot;
+	  while ((tagRoot = (commonRootData::TaggerHit*)tagIt.Next())) {
 		  AncillaryData::TaggerHit tagTds;
 		  convert(tagRoot, tagTds);
 		  tdsObj.appendTaggerHit(tagTds);
@@ -74,8 +72,8 @@ namespace RootPersistence {
 
 	  const TClonesArray* qdcHitColRoot = rootObj.getQdcHitCol();
 	  TIter qdcIt(qdcHitColRoot);
-	  QdcHit *qdcRoot;
-	  while ((qdcRoot = (QdcHit*)qdcIt.Next())) {
+	  commonRootData::QdcHit *qdcRoot;
+	  while ((qdcRoot = (commonRootData::QdcHit*)qdcIt.Next())) {
 		  AncillaryData::QdcHit qdcTds;
 		  convert(qdcRoot, qdcTds);
 		  tdsObj.appendQdcHit(qdcTds);

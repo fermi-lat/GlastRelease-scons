@@ -3,8 +3,6 @@
 
 #include "AncillaryDataEvent/Digi.h"
 
-#include "digiRootData/TaggerHit.h"
-#include "digiRootData/QdcHit.h"
 #include "digiRootData/AdfDigi.h"
 
 
@@ -12,14 +10,14 @@ namespace RootPersistence {
 
  
   /// Fill persitent verison of QdcHit
-  void convert( const AncillaryData::QdcHit*, QdcHit&);
+  void convert( const AncillaryData::QdcHit*, commonRootData::QdcHit&);
   /// Fill transient verison of QdcHit
-  void convert ( const QdcHit*, AncillaryData::QdcHit&);
+  void convert ( const commonRootData::QdcHit*, AncillaryData::QdcHit&);
 
   /// Fill persitent verison of TaggerHit
-  void convert( const AncillaryData::TaggerHit*, TaggerHit&);
+  void convert( const AncillaryData::TaggerHit*, commonRootData::TaggerHit&);
   /// Fill transient verison of TaggerHit
-  void convert ( const TaggerHit*, AncillaryData::TaggerHit&);
+  void convert ( const commonRootData::TaggerHit*, AncillaryData::TaggerHit&);
 
   /// Fill persitent verison of AdfDigi
   void convert( const AncillaryData::Digi&, AdfDigi& ) ;
