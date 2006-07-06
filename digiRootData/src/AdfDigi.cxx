@@ -9,9 +9,9 @@ using namespace std;
 ClassImp(AdfDigi)
 
 AdfDigi::AdfDigi() {
-	m_taggerHitCol = 0; 
+    m_taggerHitCol = 0; 
     m_numTaggerHit = -1;
-	m_qdcHitCol = 0; 
+    m_qdcHitCol = 0; 
     m_numQdcHit = -1;
 
     m_eventNumber = 0;
@@ -61,40 +61,40 @@ void AdfDigi::Print(Option_t *option) const {
     cout << dec;
 }
 
-TaggerHit* AdfDigi::addTaggerHit(UInt_t moduleId, UInt_t layerId, 
+commonRootData::TaggerHit* AdfDigi::addTaggerHit(UInt_t moduleId, UInt_t layerId, 
                                  UInt_t stripId, UInt_t pulseHgt, 
                                  Bool_t isPedSubtracted) {
     // Add a new TaggerHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
-	if (!m_taggerHitCol) m_taggerHitCol = new TClonesArray("TaggerHit", 1);
+    if (!m_taggerHitCol) m_taggerHitCol = new TClonesArray("commonRootData::TaggerHit", 1);
     ++m_numTaggerHit;
     TClonesArray &localCol = *m_taggerHitCol;
-    new(localCol[m_numTaggerHit]) TaggerHit(moduleId, layerId, stripId, pulseHgt, isPedSubtracted);
-    return ((TaggerHit*)(localCol[m_numTaggerHit]));
+    new(localCol[m_numTaggerHit]) commonRootData::TaggerHit(moduleId, layerId, stripId, pulseHgt, isPedSubtracted);
+    return ((commonRootData::TaggerHit*)(localCol[m_numTaggerHit]));
 }
 
-const TaggerHit* AdfDigi::getTaggerHit(UInt_t ind) const {
+const commonRootData::TaggerHit* AdfDigi::getTaggerHit(UInt_t ind) const {
     if (((Int_t)ind) < m_taggerHitCol->GetEntriesFast()) 
-        return ((TaggerHit*)m_taggerHitCol->At(ind));
+        return ((commonRootData::TaggerHit*)m_taggerHitCol->At(ind));
     else
         return 0;
 }
 
-QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub) {
+commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub) {
     // Add a new QdcHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
-	if (!m_qdcHitCol) m_qdcHitCol = new TClonesArray("QdcHit",1);
+    if (!m_qdcHitCol) m_qdcHitCol = new TClonesArray("commonRootData::QdcHit",1);
     ++m_numQdcHit;
     TClonesArray &localCol = *m_qdcHitCol;
-    new(localCol[m_numQdcHit]) QdcHit(channel, pulseHgt, isPedSub);
-    return ((QdcHit*)(localCol[m_numQdcHit]));
+    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, isPedSub);
+    return ((commonRootData::QdcHit*)(localCol[m_numQdcHit]));
 }
 
-const QdcHit* AdfDigi::getQdcHit(UInt_t ind) const {
+const commonRootData::QdcHit* AdfDigi::getQdcHit(UInt_t ind) const {
     if (((Int_t)ind) < m_qdcHitCol->GetEntriesFast()) 
-        return ((QdcHit*)m_qdcHitCol->At(ind));
+        return ((commonRootData::QdcHit*)m_qdcHitCol->At(ind));
     else
         return 0;
 }
@@ -118,8 +118,8 @@ Bool_t AdfDigi::CompareInRange( const AdfDigi &ref, const std::string& name ) co
     result = rootdatautil::CompareInRange(getEventNumber(),ref.getEventNumber(),"EventNumber") && result;
     result = rootdatautil::CompareInRange(getSpillNumber(),ref.getSpillNumber(),"SpillNumber") && result;
 
-    result = rootdatautil::TObjArrayCompareInRange<TaggerHit>(m_taggerHitCol,ref.m_taggerHitCol) && result;
-    result = rootdatautil::TObjArrayCompareInRange<QdcHit>(m_qdcHitCol,ref.m_qdcHitCol) && result;
+    result = rootdatautil::TObjArrayCompareInRange<commonRootData::TaggerHit>(m_taggerHitCol,ref.m_taggerHitCol) && result;
+    result = rootdatautil::TObjArrayCompareInRange<commonRootData::QdcHit>(m_qdcHitCol,ref.m_qdcHitCol) && result;
 
     if (!result) {
         if (name == "") {

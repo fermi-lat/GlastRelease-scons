@@ -5,8 +5,8 @@
 #include "TObject.h"
 #include "TClonesArray.h"
 
-#include "TaggerHit.h"
-#include "QdcHit.h"
+#include "commonRootData/adf/TaggerHit.h"
+#include "commonRootData/adf/QdcHit.h"
 
 /** @class AdfDigi
  * @brief The digitization ancillary data for beamtest 2006  
@@ -32,14 +32,15 @@ public:
     UInt_t getSpillNumber() const { return m_spillNumber; }
 
     const TClonesArray* getTaggerHitCol() const { return m_taggerHitCol; }
-    const TaggerHit* getTaggerHit(UInt_t ind) const;
-    TaggerHit* addTaggerHit(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-                            UInt_t pulseHgt, Bool_t isPedSubtracted);
+    const commonRootData::TaggerHit* getTaggerHit(UInt_t ind) const;
+    commonRootData::TaggerHit* addTaggerHit(UInt_t moduleId, UInt_t layerId, 
+                                            UInt_t stripId, UInt_t pulseHgt, 
+                                            Bool_t isPedSubtracted);
 
 
     const TClonesArray* getQdcHitCol() const { return m_qdcHitCol; }
-    const QdcHit* getQdcHit(UInt_t ind) const;
-    QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub);
+    const commonRootData::QdcHit* getQdcHit(UInt_t ind) const;
+    commonRootData::QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub);
 
 
     void Fake( Int_t ievent, Float_t randNum );
