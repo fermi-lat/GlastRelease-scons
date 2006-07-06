@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<rdbms        xsi:noNamespaceSchemaLocation="new-rdbmsDescrip.xsd"
+<rdbms        xsi:noNamespaceSchemaLocation="rdbmsDescrip.xsd"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        dbs="calib_test"
        SchemaVersion="2.0"
