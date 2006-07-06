@@ -119,6 +119,9 @@ class AcdReconAlg : public Algorithm
       StatusCode calcCornerDoca(const HepPoint3D &x0, const HepVector3D &dir,
                                 double &dist);
 
+      /// calculate stuff for the backsplash
+      StatusCode doBacksplash(const Event::AcdDigiCol& digiCol, Event::AcdSplashVarsCol& acdSplashVars);
+
       /// the tool to calculate the Track intersections w/ the ACD
       AcdITkrIntersectTool* m_intersectionTool;
 
@@ -155,6 +158,8 @@ class AcdReconAlg : public Algorithm
   
     
       bool m_calcCornerDoca;
+
+      bool m_doBackSplash;
 
       /// Number of Acd Tiles above threshold
       unsigned int m_tileCount, m_ribbonCount;

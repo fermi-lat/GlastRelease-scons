@@ -63,6 +63,7 @@ Algorithm(name, pSvcLocator) {
   declareProperty("hitToolName",m_hitToolName="AcdPha2MipTool");
   declareProperty("pocaToolName",m_pocaToolName="AcdPocaTool");  
   declareProperty("propToolName",m_propToolName="G4PropagationTool");
+  declareProperty("doBackSplash",m_doBackSplash=false);
 }
 
 
@@ -334,6 +335,11 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
       acdHitPocas.push_back(sortPoca);
     }
 
+    if ( m_doBackSplash ) {
+      sc = doBacksplash(digiCol,acdSplashVars);
+      if (sc.isFailure()) return sc;    
+    }
+
     log << MSG::DEBUG;
     if (log.isActive()) log.stream() << "DOCA: " << m_doca << " "
         << "ActDist: " << m_act_dist;
@@ -429,9 +435,6 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 
         const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
 	iTrack++;
-
-	//std::cout << std::endl;
-	//std::cout << "Next Track " << iTrack << std::endl;
 
 	// grap the track direction information
 	const Event::TkrTrackHit* firstHit = (*trackTds)[0];
@@ -824,4 +827,85 @@ StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &
  
     return StatusCode::SUCCESS;
   
+}
+
+StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& digiCol, Event::AcdSplashVarsCol& acdSplashVars) {
+
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream   log( msgSvc(), name() );
+  
+  // Retrieve the information on fit tracks
+  SmartDataPtr<Event::TkrTrackCol> tracksTds(eventSvc(), 
+					     EventModel::TkrRecon::TkrTrackCol);
+  
+  if (!tracksTds) {
+    log << MSG::DEBUG << "No reconstructed tracks found on the TDS" 
+	<< endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  AcdRecon::TrackData downwardExtend;
+  AcdRecon::SplashData splashData;
+
+  int iTrack(-1);
+  Event::TkrTrackColPtr trkPtr = tracksTds->begin();
+  while(trkPtr != tracksTds->end()) {
+
+    const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
+    iTrack++;
+
+    // only look at downward extension
+    const unsigned int lastHitIdx = trackTds->getNumHits() - 1;
+    const Event::TkrTrackHit* lastHit = (*trackTds)[lastHitIdx];
+    downwardExtend.m_point = lastHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+    downwardExtend.m_dir   = lastHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+    downwardExtend.m_energy = lastHit->getEnergy();
+    downwardExtend.m_index = iTrack;
+    downwardExtend.m_upward = false;
+
+    splashData.m_trackIndex = iTrack;
+    AcdRecon::entersCal(downwardExtend,0.,splashData.m_calEntryPoint,splashData.m_calEntryVector,splashData.m_region);
+
+    // only keep stuff that hits the CAL
+    if ( splashData.m_region != 0 ) continue;
+
+    static std::list<idents::AcdId> acdList;
+    if ( acdList.size() == 0 ) {
+      acdList.push_back( idents::AcdId(0,0,0,0) );
+      acdList.push_back( idents::AcdId(0,1,0,0) );
+      acdList.push_back( idents::AcdId(0,1,1,0) );
+      acdList.push_back( idents::AcdId(0,1,2,0) );
+      acdList.push_back( idents::AcdId(0,1,3,0) );      
+    }
+
+    for ( std::list<idents::AcdId>::const_iterator acdIt = acdList.begin(); acdIt != acdList.end(); acdIt++ ) {
+    //for (Event::AcdDigiCol::const_iterator acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
+      // get the id
+      //idents::AcdId acdId = (*acdDigiIt)->getId();
+      const idents::AcdId& acdId = *acdIt;
+      // get the data object to store all the computations
+      if (acdId.na()) continue;
+      if (acdId.ribbon()) continue;
+      if (acdId.tile()) {      
+	const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_glastDetSvc);
+	sc = tileDim->statusCode();
+	if ( sc.isFailure() ) {
+	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
+	      << endreq;
+	  return sc;
+	}
+	splashData.resetTileData(2000.);
+	AcdRecon::splashVariables(*tileDim,splashData.m_calEntryPoint,splashData.m_calEntryVector,
+				  splashData.m_tileSolidAngle, splashData.m_weightedTrackAngle, splashData.m_weightedPathlength );
+
+	Event::AcdSplashVars* newSplash = 
+	  new Event::AcdSplashVars(acdId,iTrack,
+				   splashData.m_calEntryPoint,splashData.m_calEntryVector,
+				   splashData.m_tileSolidAngle , splashData.m_weightedTrackAngle , splashData.m_weightedPathlength);
+
+	acdSplashVars.push_back(newSplash);
+      }
+    }	
+  }
+  return sc;
 }

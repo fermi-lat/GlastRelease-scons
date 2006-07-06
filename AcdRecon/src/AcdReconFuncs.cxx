@@ -105,7 +105,7 @@ namespace AcdRecon {
 
       crossesPlane(track,center,face,testArcLength,testLocalX,testLocalY,testHitPoint);
 
-      int region(0);
+      // int region(0);
  
       // If arcLength is negative... had to go backwards to hit plane... 
       if ( testArcLength < 0 ) continue;
@@ -549,9 +549,204 @@ namespace AcdRecon {
     }
   }  
 
-  void projectErrorAtPoca(const AcdRecon::TrackData& /* trackData */, const Event::TkrTrackParams& trackParams,
+  void projectErrorAtPoca(const AcdRecon::TrackData& /* trackData */, const Event::TkrTrackParams& /* trackParams */,
 			  const Point& /* poca */, const Vector& /* pocaVector */, double& pocaError) {
     pocaError = 1000.;
+  }
+
+  void entersCal(const AcdRecon::TrackData& aTrack, const double& calZDist, 
+		 Point& entryPoint, Vector& entryVector, int& region) {
+
+    const HepPoint3D& x0 = aTrack.m_point;
+    const HepVector3D& t0 = aTrack.m_dir;
+
+    // set a default
+    region = -1;
+
+    // Figure out where in the plane of this face the trajectory hits
+    double arcLength = (calZDist - x0.z())/t0.z();	                
+
+    // If arcLength is negative... had to go backwards to hit plane... 
+    if( arcLength < 0.) return;
+
+    HepPoint3D x_isec = aTrack.m_point + arcLength* aTrack.m_dir;
+    entryPoint.set( x_isec.x(), x_isec.y(), x_isec.z() );
+    entryVector.set( t0.x(), t0.y(), t0.z() );
+
+    region = 0;
+    if ( entryPoint.x() < -800. ) region += 1;
+    if ( entryPoint.x() > 800. ) region += 2;    
+    if ( entryPoint.y() < -800. ) region += 4;
+    if ( entryPoint.y() > 800. ) region += 8;
+
+    return;
+  }
+
+  void splashVariables(const AcdTileDim& tile, const Point& entryPoint, const Vector& entryVector,
+		       double& solidAngle, double& meanAngle, double& pathLength) {
+
+    // This code is from Phillipe Bruel, 
+    // modified by EAC to match the format of the data in AcdTileDim and to use CLHEP
+    //
+    // The idea is to split a tile up into many little elements and calculate three quantities for each
+    // element and average or sum these quantities over the whole tile.
+    //
+    //  solidAngle -> solidAngle as seen from the impact point int the CAL
+    //  meanAngle -> the angle between the track direction and the vector from impact to tile, weighted by solid angle
+    //  pathLength -> the pathLength through the tile, weighted by solid angle
+    //
+    // 
+    //  Stuff used in the calculation
+    //  
+    // the center of the tile : pc[3]  -> called "center" here
+    // 
+    // pcal[3] = the impact point of the beam particle onto the top of the calorimeter
+    //               called "impact" here
+    //
+    // velec[3] = the direction of the beam particle (the norm of this vector = 1)
+    //               called "direction" here 
+    //
+    // three vectors : v0[4], v1[4], v2[4]
+    // - v0[0,1,2] define the axis, v0[3] = the dimension along this axis (and the same for v1 and v2)
+    // - v2 is always the axis corresponding to the smallest dimension (i.e the width of the tile = 10mm)
+    // - v2 points towards the outside world : a backsplash particle, coming 
+    // from the impact point of the beam particle onto the top of the 
+    // calorimeter, would pass through the tile with a momentum vector p that would gives p.v2>0
+    // - (v0,v1,v2) is a direct system
+    //
+    // this logic is just handled by the switch statement below, the equivalent information is in
+    // 
+    // "stepVector1", "stepVector2" and "normalVector" 
+    // which are the vector to step from one element to the next and the unit normal to the tile surface
+    //
+    //
+
+    // reset are the variables that we want to determine
+    solidAngle = 0.;
+    meanAngle = 0.;
+    pathLength = 0.;
+    double ANGLERMS = 0;   // this is getting dropped might want to save it later
+    
+    // definition of the surface elements steps
+    static const int nxstep = 5;
+    static const int nystep = 5;
+    static const int nzstep = 5;
+
+    // the incoming track
+    const HepPoint3D impact(entryPoint.x(),entryPoint.y(),entryPoint.z());
+    const HepVector3D direction(entryVector.x(),entryVector.y(),entryVector.z());
+
+    // get the tile center and corner
+    const HepPoint3D& center = tile.tileCenter();
+    const HepPoint3D& lowCorner = (tile.corner(0))[0];
+
+    // define the step vectors
+    double halfX = (center.x() - lowCorner.x()) / (double)nxstep;
+    double halfY = (center.y() - lowCorner.y()) / (double)nystep;
+    double halfZ = (center.z() - lowCorner.z()) / (double)nzstep;    
+    HepVector3D halfStepVector(halfX,halfY,halfZ);
+    
+    HepVector3D stepVector1;
+    HepVector3D stepVector2;
+    HepVector3D normalVector;
+    int nstep1;
+    int nstep2;
+
+    double surfaceElementArea(0.);
+    double width(0.);
+    switch ( tile.acdId().face() ) {
+    case 0:
+      // top.  1 -> X, 2 -> Y, thickness -> Z
+      stepVector1 = HepVector3D(halfX*2.,0.,0.);
+      stepVector2 = HepVector3D(0.,halfY*2.,0.);
+      normalVector = HepVector3D(0.,0.,1.);
+      surfaceElementArea = halfX * halfY * 4.;
+      width = tile.dim()[2];
+      nstep1 = nxstep;
+      nstep2 = nystep;
+      break;
+    case 1:
+    case 3:
+      // +-X.  1 -> Y, 2 -> Z, thickness -> X
+      stepVector1 = HepVector3D(0.,halfY*2.,0.);
+      stepVector2 = HepVector3D(0.,0.,halfZ*2.);
+      normalVector = HepVector3D(1.,0.,0.);
+      surfaceElementArea = halfY * halfZ * 4.;      
+      width = tile.dim()[0];
+      nstep1 = nystep;
+      nstep2 = nzstep;
+      break;
+    case 2:
+    case 4:
+      // +-X.  1 -> Y, 2 -> Z, thickness -> Y
+      stepVector1 = HepVector3D(halfX*2.,0.,0.);
+      stepVector2 = HepVector3D(0.,0.,halfZ*2.);
+      normalVector = HepVector3D(0.,1.,0.);
+      surfaceElementArea = halfX * halfZ * 4.;
+      width = tile.dim()[1];
+      nstep1 = nxstep;
+      nstep2 = nzstep;
+      break;
+    }
+    
+    switch ( tile.acdId().face() ) {
+    case 1:
+    case 2:
+      // -X or -Y side.  Invert the normal vector.
+      normalVector *= -1.;
+      break;
+    }
+
+    // loop on the surface elements, start a half step inside the 
+    HepPoint3D currentSurfacePoint = lowCorner + halfStepVector;
+    for(int i=0;i<nstep1;++i) {
+      for(int j=0;j<nstep2;++j) {
+
+	// determine the vector (impact point, center of the surface element)
+	HepVector3D toElement = currentSurfacePoint - impact;
+
+	double distance_to_tile_squared = toElement.mag2();
+	HepVector3D unitToElement = toElement.unit();
+
+	// calculate the solid angle of the surface element seen from the impact point
+	double solang = unitToElement.dot(normalVector) * surfaceElementArea / distance_to_tile_squared;
+	
+	// add it to the total solidangle
+	solidAngle += solang;
+
+	// calculate the angle between the beam particle direction and the 
+	// vector (impact point, center of the surface element)
+	double flightAngle = acos( unitToElement.dot(direction) );
+
+	// use it to calculate the mean and the rms of the angle with the weight solang
+	meanAngle += flightAngle*solang;
+	ANGLERMS += flightAngle*flightAngle*solang;
+	
+	// calculate the corrected width.
+	double widthcorrection = unitToElement.dot(normalVector);	
+	if(widthcorrection>0)
+	  pathLength += (width/widthcorrection)*solang;
+
+	// debugging printout
+	//std::cout << currentSurfacePoint << ' ' << impact << ' ' 
+	//	  << toElement << ' ' << unitToElement << ' ' 
+	//	  << solang << ' ' << flightAngle << ' ' << widthcorrection << std::endl;	
+	
+	// step in local Y
+	currentSurfacePoint += stepVector2;
+      }
+      // step in local X
+      currentSurfacePoint += stepVector1;
+    }
+    
+    // divide by the total weight = the total solid angle
+    if(solidAngle>0) {
+      meanAngle /= solidAngle;
+      ANGLERMS /= solidAngle;
+      ANGLERMS = sqrt(ANGLERMS-meanAngle*meanAngle);
+      pathLength /= solidAngle;
+    }    
+    return;
   }
 
 }

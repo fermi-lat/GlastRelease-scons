@@ -105,6 +105,53 @@ namespace AcdRecon {
   // this is to define if a channel has a hit or not
   typedef std::map<idents::AcdId,unsigned int> AcdHitMap;
 
+  /// This struct stores the data about the backsplash
+  struct SplashData {
+  public:
+    SplashData(){reset(2000.);}      
+    void reset(double maxDist) {
+      m_id = idents::AcdId();
+
+      m_trackIndex = -1;
+      m_region = -1;
+      m_calEntryPoint = Point();
+      m_calEntryVector = Vector();
+
+      m_tileSolidAngle = -maxDist;
+      m_weightedTrackAngle = -maxDist;
+      m_weightedPathlength = -maxDist;
+    }
+
+    void resetTileData(double maxDist) {
+      m_id = idents::AcdId();
+      m_tileSolidAngle = -maxDist;
+      m_weightedTrackAngle = -maxDist;
+      m_weightedPathlength = -maxDist;
+    }
+
+    idents::AcdId m_id;       // The AcdId of the hit element   
+
+    /// The index of the associated track
+    int m_trackIndex;
+    
+    /// the region that the track exits from (0 -> cal)
+    int m_region;
+
+    /// The Vector from the point the track enters the calorimeter to the tile center
+    Point m_calEntryPoint;    
+    /// The track vector at the point the track enters the calorimeter
+    Vector m_calEntryVector;    
+    /// The total solid angle of the tile, seen from the track entry point
+    double m_tileSolidAngle;    
+    /// The average of the angle between the reconstructed track and the line         
+    /// connecting the track entry point in the calorimeter at that point
+    /// (weighted by the solid angle of the element)                         
+    double m_weightedTrackAngle;    
+    /// the average of the pathlength inside the tile along the path from the 
+    /// track entry point in the calorimeter to the tile
+    /// (weighted by the solid angle of the element)     
+    double m_weightedPathlength;
+  };  
 }
 
 #endif

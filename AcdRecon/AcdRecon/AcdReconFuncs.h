@@ -57,6 +57,13 @@ namespace AcdRecon {
 
   void projectErrorAtPoca(const AcdRecon::TrackData& trackData, const Event::TkrTrackParams& trackParams,
 			  const Point& poca, const Vector& pocaVector, double& pocaError);
+
+  void entersCal(const AcdRecon::TrackData& trackData, const double& calZDist, 
+		 Point& entryPoint, Vector& entryVector, int& region);
+ 
+  void splashVariables(const AcdTileDim& tile, const Point& entryPoint, const Vector& entryVector,
+		       double& solidAngle, double& meanAngle, double& pathLength);
+ 
 }
 
 #endif
