@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r5      06-Jul-2006 EAC Implemented calculations for AcdSplashVars from Phillipe Bruel's stuff
 v3r4      22-Jun-2006 EAC Added AcdSplashVars
 v3r3p4    31-May-2006 EAC Silence a debugging printout left in by mistake
 v3r3p3    23-May-2006 EAC yet another y->x fix for the ribbon orientation
