@@ -1,7 +1,7 @@
 package GlastClassify
 
 version v3r3p1
-author T. Burnett <tburnett@u.washington.edu>
+author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
 
@@ -30,12 +30,13 @@ macro_append ROOT_cppflags "" WIN32 " /wd4800 "
 
 # this app creates the classification trees
 macro txt "" WIN32 " *.txt"
-application classify -s=../src/classify $(source)
+# application classify -s=../src/classify $(source)
 
 set PRUNEROWS "false"
 
 application apply -s=../src/apply $(source)
 
 # app to run tests on the training data
-application test_GlastClassify -s=../src/test $(source)
+# (not relevant for CTB variables, disabled by THB)
+# application test_GlastClassify -s=../src/test $(source)
 
