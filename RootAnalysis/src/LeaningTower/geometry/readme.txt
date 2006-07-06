@@ -38,6 +38,12 @@ Full LAT **********************************************************************
 Bay*geometry135005524.txt are retrieved from the cat of runs 135005518, 20, 22,
 and 24.
 
+Bay*geometry07700510n.txt are retrieved from the cat of runs 077005108 and 9
+(pre NRL vibe z).
+
+Bay*geometry07700586n.txt are retrieved from the cat of runs 077005862 and 3
+(post NRL vibe z).
+
 *******************************************************************************
 
 stack2geometry.txt
