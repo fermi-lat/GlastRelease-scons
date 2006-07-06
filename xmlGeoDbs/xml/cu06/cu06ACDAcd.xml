@@ -1,3 +1,5 @@
+<!-- ACDM means medium-sized tile; ACDS is small -->  
+
 <box name="topTileACDS"
 XREF="ACDTileSX"
 YREF="ACDTileSY"
@@ -10,6 +12,22 @@ detectorTypeREF="eDTypeACDTile"/>
 XREF="ACDTileMX"
 YREF="ACDTileMY"
 ZREF="tileThickness"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+
+<box name="sideTileACDS"
+XREF="tileThickness"
+YREF="ACDTileSX"
+ZREF="ACDTileSY"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+
+<box name="sideTileACDM"
+XREF="tileThickness"
+YREF="ACDTileMX"
+ZREF="ACDTileMY"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
