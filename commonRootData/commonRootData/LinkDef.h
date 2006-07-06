@@ -23,6 +23,9 @@
 #pragma link C++ class VolumeIdentifier+;
 //#pragma link C++ class BadPointerException;
 
+#pragma link C++ class commonRootData::TaggerHit+;
+#pragma link C++ class commonRootData::QdcHit+;
+
 #pragma link C++ class RootObj<Int_t>+;
 #pragma link C++ class RootObj<Double_t>+;
 #pragma link C++ class FileHeader+;
