@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r9      07-Jul-2006 HMK Really remove QdcHit and TaggerHit from this package
 v9r8      06-Jul-2006 HMK Moved TaggerHit and QdcHit to commonRootData
 v9r7      20-Jun-2006 HMK Ancillary Digi data from beamtest
 v9r6p1    15-Jun-2006 HMK rename LogInfo in OBF to avoid name conflict
