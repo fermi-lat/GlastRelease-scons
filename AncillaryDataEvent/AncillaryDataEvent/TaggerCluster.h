@@ -36,6 +36,7 @@ namespace AncillaryData
       unsigned int getSize()              const {return m_hits.size();}
       double       getPosition()          const {return m_baricenterPosition;}
       double       getPulseHeight()       const {return m_totalPulseHeight;}
+      TaggerHit    getHigestHit()         const {return m_highestHit;}
       //      double       getNoise()             const {return m_totalNoise;}
       TaggerHit    getHit(int hitId)      const {return m_hits[hitId];}
       std::vector<TaggerHit> getHits()    const {return m_hits;}
