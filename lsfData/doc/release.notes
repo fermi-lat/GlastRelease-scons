@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r6    07-Jul-2006 RBL Add LsfTimeTone.earlyEvent and LciConfiguration.strobe flags to match DFI V3-4-1
 v0r5    11-Apr-2006 HMK implement type method for all configuration classes
 v0r4    11-Apr-2006 BL  Patch up LCI classes to include clone method
 v0r3    04-Apr-2006 HMK Add ACD, CAL, TKR Lci classes to LsfConfiguration.h

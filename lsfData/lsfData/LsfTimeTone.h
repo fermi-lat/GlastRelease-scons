@@ -20,7 +20,8 @@ namespace lsfData {
     enum { MISSING_GPS_MASK = 1, 
 	   MISSING_CPU_MASK = 2,
 	   MISSING_LAT_MASK = 4,
-	   MISSING_TIMETONE_MASK = 8 } MASKS;
+	   MISSING_TIMETONE_MASK = 8,
+           EARLY_EVENT_MASK = 16 } MASKS;
     
   public:
     
@@ -83,6 +84,9 @@ namespace lsfData {
     /// NO 1-PPS signal at Spacecraft 
     inline bool missingTimeTone() const  { return (m_flags & MISSING_TIMETONE_MASK) != 0; }
 
+    /// Event arrived early
+    inline bool earlyEvent() const { return (m_flags & EARLY_EVENT_MASK) != 0; }
+
     /// The time hack
     inline const GemTime& timeHack() const { return m_timeHack; }
     
@@ -118,6 +122,10 @@ namespace lsfData {
       if ( value ) m_flags |= MISSING_TIMETONE_MASK;
       else m_flags &= (~MISSING_TIMETONE_MASK);
     }
+    inline void setEarlyEvent( bool value ) {
+      if ( value ) m_flags |= EARLY_EVENT_MASK;
+      else m_flags &= (~EARLY_EVENT_MASK);
+    }
 
 
   private:
@@ -126,7 +134,7 @@ namespace lsfData {
     unsigned int m_incomplete;  // 0 -> ok
     unsigned int m_timeSecs;    // # of secs since epoch @ time hack
     unsigned int m_flywheeling; // # of timetones since last complete once
-    unsigned char m_flags;       // missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) ]
+    unsigned char m_flags;       // missing signals [ GPS | 1-pps (CPU) | 1-pps (LAT) | 1-pps (SC) | early event ]
     
     GemTime m_timeHack;          
     
