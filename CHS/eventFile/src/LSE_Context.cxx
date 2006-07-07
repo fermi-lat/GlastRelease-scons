@@ -14,7 +14,14 @@ namespace eventFile {
 
   void LSE_Context::FromTimetone::dump( const char* pre, const char* post ) const
   {
-    printf( "%ssecs = %d%s", pre, timeSecs, post );
+    printf( "%ssecs            = 0x%08x (%d)%s", pre, timeSecs, timeSecs, post );
+    printf( "%sincomplete      = 0x%08x%s", pre, incomplete, post );
+    printf( "%sflywheeling     = 0x%08x%s", pre, flywheeling, post );
+    printf( "%smissingTimeTone = %s%s", pre, (missingTimeTone) ? "True" : "False", post );
+    printf( "%smissingCpuPps   = %s%s", pre, (missingCpuPps)   ? "True" : "False", post );
+    printf( "%smissingLatPps   = %s%s", pre, (missingLatPps)   ? "True" : "False", post );
+    printf( "%searlyEvent      = %s%s", pre, (earlyEvent)      ? "True" : "False", post );
+    printf( "%smissingGps      = %s%s", pre, (missingGps)      ? "True" : "False", post );
     timeHack.dump( "   ", "\n" );
   }
 

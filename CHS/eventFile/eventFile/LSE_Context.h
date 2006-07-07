@@ -32,9 +32,10 @@ namespace eventFile {
       LSE_GemTime timeHack;
       unsigned incomplete;
       unsigned flywheeling;
-      bool missingCpuPps;
       bool missingTimeTone;
+      bool missingCpuPps;
       bool missingLatPps;
+      bool earlyEvent;
       bool missingGps;
     };
 

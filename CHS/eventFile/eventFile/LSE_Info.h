@@ -43,6 +43,7 @@ namespace eventFile {
     void dump( const char* pre, const char* post ) const;
     bool autoRange;
     bool zeroSupression;
+    bool strobe;
     unsigned periodicPrescale;
     unsigned softwareKey;
     unsigned writeCfg;

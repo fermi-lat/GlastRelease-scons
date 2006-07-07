@@ -96,6 +96,7 @@ namespace eventFile {
     flags |= ( ctx.current.missingTimeTone ) ? lsfData::TimeTone::MISSING_TIMETONE_MASK : 0x0;
     flags |= ( ctx.current.missingLatPps )   ? lsfData::TimeTone::MISSING_LAT_MASK      : 0x0;
     flags |= ( ctx.current.missingCpuPps )   ? lsfData::TimeTone::MISSING_CPU_MASK      : 0x0;
+    flags |= ( ctx.current.earlyEvent )      ? lsfData::TimeTone::EARLY_EVENT_MASK      : 0x0;
     flags |= ( ctx.current.missingGps )      ? lsfData::TimeTone::MISSING_GPS_MASK      : 0x0;
     lsfData::TimeTone curr( ctx.current.incomplete, ctx.current.timeSecs, 
 			    ctx.current.flywheeling, flags,
@@ -107,6 +108,7 @@ namespace eventFile {
     flags |= ( ctx.previous.missingTimeTone ) ? lsfData::TimeTone::MISSING_TIMETONE_MASK : 0x0;
     flags |= ( ctx.previous.missingLatPps )   ? lsfData::TimeTone::MISSING_LAT_MASK      : 0x0;
     flags |= ( ctx.previous.missingCpuPps )   ? lsfData::TimeTone::MISSING_CPU_MASK      : 0x0;
+    flags != ( ctx.previous.earlyEvent )      ? lsfData::TimeTone::EARLY_EVENT_MASK      : 0x0;
     flags |= ( ctx.previous.missingGps )      ? lsfData::TimeTone::MISSING_GPS_MASK      : 0x0;
     lsfData::TimeTone prev( ctx.previous.incomplete, ctx.previous.timeSecs, 
 			    ctx.previous.flywheeling, flags,
@@ -125,6 +127,7 @@ namespace eventFile {
     unsigned char flags(0);
     flags |= ( info.autoRange      ) ? enums::Lsf::AUTORANGE        : 0x0;
     flags |= ( info.zeroSupression ) ? enums::Lsf::ZERO_SUPPRESSION : 0x0;
+    flags |= ( info.strobe         ) ? enums::Lsf::STROBE           : 0x0;
     lcfg.set( info.softwareKey, 
 	      info.writeCfg,
 	      info.readCfg,
