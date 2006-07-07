@@ -67,7 +67,8 @@ namespace enums {
       enum { MISSING_GPS_MASK = 1,         ///> NO GPS lock, message w.r.t. LAT clock
 	     MISSING_CPU_MASK = 2,         ///> NO 1-PPS signal at CPU level
 	     MISSING_LAT_MASK = 4,         ///> NO 1-PPS signal at CPU level
-	     MISSING_TIMETONE_MASK = 8     ///> NO 1-PPS signal at Spacecraft 
+	     MISSING_TIMETONE_MASK = 8,    ///> NO 1-PPS signal at Spacecraft 
+	     EARLY_EVENT_MASK = 16         ///> Event arrived early
       };
     }
     
@@ -122,7 +123,8 @@ namespace enums {
     } RunType;
 
     typedef enum { AUTORANGE = 1, 
-                   ZERO_SUPPRESSION = 2 
+                   ZERO_SUPPRESSION = 2,
+		   STROBE = 4,
     } Masks;
 
   }//namespace lsf
