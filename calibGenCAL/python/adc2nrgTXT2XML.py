@@ -123,7 +123,6 @@ if __name__ == '__main__':
         row = calCalibXML.layerToRow(int(lyr))
 
         outData[twr, row, face, col, int(rng/2)] = adc2nrg
-        print twr, row, face, col, int(rng/2), adc2nrg
 
     log.info('Writing output file %s', outPath)
 

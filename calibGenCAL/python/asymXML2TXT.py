@@ -2,7 +2,7 @@
 Dump GLAST Cal offline asymmetry calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, face, pos_face_diode, neg_face_diode, xpos, asym, sig
+twr, lyr, col, face, pos_face_diode, neg_face_diode, asym, sig
 
 asymXML2TXT [-d delim] <input_xml_file>
 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
                     for ndiode in range(2):
                         for pt in range (0,len(xpos)):
                             print delim.join([str(x) for x in twr, lyr, col,
-                                              pdiode, ndiode
+                                              pdiode, ndiode,
                                               asymData[twr][row][col][asymIdx[(pdiode,ndiode,False)]][pt], #asym val
                                               asymData[twr][row][col][asymIdx[(pdiode,ndiode,True)]][pt]])   #sigma
                                               

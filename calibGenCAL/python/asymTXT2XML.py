@@ -9,7 +9,7 @@ where:
     -d           = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r2.dtd')
 
     input.txt    = asymmetry input txt file, space delimited in following format:
-                   twr lyr col pos_diode neg_diode xpos asym asig
+                   twr lyr col pos_diode neg_diode asym asig
         
     output.xml = properly formatted offline CAL asymmetry XML file
 """
