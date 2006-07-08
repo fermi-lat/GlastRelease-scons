@@ -1,3 +1,4 @@
+
 """
 Tool to generate CAL adc2nrg XML file from space delimited TXT file of adc2nrg values (per range)
 Note: adc2nrgTXT2XML attempts to autodetect if input data is for partial LAT only (<16 towers).
@@ -109,6 +110,10 @@ if __name__ == '__main__':
         face = int(face)
         rng  = int(rng)
 
+        # skip x1 ranges
+        if rng == calConstant.CRNG_LEX1 or rng == calConstant.CRNG_HEX1:
+            continue
+
         # convert offline face numbering to online face numbering
         face = offline_face_to_online[face]
 
@@ -118,6 +123,7 @@ if __name__ == '__main__':
         row = calCalibXML.layerToRow(int(lyr))
 
         outData[twr, row, face, col, int(rng/2)] = adc2nrg
+        print twr, row, face, col, int(rng/2), adc2nrg
 
     log.info('Writing output file %s', outPath)
 
