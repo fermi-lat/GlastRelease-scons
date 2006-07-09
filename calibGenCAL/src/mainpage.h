@@ -205,6 +205,7 @@ For converting xml files to and from columnar text and other formats.
 - <tt> adc2nrgTXT2XML input.txt output.xml </tt>
 - <tt> muSlopeTXT2XML [-doptional.dtd] input.txt output.xml </tt>
 - <tt> inlTXT2XML [-doptional.dtd] input.txt output.xml </tt>
+- <tt> biasTXT2XML </tt>
 
 Each of the TXT2XML scripts converts one offline calibration file type
 from space delimited TXT file to proper XML file format.
