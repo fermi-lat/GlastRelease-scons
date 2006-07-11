@@ -27,7 +27,7 @@ namespace AncillaryData
 	}
       ~QdcHit(){;}
       
-      unsigned int    getQdcModule()       const {return m_channel;}
+      unsigned int    getQdcModule()       const {return m_module;}
       void            setQdcModule(unsigned int mo)   { m_module = mo; }
 
       unsigned int    getQdcChannel()      const {return m_channel;}
@@ -39,7 +39,7 @@ namespace AncillaryData
       bool       getPedestalSubtract() const {return m_IsPedestalSubtracted;}
       void       setPedestalSubtract(){m_IsPedestalSubtracted=true;}
       
-      void        print(){std::cout<<"QCD Module: "<<getQdcModule()<<" Ch: "<<getQdcChannel()<<" PH "<<getPulseHeight()<<std::endl;}
+      void        print(){std::cout<<"QCD HIT Module: "<<getQdcModule()<<" Ch: "<<getQdcChannel()<<" PH "<<getPulseHeight()<<std::endl;}
     private:
       
       bool m_IsPedestalSubtracted;

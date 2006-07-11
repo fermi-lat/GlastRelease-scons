@@ -39,7 +39,7 @@ namespace AncillaryData
       bool        getPedestalSubtract()const {return m_IsPedestalSubtracted;}
       void        setPedestalSubtract(){m_IsPedestalSubtracted = true;}
       
-      void        print(){std::cout<<"Tagger Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<std::endl;}
+      void        print(){std::cout<<"Tagger HIT Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<std::endl;}
     private:
       
       bool m_IsPedestalSubtracted;
