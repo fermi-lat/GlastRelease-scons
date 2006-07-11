@@ -16,6 +16,7 @@
 namespace AncillaryData {
   class QdcDataWord : public AncillaryWord {
   public:
+    unsigned int getQdcModule() const  {return 0;}
     unsigned int getQdcChannel() const {return (m_word >> 12) & 0xff;}
     unsigned int getQdcValue()   const {return m_word & 0xfff;}
     bool checkHeader()           const {return (getHeader() == ANCILLARY_QDC_ID);}

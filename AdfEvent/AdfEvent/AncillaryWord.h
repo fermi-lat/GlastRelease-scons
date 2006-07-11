@@ -1,5 +1,6 @@
 #ifndef ANCILLARYWORD_HH
 #define ANCILLARYWORD_HH
+#include "AdfEvent/TaggerParameters.h"
 
 #include <iostream>
 
