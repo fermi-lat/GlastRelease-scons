@@ -93,13 +93,13 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
       FadcHeaderWord fadcHW;
       ScalerHeaderWord scalerHW;
       
-      std::cout<<"remainingBytes "<<remainingBytes<<std::endl;
+      //      std::cout<<"remainingBytes "<<remainingBytes<<std::endl;
 
       switch (Header)
 	{
 	case ANCILLARY_QDC_ID:
 	  qdcHW.setData(rawword);
-	  std::cout<<"Check QDC Header: "<<qdcHW.checkHeader()<<" "<<qdcHW.getQcdFifo()<<std::endl;
+	  //	  std::cout<<"Check QDC Header: "<<qdcHW.checkHeader()<<" "<<qdcHW.getQcdFifo()<<std::endl;
 
 	  for(int i=0; i < qdcHW.getQcdFifo(); i++)
 	    {
@@ -111,7 +111,7 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
 	  break;
 	case ANCILLARY_FADC_ID:
 	  fadcHW.setData(rawword);
-	  std::cout<<"Check FADC Header: "<<fadcHW.checkHeader()<<" "<<fadcHW.getFadcFifo()<<std::endl;
+	  //	  std::cout<<"Check FADC Header: "<<fadcHW.checkHeader()<<std::endl;
 	  for(int i=0; i < fadcHW.getFadcFifo(); i++)
 	    {
 	      FadcDataWord fadcDW;
@@ -122,7 +122,7 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
 	  break;
 	case ANCILLARY_SCALER_ID:
 	  scalerHW.setData(rawword);
-	  std::cout<<"Check SCALER Header: "<<scalerHW.checkHeader()<<" "<<scalerHW.getScalerFifo()<<std::endl;
+	  //	  std::cout<<"Check SCALER Header: "<<scalerHW.checkHeader()<<" "<<scalerHW.getScalerFifo()<<std::endl;
 	  for(int i=0; i < scalerHW.getScalerFifo(); i++)
 	    {
 	      ScalerDataWord scalerDW;
