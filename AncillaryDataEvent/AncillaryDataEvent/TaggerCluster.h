@@ -7,7 +7,7 @@
 
 // Our own classes.
 #include "TaggerHit.h"
-#include "TaggerParameters.h"
+#include "AdfEvent/TaggerParameters.h"
 namespace AncillaryData
 {
   class TaggerCluster

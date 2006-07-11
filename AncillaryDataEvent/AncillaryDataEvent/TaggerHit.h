@@ -23,7 +23,7 @@ namespace AncillaryData
 	  m_IsPedestalSubtracted = false;
 	  m_moduleId = fadcDw.getFadcModule();
 	  m_stripId  = fadcDw.getFadcChannel();
-	  m_layerId  = (m_stripId<384) ? 0 : 1 ;
+	  m_layerId  = fadcDw.getTaggerLayer();
 	  m_pulseHeight=fadcDw.getFadcValue();
 	}
       ~TaggerHit(){;}

@@ -14,6 +14,7 @@ namespace AncillaryData
 	  QdcHit() {
 		  m_IsPedestalSubtracted = false;
 		  m_channel = 0;
+		  m_module = 0;
 		  m_pulseHeight = 0;
 	  } ;
 
@@ -21,24 +22,30 @@ namespace AncillaryData
 	{
 	  m_IsPedestalSubtracted=false;
 	  m_channel  = qdcDw.getQdcChannel();
+	  m_module  = qdcDw.getQdcModule();
 	  m_pulseHeight=qdcDw.getQdcValue();
 	}
       ~QdcHit(){;}
       
-      unsigned    getQdcChannel()      const {return m_channel;}
-      void        setQdcChannel(unsigned ch) { m_channel = ch; }
-      unsigned    getPulseHeight()  const {return m_pulseHeight;}
+      unsigned int    getQdcModule()       const {return m_channel;}
+      void            setQdcModule(unsigned int mo)   { m_module = mo; }
 
-      void setPulseHeight(unsigned pulseHeight) { m_pulseHeight = pulseHeight; }
+      unsigned int    getQdcChannel()      const {return m_channel;}
+      void            setQdcChannel(unsigned int ch) { m_channel = ch; }
+
+      unsigned int    getPulseHeight()      const {return m_pulseHeight;}
+      void            setPulseHeight(unsigned int pulseHeight) { m_pulseHeight = pulseHeight; }
       
       bool       getPedestalSubtract() const {return m_IsPedestalSubtracted;}
       void       setPedestalSubtract(){m_IsPedestalSubtracted=true;}
-      void        print(){std::cout<<"QCD Ch: "<<getQdcChannel()<<" PH "<<getPulseHeight()<<std::endl;}
+      
+      void        print(){std::cout<<"QCD Module: "<<getQdcModule()<<" Ch: "<<getQdcChannel()<<" PH "<<getPulseHeight()<<std::endl;}
     private:
       
       bool m_IsPedestalSubtracted;
-      unsigned m_channel;
-      unsigned m_pulseHeight;  
+      unsigned int m_module;
+      unsigned int m_channel;
+      unsigned int m_pulseHeight;  
     };
 }
 #endif
