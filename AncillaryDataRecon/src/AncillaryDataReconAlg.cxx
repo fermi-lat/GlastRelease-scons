@@ -14,6 +14,12 @@
 #include "AncillaryDataEvent/TaggerCluster.h"
 #include "AncillaryDataEvent/QdcHit.h"
 
+#include "CalibData/CalibModel.h"
+#include "CalibData/Anc/AncCalibTaggerGain.h"
+#include "CalibData/Anc/AncCalibTaggerPed.h"
+#include "CalibData/Anc/AncCalibQdcPed.h"
+
+
 //#include "AncillaryDataUtil/AncillaryDataServer.h"
 
 const std::string TDSdir = "/Event/AncillaryEvent";
@@ -33,11 +39,13 @@ public:
   AncillaryData::Digi *GetDigi();
   StatusCode RegisterTDSDir();
 
+  StatusCode SubtractPedestal(AncillaryData::Digi *digiEvent);
   StatusCode RegisterRecon(AncillaryData::Recon *reconEvent);
   StatusCode MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
   StatusCode QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
 private:
   IDataProviderSvc    *m_dataSvc;
+  IDataProviderSvc    *m_pCalibDataSvc;
 };
 
 static const AlgFactory<AncillaryDataReconAlg>  Factory;
@@ -49,7 +57,6 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
   // Input parameters that may be set via the jobOptions file
   //  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin");
 }
-
 
 StatusCode AncillaryDataReconAlg::initialize()
 {
@@ -65,7 +72,17 @@ StatusCode AncillaryDataReconAlg::initialize()
     return sc;
   }
   m_dataSvc = dynamic_cast<IDataProviderSvc*>(iService);
+  
   //DEFAULT ARGS:
+  
+  sc = service("CalibDataSvc", m_pCalibDataSvc, true);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get IDataProviderSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;  
+  }
+  
   return sc;
 }
 
@@ -80,8 +97,9 @@ StatusCode AncillaryDataReconAlg::execute()
     {
       digiEvent->print();
       AncillaryData::Recon *reconEvent = new AncillaryData::Recon(digiEvent);
+      sc = SubtractPedestal(digiEvent);
       sc = MakeClusters(digiEvent,reconEvent);
-      sc = QdcRecon(digiEvent,reconEvent);
+      sc = QdcRecon(digiEvent,reconEvent);      
       sc = RegisterRecon(reconEvent);
       reconEvent->print();
     }
@@ -166,6 +184,85 @@ StatusCode AncillaryDataReconAlg::RegisterRecon(AncillaryData::Recon *reconEvent
   log << MSG::DEBUG <<" Recon event registered in "<<TDSobj<< endreq;
   return sc;
 } 
+
+StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEvent)
+{
+  using CalibData::AncTaggerPed;
+  using CalibData::AncQdcPed;
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  //////////////////////////////////////////////////
+  // TAGGER:
+  //////////////////////////////////////////////////
+  std::string fullPathTaggerPed = "/Calib/ANC_TaggerPed/vanilla";
+  DataObject *pObjectTagger;
+  m_pCalibDataSvc->retrieveObject(fullPathTaggerPed, pObjectTagger);
+  CalibData::AncCalibTaggerPed* pTaggerPeds = 0;
+  pTaggerPeds = dynamic_cast<CalibData::AncCalibTaggerPed *> (pObjectTagger);
+  if (!pTaggerPeds) {
+    log << MSG::ERROR << "Dynamic cast to AncCalibTaggerPed failed" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  std::vector<AncillaryData::TaggerHit> taggerHitCol=digiEvent->getTaggerHitCol();
+  std::vector<AncillaryData::TaggerHit>::iterator taggerHitColI;
+
+  for(taggerHitColI=taggerHitCol.begin(); taggerHitColI!=taggerHitCol.end();++taggerHitColI)
+    {
+      int iMod  = (*taggerHitColI).getModuleId();
+      int iLay  = (*taggerHitColI).getLayerId();
+      int iChan = (*taggerHitColI).getStripId();
+      CalibData::RangeBase* pTaggerPed = pTaggerPeds->getChan(iMod, iLay, iChan);
+      AncTaggerPed* pT = dynamic_cast<AncTaggerPed * >(pTaggerPed);
+      int pedestalValue=pT->getVal();    
+      log << MSG::INFO << "ped = " << pedestalValue << endreq;
+      log << MSG::INFO << "rNoise = " << pT->getRNoise() << endreq;
+      log << MSG::INFO << "sNoise = " << pT->getSNoise() << endreq;
+      log << MSG::INFO << "isBad = " <<  pT->getIsBad() << endreq << endreq;
+      
+      (*taggerHitColI).setPulseHeight((*taggerHitColI).getPulseHeight()-pedestalValue);
+      (*taggerHitColI).setPedestalSubtract();
+    }
+
+
+  //////////////////////////////////////////////////
+  // QDC
+  std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
+  DataObject *pObjectQdc;
+  m_pCalibDataSvc->retrieveObject(fullPathQdcPed, pObjectQdc);
+  CalibData::AncCalibQdcPed* pQdcPeds = 0;
+  pQdcPeds = dynamic_cast<CalibData::AncCalibQdcPed *> (pObjectQdc);
+  if (!pQdcPeds) {
+    log << MSG::ERROR << "Dynamic cast to AncCalibQdcPed failed" << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  std::vector<AncillaryData::QdcHit> qdcHitCol=digiEvent->getQdcHitCol();
+  std::vector<AncillaryData::QdcHit>::iterator qdcHitColI;
+
+  for(qdcHitColI=qdcHitCol.begin(); qdcHitColI!=qdcHitCol.end();++qdcHitColI)
+    {
+      int iChan = (*qdcHitColI).getQdcChannel();
+      int iMod  = (*qdcHitColI).getQdcModule();
+      CalibData::RangeBase* pQdcPed = pQdcPeds->getQdcChan(iMod, iChan);
+
+      AncQdcPed* pQ = dynamic_cast<AncQdcPed * >(pQdcPed);
+      int pedestalValue=pQ->getVal();    
+      log << MSG::INFO << "ped = " << pedestalValue << endreq;
+      log << MSG::INFO << " rms = " << pQ->getRms() << endreq;
+      log << MSG::INFO << " isBad = " << pQ->getIsBad() << endreq;
+      log << MSG::INFO << " device = " << pQ->getDevice() << endreq;
+      
+      
+      (*qdcHitColI).setPulseHeight((*qdcHitColI).getPulseHeight()-pedestalValue);
+      (*qdcHitColI).setPedestalSubtract();
+    }
+
+
+  
+
+  return sc;
+}
 
 StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
