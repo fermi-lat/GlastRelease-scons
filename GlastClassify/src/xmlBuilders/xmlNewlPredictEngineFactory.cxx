@@ -339,7 +339,8 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
             //*pValue = weight[m_yProbIndex];
 
             int         catIdx = m_catIndex[score];
-            double      yProb  = weight[catIdx];
+            //double      yProb  = weight[catIdx];
+            double      yProb  = weight[m_yProbIndex];
         
             //node = new XTExprsnValue<double>(sNodeId, pValue);
             CTOutPut* ctOutPut = new CTOutPut(id,score,rec,grp,dev,ent,ini,rsk,yProb); 

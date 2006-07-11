@@ -23,7 +23,7 @@ namespace
         for( int i =0; i < depth; ++i) ret += "  ";
         return ret;
     }
-} // anonomous namespace
+} // anonymous namespace
 
 newPredictEngineNode::newPredictEngineNode(const std::string& type, const std::string& name, const std::string& id) : 
                                            m_type(type), 
@@ -54,15 +54,50 @@ void newPredictEngineNode::print(std::ostream& out, int depth) const
     return;
 }
 
+// Define an object to keep track of tree results
+class PredNodeInfo
+{
+public:
+    PredNodeInfo() : m_count(0), m_catVarName(""), m_weightSum(0.), m_probSum(0.) {};
+    PredNodeInfo(int count, std::string& catVarName, double weightSum, double probSum) :
+                 m_count(count),
+                 m_catVarName(catVarName),
+                 m_weightSum(weightSum),
+                 m_probSum(probSum) {};
+    ~PredNodeInfo() {};
+
+    int                getCount()      const {return m_count;}
+    const std::string& getCatVarName() const {return m_catVarName;}
+    double             getWeightSum()  const {return m_weightSum;}
+    double             getProbSum()    const {return m_probSum;}
+
+    void   incCount()                {m_count++;}
+    void   addWeight(double weight)  {m_weightSum += weight;}
+    void   addProb(double prob)      {m_probSum   += prob;}
+
+    void   setCatVarName(std::string& catVarName) {m_catVarName = catVarName;}
+
+private:
+    int         m_count;
+    std::string m_catVarName;
+    double      m_weightSum;
+    double      m_probSum;
+};
+
+typedef std::map<std::string,PredNodeInfo>           PredNodeMap;
+typedef std::map<std::string,PredNodeInfo>::iterator PredNodeMapItr;
+
 // Does the "real" work... 
 void newPredictEngineNode::execute()
 {
     // Loop through the forest evaluating the trees
-    double weightSum   = 0.;
-    double runningWght = 0.;
+    //double weightSum   = 0.;
+    //double runningWght = 0.;
 
     //int treeNum = 0;
     std::string predict;
+
+    PredNodeMap predNodeMap;
 
     for(TreePairVector::iterator treeItr = m_trees.begin(); treeItr != m_trees.end(); treeItr++)
     {
@@ -75,19 +110,55 @@ void newPredictEngineNode::execute()
 
         predict = ctOutPut->getScore();
 
+        PredNodeInfo& nodeInfo = predNodeMap[predict];
+
+        nodeInfo.incCount();
+        nodeInfo.addProb(treeItr->second * result);
+        nodeInfo.addWeight(treeItr->second);
+        nodeInfo.setCatVarName(predict);
+
         // For printing during running, leaving here to remember how to do it
         //const XTIfElseNode<double>& ifElseNode = dynamic_cast<const XTIfElseNode<double>& >(*tree);
         //std::cout << "Tree #" << treeNum++ << " evaluates to: " << result << std::endl;
         //ifElseNode.printExp(std::cout);
 
-        weightSum += treeItr->second;
-        runningWght += treeItr->second * result;
+        //weightSum += treeItr->second;
+        //runningWght += treeItr->second * result;
     }
 
     //std::cout << "Tree " << m_name << ", running sum=" << runningWght 
     //          << ", weightSum=" << weightSum;
 
+    PredNodeMapItr predNodeMapItr = predNodeMap.begin();
+    double         runningWght    = 0.;
+    double         weightSum      = 0.;
+
+    if (predNodeMap.size() > 0)
+    {
+        int maxCount = -1;
+        for(PredNodeMapItr itr = predNodeMap.begin(); itr != predNodeMap.end(); itr++)
+        {
+            if (itr->second.getCount() > maxCount)
+            {
+                predNodeMapItr = itr;
+                maxCount       = itr->second.getCount();
+            }
+
+            // Accumulate weights
+            runningWght += itr->second.getProbSum();
+            weightSum   += itr->second.getWeightSum();
+        }
+    }
+
+    PredNodeInfo& predNode = predNodeMapItr->second;
+
     if (weightSum > 0.) runningWght /= weightSum;
+
+    if (predNode.getCount() > 0)
+    {
+        //runningWght = predNode.getProbSum() / predNode.getWeightSum();
+        predict     = predNode.getCatVarName();
+    }
 
     //std::cout << " gives: " << runningWght << std::endl;
     

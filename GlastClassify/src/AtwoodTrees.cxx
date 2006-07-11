@@ -196,6 +196,14 @@ bool AtwoodTrees::execute()
 
     FilterStatus_HI = 0;
 
+    float  eventid           = m_treeAnalysis->getTupleVal("EvtEventId");
+    double ctbBestEnergyProb = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+    double ctbCore           = m_treeAnalysis->getTupleVal("CTBCORE");
+    double ctbGam            = m_treeAnalysis->getTupleVal("CTBGAM");
+    double ctbParamProb      = m_treeAnalysis->getTupleVal("CTBParamProb");
+    double ctbProfileProb    = m_treeAnalysis->getTupleVal("CTBProfileProb");
+    double ctbVtx            = m_treeAnalysis->getTupleVal("CTBVTX");
+
     // First cuts on Filter status and failures for energy and tails
     if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
     {

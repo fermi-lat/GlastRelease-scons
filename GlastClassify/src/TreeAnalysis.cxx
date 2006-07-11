@@ -87,8 +87,7 @@ void TreeAnalysis::execute()
     // Execute the sheet
     m_headNode->execute();
 
-    // Make a pass through to clear out the "invalid" variables
-    // If we are not writing rows then this is probably not an issue...
+    // Copy calculated ctb values to the output ntuple
     for(XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); dataIter != m_xtTupleMap.end(); dataIter++)
     {
         // Check if CTB variable, if so then set data value for tuple
@@ -101,8 +100,12 @@ void TreeAnalysis::execute()
                 double               result = 0.;
 
                 if (colVal->dataIsValid()) result = *(*colVal)();
+
+                float* ctbVarAddr = m_ctbVarMap[dataIter->first];
                 
-                *(m_ctbVarMap[dataIter->first]) = result;
+                *ctbVarAddr = result;
+
+                int checkit = 0;
             }
         }
     }

@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             std::string rootPath = ::getenv("GLASTCLASSIFYROOT");
             //facilities::Util::expandEnvVar(&rootPath);
 
-            CTFilePath = rootPath + "/xml/Pass4_Analysis_Complete.xml";
+            CTFilePath = rootPath + "/xml/Pass4_Analysis_Complete_v3.xml";
             std::cout << "Setting file to  " << CTFilePath << std::endl;
         }
         else
