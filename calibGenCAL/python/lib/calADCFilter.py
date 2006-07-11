@@ -259,10 +259,13 @@ class calADCFilter:
 
         # find first non-zero point
 
+        da = 64
         for d in range(0, 64):
             if data[d] > 0.0:
                 da = d
                 break
+        if da == 64:
+            return        
 
         # start search for strings of zero data
 
