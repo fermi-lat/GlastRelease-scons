@@ -10,7 +10,6 @@ $Header$
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-#include "facilities/Util.h" // for expandEnvVar    
 
 #include "classifier/DecisionTree.h"
 
@@ -101,8 +100,7 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
 {
     declareProperty("TreeName",    m_treename="MeritTuple");
-    declareProperty("InfoPath",    m_infoPath="$(GLASTCLASSIFYROOT)/xml");
-    declareProperty("xmlFileName", m_xmlFileName="Pass4_Analysis_Complete_v3.xml");
+    declareProperty("xmlFileName", m_xmlFileName="");
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode ClassifyAlg::initialize()
@@ -127,17 +125,11 @@ StatusCode ClassifyAlg::initialize()
 
     // create the classification object if requested
     try { 
-        std::string path(  m_infoPath.value() + "/" + m_xmlFileName.value()); 
-        if(! path.empty() ){
-            facilities::Util::expandEnvVar(&path);
-            m_ctree = new  GlastClassify::AtwoodTrees(*m_tuple, log.stream(), path);
-            log << MSG::INFO << "Loading classification trees from " << path << endreq;
-        } else {
-            log << MSG::ERROR << "No classification trees found" << endreq;
-            sc = StatusCode::FAILURE;
-            
-        }
-        //TODO: finish setup.
+        std::string path( m_xmlFileName.value()); 
+        log << MSG::INFO;
+        m_ctree = new  GlastClassify::AtwoodTrees(*m_tuple, log.stream(), path);
+        log << endreq;
+        
     }catch ( std::exception& e){
         log << MSG::ERROR << "Exception caught, class  "<< typeid( e ).name( ) << ", message:"
             << e.what() <<endreq;
