@@ -20,6 +20,15 @@ namespace AncillaryData
 	{ }
       
       ~TaggerCluster(){erase();}
+
+      void initialize(double pos, double pulseHeight, double eta, const TaggerHit &highHit) {
+          m_baricenterPosition = pos;
+          m_totalPulseHeight = pulseHeight;
+          m_eta = eta;
+          m_highestHit = highHit; 
+          m_properties = true;
+      }
+
       void append(TaggerHit hit) 
 	{
 	  m_properties=false;
@@ -36,7 +45,7 @@ namespace AncillaryData
       unsigned int getSize()              const {return m_hits.size();}
       double       getPosition()          const {return m_baricenterPosition;}
       double       getPulseHeight()       const {return m_totalPulseHeight;}
-      TaggerHit    getHigestHit()         const {return m_highestHit;}
+      TaggerHit    getHighestHit()         const {return m_highestHit;}
       //      double       getNoise()             const {return m_totalNoise;}
       TaggerHit    getHit(int hitId)      const {return m_hits[hitId];}
       std::vector<TaggerHit> getHits()    const {return m_hits;}
