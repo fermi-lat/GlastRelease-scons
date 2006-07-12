@@ -81,14 +81,14 @@ const commonRootData::TaggerHit* AdfDigi::getTaggerHit(UInt_t ind) const {
         return 0;
 }
 
-commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub) {
+commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, UINt_t mod, Bool_t isPedSub) {
     // Add a new QdcHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     if (!m_qdcHitCol) m_qdcHitCol = new TClonesArray("commonRootData::QdcHit",1);
     ++m_numQdcHit;
     TClonesArray &localCol = *m_qdcHitCol;
-    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, isPedSub);
+    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, mod, isPedSub);
     return ((commonRootData::QdcHit*)(localCol[m_numQdcHit]));
 }
 
