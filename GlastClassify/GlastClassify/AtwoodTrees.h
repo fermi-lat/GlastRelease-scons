@@ -26,11 +26,11 @@ class AtwoodTrees
 public:
     /** set up the trees:
     * @param tuple -- abstract interface to a tuple that sets up access to tuple items, and creates new ones
-    * @param treepath -- file path to the root of the tree definitions
+    * @param imfile -- the Insightful Minor file created by W. B. Atwood. If empty, use the default
 
     Uses the tuple object to access current tuple items, and to create new ones.
     */
-    AtwoodTrees( ITupleInterface& tuple, std::ostream& log=std::cout, std::string treepath  ="");
+    AtwoodTrees( ITupleInterface& tuple, std::ostream& log=std::cout, std::string imfile  ="");
 
     /** run the prediction nodes on the current tuple instance
     */

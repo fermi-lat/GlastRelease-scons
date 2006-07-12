@@ -48,6 +48,8 @@ public:
     */
     GlastClassify::TreeAnalysis* buildTreeAnalysis();
 
+    int nodeCount()const{return m_iNodeVec.size();}
+
 private:
 
     // Mapping between a node ID and the ImActivityNode object

@@ -9,17 +9,23 @@ $Header$
 #include "src/xmlBuilders/xmlTreeAnalysisFactory.h"
 
 #include "classifier/DecisionTree.h"
+#include "facilities/Util.h" // for expandEnvVar    
+
 
 #include <sstream>
 #include <cassert>
 
+namespace {
+    // This should be changed each time there is a new file, to make it defautl
+    std::string default_xml("$(GLASTCLASSIFYROOT)/xml/Pass4_Analysis_Complete_v3.xml");
+}
 /* 
 */
 using namespace GlastClassify;
 
 //_________________________________________________________________________
 
-AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string treepath)
+AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string imfile)
                        : m_log(log)
 {
     // these are used for preliminary cuts to select the tree to use
@@ -130,9 +136,19 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_caughtVals     = 0;
 
     //m_xmlFactory = new GlastClassify::xmlTreeFactory(treepath, tuple);
-    xmlTreeAnalysisFactory treeFactory(treepath, tuple);
+    if( imfile.empty() ){
+        imfile = default_xml; 
+    }
+
+    facilities::Util::expandEnvVar(&imfile);
+
+    log << "GlastClassify::AtwoodTrees-- Loading Atwood's IM classification trees from " << imfile ;
+
+    xmlTreeAnalysisFactory treeFactory(imfile, tuple);
 
     m_treeAnalysis = treeFactory.buildTreeAnalysis();
+
+    log << "\n\t\tloaded " << treeFactory.nodeCount() <<" nodes";
 
     //Testing...
     //std::ofstream outFile("IMsheetTest.txt");
