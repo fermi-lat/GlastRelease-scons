@@ -41,7 +41,7 @@ public:
 
     const TClonesArray* getQdcHitCol() const { return m_qdcHitCol; }
     const commonRootData::QdcHit* getQdcHit(UInt_t ind) const;
-    commonRootData::QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub);
+    commonRootData::QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t module, Bool_t isPedSub);
 
 
     void Fake( Int_t ievent, Float_t randNum );

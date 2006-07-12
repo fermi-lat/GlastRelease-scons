@@ -73,14 +73,14 @@ const reconRootData::TaggerCluster* AdfRecon::getTaggerCluster(UInt_t ind) const
         return 0;
 }
 
-commonRootData::QdcHit* AdfRecon::addQdcHit(UInt_t channel, UInt_t pulseHgt, Bool_t isPedSub) {
+commonRootData::QdcHit* AdfRecon::addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t module, Bool_t isPedSub) {
     // Add a new QdcHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     if (!m_qdcHitCol) m_qdcHitCol = new TClonesArray("commonRootData::QdcHit",1);
     ++m_numQdcHit;
     TClonesArray &localCol = *m_qdcHitCol;
-    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, isPedSub);
+    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, module, isPedSub);
     return ((commonRootData::QdcHit*)(localCol[m_numQdcHit]));
 }
 
@@ -105,9 +105,9 @@ void AdfRecon::Fake( Int_t ievent, Float_t randNum ) {
     addTaggerCluster(clus2);
    
     // Add 3 QdcHits
-    addQdcHit(1,2,true);
-    addQdcHit(2,3,false);
-    addQdcHit(3,4,true);
+    addQdcHit(1,2,3,true);
+    addQdcHit(2,3,4,false);
+    addQdcHit(3,4,5,true);
 }
 
 Bool_t AdfRecon::CompareInRange( const AdfRecon &ref, const std::string& name ) const {
