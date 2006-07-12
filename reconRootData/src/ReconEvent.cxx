@@ -7,6 +7,7 @@ ReconEvent::ReconEvent() {
     m_tkr = 0;
     m_cal = 0;
     m_acd = 0;
+    m_adfRecon = 0;
     Clear();
 }
 
@@ -27,6 +28,12 @@ ReconEvent::~ReconEvent() {
         delete m_acd;
         m_acd = 0;
     }
+
+    if (m_adfRecon) {
+        delete m_adfRecon;
+        m_adfRecon = 0;
+    }
+
     Clear();
 
     TkrRecon::CleanUp();
@@ -40,6 +47,11 @@ void ReconEvent::initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalReco
     m_cal = cal;
     m_acd = acd;
 }
+
+void ReconEvent::initAdf(reconRootData::AdfRecon *adf) {
+    m_adfRecon = adf;
+}
+
 
 void ReconEvent::Clear(Option_t* /* option */) {
     m_eventId = 0;
@@ -55,6 +67,10 @@ void ReconEvent::Clear(Option_t* /* option */) {
     if (m_acd) {
         delete m_acd;
         m_acd = 0;
+    }
+    if (m_adfRecon) {
+        delete m_adfRecon;
+        m_adfRecon = 0;
     }
     m_eventFlags = 0;
 }

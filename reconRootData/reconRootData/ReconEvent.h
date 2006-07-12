@@ -5,6 +5,7 @@
 #include "CalRecon.h"
 #include "TkrRecon.h"
 #include "AcdRecon.h"
+#include "AdfRecon.h"
 
 /** @class ReconEvent
  * @brief Primary Root Recon Object - top level object in Root Tree.
@@ -16,6 +17,7 @@
  * -# A pointer to a TkrRecon object
  * -# A pointer to a CalRecon object
  * -# A pointer to a AcdRecon object 
+ * -# A pointer AdfRecon for beamtest 2006 ancillary data
  *
  * $Header$
 */
@@ -39,6 +41,8 @@ public:
 
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
 
+    void initAdf(reconRootData::AdfRecon* adf);
+
     void Clear(Option_t *option="");
     void Fake( Int_t ievent, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const ReconEvent &, const std::string & name = "" ) const ; // for tests
@@ -56,6 +60,8 @@ public:
     ///  Access the TKR recon data
     TkrRecon* getTkrRecon() { return m_tkr; };
 
+    reconRootData::AdfRecon* getAdfRecon() { return m_adfRecon; }
+
     //! Access the Recon Header Flags
    // ReconHeader* getReconFlags() { return &m_recFlags; };
     //! set the ReconHeader pointer 
@@ -67,9 +73,9 @@ public:
     Bool_t badEventSeq() const { return (m_eventFlags && EVTSEQ); };
 
 private:
-	/// Event Id
+    /// Event Id
     UInt_t m_eventId;
-	/// Run number
+    /// Run number
     UInt_t m_runId;
     /// ACD reconstruction data
     AcdRecon *m_acd;
@@ -81,8 +87,10 @@ private:
     //ReconHeader m_recFlags;
     /// Do the easy thing and add flags here
     UInt_t m_eventFlags;
+    /// Ancillary data from beamtest 2006
+    reconRootData::AdfRecon *m_adfRecon;
 
-    ClassDef(ReconEvent,3) 
+    ClassDef(ReconEvent,4) 
 };
 
 #endif

@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r3      11-Jul-06  : HMK Ancillary beamtest recon data
 v9r2      22-Jun-06  : EAC Added AcdSplashVars
 v9r1p2    14-Apr-06  : EAC remove forward declaration of TMatrixD in AcdTkrLocalData
 v9r1p1    11-Apr-06  : HMK patch to remove extra ; in #include

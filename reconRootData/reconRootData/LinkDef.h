@@ -9,8 +9,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-//#pragma link C++ class TVector3+;
-
+#pragma link C++ namespace reconRootData;
 #pragma link C++ class ReconEvent+;
 
 #pragma link C++ class AcdTkrIntersection+;
@@ -43,5 +42,7 @@
 #pragma link C++ class TkrVertex+;
 #pragma link C++ class TkrDiagnostics+;
 
+#pragma link C++ class reconRootData::TaggerCluster+;
+#pragma link C++ class reconRootData::AdfRecon+;
 
 #endif
