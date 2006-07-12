@@ -16,10 +16,10 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
 
-ApplicationMgr.TopAlg = {"digiRootReaderAlg" ,"AdfReaderAlg","AncillaryDataReconAlg"};
+ApplicationMgr.TopAlg = {"digiRootReaderAlg","AdfReaderAlg","AncillaryDataReconAlg"};
 
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
-AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+//AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
