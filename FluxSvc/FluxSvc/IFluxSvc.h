@@ -103,6 +103,9 @@ public:
     /// return current SAA status
     virtual bool insideSAA()=0;
 
+    /// set aligmnment for Glast. 
+    /// @param phi,theta,psi Euler angles (radians)
+    virtual void setAlignmentRotation(double phi, double theta, double psi)=0;
 };
 
 #endif  // _H_IFluxSvc

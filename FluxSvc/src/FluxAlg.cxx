@@ -133,6 +133,7 @@ private:
     StringProperty m_source_info_filename;
     std::map<int, std::string> m_flux_names;
     void summary( std::ostream& log, std::string indent);
+    DoubleArrayProperty m_alignmentRotation;
 
 
 };
@@ -165,6 +166,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("AvoidSAA",   m_avoidSAA=false);
     declareProperty("Prescale",   m_prescale=1);
     declareProperty("source_info", m_source_info_filename="source_info.txt");
+    declareProperty("alignment", m_alignmentRotation);
 
 }
 //------------------------------------------------------------------------
@@ -248,6 +250,19 @@ StatusCode FluxAlg::initialize(){
     if( m_prescale>1) {
         log << MSG::INFO << "    prescale: "<< m_prescale << endreq;
     }
+
+    // check for alignment
+    int alignment_pars ( m_alignmentRotation.value().size() );
+    if (alignment_pars >0){
+
+        double phi(0),theta(0),psi(0);
+        phi = m_alignmentRotation.value()[0]*M_PI/180;
+        if(alignment_pars >1) theta = m_alignmentRotation.value()[1]*M_PI/180;
+        if(alignment_pars >2) psi = m_alignmentRotation.value()[2]*M_PI/180;
+        m_fluxSvc->setAlignmentRotation(phi, theta, psi);
+    }
+
+
 
     if ( service("ParticlePropertySvc", m_partSvc).isFailure() ){
         log << MSG::ERROR << "Couldn't find the ParticlePropertySvc!" << endreq;

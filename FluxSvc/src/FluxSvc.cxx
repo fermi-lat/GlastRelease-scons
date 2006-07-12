@@ -133,6 +133,13 @@ public:
 
 
     bool insideSAA() { return m_insideSAA;}
+
+    /// set aligmnment for Glast, a transform that will be applied in instrument coordinates to incoming particles 
+    /// @param phi,theta,psi Euler angles (radians)
+    virtual void setAlignmentRotation(double phi, double theta, double psi);
+
+
+
     /// for the IRunnable interfce
     virtual StatusCode run();
 
@@ -656,5 +663,11 @@ StatusCode FluxSvc::run(){
         }
         log << MSG::INFO << "End after "<< eventNumber << " events, time = " << m_times.current() << endreq;
         return status;
+    }
+
+    void FluxSvc::setAlignmentRotation(double phi, double theta, double psi)
+    {
+        CLHEP::HepRotation rot(phi,theta,psi);
+        m_fluxMgr->setAlignmentRotation(rot);
     }
 
