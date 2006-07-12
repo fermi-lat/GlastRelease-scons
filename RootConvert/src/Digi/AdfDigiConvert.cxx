@@ -13,14 +13,15 @@ namespace RootPersistence {
 
   void convert( const AncillaryData::QdcHit* tdsObj,
                 commonRootData::QdcHit& rootObj) {
-       rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getPedestalSubtract());
+       rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getQdcModule(), tdsObj->getPedestalSubtract());
   };
 
   void convert( const commonRootData::QdcHit* rootObj,
                 AncillaryData::QdcHit& tdsObj) {
-      if (rootObj->isPedestalSubtracted()) tdsObj.setPedestalSubtract();
-	  tdsObj.setPulseHeight(rootObj->getPulseHeight());
-	  tdsObj.setQdcChannel(rootObj->getChannel());
+    if (rootObj->isPedestalSubtracted()) tdsObj.setPedestalSubtract();
+    tdsObj.setPulseHeight(rootObj->getPulseHeight());
+    tdsObj.setQdcChannel(rootObj->getChannel());
+    tdsObj.setQdcModule(rootObj->getModule());
   };
 
   void convert( const AncillaryData::TaggerHit* tdsObj,
@@ -52,7 +53,7 @@ namespace RootPersistence {
 	  const std::vector<AncillaryData::QdcHit>& qdcHitColTds = tdsObj.getQdcHitCol();
 	  std::vector<AncillaryData::QdcHit>::const_iterator qdcIt;
 	  for(qdcIt = qdcHitColTds.begin(); qdcIt != qdcHitColTds.end(); qdcIt++) {
-		  rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), qdcIt->getPedestalSubtract());
+		  rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), qdcIt->getQdcModule(), qdcIt->getPedestalSubtract());
 	  }
   };
 

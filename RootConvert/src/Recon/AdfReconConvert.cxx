@@ -87,6 +87,7 @@ namespace RootPersistence {
     std::vector<AncillaryData::QdcHit>::const_iterator qdcIt;
     for(qdcIt = qdcHitColTds.begin(); qdcIt != qdcHitColTds.end(); qdcIt++) {
          rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), 
+                           qdcIt->getQdcModule(),
                            qdcIt->getPedestalSubtract());
     }
 
