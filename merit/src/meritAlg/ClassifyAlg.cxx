@@ -102,7 +102,7 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 {
     declareProperty("TreeName",    m_treename="MeritTuple");
     declareProperty("InfoPath",    m_infoPath="$(GLASTCLASSIFYROOT)/xml");
-    declareProperty("xmlFileName", m_xmlFileName="DC2_Analysis.xml");
+    declareProperty("xmlFileName", m_xmlFileName="Pass4_Analysis_Complete_v3.xml");
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode ClassifyAlg::initialize()
