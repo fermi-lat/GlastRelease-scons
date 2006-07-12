@@ -18,11 +18,12 @@ public:
     
     QdcHit();
 
-    QdcHit(UInt_t channel, UInt_t pulseHeight, Bool_t isPedSubtracted);
+    QdcHit(UInt_t channel, UInt_t pulseHeight, UInt_t module, Bool_t isPedSubtracted);
 
     QdcHit(const QdcHit& copy);
 
-    void initialize(UInt_t channel, UInt_t pulseHeight, Bool_t isPedSubtracted);
+    void initialize(UInt_t channel, UInt_t pulseHeight, UInt_t module,
+                    Bool_t isPedSubtracted);
 
     QdcHit& operator=(const QdcHit& copy);
 
@@ -35,6 +36,7 @@ public:
     UInt_t getChannel() const { return m_channel; }
     UInt_t getPulseHeight() const { return m_pulseHeight; }
     Bool_t isPedestalSubtracted() const { return m_isPedestalSubtracted; }
+    UInt_t getModule() const { return m_module; }
 
     Bool_t CompareInRange( const QdcHit &ref, const std::string& name="" ) const;
 
@@ -42,9 +44,10 @@ private:
 
     UInt_t m_channel;
     UInt_t m_pulseHeight;
+    UInt_t m_module;
     Bool_t m_isPedestalSubtracted;
 
-    ClassDef(QdcHit,1) // Digitization Ancillary data beamtest 2006
+    ClassDef(QdcHit,2) // Digitization Ancillary data beamtest 2006
 };
 
 } //end namespace
