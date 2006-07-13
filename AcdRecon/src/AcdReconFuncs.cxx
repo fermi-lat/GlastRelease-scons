@@ -628,9 +628,10 @@ namespace AcdRecon {
     double ANGLERMS = 0;   // this is getting dropped might want to save it later
     
     // definition of the surface elements steps
-    static const int nxstep = 5;
-    static const int nystep = 5;
-    static const int nzstep = 5;
+    static const int NSTEP = 50;
+    static const int nxstep = NSTEP;
+    static const int nystep = NSTEP;
+    static const int nzstep = NSTEP;
 
     // the incoming track
     const HepPoint3D impact(entryPoint.x(),entryPoint.y(),entryPoint.z());
@@ -644,8 +645,8 @@ namespace AcdRecon {
     double halfX = (center.x() - lowCorner.x()) / (double)nxstep;
     double halfY = (center.y() - lowCorner.y()) / (double)nystep;
     double halfZ = (center.z() - lowCorner.z()) / (double)nzstep;    
-    HepVector3D halfStepVector(halfX,halfY,halfZ);
-    
+
+    HepVector3D halfStepVector;    
     HepVector3D stepVector1;
     HepVector3D stepVector2;
     HepVector3D normalVector;
@@ -657,6 +658,7 @@ namespace AcdRecon {
     switch ( tile.acdId().face() ) {
     case 0:
       // top.  1 -> X, 2 -> Y, thickness -> Z
+      halfStepVector = HepVector3D(halfX,halfY,0.);
       stepVector1 = HepVector3D(halfX*2.,0.,0.);
       stepVector2 = HepVector3D(0.,halfY*2.,0.);
       normalVector = HepVector3D(0.,0.,1.);
@@ -668,6 +670,7 @@ namespace AcdRecon {
     case 1:
     case 3:
       // +-X.  1 -> Y, 2 -> Z, thickness -> X
+      halfStepVector = HepVector3D(0.,halfY,halfZ);
       stepVector1 = HepVector3D(0.,halfY*2.,0.);
       stepVector2 = HepVector3D(0.,0.,halfZ*2.);
       normalVector = HepVector3D(1.,0.,0.);
@@ -678,7 +681,8 @@ namespace AcdRecon {
       break;
     case 2:
     case 4:
-      // +-X.  1 -> Y, 2 -> Z, thickness -> Y
+      // +-Y.  1 -> X, 2 -> Z, thickness -> Y
+      halfStepVector = HepVector3D(halfX,0.,halfZ);
       stepVector1 = HepVector3D(halfX*2.,0.,0.);
       stepVector2 = HepVector3D(0.,0.,halfZ*2.);
       normalVector = HepVector3D(0.,1.,0.);
@@ -699,8 +703,11 @@ namespace AcdRecon {
 
     // loop on the surface elements, start a half step inside the 
     HepPoint3D currentSurfacePoint = lowCorner + halfStepVector;
-    for(int i=0;i<nstep1;++i) {
-      for(int j=0;j<nstep2;++j) {
+    int iPoint(0);
+    for(int i=1;i<nstep1;++i) {
+      for(int j=1;j<nstep2;++j) {
+
+	iPoint++;
 
 	// determine the vector (impact point, center of the surface element)
 	HepVector3D toElement = currentSurfacePoint - impact;
@@ -708,8 +715,10 @@ namespace AcdRecon {
 	double distance_to_tile_squared = toElement.mag2();
 	HepVector3D unitToElement = toElement.unit();
 
+	double tiltAngle = unitToElement.dot(normalVector);
+
 	// calculate the solid angle of the surface element seen from the impact point
-	double solang = unitToElement.dot(normalVector) * surfaceElementArea / distance_to_tile_squared;
+	double solang = tiltAngle * surfaceElementArea / distance_to_tile_squared;
 	
 	// add it to the total solidangle
 	solidAngle += solang;
@@ -735,10 +744,13 @@ namespace AcdRecon {
 	// step in local Y
 	currentSurfacePoint += stepVector2;
       }
-      // step in local X
+      // reset localY, and step in local X
+      currentSurfacePoint -= ((float)(nstep2-1))*stepVector2;
       currentSurfacePoint += stepVector1;
     }
-    
+
+    float meanSolid = solidAngle / (float)(iPoint);
+
     // divide by the total weight = the total solid angle
     if(solidAngle>0) {
       meanAngle /= solidAngle;
