@@ -62,14 +62,17 @@ int read(char* fileName, int numEvents) {
         AcdRecon * acd = evt->getAcdRecon() ;
         CalRecon * cal = evt->getCalRecon() ;
         TkrRecon * tkr = evt->getTkrRecon() ;
-        if ((!acd)||(!cal)||(!tkr))
+        reconRootData::AdfRecon * adf = evt->getAdfRecon();
+        if ((!acd)||(!cal)||(!tkr)||(!adf))
          { return -1 ; }
         acd->Print() ;
         cal->Print();
         tkr->Print();
+        adf->Print();
         AcdRecon acdRef ;
         CalRecon calRef ;
         TkrRecon tkrRef ;
+        reconRootData::AdfRecon adfRef;
          
         // usual tests
         acdRef.Fake(ievent,RAND_NUM) ;
@@ -81,6 +84,9 @@ int read(char* fileName, int numEvents) {
         tkrRef.Fake(ievent,RAND_NUM) ;
         if (!tkr->CompareInRange(tkrRef))
          { return -1 ; }
+        adfRef.Fake(ievent,RAND_NUM);
+        if (!adf->CompareInRange(adfRef))
+         { return -1; }
          
         // opposite tests
         std::cout<<"===== on purpose errors ====="<<std::endl ;
@@ -96,6 +102,10 @@ int read(char* fileName, int numEvents) {
         tkrRef.Fake(ievent,RAND_NUM*2.) ;
         if (tkr->CompareInRange(tkrRef))
          { return -1 ; }
+        adfRef.Clear();
+        adfRef.Fake(ievent,RAND_NUM*2.);
+        if (!adf->CompareInRange(adfRef))
+         { return -1; }
         std::cout<<"============================="<<std::endl ;
         
         evt->Clear();
@@ -134,7 +144,11 @@ int write(char* fileName, int numEvents) {
         TkrRecon * tkrRec = new TkrRecon();
         tkrRec->Fake(ievent,RAND_NUM) ;        
 
+        reconRootData::AdfRecon * adfRec = new reconRootData::AdfRecon();
+        adfRec->Fake(ievent,RAND_NUM);
+
         ev->initialize(ievent, RUN_NUM, tkrRec, calRec, acdRec);
+        ev->initAdf(adfRec);
         ev->initEventFlags(1) ;
         
         t->Fill();
