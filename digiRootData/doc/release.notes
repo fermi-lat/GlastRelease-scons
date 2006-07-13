@@ -6,6 +6,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r11     13-Jul-2006 HMK Forgot to commit some fixes
+v9r10     11-Jul-2006 HMK Update QdcHit to match TDS
 v9r9      07-Jul-2006 HMK Really remove QdcHit and TaggerHit from this package
 v9r8      06-Jul-2006 HMK Moved TaggerHit and QdcHit to commonRootData
 v9r7      20-Jun-2006 HMK Ancillary Digi data from beamtest

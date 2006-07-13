@@ -81,7 +81,7 @@ const commonRootData::TaggerHit* AdfDigi::getTaggerHit(UInt_t ind) const {
         return 0;
 }
 
-commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, UINt_t mod, Bool_t isPedSub) {
+commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t mod, Bool_t isPedSub) {
     // Add a new QdcHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
@@ -107,9 +107,9 @@ void AdfDigi::Fake( Int_t ievent, Float_t randNum ) {
     addTaggerHit(5,6,7,8,false);
    
     // Add 3 QdcHits
-    addQdcHit(1,2,true);
-    addQdcHit(2,3,false);
-    addQdcHit(3,4,true);
+    addQdcHit(1,2,3,true);
+    addQdcHit(2,3,4,false);
+    addQdcHit(3,4,5,true);
 }
 
 Bool_t AdfDigi::CompareInRange( const AdfDigi &ref, const std::string& name ) const {
