@@ -1,8 +1,10 @@
 """
 Identifies files required for each gensettings script and uses the filenames to build the configuration file for the gensettings.py script
 
-note:
-    see calibGenCAL/doc/gensettings_scripts.html for more information.
+Note:
+    - this program depends on input filenames w/ certain patterns.  Filename conventions change from time to time.  we try to keep the scripts current, so
+      you may have to modify the glob matches to work w/ older files.
+    - see calibGenCAL/doc/gensettings_scripts.html for more information.
 
 """
 
@@ -176,26 +178,26 @@ for idet in detsections:
 # either change them or use override
 
     if biasname is None:
-        biasname = glob.glob(filepath+'/*T'+towerstr+'*[bB]ias*.xml')
+        biasname = glob.glob(filepath+'/*[bB]ias*.xml')
     if adc2nrgname is None:
-        adc2nrgname = glob.glob(filepath+'/*T'+towerstr+'*adc2nrg*.xml')
+        adc2nrgname = glob.glob(filepath+'/*adc2nrg*.xml')
 
 # in case adc2nrg uses module number rather than tower...
 
     if len(biasname) == 0:
-        biasname = glob.glob(filepath+'/*'+idet+'*[bB]ias*.xml')
+        biasname = glob.glob(filepath+'/*[bB]ias*.xml')
     if len(adc2nrgname) == 0:
-        adc2nrgname = glob.glob(filepath+'/*'+idet+'*adc2nrg*.xml')    
+        adc2nrgname = glob.glob(filepath+'/*adc2nrg*.xml')    
     if relgainname is None:
-        relgainname = glob.glob(filepath+'/*'+idet+'*relgain*.xml')
+        relgainname = glob.glob(filepath+'/*relgain*'+idet+'*.xml')
     if flename is None:
-        flename = glob.glob(filepath+'/*'+idet+'*fle2adc_filtered*.xml')
+        flename = glob.glob(filepath+'/*fle2adc_*'+idet+'*_filtered*.xml')
     if fhename is None:
-        fhename = glob.glob(filepath+'/*'+idet+'*fhe2adc_filtered*.xml')
+        fhename = glob.glob(filepath+'/*fhe2adc_*'+idet+'*_filtered*.xml')
     if lacname is None:
-        lacname = glob.glob(filepath+'/*'+idet+'*lac2adc_filtered*.xml')
+        lacname = glob.glob(filepath+'/*lac2adc_*'+idet+'*_filtered*.xml')
     if uldname is None:
-        uldname = glob.glob(filepath+'/*'+idet+'*uld2adc_filtered*.xml')
+        uldname = glob.glob(filepath+'/*uld2adc_*'+idet+'*_filtered*.xml')
 
 # if any name lists either empty or more than 1, report and exit with error
 
