@@ -190,7 +190,7 @@ for idet in detsections:
         sys.exit(1)
 
     # search for pedestal.xml
-    pedname = glob.glob("%s/*%s*pedestals.xml"%(ped_dir,idet))[0];
+    pedname = glob.glob("%s/*pedestals_%s.xml"%(ped_dir,idet))[0];
     
 
 # read in configuration parameters
