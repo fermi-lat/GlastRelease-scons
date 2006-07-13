@@ -300,7 +300,6 @@ namespace RootPersistence {
         config = calTds->clone();
         delete calTds;
     } else if (rootObj.runType() == enums::Lsf::TkrLCI ) {
-        std::cout << "TKR Config" << std::endl;
         const LciTkrConfiguration* tkrRoot = rootObj.lciTkrConfiguration();
         lsfData::LciTkrConfiguration *tkrTds = new lsfData::LciTkrConfiguration;
         convert(tkrRoot, tkrTds);
