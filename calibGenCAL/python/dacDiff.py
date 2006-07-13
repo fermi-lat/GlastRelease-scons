@@ -70,7 +70,7 @@ dac1 = dacFile1.read()
 dac2 = dacFile2.read()
 
 # subtract all elements in arrays
-dacDiff = dac1 - dac2
+dacDiff = dac2 - dac1
 
 for twr in dacTwrs1:
     print dacDiff[twr,:]
