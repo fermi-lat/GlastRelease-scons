@@ -46,6 +46,7 @@ public:
 private:
   IDataProviderSvc    *m_dataSvc;
   IDataProviderSvc    *m_pCalibDataSvc;
+  bool m_SubtractPedestals;
 };
 
 static const AlgFactory<AncillaryDataReconAlg>  Factory;
@@ -55,6 +56,7 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
   : Algorithm(name, pSvcLocator) 
 {
   // Input parameters that may be set via the jobOptions file
+  declareProperty("pedestalSubtraction",m_SubtractPedestals=true);
   //  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin");
 }
 
@@ -64,6 +66,7 @@ StatusCode AncillaryDataReconAlg::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Initialize AncillaryDataReconAlg"<< endreq;
   setProperties();
+
   IService* iService = 0;
   sc = serviceLocator()->service("EventDataSvc", iService, true);
   
@@ -97,7 +100,8 @@ StatusCode AncillaryDataReconAlg::execute()
     {
       digiEvent->print();
       AncillaryData::Recon *reconEvent = new AncillaryData::Recon(digiEvent);
-      sc = SubtractPedestal(digiEvent);
+      if(m_SubtractPedestals)
+	sc = SubtractPedestal(digiEvent);
       sc = MakeClusters(digiEvent,reconEvent);
       sc = QdcRecon(digiEvent,reconEvent);      
       sc = RegisterRecon(reconEvent);
@@ -214,6 +218,10 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       int iChan = (*taggerHitColI).getStripId();
       CalibData::RangeBase* pTaggerPed = pTaggerPeds->getChan(iMod, iLay, iChan);
       AncTaggerPed* pT = dynamic_cast<AncTaggerPed * >(pTaggerPed);
+      if (!pT) {
+	log << MSG::ERROR << "Dynamic cast to AncTaggerPed failed" << endreq;
+	return StatusCode::FAILURE;
+      }
       int pedestalValue=pT->getVal();    
       log << MSG::INFO << "ped = " << pedestalValue << endreq;
       log << MSG::INFO << "rNoise = " << pT->getRNoise() << endreq;
@@ -250,14 +258,13 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
 
       AncQdcPed* pQ = dynamic_cast<AncQdcPed * >(pQdcPed);
       if (!pQ) {
-	log << MSG::ERROR << "Dynamic cast to AncCalibQdcPed failed" << endreq;
+	log << MSG::ERROR << "Dynamic cast to AncQdcPed failed" << endreq;
 	return StatusCode::FAILURE;
       }
       float pedestalValue=pQ->getVal();    
       log << MSG::INFO << "ped = " << pedestalValue << endreq;
       log << MSG::INFO << " rms = " << pQ->getRms() << endreq;
       log << MSG::INFO << " isBad = " << pQ->getIsBad() << endreq;
-      //      log << MSG::INFO << " device = " << pQ->getDevice() << endreq;
       (*qdcHitColI).setPulseHeight((*qdcHitColI).getPulseHeight()-pedestalValue);
       (*qdcHitColI).setPedestalSubtract();
       log << MSG::INFO << " Done pedestal subtraction for QDC " << endreq;

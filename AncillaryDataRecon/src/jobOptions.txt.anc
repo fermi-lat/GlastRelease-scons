@@ -19,7 +19,8 @@ ApplicationMgr.Runable= "RootIoSvc";
 ApplicationMgr.TopAlg = {"digiRootReaderAlg","AdfReaderAlg","AncillaryDataReconAlg"};
 
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
-//AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AncillaryDataReconAlg.pedestalSubtraction=false;
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -34,8 +35,6 @@ EventSelector.Input = "NONE";
 
 GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
-
-ApplicationMgr.EvtMax = 5;
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
@@ -83,6 +82,9 @@ CalibDataSvc.delayTime = 3000;
 // CalibMySQLCnvSvc.EnterTimeStart = "2003-01-01";
 // CalibMySQLCnvSvc.EnterTimeEnd = "2004-03-01";
 CalibMySQLCnvSvc.DbName = "calib_test";
+
+ApplicationMgr.EvtMax = 100;
+
 
 //==============================================================
 //
