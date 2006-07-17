@@ -2432,10 +2432,12 @@ class calDacSlopesCalibXML(calCalibXML):
                             uldData[erng,tem, row, end, fe, 4] = float(dsrVal)
                             dsrVal = dsr.getAttributeNS(None, 'ULDSatErr')
                             uldData[erng,tem, row, end, fe, 5] = float(dsrVal)
-                            dsrVal = ds.getAttributeNS(None, 'ULDRange')
+                            dsrVal = dsr.getAttributeNS(None, 'ULDRange')
                             rangeData[tem,row,end,fe,erng+3] = DRNG_MAP[str(dsrVal)]
+                               
                                         
         return (dacData, uldData, rangeData)
+        
         
         
         
