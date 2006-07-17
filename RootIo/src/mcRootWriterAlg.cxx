@@ -590,11 +590,14 @@ void mcRootWriterAlg::writeEvent()
 try {
     TDirectory *saveDir = gDirectory;
     m_mcTree->GetCurrentFile()->cd();
+    if (m_mcTree->GetCurrentFile()->TestBits(TFile::kWriteError)) {
+        throw;
+    }
     m_mcTree->Fill();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval()== 0) 
-            m_mcTree->AutoSave();
+            if (m_mcTree->AutoSave() == 0) throw;
     saveDir->cd();
  } catch(...) { 
     std::cerr << "Failed to write the event to file" << std::endl; 

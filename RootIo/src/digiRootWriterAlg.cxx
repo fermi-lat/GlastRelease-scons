@@ -723,11 +723,14 @@ void digiRootWriterAlg::writeEvent()
 try {
     TDirectory *saveDir = gDirectory;
     m_digiTree->GetCurrentFile()->cd();
+    if (m_digiTree->GetCurrentFile()->TestBits(TFile::kWriteError)) {
+        throw;
+     }
     m_digiTree->Fill();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) 
-            m_digiTree->AutoSave();
+            if (m_digiTree->AutoSave() == 0) throw;
 
     saveDir->cd();
  } catch(...) {   

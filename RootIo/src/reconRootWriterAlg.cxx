@@ -722,11 +722,14 @@ void reconRootWriterAlg::writeEvent()
     try {
         TDirectory *saveDir = gDirectory;
         m_reconTree->GetCurrentFile()->cd();
+        if (m_reconTree->GetCurrentFile()->TestBits(TFile::kWriteError)) {
+            throw;
+        }
         m_reconTree->Fill();
         ++eventCounter;
         if (m_rootIoSvc)
             if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) 
-               m_reconTree->AutoSave();
+               if( m_reconTree->AutoSave() == 0) throw; 
         saveDir->cd();
     }
     catch(...) { 

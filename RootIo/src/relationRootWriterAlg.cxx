@@ -301,13 +301,16 @@ void relationRootWriterAlg::writeEvent()
  try {
     TDirectory *saveDir = gDirectory;
     m_relTree->GetCurrentFile()->cd();
+    if (m_relTree->GetCurrentFile()->TestBits(TFile::kWriteError)) {
+        throw;
+    }
     m_relTree->Fill();
     m_relTable->Clear();
     m_common.clear();
     ++eventCounter;
     if (m_rootIoSvc)
         if (eventCounter % m_rootIoSvc->getAutoSaveInterval() == 0) 
-            m_relTree->AutoSave();
+            if (m_relTree->AutoSave() == 0) throw;
     saveDir->cd();
   } catch(...) { 
       std::cerr << "Failed to write the event to file" << std::endl; 
