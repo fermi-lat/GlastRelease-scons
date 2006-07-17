@@ -385,6 +385,8 @@ if __name__ == '__main__':
     log.info("ULD LEX8 MeV offset average = %f", av)
     av = Numeric.average(uldData[calConstant.CRNG_LEX8,...,2], axis = None)
     log.info("ULD LEX8 MeV saturation average = %f", av)
+    mn = min(Numeric.ravel(uldData[calConstant.CRNG_LEX8,...,2]))
+    log.info("ULD LEX8 MeV saturation minimum = %f", mn)
     
     av = Numeric.average(uldData[calConstant.CRNG_LEX1,...,0], axis = None)
     log.info("ULD LEX1 Mev/DAC slope average = %f", av) 
@@ -392,6 +394,8 @@ if __name__ == '__main__':
     log.info("ULD LEX1 MeV offset average = %f", av)
     av = Numeric.average(uldData[calConstant.CRNG_LEX1,...,2], axis = None)
     log.info("ULD LEX1 MeV saturation average = %f", av)
+    mn = min(Numeric.ravel(uldData[calConstant.CRNG_LEX1,...,2]))
+    log.info("ULD LEX8 MeV saturation minimum = %f", mn)
     
     av = Numeric.average(uldData[calConstant.CRNG_HEX8,...,0], axis = None)
     log.info("ULD HEX8 Mev/DAC slope average = %f", av) 
@@ -399,6 +403,8 @@ if __name__ == '__main__':
     log.info("ULD HEX8 MeV offset average = %f", av)
     av = Numeric.average(uldData[calConstant.CRNG_HEX8,...,2], axis = None)
     log.info("ULD HEX8 MeV saturation average = %f", av)
+    mn = min(Numeric.ravel(uldData[calConstant.CRNG_HEX8,...,2]))
+    log.info("ULD LEX8 MeV saturation minimum = %f", mn)
 
     # report results
 
