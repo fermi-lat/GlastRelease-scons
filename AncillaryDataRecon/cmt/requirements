@@ -1,5 +1,5 @@
 package AncillaryDataRecon
-version v0r1p1
+version v0r1p2
 author N.Omodei <nicola.omodei@pi.infn.it>
 
 use GaudiInterface * IExternal
@@ -15,6 +15,8 @@ apply_pattern ld_library_path
 
 private
 use GlastSvc v*
+use CalibSvc v* 
+
 # for unit est only
 use AdfReader v*
 
