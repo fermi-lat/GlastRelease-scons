@@ -210,7 +210,7 @@ def stddev(data, tems):
 
     av = 0
     for t in tems:
-        sd = MLab.std(Numeric.ravel(data))
+        sd = MLab.std(Numeric.ravel(data[t,...]))
         av += (sd * sd)
         
     return math.sqrt(av / len(tems))
