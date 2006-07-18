@@ -1,11 +1,15 @@
 #include "AdfEvent/AncillaryWord.h"
+#include "AncillaryDataUtil/AncillaryDataTail.h"
 #include "AncillaryDataUtil/AncillaryDataServer.h"
+
+#define DEBUG 0
 
 using namespace AncillaryData;
 
 AncillaryDataServer::AncillaryDataServer(std::string dataFileName)
 {
   m_dataFileName = dataFileName;
+  m_counter=0;
 }
 
 AncillaryDataServer::~AncillaryDataServer()
@@ -38,6 +42,7 @@ int AncillaryDataServer::readRawWord()
 {
   int word[1];
   fread(word, ANCILLARY_WORD_LENGTH, 1, m_dataFile);
+  if (DEBUG) std::cout<<"--> "<<std::hex<<word[0]<<std::endl;
   return word[0];
 }
 
@@ -63,15 +68,16 @@ bool  AncillaryDataServer::readEventHeader(AdfEvent *currentEvent)
   EventSummaryData summaryData;
   fread(word, ANCILLARY_WORD_LENGTH, 4, m_dataFile);
   summaryData.setData(word);
+  currentEvent->setEventSummaryData(summaryData);    
   if(!summaryData.checkVersion()) 
     {
-      std::cout<<std::hex<<word[0]<<std::endl;
+      std::cout<<" ******************** WARNING WRONG EVENT HEADER VERSION !! WE KEEP GOING..."<<std::endl;
+      std::cout<<word[0]<<std::endl;
       std::cout<<word[1]<<std::endl;
       std::cout<<word[2]<<std::endl;
       std::cout<<word[3]<<std::dec<<std::endl;
       return false;
     }
-  currentEvent->setEventSummaryData(summaryData);
   return true;
 }
 
@@ -83,53 +89,55 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
   if(remainingBytes<=0) return false;
   while(remainingBytes>0)
     {
-      unsigned rawword = readRawWord();
+      unsigned int rawword = readRawWord();
       remainingBytes-=ANCILLARY_WORD_LENGTH;
       AncillaryWord OneWord;
       OneWord.setData(rawword);
       //      AncillaryWord OneWord = getNextDataWord();
-      unsigned Header = OneWord.getHeader();
+      unsigned int Header = OneWord.getHeader();
       QdcHeaderWord qdcHW;
       FadcHeaderWord fadcHW;
       ScalerHeaderWord scalerHW;
       
-      //      std::cout<<"remainingBytes "<<remainingBytes<<std::endl;
+      if(DEBUG) std::cout<<"remainingBytes "<<remainingBytes<<std::endl;
 
       switch (Header)
 	{
-	case ANCILLARY_QDC_ID:
+	case ANCILLARY_QDC_HID:
 	  qdcHW.setData(rawword);
-	  //	  std::cout<<"Check QDC Header: "<<qdcHW.checkHeader()<<" "<<qdcHW.getQcdFifo()<<std::endl;
+	  if(DEBUG) std::cout<<"Check QDC Header: "<<qdcHW.checkHeader()<<" "<<qdcHW.getQdcFifo()<<std::endl;
 
-	  for(int i=0; i < qdcHW.getQcdFifo(); i++)
+	  for(int i=0; i < qdcHW.getQdcFifo(); i++)
 	    {
 	      QdcDataWord qdcDW;
 	      qdcDW.setData(readRawWord());
+	      qdcDW.checkHeader();
 	      currentEvent->appendQdcDataWord(qdcDW);
 	    }
-	  remainingBytes-=qdcHW.getQcdFifo()*ANCILLARY_WORD_LENGTH;
+	  remainingBytes-=qdcHW.getQdcFifo()*ANCILLARY_WORD_LENGTH;
 	  break;
-	case ANCILLARY_FADC_ID:
+	case ANCILLARY_FADC_HID:
 	  fadcHW.setData(rawword);
-	  //	  std::cout<<"Check FADC Header: "<<fadcHW.checkHeader()<<std::endl;
+	     if(DEBUG) std::cout<<"Check FADC Header: "<<fadcHW.checkHeader()<<" "<<fadcHW.getFadcFifo()<<std::endl;
 	  for(int i=0; i < fadcHW.getFadcFifo(); i++)
 	    {
 	      FadcDataWord fadcDW;
 	      fadcDW.setData(readRawWord());
+	      fadcDW.checkHeader();
 	      currentEvent->appendFadcDataWord(fadcDW);
 	    }
 	  remainingBytes-=fadcHW.getFadcFifo()*ANCILLARY_WORD_LENGTH;
 	  break;
 	case ANCILLARY_SCALER_ID:
 	  scalerHW.setData(rawword);
-	  //	  std::cout<<"Check SCALER Header: "<<scalerHW.checkHeader()<<" "<<scalerHW.getScalerFifo()<<std::endl;
-	  for(int i=0; i < scalerHW.getScalerFifo(); i++)
+	  if(DEBUG) std::cout<<"Check SCALER Header: "<<scalerHW.checkHeader()<<" "<<scalerHW.getScalerCounters()<<std::endl;
+	  for(int i=0; i < scalerHW.getScalerCounters(); i++)
 	    {
 	      ScalerDataWord scalerDW;
 	      scalerDW.setData(readRawWord());
 	      currentEvent->appendScalerDataWord(scalerDW);
 	    }
-	  remainingBytes-= scalerHW.getScalerFifo()*ANCILLARY_WORD_LENGTH;
+	  remainingBytes-= scalerHW.getScalerCounters()*ANCILLARY_WORD_LENGTH;
 	  break;
 	default:
 	  break;
@@ -140,19 +148,26 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
   
 AdfEvent *AncillaryDataServer::getNextEvent()
 {
+
+  if(m_counter%10==0) std::cout<<" Get event number "<<++m_counter<<std::endl;
   // Get the event header:
   AdfEvent *currentEvent = new AdfEvent();
   bool suxess;
   suxess = readEventHeader(currentEvent);
   if(!suxess) 
     {
-      std::cout<<"failed to read the hevent header: "<<std::endl;
-      currentEvent->getEventSummaryData().printEventHeader();
+      std::cout<<"failed to read the Event header: "<<std::endl;
+      suxess=readFileTail();
+      if(!suxess) 
+	{
+	  std::cout<<"failed to read the TAIL "<<std::endl;
+	}
       return 0;
     }
   suxess = readEventData(currentEvent);
-  if(!suxess) return 0;
-  return currentEvent;
+  if (suxess) return currentEvent;
+  std::cout<<"failed to read the Event Data: "<<std::endl;
+  return 0;
 }
 
 void AncillaryDataServer::printInformation()
@@ -166,3 +181,10 @@ void AncillaryDataServer::printInformation()
   std::cout << "#-----------------------------------------------"          << std::endl;
 }
 
+bool AncillaryDataServer::readFileTail()
+{
+  unsigned int word[TAIL_LENGTH];
+  fread(word, ANCILLARY_WORD_LENGTH, TAIL_LENGTH, m_dataFile);
+  m_tail.setData(word);
+  std::cout << "FileTail, Read: "<<m_tail.totalNumEvents()<<std::endl;
+}

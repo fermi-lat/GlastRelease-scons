@@ -9,7 +9,7 @@
 
 namespace AncillaryData {
   
-  const unsigned int ANCILLARY_DATA_VERSION = 200;
+  const unsigned int ANCILLARY_HEADER_VERSION = 200;
   const unsigned int ANCILLARY_FILE_HEADER  = 0xf1040;
   const unsigned int ANCILLARY_HEADER_ID    = 15;
   const unsigned int HEADER_LENGTH          = 6; 
@@ -30,7 +30,7 @@ namespace AncillaryData {
     unsigned getRunNumber()      const {return m_runNumber;}
     unsigned getCommentLength()  const {return m_commentLength;}
     
-    bool checkVersion()              const {return (getVersion() == ANCILLARY_DATA_VERSION);}
+    bool checkVersion()              const {return (getVersion() ==  ANCILLARY_HEADER_VERSION );}
     
   private:
     unsigned m_version;

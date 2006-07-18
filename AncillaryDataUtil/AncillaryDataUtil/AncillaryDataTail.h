@@ -7,17 +7,20 @@
 * @class AncillaryDataTail
 */
 
-const unsigned int ANCILLARY_TAIL_ID      = 14;
-
 namespace AncillaryData {
-  
+  const unsigned int ANCILLARY_TAIL_VERSION = 100;
+  const unsigned int ANCILLARY_TAIL_ID      = 14;
+  const unsigned int TAIL_LENGTH            =5; 
+ 
   class AncillaryDataTail {
   public:
     AncillaryDataTail(){;} 
     ~AncillaryDataTail()                    {;} 
-    void setData(unsigned int word[3]) {m_word = word;}
+    void setData(unsigned int word[TAIL_LENGTH]) {m_word = word;}
+    unsigned int totalNumEvents(){return m_word[2] & 0xfffffff;}
   private:
     unsigned int *m_word;
+    
   };
   
 }

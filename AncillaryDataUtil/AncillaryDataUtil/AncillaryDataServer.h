@@ -22,12 +22,13 @@ class AncillaryDataServer
   void readFileHeader();
   bool  readEventHeader(AdfEvent *currentEvent);
   bool  readEventData(AdfEvent *currentEvent);
+  bool  readFileTail();
   AdfEvent *getNextEvent();
   void printInformation();
   
   
  private:
- 
+  int  m_counter;
   std::string m_dataFileName; 
   FILE *m_dataFile;
   AncillaryData::AncillaryDataHeader m_header;
