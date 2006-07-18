@@ -22,11 +22,14 @@ __release__   = "$Name$"
 __credits__   = "NRL code 7650"
 
 
+
 import sys, os
+import math
 import getopt
 import logging
 
 import Numeric
+import MLab
 
 import calCalibXML
 import calConstant
@@ -282,6 +285,16 @@ def average(data, tems):
             
 
 
+def stddev(data, tems):
+
+    av = 0
+    for t in tems:
+        sd = MLab.std(Numeric.ravel(data))
+        av += (sd * sd)
+        
+    return math.sqrt(av / len(tems))
+
+
 
 if __name__ == '__main__':
 
@@ -365,22 +378,36 @@ if __name__ == '__main__':
     # do simple stats 
     
     av = average(pedData[...,calConstant.CRNG_LEX8,0], towers)
-    log.info("LEX8 pedestal values average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_LEX8,0], towers)
+    log.info("LEX8 pedestal values average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_LEX1,0], towers)
-    log.info("LEX1 pedestal values average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_LEX1,0], towers)
+    log.info("LEX1 pedestal values average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_HEX8,0], towers)
-    log.info("HEX8 pedestal values average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_HEX8,0], towers)
+    log.info("HEX8 pedestal values average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_HEX1,0], towers)
-    log.info("HEX1 pedestal values average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_HEX1,0], towers)
+    log.info("HEX1 pedestal values average=%f, stddev=%f", av, sd)
     
     av = average(pedData[...,calConstant.CRNG_LEX8,1], towers)
-    log.info("LEX8 pedestal sigmas average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_LEX8,1], towers)
+    log.info("LEX8 pedestal sigmas average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_LEX1,1], towers)
-    log.info("LEX1 pedestal sigmas average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_LEX1,1], towers)
+    log.info("LEX1 pedestal sigmas average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_HEX8,1], towers)
-    log.info("HEX8 pedestal sigmas average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_HEX8,1], towers)
+    log.info("HEX8 pedestal sigmas average=%f, stddev=%f", av, sd)
+    
     av = average(pedData[...,calConstant.CRNG_HEX1,1], towers)
-    log.info("HEX1 pedestal sigmas average=%f", av)
+    sd = stddev(pedData[...,calConstant.CRNG_HEX1,1], towers)
+    log.info("HEX1 pedestal sigmas average=%f, stddev=%f", av, sd)
 
     # report results
 
