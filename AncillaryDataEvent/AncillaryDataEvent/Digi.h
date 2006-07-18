@@ -10,6 +10,7 @@
 #include "AdfEvent/AdfEvent.h"
 #include "AncillaryDataEvent/TaggerHit.h"
 #include "AncillaryDataEvent/QdcHit.h"
+#include "AncillaryDataEvent/ScalerHit.h"
 
 static const CLID& CLID_AncillaryDataDigiEvent = InterfaceID("AncillaryDataDigiEvent", 1, 0);
 
@@ -25,10 +26,12 @@ namespace AncillaryData
       
       const std::vector<TaggerHit>& getTaggerHitCol() const { return TaggerHitColl; }
       const std::vector<QdcHit>& getQdcHitCol() const { return QdcHitColl; } 
+      const std::vector<ScalerHit>& getScalerHitCol() const { return ScalerHitColl; } 
       
       void appendTaggerHit(TaggerHit h){TaggerHitColl.push_back(h);}
       void appendQdcHit(QdcHit h){QdcHitColl.push_back(h);}
-
+      void appendScalerHit(ScalerHit h){ScalerHitColl.push_back(h);}
+      
       unsigned getEventNumber() const { return m_eventNumber; }
       void setEventNumber(unsigned evtNum) { m_eventNumber = evtNum; }
       unsigned getSpillNumber() const { return m_spillNumber; }
@@ -39,6 +42,7 @@ namespace AncillaryData
     private:
       std::vector<TaggerHit> TaggerHitColl;
       std::vector<QdcHit> QdcHitColl;
+      std::vector<ScalerHit> ScalerHitColl;
       
       unsigned m_eventNumber;
       unsigned m_spillNumber;
