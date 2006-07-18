@@ -305,7 +305,7 @@ class calDacXML(calSnapshotXML):
                     # translate index
 
                     (row, end) = ccToRow(ccc, rc) 
-                    c = doc.createComment("layer = %s%s" % (calConstant.CROW[row], calConstant.CPM[end]))
+                    c = doc.createComment("layer = %s%s " % (calConstant.CROW[row], calConstant.CPM[end]))
                     gr.appendChild(c) 
                     
                     for fe in range(12):
@@ -545,7 +545,7 @@ class calEnergyXML(calXML.calXML):
                         # translate index
 
                         (row, end) = ccToRow(ccc, rc) 
-                        c = doc.createComment("layer = %s%s" % (calConstant.CROW[row], calConstant.CPM[end]))
+                        c = doc.createComment("layer = %s%s " % (calConstant.CROW[row], calConstant.CPM[end]))
                         gr.appendChild(c)
                                                           
                         for fe in range(12):
