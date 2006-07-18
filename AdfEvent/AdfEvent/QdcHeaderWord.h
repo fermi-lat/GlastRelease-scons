@@ -16,8 +16,8 @@
 namespace AncillaryData {
   class QdcHeaderWord : public AncillaryWord {
   public:
-    unsigned int getQcdFifo() const {return m_word & 0x1f;}
-    bool checkHeader()        const {return (getHeader() == ANCILLARY_QDC_ID);}
+    unsigned int getQdcFifo() const {return m_word & 0x1f;}
+    bool checkHeader()        const {return (getHeader() == ANCILLARY_QDC_HID);}
   };
   
 }//namespace AdfEvent

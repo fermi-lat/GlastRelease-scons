@@ -12,12 +12,13 @@ namespace AncillaryData
   const int    N_LAYERS_PER_MODULE    = 2;
   const int    N_CHANNELS_PER_LAYER   = 384;
   const int    N_DEBUG_CHANNELS       = 5;
-  const int    N_QCD_CHANNELS         = 32;
+  const int    N_QDC_MODULES          = 1;
+  const int    N_QDC_CHANNELS         = 32;
   const double SIGNAL_THRESHOLD       = 5.0;
   const int    MAX_CLUSTER_GAP        = 5;
   const double STRIPS_PITCH           = 0.0242;
   const double MINIMUM_NOISE          = 1.0;
-  const bool   FIT_PEDESTALS          = 0;
+  const bool   FIT_PEDESTALS          = 1;
 }
 #endif
 

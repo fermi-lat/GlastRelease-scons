@@ -7,7 +7,7 @@
 * @class EventSummaryData
 * @brief Base class describing the event header words from the ancillary detectors.
 
-* Based on ancillary data version 2.00. The basic structure is as follows:
+* Based on ancillary data version 3.01. The basic structure is as follows:
 * 31   20  19                                0
 * -------  -----------------------------------
 * version        ANCILLARY_EVENT_HEADER
@@ -23,9 +23,8 @@
 */
 
 
-const unsigned ANCILLARY_DATA_VERSION = 200;
-
 namespace AncillaryData {
+  const unsigned ANCILLARY_DATA_VERSION = 301;
   const unsigned ANCILLARY_EVENT_HEADER = 0xf1030;
   const unsigned ANCILLARY_EVENT_ID     = 12;
   class EventSummaryData {

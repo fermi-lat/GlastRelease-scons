@@ -17,9 +17,9 @@ namespace AncillaryData {
 
 	class ScalerHeaderWord : public AncillaryWord {
 	public:
-		unsigned int getScalerFifo() const {return m_word & 0xff;}
-		bool checkHeader()           const {return (getHeader() == ANCILLARY_SCALER_ID);}
-};
-
+	  unsigned int getScalerCounters() {return m_word & 0xff;}
+	  bool checkHeader()           const {return (getHeader() == ANCILLARY_SCALER_ID);}
+	};
+	
 }//namespace AdfEvent
 #endif

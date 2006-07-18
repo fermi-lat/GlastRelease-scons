@@ -2,6 +2,7 @@
 #define SCALERDATAWORD_HH
 
 #include <iostream>
+#include "AdfEvent/TaggerParameters.h"
 /**
 * @class ScalerDataWord 
 * @brief Base class describing a data word from the scaler.
@@ -18,8 +19,7 @@ namespace AncillaryData {
     ScalerDataWord()                 {;} 
     ~ScalerDataWord()                 {;} 
     void setData(unsigned int word) {m_word = word;}
-    unsigned int getCounter()   const {return m_word;}
-    
+    unsigned int getScalerValue()    {return m_word;}
   private:
     unsigned int m_word;
   };

@@ -19,7 +19,7 @@ namespace AncillaryData {
   public:
     unsigned int getFadcModule() const {return (m_word >> 24) & 0xf;}
     unsigned int getFadcFifo()   const {return m_word & 0xfff;}
-    bool checkHeader()           const {return (getHeader() == ANCILLARY_FADC_ID);}
+    bool checkHeader()           const {return (getHeader() == ANCILLARY_FADC_HID);}
   };
 }//namespace AdfEvent
 #endif

@@ -60,7 +60,7 @@ namespace AncillaryData
 	  
 	  for (std::vector<ScalerDataWord>::iterator scalerIterator=ScalerData.begin(); scalerIterator!=ScalerData.end(); scalerIterator++)
 	    {
-	      std::cout<<(*scalerIterator).getCounter()<<std::endl;
+	      std::cout<<(*scalerIterator).getScalerValue()<<std::endl;
 	    }
 	  //	  std::vector
 	}

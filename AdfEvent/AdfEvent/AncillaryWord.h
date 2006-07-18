@@ -18,25 +18,32 @@
 */
 
 namespace AncillaryData {
-  const unsigned ANCILLARY_WORD_LENGTH  = 4;
-  const unsigned ANCILLARY_QDC_ID       = 1;
-  const unsigned ANCILLARY_FADC_ID      = 2;
-  const unsigned ANCILLARY_END_RUN      = 14;
-  const unsigned ANCILLARY_SCALER_ID    = 10;
+  const unsigned int ANCILLARY_WORD_LENGTH  = 4;
+
+  const unsigned int ANCILLARY_QDC_ID       = 1;
+  const unsigned int ANCILLARY_QDC_HID      = 3;
+
+  const unsigned int ANCILLARY_FADC_ID      = 2;
+  const unsigned int ANCILLARY_FADC_HID     = 4;
+
+  const unsigned int ANCILLARY_SCALER_ID    = 10;
+
+  const unsigned int ANCILLARY_END_RUN      = 14;
+
 
   class AncillaryWord {
   public:
     AncillaryWord() {;}
-    AncillaryWord(unsigned word) {m_word = word;}
+    AncillaryWord(unsigned int word) {m_word = word;}
     //    AncillaryWord(const AncillaryWord &aword) {m_word=aword.getRawWord();}
-    void setData(unsigned word) {m_word = word;}
+    void setData(unsigned int word) {m_word = word;}
     ~AncillaryWord()                 {;} 
-    unsigned  getRawWord()  const {return m_word;}
-    unsigned  getHeader()   const {return (m_word >> 28) & 0xf;}
-    unsigned  getRawData()  const {return m_word & 0xfffffff;}
+    unsigned int  getRawWord()  const {return m_word;}
+    unsigned int  getHeader()   const {return (m_word >> 28) & 0xf;}
+    unsigned int  getRawData()  const {return m_word & 0xfffffff;}
     
   protected:
-    unsigned m_word;
+    unsigned int m_word;
     
   };
   
