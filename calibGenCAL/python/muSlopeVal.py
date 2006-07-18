@@ -24,10 +24,12 @@ __credits__   = "NRL code 7650"
 
 
 import sys, os
+import math
 import getopt
 import logging
 
 import Numeric
+import MLab
 
 import calCalibXML
 import calConstant
@@ -204,7 +206,16 @@ def average(data, tems):
     return (av / len(tems))
     
     
+def stddev(data, tems):
+
+    av = 0
+    for t in tems:
+        sd = MLab.std(Numeric.ravel(data))
+        av += (sd * sd)
+        
+    return math.sqrt(av / len(tems))
     
+        
 
 if __name__ == '__main__':
 
@@ -282,13 +293,20 @@ if __name__ == '__main__':
     # do simple stats 
     
     av = average(slopeData[...,calConstant.CRNG_LEX8,0], towers)
-    log.info("LEX8 gain values average=%f", av)
+    sd = stddev(slopeData[...,calConstant.CRNG_LEX8,0], towers)
+    log.info("LEX8 gain values average=%f, stddev=%f", av, sd)
+    
     av = average(slopeData[...,calConstant.CRNG_LEX1,0], towers)
-    log.info("LEX1 gain values average=%f", av)
+    sd = stddev(slopeData[...,calConstant.CRNG_LEX1,0], towers)
+    log.info("LEX1 gain values average=%f, stddev=%f", av, sd)
+    
     av = average(slopeData[...,calConstant.CRNG_HEX8,0], towers)
-    log.info("HEX8 gain values average=%f", av)
+    sd = stddev(slopeData[...,calConstant.CRNG_HEX8,0], towers)
+    log.info("HEX8 gain values average=%f, stddev=%f", av, sd)
+    
     av = average(slopeData[...,calConstant.CRNG_HEX1,0], towers)
-    log.info("HEX1 gain values average=%f", av)    
+    sd = stddev(slopeData[...,calConstant.CRNG_HEX1,0], towers)
+    log.info("HEX1 gain values average=%f, stddev=%f", av, sd)    
 
     # report results
 
