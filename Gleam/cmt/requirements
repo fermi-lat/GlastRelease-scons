@@ -1,6 +1,6 @@
 package Gleam
 
-version  v6r18p2
+version  v6r19
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -57,6 +57,11 @@ use  HepRepCorba *
 use LdfEvent v*
 use LdfConverter v*
 use EventIntegrity v*
+
+# beamtest 2006 ancillary data
+use AncillaryDataEvent v*
+use AncillaryDataRecon v*
+
 
 ### define a simple executable wth GUI
 
