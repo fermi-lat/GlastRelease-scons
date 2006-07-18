@@ -19,7 +19,8 @@ ApplicationMgr.Runable= "RootIoSvc";
 ApplicationMgr.TopAlg = {"digiRootReaderAlg","AdfReaderAlg","AncillaryDataReconAlg"};
 
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
-AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
+//AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
 AncillaryDataReconAlg.pedestalSubtraction=false;
 
 

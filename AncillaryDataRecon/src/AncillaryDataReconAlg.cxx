@@ -222,7 +222,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
 	log << MSG::ERROR << "Dynamic cast to AncTaggerPed failed" << endreq;
 	return StatusCode::FAILURE;
       }
-      int pedestalValue=pT->getVal();    
+      float pedestalValue=pT->getVal();    
       log << MSG::INFO << "ped = " << pedestalValue << endreq;
       log << MSG::INFO << "rNoise = " << pT->getRNoise() << endreq;
       log << MSG::INFO << "sNoise = " << pT->getSNoise() << endreq;
@@ -255,15 +255,15 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       int iMod  = (*qdcHitColI).getQdcModule();
       std::cout<<"size: "<<qdcHitCol.size()<<" ch: "<<iChan<<" mod: "<<iMod<<std::endl;
       CalibData::RangeBase* pQdcPed = pQdcPeds->getQdcChan(iMod, iChan);
-
+      
       AncQdcPed* pQ = dynamic_cast<AncQdcPed * >(pQdcPed);
       if (!pQ) {
 	log << MSG::ERROR << "Dynamic cast to AncQdcPed failed" << endreq;
 	return StatusCode::FAILURE;
       }
       float pedestalValue=pQ->getVal();    
-      log << MSG::INFO << "ped = " << pedestalValue << endreq;
-      log << MSG::INFO << " rms = " << pQ->getRms() << endreq;
+      log << MSG::INFO << "   ped = " << pedestalValue << endreq;
+      log << MSG::INFO << "   rms = " << pQ->getRms() << endreq;
       log << MSG::INFO << " isBad = " << pQ->getIsBad() << endreq;
       (*qdcHitColI).setPulseHeight((*qdcHitColI).getPulseHeight()-pedestalValue);
       (*qdcHitColI).setPedestalSubtract();
