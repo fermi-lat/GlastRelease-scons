@@ -298,11 +298,13 @@ class calDacXML(calSnapshotXML):
                     gr = doc.createElementNS(None, 'GCRC')
                     gr.setAttributeNS(None, 'ID', str(rc))
                     gc.appendChild(gr)
-                
+                                    
                     # translate index
 
-                    (row, end) = ccToRow(ccc, rc)                                            
-
+                    (row, end) = ccToRow(ccc, rc) 
+                    c = doc.createComment("layer = %s%s" % (calConstant.CROW[row], calConstant.CPM[end]))
+                    gr.appendChild(c) 
+                    
                     for fe in range(12):
 
                         # insert <GCFE> elements
@@ -536,7 +538,10 @@ class calEnergyXML(calXML.calXML):
 
                         # translate index
 
-                        (row, end) = ccToRow(ccc, rc)                                   
+                        (row, end) = ccToRow(ccc, rc) 
+                        c = doc.createComment("layer = %s%s" % (calConstant.CROW[row], calConstant.CPM[end]))
+                        gr.appendChild(c)
+                                                          
                         for fe in range(12):
 
                             # insert <GCFE> elements
