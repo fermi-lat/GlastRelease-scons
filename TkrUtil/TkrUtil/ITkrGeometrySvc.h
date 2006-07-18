@@ -29,7 +29,7 @@
  * @author Tracy Usher
  */
 
-static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 13 , 0); 
+static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 14 , 0); 
 
 namespace {
     enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
@@ -186,6 +186,9 @@ public:
     virtual double gettkrZBot() const = 0;
 
     // new stuff here for minimal disruption
+    // put this back... Johann uses it!
+    virtual bool inTower(int view, const Point p, int& iXTower, int& iYTower,
+        double& xActiveDist, double& yActiveDist, double& xGap, double &yGap) const = 0;
 
 };
 
