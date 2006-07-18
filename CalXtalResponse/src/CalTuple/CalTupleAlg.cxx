@@ -32,7 +32,7 @@ using namespace idents;
     - m_calXtalAdcRng     - adc range for matching AdcPed val
     - m_calXtalFaceSignal - energy deposit estimated from single face adc value if deposit centroid is assumed to be at center of xtal.
     - m_calXtalAdcPed     - pedestal subtracted adc values. 
-    \note in 4 range mode, readouts are stored in order of adc range # regardless of range selection.
+    - m_calXtalAdcPedAllRange - ped subtraced adc values (all available ranges, indexed by rangeId)
 
     @author Zach Fewtrell
 */
@@ -49,20 +49,12 @@ public:
 private:
   /// Single entry in CalTuple
   struct CalTupleEntry {
-    CalTupleEntry() : 
-      m_calXtalAdcPed(0),
-      m_nAdcPed(0) {}
+    CalTupleEntry() {}
 
-    ~CalTupleEntry() { if (m_calXtalAdcPed) delete [] m_calXtalAdcPed; }
+    ~CalTupleEntry() {}
 
     StatusCode initialize() {
       
-      if (m_fourRngMode)
-        m_nAdcPed = RngIdx::N_VALS;
-      else 
-        m_nAdcPed = FaceIdx::N_VALS;
-
-      m_calXtalAdcPed = new float[m_nAdcPed];
       
       return StatusCode::SUCCESS;
     }
@@ -73,9 +65,9 @@ private:
 
       memset(m_calXtalAdcRng,     0, sizeof(m_calXtalAdcRng));
       memset(m_calXtalFaceSignal, 0, sizeof(m_calXtalFaceSignal));
-      if (m_calXtalAdcPed)
-        memset(m_calXtalAdcPed,     0, 
-               sizeof(*m_calXtalAdcPed) * m_nAdcPed);
+      memset(m_calXtalAdcPed,     0, sizeof(m_calXtalAdcPed));
+      memset(m_calXtalAdcPedAllRange, 0, sizeof(m_calXtalAdcPedAllRange));
+
     }
 
     int m_runId;
@@ -84,16 +76,14 @@ private:
     /// \brief ped subtracted adcs
     /// 
     /// stored as a pointer b/c array size changes based on fourRngMode
-    float *m_calXtalAdcPed;
-    unsigned m_nAdcPed;
+    float m_calXtalAdcPed[16][8][12][2];
+    float m_calXtalAdcPedAllRange[16][8][12][2][4];
 
     /// adc range selection
     int m_calXtalAdcRng[16][8][12][2];
         
     /// Cal Xtal Face signal in scintillated MeV units.
     float m_calXtalFaceSignal[16][8][12][2];
-
-    BooleanProperty m_fourRngMode;
   };
 
   /// reusable store for CalTuple entries.
@@ -127,7 +117,6 @@ CalTupleAlg::CalTupleAlg(const string& name, ISvcLocator* pSvcLocator) :
   declareProperty("CalCalibSvc",   m_calCalibSvcName="CalCalibSvc");
   declareProperty("tupleName",     m_tupleName="CalTuple");
   declareProperty("tupleFilename", m_tupleFilename="");
-  declareProperty("fourRangeMode",   m_tupleEntry.m_fourRngMode=false);
 }
 
 StatusCode CalTupleAlg::initialize() {
@@ -174,15 +163,16 @@ StatusCode CalTupleAlg::initialize() {
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
 
-    const char *adcPedStr;
-    if (m_tupleEntry.m_fourRngMode)
-      adcPedStr = "CalXtalAdcPed[16][8][12][2][4]";
-    else
-      adcPedStr = "CalXtalAdcPed[16][8][12][2]";
+    sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                   "CalXtalAdcPed[16][8][12][2]",
+                                   (float*)m_tupleEntry.m_calXtalAdcPed,
+                                   m_tupleFilename);
+    if (sc.isFailure()) branchFailure |= true;
+
 
     sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
-                                   adcPedStr,
-                                   (float*)m_tupleEntry.m_calXtalAdcPed,
+                                   "CalXtalAdcPedAllRange[16][8][12][2][4]",
+                                   (float*)m_tupleEntry.m_calXtalAdcPedAllRange,
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
 
@@ -212,7 +202,8 @@ StatusCode CalTupleAlg::execute() {
   StatusCode sc;
 
   // _allways_ store a row, even if it's not empty
-  m_tupleWriterSvc->storeRowFlag(true);  
+  m_tupleWriterSvc->storeRowFlag(m_tupleName.value(),
+                                 true);  
 
   // clear tuple entry for this event
   m_tupleEntry.Clear();
@@ -281,35 +272,31 @@ StatusCode CalTupleAlg::execute() {
         sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
         if (sc.isFailure()) return sc;
 
-        if (m_tupleEntry.m_fourRngMode) {
-          // fill in 1st readout which i already have
-          m_tupleEntry.m_calXtalAdcPed[rngIdx.val()] = adcPed;
+        // fill in 1st readout for both bestrange and allrange arrays
+        m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.val()] = adcPed;
+        m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][face.val()][col][rng.val()] = adcPed;
 
-          // loop through remaining 3 readouts
-          for (unsigned char nRO = 1; nRO < 4; nRO++) {
-            // create my own local vars, sos i don't mess up the 
-            // ones used only for 1st readout
-            const CalDigi::CalXtalReadout *ro = (*digiIter)->getXtalReadout(nRO);
-            if (!ro) continue;
+        // loop through remaining 3 readouts
+        for (unsigned char nRO = 1; nRO < 4; nRO++) {
+          // create my own local vars, sos i don't mess up the 
+          // ones used only for 1st readout
+          const CalDigi::CalXtalReadout *ro = (*digiIter)->getXtalReadout(nRO);
+          if (!ro) continue;
 
-            RngNum rng = ro->getRange(face);
-            short adc = ro->getAdc(face);
+          RngNum rng = ro->getRange(face);
+          short adc = ro->getAdc(face);
             
-            // get pedestals
-            // pedestals
-            RngIdx rngIdx(xtalIdx, face, rng);
-            const Ped *ped = m_calCalibSvc->getPed(rngIdx);
-            if (!ped) return StatusCode::FAILURE;
+          // get pedestals
+          // pedestals
+          RngIdx rngIdx(xtalIdx, face, rng);
+          const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+          if (!ped) return StatusCode::FAILURE;
             
-            // ped subtracted ADC
-            float adcPed = adc - ped->getAvr();
+          // ped subtracted ADC
+          float adcPed = adc - ped->getAvr();
             
-            m_tupleEntry.m_calXtalAdcPed[rngIdx.val()] = adcPed;
-          }
-        }
-        else {
-          FaceIdx faceIdx(xtalIdx, face);
-          m_tupleEntry.m_calXtalAdcPed[faceIdx.val()] = adcPed;
+          m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][face.val()][col][rng.val()] = adcPed;
+
         }
       }
     }

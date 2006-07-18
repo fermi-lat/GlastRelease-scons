@@ -110,34 +110,32 @@
     xtal digi->energy conversion (default is "XtalRecTool")
     
     
-    
     @section CalTupleAlg CalTupleAlg
     
     CalTupleAlg generates CalTuple entries from TDS digi data.  Current entries
     include:
-    - CalXtalAdcPed: pedestal subtraced adc values per cahnnel.
+    - CalXtalAdcPed: pedestal subtraced adc values per channel. (BESTRANGE)
     - CalXtalAdcRng: adc range selection per channel
-    - CalXtalFaceSignal: Signal @ each crystal face in units of MeV deposited at center
-    of xtal
-    
-    Each Ntuple branch is a multi-dimensional array matching CAL geometry ([16][8][12][2], 
-    representing tower, layer, xtal & xtal face respectively)
+    - CalXtalFaceSignal: Signal @ each crystal face in units of MeV deposited at
+    center of xtal
+
+    Each of these branches is a multi-dimensional array matching 
+    CAL geometry ([16][8][12][2],  representing tower, layer, 
+    xtal & xtal face respectively)
+
+    - CalXtalAdcPedAllRange: pedestal subtracted adc values 
+    for all adc channels (may be zero if data is not available).
+    shape is [16][8][12][2][4] (last index represents ADC range.
     
     @subsection jobOptions jobOptions
     
-    @param CalTupleAlg.tupleName name of optional CalTuple tree. 
+    @param CalTupleAlg.tupleName override name of CalTuple tree. 
     (default is "CalTuple")
     
     @param CalTupleAlg.tupleFilename optional name of CalTuple file.
     instructs ntupleWriterSvc to create CalTuple in it's own file
     instead of sharing the default file w/ other modules.  The
     default ("") will use the shared file
-    
-    @param CalTupleAlg.fourRangeMode Save all 4 adc ranges instead of just best range. (default=false)
-    \note if this option is chosen, then the array shape is altered to support the extra range information
-    ([16][8][12][2][4])
-    \note TDS Digi data must be in ALLRANGE mode, not the default BEST.  Otherwise
-    the additional CalTuple entries will be zero.
     
     @param CalCalibSvc CalCalibSvc
     specifies which ICalCalibSvc object should be used by CalTupleAlg.  
@@ -176,11 +174,13 @@
     of a calibraiton set.
     
     - Most tests are run w/ out simulated noise in digi in order to check the
-    precision of the code.  But special noise tests are run by rerunning the same 
-    input many times & checking that the distribution of the noise is correct.
+    precision of the code.  But special noise tests are run by rerunning the 
+    same input many times & checking that the distribution of the noise is 
+    correct.
     
-    - For each test, all didgital outputs are verified including LAT, FLE, FHE & ULD threholds.
-    Also, reconstructed energy and position are checked for accuracy.
+    - For each test, all didgital outputs are verified including LAT, FLE, FHE &
+    ULD threholds.  Also, reconstructed energy and position are checked for 
+    accuracy.
     
     - Samples from throughout the energy range of the instrument is checked and
     crystals are checked at several positions along their length.
