@@ -283,6 +283,9 @@ class calDacXML(calSnapshotXML):
             gt.setAttributeNS(None, 'ID', str(tem))
             gl.appendChild(gt)
             
+            c = doc.createComment("module = %s" % calConstant.CMOD[tem])
+            gt.appendChild(c)
+            
             for ccc in range(4):
 
                 # insert <GCCC> elements
@@ -511,6 +514,9 @@ class calEnergyXML(calXML.calXML):
             gt = doc.createElementNS(None, 'GTEM')
             gt.setAttributeNS(None, 'ID', str(tem))
             gl.appendChild(gt)
+            
+            c = doc.createComment("module = %s" % calConstant.CMOD[tem])
+            gt.appendChild(c)
 
             for rng in range(2): 
 

@@ -309,7 +309,7 @@ class calTholdCICalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -624,7 +624,7 @@ class calIntNonlinCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -774,7 +774,7 @@ class calIntNonlinCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -1272,7 +1272,7 @@ class calAsymCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -1572,7 +1572,7 @@ class calMevPerDacCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -1797,7 +1797,7 @@ class calPedCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -1987,7 +1987,7 @@ class calMuSlopeCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
@@ -2192,7 +2192,7 @@ class calDacSlopesCalibXML(calCalibXML):
             t = doc.createElementNS(None, 'tower')
             t.setAttributeNS(None, 'iRow', str(iRow))
             t.setAttributeNS(None, 'iCol', str(iCol))
-            c = doc.createComment('tem number = %d' % tem)
+            c = doc.createComment('tem number = %d, module = %s' % (tem, calConstant.CMOD[tem]))
             t.appendChild(c)
             r.appendChild(t)
             
