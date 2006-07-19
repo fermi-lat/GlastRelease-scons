@@ -10,6 +10,7 @@
 #include "AdfEvent/TaggerParameters.h"
 namespace AncillaryData
 {
+  const unsigned int    MAX_CLUSTER_GAP        = 5;
   class TaggerCluster
     
     {

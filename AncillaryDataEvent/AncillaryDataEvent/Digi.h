@@ -28,6 +28,10 @@ namespace AncillaryData
       const std::vector<QdcHit>& getQdcHitCol() const { return QdcHitColl; } 
       const std::vector<ScalerHit>& getScalerHitCol() const { return ScalerHitColl; } 
       
+      void setTaggerHitCol(std::vector<TaggerHit> taggerHitCol) {TaggerHitColl = taggerHitCol;}
+      void setQdcHitCol(std::vector<QdcHit> qdcHitCol) {QdcHitColl = qdcHitCol;}
+      void setScalerHitCol(std::vector<ScalerHit> scalerHitCol) {ScalerHitColl = scalerHitCol;}
+	
       void appendTaggerHit(TaggerHit h){TaggerHitColl.push_back(h);}
       void appendQdcHit(QdcHit h){QdcHitColl.push_back(h);}
       void appendScalerHit(ScalerHit h){ScalerHitColl.push_back(h);}

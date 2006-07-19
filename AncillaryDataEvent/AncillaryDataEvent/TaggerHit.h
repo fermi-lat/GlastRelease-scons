@@ -15,16 +15,16 @@ namespace AncillaryData
 	m_moduleId = 0;
 	m_stripId = 0;
 	m_layerId = 0;
-	m_pulseHeight = 0;
+	m_pulseHeight = 0.0;
       };
       
       TaggerHit(FadcDataWord fadcDw)
 	{
 	  m_IsPedestalSubtracted = false;
-	  m_moduleId = fadcDw.getFadcModule();
-	  m_stripId  = fadcDw.getFadcChannel();
-	  m_layerId  = fadcDw.getTaggerLayer();
-	  m_pulseHeight=fadcDw.getFadcValue();
+	  m_moduleId    = fadcDw.getFadcModule();
+	  m_stripId     = fadcDw.getTaggerChannel();
+	  m_layerId     =  fadcDw.getTaggerLayer();
+	  m_pulseHeight = double(fadcDw.getFadcValue());
 	}
       ~TaggerHit(){;}
       
@@ -32,21 +32,22 @@ namespace AncillaryData
       void        setModuleId(unsigned moduleId) { m_moduleId = moduleId ; }
       unsigned    getStripId()      const {return m_stripId;}
       void        setStripId(unsigned stripId) { m_stripId = stripId; }
-      unsigned    getPulseHeight()  const {return m_pulseHeight;}
-      void setPulseHeight(unsigned pulseHeight) { m_pulseHeight = pulseHeight; }
+      double      getPulseHeight() const {return m_pulseHeight;}
+      //      void        setPulseHeight(unsigned int pulseHeight) { m_pulseHeight = double (1.0*pulseHeight);}
+      void        setPulseHeight(double       pulseHeight) { m_pulseHeight = pulseHeight; }
       unsigned    getLayerId() const {return m_layerId;}
       void        setLayerId(unsigned layerId) { m_layerId = layerId; }
       bool        getPedestalSubtract()const {return m_IsPedestalSubtracted;}
       void        setPedestalSubtract(){m_IsPedestalSubtracted = true;}
       
-      void        print(){std::cout<<"Tagger HIT Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<std::endl;}
+      void        print(){std::cout<<"Tagger HIT Module: "<<getModuleId()<<" ch: "<<getStripId()<<" ("<<getLayerId()<<") PH: "<<getPulseHeight()<<" "<<m_pulseHeight<<std::endl;}
     private:
       
       bool m_IsPedestalSubtracted;
       unsigned m_moduleId;
       unsigned m_layerId;
       unsigned m_stripId;
-      unsigned m_pulseHeight;  
+      double   m_pulseHeight;  
     };
 }
 #endif

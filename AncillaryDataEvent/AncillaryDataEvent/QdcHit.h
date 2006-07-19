@@ -15,7 +15,7 @@ namespace AncillaryData
 		  m_IsPedestalSubtracted = false;
 		  m_channel = 0;
 		  m_module = 0;
-		  m_pulseHeight = 0;
+		  m_pulseHeight = 0.0;
 	  } ;
 
       QdcHit(QdcDataWord qdcDw)
@@ -23,7 +23,7 @@ namespace AncillaryData
 	  m_IsPedestalSubtracted=false;
 	  m_channel  = qdcDw.getQdcChannel();
 	  m_module  = qdcDw.getQdcModule();
-	  m_pulseHeight=qdcDw.getQdcValue();
+	  m_pulseHeight=double(qdcDw.getQdcValue());
 	}
       ~QdcHit(){;}
       
@@ -33,8 +33,8 @@ namespace AncillaryData
       unsigned int    getQdcChannel()      const {return m_channel;}
       void            setQdcChannel(unsigned int ch) { m_channel = ch; }
 
-      unsigned int    getPulseHeight()      const {return m_pulseHeight;}
-      void            setPulseHeight(unsigned int pulseHeight) { m_pulseHeight = pulseHeight; }
+      double          getPulseHeight()      const {return m_pulseHeight;}
+      void            setPulseHeight(double pulseHeight) { m_pulseHeight = pulseHeight; }
       
       bool       getPedestalSubtract() const {return m_IsPedestalSubtracted;}
       void       setPedestalSubtract(){m_IsPedestalSubtracted=true;}
@@ -45,7 +45,7 @@ namespace AncillaryData
       bool m_IsPedestalSubtracted;
       unsigned int m_module;
       unsigned int m_channel;
-      unsigned int m_pulseHeight;  
+      double   m_pulseHeight;  
     };
 }
 #endif
