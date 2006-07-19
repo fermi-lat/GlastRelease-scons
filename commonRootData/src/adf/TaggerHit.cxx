@@ -15,7 +15,7 @@ TaggerHit::TaggerHit() {
 }
 
 TaggerHit::TaggerHit(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-                     UInt_t pulseHght, Bool_t isPedSubtracted) {
+                     Double_t pulseHght, Bool_t isPedSubtracted) {
 
     initialize(moduleId, layerId, stripId, pulseHght, isPedSubtracted);
 }
@@ -32,7 +32,7 @@ TaggerHit::~TaggerHit() {
 }
 
 void TaggerHit::initialize(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-                           UInt_t pulseHgt, Bool_t isPedSubtracted) {
+                           Double_t pulseHgt, Bool_t isPedSubtracted) {
 
     m_moduleId = moduleId;
     m_layerId = layerId;
@@ -52,7 +52,7 @@ void TaggerHit::Clear(Option_t *option) {
     m_moduleId = 0;
     m_layerId = 0;
     m_stripId = 0;
-    m_pulseHeight = 0;
+    m_pulseHeight = 0.0;
     m_isPedestalSubtracted = false;
 }
 

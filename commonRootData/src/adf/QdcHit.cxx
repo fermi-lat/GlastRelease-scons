@@ -13,7 +13,7 @@ QdcHit::QdcHit() {
     Clear();
 }
 
-QdcHit::QdcHit(UInt_t channel, UInt_t pulseHght, UInt_t module,
+QdcHit::QdcHit(UInt_t channel, Double_t pulseHght, UInt_t module,
                Bool_t isPedSubtracted) {
 
     initialize(channel, pulseHght, module, isPedSubtracted);
@@ -29,7 +29,7 @@ QdcHit::~QdcHit() {
     Clear();  
 }
 
-void QdcHit::initialize(UInt_t channel, UInt_t pulseHgt, UInt_t module,
+void QdcHit::initialize(UInt_t channel, Double_t pulseHgt, UInt_t module,
                         Bool_t isPedSubtracted) {
 
     m_channel = channel;
@@ -47,7 +47,7 @@ QdcHit& QdcHit::operator=(const QdcHit& copy) {
 void QdcHit::Clear(Option_t *option) {
     m_channel = 0;
     m_module = 0;
-    m_pulseHeight = 0;
+    m_pulseHeight = 0.0;
     m_isPedestalSubtracted = false;
 }
 
