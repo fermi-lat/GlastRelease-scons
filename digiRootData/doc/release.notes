@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r12     19-Jul-2006 HMK Add in ScalerHit
 v9r11     13-Jul-2006 HMK Forgot to commit some fixes
 v9r10     11-Jul-2006 HMK Update QdcHit to match TDS
 v9r9      07-Jul-2006 HMK Really remove QdcHit and TaggerHit from this package

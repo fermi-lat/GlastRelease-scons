@@ -24,6 +24,7 @@
 //#pragma link C++ class BadPointerException;
 
 #pragma link C++ class commonRootData::TaggerHit+;
+#pragma link C++ class commonRootData::ScalerHit+;
 #pragma link C++ class commonRootData::QdcHit+;
 
 #pragma link C++ class RootObj<Int_t>+;

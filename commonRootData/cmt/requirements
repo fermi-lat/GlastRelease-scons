@@ -1,5 +1,5 @@
 package commonRootData
-version v2r10
+version v2r11
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use RootcintPolicy v* GlastPolicy
@@ -19,6 +19,7 @@ apply_pattern root_package headers="\
  ../commonRootData/idents/TkrId.h\
  ../commonRootData/idents/TowerId.h\
  ../commonRootData/adf/TaggerHit.h\
+ ../commonRootData/adf/ScalerHit.h\
  ../commonRootData/adf/QdcHit.h"\
  includes="-I${COMMONROOTDATAROOT}"\
  extra_source="idents/*.cxx adf/*.cxx" 

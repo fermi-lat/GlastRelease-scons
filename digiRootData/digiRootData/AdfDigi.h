@@ -6,6 +6,7 @@
 #include "TClonesArray.h"
 
 #include "commonRootData/adf/TaggerHit.h"
+#include "commonRootData/adf/ScalerHit.h"
 #include "commonRootData/adf/QdcHit.h"
 
 /** @class AdfDigi
@@ -42,6 +43,9 @@ public:
     const commonRootData::QdcHit* getQdcHit(UInt_t ind) const;
     commonRootData::QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t module, Bool_t isPedSub);
 
+    const TClonesArray* getScalerHitCol() const { return m_scalerHitCol; }
+    const commonRootData::ScalerHit* getScalerHit(UInt_t ind) const;
+    commonRootData::ScalerHit* addScalerHit(UInt_t channel, UInt_t value);
 
     void Fake( Int_t ievent, Float_t randNum );
     Bool_t CompareInRange( const AdfDigi &, const std::string & name = "" )const;
@@ -53,10 +57,13 @@ private:
 
     Int_t m_numTaggerHit;
     Int_t m_numQdcHit;
+    Int_t m_numScalerHit;
 
     TClonesArray *m_taggerHitCol;
 
     TClonesArray *m_qdcHitCol;
+
+    TClonesArray *m_scalerHitCol;
 
     ClassDef(AdfDigi,1) // Digitization Ancillary data beamtest 2006
 };

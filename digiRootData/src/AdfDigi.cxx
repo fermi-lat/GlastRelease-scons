@@ -13,6 +13,8 @@ AdfDigi::AdfDigi() {
     m_numTaggerHit = -1;
     m_qdcHitCol = 0; 
     m_numQdcHit = -1;
+    m_scalerHitCol = 0;
+    m_numScalerHit = 0;
 
     m_eventNumber = 0;
     m_spillNumber = 0;
@@ -21,18 +23,24 @@ AdfDigi::AdfDigi() {
 
 AdfDigi::~AdfDigi() {
   
-	if (m_taggerHitCol) {
+    if (m_taggerHitCol) {
         m_taggerHitCol->Delete();
         delete m_taggerHitCol;
         m_taggerHitCol = 0;
-	}
+    }
   
-	if (m_qdcHitCol) {
+    if (m_qdcHitCol) {
         m_qdcHitCol->Delete();
         delete m_qdcHitCol;
         m_qdcHitCol = 0;
-	}
+    }
     
+
+    if (m_scalerHitCol) {
+        m_scalerHitCol->Delete();
+        delete m_scalerHitCol;
+        m_scalerHitCol = 0;
+    }
 }
 
 
@@ -44,8 +52,10 @@ void AdfDigi::Clear(Option_t *option) {
 
     if (m_taggerHitCol) m_taggerHitCol->Clear("C");
     if (m_qdcHitCol) m_qdcHitCol->Clear("C");
+    if (m_scalerHitCol) m_scalerHitCol->Clear("C");
     m_numTaggerHit = -1;
     m_numQdcHit = -1;
+    m_numScalerHit = -1;
 
 }
 
@@ -57,7 +67,7 @@ void AdfDigi::Print(Option_t *option) const {
     cout << "EventNumber: " << m_eventNumber << " SpillNumber: " 
          << m_spillNumber << endl;
     cout << "Num Tagger Hits: " << m_numTaggerHit << " Num Qdc Hits: " 
-         << m_numQdcHit << endl;
+         << m_numQdcHit << " Num Scaler Hits: " << m_numScalerHit << endl;
     cout << dec;
 }
 
@@ -99,6 +109,25 @@ const commonRootData::QdcHit* AdfDigi::getQdcHit(UInt_t ind) const {
         return 0;
 }
 
+commonRootData::ScalerHit* AdfDigi::addScalerHit(UInt_t channel, UInt_t val) {
+    // Add a new ScalerHit entry, note that
+    // TClonesArrays can only be filled via
+    // a new with placement call
+    if (!m_scalerHitCol) m_scalerHitCol = new TClonesArray("commonRootData::ScalerHit",1);
+    ++m_numScalerHit;
+    TClonesArray &localCol = *m_scalerHitCol;
+    new(localCol[m_numScalerHit]) commonRootData::ScalerHit(channel,val);
+    return ((commonRootData::ScalerHit*)(localCol[m_numScalerHit]));
+}
+
+const commonRootData::ScalerHit* AdfDigi::getScalerHit(UInt_t ind) const {
+    if (((Int_t)ind) < m_scalerHitCol->GetEntriesFast()) 
+        return ((commonRootData::ScalerHit*)m_scalerHitCol->At(ind));
+    else
+        return 0;
+}
+
+
 void AdfDigi::Fake( Int_t ievent, Float_t randNum ) {
     setEventNumber(ievent);
     setSpillNumber(5);
@@ -110,6 +139,9 @@ void AdfDigi::Fake( Int_t ievent, Float_t randNum ) {
     addQdcHit(1,2,3,true);
     addQdcHit(2,3,4,false);
     addQdcHit(3,4,5,true);
+
+    addScalerHit(0,1);
+    addScalerHit(1,2);
 }
 
 Bool_t AdfDigi::CompareInRange( const AdfDigi &ref, const std::string& name ) const {
@@ -120,6 +152,7 @@ Bool_t AdfDigi::CompareInRange( const AdfDigi &ref, const std::string& name ) co
 
     result = rootdatautil::TObjArrayCompareInRange<commonRootData::TaggerHit>(m_taggerHitCol,ref.m_taggerHitCol) && result;
     result = rootdatautil::TObjArrayCompareInRange<commonRootData::QdcHit>(m_qdcHitCol,ref.m_qdcHitCol) && result;
+    result = rootdatautil::TObjArrayCompareInRange<commonRootData::ScalerHit>(m_scalerHitCol,ref.m_scalerHitCol) && result;
 
     if (!result) {
         if (name == "") {
