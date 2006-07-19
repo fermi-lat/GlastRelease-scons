@@ -98,10 +98,15 @@ StatusCode AncillaryDataReconAlg::execute()
   log << MSG::DEBUG << "digiEvent "<< digiEvent << endreq;
   if(digiEvent) 
     {
-      digiEvent->print();
+
       AncillaryData::Recon *reconEvent = new AncillaryData::Recon(digiEvent);
       if(m_SubtractPedestals)
-	sc = SubtractPedestal(digiEvent);
+	{
+	  sc = SubtractPedestal(digiEvent);
+	  std::cout<<"------------ DIGI EVENT SUBRACTED PED !:-----------"<<std::endl;
+	  digiEvent->print();
+	  std::cout<<"---------------------------------------------------"<<std::endl;
+	}
       sc = MakeClusters(digiEvent,reconEvent);
       sc = QdcRecon(digiEvent,reconEvent);      
       sc = RegisterRecon(reconEvent);
@@ -207,10 +212,10 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
     log << MSG::ERROR << "Dynamic cast to AncCalibTaggerPed failed" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   std::vector<AncillaryData::TaggerHit> taggerHitCol=digiEvent->getTaggerHitCol();
   std::vector<AncillaryData::TaggerHit>::iterator taggerHitColI;
-
+  
   for(taggerHitColI=taggerHitCol.begin(); taggerHitColI!=taggerHitCol.end();++taggerHitColI)
     {
       int iMod  = (*taggerHitColI).getModuleId();
@@ -219,21 +224,23 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       CalibData::RangeBase* pTaggerPed = pTaggerPeds->getChan(iMod, iLay, iChan);
       AncTaggerPed* pT = dynamic_cast<AncTaggerPed * >(pTaggerPed);
       if (!pT) {
-	log << MSG::ERROR << "Dynamic cast to AncTaggerPed failed" << endreq;
+	log << MSG::ERROR << "Dynamic cast to AncTaggerPed failed M: " <<iMod<<" L: "<<iLay<<" C: "<<iChan<<endreq;
 	return StatusCode::FAILURE;
       }
-      float pedestalValue=pT->getVal();    
+      double pedestalValue=double(pT->getVal());    
+      double PHPS = (*taggerHitColI).getPulseHeight()-double(pedestalValue);
+      
       log << MSG::INFO << "ped = " << pedestalValue << endreq;
       log << MSG::INFO << "rNoise = " << pT->getRNoise() << endreq;
       log << MSG::INFO << "sNoise = " << pT->getSNoise() << endreq;
       log << MSG::INFO << "isBad = " <<  pT->getIsBad() << endreq << endreq;
-      
-      (*taggerHitColI).setPulseHeight((*taggerHitColI).getPulseHeight()-pedestalValue);
+      log << MSG::INFO << " PH ped subtract:"<<PHPS<< "( "<<
+<<")"<<endreq;
+      (*taggerHitColI).setPulseHeight(PHPS);
       (*taggerHitColI).setPedestalSubtract();
-      log << MSG::INFO << " Done pedestal subtraction for Tagger " << endreq;
-      
+      log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay<<" C: "<<iChan<<endreq;
     }
-
+  digiEvent->setTaggerHitCol(taggerHitCol);
 
   //////////////////////////////////////////////////
   // QDC
@@ -253,22 +260,24 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
     {
       int iChan = (*qdcHitColI).getQdcChannel();
       int iMod  = (*qdcHitColI).getQdcModule();
-      std::cout<<"size: "<<qdcHitCol.size()<<" ch: "<<iChan<<" mod: "<<iMod<<std::endl;
       CalibData::RangeBase* pQdcPed = pQdcPeds->getQdcChan(iMod, iChan);
       
       AncQdcPed* pQ = dynamic_cast<AncQdcPed * >(pQdcPed);
       if (!pQ) {
-	log << MSG::ERROR << "Dynamic cast to AncQdcPed failed" << endreq;
+	log << MSG::ERROR << "Dynamic cast to AncQdcPed failed M: " <<iMod<<" C: "<<iChan<<endreq;
 	return StatusCode::FAILURE;
       }
-      float pedestalValue=pQ->getVal();    
+      double pedestalValue=pQ->getVal();    
+      double PHPS = (*qdcHitColI).getPulseHeight()-double(pedestalValue);
       log << MSG::INFO << "   ped = " << pedestalValue << endreq;
       log << MSG::INFO << "   rms = " << pQ->getRms() << endreq;
       log << MSG::INFO << " isBad = " << pQ->getIsBad() << endreq;
-      (*qdcHitColI).setPulseHeight((*qdcHitColI).getPulseHeight()-pedestalValue);
+      log << MSG::INFO << " PH ped subtract:"<<PHPS<< endreq;
+      (*qdcHitColI).setPulseHeight(double ((*qdcHitColI).getPulseHeight()-pedestalValue));
       (*qdcHitColI).setPedestalSubtract();
-      log << MSG::INFO << " Done pedestal subtraction for QDC " << endreq;
+      log << MSG::INFO << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
     }
+  digiEvent->setQdcHitCol(qdcHitCol);
   return sc;
 }
 
@@ -299,7 +308,7 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
       
       if(nextHit.getModuleId()==lastHit.getModuleId() && 
 	 nextHit.getLayerId()==lastHit.getLayerId() &&
-	 nextHit.getStripId()==lastHit.getStripId()+1)
+	 nextHit.getStripId()<=lastHit.getStripId()+AncillaryData::MAX_CLUSTER_GAP)
 	{
 	  aCluster.append(nextHit);
 	  lastHit=nextHit;
