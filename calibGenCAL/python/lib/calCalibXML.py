@@ -2181,7 +2181,7 @@ class calDacSlopesCalibXML(calCalibXML):
 
         # insert <dimension> element  
 
-        d = self.dimensionWrite()            
+        d = self.dimensionWrite(nRange = 3)            
         r.appendChild(d)
 
         for tem in tems:
