@@ -2,6 +2,8 @@
  Package AncillaryDataEvent\n
  Coordinator:N.Omodei
  @verbatim
+
+ v0r1p3 20-Jul-2006 HMK Patch for windows compilation
  v0r1p2 18-Jul-2006 NO  update the file format v301
  v0r1p1 12-Jul-2006 NO  intermediate tag
  v0r1   29-Jun-2006 NO  implement recon

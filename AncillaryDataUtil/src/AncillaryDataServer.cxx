@@ -184,7 +184,9 @@ void AncillaryDataServer::printInformation()
 bool AncillaryDataServer::readFileTail()
 {
   unsigned int word[TAIL_LENGTH];
-  fread(word, ANCILLARY_WORD_LENGTH, TAIL_LENGTH, m_dataFile);
+  int count = fread(word, ANCILLARY_WORD_LENGTH, TAIL_LENGTH, m_dataFile);
+  if (count != TAIL_LENGTH) return(false); // HMK actually check to see all is well
   m_tail.setData(word);
   std::cout << "FileTail, Read: "<<m_tail.totalNumEvents()<<std::endl;
+  return(true);  // Need to return a value for windows compile - assuming true HMK
 }
