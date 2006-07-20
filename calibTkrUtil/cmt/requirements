@@ -17,6 +17,8 @@ macro  calibTkrUtil_srcs "${CALIBTKRUTILROOT}/src/*.cxx" WIN32 "${CALIBTKRUTILRO
 use ROOT * IExternal
 macro_append ROOT_libs " ${ROOT_GUI_libs}"
 
+apply_pattern package_include
+
 application genTkrNoiseRep ../src/TkrRep/genTkrNoiseRep.cxx ../src/TkrRep/TkrNoiseRep.cxx
 
 #private 
@@ -26,7 +28,6 @@ application genTkrNoiseRep ../src/TkrRep/genTkrNoiseRep.cxx ../src/TkrRep/TkrNoi
 #use reconRootData *
 #use facilities * 
 
-#apply_pattern package_include
 
 #apply_pattern package_headers
 #macro_append calibTkrUtil_headers "" WIN32 "../calibTkrUtil/*.h"
