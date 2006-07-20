@@ -11,6 +11,17 @@
 
 namespace RootPersistence {
 
+  void convert( const AncillaryData::ScalerHit* tdsObj,
+                commonRootData::ScalerHit& rootObj) {
+       rootObj.initialize(tdsObj->getScalerChannel(), tdsObj->getScalerValue());
+  };
+
+  void convert( const commonRootData::ScalerHit* rootObj,
+                AncillaryData::ScalerHit& tdsObj) {
+    tdsObj.setScalerChannel(rootObj->getChannel());
+    tdsObj.setScalerValue(rootObj->getValue());
+  };
+
   void convert( const AncillaryData::QdcHit* tdsObj,
                 commonRootData::QdcHit& rootObj) {
        rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getQdcModule(), tdsObj->getPedestalSubtract());
@@ -50,6 +61,12 @@ namespace RootPersistence {
 			  tagIt->getPulseHeight(), tagIt->getPedestalSubtract());
 	  }
 
+	  const std::vector<AncillaryData::ScalerHit>& scalerHitColTds = tdsObj.getScalerHitCol();
+	  std::vector<AncillaryData::ScalerHit>::const_iterator scalerIt;
+	  for(scalerIt = scalerHitColTds.begin(); scalerIt != scalerHitColTds.end(); scalerIt++) {
+		  rootObj.addScalerHit(scalerIt->getScalerChannel(), scalerIt->getScalerValue());
+	  }
+
 	  const std::vector<AncillaryData::QdcHit>& qdcHitColTds = tdsObj.getQdcHitCol();
 	  std::vector<AncillaryData::QdcHit>::const_iterator qdcIt;
 	  for(qdcIt = qdcHitColTds.begin(); qdcIt != qdcHitColTds.end(); qdcIt++) {
@@ -69,6 +86,15 @@ namespace RootPersistence {
 		  AncillaryData::TaggerHit tagTds;
 		  convert(tagRoot, tagTds);
 		  tdsObj.appendTaggerHit(tagTds);
+	  }
+
+	  const TClonesArray* scalerHitColRoot = rootObj.getScalerHitCol();
+	  TIter scalerIt(scalerHitColRoot);
+	  commonRootData::ScalerHit *scalerRoot;
+	  while ((scalerRoot = (commonRootData::ScalerHit*)scalerIt.Next())) {
+		  AncillaryData::ScalerHit scalerTds;
+		  convert(scalerRoot, scalerTds);
+		  tdsObj.appendScalerHit(scalerTds);
 	  }
 
 	  const TClonesArray* qdcHitColRoot = rootObj.getQdcHitCol();

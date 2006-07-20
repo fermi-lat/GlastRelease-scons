@@ -8,6 +8,10 @@
 
 namespace RootPersistence {
 
+  /// Fill persitent verison of ScalerHit
+  void convert( const AncillaryData::ScalerHit*, commonRootData::ScalerHit&);
+  /// Fill transient verison of ScalerHit
+  void convert ( const commonRootData::ScalerHit*, AncillaryData::ScalerHit&);
  
   /// Fill persitent verison of QdcHit
   void convert( const AncillaryData::QdcHit*, commonRootData::QdcHit&);
