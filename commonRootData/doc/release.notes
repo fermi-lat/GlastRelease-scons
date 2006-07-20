@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r12   20-Jul-2006 HMK store pulseHeights in Ancillary Data as double32
 v2r11   19-Jul-2006 HMK Add ScalerHit
 v2r10   12-Jul-2006 HMK Update QdcHit to match TDS
 v2r9    06-Jul-2006 HMK Moved Beamtest TaggerHit and QdcHit here from 

@@ -1,5 +1,5 @@
 package commonRootData
-version v2r11
+version v2r12
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use RootcintPolicy v* GlastPolicy
