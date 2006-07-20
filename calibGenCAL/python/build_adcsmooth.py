@@ -79,6 +79,8 @@ CALIBGENCALROOT = os.environ["CALIBGENCALROOT"]
 cmdbat = open('adcsmooth.bat','w')
 cmdsh = open('adcsmooth.sh', 'w')
 
+cmdsh.write('#!/bin/sh\n')
+cmdsh.write('set -v\n')
 cmdsh.write('PYTHONPATH=${CALIBGENCALROOT}/python/lib:${ROOTSYS}/bin:${PYTHONPATH}\n')
 cmdsh.write('export PYTHONPATH\n')
 
