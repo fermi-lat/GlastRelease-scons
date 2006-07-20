@@ -95,6 +95,7 @@ cmdbat.write("set PYTHONPATH=%CALIBGENCALROOT%/python/lib;%ROOTSYS%/bin;%PYTHONP
 # open .sh file for run commands
 cmdsh = open("run_"+fileroot+".sh", "w")
 cmdsh.write("#! /bin/sh\n")
+cmdsh.write("set -v\n")
 cmdsh.write("PYTHONPATH=${CALIBGENCALROOT}/python/lib:${ROOTSYS}/bin:${PYTHONPATH}\n")
 cmdsh.write("export PYTHONPATH\n")
 
