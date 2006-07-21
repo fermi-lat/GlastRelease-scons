@@ -152,6 +152,23 @@ if __name__ == '__main__':
     
     timestamp = time.strftime('%y%m%d%H%M%S', time.gmtime())
     
+    if dacType == 'ULD':
+        adcmargin = MeV
+        energy = None
+    else:
+        adcmargin = None
+        energy = MeV
+        
+    if dacType == 'FHE':
+        legain = None
+        hegain = gain
+    elif dacType == 'ULD':
+        legain = None
+        hegain = None
+    else:
+        legain = gain
+        hegain = None
+        
     for tem in range(calConstant.NUM_TEM):
     
         if dacType != 'ULD':
@@ -161,7 +178,9 @@ if __name__ == '__main__':
             outName = "%s_mar%03d_%s_CAL_uld.xml" % (timestamp, int(MeV * 10), calConstant.CMOD[tem])          
         log.info("Creating file %s", outName)
         fio = calDacXML.calDacXML(outName, DAC_MAP[dacType], calDacXML.MODE_CREATE)
-        fio.write(settings, tems = (tem,))
+        fio.write(settings, filename = outName, leGain = legain, heGain = hegain, 
+            energy = energy, engfilename = dacSlopesName, adcmargin = adcmargin, 
+            tems = (tem,))
         fio.close()  
 
     sys.exit(0)
