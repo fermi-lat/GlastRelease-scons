@@ -547,6 +547,7 @@ if __name__ == '__main__':
     log.info("Reading file %s", muslopeFile)
     fio = calCalibXML.calMuSlopeCalibXML(muslopeFile)
     gainData = fio.read()
+    towers = fio.getTowers()
     fio.close()
     
     # create empty output data arrays
@@ -838,7 +839,7 @@ if __name__ == '__main__':
     c = doc.createComment("Input MuSlope gain value file = %s" % os.path.basename(muslopeFile))
     doc.appendChild(c)            
         
-    fio.write(dacDataOut, uldDataOut, rangeDataOut, range(calConstant.NUM_TEM))
+    fio.write(dacDataOut, uldDataOut, rangeDataOut, towers)
     fio.close()  
     
     # fixup calibration XML file - insert DTD info
