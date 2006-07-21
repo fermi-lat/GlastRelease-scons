@@ -6,6 +6,7 @@ use GaudiInterface * IExternal
 use GlastPolicy *
 
 use AncillaryDataEvent *
+use AncillaryDataUtil *
 use facilities *
 use CalibData v0r* 
 
@@ -30,3 +31,5 @@ library AncillaryDataRecon \
         ${AncillaryDataRecon_headers}
 
 apply_pattern package_test
+
+application AncillaryDataReconTest test/AncillaryDataReconTest.cxx *.cxx

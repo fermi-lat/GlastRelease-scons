@@ -23,7 +23,7 @@ digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 
 AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
 AncillaryDataReconAlg.pedestalSubtraction=true;
-
+AncillaryDataReconAlg.geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.dat";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;

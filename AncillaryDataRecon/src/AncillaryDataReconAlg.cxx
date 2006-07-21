@@ -14,6 +14,8 @@
 #include "AncillaryDataEvent/TaggerCluster.h"
 #include "AncillaryDataEvent/QdcHit.h"
 
+#include "AncillaryDataUtil/AncillaryGeometry.h"
+
 #include "CalibData/CalibModel.h"
 #include "CalibData/Anc/AncCalibTaggerGain.h"
 #include "CalibData/Anc/AncCalibTaggerPed.h"
@@ -42,11 +44,15 @@ public:
   StatusCode SubtractPedestal(AncillaryData::Digi *digiEvent);
   StatusCode RegisterRecon(AncillaryData::Recon *reconEvent);
   StatusCode MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
+  StatusCode taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
   StatusCode QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
+  StatusCode ScalerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent);
 private:
   IDataProviderSvc    *m_dataSvc;
   IDataProviderSvc    *m_pCalibDataSvc;
+  AncillaryData::AncillaryGeometry   *m_geometry;
   bool m_SubtractPedestals;
+  std::string m_geometryFilePath;
 };
 
 static const AlgFactory<AncillaryDataReconAlg>  Factory;
@@ -57,6 +63,7 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
 {
   // Input parameters that may be set via the jobOptions file
   declareProperty("pedestalSubtraction",m_SubtractPedestals=true);
+  declareProperty("geometryFilePath",m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.txt");
   //  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin");
 }
 
@@ -85,7 +92,9 @@ StatusCode AncillaryDataReconAlg::initialize()
 	<< endreq;
     return sc;  
   }
-  
+  facilities::Util::expandEnvVar(&m_geometryFilePath);
+  log << MSG::INFO << "loading geometry from " << m_geometryFilePath << endreq;
+  m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);
   return sc;
 }
 
@@ -107,9 +116,11 @@ StatusCode AncillaryDataReconAlg::execute()
 	  digiEvent->print();
 	  std::cout<<"---------------------------------------------------"<<std::endl;
 	}
-      sc = MakeClusters(digiEvent,reconEvent);
+      sc = taggerRecon(digiEvent,reconEvent);
       sc = QdcRecon(digiEvent,reconEvent);      
+      sc = ScalerRecon(digiEvent,reconEvent);      
       sc = RegisterRecon(reconEvent);
+
       reconEvent->print();
     }
   return sc;
@@ -125,11 +136,10 @@ StatusCode AncillaryDataReconAlg::finalize()
 
 AncillaryData::Digi *AncillaryDataReconAlg::GetDigi()
 {
-  int I=0;
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name()); 
   // Get the ADF event:
-  std::string TDSobj = TDSdir + "/Digi";
+  const std::string TDSobj = TDSdir + "/Digi";
   log << MSG::DEBUG << " Get "<<TDSobj<<" from the TDS " << endreq;
   //////////////////////////////////////////////////
   // 1) test :create a sub dir (got from BariMcToolHitCol):
@@ -184,7 +194,7 @@ StatusCode AncillaryDataReconAlg::RegisterRecon(AncillaryData::Recon *reconEvent
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
   
-  std::string TDSobj = TDSdir + "/Recon";
+  const std::string TDSobj = TDSdir + "/Recon";
   sc = m_dataSvc->registerObject(TDSobj, reconEvent);
   if ( sc.isFailure() ) {
     log << MSG::DEBUG << "failed to register " << TDSobj << endreq;
@@ -218,30 +228,33 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   
   for(taggerHitColI=taggerHitCol.begin(); taggerHitColI!=taggerHitCol.end();++taggerHitColI)
     {
-      int iMod  = (*taggerHitColI).getModuleId();
-      int iLay  = (*taggerHitColI).getLayerId();
-      int iChan = (*taggerHitColI).getStripId();
+      const unsigned int iMod  = (*taggerHitColI).getModuleId();
+      const unsigned int iLay  = (*taggerHitColI).getLayerId();
+      const unsigned int iChan = (*taggerHitColI).getStripId();
       CalibData::RangeBase* pTaggerPed = pTaggerPeds->getChan(iMod, iLay, iChan);
       AncTaggerPed* pT = dynamic_cast<AncTaggerPed * >(pTaggerPed);
       if (!pT) {
 	log << MSG::ERROR << "Dynamic cast to AncTaggerPed failed M: " <<iMod<<" L: "<<iLay<<" C: "<<iChan<<endreq;
 	return StatusCode::FAILURE;
       }
-      double pedestalValue=double(pT->getVal());    
-      double PHPS = (*taggerHitColI).getPulseHeight()-double(pedestalValue);
+      const double pedestalValue  = static_cast<double>(pT->getVal());    
+      const double PHPS           = (*taggerHitColI).getPulseHeight()-pedestalValue;
+      const double RMS            = static_cast<double>(pT->getRNoise());
       
-      log << MSG::INFO << "ped = " << pedestalValue << endreq;
-      log << MSG::INFO << "rNoise = " << pT->getRNoise() << endreq;
-      log << MSG::INFO << "sNoise = " << pT->getSNoise() << endreq;
-      log << MSG::INFO << "isBad = " <<  pT->getIsBad() << endreq << endreq;
-      log << MSG::INFO << " PH ped subtract:"<<PHPS<< "( "<<
-<<")"<<endreq;
-      (*taggerHitColI).setPulseHeight(PHPS);
-      (*taggerHitColI).setPedestalSubtract();
-      log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay<<" C: "<<iChan<<endreq;
+      if (PHPS<0)
+	log << MSG::ERROR << " Negative pedestal subtracted Pulse haight "<<PHPS<<endreq;
+      
+      log << MSG::DEBUG << "ped = " << pedestalValue << endreq;
+      log << MSG::DEBUG << "rNoise = " << RMS << endreq;
+      log << MSG::DEBUG << "sNoise = " << pT->getSNoise() << endreq;
+      log << MSG::DEBUG << "isBad = " <<  pT->getIsBad() << endreq;
+      log << MSG::DEBUG << " PH ped subtract: "<<PHPS<< " ("<<PHPS/RMS<<") sigma"<<endreq;
+      (*taggerHitColI).SubctractPedestal(pedestalValue, RMS);
+      log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay
+	  <<" C: "<<iChan<<" PH: ("<<PHPS<<")"<<endreq;
     }
   digiEvent->setTaggerHitCol(taggerHitCol);
-
+  
   //////////////////////////////////////////////////
   // QDC
   std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
@@ -258,8 +271,8 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   std::vector<AncillaryData::QdcHit>::iterator qdcHitColI;
   for(qdcHitColI=qdcHitCol.begin(); qdcHitColI!=qdcHitCol.end();++qdcHitColI)
     {
-      int iChan = (*qdcHitColI).getQdcChannel();
-      int iMod  = (*qdcHitColI).getQdcModule();
+      const unsigned int iChan = (*qdcHitColI).getQdcChannel();
+      const unsigned int iMod  = (*qdcHitColI).getQdcModule();
       CalibData::RangeBase* pQdcPed = pQdcPeds->getQdcChan(iMod, iChan);
       
       AncQdcPed* pQ = dynamic_cast<AncQdcPed * >(pQdcPed);
@@ -267,14 +280,14 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
 	log << MSG::ERROR << "Dynamic cast to AncQdcPed failed M: " <<iMod<<" C: "<<iChan<<endreq;
 	return StatusCode::FAILURE;
       }
-      double pedestalValue=pQ->getVal();    
-      double PHPS = (*qdcHitColI).getPulseHeight()-double(pedestalValue);
-      log << MSG::INFO << "   ped = " << pedestalValue << endreq;
-      log << MSG::INFO << "   rms = " << pQ->getRms() << endreq;
-      log << MSG::INFO << " isBad = " << pQ->getIsBad() << endreq;
-      log << MSG::INFO << " PH ped subtract:"<<PHPS<< endreq;
-      (*qdcHitColI).setPulseHeight(double ((*qdcHitColI).getPulseHeight()-pedestalValue));
-      (*qdcHitColI).setPedestalSubtract();
+      const double pedestalValue = static_cast<double> (pQ->getVal());    
+      const double PHPS          = (*qdcHitColI).getPulseHeight()-pedestalValue;
+      const double RMS           = static_cast<double> (pQ->getRms());
+      log << MSG::DEBUG << "   ped = " << pedestalValue << endreq;
+      log << MSG::DEBUG << "   rms = " << RMS << endreq;
+      log << MSG::DEBUG << " isBad = " << pQ->getIsBad() << endreq;
+      log << MSG::DEBUG << " PH ped subtract:"<<PHPS<<" ("<<PHPS/RMS<<") sigma"<<endreq;
+      (*qdcHitColI).SubctractPedestal(pedestalValue, RMS);
       log << MSG::INFO << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
     }
   digiEvent->setQdcHitCol(qdcHitCol);
@@ -285,30 +298,32 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
 {
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG <<" Making clusters "<<endreq; 
   // Get the tagger hits collection:
   std::vector<AncillaryData::TaggerHit> taggerHits = digiEvent->getTaggerHitCol();
   if (taggerHits.size()==0) return sc;
   std::vector<AncillaryData::TaggerCluster> taggerClusters;
-  std::vector<AncillaryData::TaggerCluster>::iterator taggerClustersIterator;
-  //  std::vector<AncillaryData::TaggerHit>::iterator pos=taggerHits.begin();  
-  int i=0;
+  //  std::vector<AncillaryData::TaggerCluster>::iterator taggerClustersIterator;
+  unsigned int i=0;
   AncillaryData::TaggerHit nextHit=taggerHits[i];
   nextHit.print();
-
+  
 
   AncillaryData::TaggerCluster aCluster;
   aCluster.append(nextHit);
-  taggerClusters.push_back(aCluster);
+  //  taggerClusters.push_back(aCluster);
 
   AncillaryData::TaggerHit lastHit=nextHit;
   for(i=1; i<taggerHits.size();i++)
     {
       nextHit=taggerHits[i];
       nextHit.print();
-      
+      const signed int stripDist = 
+	static_cast<signed int> (lastHit.getStripId())-
+	static_cast<signed int> (nextHit.getStripId());
       if(nextHit.getModuleId()==lastHit.getModuleId() && 
 	 nextHit.getLayerId()==lastHit.getLayerId() &&
-	 nextHit.getStripId()<=lastHit.getStripId()+AncillaryData::MAX_CLUSTER_GAP)
+	 abs(stripDist)<= static_cast<signed int> (AncillaryData::MAX_CLUSTER_GAP))
 	{
 	  aCluster.append(nextHit);
 	  lastHit=nextHit;
@@ -321,12 +336,10 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
 	  lastHit=nextHit;
 	}
     }  
+  taggerClusters.push_back(aCluster);
   reconEvent->setTaggerClusters(taggerClusters);
   return sc;
 }
-
-
-
 
 StatusCode AncillaryDataReconAlg::QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
@@ -336,4 +349,30 @@ StatusCode AncillaryDataReconAlg::QdcRecon(AncillaryData::Digi *digiEvent, Ancil
   reconEvent->setQdcHitColl(digiEvent->getQdcHitCol());
   return sc;
 }
+
+StatusCode AncillaryDataReconAlg::ScalerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
+{
+  
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  reconEvent->setScalerHitColl(digiEvent->getScalerHitCol());
+  return sc;
+}
+
+StatusCode AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
+{
+  MakeClusters(digiEvent,reconEvent);
+  std::cout<<" Final Position of the higest cluster: "<<std::endl;
+  std::cout<<"\t I \t X \t Y \t Z "<<std::endl; 
+  reconEvent->computePositions(m_geometry);
+  for (int i = 0;i<8;i++)
+    {
+      double x=reconEvent->getX(i);
+      double y=reconEvent->getY(i);
+      double z=reconEvent->getZ(i);
+      std::cout<<"\t "<<i<<" \t "<<x<<" \t "<<y<<" \t "<<z<<std::endl; 
+    }
+}
+
+
 
