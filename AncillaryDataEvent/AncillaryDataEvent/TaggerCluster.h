@@ -8,11 +8,12 @@
 // Our own classes.
 #include "TaggerHit.h"
 #include "AdfEvent/TaggerParameters.h"
+#include "AncillaryDataUtil/AncillaryGeometry.h"
+
 namespace AncillaryData
 {
-  // HMK seems to duplicate const from AdfEvent const unsigned int    MAX_CLUSTER_GAP        = 5;
-  class TaggerCluster
-    
+
+  class TaggerCluster  
     {
     public:
       
@@ -29,12 +30,13 @@ namespace AncillaryData
           m_highestHit = highHit; 
           m_properties = true;
       }
-
+      
       void append(TaggerHit hit) 
 	{
 	  m_properties=false;
 	  m_hits.push_back(hit);
 	}
+      
       void erase()
 	{
 	  m_properties=false;
@@ -46,14 +48,27 @@ namespace AncillaryData
       unsigned int getSize()              const {return m_hits.size();}
       double       getPosition()          const {return m_baricenterPosition;}
       double       getPulseHeight()       const {return m_totalPulseHeight;}
-      TaggerHit    getHighestHit()         const {return m_highestHit;}
+      unsigned int getModuleId()          const {return getHighestHit().getModuleId();}
+      unsigned int getLayerId()           const {return getHighestHit().getLayerId();}
+      TaggerHit    getHighestHit()        const {if(!m_properties) calculateProperties(); return m_highestHit;}
       //      double       getNoise()             const {return m_totalNoise;}
       TaggerHit    getHit(int hitId)      const {return m_hits[hitId];}
       std::vector<TaggerHit> getHits()    const {return m_hits;}
       //      double       getSNRatio()           const {return m_signalToNoiseRatio;}
       //      double       getHighestHitSNRatio() const {return m_highestHitSignalToNoiseRatio;}
-      double       getEta()               const {return m_eta;}
+      void computePosition(AncillaryGeometry *geometry);
+      double       getEta()               
+	const {
+	if(!m_properties) 
+	  calculateProperties(); 
+	return m_eta;
+      }
       void print();
+      
+      double getX(){return m_X;}
+      double getY(){return m_Y;}
+      double getZ(){return m_Z;}
+      
     private:
       TaggerHit  m_highestHit;
       double     m_baricenterPosition;
@@ -63,10 +78,29 @@ namespace AncillaryData
       //      double     m_highestHitSignalToNoiseRatio;
       double     m_eta;
       bool m_properties;
+      double m_X, m_Y, m_Z;
       
-      std::vector<TaggerHit> m_hits;
-      
+      std::vector<TaggerHit> m_hits;    
     };
+  
+  inline bool ClusterSortPredicate(const TaggerCluster& cl1, const TaggerCluster& cl2)
+    {
+      const unsigned int M1 = cl1.getModuleId();
+      const unsigned int L1 = cl1.getLayerId();
+      const unsigned int M2 = cl2.getModuleId();
+      const unsigned int L2 = cl2.getLayerId();
+      const unsigned int I1 = L1+2*M1;
+      const unsigned int I2 = L2+2*M2;
+      return  (I1<I2);
+    }
+  
+  inline  TaggerCluster MaxCluster(const TaggerCluster& cl1, const TaggerCluster& cl2)
+    {
+      if (cl1.getPulseHeight() > cl2.getPulseHeight()) 
+	return cl1;
+      return cl2;
+    }
+
 }
 #endif
 

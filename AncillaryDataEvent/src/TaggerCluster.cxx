@@ -1,4 +1,6 @@
 #include "AncillaryDataEvent/TaggerCluster.h"
+#include "AdfEvent/TaggerParameters.h"
+
 using namespace AncillaryData;
 
 void TaggerCluster::calculateProperties()
@@ -15,7 +17,6 @@ void TaggerCluster::calculateProperties()
     }
     m_baricenterPosition += (*hitIterator).getStripId()*(*hitIterator).getPulseHeight();
     m_totalPulseHeight   += (*hitIterator).getPulseHeight();
-    //    m_totalNoise         += pow(((*hitIterator).getNoise()), 2.0);
   }
   m_baricenterPosition /= m_totalPulseHeight;
   m_baricenterPosition *= STRIPS_PITCH;
@@ -39,7 +40,19 @@ void TaggerCluster::calculateProperties()
 void TaggerCluster::print()
 {
   if(!m_properties) calculateProperties();
-  std::cout<<" Size: "<<getSize()<<" Baricenter: "<<getPosition()<<" PH: "<<getPulseHeight()<<" Eta: "<<getEta()<<std::endl;
+  std::cout<<" ----- size: "<<getSize()<<" Baricenter: "<<getPosition()<<" PH: "<<getPulseHeight()<<" Eta: "<<getEta()<<std::endl;
   for (std::vector<TaggerHit>::iterator hitIterator = m_hits.begin(); hitIterator != m_hits.end(); hitIterator++)
     (*hitIterator).print();
+}
+
+void TaggerCluster::computePosition(AncillaryGeometry *geometry)
+{
+  const unsigned int M= getModuleId();
+  const unsigned int L= getLayerId();
+  // The position previously computed is referred to the strip 0
+  unsigned int View = geometry->getView(M); // 1 is Y (strip along Z) , 0 is Z (strip along Y)
+
+  m_X = geometry->getX(M) + L * LAYER_WIDTH;
+  m_Y = getPosition() + geometry->getY(M);
+  m_Z = getPosition() + geometry->getZ(M);  
 }
