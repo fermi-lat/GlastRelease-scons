@@ -19,7 +19,7 @@ namespace AncillaryData {
   public:
     unsigned int getFadcModule()    const {return (m_word >> 24) & 0xf;}
     unsigned int getFadcChannel()   const {return (m_word >> 12) & 0xfff;}
-    unsigned int getTaggerLayer()   const {return (getFadcChannel() <N_CHANNELS_PER_LAYER) ? 0 : 1 ;}
+    unsigned int getTaggerLayer()   const {return ((getFadcChannel()< N_CHANNELS_PER_LAYER) ? 0 :1 );}
     unsigned int getTaggerChannel() const {return getFadcChannel()-getTaggerLayer()*N_CHANNELS_PER_LAYER;}
     unsigned int getFadcValue()   const {return m_word & 0xfff;}
     bool checkHeader()            const {return (getHeader() == ANCILLARY_FADC_ID);}
