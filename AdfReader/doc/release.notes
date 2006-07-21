@@ -2,6 +2,7 @@
  Package AdfReader\n
  Coordinator:N. Omodei
  @verbatim
+ v0r1p3 21-Jul-2006 NO  Add a test program
  v0r1p2 13-Jul-2006 NO  Update new file format
  v0r1p1 12-Jul-2006 NO  Intermediate step
  v0r1   29-Jun-2006 NO  implement recon
