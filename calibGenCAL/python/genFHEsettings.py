@@ -219,7 +219,6 @@ if __name__ == '__main__':
     fio.close()
       
     nrgIdx = calConstant.CRNG_HEX8
-    nrgRangeMultiplier = 1.
 
     heGainIdx = max(0,heGain-8)
     if heGain == 0:
@@ -244,17 +243,12 @@ if __name__ == '__main__':
                      adcs[0,0,0], heGainIdx, nrgIdx, relgain[heGainIdx,nrgIdx,srcTwr,0,0,0], nrgIdx, \
                      relgain[8,nrgIdx,srcTwr,0,0,0])
     
-    # convert Mev to LEX8 ADC
+    # convert Mev to HEX8 ADC
     
     adcs /= adc2nrg[srcTwr,...,1]
     log.debug('adcs[0,0,0]:%6.3f adc2nrg[0,0,0,0,1]:%6.3f', adcs[0,0,0], adc2nrg[srcTwr,0,0,0,1])
     
-    # convert to HEX1
-
-    adcs /= nrgRangeMultiplier
-    log.debug('adcs[0,0,0]:%6.3f nrgRangeMultiplier:%6.3f', adcs[0,0,0], nrgRangeMultiplier)
-    
-    # add bias correction
+    # add trigger bias correction
 
     adcs -= biasTable[srcTwr,...,1]
     log.debug('adcs[0,0,0]:%6.3f biasTable[0,0,0,0,1]:%6.3f', adcs[0,0,0], biasTable[srcTwr,0,0,0,1])

@@ -260,7 +260,7 @@ if __name__ == '__main__':
     adcs -= biasTable[srcTwr,...,0]
     log.debug('adcs[0,0,0]:%6.3f biasTable[0,0,0,0]:%6.3f', adcs[0,0,0], biasTable[srcTwr,0,0,0,0])
     
-    # convert to LEX8 ADC units
+    # convert to LEX1 ADC units
     
     adcs /= nrgRangeMultiplier
     log.debug('adcs[0,0,0]:%6.3f nrgRangeMultiplier[0,0,0]:%6.3f', adcs[0,0,0], nrgRangeMultiplier[0,0,0])
