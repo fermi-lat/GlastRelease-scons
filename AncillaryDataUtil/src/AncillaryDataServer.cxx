@@ -149,7 +149,7 @@ bool  AncillaryDataServer::readEventData(AdfEvent *currentEvent)
 AdfEvent *AncillaryDataServer::getNextEvent()
 {
 
-  if(m_counter%10==0) std::cout<<" Get event number "<<++m_counter<<std::endl;
+  if(m_counter%10==0 && DEBUG) std::cout<<" Get event number "<<++m_counter<<std::endl;
   // Get the event header:
   AdfEvent *currentEvent = new AdfEvent();
   bool suxess;
