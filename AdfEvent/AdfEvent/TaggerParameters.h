@@ -15,6 +15,7 @@ namespace AncillaryData
   const unsigned int    N_DEBUG_CHANNELS       = 5;
   const unsigned int    N_QDC_MODULES          = 1;
   const unsigned int    N_QDC_CHANNELS         = 32;
+  const unsigned int  MAX_CLUSTER_GAP          =5;
   const double SIGNAL_THRESHOLD       = 5.0;
   const double STRIPS_PITCH           = 0.242;
   const double LAYER_WIDTH            = 0.400;
