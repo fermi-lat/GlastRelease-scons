@@ -9,21 +9,69 @@
 <prim name="ACDTile_000_x" value="38.200000"> top ACD tile absolute x</prim>
 <prim name="ACDTile_000_y" value="0.000000"> top ACD tile absolute y</prim>
 <prim name="ACDTile_000_z" value="689.000000"> top ACD tile absolute z</prim>
-<prim name="ACDTile_100_x" value="-75.800000"> first row side ACD tile absolute x</prim>
-<prim name="ACDTile_100_y" value="0.000000"> first row side ACD tile absolute y</prim>
-<prim name="ACDTile_100_z" value="622.800000"> first row side ACD tile absolute z</prim>
-<prim name="ACDTile_110_x" value="-60.800000"> second row side ACD tile absolute x</prim>
-<prim name="ACDTile_110_y" value="0.000000"> second row side ACD tile absolute y</prim>
-<prim name="ACDTile_110_z" value="452.800000"> second row side ACD tile absolute z</prim>
-<prim name="ACDTile_120_x" value="-60.800000"> third row side ACD tile absolute x</prim>
-<prim name="ACDTile_120_y" value="0.000000"> third row side ACD tile absolute y</prim>
-<prim name="ACDTile_120_z" value="282.800000"> third row side ACD tile absolute z</prim>
-<prim name="ACDTile_130_x" value="-60.800000"> bottom row side ACD tile absolute x</prim>
-<prim name="ACDTile_130_y" value="0.000000"> bottom row side ACD tile absolute y</prim>
-<prim name="ACDTile_130_z" value="114.800000"> bottom row side ACD tile absolute z</prim>
+<prim name="ACDTile_100_x" value="-75.800000"> first row side ACD tile 
+absolute x</prim>
+<prim name="ACDTile_100_y" value="0.000000"> first row side 
+ACD tile absolute y</prim>
+<prim name="ACDTile_100_z" value="622.800000"> first row side ACD tile 
+absolute z</prim>
+<prim name="ACDTile_110_x" value="-60.800000"> second row side ACD tile 
+absolute x</prim>
+<prim name="ACDTile_110_y" value="0.000000"> second row side ACD tile 
+absolute y</prim>
+<prim name="ACDTile_110_z" value="452.800000"> second row side ACD tile 
+absolute z</prim>
+<prim name="ACDTile_120_x" value="-60.800000"> third row side ACD tile 
+absolute x</prim>
+<prim name="ACDTile_120_y" value="0.000000"> third row side ACD tile 
+absolute y</prim>
+<prim name="ACDTile_120_z" value="282.800000"> third row side ACD tile 
+absolute z</prim>
+<prim name="ACDTile_130_x" value="-60.800000"> bottom row side ACD tile 
+absolute x</prim>
+<prim name="ACDTile_130_y" value="0.000000"> bottom row side ACD tile 
+absolute y</prim>
+<prim name="ACDTile_130_z" value="114.800000"> bottom row side ACD tile 
+absolute z</prim>
 <prim name="ACDTile_005_x" value="809.800000"> extra ACD tile absolute x</prim>
 <prim name="ACDTile_005_y" value="0.000000"> extra ACD tile absolute y</prim>
 <prim name="ACDTile_005_z" value="103.000000"> extra ACD tile absolute z</prim>
 
 </primCategory>
 
+<primCategory name="cu06ContainerPrim">
+  <overview>Extra primary constants needed for cu06 container
+ description</overview>
+
+<prim name="ISCMat" value="Al" type="string" uType="mat">Material for cu06 inner container</prim> 
+<prim name="ISCThin" value="2.0">Thickness of thinner cu06 inner container
+panels</prim>
+<prim name="ISCThick" value="4.0">Thickness of thicker cu06 inner container
+panels</prim>
+<!--
+<prim name="ISCLateral" value="374.5">Y-dimension of X- and Z- faces of
+cu06 inner container. &lt;font color="red"&gt;
+For now defined to be equal to towerPitch value.
+&lt;b&gt;This is 
+a guess!!&lt;/b&gt;&lt;/font&gt;</prim>
+-->
+<prim name="ISCTkrYFace_x" value="871.2523">X-dimension of Y-face for
+tracker part of innner container.
+&lt;font color="red"&gt;&lt;b&gt;This is a second guess!!&lt;/b&gt; 
+Subtracted 20 mm from first guess.&lt;/font&gt;</prim>
+
+<prim name="ISCTkrYFace_z" value="651.35">Z-dimension of Y-face for
+tracker part of innner container.
+&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;
+Original attempt (702.5) was too big. 
+&lt;/font&gt;</prim>
+<prim name="ISCCalYFace_x" value="1635.301">X-dimension of Y-face for
+cals part of inner container.
+&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt; 
+</prim>
+<prim name="ISCCalYFace_z" value="453.5">Z-dimension of Y-face for
+Z-dimension of Y-face for
+cals part of inner container.
+&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt; 
+</prim>
+</primCategory>

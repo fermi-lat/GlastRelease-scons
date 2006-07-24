@@ -49,6 +49,236 @@
           </half>
         </const>
 
+        <const name="ISCLateral">
+          <notes>Y-dimension of X- and Z- faces of
+                cu06 inner container. &lt;font color="red"&gt;
+                For now defined to be equal to towerPitch +
+                2 * NADGridFlangeOutsideWidth.
+                &lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt;</notes>
+
+          <add>
+            <refer refTo="towerPitch" />
+            <refer refTo="NADGridFlangeOutsideWidth" />
+            <refer refTo="NADGridFlangeOutsideWidth" />
+          </add>
+        </const>
+        <const name="ISCCalZpFace_x" >
+          <notes>X-dimension of Z+ face of cu06 container in front of 
+           calorimeters only.  
+           &lt;font color="red"&gt;This is based on guesses of a couple 
+            primary constants!!&lt;/font&gt;
+          </notes>
+          <minus>
+            <refer refTo="ISCCalYFace_x" />
+            <refer refTo="ISCTkrYFace_x" />
+          </minus>
+        </const>
+
+        <!-- for convenience.  Often need half of thicknesses -->
+        <const name="ISCThinHalf">
+          <notes>Half thickness for thin ISC panels</notes>
+          <half><refer refTo="ISCThin" /></half>
+        </const>
+        <const name="ISCThickHalf">
+          <notes>Half thickness for thick ISC panels</notes>
+          <half><refer refTo="ISCThick" /></half>
+        </const>
+
+        <!-- for box on +X face of tracker 
+          Stick it on the +X end of TkrZFace -->
+        <const name="ISCTkrXp_dx">
+          <notes>X position for isc box to +X side of tracker</notes>
+          <add>
+            <refer refTo="ISCTkrZp_dx" />
+            <half>
+              <add>
+                <refer refTo="ISCTkrYFace_x" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </add>
+        </const>
+
+        <const name="ISCTkrX_dz">
+          <notes>Z position for isc boxes to +X and -X side of trackers
+               &lt;font color="red"&gt;Assume min Z is the same
+               as for the trackers and that that is
+               approx. calTrackerGap&lt;/font&gt;
+          </notes>
+          <add>
+            <refer refTo="calTrackerGap" />
+            <half>
+              <refer refTo="ISCTkrYFace_z" />
+            </half>
+          </add>
+        </const>
+
+        <!-- for box on +X face of cals -->
+        <const name="ISCCalXp_dx">
+          <notes>X position for isc box to +X side of cals</notes>
+          <half>
+            <add>
+              <refer refTo="ISCCalYFace_x" />
+              <refer refTo="ISCThick" />
+            </add>
+          </half>
+        </const>
+
+        <!-- compute this from ISCTkrX_dz -->
+        <const name="ISCCalX_dz">
+          <notes>Z-displacement of container panels adjacent to CAL
+                in +X and -X directions</notes>
+          <minus>
+            <refer refTo="ISCTkrX_dz" />
+            <half>
+              <add>
+                <refer refTo="ISCTkrYFace_z" />
+                <refer refTo="ISCCalYFace_z" />
+              </add>
+            </half>
+          </minus>
+        </const>
+
+        <const name="ISCTkrXn_dx">
+          <notes>X disp for isc box to -X side of trackers</notes>
+          <minus>
+            <refer refTo="ISCTkrXp_dx" />
+            <add>
+              <refer refTo="ISCTkrYFace_x" />
+              <refer refTo="ISCThin" />
+            </add>
+          </minus>
+        </const>
+
+        <!-- ah, some symmetry! -->
+        <const name="ISCCalXn_dx">
+          <notes>X position for isc box to -X side of cals</notes>
+          <uminus>
+            <refer refTo="ISCCalXp_dx" />
+          </uminus>
+        </const>
+<!--
+        displacements for piece on +Z side of trackers.
+
+           Calculate max x = max x for Cal +x side
+ -->
+
+        <const name="ISCTkrZp_dx">
+          <notes>X disp for isc box to +Z side of trackers</notes>
+          <half>
+            <minus>
+              <refer refTo="ISCCalYFace_x" />
+              <refer refTo="ISCTkrYFace_x" />
+            </minus>
+          </half>
+        </const>
+
+<!--
+guess 1:          <minus>
+            <refer refTo="ISCTkrXp_dx" />
+            <half>
+              <add>
+                <refer refTo="ISCTkrYFace_x" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </minus>
+        </const>
+ -->
+
+        <const name="ISCTkrZp_dz">
+          <notes>Z disp. for isc box to +Z side of trackers</notes>
+          <add>
+            <refer refTo="ISCTkrX_dz" />
+            <half>
+              <add>
+                <refer refTo="ISCTkrYFace_z" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </add>
+        </const>
+
+        <!-- displacements for piece on +Z side of cals -->
+        <const name="ISCCalZp_dx">
+          <notes>X disp for isc box to +Z side of cals</notes>
+          <minus>
+            <refer refTo="ISCTkrZp_dx" />
+            <half>
+              <add>
+                <refer refTo="ISCTkrYFace_x" />
+                <refer refTo="ISCCalZpFace_x" />
+              </add>
+            </half>
+          </minus>
+        </const>
+
+        <const name="ISCCalZp_dz">
+          <notes>Z disp. for isc box to +Z side of cals</notes>
+          <minus>
+            <refer refTo="ISCTkrZp_dz" />
+            <add>
+              <refer refTo="ISCTkrYFace_z" />
+              <refer refTo="ISCThin" />
+            </add>
+          </minus>
+
+        </const>
+        <!-- Z-displacement for piece on -Z side of cals. 
+             x-displacement is zero so we don't have to do that one. -->
+        <const name="ISCCalZn_dz">
+          <notes>Z disp. for isc box to -Z side of cals</notes>
+          <minus>
+             <refer refTo="ISCCalX_dz" />
+             <half>
+               <add>
+                 <refer refTo="ISCCalYFace_z" />
+                 <refer refTo="ISCThick" />
+               </add>
+             </half>
+           </minus>
+         </const>
+
+         <const name="ISCTkrYn_dy">
+           <notes>y-disp of isc panel to -y side of tkrs (above)</notes>
+           <uminus>
+             <half>
+               <add>
+                 <refer refTo="ISCLateral" />
+                 <refer refTo="ISCThin" />
+               </add>
+             </half>
+           </uminus>
+         </const>
+
+         <const name="ISCTkrYp_dy">
+           <notes>y-disp of isc panel to +y side of tkrs (below)</notes>
+           <half>
+             <add>
+               <refer refTo="ISCLateral" />
+               <refer refTo="ISCThick" />
+             </add>
+           </half>
+         </const>
+
+
+         <const name="ISCCalYp_dy">
+           <notes>y-disp of isc panel to +y side of cals (below)</notes>
+           <half>
+             <add>
+               <refer refTo="ISCLateral" />
+               <refer refTo="ISCThick" />
+             </add>
+           </half>
+         </const>
+
+         <const name="ISCCalYn_dy">
+           <notes>y-disp of isc panel to -y side of cals (above)</notes>
+           <uminus>
+             <refer refTo="ISCCalYp_dy" />
+           </uminus>
+         </const>
+
       </derCategory>
 
 

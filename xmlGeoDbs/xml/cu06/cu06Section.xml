@@ -69,61 +69,61 @@
         <idField name="fTowerX" value="1" />
       </posXYZ>
 
-<posXYZ volume="topTileACDM"
-        XREF="ACDTile_000_x"
-        YREF="ACDTile_000_y"
-        ZREF="ACDTile_000_z" >
-  <idField name="fLATObjects" valueREF="eLATACD"/>
-  <idField name="fACDFace" value="0"/>
-  <idField name="fACDCmp" valueREF="eACDTile"/>
-  <idField name="fRow" value="0" />
-  <idField name="fCol" value="0" />
-  <idField name="fTileSeg" value="0" />
-</posXYZ>
-<posXYZ volume="sideTileACDM"
-        XREF="ACDTile_100_x"
-        YREF="ACDTile_100_y"
-        ZREF="ACDTile_100_z" >
-  <idField name="fLATObjects" valueREF="eLATACD"/>
-  <idField name="fACDFace" value="1"/>
-  <idField name="fACDCmp" valueREF="eACDTile"/>
-  <idField name="fRow" value="0" />
-  <idField name="fCol" value="0" />
-  <idField name="fTileSeg" value="0" />
-</posXYZ>
-<posXYZ volume="sideTileACDM"
-        XREF="ACDTile_110_x"
-        YREF="ACDTile_110_y"
-        ZREF="ACDTile_110_z" >
-  <idField name="fLATObjects" valueREF="eLATACD"/>
-  <idField name="fACDFace" value="1"/>
-  <idField name="fACDCmp" valueREF="eACDTile"/>
-  <idField name="fRow" value="1" />
-  <idField name="fCol" value="0" />
-  <idField name="fTileSeg" value="0" />
-</posXYZ>
-<posXYZ volume="sideTileACDS"
-        XREF="ACDTile_120_x"
-        YREF="ACDTile_120_y"
-        ZREF="ACDTile_120_z" >
-  <idField name="fLATObjects" valueREF="eLATACD"/>
-  <idField name="fACDFace" value="1"/>
-  <idField name="fACDCmp" valueREF="eACDTile"/>
-  <idField name="fRow" value="2" />
-  <idField name="fCol" value="0" />
-  <idField name="fTileSeg" value="0" />
-</posXYZ>
-<posXYZ volume="sideTileACDS"
-        XREF="ACDTile_130_x"
-        YREF="ACDTile_130_y"
-        ZREF="ACDTile_130_z" >
-  <idField name="fLATObjects" valueREF="eLATACD"/>
-  <idField name="fACDFace" value="1"/>
-  <idField name="fACDCmp" valueREF="eACDTile"/>
-  <idField name="fRow" value="3" />
-  <idField name="fCol" value="0" />
-  <idField name="fTileSeg" value="0" />
-</posXYZ>
+      <posXYZ volume="topTileACDM"
+              XREF="ACDTile_000_x"
+              YREF="ACDTile_000_y"
+              ZREF="ACDTile_000_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="0"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="0" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileACDM"
+              XREF="ACDTile_100_x"
+              YREF="ACDTile_100_y"
+              ZREF="ACDTile_100_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="1"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="0" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileACDM"
+              XREF="ACDTile_110_x"
+              YREF="ACDTile_110_y"
+              ZREF="ACDTile_110_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="1"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="1" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileACDS"
+              XREF="ACDTile_120_x"
+              YREF="ACDTile_120_y"
+              ZREF="ACDTile_120_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="1"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="2" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
+      <posXYZ volume="sideTileACDS"
+              XREF="ACDTile_130_x"
+              YREF="ACDTile_130_y"
+              ZREF="ACDTile_130_z" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="1"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="3" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
 
       <posXYZ volume="oneTower" XREF="innerTowers_dt" ZREF="towers_dz">
         <idField name="fLATObjects" valueREF="eLATTowers" />
@@ -201,6 +201,84 @@
         <idField name="fGridObjects" value="7" />
       </posXYZ>
 
+
+<!-- Inner container pieces, maybe as many as 11 of them.
+     It seems for cu06
+            Z=0 is at the normal place (front of grid)
+            X=0 is at the normal place (between cols 1 and 2)
+            Y=0 is *not* at the normal place.  It's at the center
+             of row 0 towers (which is all we've got)
+
+            hence we don't need a Y-coordinate for any of the lateral
+            pieces.
+
+         There are two of these, one on each side of the trackers
+         First do +X, then -X (only x-displacement changes)
+-->
+       <posXYZ volume="ISCTkrXFace"
+             XREF="ISCTkrXp_dx"
+             ZREF="ISCTkrX_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCTkrXFace"
+             XREF="ISCTkrXn_dx"
+             ZREF="ISCTkrX_dz">
+       </posXYZ>
+     
+<!--
+        Similarly for CAL, but here +X and -X faces are placed symmetrically
+        w.r.t. origin so ISCCalXn_dx = -ISCCalXp_dx
+ -->       
+       <posXYZ volume="ISCCalXFace"
+             XREF="ISCCalXp_dx"
+             ZREF="ISCCalX_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCCalXFace"
+             XREF="ISCCalXn_dx"
+             ZREF="ISCCalX_dz">
+       </posXYZ>
+
+<!-- Front Z face for trackers, distinct front and back Z faces for Cal -->
+       <posXYZ volume="ISCTkrZFace"
+               XREF="ISCTkrZp_dx"
+               ZREF="ISCTkrZp_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCCalZpFace"
+               XREF="ISCCalZp_dx"
+               ZREF="ISCCalZp_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCCalZnFace"
+               ZREF="ISCCalZn_dz">
+       </posXYZ>
+
+<!-- Tracker Y faces.  x disp. is the same as for tracker Z face;
+     z disp is the same as for X faces. -->
+       <posXYZ volume="ISCTkrYnFace"
+               XREF="ISCTkrZp_dx"
+               YREF="ISCTkrYn_dy"
+               ZREF="ISCTkrX_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCTkrYpFace"
+               XREF="ISCTkrZp_dx"
+               YREF="ISCTkrYp_dy"
+               ZREF="ISCTkrX_dz">
+       </posXYZ>
+
+<!-- Cal Y faces are centered w.r.t. X.  Z disp. equals that for
+     Cal x faces.        -->
+       <posXYZ volume="ISCCalYFace"
+               YREF="ISCCalYn_dy"
+               ZREF="ISCCalX_dz">
+       </posXYZ>
+
+       <posXYZ volume="ISCCalYFace"
+               YREF="ISCCalYp_dy"
+               ZREF="ISCCalX_dz">
+       </posXYZ>
 
     </composition>
     
