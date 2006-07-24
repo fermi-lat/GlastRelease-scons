@@ -10,6 +10,7 @@ use GlastSvc v9r*
 use Event v*
 use ldfReader v*
 use LdfEvent v*
+use AdfEvent v*
 
 apply_pattern packageShr
 apply_pattern package_include
