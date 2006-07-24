@@ -4,6 +4,7 @@
 #include "LATcontributionIterator.h"
 #include "EbfEventParser.h"
 #include "EBFevent.h"
+#include "AdfParser.h"
 
 /** @class LatContributionIterator
 @brief Provides callbacks for each component.
@@ -24,6 +25,7 @@ namespace ldfReader {
 
     private:
         EbfEventParser m_eep;
+        AdfParser m_adf;
     };
 
 }

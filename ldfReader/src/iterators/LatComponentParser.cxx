@@ -33,6 +33,7 @@ namespace ldfReader {
             return 0;
         }
 
+        printf("Found UDF in LatComponentParser\n");
         //fprintf (stderr, "\nUndefined EBF component\n");
         //((MyEBFcontribution*)contribution)->dump("  ");
         return 0;

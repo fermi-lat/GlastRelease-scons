@@ -64,6 +64,9 @@ int main(int argn, char** argc) {
         GemData gem = myLatData->getGem();
         gem.print();
 
+        AdfData adf = myLatData->getAdf();
+        adf.print();
+
         AemData aem = myLatData->getAem(); 
         aem.print();
 
@@ -161,6 +164,8 @@ int main(int argn, char** argc) {
             }
         }
 
+
+        printf("\nEND EVENT\n");
         // Move the event pointer to the next event in the EBF file
         status = ebfP->nextEvent();
 
