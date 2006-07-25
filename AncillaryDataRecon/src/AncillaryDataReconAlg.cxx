@@ -112,16 +112,16 @@ StatusCode AncillaryDataReconAlg::execute()
       if(m_SubtractPedestals)
 	{
 	  sc = SubtractPedestal(digiEvent);
-	  std::cout<<"------------ DIGI EVENT SUBRACTED PED !:-----------"<<std::endl;
-	  digiEvent->print();
-	  std::cout<<"---------------------------------------------------"<<std::endl;
+	  //std::cout<<"------------ DIGI EVENT SUBRACTED PED !:-----------"<<std::endl;
+	  //	  digiEvent->print();
+	  //std::cout<<"---------------------------------------------------"<<std::endl;
 	}
       sc = taggerRecon(digiEvent,reconEvent);
       sc = QdcRecon(digiEvent,reconEvent);      
       sc = ScalerRecon(digiEvent,reconEvent);      
       sc = RegisterRecon(reconEvent);
 
-      reconEvent->print();
+      //      reconEvent->print();
     }
   return sc;
 }
@@ -249,7 +249,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       log << MSG::DEBUG << "sNoise = " << pT->getSNoise() << endreq;
       log << MSG::DEBUG << "isBad = " <<  pT->getIsBad() << endreq;
       log << MSG::DEBUG << " PH ped subtract: "<<PHPS<< " ("<<PHPS/RMS<<") sigma"<<endreq;
-      (*taggerHitColI).SubctractPedestal(pedestalValue, RMS);
+      (*taggerHitColI).SubtractPedestal(pedestalValue, RMS);
       log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay
 	  <<" C: "<<iChan<<" PH: ("<<PHPS<<")"<<endreq;
     }
@@ -287,7 +287,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       log << MSG::DEBUG << "   rms = " << RMS << endreq;
       log << MSG::DEBUG << " isBad = " << pQ->getIsBad() << endreq;
       log << MSG::DEBUG << " PH ped subtract:"<<PHPS<<" ("<<PHPS/RMS<<") sigma"<<endreq;
-      (*qdcHitColI).SubctractPedestal(pedestalValue, RMS);
+      (*qdcHitColI).SubtractPedestal(pedestalValue, RMS);
       log << MSG::INFO << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
     }
   digiEvent->setQdcHitCol(qdcHitCol);
@@ -306,7 +306,7 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
   //  std::vector<AncillaryData::TaggerCluster>::iterator taggerClustersIterator;
   unsigned int i=0;
   AncillaryData::TaggerHit nextHit=taggerHits[i];
-  nextHit.print();
+  //  nextHit.print();
   
 
   AncillaryData::TaggerCluster aCluster;
@@ -317,7 +317,6 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
   for(i=1; i<taggerHits.size();i++)
     {
       nextHit=taggerHits[i];
-      nextHit.print();
       const signed int stripDist = 
 	static_cast<signed int> (lastHit.getStripId())-
 	static_cast<signed int> (nextHit.getStripId());

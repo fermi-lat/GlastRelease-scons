@@ -12,6 +12,8 @@
 #include "AncillaryDataEvent/QdcHit.h"
 #include "AncillaryDataUtil/AncillaryGeometry.h"
 
+#include <TTree.h>
+#include <TFile.h>
 
 //////////////////////////////////////////////////
 using namespace  AncillaryData;
@@ -29,7 +31,7 @@ int MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEven
   std::vector<AncillaryData::TaggerCluster> taggerClusters;
   unsigned int i=0;
   AncillaryData::TaggerHit nextHit=taggerHits[i];
-  nextHit.print();
+  //  nextHit.print();
   
   AncillaryData::TaggerCluster aCluster;
   aCluster.append(nextHit);
@@ -38,7 +40,7 @@ int MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEven
   for(i=1; i<taggerHits.size();i++)
     {
       nextHit=taggerHits[i];
-      nextHit.print();
+      //      nextHit.print();
       const signed int stripDist = 
 	static_cast<signed int> (lastHit.getStripId())-
 	static_cast<signed int> (nextHit.getStripId());
@@ -62,23 +64,65 @@ int MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEven
   return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {  
+  std::string arg_name("");
+  std::string dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
+  int current_arg = 1;
+  int Nevents=10;
+  while(current_arg < argc)
+    {
+      arg_name = argv[current_arg];
+      if( arg_name == "-n")
+	{
+	  Nevents=atoi(argv[++current_arg]);
+	}
+      else if( arg_name == "-f")
+	{
+	  dataFilePath=argv[++current_arg];
+	}
+      current_arg++;
+    }
+      
+     
+  
   // INITIALIZE THE GEOMETRY:
   std::string m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.dat";
   facilities::Util::expandEnvVar(&m_geometryFilePath); 
   std::cout<< "loading geometry from " << m_geometryFilePath << std::endl;
   AncillaryData::AncillaryGeometry   *m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);
   //////////////////////////////////////////////////
-  std::string dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
+  
   facilities::Util::expandEnvVar(&dataFilePath);
   AncillaryDataServer *m_dataServer = new AncillaryDataServer(dataFilePath);
   m_dataServer->open();
   m_dataServer->printInformation();
-  for (int i =0; i<100; i++)
+  //////////////////////////////////////////////////
+  double X[4],Y[4],Z[4];
+  double PX, PY, PZ;
+  double E_rec, E_corr;
+  double PhiIn,PhiOut;
+  double Theta;
+  unsigned int   evNumber,spillNumber;
+  TTree* myEvent = new TTree("Event","Event");		
+  myEvent->Branch("evNumber",&evNumber,"evNumber/i");
+  myEvent->Branch("spillNumber",&spillNumber,"spillNumber/i");
+  myEvent->Branch("X",&X,"X[4]/D");
+  myEvent->Branch("Y",&Y,"Y[4]/D");
+  myEvent->Branch("Z",&Z,"Z[4]/D");
+  myEvent->Branch("PX",&PX,"PX/D");
+  myEvent->Branch("PY",&PY,"PY/D");
+  myEvent->Branch("PZ",&PZ,"PZ/D");
+  myEvent->Branch("PhiIn",&PhiIn,"PhiIn/D");
+  myEvent->Branch("PhiOut",&PhiOut,"PhiOut/D");
+  myEvent->Branch("Theta",&Theta,"Theta/D");
+  myEvent->Branch("E_rec",&E_rec,"E_rec/D");
+  myEvent->Branch("E_corr",&E_corr,"E_corr/D");
+  
+  for (int i =0; i<Nevents; i++)
     {
       AncillaryData::AdfEvent *currentEvent = m_dataServer->getNextEvent();
-      currentEvent->print();
+      //      currentEvent->print();
       //      currentEvent->dump();
       //////////////////////////////////////////////////
       AncillaryData::Digi *digiEvent = new AncillaryData::Digi(currentEvent);
@@ -88,25 +132,32 @@ int main()
       AncillaryData::Recon *reconEvent = new AncillaryData::Recon(digiEvent);
       // This is  in AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
       MakeClusters(digiEvent,reconEvent);
-      
-      std::cout<<" Final Position of the higest cluster: "<<std::endl;
-      std::cout<<" \t I \t X \t Y \t Z "<<std::endl; 
       reconEvent->ReconstructTagger(m_geometry);
-      for (int i = 0;i<4;i++)
+      reconEvent->report();
+      if(reconEvent->getNumberOfHigestClusters()==8)
 	{
-	  double x=reconEvent->getX(i);
-	  double y=reconEvent->getY(i);
-	  double z=reconEvent->getZ(i);
-	  std::cout<<i<<" \t "<<x<<" \t "<<y<<" \t "<<z<<std::endl; 
+	  evNumber = reconEvent->getEventNumber();
+	  spillNumber = reconEvent->getSpillNumber();
+	  for (int i=0;i<4;i++)
+	    {
+	      X[i]    = reconEvent->getX(i);
+	      Y[i]    = reconEvent->getY(i);
+	      Z[i]    = reconEvent->getZ(i);
+	    }
+	  PX      = reconEvent->getPX();
+	  PY      = reconEvent->getPY();
+	  PZ      = reconEvent->getPZ();
+	  PhiIn   = reconEvent->getPhiIn();
+	  PhiOut  = reconEvent->getPhiOut();
+	  Theta   = reconEvent->getTheta();
+	  E_rec    = reconEvent->getReconstructedEnergy();
+	  E_corr   = reconEvent->getCorrectedEnergy();
+	  myEvent->Fill();
 	}
-      std::cout<<" Reconstructed Energy: "<<reconEvent->getReconstructedEnergy()<<" "<<reconEvent->getCorrectedEnergy()<<" "<<std::endl;
-      // This is QDC recon:
-      reconEvent->setQdcHitColl(digiEvent->getQdcHitCol());      
-      reconEvent->setScalerHitColl(digiEvent->getScalerHitCol());      
-      std::cout<<"########  RECON EVENT PRINT:   ##################"<<std::endl;
-      reconEvent->print();
-      std::cout<<"##################################################"<<std::endl;
     }
+  TFile *myFile = new TFile("TestRecon.root","RECREATE");
+  myEvent->Write();
+  myFile->Close();
   m_dataServer->close();
   return 0;
 }
