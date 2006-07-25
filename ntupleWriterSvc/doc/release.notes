@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *
  @verbatim
+ * v3r15   24-jul-2006  THB: Add array of char option, supporting categorical variables
  * v3r14   24-mar-2006   TU: Updates for CLHEP 1.9.2.2 and new Gaudi
  * v3r13p3 10-feb-2006  THB: same interface to find pointers also gets a tree: fix that
  * v3r13p1,2 08-feb-2006  THB: minor tweak to find pointers to other than float or double
