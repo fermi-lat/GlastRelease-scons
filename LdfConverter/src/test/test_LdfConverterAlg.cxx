@@ -14,6 +14,7 @@
 #include "LdfEvent/EventSummaryData.h"
 #include "LdfEvent/Gem.h"
 #include "LdfEvent/LsfMetaEvent.h"
+#include "AdfEvent/AdfEvent.h"
 #include "idents/CalXtalId.h"
 
 //static const AlgFactory<test_LdfConverterAlg> Factory;
@@ -47,11 +48,12 @@ private:
     StatusCode readTkrDigiData();
     StatusCode readCalDigiData();
     StatusCode readAcdDigiData();
+    StatusCode readAdfData() ;
 
     int m_count;
 
     IntegerProperty m_header, m_metaEvent, m_summary, m_gem;
-    IntegerProperty m_tkr, m_cal, m_acd, m_diagnostic;
+    IntegerProperty m_tkr, m_cal, m_acd, m_diagnostic, m_adf;
     
 };
 
@@ -69,6 +71,7 @@ Algorithm(name, pSvcLocator)
     declareProperty("PrintTkr", m_tkr = 1);
     declareProperty("PrintCal", m_cal = 1);
     declareProperty("PrintAcd", m_acd = 1);
+    declareProperty("PrintAdf", m_adf = 0);
     declareProperty("PrintDiagnostic", m_diagnostic = 0);
 }
 
@@ -154,6 +157,14 @@ StatusCode test_LdfConverterAlg::execute()
 
     if (m_acd) {
         sc = readAcdDigiData();
+        if (sc.isFailure()) 
+            return sc;
+    }
+
+
+    if (m_adf) {
+        sc = readAdfData();
+
         if (sc.isFailure()) 
             return sc;
     }
@@ -296,6 +307,29 @@ StatusCode test_LdfConverterAlg::readAcdDigiData() {
     }
     return StatusCode::SUCCESS;
 }
+
+StatusCode test_LdfConverterAlg::readAdfData() {
+
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
+
+    SmartDataPtr<DataObject> ancEvt(eventSvc(), "/Event/AncillaryEvent");
+    if (!ancEvt) {
+        log << MSG::ERROR << "Did not retrieve AncillaryEvent" << endreq;
+        return StatusCode::FAILURE;
+    }
+    SmartDataPtr<AncillaryData::AdfEvent> adfEvt(eventSvc(), "/Event/AncillaryEvent/AdfEvent");
+    if (!adfEvt) {
+        log << MSG::ERROR << "Did not retrieve AdfEvent" << endreq;
+        return StatusCode::FAILURE;
+    } else {
+        log << MSG::INFO << "AdfEvent found!" << endreq;
+    }
+    adfEvt->print();
+    adfEvt->dump();
+    return StatusCode::SUCCESS;
+}
+
 
 StatusCode test_LdfConverterAlg::finalize()
 {    

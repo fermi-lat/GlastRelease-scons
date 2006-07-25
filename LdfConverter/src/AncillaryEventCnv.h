@@ -4,6 +4,7 @@
 #include "LdfBaseCnv.h"
 
 //#include "Event/TopLevel/DigiEvent.h"
+#include "AdfEvent/AdfEvent.h"
 
 // Abstract factory to create the converter
 template <class TYPE> class CnvFactory;

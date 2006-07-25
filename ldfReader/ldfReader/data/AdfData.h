@@ -1,6 +1,6 @@
 #ifndef ldfReader_AdfData_H
 #define ldfReader_AdfData_H
-
+#include <stdio.h>
 namespace ldfReader {
 
     /** @class AdfData
@@ -11,13 +11,7 @@ namespace ldfReader {
     public:
 
         AdfData() { clear(); };
-        AdfData(const AdfData& aem) { 
-           clear();
-           m_lenInBytes = aem.m_lenInBytes; 
-           m_exist = aem.m_exist;
-           m_evtNum = aem.m_evtNum;
-           m_packetError = aem.m_packetError;
-           m_buf = aem.m_buf; };
+        AdfData(const AdfData& aem);
 
         ~AdfData() { clear(); };
 
@@ -26,6 +20,7 @@ namespace ldfReader {
             m_exist = false;
             m_evtNum = 0;
             m_packetError=0; 
+            if (m_buf)  delete [] m_buf;
             m_buf = 0;};
 
         void print() const {
@@ -41,7 +36,7 @@ namespace ldfReader {
        void setExist() { m_exist = true; };
        bool exist() const { return m_exist; };
 
-       void initBuffer(const unsigned char* buf) { m_buf = buf; }
+       void initBuffer(const unsigned char* buf, unsigned int len);
        const unsigned char* buffer() const { return m_buf; }
 
        void initLength(unsigned long length) { m_lenInBytes = length; };

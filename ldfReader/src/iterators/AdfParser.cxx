@@ -49,7 +49,7 @@ int AdfParser::parseEvent(const unsigned char* buf ) {
     adf->initEventNum(evtNum);
     unsigned int spillNum = (h[3] >> 12) & 0xffff;
     unsigned int spillSize = h[3] & 0xfff;
-    adf->initBuffer(buf);
+    adf->initBuffer(buf,evtLen);
     if (EbfDebug::getDebug()) {
         printf("ver: 0x%08X %u, len: 0x%08X %u\n", ver, ver, evtLen, evtLen);
         printf("evtNum : %u\n", evtNum);
