@@ -6,16 +6,19 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
 {
   setEventNumber(digiEvent->getEventNumber());
   setSpillNumber(digiEvent->getSpillNumber());
-  XCU=0;
-  YCU=0;
-  ZCU=0;
+  setQdcHitColl(digiEvent->getQdcHitCol());      
+  setScalerHitColl(digiEvent->getScalerHitCol());      
+
+  PX =0.0;  PY=0.0;  PZ=0.0;
   E_rec=0; 
   E_corr=0;
   PhiIn=0;
-  ThetaIn=0;
+  PhiOut=0;
+
   Dphi=0;
-  Egamma=0;
-  EgammaErr=0;
+  Theta=0;
+  
+  m_NumberHigestClusters=0;
 }
 
 void Recon::print()
@@ -33,9 +36,11 @@ void Recon::print()
 
 }
 
+
 std::vector<TaggerCluster> Recon::GetHighestClusters()
 {
   SortClusters();
+  m_NumberHigestClusters=m_taggerClusterColl.size();
   if(m_taggerClusterColl.size()<=1) 
     return m_taggerClusterColl;
   std::vector<TaggerCluster> HigestsClusters;
@@ -58,6 +63,9 @@ std::vector<TaggerCluster> Recon::GetHighestClusters()
 	}
       pos++;
     }
+  HigestsClusters.push_back(selectedCluster);
+  m_NumberHigestClusters=HigestsClusters.size();
+  
   return HigestsClusters;
 }
 
@@ -113,33 +121,69 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
    E_rec  = 0.0;
    E_corr =0.0;
    double bt=geometry->getBL();
-   /*
-     double alpha = atan2(positiony[1]-positiony[0]),dist1);
-     double beta  = atan2(positiony[3]-positiony[2]),dist2);
-     if(fabs(sin(beta)-sin(alpha))>0)
-     E_rec = 300.*bt/(sin(beta)-sin(alpha));
- vv0[0] = dist1;
-    vv0[1] = positiony[1]-positiony[0];
-    vv0[2] = positionz[1]-positionz[0];
-    mynorm = sqrt(vv0[0]*vv0[0]+vv0[1]*vv0[1]+vv0[2]*vv0[2]);
-    vv0[0] /= mynorm;
-    vv0[1] /= mynorm;
-    vv0[2] /= mynorm;
-    vv1[0] = dist2;
-    vv1[1] = positiony[3]-positiony[2];
-    vv1[2] = positionz[3]-positionz[2];
-    mynorm = sqrt(vv1[0]*vv1[0]+vv1[1]*vv1[1]+vv1[2]*vv1[2]);
-    vv1[0] /= mynorm;
-    vv1[1] /= mynorm;
-    vv1[2] /= mynorm;
-    alpha2 = ( asin(vv0[2]) + asin(vv1[2]))/2;
-    dir_rec_x = vv0[0];
-    dir_rec_y = vv0[1];
-    dir_rec_z = vv0[2];
-    if(fabs(cos(alpha2))>0)
-    E_rec2 /= cos(alpha2);
-   */
-}  
+   if(m_NumberHigestClusters==8)
+     {
+       // r1 = a1*x + b1
+       double a1 = (Y[1]-Y[0])/(X[1]-X[0]);
+       double b1 = (Y[0]*X[1]-Y[1]*X[0])/(X[1]-X[0]);
+       // r1 = a2*x + b2
+       double a2 = (Y[3]-Y[2])/(X[3]-X[2]);
+       double b2 = (Y[2]*X[3]-Y[3]*X[2])/(X[3]-X[2]);
+
+       PhiIn   = atan2(Y[1]-Y[0],X[1]-X[0]);
+       PhiOut  = atan2(Y[3]-Y[2],X[3]-X[2]);
+       Dphi = PhiOut - PhiIn;
+       if(fabs(sin(PhiOut)-sin(PhiIn))>0)
+	 E_rec = 300.*bt/(sin(PhiOut)-sin(PhiIn));
+       
+       //  Z = A* X + B
+       double SX = X[0]+X[1]+X[2]+X[3];
+       double SZ = Z[0]+Z[1]+Z[2]+Z[3];
+       double SXX = X[0]*X[0] + X[1]*X[1] + X[2]*X[2] + X[3]*X[3];
+       double SXZ = X[0]*Z[0] + X[1]*Z[1] + X[2]*Z[2] + X[3]*Z[3];
+       double A = (4.*SXZ-SX*SZ)/(4.*SXX-SX*SX);
+       double B = (SZ-A*SX)/4.;
+       Theta=atan(A);
+       if(fabs(cos(Theta))>0)
+	 E_corr = E_rec/cos(Theta);
+       
+       // r1(Px) = r2(Px)
+       if(fabs(a1-a2)>0)
+	 {
+	   PX = (b2-b1)/(a1-a2);
+	   PY = a1 * PX + b1;
+	   PZ = A  * PX + B;
+	 }
+     }
+}
+
+void Recon::report()
+{
+  std::cout<<" RECON EVENT REPORT: ("<<m_NumberHigestClusters<<")"<<std::endl;
+  {
+    if(m_NumberHigestClusters==8)
+      {
+	std::cout<<" Electron Incoming Angle: \t"<<PhiIn<<std::endl;
+	std::cout<<" Electron Outgoing Angle: \t"<<PhiOut<<std::endl;
+	std::cout<<" Delta angle            : \t"<<Dphi<<std::endl;
+	std::cout<<" Theta Angle            : \t"<<Theta<<std::endl;
+	std::cout<<" Reconstructed Energy   : \t"<<E_rec<<std::endl;
+	std::cout<<" Corrected     Energy   : \t"<<E_corr<<std::endl;
+	std::cout<<" Intesection Point      "<<std::endl;
+	std::cout<<" \t X \t Y \t Z     "<<std::endl;
+	std::cout<<" \t "<<PX<<" \t "<<PY<<" \t "<<PZ<<std::endl;
+	std::cout<<" Higest Selected Clusters:    "<<std::endl;
+	std::cout<<" \t X \t Y \t Z     "<<std::endl;
+	for (int i = 0 ; i < N_MODULES;i++)	   
+	  std::cout<<" \t "<<X[i]<<" \t "<<Y[i]<<" \t "<<Z[i]<<std::endl;
+	
+      }
+    else
+      {
+	std::cout<<" Sorry, not enought clusters!"<<std::endl;
+      }
+  } 
+}
 
 /*
   AD_TIMESTAMP 	  Trigger Time-stamp measured in the AD system

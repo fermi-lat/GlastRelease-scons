@@ -40,7 +40,7 @@ namespace AncillaryData
       unsigned    getLayerId() const {return m_layerId;}
       void        setLayerId(unsigned layerId) { m_layerId = layerId; }
       
-      void        SubctractPedestal(double pedestalValue, double rms)
+      void        SubtractPedestal(double pedestalValue, double rms)
 	{
 	  const double PHPS = getPulseHeight()-pedestalValue;
 	  setPulseHeight(PHPS);

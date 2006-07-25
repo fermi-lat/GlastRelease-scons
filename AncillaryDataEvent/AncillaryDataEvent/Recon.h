@@ -51,27 +51,28 @@ namespace AncillaryData
       const std::vector<QdcHit>& getQdcHitCol() const { return m_qdcHitColl; }
 
       void print();
+      void report();
+      
       void setEventNumber(unsigned eventNumber) {m_eventNumber=eventNumber;}
-      unsigned getEventNumber() const {return m_eventNumber;}
+      unsigned int getEventNumber() const {return m_eventNumber;}
       void setSpillNumber(unsigned spillNumber) {m_spillNumber=spillNumber;}
-      unsigned getSpillNumber() const {return m_spillNumber;}
+      unsigned int getSpillNumber() const {return m_spillNumber;}      
 
+      unsigned int getNumberOfHigestClusters(){ return  m_NumberHigestClusters;}
       double getX(unsigned int Module) {return X[Module];}
       double getY(unsigned int Module) {return Y[Module];}
       double getZ(unsigned int Module) {return Z[Module];}
       
-      double getXCU() {return XCU;}
-      double getYCY() {return YCU;}
-      double getZCU() {return ZCU;}
+      double getPX() {return PX;}
+      double getPY() {return PY;}
+      double getPZ() {return PZ;}
       double getPhiIn(){return PhiIn;}
-      double getThetaIn(){return ThetaIn;}
+      double getPhiOut(){return PhiOut;}
+      double getTheta(){return Theta;}
       double getDeltaPhi(){return Dphi;}
-      double getEgamma(){return Egamma;}
-      double getEgammaErr(){return EgammaErr;}
       
       double getReconstructedEnergy(){return E_rec;}
       double getCorrectedEnergy(){return E_corr;}
-
     private:
       unsigned m_eventNumber;
       unsigned m_spillNumber;
@@ -80,10 +81,12 @@ namespace AncillaryData
       std::vector<ScalerHit> m_scalerHitColl;
       
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
-      double XCU,YCU,ZCU;
+      double PX, PY, PZ;
       double E_rec, E_corr;
-      double PhiIn,ThetaIn;
-      double Dphi,Egamma,EgammaErr;
+      double PhiIn,PhiOut;
+      double Theta;
+      double Dphi;
+      unsigned int m_NumberHigestClusters;
     }; 
 }
 #endif

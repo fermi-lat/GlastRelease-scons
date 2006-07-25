@@ -36,7 +36,7 @@ namespace AncillaryData
       double          getPulseHeight()      const {return m_pulseHeight;}
       void            setPulseHeight(double pulseHeight) { m_pulseHeight = pulseHeight; }
 
-      void            SubctractPedestal(double pedestalValue, double rms)
+      void            SubtractPedestal(double pedestalValue, double rms)
 	{
 	  const double PHPS = getPulseHeight()-pedestalValue;
 	  setPulseHeight(PHPS);
