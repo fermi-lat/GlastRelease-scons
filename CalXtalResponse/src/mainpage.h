@@ -126,6 +126,9 @@
     - CalXtalAdcPedAllRange: pedestal subtracted adc values 
     for all adc channels (may be zero if data is not available).
     shape is [16][8][12][2][4] (last index represents ADC range.
+    - CalXtalFaceSignalAllRange: face signal
+    for all adc channels (may be zero if data is not available).
+    shape is [16][8][12][2][4] (last index represents ADC range.
     
     @subsection jobOptions jobOptions
     

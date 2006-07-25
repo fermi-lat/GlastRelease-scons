@@ -1,4 +1,5 @@
-v0r12p1 06/18/06 fewtrell  CalTuple now always saves 4 range data, doesn't force all tuples to write by using wrong nTupleWriterSvc::storeRowFlag() method.
+v0r12p2 07/25/06 fewtrell  CalTuple now saves 4 range face signal as well as 4 range adcped (from last tag).  also indexing bug in caltuple adcped is fixed.
+v0r12p1 07/18/06 fewtrell  CalTuple now always saves 4 range data, doesn't force all tuples to write by using wrong nTupleWriterSvc::storeRowFlag() method.
 v0r12   06/15/06 fewtrell  Stole CalFailureModeSvc from CalUtil, set up to use new CalUtil
 v0r11p1 06/07/06 fewtrell  v0r11p1 converted 'delete' to 'delete[]' where needed.  converted some pointers to auto_ptr.
 v0r11   04/26/06 fewtrell  large restucturing for performance gain..

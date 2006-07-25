@@ -30,8 +30,9 @@ using namespace idents;
 
     CalTuple contains 1 row per GLAST event w/ the following 2 values for each xtal face
     - m_calXtalAdcRng     - adc range for matching AdcPed val
-    - m_calXtalFaceSignal - energy deposit estimated from single face adc value if deposit centroid is assumed to be at center of xtal.
-    - m_calXtalAdcPed     - pedestal subtracted adc values. 
+    - m_calXtalFaceSignal - energy deposit estimated from single face adc value if deposit centroid is assumed to be at center of xtal. (BESTRANGE)
+    - m_calXtalFaceSignalAllRange - face signal for all 4 ranges.
+    - m_calXtalAdcPed     - pedestal subtracted adc values.  (BEASTRANGE)
     - m_calXtalAdcPedAllRange - ped subtraced adc values (all available ranges, indexed by rangeId)
 
     @author Zach Fewtrell
@@ -65,6 +66,7 @@ private:
 
       memset(m_calXtalAdcRng,     0, sizeof(m_calXtalAdcRng));
       memset(m_calXtalFaceSignal, 0, sizeof(m_calXtalFaceSignal));
+      memset(m_calXtalFaceSignalAllRange, 0, sizeof(m_calXtalFaceSignalAllRange));
       memset(m_calXtalAdcPed,     0, sizeof(m_calXtalAdcPed));
       memset(m_calXtalAdcPedAllRange, 0, sizeof(m_calXtalAdcPedAllRange));
 
@@ -82,8 +84,10 @@ private:
     /// adc range selection
     int m_calXtalAdcRng[16][8][12][2];
         
-    /// Cal Xtal Face signal in scintillated MeV units.
+    /// Cal Xtal Face signal in scintillated MeV units. (BESTRANGE)
     float m_calXtalFaceSignal[16][8][12][2];
+    /// Cal Xtal Face signal in scintillated MeV units. (ALLRANGE)
+    float m_calXtalFaceSignalAllRange[16][8][12][2][4];
   };
 
   /// reusable store for CalTuple entries.
@@ -188,6 +192,12 @@ StatusCode CalTupleAlg::initialize() {
                                    (float*)m_tupleEntry.m_calXtalFaceSignal,
                                    m_tupleFilename);
     if (sc.isFailure()) branchFailure |= true;
+
+    sc = m_tupleWriterSvc->addItem(m_tupleName.value(), 
+                                   "CalXtalFaceSignalAllRange[16][8][12][2][4]",
+                                   (float*)m_tupleEntry.m_calXtalFaceSignalAllRange,
+                                   m_tupleFilename);
+    if (sc.isFailure()) branchFailure |= true;
       
     if (branchFailure) {
       msglog << MSG::ERROR << "Failure creating tuple branches" << endl;
@@ -274,7 +284,7 @@ StatusCode CalTupleAlg::execute() {
 
         // fill in 1st readout for both bestrange and allrange arrays
         m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.val()] = adcPed;
-        m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][face.val()][col][rng.val()] = adcPed;
+        m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
 
         // loop through remaining 3 readouts
         for (unsigned char nRO = 1; nRO < 4; nRO++) {
@@ -295,8 +305,11 @@ StatusCode CalTupleAlg::execute() {
           // ped subtracted ADC
           float adcPed = adc - ped->getAvr();
             
-          m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][face.val()][col][rng.val()] = adcPed;
+          m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
 
+          float &myfaceSignal  = m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()];
+          sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, myfaceSignal);
+          if (sc.isFailure()) return sc;
         }
       }
     }
