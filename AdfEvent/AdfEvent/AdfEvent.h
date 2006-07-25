@@ -16,6 +16,7 @@
 #include "AdfEvent/FadcHeaderWord.h"
 #include "AdfEvent/ScalerHeaderWord.h"
 
+static const CLID& CLID_AncillaryEvent = InterfaceID("AncillaryEvent", 1, 0);
 static const CLID& CLID_AncillaryDataFormat = InterfaceID("AncillaryDataFormat", 1, 0);
 
 namespace AncillaryData

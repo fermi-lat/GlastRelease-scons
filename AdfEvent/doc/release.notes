@@ -2,6 +2,7 @@
  Package AdfEvent\n
  Coordinator:N.Omodei
  @verbatim
+ v0r5   25-Jul-2006 HMK Add CLID for /Event/AncillaryEvent on TDS
  v0r4p1   21-Jul-2006 NO  Forgot a parameter
  v0r4   21-Jul-2006 NO  Add silicon Width Parameter
  v0r3   18-Jul-2006 NO  Update v301 file format
