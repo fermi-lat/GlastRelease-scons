@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v0r2   25-Jul-2006 NO  Finishing reconstruction (?). Add root output for the test prog
  v0r1p4 21-Jul-2006 NO  Implemented reconstruction (not finished). Add test prog
  v0r1p3 18-Jul-2006 NO  Implemented pedestal subtraction for the QDC (bugged!)
  v0r1p2 12-Jul-2006 NO  Patch for Parameters
