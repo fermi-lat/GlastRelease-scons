@@ -1,5 +1,6 @@
 <!-- ACDM means medium-sized tile; ACDS is small -->  
 
+<!--   No small tiles on the top
 <box name="topTileACDS"
 XREF="ACDTileSX"
 YREF="ACDTileSY"
@@ -7,23 +8,45 @@ ZREF="tileThickness"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
+-->
 
+<!-- Medium top tile -->
 <box name="topTileACDM"
-XREF="ACDTileMX"
-YREF="ACDTileMY"
+XREF="ACDTileMHeight"
+YREF="ACDTileMTrans"
 ZREF="tileThickness"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
-<box name="sideTileACDS"
+<!-- medium tiles destined for X-sides -->
+<box name="sideTileXACDM"
 XREF="tileThickness"
-YREF="ACDTileSX"
-ZREF="ACDTileSY"
+YREF="ACDTileMTrans"
+ZREF="ACDTileMHeight"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
+<!-- medium tiles destined for Y-sides -->
+<box name="sideTileYACDM"
+XREF="ACDTileMTrans"
+YREF="tileThickness"
+ZREF="ACDTileMHeight"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+
+<!-- small tiles destined for X-sides -->
+<box name="sideTileXACDS"
+XREF="tileThickness"
+YREF="ACDTileSTrans"
+ZREF="ACDTileSHeight"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+
+<!--
 <box name="sideTileACDM"
 XREF="tileThickness"
 YREF="ACDTileMX"
@@ -31,3 +54,4 @@ ZREF="ACDTileMY"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
+-->

@@ -279,6 +279,120 @@ guess 1:          <minus>
            </uminus>
          </const>
 
+<!-- ACD tile displacements -->
+        <const name="ACDTile_100_dy" >
+          <notes>y-displacement of tile 100 (on -X face)</notes>
+          <refer refTo="ACDTile_000_dy" />
+        </const>
+
+        <const name="ACDTile_110_dy" >
+          <notes>y-displacement of tile 110 (on -X face)</notes>
+          <refer refTo="ACDTile_000_dy" />
+        </const>
+
+        <const name="ACDTile_120_dy" >
+          <notes>y-displacement of tile 120 (on -X face)</notes>
+          <refer refTo="ACDTile_000_dy" />
+        </const>
+
+        <const name="ACDTile_100_dx" >
+           <notes> x-displacement of tile 100 (on -X face).
+                  Computed from location of  ISCTkrXFace </notes>
+           <minus>
+             <refer refTo="ISCTkrXn_dx" />
+             <half>
+               <add>
+                 <refer refTo="tileThickness" />
+                 <refer refTo="ISCThin" />
+               </add>
+             </half>
+           </minus>
+         </const>
+
+        <const name="ACDTile_110_dx" >
+           <notes> x-displacement of tile 110 (on -X face).</notes>
+           <refer refTo="ACDTile_100_dx" />
+        </const>
+
+        <const name="ACDTile_120_dx" >
+           <notes> x-displacement of tile 120 (on -X face).</notes>
+           <refer refTo="ACDTile_100_dx" />
+        </const>
+
+        <const name="ACDTile_100_dz" >
+           <notes> z-displacement of tile 100 (on -X face).
+                  Computed from location of  ISCTkrZFace </notes>
+           <minus>
+             <refer refTo="ISCTkrZp_dz" />
+             <half>
+               <add>
+                 <refer refTo="ISCThin" />
+                 <refer refTo="ACDTileMHeight" />
+               </add>
+             </half>
+           </minus>
+         </const>
+
+        <const name="ACDTile_110_dz" >
+           <notes> z-displacement of tile 110 (on -X face).
+                  Computed from location of tile 'above' (100) </notes>
+           <minus>
+             <refer refTo="ACDTile_100_dz" />
+             <half>
+               <add>
+                 <refer refTo="ACDTileMHeight" />
+                 <refer refTo="ACDTileSHeight" />
+               </add>
+             </half>
+           </minus>
+         </const>
+
+        <const name="ACDTile_120_dz" >
+           <notes> z-displacement of tile 120 (on -X face).
+                  Computed from location of tile 'above' (110) </notes>
+           <minus>
+             <refer refTo="ACDTile_110_dz" />
+             <refer refTo="ACDTileSHeight" />
+           </minus>
+         </const>
+
+
+        <const name="ACDTile_200_dx" >
+          <notes> x-displacement of tile 200 (on -Y face) is
+             computed from location of -X face of ISC
+          </notes>
+          <add>
+            <refer refTo="ISCTkrXn_dx" />
+            <half>
+              <add>
+                <refer refTo="ACDTileMTrans" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </add>
+       </const>
+
+        <const name="ACDTile_200_dy" >
+          <notes> y-displacement of tile 200 (on -Y face) is
+             computed from y-disp of  location of -Y face of ISC
+          </notes>
+          <minus>
+            <refer refTo="ISCTkrYn_dy" />
+            <half>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </minus>
+        </const>
+
+        <const name="ACDTile_200_dz" >
+          <notes> z-displacement of tile 200 (on -Y face) is same
+                  as 100 on -X face.</notes>
+          <refer refTo="ACDTile_100_dz" />
+        </const>
+
       </derCategory>
 
 
