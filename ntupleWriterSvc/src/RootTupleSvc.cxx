@@ -110,6 +110,19 @@ public:
         const std::string& itemName, const unsigned int* pval,
         const std::string& fileName=std::string(""));
 
+
+    /** @brief Adds a pointer to a zero-terminated array of char 
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param pval - pointer to the character array
+    @param fileName - name of ROOT file: if it does not exist, it will be created
+    */
+    virtual StatusCode addItem(const std::string & tupleName, 
+        const std::string& itemName, const char * val,
+            const std::string& fileName=std::string(""));
+
+
+
     /** @brief interface to ROOT to add any item
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
@@ -188,6 +201,7 @@ private:
     std::map<std::string, int> m_badMap; ///< map of counts for individual values
     BooleanProperty m_rejectIfBad; ///< set true to reject the tuple entry if bad values
 
+    Char_t test; // to see what this is
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
@@ -354,6 +368,15 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
     return addAnyItem(tupleName, itemName, "/i", (void*)pval, fileName);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                               const std::string& itemName,
+                               const char * pval,
+                               const std::string& fileName)
+{
+    return addAnyItem(tupleName, itemName, "/C", (void*)pval, fileName);
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::handle(const Incident &inc)
 {
     // Purpose and Method:  This routine is called when an "incident"
@@ -423,6 +446,7 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
         TBranch * b = (TBranch*)(*ta)[i];
         TLeaf* leaf = (TLeaf*)(*b->GetListOfLeaves())[0]; 
         double val = leaf->GetValue();
+        void* valpointer = leaf->GetValuePointer();
         if( ! isFinite(val) ){
             log << MSG::DEBUG  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
             m_badMap[leaf->GetName()]++;

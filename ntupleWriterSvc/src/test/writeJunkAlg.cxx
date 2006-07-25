@@ -48,13 +48,18 @@ private:
 
     float* m_float_test;
 
+    char  m_name[10];
+
 };
 
 static const AlgFactory<writeJunkAlg>  Factory;
 const IAlgFactory& writeJunkAlgFactory = Factory;
 
-writeJunkAlg::writeJunkAlg(const std::string& name, ISvcLocator* pSvcLocator) :
-Algorithm(name, pSvcLocator){
+writeJunkAlg::writeJunkAlg(const std::string& name, ISvcLocator* pSvcLocator) 
+: Algorithm(name, pSvcLocator)
+{
+
+    strncpy(m_name, "default",10); // make it point to something
 
     declareProperty("tupleName",  m_tupleName="");
 
@@ -79,12 +84,13 @@ StatusCode writeJunkAlg::initialize() {
 
     m_count = 0;
 
-    m_rootTupleSvc->addItem("tree_1","count", &m_count);
-    m_rootTupleSvc->addItem("tree_1","square", &m_square);
-    m_rootTupleSvc->addItem("tree_1","int", &m_int);
-    m_rootTupleSvc->addItem("tree_1","uint", &m_uint);
-    m_rootTupleSvc->addItem("tree_1","float", &m_float);
-    m_rootTupleSvc->addItem("tree_1", "array[2]", m_array);
+    m_rootTupleSvc->addItem("tree_1", "count",  &m_count);
+    m_rootTupleSvc->addItem("tree_1", "square", &m_square);
+    m_rootTupleSvc->addItem("tree_1", "int",    &m_int);
+    m_rootTupleSvc->addItem("tree_1", "uint",   &m_uint);
+    m_rootTupleSvc->addItem("tree_1", "float",  &m_float);
+    m_rootTupleSvc->addItem("tree_1", "array[2]",m_array);
+    m_rootTupleSvc->addItem("tree_1", "name",    m_name);
 #if 1
     // test creation of a second ROOT file
     m_rootTupleSvc->addItem("t2", "float2", &m_float2, "other.root");
@@ -126,6 +132,10 @@ StatusCode writeJunkAlg::execute() {
     m_array[1]= 2*m_int;
 
     m_float2 = m_count;
+
+    // test adding names
+    static const char* names[] = {"name1", "name2"};
+    strncpy(m_name, (m_count<3? names[0]: names[1]) , 10);
 
     // check finite test routines
     m_float = m_count==5? m_count/0.0 : m_count;
