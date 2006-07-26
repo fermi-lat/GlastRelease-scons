@@ -29,6 +29,9 @@ int AdfParser::parseHeader(const unsigned char *buf ) {
          printf("runNum 0x%08X %u\n", runNum, runNum);
          printf("ver: 0x%08X %u, len: 0x%08X %u\n", ver, ver, h[1], h[1]);
      }
+    
+    ldfReader::LatData* curLatData = ldfReader::LatData::instance();
+    curLatData->setAdfHdrTlr(true);
 
     return 0;
 }
@@ -59,6 +62,8 @@ int AdfParser::parseEvent(const unsigned char* buf ) {
 
 int AdfParser::parseTrailer(const unsigned char* buf) {
 
+    ldfReader::LatData* curLatData = ldfReader::LatData::instance();
+    curLatData->setAdfHdrTlr(true);
 
     return 0;
 }
