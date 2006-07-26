@@ -278,10 +278,14 @@ StatusCode CalTupleAlg::execute() {
 
         // face signal
         // get reference to 'real' location in big array
-        float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()];
-        sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
-        if (sc.isFailure()) return sc;
-        m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
+        if (adcPed > 0) {
+          float faceSignal;
+          sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
+          m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = max<float>(0,faceSignal);
+          if (sc.isFailure()) return sc;
+          m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
+        }
+
 
         // fill in 1st readout for both bestrange and allrange arrays
         m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.val()] = adcPed;
@@ -308,9 +312,12 @@ StatusCode CalTupleAlg::execute() {
             
           m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
 
-          float &myfaceSignal  = m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()];
-          sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, myfaceSignal);
-          if (sc.isFailure()) return sc;
+          if (adcPed > 0) {
+            float faceSignal; 
+            sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
+            if (sc.isFailure()) return sc;
+            m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = max<float>(0,faceSignal);
+          }
         }
       }
     }
