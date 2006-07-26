@@ -19,12 +19,12 @@ public:
     TaggerHit();
 
     TaggerHit(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-             Double_t pulseHeight, Bool_t isPedSubtracted);
+             Double_t pulseHeight, Double_t sigma, Bool_t isPedSubtracted);
 
     TaggerHit(const TaggerHit& copy);
 
     void initialize(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-             Double_t pulseHeight, Bool_t isPedSubtracted);
+             Double_t pulseHeight, Double_t sigma, Bool_t isPedSubtracted);
     
     TaggerHit& operator=(const TaggerHit& copy);
 
@@ -39,6 +39,7 @@ public:
     UInt_t getStripId() const { return m_stripId; }
     Double_t getPulseHeight() const { return m_pulseHeight; }
     Bool_t isPedestalSubtracted() const { return m_isPedestalSubtracted; } 
+    Double_t getSigma() const { return m_sigma; }
 
     Bool_t CompareInRange( const TaggerHit &ref, const std::string& name="" )const;
 
@@ -48,6 +49,7 @@ private:
     UInt_t m_layerId;
     UInt_t m_stripId;
     Double32_t m_pulseHeight;
+    Double32_t m_sigma;
     Bool_t m_isPedestalSubtracted;
 
 

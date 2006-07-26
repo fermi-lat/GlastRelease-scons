@@ -18,12 +18,13 @@ public:
     
     QdcHit();
 
-    QdcHit(UInt_t channel, Double_t pulseHeight, UInt_t module, Bool_t isPedSubtracted);
+    QdcHit(UInt_t channel, Double_t pulseHeight, UInt_t module, 
+           Double_t sigma, Bool_t isPedSubtracted);
 
     QdcHit(const QdcHit& copy);
 
     void initialize(UInt_t channel, Double_t pulseHeight, UInt_t module,
-                    Bool_t isPedSubtracted);
+                    Double_t sigma, Bool_t isPedSubtracted);
 
     QdcHit& operator=(const QdcHit& copy);
 
@@ -37,6 +38,7 @@ public:
     Double_t getPulseHeight() const { return m_pulseHeight; }
     Bool_t isPedestalSubtracted() const { return m_isPedestalSubtracted; }
     UInt_t getModule() const { return m_module; }
+    Double_t getSigma() const { return m_sigma; }
 
     Bool_t CompareInRange( const QdcHit &ref, const std::string& name="" ) const;
 
@@ -44,6 +46,7 @@ private:
 
     UInt_t m_channel;
     UInt_t m_module;
+    Double32_t m_sigma;
     Double32_t m_pulseHeight;
     Bool_t m_isPedestalSubtracted;
 

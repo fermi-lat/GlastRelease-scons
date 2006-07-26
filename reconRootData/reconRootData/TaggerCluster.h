@@ -27,17 +27,31 @@ public:
 
     void initialize(Double_t pos, Double_t pulseHeight, Double_t eta);
 
+    void initXyz(Double_t x, Double_t y, Double_t z);
+
     UInt_t getSize() const { return m_taggerHitCol->GetEntriesFast();  }
+
     Double_t getPosition() const { return m_baricenterPosition; }
+
     Double_t getPulseHeight() const { return m_totalPulseHeight; };
+
+    UInt_t getModuleId() const { return m_highestHit.getModuleId(); }
+
+    UInt_t getLayerId() const { return m_highestHit.getLayerId(); }
+    
     const commonRootData::TaggerHit& getHighestHit() const { return m_highestHit; };
     void setHighestHit(const commonRootData::TaggerHit& hit) { m_highestHit = hit; };
     Double_t getEta() const { return m_eta; }
 
+    Double_t getX() const { return m_x; }
+    Double_t getY() const { return m_y; }
+    Double_t getZ() const { return m_z; }
+
     const TClonesArray* getTaggerHitCol() const { return m_taggerHitCol; }
     const commonRootData::TaggerHit* getTaggerHit(UInt_t ind) const;
     commonRootData::TaggerHit* addTaggerHit(UInt_t moduleId,UInt_t layerId,
-                        UInt_t stripId,  UInt_t pulseHgt, Bool_t isPedSub);
+                        UInt_t stripId, Double_t pulseHgt, Double_t sigma,
+                        Bool_t isPedSub);
 
 
     void Fake( Int_t ievent, Float_t randNum );
@@ -48,8 +62,11 @@ private:
     Double_t m_baricenterPosition;
     Double_t m_totalPulseHeight;
     Double_t m_eta;
-    commonRootData::TaggerHit m_highestHit;
+    Double32_t m_x;
+    Double32_t m_y;
+    Double32_t m_z;
     Int_t m_numTaggerHit;
+    commonRootData::TaggerHit m_highestHit;
 
     TClonesArray *m_taggerHitCol;
 

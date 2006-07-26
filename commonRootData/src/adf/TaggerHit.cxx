@@ -15,15 +15,15 @@ TaggerHit::TaggerHit() {
 }
 
 TaggerHit::TaggerHit(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-                     Double_t pulseHght, Bool_t isPedSubtracted) {
+                     Double_t pulseHght, Double_t sigma, Bool_t isPedSubtracted) {
 
-    initialize(moduleId, layerId, stripId, pulseHght, isPedSubtracted);
+    initialize(moduleId, layerId, stripId, pulseHght, sigma, isPedSubtracted);
 }
 
 TaggerHit::TaggerHit(const TaggerHit& copy):TObject(copy) {
 
     initialize(copy.m_moduleId, copy.m_layerId, copy.m_stripId, 
-               copy.m_pulseHeight, copy.m_isPedestalSubtracted);
+               copy.m_pulseHeight, copy.m_sigma,  copy.m_isPedestalSubtracted);
 }
 
 
@@ -32,18 +32,20 @@ TaggerHit::~TaggerHit() {
 }
 
 void TaggerHit::initialize(UInt_t moduleId, UInt_t layerId, UInt_t stripId,
-                           Double_t pulseHgt, Bool_t isPedSubtracted) {
+                           Double_t pulseHgt, Double_t sigma, 
+                           Bool_t isPedSubtracted) {
 
     m_moduleId = moduleId;
     m_layerId = layerId;
     m_stripId = stripId;
     m_pulseHeight = pulseHgt;
+    m_sigma = sigma;
     m_isPedestalSubtracted = isPedSubtracted;
 }
 
 TaggerHit& TaggerHit::operator=(const TaggerHit& copy) {
     initialize(copy.m_moduleId, copy.m_layerId, copy.m_stripId, 
-               copy.m_pulseHeight, m_isPedestalSubtracted);
+               copy.m_pulseHeight, copy.m_sigma, copy.m_isPedestalSubtracted);
     return *this;
 }
 
@@ -53,6 +55,7 @@ void TaggerHit::Clear(Option_t *option) {
     m_layerId = 0;
     m_stripId = 0;
     m_pulseHeight = 0.0;
+    m_sigma = 0.0;
     m_isPedestalSubtracted = false;
 }
 
@@ -63,6 +66,7 @@ void TaggerHit::Print(Option_t *option) const {
     cout << "TaggerHit:" << endl;
     cout << "ModuleId: " << m_moduleId << " LayerId: " << m_layerId
          << " StripId: " << m_stripId << " PulseHeight: " << m_pulseHeight
+         << " Sigma: " << m_sigma
          << " isPedestalSubtracted: " << m_isPedestalSubtracted << endl;
     cout << dec;
 }
@@ -74,6 +78,7 @@ Bool_t TaggerHit::CompareInRange(const TaggerHit &ref, const std::string& name )
     result = rootdatautil::CompareInRange(getLayerId(),ref.getLayerId(),"LayerId") && result;
     result = rootdatautil::CompareInRange(getStripId(),ref.getStripId(),"StripId") && result;
     result = rootdatautil::CompareInRange(getPulseHeight(),ref.getPulseHeight(),"PulseHeight") && result;
+    result = rootdatautil::CompareInRange(getSigma(),ref.getSigma(),"Sigma") && result;
     result = rootdatautil::CompareInRange(isPedestalSubtracted(),ref.isPedestalSubtracted(),"IsPedestalSubtracted") && result;
 
     if (!result) {
