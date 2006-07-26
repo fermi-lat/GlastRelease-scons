@@ -2,7 +2,8 @@
  Package AncillaryDataEvent
  Coordinator:N.Omodei
  @verbatim
- v0r2   25-Jul-2006 NO  Refine the recon.
+ v1r2p1 25-Jul-2006 HMK patch for namespace definition
+ v1r2   25-Jul-2006 NO  Refine the recon.
  v0r1p5 20-Jul-2006 HMK remove duplicate const already in AdfEvent
  v0r1p4 20-Jul-2006 MK  store pulseHeights as doubles
  v0r1p3 18-Jul-2006 N0  add the scaler

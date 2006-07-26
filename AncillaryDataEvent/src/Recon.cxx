@@ -1,6 +1,8 @@
 #include "AncillaryDataEvent/Recon.h"
 
-using namespace AncillaryData;
+//using namespace AncillaryData;
+
+namespace AncillaryData {
 
 Recon::Recon(AncillaryData::Digi *digiEvent)
 {
@@ -184,6 +186,8 @@ void Recon::report()
       }
   } 
 }
+
+} // end namespace AncillaryData
 
 /*
   AD_TIMESTAMP 	  Trigger Time-stamp measured in the AD system

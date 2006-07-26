@@ -1,7 +1,7 @@
 #include "AncillaryDataEvent/TaggerCluster.h"
 #include "AdfEvent/TaggerParameters.h"
 
-using namespace AncillaryData;
+namespace AncillaryData {
 
 void TaggerCluster::calculateProperties()
 {  
@@ -56,3 +56,5 @@ void TaggerCluster::computePosition(AncillaryGeometry *geometry)
   m_Y = getPosition() + geometry->getY(M);
   m_Z = getPosition() + geometry->getZ(M);  
 }
+
+} // end namespace
