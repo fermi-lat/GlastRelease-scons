@@ -66,21 +66,21 @@ void AdfDigi::Print(Option_t *option) const {
     cout << "AdfDigi:" << endl;
     cout << "EventNumber: " << m_eventNumber << " SpillNumber: " 
          << m_spillNumber << endl;
-    cout << "Num Tagger Hits: " << m_numTaggerHit << " Num Qdc Hits: " 
-         << m_numQdcHit << " Num Scaler Hits: " << m_numScalerHit << endl;
+    cout << "Num Tagger Hits: " << m_numTaggerHit+1 << " Num Qdc Hits: " 
+         << m_numQdcHit+1 << " Num Scaler Hits: " << m_numScalerHit+1 << endl;
     cout << dec;
 }
 
 commonRootData::TaggerHit* AdfDigi::addTaggerHit(UInt_t moduleId, UInt_t layerId, 
-                                 UInt_t stripId, UInt_t pulseHgt, 
-                                 Bool_t isPedSubtracted) {
+                                 UInt_t stripId, Double_t pulseHgt, 
+                                 Double_t sigma, Bool_t isPedSubtracted) {
     // Add a new TaggerHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     if (!m_taggerHitCol) m_taggerHitCol = new TClonesArray("commonRootData::TaggerHit", 1);
     ++m_numTaggerHit;
     TClonesArray &localCol = *m_taggerHitCol;
-    new(localCol[m_numTaggerHit]) commonRootData::TaggerHit(moduleId, layerId, stripId, pulseHgt, isPedSubtracted);
+    new(localCol[m_numTaggerHit]) commonRootData::TaggerHit(moduleId, layerId, stripId, pulseHgt, sigma, isPedSubtracted);
     return ((commonRootData::TaggerHit*)(localCol[m_numTaggerHit]));
 }
 
@@ -91,14 +91,14 @@ const commonRootData::TaggerHit* AdfDigi::getTaggerHit(UInt_t ind) const {
         return 0;
 }
 
-commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t mod, Bool_t isPedSub) {
+commonRootData::QdcHit* AdfDigi::addQdcHit(UInt_t channel, Double_t pulseHgt, UInt_t mod, Double_t sigma, Bool_t isPedSub) {
     // Add a new QdcHit entry, note that
     // TClonesArrays can only be filled via
     // a new with placement call
     if (!m_qdcHitCol) m_qdcHitCol = new TClonesArray("commonRootData::QdcHit",1);
     ++m_numQdcHit;
     TClonesArray &localCol = *m_qdcHitCol;
-    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, mod, isPedSub);
+    new(localCol[m_numQdcHit]) commonRootData::QdcHit(channel, pulseHgt, mod, sigma, isPedSub);
     return ((commonRootData::QdcHit*)(localCol[m_numQdcHit]));
 }
 
@@ -132,13 +132,13 @@ void AdfDigi::Fake( Int_t ievent, Float_t randNum ) {
     setEventNumber(ievent);
     setSpillNumber(5);
     // Add 2 TaggerHits
-    addTaggerHit(1,2,3,4,true);
-    addTaggerHit(5,6,7,8,false);
+    addTaggerHit(1,2,3,4.4,5.5,true);
+    addTaggerHit(5,6,7,8.8,9.9,false);
    
     // Add 3 QdcHits
-    addQdcHit(1,2,3,true);
-    addQdcHit(2,3,4,false);
-    addQdcHit(3,4,5,true);
+    addQdcHit(1,2.2,3,4.4,true);
+    addQdcHit(2,3.3,4,5.5,false);
+    addQdcHit(3,4.4,5,6.6,true);
 
     addScalerHit(0,1);
     addScalerHit(1,2);

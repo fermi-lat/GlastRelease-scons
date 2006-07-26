@@ -35,13 +35,14 @@ public:
     const TClonesArray* getTaggerHitCol() const { return m_taggerHitCol; }
     const commonRootData::TaggerHit* getTaggerHit(UInt_t ind) const;
     commonRootData::TaggerHit* addTaggerHit(UInt_t moduleId, UInt_t layerId, 
-                                            UInt_t stripId, UInt_t pulseHgt, 
+                                            UInt_t stripId, Double_t pulseHgt, 
+                                            Double_t sigma, 
                                             Bool_t isPedSubtracted);
 
 
     const TClonesArray* getQdcHitCol() const { return m_qdcHitCol; }
     const commonRootData::QdcHit* getQdcHit(UInt_t ind) const;
-    commonRootData::QdcHit* addQdcHit(UInt_t channel, UInt_t pulseHgt, UInt_t module, Bool_t isPedSub);
+    commonRootData::QdcHit* addQdcHit(UInt_t channel, Double_t pulseHgt, UInt_t module,Double_t sigma,  Bool_t isPedSub);
 
     const TClonesArray* getScalerHitCol() const { return m_scalerHitCol; }
     const commonRootData::ScalerHit* getScalerHit(UInt_t ind) const;
