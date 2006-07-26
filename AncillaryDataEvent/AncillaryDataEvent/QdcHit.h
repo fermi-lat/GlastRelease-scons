@@ -44,7 +44,7 @@ namespace AncillaryData
 	  setSigma(rms);
 	}
       void setSigma(double rms){m_sigma = rms;}
-      double getSigma(){return m_sigma;}      
+      double getSigma() const {return m_sigma;}      
 
       bool       getPedestalSubtract() const {return m_IsPedestalSubtracted;}
       void       setPedestalSubtract(){m_IsPedestalSubtracted=true;}

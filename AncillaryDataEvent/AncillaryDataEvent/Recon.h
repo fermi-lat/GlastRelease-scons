@@ -49,6 +49,7 @@ namespace AncillaryData
       const std::vector<TaggerCluster> getTaggerClusters() const { return m_taggerClusterColl; }
 
       const std::vector<QdcHit>& getQdcHitCol() const { return m_qdcHitColl; }
+      const std::vector<ScalerHit>& getScalerHitCol() const { return m_scalerHitColl; }
 
       void print();
       void report();
@@ -58,21 +59,38 @@ namespace AncillaryData
       void setSpillNumber(unsigned spillNumber) {m_spillNumber=spillNumber;}
       unsigned int getSpillNumber() const {return m_spillNumber;}      
 
-      unsigned int getNumberOfHigestClusters(){ return  m_NumberHigestClusters;}
-      double getX(unsigned int Module) {return X[Module];}
-      double getY(unsigned int Module) {return Y[Module];}
-      double getZ(unsigned int Module) {return Z[Module];}
+      void setNumberOfHighestClusters(unsigned int n) { m_NumberHigestClusters = n; }
+      unsigned int getNumberOfHigestClusters() const { return  m_NumberHigestClusters;}
+      void setPos(const double *xArr, const double *yArr, const double *zArr) {
+          unsigned int i;
+          for (i=0; i<N_MODULES; i++) {
+              X[i] = xArr[i];
+              Y[i] = yArr[i];
+              Z[i] = zArr[i];
+          }
+       }
+      double getX(unsigned int Module) const {return X[Module];}
+      double getY(unsigned int Module) const {return Y[Module];}
+      double getZ(unsigned int Module) const {return Z[Module];}
       
-      double getPX() {return PX;}
-      double getPY() {return PY;}
-      double getPZ() {return PZ;}
-      double getPhiIn(){return PhiIn;}
-      double getPhiOut(){return PhiOut;}
-      double getTheta(){return Theta;}
-      double getDeltaPhi(){return Dphi;}
+      void setMomentum(double x, double y, double z) {
+          PX = x; PY = y; PZ = z; }
+      double getPX() const {return PX;}
+      double getPY() const {return PY;}
+      double getPZ() const {return PZ;}
+      void setPhi(double in, double out) {
+          PhiIn = in; PhiOut = out; }
+      double getPhiIn() const {return PhiIn;}
+      double getPhiOut() const {return PhiOut;}
+      void setThetaPhi(double t, double p) {
+          Theta = t; Dphi = p; }
+      double getTheta() const {return Theta;}
+      double getDeltaPhi() const {return Dphi;}
       
-      double getReconstructedEnergy(){return E_rec;}
-      double getCorrectedEnergy(){return E_corr;}
+      void setEnergy(double erec, double ecorr) {
+          E_rec = erec;  E_corr = ecorr; }
+      double getReconstructedEnergy() const{ return E_rec;}
+      double getCorrectedEnergy() const {return E_corr;}
     private:
       unsigned m_eventNumber;
       unsigned m_spillNumber;
