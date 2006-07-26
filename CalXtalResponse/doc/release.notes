@@ -1,3 +1,4 @@
+v0r12p3 07/26/06 fewtrell  CalTuple.FaceSignalAllRange from previous patch was coming out blank.  bug fixed.
 v0r12p2 07/25/06 fewtrell  CalTuple now saves 4 range face signal as well as 4 range adcped (from last tag).  also indexing bug in caltuple adcped is fixed.
 v0r12p1 07/18/06 fewtrell  CalTuple now always saves 4 range data, doesn't force all tuples to write by using wrong nTupleWriterSvc::storeRowFlag() method.
 v0r12   06/15/06 fewtrell  Stole CalFailureModeSvc from CalUtil, set up to use new CalUtil

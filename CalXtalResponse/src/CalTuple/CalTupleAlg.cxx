@@ -281,6 +281,7 @@ StatusCode CalTupleAlg::execute() {
         float &faceSignal  = m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()];
         sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
         if (sc.isFailure()) return sc;
+        m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
 
         // fill in 1st readout for both bestrange and allrange arrays
         m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.val()] = adcPed;
