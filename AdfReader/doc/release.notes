@@ -2,6 +2,8 @@
  Package AdfReader\n
  Coordinator:N. Omodei
  @verbatim
+ v0r2   25-Jul-2006 HMK Add AdfDigiAlg to read AdfEvent from TDS and create
+                    AncillaryDigi without reading binary file for ADF data
  v0r1p3 21-Jul-2006 NO  Add a test program
  v0r1p2 13-Jul-2006 NO  Update new file format
  v0r1p1 12-Jul-2006 NO  Intermediate step

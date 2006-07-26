@@ -10,4 +10,5 @@
 DECLARE_FACTORY_ENTRIES(AdfReader) 
 {
     DECLARE_ALGORITHM( AdfReaderAlg );
+    DECLARE_ALGORITHM( AdfDigiAlg );
 }
