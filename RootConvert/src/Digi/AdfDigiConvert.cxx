@@ -24,7 +24,7 @@ namespace RootPersistence {
 
   void convert( const AncillaryData::QdcHit* tdsObj,
                 commonRootData::QdcHit& rootObj) {
-       rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getQdcModule(), tdsObj->getPedestalSubtract());
+       rootObj.initialize(tdsObj->getQdcChannel(), tdsObj->getPulseHeight(), tdsObj->getQdcModule(), tdsObj->getSigma(), tdsObj->getPedestalSubtract());
   };
 
   void convert( const commonRootData::QdcHit* rootObj,
@@ -33,12 +33,14 @@ namespace RootPersistence {
     tdsObj.setPulseHeight(rootObj->getPulseHeight());
     tdsObj.setQdcChannel(rootObj->getChannel());
     tdsObj.setQdcModule(rootObj->getModule());
+    tdsObj.setSigma(rootObj->getSigma());
   };
 
   void convert( const AncillaryData::TaggerHit* tdsObj,
                 commonRootData::TaggerHit& rootObj) {
-      rootObj.initialize(tdsObj->getModuleId(), tdsObj->getLayerId(), tdsObj->getStripId(),
-		                   tdsObj->getPulseHeight(), tdsObj->getPedestalSubtract());
+      rootObj.initialize(tdsObj->getModuleId(), tdsObj->getLayerId(), 
+                        tdsObj->getStripId(), tdsObj->getPulseHeight(), 
+                        tdsObj->getSigma(), tdsObj->getPedestalSubtract());
   };
 
   void convert( const commonRootData::TaggerHit* rootObj,
@@ -48,6 +50,7 @@ namespace RootPersistence {
 	   tdsObj.setPulseHeight(rootObj->getPulseHeight());
 	   if (rootObj->isPedestalSubtracted()) tdsObj.setPedestalSubtract();
 	   tdsObj.setStripId(rootObj->getStripId());
+           tdsObj.setSigma(rootObj->getSigma());
   };
 
   void convert( const AncillaryData::Digi& tdsObj, AdfDigi& rootObj) {
@@ -57,8 +60,10 @@ namespace RootPersistence {
 	  const std::vector<AncillaryData::TaggerHit>& taggerHitColTds = tdsObj.getTaggerHitCol();
 	  std::vector<AncillaryData::TaggerHit>::const_iterator tagIt;
 	  for (tagIt = taggerHitColTds.begin(); tagIt != taggerHitColTds.end(); tagIt++) {
-		  rootObj.addTaggerHit(tagIt->getModuleId(), tagIt->getLayerId(), tagIt->getStripId(), 
-			  tagIt->getPulseHeight(), tagIt->getPedestalSubtract());
+		  rootObj.addTaggerHit(tagIt->getModuleId(), 
+                          tagIt->getLayerId(), tagIt->getStripId(), 
+			  tagIt->getPulseHeight(), tagIt->getSigma(),
+                          tagIt->getPedestalSubtract());
 	  }
 
 	  const std::vector<AncillaryData::ScalerHit>& scalerHitColTds = tdsObj.getScalerHitCol();
@@ -70,7 +75,7 @@ namespace RootPersistence {
 	  const std::vector<AncillaryData::QdcHit>& qdcHitColTds = tdsObj.getQdcHitCol();
 	  std::vector<AncillaryData::QdcHit>::const_iterator qdcIt;
 	  for(qdcIt = qdcHitColTds.begin(); qdcIt != qdcHitColTds.end(); qdcIt++) {
-		  rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), qdcIt->getQdcModule(), qdcIt->getPedestalSubtract());
+		  rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), qdcIt->getQdcModule(), qdcIt->getSigma(), qdcIt->getPedestalSubtract());
 	  }
   };
 

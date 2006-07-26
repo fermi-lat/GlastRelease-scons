@@ -13,23 +13,6 @@
 namespace RootPersistence {
 
 
-/*
-  void convert( const AncillaryData::TaggerHit* tdsObj,
-                commonRootData::TaggerHit& rootObj) {
-      rootObj.initialize(tdsObj->getModuleId(), tdsObj->getLayerId(), tdsObj->getStripId(),
-            tdsObj->getPulseHeight(), tdsObj->getPedestalSubtract());
-  };
-
-  void convert( const commonRootData::TaggerHit* rootObj,
-                AncillaryData::TaggerHit& tdsObj) {
-       tdsObj.setLayerId(rootObj->getLayerId());
-       tdsObj.setModuleId(rootObj->getModuleId());
-       tdsObj.setPulseHeight(rootObj->getPulseHeight());
-       if (rootObj->isPedestalSubtracted()) tdsObj.setPedestalSubtract();
-       tdsObj.setStripId(rootObj->getStripId());
-  };
-*/
-
   void convert( const AncillaryData::TaggerCluster& tdsObj,
                 reconRootData::TaggerCluster*& rootObj) {
 
@@ -47,7 +30,8 @@ namespace RootPersistence {
     for (tagIt = taggerHitColTds.begin(); tagIt != taggerHitColTds.end(); tagIt++) {
     rootObj->addTaggerHit(tagIt->getModuleId(), tagIt->getLayerId(), 
           tagIt->getStripId(), 
-	  tagIt->getPulseHeight(), tagIt->getPedestalSubtract());
+	  tagIt->getPulseHeight(), tagIt->getSigma(), 
+          tagIt->getPedestalSubtract());
     }
   };
 
@@ -72,8 +56,24 @@ namespace RootPersistence {
   };
 
   void convert( const AncillaryData::Recon& tdsObj, reconRootData::AdfRecon& rootObj) {
-    rootObj.setEventNumber(tdsObj.getEventNumber());
-    rootObj.setSpillNumber(tdsObj.getSpillNumber());
+    rootObj.initEventNumber(tdsObj.getEventNumber());
+    rootObj.initSpillNumber(tdsObj.getSpillNumber());
+    rootObj.initNumHighestCluster(tdsObj.getNumberOfHigestClusters());
+
+    Double_t x[AncillaryData::N_MODULES], y[AncillaryData::N_MODULES];
+    Double_t z[AncillaryData::N_MODULES];
+    unsigned int i;
+    for (i=0;i<AncillaryData::N_MODULES;i++) {
+        x[i] = tdsObj.getX(i);
+        y[i] = tdsObj.getY(i);
+        z[i] = tdsObj.getZ(i);
+    }
+    rootObj.initXyz(x,y,z,AncillaryData::N_MODULES);
+    rootObj.init(tdsObj.getPX(), tdsObj.getPY(), tdsObj.getPZ());
+    rootObj.initPhi(tdsObj.getPhiIn(), tdsObj.getPhiOut());
+    rootObj.initThetaPhi(tdsObj.getTheta(), tdsObj.getDeltaPhi());
+    rootObj.initEnergy(tdsObj.getReconstructedEnergy(), 
+                       tdsObj.getCorrectedEnergy());
 
     const std::vector<AncillaryData::TaggerCluster>& taggerClusterColTds = tdsObj.getTaggerClusters();
     std::vector<AncillaryData::TaggerCluster>::const_iterator tagIt;
@@ -87,35 +87,64 @@ namespace RootPersistence {
     std::vector<AncillaryData::QdcHit>::const_iterator qdcIt;
     for(qdcIt = qdcHitColTds.begin(); qdcIt != qdcHitColTds.end(); qdcIt++) {
          rootObj.addQdcHit(qdcIt->getQdcChannel(), qdcIt->getPulseHeight(), 
-                           qdcIt->getQdcModule(),
+                           qdcIt->getQdcModule(), qdcIt->getSigma(),
                            qdcIt->getPedestalSubtract());
     }
+
+    const std::vector<AncillaryData::ScalerHit>& scalerHitColTds = tdsObj.getScalerHitCol();
+         std::vector<AncillaryData::ScalerHit>::const_iterator scalerIt;
+         for(scalerIt = scalerHitColTds.begin(); scalerIt != scalerHitColTds.end(); scalerIt++) {
+              rootObj.addScalerHit(scalerIt->getScalerChannel(), scalerIt->getScalerValue());
+          }
+
 
   };
 
   void convert( const reconRootData::AdfRecon& rootObj, AncillaryData::Recon& tdsObj) {
 
-	  tdsObj.setEventNumber(rootObj.getEventNumber());
-	  tdsObj.setSpillNumber(rootObj.getSpillNumber());
+    tdsObj.setEventNumber(rootObj.getEventNumber());
+    tdsObj.setSpillNumber(rootObj.getSpillNumber());
+    tdsObj.setNumberOfHighestClusters(rootObj.getNumHighestCluster());
+    tdsObj.setMomentum(rootObj.getPx(), rootObj.getPy(), rootObj.getPz());
+    tdsObj.setPhi(rootObj.getPhiIn(), rootObj.getPhiOut());
+    tdsObj.setThetaPhi(rootObj.getTheta(), rootObj.getDeltaPhi());
+    tdsObj.setEnergy(rootObj.getReconstructedEnergy(), rootObj.getCorrectedEnergy());
+    double x[AncillaryData::N_MODULES], y[AncillaryData::N_MODULES];
+    double z[AncillaryData::N_MODULES];
+    unsigned int i;
+    for (i=0;i<AncillaryData::N_MODULES;i++) {
+        x[i] = rootObj.getX(i);
+        y[i] = rootObj.getY(i);
+        z[i] = rootObj.getZ(i);
+    }
+    tdsObj.setPos(x,y,z);
 
-	  const TObjArray* taggerClusterColRoot = rootObj.getTaggerClusterCol();
-	  TIter tagIt(taggerClusterColRoot);
-	  reconRootData::TaggerCluster *tagRoot;
-	  while ((tagRoot = (reconRootData::TaggerCluster*)tagIt.Next())) {
-		  AncillaryData::TaggerCluster tagTds;
-		  convert(tagRoot, tagTds);
-		  tdsObj.appendTaggerCluster(tagTds);
-	  }
+    const TObjArray* taggerClusterColRoot = rootObj.getTaggerClusterCol();
+    TIter tagIt(taggerClusterColRoot);
+    reconRootData::TaggerCluster *tagRoot;
+    while ((tagRoot = (reconRootData::TaggerCluster*)tagIt.Next())) {
+        AncillaryData::TaggerCluster tagTds;
+        convert(tagRoot, tagTds);
+        tdsObj.appendTaggerCluster(tagTds);
+    }
 
+    const TClonesArray* scalerHitColRoot = rootObj.getScalerHitCol();
+    TIter scalerIt(scalerHitColRoot);
+    commonRootData::ScalerHit *scalerRoot;
+    while ((scalerRoot = (commonRootData::ScalerHit*)scalerIt.Next())) {
+        AncillaryData::ScalerHit scalerTds;
+        convert(scalerRoot, scalerTds);
+        tdsObj.appendScalerHit(scalerTds);
+     }
 
-          const TClonesArray* qdcHitColRoot = rootObj.getQdcHitCol();
-          TIter qdcIt(qdcHitColRoot);
-          commonRootData::QdcHit *qdcRoot;
-          while ((qdcRoot = (commonRootData::QdcHit*)qdcIt.Next())) {
-                  AncillaryData::QdcHit qdcTds;
-                  convert(qdcRoot, qdcTds);
-                  tdsObj.appendQdcHit(qdcTds);
-          }
+     const TClonesArray* qdcHitColRoot = rootObj.getQdcHitCol();
+     TIter qdcIt(qdcHitColRoot);
+     commonRootData::QdcHit *qdcRoot;
+     while ((qdcRoot = (commonRootData::QdcHit*)qdcIt.Next())) {
+         AncillaryData::QdcHit qdcTds;
+         convert(qdcRoot, qdcTds);
+         tdsObj.appendQdcHit(qdcTds);
+     }
   };
 
  
