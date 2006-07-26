@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r15p1 25-Jul-2006 HMK make use of AncillaryDataEvent public
  v1r15  19-Jul-2006 HMK Add ScalerHit
  v1r14  12-Jul-2006 HMK Ancillary beamtest data recon
  v1r13  06-Jul-2006 HMK Add TaggerHit and QdcHit to commonRootdata
