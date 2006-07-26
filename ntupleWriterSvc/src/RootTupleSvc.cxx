@@ -113,7 +113,7 @@ public:
 
     /** @brief Adds a pointer to a zero-terminated array of char 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
-    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param itemName - name of the tuple column.
     @param pval - pointer to the character array
     @param fileName - name of ROOT file: if it does not exist, it will be created
     */

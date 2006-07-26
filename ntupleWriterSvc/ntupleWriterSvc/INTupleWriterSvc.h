@@ -47,11 +47,17 @@ public:
             const std::string& itemName, const unsigned int* val,
             const std::string& fileName=std::string(""))=0;
  
-    /// add a pointer to a zero-terminated character string. Note that the
-    /// data member must be the actual array containing the character data,
-    /// which must be recopied for each event
+        /** @brief Adds a pointer to a zero-terminated array of char 
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column.
+    @param pval - pointer to the character array
+     Note that the  data member must be the actual array containing the character data,
+     which must be recopied for each event, say with strncpy.
+    @param fileName - name of ROOT file: if it does not exist, it will be created
+    */
+
     virtual StatusCode addItem(const std::string & tupleName, 
-        const std::string& itemName, const char * val,
+        const std::string& itemName, const char * pval,
             const std::string& fileName=std::string(""))=0;
 
 #if 1 // deprecate! eliminate!
