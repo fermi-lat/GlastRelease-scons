@@ -95,7 +95,7 @@ class calSnapshotXML(calXML.calXML):
         # create empty DAC data array
 
         dacData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END,
-                                 calConstant.NUM_FE), Numeric.Int16)
+                                 calConstant.NUM_FE), Numeric.UInt8)
 
         # find <fle_dac> elements
 
@@ -403,7 +403,8 @@ class calEnergyXML(calXML.calXML):
 
         # create empty energy data array
 
-        engData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE, 2), Numeric.Float32)
+        engData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, 
+            calConstant.NUM_FE, 2), Numeric.Float32)
 
         # find elements
 
