@@ -46,13 +46,13 @@ IImActivityNode* xmlWriteTextFileEngineFactory::operator()(const DOMElement* xml
     WriteTextFileEngineNode* node = new WriteTextFileEngineNode(sType, sName, sId);
 
     // Set up to be able to output the ntuple
-    std::string          sVarName    = "WriteTupleRow";
-    XTcolumnValBase*     basePtr     = XprsnParser().getXtTupleVars()[sVarName];
-    XTcolumnVal<double>* xtColumnVal = dynamic_cast<XTcolumnVal<double>*>(basePtr);
+    std::string          sVarName     = "WriteTupleRow";
+    XTcolumnValBase*     basePtr      = XprsnParser().getXtTupleVars()[sVarName];
+    XTcolumnVal<REALNUM>* xtColumnVal = dynamic_cast<XTcolumnVal<REALNUM>*>(basePtr);
 
     if (xtColumnVal == 0)
     {
-        xtColumnVal = new XTcolumnVal<double>(sVarName);
+        xtColumnVal = new XTcolumnVal<REALNUM>(sVarName);
         XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
     }
 

@@ -61,9 +61,9 @@ void CreateColumnsEngineNode::execute()
 
         if (xtTuplBase->getType() == "continuous")
         {
-            XTcolumnVal<double>* xtTupleVal = dynamic_cast<XTcolumnVal<double>*>(xtTuplBase);
+            XTcolumnVal<REALNUM>* xtTupleVal = dynamic_cast<XTcolumnVal<REALNUM>*>(xtTuplBase);
 
-            double result = *(reinterpret_cast<const double*>((*xprsnNode)()));
+            REALNUM result = *(reinterpret_cast<const REALNUM*>((*xprsnNode)()));
 
             xtTupleVal->setDataValue(result);
         }

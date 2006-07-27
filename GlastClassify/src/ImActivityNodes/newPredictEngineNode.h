@@ -42,7 +42,7 @@ public:
     void setInputVar(const StringList& inVars)            {m_inputVar = inVars;}
     void setOutputVar(const StringList& outVars)          {m_outputVar = outVars;}
     void addOutputVar(const std::string& outVar)          {m_outputVar.push_back(outVar);}
-    void setXTcolumnVal(XTcolumnVal<double>* colVal)      {m_xtColumnVal = colVal;}
+    void setXTcolumnVal(XTcolumnVal<REALNUM>* colVal)     {m_xtColumnVal = colVal;}
     void setPredictVal(XTcolumnVal<std::string>* predict) {m_predict = predict;}
     void setTreePairVector(TreePairVector& treeVec)       {m_trees = treeVec;}
     void addTree(TreePair& treePair)                      {m_trees.push_back(treePair);}
@@ -56,7 +56,7 @@ private:
     IImActivityNodeMap        m_nodeMap;
     StringList                m_outputVar;
     StringList                m_inputVar;
-    XTcolumnVal<double>*      m_xtColumnVal;
+    XTcolumnVal<REALNUM>*     m_xtColumnVal;
     XTcolumnVal<std::string>* m_predict;
     TreePairVector            m_trees;
 };

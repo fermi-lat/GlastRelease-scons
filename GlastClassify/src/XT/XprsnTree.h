@@ -8,6 +8,7 @@ $Header$
 #define XprsnTree_h
 
 #include <iostream>
+#include "ImPrecision.h"
 
 /** @class Exception 
     @brief hold a string
@@ -123,32 +124,32 @@ private:
     // The allowed operations:
     const T1* operator+ (IXTExprsnNode& rhs) const 
     {
-        double left   = *(reinterpret_cast<const double*>(m_left()));
-        double rght   = *(reinterpret_cast<const double*>(rhs()));
+        REALNUM left   = *(reinterpret_cast<const REALNUM*>(m_left()));
+        REALNUM rght   = *(reinterpret_cast<const REALNUM*>(rhs()));
         *m_value  = left + rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) +  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
     const T1* operator- (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
         *m_value = left - rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) -  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
     const T1* operator* (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
         *m_value = left * rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) *  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
     const T1* operator/ (IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
         *m_value = left / rght;
         //*m_value = *(reinterpret_cast<const double*>(m_left())) /  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
@@ -213,8 +214,8 @@ private:
     }
     const T1* pow(IXTExprsnNode& rhs) const 
     {
-        double left = *(reinterpret_cast<const double*>(m_left()));
-        double rght = *(reinterpret_cast<const double*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
         *m_value = std::pow(left,rght);
         //*m_value = std::pow(*(reinterpret_cast<const double*>(m_left())),*(reinterpret_cast<const double*>(rhs())));
         return m_value;
@@ -492,15 +493,15 @@ private:
     // The allowed operations:
     const T* pow(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
-        double rght = *(reinterpret_cast<const double*>(m_right()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>(m_right()));
         *m_value = std::pow(left,rght);
         //*m_value = std::pow(*(reinterpret_cast<const double*>(arg())),*(reinterpret_cast<const double*>(m_right())));
         return m_value;
     }
     const T* log10(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::log(left);
         //*m_value = std::log10(*(reinterpret_cast<const double*>(arg())));
         //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
@@ -508,77 +509,80 @@ private:
     }
     const T* loge(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::log(left);
         //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* sqrt(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::sqrt(left);
         //*m_value = std::sqrt(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* sin(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::sin(left);
         //*m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* asin(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::asin(left);
         //*m_value = std::sin(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* cos(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::cos(left);
         //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* acos(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
-        *m_value = std::acos(left);
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
+        REALNUM temp = std::acos(left);
+        float  left2 = left;
+        float  temp2 = std::acos(left2);
+        *m_value = temp;
         //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* tan(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::tan(left);
         //*m_value = std::tan(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* exp(IXTExprsnNode& arg) const 
     {
-        double left = *(reinterpret_cast<const double*>(arg()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::exp(left);
         //*m_value = std::exp(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* abs(IXTExprsnNode& arg) const 
     {
-        double temp = *(reinterpret_cast<const double*>(arg()));
+        REALNUM temp = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = temp > 0 ? temp : -temp;
         return m_value;
     }
     const T* min(IXTExprsnNode& arg) const 
     {
-        double left  = *(reinterpret_cast<const double*>(arg()));
-        double right = *(reinterpret_cast<const double*>(m_right()));
+        REALNUM left  = *(reinterpret_cast<const REALNUM*>(arg()));
+        REALNUM right = *(reinterpret_cast<const REALNUM*>(m_right()));
         *m_value = left < right ? left : right;
         return m_value;
     }
     const T* max(IXTExprsnNode& arg) const 
     {
-        double left  = *(reinterpret_cast<const double*>(arg()));
-        double right = *(reinterpret_cast<const double*>(m_right()));
+        REALNUM left  = *(reinterpret_cast<const REALNUM*>(arg()));
+        REALNUM right = *(reinterpret_cast<const REALNUM*>(m_right()));
         *m_value = left > right ? left : right;
         return m_value;
     }

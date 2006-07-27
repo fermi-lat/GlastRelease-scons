@@ -38,6 +38,9 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_AcdRibbonActDist = tuple.getItem("AcdRibbonActDist");
     m_AcdCornerDoca    = tuple.getItem("AcdCornerDoca");
     m_Tkr1SSDVeto      = tuple.getItem("Tkr1SSDVeto");
+
+    m_eventId          = tuple.getItem("EvtEventId");
+    m_run              = tuple.getItem("EvtRun");
     
 /** @page merittuple
 @section ctbVars CTB Variables
@@ -179,6 +182,14 @@ bool AtwoodTrees::execute()
     double tkrNumTracks = *m_TkrNumTracks;
     double calenergy    = *m_CalEnergyRaw;
     double calCsiRln    = *m_CalCsIRLn;
+
+    int    eventId      = *m_eventId;
+    int    run          = *m_run;
+
+    if ((run == 1 && eventId == 59) || (run == 1 && eventId == 176))
+    {
+        int j = 0;
+    }
 
     // These are the "standard" selection cuts
     if( calenergy <= 5. || calCsiRln <= 4. || tkrNumTracks < 1) return false; 

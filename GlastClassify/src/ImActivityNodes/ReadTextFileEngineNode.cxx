@@ -46,7 +46,7 @@ void ReadTextFileEngineNode::print(std::ostream& out, int depth) const
 void ReadTextFileEngineNode::execute()
 {
     // Reset the flag to determine whether to save this row
-    XTcolumnVal<double>* colPtr = dynamic_cast<XTcolumnVal<double>*>(m_WriteTupleRow);
+    XTcolumnVal<REALNUM>* colPtr = dynamic_cast<XTcolumnVal<REALNUM>*>(m_WriteTupleRow);
     colPtr->setDataValue(0.);
 
     // Now follow through with all the daughter nodes we point to

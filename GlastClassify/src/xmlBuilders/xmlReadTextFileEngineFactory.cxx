@@ -67,7 +67,7 @@ IImActivityNode* xmlReadTextFileEngineFactory::operator()(const DOMElement* xmlA
         if (dataIter == XprsnParser().getXtTupleVars().end())
         {
             // For now we assume that all input variables are going to be "continuous" 
-            xtColumnVal = new XTcolumnVal<double>(sVarName);
+            xtColumnVal = new XTcolumnVal<REALNUM>(sVarName);
 
             // Add to the list...
             XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
@@ -77,7 +77,7 @@ IImActivityNode* xmlReadTextFileEngineFactory::operator()(const DOMElement* xmlA
     // Create a flag for determining whether to keep a row in the end of processing
     // @TODO need to change this to a bool value (implement storage maps for bool and categorical vars)
     std::string sVarName = "WriteTupleRow";
-    XTcolumnVal<double>* xtColumnVal = new XTcolumnVal<double>(sVarName);
+    XTcolumnVal<REALNUM>* xtColumnVal = new XTcolumnVal<REALNUM>(sVarName);
     XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
 
     node->setXtColumnVal(xtColumnVal);

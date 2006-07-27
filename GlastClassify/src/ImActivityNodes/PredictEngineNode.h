@@ -43,19 +43,19 @@ public:
     void setInputVar(const StringList& inVars)            {m_inputVar = inVars;}
     void setOutputVar(const StringList& outVars)          {m_outputVar = outVars;}
     void addOutputVar(const std::string& outVar)          {m_outputVar.push_back(outVar);}
-    void setXTcolumnVal(XTcolumnVal<double>* colVal)      {m_xtColumnVal = colVal;}
+    void setXTcolumnVal(XTcolumnVal<REALNUM>* colVal)     {m_xtColumnVal = colVal;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
 private:
-    std::string          m_type;
-    std::string          m_name;
-    std::string          m_id;
-    IImActivityNodeMap   m_nodeMap;
-    StringList           m_outputVar;
-    StringList           m_inputVar;
-    DecisionTree*        m_decisionTree;
-    XTcolumnVal<double>* m_xtColumnVal;
+    std::string           m_type;
+    std::string           m_name;
+    std::string           m_id;
+    IImActivityNodeMap    m_nodeMap;
+    StringList            m_outputVar;
+    StringList            m_inputVar;
+    DecisionTree*         m_decisionTree;
+    XTcolumnVal<REALNUM>* m_xtColumnVal;
 };
 
 #endif // ifdef PredictEngineNode_h

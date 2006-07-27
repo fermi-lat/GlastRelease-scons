@@ -137,13 +137,13 @@ IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression)
                 }
                 else
                 {
-                    pNode = new XTExprsnNode<bool,double>(fndDelim, *pNodeL, *pNodeR);
+                    pNode = new XTExprsnNode<bool,REALNUM>(fndDelim, *pNodeL, *pNodeR);
                 }
             }
             // Arithmetic operation node, input type: double, output type: double
             else 
             {
-                pNode = new XTExprsnNode<double,double>(fndDelim, *pNodeL, *pNodeR);
+                pNode = new XTExprsnNode<REALNUM,REALNUM>(fndDelim, *pNodeL, *pNodeR);
             }
         }
     }
@@ -170,12 +170,12 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression)
     // First case: expression is a constant value to convert to a double
     try
     {
-        double  value  = facilities::Util::stringToDouble(expression);
-        double* pValue = new double;
+        float    value  = facilities::Util::stringToDouble(expression);
+        REALNUM* pValue = new REALNUM;
 
         *pValue = value;
         
-        pNode = new XTExprsnValue<double>(expression, pValue);
+        pNode = new XTExprsnValue<REALNUM>(expression, pValue);
     }
     // Not a constant, ends up here
     catch(facilities::WrongType&)
@@ -209,14 +209,14 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression)
                 }
                 else
                 {
-                    tupleVal = new XTcolumnVal<double>(expression);
+                    tupleVal = new XTcolumnVal<REALNUM>(expression);
                 }
 
                 m_tuple[expression] = tupleVal;
             }
 
             if (tupleVal->getType() == "continuous")
-                pNode = new XTExprsnTupleVal<XTcolumnVal<double> >(expression, dynamic_cast<XTcolumnVal<double>*>(tupleVal));
+                pNode = new XTExprsnTupleVal<XTcolumnVal<REALNUM> >(expression, dynamic_cast<XTcolumnVal<REALNUM>*>(tupleVal));
             else
                 pNode = new XTExprsnTupleVal<XTcolumnVal<std::string> >(expression, dynamic_cast<XTcolumnVal<std::string>*>(tupleVal));
         }
@@ -270,7 +270,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             if (stringPos > -1)
                 pNode = new XTIfElseNode<std::string>(funcCand,*condNode,*ifNode,*elseNode);
             else
-                pNode = new XTIfElseNode<double>(funcCand,*condNode,*ifNode,*elseNode);
+                pNode = new XTIfElseNode<REALNUM>(funcCand,*condNode,*ifNode,*elseNode);
         }
         // Otherwise, must be a function
         else
@@ -282,7 +282,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             // (e.g. acos(min(1.,angle))
             if (operandNode1 = parseFunction(operand))
             {
-                operandNode2 = new XTExprsnValue<double>("",0);
+                operandNode2 = new XTExprsnValue<REALNUM>("",0);
             }
             // Ok, standard argument
             else
@@ -302,13 +302,13 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
                 else
                 {
                     operandNode1 = parseNextExpression(operand);
-                    operandNode2 = new XTExprsnValue<double>("",0);
+                    operandNode2 = new XTExprsnValue<REALNUM>("",0);
                 }
             }
 
             try
             {
-                pNode = new XTExprsnFunction<double>(funcCand, *operandNode1, *operandNode2);
+                pNode = new XTExprsnFunction<REALNUM>(funcCand, *operandNode1, *operandNode2);
             }
             catch(...)
             {

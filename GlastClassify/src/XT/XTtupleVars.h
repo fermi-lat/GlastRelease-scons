@@ -12,6 +12,8 @@ $Header$
 #include <iostream>
 #include <map>
 
+#include "ImPrecision.h"
+
 /** @class Exception 
     @brief hold a string
 */

@@ -58,8 +58,8 @@ void ModifyColumnsEngineNode::execute()
 
         if (newValue->getType() == "continuous")
         {
-            XTcolumnVal<double>* newValueCont = dynamic_cast<XTcolumnVal<double>*>(newValue);
-            XTcolumnVal<double>* oldValueCont = dynamic_cast<XTcolumnVal<double>*>(oldValue);
+            XTcolumnVal<REALNUM>* newValueCont = dynamic_cast<XTcolumnVal<REALNUM>*>(newValue);
+            XTcolumnVal<REALNUM>* oldValueCont = dynamic_cast<XTcolumnVal<REALNUM>*>(oldValue);
 
             newValueCont->setDataValue(oldValueCont->value());
         }

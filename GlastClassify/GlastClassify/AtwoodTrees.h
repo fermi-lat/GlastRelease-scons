@@ -45,6 +45,8 @@ private:
     const Item*   m_CalEnergyRaw  ;
     const Item*   m_CalCsIRLn   ;  
     const Item*   m_FilterStatus_HI;
+    const Item*   m_eventId;
+    const Item*   m_run;
 
     // These are variables to be output to the ntuple 
     // (in alphabetical order)

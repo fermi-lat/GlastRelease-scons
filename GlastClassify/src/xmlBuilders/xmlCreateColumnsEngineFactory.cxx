@@ -100,7 +100,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
         }
         else
         {
-            if (sVarType == "continuous") xtColumnVal = new XTcolumnVal<double>(sVarName);
+            if (sVarType == "continuous") xtColumnVal = new XTcolumnVal<REALNUM>(sVarName);
             else                          xtColumnVal = new XTcolumnVal<std::string>(sVarName,"categorical");
 
             XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;

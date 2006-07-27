@@ -6,6 +6,9 @@
 *
 */
 
+// This is where "REALNUM" gets defined for float point precision
+#include "../XT/ImPrecision.h"
+
 #include <vector>
 #include <map>
 #include <string>
