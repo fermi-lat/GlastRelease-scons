@@ -2,13 +2,18 @@
 <primCategory name="cu06ACDDimPrim">
   <overview>Extra primary constants needed for cu06 ACD description</overview>
 
-<prim name="ACDTileMHeight" value = "170.000000">ACD 
-medium tile short dim.</prim>
+<prim name="ACDTileMHeight" value = "200.000000">ACD 
+medium tile short dim from ACD_Tiles_final_position.pdf.  Was 170.0</prim>
+<prim name="ACDTileM2Height" value = "220.000000">ACD 
+medium tile #2 (medium tile furthest back in Z)
+ short dim from ACD_Tiles_final_position.pdf.  Was 170.0</prim>
+
 <prim name="ACDTileMTrans" value = "332.000000">ACD medium tile long dim.
 </prim>
 <prim name="ACDTileSHeight" value = "166.000000">ACD small tile 
 short dim.</prim>
-<prim name="ACDTileSTrans" value = "170.000000">ACD small tile long dim.</prim>
+<prim name="ACDTileSTrans" value = "115.000000">ACD small tile long dim.,
+from ACD_Tiles_final_position.pdf.  Was 170.</prim>
 <prim name="ACDTopTileStandoff" value="7.0">gap between top tile and front
 face of container, from ACD_tiles_Final_position.pdf</prim>
 <prim name="ACDSideTileStandoffSm" value="10.0">gap between side tiles and
@@ -40,9 +45,10 @@ tracker part of innner container.
 &lt;font color="orange"&gt;&lt;b&gt;This is a third guess!!&lt;/b&gt; 
 From Eddie's labeled photo.&lt;/font&gt;</prim>
 
-<prim name="ISCTkrYFace_z" value="660.0">Z-dimension of Y-face for
+<prim name="ISCTkrYFace_z" value="705.0">Z-dimension of Y-face for
 tracker part of innner container.
-&lt;font color="orange"&gt;From Eddie's labeled photo
+&lt;font color="orange"&gt;From ACD_Tiles_final_position.pdf.
+Eddie's labeled photo had 666
 &lt;/font&gt;</prim>
 <prim name="ISCCalYFace_x" value="1664.0">X-dimension of Y-face for
 cals part of inner container.

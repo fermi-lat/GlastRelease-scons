@@ -348,11 +348,14 @@
         <const name="ACDTile_100_dz" >
            <notes> z-displacement of tile 100 (on -X face).
                   Computed from location of  ISCTkrZFace.
-                  Appears to stick up by about 1/2 tile thickness </notes>
+                  Appears to stick up by about 1/2 tile thickness 
+                  (but call it full thickness to avoid overlap)
+                  + standoff </notes>
            <minus>
              <add>
                <refer refTo="ISCTkrZp_dz" />
-               <refer refTo="tileHalfThickness" />
+               <refer refTo="tileThickness" />
+               <refer refTo="ACDTopTileStandoff" />
              </add>
              <half>
                <add>
@@ -371,7 +374,12 @@
                <refer refTo="ACDTile_100_dz" />
                <refer refTo="ACDOverlapRow0_1" />
              </add>
-             <refer refTo="ACDTileMHeight" />
+             <half>
+               <add>     
+                 <refer refTo="ACDTileMHeight" />
+                 <refer refTo="ACDTileM2Height" />
+               </add>
+             </half>
            </minus>
         </const>
 
@@ -383,7 +391,7 @@
              <refer refTo="ACDTile_110_dz" />
              <half>
                <add>
-                 <refer refTo="ACDTileMHeight" />
+                 <refer refTo="ACDTileM2Height" />
                  <refer refTo="ACDTileSHeight" />
                </add>
              </half>

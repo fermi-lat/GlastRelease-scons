@@ -28,6 +28,15 @@ materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
+<!-- medium tile furthest from (Z) front is a bit higher than the others -->
+<box name="sideTileXACDM2"
+XREF="tileThickness"
+YREF="ACDTileMTrans"
+ZREF="ACDTileM2Height"
+materialREF="tileMat"
+sensitive="posHit"
+detectorTypeREF="eDTypeACDTile"/>
+
 <!-- medium tiles destined for Y-sides  UNUSED!! -->
 <!--
 <box name="sideTileYACDM"
