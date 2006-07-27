@@ -135,9 +135,15 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
        PhiIn   = atan2(Y[1]-Y[0],X[1]-X[0]);
        PhiOut  = atan2(Y[3]-Y[2],X[3]-X[2]);
        Dphi = PhiOut - PhiIn;
-       if(fabs(sin(PhiOut)-sin(PhiIn))>0)
-	 E_rec = 300.*bt/(sin(PhiOut)-sin(PhiIn));
+       double phiErrIn  = STRIPS_PITCH/(X[1]-X[0]); 
+       double phiErrOut = STRIPS_PITCH/(X[3]-X[2]); 
+       double DphiErr   = sqrt(phiErrIn*phiErrIn+phiErrOut*phiErrOut);
        
+       if(fabs(sin(PhiOut)-sin(PhiIn))>0)
+	 {
+	   E_rec       = 300.*bt/(sin(PhiOut)-sin(PhiIn));
+	   Error_E_rec = 300.*bt/pow(sin(PhiOut)-sin(PhiIn),2.0)*sqrt(pow(cos(PhiOut)*phiErrOut,2.0)+pow(cos(PhiIn)*phiErrIn,2.0));
+	 }
        //  Z = A* X + B
        double SX = X[0]+X[1]+X[2]+X[3];
        double SZ = Z[0]+Z[1]+Z[2]+Z[3];
@@ -147,9 +153,11 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
        double B = (SZ-A*SX)/4.;
        Theta=atan(A);
        if(fabs(cos(Theta))>0)
-	 E_corr = E_rec/cos(Theta);
+	 {
+	   E_corr = E_rec/cos(Theta);
+	   Error_E_corr=Error_E_rec;
+	 }
        
-       // r1(Px) = r2(Px)
        if(fabs(a1-a2)>0)
 	 {
 	   PX = (b2-b1)/(a1-a2);
@@ -169,8 +177,8 @@ void Recon::report()
 	std::cout<<" Electron Outgoing Angle: \t"<<PhiOut<<std::endl;
 	std::cout<<" Delta angle            : \t"<<Dphi<<std::endl;
 	std::cout<<" Theta Angle            : \t"<<Theta<<std::endl;
-	std::cout<<" Reconstructed Energy   : \t"<<E_rec<<std::endl;
-	std::cout<<" Corrected     Energy   : \t"<<E_corr<<std::endl;
+	std::cout<<" Reconstructed Energy   : \t"<<E_rec<<" +- "<< Error_E_rec <<std::endl;
+	std::cout<<" Corrected     Energy   : \t"<<E_corr<<" +- "<< Error_E_corr <<std::endl;
 	std::cout<<" Intesection Point      "<<std::endl;
 	std::cout<<" \t X \t Y \t Z     "<<std::endl;
 	std::cout<<" \t "<<PX<<" \t "<<PY<<" \t "<<PZ<<std::endl;

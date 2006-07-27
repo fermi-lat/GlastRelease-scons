@@ -91,6 +91,14 @@ namespace AncillaryData
           E_rec = erec;  E_corr = ecorr; }
       double getReconstructedEnergy() const{ return E_rec;}
       double getCorrectedEnergy() const {return E_corr;}
+      
+      void setEnergyError(double err1, double err2)
+	{
+	  Error_E_rec  = err1;
+	  Error_E_corr = err2;
+	}
+      double getErrorErec(){return Error_E_rec;}
+      double getErrorEcorr(){return Error_E_corr;}
     private:
       unsigned m_eventNumber;
       unsigned m_spillNumber;
@@ -101,6 +109,7 @@ namespace AncillaryData
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
       double PX, PY, PZ;
       double E_rec, E_corr;
+      double Error_E_rec, Error_E_corr;
       double PhiIn,PhiOut;
       double Theta;
       double Dphi;
