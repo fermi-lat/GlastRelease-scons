@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r17  27-Jul-2006 HMK handle ADF recon energy error
  v1r16  26-Jul-2006 HMK updates for final ADF recon
  v1r15p1 25-Jul-2006 HMK make use of AncillaryDataEvent public
  v1r15  19-Jul-2006 HMK Add ScalerHit

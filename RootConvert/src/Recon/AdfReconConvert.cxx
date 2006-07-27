@@ -74,6 +74,7 @@ namespace RootPersistence {
     rootObj.initThetaPhi(tdsObj.getTheta(), tdsObj.getDeltaPhi());
     rootObj.initEnergy(tdsObj.getReconstructedEnergy(), 
                        tdsObj.getCorrectedEnergy());
+    rootObj.initError(tdsObj.getErrorErec(), tdsObj.getErrorEcorr());
 
     const std::vector<AncillaryData::TaggerCluster>& taggerClusterColTds = tdsObj.getTaggerClusters();
     std::vector<AncillaryData::TaggerCluster>::const_iterator tagIt;
@@ -105,10 +106,12 @@ namespace RootPersistence {
     tdsObj.setEventNumber(rootObj.getEventNumber());
     tdsObj.setSpillNumber(rootObj.getSpillNumber());
     tdsObj.setNumberOfHighestClusters(rootObj.getNumHighestCluster());
-    tdsObj.setMomentum(rootObj.getPx(), rootObj.getPy(), rootObj.getPz());
+    tdsObj.setIntersection(rootObj.getPx(), rootObj.getPy(), rootObj.getPz());
     tdsObj.setPhi(rootObj.getPhiIn(), rootObj.getPhiOut());
     tdsObj.setThetaPhi(rootObj.getTheta(), rootObj.getDeltaPhi());
     tdsObj.setEnergy(rootObj.getReconstructedEnergy(), rootObj.getCorrectedEnergy());
+    tdsObj.setEnergyError(rootObj.getErrorReconstructedEnergy(),
+                          rootObj.getErrorCorrectedEnergy());
     double x[AncillaryData::N_MODULES], y[AncillaryData::N_MODULES];
     double z[AncillaryData::N_MODULES];
     unsigned int i;
