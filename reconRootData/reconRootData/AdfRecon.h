@@ -79,6 +79,11 @@ public:
     Double_t getReconstructedEnergy() const { return m_eRec; }
     Double_t getCorrectedEnergy() const { return m_eCorr; }
 
+    void initError(Double_t eRecErr, Double_t eCorrErr) {
+        m_errorErec = eRecErr;  m_errorEcorr = eCorrErr; }
+    Double_t getErrorReconstructedEnergy() const { return m_errorErec; }
+    Double_t getErrorCorrectedEnergy() const { return m_errorEcorr; }
+
     const TObjArray* getTaggerClusterCol() const { return m_taggerClusterCol; }
     const TaggerCluster* getTaggerCluster(UInt_t ind) const;
     void addTaggerCluster(TaggerCluster *clus);
@@ -109,15 +114,20 @@ private:
     Double32_t *m_y; //[m_nModule]
     Double32_t *m_z; //[m_nModule]
 
+    /// intersection point between incoming direction and outgoing direction
     Double32_t m_px;
     Double32_t m_py;
     Double32_t m_pz;
+
     Double32_t m_eRec;
     Double32_t m_eCorr;
     Double32_t m_phiIn;
     Double32_t m_phiOut;
     Double32_t m_theta;
     Double32_t m_dphi;
+
+    Double32_t m_errorErec;
+    Double32_t m_errorEcorr;
 
     TObjArray *m_taggerClusterCol;
 

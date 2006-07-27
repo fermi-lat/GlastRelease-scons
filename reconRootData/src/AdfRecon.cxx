@@ -21,6 +21,7 @@ AdfRecon::AdfRecon() {
     m_spillNumber = 0;
     m_px = 0.0; m_py = 0.0; m_pz = 0.0;
     m_eRec = 0.0; m_eCorr = 0.0;
+    m_errorErec = 0.0; m_errorEcorr = 0.0;
     m_phiIn = 0.0; m_phiOut = 0.0;
     m_theta = 0.0; m_dphi = 0.0;
     m_numHighestCluster  = 0;
@@ -187,6 +188,7 @@ void AdfRecon::Fake( Int_t ievent, Float_t randNum ) {
     Double_t z[3]={1.2, 2.3, 4.3};
     initXyz(x,y,z,3);
 
+    initError(2.2, 3.3);
 }
 
 Bool_t AdfRecon::CompareInRange( const AdfRecon &ref, const std::string& name ) const {
@@ -204,6 +206,8 @@ Bool_t AdfRecon::CompareInRange( const AdfRecon &ref, const std::string& name ) 
     result = rootdatautil::CompareInRange(getDeltaPhi(),ref.getDeltaPhi(),"DeltaPhi") && result;
     result = rootdatautil::CompareInRange(getReconstructedEnergy(),ref.getReconstructedEnergy(),"ReconstructedEnergy") && result;
     result = rootdatautil::CompareInRange(getCorrectedEnergy(),ref.getCorrectedEnergy(),"CorrectedEnergy") && result;
+    result = rootdatautil::CompareInRange(getErrorReconstructedEnergy(),ref.getErrorReconstructedEnergy(),"ErrorReconstructedEnergy") && result;
+    result = rootdatautil::CompareInRange(getErrorCorrectedEnergy(),ref.getErrorCorrectedEnergy(),"ErrorCorrectedEnergy") && result;
 
     result = rootdatautil::TObjArrayCompareInRange<reconRootData::TaggerCluster>(m_taggerClusterCol,ref.m_taggerClusterCol) && result;
     result = rootdatautil::TObjArrayCompareInRange<commonRootData::QdcHit>(m_qdcHitCol,ref.m_qdcHitCol) && result;
