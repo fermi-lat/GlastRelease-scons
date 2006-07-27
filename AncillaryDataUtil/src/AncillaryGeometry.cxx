@@ -6,13 +6,11 @@ using namespace AncillaryData;
 
 AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
 {
-  char FILENAME[100];
-  sprintf(FILENAME,GeometryfileName.c_str());
   FILE *infile;
-  infile=fopen(FILENAME,"r");
+  infile=fopen(GeometryfileName.c_str(),"r");
   if (infile==NULL)
     {
-      std::cerr<<"Error: could not open "<<FILENAME<<"\n";
+      std::cerr<<"Error: could not open "<<GeometryfileName<<"\n";
       exit(8);
     }
   fgets(title,sizeof(title),infile);
@@ -23,7 +21,7 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
 
   unsigned int id;
   double x,y,z,tx,ty,tz;
-  char v[1];
+  char v;
   unsigned int M=0;
   for(unsigned int i=0; i < N_MODULES; i++) 
     {
@@ -35,8 +33,8 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
       Tx[M]=tx;
       Ty[M]=ty;
       Tz[M]=tz;
-      if(v=="Y" || "y")  View[M]=0; // not flipped (strip along Z)
-      else if(v=="Z" || "z")  View[M]=0; // flipped (strip along Y)
+      if(v=='Y' || v=='y')  View[M]=0; // not flipped (strip along Z)
+      else if(v=='Z' || v=='z')  View[M]=0; // flipped (strip along Y)
       else std::cout<<"Wrong geometry file format"<<std::endl;
     }
 }

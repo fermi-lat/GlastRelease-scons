@@ -3,7 +3,8 @@
  Coordinator:N.Omodei
  @verbatim
 
- v0r1p4 27-Jul-2006 NO  Remove the test program (hangs on windows)
+ v0r1p6 27-Jul-2006 NO  Fixed bug. Re-insert the test program
+ v0r1p5 27-Jul-2006 NO  Remove the test program (hangs on windows)
  v0r1p4 20-Jul-2006 NO  Add simple geometry description
  v0r1p3 20-Jul-2006 HMK Patch for windows compilation
  v0r1p2 18-Jul-2006 NO  update the file format v301
