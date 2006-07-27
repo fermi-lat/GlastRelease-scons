@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r35   26-Jul-2006  jrb Current best guess for cu06 container geometry and
+                            tile positions
    v1r34p4 06-Jul-2006  eac change cu06 tile ids to reflect position of tiles
    v1r34p3 30-Jun-2006  jrb Add final idfield to tiles in cu06 as Recon expects 
    v1r34p2 12-Jun-2006  jrb v1r34p1 didn't tag everything; try again
