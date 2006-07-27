@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+27-Jul-06  v3r4p2 TU  Modifications to get "best" agreement with IM, include new analysis sheet
 11-Jul-06  v3r4p1 THB remove obsolete code and IM files; specify the default Atwood file to load
 11-Jul-06  v3r3p3 TU  More modifications to handle new Pass 4 IMW analyses
 30-Jun-06  v3r3p1 TU  Minor modification to preserve input CTB values
