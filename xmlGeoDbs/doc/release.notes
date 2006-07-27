@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r35p2 27-Jul-2006  jrb cu06 tile dimensions adjusted according to 
+                            ACD_Tiles_final_positions.pdf 
    v1r35p1 27-Jul-2006  jrb Fix typo in tile id for cu06
    v1r35   26-Jul-2006  jrb Current best guess for cu06 container geometry and
                             tile positions
