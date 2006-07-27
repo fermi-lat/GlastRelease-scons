@@ -361,16 +361,8 @@ StatusCode AncillaryDataReconAlg::ScalerRecon(AncillaryData::Digi *digiEvent, An
 StatusCode AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
   MakeClusters(digiEvent,reconEvent);
-  std::cout<<" Final Position of the higest cluster: "<<std::endl;
-  std::cout<<"\t I \t X \t Y \t Z "<<std::endl; 
-  reconEvent->computePositions(m_geometry);
-  for (int i = 0;i<8;i++)
-    {
-      double x=reconEvent->getX(i);
-      double y=reconEvent->getY(i);
-      double z=reconEvent->getZ(i);
-      std::cout<<"\t "<<i<<" \t "<<x<<" \t "<<y<<" \t "<<z<<std::endl; 
-    }
+  reconEvent->ReconstructTagger(m_geometry);
+  reconEvent->report();
 }
 
 
