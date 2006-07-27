@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v0r2p2   27-Jul-2006 NO Remove couts
  v0r2p1   25-Jul-2006 NO Patched the requirements
  v0r1p4 21-Jul-2006 NO  Implemented reconstruction (not finished). Add test prog
  v0r1p3 18-Jul-2006 NO  Implemented pedestal subtraction for the QDC (bugged!)
