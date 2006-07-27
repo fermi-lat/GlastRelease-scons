@@ -99,7 +99,7 @@
         <idField name="fLATObjects" valueREF="eLATACD"/>
         <idField name="fACDFace" value="1"/>
         <idField name="fACDCmp" valueREF="eACDTile"/>
-        <idField name="fRow" value="0" />
+        <idField name="fRow" value="1" />
         <idField name="fCol" value="0" />
         <idField name="fTileSeg" value="0" />
       </posXYZ>
