@@ -73,7 +73,7 @@ namespace AncillaryData
       double getY(unsigned int Module) const {return Y[Module];}
       double getZ(unsigned int Module) const {return Z[Module];}
       
-      void setMomentum(double x, double y, double z) {
+      void setIntersection(double x, double y, double z) {
           PX = x; PY = y; PZ = z; }
       double getPX() const {return PX;}
       double getPY() const {return PY;}
@@ -97,17 +97,21 @@ namespace AncillaryData
 	  Error_E_rec  = err1;
 	  Error_E_corr = err2;
 	}
-      double getErrorErec(){return Error_E_rec;}
-      double getErrorEcorr(){return Error_E_corr;}
+      double getErrorErec() const {return Error_E_rec;}
+      double getErrorEcorr() const {return Error_E_corr;}
+
     private:
       unsigned m_eventNumber;
       unsigned m_spillNumber;
       std::vector<TaggerCluster> m_taggerClusterColl;
       std::vector<QdcHit> m_qdcHitColl;
       std::vector<ScalerHit> m_scalerHitColl;
-      
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
+
+      /// coordinates of the intersection point between the incoming direction 
+      /// and the outgoing direction
       double PX, PY, PZ;
+
       double E_rec, E_corr;
       double Error_E_rec, Error_E_corr;
       double PhiIn,PhiOut;

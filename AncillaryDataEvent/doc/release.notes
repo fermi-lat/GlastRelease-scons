@@ -2,6 +2,8 @@
  Package AncillaryDataEvent
  Coordinator:N.Omodei
  @verbatim
+
+ v1r3p2 27-Jul-2006 HMK const correctness 
  v1r3p1 27-Jul-2006 NO  Add the error on the reconstructed energy
  v1r3   26-Jul-2006 HMK updates for root i/o
  v1r2p1 25-Jul-2006 HMK patch for namespace definition
