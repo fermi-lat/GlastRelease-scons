@@ -9,15 +9,15 @@ medium tile short dim.</prim>
 <prim name="ACDTileSHeight" value = "166.000000">ACD small tile 
 short dim.</prim>
 <prim name="ACDTileSTrans" value = "170.000000">ACD small tile long dim.</prim>
-
-<prim name="ACDTileMX" value = "170.000000">ACD medium tile X</prim>
-<prim name="ACDTileMY" value = "332.000000">ACD medium tile Y</prim>
-<prim name="ACDTileSX" value = "166.000000">ACD small tile X</prim>
-<prim name="ACDTileSY" value = "170.000000">ACD small tile Y</prim>
-<prim name="ACDTile_000_dx" value="38.200000"> top ACD tile absolute x</prim>
+<prim name="ACDTopTileStandoff" value="7.0">gap between top tile and front
+face of container, from ACD_tiles_Final_position.pdf</prim>
+<prim name="ACDSideTileStandoffSm" value="10.0">gap between side tiles and
+-X face of container, rows 1-3,from ACD_tiles_final_position.pdf</prim>
+<prim name="ACDSideTileStandoffLg" value="35.0">gap between side tile and
+-X face of container, row 0, from ACD_tiles_final_position.pdf</prim>
+<prim name="ACDOverlapRow0_1" value="30.0">Taken from 
+ ACD_tiles_Final_position.pdf</prim>
 <prim name="ACDTile_000_dy" value="0.000000"> top ACD tile absolute y</prim>
-<prim name="ACDTile_000_dz" value="689.000000"> top ACD tile absolute z</prim>
-
 </primCategory>
 
 <primCategory name="cu06ContainerPrim">
@@ -29,30 +29,28 @@ short dim.</prim>
 panels</prim>
 <prim name="ISCThick" value="4.0">Thickness of thicker cu06 inner container
 panels</prim>
-<!--
-<prim name="ISCLateral" value="374.5">Y-dimension of X- and Z- faces of
-cu06 inner container. &lt;font color="red"&gt;
-For now defined to be equal to towerPitch value.
-&lt;b&gt;This is 
-a guess!!&lt;/b&gt;&lt;/font&gt;</prim>
--->
-<prim name="ISCTkrYFace_x" value="871.2523">X-dimension of Y-face for
-tracker part of innner container.
-&lt;font color="red"&gt;&lt;b&gt;This is a second guess!!&lt;/b&gt; 
-Subtracted 20 mm from first guess.&lt;/font&gt;</prim>
 
-<prim name="ISCTkrYFace_z" value="651.35">Z-dimension of Y-face for
-tracker part of innner container.
-&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;
-Original attempt (702.5) was too big. 
+<prim name="ISCLateral" value="451.0">Y-dimension of X- and Z- faces of
+cu06 inner container. &lt;font color="orange"&gt;
+From Eddie's labeled photo
 &lt;/font&gt;</prim>
-<prim name="ISCCalYFace_x" value="1635.301">X-dimension of Y-face for
+
+<prim name="ISCTkrYFace_x" value="840.0">X-dimension of Y-face for
+tracker part of innner container.
+&lt;font color="orange"&gt;&lt;b&gt;This is a third guess!!&lt;/b&gt; 
+From Eddie's labeled photo.&lt;/font&gt;</prim>
+
+<prim name="ISCTkrYFace_z" value="660.0">Z-dimension of Y-face for
+tracker part of innner container.
+&lt;font color="orange"&gt;From Eddie's labeled photo
+&lt;/font&gt;</prim>
+<prim name="ISCCalYFace_x" value="1664.0">X-dimension of Y-face for
 cals part of inner container.
-&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt; 
+&lt;font color="orange"&gt;From Eddie's labeled photo&lt;/font&gt; 
 </prim>
-<prim name="ISCCalYFace_z" value="453.5">Z-dimension of Y-face for
+<prim name="ISCCalYFace_z" value="446.0">Z-dimension of Y-face for
 Z-dimension of Y-face for
 cals part of inner container.
-&lt;font color="red"&gt;&lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt; 
+&lt;font color="orange"&gt; From Eddie's labeled photo&lt;/font&gt; 
 </prim>
 </primCategory>

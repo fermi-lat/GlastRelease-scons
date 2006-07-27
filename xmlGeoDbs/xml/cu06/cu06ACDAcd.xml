@@ -28,7 +28,8 @@ materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
-<!-- medium tiles destined for Y-sides -->
+<!-- medium tiles destined for Y-sides  UNUSED!! -->
+<!--
 <box name="sideTileYACDM"
 XREF="ACDTileMTrans"
 YREF="tileThickness"
@@ -36,6 +37,7 @@ ZREF="ACDTileMHeight"
 materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
+-->
 
 <!-- small tiles destined for X-sides -->
 <box name="sideTileXACDS"

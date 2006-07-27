@@ -92,18 +92,18 @@
         <idField name="fTileSeg" value="0" />
       </posXYZ>
 
-
-      <posXYZ volume="sideTileXACDS"
+      <posXYZ volume="sideTileXACDM"
               XREF="ACDTile_110_dx"
               YREF="ACDTile_110_dy"
               ZREF="ACDTile_110_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
         <idField name="fACDFace" value="1"/>
         <idField name="fACDCmp" valueREF="eACDTile"/>
-        <idField name="fRow" value="1" />
+        <idField name="fRow" value="0" />
         <idField name="fCol" value="0" />
         <idField name="fTileSeg" value="0" />
       </posXYZ>
+
 
 
       <posXYZ volume="sideTileXACDS"
@@ -118,6 +118,19 @@
         <idField name="fTileSeg" value="0" />
       </posXYZ>
 
+      <posXYZ volume="sideTileXACDS"
+              XREF="ACDTile_130_dx"
+              YREF="ACDTile_130_dy"
+              ZREF="ACDTile_130_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD"/>
+        <idField name="fACDFace" value="1"/>
+        <idField name="fACDCmp" valueREF="eACDTile"/>
+        <idField name="fRow" value="3" />
+        <idField name="fCol" value="0" />
+        <idField name="fTileSeg" value="0" />
+      </posXYZ>
+
+<!--
       <posXYZ volume="sideTileYACDM"
               XREF="ACDTile_200_dx"
               YREF="ACDTile_200_dy"
@@ -129,7 +142,7 @@
         <idField name="fCol" value="0" />
         <idField name="fTileSeg" value="0" />
       </posXYZ>
-
+-->
      
       <posXYZ volume="oneTower" XREF="innerTowers_dt" ZREF="towers_dz">
         <idField name="fLATObjects" valueREF="eLATTowers" />

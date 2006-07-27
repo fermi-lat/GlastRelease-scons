@@ -49,19 +49,6 @@
           </half>
         </const>
 
-        <const name="ISCLateral">
-          <notes>Y-dimension of X- and Z- faces of
-                cu06 inner container. &lt;font color="red"&gt;
-                For now defined to be equal to towerPitch +
-                2 * NADGridFlangeOutsideWidth.
-                &lt;b&gt;This is a guess!!&lt;/b&gt;&lt;/font&gt;</notes>
-
-          <add>
-            <refer refTo="towerPitch" />
-            <refer refTo="NADGridFlangeOutsideWidth" />
-            <refer refTo="NADGridFlangeOutsideWidth" />
-          </add>
-        </const>
         <const name="ISCCalZpFace_x" >
           <notes>X-dimension of Z+ face of cu06 container in front of 
            calorimeters only.  
@@ -173,18 +160,6 @@
           </half>
         </const>
 
-<!--
-guess 1:          <minus>
-            <refer refTo="ISCTkrXp_dx" />
-            <half>
-              <add>
-                <refer refTo="ISCTkrYFace_x" />
-                <refer refTo="ISCThin" />
-              </add>
-            </half>
-          </minus>
-        </const>
- -->
 
         <const name="ISCTkrZp_dz">
           <notes>Z disp. for isc box to +Z side of trackers</notes>
@@ -280,6 +255,39 @@ guess 1:          <minus>
          </const>
 
 <!-- ACD tile displacements -->
+        <const name="ACDTile_000_dz" >
+          <notes>z-displacement of tile 000, computed from position of
+                front container face, adding in standoff from
+                ACD_tiles_final_position.pdf</notes>
+          <add>
+            <refer refTo="ISCTkrZp_dz" />
+            <refer refTo="ACDTopTileStandoff" />
+            <half>
+              <add>
+                <refer refTo="tileThickness" />
+                <refer refTo="ISCThin" />
+              </add>
+            </half>
+          </add>
+        </const>
+        <const name="ACDTile_000_dx" >
+          <notes>x-displacement of tile 000, computed from position of
+                front container face. Min x for top tile should equal
+                min X for Z face of container:
+                tile_dx - 1/2 tileX = face_dx - 1/2 faceX
+          </notes>
+          <add>
+            <refer refTo="ISCTkrZp_dx" />
+            <half>
+              <minus>
+                <refer refTo="ACDTileMHeight" />
+                <refer refTo="ISCTkrYFace_x" />
+              </minus>
+            </half>
+          </add>
+        </const>
+
+
         <const name="ACDTile_100_dy" >
           <notes>y-displacement of tile 100 (on -X face)</notes>
           <refer refTo="ACDTile_000_dy" />
@@ -295,35 +303,57 @@ guess 1:          <minus>
           <refer refTo="ACDTile_000_dy" />
         </const>
 
+        <const name="ACDTile_130_dy" >
+          <notes>y-displacement of tile 130 (on -X face)</notes>
+          <refer refTo="ACDTile_000_dy" />
+        </const>
+
         <const name="ACDTile_100_dx" >
            <notes> x-displacement of tile 100 (on -X face).
-                  Computed from location of  ISCTkrXFace </notes>
+                  Computed from location of  ISCTkrXFace and
+                  standoff </notes>
            <minus>
              <refer refTo="ISCTkrXn_dx" />
-             <half>
-               <add>
-                 <refer refTo="tileThickness" />
-                 <refer refTo="ISCThin" />
-               </add>
-             </half>
+             <add>
+               <refer refTo="tileHalfThickness" />
+               <refer refTo="ISCThinHalf" />
+               <refer refTo="ACDSideTileStandoffLg" />
+             </add>
            </minus>
          </const>
 
         <const name="ACDTile_110_dx" >
            <notes> x-displacement of tile 110 (on -X face).</notes>
-           <refer refTo="ACDTile_100_dx" />
+           <minus>
+             <refer refTo="ISCTkrXn_dx" />
+             <add>
+               <refer refTo="tileHalfThickness" />
+               <refer refTo="ISCThinHalf" />
+               <refer refTo="ACDSideTileStandoffSm" />
+             </add>
+           </minus>
+
         </const>
 
         <const name="ACDTile_120_dx" >
            <notes> x-displacement of tile 120 (on -X face).</notes>
-           <refer refTo="ACDTile_100_dx" />
+           <refer refTo="ACDTile_110_dx" />
+        </const>
+
+        <const name="ACDTile_130_dx" >
+           <notes> x-displacement of tile 130 (on -X face).</notes>
+           <refer refTo="ACDTile_110_dx" />
         </const>
 
         <const name="ACDTile_100_dz" >
            <notes> z-displacement of tile 100 (on -X face).
-                  Computed from location of  ISCTkrZFace </notes>
+                  Computed from location of  ISCTkrZFace.
+                  Appears to stick up by about 1/2 tile thickness </notes>
            <minus>
-             <refer refTo="ISCTkrZp_dz" />
+             <add>
+               <refer refTo="ISCTkrZp_dz" />
+               <refer refTo="tileHalfThickness" />
+             </add>
              <half>
                <add>
                  <refer refTo="ISCThin" />
@@ -337,7 +367,20 @@ guess 1:          <minus>
            <notes> z-displacement of tile 110 (on -X face).
                   Computed from location of tile 'above' (100) </notes>
            <minus>
-             <refer refTo="ACDTile_100_dz" />
+             <add>
+               <refer refTo="ACDTile_100_dz" />
+               <refer refTo="ACDOverlapRow0_1" />
+             </add>
+             <refer refTo="ACDTileMHeight" />
+           </minus>
+        </const>
+
+
+        <const name="ACDTile_120_dz" >
+           <notes> z-displacement of tile 120 (on -X face).
+                  Computed from location of tile 'above' (110) </notes>
+           <minus>
+             <refer refTo="ACDTile_110_dz" />
              <half>
                <add>
                  <refer refTo="ACDTileMHeight" />
@@ -347,16 +390,16 @@ guess 1:          <minus>
            </minus>
          </const>
 
-        <const name="ACDTile_120_dz" >
-           <notes> z-displacement of tile 120 (on -X face).
-                  Computed from location of tile 'above' (110) </notes>
+        <const name="ACDTile_130_dz" >
+           <notes> z-displacement of tile 130 (on -X face).
+                  Computed from location of tile 'above' (120) </notes>
            <minus>
-             <refer refTo="ACDTile_110_dz" />
+             <refer refTo="ACDTile_120_dz" />
              <refer refTo="ACDTileSHeight" />
            </minus>
          </const>
 
-
+<!--
         <const name="ACDTile_200_dx" >
           <notes> x-displacement of tile 200 (on -Y face) is
              computed from location of -X face of ISC
@@ -392,7 +435,7 @@ guess 1:          <minus>
                   as 100 on -X face.</notes>
           <refer refTo="ACDTile_100_dz" />
         </const>
-
+-->
       </derCategory>
 
 
