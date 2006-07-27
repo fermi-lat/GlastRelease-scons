@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r35p1 27-Jul-2006  jrb Fix typo in tile id for cu06
    v1r35   26-Jul-2006  jrb Current best guess for cu06 container geometry and
                             tile positions
    v1r34p4 06-Jul-2006  eac change cu06 tile ids to reflect position of tiles
