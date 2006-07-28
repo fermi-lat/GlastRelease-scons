@@ -9,11 +9,20 @@
 $Header$
 */
 
+#include "ldfReader/data/LatData.h"
 #include "ldfReader/EbfParser.h"
 namespace ldfReader {
 
 bool EbfParser::setDebug(bool on) {
     return EbfDebug::setDebug(on);
+}
+
+int EbfParser::setAcdRemap(const std::string& filename) {
+
+    if (filename != "") {
+       return (ldfReader::LatData::instance()->setAcdRemap(filename));
+    }
+    return -1;
 }
 
 }

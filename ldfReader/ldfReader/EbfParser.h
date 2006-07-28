@@ -8,11 +8,13 @@ filling the LatData structure.
 $Header$
 */
 
+#include <string>
+
 namespace ldfReader {
     class EbfParser {
     public:
 
-        EbfParser() {};
+        EbfParser() { };
 
         virtual ~EbfParser() { };
 
@@ -31,6 +33,9 @@ namespace ldfReader {
 
         /// Turn on or off debug output.  Returns old value of flag
         virtual bool setDebug(bool on);
+
+        virtual int setAcdRemap(const std::string &filename) ;
+
 
         // local exception class
         class Exception{ };

@@ -8,6 +8,9 @@ $Header$
 */
 
 #include "ldfReader/data/LatData.h"
+#include "../EbfDebug.h"
+#include <iostream>
+#include <fstream>
 
 namespace ldfReader {
 
@@ -16,6 +19,7 @@ namespace ldfReader {
 
     LatData::LatData() {
         clearTowers(); 
+        m_acdRemapCol.clear();
     }
 
     LatData* LatData::instance() {
@@ -345,6 +349,26 @@ unsigned LatData::checkCalReadout() {
     }
     return (orAll);
 }
+
+int LatData::setAcdRemap(const std::string& filename) {
+    if (filename == "") {
+        m_acdRemapCol.clear();
+        return -1;
+    }
+    std::ifstream infile(filename.c_str());
+    if (!infile.good()) return -1;
+    std::string fromStr, toStr;
+    while (infile.good()) {
+        infile >> fromStr;
+        infile >> toStr;
+        m_acdRemapCol[fromStr] = toStr;
+        if (EbfDebug::getDebug())
+            std::cout <<" Mapping " << fromStr << " to " << toStr << std::endl;
+    }
+
+    return 0; 
+}
+
 
 }  // end namespace
 

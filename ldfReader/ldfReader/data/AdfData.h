@@ -10,7 +10,7 @@ namespace ldfReader {
     class AdfData {
     public:
 
-        AdfData() { clear(); };
+        AdfData() { m_buf = 0; clear(); };
         AdfData(const AdfData& aem);
 
         ~AdfData() { clear(); };

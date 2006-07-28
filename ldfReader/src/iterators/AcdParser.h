@@ -41,6 +41,8 @@ namespace ldfReader {
 
         unsigned int constructTileNum(const char *name);
 
+        int lookup(const char* name, std::string& newName, char &side);
+
     private:
         const char *m_prefix;
         AEMheader m_curHeader;

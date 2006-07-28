@@ -20,11 +20,13 @@ int main(int argn, char** argc) {
   try {
     using namespace ldfReader;
     std::string filename = "$(LDFROOT)/test/muon-5.arch";
+    std::string remap = "";
 
     bool fitsWrap = false;
 
     if( argn>1 ) filename = argc[1];
     if (argn>2 ) fitsWrap = (atoi(argc[2])==1) ? true : false;
+    if( argn>3) remap = argc[3];
     
 
     if (facilities::Util::expandEnvVar(&filename) < 0) {
@@ -35,6 +37,7 @@ int main(int argn, char** argc) {
     EbfDebug::setDebug(true);
 
     LdfParser *ebfP = new LdfParser(filename, fitsWrap);
+    ebfP->setAcdRemap(remap);
 
     int status = 0;
     do {
