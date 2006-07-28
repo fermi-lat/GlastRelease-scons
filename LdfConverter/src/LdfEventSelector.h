@@ -218,6 +218,7 @@ private:
                                             // with event number N as stored
                                             // in LDF
 
+  std::string            m_acdRemap; // For beamtest 2006
 
 // From gaudi v18r1 EventSelector in GaudiSvc
   //IIncidentSvc*          m_incidentSvc;

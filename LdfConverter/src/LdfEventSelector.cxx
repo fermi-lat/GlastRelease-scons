@@ -297,6 +297,7 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
     declareProperty("StartEventIndex", m_startEventIndex = 0);
     declareProperty("StartEventNumber", m_startEventNumber = 0);
     declareProperty("FileName", m_fileName="");
+    declareProperty("AcdRemapFile", m_acdRemap="");
 
     //Here we get the maxEvt number from the aplication mgr property;
     //Sets the environment variable m_evtMax;
@@ -367,6 +368,8 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
             if (!m_ebfParser) 
                 log << MSG::DEBUG << "Creating LdfParser failed" << endreq;
             m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
+            if (m_acdRemap != "")
+                m_ebfParser->setAcdRemap(m_acdRemap);
 
         } catch(LdfException &e) {
             log << MSG::ERROR << "LdfException: " << e.what() << endreq;
@@ -389,6 +392,9 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 
             m_ebfParser = new ldfReader::LdfParser(m_fileName, true, m_instrument);
             m_ebfParser->setDebug((m_ebfDebugLevel != 0));
+            if (m_acdRemap != "")
+                m_ebfParser->setAcdRemap(m_acdRemap);
+
         } catch(LdfException &e) {
             log << MSG::ERROR << "LdfException: " << e.what() << endreq;
             return(StatusCode::FAILURE);

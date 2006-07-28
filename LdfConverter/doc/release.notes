@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
  
+v3r4    27-Jul-2006 HMK Handle beamtest06 acd remapping
 v3r3    25-Jul-2006 HMK check for ADF Hdr or Tlr
 v3r2    24-Jul-2006 HMK Converters for beamtest ancilary data
 v3r1    31-May-2006 HMK Fix releaseContext and clean up

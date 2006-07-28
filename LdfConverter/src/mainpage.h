@@ -40,6 +40,12 @@ xx/** @mainpage package LdfConverter
   Integer.  Deafults to 0 (skip check for GEM condition summary == 0).
   Setting to one performs this check and prints warnings messages for the
   first five events where Condition Summary is zero.
+  @param LdfEventSelector.AcdRemapFile
+  String.  Defaults to "" (null string).  If set to a non-null string, the
+  conversion of the ACD PMTs will look to the specified text file to 
+  determine the remapping to be used for the tileIds.  This has been added
+  strictly from beamtest2006 and is not meant to be used for typical LDF
+  processing.
   <hr>
   @section notes release notes
   release.notes
