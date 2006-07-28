@@ -825,7 +825,9 @@ StatusCode CalValsTool::calculate()
 
         for (layer=0; layer<8; ++layer) {
             if (rlCsI[layer]<0.5) useLayer[layer] = false;
-            if (CAL_eLayer[layer]<0.05*CAL_EnergyRaw) useLayer[layer] = false;
+            if (CAL_eLayer[layer]<0.05*CAL_EnergyRaw || CAL_EnergyRaw<=0) {
+                useLayer[layer] = false;
+            }
         }
 
         for (layer=0; layer<8; ++layer) {
