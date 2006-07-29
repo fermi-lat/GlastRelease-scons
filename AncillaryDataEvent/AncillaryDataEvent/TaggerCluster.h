@@ -50,7 +50,8 @@ namespace AncillaryData
       double       getPulseHeight()       const {return m_totalPulseHeight;}
       unsigned int getModuleId()          const {return getHighestHit().getModuleId();}
       unsigned int getLayerId()           const {return getHighestHit().getLayerId();}
-      TaggerHit    getHighestHit()        const {if(!m_properties) calculateProperties(); return m_highestHit;}
+      TaggerHit    getHighestHit()        {if(!m_properties) calculateProperties(); return m_highestHit;}
+      TaggerHit    getHighestHit()        const { return m_highestHit;}
       //      double       getNoise()             const {return m_totalNoise;}
       TaggerHit    getHit(int hitId)      const {return m_hits[hitId];}
       std::vector<TaggerHit> getHits()    const {return m_hits;}
