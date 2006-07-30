@@ -1,4 +1,5 @@
 #include "AncillaryDataEvent/Recon.h"
+#include <algorithm>
 
 //using namespace AncillaryData;
 
