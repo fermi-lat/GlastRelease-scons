@@ -18,6 +18,8 @@ $Header$
 #include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"
 
+#include <map>
+
 namespace {
 }   // end default namespace
 
@@ -268,15 +270,15 @@ int AcdParser::handleError(AEMcontribution *contribution, unsigned code,
 
 int AcdParser::lookup(const char* name, std::string& newName, char &side) {
 
-    const std::map<std::string, std::string> acdMap =
+    std::map<const char*, const char*> acdMap =
         ldfReader::LatData::instance()->getAcdRemapCol();
 
     std::string searchStr=name;
     searchStr += ":";
     searchStr += side;
 
-    if (acdMap.find(searchStr) != acdMap.end()) {
-        std::string name2 = acdMap[searchStr];
+    if (acdMap.find(searchStr.c_str()) != acdMap.end()) {
+        std::string name2 = acdMap[searchStr.c_str()];
         std::string::size_type loc = name2.find(":",0);
         if (loc == std::string::npos) return -1;
         if (loc+1 >= name2.length()) return -1;

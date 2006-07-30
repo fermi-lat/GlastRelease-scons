@@ -138,6 +138,15 @@ namespace ldfReader {
             return false;
         }
 
+        if ( (getAdf().exist()) && !foundFirst) {
+            firstEvtSeq = getAdf().evtNum();
+            foundFirst = true;
+        } else if ( (getAdf().exist()) && (firstEvtSeq != getAdf().evtNum()) ) {
+            std::cout << "ADF does not match event Seq "
+                << getAdf().evtNum() << std::endl;
+            return false;
+        }
+
         std::map<unsigned int, TowerData*>::const_iterator towerIter = m_towerMap.begin();
         while(towerIter != m_towerMap.end())
         {
@@ -361,7 +370,7 @@ int LatData::setAcdRemap(const std::string& filename) {
     while (infile.good()) {
         infile >> fromStr;
         infile >> toStr;
-        m_acdRemapCol[fromStr] = toStr;
+        m_acdRemapCol[fromStr.c_str()] = toStr.c_str();
         if (EbfDebug::getDebug())
             std::cout <<" Mapping " << fromStr << " to " << toStr << std::endl;
     }
