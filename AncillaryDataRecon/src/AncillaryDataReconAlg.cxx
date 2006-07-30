@@ -360,9 +360,10 @@ StatusCode AncillaryDataReconAlg::ScalerRecon(AncillaryData::Digi *digiEvent, An
 
 StatusCode AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
-  MakeClusters(digiEvent,reconEvent);
-  reconEvent->ReconstructTagger(m_geometry);
-  reconEvent->report();
+    StatusCode sc = MakeClusters(digiEvent,reconEvent);
+    reconEvent->ReconstructTagger(m_geometry);
+    reconEvent->report();
+    return sc;
 }
 
 
