@@ -287,6 +287,8 @@ int AcdParser::lookup(const char* name, std::string& newName, char &side) {
     } else
         return -1;
 
+    return 0;
+
 }
 
 
