@@ -31,21 +31,12 @@ import getopt
 import ConfigParser
 
 import Numeric
+import MLab
 
 import calFitsXML
 import calDacXML
 import calConstant
 
-
-
-# validation limits
-
-
-warnLimit   = 5.0
-errLimit    = 10.0
-    
-    
-    
 
 
 
@@ -102,6 +93,19 @@ def engVal(errData):
 
 
 
+def average(data):
+
+    return Numeric.average(data, axis = None)
+                
+
+
+def stddev(data):
+
+    return MLab.std(Numeric.ravel(data))
+     
+
+
+
 if __name__ == '__main__':
     
     usage = "dacVal [-V] [-R <root_file>] [-L <log_file>] FLE|FHE|LAC <MeV> <cfg_file> <dac_xml_file>"
@@ -151,12 +155,16 @@ if __name__ == '__main__':
 
     if dacType == 'FLE':
         type = 'fle_dac'
+        warnLimit = 5.0
+        errLimit = 10.0
     elif dacType == 'FHE':
         type = 'fhe_dac'
-        errLimit *= 10
-        warnLimit *= 10
+        warnLimit = 50.0
+        errLimit = 100.0
     elif dacType == 'LAC':
         type = 'log_acpt'
+        warnLimit = 0.5
+        errLimit = 1.0
     else:
         log.error("DAC type %s not supported", dacType)
         sys.exit(1)
@@ -439,6 +447,12 @@ if __name__ == '__main__':
         # clean up
 
         rootFile.Close()
+        
+    # do simple stats
+    
+    av = average(eng)
+    sd = stddev(eng)
+    log.info("%s MeV energy threshold average=%f, stddev=%f", dacType, av, sd)    
 
     # report results
 
