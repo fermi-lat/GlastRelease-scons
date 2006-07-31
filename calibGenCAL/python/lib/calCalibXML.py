@@ -2146,7 +2146,7 @@ class calDacSlopesCalibXML(calCalibXML):
                 10 = FHE DAC/energy slope error
                 11 = FHE energy offset error
                 
-        Param: uldData - A Numeric array of shape (3,16, 8, 2, 12, 6).  The last
+        Param: uldData - A Numeric array of shape (3, 16, 8, 2, 12, 6).  The last
                dimension holds the ULD values for each energy range:
                 0 = ULD DAC/energy slope
                 1 = ULD energy offset
@@ -2156,7 +2156,7 @@ class calDacSlopesCalibXML(calCalibXML):
                 5 = ULD energy saturation error
                 
         Param: rangeData - A Numeric array of shape (16, 8, 2, 12, 6).  The last
-               dimension holds the DAC range (0=COARSE,1=FINE) for each DAC:
+               dimension holds the DAC range (0=FINE, 1=COARSE) for each DAC:
                 0 = LAC DAC range
                 1 = FLE DAC range
                 2 = FHE DAC range
@@ -2310,7 +2310,7 @@ class calDacSlopesCalibXML(calCalibXML):
                 10 = FHE DAC/energy slope error
                 11 = FHE energy offset error
                 
-            uldData - A Numeric array of shape (3,16, 8, 2, 12, 6).  The last
+            uldData - A Numeric array of shape (3, 16, 8, 2, 12, 6).  The last
             dimension holds the ULD values for each energy range:
                 0 = ULD DAC/energy slope
                 1 = ULD energy offset
@@ -2320,7 +2320,7 @@ class calDacSlopesCalibXML(calCalibXML):
                 5 = ULD energy saturation error
                 
             rangeData - A Numeric array of shape (16, 8, 2, 12, 6).  The last
-            dimension holds the DAC range (0=COARSE,1=FINE) for each DAC:
+            dimension holds the DAC range (0=FINE, 1=COARSE) for each DAC:
                 0 = LAC DAC range
                 1 = FLE DAC range
                 2 = FHE DAC range
