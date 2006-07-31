@@ -68,8 +68,8 @@ StatusCode AdfDigiAlg::execute()
 
   sc = RegisterDigi();
   if (sc.isFailure()) {
-    log << MSG::WARNING << "Failed to register Digi" << endreq;
-    return sc;
+    log << MSG::INFO << "Failed to register or find AdfDigi" << endreq;
+    return StatusCode::SUCCESS;
   }
   return sc;
 }
@@ -86,7 +86,7 @@ StatusCode AdfDigiAlg::RegisterDigi()
   SmartDataPtr<AncillaryData::AdfEvent> currentEvent(eventSvc(),TDSobj);
   if( !currentEvent) 
     {
-      log<<MSG::WARNING<<"AdfDigiAlg::RegisterDigi : empty TDS!" <<endreq;
+      log<<MSG::INFO<<"No AdfEvent found on TDS !" <<endreq;
       return sc;
     }
   
