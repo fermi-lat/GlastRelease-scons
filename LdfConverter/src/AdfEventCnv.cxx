@@ -33,10 +33,15 @@ StatusCode AdfEventCnv::createObj(IOpaqueAddress* ,
     // Purpose and Method:  This converter will create an AdfEvent on
     //   the TDS.
     MsgStream log(msgSvc(), "AdfEventCnv");
-    AncillaryData::AdfEvent *adf = new AncillaryData::AdfEvent();
-    refpObject  = adf;
     // Retrieve the LAT data for this event 
     const ldfReader::AdfData& adfLdf = ldfReader::LatData::instance()->getAdf();
+    if (!adfLdf.exist()){
+        refpObject = 0;
+        return StatusCode::FAILURE;
+    }
+
+    AncillaryData::AdfEvent *adf = new AncillaryData::AdfEvent();
+    refpObject  = adf;
     const unsigned char* buffer = adfLdf.buffer();
     unsigned int *header = &((unsigned int*)buffer)[0];
     AncillaryData::EventSummaryData summaryData;
