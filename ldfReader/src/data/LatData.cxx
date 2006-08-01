@@ -126,7 +126,7 @@ namespace ldfReader {
             firstEvtSeq = getAem().summary().eventNumber(); 
             foundFirst = true;
         } else if ( (getAem().exist()) && (firstEvtSeq != getAem().summary().eventNumber()) ) {
-            std::cout << "AEM does not match event Seq "
+            std::cout << "AEM does not match event Seq " << firstEvtSeq << " "
                       << getAem().summary().eventSequence() << std::endl;
             return false;
         }
@@ -135,7 +135,7 @@ namespace ldfReader {
             firstEvtSeq = getOsw().summary().eventNumber();
             foundFirst = true;
         } else if ( (getOsw().exist()) && (firstEvtSeq != getOsw().summary().eventNumber()) ){
-            std::cout << "OSW does not match event Seq "
+            std::cout << "OSW does not match event Seq " << firstEvtSeq << " "
                       <<  getOsw().summary().eventSequence() << std::endl;
             return false;
         }
@@ -144,7 +144,7 @@ namespace ldfReader {
             firstEvtSeq = getAdf().evtNum();
             foundFirst = true;
         } else if ( (getAdf().exist()) && (firstEvtSeq != getAdf().evtNum()) ) {
-            std::cout << "ADF does not match event Seq "
+            std::cout << "ADF does not match event Seq " << firstEvtSeq << " "
                 << getAdf().evtNum() << std::endl;
             return false;
         }
@@ -158,8 +158,8 @@ namespace ldfReader {
                 firstEvtSeq = tem.summary().eventNumber();
                 foundFirst = true;
             } else if ( (tem.exist()) && (firstEvtSeq != tem.summary().eventNumber())) {
-                std::cout << "TEM does not match event Seq "
-                          <<  tem.summary().eventSequence() << std::endl;
+                std::cout << "TEM does not match event Seq " << firstEvtSeq 
+                          << " " <<  tem.summary().eventSequence() << std::endl;
                 return false;
             }
         }
