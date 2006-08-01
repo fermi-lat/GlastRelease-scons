@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v3r5    01-Aug-2006 HMK add JO param to ignore seg faults for LDF  reading
 v3r4p1  31-Jul-2006 HMK check that ADF data exists before processing create 
 v3r4    27-Jul-2006 HMK Handle beamtest06 acd remapping
 v3r3    25-Jul-2006 HMK check for ADF Hdr or Tlr

@@ -46,6 +46,10 @@ xx/** @mainpage package LdfConverter
   determine the remapping to be used for the tileIds.  This has been added
   strictly from beamtest2006 and is not meant to be used for typical LDF
   processing.
+  @param LdfEventSelector.IgnoreSegFault
+  Integer.  Defaults to 0 (false).  If set to non-zero value, this will set 
+  the signal handles for a segmentation fault to ignore to allow processing
+  to continue...not to be used lightly.
   <hr>
   @section notes release notes
   release.notes
