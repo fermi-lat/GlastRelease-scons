@@ -17,6 +17,7 @@ $Header$
 #include <sstream>
 #include <iostream>
 #include <math.h> // for floor
+#include <csignal> // For signal handling
 
 #include "facilities/Timestamp.h"
 #include "astro/JulianDate.h"
@@ -338,6 +339,9 @@ const unsigned LdfParser::BufferSize = 64*1024;
         ldfReader::LatData::instance()->setRunId(m_runId);
         ldfReader::LatData::instance()->setEventSizeInBytes(m_eventSize);
 
+        if (ldfReader::LatData::instance()->ignoreSegFault()) 
+            ignoreSegFault(true);
+
         if ( (m_fitsWrap)  && (m_datagram == 0) ) {
             return -1;
         }
@@ -366,6 +370,9 @@ const unsigned LdfParser::BufferSize = 64*1024;
             }
    
         }
+
+        if (ldfReader::LatData::instance()->ignoreSegFault()) 
+            ignoreSegFault(false);
 
         // Only do this check on the event sequence if we have a recent
         // enough file..  I believe we want one where they started to store the
@@ -532,5 +539,14 @@ double LdfParser::timeForTds() {
 }
 
 
+void LdfParser::ignoreSegFault(bool value)  {
+    // Purpose and Method:  Allows Client to ignore segmentation faults
+    // Not using POSIX for now
+    if (value)
+        signal(SIGSEGV, SIG_IGN);
+    else
+        signal(SIGSEGV, SIG_DFL);
 }
+
+} //namespace
 #endif

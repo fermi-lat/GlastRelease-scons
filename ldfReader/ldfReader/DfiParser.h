@@ -61,6 +61,8 @@ namespace ldfReader {
 
         unsigned long eventSize() { return m_eventSize; };
 
+        virtual void setIgnoreSegFault() { } ;
+
         // local exception class
         //class Exception{ };
 

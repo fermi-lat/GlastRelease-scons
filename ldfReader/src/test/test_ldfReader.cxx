@@ -8,6 +8,7 @@
 $Header$
 */
 
+#include <csignal>
 #include <iostream>
 
 #include "ldfReader/LdfParser.h"
@@ -38,6 +39,8 @@ int main(int argn, char** argc) {
 
     LdfParser *ebfP = new LdfParser(filename, fitsWrap);
     ebfP->setAcdRemap(remap);
+
+    ebfP->setIgnoreSegFault();
 
     int status = 0;
     do {

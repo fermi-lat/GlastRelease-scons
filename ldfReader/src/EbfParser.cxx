@@ -25,7 +25,12 @@ int EbfParser::setAcdRemap(const std::string& filename) {
     return -1;
 }
 
+
+void EbfParser::setIgnoreSegFault() {
+   ldfReader::LatData::instance()->setIgnoreSegFault(true);
+
 }
 
 
+} //namespace
 #endif

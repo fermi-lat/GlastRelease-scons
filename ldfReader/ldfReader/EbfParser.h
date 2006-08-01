@@ -37,6 +37,8 @@ namespace ldfReader {
         virtual int setAcdRemap(const std::string &filename) ;
 
 
+        virtual void setIgnoreSegFault();
+
         // local exception class
         class Exception{ };
 

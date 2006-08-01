@@ -31,6 +31,7 @@ int AdfParser::parseHeader(const unsigned char *buf ) {
      }
     
     ldfReader::LatData* curLatData = ldfReader::LatData::instance();
+    curLatData->setRunId(runNum);
     curLatData->setAdfHdrTlr(true);
 
     return 0;

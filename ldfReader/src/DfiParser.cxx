@@ -131,6 +131,7 @@ int DfiParser::nextEvent() {
 
 int DfiParser::readContextAndInfo() {
 
+    ldfReader::LatData::instance()->setContextExists(true);
     lsfData::MetaEvent *metaEvent = ldfReader::LatData::instance()->getMetaEventPtr();
 
     metaEvent->set(m_meta.run(), m_meta.datagram(), m_meta.scalers(),

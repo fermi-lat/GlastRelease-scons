@@ -104,6 +104,8 @@ namespace ldfReader {
         m_eventId = 0;
         m_adfHdrTlr = false;
         m_adf.clear();
+        m_contextExists = false;
+        m_ignoreSegFault = false;
     }
 
 
