@@ -371,6 +371,10 @@ const unsigned LdfParser::BufferSize = 64*1024;
    
         }
 
+        // Store run Id locally if we found a header or trailer
+        if (ldfReader::LatData::instance()->adfHdrTlr()) 
+            m_runId = ldfReader::LatData::instance()->runId();
+
         if (ldfReader::LatData::instance()->ignoreSegFault()) 
             ignoreSegFault(false);
 
