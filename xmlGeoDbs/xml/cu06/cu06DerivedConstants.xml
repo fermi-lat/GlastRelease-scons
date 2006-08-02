@@ -48,19 +48,7 @@
             </uminus>
           </half>
         </const>
-<!--
-        <const name="ISCCalZpFace_x" >
-          <notes>X-dimension of Z+ face of cu06 container in front of 
-           calorimeters only.  
-           &lt;font color="red"&gt;This is based on guesses of a couple 
-            primary constants!!&lt;/font&gt;
-          </notes>
-          <minus>
-            <refer refTo="ISCCalYFace_x" />
-            <refer refTo="ISCTkrYFace_x" />
-          </minus>
-        </const>
--->
+
         <const name="ISCCalYFace_x" >
           <notes>X-dimension of Y-face and back Z-face 
            of cu06 container about the grid.
@@ -367,10 +355,6 @@
              <add>
                <refer refTo="ISCTkrZp_dz" />
                <refer refTo="ACDTile_100_beyond" />
-<!--
-               <refer refTo="tileThickness" />
-               <refer refTo="ACDTopTileStandoff" />
- -->
              </add>
              <half>
                <add>
@@ -418,47 +402,13 @@
                   Computed from location of tile 'above' (120) </notes>
            <minus>
              <refer refTo="ACDTile_120_dz" />
-             <refer refTo="ACDTileSHeight" />
+             <add>
+               <refer refTo="ACDTileSHeight" />
+               <refer refTo="ACDSmallTileGap " />
+             </add>
            </minus>
          </const>
 
-<!--
-        <const name="ACDTile_200_dx" >
-          <notes> x-displacement of tile 200 (on -Y face) is
-             computed from location of -X face of ISC
-          </notes>
-          <add>
-            <refer refTo="ISCTkrXn_dx" />
-            <half>
-              <add>
-                <refer refTo="ACDTileMTrans" />
-                <refer refTo="ISCThin" />
-              </add>
-            </half>
-          </add>
-       </const>
-
-        <const name="ACDTile_200_dy" >
-          <notes> y-displacement of tile 200 (on -Y face) is
-             computed from y-disp of  location of -Y face of ISC
-          </notes>
-          <minus>
-            <refer refTo="ISCTkrYn_dy" />
-            <half>
-              <add>
-                <refer refTo="tileThickness" />
-                <refer refTo="ISCThin" />
-              </add>
-            </half>
-          </minus>
-        </const>
-
-        <const name="ACDTile_200_dz" >
-          <notes> z-displacement of tile 200 (on -Y face) is same
-                  as 100 on -X face.</notes>
-          <refer refTo="ACDTile_100_dz" />
-        </const>
--->
       </derCategory>
 
 
