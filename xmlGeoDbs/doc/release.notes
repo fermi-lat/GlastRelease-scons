@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r35p3  2-Aug-2006  jrb More small adjustments in cu06: Z-dim of TKR 
+                            container is smaller; tile 100 sticks out. 
+                            Put in 2mm gap between tiles 120 and 130 
    v1r35p2 27-Jul-2006  jrb cu06 tile dimensions adjusted according to 
                             ACD_Tiles_final_positions.pdf 
    v1r35p1 27-Jul-2006  jrb Fix typo in tile id for cu06
