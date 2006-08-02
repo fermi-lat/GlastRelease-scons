@@ -23,6 +23,10 @@ face of container, from ACD_tiles_Final_position.pdf</prim>
 <prim name="ACDOverlapRow0_1" value="30.0">Taken from 
  ACD_tiles_Final_position.pdf</prim>
 <prim name="ACDTile_000_dy" value="0.000000"> top ACD tile absolute y</prim>
+
+<prim name="ACDTile_100_beyond" value="56.0">Distance in +Z direction
+that tile 100 extends beyond container</prim>
+
 </primCategory>
 
 <primCategory name="cu06ContainerPrim">
@@ -45,15 +49,24 @@ tracker part of innner container.
 &lt;font color="orange"&gt;&lt;b&gt;This is a third guess!!&lt;/b&gt; 
 From Eddie's labeled photo.&lt;/font&gt;</prim>
 
-<prim name="ISCTkrYFace_z" value="705.0">Z-dimension of Y-face for
-tracker part of innner container.
-&lt;font color="orange"&gt;From ACD_Tiles_final_position.pdf.
-Eddie's labeled photo had 666
+<prim name="ISCTkrYFace_z" value="666.0">Z-dimension of Y-face for
+tracker part of innner container 
+&lt;font color="orange"&gt;from 
+https://confluence.slac.stanford.edu/download/attachments/15196/InnerShippingContainer-27-07-2006.ppt?version=1
+(Eddie's labeled photo).
 &lt;/font&gt;</prim>
+<!--
 <prim name="ISCCalYFace_x" value="1664.0">X-dimension of Y-face for
 cals part of inner container.
 &lt;font color="orange"&gt;From Eddie's labeled photo&lt;/font&gt; 
 </prim>
+-->
+<prim name="ISCCalZpFace_x" value="755.0">X-dimension of Z-face for
+part of inner container in front of orphan CALs.
+&lt;font color="orange"&gt;From Eddie's labeled photo&lt;/font&gt; 
+</prim>
+
+
 <prim name="ISCCalYFace_z" value="446.0">Z-dimension of Y-face for
 Z-dimension of Y-face for
 cals part of inner container.
