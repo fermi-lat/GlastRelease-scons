@@ -299,16 +299,17 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG <<" Making clusters "<<endreq; 
+  reconEvent->eraseTaggerClusters();
+
   // Get the tagger hits collection:
   std::vector<AncillaryData::TaggerHit> taggerHits = digiEvent->getTaggerHitCol();
+  log << MSG::DEBUG <<" taggerHits size: "<<taggerHits.size()<< endreq;
   if (taggerHits.size()==0) return sc;
-  std::vector<AncillaryData::TaggerCluster> taggerClusters;
   //  std::vector<AncillaryData::TaggerCluster>::iterator taggerClustersIterator;
   unsigned int i=0;
   AncillaryData::TaggerHit nextHit=taggerHits[i];
   //  nextHit.print();
   
-
   AncillaryData::TaggerCluster aCluster;
   aCluster.append(nextHit);
   //  taggerClusters.push_back(aCluster);
@@ -317,6 +318,7 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
   for(i=1; i<taggerHits.size();i++)
     {
       nextHit=taggerHits[i];
+      //      nextHit.print();
       const signed int stripDist = 
 	static_cast<signed int> (lastHit.getStripId())-
 	static_cast<signed int> (nextHit.getStripId());
@@ -329,23 +331,22 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
 	}
       else 
 	{
-	  taggerClusters.push_back(aCluster);
+	  reconEvent->appendTaggerCluster(aCluster);
 	  aCluster.erase();
 	  aCluster.append(nextHit);
 	  lastHit=nextHit;
 	}
     }  
-  taggerClusters.push_back(aCluster);
-  reconEvent->setTaggerClusters(taggerClusters);
-  return sc;
-}
+  reconEvent->appendTaggerCluster(aCluster);
+  //reconEvent->print();
+}                                                                                                                                             
 
 StatusCode AncillaryDataReconAlg::QdcRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
   
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
-  reconEvent->setQdcHitColl(digiEvent->getQdcHitCol());
+  reconEvent->setQdcHitCol(digiEvent->getQdcHitCol());
   return sc;
 }
 
@@ -354,13 +355,14 @@ StatusCode AncillaryDataReconAlg::ScalerRecon(AncillaryData::Digi *digiEvent, An
   
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
-  reconEvent->setScalerHitColl(digiEvent->getScalerHitCol());
+  reconEvent->setScalerHitCol(digiEvent->getScalerHitCol());
   return sc;
 }
 
 StatusCode AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
     StatusCode sc = MakeClusters(digiEvent,reconEvent);
+    reconEvent->print(); //This makes the code work!
     reconEvent->ReconstructTagger(m_geometry);
     reconEvent->report();
     return sc;
