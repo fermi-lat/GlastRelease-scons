@@ -113,6 +113,10 @@ class CIDAC2ADC {
   CalVec<RngIdx, TSpline3*> m_splinesADC2DAC; 
   CalVec<RngIdx, TSpline3*> m_splinesDAC2ADC; 
 
+
+  /// pedestal subtract spline point ADC by using value from first point
+  void pedSubtractADCSplines();
+
   ostream &m_ostrm;
 
   static const short INVALID_ADC = -5000;

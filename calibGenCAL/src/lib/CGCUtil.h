@@ -146,6 +146,22 @@ namespace CGCUtil {
   template<typename T> const T& min_val(const vector<T> &vec) {
     return *(min_element(vec.begin(),vec.end()));
   }
+
+  /** return p3 such that p3 - p2 = p2 - p1
+   */
+  template <class Ty>
+    inline Ty extrap(Ty p1, Ty p2) {
+    return 2*p2 - p1;
+  }
+
+
+  /** return y3 such that (y2 - y1)/(x2 - x1) = (y3 - y2)/(x3 - x2)
+   */
+  template <class Ty>
+    inline Ty linear_extrap(Ty x1, Ty x2, Ty x3, Ty y1, Ty y2) {
+    return (x3-x2)*(y2-y1)/(x2-x1) + y2;
+  }
+
 };
 
 #endif // CGCUtil_H
