@@ -66,9 +66,20 @@ namespace ldfReader {
     }
 
     AcdDigi* LatData::getAcd(const char *name) {
-        if (m_acdCol.find(name) != m_acdCol.end()) {
-            return m_acdCol[name];
+        const std::map<const char*, ldfReader::AcdDigi*> acdCol = getAcdCol();
+        std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
+
+        std::string str(name);
+        for (thisAcdDigi = acdCol.begin(); 
+                       thisAcdDigi != acdCol.end(); 
+                       thisAcdDigi++) {
+
+            if (str.compare(thisAcdDigi->first) == 0)
+                return (thisAcdDigi->second);
         }
+        //if (m_acdCol.find(name) != m_acdCol.end()) {
+       //     return m_acdCol[name];
+       // }
         return 0;
     }
 
