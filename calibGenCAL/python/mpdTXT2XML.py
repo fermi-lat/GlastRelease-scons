@@ -6,7 +6,7 @@ Note: mpdTXT2XML attempts to autodetect if input data is for partial LAT only (<
 mpdTXT2XML [-doptional.dtd] input.txt output.xml
 
 where:
-       -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r2.dtd')
+       -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r3.dtd')
        input.txt  = input txt file, space delimited in following format:
                       twr lyr col diode mevPerDAC sigma
        output.xml = properly formatted offline CAL mevPerDAC XML file
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     # constants
     usage      = "mpdTXT2XML [-doptional.dtd] input.txt output.xml"
-    dtdName    = "calCalib_v2r2.dtd"
+    dtdName    = "calCalib_v2r3.dtd"
     nTXTFields = 6
     DIODE_LRG  = 0
     DIODE_SM   = 1

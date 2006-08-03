@@ -5,7 +5,7 @@ Note: pedTXT2XML attempts to autodetect if input data is for partial LAT only (<
 pedTXT2XML [-doptional.dtd] input.txt output.xml
 
 where:
-       -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r2.dtd')
+       -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r3.dtd')
        input.txt  = input txt file, space delimited in following format:
                       twr lyr col face erange pedestal sigma
        output.xml = properly formatted offline CAL pedestal XML file
@@ -28,9 +28,7 @@ import array
 
 import calCalibXML
 import calConstant
-
-# Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
-offline_face_to_online = {0:1,1:0}
+import zachUtil
 
 #######################################################################################
 
@@ -38,7 +36,7 @@ if __name__ == '__main__':
 
     # constants
     usage      = "pedTXT2XML [-doptional.dtd] input.txt output.xml"
-    dtdName    = "calCalib_v2r2.dtd" #default value
+    dtdName    = "calCalib_v2r3.dtd" #default value
     nTXTFields = 7
 
     # setup logger
@@ -113,7 +111,7 @@ if __name__ == '__main__':
         rng  = int(rng)
 
         # convert offline face numbering to online face numbering
-        face = offline_face_to_online[face]
+        face = zachUtil.offline_face_to_online[face]
 
         # make sure current tower is on list
         twrSet.add(twr)

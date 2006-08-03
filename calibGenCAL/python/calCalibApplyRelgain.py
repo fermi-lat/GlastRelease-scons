@@ -8,7 +8,7 @@ The commandline is:
 calCalibApplyRelgain [-V] [-doptional.dtd]  <relgain.xml> <le_gain_in> <le_gain_out> <he_gain_in> <he_gain_out> <input_calCalib.xml> <output_calCalib.xml>
 
 where:
-    -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r2.dtd')
+    -d         = specify which dtd file to load from calibUtil/xml folder (default = 'calCalib_v2r3.dtd')
     -V                   = verbose; turn on debug output
     <le_gain_in>         = le gain correpsonding to input xml file (0-8)
     <le_gain_out>        = output le gain (0-8)
@@ -38,7 +38,7 @@ from calConstant import *
 
 if __name__ == '__main__':
     usage = "calCalibApplyRelgain -V [-doptional.dtd] <relgain.xml> <le_gain_in> <le_gain_out> <he_gain_in> <he_gain_out> <input_calCalib.xml> <output_calCalib.xml>"
-    dtdName    = "calCalib_v2r2.dtd" #default value
+    dtdName    = "calCalib_v2r3.dtd" #default value
 
     # setup logger
 

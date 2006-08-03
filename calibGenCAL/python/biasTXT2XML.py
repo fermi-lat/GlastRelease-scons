@@ -28,9 +28,7 @@ import array
 import calDacXML
 import calCalibXML
 import calConstant
-
-# Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
-offline_face_to_online = {0:1,1:0}
+import zachUtil
 
 #######################################################################################
 
@@ -105,7 +103,7 @@ if __name__ == '__main__':
         face = int(face)
 
         # convert offline face numbering to online face numbering
-        face = offline_face_to_online[face]
+        face = zachUtil.offline_face_to_online[face]
 
         # make sure current tower is on list
         twrSet.add(twr)

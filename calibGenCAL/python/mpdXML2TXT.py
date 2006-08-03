@@ -57,7 +57,6 @@ if __name__ == '__main__':
     inName  = args[0]
 
     # open and read XML MevPerDAC file
-
     xmlFile = calCalibXML.calMevPerDacCalibXML(inName)
     mpdData = xmlFile.read()
     towers = xmlFile.getTowers()
