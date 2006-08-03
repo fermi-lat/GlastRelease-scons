@@ -92,7 +92,7 @@ StatusCode AdfDigiAlg::RegisterDigi()
   
   // CREATE A DIGI EVENT
   AncillaryData::Digi *digiEvent = new AncillaryData::Digi(currentEvent);
-  digiEvent->print();
+  //digiEvent->print();
   TDSobj = TDSdir + "/Digi";
   // Register a Digi:
   log << MSG::DEBUG << "current digiEvent pointer: " << digiEvent << endreq;
