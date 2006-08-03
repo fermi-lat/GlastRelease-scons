@@ -25,14 +25,18 @@ namespace AncillaryData
       Recon(AncillaryData::Digi *digiEvent);
       static const CLID& classID()       { return CLID_AncillaryDataReconEvent; }
       
-      void setTaggerClusters(std::vector<TaggerCluster> taggerClusterColl) {m_taggerClusterColl=taggerClusterColl;}
-      void appendTaggerCluster(const TaggerCluster clus) { m_taggerClusterColl.push_back(clus); }
+      void setTaggerClusters(std::vector<TaggerCluster> taggerClusterCol) 
+	{
+	  m_taggerClusterCol=taggerClusterCol;
+	}
+      void eraseTaggerClusters(){m_taggerClusterCol.erase(m_taggerClusterCol.begin(),m_taggerClusterCol.end());}
+      void appendTaggerCluster(const TaggerCluster clus) { m_taggerClusterCol.push_back(clus); }
 
-      void setQdcHitColl(std::vector<QdcHit> qdcHitColl) {m_qdcHitColl = qdcHitColl;}
-      void appendQdcHit(const QdcHit qdc) { m_qdcHitColl.push_back(qdc); }
+      void setQdcHitCol(std::vector<QdcHit> qdcHitCol) {m_qdcHitCol = qdcHitCol;}
+      void appendQdcHit(const QdcHit qdc) { m_qdcHitCol.push_back(qdc); }
       
-      void setScalerHitColl(std::vector<ScalerHit> scalerHitColl) {m_scalerHitColl = scalerHitColl;}
-      void appendScalerHit(const ScalerHit scaler) { m_scalerHitColl.push_back(scaler); }
+      void setScalerHitCol(std::vector<ScalerHit> scalerHitCol) {m_scalerHitCol = scalerHitCol;}
+      void appendScalerHit(const ScalerHit scaler) { m_scalerHitCol.push_back(scaler); }
       
       void SortClusters();
       std::vector<TaggerCluster> GetHighestClusters();
@@ -46,10 +50,9 @@ namespace AncillaryData
 	}
       
 	
-      const std::vector<TaggerCluster> getTaggerClusters() const { return m_taggerClusterColl; }
-
-      const std::vector<QdcHit>& getQdcHitCol() const { return m_qdcHitColl; }
-      const std::vector<ScalerHit>& getScalerHitCol() const { return m_scalerHitColl; }
+      const std::vector<TaggerCluster> getTaggerClusters() const { return m_taggerClusterCol; }
+      const std::vector<QdcHit> getQdcHitCol() const { return m_qdcHitCol; }
+      const std::vector<ScalerHit> getScalerHitCol() const { return m_scalerHitCol; }
 
       void print();
       void report();
@@ -62,13 +65,13 @@ namespace AncillaryData
       void setNumberOfHighestClusters(unsigned int n) { m_NumberHigestClusters = n; }
       unsigned int getNumberOfHigestClusters() const { return  m_NumberHigestClusters;}
       void setPos(const double *xArr, const double *yArr, const double *zArr) {
-          unsigned int i;
-          for (i=0; i<N_MODULES; i++) {
-              X[i] = xArr[i];
-              Y[i] = yArr[i];
-              Z[i] = zArr[i];
-          }
-       }
+	unsigned int i;
+	for (i=0; i<N_MODULES; i++) {
+	  X[i] = xArr[i];
+	  Y[i] = yArr[i];
+	  Z[i] = zArr[i];
+	}
+      }
       double getX(unsigned int Module) const {return X[Module];}
       double getY(unsigned int Module) const {return Y[Module];}
       double getZ(unsigned int Module) const {return Z[Module];}
@@ -103,9 +106,9 @@ namespace AncillaryData
     private:
       unsigned m_eventNumber;
       unsigned m_spillNumber;
-      std::vector<TaggerCluster> m_taggerClusterColl;
-      std::vector<QdcHit> m_qdcHitColl;
-      std::vector<ScalerHit> m_scalerHitColl;
+      std::vector<TaggerCluster> m_taggerClusterCol;
+      std::vector<QdcHit> m_qdcHitCol;
+      std::vector<ScalerHit> m_scalerHitCol;
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
 
       /// coordinates of the intersection point between the incoming direction 

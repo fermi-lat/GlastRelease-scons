@@ -45,16 +45,14 @@ void TaggerCluster::print()
     (*hitIterator).print();
 }
 
-void TaggerCluster::computePosition(AncillaryGeometry *geometry)
+void TaggerCluster::computePosition()
 {
-  const unsigned int M= getModuleId();
+  // This provides the position of the cluster starting from stripid0;
   const unsigned int L= getLayerId();
   // The position previously computed is referred to the strip 0
-  unsigned int View = geometry->getView(M); // 1 is Y (strip along Z) , 0 is Z (strip along Y)
-
-  m_X = geometry->getX(M) + L * LAYER_WIDTH;
-  m_Y = getPosition() + geometry->getY(M);
-  m_Z = getPosition() + geometry->getZ(M);  
+  m_X = L * LAYER_WIDTH;
+  m_Y = getPosition();
+  m_Z = getPosition();
 }
 
 } // end namespace

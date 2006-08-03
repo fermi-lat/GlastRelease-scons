@@ -8,7 +8,6 @@
 // Our own classes.
 #include "TaggerHit.h"
 #include "AdfEvent/TaggerParameters.h"
-#include "AncillaryDataUtil/AncillaryGeometry.h"
 
 namespace AncillaryData
 {
@@ -57,7 +56,7 @@ namespace AncillaryData
         std::vector<TaggerHit> getHits()    const {return m_hits;}
         //      double       getSNRatio()           const {return m_signalToNoiseRatio;}
         //      double       getHighestHitSNRatio() const {return m_highestHitSignalToNoiseRatio;}
-        void computePosition(AncillaryGeometry *geometry);
+        void computePosition();
         double       getEta()  {
             if(!m_properties) 
                 calculateProperties(); 

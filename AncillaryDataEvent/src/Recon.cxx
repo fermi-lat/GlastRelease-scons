@@ -9,8 +9,8 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
 {
   setEventNumber(digiEvent->getEventNumber());
   setSpillNumber(digiEvent->getSpillNumber());
-  setQdcHitColl(digiEvent->getQdcHitCol());      
-  setScalerHitColl(digiEvent->getScalerHitCol());      
+  setQdcHitCol(digiEvent->getQdcHitCol());      
+  setScalerHitCol(digiEvent->getScalerHitCol());      
 
   PX =0.0;  PY=0.0;  PZ=0.0;
   E_rec=0; 
@@ -27,14 +27,14 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
 void Recon::print()
 {
   std::cout<< " Ancillary Recon Event: "<<getEventNumber()<<" Spill Number: "<<getSpillNumber()<<std::endl;
-  std::cout<< " --- number of Tagger Clusters: "<<m_taggerClusterColl.size()<<std::endl;
-  for(std::vector<TaggerCluster>::iterator pos=m_taggerClusterColl.begin(); pos!=m_taggerClusterColl.end(); ++pos)
+  std::cout<< " --- number of Tagger Clusters: "<<m_taggerClusterCol.size()<<std::endl;
+  for(std::vector<TaggerCluster>::iterator pos=m_taggerClusterCol.begin(); pos!=m_taggerClusterCol.end(); ++pos)
     (*pos).print();
-  std::cout<< " --- number of QDC Hits       : "<<m_qdcHitColl.size()<<std::endl;
-  for(std::vector<QdcHit>::iterator        pos=       m_qdcHitColl.begin(); pos!=       m_qdcHitColl.end(); ++pos)
+  std::cout<< " --- number of QDC Hits       : "<<m_qdcHitCol.size()<<std::endl;
+  for(std::vector<QdcHit>::iterator        pos=       m_qdcHitCol.begin(); pos!=       m_qdcHitCol.end(); ++pos)
     (*pos).print();
-  std::cout<< " --- number of Scaler Hits       : "<<m_scalerHitColl.size()<<std::endl;
-  for(std::vector<ScalerHit>::iterator        pos=       m_scalerHitColl.begin(); pos!=       m_scalerHitColl.end(); ++pos)
+  std::cout<< " --- number of Scaler Hits       : "<<m_scalerHitCol.size()<<std::endl;
+  for(std::vector<ScalerHit>::iterator        pos=       m_scalerHitCol.begin(); pos!=       m_scalerHitCol.end(); ++pos)
     (*pos).print();
 
 }
@@ -43,17 +43,21 @@ void Recon::print()
 std::vector<TaggerCluster> Recon::GetHighestClusters()
 {
   SortClusters();
-  m_NumberHigestClusters=m_taggerClusterColl.size();
-  if(m_taggerClusterColl.size()<=1) 
-    return m_taggerClusterColl;
+  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters: "<<m_taggerClusterCol.size()<<std::endl;
+  m_NumberHigestClusters=m_taggerClusterCol.size();
+  if(m_taggerClusterCol.size()<=1) 
+    return m_taggerClusterCol;
   std::vector<TaggerCluster> HigestsClusters;
-  std::vector<TaggerCluster>::iterator pos=m_taggerClusterColl.begin();
+  ///////
+  std::vector<TaggerCluster>::iterator pos=m_taggerClusterCol.begin();
   TaggerCluster selectedCluster=(*pos);
   pos++;
-  int i=1;
-  while(pos<m_taggerClusterColl.end())
+  while(pos<m_taggerClusterCol.end())
     {
       TaggerCluster newCluster=(*pos);
+      std::cout<<"selected cluster:"<<selectedCluster.getModuleId()<<", "<<selectedCluster.getLayerId()<<std::endl;
+      std::cout<<"new Cluster cluster:"<<newCluster.getModuleId()<<", "<<newCluster.getLayerId()<<std::endl;
+      
       if(selectedCluster.getModuleId()==newCluster.getModuleId() && 
 	 selectedCluster.getLayerId()==newCluster.getLayerId())
 	{
@@ -68,13 +72,13 @@ std::vector<TaggerCluster> Recon::GetHighestClusters()
     }
   HigestsClusters.push_back(selectedCluster);
   m_NumberHigestClusters=HigestsClusters.size();
-  
+  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters m_NumberHigestClusters "<<m_NumberHigestClusters<<std::endl;
   return HigestsClusters;
 }
 
 void Recon::SortClusters()
 {
-  std::sort(m_taggerClusterColl.begin(),m_taggerClusterColl.end(),ClusterSortPredicate);
+  std::sort(m_taggerClusterCol.begin(),m_taggerClusterCol.end(),ClusterSortPredicate);
 }
 
 
@@ -88,32 +92,34 @@ void Recon::computePositions(AncillaryGeometry *geometry)
   
   for(std::vector<TaggerCluster>::iterator pos=higestClusters.begin();pos!=higestClusters.end(); ++pos)
     {
-      (*pos).computePosition(geometry);
+      (*pos).computePosition();
       const unsigned int M= (*pos).getModuleId();
       const unsigned int L= (*pos).getLayerId();
       unsigned int View = geometry->getView(M); // 1 is Y (strip along Z) , 0 is Z (strip along Y)
-      
+      // Beam line=>  |+Y  -Z|    |+Y -Z|     Magnet     |+Z +Y|   |+Z +Y|
       X[M] = geometry->getX(M);
+      const double HalfWafer = N_CHANNELS_PER_LAYER*STRIPS_PITCH/2.0;
       if(View==0)
 	{
 	  if(L==0)
 	    {
-	      Y[M] = (*pos).getY();
+	      Y[M] = geometry->getY(M) - HalfWafer + (*pos).getY();
 	    }
 	  else 
 	    {
-	      Z[M] = (*pos).getZ();
+	      Z[M] = geometry->getZ(M) + HalfWafer - (*pos).getZ();
 	    }
 	}
       else
 	{
-	  if(L==1)
+	  if(L==1) 
 	    {
-	      Y[M] = (*pos).getY();
+	      Y[M] = geometry->getY(M) - HalfWafer + (*pos).getY();
+
 	    }
 	  else 
 	    {
-	      Z[M] = (*pos).getZ();
+	      Z[M] = geometry->getZ(M) - HalfWafer + (*pos).getZ();
 	    }
 	}
     }
@@ -191,7 +197,7 @@ void Recon::report()
       }
     else
       {
-	std::cout<<" Sorry, not enought clusters!"<<std::endl;
+	std::cout<<" Sorry, not enough clusters!"<<std::endl;
       }
   } 
 }
