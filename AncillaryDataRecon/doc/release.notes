@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v0r2p4   03-Aug-2006 NO Now recon works, but there is a print statment which is necessary (don't know why)
  v0r2p3   29-Jul-2006 HMK Make sure algorithm returns statuscode for windows compilation
  v0r2p2   27-Jul-2006 NO Remove couts
  v0r2p1   25-Jul-2006 NO Patched the requirements
