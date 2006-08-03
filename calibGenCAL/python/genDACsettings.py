@@ -50,6 +50,7 @@ def dacSettings(slope, offset, energy):
 
      d = (energy - offset) / slope
      d = Numeric.clip(d, 0, 63)
+     d = Numeric.around(d) 
      return d.astype(Numeric.Int8)
      
      
@@ -60,6 +61,7 @@ def uldSettings(slopes, offsets, sats, margin):
     sats = sats - (sats * margin)
     d = (sats - offsets) / slopes
     d = Numeric.clip(d, 0, 63)
+    d = Numeric.around(d)
     lex8 = d[calConstant.CRNG_LEX8, ...]
     lex1 = d[calConstant.CRNG_LEX1, ...]  
     hex8 = d[calConstant.CRNG_HEX8, ...]
