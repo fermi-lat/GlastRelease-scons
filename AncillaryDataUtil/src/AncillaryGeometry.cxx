@@ -34,7 +34,7 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
       Ty[M]=ty;
       Tz[M]=tz;
       if(v=='Y' || v=='y')  View[M]=0; // not flipped (strip along Z)
-      else if(v=='Z' || v=='z')  View[M]=0; // flipped (strip along Y)
+      else if(v=='Z' || v=='z')  View[M]=1; // flipped (strip along Y)
       else std::cout<<"Wrong geometry file format"<<std::endl;
     }
 }
