@@ -234,6 +234,7 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
 
   if (EbfDebug::getDebug()) {
       const ldfReader::AcdDigi::AcdPmt* curPmt = acd->getPmtSide(digiSide);
+      printf("name: %s, id: %u\n", acd->getTileName(), acd->getTileId());
       if (curPmt) curPmt->print(true);
   }
 

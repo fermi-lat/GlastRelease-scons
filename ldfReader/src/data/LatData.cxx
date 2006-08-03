@@ -23,6 +23,17 @@ namespace ldfReader {
         m_acdRemapCol.clear();
     }
 
+    LatData::~LatData() {
+        clearTowers();
+        std::map<const std::string*, const std::string*>::const_iterator acdMapIt;
+        for (acdMapIt = m_acdRemapCol.begin(); acdMapIt != m_acdRemapCol.end();
+                                               acdMapIt++) {
+            delete acdMapIt->first;
+            delete acdMapIt->second;
+        }
+        m_acdRemapCol.clear();
+    }
+
     LatData* LatData::instance() {
         if (m_instance == 0) {
             m_instance = new LatData();
