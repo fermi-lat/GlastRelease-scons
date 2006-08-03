@@ -43,7 +43,7 @@ void Recon::print()
 std::vector<TaggerCluster> Recon::GetHighestClusters()
 {
   SortClusters();
-  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters: "<<m_taggerClusterCol.size()<<std::endl;
+  //  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters: "<<m_taggerClusterCol.size()<<std::endl;
   m_NumberHigestClusters=m_taggerClusterCol.size();
   if(m_taggerClusterCol.size()<=1) 
     return m_taggerClusterCol;
@@ -55,8 +55,8 @@ std::vector<TaggerCluster> Recon::GetHighestClusters()
   while(pos<m_taggerClusterCol.end())
     {
       TaggerCluster newCluster=(*pos);
-      std::cout<<"selected cluster:"<<selectedCluster.getModuleId()<<", "<<selectedCluster.getLayerId()<<std::endl;
-      std::cout<<"new Cluster cluster:"<<newCluster.getModuleId()<<", "<<newCluster.getLayerId()<<std::endl;
+      //      std::cout<<"selected cluster:"<<selectedCluster.getModuleId()<<", "<<selectedCluster.getLayerId()<<std::endl;
+      //      std::cout<<"new Cluster cluster:"<<newCluster.getModuleId()<<", "<<newCluster.getLayerId()<<std::endl;
       
       if(selectedCluster.getModuleId()==newCluster.getModuleId() && 
 	 selectedCluster.getLayerId()==newCluster.getLayerId())
@@ -72,7 +72,7 @@ std::vector<TaggerCluster> Recon::GetHighestClusters()
     }
   HigestsClusters.push_back(selectedCluster);
   m_NumberHigestClusters=HigestsClusters.size();
-  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters m_NumberHigestClusters "<<m_NumberHigestClusters<<std::endl;
+  //  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters m_NumberHigestClusters "<<m_NumberHigestClusters<<std::endl;
   return HigestsClusters;
 }
 
