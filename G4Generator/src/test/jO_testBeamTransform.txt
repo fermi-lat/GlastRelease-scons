@@ -1,0 +1,64 @@
+//##############################################################
+//
+// Job options file for GUI (gui or FRED) Gleam to test BeamTransform
+// $Header$
+
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+
+// choose one or the other below for old integrated Gui or FRED
+//#include "$GLEAMROOT/src/guiOptions.txt" 
+#include "$GLEAMROOT/src/fredOptions.txt" 
+// for FRED, the Fred program is expected to be in the path given by
+// the environment variable Fred_DIR, which is set by default in the
+// interface package IExternal/Fred
+
+FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+//FluxAlg.source_name="muon_pencil_angle";
+// 5-GeV muon along beamtest06 beamline
+FluxAlg.source_name = "beamtest_muon";
+
+ApplicationMgr.EvtMax  = 1000;
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/CU06/CU06SegVols.xml";
+
+Generator.Members = {
+    "FluxAlg",
+    "BeamTransform", 
+    //"CurrentEventAlg",
+    //"PointInfoAlg", 
+    "G4Generator",
+    "Sequencer/CalibrationUpdate",
+    "Sequencer/Digitization",
+    "Sequencer/EventDisplay",
+    "Sequencer/Triggered" };
+    
+BeamTransform.horizontal_translation = -27;
+BeamTransform.vertical_translation   = -201;
+BeamTransform.table_rotation = 20.;
+
+// Examples of use of point_on_beamline:
+
+//BeamTransform.point_on_beamline = {45, -27, -130}; // thru the pivot
+//BeamTransform.point_on_beamline = {0, -27, 0}; // thru the origin
+//BeamTransform.point_on_beamline = {374.5, -27, 0}; // between tower 1 and 2
+//BeamTransform.point_on_beamline = {187, -27, 596.5}; // top of tower 1 in center
+//BeamTransform.point_on_beamline = {-374.5, -27, 0}; // grid, betwn cal 0 and 1
+
+//BeamTransform.point_on_beamline = {0, -27, -100}; // thru the cal
+//BeamTransform.table_rotation = 90.;               // sideways!
+
+BeamTransform.point_on_beamline = {-561.75, -27, 0}; // middle of cal 0
+                                                     // shouldn't see hits, but we do
+
+//TkrGeometrySvc.OutputLevel = 2;
+//MessageSvc.OutputLevel     = 2;
+
+// turn off output
+Output.Members = {};
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
