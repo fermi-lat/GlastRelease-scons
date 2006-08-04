@@ -20,6 +20,8 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
 
+#include "geometry/Ray.h"
+
 // TU: Hack for CLHEP 1.9.2.2
 typedef HepGeom::Point3D<double>  HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
@@ -68,12 +70,17 @@ private:
     DoubleProperty m_beam_plane_glast;  // z position of reporting plane in glast frame
     DoubleProperty  m_transy, m_transz; // translation in x-y table plane
     DoubleProperty  m_angle; // rotation about table pivot (y-axis in instr.) (deg)
+    DoubleArrayProperty m_point_on_beamline; // point in CU on central ray of beam
     double m_c, m_s;                    // cos, sin of rot
 
     void transform(Event::McParticle& mcp );
     CLHEP::Hep3Vector m_translation, m_pivot;
     CLHEP::HepRotationY m_rot;  // the table rotation
 };
+
+namespace {
+    const double degToRad = M_PI/180.;
+}
 
 static const AlgFactory<BeamTransform>  Factory;
 const IAlgFactory& BeamTransformFactory = Factory;
@@ -95,6 +102,9 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("beam_plane",     m_beam_plane=3300);
     // z coordinate of reporting plane in instrument frame
     declareProperty("beam_plane_glast" , m_beam_plane_glast=1000);
+    // point in CU along central ray of beam
+    declareProperty("point_on_beamline", 
+        m_point_on_beamline=std::vector<double>(3,-9999.));
 }
 
 StatusCode BeamTransform::initialize(){
@@ -104,15 +114,75 @@ StatusCode BeamTransform::initialize(){
     
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    
+
+    const std::vector<double>& POB = m_point_on_beamline.value( );
+
+    // location of pivot
+    m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_height);
+
+    log << MSG::INFO << endreq << "*********************************************"
+        << endreq << "*********************************************"
+        << endreq << endreq;
+    if(POB[0]!=-9999.) {
+        log << MSG::INFO
+            << "A point in the CU has been requested... " << endreq 
+            << "The original x-y table coordinates will be over-written" << endreq;
+        log << MSG::INFO << "CU point requested: ("
+            << POB[0] << ", " << POB[1] << ", " << POB[2] << ")" 
+            << ", angle: " << m_angle << " degrees" << endreq;
+        log << MSG::INFO << "XY table Before: horizontal " << m_transy 
+            << " mm, vertical " << m_transz << " mm" << endreq;
+        m_transz = POB[1];
+        if( m_angle==0) {
+            m_transy = -POB[0];
+        } else {
+            // I'm amazed that this code seems to work for angles of +-90.
+            //    I guess that's the power of vector arithmetic!
+            // That said, this seems a bit complicated...
+
+            Point pivot(m_pivot.x(), m_pivot.y(), m_pivot.z());
+            //make a ray orthogonal to the beam angle going thru the pivot
+            double orthAngle = degToRad*(180. - m_angle);
+            Vector orthDir(cos(orthAngle), 0.0, sin(orthAngle));
+            Ray orthRay(pivot, orthDir);
+
+            // move by the offset of the pivot along this line
+            // it's where the central ray enters for no translation
+            Point point1 = orthRay.position(m_pivot.x());
+            double angle = degToRad*(90. - m_angle);
+            Vector dirBeam(cos(angle), 0.0, sin(angle));
+            Ray zeroRay(point1, dirBeam);
+
+            // Here's the point you want the beam to go thru
+            Point point2(POB[0], 0.0, POB[2]);
+            Vector v1 = point2 - point1;
+            // The distance along the beam central ray that gets you to the 
+            //  doca for the beam point
+            double lenB = v1*dirBeam;
+            Point pointOnZero = zeroRay.position(lenB);
+            Vector disp = point2-pointOnZero;
+            // This is how much you have to move
+            double dist1 = disp.mag();
+            // and this is the direction
+            double sign = (disp*orthDir<0 ? -1.0 : 1.0);
+            m_transy = sign*dist1;
+        }
+        log << MSG::INFO << "         After:  horizontal " << m_transy 
+            << " mm, vertical " << m_transz << " mm" << endreq;
+    } else {
+        log << MSG::INFO << "XY table: horizontal " << m_transy 
+            << " mm, vertical " << m_transz 
+            << " mm, rotation: " << m_angle << " degrees" << endreq;
+    }
+    log << MSG::INFO << endreq << "*********************************************"
+        << endreq << "*********************************************"
+        << endreq << endreq;
+ 
     // define the transformation matrix here.
     m_translation = CLHEP::Hep3Vector(0, m_transy, m_transz);
 
     // this is the rotation matrix
-    m_rot = CLHEP::HepRotationY(m_angle*M_PI/180);
-
-    // location of pivot
-    m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_height);
+    m_rot = CLHEP::HepRotationY(m_angle*degToRad);
 
     return sc;
 }

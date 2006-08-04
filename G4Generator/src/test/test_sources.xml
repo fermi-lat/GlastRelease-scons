@@ -4,6 +4,14 @@
        $Header$
        Some simple test flux definitions for debugging
     -->
+    
+    <source name="beamtest_muon" >
+       <spectrum escale="GeV"> 
+         <particle name="mu+"><energy e="5"/> </particle>
+           <direction theta="90" phi="180" />
+           <launch_point x="3300" y="0" z="0" />
+       </spectrum>
+    </source>
 
     <source name="muon_slant_x" >
        <spectrum escale="GeV"> 
@@ -11,7 +19,7 @@
            <direction theta="30" phi="0" />
            <patch ymin="45" ymax="55" xmin="500" xmax="510" zmin="1000" zmax="1000"/>
        </spectrum>
-     </source>
+    </source>
 
     <source name="muon_slant_y" >
        <spectrum escale="GeV"> 

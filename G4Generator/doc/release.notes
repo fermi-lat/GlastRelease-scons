@@ -2,7 +2,11 @@
     @brief package G4Generator 
 @verbatim
     $Id$
- v5r15   16-Jun-22 LSR Complete the fix... y and z needed to be swapped for table
+ v5r15p1 04-Aug-06 LSR New jO paramater: point_on_beamline... allows a more direct way of setting
+                       the table parameters
+                       New source: beamtest_muon... this is a muon generated on the axis of the beamtest06
+                           beam, to be used with BeamTransform to test the table motions.
+ v5r15   16-Jun-06 LSR Complete the fix... y and z needed to be swapped for table
                           translations as well.
                        Also put in canonical pivot and reporting plane positions as default
  v5r14   16-Jun-06 LSR Sigh... change the coordinate system in BeamTranfrom once more,
