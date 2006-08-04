@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+04-Aug-06  v3r4p4 TU  Change way CTB variables get initialized...
 03-Aug-06  v3r4p3 TU  Fix bug: zero out CTB variables before running analysis
 27-Jul-06  v3r4p2 TU  Modifications to get "best" agreement with IM, include new analysis sheet
 11-Jul-06  v3r4p1 THB remove obsolete code and IM files; specify the default Atwood file to load
