@@ -42,6 +42,14 @@ public:
     */
     void execute();
 
+    /** @brief This will zero the IM analysis output variables
+    */
+    void zeroCTvals();
+
+    /** @brief This stores IM analysis output variables into output ntuple
+    */
+    void storeCTvals();
+
     /** @brief Look up the value of a variable stored in the local tuple
                This should be the "standard" method for retrieving information
     */

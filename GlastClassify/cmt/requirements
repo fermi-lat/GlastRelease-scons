@@ -33,6 +33,8 @@ macro txt "" WIN32 " *.txt"
 # application classify -s=../src/classify $(source)
 
 set PRUNEROWS "false"
+set MERIT_INPUT_FILE "C:/Glast/DC2DataSets/backgnd-GR-v9r9_002001_merit_merit.root"
+set MERIT_OUTPUT_FILE "test.root"
 
 application apply -s=../src/apply $(source)
 

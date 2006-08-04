@@ -171,6 +171,9 @@ AtwoodTrees::~AtwoodTrees()
 
 bool AtwoodTrees::execute()
 {
+    // Output flag default is to not write row (if pruning)
+    bool writeTupleRow = false;
+
     // initialize CT output variables
     m_acdLowerTileCount   = 0.;
     m_acdUpperTileCount   = 0.;
@@ -191,58 +194,61 @@ bool AtwoodTrees::execute()
         int j = 0;
     }
 
+    // Always zero the CTB output values in case cuts below fail
+    m_treeAnalysis->zeroCTvals();
+
     // These are the "standard" selection cuts
-    if( calenergy <= 5. || calCsiRln <= 4. || tkrNumTracks < 1) return false; 
-
-    m_treeAnalysis->execute();
-
-    m_executeTreeCnt++;
-
-    // Recover the results?
-    try
+    if( calenergy > 5. && calCsiRln > 4. && tkrNumTracks > 0)
     {
-        // Retrieve the energy classification results (needed below)
-        m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
-        m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
-        m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
+        m_treeAnalysis->execute();
 
-        m_goodVals++;
-    }
-    catch(...)
-    {
-        // Keeps on executing;
-        m_caughtVals++;
-    }
+        m_executeTreeCnt++;
 
-
-    // Cuts for Special Bill Run
-    bool writeTupleRow = false;
-
-    double FilterStatus_HI = *m_FilterStatus_HI;
-
-    FilterStatus_HI = 0;
-
-    // First cuts on Filter status and failures for energy and tails
-    if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
-    {
-        double AcdActiveDist3D  = *m_AcdActiveDist3D;
-        double AcdRibbonActDist = *m_AcdRibbonActDist;
-        double Tkr1SSDVeto      = *m_Tkr1SSDVeto;
-
-        // A series of selections on the ACD 
-        if (!((AcdActiveDist3D > 0 || AcdRibbonActDist > 0) && Tkr1SSDVeto < 2))
+        // Recover the results?
+        try
         {
-            double AcdCornerDoca = *m_AcdCornerDoca;
+            // Retrieve the energy classification results (needed below)
+            m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+            m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
+            m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
 
-            if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50 && m_tkrLATEdge < 100))
+            m_goodVals++;
+        }
+        catch(...)
+        {
+            // Keeps on executing;
+            m_caughtVals++;
+        }
+
+        double FilterStatus_HI = *m_FilterStatus_HI;
+
+        FilterStatus_HI = 0;
+
+        // First cuts on Filter status and failures for energy and tails
+        if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
+        {
+            double AcdActiveDist3D  = *m_AcdActiveDist3D;
+            double AcdRibbonActDist = *m_AcdRibbonActDist;
+            double Tkr1SSDVeto      = *m_Tkr1SSDVeto;
+
+            // A series of selections on the ACD 
+            if (!((AcdActiveDist3D > 0 || AcdRibbonActDist > 0) && Tkr1SSDVeto < 2))
             {
-                // Finally, check the result of running the Analysis Sheet
-                double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
+                double AcdCornerDoca = *m_AcdCornerDoca;
 
-                if (dWriteTupleRow != 0.) writeTupleRow = true;
+                if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50 && m_tkrLATEdge < 100))
+                {
+                    // Finally, check the result of running the Analysis Sheet
+                    double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
+
+                    if (dWriteTupleRow != 0.) writeTupleRow = true;
+                }
             }
         }
     }
+
+    // Last step, always copy CTB back to ntuple
+    m_treeAnalysis->storeCTvals();
 
     return writeTupleRow;
 }
