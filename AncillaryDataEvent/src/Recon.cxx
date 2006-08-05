@@ -92,36 +92,34 @@ void Recon::computePositions(AncillaryGeometry *geometry)
   
   for(std::vector<TaggerCluster>::iterator pos=higestClusters.begin();pos!=higestClusters.end(); ++pos)
     {
-      (*pos).computePosition();
       const unsigned int M= (*pos).getModuleId();
-      const unsigned int L= (*pos).getLayerId();
-      unsigned int View = geometry->getView(M); // 1 is Y (strip along Z) , 0 is Z (strip along Y)
-      // Beam line=>  |+Y  -Z|    |+Y -Z|     Magnet     |+Z +Y|   |+Z +Y|
-      X[M] = geometry->getX(M);
-      const double HalfWafer = N_CHANNELS_PER_LAYER*STRIPS_PITCH/2.0;
-      if(View==0)
+      const unsigned int L= (*pos).getLayerId(); // 0 or 1
+      // View and direction of the first view
+      unsigned int V,D;
+      if(L==0)
 	{
-	  if(L==0)
-	    {
-	      Y[M] = geometry->getY(M) - HalfWafer + (*pos).getY();
-	    }
-	  else 
-	    {
-	      Z[M] = geometry->getZ(M) + HalfWafer - (*pos).getZ();
-	    }
-	}
+	  V = geometry->getView1(M);
+	  D = geometry->getDirection1(M);
+	}      
       else
 	{
-	  if(L==1) 
-	    {
-	      Y[M] = geometry->getY(M) - HalfWafer + (*pos).getY();
-
-	    }
-	  else 
-	    {
-	      Z[M] = geometry->getZ(M) - HalfWafer + (*pos).getZ();
-	    }
+	  V = geometry->getView2(M);
+	  D = geometry->getDirection2(M);
 	}
+      const double HalfWafer = N_CHANNELS_PER_LAYER*STRIPS_PITCH/2.0;
+      // this is valid for both views:
+      X[M] = geometry->getX(M);
+      // case of first view
+      if(V==1 && D == 0)      // case : V = Z, D = +
+	Z[M] = geometry->getZ(M) - HalfWafer + (*pos).getPosition();
+      else if(V==1 && D == 1 )      // case : V = Z, D = -
+	Z[M] = geometry->getZ(M) + HalfWafer - (*pos).getPosition();
+      else if(V==0 && D == 0)      // case : V = Y, D = +
+	Y[M] = geometry->getY(M) - HalfWafer + (*pos).getPosition();
+      else if(V==0 && D == 1 )      // case : V = Y, D = -
+	Y[M] = geometry->getY(M) + HalfWafer - (*pos).getPosition();
+      
+      std::cout<<M<<" "<<V<<" "<<D<<" "<<X[M]<<" "<<Y[M]<<" "<<Z[M]<<std::endl;
     }
 }
 
@@ -133,17 +131,21 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
    if(m_NumberHigestClusters==8)
      {
        // r1 = a1*x + b1
-       double a1 = (Y[1]-Y[0])/(X[1]-X[0]);
-       double b1 = (Y[0]*X[1]-Y[1]*X[0])/(X[1]-X[0]);
+       const double Dist1 = fabs(X[1]-X[0]);
+       const double Dist2 = fabs(X[3]-X[2]);
+       const double Disp1 = fabs(Y[1]-Y[0]);
+       const double Disp2 = fabs(Y[3]-Y[2]);
+       double a1 = Disp1/Dist1;
+       double b1 = (Y[0]*X[1]-Y[1]*X[0])/Dist1;
        // r1 = a2*x + b2
-       double a2 = (Y[3]-Y[2])/(X[3]-X[2]);
-       double b2 = (Y[2]*X[3]-Y[3]*X[2])/(X[3]-X[2]);
+       double a2 = Disp2/Dist2;
+       double b2 = (Y[2]*X[3]-Y[3]*X[2])/Dist2;
 
-       PhiIn   = atan2(Y[1]-Y[0],X[1]-X[0]);
-       PhiOut  = atan2(Y[3]-Y[2],X[3]-X[2]);
-       Dphi = PhiOut - PhiIn;
-       double phiErrIn  = STRIPS_PITCH/(X[1]-X[0]); 
-       double phiErrOut = STRIPS_PITCH/(X[3]-X[2]); 
+       PhiIn   = atan2(Disp1,Dist1);
+       PhiOut  = atan2(Disp2,Dist2);
+       Dphi    = PhiOut - PhiIn;
+       double phiErrIn  = STRIPS_PITCH/Dist1;
+       double phiErrOut = STRIPS_PITCH/Dist2;
        double DphiErr   = sqrt(phiErrIn*phiErrIn+phiErrOut*phiErrOut);
        
        if(fabs(sin(PhiOut)-sin(PhiIn))>0)
@@ -155,10 +157,10 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
        double SX = X[0]+X[1]+X[2]+X[3];
        double SZ = Z[0]+Z[1]+Z[2]+Z[3];
        double SXX = X[0]*X[0] + X[1]*X[1] + X[2]*X[2] + X[3]*X[3];
-       double SXZ = X[0]*Z[0] + X[1]*Z[1] + X[2]*Z[2] + X[3]*Z[3];
-       double A = (4.*SXZ-SX*SZ)/(4.*SXX-SX*SX);
+       double SZX = Z[0]*X[0] + Z[1]*X[1] + Z[2]*X[2] + Z[3]*X[3];
+       double A = (4.*SZX-SZ*SX)/(4.*SXX-SX*SX);
        double B = (SZ-A*SX)/4.;
-       Theta=atan(A);
+       Theta=atan2(4.*SZX-SZ*SX,4.*SXX-SX*SX);
        if(fabs(cos(Theta))>0)
 	 {
 	   E_corr = E_rec/cos(Theta);

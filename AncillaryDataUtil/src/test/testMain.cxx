@@ -8,6 +8,7 @@ void TestGeometry()
   facilities::Util::expandEnvVar(&m_geometryFilePath); 
   std::cout<< "loading geometry from " << m_geometryFilePath << std::endl;
   AncillaryData::AncillaryGeometry   *m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);
+  m_geometry->print();
 }
 
 

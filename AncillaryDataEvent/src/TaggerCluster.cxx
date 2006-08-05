@@ -45,14 +45,4 @@ void TaggerCluster::print()
     (*hitIterator).print();
 }
 
-void TaggerCluster::computePosition()
-{
-  // This provides the position of the cluster starting from stripid0;
-  const unsigned int L= getLayerId();
-  // The position previously computed is referred to the strip 0
-  m_X = L * LAYER_WIDTH;
-  m_Y = getPosition();
-  m_Z = getPosition();
-}
-
 } // end namespace

@@ -56,7 +56,6 @@ namespace AncillaryData
         std::vector<TaggerHit> getHits()    const {return m_hits;}
         //      double       getSNRatio()           const {return m_signalToNoiseRatio;}
         //      double       getHighestHitSNRatio() const {return m_highestHitSignalToNoiseRatio;}
-        void computePosition();
         double       getEta()  {
             if(!m_properties) 
                 calculateProperties(); 
@@ -64,11 +63,7 @@ namespace AncillaryData
         }
         double getEta() const { return m_eta; }
         void print();
-
-        double getX(){return m_X;}
-        double getY(){return m_Y;}
-        double getZ(){return m_Z;}
-
+	
     private:
         TaggerHit  m_highestHit;
         double     m_baricenterPosition;
@@ -78,7 +73,6 @@ namespace AncillaryData
         //      double     m_highestHitSignalToNoiseRatio;
         double     m_eta;
         bool m_properties;
-        double m_X, m_Y, m_Z;
 
         std::vector<TaggerHit> m_hits;    
     };
