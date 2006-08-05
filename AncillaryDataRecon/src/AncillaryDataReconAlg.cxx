@@ -53,6 +53,7 @@ private:
   AncillaryData::AncillaryGeometry   *m_geometry;
   bool m_SubtractPedestals;
   std::string m_geometryFilePath;
+  float m_nSigma;
 };
 
 static const AlgFactory<AncillaryDataReconAlg>  Factory;
@@ -64,6 +65,7 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
   // Input parameters that may be set via the jobOptions file
   declareProperty("pedestalSubtraction",m_SubtractPedestals=true);
   declareProperty("geometryFilePath",m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.txt");
+  declareProperty("NSigmaForPedestalSubrtraction",m_nSigma=10.0);
   //  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin");
 }
 
@@ -95,6 +97,7 @@ StatusCode AncillaryDataReconAlg::initialize()
   facilities::Util::expandEnvVar(&m_geometryFilePath);
   log << MSG::INFO << "loading geometry from " << m_geometryFilePath << endreq;
   m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);
+  m_geometry->print();
   return sc;
 }
 
@@ -224,8 +227,8 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   }
   
   std::vector<AncillaryData::TaggerHit> taggerHitCol=digiEvent->getTaggerHitCol();
+  std::vector<AncillaryData::TaggerHit> taggerHitColPedSubtracted(0);
   std::vector<AncillaryData::TaggerHit>::iterator taggerHitColI;
-  
   for(taggerHitColI=taggerHitCol.begin(); taggerHitColI!=taggerHitCol.end();++taggerHitColI)
     {
       const unsigned int iMod  = (*taggerHitColI).getModuleId();
@@ -249,11 +252,14 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       log << MSG::DEBUG << "sNoise = " << pT->getSNoise() << endreq;
       log << MSG::DEBUG << "isBad = " <<  pT->getIsBad() << endreq;
       log << MSG::DEBUG << " PH ped subtract: "<<PHPS<< " ("<<PHPS/RMS<<") sigma"<<endreq;
+      
       (*taggerHitColI).SubtractPedestal(pedestalValue, RMS);
+      if(PHPS > fabs(m_nSigma * RMS) && (pT->getIsBad()==0))
+	taggerHitColPedSubtracted.push_back(*taggerHitColI);
       log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay
 	  <<" C: "<<iChan<<" PH: ("<<PHPS<<")"<<endreq;
     }
-  digiEvent->setTaggerHitCol(taggerHitCol);
+  digiEvent->setTaggerHitCol(taggerHitColPedSubtracted);
   
   //////////////////////////////////////////////////
   // QDC
@@ -268,6 +274,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   }
   
   std::vector<AncillaryData::QdcHit> qdcHitCol=digiEvent->getQdcHitCol();
+  std::vector<AncillaryData::QdcHit> qdcHitColPedSubtracted(0);
   std::vector<AncillaryData::QdcHit>::iterator qdcHitColI;
   for(qdcHitColI=qdcHitCol.begin(); qdcHitColI!=qdcHitCol.end();++qdcHitColI)
     {
@@ -288,6 +295,8 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       log << MSG::DEBUG << " isBad = " << pQ->getIsBad() << endreq;
       log << MSG::DEBUG << " PH ped subtract:"<<PHPS<<" ("<<PHPS/RMS<<") sigma"<<endreq;
       (*qdcHitColI).SubtractPedestal(pedestalValue, RMS);
+      //      if(PHPS > (m_nSigma * RMS) && (pT->getIsBad()==0))
+      qdcHitColPedSubtracted.push_back(*qdcHitColI);
       log << MSG::INFO << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
     }
   digiEvent->setQdcHitCol(qdcHitCol);
