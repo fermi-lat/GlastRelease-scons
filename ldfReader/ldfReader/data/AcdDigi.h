@@ -145,7 +145,7 @@ namespace ldfReader {
 
         std::vector<AcdPmt> m_readout;
         int m_tileId;
-        const char *m_tileName;
+        char *m_tileName;
         /// Tile Number as reported by LDF
         int m_tileNumber;
 
