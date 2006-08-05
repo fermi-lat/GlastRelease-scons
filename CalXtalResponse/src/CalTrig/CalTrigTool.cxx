@@ -108,9 +108,10 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     const Ped *ped = m_calCalibSvc->getPed(rngIdx);
     if (!ped) return StatusCode::FAILURE;
     float adcPed = adc - ped->getAvr();
+
     //-- eval faceSignal 
     sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, ene);
-    if (sc.isFailure()) return StatusCode::FAILURE;
+    if (sc.isFailure()) return sc;
 
     // set trigger bit
     if (ene >= fleMeV) {

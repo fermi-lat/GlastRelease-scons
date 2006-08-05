@@ -147,7 +147,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
                                   m_trigADC[diodeIdx], 
                                   m_trigCIDAC[diodeIdx]);
     // intlin should work if we got this far
-	if (sc.isFailure()) return sc;
+    if (sc.isFailure()) return sc;
 
     // calculate face signal mev for trigger
     sc = m_calCalibSvc->evalFaceSignal(rngIdx,
@@ -178,7 +178,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
     sc = m_calCalibSvc->evalCIDAC(rngIdx, 
                                   m_trigADC[diodeIdx], 
                                   m_trigCIDAC[diodeIdx]);
-	// this should work by now if we got this far.
+    // this should work by now if we got this far.
     if (sc.isFailure()) return sc;
 
     // calculate face signal mev for trigger

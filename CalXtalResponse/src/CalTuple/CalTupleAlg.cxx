@@ -149,7 +149,7 @@ StatusCode CalTupleAlg::initialize() {
   if (sc.isFailure()) {
     msglog << MSG::ERROR << "Could not locate the ntupleSvc" << endreq;
     m_tupleWriterSvc = 0;
-    return StatusCode::FAILURE;
+    return sc;
   }
 
   else { // tuple svc was successfully found
@@ -281,8 +281,8 @@ StatusCode CalTupleAlg::execute() {
         if (adcPed > 0) {
           float faceSignal;
           sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
-          m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = max<float>(0,faceSignal);
           if (sc.isFailure()) return sc;
+          m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = max<float>(0,faceSignal);
           m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
         }
 

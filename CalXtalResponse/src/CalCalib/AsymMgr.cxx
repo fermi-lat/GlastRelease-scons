@@ -271,12 +271,12 @@ StatusCode AsymMgr::initialize(const string &flavor) {
 
   double tmp;
   sc = detSvc->getNumericConstByName("CsILength", &tmp);
-  m_csiLength = tmp;
   if (sc.isFailure()) {
     MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
-    return StatusCode::FAILURE;
+    return sc;
   }
+  m_csiLength = tmp;
 
   /// call chain back to parent class routine as well
   return CalibItemMgr::initialize(flavor);
@@ -287,7 +287,7 @@ StatusCode AsymMgr::getAsymCtr(XtalIdx xtalIdx, AsymType asymType, float &asymCt
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
-  if (sc.isFailure()) return StatusCode::FAILURE;
+  if (sc.isFailure()) return sc;
 
   asymCtr = m_asymCtr[asymType][xtalIdx];
 

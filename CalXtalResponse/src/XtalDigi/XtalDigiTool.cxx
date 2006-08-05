@@ -104,7 +104,7 @@ StatusCode XtalDigiTool::initialize() {
   m_CsILength = tmp;
   if (sc.isFailure()) {
     msglog << MSG::ERROR << " constant CsILength not defiPed" << endreq;
-    return StatusCode::FAILURE;
+    return sc;
   }
   
   // eperMeVInDiode originally from CalDigi XML file

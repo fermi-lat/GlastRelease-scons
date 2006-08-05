@@ -140,11 +140,11 @@ StatusCode XtalRecTool::initialize() {
 
   // doubles are done separately                                                                                                                                                                           
   sc = m_detSvc->getNumericConstByName("CsILength", &tmp);
-  m_CsILength = tmp;
   if (sc.isFailure()) {
     msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
-    return StatusCode::FAILURE;
+    return sc;
   }
+  m_CsILength = tmp;
 
   return StatusCode::SUCCESS;
 }
@@ -458,11 +458,9 @@ void XtalRecTool::pos2Point(float pos, Point &pXtal) {
 }
 
 StatusCode XtalRecTool::retrieveCalib() {
-  StatusCode sc;
-
   //-- RETRIEVE MEV PER DAC--// 
   const CalMevPerDac *mpd = m_calCalibSvc->getMPD(m_dat.xtalIdx);
-  if (!mpd) return sc;
+  if (!mpd) return StatusCode::FAILURE;
   m_dat.mpd[LRG_DIODE] = mpd->getBig()->getVal();
   m_dat.mpd[SM_DIODE]  = mpd->getSmall()->getVal();
   
@@ -474,13 +472,13 @@ StatusCode XtalRecTool::retrieveCalib() {
 
     // pedestals
     const Ped* ped = m_calCalibSvc->getPed(rngIdx);
-    if (!ped) return sc;
+    if (!ped) return StatusCode::FAILURE;
     m_dat.ped[face] = ped->getAvr();
 	m_dat.pedSig[face] = ped->getSig();
 
     // Threshold constants
     const CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
-    if (!tholdCI) return sc;
+    if (!tholdCI) return StatusCode::FAILURE;
     m_dat.lacThresh[face] = tholdCI->getLAC()->getVal();
 
     //-- RETRIEVE HEX1 ULD --//

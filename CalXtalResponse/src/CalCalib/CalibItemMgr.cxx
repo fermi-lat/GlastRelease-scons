@@ -76,9 +76,9 @@ StatusCode CalibItemMgr::initialize(const string &flavor) {
     // so we have to call this ourselves.
     // it's a hack, but so be it.
     sc = genLocalStore();
+    if (sc.isFailure()) return sc;
 
     m_serNo = SERNO_IDEAL;
-    if (sc.isFailure()) return sc;
   }
 
   return StatusCode::SUCCESS;
