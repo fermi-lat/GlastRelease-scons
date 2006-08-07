@@ -29,6 +29,11 @@ AdfRecon::AdfRecon() {
     m_x = 0;
     m_y = 0;
     m_z = 0;
+    for(int m=0; m<4;m++)
+      {
+	m_numCluster[0][m]=0;
+	m_numCluster[1][m]=0;
+     }
 }
 
 
@@ -62,6 +67,11 @@ void AdfRecon::Clear(Option_t *option) {
 
     m_eventNumber = 0;
     m_spillNumber = 0;
+    for(int m=0; m<4; m++)
+      {
+	m_numCluster[0][m]=0;
+	m_numCluster[1][m]=0;
+     }
 
     if (m_taggerClusterCol) m_taggerClusterCol->Clear("C");
     if (m_qdcHitCol) m_qdcHitCol->Clear("C");

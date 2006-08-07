@@ -39,7 +39,8 @@ public:
 
     void initNumHighestCluster(UInt_t n) {m_numHighestCluster = n;}
     UInt_t getNumHighestCluster() const { return m_numHighestCluster; }
-
+    void initNumCluster(UInt_t l, UInt_t m,UInt_t n) {m_numCluster[l][m] = n;}
+    UInt_t getNumCluster(UInt_t l, UInt_t m) const {return m_numCluster[l][m];}
     void initXyz(const Double_t *x, const Double_t *y, const Double_t *z, UInt_t n);
 
     Double_t getX(Int_t module) const { 
@@ -106,6 +107,7 @@ private:
     UInt_t m_spillNumber;
 
     UInt_t m_numHighestCluster;
+    UInt_t m_numCluster[2][4];
     Int_t m_numQdcHit;
     Int_t m_numScalerHit;
 
