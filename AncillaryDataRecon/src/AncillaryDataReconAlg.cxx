@@ -256,7 +256,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       (*taggerHitColI).SubtractPedestal(pedestalValue, RMS);
       if(PHPS > fabs(m_nSigma * RMS) && (pT->getIsBad()==0))
 	taggerHitColPedSubtracted.push_back(*taggerHitColI);
-      log << MSG::INFO << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay
+      log << MSG::DEBUG << " Done pedestal subtraction for Tagger M: " <<iMod<<" L: "<<iLay
 	  <<" C: "<<iChan<<" PH: ("<<PHPS<<")"<<endreq;
     }
   digiEvent->setTaggerHitCol(taggerHitColPedSubtracted);
@@ -297,7 +297,7 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
       (*qdcHitColI).SubtractPedestal(pedestalValue, RMS);
       //      if(PHPS > (m_nSigma * RMS) && (pT->getIsBad()==0))
       qdcHitColPedSubtracted.push_back(*qdcHitColI);
-      log << MSG::INFO << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
+      log << MSG::DEBUG << " Done pedestal subtraction for QDC M: " <<iMod<<" C: "<<iChan<<endreq;
     }
   digiEvent->setQdcHitCol(qdcHitCol);
   return sc;
