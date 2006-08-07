@@ -59,7 +59,8 @@ namespace RootPersistence {
     rootObj.initEventNumber(tdsObj.getEventNumber());
     rootObj.initSpillNumber(tdsObj.getSpillNumber());
     rootObj.initNumHighestCluster(tdsObj.getNumberOfHigestClusters());
-    for(unsigned int m=0; m<AncillaryData::N_MODULES; m++)
+    unsigned int m;
+    for(m=0; m<AncillaryData::N_MODULES; m++)
       {
 	rootObj.initNumCluster(0,m,tdsObj.getNumberOfClusters(0,m));
 	rootObj.initNumCluster(1,m,tdsObj.getNumberOfClusters(1,m));
@@ -112,7 +113,8 @@ namespace RootPersistence {
     tdsObj.setEventNumber(rootObj.getEventNumber());
     tdsObj.setSpillNumber(rootObj.getSpillNumber());
     tdsObj.setNumberOfHighestClusters(rootObj.getNumHighestCluster());
-    for(unsigned int m=0; m<AncillaryData::N_MODULES; m++)
+    unsigned int m;
+    for(m=0; m<AncillaryData::N_MODULES; m++)
       {
         tdsObj.setNumberOfClusters(0,m,rootObj.getNumCluster(0,m));
         tdsObj.setNumberOfClusters(1,m,rootObj.getNumCluster(1,m));
