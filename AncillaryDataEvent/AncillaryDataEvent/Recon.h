@@ -64,6 +64,10 @@ namespace AncillaryData
 
       void setNumberOfHighestClusters(unsigned int n) { m_NumberHigestClusters = n; }
       unsigned int getNumberOfHigestClusters() const { return  m_NumberHigestClusters;}
+      
+      void setNumberOfClusters(unsigned int l, unsigned int m, unsigned int n) { m_NumberClusters[l][m] = n; }
+      unsigned int getNumberOfClusters(unsigned int l, unsigned int m) const { return  m_NumberClusters[l][m];}
+      
       void setPos(const double *xArr, const double *yArr, const double *zArr) {
 	unsigned int i;
 	for (i=0; i<N_MODULES; i++) {
@@ -121,6 +125,8 @@ namespace AncillaryData
       double Theta;
       double Dphi;
       unsigned int m_NumberHigestClusters;
+      unsigned int m_NumberTotalClusters;
+      unsigned int m_NumberClusters[2][N_MODULES];
     }; 
 }
 #endif

@@ -22,6 +22,14 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
   Theta=0;
   
   m_NumberHigestClusters=0;
+  m_NumberTotalClusters=0;
+  for(unsigned int m=0; m < N_MODULES; m++)
+    {
+      m_NumberClusters[0][m]=0;
+      m_NumberClusters[1][m]=0;
+    }
+
+
 }
 
 void Recon::print()
@@ -43,12 +51,26 @@ void Recon::print()
 std::vector<TaggerCluster> Recon::GetHighestClusters()
 {
   SortClusters();
+  for(unsigned int m=0;m < N_MODULES;m++)
+    {
+      m_NumberClusters[0][m]=0;
+      m_NumberClusters[1][m]=0;
+    }
   //  std::cout<<"std::vector<TaggerCluster> Recon::GetHighestClusters: "<<m_taggerClusterCol.size()<<std::endl;
-  m_NumberHigestClusters=m_taggerClusterCol.size();
+  //  m_NumberClusters       = m_taggerClusterCol.size();
   if(m_taggerClusterCol.size()<=1) 
     return m_taggerClusterCol;
   std::vector<TaggerCluster> HigestsClusters;
   ///////
+  for(std::vector<TaggerCluster>::iterator pos=m_taggerClusterCol.begin(); pos<m_taggerClusterCol.end();pos++)
+    m_NumberClusters[(*pos).getLayerId()][(*pos).getModuleId()]++;
+  m_NumberTotalClusters = 0;
+  for(unsigned int m=0; m < N_MODULES; m++)
+    {
+      m_NumberTotalClusters += m_NumberClusters[0][m];
+      m_NumberTotalClusters += m_NumberClusters[1][m];
+    }
+  //////
   std::vector<TaggerCluster>::iterator pos=m_taggerClusterCol.begin();
   TaggerCluster selectedCluster=(*pos);
   pos++;
@@ -57,7 +79,7 @@ std::vector<TaggerCluster> Recon::GetHighestClusters()
       TaggerCluster newCluster=(*pos);
       //      std::cout<<"selected cluster:"<<selectedCluster.getModuleId()<<", "<<selectedCluster.getLayerId()<<std::endl;
       //      std::cout<<"new Cluster cluster:"<<newCluster.getModuleId()<<", "<<newCluster.getLayerId()<<std::endl;
-      
+
       if(selectedCluster.getModuleId()==newCluster.getModuleId() && 
 	 selectedCluster.getLayerId()==newCluster.getLayerId())
 	{
@@ -128,7 +150,9 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
    E_rec  = 0.0;
    E_corr =0.0;
    double bt=geometry->getBL();
-   if(m_NumberHigestClusters==8)
+
+
+   if(m_NumberHigestClusters==8 && m_NumberTotalClusters == 8)
      {
        // r1 = a1*x + b1
        const double Dist1 = fabs(X[1]-X[0]);
@@ -178,9 +202,9 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
 
 void Recon::report()
 {
-  std::cout<<" RECON EVENT REPORT: ("<<m_NumberHigestClusters<<")"<<std::endl;
+  std::cout<<" RECON EVENT REPORT: Total Clusters: "<<m_NumberTotalClusters<<" Higest:" <<m_NumberHigestClusters<<std::endl;
   {
-    if(m_NumberHigestClusters==8)
+    if(m_NumberHigestClusters==8 && m_NumberTotalClusters == 8)
       {
 	std::cout<<" Electron Incoming Angle: \t"<<PhiIn<<std::endl;
 	std::cout<<" Electron Outgoing Angle: \t"<<PhiOut<<std::endl;
@@ -200,6 +224,8 @@ void Recon::report()
     else
       {
 	std::cout<<" Sorry, not enough clusters!"<<std::endl;
+	for(unsigned int m=0; m < N_MODULES; m++)
+	  std::cout<<" M = "<<m<<" Num Clusters: L = 0: "<< m_NumberClusters[0][m]<<" L = 1: "<<m_NumberClusters[1][m]<<std::endl;
       }
   } 
 }
