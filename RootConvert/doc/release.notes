@@ -2,7 +2,7 @@
  Package RootConvert\n
  author David Chamont 
  @verbatim
-
+ v1r18  07-Aug-2006 NO handle number of clusters of ADF recon
  v1r17  27-Jul-2006 HMK handle ADF recon energy error
  v1r16  26-Jul-2006 HMK updates for final ADF recon
  v1r15p1 25-Jul-2006 HMK make use of AncillaryDataEvent public
