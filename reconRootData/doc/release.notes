@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r6      07-Aug-06  : NO  AdfRecon store clusters multiplicity
 v9r5      27-Jul-06  : HMK AdfRecon store errorEnergy
 v9r4      26-Jul-06  : HMK updates for final adf recon
 v9r3      11-Jul-06  : HMK Ancillary beamtest recon data
