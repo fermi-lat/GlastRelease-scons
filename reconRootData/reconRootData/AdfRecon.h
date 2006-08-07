@@ -39,8 +39,13 @@ public:
 
     void initNumHighestCluster(UInt_t n) {m_numHighestCluster = n;}
     UInt_t getNumHighestCluster() const { return m_numHighestCluster; }
-    void initNumCluster(UInt_t l, UInt_t m,UInt_t n) {m_numCluster[l][m] = n;}
-    UInt_t getNumCluster(UInt_t l, UInt_t m) const {return m_numCluster[l][m];}
+    void initNumCluster(UInt_t l, UInt_t m,UInt_t n) {
+        if ((l<2) && (m<4)) m_numCluster[l][m] = n;
+    }
+    UInt_t getNumCluster(UInt_t l, UInt_t m) const {
+        if ((l<2) && (m<4)) return m_numCluster[l][m];
+        else return 0;
+    }
     void initXyz(const Double_t *x, const Double_t *y, const Double_t *z, UInt_t n);
 
     Double_t getX(Int_t module) const { 
@@ -136,7 +141,7 @@ private:
     TClonesArray *m_qdcHitCol;
     TClonesArray *m_scalerHitCol;
 
-    ClassDef(AdfRecon,1) // ReconAncillary data beamtest 2006
+    ClassDef(AdfRecon,2) // ReconAncillary data beamtest 2006
 };
 
 } // end namespace

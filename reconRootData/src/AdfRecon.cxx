@@ -29,7 +29,8 @@ AdfRecon::AdfRecon() {
     m_x = 0;
     m_y = 0;
     m_z = 0;
-    for(int m=0; m<4;m++)
+    Int_t m;
+    for(m=0; m<4;m++)
       {
 	m_numCluster[0][m]=0;
 	m_numCluster[1][m]=0;
@@ -56,9 +57,6 @@ AdfRecon::~AdfRecon() {
         delete m_scalerHitCol;
         m_scalerHitCol = 0;
     }
-    /*if (m_x) { delete [] m_x; m_x = 0; }
-    if (m_y) { delete [] m_y; m_y = 0; }
-    if (m_z) { delete [] m_z; m_z = 0; }*/
 }
 
 
@@ -67,7 +65,8 @@ void AdfRecon::Clear(Option_t *option) {
 
     m_eventNumber = 0;
     m_spillNumber = 0;
-    for(int m=0; m<4; m++)
+    Int_t m;
+    for(m=0; m<4; m++)
       {
 	m_numCluster[0][m]=0;
 	m_numCluster[1][m]=0;
@@ -199,6 +198,12 @@ void AdfRecon::Fake( Int_t ievent, Float_t randNum ) {
     initXyz(x,y,z,3);
 
     initError(2.2, 3.3);
+
+    Int_t m;
+    for (m=0;m<4;m++) {
+        initNumCluster(0, m, m);
+        initNumCluster(1, m, m+1);
+    }
 }
 
 Bool_t AdfRecon::CompareInRange( const AdfRecon &ref, const std::string& name ) const {
@@ -218,6 +223,12 @@ Bool_t AdfRecon::CompareInRange( const AdfRecon &ref, const std::string& name ) 
     result = rootdatautil::CompareInRange(getCorrectedEnergy(),ref.getCorrectedEnergy(),"CorrectedEnergy") && result;
     result = rootdatautil::CompareInRange(getErrorReconstructedEnergy(),ref.getErrorReconstructedEnergy(),"ErrorReconstructedEnergy") && result;
     result = rootdatautil::CompareInRange(getErrorCorrectedEnergy(),ref.getErrorCorrectedEnergy(),"ErrorCorrectedEnergy") && result;
+
+    Int_t m;
+    for (m=0; m<4; m++) {
+        result = rootdatautil::CompareInRange(getNumCluster(0,m),ref.getNumCluster(0,m),"NumCluster") && result;
+        result = rootdatautil::CompareInRange(getNumCluster(1,m),ref.getNumCluster(1,m),"NumCluster") && result;
+    }
 
     result = rootdatautil::TObjArrayCompareInRange<reconRootData::TaggerCluster>(m_taggerClusterCol,ref.m_taggerClusterCol) && result;
     result = rootdatautil::TObjArrayCompareInRange<commonRootData::QdcHit>(m_qdcHitCol,ref.m_qdcHitCol) && result;
