@@ -46,13 +46,6 @@ namespace ldfReader {
     };
 
 
-    int EbfDatagramParser::process(LATdatagram* datagram)
-    {
-        m_lci.iterate(datagram);
-
-        return m_lci.status();
-    }
-
 
 }
 #endif
