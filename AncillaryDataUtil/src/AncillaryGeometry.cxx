@@ -1,11 +1,14 @@
 #include "AncillaryDataUtil/AncillaryGeometry.h"
 #include <iostream>
 #include <fstream>
+#include "facilities/Util.h"
 
 using namespace AncillaryData;
 
-AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
+AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName,std::string rcReportPath)
 {
+  facilities::Util::expandEnvVar(&GeometryfileName);
+  facilities::Util::expandEnvVar(&rcReportPath);
   FILE *infile;
   infile=fopen(GeometryfileName.c_str(),"r");
   if (infile==NULL)
@@ -15,7 +18,7 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
     }
   fgets(title,sizeof(title),infile);
   //  std::cout<<title<<std::endl;
-  fscanf(infile,"%lf ",&BL);
+  fscanf(infile,"%lf ",&BL1);
   fgets(title,sizeof(title),infile);
   //std::cout<<title<<std::endl;
 
@@ -44,11 +47,25 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName)
       else if (d2=='-') D2[M]=1;
       else std::cout<<"Wrong geometry file format"<<std::endl;
     }
+  std::ifstream rcReport(rcReportPath.c_str());
+  if(!rcReport.is_open())
+    {
+      std::cerr<<"Error: could not open "<<rcReportPath<<"\n";
+      m_MagnetCurrent=600.0;
+    }
+  std::string input;
+  getline(rcReport, input, '\n');
+  int pos1=input.rfind("<MagnetCurrent>");
+  int pos2=input.rfind("</MagnetCurrent>");
+  std::string magnetic_current_value = input.substr(pos1+15, pos2-pos1);
+  m_MagnetCurrent = atof(magnetic_current_value.c_str());
+  std::cout<<magnetic_current_value<<" "<<m_MagnetCurrent<<std::endl;
+  BL = (m_MagnetCurrent==0 ? 600 : BL1 * m_MagnetCurrent);
 }
 
 void AncillaryGeometry::print()
 {
-  printf("B*L (field times distance in Tm) = %lf\n ",BL);
+  std::cout<<"B*L (field times distance in Tm) =  "<<BL1<<" * "<<m_MagnetCurrent<<" = "<<BL<<std::endl;
   std::cout<<title;
   for(unsigned int M=0; M < N_MODULES; M++) 
     std::cout<<M<<"\t "<<getX(M)<<"\t"<<getY(M)<<"\t"<<getZ(M)<<"\t"<<getView1(M)<<"\t"<<getView2(M)<<"\t"<<getDirection1(M)<<"\t"<<getDirection2(M)<<std::endl;

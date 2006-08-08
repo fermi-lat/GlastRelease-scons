@@ -23,7 +23,7 @@ namespace AncillaryData
   class AncillaryGeometry
     {
     public:
-      AncillaryGeometry(std::string GeometryfileName);
+      AncillaryGeometry(std::string GeometryfileName,std::string rcReportPath="");
       double getX(unsigned int Module) {return X[Module];}
       double getY(unsigned int Module) {return Y[Module];}
       double getZ(unsigned int Module) {return Z[Module];}
@@ -34,7 +34,7 @@ namespace AncillaryData
       double getBL(){return BL;}
       void print();
     private:
-      double BL;
+      double BL,BL1,m_MagnetCurrent;
       char title[100];
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
       unsigned int V1[N_MODULES], V2[N_MODULES], D1[N_MODULES], D2[N_MODULES]; 
