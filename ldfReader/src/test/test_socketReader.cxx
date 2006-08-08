@@ -37,7 +37,7 @@ int main(int argn, char** argc) {
 
 
     int status = 0;
-    status = ebfP->nextEvent();
+//    status = ebfP->nextEvent();
 /*
     std::cout << "Calling next event" << std::endl;
     do {

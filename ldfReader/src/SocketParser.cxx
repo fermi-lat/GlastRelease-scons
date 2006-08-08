@@ -81,6 +81,11 @@ SocketParser::SocketParser(unsigned int server) {
                        sizeof(mreq)) < 0) 
             throw LdfException("sockopt");
 
+
+        // Request the first event be loaded
+        if (nextEvent() < 0) 
+            throw LdfException("Failed to load first event via socket");
+
     } catch( LdfException& e) {
         std::cerr << "Caught LdfException: " << e.what() << std::endl;
         throw;
