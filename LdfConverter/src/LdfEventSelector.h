@@ -222,6 +222,10 @@ private:
 
   IntegerProperty       m_ignoreSegFault;
 
+  IntegerProperty       m_server;  // For socket commections
+  IntegerProperty       m_socket; // Boolean JO parameter to denote use of 
+                                  // sockets rather than file input
+
 // From gaudi v18r1 EventSelector in GaudiSvc
   //IIncidentSvc*          m_incidentSvc;
   /// Reconfigure occurred

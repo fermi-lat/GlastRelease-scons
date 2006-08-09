@@ -40,6 +40,13 @@ xx/** @mainpage package LdfConverter
   Integer.  Deafults to 0 (skip check for GEM condition summary == 0).
   Setting to one performs this check and prints warnings messages for the
   first five events where Condition Summary is zero.
+  @param LdfEventSelector.SocketConnection
+  Integer.  Defaults to 0.  If set to non-zero, a UDP client is created to 
+  accept incoming LDF data.
+  @param LdfEventSelector.SocketServer
+  Integer.  Defaults to 60.  If SocketConnection is set non-zero, the 
+  SocketServer JO parameter detemines the server number used for listening.
+  The beamtest uses a default of 60.  This value can be in [1,99].
   @param LdfEventSelector.AcdRemapFile
   String.  Defaults to "" (null string).  If set to a non-null string, the
   conversion of the ACD PMTs will look to the specified text file to 

@@ -22,6 +22,7 @@
 #include "facilities/Util.h"
 #include "ldfReader/LdfParser.h"
 #include "ldfReader/DfiParser.h"
+#include "ldfReader/SocketParser.h"
 #include "LdfSelectorContext.h"
 
 // Instantiation of a static factory class used by clients to create
@@ -232,7 +233,7 @@ StatusCode LdfEventSelector::initialize()     {
         log << MSG::ERROR << "Unable to initialize service " << endreq;
     }
 
-    if (m_fileName.empty()) {
+    if ( (m_fileName.empty()) && (m_socket != 1) ) {
         log << MSG::ERROR << "No input file specified - terminating job"
             << endreq;
         return StatusCode::FAILURE;
@@ -300,6 +301,11 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
     declareProperty("AcdRemapFile", m_acdRemap="");
     declareProperty("IgnoreSegFault", m_ignoreSegFault=0);
 
+    // Options for using socket connections
+    declareProperty("SocketConnection", m_socket = 0);
+    // default server is 60 - chosen for the beamtest
+    declareProperty("SocketServer", m_server = 60);
+
     //Here we get the maxEvt number from the aplication mgr property;
     //Sets the environment variable m_evtMax;
     getMaxEvent();
@@ -329,6 +335,30 @@ how to read the events in.
 StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
+
+    // Check if using socket connections first
+    if (m_socket) {
+        try {
+            // sockets assume LDF files
+            m_criteriaType = LDFFILE;
+
+            m_ebfParser = new ldfReader::SocketParser(m_server);
+            m_ebfParser->setDebug((m_ebfDebugLevel != 0));
+            if (m_acdRemap != "")
+                if (m_ebfParser->setAcdRemap(m_acdRemap) < 0) 
+                    log << MSG::WARNING << "Failed to read ACD remap file" 
+                        << endreq;
+                else 
+                    log << MSG::INFO << "Opened ACD remap file: " <<
+                           m_acdRemap << endreq;
+            if (m_ignoreSegFault)
+                m_ebfParser->setIgnoreSegFault();
+            return(StatusCode::SUCCESS);
+        } catch(...) {
+            log << MSG::ERROR << "Failed to set up socket connection" << endreq;
+            return(StatusCode::FAILURE);
+        }
+    }
 
     if (storageType == "CCSDSFILE") {
         try {
