@@ -28,7 +28,6 @@ import getopt
 import Numeric
 import calCalibXML
 import calConstant
-import calibGain
 import zachUtil
 
 if __name__ == '__main__':
@@ -84,7 +83,7 @@ if __name__ == '__main__':
     
     # open and read calibGainRatio txt file
     log.info("Reading calibGain TXT file: " +  calibGainPath)
-    (calibGainRatio, twrSet) = calibGain.read_calibGain_txt(calibGainPath)
+    (calibGainRatio, twrSet) = zachUtil.read_perFace_txt(calibGainPath)
 
     for twr in twrSet:
         # use online face numbering

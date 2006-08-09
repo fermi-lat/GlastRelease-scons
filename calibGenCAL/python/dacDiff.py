@@ -83,7 +83,10 @@ for twr in dacTwrs1:
 # set up pyROOT
 import ROOT
 ROOT.gROOT.Reset()
-rootFile = ROOT.TFile(rootPath, "recreate")
+rootFile = ROOT.TFile(rootPath,
+                      "recreate",
+                      "dacDiff(%s,%s)"%(dacPath1,dacPath2),
+                      9)
 
 # build ROOT canvas (for which onto drawem)
 cs = ROOT.TCanvas(dacType + '_diff', dacType + '_diff', -1)

@@ -86,7 +86,7 @@ if __name__ == '__main__':
     
     # open and read calibGainRatio txt file
     log.info("Reading calibGain TXT file: " +  calibGainPath)
-    (calibGainRatio, twrSet) = calibGain.read_calibGain_txt(calibGainPath)
+    (calibGainRatio, twrSet) = zachUtil.read_perFace_txt(calibGainPath)
 
     mean_ratio = Numeric.sqrt(calibGainRatio[:,:,0,:]*calibGainRatio[:,:,1,:])
 
