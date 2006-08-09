@@ -43,7 +43,7 @@ SocketParser::SocketParser(unsigned int server) {
     try {
 #ifdef WIN32
         throw LdfException("No Windows support for sockets yet!");
-#endif
+#else
         clear();
   // Set up a UDP client
         if ( (m_handle = socket(AF_INET, SOCK_DGRAM, 0) ) < 0) 
@@ -85,6 +85,7 @@ SocketParser::SocketParser(unsigned int server) {
         // Request the first event be loaded
         if (nextEvent() < 0) 
             throw LdfException("Failed to load first event via socket");
+#endif
 
     } catch( LdfException& e) {
         std::cerr << "Caught LdfException: " << e.what() << std::endl;
@@ -97,7 +98,9 @@ SocketParser::SocketParser(unsigned int server) {
 
 
     SocketParser::~SocketParser() {
+#ifndef WIN32
         close(m_handle);
+#endif
         clear();
     }
 
