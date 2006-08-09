@@ -509,10 +509,14 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                     // Allows JO to skip the search for the sweep events
                     // no skipping for LSF (CCSDSFILEs)
                     if ((m_sweepSearch == 0) && (m_criteriaType != CCSDSFILE) ){
-                        log << MSG::WARNING 
-                            << "Skipping check for first Sweep Event - "
-                            << " ARE YOU SURE YOU WANT TO DO THIS???" << endreq;
+                        static short sweepFlag = 0;
+                        if (sweepFlag < 5)
+                            log << MSG::WARNING 
+                                << "Skipping check for first Sweep Event - "
+                                << " ARE YOU SURE YOU WANT TO DO THIS???" 
+                                << endreq;
                         findFirstMarkerFive = true;
+                        ++sweepFlag;
                     }
                     if (m_criteriaType == CCSDSFILE) findFirstMarkerFive = true;
 

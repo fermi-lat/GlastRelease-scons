@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 @verbatim
 
 
+v3r6p1  09-Aug-2006 HMK put a limit on sweep event warnings
 v3r6    09-Aug-2006 HMK Add SocketConnection JO parameters
 v3r5p1  02-Aug-2006 HMK Check return code when setting AcdRemap
 v3r5    01-Aug-2006 HMK add JO param to ignore seg faults for LDF  reading
