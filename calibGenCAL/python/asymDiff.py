@@ -94,8 +94,7 @@ err_diff_summary = ROOT.TH1I("err_diff_summary",
 
 
 # calc diffs for each channel
-#for twr in asymTwrs1:
-for twr in range(1):   
+for twr in asymTwrs1:
     log.info("Processing TEM=%d"%twr)
     for lyr in range(calConstant.NUM_LAYER):
         # calCalibXML uses 'row' indexing, not layer
