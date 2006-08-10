@@ -32,10 +32,11 @@ namespace AncillaryData
       unsigned int getDirection1(unsigned int Module){return D1[Module];}
       unsigned int getDirection2(unsigned int Module){return D2[Module];}
       double getBL(){return BL;}
+      double getBeamMomentum(){return m_BeamMomentum;}
       void print();
     private:
-      double BL,BL1,m_MagnetCurrent;
-      char title[100];
+      double BL,BL0,BL1,m_MagnetCurrent,m_BeamMomentum;
+      char title[200];
       double X[N_MODULES],Y[N_MODULES],Z[N_MODULES];
       unsigned int V1[N_MODULES], V2[N_MODULES], D1[N_MODULES], D2[N_MODULES]; 
     };

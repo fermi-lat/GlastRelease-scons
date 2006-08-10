@@ -1,6 +1,5 @@
 Simple Geometry configuration file for ancyllary system:
-0.48
-
+0.0012271	-7.60132e-8
 ModId    X      Y       Z       V1	D1	V2	D2
 0       -1500.	0.0	0.0	Z 	-	Y	+
 1	-1000.	4.518	1.46	Z 	-	Y	+
