@@ -106,7 +106,7 @@ if __name__ == '__main__':
         row = calCalibXML.layerToRow(int(lyr))
 
         valIdx = zachUtil.mpdBigValIdx
-        sigIdx = zachUitl.mpdBigSigIdx
+        sigIdx = zachUtil.mpdBigSigIdx
         if (diode == zachUtil.DIODE_SM):
             valIdx = zachUtil.mpdSmallValIdx
             sigIdx = zachUtil.mpdSmallSigIdx
