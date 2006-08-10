@@ -12,7 +12,7 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
   setQdcHitCol(digiEvent->getQdcHitCol());      
   setScalerHitCol(digiEvent->getScalerHitCol());      
 
-  PX = -1000.0;  PY= -1000.0;  PZ= -1000.0;
+  PX = -9999.0;  PY= -9999.0;  PZ= -9999.0;
   E_rec=0; 
   E_corr=0;
   PhiIn=-100;
@@ -109,7 +109,7 @@ void Recon::computePositions(AncillaryGeometry *geometry)
   std::vector<TaggerCluster> higestClusters = GetHighestClusters();
   for (unsigned int i = 0 ; i < N_MODULES ; i++)
     {
-      X[i] = 0.0; Y[i] = -1000.0; Z[i] = -1000.0;
+      X[i] = 0.0; Y[i] = 0.0; Z[i] = 0.0;
     }
   
   for(std::vector<TaggerCluster>::iterator pos=higestClusters.begin();pos!=higestClusters.end(); ++pos)
@@ -148,6 +148,7 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
    E_rec  = 0.0;
    E_corr = 0.0;
    double bt=geometry->getBL();
+   double beamMomentum=geometry->getBeamMomentum()*1000.0; //MeV
    
    // first track:
    const double Dist1 = X[1]-X[0];
@@ -179,42 +180,14 @@ void Recon::reconstructEnergy(AncillaryGeometry *geometry)
        //       double DphiErr   = sqrt(phiErrIn*phiErrIn+phiErrOut*phiErrOut);
        if(fabs(sin(PhiOut)-sin(PhiIn))>0)
 	 {
-	   E_rec       = 300.*bt/(sin(PhiOut)-sin(PhiIn));
-	   Error_E_rec = 300.*bt/pow(sin(PhiOut)-sin(PhiIn),2.0)*sqrt(pow(cos(PhiOut)*phiErrOut,2.0)+pow(cos(PhiIn)*phiErrIn,2.0));
+	   E_rec       = beamMomentum - (300.*bt/(sin(PhiOut)-sin(PhiIn)));
+	   Error_E_rec = (300.*bt/pow(sin(PhiOut)-sin(PhiIn),2.0)*sqrt(pow(cos(PhiOut)*phiErrOut,2.0)+pow(cos(PhiIn)*phiErrIn,2.0)));
 	   if(fabs(a1-a2)>0)
              {
                PX = (b2-b1)/(a1-a2);
                PY = a1 * PX + b1;
 	     }   
 	 }
-       /*
-	 if(m_NumberHigestClusters==8 && m_NumberTotalClusters == 8)
-	 {
-	 // r1 = a1*x + b1
-	 const double Dist1 = X[1]-X[0];
-	 const double Dist2 = X[3]-X[2];
-	 const double Disp1 = Y[1]-Y[0];
-	 const double Disp2 = Y[3]-Y[2]
-	 double a1 = Disp1/Dist1;
-	 double b1 = (Y[0]*X[1]-Y[1]*X[0])/Dist1;
-	 // r1 = a2*x + b2
-	 double a2 = Disp2/Dist2;
-	 double b2 = (Y[2]*X[3]-Y[3]*X[2])/Dist2;
-	 
-	 PhiIn   = atan2(Disp1,Dist1);
-	 PhiOut  = atan2(Disp2,Dist2);
-	 Dphi    = PhiOut - PhiIn;
-	 double phiErrIn  = STRIPS_PITCH/Dist1;
-	 double phiErrOut = STRIPS_PITCH/Dist2;
-	 double DphiErr   = sqrt(phiErrIn*phiErrIn+phiErrOut*phiErrOut);
-	 
-	 if(fabs(sin(PhiOut)-sin(PhiIn))>0)
-	 {
-	 E_rec       = 300.*bt/(sin(PhiOut)-sin(PhiIn));
-	 Error_E_rec = 300.*bt/pow(sin(PhiOut)-sin(PhiIn),2.0)*sqrt(pow(cos(PhiOut)*phiErrOut,2.0)+pow(cos(PhiIn)*phiErrIn,2.0));
-	 }
-       */
-       
        //  Z = A* X + B
        // Case with two points in z:
        
@@ -283,7 +256,7 @@ void Recon::report()
   TAG_XYZ_IN_CU[3] 	 X,Y,Z coordinates of photon impact point on CU (assuming photon collinear with e beam)
   TAG_DPHI 	 electron deflection angle after magnet in the bending plane
   TAG_EGAMMA 	 photon energy (Ebeam - Edeflected_electron)
-  TAG_EGAMMA_ERR 	 error on photon energy measurement
+  TAG_EGAMMA_ERR 	 error on photon energy measuement
   CRNKV_PHA[2] 	 pulse height amplitude in the 2 cerenkov
   SCINT_PHA[8] 	 array of floats - PHA for scintillators in the setup (8 is a placeholder for a reasonable number, might change)
   TRD_NUM[16]

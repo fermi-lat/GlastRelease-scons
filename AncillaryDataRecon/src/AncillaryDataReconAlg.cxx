@@ -53,6 +53,7 @@ private:
   AncillaryData::AncillaryGeometry   *m_geometry;
   bool m_SubtractPedestals;
   std::string m_geometryFilePath;
+  std::string m_rcReportFilePath;
   float m_nSigma;
 };
 
@@ -65,8 +66,8 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
   // Input parameters that may be set via the jobOptions file
   declareProperty("pedestalSubtraction",m_SubtractPedestals=true);
   declareProperty("geometryFilePath",m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.txt");
+  declareProperty("rcReportFilePath",m_rcReportFilePath="$(ANCILLARYDATAUTILROOT)/data/rcReport.txt");
   declareProperty("NSigmaForPedestalSubrtraction",m_nSigma=10.0);
-  //  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin");
 }
 
 StatusCode AncillaryDataReconAlg::initialize()
@@ -95,9 +96,13 @@ StatusCode AncillaryDataReconAlg::initialize()
     return sc;  
   }
   facilities::Util::expandEnvVar(&m_geometryFilePath);
+  facilities::Util::expandEnvVar(&m_rcReportFilePath);
+
   log << MSG::INFO << "loading geometry from " << m_geometryFilePath << endreq;
-  m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);
+  log << MSG::INFO << "loading rcReport from " << m_rcReportFilePath << endreq;
+  m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath,m_rcReportFilePath);
   m_geometry->print();
+
   return sc;
 }
 
@@ -347,6 +352,7 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
 	}
     }  
   reconEvent->appendTaggerCluster(aCluster);
+  return sc;
   //reconEvent->print();
 }                                                                                                                                             
 
