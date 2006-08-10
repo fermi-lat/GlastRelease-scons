@@ -91,21 +91,6 @@ if __name__ == '__main__':
     inFile = open(inPath, 'r')
     lines = inFile.readlines()
 
-    # associate pos_diode, big_diode & val_or_sigma
-    # to index into calAsymCalibXML array as spec'd as
-    # follows (from calCalibXML.py)
-
-    #     The next-to-last
-    #     dimension contains the following data:
-    #     0 = bigVals value
-    #     1 = smallVals value
-    #     2 = NsmallPbigVals value
-    #     3 = PsmallNbigVals value
-    #     4 = bigSigs value
-    #     5 = smallSigs value
-    #     6 = NsmallPbigSigs value
-    #     7 = PsmallNbigSigs value
-
     # keep track of which curve we're plotting
     # use tuple as key of (twr,lyr,col,pdiode,ndiode)
     # increment value for each new point.
