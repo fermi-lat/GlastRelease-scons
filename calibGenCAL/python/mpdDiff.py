@@ -92,21 +92,22 @@ sm_err_diff_summary = ROOT.TH1I("sm_err_diff_summary",
                                 100,0,0)
 
 
-mpdDiff = mpd1 - mpd2
+mpdDiff = mpd2 - mpd1
 
-lrgDiff    = mpdDiff[..., zachUtil.mpdBigValIdx]
-smDiff     = mpdDiff[..., zachUtil.mpdSmallValIdx]
-lrgErrDiff = mpdDiff[..., zachUtil.mpdBigSigIdx]
-smErrDiff  = mpdDiff[..., zachUtil.mpdSmallSigIdx]
+for twr in mpdTwrs1:
+    lrgDiff    = mpdDiff[twr, ..., zachUtil.mpdBigValIdx]
+    smDiff     = mpdDiff[twr, ..., zachUtil.mpdSmallValIdx]
+    lrgErrDiff = mpdDiff[twr, ..., zachUtil.mpdBigSigIdx]
+    smErrDiff  = mpdDiff[twr, ..., zachUtil.mpdSmallSigIdx]
 
-for lrg in Numeric.ravel(lrgDiff):
-    lrg_diff_summary.Fill(lrg)
-for lErr in Numeric.ravel(lrgErrDiff):
-    lrg_err_diff_summary.Fill(lErr)
-for sm in Numeric.ravel(smDiff):
-    sm_diff_summary.Fill(sm)
-for smErr in Numeric.ravel(smErrDiff):
-    sm_err_diff_summary.Fill(smErr)
+    for lrg in Numeric.ravel(lrgDiff):
+        lrg_diff_summary.Fill(lrg)
+    for lErr in Numeric.ravel(lrgErrDiff):
+        lrg_err_diff_summary.Fill(lErr)
+    for sm in Numeric.ravel(smDiff):
+        sm_diff_summary.Fill(sm)
+    for smErr in Numeric.ravel(smErrDiff):
+        sm_err_diff_summary.Fill(smErr)
 
 log.info("Writing %s"%rootPath)
 rootFile.Write()

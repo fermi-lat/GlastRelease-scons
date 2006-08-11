@@ -28,7 +28,6 @@ import getopt
 import Numeric
 import calCalibXML
 import calConstant
-import calibGain
 import zachUtil
 
 ### CONSTANTS ###
