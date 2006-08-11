@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v1r0   11-Aug-2006 NO  Remove all the couts. Final version.
  v0r2   08-Aug-2006 NO  Initial beam geometry (4 in a raw)
  v0r1p7 03-Aug-2006 NO  Better geometry (remove from TaggerClustes)
  v0r1p6 27-Jul-2006 NO  Fixed bug. Re-insert the test program
