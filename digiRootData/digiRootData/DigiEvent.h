@@ -98,16 +98,35 @@ public:
     inline Double_t getLiveTime() const { return m_liveTime; };
 
     /// Seconds as reported by original 30 Hz clock (real data only)
+    /// Returns the number of seconds, since 1/1/1970, used in conjunction with
+    /// getEbfTimeNanoSec for a measure of absolute time using the 30 Hz clock.
+    /// This data is only available when processing LDF data from real tests.
     inline UInt_t getEbfTimeSec() const { return m_ebfTimeSec; };
     /// Nanoseconds as reported by original 30 Hz clock (real data only)
+    /// Returns the number of nano-seconds, since 1/1/1970, used in conjunction
+    /// with getEbfTimeSec for a measure of absolute time using the 30 Hz 
+    /// clock. This data is only available when processing LDF data from real 
+    /// data.
     inline UInt_t getEbfTimeNanoSec() const { return m_ebfTimeNanoSec; };
 
     /// One of two words forming PPC Time Base - see getPpcTimeSeconds
+    /// Returns the UpperPpcTimeBase word as stored in the LDF in real data. 
+    /// Used in conjunction with getEbfLowerPpcTimeBase, these words can be 
+    /// used to determine the spacing of real test events. Also see 
+    /// getEbfPpcTimeSeconds( )
     inline UInt_t getEbfUpperPpcTimeBase() const { return m_ebfUpperPpcTimeBase; };
     /// One of two words forming PPC Time Base - see getPpcTimeSeconds
+    /// Returns the LowerPpcTimeBase word stored in the LDF from real data, 
+    /// used in conjunction with getEbfUpperPpcTimeBase, these words can be 
+    /// used to determine the spacing of real test events. Also see 
+    /// getEbfPpcTimeSeconds( )
     inline UInt_t getEbfLowerPpcTimeBase() const { return m_ebfLowerPpcTimeBase; };
     /// Return the approximate number of seconds elapsed since power on
     /// by dividing the value in the PPC registers by 16 MHz
+    /// Uses the data words stored in the UpperPpcTimeBase and LowerPpcTimeBase
+    /// to calculate seconds since power on. This time is used to determine the
+    /// spacing of events - NOT as an absolute time. This is only available 
+    /// when processing LDF data from real tests.
     inline Double_t getEbfPpcTimeSeconds() const { 
         const Double_t sixteenMHz = 16000000.;
         // To handle th 64-bit value - we separate the computation
