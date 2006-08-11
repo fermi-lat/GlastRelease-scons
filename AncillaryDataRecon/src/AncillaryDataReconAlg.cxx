@@ -352,7 +352,9 @@ StatusCode AncillaryDataReconAlg:: MakeClusters(AncillaryData::Digi *digiEvent, 
 	}
     }  
   reconEvent->appendTaggerCluster(aCluster);
-  return sc;
+  
+
+ return sc;
   //reconEvent->print();
 }                                                                                                                                             
 
@@ -377,9 +379,9 @@ StatusCode AncillaryDataReconAlg::ScalerRecon(AncillaryData::Digi *digiEvent, An
 StatusCode AncillaryDataReconAlg::taggerRecon(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEvent)
 {
     StatusCode sc = MakeClusters(digiEvent,reconEvent);
-    reconEvent->print(); //This makes the code work!
+    //    reconEvent->print(); //This makes the code work!
     reconEvent->ReconstructTagger(m_geometry);
-    reconEvent->report();
+    //    reconEvent->report();
     return sc;
 }
 
