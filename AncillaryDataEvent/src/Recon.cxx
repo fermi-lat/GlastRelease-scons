@@ -32,6 +32,8 @@ Recon::Recon(AncillaryData::Digi *digiEvent)
 
 }
 
+
+
 void Recon::print()
 {
   std::cout<< " Ancillary Recon Event: "<<getEventNumber()<<" Spill Number: "<<getSpillNumber()<<std::endl;
@@ -46,7 +48,12 @@ void Recon::print()
     (*pos).print();
 
 }
+void Recon::ComputeClustersProperties()
+{
+  for(std::vector<TaggerCluster>::iterator pos=m_taggerClusterCol.begin(); pos!=m_taggerClusterCol.end(); ++pos)
+    (*pos).calculateProperties();
 
+}
 
 std::vector<TaggerCluster> Recon::GetHighestClusters()
 {

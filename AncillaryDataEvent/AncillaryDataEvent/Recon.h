@@ -40,11 +40,13 @@ namespace AncillaryData
       
       void SortClusters();
       std::vector<TaggerCluster> GetHighestClusters();
+      void ComputeClustersProperties();
       void computePositions(AncillaryData::AncillaryGeometry* geometry);
       void reconstructEnergy(AncillaryData::AncillaryGeometry *geometry);
       //////////////////////////////////////////////////
       void ReconstructTagger(AncillaryData::AncillaryGeometry *geometry)
 	{
+	  ComputeClustersProperties();
 	  computePositions(geometry);
 	  reconstructEnergy(geometry);
 	}

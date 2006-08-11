@@ -17,7 +17,7 @@ namespace AncillaryData
     public:
 
         TaggerCluster()
-            : m_baricenterPosition(0),m_totalPulseHeight(0),m_eta(0),m_properties(false)
+            : m_baricenterPosition(0),m_totalPulseHeight(0),m_eta(0)
         { }
 
         ~TaggerCluster(){erase();}
@@ -27,18 +27,15 @@ namespace AncillaryData
             m_totalPulseHeight = pulseHeight;
             m_eta = eta;
             m_highestHit = highHit; 
-            m_properties = true;
         }
 
         void append(TaggerHit hit) 
         {
-            m_properties=false;
             m_hits.push_back(hit);
         }
 
         void erase()
         {
-            m_properties=false;
             m_hits.erase(m_hits.begin(),m_hits.end());
         }
         void calculateProperties();
@@ -49,18 +46,12 @@ namespace AncillaryData
         double       getPulseHeight()       const {return m_totalPulseHeight;}
         unsigned int getModuleId()          const {return getHighestHit().getModuleId();}
         unsigned int getLayerId()           const {return getHighestHit().getLayerId();}
-        TaggerHit    getHighestHit()        {if(!m_properties) calculateProperties(); return m_highestHit;}
         TaggerHit    getHighestHit()        const { return m_highestHit;}
         //      double       getNoise()             const {return m_totalNoise;}
         TaggerHit    getHit(int hitId)      const {return m_hits[hitId];}
         std::vector<TaggerHit> getHits()    const {return m_hits;}
         //      double       getSNRatio()           const {return m_signalToNoiseRatio;}
         //      double       getHighestHitSNRatio() const {return m_highestHitSignalToNoiseRatio;}
-        double       getEta()  {
-            if(!m_properties) 
-                calculateProperties(); 
-            return m_eta;
-        }
         double getEta() const { return m_eta; }
         void print();
 	
@@ -72,8 +63,6 @@ namespace AncillaryData
         //      double     m_signalToNoiseRatio;
         //      double     m_highestHitSignalToNoiseRatio;
         double     m_eta;
-        bool m_properties;
-
         std::vector<TaggerHit> m_hits;    
     };
 

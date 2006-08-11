@@ -5,8 +5,7 @@ namespace AncillaryData {
 
 void TaggerCluster::calculateProperties()
 {  
-  m_properties=true;
-  //sort(m_hits, m_hits.size(), sizeof(TaggerHit), compareHits);
+  //sort(m_hits, m_hits.size(), sizeof(TaggerHit), coutpareHits);
   std::vector<TaggerHit>::iterator hitIterator;
   // Evaluate baricenter position, highest strip and total pulse height.
   double highestPulseHeight = 0.0;
@@ -39,10 +38,10 @@ void TaggerCluster::calculateProperties()
 
 void TaggerCluster::print()
 {
-  if(!m_properties) calculateProperties();
-  std::cout<<" ----- size: "<<getSize()<<" Baricenter: "<<getPosition()<<" PH: "<<getPulseHeight()<<" Eta: "<<getEta()<<std::endl;
+  //std::cout<<" ----- size: "<<getSize()<<" Baricenter: "<<getPosition()<<" PH: "<<getPulseHeight()<<" Eta: "<<getEta()<<std::endl;
   for (std::vector<TaggerHit>::iterator hitIterator = m_hits.begin(); hitIterator != m_hits.end(); hitIterator++)
-    (*hitIterator).print();
+    (*hitIterator);
+  //(*hitIterator).print();
 }
 
 } // end namespace
