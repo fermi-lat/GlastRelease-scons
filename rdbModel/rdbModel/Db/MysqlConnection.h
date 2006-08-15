@@ -151,6 +151,17 @@ namespace rdbModel{
                                  int   rowLimit=0,
                                  int   rowOffset=0);
 
+    /**
+       Another alternate form.  Get rid of rowOffset arg (never used)
+       and instead add flags.  Three flags are defined: 
+    */
+    virtual ResultHandle* select(const std::string& tableName,
+                                 const StringVector& getCols,
+                                 const StringVector& orderCols,
+                                 SELECTOPTIONS flags,
+                                 const std::string& where,
+                                 int   rowLimit=0);
+
 
     /** 
       Transmit raw request of any form to our other end.  If it is a 

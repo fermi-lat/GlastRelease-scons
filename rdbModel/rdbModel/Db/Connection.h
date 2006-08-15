@@ -35,6 +35,13 @@ namespace rdbModel{
     DBreadDefaultGroup
   };
 
+  enum SELECTOPTIONS {
+    SELECTnone=0,
+    SELECTdesc=1,       /* sort descending, rather than default ascending */
+    SELECTforUpdate=2,  /* SELECT .... FOR UPDATE */
+    SELECTshareLock=4   /* SELECT ... LOCK IN SHARE MODE */
+  };
+
   class ResultHandle;
   class Assertion;
   class Rdb;
@@ -184,6 +191,17 @@ namespace rdbModel{
                                  const std::string& where,
                                  int   rowLimit=0,
                                  int   rowOffset=0)=0;
+
+    /**
+       Another alternate form.  Get rid of rowOffset arg (never used)
+       and instead add flags.  Two flags are defined: 
+    */
+    virtual ResultHandle* select(const std::string& tableName,
+                                 const StringVector& getCols,
+                                 const StringVector& orderCols,
+                                 SELECTOPTIONS flags,
+                                 const std::string& where,
+                                 int   rowLimit=0)=0;
 
 
     /**
