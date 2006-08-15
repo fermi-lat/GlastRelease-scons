@@ -1,5 +1,5 @@
 package AncillaryDataUtil
-version v1r0
+version v1r0p1
 author N.Omodei <nicola.omodei@pi.infn.it>
 
 use GlastPolicy *
