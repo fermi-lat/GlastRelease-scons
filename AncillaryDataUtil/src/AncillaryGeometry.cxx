@@ -50,9 +50,10 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName,std::string rc
   std::ifstream rcReport(rcReportPath.c_str());
   if(!rcReport.is_open())
     {
-      m_MagnetCurrent=600.0;
+      m_MagnetCurrent=1.0;
+      BL=1.0;
+      m_BeamMomentum=0.0;
       std::cerr<<"WARNING: AncillaryUtil:: could not open "<<rcReportPath<<"\n";
-      std::cout<<" set the Magnet Current to: "<<m_MagnetCurrent<<" and the Beam Momentum to: "<<m_BeamMomentum<<" GeV/c"<<std::endl;
     }
   else
     {
@@ -67,7 +68,7 @@ AncillaryGeometry::AncillaryGeometry(std::string GeometryfileName,std::string rc
       m_MagnetCurrent = atof(magnetic_current_value.c_str());
       m_BeamMomentum = atof(beam_momuentum.c_str());
     }
-  BL = (m_MagnetCurrent==0 ? 600 : BL0 * m_MagnetCurrent + BL1 * m_MagnetCurrent*m_MagnetCurrent);
+  BL = ((m_MagnetCurrent==0) ? BL = 1.0 : BL0 * m_MagnetCurrent + BL1 * m_MagnetCurrent*m_MagnetCurrent);
 }
 
 void AncillaryGeometry::print()
@@ -76,8 +77,14 @@ void AncillaryGeometry::print()
   for(unsigned int M=0; M < N_MODULES; M++) 
     std::cout<<M<<"\t "<<getX(M)<<"\t"<<getY(M)<<"\t"<<getZ(M)<<"\t"<<getView1(M)<<"\t"<<getView2(M)<<"\t"<<getDirection1(M)<<"\t"<<getDirection2(M)<<std::endl;
   std::cout<<"------------------------------------------------------------------------"<<std::endl;
-  std::cout<<"B*L (field times distance in Tm) =  "<<BL0<<" * "<<m_MagnetCurrent<<" + "<<BL1<<" *("<<m_MagnetCurrent<<")^2 = "<<BL<<std::endl;
-  std::cout<<" Beam Momentum: "<<m_BeamMomentum<<" GeV"<<std::endl;
-  
+  if(m_MagnetCurrent==0) 
+    {
+      std::cout<<" Magent Current =0; BL scaled to 1, Beam Momentum: "<<m_BeamMomentum<<" GeV"<<std::endl;
+    }
+  else 
+    {
+      std::cout<<"B*L (field times distance in Tm) =  "<<BL0<<" * "<<m_MagnetCurrent<<" + "<<BL1<<" *("<<m_MagnetCurrent<<")^2 = "<<BL<<std::endl;
+      std::cout<<" Beam Momentum: "<<m_BeamMomentum<<" GeV"<<std::endl;
+    }
 }
 
