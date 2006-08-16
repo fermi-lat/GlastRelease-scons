@@ -17,6 +17,8 @@
 #include "GlastSvc/Reco/IPropagator.h"
 #include "ParticleTransporter.h"
 #include "CLHEP/Matrix/Vector.h"
+#include "G4Generator/IG4GenErrorSvc.h"
+#include "G4Generator/G4GenException.h"
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -96,6 +98,9 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     /// for use by isXPlane() and isYPlane()
     bool isTkrPlane(int& view) const;
 
+    /// a pointer to the Error handling service
+    IG4GenErrorSvc* m_ErrorSvc;
+
     /// Initial parameters
     Event::TkrTrackParams m_trackPar;
     double                m_zCoord;
@@ -142,6 +147,18 @@ StatusCode G4PropagationTool::initialize()
   }
 
   IG4GeometrySvc* gsv = dynamic_cast<IG4GeometrySvc*>(iService);
+
+  // Error handling service 
+  iService = 0;
+  if (service("G4GenErrorSvc",iService, true).isFailure())
+  {
+      log << MSG::ERROR << "Could not find G4GenErrorSvc"<<endreq ;
+      return StatusCode::FAILURE ;
+  }
+
+  m_ErrorSvc = dynamic_cast<IG4GenErrorSvc*>(iService);
+
+  initExceptionHandler();
 
   setGeometrySvc(gsv);
 
@@ -221,7 +238,20 @@ void G4PropagationTool::setStepStart(const Event::TkrTrackParams& trackPar, doub
 //! Takes a step of distance given by arcLen
 void G4PropagationTool::step(double arcLen)
 {
-    transport(arcLen);
+    try
+    {
+        transport(arcLen);
+    }
+    catch(G4GenException& e)
+    {
+        std::string exceptString = name() + ": G4Exception - " + e.what();
+        throw std::exception(exceptString.data());
+    }
+    catch(...)
+    {
+        std::string exceptString = name() + ": unknown exception caught";
+        throw std::exception(exceptString.data());
+    }
 
     return;
 }

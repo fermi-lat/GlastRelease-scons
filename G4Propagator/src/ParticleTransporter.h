@@ -125,6 +125,7 @@ public:
     void                     setTransportationManager(const G4TransportationManager* TransportationManager)
                              {m_TransportationManager = TransportationManager;}
     void                     setGeometrySvc(IG4GeometrySvc* geoSvc) {m_geometrySvc = geoSvc;}
+    void                     initExceptionHandler();
 private:
     //Private methods
     //Determines the distance along the track to the edge of start volume

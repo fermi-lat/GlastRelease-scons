@@ -12,6 +12,8 @@
 #include "CLHEP/Vector/ThreeVector.h"
 #include "globals.hh"
 #include "geomdefs.hh"
+#include "G4StateManager.hh"
+#include "G4PropagatorExceptionHandler.h"
 
 #include <stdexcept>
 #include <string>
@@ -51,6 +53,28 @@ ParticleTransporter::~ParticleTransporter()
     // Restrictions and Caveats: None
     clearStepInfo();
     
+    return;
+}
+
+void ParticleTransporter::initExceptionHandler()
+{
+    // Purpose and Method: Set up exception handling for ParticleTransporter class
+    // Inputs: none
+    // Outputs:  None
+    // Dependencies: None
+    // Restrictions and Caveats: None
+
+    // Make sure the exception handling is set up for tracking
+    G4StateManager*      stateManager = G4StateManager::GetStateManager();
+    G4VExceptionHandler* exceptHand   = stateManager->GetExceptionHandler();
+
+    // If no exception handler, register one
+    if (exceptHand == 0)
+    {
+        G4PropagatorExceptionHandler* handler = new G4PropagatorExceptionHandler();
+        stateManager->SetExceptionHandler(handler);
+    }
+
     return;
 }
 
