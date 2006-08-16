@@ -62,6 +62,7 @@ The calibGenCAL python utilites require python version 2.4.
 Their use also requires that the following python extensions be installed:
 - Numeric
 - 4Suite-XML
+- PyROOT
 
 <h5> Python general usage: launcher scripts  </h5>
 For each calibGenCAL python script XYZ.py there exists on XYZ.bat
