@@ -54,8 +54,8 @@
 #include "CLHEP/Geometry/Vector3D.h"
 
 // Error stuff
-#include "src/Utilities/IG4GenErrorSvc.h"
-#include "src/Utilities/G4GenException.h"
+#include "G4Generator/IG4GenErrorSvc.h"
+#include "G4Generator/G4GenException.h"
 
 static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;

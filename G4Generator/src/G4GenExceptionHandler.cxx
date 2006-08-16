@@ -1,7 +1,7 @@
 //
 
 #include "src/G4GenExceptionHandler.h"
-#include "src/Utilities/G4GenException.h"
+#include "G4Generator/G4GenException.h"
 #include "src/RunManager.h"
 #include "G4StateManager.hh"
 #include "G4ios.hh"

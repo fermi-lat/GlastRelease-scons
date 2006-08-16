@@ -13,8 +13,8 @@
 
 // for implementation
 #include "G4GenErrorRecord.h"
-#include "G4GenException.h"
-#include "IG4GenErrorSvc.h"
+#include "G4Generator/G4GenException.h"
+#include "G4Generator/IG4GenErrorSvc.h"
 
 /**   
 * @class G4GenErrorSvc

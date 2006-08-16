@@ -22,7 +22,7 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 
-#include "src/Utilities/G4GenException.h"
+#include "G4Generator/G4GenException.h"
 
 // TU: Hack for CLHEP 1.9.2.2
 typedef HepGeom::Point3D<double>  HepPoint3D;
