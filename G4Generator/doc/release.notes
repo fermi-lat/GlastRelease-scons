@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v5r16p0 16-Aug-06 TU  Updates to allow G4Propagator to do exception handling of G4 errors.
  v5r15p1 04-Aug-06 LSR New jO paramater: point_on_beamline... allows a more direct way of setting
                        the table parameters
                        New source: beamtest_muon... this is a muon generated on the axis of the beamtest06
