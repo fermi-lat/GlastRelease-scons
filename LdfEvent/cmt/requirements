@@ -1,5 +1,5 @@
 package LdfEvent
-version v3r7
+version v3r8
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use GaudiInterface * IExternal
@@ -9,13 +9,17 @@ use enums v*
 use lsfData v*
 use Event v*
 
-apply_pattern package_include
-apply_pattern package_linkopts
-apply_pattern package_headers
+#apply_pattern package_include
+#apply_pattern package_linkopts
+#apply_pattern package_headers
+
+apply_pattern shared_library
 
 private
 
-library LdfEvent -no_share \
+apply_pattern package_headers
+
+library LdfEvent  \
         *.cxx ${LdfEvent_headers}
 
 
