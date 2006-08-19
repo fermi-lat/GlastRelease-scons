@@ -3,7 +3,7 @@
 // $Id$
 //##############################################################
 //
-// Job options file for Reading in a ROOT file
+// Job options file for Reading in the root output files and displaying events in FRED
 //
 
 ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud", "FluxSvc", "GlastSvc"};
@@ -26,7 +26,9 @@ EventSelector.PrintFreq = -1;
 
 ApplicationMgr.TopAlg = {
 "Sequencer/Top" };
+
 ApplicationMgr.DLLs += { "RootIo" };
+
 Top.Members =  { "mcRootReaderAlg"}; 
 Top.Members += { "digiRootReaderAlg"}; 
 Top.Members += { "reconRootReaderAlg"};
@@ -43,16 +45,16 @@ ApplicationMgr.EvtMax = 100000;
 // tell it to automatically start the version of FRED 
 HepRepSvc.startFred = "$Fred_DIR";
 
-
 //##############################################################
 // Names of input ROOT files - note that you can supply a list of input files
-// comma delimited list
+// as a comma delimited list
+
+// From time to time, the test files below become outdated. If this job doesn't 
+//   run out of the box, please notify Leon or Heather.
+
 mcRootReaderAlg.mcRootFileList = {"$(ROOTTESTDATAROOT)/data/default/mc.root"};
 digiRootReaderAlg.digiRootFileList = {"$(ROOTTESTDATAROOT)/data/default/digi.root"};
 reconRootReaderAlg.reconRootFileList = {"$(ROOTTESTDATAROOT)/data/default/recon.root"};
-
-ApplicationMgr.DLLs +=    { "RootIo" };
-ApplicationMgr.ExtSvc += { "RootIoSvc" };
 
 ApplicationMgr.EvtMax  = 1000000;
 

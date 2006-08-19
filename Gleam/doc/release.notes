@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r19p1 LSR 19-Aug-06  Mostly cosmetic changes to src/readAndDisplay.txt
 * v6r19   HMK 18-Jul-06  Add AncillaryData packages
 * v6r18p2 THB 25-jun-06  CalUtil no longer a Gaudi module
 * v6r18p1 THB 23-jun-06   Invoke OnboardFilterTuple to set OBF tuple guys
