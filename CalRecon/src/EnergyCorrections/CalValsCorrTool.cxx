@@ -666,6 +666,8 @@ StatusCode CalValsCorrTool::aveRadLens(Point /* x0 */, Vector t0, double radius,
     double xHi = m_tkrGeom->getLATLimit(0, HIGH);
     double yLo = m_tkrGeom->getLATLimit(1, LOW);
     double yHi = m_tkrGeom->getLATLimit(1, HIGH);
+    // Ph. Bruel : hardcoded modification in order to take into account the CU geometry (tower 1 without tracker)
+    if(xLo==0) xLo = m_towerPitch;
 
     // Only do leakage correction for tracks which "hit" the Calorimeter
 	if (m_cal_top.x()<xLo || m_cal_top.x()>xHi || m_cal_top.y()<yLo || m_cal_top.y()>yHi) 
