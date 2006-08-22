@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r13p1   22-Aug-2006 HMK Add method to query missingCalReadout in event flag
 v9r13     26-Jul-2006 HMK updates for hopefully final adf recon
 v9r12     19-Jul-2006 HMK Add in ScalerHit
 v9r11     13-Jul-2006 HMK Forgot to commit some fixes

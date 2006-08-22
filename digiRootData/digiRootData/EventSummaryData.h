@@ -137,6 +137,11 @@ public:
          return (m_flags & enums::PHASEERROR); }
     Bool_t timeoutError() const {
          return (m_flags & enums::TIMEOUTERROR);}
+    /// Returns true if this event has at least one crystal missing a
+    /// a readout
+    Bool_t missingCalReadout() const {
+         return (m_flags & enums::MISSINGCALREADOUT);}
+
     
     /// Returns the length in bytes of the TEM contribution identified by 
     /// a value in [0,15]
