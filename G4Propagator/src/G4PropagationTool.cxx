@@ -244,12 +244,20 @@ void G4PropagationTool::step(double arcLen)
     }
     catch(G4GenException& e)
     {
-        std::string exceptString = name() + ": G4Exception - " + e.what();
-        throw std::exception(exceptString.data());
+        MsgStream log(msgSvc(), name());
+        std::string exceptString = ": G4Exception - " + e.what();
+        
+        log << MSG::WARNING << exceptString << std::endl; 
+
+        throw std::exception();
     }
     catch(...)
     {
+        MsgStream log(msgSvc(), name());
         std::string exceptString = name() + ": unknown exception caught";
+        
+        log << MSG::WARNING << exceptString << std::endl; 
+
         throw std::exception(exceptString.data());
     }
 
