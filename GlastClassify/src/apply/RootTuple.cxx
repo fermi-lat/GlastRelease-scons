@@ -65,6 +65,7 @@ TTree* getTree(TFile *f) {
   return t;
 }
 */
+
 class RootItem : public GlastClassify::Item {
 public:
     RootItem(TLeaf * leaf) : m_leaf(leaf){}
@@ -103,6 +104,11 @@ RootTuple::RootTuple( std::string file, std::string treeName)
         throw std::invalid_argument("Tree not found");
     }
     m_numEvents = m_tree->GetEntries();
+
+    // Use this to define max tree size (apparantly a "bazillion" is not really a number...)
+    Long64_t maxTreeSize=50000000000;
+
+    TTree::SetMaxTreeSize(maxTreeSize);
 }
 
 RootTuple::~RootTuple()
