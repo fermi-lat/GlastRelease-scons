@@ -251,8 +251,28 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             // operand will contain the conditional expression and the two results
             int firstPos   = 1;
             int operandLen = operand.length();
+            // hack for functions inserted into the expression...
+            int leftParen  = 0;
+            int rghtParen  = operandLen;
+            findEnclosingParens(operand, leftParen, rghtParen);
+
             int firstComma = operand.find(",", firstPos);
+
+            while (leftParen > -1 && firstComma > leftParen && firstComma < rghtParen)
+            {
+                firstComma = operand.find(",", rghtParen);
+                leftParen  = rghtParen;
+                findEnclosingParens(operand, leftParen, rghtParen);
+            }
+
             int secndComma = operand.find(",", firstComma+1);
+
+            while (leftParen > -1 && secndComma > leftParen && secndComma < rghtParen)
+            {
+                secndComma = operand.find(",", rghtParen);
+                leftParen  = rghtParen;
+                findEnclosingParens(operand, leftParen, rghtParen);
+            }
 
             std::string conExpression = operand.substr(0, firstComma);
             std::string ifResult      = operand.substr(firstComma+1,secndComma-firstComma-1);
