@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v1r0p2 22-Aug-2006 NO  Added a new Geometry file, valid from run 1642
  v1r0p1 15-Aug-2006 NO  Patched for N/A value in the rcReport in test runs
  v1r0   11-Aug-2006 NO  Remove all the couts. Final version.
  v0r2   08-Aug-2006 NO  Initial beam geometry (4 in a raw)
