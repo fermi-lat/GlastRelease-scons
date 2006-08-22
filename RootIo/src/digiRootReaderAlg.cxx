@@ -459,6 +459,9 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     if (eventIdTds != eventIdRoot) evt->setEvent(eventIdRoot);
     if (runIdTds != runIdRoot) evt->setRun(runIdRoot);
 
+    log << MSG::DEBUG << "Reading Event (run, event): (" << runIdRoot
+        << ", " << eventIdRoot << ")" << endreq;
+
     TimeStamp timeObj(m_digiEvt->getTimeStamp());
     evt->setTime(timeObj);
 
