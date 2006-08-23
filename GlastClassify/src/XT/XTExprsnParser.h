@@ -32,9 +32,10 @@ private:
     typedef std::map<std::string,std::string>  DelimMap;
 
     // Function to find the next defined delimiter in our input string
-    DelimPair      findNextDelimiter(const std::string& inString, int& startPos);
+    DelimPair      findNextDelimiter(const std::string& inString, int& startPos, bool checkUnary=true);
     std::string    findEnclosingParens(const std::string& expression, int& startPos, int& endPos);
     std::string    findCategoricalVal(const std::string& expression, int& startPos, int& endPos);
+    std::string    findFuncArgument(const std::string& expression, int& startPos, int& endPos);
 
     // Functions to clean up the input string
     std::string    trimCharacters(std::string& expression, const char& charToTrim);

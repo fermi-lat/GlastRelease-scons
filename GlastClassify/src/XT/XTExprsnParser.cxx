@@ -249,34 +249,18 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
         else if (funcCand == "ifelse")
         {
             // operand will contain the conditional expression and the two results
-            int firstPos   = 1;
-            int operandLen = operand.length();
-            // hack for functions inserted into the expression...
-            int leftParen  = 0;
-            int rghtParen  = operandLen;
-            findEnclosingParens(operand, leftParen, rghtParen);
+            int startPos = 0;
+            int endPos   = operand.length();
 
-            int firstComma = operand.find(",", firstPos);
+            std::string conExpression = findFuncArgument(operand,startPos,endPos);
 
-            while (leftParen > -1 && firstComma > leftParen && firstComma < rghtParen)
-            {
-                firstComma = operand.find(",", rghtParen);
-                leftParen  = rghtParen;
-                findEnclosingParens(operand, leftParen, rghtParen);
-            }
+            startPos = endPos + 1;
+            endPos   = operand.length();
+            std::string ifResult      = findFuncArgument(operand,startPos,endPos);
 
-            int secndComma = operand.find(",", firstComma+1);
-
-            while (leftParen > -1 && secndComma > leftParen && secndComma < rghtParen)
-            {
-                secndComma = operand.find(",", rghtParen);
-                leftParen  = rghtParen;
-                findEnclosingParens(operand, leftParen, rghtParen);
-            }
-
-            std::string conExpression = operand.substr(0, firstComma);
-            std::string ifResult      = operand.substr(firstComma+1,secndComma-firstComma-1);
-            std::string elseResult    = operand.substr(secndComma+1,operandLen-secndComma-1);
+            startPos = endPos + 1;
+            endPos   = operand.length();
+            std::string elseResult    = findFuncArgument(operand,startPos,endPos);
 
             IXTExprsnNode* condNode = parseNextExpression(conExpression);
             IXTExprsnNode* ifNode   = parseNextExpression(ifResult);
@@ -298,33 +282,36 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             IXTExprsnNode* operandNode1 = 0;
             IXTExprsnNode* operandNode2 = 0;
 
+            // Check to see if this function has more than one operand
+            int startPos = 0;
+            int lastPos  = operand.length();
+            int endPos   = lastPos;
+
+            std::string argument = findFuncArgument(operand, startPos, endPos);
+
             // First check to see if the operand is itself a function
             // (e.g. acos(min(1.,angle))
-            if (operandNode1 = parseFunction(operand))
+            if (!(operandNode1 = parseFunction(argument)))
             {
-                operandNode2 = new XTExprsnValue<REALNUM>("",0);
+                // Otherwise it must be an expression
+                operandNode1 = parseNextExpression(argument);
             }
-            // Ok, standard argument
-            else
+
+            // Is there a second argument to deal with?
+            if (endPos < lastPos)
             {
-                // Check to see if this function has more than one operand
-                int firstPos = 0;
-                int commaPos = operand.find(",",firstPos);
+                startPos     = endPos + 1;
+                endPos       = lastPos;
+                argument     = findFuncArgument(operand, startPos, endPos);
 
-                if (commaPos > 0)
+                // Is it a function?
+                if (!(operandNode2 = parseFunction(argument)))
                 {
-                    std::string operand1 = operand.substr(firstPos, commaPos);
-                    operandNode1 = parseNextExpression(operand1);
-
-                    std::string operand2 = operand.substr(commaPos+1, operand.length()-commaPos);
-                    operandNode2 = parseNextExpression(operand2);
-                }
-                else
-                {
-                    operandNode1 = parseNextExpression(operand);
-                    operandNode2 = new XTExprsnValue<REALNUM>("",0);
+                    // Otherwise it is an expression
+                    operandNode2 = parseNextExpression(argument);
                 }
             }
+            else operandNode2 = new XTExprsnValue<REALNUM>("",0);
 
             try
             {
@@ -341,7 +328,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
     return pNode;
 }
 
-XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& inString, int& startPos)
+XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& inString, int& startPos, bool checkUnary)
 {
     // null string in case we don't find anything
     DelimPair fndDelim("",0);
@@ -384,7 +371,7 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
         {
             std::string tryString = inString.substr(rightPos+1, stringLen - rightPos);
 
-            rightOp = findNextDelimiter(tryString, rDelim);
+            rightOp = findNextDelimiter(tryString, rDelim, false);
         }
 
         // Which do we take?
@@ -412,7 +399,7 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
             if (subStrPos > -1)
             {
                 // Attempt to catch special case of unary + or - operator
-                if (subStrPos == 0 && (delimOp.first == "-" || delimOp.first == "+")) continue;
+                if (checkUnary && subStrPos == 0 && (delimOp.first == "-" || delimOp.first == "+")) continue;
 
                 // Ugliness to check for exponential notation
                 if (subStrPos > 0 && (delimOp.first == "-" || delimOp.first == "+"))
@@ -518,6 +505,33 @@ std::string XTExprsnParser::findCategoricalVal(const std::string& expression, in
     }
 
     return subStr;
+}
+
+std::string XTExprsnParser::findFuncArgument(const std::string& expression, int& startPos, int& endPos)
+{
+    // Look for enclosing parenthesis as a sign of an embedded function in our expression
+    // (which may have an embedded comma which can screw us up)
+    int leftParen  = startPos;
+    int rghtParen  = endPos;
+    findEnclosingParens(expression, leftParen, rghtParen);
+
+    // Where is the comma in the expression?
+    int firstComma = expression.find(",", startPos);
+
+    // Use this loop to try to make sure we are not splitting at an embedded function
+    while (leftParen > -1 && firstComma > leftParen && firstComma < rghtParen)
+    {
+        firstComma = expression.find(",", rghtParen);
+        leftParen  = rghtParen;
+        findEnclosingParens(expression, leftParen, rghtParen);
+    }
+
+    // If we have comma then set that as the end point
+    if (firstComma > -1) endPos = firstComma;
+
+    std::string result = expression.substr(startPos, endPos-startPos);
+
+    return result;
 }
 
 
