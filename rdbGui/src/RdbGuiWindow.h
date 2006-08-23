@@ -73,7 +73,8 @@ public:
     ID_UPDATELAST,
     ID_UPDATEROW,
     ID_COPYROW,
-    ID_INSERTLATEST      
+    ID_INSERTLATEST,
+    ID_COPYLATEST      
     };
 
   // Message handlers
@@ -89,6 +90,7 @@ public:
   long onSendQuery(FXObject*,FXSelector, void*);
   long onInsert(FXObject*,FXSelector, void*);
   long onInsertLatest(FXObject*,FXSelector, void*);
+  long onCopyLatestByKey(FXObject*,FXSelector, void*); 
   long onMultiInsert(FXObject*,FXSelector, void*);
   long onUpdateLastRow(FXObject*,FXSelector, void*);
   long onUpdateRowByKey(FXObject*,FXSelector, void*);

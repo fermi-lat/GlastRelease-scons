@@ -30,6 +30,7 @@ FXDEFMAP(RdbGUIWindow) RdbGUIWindowMap[]={
   FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_UPDATEROW,        RdbGUIWindow::onUpdateRowByKey),
   FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_COPYROW,          RdbGUIWindow::onCopyRowByKey),
   FXMAPFUNC(SEL_COMMAND,  RdbGUIWindow::ID_INSERTLATEST,    RdbGUIWindow::onInsertLatest),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_COPYLATEST,    RdbGUIWindow::onCopyLatestByKey),    // added jrb 23 aug 2006
 
 };
 
@@ -396,7 +397,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
 
   int index = uiTblColList->getTableList()->getCurrentItem(); 
   uiTable->setTableName((uiTblColList->getTableList()->getItemText(index)).text());
-  //   Joanne patch starts here
+
   if (!queryResult) 
 
     {
@@ -405,7 +406,7 @@ long RdbGUIWindow::onSendQuery(FXObject*,FXSelector, void*)
       uiTable->setItemText(0, 0, "Null query result");
       return 1;
     }
-  //   Joanne patch ends here
+
   if (queryResult->getNRows() < 1)
     {
       uiTable->setTableSize(1, 1);
@@ -503,7 +504,6 @@ long RdbGUIWindow::onInsert(FXObject*,FXSelector, void*)
   return 1;
 }
 
-/*  ---------- */
 long RdbGUIWindow::onInsertLatest(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
@@ -532,10 +532,6 @@ long RdbGUIWindow::onInsertLatest(FXObject*,FXSelector, void*)
 }
 
 
-
-
-
-/*  ---------- */
 long RdbGUIWindow::onUpdateLastRow(FXObject*,FXSelector, void*)
 {
   m_dgInsert->setConnection(m_connect);
@@ -610,7 +606,7 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
   m_rdb->accept(m_dgInsert);
   // Fill the form with the last row inserted in the DB
   m_dgInsert->fillWithRowByKey(uiTable->getItemText(row, 0).text());
-  // Set the mode of the dialog to Insert 
+  // Set the mode of the dialog to Insert
   m_dgInsert->setInsertMode(1);
   
   m_dgInsert->show(PLACEMENT_OWNER);
@@ -625,6 +621,36 @@ long RdbGUIWindow::onCopyRowByKey(FXObject*,FXSelector, void* ptr)
   return 1;
 }
 
+ // Insert a row similar to selected one, but invoke rdbModel::insertLatest rather than just insert
+long RdbGUIWindow::onCopyLatestByKey(FXObject*,FXSelector, void* ptr)
+{
+  FXint row = (FXint) ptr;
+  
+  m_dgInsert->setConnection(m_connect);
+  m_dgInsert->setRdb(m_rdb);
+  if ((uiTblColList->getTableList()->getNumItems() == 0 )
+      || (m_connect == 0) || !(m_connect->isConnected()))
+    return 1;
+
+  m_dgInsert->setTableName(uiTable->getTableName());
+  // Build the form
+  m_rdb->accept(m_dgInsert);
+  // Fill the form with the last row inserted in the DB
+  m_dgInsert->fillWithRowByKey(uiTable->getItemText(row, 0).text());
+  // Set the mode of the dialog to InsertLatest 
+  m_dgInsert->setInsertMode(2);
+  
+  m_dgInsert->show(PLACEMENT_OWNER);
+  m_dgInsert->setUiLog(uiLog);
+
+  if (m_dgInsert->getDefaultWidth() < 250)
+    m_dgInsert->resize(250,m_dgInsert->getDefaultHeight());
+  else
+    m_dgInsert->resize(m_dgInsert->getDefaultWidth(),m_dgInsert->getDefaultHeight());
+  m_dgInsert->recalc();  
+  
+  return 1;
+}
 
 void RdbGUIWindow::closeConnection()
 {

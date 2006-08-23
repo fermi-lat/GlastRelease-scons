@@ -8,15 +8,14 @@
 // Message Map ResultTable class
 FXDEFMAP(ResultTable) ResultTableMap[]={
 
-  //__Message_Type___________________________ID_______________________________________Message_Handler_____
-  FXMAPFUNC(SEL_KEYPRESS,            0,                                    ResultTable::onKeyPress),
-  FXMAPFUNC(SEL_COMMAND,             FXTable::ID_COPY_SEL,                 ResultTable::onCmdCopySel),
-  FXMAPFUNC(SEL_RIGHTBUTTONRELEASE,  0,                                    ResultTable::onCmdMenuPane),
-  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_UPDATEROW,            ResultTable::onUpdRow),
-  FXMAPFUNC(SEL_COMMAND,             ResultTable::ID_COPYROW,              ResultTable::onCopyRow)    
+  //__Message_Type________ID_____________________Message_Handler_____
+  FXMAPFUNC(SEL_KEYPRESS, 0,                     ResultTable::onKeyPress),
+  FXMAPFUNC(SEL_COMMAND,  FXTable::ID_COPY_SEL,  ResultTable::onCmdCopySel),
+  FXMAPFUNC(SEL_RIGHTBUTTONRELEASE,  0,            ResultTable::onCmdMenuPane),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_UPDATEROW, ResultTable::onUpdRow),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_COPYROW,   ResultTable::onCopyRow),
+  FXMAPFUNC(SEL_COMMAND,  ResultTable::ID_COPYLATEST, ResultTable::onCopyLatest)    
 };
-
-
 
 // Macro for the GLViewWindow class hierarchy implementation
 FXIMPLEMENT(ResultTable,FXTable,ResultTableMap,ARRAYNUMBER(ResultTableMap))
@@ -30,9 +29,12 @@ ResultTable::ResultTable(FXComposite *p, FXObject* tgt,
   FXTable(p, tgt, sel, opts, x, y, w, h, pl, pr, pt, pb)
 {
   m_recordActions = new FXMenuPane(this);
-  m_updRow = new FXMenuCommand(m_recordActions,"Update Row",NULL, this, ResultTable::ID_UPDATEROW);
-  m_copyRow = new FXMenuCommand(m_recordActions,"Copy Row",NULL, this, ResultTable::ID_COPYROW);
-
+  m_updRow = new FXMenuCommand(m_recordActions,"Update Row",NULL, this, 
+                               ResultTable::ID_UPDATEROW);
+  m_copyRow = new FXMenuCommand(m_recordActions,"Copy Row",NULL, this, 
+                                ResultTable::ID_COPYROW);
+  m_copyLatest = new FXMenuCommand(m_recordActions,"Copy Latest",NULL, this, 
+                                   ResultTable::ID_COPYLATEST);
 }
 
  
@@ -107,8 +109,7 @@ void ResultTable::format()
   int i,j;
 
   // for each column, find the maximum width
-  
-  std::vector<int> colWidth(ncols,0);
+    std::vector<int> colWidth(ncols,0);
   
   int rowWidth = 0;
   for (i = 0; i < nrows; i++)
@@ -143,7 +144,9 @@ long ResultTable::onKeyPress(FXObject*,FXSelector,void* ptr)
 
 
 // Extract cells from given range as text
-void ResultTable::extractText(FXchar*& text,FXint& size,FXint startrow,FXint endrow,FXint startcol,FXint endcol,FXString cs,FXchar rs) const 
+void ResultTable::extractText(FXchar*& text,FXint& size,FXint startrow,
+                              FXint endrow,FXint startcol,FXint endcol,
+                              FXString cs,FXchar rs) const 
 {
   register FXchar *ptr;
   register FXuint sz=0;
@@ -151,7 +154,8 @@ void ResultTable::extractText(FXchar*& text,FXint& size,FXint startrow,FXint end
   FXString string;
 
   // Verify range
-  if(startrow<0 || startcol<0 || nrows<=endrow || ncols<=endcol){ fxerror("%s::extractText: index out of range.\n",getClassName()); }
+  if(startrow<0 || startcol<0 || nrows<=endrow || ncols<=endcol)
+  { fxerror("%s::extractText: index out of range.\n",getClassName()); }
 
   // Initialize
   text=NULL;
@@ -202,7 +206,8 @@ long ResultTable::onCmdCopySel(FXObject*,FXSelector,void*){
     types[2]=csvType;
     if(acquireClipboard(types,3)){
       FXFREE(&clipbuffer);
-      extractText(clipbuffer,cliplength,selection.fm.row,selection.to.row,selection.fm.col,selection.to.col);
+      extractText(clipbuffer,cliplength,selection.fm.row,
+                  selection.to.row,selection.fm.col,selection.to.col);
       }
     }
   return 1;
@@ -232,10 +237,18 @@ long ResultTable::onCmdMenuPane(FXObject* sender,FXSelector sel,void* ptr)
 
 long ResultTable::onCopyRow(FXObject*,FXSelector,void*)
 {
-  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_COPYROW),(void *)m_selRow);
+  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_COPYROW),
+                                  (void *)m_selRow);
+}
+
+long ResultTable::onCopyLatest(FXObject*,FXSelector,void*)
+{
+  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_COPYLATEST),
+                                  (void *)m_selRow);
 }
 
 long ResultTable::onUpdRow(FXObject*,FXSelector,void*)
 {
-  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_UPDATEROW),(void *)m_selRow);
+  return target && target->handle(NULL,FXSEL(SEL_COMMAND,ID_UPDATEROW),
+                                  (void *)m_selRow);
 }
