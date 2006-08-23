@@ -2,9 +2,12 @@
    @brief Package templates
    @verbatim	   
 
-   Coordinators: M. Frailis and R. Giannitrapani
+   Coordinators: M. Frailis, R. Giannitrapani and J. Bogart 
               EOH
 
+   v1r11   23-Aug-2006  jrb      Add "copy latest" function to context menu in
+                                 Results table, combining features of "copy"
+                                 and "insert latest" 
    v1r10p5 15-May-2006  jrb      Don't attempt build for tag VC8Debug
    v1r10p4 23-Apr-2006  jrb      Bug fix for tables without primary keys
    v1r10p3 25-Jan-2006  jrb      Small change for compatibility with new rdbModel
