@@ -52,6 +52,7 @@ IImActivityNode* xmlFilterRowsEngineFactory::operator()(const DOMElement* xmlAct
     try
     {
         DOMElement* xmlComplex  = xmlBase::Dom::findFirstChildByName(xmlProperty, "Complex");
+        if (xmlComplex == 0) throw XTENexception("xmlFilterRowsFactory finds zero pointer to xmlComplex");
         sExpression = xmlBase::Dom::getTextContent(xmlComplex);
     }
     //catch(xmlBase::WrongNodeType& e)
