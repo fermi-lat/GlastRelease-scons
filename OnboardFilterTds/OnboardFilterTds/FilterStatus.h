@@ -140,6 +140,14 @@ namespace OnboardFilterTds{
     m_numLogsHit = 0;
     m_vetoword = 0;
 
+    m_xHits = 0;
+    m_yHits = 0;
+    m_slopeXZ = 0.0;
+    m_slopeYZ = 0.0;
+    m_intXZ = 0.0;
+    m_intYZ = 0.0;
+
+
     unsigned int counter;
     for(counter=0;counter<16;counter++){
       m_acdStatus[counter]=0;
@@ -214,6 +222,29 @@ namespace OnboardFilterTds{
     inline int getTmsk() const;
     inline int getVetoWord() const;
     inline void setVetoWord(const int vetoword);
+
+    inline void setBestTrack( int xHits,int yHits,
+                              double slopeXZ,double slopeYZ,
+                              double intXZ,double intYZ){
+        m_xHits    = xHits;
+        m_yHits    = yHits;
+        m_slopeXZ  = slopeXZ;
+        m_slopeYZ  = slopeYZ;
+        m_intXZ    = intXZ;
+        m_intYZ    = intYZ;
+      }
+
+    inline void FilterStatus::getBestTrack(
+                                  int &xHits,int &yHits,
+                                  double &slopeXZ,double &slopeYZ,
+                                  double &intXZ,double &intYZ){
+        xHits    = m_xHits;
+        yHits    = m_yHits;
+        slopeXZ  = m_slopeXZ;
+        slopeYZ  = m_slopeYZ;
+        intXZ    = m_intXZ;
+        intYZ    = m_intYZ;
+      }
 
     inline virtual std::ostream& fillStream(std::ostream &s) const;
     inline friend std::ostream& operator << (std::ostream &s, const FilterStatus &obj);
@@ -348,6 +379,14 @@ namespace OnboardFilterTds{
    int m_gem_prescaled; 
    int m_gem_sent;
     LogInfo m_logData[16*8*12];    // 16 towers * 8 layers * 12 logs
+
+  // BestTRack info
+   int m_xHits;
+   int m_yHits;
+   double m_slopeXZ;
+   double m_slopeYZ;
+   double m_intXZ;
+   double m_intYZ;
 
 
    int m_numLogsHit;
