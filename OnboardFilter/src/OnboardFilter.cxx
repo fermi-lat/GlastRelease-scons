@@ -93,6 +93,7 @@
 
  
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/MsgStream.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -103,7 +104,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McParticle.h"
 #include "EbfWriter/Ebf.h"
-#include "OnboardFilter/FilterStatus.h"
+#include "OnboardFilterTds/FilterStatus.h"
 #include "OnboardFilter/OnboardFilterTDS.h"
 #include "OnboardFilter/trackProj.hh" 
 #include "facilities/Util.h"

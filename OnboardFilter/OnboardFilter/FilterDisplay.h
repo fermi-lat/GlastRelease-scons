@@ -27,7 +27,7 @@ public:
     StatusCode initialize(gui::GuiMgr *);
 };
 
-#include "OnboardFilter/FilterStatus.h"
+#include "OnboardFilterTds/FilterStatus.h"
 #include "gui/DisplayRep.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -41,7 +41,7 @@ class FilterTrackDisplay : public gui::DisplayRep{
   IDataProviderSvc *dps;
 };
 
-#include "OnboardFilter/FilterStatus.h"
+#include "OnboardFilterTds/FilterStatus.h"
 #include "gui/DisplayRep.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"

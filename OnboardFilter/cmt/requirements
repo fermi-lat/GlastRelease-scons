@@ -1,5 +1,5 @@
 package OnboardFilter
-version v4r0p2
+version v4r1
 # $Header$
 
 author Richard Hughes <HUGHES@mps.ohio-state.edu>
@@ -15,6 +15,7 @@ apply_pattern package_include
 apply_pattern package_header
 
 private
+use OnboardFilterTds v*
 use GlastSvc v*
 
 macro OnboardFilter_cppflags "" \

@@ -9,7 +9,7 @@
 #ifndef _FILTER_TRACKS_H_
 #define _FILTER_TRACKS_H_
 
-#include "OnboardFilter/FilterStatus.h"
+#include "OnboardFilterTds/FilterStatus.h"
 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
@@ -18,6 +18,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Property.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+#include "TkrUtil/ITkrGeometrySvc.h"
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McParticle.h"

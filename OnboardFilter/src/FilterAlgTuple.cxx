@@ -13,8 +13,8 @@ $Header$
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-#include "OnboardFilter/FilterStatus.h"
-#include "OnboardFilter/FilterAlgTds.h"
+#include "OnboardFilterTds/FilterStatus.h"
+#include "OnboardFilterTds/FilterAlgTds.h"
 
 #include <string>
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
