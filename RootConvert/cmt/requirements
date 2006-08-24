@@ -1,5 +1,5 @@
 package RootConvert
-version v1r18p1
+version v1r19
 
 author David Chamont <chamont@poly.in2p3.fr>
 author Heather Kelly <heather@slac.stanford.edu>
@@ -7,6 +7,7 @@ author Heather Kelly <heather@slac.stanford.edu>
 
 use Event v*
 use LdfEvent v*
+use OnboardFilterTds v*
 use commonRootData v*
 use mcRootData v*
 use digiRootData v*
@@ -17,27 +18,18 @@ apply_pattern shared_library
 
 private
 
-#use OnboardFilter v*
-#use AncillaryDataEvent v*
-
 apply_pattern package_headers
-
-# OBF includes
-#macro_prepend includes "-I ../flight/EFC " \
-#      WIN32 " /I ..\flight\EFC "
 
 macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Utilities/*.h \
         ../RootConvert/MonteCarlo/*.h \
-        ../RootConvert/Digi/LsfDigiConvert.h \
-        ../RootConvert/Digi/AdfDigiConvert.h \
+        ../RootConvert/Digi/*.h \
         ../RootConvert/Recon/*.h "
  
-library RootConvert \
+library RootConvert  \
         Utilities/*.cxx \
         MonteCarlo/*.cxx \
-        Digi/LsfDigiConvert.cxx \
-        Digi/AdfDigiConvert.cxx \
+        Digi/*.cxx \
         Recon/*.cxx \
         ${RootConvert_headers}
 

@@ -128,10 +128,9 @@ namespace RootPersistence {
 
     int xz, yz, xy;
     tdsObj.getAcdMap(xz, yz, xy);
-    Int_t acdStatus[16];
-    tdsObj.getAcdStatus(acdStatus);
-    rootObj.initAcd(xz, yz, xy, tdsObj.getVetoWord(),acdStatus);
+    const Int_t *acdStatus = tdsObj.getAcdStatus();
 
+    rootObj.initAcd(xz, yz, xy, tdsObj.getVetoWord(),acdStatus);
 
     rootObj.initTkr(tdsObj.getXcapture(), tdsObj.getYcapture(),
                     tdsObj.getXY00(), tdsObj.getXY11(), tdsObj.getXY22(),
@@ -160,51 +159,51 @@ namespace RootPersistence {
   };
 
   void convert( const FilterStatus& rootObj, 
-                OnboardFilterTds::FilterStatus*& tdsObj) {
+                OnboardFilterTds::FilterStatus& tdsObj) {
 
-      tdsObj->set(rootObj.getStatus());
-      tdsObj->setStageEnergy(rootObj.getStageEnergy());
-      tdsObj->setTcids(rootObj.getTcids());
+      tdsObj.set(rootObj.getStatus());
+      tdsObj.setStageEnergy(rootObj.getStageEnergy());
+      tdsObj.setTcids(rootObj.getTcids());
 
-      tdsObj->setGemThrTkr(rootObj.getGemThrTkr());
-      tdsObj->setGemCalHiLo(rootObj.getGemCalHiLo());
-      tdsObj->setGemCondsumCno(rootObj.getGemCondsumCno());
-      tdsObj->setGemAcd_vetoes_XZ(rootObj.getGemAcd_vetoes_XZ());
-      tdsObj->setGemAcd_vetoes_YZ(rootObj.getGemAcd_vetoes_YZ());
-      tdsObj->setGemAcd_vetoes_XY(rootObj.getGemAcd_vetoes_XY());
-      tdsObj->setGemAcd_vetoes_RU(rootObj.getGemAcd_vetoes_RU());
-      tdsObj->setGemLivetime(rootObj.getGemLivetime());
-      tdsObj->setGemTrgtime(rootObj.getGemTrgtime());
-      tdsObj->setGemPpstime(rootObj.getGemPpstime());
-      tdsObj->setGemDiscarded(rootObj.getGemDiscarded());
-      tdsObj->setGemPrescaled(rootObj.getGemPrescaled());
-      tdsObj->setGemSent(rootObj.getGemSent());
+      tdsObj.setGemThrTkr(rootObj.getGemThrTkr());
+      tdsObj.setGemCalHiLo(rootObj.getGemCalHiLo());
+      tdsObj.setGemCondsumCno(rootObj.getGemCondsumCno());
+      tdsObj.setGemAcd_vetoes_XZ(rootObj.getGemAcd_vetoes_XZ());
+      tdsObj.setGemAcd_vetoes_YZ(rootObj.getGemAcd_vetoes_YZ());
+      tdsObj.setGemAcd_vetoes_XY(rootObj.getGemAcd_vetoes_XY());
+      tdsObj.setGemAcd_vetoes_RU(rootObj.getGemAcd_vetoes_RU());
+      tdsObj.setGemLivetime(rootObj.getGemLivetime());
+      tdsObj.setGemTrgtime(rootObj.getGemTrgtime());
+      tdsObj.setGemPpstime(rootObj.getGemPpstime());
+      tdsObj.setGemDiscarded(rootObj.getGemDiscarded());
+      tdsObj.setGemPrescaled(rootObj.getGemPrescaled());
+      tdsObj.setGemSent(rootObj.getGemSent());
 
       Int_t xz, yz, xy;
       rootObj.getAcdMap(xz,yz,xy);
-      tdsObj->setAcdMap(xz,yz,xy);
+      tdsObj.setAcdMap(xz,yz,xy);
       
       Int_t iAcd;
       const Int_t* statusRoot = rootObj.getAcdStatus();
       for (iAcd=0; iAcd < 16; iAcd++) {
-          tdsObj->setAcdStatus(iAcd, statusRoot[iAcd]);
+          tdsObj.setAcdStatus(iAcd, statusRoot[iAcd]);
       }
 
-      tdsObj->setVetoWord(rootObj.getVetoWord());
+      tdsObj.setVetoWord(rootObj.getVetoWord());
     
-      tdsObj->setLayers(rootObj.getLayerCol());
+      tdsObj.setLayers(rootObj.getLayerCol());
 
-      tdsObj->setSeparation(rootObj.getSeparation());
+      tdsObj.setSeparation(rootObj.getSeparation());
 
       //Ask Richard to provide suitable set method using floats rather than int
       //tdsObj->setLayerEnergy(rootObj.getLayerEnergy());
 
-      tdsObj->setCapture(rootObj.getXcapture(), rootObj.getYcapture());
+      tdsObj.setCapture(rootObj.getXcapture(), rootObj.getYcapture());
 
-      tdsObj->setXY(rootObj.getXY00(), rootObj.getXY11(), rootObj.getXY22(),
+      tdsObj.setXY(rootObj.getXY00(), rootObj.getXY11(), rootObj.getXY22(),
                    rootObj.getXY33());
 
-      tdsObj->setTmsk(rootObj.getTmsk());
+      tdsObj.setTmsk(rootObj.getTmsk());
 
 
 

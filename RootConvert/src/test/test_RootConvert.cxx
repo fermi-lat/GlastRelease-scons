@@ -4,6 +4,7 @@
 #include <RootConvert/Recon/CalEventEnergyConvert.h>
 #include <RootConvert/Recon/CalXtalRecDataConvert.h>
 #include <RootConvert/Recon/AcdReconConvert.h>
+#include <RootConvert/Digi/OnboardFilterConvert.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TRandom.h"
 #include <iostream>
@@ -76,6 +77,8 @@ int main( int /* argc */, char ** /* argv */ ) {
     result = result && checkElements<Event::CalXtalRecData,CalXtalRecData>(randNum) ;
     result = result && checkTopObject<Event::AcdRecon,AcdRecon>(randNum) ;
     
+    result = result && checkTopObject<OnboardFilterTds::FilterStatus, FilterStatus>(randNum);
+
     if (result) {
       std::cout<<"RootConvert test succeeded"<<std::endl ;
       return 0 ;
