@@ -782,7 +782,7 @@ StatusCode reconRootReaderAlg::readCalRecon() {
         }
     }
     
-    SmartDataPtr<Event::CalXtalRecCol> xtalRecColTds(eventSvc(),EventModel::CalRecon::CalClusterCol);
+    SmartDataPtr<Event::CalXtalRecCol> xtalRecColTds(eventSvc(),EventModel::CalRecon::CalXtalRecCol);
     if (xtalRecColTds){
         log << MSG::INFO << "XtalRecCol data is already on the TDS" << endreq;
     } else {
