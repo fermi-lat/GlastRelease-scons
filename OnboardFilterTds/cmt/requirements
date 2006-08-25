@@ -1,5 +1,5 @@
 package OnboardFilterTds
-version v0r1
+version v0r1p1
 # $Header$
 
 author Richard Hughes <HUGHES@mps.ohio-state.edu>
@@ -17,13 +17,13 @@ private
 
 apply_pattern package_headers
 
-#macro OnboardFilter_cppflags "" \
-#   Linux "-DGLEAM -D__i386 -DEFC_FILTER -DMSG_ST -D__unix__  -DWUT_IMPLEMENTATION_PX "\
-#   WIN32 " /D GLEAM /D__i386 /DEFC_FILTER  /D_WIN32"
+macro OnboardFilterTds_cppflags "" \
+   Linux "-DGLEAM -D__i386 -DEFC_FILTER -DMSG_ST -D__unix__  -DWUT_IMPLEMENTATION_PX "\
+   WIN32 " /D GLEAM /D__i386 /DEFC_FILTER  /D_WIN32"
 
-#macro OnboardFilter_cflags $(OnboardFilter_cppflags)
+macro OnboardFilterTds_cflags $(OnboardFilterTds_cppflags)
 
-#macro_append cpplinkflags "" Linux " -ldl -lpthread " WIN32 ""
+macro_append cpplinkflags "" Linux " -ldl -lpthread " WIN32 ""
 
 library OnboardFilterTds \
  ${OnboardFilterTds_headers} \
