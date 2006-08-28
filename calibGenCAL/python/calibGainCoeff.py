@@ -83,8 +83,8 @@ if __name__ == '__main__':
                     # HEX8 only
                     rng = 2
 
-                    cgOnSpline = adc2dacOn[(twr,lyr,online_face,col,rng)]
-                    cgOffSpline = adc2dacOff[(twr,lyr,online_face,col,rng)]
+                    cgOnSpline = adc2dacOn[(twr,row,online_face,col,rng)]
+                    cgOffSpline = adc2dacOff[(twr,row,online_face,col,rng)]
 
                     # evaluate both splines @ 1500 ADC units
                     onVal = cgOnSpline.Eval(1500)
