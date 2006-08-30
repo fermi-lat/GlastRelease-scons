@@ -1,5 +1,5 @@
 package RootConvert
-version v1r19
+version v1r19p1
 
 author David Chamont <chamont@poly.in2p3.fr>
 author Heather Kelly <heather@slac.stanford.edu>
@@ -19,6 +19,11 @@ apply_pattern shared_library
 private
 
 apply_pattern package_headers
+
+# For OnboardFilterTds use of IExternal/obf and the Endianness.h file
+macro_append RootConvert_cppflags "" \
+   WIN32 " /D GLEAM /D__i386 /DEFC_FILTER  /D_WIN32"
+
 
 macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Utilities/*.h \
