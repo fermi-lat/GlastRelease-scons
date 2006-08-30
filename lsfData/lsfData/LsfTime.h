@@ -52,6 +52,8 @@ namespace lsfData {
     }
    
     void print() const {
+      printf(" trigger:  tics = 0x%08X (%u)\n", m_timeTicks, m_timeTicks );
+      m_timeHack.print(" ");
         printf(" current:  secs = %u\n", m_current.timeSecs());
         m_current.timeHack().print(" ");
         printf(" previous:  secs = %u\n", m_previous.timeSecs());
