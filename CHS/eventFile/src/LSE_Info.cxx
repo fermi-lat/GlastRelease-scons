@@ -19,6 +19,7 @@ namespace eventFile {
 
   void LCI_Info::dump( const char* pre, const char* post ) const
   {
+    LSE_Info::dump( "LSE_Info: ", "\n" );
     printf( "%sautoRange        = %s%s", pre, (autoRange) ? "True" : "False", post );
     printf( "%szeroSupression   = %s%s", pre, (zeroSupression) ? "True" : "False", post );
     printf( "%speriodicPrescale = %10d%s", pre, periodicPrescale, post );
