@@ -85,12 +85,12 @@ def build_inl_splines(data, twrSet):
                         dacArray = array.array('d', dac[rng][twr,row,online_face,col,0:length].tolist())
                         adcArray = array.array('d', adc[rng][twr,row,online_face,col,0:length].tolist())
 
-                        a2dSpline = ROOT.TSpline3("%d_%d_%d_%d_adc2dac"%(twr,lyr,col,face),
+                        a2dSpline = ROOT.TSpline3("%d_%d_%d_%d_%d_adc2dac"%(twr,lyr,col,face,rng),
                                                   adcArray,
                                                   dacArray,
                                                   length)
 
-                        d2aSpline = ROOT.TSpline3("%d_%d_%d_%d_dac2adc"%(twr,lyr,col,face),
+                        d2aSpline = ROOT.TSpline3("%d_%d_%d_%d_%d_dac2adc"%(twr,lyr,col,face,rng),
                                                   dacArray,
                                                   adcArray,
                                                   length)
