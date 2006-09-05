@@ -80,6 +80,8 @@ StatusCode CalClustersAlg::initialize()
 {
     MsgStream log(msgSvc(), name()) ;
     StatusCode sc = StatusCode::SUCCESS ;
+
+    setProperties();
     
     if (service("CalReconSvc",m_calReconSvc,true).isFailure())
     {
