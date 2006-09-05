@@ -225,9 +225,9 @@ if __name__ == '__main__':
     # get environment settings
 
     try:
-        calibUtilRoot = os.environ['CALIBUTILROOT']
+        calibUtilRoot = os.environ['CALIBGENCALROOT']
     except KeyError:
-        log.error('CALIBUTILROOT must be defined')
+        log.error('CALIBGENCALROOT must be defined')
         sys.exit(1)
 
     # check command line
