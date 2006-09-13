@@ -102,6 +102,8 @@ namespace rdbModel {
 
   FieldVal* Row::find(std::string colname) {
     unsigned nField = m_fields.size();
+    if (!nField) return 0;
+
     unsigned minI = 0;
     unsigned maxI = nField;
 
