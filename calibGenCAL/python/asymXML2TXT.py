@@ -82,8 +82,6 @@ if __name__ == '__main__':
     #     6 = NsmallPbigSigs value
     #     7 = PsmallNbigSigs value
 
-    #print asymData
-    #sys.exit()
     # print out txt file.
     for twr in towers:
         for lyr in range(8):
