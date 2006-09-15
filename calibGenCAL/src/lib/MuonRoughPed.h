@@ -1,21 +1,19 @@
-#ifndef MuonPed_h
-#define MuonPed_h
+#ifndef MuonRoughPed_h
+#define MuonRoughPed_h
 // $Header$
 /** @file
     @author Zachary Fewtrell
- */
-
-
+*/
 
 // LOCAL INCLUDES
-#include "RoughPed.h"
-#include "CalPed.h"
 #include "CGCUtil.h"
+#include "RoughPed.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
+
 
 // EXTLIB INCLUDES
 #include "TH1S.h"
@@ -23,61 +21,58 @@
 
 // STD INCLUDES
 
-
 using namespace std;
 using namespace CalUtil;
 
-/** \brief \brief Represents GLAST Cal ADC pedestal calibrations
+/** \brief Represents GLAST Cal LEX8 pedestals calibrations.  'rough' means
+    that non-pedestal hits have not yet been cut.
 
     contains read & write methods to various file formats & code
     to calculate calibrations from digi ROOT event files
-
     @author Zachary Fewtrell
 */
-class MuonPed {
+class MuonRoughPed {
  public:
-  MuonPed(ostream &ostrm = cout);
- 
-  /// Fill muonpedhist histograms w/ nEvt event data
-  /// \param rootFilename.  input digi event file
-  /// \param histFilename.  output root file for histograms.
-  void fillHists(unsigned nEntries, 
-                 const vector<string> &rootFileList, 
-                 const RoughPed &roughPeds,
-                 bool periodicTrigger); 
-
-  /// Fit muonpedhist[]'s, assign means to m_calMuonPed
-  void fitHists(CalPed &peds); 
-
-  /// skip evenmt processing and load histograms from previous run
+  MuonRoughPed(ostream &ostrm = cout);
+  /// load histograms from ROOT file
   void loadHists(const string &filename);
 
+  void fillHists(unsigned nEntries, 
+                 const vector<string> &rootFileList,
+                 bool periodicTrigger) ;
+
+
+  /// Fit roughpedhist[]'s, assign means to m_calRoughPed
+  void fitHists(RoughPed &roughPeds); 
+  /// construct ouptut filename for given path,extension & input filename
   static void genOutputFilename(const string outputDir,
                                 const string &inFilename,
                                 const string &ext,
                                 string &outFilename) {
     CGCUtil::genOutputFilename(outputDir,
-                               "muonPeds",
+                               "roughPeds",
                                inFilename,
                                ext,
                                outFilename);
   }
 
 
-
-
  private:
-  /// allocate & create muon pedestal histograms & pointer array
+
+  /// allocate & create rough pedestal histograms & pointer array
   void initHists(); 
 
   /// count min number of entries in all enable histograms
   unsigned getMinEntries();
 
-  /// list of histograms for 'muon' pedestals
-  CalVec<RngIdx, TH1S*> m_histograms; 
+  /// list of histograms for 'rough' pedestals
+  CalVec<FaceIdx, TH1S*> m_histograms; 
+
+  /// log output to here.
   ostream &m_ostrm;
 
-  static string genHistName(RngIdx rngIdx);
+  /// generate histogram name string
+  static string genHistName(FaceIdx faceIdx);
 };
 
 #endif

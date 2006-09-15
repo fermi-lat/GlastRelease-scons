@@ -83,7 +83,7 @@ class RootFileAnalysis {
   TObjArray   m_chainArr;
 
   /// current event number
-  Int_t m_nextEvt;
+  unsigned m_nextEvt;
 
   /// log to here
   ostream &m_ostrm;

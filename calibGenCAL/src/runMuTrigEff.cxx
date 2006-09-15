@@ -4,6 +4,7 @@
 */
 
 // LOCAL INCLUDES
+#include "lib/CalPed.h"
 #include "lib/MuonPed.h"
 #include "lib/MuTrig.h"
 #include "lib/CIDAC2ADC.h"
@@ -95,7 +96,7 @@ int main(int argc, char **argv) {
                                "txt",
                                pedTXTFile);
 
-    MuonPed peds(logStrm);
+    CalPed peds;
     logStrm << __FILE__ << ": reading in muon pedestal file: " << pedTXTFile << endl;
     peds.readTXT(pedTXTFile);
 
