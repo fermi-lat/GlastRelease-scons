@@ -78,6 +78,8 @@ for rngData in inlADC:
 # write new output file
 outFile = calCalibXML.calIntNonlinCalibXML(outPath, calCalibXML.MODE_CREATE)
 outFile.write(inlLen, inlDAC, newADC, tems=twrSet)
+outFile.close()
+
 calCalibXML.insertDTD(outPath, dtdPath)
 
 sys.exit(0)
