@@ -1045,7 +1045,7 @@ StatusCode OnboardFilter::execute()
     newStatus->setTkr(TDS_variables.tkr);
     newStatus->setLayers(TDS_layers);
     newStatus->setTmsk(TDS_variables.tmsk);
-    printf("newStatus set; tmsk %x\n",TDS_variables.tmsk);
+    //printf("newStatus set; tmsk %x\n",TDS_variables.tmsk);
     newStatus->setLogData(TDS_variables.numLogsHit,TDS_variables.logData);
     
     storeHits(hits);
