@@ -23,7 +23,6 @@ import logging
 import zachUtil
 import array
 import Numeric
-import pdb
 
 usage = "Usage: python inlPedSubtract.py <input_xml> <output_xml>"
 
@@ -62,8 +61,6 @@ inl = inlFile.read()
 
 (inlLen, inlDAC, inlADC) = inl
 
-pdb.set_trace()
-
 # from calCalibXML doc
 # adcData -   A list of 4 elements, each a reference to a Numeric
 # array of ADC values. The shape of each array is
@@ -74,7 +71,6 @@ pdb.set_trace()
 
 # subtract 1st point from each ADC list
 newADC = []
-#print inlLen
 for rngData in inlADC:
     rngData = rngData - Numeric.reshape(rngData[...,0],(16,8,2,12,1))
     newADC.append(rngData)
