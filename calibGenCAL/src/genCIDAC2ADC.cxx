@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
         
     //-- COMMAND LINE --//
     if (argc != 2) {
-      cout << __FILE__ << ": " << usage_str << endl;
+      cout << __FILE__ << ": Usage: " << usage_str << endl;
       return -1;
     }
 
