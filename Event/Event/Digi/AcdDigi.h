@@ -82,6 +82,12 @@ namespace Event {
             m_error[0] = errorVals[0]; m_error[1] = errorVals[1];
             m_error[2] = errorVals[2]; m_error[3] = errorVals[3];
         }
+
+	/// Set the ranges.  This is used by the AcdDigiAlg to hack in the correct 
+        /// ranges in simulated data
+	void setRanges(Range *rangeVals) {
+	  m_range[0] = rangeVals[0]; m_range[1] = rangeVals[1];
+	}
         
         /// Retrieve reference to class definition structure
         virtual const CLID& clID() const   { return AcdDigi::classID(); }
