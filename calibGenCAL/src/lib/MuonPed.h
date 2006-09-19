@@ -8,7 +8,6 @@
 
 
 // LOCAL INCLUDES
-#include "RoughPed.h"
 #include "CalPed.h"
 #include "CGCUtil.h"
 
@@ -43,7 +42,7 @@ class MuonPed {
   /// \param histFilename.  output root file for histograms.
   void fillHists(unsigned nEntries, 
                  const vector<string> &rootFileList, 
-                 const RoughPed &roughPeds,
+                 const CalPed *roughPeds,
                  bool periodicTrigger); 
 
   /// Fit muonpedhist[]'s, assign means to m_calMuonPed
