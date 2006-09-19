@@ -40,6 +40,10 @@ void CalAsym::writeTXT(const string &filename) const{
     for (AsymType asymType; asymType.isValid(); asymType++) {
       // per point along curve
       for (unsigned short i = 0; i < N_ASYM_PTS; i++) {
+        // skip empty channels
+        if (m_asym[asymType][xtalIdx].size() != N_ASYM_PTS)
+          continue;
+        
         outfile << twr
                 << " " << lyr 
                 << " " << col
