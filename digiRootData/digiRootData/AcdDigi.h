@@ -159,6 +159,8 @@ public:
     const char* getTileName() const { return m_tileName.Data(); };
 
     /// Returns the range of this PMT (low or high) (currently real data only)
+    /// WARNING: many versions ROOT always draw this as '0' b/c they don't handle
+    /// enums correctly in the Draw() function
     Range getRange(AcdDigi::PmtId pmt) const;
 
     /// Returns the odd parity bit for the requested PMT (real data only)
@@ -167,6 +169,9 @@ public:
     /// Returns Header parity bit aka CMD/Data error from AEM header (real data only)
     ParityError getHeaderParityError(AcdDigi::PmtId pmt) const;
     /*@}*/
+
+    /// Returns True if pmt was read out in low range
+    Bool_t isLowRange(AcdDigi::PmtId pmt) const { return getRange(pmt) == LOW; }
 
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
