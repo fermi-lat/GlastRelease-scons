@@ -39,24 +39,13 @@ class IntNonlin {
   /// process digi root event file
   /// \param diode specify whether to analyze HE or LE circuits
   void readRootData(const string &rootFileName,
+                    CIDAC2ADC &adcMeans,
                     DiodeNum diode,
                     bool bcastMode); 
   
   /// smooth raw adc means for use in offline spline calibration
-  void genSplinePts(CIDAC2ADC &cidac2adc); 
+  void genSplinePts(CIDAC2ADC &adcMeans, CIDAC2ADC &cidac2adc); 
 
-  /// write pre-smoothed values to txt file
-  void writeADCMeans(const string &filename) const;
-
-  void readADCMeans(const string &filename);
-
-  /// retrieve mean adc value for given CI DAC level.
-  /// \return INVALID_ADC on error.
-  double getADCMean(RngIdx rngIdx, unsigned short dacIdx) const {
-    if (m_adcMean[rngIdx].size() < dacIdx)
-      return CIDAC2ADC::INVALID_ADC;
-    return m_adcMean[rngIdx][dacIdx];
-  }
   static void genOutputFilename(const string outputDir,
                                 const string &inFilename,
                                 const string &ext,
@@ -70,9 +59,6 @@ class IntNonlin {
 
 
  private:
-  /// store mean ADC for each channel / DAC setting
-  CalVec<RngIdx, vector<float> >  m_adcMean;
-
   ostream &m_ostrm;
 
 
