@@ -333,6 +333,8 @@ void MuonMPD::fitHists(CalMPD &calMPD) {
     if (!m_dacLLHists[xtalIdx])
       continue;
     // retrieve Lrg diode DAC histogram
+    if (!m_dacLLHists[xtalIdx])
+        continue;
     TH1S& histLL = *m_dacLLHists[xtalIdx];
     // skip empty histograms
     if (histLL.GetEntries() == 0) 
