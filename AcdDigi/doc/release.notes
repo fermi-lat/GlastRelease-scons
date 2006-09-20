@@ -2,7 +2,9 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
-
+ v1r18   19-Sep-2006 EAC Added support for high range in AcdDigiAlg.  For now
+         this only uses the nominal gain ratio or 100:1 between the ranges and
+         continues to ignore pedestal values.
  v1r17   11-May-2006 HMK Update acdDigi.xml with Alex's new light yields for
          tiles from SLAC
  v1r16   10-May-2006 HMK Update AcdDigiAlg to handle bent tiles in the

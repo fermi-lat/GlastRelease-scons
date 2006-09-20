@@ -258,10 +258,26 @@ void AcdDigiUtil::applyGains(const idents::AcdId &id,
 
 
 
-unsigned short AcdDigiUtil::convertMipsToPha(double mips, double mipsToFullScale) {
-    
-    return static_cast<unsigned short>(std::min((double)floor(mips / mipsToFullScale * m_full_scale), (double)m_full_scale));
-    
+unsigned short AcdDigiUtil::convertMipsToPha(double mips, double mipsToFullScale,
+					     Event::AcdDigi::Range& range) {
+     
+  double fractionFullScale = mips / mipsToFullScale;
+  unsigned short returnValue(0);
+  if ( fractionFullScale < 1 ) { 
+    // low range, return the value
+    range = Event::AcdDigi::LOW;
+    // convert the fraction of the full scale into PHA (multiply by full scale value)
+    returnValue = static_cast<unsigned short>(floor(fractionFullScale * m_full_scale));
+  } else {
+    range = Event::AcdDigi::HIGH;
+    // high range, first subtract off the low-range full scale
+    fractionFullScale -= 1.;
+    // gain factor is 100 : 1, so divide by 100
+    fractionFullScale /= 100.;
+    // convert the fraction of the full scale into PHA (multiply by full scale value)
+    returnValue = static_cast<unsigned short>(floor(fractionFullScale * m_full_scale));    
+  }
+  return returnValue;
 }
 
 bool AcdDigiUtil::compareVolIds(const idents::VolumeIdentifier& tileId, 

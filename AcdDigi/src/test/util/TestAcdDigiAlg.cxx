@@ -117,8 +117,10 @@ StatusCode TestAcdDigiAlg::execute() {
     log << MSG::DEBUG << "mipsToFullScaleA " << mipsToFullScaleA << endreq;
     log << MSG::DEBUG << "mipsToFullScaleB " << mipsToFullScaleB << endreq;
 
-    unsigned short pmtA_pha = m_util.convertMipsToPha(pmtA_mips, mipsToFullScaleA);
-    unsigned short pmtB_pha = m_util.convertMipsToPha(pmtB_mips, mipsToFullScaleB);
+    Event::AcdDigi::Range rangeArr[2] = { Event::AcdDigi::LOW, Event::AcdDigi::LOW };
+
+    unsigned short pmtA_pha = m_util.convertMipsToPha(pmtA_mips, mipsToFullScaleA, rangeArr[0]);
+    unsigned short pmtB_pha = m_util.convertMipsToPha(pmtB_mips, mipsToFullScaleB, rangeArr[1]);
 
     log << MSG::DEBUG << "pmtA_pha " << pmtA_pha << endreq;
     log << MSG::DEBUG << "pmtB_pha " << pmtB_pha << endreq;

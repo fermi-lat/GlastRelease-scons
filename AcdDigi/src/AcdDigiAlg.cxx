@@ -334,6 +334,7 @@ StatusCode AcdDigiAlg::execute() {
         bool lowArr[2] = { false, false };
         bool vetoArr[2] = { false, false };
         bool highArr[2] = { false, false };
+	Event::AcdDigi::Range rangeArr[2] = { Event::AcdDigi::LOW, Event::AcdDigi::LOW };
         
         // Set the discriminators if above threshold
         if (m_pmtA_phaMipsMap[tileId] > m_low_threshold_mips) lowArr[0] = true;
@@ -350,20 +351,24 @@ StatusCode AcdDigiAlg::execute() {
             highArr[1] = true;
 
         // Now convert MIPs into PHA values for each PMT
-        unsigned short pmtA_pha = util.convertMipsToPha(
-                      m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId]);
-        unsigned short pmtB_pha = util.convertMipsToPha(
-                      m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId]);
+
+        unsigned short pmtA_pha = util.convertMipsToPha(m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId],
+							rangeArr[0]);
+        unsigned short pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId],
+							rangeArr[1]);
 
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
 
-        doneMap[tileId] = true;
+        doneMap[tileId] = true;	
 
-        digiCol->push_back(
-            new AcdDigi(
-            tileId, volId,
-            m_energyDepMap[tileId], phaArr, 
-            vetoArr, lowArr, highArr) );   
+	AcdDigi* aDigi = new AcdDigi(tileId, volId,
+				     m_energyDepMap[tileId], phaArr, 
+				     vetoArr, lowArr, highArr);
+
+	std::cout << "making ranges " << rangeArr[0] << ' ' << rangeArr[1] << std::endl;
+	aDigi->setRanges(rangeArr);
+        digiCol->push_back( aDigi );
+
     }
 
     clear();

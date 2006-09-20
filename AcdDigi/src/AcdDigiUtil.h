@@ -72,7 +72,8 @@ public:
     
     /// Converts MIPs to a PHA value - if the number of MIPs is offscale, returns
     /// the fullscale value
-    static unsigned short convertMipsToPha(double mips, double mipsToFullScale);
+    static unsigned short convertMipsToPha(double mips, double mipsToFullScale, 
+					   Event::AcdDigi::Range& range);
 
     /// Returns a value sampled from a Poisson distribution
     /// @param pmtPhotoElectrons is the mean of the Poisson distribution
