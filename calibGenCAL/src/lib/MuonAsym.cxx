@@ -22,14 +22,13 @@ using namespace std;
 using namespace CGCUtil;
 
 MuonAsym::MuonAsym(ostream &ostrm) :
+  m_histograms(AsymType::N_VALS),
   m_ostrm(ostrm)
 {
 }
 
 
 void MuonAsym::initHists(){
-  m_histograms.resize(AsymType::N_VALS);
-
   // fill in min & max histogram levels.
   CalArray<AsymType, float> asymMin;
   CalArray<AsymType, float> asymMax;
@@ -272,7 +271,6 @@ void MuonAsym::fitHists(CalAsym &calAsym) {
 }
 
 void MuonAsym::loadHists(const string &filename) {
-  m_histograms.resize(AsymType::N_VALS);
   TFile histFile(filename.c_str(), "READ");
 
   for (AsymType asymType; asymType.isValid(); asymType++)
