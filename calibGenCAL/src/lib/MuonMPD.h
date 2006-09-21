@@ -67,7 +67,7 @@ class MuonMPD {
                                outFilename);
   }
 
-  static void MuonMPD::writeADC2NRG(const string &filename,
+  static void writeADC2NRG(const string &filename,
                                     const CalAsym &asym,
                                     const CIDAC2ADC &dac2adc,
                                     const CalMPD &mpd);
