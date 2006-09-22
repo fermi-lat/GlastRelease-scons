@@ -16,6 +16,7 @@ __credits__   = "NRL code 7650"
 
 
 import sys, os
+import stat
 import logging
 import string
 import ConfigParser
@@ -98,6 +99,7 @@ cmdsh.write("#! /bin/sh\n")
 cmdsh.write("set -v\n")
 cmdsh.write("PYTHONPATH=${CALIBGENCALROOT}/python/lib:${ROOTSYS}/bin:${PYTHONPATH}\n")
 cmdsh.write("export PYTHONPATH\n")
+cmdsh.write('export -n DISPLAY\n')
 
 CALIBGENCALROOT = os.environ["CALIBGENCALROOT"]
 
@@ -466,7 +468,7 @@ for idet in detsections:
 
 
 
-# Close batch file and end
+# Close batch files
 cmdbat.write("endlocal\n")
 cmdbat.write("goto :EXIT\n")
 cmdbat.write(":ERROR\n")
@@ -474,4 +476,10 @@ cmdbat.write("echo ERROR: CALIBGENCALROOT must be defined\n")
 cmdbat.write(":EXIT\n")
 cmdbat.close()
 cmdsh.close()
+
+# fixup permissions on UNIX sh script
+
+fs = os.stat("run_"+fileroot+".sh")
+os.chmod("run_"+fileroot+".sh", (fs.st_mode | stat.S_IXUSR))
+
 sys.exit(0)
