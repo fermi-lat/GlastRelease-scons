@@ -75,6 +75,8 @@ private:
 	float EvtECalTrackAngle;
     float EvtEVtxAngle;
     float EvtEVtxDoca;
+    //test
+    //char  EvtEvtNum[20];
 
     IValsTool* m_pMcTool;
     IValsTool* m_pGltTool;
@@ -297,6 +299,9 @@ NOTE
 
     addItem("EvtEVtxAngle",     &EvtEVtxAngle);
     addItem("EvtEVtxDoca",      &EvtEVtxDoca);
+ 
+    //test
+    //addItem("EvtEvtNum",        EvtEvtNum);
 
     zeroVals();
 
@@ -324,6 +329,11 @@ StatusCode EvtValsTool::calculate()
     if(header) {
         EvtRun         = header->run();
         EvtEventId     = header->event();
+        //test
+        /*
+        if (EvtEventId%2==0) sprintf(EvtEvtNum, "%i" , EvtEventId);
+        //std::cout << "Event number: " << EvtEvtNum << std::endl;
+        */
         EvtElapsedTime = header->time();
         EvtLiveTime    = header->livetime();
     }

@@ -81,6 +81,8 @@ public:
             const int& value) const =0;
         virtual Visitor::eVisitorRet analysisValue(std::string varName,
             const unsigned int& value) const =0;
+        virtual Visitor::eVisitorRet analysisValue(std::string varName,
+            const char* value) const =0;
     }; 
     
     
