@@ -19,6 +19,7 @@
 
 #include "commonData.h"
 
+
 #include <vector>
 #include <algorithm>
 
@@ -38,6 +39,10 @@
 #include "TSystem.h"
 #include "TFile.h"
 #include "facilities/Util.h"
+
+
+#include "RootConvert/Utilities/RootReaderUtil.h"
+
 
 //forward declarations
 template <class TYPE> class SvcFactory;
@@ -266,19 +271,13 @@ bool RootIoSvc::setRootFile(const char *mc, const char *digi, const char *rec) {
     // Check that these files exist
     // blank, skip - since that means we just won't read from that type of file
     if (!mcFile.empty()) {
-        TFile f(mc);
-        if (!f.IsOpen()) return false;
-        f.Close();
+        if (!RootPersistence::fileExists(mcFile)) return false;
     }
     if (!digiFile.empty()) {
-       TFile f(digi);
-        if (!f.IsOpen()) return false;
-        f.Close();
+        if (!RootPersistence::fileExists(digiFile)) return false;
     }
     if (!reconFile.empty()) {
-        TFile f(rec);
-        if (!f.IsOpen()) return false;
-        f.Close();
+        if (!RootPersistence::fileExists(reconFile)) return false;
     }
 
     m_chainCol.clear(); // clear out TTrees from old files
