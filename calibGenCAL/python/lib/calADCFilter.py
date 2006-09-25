@@ -133,22 +133,22 @@ class calADCFilter:
                                              (tem, calConstant.CROW[row], calConstant.CPM[end],
                                               fe, calConstant.CRNG[erng]))
 
-                            fineData = outData[erng,tem,row,end,fe,0:64]
+                            #fineData = outData[erng,tem,row,end,fe,0:64]
                             coarseData = outData[erng,tem,row,end,fe,64:128]
 
-                            self.__floor(fineData)
+                            #self.__floor(fineData)
                             self.__floor(coarseData)
 
                             self.__saturateULD(coarseData)                            
 
-                            self.__restore(fineData)
+                            #self.__restore(fineData)
                             self.__restore(coarseData)                    
 
-                            self.__filter(fineData)
+                            #self.__filter(fineData)
                             self.__filter(coarseData)
 
                             if self.__smoothing:
-                                self.__smooth(fineData)
+                                #self.__smooth(fineData)
                                 self.__smooth(coarseData)                            
 
 

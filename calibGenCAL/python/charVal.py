@@ -224,40 +224,7 @@ def uldVal(data):
                 for fe in range(calConstant.NUM_FE):
                     for erng in range(3): 
 
-                        fineData = data[erng, tem, row, end, fe, 0:64]
-                        coarseData = data[erng, tem, row, end, fe, 64:128]                    
-
-                        # fit FINE range data                    
-                    
-                        z = Numeric.nonzero(fineData)
-                        y = Numeric.take(fineData, z)
-                        x = Numeric.take(x0, z)
-                        p0 = (20.0, -200.0)
-                        fkw = {'x': x, 'y' : y}
-
-                        if len(x) < 3:
-                            log.error('Too little data: %d,%s%s,%d,%s,FINE', tem, calConstant.CROW[row],
-                                      calConstant.CPM[end], fe, calConstant.CRNG[erng])
-                            valStatus = 1
-                        else:
-
-                            fit = mpfit.mpfit(residuals, p0, functkw = fkw, parinfo = pinfo, quiet = 1)
-                            if fit.status <= 0:
-                                log.error('mpfit error - %s', fit.errmsg)
-                                sys.exit(1)
-                            dnorm = (fit.fnorm / len(x))
-                            errData[0].append(dnorm)
-                            log.debug("%d,%s%s,%d,%s,FINE: %0.1f %0.1f %0.2f", tem, calConstant.CROW[row],
-                                calConstant.CPM[end], fe, calConstant.CRNG[erng], fit.params[0], fit.params[1], dnorm)
-
-                            if dnorm > dnormWarnLimit:
-                                if dnorm > dnormErrLimit:
-                                    log.error('dnorm %0.2f > %0.2f for %d,%s%s,%d,%s,FINE', dnorm, dnormErrLimit, tem,
-                                          calConstant.CROW[row], calConstant.CPM[end], fe, calConstant.CRNG[erng])
-                                    valStatus = 1
-                                else:
-                                    log.warning('dnorm %0.2f > %0.2f for %d,%s%s,%d,%s,FINE', dnorm, dnormWarnLimit, tem,
-                                          calConstant.CROW[row], calConstant.CPM[end], fe, calConstant.CRNG[erng])
+                        coarseData = data[erng, tem, row, end, fe, 64:128]
                                           
                         # fit coarse range data
 

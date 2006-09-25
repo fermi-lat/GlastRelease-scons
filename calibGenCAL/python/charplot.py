@@ -227,38 +227,6 @@ def plotULD(rawData, filterData, info, twrs, rawName, filterName):
 
                     for erng in range(3):                    
 
-                        # plot fine fit data
-
-                        fineData = filterData[erng, tem, layer, end, fe, 0:64]
-                        z = Numeric.nonzero(fineData)
-                        yn = Numeric.take(fineData, z)
-                        xn = Numeric.take(x0, z)
-                        
-                        p0 = (20.0, -200.0)
-                        fkw = {'x': xn, 'y' : yn}
-
-                        fit = mpfit.mpfit(residuals, p0, functkw = fkw, parinfo = pinfo, quiet = 1)
-                        if fit.status <= 0:
-                            log.warning('mpfit error - %s', fit.errmsg)
-                        else:
-                            a = fit.params[0]
-                            b = fit.params[1]
-                            x = array.array('f')
-                            y = array.array('f')
-                            for dac in range(0, 64):
-                                adc = linear(a, b, dac)
-                                if adc < 0.0:
-                                    continue
-                                x.append(dac)
-                                y.append(adc)
-
-                            g = ROOT.TGraph(len(x), x, y)
-
-                            g.SetLineColor(4)
-                            g.SetLineStyle(2)
-                            g.SetLineWidth(2)
-                            lineGraph.append(g)
-
                         # plot coarse fit data
 
                         coarseData = filterData[erng, tem, layer, end, fe, 64:128]
