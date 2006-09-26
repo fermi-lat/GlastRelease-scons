@@ -210,6 +210,8 @@ def rootHists(errData, pedData, fileName):
 
 def calcError(pedData):
 
+    status = 0
+
     # check pedestal average values
     
     for tem in towers:
@@ -238,7 +240,6 @@ def calcError(pedData):
     # check pedestal sigma values
     
     errs = pedData[...,1]
-    status = 0
 
     for tem in towers:
         for row in range(calConstant.NUM_ROW):
