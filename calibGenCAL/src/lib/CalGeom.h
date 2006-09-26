@@ -13,7 +13,8 @@
 
 /** @file CalGeom.h
     @author Zachary Fewtrell
-    \brief 
+    \brief Static Cal Geometry data for use when 
+    Gleam facilities are not available.
 */
 
 namespace CalGeom {

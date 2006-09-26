@@ -27,6 +27,8 @@ RootFileAnalysis contains the following features...
 
 1) ability to read in one or more GLAST digi, recon and/or mc root files.
 2) ability to step/rewind through events in those files
+3) events are read / stepped in parallel so that digi/recon/mc trees are always 
+in sync.
 */
 class RootFileAnalysis {
   public :
@@ -34,7 +36,7 @@ class RootFileAnalysis {
        \param mcFilenames (set to NULL to disable MC ROOT Chain)
        \param digiFilenames (set to NULL to disable Digi ROOT Chain)
        \param reconFilenames (set to NULL to disable recon ROOT Chain)
-       \param ostrm optional logging stream
+       \param ostrm optional logging ostream
 
     */
     RootFileAnalysis(const std::vector<std::string> *mcFilenames,

@@ -24,8 +24,7 @@ class CIDAC2ADC;
 /** \brief Represents GLAST Cal Optical gain calibration constants
     (MeV <-> CIDAC)
 
-    contains read & write methods to various file formats & code
-    to calculate calibrations from digi ROOT event files
+    contains read & write methods to various file formats 
 
     @author Zachary Fewtrell
 */
@@ -36,11 +35,6 @@ class CalMPD {
   void writeTXT(const std::string &filename) const;
   
   void readTXT(const std::string &filename);
-
-  /// write ADC2MEV (4-range) factors to txt file
-  void writeADC2NRG(const std::string &filename,
-                    const CalAsym &asym,
-                    const CIDAC2ADC &dac2adc);
 
   float getMPD(CalUtil::XtalIdx xtalIdx, CalUtil::DiodeNum diode) const {
     return m_mpd[diode][xtalIdx];

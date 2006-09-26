@@ -24,8 +24,8 @@ class CIDAC2ADC;
 class CalDigi;
 
 
-/** \brief Accumulate crystal hits in single tower and summarize into information
-    which can be used for track determination.
+/** \brief Accumulate crystal hits in single tower and summarize into 
+    information which can be used for track determination.
     @author fewtrell
 */
 class TwrHodoscope {

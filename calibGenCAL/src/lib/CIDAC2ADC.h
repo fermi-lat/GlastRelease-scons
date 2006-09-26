@@ -21,8 +21,7 @@
 /** \brief Represents GLAST Cal CIDAC (Charge Injection DAC) <-> ADC 
     calibration constants
 
-    contains read & write methods to various file formats & code
-    to calculate calibrations from digi ROOT event files
+    contains read & write methods to various file formats 
 
     @author fewtrell
 */
@@ -81,7 +80,9 @@ class CIDAC2ADC {
   /// output DAC spline points
   CalUtil::CalVec<CalUtil::RngIdx, vector<float> >  m_splinePtsDAC;
 
-  CalUtil::CalVec<CalUtil::RngIdx, TSpline3*> m_splinesADC2DAC; 
+  /// store optional ROOT spline objects for spline evaluation
+  CalUtil::CalVec<CalUtil::RngIdx, TSpline3*> m_splinesADC2DAC;
+  /// store optional ROOT spline objects for spline evaluation
   CalUtil::CalVec<CalUtil::RngIdx, TSpline3*> m_splinesDAC2ADC; 
 };
 

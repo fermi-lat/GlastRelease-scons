@@ -21,10 +21,14 @@ class TH1S;
 class DigiEvent;
 class CalDigi;
 
-/** \brief \brief Represents GLAST Cal ADC pedestal calibrations
+/** \brief Algorithm class populates CalPed calibration object
+    by analyzing digi ROOT event files. 
 
-contains read & write methods to various file formats & code
-to calculate calibrations from digi ROOT event files
+    Supports extracting pedestals from the following trigger schemes
+    1 - Event data only 
+    2 - Periodic trigger 
+    3 - External trigger
+    
 
 @author Zachary Fewtrell
 */
