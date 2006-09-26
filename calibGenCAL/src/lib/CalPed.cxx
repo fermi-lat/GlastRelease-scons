@@ -1,7 +1,7 @@
 // $Header$
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "CalPed.h"
@@ -10,15 +10,13 @@
 // GLAST INCLUDES
 
 // EXTLIB INCLUDES
-#include "TF1.h"
-#include "TKey.h"
 
 // STD INCLUDES
-#include <sstream>
-#include <ostream>
 #include <fstream>
 
 using namespace CGCUtil;
+using namespace CalUtil;
+using namespace std;
 
 CalPed::CalPed() :
   m_peds(RngIdx::N_VALS, INVALID_PED),

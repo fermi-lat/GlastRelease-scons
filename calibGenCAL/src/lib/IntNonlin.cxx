@@ -4,23 +4,27 @@
 */
 
 // LOCAL INCLUDES
-#include "RootFileAnalysis.h"
 #include "IntNonlin.h"
+#include "RootFileAnalysis.h"
+#include "CIDAC2ADC.h"
+#include "CalPed.h"
 
 // GLAST INCLUDES
+#include "CalUtil/CalVec.h"
+#include "digiRootData/DigiEvent.h"
 
 // EXTLIB INCLUDES
+#include "TObjArray.h"
 #include "TH1S.h"
 #include "TProfile.h"
-#include "TGraph.h"
 #include "TF1.h"
-#include "TMultiGraph.h"
 
 // STD INCLUDES
 #include <sstream>
-#include <ostream>
 
 using namespace CGCUtil;
+using namespace CalUtil;
+using namespace std;
 
 static const float CIDAC_TEST_VALS[] = 
   {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,

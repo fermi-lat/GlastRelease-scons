@@ -5,18 +5,16 @@
 
 // LOCAL INCLUDES
 #include "CalMPD.h"
-#include "CGCUtil.h"
 
 // GLAST INCLUDES
 
 // EXTLIB INCLUDES
 
 // STD INCLUDES
-#include <sstream>
 #include <fstream>
 
 using namespace std;
-using namespace CGCUtil;
+using namespace CalUtil;
 
 CalMPD::CalMPD() :
   m_mpd(DiodeNum::N_VALS),
@@ -25,6 +23,7 @@ CalMPD::CalMPD() :
   for (DiodeNum diode; diode.isValid(); diode++)
     m_mpd[diode].fill(INVALID_MPD);
 }
+
 void CalMPD::writeTXT(const string &filename) const{
   ofstream outfile(filename.c_str());
 

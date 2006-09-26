@@ -5,20 +5,18 @@
 
 // LOCAL INCLUDES
 #include "CalAsym.h"
-#include "CGCUtil.h"
 
 // GLAST INCLUDES
 
 // EXTLIB INCLUDES
 
+
 // STD INCLUDES
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
-using namespace CGCUtil;
-
-const float CalAsym::CSI_LEN      = 326;
+using namespace CalUtil;
 
 CalAsym::CalAsym() :
   m_asym(AsymType::N_VALS),
@@ -140,10 +138,10 @@ void CalAsym::buildSplines(){
                                          pos, asym, N_ASYM_PTS+2);
         mySpline->SetName(name.str().c_str());
 
-//         cout << mySpline->GetName() << " ";
-//         for (unsigned short i = 0; i < N_ASYM_PTS+2; i++)
-//           cout << pos[i] << " " << asym[i] << " ";
-//         cout << endl;
+        //         cout << mySpline->GetName() << " ";
+        //         for (unsigned short i = 0; i < N_ASYM_PTS+2; i++)
+        //           cout << pos[i] << " " << asym[i] << " ";
+        //         cout << endl;
 
         m_p2aSplines[diode][xtalIdx] = mySpline;
       }

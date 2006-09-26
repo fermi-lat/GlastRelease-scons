@@ -9,6 +9,10 @@
 #include "lib/MuonAsym.h"
 #include "lib/MuonMPD.h"
 #include "lib/SimpleIniFile.h"
+#include "lib/CalPed.h"
+#include "lib/CalAsym.h"
+#include "lib/CIDAC2ADC.h"
+#include "lib/CalMPD.h"
 
 // GLAST INCLUDES
 

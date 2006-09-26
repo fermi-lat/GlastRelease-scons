@@ -6,6 +6,7 @@
 // LOCAL INCLUDES
 #include "lib/MuonPed.h"
 #include "lib/SimpleIniFile.h"
+#include "lib/CalPed.h"
 
 // GLAST INCLUDES
 
