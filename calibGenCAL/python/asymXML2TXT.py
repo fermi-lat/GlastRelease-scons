@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     if len(args) != 1:
         # should just be the one input file.
-        print "no input file specified: ", usage
+        print usage
         sys.exit(1)
 
     # retrieve commandline parms
