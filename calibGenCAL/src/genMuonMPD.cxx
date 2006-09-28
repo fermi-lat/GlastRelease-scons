@@ -1,5 +1,5 @@
 // $Header$
-/** @file
+/** @file Gen MevPerDAC calibrations from Muon event files
     @author Zachary Fewtrell
 */
 

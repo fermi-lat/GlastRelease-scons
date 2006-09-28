@@ -1,5 +1,5 @@
 // $Header$
-/** @file
+/** @file Gen CIDAC2ADC calibrations from singlex16 charge injection event files
     @author Zachary Fewtrell
 */
 

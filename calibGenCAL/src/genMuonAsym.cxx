@@ -1,6 +1,8 @@
 // $Header$
-/** @file
+/** @file generate Light Asymmetry calibrations from Muon event files
     @author Zachary Fewtrell
+
+    
 */
 
 // LOCAL INCLUDES
