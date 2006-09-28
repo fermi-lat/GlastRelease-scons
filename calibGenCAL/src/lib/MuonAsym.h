@@ -49,6 +49,10 @@ class MuonAsym {
   /// print histogram summary info to output stream
   void summarizeHists(ostream &ostrm=cout);
 
+  /// delete empty histograms
+  /// \note useful for data w/ < 16 Cal modules.
+  void trimHists();
+
   static void genOutputFilename(const string outputDir,
                                 const string &inFilename,
                                 const string &ext,

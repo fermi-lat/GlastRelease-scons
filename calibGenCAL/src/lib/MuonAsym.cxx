@@ -370,3 +370,13 @@ bool MuonAsym::passCutY(const TwrHodoscope &hscope) {
 
   return true;
 }
+
+void MuonAsym::trimHists() {
+  for (AsymType asymType; asymType.isValid(); asymType++)
+    for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++)
+      if (m_histograms[asymType][xtalIdx])
+        if (!m_histograms[asymType][xtalIdx]->GetEntries()) {
+          delete m_histograms[asymType][xtalIdx];
+          m_histograms[asymType][xtalIdx] = 0;
+        }
+}

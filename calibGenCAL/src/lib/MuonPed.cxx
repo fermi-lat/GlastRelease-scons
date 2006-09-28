@@ -323,3 +323,13 @@ void MuonPed::processHit(const CalDigi &calDigi) {
 
   }
 }
+
+void MuonPed::trimHists() {
+  for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) 
+    if (m_histograms[rngIdx])
+      if (!m_histograms[rngIdx]->GetEntries()) {
+        delete m_histograms[rngIdx];
+        m_histograms[rngIdx] = 0;
+      }
+
+}

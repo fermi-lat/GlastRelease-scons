@@ -167,6 +167,7 @@ int main(int argc, char **argv) {
                          rootFileList,
                          peds,
                          dac2adc);
+      muonAsym.trimHists();
     }
 
     muonAsym.summarizeHists(logStrm);

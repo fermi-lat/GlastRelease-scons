@@ -196,6 +196,7 @@ int main(int argc, char **argv) {
                         peds,
                         asym,
                         dac2adc);
+      muonMPD.trimHists();
     }
     
     logStrm << __FILE__ << ": fitting muon mpd histograms." << endl;

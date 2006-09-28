@@ -597,3 +597,26 @@ bool MuonMPD::passCutY(const TwrHodoscope &hscope) {
 
   return true;
 }
+
+void MuonMPD::trimHists() {
+  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
+    if (m_dacLLHists[xtalIdx])
+      if (!m_dacLLHists[xtalIdx]->GetEntries()) {
+        delete m_dacLLHists[xtalIdx];
+        m_dacLLHists[xtalIdx] = 0;
+      }
+
+    if (m_dacL2SHists[xtalIdx])
+      if (!m_dacL2SHists[xtalIdx]->GetEntries()) {
+        delete m_dacL2SHists[xtalIdx];
+        m_dacL2SHists[xtalIdx] = 0;
+      }
+
+   if (m_dacL2SSlopeProfs[xtalIdx])
+      if (!m_dacL2SSlopeProfs[xtalIdx]->GetEntries()) {
+        delete m_dacL2SSlopeProfs[xtalIdx];
+        m_dacL2SSlopeProfs[xtalIdx] = 0;
+      }
+ 
+  }
+}

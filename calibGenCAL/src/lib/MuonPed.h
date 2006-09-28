@@ -58,6 +58,11 @@ class MuonPed {
   /// skip evenmt processing and load histograms from previous run
   void loadHists(const std::string &filename);
 
+  /// delete empty histograms
+  /// \note useful for data w/ < 16 Cal modules.
+  void trimHists();
+
+
   static void genOutputFilename(const std::string outputDir,
                                 const std::string &inFilename,
                                 const std::string &ext,

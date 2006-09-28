@@ -130,6 +130,7 @@ int main(int argc, char **argv) {
                              rootFileList,
                              NULL,
                              trigCut);
+      muonRoughPed.trimHists();
       outputHistFile.Write();
     
       logStrm << __FILE__ << ": fitting rough pedestal histograms." << endl;
@@ -174,6 +175,7 @@ int main(int argc, char **argv) {
                       rootFileList, 
                       &roughPed, 
                       trigCut);
+      muPed.trimHists();
       outputHistFile.Write();
     
       logStrm << __FILE__ << ": fitting muon pedestal histograms." << endl;
