@@ -26,6 +26,7 @@
 
 #include "CLHEP/Random/Random.h"
 
+#include "astro/SkyDir.h"
 #include "flux/Flux.h"
 #include "flux/FluxMgr.h"
 #include "flux/rootplot.h"
@@ -97,10 +98,13 @@ public:
 
     /// name of the flux
     std::string fluxName()const;
-
+#if 0
     /// set the glast tilt angles for explicit, static rocking
     /// the angles correspond to a rotation about the x axis followed by the z.
     void setExplicitRockingAngles(double ang1, double ang2);
+#endif
+    /// set the pointing direction 
+    void setPointingDirection(const astro::SkyDir& dir);
 
     /// get the angular values of the satellite
     std::pair<double,double> getExplicitRockingAngles();
@@ -531,14 +535,12 @@ std::string FluxSvc::uniqueIDString()const{
 }
 
 
-void FluxSvc::setExplicitRockingAngles(double ang1, double ang2){
-    m_fluxMgr->setExplicitRockingAngles(std::make_pair<double,double>(ang1,ang2));
+void FluxSvc::setPointingDirection(const astro::SkyDir& dir){
+    astro::GPS::instance()->setPointingDirection(dir);
 }
 
+
 /// get the angular values of the satellite
-std::pair<double,double> FluxSvc::getExplicitRockingAngles(){
-    return m_fluxMgr->getExplicitRockingAngles();
-}
 
 
 CLHEP::HepRotation FluxSvc::transformToGlast(double seconds,GPS::CoordSystem index)const{

@@ -67,12 +67,16 @@ public:
 
     /// name of the flux
     virtual std::string fluxName()const=0;
-
+#if 0
     /// set the glast tilt angles - this means glast will ALWAYS rock to these angles.
     virtual void setExplicitRockingAngles(double ang1,double ang2)=0;
 
     /// get the angular values of the satellite
     virtual std::pair<double,double> getExplicitRockingAngles()=0;
+#endif
+        /// set the pointing direction 
+    virtual void setPointingDirection(const astro::SkyDir& dir)=0;
+
 
     ///this transforms glast-local (cartesian) vectors into galactic (cartesian) vectors
     virtual CLHEP::HepRotation transformGlastToGalactic(double time)const=0;

@@ -134,6 +134,7 @@ private:
     std::map<int, std::string> m_flux_names;
     void summary( std::ostream& log, std::string indent);
     DoubleArrayProperty m_alignmentRotation;
+    DoubleArrayProperty m_pointingDirection; ///< (ra, dec) for pointing
 
 
 };
@@ -167,6 +168,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("Prescale",   m_prescale=1);
     declareProperty("source_info", m_source_info_filename="source_info.txt");
     declareProperty("alignment", m_alignmentRotation);
+    declareProperty("pointingDirection", m_pointingDirection);
 
 }
 //------------------------------------------------------------------------
@@ -187,40 +189,48 @@ StatusCode FluxAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    //this line sets the explicit rocking angles to be used IF the 
-    //rocking type is "explicit." Note that it uses the m_rocking_angle also.
-    m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
-    //m_fluxSvc->setRockingAngle(m_rocking_angle);
+    if( m_pointingDirection.value().size()==2 ) {
+        // if direction set, ignore everything else!
+        double ra(m_pointingDirection.value()[0]), dec(m_pointingDirection.value()[1]);
+        m_fluxSvc->setPointingDirection( astro::SkyDir(ra, dec));
+        log << MSG::INFO << "set to point at ra,dec= " << ra << ", "<<dec << endreq;
 
-    //then this line sets the rocking type, as well as the rocking angle.
-    m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
+    }else{
+#if 0
+        //this line sets the explicit rocking angles to be used IF the 
+        //rocking type is "explicit." Note that it uses the m_rocking_angle also.
+        m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
+        //m_fluxSvc->setRockingAngle(m_rocking_angle);
+#endif
+        //then this line sets the rocking type, as well as the rocking angle.
+        m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
-    //now make the screen outputs showing what modes were called:
-    if(m_pointing_mode){
-        //output to record the pointing settings
-        log << MSG::INFO << "rocking Mode: " << m_pointing_mode << endreq;
-        log << MSG::INFO << "rocking Angle: " << m_rocking_angle << " degrees" << endreq;
-    }
-    //set the input file to be used as the pointing database, if used
-    if(! m_pointingHistory.value().empty()){
-        std::string filename(m_pointingHistory.value()[0]);
-        facilities::Util::expandEnvVar(&filename);
-        double offset = 0;
-        if( m_pointingHistory.value().size()>1){
-            facilities::Timestamp jt(m_pointingHistory.value()[1]);
-            offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
-        }
-
-        log << MSG::INFO << "Loading Pointing History File : " << filename 
-            << " with MET offset "<< offset <<  endreq;
-
-        GPS::instance()->setPointingHistoryFile(filename, offset);
+        //now make the screen outputs showing what modes were called:
         if(m_pointing_mode){
-            //problem - two kinds of pointing are being used!
-            log << MSG::WARNING << "Pointing History and rocking mode both specified!" << endreq;
+            //output to record the pointing settings
+            log << MSG::INFO << "rocking Mode: " << m_pointing_mode << endreq;
+            log << MSG::INFO << "rocking Angle: " << m_rocking_angle << " degrees" << endreq;
+        }
+        //set the input file to be used as the pointing database, if used
+        if(! m_pointingHistory.value().empty()){
+            std::string filename(m_pointingHistory.value()[0]);
+            facilities::Util::expandEnvVar(&filename);
+            double offset = 0;
+            if( m_pointingHistory.value().size()>1){
+                facilities::Timestamp jt(m_pointingHistory.value()[1]);
+                offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
+            }
+
+            log << MSG::INFO << "Loading Pointing History File : " << filename 
+                << " with MET offset "<< offset <<  endreq;
+
+            GPS::instance()->setPointingHistoryFile(filename, offset);
+            if(m_pointing_mode){
+                //problem - two kinds of pointing are being used!
+                log << MSG::WARNING << "Pointing History and rocking mode both specified!" << endreq;
+            }
         }
     }
-
     if( !m_source_list.value().empty()){
         log << MSG::INFO << "loading sources " << endreq;
         std::vector<std::string> sources=m_source_list.value();
