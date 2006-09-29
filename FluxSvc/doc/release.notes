@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   29-sep-06  v6r37p1 THB  Minor further property improvement
    28-sep-06  v6r37   THB  Implement new property to set pointing mode
    12-jun-06  v6r36p1 THB  Fix test program to be consistent with new Gaudi, FluxSvc hiding of flux
    01-may-06  v6r36   THB  Change pointing default to rock; force build with fixed astro::EarthOrbit
