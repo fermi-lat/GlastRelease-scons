@@ -95,8 +95,6 @@ private:
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
 
-
-    UnsignedIntegerProperty m_run;      // run number
     unsigned int m_sequence;  // sequence number
 
     IDataProviderSvc* m_eds;
@@ -135,6 +133,8 @@ private:
     void summary( std::ostream& log, std::string indent);
     DoubleArrayProperty m_alignmentRotation;
     DoubleArrayProperty m_pointingDirection; ///< (ra, dec) for pointing
+    DoubleProperty m_backoff; ///< backoff distance
+    DoubleProperty m_zenithTheta; ///< set for zenith
 
 
 };
@@ -153,8 +153,9 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("sources",     m_source_list);
-    declareProperty("MCrun",        m_run=100);
     declareProperty("area",        m_area=6.0); // target area in m^2
+    declareProperty("backoff",     m_backoff=2.0); //backoff distance in m
+
     declareProperty("pointing_mode", m_pointing_mode=0); // default zenith-pointed: GLAST and zenith coord systems the same
     // set to 3 for rocking
     declareProperty("rocking_angle", m_rocking_angle=35); // in degrees
@@ -162,13 +163,16 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
     declareProperty("PointingHistory",  m_pointingHistory); // doublet, filename and launch date
 
+// deprecate these
     declareProperty("pointing_info_tree_name",  m_root_tree="");
     declareProperty("save_pointing_info",  m_save_tuple=false);
+
     declareProperty("AvoidSAA",   m_avoidSAA=false);
     declareProperty("Prescale",   m_prescale=1);
     declareProperty("source_info", m_source_info_filename="source_info.txt");
     declareProperty("alignment", m_alignmentRotation);
     declareProperty("pointingDirection", m_pointingDirection);
+    declareProperty("zenithTheta", m_zenithTheta=-99);
 
 }
 //------------------------------------------------------------------------
@@ -180,8 +184,9 @@ StatusCode FluxAlg::initialize(){
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
-    // set target area for random point generation
+    // set target area for random point generation, and the backoff distance
     EventSource::totalArea(m_area);
+    EventSource::s_backoff =m_backoff*1e3;// convert from m to mm
 
     // set pointing mode and associated rocking angle 
     if ( service("FluxSvc", m_fluxSvc).isFailure() ){
@@ -195,13 +200,12 @@ StatusCode FluxAlg::initialize(){
         m_fluxSvc->setPointingDirection( astro::SkyDir(ra, dec));
         log << MSG::INFO << "set to point at ra,dec= " << ra << ", "<<dec << endreq;
 
-    }else{
-#if 0
-        //this line sets the explicit rocking angles to be used IF the 
-        //rocking type is "explicit." Note that it uses the m_rocking_angle also.
-        m_fluxSvc->setExplicitRockingAngles(m_rocking_angle*M_PI/180,m_rocking_angle_z*M_PI/180);
-        //m_fluxSvc->setRockingAngle(m_rocking_angle);
-#endif
+    }else if( m_zenithTheta>=0) {
+        // if set from defalt, set to this value
+        m_fluxSvc->setRockType(4, m_zenithTheta);
+        log << MSG::INFO << "set to zenith angle " << m_zenithTheta << " degrees" << endreq;
+
+    }else {
         //then this line sets the rocking type, as well as the rocking angle.
         m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
 
