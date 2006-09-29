@@ -32,16 +32,21 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.sources      [{}] if used, can specify multiple sources. Overrides source_name
     @param FluxAlg.MCrun        [100] Initial run number
     @param FluxAlg.area         [6.0] target area in m^2
+    @param FluxAlg.backoff      [2.0] backoff distance in m
     @param FluxAlg.pointing_mode [0]  Corresponds to the following, from GPS
         - 0 No rocking rotation done at all.
         - 1 Satellite will be rocked toward the north pole in the northern hemisphere, opposite in the south.
         - 2 (experimental) like UPDOWN, except that rotation at equator happens gradually.
         - 3 LAT rocked northward for one orbit, southward for the next.
-        - 4 fixed.
+        - 4 fixed. use rocking_angle to define rotation about x-axis from zenith
     @param FluxAlg.rocking_angle [0 deg] Rotation angle for Glast, about x-axis. 
     @param FluxAlg.rocking_angle_z [0 deg] Rotation angle for Glast, about z-axis.
     @param FluxAlg.pointing_info_tree_name ["MeritTuple"] If set, copy "Pt" values to it. See point_info for definitions.
     @param FluxAlg.save_pointing_info [false] Set true to save all entries in the pointing tuple. Normally saved by merit.
+    @param FluxAlg.alignment    [{}] Set three rotation angles to mis-align GLAST
+    @param FluxAlg.pointingDirection [{}] Set (ra,dec) for pointed mode. Other rocking stuff ignored.
+    @param FluxAlg.AvoidSAA     [false] set true to skip events during SAA interval
+    @param FluxAlg.zenithTheta  [-99] if overridden, set to this angle in local zenith frame
 
   @section exposurealg_jobOptions ExposureAlg jobOptions
     @param ExposureAlg.root_tree ["pointing_history"] name for the root tree to be filled if there are clock ticks
