@@ -226,6 +226,11 @@ StatusCode meritAlg::setupTools() {
             // ignore, for now
             return IValsTool::Visitor::CONT;
         }
+       IValsTool::Visitor::eVisitorRet analysisValue(std::string , const char* ) const
+        {
+            // ignore, for now
+            return IValsTool::Visitor::CONT;
+        }
 
     private:
         meritAlg* m_merit;
