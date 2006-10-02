@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v1r18p1 02-Oct-2006 HMK modify cout statement to Gaudi log debug statement
  v1r18   19-Sep-2006 EAC Added support for high range in AcdDigiAlg.  For now
          this only uses the nominal gain ratio or 100:1 between the ranges and
          continues to ignore pedestal values.
