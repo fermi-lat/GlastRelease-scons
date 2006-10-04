@@ -43,7 +43,9 @@ private:
 
     // Function to evaluate a string which represents a "value"
     IXTExprsnNode* parseNextExpression(std::string& expression);
+    IXTExprsnNode* parseOperator(std::string& expression);
     IXTExprsnNode* parseValue(std::string& expression);
+    IXTExprsnNode* parseVariable(std::string& expression);
     IXTExprsnNode* parseFunction(std::string& expression);
 
     XTtupleMap&   m_tuple;

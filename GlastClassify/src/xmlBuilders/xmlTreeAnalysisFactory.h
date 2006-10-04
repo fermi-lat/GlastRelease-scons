@@ -58,6 +58,9 @@ private:
     // Mapping between the ActivityNode type and a vector of pointers to these nodes
     typedef std::map<std::string, std::vector<IImActivityNode*> > typeToINodeVecMap;
 
+    // Parse the file to find all output variables
+    int findAllOutputVars(GlastClassify::TreeAnalysis* tree);
+
     // Parse the file to find all Activity Nodes
     int findAllActivityNodes(GlastClassify::TreeAnalysis* tree);
 

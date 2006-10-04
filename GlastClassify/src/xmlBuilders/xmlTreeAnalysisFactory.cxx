@@ -23,6 +23,8 @@ $Header$
 #include "xmlTwoDimChartEngineFactory.h"
 #include "xmlWriteTextFileEngineFactory.h"
 
+#include "xmlFindOutputVars.h"
+
 #include <fstream>
 #include <cassert>
 #include <stdexcept>
@@ -82,6 +84,9 @@ GlastClassify::TreeAnalysis* GlastClassify::xmlTreeAnalysisFactory::buildTreeAna
     m_idToINodeMap.clear();
     m_typeToINodeVecMap.clear();
 
+    // First pass through to find all output vars
+    int numVars  = findAllOutputVars(tree);
+
     // Find the activity nodes in the document
     int numNodes = findAllActivityNodes(tree);
 
@@ -89,6 +94,51 @@ GlastClassify::TreeAnalysis* GlastClassify::xmlTreeAnalysisFactory::buildTreeAna
     int numLinks = linkActivityNodes(tree);
 
     return tree;
+}
+
+  
+int GlastClassify::xmlTreeAnalysisFactory::findAllOutputVars(GlastClassify::TreeAnalysis* tree)
+{
+    int numVars = 0;
+
+    // Root...    
+    DOMElement* domRoot = m_domDocument->getDocumentElement();
+
+    XTExprsnParser parser(tree->xtTupleMap());
+
+    xmlFindOutputVars varFinder(parser);
+
+    // We now need to ensure that we're getting 
+    // ActivityNode[@engineClass=='com.insightful.miner.PredictEngineNode']
+    DOMEvector xmlActivityNodes;
+    xmlBase::Dom::getDescendantsByTagName(domRoot, "ActivityNode", xmlActivityNodes);
+
+    // Loop over the ActivityNodes in the input xml file
+    for(DOMEvector::iterator actNodeIter = xmlActivityNodes.begin();
+        actNodeIter != xmlActivityNodes.end(); actNodeIter++)
+    {
+        DOMElement* xmlActivityNode = *actNodeIter;
+
+        std::string sType = xmlBase::Dom::getAttribute(xmlActivityNode, "engineClass");  
+
+        // Parse the engine class a bit to get to the unique type identifier
+        int iDelim = -1;
+        std::string sNewType = getNextWord(sType, iDelim);
+
+        while(iDelim > -1)
+        {
+            sNewType = getNextWord(sType, iDelim);
+        }
+
+        // Do we have the right node?
+        if (sNewType == "CreateColumnsEngineNode")
+        {
+            numVars += varFinder(xmlActivityNode);
+        }
+    }
+
+    //done
+    return numVars;
 }
 
   
