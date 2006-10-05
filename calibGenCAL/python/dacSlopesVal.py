@@ -71,8 +71,8 @@ fheFineSlopeErrHigh    = 78.0
 fheCoarseSlopeWarnLow  = 81.0
 fheCoarseSlopeWarnHigh = 113.0
 
-fheCoarseSlopeErrLow   = 65.0
-fheCoarseSlopeErrHigh  = 129.0
+fheCoarseSlopeErrLow   = 49.0
+fheCoarseSlopeErrHigh  = 135.0
 
 uldLex8SlopeWarnLow    = 0.67
 uldLex8SlopeWarnHigh   = 1.02
@@ -353,7 +353,8 @@ def calcError(dacData, uldData, rangeData):
                         errLow = lacFineSlopeErrLow
                         errHigh = lacFineSlopeErrHigh
                     else:
-                        log.warning('using COARSE range for T%d,%s%s,%d,LAC', tem, row, end, fe)
+                        log.warning('using COARSE range for T%d,%s%s,%d,LAC', tem, 
+                            calConstant.CROW[row], calConstant.CPM[end], fe)
                         warnLow = lacCoarseSlopeWarnLow
                         warnHigh = lacCoarseSlopeWarnHigh
                         errLow = lacCoarseSlopeErrLow
@@ -396,7 +397,8 @@ def calcError(dacData, uldData, rangeData):
                     rng = int(rangeData[tem, row, end, fe, 1])
                     
                     if rng == calConstant.CDAC_FINE:
-                        log.warning('using FINE range for T%d,%s%s,%d,FLE', tem, row, end, fe)
+                        log.warning('using FINE range for T%d,%s%s,%d,FLE', tem, 
+                            calConstant.CROW[row], calConstant.CPM[end], fe)
                         warnLow = fleFineSlopeWarnLow
                         warnHigh = fleFineSlopeWarnHigh
                         errLow = fleFineSlopeErrLow
@@ -444,7 +446,8 @@ def calcError(dacData, uldData, rangeData):
                     rng = int(rangeData[tem, row, end, fe, 2])
                     
                     if rng == calConstant.CDAC_COARSE:
-                        log.warning('using COARSE range for T%d,%s%s,%d,FHE', tem, row, end, fe)
+                        log.warning('using COARSE range for T%d,%s%s,%d,FHE', tem, 
+                            calConstant.CROW[row], calConstant.CPM[end], fe)
                         warnLow = fheCoarseSlopeWarnLow
                         warnHigh = fheCoarseSlopeWarnHigh
                         errLow = fheCoarseSlopeErrLow
