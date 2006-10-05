@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 @verbatim
 
 
+v3r7    05-Oct-2006 HMK Continue processing even if there are missing ranges
+        in CAL digi data
 v3r6p1  09-Aug-2006 HMK put a limit on sweep event warnings
 v3r6    09-Aug-2006 HMK Add SocketConnection JO parameters
 v3r5p1  02-Aug-2006 HMK Check return code when setting AcdRemap
