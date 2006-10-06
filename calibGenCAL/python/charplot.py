@@ -185,7 +185,7 @@ def plotDAC(rawData, filterData, info, twrs, rawName, filterName):
 
                     for g in lineGraph:
                         g.Draw('L')
-                        c.Update
+                        c.Update()
                     
                     for g in markerGraph:                    
                         g.Draw('P')
