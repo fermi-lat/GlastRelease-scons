@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r33p3 THB  09-Oct-06 Remove obsolete set of CTREE_PATH
  *  v6r33p2 THB  28-Sep-06 Deal with Leon's surprise
  *  v6r33p1 THB  11-Jul-06 That was a mistake: let Tracy define the default IM file to use
  *  v6r33   THB  11-Jul-06 Convert to new Trees in ClassifyAlg.
