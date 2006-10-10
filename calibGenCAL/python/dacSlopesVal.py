@@ -71,8 +71,8 @@ fheFineSlopeErrHigh    = 78.0
 fheCoarseSlopeWarnLow  = 81.0
 fheCoarseSlopeWarnHigh = 113.0
 
-fheCoarseSlopeErrLow   = 65.0
-fheCoarseSlopeErrHigh  = 129.0
+fheCoarseSlopeErrLow   = 55.0
+fheCoarseSlopeErrHigh  = 135.0
 
 uldLex8SlopeWarnLow    = 0.67
 uldLex8SlopeWarnHigh   = 1.02
