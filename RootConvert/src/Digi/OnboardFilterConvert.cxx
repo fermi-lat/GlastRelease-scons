@@ -47,9 +47,9 @@ namespace RootPersistence {
           convert(tdsObj->dir[i], dirRoot[i]);
 
       TfcProjection *projectColRoot = 0;
-      projectColRoot = new TfcProjection[tdsObj->maxCnt];
+      projectColRoot = new TfcProjection[tdsObj->curCnt];
 
-      for (i=0; i<tdsObj->maxCnt; i++) 
+      for (i=0; i<tdsObj->curCnt; i++) 
           convert(tdsObj->prjs[i], projectColRoot[i]);
 
       rootObj.initialize(tdsObj->maxCnt, tdsObj->curCnt, tdsObj->twrMsk, 
@@ -70,8 +70,8 @@ namespace RootPersistence {
     const TfcProjection* projectionArrRoot = rootObj.getProjectionCol();
     // Check to be sure the number of elements in the array doesn't exceed 
     // 1000, that's the setting for this fixed array on the TDS
-    unsigned int numProj = rootObj.getMaxCount();
-    if (rootObj.getMaxCount() >= 1000) 
+    unsigned int numProj = rootObj.getCurrentCount();
+    if (rootObj.getCurrentCount() >= 1000) 
         numProj=1000;
     for (i=0; i<numProj; i++) 
        convert(projectionArrRoot[i], tdsObj->prjs[i]); 
