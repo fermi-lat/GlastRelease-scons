@@ -192,9 +192,9 @@ private:
     UShort_t    m_twrMsk; 
     /// Directory of the projections by twr 
     TfcProjectionDir    m_dir[16];
-    TfcProjection* m_prjs; //[m_maxCnt]
+    TfcProjection* m_prjs; //[m_curCnt]
 
-    ClassDef(TfcProjectionCol,1) // TfcProjectionCol
+    ClassDef(TfcProjectionCol,2) // TfcProjectionCol
 };
 
 class ObfTrack : public TObject {

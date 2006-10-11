@@ -76,9 +76,11 @@ void TfcProjection::initialize(Int_t intercept, Int_t slope, Int_t acdTopMask,
     m_acdXMask = acdXMask;
     m_acdYMask = acdYMask;
     m_layers = layers;
-    UInt_t iHit;
-    for (iHit=0; iHit<18; iHit++) { 
-        m_hits[iHit] = hits[iHit];
+    if (hits) {
+        UInt_t iHit;
+        for (iHit=0; iHit<18; iHit++) { 
+            m_hits[iHit] = hits[iHit];
+        }
     }
     m_skirtMask = skirtMask;
     m_min = min;
@@ -186,16 +188,15 @@ void TfcProjectionCol::initialize(Int_t maxCnt, UShort_t curCnt,
         m_dir[iDir] = dir[iDir];
     }
     if (projectionCol) {
-    m_prjs = new TfcProjection[m_maxCnt];
-    UInt_t iProj;
-    for (iProj=0; iProj<m_maxCnt; iProj++) {
-        std::cout << "creating TfcProjection  " << iProj << std::endl;
-        if (!projectionCol) std::cout << "input col is null" << std::endl;
-        m_prjs[iProj] = projectionCol[iProj];
-    }
+        m_prjs = new TfcProjection[m_curCnt];
+        UInt_t iProj;
+        for (iProj=0; iProj<m_curCnt; iProj++) {
+            m_prjs[iProj] = projectionCol[iProj];
+        }
     } else {
         m_prjs = 0;
         m_maxCnt = 0;
+        m_curCnt = 0;
     }
 }
 
@@ -205,7 +206,7 @@ TfcProjectionCol::~TfcProjectionCol() {
 }
 void TfcProjectionCol::Clear(Option_t *option) {
 
-    if (m_maxCnt && m_prjs) {
+    if (m_curCnt && m_prjs) {
         delete [] m_prjs;
     }
     m_maxCnt = 0;
@@ -225,7 +226,7 @@ void TfcProjectionCol::Print(Option_t *option) const {
     cout << "maxCount: " << m_maxCnt << " curCnt: " << m_curCnt << " twrMsk: " 
          << m_twrMsk << endl;
     Int_t i;
-    for (i=0; i<m_maxCnt; i++) {
+    for (i=0; i<m_curCnt; i++) {
         cout << "TfcProjection: " << i << std::endl;
         m_prjs[i].Print();
     }
@@ -240,11 +241,11 @@ void TfcProjectionCol::Fake( Int_t ievent, Float_t randNum ) {
     for (iDir=0; iDir < 16; iDir++) {
         m_dir[iDir].initialize(6, '1', '2');
     }
-    m_maxCnt = 2;
-    m_prjs = new TfcProjection[m_maxCnt];
+    m_curCnt = 2;
+    m_prjs = new TfcProjection[m_curCnt];
     UInt_t iCnt;
     const Short_t hits[18] = {10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27};
-    for (iCnt = 0; iCnt < m_maxCnt; iCnt++) {
+    for (iCnt = 0; iCnt < m_curCnt; iCnt++) {
 
         m_prjs[iCnt].initialize(1, 2, 3, 4, 5, 6, hits, '8', '9', '0', '1');
 

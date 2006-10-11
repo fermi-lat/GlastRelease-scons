@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r13p3   11-Oct-2006 HMK Patch OBF TFCprojectionCol, to use curCnt and not
+          maxCnt to determine size of the variable length array
 v9r13p2   28-Sep-2006 EC  Tag patch to AcdDigi adding isLowRange to allow
           range to be drawn sensibly - ROOT doesn't seem to handle enums well 
 v9r13p1   22-Aug-2006 HMK Add method to query missingCalReadout in event flag
