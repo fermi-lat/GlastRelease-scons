@@ -90,6 +90,10 @@ int main(int narg, char** args) {
   ret = i.dbconnect(host, 0, 
                     std::string("mood_test"), 
                     std::string("MOOT_WRITE"));
+  if (ret) return 0;
+  
+  // Handle init file
+  ret = i.init(ifile);
 
   return 0;
   // 

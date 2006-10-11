@@ -30,6 +30,6 @@ library rdbModel  \
 
 
 application test_build  test/test_build.cxx
-application initRdb     test/initRdb.cxx test/InitRdb.cxx
+application initRdb     test/initRdbMain.cxx test/InitRdb.cxx
 
 
