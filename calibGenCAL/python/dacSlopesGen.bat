@@ -11,7 +11,7 @@ endlocal
 goto :EXIT
 
 :ERROR
-echo ERROR: tholdCIGen: CALIBGENCALROOT must be defined
+echo ERROR: dacSlopesGen: CALIBGENCALROOT must be defined
 
 :EXIT
 
