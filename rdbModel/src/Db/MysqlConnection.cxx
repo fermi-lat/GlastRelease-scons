@@ -174,8 +174,9 @@ namespace rdbModel {
                                           port, NULL, 0);
 
     if (connected != 0) {  // Everything is fine.  Put out an info message
-      (*m_out) << "Successfully connected to MySQL host " << 
-        host << ", database " << dbName << std::endl;
+      (*m_out) << "Successfully connected to MySQL host " 
+               << ((host != 0) ? host : "from init file" )
+               << ", database " << dbName << std::endl;
       m_out->flush();
       m_connected = true;
       m_dbName = dbName;
