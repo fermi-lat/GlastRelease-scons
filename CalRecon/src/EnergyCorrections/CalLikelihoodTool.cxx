@@ -207,7 +207,7 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
   log << MSG::DEBUG << "End of Calculations:"<< endreq 
       << MSG::VERBOSE << "Found Energy:" << mpv[0] 
                       << "MeV,\tWidth:" << .5*(fwhm[0]+fwhm[1])
-                      << "\%" << endreq;
+                      << "%" << endreq;
 
 
   // Create a CalCorToolResult object to hold the information

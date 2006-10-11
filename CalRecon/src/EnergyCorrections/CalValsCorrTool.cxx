@@ -370,8 +370,6 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
 	m_cal_pos  = m_cluster->getPosition();
     m_cal_dir  = m_cluster->getDirection();
 
-    if(m_raw_energy < m_minEnergy) return;  
-	m_status_bits |=  Event::CalCorToolResult::VALIDPARAMS;
 // DC: redundant with correctionName
 //    m_status_bits |=  Event::CalCorToolResult::CALVALS;
 
@@ -379,7 +377,20 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     Ray axis(x0, t0); 
     double arc_len = (x0.z()- m_calZTop)/t0.z(); 
     m_cal_top = axis.position(-arc_len);   // Event axis entry point to top of Cal Stack 
-    axis      = Ray(m_cal_top, t0);    
+    axis      = Ray(m_cal_top, t0); 
+
+    // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
+    double rm_hard   = 40. + 36.*cal_trans((m_raw_energy-250)/200.)* arc_len/500.;
+
+    if(aveRadLens(m_cal_top, -t0, rm_hard/4., 6) == StatusCode::FAILURE) return; 
+	m_status_bits |= VALIDAVERLN; 
+
+    double t_cal_tot  = m_radLen_CsI + m_radLen_Stuff;// rad. len. in Cal
+    m_t_total         = t_tracker + t_cal_tot;        // Total rad. len. in LAT
+    m_t               = t_tracker + m_radLen_Cntr;    // Energy centroid in rad. len.
+
+    if(m_raw_energy < m_minEnergy) return;  
+	m_status_bits |=  Event::CalCorToolResult::VALIDPARAMS;
 
     // this "cos(theta)" doesn't distinguish between up and down
     double costh  = fabs(t0.z()); 
@@ -392,10 +403,17 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     // and size of inter-tower gap (active-to-active area) 
     // What counts is radius of the shower at the CAL entrance.  At low energy, for early
     // conversions there should be a large radius.  
-    double rm_hard   = 40. + 36.*cal_trans((m_raw_energy-250)/200.)* arc_len/500.;
  	double rm_soft   = 80. + 65.*cal_trans((m_raw_energy-250)/200.)* arc_len/500.;
 	double hard_frac =  .5  + .5*cal_trans((670.- m_raw_energy)/300.);   
-      
+ 
+    double test_energy = 0;
+    double arg1 = -1.25;
+    double arg2 = 670./300.;
+    //std::cout << "vals = " << cal_trans(arg1) << ", " << cal_trans(arg2) << std::endl;
+    double rm_h1 = 40. + 36.*cal_trans(arg1)*250/500.;
+    double rm_hf1 = .5 + .5*cal_trans(arg2);
+    //std::cout << "rm_h1/hf1 = " << rm_h1 << ", " << rm_hf1 << std::endl;  
+     
     // This is the effective inter-tower CalModule gap: approx = towerpitch - calwidth = 44 - 46 mm
 	double gap       = 45.; //Physical gap
 
@@ -461,17 +479,14 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     //           Average Radiation Lengths
     // The averaging is set for 6 + 3 samples at a radius of rm_hard/4
 
-    // Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
-    if(aveRadLens(m_cal_top, -t0, rm_hard/4., 6) == StatusCode::FAILURE) return; 
-	m_status_bits |= VALIDAVERLN; 
+    //// Note: this method fills internal variables such as m_radLen_CsI & m_radLen_Stuff
+    //if(aveRadLens(m_cal_top, -t0, rm_hard/4., 6) == StatusCode::FAILURE) return; 
+	//m_status_bits |= VALIDAVERLN; 
 
 	if(m_radLen_CsI < m_minCsIRLn) return;
 	m_status_bits |= MINCSIRLN; 
 
-    double t_cal_tot  = m_radLen_CsI + m_radLen_Stuff;// rad. len. in Cal
     m_corr_energy    *= t_cal_tot/m_radLen_CsI;       // Correction for non-CsI shower
-    m_t_total         = t_tracker + t_cal_tot;        // Total rad. len. in LAT
-    m_t               = t_tracker + m_radLen_Cntr;    // Energy centroid in rad. len.
 
 	//                    Energy Leakage Correction
     // Note: the TMath incomplete gamma function is really the fractional inner incomplete
