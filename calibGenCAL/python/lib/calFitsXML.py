@@ -118,7 +118,8 @@ class calFitsXML(calXML.calXML):
 
         # open file
 
-        calXML.calXML.__init__(self, path, mode)        
+        calXML.calXML.__init__(self, path, mode) 
+        self.__fileName = self.getName()       
         self.__doc = self.getDoc()
         
 
