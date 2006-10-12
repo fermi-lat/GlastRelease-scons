@@ -178,7 +178,8 @@ namespace rdbModel {
     elts.clear();
     Dom::getChildrenByTagName(tblElt, std::string("row"), elts);
     for (unsigned iRow = 0; iRow < elts.size(); iRow++) {
-      ret = handleRow(elts[iRow], tbl, forAllFields);
+      unsigned newKey;
+      ret = handleRow(elts[iRow], tbl, forAllFields, &newKey);
       if (ret) return ret;
     }
     return 0;
@@ -219,8 +220,9 @@ namespace rdbModel {
     //    m_rdb->insertRow(tname, toInsert, signedKey, newKey);
     m_rdb->insertRow(tname, toInsert, 0, newKey);
     if (m_dbg) {
-      std::cout << "Inserted row into table " << tbl->getName() 
-                << ", assigned key " << newKey << std::endl;
+      std::cout << "Inserted row into table " << tbl->getName();
+      if (newKey) std::cout  << ", assigned key " << *newKey;
+      std::cout << std::endl;
     }
     return 0;
     // Should be ready to do insert 
