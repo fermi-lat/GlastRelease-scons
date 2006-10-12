@@ -42,6 +42,8 @@ namespace rdbModel {
     Index* getIndexByName(const std::string& name) const;
     Assertion* getAssertionByName(const std::string& name) const;
 
+    std::string getPrimaryKeyCol() {return m_primaryKeyCol;}
+
     /**
        insertLatest is smart in the following respects:
           o Makes some checks to see if row is self-consistent
@@ -93,6 +95,8 @@ namespace rdbModel {
     //     Visitor::VisitorState acceptNotRec(Visitor* v);
 
     void  sortColumns();
+
+    
 
   private:
     friend class rdbModel::XercesBuilder; // needs access to add.. methods
@@ -154,7 +158,9 @@ namespace rdbModel {
     /// Service routine for supersedeRow.  Check supersedable condition
     bool isSupersedable(std::string oldKeyStr) const;
 
-    /// Service routine for supersedeRow.  Need to know table's primary key
+    /// supersedeRow needs to know table's primary key
+    /// Called initially by XercesBuilder  to set the private value.
+    /// See also public routine getPrimaryKeyCol which will only get.
     const std::string& setPrimaryKeyCol();
 
 
