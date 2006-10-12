@@ -49,7 +49,7 @@ class MuonAsym {
   void loadHists(const string &filename);
 
   /// print histogram summary info to output stream
-  void summarizeHists(ostream &ostrm=cout);
+  void summarizeHists(ostream &ostrm);
 
   /// delete empty histograms
   /// \note useful for data w/ < 16 Cal modules.

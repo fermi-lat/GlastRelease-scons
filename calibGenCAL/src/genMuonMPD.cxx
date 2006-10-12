@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
 
 
     // first see if use has explicitly chosen a txt filename
-    string dac2adcTXTFile = cfgFile.getVal<string>("GCR_MPD",
+    string dac2adcTXTFile = cfgFile.getVal<string>("MUON_MPD",
                                                    "INL_TXT_FILE",
                                                    "");
     if (!dac2adcTXTFile.size()) {
