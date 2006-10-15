@@ -16,6 +16,7 @@
 //forward declarations
 template <class TYPE> class SvcFactory;
 class IGlastDetSvc;
+class ITkrGeometrySvc;
 class IRegistry;
 class IStreamer;
 class IServer;
