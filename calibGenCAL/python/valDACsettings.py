@@ -238,6 +238,10 @@ if __name__ == '__main__':
     if logName is None:
         logName = "%s.val.log" % ext[0]
 
+    if os.path.exists(logName):
+        log.debug('Removing old log file %s', logName)
+        os.remove(logName)
+
     hdl = logging.FileHandler(logName)
     fmt = logging.Formatter('%(levelname)s %(message)s')
     hdl.setFormatter(fmt)
