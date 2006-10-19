@@ -115,6 +115,8 @@ class MuonMPD {
   CalUtil::CalVec<CalUtil::XtalIdx, TProfile*> m_dacL2SSlopeProfs;
   /// list of histograms of geometric mean for both ends on each xtal.
   CalUtil::CalVec<CalUtil::XtalIdx, TH1S*> m_dacLLHists; 
+  /// contains sum of dacLLHists over all xtals
+  TH1S *m_dacLLSumHist;
                                        
   /// most likely vertical muon energy deposition in Cal CsI crystal
   static const float MUON_ENERGY;
