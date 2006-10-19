@@ -393,6 +393,7 @@ int LatComponentParser::cleanup (EBFevent*        /*event*/,
                 printf("Event: %llu Apid: %d\n", 
                     evtId,
                     ldfReader::LatData::instance()->getCcsds().getApid());
+                ldfReader::LatData::instance()->setLdfWarningFlag();
             }
             mbz++;
         }
