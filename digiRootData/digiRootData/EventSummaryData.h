@@ -141,7 +141,9 @@ public:
     /// a readout
     Bool_t missingCalReadout() const {
          return (m_flags & enums::MISSINGCALREADOUT);}
-
+    Bool_t ldfWarning() const {
+         return (m_flags & enums::LDFWARNING); }
+    
     
     /// Returns the length in bytes of the TEM contribution identified by 
     /// a value in [0,15]
