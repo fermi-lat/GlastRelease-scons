@@ -93,9 +93,9 @@ namespace Event {
    	    m_acdHits(acdHits),
     	    m_cornerDoca(cornerDoca),
 	    m_acdTkrHitPocas(acdTkrHitPocas),
-	  m_acdTkrGapPocas(acdTkrGapPocas),	  
-	  m_acdTkrPoints(acdTkrPoints),
-	  m_acdSplashVars(acdSplashVars)
+	    m_acdTkrGapPocas(acdTkrGapPocas),	  
+	    m_acdTkrPoints(acdTkrPoints),
+	    m_acdSplashVars(acdSplashVars)
 	  {
             m_actDist3D = -2000.0;
             m_rowActDist3DCol.resize(4, -2000.0);
@@ -131,6 +131,7 @@ namespace Event {
             m_minDocaId(minDocaId),
             m_actDist(actDist),
             m_actDist3D(actDist3D),
+            m_actDist3D_down(0.0),
             m_maxActDistId(maxActDistId),
             m_maxActDist3DId(maxActDist3DId),
             m_rowDocaCol(rowDoca),
@@ -139,16 +140,19 @@ namespace Event {
 	    m_idCol(idCol),
 	    m_energyCol(energyCol),            
             m_ribbon_actDist(ribbon_actDist),
-	  m_ribbon_actDist_id(ribbon_actDist_id),
-	  m_acdTkrIntersections(acdTkrIntersections),
-	  m_acdTkrPocas(acdTkrPocas),
-	  m_acdHits(acdHits),
-	  m_cornerDoca(cornerDoca),
-	  m_acdTkrHitPocas(acdTkrHitPocas),
-	  m_acdTkrGapPocas(acdTkrGapPocas),
-	  m_acdTkrPoints(acdTkrPoints),
-	  m_acdSplashVars(acdSplashVars)	  
-        {};
+	    m_ribbon_actDist_id(ribbon_actDist_id),
+	    m_acdTkrIntersections(acdTkrIntersections),
+	    m_acdTkrPocas(acdTkrPocas),
+	    m_acdHits(acdHits),
+	    m_cornerDoca(cornerDoca),
+	    m_acdTkrHitPocas(acdTkrHitPocas),
+	    m_acdTkrGapPocas(acdTkrGapPocas),
+	    m_acdTkrPoints(acdTkrPoints),
+	    m_acdSplashVars(acdSplashVars)	  
+            {
+                m_rowActDist3DCol_down.clear();
+
+            };
 
 
         
@@ -176,6 +180,15 @@ namespace Event {
 	    const idents::AcdId &ribActDistId=idents::AcdId(0,0),
             double cornerDoca=2000.0) ;
 
+        void initActDist3D_down(double actDist3D,
+                                const idents::AcdId &maxActDist3DId,
+                                const std::vector<double> &rowActDist3D) {
+
+            m_actDist3D_down = actDist3D;
+            m_maxActDist3DId_down = maxActDist3DId;
+            m_rowActDist3DCol_down = rowActDist3D;
+        }
+
         void clear();
 
         //! Retrieve reference to class definition structure
@@ -191,15 +204,21 @@ namespace Event {
         inline const double getCornerDoca() const { return m_cornerDoca; };
         inline const double getActiveDist() const { return m_actDist; };
         inline const double getActiveDist3D() const { return m_actDist3D; };
+        inline const double getActiveDist3D_Up() const { return m_actDist3D; };
+        inline const double getActiveDist3D_Down() const { return m_actDist3D_down; };
         inline const double getRibbonActiveDist()            const { return m_ribbon_actDist; };
         inline const idents::AcdId& getRibbonActiveDistId()  const { return m_ribbon_actDist_id; };
         inline const idents::AcdId& getMinDocaId()           const { return m_minDocaId; };
         inline const idents::AcdId& getMaxActDistId()        const { return m_maxActDistId; };
         inline const idents::AcdId& getMaxActDist3DId()        const { return m_maxActDist3DId; };
+        inline const idents::AcdId& getMaxActDist3DId_Up()        const { return m_maxActDist3DId; };
+        inline const idents::AcdId& getMaxActDist3DId_Down()        const { return m_maxActDist3DId_down; };
         inline const std::vector<double>& getRowDocaCol()    const { return m_rowDocaCol; };
         inline const std::vector<double>& getRowActDistCol() const { return m_rowActDistCol; };
         inline const std::vector<double>& getRowActDist3DCol() const { return m_rowActDist3DCol; };
-	inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
+        inline const std::vector<double>& getRowActDist3DCol_Up() const { return m_rowActDist3DCol; };
+        inline const std::vector<double>& getRowActDist3DCol_Down() const { return m_rowActDist3DCol_down; };
+       inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
         inline const std::vector<double>& getEnergyCol()     const { return m_energyCol; };
 	inline const AcdTkrIntersectionCol& getAcdTkrIntersectionCol() const { return m_acdTkrIntersections; };
 	inline const AcdTkrPocaCol& getAcdTkrPocaCol() const { return m_acdTkrPocas; };
@@ -245,11 +264,12 @@ namespace Event {
 
         /// DOCA calculation using edge of tiles (Bill Atwood)
         double m_actDist;
-        double m_actDist3D;
+        /// Active Distance calc for both upward and downward tracks
+        double m_actDist3D, m_actDist3D_down;
     
         /// record of the tile with the maximum Active Distance 
         idents::AcdId m_maxActDistId;
-        idents::AcdId m_maxActDist3DId;
+        idents::AcdId m_maxActDist3DId, m_maxActDist3DId_down;
  
 
         /// Collection of distance of closest approach calculations
@@ -262,6 +282,7 @@ namespace Event {
         ///    index 1 corresponds to the first row closest to the top, etc.
         std::vector<double>  m_rowActDistCol;
         std::vector<double>  m_rowActDist3DCol;
+        std::vector<double>  m_rowActDist3DCol_down;
         
         /// Reconstructed energy per ACD digi - MC for now
         std::vector<idents::AcdId> m_idCol;
@@ -304,6 +325,7 @@ namespace Event {
         m_rowDocaCol.clear();
         m_rowActDistCol.clear();
         m_rowActDist3DCol.clear();
+        m_rowActDist3DCol_down.clear();
         m_idCol.clear();
         m_energyCol.clear();
 	m_acdTkrIntersections.clear();
@@ -344,6 +366,7 @@ namespace Event {
         m_doca       = doca;
         m_actDist    = actDist;
         m_actDist3D    = actDist3D;
+        m_actDist3D_down = 0.0;
         m_ribbon_actDist    = ribbon_actDist;
         m_ribbon_actDist_id = ribbonId;
         m_minDocaId  = minDocaId;
@@ -352,6 +375,7 @@ namespace Event {
         m_rowDocaCol = rowDoca;
         m_rowActDistCol = rowActDist;
         m_rowActDist3DCol = rowActDist3D;
+        m_rowActDist3DCol_down.clear();
         m_idCol      = idCol;
         m_energyCol  = energyCol;
 	m_acdTkrIntersections.clear();
