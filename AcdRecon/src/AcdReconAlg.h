@@ -150,7 +150,7 @@ class AcdReconAlg : public Algorithm
 
       // record of the tile with the minimum Distance of Closest Approach
       idents::AcdId m_minDocaId, m_ribbon_act_dist_id, m_maxActDistId,  
-                    m_maxActDist3DId;
+                    m_maxActDist3DId, m_maxActDist3DId_down;
 
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
@@ -170,12 +170,13 @@ class AcdReconAlg : public Algorithm
       /// DOCA to corner gaps
       double m_cornerDoca;
       /// Minimum Active Distance
-      double m_act_dist, m_ribbon_act_dist, m_act_dist3D;
+      double m_act_dist, m_ribbon_act_dist, m_act_dist3D, m_act_dist3D_down;
       /// list of DOCA values for top and each side row
       std::vector<double> m_rowDocaCol;
       /// list of active distance values for top and each side row
       std::vector<double> m_rowActDistCol;
       std::vector<double> m_rowActDist3DCol;
+      std::vector<double> m_rowActDist3DCol_down;
       /// map of AcdId and their corresponding energies
       //std::map<idents::AcdId, double> m_energyCol;
       std::vector<idents::AcdId> m_idCol, m_idRibbonCol;

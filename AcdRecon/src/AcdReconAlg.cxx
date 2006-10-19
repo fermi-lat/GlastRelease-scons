@@ -232,13 +232,16 @@ void AcdReconAlg::clear() {
     // For new ActDist calc.
     m_rowActDist3DCol.clear();
     m_rowActDist3DCol.resize(s_numSideRows+1, -maxDoca);
+    m_rowActDist3DCol_down.clear();
+    m_rowActDist3DCol_down.resize(s_numSideRows+1, -maxDoca);
 
     m_energyCol.clear();
     m_idCol.clear();
     m_energyRibbonCol.clear();
     m_idRibbonCol.clear();
     m_act_dist = -maxDoca;
-    m_act_dist3D = -maxDoca;  // for new active distance
+    m_act_dist3D = -maxDoca;  // active distance 3D upward tracks
+    m_act_dist3D_down = -maxDoca;  // active distance downward tracks
     m_ribbon_act_dist = -maxDoca;
 
     m_cornerDoca = maxDoca;
@@ -251,6 +254,7 @@ void AcdReconAlg::clear() {
     m_ribbon_act_dist_id = resetId;
     m_maxActDistId = resetId;
     m_maxActDist3DId = resetId;
+    m_maxActDist3DId_down = resetId;
 
 
     m_geomMap.reset();
@@ -362,6 +366,10 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 			     acdIntersections, acdPocas, acdHits, acdHitPocas, 
                              acdGapPocas, acdPoints, acdSplashVars, m_ribbon_act_dist, 
                              m_ribbon_act_dist_id, m_cornerDoca);
+
+        checkAcdRecTds->initActDist3D_down(m_act_dist3D_down, 
+                                           m_maxActDist3DId_down, 
+                                           m_rowActDist3DCol_down);
     } else {
         // create the TDS location for the AcdRecon
         Event::AcdRecon *acdRecon = new Event::AcdRecon(m_totEnergy, 
@@ -375,6 +383,10 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
                                     acdGapPocas, acdPoints, acdSplashVars, m_act_dist3D, 
                                     m_maxActDist3DId, m_rowActDist3DCol, 
                                     m_cornerDoca);
+
+        acdRecon->initActDist3D_down(m_act_dist3D_down, m_maxActDist3DId_down, 
+                                     m_rowActDist3DCol_down);
+
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
             log << "Failed to register AcdRecon" << endreq;
@@ -482,6 +494,12 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
         sc = tileActDist(upwardPocas, m_rowActDist3DCol, m_act_dist3D, 
                          m_maxActDist3DId);
         if (sc.isFailure()) return sc;
+
+        // Now calculate using downward Pocas
+        sc = tileActDist(downwardPocas, m_rowActDist3DCol_down,
+                         m_act_dist3D_down, m_maxActDist3DId_down);
+        if (sc.isFailure()) return sc;
+
 
 	// grab the best "Active Distance" from ribbons
         sc = hitRibbonDist(upwardPocas, m_ribbon_act_dist, m_ribbon_act_dist_id);
