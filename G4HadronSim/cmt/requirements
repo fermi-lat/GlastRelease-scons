@@ -1,0 +1,52 @@
+package G4HadronSim
+
+version v0r0p0
+
+author  Francesco Longo <Francesco.Longo@ts.infn.it>
+author  Tracy Usher <usher@slac.stanford.edu>
+
+#$Id$
+
+use GlastPolicy v*
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_stamps
+
+set G4tableDir	            ${GLAST_EXT)/G4HadronSim/v8r1p1
+set G4LEVELGAMMADATA	      ${G4tableDir}/PhotonEvaporation2.0
+set NeutronHPCrossSections	${G4tableDir}/G4NDL3.9
+set G4RADIOACTIVEDATA         ${G4tableDir}/RadiativeDecay3.0
+set G4LEDATA                  ${G4tableDir}/G4EMLOW4.0
+set G4ELASTICDATA             ${G4tableDir}/G4ELASTIC1.1
+
+# path to the combined include folder
+macro G4HadronSimSrcDir "${G4HADRONSIMROOT}/src"
+
+include_dirs "$(G4HadronSimSrcDir)/Packaging/include" \
+             "$(G4HadronSimSrcDir)/LHEP/include"      \
+             "$(G4HadronSimSrcDir)/LHEP_BERT/include" \
+             "$(G4HadronSimSrcDir)/LHEP_BIC/include"  \
+             "$(G4HadronSimSrcDir)/QGSP/include"      \
+             "$(G4HadronSimSrcDir)/QGSP_BERT/include" \
+             "$(G4HadronSimSrcDir)/QGSP_BIC/include"  \
+             "$(G4HadronSimSrcDir)/LC/include"        \
+             "$(G4HadronSimSrcDir)/SE/include"
+
+private
+#this is private to avoid passing on build info to clients
+use Geant4   v3r8* IExternal
+use GlastMS  v*
+
+macro src "src/*.cc " WIN32 "include/*.hh include/*.icc src/*.cc"
+library  G4HadronSim -no_share  \
+                       -s=$(G4HadronSimSrcDir)/Packaging $(src) \
+                       -s=$(G4HadronSimSrcDir)/LHEP      $(src) \
+                       -s=$(G4HadronSimSrcDir)/LHEP_BERT $(src) \
+                       -s=$(G4HadronSimSrcDir)/LHEP_BIC  $(src) \
+                       -s=$(G4HadronSimSrcDir)/QGSP      $(src) \
+                       -s=$(G4HadronSimSrcDir)/QGSP_BERT $(src) \
+                       -s=$(G4HadronSimSrcDir)/QGSP_BIC  $(src) \ 
+                       -s=$(G4HadronSimSrcDir)/LC        $(src) \
+                       -s=$(G4HadronSimSrcDir)/SE        $(src) 
+
