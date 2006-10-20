@@ -1,0 +1,7 @@
+setup.*
+cleanup.*
+NMake 
+*.mak*
+Makefile
+
+*.bat 
