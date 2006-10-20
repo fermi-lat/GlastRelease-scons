@@ -824,9 +824,13 @@ namespace rdbModel {
       return Visitor::VERRORABORT;
     }
     // Key (PRI for primary, MUL if first in a multiple-field key
-    // Save primary key info, if any
+    // or if nullable unique key, UNI if not nullable, unique.  
+    // Save primary key and unique key info, if any
     if (std::string(colDescrip[3]) == std::string("PRI")) {
       m_primColName = myName;
+      col->m_isUniqueKey = true;
+    } else if  (std::string(colDescrip[3]) == std::string("UNI")) {
+      col->m_isUniqueKey = true;
     }
 
     // Field 4 is default

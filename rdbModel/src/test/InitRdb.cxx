@@ -218,7 +218,15 @@ namespace rdbModel {
     const std::string tname = tbl->getName();
     //    int* signedKey = 0;
     //    m_rdb->insertRow(tname, toInsert, signedKey, newKey);
-    m_rdb->insertRow(tname, toInsert, 0, newKey);
+    try {
+      m_rdb->insertRow(tname, toInsert, 0, newKey);
+    }
+    catch (RdbException ex) {
+      std::cerr << "Insert row for table " << tname
+                << " failed with error" << std::endl
+                << "***  " << ex.what()  << std::endl;
+      return 4;
+    }
     if (m_dbg) {
       std::cout << "Inserted row into table " << tbl->getName();
       if (newKey) std::cout  << ", assigned key " << *newKey;
