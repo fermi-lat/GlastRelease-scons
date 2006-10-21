@@ -81,7 +81,7 @@ StatusCode AcdPocaTool::tileDistances (const AcdTileDim& tile,
 		      data.m_activeX,data.m_activeY,data.m_active2D,p);
   data.m_inPlane.set(p.x(),p.y(),p.z());
 
-  if ( data.m_arcLengthPlane < 0 ) return sc;
+  if ( data.m_arcLengthPlane < 1e-9 ) return sc;
 
   if (data.m_active2D > 0) { 
     // get the distance to the closest edge

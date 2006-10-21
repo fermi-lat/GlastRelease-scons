@@ -93,7 +93,7 @@ namespace AcdRecon {
       
       std::vector<double> dim = tile.dim(iVol);
       // Beware: these dimensions are in some sort of local system and for
-      // iFace = 1 || 3  x<->y 		
+      // iFace = 1 || 3  x<->y 
       double dX = dim[0];
       double dY = dim[1];
       double dZ = dim[2];
@@ -187,7 +187,11 @@ namespace AcdRecon {
 	// Compute DOCA and DOCA location between the track and edge
 	RayDoca raydoca;
 	AcdRecon::rayDoca(aTrack,c1,c2,raydoca,edge_length);
-	
+
+	// Make sure that we are going forward
+	double s_to_inter = raydoca.arcLenRay1();
+	if ( s_to_inter < 0 ) continue;
+
 	// Check if x,y,z along edge falls within limits of tile edge.
 	double length_2_intersect = raydoca.arcLenRay2();
 	
