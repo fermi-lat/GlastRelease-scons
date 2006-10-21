@@ -32,6 +32,8 @@ namespace eventFile {
     LSEWriter( const std::string& filename, unsigned runid = 0 );
     ~LSEWriter();
 
+    std::string name() const { return m_name; };
+
     void write( const LSE_Context&, const EBF_Data&, const LPA_Info& );
     void write( const LSE_Context&, const EBF_Data&, const LCI_ACD_Info& );
     void write( const LSE_Context&, const EBF_Data&, const LCI_CAL_Info& );
