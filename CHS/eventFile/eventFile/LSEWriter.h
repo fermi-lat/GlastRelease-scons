@@ -42,12 +42,6 @@ namespace eventFile {
     void close();
 
     // header mutators
-    void runid( unsigned rid ) { m_hdr.m_runid = rid; };
-    void begSec( unsigned sec ) { m_hdr.m_secs_beg = sec; };
-    void endSec( unsigned sec ) { m_hdr.m_secs_end = sec; };
-    void evtcnt( unsigned long long evt ) { m_hdr.m_evtcnt = evt; };
-    void begGEM( unsigned long long gem ) { m_hdr.m_GEMseq_beg = gem; };
-    void endGEM( unsigned long long gem ) { m_hdr.m_GEMseq_end = gem; };
     void seqErr( unsigned apid, unsigned seqerr, int islot )
       {
 	if ( islot >= LSEHEADER_MAX_APIDS ) return;

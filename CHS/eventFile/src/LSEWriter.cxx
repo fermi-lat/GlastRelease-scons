@@ -1,4 +1,6 @@
 #include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <sstream>
 #include <stdexcept>
@@ -45,6 +47,10 @@ namespace eventFile {
       writeHeader();
       fclose( m_FILE );
       m_FILE = NULL;
+      if ( m_hdr.m_evtcnt == 0ULL ) {
+	off_t zero(0);
+	truncate( m_name.c_str(), zero );
+      }
     }
   }
 
@@ -87,6 +93,15 @@ namespace eventFile {
       throw std::runtime_error( ess.str() );
     }
     ebf.write( m_FILE );
+
+    // capture header information
+    if ( m_hdr.m_evtcnt == 0ULL ) {
+      m_hdr.m_secs_beg = ctx.current.timeSecs;
+      m_hdr.m_GEMseq_beg = ctx.scalers.sequence;
+    }
+    m_hdr.m_evtcnt++;
+    m_hdr.m_secs_end = ctx.current.timeSecs;
+    m_hdr.m_GEMseq_end = ctx.scalers.sequence;
   }
   
   void LSEWriter::write( int itype, const void* buf, size_t len )
