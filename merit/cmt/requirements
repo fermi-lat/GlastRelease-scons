@@ -1,11 +1,10 @@
 package merit
-version v6r33p3
+version v6r34
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 branches doc
 
 use GlastPolicy v*
-use GlastClassify * 
 
 apply_pattern packageShr
 
