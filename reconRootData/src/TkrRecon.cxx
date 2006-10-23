@@ -6,7 +6,8 @@
 ClassImp(TkrRecon)
 
 const Int_t nd = 10000;
-TkrCluster *TkrRecon::keepCluster[nd];
+const Int_t maxCluster = 16384;
+TkrCluster *TkrRecon::keepCluster[maxCluster];
 TkrTrack *TkrRecon::keepTrack[nd];
 TkrVertex *TkrRecon::keepVertex[nd];
 Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, TkrRecon::indVertex=0;
@@ -42,9 +43,6 @@ void TkrRecon::Clear(Option_t* /*option*/) {
     static Int_t limitCluster = 100;
     static Int_t limitTrack = 100;
     static Int_t limitVertex = 100;
-    //static TkrCluster *keepCluster[nd];
-    //static TkrVertex *keepVertex[nd];
-    //static TkrTrack *keepTrack[nd];
 
 //    if (m_clusterCol) m_clusterCol->Delete();
 //    if (m_trackCol) m_trackCol->Delete();
@@ -58,16 +56,19 @@ void TkrRecon::Clear(Option_t* /*option*/) {
         n = m_clusterCol->GetEntries();
         if (n > limitCluster) {
             limitCluster = n + 10;
-            if (limitCluster > nd)  
+            if (limitCluster > maxCluster)  
                 std::cout << "!!!Warning: limit for TkrCluster Array is greater than " 
-                     << nd << std::endl;
+                     << maxCluster << std::endl;
             for (j = 0; j<indCluster; j++) delete keepCluster[j];
             indCluster = 0;
         }
+        // add current clusters for this event to the keepCluster array
         for (i=0;i<n;i++) 
             keepCluster[indCluster+i] = (TkrCluster*)m_clusterCol->At(i);
         indCluster +=n;
-        if (indCluster > nd-limitCluster) {
+        // if we're close to the max number of clusters in the static array
+        // clear the whole array out
+        if (indCluster > maxCluster-limitCluster) {
             for (j = 0; j<indCluster;j++) delete keepCluster[j];
             indCluster = 0;
         }

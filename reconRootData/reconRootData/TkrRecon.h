@@ -72,7 +72,7 @@ private:
     /// Diagnostics
     TkrDiagnostics*   m_diagnostics;
 
-    static TkrCluster *keepCluster[10000]; //!
+    static TkrCluster *keepCluster[16384]; //!
     static TkrTrack *keepTrack[10000]; //!
     static TkrVertex *keepVertex[10000]; //!
     static Int_t indCluster, indTrack, indVertex; //!

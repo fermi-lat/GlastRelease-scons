@@ -3,6 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r7      22-Oct-06  : HMK increase TkrCluster static array to max
+                       128 * 8 * 16 to address JIRA ROOT-25
 v9r6p1    07-Aug-06  : HMK minor patch, add in cluster mutliplicity to Fake and
           CompareInRange
 v9r6      07-Aug-06  : NO  AdfRecon store clusters multiplicity
