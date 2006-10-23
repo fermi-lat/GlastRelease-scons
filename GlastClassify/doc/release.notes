@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+23-Oct-06  v4r0p0 TU  Convert to a Gaudi package, including ClassifyAlg and fixes for int problem
 06-Oct-06  v3r6p6 TU  Tag for the Handoff Review processing
 05-Oct-06  v3r6p5 TU  Interim tag to check builds **NOT FOR RELEASE**
 26-Sep-06  v3r6p4 TU  Incorporate new IM analysis sheet: Pass4 Analysis_Complete_v8
