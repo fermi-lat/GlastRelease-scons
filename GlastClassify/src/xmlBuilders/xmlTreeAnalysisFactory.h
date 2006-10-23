@@ -10,7 +10,7 @@ $Header$
 #define xmlTreeAnalysisFactory_h
 
 #include "GlastClassify/ITupleInterface.h"
-#include "src/ImActivityNodes/IImActivityNode.h"
+#include "../ImActivityNodes/IImActivityNode.h"
 
 #include <vector>
 #include <map>

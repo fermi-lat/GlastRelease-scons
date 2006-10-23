@@ -6,7 +6,7 @@ $Header$
 */
 
 #include "TreeAnalysis.h"
-#include "src/ImActivityNodes/IImActivityNode.h"
+#include "ImActivityNodes/IImActivityNode.h"
 #include <fstream>
 #include <cassert>
 #include <stdexcept>

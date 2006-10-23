@@ -4,9 +4,9 @@
 $Header$
 
 */
-#include "GlastClassify/AtwoodTrees.h"
+#include "AtwoodTrees.h"
 #include "TreeAnalysis.h"
-#include "src/xmlBuilders/xmlTreeAnalysisFactory.h"
+#include "xmlBuilders/xmlTreeAnalysisFactory.h"
 
 #include "classifier/DecisionTree.h"
 #include "facilities/Util.h" // for expandEnvVar    

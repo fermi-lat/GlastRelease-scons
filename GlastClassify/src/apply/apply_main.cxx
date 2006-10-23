@@ -6,7 +6,7 @@ $Header$
 
 #include "RootTuple.h"
 
-#include "GlastClassify/AtwoodTrees.h"
+#include "../AtwoodTrees.h"
 #include "facilities/Util.h"
 
 #include <iostream>

@@ -5,28 +5,38 @@ author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
 
-apply_pattern package_include
-apply_pattern package_linkopts
-apply_pattern package_stamps
+apply_pattern packageShr
 
+apply_pattern package_include
 
 private
 #-----------------------------------------------------------------
+apply_pattern package_Cshlibflags
+apply_pattern package_headers
+
 macro source "*.cxx " WIN32 "*.h *.cxx"
-library  GlastClassify -no_share  \
-                       -s=../GlastClassify $(source) \
-                       -s=../src $(source) \
-                       -s=../src/ImActivityNodes $(source) \
-                       -s=../src/XT $(source) \
-                       -s=../src/xmlBuilders $(source)
 
 use classifier *
 use xmlBase v5r*
+
+use ntupleWriterSvc v*
 
 use ROOT * IExternal
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 macro_append ROOT_cppflags "" WIN32 " /wd4800 "
 
+library  ClassificationTree -no_share                    \
+                                $(GlastClassify_headers) \
+                            -s= $(source)                \
+                            -s=ImActivityNodes $(source) \
+                            -s=XT $(source)              \
+                            -s=xmlBuilders $(source) 
+
+library  GlastClassify      -s=Dll $(source)   
+   
+macro_append GlastClassify_shlibflags "" \
+             Linux " -L${GLASTCLASSIFYROOT}/${BINDIR}  -lClassificationTree " \
+             WIN32 " /libpath:${GLASTCLASSIFYROOT}/${BINDIR} ClassificationTree.lib "
 
 # this app creates the classification trees
 macro txt "" WIN32 " *.txt"

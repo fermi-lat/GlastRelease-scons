@@ -17,7 +17,7 @@ class IImActivityNode;
 #include <utility>
 #include <map>
 
-#include "src/XT/XTtupleVars.h"
+#include "XT/XTtupleVars.h"
 
 namespace GlastClassify {
 
