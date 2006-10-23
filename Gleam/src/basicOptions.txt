@@ -185,7 +185,7 @@ Acd.Members = {"AcdReconAlg"};
 // ----------------------------
 //  tuple generation 
 //
-ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit"};
+ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 Reconstruction.Members +=     {"AnalysisNtupleAlg" }; // AnaTup and Filter stuff into the tuple
