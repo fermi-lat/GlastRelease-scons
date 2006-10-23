@@ -96,6 +96,7 @@ private:
     }
     void addItem(const std::string & itemName,  int* pint)
     {
+//        new TupleItem(itemName, pint);
     }
 
 
@@ -216,9 +217,10 @@ StatusCode meritAlg::setupTools() {
             m_merit->addItem( varName, val);
             return IValsTool::Visitor::CONT;
         }
-        IValsTool::Visitor::eVisitorRet analysisValue(std::string , const int& ) const
+        IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const int& value) const
         {
-            // ignore, for now
+            int * val = const_cast<int*>(&value);
+            m_merit->addItem( varName, val);
             return IValsTool::Visitor::CONT;
         }
         IValsTool::Visitor::eVisitorRet analysisValue(std::string , const unsigned int& ) const
@@ -308,7 +310,7 @@ void meritAlg::printOn(std::ostream& out)const{
     for(Tuple::const_iterator tit =m_tuple->begin(); tit != m_tuple->end(); ++tit){
         const TupleItem& item = **tit;
         out << std::setw(25) << item.name() 
-            << "  " << std::setprecision(4)<< double(item) << std::endl;
+            << "  " << std::setprecision(4)<< item.value() << std::endl;
     }
 }
 
@@ -321,7 +323,7 @@ void meritAlg::printOnByPrefix(std::ostream& out, std::string prefix)const{
         if(!item.name().find(prefix))
         {
             out << std::setw(25) << item.name() 
-                << "  " << std::setprecision(4)<< double(item) << std::endl;
+                << "  " << std::setprecision(4)<< item.value() << std::endl;
         }
     }
 }
