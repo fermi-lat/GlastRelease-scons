@@ -24,7 +24,9 @@ public:
     
     virtual ~GleamItem<T>() {}
 
-    operator double()const {return (double)*m_pdata;}
+    operator double()const {
+        return (double)*m_pdata;
+    }
 private:
     T*   m_pdata;
     std::string m_name;
