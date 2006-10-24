@@ -264,7 +264,9 @@ double TupleItem::value() const
         case FLOAT:  return *(const float*)(m_pdatum);
         case INT:    return *(const int*)(m_pdatum);
         case DOUBLE: return *m_pdatum;
+        default:    throw std::runtime_error("TupleItem::value: unexpected type");
     }
+    return 0;
 }
 
 
