@@ -62,6 +62,10 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
   virtual StatusCode exitsLAT(const Event::TkrTrack& track, bool forward,
 			      AcdRecon::ExitData& data);
 
+  // @brief calculate the arclength at which a ray exits the tracking volume
+  virtual StatusCode exitsLAT(const Point& x, const Vector& v, bool forward,
+			      AcdRecon::ExitData& data);
+
   // @brief make the TDS object that states where the track left the ACD
   virtual StatusCode makeTkrPoint(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
 				  const Event::TkrTrackParams& params, Event::AcdTkrPoint*& tkrPoint );

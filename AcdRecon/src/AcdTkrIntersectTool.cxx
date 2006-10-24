@@ -221,6 +221,23 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 
 StatusCode AcdTkrIntersectTool::exitsLAT(const Event::TkrTrack& aTrack, bool upward,
 					 AcdRecon::ExitData& data) {
+ 
+  // which end of track to get hit from
+  const unsigned int hitIndex = upward ? 0 : aTrack.getNumHits() - 1;
+  const Event::TkrTrackHit* theHit = aTrack[hitIndex];
+
+  // get position, direction
+  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+  const Vector initialDirection = upward ? 
+    theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
+    -1.*  theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+  
+  return exitsLAT(initialPosition,initialDirection,upward,data);
+}
+ 
+
+StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vector& initialDirection, bool upward,
+					 AcdRecon::ExitData& data) {
 
   // Define the fiducial volume of the LAT
   // FIXME -- this should come for some xml reading service
@@ -236,16 +253,6 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Event::TkrTrack& aTrack, bool upw
 
   MsgStream log(msgSvc(),name()) ;   
 
-  // which end of track to get hit from
-  const unsigned int hitIndex = upward ? 0 : aTrack.getNumHits() - 1;
-  const Event::TkrTrackHit* theHit = aTrack[hitIndex];
-
-  // get position, direction
-  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-  const Vector initialDirection = upward ? 
-    theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
-    -1.*  theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
-  
   // hits -x or +x side ?
   const double normToXIntersection =  initialDirection.x() > 0 ?  
     -1.*side_distance - initialPosition.x() :    // hits -x side

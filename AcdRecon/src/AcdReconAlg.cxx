@@ -23,6 +23,7 @@
 #include "GaudiKernel/StatusCode.h"
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
 #include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
@@ -328,6 +329,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 
     sc = trackDistances(digiCol,acdPocaSet,acdIntersections,acdGapPocas,acdPoints);
     if (sc.isFailure()) return sc;
+    
+    sc = vertexDistances(digiCol,acdPocaSet,acdPoints);
+    if (sc.isFailure()) return sc;
 
     static Event::AcdPocaMap acdPocaMap;
     for (  Event::AcdPocaSet::iterator itrPoca = acdPocaSet.begin(); 
@@ -451,7 +455,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	// grap the track direction information
 	const Event::TkrTrackHit* firstHit = (*trackTds)[0];
 	upwardExtend.m_point = firstHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-	upwardExtend.m_dir   = -(firstHit->getDirection(Event::TkrTrackHit::SMOOTHED));
+	upwardExtend.m_dir   = firstHit->getDirection(Event::TkrTrackHit::SMOOTHED);
 	upwardExtend.m_energy = firstHit->getEnergy();
 	upwardExtend.m_index = iTrack;
 	upwardExtend.m_upward = true;
@@ -459,7 +463,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	const unsigned int lastHitIdx = trackTds->getNumHits() - 1;
 	const Event::TkrTrackHit* lastHit = (*trackTds)[lastHitIdx];
 	downwardExtend.m_point = lastHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-	downwardExtend.m_dir   = lastHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+	downwardExtend.m_dir   = -(lastHit->getDirection(Event::TkrTrackHit::SMOOTHED));
 	downwardExtend.m_energy = lastHit->getEnergy();
 	downwardExtend.m_index = iTrack;
 	downwardExtend.m_upward = false;
@@ -574,6 +578,114 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 }
 
 
+
+StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol, 
+					Event::AcdPocaSet& pocaSet,
+					Event::AcdTkrPointCol& exitPoints) {
+
+    // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
+    //  calculates the DOCA and Active Distance quantities.  Updates the
+    // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
+    // TDS Input: EventModel::TkrRecon::TkrFitTrackCole
+	
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
+     
+    // Retrieve the information on fit tracks
+    SmartDataPtr<Event::TkrVertexCol> vertexTds(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
+	
+    if (!vertexTds) {
+      log << MSG::DEBUG << "No reconstructed vertex collection found on the TDS" 
+	  << endreq;
+        return StatusCode::SUCCESS;
+    }
+	
+    int nVtx = vertexTds->size();
+    if ( nVtx == 0 ) {      
+      log << MSG::DEBUG << "No reconstructed vertices found on the TDS" 
+	  << endreq;
+      return StatusCode::SUCCESS;
+    }
+    Event::TkrVertex* theVertex = (*vertexTds)[0];
+    if ( theVertex == 0 ) {
+      log << MSG::DEBUG << "Missed a vertex" 
+	  << endreq;
+        return StatusCode::SUCCESS;
+    }
+
+    // Places to store the track endpoint and direction
+    AcdRecon::TrackData upwardExtend;
+    AcdRecon::TrackData downwardExtend;
+    
+    // where does this track leave the LAT?
+    AcdRecon::ExitData upwardExit;
+    AcdRecon::ExitData downwardExit;
+
+    // grap the vertex information
+    upwardExtend.m_point = theVertex->getPosition();
+    upwardExtend.m_dir   = theVertex->getDirection();
+    upwardExtend.m_energy = theVertex->getEnergy();
+    upwardExtend.m_index = -1;
+    upwardExtend.m_upward = true;
+    Point upPoint(upwardExtend.m_point.x(),upwardExtend.m_point.y(),upwardExtend.m_point.z());
+    Vector upDir(upwardExtend.m_dir.x(),upwardExtend.m_dir.y(),upwardExtend.m_dir.z());   
+
+    downwardExtend.m_point = theVertex->getPosition();
+    downwardExtend.m_dir   = -(theVertex->getDirection());
+    downwardExtend.m_energy = theVertex->getEnergy();
+    downwardExtend.m_index = -1;
+    downwardExtend.m_upward = false;
+    Point downPoint(downwardExtend.m_point.x(),downwardExtend.m_point.y(),downwardExtend.m_point.z());
+    Vector downDir(downwardExtend.m_dir.x(),downwardExtend.m_dir.y(),downwardExtend.m_dir.z());
+   
+    // get the LAT exit points
+    if ( m_intersectionTool != 0 ) {
+      sc = m_intersectionTool->exitsLAT(upPoint,upDir,true,upwardExit);
+      if (sc.isFailure()) {
+	log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed on upward end for vertex- we'll bravely carry on" << endreq;
+	return StatusCode::SUCCESS;
+      }
+      sc = m_intersectionTool->exitsLAT(downPoint,downDir,false,downwardExit);
+      if (sc.isFailure()) { 
+	log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed "<< "on downward end for vertex- we'll bravely carry on" << endreq;
+	return StatusCode::SUCCESS;
+      }
+    }	  
+    
+    // keep track of all the pocas to hit tiles
+    AcdRecon::PocaDataMap upwardPocas;
+    AcdRecon::PocaDataMap downwardPocas;
+    
+    // calculate all the distances to the hit tiles at once
+    sc = hitDistances(upwardExtend,digiCol,upwardPocas);
+    if (sc.isFailure()) return sc;
+
+    sc = hitDistances(downwardExtend,digiCol,downwardPocas);
+    if (sc.isFailure()) return sc;
+
+    // filter the lists for further procsessing
+    AcdRecon::PocaDataPtrMap upPocasCut;
+    AcdRecon::PocaDataPtrMap downPocasCut;
+    
+    if ( m_pocaTool != 0 ) {
+      sc = m_pocaTool->filter(upwardPocas,upPocasCut);
+      if (sc.isFailure()) return sc;
+      
+      sc = m_pocaTool->filter(downwardPocas,downPocasCut);
+      if (sc.isFailure()) return sc;
+    }
+
+    // extrapolate the track upwards
+    sc = extrapolateVertex(upwardExtend, upPocasCut, upwardExit, pocaSet, exitPoints);
+    if (sc.isFailure()) return sc;
+
+    // extrapolate the track downwards
+    sc = extrapolateVertex(downwardExtend, downPocasCut, downwardExit, pocaSet, exitPoints);
+    if (sc.isFailure()) return sc;
+
+    return sc;
+	
+}
 
 StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack, 
                                      const Event::AcdDigiCol& digiCol,
@@ -788,6 +900,58 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
 
   // build the TrkPoint
   Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(isectData.m_arcLength,startEnergy,true);
+  Event::AcdTkrPoint* exitPoint(0);
+  if ( m_intersectionTool != 0 ) {
+    sc = m_intersectionTool->makeTkrPoint(trackData,isectData,next_params,exitPoint);
+    if ( sc.isFailure() ) return sc;
+    if ( exitPoint != 0 ) {
+      exitPoint->writeOut(log);
+      points.push_back(exitPoint);      
+    }
+  }
+
+  return sc;
+
+}
+
+StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
+					 const AcdRecon::PocaDataPtrMap& pocaDataMap,
+					 const AcdRecon::ExitData& isectData,
+					 Event::AcdPocaSet& pocaSet,
+					 Event::AcdTkrPointCol& points) {
+
+  MsgStream   log( msgSvc(), name() );
+  StatusCode sc = StatusCode::SUCCESS;  
+
+  // first figure out how far to extrapolate track
+  double maxArcLength(0.);
+
+  // figure out which direction we are going in
+  bool forward = isectData.m_arcLength > 0;
+  
+  // run the propagator out to the right arclength
+  if ( !forward ) maxArcLength *= -1.;
+
+  // build all the pocas
+  for ( AcdRecon::PocaDataPtrMap::const_iterator itr = pocaDataMap.begin(); itr != pocaDataMap.end(); itr++ ) {
+    AcdRecon::PocaData& pocaData = *(itr->second);
+    float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+    //Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(pocaArcLength,startEnergy,true);
+    //AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_pocaVector,pocaData.m_active3DErr);
+    Event::AcdTkrHitPoca* aPoca(0);
+    if ( m_pocaTool != 0 ) {
+      sc = m_pocaTool->makePoca(trackData,pocaData,aPoca);
+    }
+    if ( sc.isFailure() ) return sc;
+    if ( aPoca != 0 ) {
+      aPoca->writeOut(log);
+      pocaSet.insert(aPoca);
+    }
+  }
+
+  // build the TrkPoint
+  //Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(isectData.m_arcLength,startEnergy,true);
+  Event::TkrTrackParams next_params;
   Event::AcdTkrPoint* exitPoint(0);
   if ( m_intersectionTool != 0 ) {
     sc = m_intersectionTool->makeTkrPoint(trackData,isectData,next_params,exitPoint);

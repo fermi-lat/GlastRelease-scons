@@ -5,6 +5,7 @@ package manager:H.Kelly
 @verbatim
 
 v3r6      19-Oct-2006 HMK Add downward end of tracks in ActDist3D
+	  24-Oct-2006 EAC Also added extrapolation based on VTX data 
 v3r5p1    13-Jul-2006 EAC Fixed up a bug in stepping in calc for AcdSplashVars
 v3r5      06-Jul-2006 EAC Implemented calculations for AcdSplashVars from Phillipe Bruel's stuff
 v3r4      22-Jun-2006 EAC Added AcdSplashVars
