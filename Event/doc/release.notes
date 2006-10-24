@@ -3,7 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
- *
+ * v11r15   24-Oct-06 THB Add source name to McEvent
  * v11r15   19-Oct-06 HMK Store ActDist3D for downward tracks in AcdRecon
  * v11r14   28-Sep-06 EAC update AcdDigi to add setRanges method
  * v11r13   22-Jun-06 EAC Added AcdSplashVars
