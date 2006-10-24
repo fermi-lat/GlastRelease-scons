@@ -34,7 +34,7 @@ library  ClassificationTree -no_share                    \
 
 library  GlastClassify      -s=Dll $(source)   
    
-macro_append GlastClassify_shlibflags "" \
+macro_append GlastClassify_linkopts "" \
              Linux " -L${GlastClassify_cmtpath}/lib  -lClassificationTree " \
              WIN32 " /libpath:${GLASTCLASSIFYROOT}/${BINDIR} ClassificationTree.lib "
 
