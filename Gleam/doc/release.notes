@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r20   HTB 24-oct-06  GlastClassify now a dll
 * v6r19p1 LSR 19-Aug-06  Mostly cosmetic changes to src/readAndDisplay.txt
 * v6r19   HMK 18-Jul-06  Add AncillaryData packages
 * v6r18p2 THB 25-jun-06  CalUtil no longer a Gaudi module
