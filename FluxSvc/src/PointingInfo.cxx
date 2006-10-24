@@ -53,6 +53,7 @@ void PointingInfo::set(double time, bool insideSAA)
     B=loc.B();
     lat_mag = loc.geolat();
     in_saa= insideSAA? 1:0;
+    zenith_scz = 180/M_PI* SkyDir(ra_zenith,dec_zenith).difference(SkyDir(ra_scz,dec_scz));
 
 }
 //------------------------------------------------------------------------
@@ -109,6 +110,7 @@ void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
     - PtPos[3] (m) current orbit position
     - PtRax,PtDecx (deg) equatorial coordinates for orientation of S/C x-axis
     - PtRaz,PtDecz (deg) equatorial coordinates for orientation of S/C z-axis 
+    - PtSCzenith  (deg) current angle between zenith and S/C z-axis
     */
 
     if( tuple==0 ) return;
@@ -122,5 +124,6 @@ void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
     tuple->addItem(tname, "PtDecz",   &dec_scz);
     tuple->addItem(tname, "PtRax",    &ra_scx);
     tuple->addItem(tname, "PtDecx",   &dec_scx);
+    tuple->addItem(tname, "PtSCzenith", &zenith_scz);
 
 }

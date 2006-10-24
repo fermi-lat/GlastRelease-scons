@@ -51,6 +51,7 @@ public:
     float livetime;
     float L; ///< McIllwain L parameter
     float B; ///< magnetic field
+    float zenith_scz; ///< space craft zenith angle
 
 };
 
