@@ -44,18 +44,61 @@ $Header$
 static const AlgFactory<InterleaveAlg>  Factory;
 const IAlgFactory& InterleaveAlgFactory = Factory;
 
+namespace {
+
+    std::vector<std::string> sourcenames;
+    std::map<std::string, BackgroundSelection*> selectormap;
+    InterleaveAlg* instance(0);
+    double defaultRate(500);
+}
 
 double InterleaveAlg::s_rate=0;
+void InterleaveAlg::defineSource(const std::string& name){ sourcenames.push_back(name);}
+
+void InterleaveAlg::currentSource(const std::string& name)
+{
+    if( instance==0) return; // not set up yet
+    BackgroundSelection* selector = selectormap[name];
+    instance->setSelector( selector );
+}
+
+double InterleaveAlg::downlinkRate(const std::string& name)
+{
+    if( instance==0) return defaultRate; // just to get started 
+    double ret(0);
+    if(name.empty()){
+        for(std::map<std::string, BackgroundSelection*>::const_iterator it(selectormap.begin()); it!=selectormap.end();++it){
+            ret += it->second->downlinkRate();
+        }
+
+    } else{
+        ret = selectormap[name]->downlinkRate();
+    }
+    return ret;
+}
+double InterleaveAlg::triggerRate(const std::string& name)
+{
+    double ret(0);
+    if(name.empty()){
+        for(std::map<std::string, BackgroundSelection*>::const_iterator it(selectormap.begin()); it!=selectormap.end();++it){
+            ret += it->second->triggerRate();
+        }
+
+    } else{
+        ret = selectormap[name]->triggerRate();
+    }
+    return ret;
+}
 
 //------------------------------------------------------------------------
 //! ctor
 InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 , m_selector(0)
-, m_count(0), m_downlink(0),  m_meritTuple(0)
-, m_magLatLeaf(0) 
+, m_count(0), m_downlink(0),  m_meritTuple(0), m_runLeaf(0)
 
 {
+
     // declare properties with setProperties calls
     declareProperty("RootFile",     m_rootFile="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
@@ -114,7 +157,14 @@ StatusCode InterleaveAlg::initialize(){
         if( !file.empty()){
             facilities::Util::expandEnvVar(&file);
             log << MSG::INFO << "Using directory " << file << " for interleave." << endreq;
-            m_selector = new BackgroundSelection(file, m_disableList, m_meritTuple);
+            for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
+                const std::string& name=*it;
+                log << MSG::INFO << "Will interleave source based on value of "<< name << std::endl;
+                selectormap[name]= new BackgroundSelection(name, file, m_disableList, m_meritTuple);
+            }
+            // initialized, can use the statics now.
+            instance = this;
+
         }else{
             log << MSG::INFO<< "No file specified for interleave" << endreq;
             return sc;
@@ -127,10 +177,8 @@ StatusCode InterleaveAlg::initialize(){
         //return StatusCode::FAILURE;
     }
 
-    // set initial default values for downlink rate to fold in
-    s_rate = m_selector->downlinkRate(0.);
-    log << MSG::INFO << "initialized OK: initial downlink rate to merge is " << s_rate << " Hz"<< endreq;
-    m_LivetimeSvc->setTriggerRate(m_selector->triggerRate(0));
+    log << MSG::INFO << "initialized OK: initial downlink rate to merge is " << downlinkRate() << " Hz"<< endreq;
+    m_LivetimeSvc->setTriggerRate(triggerRate());
 
     return sc;
 }
@@ -148,11 +196,7 @@ StatusCode InterleaveAlg::execute()
 
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
     
-    if( m_magLatLeaf==0){
-        if( (m_magLatLeaf = m_meritTuple->GetLeaf("PtMagLat"))==0){
-            log << MSG::ERROR << "PtMagLat leaf not found in the tuple" << endreq;
-            return StatusCode::FAILURE;
-        }
+    if( m_runLeaf==0){
         if( (m_runLeaf = m_meritTuple->GetLeaf("EvtRun"))==0){
             log << MSG::ERROR << "EvtRun leaf not found in the tuple" << endreq;
             return StatusCode::FAILURE;
@@ -178,12 +222,10 @@ StatusCode InterleaveAlg::execute()
     }
     ++m_count;
 
-    // set current downlink rate for access by the source
-    s_rate = m_selector->downlinkRate(magneticLatitude());
 
     // let the livetime service know about the current trigger rate,
     // and set the current accumulated live time in the header
-    m_LivetimeSvc->setTriggerRate(m_selector->triggerRate(magneticLatitude()));
+    m_LivetimeSvc->setTriggerRate( triggerRate() );
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
 
@@ -191,7 +233,7 @@ StatusCode InterleaveAlg::execute()
 
     // ask for a tree corresponding to our current position: it will set all the tuple
 
-    m_selector->selectEvent(magneticLatitude());
+    m_selector->selectEvent();
 
     // overwrite the event info
     copyEventInfo();
@@ -245,10 +287,10 @@ void InterleaveAlg::copyEventInfo()
     float EvtLiveTime      = header->livetime();
 
     // load the map entries and save the row
-    m_run = header->run();
-    m_event = header->event();
-    m_irun= static_cast<int>(m_runLeaf->GetValue());
-    m_ievent = static_cast<int>( m_eventLeaf->GetValue());
+    m_run   =  header->run();
+    m_event =  header->event();
+    m_irun  =  static_cast<int>(m_runLeaf->GetValue());
+    m_ievent=  static_cast<int>( m_eventLeaf->GetValue());
     m_rootTupleSvc->saveRow(m_mapName.value());
 
     // these have to be done here, since there is no algorithm 
@@ -261,13 +303,6 @@ void InterleaveAlg::copyEventInfo()
     if( sourceLeaf==0 ) return; // testing mode
     float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());
     sourceid=-1-sourceid;
-
-
 }
 
-//------------------------------------------------------------------------
-double InterleaveAlg::magneticLatitude()
-{
-    return m_magLatLeaf->GetValue();
-}
 

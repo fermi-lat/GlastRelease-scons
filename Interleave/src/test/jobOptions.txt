@@ -41,7 +41,7 @@ ApplicationMgr.TopAlg = {"Sequencer/Top" };
 //the top sequence loop
 Top.Members={"Sequencer/Generator"};
 
-Generator.Members     = {"FluxAlg", "PointInfoAlg",  "Sequencer/Trigger"};
+Generator.Members     = {"FluxAlg", "PointInfoAlg", "Sequencer/Trigger"};
 
 Trigger.Members       = {"TriggerAlg"};
 Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
@@ -51,12 +51,14 @@ Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
 //          define sources, select the one(s) to generate
 FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 
-FluxAlg.sources = {"sampled_background"};
+FluxAlg.sources = {"sampled_background", "sampled_EarthAlbedo"};
 
 // the "background" to sample for mixing
 InterleaveAlg.RootFile = "$(ROOTTESTDATAROOT)/data/default/merit.root";
 InterleaveAlg.DisableList += {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*"};
 ApplicationMgr.EvtMax = 50; 
+RoottupleSvc.filename = "tuple.root";
+FluxAlg.zenithTheta=90;
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 

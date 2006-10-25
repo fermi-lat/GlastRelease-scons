@@ -1,6 +1,6 @@
  package Interleave
 
-version v0r8p2
+version v1r0
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -9,6 +9,10 @@ use FluxSvc v*
 use CLHEP v* IExternal
 use ntupleWriterSvc *
 use Trigger *
+
+#for FT1Alg
+use merit * 
+
 apply_pattern packageShr
 
 #=============================================================
@@ -32,14 +36,16 @@ use ROOT * IExternal
 apply_pattern package_Cshlibflags
 
 macro source "*.cxx" WIN32 "*.h *.cxx"
+macro xml "" WIN32 "*.xml"
 
 library Interleave \
  -s=../src $(source) \
- -s=Dll *.cxx
+ -s=Dll *.cxx \
+ -s=../xml $(xml)
 
 # test program, using local joboptions
 public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt
-apply_pattern package_test
+apply_pattern package_test  
 
 
 

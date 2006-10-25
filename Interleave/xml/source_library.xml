@@ -4,7 +4,14 @@
 
     <source name="sampled_background">
         <spectrum escale="GeV"> 
-            <SpectrumClass name="SampledBackground" /> 
+            <SpectrumClass name="SampledBackground" params="PtMagLat" /> 
+            <use_spectrum/>
+        </spectrum>
+    </source>
+
+    <source name="sampled_EarthAlbedo">
+        <spectrum escale="GeV"> 
+            <SpectrumClass name="SampledBackground" params="PtSCzenith"/> 
             <use_spectrum/>
         </spectrum>
     </source>

@@ -32,13 +32,14 @@ public:
     virtual const char* particleName() const{ return "p"; }
 
     /// Gives back the component name
-    virtual std::string title() const{ return "SampledBackground"; }
+    virtual std::string title() const{ return "SampledBackground for "+m_tupleVar; }
 
     /// Gives back solid angle from which particles come
     virtual double solidAngle() const;
 
 
 private:
+    std::string m_tupleVar; ///< Name of the ntuple variable used for the selection
 };
 
 #endif

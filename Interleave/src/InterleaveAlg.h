@@ -12,9 +12,12 @@ $Header$
 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
+#include <map>
+#include <string>
 class BackgroundSelection;
 class INTupleWriterSvc;
 class ILivetimeSvc;
+class SampledBackground;
 class TTree;
 class TFile;
 class TLeaf;
@@ -36,17 +39,24 @@ public:
     StatusCode execute();
     StatusCode finalize();
 
-    static double rate(){
-        return s_rate;
-    }
+    ///! 
+    static double downlinkRate(const std::string& tvar="");
+    static double triggerRate(const std::string& tvar="");
 
+    ///! Set the current source, 
+    static void currentSource(const std::string& tvar);
+    static void defineSource(const std::string& tvar);
+
+    ///! set the current selector
+    void setSelector(BackgroundSelection* selector){m_selector=selector;}
     
 private: 
     void copyEventInfo(); ///< set up 
 
-    double magneticLatitude();
+    //double magneticLatitude();
+    
+    BackgroundSelection* m_selector; ///< current selector
 
-    BackgroundSelection* m_selector;
 
     /// access the ntupleWriter service to write out to ROOT ntuples
     INTupleWriterSvc * m_rootTupleSvc;
@@ -64,7 +74,7 @@ private:
     int m_irun, m_ievent; ///< interleaved run, event
     TTree * m_meritTuple;
 
-    TLeaf * m_magLatLeaf;
+  //  TLeaf * m_magLatLeaf;
     TLeaf * m_runLeaf;
     TLeaf * m_eventLeaf;
 
