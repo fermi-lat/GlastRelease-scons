@@ -82,7 +82,6 @@ namespace rdbModel {
     std::string cnf("$(HOME)/.my.cnf");
     facilities::Util::expandEnvVar(&cnf);
     ok = conn->setOption(rdbModel::DBreadDefaultFile, cnf.c_str());
-    //if (ok) ok = conn->setOption(rdbModel::DBreadDefaultGroup, "MOOT_WRITE");
     if (ok) ok = conn->setOption(rdbModel::DBreadDefaultGroup, group.c_str());
     if (ok) ok =  conn->open(host, port, NULL, NULL, dbname.c_str());
     if (!ok) return -2;   // no connection

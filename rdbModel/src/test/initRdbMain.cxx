@@ -86,10 +86,10 @@ int main(int narg, char** args) {
   int ret = i.buildModel(dfile);
   if (ret) return 0;
   // Make db connection and verify compatibility
-  // First arg is char* host.  Should pick up value in .my.cnf
+  // Account info should be in group with name = dbname
   ret = i.dbconnect(host, 0, 
-                    std::string("mood_test"), 
-                    std::string("MOOT_WRITE"));
+                    dbname,
+                    dbname);
   if (ret) return 0;
   
   // Handle init file
