@@ -56,7 +56,7 @@ public:
   /// The value of the GemTime registers at event capture time
   inline const GemTime& timeHack() const { return m_timeHack; } 
   
-  /// The number of 50ns ticks since last the last time hack
+  /// The number of 50ns ticks of the event 
   inline UInt_t timeTicks() const { return m_timeTicks; }
   
   /// set everything at once

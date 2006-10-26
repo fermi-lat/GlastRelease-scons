@@ -94,7 +94,7 @@ public:
     /// Valid for real or simulated data, in seconds since mission start 
     inline Double_t getTimeStamp() const { return m_timeStamp; };
 
-    /// Valid for both real or simulated data
+    /// Currently valid only for simulated data
     inline Double_t getLiveTime() const { return m_liveTime; };
 
     /// Seconds as reported by original 30 Hz clock (real data only)
