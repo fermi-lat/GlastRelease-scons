@@ -41,4 +41,4 @@
 
 /////////////////////// MISC OPTIONS //////////////////////////////////////////
 //-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
-//ToolSvc/XtalDigiTool.NoRandomNoise = false;
+//CalDigiAlg.XtalDigiTool.NoRandomNoise = false;
