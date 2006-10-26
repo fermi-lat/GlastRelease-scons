@@ -45,14 +45,15 @@ static const AlgFactory<InterleaveAlg>  Factory;
 const IAlgFactory& InterleaveAlgFactory = Factory;
 
 namespace {
+    // For static function access to the Gaudi-generated instance
+    InterleaveAlg* instance(0);
 
     std::vector<std::string> sourcenames;
     std::map<std::string, BackgroundSelection*> selectormap;
-    InterleaveAlg* instance(0);
     double defaultRate(500);
 }
 
-double InterleaveAlg::s_rate=0;
+
 void InterleaveAlg::defineSource(const std::string& name){ sourcenames.push_back(name);}
 
 void InterleaveAlg::currentSource(const std::string& name)
@@ -95,9 +96,10 @@ double InterleaveAlg::triggerRate(const std::string& name)
 InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
 , m_selector(0)
-, m_count(0), m_downlink(0),  m_meritTuple(0), m_runLeaf(0)
+, m_count(0),   m_meritTuple(0), m_runLeaf(0)
 
 {
+    if( instance!=0 ) throw std::invalid_argument("InterleaveAlg: only one instance allowed!");
 
     // declare properties with setProperties calls
     declareProperty("RootFile",     m_rootFile="");
@@ -229,8 +231,6 @@ StatusCode InterleaveAlg::execute()
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
 
-    ++m_downlink;
-
     // ask for a tree corresponding to our current position: it will set all the tuple
 
     m_selector->selectEvent();
@@ -251,7 +251,7 @@ StatusCode InterleaveAlg::finalize(){
     if( m_selector==0) return sc;
     MsgStream log(msgSvc(), name());
 
-    log << MSG::INFO << "Processed "<< m_count << " sampled background events, of which "<< m_downlink<< " were passed." << endreq; 
+    log << MSG::INFO << "Inserted "<< m_count << " sampled background events." << endreq; 
     delete m_selector;
     return sc;
 }

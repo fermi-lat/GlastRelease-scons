@@ -1,6 +1,6 @@
 /** @file BackgroundSelection.h
 
-    @brief declaration of the BackGroundSelection class
+    @brief declaration of the BackgroundSelection class
 
 $Header$
 

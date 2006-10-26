@@ -25,8 +25,11 @@ class TLeaf;
 
 /** @class InterleaveAlg
     @brief Gaudi Alg that will fill the ntuple with a background event
- 
-    It is expected to be invoked for every non-triggering event, on a branch for the Trigger
+
+    When initialized, it expects to find that one or more instances of SampledBackground have declared sources, 
+    with the defineSource static method 
+
+    The execute method is expected to be invoked for every non-triggering event, on a branch for the Trigger
     algorithm sequence.
 
  */
@@ -39,12 +42,15 @@ public:
     StatusCode execute();
     StatusCode finalize();
 
-    ///! 
+    ///! access rate according to section variable
+    ///! @param tvar Name of key variable: if blank, sum all rates
     static double downlinkRate(const std::string& tvar="");
     static double triggerRate(const std::string& tvar="");
 
     ///! Set the current source, 
     static void currentSource(const std::string& tvar);
+
+    ///! during initialization, add this source name
     static void defineSource(const std::string& tvar);
 
     ///! set the current selector
@@ -68,18 +74,13 @@ private:
     StringArrayProperty m_disableList;
     StringProperty m_mapName;  ///< name of the map tree
     int m_count;   ///< number of processed events
-    int m_downlink;
 
-    int m_run, m_event;   ///< current
+    int m_run, m_event;   ///< current run, event
     int m_irun, m_ievent; ///< interleaved run, event
     TTree * m_meritTuple;
 
-  //  TLeaf * m_magLatLeaf;
     TLeaf * m_runLeaf;
     TLeaf * m_eventLeaf;
-
-
-    static double s_rate;
 
 
 };
