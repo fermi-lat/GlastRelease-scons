@@ -48,7 +48,7 @@ BackgroundSelection::~BackgroundSelection()
 }
 
 //------------------------------------------------------------------------
-double BackgroundSelection::value()
+double BackgroundSelection::value()const
 {
     return m_varleaf->GetValue();
 }
@@ -73,7 +73,7 @@ void BackgroundSelection::selectEvent()
 }
 
 //------------------------------------------------------------------------
-double BackgroundSelection::triggerRate()
+double BackgroundSelection::triggerRate()const
 {
     double x(value());
 
@@ -82,7 +82,7 @@ double BackgroundSelection::triggerRate()
 }
 
 //------------------------------------------------------------------------
-double BackgroundSelection::downlinkRate( )
+double BackgroundSelection::downlinkRate( )const
 {
     double  x(value());
 

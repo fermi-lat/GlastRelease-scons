@@ -1,4 +1,5 @@
 /** @file Interleave_dll.cxx
+@brief Gaudi setup
 
   $Header$
 */

@@ -18,6 +18,12 @@ class TLeaf;
 
 /** @class BackgroundSelection
     @brief manage the selection of background events to merge with signal events
+    @author Dan Flath
+
+It uses the name of a tuple variable as a key to look up trigger and downlink rates of a background
+source depending on the value of that variable. See the corresponding member functions. Given such
+a value, it expects to find a source of such events generated with that value which can be inserted 
+into the Gleam output tuple.
 
 */
 class BackgroundSelection
@@ -37,7 +43,7 @@ public:
     ~BackgroundSelection();
 
     ///! The current value of the quantity that we are selecting on
-    double value();
+    double value()const;
 
     /** @brief select an event and copy the contents to the output tree
     */
@@ -46,11 +52,11 @@ public:
  
     /**@brief the current trigger rate for the current value
     */
-    double triggerRate();
+    double triggerRate()const;
 
     /**@brief the downlink rate for the current value
     */
-    double downlinkRate();
+    double downlinkRate()const;
 
 private:
     /** @brief disable branches in the tree, from the disableList
@@ -78,7 +84,6 @@ private:
     TFile* m_inputFile; ///< the file that contains the input tree
     std::vector<std::string>m_disableList; ///< list of strings for disable
     std::string m_rootFileDirectory;  ///< either path to a ROOT file to sample from, or a directory containing files
-
 
 };
 

@@ -1,5 +1,6 @@
 /** @file SampledBackground.h
     @brief declaration of SampledBackground class
+
 $Header$
 
 */
