@@ -84,8 +84,10 @@ public:
       m_acdHitCol(0),
       m_acdTkrHitPocaCol(0),
       m_acdTkrPointCol(0),
-      m_acdSplashVarCol(0)
+      m_acdSplashVarCol(0),
+      m_actDist_down(-2000.)
       {
+          m_rowActDistCol_down.clear();
       };
      
     virtual ~AcdRecon();
@@ -104,6 +106,13 @@ public:
                     Int_t ribbonCount, Double_t gDoca, Double_t doca, 
                     const AcdId &minDocaId,
                     Double_t actDist, const AcdId &maxActDistId);
+
+    void initActDist_Down(Double_t actDist, const AcdId &id,
+                          const vector<Double_t> &vect) {
+        m_actDist_down = actDist;
+        m_maxActDistId_down = id;
+        m_rowActDistCol_down = vect;
+    }
     
     void Clear(Option_t *option="");
     void Fake( Int_t ievent, Float_t randNum ) ; // for tests
@@ -117,19 +126,28 @@ public:
     inline const Double_t getGammaDoca() const { return m_gammaDoca; };
     inline const Double_t getDoca() const { return m_doca; };
     inline const Double_t getActiveDist() const { return m_actDist; };
+    inline const Double_t getActiveDist_Down() const { return m_actDist_down; };
     inline const Double_t getRibbonActiveDist() const { return m_ribbonActDist; };
     inline const AcdId& getMinDocaId() const { return m_minDocaId; };
     inline const AcdId& getMaxActDistId() const { return m_maxActDistId; };
+    inline const AcdId& getMaxActDistId_Down() const { return m_maxActDistId_down; };
     inline const AcdId& getRibbonActDistId() const { return m_ribbonActDistId; }
 
     inline const std::vector<Double_t>& getRowDocaCol() const { return m_rowDocaCol; };
     inline const Double_t getRowDoca(UInt_t i) const { 
         return ((i < m_rowDocaCol.size()) ? m_rowDocaCol[i] : -1.); };
     inline void addRowDoca(Double_t val) { m_rowDocaCol.push_back(val); };
+
     inline const std::vector<Double_t>& getRowActDistCol() const { return m_rowActDistCol; };
     inline const Double_t getRowActDist(UInt_t i) const {
         return ( (i < m_rowActDistCol.size()) ? m_rowActDistCol[i] : -1.); };
     inline void addRowActDist(Double_t val) { m_rowActDistCol.push_back(val); };
+
+    inline const std::vector<Double_t>& getRowActDistCol_Down() const { return m_rowActDistCol_down; };
+    inline const Double_t getRowActDist_Down(UInt_t i) const {
+        return ( (i < m_rowActDistCol_down.size()) ? m_rowActDistCol_down[i] : -1.); };
+    inline void addRowActDist_Down(Double_t val) { m_rowActDistCol_down.push_back(val); };
+
     inline const std::vector<Double_t>& getEnergyCol() const { return m_energyCol; };
     inline const Double_t getEnergy(UInt_t i) const { 
            return ( (i < m_energyCol.size()) ? m_energyCol[i] : -1.); };
@@ -297,7 +315,17 @@ private:
     // Store the angles and such to study backsplash
     TClonesArray *m_acdSplashVarCol;
 
-    ClassDef(AcdRecon,13) // Acd Reconstruction data
+    /// New Bill Atwood DOCA calculation using edge of tiles for downward pocas
+    Double32_t m_actDist_down;
+
+    /// record of the tile with the maximum Active Distance for downward pocas
+    AcdId m_maxActDistId_down;
+
+    /// Collection of Active Distance calc for each side row of ACD for 
+    /// downward pocas
+    vector<Double32_t> m_rowActDistCol_down;
+
+    ClassDef(AcdRecon,14) // Acd Reconstruction data
 };
 
 #endif

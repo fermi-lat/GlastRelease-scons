@@ -141,6 +141,9 @@ void AcdRecon::Clear(Option_t* /*option*/) {
     if ( m_acdSplashVarCol != 0 ) {
       m_acdSplashVarCol->Clear();
     }
+
+    m_actDist_down = -maxDoca;
+    m_rowActDistCol.clear();
 }
 
 void AcdRecon::Print(Option_t *option) const {
@@ -313,6 +316,8 @@ void AcdRecon::Fake( Int_t ievent, Float_t randNum ) {
         rowDocaCol, rowActDistCol,
         idCol, energyCol, cornerDoca
     ) ;
+
+    initActDist_Down(actDist, maxActDistId, rowActDistCol);
  }
 
 #define UTIL_COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),a.get ## att(),#att)
@@ -330,12 +335,15 @@ Bool_t AcdRecon::CompareInRange( const AcdRecon & a, const std::string & name ) 
     result = UTIL_COMPARE_IN_RANGE(Doca) && result ;
     result = ID_COMPARE_IN_RANGE(MinDocaId) && result ;
     result = UTIL_COMPARE_IN_RANGE(ActiveDist) && result ;
+    result = UTIL_COMPARE_IN_RANGE(ActiveDist_Down) && result ;
     result = UTIL_COMPARE_IN_RANGE(RibbonActiveDist) && result ;
     result = ID_COMPARE_IN_RANGE(MinDocaId) && result ;
     result = ID_COMPARE_IN_RANGE(MaxActDistId) && result ;
+    result = ID_COMPARE_IN_RANGE(MaxActDistId_Down) && result ;
     result = ID_COMPARE_IN_RANGE(RibbonActDistId) && result ;
     result = UTIL_COMPARE_IN_RANGE(RowDocaCol) && result ;
     result = UTIL_COMPARE_IN_RANGE(RowActDistCol) && result ;
+    result = UTIL_COMPARE_IN_RANGE(RowActDistCol_Down) && result ;
     result = UTIL_COMPARE_IN_RANGE(EnergyCol) && result ;
     result = UTIL_COMPARE_IN_RANGE(IdCol) && result ;
 
