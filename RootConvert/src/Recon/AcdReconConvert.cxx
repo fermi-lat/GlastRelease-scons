@@ -34,6 +34,12 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
     tdsAcdRec.getRibbonActiveDist(), rootRibActDistId,
     tdsAcdRec.getRowDocaCol(), tdsAcdRec.getRowActDist3DCol(),
 	rootIdCol, tdsAcdRec.getEnergyCol(), tdsAcdRec.getCornerDoca());
+
+  idents::AcdId tdsActDistId_Down = tdsAcdRec.getMaxActDist3DId_Down();
+  AcdId rootActDistId_Down = convert(tdsActDistId_Down);
+  rootAcdRec.initActDist_Down(tdsAcdRec.getActiveDist3D_Down(), 
+                              rootActDistId_Down,
+                              tdsAcdRec.getRowActDist3DCol_Down());
     
   const Event::AcdTkrIntersectionCol& tdsAcdTkrIntersects = tdsAcdRec.getAcdTkrIntersectionCol() ;
   AcdTkrIntersection rootAcdInter;
@@ -226,6 +232,12 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
         tdsRibActDistId, 
         rootAcdRec.getCornerDoca()
         ) ;
+
+     AcdId rootActDistId_down = rootAcdRec.getMaxActDistId_Down();
+     idents::AcdId tdsActDistId_down = convert(rootActDistId_down);
+     tdsAcdRec.initActDist3D_down(rootAcdRec.getActiveDist_Down(),
+                                  tdsActDistId_down,
+                                  rootAcdRec.getRowActDistCol_Down());
 }
 
 

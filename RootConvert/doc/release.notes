@@ -3,7 +3,8 @@
  author David Chamont 
  @verbatim
 
- v1r20p1 11-Oct-2007 HMK Patch OBF TFCprojectionCol handling to use curCnt
+ v1r21   27-Oct-2006 HMK read/write active distance down variables
+ v1r20p1 11-Oct-2006 HMK Patch OBF TFCprojectionCol handling to use curCnt
          rather than maxCnt
  v1r20   26-Sep-2006 WK  modifications to open files to allow xrootd testing
  v1r19p1 30-Aug-2006 HMK update cppflags for IExternal/obf Endianness.h
