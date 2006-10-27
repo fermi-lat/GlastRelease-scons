@@ -35,7 +35,7 @@ include_dirs "$(G4HadronSimSrcDir)/Packaging/include" \
 
 private
 #this is private to avoid passing on build info to clients
-use Geant4   v3r8* IExternal
+use Geant4   v3r80* IExternal
 use GlastMS  v*
 
 macro src "src/*.cc " WIN32 "include/*.hh include/*.icc src/*.cc"
