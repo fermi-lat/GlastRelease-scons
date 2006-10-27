@@ -8,6 +8,7 @@
 #include "McPositionHit.h"
 #include "McIntegratingHit.h"
 #include "McTrajectory.h"
+#include "TString.h"
 
 /** @class McEvent
 * @brief GLAST Monte Carlo Event class.
@@ -20,6 +21,7 @@
 * - Collection of McPositionHit
 * - Collection of McIntegratingHit
 * - Collection of McTrajectories
+* - Source Name
 * The MC data stored to ROOT files mirrors the data available within the Gaudi 
 * TDS.
 *  
@@ -42,12 +44,18 @@ public:
     Bool_t CompareToFake( Int_t ievent, Int_t irun, Float_t randNum ) ; // for tests
     void Print(Option_t *option="") const;
     
-    void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId, UInt_t sequence, Double_t timeStamp);
+    void initialize(UInt_t nEvent, UInt_t nRun, Int_t sourceId,
+                    UInt_t sequence, Double_t timeStamp, 
+                    const TString& str);
+
+    void initSourceName(const TString &str) { m_sourceName = str; }
     
     inline UInt_t getEventId() const { return m_eventId; };
     inline UInt_t getRunId() const { return m_runId; };
-	inline Int_t getSourceId() const { return m_sourceId; };
-	inline UInt_t getSequence() const { return m_sequence; };
+    inline Int_t getSourceId() const { return m_sourceId; };
+    inline UInt_t getSequence() const { return m_sequence; };
+    inline const char* getSourceName() const { return m_sourceName.Data(); }
+    inline const TString& getSourceNameAsTString() const { return m_sourceName; }
 
     
     /// add a McParticle to list
@@ -112,16 +120,16 @@ private:
     /// Run number
     UInt_t m_runId;
 
-	// identifier of the source
-	Int_t m_sourceId;
+    // identifier of the source
+    Int_t m_sourceId;
 
-	/// Sequence number
-	UInt_t m_sequence;
+    /// Sequence number
+    UInt_t m_sequence;
     
-            /// Time in seconds
+    /// Time in seconds
     Double_t m_timeStamp; /// this is supposed to coresponed to the following in MCEvent 
-        /// Time stamp: use special class to encapsulate type
-        ///TimeStamp           m_time;
+    /// Time stamp: use special class to encapsulate type
+    ///TimeStamp           m_time;
 
     /// Collection of McParticles
     /// Must be TObjArray due to TRefArray which grows dynamically
@@ -144,8 +152,11 @@ private:
     TObjArray *m_trajectoryCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticTrajectoryCol; //!
+
+    /// name for the source, hopefully unique
+    TString m_sourceName;
     
-    ClassDef(McEvent,6) // Monte Carlo Event Class
+    ClassDef(McEvent,7) // Monte Carlo Event Class
 };
 
 #endif

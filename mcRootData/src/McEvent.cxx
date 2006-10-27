@@ -19,10 +19,12 @@ TObjArray *McEvent::m_staticPositionHitCol = 0;
 TObjArray *McEvent::m_staticIntegratingHitCol = 0;
 TObjArray *McEvent::m_staticTrajectoryCol = 0;
 
+static const TString sourceUnknownStr = "NotStored";
+
 ClassImp(McEvent)
 
 McEvent::McEvent() : 
-m_eventId(0), m_runId(0)
+m_eventId(0), m_runId(0), m_sourceName(sourceUnknownStr)
 {
     if (!m_staticParticleCol) m_staticParticleCol = new TObjArray();
     m_particleCol = m_staticParticleCol;
@@ -59,16 +61,19 @@ McEvent::~McEvent() {
     delete m_trajectoryCol;
     m_trajectoryCol = 0;
 
+    m_sourceName = sourceUnknownStr;
     Clear("ALL");
 }
 
 void McEvent::initialize(UInt_t nEvent, UInt_t nRun, 
-                         Int_t sourceId, UInt_t sequence, Double_t timestamp) {
+                         Int_t sourceId, UInt_t sequence, Double_t timestamp,
+                         const TString& str) {
     m_eventId = nEvent;
     m_runId = nRun;
     m_sourceId = sourceId;
     m_sequence = sequence;
     m_timeStamp = timestamp;
+    m_sourceName = str;
     return;
 }
 
@@ -78,6 +83,7 @@ void McEvent::Clear(Option_t *option) {
 
     m_eventId = 0;
     m_runId = 0;
+    m_sourceName = sourceUnknownStr;
     const Int_t ndpos = 150000;
     const Int_t nd = 150000;
     const Int_t ndtraj = 150000;
@@ -204,6 +210,7 @@ void McEvent::Print(Option_t *option) const {
     TObject::Print(option);
     std::cout.precision(2);
     std::cout << "Run: " << m_runId << " Event: " << m_eventId << std::endl;
+    std::cout << "SourceName: " << m_sourceName << std::endl;
     std::cout << m_particleCol->GetEntries() << " McParticles" << std::endl;
     std::cout << m_positionHitCol->GetEntries() << " McPositionHits" << std::endl;
     std::cout << m_integratingHitCol->GetEntries() 
@@ -271,7 +278,7 @@ void McEvent::Fake( Int_t ievent, Int_t irun, Float_t randNum ) {
     //are unsigned, and not in the usual Fake. I should
     //have a look at all kinds of events, and either
     //change McEvent or Fake
-    initialize(ievent,irun,SOURCE_ID,SEQUENCE,ievent*1.0) ;
+    initialize(ievent,irun,SOURCE_ID,SEQUENCE,ievent*1.0, sourceUnknownStr) ;
         
     UInt_t ientry ;
     for ( ientry=0 ; ientry<NUM_ENTRIES ; ++ientry ) {
@@ -305,6 +312,7 @@ Bool_t McEvent::CompareToFake( Int_t iEvent, Int_t iRun, Float_t randNum ) {
     result = rootdatautil::CompareInRange(getSourceId(),SOURCE_ID,"SourceId") && result ;
     result = rootdatautil::CompareInRange(getSequence(),SEQUENCE,"Sequence") && result ;
     result = rootdatautil::CompareInRange(getTimeStamp(),iEvent*1.0,"TimeStamp") && result ;
+    result = rootdatautil::CompareInRange(getSourceName(),sourceUnknownStr.Data(),"SourceName") && result ;
         
     TObjArray refParticleCol ;
     TObjArray refPositionHitCol ;
