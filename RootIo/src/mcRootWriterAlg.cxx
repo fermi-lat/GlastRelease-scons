@@ -20,6 +20,7 @@
 #include "TTree.h"
 #include "TDirectory.h"
 #include "TProcessID.h"
+#include "TString.h"
 
 #include "mcRootData/McEvent.h"
 
@@ -278,12 +279,14 @@ StatusCode mcRootWriterAlg::writeMcEvent() {
     Int_t sourceId = mcEvt->getSourceId();
     UInt_t sequence = mcEvt->getSequence();
     Double_t timestamp = mcEvt->time();  /// note: converting from timestamp to double
+
+    TString sourceName = mcEvt->getSourceName();
     
     log << MSG::DEBUG;
     if( log.isActive()) evt->fillStream(log.stream());
     log << endreq;
     
-    m_mcEvt->initialize(evtId, runId, sourceId, sequence, timestamp);
+    m_mcEvt->initialize(evtId, runId, sourceId, sequence, timestamp, sourceName);
     
     return sc;
 }
