@@ -76,79 +76,79 @@ void IonPhysics::ConstructProcess()
   // Full physics
   
   
-  if (m_physicsChoice=="full")
-    {
-    // -----------------------
-    // Ions Physics
-    // ------------------------
-    
-    G4double theMin = 0;
-    G4double theMax = 100*TeV; // corretto?? 
-    G4IonsShenCrossSection* theIonXSec = new G4IonsShenCrossSection();
-    
+  //  if (m_physicsChoice=="full")
+  //  {
+  // -----------------------
+  // Ions Physics
+  // ------------------------
+  
+  G4double theMin = 0;
+  G4double theMax = 100*TeV; // corretto?? 
+  G4IonsShenCrossSection* theIonXSec = new G4IonsShenCrossSection();
+  
     // Elastic Process
-    
-    G4LElastic*            theIonElasticModel = new G4LElastic();
-    
-    // Generic Ion physics
-    
-    G4HadronElasticProcess* theIonElasticProcess = new G4HadronElasticProcess();
-    theIonElasticProcess->RegisterMe(theIonElasticModel);
-    G4IonInelasticProcess*  theIonInelasticProcess = new G4IonInelasticProcess();
-    //   G4BinaryLightIonReaction* theIonModel = new  G4BinaryLightIonReaction();  
-    EpaxInelasticModel* theIonModel = new  EpaxInelasticModel();
-    theIonModel->SetMinEnergy(theMin);
-    theIonModel->SetMaxEnergy(theMax);
-    theIonInelasticProcess->RegisterMe(theIonModel);
-    theIonInelasticProcess->AddDataSet(theIonXSec);  
-    
+  
+  G4LElastic*            theIonElasticModel = new G4LElastic();
+  
+  // Generic Ion physics
+  
+  G4HadronElasticProcess* theIonElasticProcess = new G4HadronElasticProcess();
+  theIonElasticProcess->RegisterMe(theIonElasticModel);
+  G4IonInelasticProcess*  theIonInelasticProcess = new G4IonInelasticProcess();
+  //   G4BinaryLightIonReaction* theIonModel = new  G4BinaryLightIonReaction();  
+  EpaxInelasticModel* theIonModel = new  EpaxInelasticModel();
+  theIonModel->SetMinEnergy(theMin);
+  theIonModel->SetMaxEnergy(theMax);
+  theIonInelasticProcess->RegisterMe(theIonModel);
+  theIonInelasticProcess->AddDataSet(theIonXSec);  
+  
     // Deuteron physics
-    
-    G4HadronElasticProcess*      theDElasticProcess = new G4HadronElasticProcess();
-    theDElasticProcess->RegisterMe(theIonElasticModel);
-    G4DeuteronInelasticProcess*  fDeuteronProcess = new  G4DeuteronInelasticProcess();
-    G4LEDeuteronInelastic*      fDeuteronModel = new G4LEDeuteronInelastic();
-    fDeuteronModel->SetMinEnergy(theMin);
-    fDeuteronModel->SetMaxEnergy(theMax);
-    fDeuteronProcess->RegisterMe(fDeuteronModel);
-    fDeuteronProcess->AddDataSet(theIonXSec);  
-    
+  
+  G4HadronElasticProcess*      theDElasticProcess = new G4HadronElasticProcess();
+  theDElasticProcess->RegisterMe(theIonElasticModel);
+  G4DeuteronInelasticProcess*  fDeuteronProcess = new  G4DeuteronInelasticProcess();
+  G4LEDeuteronInelastic*      fDeuteronModel = new G4LEDeuteronInelastic();
+  fDeuteronModel->SetMinEnergy(theMin);
+  fDeuteronModel->SetMaxEnergy(theMax);
+  fDeuteronProcess->RegisterMe(fDeuteronModel);
+  fDeuteronProcess->AddDataSet(theIonXSec);  
+  
     // Triton physics
-    
-    G4HadronElasticProcess*      theTElasticProcess = new  G4HadronElasticProcess();
-    theTElasticProcess->RegisterMe(theIonElasticModel);
-    G4TritonInelasticProcess*    fTritonProcess = new G4TritonInelasticProcess();
-    G4LETritonInelastic*        fTritonModel= new G4LETritonInelastic();
-    fTritonModel->SetMinEnergy(theMin);
-    fTritonModel->SetMaxEnergy(theMax);
-    fTritonProcess->RegisterMe(fTritonModel);
-    fTritonProcess->AddDataSet(theIonXSec);    
-    
-    // Alpha physics
-    
-    G4HadronElasticProcess*      theAElasticProcess = new G4HadronElasticProcess();
-    theAElasticProcess->RegisterMe(theIonElasticModel);
-    G4AlphaInelasticProcess*     fAlphaProcess = new G4AlphaInelasticProcess();
-    G4LEAlphaInelastic*         fAlphaModel = new G4LEAlphaInelastic();
-    fAlphaModel->SetMinEnergy(theMin);
-    fAlphaModel->SetMaxEnergy(theMax);
-    fAlphaProcess->RegisterMe(fAlphaModel);
-    fAlphaProcess->AddDataSet(theIonXSec);  
-    
+  
+  G4HadronElasticProcess*      theTElasticProcess = new  G4HadronElasticProcess();
+  theTElasticProcess->RegisterMe(theIonElasticModel);
+  G4TritonInelasticProcess*    fTritonProcess = new G4TritonInelasticProcess();
+  G4LETritonInelastic*        fTritonModel= new G4LETritonInelastic();
+  fTritonModel->SetMinEnergy(theMin);
+  fTritonModel->SetMaxEnergy(theMax);
+  fTritonProcess->RegisterMe(fTritonModel);
+  fTritonProcess->AddDataSet(theIonXSec);    
+  
+  // Alpha physics
+  
+  G4HadronElasticProcess*      theAElasticProcess = new G4HadronElasticProcess();
+  theAElasticProcess->RegisterMe(theIonElasticModel);
+  G4AlphaInelasticProcess*     fAlphaProcess = new G4AlphaInelasticProcess();
+  G4LEAlphaInelastic*         fAlphaModel = new G4LEAlphaInelastic();
+  fAlphaModel->SetMinEnergy(theMin);
+  fAlphaModel->SetMaxEnergy(theMax);
+  fAlphaProcess->RegisterMe(fAlphaModel);
+  fAlphaProcess->AddDataSet(theIonXSec);  
+  
   // He3 physics
     
-    G4HadronElasticProcess* theHe3ElasticProcess = new G4HadronElasticProcess();
-    theHe3ElasticProcess->RegisterMe(theIonElasticModel);
-    
-   
+  G4HadronElasticProcess* theHe3ElasticProcess = new G4HadronElasticProcess();
+  theHe3ElasticProcess->RegisterMe(theIonElasticModel);
+  
+  
   // Building processes
    
   // Generic Ion
   
-    G4ProcessManager* pManager = G4GenericIon::GenericIon()->GetProcessManager();
-    //pManager->AddDiscreteProcess(theIonElasticProcess);
-    pManager->AddDiscreteProcess(theIonInelasticProcess);
-    
+  pManager = G4GenericIon::GenericIon()->GetProcessManager();
+  //pManager->AddDiscreteProcess(theIonElasticProcess);
+  pManager->AddDiscreteProcess(theIonInelasticProcess);
+  
   // Deuteron 
   
   pManager = G4Deuteron::Deuteron()->GetProcessManager();
@@ -170,7 +170,7 @@ void IonPhysics::ConstructProcess()
   pManager->AddDiscreteProcess(theHe3ElasticProcess);
 
 
-    }
+  //    }
 
   
   // Generic Ion 

@@ -29,6 +29,7 @@ use Geant4   v3r8* IExternal
 
 # special code to replace the standared multiple scattering 
 use GlastMS
+use G4HadronSim
 
 # only needed by test program 
 use FluxSvc v*

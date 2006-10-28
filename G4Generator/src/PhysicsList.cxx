@@ -20,11 +20,44 @@
 #include "G4MaterialTable.hh"
 #include "G4ParticleTypes.hh"
 
+// GLAST
+
 #include "GeneralPhysics.h"
 #include "EMPhysics.h"
 #include "MuonPhysics.h"
 #include "HadronPhysics.h"
 #include "IonPhysics.h"
+
+// LC 
+
+#include "LCBosonPhysics.hh"
+#include "LCDecayPhysics.hh"
+#include "LCHadronPhysics.hh"
+#include "LCIonPhysics.hh"
+#include "LCLeptonPhysics.hh"
+
+// LC 
+
+#include "SEBosonPhysics.hh"
+#include "SEDecayPhysics.hh"
+#include "SEHadronPhysics.hh"
+#include "SEIonPhysics.hh"
+#include "SELeptonPhysics.hh"
+#include "SENeutronPhysics.hh"
+
+// others
+
+#include "HadronPhysicsLHEP.hh"
+#include "HadronPhysicsLHEP_BIC.hh"
+#include "HadronPhysicsLHEP_BERT.hh"
+#include "HadronPhysicsQGSP.hh"
+#include "HadronPhysicsQGSP_BIC.hh"
+#include "HadronPhysicsQGSP_BERT.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4DecayPhysics.hh"
+#include "G4IonPhysics.hh"
+
 
 #include <cstdlib>
 
@@ -46,36 +79,128 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
   m_physicsTable = physicsTable;
   m_physicsDir = physicsDir;
 
-  
-  // General Physics
-  //RegisterPhysics( new GeneralPhysics("general") );
-  m_GeneralPhysics = new GeneralPhysics("general");
-  
-  // EM Physics 
-  //RegisterPhysics( new EMPhysics("standard EM", msFactory, eLossFactory));
-  m_EMPhysics = new EMPhysics("standard EM", msFactory, eLossFactory);
 
-  // Muon Physics
-  //RegisterPhysics(  new MuonPhysics("muon", msFactory, eLossFactory));
-  m_MuonPhysics = new MuonPhysics("muon", msFactory, eLossFactory);
+ std::cout << physicsChoice << std::endl; // this is for hadronic stuff
 
-  // Full or EM Hadron Physics
-  //RegisterPhysics(  new HadronPhysics("hadron", m_physicsChoice, msFactory));
-  m_HadronPhysics = new HadronPhysics("hadron", m_physicsChoice, msFactory);
-  // RegisterPhysics(  new HadronPhysics("hadron"));
-  
-  // Full or EM Ion Physics
-  //RegisterPhysics( new IonPhysics("ion", m_physicsChoice, msFactory));
-  m_IonPhysics = new IonPhysics("ion", m_physicsChoice, msFactory);
-  //RegisterPhysics( new IonPhysics("ion"));
-  
+  // options: GLAST
+  //          LHEP
+  //          LHEP_BIC
+  //          LHEP_BERT
+  //          QGSP
+  //          QGSP_BIC
+  //          QGSP_BERT
+  //          LC 
+  //          Space
 
+ if (m_physicsChoice=="GLAST")
+   {
+     // General Physics
+     RegisterPhysics( new GeneralPhysics("general") );
+     
+     // EM Physics 
+     
+     RegisterPhysics( new EMPhysics("standard EM", msFactory, eLossFactory));
+     
+     // Muon Physics
+     
+     RegisterPhysics(  new MuonPhysics("muon", msFactory, eLossFactory));
+
+     // Full Hadron Physics
+     
+     RegisterPhysics(  new HadronPhysics("hadron", m_physicsChoice, msFactory));
+     // RegisterPhysics(  new HadronPhysics("hadron"));
+     
+     // Full Ion Physics
+     
+     RegisterPhysics( new IonPhysics("ion", m_physicsChoice, msFactory));
+     
+     //     // Full Ion Physics
+     
+     //RegisterPhysics( new IonPhysics("ion", msFactory));
+   }
+ if (m_physicsChoice=="LC")
+   {
+     
+     RegisterPhysics( new LCDecayPhysics("decay"));
+     
+     // Bosons (gamma + geantinos)
+     RegisterPhysics( new LCBosonPhysics("boson"));
+      
+     // Leptons
+     RegisterPhysics( new LCLeptonPhysics("lepton",msFactory, eLossFactory));
+     
+     // Hadron Physics
+     RegisterPhysics( new LCHadronPhysics("hadron", msFactory));
+     
+      // Ion Physics
+     RegisterPhysics( new LCIonPhysics("ion", msFactory));
+     }
+ if (m_physicsChoice=="Space")
+   {
+     RegisterPhysics( new SEDecayPhysics("decay"));
+     
+     // Bosons (gamma + geantinos)
+     RegisterPhysics( new SEBosonPhysics("boson"));
+      
+     // Leptons
+     RegisterPhysics( new SELeptonPhysics("lepton",msFactory, eLossFactory));
+     
+     // Hadron Physics
+     RegisterPhysics( new SEHadronPhysics("hadron",msFactory));
+
+     // Neutron Physics
+     RegisterPhysics( new SENeutronPhysics("neutron"));
+     
+      // Ion Physics
+     RegisterPhysics( new SEIonPhysics("ion",msFactory));
+   }
+ if (m_physicsChoice!="GLAST"&&m_physicsChoice!="LC"&&m_physicsChoice!="Space") 
+   {
+
+     G4int ver=1;
+  
+     // EM Physics
+     
+     RegisterPhysics( new G4EmStandardPhysics("standard EM", ver, msFactory, eLossFactory));
+     
+     // Synchroton Radiation & GN Physics
+  
+     RegisterPhysics( new G4EmExtraPhysics("extra EM"));
+
+     // Decay Physics - i.e. decay
+     
+     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+     
+     // Ion Physics
+     
+     RegisterPhysics( new G4IonPhysics("ion"));
+
+
+     if (m_physicsChoice=="LHEP")
+     // Hadron Physics
+       RegisterPhysics(  new HadronPhysicsLHEP("hadron"));
+
+     if (m_physicsChoice=="LHEP_BIC")
+       RegisterPhysics(  new HadronPhysicsLHEP_BIC("hadron"));
+
+     if (m_physicsChoice=="LHEP_BERT")
+       RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron"));
+
+     if (m_physicsChoice=="QGSP")
+       RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron"));
+
+     if (m_physicsChoice=="QGSP_BERT")
+       RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
+
+     if (m_physicsChoice=="QGSP_BIC")
+       RegisterPhysics(  new HadronPhysicsQGSP_BIC("hadron"));
+
+   }
 }
-
 PhysicsList::~PhysicsList()
 {;}
 
-void PhysicsList::ConstructParticle()
+/*void PhysicsList::ConstructParticle()
 {
   m_GeneralPhysics->ConstructParticle();
   m_EMPhysics->ConstructParticle();
@@ -94,6 +219,8 @@ void PhysicsList::ConstructProcess()
   m_HadronPhysics->ConstructProcess();
   m_IonPhysics->ConstructProcess();
 }
+*/
+
 
 void PhysicsList::SetCuts()
 {

@@ -40,8 +40,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   // negative z axis with 30 MeV of energy. 
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   G4String particleName;
-  G4ParticleDefinition* particle
-    = particleTable->FindParticle(particleName="e-");
+  G4ParticleDefinition* particle = particleTable->FindParticle(particleName="e-");
+  //std::cout << particle->GetParticleName() << std::endl;
   particleGun->SetParticleDefinition(particle);
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   particleGun->SetParticleEnergy(30.*MeV);
