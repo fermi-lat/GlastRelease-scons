@@ -1,41 +1,24 @@
 //
 // ********************************************************************
-// * License and Disclaimer                                           *
+// * DISCLAIMER                                                       *
 // *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
+// * The following disclaimer summarizes all the specific disclaimers *
+// * of contributors to this software. The specific disclaimers,which *
+// * govern, are listed with their locations in:                      *
+// *   http://cern.ch/geant4/license                                  *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
+// * use.                                                             *
 // *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
+// * This  code  implementation is the  intellectual property  of the *
+// * GEANT4 collaboration.                                            *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
 // ********************************************************************
-//
-// GEANT4 tag $Name$
-//
-//---------------------------------------------------------------------------
-//
-// ClassName:   G4MiscLHEPBuilder
-//
-// Author: 2002 J.P. Wellisch
-//
-// Modified:
-// 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
-//
-//----------------------------------------------------------------------------
 //
 #include "G4MiscLHEPBuilder.hh"
 
@@ -46,11 +29,58 @@
 G4MiscLHEPBuilder::G4MiscLHEPBuilder(): wasActivated(false) {}
 G4MiscLHEPBuilder::~G4MiscLHEPBuilder()
 {
+  if(wasActivated)
+  {
+    G4ProcessManager * aProcMan = 0;
+    aProcMan = G4AntiProton::AntiProton()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiProtonInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiProtonElasticProcess);
+    aProcMan = G4AntiNeutron::AntiNeutron()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiNeutronInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiNeutronElasticProcess);
+    aProcMan = G4Lambda::Lambda()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theLambdaInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theLambdaElasticProcess);
+    aProcMan = G4AntiLambda::AntiLambda()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiLambdaInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiLambdaElasticProcess);
+    aProcMan = G4SigmaMinus::SigmaMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theSigmaMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theSigmaMinusElasticProcess);
+    aProcMan = G4AntiSigmaMinus::AntiSigmaMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiSigmaMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiSigmaMinusElasticProcess);
+    aProcMan = G4SigmaPlus::SigmaPlus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theSigmaPlusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theSigmaPlusElasticProcess);
+    aProcMan = G4AntiSigmaPlus::AntiSigmaPlus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiSigmaPlusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiSigmaPlusElasticProcess);
+    aProcMan = G4XiMinus::XiMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theXiMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theXiMinusElasticProcess);
+    aProcMan = G4AntiXiMinus::AntiXiMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiXiMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiXiMinusElasticProcess);
+    aProcMan = G4XiZero::XiZero()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theXiZeroInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theXiZeroElasticProcess);
+    aProcMan = G4AntiXiZero::AntiXiZero()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiXiZeroInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiXiZeroElasticProcess);
+    aProcMan = G4OmegaMinus::OmegaMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theOmegaMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theOmegaMinusElasticProcess);
+    aProcMan = G4AntiOmegaMinus::AntiOmegaMinus()->GetProcessManager();
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiOmegaMinusInelastic);
+    if(aProcMan) aProcMan->RemoveProcess(&theAntiOmegaMinusElasticProcess);
+  }
 }
 
 void G4MiscLHEPBuilder::Build()
 {
   G4ProcessManager * aProcMan = 0;
+  theElasticModel = new G4LElastic;
   wasActivated = true;
   
   // anti-Proton
@@ -60,6 +90,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiProtonInelastic.RegisterMe(theLEAntiProtonModel);
   theAntiProtonInelastic.RegisterMe(theHEAntiProtonModel);
   aProcMan->AddDiscreteProcess(&theAntiProtonInelastic);
+  theAntiProtonElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiProtonElasticProcess);
 
   // AntiNeutron
   aProcMan = G4AntiNeutron::AntiNeutron()->GetProcessManager();
@@ -68,6 +100,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiNeutronInelastic.RegisterMe(theLEAntiNeutronModel);
   theAntiNeutronInelastic.RegisterMe(theHEAntiNeutronModel);
   aProcMan->AddDiscreteProcess(&theAntiNeutronInelastic);
+  theAntiNeutronElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiNeutronElasticProcess);
 
   // Lambda
   aProcMan = G4Lambda::Lambda()->GetProcessManager();
@@ -76,6 +110,8 @@ void G4MiscLHEPBuilder::Build()
   theLambdaInelastic.RegisterMe(theLELambdaModel);
   theLambdaInelastic.RegisterMe(theHELambdaModel);
   aProcMan->AddDiscreteProcess(&theLambdaInelastic);
+  theLambdaElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theLambdaElasticProcess);
   
   // AntiLambda
   aProcMan = G4AntiLambda::AntiLambda()->GetProcessManager();
@@ -84,6 +120,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiLambdaInelastic.RegisterMe(theLEAntiLambdaModel);
   theAntiLambdaInelastic.RegisterMe(theHEAntiLambdaModel);
   aProcMan->AddDiscreteProcess(&theAntiLambdaInelastic);
+  theAntiLambdaElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiLambdaElasticProcess);
     
   // SigmaMinus
   aProcMan = G4SigmaMinus::SigmaMinus()->GetProcessManager();
@@ -92,6 +130,8 @@ void G4MiscLHEPBuilder::Build()
   theSigmaMinusInelastic.RegisterMe(theLESigmaMinusModel);
   theSigmaMinusInelastic.RegisterMe(theHESigmaMinusModel);
   aProcMan->AddDiscreteProcess(&theSigmaMinusInelastic);
+  theSigmaMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theSigmaMinusElasticProcess);
 
   // anti-SigmaMinus
   aProcMan = G4AntiSigmaMinus::AntiSigmaMinus()->GetProcessManager();
@@ -100,6 +140,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiSigmaMinusInelastic.RegisterMe(theLEAntiSigmaMinusModel);
   theAntiSigmaMinusInelastic.RegisterMe(theHEAntiSigmaMinusModel);
   aProcMan->AddDiscreteProcess(&theAntiSigmaMinusInelastic);
+  theAntiSigmaMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiSigmaMinusElasticProcess);
 
   // SigmaPlus
   aProcMan = G4SigmaPlus::SigmaPlus()->GetProcessManager();
@@ -108,6 +150,8 @@ void G4MiscLHEPBuilder::Build()
   theSigmaPlusInelastic.RegisterMe(theLESigmaPlusModel);
   theSigmaPlusInelastic.RegisterMe(theHESigmaPlusModel);
   aProcMan->AddDiscreteProcess(&theSigmaPlusInelastic);
+  theSigmaPlusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theSigmaPlusElasticProcess);
 
   // anti-SigmaPlus
   aProcMan = G4AntiSigmaPlus::AntiSigmaPlus()->GetProcessManager();
@@ -116,6 +160,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiSigmaPlusInelastic.RegisterMe(theLEAntiSigmaPlusModel);
   theAntiSigmaPlusInelastic.RegisterMe(theHEAntiSigmaPlusModel);
   aProcMan->AddDiscreteProcess(&theAntiSigmaPlusInelastic);
+  theAntiSigmaPlusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiSigmaPlusElasticProcess);
 
   // XiMinus
   aProcMan = G4XiMinus::XiMinus()->GetProcessManager();
@@ -124,6 +170,8 @@ void G4MiscLHEPBuilder::Build()
   theXiMinusInelastic.RegisterMe(theLEXiMinusModel);
   theXiMinusInelastic.RegisterMe(theHEXiMinusModel);
   aProcMan->AddDiscreteProcess(&theXiMinusInelastic);
+  theXiMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theXiMinusElasticProcess);
 
   // anti-XiMinus
   aProcMan = G4AntiXiMinus::AntiXiMinus()->GetProcessManager();
@@ -132,6 +180,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiXiMinusInelastic.RegisterMe(theLEAntiXiMinusModel);
   theAntiXiMinusInelastic.RegisterMe(theHEAntiXiMinusModel);
   aProcMan->AddDiscreteProcess(&theAntiXiMinusInelastic);
+  theAntiXiMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiXiMinusElasticProcess);
 
   // XiZero
   aProcMan = G4XiZero::XiZero()->GetProcessManager();
@@ -140,6 +190,8 @@ void G4MiscLHEPBuilder::Build()
   theXiZeroInelastic.RegisterMe(theLEXiZeroModel);
   theXiZeroInelastic.RegisterMe(theHEXiZeroModel);
   aProcMan->AddDiscreteProcess(&theXiZeroInelastic);
+  theXiZeroElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theXiZeroElasticProcess);
 
   // anti-XiZero
   aProcMan = G4AntiXiZero::AntiXiZero()->GetProcessManager();
@@ -148,6 +200,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiXiZeroInelastic.RegisterMe(theLEAntiXiZeroModel);
   theAntiXiZeroInelastic.RegisterMe(theHEAntiXiZeroModel);
   aProcMan->AddDiscreteProcess(&theAntiXiZeroInelastic);
+  theAntiXiZeroElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiXiZeroElasticProcess);
 
   // OmegaMinus
   aProcMan = G4OmegaMinus::OmegaMinus()->GetProcessManager();
@@ -156,6 +210,8 @@ void G4MiscLHEPBuilder::Build()
   theOmegaMinusInelastic.RegisterMe(theLEOmegaMinusModel);
   theOmegaMinusInelastic.RegisterMe(theHEOmegaMinusModel);
   aProcMan->AddDiscreteProcess(&theOmegaMinusInelastic);
+  theOmegaMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theOmegaMinusElasticProcess);
 
   // anti-OmegaMinus
   aProcMan = G4AntiOmegaMinus::AntiOmegaMinus()->GetProcessManager();
@@ -164,6 +220,8 @@ void G4MiscLHEPBuilder::Build()
   theAntiOmegaMinusInelastic.RegisterMe(theLEAntiOmegaMinusModel);
   theAntiOmegaMinusInelastic.RegisterMe(theHEAntiOmegaMinusModel);
   aProcMan->AddDiscreteProcess(&theAntiOmegaMinusInelastic);
+  theAntiOmegaMinusElasticProcess.RegisterMe(theElasticModel);
+  aProcMan->AddDiscreteProcess(&theAntiOmegaMinusElasticProcess);
 }
 
 // 2002 by J.P. Wellisch

@@ -1,26 +1,23 @@
 //
 // ********************************************************************
-// * License and Disclaimer                                           *
+// * DISCLAIMER                                                       *
 // *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
+// * The following disclaimer summarizes all the specific disclaimers *
+// * of contributors to this software. The specific disclaimers,which *
+// * govern, are listed with their locations in:                      *
+// *   http://cern.ch/geant4/license                                  *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
+// * use.                                                             *
 // *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
+// * This  code  implementation is the  intellectual property  of the *
+// * GEANT4 collaboration.                                            *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
 // ********************************************************************
 //
 // $Id$
@@ -34,7 +31,6 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
 //
 //----------------------------------------------------------------------------
 //
@@ -46,6 +42,13 @@
 G4PiKBuilder::
 G4PiKBuilder(): wasActivated(false) 
 {  
+  thePionPlusElasticProcess=new G4HadronElasticProcess;
+  thePionMinusElasticProcess=new G4HadronElasticProcess;
+  theKaonPlusElasticProcess=new G4HadronElasticProcess;
+  theKaonMinusElasticProcess=new G4HadronElasticProcess;
+  theKaonZeroLElasticProcess=new G4HadronElasticProcess;
+  theKaonZeroSElasticProcess=new G4HadronElasticProcess;
+
   thePionPlusInelastic=new G4PionPlusInelasticProcess;
   thePionMinusInelastic=new G4PionMinusInelasticProcess;
   theKaonPlusInelastic=new G4KaonPlusInelasticProcess;
@@ -56,12 +59,28 @@ G4PiKBuilder(): wasActivated(false)
 
 G4PiKBuilder::
 ~G4PiKBuilder(){
-  delete thePionPlusInelastic;
-  delete thePionMinusInelastic;
-  delete theKaonPlusInelastic;
-  delete theKaonMinusInelastic;
-  delete theKaonZeroLInelastic;
-  delete theKaonZeroSInelastic;
+  if(wasActivated)
+  {
+    G4ProcessManager * theProcMan;
+    theProcMan = G4PionPlus::PionPlus()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(thePionPlusElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(thePionPlusInelastic);
+    theProcMan = G4PionMinus::PionMinus()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(thePionMinusElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(thePionMinusInelastic);
+    theProcMan = G4KaonPlus::KaonPlus()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(theKaonPlusElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(theKaonPlusInelastic);
+    theProcMan = G4KaonMinus::KaonMinus()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(theKaonMinusElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(theKaonMinusInelastic);
+    theProcMan = G4KaonZeroLong::KaonZeroLong()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(theKaonZeroLElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(theKaonZeroLInelastic);
+    theProcMan = G4KaonZeroShort::KaonZeroShort()->GetProcessManager();
+    if(theProcMan) theProcMan->RemoveProcess(theKaonZeroSElasticProcess);
+    if(theProcMan) theProcMan->RemoveProcess(theKaonZeroSInelastic);
+  }
 }
 
 void G4PiKBuilder::
@@ -72,6 +91,13 @@ Build()
   std::vector<G4VPiKBuilder *>::iterator i;
   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
   {
+    (*i)->Build(thePionPlusElasticProcess);
+    (*i)->Build(thePionMinusElasticProcess);
+    (*i)->Build(theKaonPlusElasticProcess);
+    (*i)->Build(theKaonMinusElasticProcess);
+    (*i)->Build(theKaonZeroLElasticProcess);
+    (*i)->Build(theKaonZeroSElasticProcess);
+
     (*i)->Build(thePionPlusInelastic);
     (*i)->Build(thePionMinusInelastic);
     (*i)->Build(theKaonPlusInelastic);
@@ -81,21 +107,27 @@ Build()
   }
   G4ProcessManager * theProcMan;
   theProcMan = G4PionPlus::PionPlus()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(thePionPlusElasticProcess);
   theProcMan->AddDiscreteProcess(thePionPlusInelastic);
   
   theProcMan = G4PionMinus::PionMinus()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(thePionMinusElasticProcess);
   theProcMan->AddDiscreteProcess(thePionMinusInelastic);
   
   theProcMan = G4KaonPlus::KaonPlus()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theKaonPlusElasticProcess);
   theProcMan->AddDiscreteProcess(theKaonPlusInelastic);
   
   theProcMan = G4KaonMinus::KaonMinus()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theKaonMinusElasticProcess);
   theProcMan->AddDiscreteProcess(theKaonMinusInelastic);
   
   theProcMan = G4KaonZeroLong::KaonZeroLong()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theKaonZeroLElasticProcess);
   theProcMan->AddDiscreteProcess(theKaonZeroLInelastic);
   
   theProcMan = G4KaonZeroShort::KaonZeroShort()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theKaonZeroSElasticProcess);
   theProcMan->AddDiscreteProcess(theKaonZeroSInelastic);
 }
 // 2002 by J.P. Wellisch
