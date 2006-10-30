@@ -36,7 +36,7 @@ AcdPocaTool::AcdPocaTool
  : AlgTool( type, name, parent )
  { 
    declareInterface<AcdIPocaTool>(this) ; 
-   declareProperty("distanceCut",m_distanceCut=200.);
+   declareProperty("distanceCut",m_distanceCut=2000.);
    declareProperty("sigmaCut",m_sigmaCut=5.);
  }
 

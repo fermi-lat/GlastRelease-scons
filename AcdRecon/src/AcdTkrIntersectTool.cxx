@@ -229,8 +229,8 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Event::TkrTrack& aTrack, bool upw
   // get position, direction
   const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
   const Vector initialDirection = upward ? 
-    theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
-    -1.*  theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
+    -1.* theHit->getDirection(Event::TkrTrackHit::SMOOTHED) : 
+    theHit->getDirection(Event::TkrTrackHit::SMOOTHED);
   
   return exitsLAT(initialPosition,initialDirection,upward,data);
 }
@@ -273,10 +273,10 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vec
   const double normToZIntersection = upward ? 
     top_distance - initialPosition.z() :
     bottom_distance - initialPosition.z();
-  const double slopeToZIntersection = -1. / initialDirection.z();
+  const double slopeToZIntersection = 1. / initialDirection.z();
   const double sToZIntersection = normToZIntersection * slopeToZIntersection;
   
-  if ( (upward && initialDirection.z() > 0) || (!upward && initialDirection.z() < 0) ) {
+  if ( (upward && initialDirection.z() < 0) || (!upward && initialDirection.z() > 0) ) {
     log << MSG::ERROR << "Downgoing track " << upward << ' ' << initialDirection.z()  << endreq;
   }
 
