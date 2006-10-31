@@ -61,8 +61,8 @@ use EventIntegrity v*
 
 # beamtest 2006 ancillary data
 use AncillaryDataEvent v*
-use AncillaryDataRecon v*
-use AdfReader v*
+#use AncillaryDataRecon v*
+#use AdfReader v*
 
 
 ### define a simple executable wth GUI
