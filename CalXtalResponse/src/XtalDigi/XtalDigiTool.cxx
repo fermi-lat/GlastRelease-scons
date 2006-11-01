@@ -135,6 +135,7 @@ StatusCode XtalDigiTool::initialize() {
       //-- Add Branches to tree --//
       if (!m_tuple->Branch("RunID",          &m_dat.RunID,             "RunID/i")            ||
           !m_tuple->Branch("EventID",        &m_dat.EventID,           "EventID/i")          ||
+          !m_tuple->Branch("XtalIdx",        &m_dat.xtalIdx,            "xtalIdx/i")          ||
           !m_tuple->Branch("adcPed",         m_dat.adcPed.begin(),     "adcPed[2][4]/F")     ||
           !m_tuple->Branch("nMCHits",        &m_dat.nMCHits,           "nMCHits/i")          ||
           !m_tuple->Branch("nCsIHits",       &m_dat.nCsIHits,          "nCsIHits/i")         ||
@@ -204,9 +205,10 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
   /////////////////////////////////////
   // STAGE 1: fill signal energies ////
   /////////////////////////////////////
-  
+
   // loop over hits.
-  if (hitList.size()) {
+  if (!hitList.empty()) {
+  
     for (vector<const McIntegratingHit*>::const_iterator it = hitList.begin();
          it != hitList.end(); it++) {
       
@@ -297,7 +299,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
       for (DiodeNum diode; diode.isValid(); diode++){
         // only add electronic nose to sm diodes if we have
         // hits, otherwise may cause false signals?
-        if (diode == SM_DIODE && !hitList.size()) continue;
+        if (diode == SM_DIODE && hitList.empty()) continue;
         
         XtalRng xRng(face, diode.getX8Rng());
         RngIdx rngIdx(m_dat.xtalIdx, xRng);
@@ -319,7 +321,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
     
     // test LACs against ped-subtracted adc values.
     if (m_allowNoiseOnlyTrig ||  // noise CAN set lac trigger even if not hits.
-        hitList.size() > 0) {
+        !hitList.empty()) {
       FaceIdx faceIdx(m_dat.xtalIdx, face);
       sc = m_precalcCalib->getLacCIDAC(faceIdx, m_dat.lacThreshCIDAC[face]);
       if (sc.isFailure()) return sc;
@@ -364,9 +366,16 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
   //////////////////////////////
   sc = rangeSelect();
   if (sc.isFailure()) return sc;
-  
+    
+  ///////////////////////////////////////
+  //-- STEP 8: Populate Return Vars --//
+  ///////////////////////////////////////
+  // generate xtalDigReadouts.
+  sc = fillDigi(calDigi);
+  if (sc.isFailure()) return sc;
+
   ////////////////////////////////////////////////////////
-  //-- STEP 8: Populate XtalDigiTuple vars (optional) --//
+  //-- STEP 9: Populate XtalDigiTuple vars (optional) --//
   ////////////////////////////////////////////////////////
   
   // following steps only needed if tuple output is selected
@@ -397,14 +406,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
     m_dat.lac[POS_FACE] = lacBits[POS_FACE] != 0;
     m_dat.lac[NEG_FACE] = lacBits[NEG_FACE] != 0;
   }
-  
-  ///////////////////////////////////////
-  //-- STEP 10: Populate Return Vars --//
-  ///////////////////////////////////////
-  // generate xtalDigReadouts.
-  sc = fillDigi(calDigi);
-  if (sc.isFailure()) return sc;
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -439,6 +441,8 @@ StatusCode XtalDigiTool::sumCsIHit(const Event::McIntegratingHit &hit) {
   m_dat.diodeCIDAC[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanCIDACL;
   m_dat.diodeCIDAC[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanCIDACS;
   m_dat.diodeCIDAC[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanCIDACS;
+
+
 
   // update summary vals
   if (m_tuple) {
@@ -586,10 +590,10 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
       roRange[face] = (m_dat.rng[face].val() + nRo) % RngNum::N_VALS; 
 
       XtalRng xRng(face,roRange[face]);
-	  RngIdx rngIdx(m_dat.xtalIdx, face, roRange[face]);
-	  const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
-	  if (!ped) return StatusCode::FAILURE;
-	  m_dat.ped[xRng] = ped->getAvr();
+      RngIdx rngIdx(m_dat.xtalIdx, face, roRange[face]);
+      const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
+      if (!ped) return StatusCode::FAILURE;
+      m_dat.ped[xRng] = ped->getAvr();
   
       ////////////////////////////////////////
       // Stage 5: ADD PEDS, CHECK ADC RANGE //
