@@ -153,10 +153,10 @@ double TkrEnergyTool::getTotalEnergy(const Event::TkrTrack* track, double CalEne
     double radKal = m_propagator->getRadLength();                 
 
     // Set up summed var's and loop over all layers between track start and cal
-    int    numHits[NTYPES];
-    int    numLayers[NTYPES];
+    int    numHits[NCONVTYPES];
+    int    numLayers[NCONVTYPES];
 
-    for(int i=0; i < NTYPES; ++i) 
+    for(int i=0; i < NCONVTYPES; ++i) 
     {
         numHits[i] = 0;
         numLayers[i] = 0;

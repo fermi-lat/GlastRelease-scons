@@ -227,6 +227,8 @@ StatusCode TkrMakeClustersTool::makeClusters(
 
                     Event::TkrCluster* cl = new Event::TkrCluster(hitId, strip0, stripf, 
                         pos, rawToT, ToT, status, nBad);
+
+
                     // for tests
                     //if(m_type == ITkrBadStripsSvc::BADCLUSTERS) {
                     //    std::cout << tower << " " << nHits << " " <<

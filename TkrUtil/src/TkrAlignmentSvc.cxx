@@ -322,7 +322,7 @@ StatusCode TkrAlignmentSvc::getData(std::string fileName)
 
     log << MSG::DEBUG ;
     if (log.isActive()) {
-        ConstsVec* ptrConsts = (m_constType==SIM ? &m_simConsts : &m_recConsts );
+        ConstsVec* ptrConsts = (m_calibType==SIM ? &m_simConsts : &m_recConsts );
         log << "Debug output for alignment consts follows:" << endreq;
         AlignmentConsts alConsts;
         for (int tower = 0; tower < m_nTowers; ++tower) {
@@ -742,7 +742,7 @@ StatusCode TkrAlignmentSvc::fillWaferConsts()
     int index;
     AlignmentItem item;
     
-    ConstsVec* ptrConsts = (m_constType==SIM ? &m_simConsts : &m_recConsts );
+    ConstsVec* ptrConsts = (m_calibType==SIM ? &m_simConsts : &m_recConsts );
     while (getNextItem(WAFER,item)) {
         m_wafer = item.getNumber();
         if (m_wafer>=m_nWafers) {
@@ -817,7 +817,7 @@ void TkrAlignmentSvc::calculateWaferConsts(AlignmentConsts& thisWafer) const
     return;
 }
 
-const AlignmentConsts* TkrAlignmentSvc::getConsts(constType type, int tower, int layer, 
+const AlignmentConsts* TkrAlignmentSvc::getConsts(calibType type, int tower, int layer, 
                                                   int view, int ladder, int wafer) const
 {
     // Purpose:  return pointer to an set of alignment consts
@@ -830,7 +830,7 @@ const AlignmentConsts* TkrAlignmentSvc::getConsts(constType type, int tower, int
     return getConsts(type, index);
 }
 
-const AlignmentConsts* TkrAlignmentSvc::getConsts(constType type, 
+const AlignmentConsts* TkrAlignmentSvc::getConsts(calibType type, 
                                                   idents::VolumeIdentifier id) const
 {
     // Purpose:  return pointer to a set of alignment consts
@@ -852,7 +852,7 @@ const AlignmentConsts* TkrAlignmentSvc::getConsts(constType type,
     return getConsts(type, index);
 }
 
-const AlignmentConsts* TkrAlignmentSvc::getConsts(constType type, int index) const
+const AlignmentConsts* TkrAlignmentSvc::getConsts(calibType type, int index) const
 {
     // Purpose:  return pointer
     // Inputs:   index

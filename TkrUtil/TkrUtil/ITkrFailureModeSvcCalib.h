@@ -24,7 +24,7 @@ $Header$
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
-static const InterfaceID IID_ITkrFailureModeSvcCalib("ITkrFailureModeSvcCalib", 2 , 0);
+static const InterfaceID IID_ITkrFailureModeSvcCalib("ITkrFailureModeSvcCalib", 3 , 0);
 
 typedef std::map <int, std::vector<int> > LayerMap;
 
@@ -40,12 +40,17 @@ class ITkrFailureModeSvcCalib : virtual public IInterface, virtual public ITkrFa
 {
 
 public:
+    enum calibType { SIM, REC, NCALIBTYPES };
+
     static const InterfaceID& interfaceID() { return IID_ITkrFailureModeSvcCalib; }
 
     virtual StatusCode update(CalibData::BadStrips* pDead, CalibData::BadStrips* pHot) = 0;
 
     virtual std::vector<int>& getLayers(int tower) = 0;
     virtual std::vector<int>& getTowers() = 0;
+
+    virtual void SetCalibType(calibType type) const = 0;
+
 };
 
 #endif // ITkrFailureModeSvcCalib_H

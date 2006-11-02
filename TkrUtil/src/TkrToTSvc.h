@@ -25,7 +25,7 @@ $Header$
 *
 */
 
-enum constType {GAIN=0, QUAD, THRESHOLD, SCALE, QUALITY};
+enum calibType {GAIN=0, QUAD, THRESHOLD, SCALE, QUALITY};
 
 class TkrToTSvc : public Service, virtual public ITkrToTSvc  {
 

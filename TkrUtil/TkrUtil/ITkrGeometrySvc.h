@@ -32,7 +32,8 @@
 static const InterfaceID IID_ITkrGeometrySvc("ITkrGeometrySvc", 14 , 0); 
 
 namespace {
-    enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NTYPES};
+    enum convType { ABSENT = -1, NOCONV = 0, STANDARD, SUPER, ALL, NCONVTYPES};
+    convType ANYCONV = ALL;
     enum limitType { LOW, HIGH };
 }
 

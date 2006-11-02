@@ -81,7 +81,7 @@ public:
     //! Constructor of this form must be provided
 
     static const InterfaceID& interfaceID() { return IID_ITkrBadStripsSvc; }
-   
+
     virtual const stripCol* getBadStrips(int tower, int layer, 
         idents::GlastAxis::axis axis) const = 0;
     virtual bool isBadStrip(int tower, int layer, 

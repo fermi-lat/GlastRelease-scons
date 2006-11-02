@@ -187,7 +187,7 @@ void TkrSplitsSvc::update(CalibData::TkrSplitsCalib* pSplits)
 
     m_pSplits = pSplits;
 
-    log << MSG::INFO << "Splits pointer updated" << endreq;
+    //log << MSG::INFO << "Splits pointer updated" << endreq;
 }
 
 StatusCode TkrSplitsSvc::doInit()
