@@ -87,9 +87,15 @@ rootFile = ROOT.TFile(rootPath,
                       "inlDiff(%s,%s)"%(inlPath1,inlPath2))
 
 # gobal summary histogram
-resid_summary = ROOT.TH1I("resid_summary",
-                          "resid_summary",
-                          100,0,0)
+resid_summary = []
+resid_sum_prof = []
+for rng in range(calConstant.NUM_RNG):
+    resid_summary.append(ROOT.TH1I("resid_summary_%s"%rng,
+                                   "resid_summary_%s"%rng,
+                                   100,0,0))
+    resid_sum_prof.append(ROOT.TProfile("resid_sum_prof_%s"%rng,
+                                        "resid_sum_prof_%s"%rng,
+                                        400,0,4096))
                 
 # calc diffs for each channel
 for twr in inlTwrs1:
@@ -144,7 +150,8 @@ for twr in inlTwrs1:
                         diff = adc2 - adc1
                         resid.append(diff)
                         diffHist.Fill(diff)
-                        resid_summary.Fill(diff)
+                        resid_summary[rng].Fill(diff)
+                        resid_sum_prof[rng].Fill(dac,diff)
 
                     ### INIT PLOTS ###
 
