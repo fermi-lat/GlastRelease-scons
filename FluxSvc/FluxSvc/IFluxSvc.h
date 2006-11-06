@@ -67,14 +67,8 @@ public:
 
     /// name of the flux
     virtual std::string fluxName()const=0;
-#if 0
-    /// set the glast tilt angles - this means glast will ALWAYS rock to these angles.
-    virtual void setExplicitRockingAngles(double ang1,double ang2)=0;
 
-    /// get the angular values of the satellite
-    virtual std::pair<double,double> getExplicitRockingAngles()=0;
-#endif
-        /// set the pointing direction 
+    /// set the pointing direction 
     virtual void setPointingDirection(const astro::SkyDir& dir)=0;
 
 
@@ -96,7 +90,7 @@ public:
     ///4 = EXPLICIT :  Explicit angles given - this should be used with the setExplicit... function.
     ///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
     ///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
-    virtual std::vector<double> setRockType(int rockType, double rockAngle)=0;
+    virtual std::vector<double> setRockType(astro::GPS::RockType rockType, double rockAngle)=0;
 
     ///this should return the source file names, along with the contained sources.
     virtual std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const=0;

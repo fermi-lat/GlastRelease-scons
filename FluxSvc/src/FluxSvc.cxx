@@ -98,11 +98,7 @@ public:
 
     /// name of the flux
     std::string fluxName()const;
-#if 0
-    /// set the glast tilt angles for explicit, static rocking
-    /// the angles correspond to a rotation about the x axis followed by the z.
-    void setExplicitRockingAngles(double ang1, double ang2);
-#endif
+
     /// set the pointing direction 
     void setPointingDirection(const astro::SkyDir& dir);
 
@@ -130,7 +126,7 @@ public:
     ///4=EXPLICIT (use the internal rotangles rotation angles (this should be set through setOrientation)).
     ///5 = POINT:  Explicit pointing direction given - setExplicitRockingAngles are (l,b).
     ///6 = HISTORY - Filename given to stand for a pre-recorded pointing history.  Use the setPointingHistoryFile function.
-    std::vector<double> setRockType(int rockType, double rockAngle = 35.);
+    std::vector<double> setRockType(astro::GPS::RockType rockType, double rockAngle = 35.);
 
     ///this should return the source file names, along with the contained sources.
     std::vector<std::pair< std::string ,std::list<std::string> > > sourceOriginList() const;
@@ -543,19 +539,19 @@ void FluxSvc::setPointingDirection(const astro::SkyDir& dir){
 /// get the angular values of the satellite
 
 
-CLHEP::HepRotation FluxSvc::transformToGlast(double seconds,GPS::CoordSystem index)const{
-    return m_fluxMgr->transformToGlast(seconds,index);
+CLHEP::HepRotation FluxSvc::transformToGlast(double time, GPS::CoordSystem index)const{
+    return m_fluxMgr->transformToGlast(time,index);
 }
 
 CLHEP::HepRotation FluxSvc::transformGlastToGalactic(double time)const{
-    return m_fluxMgr->transformGlastToGalactic(time);
+    return transformToGlast(time, GPS::CELESTIAL).inverse();
 }
 
 std::pair<double,double> FluxSvc::location(){
     return m_fluxMgr->location();
 }
 /// this sets the rocking mode in GPS.
-std::vector<double> FluxSvc::setRockType(int rockType, double rockAngle){
+std::vector<double> FluxSvc::setRockType(astro::GPS::RockType rockType, double rockAngle){
     return m_fluxMgr->setRockType(rockType, rockAngle);
 }
 
