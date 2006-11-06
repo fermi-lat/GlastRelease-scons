@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   05-nov-06  v6r38p1 THB  accomodate changes to astro::GPS
    24-oct-06  v6r38   THB  Set source name in McEvent; add s/c zenith angle to tuple
    29-sep-06  v6r37p1 THB  Minor further property improvement
    28-sep-06  v6r37   THB  Implement new property to set pointing mode
