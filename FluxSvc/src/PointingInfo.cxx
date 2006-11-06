@@ -24,8 +24,8 @@ void PointingInfo::set(double time, bool insideSAA)
     start = time;
     // The GPS singleton has current time and orientation
     GPS* gps = GPS::instance();
-    gps->getPointingCharacteristics(time); // sets time for other functions
-    CLHEP::Hep3Vector pos_km = gps->position(time);
+    gps->time(time); // sets time for other functions
+    CLHEP::Hep3Vector pos_km = gps->position();
     CLHEP::Hep3Vector location = 1.e3* pos_km; // special, needs its own time
     
     // cartesian location of the LAT (in m)
@@ -33,18 +33,17 @@ void PointingInfo::set(double time, bool insideSAA)
     sc_position[1] = location.y();
     sc_position[2] = location.z(); 
 
-    ra_zenith = gps->RAZenith();
-    dec_zenith= gps->DECZenith();
-    ra_scx =    gps->RAX();
-    dec_scx =   gps->DECX();
+    ra_zenith = gps->zenithDir().ra();
+    dec_zenith= gps->zenithDir().dec();
 
-    ra_scz =    gps->RAZ();
-    dec_scz =   gps->DECZ();
-    //uncomment for debug check double check=astro::SkyDir(rax, decx)().dot(astro::SkyDir(raz, decz)());
+    ra_scx =    gps->xAxisDir().ra();
+    dec_scx =   gps->xAxisDir().dec();
+
+    ra_scz =    gps->zAxisDir().ra();
+    dec_scz =   gps->zAxisDir().dec();
 
     lat_geo = gps->lat(); 
     lon_geo = gps->lon(); 
-
     
     // override altitude by using shape of earth; access magnetic stuff
     EarthCoordinate loc = gps->earthpos();
@@ -53,7 +52,7 @@ void PointingInfo::set(double time, bool insideSAA)
     B=loc.B();
     lat_mag = loc.geolat();
     in_saa= insideSAA? 1:0;
-    zenith_scz = 180/M_PI* SkyDir(ra_zenith,dec_zenith).difference(SkyDir(ra_scz,dec_scz));
+    zenith_scz = 180/M_PI* gps->zenithDir().difference(gps->zAxisDir());
 
 }
 //------------------------------------------------------------------------
