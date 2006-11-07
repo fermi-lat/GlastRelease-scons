@@ -18,7 +18,7 @@ apply_pattern component_library library=CalibSvc
 use calibUtil v1r*
 use CalibData v0r* 
 use calibRootData v1r* -no_auto_imports
-use astro         v1r* -no_auto_imports
+use astro         v2r* -no_auto_imports
 
 #because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
 # to protect windows builds. this really needs fixing!
