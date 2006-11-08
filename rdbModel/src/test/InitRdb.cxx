@@ -14,8 +14,6 @@
 #include "rdbModel/Db/MysqlResults.h"
 #include "rdbModel/Tables/Table.h"
 #include "rdbModel/Tables/Column.h"
-// #include "rdbModel/Tables/Datatype.h"
-// #include "rdbModel/Tables/Assertion.h"
 #include "facilities/Util.h"
 #include "InitRdb.h"
 #include "xmlBase/XmlParser.h"
@@ -122,7 +120,6 @@ namespace rdbModel {
 
   // Return 0 if no errors or warnings
   int InitRdb::init(std::string& ifile) {
-    //    using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
     using xmlBase::Dom;
     int   ret;
 
@@ -215,8 +212,6 @@ namespace rdbModel {
     }
     Row toInsert(fields);
     const std::string tname = tbl->getName();
-    //    int* signedKey = 0;
-    //    m_rdb->insertRow(tname, toInsert, signedKey, newKey);
     try {
       m_rdb->insertRow(tname, toInsert, 0, newKey);
     }

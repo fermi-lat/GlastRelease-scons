@@ -87,7 +87,7 @@ int main(int narg, char** args) {
   if (ret) return 0;
   // Make db connection and verify compatibility
   // Account info should be in group with name = dbname
-  ret = i.dbconnect(host, 0, 
+  ret = i.dbconnect(host, port, 
                     dbname,
                     dbname);
   if (ret) return 0;
