@@ -194,6 +194,23 @@ double DfiParser::timeForTds(double utc) {
       awbTicks1 = awbTicks1 + RollOver;
     }
 
+
+    // New:
+    int diffSecs = metaEvent.time().timeHack().hacks() - metaEvent.time().current().timeHack().hacks();
+    if (diffSecs != 0) {
+        std::cout << " Wow!: More than a second between the event and the "
+                  << "current timetone! " 
+                  << ldfReader::LatData::instance()->eventId() 
+                  << diffSecs << "  " 
+                  << metaEvent.time().timeHack().hacks() << "   "
+                  << metaEvent.time().current().timeHack().hacks() 
+                  << std::endl;
+        awbTicks1 = awbTicks1 + double(diffSecs)*RollOver;
+        awbTicks1 = awbTicks1 / double (diffSecs);
+  };
+  // End new!
+
+
     // Check that the two TimeTones are OK and different:
     if (!(metaEvent.time().current().flywheeling()) &&
         !(metaEvent.time().current().missingCpuPps()) &&
