@@ -1,14 +1,5 @@
 <!-- ACDM means medium-sized tile; ACDS is small -->  
 
-<!--   No small tiles on the top
-<box name="topTileACDS"
-XREF="ACDTileSX"
-YREF="ACDTileSY"
-ZREF="tileThickness"
-materialREF="tileMat"
-sensitive="posHit"
-detectorTypeREF="eDTypeACDTile"/>
--->
 
 <!-- Medium top tile -->
 <box name="topTileACDM"
@@ -28,25 +19,7 @@ materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
-<!-- medium tile furthest from (Z) front is a bit higher than the others -->
-<box name="sideTileXACDM2"
-XREF="tileThickness"
-YREF="ACDTileMTrans"
-ZREF="ACDTileM2Height"
-materialREF="tileMat"
-sensitive="posHit"
-detectorTypeREF="eDTypeACDTile"/>
 
-<!-- medium tiles destined for Y-sides  UNUSED!! -->
-<!--
-<box name="sideTileYACDM"
-XREF="ACDTileMTrans"
-YREF="tileThickness"
-ZREF="ACDTileMHeight"
-materialREF="tileMat"
-sensitive="posHit"
-detectorTypeREF="eDTypeACDTile"/>
--->
 
 <!-- small tiles destined for X-sides -->
 <box name="sideTileXACDS"
@@ -57,12 +30,70 @@ materialREF="tileMat"
 sensitive="posHit"
 detectorTypeREF="eDTypeACDTile"/>
 
-<!--
-<box name="sideTileACDM"
-XREF="tileThickness"
-YREF="ACDTileMX"
-ZREF="ACDTileMY"
-materialREF="tileMat"
-sensitive="posHit"
-detectorTypeREF="eDTypeACDTile"/>
--->
+<!-- Black plastic volume adjoining medium top tile -->
+<box name="topTilePlasticACDM"
+XREF="ACDTileMHeight"
+YREF="ACDTileMTrans"
+ZREF="ACDPlasticThick"
+materialREF="tileMat" />
+
+<!-- Plexiglass volume adjoining medium top tile -->
+<box name="topTilePlexiACDM"
+XREF="ACDTileMHeight"
+YREF="ACDTileMTrans"
+ZREF="ACDPlexiInterfaceThick"
+materialREF="plexiglassMat" />
+
+<!-- Black plastic volume adjoining medium side tile -->
+<box name="sideTileXPlasticACDM"
+XREF="ACDPlasticThick"
+YREF="ACDTileMTrans"
+ZREF="ACDTileMHeight"
+materialREF="tileMat" />
+
+<!-- Plexiglass volume adjoining medium side tile -->
+<box name="sideTileXPlexiACDM"
+XREF="ACDPlexiInterfaceThick"
+YREF="ACDTileMTrans"
+ZREF="ACDTileMHeight"
+materialREF="plexiglassMat" />
+
+<!-- Black plastic volume adjoining small side tile -->
+<box name="sideTileXPlasticACDS"
+XREF="ACDPlasticThick"
+YREF="ACDTileSTrans"
+ZREF="ACDTileSHeight"
+materialREF="tileMat" />
+
+<!-- Plexiglass volume adjoining small side tile -->
+<box name="sideTileXPlexiACDS"
+XREF="ACDPlexiInterfaceThick"
+YREF="ACDTileSTrans"
+ZREF="ACDTileSHeight"
+materialREF="plexiglassMat" />
+
+
+<!-- make tile packages for each tile type: sandwich together
+     plastic, tile, plastic, plexiglass.  For top tile stack along
+     Y direction  -->
+<stackZ name="topTilePkg" >
+  <axisPos volume="topTilePlexiACDM"  />
+  <axisPos volume="topTilePlasticACDM"  />
+  <axisPos volume="topTileACDM" />
+  <axisPos volume="topTilePlasticACDM"  />
+</stackZ>
+
+<!-- Side tile packages are stacked in X -->
+<stackX name="sideTileMPkg" >  
+  <axisPos volume="sideTileXPlasticACDM" />
+  <axisPos volume="sideTileXACDM" />
+  <axisPos volume="sideTileXPlasticACDM" />
+  <axisPos volume="sideTileXPlexiACDM" />
+</stackX>
+
+<stackX name="sideTileSPkg" >  
+  <axisPos volume="sideTileXPlasticACDS" />
+  <axisPos volume="sideTileXACDS" />
+  <axisPos volume="sideTileXPlasticACDS" />
+  <axisPos volume="sideTileXPlexiACDS" />
+</stackX>

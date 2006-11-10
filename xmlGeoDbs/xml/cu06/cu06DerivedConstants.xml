@@ -254,27 +254,29 @@
            </uminus>
          </const>
 
-<!-- ACD tile displacements -->
-        <const name="ACDTile_000_dz" >
-          <notes>z-displacement of tile 000, computed from position of
-                front container face, adding in standoff from
-                ACD_tiles_final_position.pdf</notes>
+        <const name="tilePkgThick" >
+          <notes>Thickness of tile + 2 layers of plastic + plexiglass</notes>
           <add>
-            <refer refTo="ISCTkrZp_dz" />
-            <refer refTo="ACDTopTileStandoff" />
-            <half>
-              <add>
-                <refer refTo="tileThickness" />
-                <refer refTo="ISCThin" />
-              </add>
-            </half>
+            <refer refTo="tileThickness" />
+            <refer refTo="ACDPlasticThick" />
+            <refer refTo="ACDPlasticThick" />
+            <refer refTo="ACDPlexiInterfaceThick" />
           </add>
         </const>
+
+        <const name="tilePkgHalfThick" >
+          <notes>For convenience</notes>
+          <half>
+            <refer refTo="tilePkgThick" />
+          </half>
+        </const>
+
+<!-- ACD tile displacements -->
         <const name="ACDTile_000_dx" >
           <notes>x-displacement of tile 000, computed from position of
                 front container face. Min x for top tile should equal
-                min X for Z face of container:
-                tile_dx - 1/2 tileX = face_dx - 1/2 faceX
+                min X for Z face of container + x-offset:
+                tile_dx - 1/2 tileX = face_dx - 1/2 faceX + x-offset
           </notes>
           <add>
             <refer refTo="ISCTkrZp_dx" />
@@ -283,6 +285,44 @@
                 <refer refTo="ACDTileMHeight" />
                 <refer refTo="ISCTkrYFace_x" />
               </minus>
+            </half>
+            <refer refTo="ACDTile_000_xoffset" />
+          </add>
+        </const>
+
+        <const name="ACDTile_000_dy" >
+          <notes>y-displacement of tile 000, computed from position of
+                front container face. Max y for top tile should equal
+                max Y for Z face of container + yoffset:
+                tile_dy + 1/2 tileY = face_d0 + 1/2 faceY + yoffset, equiv
+&lt;br /&gt; tile_dy=yoffset+1/2(faceY-tileY)
+                (the Z-face is centered in Y)
+          </notes>
+          <add>
+            <refer refTo="ACDTile_000_yoffset" />
+            <half>
+              <minus>
+                <refer refTo="ISCLateral" />
+                <refer refTo="ACDTileMTrans" />
+              </minus>
+            </half>
+          </add>
+        </const>
+
+        <const name="ACDTilePkg_000_dz" >
+          <notes>z-displacement of tile 000 "package", computed 
+                from position of
+                front container face, adding in standoff from Luca's
+                diagrams of Nov. 9-10 2006
+                </notes>
+          <add>
+            <refer refTo="ISCTkrZp_dz" />
+            <refer refTo="ACDTopTilePkgStandoff" />
+            <half>
+              <add>
+                <refer refTo="tilePkgThick" />
+                <refer refTo="ISCThin" />
+              </add>
             </half>
           </add>
         </const>
@@ -299,58 +339,73 @@
         </const>
 
         <const name="ACDTile_120_dy" >
-          <notes>y-displacement of tile 120 (on -X face)</notes>
-          <refer refTo="ACDTile_000_dy" />
+          <notes>y-displacement of tile 120 (on -X face).
+                tile_dy=yoffset+1/2(faceY-tileY)
+          </notes>
+          <add>
+            <refer refTo="ACDTile_120_yoffset" />
+            <half>
+              <minus>
+                <refer refTo="ISCLateral" />
+                <refer refTo="ACDTileSTrans" />
+              </minus>
+            </half>
+          </add>
         </const>
 
         <const name="ACDTile_130_dy" >
           <notes>y-displacement of tile 130 (on -X face)</notes>
-          <refer refTo="ACDTile_000_dy" />
+          <refer refTo="ACDTile_120_dy" />
         </const>
 
-        <const name="ACDTile_100_dx" >
+        <const name="ACDTilePkg_100_dx" >
            <notes> x-displacement of tile 100 (on -X face).
                   Computed from location of  ISCTkrXFace and
                   standoff </notes>
            <minus>
              <refer refTo="ISCTkrXn_dx" />
              <add>
-               <refer refTo="tileHalfThickness" />
+               <refer refTo="tilePkgHalfThick" />
                <refer refTo="ISCThinHalf" />
-               <refer refTo="ACDSideTileStandoffLg" />
+               <refer refTo="ACDSideTilePkgStandoff_100" />
              </add>
            </minus>
          </const>
 
-        <const name="ACDTile_110_dx" >
+        <const name="ACDTilePkg_110_dx" >
            <notes> x-displacement of tile 110 (on -X face).</notes>
            <minus>
              <refer refTo="ISCTkrXn_dx" />
              <add>
-               <refer refTo="tileHalfThickness" />
+               <refer refTo="tilePkgHalfThick" />
                <refer refTo="ISCThinHalf" />
-               <refer refTo="ACDSideTileStandoffSm" />
+               <refer refTo="ACDSideTilePkgStandoff_110" />
+             </add>
+           </minus>
+        </const>
+
+        <const name="ACDTilePkg_120_dx" >
+           <notes> x-displacement of tile 120 (on -X face).</notes>
+           <minus>
+             <refer refTo="ISCTkrXn_dx" />
+             <add>
+               <refer refTo="tilePkgHalfThick" />
+               <refer refTo="ISCThinHalf" />
+               <refer refTo="ACDSideTilePkgStandoff_120" />
              </add>
            </minus>
 
         </const>
 
-        <const name="ACDTile_120_dx" >
-           <notes> x-displacement of tile 120 (on -X face).</notes>
-           <refer refTo="ACDTile_110_dx" />
-        </const>
-
-        <const name="ACDTile_130_dx" >
+        <const name="ACDTilePkg_130_dx" >
            <notes> x-displacement of tile 130 (on -X face).</notes>
-           <refer refTo="ACDTile_110_dx" />
+           <refer refTo="ACDTilePkg_120_dx" />
         </const>
 
         <const name="ACDTile_100_dz" >
            <notes> z-displacement of tile 100 (on -X face).
                   Computed from location of  ISCTkrZFace.
-                  Appears to stick up by about 1/2 tile thickness 
-                  (but call it full thickness to avoid overlap)
-                  + standoff </notes>
+                  + amount tile sticks out in front </notes>
            <minus>
              <add>
                <refer refTo="ISCTkrZp_dz" />
@@ -367,30 +422,28 @@
 
         <const name="ACDTile_110_dz" >
            <notes> z-displacement of tile 110 (on -X face).
-                  Computed from location of tile 'above' (100) </notes>
+                  Computed from location of tile 'above' (100)
+                  and gap between them. Note tiles have same Z-dim
+                  (165 mm) </notes>
            <minus>
-             <add>
-               <refer refTo="ACDTile_100_dz" />
-               <refer refTo="ACDOverlapRow0_1" />
+             <refer refTo="ACDTile_100_dz" />
+             <add>     
+               <refer refTo="ACDTileMHeight" />
+               <refer refTo="ACDMediumTileGap" />
              </add>
-             <half>
-               <add>     
-                 <refer refTo="ACDTileMHeight" />
-                 <refer refTo="ACDTileM2Height" />
-               </add>
-             </half>
            </minus>
         </const>
 
 
         <const name="ACDTile_120_dz" >
            <notes> z-displacement of tile 120 (on -X face).
-                  Computed from location of tile 'above' (110) </notes>
+                  Computed from location of tile 'above' (110).
+                  There is no gap between 110 and 120 </notes>
            <minus>
              <refer refTo="ACDTile_110_dz" />
              <half>
                <add>
-                 <refer refTo="ACDTileM2Height" />
+                 <refer refTo="ACDTileMHeight" />
                  <refer refTo="ACDTileSHeight" />
                </add>
              </half>
@@ -399,7 +452,8 @@
 
         <const name="ACDTile_130_dz" >
            <notes> z-displacement of tile 130 (on -X face).
-                  Computed from location of tile 'above' (120) </notes>
+                  Computed from location of tile 'above' (120).
+                  There is no gap between 120 and 130. </notes>
            <minus>
              <refer refTo="ACDTile_120_dz" />
              <add>

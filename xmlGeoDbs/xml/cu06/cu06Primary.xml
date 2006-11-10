@@ -2,38 +2,100 @@
 <primCategory name="cu06ACDDimPrim">
   <overview>Extra primary constants needed for cu06 ACD description</overview>
 
-<prim name="ACDTileMHeight" value = "200.000000">ACD 
-medium tile short dim from ACD_Tiles_final_position.pdf.  Was 170.0</prim>
-<prim name="ACDTileM2Height" value = "220.000000">ACD 
-medium tile #2 (medium tile furthest back in Z)
- short dim from ACD_Tiles_final_position.pdf.  Was 170.0</prim>
+<prim name="ACDTileMHeight" value = "165.000000">ACD 
+medium tile short dim 
+&lt;font color="orange"&gt;(confirmed 9 Nov 2006. Source: Alex Moiseev)</prim>
+
 
 <prim name="ACDTileMTrans" value = "332.000000">ACD medium tile long dim.
-</prim>
+&lt;font color="orange"&gt;(confirmed 9 Nov 2006. Source: Alex Moiseev)
+&lt;/font&gt;</prim>
 <prim name="ACDTileSHeight" value = "165.000000">ACD small tile 
-short dim.</prim>
-<prim name="ACDTileSTrans" value = "115.000000">ACD small tile long dim.,
-from ACD_Tiles_final_position.pdf.  Was 170.</prim>
+height 
+&lt;font color="orange"&gt;(updated 9 Nov 2006. Source: Alex Moiseev )</prim>
+<prim name="ACDTileSTrans" value = "165.000000">ACD small tile width
+&lt;font color="orange"&gt;(updated 9 Nov 2006. Source: Alex Moiseev)
+&lt;/font&gt;</prim>
+
+
+<prim name="ACDPlasticThick" value="2.0">Thickness of black plastic on
+faces of ACD tiles</prim>
+<prim name="ACDPlexiInterfaceThick" value="2.0">Thickness of plexiglass
+interface plate adjoining tile</prim>
+
+
 <prim name="ACDTopTileStandoff" value="7.0">gap between top tile and front
-face of container, from ACD_tiles_Final_position.pdf</prim>
+face of container, from ACD_tiles_Final_position.pdf.  OBSOLETE</prim>
+<prim name="ACDTopTilePkgStandoff" value="4.0">gap between plexiglass
+interface attached to tile and front face of container. 
+&lt;font color="orange"&gt;Source:
+Luca Latronico's measurements of 9 Nov. 2006&lt;/font&gt;</prim>
+
 <prim name="ACDSideTileStandoffSm" value="10.0">gap between side tiles and
--X face of container, rows 1-3,from ACD_tiles_final_position.pdf</prim>
+-X face of container, rows 1-3,from ACD_tiles_final_position.pdf 
+OBSOLETE</prim>
+
+<prim name="ACDSideTilePkgStandoff_120" value="4.0">gap between plexiglass
+interface attached to small tiles 120 and 130 and -X face of container. 
+&lt;font color="orange"&gt;Source:
+Luca Latronico's measurements of 9 Nov. 2006&lt;/font&gt;</prim>
+
+<prim name="ACDSideTilePkgStandoff_100" value="28.0">gap between plexiglass
+interface attached to more foreward medium tile and -X face of container. 
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements 
+of 9 Nov. 2006&lt;/font&gt;</prim>
+
+<prim name="ACDSideTilePkgStandoff_110" value="5.0">gap between plexiglass
+interface attached to less foreward medium tile and -X face of container. 
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements of
+ 9 Nov. 2006&lt;/font&gt;</prim>
+
+
 <prim name="ACDSideTileStandoffLg" value="35.0">gap between side tile and
--X face of container, row 0, from ACD_tiles_final_position.pdf</prim>
+-X face of container, row 0, from ACD_tiles_final_position.pdf OBSOLETE</prim>
+
 <prim name="ACDOverlapRow0_1" value="30.0">Taken from 
  ACD_tiles_Final_position.pdf</prim>
+<!--   It's not centered after all (see Luca's Nov. 10, 2006 file)
 <prim name="ACDTile_000_dy" value="0.000000"> top ACD tile absolute y</prim>
+-->
+<prim name="ACDTile_100_beyond" value="50.0">Distance in +Z direction
+that tile 100 extends beyond container
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements of
+ 10 Nov. 2006&lt;/font&gt;</prim>
 
-<prim name="ACDTile_100_beyond" value="56.0">Distance in +Z direction
-that tile 100 extends beyond container</prim>
+<prim name="ACDSmallTileGap" value="0.0"> Distance between small tiles
+(120, 130) 
+&lt;font color="orange"&gt;(Source: Luca Latronico's measurements of
+ 9 Nov. 2006&lt;/font&gt;</prim>
 
-<prim name="ACDSmallTileGap" value="2.0"> Distance between small tiles
-(120, 130)</prim>
+
+<prim name="ACDMediumTileGap" value="45.0"> Distance between tiles
+(100, 110) 
+&lt;font color="orange"&gt;(Source: Luca Latronico's measurements of 
+9 Nov. 2006&lt;/font&gt;</prim>
+
+
+<prim name="ACDTile_000_xoffset" value="45">Distance of -X edge of
+tile 000 from -X edge of front Z-face
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements of
+ 10 Nov. 2006&lt;/font&gt;</prim>
+
+<prim name="ACDTile_000_yoffset" value="-40">Distance of +Y edge of
+tile 000 from +Y edge of front Z-face
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements of
+ 10 Nov. 2006&lt;/font&gt;
+</prim>
+
+<prim name="ACDTile_120_yoffset" value="-120">Distance of +Y edge of
+tile 120 (and 130) from +Y edge of -X face
+&lt;font color="orange"&gt;Source: Luca Latronico's measurements of
+ 10 Nov. 2006&lt;/font&gt;</prim>
 </primCategory>
 
 <primCategory name="cu06ContainerPrim">
   <overview>Extra primary constants needed for cu06 container
- description</overview>
+ description</overview> 
 
 <prim name="ISCMat" value="Al" type="string" uType="mat">Material for cu06 inner container</prim> 
 <prim name="ISCThin" value="2.0">Thickness of thinner cu06 inner container
@@ -68,4 +130,11 @@ Z-dimension of Y-face for
 cals part of inner container.
 &lt;font color="orange"&gt; From Eddie's labeled photo&lt;/font&gt; 
 </prim>
+
+<prim name="plexiglassMat" value="plexiglass" type="string" uType="mat">
+Definition of plexiglass used for MMS runs</prim>
+
+<prim name="cu06blanketMat" value="cu06blanket" type="string" uType="mat">
+Definition of cu06 blanket used for MMS runs</prim>
+
 </primCategory>

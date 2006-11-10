@@ -69,10 +69,10 @@
         <idField name="fTowerX" value="1" />
       </posXYZ>
 
-      <posXYZ volume="topTileACDM"
+      <posXYZ volume="topTilePkg"
               XREF="ACDTile_000_dx"
               YREF="ACDTile_000_dy"
-              ZREF="ACDTile_000_dz" >
+              ZREF="ACDTilePkg_000_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
         <idField name="fACDFace" value="0"/>
         <idField name="fACDCmp" valueREF="eACDTile"/>
@@ -80,8 +80,8 @@
         <idField name="fCol" value="0" />
         <idField name="fTileSeg" value="0" />
       </posXYZ>
-      <posXYZ volume="sideTileXACDM"
-              XREF="ACDTile_100_dx"
+      <posXYZ volume="sideTileMPkg"
+              XREF="ACDTilePkg_100_dx"
               YREF="ACDTile_100_dy"
               ZREF="ACDTile_100_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
@@ -92,8 +92,8 @@
         <idField name="fTileSeg" value="0" />
       </posXYZ>
 
-      <posXYZ volume="sideTileXACDM"
-              XREF="ACDTile_110_dx"
+      <posXYZ volume="sideTileMPkg"
+              XREF="ACDTilePkg_110_dx"
               YREF="ACDTile_110_dy"
               ZREF="ACDTile_110_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
@@ -106,8 +106,8 @@
 
 
 
-      <posXYZ volume="sideTileXACDS"
-              XREF="ACDTile_120_dx"
+      <posXYZ volume="sideTileSPkg"
+              XREF="ACDTilePkg_120_dx"
               YREF="ACDTile_120_dy"
               ZREF="ACDTile_120_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
@@ -118,8 +118,8 @@
         <idField name="fTileSeg" value="0" />
       </posXYZ>
 
-      <posXYZ volume="sideTileXACDS"
-              XREF="ACDTile_130_dx"
+      <posXYZ volume="sideTileSPkg"
+              XREF="ACDTilePkg_130_dx"
               YREF="ACDTile_130_dy"
               ZREF="ACDTile_130_dz" >
         <idField name="fLATObjects" valueREF="eLATACD"/>
@@ -129,20 +129,6 @@
         <idField name="fCol" value="0" />
         <idField name="fTileSeg" value="0" />
       </posXYZ>
-
-<!--
-      <posXYZ volume="sideTileYACDM"
-              XREF="ACDTile_200_dx"
-              YREF="ACDTile_200_dy"
-              ZREF="ACDTile_200_dz" >
-        <idField name="fLATObjects" valueREF="eLATACD"/>
-        <idField name="fACDFace" value="2"/>
-        <idField name="fACDCmp" valueREF="eACDTile"/>
-        <idField name="fRow" value="0" />
-        <idField name="fCol" value="0" />
-        <idField name="fTileSeg" value="0" />
-      </posXYZ>
--->
      
       <posXYZ volume="oneTower" XREF="innerTowers_dt" ZREF="towers_dz">
         <idField name="fLATObjects" valueREF="eLATTowers" />
