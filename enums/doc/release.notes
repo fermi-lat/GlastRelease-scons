@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r11   10-Nov-2006 THB Make trigger bit 0 also represent ROI.
 v0r10   19-Oct-2006 HMK Add a new error flag:  LDFWARNING
 v0r9    07-Jul-2006 RBL Add EMPTY_EVENT and STROBE flags in Lsf.h to match DFI V3-4-1
 v0r8    16-Jun-2006 HMK Add flag for missing CAL readouts in ALLRANGE

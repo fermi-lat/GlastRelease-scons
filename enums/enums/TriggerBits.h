@@ -6,6 +6,8 @@ namespace enums {
         //! definition of  trigger bits
 
         b_ACDL =     1,  ///>  set if cover or side veto, low threshold
+        b_ROI =      1,  ///<  copy of throttle,  if (new style) mimic GEM word
+
         b_Track=     2,  ///>  3 consecutive x-y layers hit
         b_LO_CAL=    4,  ///>  single log above low threshold
         b_HI_CAL=    8,  ///>  single log above high threshold
