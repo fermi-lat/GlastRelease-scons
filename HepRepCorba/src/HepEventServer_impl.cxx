@@ -145,10 +145,11 @@ char* HepEventServer_impl::setEvent(const char* command)
   }  
   else if (cmd.substr(0,18) == "open:rootfilename:") {
     std::string temp = cmd.substr(18,cmd.size());   
-    std::string temp2;
+    std::string temp2,temp3,temp4;
     std::string mc;
     std::string digi;
     std::string recon;
+    std::string gcr;
 
     int i = temp.find(";");
     if(i >=0 )
@@ -157,12 +158,18 @@ char* HepEventServer_impl::setEvent(const char* command)
       temp2 = temp.substr(i+1,temp.size());
       i = temp2.find(";");
       digi=temp2.substr(0,i);
-      recon = temp2.substr(i+1,temp2.size());
+      //recon = temp2.substr(i+1,temp2.size());
+      temp3 = temp2.substr(i+1,temp2.size());
+      i = temp3.find(";");
+      recon=temp3.substr(0,i);
+      temp4 = temp3.substr(i+1,temp3.size());
+      i = temp4.find(";");
+      gcr=temp4.substr(0,i);
     } 
     else 
       nextEventMsg = "error:Incorrect command format";      
 
-    if (m_svcAdapter->openFile(mc.c_str(), digi.c_str(), recon.c_str()))
+    if (m_svcAdapter->openFile(mc.c_str(), digi.c_str(), recon.c_str(), gcr.c_str()))
       nextEventMsg = "ok:Set ROOT files";
     else
       nextEventMsg = "error:The requested ROOT files seem to non exist";      
