@@ -283,6 +283,11 @@ public:
 
     void initTracks(const TObjArray &tracks);
 
+    void initBestTrack( Int_t xHits, Int_t yHits,
+                              Double_t slopeXZ,Double_t slopeYZ,
+                              Double_t intXZ,Double_t intYZ);
+       
+
     //void initCalLogInfo(const CalLogInfo *logData); 
 
     void Clear(Option_t *option ="");
@@ -366,6 +371,24 @@ public:
 
     inline int getVetoWord() const{    return m_vetoword;  }
 
+    inline void getBestTrack(Int_t &xHits,Int_t &yHits,
+        Double_t &slopeXZ,Double_t &slopeYZ,
+        Double_t &intXZ,Double_t &intYZ) const {
+            xHits    = m_xHits;
+            yHits    = m_yHits;
+            slopeXZ  = m_slopeXZ;
+            slopeYZ  = m_slopeYZ;
+            intXZ    = m_intXZ;
+            intYZ    = m_intYZ;
+        }
+
+        inline Int_t getXhitsBestTrack() const { return m_xHits; }
+        inline Int_t getYhitsBestTrack() const { return m_yHits; }
+        inline Double_t getSlopeXzBestTrack() const { return m_slopeXZ; }
+        inline Double_t getSlopeYzBestTrack() const { return m_slopeYZ; }
+        inline Double_t getIntXzBestTrack() const { return m_intXZ; }
+        inline Double_t getIntYzBestTrack() const { return m_intYZ; }
+
 private:
 
     ///Filter status code
@@ -411,6 +434,14 @@ private:
 
     ///Layers hit in each tower
     Int_t m_layers[16];
+    
+    /// Best Track data
+    Int_t m_xHits;   
+    Int_t m_yHits;   
+    Double_t m_slopeXZ;
+    Double_t m_slopeYZ;
+    Double_t m_intXZ;
+    Double_t m_intYZ;
 
     ///Angular separation between best track and incomming particle
     Double_t m_separation;
@@ -418,14 +449,14 @@ private:
     Float_t m_layerEnergy[8];
 
     ///Projections for the towers
-    TfcProjectionCol m_projectionCol;
+    TfcProjectionCol m_projectionCol;  //Disable for right now
 
     ///Tracks found for this event
     TObjArray m_tracks;
 
     //CalLogInfo m_calLogData[16*8*12];    // 16 towers * 8 layers * 12 logs  in newer version of OBF
 
-    ClassDef(FilterStatus,1) // OBF Filter Status
+    ClassDef(FilterStatus,2) // OBF Filter Status
 };
 
 #endif

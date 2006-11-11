@@ -332,6 +332,9 @@ FilterStatus::FilterStatus(const FilterStatus& copy) : TObject(copy)
     initSeparation(copy.m_separation);
 
     initProjectionCol(copy.m_projectionCol);
+
+    initBestTrack(copy.m_xHits,copy.m_yHits,copy.m_slopeXZ,copy.m_slopeYZ,copy.m_intXZ,copy.m_intYZ);
+
 }
 
 FilterStatus::~FilterStatus() {
@@ -366,6 +369,8 @@ FilterStatus& FilterStatus::operator=(const FilterStatus& copy) {
     initSeparation(copy.m_separation);
 
     initProjectionCol(copy.m_projectionCol);
+
+    initBestTrack(copy.m_xHits,copy.m_yHits,copy.m_slopeXZ,copy.m_slopeYZ,copy.m_intXZ,copy.m_intYZ);
 
     return *this;
   }
@@ -453,10 +458,21 @@ void FilterStatus::initSeparation(Double_t separation)
 m_separation = separation;
 }
 
+void FilterStatus::initBestTrack(Int_t xHits, Int_t yHits, Double_t slopeXZ, Double_t slopeYZ, 
+                                 Double_t intXZ, Double_t intYZ) {
+        m_xHits    = xHits;
+        m_yHits    = yHits;
+        m_slopeXZ  = slopeXZ;
+        m_slopeYZ  = slopeYZ;
+        m_intXZ    = intXZ;
+        m_intYZ    = intYZ;
+}
+
+
 ///Projections for the towers
 void FilterStatus::initProjectionCol(const TfcProjectionCol& projectionCol) 
 {
-    m_projectionCol = projectionCol;
+    //m_projectionCol = projectionCol;
 } 
 
 void FilterStatus::initTracks(const TObjArray &tracks) 
@@ -511,6 +527,14 @@ void FilterStatus::Clear(Option_t *option)
 
     m_ebfSize = 0;
     m_numLogsHit = 0;
+
+    // Clear Best Track vars
+    m_xHits = 0;   
+    m_yHits = 0;   
+    m_slopeXZ = 0.0;
+    m_slopeYZ = 0.0;
+    m_intXZ = 0.0;
+    m_intYZ = 0.0;
 
     m_separation = 0.0;
 
@@ -580,7 +604,7 @@ void FilterStatus::Print(Option_t *option) const
         curTrack->Print(option);
     }
 
-    m_projectionCol.Print(option);
+    //m_projectionCol.Print(option);
 }
 
 //======================================================
@@ -605,6 +629,7 @@ void FilterStatus::Fake( Int_t ievent, Float_t randNum ) {
   Float_t layerEnergy[8] = {1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8};
   initCal(0,layerEnergy);
   initSeparation(10.0);
+  initBestTrack(2,4,2.2,3.3,4.4,5.5);
 
   TObjArray trackObf;
   initTracks(trackObf);
@@ -637,6 +662,12 @@ Bool_t FilterStatus::CompareInRange( FilterStatus & ref, const std::string & nam
     result = rootdatautil::CompareInRange(getGemDiscarded(),ref.getGemDiscarded(),"GemDiscarded") && result;
     result = rootdatautil::CompareInRange(getGemPrescaled(),ref.getGemPrescaled(),"GemPrescaled") && result;
     result = rootdatautil::CompareInRange(getGemSent(),ref.getGemSent(),"GemSent") && result;
+    result = rootdatautil::CompareInRange(getXhitsBestTrack(),ref.getXhitsBestTrack(),"Xhits") && result;
+    result = rootdatautil::CompareInRange(getYhitsBestTrack(),ref.getYhitsBestTrack(),"Yhits") && result;
+    result = rootdatautil::CompareInRange(getSlopeXzBestTrack(), ref.getSlopeXzBestTrack(),"SlopeXZ") && result;
+    result = rootdatautil::CompareInRange(getSlopeYzBestTrack(), ref.getSlopeYzBestTrack(),"SlopeYZ") && result;
+    result = rootdatautil::CompareInRange(getIntXzBestTrack(),ref.getIntXzBestTrack(),"IntXZ") && result;
+    result = rootdatautil::CompareInRange(getIntYzBestTrack(),ref.getIntYzBestTrack(),"IntYZ")&& result;
 
     if (!result) {
         if (name == "") {
