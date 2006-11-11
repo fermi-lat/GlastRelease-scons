@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   11-nov-06  v6r39   THB  timing changes to accomodate multiple timers
    06-nov-06  v6r38p2 THB  accomodate changes to astro::GPS
    24-oct-06  v6r38   THB  Set source name in McEvent; add s/c zenith angle to tuple
    29-sep-06  v6r37p1 THB  Minor further property improvement
