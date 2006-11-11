@@ -142,6 +142,11 @@ namespace RootPersistence {
     rootObj.initCal(numLogsHit, tdsObj.getLayerEnergy());
 
     rootObj.initSeparation(tdsObj.getSeparation());
+    
+    int xHits, yHits;
+    double slopeXZ,slopeYZ,intXZ,intYZ;
+    tdsObj.getBestTrack(xHits,yHits,slopeXZ,slopeYZ,intXZ,intYZ);
+    rootObj.initBestTrack(xHits,yHits,slopeXZ,slopeYZ,intXZ,intYZ);
 
     TObjArray trackRootCol;
     if (tdsObj.tracksExist()) {
@@ -178,6 +183,9 @@ namespace RootPersistence {
       tdsObj.setGemDiscarded(rootObj.getGemDiscarded());
       tdsObj.setGemPrescaled(rootObj.getGemPrescaled());
       tdsObj.setGemSent(rootObj.getGemSent());
+      tdsObj.setBestTrack(rootObj.getXhitsBestTrack(),rootObj.getYhitsBestTrack(),
+          rootObj.getSlopeXzBestTrack(), rootObj.getSlopeYzBestTrack(),rootObj.getIntXzBestTrack(),
+          rootObj.getIntYzBestTrack());
 
       Int_t xz, yz, xy;
       rootObj.getAcdMap(xz,yz,xy);
