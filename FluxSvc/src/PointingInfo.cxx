@@ -16,17 +16,16 @@ class MsgStream; // needed for Exposure.
 
 
 
-void PointingInfo::set(double time, bool insideSAA)
+void PointingInfo::set()
 {
     // Purpose: save the current status until the next tick
     using namespace astro;
  
-    start = time;
     // The GPS singleton has current time and orientation
     GPS* gps = GPS::instance();
-    gps->time(time); // sets time for other functions
+    start = gps->time(); 
     CLHEP::Hep3Vector pos_km = gps->position();
-    CLHEP::Hep3Vector location = 1.e3* pos_km; // special, needs its own time
+    CLHEP::Hep3Vector location = 1.e3* pos_km; 
     
     // cartesian location of the LAT (in m)
     sc_position[0] = location.x();
@@ -51,7 +50,7 @@ void PointingInfo::set(double time, bool insideSAA)
     L=loc.L();
     B=loc.B();
     lat_mag = loc.geolat();
-    in_saa= insideSAA? 1:0;
+    in_saa= loc.insideSAA()? 1:0;
     zenith_scz = 180/M_PI* gps->zenithDir().difference(gps->zAxisDir());
 
 }

@@ -105,30 +105,9 @@ StatusCode PointInfoAlg::execute()
     //
     // Purpose: set tuple items
  
- 
-    // get the event header for the time
+    m_pointing_info.set();
 
-    SmartDataPtr<Event::EventHeader> header(eventSvc(), EventModel::EventHeader);
-    if(0==header) {
-            log << MSG::ERROR << " could not be found on data store" << endreq;
-     }
-
-    TimeStamp currentTime=header->time();
-
-    if( currentTime==-1) { // not set!
-
-        SmartDataPtr<Event::MCEvent> mcheader(eventSvc(), EventModel::MC::Event);
-        if (mcheader == 0) {
-            log << MSG::ERROR << EventModel::MC::Event  <<" could not be found on data store" << endreq;
-            return sc;
-        }
-
-        currentTime = mcheader->time();
-
-    }
-    m_pointing_info.set(currentTime, false);
-
-    
+   
     // put pointing stuff into the root tree
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){
         m_rootTupleSvc->storeRowFlag(this->m_root_tree.value(), m_save_tuple);

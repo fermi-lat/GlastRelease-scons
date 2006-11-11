@@ -156,10 +156,10 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("area",        m_area=6.0); // target area in m^2
     declareProperty("backoff",     m_backoff=2.0); //backoff distance in m
 
-    declareProperty("pointing_mode", m_pointing_mode=0); // default zenith-pointed: GLAST and zenith coord systems the same
+//    declareProperty("pointing_mode", m_pointing_mode=0); // default zenith-pointed: GLAST and zenith coord systems the same
     // set to 3 for rocking
-    declareProperty("rocking_angle", m_rocking_angle=35); // in degrees
-    declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
+    declareProperty("rocking_angle", m_rocking_angle=0); // set non-zero to enable rocking
+//    declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
 
     declareProperty("PointingHistory",  m_pointingHistory); // doublet, filename and launch date
 
@@ -206,17 +206,14 @@ StatusCode FluxAlg::initialize(){
         log << MSG::INFO << "set to zenith angle " << m_zenithTheta << " degrees" << endreq;
 
     }else {
-#if 0 // rocking not currently supported
-        //then this line sets the rocking type, as well as the rocking angle.
-        m_fluxSvc->setRockType(m_pointing_mode,m_rocking_angle);
-
-        //now make the screen outputs showing what modes were called:
-        if(m_pointing_mode){
+        if(m_rocking_angle >0 ){
             //output to record the pointing settings
-            log << MSG::INFO << "rocking Mode: " << m_pointing_mode << endreq;
-            log << MSG::INFO << "rocking Angle: " << m_rocking_angle << " degrees" << endreq;
+            //then this line sets the rocking type, as well as the rocking angle.
+            m_fluxSvc->setRockType(GPS::ONEPERORBIT ,m_rocking_angle);
+            log << MSG::INFO << "Once per orbit rocking Angle: " << m_rocking_angle << " degrees" << endreq;
         }
-#endif
+        
+    
         //set the input file to be used as the pointing database, if used
         if(! m_pointingHistory.value().empty()){
             std::string filename(m_pointingHistory.value()[0]);
@@ -341,6 +338,8 @@ StatusCode FluxAlg::execute()
 
         //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.
         if(particleName == "TimeTick" || particleName == "Clock"){
+            m_pointing_info.set();
+
             setFilterPassed( false );
             return sc;
         }
@@ -442,7 +441,7 @@ StatusCode FluxAlg::execute()
     TimeStamp currentTime=m_flux->time();
 
     // is this proper here?
-    m_pointing_info.set(currentTime, m_insideSAA);
+    m_pointing_info.set();
     
     // put pointing stuff into the root tree
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){

@@ -36,6 +36,7 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <map>
 
 /** 
 * \class ExposureAlg
@@ -67,6 +68,7 @@ private:
 
     StringProperty m_root_tree;
     StringProperty m_pointing_history_input_file;
+    StringProperty m_clockName;
 
     IntegerProperty m_print_frequency;
     IFluxSvc*   m_fluxSvc;
@@ -84,6 +86,8 @@ private:
     
     void createEntry(); // called for tick, or SAA transition
 
+    astro::GPS * m_gps;
+    std::map<std::string, int> m_ticks; // ticks by clock name
 };
 //------------------------------------------------------------------------
 
@@ -102,6 +106,7 @@ ExposureAlg::ExposureAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("root_tree",m_root_tree="pointing_history"); //doesn't work???
 
     declareProperty("PrintFrequency", m_print_frequency=1);
+    declareProperty("clockName"    , m_clockName = "clock" );// the name to check for
 }
 
 //------------------------------------------------------------------------
@@ -146,12 +151,15 @@ StatusCode ExposureAlg::initialize(){
 
     m_history.setFT2Tuple(m_rootTupleSvc, m_root_tree.value());
 
+    log << MSG::INFO << "Using the clock \""<< m_clockName<< "\" to generate FT2 entries" << endreq;
+
     // attach an observer to be notified when orbital position changes
         // set callback to be notified when the position changes
     m_observer.setAdapter( new ActionAdapter<ExposureAlg>
         (this, &ExposureAlg::askGPS) );
 
     m_fluxSvc->attachGpsObserver(&m_observer);
+    m_gps = astro::GPS::instance();
 
     return sc;
 }
@@ -176,12 +184,17 @@ int ExposureAlg::askGPS()
 StatusCode ExposureAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
 
     IFlux* flux=m_fluxSvc->currentFlux();
         
-    std::string particleName = flux->particleName();
+    std::string name( flux->name());
 
-    if(particleName == "TimeTick" || particleName == "Clock"){
+    log << MSG::DEBUG << "Clock tick at "<< m_gps->time()<<", clock: "<<name << endreq;
+
+    m_ticks[name]++;
+
+    if(m_clockName.value() == name){
         createEntry();
     } 
     return sc;
@@ -200,7 +213,7 @@ void ExposureAlg::createEntry()
     m_last_livetime = m_livetimeSvc->livetime();
 
     // start new entry
-    m_history.set(m_lasttime, m_insideSAA);
+    m_history.set();
 
     if(  m_tickCount% m_print_frequency==0){
         MsgStream   log( msgSvc(), name() );
@@ -228,9 +241,17 @@ void ExposureAlg::createEntry()
 StatusCode ExposureAlg::finalize(){
     // finish up
     if( m_tickCount>0 ) createEntry();
+
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "Processed " << m_tickCount << " ticks" << endreq;
+
+    log << MSG::INFO <<" clock Name     ticks"<<endreq;;
+    for(std::map<std::string,int>::const_iterator im=m_ticks.begin(); im !=m_ticks.end(); ++im) {
+        log<< MSG::INFO 
+            <<std::setw(15) << std::left  << im->first
+            << std::setw(10)<< std::right << im->second << endreq;
+    }
+    log << std::endl;
 
     return sc;
 }
