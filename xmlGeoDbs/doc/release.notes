@@ -4,6 +4,11 @@
  *
  *                    **EOH**
 
+   v1r36   10-Nov-2006  jrb cu06 updates: 1) fix tile positions and sizes
+                            2) make tile sandwiches consisting of layer of
+                            plexiglass, "black plastic" (inactive tile material),
+                            tile, and more black plastic.3) add material 
+                            definitions for plexiglass and "cu06blanket"
    v1r35p3  2-Aug-2006  jrb More small adjustments in cu06: Z-dim of TKR 
                             container is smaller; tile 100 sticks out. 
                             Put in 2mm gap between tiles 120 and 130 
