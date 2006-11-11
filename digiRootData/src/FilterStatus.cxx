@@ -472,7 +472,7 @@ void FilterStatus::initBestTrack(Int_t xHits, Int_t yHits, Double_t slopeXZ, Dou
 ///Projections for the towers
 void FilterStatus::initProjectionCol(const TfcProjectionCol& projectionCol) 
 {
-    //m_projectionCol = projectionCol;
+    m_projectionCol = projectionCol;
 } 
 
 void FilterStatus::initTracks(const TObjArray &tracks) 
@@ -542,7 +542,7 @@ void FilterStatus::Clear(Option_t *option)
         m_layerEnergy[i] = 0.0;
     }
 
-    //m_projectionCol.Clear("");
+    m_projectionCol.Clear("");
 
     m_tracks.Delete();
 
@@ -604,7 +604,7 @@ void FilterStatus::Print(Option_t *option) const
         curTrack->Print(option);
     }
 
-    //m_projectionCol.Print(option);
+    m_projectionCol.Print(option);
 }
 
 //======================================================

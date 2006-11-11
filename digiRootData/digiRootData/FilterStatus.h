@@ -187,14 +187,14 @@ private:
     ///Maximum # of projections available
     Int_t    m_maxCnt; 
     //Current # of projections in use   
-    UShort_t    m_curCnt;
+    Int_t    m_curCnt;
     ///Mask of the tower with projections  
     UShort_t    m_twrMsk; 
     /// Directory of the projections by twr 
     TfcProjectionDir    m_dir[16];
     TfcProjection* m_prjs; //[m_curCnt]
 
-    ClassDef(TfcProjectionCol,2) // TfcProjectionCol
+    ClassDef(TfcProjectionCol,3) // TfcProjectionCol
 };
 
 class ObfTrack : public TObject {
@@ -449,7 +449,7 @@ private:
     Float_t m_layerEnergy[8];
 
     ///Projections for the towers
-    TfcProjectionCol m_projectionCol;  //Disable for right now
+    TfcProjectionCol m_projectionCol; 
 
     ///Tracks found for this event
     TObjArray m_tracks;
