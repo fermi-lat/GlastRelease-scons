@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdexcept>
 
 #include "EbfAcdData.h"
 #include "EbfCalData.h"
@@ -489,23 +490,27 @@ int EbfOutput::open (const char     *fileName,
    char file[120];
    if(LdfFormat){sprintf(file,"%s.ldf",fileName);}else{sprintf(file,"%s.ebf",fileName);}
 
-   if(fileName != "") {
+   if( ::strcmp(fileName, "")!=0) {
      m_fp = fopen (file, "wb");
      if (!m_fp)
      {
        /* Error in opening the output file.. */
-       printf("EbfOutput::Error cannot open Ebf output file\n");
+         throw std::invalid_argument("EbfOutput::Error cannot open Ebf output file");
        free (ptr);
        return -2;
      }
     /* Report the name of the output file, maximum event size */  
+#if 0// printf statements not acceptable in Gaudi algorithms
      printf ("EbfOutput::initialize: FileName: %s\n"
      "                 Max Event Size: %d\n",
      fileName,
      maxEvtSize);
+#endif
    } else {
+#if 0 // printf statements not acceptable in Gaudi algorithms
       /* Report the name of the output file, maximum event size */  
       printf ("EbfOutput::initialize: No Output file defined \n");
+#endif
    }
 
   
