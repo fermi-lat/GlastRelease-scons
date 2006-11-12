@@ -12,4 +12,5 @@
 // the library for this package.
 DECLARE_FACTORY_ENTRIES(EbfWriter) {
     DECLARE_ALGORITHM(EbfWriter);
+      DECLARE_ALGORITHM(FesExposure);
 } 
