@@ -457,10 +457,13 @@ StatusCode EbfWriter::finalize()
 //    printf("EbfWriter: Finalize\n");
     f_output.close();
     m_ReadFile == 1 ? m_input.close() : m_output.close();
-    
-    printf("EbfWriter:: Wrote %i Total Events\n",m_countEbfEvents);
+
+    MsgStream log(msgSvc(), name());
+
+    log << MSG::INFO << "Wrote "<< m_countEbfEvents<<" Total Events\n" << endreq;
+#if 0 // this writes a bunch of stuff that is not clear we want
     f_output.dumpTriggerInfo();
-    
+#endif
     return StatusCode::SUCCESS;
 }
 
