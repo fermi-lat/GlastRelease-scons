@@ -1,6 +1,10 @@
+/** @file FesExposure.cxx
+    @brief declare and implement the Algorithm FesExposure
 
+    $Header$
+
+*/
 // Include files
-#include "FluxSvc/PointingInfo.h"
 
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
@@ -32,18 +36,15 @@
 //             1 Position (8 32 bit) = 77 32bit words 
 #define attRecordSize 77
 // Time from Jan 1, 2001 to launch  ~7 years * 30 million seconds
-#define launchOffset  210000000
+//THB time is already in MET #define launchOffset  210000000
 /** 
 * \class FesExposure
 *
-* \brief This is an Algorithm designed to get information about LAT
-* position,  from FluxSvc and use it to put information onto the TDS about
-* LAT pointing and location characteristics, effectively generating the D2 database.  The "TimeTick" 
-* Spectrum is included (and can be used in jobOptions with this algorithm) in order to provide a constant time reference.
+* \brief This is an Algorithm designed to get information about the GLAST locatation and orientaion
+* and save it in a special tuple
 *
-* \author Sean Robinson
+* \author Brian Winer, mods by T. Burnett
 * 
-* $Header$
 */
     static inline unsigned int writeAtt (unsigned int* data, FILE* fp);
     static inline void swap (unsigned int *wrds, int nwrds);
@@ -58,7 +59,7 @@ public:
     StatusCode execute();
     StatusCode finalize();
     StatusCode addAttitudeHeader();
-    StatusCode calcAttitudeContribution(double RAx, double DecX, double RAz, double DecZ);
+    StatusCode calcAttitudeContribution(CLHEP::Hep3Vector xaxis, CLHEP::Hep3Vector zaxis);
     StatusCode calcPositionContribution(double x, double y, double z);
     StatusCode convertTime(double time);
 
@@ -78,6 +79,7 @@ private:
     double        m_lastAttTime, m_lastPosTime;
     Hep3Vector    m_lastXaxis,m_lastYaxis,m_lastZaxis;
     std::string   m_FileName;
+    StringProperty m_timerName;
     
     typedef union IntDble_t {
        unsigned int dui[2];
@@ -108,6 +110,8 @@ FesExposure::FesExposure(const std::string& name, ISvcLocator* pSvcLocator)
 , m_microTime(0)
 {
   declareProperty("FileName"  ,m_FileName="Attitude");
+  declareProperty("TimerName" ,m_timerName="timer_5Hz");
+
 }
 
 //------------------------------------------------------------------------
@@ -217,42 +221,26 @@ static unsigned int writeAtt (unsigned int* data, FILE* fp)
 //! process an event
 StatusCode FesExposure::execute()
 {
+    using astro::GPS;
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
     IFlux* flux=m_fluxSvc->currentFlux();
         
-    std::string particleName = flux->particleName();
-
-
-    if(particleName != "TimeTick" && particleName != "Clock"){
-        return sc;
-    }
+    if(flux->name() != m_timerName.value()) return sc;
 
 
     //printf("found time tick\n");
+    // The GPS singleton has current time and orientation
+    GPS* gps = m_fluxSvc->GPSinstance();
+    double time = gps->time();
+    CLHEP::Hep3Vector location = 1.e3* gps->position(); // special, needs its own time
+    
+    // cartesian location of the LAT (in m)
+    double posX = location.x();
+    double posY = location.y();
+    double posZ = location.z(); 
 
-
-  Event::ExposureCol* elist = 0;
-  eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
-  if( elist==0) {
-     printf("failed to find pointing info\n");
-     return StatusCode::FAILURE; // should not happen, but make sure ok.
-  }
-  //Event::ExposureCol::iterator curEntry = (*elist).begin();
-  const Event::Exposure& exp = **(*elist).begin();
-
-  double time     = exp.intrvalstart();
-  double latitude = exp.lat();
-  double longitude= exp.lon();
-  double altitude = exp.alt();
-  double posX     = exp.posX();
-  double posY     = exp.posY();
-  double posZ     = exp.posZ();
-  double RightAsX = exp.RAX();
-  double DeclX    = exp.DECX();
-  double RightAsZ = exp.RAZ();
-  double DeclZ    = exp.DECZ(); 
 /*  printf("FES::Attitude Information:  
              Time:     %f
              Latitude: %f
@@ -279,7 +267,7 @@ StatusCode FesExposure::execute()
    }
 
 // Calculate the attitude Contribution
-   calcAttitudeContribution(RightAsX,DeclX,RightAsZ,DeclZ);
+   calcAttitudeContribution(gps->xAxisDir()(), gps->zAxisDir()());
 //   printf("Adding the Att. Contribution # %i at time %f\n",m_attCont,time);
    m_attCont++;
 
@@ -319,15 +307,8 @@ StatusCode FesExposure::addAttitudeHeader() {
    return sc;
 }
 
-
-StatusCode FesExposure::calcAttitudeContribution(double RAx, double DecX, double RAz, double DecZ) {
-
-   
+StatusCode FesExposure::calcAttitudeContribution(Hep3Vector xAxis, Hep3Vector zAxis){
    StatusCode sc = StatusCode::SUCCESS;
-
-// First get a vector for the x and z directions
-    Hep3Vector xAxis = fromRaDec(RAx,DecX);
-    Hep3Vector zAxis = fromRaDec(RAz,DecZ);
 
 // Now get the directions starting from the Z axis. Why?
    Hep3Vector yAxis = zAxis.cross(xAxis).unit();
@@ -419,9 +400,14 @@ StatusCode FesExposure::calcAttitudeContribution(double RAx, double DecX, double
        
 // get change in direction of axes
      IntFlt angVelX,angVelY,angVelZ;
-     angVelX.fltVal = xAxis.angle(m_lastXaxis)/deltaTime;
-     angVelY.fltVal = yAxis.angle(m_lastYaxis)/deltaTime;
-     angVelZ.fltVal = zAxis.angle(m_lastZaxis)/deltaTime;      
+     if( deltaTime>0) {
+         angVelX.fltVal = xAxis.angle(m_lastXaxis)/deltaTime;
+         angVelY.fltVal = yAxis.angle(m_lastYaxis)/deltaTime;
+         angVelZ.fltVal = zAxis.angle(m_lastZaxis)/deltaTime;   
+     }
+     else{
+        angVelX.intVal=angVelY.intVal=angVelZ.intVal = 0;
+     }
 //     printf("Angular Velocity (rad/sec) x,y,z,dt: %f %f %f %f\n",angVelX.fltVal,angVelY.fltVal,angVelZ.fltVal,deltaTime);
      
 // Stuff the Angular Velocity into the Record   
@@ -510,7 +496,7 @@ StatusCode FesExposure::convertTime(double time){
 
     StatusCode  sc = StatusCode::SUCCESS;
 
-    
+    static int launchOffset(0);  // THB since time is already in MET    
     m_secTime = launchOffset + (int)time;
     m_microTime = (int)(1000000.*(time - (int)time));
 //    printf("Time %f seconds %i microseconds %i\n",time,m_secTime,m_microTime);
