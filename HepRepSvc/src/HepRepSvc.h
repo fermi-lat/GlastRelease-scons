@@ -83,7 +83,7 @@ class HepRepSvc : virtual public Service,
   bool setEventId(int run, int event);
 
   /// This method sets the ROOT files to use as input
-  bool openFile(const char* mc, const char *digi, const char *rec);
+  bool openFile(const char* mc, const char *digi, const char *rec, const char *gcr);
 
   /// This method get the Event ID as a pair Run/Event
   std::string getEventId();

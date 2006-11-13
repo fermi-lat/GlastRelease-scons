@@ -375,11 +375,11 @@ bool HepRepSvc::previousEvent(int i)
   else return 0;
 }
 
-bool HepRepSvc::openFile(const char* mc, const char *digi, const char *rec) 
+bool HepRepSvc::openFile(const char* mc, const char *digi, const char *rec, const char *gcr) 
 {
   if (m_rootIoSvc)
   {
-    return m_rootIoSvc->setRootFile(mc, digi, rec);
+    return m_rootIoSvc->setRootFile(mc, digi, rec, gcr);
   } 
   else return 0;
 }
