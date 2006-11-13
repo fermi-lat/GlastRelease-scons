@@ -94,6 +94,22 @@ public:
 
     /// access to the current read-only recon header
     virtual const FileHeader * constReconHeader() =0 ;
+
+    /// create a writable gcr header
+    virtual StatusCode newGcrHeader() =0 ;
+
+    /// access to the current writable gcr header
+    virtual FileHeader * gcrHeader() =0 ;
+    
+    /// write the recon header
+    virtual StatusCode writeGcrHeader( TFile * ) =0 ;
+    
+    /// if the file is new, extract its header
+    virtual StatusCode readConstGcrHeader( TFile * ) =0 ;
+
+    /// access to the current read-only gcr header
+    virtual const FileHeader * constGcrHeader() =0 ;
+
     
 } ; 
  
@@ -129,6 +145,13 @@ public:
     StatusCode readConstReconHeader( TFile * ) ;
     const FileHeader * constReconHeader() ;
     
+    StatusCode newGcrHeader() ;
+    FileHeader * gcrHeader() ;
+    StatusCode writeGcrHeader( TFile * ) ;
+    StatusCode readConstGcrHeader( TFile * ) ;
+    const FileHeader * constGcrHeader() ;
+
+    
 private:
 
     StatusCode writeHeader( TFile *, FileHeader * ) ;
@@ -137,10 +160,12 @@ private:
     FileHeader * m_mcHeader ;
     FileHeader * m_digiHeader ;
     FileHeader * m_reconHeader ;
+    FileHeader * m_gcrHeader ;
 
     const FileHeader * m_constMcHeader ;
     const FileHeader * m_constDigiHeader ;
     const FileHeader * m_constReconHeader ;
+    const FileHeader * m_constGcrHeader ;
 
 } ; 
  

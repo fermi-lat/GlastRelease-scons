@@ -26,11 +26,15 @@ static const InterfaceID IID_IRootIoSvc("RootIoSvc", 3 , 0);
 class  IRootIoSvc : virtual public IInterface {
 public:
 
+    //virtual bool setRootFile(const char *mc, const char *digi, const char *rec) = 0;
+
     virtual bool setRootFile(const char *mc, const char *digi, 
-                             const char *rec) = 0;
+                             const char *rec, const char *gcr) = 0;
+			     
     virtual std::string getMcFile() const = 0;
     virtual std::string getDigiFile() const = 0;
     virtual std::string getReconFile() const = 0;
+    virtual std::string getGcrFile() const = 0;
     virtual bool fileChange() const = 0;
     
     virtual Long64_t getEvtMax() = 0;
