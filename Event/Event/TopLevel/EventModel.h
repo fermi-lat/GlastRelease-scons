@@ -128,6 +128,15 @@ public:
        // idem
 //       static std::string CalXtalMIPsTab;
     //@@@FP 07/09/05
+           //@@@CL 06/01/06 BEGIN:
+       static std::string GcrXtalCol;
+       //@@@CL 06/01/06 END
+       //@@@CL 26/27/06 BEGIN:
+       static std::string GcrSelectedXtalsCol;
+       //@@@CL 06/27/06 END
+       static std::string GcrTrack;
+       static std::string GcrSelectVals;
+ 
     };
 
 

@@ -1,0 +1,112 @@
+#ifndef GCRSelectClasses_H
+#define GCRSelectClasses_H
+
+#include "geometry/Point.h"
+#include "geometry/Vector.h"
+
+//#include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/CalRecon/GcrReconClasses.h"
+
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/MsgStream.h"
+
+//static const CLID& CLID_CalMipTrackVecCol = InterfaceID("CalMipTrackVecCol", 1, 0);
+
+/**   
+* @class GcrSelectedXtal
+*
+* 
+*/
+
+//-----------------------------------------------------------------------------------------------------------------
+namespace Event 
+{
+    //-----------------------------------------------------------------------------------------------------------------
+    // Define a GcrXtal class which will be used in GCRSelectAlg
+    class GcrSelectedXtal: public GcrXtal, virtual public ContainedObject 
+    {
+	private:
+	    //Event::CalXtalRecData* m_xtalData;
+	    double                 m_rawEnergy;
+	    double	           m_corrEnergy;
+	    int                   m_selectGrade;
+	    
+
+	public:
+	    GcrSelectedXtal(){};
+	      
+	    GcrSelectedXtal(idents::CalXtalId xtalId, double rawEnergy, double pathLength, double corrEnergy, int selectGrade, double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint) : 
+                	GcrXtal(xtalId, pathLength, closestFaceDist, crossedFaces, entryPoint, exitPoint), m_rawEnergy(rawEnergy), m_corrEnergy(corrEnergy), m_selectGrade(selectGrade){};
+
+	    ~GcrSelectedXtal() {};
+
+	    void                   initialize(idents::CalXtalId xtalId, float rawEnergy, float pathLength, float corrEnergy, int selectGrade, double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint);
+
+	    void                   setRawEnergy (double rawEnergy) {m_rawEnergy = rawEnergy ;}
+	    void                   setCorrEnergy  (double corrEnergy)         {m_corrEnergy  = corrEnergy;}
+	    void                   setSelectGrade  (int selectGrade)         {m_selectGrade  = selectGrade;}
+	   
+	    double                 getRawEnergy ()                                {return m_rawEnergy    ;}
+	    double                 getCorrEnergy ()                                {return m_corrEnergy     ;}
+	    int                   getSelectGrade ()                          {return m_selectGrade    ;}
+
+          
+	    /// Utilities 
+	    void writeOut(MsgStream& log) const; 
+	    std::ostream& fillStream( std::ostream& s ) const;
+    };
+    
+
+    // Define a vector of GcrSelectedXtals
+    typedef std::vector<GcrSelectedXtal> GcrSelectedXtalsVec;
+
+    // Define a vector of GcrSelectedXtals
+    typedef ObjectVector<GcrSelectedXtal>      GcrSelectedXtalsCol;
+    
+
+    
+    
+    class GcrSelectVals: public DataObject
+    {
+    
+    	private:
+	
+	    int m_inferedZ;
+	    int m_acdZ;
+	    int m_interactionParams;
+
+
+
+	public:
+	    GcrSelectVals(){};
+
+	    GcrSelectVals(int inferedZ, int acdZ, int interactionParams) : 
+                	m_inferedZ(inferedZ), m_acdZ(acdZ), m_interactionParams(interactionParams) {};
+
+	    ~GcrSelectVals() {};
+
+	    void                   initialize(int inferedZ, int acdZ, int interactionParams);
+
+	    void                   setInferedZ (int inferedZ)         {m_inferedZ  = inferedZ;}
+	    void                   setAcdZ  (int acdZ)         {m_acdZ  = acdZ;}
+	    void                   setInteractionParams  (int interactionParams)         {m_interactionParams  = interactionParams;}
+	   
+	    int                    getInferedZ ()                          {return m_inferedZ    ;}
+	    int                    getAcdZ ()                          {return m_acdZ    ;}
+	    double                 getInteractionParams ()                          {return m_interactionParams    ;}
+
+           
+	    /// Utilities 
+	    //void writeOut(MsgStream& log) const; 
+	    //std::ostream& fillStream( std::ostream& s ) const;
+    
+    
+    
+    };
+
+    
+    
+    
+}
+#endif
