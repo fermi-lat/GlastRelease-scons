@@ -10,6 +10,9 @@ CalRecon::CalRecon()
     m_xtalRecCol  = 0;
     m_clusterCol  = 0;
     m_mipTrackCol = 0;
+    m_gcrXtalCol = 0;
+    m_gcrTrack=0;
+
 }
 
 CalRecon::~CalRecon() 
@@ -41,6 +44,19 @@ CalRecon::~CalRecon()
         delete m_mipTrackCol;
         m_mipTrackCol = 0;
     }
+    
+    if (m_gcrXtalCol) 
+    {
+        m_gcrXtalCol->Delete();
+        delete m_gcrXtalCol;
+        m_gcrXtalCol = 0;
+    }
+      
+    if (m_gcrTrack) 
+    {
+        m_gcrTrack = 0;
+    }
+
 }
 
 void CalRecon::initialize() 
@@ -49,6 +65,7 @@ void CalRecon::initialize()
     if (!m_clusterCol)  m_clusterCol  = new TObjArray();
     if (!m_xtalRecCol)  m_xtalRecCol  = new TObjArray();
     if (!m_mipTrackCol) m_mipTrackCol = new TObjArray();
+    if (!m_gcrXtalCol) m_gcrXtalCol = new TObjArray();
 }
 
 void CalRecon::Clear(Option_t* /* option */) 
@@ -57,6 +74,8 @@ void CalRecon::Clear(Option_t* /* option */)
     if (m_xtalRecCol)  m_xtalRecCol->Delete();
     if (m_clusterCol)  m_clusterCol->Delete();
     if (m_mipTrackCol) m_mipTrackCol->Delete();
+    if (m_gcrXtalCol) m_gcrXtalCol->Delete();
+    if (m_gcrTrack) m_gcrTrack = 0;
 }
 
 void CalRecon::Print(Option_t *option) const 
@@ -66,7 +85,8 @@ void CalRecon::Print(Option_t *option) const
         << "# eventEnergies: " << m_eventEnergyCol->GetEntries()
         << " # mipTracks: " << m_mipTrackCol->GetEntries()
         << " # clusters: " << m_clusterCol->GetEntries()
-        << " # xtalRecDatas: " << m_xtalRecCol->GetEntries() << std::endl;
+        << " # xtalRecDatas: " << m_xtalRecCol->GetEntries() 
+       << " # gcrXtal : " << m_gcrXtalCol->GetEntries() << std::endl;
 }
 
 

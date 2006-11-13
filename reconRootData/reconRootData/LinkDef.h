@@ -33,6 +33,9 @@
 #pragma link C++ class CalRangeRecData+;
 #pragma link C++ class CalXtalRecData+;
 #pragma link C++ class CalMipTrack+;
+//CL 08/22/06:
+#pragma link C++ class GcrXtal+;
+#pragma link C++ class GcrTrack+;
 
 #pragma link C++ class TkrRecon+;
 #pragma link C++ class TkrCluster+;

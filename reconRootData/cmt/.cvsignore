@@ -1,3 +1,5 @@
 setup.*
 cleanup.*
-*.make
+*.mak*
+Makefile
+

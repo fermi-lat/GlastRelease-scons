@@ -13,6 +13,8 @@
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
 #include "CalMipTrack.h"
+#include "GcrXtal.h"
+#include "GcrTrack.h"
 
 /** @class CalRecon
  * @brief Primary Root object containing CAL reconstruction data.
@@ -53,11 +55,19 @@ public:
     /// provide access to the list of CalMipTracks
     TObjArray* getCalMipTrackCol() { return m_mipTrackCol; };
 
+    /// C.L. 08/22/06 provide access to the list of GcrXtals and to GcrTrack
+    TObjArray* getGcrXtalCol() { return m_gcrXtalCol; };
+    TObject* getGcrTrack(){return m_gcrTrack;};
+
     void addCalEventEnergy(CalEventEnergy* energy) { m_eventEnergyCol->Add(energy); };
     void addCalCluster(CalCluster* cluster)     { m_clusterCol->Add(cluster); };
     void addXtalRecData(CalXtalRecData *xtal)   { m_xtalRecCol->Add(xtal); };
     void addCalMipTrack(CalMipTrack* track)     { m_mipTrackCol->Add(track); };
 
+    /// C.L. 08/22/06:
+    void addGcrXtal(GcrXtal* gcrXtal)     { m_gcrXtalCol->Add(gcrXtal); };
+    void addGcrTrack(GcrTrack* gcrTrack) {m_gcrTrack = gcrTrack;};
+ 
 private:
     /// list of CalXtalRecData
     TObjArray* m_xtalRecCol;
@@ -71,7 +81,11 @@ private:
     /// list of CalEventEnergy
     TObjArray* m_eventEnergyCol;
 
-    ClassDef(CalRecon,3)
+    ///CL: 08/22/06 list of gcrXtals
+    TObjArray* m_gcrXtalCol;
+    TObject* m_gcrTrack;
+
+    ClassDef(CalRecon,4)
 };
 
 #endif

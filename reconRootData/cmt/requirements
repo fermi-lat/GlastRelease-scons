@@ -36,6 +36,8 @@ apply_pattern root_package headers="\
  ../reconRootData/TkrVertex.h\
  ../reconRootData/TkrDiagnostics.h\
  ../reconRootData/TaggerCluster.h\
- ../reconRootData/AdfRecon.h"\
+ ../reconRootData/AdfRecon.h\
+ ../reconRootData/GcrXtal.h\
+ ../reconRootData/GcrTrack.h"\
  includes="-I$(COMMONROOTDATAROOT)"\
  test_source="test/testReconClasses.cxx"
