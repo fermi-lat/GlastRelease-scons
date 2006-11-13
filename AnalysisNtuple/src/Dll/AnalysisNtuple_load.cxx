@@ -24,5 +24,10 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     //@@@FP 07/08/05
     DECLARE_TOOL(      CalMipValsTool   );
 //@@@FP 07/08/05
+    //@@@ CL 06/26/06
+    DECLARE_TOOL(      GcrSelectValsTool   );
+    DECLARE_TOOL(      GcrReconValsTool   );
+    //@@@ CL 06/26/06
+
 
 } 
