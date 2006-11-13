@@ -13,6 +13,7 @@ use mcRootData v*
 use digiRootData v*
 use reconRootData v*
 use AncillaryDataEvent v*
+use gcrSelectRootData v*
 
 apply_pattern shared_library
 
@@ -29,13 +30,15 @@ macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Utilities/*.h \
         ../RootConvert/MonteCarlo/*.h \
         ../RootConvert/Digi/*.h \
-        ../RootConvert/Recon/*.h "
+        ../RootConvert/Recon/*.h \
+        ../RootConvert/GcrSelect/*.h"
  
 library RootConvert  \
         Utilities/*.cxx \
         MonteCarlo/*.cxx \
         Digi/*.cxx \
         Recon/*.cxx \
+        GcrSelect/*.cxx \
         ${RootConvert_headers}
 
 application test_RootConvert -group=test test/test_RootConvert.cxx
