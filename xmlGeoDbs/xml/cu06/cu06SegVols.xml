@@ -54,7 +54,7 @@
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
 
     <!ENTITY Materials      SYSTEM "../materials.xml">
-    <!ENTITY extraMaterials SYSTEM "../empty.xml">
+    <!ENTITY extraMaterials SYSTEM "cu06Materials.xml">
 
   ]
 >
