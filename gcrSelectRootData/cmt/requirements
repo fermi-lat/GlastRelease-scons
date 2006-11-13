@@ -1,0 +1,19 @@
+package gcrSelectRootData
+
+version v1r1p1
+author Claudia Lavalley 
+# $Id$
+
+use commonRootData v2r*
+use GlastPolicy *
+use RootcintPolicy v* GlastPolicy
+use idents v2r*
+use reconRootData v9*
+
+# See RootPolicy for discussion of this pattern
+apply_pattern root_package headers="\
+  ../../../reconRootData/v9r7/reconRootData/CalXtalRecData.h\
+  ../gcrSelectRootData/GcrSelectedXtal.h\
+  ../gcrSelectRootData/GcrSelectEvent.h\
+  ../gcrSelectRootData/GcrSelectVals.h"\
+ includes="-I$(COMMONROOTDATAROOT) -I$(RECONROOTDATAROOT)"
