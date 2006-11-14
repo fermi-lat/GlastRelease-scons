@@ -12,7 +12,6 @@ use reconRootData v9*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
-  ../../../reconRootData/v9r7/reconRootData/CalXtalRecData.h\
   ../gcrSelectRootData/GcrSelectedXtal.h\
   ../gcrSelectRootData/GcrSelectEvent.h\
   ../gcrSelectRootData/GcrSelectVals.h"\
