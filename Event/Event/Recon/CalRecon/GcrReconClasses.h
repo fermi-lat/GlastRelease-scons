@@ -67,7 +67,7 @@ namespace Event
 
 
 
-	    idents::CalXtalId getXtalId ()                                {return m_xtalId     ;}
+	    idents::CalXtalId getXtalId () const                         {return m_xtalId     ;}
 	    double                  getPathLength ()                          {return m_pathLength    ;}
 
 	    double                  getClosestFaceDist ()                          {return m_closestFaceDist    ;}
