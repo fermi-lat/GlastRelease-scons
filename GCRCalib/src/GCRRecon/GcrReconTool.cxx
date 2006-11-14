@@ -185,6 +185,9 @@ private:
 
   //allows display if debugging:
   bool m_debugging;
+  
+    //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction
+  bool m_useMcDir;
 
 
 } ;
@@ -319,8 +322,11 @@ StatusCode GcrReconTool::readGlastDet()
 */
 StatusCode GcrReconTool::findGcrXtals(bool useMcDir){
 
-  //m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
-
+  bool debugging=false;
+  if(debugging) {
+      m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
+      m_log << MSG::INFO << "useMcDir=" << useMcDir << endreq;
+  }
   StatusCode sc = StatusCode::SUCCESS;
   
   m_useMcDir = useMcDir;  
@@ -577,9 +583,11 @@ void GcrReconTool::buildGcrXtalsVec(){
 		    //TEST:
 		    int n,m;
 		    gcrXtal.getReadableXedFaces(crossedFaces,n,m);
-		    m_log <<"crossedFaces,n,m="<< crossedFaces << "," << n << "," << m << endreq;
-		    if(debugging)
+		    
+		    if(debugging){
+		        m_log <<"crossedFaces,n,m="<< crossedFaces << "," << n << "," << m << endreq;
 			m_log <<"gcrXtalId,pathLength"<< gcrXtal.getXtalId() << "," << gcrXtal.getPathLength() << endreq;
+	             }
 
 		
 	    } 
@@ -876,6 +884,9 @@ StatusCode GcrReconTool::storeGcrXtals () {
  * This method allows to store GcrTrack in TDS structure
  */
 StatusCode GcrReconTool::storeGcrTrack () {
+
+  bool debugging= false;
+  
   StatusCode sc = StatusCode::SUCCESS;
  
   m_log << MSG::INFO << "BEGIN storeGcrTrack in GcrReconTool" << endreq;
@@ -904,12 +915,17 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
   m_gcrTrack->setCalExitPoint(m_calExitPoint);
   
   if(m_useMcDir){// if keeping MC Track
+      if(debugging)
+	  m_log << MSG::INFO << "keeping MC Track" << m_initDir << endreq;
+	  
       m_gcrTrack->setDirection(m_initDir);
       m_gcrTrack->setDirError(Vector(0.0,0.0,0.0));
   }
   else{// if we are keeping the Tracker Track
-
     //SETTING RECONSTRUCTED TKR TRACK INFO:
+    if(debugging)
+	m_log << MSG::INFO << "keeping Tracker Recon Track" << m_initDir << endreq;
+
 
 	SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc,EventModel::TkrRecon::TkrTrackCol);
 
@@ -923,8 +939,10 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 
 	    const Event::TkrTrack* track_1 = *pTrack;
 
-	    m_log << MSG::INFO << "m_TkrTrackDir=" << track_1->getInitialDirection() << endreq;
-	    m_log << MSG::INFO << "m_KalmanThetaMS=" << track_1->getKalThetaMS() << endreq;
+            if(debugging){
+		m_log << MSG::INFO << "m_TkrTrackDir=" << track_1->getInitialDirection() << endreq;
+		m_log << MSG::INFO << "m_KalmanThetaMS=" << track_1->getKalThetaMS() << endreq;
+            }
 
 	    m_gcrTrack->setDirection(track_1->getInitialDirection());
 	    m_gcrTrack->setDirError(Vector(0.0,0.0,cos(track_1->getKalThetaMS())));
@@ -983,7 +1001,8 @@ void GcrReconTool::getCrossedFaces(int ilay, Point xtalCentralPoint, Point entry
 
 int GcrReconTool::getClosestFace(int ilay, Point xtalCentralPoint, Point point, double& minDist){
 
-bool debugging= false;
+bool debugging=false;
+
 if(debugging)
     m_log << MSG::INFO << "GcrReconTool::getClosestFace BEGIN" << endreq;
 
