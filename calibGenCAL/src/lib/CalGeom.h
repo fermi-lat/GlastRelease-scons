@@ -22,7 +22,7 @@ namespace CalGeom {
   static const float CsILength     = 326.  ;
   static const float CsIHeight     = 19.9 ;
   static const float CsIWidth      = 26.7;
-  static const float cellHorPitch  = 27.35;
+  static const float cellHorPitch  = 27.84;
   static const float cellVertPitch = 21.35;  
   static const float twrPitch      = 374.5 ;
   static const float twrGap        = twrPitch - 12.*cellHorPitch;
