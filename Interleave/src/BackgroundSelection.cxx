@@ -5,9 +5,11 @@
 */
 
 #include "BackgroundSelection.h"
+#include "XmlFetchEvents.h"
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TChain.h"
 #include "TLeaf.h"
 
 #include "CLHEP/Random/RandFlat.h"
@@ -32,19 +34,25 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 , m_disableList(disableList)
 , m_rootFileDirectory(rootFileDirectory)
 , m_singleFileMode(false)
+, m_fetch(0)
 {
     // find leaf corresponding to varname in the output tree
     m_varleaf = m_outputTree->GetLeaf(varname.c_str());
     if( m_varleaf==0 ) {
         throw std::runtime_error("BackgroundSelection: could not find variable "+varname);
     }
-    
+
+    // If passed an XML file, set up the XmlFetchEvents object
+    if (m_rootFileDirectory.find(".xml")!=std::string::npos)
+        m_fetch = new XmlFetchEvents(rootFileDirectory, varname);
+
     setCurrentTree();
 
 }
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
+    if (m_fetch) delete m_fetch;
 }
 
 //------------------------------------------------------------------------
@@ -78,6 +86,7 @@ double BackgroundSelection::triggerRate()const
     double x(value());
 
     ///@todo: replace with lookup
+    if (m_fetch) return (m_fetch->getAttributeValue("triggerRate", x));
     return 1000;
 }
 
@@ -87,10 +96,11 @@ double BackgroundSelection::downlinkRate( )const
     double  x(value());
 
     ///@todo: replace with lookup
+    if (m_fetch) return (m_fetch->getAttributeValue("downlinkRate", x));
     return 100;
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::disableBranches(TTree* t) 
+void BackgroundSelection::disableBranches(TChain* t) 
 {
     std::vector<std::string>::const_iterator it= m_disableList.begin();
     for( ; it != m_disableList.end();  ++it) {
@@ -114,6 +124,12 @@ void BackgroundSelection::setCurrentTree()
         // if is is root file, will set it up only once
         m_singleFileMode = true;
         file_name = m_rootFileDirectory;
+        m_inputTree = new TChain(tree_name.c_str());
+        int status = m_inputTree->AddFile(file_name.c_str());
+        if (status != 1) {
+            TString error = "Did not find tree[" + tree_name + "] in root file";
+            throw std::invalid_argument(error.Data());
+        }
 
     }else {
 
@@ -121,21 +137,23 @@ void BackgroundSelection::setCurrentTree()
 
         ///@todo: set up lookup table for rates, files to sample from, based on currrent value
         // set file_name to be opened (and maybe close previous one?)
+        m_inputTree = new TChain(); // leave tree name unspecified, as XML file will contain the tree names
+        if (m_fetch) m_fetch->getFiles(x, m_inputTree);
     }
 
     // open file for reading:
-    m_inputFile = new TFile(file_name.c_str(), "readonly");
-    if (!m_inputFile->IsOpen() ) {
-        TString error = "Did not find file[" + file_name + "]";
-        throw std::invalid_argument(error.Data());
-    }
+    //m_inputFile = new TFile(file_name.c_str(), "READ");
+    //if (!m_inputFile->IsOpen() ) {
+    //    TString error = "Did not find file[" + file_name + "]";
+    //    throw std::invalid_argument(error.Data());
+    //}
 
     // get the tree:
-    m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.c_str()));
-    if (0 == m_inputTree) {
-        TString error = "Did not find tree[" + tree_name + "] in root file";
-        throw std::invalid_argument(error.Data());
-    }
+    //m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.c_str()));
+    //if (0 == m_inputTree) {
+    //    TString error = "Did not find tree[" + tree_name + "] in root file";
+    //    throw std::invalid_argument(error.Data());
+   // }
 
     // start at a random location in the tree:
     m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1));
@@ -144,7 +162,7 @@ void BackgroundSelection::setCurrentTree()
     setLeafPointers(m_inputTree);
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers(TTree* pTree)
+void BackgroundSelection::setLeafPointers(TChain* pTree)
 {
 
     // first disable the branches
