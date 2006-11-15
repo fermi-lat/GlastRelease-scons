@@ -16,13 +16,10 @@ $Header$
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "xmlBase/XmlParser.h"
-//#include "xmlBase/Dom.h"
-//#include <xercesc/dom/DOMElement.hpp>
-//#include <xercesc/dom/DOMNodeList.hpp>
 
 
 /** @class XmlFetchEvents
-    @brief manage the retrieval of events using some specified parameter(s)
+    @brief manage the retrieval of events using some specified parameter(s) from an XML file
     @author Heather Kelly heather625@gmail.com
 
 
@@ -30,12 +27,6 @@ $Header$
 class XmlFetchEvents : public IFetchEvents
 {
 public:
-
-    /** @brief ctor
-        @param param parameter used for retrieving data from xmlFile
-        @param xmlFile name of the file containing the event store
-    */
-    //XmlFetchEvents(const std::string& xmlFile);
 
     XmlFetchEvents(const std::string& xmlFile, const std::string& param);
 
@@ -45,23 +36,25 @@ public:
 
     int getFiles(double binVal, TChain* chain);
 
+    static double m_badVal;
 
 private:
 
-  //  std::string m_param; /// name of the variable that we use to key the rates
-
+    /// actually handles the XML reading
     xmlBase::XmlParser m_xmlParser;
 
-    std::vector<xmlBase::DOMElement* > m_children;  // stores all children of top element in XML file
+    /// stores all children of the top element in the XML file
+    std::vector<xmlBase::DOMElement* > m_children;  
 
-    std::vector<xmlBase::DOMElement*> m_paramChildren; // children that contain the parameter we're interested in
+    /// children that contain the parameter we're interested in
+    std::vector<xmlBase::DOMElement*> m_paramChildren; 
 
+    /// children that contain the bins for the parameter we're interested in
     std::vector<xmlBase::DOMElement*> m_binChildren;
 
     /// Store the most recently accessed DOMElement in the m_binChildren vector;
     int m_lastBinIndex;
     double m_lastBinMin, m_lastBinMax;
-
 
 };
 

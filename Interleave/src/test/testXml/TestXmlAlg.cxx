@@ -82,8 +82,14 @@ StatusCode TestXmlAlg::execute() {
 
     double triggerRate = m_fetch->getAttributeValue("triggerRate", 5.0);
     double downlinkRate = m_fetch->getAttributeValue("downlinkRate",5.0);
+    if ( (triggerRate == m_fetch->m_badVal) || (downlinkRate == m_fetch->m_badVal) )
+        log << MSG::WARNING << "Failed to retrieve triggerRate or downlinkRate" << endreq;
     TChain *ch = new TChain();  // not specifying a TTree name, as our input tree names will come from XML
     int status = m_fetch->getFiles(5.0, ch);
+    if (status == 1)
+        log << MSG::WARNING << "At least one file failed to be added to the TChain" << endreq;
+    else if (status == -1)
+        log << MSG::WARNING << "No files were found" << endreq;
     
     return sc;
 }
