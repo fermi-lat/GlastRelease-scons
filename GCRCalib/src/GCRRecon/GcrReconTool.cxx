@@ -417,7 +417,7 @@ void GcrReconTool::buildGcrXtalsVec(){
   Event::McParticle* firstMcParticle = GcrReconTool::findFirstMcParticle();
     
   // ******the first McParticle initial position (when launched):
-  HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
+  const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
   // casting to Point of initPosition, necessary to define propagator steps
   double x0 = initPosition.x();
   double y0 = initPosition.y();

@@ -122,7 +122,8 @@ private:
   static const int NCOL = 12;
   
   //static const float E_TH = 60.0;  //--> Gives same number of GcrSelectedXtals that GcrXtals
-  static const float E_TH = 120.0;  //Energy threshold for considering an energy deposit as representatif
+  //static const float E_TH = 120.0;  //Energy threshold for considering an energy deposit as representatif
+  static const float E_TH;  //Energy threshold for considering an energy deposit as representatif
     
   /// MsgStream member variable to speed up execution
   MsgStream          m_log;
@@ -193,6 +194,8 @@ private:
   
 
 } ;
+
+const float GcrSelectTool::E_TH = 120.0;  //Energy threshold for considering an energy deposit as representatif
 
 //-----------------------------------------------------------------------------------------------------------------
 static ToolFactory<GcrSelectTool> s_factory;
@@ -421,10 +424,10 @@ StatusCode GcrSelectTool::retrieveGcrXtalsMap(){
   int icol = -1;
   
   //initialization of gcrXtalsMap
-  for (int itow=0; itow<NTOW; itow++)
-    for (int ilay=0; ilay<NLAY; ilay++)
-      for (int icol=0; icol<NCOL; icol++)
-	m_gcrXtalsMap[itow][ilay][icol]=-1;
+  for (int iTow=0; iTow<NTOW; iTow++)
+    for (int iLay=0; iLay<NLAY; iLay++)
+      for (int iCol=0; iCol<NCOL; iCol++)
+	m_gcrXtalsMap[iTow][iLay][iCol]=-1;
 	
   m_gcrXtalVec.clear();
 	
