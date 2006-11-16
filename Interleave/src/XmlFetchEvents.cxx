@@ -8,6 +8,9 @@ $Header$
 #include "xmlBase/Dom.h"
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMNodeList.hpp>
+#include "TChain.h"
+
+
 
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;

@@ -10,7 +10,7 @@ $Header$
 #define IFetchEvents_h
 
 #include <string>
-#include "TChain.h"
+class TChain;
 
 
 /** @class IFetchEvents
