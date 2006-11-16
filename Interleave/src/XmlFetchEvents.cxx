@@ -109,7 +109,7 @@ double XmlFetchEvents::getAttributeValue(const std::string& elemName, double bin
 }
 
 
-int XmlFetchEvents::getFiles(double binVal, TTree* chain) {
+int XmlFetchEvents::getFiles(double binVal, TChain* chain) {
     /// Purpose and Method:  Returns a TChain constructed from the "fileList" associated with the bin
     /// found using binVal.
     /// Returns 0 if completely successful

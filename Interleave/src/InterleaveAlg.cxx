@@ -159,10 +159,9 @@ StatusCode InterleaveAlg::initialize(){
         if( !file.empty()){
             facilities::Util::expandEnvVar(&file);
             log << MSG::INFO << "Using xml or root file " << file << " for interleave." << endreq;
-            log << MSG::INFO << "Tuple name(s) used as keys for selection:  " ;
             for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
                 const std::string& name=*it;
-                log <<  name <<", ";
+                log << MSG::INFO << "setting up tuple key "<<  name << endreq;
                 selectormap[name]= new BackgroundSelection(name, file, m_disableList, m_meritTuple);
             }
             log << endreq;
@@ -175,10 +174,13 @@ StatusCode InterleaveAlg::initialize(){
         }
 
     }catch( const std::exception& e){
-        log << MSG::WARNING << e.what() << endreq;
+        log << MSG::ERROR << e.what() << endreq;
+#if 0
         log << MSG::WARNING << "Continuing without background" << endreq;
             return sc;
-        //return StatusCode::FAILURE;
+#else
+        return StatusCode::FAILURE;
+#endif
     }
 
     log << MSG::INFO << "initialized OK: initial downlink rate to merge is " << downlinkRate() << " Hz"<< endreq;

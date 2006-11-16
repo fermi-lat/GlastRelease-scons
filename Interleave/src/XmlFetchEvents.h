@@ -16,6 +16,7 @@ $Header$
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "xmlBase/XmlParser.h"
+class TChain;
 
 
 /** @class XmlFetchEvents
@@ -34,7 +35,7 @@ public:
 
     double getAttributeValue(const std::string& elemName, double binVal);
 
-    int getFiles(double binVal, TTree* chain);
+    int getFiles(double binVal, TChain* chain);
 
     static double m_badVal;
 

@@ -10,7 +10,7 @@ $Header$
 #define IFetchEvents_h
 
 #include <string>
-class TTree;
+class TChain;
 
 
 /** @class IFetchEvents
@@ -35,7 +35,7 @@ public:
     virtual double getAttributeValue(const std::string& elemName, double binVal) = 0;
 
     /// Returns a TChain* constructed from the fileList stored in the m_dataStore
-    virtual int getFiles(double binVal, TTree* chain) = 0;
+    virtual int getFiles(double binVal, TChain* chain) = 0;
 
 private:
     friend class XmlFetchEvents;
