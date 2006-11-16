@@ -24,7 +24,7 @@ namespace Event
 {
     //-----------------------------------------------------------------------------------------------------------------
     // Define a GcrXtal class which will be used in GCRSelectAlg
-    class GcrSelectedXtal: public GcrXtal, virtual public ContainedObject 
+    class GcrSelectedXtal: public Event::GcrXtal, virtual public ContainedObject 
     {
 	private:
 	    //Event::CalXtalRecData* m_xtalData;
@@ -47,9 +47,9 @@ namespace Event
 	    void                   setCorrEnergy  (double corrEnergy)         {m_corrEnergy  = corrEnergy;}
 	    void                   setSelectGrade  (int selectGrade)         {m_selectGrade  = selectGrade;}
 	   
-	    double                 getRawEnergy ()                                {return m_rawEnergy    ;}
-	    double                 getCorrEnergy ()                                {return m_corrEnergy     ;}
-	    int                   getSelectGrade ()                          {return m_selectGrade    ;}
+	    double                 getRawEnergy () const                               {return m_rawEnergy    ;}
+	    double                 getCorrEnergy () const                                {return m_corrEnergy     ;}
+	    int                   getSelectGrade () const                          {return m_selectGrade    ;}
 
           
 	    /// Utilities 
@@ -92,9 +92,9 @@ namespace Event
 	    void                   setAcdZ  (int acdZ)         {m_acdZ  = acdZ;}
 	    void                   setInteractionParams  (int interactionParams)         {m_interactionParams  = interactionParams;}
 	   
-	    int                    getInferedZ ()                          {return m_inferedZ    ;}
-	    int                    getAcdZ ()                          {return m_acdZ    ;}
-	    double                 getInteractionParams ()                          {return m_interactionParams    ;}
+	    int                    getInferedZ ()  const                        {return m_inferedZ    ;}
+	    int                    getAcdZ ()      const                    {return m_acdZ    ;}
+	    double                 getInteractionParams ()  const                        {return m_interactionParams    ;}
 
            
 	    /// Utilities 

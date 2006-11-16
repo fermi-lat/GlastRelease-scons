@@ -68,12 +68,12 @@ namespace Event
 
 
 	    idents::CalXtalId getXtalId () const                         {return m_xtalId     ;}
-	    double                  getPathLength ()                          {return m_pathLength    ;}
+	    double                  getPathLength () const               {return m_pathLength    ;}
 
-	    double                  getClosestFaceDist ()                          {return m_closestFaceDist    ;}
-	    int                  getCrossedFaces ()                          {return m_crossedFaces    ;}
-	    Point                  getEntryPoint ()                          {return m_entryPoint    ;}
-	    Point                  getExitPoint ()                          {return m_exitPoint    ;}
+	    double                  getClosestFaceDist () const          {return m_closestFaceDist    ;}
+	    int                     getCrossedFaces () const             {return m_crossedFaces    ;}
+	    Point                  getEntryPoint () const                {return m_entryPoint    ;}
+	    Point                  getExitPoint () const                 {return m_exitPoint    ;}
 
 	    /// Utilities 
 	    void writeOut(MsgStream& log) const; 
@@ -124,11 +124,11 @@ namespace Event
 	    void                   setCalEntryPoint  (Point calEntryPoint)         {m_calEntryPoint  = calEntryPoint;}
 	    void                   setCalExitPoint  (Point calExitPoint)         {m_calExitPoint  = calExitPoint;}
 	   
-	    Vector                  getDirection ()                          {return m_direction    ;}
-	    Vector                  getDirError ()                          {return m_dirError    ;}
-	    Vector                  getMcDir ()                          {return m_mcDirection    ;}
-	    Point                  getCalEntryPoint ()                          {return m_calEntryPoint    ;}
-	    Point                  getCalExitPoint ()                          {return m_calExitPoint    ;}
+	    Vector                 getDirection () const                   {return m_direction    ;}
+	    Vector                 getDirError () const                    {return m_dirError    ;}
+	    Vector                 getMcDir () const                       {return m_mcDirection    ;}
+	    Point                  getCalEntryPoint () const               {return m_calEntryPoint    ;}
+	    Point                  getCalExitPoint () const                {return m_calExitPoint    ;}
 
            
 	    /// Utilities 
