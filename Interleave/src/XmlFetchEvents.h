@@ -34,7 +34,7 @@ public:
 
     double getAttributeValue(const std::string& elemName, double binVal);
 
-    int getFiles(double binVal, TChain* chain);
+    int getFiles(double binVal, TTree* chain);
 
     static double m_badVal;
 

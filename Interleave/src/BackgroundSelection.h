@@ -12,7 +12,8 @@ $Header$
 
 #include <string>
 #include <vector>
-#include "IFetchEvents.h"
+
+class IFetchEvents;
 class TTree;
 class TFile;
 class TChain;
@@ -63,13 +64,13 @@ public:
 private:
     /** @brief disable branches in the tree, from the disableList
     */
-    void disableBranches(TChain*);
+    void disableBranches(TTree*);
 
     /**@brief Set the addresses of active leaves, so that a GetEvent will perform a copy
     */
-    void setLeafPointers(TChain*);
+    void setLeafPointers(TTree*);
 
-    /**@brief Retrieve the correct tree for current geomagnetic latitude so copyEvent comes from correct sample bin
+    /**@brief Retrieve the correct tree for current value of the variable(s) so copyEvent comes from correct sample bin
     */
     void setCurrentTree();
 
@@ -81,7 +82,7 @@ private:
     bool m_singleFileMode; 
     
     TTree* m_outputTree; ///< the tree to copy data to
-    TChain* m_inputTree; ///< the tree to copy data from
+    TTree* m_inputTree; ///< the tree to copy data from
     
     TFile* m_inputFile; ///< the file that contains the input tree
     std::vector<std::string>m_disableList; ///< list of strings for disable

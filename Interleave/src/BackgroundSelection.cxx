@@ -100,7 +100,7 @@ double BackgroundSelection::downlinkRate( )const
     return 100;
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::disableBranches(TChain* t) 
+void BackgroundSelection::disableBranches(TTree* t) 
 {
     std::vector<std::string>::const_iterator it= m_disableList.begin();
     for( ; it != m_disableList.end();  ++it) {
@@ -108,7 +108,9 @@ void BackgroundSelection::disableBranches(TChain* t)
     }
 
     // restore this, if needed, for cuts
+#if 0 // why did we need this?
     t->SetBranchStatus("FT1ZenithTheta", 1);
+#endif
     t->SetBranchStatus("McSourceId", 1);
 }
 //------------------------------------------------------------------------
@@ -124,45 +126,56 @@ void BackgroundSelection::setCurrentTree()
         // if is is root file, will set it up only once
         m_singleFileMode = true;
         file_name = m_rootFileDirectory;
-        m_inputTree = new TChain(tree_name.c_str());
-        int status = m_inputTree->AddFile(file_name.c_str());
+        TChain * c = new TChain(tree_name.c_str());
+        int status = c->AddFile(file_name.c_str());
         if (status != 1) {
             TString error = "Did not find tree[" + tree_name + "] in root file";
             throw std::invalid_argument(error.Data());
         }
+        m_inputTree = c;
 
-    }else {
+    }else if( m_rootFileDirectory.find(".xml")!=std::string::npos ){
 
         double x(value());
 
         ///@todo: set up lookup table for rates, files to sample from, based on currrent value
         // set file_name to be opened (and maybe close previous one?)
         m_inputTree = new TChain(); // leave tree name unspecified, as XML file will contain the tree names
-        if (m_fetch) m_fetch->getFiles(x, m_inputTree);
+        if (m_fetch){ 
+            int stat= m_fetch->getFiles(x, m_inputTree);
+            if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+
+        }
+    }else{
+        throw std::runtime_error("BackgaroundSelection::setCurrentTree: no valid file");
     }
 
+#if 0 // for testing with a single file
     // open file for reading:
-    //m_inputFile = new TFile(file_name.c_str(), "READ");
-    //if (!m_inputFile->IsOpen() ) {
-    //    TString error = "Did not find file[" + file_name + "]";
-    //    throw std::invalid_argument(error.Data());
-    //}
+    m_inputFile = new TFile(file_name.c_str(), "READ");
+    if (!m_inputFile->IsOpen() ) {
+        TString error = "Did not find file[" + file_name + "]";
+        throw std::invalid_argument(error.Data());
+    }
 
-    // get the tree:
-    //m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.c_str()));
-    //if (0 == m_inputTree) {
-    //    TString error = "Did not find tree[" + tree_name + "] in root file";
-    //    throw std::invalid_argument(error.Data());
-   // }
+    //  get the tree:
+    m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.c_str()));
+    if (0 == m_inputTree) {
+        TString error = "Did not find tree[" + tree_name + "] in root file";
+        throw std::invalid_argument(error.Data());
+   }
+#endif
 
     // start at a random location in the tree:
-    m_eventOffset = (unsigned int)(RandFlat::shoot()*(m_inputTree->GetEntries() - 1));
+    double length (m_inputTree->GetEntries());
+    
+    m_eventOffset = (unsigned int)(RandFlat::shoot()*(length - 1));
 
     // point tree to buffer for copying events:
     setLeafPointers(m_inputTree);
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers(TChain* pTree)
+void BackgroundSelection::setLeafPointers(TTree* pTree)
 {
 
     // first disable the branches
@@ -171,6 +184,7 @@ void BackgroundSelection::setLeafPointers(TChain* pTree)
     // iteration over active leaves -- copied from Ttree::Show()
 
     TObjArray *leaves  = pTree->GetListOfLeaves();
+    if( leaves==0 ) throw std::runtime_error("BackgroundSelection::setLeafPointers: invalid tree, not leaves found");
     Int_t nleaves = leaves->GetEntriesFast();
     for (Int_t i=0;i<nleaves;i++) {
         TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(i);

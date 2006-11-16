@@ -158,12 +158,14 @@ StatusCode InterleaveAlg::initialize(){
         std::string file(m_rootFile.value());
         if( !file.empty()){
             facilities::Util::expandEnvVar(&file);
-            log << MSG::INFO << "Using directory " << file << " for interleave." << endreq;
+            log << MSG::INFO << "Using xml or root file " << file << " for interleave." << endreq;
+            log << MSG::INFO << "Tuple name(s) used as keys for selection:  " ;
             for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
                 const std::string& name=*it;
-                log << MSG::INFO << "Will interleave source based on value of "<< name << std::endl;
+                log <<  name <<", ";
                 selectormap[name]= new BackgroundSelection(name, file, m_disableList, m_meritTuple);
             }
+            log << endreq;
             // initialized, can use the statics now.
             instance = this;
 
