@@ -57,8 +57,15 @@ int main( int argc, char* argv[] )
   // get the event id and the base
   bool bgem = true;
   if ( idbase == "file" ) bgem = false;
+  bool ball = false;
   unsigned long long evtid = 0;
-  sscanf( idstr.c_str(), "%llu", &evtid );
+  int rc = sscanf( idstr.c_str(), "%llu", &evtid );
+  if (  rc == 0 ) {
+    ball = true;
+    printf( "dumping all events\n" );
+  } else {
+    printf( "dumping event with %s %llu\n", (bgem) ? "GEM ID" : "file offset", evtid );
+  }
 
   // print the header summary information
   printf( "retrieved %llu events for run %09u\n", pLSF->evtcnt(), pLSF->runid() );
@@ -98,11 +105,14 @@ int main( int argc, char* argv[] )
     if ( !bmore ) break;
     fileid++;
 
-    // skip anything but the requested event
-    if ( bgem ) {
-      if ( lmeta.scalers().sequence() != evtid ) continue;
-    } else {
-      if ( fileid != evtid ) continue;
+    // skip anything but the requested event, unless we want to
+    // dump them all
+    if ( !ball ) {
+      if ( bgem ) {
+	if ( lmeta.scalers().sequence() != evtid ) continue;
+      } else {
+	if ( fileid != evtid ) continue;
+      }
     }
 
     // print out the context
@@ -129,7 +139,9 @@ int main( int argc, char* argv[] )
     printf( "\n" );
 
     // break after dumping one event 
-    break;
+    if ( !ball ) {
+      break;
+    }
 
   } while ( true );
   delete pLSF;
