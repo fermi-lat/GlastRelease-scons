@@ -72,6 +72,7 @@ StatusCode TholdCIMgr::loadIdealVals() {
 
 bool TholdCIMgr::validateRangeBase(CalTholdCI *tholdCI) {
   if (!tholdCI) return false;
+
   if (!tholdCI->getFLE()) {
     // no error print out req'd b/c we're supporting LAT configs w/ empty bays
     // however, if tholdCI->getFLE() is successful & following checks fail

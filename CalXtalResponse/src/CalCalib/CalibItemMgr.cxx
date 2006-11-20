@@ -153,7 +153,7 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
   if (!spline) {
     ostringstream msg;
     MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
-    msglog << MSG::ERROR 
+    msglog << MSG::INFO 
            << "No spline data found for " << m_calibPath 
            << " xtal=" << idx.val()
            << endreq;

@@ -467,7 +467,7 @@ StatusCode test_CalXtalResponse::initialize(){
     if(!m_detSvc->getNumericConstByName((*iter).second, &tmp)) {
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::ERROR << " constant " <<(*iter).second
-             <<" not defined" << endreq;
+             << " not defined" << endreq;
       return StatusCode::FAILURE;
     } else *((*iter).first)= int(tmp); // store retrieved value 
   }
