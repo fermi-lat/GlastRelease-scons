@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r23   20-Nov-2006 CL  Updates for GCR
  v1r22   06-Nov-2006 HMK Handle OBF BestTrack vars in FilterStatus
  v1r21   27-Oct-2006 HMK read/write active distance down variables
  v1r20p1 11-Oct-2006 HMK Patch OBF TFCprojectionCol handling to use curCnt
