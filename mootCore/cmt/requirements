@@ -1,0 +1,56 @@
+package mootCore
+
+# $Header$
+
+version v1r0
+
+author Joanne Bogart <jrb@slac.stanford.edu>
+
+
+##
+## MOOT code used both offline and online:  connection to DB, system
+## calls and queries.
+
+use GlastPolicy v*
+use rdbModel v2r*
+use xmlBase  v5r*
+use facilities v2r*
+
+apply_pattern shared_library
+
+use SwigPolicy v*
+
+
+set MOOT_XML  $(MOOTCOREROOT)/xml
+
+## Another environment variable that should be set somewhere else someday
+set MOOT_ARCHIVE /afs/slac/g/glast/moot/srcArchive-test/
+## To  use 'real' test archive - the one resident on glastlnx06,
+## use alternate def. of MOOT_ARCHIVE below
+## set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood_test
+
+private 
+
+apply_pattern package_headers
+
+
+library mootCore  \
+  MoodConnection.cxx \
+  MootSys.cxx \
+  DbUtil.cxx \
+  MootQuery.cxx \
+  ${mootCore_headers}
+
+application test_mootConnect test/test_connect.cxx
+application test_mootSys     test/test_mootSys.cxx
+application test_queries     test/test_queries.cxx
+
+path_remove PYTHONPATH MOOTCORE
+path_prepend PYTHONPATH $(MOOTCOREROOT)/$(BINDIR)
+path_remove PYTHONPATH "" Linux "${MOOTCORE_cmtpath}/lib" \
+                          WIN32 "${MOOTCORE_cmtpath}\lib"
+path_append PYTHONPATH "" Linux "${MOOTCORE_cmtpath}/lib" \
+                          WIN32 "${MOOTCORE_cmtpath}\lib"
+ 
+apply_pattern swig_module name="py_mootCore"
+

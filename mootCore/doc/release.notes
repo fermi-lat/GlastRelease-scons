@@ -1,0 +1,12 @@
+/** @file release.notes
+   @brief Package MOOT
+   @verbatim	   
+
+   Coordinator: J. Bogart
+
+   *  EOH  *
+  20-Nov-2006 jrb v1r0  Initial import.  Contains connection, query and
+                        utility classes from users/jrb/MOOT
+
+   @endverbatim
+ */

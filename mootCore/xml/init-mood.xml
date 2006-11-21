@@ -1,0 +1,558 @@
+<?xml version="1.0" ?>
+<rdbmsInit        xsi:noNamespaceSchemaLocation="rdbmsInit.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+  <table name="Delegates">
+    <forAll col="status" val="OK" />
+    <row>
+      <field col="name" val="generic" />
+      <field col="description" 
+         val="for backwards compatibility, or when delegate does not matter" />
+    </row>
+    <row>
+      <field col="name" val="ACD" />
+      <field col="description" 
+         val="owns ACD thresholds, masking, calib scripts.." />
+    </row>
+    <row>
+      <field col="name" val="CAL" />
+      <field col="description" 
+         val="owns CAL thresholds, masking, calib scripts.." />
+    </row>
+    <row>
+      <field col="name" val="TKR" />
+      <field col="description" 
+         val="owns TKR thresholds, masking, calib scripts.." />
+    </row>
+    <row>
+      <field col="name" val="TRG" />
+      <field col="description" 
+         val="owns (LATC) GEM configuration" />
+    </row>
+    <row>
+      <field col="name" val="TIM" />
+      <field col="description" 
+         val="owns (LATC) config of various delays" />
+    </row>
+    <row>
+      <field col="name" val="HSK" />
+      <field col="description" 
+         val="owns thermal control parameters" />
+    </row>
+  </table>
+
+  <table name="Conditions">
+    <row>
+      <field col="name" val="dont_care" />
+      <field col="status" val="OK" />
+      <field col="description" 
+        val="when conditions are irrelevant and for testing" />
+      <ref col="delegate_fk" table="Delegates"  refCol="name" 
+         refVal="generic" />
+    </row>
+  </table>
+
+  <table name="FSW_class" >
+    <row>
+      <field col="name" val="latc_DFT" />
+      <field col="from_precursors" val="latc_DFT" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to DFT component" />
+    </row>
+    <row>
+      <field col="name" val="latc_GEM" />
+      <field col="from_precursors" val="latc_GEM" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+           val="latc input corresponding to GEM component" />
+    </row>
+    <row>
+      <field col="name" val="latc_AEM" />
+      <field col="from_precursors" val="latc_AEM" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+           val="latc input corresponding to AEM component" />
+    </row>
+    <row>
+      <field col="name" val="latc_ARC" />
+      <field col="from_precursors" val="latc_ARC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to ARC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_AFE" />
+      <field col="from_precursors" val="latc_AFE" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to AFE component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TEM" />
+      <field col="from_precursors" val="latc_TEM" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TEM component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TIC" />
+      <field col="from_precursors" val="latc_TIC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TIC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_CCC" />
+      <field col="from_precursors" val="latc_CCC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to CCC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_CRC" />
+      <field col="from_precursors" val="latc_CRC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to CRC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_CFE" />
+      <field col="from_precursors" val="latc_CFE" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to CFE component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TCC" />
+      <field col="from_precursors" val="latc_TCC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TCC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TRC" />
+      <field col="from_precursors" val="latc_TRC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TRC component" />
+    </row>
+    <row>
+      <field col="name" val="latc_SPT" />
+      <field col="from_precursors" val="latc_SPT" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to SPT component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TFE" />
+      <field col="from_precursors" val="latc_TFE" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TFE component" />
+    </row>
+    <row>
+      <field col="name" val="latc_TDC" />
+      <field col="from_precursors" val="latc_TDC" />
+      <field col="to_binary" val="latc" />
+      <field col="description" 
+             val="latc input corresponding to TDC component" />
+    </row>
+
+    <row>
+      <field col="name" val="latc_master" />
+      <field col="from_precursors" val="none" />
+      <field col="to_binary" val="none" />
+      <field col="description" 
+             val="latc master is written by MOOT" />
+    </row>
+
+    <row>
+      <field col="name" val="latc_ignore" />
+      <field col="from_precursors" val="latc_ignore" />
+      <field col="to_binary" val="latc_map" />
+      <field col="description" 
+             val="LATC ignore file" />
+    </row>
+
+    <row>
+      <field col="name" val="lci_ACD" />
+      <field col="from_precursors" val="lci_ACD" />
+      <field col="to_binary" val="lci" />
+      <field col="description" 
+             val="Source charge injection script for ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="lci_CAL" />
+      <field col="from_precursors" val="lci_CAL" />
+      <field col="to_binary" val="lci" />
+      <field col="description" 
+             val="Source charge injection script for CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="lci_TKR" />
+      <field col="from_precursors" val="lci_TKR" />
+      <field col="to_binary" val="lci" />
+      <field col="description" 
+             val="Source charge injection script for TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="ltc_C" />
+      <field col="from_precursors" val="ltc_C" />
+      <field col="to_binary" val="ltc" />
+      <field col="description" 
+             val="Master config ltc (LAT Thermal Control) file" />
+    </row>
+
+    <row>
+      <field col="name" val="ltc_F" />
+      <field col="from_precursors" val="ltc_F" />
+      <field col="to_binary" val="ltc" />
+      <field col="description" 
+             val="Filter definition ltc (LAT Thermal Control) file" />
+    </row>
+
+    <row>
+      <field col="name" val="ltc_T" />
+      <field col="from_precursors" val="ltc_T" />
+      <field col="to_binary" val="ltc" />
+      <field col="description" 
+             val="Temperature/adc look-up ltc (LAT Thermal Control) file" />
+    </row>
+
+    <row>
+      <field col="name" val="none" />
+      <field col="from_precursors" val="none" />
+      <field col="to_binary" val="none" />
+      <field col="description" 
+             val="Can be used as FSW_class value when no real class applies" />
+    </row>
+
+  </table>
+
+  <table name="Parameter_class" >
+    <row>
+      <field col="name" val="latc_DFT" />
+      <field col="description" 
+         val="latc input corresponding to DFT component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+
+    <row>
+      <field col="name" val="latc_GEM" />
+      <field col="description" 
+         val="latc input corresponding to GEM component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TRG" />    
+    </row>
+    <row>
+      <field col="name" val="latc_AEM" />
+      <field col="description" 
+         val="latc input corresponding to AEM component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+    <row>
+      <field col="name" val="latc_ARC" />
+      <field col="description" 
+         val="latc input corresponding to ARC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"  
+         refVal="ACD" />
+    </row>
+    <row>
+      <field col="name" val="latc_AFE" />
+      <field col="description" 
+         val="latc input corresponding to AFE component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="ACD" />  
+    </row>
+    <row>
+      <field col="name" val="latc_TEM" />
+      <field col="description" 
+         val="latc input corresponding to TEM component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+    <row>
+      <field col="name" val="latc_TIC" />
+      <field col="description" 
+         val="latc input corresponding to TIC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+    <row>
+      <field col="name" val="latc_CCC" />
+      <field col="description" 
+         val="latc input corresponding to CCC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+    <row>
+      <field col="name" val="latc_CRC" />
+      <field col="description" 
+         val="latc input corresponding to CRC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TIM" />  
+    </row>
+    <row>
+      <field col="name" val="latc_CFE" />
+      <field col="description" 
+         val="latc input corresponding to CFE component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="CAL" />   
+    </row>
+    <row>
+      <field col="name" val="latc_TCC" />
+      <field col="description" 
+         val="latc input corresponding to TCC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />
+    </row>
+    <row>
+      <field col="name" val="latc_TRC" />
+      <field col="description" 
+         val="latc input corresponding to TRC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TKR" />  
+    </row>
+    <row>
+      <field col="name" val="latc_SPT" />
+      <field col="description" 
+         val="latc input corresponding to SPT component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TKR" />  
+    </row>
+    <row>
+      <field col="name" val="latc_TFE" />
+      <field col="description" 
+         val="latc input corresponding to TFE component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="latc_TDC" />
+      <field col="description" 
+         val="latc input corresponding to TDC component" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TKR" />     
+    </row>
+
+    <row>
+      <field col="name" val="lci_ACD" />
+      <field col="description" 
+         val="lci (charge injection) script for ACD" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="ACD" /> 
+    </row>
+
+    <row>
+      <field col="name" val="lci_CAL" />
+      <field col="description" 
+         val="lci (charge injection) script for Calorimeter" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="CAL" />     
+    </row>
+
+    <row>
+      <field col="name" val="lci_TKR" />
+      <field col="description" 
+         val="lci (charge injection) script for Tracker" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="TKR" />     
+    </row>
+
+    <row>
+      <field col="name" val="ltc_C" />
+      <field col="description" 
+         val="Master config ltc file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="HSK" /> 
+    </row>
+
+    <row>
+      <field col="name" val="ltc_F" />
+      <field col="description" 
+         val="Filter definition ltc file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="HSK" />
+    </row>
+
+    <row>
+      <field col="name" val="ltc_T" />
+      <field col="description" 
+         val="Temperature/ADC look-up ltc file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="HSK" />     
+    </row>
+
+    <row>
+      <field col="name" val="latc_ignore" />
+      <field col="description" 
+         val="input to LATC_map" />
+      <ref col="delegate_fk" table="Delegates" refCol="name" 
+         refVal="generic" />     
+    </row>
+
+  </table>
+
+  <table name="FClass_to_PClass">
+    <forAll col="status" val="ACTIVE" />
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_GEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_GEM" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AEM" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TIC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TIC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CCC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CCC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CRC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CRC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TCC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TCC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TRC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TRC" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_SPT" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_SPT" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TFE" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TDC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TDC" />
+    </row>
+
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ignore" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ignore" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_C" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_C" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_F" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_F" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_T" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_T" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_ACD" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_ACD" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_CAL" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_CAL" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_TKR" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_TKR" />
+    </row>
+
+
+  </table>
+
+<!-- more tables to init:
+        Ancillary_class
+        Offline_class
+        OClass_to_AClass
+        PClass_to_AClass
+        Instrument (if we use it at all)
+ -->
+
+</rdbmsInit>
+
