@@ -6,6 +6,8 @@
 #include <io.h>
 
 #define ftruncate( a, b ) _chsize( (a), (b) )
+#undef _fileno
+#define fileno( a ) _fileno( (a) )
 
 #else
 
