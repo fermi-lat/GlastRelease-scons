@@ -9,10 +9,9 @@ $Header$
 #include "facilities/Util.h"
 #include <xercesc/dom/DOMNodeList.hpp>
 #include "TChain.h"
+#include "TFile.h"
 
 
-
-#include "TChain.h"
 
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
@@ -146,6 +145,7 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain) {
         }
     }
 
+
     if (fileList.size() > 0) {
         std::vector<DOMElement*>::const_iterator fileIt;
         for (fileIt=fileList.begin(); fileIt != fileList.end(); fileIt++) {
@@ -160,4 +160,56 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain) {
         statFlag = -1;
 
     return(statFlag);
+}
+
+TTree* XmlFetchEvents::getTree(double binVal) {
+    /// Purpose and Method:  Returns a TTree constructed from the "fileList" associated with the bin
+    /// found using binVal.
+    /// Returns a pointer to the TTree  if completely successful
+    /// returns 0 if failure
+
+    std::vector<DOMElement*> fileList;
+    TTree* tree(0);
+    fileList.clear();
+    // Check to see if we're accessing the same bin we have previously
+    if (m_lastBinIndex >= 0) {
+        if ((binVal >= m_lastBinMin) && (binVal <= m_lastBinMax)) {
+            DOMElement* fileListElem = xmlBase::Dom::findFirstChildByName(m_binChildren[m_lastBinIndex], "fileList");
+            xmlBase::Dom::getChildrenByTagName(fileListElem, "file", fileList);
+        }
+    } else {
+        // Otherwise search the whole vector
+        std::vector<DOMElement*>::const_iterator domElemIt; 
+        int curIndex = 0;
+
+        for (domElemIt = m_binChildren.begin(); domElemIt != m_binChildren.end(); domElemIt++) { 
+            std::string minBinStr = xmlBase::Dom::getAttribute(*domElemIt, "min");
+            std::string maxBinStr = xmlBase::Dom::getAttribute(*domElemIt, "max");
+            double minBin = facilities::Util::stringToDouble(minBinStr);
+            double maxBin = facilities::Util::stringToDouble(maxBinStr);
+            if ((binVal >= minBin) && (binVal <= maxBin)) {
+                m_lastBinIndex = curIndex;
+                m_lastBinMin = minBin;
+                m_lastBinMax = maxBin;
+                DOMElement* fileListElem = xmlBase::Dom::findFirstChildByName(*domElemIt, "fileList");
+                xmlBase::Dom::getChildrenByTagName(fileListElem, "file", fileList);
+            }
+            ++curIndex;
+        }
+    }
+    if( fileList.empty() ){
+        throw std::runtime_error("XMLFetchEvents::getTree -- no files found for type "+ m_param);
+    }
+
+    if (fileList.size() ==1) {
+        DOMElement* file= fileList.front();
+        std::string fileNameStr = xmlBase::Dom::getAttribute(file, "filePath");
+        facilities::Util::expandEnvVar(&fileNameStr);
+        std::string treeNameStr = xmlBase::Dom::getAttribute(file, "treeName");
+        TFile* f = new TFile(fileNameStr.c_str());
+        tree = (TTree*)f->Get(treeNameStr.c_str());
+    }else{
+        throw std::runtime_error("XMLFetchEvents::getTree expected a single file");
+    }
+    return tree;
 }

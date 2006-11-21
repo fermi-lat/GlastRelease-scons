@@ -35,6 +35,7 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 , m_rootFileDirectory(rootFileDirectory)
 , m_singleFileMode(false)
 , m_fetch(0)
+, m_useChain(false) // for now, disable chains
 {
     // find leaf corresponding to varname in the output tree
     m_varleaf = m_outputTree->GetLeaf(varname.c_str());
@@ -139,33 +140,26 @@ void BackgroundSelection::setCurrentTree()
         double x(value());
 
         if (m_fetch){ 
-            TChain* chain = new TChain();
-            int stat= m_fetch->getFiles(x, chain);
-            if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
-            m_inputTree = chain;
+            if( m_useChain ){
+                TChain* chain = new TChain();
+                int stat= m_fetch->getFiles(x, chain);
+                if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+                m_inputTree = chain;
+            }else {
+                m_inputTree = m_fetch->getTree(x);
+                if( m_inputTree==0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+            }
         }
     }else{
         throw std::runtime_error("BackgaroundSelection::setCurrentTree: no valid file");
     }
 
-#if 0 // for testing with a single file
-    // open file for reading:
-    m_inputFile = new TFile(file_name.c_str(), "READ");
-    if (!m_inputFile->IsOpen() ) {
-        TString error = "Did not find file[" + file_name + "]";
-        throw std::invalid_argument(error.Data());
-    }
-
-    //  get the tree:
-    m_inputTree =  dynamic_cast<TTree*>(m_inputFile->Get(tree_name.c_str()));
-    if (0 == m_inputTree) {
-        TString error = "Did not find tree[" + tree_name + "] in root file";
-        throw std::invalid_argument(error.Data());
-   }
-#endif
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
+    if( length==0 ) {
+        throw std::runtime_error("BackgaroundSelection::setCurrentTree: no events in the tree");
+    }
     
     m_eventOffset = (unsigned int)(RandFlat::shoot()*(length - 1));
 

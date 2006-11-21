@@ -12,26 +12,20 @@
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:schemaLocation='http://xml.netbeans.org/examples/targetNS file:/./backgroundInterleave.xsd'>
 
-   <source name="earthsLimb" type="PtScZenith" rangeUnits="degrees" rangeMin="0.0" rangeMax="30.0">
-      <bin min="0.0" max="10.0" triggerRate="5000.0" downlinkRate="1000.0">
+   <source name="earthsLimb" type="PtSCzenith" rangeUnits="degrees" rangeMin="0.0" rangeMax="180.0">
+      <bin min="-1.0" max="10" triggerRate="5000.0" downlinkRate="1000.0">
          <fileList>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/0-10_1.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/0-10_2.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/0-10_3.root" treeName="MeritTuple" numEvents="402"/>
+            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
       <bin min="10.0" max="20.0" triggerRate="4000.0" downlinkRate="1000.0">
          <fileList>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/10-20_1.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/10-20_2.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/10-20_3.root" treeName="MeritTuple" numEvents="402"/>
+            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
-      <bin min="20.0" max="30.0" triggerRate="3000.0" downlinkRate="1000.0">
+      <bin min="20.0" max="180." triggerRate="3000.0" downlinkRate="1000.0">
          <fileList>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/20-30_1.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/20-30_2.root" treeName="MeritTuple" numEvents="2048"/>
-            <file filePath="/nfs/farm/g/glast/u24/backgrounds/earthsLimb/20-30_3.root" treeName="MeritTuple" numEvents="402"/>
+            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
    </source>

@@ -11,7 +11,7 @@ $Header$
 
 #include <string>
 class TChain;
-
+class TTree;
 
 /** @class IFetchEvents
     @brief manage the retrieval of events using some specified parameter(s)
@@ -36,6 +36,9 @@ public:
 
     /// Returns a TChain* constructed from the fileList stored in the m_dataStore
     virtual int getFiles(double binVal, TChain* chain) = 0;
+
+    /// Returns a TTree* constructed from the file stored in the m_dataStore
+    virtual TTree* getTree(double binval){return 0;}
 
 private:
     friend class XmlFetchEvents;

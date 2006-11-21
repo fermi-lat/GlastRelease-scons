@@ -89,6 +89,7 @@ private:
     std::string m_rootFileDirectory;  ///< either path to a ROOT file to sample from, or a directory containing files
 
     IFetchEvents *m_fetch;
+    bool m_useChain; ///< flag that we are expecting to find lists of files to combine into TChain objects
 };
 
 
