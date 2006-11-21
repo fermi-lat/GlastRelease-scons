@@ -1,6 +1,18 @@
 #include <errno.h>
+#include <stdio.h>
+
+#ifdef WIN32
+
+#include <io.h>
+
+#define ftruncate( a, b ) _chsize( (a), (b) )
+
+#else
+
 #include <unistd.h>
 #include <sys/types.h>
+
+#endif
 
 #include <sstream>
 #include <stdexcept>
@@ -45,12 +57,12 @@ namespace eventFile {
   {
     if ( m_FILE ) {
       writeHeader();
-      fclose( m_FILE );
-      m_FILE = NULL;
       if ( m_hdr.m_evtcnt == 0ULL ) {
 	off_t zero(0);
-	truncate( m_name.c_str(), zero );
+	ftruncate( fileno( m_FILE ), zero );
       }
+      fclose( m_FILE );
+      m_FILE = NULL;
     }
   }
 
