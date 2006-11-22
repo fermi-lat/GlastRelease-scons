@@ -78,7 +78,7 @@ StatusCode testRootIoSvcAlg::execute()
     }
 
     if (flag == 3) {
-        bool retVal = m_rootIoSvc->setRootFile("","noFile.root","");
+        bool retVal = m_rootIoSvc->setRootFile("","noFile.root","","");
         if (retVal == false) {
             log << MSG::INFO << "Passed ROOT file open test "
                 << "failed to open non-existant file" 
@@ -87,7 +87,8 @@ StatusCode testRootIoSvcAlg::execute()
         retVal = m_rootIoSvc->setRootFile( 
                  "",
                  "$(ROOTTESTDATAROOT)/data/vertical_surface_muons/digi.root", 
-                 "$(ROOTTESTDATAROOT)/data//vertical_surface_muons/recon.root");
+                 "$(ROOTTESTDATAROOT)/data//vertical_surface_muons/recon.root",
+                 "");
         if (retVal)
              log << MSG::INFO << "Passed ROOT file open test "
                  << "Succeeded in opening new files" << endreq;
