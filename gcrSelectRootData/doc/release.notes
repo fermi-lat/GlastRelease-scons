@@ -3,6 +3,7 @@ package gcrSelectRootData
 package manager:C.Lavalley 
 @verbatim
 
+v1r2p1   TU  Removed rootcint cxx and h files since they are generated at build
 v1r2     CL  test tag for RM
 v0       CL  initial import of new package 
 @endverbatim 
