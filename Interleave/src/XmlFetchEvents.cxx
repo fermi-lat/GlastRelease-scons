@@ -215,6 +215,7 @@ TTree* XmlFetchEvents::getTree(double binVal) {
         delete m_file;  // get rid of last guy
         m_file = new TFile(fileNameStr.c_str());
         tree = (TTree*)m_file->Get(treeNameStr.c_str());
+        if( tree==0 ) throw std::runtime_error("XMLFetchEvent: did not find the TTree "+treeNameStr);
     }else{
         throw std::runtime_error("XMLFetchEvents::getTree expected a single file");
     }
