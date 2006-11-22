@@ -171,11 +171,11 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain) {
 TTree* XmlFetchEvents::getTree(double binVal) {
     /// Purpose and Method:  Returns a TTree constructed from the "fileList" associated with the bin
     /// found using binVal.
-    /// Returns a pointer to the TTree  if completely successful
+    /// Returns a pointer to the TTree  if  successful
     /// Return 0 if the TTree was previously found
     /// throws an exception if failure
 
-    // Check to see if we're accessing the same bin we have previously
+    // Check to see if we are still in the same bin that was previously set up
     if (m_lastBinIndex >= 0 && (binVal >= m_lastBinMin) && (binVal < m_lastBinMax) ) {
             return 0;  // no new ttree to find.
     }
@@ -183,7 +183,6 @@ TTree* XmlFetchEvents::getTree(double binVal) {
     
     std::vector<DOMElement*> fileList;
     TTree* tree(0);
-
   
     // Otherwise search the whole vector
     std::vector<DOMElement*>::const_iterator domElemIt; 
@@ -200,6 +199,7 @@ TTree* XmlFetchEvents::getTree(double binVal) {
             m_lastBinMax = maxBin;
             DOMElement* fileListElem = xmlBase::Dom::findFirstChildByName(*domElemIt, "fileList");
             xmlBase::Dom::getChildrenByTagName(fileListElem, "file", fileList);
+            break;
         }
         ++curIndex;
     }
