@@ -35,11 +35,11 @@ public:
 
     /** @brief ctor
         @param varname tuple variable name
-        @param rootFileDirectory name of the directory containing the root files, or a root file for testing
+        @param xmlFileName
         @param disableList list of strings specifying branches to disable
         @param outputTree pointer to tree to copy to
     */
-    BackgroundSelection(const std::string& varname, const std::string& rootFileDirectory,
+    BackgroundSelection(const std::string& varname, const std::string& xmlFileName,
         std::vector<std::string> disableList,
         TTree* outputTree);
 
@@ -61,6 +61,8 @@ public:
     */
     double downlinkRate()const;
 
+    const std::string& name()const{return m_varname;}
+
 private:
     /** @brief disable branches in the tree, from the disableList
     */
@@ -78,17 +80,15 @@ private:
     TLeaf* m_varleaf;      ///< corresponding TLeaf for access to current value
 
     unsigned int m_event, m_eventOffset;
-
-    bool m_singleFileMode; 
-    
+   
     TTree* m_outputTree; ///< the tree to copy data to
     TTree* m_inputTree; ///< the tree to copy data from
     
     TFile* m_inputFile; ///< the file that contains the input tree
     std::vector<std::string>m_disableList; ///< list of strings for disable
-    std::string m_rootFileDirectory;  ///< either path to a ROOT file to sample from, or a directory containing files
+    std::string m_xmlFileName;  ///< either path to a ROOT file to sample from, or a directory containing files
 
-    IFetchEvents *m_fetch;
+    IFetchEvents *m_fetch; ///< abstract guy that processes the xml file
     bool m_useChain; ///< flag that we are expecting to find lists of files to combine into TChain objects
 };
 

@@ -18,6 +18,7 @@ $Header$
 #include "xmlBase/XmlParser.h"
 class TChain;
 class TTree;
+class TFile;
 
 
 /** @class XmlFetchEvents
@@ -64,6 +65,7 @@ private:
     int m_lastBinIndex;
     double m_lastBinMin, m_lastBinMax;
 
+    TFile * m_file; ///< current TFile
 };
 
 

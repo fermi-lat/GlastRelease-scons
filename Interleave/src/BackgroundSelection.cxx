@@ -21,7 +21,7 @@
 
 //------------------------------------------------------------------------
 BackgroundSelection::BackgroundSelection(const std::string& varname, 
-                                         const std::string& rootFileDirectory,
+                                         const std::string& xmlFileName,
         std::vector<std::string> disableList,
         TTree* outputTree)
 : m_varname(varname)
@@ -32,8 +32,6 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 , m_inputTree(0)
 , m_inputFile(0)
 , m_disableList(disableList)
-, m_rootFileDirectory(rootFileDirectory)
-, m_singleFileMode(false)
 , m_fetch(0)
 , m_useChain(false) // for now, disable chains
 {
@@ -44,8 +42,9 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
     }
 
     // If passed an XML file, set up the XmlFetchEvents object
-    if (m_rootFileDirectory.find(".xml")!=std::string::npos)
-        m_fetch = new XmlFetchEvents(rootFileDirectory, varname);
+    if (xmlFileName.find(".xml")!=std::string::npos)
+        m_fetch = new XmlFetchEvents(xmlFileName, varname);
+    else throw std::invalid_argument("BackgroundSelection: expect to find an XML file");
 
     setCurrentTree();
 
@@ -53,7 +52,7 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
 {
-    if (m_fetch) delete m_fetch;
+    delete m_fetch;
 }
 
 //------------------------------------------------------------------------
@@ -65,7 +64,7 @@ double BackgroundSelection::value()const
 void BackgroundSelection::selectEvent()
 {
 
-    // this is necessary due to the poor design of ROOT :-(
+    // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
 
     // make sure we have the right tree selected for new value
@@ -77,7 +76,7 @@ void BackgroundSelection::selectEvent()
 
     // grab the event:
     m_inputTree->GetEvent(m_eventOffset++);
-    // this is necessary due to the poor design of ROOT :-(
+    // this is necessary due to the design of ROOT :-(
     saveDir->cd();
 }
 
@@ -117,43 +116,17 @@ void BackgroundSelection::disableBranches(TTree* t)
 //------------------------------------------------------------------------
 void BackgroundSelection::setCurrentTree() 
 {
-    if( m_singleFileMode && m_inputTree!=0 ) return; // all set up
+    double x(value());
 
-    std::string file_name("test.root");
-    std::string tree_name("MeritTuple");
-
-    if( ! m_singleFileMode && m_rootFileDirectory.find(".root")!=std::string::npos) { 
-
-        // if is is root file, will set it up only once
-        m_singleFileMode = true;
-        file_name = m_rootFileDirectory;
-        TChain * c = new TChain(tree_name.c_str());
-        int status = c->AddFile(file_name.c_str());
-        if (status != 1) {
-            TString error = "Did not find tree[" + tree_name + "] in root file";
-            throw std::invalid_argument(error.Data());
-        }
-        m_inputTree = c;
-
-    }else if( m_rootFileDirectory.find(".xml")!=std::string::npos ){
-
-        double x(value());
-
-        if (m_fetch){ 
-            if( m_useChain ){
-                TChain* chain = new TChain();
-                int stat= m_fetch->getFiles(x, chain);
-                if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
-                m_inputTree = chain;
-            }else {
-                m_inputTree = m_fetch->getTree(x);
-                if( m_inputTree==0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
-            }
-        }
-    }else{
-        throw std::runtime_error("BackgaroundSelection::setCurrentTree: no valid file");
+    if( m_useChain ){
+        TChain* chain = new TChain();
+        int stat= m_fetch->getFiles(x, chain);
+        if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+        m_inputTree = chain;
+    }else {
+        m_inputTree = m_fetch->getTree(x);
+        if( m_inputTree==0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
     }
-
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
@@ -169,7 +142,6 @@ void BackgroundSelection::setCurrentTree()
 //------------------------------------------------------------------------
 void BackgroundSelection::setLeafPointers(TTree* pTree)
 {
-//    TChain* pTree = dynamic_cast<TChain*>(xTree);
 
     // first disable the branches
     disableBranches(pTree);

@@ -21,7 +21,10 @@ using xmlBase::Dom;
 
 double XmlFetchEvents::m_badVal = -999999.0;
 
-XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& param) : IFetchEvents(xmlFile,param) {
+XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& param)
+: IFetchEvents(xmlFile,param) 
+, m_file(0)
+{
 
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc;
     m_xmlParser.doSchema(true);
@@ -73,6 +76,7 @@ XmlFetchEvents::~XmlFetchEvents()
     m_children.clear();
     m_paramChildren.clear();
     m_binChildren.clear();
+    delete m_file;
 }
 
 double XmlFetchEvents::getAttributeValue(const std::string& elemName, double binVal) {
@@ -168,7 +172,7 @@ TTree* XmlFetchEvents::getTree(double binVal) {
     /// Purpose and Method:  Returns a TTree constructed from the "fileList" associated with the bin
     /// found using binVal.
     /// Returns a pointer to the TTree  if completely successful
-    /// returns 0 if failure
+    /// throws an exception if failure
 
     std::vector<DOMElement*> fileList;
     TTree* tree(0);
@@ -208,8 +212,9 @@ TTree* XmlFetchEvents::getTree(double binVal) {
         std::string fileNameStr = xmlBase::Dom::getAttribute(file, "filePath");
         facilities::Util::expandEnvVar(&fileNameStr);
         std::string treeNameStr = xmlBase::Dom::getAttribute(file, "treeName");
-        TFile* f = new TFile(fileNameStr.c_str());
-        tree = (TTree*)f->Get(treeNameStr.c_str());
+        delete m_file;  // get rid of last guy
+        m_file = new TFile(fileNameStr.c_str());
+        tree = (TTree*)m_file->Get(treeNameStr.c_str());
     }else{
         throw std::runtime_error("XMLFetchEvents::getTree expected a single file");
     }
