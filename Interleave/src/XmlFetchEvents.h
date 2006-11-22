@@ -32,7 +32,7 @@ public:
 
     XmlFetchEvents(const std::string& xmlFile, const std::string& param);
 
-    ~XmlFetchEvents();
+    virtual ~XmlFetchEvents();
 
     double getAttributeValue(const std::string& elemName, double binVal);
 
