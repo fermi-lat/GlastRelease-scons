@@ -1,16 +1,3 @@
 
-#include "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/common.txt"
-
-// read back simulation and reconstruction first pass
-Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/digi.root" ;
-reconRootReaderAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/recon.root" ;
-
-// calo reconstruction second pass
-ApplicationMgr.DLLs += { "CalRecon" } ;
-ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalClustersAlg", "CalEventEnergyAlg" } ;
-Top.Members += { "test_CalRecon" } ;
-
-
+#include "$CALRECONROOT/src/test/singleOptions.txt"
 

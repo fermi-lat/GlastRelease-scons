@@ -3,6 +3,7 @@ version v6r4p7
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 author David Chamont <chamont@poly.in2p3.fr>
+
 # $Id$
 
 branches src cmt doc
@@ -17,6 +18,7 @@ use TkrUtil
 apply_pattern packageShr
 
 #========================================================
+
 private
 
 use RootIo 

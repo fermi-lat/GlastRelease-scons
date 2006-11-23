@@ -1,0 +1,46 @@
+
+// event loop
+ApplicationMgr.DLLs += { "GlastSvc" } ;
+//ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
+EventSelector.Input = "NONE" ;
+ApplicationMgr.ExtSvc += { "EventCnvSvc" } ;
+EventPersistencySvc.CnvServices = { "EventCnvSvc" } ;
+ApplicationMgr.EvtMax = 10 ;
+
+// geometry
+ApplicationMgr.DLLs += { "G4Generator","G4Propagator", "TkrUtil" } ;
+ApplicationMgr.ExtSvc += { "GlastDetSvc", "G4GeometrySvc" } ;
+GlastDetSvc.topVolume = "LAT" ; 
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml" ;
+GlastDetSvc.visitorMode = "recon" ;
+
+// calibration services
+ApplicationMgr.DLLs +={ "CalibSvc" } ;
+ApplicationMgr.ExtSvc += {"CalibDataSvc"} ;
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" } ;
+DetectorPersistencySvc.CnvServices += { "CalibMySQLCnvSvc" } ;
+DetectorPersistencySvc.CnvServices += { "CalibXmlCnvSvc" } ;
+CalibDataSvc.CalibInstrumentName = "LAT" ;
+CalibDataSvc.CalibStorageType = 14 ; // Mysql
+CalibDataSvc.CalibRootName = "Calib" ;
+CalibDataSvc.CalibFlavorList = {"ideal"} ;
+ApplicationMgr.Dlls += {"CalXtalResponse"} ;
+ApplicationMgr.ExtSvc += {"CalCalibSvc"} ;
+CalCalibSvc.DefaultFlavor  = "ideal" ;
+
+// algorithms skeleton
+ApplicationMgr.DLLs += { "GaudiAlg", "RootIo" } ;
+ApplicationMgr.TopAlg += { "Sequencer/Top" } ;
+Top.Members = { "PropertiesCheckAlg" } ;  
+Top.Members += { "TkrCalibAlg" } ;
+Top.Members += { "Sequencer/Simulation" } ;
+Top.Members += { "Sequencer/Reconstruction" } ;
+PropertiesCheckAlg.exclude = {
+  "ApplicationMgr", "EventSelector", "MessageSvc", "FluxSvc",
+  "GlastDetSvc", "DetectorPersistencySvc", "EventPersistencySvc",
+  "CalibDataSvc", "CalCalibSvc",
+  "PropertiesCheckAlg" } ;
+  
+// etc
+MessageSvc.OutputLevel = 2 ;
+

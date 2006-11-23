@@ -1,0 +1,16 @@
+
+#include "$CALRECONROOT/src/test/common.txt"
+
+// read back simulation and reconstruction first pass
+Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
+digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/digi.root" ;
+reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/recon.root" ;
+
+// calo reconstruction second pass
+ApplicationMgr.DLLs += { "CalRecon" } ;
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
+Reconstruction.Members += { "CalClustersAlg", "CalEventEnergyAlg" } ;
+Top.Members += { "test_CalRecon" } ;
+
+
+

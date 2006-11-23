@@ -88,13 +88,13 @@ def key_values(filename) :
   raw_energy = 0
   calvals_energy = 0
   likelihood_energy = 0
-  corrected_energy = 0
   ll_energy = 0
   fit_energy = 0
   hashed_posdir = 0
   file = open(filename)
   for line in file.readlines() :
     if regexp.search(line) :
+      #print os.path.basename(filename)+': '+line,
       words = line.split()
       if words[2] == 'Energy' :
         energy = string.atof(words[3])
@@ -130,10 +130,9 @@ def key_values(filename) :
           nb_likelihood += 1
           likelihood_energy += energy
      
-  # result
+  # compute means
   if nb_clusters>0 :
     raw_energy = raw_energy/nb_clusters
-    corrected_energy = corrected_energy/nb_clusters
     hashed_posdir = hashed_posdir/nb_clusters
   if nb_profiles>0 :
     fit_energy = fit_energy/nb_profiles
@@ -143,6 +142,8 @@ def key_values(filename) :
     calvals_energy = calvals_energy/nb_calvals
   if nb_likelihood>0 :
     likelihood_energy = likelihood_energy/nb_likelihood
+     
+  # display results
   ft_count = '%d'
   ft_mean = '%g'
   all_values = [ (ft_count % nb_clusters)+'*'+ (ft_mean % raw_energy) ]
@@ -154,12 +155,12 @@ def key_values(filename) :
   return all_values
 
 #=================================================
-# all things to be done for a given set of options
+# job execution for a given set of options
 # prerequisite: the current dir is something
 #   like <project>/<package>/<version>/cmt
 #=================================================
 
-def run_job(setup_package,binary_package,options,cmtbin_depend) :
+def run_job(setup_package,binary_package,options) :
 
   # change directory
   os.chdir(os.path.join(root_dir(setup_package),'cmt'))
@@ -168,14 +169,6 @@ def run_job(setup_package,binary_package,options,cmtbin_depend) :
   exe_name = os.path.join(root_dir(binary_package),os.environ['CMTCONFIG'],'test_'+binary_package+'.exe')
   opt_name = os.path.join(original_dir,options+'.txt')
   log_name = os.path.join(original_dir,options+'.log')
-  ref_name = os.path.join(original_dir,options+'.ref')
-  if cmtbin_depend == True :
-    linux_expr = re.compile('^Linux')
-    if linux_expr.search(os.environ['CMTBIN']) :
-      ref_name = os.path.join(original_dir,options+'.linux.ref')
-    windows_expr = re.compile('^VisualC')
-    if windows_expr.search(os.environ['CMTBIN']) :
-      ref_name = os.path.join(original_dir,options+'.win.ref')
 
   # command
   if os.name == 'posix':
@@ -192,6 +185,33 @@ def run_job(setup_package,binary_package,options,cmtbin_depend) :
   if log_pipe.close() != None :
     print 'VALIDATION ERROR: '+binary_package+' '+options+' EXECUTION FAILED'
     sys.exit(1)
+
+  # back to original dir
+  os.chdir(original_dir)
+
+
+
+#=================================================
+# job output analysis for a given set of options
+# prerequisite: the current dir is something
+#   like <project>/<package>/<version>/cmt
+#=================================================
+
+def compare_job(setup_package,binary_package,options,cmtbin_depend) :
+
+  # change directory
+  os.chdir(os.path.join(root_dir(setup_package),'cmt'))
+
+  # file names
+  log_name = os.path.join(original_dir,options+'.log')
+  ref_name = os.path.join(original_dir,options+'.ref')
+  if cmtbin_depend == True :
+    linux_expr = re.compile('^Linux')
+    if linux_expr.search(os.environ['CMTBIN']) :
+      ref_name = os.path.join(original_dir,options+'.linux.ref')
+    windows_expr = re.compile('^VisualC')
+    if windows_expr.search(os.environ['CMTBIN']) :
+      ref_name = os.path.join(original_dir,options+'.win.ref')
 
   # compute energies
   log_key_values = key_values(log_name)
@@ -212,10 +232,14 @@ def run_job(setup_package,binary_package,options,cmtbin_depend) :
 #  jobs
 #=================================
 
-# build the application
-build_application_test('CalRecon')
+# prepare input data
+build_application_test('Gleam')
+run_job('Gleam','Gleam','simuOptions')
 
 # pure CaloRecon jobs 
-run_job('CalRecon','CalRecon','jobOptions',False)
-run_job('CalRecon','CalRecon','simpleOptions',False)
+build_application_test('CalRecon')
+run_job('CalRecon','CalRecon','singleOptions')
+compare_job('CalRecon','CalRecon','singleOptions',False)
+run_job('CalRecon','CalRecon','simpleOptions')
+compare_job('CalRecon','CalRecon','simpleOptions',False)
 
