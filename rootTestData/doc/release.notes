@@ -3,7 +3,9 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v3r6p3    16-Nov-06  DC  remove CalUtile from Gaudi DLLs to load
+v3r6p4    23-Nov-06  DC  remove gamma Root files, which return to CalRecon
+                         so to remove some kind of cyclic dependancy with CalRecon
+v3r6p3    16-Nov-06  DC  remove CalUtil from Gaudi DLLs to load
 v3r6p1    21-Jan-06  DC  Update also data/default.
 v3r6      19-Jan-06  DC  Update files after some RootIo=>RootConvert moves.
 v3r5      25-Nov-05  DC  Update gamma files for new CalRecon after DC2
