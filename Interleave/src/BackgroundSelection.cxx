@@ -46,8 +46,10 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
         m_fetch = new XmlFetchEvents(xmlFileName, varname);
     else throw std::invalid_argument("BackgroundSelection: expect to find an XML file");
 
-    setCurrentTree();
+    // prime the pump with the mean of the limits for initial downlink, trigger rates
+    double mean( (m_fetch->minVal() + m_fetch->maxVal())/2.);
 
+    setCurrentTree(mean);
 }
 //------------------------------------------------------------------------
 BackgroundSelection::~BackgroundSelection()
@@ -68,7 +70,7 @@ void BackgroundSelection::selectEvent()
     TDirectory *saveDir = gDirectory;
 
     // make sure we have the right tree selected for new value
-    setCurrentTree();    
+    setCurrentTree(value());    
 
     // check event offset for overflow:
     if (m_eventOffset >= m_inputTree->GetEntries())
@@ -78,26 +80,6 @@ void BackgroundSelection::selectEvent()
     m_inputTree->GetEvent(m_eventOffset++);
     // this is necessary due to the design of ROOT :-(
     saveDir->cd();
-}
-
-//------------------------------------------------------------------------
-double BackgroundSelection::triggerRate()const
-{
-    double x(value());
-
-    ///@todo: replace with lookup
-    if (m_fetch) return (m_fetch->getAttributeValue("triggerRate", x));
-    return 1000;
-}
-
-//------------------------------------------------------------------------
-double BackgroundSelection::downlinkRate( )const
-{
-    double  x(value());
-
-    ///@todo: replace with lookup
-    if (m_fetch) return (m_fetch->getAttributeValue("downlinkRate", x));
-    return 100;
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::disableBranches(TTree* t) 
@@ -114,9 +96,8 @@ void BackgroundSelection::disableBranches(TTree* t)
     t->SetBranchStatus("McSourceId", 1);
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::setCurrentTree() 
+void BackgroundSelection::setCurrentTree(double x) 
 {
-    double x(value());
     TTree * nextTree(0);
 
     if( m_useChain ){
@@ -143,16 +124,17 @@ void BackgroundSelection::setCurrentTree()
 
     // point tree to buffer for copying events:
     setLeafPointers(m_inputTree);
+    m_triggerRate = m_fetch->getAttributeValue("triggerRate", x);
+    m_downlinkRate=m_fetch->getAttributeValue("downlinkRate", x);
+
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::setLeafPointers(TTree* pTree)
 {
-
     // first disable the branches
     disableBranches(pTree);
 
     // iteration over active leaves -- copied from Ttree::Show()
-
 
     TObjArray *leaves  = pTree->GetListOfLeaves();
     if( leaves==0 ) throw std::runtime_error("BackgroundSelection::setLeafPointers: invalid tree, no leaves found");

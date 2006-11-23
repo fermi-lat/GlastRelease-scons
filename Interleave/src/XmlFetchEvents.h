@@ -42,8 +42,11 @@ public:
     /// Purpose and Method:  Returns a TTree constructed from the "fileList" associated with the bin
     /// found using binVal.
     /// Returns a pointer to the TTree  if completely successful
-    /// returns 0 if failure (or throws exception.
+    /// returns 0 if still in the same bin as a previous call
     TTree* getTree(double binVal);
+
+    virtual double minVal()const{return m_minval;}///< return minimum value allowed
+    virtual double maxVal()const{return m_maxval;}///< return maximum value allowed
 
     static double m_badVal;
 
@@ -64,6 +67,8 @@ private:
     /// Store the most recently accessed DOMElement in the m_binChildren vector;
     int m_lastBinIndex;
     double m_lastBinMin, m_lastBinMax;
+
+    double m_minval, m_maxval;
 
     TFile * m_file; ///< current TFile
 };

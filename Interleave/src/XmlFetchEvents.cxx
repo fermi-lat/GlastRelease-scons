@@ -13,6 +13,9 @@ $Header$
 #include "TFile.h"
 
 #include <stdexcept>
+#include <sstream>
+#include <cmath>
+#include <cassert>
 
 
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
@@ -54,7 +57,12 @@ XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& pa
     for (domElemIt = m_children.begin(); domElemIt != m_children.end(); domElemIt++) { 
         std::string typeAttr = xmlBase::Dom::getAttribute(*domElemIt, "type");
         if (typeAttr == m_param) {
+            // found one save it
             m_paramChildren.push_back(*domElemIt);
+            double minval(facilities::Util::stringToDouble(xmlBase::Dom::getAttribute(*domElemIt, "rangeMin"))),
+                maxval(facilities::Util::stringToDouble(xmlBase::Dom::getAttribute(*domElemIt, "rangeMax")));
+            if(minval< m_minval) m_minval = minval;
+            if(maxval>m_maxval) m_maxval = maxval;
         }
     }
 
@@ -65,6 +73,9 @@ XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& pa
         xmlBase::Dom::getChildrenByTagName(*domElemIt, "bin", m_binChildren, false);
     }
 
+    if( m_binChildren.empty() ){
+        throw std::invalid_argument("XmlFetchEvents: did not find entries for "+param);
+    }
     m_lastBinIndex = -1;
     m_lastBinMin = m_badVal;
     m_lastBinMax = m_badVal;
@@ -82,7 +93,6 @@ XmlFetchEvents::~XmlFetchEvents()
 double XmlFetchEvents::getAttributeValue(const std::string& elemName, double binVal) {
     /// Purpose and Method:  Extracts any attribute associated with the name elemName from
     /// our vector of bins.  Uses the binVal to determine which bin to use.
-
     // Check to see if we're accessing the same bin we have previously
     if (m_lastBinIndex >= 0) {
         if ((binVal >= m_lastBinMin) && (binVal <= m_lastBinMax)) {
@@ -110,6 +120,7 @@ double XmlFetchEvents::getAttributeValue(const std::string& elemName, double bin
         }
         ++curIndex;
     }
+    
     return m_badVal;
 }
 
@@ -176,8 +187,10 @@ TTree* XmlFetchEvents::getTree(double binVal) {
     /// throws an exception if failure
 
     // Check to see if we are still in the same bin that was previously set up
+
     if (m_lastBinIndex >= 0 && (binVal >= m_lastBinMin) && (binVal < m_lastBinMax) ) {
-            return 0;  // no new ttree to find.
+        std::cout << "no new tree needed" << std::endl;
+        return 0;  // no new ttree to find.
     }
     
     
@@ -204,7 +217,10 @@ TTree* XmlFetchEvents::getTree(double binVal) {
         ++curIndex;
     }
     if( fileList.empty() ){
-        throw std::runtime_error("XMLFetchEvents::getTree -- no files found for type "+ m_param);
+        std::stringstream err;
+        err << "XMLFetchEvents::getTree -- no files found for "<< m_param << "=" << binVal;
+
+        throw std::runtime_error(err.str());
     }
 
     if (fileList.size() ==1) {

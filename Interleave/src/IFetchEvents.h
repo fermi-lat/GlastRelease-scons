@@ -40,6 +40,9 @@ public:
     /// Returns a TTree* constructed from the file stored in the m_dataStore
     virtual TTree* getTree(double binval){return 0;}
 
+    virtual double minVal()const{return -1e30;}///< return minimum value allowed
+    virtual double maxVal()const{return +1e30;}///< return maximum value allowed
+
 private:
     friend class XmlFetchEvents;
 

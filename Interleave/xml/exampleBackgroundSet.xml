@@ -30,8 +30,8 @@
       </bin>
    </source>
 
-   <source name="diffuse" type="PtMagLat" rangeUnits="degrees" rangeMin="0.0" rangeMax="70.0">
-      <bin min="-50." max="50.0" triggerRate="2500.0" downlinkRate="300.0">
+   <source name="diffuse" type="PtMagLat" rangeUnits="degrees" rangeMin="-45" rangeMax="45.0">
+      <bin min="-45." max="45.0" triggerRate="2500.0" downlinkRate="300.0">
          <fileList>
             <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>

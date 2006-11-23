@@ -102,7 +102,7 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     if( instance!=0 ) throw std::invalid_argument("InterleaveAlg: only one instance allowed!");
 
     // declare properties with setProperties calls
-    declareProperty("RootFile",     m_rootFile="");
+    declareProperty("RootFile",     m_fileName="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
     declareProperty("DisableList",  m_disableList);
     declareProperty("MapName",      m_mapName="interleave_map");
@@ -155,16 +155,17 @@ StatusCode InterleaveAlg::initialize(){
     }
     // initialize the background selection
     try {
-        std::string file(m_rootFile.value());
+        std::string file(m_fileName.value());
         if( !file.empty()){
             facilities::Util::expandEnvVar(&file);
-            log << MSG::INFO << "Using xml or root file " << file << " for interleave." << endreq;
+            log << MSG::INFO << "Using xml file " << file << " for interleave." << endreq;
             for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
                 const std::string& name=*it;
-                log << MSG::INFO << "setting up tuple key "<<  name << endreq;
+                log << MSG::INFO << "setting up tuple key "<<  name <<endreq;    
                 selectormap[name]= new BackgroundSelection(name, file, m_disableList, m_meritTuple);
+                log <<MSG::INFO << "\tinitial trigger, downlink rates: " << selectormap[name]->triggerRate() 
+                    <<", " << selectormap[name]->downlinkRate() << endreq;
             }
-            log << endreq;
             // initialized, can use the statics now.
             instance = this;
 
@@ -228,6 +229,10 @@ StatusCode InterleaveAlg::execute()
     }
     ++m_count;
 
+    // ask for a tree corresponding to our current position: it will set all the tuple
+    m_selector->selectEvent();
+    // overwrite the event info
+    copyEventInfo();
 
     // let the livetime service know about the current trigger rate,
     // and set the current accumulated live time in the header
@@ -238,13 +243,6 @@ StatusCode InterleaveAlg::execute()
     m_LivetimeSvc->setTriggerRate(triggerRate());
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
-
-    // ask for a tree corresponding to our current position: it will set all the tuple
-
-    m_selector->selectEvent();
-
-    // overwrite the event info
-    copyEventInfo();
     
     // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
