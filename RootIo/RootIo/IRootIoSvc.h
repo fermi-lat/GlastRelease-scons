@@ -29,7 +29,7 @@ public:
     //virtual bool setRootFile(const char *mc, const char *digi, const char *rec) = 0;
 
     virtual bool setRootFile(const char *mc, const char *digi, 
-                             const char *rec, const char *gcr) = 0;
+                             const char *rec, const char *gcr="") = 0;
 			     
     virtual std::string getMcFile() const = 0;
     virtual std::string getDigiFile() const = 0;

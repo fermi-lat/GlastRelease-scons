@@ -76,7 +76,7 @@ public:
     /// Handles incidents, implementing IIncidentListener interface
     virtual void handle(const Incident& inc);    
 	
-    virtual bool setRootFile(const char* mc, const char* digi, const char* rec, const char* gcr);
+    virtual bool setRootFile(const char* mc, const char* digi, const char* rec, const char* gcr="");
     virtual std::string getMcFile() const { return m_mcFile; };
     virtual std::string getDigiFile() const { return m_digiFile; };
     virtual std::string getReconFile() const { return m_reconFile; };
