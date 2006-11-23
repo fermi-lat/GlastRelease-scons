@@ -102,7 +102,7 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     if( instance!=0 ) throw std::invalid_argument("InterleaveAlg: only one instance allowed!");
 
     // declare properties with setProperties calls
-    declareProperty("RootFile",     m_fileName="");
+    declareProperty("FileName",     m_fileName="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
     declareProperty("DisableList",  m_disableList);
     declareProperty("MapName",      m_mapName="interleave_map");
@@ -111,9 +111,8 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     std::vector<std::string> tlist;
     tlist.push_back("EvtElapsedTime");
     tlist.push_back("EvtLiveTime");
-    tlist.push_back("Pt*");
-    tlist.push_back("FT1*");
-    tlist.push_back("CT*");
+    tlist.push_back("Pt*");   // use current position, etc.
+    tlist.push_back("FT1*");  // will recalculate
     m_disableList = tlist;
 
 }
@@ -136,6 +135,8 @@ StatusCode InterleaveAlg::initialize(){
     m_rootTupleSvc->addItem(m_mapName.value(), "event",  &m_event);
     m_rootTupleSvc->addItem(m_mapName.value(), "irun",   &m_irun);
     m_rootTupleSvc->addItem(m_mapName.value(), "ievent", &m_ievent);
+    m_rootTupleSvc->addItem(m_mapName.value(), "itype",  m_type);
+    m_rootTupleSvc->addItem(m_mapName.value(), "value",  &m_value);
 
 
     sc = service("LivetimeSvc", m_LivetimeSvc);
@@ -278,11 +279,11 @@ namespace {
 void InterleaveAlg::copyEventInfo()
 {
     
-    static TLeaf *  timeLeaf=0,* liveLeaf=0, *sourceLeaf=0;
+    static TLeaf *  timeLeaf=0,* liveLeaf=0, *mcidLeaf;
     if( timeLeaf==0){
         timeLeaf =  m_meritTuple->GetLeaf("EvtElapsedTime");
         liveLeaf =  m_meritTuple->GetLeaf("EvtLiveTime");
-        sourceLeaf =m_meritTuple->GetLeaf("McSourceId");
+        mcidLeaf =  m_meritTuple->GetLeaf("McSourceId");
         assert(timeLeaf!=0);
     }
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
@@ -297,6 +298,9 @@ void InterleaveAlg::copyEventInfo()
     m_event =  header->event();
     m_irun  =  static_cast<int>(m_runLeaf->GetValue());
     m_ievent=  static_cast<int>( m_eventLeaf->GetValue());
+    m_value =  m_selector->value();
+    strncpy(m_type, m_selector->name().c_str(),sizeof(m_type));
+
     m_rootTupleSvc->saveRow(m_mapName.value());
 
     // these have to be done here, since there is no algorithm 
@@ -304,11 +308,9 @@ void InterleaveAlg::copyEventInfo()
     setLeafValue(m_eventLeaf,   EvtEventId);
     setLeafValue(timeLeaf,      EvtElapsedTime);
     setLeafValue(liveLeaf,      EvtLiveTime);
-
-    //  make the source id negative; make zero -1 by offset. (2's complement)
-    if( sourceLeaf==0 ) return; // testing mode
-    float & sourceid = *static_cast<float*>(sourceLeaf->GetValuePointer());
-    sourceid=-1-sourceid;
+    SmartDataPtr<Event::MCEvent>   mcheader(eventSvc(),    EventModel::MC::Event );
+    float sourceid(mcheader->getSourceId());
+    setLeafValue(mcidLeaf, sourceid);
 }
 
 

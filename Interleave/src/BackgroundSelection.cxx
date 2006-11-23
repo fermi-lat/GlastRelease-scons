@@ -42,9 +42,11 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
     }
 
     // If passed an XML file, set up the XmlFetchEvents object
-    if (xmlFileName.find(".xml")!=std::string::npos)
+    if (xmlFileName.find(".xml")!=std::string::npos){
         m_fetch = new XmlFetchEvents(xmlFileName, varname);
-    else throw std::invalid_argument("BackgroundSelection: expect to find an XML file");
+    }else{ // did not find an option
+        throw std::invalid_argument("BackgroundSelection: expect to find an XML file");
+    }
 
     // prime the pump with the mean of the limits for initial downlink, trigger rates
     double mean( (m_fetch->minVal() + m_fetch->maxVal())/2.);
@@ -60,26 +62,24 @@ BackgroundSelection::~BackgroundSelection()
 //------------------------------------------------------------------------
 double BackgroundSelection::value()const
 {
-    return m_varleaf->GetValue();
+    double x(m_varleaf->GetValue());
+    return x;
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::selectEvent()
 {
 
-    // this is necessary due to the design of ROOT :-(
-    TDirectory *saveDir = gDirectory;
 
     // make sure we have the right tree selected for new value
     setCurrentTree(value());    
 
-    // check event offset for overflow:
-    if (m_eventOffset >= m_inputTree->GetEntries())
-        m_eventOffset = 0;
+    // grab the next event, cycling if needed
+    int bytes = m_inputTree->GetEntry(m_eventOffset++);
+    if( bytes==0){ m_eventOffset = 0; 
+        bytes = m_inputTree->GetEntry(m_eventOffset++);
+    }
+    if( bytes<=0) throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
 
-    // grab the event:
-    m_inputTree->GetEvent(m_eventOffset++);
-    // this is necessary due to the design of ROOT :-(
-    saveDir->cd();
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::disableBranches(TTree* t) 
@@ -89,16 +89,13 @@ void BackgroundSelection::disableBranches(TTree* t)
         t->SetBranchStatus((*it).c_str(), false);
     }
 
-    // restore this, if needed, for cuts
-#if 0 // why did we need this?
-    t->SetBranchStatus("FT1ZenithTheta", 1);
-#endif
-    t->SetBranchStatus("McSourceId", 1);
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::setCurrentTree(double x) 
 {
     TTree * nextTree(0);
+    // this is necessary due to the design of ROOT :-(
+    TDirectory *saveDir = gDirectory;
 
     if( m_useChain ){
         TChain* chain = new TChain();
@@ -108,6 +105,9 @@ void BackgroundSelection::setCurrentTree(double x)
     }else {
         nextTree = m_fetch->getTree(x);
     }
+    // this is necessary due to the design of ROOT :-(
+    saveDir->cd();
+
 
     if( nextTree==0) return; // still using the same treee
 
@@ -117,7 +117,7 @@ void BackgroundSelection::setCurrentTree(double x)
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
     if( length==0 ) {
-        throw std::runtime_error("BackgaroundSelection::setCurrentTree: no events in the tree");
+        throw std::runtime_error("BackgroundSelection::setCurrentTree: no events in the tree");
     }
     
     m_eventOffset = (unsigned int)(RandFlat::shoot()*(length - 1));
@@ -126,6 +126,9 @@ void BackgroundSelection::setCurrentTree(double x)
     setLeafPointers(m_inputTree);
     m_triggerRate = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate=m_fetch->getAttributeValue("downlinkRate", x);
+
+    int ret =m_inputTree->GetEntry(0); // make sure this works
+    if( ret<0 ) throw std::runtime_error("BackgroundSelection::setCurrentTree: could not read");
 
 }
 //------------------------------------------------------------------------
@@ -156,6 +159,7 @@ void BackgroundSelection::setLeafPointers(TTree* pTree)
             std::cerr << msg.str() << std::endl;
             throw std::runtime_error( msg.str());
         }else{
+            //std::cout << "setting pointer for leaf " << leaf->GetName() << std::endl;
             leaf->SetAddress(otherleaf->GetValuePointer());
         }
     }

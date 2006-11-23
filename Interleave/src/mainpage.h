@@ -25,9 +25,24 @@ Trigger.Members       = {"TriggerAlg"};
 Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
  @endverbatim
 
+ @section gleam Gleam options
+ For Gleam runs, append the following to basicOptions
+ @verbatim
+ // ------------------------
+//    interleave background
+//
+ApplicationMgr.DLLs+= { "Interleave" };
+Triggered.BranchMembers = {"TriggerAlg", "InterleaveAlg"}; //pseudo-sources do not trigger
+
+FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+FluxAlg.sources += {"sampled_background"};
+FluxAlg.sources += {"sampled_EarthAlbedo"};
+InterleaveAlg.FileName= "$(INTERLEAVEROOT)/xml/exampleBackgroundSet.xml";
+@endverbatim
+
   @section job JobOptions
 
-@param RootFile     set root file name to pass to the backgroundSelection object  
+@param Filename     set file name to pass to the backgroundSelection object  
 @param TreeName     ["MeritTuple"] name of tree
 @param DisableList List of branches to disable from being copied. Default, which can be
 appended to or replaced, is {"EvtElapsedTime","EvtLiveTime","Pt*","FT1*","CT*"}. These are the 

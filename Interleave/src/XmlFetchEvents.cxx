@@ -189,7 +189,6 @@ TTree* XmlFetchEvents::getTree(double binVal) {
     // Check to see if we are still in the same bin that was previously set up
 
     if (m_lastBinIndex >= 0 && (binVal >= m_lastBinMin) && (binVal < m_lastBinMax) ) {
-        std::cout << "no new tree needed" << std::endl;
         return 0;  // no new ttree to find.
     }
     
@@ -228,8 +227,11 @@ TTree* XmlFetchEvents::getTree(double binVal) {
         std::string fileNameStr = xmlBase::Dom::getAttribute(file, "filePath");
         facilities::Util::expandEnvVar(&fileNameStr);
         std::string treeNameStr = xmlBase::Dom::getAttribute(file, "treeName");
-        delete m_file;  // get rid of last guy
-        m_file = new TFile(fileNameStr.c_str());
+        if( m_file!=0 ) {
+            m_file->Close();
+            delete m_file;  // get rid of last guy
+        }
+        m_file = new TFile(fileNameStr.c_str(), "READONLY");
         tree = (TTree*)m_file->Get(treeNameStr.c_str());
         if( tree==0 ) throw std::runtime_error("XMLFetchEvent: did not find the TTree "+treeNameStr);
     }else{
