@@ -183,18 +183,10 @@ StatusCode meritAlg::setupTools() {
         return StatusCode::FAILURE;
     }
 
-    //@@@FP 07/08/05
-    //    const char * toolnames[] = {"McValsTool", "GltValsTool", "TkrValsTool", 
-    //        "VtxValsTool", "CalValsTool", "AcdValsTool", "EvtValsTool"};
-
-    //const char * toolnames[] = {"McValsTool", "GltValsTool", "TkrValsTool", 
-    //    "VtxValsTool", "CalValsTool", "AcdValsTool", "EvtValsTool","CalMipValsTool"};
-    //@@@FP 07/08/05
     
-    //@@@CL 06/26/06: add GcrSelectTool
     const char * toolnames[] = {"McValsTool", "GltValsTool", "TkrValsTool", 
-        "VtxValsTool", "CalValsTool", "AcdValsTool", "EvtValsTool","CalMipValsTool","GcrSelectValsTool"};
-    //@@@CL 06/26/06
+        "VtxValsTool", "CalValsTool", "AcdValsTool", "EvtValsTool"};
+    
 
     for( int i =0; i< (int)(sizeof(toolnames)/sizeof(void*)); ++i){
         m_toolvec.push_back(0);
