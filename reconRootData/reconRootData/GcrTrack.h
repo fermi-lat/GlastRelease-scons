@@ -57,7 +57,7 @@ private:
     TVector3                  getCalEntryPoint ()   const                       {return m_calEntryPoint    ;}
     TVector3                  getCalExitPoint ()    const                      {return m_calExitPoint    ;}
 
-    //void print() const;
+    void Print(Option_t *option="") const;
   
  
     ClassDef(GcrTrack,2)

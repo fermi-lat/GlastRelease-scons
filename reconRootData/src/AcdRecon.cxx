@@ -155,7 +155,9 @@ void AcdRecon::Print(Option_t *option) const {
     m_minDocaId.Print();
     cout << " Act_Dist: " << m_actDist << endl;
     m_maxActDistId.Print();
-    cout << "GammeDoca: " << m_gammaDoca << endl;
+    cout << " Act_Dist_down: " << m_actDist_down << endl;
+    m_maxActDistId_down.Print();
+    cout << "GammaDoca: " << m_gammaDoca << endl;
     cout << "RowDoca: " << endl;
     std::vector<Double_t>::const_iterator rowDocaIt;
     for (rowDocaIt = m_rowDocaCol.begin(); rowDocaIt != m_rowDocaCol.end(); rowDocaIt++) 
