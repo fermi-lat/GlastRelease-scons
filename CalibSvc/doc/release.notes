@@ -2,7 +2,7 @@
  * Package CalibSvc
  * Coordinator:  J. Bogart
  *                  EOH
-
+   v0r25p2  27-Nov-2006 jrb  Move comments out of defaultOptions.txt
    v0r25p1  6-Nov-2006  jrb  Keep up with benign astro interface change (use v2r*)
    v0r25   30-Jun-2006  jrb  Converters, test program for anc. detector calibs
    v0r24p3  17-Jun-2006 jrb  Same as p1.  Windows compiler doesn't like p2
