@@ -78,8 +78,9 @@
   <dl>
   <dt> CalibStorageType</dt> <dd> defaults to MYSQL_StorageType</dd>
   <dt> CalibFlavorList</dt> <dd>list of additional flavors (beyond vanilla,
-       which is always used) for which nodes should be created for each
-       calibration type.   </dd> 
+       which is always implicitly included) for which nodes should be 
+       created for each calibration type. "ideal" is often needed for
+       MC jobs.   </dd> 
   <dt> CalibNameList</dt> <dd>list of calibration type/flavor
        combinations beyond those of flavor "vanilla" or of a flavor 
        specified in CalibFlavorList for which the data service is requested
@@ -124,13 +125,19 @@
                        can't be found, job will issue a message and exit.
                       Otherwise the service will continue and it is up
                       to client to handle the error.</dd>
-  <dt> Host </dt>        <dd>defaults to "*", meaning "use default MySQL
-                             host" </dd>
+  <dt> Host </dt>     <dd>defaults to "*", meaning "use default MySQL
+                      host". Currently (Nov. 2006) that is
+                      glastDB.slac.stanford.edu.  For local MySQL server, 
+                      use "localhost" or "localhost.localdomain".  See also
+<a href="http://www.slac.stanford.edu/exp/glast/ground/software/notes/LocalDb.shtml">
+http://www.slac.stanford.edu/exp/glast/ground/software/notes/LocalDb.shtml</a>
+ </dd>
   <dt> DbName</dt>         <dd>defaults to "calib", the production dbs for
        calibration metadata.  Algorithm developers, etc., may need to
        use the development database, "calib_user", instead.
   </dd>
-  <dt> UseEventTime</dt>         <dd>defaults to "true". If set to "false", 
+  <dt> UseEventTime</dt>         
+    <dd>defaults to "true". If set to "false", 
        must also set CalibDataSvc.UseEventTime to "false". In this case,
        calibrations will be selected according to enter_time (see further
        job options) rather than by validity interval compared with event time.
@@ -148,14 +155,7 @@ Ignored unless UseEventTime is false.  </dd>
   CalibDataSvc.CalibTimeSource = "clock" instead.
 
 
-  @todo    Figure out what other information from the metadata needs to
-           be acquired and saved, and where it should go.
-  @todo    Write CalibROOTCnvSvc
-  @todo    Define remaining calibration TDS classes in detail; 
-           write converters.
-  @todo    implement CalibDataSvc.CalibTimeSource = "mc" 
-  @todo    do fake event clock implementation as "data" is done (and "mc"
-           will be done), without requiring user to configure a 
-           separate algorithm in job options
+  @todo    Add new conversion service which can access MOOT offline
+           calibration table.
  */
 
