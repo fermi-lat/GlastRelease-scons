@@ -1,3 +1,7 @@
 
 #include "$CALRECONROOT/src/test/singleOptions.txt"
 
+ApplicationMgr.DLLs += { "GaudiAud" } ;
+AuditorSvc.Auditors += { "CalReconAuditor" } ;
+
+

@@ -10,6 +10,7 @@
 DECLARE_FACTORY_ENTRIES( CalRecon ) 
 {
     DECLARE_SERVICE(   CalReconSvc             );
+    DECLARE_AUDITOR(   CalReconAuditor         );
     DECLARE_ALGORITHM( CalClustersAlg          );
     DECLARE_ALGORITHM( CalMipFinderAlg         );
     DECLARE_ALGORITHM( CalEventEnergyAlg       );
