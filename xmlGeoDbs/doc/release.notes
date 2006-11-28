@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r36p2 27-Nov-2006  jrb Adjust converter thicknesses downwards (and gaps
+                            between trays upwards to compensate) for cu06 
    v1r36p1 13-Nov-2006  jrb extraMaterials entity reference should resolve to
                             cu06Materials.xml
    v1r36   10-Nov-2006  jrb cu06 updates: 1) fix tile positions and sizes
