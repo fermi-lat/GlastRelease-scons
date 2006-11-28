@@ -26,7 +26,7 @@
 
     <!ENTITY TKRMatPrim     SYSTEM "../flight/flightTKRMatPrim.xml">
     <!ENTITY TKRCountPrim   SYSTEM "../flight/flightTKRCountPrim.xml">
-    <!ENTITY TKRDimPrim     SYSTEM "../flight/flightTKRDimPrim.xml">
+    <!ENTITY TKRDimPrim     SYSTEM "../cu06/cu06TKRDimPrim.xml">
     <!ENTITY TKROneTkr      SYSTEM "../flight/flightTKROneTkr.xml">
 
     <!ENTITY ACDMatPrim     SYSTEM "../flight/flightACDMatPrim.xml">
