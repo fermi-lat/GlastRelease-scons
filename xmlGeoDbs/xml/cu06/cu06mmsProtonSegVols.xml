@@ -1,13 +1,6 @@
 <?xml version="1.0"  ?>
 
-
-<!-- 1 Feb 2001   Default length unit is now mm.  Change constants
-                   accordingly.                             (jrb) 
-    22 Feb 2001   Add CVS macros, CVSid attribute for gdd     
-     1 Mar 2001   Changes for <identifier> to <idField> change in dtd.
-                  Includes combining old pair of diode identifier fields
-                  into just one and ( *sigh* ) eliminating "orient" field.
--->
+<!-- cu06 configuration with mms target, used in proton runs -->
 
 <!DOCTYPE gdd SYSTEM "../gdd.dtd"
   [
@@ -55,8 +48,8 @@
 
     <!ENTITY Materials      SYSTEM "../materials.xml">
     <!ENTITY extraMaterials SYSTEM "cu06Materials.xml">
-    <!ENTITY targetVolumes  SYSTEM "../empty.xml">
-    <!ENTITY target         SYSTEM "../empty.xml">
+    <!ENTITY targetVolumes  SYSTEM "cu06Targets.xml">
+    <!ENTITY target         SYSTEM "cu06mmsProtonTarget.xml">
   ]
 >
 <gdd CVSid="$Id$" 

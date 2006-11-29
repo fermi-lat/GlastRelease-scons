@@ -49,8 +49,8 @@
 &NADGeo;
 &oneTower;
 
-  &ACDAcd;  
-
+&ACDAcd;  
+&targetVolumes;
 <!-- Make a LATInner. This is just the usual LAT
      Missing id fields for various non-sensitive components.  
      Do we care? -->
@@ -284,7 +284,7 @@
                YREF="ISCCalYp_dy"
                ZREF="ISCCalX_dz">
        </posXYZ>
-
+       &target;
     </composition>
     
     <!-- position LATInner in the envelope LATShiftedEnv,

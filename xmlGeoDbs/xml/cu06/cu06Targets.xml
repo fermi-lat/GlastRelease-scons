@@ -1,0 +1,15 @@
+<!-- $Header$ -->
+<!-- volume definitions for mms and plexiglass target -->
+
+
+<box name="mmsTarget" 
+     XREF="mmsTargetEdge"
+     YREF="mmsTargetEdge"
+     ZREF="mmsTargetEdge"
+     materialREF="cu06blanketMat" />
+
+<box name="plexiTarget"
+     XREF="plexiTarget_x"
+     YREF="plexiTarget_y"
+     ZREF="plexiTarget_z"
+     materialREF="plexiglassMat" />
