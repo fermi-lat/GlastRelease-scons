@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r37   29-Nov-2006  jrb Add cu06 configurations including mms target, one
+                            for proton runs and one for positron runs
    v1r36p2 27-Nov-2006  jrb Adjust converter thicknesses downwards (and gaps
                             between trays upwards to compensate) for cu06 
    v1r36p1 13-Nov-2006  jrb extraMaterials entity reference should resolve to
