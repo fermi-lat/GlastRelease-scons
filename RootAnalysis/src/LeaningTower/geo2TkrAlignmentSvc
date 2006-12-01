@@ -8,6 +8,7 @@ echo
 echo "// I cannot deduce what tower id should be put here. Hence, you have to fill that in!"
 echo
 echo "tower -1"
+echo "// from file $geo"
 
 paste $geo geometry/TowerGeometryGleamv5r8.txt | gawk '{
     planeName = $1
