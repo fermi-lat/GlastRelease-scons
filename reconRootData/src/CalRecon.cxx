@@ -65,7 +65,9 @@ void CalRecon::initialize()
     if (!m_clusterCol)  m_clusterCol  = new TObjArray();
     if (!m_xtalRecCol)  m_xtalRecCol  = new TObjArray();
     if (!m_mipTrackCol) m_mipTrackCol = new TObjArray();
-    if (!m_gcrXtalCol) m_gcrXtalCol = new TObjArray();
+//    if (!m_gcrXtalCol) m_gcrXtalCol = new TObjArray();
+    m_gcrXtalCol = 0;
+    m_indGcrXtal = -1;
 }
 
 void CalRecon::Clear(Option_t* /* option */) 
@@ -74,7 +76,8 @@ void CalRecon::Clear(Option_t* /* option */)
     if (m_xtalRecCol)  m_xtalRecCol->Delete();
     if (m_clusterCol)  m_clusterCol->Delete();
     if (m_mipTrackCol) m_mipTrackCol->Delete();
-    if (m_gcrXtalCol) m_gcrXtalCol->Delete();
+    if (m_gcrXtalCol) m_gcrXtalCol->Clear("C");
+    m_indGcrXtal = -1;
     if (m_gcrTrack) m_gcrTrack = 0;
 }
 
@@ -86,9 +89,28 @@ void CalRecon::Print(Option_t *option) const
         << " # mipTracks: " << m_mipTrackCol->GetEntries()
         << " # clusters: " << m_clusterCol->GetEntries()
         << " # xtalRecDatas: " << m_xtalRecCol->GetEntries() 
-       << " # gcrXtal : " << m_gcrXtalCol->GetEntries() << std::endl;
+       << " # gcrXtal : " << m_indGcrXtal+1 << std::endl;
 }
 
+
+GcrXtal* CalRecon::addGcrXtal(const CalXtalId& xtalId, Double_t pathLength,
+    Double_t closestFaceDist, Int_t crossedFaces, const TVector3& entry,
+    const TVector3& exit) {
+    if (!m_gcrXtalCol) m_gcrXtalCol = new TClonesArray("GcrXtal", 1);
+    ++m_indGcrXtal;
+    TClonesArray &localCol = *m_gcrXtalCol;
+    new(localCol[m_indGcrXtal]) GcrXtal(xtalId, pathLength, closestFaceDist,
+                                       crossedFaces, entry, exit);
+    return ((GcrXtal*) (localCol[m_indGcrXtal]));
+}
+
+GcrXtal* CalRecon::addGcrXtal() {
+    if (!m_gcrXtalCol) m_gcrXtalCol = new TClonesArray("GcrXtal", 1);
+    ++m_indGcrXtal;
+    TClonesArray &localCol = *m_gcrXtalCol;
+    new(localCol[m_indGcrXtal]) GcrXtal();
+    return ((GcrXtal*) (localCol[m_indGcrXtal]));
+}
 
 //======================================================
 // For Unit Tests
@@ -133,6 +155,21 @@ void CalRecon::Fake( Int_t ievent, Float_t randNum ) {
 
     }
 
+    const int NUM_GCRXTALS = 3;
+    unsigned int igcrxtal;
+    for (igcrxtal=0; igcrxtal < NUM_GCRXTALS; igcrxtal++) {
+        GcrXtal *xtal=addGcrXtal();
+        xtal->Fake(ievent,igcrxtal,randNum);
+        
+        //addGcrXtal(xtal.getXtalId(),xtal.getPathLength(),
+                   //xtal.getClosestFaceDist(),xtal.getCrossedFaces(),
+                   //xtal.getEntryPoint(), xtal.getExitPoint());
+    }
+
+    GcrTrack* track = new GcrTrack();
+    track->Fake(ievent, randNum);
+    addGcrTrack(track);
+
 }
 
 #define COMPARE_TOBJ_ARRAY_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m,ref.m)
@@ -145,6 +182,9 @@ Bool_t CalRecon::CompareInRange( CalRecon & ref, const std::string & name ) {
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalCluster,getCalClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalXtalRecData,getCalXtalRecCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalMipTrack,getCalMipTrackCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(GcrXtal,getGcrXtalCol()) && result;
+
+    result = rootdatautil::CompareInRange(*(GcrTrack*)getGcrTrack(),*(GcrTrack*)ref.getGcrTrack(),"GcrTrack") && result;
 
     if (!result) {
         if ( name == "" ) {

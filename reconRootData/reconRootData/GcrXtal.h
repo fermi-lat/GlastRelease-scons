@@ -4,22 +4,9 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-#include "CalXtalRecData.h"
+//#include "CalXtalRecData.h"
 #include "commonRootData/idents/CalXtalId.h"
 
-
-#include <vector>
-#ifndef R__GLOBALSTL
-#ifndef WIN32
-using std::vector;
-#else
-using namespace std;
-
-#endif
-#endif
-
-//-----------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------
 
 class GcrXtal: public TObject
 {
@@ -66,8 +53,12 @@ private:
     TVector3                  getExitPoint () const                          {return m_exitPoint    ;}
 
 
+    void Print(Option_t *option="") const;
 
  
+    void Fake( Int_t ievent, Int_t ixtal, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange(const GcrXtal&, const std::string & name = "" )const ; // for tests
+
 
     void print() const;
   

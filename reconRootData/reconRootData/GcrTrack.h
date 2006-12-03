@@ -4,24 +4,9 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-#include "CalXtalRecData.h"
-#include "commonRootData/idents/CalXtalId.h"
+//#include "CalXtalRecData.h"
+//#include "commonRootData/idents/CalXtalId.h"
 
-
-//#include <vector>
-//#include <point>
-#ifndef R__GLOBALSTL
-#ifndef WIN32
-//using std::vector;
-//using std::point;
-#else
-using namespace std;
-
-#endif
-#endif
-
-//-----------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------
 
 class GcrTrack: public TObject
 {
@@ -59,6 +44,9 @@ private:
 
     void Print(Option_t *option="") const;
   
+    void Fake( Int_t ievent, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const GcrTrack&, const std::string & name = "" ) const ; // for tests
+
  
     ClassDef(GcrTrack,2)
 };

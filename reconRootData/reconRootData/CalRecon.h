@@ -3,11 +3,7 @@
 
 #include "TObject.h"
 #include "TObjArray.h"
-
-//#include <vector>
-//#ifdef WIN32
-//using namespace std;
-//#endif
+#include "TClonesArray.h"
 
 #include "CalEventEnergy.h"
 #include "CalXtalRecData.h"
@@ -56,7 +52,7 @@ public:
     TObjArray* getCalMipTrackCol() { return m_mipTrackCol; };
 
     /// C.L. 08/22/06 provide access to the list of GcrXtals and to GcrTrack
-    TObjArray* getGcrXtalCol() { return m_gcrXtalCol; };
+    const TClonesArray* getGcrXtalCol() const {  return m_gcrXtalCol; };
     TObject* getGcrTrack(){return m_gcrTrack;};
 
     void addCalEventEnergy(CalEventEnergy* energy) { m_eventEnergyCol->Add(energy); };
@@ -65,7 +61,11 @@ public:
     void addCalMipTrack(CalMipTrack* track)     { m_mipTrackCol->Add(track); };
 
     /// C.L. 08/22/06:
-    void addGcrXtal(GcrXtal* gcrXtal)     { m_gcrXtalCol->Add(gcrXtal); };
+    GcrXtal* addGcrXtal(const CalXtalId& xtalId, Double_t pathLength,
+                        Double_t closestFaceDist, Int_t crossedFaces, 
+                        const TVector3& entry, const TVector3& exit);
+    GcrXtal* addGcrXtal();
+    //void addGcrXtal(GcrXtal* gcrXtal)     { m_gcrXtalCol->Add(gcrXtal); };
     void addGcrTrack(GcrTrack* gcrTrack) {m_gcrTrack = gcrTrack;};
  
 private:
@@ -82,10 +82,11 @@ private:
     TObjArray* m_eventEnergyCol;
 
     ///CL: 08/22/06 list of gcrXtals
-    TObjArray* m_gcrXtalCol;
+    TClonesArray* m_gcrXtalCol;
     TObject* m_gcrTrack;
+    Int_t m_indGcrXtal;
 
-    ClassDef(CalRecon,4)
+    ClassDef(CalRecon,5)
 };
 
 #endif

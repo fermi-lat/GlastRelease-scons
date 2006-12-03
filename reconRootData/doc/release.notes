@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r11     03-Dec-06  : HMK Use TClonesArray for GcrXtal storage
 v9r10     27-Nov-06  : HMK minor cleaning
 v9r9      20-Nov-06  : CL  Updates for GCR
 v9r8      27-Oct-06  : HMK Add actDistDown variables
