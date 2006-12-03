@@ -684,17 +684,13 @@ void reconRootWriterAlg::fillGcrXtal(CalRecon *calRec, Event::GcrXtalCol* gcrXta
     
     for (gcrXtalColIterTds = gcrXtalColTds->begin(); gcrXtalColIterTds != gcrXtalColTds->end(); gcrXtalColIterTds++) {
 	
-	GcrXtal* gcrXtalRoot = new GcrXtal();
-	RootPersistence::convert(**gcrXtalColIterTds,*gcrXtalRoot) ; 
+	//GcrXtal* gcrXtalRoot = new GcrXtal();
+    GcrXtal* gcrXtalRoot = calRec->addGcrXtal();
+    RootPersistence::convert(**gcrXtalColIterTds,*gcrXtalRoot) ; 
 	
-   /** log << MSG::INFO << "gcrXtalRoot->getXtal()->getPackedId()= " << gcrXtalRoot->getXtal()->getPackedId().getTower()
-    << "/" << gcrXtalRoot->getXtal()->getPackedId().getLayer() << "/" << gcrXtalRoot->getXtal()->getPackedId().getColumn()<< endreq;   
-   */	
-	
-        calRec->addGcrXtal(gcrXtalRoot) ;   
+       // calRec->addGcrXtal(gcrXtalRoot) ;   
     }   
     
-        //log << MSG::INFO << "reconRootWriterAlg::fillGcrXtal END" << endreq;   
 
     
     return;   
