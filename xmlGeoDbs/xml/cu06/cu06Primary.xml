@@ -137,6 +137,9 @@ Definition of plexiglass used for MMS runs</prim>
 <prim name="cu06blanketMat" value="cu06blanket" type="string" uType="mat">
 Definition of cu06 blanket used for MMS runs</prim>
 
+<prim name="cu06airMat" value="cu06air" type="string" uType="mat">
+For cu06 runs embed instrument in 'air' </prim>
+
 </primCategory>
 
 <primCategory name="mmsTargetPrim">

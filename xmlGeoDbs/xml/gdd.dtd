@@ -165,7 +165,8 @@
        aweight     : atomic weight
        density     : density (g/mole)
   o composites are identified using a long name and provide a 
-  density (g/mole). They are made of a set of addmaterial elements, 
+  density [(g/mole) in ATLAS version, but for GLAST this value is in
+  gm/cm3] They are made of a set of addmaterial elements, 
   each providing
 
        material     : an IDREF towards an already defined material or element

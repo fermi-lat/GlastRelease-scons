@@ -38,7 +38,8 @@
     the Gleam code
     -->
     <box name="LATenv" 
-         XREF="bigXZDim" YREF="bigYDim" ZREF="bigXZDim" />
+         XREF="bigXZDim" YREF="bigYDim" ZREF="bigXZDim"  
+         materialREF="cu06airMat" />
          
     <box name="LATShiftedEnv"
          XREF="bigXZDim" YREF="bigYDim" ZREF="biggerZDim" />
