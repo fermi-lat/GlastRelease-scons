@@ -22,6 +22,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/StatusCode.h"
 
+#include "GlastSvc/MonteCarlo/IMcGetEventInfoTool.h"
+
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
@@ -29,6 +31,8 @@
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrPoca.h"
 
+#include "Event/MonteCarlo/McParticle.h"
+#include "Event/TopLevel/MCEvent.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -179,10 +183,17 @@ StatusCode AcdReconAlg::execute() {
         log << MSG::INFO << "No AcdDigiCol found on the TDS" << endreq;
         return sc;
     }
+
+    // reset all member variables to their defaults
+    clear();
 		
     // run the reconstruction
     sc = reconstruct(acdDigiCol);
-	
+    if ( sc.isFailure() ) {
+      return sc;
+    }
+    
+    sc = doMC(acdDigiCol);
     return sc;
 }
 
@@ -276,9 +287,6 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
-    // reset all member variables to their defaults
-    clear();
-
     // make the hits (with MIP peak data) and fill the hitMap
     static Event::AcdHitCol acdHits;
     if (m_hitTool != 0) {
@@ -409,6 +417,82 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     return sc;
 }
 
+
+StatusCode AcdReconAlg::doMC (const Event::AcdDigiCol& digiCol) {
+    // Purpose and Method:  Actually performs the ACD reconstruction.
+    //        Counts the number of hit tiles and determines the total energy 
+    //        deposited in the ACD.
+    // Inputs:  digiCol is a pointer to the TDS ACD detector data.
+    // Outputs:  Gaudi StatusCode:  returns StatusCode::FAILURE if an error 
+    //           occurs
+    // TDS Output:  EventModel::AcdRecon::AcdMCPoints
+    //              EventModel::AcdRecon::AcdMCPocas
+    // Dependencies: None
+    // Restrictions and Caveats:  None
+	
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
+		
+    Event::AcdPocaSet acdPocaSet;
+    static Event::AcdTkrHitPocaCol acdHitPocas;
+    static Event::AcdTkrPointCol acdPoints;
+    
+    sc = mcDistances(digiCol,acdPocaSet,acdPoints);
+    if (sc.isFailure()) return sc;
+
+    static Event::AcdPocaMap acdPocaMap;
+    for (  Event::AcdPocaSet::iterator itrPoca = acdPocaSet.begin(); 
+           itrPoca != acdPocaSet.end();
+	   itrPoca++ ) {
+      Event::AcdTkrHitPoca* sortPoca = const_cast<Event::AcdTkrHitPoca*>(*itrPoca);
+      if ( sortPoca == 0 ) continue;
+      acdPocaMap.add(*sortPoca);
+      acdHitPocas.push_back(sortPoca);
+    }
+
+    SmartDataPtr<Event::AcdTkrPointCol> checkAcdMcPointTds(eventSvc(), EventModel::MC::McAcdTkrPointCol);
+    if (checkAcdMcPointTds) {
+      log << MSG::DEBUG;
+      if (log.isActive()) log.stream() << "AcdRecon data already on TDS!";
+      log << endreq;
+      checkAcdMcPointTds->clear();
+      checkAcdMcPointTds->init(acdPoints);
+
+    } else {
+      // create the TDS location for the AcdRecon
+      Event::AcdTkrPointCol *acdPointCol = new Event::AcdTkrPointCol(acdPoints);
+      sc = eventSvc()->registerObject(EventModel::MC::McAcdTkrPointCol, acdPointCol);
+      if (sc.isFailure()) {
+	log << "Failed to register " << EventModel::MC::McAcdTkrPointCol << endreq;
+	return StatusCode::FAILURE;
+      }
+    }
+
+    SmartDataPtr<Event::AcdTkrHitPocaCol> checkAcdMcHitPocaTds(eventSvc(), EventModel::MC::McAcdTkrHitPocaCol);
+    if (checkAcdMcHitPocaTds) {
+      log << MSG::DEBUG;
+      if (log.isActive()) log.stream() << "AcdRecon data already on TDS!";
+      log << endreq;
+      checkAcdMcHitPocaTds->clear();
+      checkAcdMcHitPocaTds->init(acdHitPocas);
+
+    } else {
+      // create the TDS location for the AcdRecon
+      Event::AcdTkrHitPocaCol *acdHitPocaCol = new Event::AcdTkrHitPocaCol(acdHitPocas);
+      sc = eventSvc()->registerObject(EventModel::MC::McAcdTkrHitPocaCol, acdHitPocaCol);
+      if (sc.isFailure()) {
+	log << "Failed to register" << EventModel::MC::McAcdTkrHitPocaCol << endreq;
+	return StatusCode::FAILURE;
+      }
+    }
+
+    // ownership handed to TDS, clear local copies	
+    acdPocaSet.clear();
+    acdPocaMap.clear();
+    acdHitPocas.clear();
+    acdPoints.clear();
+    return sc;
+}
 
 StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, 
 				 Event::AcdPocaSet& pocaSet,
@@ -561,7 +645,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	upGapPocas.clear();	
 	downwardIntersections.clear();
 	downGapPocas.clear();
-
+	
         if ((!firstPassDone) && (m_calcCornerDoca)) {
             // take the first track, since it is the best track ignore the rest
             calcCornerDoca(trackTds->getInitialPosition(), 
@@ -685,6 +769,76 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol,
 
     return sc;
 	
+};
+
+
+StatusCode AcdReconAlg::mcDistances(const Event::AcdDigiCol& digiCol, 
+				    Event::AcdPocaSet& pocaSet,
+				    Event::AcdTkrPointCol& exitPoints) {
+
+    // Purpose and Method:  Retrieves the TkrFitTrackCol from the TDS and 
+    //  calculates the DOCA and Active Distance quantities.  Updates the
+    // local data members m_doca, m_rowDocaCol, m_act_dist, m_rowActDistCol
+    // TDS Input: EventModel::TkrRecon::TkrFitTrackCole
+	
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
+     
+    // Retrieve the information on mc tracks
+    SmartDataPtr<Event::McParticleCol> pMcParticle(eventSvc(), EventModel::MC::McParticleCol);
+    if (pMcParticle == 0) {
+      return StatusCode::SUCCESS;
+    }    
+    Event::McParticleCol::const_iterator mcFirst = pMcParticle->begin();
+    Event::McParticle* mcPart = *mcFirst;
+    if ( mcPart == 0 ) {
+      return StatusCode::SUCCESS;
+    }
+	
+    // Places to store the track endpoint and direction
+    AcdRecon::TrackData extend;
+
+    // where does this track enter the LAT?
+    AcdRecon::ExitData enter;
+
+    // grap the vertex information
+    extend.m_point = mcPart->initialPosition();
+    extend.m_dir   = mcPart->initialFourMomentum().vect().unit();
+    extend.m_energy = mcPart->initialFourMomentum().e();
+    extend.m_index = -2;
+    extend.m_upward = false;
+    Point point(extend.m_point.x(),extend.m_point.y(),extend.m_point.z());
+    Vector dir(extend.m_dir.x(),extend.m_dir.y(),extend.m_dir.z());   
+
+    // get the LAT exit points
+    if ( m_intersectionTool != 0 ) {
+      sc = m_intersectionTool->entersLAT(point,dir,true,enter);
+      if (sc.isFailure()) {
+	log << MSG::WARNING << "AcdIntersectionTool::entersLat() failed on MC track- we'll bravely carry on" << endreq;
+	return StatusCode::SUCCESS;
+      }
+    }	  
+    
+    // keep track of all the pocas to hit tiles
+    AcdRecon::PocaDataMap pocas;
+    
+    // calculate all the distances to the hit tiles at once
+    sc = hitDistances(extend,digiCol,pocas);
+    if (sc.isFailure()) return sc;
+
+    // filter the lists for further procsessing
+    AcdRecon::PocaDataPtrMap pocasCut;
+    
+    if ( m_pocaTool != 0 ) {
+      sc = m_pocaTool->filter(pocas,pocasCut);
+      if (sc.isFailure()) return sc;
+    }
+
+    // extrapolate the track upwards
+    sc = extrapolateVertex(extend, pocasCut, enter, pocaSet, exitPoints);
+    if (sc.isFailure()) return sc;
+    
+    return sc;	
 }
 
 StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack, 

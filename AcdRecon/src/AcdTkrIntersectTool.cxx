@@ -19,6 +19,18 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
+// Define the fiducial volume of the LAT
+// FIXME -- this should come for some xml reading service
+//
+// top is defined by planes at + 754.6 -> up to stacking of tiles
+// sides are defined by planes at +-840.14
+// the bottom of the ACD is at the z=-50 plane
+
+// Later we add 10 cm to make sure that we catch everything
+const double AcdTkrIntersectTool::s_top_distance  = 754.6;     // center of tiles in cols 1 and 3
+const double AcdTkrIntersectTool::s_side_distance  = 840.14;   // center of tiles in sides
+const double AcdTkrIntersectTool::s_bottom_distance  = -50.;   // bottom of ACD
+
 DECLARE_TOOL_FACTORY(AcdTkrIntersectTool)
 
 AcdTkrIntersectTool::AcdTkrIntersectTool
@@ -239,40 +251,28 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Event::TkrTrack& aTrack, bool upw
 StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vector& initialDirection, bool upward,
 					 AcdRecon::ExitData& data) {
 
-  // Define the fiducial volume of the LAT
-  // FIXME -- this should come for some xml reading service
-  //
-  // top is defined by planes at + 754.6 -> up to stacking of tiles
-  // sides are defined by planes at +-840.14
-  // Later we add 10 cm to make sure that we catch everything
-  static double top_distance = 754.6;     // center of tiles in cols 1 and 3
-  static double side_distance = 840.14;   // center of tiles in sides
-  
-  // the bottom of the ACD is at the z=-50 plane
-  static double bottom_distance = -50.; 
-
   MsgStream log(msgSvc(),name()) ;   
 
   // hits -x or +x side ?
   const double normToXIntersection =  initialDirection.x() > 0 ?  
-    -1.*side_distance - initialPosition.x() :    // hits -x side
-    1.*side_distance - initialPosition.x();      // hits +x side  
+    -1.*s_side_distance - initialPosition.x() :    // hits -x side
+    1.*s_side_distance - initialPosition.x();      // hits +x side  
   const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
     -1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
   const double sToXIntersection = normToXIntersection * slopeToXIntersection;
   
   // hits -y or +y side ?
   const double normToYIntersection = initialDirection.y() > 0 ?  
-    -1.*side_distance - initialPosition.y() :    // hits -y side
-    1.*side_distance - initialPosition.y();      // hits +y side
+    -1.*s_side_distance - initialPosition.y() :    // hits -y side
+    1.*s_side_distance - initialPosition.y();      // hits +y side
   const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
     -1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
   const double sToYIntersection = normToYIntersection * slopeToYIntersection;
   
   // hits top or bottom
   const double normToZIntersection = upward ? 
-    top_distance - initialPosition.z() :
-    bottom_distance - initialPosition.z();
+    s_top_distance - initialPosition.z() :
+    s_bottom_distance - initialPosition.z();
   const double slopeToZIntersection = 1. / initialDirection.z();
   const double sToZIntersection = normToZIntersection * slopeToZIntersection;
   
@@ -563,5 +563,86 @@ StatusCode AcdTkrIntersectTool::makeTkrPoint(const AcdRecon::TrackData& /*track*
   tkrPoint = 0;
   
   tkrPoint = new Event::AcdTkrPoint(/* track.m_index, */ data.m_arcLength,data.m_face,data.m_x,params);
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode AcdTkrIntersectTool::entersLAT(const Point& initialPosition, const Vector& initialDirection, bool upward,
+					  AcdRecon::ExitData& data) {
+
+  MsgStream log(msgSvc(),name()) ;   
+
+  // where does the track start relative to +-X sides
+  // and how long before it hits one of the sides
+  // this evals to -1 if between sides
+  double sToXIntersection(-1.);
+  if ( fabs(initialPosition.x()) > s_side_distance ) {
+    double normToXIntersection = initialPosition.x() < 0 ? 
+      -1.*s_side_distance - initialPosition.x() :    // hits -x side first
+      1.*s_side_distance - initialPosition.x();      // hits +x side frist
+    const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
+      1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
+    sToXIntersection = normToXIntersection * slopeToXIntersection;
+    // propagate to that point, make sure that other two values inside LAT also
+    if ( sToXIntersection > 0 ) {
+      Point xPlaneInter = initialPosition;  xPlaneInter += sToXIntersection* initialDirection;
+      if (  fabs(xPlaneInter.y()) < s_side_distance  &&
+	    xPlaneInter.z() > s_bottom_distance &&
+	    xPlaneInter.z() < s_top_distance ) {
+	data.m_arcLength = sToXIntersection;
+	data.m_x = xPlaneInter;
+	data.m_face = initialPosition.x() < 0 ? 1 : 3;
+      }
+    }
+  }  
+
+  // where does the track start relative to +-Y sides
+  // this evals to -1 if between sides
+  double sToYIntersection(-1.);
+  if ( fabs(initialPosition.y()) > s_side_distance ) {
+    double normToYIntersection = initialPosition.y() < 0 ? 
+      -1.*s_side_distance - initialPosition.y() :    // hits -y side first
+      1.*s_side_distance - initialPosition.y();      // hits +y side frist
+    const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
+      1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9);
+    sToYIntersection = normToYIntersection * slopeToYIntersection;
+    if ( sToYIntersection > 0 && 
+	 ( sToYIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+      // propagate to that point, make sure that other two values inside LAT also
+      Point yPlaneInter = initialPosition;  yPlaneInter += sToYIntersection* initialDirection;
+      if (  fabs(yPlaneInter.x()) < s_side_distance  &&
+	    yPlaneInter.z() > s_bottom_distance &&
+	    yPlaneInter.z() < s_top_distance ) {
+	data.m_arcLength = sToYIntersection;
+	data.m_x = yPlaneInter;
+	data.m_face = initialPosition.y() < 0 ? 2 : 4;	
+      }
+    }
+  }  
+
+  // where does the track start relative to +-Z sides
+  // this evals to -1 if between sides
+  double sToZIntersection(-1.);
+  if ( initialPosition.z() < s_bottom_distance ||
+       initialPosition.z() > s_top_distance ) {
+    double normToZIntersection = initialPosition.z() < 0 ? 
+      s_bottom_distance - initialPosition.z() :    // hits -z side first
+      s_top_distance - initialPosition.z();      // hits +z side frist
+    const double slopeToZIntersection = fabs(initialDirection.z()) > 1e-9 ? 
+      1. / initialDirection.z() : (normToZIntersection > 0. ? 1e9 : -1e9);
+    sToZIntersection = normToZIntersection * slopeToZIntersection;
+    if ( sToZIntersection > 0 && 
+	 ( sToZIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+      // propagate to that point, make sure that other two values inside LAT also
+      Point zPlaneInter = initialPosition;  zPlaneInter += sToZIntersection* initialDirection;
+      if (  fabs(zPlaneInter.x()) < s_side_distance  &&
+	    fabs(zPlaneInter.y()) < s_side_distance ) {
+	data.m_arcLength = sToZIntersection;
+	data.m_x = zPlaneInter;
+	data.m_face = initialPosition.z() > s_top_distance ? 0 : 5;	
+      }
+    }
+  }  
+
   return StatusCode::SUCCESS;
 }

@@ -82,6 +82,14 @@ class AcdReconAlg : public Algorithm
       /// routine called by execute that performs the reconstruction 
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
+      /// routine called by execute that performs the on the MC side
+      StatusCode doMC(const Event::AcdDigiCol& digiCol);
+
+      /// retrieves MC particles and calls the DOCA and Active Distance routines
+      StatusCode mcDistances(const Event::AcdDigiCol& digiCol, 
+			     Event::AcdPocaSet& pocaSet,
+			     Event::AcdTkrPointCol& exitPoints);
+
       /// retrieves tracks and calls the DOCA and Active Distance routines
       StatusCode trackDistances(const Event::AcdDigiCol& digiCol, 
 				Event::AcdPocaSet& pocaSet,

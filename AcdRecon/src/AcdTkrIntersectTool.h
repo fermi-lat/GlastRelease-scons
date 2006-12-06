@@ -66,6 +66,10 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
   virtual StatusCode exitsLAT(const Point& x, const Vector& v, bool forward,
 			      AcdRecon::ExitData& data);
 
+  // @brief calculate the arclength at which a ray enters the tracking volume
+  virtual StatusCode entersLAT(const Point& x, const Vector& v, bool forward,
+			       AcdRecon::ExitData& data);
+
   // @brief make the TDS object that states where the track left the ACD
   virtual StatusCode makeTkrPoint(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
 				  const Event::TkrTrackParams& params, Event::AcdTkrPoint*& tkrPoint );
@@ -96,6 +100,17 @@ private:
   IPropagator *    m_G4PropTool; 
   IGlastDetSvc*    m_detSvc; 
 
+  // Define the fiducial volume of the LAT
+  // FIXME -- this should come for some xml reading service
+  //
+  // top is defined by planes at + 754.6 -> up to stacking of tiles
+  // sides are defined by planes at +-840.14
+  // the bottom of the ACD is at the z=-50 plane
+
+  // Later we add 10 cm to make sure that we catch everything
+  static const double s_top_distance; // = 754.6;     // center of tiles in cols 1 and 3
+  static const double s_side_distance; // = 840.14;   // center of tiles in sides
+  static const double s_bottom_distance; // = -50.; 
  
 } ;
 
