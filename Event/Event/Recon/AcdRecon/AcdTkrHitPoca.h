@@ -107,11 +107,18 @@ namespace Event {
     /// destructor - deleting the hits pointed
     /// by the vector elements
     ~AcdTkrHitPocaCol() { delTkrHitPocas();}
-        
+
     
     // GAUDI members to be use by the converters
     static const CLID& classID() {return CLID_AcdTkrHitPocaCol;}
     virtual const CLID& clID() const {return classID();}
+
+    /// takes ownership of a vector AcdTkrHitPoca
+    void init(std::vector<AcdTkrHitPoca*>& acdhits) {
+      for ( std::vector<AcdTkrHitPoca*>::iterator itr = acdhits.begin(); itr != acdhits.end(); itr++ ) {
+	push_back(*itr);
+      }
+    }
     
     /// add new AcdTkrHitPoca
     void add(AcdTkrHitPoca* cl) {push_back(cl);}

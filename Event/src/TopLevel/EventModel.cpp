@@ -35,6 +35,10 @@ std::string EventModel::MC::McPartToTkrPatCandTab     = EventModel::MC::Event  +
 std::string EventModel::MC::McPartToTkrTrackHitTab    = EventModel::MC::Event  + "/McPartToTkrTrackHitTab";
 std::string EventModel::MC::McPartToTkrTrackTab       = EventModel::MC::Event  + "/McPartToTkrTrackTab";
 
+std::string EventModel::MC::McAcdTkrPointCol          = EventModel::MC::Event  + "/AcdTkrPointCol";
+std::string EventModel::MC::McAcdTkrHitPocaCol        = EventModel::MC::Event  + "/AcdTkrHitPocaCol";
+
+
 // Digi event
 std::string EventModel::Digi::Event                   = EventModel::EventHeader + "/Digi";
 std::string EventModel::Digi::AcdDigiCol              = EventModel::Digi::Event + "/AcdDigiCol";
