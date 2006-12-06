@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r37p1  6-Dec-2006  jrb Embed cu06 in 'air'
    v1r37   29-Nov-2006  jrb Add cu06 configurations including mms target, one
                             for proton runs and one for positron runs
    v1r36p2 27-Nov-2006  jrb Adjust converter thicknesses downwards (and gaps
