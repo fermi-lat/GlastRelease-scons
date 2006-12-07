@@ -38,4 +38,4 @@ private
 #needed only for the test app
 use CalibSvc
 # sets up standard test executable and job options file
-apply_pattern package_test
+# apply_pattern package_test
