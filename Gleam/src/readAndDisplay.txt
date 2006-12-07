@@ -10,6 +10,7 @@ ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud", "FluxSvc", "GlastSvc"};
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
+ApplicationMgr.DLLs+=    {"TkrUtil","G4Propagator", "G4Generator", "CalibSvc"};
 ApplicationMgr.DLLs+=    {"HepRepSvc", "HepRepXml", "HepRepCorba"}; 
 ApplicationMgr.ExtSvc += {"HepRepSvc","EventSelector/EventSelector"}; 
 ApplicationMgr.Runable = "HepRepSvc";
@@ -55,9 +56,7 @@ HepRepSvc.startFred = "$Fred_DIR";
 mcRootReaderAlg.mcRootFileList = {"$(ROOTTESTDATAROOT)/data/default/mc.root"};
 digiRootReaderAlg.digiRootFileList = {"$(ROOTTESTDATAROOT)/data/default/digi.root"};
 reconRootReaderAlg.reconRootFileList = {"$(ROOTTESTDATAROOT)/data/default/recon.root"};
-
-ApplicationMgr.EvtMax  = 1000000;
-
+ApplicationMgr.EvtMax  = 10;
 
 // -------end readAndDisplay-specific-------
 // ----------------------------------
