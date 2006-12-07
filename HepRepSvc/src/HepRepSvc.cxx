@@ -127,7 +127,7 @@ StatusCode HepRepSvc::initialize ()
 
     // get the TkrGeometry Service    
     ITkrGeometrySvc* tgsvc = 0;
-    status = service("TkrGeometrySvc", tgsvc);
+    status = service("TkrGeometrySvc", tgsvc, true);
     if( status.isFailure()) {
       log << MSG::ERROR << "Could not find TkrGeometrySvc" << endreq;
       return status;
