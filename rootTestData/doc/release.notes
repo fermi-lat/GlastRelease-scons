@@ -3,7 +3,8 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v3r6p5    07-Dec-06  LSR New version of the default root files
+v3r6p6    07-Dec-06  LSR New version of the default root files
+v3r6p5    07-Dec-06  LSR New version of the vertical muons root files
 v3r6p4    23-Nov-06  DC  remove gamma Root files, which return to CalRecon
                          so to remove some kind of cyclic dependancy with CalRecon
 v3r6p3    16-Nov-06  DC  remove CalUtil from Gaudi DLLs to load
