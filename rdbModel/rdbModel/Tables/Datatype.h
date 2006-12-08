@@ -71,16 +71,16 @@ namespace rdbModel{
     bool okValue(const std::string& val) const;
     bool isCompatible(const Datatype* other) const;
     bool isUnsigned() {return m_isUnsigned;}
-    bool isText() {return ((m_type == TYPEtinytext) ||
-                           (m_type == TYPEtext) ||
-                           (m_type == TYPEmediumtext) ||
-                           (m_type == TYPElongtext) ); }
+    bool isText() const {return ((m_type == TYPEtinytext) ||
+                                 (m_type == TYPEtext) ||
+                                 (m_type == TYPEmediumtext) ||
+                                 (m_type == TYPElongtext) ); }
                            
                            
-    bool isBlob() {return ((m_type == TYPEtinyblob) ||
-                           (m_type == TYPEblob) ||
-                           (m_type == TYPEmediumblob) ||
-                           (m_type == TYPElongblob) ); }
+    bool isBlob() const {return ((m_type == TYPEtinyblob) ||
+                                 (m_type == TYPEblob) ||
+                                 (m_type == TYPEmediumblob) ||
+                                 (m_type == TYPElongblob) ); }
                            
     TYPES getType() const {return m_type;}
     int   getOutputSize() const {return m_outputSize;}
