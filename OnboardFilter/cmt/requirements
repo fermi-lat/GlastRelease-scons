@@ -32,7 +32,7 @@ macro headers "" WIN32 "*.h"
 
 library OnboardFilter \
  -s=../OnboardFilter $(headers)\
- -s=../src *.cxx \
+ -s=../src *.cxx *.h \
  -s=../src/Dll *.cxx 
  
 
