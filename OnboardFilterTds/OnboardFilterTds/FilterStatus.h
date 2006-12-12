@@ -28,78 +28,86 @@ static const CLID& CLID_FilterStatus = InterfaceID("FilterStatus", 0, 0);
 class OnboardFilter;
 
 
-namespace OnboardFilterTds{
-  class TowerHits : public DataObject{
-  public:
+namespace OnboardFilterTds
+{
+    class TowerHits : public DataObject{
+public:
     struct towerRecord{
-      unsigned char lcnt[2];
-      int layerMaps[2];
-      unsigned char cnt[36];
-      short int *beg[36];
+        unsigned char lcnt[2];
+        int layerMaps[2];
+        unsigned char cnt[36];
+        short int *beg[36];
     };
     TowerHits() : DataObject() {
-      for(int counter=0;counter<16;counter++){
-        for(int layerCounter=0;layerCounter<36;layerCounter++){
-          m_hits[counter].cnt[layerCounter]=0;
-          m_hits[counter].beg[layerCounter]=NULL;
+        for(int counter=0;counter<16;counter++){
+            m_hits[counter].lcnt[0]      = m_hits[counter].lcnt[1]      = 0;
+            m_hits[counter].layerMaps[0] = m_hits[counter].layerMaps[1] = 0;
+            for(int layerCounter=0;layerCounter<36;layerCounter++){
+                m_hits[counter].cnt[layerCounter]=0;
+                m_hits[counter].beg[layerCounter]=NULL;
+            }
         }
-      }
     };
     virtual ~TowerHits(){
-      for(int counter=0;counter<16;counter++){
-        for(int layerCounter=0;layerCounter<36;layerCounter++){
-          if(m_hits[counter].beg[layerCounter]){
-            delete[] m_hits[counter].beg[layerCounter];
-          }
+        for(int counter=0;counter<16;counter++){
+            for(int layerCounter=0;layerCounter<36;layerCounter++){
+                if(m_hits[counter].beg[layerCounter]){
+                    delete[] m_hits[counter].beg[layerCounter];
+                }
+            }
         }
-      }
     };
     TowerHits(const TowerHits &toCopy){
-      for(int counter=0;counter<16;counter++){
-        m_hits[counter].lcnt[0]=toCopy.m_hits[counter].lcnt[0];
-        m_hits[counter].lcnt[1]=toCopy.m_hits[counter].lcnt[1];
-        m_hits[counter].layerMaps[0]=toCopy.m_hits[counter].layerMaps[0];
-        m_hits[counter].layerMaps[1]=toCopy.m_hits[counter].layerMaps[1];
-        for(int layerCounter=0;layerCounter<36;layerCounter++){
-          m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter];
-          m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
-          memcpy(m_hits[counter].beg[layerCounter],toCopy.m_hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+        for(int counter=0;counter<16;counter++){
+            m_hits[counter].lcnt[0]=toCopy.m_hits[counter].lcnt[0];
+            m_hits[counter].lcnt[1]=toCopy.m_hits[counter].lcnt[1];
+            m_hits[counter].layerMaps[0]=toCopy.m_hits[counter].layerMaps[0];
+            m_hits[counter].layerMaps[1]=toCopy.m_hits[counter].layerMaps[1];
+            for(int layerCounter=0;layerCounter<36;layerCounter++){
+                m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter];
+                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+                memcpy(m_hits[counter].beg[layerCounter],
+                       toCopy.m_hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+            }
         }
-      }
     };
     inline const towerRecord* get(){
-      return m_hits;
+        return m_hits;
     };
     inline void set(towerRecord* hits){
-      for(int counter=0;counter<16;counter++){
-        m_hits[counter].lcnt[0]=hits[counter].lcnt[0];
-        m_hits[counter].lcnt[1]=hits[counter].lcnt[1];
-        m_hits[counter].layerMaps[0]=hits[counter].layerMaps[0];
-        m_hits[counter].layerMaps[1]=hits[counter].layerMaps[1];
-        for(int layerCounter=0;layerCounter<36;layerCounter++){
-          m_hits[counter].cnt[layerCounter]=hits[counter].cnt[layerCounter];
-          if(m_hits[counter].beg[layerCounter]){
-            delete[] m_hits[counter].beg[layerCounter];
-          }
-          m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
-          memcpy(m_hits[counter].beg[layerCounter],hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+        for(int counter=0;counter<16;counter++){
+            m_hits[counter].lcnt[0]=hits[counter].lcnt[0];
+            m_hits[counter].lcnt[1]=hits[counter].lcnt[1];
+            m_hits[counter].layerMaps[0]=hits[counter].layerMaps[0];
+            m_hits[counter].layerMaps[1]=hits[counter].layerMaps[1];
+            for(int layerCounter=0;layerCounter<36;layerCounter++){
+                m_hits[counter].cnt[layerCounter]=hits[counter].cnt[layerCounter];
+                if(m_hits[counter].beg[layerCounter]){
+                    delete[] m_hits[counter].beg[layerCounter];
+                }
+                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+                memcpy(m_hits[counter].beg[layerCounter],
+                       hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+            }
         }
-      }
     };
+  
     towerRecord m_hits[16];
-  };
-  class track{
-  public:
+};
+
+
+class track{
+public:
     inline track(){};
     inline track(const track &copy){
-      lowCoord=copy.lowCoord;
-      highCoord=copy.highCoord;
-      exLowCoord=copy.exLowCoord;
-      exHighCoord=copy.exHighCoord;
-      length=copy.length;
-      phi_rad=copy.phi_rad;
-      theta_rad=copy.theta_rad;
-      numhits=copy.numhits;
+        lowCoord=copy.lowCoord;
+        highCoord=copy.highCoord;
+        exLowCoord=copy.exLowCoord;
+        exHighCoord=copy.exHighCoord;
+        length=copy.length;
+        phi_rad=copy.phi_rad;
+        theta_rad=copy.theta_rad;
+        numhits=copy.numhits;
     };
     int numhits;
     double phi_rad,theta_rad;
@@ -108,68 +116,99 @@ namespace OnboardFilterTds{
     std::vector<double> exLowCoord;
     std::vector<double> exHighCoord;
     double length;
-  };
+};
 
 
-  class FilterStatus : public DataObject{
-  public:
+class FilterStatus : public DataObject{
+public:
     FilterStatus() : DataObject() {
-    m_status=0;
-    m_stageEnergy=0;
-    m_tcids=0;
-    m_ebfsize=0;
+        m_status            = 0;
+        m_stageEnergy       = 0;
+        m_tcids             = 0;
+        m_ebfsize           = 0;
 
-    // init GEM
-    m_gem_thrTkr = 0;
-    m_gem_calHiLo = 0;
-    m_gem_condsumCno = 0;
-    m_gem_acd_vetoes_XZ = 0;
-    m_gem_acd_vetoes_YZ = 0;
-    m_gem_acd_vetoes_XY = 0;   
-    m_gem_acd_vetoes_RU = 0;
-    m_gem_livetime = 0;
-    m_gem_trgtime = 0;
-    m_gem_ppstime = 0;
-    m_gem_discarded = 0;
-    m_gem_prescaled = 0;
-    m_gem_sent = 0;
+        // init GEM
+        m_gem_thrTkr        = 0;
+        m_gem_calHiLo       = 0;
+        m_gem_condsumCno    = 0;
+        m_gem_acd_vetoes_XZ = 0;
+        m_gem_acd_vetoes_YZ = 0;
+        m_gem_acd_vetoes_XY = 0;   
+        m_gem_acd_vetoes_RU = 0;
+        m_gem_livetime      = 0;
+        m_gem_trgtime       = 0;
+        m_gem_ppstime       = 0;
+        m_gem_discarded     = 0;
+        m_gem_prescaled     = 0;
+        m_gem_sent          = 0;
 
-    m_acd_xy=0;
-    m_acd_xz=0;
-    m_acd_yz=0;
-    m_numLogsHit = 0;
-    m_vetoword = 0;
+        m_xHits             = 0;
+        m_yHits             = 0;
+        m_slopeXZ           = 0.0;
+        m_slopeYZ           = 0.0;
+        m_intXZ             = 0.0;
+        m_intYZ             = 0.0;
 
-    m_xHits = 0;
-    m_yHits = 0;
-    m_slopeXZ = 0.0;
-    m_slopeYZ = 0.0;
-    m_intXZ = 0.0;
-    m_intYZ = 0.0;
+        m_acd_xy            = 0;
+        m_acd_xz            = 0;
+        m_acd_yz            = 0;
+        m_vetoword          = 0;
 
+        m_numLogsHit        = 0;
 
-    unsigned int counter;
-    for(counter=0;counter<16;counter++){
-      m_acdStatus[counter]=0;
-      m_layers[counter]=0;
-      m_prjs.curCnt=0;
-      m_prjs.twrMsk=0;
-
-      m_xcapture[counter] = 0;
-      m_ycapture[counter] = 0;
-      m_xy00[counter] = 0;
-      m_xy11[counter] = 0;
-      m_xy22[counter] = 0;
-      m_xy33[counter] = 0;
-    }
-    for (counter = 0; counter < 8; counter++) {
-        m_layerEnergy[counter] = 0;
-    }
-    m_separation=-1;
-    m_tracks.clear();
+        m_separation        = -1;
+        m_tracks.clear();
   
-    m_tmsk = 0;
-  }
+        m_tmsk              = 0;
+
+        //****TEMP
+        m_separation2       = -1.;;
+        m_x_report          =  0.;  
+        m_y_report          =  0.;
+        m_xavg              =  0.;
+        m_yavg              =  0.;
+        m_xslopeL           =  0.;
+        m_yslopeL           =  0.;
+        m_xslopeAvg         =  0.;
+        m_yslopeAvg         =  0.;
+        m_long_firstanglex  =  0.;
+        m_long_firstangley  =  0.;
+        m_xslopetower       =  0.;
+        m_yslopetower       =  0.;
+        m_xangleL           =  0.;
+        m_yangleL           =  0.;
+        m_xlongestB         =  0.;
+        m_ylongestB         =  0.;
+        m_highestlayer      =  0.;
+
+        double m_houghsep   =  0.;
+        //****TEMP
+
+        // Zero the EDR_tkr structure
+        memset(&m_tkr, 0, sizeof(EDR_tkr));
+
+        // Zero the TFC_projections structure
+        memset(&m_prjs, 0, sizeof(TFC_projections));
+
+        // zero log data
+        memset(m_logData, 0, 16*8*12*sizeof(LogInfo));
+
+        unsigned int counter;
+        // Loop over towers
+        for(counter=0;counter<16;counter++){
+            m_acdStatus[counter] = 0;
+            m_layers[counter]    = 0;
+            m_xcapture[counter]  = 0;
+            m_ycapture[counter]  = 0;
+            m_xy00[counter]      = 0;
+            m_xy11[counter]      = 0;
+            m_xy22[counter]      = 0;
+            m_xy33[counter]      = 0;
+        }
+        for (counter = 0; counter < 8; counter++) {
+            m_layerEnergy[counter] = 0;
+        }
+    }
 
     virtual ~FilterStatus() { };
 
@@ -355,7 +394,7 @@ namespace OnboardFilterTds{
 
     //****TEMP
 
-  private:
+private:
     ///Filter status code
     unsigned int m_status;
     ///Energy in CAL
