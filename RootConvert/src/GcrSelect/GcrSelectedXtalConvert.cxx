@@ -1,7 +1,5 @@
 
 #include <RootConvert/GcrSelect/GcrSelectedXtalConvert.h>
-//#include <RootConvert/Recon/CalXtalRecDataConvert.h>
-//#include <RootConvert/Recon/CalParamsConvert.h>
 #include <RootConvert/Utilities/Toolkit.h>
 
 namespace RootPersistence {
@@ -9,12 +7,6 @@ namespace RootPersistence {
 void convert( const Event::GcrSelectedXtal& gcrSelXtalTds, GcrSelectedXtal& gcrSelXtalRoot )
 {
 
-    //std::cout << "GcrXtalConvert::convert from TDS to ROOt BEGIN" << std::endl;   
-
-
-    
-    //Event::CalXtalRecData* xTalTds = gcrXtalTds.getXtal ();
-    
     CalXtalId rootId = RootPersistence::convert(gcrSelXtalTds.getXtalId()) ; 
     double pathLength =   gcrSelXtalTds.getPathLength ();
     double rawEnergy =   gcrSelXtalTds.getRawEnergy();
@@ -22,9 +14,6 @@ void convert( const Event::GcrSelectedXtal& gcrSelXtalTds, GcrSelectedXtal& gcrS
     double closestFaceDist = gcrSelXtalTds.getClosestFaceDist();
     int crossedFaces = gcrSelXtalTds.getCrossedFaces();  
     
-    
-   // CalXtalRecData* xTalRoot = new CalXtalRecData();
-   // convert(*xTalTds, *xTalRoot);
     
     gcrSelXtalRoot.setXtalId(rootId);
     gcrSelXtalRoot.setPathLength(pathLength);
@@ -65,10 +54,6 @@ void convert( const Event::GcrSelectedXtal& gcrSelXtalTds, GcrSelectedXtal& gcrS
  
 void convert( const GcrSelectedXtal& gcrSelXtalRoot, Event::GcrSelectedXtal& gcrSelXtalTds )
 {
-    //std::cout << "GcrXtalConvert::convert from ROOT to TDS BEGIN" << std::endl;   
-    
-    
-    //CalXtalRecData* xTalRoot = gcrXtalRoot.getXtal();
     idents::CalXtalId tdsId = RootPersistence::convert(gcrSelXtalRoot.getXtalId()) ;    
     double pathLength = gcrSelXtalRoot.getPathLength();
     double rawEnergy =   gcrSelXtalRoot.getRawEnergy();
