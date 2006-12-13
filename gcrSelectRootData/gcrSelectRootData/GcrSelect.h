@@ -30,7 +30,7 @@ public:
     Bool_t CompareInRange( const GcrSelect &, const std::string & name = "" ) const; // for tests
     void Print(Option_t *option="") const;
     const TClonesArray* getGcrSelectedXtalCol() const { return m_gcrSelectedXtalCol; };
-    TObject* getGcrSelectVals() { return m_gcrSelectVals; };
+    const GcrSelectVals* getGcrSelectVals() const { return m_gcrSelectVals; };
     
     /// C.L. 08/22/06:
     //void addGcrSelectedXtal(GcrSelectedXtal* gcrSelectedXtal){ m_gcrSelectedXtalCol->Add(gcrSelectedXtal); };
@@ -41,7 +41,7 @@ private:
     
     Int_t m_indGcrSelectXtal;
     TClonesArray* m_gcrSelectedXtalCol;
-    TObject* m_gcrSelectVals;
+    GcrSelectVals* m_gcrSelectVals;
     
 
     ClassDef(GcrSelect,6)

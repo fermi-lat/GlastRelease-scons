@@ -85,7 +85,7 @@ Bool_t GcrSelect::CompareInRange(const GcrSelect & ref, const std::string & name
 
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(GcrSelectedXtal,getGcrSelectedXtalCol()) && result ;
 
-    result = ((GcrSelectVals*)m_gcrSelectVals)->CompareInRange(*(GcrSelectVals*)(ref.getGcrSelectVals()), "GcrSelectVals") && result;
+    result = m_gcrSelectVals->CompareInRange(*(ref.getGcrSelectVals()), "GcrSelectVals") && result;
 
     if (!result) {
         if ( name == "" ) {

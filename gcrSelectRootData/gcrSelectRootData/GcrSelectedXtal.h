@@ -33,13 +33,13 @@ private:
     ~GcrSelectedXtal()  {};
   
     GcrSelectedXtal(CalXtalId xtalId, Double_t rawEnergy, Double_t pathLength, Double_t corrEnergy, Int_t selectGrade, Double_t closestFaceDist, Int_t crossedFaces, TVector3 entryPoint, TVector3 exitPoint)
-      :m_xtalId(xtalId),
+      :m_selectGrade(selectGrade),
+       m_crossedFaces(crossedFaces),
+       m_xtalId(xtalId),
        m_rawEnergy(rawEnergy),
        m_pathLength(pathLength),
        m_corrEnergy(corrEnergy),
-       m_selectGrade(selectGrade),
        m_closestFaceDist(closestFaceDist),
-       m_crossedFaces(crossedFaces),
        m_entryPoint(entryPoint),
        m_exitPoint(exitPoint)
        {}

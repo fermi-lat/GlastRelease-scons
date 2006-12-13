@@ -3,6 +3,7 @@ package gcrSelectRootData
 package manager:C.Lavalley 
 @verbatim
 
+v2r1     HMK store GcrSelectVals as a GcrSelectVals not a TObject
 v2r0     HMK use TClonesARray rather than TObjARray (not backward compatible)
 v1r2p1   TU  Removed rootcint cxx and h files since they are generated at build
 v1r2     CL  test tag for RM
