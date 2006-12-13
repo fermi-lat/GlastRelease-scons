@@ -44,7 +44,9 @@ public:
     UInt_t getRunId() const { return m_runId; };
 
     const GcrSelect* getGcrSelect()  const {return m_gcrSelect;}
+    GcrSelect* getGcrSelect() {return m_gcrSelect;}
     
+
 
     UInt_t getEventFlags() const { return m_eventFlags; };
     Bool_t goodEvent() const { return (m_eventFlags == 0); };
