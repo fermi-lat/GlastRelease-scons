@@ -2,16 +2,12 @@
 #define GCRSELECTEVENT_H
 
 #include "TObject.h"
-//#include "CalRecon.h"
-//#include "TkrRecon.h"
-//#include "AcdRecon.h"
 #include "GcrSelect.h"
 
 /** @class GcrSelectEvent
  * @brief Primary Root Recon Object - top level object in Root Tree.
  *
- * Portal through which all recon data is accessed.  
- * A ReconEvent object contains:
+ * A GcrSelectEvent object contains:
  * -# Run Number
  * -# Event Id
  * -# A pointer to a GcrSelect object
@@ -39,23 +35,15 @@ public:
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
 
     void Clear(Option_t *option="");
-    //void Fake( Int_t ievent, Float_t randNum ) ; // for tests
-    //Bool_t CompareInRange( const ReconEvent &, const std::string & name = "" ) const ; // for tests
+    void Fake( Int_t ievent, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const GcrSelectEvent &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
 
-    UInt_t getEventId() { return m_eventId; };
+    UInt_t getEventId()  const{ return m_eventId; };
 
-    UInt_t getRunId() { return m_runId; };
+    UInt_t getRunId() const { return m_runId; };
 
-    //AcdRecon* getAcdRecon() { return m_acd; };
-
-    /// provide access to the CAL recon data
-    //CalRecon* getCalRecon() { return m_cal; };
-
-    ///  Access the TKR recon data
-    //TkrRecon* getTkrRecon() { return m_tkr; };
-
-    GcrSelect* getGcrSelect() {return m_gcrSelect;}
+    const GcrSelect* getGcrSelect()  const {return m_gcrSelect;}
     
 
     UInt_t getEventFlags() const { return m_eventFlags; };
@@ -68,14 +56,12 @@ private:
     UInt_t m_eventId;
 	/// Run number
     UInt_t m_runId;
-    
-    GcrSelect *m_gcrSelect;
-    /// pointer to Recon Header data
-    //ReconHeader m_recFlags;
     /// Do the easy thing and add flags here
     UInt_t m_eventFlags;
+    
+    GcrSelect *m_gcrSelect;
 
-    ClassDef(GcrSelectEvent,3) 
+    ClassDef(GcrSelectEvent,4) 
 };
 
 #endif

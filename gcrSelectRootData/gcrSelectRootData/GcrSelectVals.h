@@ -5,17 +5,6 @@
 #include "TVector3.h"
 
 
-
-#include <vector>
-#ifndef R__GLOBALSTL
-#ifndef WIN32
-using std::vector;
-#else
-using namespace std;
-
-#endif
-#endif
-
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -39,6 +28,12 @@ private:
        m_acdZ(acdZ),
        m_interactionParams(interactionParams)
        {}
+
+    void Clear(Option_t *option="");
+    void Print(Option_t *option="")const;
+
+    void Fake(Int_t ievent, Float_t randNum);
+    Bool_t CompareInRange(const GcrSelectVals &val, const std::string &name="") const;
   
 
     void                   setInferedZ (Int_t inferedZ)         {m_inferedZ  = inferedZ;}
@@ -49,7 +44,6 @@ private:
     Int_t                    getAcdZ ()        const                  {return m_acdZ    ;}
     Int_t                 getInteractionParams () const                          {return m_interactionParams    ;}
 
-    //void print() const;
   
  
     ClassDef(GcrSelectVals,2)

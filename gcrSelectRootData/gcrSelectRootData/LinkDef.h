@@ -14,7 +14,6 @@
 #pragma link C++ class GcrSelectEvent+;
 
 #pragma link C++ class GcrSelect+;
-//#pragma link C++ class GcrXtal+;
 #pragma link C++ class GcrSelectedXtal+;
 #pragma link C++ class GcrSelectVals+;
 

@@ -1,4 +1,3 @@
-#include "reconRootData/CalRecon.h"
 #include "gcrSelectRootData/GcrSelect.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
@@ -7,20 +6,13 @@ ClassImp(GcrSelect)
 
 GcrSelect::GcrSelect() 
 {
-    //m_gcrXtalCol = 0;
     m_gcrSelectedXtalCol = 0;
     m_gcrSelectVals = 0;
+    m_indGcrSelectXtal =-1;
 }
 
 GcrSelect::~GcrSelect() 
 {
-    
-    /**if (m_gcrXtalCol) 
-    {
-        m_gcrXtalCol->Delete();
-        delete m_gcrXtalCol;
-        m_gcrXtalCol = 0;
-    }*/
     
     if (m_gcrSelectedXtalCol) 
     {
@@ -34,28 +26,34 @@ GcrSelect::~GcrSelect()
 
 void GcrSelect::initialize() 
 {
-    //if (!m_gcrXtalCol) m_gcrXtalCol = new TObjArray();
-    if (!m_gcrSelectedXtalCol) m_gcrSelectedXtalCol = new TObjArray();
-    //if (!m_gcrSelectVals) m_gcrSelectVals = new TObject();
+    m_indGcrSelectXtal =-1;
+    //if (!m_gcrSelectedXtalCol) m_gcrSelectedXtalCol = new TObjArray();
 
 }
 
 void GcrSelect::Clear(Option_t* /* option */) 
 {
-    //if (m_gcrXtalCol) m_gcrXtalCol->Delete();
-    if (m_gcrSelectedXtalCol) m_gcrSelectedXtalCol->Delete();
+    if (m_gcrSelectedXtalCol) m_gcrSelectedXtalCol->Clear("C");
+    m_indGcrSelectXtal = -1;
     if (m_gcrSelectVals) m_gcrSelectVals =0;
     
+}
+
+GcrSelectedXtal* GcrSelect::addGcrSelectedXtal() {
+
+    if (!m_gcrSelectedXtalCol) m_gcrSelectedXtalCol = new TClonesArray("GcrSelectedXtal", 1);
+    ++m_indGcrSelectXtal;
+    TClonesArray &localCol = *m_gcrSelectedXtalCol;
+    new(localCol[m_indGcrSelectXtal]) GcrSelectedXtal();
+    return ((GcrSelectedXtal*) (localCol[m_indGcrSelectXtal]));
+
 }
 
 void GcrSelect::Print(Option_t *option) const 
 {
     TObject::Print(option);
     std::cout
-        //<< " # gcrXtal : " << m_gcrXtalCol->GetEntries() 
-       << " # gcrSelectedXtal : " << m_gcrSelectedXtalCol->GetEntries() 
-	
-	
+       << " # gcrSelectedXtal : " << m_indGcrSelectXtal+1
 	<< std::endl;
 }
 
@@ -64,57 +62,30 @@ void GcrSelect::Print(Option_t *option) const
 // For Unit Tests
 //======================================================
 
-/**void CalRecon::Fake( Int_t ievent, Float_t randNum ) {
+void GcrSelect::Fake( Int_t ievent, Float_t randNum ) {
 
-    const UInt_t NUM_XTALS = 10;
-    const UInt_t NUM_EVENT_ENERGIES = 2 ;
-    const UInt_t NUM_CLUSTERS = 20;
-    const UInt_t NUM_MIP_TRACKS = 5;
+    GcrSelectVals* m_gcrSelectVals = new GcrSelectVals();
+    m_gcrSelectVals->Fake(ievent, randNum);
+    addGcrSelectVals(m_gcrSelectVals);
 
-    initialize() ;
-    Clear() ;
-
-    UInt_t ienergy;
-    for (ienergy = 0; ienergy < NUM_EVENT_ENERGIES ; ienergy++ ) {
-        CalEventEnergy * energy = new CalEventEnergy() ;
-        energy->Fake(ievent,ienergy,randNum) ;
-        addCalEventEnergy(energy);
-    }
-
-    UInt_t icluster;
-    for (icluster = 0; icluster < NUM_CLUSTERS ; icluster++ ) {
-        CalCluster *cluster = new CalCluster();
-        cluster->Fake(ievent,icluster,randNum) ;
-        addCalCluster(cluster);
-    }
-
-    UInt_t ixtal;
-    for (ixtal = 0; ixtal < NUM_XTALS ; ixtal++) {
-        CalXtalRecData *xtal = new CalXtalRecData();
-        xtal->Fake(ievent,ixtal,randNum) ;
-        addXtalRecData(xtal);
-    }
-
-    unsigned int imip;
-    for (imip = 0; imip < NUM_MIP_TRACKS ; imip++) {
-        CalMipTrack * mipTrack = new CalMipTrack ;
-        mipTrack->Fake(ievent,imip,randNum) ;
-        addCalMipTrack(mipTrack);
+    const Int_t numXtals = 5;
+    Int_t ixtal;
+    for (ixtal = 0; ixtal < numXtals; ixtal++) {
+        GcrSelectedXtal* xtal = addGcrSelectedXtal();
+        xtal->Fake(ievent, ixtal, randNum);
 
     }
-
 }
 
 #define COMPARE_TOBJ_ARRAY_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m,ref.m)
 
-Bool_t CalRecon::CompareInRange( CalRecon & ref, const std::string & name ) {
+Bool_t GcrSelect::CompareInRange(const GcrSelect & ref, const std::string & name ) const {
 
     bool result = true ;
 
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalEventEnergy,getCalEventEnergyCol()) && result ;
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalCluster,getCalClusterCol()) && result ;
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalXtalRecData,getCalXtalRecCol()) && result ;
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalMipTrack,getCalMipTrackCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(GcrSelectedXtal,getGcrSelectedXtalCol()) && result ;
+
+    result = ((GcrSelectVals*)m_gcrSelectVals)->CompareInRange(*(GcrSelectVals*)(ref.getGcrSelectVals()), "GcrSelectVals") && result;
 
     if (!result) {
         if ( name == "" ) {
@@ -127,28 +98,3 @@ Bool_t CalRecon::CompareInRange( CalRecon & ref, const std::string & name ) {
     return result ;
 
 }
-*/
-//C.L. for DEBUG, overload of addGcrXtal method:
-/**void GcrSelect::addGcrSelectedXtal(GcrSelectedXtal* gcrSelectedXtal)     { 
-    
-      
-      std::cout<<"GcrSelect::addGcrSelectedXtal BEGIN"<<std::endl ;
-      std::cout<< "gcrSelectedXtal->getXtalId()= " << gcrSelectedXtal->getXtalId().getTower() << "/" << gcrSelectedXtal->getXtalId().getLayer() << "/" << gcrSelectedXtal->getXtalId().getColumn() 
-          << "gcrSelectedXtal-> getRowEnergy=" << gcrSelectedXtal-> getRowEnergy() 
-          << "gcrSelectedXtal-> getCorrEnergy=" << gcrSelectedXtal-> getCorrEnergy() 
-          << "gcrSelectedXtal-> getPathLength=" << gcrSelectedXtal-> getPathLength() 
-          << "gcrSelectedXtal-> getInferedZ=" << gcrSelectedXtal-> getInferedZ() 
-	  << "gcrSelectedXtal-> getCrossedFaces=" << gcrSelectedXtal-> getCrossedFaces()
-	  << "gcrSelectedXtal-> getEntryPoint.x=" << gcrSelectedXtal-> getEntryPoint().x()
-	  
-	  << std::endl;   
-
-
-      m_gcrSelectedXtalCol->Add(gcrSelectedXtal);
-      
-            std::cout<<"GcrSelect::addGcrSelectedXtal END"<<std::endl ;
-
-    
-    
-     }*/
-

@@ -7,31 +7,20 @@
 #include <commonRootData/idents/CalXtalId.h>
 
 
-#include <vector>
-#ifndef R__GLOBALSTL
-#ifndef WIN32
-using std::vector;
-#else
-using namespace std;
-
-#endif
-#endif
-
-//-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 
 class GcrSelectedXtal: public TObject
 {
 private:
     
+    Int_t m_selectGrade;
+    Int_t m_crossedFaces;
     CalXtalId m_xtalId;
     Double_t m_rawEnergy;
     Double_t m_pathLength; 
     Double_t m_corrEnergy;
-    Int_t m_selectGrade;
 
     Double_t m_closestFaceDist;
-    Int_t m_crossedFaces;
     TVector3 m_entryPoint;
     TVector3 m_exitPoint;
 
@@ -89,10 +78,16 @@ private:
 
 
 
+    void Print(Option_t *opt="") const;
+
     void print() const;
+
+    void Fake(Int_t ievent, UInt_t ixtal, Float_t randNum);
+
+    Bool_t CompareInRange( const GcrSelectedXtal & ref, const std::string & name="" ) const; 
   
  
-    ClassDef(GcrSelectedXtal,4)
+    ClassDef(GcrSelectedXtal,5)
 };
     
 #endif

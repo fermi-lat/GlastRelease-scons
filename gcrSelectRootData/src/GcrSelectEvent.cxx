@@ -1,4 +1,5 @@
 #include "gcrSelectRootData/GcrSelectEvent.h"
+#include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
 ClassImp(GcrSelectEvent)
@@ -47,17 +48,25 @@ void GcrSelectEvent::Print(Option_t* /* option */) const {
 // For Unit Tests
 //======================================================
 
-/**void ReconEvent::Fake( Int_t , Float_t  ) {
+void GcrSelectEvent::Fake( Int_t ievent, Float_t randNum ) {
+    m_gcrSelect = new GcrSelect();
+    m_gcrSelect->Fake(ievent, randNum);
+    initialize(ievent, 0, m_gcrSelect);
+    initEventFlags(1);
 
-}*/
+}
 
-// #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-/**Bool_t ReconEvent::CompareInRange( const ReconEvent & ref, const std::string & name ) const {
+Bool_t GcrSelectEvent::CompareInRange( const GcrSelectEvent & ref, const std::string & name ) const {
 
     bool result = true ;
 
-    //result = COMPARE_IN_RANGE(Energy) && result ;
+    result = COMPARE_IN_RANGE(EventId) && result ;
+    result = COMPARE_IN_RANGE(RunId) && result ;
+    result = COMPARE_IN_RANGE(EventFlags) && result ;
+
+    result = getGcrSelect()->CompareInRange(*(ref.getGcrSelect()), "GcrSelect") && result;
 
     if (!result) {
         if ( name == "" ) {
@@ -69,5 +78,5 @@ void GcrSelectEvent::Print(Option_t* /* option */) const {
     }
     return result ;
 
-}*/
+}
 
