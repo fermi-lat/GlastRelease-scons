@@ -48,7 +48,8 @@ namespace rdbModel {
   Index* Rdb::getIndex(const std::string& tableName, 
                        const std::string& indexName) const {
     Table* table = getTable(tableName);
-    if (!table) return 0;
+    if (!table)
+	return 0;
 
     return table->getIndexByName(indexName);
 
