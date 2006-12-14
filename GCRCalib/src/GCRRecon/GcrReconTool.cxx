@@ -349,6 +349,7 @@ StatusCode GcrReconTool::findGcrXtals(bool useMcDir){
 		
       }
       
+      
   //Task #4: build gcrXtalsVec
  
   buildGcrXtalsVec();
@@ -565,6 +566,7 @@ void GcrReconTool::buildGcrXtalsVec(){
 	    Event::CalXtalRecData* xTalData = m_hitsMap[itow][ilay][icol];   // search for corresponding hits entry, if any
 	    
 	    if(xTalData){//add and update entry on grcXtalVec, only if a corresponding CalXtalRecData is found
+	    
 	            idents::CalXtalId xtalId = xTalData->getPackedId();
 
 	            m_gcrXtalsMap[itow][ilay][icol] = m_numGcrXtals++; // the entry of m_gcrXtalsMap corresponds to m_gcrXtalVec index
@@ -591,6 +593,9 @@ void GcrReconTool::buildGcrXtalsVec(){
 
 		
 	    } 
+	    else  // track crosses crystal, but no corresponding CalXtal found
+	      m_gcrXtalsMap[itow][ilay][icol]=-2;  
+
 	   
 	   // else
 	    //     m_log << MSG::INFO << "new touched Xtal: no corresponding CalXtalRecData was found"<< endreq;
@@ -908,23 +913,23 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 
 //  SETTING THE MC DIRECTION:
 
-  m_log << MSG::INFO << "m_mcDir=" << m_initDir << endreq;
+  //m_log << MSG::INFO << "m_mcDir=" << m_initDir << endreq;
 
   m_gcrTrack->setMcDir(m_initDir);
   m_gcrTrack->setCalEntryPoint(m_calEntryPoint);
   m_gcrTrack->setCalExitPoint(m_calExitPoint);
   
   if(m_useMcDir){// if keeping MC Track
-      if(debugging)
-	  m_log << MSG::INFO << "keeping MC Track" << m_initDir << endreq;
+      //if(debugging)
+	  m_log << MSG::INFO << "keeping MC Track" << endreq;
 	  
       m_gcrTrack->setDirection(m_initDir);
       m_gcrTrack->setDirError(Vector(0.0,0.0,0.0));
   }
   else{// if we are keeping the Tracker Track
     //SETTING RECONSTRUCTED TKR TRACK INFO:
-    if(debugging)
-	m_log << MSG::INFO << "keeping Tracker Recon Track" << m_initDir << endreq;
+    //if(debugging)
+	m_log << MSG::INFO << "keeping Tracker Recon Track" << endreq;
 
 
 	SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc,EventModel::TkrRecon::TkrTrackCol);

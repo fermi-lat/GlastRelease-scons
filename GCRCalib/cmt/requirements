@@ -11,27 +11,17 @@ use Event
 use GlastSvc 
 use TkrUtil
 
+use ROOT v* IExternal
 
-# These macros are needed by any package that means to share a library & it's headers
-apply_pattern packageShr
 
 #=============================================================
 private
 
-use ROOT v* IExternal
-
-apply_pattern package_include
 apply_pattern package_headers
 
-library GCRCalib  -s=Dll               ${source} \
-                  -s=GCRRecon          ${source} \
-                  -s=GCRSelect         ${source} 
-
-macro GCRCalib_stamps     
-
-apply_pattern package_Cshlibflags 
-	
-
+library GCRCalib *.cxx Dll/*.cxx GCRRecon/*.cxx GCRSelect/*.cxx ${GCRCalib_headers}
+		  
+apply_pattern package_Cshlibflags
 #=============================================================
 private
 
