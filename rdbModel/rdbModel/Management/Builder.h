@@ -18,7 +18,8 @@ namespace rdbModel{
   class Builder {
   public:
   
-    Builder(){};
+    Builder() : m_currentRdb(NULL) {}
+    virtual ~Builder() {}
     
     /** This method parses the input into an intermediate in-memeory form.
      *  For now, the only acceptable input source is an xml file and the

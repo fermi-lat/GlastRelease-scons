@@ -48,8 +48,11 @@ namespace rdbModel {
 
   void Table::setConnection(Connection* connect) {
     m_connect = connect;
-    m_out = connect->getOut();
-    m_err = connect->getErrOut();
+    if (connect)
+      {
+	m_out = connect->getOut();
+	m_err = connect->getErrOut();
+      }
   }
   // Columns are stored in order; binary cuts should do better than
   // just dumb compare one by one.

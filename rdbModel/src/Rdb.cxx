@@ -15,6 +15,8 @@ namespace rdbModel {
   }
 
   int Rdb::build(const std::string& description, Builder* b) {
+    this->setConnection(NULL);
+
     m_descrip = description;
     m_builder = b;
     int errCode = m_builder->parseInput(m_descrip);
@@ -121,7 +123,8 @@ namespace rdbModel {
 
   unsigned int Rdb::accept(Visitor* v) {
     Visitor::VisitorState state = v->visitRdb(this);
-    if (state != Visitor::VCONTINUE) return state;
+    if (state != Visitor::VCONTINUE)
+      return state;
 
     unsigned nTable = m_tables.size();
 

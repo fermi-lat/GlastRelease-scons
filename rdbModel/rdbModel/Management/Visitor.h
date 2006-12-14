@@ -40,6 +40,9 @@ namespace rdbModel {
     };
 
   public:
+    Visitor() { }
+    virtual ~Visitor() { }
+
     /// This method says if the visitor is recursive or not
     //    bool getRecursive(){return recursive;}
     /// This method sets if the visitor is recursive or not

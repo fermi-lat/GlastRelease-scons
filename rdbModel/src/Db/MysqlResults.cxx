@@ -23,15 +23,18 @@ namespace rdbModel {
                             unsigned int i, bool clear) {
     mysql_data_seek(m_myres, i);
     MYSQL_ROW myRow = mysql_fetch_row(m_myres);
+    unsigned long const* lengths = mysql_fetch_lengths(m_myres);
 
     unsigned nFields = mysql_num_fields(m_myres);
-
 
     if (clear) fields.clear();
 
     for (unsigned int iField = 0; iField < nFields; iField++) {
-      if (myRow[iField]) fields.push_back(std::string(myRow[iField]));
-      else fields.push_back("");
+      if (myRow[iField])
+	fields.push_back(std::string(myRow[iField],
+				     lengths[iField]));
+      else
+	fields.push_back("");
     }
 
     return true;
@@ -42,6 +45,7 @@ namespace rdbModel {
 
     mysql_data_seek(m_myres, i);
     MYSQL_ROW myRow = mysql_fetch_row(m_myres);
+    unsigned long const* lengths = mysql_fetch_lengths(m_myres);
 
     unsigned nFields = mysql_num_fields(m_myres);
 
@@ -49,8 +53,11 @@ namespace rdbModel {
     if (clear) fields.clear();
 
     for (unsigned int iField = 0; iField < nFields; iField++) {
-      if (myRow[iField]) fields.push_back(new std::string(myRow[iField]));
-      else fields.push_back(0);
+      if (myRow[iField])
+	fields.push_back(new std::string(myRow[iField],
+					 lengths[iField]));
+      else
+	fields.push_back(0);
     }
 
     return true;
