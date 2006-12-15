@@ -15,7 +15,7 @@ namespace rdbModel {
       std::string msg = m_name + ": " + m_extra;
       return msg;}
     virtual int getCode() const { return m_code;}
-    virtual const char* what() {
+    virtual const char* what() const throw() {
       return m_extra.c_str();
     }
   protected: 
