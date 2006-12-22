@@ -333,7 +333,11 @@ StatusCode FluxAlg::execute()
     int count = m_prescale;
     do{ // loop if we are rejecting particles generated during SAA
         // also do prescale here
-        m_flux->generate();
+        bool valid =m_flux->generate();
+        if( !valid) {
+            log << MSG::ERROR << "Ran out of valid sources, aborting" << endreq;
+            return StatusCode::FAILURE;
+        }
         particleName = m_flux->particleName();
 
         //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.

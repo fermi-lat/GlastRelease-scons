@@ -5,17 +5,8 @@
 
 // includes
 #include <string>
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Vector/Rotation.h"
-
-// TU: Hacks for CLHEP 1.9.2.2 and beyond
-#ifndef HepPoint3D
-typedef HepGeom::Point3D<double> HepPoint3D;
-#endif
-#ifndef HepVector3D
-typedef HepGeom::Vector3D<double> HepVector3D;
-#endif
+#include "CLHEP/Vector/ThreeVector.h"
 
 class ParticleProperty;
 class EventSource;
@@ -57,10 +48,10 @@ public:
     virtual double energy()const=0;
     
     /// starting point 
-    virtual HepPoint3D launchPoint()const=0;
+    virtual Hep3Vector launchPoint()const=0;
     
     /// direction
-    virtual HepVector3D launchDir()const=0;
+    virtual Hep3Vector launchDir()const=0;
     
     /// time (s) (absolute or elapsed??)
     virtual double time()const=0;
@@ -104,6 +95,7 @@ public:
 
     //get the transformtation matrix - the rest of these functions are now deprecated
     virtual CLHEP::HepRotation transformToGlast(double seconds,int  index)const=0;
+
 };
 
 
