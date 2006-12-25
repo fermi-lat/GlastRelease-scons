@@ -12,7 +12,7 @@
 
 DECLARE_FACTORY_ENTRIES(ntupleWriterSvc) {
     DECLARE_SERVICE(RootTupleSvc);
-
+    DECLARE_ALGORITHM( Count);
     DECLARE_ALGORITHM(WriteTupleAlg);
 } 
 
