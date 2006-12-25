@@ -484,8 +484,12 @@ StatusCode RootTupleSvc::finalize ()
     // -- set up job info TTree if requested to add values, or the tree exists already
 
     TTree * jobinfotree(0);
+    std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(m_jobInfoTreeName);
+    if( treeit!=m_tree.end()){
+        jobinfotree= treeit->second;
+    }
+
     std::list<float> values;
-    getItem(m_jobInfoTreeName, "", (void*&)jobinfotree);
     if( jobinfotree!=0 || ! m_jobInfo.value().empty() ){
         std::map<std::string, std::string > parmap;
         facilities::Util::keyValueTokenize(m_jobInfo.value(), ",", parmap);
