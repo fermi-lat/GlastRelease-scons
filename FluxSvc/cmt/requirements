@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r39p2
+version v6r40
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -40,7 +40,7 @@ private
 use Event       v*
 use GlastSvc    v*
 
-use ntupleWriterSvc v3r*
+use ntupleWriterSvc v*
 use XMLEXT * IExternal
 
 

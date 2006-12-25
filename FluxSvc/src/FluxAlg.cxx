@@ -5,7 +5,6 @@ $Header$
 
 */
 
-
 // Include files
 // Gaudi system includes
 #include "GaudiKernel/MsgStream.h"
@@ -95,6 +94,7 @@ private:
     IFluxSvc*   m_fluxSvc;
     IFlux *     m_flux;
 
+    unsigned int m_run;       // run number
     unsigned int m_sequence;  // sequence number
 
     IDataProviderSvc* m_eds;
@@ -108,7 +108,8 @@ private:
     DoubleProperty m_rocking_angle_z; // z-axis
 
     std::map<int, int> m_counts; //! for measuring the total number generated per code.
-    TimeStamp m_initialTime;
+    double m_initialTime;
+    double m_currentTime;
     int m_SAAreject;
 
     PointingInfo m_pointing_info;
@@ -351,8 +352,8 @@ StatusCode FluxAlg::execute()
         else break;
     } while(m_insideSAA && m_avoidSAA.value() || --count>0);
 
-    HepPoint3D p = m_flux->launchPoint();
-    HepVector3D d = m_flux->launchDir();
+    Hep3Vector p = m_flux->launchPoint();
+    Hep3Vector d = m_flux->launchDir();
 
     double ke = m_flux->energy(); // kinetic energy in MeV
 
@@ -442,7 +443,7 @@ StatusCode FluxAlg::execute()
     } else{  h = header;
     }
 
-    TimeStamp currentTime=m_flux->time();
+    m_currentTime=m_flux->time();
 
     // is this proper here?
     m_pointing_info.set();
@@ -452,13 +453,14 @@ StatusCode FluxAlg::execute()
         m_rootTupleSvc->storeRowFlag(this->m_root_tree.value(), m_save_tuple);
     }
 
-    if( m_initialTime==0) m_initialTime=currentTime;
-    h->setTime(currentTime);
+    if( m_initialTime==0) m_initialTime=m_currentTime;
+    h->setTime(m_currentTime);
+    m_run = h->run();  // save
     int numEvents = ++m_sequence;
     m_counts[m_flux->numSource()]++; // update count
     m_flux_names[m_flux->numSource()]= m_flux->name(); // save (or resave!) name 
 
-    m_currentRate=numEvents/(currentTime-m_initialTime);
+    m_currentRate=numEvents/(m_currentTime-m_initialTime);
     return StatusCode::SUCCESS;
 }
 
@@ -484,6 +486,11 @@ StatusCode FluxAlg::finalize(){
         log << "\t\tRejected by SAA: " << m_SAAreject << endreq;
             log << "\t\t(note that this may invalidate the rate calculation)" << endreq;
     }
+    // create the jobinfo tuple
+    m_rootTupleSvc->addItem("jobinfo", "run", &m_run);
+    m_rootTupleSvc->addItem("jobinfo", "generated", &m_sequence);
+    m_rootTupleSvc->addItem("jobinfo", "start", &m_initialTime);
+    m_rootTupleSvc->addItem("jobinfo", "stop",  &m_currentTime);
     return sc;
 }
 
