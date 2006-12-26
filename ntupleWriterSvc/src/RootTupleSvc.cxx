@@ -502,6 +502,8 @@ StatusCode RootTupleSvc::finalize ()
         }
         // process this row
         saveRow(m_jobInfoTreeName); 
+        log << MSG::INFO << "jobinfo scan: "<< endreq;
+        if( jobinfotree!=0) jobinfotree->Scan();
     }
 
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
