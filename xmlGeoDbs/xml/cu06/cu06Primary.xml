@@ -139,6 +139,10 @@ Definition of cu06 blanket used for MMS runs</prim>
 
 <prim name="cu06airMat" value="cu06air" type="string" uType="mat">
 For cu06 runs embed instrument in 'air' </prim>
+<!-- leave out for now
+<prim name="cu06fingerMat" value="???" type="string" uType="mat">
+Material for finger counter </prim>
+-->
 
 </primCategory>
 
@@ -158,5 +162,13 @@ in beamtests is oblong.  x-dimension = y-dimension &gt; z-dimension</prim>
  target rests for positron runs</prim>
 <prim name="sqrt2" value="1.41421356" uType="count" >Useful for calculating
   displacement of mms cube which has been rotated 45 degrees</prim>
+<prim name="cos35" value="0.819152044">cos(35 deg) is used to calculate z-coordinate
+of plexi. target in positron runs</prim>
 <!-- <prim name="protonMmsHalfDiag" value="7.5" /> -->
+<prim name="finger_x" value="15.0" >x-dimension of finger counter used
+with plexiglass target</prim>
+<prim name="finger_y" value="40.0" >y-dimension of finger counter used
+with plexiglass target</prim>
+<prim name="finger_z" value="2.0" >z-dimension of finger counter used
+with plexiglass target</prim>
 </primCategory>

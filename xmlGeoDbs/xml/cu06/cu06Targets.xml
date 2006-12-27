@@ -13,3 +13,11 @@
      YREF="plexiTarget_y"
      ZREF="plexiTarget_z"
      materialREF="plexiglassMat" />
+<!--
+    Leave out for now
+<box name="fingerCounters"
+     XREF="finger_x"     
+     YREF="finger_y"     
+     ZREF="finger_z"
+     materialREF="cu06fingerMat" />
+-->

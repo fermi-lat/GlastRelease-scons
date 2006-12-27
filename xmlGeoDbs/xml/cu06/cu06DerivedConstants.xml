@@ -558,4 +558,32 @@
     </minus>
   </const>      
 
+   <const name="positronPlexi_dx" >
+     <notes>x-displacement of plexiglass target for positron runs.
+            Approximately equal to x-displacement of ISC negative-x side
+     </notes>
+     <refer refTo="ISCTkrXn_dx" />
+   </const>
+
+   <const name="positronPlexi_dy" value="0" >
+     <notes>y-displacement of plexiglass target for positron runs.
+            Call it centered in Y w.r.t. CU.</notes>
+   </const>
+
+
+
+   <const name="positronPlexi_dz" >
+     <notes>z-displacement of plexiglass target for positron runs.
+           From picture it's 26 cm from beam impact point on ISC.</notes>
+     <add>
+       <quo>
+         <const value="260" >
+           <notes>Distance from target to ISC</notes>
+         </const>
+         <refer refTo="cos35" />
+       </quo>
+       <refer refTo="ISCTkrZp_dz" />
+     </add>
+   </const>
+
  </derCategory>

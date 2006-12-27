@@ -36,13 +36,3 @@
     <fractionmass fraction="0.3" />
   </addmaterial>
 </composite>
-<!--
-<composite name="cu06air" density="0.0012" >
-  <addmaterial material ="Nitrogen" >
-    <fractionmass fraction ="0.7" />
-  </addmaterial>
-  <addmaterial material="Oxygen" />
-    <fractionmass fraction="0.3" />
-  </addmaterial>
-</composite>
--->
