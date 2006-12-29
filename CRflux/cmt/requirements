@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r10
+version v1r11p1
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
