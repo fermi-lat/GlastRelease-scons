@@ -46,8 +46,9 @@ Generator.BranchMembers = {"FluxAlg", "ExposureAlg"};
 // the sequence that is triggered with data
 Triggered.Members={
     "TriggerAlg",       // can reject following
-    "Count/triggerd",
-    "Sequencer/Filter",
+    "Count/trigger",
+    "Sequencer/Filter", // reject here if filter active
+    "Count/downlink",
     "Sequencer/Reconstruction",
     "Sequencer/RecoDisplay",
     "Sequencer/Output" };
@@ -112,7 +113,7 @@ TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., misse
 //  onboard filter 
 //
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
-Filter.Members       += {"EbfWriter","Count/downlink", "OnboardFilter"}; // this guy can cause rejection
+Filter.Members       += {"EbfWriter", "OnboardFilter"}; // this guy can cause rejection
 OnboardFilter.mask=0; // all bits off by default: no rejection
 
 Reconstruction.Members += {"FilterTracks", "FilterAlg"}; // for study of performance
