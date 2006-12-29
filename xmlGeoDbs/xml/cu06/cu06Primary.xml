@@ -162,8 +162,9 @@ in beamtests is oblong.  x-dimension = y-dimension &gt; z-dimension</prim>
  target rests for positron runs</prim>
 <prim name="sqrt2" value="1.41421356" uType="count" >Useful for calculating
   displacement of mms cube which has been rotated 45 degrees</prim>
-<prim name="cos35" value="0.819152044">cos(35 deg) is used to calculate z-coordinate
-of plexi. target in positron runs</prim>
+<prim name="cos35" value="0.819152044">cos(35 deg) 
+ used to calculate z-coordinate
+of plexi. target in positron runs (angle is actually 125) </prim>
 <!-- <prim name="protonMmsHalfDiag" value="7.5" /> -->
 <prim name="finger_x" value="15.0" >x-dimension of finger counter used
 with plexiglass target</prim>
