@@ -19,7 +19,7 @@
 class CNOFilterOutput : virtual public OutputRtn
 {
 public:
-    CNOFilterOutput(int offset);
+    CNOFilterOutput(int offset, bool passThrough=false);
     virtual ~CNOFilterOutput() {}
 
     // This defines the method called for end of event processing
@@ -30,10 +30,11 @@ public:
 private:
     // Local functions
 
-    int m_offset;   // Offset into ixb event desriptor block for this information
+    int m_offset;         // Offset into ixb event desriptor block for this information
+    bool m_passThrough;   // Running filter in pass through mode
 
-    int m_vetoBits[17];      //array to count # of times each veto bit was set
-    int m_statusBits[15];    //array to count # of times each veto bit was set
+    int m_vetoBits[17];   //array to count # of times each veto bit was set
+    int m_statusBits[15]; //array to count # of times each veto bit was set
 };
 
 #endif // __ObfInterface_H
