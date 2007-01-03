@@ -469,6 +469,13 @@ StatusCode FluxAlg::execute()
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     static bool done = false;
+
+    // create the jobinfo tuple
+    m_rootTupleSvc->addItem("jobinfo", "run", &m_run);
+    m_rootTupleSvc->addItem("jobinfo", "generated", &m_sequence);
+    m_rootTupleSvc->addItem("jobinfo", "start", &m_initialTime);
+    m_rootTupleSvc->addItem("jobinfo", "stop",  &m_currentTime);
+
     if( done || m_counts.empty() ) return sc;
     done=true;
     MsgStream log(msgSvc(), name());
@@ -486,11 +493,6 @@ StatusCode FluxAlg::finalize(){
         log << "\t\tRejected by SAA: " << m_SAAreject << endreq;
             log << "\t\t(note that this may invalidate the rate calculation)" << endreq;
     }
-    // create the jobinfo tuple
-    m_rootTupleSvc->addItem("jobinfo", "run", &m_run);
-    m_rootTupleSvc->addItem("jobinfo", "generated", &m_sequence);
-    m_rootTupleSvc->addItem("jobinfo", "start", &m_initialTime);
-    m_rootTupleSvc->addItem("jobinfo", "stop",  &m_currentTime);
     return sc;
 }
 
