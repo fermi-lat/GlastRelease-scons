@@ -33,7 +33,7 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 , m_inputFile(0)
 , m_disableList(disableList)
 , m_fetch(0)
-, m_useChain(false) // for now, disable chains
+, m_observer(0)
 {
     // find leaf corresponding to varname in the output tree
     m_varleaf = m_outputTree->GetLeaf(varname.c_str());
@@ -48,6 +48,17 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
         throw std::invalid_argument("BackgroundSelection: expect to find an XML file");
     }
 
+    //---------------------------------------------------
+    // ----------- for getting notification -------------
+    class Observer : public TObject {
+    public:
+        Observer(BackgroundSelection& bg): m_bg(bg){}
+        virtual bool Notify(){m_bg.notify(); return true;} // virtual in TObject
+    private:
+        BackgroundSelection& m_bg;
+    };
+    m_observer = new Observer(*this);
+
     // prime the pump with the mean of the limits for initial downlink, trigger rates
     double mean( (m_fetch->minVal() + m_fetch->maxVal())/2.);
 
@@ -57,6 +68,12 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
 BackgroundSelection::~BackgroundSelection()
 {
     delete m_fetch;
+    delete m_observer;
+}
+//------------------------------------------------------------------------
+void BackgroundSelection::notify()
+{
+    std::cout << " Got notified " << std::endl;
 }
 
 //------------------------------------------------------------------------
@@ -74,9 +91,9 @@ void BackgroundSelection::selectEvent()
     setCurrentTree(value());    
 
     // grab the next event, cycling if needed
-    int bytes = m_inputTree->GetEntry(m_eventOffset++);
-    if( bytes==0){ m_eventOffset = 0; 
-        bytes = m_inputTree->GetEntry(m_eventOffset++);
+    Long64_t bytes = m_inputTree->LoadTree(m_eventOffset++);
+    if( bytes<=0){ m_eventOffset = 0; 
+        bytes = m_inputTree->LoadTree(m_eventOffset++);
     }
     if( bytes<=0) throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
 
@@ -97,14 +114,11 @@ void BackgroundSelection::setCurrentTree(double x)
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
 
-    if( m_useChain ){
-        TChain* chain = new TChain();
-        int stat= m_fetch->getFiles(x, chain);
-        if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
-        m_inputTree = chain;
-    }else {
-        nextTree = m_fetch->getTree(x);
-    }
+    TChain* chain = new TChain();
+    int stat= m_fetch->getFiles(x, chain);
+    if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+    chain->SetNotify(m_observer);
+    m_inputTree = chain;
     // this is necessary due to the design of ROOT :-(
     saveDir->cd();
 

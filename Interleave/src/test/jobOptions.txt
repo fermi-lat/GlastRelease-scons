@@ -52,7 +52,8 @@ Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
 FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 
 FluxAlg.sources += {"sampled_background"};
-FluxAlg.sources += {"sampled_EarthAlbedo"};
+// disable this one for now, apparent bug in handling multiple ranges
+//FluxAlg.sources += {"sampled_EarthAlbedo"};
 
 // the xml file with root files
 InterleaveAlg.FileName = "$(INTERLEAVEROOT)/xml/exampleBackgroundSet.xml";
