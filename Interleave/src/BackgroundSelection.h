@@ -71,7 +71,7 @@ private:
 
     /**@brief Set the addresses of active leaves, so that a GetEvent will perform a copy
     */
-    void setLeafPointers(TTree*);
+    void setLeafPointers();
 
     /**@brief Retrieve the correct tree for current value of the variable(s) so copyEvent comes from correct sample bin
     */

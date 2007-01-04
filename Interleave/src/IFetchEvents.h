@@ -43,6 +43,9 @@ public:
     virtual double minVal()const{return -1e30;}///< return minimum value allowed
     virtual double maxVal()const{return +1e30;}///< return maximum value allowed
 
+    /// test if value is valid
+    virtual bool isValid(double val)const{return val>=minVal() && val< maxVal();}
+
 private:
     friend class XmlFetchEvents;
 

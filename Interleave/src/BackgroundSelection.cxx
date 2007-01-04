@@ -69,11 +69,12 @@ BackgroundSelection::~BackgroundSelection()
 {
     delete m_fetch;
     delete m_observer;
+    delete m_inputTree;
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::notify()
 {
-    std::cout << " Got notified " << std::endl;
+    setLeafPointers();
 }
 
 //------------------------------------------------------------------------
@@ -86,16 +87,22 @@ double BackgroundSelection::value()const
 void BackgroundSelection::selectEvent()
 {
 
+    double x(value());
 
-    // make sure we have the right tree selected for new value
-    setCurrentTree(value());    
+    // make sure we have the right tree selected for new value    // if still valid, do not change
+    if( !m_fetch->isValid(x) ){
+
+        setCurrentTree(x);   
+    }
 
     // grab the next event, cycling if needed
-    Long64_t bytes = m_inputTree->LoadTree(m_eventOffset++);
-    if( bytes<=0){ m_eventOffset = 0; 
-        bytes = m_inputTree->LoadTree(m_eventOffset++);
+    Long64_t code = m_inputTree->LoadTree(m_eventOffset++);
+    if( code<0){ m_eventOffset = 0; 
+        code = m_inputTree->LoadTree(m_eventOffset++);
+        if( code < 0 ){
+            throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
+        }
     }
-    if( bytes<=0) throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
 
 }
 //------------------------------------------------------------------------
@@ -110,23 +117,22 @@ void BackgroundSelection::disableBranches(TTree* t)
 //------------------------------------------------------------------------
 void BackgroundSelection::setCurrentTree(double x) 
 {
-    TTree * nextTree(0);
+
+    // replace the TChain
+    delete m_inputTree; 
+    m_inputTree = new TChain("MeritTuple");
+    m_inputTree->SetNotify(m_observer);
+
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
+    
+    int stat= m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree));
+    if( stat!=0 ){
+        throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
+    }
 
-    TChain* chain = new TChain();
-    int stat= m_fetch->getFiles(x, chain);
-    if( stat!=0 ) throw std::runtime_error("BackgaroundSelection::setCurrentTree: invalid tree");
-    chain->SetNotify(m_observer);
-    m_inputTree = chain;
     // this is necessary due to the design of ROOT :-(
     saveDir->cd();
-
-
-    if( nextTree==0) return; // still using the same treee
-
-    // a new tree: must set it up for sequential access from random point
-    m_inputTree = nextTree;
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
@@ -137,23 +143,23 @@ void BackgroundSelection::setCurrentTree(double x)
     m_eventOffset = (unsigned int)(RandFlat::shoot()*(length - 1));
 
     // point tree to buffer for copying events:
-    setLeafPointers(m_inputTree);
+    setLeafPointers();
     m_triggerRate = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate=m_fetch->getAttributeValue("downlinkRate", x);
 
-    int ret =m_inputTree->GetEntry(0); // make sure this works
+    int ret =m_inputTree->LoadTree(0); // make sure this works
     if( ret<0 ) throw std::runtime_error("BackgroundSelection::setCurrentTree: could not read");
 
 }
 //------------------------------------------------------------------------
-void BackgroundSelection::setLeafPointers(TTree* pTree)
+void BackgroundSelection::setLeafPointers()
 {
     // first disable the branches
-    disableBranches(pTree);
+    disableBranches(m_inputTree);
 
     // iteration over active leaves -- copied from Ttree::Show()
 
-    TObjArray *leaves  = pTree->GetListOfLeaves();
+    TObjArray *leaves  = m_inputTree->GetListOfLeaves();
     if( leaves==0 ) throw std::runtime_error("BackgroundSelection::setLeafPointers: invalid tree, no leaves found");
 
     Int_t nleaves = leaves->GetEntries();
