@@ -24,6 +24,7 @@ mpdBigValIdx   = 0
 mpdSmallValIdx = 1
 mpdBigSigIdx   = 2
 mpdSmallSigIdx = 3
+N_MPD_IDX      = 4
 
 
 
