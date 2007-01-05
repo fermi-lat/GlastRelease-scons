@@ -43,6 +43,7 @@ public:
     virtual double maxVal()const{return m_maxval;}///< return maximum value allowed
 
     static double m_badVal;
+    virtual bool isValid(double val)const{return val>=m_lastBinMin && val<m_lastBinMax;}
 
 private:
 
