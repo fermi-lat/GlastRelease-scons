@@ -4,7 +4,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "CGCUtil.h"
@@ -23,15 +23,15 @@ class CalPed;
 
 /** \brief Represents GLAST Cal trigger efficiency calibrations
 
-   contains read & write methods to various file formats & code
-   to calculate calibrations from digi ROOT event files.
+contains read & write methods to various file formats & code
+to calculate calibrations from digi ROOT event files.
 
-   calculates efficiency for both CIDAC and Muon tests
+calculates efficiency for both CIDAC and Muon tests
 
-   @author fewtrell
- */
+@author fewtrell
+*/
 class MuTrig {
-public:
+ public:
   /// describes which cal trigger channels are enabled
   /// in this configuration.
   /// \note 'row' refers to the row number on a single
@@ -53,7 +53,7 @@ public:
                      unsigned nEvents,
                      const CalPed &peds,
                      bool calLOEnabled = false
-  );
+                     );
 
   /// \brief measure FLE trigger efficiency against charge injection
   /// \param filename root digi data file w/ diagnostic info
@@ -79,7 +79,7 @@ public:
                                       ext);
   }
 
-private:
+ private:
   void initHists();
 
   /// determine if xtal is enabled for this
@@ -92,9 +92,9 @@ private:
         return true;
       else return false;
     else
-    if (gcrc%2 != col%2)
-      return true;
-    else return false;
+      if (gcrc%2 != col%2)
+        return true;
+      else return false;
   }
 
   std::string genHistName(const std::string &type,

@@ -2,7 +2,7 @@
 
 /** @file Gen CIDAC2ADC calibrations from singlex16 charge injection event files
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "lib/IntNonlin.h"
@@ -57,7 +57,7 @@ int main(int argc,
     }
 
     const  string &outputBaseName = (rootFileLE.length()) ?
-                                    rootFileLE : rootFileHE;
+      rootFileLE : rootFileHE;
 
     //-- SETUP LOG FILE --//
     /// multiplexing output streams

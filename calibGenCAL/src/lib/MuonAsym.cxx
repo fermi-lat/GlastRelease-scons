@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "MuonAsym.h"
@@ -122,7 +122,7 @@ void MuonAsym::processTower(TwrHodoscope &hscope) {
     /** Note: 'direction' refers to the direction of xtals which have vertical
         'connect-4' deposits.  For asymmetry, we use this vertical column
         to calibrate the signal in the orthogonal crystals.
-     */
+    */
     if (dir == X_DIR) {
       if (!passCutX(hscope)) continue;     // skip this direction if track is bad
       pos           = hscope.firstColX;
@@ -180,7 +180,7 @@ void MuonAsym::fillHists(unsigned nEntries,
 
   unsigned nEvents = rootFile.getEntries();
   LogStream::get() <<
-  __FILE__ << ": Processing: " << nEvents << " events." << endl;
+    __FILE__ << ": Processing: " << nEvents << " events." << endl;
 
   // Basic digi-event loop
   for (eventData.eventNum = 0; eventData.eventNum < nEvents; eventData.eventNum++) {

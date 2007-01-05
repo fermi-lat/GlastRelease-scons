@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "CalPed.h"
@@ -60,12 +60,12 @@ void CalPed::readTXT(const string &filename) {
     unsigned short rng;
 
     infile >> twr
-    >> lyr
-    >> col
-    >> face
-    >> rng
-    >> ped
-    >> sig;
+           >> lyr
+           >> col
+           >> face
+           >> rng
+           >> ped
+           >> sig;
     // quit once we can't read any more values
     if (infile.fail()) break;
 

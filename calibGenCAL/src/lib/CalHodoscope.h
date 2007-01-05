@@ -2,7 +2,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 #ifndef CalHodoscope_h
 #define CalHodoscope_h
@@ -26,9 +26,9 @@ class CalDigi;
 /** \brief Accumulate crystal hits in Cal summarize into
     information which can be used for track determination.
     @author fewtrell
- */
+*/
 class CalHodoscope {
-public:
+ public:
   CalHodoscope(const CalPed &ped,
                const CIDAC2ADC &cidac2adc) :
     adc_ped(CalUtil::DiodeIdx::N_VALS),
@@ -36,9 +36,9 @@ public:
     bestRng(CalUtil::FaceIdx::N_VALS),
     m_peds(ped),
     m_cidac2adc(cidac2adc)
-  {
-    clear();
-  }
+    {
+      clear();
+    }
 
   /// 'zero-out' all members
   void clear();

@@ -2,7 +2,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "TwrHodoscope.h"
