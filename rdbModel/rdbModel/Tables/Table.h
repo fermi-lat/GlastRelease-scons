@@ -163,7 +163,13 @@ namespace rdbModel {
     /// See also public routine getPrimaryKeyCol which will only get.
     const std::string& setPrimaryKeyCol();
 
-
+    // Translate a row into lists of field name/value and a list of null cells
+    // The field values are guaranteed to respect the Connection constraints
+    // Return false in case of error (an error is displayed on err stream)
+    bool rowRegroup(const Row& row,
+		    std::vector<std::string>& colNames, 
+		    std::vector<std::string>& colVals, 
+		    std::vector<std::string>& nullCols) const;
   };
 
 }

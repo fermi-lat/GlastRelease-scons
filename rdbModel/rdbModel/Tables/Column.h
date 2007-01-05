@@ -170,11 +170,13 @@ namespace rdbModel {
     Row(std::vector<FieldVal>& fields) : m_fields(fields), m_sorted(false) {}
 
     ~Row() { m_fields.clear(); }
+
     void rowSort();
     void addField(const FieldVal& f) {m_fields.push_back(f); m_sorted = false;}
     void clear() {m_fields.clear();}
 
     FieldVal* find(std::string colname);
+    inline std::vector<FieldVal> const& getFields() const { return m_fields; }
 
     /// Reorder information suitable for Connection::insert
     void  regroup(std::vector<std::string>& colNames, 
