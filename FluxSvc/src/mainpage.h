@@ -45,6 +45,7 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.pointingDirection [{}] Set (ra,dec) for pointed mode. Other rocking stuff ignored.
     @param FluxAlg.AvoidSAA     [false] set true to skip events during SAA interval
     @param FluxAlg.zenithTheta  [-99] if overridden, set to this angle in local zenith frame
+    @param FluxAlg.PointingHistory [{}] Doublet, file name and offset, the latter default to none.
 
   @section exposurealg_jobOptions ExposureAlg jobOptions
     @param ExposureAlg.root_tree ["pointing_history"] name for the root tree to be filled if there are clock ticks
