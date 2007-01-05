@@ -221,6 +221,18 @@ void SimpleIniFile::tokenize_str(const string & str,
     }
 }
 
+vector<string>  SimpleIniFile::getSectionList() {
+  vector<string> retVal;
+
+  // push all section keys onto return vector
+  for (SectionMap::const_iterator smIter = m_sectionMap.begin();
+       smIter != m_sectionMap.end();
+       smIter++)
+    retVal.push_back(smIter->first);
+
+  return retVal;
+}
+
 vector<string>  SimpleIniFile::getSectionKeys(const string &section) {
   vector<string> retVal;
 

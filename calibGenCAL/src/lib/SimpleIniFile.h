@@ -102,6 +102,9 @@ class SimpleIniFile
     return retVal;
   }
 
+  /// return list of section names
+  std::vector<std::string> getSectionList();
+							 
   /// return list of keys for given section
   std::vector<std::string> getSectionKeys(const std::string &section);
 
