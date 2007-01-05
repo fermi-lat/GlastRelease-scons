@@ -103,7 +103,6 @@ private:
 
     // the target area
     DoubleProperty m_area;
-    IntegerProperty m_pointing_mode;
     DoubleProperty m_rocking_angle; // x-axis
     DoubleProperty m_rocking_angle_z; // z-axis
 
@@ -157,10 +156,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("area",        m_area=6.0); // target area in m^2
     declareProperty("backoff",     m_backoff=2.0); //backoff distance in m
 
-//    declareProperty("pointing_mode", m_pointing_mode=0); // default zenith-pointed: GLAST and zenith coord systems the same
-    // set to 3 for rocking
     declareProperty("rocking_angle", m_rocking_angle=0); // set non-zero to enable rocking
-//    declareProperty("rocking_angle_z", m_rocking_angle_z=0); // in degrees
 
     declareProperty("PointingHistory",  m_pointingHistory); // doublet, filename and launch date
 
@@ -229,10 +225,6 @@ StatusCode FluxAlg::initialize(){
                 << " with MET offset "<< offset <<  endreq;
 
             GPS::instance()->setPointingHistoryFile(filename, offset);
-            if(m_pointing_mode){
-                //problem - two kinds of pointing are being used!
-                log << MSG::WARNING << "Pointing History and rocking mode both specified!" << endreq;
-            }
         }
     }
     if( !m_source_list.value().empty()){
