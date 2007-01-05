@@ -65,7 +65,6 @@ private:
 
     double m_minval, m_maxval;
 
-    TFile * m_file; ///< current TFile
 };
 
 
