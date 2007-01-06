@@ -60,7 +60,7 @@ BackgroundSelection::BackgroundSelection(const std::string& varname,
     m_observer = new Observer(*this);
 
     // prime the pump with the mean of the limits for initial downlink, trigger rates
-    double mean( (m_fetch->minVal() + m_fetch->maxVal())/2.);
+    double mean( (m_fetch->minValFullRange() + m_fetch->maxValFullRange())/2.);
 
     setCurrentTree(mean);
 }
@@ -175,7 +175,7 @@ void BackgroundSelection::setLeafPointers()
         TLeaf* otherleaf = m_outputTree->GetLeaf(leaf->GetName());
         if( otherleaf==0){
             std::stringstream msg;
-            msg << "BackgroundSelection::setLeafPointesrs: did not find the leaf " << leaf->GetName();
+            msg << "BackgroundSelection::setLeafPointers: did not find the leaf " << leaf->GetName();
             std::cerr << msg.str() << std::endl;
             throw std::runtime_error( msg.str());
         }else{

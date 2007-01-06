@@ -40,10 +40,13 @@ public:
     /// Returns a TTree* constructed from the file stored in the m_dataStore
     virtual TTree* getTree(double binval){return 0;}
 
-    virtual double minVal()const{return -1e30;}///< return minimum value allowed
-    virtual double maxVal()const{return +1e30;}///< return maximum value allowed
+    virtual double minValFullRange()const{return -1e30;}///< return minimum value allowed
+    virtual double maxValFullRange()const{return +1e30;}///< return maximum value allowed
 
-    /// test if value is valid
+    virtual double minVal()const{return -1e30; }///< return minimum value in current range
+    virtual double maxVal()const{return +1e30; }///< return maximum value in current range
+
+    /// test if value is valid in current range
     virtual bool isValid(double val)const{return val>=minVal() && val< maxVal();}
 
 private:

@@ -39,8 +39,11 @@ public:
 
     int getFiles(double binVal, TChain* chain);
 
-    virtual double minVal()const{return m_minval;}///< return minimum value allowed
-    virtual double maxVal()const{return m_maxval;}///< return maximum value allowed
+    virtual double minValFullRange()const{return m_minval;}///< return minimum value allowed
+    virtual double maxValFullRange()const{return m_maxval;}///< return maximum value allowed
+
+    virtual double minVal()const{return m_lastBinMin;}///< return minimum value in current range
+    virtual double maxVal()const{return m_lastBinMax;}///< return maximum value in current range
 
     static double m_badVal;
     virtual bool isValid(double val)const{return val>=m_lastBinMin && val<m_lastBinMax;}
