@@ -15,8 +15,6 @@ namespace rdbModel {
   }
 
   int Rdb::build(const std::string& description, Builder* b) {
-    this->setConnection(NULL);
-
     m_descrip = description;
     m_builder = b;
     int errCode = m_builder->parseInput(m_descrip);
