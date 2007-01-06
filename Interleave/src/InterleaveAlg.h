@@ -68,7 +68,7 @@ private:
     ILivetimeSvc * m_LivetimeSvc;
 
     StringProperty m_treeName; ///< name of the tree to process
-    StringProperty m_fileName; ///< root file or path to sample events from
+    StringProperty m_filePath; ///< path to files containing info for each variable
     StringArrayProperty m_disableList;
     StringProperty m_mapName;  ///< name of the map tree
     int m_count;   ///< number of processed events

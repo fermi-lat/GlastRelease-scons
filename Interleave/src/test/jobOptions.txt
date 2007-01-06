@@ -51,18 +51,18 @@ Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
 //          define sources, select the one(s) to generate
 FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 
-//FluxAlg.sources += {"sampled_background"};
+FluxAlg.sources += {"sampled_background"};
 FluxAlg.sources += {"sampled_EarthAlbedo"};
 
-// the xml file with root files
-InterleaveAlg.FileName = "$(INTERLEAVEROOT)/xml/exampleBackgroundSet.xml";
+// the path to the xml files
+InterleaveAlg.FilePath = "$(INTERLEAVEROOT)/xml";
 
 // do not want to override these
 InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};
 // set these since test program does not define the tuples 
 InterleaveAlg.DisableList += {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*"};
 
-ApplicationMgr.EvtMax = 50; 
+ApplicationMgr.EvtMax = 30; 
 RoottupleSvc.filename = "tuple.root";
 FluxAlg.zenithTheta=90;
 

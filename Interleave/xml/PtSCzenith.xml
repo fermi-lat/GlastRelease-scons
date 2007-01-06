@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Document   : exampleBackgroundSet.xml
-    Created on : October 30, 2006, 3:43 PM
-    Author     : dflath
-    Description:
-        Purpose of the document follows.
+$Header$
 -->
 
 <sourceList xmlns='http://xml.netbeans.org/examples/targetNS'
@@ -30,13 +26,5 @@
       </bin>
    </source>
 
-   <source name="diffuse" type="PtMagLat" rangeUnits="degrees" rangeMin="-45" rangeMax="45.0">
-      <bin min="-45." max="45.0" triggerRate="3000.0" downlinkRate="0.2">
-         <fileList>
-         <!-- two copies -->
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
-         </fileList>
-      </bin>
-   </source>      
+
 </sourceList>

@@ -102,7 +102,7 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     if( instance!=0 ) throw std::invalid_argument("InterleaveAlg: only one instance allowed!");
 
     // declare properties with setProperties calls
-    declareProperty("FileName",     m_fileName="");
+    declareProperty("FilePath",     m_filePath="");
     declareProperty("TreeName",     m_treeName="MeritTuple");
     declareProperty("DisableList",  m_disableList);
     declareProperty("MapName",      m_mapName="interleave_map");
@@ -156,14 +156,14 @@ StatusCode InterleaveAlg::initialize(){
     }
     // initialize the background selection
     try {
-        std::string file(m_fileName.value());
-        if( !file.empty()){
-            facilities::Util::expandEnvVar(&file);
-            log << MSG::INFO << "Using xml file " << file << " for interleave." << endreq;
+        std::string filepath(m_filePath.value());
+        if( !filepath.empty()){
+            facilities::Util::expandEnvVar(&filepath);
+            log << MSG::INFO << "Using xml file path " << filepath << " for interleave." << endreq;
             for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
                 const std::string& name=*it;
                 log << MSG::INFO << "setting up tuple key "<<  name <<endreq;    
-                selectormap[name]= new BackgroundSelection(name, file, m_disableList, m_meritTuple);
+                selectormap[name]= new BackgroundSelection(name, filepath+"/"+name+".xml", m_disableList, m_meritTuple);
                 log <<MSG::INFO << "\tinitial trigger, downlink rates: " << selectormap[name]->triggerRate() 
                     <<", " << selectormap[name]->downlinkRate() << endreq;
             }
