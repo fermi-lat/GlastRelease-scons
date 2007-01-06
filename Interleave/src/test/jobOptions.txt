@@ -62,9 +62,9 @@ InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};
 // set these since test program does not define the tuples 
 InterleaveAlg.DisableList += {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*"};
 
-ApplicationMgr.EvtMax = 30; 
+ApplicationMgr.EvtMax = 100; 
 RoottupleSvc.filename = "tuple.root";
-FluxAlg.zenithTheta=90;
+FluxAlg.zenithTheta=30;
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
