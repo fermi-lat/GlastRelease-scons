@@ -46,7 +46,6 @@ public:
     virtual double maxVal()const{return m_lastBinMax;}///< return maximum value in current range
 
     static double m_badVal;
-    virtual bool isValid(double val)const{return val>=m_lastBinMin && val<m_lastBinMax;}
 
 private:
 

@@ -29,16 +29,14 @@ public:
     */
     IFetchEvents(const std::string& dataStore, const std::string& param) : m_dataStore(dataStore), m_param(param) {};
 
-    ~IFetchEvents() { };
+    virtual ~IFetchEvents() { };
 
     /// Returns the value of the requested elemName, based on the bin associated with binVal
     virtual double getAttributeValue(const std::string& elemName, double binVal) = 0;
 
-    /// Returns a TChain* constructed from the fileList stored in the m_dataStore
+    /// adds TTree's to a TChain
     virtual int getFiles(double binVal, TChain* chain) = 0;
 
-    /// Returns a TTree* constructed from the file stored in the m_dataStore
-    virtual TTree* getTree(double binval){return 0;}
 
     virtual double minValFullRange()const{return -1e30;}///< return minimum value allowed
     virtual double maxValFullRange()const{return +1e30;}///< return maximum value allowed
@@ -47,7 +45,8 @@ public:
     virtual double maxVal()const{return +1e30; }///< return maximum value in current range
 
     /// test if value is valid in current range
-    virtual bool isValid(double val)const{return val>=minVal() && val< maxVal();}
+    virtual bool isCurrent(double val)const{return val>=minVal() && val< maxVal();}
+    virtual bool isValid(double val)const{return val>=minValFullRange() && val< maxValFullRange();}
 
 private:
     friend class XmlFetchEvents;

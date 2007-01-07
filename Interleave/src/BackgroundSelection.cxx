@@ -89,10 +89,17 @@ void BackgroundSelection::selectEvent()
 {
 
     double x(value());
+    if( !m_fetch->isValid(x) ){
+        std::stringstream msg;
+        msg << "BackgaroundSelection::selectEvent: called with "<< name() 
+            <<" = "<< x << " is not in range " 
+            <<  m_fetch->minValFullRange() << ", to " 
+            <<  m_fetch->maxValFullRange() << std::endl;
+        throw std::runtime_error(msg.str());
+    }
 
     // make sure we have the right tree selected for new value    // if still valid, do not change
-    if( !m_fetch->isValid(x) ){
-
+    if( !m_fetch->isCurrent(x) ){
         setCurrentTree(x);   
     }
 
