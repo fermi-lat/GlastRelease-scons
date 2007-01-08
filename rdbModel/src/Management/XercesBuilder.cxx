@@ -56,7 +56,7 @@ namespace rdbModel {
     m_rdb->m_dbName = Dom::getAttribute(docElt, "dbs");
     if (m_rdb->m_dbName.empty())
       {
-	std::cerr << "Invalid XML dialect" << std::endl;
+	std::cerr << "Invalid XML input" << std::endl;
 	if (! rdb) man->cleanRdb();
 	this->m_rdb = NULL;
 	return -1;
