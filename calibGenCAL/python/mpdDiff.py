@@ -248,10 +248,10 @@ for twr in mpdTwrs1:
                          array.array('d',smErr2),
                          array.array('d',[1]*len(smErr1)))
 
-lrg_prof.Fit("pol1")
-sm_prof.Fit("pol1")
-lrg_err_prof.Fit("pol1")
-sm_err_prof.Fit("pol1")
+lrg_prof.Fit("pol1","Q")
+sm_prof.Fit("pol1","Q")
+lrg_err_prof.Fit("pol1","Q")
+sm_err_prof.Fit("pol1","Q")
 
 log.info("Writing %s"%rootPath)
 rootFile.Write()
