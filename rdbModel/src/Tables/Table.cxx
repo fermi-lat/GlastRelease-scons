@@ -674,15 +674,7 @@ namespace rdbModel {
 
     StringVector colVals;
     row.regroup(colNames, colVals, nullCols);
-
-    // check that sizes of vectors match
-    unsigned  nCol = colNames.size();    
-    if (!nCol || (nCol != colVals.size()  ) ) {
-      (*m_err) << " Table::rowRegroup: vector lengths incompatible"
-	       << std::endl;
-      m_err->flush();
-      return false;
-    }
+    unsigned nCol = colNames.size();
 
     /* Make sure values in columns match the column constraints */
     for (unsigned i = 0 ; i < nCol ; i ++)
