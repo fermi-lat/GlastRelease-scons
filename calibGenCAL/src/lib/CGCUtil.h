@@ -175,5 +175,22 @@ namespace CGCUtil {
   /// \note leave pwd unchanged
   TDirectory &root_safe_mkdir(TDirectory &parent, 
                               const std::string &dirName);
+
+  
+  /// template method joins a sequence of data items ino
+  /// a string, separating each by delim.
+  template <class FwdIt>
+  std::string str_join(FwdIt start,
+                       FwdIt stop,
+					   const std::string &delim=" ") {
+    std::ostringstream tmp;
+    while (start != stop) {
+      tmp << *start;
+      tmp << delim;
+      start++;
+    }
+
+    return tmp.str();
+  }
 };
 #endif // CGCUtil_H
