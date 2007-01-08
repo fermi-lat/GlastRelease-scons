@@ -39,7 +39,12 @@ namespace rdbModel{
     */
     virtual unsigned int parseInput(const std::string& inputPath);
 
-    /** Concrete implementation of pure virtual Builder::buildRdb */
+    /** Concrete implementation of pure virtual Builder::buildRdb.
+     *  It starts the parser and puts the result in a private pointer
+     *  Return is number of tables built.  If negative, indicates
+     *  error.
+     */
+
     virtual int buildRdb(rdbModel::Rdb* rdb=0);
 
   private:

@@ -30,8 +30,7 @@ namespace rdbModel{
     virtual unsigned int parseInput(const std::string&) = 0;
 
     /** This method start the parser (implemented in a concrete
-     *  subclass of this class) for the sections part and put the
-     *  result in a private pointer
+     *  subclass of this class) and puts the result in a private pointer
      *  Return is number of tables built.  If negative, indicates
      *  error.
      */
