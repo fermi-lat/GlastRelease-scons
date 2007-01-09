@@ -182,8 +182,24 @@ namespace MOOT {
       return classKey("FSW_class", name);
     }
 
-    //    bool getConfigParameters(unsigned configKey, 
-    //                             std::vector<unsigned>& parameterKeys);
+    // Fill supplied argument with parameter class names. Return count
+    unsigned getParameterClasses(std::vector<std::string>& names);
+
+    /**
+       Return keys of parameter entries used to build FSW inputs
+       for this config
+     */
+    bool getConfigParmsUsed(unsigned configKey, 
+                            std::vector<unsigned>& parameterKeys);
+
+
+    /**
+       Return keys of parameter entries supplied when config was
+       created.
+     */
+    bool getConfigParmsRequest(unsigned configKey, 
+                               std::vector<unsigned>& parameterKeys);
+
     
 
   private:
