@@ -64,6 +64,7 @@
         </comment>
     </col>
 
+
     <col name="mode" >
       <src null="false">
         <from agent="enduser" />
@@ -963,7 +964,6 @@
           row is inserted.</comment>
     </col>
    
-<!-- need some more stuff to handle foreign keys -->
     <col name="class_fk" >
       <src null="false" >
         <from agent="enduser" />
@@ -973,10 +973,25 @@
           <nonnegative />   
         </restriction>
       </type>
+      <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
 
       <comment>Refers to primary key in Parameter_class table.
           See foreign key definition below.
       </comment>
+    </col>
+
+    <col name="condition_fk" >
+      <src null="false" >
+        <default value="1" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Conditions" keyCol="condition_key" />
+      <comment>Refers to primary key in Conditions table, defaulting
+             to generic</comment>
     </col>
 
     <col name="instrument">
@@ -1042,7 +1057,6 @@
 
     <col name="vstart" >
       <src  stickyInsert="true" null="true"> 
-<!--        <from agent="enduser" /> -->
          <default interp="time" value="NOW" />
       </src>
       <type typename="datetime">
@@ -1156,8 +1170,6 @@
       </compare>
     </assert>
   </table>
-
-
   
   <table name="FSW_inputs"
      comment="Describe parameter set instances for MOOT" version="v1r0">
@@ -1177,7 +1189,6 @@
           row is inserted.</comment>
     </col>
    
-<!-- need some more stuff to handle foreign keys -->
     <col name="class_fk" >
       <src null="false" >
         <from agent="enduser" />
@@ -1188,6 +1199,7 @@
         </restriction>
       </type>
 
+      <fk tableName="FSW_class" keyCol="FSW_class_key" />
       <comment>Refers to primary key in FSW_class table.
           See foreign key definition below.
       </comment>
@@ -1361,6 +1373,7 @@
           <nonnegative />   
         </restriction>
       </type>
+      <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
 
       <comment>Refers to primary key in Ancillary_class table.
           See foreign key definition below.
@@ -1768,7 +1781,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
       <comment>Refers to row in FSW_inputs</comment>
     </col>
     <col name="Parameter_fk" >
@@ -1780,7 +1793,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Parameters" keyCol="parm_key" />
       <comment>Refers to row in Parameters</comment>
     </col>
 
@@ -1846,7 +1859,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+       <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
        <comment>Refers to row in FSW_inputs</comment>
      </col>
      <col name="config_fk" >
@@ -1858,7 +1871,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+      <fk tableName="Configs" keyCol="config_key" />
        <comment>Refers to row in Configs</comment>
      </col>
 
@@ -1898,6 +1911,78 @@
     <index name="config_fk_index" cols="config_fk" />
   </table>
 
+  <table name="Configs_to_Parameters" gui_readonly="true" version="v1r0"
+   comment="keep track of requested parameter files when Config was built">
+     <col name="prim_key" >
+       <src null="false">
+         <from agent="auto_increment" />
+       </src>
+       <type typename="int" unsigned ="true" >
+         <restriction>          
+           <nonnegative />   
+         </restriction>
+       </type>
+       <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+     <col name="config_fk" >
+       <src null="false" >
+         <from agent="enduser" />
+       </src>
+       <type typename="int" unsigned="true" >
+         <restriction>
+           <nonnegative />
+         </restriction>
+       </type>
+      <fk tableName="Configs" keyCol="config_key" />
+       <comment>Refers to row in Configs</comment>
+     </col>
+
+     <col name="Parameter_fk" >
+       <src null="false" >
+         <from agent="enduser" />
+       </src>
+       <type typename="int" unsigned="true" >
+         <restriction>
+           <nonnegative />
+         </restriction>
+       </type>
+       <fk tableName="Parameters" keyCol="parm_key" />
+       <comment>Refers to row in Parameters requested when
+             Config was built.  It is not necessarily used
+            if a corresponding FSW binary already exists, built
+            from other parameter files.</comment>
+     </col>
+     <col name="creation_time" >
+        <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+  </table>
+
+     
+
   <table name="Parameters_to_Ancillary" gui_readonly="true" version="v1r0"
      comment="relate Parameter files to the Ancillary files which are their sources">
      <col name="prim_key" >
@@ -1922,7 +2007,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+       <fk tableName="Parameters" keyCol="parm_key" />
        <comment>Refers to row in Paramaeters</comment>
      </col>
      <col name="Ancillary_fk" >
@@ -1934,7 +2019,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+       <fk tableName="Ancillary" keyCol="Ancillary_key" />
        <comment>Refers to row in Ancillary</comment>
      </col>
 
@@ -1999,7 +2084,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+       <fk tableName="OfflineCalib" keyCol="ser_no" />
        <comment>Refers to row in OfflineCalib</comment>
      </col>
      <col name="Ancillary_fk" >
@@ -2011,7 +2096,7 @@
            <nonnegative />
          </restriction>
        </type>
-
+       <fk tableName="Ancillary" keyCol="Ancillary_key" />
        <comment>Refers to row in Ancillary</comment>
      </col>
     <col name="status" >
@@ -2076,7 +2161,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
       <comment>Refers to row in Parameters</comment>
     </col>
     <col name="FClass_fk" >
@@ -2088,7 +2173,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="FSW_class" keyCol="FSW_class_key" />
       <comment>Refers to row in FSW_inputs</comment>
     </col>
 
@@ -2145,7 +2230,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Offline_class" keyCol="Offline_class_key" />
       <comment>Refers to row in FSW_inputs</comment>
     </col>
     <col name="AClass_fk" >
@@ -2157,7 +2242,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
       <comment>Refers to row in Ancillary</comment>
     </col>
 
@@ -2206,7 +2291,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
       <comment>Refers to row in Parameter_class</comment>
     </col>
     <col name="AClass_fk" >
@@ -2218,7 +2303,7 @@
           <nonnegative />
         </restriction>
       </type>
-
+      <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
       <comment>Refers to row in Ancillary_class</comment>
     </col>
 
