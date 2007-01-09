@@ -72,6 +72,7 @@ source createConfigs.sql;
 source createFClass_to_PClass.sql;
 source createConfigs_to_FSW.sql;
 source createFSW_to_Parameters.sql;
+source createConfigs_to_Parameters.sql;
 
 source createParameters_to_Ancillary.sql;   
 source createOffline_to_Ancillary.sql;
