@@ -6,12 +6,17 @@
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
+#include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
-#include "TF1.h"
+#include "Rtypes.h"
 
 // STD INCLUDES
 #include <memory>
+
+class TNtuple;
+class TH1;
+class TF1;
 
 /** @file
     @author Zach Fewtrell, Alexandre Chekhtman
@@ -36,10 +41,14 @@ class LangauFun {
  public:
   /// retrieve gaussian convolved landau fuction with limits & initial values appropriate for LE CIDAC scale
   static TF1 &getLangauDAC();
-  /// retrieve gaussian convolved landau fuction with limits & initial values appropriate for LEX8 ADC scale
-  static TF1 &getLangauADC();
 
+  /// build ROOT TNtuple obj w/ fields formatted for this function
+  static TNtuple &buildTuple();
 
+  /// fill ROOT TNtuple w/ fitted parms for this func / hist
+  static Int_t fillTuple(CalUtil::XtalIdx xtalId,
+	                     const TH1 &hist, 
+						 TNtuple &tuple);
 };
 
 #endif
