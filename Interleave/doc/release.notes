@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+09-jan-07 v1r2p7 HMK init min and max val in XmlFetchEvents
 05-jan-07 v1r2p6 THB Heather's fixes, plus separation ofthe XML files according to the source
 04-jan-07 v1r2p2 THB test version to see what happens with test program on Linux
 23-nov-06 v1r2   THB Fix up map to include info on which source, and value used

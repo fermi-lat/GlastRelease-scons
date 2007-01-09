@@ -25,7 +25,9 @@ using xmlBase::Dom;
 double XmlFetchEvents::m_badVal = -999999.0;
 
 XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& param)
-: IFetchEvents(xmlFile,param) 
+: IFetchEvents(xmlFile,param),
+  m_minval(+1e30),
+  m_maxval(-1e30)
 {
 
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc;
