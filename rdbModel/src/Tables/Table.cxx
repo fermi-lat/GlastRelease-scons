@@ -167,6 +167,9 @@ namespace rdbModel {
     if (!m_connect) {
       throw RdbException("Table::insertLatest Need matching connection");
     }
+    if (!this->m_iNew) {
+      throw RdbException("Table::insertLatest The schema does not define any insertNew policy for this table. Can't proceed request.");
+    }
     row.rowSort();
 
     // Fill in columns in m_programCols list
