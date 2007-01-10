@@ -574,7 +574,7 @@ namespace MOOT {
     std::vector<std::string> inputKeys;
     bool ok = getConfigInputs(configKey, inputKeys);
     if (!ok) return false;
-    if (!parameterKeys.size()) return ok;
+    if (!inputKeys.size()) return ok;
 
     // For each input..
     for (unsigned i = 0; i < inputKeys.size(); i++) {

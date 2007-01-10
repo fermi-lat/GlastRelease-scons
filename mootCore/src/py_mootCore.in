@@ -194,6 +194,23 @@
     return my_info;
   }
 
+  std::vector<unsigned>    configParmsUsed(unsigned configKey) {
+    std::vector<unsigned> parmKeys;
+    self->getConfigParmsUsed(configKey, parmKeys);
+    return parmKeys;
+  }
+
+  std::vector<unsigned>    configParmsRequest(unsigned configKey) {
+    std::vector<unsigned> parmKeys;
+    self->getConfigParmsRequest(configKey, parmKeys);
+    return parmKeys;
+  }
+
+  std::vector<std::string> parameterClassNames( ) {
+    std::vector<std::string> names;
+    self->getParameterClasses(names);
+    return names;
+  }
 
 }
 
