@@ -304,5 +304,54 @@ int main(int nargs, char**)    {
   nConfigs = q.getConfigInfo(cInfo, "STARTED", "");  
  
   std::cout << "Found " << nConfigs << " with status = STARTED" << std::endl;
+
+  // Exercise getConfigsRequested, getConfigsUsed
+  std::vector<unsigned> parmKeys;
+  parmKeys.reserve(10);
+
+  unsigned configKey = 119;
+  bool ok;
+
+  for (unsigned itry = 0; itry < 2; itry++) {
+    try {
+      ok = q.getConfigParmsRequest(configKey, parmKeys);
+    }
+    catch (std::exception ex) {
+      std::cerr << "getConfigParmsRequest of key #" << configKey
+                << " failed " << std::endl;
+      ok = false;
+    }
+    if (ok) {
+      std::cout << "Config #" << configKey << " requested parameters ";
+      for (unsigned i = 0; i < parmKeys.size(); i++) {
+        if ((i % 10) == 0) std::cout << std::endl;
+        std::cout << parmKeys[i] << " ";
+      }
+      std::cout << std::endl << std::endl;
+    }
+    
+    parmKeys.clear();
+
+    try {
+      ok = q.getConfigParmsUsed(configKey, parmKeys);
+    }
+    catch (std::exception ex) {
+      std::cerr << "getConfigParmsUsed of key #" << configKey
+                << " failed with error " << ex.what() << std::endl;
+      ok = false;
+    }
+    if (ok) {
+      std::cout << "Config #" << configKey << " used parameters ";
+      for (unsigned i = 0; i < parmKeys.size(); i++) {
+        if ((i % 10) == 0) std::cout << std::endl;
+        std::cout << parmKeys[i] << " ";
+      }
+      std::cout << std::endl << std::endl;
+    }
+    configKey = 120;
+    parmKeys.clear();
+  }
+
+
   return 0;
 }
