@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r1p1 9-Jan-2007  jrb Bug fix for MootQuery::getParmsUsed
    v1r1   9-Jan-2007  jrb Add table Configs_to_Parameters and a couple
                           new queries
    v1r0  20-Nov-2006  jrb Initial import.  Contains connection, query and
