@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r2   10-Jan-2006 THB Implement environment variable expansion for filenames in FesExposure and EbfWriter
  * v1r1   15-Nov-2006 THB Revise FesExposure to use new timer, get info from the GPS singleton.
  * v1r0p5 21-JUN-2006 BLW Fix for RngIdx in EbfCalData 
  * v1r0p4 28-APR-2006 BLW Fix for change in CalCalibSvc 
