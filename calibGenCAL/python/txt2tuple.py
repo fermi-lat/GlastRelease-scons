@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # create ROOT File & Ntuple
     outfile = ROOT.TFile(outPath, "RECREATE")
-    tuple = ROOT.TNtuple('txt2tuple', 'txt2tuple', col_def)
+    tuple = ROOT.TNtuple(inPath, inPath, col_def)
 
     for line in lines:
         vals = line.split()
