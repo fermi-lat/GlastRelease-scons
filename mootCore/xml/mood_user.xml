@@ -378,8 +378,7 @@
 
 <!-- end of Conditions -->
 
-<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs
-      TO DO:  Ancillary            -->
+<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs, Ancillary -->
   <table name="OfflineCalib" 
     comment="metadata table for LAT calibrations" version="v2r1">
     <!-- define columns -->
@@ -1427,7 +1426,8 @@
       </comment>
     </col>
 
-    <col name="flavor" >
+<!-- Leaving it in MySQL db for now, but unused so drop from description -->
+    <!-- col name="flavor" >
       <src null="false" stickyInsert="true">
         <default value="default" />
       </src>
@@ -1438,7 +1438,7 @@
       </type>
       <comment>Normal production parameter files will be of flavor 'default'
       </comment>
-    </col>
+    </col -->
 
     <col name="description" >
       <src null="false" >

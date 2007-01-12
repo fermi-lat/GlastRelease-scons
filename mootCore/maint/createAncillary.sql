@@ -28,12 +28,6 @@ create table Ancillary
      COMMENT 'a place to mention anything special about this ancillary 
             instance',
 
-  energy 		FLOAT DEFAULT NULL
-     COMMENT 'Energy Setting in MeV',
-  temperature 		FLOAT DEFAULT NULL
-     COMMENT 'Temperature associated with data in C',
-  temperature_range     ENUM('COLD', 'OP', 'ROOM', 'HOT') DEFAULT NULL
-     COMMENT 'Temperature range associated with data',
   tower                 TINYINT DEFAULT '-1' NOT NULL
      COMMENT 'Ancillary info may be by tower or by entire detector',
 
