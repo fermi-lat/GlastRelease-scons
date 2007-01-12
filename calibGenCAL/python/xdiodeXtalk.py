@@ -15,10 +15,6 @@ where:
      xtalk.xml     intNonlin XML file contains LE->HE crosstalk values in HE channels.
      output.xml    output, xtalk corrected, intNonlin XML file
 
-where:
-   cidac2adc.xml input cidac2adc file w/out crosstalk correction.
-   xtalk.xml cidac2adc file w/ crosstalk values in HE channels.
-   output.xml new cidac2adc file corrected for LE->HE diode crosstalk.
 
 """
 
