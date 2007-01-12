@@ -6,7 +6,7 @@ create table FSW_to_Parameters
   FSW_fk      INT UNSIGNED NOT NULL
     COMMENT 'refers to row in FSW_inputs',
 
-  status      VARCHAR(32) not null default 'active'
+  status      VARCHAR(32) not null default 'ACTIVE'
      COMMENT 'any value other than default means unusable',
 
   creation_time          DATETIME,
