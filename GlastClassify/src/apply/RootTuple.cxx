@@ -25,6 +25,7 @@
 #include "TIterator.h"
 #include "TString.h"
 #include <stdexcept>
+#include <iostream>
 
 namespace {
 /*
