@@ -1,0 +1,39 @@
+//##############################################################
+//
+// Job options file for Gleam job using pre-existing files and writing them out
+// demo of the new basicOptions
+// $Header$
+
+#include "$GLEAMROOT/src/basicOptions_test.txt"
+
+// choose one or the other below for old integrated Gui or FRED
+//#include "$GLEAMROOT/src/guiOptions.txt" 
+#include "$GLEAMROOT/src/fredOptions.txt" 
+// for FRED, the Fred program is expected to be in the path given by
+// the enviornment variable Fred_DIR, which is set by default in the
+// interface package IExternal/Fred
+
+// output is written to the new $GLEAMROOT/data by default, but just to make it explicit:
+
+mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc_test.root";
+digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi_test.root";
+reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon_test.root";
+RootTupleSvc.filename            = "${GLEAMROOT}/data/merit_test.root";
+RootTupleSvc.RejectIfBad = false;
+
+// modify basicOptions to do this task
+Generation.Members     = {"mcRootReaderAlg"};
+Digitization.Members   = {"digiRootReaderAlg"};
+Reconstruction.Members = {"reconRootReaderAlg"};
+Filter.Members         = {};
+
+mcRootReaderAlg.mcRootFile       = "$(ROOTTESTDATAROOT)/data/default/mc.root";
+digiRootReaderAlg.digiRootFile   = "$(ROOTTESTDATAROOT)/data/default/digi.root";
+reconRootReaderAlg.reconRootFile = "$(ROOTTESTDATAROOT)/data/default/recon.root";
+ApplicationMgr.EvtMax = 5;
+
+//==============================================================
+//
+// End of "ReadDisplayAndWrite" job options file
+//
+//##############################################################

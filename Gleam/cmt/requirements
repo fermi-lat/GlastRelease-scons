@@ -78,3 +78,5 @@ private
 # define a standard test executable, if desired
 apply_pattern package_test
 
+# make a folder to keep local data files
+branches data

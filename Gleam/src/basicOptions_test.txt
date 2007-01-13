@@ -1,0 +1,270 @@
+//##############################################################
+//
+// basic Job options file for a Gleam execution
+// $Header$
+
+// primary DLLs, including auditor 
+
+ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { "EventSelector/EventSelector" };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq = -1;
+
+
+// ----------------------------
+//  a structure for the topalg, using sequencer steps
+
+ApplicationMgr.TopAlg = {
+      "Sequencer/Top" };
+
+//the top sequence loop
+Top.Members={
+    "Sequencer/Event"};
+
+Event.Members = {
+    "Sequencer/Generation",
+    "Sequencer/CalibrationUpdate",
+    "Sequencer/Digitization",
+    "Sequencer/TriggerTest",   // can reject events, set TriggerAlg.mask = 0 to pass all
+    "Sequencer/Triggered" 
+};
+
+// FluxAlg branch for "TimeTicks" 
+// (note that if you override Members, this must be too)
+
+Event.BranchMembers = {"Generation", "ExposureAlg"};
+
+// can substitute mcRootReaderAlg here!
+
+Generation.Members = {
+    "FluxAlg", 
+    "CurrentEventAlg",
+    "PointInfoAlg", 
+    "G4Generator" };
+  
+
+// These algorithms run before digitization or reconstruction
+// Currently, only TKR is handled this way
+
+CalibrationUpdate.Members={
+    "TkrCalibAlg"     // found in TkrUtil
+    };
+
+// ----------------------------
+//  Digitization
+//
+ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
+Digitization.Members = { 
+    "TkrDigiAlg", 
+    "CalDigiAlg", 
+    "AcdDigiAlg"
+    };
+
+// this sequence contains the trigger test
+TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
+
+
+// this sequence runs if the event passes the trigger
+
+Triggered.Members={
+    "Sequencer/Filter", // can also cause rejection
+    "Sequencer/ReconCalibrationUpdate",
+    "Sequencer/Reconstruction",
+    "Sequencer/FilterPerformance",
+    "Sequencer/EventDisplay",
+    "Sequencer/Output",
+    "Sequencer/NtupleMaker"
+ };
+
+//  Trigger and livetime
+
+ApplicationMgr.DLLs +={ "Trigger"};
+ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
+LivetimeSvc.Deadtime=0;  // default is now to disable this
+TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
+
+
+//  onboard filter 
+
+ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
+Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // this guy can cause rejection
+OnboardFilter.mask=0; // all bits off by default: no rejection
+
+
+// to specify a different set of calibrations for recon (TKR only)
+
+ReconCalibrationUpdate.Members = {};
+
+// Reconstruction
+
+ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
+
+ApplicationMgr.DLLs +={ 
+    "CalRecon", 
+    "TkrRecon", "TkrUtil"
+    };
+Reconstruction.Members={ 
+    "Sequencer/Cal1", 
+    "Sequencer/Tkr",
+    "Sequencer/Cal2",
+    "Sequencer/TkrIter",
+    "Sequencer/Acd"
+    };
+
+
+// Analyzes the performance of the filter (not ordinarily invoked)
+
+//FilterPerformance.Members = {"FilterTracks", "FilterAlg"}; // for study of performance
+FilterPerformance.Members = {};
+
+// Members are set in guiOptions, if enabled
+// the display routines have a null execute() method, but
+// need to be in the Gaudi sequence so it will initialize
+
+EventDisplay.Members = {};
+ 
+// Output
+
+ApplicationMgr.DLLs +={"RootIo"}; 
+Output.Members = {     
+    "FhSetAlg",
+    "mcRootWriterAlg", 
+    "digiRootWriterAlg", 
+    "reconRootWriterAlg"};
+
+// default output to GLEAMROOT/data
+mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc.root";
+digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi.root";
+reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon.root";
+RootTupleSvc.filename            = "${GLEAMROOT}/data/merit.root";
+RootTupleSvc.RejectIfBad = false;
+
+
+// ntuple generation 
+
+ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
+ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+
+NtupleMaker.Members = {
+    "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
+    "FilterAlgTuple",    // FilterAlg vars
+    "ClassifyAlg",       // Atwood's Insightful Miner analysis
+    "FT1Alg",            // generate stuff to go into FT1.
+    "meritAlg"           //   some analysis for PSF
+ };
+
+AnalysisNtupleAlg.tupleName = "MeritTuple";
+// default output to GLEAMROOT/data
+RootTupleSvc.filename            = "${GLEAMROOT}/data/merit.root";
+RootTupleSvc.RejectIfBad = false;
+
+
+// Reconstruction sequence details
+
+// First pass of Cal Recon - full recon...
+Cal1.Members = { 
+    "CalXtalRecAlg",
+    "CalClustersAlg/first",
+    "CalEventEnergyAlg/RawEnergy"
+    };
+
+// First pass of Tkr Recon
+Tkr.Members = {
+    "TkrReconAlg/FirstPass"
+    };
+
+// Second pass of Cal Recon - energy corrections only
+Cal2.Members = {
+    "CalEventEnergyAlg/second"
+    };
+TkrIter.Members = {
+    "TkrReconAlg/Iteration"
+    };
+
+//   ACD recon
+
+ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
+Acd.Members = {"AcdReconAlg"};
+
+
+//  Geometry definition
+
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="LAT"; 
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+//  Randoms definition
+
+ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
+
+// ----------------------------
+//  Generation and simulation
+//
+//  get the parameters for simulation -- misnamed the file :-(
+#include "$G4GENERATORROOT/src/basicOptions.txt"
+ApplicationMgr.DLLs +={ "G4Propagator"};
+
+#include "$FLUXSVCROOT/src/defaultOptions.txt"
+FluxAlg.source_name="default";
+
+// add in CRflux option
+ApplicationMgr.DLLs +={ "CRflux" };
+FluxSvc.source_lib += {
+    "$(CRFLUXROOT)/xml/source_library.xml"};
+
+// -------------------------------------------
+//          tracker services
+//
+ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
+ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
+
+// this fixes a HE track pattern recognition problem
+// *** it should be done in TkrRecon ***
+TkrFilterFirst.FilterToolName="TkrCalFilterTool";
+
+// -------------------------------------------
+//  Calibration sevices
+//
+#include "$CALIBSVCROOT/src/defaultOptions.txt"
+
+// -------------------------------------------
+//  Calorimeter services
+//
+ApplicationMgr.Dlls += {"CalXtalResponse"};
+#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+
+// output levels, including suppression to allow debug, info
+mcRootWriterAlg.OutputLevel=3;
+digiRootWriterAlg.OutputLevel=3;
+reconRootWriterAlg.OutputLevel=3;
+ToolSvc.OutputLevel=3;    // too verbose in debug
+CalClustersAlg.OutputLevel=4; // too much info
+TkrClusFirst.OutputLevel=4;
+CalDigiAlg.OutputLevel=4;
+TkrAlignmentSvc.OutputLevel=4;
+TkrGeometrySvc.OutputLevel=4;
+EbfWriter.OutputLevel=4;
+ToolSvc.LastLayerCorrTool.OutputLevel=4; 
+ToolSvc.OutputLevel=4;
+CalXtalRecAlg.OutputLevel=4;
+AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
+    
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
