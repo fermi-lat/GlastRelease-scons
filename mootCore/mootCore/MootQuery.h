@@ -164,6 +164,12 @@ namespace MOOT {
                            const std::string& mode="");
 
     /**
+       Return pointer to ConfigInfo for the single Config specified by key.
+       Return 0 if not found or other failure.
+     */
+    ConfigInfo* getConfigInfo(unsigned key);
+
+    /**
        Translate  class key to corresponding string.
        Return empty string if there is no translation
     */

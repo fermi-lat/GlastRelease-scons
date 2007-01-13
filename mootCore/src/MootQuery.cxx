@@ -502,6 +502,54 @@ namespace MOOT {
 
   }
 
+  ConfigInfo* MootQuery::getConfigInfo(unsigned key) {
+    rdbModel::StringVector getCols;
+    rdbModel::StringVector orderCols;
+    orderCols.clear();
+    std::string where(" WHERE config_key= '");
+    std::string keystr;
+    facilities::Util::utoa(key, keystr);
+    where += keystr + "'";
+    
+    getCols.reserve(9);
+    getCols.push_back("config_key");
+    getCols.push_back("name");
+    getCols.push_back("algorithm");
+    getCols.push_back("alg_step");
+    getCols.push_back("description");
+    getCols.push_back("status");
+    getCols.push_back("active_state");
+    getCols.push_back("mode");
+    getCols.push_back("creation_request_time");
+
+    rdbModel::ResultHandle* res = 0;
+    try {
+      res = m_rdb->getConnection()->select("Configs", getCols, orderCols,
+                                           where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getConfigInfo "
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      return 0;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>selFields;
+    res->getRow(selFields, 0);
+    ConfigInfo* c = 
+      new ConfigInfo(selFields[0], selFields[1], selFields[2], selFields[3],
+                     selFields[4], selFields[5], selFields[6], selFields[7],
+                     selFields[8]);
+    delete res;
+    return c;
+  }
+
   unsigned MootQuery::getConfigInfo(std::vector<ConfigInfo>& info,
                                     const std::string& status,
                                     const std::string& instr,
