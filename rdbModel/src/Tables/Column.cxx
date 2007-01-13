@@ -127,22 +127,32 @@ namespace rdbModel {
     return &m_fields[guess];
   }
 
-   void  Row::regroup(std::vector<std::string>& colNames, 
-                      std::vector<std::string>& colVals, 
-                      std::vector<std::string>& nullCols) const {
-     unsigned nFields = m_fields.size();
-     colNames.reserve(nFields);
-     colVals.reserve(nFields);
-
-     for (unsigned i = 0; i < nFields; i++) {
-       if (m_fields[i].m_null) {
-         nullCols.push_back(m_fields[i].m_colname);
-       }
-       else {
-         colNames.push_back(m_fields[i].m_colname);
-         colVals.push_back(m_fields[i].m_val);
-       }
-     }
-   }
+  void  Row::regroup(std::vector<std::string>& colNames, 
+                     std::vector<std::string>& colVals, 
+                     std::vector<std::string>& nullCols) const {
+    unsigned nFields = m_fields.size();
+    colNames.reserve(nFields);
+    colVals.reserve(nFields);
+    
+    for (unsigned i = 0; i < nFields; i++) {
+      if (m_fields[i].m_null) {
+        nullCols.push_back(m_fields[i].m_colname);
+      }
+      else {
+        colNames.push_back(m_fields[i].m_colname);
+        colVals.push_back(m_fields[i].m_val);
+      }
+    }
+  }
+  void  Row::write(std::ostream& out) const {
+    out << std::endl;
+    for (unsigned i = 0; i < m_fields.size(); i++) {
+      out << m_fields[i] << std::endl;
+    }
+  }
  
+  void FieldVal::write(std::ostream& out) const {
+    out << m_colname << "='" << m_val << "'";
+  }
+
 }

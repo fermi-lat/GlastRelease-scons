@@ -271,6 +271,16 @@ namespace rdbModel {
       }
       return ((intVal >= m_minInt) && (intVal <= m_maxInt));
     }
+      // Connection::formatField does most of the checking for these types
+    case TYPEtinytext:
+    case TYPEtext:
+    case TYPEmediumtext:
+    case TYPElongtext:
+    case TYPEtinyblob:
+    case TYPEblob:
+    case TYPEmediumblob:
+    case TYPElongblob:
+
     case TYPEvarchar:
     case TYPEchar:
       if (m_restrict == RESTRICTnone) return true;

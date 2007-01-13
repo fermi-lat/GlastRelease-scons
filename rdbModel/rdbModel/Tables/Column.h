@@ -3,6 +3,7 @@
 #define RDBMODEL_COLUMN_H
 #include <vector>
 #include <string>
+#include <iostream>
 #include <utility>
 #include "rdbModel/Management/Visitor.h"
 // #include "rdbModel/Tables/Table.h"
@@ -145,9 +146,11 @@ namespace rdbModel {
   public:
     FieldVal(std::string colname="", std::string val="", bool isNull=false) :
       m_colname(colname), m_val(val), m_null(isNull) { }
+    void write (std::ostream& out) const;
     std::string m_colname;
     std::string m_val;
     bool        m_null; // true if field val is NULL; then will ignore m_val
+
   };
 
   /// Function object used to sort FieldValPar objects by column name
@@ -182,9 +185,16 @@ namespace rdbModel {
     void  regroup(std::vector<std::string>& colNames, 
                   std::vector<std::string>& colVals, 
                   std::vector<std::string>& nullCols) const;
+    void  write(std::ostream& out) const;
   private:
     std::vector<FieldVal> m_fields;
     bool     m_sorted;
   };
+  inline std::ostream& operator<<(std::ostream& out,const Row& r) {
+    r.write(out); return out;
+  }
+  inline std::ostream& operator<<(std::ostream& out,const FieldVal& f) {
+    f.write(out); return out;
+  }
 }
 #endif

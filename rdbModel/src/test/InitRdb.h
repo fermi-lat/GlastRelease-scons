@@ -33,6 +33,8 @@ namespace rdbModel {
     Rdb* m_rdb;
     Builder* m_build;
     bool     m_dbg;
+    /// If m_add is true, keep going after certain kinds of insert failures
+    bool     m_add;   
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* m_doc;
 
   };
