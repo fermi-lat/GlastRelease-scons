@@ -9,6 +9,8 @@
 #include "mootCore/MoodConnection.h"
 #include "mootCore/MootQuery.h"
 
+void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out);
+
 int main(int nargs, char**)    {
 
   MOOT::MoodConnection* moodCon = 
@@ -273,6 +275,9 @@ int main(int nargs, char**)    {
   std::cout << "Retrieved information for " << nConfigs << " Configs "
             << std::endl;
   std::cout << "For first config: " << std::endl;
+
+  writeInfo(pInfo, std::cout);
+  /*
   std::cout << "Key = " << pInfo->getKey() << std::endl;
   std::cout << "Name = " << pInfo->getName() << std::endl;
   std::cout << "Alg. = " << pInfo->getAlg() << std::endl;
@@ -283,10 +288,12 @@ int main(int nargs, char**)    {
   std::cout << "Mode = " << pInfo->getMode() << std::endl;
   std::cout << "Creation time = " << pInfo->getCreationTime() 
             << std::endl << std::endl;
-
+  */
   pInfo = &cInfo[nConfigs - 1];
 
   std::cout << "For last config: " << std::endl;
+  writeInfo(pInfo, std::cout);
+  /*
   std::cout << "Key = " << pInfo->getKey() << std::endl;
   std::cout << "Name = " << pInfo->getName() << std::endl;
   std::cout << "Alg. = " << pInfo->getAlg() << std::endl;
@@ -296,7 +303,7 @@ int main(int nargs, char**)    {
   std::cout << "Mode = " << pInfo->getMode() << std::endl;
   std::cout << "Creation time = " << pInfo->getCreationTime() 
             << std::endl  << std::endl;
-
+  */
   cInfo.clear();
   nConfigs = q.getConfigInfo(cInfo, "", "");
   std::cout << "Using no cuts at all, found " << nConfigs << " configs" 
@@ -352,6 +359,51 @@ int main(int nargs, char**)    {
     parmKeys.clear();
   }
 
+  unsigned ckey = 8;
+  pInfo = q.getConfigInfo(ckey);
+  if (pInfo) {
+    std::cout << "Got config info for config #" << ckey << std::endl;
+    writeInfo(pInfo, std::cout);
+  }
+  else {
+    std::cout << "No info found for config #" << ckey 
+              << std::endl << std::endl;
+  }
+
+  ckey = 119;
+  pInfo = q.getConfigInfo(ckey);
+  if (pInfo) {
+    std::cout << "Got config info for config #" << ckey << std::endl;
+    writeInfo(pInfo, std::cout);
+  }
+  else {
+    std::cout << "No info found for config #" << ckey 
+              << std::endl << std::endl;
+  }
+
+  ckey = 10023;
+  pInfo = q.getConfigInfo(ckey);
+  if (pInfo) {
+    std::cout << "Got config info for config #" << ckey << std::endl;
+    writeInfo(pInfo, std::cout);
+  }
+  else {
+    std::cout << "No info found for config #" << ckey 
+              << std::endl << std::endl;
+  }
+
 
   return 0;
+}
+void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
+  out << "Key = " << pInfo->getKey() << std::endl;
+  out << "Name = " << pInfo->getName() << std::endl;
+  out << "Alg. = " << pInfo->getAlg() << std::endl;
+  out << "Step = " << pInfo->getStep() << std::endl;
+  out << "Description = " << pInfo->getDescrip() << std::endl;
+  out << "Status = " << pInfo->getStatus() << std::endl;
+  out << "active_state = " << pInfo->getActive() << std::endl;
+  out << "Mode = " << pInfo->getMode() << std::endl;
+  out << "Creation time = " << pInfo->getCreationTime() 
+            << std::endl << std::endl;
 }
