@@ -1,5 +1,5 @@
 package AcdDigi
-version v1r18p1
+version v1r18p2
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -17,17 +17,19 @@ apply_pattern packageShr
 private
 
 apply_pattern package_headers
+macro xml_source "" WIN32 "-s=../xml *.xml"
 
 library AcdDigi *.cxx \
                 Dll/*.cxx \
-                ${AcdDigi_headers}               
+                ${AcdDigi_headers}  \
+                ${xml_source}             
 
 apply_pattern package_Cshlibflags
 private
 
 
 application test_AcdUtil AcdDigiUtil.cxx test/util/*.cxx \
-                         $(TestGlastMain) ${AcdDigi_headers}
+                         $(TestGlastMain) ${AcdDigi_headers} 
 
 public
 
