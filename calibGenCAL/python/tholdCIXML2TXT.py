@@ -83,11 +83,3 @@ if __name__ == '__main__':
                                      pedData[twr][row][online_face][col][1],\
                                      pedData[twr][row][online_face][col][2],\
                                      pedData[twr][row][online_face][col][3]])
-
- 
-
- 
- 
-
-
- 

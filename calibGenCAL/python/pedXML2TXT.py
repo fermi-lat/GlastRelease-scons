@@ -30,8 +30,6 @@ import Numeric
 import calCalibXML
 import calConstant
 import zachUtil
-
-
                   
 if __name__ == '__main__':
     usage = "usage: python pedXML2TXT.py [-d delim] <input_xml_file>"
@@ -66,13 +64,13 @@ if __name__ == '__main__':
 
     # print out txt file.
     for twr in towers:
-        for lyr in range(8):
+        for lyr in range(calConstant.NUM_LAYER):
             # calCalibXML uses 'row' indexing, not layer
             row = calCalibXML.layerToRow(lyr)
-            for col in range(12):
-                for face in range(2):
+            for col in range(calConstant.NUM_FE):
+                for face in range(calConstant.NUM_END):
                     online_face = zachUtil.offline_face_to_online[face]
-                    for rng in range(4):
+                    for rng in range(calConstant.NUM_RANGE):
                         print delim.join([str(x) for x in twr, lyr, col, face, rng,
                                           pedData[twr][row][online_face][col][rng][0],
                                           pedData[twr][row][online_face][col][rng][1]])
