@@ -83,8 +83,8 @@ def build_inl_splines(data, twrSet):
                         if length <= 1:
                             continue
 
-                        dacArray = array.array('d', dac[rng][twr,row,online_face,col,0:length].tolist())
-                        adcArray = array.array('d', adc[rng][twr,row,online_face,col,0:length].tolist())
+                        dacArray = array.array('d', dac[rng][twr,row,online_face,col,0:length])
+                        adcArray = array.array('d', adc[rng][twr,row,online_face,col,0:length])
 
                         a2dSpline = ROOT.TSpline3("%d_%d_%d_%d_%d_adc2dac"%(twr,lyr,col,face,rng),
                                                   adcArray,

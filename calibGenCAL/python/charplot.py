@@ -397,9 +397,3 @@ if __name__ == '__main__':
 
     rootFile.Close()
     sys.exit(0)
-
-
-
-
-
-
