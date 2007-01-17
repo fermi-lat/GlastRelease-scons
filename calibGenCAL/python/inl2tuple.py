@@ -73,10 +73,9 @@ if __name__ == '__main__':
                     for rng in range(calConstant.NUM_RNG):
                         ## retrieve data for this channel ##
                         len = inLen[rng][twr, row, online_face, col]
-                        print twr, lyr, face, col, len
                         
                         # skip channel if data is empty
-                        if (len == 0):
+                        if (len <= 1):
                             continue
                         
                         dac = inDAC[rng][twr, row, online_face, col, 0:len]
