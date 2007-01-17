@@ -95,10 +95,10 @@ for twr in mpdTwrs1:
     for idx in range(zachUtil.N_MPD_IDX):
         # first pass only compare against 1st set
         if minVals is None:
-            minVals = Numeric.ones(zachUtil.N_MPD_IDX,'d')*1e5
-            maxVals = Numeric.ones(zachUtil.N_MPD_IDX,'d')*-1e5
-            minDiff = Numeric.ones(zachUtil.N_MPD_IDX,'d')*1e5
-            maxDiff = Numeric.ones(zachUtil.N_MPD_IDX,'d')*-1e5
+            minVals = Numeric.ones(zachUtil.N_MPD_IDX,'f')*1e5
+            maxVals = Numeric.ones(zachUtil.N_MPD_IDX,'f')*-1e5
+            minDiff = Numeric.ones(zachUtil.N_MPD_IDX,'f')*1e5
+            maxDiff = Numeric.ones(zachUtil.N_MPD_IDX,'f')*-1e5
 
             minVals[idx] = min(Numeric.ravel(mpd1[twr, ..., idx]))
             maxVals[idx] = max(Numeric.ravel(mpd1[twr, ..., idx]))
@@ -143,41 +143,41 @@ sm_err_diff_summary = ROOT.TH1I("sm_err_diff_summary",
 # build scatter histograms
 
 lrg_scatter = ROOT.TH2S("lrg_scatter",
-                            "lrg diode mpd change x=mpd1 y=mpd2",
-                            100, minVals[zachUtil.mpdBigValIdx], maxVals[zachUtil.mpdBigValIdx],
-                            100, minVals[zachUtil.mpdBigValIdx], maxVals[zachUtil.mpdBigValIdx])
+                        "lrg diode mpd change x=mpd1 y=mpd2",
+                        100, minVals[zachUtil.mpdBigValIdx], maxVals[zachUtil.mpdBigValIdx],
+                        100, minVals[zachUtil.mpdBigValIdx], maxVals[zachUtil.mpdBigValIdx])
 
 sm_scatter = ROOT.TH2S("sm_scatter",
-                           "sm diode mpd change x=mpd1 y=mpd2",
-                           100, minVals[zachUtil.mpdSmallValIdx], maxVals[zachUtil.mpdSmallValIdx],
-                           100, minVals[zachUtil.mpdSmallValIdx], maxVals[zachUtil.mpdSmallValIdx])
+                       "sm diode mpd change x=mpd1 y=mpd2",
+                       100, minVals[zachUtil.mpdSmallValIdx], maxVals[zachUtil.mpdSmallValIdx],
+                       100, minVals[zachUtil.mpdSmallValIdx], maxVals[zachUtil.mpdSmallValIdx])
 
 lrg_err_scatter = ROOT.TH2S("lrg_err_scatter",
-                                "lrg diode mpd error change x=mpd1 y=mpd2",
-                                100, minVals[zachUtil.mpdBigSigIdx], maxVals[zachUtil.mpdBigSigIdx],
-                                100, minVals[zachUtil.mpdBigSigIdx], maxVals[zachUtil.mpdBigSigIdx])
+                            "lrg diode mpd error change x=mpd1 y=mpd2",
+                            100, minVals[zachUtil.mpdBigSigIdx], maxVals[zachUtil.mpdBigSigIdx],
+                            100, minVals[zachUtil.mpdBigSigIdx], maxVals[zachUtil.mpdBigSigIdx])
 
 sm_err_scatter = ROOT.TH2S("sm_err_scatter",
-                               "sm diode mpd error change x=mpd1 y=mpd2",
-                               100, minVals[zachUtil.mpdSmallSigIdx], maxVals[zachUtil.mpdSmallSigIdx],
-                               100, minVals[zachUtil.mpdSmallSigIdx], maxVals[zachUtil.mpdSmallSigIdx])
+                           "sm diode mpd error change x=mpd1 y=mpd2",
+                           100, minVals[zachUtil.mpdSmallSigIdx], maxVals[zachUtil.mpdSmallSigIdx],
+                           100, minVals[zachUtil.mpdSmallSigIdx], maxVals[zachUtil.mpdSmallSigIdx])
 
 
 lrg_prof = ROOT.TProfile("lrg_prof",
-                            "lrg diode mpd change x=mpd1 y=mpd2",
-                            100, 0, maxVals[zachUtil.mpdBigValIdx])
+                         "lrg diode mpd change x=mpd1 y=mpd2",
+                         100, 0, maxVals[zachUtil.mpdBigValIdx])
 
 sm_prof = ROOT.TProfile("sm_prof",
-                           "sm diode mpd change x=mpd1 y=mpd2",
-                           100, 0, maxVals[zachUtil.mpdSmallValIdx])
+                        "sm diode mpd change x=mpd1 y=mpd2",
+                        100, 0, maxVals[zachUtil.mpdSmallValIdx])
 
 lrg_err_prof = ROOT.TProfile("lrg_err_prof",
-                                "lrg diode mpd error change x=mpd1 y=mpd2",
-                                100, 0, maxVals[zachUtil.mpdBigSigIdx])
+                             "lrg diode mpd error change x=mpd1 y=mpd2",
+                             100, 0, maxVals[zachUtil.mpdBigSigIdx])
 
 sm_err_prof = ROOT.TProfile("sm_err_prof",
-                               "sm diode mpd error change x=mpd1 y=mpd2",
-                               100, 0, maxVals[zachUtil.mpdSmallSigIdx])
+                            "sm diode mpd error change x=mpd1 y=mpd2",
+                            100, 0, maxVals[zachUtil.mpdSmallSigIdx])
 
 # fill histograms
 for twr in mpdTwrs1:
@@ -256,20 +256,3 @@ sm_err_prof.Fit("pol1","Q")
 log.info("Writing %s"%rootPath)
 rootFile.Write()
 rootFile.Close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
