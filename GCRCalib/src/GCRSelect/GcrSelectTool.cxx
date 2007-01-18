@@ -115,10 +115,8 @@ private:
   void verifyDataVectors();
   
   void buildLayMatchTrackCrit();
-  //void rebuildLayMatchTrackCrit();
   void verifyLayMatchTrackCrit();
   void buildLayMatchMultCrit();
-  //void rebuildLayMatchMultCrit();
   void verifyLayMatchMultCrit();
    
 
@@ -414,29 +412,6 @@ void GcrSelectTool::verifyLayMatchTrackCrit(){
       
 }
  
-/** void GcrSelectTool::rebuildLayMatchTrackCrit(){
-    m_log << MSG::INFO << "BEGIN rebuildLayMatchTrackCrit in GcrSelectTool" << endreq;
-  
-    bool fstGoodLayFound = false;
-    for(int ilay=0; ilay<NLAY;ilay++) { 
-    
-    if(m_layMatchTrackCrit[ilay]==1){
-    if(!fstGoodLayFound) fstGoodLayFound = true;
-    }
-    else{
-    if(fstGoodLayFound)
-    {
-    for(int i=ilay; i<NLAY; i++)
-    m_layMatchTrackCrit[i]=-2;
-    }
-    return;
-      
-    }
-    }   
- 
-    m_log << MSG::INFO << "END rebuildLayMatchTrackCrit in GcrSelectTool" << endreq;
-    }*/
-
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -519,24 +494,24 @@ void GcrSelectTool::buildLayMatchMultCrit(){
   bool fstLayWithClusters = false;
   for(int ilay=0; ilay<NLAY;ilay++) { 
     
-    if(m_layMatchMultCrit[ilay]!=-1)
+    if(m_layMatchMultCrit[ilay]!=-1)// if clusters have been found on this layer
       if(!fstLayWithClusters) fstLayWithClusters = true;
       
-    if(m_layMatchMultCrit[ilay]==1){
+    if(m_layMatchMultCrit[ilay]==1){ // if layer is good
       m_layMatchMultCrit2[ilay]=m_layMatchMultCrit[ilay];
       if(debugging)
         m_log << MSG::INFO << "m_layMatchMultCrit[ " << ilay << "]==1"<< endreq;
  
     }
-    else{
+    else{   // if layer is not good
       if(debugging)
         m_log << MSG::INFO << "m_layMatchMultCrit[ " << ilay << "]<>1"<< endreq;
 	  
       int layMatchMultCritCourant = m_layMatchMultCrit[ilay];
-      if(m_layMatchMultCrit[ilay] == -1 && !fstLayWithClusters)
+      if(m_layMatchMultCrit[ilay] == -1 && !fstLayWithClusters)  // layer is not good but no cluster has been found before 
         continue;
 	
-      else{	  
+      else{// layer is not good, clusters have been found, every layer beyond this one has to be tagged as bad one
         for(int i=ilay; i<NLAY; i++)
           m_layMatchMultCrit2[i]=layMatchMultCritCourant;
 
@@ -569,30 +544,6 @@ void GcrSelectTool::verifyLayMatchMultCrit(){
       
 }
  
-/**  void GcrSelectTool::rebuildLayMatchMultCrit(){
-     m_log << MSG::INFO << "BEGIN rebuildLayMatchMultCrit in GcrSelectTool" << endreq;
-  
-     bool fstGoodLayFound = false;
-     for(int ilay=0; ilay<NLAY;ilay++) { 
-    
-     if(m_layMatchMultCrit[ilay]==1){
-     if(!fstGoodLayFound) fstGoodLayFound = true;
-     }
-     else{
-     if(fstGoodLayFound)
-     {
-     for(int i=ilay; i<NLAY; i++)
-     m_layMatchMultCrit[i]=-2;
-     }
-     return;
-      
-     }
-     }   
- 
-     m_log << MSG::INFO << "END rebuildLayMatchMultCrit in GcrSelectTool" << endreq;
-     }
-*/
-
 
 
 //-----------------------------------------------------------------------------------------------------------------

@@ -163,7 +163,8 @@ private:
   Point m_xtalCentersTab[NTOW][NLAY][NCOL];
   
   /// variables defining the path of MCFirstParticle:  should these variables be stored in TDS in an Event::GcrTrack for exemple?
-  Vector m_initDir;
+  Vector m_mcDir,m_initDir;
+  Point m_initPos;
   Point m_calEntryPoint;
   Point m_calExitPoint;
   
@@ -395,8 +396,6 @@ void GcrReconTool::verifyGcrXtalsVec(){
 
 //-----------------------------------------------------------------------------------------------------------------
 void GcrReconTool::buildGcrXtalsVec(){
-
-  Point initPos;
   
   bool debugging = false;
 
@@ -414,26 +413,65 @@ void GcrReconTool::buildGcrXtalsVec(){
 
   m_numGcrXtals=0;
     
-  //====== Task #4.1: we take the first McParticle: =====================================
+  //====== Task #4.1: define initial Position and Direction =====================================
+  
+  //get MC direction:
+  
   Event::McParticle* firstMcParticle = GcrReconTool::findFirstMcParticle();
-    
-  // ******the first McParticle initial position (when launched):
-  const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
-  // casting to Point of initPosition, necessary to define propagator steps
-  double x0 = initPosition.x();
-  double y0 = initPosition.y();
-  double z0 = initPosition.z();
+
+  if(firstMcParticle != 0)
+  	m_mcDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
+  else 
+        m_mcDir = Vector(-1e9,-1e9,-1e9);
+ 
+ 
+  if(m_useMcDir){ // if taking MCTrack, get theoretical initial position and direction
+
+     // ******the first McParticle initial position (when launched):
+      const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
+      // casting to Point of initPosition, necessary to define propagator steps
+
+      m_initPos.setX(initPosition.x());
+      m_initPos.setY(initPosition.y());
+      m_initPos.setZ(initPosition.z());
+
+      // ******the first McParticle initial direction (when launched):
+      m_initDir = Vector(m_mcDir.x(), m_mcDir.y(), m_mcDir.z());
+
   
-  initPos.setX(x0);
-  initPos.setY(y0);
-  initPos.setZ(z0);
+  }
   
-  // ******the first McParticle initial direction (when launched):
-  m_initDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
+  else{ // if taking MCTrack, get reconstructed initial position and direction
   
+	SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc,EventModel::TkrRecon::TkrTrackCol);
+
+	if (pTracks){   
+            // Count number of tracks
+            int nTracks = pTracks->size();
+            if(nTracks < 1) return;
+
+            // Get the first Track - it should be the "Best Track"
+            Event::TkrTrackColConPtr pTrack = pTracks->begin();
+
+	    const Event::TkrTrack* track_1 = *pTrack;
+             
+	    m_initPos = track_1->getInitialPosition();
+	    m_initDir = track_1->getInitialDirection().unit();
+
+	}
+	else
+            m_log << MSG::INFO << "no TkrTrackCol found" << endreq;
+  }
+  
+  double x0 = m_initPos.x();
+  double y0 = m_initPos.y();
+  double z0 = m_initPos.z();
+
   double ux0 = m_initDir.x();
   double uy0 = m_initDir.y();
   double uz0 = m_initDir.z();
+ 
+
 
     
   //m_log << MSG::INFO << "initPos="<< '(' << x0 << ',' << y0 << ',' << z0 << ')'<<endreq;
@@ -448,8 +486,8 @@ void GcrReconTool::buildGcrXtalsVec(){
   
   if (uz0!=0)
     {
-      m_calEntryPoint = initPos+((m_calZTop-z0)/uz0)*m_initDir; 
-      m_calExitPoint  = initPos+((m_calZBot-z0)/uz0)*m_initDir;        
+      m_calEntryPoint = m_initPos+((m_calZTop-z0)/uz0)*m_initDir; 
+      m_calExitPoint  = m_initPos+((m_calZBot-z0)/uz0)*m_initDir;        
       
     }
   else
@@ -458,23 +496,23 @@ void GcrReconTool::buildGcrXtalsVec(){
         {
          
 	  if (ux0>0){
-	    m_calEntryPoint = initPos+((m_calXLo-x0)/ux0)*m_initDir; 
-	    m_calExitPoint  = initPos+((m_calXHi-x0)/ux0)*m_initDir;
+	    m_calEntryPoint = m_initPos+((m_calXLo-x0)/ux0)*m_initDir; 
+	    m_calExitPoint  = m_initPos+((m_calXHi-x0)/ux0)*m_initDir;
 	  }
 	  else{
-	    m_calEntryPoint = initPos+((m_calXHi-x0)/ux0)*m_initDir; 
-	    m_calExitPoint  = initPos+((m_calXLo-x0)/ux0)*m_initDir;
+	    m_calEntryPoint = m_initPos+((m_calXHi-x0)/ux0)*m_initDir; 
+	    m_calExitPoint  = m_initPos+((m_calXLo-x0)/ux0)*m_initDir;
 	    }
         }
       else if (uy0!=0)
         {
 	  if (uy0>0){
-	    m_calEntryPoint = initPos+((m_calYLo-y0)/uy0)*m_initDir; 
-	    m_calExitPoint  = initPos+((m_calYHi-y0)/uy0)*m_initDir;
+	    m_calEntryPoint = m_initPos+((m_calYLo-y0)/uy0)*m_initDir; 
+	    m_calExitPoint  = m_initPos+((m_calYHi-y0)/uy0)*m_initDir;
 	    }
 	  else{
-	    m_calEntryPoint = initPos+((m_calYHi-y0)/uy0)*m_initDir; 
-	    m_calExitPoint  = initPos+((m_calYLo-y0)/uy0)*m_initDir;
+	    m_calEntryPoint = m_initPos+((m_calYHi-y0)/uy0)*m_initDir; 
+	    m_calExitPoint  = m_initPos+((m_calYLo-y0)/uy0)*m_initDir;
 	    
 	    }
         }
@@ -915,15 +953,14 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 
   //m_log << MSG::INFO << "m_mcDir=" << m_initDir << endreq;
 
-  m_gcrTrack->setMcDir(m_initDir);
+  m_gcrTrack->setMcDir(m_mcDir);
   m_gcrTrack->setCalEntryPoint(m_calEntryPoint);
   m_gcrTrack->setCalExitPoint(m_calExitPoint);
+  m_gcrTrack->setDirection(m_initDir);
   
   if(m_useMcDir){// if keeping MC Track
       //if(debugging)
-	  m_log << MSG::INFO << "keeping MC Track" << endreq;
-	  
-      m_gcrTrack->setDirection(m_initDir);
+	  m_log << MSG::INFO << "keeping MC Track" << endreq;	  
       m_gcrTrack->setDirError(Vector(0.0,0.0,0.0));
   }
   else{// if we are keeping the Tracker Track
@@ -949,7 +986,6 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 		m_log << MSG::INFO << "m_KalmanThetaMS=" << track_1->getKalThetaMS() << endreq;
             }
 
-	    m_gcrTrack->setDirection(track_1->getInitialDirection());
 	    m_gcrTrack->setDirError(Vector(0.0,0.0,cos(track_1->getKalThetaMS())));
 
 	}
