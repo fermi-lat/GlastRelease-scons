@@ -63,7 +63,8 @@ G4Generator.mcTreeMode = "pruneCal";
 
 // do you want the full or only the em physics? (default is full)
 
-G4Generator.physics_choice = "full";
+//G4Generator.physics_choice = "LowEnergy";
+G4Generator.physics_choice = "GLAST";
 G4Generator.defaultCutValue= 0.7;		
 G4Generator.physics_tables = "store";	
 G4Generator.physics_dir = "G4cuts/700micron";
@@ -75,7 +76,7 @@ G4Generator.UIcommands+={"/tracking/storeTrajectory 1"};
 //G4Generator.UIcommands+={"/process/inactivate conv"};
 //G4Generator.UIcommands+={"/tracking/verbose 0"};
 
-ApplicationMgr.EvtMax =10;
+ApplicationMgr.EvtMax =100;
 
 //==============================================================
 //

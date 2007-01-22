@@ -55,6 +55,7 @@
 #include "HadronPhysicsQGSP_BERT.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
+#include "G4EmLowEnergyPhysics.hh"
 #include "G4DecayPhysics.hh"
 #include "G4IonPhysics.hh"
 
@@ -91,6 +92,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
   //          QGSP_BERT
   //          LC 
   //          Space
+ //           LowEnergy 
 
  if (m_physicsChoice=="GLAST")
    {
@@ -154,7 +156,27 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
       // Ion Physics
      RegisterPhysics( new SEIonPhysics("ion",msFactory));
    }
- if (m_physicsChoice!="GLAST"&&m_physicsChoice!="LC"&&m_physicsChoice!="Space") 
+  if (m_physicsChoice=="LowEnergy")
+   {
+     G4int ver=1;
+  
+     // EM Physics
+     
+     RegisterPhysics( new G4EmLowEnergyPhysics("lowEnergy EM", ver, msFactory, eLossFactory));
+     
+     // Decay Physics - i.e. decay
+     
+     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+     
+     // Ion Physics
+     
+     RegisterPhysics( new G4IonPhysics("ion"));
+
+     
+     RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron")); // to be updated
+ 
+   }
+ if (m_physicsChoice!="GLAST"&&m_physicsChoice!="LC"&&m_physicsChoice!="Space"&&m_physicsChoice!="LowEnergy") 
    {
 
      G4int ver=1;
