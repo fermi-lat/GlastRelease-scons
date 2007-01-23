@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+ v1r1p3 23-Jan-07 FL  new EM Low Energy processes
  v1r1p2 18-Nov-06 MK  fix syntax error in reqirements
  v1r1p1 Halloween TU  Remove renegade files from release for G4 8.0.p01
  v1r1p0 29-Oct-06 TU  This is the real version to go with v8.0.p01... sorry!
