@@ -70,7 +70,7 @@ if __name__ == '__main__':
             for col in range(calConstant.NUM_FE):
                 for face in range(calConstant.NUM_END):
                     online_face = zachUtil.offline_face_to_online[face]
-                    for rng in range(calConstant.NUM_RANGE):
+                    for rng in range(calConstant.NUM_RNG):
                         print delim.join([str(x) for x in twr, lyr, col, face, rng,
                                           pedData[twr][row][online_face][col][rng][0],
                                           pedData[twr][row][online_face][col][rng][1]])
