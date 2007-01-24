@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
         valIdx = zachUtil.mpdBigValIdx
         sigIdx = zachUtil.mpdBigSigIdx
-        if (diode == zachUtil.DIODE_SM):
+        if (diode == calConstant.CDIODE_SM):
             valIdx = zachUtil.mpdSmallValIdx
             sigIdx = zachUtil.mpdSmallSigIdx
             
