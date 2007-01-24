@@ -82,7 +82,6 @@ if __name__ == '__main__':
 
                     # HEX8 only
                     rng = 2
-
                     cgOnSpline = adc2dacOn[(twr,row,online_face,col,rng)]
                     cgOffSpline = adc2dacOff[(twr,row,online_face,col,rng)]
 

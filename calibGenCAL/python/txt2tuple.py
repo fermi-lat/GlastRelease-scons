@@ -75,5 +75,3 @@ if __name__ == '__main__':
     outfile.Close()
 
     sys.exit(0)                            
-
-    
