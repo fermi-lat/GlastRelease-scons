@@ -17,15 +17,11 @@ import Numeric
 import ROOT
 
 ### CONSTANTS ###
-DIODE_LRG  = 0
-DIODE_SM   = 1
-
 mpdBigValIdx   = 0
 mpdSmallValIdx = 1
 mpdBigSigIdx   = 2
 mpdSmallSigIdx = 3
 N_MPD_IDX      = 4
-
 
 
 """
