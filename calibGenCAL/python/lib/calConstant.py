@@ -36,6 +36,10 @@ CRNG_LEX1 = 1
 CRNG_HEX8 = 2
 CRNG_HEX1 = 3
 
+# Calorimeter symbolic names for diode sizes
+CDIODE_LRG = 0
+CDIODE_SM  = 1
+
 # Calorimeter layer number to string mapping
 
 CLAYER = ('0','1','2','3')
@@ -88,6 +92,9 @@ NUM_TEM = 16
 # Number of calorimeter energy ranges
 
 NUM_RNG = 4
+
+# Number of calorimeter diode sizes
+NUM_DIODE = 2
 
 # Symbolic names for the towers/tems as modules
 
