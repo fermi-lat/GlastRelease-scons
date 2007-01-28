@@ -1486,7 +1486,6 @@
     </col>
     <primary col="Ancillary_key" />
 </table>
-<!--     temp  -->
 
 <!-- Class tables:  Parameter_class, FSW_class
       TO DO: Ancillary_class, Offline_class     -->
