@@ -1426,22 +1426,6 @@
       </comment>
     </col>
 
-<!-- probably don't want this.  Will be replaced with some sort of
-     intent handling, TBD
--->
-    <!-- col name="flavor" >
-      <src null="false" stickyInsert="true">
-        <default value="default" />
-      </src>
-      <type typename="varchar" size="32">
-        <restriction>
-          <enum use="prefer" values="default vanilla ideal" />
-        </restriction>
-      </type>
-      <comment>Normal production parameter files will be of flavor 'default'
-      </comment>
-    </col -->
-
     <col name="description" >
       <src null="false" >
         <from agent="enduser" />
@@ -1488,51 +1472,6 @@
              it and put it in this field.
       </comment>
     </col>
-<!--
-    <col name="energy">
-      <src null="true" >
-        <from agent="enduser" />
-      </src>
-      <type typename="float" >
-        <restriction>
-          <nonnegative />
-        </restriction>
-      </type>
-      <comment>intent-like attribute. Not relevant for all ancillary types
-      </comment>
-    </col>
--->
-<!--
-    <col name="temperature">
-      <src null="true" >
-        <from agent="enduser" />
-      </src>
-      <type typename="float" >
-        <restriction>
-          <nonnegative />
-        </restriction>
-      </type>
-      <comment>Not relevant for all ancillary types
-      </comment>
-    </col>
--->
-<!--
-    <col name="temperature_range">
-      <src null="true" >
-        <from agent="enduser" />
-      </src>
-      <type typename="enum" >
-        <restriction>
-           Value need not be specified, but if it is, must be from
-             the following set.
-          
-          <enum use="require" values="COLD OP ROOM HOT" />
-        </restriction>
-      </type>
-      <comment>Not relevant for all ancillary types
-      </comment>
-    </col>
--->
     <col name="tower" >
       <src null="false" >
         <default value="-1" />
