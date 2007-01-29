@@ -42,13 +42,14 @@ class CalAsym {
   static const unsigned short N_ASYM_PTS = 10;
 
   /// creates & populates Asymmetry splines from m_asym
-  void buildSplines();
+  void genSplines();
 
   /// uses asym2pos splines to convert asymmetry value to xtal position for
   /// energy centroid
   /// \note uses calibGenCAL internal xtal-pitch units w/ origin at negative
   /// face.
   /// \return INVALID_ASYM on error
+  /// \warning you _must_ call genSplines method before using.
   float asym2pos(CalUtil::XtalIdx xtalIdx,
                  CalUtil::DiodeNum diode,
                  float asym) const {
@@ -62,6 +63,7 @@ class CalAsym {
   /// \note uses calibGenCAL internal xtal-pitch units w/ origin at negative
   /// face.
   /// \return INVALID_ASYM on error
+  /// \warning you _must_ call genSplines method before using.
   float pos2asym(CalUtil::XtalIdx xtalIdx,
                  CalUtil::DiodeNum diode,
                  float pos) const {

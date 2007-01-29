@@ -56,8 +56,7 @@ if __name__ == '__main__':
     # retrieve commandline parms
     inName  = args[0]
 
-    # open and read XML Pedestal file
-
+    # open and read XML Asymmetry file
     xmlFile = calCalibXML.calAsymCalibXML(inName)
     (xpos, asymData) = xmlFile.read()
     towers = xmlFile.getTowers()

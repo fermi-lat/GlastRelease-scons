@@ -89,7 +89,9 @@ void MuonCalibTkr::cfgBranches(RootFileAnalysis &rootFile) {
 
 void MuonCalibTkr::fillHists(unsigned nEntries,
                              const vector<string> &digiFileList,
-                             const vector<string> &svacFileList) {
+                             const vector<string> &svacFileList,
+                             unsigned startEvent
+                             ) {
   m_asymHists.initHists();
   m_mpdHists.initHists();
 
@@ -108,7 +110,7 @@ void MuonCalibTkr::fillHists(unsigned nEntries,
   // DIGI Event Loop //
   /////////////////////
   //nEvents = 100000;
-  for (eventData.eventNum = 0; eventData.eventNum < nEvents; eventData.eventNum++) {
+  for (eventData.eventNum = startEvent; eventData.eventNum < nEvents; eventData.eventNum++) {
     eventData.next();
     //LogStream::get() << "event: " << eventData.eventNum << endl;
 

@@ -84,7 +84,7 @@ void CalAsym::readTXT(const string &filename) {
   }
 }
 
-void CalAsym::buildSplines() {
+void CalAsym::genSplines() {
   m_a2pSplines.resize(DiodeNum::N_VALS);
   m_p2aSplines.resize(DiodeNum::N_VALS);
 

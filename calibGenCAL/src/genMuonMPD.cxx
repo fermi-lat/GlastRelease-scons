@@ -154,7 +154,7 @@ int main(int argc,
   LogStream::get() << __FILE__ << ": reading in muon asym file: " << asymTXTFile << endl;
   asym.readTXT(asymTXTFile);
   LogStream::get() << __FILE__ << ": building asymmetry splines: " << endl;
-  asym.buildSplines();
+  asym.genSplines();
 
   //-- MUON MPD
 

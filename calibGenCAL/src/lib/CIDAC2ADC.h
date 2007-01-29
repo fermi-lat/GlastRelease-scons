@@ -62,6 +62,7 @@ class CIDAC2ADC {
   void genSplines();
 
   /// uses intNonlin to convert adc 2 dac for specified xtal/adc range
+  /// \warning you _must_ call genSplines method before using.
   float adc2dac(CalUtil::RngIdx rngIdx,
                 float adc) const {
     if (!m_splinesADC2DAC[rngIdx])
@@ -71,6 +72,7 @@ class CIDAC2ADC {
   }
 
   /// uses intNonlin to convert dac 2 adc for specified xtal/adc range
+  /// \warning you _must_ call genSplines method before using.
   float dac2adc(CalUtil::RngIdx rngIdx,
                 float dac) const {
     if (!m_splinesDAC2ADC[rngIdx])
