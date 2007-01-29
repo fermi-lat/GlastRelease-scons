@@ -6,3 +6,5 @@ setup.*
 *.mak*
 *.root
 rh*
+VC8Debug
+VC8

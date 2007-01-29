@@ -16,6 +16,11 @@
 
 #include "GaudiKernel/IInterface.h"
 
+// Include these to make sure we have the status/veto bit definitions and masks
+#include "EFC/GFC_status.h"
+#include "XFC/HFC_status.h"
+#include "XFC/MFC_status.h"
+
 static const CLID& CLID_ObfStatus = InterfaceID("ObfStatus", 1, 0);
 
 namespace OnboardFilterTds {
@@ -94,9 +99,14 @@ public:
     ObfGammaStatus(unsigned int status) : m_status(status) {}
     virtual ~ObfGammaStatus() {}
 
-    unsigned int getStatusHi() const {return m_status >> 16;}
+    // This for backward compatibility...
+    unsigned int getStatusHi() const {return m_status >> GFC_STATUS_V_TKR_LT_2_ELO;}
     unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    // If msb is set below then event is to be vetoed
     unsigned int getStatus32() const {return m_status;}
+
+    unsigned int getVetoMask() const {return GFC_STATUS_M_VETOES;}
+    unsigned int getVetoBit()  const {return GFC_STATUS_M_VETOED;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -115,7 +125,11 @@ public:
 
     unsigned int getStatusHi() const {return m_status >> 16;}
     unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    // If msb of below is set then event is to be vetoed
     unsigned int getStatus32() const {return m_status;}
+
+    unsigned int getVetoMask() const {return HFC_STATUS_M_VETO_DEF;}
+    unsigned int getVetoBit()  const {return HFC_STATUS_M_VETOED;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -135,6 +149,9 @@ public:
     unsigned int getStatusHi() const {return m_status >> 16;}
     unsigned int getStatusLo() const {return m_status & 0xFFFF;}
     unsigned int getStatus32() const {return m_status;}
+
+    unsigned int getVetoMask() const {return MFC_STATUS_M_VETO_DEF;}
+    unsigned int getVetoBit()  const {return MFC_STATUS_M_VETOED;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
