@@ -170,29 +170,28 @@ int write(char* fileName, int numEvents) {
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
     
-    char *fileName = "recon.root";
-    int n = 1;
-    int numEvents = 10;
+    char *fileName = "recon.root" ;
+    int n =1 ;
+    unsigned int numEvents =10 ;
     if (argc > 1) {
-        fileName = argv[n++];
+        fileName = argv[n++] ;
     } 
     if (argc > 2) {
-        numEvents = atoi(argv[n++]);
+        numEvents = atoi(argv[n++]) ;
     } 
 
     int sc = 0 ;
     try 
      {
-      sc = write(fileName, numEvents) ;
-      sc = read(fileName, numEvents) ;
+      sc = write(fileName,numEvents) ;
+      sc = read(fileName,numEvents) ;
      }
     catch (...)
      {
       std::cout<<"AN UNKNOWN EXCEPTION HAS BEEN RAISED"<<std::endl ;
       sc = 1 ;
      }
-     
-     
+         
     if (sc == 0) {
         std::cout << "RECON ROOT file writing and reading succeeded!" << std::endl;
     } else {

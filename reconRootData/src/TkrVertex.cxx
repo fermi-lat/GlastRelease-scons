@@ -84,6 +84,7 @@ Bool_t TkrVertex::CompareInRange( const TkrVertex & ref, const std::string & nam
 
     bool result = true ;
 
+    // the test comes before "&& result" because we want to enforce all tests
     result = COMPARE_IN_RANGE(Energy) && result ;
     result = COMPARE_IN_RANGE(Quality) && result ;
     result = COMPARE_IN_RANGE(TkrId) && result ;
