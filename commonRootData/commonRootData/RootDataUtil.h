@@ -46,13 +46,16 @@ namespace rootdatautil {
     bool CompareInRange( const TowerId &, const TowerId &, const std::string & name ="unknown TowerId" ) ;
     bool CompareInRange( const VolumeIdentifier &, const VolumeIdentifier &, const std::string & name ="unknown VolumeIdentifier" ) ;
 
-    // adapter
+    // adapters
     template <class T>
     bool CompareInRange( const T & obj1, const T & obj2, const std::string & name = "" )
      {
       if (name=="") return obj1.CompareInRange(obj2) ;
       else  return obj1.CompareInRange(obj2,name) ;
      }
+    template <class T>
+    bool CompareInRange( const T * obj1, const T * obj2, const std::string & name = "" )
+     { return CompareInRange((void*)obj1,(void*)obj2,name) ; }
 
     // std collections
     bool CompareInRange(
