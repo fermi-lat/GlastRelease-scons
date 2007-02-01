@@ -1,7 +1,8 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
- v5r17p1 23-Jan-06 FL  Add G4LowEnergy EM physics
+ v5r17p2  1-Feb-07 TU  Change default physics option from "full" to "GLAST"
+ v5r17p1 23-Jan-07 FL  Add G4LowEnergy EM physics
  v5r17p0  8-Nov-06 TU  Use G4HadronSim to access alternate hadron models 
  v5r16p0 16-Aug-06 TU  Updates to allow G4Propagator to do exception handling of G4 errors.
  v5r15p1 04-Aug-06 LSR New jO paramater: point_on_beamline... allows a more direct way of setting
