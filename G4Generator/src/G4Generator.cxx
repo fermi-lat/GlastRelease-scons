@@ -75,7 +75,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("defaultCutValue", m_defaultCutValue=0.1*mm);
   declareProperty("defaultTkrCutValue", m_defaultTkrCutValue=0.1*mm);
   declareProperty("defaultCalCutValue", m_defaultCalCutValue=0.1*mm);
-  declareProperty("physics_choice", m_physics_choice="full");
+  declareProperty("physics_choice", m_physics_choice="GLAST");
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
   declareProperty("numGenerations", m_numGenerations=100000);
