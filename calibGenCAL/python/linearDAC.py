@@ -121,7 +121,7 @@ if __name__ == '__main__':
             row = calCalibXML.layerToRow(lyr)
             for col in range(calConstant.NUM_FE):
                 for face in range(calConstant.NUM_END):
-                    online_face = zachUtil.offline_face_to_online[face]
+                    online_face = calConstant.offline_face_to_online[face]
 
                     for rng in range(calConstant.NUM_RNG):
 

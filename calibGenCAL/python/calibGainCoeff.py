@@ -78,7 +78,7 @@ if __name__ == '__main__':
             row = calCalibXML.layerToRow(lyr)
             for col in range(12):
                 for face in range(2):
-                    online_face = zachUtil.offline_face_to_online[face]
+                    online_face = calConstant.offline_face_to_online[face]
 
                     # HEX8 only
                     rng = 2

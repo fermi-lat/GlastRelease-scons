@@ -113,7 +113,7 @@ if __name__ == '__main__':
             continue
 
         # convert offline face numbering to online face numbering
-        face = zachUtil.offline_face_to_online[face]
+        face = calConstant.offline_face_to_online[face]
 
         # make sure current tower is on list
         twrSet.add(twr)

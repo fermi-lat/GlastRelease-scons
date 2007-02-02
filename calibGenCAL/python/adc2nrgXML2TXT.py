@@ -1,19 +1,19 @@
 """
-Dump GLAST Cal offline Integral Nonlinearity (ADC<->CIDAC) calibration xml into column delmited text on stdout
+Dump GLAST Cal offline adc2nrg calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, face, range, cidac, adc
+twr, lyr, col, diode, adc2nrg
 
-inlXML2TXT [-d delim] <input_xml_file>
+adc2nrgXML2TXT [-d delim] <input_xml_file>
 
 where:
-    <input_xml_file> = input intNonlin GLAST Cal offline calibration file
+    <input_xml_file> = input adc2nrg  GLAST Cal offline calibration file
         -d delim         = optional field delimeter override (default = ' ')
 """
 
 
 __facility__  = "Offline"
-__abstract__  = "Dump offline intNonlin xml file to .txt file"
+__abstract__  = "Dump offline adc2nrg xml file to .txt file"
 __author__    = "Z. Fewtrell"
 __date__      = "$Date$"
 __version__   = "$Revision$, $Author$"
@@ -27,14 +27,14 @@ import array
 
 import Numeric
 
+import calDacXML
 import calCalibXML
 import calConstant
-import zachUtil
 
 
                   
 if __name__ == '__main__':
-    usage = "usage: python inlXML2TXT.py [-d delim] <input_xml_file>"
+    usage = "usage: python adc2nrgXML2TXT.py [-d delim] <input_xml_file>"
 
     # check commandline
     delim = ' '
@@ -57,33 +57,20 @@ if __name__ == '__main__':
     # retrieve commandline parms
     inName  = args[0]
 
-    # open and read XML intNonlin file
-
-    xmlFile = calCalibXML.calIntNonlinCalibXML(inName)
-    (lenData, dacData, adcData) = xmlFile.read()
+    # open and read XML Adc2nrg file
+    xmlFile = calDacXML.calEnergyXML(inName,"adc2nrg")
+    adc2nrgData = xmlFile.read()
     towers = xmlFile.getTowers()
     xmlFile.close()
 
     # print out txt file.
-    # print out txt file.
     for twr in towers:
         for lyr in range(calConstant.NUM_ROW):
-            # calCalibXML uses 'row' indexing, not layer
+            # calDacXML uses 'row' indexing, not layer
             row = calCalibXML.layerToRow(lyr)
             for col in range(calConstant.NUM_FE):
                 for face in range(calConstant.NUM_END):
                     online_face = calConstant.offline_face_to_online[face]
-                    for rng in range(4):
-                        for pt in range(lenData[rng][twr][row][online_face][col]):
-                            print delim.join([str(x) for x in twr, lyr, col, face, rng,
-                                              dacData[rng][twr][row][online_face][col][pt],
-                                              adcData[rng][twr][row][online_face][col][pt]])
-                                          
-
- 
-
- 
- 
-
-
- 
+                    for diode in range(calConstant.NUM_DIODE):
+                        print delim.join([str(x) for x in twr, lyr, col, face, diode,\
+                                          adc2nrgData[twr, row, online_face, col, diode]])

@@ -129,4 +129,13 @@ def rowToName(row):
         raise ValueError, "row value %d not 0<>7" % row
         
     return CROW[row]
-                 
+
+
+"""
+Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
+"""
+offline_face_to_online = {0:1,1:0}
+
+OFFLINE_FACE_POS = 0
+OFFLINE_FACE_NEG = 1
+

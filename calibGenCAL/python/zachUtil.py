@@ -23,12 +23,6 @@ mpdBigSigIdx   = 2
 mpdSmallSigIdx = 3
 N_MPD_IDX      = 4
 
-
-"""
-Convert offline xtal face indexing to online xtal face indexing  (they're reversed, don't blame me :)
-"""
-offline_face_to_online = {0:1,1:0}
-
 """
 calCalibAsym array idx dictionary
 tuple idx keys are (pos_diode, neg_diode, sigma)
@@ -67,7 +61,7 @@ def build_inl_splines(data, twrSet):
             row = calCalibXML.layerToRow(lyr)
             for col in range(calConstant.NUM_FE):
                 for face in range(calConstant.NUM_END):
-                    online_face = offline_face_to_online[face]
+                    online_face = calConstant.offline_face_to_online[face]
                     for rng in range(calConstant.NUM_RNG):
                         length = int(lenData[rng][twr,row,online_face,col])
 
@@ -146,7 +140,7 @@ def read_perFace_txt(filename):
         ratio = float(ratio)
 
         # convert offline face numbering to online face numbering
-        face = offline_face_to_online[face]
+        face = calConstant.offline_face_to_online[face]
         # convert offline lyr to row
         row = calCalibXML.layerToRow(lyr)
 
@@ -165,3 +159,55 @@ return y3 such that (y2 - y1)/(x2 - x1) = (y3 - y2)/(x3 - x2)
 
 def linear_extrap(x1, x2, x3, y1, y2):
     return (x3-x2)*(y2-y1)/(x2-x1) + y2;
+
+
+"""
+build set of spline objects from cal asymmetry data
+return tuple of 2 dictionaries of ROOT.TSpline3 objects (pos2asym, asym2pos)
+dictionaries are indexed by tuples (twr, row, online_face, col, diode_size)
+input is cal light asymmetry data as returned by calCalibXML.calIntNonlinCalibXML.read()
+"""
+def build_asym_splines(data, twrSet):
+    pos2asym = dict()
+    asym2pos = dict()
+
+    (xpos, asym) = data
+    posArray = array.array('d', xpos)
+    
+
+    # indexes i'm interested in
+    
+    for twr in twrSet:
+        for lyr in range(calConstant.NUM_LAYER):
+            # calCalibXML uses 'row' indexing, not layer
+            row = calCalibXML.layerToRow(lyr)
+            for col in range(calConstant.NUM_FE):
+                # diode var(0,1) will match 0,1 indexes in calCalibXML.asym data
+                for diode in range(calConstant.NUM_DIODE):
+                    asym_data = asym[twr,row,col,diode]
+                    length = len(asym_data)
+
+                    # skip empty channels
+                    if length < 1:
+                        continue
+                        
+                    asymArray = array.array('d', asym_data)
+                    
+                    p2aSpline = ROOT.TSpline3("%d_%d_%d_%d_pos2asym"%(twr,lyr,col,diode),
+                                              posArray,
+                                              asymArray,
+                                              length)
+                    
+                    a2pSpline = ROOT.TSpline3("%d_%d_%d_%d_asym2pos"%(twr,lyr,col,diode),
+                                              asymArray,
+                                              posArray,
+                                              length)
+
+                    tpl = (twr,row,col,diode)
+                    pos2asym[tpl] = p2aSpline
+                    asym2pos[tpl] = a2pSpline
+
+                    # find 'overall' light asymmetry @ center of xtal
+                    p2a = pos2asym[tpl]
+
+    return (pos2asym, asym2pos)
