@@ -241,11 +241,10 @@ if __name__ == '__main__':
 
                         
                         
-                        # insert 0,0 point @ beginning of curve
+                        # insure 0,0 point @ beginning of curve
                         if dac[0] != 0:
-                            dac = Numeric.concatenate(([0],dac))
-                            adc = Numeric.concatenate(([0],adc))
-                            length += 1
+                            dac[0] = 0
+                            adc[0] = 0
 
                         #print "zero"
                         #print length
