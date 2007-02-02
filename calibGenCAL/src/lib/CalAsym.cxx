@@ -142,11 +142,6 @@ void CalAsym::genSplines() {
                                               pos, asym, N_ASYM_PTS+2);
         mySpline->SetName(name.str().c_str());
 
-        //         cout << mySpline->GetName() << " ";
-        //         for (unsigned short i = 0; i < N_ASYM_PTS+2; i++)
-        //           cout << pos[i] << " " << asym[i] << " ";
-        //         cout << endl;
-
         m_p2aSplines[diode][xtalIdx] = mySpline;
       }
     }

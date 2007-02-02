@@ -73,10 +73,6 @@ class CalAsym {
     if (!splinePtr)
       return INVALID_ASYM;
 
-    /*     cout << splinePtr->GetName()  */
-    /*          << " " << pos << " " << splinePtr->Eval(pos) */
-    /*          << endl; */
-
     return splinePtr->Eval(pos);
   }
 

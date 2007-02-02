@@ -97,7 +97,6 @@ void CalHodoscope::addHit(const CalDigi &calDigi) {
   count++;  // increment total # hits
 
   perLyr[lyr]++;
-  //cout << "hscope add: " << xtalIdx.getCalXtalId() << endl;
   hitList.push_back(xtalIdx);
 }
 
