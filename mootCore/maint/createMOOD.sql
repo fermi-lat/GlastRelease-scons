@@ -44,9 +44,12 @@
 ##
 ## Tables may be dropped in reverse order
 
-## Delegates must be created before Parameter_class and Conditions
-## Both will some day refer to it.
-source createDelegates.sql;      
+## Delegates must be created before  Precincts.
+source createDelegates.sql; 
+source createPrecincts.sql;
+
+## Precincts must be created before Votes and Parameter_class
+source createVotes.sql;     
 
 ## class tables
 source createFSW_class.sql;
@@ -57,7 +60,9 @@ source createAncillary_class.sql;
 ## instance tables
 ## Conditions must be created before Parameters since the latter
 ## will have (some day) a foreign key referencing Conditions.
-source createConditions.sql;
+
+## Don't want this after all
+##source createConditions.sql;
 
 source createParameters.sql;
 source createFSW_inputs.sql;

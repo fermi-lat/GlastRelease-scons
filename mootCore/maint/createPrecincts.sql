@@ -1,8 +1,8 @@
 create table Precincts
-(key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
- COMMENT "primary key", 
+(precincts_key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
+ COMMENT 'primary key', 
  name  VARCHAR(32) NOT NULL UNIQUE
- COMMENT "ACD_Mode, ACD_Bias, CAL_Timing, ...",
+ COMMENT 'ACD_Mode, ACD_Bias, CAL_Timing, ...',
  delegate_fk INT UNSIGNED NOT NULL default '1'
   COMMENT 'refers to row in Delegate table',
  status    VARCHAR(32) NOT NULL default 'OK'
