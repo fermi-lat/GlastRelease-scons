@@ -40,9 +40,7 @@ int main(int argc,
     SimpleIniFile cfgFile(argv[1]);
 
     // output dir
-    string outputDir        = cfgFile.getVal("GENERAL",
-                                             "OUTPUT_DIR",
-                                             string("./"));
+    const string outputDir("./");
     // input files
     string rootFileCI       = cfgFile.getVal("MU_TRIG",
                                              "ROOTFILE_CI",

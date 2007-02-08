@@ -40,15 +40,23 @@ int main(int argc,
     SimpleIniFile cfgFile(argv[1]);
 
     // output dir
-    string outputDir  = cfgFile.getVal("GENERAL",
-                                       "OUTPUT_DIR",
-                                       string("./"));
+    const string outputDir("./");
 
     // input files
     string rootFileLE = cfgFile.getVal("CIDAC2ADC",
                                        "LE_ROOT_FILE", string(""));
     string rootFileHE = cfgFile.getVal("CIDAC2ADC",
                                        "HE_ROOT_FILE", string(""));
+    // broadcast mode
+    bool bcastMode = cfgFile.getVal("CIDAC2ADC",
+                                    "BCAST_MODE",
+                                    true);
+
+    bool readADCMeans = cfgFile.getVal("CIDAC2ADC",
+                                       "READ_ADC_MEANS",
+                                       false);
+
+
 
     // i can process 1 or 2 files, but not none
     if (rootFileLE.length() == 0 && rootFileHE.length() == 0) {
@@ -75,11 +83,6 @@ int main(int argc,
     //-- LOG SOFTWARE VERSION INFO --//
     output_env_banner(LogStream::get());
 
-    // broadcast mode
-    bool      bcastMode     = cfgFile.getVal("CIDAC2ADC",
-                                             "BCAST_MODE",
-                                             true);
-
     // txt output filename
     string    outputTXTFile =
       CIDAC2ADC::genFilename(outputDir,
@@ -89,10 +92,6 @@ int main(int argc,
     CIDAC2ADC adcMeans;
     CIDAC2ADC cidac2adc;
     IntNonlin intNonlin;
-
-    bool      readADCMeans = cfgFile.getVal("CIDAC2ADC",
-                                            "READ_ADC_MEANS",
-                                            false);
 
     string    adcMeanFile  =
       CIDAC2ADC::genFilename(outputDir,
