@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # print out txt file.
     # print out txt file.
     for twr in towers:
-        for lyr in range(calConstant.NUM_ROW):
+        for lyr in range(calConstant.NUM_LAYER):
             # calCalibXML uses 'row' indexing, not layer
             row = calCalibXML.layerToRow(lyr)
             for col in range(calConstant.NUM_FE):
