@@ -6,6 +6,13 @@
 
    *  EOH  *
 
+   v1r2   9-Feb-2007  jrb 1. Add query to fetch Config info by key
+                          2. Several changes to mood*.xml to eliminate
+                             mention of unused fields in Parameters and
+                             Ancillary; also eliminate Conditions table
+                          3. Add sql files to maint subdir. to create
+                             new tables Votes, Precincts and Ancillary_aliases
+                             (but don't add to xml description yet)
    v1r1p1 9-Jan-2007  jrb Bug fix for MootQuery::getParmsUsed
    v1r1   9-Jan-2007  jrb Add table Configs_to_Parameters and a couple
                           new queries
