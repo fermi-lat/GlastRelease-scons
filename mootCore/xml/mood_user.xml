@@ -149,7 +149,8 @@
   </table>
 <!-- start Delegates -->
   <table name="Delegates"
-     comment="Describe Conditions set instances for MOOT" version="v1r0" >
+     comment="Describe major management divisions of configuration" 
+version="v1r0" >
     <col name="delegate_key" >
       <src null="false">
         <from agent="auto_increment" />
@@ -168,8 +169,7 @@
         <from agent="enduser" />
       </src>
       <type typename="varchar" size="16" />
-      <comment>user-friendly way to identify the Conditions collection, 
-              preferably unique but uniqueness is not enforced.
+      <comment>user-friendly way to identify the Delegate. Must be unique.
       </comment>
     </col>
 
@@ -220,165 +220,13 @@
     </col>
 
     <primary col="delegate_key" />
-
+    <index name="name_unique_index" cols="name" />
 
   </table>
 
 <!-- end Delegates -->
-<!-- start of Conditions -->
-  <table name="Conditions"
-     comment="Describe Conditions set instances for MOOT" version="v1r0" >
-    <col name="condition_key" >
-      <src null="false">
-        <from agent="auto_increment" />
-      </src>
-      <type typename="int" unsigned="true">
-        <restriction>          
-          <nonnegative />   
-        </restriction>
-      </type>
-      <comment>This is the primary key, automatically set when a 
-          row is inserted.</comment>
-    </col>
 
-    <col name="name" >
-      <src null="false">
-        <from agent="enduser" />
-      </src>
-      <type typename="varchar" size="32" />
-      <comment>user-friendly way to identify the Conditions collection, 
-              preferably unique but uniqueness is not enforced.
-      </comment>
-    </col>
-
-<!-- Not sure we need an instrument column.
-    <col name="instrument">
-      <src null="false">
-        <default value="LAT" />
-      </src>
-      <type typename="varchar" size="16" />
-      <comment>Instrument for which these conditions are intended </comment>
-    </col>
--->
-
-    <col name="status" >
-      <src null="false">
-        <from agent="enduser" />
-      </src>
-      <type typename="enum" >
-        <restriction>
-          <enum use="require" values="OK INVALID SUPSED" />
-        </restriction>
-      </type>
-      <comment>status refers to usability during build </comment>
-    </col>
-
-
-    <col name="description" >
-      <src null="false" >
-        <from agent="enduser" />
-      </src>
-      <type typename="varchar" size="255" />
-      <comment>Optional comments about anything at all</comment>
-    </col>
-
-
-    <col name="delegate_fk" >
-      <src null="false" >
-        <from agent="enduser" />
-      </src>
-      <type typename="int" unsigned="true" >
-        <restriction>          
-          <nonnegative />   
-        </restriction>
-      </type>
-      <fk tableName="Delegates" keyCol="delegate_key" />
-      <comment>A non-trivial condition set applies only to parameters
-         for one delegate</comment>
-    </col>
-
-    <col name="legain" >
-      <src null="false">
-         <default value="none" />
-      </src>
-      <type typename="enum" >
-        <restriction>
-          <enum use="require" values="0 1 2 3 4 5 6 7 none" />
-        </restriction>
-      </type>
-      <comment>CAL low-energy gain setting, normally 5</comment>
-    </col>
-
-    <col name="hegain" >
-      <src null="false" >
-        <default value="none" />
-      </src>
-      <type typename="enum" >
-        <restriction>
-          <enum use="require" 
-             values="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 none" />
-        </restriction>
-      </type>
-      <comment>CAL high-energy gain setting, normally 15 for flight</comment>
-    </col>
-
-    <col name="temperature" >
-      <src null="false" >
-        <default value="0" />
-      </src>
-      <type typename="float" />
-      <comment>
-      </comment>
-    </col>
-
-    <col name="temperature_tol" >
-      <src null="false" >
-        <default value="0" />
-      </src>
-
-      <type typename="float" >
-        <restriction>
-          <nonnegative />
-        </restriction>
-      </type>
-      <comment>
-      </comment>
-    </col>
-
-      
-    <col name="creator" >
-      <src null="false" >
-        <from agent="service"  contents="username" />
-      </src>
-      <type typename="varchar" size="32" />
-      <comment>Service creating the row should determine user id invoking
-             it and put it in this field.
-      </comment>
-    </col>
-
-    <col name="creation_time" >
-      <src null="true" >
-        <from agent="service" contents="insert_time" />         
-      </src>
-      <type typename="datetime" >
-        <restriction>
-          <interval min="1970-1-1" max="2037-12-31"/>
-        </restriction>
-      </type>
-      <comment>
-      Date when this row was entered into database, to be
-      set automatically by service (not by end user)
-      </comment>
-    </col>
-
-    <primary col="condition_key" />
-
-
-  </table>
-
-<!-- end of Conditions -->
-
-<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs, Ancillary -->
+<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs, Ancillary  -->
   <table name="OfflineCalib" 
     comment="metadata table for LAT calibrations" version="v2r1">
     <!-- define columns -->
@@ -979,20 +827,6 @@
       </comment>
     </col>
 
-    <col name="condition_fk" >
-      <src null="false" >
-        <default value="1" />
-      </src>
-      <type typename="int" unsigned="true" >
-        <restriction>
-          <nonnegative />
-        </restriction>
-      </type>
-      <fk tableName="Conditions" keyCol="condition_key" />
-      <comment>Refers to primary key in Conditions table, defaulting
-             to generic</comment>
-    </col>
-
     <col name="instrument">
       <src null="false">
         <default value="LAT" />
@@ -1039,49 +873,6 @@
       covering a particular instant should be PROD at a time.
       </comment>
     </col>
-
-    <col name="flavor" >
-      <src null="false" stickyInsert="true">
-        <default value="default" />
-      </src>
-      <type typename="varchar" size="255">
-        <restriction>
-          <enum use="prefer" values="default vanilla ideal" />
-        </restriction>
-      </type>
-      <comment>Normal production parameter files will be of flavor 'default'
-      </comment>
-    </col>
-
-
-    <col name="vstart" >
-      <src  stickyInsert="true" null="true"> 
-         <default interp="time" value="NOW" />
-      </src>
-      <type typename="datetime">
-        <restriction>
-          <interval min="1970-1-1" max="2037-12-31"/>
-        </restriction>
-      </type>
-      <comment>Start of period for which parameter file is valid. MUST be 
-            supplied by user</comment>
-    </col>
-
-    <col name="vend" >
-      <!-- If no value is supplied, file is marked as being
-      valid until the last possible time
-      -->
-      <src null="true" stickyInsert="true"> 
-        <default value="2037-12-31" />
-      </src>
-      <type typename="datetime">
-        <restriction>
-          <interval min="1970-1-1" max="2037-12-31"/>
-        </restriction>
-      </type>
-      <comment>End of period for which file is valid</comment>
-    </col>
-
 
     <col name="description" >
       <src null="false" >
@@ -1161,13 +952,6 @@
 
     <primary col="parm_key" />
 
-    <!-- define extra constraints -->
-    <assert name="validRow">
-      <compare relation="lessThan">
-        <colRef col="vstart" which="toBe"/>
-        <colRef col="vend" which="toBe" />
-      </compare>
-    </assert>
   </table>
   
   <table name="FSW_inputs"
@@ -1426,7 +1210,6 @@
       </comment>
     </col>
 
-
     <col name="description" >
       <src null="false" >
         <from agent="enduser" />
@@ -1473,7 +1256,6 @@
              it and put it in this field.
       </comment>
     </col>
-
     <col name="tower" >
       <src null="false" >
         <default value="-1" />
