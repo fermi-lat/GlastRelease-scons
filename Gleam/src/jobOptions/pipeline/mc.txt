@@ -21,7 +21,7 @@ AuditorSvc.Auditors    = {"ChronoAuditor"};
 //
 // Set up basic event loop:
 //
-ApplicationMgr.ExtSvc = {"GlastEventSelector/EventSelector" , 
+ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" , 
                          "EventCnvSvc"};
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};

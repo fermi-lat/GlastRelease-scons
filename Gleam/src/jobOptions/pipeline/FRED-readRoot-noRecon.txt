@@ -11,7 +11,7 @@
 ApplicationMgr.DLLs    += {"GaudiAlg","FluxSvc","GlastSvc"};
 ApplicationMgr.DLLs    += {"HepRepSvc","HepRepXml","HepRepCorba"};
 ApplicationMgr.ExtSvc  += {"HepRepSvc"};
-ApplicationMgr.ExtSvc  += {"GlastEventSelector/EventSelector","EventCnvSvc"};
+ApplicationMgr.ExtSvc  += {"EventSelector/EventSelector","EventCnvSvc"};
 
 ApplicationMgr.Runable = "HepRepSvc";
 
