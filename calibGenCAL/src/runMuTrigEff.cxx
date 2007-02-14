@@ -147,7 +147,7 @@ int main(int argc,
 
     histFile.Write();
     histFile.Close();
-  } catch (exception e) {
+  } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
   }
   return 0;

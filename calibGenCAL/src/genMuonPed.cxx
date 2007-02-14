@@ -176,7 +176,7 @@ int main(int argc,
 
     LogStream::get() << __FILE__ << ": writing muon pedestals: " << muPedTXTFile << endl;
     calPed.writeTXT(muPedTXTFile);
-  } catch (exception e) {
+  } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
   }
   return 0;
