@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+           xmlns:xi="http://www.w3.org/2001/XInclude"
+    elementFormDefault="unqualified" >
+
+<!-- Element and type definitions herein are in bottom-up order;
+     for the most part elements and datatypes are defined before
+     they're referenced.
+ -->
+
+  <!-- register values may be expressed in decimal or in hex -->
+  <xs:simpleType name="regValueType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:unsignedInt" />
+      </xs:simpleType>
+      <xs:simpleType >
+        <xs:restriction base="xs:string" >
+          <xs:pattern value="0x[0-9A-Fa-f]{1,8}" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>  
+
+  <xs:simpleType name="nonnegFloat">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="broadcast" type="regValueType" />
+
+  <xs:element name="singleton" type="regValueType" />
+
+  <xs:element name="broadcastField" >
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="regValueType">
+          <xs:attribute name="name" use="required" type="xs:Name" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="singletonField" >
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="regValueType">
+          <xs:attribute name="name" use="required" type="xs:Name" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+
+<!-- Register elements contain <singleton>, <broadcast> or an arbitrary number
+     of <broadcastField> elements.  In the latter 2 cases an arbitrary
+     number of <except> elements may be appended
+ -->
+  <xs:complexType name="registerType">
+    <xs:choice>
+      <xs:choice>
+        <xs:element ref="singleton" />
+        <xs:element ref="singletonField" maxOccurs="unbounded" 
+                         minOccurs="0" />
+      </xs:choice>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="broadcast"  />
+          <!-- alternative is an arbitary # of broadcastField elements -->
+          <xs:element ref="broadcastField" maxOccurs="unbounded" 
+                      minOccurs="0" />
+        </xs:choice>
+        <xs:element name="except" minOccurs="0" maxOccurs="unbounded" >
+          <xs:complexType>
+            <xs:simpleContent >
+              <xs:extension base="regValueType">
+                <xs:attribute name="garc" type="xs:unsignedByte" />
+                <xs:attribute name="gafe" type="xs:unsignedByte" />
+                <xs:attribute name="tem" type="xs:unsignedByte" />
+                <xs:attribute name="ccc" type="xs:unsignedByte" />
+                <xs:attribute name="crc" type="xs:unsignedByte"  />
+                <xs:attribute name="cfe" type="xs:unsignedByte"  />
+                <xs:attribute name="spt" type="xs:Name"  />
+                <xs:attribute name="tfe" type="xs:unsignedByte"  />
+                <xs:attribute name="tcc" type="xs:unsignedByte"  />
+                <xs:attribute name="trc" type="xs:unsignedByte"  />
+                <xs:attribute name="tic" type="xs:unsignedByte"  />
+                <xs:attribute name="field" type="xs:Name" />
+              </xs:extension >
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:choice>
+  </xs:complexType>
+
+<!-- attribute group to be used by output-file-container-type elements
+     (of the form PRECINCT-param or PRECINCT-offline where PRECINCT
+     is replaced by a precinct name -->
+  <xs:attributeGroup name="outfileAttGroup">
+    <xs:attribute name="stub" type="xs:string" use="optional" />
+  </xs:attributeGroup>
+
+  <!-- Make a type for empty output file container elements
+       (since they occur often -->
+  <xs:complexType name="noOutfilesType" >
+    <xs:sequence />
+    <xs:attributeGroup ref="outfileAttGroup" />
+  </xs:complexType >
+
+<!-- attribute group to be used by ancillary file elements -->
+  <xs:attributeGroup name="ancAttributes" >
+    <xs:attribute name="perTower" type="xs:boolean" default="false" />
+    <xs:attribute name="nickname" type="xs:Name" use="required" />
+  </xs:attributeGroup>
+
+<!-- base type for ancillary file elements.  Content is alias name -->
+  <xs:complexType name="ancFileType"  >
+    <xs:simpleContent >
+      <xs:extension base ="xs:Name" >
+      <xs:attributeGroup ref="ancAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+<!-- Base type for elements with no content and no attributes.
+     It's convenient to be able to refer to this for many of the
+     containers which, depending on precinct, may always be empty
+  -->
+    <xs:complexType name="emptyBaseType">
+      <xs:sequence />
+    </xs:complexType>
+
+  <!-- param files may depend on one or more ancillary files -->
+  <xs:complexType name="paramFileType" >
+    <xs:sequence>
+      <xs:element name="ancRef" minOccurs="0" maxOccurs="unbounded" >
+        <xs:complexType>
+          <xs:attribute name="refTo" type="xs:Name" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="emptyBase" type="emptyBaseType" />
+
+
+  <xs:element name="method" type="xs:string" />
+
+
+  <xs:element name="ACD_Mode-registers" >
+    <xs:complexType>
+      <xs:all minOccurs="1">
+        <xs:element name="AEM_aem_configuration" type="registerType" />
+        <xs:element name="AFE_config_reg" type="registerType" />
+        <xs:element name="ARC_max_pha" type="registerType" />
+        <xs:element name="AEM_tci_dac" type="registerType" />
+        <xs:element name="ARC_pha_en" type="registerType" />
+        <xs:element name="ARC_veto_en" type="registerType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Mode-param" >
+    <xs:complexType>
+      <xs:all minOccurs="1" >
+        <xs:element name="latc_AEM_ACD_Mode" type="paramFileType" />
+        <xs:element name="latc_ARC_ACD_Mode" type="paramFileType" />
+        <xs:element name="latc_AFE_ACD_Mode" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_Mode" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Mode-anc" type="emptyBaseType" />
+  <xs:element name="ACD_Mode-constants" type="emptyBaseType" />
+
+  <xs:element name="ACD_Mode-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_Mode" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_Mode precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_Mode-registers" />
+        <xs:element ref="ACD_Mode-constants" />
+        <xs:element ref="ACD_Mode-anc" />
+        <xs:element ref="ACD_Mode-param" />
+        <xs:element ref="ACD_Mode-offline" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+<!--   ***** ACD_Bias starts here ****** -->
+
+  <xs:element name="ACD_Bias-registers" >
+    <xs:complexType>
+      <xs:sequence >
+        <xs:element name="AFE_bias_dac" type="registerType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Bias-anc" >
+    <xs:complexType >
+      <xs:all minOccurs="0" >
+        <xs:element name="ACD_BiasDacCalibration" type="ancFileType" 
+	minOccurs="0" 	/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Bias-param" >
+    <xs:complexType>
+      <xs:all minOccurs="1" >
+        <xs:element name="latc_AFE_ACD_Bias" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_Bias" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Bias-constants" type="emptyBaseType" />
+
+  <xs:element name="ACD_Bias-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_Bias" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_Bias precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_Bias-registers" />
+        <xs:element ref="ACD_Bias-constants" />
+        <xs:element ref="ACD_Bias-anc" />
+        <xs:element ref="ACD_Bias-param" />
+        <xs:element ref="ACD_Bias-offline" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+<!--   ACD_Hld -->
+  <xs:element name="ACD_Hld-registers" >
+    <xs:complexType>
+      <xs:sequence >
+        <xs:element name="AFE_hld_dac" type="registerType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Hld-anc" >
+    <xs:complexType >
+      <xs:all minOccurs="0" >
+        <xs:element name="ACD_HldCalibration" type="ancFileType" 
+                    minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Hld-param" >
+    <xs:complexType>
+      <xs:all minOccurs="1" >
+        <xs:element name="latc_AFE_ACD_Hld" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_Hld" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Hld-constants" type="emptyBaseType" />
+
+  <xs:element name="ACD_Hld-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_Hld" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_Hld precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_Hld-registers" />
+        <xs:element ref="ACD_Hld-constants" />
+        <xs:element ref="ACD_Hld-anc" />
+        <xs:element ref="ACD_Hld-param" />
+        <xs:element ref="ACD_Hld-offline" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+<!-- ACD_PHA -->
+
+  <xs:element name="ACD_PHA-registers" >
+    <xs:complexType>
+      <xs:sequence >
+        <xs:element name="ARC_pha_threshold" type="registerType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_PHA-anc" >
+    <xs:complexType >
+      <xs:all minOccurs="0" >
+        <xs:element name="ACD_PedestalCalibration" type="ancFileType"
+                    minOccurs="0" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_PHA-param" >
+    <xs:complexType>
+      <xs:all minOccurs="1" >
+        <xs:element name="latc_ARC_ACD_PHA" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_PHA" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_PHA-constants" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="countsAbovePedestal" type="xs:unsignedShort" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_PHA-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_PHA" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_PHA precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_PHA-registers" />
+        <xs:element ref="ACD_PHA-constants" />
+        <xs:element ref="ACD_PHA-anc" />
+        <xs:element ref="ACD_PHA-param" />
+        <xs:element ref="ACD_PHA-offline" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+<!-- ACD_Veto -->
+  <xs:element name="ACD_Veto-registers" >
+    <xs:complexType>
+      <xs:all >
+        <xs:element name="AFE_veto_dac" type="registerType" />
+        <xs:element name="AFE_veto_vernier" type="registerType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Veto-anc" >
+    <xs:complexType >
+      <xs:all minOccurs="0">
+        <xs:element name="ACD_PedestalCalibration" type="ancFileType" 
+                    minOccurs="0" />
+        <xs:element name="ACD_MIPCalibration" type="ancFileType" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_ElectronicsCalibration" type="ancFileType"
+                    minOccurs="0" />
+      </xs:all>
+    </xs:complexType>
+
+
+  </xs:element>
+
+  <xs:element name="ACD_Veto-param" >
+    <xs:complexType>
+      <xs:all  >
+        <xs:element name="latc_AFE_ACD_Veto" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_Veto" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Veto-constants" >
+    <xs:complexType>
+      <xs:choice>
+        <xs:element name="vetoInMip">
+          <xs:complexType>
+            <xs:attribute name="tile" type="nonnegFloat" use="required" />
+            <xs:attribute name="ribbon" type="nonnegFloat" use="required" />
+            <xs:attribute name="NA" type="nonnegFloat" use="required" />
+          </xs:complexType>
+         </xs:element>
+        <xs:element name="vetoInPha">
+          <xs:complexType>
+            <xs:attribute name="tile" type="xs:unsignedShort" use="required" />
+            <xs:attribute name="ribbon" type="xs:unsignedShort"
+                          use="required" />
+            <xs:attribute name="NA" type="xs:unsignedShort" use="required" />
+          </xs:complexType>
+         </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Veto-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_Veto" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_Veto precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_Veto-registers" />
+        <xs:element ref="ACD_Veto-constants" />
+        <xs:element ref="ACD_Veto-anc" />
+        <xs:element ref="ACD_Veto-param" />
+        <xs:element ref="ACD_Veto-offline" />
+      </xs:sequence>
+    </xs:complexType>
+
+
+  </xs:element>
+
+<!-- ACD_Timing -->
+  <xs:element name="ACD_Timing-registers" >
+    <xs:complexType>
+      <xs:all >
+        <xs:element name="AEM_tack" type="registerType" />
+        <xs:element name="AEM_cal_delay" type="registerType" />
+        <xs:element name="ARC_veto_delay" type="registerType" />
+        <xs:element name="ARC_veto_width" type="registerType" />
+        <xs:element name="ARC_hold_delay" type="registerType" />
+        <xs:element name="ARC_hitmap_width" type="registerType" />
+        <xs:element name="ARC_hitmap_delay" type="registerType" />
+        <xs:element name="ARC_hitmap_deadtime" type="registerType" />
+        <xs:element name="ARC_acd_tacq" type="registerType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Timing-anc" type="emptyBaseType" />
+
+  <xs:element name="ACD_Timing-param" >
+    <xs:complexType>
+      <xs:all  minOccurs="0">
+        <xs:element name="latc_AEM_ACD_Timing" type="paramFileType" />
+        <xs:element name="latc_AEM_ARC_Timing" type="paramFileType" />
+        <xs:element name="latc_DFT_ACD_Timing" type="paramFileType" />
+      </xs:all>  
+      <xs:attributeGroup ref="outfileAttGroup" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_Timing-constants" type="emptyBaseType" />
+
+  <xs:element name="ACD_Timing-offline" type="noOutfilesType" />
+
+  <xs:element name="ACD_Timing" >
+    <xs:annotation>
+      <xs:documentation> Element to specify intent for ACD_Timing precinct
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="method" />
+        <xs:element ref="ACD_Timing-registers" />
+        <xs:element ref="ACD_Timing-constants" />
+        <xs:element ref="ACD_Timing-anc" />
+        <xs:element ref="ACD_Timing-param" />
+        <xs:element ref="ACD_Timing-offline" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+<!--   ****  Finally, the top-level element for ACD delegate **** -->  
+ 
+  <xs:element name="ACD_Intent">
+    <xs:annotation>
+      <xs:documentation> Root element for fully specifying
+         ACD intent
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="ACD_Mode" />
+        <xs:element ref="ACD_Bias" />
+        <xs:element name="ACD_Hld" />
+        <xs:element name="ACD_PHA" />
+        <xs:element name="ACD_Veto" />
+        <xs:element name="ACD_Timing" />
+      </xs:all>
+    </xs:complexType>
+
+
+   <xs:unique name="ACD_Mode-anc-key" >
+      <xs:selector xpath="Mode_Veto/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_Mode-anc-keyref" refer="ACD_Mode-anc-key" >
+      <xs:selector xpath="ACD_Mode/ACD_Mode-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+   <xs:unique name="ACD_Bias-anc-key" >
+      <xs:selector xpath="ACD_Bias/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_Bias-anc-keyref" refer="ACD_Bias-anc-key" >
+      <xs:selector xpath="ACD_Bias/ACD_Bias-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+   <xs:unique name="ACD_Hld-anc-key" >
+      <xs:selector xpath="ACD_Hld/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_Hld-anc-keyref" refer="ACD_Hld-anc-key" >
+      <xs:selector xpath="ACD_Hld/ACD_Hld-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+   <xs:unique name="ACD_PHA-anc-key" >
+      <xs:selector xpath="ACD_PHA/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_PHA-anc-keyref" refer="ACD_PHA-anc-key" >
+      <xs:selector xpath="ACD_PHA/ACD_PHA-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+   <xs:unique name="ACD_Veto-anc-key" >
+      <xs:selector xpath="ACD_Veto/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_Veto-anc-keyref" refer="ACD_Veto-anc-key" >
+      <xs:selector xpath="ACD_Veto/ACD_Veto-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+   <xs:unique name="ACD_Timing-anc-key" >
+      <xs:selector xpath="ACD_Timing/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
+
+    <xs:keyref name="ACD_Timing-anc-keyref" refer="ACD_Timing-anc-key" >
+      <xs:selector xpath="ACD_Timing/ACD_Timing-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
+
+ 
+  </xs:element>
+
+
+</xs:schema>
