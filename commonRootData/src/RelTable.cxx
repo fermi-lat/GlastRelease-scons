@@ -30,6 +30,12 @@ RelTable::~RelTable() {
 }
 
 
+void RelTable::initialize(UInt_t nEvent, UInt_t nRun)
+{
+    m_eventId = nEvent;
+    m_runId   = nRun;
+}
+
 void RelTable::addRelation(Relation *rel) {
     if (!m_table) m_table = new TObjArray();
     m_table->Add(rel);
