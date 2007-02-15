@@ -15,5 +15,6 @@
 #pragma link C++ class McIntegratingHit+;
 #pragma link C++ class McEvent+;
 #pragma link C++ class McTrajectory+;
+#pragma link C++ class McTrajectoryPoint+;
 
 #endif

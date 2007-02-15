@@ -8,6 +8,8 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "McObjectManager.h"
+
 ClassImp(McParticle)
 
 McParticle::McParticle() : 
@@ -43,6 +45,39 @@ McParticle::McParticle(const McParticle &p)
 
 McParticle::~McParticle() {
     Clear();
+}
+
+void* McParticle::operator new(size_t size)
+{
+    McParticle* temp = McObjectManager::getPointer()->getNewMcParticle();
+
+    // Since we recycle, make sure these member functions are cleared
+    temp->m_daughters.Clear();
+    temp->m_process = "";
+
+    return temp;
+}
+
+void* McParticle::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+McParticle& McParticle::operator =(const McParticle& rhs)
+{
+    m_particleId           = rhs.m_particleId;
+    m_statusFlags          = rhs.m_statusFlags;
+    m_initialPosition      = rhs.m_initialPosition;
+    m_finalPosition        = rhs.m_finalPosition;
+    m_initialFourMomentum  = rhs.m_initialFourMomentum;
+    m_finalFourMomentum    = rhs.m_finalFourMomentum;
+    m_mother               = rhs.m_mother;
+    m_process              = rhs.m_process; 
+
+    for(int idx = 0; idx < rhs.m_daughters.GetEntries(); idx++)
+        m_daughters.Add(rhs.m_daughters[idx]);
+
+    return *this;
 }
 
 void McParticle::Clear(Option_t *) {

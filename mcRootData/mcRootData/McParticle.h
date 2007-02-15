@@ -105,6 +105,12 @@ public:
     const TLorentzVector& getFinalFourMomentum() const;
     
     const TString& getProcess() const;
+
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    McParticle& operator=(const McParticle& rhs);
     
 private:
     

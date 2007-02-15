@@ -98,6 +98,12 @@ public:
     const TVector3 getMoment1 () const;
     /// Retrieve the energy-weighted second moments of the position
     const TVector3 getMoment2 () const;
+
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    McIntegratingHit& operator=(const McIntegratingHit& rhs);
     
 private:
     /// total deposited energy: set automatically when m_energyInfo is modified.

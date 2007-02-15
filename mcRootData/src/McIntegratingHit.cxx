@@ -3,6 +3,8 @@
 #include "TRefArray.h"
 #include "Riostream.h"
 
+#include "McObjectManager.h"
+
 ClassImp(McIntegratingHit)
 
 
@@ -20,6 +22,40 @@ void McIntegratingHit::initialize(const VolumeIdentifier& id) {
     m_volumeId = id;
 }
 
+
+void* McIntegratingHit::operator new(size_t size)
+{
+    McIntegratingHit* temp = McObjectManager::getPointer()->getNewMcIntegratingHit();
+
+    // Since we are re-using, make sure some of the data members which might allocate memory are cleaned up
+    temp->m_mcPartArr.Clear();
+    temp->m_energyPtrArr.clear();
+
+    return temp;
+}
+
+void* McIntegratingHit::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+McIntegratingHit& McIntegratingHit::operator =(const McIntegratingHit& rhs)
+{
+    m_totalEnergy    = rhs.m_totalEnergy;
+    m_energyArray[0] = rhs.m_energyArray[0];
+    m_energyArray[1] = rhs.m_energyArray[1];
+    m_energyArray[2] = rhs.m_energyArray[2];
+    m_packedFlags    = rhs.m_packedFlags;
+    m_volumeId       = rhs.m_volumeId;
+    m_moment1Seed    = rhs.m_moment1Seed;
+    m_moment2Seed    = rhs.m_moment2Seed;
+    m_mapPtr         = rhs.m_mapPtr; 
+
+    for(int idx=0; idx < rhs.m_mcPartArr.GetEntries(); idx++)
+        m_mcPartArr.Add(rhs.m_mcPartArr.At(idx));
+
+    return *this;
+}
 
 void McIntegratingHit::Clear( Option_t * )
 {

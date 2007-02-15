@@ -92,6 +92,12 @@ public:
     /// Retrieve whether this hit should be digitized
     Bool_t needDigi() const;
 
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    McPositionHit& operator=(const McPositionHit& rhs);
+
 private:
 
     Double_t m_depositedEnergy;

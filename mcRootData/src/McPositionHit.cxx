@@ -2,6 +2,8 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "McObjectManager.h"
+
 ClassImp(McPositionHit)
 
 McPositionHit::McPositionHit() :
@@ -26,6 +28,38 @@ void McPositionHit::Clear(Option_t *)
     m_globalEntry = TVector3(0., 0., 0.);
     m_globalExit = TVector3(0., 0., 0.);
     m_volumeId.Clear();
+}
+
+void* McPositionHit::operator new(size_t size)
+{
+    McPositionHit* temp = McObjectManager::getPointer()->getNewMcPositionHit();
+
+    return temp;
+}
+
+void* McPositionHit::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+McPositionHit& McPositionHit::operator =(const McPositionHit& rhs)
+{
+    m_depositedEnergy      = rhs.m_depositedEnergy;
+    m_particleEnergy       = rhs.m_particleEnergy; 
+    m_timeOfFlight         = rhs.m_timeOfFlight;
+    m_statusFlags          = rhs.m_statusFlags;
+    m_mcParticleId         = rhs.m_mcParticleId;
+    m_originMcParticleId   = rhs.m_originMcParticleId;
+    m_entry                = rhs.m_entry;
+    m_exit                 = rhs.m_exit;
+    m_globalEntry          = rhs.m_globalEntry;
+    m_globalExit           = rhs.m_globalExit;
+    m_mcParticle           = rhs.m_mcParticle;
+    m_originMcParticle     = rhs.m_originMcParticle;
+    m_volumeId             = rhs.m_volumeId;
+    m_particleFourMomentum = rhs.m_particleFourMomentum;
+
+    return *this;
 }
 
 // dummy data, just for tests
