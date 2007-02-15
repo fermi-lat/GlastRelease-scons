@@ -233,6 +233,7 @@ StatusCode mcRootWriterAlg::execute()
     m_common.m_mcPosHitMap.clear();
     m_common.m_mcIntHitMap.clear();
     m_common.m_mcTrajectoryMap.clear();
+    m_common.m_mcTrajectoryPointMap.clear();
 
     sc = writeMcEvent();
     if (sc.isFailure()) return sc;
@@ -548,19 +549,27 @@ StatusCode mcRootWriterAlg::writeMcTrajectories()
         TRef ref = mcTrajectory;
         m_common.m_mcTrajectoryMap[(*trajectory)] = ref ;
         RootPersistence::convert(**trajectory,*mcTrajectory) ;  
-         
-        const Event::McParticle *mcPartTds = (*trajectory)->getMcParticle();
-        McParticle *mcPartRoot = 0;
-        if (mcPartTds != 0) 
-        {
-            TRef ref;
-            ref = m_common.m_mcPartMap[mcPartTds];
-            mcPartRoot = (McParticle*)ref.GetObject();
-            mcTrajectory->setMcParticle(mcPartRoot);
-        }
 
         // Add the ROOT McPositionHit to the ROOT collection of McPositionHits
         m_mcEvt->addMcTrajectory(mcTrajectory);
+
+        // Now loop through and set up the McTrajectoryPoints
+        std::vector<Event::McTrajectoryPoint*> points = (*trajectory)->getPoints();
+        std::vector<Event::McTrajectoryPoint*>::const_iterator pointIter;
+
+        for(pointIter = points.begin(); pointIter != points.end(); pointIter++) 
+        {
+            // De-reference the McTrajectoryPoint pointer
+            Event::McTrajectoryPoint* mcPointTds  = *pointIter;
+            McTrajectoryPoint*        mcPointRoot = new McTrajectoryPoint();
+
+            RootPersistence::convert(*mcPointTds, *mcPointRoot);
+
+            mcTrajectory->addMcPoint(mcPointRoot);
+
+            TRef pointRef = mcPointRoot;
+            m_common.m_mcTrajectoryPointMap[mcPointTds] = pointRef;
+        }
     }
     
     return sc;
