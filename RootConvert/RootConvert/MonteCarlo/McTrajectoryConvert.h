@@ -11,6 +11,9 @@ namespace RootPersistence {
 void convert( const Event::McTrajectory &, McTrajectory & ) ;
 void convert( const McTrajectory &, Event::McTrajectory & ) ;
 
+void convert( const Event::McTrajectoryPoint &, McTrajectoryPoint & ) ;
+void convert( const McTrajectoryPoint &, Event::McTrajectoryPoint & ) ;
+
 }
 
 #endif

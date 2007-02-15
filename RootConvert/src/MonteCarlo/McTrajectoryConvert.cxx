@@ -6,56 +6,33 @@ namespace RootPersistence {
 
 void convert( const Event::McTrajectory & tdsTrajectory, McTrajectory & rootTrajectory ) 
 {
-    // not to be managed by RootConvert
-    McParticle * mcPartRoot = 0 ;
-
     // Initialize data members
-    rootTrajectory.initialize(mcPartRoot, tdsTrajectory.getCharge());
-
-    // Retrieve points on trajectory
-    const std::vector<CLHEP::Hep3Vector> tdsPoints = tdsTrajectory.getPoints();
-    std::vector<CLHEP::Hep3Vector>::const_iterator tdsPointsIter;
-
-    // Loop through hits creating root equivalents
-    for(tdsPointsIter = tdsPoints.begin(); tdsPointsIter != tdsPoints.end(); tdsPointsIter++)
-    {
-        const CLHEP::Hep3Vector tdsPoint = *tdsPointsIter;
-        TVector3* rootPoint = new TVector3(tdsPoint.x(),tdsPoint.y(),tdsPoint.z());
-
-        rootTrajectory.addMcPoint(rootPoint);
-    }
+    rootTrajectory.initialize();
+    rootTrajectory.Clear();
 
     return;
 }
  
 void convert( const McTrajectory & rootTrajectory, Event::McTrajectory & tdsTrajectory ) 
 {
-    // Not to be managed by RootConvert
-    Event::McParticle* mcPartTds = 0;
+    return;
+}
 
-    // Set this to make sure it is something
-    tdsTrajectory.setMcParticle(mcPartTds);
+void convert( const Event::McTrajectoryPoint & tdsPoint, McTrajectoryPoint & rootPoint ) 
+{
+    rootPoint.initialize(convert(tdsPoint.getVolumeID()),
+                          tdsPoint.getEnergy(),
+                          convert3vector(tdsPoint.getPoint()));
 
-    // Now for charge
-    tdsTrajectory.setCharge(rootTrajectory.getMcTrajectoryCharge());
-
-    // Retrieve points read back in
-    TObjArray* rootPoints = rootTrajectory.getMcPointCol();
-
-    // std vector to store points
-    std::vector<CLHEP::Hep3Vector> tdsPoints;
-
-    // Loop through root points and convert
-    for(int idx = 0; idx < rootPoints->GetEntries(); idx++)
-    {
-        TVector3*  rootPoint = (TVector3 *)rootPoints->At(idx);
+    return;
+}
+ 
+void convert( const McTrajectoryPoint & rootPoint, Event::McTrajectoryPoint & tdsPoint ) 
+{
+    tdsPoint.setVolumeID(convert(rootPoint.getVolumeID()));
+    tdsPoint.setEnergy(rootPoint.getEnergy());
+    tdsPoint.setPoint(convert3vector(rootPoint.getPoint()));
         
-        tdsPoints.push_back(CLHEP::Hep3Vector(rootPoint->x(), rootPoint->y(), rootPoint->z()));
-    }
-
-    // Add these points to TDS object
-    tdsTrajectory.addPoints(tdsPoints);
-
     return;
 }
 

@@ -105,6 +105,14 @@ TVector3 convert( const HepPoint3D & v ) {
     return TVector3(v.x(),v.y(),v.z()) ;
 }
 
+Hep3Vector convert3vector( const TVector3 & v ) {
+    return CLHEP::Hep3Vector(v.X(),v.Y(),v.Z()) ;
+}
+
+TVector3 convert3vector( const Hep3Vector & v ) {
+    return TVector3(v.x(),v.y(),v.z()) ;
+}
+
 Point convertPoint( const TVector3 & v ) {
     return Point(v.X(),v.Y(),v.Z()) ;
 }
