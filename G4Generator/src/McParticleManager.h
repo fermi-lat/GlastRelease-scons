@@ -143,7 +143,7 @@ class McParticleManager {
  private:
   /// The constructor is private since this is a singleton
      McParticleManager() : 
-        m_lastParticle(0),m_currentOrigin(0),m_mode(PruneMode::FULL_MC_TREE),m_cutOffE(0.),m_maxGen(3) 
+        m_lastParticle(0),m_currentOrigin(0),m_mode(FULL_MC_TREE),m_cutOffE(0.),m_maxGen(3) 
      {m_particles.clear(); m_partToPosHit.clear(); m_partToIntHit.clear();}; 
 
   /// private method to keep the local relational table lists clear

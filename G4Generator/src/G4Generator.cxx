@@ -216,20 +216,20 @@ StatusCode G4Generator::initialize()
   // set the mode for the McParticle tree
   if (m_mcTreeMode == "nGenerations")
   {
-      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::N_GENERATIONS);
+      McParticleManager::getPointer()->setMode(McParticleManager::N_GENERATIONS);
       McParticleManager::getPointer()->setNumGenerations(m_numGenerations);
   }
   else if (m_mcTreeMode == "prunecal")
   {
-      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::PRUNE_CAL);
+      McParticleManager::getPointer()->setMode(McParticleManager::PRUNE_CAL);
   }
   else if (m_mcTreeMode == "full")
   {
-      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::FULL_MC_TREE);
+      McParticleManager::getPointer()->setMode(McParticleManager::FULL_MC_TREE);
   }
   else // default mode is "minimal" 
   {
-      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::MINIMAL_TREE);
+      McParticleManager::getPointer()->setMode(McParticleManager::MINIMAL_TREE);
       McParticleManager::getPointer()->setCutOffEnergy(m_lowEnergy);
   }
  

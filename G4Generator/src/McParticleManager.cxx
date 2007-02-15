@@ -207,7 +207,7 @@ bool McParticleManager::makeMcParticle(const G4Track* aTrack)
     Event::McParticle* particle = getMcParticle(aTrack->GetTrackID());  // Is probably zero
   
     // Determine if we should create and save the McParticle info if in pruning mode
-    if ( m_mode == PruneMode::MINIMAL_TREE )
+    if ( m_mode == MINIMAL_TREE )
     {
         // In full prune mode, we create and save McParticles if
         // 1) This is the primary track
@@ -224,7 +224,7 @@ bool McParticleManager::makeMcParticle(const G4Track* aTrack)
         else save = false;
     }
     // Save all McParticles by generation (if above cutoff energy)
-    else if (m_mode == PruneMode::N_GENERATIONS && aTrack->GetTrackID() > 1)
+    else if (m_mode == N_GENERATIONS && aTrack->GetTrackID() > 1)
     {
         save = false;
 
@@ -258,7 +258,7 @@ bool McParticleManager::keepMcParticle(const G4Track* aTrack)
     bool save = true;
 
     // If we are in minimal pruning mode, check that this is an "important" McParticle
-    if ( m_mode == PruneMode::MINIMAL_TREE )
+    if ( m_mode == MINIMAL_TREE )
     {
         // McParticle must have a parent which is the primary particle
         const Event::McParticle* parent = particle->getMother();
@@ -274,37 +274,7 @@ bool McParticleManager::keepMcParticle(const G4Track* aTrack)
             }
         }
     }
-/*
-    // Save all McParticles by generation (if above cutoff energy)
-    else if (m_mode == PruneMode::N_GENERATIONS && aTrack->GetTrackID() > 1)
-    {
-        save = true;
-    }
-    // Check for PruneCal mode here 
-    else if (m_mode == PruneMode::PRUNE_CAL)
-    {
-        int towersId;
-        int calId;
-        m_glastDetSvc->getNumericConstByName("eLATTowers", &towersId);
-        m_glastDetSvc->getNumericConstByName("eTowerCAL", &calId);
 
-        if ((particle->getInitialId().size() > 3) && 
-	        (particle->getInitialId()[0] == towersId) && 
-	        (particle->getInitialId()[3] == calId) &&
-	        (particle->getFinalId().size() > 3) &&
-	        (particle->getFinalId()[0] == 0) && 
-	        (particle->getFinalId()[3] == 0) && 
-	       !(particle->statusFlags()&Event::McParticle::POSHIT) && 
-	       !(particle->statusFlags()&Event::McParticle::PRIMARY))
-        {
-            SmartRef<Event::McParticle> mother = &particle->mother();
-
-            mother->removeDaughter(particle);
-
-            save = false;
-        }
-    }
-*/
     return save;
 }
 
