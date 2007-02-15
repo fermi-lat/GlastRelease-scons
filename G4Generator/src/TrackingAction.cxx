@@ -152,39 +152,39 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
     if (particle)
     {
-        // get the 4-momentum   
-        CLHEP::HepLorentzVector pfin(aTrack->GetTotalEnergy(), aTrack->GetMomentum()); 
-
-        // Do this for gammas...
-        if (particle->particleProperty() == 22 && aTrack->GetTrackStatus() == fStopAndKill)
-        {
-            // Try getting the final gamma momentum...
-            const G4Step*      finalStep          = aTrack->GetStep();
-            const G4StepPoint* preFinalStepPoint  = finalStep->GetPreStepPoint();
-
-            pfin = CLHEP::HepLorentzVector(preFinalStepPoint->GetTotalEnergy(), preFinalStepPoint->GetMomentum());
-        }
-
-        // we finalize the particle by giving the final momentum and position
-        particle->finalize(pfin, aTrack->GetPosition());
-
-        idents::VolumeIdentifier ret;
-        G4TouchableHistory* theTouchable = (G4TouchableHistory*)aTrack->GetTouchable();
-        if (theTouchable)
-        {
-            for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
-            {
-                const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
-                idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
-                ret.prepend(id);
-            }
-        }
-      
-        particle->setFinalId(ret);
-
         // Should we keep this McParticle?
         if (man->keepMcParticle(aTrack))
         {
+            // get the 4-momentum   
+            CLHEP::HepLorentzVector pfin(aTrack->GetTotalEnergy(), aTrack->GetMomentum()); 
+
+            // Do this for gammas...
+            if (particle->particleProperty() == 22 && aTrack->GetTrackStatus() == fStopAndKill)
+            {
+                // Try getting the final gamma momentum...
+                const G4Step*      finalStep          = aTrack->GetStep();
+                const G4StepPoint* preFinalStepPoint  = finalStep->GetPreStepPoint();
+
+                pfin = CLHEP::HepLorentzVector(preFinalStepPoint->GetTotalEnergy(), preFinalStepPoint->GetMomentum());
+            }
+
+            // we finalize the particle by giving the final momentum and position
+            particle->finalize(pfin, aTrack->GetPosition());
+
+            idents::VolumeIdentifier ret;
+            G4TouchableHistory* theTouchable = (G4TouchableHistory*)aTrack->GetTouchable();
+            if (theTouchable)
+            {
+                for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
+                {
+                    const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
+                    idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
+                    ret.prepend(id);
+                }
+            }
+      
+            particle->setFinalId(ret);
+
             // Move the McParticles to the TDS
             man->saveMcParticle();
             // Also save the trajectories
@@ -197,7 +197,8 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
             McTrajectoryManager::getPointer()->dropMcTrajectory(aTrack);
         }
     }
-  
+
+    return;
 }
 
 

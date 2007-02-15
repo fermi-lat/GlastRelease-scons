@@ -157,6 +157,9 @@ void McParticleManager::clear()
     m_partToPosHit.clear();
     m_partToIntHit.clear();
 
+    m_currentOrigin   = 0;
+    m_currentOriginId = 0;
+
     // if running FluxAlg, collection will already have parent 
     m_particleColTDS = SmartDataPtr<Event::McParticleCol>(m_esv, EventModel::MC::McParticleCol);
 
@@ -268,7 +271,7 @@ bool McParticleManager::keepMcParticle(const G4Track* aTrack)
                         && (particle->statusFlags() & Event::McParticle::PRIMARY) == 0 ) 
         {
             // If a charged track then check to see if it created any hits 
-            if (aTrack->GetDynamicParticle()->GetCharge() != 0.)
+            if (parent->particleProperty() != 22 && aTrack->GetDynamicParticle()->GetCharge() != 0.)
             {
                 if (m_partToPosHit.empty() && m_partToIntHit.empty()) save = false;
             }
