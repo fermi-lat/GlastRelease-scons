@@ -138,7 +138,7 @@ McTrajectoryPoint::McTrajectoryPoint()
     Clear();
 }
 
-void McTrajectoryPoint::initialize(VolumeIdentifier id, Float_t energy, TVector3& position)
+void McTrajectoryPoint::initialize(VolumeIdentifier id, Float_t energy, const TVector3& position)
 {
     m_volumeID = id;
     m_energy   = energy;

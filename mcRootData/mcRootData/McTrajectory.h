@@ -33,7 +33,7 @@ public:
     void Print(Option_t *option="") const;
 
     /// initialize 
-    void initialize(VolumeIdentifier id, Float_t energy, TVector3& position);
+    void initialize(VolumeIdentifier id, Float_t energy, const TVector3& position);
 
     /// Retrieve cell identifier
     VolumeIdentifier getVolumeID() const {return m_volumeID;}
