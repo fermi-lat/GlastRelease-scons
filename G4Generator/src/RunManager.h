@@ -155,6 +155,7 @@ class RunManager
     int getTrajectoryTrackId(unsigned int i);
 
   protected: 
+    friend class G4Generator;
 
     ///  These three protected methods are invoked from Initialize() method
     virtual void InitializeGeometry();

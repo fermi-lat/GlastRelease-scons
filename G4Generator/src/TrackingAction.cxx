@@ -11,6 +11,7 @@
 //      R.Giannitrapani
 
 #include "McParticleManager.h"
+#include "McTrajectoryManager.h"
 #include "TrackingAction.h"
 #include "G4Generator/IG4GeometrySvc.h"
 
@@ -30,7 +31,8 @@
 #include "CLHEP/Geometry/Vector3D.h"
 
 
-TrackingAction::TrackingAction(IG4GeometrySvc* gsv):m_geoSvc(gsv)
+TrackingAction::TrackingAction(IG4GeometrySvc* gsv) :
+    m_geoSvc(gsv)
 {;}
 
 void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
@@ -39,41 +41,27 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     // during the Geant4 event simulation
     // Inputs: the G4Track pointer aTrack that gives access to the actual created
     // track object
-
-    bool save      = true;
-    bool isPrimary = true;
   
     // we get the pointer to the McParticleManager singleton
     McParticleManager* man = McParticleManager::getPointer();
- 
-    // the name of the process producing the track; by defauld is primary
-    std::string process = "primary";
 
-    // Search for particle, parentage and process info
-    Event::McParticle* parent   = man->getMcParticle(aTrack->GetParentID()); // Non-zero unless pruning
-    Event::McParticle* particle = man->getMcParticle(aTrack->GetTrackID());  // Is probably zero
+    if (man->makeMcParticle(aTrack))
+    { 
+        bool isPrimary = true;
 
-    if (aTrack->GetCreatorProcess() != 0) 
-    {
-        process = aTrack->GetCreatorProcess()->GetProcessName();
-        isPrimary = false;
-    }
-  
-    // Determine if we should create and save the McParticle info if in pruning mode
-    if ( man->getMode()== 0)
-    {
-        // In full prune mode, we create and save McParticles if
-        // 1) This is the primary track
-        // 2) This is the direct descendant of the primary track
-        if      (parent   != 0 && (parent->statusFlags()   & Event::McParticle::PRIMARY) != 0) save = true;
-        else if (particle != 0 && (particle->statusFlags() & Event::McParticle::PRIMARY) != 0) save = true;
-        //if ((aTrack->GetTrackID() == 1) || (aTrack->GetParentID() == 1)) save = 1;
-        else save = false;
-    }
+        // the name of the process producing the track; by defauld is primary
+        std::string process = "primary";
 
+        // Search for particle, parentage and process info
+        Event::McParticle* parent   = man->getMcParticle(aTrack->GetParentID()); // Non-zero unless pruning
+        Event::McParticle* particle = man->getMcParticle(aTrack->GetTrackID());  // Is probably zero
 
-    if (save)
-    {
+        if (aTrack->GetCreatorProcess() != 0) 
+        {
+            process = aTrack->GetCreatorProcess()->GetProcessName();
+            isPrimary = false;
+        }
+
         // lets create a new particle (we don't need to destroy this since it will go
         // in the TDS
         if (particle == 0)
@@ -110,7 +98,6 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
             for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
             {
                 const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
-//**                if( physVol->GetMother()==0) break;
                 idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
                 ret.prepend(id);
             }
@@ -119,20 +106,33 @@ void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         particle->setInitialId(ret);
       
         // we add this particle to our collection for subsequent saving in the TDS
-        man->addMcParticle(aTrack->GetTrackID(),particle);  
+        man->addMcParticle(aTrack->GetTrackID(),particle);
+
+        // Now create the McTrajectory to pair with this McParticle
+        Event::McTrajectory* trajectory = 
+            McTrajectoryManager::getPointer()->getMcTrajectory(aTrack->GetTrackID());
+        
+        if (!trajectory)
+        {
+            // A new trajectory to go with this McParticle
+            trajectory = new Event::McTrajectory();
+
+            // Add to the collection
+            McTrajectoryManager::getPointer()->addMcTrajectory(aTrack->GetTrackID(), trajectory, particle);
+        }
+
+        // if the particle is an e+ or an e- coming from the conversion of a gamma,
+        // than set it as the origin particle, otherwise the primary is the origin
+        // particle
+        // Note that this ASSUMES that THE gamma is particle #1 in the McParticle - ID
+        // map. I wonder if there is a way to make this work without that assumption?
+        if ((parent == man->getMcParticle(1)) && 
+            (parent->particleProperty() == 22) && 
+            (process == "conv"))
+                man->setOriginParticle(particle);
+        else man->setOriginParticle(man->getMcParticle(1));
     }
-
-    // if the particle is an e+ or an e- coming from the conversion of a gamma,
-    // than set it as the origin particle, otherwise the primary is the origin
-    // particle
-    // Note that this ASSUMES that THE gamma is particle #1 in the McParticle - ID
-    // map. I wonder if there is a way to make this work without that assumption?
-    if ((parent == man->getMcParticle(1)) && 
-        (parent->particleProperty() == 22) && 
-        (process == "conv"))
-            man->setOriginParticle(particle);
-    else man->setOriginParticle(man->getMcParticle(1));
-
+    //else man->setLastParticle(0);
 }
 
 void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
@@ -148,7 +148,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     McParticleManager* man = McParticleManager::getPointer();
 
     // retrive the particle from our collection with the singleton manager
-    particle = man->getMcParticle(aTrack->GetTrackID());
+    particle = man->getLastParticle();
 
     if (particle)
     {
@@ -175,14 +175,27 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
             for( int i = 0; i<theTouchable->GetHistoryDepth() ; ++i) 
             {
                 const G4VPhysicalVolume* physVol = theTouchable->GetVolume(i); 
-//**             if( physVol->GetMother()==0) break;
                 idents::VolumeIdentifier id = m_geoSvc->getVolumeIdent(physVol);
                 ret.prepend(id);
             }
         }
       
         particle->setFinalId(ret);
-      
+
+        // Should we keep this McParticle?
+        if (man->keepMcParticle(aTrack))
+        {
+            // Move the McParticles to the TDS
+            man->saveMcParticle();
+            // Also save the trajectories
+            McTrajectoryManager::getPointer()->saveMcTrajectory();
+        }
+        // Otherwise, drop it
+        else
+        {
+            man->dropMcParticle(aTrack);
+            McTrajectoryManager::getPointer()->dropMcTrajectory(aTrack);
+        }
     }
   
 }

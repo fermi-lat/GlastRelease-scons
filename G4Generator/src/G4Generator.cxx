@@ -23,6 +23,7 @@
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 #include "McParticleManager.h"
+#include "McTrajectoryManager.h"
 // GLAST Geant4
 
 #include "GlastMS/MultipleScatteringFactory.h"  // For controlling multiple scattering versions
@@ -45,7 +46,7 @@
 //montecarlo data structures 
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
-#include "Event/MonteCarlo/McTrajectory.h"
+//#include "Event/MonteCarlo/McTrajectory.h"
 
 #include "G4Generator/IG4GeometrySvc.h"
 
@@ -68,19 +69,31 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   :Algorithm(name, pSvcLocator) 
 {
   // set defined properties
-  declareProperty("UIcommands", m_uiCommands);
+  declareProperty("UIcommands",   m_uiCommands);
   declareProperty("geometryMode", m_geometryMode="");
+
+  // This is no longer used but kept to preserve old jo files
   declareProperty("saveTrajectories", m_saveTrajectories=0);
-  declareProperty("mcTreeMode", m_mcTreeMode="minimal");
-  declareProperty("defaultCutValue", m_defaultCutValue=0.1*mm);
+
+  // G4 cut offs for tracking
+  declareProperty("defaultCutValue",    m_defaultCutValue=0.1*mm);
   declareProperty("defaultTkrCutValue", m_defaultTkrCutValue=0.1*mm);
   declareProperty("defaultCalCutValue", m_defaultCalCutValue=0.1*mm);
+
+  // G4 choices 
   declareProperty("physics_choice", m_physics_choice="GLAST");
   declareProperty("physics_tables", m_physics_table="build");
-  declareProperty("physics_dir", m_physics_dir="G4cuts/100micron/");
-  declareProperty("numGenerations", m_numGenerations=100000);
-  declareProperty("lowEnergyCut",m_lowEnergy=0.52);
-  declareProperty("minDistanceCut",m_minDistance=0.1);
+  declareProperty("physics_dir",    m_physics_dir="G4cuts/100micron/");
+
+  // McParticle/McTrajectory pruning modes
+  // "full" means no pruning of particles/trajectories
+  // "minimal" means primary and direct daughters only (but > m_lowEnergy)
+  // "nGenerations" means keep up to m_numGenerations generations of daughters
+  // "prunecal" means prune particles originating and termination in the cal
+  declareProperty("mcTreeMode",     m_mcTreeMode="minimal");
+  declareProperty("numGenerations", m_numGenerations=4);
+  declareProperty("lowEnergyCut",   m_lowEnergy=0.52);
+  declareProperty("minDistanceCut", m_minDistance=0.1);
 
   declareProperty("mscatOption",  m_mscatOption  = true); 
   declareProperty("eLossCurrent", m_eLossCurrent = true);  // default is to use the current, not 5.2.
@@ -157,6 +170,9 @@ StatusCode G4Generator::initialize()
   // Init the McParticle hierarchy 
   McParticleManager::getPointer()->initialize(eventSvc(), glastsvc);
 
+  // Init the McTrajectory hierarchy 
+  McTrajectoryManager::getPointer()->initialize(eventSvc(), glastsvc);
+
   if( service( "ParticlePropertySvc", m_ppsvc).isFailure() ) {
       log << MSG::ERROR << "Couldn't set up ParticlePropertySvc!" << endreq;
       return StatusCode::FAILURE;
@@ -198,8 +214,24 @@ StatusCode G4Generator::initialize()
   m_runManager->Initialize();
 
   // set the mode for the McParticle tree
-  if (m_mcTreeMode == "minimal")
-    McParticleManager::getPointer()->setMode(0);
+  if (m_mcTreeMode == "nGenerations")
+  {
+      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::N_GENERATIONS);
+      McParticleManager::getPointer()->setNumGenerations(m_numGenerations);
+  }
+  else if (m_mcTreeMode == "prunecal")
+  {
+      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::PRUNE_CAL);
+  }
+  else if (m_mcTreeMode == "full")
+  {
+      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::FULL_MC_TREE);
+  }
+  else // default mode is "minimal" 
+  {
+      McParticleManager::getPointer()->setMode(McParticleManager::PruneMode::MINIMAL_TREE);
+      McParticleManager::getPointer()->setCutOffEnergy(m_lowEnergy);
+  }
  
   log << endreq;
   return StatusCode::SUCCESS;
@@ -223,8 +255,9 @@ StatusCode G4Generator::execute()
 
   log << MSG::DEBUG << "TDS ready" << endreq;
 
-  // Clean the McParticle hierarchy 
+  // Clean the McParticle & McTrajectory hierarchy 
   McParticleManager::getPointer()->clear();
+  McTrajectoryManager::getPointer()->clear();
 
   // following model from previous version, allow property "UIcommands" to
   // generate UI commands here.
@@ -268,11 +301,15 @@ StatusCode G4Generator::execute()
   }
   catch(G4GenException& e)
   {
-      return m_ErrorSvc->handleError(name()+" G4Exception",e.what());
+      StatusCode sc = m_ErrorSvc->handleError(name()+" G4Exception",e.what());
+      if (sc == StatusCode::SUCCESS) m_runManager->RunTermination();
+      return sc;
   }
   catch(...)
   {
-      return m_ErrorSvc->handleError(name(),"unknown exception");
+      StatusCode sc = m_ErrorSvc->handleError(name(),"unknown exception");
+      if (sc == StatusCode::SUCCESS) m_runManager->RunTermination();
+      return sc;
   }
     
   // If we set the pruneCal mode than we remove all the not TKR interacting
@@ -282,98 +319,7 @@ StatusCode G4Generator::execute()
 
   // Save the McParticle hierarchy in the TDS
   McParticleManager::getPointer()->save();
-
-  // we save the trajectories if the m_saveTrajectories is true
-  if (m_saveTrajectories)
-    {
-      Event::McTrajectoryCol* traj = new Event::McTrajectoryCol();  
-      eventSvc()->registerObject("/Event/MC/TrajectoryCol",traj);
-
-      int numTrajs  = m_runManager->getNumberOfTrajectories();
-      int maxGenNum = 0;
-
-      std::multimap<const int, const unsigned int> genVsTrajIdx;
-
-      for(unsigned int j = 0; j < m_runManager->getNumberOfTrajectories(); j++)
-      {
-          // Start by finding the McParticle associated with this trajectory
-          // note that even if we can't find an associated particle, we store the trajectory and its sign
-          Event::McParticle* part = 0;
-
-          if (McParticleManager::getPointer()->size() > 
-              static_cast<unsigned int>( m_runManager->getTrajectoryTrackId(j)))
-          {
-              part = 
-                  McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(j));
-          }
-
-          int genNum = 1000;
-
-          if (part)
-          {
-              if (part->initialFourMomentum().e() < m_lowEnergy)
-              {
-                  double dist = (part->initialPosition() - part->finalPosition()).mag();
-
-                  if (dist < m_minDistance) continue;
-              }
-
-              genNum = 0;
-              SmartRef<Event::McParticle> mcPart = part->getMother();
-
-              while(mcPart != mcPart->getMother())
-              {
-                  mcPart = mcPart->getMother();
-                  genNum++;
-              }
-
-              if (genNum > maxGenNum) maxGenNum = genNum;
-          }
-
-          genVsTrajIdx.insert(std::pair<const int, const unsigned int>(genNum,j));
-      }
-
-      // Check size of map
-      int genIdxMapSize  = genVsTrajIdx.size();
-      int maxGenerations = 10000;
-
-      if (genIdxMapSize > 20000)
-      {
-          maxGenerations = maxGenNum - 2;
-          if (maxGenerations > m_numGenerations) maxGenerations = m_numGenerations;
-          if (maxGenerations < 2)                maxGenerations = 2;
-      }
-
-      // Now go through the map and set up generation related display
-      std::multimap<const int, const unsigned int>::iterator genMapIter;
-      for(genMapIter = genVsTrajIdx.begin(); genMapIter != genVsTrajIdx.end(); genMapIter++)
-      {
-          const int          genNum  = (*genMapIter).first;
-          const unsigned int trajIdx = (*genMapIter).second;
-
-          if (genNum <= maxGenerations)
-          {
-              Event::McParticle* part = 0;
-
-              if (McParticleManager::getPointer()->size() > 
-                  static_cast<unsigned int>( m_runManager->getTrajectoryTrackId(trajIdx)))
-              {
-                  part = 
-                      McParticleManager::getPointer()->getMcParticle(m_runManager->getTrajectoryTrackId(trajIdx));
-              }
-
-              std::auto_ptr<std::vector<Hep3Vector> > points = 
-                  m_runManager->getTrajectoryPoints(trajIdx);
-              int numPoints = (*(points.get())).size();
-              Event::McTrajectory* tr = new Event::McTrajectory();
-              tr->addPoints(*(points.get()));
-              tr->setCharge(m_runManager->getTrajectoryCharge(trajIdx));
-              tr->setMcParticle(part); //may be zero.
-
-              traj->push_back(tr);
-          }
-      }
-  }
+  McTrajectoryManager::getPointer()->save();
 
   return StatusCode::SUCCESS;
 }

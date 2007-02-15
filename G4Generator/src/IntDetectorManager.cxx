@@ -10,6 +10,7 @@
 
 #include "IntDetectorManager.h"
 #include "McParticleManager.h"
+#include "McTrajectoryManager.h"
 
 #include <iostream>
 #include "Event/TopLevel/EventModel.h"
@@ -130,19 +131,20 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
   // Note that this will be the PDG id, not the "std" id used in the beginning
   int particlePDGId = aStep->GetTrack()->GetDefinition()->GetPDGEncoding();
 
-  // Heavy ions return a zero for ID, if we are in "full" mode then can look up from McParticle
-  if (partMan->getMode())
-  {
-      // Look up the particle being tracked
-      Event::McParticle* mcPart = partMan->getLastParticle();
+  // Heavy ions return a zero for ID, if we are not pruning then can look up from McParticle
+  Event::McParticle* mcPart = partMan->getLastParticle();
 
-      // This now sets the ID to the "std" HEP id...
-      particlePDGId = mcPart->particleProperty();
-  }
+  // This now sets the ID to the "std" HEP id...
+  if (mcPart) particlePDGId = mcPart->particleProperty();
 
   // Creat the map entry and add to list
   std::pair<Event::McParticle::StdHepId, double> idEnePair(particlePDGId,edep);
   hit->itemizedEnergyId().push_back(idEnePair);
+
+  // This method is always called BEFORE the SteppingAction where the trajectory
+  // hits are stored. Copy the pointer to the McTrajectoryManager so we can have it
+  // to store with the hit
+  McTrajectoryManager::getPointer()->setMcIntHit(hit);
 
   return true;
 }

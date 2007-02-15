@@ -12,6 +12,7 @@
 
 #include "PosDetectorManager.h"
 #include "McParticleManager.h"
+#include "McTrajectoryManager.h"
 
 #include <iostream>
 #include "Event/TopLevel/EventModel.h"
@@ -103,7 +104,7 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
   
     hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
 
-    partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
+    if (partMan->getLastParticle()) partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
 
     // Track energy at this point
     G4double                trkEnergy   = aStep->GetTrack()->GetTotalEnergy();
@@ -113,11 +114,19 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
 
     // Retrieve the particle causing the hit and the ancestor and set the corresponding
     // attributes of the McPositionHit
-    if (partMan->getMode() == 1)
+    // Try to look up the parent of this hit
+    Event::McParticle* particle = partMan->getLastParticle();  // May be Zero if pruning
+
+    // If not found (because of pruning), then try using the parent's McParticle
+    if (!particle)
     {
-      hit->setMcParticle(partMan->getLastParticle());
-      hit->setOriginMcParticle(partMan->getOriginParticle());
+        particle = partMan->getMcParticle(aStep->GetTrack()->GetParentID()); // Non-zero if this particle is first daughter
     }
+
+    // Set pointer (if found) to McParticle most responsible for this hit
+    hit->setMcParticle(particle);
+    // Set pointer to the origin particle (why do we need this?)
+    hit->setOriginMcParticle(partMan->getOriginParticle());
 
     // Get the proper time for particle at this hit
     G4double properTime = aStep->GetTrack()->GetProperTime();
@@ -128,6 +137,15 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     hit->setOriginMcParticleId(partMan->getOriginParticle()->particleProperty());
 
     m_posHit->push_back(hit);
+
+    // Add relation if McParticle exists
+    if (particle) partMan->addMcRelation(particle, hit);
+
+    // This method is always called BEFORE the SteppingAction where the trajectory
+    // hits are stored. Copy the pointer to the McTrajectoryManager so we can have it
+    // to store with the hit
+    McTrajectoryManager::getPointer()->setMcPosHit(hit);
+
     return true;
   }
 
