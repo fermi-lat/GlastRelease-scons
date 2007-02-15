@@ -2,8 +2,7 @@
 #ifndef RELKEY_H
 #define RELKEY_H
 
-
-#include "GaudiKernel/SmartRef.h"
+#include <map>
 #include <iostream>
 
 /** 
@@ -25,63 +24,84 @@
  *    
  * $Header$
  */
+namespace Event
+{
 
+// Prototype the Relation class
+template <class T1, class T2> class Relation;
 
-namespace Event {
-
-template <class T1, class T2>
-class Relation;
-
-template <class T1, class T2, class T3>
-class RelKey {
-    
+// Define here the RelationList class to be a list of pointers to Relations
+//template <typename T1, typename T2> class RelationList : public std::list<Relation<T1,T2>*> 
+template <typename T1, typename T2> class RelationList : public ObjectList<Relation<T1,T2> > 
+{
 public:
+    typedef typename RelationList<T1,T2>::iterator RelationListIter;
+};
+
+// A RelKey will interact with a multimap which will relate the key back to its relation
+template <typename T1, typename T2, typename T3> class RelKeyMultiMap : 
+          public std::multimap<T1*, typename RelationList<T2,T3>::iterator > {};
+
+// Define the RelKey class here
+template <class T1, class T2, class T3> class RelKey 
+{    
+public:   
+    RelKey()       : m_data(0),   m_iterator(0){}
+    RelKey(T1* obj): m_data(obj), m_iterator(0){}
     
-    RelKey() {}
-    RelKey(T1* obj): m_data(obj) {}
+   ~RelKey() {}
     
-    ~RelKey() {}
-    
+    // Provide ability to set and retrieve the "data" or "key"
     void setData(T1* obj) {m_data = obj;}  
     const T1* getData() const { return m_data;}
     T1* getData() {return m_data;}
 
-    void setPrev(Relation<T2,T3>* rel) {m_prev = rel;}
-    Relation<T2,T3>* getPrev() {return m_prev;}
-
-    void setSame(Relation<T2,T3>* rel) {m_same = rel;}
-    Relation<T2,T3>* getSame() {return m_same;}
-
-    void setFirst(Relation<T2,T3>* rel) {m_first = rel;}
-    Relation<T2,T3>* getFirst() {return m_first;}
-
     /// Fill the ASCII output stream
     void toStream(std::ostream& s) const;
 
+    friend class Relation<T2,T3>;
+
 private:
+
+    // These typedefs will help compiler determine the iterators are a type
+    typedef typename RelationList<T2,T3>::iterator      RelationListIter;
+    typedef typename RelKeyMultiMap<T1,T2,T3>::iterator RelKeyMultiMapIter;
+
+    // Allow class Relation to "set" and "get" the iterator into the RelKey multimap
+    void setMapIter(RelKeyMultiMapIter &relIter) {m_iterator = relIter;}
+    RelKeyMultiMapIter getMapIter() const        {return m_iterator;}
+
+    // Allow class Relation to insert and remove this RelKey from the RelKey multimap
+    void insertInMap(RelKeyMultiMap<T1,T2,T3>* map, RelationListIter listIter);
+    void removeFromMap(RelKeyMultiMap<T1,T2,T3>* map);
     
     /// Pointer to the object to be related
-    SmartRef<T1> m_data;
-    /// Pointer to the previous relation
-    SmartRef< Relation<T2,T3> > m_prev;
-    /// Pointer to the next relation containing m_data
-    SmartRef< Relation<T2,T3> > m_same;
-    /// Pointer to the first relation which not contains m_data
-    SmartRef< Relation<T2,T3> > m_first;
-        
+    T1* m_data;
+    /// Iterator to its position in the T1 to Relation multimap
+    RelKeyMultiMapIter m_iterator;
 };
 
+template <class T1, class T2, class T3> 
+inline void RelKey<T1,T2,T3>::insertInMap(RelKeyMultiMap<T1,T2,T3>* map, RelationListIter listIter)
+{
+    RelKeyMultiMapIter mapIter = map->insert(std::pair<T1*, RelationListIter>(m_data, listIter));
+    m_iterator = mapIter;
+}
+
+template <class T1, class T2, class T3> 
+inline void RelKey<T1,T2,T3>::removeFromMap(RelKeyMultiMap<T1,T2,T3>* map)
+{
+    map->erase(m_iterator);
+    m_iterator = 0;
+}
 
 template <class T1, class T2, class T3>
 inline void RelKey<T1,T2,T3>::toStream(std::ostream& s) const
 {
   /// Fill the ASCII output stream
-  s  << "\n        Data                    = " << m_data
-     << "\n        Previous Relation       = " << m_prev
-     << "\n        Next Relation           = " << m_same
-     << "\n        First Different Data    = " << m_first;
+  s  << "\n        Data                    = " << m_data;
+//     << "\n        Iterator                = " << m_iterator;
 }
 
 }
-
 #endif // RELKEY_H 

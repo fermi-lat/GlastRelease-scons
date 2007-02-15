@@ -92,12 +92,20 @@ const McParticle& McParticle::mother()const
 /// Remove daughters when in prune mode
 void McParticle::removeDaughter(const SmartRef<McParticle> mcPart)
 {
-    SmartRefVector<Event::McParticle>::iterator daughtIter;
-    for(daughtIter = m_daughters.begin();daughtIter != m_daughters.end();daughtIter++)
+    // Particle to delete was most likely last one added, use reverse iterator
+    SmartRefVector<Event::McParticle>::reverse_iterator daughtIter;
+    //std::vector<SmartRef<Event::McParticle> >::reverse_iterator daughtIter;
+    for(daughtIter = m_daughters.rbegin();daughtIter != m_daughters.rend();daughtIter++)
     {
         if (mcPart == *daughtIter)
         {
-            m_daughters.erase(daughtIter);
+            SmartRefVector<Event::McParticle>::iterator forwardIter = (++daughtIter).base();
+            // but are they they same?
+            if (*daughtIter != *forwardIter)
+            {
+                int j = 0;
+            }
+            m_daughters.erase(forwardIter);
             break;
         }
     }

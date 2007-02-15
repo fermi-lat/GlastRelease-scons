@@ -55,7 +55,8 @@ class McPositionHit : virtual public ContainedObject {
     /// Constructors
     McPositionHit()
       : m_depositedEnergy(0.),
-        m_timeOfFlight(0.)
+        m_timeOfFlight(0.),
+        m_packedFlags(0)
     {}
 
     virtual ~McPositionHit() { }
