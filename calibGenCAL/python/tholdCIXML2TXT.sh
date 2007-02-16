@@ -1,7 +1,6 @@
 #! /bin/sh
 #$Header$
-PYTHONPATH=${CALIBGENCALROOT}/python/lib:$ROOTSYS/lib:${PYTHONPATH}
-export PYTHONPATH
+export -n DISPLAY
 
 python ${CALIBGENCALROOT}/python/tholdCIXML2TXT.py "$@"
 

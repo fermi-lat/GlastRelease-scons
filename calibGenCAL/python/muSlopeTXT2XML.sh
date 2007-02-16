@@ -1,7 +1,6 @@
 #! /bin/sh
 #$Header$
+export -n DISPLAY
 
-PYTHONPATH=${CALIBGENCALROOT}/python/lib:$ROOTSYS/lib:${PYTHONPATH}
-export PYTHONPATH
 
 python ${CALIBGENCALROOT}/python/muSlopeTXT2XML.py "$@"

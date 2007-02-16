@@ -1,7 +1,7 @@
 #! /bin/sh
 #$Header$
 
-PYTHONPATH=${CALIBGENCALROOT}/python/lib:${PYTHONPATH}
-export PYTHONPATH
+export -n DISPLAY
+
 
 python ${CALIBGENCALROOT}/python/xdiodeXtalk.py "$@"
