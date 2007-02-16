@@ -24,6 +24,7 @@
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/MonteCarlo/McRelTableDefs.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
@@ -86,7 +87,7 @@ private:
     //! @param track a list of dots to connect
     //! @param charge tell if neurtal
     //! @param primary flag if primary track, to distinguish from neutrals?
-    typedef std::vector<Hep3Vector> PointList;
+    typedef std::vector<Event::McTrajectoryPoint*> PointList;
     void addTrack(const PointList& track,  int charge, bool primary=false);
 
     gui::DisplayControl* m_display;
@@ -259,9 +260,11 @@ void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
         TrackRep( const MCdisplay::PointList& track, bool neutral=false, bool primary=false){
             if( neutral) setColor("white");
             MCdisplay::PointList::const_iterator pit = track.begin();
-            if(primary) markerAt(*pit);
-            moveTo(*pit++);
-            for(; pit !=track.end(); ++pit) lineTo(*pit);
+            Hep3Vector hit = (*pit)->getPoint();
+            if(primary) markerAt(hit);
+            moveTo(hit);
+            pit++;
+            for(; pit !=track.end(); ++pit) lineTo((*pit)->getPoint());
         }
         void update(){}
     };
@@ -331,14 +334,33 @@ void MCdisplay::endEvent()
     }
     // ---------- tracks -----------------------------------------
     bool primary=true;
-    SmartDataPtr<Event::McTrajectoryCol>    mcTraj(eventSvc(), "/Event/MC/TrajectoryCol");
-    if (mcTraj !=0)   {
-        //  trajectory is available 
-        for(Event::McTrajectoryCol::const_iterator traj=mcTraj->begin(); 
-            traj != mcTraj->end(); traj++) {
-                addTrack((*traj)->getPoints(),  (*traj)->getCharge() , primary);
-                primary=false;
+
+    // If there are trajectories in the TDS, we use them       
+    SmartDataPtr<Event::McPartToTrajectoryTabList> 
+        mcPartToTraj(eventSvc(), "/Event/MC/McPartToTrajectory");
+
+    if (mcPartToTraj != 0)
+    {
+        for(Event::McPartToTrajectoryTabList::const_iterator trajIter = mcPartToTraj->begin(); 
+            trajIter != mcPartToTraj->end(); trajIter++) 
+        {
+            Event::McPartToTrajectoryRel* partToTraj = *trajIter;
+
+            // Recover pointers to particle and trajectory
+            const Event::McParticle*   part = partToTraj->getFirst();
+            const Event::McTrajectory* traj = partToTraj->getSecond();
+
+            // Get the particle properties...
+            Event::McParticle::StdHepId hepid= part->particleProperty();
+            ParticleProperty* ppty = m_ppsvc->findByStdHepID( hepid );
+            if (ppty == 0) {
+                log << MSG::DEBUG << "hepid = " << hepid << endreq;
+                continue;
             }
+
+            addTrack(traj->getPoints(), ppty->charge(), primary);
+            primary=false;
+        }
     } else {
         // use the endpoints to connect the dots
         SmartDataPtr<Event::McParticleCol>   mcPart(eventSvc(), "/Event/MC/McParticleCol");
@@ -352,9 +374,13 @@ void MCdisplay::endEvent()
                   continue;
                 }
                 std::string name = ppty->particle(); 
-                PointList line; 
-                line.push_back((*part)->initialPosition());
-                line.push_back( (*part)->finalPosition() );
+                PointList line;
+                Event::McTrajectoryPoint* initPoint = new Event::McTrajectoryPoint();
+                initPoint->setPoint((*part)->initialPosition());
+                line.push_back(initPoint);
+                Event::McTrajectoryPoint* finalPoint = new Event::McTrajectoryPoint();
+                finalPoint->setPoint((*part)->finalPosition());
+                line.push_back(finalPoint);
                 addTrack(line, ppty->charge(), primary);
                 primary=false;
 
