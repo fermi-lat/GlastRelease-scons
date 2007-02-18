@@ -41,16 +41,15 @@ public:
     
     
 private:
+    /// The list of relations that we really wwant
+    TObjArray *m_table;
     /// unique event id for this run (for indexing)
     UInt_t m_eventId;
     
     /// Run number (for indexing)
     UInt_t m_runId;
-
-    /// The list of relations that we really wwant
-    TObjArray *m_table;
     
-    ClassDef(RelTable,1) // Relational Table Class
+    ClassDef(RelTable,2) // Relational Table Class
 };
 
 #endif
