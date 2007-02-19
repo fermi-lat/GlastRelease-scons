@@ -66,7 +66,6 @@ using astro::GPS;
 * $Header$
 */
 
-// TU: CLHEP 1.9.2.2 hack
 typedef HepGeom::Point3D<double>  HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
 
@@ -150,6 +149,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) , m_sequence(0), m_initialTime(0)
 , m_SAAreject(0), m_insideSAA(false)
 {
+    
     // declare properties with setProperties calls
     declareProperty("source_name",  m_source_name="default");
     declareProperty("sources",     m_source_list);
@@ -456,17 +456,26 @@ StatusCode FluxAlg::execute()
     return StatusCode::SUCCESS;
 }
 
+namespace { 
+    // define some static variables for rootupleSVc to get after we are deleted
+    unsigned int run, sequence;
+    double initialTime, currentTime;
+}
 //------------------------------------------------------------------------
 //! clean up, summarize
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     static bool done = false;
 
-    // create the jobinfo tuple
-    m_rootTupleSvc->addItem("jobinfo", "run", &m_run);
-    m_rootTupleSvc->addItem("jobinfo", "generated", &m_sequence);
-    m_rootTupleSvc->addItem("jobinfo", "start", &m_initialTime);
-    m_rootTupleSvc->addItem("jobinfo", "stop",  &m_currentTime);
+    // create the jobinfo tuple: copy to statics
+    run = m_run;
+    sequence=m_sequence;
+    initialTime=m_initialTime;
+    currentTime=m_currentTime;
+    m_rootTupleSvc->addItem("jobinfo", "run", &run);
+    m_rootTupleSvc->addItem("jobinfo", "generated", &sequence);
+    m_rootTupleSvc->addItem("jobinfo", "start", &initialTime);
+    m_rootTupleSvc->addItem("jobinfo", "stop",  &currentTime);
 
     if( done || m_counts.empty() ) return sc;
     done=true;
