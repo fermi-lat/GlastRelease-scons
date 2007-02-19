@@ -84,6 +84,7 @@ Triggered.Members={
     "Sequencer/NtupleMaker"
  };
 
+// ----------------------------
 //  Trigger and livetime
 
 ApplicationMgr.DLLs +={ "Trigger"};
@@ -92,6 +93,7 @@ LivetimeSvc.Deadtime=0;  // default is now to disable this
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 
+// ----------------------------
 //  onboard filter 
 
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
@@ -103,6 +105,7 @@ OnboardFilter.mask=0; // all bits off by default: no rejection
 
 ReconCalibrationUpdate.Members = {};
 
+// ----------------------------
 // Reconstruction
 
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
@@ -131,6 +134,7 @@ FilterPerformance.Members = {};
 
 EventDisplay.Members = {};
  
+// ----------------------------
 // Output
 
 ApplicationMgr.DLLs +={"RootIo"}; 
@@ -148,10 +152,10 @@ RootTupleSvc.filename            = "${GLEAMROOT}/data/merit.root";
 RootTupleSvc.RejectIfBad = false;
 
 
+// ----------------------------
 // ntuple generation 
 
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
-ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 NtupleMaker.Members = {
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
@@ -167,6 +171,7 @@ RootTupleSvc.filename            = "${GLEAMROOT}/data/merit.root";
 RootTupleSvc.RejectIfBad = false;
 
 
+// ----------------------------
 // Reconstruction sequence details
 
 // First pass of Cal Recon - full recon...
@@ -189,12 +194,14 @@ TkrIter.Members = {
     "TkrReconAlg/Iteration"
     };
 
+// ----------------------------
 //   ACD recon
 
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
 
+// ----------------------------
 //  Geometry definition
 
 ApplicationMgr.DLLs += {"GlastSvc"};
@@ -242,6 +249,12 @@ TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+
+// -------------------------------------------
+
+// add this service last since it may pick up  
+// details from other services
+ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 // output levels, including suppression to allow debug, info
 mcRootWriterAlg.OutputLevel=3;
