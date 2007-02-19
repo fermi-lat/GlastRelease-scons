@@ -27,6 +27,7 @@
 #include "CLHEP/Random/Random.h"
 
 #include "astro/SkyDir.h"
+#include "astro/EarthOrbit.h"
 #include "flux/Flux.h"
 #include "flux/FluxMgr.h"
 #include "flux/rootplot.h"
@@ -268,6 +269,7 @@ private:
 
     DoubleProperty m_expansionFactor;
     DoubleProperty m_sampleInterval;
+    DoubleProperty m_orbitInclination;
 
 
 };
@@ -299,6 +301,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("LaunchDate"  , m_times.m_launchDate="");
     declareProperty("StartTimeEnvVar", m_times.m_startTimeEnvVar="");
     declareProperty("SampleInterval", m_sampleInterval=1.0);
+    declareProperty("OrbitInclination", m_orbitInclination=25.3);
 
 
 
@@ -339,14 +342,18 @@ StatusCode FluxSvc::initialize ()
     setProperties ();
 
 
- 
     // open the message log
     MsgStream log( msgSvc(), name() );
+
+    // set orbit properties: needs to be done before EarthOrbit object gets created by GPS
+    astro::EarthOrbit::set_inclination(m_orbitInclination);
+
 
     m_times.initialize(log);
 
     // set starting, or "launch" time for easy access by sources
     Spectrum::setStartTime(m_times.launch());
+
 
     status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
 
