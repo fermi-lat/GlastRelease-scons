@@ -72,6 +72,22 @@ public:
     */
     void clear();
   
+    /**
+    * This method change the first data pointer of a given relation contained
+    * into the table.
+    * @param rel it's a pointer to the relation to be modified
+    * @param pobj is the new data value provided by the user
+    */
+    void changeFirst(Relation<T1,T2> *rel, T1 *pobj);
+  
+    /**
+    * This method change the second data pointer of a given relation contained
+    * into the table.
+    * @param rel it's a pointer to the relation to be modified
+    * @param pobj is the new data value provided by the user
+    */
+    void changeSecond(Relation<T1,T2> *rel, T2 *pobj);
+  
     /// This method returns the number of relations in the table
     unsigned long size() const ;
   
@@ -195,6 +211,39 @@ template <class T1,class T2> void RelTable<T1,T2>::erase(Relation<T1,T2>* rel)
     rel->removeFromList(m_relations);
 
     delete rel;
+}
+  
+template <class T1,class T2>
+    void RelTable<T1,T2>::changeFirst(Relation<T1,T2> *rel, T1 *pobj) 
+{
+    // Purpose: This method change the first data pointer of a relation with the
+    // one given by the user
+
+    T2* pSecond = rel->getSecond();
+    std::vector<std::string> info = rel->getInfos();
+
+    erase(rel);
+
+    rel = new Event::Relation<T1,T2>(pobj, pSecond, info);
+
+    addRelation(rel);
+}
+
+
+template <class T1,class T2>
+    void RelTable<T1,T2>::changeSecond(Relation<T1,T2> *rel, T2 *pobj) 
+{
+    // Purpose: This method change the second data pointer of a relation with the
+    // one given by the user
+
+    T1* pFirst = rel->getFirst();
+    std::vector<std::string> info = rel->getInfos();
+
+    erase(rel);
+
+    rel = new Event::Relation<T1,T2>(pFirst, pobj, info);
+
+    addRelation(rel);
 }
   
 template <class T1,class T2> void RelTable<T1,T2>::clear() 

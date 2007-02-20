@@ -92,11 +92,11 @@ private:
 
 
 template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, std::string info): 
-  m_first(obj1,this), m_second(obj2,this), m_infos(1,info) {}
+  m_first(obj1), m_second(obj2), m_infos(1,info) {}
 
 
 template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, std::vector<std::string> infos): 
-  m_first(obj1,this), m_second(obj2,this), m_infos(infos) {}
+  m_first(obj1), m_second(obj2), m_infos(infos) {}
 
 
 
