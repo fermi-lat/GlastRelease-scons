@@ -467,6 +467,7 @@ void relationRootWriterAlg::writeEvent()
         throw;
     }
     m_relTree->Fill();
+    const_cast<TObjArray*>(m_relTable->getRelationTable())->SetOwner(true);
     m_relTable->Clear();
     m_common.clear();
     ++eventCounter;
