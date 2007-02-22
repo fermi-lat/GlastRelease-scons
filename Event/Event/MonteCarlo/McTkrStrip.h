@@ -1,5 +1,5 @@
-#ifndef McTkrStrip_H
-#define McTkrStrip_H 1
+#ifndef Event_McTkrStrip_H
+#define Event_McTkrStrip_H 1
 
 //include files
 
