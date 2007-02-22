@@ -20,6 +20,7 @@ TObjArray *McEvent::m_staticParticleCol = 0;
 TObjArray *McEvent::m_staticPositionHitCol = 0;
 TObjArray *McEvent::m_staticIntegratingHitCol = 0;
 TObjArray *McEvent::m_staticTrajectoryCol = 0;
+TObjArray *McEvent::m_staticTkrStripCol = 0;
 
 static const TString sourceUnknownStr = "NotStored";
 
@@ -33,6 +34,9 @@ m_eventId(0), m_runId(0), m_sourceName(sourceUnknownStr)
     
     if (!m_staticPositionHitCol) m_staticPositionHitCol = new TObjArray();
     m_positionHitCol = m_staticPositionHitCol;
+    
+    if (!m_staticTkrStripCol) m_staticTkrStripCol = new TObjArray();
+    m_tkrStripCol = m_staticTkrStripCol;
     
     if (!m_staticIntegratingHitCol) m_staticIntegratingHitCol = new TObjArray();
     m_integratingHitCol = m_staticIntegratingHitCol;
@@ -52,6 +56,11 @@ McEvent::~McEvent() {
     m_positionHitCol->Delete();
     delete m_positionHitCol;
     m_positionHitCol = 0;
+
+    if (m_tkrStripCol == m_staticTkrStripCol) m_staticTkrStripCol = 0;
+    m_tkrStripCol->Delete();
+    delete m_tkrStripCol;
+    m_tkrStripCol = 0;
 
     if(m_integratingHitCol == m_staticIntegratingHitCol) m_staticIntegratingHitCol = 0;
     m_integratingHitCol->Delete();
@@ -169,6 +178,12 @@ void McEvent::Clear(Option_t *option) {
         m_positionHitCol->Expand(10000);  //temporary
    }
 
+    if (m_tkrStripCol)
+    {
+        m_tkrStripCol->SetOwner();
+        m_tkrStripCol->Clear();
+    }
+
     if (m_integratingHitCol) {
         //      m_integratingHitCol->Delete();
         Int_t n = m_integratingHitCol->GetEntries();
@@ -247,6 +262,16 @@ void McEvent::addMcPositionHit(McPositionHit *hit) {
 McPositionHit* McEvent::getMcPositionHit(UInt_t index) const {
 
     return ((McPositionHit*)m_positionHitCol->At(index));
+}
+
+void McEvent::addMcTkrStrip(McTkrStrip *strip) {
+    m_tkrStripCol->Add(strip);
+    return;
+}
+
+McTkrStrip* McEvent::getMcTkrStrip(UInt_t index) const {
+
+    return ((McTkrStrip*)m_tkrStripCol->At(index));
 }
 
 void McEvent::addMcIntegratingHit(McIntegratingHit *hit) {

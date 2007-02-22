@@ -16,5 +16,6 @@
 #pragma link C++ class McEvent+;
 #pragma link C++ class McTrajectory+;
 #pragma link C++ class McTrajectoryPoint+;
+#pragma link C++ class McTkrStrip+;
 
 #endif

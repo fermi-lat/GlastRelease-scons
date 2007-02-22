@@ -7,6 +7,7 @@
 #include "McParticle.h"
 #include "McPositionHit.h"
 #include "McIntegratingHit.h"
+#include "McTkrStrip.h"
 #include "McTrajectory.h"
 #include "TString.h"
 
@@ -83,6 +84,19 @@ public:
     const TObjArray* getMcPositionHitCol() const { return m_positionHitCol; };
     /// clear of the array (necessary for converters)
     void clearMcPositionHitCol()  { m_positionHitCol->Clear(); };
+   
+    /// store a new McTkrStrip in the collection
+    void addMcTkrStrip(McTkrStrip *hit);
+    /// return a McTkrStrip corresponding to index
+    McTkrStrip* getMcTkrStrip(UInt_t index) const;
+    /// return the number of McTkrStrips stored in the collection
+    inline UInt_t getMcTkrStripCount() const { 
+        return ((m_tkrStripCol) ? m_tkrStripCol->GetEntries() : 0); 
+    };
+    /// return the full TObjArray containing McTkrStrips
+    const TObjArray* getMcTkrStripCol() const { return m_tkrStripCol; };
+    /// clear of the array (necessary for converters)
+    void clearMcTkrStripCol()  { m_tkrStripCol->Clear(); };
  
     /// add a new McIntegratingHit to the collection
     void addMcIntegratingHit(McIntegratingHit *hit);
@@ -147,6 +161,11 @@ private:
     TObjArray *m_positionHitCol; //->
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
+    
+    /// Collection of McTkrStrips
+    TObjArray *m_tkrStripCol; //->
+    /// static array to allow one-time array creation
+    static TObjArray *m_staticTkrStripCol; //!
     
     /// Collection of McTrajectories
     TObjArray *m_trajectoryCol; //->
