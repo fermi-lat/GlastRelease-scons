@@ -43,6 +43,7 @@ namespace xmlUtil {
       ETAG_uminus,
       ETAG_max,
       ETAG_half,
+      ETAG_sqrt,
       ETAG_n 
     } ;
 

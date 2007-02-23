@@ -53,7 +53,8 @@ int main(int argc, char* argv[]) {
   }
 
   xmlBase::XmlParser* parser = new xmlBase::XmlParser();
-  DOMDocument* doc = parser->parse(argv[1], "gdd");
+  //  DOMDocument* doc = parser->parse(argv[1], "gdd");
+  DOMDocument* doc = parser->parse(argv[1], "");
 
   if (doc == 0) {
     std::cout << "Document failed to parse correctly" << std::endl;
