@@ -47,8 +47,8 @@ class LangauFun {
 
   /// fill ROOT TNtuple w/ fitted parms for this func / hist
   static Int_t fillTuple(CalUtil::XtalIdx xtalId,
-	                     const TH1 &hist, 
-						 TNtuple &tuple);
+                         const TH1 &hist, 
+                         TNtuple &tuple);
 };
 
 #endif

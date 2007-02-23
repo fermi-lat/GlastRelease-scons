@@ -180,9 +180,9 @@ namespace CGCUtil {
   /// template method joins a sequence of data items ino
   /// a string, separating each by delim.
   template <class FwdIt>
-  std::string str_join(FwdIt start,
-                       FwdIt stop,
-					   const std::string &delim=" ") {
+    std::string str_join(FwdIt start,
+                         FwdIt stop,
+                         const std::string &delim=" ") {
     std::ostringstream tmp;
     while (start != stop) {
       tmp << *start;

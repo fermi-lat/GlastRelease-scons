@@ -77,7 +77,7 @@ void TwrHodoscope::addHit(const CalDigi &calDigi) {
 
     float adc = calDigi.getAdcSelectedRange(rng.val(), (CalXtalId::XtalFace)face.val());   // raw adc
     if (adc < 0)
-      //       m_ostrm << "Couldn't get adc val for face=" << face.val()
+      //       LogStream::get() << "Couldn't get adc val for face=" << face.val()
       //               << " rng=" << rng.val() << endl;
       //    return;
       continue;
