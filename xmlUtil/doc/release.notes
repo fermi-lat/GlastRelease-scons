@@ -3,7 +3,8 @@
  * Coordinator: J. Bogart
  *    EOH
 
-   v3r1p2   26-Apr-2005 jrb Fix Windows compile problem; reinstate all test 
+   v3r2   23-Feb-2007 jrb Add support for <sqrt> tag
+   v3r1p2 26-Apr-2005 jrb Fix Windows compile problem; reinstate all test 
                             test programs since they now build on both systems
  * 13 Apr 2005  jrb v3r1p1  Comment out trouble-making unnecessary test apps
  *  3-Jan-2005  jrb v3r1    Use xmlBase rather than xml package
