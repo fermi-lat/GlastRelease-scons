@@ -303,11 +303,11 @@ namespace CfgMgr {
   }
 
   void CmdLineParser::printUsage(std::ostream &strm) const {
-    strm << "Usage: '";
+    strm << "Usage: '" << appName << " ";
 
     //-- INITIAL USAGE STR --//
     // patterned after "grep [options] PATTERN [FILE...]"
-    if (switchList.size() && varList.size())
+    if (switchList.size() || varList.size())
       strm << "[options] ";
     
     for (unsigned i = 0; i < argList.size(); i++)

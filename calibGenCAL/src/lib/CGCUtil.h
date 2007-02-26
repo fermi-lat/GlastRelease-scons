@@ -39,12 +39,10 @@ namespace CGCUtil {
                              const std::string & delimiters = " ");
 
   /// remove directory portion of full path
-  /// \note works in place on string!
-  void path_remove_dir(std::string &path);
+  std::string path_remove_dir(const std::string &path);
 
   /// remove filename extention portion of path
-  /// \note works in place on string!
-  void path_remove_ext(std::string &path);
+  std::string path_remove_ext(const std::string &path);
 
   /// logStream will support parallel output to mutitple ostream classes
   /// (as many as are added by the addStream method)

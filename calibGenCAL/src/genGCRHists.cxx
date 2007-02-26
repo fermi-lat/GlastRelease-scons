@@ -30,6 +30,7 @@ class AppCfg {
 public:
    AppCfg(const int argc,
           const char **argv) :
+     cmdParser(path_remove_ext(__FILE__)),
      cfgPath("CfgPath",
              "path to configuration file",
              ""),
@@ -55,7 +56,13 @@ public:
 
     cmdParser.registerSwitch(summaryMode);
 
-    cmdParser.parseCmdLine(argc, argv);
+    try {
+      cmdParser.parseCmdLine(argc, argv);
+    } catch (exception &e) {
+      cout << e.what() << endl;
+      cmdParser.printUsage();
+      throw e;
+    }
   }
 
   // construct new parser
@@ -148,7 +155,7 @@ int main(const int argc,
                                                  "ENTRIES_PER_HIST",
                                                  3000); 
 
-    GCRHists gcrMPD(&cfgFile);
+    GCRHists gcrMPD(&cfgFile, cfg.summaryMode.getVal());
     CalMPD calMPD;
 
     // used when creating histgrams

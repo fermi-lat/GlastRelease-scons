@@ -240,6 +240,9 @@ namespace CfgMgr {
   /// basic implementation of ICmdLineParser
   class CmdLineParser {
   public:
+    /// \param appName optional for usage print-outs, etc
+    CmdLineParser(const std::string &appName="") :
+      appName(appName) {}
 
     void registerArg(ICmdArg &arg);
 
@@ -297,6 +300,8 @@ namespace CfgMgr {
     ArgList argList;
 
     std::vector<std::string> anonArgList;
+
+    std::string appName;
   };
 
 };
