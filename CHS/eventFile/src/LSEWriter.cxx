@@ -69,6 +69,11 @@ namespace eventFile {
   }
 
 #ifdef _FILE_OFFSET_BITS
+  off_t LSEWriter::tell()
+  {
+    return ftello( m_FILE );
+  }
+
   void LSEWriter::writeHeader()
   {
     // seek to the beginning of the file
@@ -82,6 +87,11 @@ namespace eventFile {
     fseeko( m_FILE, ofst, SEEK_END );
   }
 #else
+  long LSEWriter::tell()
+  {
+    return ftell( m_FILE );
+  }
+
   void LSEWriter::writeHeader()
   {
     // seek to the beginning of the file

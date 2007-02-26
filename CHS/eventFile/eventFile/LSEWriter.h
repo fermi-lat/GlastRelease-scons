@@ -79,6 +79,13 @@ namespace eventFile {
 	}
       };
 
+    // file position accessor
+#ifdef _FILE_OFFSET_BITS
+    off_t tell();
+#else
+    long tell();
+#endif
+
   private:
     std::string m_name;
     LSEHeader m_hdr;
