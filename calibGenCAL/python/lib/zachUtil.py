@@ -1,3 +1,5 @@
+import sys
+
 """
 collection of simple utilities shared throughout my code
 """
@@ -122,8 +124,8 @@ def read_perFace_txt(filename):
         nLine+=1
         vals = line.split()
         if (len(vals) != nTXTFields):
-            log.error("input line# %d expecting %d column input, got %d" % (nLine, nTXTFields, len(vals)) +
-                      "fmt=[twr lyr col face ratio] " + line)
+            print "ERROR: input line# %d expecting %d column input, got %d" % (nLine, nTXTFields, len(vals)) + \
+            "fmt=[twr lyr col face ratio] " + line
             sys.exit(-1)
 
         # convert vals array to floats instead of strings
