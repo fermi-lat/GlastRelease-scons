@@ -122,6 +122,12 @@ def read_perFace_txt(filename):
     nLine = -1
     for line in lines:
         nLine+=1
+
+        # discard comments
+        if line[0] == ';':
+            continue
+        
+        
         vals = line.split()
         if (len(vals) != nTXTFields):
             print "ERROR: input line# %d expecting %d column input, got %d" % (nLine, nTXTFields, len(vals)) + \

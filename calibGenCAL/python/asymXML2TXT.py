@@ -2,7 +2,7 @@
 Dump GLAST Cal offline asymmetry calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, face, pos_face_diode, neg_face_diode, asym, sig
+twr lyr col face pos_face_diode neg_face_diode asym sig
 
 asymXML2TXT [-d delim] <input_xml_file>
 
@@ -80,6 +80,9 @@ if __name__ == '__main__':
     #     5 = smallSigs value
     #     6 = NsmallPbigSigs value
     #     7 = PsmallNbigSigs value
+
+    # print header as comment
+    print "; twr lyr col face pos_face_diode neg_face_diode asym sig"
 
     # print out txt file.
     for twr in towers:

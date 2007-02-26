@@ -2,7 +2,7 @@
 Dump GLAST Cal offline Integral Nonlinearity (ADC<->CIDAC) calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, face, range, cidac, adc
+twr lyr col face range cidac adc
 
 inlXML2TXT [-d delim] <input_xml_file>
 
@@ -63,6 +63,9 @@ if __name__ == '__main__':
     (lenData, dacData, adcData) = xmlFile.read()
     towers = xmlFile.getTowers()
     xmlFile.close()
+
+    # print out header as comment
+    print "; twr lyr col face range cidac adc"
 
     # print out txt file.
     # print out txt file.

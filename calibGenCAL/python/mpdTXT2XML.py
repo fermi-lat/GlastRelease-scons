@@ -91,6 +91,12 @@ if __name__ == '__main__':
     nLine = -1
     for line in lines:
         nLine+=1
+
+        # skip comments
+        if line[0] == ';':
+            continue
+
+
         (twr, lyr, col, diode, mpd, sig)= line.split()
         # convert array index values to integer.
         twr = int(twr)

@@ -91,6 +91,10 @@ if __name__ == '__main__':
     nLine = -1
     for line in lines:
         nLine+=1
+
+        if line[0] == ';':
+            continue
+
         vals = line.split()
         if (len(vals) != nTXTFields):
             log.error("input line# %d expecting %d column input, got %d" % (nLine, nTXTFields, len(vals)) +

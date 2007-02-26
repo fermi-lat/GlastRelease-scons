@@ -2,7 +2,7 @@
 Convert CAL DAC setting XML file to txt.  the commadnline format is.
 
 The txt output format is:
-twr, row, xtal, online_face, dac
+twr row xtal online_face dac
 
 The commandline is
 python dacDiff.py FLE|FHE|LAC <dac_xml_file> 
@@ -57,6 +57,9 @@ dacTwrs = dacFile.getTowers()
 
 # load up arrays
 dac = dacFile.read()
+
+#print header as comment
+print  "; twr row xtal online_face dac"
 
 for twr in dacTwrs:
     for row in range(calConstant.NUM_ROW):

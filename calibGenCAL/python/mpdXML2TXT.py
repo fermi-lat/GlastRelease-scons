@@ -2,7 +2,7 @@
 Dump GLAST Cal offline mevPerDAC calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, diode, mevPerDAC, sigma
+twr lyr col diode mevPerDAC sigma
 
 mpdXML2TXT [-d delim] <input_xml_file>
 
@@ -61,6 +61,9 @@ if __name__ == '__main__':
     mpdData = xmlFile.read()
     towers = xmlFile.getTowers()
     xmlFile.close()
+
+    # print out header as comment
+    print "; twr lyr col diode mevPerDAC sigma"
 
     # print out txt file.
     for twr in towers:

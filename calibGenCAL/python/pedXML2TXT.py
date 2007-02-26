@@ -2,7 +2,7 @@
 Dump GLAST Cal offline pedestal calibration xml into column delmited text on stdout
 
 output format is:
-twr, lyr, col, face, range, pedestal, sigma
+twr lyr col face range pedestal sigma
 
 pedXML2TXT [-d delim] <input_xml_file>
 
@@ -61,7 +61,10 @@ if __name__ == '__main__':
     pedData = xmlFile.read()
     towers = xmlFile.getTowers()
     xmlFile.close()
-
+    
+    # print header as comment
+    print "; twr lyr col face range pedestal sigma"
+    
     # print out txt file.
     for twr in towers:
         for lyr in range(calConstant.NUM_LAYER):
