@@ -31,6 +31,9 @@ void CalAsym::writeTXT(const string &filename) const {
   if (!outfile.is_open())
     throw runtime_error(string("Unable to open " + filename));
 
+  // output header info as comment
+  outfile << "; twr lyr col pos_diode neg_diode asym error" << endl;
+
   // PER XTAL LOOP
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
     TwrNum twr = xtalIdx.getTwr();
@@ -59,7 +62,6 @@ void CalAsym::readTXT(const string &filename) {
   unsigned short twr, lyr, col, pdiode, ndiode;
   float asym, sig;
 
-
   // open file
   ifstream infile(filename.c_str());
 
@@ -67,11 +69,19 @@ void CalAsym::readTXT(const string &filename) {
     throw runtime_error(string("Unable to open " + filename));
 
   // loop through each line in file
+  string line;
   while (infile.good()) {
-    // get lyr, col (xtalId)
-    infile >> twr >> lyr >> col >> pdiode >> ndiode >> asym >> sig;
+    getline(infile, line);
+    if (infile.fail()) break; // bad get
 
-    if (infile.fail()) break; // bad get()
+    // check for comments
+    if (line[0] == ';')
+      continue;
+
+    istringstream istrm(line);
+
+    // get lyr, col (xtalId)
+    istrm >> twr >> lyr >> col >> pdiode >> ndiode >> asym >> sig;
 
     XtalIdx  xtalIdx(twr,
                      lyr,

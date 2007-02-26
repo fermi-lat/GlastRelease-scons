@@ -560,6 +560,11 @@ void MuTrig::writeTXT(const string &filename) const {
   if (!outfile.is_open())
     throw runtime_error(string("Unable to open " + filename));
 
+  // output header as comment
+  outfile << "; twr lyr col face muThr muThrErr muThrWid muThrWidErr [ciThr ciThrErr ciThrWid ciThrWidErr muThr/ciThr delPed]"
+          << endl;
+    
+
   for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
     TwrNum  twr  = faceIdx.getTwr();
     LyrNum  lyr  = faceIdx.getLyr();
