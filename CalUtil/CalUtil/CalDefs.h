@@ -131,6 +131,8 @@ namespace CalUtil {
     bool operator==(const DirNum &that) const {return m_data == that.m_data;}
     bool operator!=(const DirNum &that) const {return m_data != that.m_data;}
 
+	const std::string &toStr() const;
+
   };
   const DirNum X_DIR(0);
   const DirNum Y_DIR(1);
@@ -162,6 +164,7 @@ namespace CalUtil {
     static const vector<string> MNEM;
     static const unsigned short N_VALS=2;    
     bool isValid() const {return m_data < N_VALS;}
+	const std::string &toStr() const;
     
     /// allow quick conversion to idents::CalXtalId::XtalFace since internal
     /// storage is the same
@@ -190,6 +193,8 @@ namespace CalUtil {
     static const unsigned short N_VALS = 2; 
     bool isValid() const {return m_data < N_VALS;}
 
+	const std::string &toStr() const;
+
     bool operator==(const DiodeNum &that) const {return m_data == that.m_data;}
     bool operator!=(const DiodeNum &that) const {return m_data != that.m_data;}
 
@@ -207,12 +212,12 @@ namespace CalUtil {
 
     bool isValid() const {return m_data < N_VALS;}
     static const unsigned short N_VALS=2;
+	const std::string &toStr() const;
 
     bool operator==(const THXNum &that) const {return m_data == that.m_data;}
     bool operator!=(const THXNum &that) const {return m_data != that.m_data;}
 
   };
-
   const THXNum THX8(0);
   const THXNum THX1(1);
 
@@ -226,6 +231,7 @@ namespace CalUtil {
 
     static const vector<string> MNEM;
     static const unsigned short N_VALS=4;
+	const std::string &toStr() const;
     
     DiodeNum getDiode() const {
       using idents::CalXtalId;
@@ -669,6 +675,8 @@ namespace CalUtil {
     ColNum getCol() const {return m_data%LYR_BASE;}
 
     bool isValid() const {return m_data < N_VALS;}
+
+	std::string toStr() const;
     
   private:
     static unsigned calc(TwrNum twr, LyrNum lyr, ColNum col) {
@@ -719,6 +727,8 @@ namespace CalUtil {
 
     
     bool isValid() const {return m_data < N_VALS;}
+
+	std::string toStr() const;
   private:
     static unsigned calc(TwrNum twr, LyrNum lyr, ColNum col, FaceNum face) {
       return twr*TWR_BASE + lyr*LYR_BASE + col*COL_BASE + face.val();
@@ -773,6 +783,8 @@ namespace CalUtil {
                                                       getDiode());}
     
     bool isValid() const {return m_data < N_VALS;}
+
+	std::string toStr() const;
   private:
     static unsigned calc(TwrNum twr, LyrNum lyr, ColNum col, 
                          FaceNum face, DiodeNum diode) {
@@ -833,6 +845,8 @@ namespace CalUtil {
                                                getFace());}
 
     bool isValid() const {return m_data < N_VALS;}
+
+	std::string toStr() const;
   private:
     static unsigned calc(TwrNum twr, LyrNum lyr, ColNum col, FaceNum face, RngNum rng) {
       return twr*TWR_BASE + lyr*LYR_BASE + col*COL_BASE + face.val()*FACE_BASE + rng.val();
@@ -892,6 +906,8 @@ namespace CalUtil {
     static const unsigned short N_VALS = 4; 
 
     bool isValid() const {return m_data < N_VALS;}
+
+	const std::string &toStr() const;
 
 
     bool operator==(const AsymType &that) const {return m_data == that.m_data;}

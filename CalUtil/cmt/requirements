@@ -8,10 +8,10 @@ use idents
 
 apply_pattern package_include
 apply_pattern package_headers
-
-private
+apply_pattern package_linkopts
 
 library CalUtil *.cxx ${CalUtil_headers}
 
+private
 application test_CalUtil test/test_CalUtil.cxx
 
