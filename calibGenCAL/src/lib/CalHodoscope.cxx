@@ -2,7 +2,7 @@
 
 /** @file
     @author fewtrell
-*/
+ */
 
 // LOCAL INCLUDES
 #include "CalHodoscope.h"
@@ -41,10 +41,11 @@ void CalHodoscope::clear() {
 void CalHodoscope::addHit(const CalDigi &calDigi) {
   //-- XtalId --//
   idents::CalXtalId id(calDigi.getPackedId());  // get interaction information
+
   // skip hits not for current tower.
   LyrNum lyr = id.getLayer();
 
-  XtalIdx           xtalIdx(id);
+  XtalIdx xtalIdx(id);
 
   // load up all adc values for each xtal diode
   // also ped subtraced adc values.

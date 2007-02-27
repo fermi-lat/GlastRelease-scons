@@ -15,9 +15,9 @@
 
 /** @file CalGeom.h
     @author Zachary Fewtrell
-    \brief Static Cal Geometry data for use when
+ \brief Static Cal Geometry data for use when
     Gleam facilities are not available.
-*/
+ */
 
 namespace CalGeom {
   /// z pos of top surface of Layer 0 Cal Xtal

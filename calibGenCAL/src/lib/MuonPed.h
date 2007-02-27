@@ -4,7 +4,7 @@
 
 /** @file
     @author Zachary Fewtrell
-*/
+ */
 
 // LOCAL INCLUDES
 #include "CGCUtil.h"
@@ -32,9 +32,9 @@ class CalDigi;
 
 
     @author Zachary Fewtrell
-*/
+ */
 class MuonPed {
- public:
+public:
   MuonPed();
 
   /// which type of events should be filtered for
@@ -63,7 +63,7 @@ class MuonPed {
   /// \note useful for data w/ < 16 Cal modules.
   void     trimHists();
 
- private:
+private:
   /// allocate & create muon pedestal histograms & pointer array
   void     initHists();
 
@@ -84,13 +84,13 @@ class MuonPed {
 
   /// store cfg & status data pertinent to current algorithm run
   class AlgData {
-  private:
+private:
     void init() {
       roughPeds = 0;
       trigCut   = PERIODIC_TRIGGER;
     }
 
-  public:
+public:
     AlgData() {
       init();
     }
@@ -102,7 +102,7 @@ class MuonPed {
 
   /// store data pertinent to current event
   class EventData {
-  private:
+private:
     /// reset all member variables
     void init() {
       prev4Range = true;
@@ -110,7 +110,7 @@ class MuonPed {
       eventNum   = 0;
     }
 
-  public:
+public:
     EventData() {
       init();
     }

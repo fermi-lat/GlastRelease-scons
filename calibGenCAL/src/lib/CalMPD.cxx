@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
-*/
+ */
 
 // LOCAL INCLUDES
 #include "CalMPD.h"
@@ -37,7 +37,6 @@ void CalMPD::writeTXT(const string &filename) const {
   // output header info as comment
   outfile << "; twr lyr col diode mpd error" << endl;
 
-
   // PER XTAL LOOP
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++)
     for (DiodeNum diode; diode.isValid(); diode++) {
@@ -62,6 +61,7 @@ void CalMPD::readTXT(const string &filename) {
   unsigned short twr, lyr, col, diode;
   float mpd, sig;
 
+
   // open file
   ifstream infile(filename.c_str());
 
@@ -79,12 +79,13 @@ void CalMPD::readTXT(const string &filename) {
       continue;
 
     istringstream istrm(line);
+
     // get lyr, col (xtalId)
     istrm >> twr >> lyr >> col >> diode >> mpd >> sig;
 
-    XtalIdx xtalIdx(twr,
-                    lyr,
-                    col);
+    XtalIdx       xtalIdx(twr,
+                          lyr,
+                          col);
 
     m_mpd[diode][xtalIdx]    = mpd;
     m_mpdErr[diode][xtalIdx] = sig;

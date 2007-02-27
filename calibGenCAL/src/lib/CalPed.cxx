@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
-*/
+ */
 
 // LOCAL INCLUDES
 #include "CalPed.h"
@@ -74,12 +74,12 @@ void CalPed::readTXT(const string &filename) {
     istringstream istrm(line);
 
     istrm >> twr
-          >> lyr
-          >> col
-          >> face
-          >> rng
-          >> ped
-          >> sig;
+    >> lyr
+    >> col
+    >> face
+    >> rng
+    >> ped
+    >> sig;
 
     RngIdx rngIdx(twr,
                   lyr,

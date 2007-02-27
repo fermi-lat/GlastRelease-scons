@@ -1,11 +1,11 @@
 /** @file CalGeom.cxx
 
-@author Zachary Fewtrell
+   @author Zachary Fewtrell
 
-\brief function definitions for CalGeom.h
+ \brief function definitions for CalGeom.h
 
-$Header$
-*/
+   $Header$
+ */
 
 // LOCAL INCLUDES
 #include "CalGeom.h"

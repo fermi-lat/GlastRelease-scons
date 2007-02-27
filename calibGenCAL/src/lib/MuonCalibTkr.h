@@ -4,7 +4,7 @@
 
 /** @file
     @author Zachary Fewtrell
-*/
+ */
 
 // LOCAL INCLUDES
 #include "CGCUtil.h"
@@ -37,9 +37,9 @@ class MPDHists;
     event files
 
     @author Zachary Fewtrell
-*/
+ */
 class MuonCalibTkr {
- public:
+public:
   MuonCalibTkr(const SimpleIniFile &cfg,
                const CalPed &ped,
                const CIDAC2ADC &dac2adc,
@@ -55,9 +55,9 @@ class MuonCalibTkr {
                         const std::vector<std::string> &digiFileList,
                         const std::vector<std::string> &svacFileList,
                         unsigned startEvent = 0
-                        );
+  );
 
- private:
+private:
   /// process a single event for histogram fill
   bool           processEvent(const DigiEvent &digiEvent);
 
@@ -118,7 +118,7 @@ class MuonCalibTkr {
   MPDHists &m_mpdHists;
 
   class AlgData {
-  private:
+private:
     void init() {
       minDeltaEventTime  = 0;
       xtalLongCut        = 0;
@@ -143,7 +143,7 @@ class MuonCalibTkr {
       mpdSmFills         = 0;
     }
 
-  public:
+public:
     AlgData() {
       init();
     }
@@ -204,20 +204,20 @@ class MuonCalibTkr {
   } algData;
 
   class EventData {
-  private:
+private:
     /// reset all member variables
     void init() {
       eventNum = 0;
       next();
     }
 
-  public:
+public:
     EventData(const CalPed &ped,
               const CIDAC2ADC &dac2adc) :
       hscope(ped, dac2adc)
-      {
-        init();
-      }
+    {
+      init();
+    }
 
     /// rest all member variables that do not retain data
     /// from one event to next.
@@ -254,7 +254,6 @@ class MuonCalibTkr {
 
     /// theta angle (from vertical) of Tracker track
     float theta;
-    
   } eventData;
 };
 
