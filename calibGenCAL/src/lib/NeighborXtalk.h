@@ -31,8 +31,6 @@ class NeighborXtalk {
   /// write calibrations to txt file
   void writeTXT(const std::string &filename) const;
 
-  void readTXT(const std::string &filename);
-
   /// \brief retrieve 2d points for crosstalk spline function (x=cidac, y=adc)
   /// for given source_channel, destination_channel pair
   /// \return NULL if no such spline exists.
