@@ -88,6 +88,7 @@ void AcdHit::setFlags(const Event::AcdDigi& digi)
 // Purpose: to pull various flags out of the digis into the hits
 //
 {
+  m_acdId = digi.getId();
   m_flags[A] = 0; m_flags[B] = 0;
 
   // FIXME  -> Do all the flags
