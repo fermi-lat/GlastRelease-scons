@@ -167,8 +167,6 @@ void NeighborXtalkAlg::processHit(const CalDigi &cdig) {
       // only interested in current diode!
       DiodeNum diode(rng.getDiode());
 
-      if (diode != LRG_DIODE) continue;
-
       // only processing X8 data
       if (THXNum(rng) != THX8) continue;
 
@@ -207,12 +205,12 @@ void NeighborXtalkAlg::processHit(const CalDigi &cdig) {
         }
 
         // assign to table
-        // 'source' channel is current injected channel.
+        // 'source' channel is current injected channel / LEX8
         RngIdx srcIdx(twr,
                       lyr,
                       eventData.testCol,
                       face,
-                      rng);
+                      LEX8);
 
         // 'dest' channel is currently measured channel
         RngIdx destIdx(twr,
