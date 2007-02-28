@@ -255,7 +255,22 @@ namespace CfgMgr {
     }
   }
 
-  void CmdLineParser::printHelp(std::ostream &strm) const {
+  void CmdLineParser::printUsage(std::ostream &strm) const {
+    strm << "Usage: '" << appName << " ";
+
+    //-- INITIAL USAGE STR --//
+    // patterned after "grep [options] PATTERN [FILE...]"
+    if (switchList.size() || varList.size())
+      strm << "[options] ";
+
+    for (unsigned i = 0; i < argList.size(); i++)
+      strm << argList[i]->getLongName() << " ";
+
+    strm << "'" << endl;
+
+    //-- OPTIONS / ARG DESCRIPTIONS --//
+    strm << "Where: " << endl;
+
     for (SwitchList::const_iterator sw(switchList.begin());
          sw != switchList.end();
          sw++) {
@@ -297,23 +312,6 @@ namespace CfgMgr {
            << (**arg).getHelp() << "\t"
            << endl;
     }
-  }
 
-  void CmdLineParser::printUsage(std::ostream &strm) const {
-    strm << "Usage: '" << appName << " ";
-
-    //-- INITIAL USAGE STR --//
-    // patterned after "grep [options] PATTERN [FILE...]"
-    if (switchList.size() || varList.size())
-      strm << "[options] ";
-
-    for (unsigned i = 0; i < argList.size(); i++)
-      strm << argList[i]->getLongName() << " ";
-
-    strm << "'" << endl;
-
-    //-- OPTIONS / ARG DESCRIPTIONS --//
-    strm << "Where: " << endl;
-    printHelp(strm);
   }
 };

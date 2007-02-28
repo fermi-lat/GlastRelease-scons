@@ -271,7 +271,7 @@ private:
   class CmdLineParser {
 public:
     /// \param appName optional for usage print-outs, etc
-    CmdLineParser(const std::string &appName = "") :
+    CmdLineParser(const std::string &appName) :
       appName(appName) {
     }
 
