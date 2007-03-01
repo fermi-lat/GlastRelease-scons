@@ -178,3 +178,28 @@ void NeighborXtalk::writeTuple(const std::string &filename) const {
   rootFile.Write();
   rootFile.Close();
 }
+
+void NeighborXtalk::pedSubtractADC() {
+	/// loop through each dest channel
+	for (XtalkMap::iterator it = m_xtalkMap.begin();
+		it != m_xtalkMap.end();
+		it++) {
+		ChannelSplineMap &splMap = it->second;
+		
+		/// select each polyline for source channel
+		for (ChannelSplineMap::iterator chanIt = splMap.begin();
+			chanIt != splMap.end();
+			chanIt++) {
+
+			Polyline &spline = chanIt->second;
+
+			float adcPed = spline[0].second;
+
+			for (Polyline::iterator splIt = spline.begin();
+				splIt != spline.end();
+				splIt++)
+				splIt->second -= adcPed;
+			}
+		}
+
+}

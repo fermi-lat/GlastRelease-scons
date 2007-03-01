@@ -28,7 +28,7 @@ if len(sys.argv) != 2:
 rootPath = sys.argv[1]
 
 gROOT.Reset()
-rootFile = TFile(rootPath)
+rootFile = TFile(rootPath,"READ")
 
 for k in rootFile.GetListOfKeys():
     cl = gROOT.GetClass(k.GetClassName());

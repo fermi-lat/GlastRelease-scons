@@ -80,7 +80,7 @@ if imgType not in imgTypes:
 ### MAIN LOOP ###
 # setup ROOT
 gROOT.Reset()
-rootFile = TFile(rootPath)
+rootFile = TFile(rootPath,"READ")
 
 for k in rootFile.GetListOfKeys():
     cls = gROOT.GetClass(k.GetClassName());

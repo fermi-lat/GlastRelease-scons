@@ -168,7 +168,7 @@ void NeighborXtalkAlg::processHit(const CalDigi &cdig) {
       DiodeNum diode(rng.getDiode());
 
       // only processing X8 data
-      if (THXNum(rng) != THX8) continue;
+      if (rng.getTHX() != THX8) continue;
 
       // retrieve adc value
       unsigned short adc = acRo.getAdc((CalXtalId::XtalFace)face.val());

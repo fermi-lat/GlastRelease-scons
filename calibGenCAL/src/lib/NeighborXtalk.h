@@ -57,6 +57,9 @@ public:
                                   float dac,
                                   float adc);
 
+  /// for each xtalk spline, subtract spline[0].adc from all points in spline.
+  void pedSubtractADC();
+
 private:
   /// associate cidac2adc splines from other channels w/ a single adc channel
   typedef std::map<CalUtil::RngIdx, SplineUtil::Polyline> ChannelSplineMap;
