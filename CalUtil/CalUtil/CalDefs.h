@@ -243,6 +243,8 @@ namespace CalUtil {
       return (idents::CalXtalId::AdcRange)m_data;
     }
 
+	THXNum getTHX() {return m_data%2;}
+
     bool operator==(const RngNum &that) const {return m_data == that.m_data;}
     bool operator!=(const RngNum &that) const {return m_data != that.m_data;}
     bool operator>=(const RngNum &that) const {return m_data >= that.m_data;}
