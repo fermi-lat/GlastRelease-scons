@@ -101,6 +101,13 @@
 	 aweight="183.85" 
 	 />
 
+<element name="Titanium"
+         symbol="Ti"
+         z="22"
+         aweight="47.867"
+         />
+
+
 
 <!-- invented to satisfy Geant4, but doesn't seem to be good enough    -->
 <!--
@@ -185,6 +192,12 @@
   <addmaterial material="Beryllium">
     <natoms n="1" />
    </addmaterial>
+</composite>
+
+<composite name="Ti" density="19.25" >
+  <addmaterial material="Titanium">
+    <natoms n="1" />
+  </addmaterial>
 </composite>
 
 
@@ -354,6 +367,97 @@
 <addmaterial material ="Iron">
 <fractionmass fraction="0.16" />
 </addmaterial>
+</composite>
+
+<composite name="Hydrazine" density="1.01">
+  <addmaterial material="Hydrogen">
+    <natoms n="4" />
+  </addmaterial>
+  <addmaterial material="Nitrogen">
+    <natoms n="2" />
+  </addmaterial>
+</composite>
+
+<!-- avg. TEM mass is 7.316 kg, volume is 28*28*10.57 cm**3 -->
+<composite name="TEM_electronics" density="0.882841" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+</composite>
+
+<!-- GASU mass is 15.8 kg, volume is 68*39*11.25 cm**3 -->
+<composite name="GASU_electronics" density="0.521904" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+</composite>
+
+<!-- PDU mass is 11.1 kg, volume is 30*67.5*11.25 cm**3 -->
+<composite name="PDU_electronics" density="0.487243" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+</composite>
+
+<!-- SIU and EPU masses are 6.5 kg, volumes are 30*30*11.25 cm**3 -->
+<composite name="SIU_electronics" density="0.641975" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+</composite>
+
+<!-- HIB mass is 2.6 kg, volume is 30*30*11.25 cm**3 -->
+<composite name="HIB_electronics" density="0.256790" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+</composite>
+
+
+
+
+
+<!-- No idea yet what density actually needs to be -->
+<composite name="SC_electronics" density="1" >
+  <addmaterial material="Copper">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Silicon">
+    <fractionmass fraction="1"/>
+  </addmaterial>
+  <addmaterial material="Aluminum">
+    <fractionmass fraction="1"/>
+  </addmaterial>
 </composite>
 
 <!-- OBSOLETE???? -->

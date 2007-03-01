@@ -6,6 +6,26 @@
       vacuum for some 'solids'</prim>
   <prim name="blanketMat" value="blanket" type="string" uType="mat">
 Material for thermal blanket</prim>
+
+  <prim name="TEMMat" value="TEM_electronics" type="string" uType="mat">Equal 
+   parts Cu, Si, Al of correct average density for a TEM</prim>
+
+  <prim name="GASUMat" value="GASU_electronics" type="string" uType="mat">
+  Equal parts Cu, Si, Al of correct average density for a TEM</prim>
+
+  <prim name="PDUMat" value="PDU_electronics" type="string" uType="mat">Equal 
+   parts Cu, Si, Al of correct average density for a PDU</prim>
+
+  <prim name="SIUMat" value="SIU_electronics" type="string" uType="mat">Equal 
+   parts Cu, Si, Al of correct average density for an SIU</prim>
+
+
+  <prim name="EPUMat" value="SIU_electronics" type="string" uType="mat">Equal 
+   parts Cu, Si, Al of correct average density for an EPU (same as SIU)</prim>
+
+  <prim name="HIBMat" value="HIB_electronics" type="string" uType="mat">Equal 
+   parts Cu, Si, Al of correct average density for an HIB</prim>
+
   <prim name="spacecraftMat" value="Alsc" type="string" uType="mat">
 Material for spacecraft</prim>
   <prim name="solarPanelMat" value="Si" type="string" uType="mat">
@@ -15,4 +35,11 @@ Material for solar panel core</prim>
   <prim name="solarRodMat" value="Al" type="string" uType="mat">
 Material for solar panel connecting rods</prim>
 
+  <prim name="propellantMat" value="Hydrazine" type="string" uType="mat">
+Propellant is hydrazine</prim>
+  <prim name="tankMat" value="Ti" type="string" uType="mat">
+Propellant tank is made of titanium</prim>
+  <prim name="SCStructMat" value="Al" type="string" uType="mat">
+Use some sort of aluminum for primary structure of spacecraft
+</prim>
 </primCategory>

@@ -478,18 +478,26 @@
 
         <const name="spacecraft_dz">
           <notes>Z displacement of spacecraft relative to Ritz origin.
-                It goes immediately under the LAT</notes>
-          <uminus>
+                It goes immediately under the 2nd layer of LAT electronics.
+                All the modules in this layer have samae offset and
+                same z-dimension</notes>
+          <minus>
+            <refer refTo="NAD_LAT_L2Electronics_dz" />
             <add>
+<!--
               <refer refTo="NADGridFlangeZ" />
               <refer refTo="CALGridFrameGap" />
               <refer refTo="CALVertStayClear" />
               <refer refTo="NADSpacecraftGap" />
+-->           
+              <half>
+                <refer refTo="NADpdu_z" />
+              </half>
               <half> 
                  <refer refTo="NADSpacecraftZ" />
               </half>
             </add>
-          </uminus>
+          </minus>
         </const>
 
 <!-- have to do analogous 5 constants for side tile locations -->
@@ -894,6 +902,74 @@
                 </half>
               </add>
             </minus>
+          </const>
+
+          <const name="NAD_siu_epu_dxn">
+            <notes>Some SIUs and EPUs have neg. x displacement</notes>
+            <uminus>
+              <refer refTo="NAD_siu_epu_dx" />
+            </uminus>
+          </const>
+
+          <const name="NADepu_dyn">
+            <notes>Some EPUs have neg. y displacement</notes>
+            <uminus>
+              <refer refTo="NADepu_dy" />
+            </uminus>
+          </const>
+
+          <const name="NADtem_small_dtn">
+            <notes>TEMs form 4x4 array</notes>
+            <uminus>
+              <refer refTo="NADtem_small_dt" />
+            </uminus>
+          </const>
+
+          <const name="NADtem_large_dtn">
+            <notes>TEMs form 4x4 array</notes>
+            <uminus>
+              <refer refTo="NADtem_large_dt" />
+            </uminus>
+          </const>
+
+          <const name="NADsiu_dy">
+            <notes>Same as small TEM transverse displacement</notes>
+            <refer refTo="NADtem_small_dt" />
+          </const>
+
+          <const name="NADsiu_dyn">
+            <notes>Same as small TEM transverse displacement</notes>
+            <uminus>
+              <refer refTo="NADsiu_dy" />
+            </uminus>
+          </const>
+
+          <const name="NADhib_small_dt">
+            <notes>HIBs have same transverse offsets as TEMs, (but there
+                  are only 5 of them so not all combinations occur)
+            </notes>
+            <refer refTo="NADtem_small_dt" />
+          </const>
+
+          <const name="NADhib_small_dtn">
+            <notes>HIBs have same transverse offsets as TEMs, (but there
+                  are only 5 of them so not all combinations occur)
+            </notes>
+            <refer refTo="NADtem_small_dtn" />
+          </const>
+
+          <const name="NADhib_large_dt">
+            <notes>HIBs have same transverse offsets as TEMs, (but there
+                  are only 5 of them so not all combinations occur)
+            </notes>
+            <refer refTo="NADtem_large_dt" />
+          </const>
+
+          <const name="NADhib_large_dtn">
+            <notes>HIBs have same transverse offsets as TEMs, (but there
+                  are only 5 of them so not all combinations occur)
+            </notes>
+            <refer refTo="NADtem_large_dtn" />
           </const>
               
       </derCategory>

@@ -59,7 +59,8 @@ to top of lower, central part of blanket.  May, 2006</prim>
   <prim name="NADSpacecraftZ" value="1400.0">Height of spacecraft</prim>
   <prim name="NADSpacecraftR" value="817.775">Radius of spacecraft
 (800.0 * sqrt(1/(0.957)) to make mass equal to about 1000 kg</prim>
-  <prim name="NADSpacecraftGap" value="0.0">Gap between LAT and spacecraft</prim>
+<!--
+  <prim name="NADSpacecraftGap" value="0.0">Gap between LAT and spacecraft</prim> -->
   <prim name="NADSolarRodLength" value="1000.0">Length of connecting 
 rods for solar panels</prim>
   <prim name="NADSolarRodR" value="50.0">Radius of connecting 
@@ -69,4 +70,84 @@ out from spacecraft)</prim>
   <prim name="NADSolarPWidth" value="1500.0">Solar panel width</prim>
   <prim name="NADSolarSiThick" value="4.0">Solar panel thickness</prim>
   <prim name="NADSolarCoreThick" value="2.0">Solar panel thickness</prim>
+</primCategory>
+<primCategory name="SCPrim">
+<overview>Dimensions for 'spacecraft' components such as primary
+structure, electronics, batteries, etc.</overview>
+ <prim name="SCWidth" value="1500">Width of primary structure. Cross-section
+  is an (irregular) octagon: a square with corners clipped off, so
+no side is as large as SCWidth, which is the length of a side of the
+enclosing square.</prim>
+ <prim name="SCBigSide" value="800">Length of X- and Y-sides of 
+primary structure</prim> 
+ <prim name="SC_z" value="1300">
+&lt;em&gt;Approximate&lt;/em&gt; Z-dimension of spacecraft
+primary structure</prim>
+ <prim name="SC_thick" value="2">Pure &lt;font color="red"&gt;guess 
+&lt;/font&gt; for thickness of primary structure</prim>
+<prim name="tankOuterRadius" value="515">Outer radius of hydrazine tank,
+from spec sheet</prim>
+<prim name="tankThickness" value="0.94">Minimum wall, from spec sheet</prim>
+<prim name="skirt_z" value="152">Height of spacecraft skirt</prim>
+<prim name="radiator_z" value="1488">Z-extent of radiators</prim>
+<prim name="radTop_dz" value="-236.2">Z-displacement relative to LAT origin
+of top of radiators</prim>
+<prim name="skirtTop_to_radTop" value="296">Z-distance from top of skirt
+to top of radiators</prim>
+
+<!-- Some offsets get reused for different components -->
+<prim name="NAD_LAT_L2Electronics_dz" value="-423.474">z-offset 
+in LAT coordinate system of GASU, PDU, SIU, EPU, HIB</prim>
+
+<prim name="NAD_siu_epu_dx" value="574.548">x-offset for siu's and
+epu #2.  Other epu's and pdu use negative of this value</prim>
+
+<prim name="NADtem_small_dt" value="187.25">TEMs are in a 4x4 array.
+This is the smaller of two transverse displacement values</prim>
+<prim name="NADtem_large_dt" value="561.75">TEMs are in a 4x4 array.
+This is the larger of two transverse displacement values</prim>
+<prim name="NADtem_dz" value="-306.214">All TEMs have the same 
+z-displacement</prim>
+<prim name="NADepu_dy" value="559.308">EPUs have y-offset equal
+to this value or its opposite.</prim>
+
+
+<prim name="NADgasu_dx" value="0">x-offset of GASU (electronics)</prim>
+<prim name="NADgasu_dy" value="0">y-offset of GASU (electronics)</prim>
+
+
+
+<prim name="NADpdu_dx" value="-574.548">x-offset of PDU (electronics)</prim>
+<prim name="NADpdu_dy" value="0">y-offset of PDU (electronics)</prim>
+
+<prim name="NADtem_t" value="280">TEMs have equal x- and y-dimension</prim>
+<prim name="NADtem_z" value="105.7">z-dimension of TEM.</prim>
+
+<prim name="NADgasu_x" value="680">x-dimension of GASU (electronics)</prim>
+<prim name="NADgasu_y" value="390">y-dimension of GASU (electronics)</prim>
+<prim name="NADgasu_z" value="112.5">z-dimension of GASU (electronics)</prim>
+
+<prim name="NADpdu_x" value="300">x-dimension of PDU (electronics)</prim>
+<prim name="NADpdu_y" value="675">y-dimension of PDU (electronics)</prim>
+<prim name="NADpdu_z" value="112.5">z-dimension of PDU (electronics)</prim>
+
+<prim name="NADsiu_t" value="300">SIU, EPU and HIB all have the same
+  transverse dimensions</prim>
+
+<prim name="NADepu_t" value="300">SIU, EPU and HIB all have the same
+  transverse dimensions</prim>
+
+<prim name="NADhib_t" value="300">SIU, EPU and HIB all have the same
+  transverse dimensions</prim>
+
+<prim name="NADsiu_z" value="112.5">SIU, EPU and HIB all have the same
+  z dimension</prim>
+<prim name="NADepu_z" value="112.5">SIU, EPU and HIB all have the same
+  z dimension</prim>
+<prim name="NADhib_z" value="112.5">SIU, EPU and HIB all have the same
+  z dimension</prim>
+ 
+
+
+
 </primCategory>

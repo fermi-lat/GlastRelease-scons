@@ -909,7 +909,7 @@
 <!ATTLIST derCategory name ID #REQUIRED
           save        (true | false) "false" >
 
-<!ENTITY  % operator "mul | quo | add | minus | uminus | half | max" >
+<!ENTITY  % operator "mul | quo | add | minus | uminus | half | max | sqrt" >
 
 <!ELEMENT const (notes?, (refer | (%operator;)? )) >
 <!ATTLIST const name ID #IMPLIED
@@ -936,6 +936,7 @@
 <!ELEMENT quo ((%operand;), (%operand;) ) >
 <!ELEMENT uminus (%operand;)  >
 <!ELEMENT half (%operand;)  >
+<!ELEMENT sqrt (%operand;)  >
 
 <!--    ID DICTIONARY DEFINITONS
 
@@ -958,7 +959,7 @@
 
    The whole thing is tree-like where the children of a particular
    node correspond to possible field names which can follow the
-   already-constructed sequence of ancestor nodes.
+   already-constucted sequence of ancestor nodes.
 
  -->
 

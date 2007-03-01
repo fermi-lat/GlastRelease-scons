@@ -119,6 +119,44 @@
          ZREF="NADGridWebZ"
          materialREF="CALGridMat"  />
 
+<!-- Electronics boxes -->
+     <box name="TEM" 
+         XREF="NADtem_t"
+         YREF="NADtem_t"
+         ZREF="NADtem_z"
+         materialREF="TEMMat" />
+
+     <box name="GASU" 
+         XREF="NADgasu_x"
+         YREF="NADgasu_y"
+         ZREF="NADgasu_z"
+         materialREF="GASUMat" />
+
+     <box name="PDU" 
+         XREF="NADpdu_x"
+         YREF="NADpdu_y"
+         ZREF="NADpdu_z"
+         materialREF="PDUMat" />
+
+    <box name="SIU" 
+         XREF="NADsiu_t"
+         YREF="NADsiu_t"
+         ZREF="NADsiu_z"
+         materialREF="SIUMat" />
+
+    <box name="EPU" 
+         XREF="NADepu_t"
+         YREF="NADepu_t"
+         ZREF="NADepu_z"
+         materialREF="EPUMat" />
+
+    <box name="HIB" 
+         XREF="NADhib_t"
+         YREF="NADhib_t"
+         ZREF="NADhib_z"
+         materialREF="HIBMat" />
+
+
 <!-- Define primitive volumes needed for solar panels -->
     <box name="solarPanelSiBox"
          XREF="NADSolarPWidth"
@@ -164,3 +202,33 @@
         <idField name="fPanelObjects" valueREF="eSolarPanelRod" />
       </posXYZ>
     </composition>
+
+    <!-- Make boxes for primary structure -->
+    <!-- One or both of material and thickness is likely to change -->
+    <box name="primaryStructureCorner"
+       XREF="SCCornerSide"
+       YREF="SC_thick"
+       ZREF="SC_z" 
+       materialREF="SCStructMat"
+    />
+
+<!-- Box for sides parallel to x- or y-axis -->
+    <box name="primaryStructureMain"
+       XREF="SCBigSide"
+       YREF="SC_thick"
+       ZREF="SC_z" 
+       materialREF="SCStructMat"
+    />
+
+
+<!-- Make propellant tank of titanium and fill with hydrazine -->
+    <sphere name="propellant" ROutREF="tankInnerRadius"
+            materialREF="propellantMat"
+    />
+    <sphere name="propellantTank" 
+            RInREF="tankInnerRadius"
+            ROutREF="tankOuterRadius"
+            materialREF="tankMat"
+    />
+
+

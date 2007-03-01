@@ -49,7 +49,12 @@
     <!ENTITY CALDerived     SYSTEM "flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "flightNADDerived.xml">
-    <!ENTITY extraDerived   SYSTEM "../empty.xml">
+<!--   extraDerived used to refer to empty.xml.  Content
+       in flightSCDerived isn't used yet, but there is no harm
+       in including the constant definitions.
+ -->
+      
+    <!ENTITY extraDerived   SYSTEM "flightSCDerived.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDict.xml">
