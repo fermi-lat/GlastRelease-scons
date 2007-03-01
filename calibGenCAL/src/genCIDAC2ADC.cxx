@@ -121,7 +121,7 @@ int main(int argc,
                                         false);
 
     if (!skipSmoothing) {
-      LogStream::get() << __FILE__ << ": generating smoothed spline points: " << rootFileHE << endl;
+      LogStream::get() << __FILE__ << ": generating smoothed spline points: " << endl;
       inlAlg.genSplinePts(adcMeans, cidac2adc);
 
       LogStream::get() << __FILE__ << ": writing smoothed spline points: " << outputTXTFile << endl;
