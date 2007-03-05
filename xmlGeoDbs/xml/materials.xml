@@ -145,12 +145,53 @@
    </addmaterial>
 </composite>
 
+<composite name="TKR_Si" density="2.4">
+   <addmaterial material="Silicon">
+     <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Solar_Si" density="2.4">
+   <addmaterial material="Silicon">
+     <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="CAL_Si" density="2.4">
+   <addmaterial material="Silicon">
+     <natoms n="1" />
+   </addmaterial>
+</composite>
+
+
+
+
 
 <composite name="Al" density="2.702">
   <addmaterial material="Aluminum">
     <natoms n="1" />
    </addmaterial>
 </composite>
+
+<composite name="Solar_Al" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="CAL_Al" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+<composite name="Grid_Al" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+
 
 <composite name="W" density="19.3">
   <addmaterial material="Tungsten">
@@ -194,6 +235,12 @@
    </addmaterial>
 </composite>
 
+<composite name="ACD_Be" density="1.85">
+  <addmaterial material="Beryllium">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
 <composite name="Ti" density="19.25" >
   <addmaterial material="Titanium">
     <natoms n="1" />
@@ -229,6 +276,24 @@
 </addmaterial>
 </composite>
 
+<composite name="ACD_Polystyrene" density = "1.032">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+<composite name="CAL_Polystyrene" density = "1.032">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
 <composite name="FOAM05" density = "0.050">
 <addmaterial material="Carbon">
 <natoms n="1" />
@@ -237,6 +302,26 @@
 <natoms n="1" />
 </addmaterial>
 </composite>
+
+<composite name="ACD_FOAM05" density = "0.050">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+<composite name="TKR_FOAM05" density = "0.050">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+
 
 <composite name="Tray_bot_bias" density = "1.087">
 <addmaterial material="Copper">
