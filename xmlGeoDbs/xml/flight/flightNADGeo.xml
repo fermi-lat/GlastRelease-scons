@@ -120,6 +120,96 @@
          materialREF="CALGridMat"  />
 
 <!-- Electronics boxes -->
+<!-- Make solid boxes of aluminum to be used as envelopes for
+     the different electronics boxes.  Aluminum is typically 0.1"
+     thick, so for each electronics box define and appropriate
+     Cu/Si material to account for remainder of mass of the box.
+ -->
+
+     <box name="TEMenv"
+         XREF="NADtem_t"
+         YREF="NADtem_t"
+         ZREF="NADtem_z"
+         materialREF="LATElectAlMat" />
+
+     <box name="TEMintr"
+         XREF="NADtemIntr_t"
+         YREF="NADtemIntr_t"
+         ZREF="NADtemIntr_z"
+         materialREF="TEMMat" />
+
+
+     <box name="GASUenv" 
+         XREF="NADgasu_x"
+         YREF="NADgasu_y"
+         ZREF="NADgasu_z"
+         materialREF="LATElectAlMat" />
+
+     <box name="GASUintr" 
+         XREF="NADgasuIntr_x"
+         YREF="NADgasuIntr_y"
+         ZREF="NADgasuIntr_z"
+         materialREF="GASUMat" />
+
+     <box name="PDUenv" 
+         XREF="NADpdu_x"
+         YREF="NADpdu_y"
+         ZREF="NADpdu_z"
+         materialREF="LATElectAlMat" />
+
+     <box name="PDUintr" 
+         XREF="NADpduIntr_x"
+         YREF="NADpduIntr_y"
+         ZREF="NADpduIntr_z"
+         materialREF="PDUMat" />
+
+    <box name="SIU_EPU_HIBenv" 
+         XREF="NADelectCommon_t"
+         YREF="NADelectCommon_t"
+         ZREF="NADelectCommon_z"
+         materialREF="LATElectAlMat" />
+
+<!-- for SIU and EPU -->
+    <box name="SIUintr"      
+         XREF="NADelectCommonIntr_t"
+         YREF="NADelectCommonIntr_t"
+         ZREF="NADelectCommonIntr_z"
+         materialREF="SIUMat" />
+
+    <box name="HIBintr"      
+         XREF="NADelectCommonIntr_t"
+         YREF="NADelectCommonIntr_t"
+         ZREF="NADelectCommonIntr_z"
+         materialREF="HIBMat" />
+  
+
+     <composition name="TEM" envelope="TEMenv" >
+       <posXYZ volume="TEMintr" />      
+     </composition>
+
+     <composition name="GASU" envelope="GASUenv" >
+       <posXYZ volume="GASUintr" />      
+     </composition>
+
+     <composition name="PDU" envelope="PDUenv" >
+       <posXYZ volume="PDUintr" />      
+     </composition>
+
+     <composition name="SIU" envelope="SIU_EPU_HIBenv" >
+       <posXYZ volume="SIUintr" />      
+     </composition>
+
+     <composition name="EPU" envelope="SIU_EPU_HIBenv" >
+       <posXYZ volume="SIUintr" />      
+     </composition>
+
+     <composition name="HIB" envelope="SIU_EPU_HIBenv" >
+       <posXYZ volume="HIBintr" />      
+     </composition>
+
+
+
+<!--
      <box name="TEM" 
          XREF="NADtem_t"
          YREF="NADtem_t"
@@ -139,22 +229,26 @@
          materialREF="PDUMat" />
 
     <box name="SIU" 
-         XREF="NADsiu_t"
-         YREF="NADsiu_t"
-         ZREF="NADsiu_z"
+         XREF="NADelectCommon_t"
+         YREF="NADelectCommon_t"
+         ZREF="NADelectCommon_z"
          materialREF="SIUMat" />
 
     <box name="EPU" 
-         XREF="NADepu_t"
-         YREF="NADepu_t"
-         ZREF="NADepu_z"
+         XREF="NADelectCommon_t"
+         YREF="NADelectCommon_t"
+         ZREF="NADelectCommon_z"
          materialREF="EPUMat" />
 
     <box name="HIB" 
-         XREF="NADhib_t"
-         YREF="NADhib_t"
-         ZREF="NADhib_z"
+         XREF="NADelectCommon_t"
+         YREF="NADelectCommon_t"
+         ZREF="NADelectCommon_z"
          materialREF="HIBMat" />
+
+-->
+
+
 
 
 <!-- Define primitive volumes needed for solar panels -->

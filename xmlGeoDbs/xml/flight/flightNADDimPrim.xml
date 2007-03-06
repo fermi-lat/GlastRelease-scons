@@ -111,6 +111,20 @@ z-displacement</prim>
 <prim name="NADepu_dy" value="559.308">EPUs have y-offset equal
 to this value or its opposite.</prim>
 
+<prim name="TEMmass" value="7316" uType="none">Average as-built mass
+ of the 16 TEMs installed in the LAT in grams.</prim>
+
+<prim name="GASUmass" value="15800" uType="none">As-built GASU mass
+ in grams.</prim>
+
+<prim name="PDUmass" value="11100" uType="none">As-built PDU mass
+ in grams.</prim>
+
+<prim name="SIU_EPUmass" value="6500" uType="none">As-built mass
+ of the 2 SIUs and 3 EPUs installed in the LAT in grams.</prim>
+
+<prim name="HIBmass" value="2600" uType="none">As-build mass
+of the 5 HIBs installed in the LAT in grams</prim>
 
 <prim name="NADgasu_dx" value="0">x-offset of GASU (electronics)</prim>
 <prim name="NADgasu_dy" value="0">y-offset of GASU (electronics)</prim>
@@ -131,23 +145,21 @@ to this value or its opposite.</prim>
 <prim name="NADpdu_y" value="675">y-dimension of PDU (electronics)</prim>
 <prim name="NADpdu_z" value="112.5">z-dimension of PDU (electronics)</prim>
 
-<prim name="NADsiu_t" value="300">SIU, EPU and HIB all have the same
+<prim name="NADelectCommon_t" value="300">SIU, EPU and HIB all have the same
   transverse dimensions</prim>
 
-<prim name="NADepu_t" value="300">SIU, EPU and HIB all have the same
-  transverse dimensions</prim>
-
-<prim name="NADhib_t" value="300">SIU, EPU and HIB all have the same
-  transverse dimensions</prim>
-
-<prim name="NADsiu_z" value="112.5">SIU, EPU and HIB all have the same
+<prim name="NADelectCommon_z" value="112.5">SIU, EPU and HIB all have the same
   z dimension</prim>
-<prim name="NADepu_z" value="112.5">SIU, EPU and HIB all have the same
-  z dimension</prim>
-<prim name="NADhib_z" value="112.5">SIU, EPU and HIB all have the same
-  z dimension</prim>
- 
 
+<prim name="NADelectAlThick" value="2.54">Typical thickness for aluminum
+  box around electronics is .1 inch</prim>
+
+<prim name="NADelectAlDensity" value="2.702" uType="none">
+  Standard aluminum density</prim>
+
+ <prim name="cubicmmToCubiccm" value="0.001" uType="none">
+  Just what it says.
+</prim>
 
 
 </primCategory>

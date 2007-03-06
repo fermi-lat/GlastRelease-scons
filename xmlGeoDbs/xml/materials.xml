@@ -191,6 +191,12 @@
    </addmaterial>
 </composite>
 
+<composite name="LATElect_Al" densityREF="NADelectAlDensity">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
 
 
 <composite name="W" density="19.3">
@@ -463,8 +469,16 @@
   </addmaterial>
 </composite>
 
-<!-- avg. TEM mass is 7.316 kg, volume is 28*28*10.57 cm**3 -->
-<composite name="TEM_electronics" density="0.882841" >
+<!-- Densities of the made up materials filling the interior of
+     the LAT electronics are computed from
+       * dimensions of the box in question (primary constants)
+       * total mass (primary constant)
+     and the assumption that each box has an aluminum shell 
+     of standard thickness (1/10 inch).  
+     See flight/flightDerivedConstants.xml for the derivation
+     of these densities.
+-->
+<composite name="TEM_electronics" densityREF="TEMintrDensity" >
   <addmaterial material="Copper">
     <fractionmass fraction="1"/>
   </addmaterial>
@@ -476,54 +490,41 @@
   </addmaterial>
 </composite>
 
-<!-- GASU mass is 15.8 kg, volume is 68*39*11.25 cm**3 -->
-<composite name="GASU_electronics" density="0.521904" >
+<composite name="GASU_electronics" densityREF="GASUintrDensity" >
   <addmaterial material="Copper">
     <fractionmass fraction="1"/>
   </addmaterial>
   <addmaterial material="Silicon">
-    <fractionmass fraction="1"/>
-  </addmaterial>
-  <addmaterial material="Aluminum">
     <fractionmass fraction="1"/>
   </addmaterial>
 </composite>
 
-<!-- PDU mass is 11.1 kg, volume is 30*67.5*11.25 cm**3 -->
-<composite name="PDU_electronics" density="0.487243" >
+<composite name="PDU_electronics" densityREF="PDUintrDensity" >
   <addmaterial material="Copper">
     <fractionmass fraction="1"/>
   </addmaterial>
   <addmaterial material="Silicon">
-    <fractionmass fraction="1"/>
-  </addmaterial>
-  <addmaterial material="Aluminum">
     <fractionmass fraction="1"/>
   </addmaterial>
 </composite>
 
-<!-- SIU and EPU masses are 6.5 kg, volumes are 30*30*11.25 cm**3 -->
-<composite name="SIU_electronics" density="0.641975" >
+<!-- SIU and EPU have same mass (6.5 kg) and exterior dimensions -->
+
+<composite name="SIU_electronics" densityREF="SIUintrDensity" >
   <addmaterial material="Copper">
     <fractionmass fraction="1"/>
   </addmaterial>
   <addmaterial material="Silicon">
-    <fractionmass fraction="1"/>
-  </addmaterial>
-  <addmaterial material="Aluminum">
     <fractionmass fraction="1"/>
   </addmaterial>
 </composite>
 
-<!-- HIB mass is 2.6 kg, volume is 30*30*11.25 cm**3 -->
-<composite name="HIB_electronics" density="0.256790" >
+
+<composite name="HIB_electronics" densityREF="HIBintrDensity" >
   <addmaterial material="Copper">
     <fractionmass fraction="1"/>
   </addmaterial>
   <addmaterial material="Silicon">
-    <fractionmass fraction="1"/>
-  </addmaterial>
-  <addmaterial material="Aluminum">
     <fractionmass fraction="1"/>
   </addmaterial>
 </composite>

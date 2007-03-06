@@ -7,24 +7,34 @@
   <prim name="blanketMat" value="blanket" type="string" uType="mat">
 Material for thermal blanket</prim>
 
-  <prim name="TEMMat" value="TEM_electronics" type="string" uType="mat">Equal 
-   parts Cu, Si, Al of correct average density for a TEM</prim>
+  <prim name="LATElectAlMat" value="LATElect_Al" type="string" uType="mat">
+  Aluminum used for outer shell of LAT electronics boxes TEM, GASU, etc.
+  </prim>
+
+  <prim name="TEMMat" value="TEM_electronics" type="string" uType="mat">
+   Equal parts Cu, Si of correct average density for interior of TEM,
+   excluding Al shell</prim>
 
   <prim name="GASUMat" value="GASU_electronics" type="string" uType="mat">
-  Equal parts Cu, Si, Al of correct average density for a TEM</prim>
+  Equal parts Cu, Si of correct average density for interior of GASU,
+   excluding Al shell</prim>
 
-  <prim name="PDUMat" value="PDU_electronics" type="string" uType="mat">Equal 
-   parts Cu, Si, Al of correct average density for a PDU</prim>
-
-  <prim name="SIUMat" value="SIU_electronics" type="string" uType="mat">Equal 
-   parts Cu, Si, Al of correct average density for an SIU</prim>
+  <prim name="PDUMat" value="PDU_electronics" type="string" uType="mat">
+  Equal parts Cu, Si of correct average density for interior of PDU,
+   excluding Al shell</prim>
 
 
-  <prim name="EPUMat" value="SIU_electronics" type="string" uType="mat">Equal 
-   parts Cu, Si, Al of correct average density for an EPU (same as SIU)</prim>
+  <prim name="SIUMat" value="SIU_electronics" type="string" uType="mat">
+  Equal parts Cu, Si of correct average density for interior of SIU,
+   excluding Al shell</prim>
 
-  <prim name="HIBMat" value="HIB_electronics" type="string" uType="mat">Equal 
-   parts Cu, Si, Al of correct average density for an HIB</prim>
+  <prim name="EPUMat" value="SIU_electronics" type="string" uType="mat">
+  Equal parts Cu, Si of correct average density for interior of an EPU,
+   excluding Al shell</prim>
+
+  <prim name="HIBMat" value="HIB_electronics" type="string" uType="mat">
+  Equal parts Cu, Si of correct average density for interior of HIB,
+   excluding Al shell</prim>
 
   <prim name="spacecraftMat" value="Alsc" type="string" uType="mat">
 Material for spacecraft</prim>

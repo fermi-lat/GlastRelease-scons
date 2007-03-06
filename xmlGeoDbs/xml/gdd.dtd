@@ -580,6 +580,7 @@
            version      CDATA   #REQUIRED
            date         CDATA   #REQUIRED
            author       CDATA   #REQUIRED
+           %didSub;
            %DTDconstraint;>
 
 
@@ -591,9 +592,17 @@
            density   NMTOKEN  #IMPLIED
            %materialProperties;>
 
+<!-- 
+          Instead of requiring density attribute, give it a nonsense 
+          value by default.  Every composite should either have
+          density explicitly set or should use densityREF, in which
+          case standard processing should replace the value of
+          density with the evaluated densityREF
+-->
 <!ELEMENT  composite ( addmaterial )+>
 <!ATTLIST  composite
-           density  NMTOKEN  #REQUIRED
+           density NMTOKEN "-1.00"
+           densityREF IDREF #IMPLIED
            %materialProperties;>
 
 <!ELEMENT  addmaterial  ( fractionmass | natoms ) >

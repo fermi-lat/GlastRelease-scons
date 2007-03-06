@@ -971,6 +971,314 @@
             </notes>
             <refer refTo="NADtem_large_dtn" />
           </const>
+
+          <const name="NADelectAlDoubleThick">
+            <notes>Convenience value</notes>
+            <add>
+              <refer refTo="NADelectAlThick" />
+              <refer refTo="NADelectAlThick" />
+            </add>
+          </const>
+
+          <const name="NADtemIntr_t">
+            <notes>transverse dimension of TEM interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADtem_t" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADtemIntr_z">
+            <notes>z-dimension of TEM interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADtem_z" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+
+
+          <const name="NADgasuIntr_x">
+            <notes>x-dimension of GASU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADgasu_x" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADgasuIntr_y">
+            <notes>y-dimension of GASU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADgasu_y" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADgasuIntr_z">
+            <notes>z-dimension of GASU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADgasu_z" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADpduIntr_x">
+            <notes>x-dimension of PDU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADpdu_x" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADpduIntr_y">
+            <notes>y-dimension of PDU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADpdu_y" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADpduIntr_z">
+            <notes>z-dimension of PDU interior, excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADpdu_z" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADelectCommonIntr_t">
+            <notes>transverse dimension of SIU, EPU, HIB interior, 
+                   excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADelectCommon_t" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+          <const name="NADelectCommonIntr_z">
+            <notes>Z dimension of SIU, EPU, HIB interior, 
+                   excluding Al shell
+            </notes>
+            <minus>
+              <refer refTo="NADelectCommon_z" />
+              <refer refTo="NADelectAlDoubleThick" />
+            </minus>
+          </const>
+
+<!-- Starting here, ending with TEMintrDensity, go through
+     similar rigamarole for GASU, PDU, SIU/EPU and HIB
+ -->
+          <const name="TEMvol">
+            <notes>Volume of TEM, including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADtem_t" />
+               <refer refTo="NADtem_t" />
+               <refer refTo="NADtem_z" />
+            </mul>
+          </const>
+
+          <const name="TEMintrVol">
+            <notes>Volume of TEM, not including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADtemIntr_t" />
+               <refer refTo="NADtemIntr_t" />
+               <refer refTo="NADtemIntr_z" />
+            </mul>
+          </const>
+
+          <const name="TEMAlMass">
+            <notes>Calc. from TEM dimensions, assuming Al box of
+              one-tenth inch thickness. Result is in grams. </notes>
+            <mul>
+              <minus>
+                <refer refTo="TEMvol" />
+                <refer refTo="TEMintrVol" />
+              </minus>
+              <refer refTo="cubicmmToCubiccm" />
+              <refer refTo="NADelectAlDensity" />
+            </mul>
+          </const>
+
+          <const name="TEMintrDensity">
+            <notes>Computed from TEM dimensions and total mass,
+               assuming Al shell of 2.54 mm all around</notes>
+            <quo>
+              <minus>
+                <refer refTo="TEMmass" />
+                <refer refTo="TEMAlMass" />
+              </minus>
+              <mul>
+                <refer refTo="TEMintrVol" />
+                <refer refTo="cubicmmToCubiccm" />
+              </mul>
+            </quo>
+          </const>
+
+<!-- start GASU -->
+          <const name="GASUvol">
+            <notes>Volume of GASU, including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADgasu_x" />
+               <refer refTo="NADgasu_y" />
+               <refer refTo="NADgasu_z" />
+            </mul>
+          </const>
+
+          <const name="GASUintrVol">
+            <notes>Volume of GASU, not including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADgasuIntr_x" />
+               <refer refTo="NADgasuIntr_y" />
+               <refer refTo="NADgasuIntr_z" />
+            </mul>
+          </const>
+
+          <const name="GASUAlMass">
+            <notes>Calc. from GASU dimensions, assuming Al box of
+              one-tenth inch thickness. Result is in grams. </notes>
+            <mul>
+              <minus>
+                <refer refTo="GASUvol" />
+                <refer refTo="GASUintrVol" />
+              </minus>
+              <refer refTo="cubicmmToCubiccm" />
+              <refer refTo="NADelectAlDensity" />
+            </mul>
+          </const>
+
+          <const name="GASUintrDensity">
+            <notes>Computed from GASU dimensions and total mass,
+               assuming Al shell of 2.54 mm all around</notes>
+            <quo>
+              <minus>
+                <refer refTo="GASUmass" />
+                <refer refTo="GASUAlMass" />
+              </minus>
+              <mul>
+                <refer refTo="GASUintrVol" />
+                <refer refTo="cubicmmToCubiccm" />
+              </mul>
+            </quo>
+          </const>
+
+<!-- begin PDU -->
+          <const name="PDUvol">
+            <notes>Volume of PDU, including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADpdu_x" />
+               <refer refTo="NADpdu_y" />
+               <refer refTo="NADpdu_z" />
+            </mul>
+          </const>
+
+          <const name="PDUintrVol">
+            <notes>Volume of PDU, not including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADpduIntr_x" />
+               <refer refTo="NADpduIntr_y" />
+               <refer refTo="NADpduIntr_z" />
+            </mul>
+          </const>
+
+          <const name="PDUAlMass">
+            <notes>Calc. from PDU dimensions, assuming Al box of
+              one-tenth inch thickness. Result is in grams. </notes>
+            <mul>
+              <minus>
+                <refer refTo="PDUvol" />
+                <refer refTo="PDUintrVol" />
+              </minus>
+              <refer refTo="cubicmmToCubiccm" />
+              <refer refTo="NADelectAlDensity" />
+            </mul>
+          </const>
+
+          <const name="PDUintrDensity">
+            <notes>Computed from PDU dimensions and total mass,
+               assuming Al shell of 2.54 mm all around</notes>
+            <quo>
+              <minus>
+                <refer refTo="PDUmass" />
+                <refer refTo="PDUAlMass" />
+              </minus>
+              <mul>
+                <refer refTo="PDUintrVol" />
+                <refer refTo="cubicmmToCubiccm" />
+              </mul>
+            </quo>
+          </const>
+
+<!-- begin SIU (= EPU for this purpose and = HIB for volume only -->
+          <const name="NADelectCommonVol">
+            <notes>Volume of SIU, EPU HIB, including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADelectCommon_t" />
+               <refer refTo="NADelectCommon_t" />
+               <refer refTo="NADelectCommon_z" />
+            </mul>
+          </const>
+
+          <const name="NADelectCommonIntrVol">
+            <notes>Volume of TEM, not including Al shell, in mm**3</notes>
+            <mul>
+               <refer refTo="NADelectCommonIntr_t" />
+               <refer refTo="NADelectCommonIntr_t" />
+               <refer refTo="NADelectCommonIntr_z" />
+            </mul>
+          </const>
+
+          <const name="NADelectCommonAlMass">
+            <notes>Calc. from SIU/EPU,HIB dimensions, assuming Al box of
+              one-tenth inch thickness. Result is in grams. </notes>
+            <mul>
+              <minus>
+                <refer refTo="NADelectCommonVol" />
+                <refer refTo="NADelectCommonIntrVol" />
+              </minus>
+              <refer refTo="cubicmmToCubiccm" />
+              <refer refTo="NADelectAlDensity" />
+            </mul>
+          </const>
+
+          <const name="SIUintrDensity">
+            <notes>Computed from  dimensions and total mass,
+               assuming Al shell of 2.54 mm all around</notes>
+            <quo>
+              <minus>
+                <refer refTo="SIU_EPUmass" />
+                <refer refTo="NADelectCommonAlMass" />
+              </minus>
+              <mul>
+                <refer refTo="NADelectCommonIntrVol" />
+                <refer refTo="cubicmmToCubiccm" />
+              </mul>
+            </quo>
+          </const>
+
+<!-- Just need to redo last definition for HIB -->
+          <const name="HIBintrDensity">
+            <notes>Computed from  dimensions and total mass,
+               assuming Al shell of 2.54 mm all around</notes>
+            <quo>
+              <minus>
+                <refer refTo="HIBmass" />
+                <refer refTo="NADelectCommonAlMass" />
+              </minus>
+              <mul>
+                <refer refTo="NADelectCommonIntrVol" />
+                <refer refTo="cubicmmToCubiccm" />
+              </mul>
+            </quo>
+          </const>
               
       </derCategory>
    </derived>
