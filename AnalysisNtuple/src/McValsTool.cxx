@@ -230,7 +230,7 @@ StatusCode McValsTool::initialize()
     addItem("McZ0",           &MC_z0);  
 
     addItem("McRa",           &MC_ra);
-    addItem("MCDec",          &MC_dec);
+    addItem("McDec",          &MC_dec);
     
     addItem("McGlon",         &MC_glon);
     addItem("MCGlat",         &MC_glat);
