@@ -31,6 +31,10 @@ public:
   /// This function fills the corners using the information in the dimension vector and the center of the tile
   static StatusCode getCorners(const std::vector<double> &dim, const HepPoint3D &center, HepPoint3D *corner);
 
+  /// This function switches from active distance to local coords
+  static StatusCode toLocalCoords(const AcdTileDim& dim, int region, const double& activeX, const double& activeY,
+				  double& localX, double& localY);
+
 public:
     
   /// Constructor: takes the tile id, the volume id, and the detector service
@@ -86,6 +90,10 @@ public:
     return (m_volId[idx])[1];    
   }
 
+  inline const std::vector< HepPoint3D > screwHoles() const {
+    return m_screwHoles;
+  }
+
   void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0);
 
 protected:
@@ -128,6 +136,9 @@ private:
   /// width extra of extra volume in curved tiles
   float                     m_sharedWidth[2];
 
+  /// Positions of the screw holes, in local coords
+  std::vector< HepPoint3D > m_screwHoles;
+  
 };
    
 

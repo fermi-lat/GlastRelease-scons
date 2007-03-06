@@ -143,6 +143,14 @@ StatusCode AcdTileDim::getCorners(const std::vector<double> &dim, const HepPoint
   return sc;
 } 
 
+
+StatusCode AcdTileDim::toLocalCoords(const AcdTileDim& dim, 
+				     int region, const double& activeX, const double& activeY,
+				     double& localX, double& localY){
+  localX = localY = 0.;
+  return StatusCode::SUCCESS;
+}
+
 void AcdTileDim::toLocal(const HepPoint3D& global, HepPoint3D& local, int idx) {
   assert(idx < m_nVol);
   local = m_transform[idx] * global;
