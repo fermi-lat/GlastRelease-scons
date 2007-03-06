@@ -1,6 +1,7 @@
 """
 Tool to create ROOT ntuple file from csv file. First line of text is used as column headers
 txt2tuple input.txt output.root
+some assumptions are made about calibGenCAL delimited TXT file conventions
 """
 
 __facility__  = "Offline"
@@ -46,6 +47,7 @@ if __name__ == '__main__':
 
     # read in first line for column headers
     firstline = lines.pop(0)
+    firstline = firstline.replace(";","")
     col_names = firstline.split()
     nTXTFields = len(col_names)
 
@@ -57,7 +59,10 @@ if __name__ == '__main__':
     outfile = ROOT.TFile(outPath, "RECREATE")
     tuple_name = os.path.splitext(os.path.basename(outPath))[0]
     # strip bad characters
-    tuple_name = re.compile('[.-]').sub('_',tuple_name)
+    tuple_name = re.compile('[. ]+').sub('_',tuple_name)
+    # take first alpha string
+    tuple_name = tuple_name.split('_')[0]
+
     tuple = ROOT.TNtuple(tuple_name,
                          tuple_name,
                          col_def)

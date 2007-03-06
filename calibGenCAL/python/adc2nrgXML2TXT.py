@@ -2,7 +2,7 @@
 Dump GLAST Cal offline adc2nrg calibration xml into column delmited text on stdout
 
 output format is:
-twr lyr col diode adc2nrg
+twr lyr col face diode adc2nrg
 
 adc2nrgXML2TXT [-d delim] <input_xml_file>
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     xmlFile.close()
 
     # print header as comment
-    print "; twr lyr col diode adc2nrg"
+    print "; twr lyr col face diode adc2nrg"
 
     # print out txt file.
     for twr in towers:
