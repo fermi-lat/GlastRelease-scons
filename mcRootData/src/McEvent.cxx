@@ -48,27 +48,27 @@ m_eventId(0), m_runId(0), m_sourceName(sourceUnknownStr)
 McEvent::~McEvent() {
     
     if (m_particleCol == m_staticParticleCol) m_staticParticleCol = 0;
-    m_particleCol->Delete();
+    m_particleCol->Clear();  // We don't own these objects
     delete m_particleCol;
     m_particleCol = 0;
 
     if (m_positionHitCol == m_staticPositionHitCol) m_staticPositionHitCol = 0;
-    m_positionHitCol->Delete();
+    m_positionHitCol->Clear();
     delete m_positionHitCol;
     m_positionHitCol = 0;
 
     if (m_tkrStripCol == m_staticTkrStripCol) m_staticTkrStripCol = 0;
-    m_tkrStripCol->Delete();
+    m_tkrStripCol->Clear();
     delete m_tkrStripCol;
     m_tkrStripCol = 0;
 
     if(m_integratingHitCol == m_staticIntegratingHitCol) m_staticIntegratingHitCol = 0;
-    m_integratingHitCol->Delete();
+    m_integratingHitCol->Clear();
     delete m_integratingHitCol;
     m_integratingHitCol = 0;
 
     if (m_trajectoryCol == m_staticTrajectoryCol) m_staticTrajectoryCol = 0;
-    m_trajectoryCol->Delete();
+    m_trajectoryCol->Clear();
     delete m_trajectoryCol;
     m_trajectoryCol = 0;
 
@@ -95,35 +95,14 @@ void McEvent::Clear(Option_t *option) {
     m_eventId = 0;
     m_runId = 0;
     m_sourceName = sourceUnknownStr;
-    const Int_t ndpos = 150000;
-    const Int_t nd = 150000;
-    const Int_t ndtraj = 150000;
-    static Int_t limit=100;
-    static Int_t indpart=0;
-    static Int_t indpos=0;
-    static Int_t indint=0;
-    static Int_t indtraj=0;
-//    static McParticle* keeppart[nd];
-//    static McPositionHit* keeppos[ndpos];
-//    static McIntegratingHit* keepint[nd];
-//    static McTrajectory* keeptraj[nd];
     
     if (option) {
         TString optStr(option);
         if (optStr.CompareTo("ALL")==0) {
-            Int_t j;
-//            for (j=0;j<indpart;j++) delete keeppart[j];
-            indpart = 0;
-//            for (j=0;j<indpos;j++) delete keeppos[j];
-            indpos = 0;
-//            for (j=0;j<indint;j++) delete keepint[j];
-            indint = 0;
-//            for (j=0;j<indtraj;j++) delete keeptraj[j];
-            indtraj = 0;
-            if (m_particleCol) m_particleCol->Delete();
-            if (m_positionHitCol) m_positionHitCol->Delete();
-            if (m_integratingHitCol) m_integratingHitCol->Delete();
-            if (m_trajectoryCol) m_trajectoryCol->Delete();
+            if (m_particleCol)       m_particleCol->Clear();
+            if (m_positionHitCol)    m_positionHitCol->Clear();
+            if (m_integratingHitCol) m_integratingHitCol->Clear();
+            if (m_trajectoryCol)     m_trajectoryCol->Clear();
             return;
         }
     }
@@ -132,50 +111,11 @@ void McEvent::Clear(Option_t *option) {
     McObjectManager::getPointer()->Delete();
 
     if (m_particleCol) {
-        //      m_particleCol->Delete();
-        Int_t n = m_particleCol->GetEntries();
-/*
-        if (n>limit) {
-            //std::cout <<"!!!Warning: particle nr entries more than limit!!!Limit was increased "<<n<<std::endl;
-	        limit=n+10;
-            if (limit > nd)
-                std::cout << "!!!Warning:  limit for mcParticles is greater than " << nd << std::endl;
-	        for (Int_t j=0;j<indpart;j++) delete keeppart[j];
-            indpart = 0;
-        }
-        if (n > nd) n = nd-10;
-        for (Int_t i=0;i<n;i++) keeppart[indpart+i] = (McParticle*)m_particleCol->At(i);
-        indpart += n;
-        if (indpart > nd-limit) {
-            for (Int_t j=0;j<indpart;j++) delete keeppart[j];
-            indpart = 0;
-        }
-*/
         m_particleCol->Clear();
     }
 
     if (m_positionHitCol) {
-        //      m_positionHitCol->Delete();
-        Int_t n = m_positionHitCol->GetEntries();
-/*
-        if (n>limit) {
-            //std::cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
-            limit=n+10;
-            if (limit > ndpos)
-                std::cout << "!!!Warning:  limit for posHits is greater than " << ndpos << std::endl;
-            for (Int_t j=0;j<indpos;j++) delete keeppos[j];
-            indpos = 0;
-        }
-
-        for (Int_t i=0;i<n;i++) keeppos[indpos+i] = (McPositionHit*)m_positionHitCol->At(i);
-        indpos += n;
-        if (indpos > ndpos-limit) {
-            for (Int_t j=0;j<indpos;j++) delete keeppos[j];
-	        indpos = 0;
-        }
-*/
         m_positionHitCol->Clear();
-        m_positionHitCol->Expand(10000);  //temporary
    }
 
     if (m_tkrStripCol)
@@ -185,49 +125,12 @@ void McEvent::Clear(Option_t *option) {
     }
 
     if (m_integratingHitCol) {
-        //      m_integratingHitCol->Delete();
-        Int_t n = m_integratingHitCol->GetEntries();
-/*
-        if (n>limit) {
-            //std::cout <<"!!!Warning: integratinghit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
-            limit=n+10;
-            if (limit > nd)
-                std::cout << "!!!Warning:  limit for intHits is greater than " << nd << std::endl;
-            for (Int_t j=0;j<indint;j++) delete keepint[j];
-            indint = 0;
-        }
-        for (Int_t i=0;i<n;i++) keepint[indint+i] = (McIntegratingHit*)m_integratingHitCol->At(i);
-        indint += n;
-        if (indint > nd-limit) {
-	        for (Int_t j=0;j<indint;j++) delete keepint[j];
-	        indint = 0;
-        }
-*/
         m_integratingHitCol->Clear();
     }
 
     if (m_trajectoryCol) 
     {
-        Int_t n = m_trajectoryCol->GetEntries();
-//        if (n>limit) 
-//        {
-//            //std::cout <<"!!!Warning: positionhit nr entries more than limit!!!Limit was increased "<<n<<std::endl;
-//	        limit=n+10;
-//            if (limit > ndtraj)
-//                std::cout << "!!!Warning:  limit for McTrajectory is greater than " << ndtraj << std::endl;
-//            for (Int_t j=0;j<indtraj;j++) delete keeptraj[j];
-//	        indtraj = 0;
-//        }
-
-//        for (Int_t i=0;i<n;i++) keeptraj[indtraj+i] = (McTrajectory*)m_trajectoryCol->At(i);
-//        indtraj += n;
-//        if (indtraj > ndtraj-limit) 
-//        {
-//            for (Int_t j=0;j<indtraj;j++) delete keeptraj[j];
-//	        indtraj = 0;
-//        }
         m_trajectoryCol->Clear();
-        m_trajectoryCol->Expand(10000);  //temporary
     }
 }
 
