@@ -7,12 +7,12 @@ namespace AcdTileUtil {
   void planeErrorProjection(const double& activeX, const double& activeY, const double& covXX, const double& covYY,
 			    double& planeError){
     
-    double ratX = (activeX*activeX*covXX);
-    double ratY = (activeY*activeY*covYY);
-    if (ratX > ratY) {
-      planeError = sqrt(ratY);
+    double sigX2 = (activeX*activeX*covXX);
+    double sigY2 = (activeY*activeY*covYY);
+    if ( sigX2 > sigY2) {
+      planeError = sqrt(covYY);
     } else {
-      planeError = sqrt(ratX);
+      planeError = sqrt(covYY);
     }
   }
 
@@ -33,7 +33,7 @@ namespace AcdTileUtil {
     double deltaY = activeY - 5.;
     doca = sqrt(deltaX*deltaX + deltaY*deltaY);
     docaErr = -1.;
-    iHole = tileHit.getRegion();
+    iHole = -1;
   }
  
 }
