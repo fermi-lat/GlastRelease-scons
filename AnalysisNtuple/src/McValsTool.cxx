@@ -504,6 +504,7 @@ void McValsTool::getAcdReconVars() {
     log << "no AcdTkrHitPocas found on TDS" << endreq;
     MC_AcdActiveDist3D = bestActDist;
     MC_AcdActDistTileId = bestId.id();
+    MC_AcdActDistTileEnergy = -1.;
   } else {  
     for ( Event::AcdTkrHitPocaCol::const_iterator itr = acdTkrHits->begin();
 	  itr != acdTkrHits->end(); itr++ ) {
@@ -516,7 +517,7 @@ void McValsTool::getAcdReconVars() {
     // latch values
     MC_AcdActiveDist3D = bestActDist;
     MC_AcdActDistTileId = bestId.id();
-    MC_AcdActDistTileEnergy = energyIdMap[bestId.id()];
+    MC_AcdActDistTileEnergy = energyIdMap[bestId];
   }
 
   // Here we will get the point the MC parent enters the ACD volume
