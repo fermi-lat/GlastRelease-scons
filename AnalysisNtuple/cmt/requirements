@@ -23,6 +23,7 @@ private
 use GlastSvc        v*
 use facilities      v*
 use RootIo          v*
+use AcdRecon        v*
 
 set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 
