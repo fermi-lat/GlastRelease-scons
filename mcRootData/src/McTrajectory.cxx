@@ -189,7 +189,7 @@ void McTrajectoryPoint::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
 
 Bool_t McTrajectoryPoint::CompareInRange( const McTrajectoryPoint & ref, const std::string & name ) const
 {
-    bool result = 0;
+    bool result = true;
 
     result = COMPARE_IN_RANGE(VolumeID) && result ;
     result = COMPARE_IN_RANGE(Energy) && result ;
