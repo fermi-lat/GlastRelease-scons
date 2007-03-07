@@ -187,6 +187,16 @@
     
     - Samples from throughout the energy range of the instrument is checked and
     crystals are checked at several positions along their length.
+
+	 * @section CalFailureModeSvc CalFailureModeSvc
+ * CalFailureModeSvc creates a list of large-scale failures in the CAL, 
+ * and utilities
+ * to search the lists to allow digi and recon algorithms to ignore hits based
+ * on those lists.
+ *
+ * It can take lists of towers, (tower,AFEE) or (tower, Controller) pairs
+ * to create the lists of dead objects. It provides a method to see if a 
+ * given CalXtalId is contained in the lists.
     
     
 */
