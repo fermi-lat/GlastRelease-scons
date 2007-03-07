@@ -121,7 +121,7 @@ private:
     /// An array of points defining the trajectory
     TObjArray m_pointCol;
     
-    ClassDef(McTrajectory,1) // Monte Carlo Trajectory Class
+    ClassDef(McTrajectory,2) // Monte Carlo Trajectory Class
 };
 
 #endif

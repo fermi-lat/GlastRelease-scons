@@ -162,10 +162,7 @@ private:
     /// static array to allow one-time array creation
     static TObjArray *m_staticPositionHitCol; //!
     
-    /// Collection of McTkrStrips
-    TObjArray *m_tkrStripCol; //->
-    /// static array to allow one-time array creation
-    static TObjArray *m_staticTkrStripCol; //!
+
     
     /// Collection of McTrajectories
     TObjArray *m_trajectoryCol; //->
@@ -174,8 +171,13 @@ private:
 
     /// name for the source, hopefully unique
     TString m_sourceName;
+
+    /// Collection of McTkrStrips
+    TObjArray *m_tkrStripCol; //->
+    /// static array to allow one-time array creation
+    static TObjArray *m_staticTkrStripCol; //!
     
-    ClassDef(McEvent,7) // Monte Carlo Event Class
+    ClassDef(McEvent,8) // Monte Carlo Event Class
 };
 
 #endif
