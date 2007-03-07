@@ -34,45 +34,13 @@
     t->Branch("McEvent", "McEvent", &ev, 64000, 1);
     
     gObjectTable->Print();
-    
-    VolumeIdentifier id;
+    TRandom randGen ;
+    RAND_NUM = randGen.Rndm() ;
 
-    Int_t ievent, ipart;
-    Double_t timestamp=0.0;
+    Int_t ievent;
     for (ievent = 0; ievent < numEvents; ievent++) {
+        ev->Fake(ievent,runNum,RAND_NUM) ;
 
-        ev->initialize(ievent, runNum, sourceId, sequence, timestamp);
-
-        for (ipart = 0; ipart < numParticles; ipart ++) {
-            McParticle *mcPart = new McParticle();
-            Float_t rand = gRandom->Rndm();
-            TLorentzVector initMom(1., 2., 3.);
-            TLorentzVector finalMom(ipart*rand+ievent, rand*ievent+ipart, 1., 2.);
-            TVector3 initPos(ipart*rand, ipart*2.0*rand, ipart*4.0*rand);
-            TVector3 finalPos(ipart*rand, ipart*rand, ipart*rand);
-            mcPart->initialize(mcPart, 0, 0, initMom, finalMom, initPos, finalPos, "pair");
-            ev->addMcParticle(mcPart);
-            if (ipart % 2) {
-                McPositionHit *posHit = new McPositionHit();
-                TVector3 entry(1., 1., 1.);
-                TVector3 exit(0., 0.5, 0.1);
-                TVector3 gEntry(3., 3., 3.);
-                TVector3 gExit(0., 1.5, 0.2);
-                id.initialize(0, 1, 1);
-                posHit->initialize(ipart, 0, rand, id, 
-                    entry, exit, gEntry, gExit,
-                    0, 0, rand*0.1, rand*0.4, 0);
-                ev->addMcPositionHit(posHit);
-            } else {
-                McIntegratingHit *intHit = new McIntegratingHit();
-                id.initialize(0, 0, 0);
-                intHit->initialize(id);
-                TVector3 pos = mcPart->getFinalPosition();
-                intHit->addEnergyItem(1.5, mcPart, pos);
-                intHit->addEnergyItem(1.5, McIntegratingHit::PRIMARY, pos);
-                ev->addMcIntegratingHit(intHit);
-            }
-        }
         t->Fill();
         ev->Clear();
     }
