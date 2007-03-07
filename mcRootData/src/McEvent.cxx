@@ -73,7 +73,8 @@ McEvent::~McEvent() {
     m_trajectoryCol = 0;
 
     m_sourceName = sourceUnknownStr;
-    Clear("ALL");
+
+    delete McObjectManager::getPointer();
 }
 
 void McEvent::initialize(UInt_t nEvent, UInt_t nRun, 
