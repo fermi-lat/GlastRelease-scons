@@ -1,4 +1,4 @@
-v0412p8 03/07/07 fewtrell doc update
+v0r12p9 03/07/07 fewtrell doc update
 v0r12p7 03/07/07 fewtrell re-enabled CalFailureModeSvc which was temporarily disabled.
 v0r12p4 07/26/06 fewtrell CalTuple face signal is now allways > 0
 v0r12p3 07/26/06 fewtrell  CalTuple.FaceSignalAllRange from previous patch was coming out blank.  bug fixed.

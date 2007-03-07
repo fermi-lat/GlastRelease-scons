@@ -39,6 +39,14 @@
 //CalTupleAlg.tupleFilename = "CalTuple.root"; // optional filename
 //CalTupleAlg.fourRangeMode = true; // enable 4 range readout in CalTuple
 
+///////////////////////// CAL FAILUREMODE /////////////////////////////////////////
+ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
+CalFailureModeSvc.towerAfeeList= {"10_2"}; 
+CalFailureModeSvc.towerList= {"11"}; 
+CalFailureModeSvc.towerControllerList= {"4_2"}; 
+
+
+
 /////////////////////// MISC OPTIONS //////////////////////////////////////////
 //-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
 //CalDigiAlg.XtalDigiTool.NoRandomNoise = false;
