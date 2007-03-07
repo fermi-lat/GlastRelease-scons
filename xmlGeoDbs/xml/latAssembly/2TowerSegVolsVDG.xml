@@ -37,7 +37,7 @@
     <!ENTITY ACDAcd         SYSTEM "../flight/flightACDAcd.xml">
 
     <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
-    <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
+    <!ENTITY NADGeo         SYSTEM "altNADGeo.xml">
 
     <!ENTITY oneTower         SYSTEM "../flight/flightOneTower.xml">
     <!ENTITY section         SYSTEM "2TowerSectionVDG.xml">

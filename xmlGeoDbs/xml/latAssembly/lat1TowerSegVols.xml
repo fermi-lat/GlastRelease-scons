@@ -36,7 +36,7 @@
     <!ENTITY ACDResponse    SYSTEM "../flight/flightACDResponse.xml">
     <!ENTITY ACDAcd         SYSTEM "../flight/flightACDAcd.xml">
 
-    <!ENTITY NADDimPrim     SYSTEM "../flight/flightNADDimPrim.xml">
+    <!ENTITY NADDimPrim     SYSTEM "altNADDimPrim.xml">
     <!ENTITY NADGeo         SYSTEM "../flight/flightNADGeo.xml">
 
     <!ENTITY oneTower         SYSTEM "../flight/flightOneTower.xml">
