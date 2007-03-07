@@ -4,21 +4,24 @@
 
 // LOCAL
 #include "CalXtalResponse/IXtalDigiTool.h"
-#include "CalXtalResponse/ICalCalibSvc.h"
-#include "CalXtalResponse/ICalTrigTool.h"
-#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalArray.h"
 
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
 #include "TFile.h"
-#include "TTree.h"
 
 // STD
 #include <cstring>
+
+class ICalCalibSvc;
+class ICalTrigTool;
+class TTree;
+class IPrecalcCalibTool;
+class ICalFailureModeSvc;
 
 /*! \class XtalDigiTool
   \author Zachary Fewtrell
@@ -48,8 +51,8 @@ class XtalDigiTool : public AlgTool,
   StatusCode calculate(const vector<const Event::McIntegratingHit*> &hitList,
                        const Event::EventHeader *evtHdr,            
                        Event::CalDigi &calDigi,
-                       CalArray<FaceNum, bool> &lacBits,
-                       CalArray<XtalDiode, bool> &trigBits,
+					   CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
+                       CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                        Event::GltDigi *glt,
                        bool zeroSuppress);
  private:
@@ -61,6 +64,9 @@ class XtalDigiTool : public AlgTool,
   
   /// select best adc range for both faces
   StatusCode rangeSelect();
+
+  /// get failureMode bits
+  StatusCode getFailureStatus(const CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits);
 
   /// populate Digi TDS class
   StatusCode fillDigi(Event::CalDigi &calDigi);
@@ -131,53 +137,55 @@ class XtalDigiTool : public AlgTool,
     unsigned   EventID;
 
     /// ped subtracted adc.
-    CalArray<XtalRng, float> adcPed;
+	CalUtil::CalArray<CalUtil::XtalRng, float> adcPed;
     
     /// total # of MC int hits
     unsigned   nMCHits;
     /// # of MC int hits in CsI xtal
     unsigned   nCsIHits;
     /// # of MC int hits each diode
-    CalArray<XtalDiode, unsigned> nDiodeHits;
+    CalUtil::CalArray<CalUtil::XtalDiode, unsigned> nDiodeHits;
 
     /// total ene deposited in xtal
     float  sumEneCsI;
     /// total ene from xtal and diodes
     float  sumEne;
     /// cidac values for each adc range
-    CalArray<XtalDiode, float> diodeCIDAC;
+    CalUtil::CalArray<CalUtil::XtalDiode, float> diodeCIDAC;
     /// average energy deposit position weighted by ene of each deposit
     float  csiWeightedPos;
     
     /// calibration constant
-    CalArray<XtalRng, float> ped;
+    CalUtil::CalArray<CalUtil::XtalRng, float> ped;
     
     /// calibration constant CIDAC
-    CalArray<XtalRng, float> pedSigCIDAC;
+    CalUtil::CalArray<CalUtil::XtalRng, float> pedSigCIDAC;
 
     /// trigger threholds in CIDAC units
-    CalArray<XtalDiode, float> trigThreshCIDAC;
+    CalUtil::CalArray<CalUtil::XtalDiode, float> trigThreshCIDAC;
 
     /// calibration constant
-    CalArray<FaceNum, float> lacThreshCIDAC;
+    CalUtil::CalArray<CalUtil::FaceNum, float> lacThreshCIDAC;
 
     /// calibration constant
-    CalArray<XtalRng, float> uldTholdADC;
+    CalUtil::CalArray<CalUtil::XtalRng, float> uldTholdADC;
 
     /// calibration constant
-    CalArray<DiodeNum, float> mpd;
+    CalUtil::CalArray<CalUtil::DiodeNum, float> mpd;
 
-    CalArray<FaceNum, RngNum> rng;
+    CalUtil::CalArray<CalUtil::FaceNum, CalUtil::RngNum> rng;
 
     /// lac threshold flag
-    CalArray<FaceNum, unsigned char> lac;
+    CalUtil::CalArray<CalUtil::FaceNum, unsigned char> lac;
     
-    CalArray<XtalDiode, unsigned char> trigBits;
+    CalUtil::CalArray<CalUtil::XtalDiode, unsigned char> trigBits;
 
     /// HEX1 range in xtal is saturated
-    CalArray<FaceNum, unsigned char> saturated;
+    CalUtil::CalArray<CalUtil::FaceNum, unsigned char> saturated;
 
-    XtalIdx xtalIdx;
+    CalUtil::XtalIdx xtalIdx;
+    
+    unsigned short failureStatus;
   };
   AlgData m_dat;
 
@@ -187,6 +195,9 @@ class XtalDigiTool : public AlgTool,
   
   /// pointer to precalcCalibTool
   IPrecalcCalibTool *m_precalcCalib;
+
+  /// pointer to optional CalFailureMode
+  ICalFailureModeSvc *m_calFailureModeSvc;
 
 };
 

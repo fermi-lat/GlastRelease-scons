@@ -8,12 +8,17 @@
 
 // LOCAL
 #include "XtalDigiTool.h"
+#include "CalXtalResponse/ICalFailureModeSvc.h"
+#include "CalXtalResponse/ICalCalibSvc.h"
+#include "CalXtalResponse/ICalTrigTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // EXTLIB
 #include "GaudiKernel/ToolFactory.h"
+#include "TTree.h"
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -25,7 +30,6 @@ using namespace CalUtil;
 using namespace Event;
 using namespace CalibData;
 using namespace idents;
-
 
 static ToolFactory<XtalDigiTool> s_factory;
 const IToolFactory& XtalDigiToolFactory = s_factory;
@@ -178,6 +182,14 @@ StatusCode XtalDigiTool::initialize() {
     msglog << MSG::ERROR << "  Unable to create " << m_precalcCalibName << endreq;
     return sc;
   }
+
+  //-- find optional CalFailureModeSvc --//
+  sc = service("CalFailureModeSvc", m_calFailureModeSvc);
+  if (sc.isFailure() ) {
+    msglog << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
+    m_calFailureModeSvc = 0;
+  }
+
 
   return StatusCode::SUCCESS;
 }
@@ -341,6 +353,12 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
                                    glt);
   if (sc.isFailure()) return sc;
 
+  /////////////////////////////////////////
+  // Stage 6: Optional failure mode test //
+  /////////////////////////////////////////
+  sc = getFailureStatus(lacBits);
+  if (sc.isFailure()) return sc;
+
   //-- Quick Exit --//
   // once LAC & triggers have been processed (in CIDAC scale
   // I can now exit and save rest of processing including adc->dac
@@ -350,7 +368,7 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
 
   
   ///////////////////////////////
-  // Stage 6: convert cidac->adc //
+  // Stage 7: convert cidac->adc //
   ///////////////////////////////
   for (XtalRng xRng; xRng.isValid(); xRng++) {
     XtalDiode xDiode(xRng.getFace(), xRng.getRng().getDiode());
@@ -362,21 +380,21 @@ StatusCode XtalDigiTool::calculate(const vector<const McIntegratingHit*> &hitLis
   } // xRng
   
   //////////////////////////////
-  // Stage 7: Range Selection //
+  // Stage 8: Range Selection //
   //////////////////////////////
   sc = rangeSelect();
   if (sc.isFailure()) return sc;
     
   ///////////////////////////////////////
-  //-- STEP 8: Populate Return Vars --//
+  //-- STEP 9: Populate Return Vars --//
   ///////////////////////////////////////
   // generate xtalDigReadouts.
   sc = fillDigi(calDigi);
   if (sc.isFailure()) return sc;
 
-  ////////////////////////////////////////////////////////
-  //-- STEP 9: Populate XtalDigiTuple vars (optional) --//
-  ////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
+  //-- STEP 10: Populate XtalDigiTuple vars (optional) --//
+  /////////////////////////////////////////////////////////
   
   // following steps only needed if tuple output is selected
   if (m_tuple) {
@@ -611,7 +629,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
                                                          (short)adc[POS_FACE], 
                                                          roRange[NEG_FACE].val(), 
                                                          (short)adc[NEG_FACE], 
-                                                         0);
+                                                         m_dat.failureStatus);
     calDigi.addReadout(ro);
   }
   
@@ -631,3 +649,24 @@ StatusCode XtalDigiTool::finalize() {
 
   
   
+StatusCode XtalDigiTool::getFailureStatus(const CalArray<FaceNum, bool> &lacBits) {
+  CalXtalId xtalId(m_dat.xtalIdx.getCalXtalId());
+
+  if (m_calFailureModeSvc != 0) {   
+    if (m_calFailureModeSvc->matchChannel(xtalId,
+                                (CalXtalId::POS))) {
+      
+      if (lacBits[POS_FACE]) (m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_P);
+    }
+    if (m_calFailureModeSvc->matchChannel(xtalId,
+                                (CalXtalId::NEG))) {
+      if (lacBits[NEG_FACE]) (m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_N);
+
+    }
+  }
+
+  if ((m_dat.failureStatus & 0x00FF) == 0) m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::OK_P;
+  if ((m_dat.failureStatus & 0xFF00) == 0) m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::OK_N;
+
+  return StatusCode::SUCCESS;
+}

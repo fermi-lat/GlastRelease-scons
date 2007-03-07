@@ -1,3 +1,4 @@
+v0r12p7 03/07/07 fewtrell re-enabled CalFailureModeSvc which was temporarily disabled.
 v0r12p4 07/26/06 fewtrell CalTuple face signal is now allways > 0
 v0r12p3 07/26/06 fewtrell  CalTuple.FaceSignalAllRange from previous patch was coming out blank.  bug fixed.
 v0r12p2 07/25/06 fewtrell  CalTuple now saves 4 range face signal as well as 4 range adcped (from last tag).  also indexing bug in caltuple adcped is fixed.
