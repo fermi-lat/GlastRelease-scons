@@ -34,6 +34,7 @@ set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 #   other than vanilla Gleam.
 #
 use FluxSvc         v*
+use astro           v*
 set LCHBDBASE  ${FLUXSVCROOT}/cdf
 #
 # End of kludge
