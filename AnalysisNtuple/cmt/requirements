@@ -9,6 +9,7 @@ use GlastPolicy v*
 
 # these really belong below the "private" line, but apparently linux can't handle it...
 use TkrUtil     v*
+
 use G4Propagator v*
 
 use ntupleWriterSvc v*
@@ -23,7 +24,7 @@ private
 use GlastSvc        v*
 use facilities      v*
 use RootIo          v*
-use AcdRecon        v*
+use AcdUtil         v*
 
 set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 
