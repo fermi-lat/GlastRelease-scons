@@ -164,22 +164,22 @@
          materialREF="PDUMat" />
 
     <box name="SIU_EPU_HIBenv" 
-         XREF="NADelectCommon_t"
-         YREF="NADelectCommon_t"
-         ZREF="NADelectCommon_z"
+         XREF="LATelectCommon_t"
+         YREF="LATelectCommon_t"
+         ZREF="LATelectCommon_z"
          materialREF="LATElectAlMat" />
 
 <!-- for SIU and EPU -->
     <box name="SIUintr"      
-         XREF="NADelectCommonIntr_t"
-         YREF="NADelectCommonIntr_t"
-         ZREF="NADelectCommonIntr_z"
+         XREF="LATelectCommonIntr_t"
+         YREF="LATelectCommonIntr_t"
+         ZREF="LATelectCommonIntr_z"
          materialREF="SIUMat" />
 
     <box name="HIBintr"      
-         XREF="NADelectCommonIntr_t"
-         YREF="NADelectCommonIntr_t"
-         ZREF="NADelectCommonIntr_z"
+         XREF="LATelectCommonIntr_t"
+         YREF="LATelectCommonIntr_t"
+         ZREF="LATelectCommonIntr_z"
          materialREF="HIBMat" />
   
 
@@ -207,49 +207,200 @@
        <posXYZ volume="HIBintr" />      
      </composition>
 
+     <box name="LATelectEnv" 
+          XREF="LATelectEnv_t"
+          YREF="LATelectEnv_t"
+          ZREF="LATelectEnv_z"
+          materialREF="LATelectOuterCuMat" />
+
+     <box name="LATinnerElectEnv"
+          XREF="LATelectInnerCable_t"
+          YREF="LATelectInnerCable_t"
+          ZREF="LATelectEnv_z"
+          materialREF="LATelectInnerCuMat" />
+
+<!-- Assemble the electronics -->
+    <composition name="LATinnerElect" envelope="LATinnerElectEnv" >
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dtn"
+        YREF="NADtem_small_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dt"
+        YREF="NADtem_small_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dtn"
+        YREF="NADtem_small_dt"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dt"
+        YREF="NADtem_small_dt"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="GASU"
+        XREF="NADgasu_dx"
+        YREF="NADgasu_dy"
+        ZREF="L2ElectronicsRel_dz"
+       />
+     </composition>
+
+     <composition name="LATelect" envelope="LATelectEnv" >
+       <posXYZ volume="LATinnerElect" />
+       
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dtn"
+        YREF="NADtem_large_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dtn"
+        YREF="NADtem_large_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dt"
+        YREF="NADtem_large_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dt"
+        YREF="NADtem_large_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dtn"
+        YREF="NADtem_small_dtn"
+        ZREF="TEMrel_dz"
+       />
+
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dt"
+        YREF="NADtem_small_dtn"
+        ZREF="TEMrel_dz"
+       />
 
 
-<!--
-     <box name="TEM" 
-         XREF="NADtem_t"
-         YREF="NADtem_t"
-         ZREF="NADtem_z"
-         materialREF="TEMMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dtn"
+        YREF="NADtem_small_dt"
+        ZREF="TEMrel_dz"
+       />
 
-     <box name="GASU" 
-         XREF="NADgasu_x"
-         YREF="NADgasu_y"
-         ZREF="NADgasu_z"
-         materialREF="GASUMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dt"
+        YREF="NADtem_small_dt"
+        ZREF="TEMrel_dz"
+       />
 
-     <box name="PDU" 
-         XREF="NADpdu_x"
-         YREF="NADpdu_y"
-         ZREF="NADpdu_z"
-         materialREF="PDUMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dtn"
+        YREF="NADtem_large_dt"
+        ZREF="TEMrel_dz"
+       />
 
-    <box name="SIU" 
-         XREF="NADelectCommon_t"
-         YREF="NADelectCommon_t"
-         ZREF="NADelectCommon_z"
-         materialREF="SIUMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dtn"
+        YREF="NADtem_large_dt"
+        ZREF="TEMrel_dz"
+       />
 
-    <box name="EPU" 
-         XREF="NADelectCommon_t"
-         YREF="NADelectCommon_t"
-         ZREF="NADelectCommon_z"
-         materialREF="EPUMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_small_dt"
+        YREF="NADtem_large_dt"
+        ZREF="TEMrel_dz"
+       />
 
-    <box name="HIB" 
-         XREF="NADelectCommon_t"
-         YREF="NADelectCommon_t"
-         ZREF="NADelectCommon_z"
-         materialREF="HIBMat" />
+      <posXYZ volume="TEM"
+        XREF="NADtem_large_dt"
+        YREF="NADtem_large_dt"
+        ZREF="TEMrel_dz"
+       />
 
--->
+<!-- The PDU -->
+      <posXYZ volume="PDU"
+        XREF="NADpdu_dx"
+        YREF="NADpdu_dy"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+<!-- Two SIU's -->
+      <posXYZ volume="SIU"
+        XREF="NAD_siu_epu_dx"
+        YREF="NADsiu_dyn"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="SIU"
+        XREF="NAD_siu_epu_dx"
+        YREF="NADsiu_dy"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+<!-- Three EPUs -->
+      <posXYZ volume="EPU"
+        XREF="NAD_siu_epu_dxn"
+        YREF="NADepu_dyn"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="EPU"
+        XREF="NAD_siu_epu_dx"
+        YREF="NADepu_dyn"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="EPU"
+        XREF="NAD_siu_epu_dxn"
+        YREF="NADepu_dy"
+        ZREF="L2ElectronicsRel_dz"
+       />
 
 
+<!-- 5 HIBs -->
+      <posXYZ volume="HIB"
+        XREF="NADhib_small_dtn"
+        YREF="NADhib_large_dtn"
+        ZREF="L2ElectronicsRel_dz"
+       />
 
+
+      <posXYZ volume="HIB"
+        XREF="NADhib_small_dt"
+        YREF="NADhib_large_dtn"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="HIB"
+        XREF="NADhib_small_dtn"
+        YREF="NADhib_large_dt"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="HIB"
+        XREF="NADhib_small_dt"
+        YREF="NADhib_large_dt"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+      <posXYZ volume="HIB"
+        XREF="NADhib_large_dt"
+        YREF="NADhib_large_dt"
+        ZREF="L2ElectronicsRel_dz"
+       />
+
+     </composition>
 
 <!-- Define primitive volumes needed for solar panels -->
     <box name="solarPanelSiBox"

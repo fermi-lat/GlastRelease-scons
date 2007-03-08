@@ -51,5 +51,13 @@ Propellant is hydrazine</prim>
 Propellant tank is made of titanium</prim>
   <prim name="SCStructMat" value="Al" type="string" uType="mat">
 Use some sort of aluminum for primary structure of spacecraft
-</prim>
+  </prim>
+  <prim name="LATelectInnerCuMat" value="LATelectInnerCu" type="string" 
+        uType="mat">
+Material used for interior of envelope containing LAT electronics
+  </prim>
+  <prim name="LATelectOuterCuMat" value="LATelectOuterCu" type="string" 
+        uType="mat">
+Material used for periphery of envelope containing LAT electronics
+  </prim>
 </primCategory>

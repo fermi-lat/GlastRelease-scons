@@ -529,7 +529,20 @@
   </addmaterial>
 </composite>
 
+<!-- Material used for Cu cabling in periphery of LAT elect. envelope -->
+<composite name="LATelectOuterCu" densityREF="LATelectOuterCuDensity" >
+  <addmaterial material="Copper" >
+    <natoms n="1" />  
+  </addmaterial>
+</composite>
 
+<!-- Material used for Cu cabling in center of LAT elect. envelope -->
+<composite name="LATelectInnerCu" densityREF="LATelectInnerCuDensity" >
+  <addmaterial material="Copper" >
+    <natoms n="1" />  
+  </addmaterial>
+</composite>
+  
 
 
 
