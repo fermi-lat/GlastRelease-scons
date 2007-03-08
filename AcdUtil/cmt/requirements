@@ -33,7 +33,7 @@ library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx
 apply_pattern package_headers
 
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
-	        AcdCalibMgr.cxx AcdCalibSvc.cxx AcdTileFuncs.cxx\
+	        AcdCalibMgr.cxx AcdCalibSvc.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
                 ${AcdUtil_headers}               
