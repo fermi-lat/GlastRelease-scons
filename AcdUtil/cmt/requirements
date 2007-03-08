@@ -27,10 +27,11 @@ private
 
 apply_pattern use_CalibData_symbols
 
-library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx
+library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx
 
 
 apply_pattern package_headers
+
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx RayDoca.cxx \
 	        AcdCalibMgr.cxx AcdCalibSvc.cxx AcdTileFuncs.cxx\
                 Dll/*.cxx \
