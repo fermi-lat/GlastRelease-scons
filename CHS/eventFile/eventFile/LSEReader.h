@@ -32,6 +32,12 @@ namespace eventFile {
     bool read( LSE_Context&, EBF_Data&, LSE_Info::InfoType&, LPA_Info&, LCI_ACD_Info&, LCI_CAL_Info&, LCI_TKR_Info& );
     void close();
 
+#ifdef _FILE_OFFSET_BITS
+    int seek( off_t ofst );
+#else
+    int seek( int ofst );
+#endif
+
     // header accessors
     unsigned runid() const { return m_hdr.m_runid; };
     unsigned begSec() const { return m_hdr.m_secs_beg; };

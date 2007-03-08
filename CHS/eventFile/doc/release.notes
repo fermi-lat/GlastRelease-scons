@@ -3,6 +3,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v2r1   08-Mar-2007 RBL Added writeMerge.exe for halfPipe, added seek method for LSEReader.
  * v2r0p4 21-Nov-2006 RBL another tweak to LSEWriter for WIN32 compatibility
  * v2r0p3 21-Nov-2006 RBL tweak to LSEWriter for WIN32 compatibility
  * v2r0p2 17-Nov-2006 RBL modify dumpEvents.exe to dump all events if requested.

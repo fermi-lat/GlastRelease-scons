@@ -1,5 +1,5 @@
 package eventFile
-version v2r0p4
+version v2r1
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -34,6 +34,8 @@ set LDFROOT ${ldfExt_DIR}
 apply_pattern package_stamps
 
 apply_pattern ld_library_path
+
+application writeMerge writeMerge.cxx
 
 application test_LSEReader test/test_LSEReader.cxx test/LDFdump.cxx
 

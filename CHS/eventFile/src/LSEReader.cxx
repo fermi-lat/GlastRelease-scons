@@ -70,6 +70,11 @@ namespace eventFile {
     // read in the header data
     m_hdr.read( m_FILE );
   }
+
+  int LSEReader::seek( off_t ofst )
+  {
+    return fseeko( m_FILE, ofst, SEEK_SET );
+  }
 #else
   void LSEReader::readHeader()
   {
@@ -79,6 +84,11 @@ namespace eventFile {
 
     // read in the header data
     m_hdr.read( m_FILE );
+  }
+
+  int LSEReader::seek( int ofst )
+  {
+    return fseek( m_FILE, ofst, SEEK_SET );
   }
 #endif
 
