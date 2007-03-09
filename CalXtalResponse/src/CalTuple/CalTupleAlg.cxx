@@ -50,15 +50,11 @@ public:
 private:
   /// Single entry in CalTuple
   struct CalTupleEntry {
-    CalTupleEntry() {}
+    CalTupleEntry() {
+      Clear();
+    }
 
     ~CalTupleEntry() {}
-
-    StatusCode initialize() {
-      
-      
-      return StatusCode::SUCCESS;
-    }
 
     void Clear() {
       m_runId = 0;
@@ -133,8 +129,6 @@ StatusCode CalTupleAlg::initialize() {
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
-
-  m_tupleEntry.initialize();
 
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
