@@ -344,7 +344,7 @@ namespace detCheck {
     // not the real one
     double rOut = sphere->getRout();
     double rIn = sphere->getRin();
-    double cuVol = PI * (4/3.0) * (rOut * rOut - rIn * rIn);
+    double cuVol = PI * (4/3.0) * (rOut * rOut *rOut - rIn * rIn * rIn);
 
     registerShape(sphere, cuVol);
   }
