@@ -715,9 +715,9 @@
           RIn         NMTOKEN "0"
           ROut        NMTOKEN "0"
           PhiMin      NMTOKEN "0"
-          PhiMax      NMTOKEN "0"
+          PhiMax      NMTOKEN "360"
           ThetaMin    NMTOKEN "0"
-          ThetaMax    NMTOKEN "0"
+          ThetaMax    NMTOKEN "180"
           RInREF      IDREF   #IMPLIED
           ROutREF     IDREF   #IMPLIED
           PhiMinREF   IDREF   #IMPLIED
