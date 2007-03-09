@@ -340,12 +340,12 @@ namespace detCheck {
       double one = 1.0;
       PI = 2 * (asin(one));
     }
-    //\todo This formula just compute the total volume of the complete spherical shell,
-    // not the real one
+    //\todo This formula is only correct if theta has full range.
     double rOut = sphere->getRout();
     double rIn = sphere->getRin();
     double cuVol = PI * (4/3.0) * (rOut * rOut *rOut - rIn * rIn * rIn);
-
+    double phiRange = sphere->getPhiMax() - sphere->getPhiMin();
+    cuVol *= (phiRange / (2 * PI));
     registerShape(sphere, cuVol);
   }
 
