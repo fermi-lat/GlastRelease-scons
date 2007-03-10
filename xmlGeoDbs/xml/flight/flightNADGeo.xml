@@ -60,10 +60,10 @@
          ZREF="NADBlanketSideZ" materialREF="blanketMat" >
     </box>
       
-<!-- define cylinder for spacecraft -->
+<!-- define cylinder for spacecraft
     <tubs name="spacecraft" ROutREF="NADSpacecraftR" ZREF="NADSpacecraftZ"
           materialREF="spacecraftMat" />
-
+-->
 
 <!-- Define grid pieces.  There will be 4 per-tower
     grid web pieces and 4 per-tower grid flange pieces.  Then
@@ -402,6 +402,20 @@
 
      </composition>
 
+<!-- X-LAT plate -->
+    <box name="XLATplate"
+      XREF="XLAT_t"    
+      YREF="XLAT_t"    
+      ZREF="XLAT_z"    
+      materialREF="XLATMat" />
+
+<!-- radiator -->
+    <box name="radiator"
+      XREF="radiator_x"
+      YREF="radiator_y"
+      ZREF="radiator_z"
+      materialREF="radiatorMat" />
+
 <!-- Define primitive volumes needed for solar panels -->
     <box name="solarPanelSiBox"
          XREF="NADSolarPWidth"
@@ -476,4 +490,9 @@
             materialREF="tankMat"
     />
 
-
+<!-- Make an optical bench -->
+    <box name="opticalBench" 
+       XREF="opticalBench_x"
+       YREF="opticalBench_y"
+       ZREF="opticalBench_z"
+       materialREF="AlMat" />

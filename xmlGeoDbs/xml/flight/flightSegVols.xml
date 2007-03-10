@@ -49,13 +49,13 @@
     <!ENTITY CALDerived     SYSTEM "flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "flightNADDerived.xml">
-    <!ENTITY extraDerived   SYSTEM "flightSCDerived.xml">
+    <!ENTITY extraDerived   SYSTEM "empty.xml">
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDictSegVols.xml">
 
     <!ENTITY Materials      SYSTEM "../materials.xml">
-    <!ENTITY extraMaterials SYSTEM "empty.xml">
+    <!ENTITY extraMaterials SYSTEM "../empty.xml" >
   ]
 >
 <gdd CVSid="$Id$" 

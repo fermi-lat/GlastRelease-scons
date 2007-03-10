@@ -36,6 +36,12 @@ Material for thermal blanket</prim>
   Equal parts Cu, Si of correct average density for interior of HIB,
    excluding Al shell</prim>
 
+  <prim name="AlMat" value="Al" type="string" uType="mat">
+Garden variety aluminum</prim>
+  <prim name="XLATMat" value="XLAT_Al" type="string" uType="mat">
+Aluminum of proper density to give correct XLAT mass</prim>
+  <prim name="radiatorMat" value="radiator_C" type="string" uType="mat">
+Make radiators out of carbon with appropriate density</prim>
   <prim name="spacecraftMat" value="Alsc" type="string" uType="mat">
 Material for spacecraft</prim>
   <prim name="solarPanelMat" value="Solar_Si" type="string" uType="mat">
@@ -45,12 +51,12 @@ Material for solar panel core</prim>
   <prim name="solarRodMat" value="Solar_Al" type="string" uType="mat">
 Material for solar panel connecting rods</prim>
 
-  <prim name="propellantMat" value="Hydrazine" type="string" uType="mat">
-Propellant is hydrazine</prim>
+  <prim name="propellantMat" value="SC_Hydrazine" type="string" uType="mat">
+Propellant is hydrazine (at reduced density)</prim>
   <prim name="tankMat" value="Ti" type="string" uType="mat">
 Propellant tank is made of titanium</prim>
-  <prim name="SCStructMat" value="Al" type="string" uType="mat">
-Use some sort of aluminum for primary structure of spacecraft
+  <prim name="SCStructMat" value="SCStruct_Al" type="string" uType="mat">
+Use  aluminum for primary structure of spacecraft
   </prim>
   <prim name="LATelectInnerCuMat" value="LATelectInnerCu" type="string" 
         uType="mat">

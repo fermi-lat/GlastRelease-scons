@@ -407,87 +407,116 @@
       <posXYZ volume="LATelect"
          ZREF="LATelectEnv_dz"
        />
+<!-- XLAT plate -->
+      <posXYZ volume="XLATplate"
+        ZREF="XLAT_dz" 
+      />
 
+<!-- radiators -->
+      <posXYZ volume="radiator"
+        XREF="radiator_dx"
+        YREF="radiator_dy"
+        ZREF="radiator_dz"
+      />
 
-<!-- Spacecraft primary structure 
-      <! Y+ side 
+      <posXYZ volume="radiator"
+        XREF="radiator_dx"
+        YREF="radiator_dyn"
+        ZREF="radiator_dz"
+      />
+
+<!-- Spacecraft primary structure -->
+      <!-- Y+ side    -->
       <posXYZ volume="primaryStructureMain"
          YREF="SCBigSide_dt"
          ZREF="SCStruct_dz"
-       />
+       /> 
 
-      <! Y- side 
+      <!-- Y- side   -->
       <posXYZ volume="primaryStructureMain"
          YREF="SCBigSide_dtn"
          ZREF="SCStruct_dz"
-       />
+       /> 
 
-      <! X+ side 
+      <!-- X+ side   -->
       <posXYZ volume="primaryStructureMain"
          XREF="SCBigSide_dt"
          ZREF="SCStruct_dz"
          zrot="90"
-       />
+       />  
 
-      <! X- side 
+      <!-- X- side   -->
       <posXYZ volume="primaryStructureMain"
          XREF="SCBigSide_dtn"
          ZREF="SCStruct_dz"
          zrot="90"
-       />
+       /> 
 
-      <! +X, +Y corner side
+      <!-- +X, +Y corner side  -->
       <posXYZ volume="primaryStructureCorner"
          XREF="SCCorner_dt"
          YREF="SCCorner_dt"
          ZREF="SCStruct_dz"
          zrot="135"
-       />
+       /> 
 
-      <! -X, -Y corner side
+      <!-- -X, -Y corner side   -->
       <posXYZ volume="primaryStructureCorner"
          XREF="SCCorner_dtn"
          YREF="SCCorner_dtn"
          ZREF="SCStruct_dz"
          zrot="135"
-       />
+       /> 
 
-      <! +X, -Y corner side
+      <!-- +X, -Y corner side   -->
       <posXYZ volume="primaryStructureCorner"
          XREF="SCCorner_dt"
          YREF="SCCorner_dtn"
          ZREF="SCStruct_dz"
          zrot="45"
-       />
+       /> 
 
-      <! -X, +Y corner side
+      <!-- -X, +Y corner side  -->
       <posXYZ volume="primaryStructureCorner"
          XREF="SCCorner_dtn"
          YREF="SCCorner_dt"
          ZREF="SCStruct_dz"
          zrot="45"
-       />
--->
+       /> 
 
+<!-- Locate propellant tank and contents -->
+     <posXYZ volume="propellantTank"
+               ZREF="tank_dz" /> 
+
+      <posXYZ volume="propellant"
+               ZREF="tank_dz" />
+
+<!-- old spacecraft
       <posXYZ volume="spacecraft"
               ZREF="spacecraft_dz">
         <idField name="fLATObjects" valueREF="eLATSpacecraft" />
       </posXYZ>
+-->
 
+<!-- Optical bench -->
+      <posXYZ volume="opticalBench"
+              XREF="opticalBench_dx"
+              ZREF="opticalBench_dz"
+       />
 
  <!-- "Attach" solar panels to spacecraft along Y axis  -->
       <posXYZ volume="solarPanel" 
               YREF="solarPanelEnv_dy" 
               ZREF="solarPanelEnv_dz" >
         <idField name="fLATObjects" valueREF="eLATPanelYPos" />
-      </posXYZ>
+      </posXYZ>  
 
       <posXYZ volume="solarPanel" 
               xrot="180.0"
               YREF="solarPanelEnv_dyn" 
               ZREF="solarPanelEnv_dz" >
         <idField name="fLATObjects" valueREF="eLATPanelYNeg" />
-      </posXYZ>
+      </posXYZ> 
 
 
     </composition>

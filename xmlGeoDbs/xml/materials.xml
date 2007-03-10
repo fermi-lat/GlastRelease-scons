@@ -107,16 +107,6 @@
          aweight="47.867"
          />
 
-
-
-<!-- invented to satisfy Geant4, but doesn't seem to be good enough    -->
-<!--
-<element name="VacuumElement" 
-         symbol="vac"
-	 z="1" 
-	 aweight="1.01" 
-	 />
--->
 <!-- Go back to old style method of dealing with vacuum -->
 <element name="Vacuum" 
          z="1" 
@@ -138,6 +128,11 @@
   </addmaterial>
 </composite>
 
+<composite name="C" density="2.265">
+  <addmaterial material="Carbon">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
 
 <composite name="Si" density="2.4">
    <addmaterial material="Silicon">
@@ -173,6 +168,13 @@
    </addmaterial>
 </composite>
 
+<composite name="XLAT_Al" densityREF="XLATdensity">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
+
 <composite name="Solar_Al" density="2.702">
   <addmaterial material="Aluminum">
     <natoms n="1" />
@@ -190,6 +192,13 @@
     <natoms n="1" />
    </addmaterial>
 </composite>
+
+<composite name="SCStruct_Al" density="2.702">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+   </addmaterial>
+</composite>
+
 
 <composite name="LATElect_Al" densityREF="NADelectAlDensity">
   <addmaterial material="Aluminum">
@@ -253,6 +262,11 @@
   </addmaterial>
 </composite>
 
+<composite name="radiator_C" densityREF="radiatorDensity" >
+  <addmaterial material="Carbon">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
 
 <!-- THIS IS SPECIAL -->
 <!--
@@ -460,6 +474,8 @@
 </addmaterial>
 </composite>
 
+
+
 <composite name="Hydrazine" density="1.01">
   <addmaterial material="Hydrogen">
     <natoms n="4" />
@@ -559,6 +575,21 @@
   </addmaterial>
 </composite>
 
+<!-- 
+    true density of hydrazine is in the neighborhood of 1.01,
+    but use a computed value here.  If the propellant tank
+    were full the hydrazine would weigh about 570 kg, but in
+    reality it's more like 350 kg 
+ -->
+<composite name="SC_Hydrazine" densityREF="SC_HydrazineDensity">
+  <addmaterial material="Hydrogen">
+    <natoms n="4" />
+  </addmaterial>
+  <addmaterial material="Nitrogen">
+    <natoms n="2" />
+  </addmaterial>
+</composite>
+
 <!-- OBSOLETE???? -->
 
 <element name="Al20" 
@@ -571,12 +602,6 @@
 	 z="13" 
 	 aweight="26.98" 
 	 density="1.3520"
-	 />
-
-<element name="C" 
-	 z="6" 
-	 aweight="12.01" 
-	 density="2.265"
 	 />
 
 &extraMaterials;

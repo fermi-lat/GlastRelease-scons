@@ -843,6 +843,22 @@
     </add>
   </const>
 
+  <const name="XLAT_dz">
+<notes>Z displacement of XLAT-plate needs to be a little lower than 
+official value from LAT-TD-00564-12, -477.186, to avoid collision with
+electronics.</notes>
+  <minus>
+    <refer refTo="NAD_LAT_L2Electronics_dz" />
+    <half>
+      <add>
+        <refer refTo="LATelectCommon_z" />
+        <refer refTo="XLAT_z" />
+      </add>
+    </half>
+  </minus>
+</const>
+
+
   <const name="TEMrel_dz"> 
     <notes>Displacement of TEMs relative to electronics envelope</notes>
     <minus>
@@ -959,7 +975,339 @@
        </mul>
      </quo>
    </const>
-      
+
+   <const name="radiator_dyn">
+     <notes>-Y radiator is symmetrically placed</notes>
+     <uminus>
+       <refer refTo="radiator_dy" />
+     </uminus>
+   </const>
+
+   <const name="radiatorDensity">
+     <notes>Computed density of a radiator from total mass and dimensions
+     </notes>
+     <quo>
+       <refer refTo="radiatorMass" />
+       <mul>
+         <refer refTo="radiator_x" />
+         <refer refTo="radiator_y" />
+         <refer refTo="radiator_z" />
+         <refer refTo="cubicmmToCubiccm" />
+       </mul>
+     </quo>
+   </const>
+
+   <const name="XLATdensity">
+     <notes>Computed density of XLAT from total mass and dimensions
+     </notes>
+     <quo>
+       <refer refTo="XLATmass" />
+       <mul>
+         <refer refTo="XLAT_t" />
+         <refer refTo="XLAT_t" />
+         <refer refTo="XLAT_z" />
+         <refer refTo="cubicmmToCubiccm" />
+       </mul>
+     </quo>
+   </const>
+
 </derCategory>
 
-  
+<derCategory name="derSC" save="true" >
+  <overview>Derived constants specific to spacecraft</overview>
+  <const name="SCCornerSide">
+    <notes>Length of corner sides of primary structure octagon.
+           Let q = orthog. projection of side in, say x-direction,
+           so side = sqrt(2)*q.  Then 2*q + 2*thick + SCBigSide = SCWidth,
+           or q = 1/2(SCWidth-SCBigSide) - thick.</notes>
+    <mul>
+      <refer refTo="sqrt2" />
+      <minus>
+        <half>
+          <minus>
+            <refer refTo="SCWidth" />
+            <refer refTo="SCBigSide" />
+          </minus>
+        </half>
+        <refer refTo="SC_thick" />
+      </minus>
+    </mul>
+  </const>
+
+  <const name="tankInnerRadius" >
+    <notes>Inner radius for hydrazine tank (and radius of 
+      sphere of hydrazine propellant)</notes>
+    <minus>
+      <refer refTo="tankOuterRadius" />
+      <refer refTo="tankThickness" />
+    </minus>
+  </const>
+
+  <const name="skirt_dz">
+    <notes>Z-displacement of skirt</notes>
+    <minus>
+      <refer refTo="radTop_dz" />
+      <add>
+        <refer refTo="skirtTop_to_radTop" />
+        <half>
+          <refer refTo="skirt_z" />
+        </half>
+      </add>
+    </minus>
+  </const>
+
+  <const name="SCBigSide_dt" >
+    <notes>Transverse displacement of +x or +y side of 
+          primary structure</notes>
+    <half>
+      <minus>
+        <refer refTo="SCWidth" />
+        <refer refTo="SC_thick" />
+      </minus>
+    </half>
+  </const>
+
+  <const name="SCBigSide_dtn" >
+    <notes>Transverse displacement of -x or -y side of primary 
+        structure</notes>
+    <uminus>
+      <refer refTo="SCBigSide_dt" />
+    </uminus>
+  </const>
+
+  <const name="SCBigSideClosest" >
+    <notes>Transverse distance between nearest point of big side and origin
+    </notes>
+    <minus>
+      <refer refTo="SCBigSide_dt" />
+      <half>
+        <refer refTo="SC_thick" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="SCCorner_dt" >
+    <notes>Transverse displacement t of 45-degree sides of primary structure.
+     Can be computed in terms of (half-)length of big side B and 45-degree
+     side b and displacement T of big side:&lt;br /&gt;
+       t**2 = ((B/2)**2 + T**2) - (b/2)**2 is distance.  Then each coord.
+       is this quantity / sqrt(2)
+     This is displacement of closest point.  Then add 1/2 thickness to
+     get displacement of middle.
+    </notes>
+    <add>
+      <sqrt>
+        <mul>
+          <minus>
+            <add>
+              <mul>
+                <refer refTo="SCBigSide" />
+                <refer refTo="SCBigSide" />
+                <const value="0.25" uType="count" />
+              </mul>
+              <mul>
+                <refer refTo="SCBigSideClosest" />
+                <refer refTo="SCBigSideClosest" />
+              </mul>
+            </add>
+            <mul>
+              <refer refTo="SCCornerSide" />
+              <refer refTo="SCCornerSide" />
+              <const value="0.25" uType="count" />
+            </mul>
+          </minus>
+          <const value="0.5" uType="count" />
+        </mul>
+      </sqrt>
+      <refer refTo="SC_thick" />
+    </add>
+  </const>
+
+
+  <const name="SCCorner_dtn" >
+    <notes>Neg. displacement for corner sides</notes>
+    <uminus>
+      <refer refTo="SCCorner_dt" />
+    </uminus>
+  </const>
+
+  <const name="SCStruct_dz" >
+    <notes>Z displacement for all 8 primary structure volumes.
+    Roughly, top of skirt = top of primary structure.  May refine
+    this later.     
+    </notes>
+    <minus>
+      <refer refTo="skirt_dz" />
+      <half>
+        <minus>
+          <refer refTo="SC_z" />
+          <refer refTo="skirt_z" />
+        </minus>
+      </half>
+    </minus>
+  </const>
+
+  <const name="tank_dz" >
+    <notes>vertical displacement for propellant tank and contents.
+          Just assume it's on the bottom: bottom of tank lines up
+          with bottom of primary structure</notes>
+    <minus>
+      <refer refTo="SCStruct_dz" />
+      <minus>
+        <half>
+          <refer refTo="SC_z" />
+        </half>
+        <refer refTo="tankOuterRadius" />
+      </minus>
+    </minus>
+  </const>
+
+  <const name="SC_HydrazineDensity" >
+    <notes>Compute density in gm/cu cm given that tank of inner radius
+      about 514 mm contains 350 kg of stuff</notes>
+    <quo>
+      <refer refTo="hydrazineMass" />
+      <mul>
+        <quo>
+          <const value="4.0" />
+          <const value="3.0" />
+        </quo>
+        <refer refTo="Pi" />
+        <refer refTo="tankInnerRadius" />
+        <refer refTo="tankInnerRadius" />
+        <refer refTo="tankInnerRadius" />
+        <refer refTo="cubicmmToCubiccm" />
+      </mul>
+    </quo>
+  </const>    
+
+
+  <const name="opticalBench_x" >
+    <notes>Compute thickness from y and z dimensions, mass and
+           density of aluminum</notes>
+    <quo>
+      <refer refTo="opticalBenchMass" />
+      <mul>
+        <refer refTo="opticalBench_y" />
+        <refer refTo="opticalBench_z" />
+        <refer refTo="cubicmmToCubiccm" />
+        <refer refTo="NADelectAlDensity" /> 
+      </mul>
+    </quo>
+  </const>
+
+
+  <const name="opticalBench_dx" >
+    <notes>Compute, assuming optical bench is just to the -X of 
+           primary spacecraft structure</notes>
+    <uminus>
+      <half>
+        <add>
+          <refer refTo="SCWidth" />
+          <refer refTo="opticalBench_x" />
+        </add>
+      </half>
+    </uminus>
+  </const>
+
+  <const name="opticalBench_dz" >
+    <notes>Compute, assuming top of optical bench is level with
+           top of primary spacecraft structure</notes>
+    <add>
+      <refer refTo="SCStruct_dz" />
+      <half>
+        <minus>
+           <refer refTo="SC_z" />
+           <refer refTo="opticalBench_z" />
+        </minus>
+      </half>
+    </add>
+  </const>   
+
+
+        <const name="solarPanel_dy" >
+          <notes>y-displacement of panel-only part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <quo>
+            <refer refTo="NADSolarRodLength" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="solarRod_dy" >
+          <notes>y-displacement of rod part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <uminus>
+            <quo>
+              <refer refTo="NADSolarPLength" />
+              <const value="2" uType="count" />
+            </quo>
+          </uminus>
+        </const>
+
+<!--
+            <half>
+              <refer refTo="SCWidth" />
+            </half>
+-->
+
+        <const name="solarPanelEnv_dy" >
+          <notes>y-displacement of entire (+Y) solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+          <add>
+            <refer refTo="radiator_dy" />
+            <half>
+              <add>
+                <refer refTo="NADTotalPanelLen" />
+                <refer refTo="radiator_y" />
+              </add>
+            </half>
+          </add>
+        </const>
+        
+        <const name="solarPanelEnv_dyn" >
+          <notes>y-displacement of entire (-Y) solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+          <uminus>
+            <refer refTo="solarPanelEnv_dy" />
+          </uminus>
+        </const>
+
+        <!-- Put solar panels just halfway down the spacecraft -->
+        <const name="solarPanelEnv_dz" >
+          <notes>z-displacement of entire solar panel envelope w.r.t.
+                 Ritz origin.</notes>
+<!--          <refer refTo="spacecraft_dz" /> -->
+           <refer refTo="SCStruct_dz" />
+        </const>
+
+        <const name="solarPanelSi_dz" >
+          <notes>z-displacement of Si part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <quo>
+            <refer refTo="NADSolarCoreThick" />
+            <const value="2" uType="count" />
+          </quo>
+        </const>
+
+        <const name="solarPanelCore_dz" >
+          <notes>z-displacement of core part of solar panel w.r.t.
+                 envelope including panel and connecting rod</notes>
+          <uminus>
+            <quo>
+              <refer refTo="NADSolarSiThick" />
+              <const value="2" uType="count" />
+            </quo>
+          </uminus>
+        </const>
+          
+
+        <const name="NADSolarRodDiam" >
+          <notes>Diameter of rods connecting solar panels to spacecraft</notes>
+          <add>
+            <refer refTo="NADSolarRodR" />
+            <refer refTo="NADSolarRodR" />
+          </add>
+        </const>
+
+</derCategory>

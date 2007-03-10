@@ -49,18 +49,15 @@
     <!ENTITY CALDerived     SYSTEM "../flight/flightCALDerived.xml">
     <!ENTITY ACDDerived     SYSTEM "../flight/flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "../flight/flightNADDerived.xml">
-    <!ENTITY extraDerived   SYSTEM "../flight/flightSCDerived.xml">
-<!--   extraDerived used to refer to empty.xml.  Content
-       in flightSCDerived isn't used yet, but there is no harm
-       in including the constant definitions.
- -->
+    <!ENTITY extraDerived   SYSTEM "../empty.xml" >
+<!--   extraDerived used to refer to empty.xml. -->
 
     <!ENTITY Primary        SYSTEM "../flight/flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "../flight/flightIdDictSegVols.xml">
 
     <!ENTITY Materials      SYSTEM "../materials.xml">
-    <!ENTITY extraMaterials SYSTEM "empty.xml">
+    <!ENTITY extraMaterials SYSTEM "../empty.xml" >
   ]
 >
 <gdd CVSid="$Id$" 

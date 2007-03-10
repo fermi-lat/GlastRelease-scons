@@ -189,7 +189,8 @@
             <max>
               <add>
                 <refer refTo = "towersTotalZ" />
-                <refer refTo = "NADSpacecraftZ" />
+<!--                <refer refTo = "NADSpacecraftZ" /> -->
+                <refer refTo = "SC_z" />
               </add>
               <refer refTo = "ACDTotalX" />
             </max>
@@ -222,7 +223,6 @@
           </add>
         </const>
 
-
         <const name="bigYDim" >
           <notes>Something big enough to use as Y dimension of
                  envelope (takes into account solar panels)
@@ -232,87 +232,12 @@
             <add>
               <refer refTo="NADTotalPanelLen" />
               <const value = "100" />          
-              <refer refTo="NADSpacecraftR" />
+              <refer refTo="SCWidth" />
             </add>
           </mul>
         </const>
              
 
-        <const name="solarPanel_dy" >
-          <notes>y-displacement of panel-only part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <quo>
-            <refer refTo="NADSolarRodLength" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
-
-        <const name="solarRod_dy" >
-          <notes>y-displacement of rod part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <uminus>
-            <quo>
-              <refer refTo="NADSolarPLength" />
-              <const value="2" uType="count" />
-            </quo>
-          </uminus>
-        </const>
-
-        <const name="solarPanelEnv_dy" >
-          <notes>y-displacement of entire (+Y) solar panel envelope w.r.t.
-                 Ritz origin.</notes>
-          <add>
-            <refer refTo="NADSpacecraftR" />
-            <quo>
-              <refer refTo="NADTotalPanelLen" />
-              <const value="2" uType="count" />
-            </quo>
-          </add>
-        </const>
-        
-        <const name="solarPanelEnv_dyn" >
-          <notes>y-displacement of entire (-Y) solar panel envelope w.r.t.
-                 Ritz origin.</notes>
-          <uminus>
-            <refer refTo="solarPanelEnv_dy" />
-          </uminus>
-        </const>
-
-        <!-- Put solar panels just halfway down the spacecraft -->
-        <const name="solarPanelEnv_dz" >
-          <notes>z-displacement of entire solar panel envelope w.r.t.
-                 Ritz origin.</notes>
-          <refer refTo="spacecraft_dz" />
-        </const>
-
-        <const name="solarPanelSi_dz" >
-          <notes>z-displacement of Si part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <quo>
-            <refer refTo="NADSolarCoreThick" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
-
-        <const name="solarPanelCore_dz" >
-          <notes>z-displacement of core part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <uminus>
-            <quo>
-              <refer refTo="NADSolarSiThick" />
-              <const value="2" uType="count" />
-            </quo>
-          </uminus>
-        </const>
-          
-
-        <const name="NADSolarRodDiam" >
-          <notes>Diameter of rods connecting solar panels to spacecraft</notes>
-          <add>
-            <refer refTo="NADSolarRodR" />
-            <refer refTo="NADSolarRodR" />
-          </add>
-        </const>
 
         <const name="LATZHalf" >
           <notes>convenience</notes>
@@ -376,30 +301,26 @@
           </minus>
         </const>
 
+<!--
         <const name="spacecraft_dz">
           <notes>Z displacement of spacecraft relative to Ritz origin.
                 It goes immediately under the 2nd layer of LAT electronics.
-                All the modules in this layer have samae offset and
+                All the modules in this layer have same offset and
                 same z-dimension</notes>
           <minus>
             <refer refTo="NAD_LAT_L2Electronics_dz" />
             <add>
-<!--
-              <refer refTo="NADGridFlangeZ" />
-              <refer refTo="CALGridFrameGap" />
-              <refer refTo="CALVertStayClear" />
-              <refer refTo="NADSpacecraftGap" />
--->           
               <half>
                 <refer refTo="NADpdu_z" />
               </half>
               <half> 
+                <
                  <refer refTo="NADSpacecraftZ" />
               </half>
             </add>
           </minus>
         </const>
-
+-->
 <!-- have to do analogous 5 constants for side tile locations -->
 
         <const name="tileSide_dz">
