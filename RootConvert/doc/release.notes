@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r24   12-Mar-2007 TU  Include converters for McTkrStrips and McTrajectories
  v1r23p1 13-Dec-2006 HMK patch to remove commented out lines
  v1r23   20-Nov-2006 CL  Updates for GCR
  v1r22   06-Nov-2006 HMK Handle OBF BestTrack vars in FilterStatus
