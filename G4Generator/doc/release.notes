@@ -1,6 +1,7 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
+ v5r18   12-Mar-07 TU  Implement new scheme for storing particle trajectories
  v5r17p2  1-Feb-07 TU  Change default physics option from "full" to "GLAST"
  v5r17p1 23-Jan-07 FL  Add G4LowEnergy EM physics
  v5r17p0  8-Nov-06 TU  Use G4HadronSim to access alternate hadron models 
