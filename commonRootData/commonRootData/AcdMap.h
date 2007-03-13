@@ -104,8 +104,10 @@ namespace AcdMap {
 
   inline AcdTilePmt* _initTbl();
   inline unsigned* _initGemTbl();
+  inline unsigned* _initIndexTbl();
   const std::map<AcdTilePmt,AcdGarcGafe> _initMap();
   const std::map<unsigned,unsigned> _initGemMap();
+  const std::map<unsigned,unsigned> _initIndexMap();
 
   const AcdTilePmt* toTilePmt(unsigned  cable, unsigned  channel) {
     if (channel >= 18 || cable >= 12 ) return 0;
@@ -147,6 +149,18 @@ namespace AcdMap {
 
   unsigned           gemIndexFromTile(unsigned tile) {
     const std::map<unsigned,unsigned>& map = _initGemMap();
+    std::map<unsigned,unsigned>::const_iterator itr = map.find(tile);
+    if ( itr == map.end() ) return 0xFFFF;
+    return itr->second;
+  };
+  const unsigned           tileFromIndex(unsigned gemIndex) {
+    if ( gemIndex >= 108 ) return 0xFFFF;
+    const unsigned* table = _initIndexTbl();
+    return table[gemIndex];
+  };
+
+  const unsigned           indexFromTile(unsigned tile) {
+    const std::map<unsigned,unsigned>& map = _initIndexMap();
     std::map<unsigned,unsigned>::const_iterator itr = map.find(tile);
     if ( itr == map.end() ) return 0xFFFF;
     return itr->second;
@@ -308,11 +322,11 @@ namespace AcdMap {
 			      310,311,312,313,314,
 			      320,321,322,323,324,
 			      330,
-			      000,001,002,003,004, // Top 64-88
-			      010,011,012,013,014,
-			      020,021,022,023,024,
-			      030,031,032,033,034,
-			      040,041,042,043,044,
+			      0,1,2,3,4, // Top 64-88
+			      10,11,12,13,14,
+			      20,21,22,23,24,
+			      30,31,32,33,34,
+			      40,41,42,43,44,
 			      0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF, // 89-95 Must Be Zero
 			      0xFFFF,0xFFFF,
 			      500,501,502,503,       // Ribbons 96-103 
@@ -322,6 +336,28 @@ namespace AcdMap {
 			      1000,1001,1002,1003,1004,1005, // Not Assigned 112-122 
 			      1006,1007,1008,1009,1010,  
 			      0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF};       // 123-127 Must Be Zero    
+    return a;
+  };
+  /*!
+   * \brief Private function for initializing the ACD index map as used in the enable and ROI registers.
+   *
+   *  This comment is copied from the function above:
+   *
+   *
+   */
+  inline unsigned* _initIndexTbl() {
+    static unsigned a[108] = {0,1,2,3,4,10,11,12,13,14,      
+			      20,21,22,23,24,30,31,32,33,34,     
+			      40,41,42,43,44,1002,		     
+			      1003,100,101,102,103,104,110,111,112,113,114,
+			      120,121,122,123,124,130,1004,		     
+			      1005,200,201,202,203,204,210,211,212,213,214,
+			      220,221,222,223,224,230,1006,		     
+			      1007,300,301,302,303,304,310,311,312,313,314,
+			      320,321,322,323,324,330,1008,		     
+			      1009,400,401,402,403,404,410,411,412,413,414,
+			      420,421,422,423,424,430,1000,		     
+			      1001,500,501,502,503,600,601,602,603,1010 };
     return a;
   };
   
@@ -346,6 +382,16 @@ namespace AcdMap {
 	if ( tile != 0xFFFF ) {
 	  theMap[tile] = idx;
 	}
+      }
+    }
+    return theMap;
+  };
+  const std::map<unsigned,unsigned> _initIndexMap() {   
+    static std::map<unsigned,unsigned> theMap;
+    if ( theMap.size() == 0 ) {
+      for ( unsigned idx(0); idx < 108; idx++ ) {
+	unsigned tile = tileFromIndex(idx);
+	theMap[tile] = idx;
       }
     }
     return theMap;
