@@ -282,4 +282,13 @@ UInt_t AcdId::gemIndexFromTile(UInt_t tile) {
   return AcdMap::gemIndexFromTile(tile);
 }
 
+UInt_t AcdId::tileFromIndex(UInt_t gemIndex) {
+  return AcdMap::tileFromIndex(gemIndex);
+}
+
+UInt_t AcdId::indexFromTile(UInt_t tile) {
+  return AcdMap::indexFromTile(tile);
+}
+
+
 

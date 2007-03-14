@@ -50,6 +50,8 @@ public:
   static void convertToGarcGafe(UInt_t tile, UInt_t pmt, UInt_t& garc, UInt_t& gafe);
   static UInt_t           tileFromGemIndex(UInt_t gemIndex);
   static UInt_t           gemIndexFromTile(UInt_t tile);
+  static UInt_t           tileFromIndex(UInt_t gemIndex);
+  static UInt_t           indexFromTile(UInt_t tile);
   
 private:
     // extend the notion of a layer to allow for more than 2 layers
