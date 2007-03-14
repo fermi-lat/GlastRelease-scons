@@ -68,8 +68,7 @@ private:
     //Function to parse the stuff we get from AcdReconAlg
     void getAcdReconVars();
     IFluxSvc*   m_fluxSvc;
-
-    
+   
     //Pure MC Tuple Items
     float MC_SourceId;
     char  MC_SourceName[80];

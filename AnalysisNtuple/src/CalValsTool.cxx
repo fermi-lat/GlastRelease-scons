@@ -1,4 +1,3 @@
-
 /** @file CalValsTool.cxx
 @brief Calculates the Cal analysis variables
 @author Bill Atwood, Leon Rochester

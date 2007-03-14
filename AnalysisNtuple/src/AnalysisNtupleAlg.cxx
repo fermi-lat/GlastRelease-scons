@@ -176,24 +176,39 @@ StatusCode AnalysisNtupleAlg::initialize(){
 
     //probably a better way to do this!
     // default set:
-    std::string toolnames [] = {"Mc", "Glt", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "CalMip", "", "", ""};
+    std::string toolnames [] = {"Mc", "Glt", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "CalMip", "Obf", "", ""};
     int i;
-    int namesSize;
+    int namesSize = m_toolnames.size();
 
-    if (m_toolnames.empty()) {
+    // use the default
+    if(m_toolnames.empty()) {
         for (i=0; ; ++i) {
             if (toolnames[i]=="") break;
             m_toolnames.push_back(toolnames[i]+"ValsTool");
         }
-    } else {
+    // fresh list, use it
+    } else if (m_toolnames.size()>0&&m_toolnames[0]!="+") {
+        for (i=0; i<namesSize; ++i) {
+            m_toolnames[i] = m_toolnames[i]+"ValsTool";
+        }
+    // add the input to the regular list
+    } else if (namesSize>1&&m_toolnames[0]=="+") {
+        m_toolnames.erase(m_toolnames.begin());
+        // first the input
         namesSize = m_toolnames.size();
         for (i=0; i<namesSize; ++i) {
             m_toolnames[i] = m_toolnames[i]+"ValsTool";
         }
+        // then the regulars
+        for (i=0; ; ++i) {
+            if (toolnames[i]=="") break;
+            m_toolnames.push_back(toolnames[i]+"ValsTool");
+        }
     }
 
-    log << MSG::INFO << "Tools requested: ";
+
     namesSize = m_toolnames.size();
+    log << MSG::INFO << namesSize << " Tools requested: ";
     for (i=0; i<namesSize; ++i) {
         log << m_toolnames[i] << " " ;
     }
