@@ -23,6 +23,10 @@ $Header$
 /** @class FilterAlgTuple
 @brief generate tuple stuff for the Onboard Filter
 */
+
+namespace{
+    bool disabled = true;
+}
 class FilterAlgTuple : public Algorithm {
 
 public:
@@ -68,8 +72,10 @@ Algorithm(name, pSvcLocator),  m_rootTupleSvc(0)
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode FilterAlgTuple::initialize() {
-    StatusCode  sc = StatusCode::SUCCESS;
 
+    StatusCode  sc = StatusCode::SUCCESS;
+    if(disabled) return sc;
+    
     MsgStream log(msgSvc(), name());
 
     // Use the Job options service to get the Algorithm's parameters
@@ -173,6 +179,8 @@ StatusCode FilterAlgTuple::initialize() {
 StatusCode FilterAlgTuple::execute() {
 
     StatusCode  sc = StatusCode::SUCCESS;
+    if(disabled) return sc;
+
     MsgStream log(msgSvc(), name());
 
     // Old school output
@@ -246,6 +254,8 @@ StatusCode FilterAlgTuple::execute() {
 }
 //------------------------------------------------------------------------------
 StatusCode FilterAlgTuple::finalize() {
+
+    if(disabled) return StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());
     log << MSG::INFO ;
