@@ -25,6 +25,18 @@ use GlastSvc        v*
 use facilities      v*
 use RootIo          v*
 use AcdUtil         v*
+use OnboardFilterTds v*
+
+macro AnalysisNtuple_cppflags "" \
+   Linux "-DGLEAM -D__i386 -DEFC_FILTER -DMSG_ST -D__unix__  -DWUT_IMPLEMENTATION_PX "\
+   WIN32 " /D GLEAM /D__i386 /DEFC_FILTER  /D_WIN32"
+
+#    -nostdinc -I/usr/local/gcc-3.2.3/lib/gcc-lib/i686-pc-linux-gnu/3.2.3/include -I/usr/include"\
+
+macro AnalysisNtuple_cflags $(AnalysisNtuple_cppflags)
+
+macro_append cpplinkflags "" Linux " -ldl -lpthread " WIN32 ""
+
 
 set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 
@@ -35,6 +47,9 @@ set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 #
 use FluxSvc         v*
 use astro           v*
+
+# use OnBoardFilterTDS v*
+
 set LCHBDBASE  ${FLUXSVCROOT}/cdf
 #
 # End of kludge
