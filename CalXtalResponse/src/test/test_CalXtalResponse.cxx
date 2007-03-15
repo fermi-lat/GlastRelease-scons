@@ -42,13 +42,13 @@ using namespace std;
 using namespace CalibData;
 using namespace idents;
 
-/// return % diff (abs) between 2 floats avoid divide-by-zero errros
-float pct_diff(float a, float b) {
+/// return relative diff (abs) between 2 floats avoid divide-by-zero errros
+float rel_diff(float a, float b) {
   // safe to divide by a
-  if (a!=0) return abs(a-b)/a;
+  if (a!=0) return abs((a-b)/a);
 
   // fall back to divide by b
-  if (b!=0) return abs(a-b)/b;
+  if (b!=0) return abs((a-b)/b);
 
   // only possibility a==b==0
   // zero pct diff
@@ -954,7 +954,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
     pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
     curTest->posDiff = Vector(testPoint - recData.getPosition()).magnitude();
     curTest->recEne  = recData.getEnergy();
-    float eneDiff = pct_diff(curTest->meV, curTest->recEne);
+    float eneDiff = rel_diff(curTest->meV, curTest->recEne);
 
     //--------- REPORT RESULT --------------------------//
     ostringstream tmp;
@@ -1325,8 +1325,8 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
       sc = curTest->getCalCalibSvc()->evalAsym(curTest->xtalIdx, asymType, (*xvals)[i], testAsym);
       if (sc.isFailure()) return sc;
 
-      if (pct_diff((*asymVals[asymType])[i].getVal(), testAsym) > .01 ||
-          pct_diff((*xvals)[i], testPos) > .01) {
+      if (rel_diff((*asymVals[asymType])[i].getVal(), testAsym) > .01 ||
+          rel_diff((*xvals)[i], testPos) > .01) {
         msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
@@ -1370,7 +1370,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
         sc = curTest->getCalCalibSvc()->evalCIDAC(rngIdx, (*adcs)[i], testCIDAC);
         if (sc.isFailure()) return sc;
 
-        if (pct_diff(testCIDAC, (*cidacs)[i]) > .01 && abs(testCIDAC - (*cidacs)[i] > .01)) {
+        if (rel_diff(testCIDAC, (*cidacs)[i]) > .01 && abs(testCIDAC - (*cidacs)[i] > .01)) {
           msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
@@ -1380,7 +1380,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
         sc = curTest->getCalCalibSvc()->evalADC(rngIdx, (*cidacs)[i], testADC);
         if (sc.isFailure()) return sc;
 
-        if (pct_diff(testADC, (*adcs)[i]) > .01 && abs(testADC - (*adcs)[i] > .01)) {
+        if (rel_diff(testADC, (*adcs)[i]) > .01 && abs(testADC - (*adcs)[i] > .01)) {
           msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
@@ -1758,7 +1758,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
     pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
     curTest->posDiff = Vector(testPoint - recData.getPosition()).magnitude();
     curTest->recEne  = recData.getEnergy();
-    float eneDiff = pct_diff(curTest->meV, curTest->recEne);
+    float eneDiff = rel_diff(curTest->meV, curTest->recEne);
         
     //--------- REPORT RESULT --------------------------//
     ostringstream tmp;
