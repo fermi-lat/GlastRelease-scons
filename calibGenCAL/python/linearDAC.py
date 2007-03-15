@@ -161,8 +161,8 @@ if __name__ == '__main__':
                         # find points in range for fit
                         fit_start = LINEFIT_IDX_START[rng]
                         fit_end   = LINEFIT_IDX_END[rng]
-                        fit_dacs = dac[fit_start:fit_end+1]
-                        fit_adcs = adc[fit_start:fit_end+1]
+                        fit_dacs  = dac[fit_start:fit_end+1]
+                        fit_adcs  = adc[fit_start:fit_end+1]
 
                         # create ROOT graph for fitting line
                         g = ROOT.TGraph(len(fit_dacs),
