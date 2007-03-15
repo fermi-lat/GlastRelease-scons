@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r23   THB 15-Mar-07  remove FilterAlgTuple from algs (done in AnaTup)
 * v6r22p1 THB 19-Feb=07  update basicOptions (Leon) and pipeline jo files (Johann)
 * v6r21p1 THB 29-dec-06  add Count alg to keep track of triggred, downlink counts in new jobinfo TTree
 * v6r20p3 LSR 07-dec-06  fix EvtMax for default ReadAndDisplay.txt
