@@ -43,3 +43,4 @@
  * v0r19    07-12-06 CL  Modifications to add gcr ROOT file
  * v0r19p1  07-12-06 LSR invoke TkrGeometrySvc with "true" option
  * v0r20    12-03-07 TU  Re-work MC part of display (when will we have a v1?)
+ * v0r20p1  15-03-07 TU  Fix jobOptions so test program "runs"
