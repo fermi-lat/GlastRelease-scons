@@ -28,8 +28,12 @@ namespace Event
 template <class T1, class T2> class RelTable 
 {    
 public: 
-    RelTable() : m_relations(0), m_firstMMap(0), m_secondMMap(0) {}
+    RelTable() : m_relations(0), m_ownRelationList(true), m_ownMaps(true), m_firstMMap(0), m_secondMMap(0) {}
     RelTable(ObjectList < Relation<T1,T2> >* rels);
+    RelTable(const RelTable<T1,T2>& table);
+
+    // Destructor
+    ~RelTable();
   
     /// Initialize the internal pointer to an ObjectList of relations
     void init(); // { m_relations = new std::list< Relation<T1,T2>* >;}
@@ -92,7 +96,7 @@ public:
     unsigned long size() const ;
   
     /// Returns the pointer to the collection of relations.
-    RelationList<T1,T2>* getAllRelations() const;
+    RelationList<T1,T2>* getAllRelations(bool disown = true);
   
 private:
 
@@ -107,27 +111,70 @@ private:
     /// Pointer to a collection of relations
     RelationList<T1,T2>*      m_relations;
 
+    /// Flag to declare ownership of above list
+    bool                      m_ownRelationList;
+
     /// Pointer to T1 multimap
     RelKeyMultiMap<T1,T1,T2>* m_firstMMap;
 
     /// Pointer to T2 multimap
     RelKeyMultiMap<T2,T1,T2>* m_secondMMap;
+
+    /// Flag to declare ownership of maps
+    bool                      m_ownMaps;
 };
   
-template <class T1, class T2> inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels)
+template <class T1, class T2> inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels) :
+                              m_relations(0), m_ownRelationList(false), m_ownMaps(true), m_firstMMap(0), m_secondMMap(0)
 {
-    init();
+//    init();
+    // We are given a RelationList to work with
+    m_relations  = dynamic_cast<Event::RelationList<T1,T2>*>(rels);
 
+    // Will need to create and fill the multi-maps
+    m_firstMMap  = new RelKeyMultiMap<T1,T1,T2>;
+    m_secondMMap = new RelKeyMultiMap<T2,T1,T2>;
+
+    // Set up and loop through the provided relations, resetting pointers to MMaps
     ObjectList<Relation<T1,T2> >::iterator relIter;
-
     for(relIter = rels->begin(); relIter != rels->end(); relIter++)
     {
-        addRelation(*relIter);
+        Relation<T1,T2>* relation = *relIter;
+
+        relation->insertInList(m_relations);
+        relation->insertFirst(m_firstMMap);
+        relation->insertSecond(m_secondMMap);
     }
+}
+
+template <class T1, class T2> inline RelTable<T1,T2>::RelTable(const RelTable<T1,T2>& table)
+{
+    m_relations       = table.m_relations;
+    m_ownRelationList = false;
+    m_firstMMap       = table.m_firstMMap;
+    m_secondMMap      = table.m_secondMMap;
+    m_ownMaps         = false;
+    return;
+}
+
+template <class T1, class T2> inline RelTable<T1,T2>::~RelTable()
+{
+    // If we don't "own" it then don't delete it (presumed in TDS)
+    if (m_relations  && m_ownRelationList) delete m_relations;
+    if (m_firstMMap  && m_ownMaps)         delete m_firstMMap;
+    if (m_secondMMap && m_ownMaps)         delete m_secondMMap;
+    return;
 }
 
 template <class T1, class T2> inline void RelTable<T1,T2>::init()
 {
+    if (m_relations)  delete m_relations;
+    if (m_firstMMap)  delete m_firstMMap;
+    if (m_secondMMap) delete m_secondMMap;
+
+    m_ownRelationList = true;
+    m_ownMaps         = true;
+
     m_relations  = new RelationList<T1,T2>;
     m_firstMMap  = new RelKeyMultiMap<T1,T1,T2>;
     m_secondMMap = new RelKeyMultiMap<T2,T1,T2>;
@@ -272,8 +319,11 @@ template <class T1,class T2>
     return m_relations->size();
 }
   
-template <class T1,class T2> inline RelationList<T1,T2>* RelTable<T1,T2>::getAllRelations() const 
+template <class T1,class T2> inline RelationList<T1,T2>* RelTable<T1,T2>::getAllRelations(bool disown)
 {
+    // Does caller want ownership of the list (default mode)
+    if (disown) m_ownRelationList = false;
+
     return m_relations;
 }
 

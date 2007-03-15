@@ -45,6 +45,8 @@ public:
     Relation(T1* obj1, T2* obj2, std::string info);
     Relation(T1* obj1, T2* obj2, std::vector<std::string> infos);
 
+    ~Relation();
+
     const T1* getFirst()  const { return m_first.getData(); } 
     T1* getFirst()              { return m_first.getData(); }
 
@@ -98,7 +100,10 @@ template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj
 template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, std::vector<std::string> infos): 
   m_first(obj1), m_second(obj2), m_infos(infos) {}
 
-
+template <class T1, class T2> inline Relation<T1,T2>::~Relation()
+{
+    return;
+}
 
 template <class T1, class T2> void Relation<T1,T2>::addInfo(std::string inf) 
 {
@@ -119,8 +124,10 @@ template <class T1, class T2> std::vector<std::string> Relation<T1,T2>::getInfos
 
 template <class T1, class T2> void Relation<T1,T2>::insertInList(RelationList<T1,T2>* list)
 {
-    RelListIter listIter = list->end();
-    listIter   = list->insert(listIter, this);
+    //RelListIter listIter = list->end();
+    //listIter   = list->insert(listIter, this);
+    RelListIter listIter = std::find(list->begin(),list->end(),this);
+    if (listIter == list->end()) listIter = list->insert(listIter, this);
     m_listIter = listIter;
 
     return;

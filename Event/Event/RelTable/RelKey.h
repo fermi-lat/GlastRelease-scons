@@ -49,7 +49,7 @@ public:
     RelKey()       : m_data(0),   m_iterator(0){}
     RelKey(T1* obj): m_data(obj), m_iterator(0){}
     
-   ~RelKey() {}
+   ~RelKey();
     
     // Provide ability to set and retrieve the "data" or "key"
     void setData(T1* obj) {m_data = obj;}  
@@ -80,6 +80,11 @@ private:
     /// Iterator to its position in the T1 to Relation multimap
     RelKeyMultiMapIter m_iterator;
 };
+
+template <class T1, class T2, class T3> RelKey<T1,T2,T3>::~RelKey()
+{
+    return;
+}
 
 template <class T1, class T2, class T3> 
 inline void RelKey<T1,T2,T3>::insertInMap(RelKeyMultiMap<T1,T2,T3>* map, RelationListIter listIter)
