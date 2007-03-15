@@ -3,6 +3,8 @@
  author David Chamont 
  @verbatim
 
+ v1r25   14-Mar-2007 HMK Patch for reading recon files' AcdRecon class with
+         vector<double32>
  v1r24   12-Mar-2007 TU  Include converters for McTkrStrips and McTrajectories
  v1r23p1 13-Dec-2006 HMK patch to remove commented out lines
  v1r23   20-Nov-2006 CL  Updates for GCR
