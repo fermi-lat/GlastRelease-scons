@@ -50,14 +50,12 @@ try:
     opts, args = getopt.getopt(sys.argv[1:], "-f:")
 except getopt.GetoptError:
     log.error(usage)
-    sys.ext(1)
+    sys.exit(1)
 
 imgType = "pdf" #default 
 for o, a in opts:
     if o == "-f":
         imgType = a
-    
-        
 
 # now check for req'd params
 if len(args) != 1:
