@@ -280,7 +280,7 @@ bool RootIoSvc::setRootFile(const char *mc, const char *digi, const char *rec, c
         if (!RootPersistence::fileExists(digiFile)) return false;
     }
     if (!reconFile.empty()) {
-        if (!RootPersistence::fileExists(reconFile)) return false;
+        if (!RootPersistence::fileExists(reconFile, true)) return false;
     }
 
     if (!gcrFile.empty()) {

@@ -203,7 +203,7 @@ StatusCode reconRootReaderAlg::initialize()
     m_reconTree = new TChain(m_treeName.c_str());
 
     // add root files to TChain and check if files exist
-    StatusCode openSc= RootPersistence::addFilesToChain(m_reconTree, m_fileName, m_fileList, log);
+    StatusCode openSc= RootPersistence::addFilesToChain(m_reconTree, m_fileName, m_fileList, log, true);
     if (openSc.isFailure()) {
       return  openSc;
     }
