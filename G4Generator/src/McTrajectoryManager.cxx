@@ -93,8 +93,8 @@ void McTrajectoryManager::clear()
 
     if (m_partToTrajectoryTDS == 0)
     {
-        // Create new one and give to TDS
-        m_partToTrajectoryTDS = new Event::McPartToTrajectoryTabList();
+        // Create new one and give to TDS (note use of ReleationList here!)
+        m_partToTrajectoryTDS = new Event::RelationList<Event::McParticle, Event::McTrajectory>;
         m_esv->registerObject("/Event/MC/McPartToTrajectory", m_partToTrajectoryTDS);
     }
 
@@ -104,7 +104,7 @@ void McTrajectoryManager::clear()
     if (m_pointToPosHitTDS == 0)
     {
         // Create new one and give to TDS
-        m_pointToPosHitTDS = new Event::McPointToPosHitTabList();
+        m_pointToPosHitTDS = new Event::RelationList<Event::McTrajectoryPoint, Event::McPositionHit>;
         m_esv->registerObject("/Event/MC/McPointToPosHit", m_pointToPosHitTDS);
     }
 
@@ -114,7 +114,7 @@ void McTrajectoryManager::clear()
     if (m_pointToIntHitTDS == 0)
     {
         // Create new one and give to TDS
-        m_pointToIntHitTDS = new Event::McPointToIntHitTabList();
+        m_pointToIntHitTDS = new Event::RelationList<Event::McTrajectoryPoint, Event::McIntegratingHit>;
         m_esv->registerObject("/Event/MC/McPointToIntHit", m_pointToIntHitTDS);
     }
 }
