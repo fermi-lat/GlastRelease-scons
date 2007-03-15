@@ -20,6 +20,8 @@
  */
 class McObjectManager {
 public:
+    virtual ~McObjectManager(){ m_pointer=0; };
+
     /// The static pointer retrival method of the singleton
     static McObjectManager* getPointer();
 

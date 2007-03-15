@@ -8,6 +8,7 @@
 
 $Header$
 
+v2r21p1   15-Mar-2007 HMK patch cleabup objmgr
 v2r21     12-Mar-2007 TU  Changes to ouput McTkrStrips, McTrajectory's, implement scheme to manage memory, etc.
 v2r20     27-Oct-2006 HMK Add SourceName to McEvent
 v2r19p7   09-Jun-2006 HMK patch the review of all unit tests
@@ -18,7 +19,7 @@ v2r19p3   24-Jan-2006 HMK Update McEvent::Clear to add ALL option, where the
                           static arrays are cleared out
 v2r19p2   20-Jan-2006 DC  up-to-date test
 v2r19p1   19-Jan-2006 DC  Standardize McPositionHit::Fake() signature
-v2r19p0   24-Sep-2005 TU  Introduce McTrajectory into I/O, implement readback of CalMipTracks
+v2r19p0   24-Sep-2005 TU  Introduce McTrajectory into I/O, implement roadback of CalMipTracks
 v2r18p1   06-Sep-2005 NG  Include GlastPolicy so lib directory is created
 v2r18     02-Sep-2005 HMK Because I like doing things on the 2nd of the month
                       And we need to use the most recent RootCintPolicy for
