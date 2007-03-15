@@ -1,5 +1,5 @@
 package HepRepXml
-version v0r7
+version v0r7p1
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
@@ -20,6 +20,7 @@ library HepRepXml *.cxx \
  ${HepRepXml_headers}
 
 # test program, using local joboptions
+# just tests if the stuff loads... 
 public 
 set JOBOPTIONS ${HEPREPXMLROOT}/src/test/jobOptions.txt
 apply_pattern package_test
