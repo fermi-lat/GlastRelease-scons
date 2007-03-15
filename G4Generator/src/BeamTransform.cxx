@@ -1,6 +1,12 @@
 /** @file BeamTransform.cxx
     @brief declartion, implementaion of the class BeamTransform
 
+    Transforms particle trajectories generated in the beamtest-2006 beam frame
+    into the CU frame, taking into account the translations and rotations of the
+    x-y table.
+
+    @authors Toby Burnett, Leon Rochester
+
     $Header$
 */
 // Gaudi system includes
@@ -64,18 +70,23 @@ public:
     
 private: 
     int m_count;
+    /// z position of pivot in CU frame
     DoubleProperty m_pivot_height;    // z position of pivot in glast frame
     DoubleProperty m_pivot_offset;      // x position of pivot in glast frame
     DoubleProperty m_beam_plane; // z position of reporting plane in beam frame
     DoubleProperty m_beam_plane_glast;  // z position of reporting plane in glast frame
     DoubleProperty  m_transy, m_transz; // translation in x-y table plane
     DoubleProperty  m_angle; // rotation about table pivot (y-axis in instr.) (deg)
+    DoubleProperty  m_tilt;  // rotation about x-axis in instr. (deg)
     DoubleArrayProperty m_point_on_beamline; // point in CU on central ray of beam
-    double m_c, m_s;                    // cos, sin of rot
+    double m_c, m_s;                    // cos, sin of rot angle
+    double m_ct, m_st;                  // cos, sin of tilt
 
     void transform(Event::McParticle& mcp );
     CLHEP::Hep3Vector m_translation, m_pivot;
-    CLHEP::HepRotationY m_rot;  // the table rotation
+    CLHEP::HepRotationY m_rotY;  // the table rotation
+    CLHEP::HepRotationX m_rotX;  // the table tilt
+    CLHEP::HepRotation  m_rot;   // the full rotation
 };
 
 namespace {
@@ -90,13 +101,19 @@ BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 ,m_count(0)
 {
     // declare properties with setProperties calls
-    // translations and rotation of x-y table
+    // translations, rotation and tilt of x-y table
+    //   distances in mm, angles in degrees
+    // vertical translation of the table (along z(beam))
     declareProperty("vertical_translation",  m_transz=0);
+    // horizontal translation of the table, (along y(beam))
     declareProperty("horizontal_translation",m_transy=0);
+    // rotation of the table around the pivot
     declareProperty("table_rotation", m_angle=0);
-    // z position of pivot in glast frame according to the Italians
+    // tilt of the table around an axis along x(CU), going through the pivot
+    declareProperty("table_tilt", m_tilt=0);
+    // z position of pivot in glast frame
     declareProperty("pivot_location", m_pivot_height=-130);
-    // x position of pivot in glast frame according to the Italians
+    // x position of pivot in glast frame
     declareProperty("pivot_offset", m_pivot_offset=45);
     // z position of reporting plane in beam frame
     declareProperty("beam_plane",     m_beam_plane=3300);
@@ -115,7 +132,13 @@ StatusCode BeamTransform::initialize(){
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
-    const std::vector<double>& POB = m_point_on_beamline.value( );
+    const std::vector<double>& POBx = m_point_on_beamline.value( );
+    Point POB = Point(POBx[0], POBx[1], POBx[2]);
+
+        // this is the rotation matrix
+    m_rotY = CLHEP::HepRotationY(m_angle*degToRad);
+    m_rotX = CLHEP::HepRotationX(m_tilt*degToRad);
+    m_rot  = m_rotX*m_rotY;
 
     // location of pivot
     m_pivot = CLHEP::Hep3Vector( m_pivot_offset,0, m_pivot_height);
@@ -133,7 +156,7 @@ StatusCode BeamTransform::initialize(){
         log << MSG::INFO << "XY table Before: horizontal " << m_transy 
             << " mm, vertical " << m_transz << " mm" << endreq;
         m_transz = POB[1];
-        if( m_angle==0) {
+        if( m_angle==0&&m_tilt==0) {
             m_transy = -POB[0];
         } else {
             // I'm amazed that this code seems to work for angles of +-90.
@@ -142,7 +165,9 @@ StatusCode BeamTransform::initialize(){
 
             Point pivot(m_pivot.x(), m_pivot.y(), m_pivot.z());
             //make a ray orthogonal to the beam angle going thru the pivot
+
             double orthAngle = degToRad*(180. - m_angle);
+            double tilt      = degToRad*m_tilt;
             Vector orthDir(cos(orthAngle), 0.0, sin(orthAngle));
             Ray orthRay(pivot, orthDir);
 
@@ -150,22 +175,34 @@ StatusCode BeamTransform::initialize(){
             // it's where the central ray enters for no translation
             Point point1 = orthRay.position(m_pivot.x());
             double angle = degToRad*(90. - m_angle);
-            Vector dirBeam(cos(angle), 0.0, sin(angle));
+            double angle0 = degToRad*m_angle;
+
+           
+            Vector dirBeam(0.0, 0.0, 1.0);
+            dirBeam = m_rot*dirBeam;
+            dirBeam = Vector(dirBeam.x(), 0.0, dirBeam.z());
+            dirBeam.unit();
+
             Ray zeroRay(point1, dirBeam);
 
-            // Here's the point you want the beam to go thru
+            // Here's the point you want the beam to go thru, projected onto the y(CU)=0 plane
             Point point2(POB[0], 0.0, POB[2]);
             Vector v1 = point2 - point1;
             // The distance along the beam central ray that gets you to the 
             //  doca for the beam point
             double lenB = v1*dirBeam;
+
             Point pointOnZero = zeroRay.position(lenB);
-            Vector disp = point2-pointOnZero;
+            Point projPOZ(pointOnZero.x(), 0.0, pointOnZero.z());
+            Vector disp = point2-projPOZ;
             // This is how much you have to move
             double dist1 = disp.mag();
             // and this is the direction
             double sign = (disp*orthDir<0 ? -1.0 : 1.0);
             m_transy = sign*dist1;
+
+            // correct vertical translation for the tilt
+            m_transz = m_transz - (m_pivot.z()-POB[2])*tan(tilt);
         }
         log << MSG::INFO << "         After:  horizontal " << m_transy 
             << " mm, vertical " << m_transz << " mm" << endreq;
@@ -180,9 +217,6 @@ StatusCode BeamTransform::initialize(){
  
     // define the transformation matrix here.
     m_translation = CLHEP::Hep3Vector(0, m_transy, m_transz);
-
-    // this is the rotation matrix
-    m_rot = CLHEP::HepRotationY(m_angle*degToRad);
 
     return sc;
 }

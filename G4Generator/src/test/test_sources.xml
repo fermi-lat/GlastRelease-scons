@@ -7,7 +7,7 @@
     
     <source name="beamtest_muon" >
        <spectrum escale="GeV"> 
-         <particle name="mu+"><energy e="5"/> </particle>
+         <particle name="mu+"><energy e="20"/> </particle>
            <direction theta="90" phi="180" />
            <launch_point x="3300" y="0" z="0" />
        </spectrum>
