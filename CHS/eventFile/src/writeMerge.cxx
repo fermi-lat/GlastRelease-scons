@@ -67,11 +67,18 @@ int main( int argc, char* argv[] )
     return 1;
   }
   std::string idxfile( argv[1] );
-  std::string evtfile( argv[2] );
+  std::string evtfile( argv[2] );  // this contains format specifiers
   int downlinkID = atoi( argv[3] );
 
-  // create the file-output object
-  eventFile::LSEWriter* pLSEW = new eventFile::LSEWriter( evtfile, downlinkID );
+  // add support for configurable output file size
+  int maxEvents = -1;
+  if ( argc >= 5 ) {
+    maxEvents = atoi( argv[4] );
+  }
+
+  // declare the file-output object pointer
+  int eventsOut = 0;
+  eventFile::LSEWriter* pLSEW = NULL;
 
   // create a container for the chunk-evt input files
   lser_map mapLSER;
@@ -117,6 +124,17 @@ int main( int argc, char* argv[] )
       continue;
     }
 
+    // open an output file if necessary
+    if ( !pLSEW ) {
+      // create the output filename from the user-supplied template
+      char ofn[512];
+      snprintf( ofn, 512, evtfile.c_str(), ctx.run.startedAt, ctx.scalers.sequence );
+
+      // open the output file
+      pLSEW = new eventFile::LSEWriter( std::string( ofn ), downlinkID );
+      std::cout << "created output file " << pLSEW->name() << std::endl;
+    }
+
     // write the event to the merged file
     switch( infotype ) {
     case eventFile::LSE_Info::LPA:
@@ -138,10 +156,21 @@ int main( int argc, char* argv[] )
       std::cout << std::endl;
       break;
     }
+
+    // check to see if the output file is full
+    if ( maxEvents > 0 && ++eventsOut >= maxEvents ) {
+      // close the current file and reset the event counter
+      std::cout << "wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
+      delete pLSEW; pLSEW = NULL;
+      eventsOut = 0;
+    }
   }
   std::for_each( mapLSER.begin(), mapLSER.end(), cleanup() );
   idx.close();
-  delete pLSEW;
+  if ( pLSEW ) {
+    std::cout << "wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
+    delete pLSEW;
+  }
 
   // all done
   return 0;
