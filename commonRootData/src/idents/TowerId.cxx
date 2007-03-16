@@ -32,7 +32,7 @@ Bool_t TowerId::neighbor (const TowerId& n) const
 
 
 #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
-#define COMPARE_IN_RANGE_NO_GET(att) rootdatautil::CompareInRange(att(),ref. ## att(),#att)
+#define COMPARE_IN_RANGE_NO_GET(att) rootdatautil::CompareInRange(att(),ref.att(),#att)
 
 Bool_t TowerId::CompareInRange( const TowerId & ref, const std::string & name ) const {
 
