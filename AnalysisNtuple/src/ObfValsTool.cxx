@@ -21,7 +21,7 @@ $Header$
 #include "Event/TopLevel/Event.h"
 
 #include "CLHEP/Vector/Rotation.h"
-#include "Geometry/Point.h"
+#include "geometry/Vector.h"
 
 #include "OnboardFilterTds/FilterStatus.h"
 #include "OnboardFilterTds/ObfFilterStatus.h"
