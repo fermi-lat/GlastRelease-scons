@@ -349,7 +349,8 @@ unsigned int TriggerAlg::gemBits(unsigned int  trigger_bits)
     // kudos to Heather for creating a typedef
 
     return 
-        (( trigger_bits & enums::b_Track) !=0 ? LdfEvent::Gem::TKR   : 0)
+         ((trigger_bits & enums::b_ROI)   !=0 ? LdfEvent::Gem::ROI   : 0)
+        |((trigger_bits & enums::b_Track) !=0 ? LdfEvent::Gem::TKR   : 0)
         |((trigger_bits & enums::b_LO_CAL)!=0 ? LdfEvent::Gem::CALLE : 0)
         |((trigger_bits & enums::b_HI_CAL)!=0 ? LdfEvent::Gem::CALHE : 0)
         |((trigger_bits & enums::b_ACDH)  !=0 ? LdfEvent::Gem::CNO   : 0) ;
