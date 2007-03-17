@@ -1,0 +1,15 @@
+// $Header$
+// DC2 calibration
+
+// add new flavors to default
+CalibDataSvc.CalibFlavorList += {"vanilla", "DC2"}; 
+
+// for MSQL connection
+CalibMySQLCnvSvc.DbName      = "calib"; 
+CalibMySQLCnvSvc.QualityList = {"PROD"}; 
+
+// Cal specs
+CalCalibSvc.DefaultFlavor     = "ideal"; 
+
+// Tkr specs
+TkrCalibAlg.deadStripsCalibFlavor = "DC2"; 

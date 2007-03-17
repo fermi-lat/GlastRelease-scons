@@ -1,0 +1,11 @@
+//  -----------------------------------------------
+//           DC2 background sources
+//
+FluxAlg.sources+={"CrProtonMix"}; 
+FluxAlg.sources+={"CrElectronMix"}; 
+FluxAlg.sources+={"CrPositronMix"};
+FluxAlg.sources+={"CrAlpha"}; 
+FluxAlg.sources+={"CrHeavyIon"}; 
+FluxAlg.sources+={"Earth10"}; 
+
+//------------------end background ---------------

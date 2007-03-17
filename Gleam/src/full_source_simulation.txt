@@ -1,0 +1,85 @@
+// $Header$
+//##############################################################
+//
+// Job options file for Gleam job to do full simulation with  sources
+//
+// Input sky model directory: $(SKYMODEL_DIR)
+//         pointing history: $(POINTING_HISTORY_FILE)
+//
+// Outputs: $(meritRootFileName)
+//          $(mcRootFileName)
+//          $(digiRootFileName)
+//          $(reconRootFileName)
+
+#include "$GLEAMROOT/src/basicOptions.txt"
+
+
+//   ---------------------------------------------
+//          Define orbit, behavior
+//
+FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)"};
+FluxAlg.AvoidSAA       =  true;                // turn off during SAA
+FluxSvc.StartDate      = "2009-1-1 00:00:00";  // simulated start 
+
+// ------------------------------------------------
+// sets run number and start time 
+ 
+GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
+FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
+
+
+//  -------------------------------------------
+//         Source specification
+//
+FluxAlg.sources    = {"clock"};
+
+//#include "$GLEAMROOT/src/interleave.txt"
+#include "$GLEAMROOT/src/background.txt"  // background only
+
+//  -------------------------------------------
+//         Trigger, filter
+//
+LiveTimeAlg.deadtime        = 26e-6;// deadtime per trigger
+TriggerAlg.mask             = 10;   // TKR(2) + HICAL(8) 
+TriggerAlg.throttle         = true; // ignore if TKR + Throttle
+TriggerAlg.vetomask         =  7;   // TKR(2) + LOCAL(4) +ROI(1): disable throttle if LOCAL is on
+OnboardFilter.mask          = -1;   // set the filter to reject events, 
+                                    // turn on all bits (only low 16 count)
+// --------------------------------------------
+//         calibration
+#include "$GLEAMROOT/src/calibration.txt"
+
+// ------------------------------------------------
+//          Job length
+//
+ApplicationMgr.EvtMax = 900000;     // safety limit
+FluxSvc.DeltaTime     = 1;          // duration, expect to override
+
+
+//  -------------------------------------------
+//         RootIo output 
+//
+mcRootWriterAlg.mcRootFile      ="$(mcRootFileName)";
+digiRootWriterAlg.digiRootFile  ="$(digiRootFileName)";
+reconRootWriterAlg.reconRootFile="$(reconRootFileName)";
+
+// --------------------------------------------
+//       merittuple output
+//
+RootTupleSvc.RejectIfBad        =false;             // warning your own risk!
+MeritAlg.EventTreeName          ="MeritTuple";
+RootTupleSvc.filename           ="$(meritRootFileName)";
+
+
+MessageSvc.OutputLevel        =3;  // info 
+AcdReconAlg.OutputLevel       =5;  // is it crying wolf??
+CalLikelihoodTool.OutputLevel =4;  // 
+AcdDigiAlg.OutputLevel        =4;  // too much info
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
