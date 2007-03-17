@@ -176,7 +176,7 @@ StatusCode AnalysisNtupleAlg::initialize(){
 
     //probably a better way to do this!
     // default set:
-    std::string toolnames [] = {"Mc", "Glt", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "CalMip", "Obf", "", ""};
+    std::string toolnames [] = {"Mc", "Glt", "Tkr", "Vtx",  "Cal", "Acd", "Evt", "CalMip", "Obf", "McTkrHit", ""};
     int i;
     int namesSize = m_toolnames.size();
 
