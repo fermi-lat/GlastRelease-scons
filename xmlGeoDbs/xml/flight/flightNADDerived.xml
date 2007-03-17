@@ -1224,90 +1224,182 @@ electronics.</notes>
     </add>
   </const>   
 
+<!-- Relating to spacecraft skirt -->
+  <const name="skirtWidth" >
+    <notes>Length of side of square enclosing skirt</notes>
+    <add>
+      <refer refTo="SCWidth" />
+      <refer refTo="skirt_thick" />
+      <refer refTo="skirt_thick" />
+    </add>
+  </const>
 
-        <const name="solarPanel_dy" >
-          <notes>y-displacement of panel-only part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <quo>
-            <refer refTo="NADSolarRodLength" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
+<!-- suppose ratio of skirt dimensions to skirt width = ratio
+     of SC dimensions to SC width -->
+  <const name="skirtBigSide_t " >
+    <notes>Length of sides aligned with x or y axis</notes>
+    <quo>
+      <mul>
+        <refer refTo="SCBigSide" />
+        <refer refTo="skirtWidth" />
+      </mul>
+      <refer refTo="SCWidth" />
+    </quo>
+  </const>
 
-        <const name="solarRod_dy" >
-          <notes>y-displacement of rod part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <uminus>
-            <quo>
-              <refer refTo="NADSolarPLength" />
-              <const value="2" uType="count" />
-            </quo>
-          </uminus>
-        </const>
+  <const name="skirtCornerSide_t" >
+    <notes>Length of corner sides of skirt</notes>
+    <mul>
+      <refer refTo="sqrt2" />
+      <minus>
+        <half>
+          <minus>
+            <refer refTo="skirtWidth" />
+            <refer refTo="skirtBigSide_t" />
+          </minus>
+        </half>
+        <refer refTo="skirt_thick" />
+      </minus>
+    </mul>
+  </const>
 
-<!--
-            <half>
-              <refer refTo="SCWidth" />
-            </half>
--->
+  <const name="skirtBigSide_dt" >
+    <notes>Transverse displacement of skirt sides aligned with X or Y</notes>
+    <add>
+      <refer refTo="SCBigSide_dt" />
+      <half>
+        <add>
+          <refer refTo="SC_thick" />
+          <refer refTo="skirt_thick" />
+        </add>
+      </half>
+    </add>
+  </const>
 
-        <const name="solarPanelEnv_dy" >
-          <notes>y-displacement of entire (+Y) solar panel envelope w.r.t.
-                 Ritz origin.</notes>
+  <const name="skirtBigSide_dtn" >
+    <notes>Transverse displacement of skirt sides aligned with X or Y</notes>
+    <uminus>
+      <refer refTo="skirtBigSide_dt" />
+    </uminus>
+  </const>
+
+  <const name="skirtCorner_dt" >
+    <notes>Transverse disp. of skirt sides clipping corner of square</notes>
+    <add>
+      <refer refTo="SCCorner_dt" />
+      <quo>
+        <half>
           <add>
-            <refer refTo="radiator_dy" />
-            <half>
-              <add>
-                <refer refTo="NADTotalPanelLen" />
-                <refer refTo="radiator_y" />
-              </add>
-            </half>
+            <refer refTo="SC_thick" />
+            <refer refTo="skirt_thick" />
           </add>
-        </const>
-        
-        <const name="solarPanelEnv_dyn" >
-          <notes>y-displacement of entire (-Y) solar panel envelope w.r.t.
-                 Ritz origin.</notes>
-          <uminus>
-            <refer refTo="solarPanelEnv_dy" />
-          </uminus>
-        </const>
+        </half>
+        <refer refTo="sqrt2" />
+      </quo>
+    </add>
+  </const>
 
-        <!-- Put solar panels just halfway down the spacecraft -->
-        <const name="solarPanelEnv_dz" >
-          <notes>z-displacement of entire solar panel envelope w.r.t.
-                 Ritz origin.</notes>
-<!--          <refer refTo="spacecraft_dz" /> -->
-           <refer refTo="SCStruct_dz" />
-        </const>
+  <const name="skirtCorner_dtn" >
+    <notes>Neg transverse disp of skirt sides clipping corner of square</notes>
+    <uminus>
+      <refer refTo="skirtCorner_dt" />
+    </uminus>
+  </const>
 
-        <const name="solarPanelSi_dz" >
-          <notes>z-displacement of Si part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <quo>
-            <refer refTo="NADSolarCoreThick" />
-            <const value="2" uType="count" />
-          </quo>
-        </const>
+  <const name="skirtDensity" uType="none">
+    <notes>Compute from volume and mass in grams. Result
+           must be gm / cm**3 </notes>
+    <quo>
+      <refer refTo="skirtMass" />
+      <mul>
+        <add>
+          <refer refTo="skirtBigSide_t" />
+          <refer refTo="skirtCornerSide_t" />
+        </add>
+        <const value="4.0" uType="none" />
+        <refer refTo="skirt_z" />
+        <refer refTo="skirt_thick" />
+        <refer refTo="cubicmmToCubiccm" />
+      </mul>
+    </quo>
+  </const>
 
-        <const name="solarPanelCore_dz" >
-          <notes>z-displacement of core part of solar panel w.r.t.
-                 envelope including panel and connecting rod</notes>
-          <uminus>
-            <quo>
-              <refer refTo="NADSolarSiThick" />
-              <const value="2" uType="count" />
-            </quo>
-          </uminus>
-        </const>
-          
+  <const name="solarPanel_dy" >
+    <notes>y-displacement of panel-only part of solar panel w.r.t.
+           envelope including panel and connecting rod</notes>
+    <quo>
+      <refer refTo="NADSolarRodLength" />
+      <const value="2" uType="count" />
+    </quo>
+  </const>
 
-        <const name="NADSolarRodDiam" >
-          <notes>Diameter of rods connecting solar panels to spacecraft</notes>
-          <add>
-            <refer refTo="NADSolarRodR" />
-            <refer refTo="NADSolarRodR" />
-          </add>
-        </const>
+  <const name="solarRod_dy" >
+    <notes>y-displacement of rod part of solar panel w.r.t.
+           envelope including panel and connecting rod</notes>
+    <uminus>
+      <quo>
+        <refer refTo="NADSolarPLength" />
+        <const value="2" uType="count" />
+      </quo>
+    </uminus>
+  </const>
+
+  <const name="solarPanelEnv_dy" >
+    <notes>y-displacement of entire (+Y) solar panel envelope w.r.t.
+           Ritz origin.</notes>
+    <add>
+      <refer refTo="radiator_dy" />
+      <half>
+        <add>
+          <refer refTo="NADTotalPanelLen" />
+          <refer refTo="radiator_y" />
+        </add>
+      </half>
+    </add>
+  </const>
+  
+  <const name="solarPanelEnv_dyn" >
+    <notes>y-displacement of entire (-Y) solar panel envelope w.r.t.
+           Ritz origin.</notes>
+    <uminus>
+      <refer refTo="solarPanelEnv_dy" />
+    </uminus>
+  </const>
+
+  <!-- Put solar panels just halfway down the spacecraft -->
+  <const name="solarPanelEnv_dz" >
+    <notes>z-displacement of entire solar panel envelope w.r.t.
+           Ritz origin.</notes>
+     <refer refTo="SCStruct_dz" />
+  </const>
+
+  <const name="solarPanelSi_dz" >
+    <notes>z-displacement of Si part of solar panel w.r.t.
+           envelope including panel and connecting rod</notes>
+    <quo>
+      <refer refTo="NADSolarCoreThick" />
+      <const value="2" uType="count" />
+    </quo>
+  </const>
+
+  <const name="solarPanelCore_dz" >
+    <notes>z-displacement of core part of solar panel w.r.t.
+           envelope including panel and connecting rod</notes>
+    <uminus>
+      <quo>
+        <refer refTo="NADSolarSiThick" />
+        <const value="2" uType="count" />
+      </quo>
+    </uminus>
+  </const>
+    
+
+  <const name="NADSolarRodDiam" >
+    <notes>Diameter of rods connecting solar panels to spacecraft</notes>
+    <add>
+      <refer refTo="NADSolarRodR" />
+      <refer refTo="NADSolarRodR" />
+    </add>
+  </const>
 
 </derCategory>

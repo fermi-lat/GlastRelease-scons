@@ -66,4 +66,6 @@ Material used for interior of envelope containing LAT electronics
         uType="mat">
 Material used for periphery of envelope containing LAT electronics
   </prim>
+  <prim name="skirtMat" value="skirt_Al" type="string" uType="mat">
+    Aluminum with calculated density so skirt has correct mass</prim>
 </primCategory>

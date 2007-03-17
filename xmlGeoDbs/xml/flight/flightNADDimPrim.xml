@@ -172,11 +172,17 @@ from spec sheet</prim>
 <prim name="tankThickness" value="0.94">Minimum wall, from spec sheet</prim>
 <prim name="hydrazineMass" value="350000" uType="none">Mass in grams
 of hydrazine propellant</prim>
-<prim name="skirt_z" value="152">Height of spacecraft skirt</prim>
+
 <prim name="radTop_dz" value="-236.2">Z-displacement relative to LAT origin
 of top of radiators (measuring from 1/4 scale pictures)</prim>
 <prim name="skirtTop_to_radTop" value="296">Z-distance from top of skirt
 to top of radiators</prim>
+
+<prim name="skirt_thick" value="10.0">Arbitrary.  Will calculate
+density of skirt's material to give correct total mass</prim>
+<prim name="skirtMass" value ="32000" uType="none">Mass of spacecraft
+skirt in grams</prim>
+<prim name="skirt_z" value="152">As measured from 1/4 scale drawings</prim>
 
 <!--
   <prim name="NADSpacecraftZ" value="1400.0">Height of spacecraft</prim>

@@ -590,6 +590,12 @@
   </addmaterial>
 </composite>
 
+<composite name="skirt_Al" densityREF="skirtDensity">
+  <addmaterial material="Aluminum">
+    <natoms n="1" />
+  </addmaterial>
+</composite>
+
 <!-- OBSOLETE???? -->
 
 <element name="Al20" 
