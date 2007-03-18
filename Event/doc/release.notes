@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r18p1 18-Mar-07 TU  Add get/set methods to McPositionHits
  * v11r18   12-Mar-07 TU  Updates to modify McTrajectory for output to TDS
  * v11r17   07-Dec-06 EAC Updates to store ACD MC related stuff on TDS
  * v11r16   20-Nov-06 TU  GCR updates
