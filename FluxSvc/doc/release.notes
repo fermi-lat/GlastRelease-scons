@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   180mar-07  v6r41p3 THB  Implement option to set x-axis to East with history file
    03-jan-07  v6r41p1 THB  job parameter to set orbit inclination
    03-jan-07  v6r40p1 THB  Generate jobinfo stuff in FluxAlg if no events. (bugfix)
    24-dec-06  v6r40   THB  FluxAlx: set the jobinfo tuple  with run number, start and stop times, generated events
