@@ -107,10 +107,12 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     if (partMan->getLastParticle()) partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
 
     // Track energy at this point
+    G4int                   trkId       = aStep->GetTrack()->GetTrackID();
     G4double                trkEnergy   = aStep->GetTrack()->GetTotalEnergy();
     CLHEP::Hep3Vector       trkMomentum = aStep->GetTrack()->GetMomentum();
     CLHEP::HepLorentzVector trk4Mom     = CLHEP::HepLorentzVector(trkMomentum, trkEnergy);
     hit->setParticle4Momentum(trk4Mom);
+    hit->setPackedFlags((unsigned long)trkId); // **NOTE** non-standard usage!!
 
     // Retrieve the particle causing the hit and the ancestor and set the corresponding
     // attributes of the McPositionHit
