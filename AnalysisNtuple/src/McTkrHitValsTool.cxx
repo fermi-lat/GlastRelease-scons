@@ -326,6 +326,7 @@ void McTkrHitValsTool::GetTotalHits(const Event::McParticle* primary)
             Event::ClusMcPosHitVec clusHitVec = m_clusToPosHitTab->getRelBySecond(posHit);
 
             // Do we have anything? (note that this will eliminate McPositionHits from the ACD)
+           
             if (!clusHitVec.empty())
             {
                 // An McPositionHit belongs to one cluster (but a cluster can be made up of

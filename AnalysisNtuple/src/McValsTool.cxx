@@ -145,7 +145,7 @@ StatusCode McValsTool::initialize()
     if( ValBase::initialize().isFailure()) return StatusCode::FAILURE;
   
     // get the services    
-    if ( service("FluxSvc", m_fluxSvc).isFailure() ){
+    if ( service("FluxSvc", m_fluxSvc, true).isFailure() ){
         log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
         return StatusCode::FAILURE;
     }
