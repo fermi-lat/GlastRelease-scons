@@ -216,15 +216,26 @@ StatusCode FluxAlg::initialize(){
             std::string filename(m_pointingHistory.value()[0]);
             facilities::Util::expandEnvVar(&filename);
             double offset = 0;
+            bool eastflag(false);
             if( m_pointingHistory.value().size()>1){
-                facilities::Timestamp jt(m_pointingHistory.value()[1]);
-                offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
+                std::string field(m_pointingHistory.value()[1]);
+                if(! field.empty() ) { // allow null string
+                    facilities::Timestamp jt(m_pointingHistory.value()[1]);
+                    offset = (astro::JulianDate(jt.getJulian())-astro::JulianDate::missionStart())*astro::JulianDate::secondsPerDay;
+                }
             }
 
+            if( m_pointingHistory.value().size()>2){
+                std::string field(m_pointingHistory.value()[2]);
+                eastflag =! field.empty();
+            }
             log << MSG::INFO << "Loading Pointing History File : " << filename 
                 << " with MET offset "<< offset <<  endreq;
+            if( eastflag){
+                log << MSG::INFO << "Will override x-direction to point east"<<endreq;
+            }
 
-            GPS::instance()->setPointingHistoryFile(filename, offset);
+            GPS::instance()->setPointingHistoryFile(filename, offset, eastflag);
         }
     }
     if( !m_source_list.value().empty()){
