@@ -17,7 +17,7 @@
 //   ---------------------------------------------
 //          Define orbit, behavior
 //
-FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)"};
+FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "", "true"}; // last field to force x-direction
 FluxAlg.AvoidSAA       =  true;                // turn off during SAA
 FluxSvc.StartDate      = "2009-1-1 00:00:00";  // simulated start 
 
@@ -42,7 +42,6 @@ FluxAlg.sources    = {"clock"};
 LiveTimeAlg.deadtime        = 26e-6;// deadtime per trigger
 TriggerAlg.mask             = 10;   // TKR(2) + HICAL(8) 
 TriggerAlg.throttle         = true; // ignore if TKR + Throttle
-TriggerAlg.vetomask         =  7;   // TKR(2) + LOCAL(4) +ROI(1): disable throttle if LOCAL is on
 OnboardFilter.mask          = -1;   // set the filter to reject events, 
                                     // turn on all bits (only low 16 count)
 // --------------------------------------------

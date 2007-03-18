@@ -1,0 +1,23 @@
+
+//--------------------------------------------------------
+//     Interleave 
+
+FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+
+ApplicationMgr.DLLs   += { "Interleave" }; 
+
+Triggered.BranchMembers ={ "TriggerAlg"   // triggers this branch
+                         , "InterleaveAlg"// process if interleave, dump otherwise
+                         , "ClassifyAlg"  // apply classification (which may be different)
+                         , "FT1Alg"       // add FT2 stuff if an interleave  
+                         };
+// ** this seems to kill more than this one sequence **
+//Digitization.Members = { "InterleaveAlg/interleave_filter"
+//                    , "TkrDigiAlg", "CalDigiAlg",   "AcdDigiAlg"
+//                    };
+
+
+FluxAlg.sources       += {"sampled_background"};
+
+// the background to sample for mixing
+InterleaveAlg.RootFile = "$(INTERLEAVE_ROOTFILE)";
