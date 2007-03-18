@@ -139,6 +139,7 @@ CLHEP::HepLorentzVector McPositionHit::particleFourMomentum() const
 void McPositionHit::setParticle4Momentum( const CLHEP::HepLorentzVector& fourMom)
 {
     m_particleFourMomentum = fourMom;
+    m_particleEnergy       = fourMom.e();
 }
 
 /// Retrieve member TOF

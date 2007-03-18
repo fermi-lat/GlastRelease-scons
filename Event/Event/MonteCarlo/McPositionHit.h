@@ -156,6 +156,10 @@ class McPositionHit : virtual public ContainedObject {
     void setOriginMcParticle( McParticle* value );
     void setOriginMcParticle( SmartRef<McParticle> value );
 
+    /// Provide access to setting/retrieving the "packed flags"
+    unsigned long getPackedFlags() const {return m_packedFlags;}
+    void setPackedFlags(unsigned long flags) {m_packedFlags = flags;}
+
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
     /// Serialize the object for reading
