@@ -160,11 +160,11 @@ StatusCode ObfValsTool::initialize()
     <tr><td>  FilterAngSep   
     <td>D<td>    Filter status separation
     <tr><td>  FilterEnergy
-    <td>D<td>    Energy as determined by onboard alg
+    <td>F<td>    Energy as determined by onboard alg
     <tr><td>  FilterXhits
-    <td>D<td>    number of hits on best track XZ slope
+    <td>I<td>    number of hits on best track XZ slope
     <tr><td>  FilterYhits
-    <td>D<td>    number of hits on best track YZ slope
+    <td>I<td>    number of hits on best track YZ slope
     <tr><td>  FilterXZslope
     <td>D<td>    XZ slope of the track
     <tr><td>  FilterYZslope
@@ -172,11 +172,11 @@ StatusCode ObfValsTool::initialize()
     <tr><td>  Filter[X/Y/Z]Dir
     <td>D<td>    Direction cosines of the best track
     <tr><td>  FilterRa, FilterDec
-    <td>D<td>    Ra and Dec of the best track
+    <td>F<td>    Ra and Dec of the best track
     <tr><td>  FilterL, FilterB
-    <td>D<td>    l and b of the best track
+    <td>F<td>    l and b of the best track
     <tr><td>  Obf[Gam/Cno/Mip]Status
-    <td>D<td>    Status bits for the Gamma, CNO and MIP filters
+    <td>I<td>    Status bits for the Gamma, CNO and MIP filters
     </table> 
 
     */    
