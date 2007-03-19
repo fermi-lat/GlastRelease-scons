@@ -1,0 +1,31 @@
+package configData
+version v0r0
+
+author M. Kocian <kocian@slac.stanford.edu>
+
+branches configData cmt doc src
+
+use GlastPolicy v*
+use commonRootData v*
+use xmlBase v* 
+
+apply_pattern shared_library
+
+private
+
+apply_pattern package_headers
+
+library configData \
+        gem/*.cxx 
+
+###  non-standard definition -- why is it needed?
+#macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
+
+# simple test program
+# use this when we want to make a Gaudi test program apply_pattern package_test
+
+#application test_Event    test/testmain.cxx
+
+#application test_Tables   test/test_RelTabs.cxx
+
+#application test_TkrRecon test/test_TkrRecon.cxx
