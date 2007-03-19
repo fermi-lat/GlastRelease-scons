@@ -478,16 +478,17 @@ StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     static bool done = false;
 
-    // create the jobinfo tuple: copy to statics
-    run = m_run;
-    sequence=m_sequence;
-    initialTime=m_initialTime;
-    currentTime=m_currentTime;
-    m_rootTupleSvc->addItem("jobinfo", "run", &run);
-    m_rootTupleSvc->addItem("jobinfo", "generated", &sequence);
-    m_rootTupleSvc->addItem("jobinfo", "start", &initialTime);
-    m_rootTupleSvc->addItem("jobinfo", "stop",  &currentTime);
-
+    if( m_rootTupleSvc!=0 ){
+        // create the jobinfo tuple: copy to statics
+        run = m_run;
+        sequence=m_sequence;
+        initialTime=m_initialTime;
+        currentTime=m_currentTime;
+        m_rootTupleSvc->addItem("jobinfo", "run", &run);
+        m_rootTupleSvc->addItem("jobinfo", "generated", &sequence);
+        m_rootTupleSvc->addItem("jobinfo", "start", &initialTime);
+        m_rootTupleSvc->addItem("jobinfo", "stop",  &currentTime);
+    }
     if( done || m_counts.empty() ) return sc;
     done=true;
     MsgStream log(msgSvc(), name());
