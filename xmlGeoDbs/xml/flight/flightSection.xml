@@ -484,6 +484,68 @@
          zrot="45"
        /> 
 
+<!-- Skirt.  Also octagonal, just outside primary structure -->
+      <!-- Y+ side    -->
+      <posXYZ volume="skirtMain"
+         YREF="skirtBigSide_dt"
+         ZREF="skirt_dz"
+       /> 
+
+      <!-- Y- side   -->
+      <posXYZ volume="skirtMain"
+         YREF="skirtBigSide_dtn"
+         ZREF="skirt_dz"
+       /> 
+
+      <!-- X+ side   -->
+      <posXYZ volume="skirtMain"
+         XREF="skirtBigSide_dt"
+         ZREF="skirt_dz"
+         zrot="90"
+       />  
+
+      <!-- X- side   -->
+      <posXYZ volume="skirtMain"
+         XREF="skirtBigSide_dtn"
+         ZREF="skirt_dz"
+         zrot="90"
+       /> 
+
+      <!-- +X, +Y corner side  -->
+      <posXYZ volume="skirtCorner"
+         XREF="skirtCorner_dt"
+         YREF="skirtCorner_dt"
+         ZREF="skirt_dz"
+         zrot="135"
+       /> 
+
+      <!-- -X, -Y corner side   -->
+      <posXYZ volume="skirtCorner"
+         XREF="skirtCorner_dtn"
+         YREF="skirtCorner_dtn"
+         ZREF="skirt_dz"
+         zrot="135"
+       /> 
+
+      <!-- +X, -Y corner side   -->
+      <posXYZ volume="skirtCorner"
+         XREF="skirtCorner_dt"
+         YREF="skirtCorner_dtn"
+         ZREF="skirt_dz"
+         zrot="45"
+       /> 
+
+      <!-- -X, +Y corner side  -->
+      <posXYZ volume="skirtCorner"
+         XREF="skirtCorner_dtn"
+         YREF="skirtCorner_dt"
+         ZREF="skirt_dz"
+         zrot="45"
+       /> 
+
+
+
+<!-- end skirt -->
 <!-- Locate propellant tank and contents -->
      <posXYZ volume="propellantTank"
                ZREF="tank_dz" /> 

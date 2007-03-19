@@ -479,6 +479,20 @@
        materialREF="SCStructMat"
     />
 
+<!-- Make boxe for skirt -->
+    <box name="skirtMain"
+      XREF="skirtBigSide_t"
+      YREF="skirt_thick"
+      ZREF="skirt_z"
+      materialREF="skirtMat" 
+     />
+
+     <box name="skirtCorner"
+        XREF="skirtCornerSide_t"
+        YREF="skirt_thick"
+        ZREF="skirt_z"
+        materialREF="skirtMat"
+      />
 
 <!-- Make propellant tank of titanium and fill with hydrazine -->
     <sphere name="propellant" ROutREF="tankInnerRadius"

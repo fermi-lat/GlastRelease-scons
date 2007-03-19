@@ -1199,11 +1199,11 @@ electronics.</notes>
 
   <const name="opticalBench_dx" >
     <notes>Compute, assuming optical bench is just to the -X of 
-           primary spacecraft structure</notes>
+           primary spacecraft structure and skirt</notes>
     <uminus>
       <half>
         <add>
-          <refer refTo="SCWidth" />
+          <refer refTo="skirtWidth" />
           <refer refTo="opticalBench_x" />
         </add>
       </half>
