@@ -13,9 +13,9 @@ class TChain;
 namespace RootPersistence {
     
     StatusCode addFilesToChain(TChain *chain,  std::string &fileName, 
-                               StringArrayProperty &fileList, MsgStream &log, bool recFile=false); 
+                               StringArrayProperty &fileList, MsgStream &log); 
     
-    bool fileExists(std::string &fileName, bool recFile=false);
+    bool fileExists(std::string &fileName);
     
 }
 
