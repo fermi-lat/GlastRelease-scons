@@ -240,8 +240,8 @@ StatusCode McTkrHitValsTool::calculate()
         m_primNumHits = mcPartHitMap[primary];
 
         // Get some of the primary's characteristics
-        ParticleProperty* ppty     = m_ppsvc->findByStdHepID(m_primType);
-        std::string       partName = ppty->particle(); 
+//        ParticleProperty* ppty     = m_ppsvc->findByStdHepID(m_primType);
+//        std::string       partName = ppty->particle(); 
 
         // We will need pointers to the "two" daughters to determine shared hits
         const Event::McParticle* daughter1 = 0;
