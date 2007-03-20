@@ -142,7 +142,8 @@ Output.Members = {
     "FhSetAlg",
     "mcRootWriterAlg", 
     "digiRootWriterAlg", 
-    "reconRootWriterAlg"};
+    "reconRootWriterAlg",
+    "relationRootWriterAlg"};
 
 // default output to GLEAMROOT/data
 mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc.root";
