@@ -6,6 +6,34 @@ ClassImp(AcdRecon)
 
 static const Double_t maxDoca = 2000.0;
 
+#if ROOT_VERSION(5,14,0) <=  ROOT_VERSION_CODE
+#include "TStreamerElement.h"
+
+void FixElement(TStreamerElement *el) {
+   if (el) {
+      el->SetTypeName("vector<double>");
+      el->Update(TClass::GetClass("vector<Double32_t>"),gROOT->GetClass("vector<double>"));
+   }
+}
+#endif
+
+bool AcdRecon::fixAcdStreamer(int version) {
+#if ROOT_VERSION(5,14,0) <=  ROOT_VERSION_CODE
+    if (version<51200) {
+        TClass *cl = TClass::GetClass("AcdRecon");
+        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowDocaCol"));
+        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol"));
+        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol_down"));
+        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_energyCol"));
+        cl->GetStreamerInfo(14)->Clear("build");
+        return (true);
+    }
+#endif
+    return (false);
+}
+
+
+
 AcdRecon::AcdRecon() {
   m_acdTkrIntersectionCol = 0;
   m_acdTkrPocaCol = 0;

@@ -255,7 +255,12 @@ public:
 	static_cast<const AcdSplashVars*>((*m_acdSplashVarCol)[i]) : 0;  
     }  
 
-    bool checkAcdRecon();        
+    bool checkAcdRecon();   
+
+
+static bool fixAcdStreamer(int version=51000);
+
+
 private:
 
     /// Total energy in MeV deposited in the whole ACD system

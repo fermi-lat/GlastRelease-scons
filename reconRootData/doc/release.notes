@@ -3,6 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r12     17-Mar-07  ; HMK patch for AcdRecon for Double to Double32 schema
+                       evolution
 v9r11     03-Dec-06  : HMK Use TClonesArray for GcrXtal storage
 v9r10     27-Nov-06  : HMK minor cleaning
 v9r9      20-Nov-06  : CL  Updates for GCR
