@@ -151,7 +151,7 @@ Algorithm(name, pSvcLocator)
     // ROOT TTree name
     declareProperty("treeName", m_treeName="Mc");
     // Save McTrajectory's?
-    declareProperty("saveMcTrajectory", m_saveTrajectories=false);
+    declareProperty("saveMcTrajectory", m_saveTrajectories=true);
     declareProperty("saveMcTkrStrips", m_saveMcTkrStrips=false);
     declareProperty("clearOption", m_clearOption="");
 
