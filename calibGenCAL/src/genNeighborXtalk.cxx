@@ -108,9 +108,6 @@ int main(const int argc,
     LogStream::get() << __FILE__ << ": saving xtalk to tuple ROOT file: "
                      << tuplefile << endl;
     xtalk.writeTuple(tuplefile);
-
-
-    
     
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;

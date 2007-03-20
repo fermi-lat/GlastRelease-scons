@@ -20,7 +20,6 @@ import csv
 
 import ROOT
 
-
 #######################################################################################
 
 if __name__ == '__main__':
@@ -47,30 +46,38 @@ if __name__ == '__main__':
     has_header = csv.Sniffer().has_header(csv_sample)
     infile = csv.reader(open(inPath,"r"),dialect = dialect)
 
-    # skip optional header in first line
-    header_list = infile.next()
-    header_cols = ':'.join(header_list)
-    nTXTFields = len(header_list)
 
-    # create ROOT ntuple definition string for column
-    # names
-
-    # create ROOT File & Ntuple
     outfile = ROOT.TFile(outPath, "RECREATE")
+    # create ROOT File & Ntuple
     tuple_name = os.path.splitext(os.path.basename(outPath))[0]
     # strip bad characters
     tuple_name = re.compile('[. ]+').sub('_',tuple_name)
     # take first alpha string
     tuple_name = tuple_name.split('_')[0]
 
-    tuple = ROOT.TNtuple(tuple_name,
-                         tuple_name,
-                         header_cols)
-
+    tpl = None
     for line in infile:
+        # first line init
+        if tpl is None:
+            # use optional header in first line for column names
+            if has_header:
+               header_cols = ":".join(line)
+            else: # othewise just 'number' the columns
+               header_cols = ":".join("_%s"%x for x in range(len(line)))
+
+            # remove bad characters
+            header_cols = header_cols.replace(";","")
+            header_cols = header_cols.replace(",","")
+            tpl = ROOT.TNtuple(tuple_name,
+                               tuple_name,
+                               header_cols)
+            # don't process this line
+            if has_header:
+                continue
+        
         vals = [float(x) for x in line]
         data = array.array('f',vals)
-        tuple.Fill(data)
+        tpl.Fill(data)
 
 
     log.info('Writing output file %s', outPath)
