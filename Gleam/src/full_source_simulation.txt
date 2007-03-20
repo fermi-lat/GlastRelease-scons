@@ -29,12 +29,9 @@ FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for thi
 
 
 //  -------------------------------------------
-//         Source specification
+//         Source specification (expect additions or replacement from including script)
 //
 FluxAlg.sources    = {"clock"};
-
-//#include "$GLEAMROOT/src/interleave.txt"
-#include "$GLEAMROOT/src/background.txt"  // background only
 
 //  -------------------------------------------
 //         Trigger, filter

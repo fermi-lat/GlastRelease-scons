@@ -1,23 +1,32 @@
 
 //--------------------------------------------------------
-//     Interleave 
-
-FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+//     Interleave-specific job options
+//     $Header$
 
 ApplicationMgr.DLLs   += { "Interleave" }; 
 
-Triggered.BranchMembers ={ "TriggerAlg"   // triggers this branch
-                         , "InterleaveAlg"// process if interleave, dump otherwise
-                         , "ClassifyAlg"  // apply classification (which may be different)
-                         , "FT1Alg"       // add FT2 stuff if an interleave  
+// force initialization of these before InterleaveAlg 
+// by putting these onto a phantom branch (kluge!)
+
+Digitization.BranchMembers = {"AnalysisNtupleAlg", "ClassifyAlg", "FT1Alg"}; 
+
+
+// TriggerTest is defined in basicOptions but needs to be told
+TriggerTest.BranchMembers = { "TriggerAlg"   // trigger this branch
+                         , "InterleaveAlg"   // process if interleave, dump otherwise
+                         , "Count/interleave"// keep track of how many on this branch
+                         , "ClassifyAlg"     // recalculate classification (which may be different)
+                         , "FT1Alg"          // add FT1 stuff if an interleave  
                          };
-// ** this seems to kill more than this one sequence **
-//Digitization.Members = { "InterleaveAlg/interleave_filter"
-//                    , "TkrDigiAlg", "CalDigiAlg",   "AcdDigiAlg"
-//                    };
-
-
+//  the (pseudo) sources: get definitions, and add them to the list of sources
+FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 FluxAlg.sources       += {"sampled_background"};
+FluxAlg.sources       += {"sampled_EarthAlbedo"};
 
-// the background to sample for mixing
-InterleaveAlg.RootFile = "$(INTERLEAVE_ROOTFILE)";
+// do not want to override these
+InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime"};
+
+// the path to the xml files with pointers to the data and rate information 
+InterleaveAlg.FilePath = "$(INTERLEAVEPATH)";
+
+// ---------------------------------------------------------

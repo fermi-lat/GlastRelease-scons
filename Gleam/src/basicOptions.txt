@@ -157,7 +157,6 @@ RootTupleSvc.RejectIfBad = false;
 // ntuple generation 
 
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
-
 NtupleMaker.Members = {
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
     "ClassifyAlg",       // Atwood's Insightful Miner analysis
