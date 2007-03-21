@@ -502,7 +502,8 @@ int McTkrHitValsTool::GetSharedHits(const Event::McParticle* daughter1, const Ev
                 {
                     Event::McPositionHit* relPosHit = (*relHitIter)->getSecond();
 
-                    if (relPosHit->mcParticle() == daughter1)
+                    // Check that a valid pointer exists and see if it matches the first daughter
+                    if (relPosHit && relPosHit->mcParticle() == daughter1)
                     {
                         numShared++;
                         break;
