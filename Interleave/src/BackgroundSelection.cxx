@@ -89,6 +89,9 @@ void BackgroundSelection::selectEvent()
 {
 
     double x(value());
+#if 1 // have to do this since my specification was not understood
+    x = fabs(x); 
+#endif
     if( !m_fetch->isValid(x) ){
         std::stringstream msg;
         msg << "BackgaroundSelection::selectEvent: called with "<< name() 
