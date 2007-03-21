@@ -9,6 +9,7 @@ use RootcintPolicy v* GlastPolicy
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
+ ../reconRootData/AdfRecon.h\
  ../reconRootData/AcdRecon.h\
  ../reconRootData/CalParams.h\
  ../reconRootData/CalClusterLayerData.h\

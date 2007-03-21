@@ -83,6 +83,7 @@ public:
       m_acdTkrPocaCol(0),
       m_acdHitCol(0),
       m_acdTkrHitPocaCol(0),
+      m_acdTkrGapPocaCol(0),
       m_acdTkrPointCol(0),
       m_acdSplashVarCol(0),
       m_actDist_down(-2000.)

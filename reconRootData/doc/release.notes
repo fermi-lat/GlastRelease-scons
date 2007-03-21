@@ -3,6 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r13     21-Mar-07  ; DC  review test strategy so to check schema evolution
+                           and better handle random numbers.
 v9r12     17-Mar-07  ; HMK patch for AcdRecon for Double to Double32 schema
                        evolution
 v9r11     03-Dec-06  : HMK Use TClonesArray for GcrXtal storage

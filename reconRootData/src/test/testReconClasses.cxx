@@ -1,5 +1,6 @@
 
 #include <reconRootData/ReconEvent.h>
+#include <commonRootData/RootObj.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TROOT.h"
 #include "TFile.h"
@@ -8,6 +9,19 @@
 #include "TCollection.h"
 #include "TVector3.h"
 #include "Riostream.h"
+#include <string>
+
+#if ROOT_VERSION(5,14,0) <= ROOT_VERSION_CODE
+#include "TStreamerInfo.h"
+#include "TStreamerElement.h"
+#include <vector>
+void FixElement(TStreamerElement *el) {
+   if (el) {
+      el->SetTypeName("vector<double>");
+      el->Update(TClass::GetClass("vector<Double32_t>"),gROOT->GetClass("vector<double>"));
+   }
+}
+#endif
 
 /** @file testReconClasses.cxx
 * @brief This defines a test routine for the Reconstruction ROOT classes.
@@ -22,7 +36,6 @@
 * $Header$
 */
 const UInt_t RUN_NUM = 1;
-Float_t RAND_NUM;
 
 int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
     
@@ -41,7 +54,31 @@ int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
 
 /// Read in the ROOT file just generated via the write method
 int read(char* fileName, int numEvents) {
+    
     TFile *f = new TFile(fileName, "READ");
+
+#if ROOT_VERSION(5,14,0) <= ROOT_VERSION_CODE
+    TString root_release = ROOT_RELEASE ;   
+    if ( root_release.CompareTo("5.14/00c")!=0 &&
+         root_release.CompareTo("5.14/00b")!=0 &&
+         root_release.CompareTo("5.14/00a")!=0 &&
+         root_release.CompareTo("5.14/00")!=0 &&
+         f->GetVersion()<51200 )   
+     {
+      cout<<"Root release   : "<<root_release<<endl ;
+      cout<<"File release   : "<<f->GetVersion()<<endl ;
+      cout<<"Sizeof(double) : "<<sizeof(double)<<endl ;
+      TClass *cl = TClass::GetClass("AcdRecon");
+      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowDocaCol"));
+      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol"));
+      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol_down"));
+      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_energyCol"));
+      cl->GetStreamerInfo(14)->Clear("build");
+     }
+#endif
+   
+    TObjArray * randomNumbers = (TObjArray*)f->Get("randomNumbers") ;
+   
     TTree *t = (TTree*)f->Get("Recon");
     ReconEvent *evt = 0;
     t->SetBranchAddress("ReconEvent", &evt);
@@ -50,6 +87,8 @@ int read(char* fileName, int numEvents) {
 
     UInt_t ievent;
     for (ievent = 0; ievent < (UInt_t) numEvents; ievent++) {
+        
+        Double_t randomNumber = ((RootObj<Double_t> *)randomNumbers->At(ievent))->value() ;
         
         t->GetEvent(ievent);
         std::cout << "ReconEvent ievent = " << ievent << std::endl;
@@ -75,35 +114,35 @@ int read(char* fileName, int numEvents) {
         reconRootData::AdfRecon adfRef;
          
         // usual tests
-        acdRef.Fake(ievent,RAND_NUM) ;
+        acdRef.Fake(ievent,randomNumber) ;
         if (!acd->CompareInRange(acdRef))
          { return -1 ; }
-        calRef.Fake(ievent,RAND_NUM) ;
+        calRef.Fake(ievent,randomNumber) ;
         if (!cal->CompareInRange(calRef))
          { return -1 ; }
-        tkrRef.Fake(ievent,RAND_NUM) ;
+        tkrRef.Fake(ievent,randomNumber) ;
         if (!tkr->CompareInRange(tkrRef))
          { return -1 ; }
-        adfRef.Fake(ievent,RAND_NUM);
+        adfRef.Fake(ievent,randomNumber);
         if (!adf->CompareInRange(adfRef))
          { return -1; }
          
         // opposite tests
         std::cout<<"===== on purpose errors ====="<<std::endl ;
         acdRef.Clear() ;
-        acdRef.Fake(ievent,RAND_NUM*2.) ;
+        acdRef.Fake(ievent,randomNumber*2.) ;
         if (acd->CompareInRange(acdRef))
          { return -1 ; }
         calRef.Clear() ;
-        calRef.Fake(ievent,RAND_NUM*2.) ;
+        calRef.Fake(ievent,randomNumber*2.) ;
         if (cal->CompareInRange(calRef))
          { return -1 ; }
         tkrRef.Clear() ;
-        tkrRef.Fake(ievent,RAND_NUM*2.) ;
+        tkrRef.Fake(ievent,randomNumber*2.) ;
         if (tkr->CompareInRange(tkrRef))
          { return -1 ; }
         adfRef.Clear();
-        adfRef.Fake(ievent,RAND_NUM*2.);
+        adfRef.Fake(ievent,randomNumber*2.);
         if (!adf->CompareInRange(adfRef))
          { return -1; }
         std::cout<<"============================="<<std::endl ;
@@ -124,28 +163,32 @@ int write(char* fileName, int numEvents) {
     Int_t splitLevel = 1 ;
 
     TFile * f =  new TFile(fileName,"RECREATE") ;
+    
     TTree * t = new TTree("Recon","Recon") ;
     ReconEvent * ev = new ReconEvent() ;
     t->Branch("ReconEvent", "ReconEvent", &ev, buffer, splitLevel);
     std::cout << "Created new ROOT file" << std::endl;
 
     TRandom randGen ;
-    RAND_NUM = randGen.Rndm() ;
+    TObjArray randomNumbers ;
     
     Int_t ievent ;
     for (ievent = 0; ievent < numEvents; ievent++) {
 
+        RootObj<Double_t> * randomNumber = new RootObj<Double_t>(randGen.Rndm()) ;
+        randomNumbers.Add(randomNumber) ;
+
         AcdRecon * acdRec = new AcdRecon() ;
-        acdRec->Fake(ievent,RAND_NUM) ;
-        
+        acdRec->Fake(ievent,randomNumber->value()) ;
+
         CalRecon * calRec = new CalRecon() ;
-        calRec->Fake(ievent,RAND_NUM) ;
+        calRec->Fake(ievent,randomNumber->value()) ;
 
         TkrRecon * tkrRec = new TkrRecon();
-        tkrRec->Fake(ievent,RAND_NUM) ;        
+        tkrRec->Fake(ievent,randomNumber->value()) ;        
 
         reconRootData::AdfRecon * adfRec = new reconRootData::AdfRecon();
-        adfRec->Fake(ievent,RAND_NUM);
+        adfRec->Fake(ievent,randomNumber->value());
 
         ev->initialize(ievent, RUN_NUM, tkrRec, calRec, acdRec);
         ev->initAdf(adfRec);
@@ -156,11 +199,18 @@ int write(char* fileName, int numEvents) {
     }
 
     std::cout << "Filled ROOT file with " << numEvents << " events" << std::endl;
-    delete ev;
-
-    f->Write();
+    delete ev ;
+    
+    f->cd() ;
+    randomNumbers.Write("randomNumbers",TObject::kSingleKey) ;
+    
+    f->Write() ;
     f->Close();
     delete f;
+    
+    randomNumbers.Delete() ;
+    randomNumbers.Clear() ;
+    
     return(0);
 }
 
@@ -170,33 +220,53 @@ int write(char* fileName, int numEvents) {
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
     
-    char *fileName = "recon.root" ;
-    int n =1 ;
-    unsigned int numEvents =10 ;
+    char * fileName = "recon-v9r11-v5r10.root" ;
+    int numEvents = 10 ;
+    
+    TString writeString("write") ;
+    bool writeMode = false ;
+
+    int n = 1;
     if (argc > 1) {
-        fileName = argv[n++] ;
+      if (writeString.CompareTo(argv[n++])==0)
+        { writeMode = true ; }
     } 
     if (argc > 2) {
-        numEvents = atoi(argv[n++]) ;
+        fileName = argv[n++];
+    } 
+    if (argc > 3) {
+        numEvents = atoi(argv[n++]);
     } 
 
     int sc = 0 ;
     try 
      {
-      sc = write(fileName,numEvents) ;
-      sc = read(fileName,numEvents) ;
+      if (writeMode)
+       { sc = write(fileName,numEvents) ; }
+      else
+       { sc = read(fileName,numEvents) ; }
      }
     catch (...)
      {
       std::cout<<"AN UNKNOWN EXCEPTION HAS BEEN RAISED"<<std::endl ;
       sc = 1 ;
      }
-         
-    if (sc == 0) {
-        std::cout << "RECON ROOT file writing and reading succeeded!" << std::endl;
-    } else {
-        std::cout << "FAILED recon writing and reading" << std::endl;
-    }
+     
+     
+    if (sc == 0)
+     {
+      if (writeMode)
+       { std::cout << "RECON ROOT file writing succeeded!" << std::endl ; }
+      else
+       { std::cout << "RECON ROOT file reading succeeded!" << std::endl ; }
+     }
+    else
+     {
+      if (writeMode)
+       { std::cout << "FAILED recon writing" << std::endl ; }
+      else
+       { std::cout << "FAILED recon reading" << std::endl ; }
+     }
 
     return(sc);
 }

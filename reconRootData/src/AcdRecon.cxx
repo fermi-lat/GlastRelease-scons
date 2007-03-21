@@ -178,12 +178,12 @@ void AcdRecon::Print(Option_t *option) const {
     TObject::Print(option);
     using namespace std;
     cout << "TileCount: " << m_tileCount;
-    cout << "RibbonCount: " << m_ribbonCount;
+    cout << " RibbonCount: " << m_ribbonCount;
     cout << " DOCA: " << m_doca << endl;
     m_minDocaId.Print();
-    cout << " Act_Dist: " << m_actDist << endl;
+    cout << "Act_Dist: " << m_actDist << endl;
     m_maxActDistId.Print();
-    cout << " Act_Dist_down: " << m_actDist_down << endl;
+    cout << "Act_Dist_down: " << m_actDist_down << endl;
     m_maxActDistId_down.Print();
     cout << "GammaDoca: " << m_gammaDoca << endl;
     cout << "RowDoca: " << endl;
