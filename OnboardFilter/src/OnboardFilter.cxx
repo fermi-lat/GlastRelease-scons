@@ -257,7 +257,7 @@ StatusCode OnboardFilter::execute()
     SmartDataPtr<EbfWriterTds::Ebf> ebfData(eventSvc(),"/Event/Filter/Ebf");
     if(!ebfData)
     {
-        log << MSG::INFO << "No ebf data found "<<endreq;
+        log << MSG::DEBUG << "No ebf data found "<<endreq;
 
         return StatusCode::SUCCESS;
     }
