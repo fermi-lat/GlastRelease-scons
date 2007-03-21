@@ -252,7 +252,9 @@ StatusCode ObfValsTool::calculate()
 
             CLHEP::HepRotation R ( gps->transformToGlast(time, astro::GPS::CELESTIAL) );
 
-            astro::SkyDir skydir( - (R.inverse() * filtDir ) );
+            // no minus sign... filter tracks already point up!
+
+            astro::SkyDir skydir( R.inverse() * filtDir );
             OBF_ra   = skydir.ra();
             OBF_dec  = skydir.dec();
             OBF_glon = skydir.l();
