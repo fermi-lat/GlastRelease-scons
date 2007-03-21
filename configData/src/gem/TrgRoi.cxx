@@ -19,8 +19,10 @@
 #include "configData/gem/TrgRoi.h"
 #include <iomanip>
 #include "commonRootData/idents/AcdId.h"
+#include "TTree.h"
 
-TrgRoi::TrgRoi(){
+TrgRoi::TrgRoi()
+  :ConfigBranch("r",'i',ChannelKey(54)){  
   clear();
 }
 
@@ -86,7 +88,19 @@ bool TrgRoi::isTileByNameInRoi(unsigned tile, int roi) const{
   else return false;
 }
   
-  
+
+// Attach this value to a TTree
+void TrgRoi::makeBranch(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  std::string leafName = branchName;
+  setLeafSuffix(leafName);
+  tree.Branch(branchName.c_str(),(void*)(_roi),leafName.c_str());
+}
+
+void TrgRoi::attach(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  tree.SetBranchAddress(branchName.c_str(),(void*)(_roi));
+}
 
 std::ostream& operator <<(std::ostream& os,  const TrgRoi& tc){
   os<<"ROI: Tiles"<<std::endl;

@@ -22,6 +22,8 @@
 #include <vector>
 #include "TrgConditions.h"
 
+#include "configData/base/ConfigTuple.h"
+
 // number of registers in LUT
 #define NREG 32
 // number of conditions per register
@@ -34,7 +36,7 @@
 #define CONDMASK 0xf
 //---------------
 
-class TrgConfLUT{
+class TrgConfLUT: public ConfigBranch {
 
 public:
   
@@ -43,6 +45,13 @@ public:
   std::vector<unsigned long> conditionsInEngine(int i) const;
   unsigned long reg(int i) const {if (i<NREG && i>=0)return _lut[i];
                                        else return 0;} 
+
+  // Reset the cached and output values
+  virtual void reset();
+  // Attach this value to a TTree
+  virtual void makeBranch(TTree& tree, const std::string& prefix) const;
+  virtual void attach(TTree& tree, const std::string& prefix) const;    
+
 private:
   friend class TrgConfigParser;
   void setEngineNumber(int i, int entry);

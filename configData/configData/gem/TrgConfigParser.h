@@ -13,12 +13,13 @@ using namespace xmlBase;
 class TrgConfigParser{
  public:
   TrgConfigParser(const char* filename);
-  TrgConfigParser(DOMElement* topElt);
+  TrgConfigParser(DOMElement* topElt,bool allowMissing=false);
   int parse(TrgConfig* tcf);
  private:
   const std::string removeWhitespace(const std::string) const;
   unsigned long content(DOMElement* el,const char* tag);
   DOMElement* m_topElt;
+  bool m_allowMissing;
 };
 
 #endif

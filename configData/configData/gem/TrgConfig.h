@@ -34,16 +34,22 @@ public:
   TrgWindowParams* windowParams(){return &_twp;}
   TrgPeriodicTrigger* periodicTrigger(){return &_tpt;}
   TrgConfLUT* lut(){return &_lut;}
-  TrgEngine* trgEngine(int i);
+  TrgEngine* trgEngine() {return &_tev;}
   TrgDisabledChannels* disabledChannels(){return &_tdv;}
   TrgConfiguration* configuration(){return &_configuration;}
   TrgRoi* roi(){return &_roi;}
+
+  // Reset the cached and output values
+  void reset();
+  // Attach this value to a TTree
+  void makeBranches(TTree& tree, const std::string& prefix) const;
+  void attach(TTree& tree, const std::string& prefix) const;
   
 private:
   TrgWindowParams _twp;
   TrgPeriodicTrigger _tpt;
   TrgConfLUT _lut;
-  std::vector<TrgEngine> _tev;
+  TrgEngine _tev;
   TrgDisabledChannels _tdv;
   TrgConfiguration _configuration;
   TrgRoi _roi;

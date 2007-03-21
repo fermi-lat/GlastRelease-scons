@@ -17,8 +17,10 @@
 //---------------------------------------------------------------------------
 
 #include "configData/gem/TrgWindowParams.h"
+#include "TTree.h"
 
-TrgWindowParams::TrgWindowParams(){
+TrgWindowParams::TrgWindowParams()
+  :ConfigBranch("window",'i',ChannelKey(1)){
   _winwidth=0;
   _windowmask=0;
 }
@@ -46,6 +48,32 @@ void TrgWindowParams::setWindowWidth(int w){
 void TrgWindowParams::addToOpenMask(TrgConditions::conditions cond){
   _windowmask|=(1<<cond);
 }
+
+// Attach this value to a TTree
+void TrgWindowParams::makeBranch(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+
+  std::string branchNameWidth = branchName; branchNameWidth += "_width";
+  std::string leafNameWidth = branchNameWidth;
+  setLeafSuffix(leafNameWidth);
+  tree.Branch(branchNameWidth.c_str(),(void*)(&_winwidth),leafNameWidth.c_str());
+  
+  std::string branchNameMask = branchName; branchNameMask += "_open_mask";
+  std::string leafNameMask = branchNameMask;
+  leafNameMask += "/B";
+  tree.Branch(branchNameMask.c_str(),(void*)(&_windowmask),leafNameMask.c_str());
+}
+
+void TrgWindowParams::attach(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+
+  std::string branchNameWidth = branchName; branchNameWidth += "_width";
+  tree.SetBranchAddress(branchNameWidth.c_str(),(void*)(&_winwidth));
+  
+  std::string branchNameMask = branchName; branchNameMask += "_open_mask";
+  tree.SetBranchAddress(branchNameMask.c_str(),(void*)(&_windowmask));
+}
+
 
 std::ostream& operator <<(std::ostream &os, const TrgWindowParams& tl){
   os<<"Window open mask: ";

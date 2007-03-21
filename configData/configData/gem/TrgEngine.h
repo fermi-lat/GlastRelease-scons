@@ -19,36 +19,41 @@
 #define TRGENGINE_HH
 
 #include <iostream>
+#include "configData/base/ConfigTuple.h"
 
-class TrgEngine{
+class TrgEngine : public ConfigBranch {
 
 public:
   TrgEngine();
-  TrgEngine(unsigned long engine);
-  void setEngine(unsigned long engine);
-  unsigned long engine();
-  void setCalstrobe(bool);
-  bool calstrobe() const;
-  void setTack(bool);
-  bool tack() const;
-  void setZeroSuppression(bool);
-  bool zeroSuppression() const;
-  void setFourRangeReadout(bool);
-  bool fourRangeReadout() const;
-  void setInhibit(bool);
-  bool inhibited() const;
-  void setDestination(int);
-  int destination() const;
-  void setMarker(int);
-  int marker() const;
-  int prescale() const;
-  void setPrescale(int);
+  void setEngine(unsigned idx, unsigned long engine);
+  unsigned long engine(unsigned idx) const;
+  void setCalstrobe(unsigned idx, bool);
+  bool calstrobe(unsigned idx) const;
+  void setTack(unsigned idx, bool);
+  bool tack(unsigned idx) const;
+  void setZeroSuppression(unsigned idx, bool);
+  bool zeroSuppression(unsigned idx) const;
+  void setFourRangeReadout(unsigned idx, bool);
+  bool fourRangeReadout(unsigned idx) const;
+  void setInhibit(unsigned idx, bool);
+  bool inhibited(unsigned idx) const;
+  void setDestination(unsigned idx, int);
+  int destination(unsigned idx) const;
+  void setMarker(unsigned idx, int);
+  int marker(unsigned idx) const;
+  int prescale(unsigned idx) const;
+  void setPrescale(unsigned idx, int);
   void clear();
-  
+
+  // Reset the cached and output values
+  virtual void reset() { clear() ;}
+  // Attach this value to a TTree
+  virtual void makeBranch(TTree& tree, const std::string& prefix) const;
+  virtual void attach(TTree& tree, const std::string& prefix) const;    
 
 private:
 
-  unsigned long _engine;
+  unsigned long _engine[16];
 };
 
 std::ostream& operator <<(std::ostream& os, const TrgEngine& tc);

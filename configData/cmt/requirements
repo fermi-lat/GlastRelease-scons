@@ -16,7 +16,10 @@ private
 apply_pattern package_headers
 
 library configData \
-        gem/*.cxx 
+        gem/*.cxx base/*.cxx *.cxx
+
+
+application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 
 ###  non-standard definition -- why is it needed?
 #macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"

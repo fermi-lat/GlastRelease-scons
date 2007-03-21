@@ -22,8 +22,9 @@
 #include <vector>
 #include <iostream>
 #include "TrgConditions.h"
+#include "configData/base/ConfigTuple.h"
 
-class TrgDisabledChannels{
+class TrgDisabledChannels : public ConfigBranch {
 
 public:
   TrgDisabledChannels();
@@ -53,7 +54,12 @@ public:
   void setTileEnableByName(unsigned tile, TrgConditions::pmt pmt, bool on);
   const bool tileEnabledByName(unsigned tile,TrgConditions::pmt pmt) const;
   
-   
+  // Reset the cached and output values
+  virtual void reset() { clear() ;}
+  // Attach this value to a TTree
+  virtual void makeBranch(TTree& tree, const std::string& prefix) const;
+  virtual void attach(TTree& tree, const std::string& prefix) const;
+
 private:
   
   unsigned _towers[4];

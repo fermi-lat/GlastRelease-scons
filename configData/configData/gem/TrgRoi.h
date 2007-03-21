@@ -22,8 +22,10 @@
 #include <iostream>
 #include <vector>
 
-class TrgRoi{
- public:
+#include "configData/base/ConfigTuple.h"
+
+class TrgRoi: public ConfigBranch {
+public:
   TrgRoi();
   void clear();
   void setRoiRegister(int i, unsigned long val);
@@ -34,7 +36,12 @@ class TrgRoi{
   std::vector<unsigned long> tilesByNameInRoi(int i) const;
   bool isTileByIndexInRoi(unsigned tile, int roi) const;
   bool isTileByNameInRoi(unsigned tile, int roi) const;
- private:
+  // Reset the cached and output values
+  virtual void reset() { clear() ;}
+  // Attach this value to a TTree
+  virtual void makeBranch(TTree& tree, const std::string& prefix) const;
+  virtual void attach(TTree& tree, const std::string& prefix) const;  
+private:
   unsigned long _roi[54];
 };
 #endif

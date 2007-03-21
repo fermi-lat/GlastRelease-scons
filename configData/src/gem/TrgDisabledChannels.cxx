@@ -19,8 +19,10 @@
 #include "configData/gem/TrgDisabledChannels.h"
 #include "commonRootData/idents/AcdId.h"
 #include <iomanip>
+#include "TTree.h"
 
-TrgDisabledChannels::TrgDisabledChannels(){
+TrgDisabledChannels::TrgDisabledChannels()
+  :ConfigBranch("",'i',ChannelKey(1)){
   clear();
 }
 void TrgDisabledChannels::clear(){
@@ -150,7 +152,55 @@ const bool TrgDisabledChannels::tileEnabledByName(unsigned tile, TrgConditions::
   return tileEnabledByIndex(AcdId::indexFromTile(tile),pmt);
 }
 
+// Attach this value to a TTree
+void TrgDisabledChannels::makeBranch(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  
+  std::string branchNameTower = branchName; branchNameTower += "tower";
+  std::string leafNameTower = branchNameTower;
+  leafNameTower += "[4]/i";
+  tree.Branch(branchNameTower.c_str(),(void*)(_towers),leafNameTower.c_str());
 
+  std::string branchNameTile = branchName; branchNameTile += "tile";
+  std::string leafNameTile = branchNameTile;
+  leafNameTile += "[12]/i";
+  tree.Branch(branchNameTile.c_str(),(void*)(_tiles),leafNameTile.c_str());
+
+  std::string branchNameCno = branchName; branchNameCno += "tile";
+  std::string leafNameCno = branchNameCno;
+  leafNameCno += "/i";
+  tree.Branch(branchNameCno.c_str(),(void*)(&_cno),leafNameCno.c_str());
+
+  std::string branchNameBusy = branchName; branchNameBusy += "busy";
+  std::string leafNameBusy = branchNameBusy;
+  leafNameBusy += "/i";
+  tree.Branch(branchNameBusy.c_str(),(void*)(&_busy),leafNameBusy.c_str());
+
+  std::string branchNameExt = branchName; branchNameExt += "ext";
+  std::string leafNameExt = branchNameExt;
+  leafNameExt += "/B";
+  tree.Branch(branchNameExt.c_str(),(void*)(&_external),leafNameExt.c_str());
+
+}
+
+void TrgDisabledChannels::attach(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  
+  std::string branchNameTower = branchName; branchNameTower += "tower";
+  tree.SetBranchAddress(branchNameTower.c_str(),(void*)(_towers));
+
+  std::string branchNameTile = branchName; branchNameTile += "tile";
+  tree.SetBranchAddress(branchNameTile.c_str(),(void*)(_tiles));
+
+  std::string branchNameCno = branchName; branchNameCno += "tile";
+  tree.SetBranchAddress(branchNameCno.c_str(),(void*)(&_cno));
+
+  std::string branchNameBusy = branchName; branchNameBusy += "busy";
+  tree.SetBranchAddress(branchNameBusy.c_str(),(void*)(&_busy));
+
+  std::string branchNameExt = branchName; branchNameExt += "ext";
+  tree.SetBranchAddress(branchNameExt.c_str(),(void*)(&_external));
+}
 
 std::ostream& operator <<(std::ostream& os, const TrgDisabledChannels* tc){
   os<<(*tc);

@@ -18,90 +18,107 @@
 
 
 #include "configData/gem/TrgEngine.h"
+#include "TTree.h"
 
+TrgEngine::TrgEngine()
+  :ConfigBranch("engine",'i',ChannelKey(16)){
+  clear();
+}
 
-TrgEngine::TrgEngine(){
-  _engine=0;
+void TrgEngine::setEngine(unsigned idx, unsigned long en){
+  _engine[idx] =en;
 }
-TrgEngine::TrgEngine(unsigned long en):_engine(en){ }
-
-void TrgEngine::setEngine(unsigned long en){
-  _engine=en;
+unsigned long TrgEngine::engine(unsigned idx) const {
+  return _engine[idx];
 }
-unsigned long TrgEngine::engine(){
-  return _engine;
+void TrgEngine::setCalstrobe(unsigned idx,bool on){
+  if(on)_engine[idx]|=1<<16;
+  else _engine[idx]&=~(1<<16);
 }
-void TrgEngine::setCalstrobe(bool on){
-  if(on)_engine|=1<<16;
-  else _engine&=~(1<<16);
+void TrgEngine::setTack(unsigned idx,bool on){
+  if(on)_engine[idx]|=1<<19;
+  else _engine[idx]&=~(1<<19);
 }
-void TrgEngine::setTack(bool on){
-  if(on)_engine|=1<<19;
-  else _engine&=~(1<<19);
+void TrgEngine::setZeroSuppression(unsigned idx,bool on){
+  if(on)_engine[idx]|=1<<21;
+  else _engine[idx]&=~(1<<21);
 }
-void TrgEngine::setZeroSuppression(bool on){
-  if(on)_engine|=1<<21;
-  else _engine&=~(1<<21);
-}
-void TrgEngine::setFourRangeReadout(bool on){
-  if(on)_engine|=1<<20;
-  else _engine&=~(1<<20);
+void TrgEngine::setFourRangeReadout(unsigned idx,bool on){
+  if(on)_engine[idx]|=1<<20;
+  else _engine[idx]&=~(1<<20);
 
 }
-void TrgEngine::setInhibit(bool on){
-  if(on)_engine|=1<<15;
-  else _engine&=~(1<<15);
+void TrgEngine::setInhibit(unsigned idx,bool on){
+  if(on)_engine[idx]|=1<<15;
+  else _engine[idx]&=~(1<<15);
 }
-void TrgEngine::setDestination(int dest){
-  _engine&=~(0x3f<<25);
-  _engine|=((dest&0x3f)<<25);
+void TrgEngine::setDestination(unsigned idx,int dest){
+  _engine[idx]&=~(0x3f<<25);
+  _engine[idx]|=((dest&0x3f)<<25);
 }
-void TrgEngine::setMarker(int marker){
-  _engine&=~(0x7<<22);
-  _engine|=((marker&0x7)<<22);
+void TrgEngine::setMarker(unsigned idx,int marker){
+  _engine[idx]&=~(0x7<<22);
+  _engine[idx]|=((marker&0x7)<<22);
 }
-void TrgEngine::setPrescale(int num){
-  _engine&=~0xff;
-  _engine|=num&0xff;
+void TrgEngine::setPrescale(unsigned idx,int num){
+  _engine[idx]&=~0xff;
+  _engine[idx]|=num&0xff;
 }
-bool TrgEngine::calstrobe() const{
-  return _engine&(1<<16)? 1: 0;
+bool TrgEngine::calstrobe(unsigned idx) const{
+  return _engine[idx]&(1<<16)? 1: 0;
 }
-bool TrgEngine::tack() const{
-  return _engine&(1<<19)? 1: 0;
+bool TrgEngine::tack(unsigned idx) const{
+  return _engine[idx]&(1<<19)? 1: 0;
 }
-bool TrgEngine::inhibited() const{
-  return _engine&(1<<15)? 1: 0;
+bool TrgEngine::inhibited(unsigned idx) const{
+  return _engine[idx]&(1<<15)? 1: 0;
 }
-bool TrgEngine::zeroSuppression() const{
-  return _engine&(1<<21)? 1: 0;
+bool TrgEngine::zeroSuppression(unsigned idx) const{
+  return _engine[idx]&(1<<21)? 1: 0;
 }
-bool TrgEngine::fourRangeReadout() const{
-  return _engine&(1<<20)? 1: 0;
+bool TrgEngine::fourRangeReadout(unsigned idx) const{
+  return _engine[idx]&(1<<20)? 1: 0;
 }
-int TrgEngine::destination() const{
-  return (_engine>>25)&0x3f;
+int TrgEngine::destination(unsigned idx) const{
+  return (_engine[idx]>>25)&0x3f;
 }
-int TrgEngine::marker() const{
-  return (_engine>>22)&0x7;
+int TrgEngine::marker(unsigned idx) const{
+  return (_engine[idx]>>22)&0x7;
 }
-int TrgEngine::prescale() const{
-  return _engine&0xff;
+int TrgEngine::prescale(unsigned idx) const{
+  return _engine[idx]&0xff;
 }
 void TrgEngine::clear(){
-  _engine=0;
+  for (int i(0); i < 16; i++ ) {
+    _engine[i]=0;
+  }
 } 
 
+// Attach this value to a TTree
+void TrgEngine::makeBranch(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  std::string leafName = branchName;
+  setLeafSuffix(leafName);
+  tree.Branch(branchName.c_str(),(void*)(_engine),leafName.c_str());
+}
+
+void TrgEngine::attach(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  tree.SetBranchAddress(branchName.c_str(),(void*)(_engine));
+}
+
 std::ostream& operator <<(std::ostream& os, const TrgEngine& tc){
-  if (tc.calstrobe())os<<"Calstrobe ";
-  if (tc.tack())os<<"Tack ";
-  if (tc.inhibited())os<<"Inhibit ";
-  os<<"; ";
-  if (tc.prescale()!=0)os<<"Prescale="<<tc.prescale()<<" ";
-  if (tc.marker()!=0)os<<"Marker="<<tc.marker()<<" ";
-  if (tc.destination()!=0)os<<"Destination="<<tc.destination()<<" ";
-  if (tc.zeroSuppression())os<<"0-suppression ";
-  if (tc.fourRangeReadout())os<<"4-range-readout ";
+  for (int i(0); i < 16; i++ ) {
+    if (tc.calstrobe(i))os<<"Calstrobe ";
+    if (tc.tack(i))os<<"Tack ";
+    if (tc.inhibited(i))os<<"Inhibit ";
+    os<<"; ";
+    if (tc.prescale(i)!=0)os<<"Prescale="<<tc.prescale(i)<<" ";
+    if (tc.marker(i)!=0)os<<"Marker="<<tc.marker(i)<<" ";
+    if (tc.destination(i)!=0)os<<"Destination="<<tc.destination(i)<<" ";
+    if (tc.zeroSuppression(i))os<<"0-suppression ";
+    if (tc.fourRangeReadout(i))os<<"4-range-readout ";
+  }
   return os;
 }
     

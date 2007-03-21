@@ -18,8 +18,10 @@
 
 #include "configData/gem/TrgConfLUT.h"
 #include <iomanip>
+#include "TTree.h"
 
-TrgConfLUT::TrgConfLUT(){
+TrgConfLUT::TrgConfLUT()
+  :ConfigBranch("conditions",'i',ChannelKey(NREG)){
     for (int i=0;i<NREG;i++) _lut[i]=0;
   }  
 
@@ -49,6 +51,26 @@ std::vector<unsigned long> TrgConfLUT::conditionsInEngine(int num)const{
   return retvector;
 
 }
+
+void TrgConfLUT::reset() {
+  for ( int i(0); i < NREG; i++ ) {
+    _lut[i] = 0;
+  }
+}
+
+// Attach this value to a TTree
+void TrgConfLUT::makeBranch(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  std::string leafName = branchName;
+  setLeafSuffix(leafName);
+  tree.Branch(branchName.c_str(),(void*)(_lut),leafName.c_str());
+}
+
+void TrgConfLUT::attach(TTree& tree, const std::string& prefix) const {
+  std::string branchName = prefix; branchName += name();
+  tree.SetBranchAddress(branchName.c_str(),(void*)(_lut));
+}
+
 
 std::ostream& operator <<(std::ostream& os, const TrgConfLUT& tc){
   os<<std::hex<<std::setfill('0');

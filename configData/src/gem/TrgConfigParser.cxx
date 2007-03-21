@@ -22,7 +22,8 @@
 
 #include "configData/gem/TrgConfigParser.h"
 
-TrgConfigParser::TrgConfigParser(const char* filename){
+TrgConfigParser::TrgConfigParser(const char* filename)
+  :m_allowMissing(false){
   XmlParser* parser = new XmlParser( true );
   DOMDocument* doc;
   try {
@@ -37,7 +38,8 @@ TrgConfigParser::TrgConfigParser(const char* filename){
   m_topElt = doc->getDocumentElement();
 }
 
-TrgConfigParser::TrgConfigParser(DOMElement* el):m_topElt(el){};
+TrgConfigParser::TrgConfigParser(DOMElement* el,bool allowMissing)
+  :m_topElt(el),m_allowMissing(allowMissing){};
 
 int TrgConfigParser::parse(TrgConfig* tcf){
   if(removeWhitespace(Dom::getTagName(m_topElt))!="GEM"){
@@ -98,7 +100,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	for (int i=0;i<16;i++){
 	  sprintf(engname,"engine_%x",i);
 	  unsigned long engine=content(currentElement,engname);
-	  tcf->trgEngine(i)->setEngine(engine);
+	  tcf->trgEngine()->setEngine(i,engine);
 	}
       }
       if (nm=="TIE"){
@@ -176,7 +178,10 @@ unsigned long TrgConfigParser::content(DOMElement* el, const char* tag){
   std::string ous;
   unsigned res;
   Dom::getChildrenByTagName( el, tag, subList );
-  if (subList.empty()){
+  if (subList.empty() ){
+    if ( m_allowMissing ) {
+      return 0;
+    }
     std::cout<<"No "<<tag<<" tag found. Exiting"<<std::endl;
     assert(0);
   } else if(subList.size()>1){
