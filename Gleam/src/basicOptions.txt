@@ -150,16 +150,12 @@ mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc.root";
 digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi.root";
 reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon.root";
 relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relation.root";
-RootTupleSvc.filename            = "${GLEAMROOT}/data/merit.root";
-RootTupleSvc.RejectIfBad = false;
-
 
 // ----------------------------
 // ntuple generation 
 
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
 NtupleMaker.Members = {
-    "Count/anatup",      // a check!
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
     "ClassifyAlg",       // Atwood's Insightful Miner analysis
     "FT1Alg",            // generate stuff to go into FT1.
