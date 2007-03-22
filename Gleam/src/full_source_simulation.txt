@@ -10,6 +10,7 @@
 //          $(mcRootFileName)
 //          $(digiRootFileName)
 //          $(reconRootFileName)
+//          $(relationRootFileName)
 
 #include "$GLEAMROOT/src/basicOptions.txt"
 
@@ -17,7 +18,7 @@
 //   ---------------------------------------------
 //          Define orbit, behavior
 //
-FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "", "true"}; // last field to force x-direction
+FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "2009-1-1 00:00:00", "true"}; // last field to force x-direction
 FluxAlg.AvoidSAA       =  true;                // turn off during SAA
 FluxSvc.StartDate      = "2009-1-1 00:00:00";  // simulated start 
 
@@ -58,6 +59,7 @@ FluxSvc.DeltaTime     = 1;          // duration, expect to override
 mcRootWriterAlg.mcRootFile      ="$(mcRootFileName)";
 digiRootWriterAlg.digiRootFile  ="$(digiRootFileName)";
 reconRootWriterAlg.reconRootFile="$(reconRootFileName)";
+relationRootWriterAlg.rootFile  ="$(relationRootFileName)";
 
 // --------------------------------------------
 //       merittuple output

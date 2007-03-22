@@ -1,11 +1,12 @@
 //  -----------------------------------------------
-//           DC2 background sources
+//          Standard background sources, except albedo
 //
 FluxAlg.sources+={"CrProtonMix"}; 
 FluxAlg.sources+={"CrElectronMix"}; 
 FluxAlg.sources+={"CrPositronMix"};
 FluxAlg.sources+={"CrAlpha"}; 
 FluxAlg.sources+={"CrHeavyIon"}; 
-FluxAlg.sources+={"Earth10"}; 
+// leave out for convenience: should be added or run separately
+//FluxAlg.sources+={"Earth10"}; 
 
 //------------------end background ---------------
