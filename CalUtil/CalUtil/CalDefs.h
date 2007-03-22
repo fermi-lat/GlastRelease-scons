@@ -601,6 +601,9 @@ namespace CalUtil {
     }
     
     unsigned val() const {return m_data;}
+
+	/// direct set of internal integer value 
+	void setVal(unsigned val) {m_data = val;}
     
     bool operator==(const LATWideIndex &that) const {
       return m_data == that.m_data;
