@@ -4,23 +4,16 @@
 
 // LOCAL
 #include "CalXtalResponse/IXtalRecTool.h"
-#include "CalXtalResponse/ICalCalibSvc.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
-#include "TFile.h"
-#include "TTree.h"
 
 // STD
 #include <cstring>
-
-using namespace CalUtil;
-using namespace Event;
 
 /*! @class XtalRecTool
   \author Zachary Fewtrell
@@ -28,6 +21,13 @@ using namespace Event;
   from XtalRecAlg v5r6p1
 
 */
+
+class Event::CalDigi;
+class ICalCalibSvc;
+class IGlastDetSvc;
+class Point;
+class TTree;
+class TFile;
 
 class XtalRecTool : public AlgTool, 
                     virtual public IXtalRecTool 
@@ -46,9 +46,10 @@ class XtalRecTool : public AlgTool,
 
   StatusCode calculate(const Event::CalDigi &digi,
                        Event::CalXtalRecData &xtalRec,
-                       CalArray<FaceNum, bool> &belowThresh,
+					   CalUtil::CalArray<CalUtil::FaceNum, bool> &belowThresh,
                        bool &xtalBelowThresh,
-                       CalArray<FaceNum, bool> &saturated,
+                       CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
+					   const INeighborXtalkTool *xtalTool=0,
                        const Event::EventHeader *evtHdr=0
                        );
 
@@ -65,7 +66,7 @@ class XtalRecTool : public AlgTool,
       \param largeCIDAC input large diode CIDAC value
       \param smallCIDAC output small diode CIDAC value
   */
-  StatusCode largeCIDAC2Small(FaceNum face, float pos, float largeCIDAC, 
+  StatusCode largeCIDAC2Small(CalUtil::FaceNum face, float pos, float largeCIDAC, 
                             float &smallCIDAC);
 
 
@@ -117,47 +118,47 @@ class XtalRecTool : public AlgTool,
 
     unsigned   RunID;
     unsigned   EventID;
-    CalArray<FaceNum, unsigned short> adc;
+	CalUtil::CalArray<CalUtil::FaceNum, unsigned short> adc;
 
-    CalArray<FaceNum, float> adcPed;
+    CalUtil::CalArray<CalUtil::FaceNum, float> adcPed;
 
     float  ene;
-    CalArray<FaceNum, float> faceSignal;
-    CalArray<DiodeNum, float> asymCtr;
+    CalUtil::CalArray<CalUtil::FaceNum, float> faceSignal;
+    CalUtil::CalArray<CalUtil::DiodeNum, float> asymCtr;
 
     float  pos;
-    CalArray<FaceNum, float> cidac;
+    CalUtil::CalArray<CalUtil::FaceNum, float> cidac;
 
     float  asym;
     float  meanCIDAC;
 
     /// calibration constant
-    CalArray<FaceNum, float> ped;
+    CalUtil::CalArray<CalUtil::FaceNum, float> ped;
     /// calibration constant
-    CalArray<FaceNum, float> pedSig;
+    CalUtil::CalArray<CalUtil::FaceNum, float> pedSig;
     /// calibration constant
-    CalArray<FaceNum, float> lacThresh;
+    CalUtil::CalArray<CalUtil::FaceNum, float> lacThresh;
     /// calibration constant
-    CalArray<DiodeNum, float> mpd;
+    CalUtil::CalArray<CalUtil::DiodeNum, float> mpd;
 
     /// calibration constant
-    CalArray<FaceNum, float> h1Limit;
+    CalUtil::CalArray<CalUtil::FaceNum, float> h1Limit;
 
-    TwrNum  twr;
-    LyrNum  lyr;
-    ColNum  col;
+    CalUtil::TwrNum  twr;
+    CalUtil::LyrNum  lyr;
+    CalUtil::ColNum  col;
 
-    CalArray<FaceNum, RngNum> rng;
+    CalUtil::CalArray<CalUtil::FaceNum, CalUtil::RngNum> rng;
 
-    CalArray<FaceNum, char> belowThresh;
+    CalUtil::CalArray<CalUtil::FaceNum, char> belowThresh;
 
     char  xtalBelowThresh;
 
-    CalArray<FaceNum, char> saturated;
+    CalUtil::CalArray<CalUtil::FaceNum, char> saturated;
 
-    CalArray<FaceNum, DiodeNum> diode;
+    CalUtil::CalArray<CalUtil::FaceNum, CalUtil::DiodeNum> diode;
 
-    XtalIdx xtalIdx;
+    CalUtil::XtalIdx xtalIdx;
 
   };
 

@@ -2,8 +2,9 @@
 #define CalXtalRecAlg_h 
 //    $Header$
 
+
 // LOCAL INCLUDES
-#include "CalXtalResponse/IXtalRecTool.h"
+
 
 // GLAST INCLUDES
 #include "Event/Digi/CalDigi.h"
@@ -13,7 +14,16 @@
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
 
+
 // STD INCLUDES
+
+
+class INeighborXtalkTool;
+class IXtalRecTool;
+
+namespace Event {
+	class EventHeader;
+};
 
 /** @class CalXtalRecAlg
     @brief  Calorimeter crystal reconstruction algorithm
@@ -46,14 +56,20 @@ class CalXtalRecAlg : public Algorithm
   /// pointer to the output data collection in TDS
   Event::CalXtalRecCol* m_calXtalRecCol;
     
-  /// pointer to CalResponse tool for converting xtal digi info -> energy 
-  IXtalRecTool *m_xtalRecTool;
-
   /// pointer to event Header (evtId, runId, etc...)
   Event::EventHeader* m_evtHdr;
 
+  /// pointer to CalResponse tool for converting xtal digi info -> energy 
+  IXtalRecTool *m_xtalRecTool;
+
   /// name of IXtalRecTool instantiation
   StringProperty m_recToolName;
+
+  /// pointer to NeighborXtalk tool for calculating electronic crosstalk from neighboring crystals
+  INeighborXtalkTool *m_xtalkTool;
+
+  /// name of INeigbhorXtalkTool instantiation
+  StringProperty m_xtalkToolName;
 };
 
 #endif

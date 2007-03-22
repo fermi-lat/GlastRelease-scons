@@ -11,18 +11,27 @@
  *
  */
 
+// LOCAL INCLUDES
+
 // GLAST INCLUDES
-#include "Event/TopLevel/Event.h"
-#include "Event/Digi/CalDigi.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "CalUtil/CalArray.h"
+#include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
 
 // STD INCLUDES
 
-static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 1);
+static const InterfaceID IID_IXtalRecTool("IXtalRecTool", 1, 2);
+
+// forward declarations
+namespace Event {
+	class CalDigi;
+	class CalXtalRecData;
+	class EventHeader;
+};
+
+class INeighborXtalkTool;
 
 class IXtalRecTool : virtual public IAlgTool {
 
@@ -49,6 +58,8 @@ class IXtalRecTool : virtual public IAlgTool {
       \param saturated returns TRUE for each face signal that is >= HEX1 
       saturation level
 
+	  \param nbrXtalkTool (optional) pointer to neighboring xtal->xtal electronic crosstalk model
+
       \param evtHdr (optional) pointer to current event header (used for RunID 
       & EventID in optional XtalRecTuple)
 
@@ -62,7 +73,8 @@ class IXtalRecTool : virtual public IAlgTool {
                                CalUtil::CalArray<CalUtil::FaceNum, bool> &belowThresh,
                                bool &xtalBelowThresh,
                                CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
-                               const Event::EventHeader *evtHdr=0
+							   const INeighborXtalkTool *nbrXtalkTool,
+                               const Event::EventHeader *evtHdr
                                ) = 0;
 };
 

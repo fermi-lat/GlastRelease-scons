@@ -1,3 +1,5 @@
+v0r13   03/22/07 fewtrell - example jobOptions files for generating only caltuple from digi 
+                          - Added NeighborXtalkTool which caculcates neighboring xtal electronic crosstalk
 v0r12p9 03/07/07 fewtrell doc update
 v0r12p7 03/07/07 fewtrell re-enabled CalFailureModeSvc which was temporarily disabled.
 v0r12p4 07/26/06 fewtrell CalTuple face signal is now allways > 0

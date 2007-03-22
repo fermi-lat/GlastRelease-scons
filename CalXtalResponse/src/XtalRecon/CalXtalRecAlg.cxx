@@ -1,16 +1,19 @@
 //   $Header$
 /** @file
     @author Zach Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "CalXtalRecAlg.h"
+#include "../Xtalk/INeighborXtalkTool.h"
+#include "CalXtalResponse/IXtalRecTool.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
-#include "Event/Digi/CalDigi.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/Digi/CalDigi.h"
+
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/MsgStream.h"
@@ -31,11 +34,13 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   Algorithm(name, pSvcLocator),
   m_calDigiCol(0),
   m_calXtalRecCol(0),
+  m_evtHdr(0),
   m_xtalRecTool(0),
-  m_evtHdr(0)
+  m_xtalkTool(0)
 {
   // declare jobOptions.txt properties
   declareProperty("XtalRecToolName", m_recToolName="XtalRecTool");
+  declareProperty("NeighborXtalkToolName", m_xtalkToolName="");
 }
 
 StatusCode CalXtalRecAlg::initialize()
@@ -55,6 +60,15 @@ StatusCode CalXtalRecAlg::initialize()
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  Unable to create " << m_recToolName << endreq;
     return sc;
+  }
+
+  //-- Neighbor Xtalk Tool --//
+  if (!m_xtalkToolName.value().empty()) {
+    sc = toolSvc()->retrieveTool(m_xtalkToolName, m_xtalkTool, this);
+    if (sc.isFailure() ) {
+      msglog << MSG::ERROR << "  Unable to create " << m_xtalkToolName << endreq;
+      return sc;
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -79,6 +93,9 @@ StatusCode CalXtalRecAlg::execute()
   /// if there's no CalDigiCol then CalXtalRecAlg is not happening, go on w/ other algs
   if (!m_calDigiCol) return StatusCode::SUCCESS;
 
+  // initialize neighborXtalkTool
+  if (m_xtalkTool)
+	  m_xtalkTool->buildSignalMap(*m_calDigiCol);  
        
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
@@ -88,7 +105,7 @@ StatusCode CalXtalRecAlg::execute()
     // recon TDS data for this xtal
     if ((*digiIter)->getReadoutCol().size() < 1) continue;
     
-    CalXtalId xtalId = (*digiIter)->getPackedId();
+    CalXtalId xtalId((*digiIter)->getPackedId());
     
     // create new object to store crystal reconstructed data  
     // use auto_ptr so it is autmatically deleted when we exit early
@@ -108,7 +125,10 @@ StatusCode CalXtalRecAlg::execute()
                                   *recData,
                                   belowThresh,
                                   xtalBelowThresh,
-                                  saturated);
+                                  saturated,
+								  m_xtalkTool,
+								  0
+								  );
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 

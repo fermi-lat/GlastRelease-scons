@@ -15,6 +15,9 @@
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "geometry/Point.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
+
 
 // EXTLIB
 #include "GaudiKernel/MsgStream.h"
@@ -945,7 +948,9 @@ StatusCode test_CalXtalResponse::testSingleHit() {
                                         recData,
                                         belowThresh,
                                         xtalBelowThresh,
-                                        saturated);
+                                        saturated,
+                                        0,
+                                        0);
   if (sc.isFailure()) return sc;
 
   // only process if ptr is non-null
@@ -1749,7 +1754,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
                                         belowThresh,
                                         xtalBelowThresh,
                                         saturated,
-                                        0);
+                                        0,0);
   if (sc.isFailure()) return sc;
 
   // only process if ptr is non-null

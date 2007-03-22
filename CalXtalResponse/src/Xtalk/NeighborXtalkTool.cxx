@@ -1,0 +1,311 @@
+//    $Header$
+
+/** @file
+    @author Zach Fewtrell
+*/
+
+// Include files
+
+// LOCAL
+#include "INeighborXtalkTool.h"
+#include "CalXtalResponse/ICalCalibSvc.h"
+
+// GLAST
+#include "CalUtil/CalDefs.h"
+#include "CalUtil/CalVec.h"
+#include "Event/Digi/CalDigi.h"
+#include "idents/CalXtalId.h"
+#include "facilities/Util.h"
+
+// EXTLIB
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/MsgStream.h"
+
+
+// STD
+#include <string>
+#include <map>
+#include <fstream>
+
+using namespace std;
+using namespace CalUtil;
+using namespace Event;
+using namespace idents;
+using namespace facilities;
+
+
+/** \brief Simple implementation of INeighborXtalkTool
+    \note currently reads xtalk curves from txt file & not from calib db.
+    \note currently only deals w/ cross-talk listed as he_diode->he_diode
+*/
+class NeighborXtalkTool : public AlgTool, 
+                          virtual public INeighborXtalkTool {
+public:
+  /// default ctor, declares jobOptions.
+  NeighborXtalkTool( const string& type, 
+                     const string& name, 
+                     const IInterface* parent);
+
+  /// gets needed parameters and pointers to required services
+  StatusCode initialize();
+
+  StatusCode finalize();
+
+
+  float calcXtalk(CalUtil::DiodeIdx diodeIdx) const ;
+
+  StatusCode buildSignalMap(const Event::CalDigiCol &digiCol);
+
+private:
+  /// load in xtalk table from txt ifle
+  StatusCode loadXtalkTable(const string &infile);
+
+  /// represents single xtalk curve
+  struct XtalkEntry {
+    float x_intercept;
+    float slope;
+  };
+
+  /// type for associating single adc channel w/ xtalk curve
+  typedef map<FaceIdx, XtalkEntry> ChannelSplineMap;
+
+  /// type for associating (dest_channel,src_channel) tuple w/ xtalk curve
+  typedef map<FaceIdx, ChannelSplineMap > XtalkMap;
+
+  void insertXtalkCurve(FaceIdx srcIdx,
+                        FaceIdx destIdx,
+                        const XtalkEntry &xtalk);
+
+  /// store xtalk curves associated w/ channels.
+  XtalkMap m_xtalkMap;
+
+  /// read in xtalk table from this file.
+  StringProperty m_txtFilename;
+
+  /// \brief store output signals for HE diode on each cal face
+  ///  signal stored in he_dac units
+  CalVec<FaceIdx, float> m_signalMap;
+
+  /// used to indicate empty channel
+  static const short INVALID_ADC = -5000;
+
+  /// name of CalCalibSvc to use for calib constants.
+  StringProperty m_calCalibSvcName;                         
+  /// pointer to CalCalibSvc object.
+  ICalCalibSvc *m_calCalibSvc;  
+
+  /// evaluate xtalk from single channel
+  /// xtalk in dac units, retuns 0 if unapplicable
+  float evalSingleChannelXtalk(float srcDac, const XtalkEntry &xtalk) const;
+
+};
+
+static ToolFactory<NeighborXtalkTool> s_factory;
+const IToolFactory& NeighborXtalkToolFactory = s_factory;
+
+NeighborXtalkTool::NeighborXtalkTool( const string& type, 
+                                      const string& name, 
+                                      const IInterface* parent) :
+  AlgTool(type,name,parent),
+  m_signalMap(FaceIdx::N_VALS, INVALID_ADC),
+  m_calCalibSvc(0)
+{
+  declareInterface<INeighborXtalkTool>(this);
+
+  declareProperty("txtFile", m_txtFilename="$(CALXTALRESPONSEROOT)/src/Xtalk/CU06_Neighbor_xtalk.txt");
+  declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");
+  
+}
+
+StatusCode NeighborXtalkTool::initialize() {
+  MsgStream msglog(msgSvc(), name());
+  msglog << MSG::INFO << "initialize" << endreq;
+
+  StatusCode sc;
+
+  //-- jobOptions --//
+  if ((sc = setProperties()).isFailure()) {
+    msglog << MSG::ERROR << "Failed to set properties" << endreq;
+    return sc;
+  }
+  
+  // obtain CalCalibSvc
+  sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
+  if (sc.isFailure()) {
+    msglog << MSG::ERROR << "can't get " << m_calCalibSvcName  << endreq;
+    return sc;
+  }
+  
+  //-- read xtalk curves table from disk --//
+  if ((sc = loadXtalkTable(m_txtFilename)).isFailure())
+    return sc;
+
+  return StatusCode::SUCCESS;
+}
+
+float NeighborXtalkTool::calcXtalk(CalUtil::DiodeIdx diodeIdx) const {
+  /// currently only simulating crosstalk w/ HE diode destination channe,l
+  if (diodeIdx.getDiode() != SM_DIODE)
+    return 0;
+
+  XtalkMap::const_iterator xtalkIt = m_xtalkMap.find(diodeIdx.getFaceIdx());
+
+  // return 0 if there are no neighboring source channels w/ registered xtalk
+  if (xtalkIt == m_xtalkMap.end())
+    return 0;
+
+  float totalXtalk = 0;
+  // find all source curves for given destination channel
+  for (ChannelSplineMap::const_iterator chanIt =
+         xtalkIt->second.begin();
+       chanIt != xtalkIt->second.end();
+       chanIt++) {
+    FaceIdx srcIdx(chanIt->first);
+    float srcDac = m_signalMap[srcIdx];
+
+    totalXtalk += evalSingleChannelXtalk(srcDac, chanIt->second);
+  }
+
+  return totalXtalk;
+}
+
+
+
+StatusCode NeighborXtalkTool::loadXtalkTable(const string &filename) {
+  // open file
+  string filenameCopy(filename);
+  Util::expandEnvVar(&filenameCopy);
+  MsgStream msglog(msgSvc(), name());
+
+  msglog << MSG::INFO << "Loading xtalk tables from: " << filename << endreq;
+
+  ifstream infile(filenameCopy.c_str());
+  if (!infile.is_open()) {
+    msglog << MSG::ERROR << "can't find xtalk table file: " << filename << endreq;
+
+    return StatusCode::FAILURE;
+  }
+
+  // loop through each line in file
+  string line;
+  while (infile.good()) {
+    getline(infile, line);
+    if (infile.fail()) break; // bad get
+
+    // check for comments
+    if (line[0] == ';')
+      continue;
+
+    istringstream istrm(line);
+
+    // read values from line
+    unsigned srcDiodeIdx, destDiodeIdx;
+    float x_int, slope;
+    istrm >> destDiodeIdx >> srcDiodeIdx >> x_int >> slope;
+
+    DiodeIdx srcIdx, destIdx;
+    srcIdx.setVal(srcDiodeIdx);
+    destIdx.setVal(destDiodeIdx);
+
+    /// currently only simulating crosstalk w/ HE diode -> HE diode
+    if (srcIdx.getDiode() != SM_DIODE)
+      continue;
+    if (destIdx.getDiode() != SM_DIODE)
+      continue;
+
+    XtalkEntry xtalk = {x_int, slope};
+        
+    insertXtalkCurve(srcIdx.getFaceIdx(),
+                     destIdx.getFaceIdx(),
+                     xtalk);
+  }
+
+
+  return StatusCode::SUCCESS;
+}
+
+
+void NeighborXtalkTool::insertXtalkCurve(FaceIdx srcIdx,
+                                         FaceIdx destIdx,
+                                         const XtalkEntry &xtalk) {
+  // find all cross talk entries for given 'destination' channel
+  XtalkMap::iterator xtalkIt = m_xtalkMap.find(destIdx);
+
+
+  // create new destination map if needed
+  if (xtalkIt == m_xtalkMap.end())
+    xtalkIt = m_xtalkMap.insert(XtalkMap::value_type(destIdx, ChannelSplineMap())).first;
+
+  // find curve for given source, destination pair.
+  ChannelSplineMap::iterator chanIt =
+    xtalkIt->second.find(srcIdx);
+
+  // create new spline curve if needed
+  if (chanIt == xtalkIt->second.end())
+    chanIt = xtalkIt->second.insert(ChannelSplineMap::value_type(srcIdx, xtalk)).first;
+}
+
+StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
+  // re-initialize signalMap
+  m_signalMap.fill(INVALID_ADC);
+
+  // loop over all calorimeter digis in CalDigiCol
+  for (CalDigiCol::const_iterator digiIter = digiCol.begin(); 
+       digiIter != digiCol.end(); digiIter++) {
+
+    // if there is no digi data, then move on w/ out creating
+    // recon TDS data for this xtal
+    if ((*digiIter)->getReadoutCol().size() < 1) continue;
+    
+    CalXtalId xtalId((*digiIter)->getPackedId());
+    XtalIdx xtalIdx(xtalId);
+
+    // currently always using 1st readout
+    CalDigi::CalXtalReadoutCol::const_iterator ro = 
+      (*digiIter)->getReadoutCol().begin();
+
+    for (FaceNum face; face.isValid(); face++) {
+      RngNum rng(ro->getRange(face));
+      if (rng.getDiode() == LRG_DIODE)
+        continue;
+      float adc(ro->getAdc(face));
+
+      FaceIdx faceIdx(xtalIdx,face);
+      DiodeIdx diodeIdx(faceIdx,rng.getDiode());
+      RngIdx rngIdx(faceIdx,rng);
+
+      // pedestal subtract
+      const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
+      if (!ped) {
+        MsgStream msglog(msgSvc(), name());
+        msglog << MSG::ERROR << "can't find cal ped for given digi channel: " << rngIdx.toStr() << endreq;
+        return StatusCode::FAILURE;
+      }
+      float adcPed = adc - ped->getAvr();
+          
+          
+      // evaluate CIDAC signal
+      float cidac = 0;
+      StatusCode sc(m_calCalibSvc->evalCIDAC(rngIdx, adcPed, cidac));
+      if (sc.isFailure()) return sc;
+
+      m_signalMap[faceIdx] = cidac;
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+
+float NeighborXtalkTool::evalSingleChannelXtalk(float srcDac, const XtalkEntry &xtalk)  const {
+  if (srcDac <= xtalk.x_intercept)
+    return 0;
+  
+  // currently simple linear model
+  return (srcDac - xtalk.x_intercept)*xtalk.slope;
+}
+
+StatusCode NeighborXtalkTool::finalize() {
+  return StatusCode::SUCCESS;
+}

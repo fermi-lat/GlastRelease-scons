@@ -1,19 +1,28 @@
 // $Header$
 /** @file
     @author Zach Fewtrell
- */
+*/
 
 // LOCAL
 #include "XtalRecTool.h"
+#include "CalXtalResponse/ICalCalibSvc.h"
+#include "../Xtalk/INeighborXtalkTool.h"
 
 // GLAST
 #include "idents/VolumeIdentifier.h"
 #include "CalUtil/CalArray.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "Event/Digi/CalDigi.h"
+#include "Event/TopLevel/Event.h"
+#include "geometry/Point.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
 
 // EXTLIB
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "CLHEP/Geometry/Transform3D.h"
+#include "TTree.h"
+#include "TFile.h"
 
 // STD
 #include <cmath>
@@ -159,6 +168,7 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
                                   CalArray<FaceNum, bool> &belowThresh,
                                   bool &xtalBelowThresh,
                                   CalArray<FaceNum, bool> &saturated,
+                                  const INeighborXtalkTool *xtalkTool,
                                   const Event::EventHeader *evtHdr) {
   StatusCode sc;
 
@@ -178,9 +188,9 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
 
   // check for empty digi
   if (digi.getReadoutCol().size() <= 0)
-	  return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 
-  // currently allways using 1st readout
+  // currently always using 1st readout
   CalDigi::CalXtalReadoutCol::const_iterator ro = 
     digi.getReadoutCol().begin();
 
@@ -219,10 +229,11 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
     if (m_dat.rng[face] != LEX8 && m_dat.adcPed[face] < m_dat.pedSig[face]*5.0)
       belowThresh[face] = true;
 
-    ///////////////////////////////////////////
+    /////////////////////////////////////////////
     //-- STEP 3: CONVERT ADCs -> CIDAC SCALE --//
-    ///////////////////////////////////////////
-	RngIdx rngIdx(m_dat.xtalIdx, face, m_dat.rng[face]);
+    /////////////////////////////////////////////
+    RngIdx rngIdx(m_dat.xtalIdx, face, m_dat.rng[face]);
+    m_dat.diode[face] = m_dat.rng[face].getDiode();
     sc = m_calCalibSvc->evalCIDAC(rngIdx, m_dat.adcPed[face], m_dat.cidac[face]);
     if (sc.isFailure()) return sc;
         
@@ -243,20 +254,24 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
       // return w/out populating xtalRec structure
       return StatusCode::SUCCESS;
     }
-        
 
-
-    m_dat.diode[face] = m_dat.rng[face].getDiode();
-
+    ///////////////////////////////////////////////////////////
+    //-- STEP 4: (OPTIONAL) NEIGHBOR XTAL XTALK CORRECTION --//
+    ///////////////////////////////////////////////////////////
+    if (xtalkTool) {
+      DiodeIdx diodeIdx(m_dat.xtalIdx, face, m_dat.diode[face]);
+      m_dat.cidac[face] += xtalkTool->calcXtalk(diodeIdx);
+    }
+    
     /////////////////////////////////////////////
-    //-- STEP 4: DETECT SATURATED HEX1 RANGE --//
+    //-- STEP 5: DETECT SATURATED HEX1 RANGE --//
     /////////////////////////////////////////////
     if (m_dat.rng[face] == HEX1)
       if (m_dat.adc[face] >= m_dat.h1Limit[face]) saturated[face] = true;
     
   
     ////////////////////////////////////////////
-    //-- STEP 5: POPULATE TUPLES (OPTIONAL) --//
+    //-- STEP 6: POPULATE TUPLES (OPTIONAL) --//
     ////////////////////////////////////////////
     
     // need face signal for either tuple
@@ -267,8 +282,6 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
       if (sc.isFailure()) return sc;
     }
   }
-
-
 
   ////////////////////////////////////
   //-- STEP 7: CALCULATE POSITION --//
@@ -327,12 +340,13 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
   /////////////////////////////////////////////////
   if (m_tuple) {
     if (evtHdr) {
-      m_dat.RunID                   = evtHdr->run();
-      m_dat.EventID                 = evtHdr->event();
+      m_dat.RunID   = evtHdr->run();
+      m_dat.EventID = evtHdr->event();
     }
+        
     copy(belowThresh.begin(), belowThresh.end(), m_dat.belowThresh.begin());
-    copy(saturated.begin(), saturated.end(),   m_dat.saturated.begin());
-    m_dat.xtalBelowThresh        = xtalBelowThresh;
+    copy(saturated.begin(),   saturated.end(),   m_dat.saturated.begin());
+    m_dat.xtalBelowThresh = xtalBelowThresh;
 
     //-- RETRIEVE ASYM @ CTR OF XTAL --//
     sc = m_calCalibSvc->getAsymCtr(m_dat.xtalIdx, ASYM_LL, m_dat.asymCtr[LRG_DIODE]);
@@ -474,7 +488,7 @@ StatusCode XtalRecTool::retrieveCalib() {
     const Ped* ped = m_calCalibSvc->getPed(rngIdx);
     if (!ped) return StatusCode::FAILURE;
     m_dat.ped[face] = ped->getAvr();
-	m_dat.pedSig[face] = ped->getSig();
+    m_dat.pedSig[face] = ped->getSig();
 
     // Threshold constants
     const CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
