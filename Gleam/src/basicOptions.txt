@@ -149,7 +149,7 @@ Output.Members = {
 mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc.root";
 digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi.root";
 reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon.root";
-relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relation.root";
+relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relations.root";
 
 // ----------------------------
 // ntuple generation 
