@@ -271,3 +271,34 @@ def tuple2rngIdx(tpl):
              (lyr + calConstant.NUM_LAYER*twr)))
                                       
            
+# convert linear index to (twr,lyr,col,face,diode)
+def diodeIdx2tuple(diodeIdx):
+    diodeIdx = int(diodeIdx)
+    
+    diode = diodeIdx % calConstant.NUM_DIODE
+    diodeIdx /= calConstant.NUM_DIODE
+
+    face = diodeIdx % calConstant.NUM_END
+    diodeIdx /= calConstant.NUM_END
+
+    col = diodeIdx % calConstant.NUM_FE
+    diodeIdx /= calConstant.NUM_FE
+
+    lyr = diodeIdx % calConstant.NUM_LAYER
+    diodeIdx /= calConstant.NUM_LAYER
+
+    twr = diodeIdx
+
+    return (twr, lyr, col, face, diode)
+
+# generate linear index from component indices
+# input is tuple (twr,lyr,col,face,diode)
+def tuple2diodeIdx(tpl):
+    (twr, lyr, col, face, diode) = tpl
+
+    return diode + calConstant.NUM_DIODE* \
+           (face + calConstant.NUM_END* \
+            (col + calConstant.NUM_FE*\
+             (lyr + calConstant.NUM_LAYER*twr)))
+                                      
+           

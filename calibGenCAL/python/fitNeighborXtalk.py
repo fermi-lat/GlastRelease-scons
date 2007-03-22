@@ -71,8 +71,8 @@ for row in infile:
     (destChan, srcChan, srcDac, destDac) = row
 
     # skip le->le xtalk & keep only le->he xtalk
-    (twr,lyr,col,face,rng) = zachUtil.rngIdx2tuple(destChan)
-    if rng < 2:
+    (twr,lyr,col,face,diode) = zachUtil.diodeIdx2tuple(destChan)
+    if diode == 0:
         continue
 
     k = (int(destChan), int(srcChan))
