@@ -50,7 +50,7 @@ class calCalibXML(calXML.calXML):
     in XML format.
     """
   
-    def __init__(self, fileName, mode = MODE_READONLY):
+    def __init__(self, fileName, mode = MODE_READONLY, validating = True):
         """
         Open a CAL calibration XML file
 
@@ -58,7 +58,7 @@ class calCalibXML(calXML.calXML):
         \param mode The file access mode (MODE_READONLY or MODE_CREATE).
         """
 
-        calXML.calXML.__init__(self, fileName, mode, validating = True)
+        calXML.calXML.__init__(self, fileName, mode, validating)
 
 
     def info(self):
