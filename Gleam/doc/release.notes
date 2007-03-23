@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r25   THB 23-Mar-07  Add skymodel.txt, clocks.xml to support production simulation 
 * v6r24p1 THB 20-Mar-07  Update interleave.txt for new design; remove explict source spec. from full_source_simulation.txt 
 * v6r24   THB 18-Mar-07  copy JO files from DataChallenge, especially to run background
 * v6r23   THB 15-Mar-07  remove FilterAlgTuple from algs (done in AnaTup)
