@@ -849,6 +849,12 @@ namespace CalUtil {
                                                getCol(),
                                                getFace());}
 
+	DiodeIdx getDiodeIdx() const {return DiodeIdx(getTwr(),
+		                                          getLyr(),
+												  getCol(),
+												  getFace(),
+												  getRng().getDiode());}
+
     bool isValid() const {return m_data < N_VALS;}
 
 	std::string toStr() const;

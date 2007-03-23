@@ -29,7 +29,7 @@ namespace CalUtil {
 
 
   template <typename idx_type, typename val_type >
-    class CalVec : protected vector<val_type > {
+    class CalVec : private vector<val_type > {
     protected:
     typedef vector<val_type> parent_type;
     typedef size_t size_type;
