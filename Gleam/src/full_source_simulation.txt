@@ -2,9 +2,9 @@
 //##############################################################
 //
 // Job options file for Gleam job to do full simulation with  sources
-//
-// Input sky model directory: $(SKYMODEL_DIR)
+// Input:
 //         pointing history: $(POINTING_HISTORY_FILE)
+//         (expect sources, sky model, background, iterleave,  to be in file adding this)
 //
 // Outputs: $(meritRootFileName)
 //          $(mcRootFileName)
