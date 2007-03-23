@@ -278,7 +278,6 @@ StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
       float adc(ro->getAdc(face));
 
       FaceIdx faceIdx(xtalIdx,face);
-      DiodeIdx diodeIdx(faceIdx,rng.getDiode());
       RngIdx rngIdx(faceIdx,rng);
 
       // pedestal subtract
@@ -289,7 +288,6 @@ StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
         return StatusCode::FAILURE;
       }
       float adcPed = adc - ped->getAvr();
-          
           
       // evaluate CIDAC signal
       float cidac = 0;
