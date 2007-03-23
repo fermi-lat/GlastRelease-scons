@@ -1,9 +1,10 @@
 // $Header$
 // LOCAL INCLUDES
+#include "../Xtalk/INeighborXtalkTool.h"
+#include "CalXtalResponse/ICalCalibSvc.h"
 
 // GLAST INCLUDES
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-#include "CalXtalResponse/ICalCalibSvc.h"
 #include "Event/Digi/CalDigi.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
@@ -102,6 +103,12 @@ private:
 
   /// pointer to tupleWriterSvc
   INTupleWriterSvc *m_tupleWriterSvc;
+
+  /// pointer to NeighborXtalk tool for calculating electronic crosstalk from neighboring crystals
+  INeighborXtalkTool *m_xtalkTool;
+
+  /// name of INeigbhorXtalkTool instantiation
+  StringProperty m_xtalkToolName;
 };
 
 static const AlgFactory<CalTupleAlg>  Factory;
@@ -110,13 +117,15 @@ const IAlgFactory& CalTupleAlgFactory = Factory;
 CalTupleAlg::CalTupleAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_calCalibSvc(0),
-  m_tupleWriterSvc(0)
+  m_tupleWriterSvc(0),
+  m_xtalkTool(0)
 {
 
   // declare jobOptions.txt properties
   declareProperty("CalCalibSvc",   m_calCalibSvcName="CalCalibSvc");
   declareProperty("tupleName",     m_tupleName="CalTuple");
   declareProperty("tupleFilename", m_tupleFilename="");
+  declareProperty("NeighborXtalkToolName", m_xtalkToolName="");
 }
 
 StatusCode CalTupleAlg::initialize() {
@@ -198,6 +207,15 @@ StatusCode CalTupleAlg::initialize() {
       return StatusCode::FAILURE;
     }
   }
+
+  //-- Neighbor Xtalk Tool --//
+  if (!m_xtalkToolName.value().empty()) {
+    sc = toolSvc()->retrieveTool(m_xtalkToolName, m_xtalkTool, this);
+    if (sc.isFailure() ) {
+      msglog << MSG::ERROR << "  Unable to create " << m_xtalkToolName << endreq;
+      return sc;
+    }
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -211,6 +229,7 @@ StatusCode CalTupleAlg::execute() {
 
   // clear tuple entry for this event
   m_tupleEntry.Clear();
+
 
   // Retrieve the Event data for this event
   SmartDataPtr<EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
@@ -235,6 +254,11 @@ StatusCode CalTupleAlg::execute() {
     }
   }  
   else {
+    // initialize neighborXtalkTool
+    if (m_xtalkTool)
+      m_xtalkTool->buildSignalMap(*calDigiCol);  
+
+          
     // loop over all calorimeter digis in CalDigiCol
     for (CalDigiCol::const_iterator digiIter = calDigiCol->begin(); 
          digiIter != calDigiCol->end(); digiIter++) {
@@ -270,14 +294,26 @@ StatusCode CalTupleAlg::execute() {
         // ped subtracted ADC
         float adcPed = adc - ped->getAvr();
 
-        // face signal
+        //-- face signal --//
         if (adcPed > 0) {
           float faceSignal;
           sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
-		  faceSignal = max<float>(0,faceSignal);
+          faceSignal = max<float>(0,faceSignal);
           if (sc.isFailure()) return sc;
+                  
+          // (optional) Neighbor Xtalk Correction
+          if (m_xtalkTool) {
+            float xtalkMeV;
+            sc = m_xtalkTool->calcXtalkMeV(DiodeIdx(xtalIdx,face,rng.getDiode()), xtalkMeV);
+            if (sc.isFailure()) return sc;
+
+            faceSignal += xtalkMeV;
+          }
+                  
           m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = faceSignal;
           m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
+
+
         }
 
 
@@ -306,11 +342,22 @@ StatusCode CalTupleAlg::execute() {
             
           m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
 
+          //-- FACE SIGNAL --//
           if (adcPed > 0) {
             float faceSignal; 
             faceSignal = max<float>(0,faceSignal);
+
+            // (optional) Neighbor Xtalk Correction
+            if (m_xtalkTool) {
+              float xtalkMeV;
+              sc = m_xtalkTool->calcXtalkMeV(DiodeIdx(xtalIdx,face,rng.getDiode()), xtalkMeV);
+              if (sc.isFailure()) return sc;
+
+              faceSignal += xtalkMeV;
+            }
+
             sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);
-			if (sc.isFailure()) return sc;
+            if (sc.isFailure()) return sc;
             m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
           }
         }
@@ -321,3 +368,4 @@ StatusCode CalTupleAlg::execute() {
   return StatusCode::SUCCESS;
 }
 
+    

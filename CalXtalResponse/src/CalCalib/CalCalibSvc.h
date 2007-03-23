@@ -94,6 +94,8 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
 
   StatusCode evalFaceSignal(RngIdx rngIdx, float adc, float &ene);
 
+  StatusCode getMPDDiode(CalUtil::DiodeIdx diodeIdx, float &mpdDiode);
+
   StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType, 
                         float &asymCtr) {
     return m_asymMgr.getAsymCtr(xtalIdx, asymType, asymCtr);

@@ -53,7 +53,9 @@ public:
   StatusCode finalize();
 
 
-  float calcXtalk(CalUtil::DiodeIdx diodeIdx) const ;
+  StatusCode calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &xtalkCIDAC) const ;
+  
+  StatusCode calcXtalkMeV(CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const;
 
   StatusCode buildSignalMap(const Event::CalDigiCol &digiCol);
 
@@ -144,18 +146,19 @@ StatusCode NeighborXtalkTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-float NeighborXtalkTool::calcXtalk(CalUtil::DiodeIdx diodeIdx) const {
+StatusCode NeighborXtalkTool::calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &xtalkCIDAC) const {
+  // start w/ 0 xtalk in case of early function exit.
+  xtalkCIDAC = 0;
   /// currently only simulating crosstalk w/ HE diode destination channe,l
   if (diodeIdx.getDiode() != SM_DIODE)
-    return 0;
+	 return StatusCode::SUCCESS;
 
   XtalkMap::const_iterator xtalkIt = m_xtalkMap.find(diodeIdx.getFaceIdx());
 
   // return 0 if there are no neighboring source channels w/ registered xtalk
   if (xtalkIt == m_xtalkMap.end())
-    return 0;
+	 return StatusCode::SUCCESS;
 
-  float totalXtalk = 0;
   // find all source curves for given destination channel
   for (ChannelSplineMap::const_iterator chanIt =
          xtalkIt->second.begin();
@@ -164,10 +167,13 @@ float NeighborXtalkTool::calcXtalk(CalUtil::DiodeIdx diodeIdx) const {
     FaceIdx srcIdx(chanIt->first);
     float srcDac = m_signalMap[srcIdx];
 
-    totalXtalk += evalSingleChannelXtalk(srcDac, chanIt->second);
+	if (srcDac <= 0)
+		continue;
+
+    xtalkCIDAC += evalSingleChannelXtalk(srcDac, chanIt->second);
   }
 
-  return totalXtalk;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -308,4 +314,26 @@ float NeighborXtalkTool::evalSingleChannelXtalk(float srcDac, const XtalkEntry &
 
 StatusCode NeighborXtalkTool::finalize() {
   return StatusCode::SUCCESS;
+}
+
+StatusCode NeighborXtalkTool::calcXtalkMeV(CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const {
+	xtalkMev = 0;
+    StatusCode sc;
+	
+	float xtalkCIDAC;
+	sc = calcXtalkCIDAC(diodeIdx, xtalkCIDAC);
+	if (sc.isFailure()) return sc;
+
+	// quick exit.
+	if (xtalkCIDAC == 0)
+		return StatusCode::SUCCESS;
+
+	float mpdDiode;
+	sc = m_calCalibSvc->getMPDDiode(diodeIdx, mpdDiode);
+	if (sc.isFailure()) return sc;
+
+	/// mev = (mev/cidac)*cidac
+	xtalkMev = xtalkCIDAC*mpdDiode;
+
+	return StatusCode::SUCCESS;
 }

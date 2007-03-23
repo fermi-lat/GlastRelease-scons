@@ -14,7 +14,7 @@
 
 // STD INCLUDES
 
-static const InterfaceID IID_INeighborXtalkTool("INeighborXtalkTool", 1, 1);
+static const InterfaceID IID_INeighborXtalkTool("INeighborXtalkTool", 1, 2);
 
 
 /** 
@@ -46,7 +46,20 @@ class INeighborXtalkTool : virtual public IAlgTool {
   \return sum of xtalk for all neighboring xtals, 0 if not applicable.
                 
   */
-  virtual float calcXtalk(CalUtil::DiodeIdx diodeIdx) const = 0;
+  virtual StatusCode calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &xtalkDAC) const = 0;
+
+
+  /** \brief calcuate total crosstalk for given cal diode from all neighboring crystals in units of MeV deposited @ center of xtal.
+
+  Response is based on neigbhoring xtal signal provided in last call to BuildSignalMap()
+  
+  \param diodeIdx selected cal diode
+  
+  \return sum of xtalk for all neighboring xtals, 0 if not applicable.
+                
+  */
+  virtual StatusCode calcXtalkMeV(CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const = 0;
+
 
 };
 

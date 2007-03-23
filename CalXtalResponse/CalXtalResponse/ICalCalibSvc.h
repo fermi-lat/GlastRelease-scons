@@ -22,7 +22,7 @@
 
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
-static const InterfaceID IID_ICalCalibSvc("ICalCalibSvc", 2, 0);
+static const InterfaceID IID_ICalCalibSvc("ICalCalibSvc", 2, 1);
 
 /*! @class ICalCalibSvc
  * \brief Abstract interface for provision of GLAST LAT calorimeter calib consts
@@ -125,6 +125,11 @@ class ICalCalibSvc : virtual public IInterface {
   */
   virtual StatusCode evalFaceSignal(CalUtil::RngIdx rngIdx, float adc, 
                                     float &ene) = 0;
+
+  /** \brief get ratio of MeV/CIDAC for given diode where MeV is energy deposited @ center of xtal
+      \note this calculation should include comination of overall mevPerDAC & asymmetry calibrations.
+  */
+  virtual StatusCode getMPDDiode(CalUtil::DiodeIdx diodeIdx, float &mpdDiode) = 0;
 
   /// retrieve serial # for current pedestal calibration data
   virtual int getSerNoPed() = 0;

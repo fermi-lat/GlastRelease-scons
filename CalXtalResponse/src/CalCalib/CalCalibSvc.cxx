@@ -150,10 +150,31 @@ StatusCode CalCalibSvc::evalFaceSignal(RngIdx rngIdx, float adcPed, float &ene) 
 
   RngNum rng(rngIdx.getRng());
 
+  float mpdDiode;
+  sc = getMPDDiode(rngIdx.getDiodeIdx(), mpdDiode);
+  if (sc.isFailure()) return StatusCode::FAILURE;
+
+  ene = cidac*mpdDiode;
+  
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode CalCalibSvc::getMPDDiode(CalUtil::DiodeIdx diodeIdx, float &mpdDiode) {
+  XtalIdx xtalIdx(diodeIdx.getXtalIdx());
+
+  // MeVPerDAC
+  const CalMevPerDac *calMPD;
+  // need to create tmp rngIdx w/ only twr/lyr/col info
+  calMPD = getMPD(xtalIdx);
+  if (!calMPD) return StatusCode::FAILURE;
+
   float mpd;
   float asymCtr;
 
-  if (rng.getDiode() == LRG_DIODE) {
+  // get overall asymmetry & mpd for this xtal
+  StatusCode sc;
+  if (diodeIdx.getDiode() == LRG_DIODE) {
     mpd = calMPD->getBig()->getVal();
     sc = getAsymCtr(xtalIdx, ASYM_LL, asymCtr);
     if (sc.isFailure()) return sc;
@@ -164,15 +185,15 @@ StatusCode CalCalibSvc::evalFaceSignal(RngIdx rngIdx, float adcPed, float &ene) 
     if (sc.isFailure()) return sc;
   }
 
-  // 1st multiply each cidac val by overall gain.
-  ene = cidac*mpd;
-
-  // 2nd correct for overally asymmetry of diodes (use asym at center
+  // correct for overall asymmetry of diodes (use asym at center
   // of xtal)
-  if (rngIdx.getFace() == POS_FACE)
-    ene *= exp(-1*asymCtr/2);
+  if (diodeIdx.getFace() == POS_FACE)
+    mpd *= exp(-1*asymCtr/2);
   else // face == NEG_FACE
-    ene *= exp(asymCtr/2);
+    mpd *= exp(asymCtr/2);
+
+  mpdDiode = mpd;
+
 
   return StatusCode::SUCCESS;
 }
