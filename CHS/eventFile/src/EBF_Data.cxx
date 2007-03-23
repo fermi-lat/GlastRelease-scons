@@ -46,7 +46,7 @@ namespace eventFile {
     nitems = fread( data, len, 1, fp );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "EBF_Data::read: error reading length ";
+      ess << "EBF_Data::read: error reading data ";
       ess << "(" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }

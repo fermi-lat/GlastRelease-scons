@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -64,7 +66,7 @@ int main( int argc, char* argv[] )
   // get the input and output file names
   if ( argc < 4 ) {
     std::cout << "writeMerge: not enough input arguments" << std::endl;
-    return 1;
+    exit( EXIT_FAILURE );
   }
   std::string idxfile( argv[1] );
   std::string evtfile( argv[2] );  // this contains format specifiers
@@ -96,6 +98,10 @@ int main( int argc, char* argv[] )
   // requeseted events as we go
   std::string idxline;
   std::ifstream idx( idxfile.c_str() );
+  if ( idx.fail() ) {
+    std::cout << "writeMerge: failed to open " << idxfile << std::endl;
+    exit( EXIT_FAILURE );
+  }
   while ( getline( idx, idxline ) ) {
     
     // skip non-event records
@@ -107,7 +113,12 @@ int main( int argc, char* argv[] )
     // get an LSEReader for the file
     lser_iter it = mapLSER.find( edx.evtfile );
     if ( it == mapLSER.end() ) {
-      it = mapLSER.insert( std::pair< std::string, eventFile::LSEReader* >( edx.evtfile, new eventFile::LSEReader( edx.evtfile ) ) ).first;
+      try {
+	it = mapLSER.insert( std::pair< std::string, eventFile::LSEReader* >( edx.evtfile, new eventFile::LSEReader( edx.evtfile ) ) ).first;
+      }	catch ( std::runtime_error& e ) {
+	std::cout << e.what() << std::endl;
+	exit( EXIT_FAILURE );
+      }
     }
 
     // read the event at the specified location
@@ -117,11 +128,11 @@ int main( int argc, char* argv[] )
       bevtread = it->second->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo );
     } catch( std::runtime_error e ) {
       std::cout << e.what() << std::endl;
-      continue;
+      exit( EXIT_FAILURE );
     }
     if ( !bevtread ) {
       std::cout << "no event read from " << edx.fileofst << " of " << edx.evtfile << std::endl;
-      continue;
+      exit( EXIT_FAILURE);
     }
 
     // open an output file if necessary
@@ -131,36 +142,47 @@ int main( int argc, char* argv[] )
       snprintf( ofn, 512, evtfile.c_str(), ctx.run.startedAt, ctx.scalers.sequence );
 
       // open the output file
-      pLSEW = new eventFile::LSEWriter( std::string( ofn ), downlinkID );
-      std::cout << "created output file " << pLSEW->name() << std::endl;
+      try {
+	pLSEW = new eventFile::LSEWriter( std::string( ofn ), downlinkID );
+      } catch ( std::runtime_error& e ) {
+	std::cout << e.what() << std::endl;
+	exit( EXIT_FAILURE );
+      }
+      std::cout << "writeMerge: created output file " << pLSEW->name() << std::endl;
     }
 
     // write the event to the merged file
-    switch( infotype ) {
-    case eventFile::LSE_Info::LPA:
-      pLSEW->write( ctx, ebf, pinfo );
-      break;
-    case eventFile::LSE_Info::LCI_ACD:
-      pLSEW->write( ctx, ebf, ainfo );
-      break;
-    case eventFile::LSE_Info::LCI_CAL:
-      pLSEW->write( ctx, ebf, cinfo );
-      break;
-    case eventFile::LSE_Info::LCI_TKR:
-      pLSEW->write( ctx, ebf, tinfo );
-      break;
-    default:
-      std::cout << "unknown LSE_Info type " << infotype;
-      std::cout << " at offset "            << edx.fileofst;
-      std::cout << " in "                   << edx.evtfile;
-      std::cout << std::endl;
-      break;
+    try {
+      switch( infotype ) {
+      case eventFile::LSE_Info::LPA:
+	pLSEW->write( ctx, ebf, pinfo );
+	break;
+      case eventFile::LSE_Info::LCI_ACD:
+	pLSEW->write( ctx, ebf, ainfo );
+	break;
+      case eventFile::LSE_Info::LCI_CAL:
+	pLSEW->write( ctx, ebf, cinfo );
+	break;
+      case eventFile::LSE_Info::LCI_TKR:
+	pLSEW->write( ctx, ebf, tinfo );
+	break;
+      default:
+	std::ostringstream ess;
+	ess << "writeMerge: unknown LSE_Info type " << infotype;
+	ess << " at offset "            << edx.fileofst;
+	ess << " in "                   << edx.evtfile;
+	throw std::runtime_error( ess.str() );
+	break;
+      }
+    } catch ( std::runtime_error& e ) {
+      std::cout << e.what() << std::endl;
+      exit( EXIT_FAILURE );
     }
 
     // check to see if the output file is full
     if ( maxEvents > 0 && ++eventsOut >= maxEvents ) {
       // close the current file and reset the event counter
-      std::cout << "wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
+      std::cout << "writeMerge: wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
       delete pLSEW; pLSEW = NULL;
       eventsOut = 0;
     }
@@ -168,7 +190,7 @@ int main( int argc, char* argv[] )
   std::for_each( mapLSER.begin(), mapLSER.end(), cleanup() );
   idx.close();
   if ( pLSEW ) {
-    std::cout << "wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
+    std::cout << "writeMerge: wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
     delete pLSEW;
   }
 
