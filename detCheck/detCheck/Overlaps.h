@@ -74,7 +74,7 @@ namespace detCheck {
     double        m_eps;
     bool          m_verbose;
     bool          m_dump;
-
+    bool          m_childrenPrinted;
     class Point {
     public:
       double px, py, pz;
