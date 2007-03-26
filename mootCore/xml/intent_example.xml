@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<!--   Sample ACD intent description, so far just including
-       votes for ACD_Mode, ACD_Bias, ACD_PHA and ACD_Hld
+<!--   Sample intent description, so far just including
+       votes for ACD precincts
 -->
-<ACD_Intent xsi:noNamespaceSchemaLocation="intent.xsd"
+<LAT_INTENT xsi:noNamespaceSchemaLocation="intent.xsd"
            xmlns:xi="http://www.w3.org/2001/XInclude"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 <ACD_Mode>
-  <method>BCAST</method>
+  <method comment="BCAST is typical for ACD_Mode">BCAST</method>
   <ACD_Mode-registers>
     <AEM_aem_configuration /> 
     <AFE_config_reg>
@@ -104,12 +104,9 @@
 <ACD_Veto>
   <method>VETO_IN_MIP</method>
   <ACD_Veto-registers>
-    <AFE_veto_dac>
-      <broadcast>34</broadcast>
-    </AFE_veto_dac>
-    <AFE_veto_vernier>
-      <broadcast>34</broadcast>
-    </AFE_veto_vernier>
+    <AFE_veto>
+      <broadcastDouble>34:34</broadcastDouble>
+    </AFE_veto>
   </ACD_Veto-registers>
   <ACD_Veto-constants >
     <vetoInMip tile="0.5" ribbon="0.4" NA="0.3" />
@@ -166,8 +163,13 @@
   </ACD_Timing-registers>
   <ACD_Timing-constants />
   <ACD_Timing-anc />
+  <ACD_Timing-param>
+    <latc_AEM_ACD_Timing />
+    <latc_ARC_ACD_Timing />
+    <latc_DFT_ACD_Timing />
+  </ACD_Timing-param>
   <ACD_Timing-offline />
 </ACD_Timing>
 
 
-</ACD_Intent>
+</LAT_INTENT>
