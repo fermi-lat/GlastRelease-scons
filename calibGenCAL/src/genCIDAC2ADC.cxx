@@ -5,10 +5,10 @@
  */
 
 // LOCAL INCLUDES
-#include "lib/IntNonlinAlg.h"
-#include "lib/CIDAC2ADC.h"
-#include "lib/SimpleIniFile.h"
-#include "lib/CGCUtil.h"
+#include "lib/Algs/IntNonlinAlg.h"
+#include "lib/CalibDataTypes/CIDAC2ADC.h"
+#include "lib/Util/SimpleIniFile.h"
+#include "lib/Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"

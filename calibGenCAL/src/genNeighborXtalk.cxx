@@ -5,10 +5,10 @@
  */
 
 // LOCAL INCLUDES
-#include "lib/CGCUtil.h"
-#include "lib/CfgMgr.h"
-#include "lib/NeighborXtalk.h"
-#include "lib/NeighborXtalkAlg.h"
+#include "lib/CalibDataTypes/NeighborXtalk.h"
+#include "lib/Algs/NeighborXtalkAlg.h"
+#include "lib/Util/CGCUtil.h"
+#include "lib/Util/CfgMgr.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
