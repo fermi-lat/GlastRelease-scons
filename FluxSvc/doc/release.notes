@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   27-mar-07  v6r41p5 THB  Protect against sources modifying the GPS time during initialization
    19-mar-07  v6r41p4 THB  Fix bug and prevent FluxAlg crash if no RootTupleSvc set up
    18-mar-07  v6r41p3 THB  Implement option to set x-axis to East with history file
    03-jan-07  v6r41p1 THB  job parameter to set orbit inclination

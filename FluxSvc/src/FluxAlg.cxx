@@ -238,6 +238,7 @@ StatusCode FluxAlg::initialize(){
             GPS::instance()->setPointingHistoryFile(filename, offset, eastflag);
         }
     }
+    double current_time = GPS::instance()->time();
     if( !m_source_list.value().empty()){
         log << MSG::INFO << "loading sources " << endreq;
         std::vector<std::string> sources=m_source_list.value();
@@ -260,6 +261,8 @@ StatusCode FluxAlg::initialize(){
             return sc;
         }
     }
+
+    GPS::instance()->time(current_time);
     std::string title(m_flux->title()); if(title.length()>100) title = title.substr(0,100)+"...";
     log << MSG::INFO << "Source title: " << title << endreq;
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
