@@ -1,5 +1,5 @@
 create table Votes
-(votes_key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
+(vote_key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
  COMMENT "primary key", 
  name  VARCHAR(32) NOT NULL
   COMMENT "need not be unique",
@@ -15,7 +15,7 @@ create table Votes
  creator  VARCHAR(32) NOT NULL
   COMMENT 'OS username of person making the insert of this row',
  INDEX(precinct_fk),
- FOREIGN KEY(precinct_fk) REFERENCES Precincts (precincts_key)
+ FOREIGN KEY(precinct_fk) REFERENCES Precincts (precinct_key)
   ON DELETE CASCADE
   ON UPDATE CASCADE
 ) TYPE=InnoDB

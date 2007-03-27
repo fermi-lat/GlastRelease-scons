@@ -4,8 +4,8 @@ create table Parameters
   class_fk               INT UNSIGNED NOT NULL 
      COMMENT 'refers to row in Parm_class',
 
-  condition_fk               INT UNSIGNED NOT NULL DEFAULT '1'
-     COMMENT 'refers to row in Conditions',
+  vote_fk               INT UNSIGNED NOT NULL DEFAULT '1'
+     COMMENT 'refers to row in Votes',
 
   instrument  varchar(16) not null default 'LAT'
      COMMENT 'e.g. LAT, EM2  ',
@@ -49,7 +49,7 @@ COMMENT 'refers to status of entry, in case file has to be copied',
   FOREIGN KEY(class_fk) REFERENCES Parameter_class (Parameter_class_key)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
-  FOREIGN KEY(condition_fk) REFERENCES Conditions (condition_key)
+  FOREIGN KEY(vote_fk) REFERENCES Votes (vote_key)
   ON DELETE CASCADE
   ON UPDATE CASCADE
  ) TYPE=InnoDB

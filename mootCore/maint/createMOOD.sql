@@ -58,12 +58,6 @@ source createOffline_class.sql;
 source createAncillary_class.sql; 
 
 ## instance tables
-## Conditions must be created before Parameters since the latter
-## will have (some day) a foreign key referencing Conditions.
-
-## Don't want this after all
-##source createConditions.sql;
-
 source createParameters.sql;
 source createFSW_inputs.sql;
 source createAncillary.sql;   
@@ -84,6 +78,10 @@ source createOffline_to_Ancillary.sql;
 
 source createPClass_to_AClass.sql; 
 source createOClass_to_AClass.sql; 
+
+# Alias tables
+source createAncillary_aliases;
+source createVote_aliases;
 
 ## sui generis
 source createInstrument.sql;
