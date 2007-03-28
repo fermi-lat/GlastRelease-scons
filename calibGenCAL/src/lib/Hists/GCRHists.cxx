@@ -377,6 +377,10 @@ void GCRHists::trimHists() {
 }
 
 void GCRHists::fitHists(CalMPD &calMPD, const set<unsigned short> &zList) {
+  // build peak ratio initial values & fitting limits
+  
+
+
   // PER XTAL LOOP
   for (DiodeNum diode; diode.isValid(); diode++)
     for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {

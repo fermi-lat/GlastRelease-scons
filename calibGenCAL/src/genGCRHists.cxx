@@ -2,6 +2,8 @@
 
 /** @file
     @author Zachary Fewtrell
+
+	Generate CIDAC & ADC signal gain calibration histograms from digi & gcrRecon root files
 */
 
 // LOCAL INCLUDES
@@ -79,7 +81,7 @@ public:
     }
   }
 
-  // construct new parser
+  /// construct new parser
   CmdLineParser cmdParser;
 
   CmdOptVar<string> cfgPath;
