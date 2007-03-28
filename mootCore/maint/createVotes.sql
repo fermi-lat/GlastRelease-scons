@@ -10,6 +10,8 @@ create table Votes
  status    VARCHAR(32) NOT NULL default 'OK'
   COMMENT 'set to some value other than OK to indicate it 
            should not be used',
+description           VARCHAR(255) NOT NULL
+  COMMENT 'a place to mention anything special about the Vote',
  creation_time DATETIME
   COMMENT 'time (GMT) of initial insert of this row',
  creator  VARCHAR(32) NOT NULL
