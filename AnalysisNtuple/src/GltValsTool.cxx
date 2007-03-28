@@ -127,14 +127,14 @@ StatusCode GltValsTool::initialize()
 <td>F<td>   Trigger word from the event header, based on digi information (null value: -1)
             The definition of the bits can be found in TriggerBits.h in the enums package.
 
-            Here are the definitions as of Glast Release v7r2 (they are not expected to change.):
 @verbatim
-  b_ACDL =    0x01  ///>  set if cover or side veto, low threshold
+  b_ROI  =    0x01  ///>  Trottle bit
   b_Track=    0x02  ///>  3 consecutive x-y layers hit
   b_LO_CAL=   0x04  ///>  single log above low threshold
   b_HI_CAL=   0x08  ///>  single log above high threshold
-  b_ACDH =    0x10  ///>  cover or side veto, high threshold ("CNO")
-  b_THROTTLE= 0x20  ///>  Ritz throttle
+  b_CNO  =    0x10  ///>  cover or side veto, high threshold ("CNO")
+  b_trottle=  0x20  ///>  temporary copy of the ROI bit, for backward compatibilty
+  b_ACDL =    0x40  ///> set if cover or side veto, low threshold
 @endverbatim
 <tr><td> GltGemSummary 
 <td>F<td>   For Data, a copy of the GEM condtion summary; for MC, 
