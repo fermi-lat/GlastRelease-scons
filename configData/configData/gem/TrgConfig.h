@@ -15,6 +15,11 @@
 //      Copyright (C) 2005      Stanford Linear Accelerator Center
 //
 //---------------------------------------------------------------------------
+/** @class TrgConfig
+    @author M. Kocian
+
+    Top level class to hold GEM information.
+*/
 
 #ifndef TRGCONFIG_HH
 #define TRGCONFIG_HH
@@ -30,18 +35,26 @@
 class TrgConfig{
 
 public:
+  /// Default constructor
   TrgConfig();
+  /// Return the window parameter object
   TrgWindowParams* windowParams(){return &_twp;}
+  /// Return the periodic trigger object
   TrgPeriodicTrigger* periodicTrigger(){return &_tpt;}
+  /// Return the lookup table object
   TrgConfLUT* lut(){return &_lut;}
+  /// Return the trigger engine object
   TrgEngine* trgEngine() {return &_tev;}
+  /// Return the object that holds the information about input disables
   TrgDisabledChannels* disabledChannels(){return &_tdv;}
+  /// Return the information contained in the configuration register
   TrgConfiguration* configuration(){return &_configuration;}
+  /// Return the object that holds the ROI configuration
   TrgRoi* roi(){return &_roi;}
 
-  // Reset the cached and output values
+  /// Reset the cached and output values
   void reset();
-  // Attach this value to a TTree
+  /// Attach this value to a TTree
   void makeBranches(TTree& tree, const std::string& prefix) const;
   void attach(TTree& tree, const std::string& prefix) const;
   

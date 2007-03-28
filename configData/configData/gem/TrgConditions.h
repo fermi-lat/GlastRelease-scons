@@ -15,6 +15,12 @@
 //      Copyright (C) 2005      Stanford Linear Accelerator Center
 //
 //---------------------------------------------------------------------------
+/** @class TrgConditions
+    @author M. Kocian
+
+    Auxiliary class to define trigger conditions by name.
+*/
+
 
 #ifndef TRGCONDITIONS_HH
 #define TRGCONDITIONS_HH
@@ -26,6 +32,7 @@ class TrgConditions{
  public:
   enum pmt {PMTA,PMTB};
   enum conditions {ROI, TKR, CALlow, CALhigh, CNO, Periodic, Solicited, EXT};
+  /// Return a string with the name of the condition
   static const char* condName(conditions i){
     switch(i){
     case ROI: return "ROI";
