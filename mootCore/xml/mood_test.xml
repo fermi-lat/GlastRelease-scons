@@ -226,7 +226,200 @@ version="v1r0" >
 
 <!-- end Delegates -->
 
-<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs, Ancillary  -->
+<!-- Start Precincts -->
+  <table name="Precincts"
+     comment="Further partition of configuration.  A delegate may
+have several precincts." 
+version="v1r0" >
+    <col name="precinct_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>user-friendly way to identify the Precinct. Must be unique.
+      </comment>
+    </col>
+
+    <col name="delegate_fk" >
+      <src null="false">
+        <default value="1" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Delegates" keyCol="delegate_key" />
+      <comment>Refers to Delegates table</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false">
+        <default value="OK" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>If value is not 'OK', indicates entries in other tables created
+              during build must not refer to it </comment>
+    </col>
+
+
+    <col name="description" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="255" />
+      <comment>Optional comments about anything at all</comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <primary col="precinct_key" />
+    <index name="name_unique_index" cols="name" />
+
+  </table>
+
+<!-- end Precincts -->
+
+
+<!-- Instance tables Votes, OfflineCalib, Parameters, FSW_inputs, Ancillary -->
+  <table name="Votes"
+     comment="Smallest interesting unit for intent" version="v1r0" >
+    <col name="vote_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>user-friendly way to identify the vote. Need not be unique.
+      </comment>
+    </col>
+
+    <col name="precinct_fk" >
+      <src null="false">
+        <default value="1" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>A vote file specifies intent for registers controlled
+               by a particular precinct</comment>
+    </col>
+
+    <col name="source" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="255">
+        <restriction>
+          <file />
+        </restriction>
+      </type>
+      <comment>Path and filename for the vote file
+       relative to root directory of MOOT archive.
+      </comment>
+    </col>
+
+
+    <col name="status" >
+      <src null="false">
+        <default value="OK" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>If value is not 'OK', indicates entries in other tables created
+              during build must not refer to it </comment>
+    </col>
+
+
+    <col name="description" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="255" />
+      <comment>Optional comments about anything at all</comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <primary col="vote_key" />
+    <index name="precinct_index" cols="precinct_fk" />
+
+  </table>
+
+  <!--  -->
   <table name="OfflineCalib" 
     comment="metadata table for LAT calibrations" version="v2r1">
     <!-- define columns -->
