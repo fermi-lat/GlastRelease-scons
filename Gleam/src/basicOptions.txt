@@ -158,8 +158,10 @@ ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastCl
 NtupleMaker.Members = {
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
     "ClassifyAlg",       // Atwood's Insightful Miner analysis
-    "FT1Alg",            // generate stuff to go into FT1.
-    "meritAlg"           //   some analysis for PSF
+    "FT1Alg",            // generate stuff to go into FT1 // version from AnaTup
+    "meritAlg",          // some analysis for PSF
+    "McCoordsAlg",       // now in AnaTup
+    "ObfCoordsAlg"       // now in AnaTup
  };
 
 AnalysisNtupleAlg.tupleName = "MeritTuple";
