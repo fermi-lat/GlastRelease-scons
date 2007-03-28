@@ -8,6 +8,7 @@ branches configData cmt doc src
 use GlastPolicy v*
 use commonRootData v*
 use xmlBase v* 
+use mootCore v*
 
 apply_pattern shared_library
 
@@ -21,6 +22,7 @@ library configData \
 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 
+#application testdb testdb.cxx
 ###  non-standard definition -- why is it needed?
 #macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
 
