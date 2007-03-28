@@ -11,6 +11,9 @@
 DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
 
     DECLARE_ALGORITHM( AnalysisNtupleAlg );
+    DECLARE_ALGORITHM( FT1Alg            );
+    DECLARE_ALGORITHM( McCoordsAlg       );
+    DECLARE_ALGORITHM( ObfCoordsAlg      );
 
     DECLARE_TOOL(      TkrValsTool      );
     DECLARE_TOOL(      CalValsTool      );
