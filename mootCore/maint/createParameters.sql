@@ -20,11 +20,9 @@ create table Parameters
   creation_time         DATETIME 
   COMMENT 'When this row was created',
 
-  vstart                DATETIME 
-   COMMENT 'start of interval for which parameter data is suitable for upload',
+  src_creation_time         DATETIME 
+  COMMENT 'When the file this row references  was created',
 
-  vend                  DATETIME 
-   COMMENT 'end of interval for which parameter data is suitable for upload',
 
   status                 ENUM('STARTED', 'ABORT', 'CREATED', 'INVALID')
                             NOT NULL DEFAULT 'STARTED'
@@ -34,10 +32,6 @@ COMMENT 'refers to status of entry, in case file has to be copied',
 
   quality               ENUM('PROD', 'DEV', 'TEST', 'SUPSED', 'INVALID') 
                        NOT NULL,
-
-  flavor                VARCHAR(255) NOT NULL DEFAULT 'default'
-   COMMENT 'set to non-default if this parameter data is special-purpose;
-           may consist of several values separated by commas or spaces',
   description           VARCHAR(255) NOT NULL
      COMMENT 'a place to mention anything special about this parameter',
   checksum              INT UNSIGNED  

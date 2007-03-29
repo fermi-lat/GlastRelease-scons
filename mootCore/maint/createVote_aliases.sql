@@ -3,8 +3,6 @@ create table Vote_aliases
  COMMENT "primary key", 
  name  VARCHAR(32) NOT NULL
  COMMENT "things like 'nominal' ",
- name  VARCHAR(32) NOT NULL
- COMMENT "things like 'nominal' ",
  precinct_fk INT UNSIGNED NOT NULL default '1'
   COMMENT 'refers to row in Precincts table',
  vote_fk INT UNSIGNED NOT NULL
@@ -14,7 +12,7 @@ create table Vote_aliases
  COMMENT 'last update. In practice, last time ancillary_fk was written',
  last_modifier       VARCHAR(32) NOT NULL
   COMMENT 'OS username of person who did last update',
- FOREIGN KEY(precinct_fk) REFERENCES Precincts(precincts_key)
+ FOREIGN KEY(precinct_fk) REFERENCES Precincts(precinct_key)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
  FOREIGN KEY(vote_fk) REFERENCES Votes(vote_key)
