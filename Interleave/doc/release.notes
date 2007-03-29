@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+30-Mar-07 v1r2p9 TU  Change to using GetEntry instead of LoadTree in BackgroundSelection.cxx
 20-sep-07 v1r2p8 THB Enforce a requirement that all variables used be positive, by taking absolute value
 09-jan-07 v1r2p7 HMK init min and max val in XmlFetchEvents
 05-jan-07 v1r2p6 THB Heather's fixes, plus separation ofthe XML files according to the source
