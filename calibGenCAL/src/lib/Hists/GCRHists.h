@@ -67,10 +67,13 @@ public:
   void fillDacRatio(CalUtil::FaceIdx faceIdx,
 				    float leDAC,
 				    float heDAC);
+  
+  /// allocate & create mpdmetry histograms & pointer arrays
+  /// \note you should cal this if you don't call loadHists() from file
+  void     initHists();
 
 private:
-  /// allocate & create mpdmetry histograms & pointer arrays
-  void     initHists();
+  
 
   /// list of histograms of geometric mean for both ends on each xtal.
   CalUtil::CalVec<CalUtil::DiodeNum,

@@ -108,6 +108,8 @@ void GCRCalibAlg::fillHists(unsigned nEntries,
                          const CIDAC2ADC &dac2adc,
                          GCRHists &gcrHists
                          ) {
+  gcrHists.initHists();
+
   algData.clear();
   algData.calPed  = &peds;
   algData.dac2adc = &dac2adc;

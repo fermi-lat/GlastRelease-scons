@@ -1,5 +1,5 @@
-#ifndef MuonAsymALg_h
-#define MuonAsymALg_h
+#ifndef MuonAsymAlg_h
+#define MuonAsymAlg_h
 // $Header$
 
 /** @file
@@ -31,9 +31,9 @@ class AsymHists;
 
     @author Zachary Fewtrell
  */
-class MuonAsymALg {
+class MuonAsymAlg {
 public:
-  MuonAsymALg(const CalPed &ped,
+  MuonAsymAlg(const CalPed &ped,
            const CIDAC2ADC &dac2adc,
            AsymHists &asymHists);
 

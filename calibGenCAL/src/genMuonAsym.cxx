@@ -152,7 +152,7 @@ int main(int argc,
                                              false);
 
     AsymHists asymHists;
-    MuonAsymALg muonAsym(peds,
+    MuonAsymAlg muonAsym(peds,
                       dac2adc,
                       asymHists);
 
