@@ -278,7 +278,9 @@ StatusCode AcdValsTool::initialize()
 <tr><td> AcdTkrHitsCountR[0...3] 
 <td>F<td>   ditto for ACD tiles in side row [0...3] 
 <tr><td> AcdIdRecon
-<td>I<td> Detector identifier that was pierced by the reconstructed track
+<td>I<td> Detector identifier that was pierced by the reconstructed track.  
+          A value of 899 (N/A) is the default and denotes that no ACD detector was 
+		  intersected by a reconstructed track.
 </table>
     */
 
