@@ -107,14 +107,14 @@ void BackgroundSelection::selectEvent()
     }
 
     // grab the next event, cycling if needed
-    Long64_t code = m_inputTree->LoadTree(m_eventOffset++);
+    //Long64_t code = m_inputTree->LoadTree(m_eventOffset++);
+    int code = m_inputTree->GetEntry(m_eventOffset++);
     if( code<0){ m_eventOffset = 0; 
         code = m_inputTree->LoadTree(m_eventOffset++);
         if( code < 0 ){
             throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
         }
     }
-
 }
 //------------------------------------------------------------------------
 void BackgroundSelection::disableBranches(TTree* t) 
@@ -132,7 +132,7 @@ void BackgroundSelection::setCurrentTree(double x)
     // replace the TChain
     delete m_inputTree; 
     m_inputTree = new TChain("MeritTuple");
-    m_inputTree->SetNotify(m_observer);
+    //m_inputTree->SetNotify(m_observer);
 
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
@@ -161,7 +161,8 @@ void BackgroundSelection::setCurrentTree(double x)
     m_triggerRate = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate=m_fetch->getAttributeValue("downlinkRate", x);
 
-    int ret =m_inputTree->LoadTree(0); // make sure this works
+    //int ret =m_inputTree->LoadTree(0); // make sure this works
+    int ret = m_inputTree->GetEntry(0);
     if( ret<0 ) throw std::runtime_error("BackgroundSelection::setCurrentTree: could not read");
 
 }
