@@ -20,6 +20,7 @@
 #include "EFC/GFC_status.h"
 #include "XFC/HFC_status.h"
 #include "XFC/MFC_status.h"
+#include "XFC/DFC_status.h"
 
 static const CLID& CLID_ObfStatus = InterfaceID("ObfStatus", 1, 0);
 
@@ -69,7 +70,8 @@ public:
     enum FilterKeys {
         GammaFilter = 0,
         CNOFilter   = 1,
-        MipFilter   = 2
+        MipFilter   = 2,
+        DFCFilter   = 3
     };
 
     // Standard constructor
@@ -156,6 +158,29 @@ public:
     std::ostream& fillStream(std::ostream& s) const
     {
         s << "MIP Filter status:" << std::hex << m_status << std::dec << std::endl;
+        return s;
+    }
+private:
+    unsigned int m_status;
+};
+
+class ObfDFCStatus : virtual public IObfStatus
+{
+public:
+    ObfDFCStatus(unsigned int status) : m_status(status) {}
+    virtual ~ObfDFCStatus() {}
+
+    unsigned int getStatusHi() const {return m_status >> 16;}
+    unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    // If msb of below is set then event is to be vetoed
+    unsigned int getStatus32() const {return m_status;}
+
+    unsigned int getVetoMask() const {return DFC_STATUS_M_VETO_DEF;}
+    unsigned int getVetoBit()  const {return DFC_STATUS_M_VETOED;}
+    
+    std::ostream& fillStream(std::ostream& s) const
+    {
+        s << "DFC Filter status:" << std::hex << m_status << std::dec << std::endl;
         return s;
     }
 private:
