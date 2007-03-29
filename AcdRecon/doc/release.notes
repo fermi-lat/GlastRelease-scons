@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r7p1    29-Mar-2007 EAC Switch code to prefer ribbon data over tile data for GAP calculation.
 v3r7      07-Dec-2006 EAC Add stuff to get active distance relative to MC particle
 v3r6p1    30-Oct-2006 EAC Fix bug in direction of track extension 
 v3r6      19-Oct-2006 HMK Add downward end of tracks in ActDist3D

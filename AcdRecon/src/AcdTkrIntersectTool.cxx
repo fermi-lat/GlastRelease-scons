@@ -219,10 +219,10 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
     intersections.push_back(iSect);
   }
 
-  if ( tileDataForGap != 0 ) {
-    gapPocaTile(track,data,*tileDataForGap,gapPocas);
-  } else if ( ribbonDataForGap != 0 ) {
+  if ( ribbonDataForGap != 0 ) {
     gapPocaRibbon(track,data,*ribbonDataForGap,gapPocas);
+  } else if ( tileDataForGap != 0 ) {
+    gapPocaTile(track,data,*tileDataForGap,gapPocas);
   } else {
     fallbackToNominal(track,data,gapPocas);
   } 
