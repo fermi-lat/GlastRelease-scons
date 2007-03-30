@@ -38,7 +38,8 @@ Bool_t TowerId::CompareInRange( const TowerId & ref, const std::string & name ) 
 
     bool result = true ;
 
-    result = COMPARE_IN_RANGE_NO_GET(id) && result ;
+    //result = COMPARE_IN_RANGE_NO_GET(id) && result ;
+    result = rootdatautil::CompareInRange(id(),ref.id(),"id");
 
     if (!result) {
         std::cout<<"Comparison ERROR for "<<name<<std::endl ;

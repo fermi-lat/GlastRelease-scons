@@ -103,6 +103,10 @@ bool CompareInRange( Int_t v1, Int_t v2, const std::string & name ) {
 bool CompareInRange( UInt_t v1, UInt_t v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;
 }
+
+bool CompareInRange( ULong_t v1, ULong_t v2, const std::string & name ) {
+    return DirectCompareInRangeVals(v1,v2,name) ;
+}
  
 bool CompareInRange( Bool_t v1, Bool_t v2, const std::string & name ) {
     return DirectCompareInRangeVals(v1,v2,name) ;

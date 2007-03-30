@@ -30,6 +30,7 @@ namespace rootdatautil {
     bool CompareInRange( Short_t, Short_t, const std::string & name ="unknown integer" ) ;
     bool CompareInRange( Int_t, Int_t, const std::string & name ="unknown integer" ) ;
     bool CompareInRange( UInt_t, UInt_t, const std::string & name ="unknown integer" ) ;
+    bool CompareInRange( ULong_t, ULong_t, const std::string & name ="unknown integer" ) ;
     bool CompareInRange( Bool_t, Bool_t, const std::string & name ="unknown bool" ) ;
     bool CompareInRange( Char_t, Char_t, const std::string & name ="unknown Char_t" ) ;
     bool CompareInRange( const char *, const char *, const std::string & name ="unknown vector3" ) ;
