@@ -33,12 +33,13 @@
 #include <list>
 #include <string>
 
-namespace {
 #ifdef WIN32
 #include <float.h> // used to check for NaN
 #else
 #include <cmath>
 #endif
+
+namespace {
 
     bool isFinite(double val) {
         using namespace std; // should allow either std::isfinite or ::isfinite
