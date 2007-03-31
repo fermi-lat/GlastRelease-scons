@@ -31,6 +31,7 @@
 #include <fstream>
 #include <iomanip>
 #include <list>
+#include <string>
 
 namespace {
 #ifdef WIN32
