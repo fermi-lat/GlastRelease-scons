@@ -126,7 +126,12 @@ int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
 
 int checkL1T(const L1T &level1) {
 
-    if (level1.getTriggerWord() != 19) {
+    UInt_t l1Word = 0;
+        l1Word |= enums::b_ACDL;
+        l1Word |= enums::b_Track;
+        l1Word |= enums::b_ACDH;
+
+    if (level1.getTriggerWord() != l1Word) {
         std::cout << "Trigger Word is wrong: " << level1.getTriggerWord() 
             << std::endl;
         return -1;
@@ -562,7 +567,12 @@ int write(char* fileName, int numEvents) {
         
         UInt_t digiTriRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
         UInt_t trgReqTriRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
-        L1T level1(19, digiTriRowBits,trgReqTriRowBits);
+        UInt_t l1Word = 0;
+        l1Word |= enums::b_ACDL;
+        l1Word |= enums::b_Track;
+        l1Word |= enums::b_ACDH;
+
+        L1T level1(l1Word, digiTriRowBits,trgReqTriRowBits);
         EventSummaryData summary(0);
         summary.initEventFlags(1);
         ev->initialize(ievent, runNum, randNum*ievent, randNum*ievent, level1, summary, fromMc);
