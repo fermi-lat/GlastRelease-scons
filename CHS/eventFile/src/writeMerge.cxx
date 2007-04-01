@@ -1,4 +1,7 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 #include <iostream>
 #include <fstream>
@@ -99,7 +102,8 @@ int main( int argc, char* argv[] )
   std::string idxline;
   std::ifstream idx( idxfile.c_str() );
   if ( idx.fail() ) {
-    std::cout << "writeMerge: failed to open " << idxfile << std::endl;
+    std::cout << "writeMerge: failed to open " << idxfile;
+    std::cout << " (" << errno << ":" << strerror(errno) << ")" << std::endl;
     exit( EXIT_FAILURE );
   }
   while ( getline( idx, idxline ) ) {
@@ -139,7 +143,11 @@ int main( int argc, char* argv[] )
     if ( !pLSEW ) {
       // create the output filename from the user-supplied template
       char ofn[512];
+#ifndef _FILE_OFFSET_BITS
+      _snprintf( ofn, 512, evtfile.c_str(), ctx.run.startedAt, ctx.scalers.sequence );
+#else
       snprintf( ofn, 512, evtfile.c_str(), ctx.run.startedAt, ctx.scalers.sequence );
+#endif
 
       // open the output file
       try {
