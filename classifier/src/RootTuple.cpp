@@ -11,6 +11,11 @@ $Header$
 
 #include <iostream>
 #include <stdexcept>
+#ifdef WIN32
+#include <float.h> // used to check for NaN
+#else
+#include <cmath>
+#endif
 
 namespace {
 
@@ -36,11 +41,6 @@ namespace {
             }
         }
     }
-#ifdef WIN32
-#include <float.h> // used to check for NaN
-#else
-#include <cmath>
-#endif
 
     bool isFinite(double val) {
         using namespace std; // should allow either std::isfinite or ::isfinite
