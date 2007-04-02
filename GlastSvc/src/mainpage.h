@@ -95,7 +95,8 @@
 * @param CurrentEventAlg.fileName
 * Name of the output ASCII file which will contain the run and event ids 
 * written by the CurrentEventAlg algorithm.  This JO parameter can handle
-* environment variables as part of the input.
+* environment variables as part of the input.  By default this fileName is "" 
+* causing no eventId.txt file to be written.
 *
 * @section Testing test_GlastSvc
 * The test routine contains one main algorithm called CreateEvent.

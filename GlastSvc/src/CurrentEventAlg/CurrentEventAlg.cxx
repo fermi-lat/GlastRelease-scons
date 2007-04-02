@@ -55,7 +55,7 @@ CurrentEventAlg::CurrentEventAlg(const std::string& name, ISvcLocator* pSvcLocat
 :Algorithm(name, pSvcLocator) 
 {
     // declare properties with setProperties calls
-    declareProperty("fileName", m_outputFileName="eventId.txt");
+    declareProperty("fileName", m_outputFileName="");  //eventId.txt
 }
 
 //! set parameters and attach to various perhaps useful services.
@@ -77,6 +77,8 @@ StatusCode CurrentEventAlg::execute()
 {
     StatusCode  sc = StatusCode::SUCCESS;
     
+    if (m_outputFileName.empty()) return StatusCode::SUCCESS;
+
     m_eventFile = new std::ofstream(m_outputFileName.c_str(),std::ios_base::trunc);
     if (!m_eventFile)  {
         MsgStream log( msgSvc(), name() );

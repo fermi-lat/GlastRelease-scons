@@ -5,6 +5,9 @@
  package manager:T.Burnett
            EOH
 
+ v9r20    02-Apr-2007  HMK  Modify the behavior of CurrentEventAlg's fileName parameter to take a default of ""
+                            (the empty string), so that writing the run/event ids is skipped by default.  User
+                            must now set the fileName to cause writing to occur.
  v9r19    09-Apr-2006  THB  GlastRandomSvc: Set all seeds before first event, to be unique for a run
  v9r18    23-Mar-2006  TU   Tagging for new externals (CLHEP, Gaudi, G4, etc.)
  v9r17cl2 15-Feb-2006  TU   one more attempt to remove "old school" selector methods
