@@ -7,7 +7,7 @@
 #include <typeinfo>
 
 
-class IFluxSvc;
+#include "IFluxSvc.h"
 
 static const InterfaceID IID_IRegisterSource("IRegisterSource", 1 , 0); 
 
