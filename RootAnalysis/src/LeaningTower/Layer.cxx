@@ -105,14 +105,14 @@ float Layer::activeAreaDist(const float x, const float y) const {
     float dx = 1000000.f;
     for ( int i=0; i<4; ++i ) {
         // x dist to ladder center
-        const float dist = std::abs(GetLadderCenX(i)-x);
+        const float dist = fabs(GetLadderCenX(i)-x);
         if ( dist < dx )
             dx = dist;
     }
     float dy = 1000000.f;
     for ( int i=0; i<4; ++i ) {
         // y dist to wafer center
-        const float dist = std::abs(GetWaferCenY(i)-y);
+        const float dist = fabs(GetWaferCenY(i)-y);
         if ( dist < dy )
             dy = dist;
     }

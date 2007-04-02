@@ -133,7 +133,7 @@ void Efficiency::Go(int lastEntry) {
                 Double_t hor, vert;
                 clusters.GetPoint(i, hor, vert);
                 const float newRes = absExt - hor;
-                if ( std::abs(newRes) < std::abs(ntuple[l][v].res) )
+                if ( fabs(newRes) < fabs(ntuple[l][v].res) )
                      ntuple[l][v].res = newRes;
             }
             // check if this plane is needed for a 3-in-a-row trigger
