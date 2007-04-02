@@ -127,7 +127,7 @@ int main(int argc,
       LogStream::get() << __FILE__ << ": writing smoothed spline points: " << outputTXTFile << endl;
       cidac2adc.writeTXT(outputTXTFile);
     }
-  } catch (exception e) {
+  } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
   }
 

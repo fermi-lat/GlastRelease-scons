@@ -7,7 +7,7 @@
 // LOCAL INCLUDES
 #include "GCRHists.h"
 #include "../Util/CGCUtil.h"
-#include "../util/MultiPeakGaus.h"
+#include "../Util/MultiPeakGaus.h"
 
 // GLAST INCLUDES
 
