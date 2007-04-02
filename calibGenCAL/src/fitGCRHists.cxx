@@ -103,8 +103,7 @@ int main(const int argc,
                           cfg.histFile.getVal(),
                           "txt");
 
-
-
+	calMPD.writeTXT(outputTXTFile);
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
   }
