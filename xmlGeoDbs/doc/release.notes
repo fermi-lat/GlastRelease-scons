@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r39p1 2-Apr-2007  jrb  add skirt to spacecraft model
    v1r39   9-Mar-2007  jrb  Add more inactive LAT volumes; replace cylindrical
                             spacecraft with some real volumes: primary structure,
                             hydrazine and tank, optical bench.
