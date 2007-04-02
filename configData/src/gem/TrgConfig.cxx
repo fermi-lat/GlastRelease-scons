@@ -30,6 +30,17 @@ void TrgConfig::reset() {
   _configuration.reset();
   _roi.reset();  
 }
+std::ostream& operator <<(std::ostream &os, const TrgConfig& tl){
+  os<<"GEM configuration: ";
+  os<<*tl.configuration()<<std::endl;
+  os<<*tl.windowParams()<<std::endl;
+  os<<*tl.periodicTrigger()<<std::endl;
+  os<<*tl.lut()<<std::endl;
+  os<<*tl.trgEngine()<<std::endl;
+  os<<*tl.disabledChannels()<<std::endl;
+  os<<*tl.roi()<<std::endl;
+  return os;
+}
 
 // Attach this value to a TTree
 void TrgConfig::makeBranches(TTree& tree, const std::string& prefix) const {

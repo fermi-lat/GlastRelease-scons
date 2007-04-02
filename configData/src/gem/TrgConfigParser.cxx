@@ -22,16 +22,19 @@
 
 #include "configData/gem/TrgConfigParser.h"
 
+TrgConfigParser::TrgConfigParser()
+  :m_topElt(0),m_allowMissing(false){}
+
 TrgConfigParser::TrgConfigParser(const char* filename)
   :m_allowMissing(false){
-  XmlParser* parser = new XmlParser( true );
+  XmlParser parser(true);
   DOMDocument* doc;
   try {
-    doc =parser->parse( filename );
+    doc =parser.parse( filename );
   }
   catch (ParseException ex) {
-    std::cout << "caught exception with message " << std::endl;
-    std::cout << ex.getMsg() << std::endl;
+    std::cerr << "caught exception with message " << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
     assert(false);
   }
   // top level element
@@ -41,9 +44,30 @@ TrgConfigParser::TrgConfigParser(const char* filename)
 TrgConfigParser::TrgConfigParser(DOMElement* el,bool allowMissing)
   :m_topElt(el),m_allowMissing(allowMissing){};
 
+int TrgConfigParser::parse(TrgConfig* tcf, const char* filename){
+   XmlParser parser(true);
+  DOMDocument* doc;
+  try {
+    doc =parser.parse( filename );
+  }
+  catch (ParseException ex) {
+    std::cerr << "caught exception with message " << std::endl;
+    std::cerr << ex.getMsg() << std::endl;
+    assert(false);
+  }
+  // top level element
+  m_topElt = doc->getDocumentElement();
+  return parse(tcf);
+}
+int TrgConfigParser::parse(TrgConfig* tcf, DOMElement* el){
+  m_topElt=el;
+  return parse(tcf);
+}
+  
 int TrgConfigParser::parse(TrgConfig* tcf){
+  assert(m_topElt);
   if(removeWhitespace(Dom::getTagName(m_topElt))!="GEM"){
-    std::cout<<"Searching for GEM..."<<std::endl;
+    //    std::cout<<"Searching for GEM..."<<std::endl;
     std::vector<DOMElement*> defOutList;
     Dom::getChildrenByTagName( m_topElt, "GEM", defOutList );
     if (defOutList.empty()){
@@ -54,7 +78,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
       std::cout<<"More than one GEM tag found. Exiting"<<std::endl;
       assert(0);
     }  else{
-      std::cout<<"found GEM"<<std::endl;
+      // std::cout<<"found GEM"<<std::endl;
     }
     
     m_topElt=defOutList[0];
@@ -96,6 +120,8 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  unsigned long condreg=content(currentElement,condname);
 	  tcf->lut()->setRegister(i,condreg);
 	}
+      }
+      if (nm=="TAM"){
 	char engname[128];
 	for (int i=0;i<16;i++){
 	  sprintf(engname,"engine_%x",i);
@@ -142,7 +168,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	reg=content(currentElement,"acd_cno");	
 	tcf->disabledChannels()->setCnoRegister(reg);
 	
-	reg=content(currentElement,"tie_tower_busy");	
+	reg=content(currentElement,"tower_busy");	
 	tcf->disabledChannels()->setBusyRegister(reg);
 
 	reg=content(currentElement,"external");	

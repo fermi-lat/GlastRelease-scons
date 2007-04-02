@@ -56,6 +56,6 @@ void TrgConfiguration::attach(TTree& tree, const std::string& prefix) const {
 std::ostream& operator <<(std::ostream& os,  const TrgConfiguration& tc){
   if(tc.acdUsedAsTrigger())os<<"ACD used as trigger"<<std::endl;
   else os<<"ACD used as veto"<<std::endl;
-  os<<"Trigger word "<<std::hex<<tc.configuration()<<std::dec<<std::endl;
+  os<<"Configuration register: "<<std::hex<<tc.configuration()<<std::dec<<std::endl;
   return os;
 }

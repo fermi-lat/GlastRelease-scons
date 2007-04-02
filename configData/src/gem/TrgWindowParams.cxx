@@ -82,4 +82,5 @@ std::ostream& operator <<(std::ostream &os, const TrgWindowParams& tl){
   }
   os<<std::endl;
   os<<"Window width: "<<tl.windowWidth()<<std::endl;
+  return os;
 }

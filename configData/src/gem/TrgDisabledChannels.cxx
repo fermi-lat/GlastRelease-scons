@@ -55,7 +55,7 @@ void TrgDisabledChannels::setCnoRegister( unsigned val){
   _cno=val&0xfff;
 }
 void TrgDisabledChannels::setBusyRegister( unsigned val){
-  _busy=val&0xff;
+  _busy=val&0xffff;
 }
 void TrgDisabledChannels::setExternal( unsigned val){
   _external=(bool)val;

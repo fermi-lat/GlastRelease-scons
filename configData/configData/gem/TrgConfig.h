@@ -68,6 +68,8 @@ private:
   TrgRoi _roi;
 };
 
+/// printout function  
+std::ostream& operator <<(std::ostream &os, const TrgConfig& tl);
 
 
 
