@@ -307,7 +307,7 @@ StatusCode CalTupleAlg::execute() {
             sc = m_xtalkTool->calcXtalkMeV(DiodeIdx(xtalIdx,face,rng.getDiode()), xtalkMeV);
             if (sc.isFailure()) return sc;
 
-            faceSignal += xtalkMeV;
+            faceSignal -= xtalkMeV;
           }
                   
           m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = faceSignal;
@@ -353,7 +353,7 @@ StatusCode CalTupleAlg::execute() {
               sc = m_xtalkTool->calcXtalkMeV(DiodeIdx(xtalIdx,face,rng.getDiode()), xtalkMeV);
               if (sc.isFailure()) return sc;
 
-              faceSignal += xtalkMeV;
+              faceSignal -= xtalkMeV;
             }
 
             sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, faceSignal);

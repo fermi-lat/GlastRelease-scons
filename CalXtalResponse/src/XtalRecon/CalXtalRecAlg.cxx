@@ -95,7 +95,7 @@ StatusCode CalXtalRecAlg::execute()
 
   // initialize neighborXtalkTool
   if (m_xtalkTool)
-	  m_xtalkTool->buildSignalMap(*m_calDigiCol);  
+    m_xtalkTool->buildSignalMap(*m_calDigiCol);  
        
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = m_calDigiCol->begin(); 
@@ -126,9 +126,9 @@ StatusCode CalXtalRecAlg::execute()
                                   belowThresh,
                                   xtalBelowThresh,
                                   saturated,
-								  m_xtalkTool,
-								  0
-								  );
+                                  m_xtalkTool,
+                                  0
+                                  );
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 
