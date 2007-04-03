@@ -1,3 +1,4 @@
+v0r14p1 04/02/07 fewtrell - NeighborXtalk correction had wrong sign
 v0r14   03/23/07 fewtrell - added NeighborXtalk to CalTuple - added MeV unit xtalk correction to NeighborXtalk - added MeVPERDAC per Diode to CalCalibSvc
 v0r13   03/22/07 fewtrell - example jobOptions files for generating only caltuple from digi 
                           - Added NeighborXtalkTool which caculcates neighboring xtal electronic crosstalk
