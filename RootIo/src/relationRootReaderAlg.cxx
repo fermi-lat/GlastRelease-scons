@@ -301,9 +301,9 @@ StatusCode relationRootReaderAlg::createTDSTables()
     m_calDigiRelTab = new CalDigiRelTab();
     m_calDigiRelTab->init();
 
-    m_mcPartToTrajList    = new Event::McPartToTrajectoryTabList();
-    m_mcPointToPosHitList = new Event::McPointToPosHitTabList();
-    m_mcPointToIntHitList = new Event::McPointToIntHitTabList();
+    m_mcPartToTrajList    = new Event::RelationList<Event::McParticle,Event::McTrajectory>;
+    m_mcPointToPosHitList = new Event::RelationList<Event::McTrajectoryPoint,Event::McPositionHit>;
+    m_mcPointToIntHitList = new Event::RelationList<Event::McTrajectoryPoint,Event::McIntegratingHit>;
 
     return sc;
 }
