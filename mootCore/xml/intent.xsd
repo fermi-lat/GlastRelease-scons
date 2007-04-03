@@ -1024,7 +1024,7 @@
   <xs:element name="TKR_Threshold-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="TKR_THresholds" type="ancFileType"
+        <xs:element name="TKR_Thresholds" type="ancFileType"
                          minOccurs="0" />
         <xs:element name="TKR_ChargeScale" type="ancFileType"
                          minOccurs="0" />

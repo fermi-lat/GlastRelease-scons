@@ -2,7 +2,7 @@
 <rdbmsInit        xsi:noNamespaceSchemaLocation="rdbmsInit.xsd"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
-  <table name="Delegates">
+  <table name="Delegates" mode="add">
     <forAll col="status" val="OK" />
     <row>
       <field col="name" val="generic" />
@@ -39,20 +39,16 @@
       <field col="description" 
          val="owns thermal control parameters" />
     </row>
-  </table>
 
-  <table name="Conditions">
     <row>
-      <field col="name" val="dont_care" />
-      <field col="status" val="OK" />
+      <field col="name" val="LAT" />
       <field col="description" 
-        val="when conditions are irrelevant and for testing" />
-      <ref col="delegate_fk" table="Delegates"  refCol="name" 
-         refVal="generic" />
+     val="to control some latc registers not naturally controlled elsewhere" />
     </row>
+
   </table>
 
-  <table name="FSW_class" >
+  <table name="FSW_class" mode="add" >
     <row>
       <field col="name" val="latc_DFT" />
       <field col="from_precursors" val="latc_DFT" />
@@ -233,7 +229,7 @@
 
   </table>
 
-  <table name="Parameter_class" >
+  <table name="Parameter_class" mode="add" >
     <row>
       <field col="name" val="latc_DFT" />
       <field col="description" 
@@ -398,6 +394,277 @@
          refVal="generic" />     
     </row>
 
+    <row>
+      <field col="name" val="latc_AEM_ACD_Mode" />
+      <field col="description" val="AEM registers controlled by ACD_Mode" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_ARC_ACD_Mode" />
+      <field col="description" val="ARC registers controlled by ACD_Mode" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_AFE_ACD_Mode" />
+      <field col="description" val="AFE registers controlled by ACD_Mode" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_Mode" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_Mode" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_AEM_ACD_Timing" />
+      <field col="description" val="AEM registers controlled by ACD_Timing" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_ARC_ACD_Timing" />
+      <field col="description" val="ARC registers controlled by ACD_Timing" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_Timing" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_Timing" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_AFE_ACD_Bias" />
+      <field col="description" val="AFE registers controlled by ACD_Bias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_Bias" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_Bias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_AFE_ACD_Hld" />
+      <field col="description" val="AFE registers controlled by ACD_Hld" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_Hld" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_Hld" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_ARC_ACD_PHA" />
+      <field col="description" val="ARC registers controlled by ACD_PHA" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_PHA" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_PHA" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_AFE_ACD_Veto" />
+      <field col="description" val="AFE registers controlled by ACD_Veto" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_ACD_Veto" />
+      <field col="description" 
+             val="Broadcast values for registers controlled by ACD_Veto" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row> 
+
+  </table>
+
+  <table name="Precincts" >
+    <forAll col="status" val="OK" />
+    <row>
+      <field col="name" val="ACD_Mode" />
+      <field col="description" 
+       val="Static parts of ACD precinct, independent of calibs" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_Bias" />
+      <field col="description" 
+       val="Controls ACD bias dac registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_Hld" />
+      <field col="description" 
+       val="Controls ACD hld dac registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_PHA" />
+      <field col="description" 
+       val="Controls ACD pha threshold registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_Veto" />
+      <field col="description" 
+       val="Controls ACD veto registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_Timing" />
+      <field col="description" 
+       val="Controls various AEM and ARC timing-related registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_Mode" />
+      <field col="description" 
+       val="Static parts of CAL precinct, independent of calibs" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_Timing" />
+      <field col="description" 
+       val="Controls CAL timing-related registers in TEM, CCC, CRC" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_LAC" />
+      <field col="description" val="Controls log acpt registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_FLE" />
+      <field col="description" val="Controls fle dac registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_FHE" />
+      <field col="description" val="Controls fhe dac registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_ULD" />
+      <field col="description" val="Controls rng_uld_dac registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_Mode" />
+      <field col="description" 
+       val="Static parts of TKR precinct, independent of calibs" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_Timing" />
+      <field col="description" 
+       val="Controls TKR timing-related registers in TEM, TCC" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_Strips" />
+      <field col="description" 
+       val="Controls strip enables for trigger and data" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_Threshold" />
+      <field col="description" 
+       val="Controls tfe_dac registers " />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TRG_GEM" />
+      <field col="description" 
+       val="Controls GEM registers exclusive of ROI " />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TRG" />
+    </row>
+
+    <row>
+      <field col="name" val="TRG_ROI" />
+      <field col="description" 
+       val="Controls ROI registers in GEM " />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TRG" />
+    </row>
+
+    <row>
+      <field col="name" val="LAT_Mode" />
+      <field col="description" 
+       val="Mode settings not specific to a single subsystem" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="LAT" />
+    </row>
+
+    <row>
+      <field col="name" val="LAT_Timing" />
+      <field col="description" 
+       val="Timing-related registers in AEM and TEM not handled elsewhere" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="LAT" />
+    </row>
+
   </table>
 
   <table name="FClass_to_PClass">
@@ -544,14 +811,16 @@
     </row>
 
 
+
   </table>
 
 <!-- more tables to init:
         Ancillary_class
         Offline_class
-        OClass_to_AClass
-        PClass_to_AClass
+        OClass_to_AClass            ?? not sure we need this
+        PClass_to_AClass            ?? not sure we need this
         Instrument (if we use it at all)
+        Precincts
  -->
 
 </rdbmsInit>
