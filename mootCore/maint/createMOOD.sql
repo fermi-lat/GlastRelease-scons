@@ -80,8 +80,8 @@ source createPClass_to_AClass.sql;
 source createOClass_to_AClass.sql; 
 
 # Alias tables
-source createAncillary_aliases;
-source createVote_aliases;
+source createAncillary_aliases.sql;
+source createVote_aliases.sql;
 
 ## sui generis
 source createInstrument.sql;
