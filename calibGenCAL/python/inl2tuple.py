@@ -30,7 +30,7 @@ import zachUtil
 if __name__ == '__main__':
 
     # constants
-    usage      = "inl2tuple input.xml output.xml"
+    usage      = "inl2tuple input.xml output.root"
 
     # setup logger
     logging.basicConfig()
