@@ -1,6 +1,7 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
+ v5r18p3  4-Apr-07 TU  Fix bug with resetting particle pointer in mcpositionhits when clearing rel tables
  v5r18p2 18-Mar-07 TU  Fill McPositionHit "packed flags" with G4 track ID
  v5r18p1 14-Mar-07 LSR Add table-tilt jO parameter
  v5r18   12-Mar-07 TU  Implement new scheme for storing particle trajectories
