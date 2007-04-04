@@ -20,6 +20,7 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
     m_delimiters.push_back(DelimPair("<=",4));
     m_delimiters.push_back(DelimPair(">",4));
     m_delimiters.push_back(DelimPair("<",4));
+    m_delimiters.push_back(DelimPair("!",3));
     m_delimiters.push_back(DelimPair("+",3));
     m_delimiters.push_back(DelimPair("-",3));
     m_delimiters.push_back(DelimPair("*",2));
@@ -28,6 +29,7 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
 
     m_delimMap["("]  = " ";
     m_delimMap[")"]  = " ";
+    m_delimMap["!"]  = "B";
     m_delimMap["&"]  = "B";
     m_delimMap["|"]  = "B";
     m_delimMap[">"]  = "B";
@@ -116,8 +118,9 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
     // Delimiter found, process the expression
     if (delimPos < strnLength && fndDelim != "")
     {
-        IXTExprsnNode* pNodeL = 0;
-        IXTExprsnNode* pNodeR = 0;
+        IXTExprsnNode* pNodeL    = 0;
+        IXTExprsnNode* pNodeR    = 0;
+        std::string    inputType = "";
 
         // If the delimiter is not the first character then process 
         // the string to the left of the delimiter
@@ -128,8 +131,10 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
 
             // Parse it
             pNodeL = parseNextExpression(temp);
+
+            inputType = pNodeL->getTypeId();
         }
-        else pNodeL = new XTExprsnValue<REALNUM>("",0);
+        //else pNodeL = new XTExprsnValue<REALNUM>("",0);
         
         // If the delimiter (e.g. a ")") is not the last character
         // then process to the right of the delimiter
@@ -140,16 +145,16 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
 
             // Parse it
             pNodeR = parseNextExpression(temp);
+
+            inputType = pNodeR->getTypeId();
         }
-        else pNodeR = new XTExprsnValue<REALNUM>("",0);
+        //else pNodeR = new XTExprsnValue<REALNUM>("",0);
 
         // An expression node operates on a right and left node to produce 
         // some output. The type of output will depend on the operator, the 
         // type of input is extracted from the nodes (where it is assumed
         // that both nodes have the same type)
         std::string& opType = m_delimMap[fndDelim];
-
-        std::string inputType = pNodeL->getTypeId();
 
         // Exact type of node depends on the operator
         // Logical operation node, input type: bool or double, output type: bool
@@ -159,21 +164,21 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
 
             if ( pos > -1 )
             {
-                pNode = new XTExprsnNode<bool,bool>(fndDelim, *pNodeL, *pNodeR);
+                pNode = new XTExprsnNode<bool,bool>(fndDelim, pNodeL, pNodeR);
             }
             else if ( (pos = inputType.find("string",0)) > -1)
             {
-                pNode = new XTExprsnNode<bool,std::string>(fndDelim, *pNodeL, *pNodeR);
+                pNode = new XTExprsnNode<bool,std::string>(fndDelim, pNodeL, pNodeR);
             }
             else
             {
-                pNode = new XTExprsnNode<bool,REALNUM>(fndDelim, *pNodeL, *pNodeR);
+                pNode = new XTExprsnNode<bool,REALNUM>(fndDelim, pNodeL, pNodeR);
             }
         }
         // Arithmetic operation node, input type: double, output type: double
         else 
         {
-            pNode = new XTExprsnNode<REALNUM,REALNUM>(fndDelim, *pNodeL, *pNodeR);
+            pNode = new XTExprsnNode<REALNUM,REALNUM>(fndDelim, pNodeL, pNodeR);
         }
     }
 

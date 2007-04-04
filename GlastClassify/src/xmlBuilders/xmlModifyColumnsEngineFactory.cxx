@@ -99,10 +99,10 @@ IImActivityNode* xmlModifyColumnsEngineFactory::operator()(const DOMElement* xml
             std::string sVarType = xtOldValue->getType();
 
             // New type depends on the old type
-            if (sVarType == "continuous") xtColumnVal = new XTcolumnVal<REALNUM>(sVarName);
-            else                          xtColumnVal = new XTcolumnVal<std::string>(sVarName,"categorical");
+            if (sVarType == "continuous") xtColumnVal = new XTcolumnVal<REALNUM>(sNewName);
+            else                          xtColumnVal = new XTcolumnVal<std::string>(sNewName,"categorical");
 
-            XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
+            XprsnParser().getXtTupleVars()[sNewName] = xtColumnVal;
         }
 
         xprsnNodeMap[xtColumnVal] = xtOldValue;

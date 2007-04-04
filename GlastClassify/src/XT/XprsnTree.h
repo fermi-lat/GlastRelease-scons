@@ -45,6 +45,20 @@ public:
 };
 
 
+// Use this so that code will compile for case when T2 = std::string
+template <class T1, class T2> T1 ExprsnNodeNotFunc(const T2* pOperand) 
+{
+    T1 value = !(*pOperand);
+    return value;
+};
+template <class T1, class T2> T1 ExprsnNodeNotFunc(const std::string* operand) 
+{
+    // std::string does not define this operator and this will never be called
+    // but... we need to get the code to compile... sorry for the hack here!
+    int stringSize = operand->length();
+    return operand->length() > 0;
+};
+
 /** @class XTExprsnNode
 @brief A generic implementation of an "Expression Node". This class defines the 
        actual type of the node and implements arithmetic or logical functions
@@ -66,8 +80,8 @@ public:
 
     // The basic constructor 
     XTExprsnNode(const std::string& name,
-                 IXTExprsnNode&     left, 
-                 IXTExprsnNode&     right) 
+                 IXTExprsnNode*     left, 
+                 IXTExprsnNode*     right) 
                   : m_name(name), m_value(new T1), m_left(left), m_right(right) 
     {
         // Set the function pointer to the type of operation we define
@@ -85,6 +99,7 @@ public:
         else if (name == "<=") mathOp = &XTExprsnNode<T1,T2>::operator<=; // Logical compare <=
         else if (name == "==") mathOp = &XTExprsnNode<T1,T2>::operator==; // Logical compare ==
         else if (name == "!=") mathOp = &XTExprsnNode<T1,T2>::operator!=; // Logical compare != 
+        else if (name == "!")  mathOp = &XTExprsnNode<T1,T2>::not;        // Logical not operator (unary) 
         else if (name == "^")  mathOp = &XTExprsnNode<T1,T2>::pow;        // Raise x to power y 
         else throw XTENexception("XTExprsnNode: Invalid math operation requested");
     }
@@ -99,22 +114,22 @@ public:
     virtual void print(std::ostream& out=std::cout, bool first=true) const
     {
         // Go down the left branch first
-        m_left.print(out,false);
+        if (m_left) m_left->print(out,false);
 
         // Print out name
         out << " " << m_name.data() << " ";
 
         // Now the right branch
-        m_right.print(out,false);
+        if (m_right) m_right->print(out,false);
 
         if (first) out << std::endl;
     }
     virtual void printExp(std::ostream& out=std::cout, bool first=true) const
     {
         out << "(";
-        m_left.printExp(out,false);
+        if (m_left) m_left->printExp(out,false);
         out << ")" << m_name.data() << "(";
-        m_right.printExp(out,false);
+        if (m_right) m_right->printExp(out,false);
         out << ")=" << (*m_value);
         if (first) out << std::endl;
     }
@@ -122,115 +137,110 @@ public:
 private:
 
     // The allowed operations:
-    const T1* operator+ (IXTExprsnNode& rhs) const 
+    const T1* operator+ (IXTExprsnNode* rhs) const 
     {
-        REALNUM left   = *(reinterpret_cast<const REALNUM*>(m_left()));
-        REALNUM rght   = *(reinterpret_cast<const REALNUM*>(rhs()));
+        REALNUM left   = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM rght   = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value  = left + rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) +  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator- (IXTExprsnNode& rhs) const 
+    const T1* operator- (IXTExprsnNode* rhs) const 
     {
-        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
-        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value = left - rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) -  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator* (IXTExprsnNode& rhs) const 
+    const T1* operator* (IXTExprsnNode* rhs) const 
     {
-        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
-        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value = left * rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) *  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator/ (IXTExprsnNode& rhs) const 
+    const T1* operator/ (IXTExprsnNode* rhs) const 
     {
-        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
-        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
+        REALNUM left = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value = left / rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) /  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator||(IXTExprsnNode& rhs) const 
+    const T1* operator||(IXTExprsnNode* rhs) const 
     {
-        *m_value = *(reinterpret_cast<const bool*>(m_left())) ||  *(reinterpret_cast<const bool*>(rhs()));
+        *m_value = *(reinterpret_cast<const bool*>((*m_left)())) ||  *(reinterpret_cast<const bool*>((*rhs)()));
         return m_value;
     }
-    const T1* operator&&(IXTExprsnNode& rhs) const 
+    const T1* operator&&(IXTExprsnNode* rhs) const 
     {
-        *m_value = *(reinterpret_cast<const bool*>(m_left())) &&  *(reinterpret_cast<const bool*>(rhs()));
+        *m_value = *(reinterpret_cast<const bool*>((*m_left)())) &&  *(reinterpret_cast<const bool*>((*rhs)()));
         return m_value;
     }
-    const T1* operator> (IXTExprsnNode& rhs) const 
+    const T1* operator> (IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left > rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) >  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator>=(IXTExprsnNode& rhs) const 
+    const T1* operator>=(IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left >= rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) >=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator< (IXTExprsnNode& rhs) const 
+    const T1* operator< (IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left < rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) <  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator<=(IXTExprsnNode& rhs) const 
+    const T1* operator<=(IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left <= rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) <=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator==(IXTExprsnNode& rhs) const 
+    const T1* operator==(IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left == rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) ==  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* operator!=(IXTExprsnNode& rhs) const 
+    const T1* operator!=(IXTExprsnNode* rhs) const 
     {
-        T2 left = *(reinterpret_cast<const T2*>(m_left()));
-        T2 rght = *(reinterpret_cast<const T2*>(rhs()));
+        T2 left = *(reinterpret_cast<const T2*>((*m_left)()));
+        T2 rght = *(reinterpret_cast<const T2*>((*rhs)()));
         *m_value = left != rght;
-        //*m_value = *(reinterpret_cast<const double*>(m_left())) !=  *(reinterpret_cast<const double*>(rhs()));
         return m_value;
     }
-    const T1* pow(IXTExprsnNode& rhs) const 
+    const T1* not(IXTExprsnNode* rhs) const 
     {
-        REALNUM left = *(reinterpret_cast<const REALNUM*>(m_left()));
-        REALNUM rght = *(reinterpret_cast<const REALNUM*>(rhs()));
+        // We need to do this because std::string does not define the operator !
+        *m_value = ExprsnNodeNotFunc<T1,T2>(reinterpret_cast<const T2*>((*rhs)()));
+        return m_value;
+    }
+    const T1* pow(IXTExprsnNode* rhs) const 
+    {
+        REALNUM left = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM rght = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value = std::pow(left,rght);
-        //*m_value = std::pow(*(reinterpret_cast<const double*>(m_left())),*(reinterpret_cast<const double*>(rhs())));
         return m_value;
     }
     
     // Function pointer to the particular operation defined for this node
-    const T1* (XTExprsnNode<T1,T2>::*mathOp)(IXTExprsnNode& rhs) const;
+    const T1* (XTExprsnNode<T1,T2>::*mathOp)(IXTExprsnNode* rhs) const;
 
     // Our name and value
     std::string m_name;     // The name assigned to this node
     T1*         m_value;    // The "value" of this node 
 
     // The left and right branches beneath the node 
-    IXTExprsnNode& m_left;  // Left branch to follow
-    IXTExprsnNode& m_right; // Right branch to follow
+    IXTExprsnNode* m_left;  // Left branch to follow
+    IXTExprsnNode* m_right; // Right branch to follow
 
     // This is for making a fancy output... I'm not necessarily proud of it...
     //template <class T> friend std::ostream& operator <<(std::ostream& stream, const XTExprsnNode<T>& node);
@@ -354,7 +364,10 @@ template <class T> class XTExprsnValue : virtual public IXTExprsnNode
 {
 public:
     XTExprsnValue<T>(const std::string& name, T* value) : m_name(name), m_value(value) {}
-    virtual ~XTExprsnValue() {}
+    virtual ~XTExprsnValue() 
+    {
+        return;
+    }
 
     // "My" functions
     const T getValue() const {return *m_value;}
@@ -451,6 +464,8 @@ public:
         else if (name == "abs")   mathOp = &XTExprsnFunction<T>::abs;   // absolute value
         else if (name == "min")   mathOp = &XTExprsnFunction<T>::min;   // smallest
         else if (name == "max")   mathOp = &XTExprsnFunction<T>::max;   // largest
+        else if (name == "floor") mathOp = &XTExprsnFunction<T>::floor; // largest int not greater than x
+        else if (name == "-")     mathOp = &XTExprsnFunction<T>::minus; // unary minus in front of parens
         else throw XTENexception("XTExprsnFunction: Invalid function requested");
     }
     virtual ~XTExprsnFunction() {delete m_value;}
@@ -496,15 +511,12 @@ private:
         REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         REALNUM rght = *(reinterpret_cast<const REALNUM*>(m_right()));
         *m_value = std::pow(left,rght);
-        //*m_value = std::pow(*(reinterpret_cast<const double*>(arg())),*(reinterpret_cast<const double*>(m_right())));
         return m_value;
     }
     const T* log10(IXTExprsnNode& arg) const 
     {
         REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::log(left);
-        //*m_value = std::log10(*(reinterpret_cast<const double*>(arg())));
-        //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
     const T* loge(IXTExprsnNode& arg) const 
@@ -514,7 +526,7 @@ private:
         //*m_value = std::log(*(reinterpret_cast<const double*>(arg())));
         return m_value;
     }
-    const T* sqrt(IXTExprsnNode& arg) const 
+    const REALNUM* sqrt(IXTExprsnNode& arg) const 
     {
         REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::sqrt(left);
@@ -584,6 +596,18 @@ private:
         REALNUM left  = *(reinterpret_cast<const REALNUM*>(arg()));
         REALNUM right = *(reinterpret_cast<const REALNUM*>(m_right()));
         *m_value = left > right ? left : right;
+        return m_value;
+    }
+    const T* floor(IXTExprsnNode& arg) const 
+    {
+        REALNUM temp = *(reinterpret_cast<const REALNUM*>(arg()));
+        *m_value = std::floor(temp);
+        return m_value;
+    }
+    const T* minus(IXTExprsnNode& arg) const 
+    {
+        T temp = *(reinterpret_cast<const T*>(arg()));
+        *m_value = -(temp);
         return m_value;
     }
     

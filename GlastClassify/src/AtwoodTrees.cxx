@@ -41,6 +41,11 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
 
     m_eventId          = tuple.getItem("EvtEventId");
     m_run              = tuple.getItem("EvtRun");
+
+    // Default values as of 4/5/2007 at request of Bill Atwood
+    m_calEnergyCut     = 5.;
+    m_csiRadLenCut     = 4.;
+    m_numTracksCut     = 0.;
     
 /** @page merittuple
 @section ctbVars CTB Variables
@@ -175,12 +180,9 @@ bool AtwoodTrees::execute()
     bool writeTupleRow = false;
 
     // initialize CT output variables
-    m_acdLowerTileCount   = 0.;
-    m_acdUpperTileCount   = 0.;
-    m_bestEnergyProb      = 0.;
-    m_CORE                = 0.;
-    m_evtLogEnergyRaw     = 0.;
-    m_tkrLATEdge          = 0.;
+    m_bestEnergyProb    = 0.;
+    m_CORE              = 0.;
+    m_evtLogEnergyRaw   = 0.;
 
     double tkrNumTracks = *m_TkrNumTracks;
     double calenergy    = *m_CalEnergyRaw;
@@ -189,16 +191,11 @@ bool AtwoodTrees::execute()
     int    eventId      = *m_eventId;
     int    run          = *m_run;
 
-    if ((run == 25312 && eventId == 67710) || (run == 25888 && eventId == 72459))
-    {
-        int j = 0;
-    }
-
     // Always zero the CTB output values in case cuts below fail
     m_treeAnalysis->zeroCTvals();
 
     // These are the "standard" selection cuts
-    if( calenergy > 5. && calCsiRln > 4. && tkrNumTracks > 0)
+    if( calenergy > m_calEnergyCut && calCsiRln > m_csiRadLenCut && tkrNumTracks > m_numTracksCut)
     {
         m_treeAnalysis->execute();
 
@@ -236,7 +233,7 @@ bool AtwoodTrees::execute()
             {
                 double AcdCornerDoca = *m_AcdCornerDoca;
 
-                if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50 && m_tkrLATEdge < 100))
+                if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50))
                 {
                     // Finally, check the result of running the Analysis Sheet
                     double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
