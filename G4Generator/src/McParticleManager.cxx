@@ -32,7 +32,7 @@ void McParticleManager::initialize(IDataProviderSvc* esv, IGlastDetSvc* gsvc)
 	m_glastDetSvc = gsvc;
 }
 
-void McParticleManager::clearRelTables()
+void McParticleManager::clearRelTables(bool modMcPart)
 {
     // It can happen that a set of relations were stored but never transferred
     // to the TDS because the particle was then rejected. This method will delete
@@ -51,13 +51,21 @@ void McParticleManager::clearRelTables()
     for(posHitIter = m_partToPosHit.begin(); posHitIter != m_partToPosHit.end(); posHitIter++)
     {
         // Clean up the McParticle pointer before deleting relation
-        Event::McPartToPosHitRel* rel    = *posHitIter;
-        Event::McPositionHit*     posHit = rel->getSecond();
-        Event::McParticle*        mcPart = rel->getFirst();
+        Event::McPartToPosHitRel* rel = *posHitIter;
 
-        if (mcPart != mcPart->getMother()) posHit->setMcParticle(mcPart->getMother());
-        else                               posHit->setMcParticle(0);
+        // If we are "dropping" the McParticle after the fact, then need to modify pointers
+        // in McPositionHits so they don't point to empty space
+        if (modMcPart)
+        {
+            Event::McPositionHit*     posHit = rel->getSecond();
+            Event::McParticle*        mcPart = rel->getFirst();
 
+            // Convention in PosDetectorManager is to set to parent
+            if (mcPart != mcPart->getMother()) posHit->setMcParticle(mcPart->getMother());
+            else                               posHit->setMcParticle(0);
+        }
+
+        // Delete the relation
         delete rel;
     }
     m_partToPosHit.clear();
@@ -335,7 +343,7 @@ void McParticleManager::dropMcParticle(const G4Track* aTrack)
         }
 
         m_lastParticle = 0;
-        clearRelTables();
+        clearRelTables(true);
     }
 
     return;

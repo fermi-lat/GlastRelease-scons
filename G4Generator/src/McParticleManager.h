@@ -147,7 +147,7 @@ class McParticleManager {
      {m_particles.clear(); m_partToPosHit.clear(); m_partToIntHit.clear();}; 
 
   /// private method to keep the local relational table lists clear
-  void clearRelTables();
+  void clearRelTables(bool modMcPart = false);
 
   /// The static pointer of the singleton
   static McParticleManager* m_pointer;

@@ -99,12 +99,8 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     // this is the global transformation from world to the topVolume; it is the
     // identity if topVolume is equal to LAT
     HepGeom::Transform3D global = m_gsv->getTransform3DPrefix();
-
-    McParticleManager* partMan =  McParticleManager::getPointer();
   
     hit->init(edep, id, local*(prePos-center), local*(postPos-center), global*prePos, global*postPos );
-
-    if (partMan->getLastParticle()) partMan->getLastParticle()->addStatusFlag(Event::McParticle::POSHIT);
 
     // Track energy at this point
     G4int                   trkId       = aStep->GetTrack()->GetTrackID();
@@ -117,7 +113,11 @@ G4bool PosDetectorManager::ProcessHits(G4Step* aStep,
     // Retrieve the particle causing the hit and the ancestor and set the corresponding
     // attributes of the McPositionHit
     // Try to look up the parent of this hit
+    McParticleManager* partMan =  McParticleManager::getPointer();
+
     Event::McParticle* particle = partMan->getLastParticle();  // May be Zero if pruning
+
+    if (particle) particle->addStatusFlag(Event::McParticle::POSHIT);
 
     // If not found (because of pruning), then try using the parent's McParticle
     if (!particle)
