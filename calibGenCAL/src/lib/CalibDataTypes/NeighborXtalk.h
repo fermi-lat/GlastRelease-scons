@@ -32,8 +32,8 @@ public:
   /// write calibrations to txt file
   void writeTXT(const std::string &filename) const;
 
-  /// write ROOT file w/ one tuple per xtalk spline
-  void writeTuple(const std::string &filename) const;
+  /// write ROOT file w/ one tuple per xtalk spline, also throw in a TGraph per spline
+  void writeTuples(const std::string &filename) const;
 
   /// \brief retrieve 2d points for crosstalk spline function (x=cidac, y=adc)
   /// for given source_channel, destination_channel pair
