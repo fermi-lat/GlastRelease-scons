@@ -44,19 +44,25 @@ public:
     virtual void printExp(std::ostream& out=std::cout, bool first=true) const = 0;
 };
 
-
-// Use this so that code will compile for case when T2 = std::string
-template <class T1, class T2> T1 ExprsnNodeNotFunc(const T2* pOperand) 
+// Define specific templated functions here that may need overriding depending on type
+template <class T1, class T2> class XTfunctions
 {
-    T1 value = !(*pOperand);
-    return value;
+public:
+    static T1 not(const T2* valuePtr)
+    {
+        T1 result = !(*valuePtr);
+        return result;
+    }
 };
-template <class T1, class T2> T1 ExprsnNodeNotFunc(const std::string* operand) 
+
+// Override the above for the case there T2 is a string (and the ! operator is not defined)
+template <class T1> class XTfunctions<T1, std::string>
 {
-    // std::string does not define this operator and this will never be called
-    // but... we need to get the code to compile... sorry for the hack here!
-    int stringSize = operand->length();
-    return operand->length() > 0;
+public:
+    static T1 not(const std::string* valuePtr)
+    {
+        return valuePtr->length() == 0;
+    }
 };
 
 /** @class XTExprsnNode
@@ -220,7 +226,8 @@ private:
     const T1* not(IXTExprsnNode* rhs) const 
     {
         // We need to do this because std::string does not define the operator !
-        *m_value = ExprsnNodeNotFunc<T1,T2>(reinterpret_cast<const T2*>((*rhs)()));
+//        *m_value = ExprsnNodeNotFunc<T1,T2>(reinterpret_cast<const T2*>((*rhs)()));
+        *m_value = XTfunctions<T1,T2>::not(reinterpret_cast<const T2*>((*rhs)()));
         return m_value;
     }
     const T1* pow(IXTExprsnNode* rhs) const 
