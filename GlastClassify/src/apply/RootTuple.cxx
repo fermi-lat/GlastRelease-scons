@@ -24,6 +24,8 @@
 #include "TKey.h"
 #include "TIterator.h"
 #include "TString.h"
+
+#include <cassert>
 #include <stdexcept>
 #include <iostream>
 
