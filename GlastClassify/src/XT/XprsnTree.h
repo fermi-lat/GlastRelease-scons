@@ -45,10 +45,10 @@ public:
 };
 
 // Define specific templated functions here that may need overriding depending on type
-template <class T1, class T2> class XTfunctions
+template <typename T1, typename T2> class XTfunctions
 {
 public:
-    static T1 not(const T2* valuePtr)
+    static T1 xtnot(const T2* valuePtr)
     {
         T1 result = !(*valuePtr);
         return result;
@@ -56,10 +56,10 @@ public:
 };
 
 // Override the above for the case there T2 is a string (and the ! operator is not defined)
-template <class T1> class XTfunctions<T1, std::string>
+template <typename T1> class XTfunctions<T1, std::string>
 {
 public:
-    static T1 not(const std::string* valuePtr)
+    static T1 xtnot(const std::string* valuePtr)
     {
         return valuePtr->length() == 0;
     }
@@ -105,7 +105,7 @@ public:
         else if (name == "<=") mathOp = &XTExprsnNode<T1,T2>::operator<=; // Logical compare <=
         else if (name == "==") mathOp = &XTExprsnNode<T1,T2>::operator==; // Logical compare ==
         else if (name == "!=") mathOp = &XTExprsnNode<T1,T2>::operator!=; // Logical compare != 
-        else if (name == "!")  mathOp = &XTExprsnNode<T1,T2>::not;        // Logical not operator (unary) 
+        else if (name == "!")  mathOp = &XTExprsnNode<T1,T2>::xtnot;      // Logical not operator (unary) 
         else if (name == "^")  mathOp = &XTExprsnNode<T1,T2>::pow;        // Raise x to power y 
         else throw XTENexception("XTExprsnNode: Invalid math operation requested");
     }
@@ -223,11 +223,11 @@ private:
         *m_value = left != rght;
         return m_value;
     }
-    const T1* not(IXTExprsnNode* rhs) const 
+    const T1* xtnot(IXTExprsnNode* rhs) const 
     {
         // We need to do this because std::string does not define the operator !
 //        *m_value = ExprsnNodeNotFunc<T1,T2>(reinterpret_cast<const T2*>((*rhs)()));
-        *m_value = XTfunctions<T1,T2>::not(reinterpret_cast<const T2*>((*rhs)()));
+        *m_value = XTfunctions<T1,T2>::xtnot(reinterpret_cast<const T2*>((*rhs)()));
         return m_value;
     }
     const T1* pow(IXTExprsnNode* rhs) const 
