@@ -333,15 +333,6 @@ version="v1r0" >
           row is inserted.</comment>
     </col>
 
-    <col name="name" >
-      <src null="false">
-        <from agent="enduser" />
-      </src>
-      <type typename="varchar" size="32" />
-      <comment>user-friendly way to identify the vote. Need not be unique.
-      </comment>
-    </col>
-
     <col name="precinct_fk" >
       <src null="false">
         <default value="1" />
@@ -1613,6 +1604,19 @@ version="v1r0" >
     <comment>Whatever else should be noted about this class
     </comment>
   </col>
+
+    <col name="delegate_fk">
+      <src null="true">
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <fk tableName="Delegates" keyCol="delegate_key" />
+      <comment>Delegate which owns this kind of Ancillary file</comment>
+    </col>
 
   <primary col="Ancillary_class_key" />
 

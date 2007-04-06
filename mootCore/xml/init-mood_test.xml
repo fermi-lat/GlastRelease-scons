@@ -776,7 +776,111 @@
 
   </table>
 
-  <table name="Precincts" >
+  <table name="Ancillary_class" mode="add" >
+    <row>
+      <field col="name" val="dummy" />
+      <field col="description" 
+             val="for backwards compatibility; probably not needed" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="generic" />
+
+    </row>
+
+    <row>
+      <field col="name" val="ACD_BiasDacCalibration" />
+      <field col="description" 
+             val="ACD calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_HldCalibration" />
+      <field col="description" 
+             val="ACD calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_PedestalCalibration" />
+      <field col="description" 
+             val="ACD calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_MIPCalibration" />
+      <field col="description" 
+             val="ACD calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+
+<!--  Comment out until we get final word on this name
+    <row>
+      <field col="name" val="ACD_VetoElectronicsCalibration" />
+      <field col="description" 
+             val="ACD calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+-->
+
+    <row>
+      <field col="name" val="ACD_VetoInMipConfiguration" />
+      <field col="description" 
+             val="ACD config file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_VetoInPhaConfiguration" />
+      <field col="description" 
+             val="ACD config file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_HotStripsCalibration" />
+      <field col="description" 
+             val="TKR calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_ThresholdSettings" />
+      <field col="description" 
+             val="TKR settings" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="GEM_Configuration" />
+      <field col="description" 
+             val="GEM config. exclusive of ROI" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TRG" />
+    </row>
+
+    <row>
+      <field col="name" val="ROI_Configuration" />
+      <field col="description" 
+             val="GEM config. for ROI registers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TRG" />
+    </row>
+
+
+  </table>
+
+  <table name="Precincts" mode="add" >
     <forAll col="status" val="OK" />
     <row>
       <field col="name" val="ACD_Mode" />
