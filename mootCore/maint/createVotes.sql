@@ -1,8 +1,6 @@
 create table Votes
 (vote_key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
  COMMENT "primary key", 
- name  VARCHAR(32) NOT NULL
-  COMMENT "need not be unique",
  precinct_fk INT UNSIGNED NOT NULL  default '1'
   COMMENT "precinct this vote pertains to",
  source                  VARCHAR(255) NOT NULL 

@@ -12,6 +12,9 @@ create table Ancillary
   source_fmt             VARCHAR(32) NOT NULL
      COMMENT 'could be, e.g. xml',
 
+  GMT_creation_time         DATETIME 
+  COMMENT 'When file this row refers to was created',
+
   creation_time         DATETIME 
   COMMENT 'When this row was created',
 
@@ -20,9 +23,6 @@ create table Ancillary
 
   quality               ENUM('PROD', 'DEV', 'TEST', 'SUPSED', 'INVALID') 
                        NOT NULL,
-
-  flavor                VARCHAR(32) NOT NULL DEFAULT 'default'
-   COMMENT 'set to non-default if this parameter data is special-purpose',
 
   description           VARCHAR(255) NOT NULL
      COMMENT 'a place to mention anything special about this ancillary 
