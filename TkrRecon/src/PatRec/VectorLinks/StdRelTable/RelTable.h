@@ -142,7 +142,7 @@ template <class T1,class T2>
 
     for(mapT1RelIter mapIter = iterPair.first; mapIter != iterPair.second; mapIter++)
     {
-        RelationList<T1,T2>::RelationListIter relIter = (*mapIter).second;
+        typename RelationList<T1,T2>::RelationListIter relIter = (*mapIter).second;
         Relation<T1,T2>* relation = *relIter;
         rels.push_back(relation);
     }
@@ -166,7 +166,7 @@ template <class T1,class T2>
 
     for(mapT2RelIter mapIter = iterPair.first; mapIter != iterPair.second; mapIter++)
     {
-        RelationList<T1,T2>::RelationListIter relIter = (*mapIter).second;
+        typename RelationList<T1,T2>::RelationListIter relIter = (*mapIter).second;
         Relation<T1,T2>* relation = *relIter;
         rels.push_back(relation);
     }
@@ -192,7 +192,7 @@ template <class T1,class T2> void RelTable<T1,T2>::clear()
     m_firstMMap->clear();
     m_secondMMap->clear();
 
-    for(RelationList<T1,T2>::RelationListIter relIter = m_relations->begin(); relIter != m_relations->end(); relIter++)
+    for(typename RelationList<T1,T2>::RelationListIter relIter = m_relations->begin(); relIter != m_relations->end(); relIter++)
     {
         delete *relIter;
     }

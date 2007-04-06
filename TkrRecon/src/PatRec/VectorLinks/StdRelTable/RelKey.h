@@ -67,8 +67,8 @@ private:
     typedef typename RelKeyMultiMap<T1,T2,T3>::iterator RelKeyMultiMapIter;
 
     // Allow class Relation to "set" and "get" the iterator into the RelKey multimap
-    void setMapIter(RelKeyMultiMapIter &relIter) {m_iter = relIter;}
-    RelKeyMultiMapIter getMapIter() const        {return m_iter;}
+    void setMapIter(RelKeyMultiMapIter &relIter) {m_iterator = relIter;}
+    RelKeyMultiMapIter getMapIter() const        {return m_iterator;}
 
     // Allow class Relation to insert and remove this RelKey from the RelKey multimap
     void insertInMap(RelKeyMultiMap<T1,T2,T3>* map, RelationListIter listIter);
@@ -99,7 +99,7 @@ inline void RelKey<T1,T2,T3>::toStream(std::ostream& s) const
 {
   /// Fill the ASCII output stream
   s  << "\n        Data                    = " << m_data
-     << "\n        Iterator                = " << m_iter;
+     << "\n        Iterator                = " << m_iterator;
 }
 
 }
