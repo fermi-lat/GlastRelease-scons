@@ -1,5 +1,5 @@
 package Trigger
-version v4r9p3
+version v4r10
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -38,3 +38,6 @@ library Trigger  \
   -s=../src $(source)
 
 apply_pattern package_test
+
+# enable for testing
+#application engine_test -s=test/engine $(source) -s=../src TriggerTables.* Engine.*
