@@ -3,7 +3,7 @@
 #include "CalLikelihoodPDFFunctions.h"
 #include "CalLikelihoodManagerTool.h"
 #include "Event/Digi/TkrDigi.h"
-
+#include <cerrno>
 /******************************************************************************/
 /***********************  PDFFunction *****************************************/
 /******************************************************************************/

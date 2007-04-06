@@ -3,6 +3,7 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "facilities/Util.h"
 #include <fstream>
+#include <cerrno>
 
 StatusCode CalLikelihoodTool::initialize()
 {
