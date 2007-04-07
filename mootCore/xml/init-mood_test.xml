@@ -706,6 +706,7 @@
        refVal="TKR" />
     </row> 
 
+<!--       leave out for now 
     <row>
       <field col="name" val="latc_GEM_TRG_GEM" />
       <field col="description" 
@@ -721,7 +722,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TRG" />
     </row> 
-
+-->
 
     <row>
       <field col="name" val="latc_AEM_LAT_Mode" />
@@ -861,6 +862,7 @@
        refVal="TKR" />
     </row>
 
+<!--   not so sure about this name ... leave out for now
     <row>
       <field col="name" val="GEM_Configuration" />
       <field col="description" 
@@ -868,7 +870,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TRG" />
     </row>
-
+-->
     <row>
       <field col="name" val="ROI_Configuration" />
       <field col="description" 
@@ -882,6 +884,15 @@
 
   <table name="Precincts" mode="add" >
     <forAll col="status" val="OK" />
+    <row>
+      <field col="name" val="generic" />
+      <field col="description" 
+         val="for backwards compatibility, or when precinct does not matter" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+
+    </row>
+
     <row>
       <field col="name" val="ACD_Mode" />
       <field col="description" 
@@ -1005,23 +1016,6 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
            refVal="TKR" />
     </row>
-
-    <row>
-      <field col="name" val="TRG_GEM" />
-      <field col="description" 
-       val="Controls GEM registers exclusive of ROI " />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-           refVal="TRG" />
-    </row>
-
-    <row>
-      <field col="name" val="TRG_ROI" />
-      <field col="description" 
-       val="Controls ROI registers in GEM " />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-           refVal="TRG" />
-    </row>
-
     <row>
       <field col="name" val="LAT_Mode" />
       <field col="description" 
@@ -1038,9 +1032,31 @@
            refVal="LAT" />
     </row>
 
+    <row>
+      <field col="name" val="TRG_ROI" />
+      <field col="description" 
+       val="Controls ROI registers in GEM " />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TRG" />
+    </row>
+
+<!--   not sure about this name
+    <row>
+      <field col="name" val="TRG_GEM" />
+      <field col="description" 
+       val="Controls GEM registers exclusive of ROI " />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TRG" />
+    </row>
+ -->
   </table>
 
-  <table name="FClass_to_PClass">
+<!--    mode="add" does no good here since there is no unique field
+        Commented out since existing databases already have the right
+        entries.  For new dbs running old code will need to be
+        reinstated.  May not be necessary for new code.
+
+  <table name="FClass_to_PClass" mode="add" >
     <forAll col="status" val="ACTIVE" />
     <row>
       <ref col="PClass_fk" table="Parameter_class" 
@@ -1186,14 +1202,16 @@
 
 
   </table>
+-->
 
 <!-- more tables to init:
-        Ancillary_class
         Offline_class
         OClass_to_AClass            ?? not sure we need this
         PClass_to_AClass            ?? not sure we need this
         Instrument (if we use it at all)
-        Precincts
+
+Also need to add single generic element - just something to
+have primary key = 1 - to Precincts and Votes.
  -->
 
 </rdbmsInit>

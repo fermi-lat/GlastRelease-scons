@@ -1007,9 +1007,25 @@ version="v1r0" >
       <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
 
       <comment>Refers to primary key in Parameter_class table.
-          See foreign key definition below.
       </comment>
     </col>
+
+    <col name="vote_fk" >
+      <src null="false" >
+        <default value="1" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+
+      <comment>Refers to primary key in Votes table.
+      </comment>
+    </col>
+
+
 
     <col name="instrument">
       <src null="false">
@@ -1377,6 +1393,20 @@ version="v1r0" >
       <comment>XML or other form of text are likely values</comment>
     </col>
 
+    <col name="GMT_create_time" >
+      <src null="true" >
+        <from agent="enduser" /> 
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when file described by this row was created, to be
+      specified by end user.
+      </comment>
+    </col>
 
     <col name="quality" >
       <src null="false" stickyInsert="true">
@@ -1676,6 +1706,166 @@ version="v1r0" >
   <index name="classname_unique_index" cols="name" />
 </table>
 <!-- end Offline_class -->
+
+
+<!-- alias tables -->
+<table name="Ancillary_aliases" version="v1r0"
+    comment="Place to keep track of currently-favored anc. files">
+      <col name="ancillary_aliases_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>E.g. nominal</comment>
+    </col>
+
+    <col name="tower" >
+      <src null="false">
+        <default value="-1" />
+      </src>
+      <type typename="tinyint" >
+        <restriction>
+          <interval min="-1" max="15" />
+        </restriction>
+      </type>
+      <comment> Tower to which anc file applies.
+         Special value -1 signifies all or irrelevant
+      </comment>
+    </col>
+
+    <col name="aclass_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
+      <comment>Class of the ancillary file getting an alias</comment>
+    </col>
+
+    <col name="ancillary_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Ancillary" keyCol="Ancillary_key" />
+      <comment>Key for the ancillary file getting an alias</comment>
+    </col>
+
+    <col name="last_modified_time" >
+      <src null="true">
+        <from agent="service" contents="update_time" />         
+      </src>
+      <type typename="datetime" size="14" />
+      <comment>Time of last modification to row. Equal to time it was entered
+      if there were no subsequent mods.  End user is not allowed to set it
+      </comment>
+    </col>
+
+    <col name="last_modifier" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id of
+             whoever creates or modifies this row.
+      </comment>
+    </col>
+    <primary col="ancillary_aliases_key"  />
+    <index name="uniqueness" cols="name aclass_fk tower" />
+</table>
+
+<table name="Vote_aliases" version="v1r0"
+    comment="Place to keep track of currently-favored vote files">
+      <col name="vote_aliases_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>E.g. nominal</comment>
+    </col>
+
+    <col name="precinct_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>Precinct of the file getting an alias</comment>
+    </col>
+
+    <col name="vote_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Key for the vote file getting an alias</comment>
+    </col>
+
+    <col name="last_modified_time" >
+      <src null="true">
+        <from agent="service" contents="update_time" />         
+      </src>
+      <type typename="datetime" size="14" />
+      <comment>Time of last modification to row. Equal to time it was entered
+      if there were no subsequent mods.  End user is not allowed to set it
+      </comment>
+    </col>
+
+    <col name="last_modifier" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id of
+             whoever creates or modifies this row.
+      </comment>
+    </col>
+    <primary col="vote_aliases_key"  />
+    <index name="uniqueness" cols="name precinct_fk" />
+</table>
 
 <table name="FSW_to_Parameters" gui_readonly="true" version="v1r0"
     comment="relate Flight Software input files to the Parameter files
