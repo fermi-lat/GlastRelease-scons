@@ -25,6 +25,7 @@ FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/galaxies/source_galaxies_v1.xml"};
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/grb/GRBobs_user_library_SC2_PF_repoint9.xml"};
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/grb/GRBtemplate_library_SC1.xml"};
 
+FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/moon/source_moon_sc2_v0.xml"};
 
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/ob/source_ob_v0.xml"};
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/other3eg/source_other3eg_v0.xml"};
@@ -70,7 +71,7 @@ FluxAlg.sources   += {"SC2_HighLatClouds"};
 FluxAlg.sources   += {"All_cluster"};
 
 // Dark Matter:
-FluxAlg.sources   += {"lcc2_GC"};
+//FluxAlg.sources   += {"lcc2_GC"};
 FluxAlg.sources   += {"lcc2_halo"};
 FluxAlg.sources   += {"generic_extragalactic"};
 FluxAlg.sources   += {"satellites"};
@@ -91,7 +92,7 @@ FluxAlg.sources   += {"AllGRBobs"};
 FluxAlg.sources   += {"AllGRBtemplate"};
 
 // MOON
-//FluxAlg.sources   += {"Moon"};   <-- conflict with flux source_library
+FluxAlg.sources   += {"Moon"};   
 
 // OB/WR associations
 FluxAlg.sources   += {"All_ob"};
