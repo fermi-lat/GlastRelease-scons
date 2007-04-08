@@ -25,7 +25,8 @@ class TriggerTables : public std::vector<Engine> {
 public:
 
     /// ctor -- expect to create the engines
-    TriggerTables();
+    /// @param configuration specify a trigger table 
+    TriggerTables(std::string configuration="default");
 
     /// for a gltword, return associated engine, or -1 if disabled
     int operator()(int gltword)const;
