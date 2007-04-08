@@ -9,6 +9,7 @@
 
 // following, if uncommented, will run the GUI
 //#include "$GLEAMROOT/src/guiOptions.txt"
+//#include "$GLEAMROOT/src/fredOptions.txt"
 
 FluxAlg.source_name="vertical_surface_muons";
 
@@ -20,9 +21,11 @@ MeritAlg.EventTreeName="MeritTuple";
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 
 mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/vertical_surface_muons/mc.root";
+relationRootWriterAlg.rootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/relations.root";
 digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/digi.root";
 reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/recon.root";
 RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/vertical_surface_muons/merit.root";
+RootTupleSvc.rejectIfBad         = false;
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
