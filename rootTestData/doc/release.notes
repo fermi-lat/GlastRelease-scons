@@ -3,7 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
-v3r7      08-Apr-07  LSR New version of the default and vertical muon files
+v3r7p1    08-Apr-07  LSR New version of the default and vertical muon files
                             write out relations.root
 v3r6p6    07-Dec-06  LSR New version of the default root files
 v3r6p5    07-Dec-06  LSR New version of the vertical muons root files
