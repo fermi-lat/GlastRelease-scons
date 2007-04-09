@@ -567,7 +567,7 @@ void TriggerAlg::bitSummary(std::ostream& out, std::string label, const std::map
     out << endl << setw(col1) <<" "<< setw(6) << "------"; 
     for( j=0; j<size; ++j) out << setw(6) << "-----";
     out << endl << setw(col1) << "tot:" << setw(6)<< grand_total;
-    for( j=0; j<size; ++j) out << setw(6) << total[j];
+    for(j=size-1; j>=0; --j) out << setw(6) << total[j];
 
 
 }
