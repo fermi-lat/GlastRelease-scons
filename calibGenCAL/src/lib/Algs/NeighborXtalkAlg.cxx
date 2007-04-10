@@ -2,7 +2,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "NeighborXtalkAlg.h"
@@ -207,9 +207,9 @@ void NeighborXtalkAlg::processHit(const CalDigi &cdig) {
         // assign to table
         // 'source' channel is current injected channel / LEX8
         DiodeIdx srcIdx(twr,
-                      lyr,
-                      eventData.testCol,
-                      face,
+                        lyr,
+                        eventData.testCol,
+                        face,
                         LRG_DIODE);
 
         algData.xtalk->setPoint(diodeIdx,

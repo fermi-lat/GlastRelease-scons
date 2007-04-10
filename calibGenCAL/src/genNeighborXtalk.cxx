@@ -77,8 +77,6 @@ int main(const int argc,
     /// multiplexing output streams
     /// simultaneously to cout and to logfile
     LogStream::addStream(cout);
-    // generate logfile name
-    const std::string outputDir("./");
     string logfile = cfg.outputBasePath.getVal() + ".log.txt";
     ofstream          tmpStrm(logfile.c_str());
     LogStream::addStream(tmpStrm);

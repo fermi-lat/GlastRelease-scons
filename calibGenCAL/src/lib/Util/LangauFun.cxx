@@ -2,7 +2,7 @@
 
 /** @file
     @author Zach Fewtrell
- */
+*/
 // LOCAL INCLUDES
 #include "LangauFun.h"
 #include "CGCUtil.h"
@@ -133,19 +133,19 @@ namespace {
     // Convolution integral of Landau and Gaussian by sum
 
     for (i = 1; i <= np/2; i++)
-    {
-      xx    = xlow+(i-.5)* step;
-      fland = TMath::Landau(xx, mpc, real_lan)/real_lan;
-      sum  += fland *TMath::Gaus(x[0],
-                                 xx,
-                                 real_gau);
+      {
+        xx    = xlow+(i-.5)* step;
+        fland = TMath::Landau(xx, mpc, real_lan)/real_lan;
+        sum  += fland *TMath::Gaus(x[0],
+                                   xx,
+                                   real_gau);
 
-      xx    = xupp-(i-.5)*step;
-      fland = TMath::Landau(xx, mpc, real_lan)/real_lan;
-      sum  += fland *TMath::Gaus(x[0],
-                                 xx,
-                                 real_gau);
-    }
+        xx    = xupp-(i-.5)*step;
+        fland = TMath::Landau(xx, mpc, real_lan)/real_lan;
+        sum  += fland *TMath::Gaus(x[0],
+                                   xx,
+                                   real_gau);
+      }
 
     // combine sigmas for both landau & gaussian
     float convolved_width = sqrt(real_gau*real_gau + real_lan*real_lan);
@@ -161,7 +161,7 @@ namespace {
                << real_lan << " "
                << real_gau << " "
                << retVal << endl;
-     */
+    */
     return retVal;
   }
 

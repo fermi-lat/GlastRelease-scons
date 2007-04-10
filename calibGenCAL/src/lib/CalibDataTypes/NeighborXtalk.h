@@ -4,7 +4,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "../Util/SplineUtil.h"
@@ -23,9 +23,9 @@
     contains read & write methods to various file formats
 
     @author fewtrell
- */
+*/
 class NeighborXtalk {
-public:
+ public:
   NeighborXtalk() {
   }
 
@@ -60,7 +60,7 @@ public:
   /// for each xtalk spline, subtract spline[0].adc from all points in spline.
   void pedSubtractADC();
 
-private:
+ private:
   /// associate cidac2adc splines from other channels w/ a single adc channel
   typedef std::map<CalUtil::DiodeIdx, SplineUtil::Polyline> ChannelSplineMap;
 

@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "RootFileAnalysis.h"
@@ -74,7 +74,7 @@ RootFileAnalysis::RootFileAnalysis(const vector<string> *mcFilenames,
       TFile       curFile(curFilenames);
 
       int fileDigiEvtVer = ((TStreamerInfo *)curFile.GetStreamerInfoList()->FindObject("DigiEvent"))->
-                             GetClassVersion();
+        GetClassVersion();
 
       if (fileDigiEvtVer != codeDigiEvtVer)
         LogStream::get() << "WARNING: digFile=" << curFilenames << " created with DigiEvent version"

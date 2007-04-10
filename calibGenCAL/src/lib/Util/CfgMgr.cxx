@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "CfgMgr.h"
@@ -74,7 +74,7 @@ namespace CfgMgr {
                                    bool allowAnonArgs,
                                    bool skipFirst,
                                    bool ignoreErrors
-  ) {
+                                   ) {
     // skip empty lists
     if (argc == 0 || argv == 0)
       return;
@@ -93,7 +93,7 @@ namespace CfgMgr {
       // CASE 1: positional argument (no '-')
       if (str[0] != '-' ||
           str[0] == '-' && str.size() == 1 // case of single '-' as positional cmd argument
-      ) {
+          ) {
         nPositionalArgs++;
 
         // CASE 1A: use one of pre-registered positional args

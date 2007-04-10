@@ -382,7 +382,7 @@ void GCRHists::fitHists(CalMPD &calMPD, const set<unsigned short> &zList) {
   // PER XTAL LOOP
   for (DiodeNum diode; diode.isValid(); diode++) {
     /// rough mevperdac guess.
-	const float initialMPD = (diode == LRG_DIODE) ? .3 : 20;
+    const float initialMPD = (diode == LRG_DIODE) ? .3 : 20;
 
     for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
       if (!m_meanDACHists[diode][xtalIdx])
@@ -393,14 +393,14 @@ void GCRHists::fitHists(CalMPD &calMPD, const set<unsigned short> &zList) {
       if (hist.GetEntries() == 0)
         continue;
 
-	  MultiPeakGaus::fitHist(hist, zList, initialMPD);
+      MultiPeakGaus::fitHist(hist, zList, initialMPD);
     }
 
     TH1S &hist = *m_meanDACSumHist[diode];
     if (hist.GetEntries() == 0)
       continue;
-	
-	MultiPeakGaus::fitHist(hist, zList, initialMPD);
+        
+    MultiPeakGaus::fitHist(hist, zList, initialMPD);
 
   }
 }

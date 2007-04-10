@@ -2,7 +2,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "IntNonlinAlg.h"
@@ -275,7 +275,7 @@ void IntNonlinAlg::smoothSpline(const vector<float> &curADC,
                                 vector<float> &splineADC,
                                 vector<float> &splineDAC,
                                 RngNum rng
-) {
+                                ) {
   // following vals only change w/ rng, so i get them outside the other loops.
   unsigned short grpWid       = SMOOTH_GRP_WIDTH[rng.val()];
   unsigned short extrapLo     = EXTRAP_PTS_LO[rng.val()];

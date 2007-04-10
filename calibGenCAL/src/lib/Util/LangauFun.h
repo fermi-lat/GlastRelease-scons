@@ -20,7 +20,7 @@ class TF1;
 
 /** @file
     @author Zach Fewtrell, Alexandre Chekhtman
- */
+*/
 
 /** @brief Singleton-like class provides pointers to ROOT TF1 functions which
     fit with gaussian-convolved landau function.
@@ -36,9 +36,9 @@ class TF1;
     the maximum is located at x=-0.22278298 with the location parameter= 0.
     This shift is corrected within this function, so that the actual
     maximum is identical to the MP parameter.
- */
+*/
 class LangauFun {
-public:
+ public:
   /// retrieve gaussian convolved landau fuction with limits & initial values appropriate for LE CIDAC scale
   static TF1 &     getLangauDAC();
 

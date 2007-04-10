@@ -2,7 +2,7 @@
 
 /** @file
     @author Zachary Fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "../Util/RootFileAnalysis.h"
@@ -45,9 +45,9 @@ void MuonPedAlg::initHists() {
 }
 
 void MuonPedAlg::fillHists(unsigned nEntries,
-                        const vector<string> &rootFileList,
-                        const CalPed *roughPeds,
-                        TRIGGER_CUT trigCut) {
+                           const vector<string> &rootFileList,
+                           const CalPed *roughPeds,
+                           TRIGGER_CUT trigCut) {
   /////////////////////////////////////////
   /// Initialize Object Data //////////////
   /////////////////////////////////////////

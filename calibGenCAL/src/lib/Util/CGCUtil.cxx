@@ -173,22 +173,6 @@ namespace CGCUtil {
     throw std::runtime_error(tmp.str());
   }
 
-  std::string genOutputFilename(const string &outputDir,
-                                const string &outputCalibType,
-                                const string &inputFilename,
-                                const string &outputExt) {
-    // extract basename from input file
-    string baseFilename = inputFilename;
-
-
-    baseFilename = path_remove_ext(path_remove_dir(baseFilename));
-
-    return outputDir + '/'
-      + outputCalibType + '.'
-      + baseFilename + '.'
-      + outputExt;
-  }
-
   typedef std::vector<std::ostream *> streamvector;
 
   /** wrapper class for treating multiple streambuf objects as one

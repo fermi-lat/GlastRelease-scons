@@ -11,12 +11,14 @@
 ## SECTION A: PEDESTALS ##
 
 ### A1: MUON GAIN PEDESTALS
-# cfg file used to drive most C++ muon calibration applications
-CGC_MUON_CFG = calibGenCAL_suite.cfg
 
-# first digi root input file for pedestal calibration 
-# (this file will be used for output filename generation) - the full list of files should be found in CGC_MUON_CFG file
-FIRST_PED_ROOT_INPUT = /nfs/farm/g/glast/u34/Integration/rootData/077003627/v6r070329p16/grRoot/digitization-licos-v3r6p2_077003627_digi_DIGI.root
+MUPED_INPUT_ROOT_FILES = muon_rootfile_list.txt
+
+# options 'PERIODIC' 'EXTERNAL' 'ALL' (default = 'PERIODIC')
+MUPED_EVENT_FILTER     = PERIODIC
+
+# 1000 events minimum per hist is sufficient
+MUPED_NENTRIES_PERHIST = 1000
 
 
 

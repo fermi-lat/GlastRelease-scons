@@ -4,7 +4,7 @@
 
 /** @file
     @author fewtrell
- */
+*/
 
 // LOCAL INCLUDES
 #include "../CalibDataTypes/NeighborXtalk.h"
@@ -26,16 +26,16 @@ class CalDigi;
     object by analyzing calibGen singlex16 digi ROOT files.
 
     @author fewtrell
- */
+*/
 class NeighborXtalkAlg {
-public:
+ public:
   NeighborXtalkAlg();
 
   /// process digi root event file
   void readRootData(const std::string &rootFileName,
                     NeighborXtalk &xtalk);
 
-private:
+ private:
   /// fill histograms w/ data from single event
   void processEvent(const DigiEvent &digiEvent);
 
@@ -73,20 +73,20 @@ private:
 
   /// store data pertinent to current event
   struct EventData {
-private:
+    private:
 
-    void            init() {
-      eventNum = 0;
-      iGoodEvt = 0;
-      testCol  = 0;
-      iSamp    = 0;
-      testDAC  = 0;
-    }
+void            init() {
+  eventNum = 0;
+  iGoodEvt = 0;
+  testCol  = 0;
+  iSamp    = 0;
+  testDAC  = 0;
+}
 
-public:
-    EventData() {
-      init();
-    }
+    public:
+EventData() {
+  init();
+}
 
     /// count events read from root file
     unsigned        eventNum;
