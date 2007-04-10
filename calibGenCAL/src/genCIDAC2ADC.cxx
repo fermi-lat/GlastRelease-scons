@@ -32,23 +32,25 @@ public:
     cmdParser(path_remove_ext(__FILE__)),
     rootFileHE("rootFileHE",
                'h',
-               "input HE DIODE singlex16 digi root file",
+               "input HE DIODE singlex16 digi root file (one of eitehr -l or -h is required)",
                ""),
     rootFileLE("rootFileLE",
-               'h',
-               "input LE DIODE singlex16 digi root file",
+               'l',
+               "input LE DIODE singlex16 digi root file (one of either -l or -h is required)",
                ""),
-    columnMode("bcastMode",
-               'b',
+    columnMode("columnMode",
+               'c',
                "singlex16 pulses 12 columns individually"),
     outputBasename("outputBasename",
                    "all output files will use this basename + some_ext",
                    "")
   {
     cmdParser.registerArg(outputBasename);
-
+    
     cmdParser.registerVar(rootFileHE);
     cmdParser.registerVar(rootFileLE);
+
+    cmdParser.registerSwitch(columnMode);
 
 
     try {
@@ -56,7 +58,7 @@ public:
     } catch (exception &e) {
       cout << e.what() << endl;
       cmdParser.printUsage();
-      throw e;
+      exit(-1);
     }
 
   }
@@ -127,6 +129,7 @@ int main(int argc,
     cidac2adc.writeTXT(outputTXTFile);
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
+    return -1;
   }
 
   return 0;

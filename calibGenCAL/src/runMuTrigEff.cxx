@@ -123,6 +123,7 @@ int main(int argc,
     histFile.Close();
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
+    return -1;
   }
   return 0;
 }

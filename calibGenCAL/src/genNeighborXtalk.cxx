@@ -33,7 +33,7 @@ public:
     rootFileLE("rootFileLE",
                "low energy input singlex16 digi root event file",
                ""),
-    outputBasePath("outputBasePath",
+    outputBasename("outputBasename",
                    "output file path w/o extention (file extensions will be appended",
                    "")
 
@@ -42,7 +42,7 @@ public:
 
     // register positional arguments
     cmdParser.registerArg(rootFileLE);
-    cmdParser.registerArg(outputBasePath);
+    cmdParser.registerArg(outputBasename);
 
     try {
       // parse commandline
@@ -61,7 +61,7 @@ public:
   CmdArg<string> rootFileLE;
 
   /// output file path w/o extention (file extensions will be appended)
-  CmdArg<string> outputBasePath;
+  CmdArg<string> outputBasename;
 };
 
 int main(const int argc,
@@ -77,7 +77,7 @@ int main(const int argc,
     /// multiplexing output streams
     /// simultaneously to cout and to logfile
     LogStream::addStream(cout);
-    string logfile = cfg.outputBasePath.getVal() + ".log.txt";
+    string logfile = cfg.outputBasename.getVal() + ".log.txt";
     ofstream          tmpStrm(logfile.c_str());
     LogStream::addStream(tmpStrm);
 
@@ -97,18 +97,19 @@ int main(const int argc,
     xtalk.pedSubtractADC();
     
 
-    string txtfile = cfg.outputBasePath.getVal() + ".txt";
+    string txtfile = cfg.outputBasename.getVal() + ".txt";
     LogStream::get() << __FILE__ << ": saving xtalk to txt file: "
                      << txtfile << endl;
     xtalk.writeTXT(txtfile);
 
-    string tuplefile = cfg.outputBasePath.getVal() + ".tuple.root";
+    string tuplefile = cfg.outputBasename.getVal() + ".tuple.root";
     LogStream::get() << __FILE__ << ": saving xtalk to tuple ROOT file: "
                      << tuplefile << endl;
     xtalk.writeTuples(tuplefile);
     
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
+    return -1;
   }
 
   return 0;

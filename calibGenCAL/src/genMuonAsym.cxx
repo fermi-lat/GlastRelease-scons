@@ -66,7 +66,7 @@ public:
     } catch (exception &e) {
       cout << e.what() << endl;
       cmdParser.printUsage();
-      throw e;
+      exit(-1);
     }
   }
   /// construct new parser
@@ -162,6 +162,7 @@ int main(int argc,
     histFile.Write();
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
+    return -1;
   }
 
   return 0;

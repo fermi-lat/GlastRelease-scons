@@ -69,7 +69,7 @@ public:
     } catch (exception &e) {
       cout << e.what() << endl;
       cmdParser.printUsage();
-      throw e;
+      exit(-1);
     }
   }
   /// construct new parser
@@ -167,8 +167,6 @@ int main(int argc,
 
     LogStream::get() << __FILE__ << ": writing muon mpd: " << outputTXTFile << endl;
     calMPD.writeTXT(outputTXTFile);
-
-    string adc2nrgFile(cfg.outputBasename.getVal() + ".adc2nrg.txt");
 
     LogStream::get() << __FILE__ << ": writing histogram file: " << histFilename << endl;
     histFile.Write();
