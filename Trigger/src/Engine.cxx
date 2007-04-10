@@ -81,7 +81,7 @@ int Engine::check()const
     // here for a match: return marker if trigger ok.
 
     if( m_prescale==0 ) return m_marker;
-    if( m_prescale<0 || ++m_scalar < m_prescale) return -1;
+    if( m_prescale<0 || m_scalar++ < m_prescale) return -1; 
     m_scalar=0;
     return m_marker;
 }

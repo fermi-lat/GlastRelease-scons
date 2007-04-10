@@ -26,7 +26,8 @@ public:
 
     /// ctor -- expect to create the engines
     /// @param configuration specify a trigger table 
-    TriggerTables(std::string configuration="default");
+    /// @param prescale vector of prescale factors: if empty, use default in table
+    TriggerTables(std::string configuration, const std::vector<int>& prescale);
 
     /// for a gltword, return associated engine, or -1 if disabled
     int operator()(int gltword)const;
