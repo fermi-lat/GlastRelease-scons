@@ -244,7 +244,7 @@ StatusCode FilterAlgTuple::execute() {
         m_gamStatus = obfResult ? obfResult->getStatus32() : -1;
 
         // Get the CNO (HFC) Filter
-        obfResult   = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::CNOFilter);
+        obfResult   = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);
         m_cnoStatus = obfResult ? obfResult->getStatus32() : -1;
 
         // Get the MIP filter
