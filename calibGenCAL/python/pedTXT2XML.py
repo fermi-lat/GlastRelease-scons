@@ -102,8 +102,7 @@ if __name__ == '__main__':
             sys.exit(-1)
 
         # convert vals array to floats instead of strings
-        for i in range(len(vals)):
-            vals[i] = float(vals[i])
+        vals = [float(x) for x in vals]
 
         (twr, lyr, col, face, rng, ped, sig) = vals
         

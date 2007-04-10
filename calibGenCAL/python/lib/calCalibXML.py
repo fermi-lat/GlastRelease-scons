@@ -1723,7 +1723,7 @@ class calPedCalibXML(calCalibXML):
 
         # insert <dimension> element  
             
-        d = self.dimensionWrite(nRange = 4, n = 2)
+        d = self.dimensionWrite(nRange = 4, nFace = 2)
         r.appendChild(d)
 
         for tem in tems:

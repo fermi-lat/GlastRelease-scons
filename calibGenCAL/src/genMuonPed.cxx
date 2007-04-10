@@ -155,9 +155,9 @@ int main(int argc,
     MuonPedAlg  muPed;
     CalPed   calPed;
     // txt output filename
-    string   muPedTXTFile(cfg.outputBasename.getVal() + ".calPed.txt");
+    string   muPedTXTFile(cfg.outputBasename.getVal() + ".txt");
     // output histogram file
-    string   muPedHistFileName(cfg.outputBasename.getVal() + ".calPed.root");
+    string   muPedHistFileName(cfg.outputBasename.getVal() + ".root");
 
     // open new output histogram file
     LogStream::get() << __FILE__ << ": opening muon pedestal output histogram file: " << muPedHistFileName << endl;
