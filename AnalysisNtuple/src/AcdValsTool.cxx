@@ -511,7 +511,7 @@ StatusCode AcdValsTool::calculate()
 	  // check to see if we already have an activeDistance of that type
 	  int checkFilled = filledTypeMask & ( 1 < fillType );
 	  if ( checkFilled != 0 ) continue;
-	  filledTypeMask &= ( 1 < fillType );
+	  filledTypeMask |= ( 1 < fillType );
 
 	  idents::AcdId theId = aPoca->getId();
 
