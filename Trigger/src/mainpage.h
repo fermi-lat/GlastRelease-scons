@@ -18,6 +18,7 @@ sets a flag to abort processing of subsequent algorithms in the same sequence.
 @param vetomask [1+2+4]  if thottle it set, veto if trigger masked with these ...
 @param vetobits[ 1+2]    equals these bits
 @param engine [""]   specify data source for engine data. Currently only "default" is recognized.
+@param prescales []  allow to override the prescales. Should be alist of 12 integers
 
 If the deadtime is enabled, this much time is subtracted from the accumulated livetime associated with the given 
 event, which is copied to the event header. (But note that deadtime is now managed by LivetimeSvc.)
