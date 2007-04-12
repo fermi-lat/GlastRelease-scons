@@ -20,6 +20,11 @@ TriggerAlg.throttle = false;   // set true to test this option
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; 
 
+// test using the trigger engine
+TriggerAlg.engine  ="default";  // overrides masking logic, uses default engine
+OnboardFilter.mask = -1;      // enable OBF
+//TriggerAlg.OutputLevel=2;
+
 
 //==============================================================
 //
