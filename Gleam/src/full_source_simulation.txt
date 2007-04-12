@@ -32,7 +32,9 @@ FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for thi
 //  -------------------------------------------
 //         Source specification (expect additions or replacement from including script)
 //
-FluxAlg.sources    = {"clock"};
+FluxAlg.sources    = {"clock"};     // will be used to generate FT2
+FluxAlg.AvoidSAA   = true;          // no events if in SAA
+
 
 //  -------------------------------------------
 //         Trigger, filter

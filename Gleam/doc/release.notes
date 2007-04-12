@@ -4,7 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
-* v6r26   THB 12-Apr-07  New calibration; test program runs trigger engines
+* v6r26p1 THB 12-Apr-07  New calibration; test program runs trigger engines; 
 * v6r25p1 LSR 30-Mar-07  incorporate new Anatup algs into standard sequence 
 * v6r25   THB 23-Mar-07  Add skymodel.txt, clocks.xml to support production simulation 
 * v6r24p1 THB 20-Mar-07  Update interleave.txt for new design; remove explict source spec. from full_source_simulation.txt 
