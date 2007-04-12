@@ -39,7 +39,7 @@ class GeneralHitToDigiTool : public AlgTool, virtual public IHitToDigiTool {
     /// Runs the tool
     StatusCode execute();
 
-    static const double totThreshold() { return s_totThreshold; }
+    //static const double totThreshold() { return s_totThreshold; }
     static const int    maxHits()      { return s_maxHits;}
 
 private:
@@ -67,7 +67,7 @@ private:
     bool   m_killFailed;
 
     /// threshold for ToT (in Mips)
-    static double s_totThreshold;
+    double m_totThreshold;
     /// maximum number of hits per side
     static int    s_maxHits;
 

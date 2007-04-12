@@ -7,6 +7,9 @@
  *     TkrDigiMcToHitAlg
  *     TkrDigiNoiseAlg
  *     TkrDigiHitToDigiAlg
+ *     TkrHitRemovalAlg
+ *     TkrChargeAlg
+
  * Each sub-algorithm can choose among different tools.  At the end, MC hits are
  * converted into tkr digis.
  *
@@ -44,6 +47,7 @@ class TkrDigiAlg : public Algorithm {
     Algorithm* m_hitRemovalAlg;
     Algorithm* m_noiseAlg;
     Algorithm* m_hitToDigiAlg;
+    Algorithm* m_chargeAlg;
 
 };
 

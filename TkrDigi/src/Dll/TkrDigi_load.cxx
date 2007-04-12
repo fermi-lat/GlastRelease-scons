@@ -17,10 +17,12 @@ DECLARE_FACTORY_ENTRIES(TkrDigi)
   DECLARE_ALGORITHM(TkrDigiNoiseAlg);
   DECLARE_ALGORITHM(TkrDigiHitRemovalAlg);
   DECLARE_ALGORITHM(TkrDigiHitToDigiAlg);
+  DECLARE_ALGORITHM(TkrDigiChargeAlg);
   DECLARE_TOOL     (BariMcToHitTool);
   DECLARE_TOOL     (SimpleMcToHitTool);
   DECLARE_TOOL     (GeneralNoiseTool);
   DECLARE_TOOL     (GeneralHitRemovalTool);
   DECLARE_TOOL     (GeneralHitToDigiTool);
+  DECLARE_TOOL     (GeneralChargeTool);
   DECLARE_TOOL     (TkrDigiRandom); 
 }
