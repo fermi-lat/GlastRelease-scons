@@ -82,18 +82,10 @@ const CLID CLID_Calib_ANC_QdcPed       = 6702;
 // For everybody except the CalibModel class implementation file,
 // the variables are extern.  CalibModel.cxx actually defines them.
 
-#if (defined(_WIN32) && defined(_MSC_VER))
-# if defined(_CalibData_CalibModel_cxx)
-#  define _EXTERN_ __declspec(dllexport)
-# else
-#  define _EXTERN_ extern __declspec(dllimport) 
-# endif
+#if defined(_CalibData_CalibModel_cxx)
+#define  _EXTERN_ 
 #else
-# if defined(_CalibData_CalibModel_cxx)
-#  define  _EXTERN_ 
-# else
-#  define  _EXTERN_ extern
-# endif
+#define  _EXTERN_ extern
 #endif
 
     namespace CalibData {
