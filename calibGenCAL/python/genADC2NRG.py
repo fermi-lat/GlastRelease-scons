@@ -176,7 +176,7 @@ if __name__ == '__main__':
                             # fill in muSlope array
                             muSlopeData[twr, row, online_face, col, rng, slopeIdx] = adc2nrg
 
-                            print twr, lyr, col, face, rng, adc2nrg
+                           # print twr, lyr, col, face, rng, adc2nrg
 
                             # fill in adc2nrg array
                             if thx == 0:
