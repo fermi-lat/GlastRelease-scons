@@ -509,9 +509,9 @@ StatusCode AcdValsTool::calculate()
 	  if ( aPoca->trackIndex() == -1 ) fillType += 2; // vertices
 
 	  // check to see if we already have an activeDistance of that type
-	  int checkFilled = filledTypeMask & ( 1 < fillType );
+	  int checkFilled = filledTypeMask & ( 1 << fillType );
 	  if ( checkFilled != 0 ) continue;
-	  filledTypeMask |= ( 1 < fillType );
+	  filledTypeMask |= ( 1 << fillType );
 
 	  idents::AcdId theId = aPoca->getId();
 
