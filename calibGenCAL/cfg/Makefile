@@ -484,15 +484,15 @@ ${DACSLOPES_MUON_XML} : ${DACSLOPES_MUON_CFG} ${MUSLOPE_MUON_XML}
 	dacSlopesGen.sh ${DACSLOPES_MUON_CFG} ${DACSLOPES_MUON_XML}
 
 .PHONY: tholdci_flight_xml
-tholdci_flight_xml : ${THOLDCI_FLIGHT_XML}
+tholdci_flight_xml : ${THOLDCI_FLIGHT_XML} 
 .PHONY: dac_settings_flight
-${THOLDCI_FLIGHT_XML} : ${THOLDCI_FLIGHT_CFG} 
+${THOLDCI_FLIGHT_XML} : ${THOLDCI_FLIGHT_CFG} ${INL_FLIGHT_XML}
 	tholdCIGen.sh ${THOLDCI_FLIGHT_CFG} ${THOLDCI_FLIGHT_XML}
 
 .PHONY: tholdci_muon_xml
 tholdci_muon_xml : ${THOLDCI_MUON_XML}
 .PHONY: dac_settings_muon
-${THOLDCI_MUON_XML} : ${THOLDCI_MUON_CFG} 
+${THOLDCI_MUON_XML} : ${THOLDCI_MUON_CFG} ${INL_MUON_XML}
 	tholdCIGen.sh ${THOLDCI_MUON_CFG} ${THOLDCI_MUON_XML}
 
 
