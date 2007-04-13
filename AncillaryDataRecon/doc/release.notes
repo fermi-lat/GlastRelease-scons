@@ -3,6 +3,8 @@
  Coordinator:N.Omodei
  @verbatim
 
+ v1r0p2   13-Apr-2007 HMK Add use of IExternal/ROOT, was probably picking it
+          up from IExternal/GaudiInterface previously
  v1r0p1   11-Aug-2006 NO Change the default for rcReport extecntsion (txt->out)
  v1r0     11-Aug-2006 NO Clean up the code. No more couts
  v0r3     08-Aug-2006 NO Clean up the code. Added cluster multiplicity.
