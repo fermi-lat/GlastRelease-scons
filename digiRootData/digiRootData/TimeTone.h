@@ -76,6 +76,8 @@ public:
   /// NO 1-PPS signal at Spacecraft 
   inline Bool_t missingTimeTone() const  { return (m_flags & enums::Lsf::TimeTone::MISSING_TIMETONE_MASK) != 0; }
 
+  inline Bool_t earlyEvent() const { return (m_flags & enums::Lsf::TimeTone::EARLY_EVENT_MASK); }
+
   /// The value of the GemTime registers at the time tone
   inline const GemTime& timeHack() const { return m_timeHack; }
   

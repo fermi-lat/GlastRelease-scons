@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r16p2   15-Apr-2007 HMK add TimeTone::earlyEvent to address JIRA ROOT-28
 v9r16p1   30-Mar-2007 HMK Patch unit test to handle trigger word more
           robustly
 v9r16     11-Nov-2006 HMK Update TfcProjectionCol to 
