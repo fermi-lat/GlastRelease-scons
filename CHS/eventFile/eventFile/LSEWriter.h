@@ -26,6 +26,8 @@ namespace eventFile {
   class LCI_ACD_Info;
   class LCI_CAL_Info;
   class LCI_TKR_Info;
+  struct LPA_Keys;
+  struct LCI_Keys;
   
   class LSEWriter {
   public:
@@ -34,10 +36,10 @@ namespace eventFile {
 
     std::string name() const { return m_name; };
 
-    void write( const LSE_Context&, const EBF_Data&, const LPA_Info& );
-    void write( const LSE_Context&, const EBF_Data&, const LCI_ACD_Info& );
-    void write( const LSE_Context&, const EBF_Data&, const LCI_CAL_Info& );
-    void write( const LSE_Context&, const EBF_Data&, const LCI_TKR_Info& );
+    void write( const LSE_Context&, const EBF_Data&, const LPA_Info&, const LPA_Keys& );
+    void write( const LSE_Context&, const EBF_Data&, const LCI_ACD_Info&, const LCI_Keys& );
+    void write( const LSE_Context&, const EBF_Data&, const LCI_CAL_Info&, const LCI_Keys& );
+    void write( const LSE_Context&, const EBF_Data&, const LCI_TKR_Info&, const LCI_Keys& );
 
     void close();
 
@@ -93,6 +95,8 @@ namespace eventFile {
 
     void write( const LSE_Context&, const EBF_Data& );
     void write( int, const void*, size_t );
+    void write( const LPA_Keys& );
+    void write( const LCI_Keys& );
     void writeHeader();
   };
   

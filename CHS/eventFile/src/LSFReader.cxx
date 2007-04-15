@@ -2,6 +2,7 @@
 #include "eventFile/LSE_Context.h"
 #include "eventFile/EBF_Data.h"
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LSE_Keys.h"
 
 #include "lsfData/LsfCcsds.h"
 #include "lsfData/LsfDatagramInfo.h"
@@ -23,9 +24,12 @@ namespace eventFile {
     LCI_ACD_Info       ainfo;
     LCI_CAL_Info       cinfo;
     LCI_TKR_Info       tinfo;
+    LSE_Keys::KeysType ktype;
+    LPA_Keys           pakeys;
+    LCI_Keys           cikeys;
 
     // read the native objects
-    if ( !LSEReader::read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo ) ) {
+    if ( !LSEReader::read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys ) ) {
       return false;
     }
 
@@ -48,6 +52,8 @@ namespace eventFile {
       break;
     case LSE_Info::LCI_TKR:
       transferInfo( ctx, tinfo, lmeta );
+      break;
+    default:
       break;
     }
 
@@ -108,7 +114,7 @@ namespace eventFile {
     flags |= ( ctx.previous.missingTimeTone ) ? lsfData::TimeTone::MISSING_TIMETONE_MASK : 0x0;
     flags |= ( ctx.previous.missingLatPps )   ? lsfData::TimeTone::MISSING_LAT_MASK      : 0x0;
     flags |= ( ctx.previous.missingCpuPps )   ? lsfData::TimeTone::MISSING_CPU_MASK      : 0x0;
-    flags != ( ctx.previous.earlyEvent )      ? lsfData::TimeTone::EARLY_EVENT_MASK      : 0x0;
+    flags |= ( ctx.previous.earlyEvent )      ? lsfData::TimeTone::EARLY_EVENT_MASK      : 0x0;
     flags |= ( ctx.previous.missingGps )      ? lsfData::TimeTone::MISSING_GPS_MASK      : 0x0;
     lsfData::TimeTone prev( ctx.previous.incomplete, ctx.previous.timeSecs, 
 			    ctx.previous.flywheeling, flags,

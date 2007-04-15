@@ -9,6 +9,7 @@
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
 #include "eventFile/EBF_Data.h"
+#include "eventFile/LSE_Keys.h"
 
 #include "LATdatagramIterator.h"
 #include "EBFeventIterator.h"
@@ -69,12 +70,15 @@ int main( int argc, char* argv[] )
   eventFile::LCI_ACD_Info ainfo;
   eventFile::LCI_CAL_Info cinfo;
   eventFile::LCI_TKR_Info tinfo;
+  eventFile::LSE_Keys::KeysType ktype;
+  eventFile::LPA_Keys pakeys;
+  eventFile::LCI_Keys cikeys;
 
   // retrieve each event in turn
   bool bmore = true;
   do {
     try {
-      bmore = pLSE->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo );
+      bmore = pLSE->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys );
     } catch( std::runtime_error e ) {
       std::cout << e.what() << std::endl;
       break;
@@ -93,15 +97,21 @@ int main( int argc, char* argv[] )
     switch ( infotype ) {
     case eventFile::LSE_Info::LPA:
       pinfo.dump();
+      pakeys.dump("Keys:", "\n");
       break;
     case eventFile::LSE_Info::LCI_ACD:
       ainfo.dump();
+      cikeys.dump("Keys:", "\n");
       break;
     case eventFile::LSE_Info::LCI_CAL:
       cinfo.dump();
+      cikeys.dump("Keys:", "\n");
       break;
     case eventFile::LSE_Info::LCI_TKR:
       tinfo.dump();
+      cikeys.dump("Keys:", "\n");
+      break;
+    default:
       break;
     }
 

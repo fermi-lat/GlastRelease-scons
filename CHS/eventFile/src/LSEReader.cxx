@@ -155,8 +155,101 @@ namespace eventFile {
     }
   }
 
+  void LSEReader::read( LSE_Keys& keys )
+  {
+    // every keys object has LATC_master and LATC_ignore
+    size_t nitems(0);
+    nitems = fread( &keys.LATC_master, sizeof( unsigned ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LSE_Keys LATC_master from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+    nitems = fread( &keys.LATC_ignore, sizeof( unsigned ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LSE_Keys LATC_ignore from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LSEReader::read( LPA_Keys& pakeys )
+  {
+    // read the common part of the struct
+    LSE_Keys& ekeys = pakeys;
+    read( ekeys );
+
+    // read the number of LPA_DB entries
+    unsigned nDB( 0 );
+    size_t nitems( 0 );
+    nitems = fread( &nDB, sizeof( unsigned ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LPA_Keys number of DB's from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // read the entries themselves
+    pakeys.LPA_DB.clear();
+    pakeys.LPA_DB.resize( nDB );
+    nitems = fread( &(pakeys.LPA_DB[0]), nDB*sizeof( unsigned ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LPA_Keys LPA_DB's from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LSEReader::read( LCI_Keys& cikeys )
+  {
+    // read the common part of the struct
+    LSE_Keys& ekeys = cikeys;
+    read( ekeys );
+
+    // read the LCI_script value
+    size_t nitems( 0 );
+    nitems = fread( &cikeys.LCI_script, sizeof( unsigned ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LCI_Keys LCI_script from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LSEReader::readKeys( LSE_Keys::KeysType& ktype, LPA_Keys& pakeys, LCI_Keys& cikeys )
+  {
+    // read the keytype from the file
+    size_t nitems(0);
+    int itype(0);
+    nitems = fread( &itype, sizeof( int ), 1, m_FILE );
+    if ( nitems != 1 ) {
+    }
+    ktype = static_cast<LSE_Keys::KeysType>( itype );
+
+    // operate on the proper keys object based on the type information
+    switch ( ktype ) {
+    case LSE_Keys::LPA:
+      read( pakeys );
+      break;
+    case LSE_Keys::LCI:
+      read( cikeys );
+      break;
+    default:
+      std::ostringstream ess;
+      ess << "LSEReader::read: unknown LSE_Keys typeid " << ktype;
+      ess << " from " << m_name;
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
   bool LSEReader::read( LSE_Context& ctx, EBF_Data& ebf, LSE_Info::InfoType& infotype,
-			LPA_Info& pinfo, LCI_ACD_Info& ainfo, LCI_CAL_Info& cinfo, LCI_TKR_Info& tinfo )
+			LPA_Info& pinfo, LCI_ACD_Info& ainfo, LCI_CAL_Info& cinfo, LCI_TKR_Info& tinfo,
+			LSE_Keys::KeysType& ktype, LPA_Keys& pakeys, LCI_Keys& cikeys )
   {
     // read the context and EBF 
     if ( !read( ctx, ebf ) ) {
@@ -185,6 +278,9 @@ namespace eventFile {
       tinfo = *reinterpret_cast<LCI_TKR_Info*>( buf );
       break;
     }
+
+    // read the translated-key objects
+    readKeys( ktype, pakeys, cikeys );
 
     return true;
   }

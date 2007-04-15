@@ -24,6 +24,7 @@
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
 #include "eventFile/EBF_Data.h"
+#include "eventFile/LSE_Keys.h"
 
 #include "facilities/Util.h"
 
@@ -162,32 +163,108 @@ namespace eventFile {
     }
   }
 
-  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LPA_Info& info )
+  void LSEWriter::write( const LPA_Keys& keys )
+  {
+    // write the object type id to the file
+    size_t nitems(0);
+    int itype = LSE_Keys::LPA;
+    nitems = fwrite( &itype, sizeof( int ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LPA_Keys typeid  to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the two LSE keys
+    unsigned ukeys[2];
+    ukeys[0] = keys.LATC_master;
+    ukeys[1] = keys.LATC_ignore;
+    nitems = fwrite( ukeys, sizeof( ukeys ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LPA_Keys LSE content to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the LPA_DB vector size
+    size_t len = keys.LPA_DB.size();
+    nitems = fwrite( &len, sizeof( size_t ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LPA_Keys LPA_DB length to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the LPA_DB vector
+    nitems = fwrite( &keys.LPA_DB[0], sizeof( unsigned ), keys.LPA_DB.size(), m_FILE );
+    if ( nitems != keys.LPA_DB.size() ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LPA_Keys LPA_DB content to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LSEWriter::write( const LCI_Keys& keys )
+  {
+    // write the object type id to the file
+    size_t nitems(0);
+    int itype = LSE_Keys::LCI;
+    nitems = fwrite( &itype, sizeof( int ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LCI_Keys typeid  to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the three unsigned keys to the file
+    unsigned ukeys[3];
+    ukeys[0] = keys.LATC_master;
+    ukeys[1] = keys.LATC_ignore;
+    ukeys[2] = keys.LCI_script;
+    nitems = fwrite( ukeys, sizeof( ukeys ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LCI_Keys content to " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LPA_Info& info, const LPA_Keys& keys )
   {
     write( ctx, ebf );
     int itype = LSE_Info::LPA;
     write( itype, &info, sizeof( info ) );
+    write( keys );
   }
 
-  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_ACD_Info& info )
+  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_ACD_Info& info, const LCI_Keys& keys )
   {
     write( ctx, ebf );
     int itype = LSE_Info::LCI_ACD;
     write( itype, &info, sizeof( info ) );
+    write( keys );
   }
 
-  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_CAL_Info& info )
+  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_CAL_Info& info, const LCI_Keys& keys )
   {
     write( ctx, ebf );
     int itype = LSE_Info::LCI_CAL;
     write( itype, &info, sizeof( info ) );
+    write( keys );
   }
 
-  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_TKR_Info& info )
+  void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LCI_TKR_Info& info, const LCI_Keys& keys )
   {
     write( ctx, ebf );
     int itype = LSE_Info::LCI_TKR;
     write( itype, &info, sizeof( info ) );
+    write( keys );
   }
 
 }

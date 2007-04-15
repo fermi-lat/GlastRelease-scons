@@ -16,6 +16,7 @@
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
 #include "eventFile/EBF_Data.h"
+#include "eventFile/LSE_Keys.h"
 
 struct EvtIdx {
   std::string tag;
@@ -42,16 +43,16 @@ struct EvtIdx {
     iss >> tag;
     iss >> startedAt;
     iss >> sequence;
-    iss >> elapsed;
-    iss >> livetime;
-    iss >> evtUTC;
-    iss >> scid;
+//     iss >> elapsed;
+//     iss >> livetime;
+//     iss >> evtUTC;
+//     iss >> scid;
     iss >> apid;
     iss >> datagrams;
-    iss >> dgmevt;
+//     iss >> dgmevt;
     iss >> oaction;
     iss >> caction;
-    iss >> dgmUTC;
+//     iss >> dgmUTC;
     iss >> fileofst;
     iss >> evtfile;
   };
@@ -96,6 +97,9 @@ int main( int argc, char* argv[] )
   eventFile::LCI_ACD_Info ainfo;
   eventFile::LCI_CAL_Info cinfo;
   eventFile::LCI_TKR_Info tinfo;
+  eventFile::LSE_Keys::KeysType ktype;
+  eventFile::LPA_Keys     pakeys;
+  eventFile::LCI_Keys     cikeys;
 
   // read the index file and parse the entries, retrieving the 
   // requeseted events as we go
@@ -129,7 +133,7 @@ int main( int argc, char* argv[] )
     bool bevtread = false;
     try {
       it->second->seek( edx.fileofst );
-      bevtread = it->second->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo );
+      bevtread = it->second->read( ctx, ebf, infotype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys );
     } catch( std::runtime_error e ) {
       std::cout << e.what() << std::endl;
       exit( EXIT_FAILURE );
@@ -163,16 +167,16 @@ int main( int argc, char* argv[] )
     try {
       switch( infotype ) {
       case eventFile::LSE_Info::LPA:
-	pLSEW->write( ctx, ebf, pinfo );
+	pLSEW->write( ctx, ebf, pinfo, pakeys );
 	break;
       case eventFile::LSE_Info::LCI_ACD:
-	pLSEW->write( ctx, ebf, ainfo );
+	pLSEW->write( ctx, ebf, ainfo, cikeys );
 	break;
       case eventFile::LSE_Info::LCI_CAL:
-	pLSEW->write( ctx, ebf, cinfo );
+	pLSEW->write( ctx, ebf, cinfo, cikeys );
 	break;
       case eventFile::LSE_Info::LCI_TKR:
-	pLSEW->write( ctx, ebf, tinfo );
+	pLSEW->write( ctx, ebf, tinfo, cikeys );
 	break;
       default:
 	std::ostringstream ess;

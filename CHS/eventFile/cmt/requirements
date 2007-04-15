@@ -27,7 +27,8 @@ library eventFile ${eventFile_headers} \
 	LSEHeader.cxx \
 	LSEReader.cxx \
 	LSFReader.cxx \
-	LSEWriter.cxx 
+	LSEWriter.cxx \
+	LSE_Keys.cxx
 	
 set LDFROOT ${ldfExt_DIR}
 
