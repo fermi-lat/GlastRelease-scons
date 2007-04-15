@@ -10,6 +10,7 @@
 #include "TVector3.h"
 #include "Riostream.h"
 #include <string>
+#include "facilities/Util.h"
 
 #if ROOT_VERSION(5,14,0) <= ROOT_VERSION_CODE
 #include "TStreamerInfo.h"
@@ -220,7 +221,10 @@ int write(char* fileName, int numEvents) {
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
     
-    char * fileName = "recon-v9r11-v5r10.root" ;
+    std::string fileStr("$(TESTDATAROOT)/recon-v9r11-v5r10.root");
+    facilities::Util::expandEnvVar(&fileStr);
+    //char * fileName = "recon-v9r11-v5r10.root" ;
+    char *fileName = fileStr.c_str();
     int numEvents = 10 ;
     
     TString writeString("write") ;

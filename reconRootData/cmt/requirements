@@ -1,5 +1,5 @@
 package reconRootData
-version v9r12
+version v9r13p1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -42,3 +42,7 @@ apply_pattern root_package headers="\
  ../reconRootData/GcrTrack.h"\
  includes="-I$(COMMONROOTDATAROOT)"\
  test_source="test/testReconClasses.cxx"
+
+private
+use facilities v*
+set TESTDATAROOT "${RECONROOTDATAROOT}/cmt"
