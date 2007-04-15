@@ -18,6 +18,8 @@ apply_pattern shared_library
 ##     apply_pattern use_CalibData_symbols
 pattern use_CalibData_symbols \
   macro_append CalibData_linkopts " "\
+      WIN32 & CMTp20061003  " "  \
+      WIN32 & CMTr20  " " \
       WIN32  " ${CalibData_root}/${BINDIR}/CalibData/CalibModel.obj "
 
 private
