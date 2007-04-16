@@ -1,22 +1,17 @@
 // $Header$
 
+// Start up an AcdCalibSvc
+ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // add new flavors to default
-CalibDataSvc.CalibFlavorList += {"vanilla", "DC2"}; 
+CalibDataSvc.CalibFlavorList = {"ideal","MC-data-spring-2007"};
 
 // for MSQL connection
 CalibMySQLCnvSvc.DbName      = "calib"; 
 CalibMySQLCnvSvc.QualityList = {"PROD", "DEV" }; 
 
-// Cal specs
-CalCalibSvc.DefaultFlavor = "vanilla";
+// acd, cal, tkr flavors
+AcdCalibSvc.DefaultFlavor    = "ideal";
+CalCalibSvc.DefaultFlavor    = "MC-data-spring-2007";
+TkrCalibAlg.calibFlavor      = "MC-data-spring-2007";
 
-// Tkr specs
-TkrCalibAlg.deadStripsCalibFlavor = "DC2"; 
-TkrCalibAlg.calibFlavor = "vanilla";
-
-// Start up an AcdCalibSvc
-ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
-
-// For real data:
-AcdCalibSvc.DefaultFlavor = "vanilla";

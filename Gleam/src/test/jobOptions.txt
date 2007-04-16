@@ -14,8 +14,6 @@ Output.Members={}; // turn off any root ouptut
 // mix in ticks to generate pointing and livetime tree
 FluxAlg.sources={"gamma_1_gev_normal","clock"};
 
-TriggerAlg.throttle = false;   // set true to test this option
-
 // Number of events to process
 ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; 
@@ -25,6 +23,7 @@ TriggerAlg.engine  ="default";  // overrides masking logic, uses default engine
 OnboardFilter.mask = -1;      // enable OBF
 //TriggerAlg.OutputLevel=2;
 
+#include "$GLEAMROOT/src/calibration.txt"
 
 //==============================================================
 //
