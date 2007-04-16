@@ -29,8 +29,6 @@ namespace CfgMgr {
   template <typename _T>
     std::string toStr(const _T &val) {
     std::ostringstream tmp;
-
-
     tmp << val;
     return tmp.str();
   }

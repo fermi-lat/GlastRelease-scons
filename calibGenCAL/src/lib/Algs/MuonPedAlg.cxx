@@ -154,8 +154,7 @@ void MuonPedAlg::loadHists(const TFile &histFile) {
 string MuonPedAlg::genHistName(RngIdx rngIdx) {
   ostringstream tmp;
 
-
-  tmp << "muonpeds_" << rngIdx.val();
+  tmp << "muonpeds_" << rngIdx.toStr();
   return tmp.str();
 }
 

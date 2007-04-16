@@ -550,9 +550,8 @@ string MuTrigAlg::genHistName(const string &type,
                               FaceIdx faceIdx) {
   ostringstream tmp;
 
-
   tmp <<  type
-      << "_" << faceIdx.val();
+      << "_" << faceIdx.toStr();
   return tmp.str();
 }
 
