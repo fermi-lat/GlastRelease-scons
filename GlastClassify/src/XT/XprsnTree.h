@@ -8,6 +8,7 @@ $Header$
 #define XprsnTree_h
 
 #include <iostream>
+#include <cmath>
 #include "ImPrecision.h"
 
 /** @class Exception 
@@ -257,7 +258,7 @@ private:
 // Override the ostream << operator. Keeping here as an example....
 template <typename T1, typename T2> std::ostream& operator<<(std::ostream& stream, const XTExprsnNode<T1,T2>& node)
 {
-    node.printExp(out,false);
+    node.printExp(stream,false);
     return stream;
 }
 
