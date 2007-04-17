@@ -257,11 +257,11 @@ for twr in pedTowers:
 
                     pedDiff = max(pedList)-min(pedList)
                     if pedDiff > pedSig:
-                        log.error("Tholdci, muon, inl pedestals %s spread %s > muon ped sigma %s, channel %s"%(pedList, pedDiff, muonPedSig,[twr,lyr,col,face,rng]))
+                        log.warning("Tholdci, muon, inl pedestals %s spread %s > muon ped sigma %s, channel %s"%(pedList, pedDiff, muonPedSig,[twr,lyr,col,face,rng]))
                         nWarnings +=1
 
-                    if max(pedList) - min(pedList) > 2*pedSig:
-                        log.error("Tholdci, muon, inl pedestals %s spread %s, > muon ped sigma %s, channel %s"%(pedList, pedDiff, muonPedSig,[twr,lyr,col,face,rng]))
+                    if pedDiff > 2*pedSig:
+                        log.error("Tholdci, muon, inl pedestals %s spread %s, > 2x muon ped sigma %s, channel %s"%(pedList, pedDiff, muonPedSig,[twr,lyr,col,face,rng]))
                         nErrors +=1
 
                     
