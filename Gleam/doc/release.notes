@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r27p1 THB 17-Apr-07  Rename the flavor for calibration
 * v6r27   THB 16-Apr-07  MC version of calibration: test program runs it
 * v6r26p1 THB 12-Apr-07  New calibration; test program runs trigger engines; 
 * v6r25p1 LSR 30-Mar-07  incorporate new Anatup algs into standard sequence 

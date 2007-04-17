@@ -1,6 +1,6 @@
 package Gleam
 
-version v6r27
+version v6r27p1
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -80,3 +80,9 @@ apply_pattern package_test
 
 # make a folder to keep local data files
 branches data
+
+# temporary=============================================
+# this is set to the correct place for SLAC and glast-ts
+set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
+                    WIN32 "f:\glast\calibrations"
+
