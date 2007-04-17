@@ -83,6 +83,6 @@ branches data
 
 # temporary=============================================
 # this is set to the correct place for SLAC and glast-ts
-set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
-                    WIN32 "f:\glast\calibrations"
+#set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
+#                    WIN32 "f:\glast\calibrations"
 
