@@ -172,6 +172,9 @@ from spec sheet</prim>
 <prim name="tankThickness" value="0.94">Minimum wall, from spec sheet</prim>
 <prim name="hydrazineMass" value="350000" uType="none">Mass in grams
 of hydrazine propellant</prim>
+<prim name="batteryBoxMass" value="53500" uType="none">Mass in grams
+of half the batteries</prim>
+
 
 <prim name="radTop_dz" value="-236.2">Z-displacement relative to LAT origin
 of top of radiators (measuring from 1/4 scale pictures)</prim>

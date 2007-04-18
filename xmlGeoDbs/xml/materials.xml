@@ -575,6 +575,16 @@
   </addmaterial>
 </composite>
 
+<!-- made-up material for batteries -->
+<composite name="SC_batteries" densityREF="batteryBoxDensity" >
+  <addmaterial material="Nickel" >
+    <fractionmass fraction="1" />
+  </addmaterial>
+  <addmaterial material="Copper" >
+    <fractionmass fraction="1" />
+  </addmaterial>
+</composite>
+
 <!-- 
     true density of hydrazine is in the neighborhood of 1.01,
     but use a computed value here.  If the propellant tank

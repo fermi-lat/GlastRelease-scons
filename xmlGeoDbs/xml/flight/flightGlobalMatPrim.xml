@@ -68,4 +68,8 @@ Material used for periphery of envelope containing LAT electronics
   </prim>
   <prim name="skirtMat" value="skirt_Al" type="string" uType="mat">
     Aluminum with calculated density so skirt has correct mass</prim>
+  <prim name="SCbatMat" value="SC_batteries" type="string" uType="mat">
+    Made-up material of appropriate density to give correct total mass
+  </prim>
+
 </primCategory>

@@ -1402,4 +1402,87 @@ electronics.</notes>
     </add>
   </const>
 
+  <!-- Make up some dimensions for boxes to contain batteries. Make
+       2 boxes, one near each of the Y-sides (sides with solar panels).
+       Y-dimension appears to be about 1/4 full spacecraft width.
+       X-dimension is somewhat larger.  Ratio is roughly 4 : 3.
+       Z-dimension is about half of X-dimension.
+    -->
+  <const name="batteryBox_y" >
+    <notes>Guess at Y-dimension of imaginary box containing half the
+           spacecraft batteries.</notes>
+    <mul>
+      <refer refTo="SCWidth" />
+      <const value="0.25" uType="count" />
+    </mul>
+  </const>
+
+  <const name="batteryBox_x" >
+    <notes>Guess at X-dimension of imaginary box containing half the
+           spacecraft batteries.</notes>
+    <quo>
+      <refer refTo="batteryBox_y" />
+      <const value="0.75" uType="count" />
+    </quo>
+  </const>
+
+  <const name="batteryBox_z" >
+    <notes>Guess at Z-dimension of imaginary box containing half the
+           spacecraft batteries.</notes>
+    <mul>
+      <refer refTo="batteryBox_x" />
+      <const value="0.5" uType="count" />
+    </mul>
+  </const>
+
+  <const name="batteryBoxDensity" >
+    <notes>Compute density in gram/cm**3 of made-up material
+           for battery boxes</notes>
+    <quo>
+      <refer refTo="batteryBoxMass" />
+      <mul>
+        <refer refTo="batteryBox_x" />
+        <refer refTo="batteryBox_y" />
+        <refer refTo="batteryBox_z" />
+        <refer refTo="cubicmmToCubiccm" />
+      </mul>
+    </quo>
+  </const>
+
+  <!-- Positioning of battery boxes.  Assume they're centered in X,
+       sit on the "bottom" of SC in Z, and are adjacent to
+       Y-walls of primary structure, on the inside  -->
+
+  <const name="batteryBox_dz" >
+    <notes> Z-displacement of battery boxes</notes>
+    <minus>
+      <refer refTo="SCStruct_dz" />
+      <half>
+        <minus>
+          <refer refTo="SC_z" />
+          <refer refTo="batteryBox_z" />
+        </minus>
+      </half>
+    </minus>
+  </const>
+
+  <const name="batteryBox_dy" >
+    <notes> Y-displacement of battery box near +Y side</notes>
+    <minus>
+      <refer refTo="SCBigSide_dt" />
+      <half>
+        <add>
+          <refer refTo="SC_thick" />
+          <refer refTo="batteryBox_y" />
+        </add>
+      </half>
+    </minus>
+  </const>
+
+  <const name="batteryBox_dyn" >
+    <notes> Y-displacement of battery box near -Y side</notes>
+    <uminus>
+      <refer refTo="batteryBox_dy" />
+    </uminus>
+  </const>
 </derCategory>

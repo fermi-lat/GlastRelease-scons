@@ -580,6 +580,16 @@
         <idField name="fLATObjects" valueREF="eLATPanelYNeg" />
       </posXYZ> 
 
+      <!-- Spacecraft batteries -->
+
+      <posXYZ volume="SCbatteryBox" 
+              YREF="batteryBox_dy" 
+              ZREF="batteryBox_dz"
+       />
+      <posXYZ volume="SCbatteryBox" 
+              YREF="batteryBox_dyn" 
+              ZREF="batteryBox_dz"
+       />
 
     </composition>
     

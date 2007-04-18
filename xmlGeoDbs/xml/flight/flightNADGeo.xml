@@ -510,3 +510,10 @@
        YREF="opticalBench_y"
        ZREF="opticalBench_z"
        materialREF="AlMat" />
+
+<!-- Battery box -->
+    <box name="SCbatteryBox"
+       XREF="batteryBox_x"
+       YREF="batteryBox_y"
+       ZREF="batteryBox_z"
+       materialREF="SCbatMat" />
