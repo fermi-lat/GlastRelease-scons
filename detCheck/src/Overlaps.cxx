@@ -349,7 +349,7 @@ namespace detCheck {
     }
 
     // If one is sphere and one is box..
-    if (loc1->shapeType == SHAPEsphere) {
+    else if (loc1->shapeType == SHAPEsphere) {
       ok = checkSphereBox(loc1, loc2);
     }
     else if (loc2->shapeType == SHAPEsphere) {
@@ -490,9 +490,10 @@ namespace detCheck {
     Point sphereC(sphereLoc->c);
     Point rotC;   // represents sphere center after rotation into box coords
     bool rotated;
+    // adjust rot sphere center into box coords
+    sphereC -= boxLoc->c;
+
     if (rotated = (boxLoc->shapeType == SHAPErotBox)) {
-      // adjust rot sphere center into box coords
-      sphereC -= boxLoc->c;
       double rot;
       ROT_DIR dir = boxLoc->rotDir;
 
