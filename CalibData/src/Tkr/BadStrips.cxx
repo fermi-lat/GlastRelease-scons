@@ -16,6 +16,11 @@ namespace {
     for (unsigned s = 0; s < sz; s++) {
       unsigned iWd = vec[s] / 32;
       unsigned iBit = vec[s] % 32;
+      if (iWd >= N_MASK) {
+        std::cerr << "Illegal strip id "  << s << std::endl;
+        std::cerr << "Exiting..." << std::endl;
+        exit(1);
+      }
       *(mask + iWd) |= (((unsigned) 1) << iBit);
     }
   }
@@ -25,7 +30,7 @@ namespace {
   void merge(std::vector<unsigned short int>* orig, 
              std::vector<unsigned short int>* more) {
     
-    unsigned mask[N_MASK - 1];
+    unsigned mask[N_MASK];
 
     // Clear
     for (unsigned i = 0; i < N_MASK; i++) {
