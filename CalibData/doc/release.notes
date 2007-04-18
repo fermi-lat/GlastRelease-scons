@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r15p1 18-Apr-2007  jrb  Bug fix in bad strips handling (thanks, Leon!)
    v0r15   30-Jun-2006  jrb  Calib.TDS classes for ancillary detector calibs.
    v0r14   12-Apr-2006  jrb  Add/refurbish classes for ACD calibration
    v0r13   23-Mar-2006   jrb Updates for new Gaudi external library
