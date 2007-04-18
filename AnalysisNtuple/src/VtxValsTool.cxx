@@ -353,7 +353,7 @@ StatusCode VtxValsTool::calculate()
 		Point  x2 = track_2->front()->getPoint(Event::TkrTrackHit::SMOOTHED);
 	    Vector t2 = track_2->front()->getDirection(Event::TkrTrackHit::SMOOTHED);
 
-		x2 + ((x1.z()-x2.z())/t2.z()) * t2;
+		x2H = x2 + ((x1.z()-x2.z())/t2.z()) * t2;
 
 		VTX_Head_Sep = (x1-x2H).magnitude(); 
 
