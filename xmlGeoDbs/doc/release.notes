@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r39p3 17-Apr-2007 jrb  Move propellant and tank up somewhat to avoid
+                            colliding with batteries
    v1r39p2 17-Apr-2007 jrb  add batteries
    v1r39p1 2-Apr-2007  jrb  add skirt to spacecraft model
    v1r39   9-Mar-2007  jrb  Add more inactive LAT volumes; replace cylindrical
