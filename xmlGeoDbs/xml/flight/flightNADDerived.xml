@@ -1147,19 +1147,30 @@ electronics.</notes>
     </minus>
   </const>
 
+  <const name="avoidBattery_dz" >
+    <notes>Try half of battery height</notes>
+    <mul>
+      <refer refTo="batteryBox_z" />
+      <const value="0.5" uType="count" />
+    </mul>
+  </const>
+
   <const name="tank_dz" >
     <notes>vertical displacement for propellant tank and contents.
-          Just assume it's on the bottom: bottom of tank lines up
-          with bottom of primary structure</notes>
-    <minus>
-      <refer refTo="SCStruct_dz" />
+          Just assume it's somewhat above the bottom so avoid hitting
+          battery. </notes>
+    <add>
+      <refer refTo="avoidBattery_dz" />
       <minus>
-        <half>
-          <refer refTo="SC_z" />
-        </half>
-        <refer refTo="tankOuterRadius" />
+        <refer refTo="SCStruct_dz" />
+        <minus>
+          <half>
+            <refer refTo="SC_z" />
+          </half>
+          <refer refTo="tankOuterRadius" />
+        </minus>
       </minus>
-    </minus>
+     </add>
   </const>
 
   <const name="SC_HydrazineDensity" >
