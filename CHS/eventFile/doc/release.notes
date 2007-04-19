@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v3r1   18-Apr-2007 RBL Added LsfKeys to lsfData and populate.
  * v3     16-Apr-2007 RBL Added LSE_Keys to .evt file.
  * v2r2   23-Mar-2007 RBL more-informative exception-handling in writeMerge.exe
  * v2r1   08-Mar-2007 RBL Added writeMerge.exe for halfPipe, added seek method for LSEReader.
