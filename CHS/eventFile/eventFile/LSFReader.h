@@ -29,6 +29,8 @@ namespace eventFile {
     void transferInfo( const LSE_Context&, const LCI_ACD_Info&, lsfData::MetaEvent& );
     void transferInfo( const LSE_Context&, const LCI_CAL_Info&, lsfData::MetaEvent& );
     void transferInfo( const LSE_Context&, const LCI_TKR_Info&, lsfData::MetaEvent& );
+    void transferKeys( const LPA_Keys&, lsfData::MetaEvent& );
+    void transferKeys( const LCI_Keys&, lsfData::MetaEvent& );
   };
 };
 

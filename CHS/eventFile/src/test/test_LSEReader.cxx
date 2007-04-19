@@ -97,19 +97,19 @@ int main( int argc, char* argv[] )
     switch ( infotype ) {
     case eventFile::LSE_Info::LPA:
       pinfo.dump();
-      pakeys.dump("Keys:", "\n");
+      pakeys.dump("LPA_Keys::", "\n");
       break;
     case eventFile::LSE_Info::LCI_ACD:
       ainfo.dump();
-      cikeys.dump("Keys:", "\n");
+      cikeys.dump("LCI_Keys::", "\n");
       break;
     case eventFile::LSE_Info::LCI_CAL:
       cinfo.dump();
-      cikeys.dump("Keys:", "\n");
+      cikeys.dump("LCI_Keys::", "\n");
       break;
     case eventFile::LSE_Info::LCI_TKR:
       tinfo.dump();
-      cikeys.dump("Keys:", "\n");
+      cikeys.dump("LCI_Keys::", "\n");
       break;
     default:
       break;

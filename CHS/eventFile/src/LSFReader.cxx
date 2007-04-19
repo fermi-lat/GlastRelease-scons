@@ -43,15 +43,19 @@ namespace eventFile {
     switch ( infotype ) {
     case LSE_Info::LPA:
       transferInfo( ctx, pinfo, lmeta );
+      transferKeys( pakeys, lmeta );
       break;
     case LSE_Info::LCI_ACD:
       transferInfo( ctx, ainfo, lmeta );
+      transferKeys( cikeys, lmeta );
       break;
     case LSE_Info::LCI_CAL:
       transferInfo( ctx, cinfo, lmeta );
+      transferKeys( cikeys, lmeta );
       break;
     case LSE_Info::LCI_TKR:
       transferInfo( ctx, tinfo, lmeta );
+      transferKeys( cikeys, lmeta );
       break;
     default:
       break;
@@ -142,6 +146,15 @@ namespace eventFile {
 	      );
   }
 
+  void LSFReader::transferKeys( const LPA_Keys& pakeys, lsfData::MetaEvent& lmeta )
+  {
+    // create & populate a local lsfData::LpaKeys object
+    lsfData::LpaKeys lkeys( pakeys.LATC_master, pakeys.LATC_ignore, pakeys.LPA_DB );
+
+    // install the keys object into the lsfData::MetaEvent
+    lmeta.setKeys( lkeys );
+  }
+
   void LSFReader::transferInfo( const LSE_Context& ctx, const LPA_Info& info, lsfData::MetaEvent& lmeta )
   {
     // set the timing information
@@ -152,6 +165,15 @@ namespace eventFile {
 
     // install the configuration object into the lsfData::MetaEvent
     lmeta.setConfiguration( lcfg );
+  }
+
+  void LSFReader::transferKeys( const LCI_Keys& cikeys, lsfData::MetaEvent& lmeta )
+  {
+    // create & populate a local lsfData::LciKeys object
+    lsfData::LciKeys lkeys( cikeys.LATC_master, cikeys.LATC_ignore, cikeys.LCI_script );
+    
+    // install the keys object into the lsfData::MetaEvent
+    lmeta.setKeys( lkeys );
   }
 
   void LSFReader::transferInfo( const LSE_Context& ctx, const LCI_ACD_Info& info, lsfData::MetaEvent& lmeta )

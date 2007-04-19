@@ -96,6 +96,7 @@ int main( int argc, char* argv[] )
     lmeta.scalers().print();
     lmeta.time().print();
     lmeta.configuration()->print();
+    lmeta.keys()->print();
 
     // iterate over the contributions and print them out
     printf( "\nEvent %lld data:", lmeta.scalers().sequence() );
