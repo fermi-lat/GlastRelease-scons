@@ -4,7 +4,7 @@
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // add new flavors to default
-CalibDataSvc.CalibFlavorList = {"ideal","MCdataspring2007"};
+CalibDataSvc.CalibFlavorList = {"ideal","MCdata-spring-2007"};
 
 // for MSQL connection
 CalibMySQLCnvSvc.DbName      = "calib"; 
@@ -12,6 +12,6 @@ CalibMySQLCnvSvc.QualityList = {"PROD", "DEV" };
 
 // acd, cal, tkr flavors
 AcdCalibSvc.DefaultFlavor    = "ideal";
-CalCalibSvc.DefaultFlavor    = "MCdataspring2007";
-TkrCalibAlg.calibFlavor      = "MCdataspring2007";
+CalCalibSvc.DefaultFlavor    = "MCdata-spring-2007";
+TkrCalibAlg.calibFlavor      = "MCdata-spring-2007";
 
