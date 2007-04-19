@@ -122,6 +122,14 @@ namespace enums {
 		   NumRunTypes
     } RunType;
 
+    // The type of translated keys.
+    typedef enum { NoKeysType = -1,
+		   LpaKeys,   ///> master, ignore, list-of-LPA_DB
+		   LciKeys,   ///> master, ignore, script
+		   NumKeysTypes
+    } KeysType;
+
+    // CAL readout bits
     typedef enum { AUTORANGE = 1, 
                    ZERO_SUPPRESSION = 2,
 		   STROBE = 4,

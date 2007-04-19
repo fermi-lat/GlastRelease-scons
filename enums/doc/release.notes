@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r13   18-Apr-2007 RLB Add a new Lsf enum for translated-key type.
 v0r12   17-Mar-2007 THB Make trigger bit 6 a simulation-only ACDL
 v0r11   10-Nov-2006 THB Make trigger bit 0 also represent ROI.
 v0r10   19-Oct-2006 HMK Add a new error flag:  LDFWARNING
