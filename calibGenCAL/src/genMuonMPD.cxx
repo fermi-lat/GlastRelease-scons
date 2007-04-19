@@ -52,9 +52,10 @@ public:
     entriesPerHist("entriesPerHist",
                    'e',
                    "quit after all histograms have > n entries",
-                   3000)
-
-  
+                   3000),
+    help("help",
+         'h',
+         "print usage info")
   {
 
     cmdParser.registerArg(pedTXTFile);
@@ -63,11 +64,14 @@ public:
     cmdParser.registerArg(digiFilenames);
     cmdParser.registerArg(outputBasename);
     cmdParser.registerVar(entriesPerHist);
+    cmdParser.registerSwitch(help);
         
     try {
       cmdParser.parseCmdLine(argc, argv);
     } catch (exception &e) {
-      cout << e.what() << endl;
+      // ignore invalid commandline if user asked for help.
+      if (!help.getVal())
+        cout << e.what() << endl;
       cmdParser.printUsage();
       exit(-1);
     }
@@ -83,6 +87,10 @@ public:
   CmdArg<string> outputBasename;
 
   CmdOptVar<unsigned> entriesPerHist;
+
+  /// print usage string
+  CmdSwitch help;
+
 };
 
 int main(int argc,

@@ -37,16 +37,23 @@ public:
                    ""),
     summaryMode("summaryMode",
                 's',
-                "generate summary histograms only (no individual channel hists)")
+                "generate summary histograms only (no individual channel hists)"),
+    help("help",
+         'h',
+         "print usage info")
 
   {
     cmdParser.registerSwitch(summaryMode);
     cmdParser.registerArg(histFile);
+    cmdParser.registerSwitch(help);
+
 
     try {
       cmdParser.parseCmdLine(argc, argv);
     } catch (exception &e) {
-      cout << e.what() << endl;
+      // ignore invalid commandline if user asked for help.
+      if (!help.getVal())
+        cout << e.what() << endl;
       cmdParser.printUsage();
       exit(-1);
     }
@@ -63,6 +70,10 @@ public:
 
   /// operate histograms in 'summary mode' where you use histograms w/ sums of all channels together.
   CmdSwitch summaryMode;
+
+  /// print usage string
+  CmdSwitch help;
+
 };
 
 int main(const int argc,

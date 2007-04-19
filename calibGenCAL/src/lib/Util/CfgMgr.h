@@ -103,8 +103,8 @@ namespace CfgMgr {
     /// \param  Optionally may be "" to disable longName
     /// \param shortName may be (char)0 in order to disable shortName
     /// \pre at least one of  longName or shortName needs to be defined.
-    /// \pre longName should consist of word delimited by the '-' character, it should
-    ///      avoid commandline special characters
+    /// \pre longName should consist of word delimited by the '-' character, it 
+    ///      should avoid commandline special characters
     /// \thows InvalidVardef
     CmdSwitch(const std::string &longName,
               char shortName,
