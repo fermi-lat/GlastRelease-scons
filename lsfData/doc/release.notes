@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r7    18-Apr-2007 RBL Add LsfKeys structure for translated file keys.
 v0r6p1  30-Aug-2006 RBL Add printout of trigger-timing info to LsfTime.print()
 v0r6    07-Jul-2006 RBL Add LsfTimeTone.earlyEvent and LciConfiguration.strobe flags to match DFI V3-4-1
 v0r5    11-Apr-2006 HMK implement type method for all configuration classes
