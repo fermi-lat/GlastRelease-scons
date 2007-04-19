@@ -12,6 +12,7 @@
 #include "TKey.h"
 #include "TF1.h"
 #include "TDirectory.h"
+#include "TROOT.h"
 
 // STD INCLUDES
 #include <ostream>
@@ -20,6 +21,7 @@
 #include <cmath>
 #include <memory>
 #include <algorithm>
+#include <sstream>
 
 /** @file CGCUtil.h
     @author Zachary Fewtrell
