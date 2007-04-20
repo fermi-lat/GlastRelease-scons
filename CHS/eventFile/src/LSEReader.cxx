@@ -193,12 +193,12 @@ namespace eventFile {
     }
 
     // read the entries themselves
-    pakeys.LPA_DB.clear();
-    pakeys.LPA_DB.resize( nDB );
-    nitems = fread( &(pakeys.LPA_DB[0]), nDB*sizeof( unsigned ), 1, m_FILE );
+    pakeys.CDM_keys.clear();
+    pakeys.CDM_keys.resize( nDB );
+    nitems = fread( &(pakeys.CDM_keys[0]), nDB*sizeof( unsigned ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "LSEReader::read: error reading LPA_Keys LPA_DB's from " << m_name;
+      ess << "LSEReader::read: error reading LPA_Keys CDM_keys's from " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }

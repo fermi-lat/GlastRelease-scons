@@ -188,21 +188,21 @@ namespace eventFile {
       throw std::runtime_error( ess.str() );
     }
 
-    // write the LPA_DB vector size
-    size_t len = keys.LPA_DB.size();
+    // write the CDM_keys vector size
+    size_t len = keys.CDM_keys.size();
     nitems = fwrite( &len, sizeof( size_t ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "LSEWriter::write: error writing LPA_Keys LPA_DB length to " << m_name;
+      ess << "LSEWriter::write: error writing LPA_Keys CDM_keys length to " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
 
-    // write the LPA_DB vector
-    nitems = fwrite( &keys.LPA_DB[0], sizeof( unsigned ), keys.LPA_DB.size(), m_FILE );
-    if ( nitems != keys.LPA_DB.size() ) {
+    // write the CDM_keys vector
+    nitems = fwrite( &keys.CDM_keys[0], sizeof( unsigned ), keys.CDM_keys.size(), m_FILE );
+    if ( nitems != keys.CDM_keys.size() ) {
       std::ostringstream ess;
-      ess << "LSEWriter::write: error writing LPA_Keys LPA_DB content to " << m_name;
+      ess << "LSEWriter::write: error writing LPA_Keys CDM_keys content to " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }

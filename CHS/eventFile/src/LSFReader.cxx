@@ -149,7 +149,7 @@ namespace eventFile {
   void LSFReader::transferKeys( const LPA_Keys& pakeys, lsfData::MetaEvent& lmeta )
   {
     // create & populate a local lsfData::LpaKeys object
-    lsfData::LpaKeys lkeys( pakeys.LATC_master, pakeys.LATC_ignore, pakeys.LPA_DB );
+    lsfData::LpaKeys lkeys( pakeys.LATC_master, pakeys.LATC_ignore, pakeys.CDM_keys );
 
     // install the keys object into the lsfData::MetaEvent
     lmeta.setKeys( lkeys );

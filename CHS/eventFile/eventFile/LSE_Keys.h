@@ -34,9 +34,9 @@ namespace eventFile {
 
   struct LPA_Keys : public LSE_Keys {
     LPA_Keys( unsigned master=0xFFFFFFFF, unsigned ignore=0xFFFFFFFF, const std::vector<unsigned>& dbs=std::vector<unsigned>() )
-      : LSE_Keys( master, ignore ), LPA_DB( dbs ) {};
+      : LSE_Keys( master, ignore ), CDM_keys( dbs ) {};
     void dump( const char* pre, const char* post ) const;
-    std::vector< unsigned > LPA_DB;
+    std::vector< unsigned > CDM_keys;
   };
 
   struct LCI_Keys : public LSE_Keys {

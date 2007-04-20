@@ -13,10 +13,10 @@ namespace eventFile {
   void LPA_Keys::dump( const char* pre, const char* post ) const
   {
     LSE_Keys::dump( pre, post );
-    std::vector<unsigned>::const_iterator itr(LPA_DB.begin());
+    std::vector<unsigned>::const_iterator itr(CDM_keys.begin());
     int i=0;
-    for ( ; itr!=LPA_DB.end(); ++itr, ++i ) {
-      printf( "%sLPA_DB[%d] = 0x%08X%s", pre, i, *itr, post );
+    for ( ; itr!=CDM_keys.end(); ++itr, ++i ) {
+      printf( "%sCMD_key[%d] = 0x%08X%s", pre, i, *itr, post );
     } 
   }
 
