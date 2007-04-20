@@ -18,6 +18,10 @@ apply_pattern packageShr
 #=============================================================
 private
 
+use enums v*
+
+use OnboardFilterTds v*
+
 use ROOT v* IExternal
 
 apply_pattern package_include

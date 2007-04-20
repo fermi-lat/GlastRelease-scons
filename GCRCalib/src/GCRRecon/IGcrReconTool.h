@@ -23,6 +23,9 @@ class IGcrReconTool : virtual public IAlgTool
 
     //! main method
     
+    virtual bool TriggerEngine4ON()=0;
+    virtual bool OBF_HFCVetoExist()=0;
+
     virtual StatusCode findGcrXtals(bool useMcDir)=0;
     
  } ;

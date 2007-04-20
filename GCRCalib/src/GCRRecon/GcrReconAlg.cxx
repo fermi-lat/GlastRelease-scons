@@ -42,8 +42,11 @@ private:
     //! correction tools
     IGcrReconTool* m_gcrReconTool ;
     
-    //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction
+    //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction, default value: true
     bool m_useMcDir;
+    //variable that indicates if we want to set HCF or CNOTrigger(CNO&LoCal&Tkr&RIO), default value: CnoTrig
+    std::string m_HfcOrCnoTrig;
+    
 } ;
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -55,6 +58,8 @@ GcrReconAlg::GcrReconAlg( const std::string & name, ISvcLocator * pSvcLocator ) 
     // Declare the properties with these defaults
     declareProperty("GcrReconToolName", m_gcrReconToolName = "GcrReconTool");
     declareProperty("UseMcDir", m_useMcDir = "true");
+    declareProperty("HFC_Or_TriggerEng4", m_HfcOrCnoTrig = "TriggerEng4");
+
 }
 
 
@@ -105,22 +110,27 @@ StatusCode GcrReconAlg::execute()
     log << MSG::INFO << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
     log<<MSG::INFO<<"GcrReconAlg::execute Begin"<<endreq ;
 
-    // Retrieve our TDS objects, we use Clusters to output corrected energy in CalEventEnergy
     
-    // find GCRs
- 
-   m_gcrReconTool->findGcrXtals(m_useMcDir);
-    /**try {
-        if ((m_gcrReconTool->findGcrXtals()).isFailure()) {
-            sc = m_calReconSvc->handleError(name(),"mip finding tool failure") ;
-        }        
-    } catch( CalException & e ) {
-        sc = m_calReconSvc->handleError(name()+" CalException",e.what()) ;
-    } catch( std::exception & e) {
-        sc = m_calReconSvc->handleError(name()+" std::exception",e.what()) ;
-    } catch(...) {
-        sc = m_calReconSvc->handleError(name(),"unknown exception") ;
-    }*/
+    // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
+       
+   if(m_HfcOrCnoTrig == "TriggerEng4"){
+      log<<MSG::INFO<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
+      if(m_gcrReconTool->TriggerEngine4ON()){
+	 m_gcrReconTool->findGcrXtals(m_useMcDir);
+      }
+      else{
+	 log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;
+      }    
+   }
+   else{
+       log<<MSG::INFO<<"@@@@@@@@ Using HFC OBF"<<endreq ;
+       if(!m_gcrReconTool->OBF_HFCVetoExist()){
+	 m_gcrReconTool->findGcrXtals(m_useMcDir);
+       }
+       else{
+	log<<MSG::INFO<<"@@@@@@@@ Vetoed Event"<<endreq ;
+       }
+   }
 
     log<<MSG::INFO<<"GcrReconAlg::execute End"<<endreq ;
     return sc;

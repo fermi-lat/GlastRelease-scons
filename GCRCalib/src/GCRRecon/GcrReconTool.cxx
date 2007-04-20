@@ -46,6 +46,13 @@
 #include "TObjArray.h"
 #include "TObject.h"
 
+#include "OnboardFilterTds/FilterStatus.h"
+#include "OnboardFilterTds/ObfFilterStatus.h"
+#include "OnboardFilterTds/FilterAlgTds.h"
+
+#include "enums/TriggerBits.h"
+
+
 /**   
  * @class GcrReconTool
  *
@@ -60,7 +67,10 @@ public:
   
   /// @brief Intialization of the tool
   virtual StatusCode initialize();
-  /// @brief Default cluster finding framework
+
+  virtual bool GcrReconTool::TriggerEngine4ON();
+  virtual bool GcrReconTool::OBF_HFCVetoExist();
+
   virtual StatusCode GcrReconTool::findGcrXtals(bool useMcDir);
   
   
@@ -313,6 +323,75 @@ StatusCode GcrReconTool::readGlastDet()
   return sc;
 }
 
+bool GcrReconTool::TriggerEngine4ON(){
+    // GltWord:
+    // b_ACDL =    0x01  ///>  set if cover or side veto, low threshold
+    // b_Track=    0x02  ///>  3 consecutive x-y layers hit
+    // b_LO_CAL=   0x04  ///>  single log above low threshold
+    // b_HI_CAL=   0x08  ///>  single log above high threshold
+    // b_ACDH =    0x10  ///>  cover or side veto, high threshold ("CNO")
+    // b_THROTTLE= 0x20  ///>  Ritz throttle
+
+    // Trigger engine 4 (CNOTrigger here): 
+    // Track, LoCal, ACDH("CNO"), THROTTLE ("ROI")
+   
+    IDataProviderSvc* m_pEventSvc;
+
+    // Recover EventHeader Pointer
+    SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
+    unsigned int word = ( pEvent==0? 0 : pEvent->trigger());
+
+    // GltWord only 6 bits
+    unsigned int Trig_word = word & enums::GEM_mask;  //merit tuple: addItem("GltWord",&Trig_word);
+    
+    bool gltWord_bit2 = (Trig_word & (1<<1))>0;
+    bool gltWord_bit3 = (Trig_word & (1<<2))>0;
+    bool gltWord_bit5 = (Trig_word & (1<<4))>0;
+    bool gltWord_bit6 = (Trig_word & (1<<5))>0;
+    
+    bool engine4ON = gltWord_bit2 && gltWord_bit3 && gltWord_bit5 && gltWord_bit6;
+    m_log << MSG::INFO << "engine4ON= " << engine4ON << endreq;
+    
+    return engine4ON;
+}
+
+
+bool GcrReconTool::OBF_HFCVetoExist(){
+
+ bool debugging= true;
+  //CL. 26/03/07:  Task #0: verify OBF status
+ bool vetoExists=true;
+ 
+ SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
+ if (obfStatus)
+  {
+      // Pointer to our retrieved objects
+      const OnboardFilterTds::IObfStatus* obfResult = 0;
+
+      obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::CNOFilter);
+      
+      if(obfResult){
+	unsigned int statusHFC32 = obfResult->getStatus32();
+        unsigned int vetoHFC= obfResult->getVetoBit();
+	
+	vetoExists = (statusHFC32 & vetoHFC)>0;
+		
+	m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoExists << endreq;
+	
+      }
+      else
+          m_log << MSG::INFO <<  "no obfResult" << endreq;
+      
+  }
+  else
+    m_log << MSG::INFO << "no obfStatus"<< endreq;
+
+  
+  return vetoExists;
+
+
+}
+
 
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -323,7 +402,7 @@ StatusCode GcrReconTool::readGlastDet()
 */
 StatusCode GcrReconTool::findGcrXtals(bool useMcDir){
 
-  bool debugging=false;
+  bool debugging=true;
   if(debugging) {
       m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
       m_log << MSG::INFO << "useMcDir=" << useMcDir << endreq;
@@ -332,6 +411,7 @@ StatusCode GcrReconTool::findGcrXtals(bool useMcDir){
   
   m_useMcDir = useMcDir;  
   
+
   
   // Task #1: build Hits (Xtals with energy deposit) Map 
   buildHitsMap();
