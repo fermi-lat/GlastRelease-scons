@@ -68,39 +68,39 @@ namespace lsfData {
 
   // translated keys from LPA data
   class LpaKeys : public LsfKeys {
-    std::vector< unsigned int > m_LPA_DB;
+    std::vector< unsigned int > m_CDM_keys;
 
   public:
-    LpaKeys() : LsfKeys(), m_LPA_DB( std::vector<unsigned int>() ) {};
+    LpaKeys() : LsfKeys(), m_CDM_keys( std::vector<unsigned int>() ) {};
 
     LpaKeys( unsigned int master, unsigned int ignore, const std::vector< unsigned int >& dbs )
-      : LsfKeys( master, ignore ), m_LPA_DB( dbs ) {};
+      : LsfKeys( master, ignore ), m_CDM_keys( dbs ) {};
 
-    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_LPA_DB( other.LPA_DB() ) {};
+    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_CDM_keys( other.CDM_keys() ) {};
 
     virtual ~LpaKeys() {};
 
     const LpaKeys& operator=( const LpaKeys& other ) {
       if ( &other != this ) {
 	( dynamic_cast< LsfKeys& >( *this ) ) = other;
-	m_LPA_DB.clear();
-	m_LPA_DB.insert( m_LPA_DB.begin(), other.LPA_DB().begin(), other.LPA_DB().end() );
+	m_CDM_keys.clear();
+	m_CDM_keys.insert( m_CDM_keys.begin(), other.CDM_keys().begin(), other.CDM_keys().end() );
       }
       return *this;
     }
 
-    const std::vector< unsigned int >& LPA_DB() const { return m_LPA_DB; };
+    const std::vector< unsigned int >& CDM_keys() const { return m_CDM_keys; };
 
-    void setLPA_DB( const std::vector< unsigned int >& value ) {
-      m_LPA_DB.clear();
-      m_LPA_DB.insert( m_LPA_DB.begin(), value.begin(), value.end() );
+    void setCDM_keys( const std::vector< unsigned int >& value ) {
+      m_CDM_keys.clear();
+      m_CDM_keys.insert( m_CDM_keys.begin(), value.begin(), value.end() );
     };
 
     virtual void print( const std::string& str="" ) const {
       LsfKeys::print( str );
-      std::vector<unsigned int>::const_iterator itr = m_LPA_DB.begin();
-      for ( int i=0; itr != m_LPA_DB.end(); ++itr, ++i ) {
-	std::cout << str << " LPA_DB[" << i << "] = 0x" << std::setw(8) << std::setfill('0') << std::hex << *itr << std::endl;
+      std::vector<unsigned int>::const_iterator itr = m_CDM_keys.begin();
+      for ( int i=0; itr != m_CDM_keys.end(); ++itr, ++i ) {
+	std::cout << str << " CDM_key[" << i << "] = 0x" << std::setw(8) << std::setfill('0') << std::hex << *itr << std::endl;
       }
     }
     
