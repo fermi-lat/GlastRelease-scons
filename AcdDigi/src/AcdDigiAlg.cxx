@@ -206,6 +206,12 @@ StatusCode AcdDigiAlg::execute() {
             } else {
                 energyIdMap[id] = energy;
             }
+            // Save MC energy for ntuple
+            if (m_energyDepMap.find(id) != m_energyDepMap.end()) {
+                m_energyDepMap[id] += (*hit)->depositedEnergy();
+            } else {
+                m_energyDepMap[id] = (*hit)->depositedEnergy();
+            }
          } 
     }
 
@@ -219,7 +225,6 @@ StatusCode AcdDigiAlg::execute() {
         idents::AcdId id = acdIt->first; //(volId);
 
         double energyMevDeposited = acdIt->second;
-        m_energyDepMap[id] = energyMevDeposited;
 
         log << MSG::DEBUG << "tile id found: " << id.id() 
             << ", energy deposited: "<< energyMevDeposited<< " MeV" << endreq;
@@ -505,6 +510,9 @@ void AcdDigiAlg::addNoise()  {
         }
         m_pmtA_toFullScaleMap[tileId] = pmtA_mipsToFullScale;
         m_pmtB_toFullScaleMap[tileId] = pmtB_mipsToFullScale;
+
+        if (m_energyDepMap.find(tileId) == m_energyDepMap.end())
+            m_energyDepMap[tileId] = 0.0;
 
         doneMap[tileId] = true;
 
