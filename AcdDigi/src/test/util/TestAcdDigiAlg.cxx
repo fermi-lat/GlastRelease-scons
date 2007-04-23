@@ -93,7 +93,7 @@ StatusCode TestAcdDigiAlg::execute() {
 
     idents::AcdId id(0, 1, 1, 1);
 
-    unsigned int pmtA_pe, pmtB_pe;
+    double pmtA_pe, pmtB_pe;
 
     m_util.convertMipsToPhotoElectrons(id, pmtA_mips, pmtA_pe,
         pmtB_mips, pmtB_pe);

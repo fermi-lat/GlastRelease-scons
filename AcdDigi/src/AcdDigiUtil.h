@@ -44,8 +44,8 @@ public:
     /// @param pmtB_mips input number of MIPs detected by PMT B
     /// @param pmtB_pe output number of PEs detected by PMT B
     static void convertMipsToPhotoElectrons(const idents::AcdId &id, 
-        double pmtA_mips, unsigned int &pmtA_pe,
-        double pmtB_mips, unsigned int &pmtB_pe);
+        double pmtA_mips, double &pmtA_pe,
+        double pmtB_mips, double &pmtB_pe);
 
     /// Converts PhotoElectrons to MIPs
     /// @param id an AcdId identifer
@@ -55,13 +55,13 @@ public:
     /// @param pmtB_pe input number of PEs detected by PMT B
     /// @param pmtB_mips output number of MIPs detected by PMT B
     static void convertPhotoElectronsToMips(const idents::AcdId &id, 
-        unsigned int pmtA_pe, double &pmtA_mips,
-        unsigned int pmtB_pe, double &pmtB_mips);
+        double pmtA_pe, double &pmtA_mips,
+        double pmtB_pe, double &pmtB_mips);
 
     /// Determine MIPS to Full Scale conversion for both PMTs for a particular AcdId
     static void calcMipsToFullScale(const idents::AcdId&, 
-        double pmtA_mips, unsigned int pmtA_pe, double &mipsToFullScaleA, 
-        double pmtB_mips, unsigned int pmtB_pe, double& mipsToFullScaleB );
+        double pmtA_mips, double pmtA_pe, double &mipsToFullScaleA, 
+        double pmtB_mips, double pmtB_pe, double& mipsToFullScaleB );
 
     /// calculate mipsToFullScale based on the specific parameters provided for AcdIds
     /// @param id an AcdId identifer
@@ -77,7 +77,7 @@ public:
 
     /// Returns a value sampled from a Poisson distribution
     /// @param pmtPhotoElectrons is the mean of the Poisson distribution
-    static long shootPoisson(double pmtPhotoElectrons);
+    static double shootPoisson(double pmtPhotoElectrons);
 
     /// Returns a value sampled from a Gaussian distribution
     /// @param std_dev Standard Deviation to be  used when sampling

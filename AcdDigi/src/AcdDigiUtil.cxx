@@ -85,8 +85,8 @@ double AcdDigiUtil::convertMevToMips(double energy_mev) {
 }
 
 void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id, 
-                                             double pmtA_mips, unsigned int &pmtA_pe, 
-                                             double pmtB_mips, unsigned int &pmtB_pe) {
+                                             double pmtA_mips, double &pmtA_pe, 
+                                             double pmtB_mips, double &pmtB_pe) {
     // Purpose and Method:  Convert from MIPs to PhotoElectrons for both PMTs of an AcdId.
     //   First check to see if an individual pePerMip has been assigned for this PMT
     //   Check both in a map that stores the values already read in from the input XML file
@@ -98,8 +98,8 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
     // Check the map
     if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
         std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
-        pmtA_pe = (unsigned int) floor(pmtA_mips * pePerMip.first);
-        pmtB_pe = (unsigned int) floor(pmtB_mips * pePerMip.second);
+        pmtA_pe = pmtA_mips * pePerMip.first;
+        pmtB_pe = pmtB_mips * pePerMip.second;
         return;
     } 
     // Check the XML file
@@ -109,24 +109,24 @@ void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id,
     if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
         std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
         m_pePerMipMap[id.id()] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
-        pmtA_pe = (unsigned int) floor(pmtA_mips * pePerMipVec[0]);
-        pmtB_pe = (unsigned int) floor(pmtB_mips * pePerMipVec[1]);
+        pmtA_pe = pmtA_mips * pePerMipVec[0];
+        pmtB_pe = pmtB_mips * pePerMipVec[1];
         return;
     }
     // Now use the global mean_pe_per_mip
     if (id.tile()) {
-        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip );
-        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip );
+        pmtA_pe = pmtA_mips * m_mean_pe_per_mip;
+        pmtB_pe = pmtB_mips * m_mean_pe_per_mip;
     } else if (id.ribbon()) {
-        pmtA_pe = (unsigned int) floor(pmtA_mips * m_mean_pe_per_mip_ribbon );
-        pmtB_pe = (unsigned int) floor(pmtB_mips * m_mean_pe_per_mip_ribbon );
+        pmtA_pe = pmtA_mips * m_mean_pe_per_mip_ribbon;
+        pmtB_pe = pmtB_mips * m_mean_pe_per_mip_ribbon;
     }
     return;
 }
 
 void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id, 
-                                             unsigned int pmtA_pe, double &pmtA_mips, 
-                                             unsigned int pmtB_pe, double &pmtB_mips) {
+                                             double pmtA_pe, double &pmtA_mips, 
+                                             double pmtB_pe, double &pmtB_mips) {
     // Purpose and Method:  Convert from PhotoElectrons to MIPs for both PMTs of an AcdId.
     //   First check to see if an individual pePerMip has been assigned for this PMT
     //   Check both in a map that stores the values already read in from the input XML file
@@ -166,7 +166,7 @@ void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id,
     
 }
 
-long AcdDigiUtil::shootPoisson(double pmtPhotoElectrons) {
+double AcdDigiUtil::shootPoisson(double pmtPhotoElectrons) {
     // Pupose and Method:  Returns a value from a Poisson distribution,
     //   using the input number of photoelectrons as the mean
     // Input:
@@ -185,8 +185,8 @@ double AcdDigiUtil::shootGaussian(double std_dev) {
 }
 
 void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id, 
-                                     double pmtA_mips, unsigned int pmtA_pe, double &pmtA_mipsToFullScale, 
-                                     double pmtB_mips, unsigned int pmtB_pe, double &pmtB_mipsToFullScale) {
+                                     double pmtA_mips, double pmtA_pe, double &pmtA_mipsToFullScale, 
+                                     double pmtB_mips, double pmtB_pe, double &pmtB_mipsToFullScale) {
     
     // Check the map
     if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {

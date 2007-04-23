@@ -234,17 +234,36 @@ StatusCode AcdDigiAlg::execute() {
         // apply the signal to the two PMT's
         double pmtA_mips = mips;
         double pmtB_mips = mips;
-        
+
         // Number of photoelectrons for each PMT, A and B
-        unsigned int pmtA_pe, pmtB_pe;
+	// Here we use double so that the Poisson fluctuations are considered with 
+	// respect to the MEAN number of photoelectrons per mip (as opposed to the "floor" value)
+        double pmtA_pe, pmtB_pe;
         util.convertMipsToPhotoElectrons(id, pmtA_mips, pmtA_pe, 
                                          pmtB_mips, pmtB_pe);
+
+
+        //The idea here is to apply Poisson statistics to the number of photoelectrons
+	//created in the first few dynodes. There are a total of 10 dynodes in an ACD PMT.
+	//However, only fluctuations on the first few stages (~3-4) have a significant impact
+	
+        int poisson_steps = 4;  //Number of "dynodes" considered
+        double gain=5.;        //Nominal gain in each dynode
         
         // Apply Poisson fluctuations to the number of pe's for each PMT
         if (m_apply_poisson) {
-            pmtA_pe = util.shootPoisson(pmtA_pe);
-            pmtB_pe = util.shootPoisson(pmtB_pe);
+            for(int i=0; i<poisson_steps; i++){
+                pmtA_pe = util.shootPoisson(pmtA_pe);
+                pmtB_pe = util.shootPoisson(pmtB_pe);
+                pmtA_pe*=gain;
+                pmtB_pe*=gain;
+                }
+            //here we re-normalize to the number of photoelectrons produced at the first stage
+	    //(we are only interested in the fluctuations with respect to the original value) 
+            pmtA_pe/=pow(gain, poisson_steps);
+            pmtB_pe/=pow(gain, poisson_steps);
         }
+        
         
         util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA_mips, 
                                              pmtB_pe, pmtB_mips);
@@ -495,7 +514,7 @@ void AcdDigiAlg::addNoise()  {
         m_pmtB_cnoMipsMap[tileId] = util.shootGaussian(m_noise_std_dev_cno);
 
         // Number of photoelectrons for each PMT, A and B
-        unsigned int pmtA_pe, pmtB_pe;
+        double pmtA_pe, pmtB_pe;
         util.convertMipsToPhotoElectrons(tileId, m_pmtA_phaMipsMap[tileId], 
                                 pmtA_pe, m_pmtB_phaMipsMap[tileId], pmtB_pe);
         // If in auto calibrate mode, determine the conversion factor from MIPs
