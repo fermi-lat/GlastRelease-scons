@@ -414,6 +414,7 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     acdHitPocas.clear();
     acdPoints.clear();
     acdSplashVars.clear();
+
     return sc;
 }
 
@@ -754,7 +755,6 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol,
     if ( m_pocaTool != 0 ) {
       sc = m_pocaTool->filter(upwardPocas,upPocasCut);
       if (sc.isFailure()) return sc;
-      
       sc = m_pocaTool->filter(downwardPocas,downPocasCut);
       if (sc.isFailure()) return sc;
     }
@@ -904,7 +904,7 @@ StatusCode AcdReconAlg::tileActDist(const AcdRecon::PocaDataMap& pocaMap,
 	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-	
+
     // loop on all the pocas we computed
     for ( AcdRecon::PocaDataMap::const_iterator it = pocaMap.begin(); 
           it != pocaMap.end(); it++ ) {
@@ -1089,7 +1089,7 @@ StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
   // build all the pocas
   for ( AcdRecon::PocaDataPtrMap::const_iterator itr = pocaDataMap.begin(); itr != pocaDataMap.end(); itr++ ) {
     AcdRecon::PocaData& pocaData = *(itr->second);
-    float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+    //float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     //Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(pocaArcLength,startEnergy,true);
     //AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_pocaVector,pocaData.m_active3DErr);
     Event::AcdTkrHitPoca* aPoca(0);

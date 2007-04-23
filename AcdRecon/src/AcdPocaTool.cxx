@@ -36,7 +36,7 @@ AcdPocaTool::AcdPocaTool
  : AlgTool( type, name, parent )
  { 
    declareInterface<AcdIPocaTool>(this) ; 
-   declareProperty("distanceCut",m_distanceCut=2000.);
+   declareProperty("distanceCut",m_distanceCut=1999.);
    declareProperty("sigmaCut",m_sigmaCut=5.);
  }
 
@@ -128,10 +128,11 @@ StatusCode AcdPocaTool::makePoca(const AcdRecon::TrackData& aTrack,
 				 Event::AcdTkrHitPoca*& poca) {
   poca = 0;
   
-  double arcLength = aTrack.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+  double arcLength3D = aTrack.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+  double arcLengthPlane = aTrack.m_upward ? pocaData.m_arcLengthPlane : -1* pocaData.m_arcLengthPlane;
 
   idents::AcdId acdId = pocaData.m_id;
-    
+
   float local[2];
   local[0] = pocaData.m_activeX;
   local[1] = pocaData.m_activeY;
@@ -140,6 +141,8 @@ StatusCode AcdPocaTool::makePoca(const AcdRecon::TrackData& aTrack,
   localCov[1][1] = pocaData.m_localCovYY;
   localCov[0][1] = localCov[1][0] = pocaData.m_localCovXY;
   float distance = pocaData.m_active2D > 0 ? pocaData.m_active2D : pocaData.m_active3D;
+  //float arcLength = arcLength3D;
+  float arcLength = arcLengthPlane;
 
   // temp storage
   static Event::AcdTkrLocalCoords localCoords;
@@ -161,7 +164,8 @@ StatusCode AcdPocaTool::filter(const AcdRecon::PocaDataMap& in, AcdRecon::PocaDa
   for ( AcdRecon::PocaDataMap::const_iterator it = in.begin(); it != in.end(); it++ ) {
     const AcdRecon::PocaData& data = it->second;
     if ( data.m_active3D < (-1.*m_distanceCut) ) continue;
-    if ( data.m_arcLength < 1e-5 ) continue;
+    if ( data.m_arcLengthPlane < -1e-5 ) continue;
+
     AcdRecon::PocaData* ptr = const_cast<AcdRecon::PocaData*>(&data);
     out[it->first] = ptr;
   }
