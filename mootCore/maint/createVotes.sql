@@ -5,9 +5,10 @@ create table Votes
   COMMENT "precinct this vote pertains to",
  source                  VARCHAR(255) NOT NULL 
      COMMENT 'path to file in Moot archive, relative to root',
- status    VARCHAR(32) NOT NULL default 'OK'
-  COMMENT 'set to some value other than OK to indicate it 
-           should not be used',
+  status                 ENUM('STARTED', 'ABORT', 'CREATED', 'INVALID')
+                            NOT NULL DEFAULT 'STARTED'
+  COMMENT 'refers to status of entry.  Not usable until it's been
+           parsed, copied and has minimally sensible contents',
 description           VARCHAR(255) NOT NULL
   COMMENT 'a place to mention anything special about the Vote',
  creation_time DATETIME
