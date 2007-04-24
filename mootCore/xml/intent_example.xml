@@ -3,7 +3,6 @@
        votes for ACD precincts
 -->
 <LAT_INTENT xsi:noNamespaceSchemaLocation="intent.xsd"
-           xmlns:xi="http://www.w3.org/2001/XInclude"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 <ACD_Mode>
   <method comment="BCAST is typical for ACD_Mode">BCAST</method>

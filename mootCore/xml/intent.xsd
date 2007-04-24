@@ -202,7 +202,7 @@
         <xs:element name="AEM_aem_configuration" type="registerType" />
         <xs:element name="AFE_config_reg" type="registerType" />
         <xs:element name="ARC_max_pha" type="registerType" />
-        <xs:element name="AEM_tci_dac" type="registerType" />
+        <xs:element name="AFE_tci_dac" type="registerType" />
         <xs:element name="ARC_pha_en" type="registerType" />
         <xs:element name="ARC_veto_en" type="registerType" />
       </xs:all>

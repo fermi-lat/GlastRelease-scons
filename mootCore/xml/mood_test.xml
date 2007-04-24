@@ -364,12 +364,19 @@ version="v1r0" >
 
     <col name="status" >
       <src null="false">
-        <default value="OK" />
+        <default value="STARTED" />
       </src>
-      <type typename="varchar" size="32" />
-      <comment>If value is not 'OK', indicates entries in other tables created
-              during build must not refer to it </comment>
+      <type typename="enum" >
+        <restriction>
+          <enum use="require" values="STARTED ABORT CREATED INVALID" />
+        </restriction>
+      </type>
+      <comment>If file must be copied to MOOT archive, set this to
+         STARTED before the copy, then update to CREATED if copy is
+         successful, file parses and has acceptable contents.
+      </comment>
     </col>
+
 
 
     <col name="description" >
