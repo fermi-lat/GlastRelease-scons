@@ -252,7 +252,8 @@ StatusCode AcdDigiAlg::execute() {
         
         // Apply Poisson fluctuations to the number of pe's for each PMT
         if (m_apply_poisson) {
-            for(int i=0; i<poisson_steps; i++){
+            int i;
+            for(i=0; i<poisson_steps; i++){
                 pmtA_pe = util.shootPoisson(pmtA_pe);
                 pmtB_pe = util.shootPoisson(pmtB_pe);
                 pmtA_pe*=gain;
