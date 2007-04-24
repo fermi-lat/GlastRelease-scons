@@ -109,6 +109,9 @@ int main(int argc,
 
     //-- LOG SOFTWARE VERSION INFO --//
     output_env_banner(LogStream::get());
+    LogStream::get() << endl;
+    cfg.cmdParser.printStatus(LogStream::get());
+    LogStream::get() << endl;
 
     //-- ROUGH PEDS --//
     // - LEX8 only include hits in histograms.
@@ -144,8 +147,7 @@ int main(int argc,
       endl;
     TFile roughpedHistfile(roughPedHistFileName.c_str(),
                          "RECREATE",
-                         "Muon rough pedestals",
-                         9);
+                         "Muon rough pedestals");
 
     LogStream::get() << __FILE__ << ": reading root event file(s) starting w/ " << rootFileList[0] << endl;
     muonRoughPed.fillHists(nEntries,
@@ -175,8 +177,7 @@ int main(int argc,
     LogStream::get() << __FILE__ << ": opening muon pedestal output histogram file: " << muPedHistFileName << endl;
     TFile mupedHistfile(muPedHistFileName.c_str(),
                         "RECREATE",
-                        "Muon pedestals",
-                        9);
+                        "Muon pedestals");
     
     LogStream::get() << __FILE__ << ": reading root event file(s) starting w/ " << rootFileList[0] << endl;
     muPed.fillHists(nEntries,

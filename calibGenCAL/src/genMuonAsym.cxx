@@ -110,6 +110,9 @@ int main(int argc,
 
     //-- LOG SOFTWARE VERSION INFO --//
     output_env_banner(LogStream::get());
+    LogStream::get() << endl;
+    cfg.cmdParser.printStatus(LogStream::get());
+    LogStream::get() << endl;
 
     //-- RETRIEVE PEDESTALS
     CalPed peds;
@@ -145,8 +148,7 @@ int main(int argc,
                      << histFilename << endl;
     TFile histFile(histFilename.c_str(),
                    "RECREATE",
-                   "CAL Muon Asymmetry",
-                   9);
+                   "CAL Muon Asymmetry");
 
     LogStream::get() << __FILE__ << ": reading root event file(s) starting w/ "
                      << rootFileList[0] << endl;

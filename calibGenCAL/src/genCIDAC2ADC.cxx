@@ -107,6 +107,9 @@ int main(int argc,
 
     //-- LOG SOFTWARE VERSION INFO --//
     output_env_banner(LogStream::get());
+    LogStream::get() << endl;
+    cfg.cmdParser.printStatus(LogStream::get());
+    LogStream::get() << endl;
 
     // txt output filename
     string       outputTXTFile(cfg.outputBasename.getVal() + ".txt");

@@ -81,8 +81,7 @@ int main(int argc,
     string histFilename(cfg.outputBasename.getVal() + ".root");
     TFile histFile(histFilename.c_str(),
                    "RECREATE",
-                   "Cal MuTrig Analysis",
-                   9);
+                   "Cal MuTrig Analysis");
 
     MuTrigAlg muTrig;
 

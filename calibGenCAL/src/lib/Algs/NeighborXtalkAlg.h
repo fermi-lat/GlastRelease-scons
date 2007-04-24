@@ -55,8 +55,7 @@ class NeighborXtalkAlg {
     }
 
     ~AlgData() {
-      if (adcHists)
-        delete adcHists;
+      delete adcHists;
     }
 
     /// create one temporary histogram per adc channel.

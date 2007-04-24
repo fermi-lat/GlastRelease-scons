@@ -191,7 +191,7 @@ int main(const int argc,
 
     // open file to save output histograms.
     LogStream::get() << __FILE__ << ": opening output histogram file: " << histFilename<< endl;
-    histFile.reset(new TFile(histFilename.c_str(), "RECREATE", "CAL GCR MPD", 9));
+    histFile.reset(new TFile(histFilename.c_str(), "RECREATE", "CAL GCR MPD"));
 
     LogStream::get() << __FILE__ << ": reading digiRoot event file(s) starting w/ " << digiRootFileList[0] << endl;
     gcrCalib.fillHists(cfg.nEntries.getVal(),

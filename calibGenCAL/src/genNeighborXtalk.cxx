@@ -98,6 +98,9 @@ int main(const int argc,
 
     //-- LOG SOFTWARE VERSION INFO --//
     output_env_banner(LogStream::get());
+    LogStream::get() << endl;
+    cfg.cmdParser.printStatus(LogStream::get());
+    LogStream::get() << endl;
 
     LogStream::get() << __FILE__ << ": reading LE calibGen event file: " << cfg.rootFileLE.getVal() << endl;
     xtalkAlg.readRootData(cfg.rootFileLE.getVal(), xtalk);

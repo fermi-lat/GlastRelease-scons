@@ -215,9 +215,7 @@ namespace CfgMgr {
         strm << longName;
       strm << "\t";
 
-      strm << (**sw).getVal() << "\t"
-           << (**sw).getHelp() << "\t"
-           << endl;
+      strm << (**sw).getVal() << endl;
     }
 
     for (VarList::const_iterator var(varList.begin());
