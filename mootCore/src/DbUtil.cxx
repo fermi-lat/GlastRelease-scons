@@ -121,7 +121,10 @@ namespace MOOT {
       //      return std::string("");
     }
     int nRows = checkResults(res, "MootBuild,getColumnValue ", 0);
-    if (nRows <= 0) // return std::string("");
+    if ((nRows == 0) & (!onlyOne)) {
+      return std::string("");
+    }
+    else if (nRows <= 0) 
     {
       throw DbUtilException("DbUtil::getColumnWhere:  none found ");
     }
