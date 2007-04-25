@@ -1249,8 +1249,8 @@
 
 <!-- end TRG_ROI -->
 
-  <!-- Start LAT; LAT_Mode -->
-  <xs:element name="LAT_Mode-registers" >
+  <!-- Start GNL; GNL_Mode -->
+  <xs:element name="GNL_Mode-registers" >
     <xs:complexType>
       <xs:all minOccurs="1">
         <xs:element name="AEM_aem_configuration" type="registerType" />
@@ -1263,42 +1263,42 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="LAT_Mode-param" >
+  <xs:element name="GNL_Mode-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_TIC_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_TEM_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_AEM_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_DFT_LAT_Mode" type="paramFileType" />
+        <xs:element name="latc_TIC_GNL_Mode" type="paramFileType" />
+        <xs:element name="latc_TEM_GNL_Mode" type="paramFileType" />
+        <xs:element name="latc_AEM_GNL_Mode" type="paramFileType" />
+        <xs:element name="latc_DFT_GNL_Mode" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="LAT_Mode-anc" type="emptyBaseType" />
-  <xs:element name="LAT_Mode-constants" type="emptyBaseType" />
-  <xs:element name="LAT_Mode-offline" type="noOutfilesType" />
+  <xs:element name="GNL_Mode-anc" type="emptyBaseType" />
+  <xs:element name="GNL_Mode-constants" type="emptyBaseType" />
+  <xs:element name="GNL_Mode-offline" type="noOutfilesType" />
 
-  <xs:element name="LAT_Mode" >
+  <xs:element name="GNL_Mode" >
     <xs:annotation>
-      <xs:documentation> Element to specify intent for LAT_Mode precinct
+      <xs:documentation> Element to specify intent for GNL_Mode precinct
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="method" />
-        <xs:element ref="LAT_Mode-registers" />
-        <xs:element ref="LAT_Mode-constants" />
-        <xs:element ref="LAT_Mode-anc" />
-        <xs:element ref="LAT_Mode-param" />
-        <xs:element ref="LAT_Mode-offline" />
+        <xs:element ref="GNL_Mode-registers" />
+        <xs:element ref="GNL_Mode-constants" />
+        <xs:element ref="GNL_Mode-anc" />
+        <xs:element ref="GNL_Mode-param" />
+        <xs:element ref="GNL_Mode-offline" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <!-- end LAT_Mode --> 
+  <!-- end GNL_Mode --> 
 
-  <!-- start LAT_Timing -->
-  <xs:element name="LAT_Timing-registers" >
+  <!-- start GNL_Timing -->
+  <xs:element name="GNL_Timing-registers" >
     <xs:complexType>
       <xs:all >
         <xs:element name="AEM_trgseq" type="registerType" />
@@ -1308,7 +1308,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="LAT_Timing-anc" >
+  <xs:element name="GNL_Timing-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
         <xs:element name="TKR_TACK_delay" type="ancFileType"
@@ -1317,38 +1317,38 @@
     </xs:complexType >
   </xs:element>
 
-  <xs:element name="LAT_Timing-param" >
+  <xs:element name="GNL_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TEM_LAT_Timing" type="paramFileType" />
-        <xs:element name="latc_AEM_LAT_Timing" type="paramFileType" />
-        <xs:element name="latc_DFT_LAT_Timing" type="paramFileType" />
+        <xs:element name="latc_TEM_GNL_Timing" type="paramFileType" />
+        <xs:element name="latc_AEM_GNL_Timing" type="paramFileType" />
+        <xs:element name="latc_DFT_GNL_Timing" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="LAT_Timing-constants" type="emptyBaseType" />
+  <xs:element name="GNL_Timing-constants" type="emptyBaseType" />
 
-  <xs:element name="LAT_Timing-offline" type="noOutfilesType" />
+  <xs:element name="GNL_Timing-offline" type="noOutfilesType" />
 
-  <xs:element name="LAT_Timing" >
+  <xs:element name="GNL_Timing" >
     <xs:annotation>
-      <xs:documentation> Element to specify intent for LAT_Timing precinct
+      <xs:documentation> Element to specify intent for GNL_Timing precinct
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="method" />
-        <xs:element ref="LAT_Timing-registers" />
-        <xs:element ref="LAT_Timing-constants" />
-        <xs:element ref="LAT_Timing-anc" />
-        <xs:element ref="LAT_Timing-param" />
-        <xs:element ref="LAT_Timing-offline" />
+        <xs:element ref="GNL_Timing-registers" />
+        <xs:element ref="GNL_Timing-constants" />
+        <xs:element ref="GNL_Timing-anc" />
+        <xs:element ref="GNL_Timing-param" />
+        <xs:element ref="GNL_Timing-offline" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <!-- end LAT_Timing -->
+  <!-- end GNL_Timing -->
 
 
  <xs:element name="LAT_INTENT">
@@ -1381,8 +1381,8 @@
         <xs:element ref="TRG_GEM"  />
         <xs:element ref="TRG_ROI"  />
 
-        <xs:element ref="LAT_Mode"  />
-        <xs:element ref="LAT_Timing"  />
+        <xs:element ref="GNL_Mode"  />
+        <xs:element ref="GNL_Timing"  />
 
       </xs:choice>
     </xs:complexType>
@@ -1568,23 +1568,23 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="LAT_Mode-anc-key" >
-      <xs:selector xpath="LAT_Mode/*/*" /> 
+   <xs:unique name="GNL_Mode-anc-key" >
+      <xs:selector xpath="GNL_Mode/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
 
-    <xs:keyref name="LAT_Mode-anc-keyref" refer="LAT_Mode-anc-key" >
-      <xs:selector xpath="LAT_Mode/LAT_Mode-param/*/ancRef" />
+    <xs:keyref name="GNL_Mode-anc-keyref" refer="GNL_Mode-anc-key" >
+      <xs:selector xpath="GNL_Mode/GNL_Mode-param/*/ancRef" />
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="LAT_Timing-anc-key" >
-      <xs:selector xpath="LAT_Timing/*/*" /> 
+   <xs:unique name="GNL_Timing-anc-key" >
+      <xs:selector xpath="GNL_Timing/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
 
-    <xs:keyref name="LAT_Timing-anc-keyref" refer="LAT_Timing-anc-key" >
-      <xs:selector xpath="LAT_Timing/LAT_Timing-param/*/ancRef" />
+    <xs:keyref name="GNL_Timing-anc-keyref" refer="GNL_Timing-anc-key" >
+      <xs:selector xpath="GNL_Timing/GNL_Timing-param/*/ancRef" />
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
@@ -1639,8 +1639,8 @@
         <xs:element name="TRG_GEM-vote" type="voteFileType" minOccurs="0" />
         <xs:element name="TRG_ROI-vote" type="voteFileType" minOccurs="0" />
 
-        <xs:element name="LAT_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="LAT_Timing-vote" type="voteFileType" minOccurs="0" />
+        <xs:element name="GNL_Mode-vote" type="voteFileType" minOccurs="0" />
+        <xs:element name="GNL_Timing-vote" type="voteFileType" minOccurs="0" />
 
 
       </xs:all>
