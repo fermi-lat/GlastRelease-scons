@@ -15,37 +15,18 @@
       <xs:pattern value="[1-9][0-9]*" />
       <xs:pattern value="0" />
     </xs:restriction >
-  </xs:simpleType>  
-
-  <!-- spt names look like '+x0' or '-y3' -->
-  <xs:simpleType name="sptNameType">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="\+x[0-8]" />
-      <xs:pattern value="\-x[0-8]" />
-      <xs:pattern value="\+y[0-8]" />
-      <xs:pattern value="\-y[0-8]" />
-    </xs:restriction >
-  </xs:simpleType>  
-
-  <!-- tile names look like '000' or 'NA0' -->
-  <xs:simpleType name="tileListType">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[NA0-9 ]*"/>      
-    </xs:restriction >
-  </xs:simpleType>  
-
- <!-- pmt names look like '000:A' or 'NA0:B' -->
-  <xs:simpleType name="pmtListType">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[NAB0-9: ]*"/>      
-    </xs:restriction >
-  </xs:simpleType>  
-  
- <!-- roi names are a single hex digit -->
-  <xs:simpleType name="roiNameType">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9a-fA-F]"/>
-    </xs:restriction >
+<!--
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:unsignedInt" />
+      </xs:simpleType>
+      <xs:simpleType >
+        <xs:restriction base="xs:string" >
+          <xs:pattern value="0x[0-9A-Fa-f]{1,16}" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+ -->
   </xs:simpleType>  
 
 <!-- According to schema spec, the value space for the type is the 
@@ -71,14 +52,6 @@
       <xs:minInclusive value="0" />
     </xs:restriction>
   </xs:simpleType>
-
-
-  <xs:simpleType name="triState">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[01x]" />
-    </xs:restriction>
-  </xs:simpleType>
-
 
   <xs:element name="broadcast" type="regValueType" />
   <xs:element name="broadcastDouble" type="doubleRegType" />
@@ -113,15 +86,15 @@
  -->
   <xs:complexType name="registerType">
     <xs:choice>
-      <xs:element ref="singleton" />
-      <xs:element ref="singletonField" maxOccurs="unbounded" 
+      <xs:choice>
+        <xs:element ref="singleton" />
+        <xs:element ref="singletonField" maxOccurs="unbounded" 
                          minOccurs="0" />
-      <xs:sequence>
-        <xs:choice>
           <xs:element ref="broadcastField" maxOccurs="unbounded" 
-                        minOccurs="0" />
-          <xs:element ref="broadcast"  />
-        </xs:choice>
+                      minOccurs="0" />
+      </xs:choice>
+      <xs:sequence>
+        <xs:element ref="broadcast"  />
         <xs:element name="except" minOccurs="0" maxOccurs="unbounded" >
           <xs:complexType>
             <xs:simpleContent >
@@ -147,16 +120,6 @@
     </xs:choice>
   </xs:complexType>
 
-<!-- roiSet elements have an attribute 'roi' and then a tileList -->
-  <xs:complexType name="roiSetType">
-    <xs:simpleContent>
-      <xs:extension base="tileListType">
-        <xs:attribute name="roi" type="roiNameType" use="required" />
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
-
 <!-- attribute group to be used by output-file-container-type elements
      (of the form PRECINCT-param or PRECINCT-offline where PRECINCT
      is replaced by a precinct name -->
@@ -171,38 +134,13 @@
     <xs:attribute name="ccc" type="xs:unsignedByte" />
     <xs:attribute name="crc" type="xs:unsignedByte"  />
     <xs:attribute name="cfe" type="xs:unsignedByte"  />
-    <xs:attribute name="spt" type="sptNameType"  />
+    <xs:attribute name="spt" type="xs:Name"  />
     <xs:attribute name="tfe" type="xs:unsignedByte"  />
     <xs:attribute name="tcc" type="xs:unsignedByte"  />
     <xs:attribute name="trc" type="xs:unsignedByte"  />
     <xs:attribute name="tic" type="xs:unsignedByte"  />
     <xs:attribute name="field" type="xs:Name" />
   </xs:attributeGroup>
-
-  <xs:attributeGroup name="engineGroup">
-    <xs:attribute name="number" type="xs:unsignedByte" />
-    <xs:attribute name="calstrobe" type="xs:unsignedByte" />
-    <xs:attribute name="fourrange" type="xs:unsignedByte" />
-    <xs:attribute name="inhibit" type="xs:unsignedByte" />
-    <xs:attribute name="marker" type="xs:unsignedByte"  />
-    <xs:attribute name="prescale" type="xs:unsignedByte"  />
-    <xs:attribute name="tack" type="xs:unsignedByte"  />
-    <xs:attribute name="zerosuppress" type="xs:unsignedByte"  />
-  </xs:attributeGroup>
-
-  <xs:attributeGroup name="ruleGroup">
-    <xs:attribute name="number" type="xs:unsignedByte" />
-    <xs:attribute name="engine" type="xs:unsignedByte" />
-    <xs:attribute name="ext" type="triState" />
-    <xs:attribute name="sol" type="triState" />
-    <xs:attribute name="per" type="triState" />
-    <xs:attribute name="cno" type="triState" />
-    <xs:attribute name="chi" type="triState" />
-    <xs:attribute name="clo" type="triState" />
-    <xs:attribute name="tkr" type="triState" />
-    <xs:attribute name="roi" type="triState" />
-  </xs:attributeGroup>
-
 
   <!-- Make a type for empty output file container elements
        (since they occur often -->
@@ -263,8 +201,8 @@
       <xs:all minOccurs="1">
         <xs:element name="AEM_aem_configuration" type="registerType" />
         <xs:element name="AFE_config_reg" type="registerType" />
-        <xs:element name="AFE_tci_dac" type="registerType" />
         <xs:element name="ARC_max_pha" type="registerType" />
+        <xs:element name="AFE_tci_dac" type="registerType" />
         <xs:element name="ARC_pha_en" type="registerType" />
         <xs:element name="ARC_veto_en" type="registerType" />
       </xs:all>
@@ -496,11 +434,23 @@
 
   <xs:element name="ACD_Veto-constants" >
     <xs:complexType>
-      <xs:sequence>
-        <xs:element name="TileMip" type="nonnegFloat" minOccurs="1"/> 
-        <xs:element name="RibbonMip" type="nonnegFloat" minOccurs="1"/>
-        <xs:element name="NaMip" type="nonnegFloat" minOccurs="1"/>
-      </xs:sequence>
+      <xs:choice>
+        <xs:element name="vetoInMip">
+          <xs:complexType>
+            <xs:attribute name="tile" type="nonnegFloat" use="required" />
+            <xs:attribute name="ribbon" type="nonnegFloat" use="required" />
+            <xs:attribute name="NA" type="nonnegFloat" use="required" />
+          </xs:complexType>
+         </xs:element>
+        <xs:element name="vetoInPha">
+          <xs:complexType>
+            <xs:attribute name="tile" type="xs:unsignedShort" use="required" />
+            <xs:attribute name="ribbon" type="xs:unsignedShort"
+                          use="required" />
+            <xs:attribute name="NA" type="xs:unsignedShort" use="required" />
+          </xs:complexType>
+         </xs:element>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
 
@@ -529,6 +479,8 @@
   <xs:element name="ACD_Timing-registers" >
     <xs:complexType>
       <xs:all >
+        <xs:element name="AEM_tack" type="registerType" />
+        <xs:element name="AEM_cal_delay" type="registerType" />
         <xs:element name="ARC_veto_delay" type="registerType" />
         <xs:element name="ARC_veto_width" type="registerType" />
         <xs:element name="ARC_hold_delay" type="registerType" />
@@ -545,6 +497,7 @@
   <xs:element name="ACD_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
+        <xs:element name="latc_AEM_ACD_Timing" type="paramFileType" />
         <xs:element name="latc_ARC_ACD_Timing" type="paramFileType" />
         <xs:element name="latc_DFT_ACD_Timing" type="paramFileType" />
       </xs:all>  
@@ -909,7 +862,7 @@
         <xs:element name="SPT_low" type="registerType" />
         <xs:element name="SPT_high" type="registerType" />
         <xs:element name="TFE_calib_mask" type="registerType" />
-        <xs:element name="TDC_injection" type="registerType" />
+        <xs:element name="TDC_tfe_dac.injection" type="registerType" />
         <xs:element name="TCC_tcc_configuration" type="registerType" />
         <xs:element name="TCC_input_mask" type="registerType" />
         <xs:element name="TRC_trc_csr" type="registerType" />
@@ -958,6 +911,7 @@
   <xs:element name="TKR_Timing-registers" >
     <xs:complexType>
       <xs:all >
+        <xs:element name="TEM_tkr_trgseq" type="registerType" />
         <xs:element name="TCC_tcc_trg_align" type="registerType" />
       </xs:all>
     </xs:complexType>
@@ -977,6 +931,7 @@
   <xs:element name="TKR_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
+        <xs:element name="latc_TEM_TKR_Timing" type="paramFileType" />
         <xs:element name="latc_TCC_TKR_Timing" type="paramFileType" />
         <xs:element name="latc_DFT_TKR_Timing" type="paramFileType" />
       </xs:all>  
@@ -1019,7 +974,7 @@
   <xs:element name="TKR_Strips-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="TKR_Strips_Settings" type="ancFileType"
+        <xs:element name="TKR_HotStrips" type="ancFileType"
                          minOccurs="0" />
       </xs:all>
     </xs:complexType >
@@ -1057,113 +1012,70 @@
   </xs:element>
   <!-- end TKR_Strips -->
 
-  <!-- Start TKR_Thresh -->
-  <xs:element name="TKR_Thresh-registers" >
+  <!-- Start TKR_Threshold -->
+  <xs:element name="TKR_Threshold-registers" >
     <xs:complexType>
       <xs:all >
-        <xs:element name="TDC_threshold" type="registerType" />
+        <xs:element name="TDC_tfe_dac.threshold" type="registerType" />
       </xs:all>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="TKR_Thresh-anc" >
+  <xs:element name="TKR_Threshold-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="TKR_Thresh_Settings" type="ancFileType"
-                          minOccurs="0" />
+        <xs:element name="TKR_Thresholds" type="ancFileType"
+                         minOccurs="0" />
+        <xs:element name="TKR_ChargeScale" type="ancFileType"
+                         minOccurs="0" />
       </xs:all>
     </xs:complexType >
   </xs:element>
 
-  <xs:element name="TKR_Thresh-param" >
+  <xs:element name="TKR_Threshold-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TDC_TKR_Thresh" type="paramFileType" />
-        <xs:element name="latc_DFT_TKR_Thresh" type="paramFileType" />
+        <xs:element name="latc_TDC_TKR_Threshold" type="paramFileType" />
+        <xs:element name="latc_DFT_TKR_Threshold" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="TKR_Thresh-constants" type="emptyBaseType" />
+  <xs:element name="TKR_Threshold-constants" type="emptyBaseType" />
 
-  <xs:element name="TKR_Thresh-offline" type="noOutfilesType" />
+  <xs:element name="TKR_Threshold-offline" type="noOutfilesType" />
 
-  <xs:element name="TKR_Thresh" >
+  <xs:element name="TKR_Threshold" >
     <xs:annotation>
-      <xs:documentation> Element to specify intent for TKR_Thresh precinct
+      <xs:documentation> Element to specify intent for TKR_Threshold precinct
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="method" />
-        <xs:element ref="TKR_Thresh-registers" />
-        <xs:element ref="TKR_Thresh-constants" />
-        <xs:element ref="TKR_Thresh-anc" />
-        <xs:element ref="TKR_Thresh-param" />
-        <xs:element ref="TKR_Thresh-offline" />
+        <xs:element ref="TKR_Threshold-registers" />
+        <xs:element ref="TKR_Threshold-constants" />
+        <xs:element ref="TKR_Threshold-anc" />
+        <xs:element ref="TKR_Threshold-param" />
+        <xs:element ref="TKR_Threshold-offline" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <!-- End TKR_Thresh -->
+  <!-- End TKR_Threshold -->
 
 <!-- TRG_GEM -->
-  <xs:complexType name="GEM_conditionsType">
-    <xs:sequence>
-      <xs:element name="rule" maxOccurs="19">
-        <xs:complexType>
-          <xs:sequence/>
-          <xs:attributeGroup ref="ruleGroup" />
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="GEM_engineType">
-    <xs:sequence>
-      <xs:element name="engine" maxOccurs="16">
-        <xs:complexType>
-          <xs:sequence />
-          <xs:attributeGroup ref="engineGroup" />
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="GEM_tilesType">
-    <xs:all minOccurs="0">
-      <xs:element name="enableAll">        
-      </xs:element>
-      <xs:element name="exceptTileList">
-      </xs:element>
-    </xs:all>
-  </xs:complexType>
-
   <xs:element name="TRG_GEM-registers" >
     <xs:complexType>
       <xs:all minOccurs="0">
-        <xs:element name="GEM_conditions" type="GEM_conditionsType" 
-                    minOccurs="0"/>
         <xs:element name="GEM_configuration" type="registerType" 
                     minOccurs="0"/>
         <xs:element name="GEM_periodic_mode" type="registerType" 
                     minOccurs="0"/>
         <xs:element name="GEM_periodic_rate" type="registerType" 
                     minOccurs="0"/>
-        <xs:element name="GEM_window_open_mask" type="registerType" 
-	            minOccurs="0"/>
-        <xs:element name="GEM_periodic_limit" type="registerType" 
-                    minOccurs="0"/>
         <xs:element name="GEM_window_width" type="registerType" minOccurs="0"/>
-         <xs:element name="GEM_acd_cno" type="registerType" minOccurs="0"/>
-        <xs:element name="GEM_external" type="registerType" minOccurs="0"/>
-        <xs:element name="GEM_tie_tower_busy" type="registerType" 
-                    minOccurs="0"/>
-        <xs:element name="GEM_conditions" type="GEM_conditionsType" 
-                    minOccurs="0"/>
-        <xs:element name="GEM_engine" type="GEM_engineType" minOccurs="0"/>
-        <xs:element name="GEM_tiles" type="GEM_tilesType" minOccurs="0"/>
-     </xs:all>
+      </xs:all>
     </xs:complexType>
   </xs:element>
 
@@ -1176,8 +1088,13 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="TRG_GEM-anc" type="emptyBaseType" />
-
+  <xs:element name="TRG_GEM-anc" >
+    <xs:complexType >
+      <xs:sequence minOccurs="0">
+        <xs:element name="GEM_Cfg" type="ancFileType" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="TRG_GEM-constants" type="emptyBaseType" />
 
   <xs:element name="TRG_GEM-offline" type="noOutfilesType" />
@@ -1203,14 +1120,14 @@
 <!-- TRG_ROI -->
   <xs:element name="TRG_ROI-registers" >
     <xs:complexType>
-      <xs:all minOccurs="1" >
-        <xs:element name="GEM_r" >
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="roiSet" type="roiSetType" minOccurs="0" maxOccurs="16" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
+      <xs:all minOccurs="0">
+        <xs:element name="ROI_configuration" type="registerType" 
+                    minOccurs="0"/>
+        <xs:element name="ROI_periodic_mode" type="registerType" 
+                    minOccurs="0"/>
+        <xs:element name="ROI_periodic_rate" type="registerType" 
+                    minOccurs="0"/>
+        <xs:element name="ROI_window_width" type="registerType" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -1224,7 +1141,13 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="TRG_ROI-anc" type="emptyBaseType" />
+  <xs:element name="TRG_ROI-anc">
+    <xs:complexType >
+      <xs:sequence minOccurs="0">
+        <xs:element name="ROI_Cfg" type="ancFileType" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="TRG_ROI-constants" type="emptyBaseType" />
 
@@ -1249,142 +1172,36 @@
 
 <!-- end TRG_ROI -->
 
-  <!-- Start LAT; LAT_Mode -->
-  <xs:element name="LAT_Mode-registers" >
-    <xs:complexType>
-      <xs:all minOccurs="1">
-        <xs:element name="AEM_aem_configuration" type="registerType" />
-        <xs:element name="TEM_data_masks" type="registerType" />
-        <xs:element name="TIC_cal_in_mask" type="registerType" />
-        <xs:element name="TIC_tkr_out_mask" type="registerType" />
-        <xs:element name="TIC_tkr_layer_enable_0" type="registerType" />
-        <xs:element name="TIC_tkr_layer_enable_1" type="registerType" />
-      </xs:all>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="LAT_Mode-param" >
-    <xs:complexType>
-      <xs:all minOccurs="1" >
-        <xs:element name="latc_TIC_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_TEM_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_AEM_LAT_Mode" type="paramFileType" />
-        <xs:element name="latc_DFT_LAT_Mode" type="paramFileType" />
-      </xs:all>  
-      <xs:attributeGroup ref="outfileAttGroup" />
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="LAT_Mode-anc" type="emptyBaseType" />
-  <xs:element name="LAT_Mode-constants" type="emptyBaseType" />
-  <xs:element name="LAT_Mode-offline" type="noOutfilesType" />
-
-  <xs:element name="LAT_Mode" >
-    <xs:annotation>
-      <xs:documentation> Element to specify intent for LAT_Mode precinct
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="method" />
-        <xs:element ref="LAT_Mode-registers" />
-        <xs:element ref="LAT_Mode-constants" />
-        <xs:element ref="LAT_Mode-anc" />
-        <xs:element ref="LAT_Mode-param" />
-        <xs:element ref="LAT_Mode-offline" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!-- end LAT_Mode --> 
-
-  <!-- start LAT_Timing -->
-  <xs:element name="LAT_Timing-registers" >
-    <xs:complexType>
-      <xs:all >
-        <xs:element name="AEM_trgseq" type="registerType" />
-        <xs:element name="TEM_cal_trg_seq" type="registerType" />
-        <xs:element name="TEM_tkr_trgseq" type="registerType" />
-      </xs:all>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="LAT_Timing-anc" >
-    <xs:complexType >
-      <xs:all minOccurs="0" >
-        <xs:element name="TKR_TACK_delay" type="ancFileType"
-                         minOccurs="0" />
-      </xs:all>
-    </xs:complexType >
-  </xs:element>
-
-  <xs:element name="LAT_Timing-param" >
-    <xs:complexType>
-      <xs:all  minOccurs="0">
-        <xs:element name="latc_TEM_LAT_Timing" type="paramFileType" />
-        <xs:element name="latc_AEM_LAT_Timing" type="paramFileType" />
-        <xs:element name="latc_DFT_LAT_Timing" type="paramFileType" />
-      </xs:all>  
-      <xs:attributeGroup ref="outfileAttGroup" />
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="LAT_Timing-constants" type="emptyBaseType" />
-
-  <xs:element name="LAT_Timing-offline" type="noOutfilesType" />
-
-  <xs:element name="LAT_Timing" >
-    <xs:annotation>
-      <xs:documentation> Element to specify intent for LAT_Timing precinct
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="method" />
-        <xs:element ref="LAT_Timing-registers" />
-        <xs:element ref="LAT_Timing-constants" />
-        <xs:element ref="LAT_Timing-anc" />
-        <xs:element ref="LAT_Timing-param" />
-        <xs:element ref="LAT_Timing-offline" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!-- end LAT_Timing -->
-
-
  <xs:element name="LAT_INTENT">
     <xs:annotation>
-      <xs:documentation> Root element for specifying
-         LAT configuration intent for a precinct
+      <xs:documentation> Root element for fully specifying
+         LAT configuration intent
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:choice>
-        <xs:element ref="ACD_Mode"  />
-        <xs:element ref="ACD_Bias"  />
-        <xs:element ref="ACD_Hld"  />
-        <xs:element ref="ACD_PHA"  />
-        <xs:element ref="ACD_Veto"  />
-        <xs:element ref="ACD_Timing"  />
+      <xs:all>
+        <xs:element ref="ACD_Mode" minOccurs="0" />
+        <xs:element ref="ACD_Bias" minOccurs="0" />
+        <xs:element ref="ACD_Hld" minOccurs="0" />
+        <xs:element ref="ACD_PHA" minOccurs="0" />
+        <xs:element ref="ACD_Veto" minOccurs="0" />
+        <xs:element ref="ACD_Timing" minOccurs="0" />
 
-        <xs:element ref="CAL_Mode"  />
-        <xs:element ref="CAL_Timing"  />
-        <xs:element ref="CAL_LAC"  />
-        <xs:element ref="CAL_FLE"  />
-        <xs:element ref="CAL_FHE"  />    
-        <xs:element ref="CAL_ULD"  /> 
+        <xs:element ref="CAL_Mode" minOccurs="0" />
+        <xs:element ref="CAL_Timing" minOccurs="0" />
+        <xs:element ref="CAL_LAC" minOccurs="0" />
+        <xs:element ref="CAL_FLE" minOccurs="0" />
+        <xs:element ref="CAL_FHE" minOccurs="0" />    
+        <xs:element ref="CAL_ULD" minOccurs="0" /> 
 
-        <xs:element ref="TKR_Mode"  />
-        <xs:element ref="TKR_Timing"  />
-        <xs:element ref="TKR_Strips"  />
-        <xs:element ref="TKR_Thresh"  />
+        <xs:element ref="TKR_Mode" minOccurs="0" />
+        <xs:element ref="TKR_Timing" minOccurs="0" />
+        <xs:element ref="TKR_Strips" minOccurs="0" />
+        <xs:element ref="TKR_Threshold" minOccurs="0" />
 
-        <xs:element ref="TRG_GEM"  />
-        <xs:element ref="TRG_ROI"  />
-
-        <xs:element ref="LAT_Mode"  />
-        <xs:element ref="LAT_Timing"  />
-
-      </xs:choice>
+        <xs:element ref="TRG_GEM" minOccurs="0" />
+        <xs:element ref="TRG_ROI" minOccurs="0" />
+      </xs:all>
     </xs:complexType>
 
   <xs:unique name="ACD_Mode-anc-key" >
@@ -1538,13 +1355,13 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TKR_Thresh-anc-key" >
-      <xs:selector xpath="TKR_Thresh/*/*" /> 
+   <xs:unique name="TKR_Threshold-anc-key" >
+      <xs:selector xpath="TKR_Threshold/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
 
-    <xs:keyref name="TKR_Thresh-anc-keyref" refer="TKR_Thresh-anc-key" >
-      <xs:selector xpath="TKR_Thresh/TKR_Thresh-param/*/ancRef" />
+    <xs:keyref name="TKR_Threshold-anc-keyref" refer="TKR_Threshold-anc-key" >
+      <xs:selector xpath="TKR_Threshold/TKR_Threshold-param/*/ancRef" />
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
@@ -1568,83 +1385,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="LAT_Mode-anc-key" >
-      <xs:selector xpath="LAT_Mode/*/*" /> 
-      <xs:field xpath="@nickname" />
-    </xs:unique>
-
-    <xs:keyref name="LAT_Mode-anc-keyref" refer="LAT_Mode-anc-key" >
-      <xs:selector xpath="LAT_Mode/LAT_Mode-param/*/ancRef" />
-      <xs:field   xpath="@refTo" />
-    </xs:keyref>
-
-   <xs:unique name="LAT_Timing-anc-key" >
-      <xs:selector xpath="LAT_Timing/*/*" /> 
-      <xs:field xpath="@nickname" />
-    </xs:unique>
-
-    <xs:keyref name="LAT_Timing-anc-keyref" refer="LAT_Timing-anc-key" >
-      <xs:selector xpath="LAT_Timing/LAT_Timing-param/*/ancRef" />
-      <xs:field   xpath="@refTo" />
-    </xs:keyref>
 
   </xs:element> 
-
-<!-- Stuff for global intent: a list of vote file aliases for all
-     precincts -->
-
-<!-- attribute group to be used by votes file elements -->
-  <xs:attributeGroup name="voteAttributes" >
-    <xs:attribute name="comment" type="xs:Name"/>
-  </xs:attributeGroup>
-
-<!-- base type for votes file elements.  Content is alias name -->
-  <xs:complexType name="voteFileType"  >
-    <xs:simpleContent >
-      <xs:extension base ="xs:Name" >
-      <xs:attributeGroup ref="voteAttributes" />
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
- <xs:element name="LAT_GLOBAL_INTENT">
-    <xs:annotation>
-      <xs:documentation> Root element for fully specifying
-         LAT configuration intent
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:all>
-        <xs:element name="description" type="xs:string" minOccurs="0" />
-
-        <xs:element name="ACD_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Bias-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Hld-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_PHA-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Veto-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Timing-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="CAL_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_Timing-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_LAC-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_FLE-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_FHE-vote" type="voteFileType" minOccurs="0" />    
-        <xs:element name="CAL_ULD-vote" type="voteFileType" minOccurs="0" /> 
-
-        <xs:element name="TKR_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Timing-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Strips-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Thresh-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="TRG_GEM-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TRG_ROI-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="LAT_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="LAT_Timing-vote" type="voteFileType" minOccurs="0" />
-
-
-      </xs:all>
-    </xs:complexType>
-  </xs:element>
 
 </xs:schema>
