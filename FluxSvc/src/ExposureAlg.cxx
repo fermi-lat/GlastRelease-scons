@@ -223,11 +223,11 @@ void ExposureAlg::createEntry()
             t   << "tick at " << std::setprecision(10)
                 << m_lasttime - m_initial_time << " sec"
                 << std::setprecision(3)
-                << ", lat, lon, B, L = " 
+                << ", lat, lon, magLat, SAA = " 
                 << m_history.lat_geo << ", " 
                 << m_history.lon_geo << ", "
-                << m_history.B << ", " 
-                << m_history.L;
+                << m_history.lat_mag << ", " 
+                << m_history.in_saa;
             log << t.str();
         }
         log << endreq;

@@ -144,6 +144,7 @@ public:
     /// for the IRunnable interfce
     virtual StatusCode run();
 
+    double endruntime(); ///< access the end of run time 
     //------------------------------------------------------------------
     //  stuff required by a Service
 
@@ -452,12 +453,15 @@ int FluxSvc::askGPS()
     astro::EarthCoordinate pos = GPS::instance()->earthpos();
     bool inside = pos.insideSAA();
 
+    double curtime = GPS::instance()->time();
+
     if( m_insideSAA == inside) return 0; // no change
+
     MsgStream log( msgSvc(), name() );
     log << MSG::INFO;
     std::stringstream t;
         t<< (!inside? " leaving" : "entering") 
-        << " SAA at "  << std::setprecision(10)<< GPS::instance()->time();
+        << " SAA at "  << std::setprecision(10)<< curtime;
     log << t.str()    << endreq;
     m_insideSAA = inside;
 
@@ -513,6 +517,7 @@ void FluxSvc::rootDisplay(std::vector<std::string> arguments){
 void FluxSvc::attachGpsObserver(Observer* anObserver)
 {
     GPS::instance()->notification().attach( anObserver );
+    GPS::instance()->notifyObservers(); // make sure everyone notified as observers are attached?
 }
 
 
@@ -564,6 +569,10 @@ std::vector<double> FluxSvc::setRockType(astro::GPS::RockType rockType, double r
 
 std::vector<std::pair< std::string ,std::list<std::string> > > FluxSvc::sourceOriginList() const{
     return m_fluxMgr->sourceOriginList();
+}
+
+double FluxSvc::endruntime() {
+    return m_times.end() ;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -630,6 +639,9 @@ StatusCode FluxSvc::run(){
         return StatusCode::FAILURE;
     }
     int last_fraction=0;
+
+    GPS::instance()->notifyObservers(); // make sure all are in the
+
     // loop: will quit if either limit is set, and exceeded
     while( (m_evtMax==0  || m_evtMax>0 &&  eventNumber < m_evtMax)
         && (m_times.end()==0 || m_times.end()>0 && m_times.current() < m_times.end()) ) {

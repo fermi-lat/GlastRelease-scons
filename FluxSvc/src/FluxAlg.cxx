@@ -177,7 +177,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 StatusCode FluxAlg::initialize(){
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
+    GPS* gps = GPS::instance();
 
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
@@ -235,10 +235,10 @@ StatusCode FluxAlg::initialize(){
                 log << MSG::INFO << "Will override x-direction to point east"<<endreq;
             }
 
-            GPS::instance()->setPointingHistoryFile(filename, offset, eastflag);
+            gps->setPointingHistoryFile(filename, offset, eastflag);
         }
     }
-    double current_time = GPS::instance()->time();
+    double current_time = gps->time(); // preserve time to protect against Pulsar, etc.
     if( !m_source_list.value().empty()){
         log << MSG::INFO << "loading sources " << endreq;
         std::vector<std::string> sources=m_source_list.value();
@@ -262,7 +262,7 @@ StatusCode FluxAlg::initialize(){
         }
     }
 
-    GPS::instance()->time(current_time);
+    gps->time(current_time);  // restore time if it was modified
     std::string title(m_flux->title()); if(title.length()>100) title = title.substr(0,100)+"...";
     log << MSG::INFO << "Source title: " << title << endreq;
     log << MSG::INFO << "        area: " << m_flux->targetArea() << endreq;
@@ -305,7 +305,7 @@ StatusCode FluxAlg::initialize(){
         (this, &FluxAlg::askGPS) );
 
     m_fluxSvc->attachGpsObserver(&m_observer);
-
+    gps->notifyObservers();
     return sc;
 }
 //------------------------------------------------------------------------
@@ -354,7 +354,15 @@ StatusCode FluxAlg::execute()
             setFilterPassed( false );
             return sc;
         }
-        if( m_avoidSAA) ++m_SAAreject;
+        if( m_avoidSAA){
+            if( GPS::instance()->time() > m_fluxSvc->endruntime()){
+                log << MSG::INFO << "Ran out of time while in SAA"<< endreq;
+                setFilterPassed( false );
+                break;  //return sc;
+            }
+                
+            ++m_SAAreject;
+        }
         else break;
     } while(m_insideSAA && m_avoidSAA.value() || --count>0);
 
@@ -480,11 +488,13 @@ namespace {
 StatusCode FluxAlg::finalize(){
     StatusCode  sc = StatusCode::SUCCESS;
     static bool done = false;
+    if( done  ) return sc;
+    done=true;
 
     if( m_rootTupleSvc!=0 ){
         // create the jobinfo tuple: copy to statics
         run = m_run;
-        sequence=m_sequence;
+        sequence=m_sequence+m_SAAreject;
         initialTime=m_initialTime;
         currentTime=m_currentTime;
         m_rootTupleSvc->addItem("jobinfo", "run", &run);
@@ -492,8 +502,6 @@ StatusCode FluxAlg::finalize(){
         m_rootTupleSvc->addItem("jobinfo", "start", &initialTime);
         m_rootTupleSvc->addItem("jobinfo", "stop",  &currentTime);
     }
-    if( done || m_counts.empty() ) return sc;
-    done=true;
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "Computed Rate: "<< currentRate() << " Hz" ;
     summary(log.stream(), "\n\t\t\t");

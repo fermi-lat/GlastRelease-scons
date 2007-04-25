@@ -104,6 +104,8 @@ public:
     /// set aligmnment for Glast. 
     /// @param phi,theta,psi Euler angles (radians)
     virtual void setAlignmentRotation(double phi, double theta, double psi)=0;
+
+    virtual double endruntime() = 0; ///< access end of run time
 };
 
 #endif  // _H_IFluxSvc
