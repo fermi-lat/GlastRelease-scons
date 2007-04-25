@@ -157,8 +157,8 @@ TriggerAlg::TriggerAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("vetomask",  m_vetomask=1+2+4);  // if thottle it set, veto if trigger masked with these ...
     declareProperty("vetobits",  m_vetobits=1+2);    // equals these bits
 
-    declareProperty("engine",    m_table = "");     // set to "detault"  to use default engine
-    declareProperty("prescale",  m_prescale);        // vector of prescale factors
+    declareProperty("engine",    m_table = "");     // set to "default"  to use default engine table
+    declareProperty("prescale",  m_prescale=std::vector<int>());        // vector of prescale factors
 
     for( int i=0; i<8; ++i) { 
         std::stringstream t; t<< "bit "<< i;

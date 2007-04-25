@@ -18,10 +18,12 @@ TriggerTables::TriggerTables(std::string type, const std::vector<int>& prescale)
     if( type!="default" ){
         throw std::invalid_argument("TriggerTables only accepts \"default\" configuration");
     }
-    int psdata[] = {0,0,0,0, 0, 249, 0,0,0 ,0, 49,-1};
-    std::vector<int>::const_iterator ps = std::vector<int>(psdata, psdata+12).begin();
-    if( !prescale.empty() ) ps = prescale.begin();
-        
+    static int psdata[] = {0,0,0,0, 0, 249, 0,0,0 ,0, 49,-1};
+    std::vector<int>defaultps(std::vector<int>(psdata, psdata+12));
+    std::vector<int>::const_iterator ps = defaultps.begin();
+    if( !prescale.empty() ){
+        ps = prescale.begin();
+    }
 
     int n(0);
     push_back(Engine("1 x x x x x x x", n++, *ps++)); //0
