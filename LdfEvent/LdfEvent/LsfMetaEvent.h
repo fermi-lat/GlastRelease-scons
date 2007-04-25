@@ -10,12 +10,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 
-//#include "LdfEvent/LsfTime.h"
-//#include "LdfEvent/LsfRunInfo.h"
-//#include "LdfEvent/LsfDatagramInfo.h"
-//#include "LdfEvent/LsfGemScalers.h"
-//#include "LdfEvent/LsfConfiguration.h"
-
 #include "lsfData/LsfMetaEvent.h"
 
 /** @class MetaEvent
@@ -34,7 +28,9 @@ namespace LsfEvent {
     /// Default c'tor.  Assigns sentinel or null values to all fields
     MetaEvent()
       :m_config(0),
-       m_type(enums::Lsf::NoRunType){
+       m_type(enums::Lsf::NoRunType),
+       m_keys(0),
+       m_ktype(enums::Lsf::NoKeysType) {
     }
 
     /// Standard c'tor.  Takes input values for all fields
@@ -42,12 +38,15 @@ namespace LsfEvent {
                const lsfData::DatagramInfo& datagram, 
 	       const lsfData::GemScalers& scalers,
 	       const lsfData::Time& time,
-	       const lsfData::Configuration& configuration )
+	       const lsfData::Configuration& configuration,
+               const lsfData::LsfKeys& keys )
       :m_run(run),m_datagram(datagram),
        m_scalers(scalers),
        m_time(time),
        m_config(configuration.clone()),
-       m_type(configuration.type()){
+       m_type(configuration.type()),
+       m_keys(keys.clone()),
+       m_ktype(keys.type()) {
     }
 
     /// Copy c'tor.  Just copy all values.  
@@ -59,10 +58,16 @@ namespace LsfEvent {
        m_scalers(other.scalers()),
        m_time(other.time()),
        m_config(0),
-       m_type(enums::Lsf::NoRunType){
+       m_type(enums::Lsf::NoRunType),
+       m_keys(0),
+       m_ktype(enums::Lsf::NoKeysType) {
       if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
 	m_type = other.configuration()->type();
+      }
+      if ( other.keys() != 0) {
+          m_keys = other.keys()->clone();
+          m_ktype = other.keys()->type();
       }
     }
     
@@ -72,17 +77,30 @@ namespace LsfEvent {
        m_scalers(other.scalers()),
        m_time(other.time()),
        m_config(0),
-       m_type(enums::Lsf::NoRunType) {
+       m_type(enums::Lsf::NoRunType),
+       m_keys(0),
+       m_ktype(enums::Lsf::NoKeysType) {
 
        if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
 	m_type = other.configuration()->type();
-      }
+       }
+       if (other.keys() != 0) {
+            m_keys = other.keys()->clone();
+            m_ktype = other.keys()->type();
+       }
     }
 
     /// D'tor.  Delete the configuration, which had been deep-copied
     virtual ~MetaEvent(){
-      if (m_config) delete m_config;
+      if (m_config) {
+          delete m_config;
+        m_config = 0;
+      }
+      if (m_keys) {
+          delete m_keys;
+          m_keys = 0;
+      }
     }
 
     /// Retrieve reference to class definition structure
@@ -106,12 +124,16 @@ namespace LsfEvent {
 
     inline const enums::Lsf::RunType runType() const { return m_type; }
 
+    inline const lsfData::LsfKeys* keys() const { return m_keys; }
+    inline const enums::Lsf::KeysType keyType() const { return m_ktype; }
+
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
                     const lsfData::DatagramInfo& datagram, 
 		    const lsfData::GemScalers& scalers,
 		    const lsfData::Time& time,
-		    const lsfData::Configuration& configuration) {
+		    const lsfData::Configuration& configuration,
+                    const lsfData::LsfKeys& keys) {
       m_run = run;
       m_datagram = datagram;
       m_scalers = scalers;
@@ -120,6 +142,9 @@ namespace LsfEvent {
       m_type = enums::Lsf::NoRunType;
       m_config = configuration.clone();
       m_type = configuration.type();
+      if (m_keys) delete m_keys;
+      m_keys = keys.clone();
+      m_ktype = keys.type();
     }
 
     /// set everything except configuration
@@ -146,6 +171,12 @@ namespace LsfEvent {
       m_type = configuration.type();
     }
 
+    inline void setKeys( const lsfData::LsfKeys& keys) {
+        if (m_keys) delete m_keys;
+        m_keys = keys.clone();
+        m_ktype = keys.type();
+    }
+
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
       return obj.fillStream(s);
@@ -169,6 +200,14 @@ namespace LsfEvent {
           else if (m_type == enums::Lsf::TkrLCI)
               s << *(m_config->castToLciTkrConfig());
       }
+/*
+      if (m_keys != 0) {
+          if (m_ktype == enums::Lsf::LpaKeys)
+              s << *(m_keys->castToLpaKeys());
+          else if (m_ktype == enums::Lsf::LciKeys)
+              s << *(m_keys->castToLciKeys());
+      }
+*/
       return s;
     }
     
@@ -191,6 +230,9 @@ namespace LsfEvent {
     
     /// Which type of run was this, particle data or charge injection 
     enums::Lsf::RunType m_type;
+
+    lsfData::LsfKeys* m_keys;
+    enums::Lsf::KeysType m_ktype;
 
   };
 

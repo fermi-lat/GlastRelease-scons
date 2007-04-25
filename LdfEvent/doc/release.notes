@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v4r0    24-Apr-2007 HMK Adderss JIRA ICS-199 to handle LPA and LCI keys
 v3r9    10-Nov-2006 HMK Remove obsolete includes that reference lsfDataStore
 v3r8    18-Aug-2006 HMK Try out using a shared library instead of static
 v3r7    16-May-2006 HMK store TKR fifo errors from err contribution
