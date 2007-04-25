@@ -41,7 +41,7 @@
     </row>
 
     <row>
-      <field col="name" val="LAT" />
+      <field col="name" val="GNL" />
       <field col="description" 
      val="to control some latc registers not naturally controlled elsewhere" />
     </row>
@@ -424,13 +424,6 @@
     </row> 
 
     <row>
-      <field col="name" val="latc_AEM_ACD_Timing" />
-      <field col="description" val="AEM registers controlled by ACD_Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
-    </row> 
-
-    <row>
       <field col="name" val="latc_ARC_ACD_Timing" />
       <field col="description" val="ARC registers controlled by ACD_Timing" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
@@ -670,13 +663,6 @@
     </row> 
 
     <row>
-      <field col="name" val="latc_TEM_TKR_Timing" />
-      <field col="description" 
-             val="TEM registers controlled by TKR Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
-    </row> 
-    <row>
       <field col="name" val="latc_TCC_TKR_Timing" />
       <field col="description" 
              val="TCC registers controlled by TKR Timing" />
@@ -725,54 +711,54 @@
 -->
 
     <row>
-      <field col="name" val="latc_AEM_LAT_Mode" />
+      <field col="name" val="latc_AEM_GNL_Mode" />
       <field col="description" 
-             val="AEM registers controlled by LAT Mode" />
+             val="AEM registers controlled by GNL Mode" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
     <row>
-      <field col="name" val="latc_TEM_LAT_Mode" />
+      <field col="name" val="latc_TEM_GNL_Mode" />
       <field col="description" 
-             val="TEM registers controlled by LAT Mode" />
+             val="TEM registers controlled by GNL Mode" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
     <row>
-      <field col="name" val="latc_TIC_LAT_Mode" />
+      <field col="name" val="latc_TIC_GNL_Mode" />
       <field col="description" 
-             val="TIC registers controlled by LAT Mode" />
+             val="TIC registers controlled by GNL Mode" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
      <row>
-      <field col="name" val="latc_DFT_LAT_Mode" />
+      <field col="name" val="latc_DFT_GNL_Mode" />
       <field col="description" 
-             val="DFT registers controlled by LAT Mode" />
+             val="DFT registers controlled by GNL Mode" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
 
      <row>
-      <field col="name" val="latc_AEM_LAT_Timing" />
+      <field col="name" val="latc_AEM_GNL_Timing" />
       <field col="description" 
-             val="AEM registers controlled by LAT Timing" />
+             val="AEM registers controlled by GNL Timing" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
      <row>
-      <field col="name" val="latc_TEM_LAT_Timing" />
+      <field col="name" val="latc_TEM_GNL_Timing" />
       <field col="description" 
-             val="TEM registers controlled by LAT Timing" />
+             val="TEM registers controlled by GNL Timing" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
      <row>
-      <field col="name" val="latc_DFT_LAT_Timing" />
+      <field col="name" val="latc_DFT_GNL_Timing" />
       <field col="description" 
-             val="DFT registers controlled by LAT Timing" />
+             val="DFT registers controlled by GNL Timing" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="LAT" />
+       refVal="GNL" />
     </row> 
 
   </table>
@@ -1017,19 +1003,19 @@
            refVal="TKR" />
     </row>
     <row>
-      <field col="name" val="LAT_Mode" />
+      <field col="name" val="GNL_Mode" />
       <field col="description" 
        val="Mode settings not specific to a single subsystem" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-           refVal="LAT" />
+           refVal="GNL" />
     </row>
 
     <row>
-      <field col="name" val="LAT_Timing" />
+      <field col="name" val="GNL_Timing" />
       <field col="description" 
        val="Timing-related registers in AEM and TEM not handled elsewhere" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
-           refVal="LAT" />
+           refVal="GNL" />
     </row>
 
     <row>
