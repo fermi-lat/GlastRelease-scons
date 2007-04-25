@@ -135,7 +135,7 @@ int DfiParser::readContextAndInfo() {
     lsfData::MetaEvent *metaEvent = ldfReader::LatData::instance()->getMetaEventPtr();
 
     metaEvent->set(m_meta.run(), m_meta.datagram(), m_meta.scalers(),
-                   m_meta.time(), *(m_meta.configuration()));
+                   m_meta.time(), *(m_meta.configuration()), *(m_meta.keys()));
  
     lsfData::LsfCcsds* ccsdsData = ldfReader::LatData::instance()->getCcsdsPtr();
     ccsdsData->initialize(m_ccsds.getScid(), m_ccsds.getApid(), m_ccsds.getUtc());
