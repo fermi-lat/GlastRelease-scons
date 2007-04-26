@@ -230,9 +230,7 @@ namespace CfgMgr {
         strm << "--" << longName;
       strm << "\t";
 
-      strm  << (**var).getStrVal() << "\t"
-            << (**var).getHelp() << "\t"
-            << endl;
+      strm  << (**var).getStrVal() << endl;
     }
 
     for (ArgList::const_iterator arg(argList.begin());
@@ -241,9 +239,7 @@ namespace CfgMgr {
       const string &longName = (**arg).getLongName();
 
       strm << longName << "\t"
-           << (**arg).getStrVal() << "\t"
-           << (**arg).getHelp() << "\t"
-           << endl;
+           << (**arg).getStrVal() << endl;
     }
 
     for (unsigned idx = 0; idx < anonArgList.size(); idx++) {
