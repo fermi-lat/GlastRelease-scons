@@ -28,27 +28,30 @@
 ##  collection          Config             provide a handle to group together
 ##                                         instances from another table (here
 ##                                         FSW_Inputs)
-##  history             History            provide handle for time interval
-##                                         over which config was fixed
 
 ## Some care must be taken about the order in which tables are created or
 ## dropped since some have foreign keys referring to others. The following
 ## is an acceptable ordering for creation
 ##    Type                                                     Count
-## 1. Class tables                                             4/4
-## 2. Instance tables (usually refer to a class table)         4/4
-## 3. Collection tables                                        1/2
-## 4. History                                                  0/1
-## 5. Relation tables (may refer to any of the other types)    7/9
+## 0. Delegates                                                1
+## 1. Class tables                                             5
+## 2. Instance tables (usually refer to a class table)         5
+## 3. Collection tables                                        1
+## 4. Relation tables (may refer to any of the other types)    8
+## 5. Alias tables: a special kind of relation table           2
+## n. Instrument                                               1
 ## In m/n n=number planned, m is number fully specified
 ##
 ## Tables may be dropped in reverse order
 
-## Delegates must be created before  Precincts.
+## Delegates must be created before  Precincts. Delegates is  like
+## a class table i some respects but has no corresponding instances
 source createDelegates.sql; 
-source createPrecincts.sql;
 
-## Precincts must be created before Votes and Parameter_class
+
+## Precincts act like a class table. Must be created before Votes 
+## (its corresponding instance table) and Parameter_class
+source createPrecincts.sql;
 source createVotes.sql;     
 
 ## class tables
@@ -76,7 +79,8 @@ source createConfigs_to_Parameters.sql;
 source createParameters_to_Ancillary.sql;   
 source createOffline_to_Ancillary.sql;
 
-source createPClass_to_AClass.sql; 
+###source createPClass_to_AClass.sql; 
+source createVote_PClass_to_AClass.sql; 
 source createOClass_to_AClass.sql; 
 
 # Alias tables

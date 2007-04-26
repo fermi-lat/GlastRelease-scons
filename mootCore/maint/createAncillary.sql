@@ -28,8 +28,8 @@ create table Ancillary
      COMMENT 'a place to mention anything special about this ancillary 
             instance',
 
-  tower                 TINYINT DEFAULT '-1' NOT NULL
-     COMMENT 'Ancillary info may be by tower or by entire detector',
+##  tower                 TINYINT DEFAULT '-1' NOT NULL
+##     COMMENT 'Ancillary info may be by tower or by entire detector',
 
   status                 ENUM('STARTED', 'ABORT', 'CREATED', 'INVALID')
                             NOT NULL DEFAULT 'STARTED'
