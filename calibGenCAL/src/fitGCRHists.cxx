@@ -115,7 +115,7 @@ int main(const int argc,
     
     CalMPD calMPD;
     set<unsigned short> zSet;
-    zSet.insert(1);
+    zSet.insert(12);
 
     gcrHists.fitHists(calMPD, zSet);
 
