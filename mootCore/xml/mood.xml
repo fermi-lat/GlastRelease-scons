@@ -1256,6 +1256,7 @@ version="v1r0" >
              it and put it in this field.
       </comment>
     </col>
+<!--
     <col name="tower" >
       <src null="false" >
         <default value="-1" />
@@ -1268,6 +1269,7 @@ version="v1r0" >
       <comment> Special value -1 signifies all or irrelevant
       </comment>
     </col>
+-->
     <primary col="Ancillary_key" />
 </table>
 
