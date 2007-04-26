@@ -1026,7 +1026,7 @@
            refVal="TRG" />
     </row>
 
-<!--   not sure about this name
+<!--   not delighted with this name, but so far have no alternative -->
     <row>
       <field col="name" val="TRG_GEM" />
       <field col="description" 
@@ -1034,7 +1034,16 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
            refVal="TRG" />
     </row>
- -->
+
+    <row>
+      <field col="name" val="LATC_all" />
+      <field col="description" 
+       val=
+"Pseudo-precinct used for container vote files which reference regular votes by alias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+    </row>
+
   </table>
 
 <!--    mode="add" does no good here since there is no unique field

@@ -1989,7 +1989,7 @@ version="v1r0" >
   </table>
 
 
-
+<!-- This isn't used.  Will be replaced by Vote_PClass_AClass
   <table name="PClass_to_AClass" gui_readonly="true" version="v1r0"
     comment="relate Parameter file classes to Ancillary file classes
     which are their sources">
@@ -2046,9 +2046,8 @@ version="v1r0" >
     </col>
     <primary col="prim_key" /> 
 
-    <!-- index name="PClass_fk_index" cols="PClass_fk" / -->
   </table>
-
+-->
   <table name="Instrument" gui_readonly="true" version="v1r0"
     comment="describe tower configuration for an instrument">
 
