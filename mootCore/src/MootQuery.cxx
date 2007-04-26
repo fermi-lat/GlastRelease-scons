@@ -52,145 +52,33 @@ namespace MOOT {
     if (m_ownConnection) delete m_mood;
   }
 
-  bool MootQuery::getConfigInputs(const std::string& configKeyStr,
-                                  std::vector<std::string>& inputKeys,
-                                  bool goodStatus) {
-    if (goodStatus) {
-      std::string configStatus;
-      try {
-        configStatus = 
-          DbUtil::getColumnValue(m_rdb, "Configs", "status", "config_key",
-                                 configKeyStr);
-      }
-      catch (std::exception ex) {
-        std::cerr << ex.what() << std::endl;
-        std::cerr.flush();
-        return false;
-      }
-      if (configStatus != std::string("CREATED") ) {
-        std::cerr << "MootQuery::getConfigInputs:  Config "  
-                  << configKeyStr << " does not have good (CREATED) status " 
-                  << std::endl;
-        std::cerr.flush();
-        return false;
-      }
-    }
-    inputKeys.clear();
-    std::string where(" WHERE config_fk='");
-    where += configKeyStr + "' ";
-    // int nFetched = 
-    DbUtil::getAllWhere(m_rdb, "Configs_to_FSW", "FSW_fk", 
-                                       where, inputKeys);
-    return true;
-  }
-
-  bool MootQuery::getConfigInputs(unsigned configKey, 
-                                  std::vector<std::string>& inputKeys,
-                                  bool goodStatus) {
-
+  int MootQuery::classKey(const std::string& table, const std::string& name) {
+    std::string getCol = table + "_key";
     std::string keyStr;
-    facilities::Util::utoa(configKey, keyStr);
-    return getConfigInputs(keyStr, inputKeys, goodStatus);
-  }
-
-  bool MootQuery::getConfigFmxPathsByName(const std::string& configName,
-                                          std::vector<std::string>& paths) {
-    std::string where(" WHERE name='");
-    where += configName +
-      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
-    std::string key;
     try {
-      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
-                                   where, false);
+      keyStr = DbUtil::getColumnValue(m_rdb, table, getCol, "name", name);
     }
     catch (std::exception ex) {
       std::cerr << ex.what() << std::endl;
       std::cerr.flush();
-      return false;
+      return -1;
     }
-    if (key.size() == 0 ) return false;
-    return getConfigFmxPaths(key, paths);
+    if (keyStr.size() == 0) return -1;
+    return facilities::Util::stringToInt(keyStr);
   }
 
-  bool MootQuery::getConfigFswInfoByName(const std::string& configName,
-                                         std::vector<FswInfo>& info, 
-                                         bool clear) {
-    std::string where(" WHERE name='");
-    where += configName +
-      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
-    std::string key;
+  std::string MootQuery::classStr(const std::string& table, unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string keyCol = table + "_key";
     try {
-      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
-                                   where, false);
+      return DbUtil::getColumnValue(m_rdb, table, "name", keyCol, keyStr);
     }
     catch (std::exception ex) {
       std::cerr << ex.what() << std::endl;
       std::cerr.flush();
-      return false;
+      throw ex;
     }
-    if (key.size() == 0 ) return false;
-    return getConfigFswInfo(key, info, clear);
-  }
-
-
-  bool MootQuery::getConfigFmxPathsByAlg(const std::string& algName,
-                                         const std::string& algStep,
-                                         std::vector<std::string>& paths) {
-    std::string where(" WHERE algorithm='");
-    where += algName + std::string("' AND alg_step='") + algStep +
-      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
-    std::string key;
-    try {
-      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key", where, 
-                                   false);
-    }
-    catch (std::exception ex) {
-      std::cerr << ex.what() << std::endl;
-      std::cerr.flush();
-      return false;
-    }
-    if (key.size() == 0 ) return false;
-    return getConfigFmxPaths(key, paths);
-  }
-
-  bool MootQuery::getConfigFmxPathsByAlg(const std::string& algName,
-                                         unsigned algStep,
-                                         std::vector<std::string>& paths)
-  {
-    std::string stepStr;
-    facilities::Util::utoa(algStep, stepStr);
-    return getConfigFmxPathsByAlg(algName, stepStr, paths);
-  }
-
-  bool MootQuery::getConfigFswInfoByAlg(const std::string& algName,
-                                        const std::string& algStep,
-                                        std::vector<FswInfo>& info,
-                                        bool clear) {
-    std::string where(" WHERE algorithm='");
-    where += algName + std::string("' AND alg_step='") + algStep +
-      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
-    std::string key;
-    try {
-      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
-                                   where, false);
-    }
-    catch (std::exception ex) {
-      std::cerr << ex.what() << std::endl;
-      std::cerr.flush();
-      return false;
-    }
-
-    if (key.size() == 0 ) return false;
-    return getConfigFswInfo(key, info, clear);
-  }
-
-  bool MootQuery::getConfigFswInfoByAlg(const std::string& algName,
-                                        unsigned algStep,
-                                        std::vector<FswInfo>& info,
-                                        bool clear) {
-    std::string stepStr;
-    facilities::Util::utoa(algStep, stepStr);
-    return getConfigFswInfoByAlg(algName, stepStr, info, clear);
   }
 
   bool MootQuery::getConfigFmxPaths(unsigned configKey,
@@ -243,6 +131,55 @@ namespace MOOT {
     return ret;
   }
 
+  bool MootQuery::getConfigFmxPathsByAlg(const std::string& algName,
+                                         const std::string& algStep,
+                                         std::vector<std::string>& paths) {
+    std::string where(" WHERE algorithm='");
+    where += algName + std::string("' AND alg_step='") + algStep +
+      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
+    std::string key;
+    try {
+      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key", where, 
+                                   false);
+    }
+    catch (std::exception ex) {
+      std::cerr << ex.what() << std::endl;
+      std::cerr.flush();
+      return false;
+    }
+    if (key.size() == 0 ) return false;
+    return getConfigFmxPaths(key, paths);
+  }
+
+  bool MootQuery::getConfigFmxPathsByAlg(const std::string& algName,
+                                         unsigned algStep,
+                                         std::vector<std::string>& paths)
+  {
+    std::string stepStr;
+    facilities::Util::utoa(algStep, stepStr);
+    return getConfigFmxPathsByAlg(algName, stepStr, paths);
+  }
+
+  bool MootQuery::getConfigFmxPathsByName(const std::string& configName,
+                                          std::vector<std::string>& paths) {
+    std::string where(" WHERE name='");
+    where += configName +
+      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
+    std::string key;
+    try {
+      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
+                                   where, false);
+    }
+    catch (std::exception ex) {
+      std::cerr << ex.what() << std::endl;
+      std::cerr.flush();
+      return false;
+    }
+    if (key.size() == 0 ) return false;
+    return getConfigFmxPaths(key, paths);
+  }
+
+
   bool MootQuery::getConfigFswInfo(unsigned configKey,
                                    std::vector<FswInfo>& info, bool clear) {
     std::string keyStr;
@@ -294,20 +231,27 @@ namespace MOOT {
     }
     return true;
   }
-  bool MootQuery::getLatcSrc(unsigned latcMasterKey,
-                             std::vector<FileDescrip>& sources) {
-    std::string keyStr;
-    facilities::Util::utoa(latcMasterKey, keyStr);
-    return getLatcSrc(keyStr, sources);
+
+  bool MootQuery::getConfigFswInfoByAlg(const std::string& algName,
+                                        unsigned algStep,
+                                        std::vector<FswInfo>& info,
+                                        bool clear) {
+    std::string stepStr;
+    facilities::Util::utoa(algStep, stepStr);
+    return getConfigFswInfoByAlg(algName, stepStr, info, clear);
   }
 
-  bool MootQuery::getLatcSrc(const std::string& latcMasterKey,
-                             std::vector<FileDescrip>& sources) {
-    std::string descrip;
+  bool MootQuery::getConfigFswInfoByAlg(const std::string& algName,
+                                        const std::string& algStep,
+                                        std::vector<FswInfo>& info,
+                                        bool clear) {
+    std::string where(" WHERE algorithm='");
+    where += algName + std::string("' AND alg_step='") + algStep +
+      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
+    std::string key;
     try {
-      descrip = 
-        DbUtil::getColumnValue(m_rdb, "FSW_inputs", "description",
-                               "FSW_id", latcMasterKey);
+      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
+                                   where, false);
     }
     catch (std::exception ex) {
       std::cerr << ex.what() << std::endl;
@@ -315,191 +259,28 @@ namespace MOOT {
       return false;
     }
 
-    if (descrip.size() == 0) return false;
-
-    // description for a latc master file looks like
-    //   n_m_k_  ..and so forth, where n, m, k are (MOOT) keys for
-    //   other rows in the table.
-    unsigned pos = 0;
-    while (pos   < descrip.size() ) {
-      // parse out next key
-      unsigned newPos = descrip.find('_', pos);
-      std::string srcKey = std::string(descrip, pos, newPos - pos);
-      //    get source and class_fk fields
-      std::string path;
-      try {
-        path = DbUtil::getColumnValue(m_rdb, "FSW_inputs", "source", 
-                                      "FSW_input_key", srcKey);
-      }
-      catch (std::exception ex) {
-        std::cerr << ex.what() << std::endl;
-        std::cerr.flush();
-        return false;
-      }
-
-      if (path.size() == 0) {
-        std::cerr << "MootQuery::getLatcSrc:  bad FSW_input key " 
-                  << srcKey << std::endl;
-      }
-      else {
-        path = m_archive + path;
-        std::string where(" WHERE FSW_class_key=(SELECT class_fk from FSW_inputs  WHERE FSW_input_key =");
-        where += srcKey + std::string(")");
-        std::string srcType;
-        try {
-          srcType = DbUtil::getColumnWhere(m_rdb, "FSW_class", "name", where);
-        }
-        catch (std::exception ex) {
-          std::cerr << ex.what() << std::endl;
-          std::cerr.flush();
-          return false;
-        }
-        sources.push_back(FileDescrip(path, srcType));
-      }
-      
-      //    Prepend MOOT_ARCHIVE root to source to give abs. path
-      //    look up name corresponding to class_fk in FSW_class table
-      pos = newPos + 1;
-    }
-    return true;
+    if (key.size() == 0 ) return false;
+    return getConfigFswInfo(key, info, clear);
   }
 
-  std::string MootQuery::classStr(const std::string& table, unsigned key) {
-    std::string keyStr;
-    facilities::Util::utoa(key, keyStr);
-    std::string keyCol = table + "_key";
+  bool MootQuery::getConfigFswInfoByName(const std::string& configName,
+                                         std::vector<FswInfo>& info, 
+                                         bool clear) {
+    std::string where(" WHERE name='");
+    where += configName +
+      std::string("' AND status='CREATED' ORDER BY config_key DESC" );
+    std::string key;
     try {
-      return DbUtil::getColumnValue(m_rdb, table, "name", keyCol, keyStr);
+      key = DbUtil::getColumnWhere(m_rdb, "Configs", "config_key",
+                                   where, false);
     }
     catch (std::exception ex) {
       std::cerr << ex.what() << std::endl;
       std::cerr.flush();
-      throw ex;
+      return false;
     }
-  }
-
-  int MootQuery::classKey(const std::string& table, const std::string& name) {
-    std::string getCol = table + "_key";
-    std::string keyStr;
-    try {
-      keyStr = DbUtil::getColumnValue(m_rdb, table, getCol, "name", name);
-    }
-    catch (std::exception ex) {
-      std::cerr << ex.what() << std::endl;
-      std::cerr.flush();
-      return -1;
-    }
-    if (keyStr.size() == 0) return -1;
-    return facilities::Util::stringToInt(keyStr);
-  }
-
-  unsigned MootQuery::listConfigKeys(std::vector<unsigned>& keys, 
-                                     const std::string& status,
-                                     const std::string& instr) {
-    std::string where("");
-    if (status.size()) {
-      where = std::string(" WHERE status='" ) + status +
-        std::string("'");
-    }
-    if (instr.size()) {
-      if (where.size()) where += std::string(" AND ");
-      else where = std::string(" WHERE ");
-      where  += std::string("instrument='" ) + instr +
-        std::string("'");
-    }
-    // ask for keys in ascending order
-    return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 
-                           0, true);
-  }
-                            
-
-  unsigned MootQuery::getLastConfigKeyByName(const std::string& name, 
-                                             const std::string& status,
-                                             const std::string& instr) {
-    std::string where(" WHERE name='");
-    where += name + std::string("'");
-    if (status.size()) {
-      where += std::string(" AND status='" ) + status +
-        std::string("'");
-    }
-    if (instr.size()) {
-      where  += std::string(" AND instrument='" ) + instr +
-        std::string("'");
-    }
-    std::vector<unsigned> keys;
-    unsigned nKeys = 
-      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 1);
-    return (nKeys) ? keys[0] : 0;
-  }
-
-  unsigned MootQuery::getLastConfigKeyByAlg(const std::string& alg, 
-                                            unsigned step,
-                                            const std::string& status,
-                                            const std::string& instr) {
-    std::string where(" WHERE algorithm='");
-    where += alg + std::string("'");
-    if (step > 0) {
-      std::string stepStr;
-      facilities::Util::utoa(step, stepStr);
-      where += std::string(" AND alg_step='")+ stepStr + "'";
-    }
-    if (status.size()) {
-      where += std::string(" AND status='" ) + status +
-        std::string("'");
-    }
-    if (instr.size()) {
-      where  += std::string(" AND instrument='" ) + instr +
-        std::string("'");
-    }
-    std::vector<unsigned> keys;
-    unsigned nKeys = 
-      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 1);
-    return (nKeys) ? keys[0] : 0;
-  }
-
-  unsigned MootQuery::getConfigKeysByName(std::vector<unsigned>& keys, 
-                                          const std::string& name, 
-                                          const std::string& status,
-                                          const std::string& instr) {
-    std::string where(" WHERE name='");
-    where += name + std::string("'");
-    if (status.size()) {
-      where += std::string(" AND status='" ) + status +
-        std::string("'");
-    }
-    if (instr.size()) {
-      where  += std::string(" AND instrument='" ) + instr +
-        std::string("'");
-    }
-    // Ask for keys in ascending order
-    return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where,
-                           0, true);
-  }
-
-  unsigned MootQuery::getConfigKeysByAlg(std::vector<unsigned>& keys, 
-                                         const std::string& alg,
-                                         unsigned step,
-                                         const std::string& status,
-                                         const std::string& instr) {
-    std::string where(" WHERE algorithm='");
-    where += alg + std::string("'");
-    if (step > 0) {
-      std::string stepStr;
-      facilities::Util::utoa(step, stepStr);
-      where += std::string(" AND alg_step='")+ stepStr + "'";
-    }
-    if (status.size()) {
-      where += std::string(" AND status='" ) + status +
-        std::string("'");
-    }
-    if (instr.size()) {
-      where  += std::string(" AND instrument='" ) + instr +
-        std::string("'");
-    }
-    return
-      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where,
-                      0, true);   // keys in ascending order
-
+    if (key.size() == 0 ) return false;
+    return getConfigFswInfo(key, info, clear);
   }
 
   ConfigInfo* MootQuery::getConfigInfo(unsigned key) {
@@ -617,6 +398,104 @@ namespace MOOT {
     return n;
   }
 
+
+  bool MootQuery::getConfigInputs(const std::string& configKeyStr,
+                                  std::vector<std::string>& inputKeys,
+                                  bool goodStatus) {
+    if (goodStatus) {
+      std::string configStatus;
+      try {
+        configStatus = 
+          DbUtil::getColumnValue(m_rdb, "Configs", "status", "config_key",
+                                 configKeyStr);
+      }
+      catch (std::exception ex) {
+        std::cerr << ex.what() << std::endl;
+        std::cerr.flush();
+        return false;
+      }
+      if (configStatus != std::string("CREATED") ) {
+        std::cerr << "MootQuery::getConfigInputs:  Config "  
+                  << configKeyStr << " does not have good (CREATED) status " 
+                  << std::endl;
+        std::cerr.flush();
+        return false;
+      }
+    }
+    inputKeys.clear();
+    std::string where(" WHERE config_fk='");
+    where += configKeyStr + "' ";
+    // int nFetched = 
+    DbUtil::getAllWhere(m_rdb, "Configs_to_FSW", "FSW_fk", 
+                                       where, inputKeys);
+    return true;
+  }
+
+  bool MootQuery::getConfigInputs(unsigned configKey, 
+                                  std::vector<std::string>& inputKeys,
+                                  bool goodStatus) {
+
+    std::string keyStr;
+    facilities::Util::utoa(configKey, keyStr);
+    return getConfigInputs(keyStr, inputKeys, goodStatus);
+  }
+
+  unsigned MootQuery::getConfigKeysByAlg(std::vector<unsigned>& keys, 
+                                         const std::string& alg,
+                                         unsigned step,
+                                         const std::string& status,
+                                         const std::string& instr) {
+    std::string where(" WHERE algorithm='");
+    where += alg + std::string("'");
+    if (step > 0) {
+      std::string stepStr;
+      facilities::Util::utoa(step, stepStr);
+      where += std::string(" AND alg_step='")+ stepStr + "'";
+    }
+    if (status.size()) {
+      where += std::string(" AND status='" ) + status +
+        std::string("'");
+    }
+    if (instr.size()) {
+      where  += std::string(" AND instrument='" ) + instr +
+        std::string("'");
+    }
+    return
+      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where,
+                      0, true);   // keys in ascending order
+
+  }
+
+  unsigned MootQuery::getConfigKeysByName(std::vector<unsigned>& keys, 
+                                          const std::string& name, 
+                                          const std::string& status,
+                                          const std::string& instr) {
+    std::string where(" WHERE name='");
+    where += name + std::string("'");
+    if (status.size()) {
+      where += std::string(" AND status='" ) + status +
+        std::string("'");
+    }
+    if (instr.size()) {
+      where  += std::string(" AND instrument='" ) + instr +
+        std::string("'");
+    }
+    // Ask for keys in ascending order
+    return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where,
+                           0, true);
+  }
+
+  bool MootQuery::getConfigParmsRequest(unsigned configKey, 
+                                        std::vector<unsigned>& parameterKeys){
+    std::string where("WHERE config_fk ='");
+    std::string configKeyStr;
+    facilities::Util::utoa(configKey, configKeyStr);
+    where += configKeyStr + std::string("'");
+    DbUtil::getKeys(parameterKeys, m_rdb, "Configs_to_Parameters",
+                    "Parameter_fk", where, 0, true);
+    return true;
+  }
+
   bool MootQuery::getConfigParmsUsed(unsigned configKey, 
                                      std::vector<unsigned>& parameterKeys) {
     std::vector<std::string> inputKeys;
@@ -638,14 +517,117 @@ namespace MOOT {
     return true;
   }
 
-  bool MootQuery::getConfigParmsRequest(unsigned configKey, 
-                                        std::vector<unsigned>& parameterKeys){
-    std::string where("WHERE config_fk ='");
-    std::string configKeyStr;
-    facilities::Util::utoa(configKey, configKeyStr);
-    where += configKeyStr + std::string("'");
-    DbUtil::getKeys(parameterKeys, m_rdb, "Configs_to_Parameters",
-                    "Parameter_fk", where, 0, true);
+  unsigned MootQuery::getLastConfigKeyByAlg(const std::string& alg, 
+                                            unsigned step,
+                                            const std::string& status,
+                                            const std::string& instr) {
+    std::string where(" WHERE algorithm='");
+    where += alg + std::string("'");
+    if (step > 0) {
+      std::string stepStr;
+      facilities::Util::utoa(step, stepStr);
+      where += std::string(" AND alg_step='")+ stepStr + "'";
+    }
+    if (status.size()) {
+      where += std::string(" AND status='" ) + status +
+        std::string("'");
+    }
+    if (instr.size()) {
+      where  += std::string(" AND instrument='" ) + instr +
+        std::string("'");
+    }
+    std::vector<unsigned> keys;
+    unsigned nKeys = 
+      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 1);
+    return (nKeys) ? keys[0] : 0;
+  }
+
+  unsigned MootQuery::getLastConfigKeyByName(const std::string& name, 
+                                             const std::string& status,
+                                             const std::string& instr) {
+    std::string where(" WHERE name='");
+    where += name + std::string("'");
+    if (status.size()) {
+      where += std::string(" AND status='" ) + status +
+        std::string("'");
+    }
+    if (instr.size()) {
+      where  += std::string(" AND instrument='" ) + instr +
+        std::string("'");
+    }
+    std::vector<unsigned> keys;
+    unsigned nKeys = 
+      DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 1);
+    return (nKeys) ? keys[0] : 0;
+  }
+
+  bool MootQuery::getLatcSrc(unsigned latcMasterKey,
+                             std::vector<FileDescrip>& sources) {
+    std::string keyStr;
+    facilities::Util::utoa(latcMasterKey, keyStr);
+    return getLatcSrc(keyStr, sources);
+  }
+
+  bool MootQuery::getLatcSrc(const std::string& latcMasterKey,
+                             std::vector<FileDescrip>& sources) {
+    std::string descrip;
+    try {
+      descrip = 
+        DbUtil::getColumnValue(m_rdb, "FSW_inputs", "description",
+                               "FSW_id", latcMasterKey);
+    }
+    catch (std::exception ex) {
+      std::cerr << ex.what() << std::endl;
+      std::cerr.flush();
+      return false;
+    }
+
+    if (descrip.size() == 0) return false;
+
+    // description for a latc master file looks like
+    //   n_m_k_  ..and so forth, where n, m, k are (MOOT) keys for
+    //   other rows in the table.
+    unsigned pos = 0;
+    while (pos   < descrip.size() ) {
+      // parse out next key
+      unsigned newPos = descrip.find('_', pos);
+      std::string srcKey = std::string(descrip, pos, newPos - pos);
+      //    get source and class_fk fields
+      std::string path;
+      try {
+        path = DbUtil::getColumnValue(m_rdb, "FSW_inputs", "source", 
+                                      "FSW_input_key", srcKey);
+      }
+      catch (std::exception ex) {
+        std::cerr << ex.what() << std::endl;
+        std::cerr.flush();
+        return false;
+      }
+
+      if (path.size() == 0) {
+        std::cerr << "MootQuery::getLatcSrc:  bad FSW_input key " 
+                  << srcKey << std::endl;
+      }
+      else {
+        path = m_archive + path;
+        std::string where(" WHERE FSW_class_key=(SELECT class_fk from FSW_inputs  WHERE FSW_input_key =");
+        where += srcKey + std::string(")");
+        std::string srcType;
+        try {
+          srcType = DbUtil::getColumnWhere(m_rdb, "FSW_class", "name", where);
+        }
+        catch (std::exception ex) {
+          std::cerr << ex.what() << std::endl;
+          std::cerr.flush();
+          return false;
+        }
+        sources.push_back(FileDescrip(path, srcType));
+      }
+      
+      //    Prepend MOOT_ARCHIVE root to source to give abs. path
+      //    look up name corresponding to class_fk in FSW_class table
+      pos = newPos + 1;
+    }
     return true;
   }
 
@@ -654,6 +636,85 @@ namespace MOOT {
                                    "", names);
     return nRet;
   }
+
+
+  unsigned MootQuery::listConfigKeys(std::vector<unsigned>& keys, 
+                                     const std::string& status,
+                                     const std::string& instr) {
+    std::string where("");
+    if (status.size()) {
+      where = std::string(" WHERE status='" ) + status +
+        std::string("'");
+    }
+    if (instr.size()) {
+      if (where.size()) where += std::string(" AND ");
+      else where = std::string(" WHERE ");
+      where  += std::string("instrument='" ) + instr +
+        std::string("'");
+    }
+    // ask for keys in ascending order
+    return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 
+                           0, true);
+  }
+
+  unsigned MootQuery::resolveAncAlias(const std::string& alias, 
+                                      const std::string& ancClass,
+                                      int tower) {
+    // First translate anc class name to key
+    std::string where(" WHERE name='");
+    where += ancClass + std::string("'");
+
+    std::string ancClassKey = DbUtil::getColumnWhere(m_rdb,
+                                                     "Ancillary_class",
+                                                     "Ancillary_class_key",
+                                                     where, false);
+
+    if (!ancClassKey.size()) return 0;
+    std::string towerStr;
+    facilities::Util::itoa(tower, towerStr);
+
+    where = std::string(" WHERE name='");
+    where += alias + std::string("' and aclass_fk='") + ancClassKey
+      + std::string("' and tower='") + towerStr + std::string("'");
+    std::vector<unsigned> keys;  // can only be one returned
+
+    unsigned nKey = DbUtil::getKeys(keys, m_rdb, "Ancillary_aliases",
+                                    "ancillary_aliases_key", where);
+    return (nKey > 0) ? keys[0] : 0;
+  }
+
+
+  // ***TODO***
+  unsigned MootQuery::resolveAncAliases(std::vector<unsigned>& ancKeys,
+                                        unsigned voteKey) {
+
+    return 0;
+  }
+
+
+  unsigned MootQuery::resolveVoteAlias(const std::string& alias,
+                                       const std::string& precinct) {
+    // First translate precinct name to key
+    std::string where(" WHERE name='");
+    where += precinct + std::string("'");
+
+    std::string precinctKey = DbUtil::getColumnWhere(m_rdb,
+                                                     "Precincts"
+                                                     "precinct_key",
+                                                     where, false);
+
+    if (!precinctKey.size()) return 0;
+
+    where = std::string(" WHERE alias='");
+    where += alias + std::string("' and precinct_fk='") + precinctKey
+      + std::string("'");
+    std::vector<unsigned> keys;  // can only be one returned
+
+    unsigned nKey = DbUtil::getKeys(keys, m_rdb, "Vote_aliases",
+                                    "vote_aliases_key", where);
+    return (nKey > 0) ? keys[0] : 0;
+  }
+
 
 
 }
