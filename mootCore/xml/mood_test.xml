@@ -2384,10 +2384,10 @@ version="v1r0" >
   </table>
 
 
-<!--
-  <table name="PClass_to_AClass" gui_readonly="true" version="v1r0"
-    comment="relate Parameter file classes to Ancillary file classes
-    which are their sources">
+
+  <table name="Vote_PClass_AClass" gui_readonly="true" version="v1r0"
+    comment="For a vote file, relate Parameter file classes to 
+              Ancillary file classes which are their sources">
      <col name="prim_key" >
        <src null="false">
          <from agent="auto_increment" />
@@ -2401,7 +2401,20 @@ version="v1r0" >
          row is inserted.</comment>
      </col>
 
-    <col name="PClass_fk" >
+    <col name="vote_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes</comment>
+    </col>
+
+    <col name="pclass_fk" >
       <src null="false" >
         <from agent="enduser" />
       </src>
@@ -2413,7 +2426,7 @@ version="v1r0" >
       <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
       <comment>Refers to row in Parameter_class</comment>
     </col>
-    <col name="AClass_fk" >
+    <col name="aclass_fk" >
       <src null="false" >
         <from agent="enduser" />
       </src>
@@ -2439,10 +2452,34 @@ version="v1r0" >
                Parameter file changes
       </comment>
     </col>
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
     <primary col="prim_key" /> 
 
   </table>
--->
+
   <table name="Instrument" gui_readonly="true" version="v1r0"
     comment="describe tower configuration for an instrument">
 
