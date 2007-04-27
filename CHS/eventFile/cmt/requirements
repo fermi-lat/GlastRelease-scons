@@ -1,5 +1,5 @@
 package eventFile
-version v3r2
+version v3r3
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -9,6 +9,8 @@ use GlastPolicy v*
 use facilities v*
 use lsfData v*
 use enums v*
+use SwigPolicy v*
+use BOOST * IExternal
 
 apply_pattern package_include
 apply_pattern package_headers
@@ -16,8 +18,12 @@ apply_pattern package_linkopts
 
 apply_pattern shared_library
 
-macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
-	WIN32	" /D __i386 "
+macro_append cppflags "-D_FILE_OFFSET_BITS=64 -DHAVE_FACILITIES " \
+	WIN32	" /D __i386 /D HAVE_FACILITIES "
+
+# make sure we have no general run-time dependencies on boost or python
+macro_remove use_linkopts "$(BOOST_linkopts)"
+macro_remove use_linkopts "$(python_linkopts)"
 
 library eventFile ${eventFile_headers} \
 	EBF_Data.cxx \
@@ -29,6 +35,11 @@ library eventFile ${eventFile_headers} \
 	LSFReader.cxx \
 	LSEWriter.cxx \
 	LSE_Keys.cxx
+
+apply_pattern swig_module name="eventFile"
+
+# the Python wrapper has a runtime dep on Python, of course
+macro_append _eventFile_shlibflags "$(python_linkopts)"
 	
 set LDFROOT ${ldfExt_DIR}
 

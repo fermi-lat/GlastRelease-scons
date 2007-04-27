@@ -5,21 +5,24 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "eventFile/LSEReader.h"
+#ifdef HAVE_FACILITIES
+#include "facilities/Util.h"
+#endif
 
+#include "eventFile/LSEReader.h"
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
 #include "eventFile/EBF_Data.h"
-
-#include "facilities/Util.h"
 
 namespace eventFile {
 
   LSEReader::LSEReader( const std::string& filename )
     : m_name( filename ), m_hdr()
   {
+#ifdef HAVE_FACILITIES
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );
+#endif
 
 #ifndef _FILE_OFFSET_BITS
     // on windows, check to see if the file is >2GB in size and
@@ -57,6 +60,27 @@ namespace eventFile {
     if ( m_FILE ) {
       fclose( m_FILE );
       m_FILE = NULL;
+    }
+  }
+
+  // convenience method to get an container of all the event data
+  // only accessible from the SWIG'ged python interface for now
+  const EventPtr LSEReader::nextEvent()
+  {
+    eventFile::LSE_Context        ctx;
+    eventFile::EBF_Data           ebf;
+    eventFile::LSE_Info::InfoType itype;
+    eventFile::LPA_Info           pinfo;
+    eventFile::LCI_ACD_Info       ainfo;
+    eventFile::LCI_CAL_Info       cinfo;
+    eventFile::LCI_TKR_Info       tinfo;
+    eventFile::LSE_Keys::KeysType ktype;
+    eventFile::LPA_Keys           pakeys;
+    eventFile::LCI_Keys           cikeys;
+    if ( read( ctx, ebf, itype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys ) ) {
+      return EventPtr( new eventFile::LSE_Event( ctx, ebf, itype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys ) );
+    } else {
+      return EventPtr();
     }
   }
 
@@ -277,6 +301,8 @@ namespace eventFile {
     case LSE_Info::LCI_TKR:
       tinfo = *reinterpret_cast<LCI_TKR_Info*>( buf );
       break;
+    default:
+      break;
     }
 
     // read the translated-key objects
@@ -284,4 +310,5 @@ namespace eventFile {
 
     return true;
   }
+
 }

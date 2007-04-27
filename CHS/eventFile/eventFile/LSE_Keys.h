@@ -17,12 +17,12 @@
 namespace eventFile {
 
   struct LSE_Keys {
-    enum KeysType {
+    typedef enum _KeysType {
       NONE = -1,
       LPA  = 0,
       LCI,
       NumLSEKeysTypes,
-    };
+    } KeysType;
 
     LSE_Keys( unsigned master, unsigned ignore)
       : LATC_master( master ), LATC_ignore( ignore ) {};

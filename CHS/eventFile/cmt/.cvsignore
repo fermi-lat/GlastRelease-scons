@@ -2,3 +2,4 @@ Makefile
 setup.*
 cleanup.*
 *.make
+python_setup.*

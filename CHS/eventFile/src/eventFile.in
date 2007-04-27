@@ -1,0 +1,69 @@
+// -*- mode: c++ -*-
+/**
+ * @file eventFile.in
+ * @brief Interface file for SWIG-generated wrapper.
+ * @author Bryson Lee <blee@slac.stanford.edu>
+ *
+ * $Id$
+ */
+
+%module eventFile
+
+%{
+#include <stdexcept>
+#include <iostream>
+#include "eventFile/LSEReader.h"
+#include "eventFile/LSE_Context.h"
+#include "eventFile/LSE_Info.h"
+#include "eventFile/EBF_Data.h"
+#include "eventFile/LSE_Keys.h"
+#include "eventFile/LSE_Event.h"
+%}
+
+// use STL types
+%include stl.i
+
+// gate exceptions back to the interpreter
+%exception {
+  try {
+    $action
+  } catch ( std::exception& eObj ) {
+    PyErr_SetString( PyExc_RuntimeError, const_cast<char*>(eObj.what()) );
+    return NULL;
+  }
+};
+
+// make a template for some method returns
+%template(UnsignedPair) std::pair< unsigned, unsigned >;
+%template(UnsignedVector) std::vector< unsigned >;
+
+// wrap the event-structure components
+%include $(EVENTFILEROOT)/eventFile/LSE_GemTime.h
+%include $(EVENTFILEROOT)/eventFile/LSE_Context.h
+%include $(EVENTFILEROOT)/eventFile/LSE_Info.h
+%include $(EVENTFILEROOT)/eventFile/EBF_Data.h
+%include $(EVENTFILEROOT)/eventFile/LSE_Keys.h
+
+// wrap the smart-pointer to the event container
+%include $(EVENTFILEROOT)/src/shared_ptr.i
+SHARED_PTR(eventFile::LSE_Event, EventPtr);
+
+// wrap the event-container object 
+%include $(EVENTFILEROOT)/eventFile/LSE_Event.h
+
+// wrap the file-reader object
+%newobject eventFile::LSEReader::nextEvent;
+%include $(EVENTFILEROOT)/eventFile/LSEReader.h
+
+// python-friendly access to the EBF event data
+%extend eventFile::EBF_Data {
+  // Create a python buffer object that refers to the internal
+  // buffer containing the EBF data
+  PyObject* getData() {
+    return PyBuffer_FromMemory( const_cast< unsigned char* >( self->data() ), self->size() );
+  }
+  // Create a Python string containing a copy of the EBF data
+  PyObject* copyData() {
+    return PyString_FromStringAndSize( reinterpret_cast< const char* >( self->data() ), self->size() );
+  }
+};

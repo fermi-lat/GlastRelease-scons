@@ -16,14 +16,14 @@
 namespace eventFile {
 
   struct LSE_Info {
-    enum InfoType {
+    typedef enum _InfoType {
       NONE = -1,
       LPA  =  0,
       LCI_ACD,
       LCI_CAL,
       LCI_TKR,
       NumLSEInfoTypes,
-    };
+    } InfoType;
 
     LSE_Info() {};
     void dump( const char* pre, const char* post ) const;

@@ -16,16 +16,20 @@
 #include <string>
 #include <utility>
 
+#include "boost/utility.hpp"
+
 #include "eventFile/LSE_Info.h"
 #include "eventFile/LSEHeader.h"
 #include "eventFile/LSE_Keys.h"
+#include "eventFile/LSE_Event.h"
 
 namespace eventFile {
 
   class LSE_Context;
   class EBF_Data;
+  class LSE_Event;
   
-  class LSEReader {
+  class LSEReader : private boost::noncopyable {
   public:
     LSEReader( const std::string& filename );
     virtual ~LSEReader();
@@ -34,6 +38,9 @@ namespace eventFile {
 	       LSE_Info::InfoType&, LPA_Info&, LCI_ACD_Info&, LCI_CAL_Info&, LCI_TKR_Info&, 
 	       LSE_Keys::KeysType&, LPA_Keys&, LCI_Keys& );
     void close();
+
+    // convenience function
+    const EventPtr nextEvent();
 
 #ifdef _FILE_OFFSET_BITS
     int seek( off_t ofst );

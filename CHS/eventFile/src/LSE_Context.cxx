@@ -5,14 +5,14 @@
 
 namespace eventFile {
 
-  void LSE_Context::FromCcsds::dump( const char* pre, const char* post ) const 
+  void FromCcsds::dump( const char* pre, const char* post ) const 
   {
     printf( "%sscid = %d%s", pre, scid, post );
     printf( "%sapid = %d%s", pre, apid, post );
     printf( "%sutc  = %18.6f%s", pre, utc, post );
   }
 
-  void LSE_Context::FromTimetone::dump( const char* pre, const char* post ) const
+  void FromTimetone::dump( const char* pre, const char* post ) const
   {
     printf( "%ssecs            = 0x%08x (%d)%s", pre, timeSecs, timeSecs, post );
     printf( "%sincomplete      = 0x%08x%s", pre, incomplete, post );
@@ -25,7 +25,7 @@ namespace eventFile {
     timeHack.dump( "   ", "\n" );
   }
 
-  void LSE_Context::FromScalers::dump( const char* pre, const char* post ) const
+  void FromScalers::dump( const char* pre, const char* post ) const
   {
     printf( "%selapsed   = 0x%016llx = %llu%s", pre, elapsed, elapsed, post );
     printf( "%slivetime  = 0x%016llx = %llu%s", pre, livetime, livetime, post );
@@ -35,14 +35,14 @@ namespace eventFile {
     printf( "%sdeadzone  = 0x%016llx = %llu%s", pre, deadzone, deadzone, post );
   }
 
-  void LSE_Context::FromRun::dump( const char* pre, const char* post ) const
+  void FromRun::dump( const char* pre, const char* post ) const
   {
     printf( "%sgroundid = 0x%06X, started = 0x%08X (%d )%s", pre, groundId, startedAt, startedAt, post );
     printf( "%splatform = %s (%d)%s", pre, platformTxt, platform, post );
     printf( "%sorigin   = %s (%d)%s", pre, originTxt, origin, post );
   }
 
-  void LSE_Context::FromOpen::dump( const char* pre, const char* post ) const
+  void FromOpen::dump( const char* pre, const char* post ) const
   {
     printf( "%snmodes = %d, ndgms = %d%s", pre, modeChanges, datagrams, post );
     printf( "%saction = %s (%d)%s", pre, actionTxt, action, post );
@@ -51,7 +51,7 @@ namespace eventFile {
     printf( "%smode   = %s (%d)%s", pre, modeTxt, mode, post );
   }
 
-  void LSE_Context::FromClose::dump( const char* pre, const char* post ) const
+  void FromClose::dump( const char* pre, const char* post ) const
   {
     printf( "%saction = %s (%d)%s", pre, actionTxt, action, post );
     printf( "%sreason = %s (%d)%s", pre, reasonTxt, reason, post );

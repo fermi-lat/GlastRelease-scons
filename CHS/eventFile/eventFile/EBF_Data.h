@@ -26,16 +26,17 @@ namespace eventFile {
 
     EBF_Data() {};
 
-    const EBFevent* start() const { return reinterpret_cast< const EBFevent* >( &data[0] ); };
-    const EBFevent* end() const { return reinterpret_cast< const EBFevent* >( &data[len] ); };
-    unsigned size() const { return len; };
+    const EBFevent* start() const { return reinterpret_cast< const EBFevent* >( &m_data[0] ); };
+    const EBFevent* end() const { return reinterpret_cast< const EBFevent* >( &m_data[m_len] ); };
+    const unsigned char* data() const { return m_data; }
+    unsigned size() const { return m_len; };
     void init( unsigned nbytes, const void* payload );
     void write( FILE* ) const;
     void read( FILE* );
 
   private:
-    unsigned char data[128*1024];
-    unsigned      len;
+    unsigned char m_data[128*1024];
+    unsigned      m_len;
   };
 
 };
