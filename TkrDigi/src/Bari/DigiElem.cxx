@@ -12,9 +12,10 @@
 
 
 DigiElem::DigiElem(){
-    for ( int i=0; i<100; ++i )
-	m_Ic[i] = 0;
+  for ( int i=0; i<Nbin; ++i )m_Ic[i] = 0;
 }
+
+
 
 DigiElem::DigiElem(const idents::VolumeIdentifier volId, const int strip,
                    const double* Ic,
@@ -28,10 +29,13 @@ DigiElem::DigiElem(const idents::VolumeIdentifier volId, const int strip,
  
     m_volId = volId;
     m_strip = strip;
-    for ( int i=0; i<100; i++ )
-	m_Ic[i] = Ic[i];
+    for ( int i=0; i<Nbin; i++ )
+    m_Ic[i] = Ic[i];
     m_hits.push_back(hit);
 }
+
+
+
 
 
 void DigiElem::add(Event::McPositionHit* hit) {
@@ -41,8 +45,8 @@ void DigiElem::add(Event::McPositionHit* hit) {
     // Dependencies: none
 
     for ( hitList::const_iterator it=m_hits.begin(); it!=m_hits.end(); ++it )
-	if ( *it == hit )
-	    return;
+      if ( *it == hit )
+	return;
     m_hits.push_back(hit);
 }
 

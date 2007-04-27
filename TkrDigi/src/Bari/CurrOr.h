@@ -40,8 +40,11 @@ class CurrOr {
      * @param 3  array of currents 
      * @param 4  pointer to a McPositionHit
      */
-    void add(const idents::VolumeIdentifier, const int, const double*,
-             Event::McPositionHit*);
+  void add(const idents::VolumeIdentifier, const int, const double*,
+           Event::McPositionHit*, int);
+  void add(const idents::VolumeIdentifier, const int, const double*,
+           Event::McPositionHit*);
+ 
 
     /// adds a vector of DigiElem
     void add(const DigiElemCol&);
@@ -61,6 +64,7 @@ class CurrOr {
      *           the strip, or m_list.end().
      */
     DigiElemCol::iterator getPos(const idents::VolumeIdentifier, const int);
+  int ii;
 
 };
 

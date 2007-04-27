@@ -35,10 +35,10 @@ class DigiElem {
     ~DigiElem(){}
 
     typedef std::vector<Event::McPositionHit*> hitList;
-
+    static const int Nbin = 1; 
     /// adds more current to each element of m_Ic
-    void add(const double* I) { for ( int i=0; i<100; ++i ) m_Ic[i] += I[i]; }
-    /// adds a McPositionHit
+    void add(const double* I) { for ( int i=0; i<Nbin; ++i ) m_Ic[i] += I[i]; }
+     /// adds a McPositionHit
     void add(Event::McPositionHit*);
     /// adds a vector ofMcPositionHits
     void add(const hitList&);
@@ -50,7 +50,7 @@ class DigiElem {
     int getStrip()             const { return m_strip; }
     const hitList& getHits()   const { return m_hits; }
     const double* getCurrent() const { return m_Ic; }
-
+ 
  private:
 
     /// vector of McPositionHits
@@ -63,7 +63,7 @@ class DigiElem {
     /// strip id;
     int m_strip;
     /// array of currents
-    double m_Ic[100];
+    double m_Ic[Nbin];
 
 };
 

@@ -19,7 +19,7 @@
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-
+#include "../GaudiAlg/TkrDigiAlg.h"
 #include <string>
 
 
@@ -27,12 +27,13 @@ class BariMcToHitTool : public AlgTool, virtual public IMcToHitTool {
 
  public:
 
-    /// Standard Gaudi Tool interface constructor
-    BariMcToHitTool(const std::string&, const std::string&, const IInterface*);
-    /// Initializes the tool
-    StatusCode initialize();
-    /// Runs the tool
-    StatusCode execute();
+  /// Standard Gaudi Tool interface constructor
+  BariMcToHitTool(const std::string&, const std::string&, const IInterface*);
+  /// Initializes the tool
+  StatusCode initialize();
+  /// Runs the tool
+  StatusCode execute();
+  
 
 private:
 
@@ -45,6 +46,10 @@ private:
     /// pointer to geometry svc
     ITkrGeometrySvc* m_tkrGeom;
 
+    std::string m_type;
+    /// Pointers to the sub algorithms
+    TkrDigiAlg* m_BamcToHitAlg;
+ 
 };
 
 #endif
