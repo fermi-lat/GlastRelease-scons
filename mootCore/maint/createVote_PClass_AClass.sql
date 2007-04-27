@@ -7,6 +7,8 @@ create table Vote_PClass_AClass
     COMMENT 'refers to row in Parameter_class table',
   aclass_fk INT UNSIGNED NOT NULL
     COMMENT 'refers to row in Ancillary_class table',
+  a_alias   VARCHAR(32) NOT NULL
+    COMMENT 'alias name for ancillary file',
   status    ENUM('ACTIVE','TEST','INACTIVE') NOT NULL DEFAULT 'TEST'
     COMMENT 'status of relation. Expect it will always be ok (ACTIVE)',
   creation_time DATETIME
