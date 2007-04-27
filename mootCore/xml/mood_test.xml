@@ -2439,6 +2439,14 @@ version="v1r0" >
       <comment>Refers to row in Ancillary_class</comment>
     </col>
 
+    <col name="a_alias" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Alias name appearing in vote file for this class</comment>
+    </col>
+
     <col name="status" >
       <src null="false" >
         <default value="TEST" />
@@ -2452,6 +2460,7 @@ version="v1r0" >
                Parameter file changes
       </comment>
     </col>
+
     <col name="creation_time" >
       <src null="true" >
         <from agent="service" contents="insert_time" />         

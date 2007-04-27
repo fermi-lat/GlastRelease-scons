@@ -1159,8 +1159,6 @@
         <xs:element name="GEM_external" type="registerType" minOccurs="0"/>
         <xs:element name="GEM_tie_tower_busy" type="registerType" 
                     minOccurs="0"/>
-        <xs:element name="GEM_conditions" type="GEM_conditionsType" 
-                    minOccurs="0"/>
         <xs:element name="GEM_engine" type="GEM_engineType" minOccurs="0"/>
         <xs:element name="GEM_tiles" type="GEM_tilesType" minOccurs="0"/>
      </xs:all>
