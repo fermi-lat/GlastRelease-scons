@@ -397,368 +397,367 @@
     <row>
       <field col="name" val="latc_AEM_ACD_Mode" />
       <field col="description" val="AEM registers controlled by ACD_Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_ARC_ACD_Mode" />
       <field col="description" val="ARC registers controlled by ACD_Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_AFE_ACD_Mode" />
       <field col="description" val="AFE registers controlled by ACD_Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_Mode" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_ARC_ACD_Timing" />
       <field col="description" val="ARC registers controlled by ACD_Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Timing" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_Timing" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Timing" />
     </row> 
 
     <row>
       <field col="name" val="latc_AFE_ACD_Bias" />
       <field col="description" val="AFE registers controlled by ACD_Bias" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Bias" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_Bias" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_Bias" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Bias" />
     </row> 
 
     <row>
       <field col="name" val="latc_AFE_ACD_Hld" />
       <field col="description" val="AFE registers controlled by ACD_Hld" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Hld" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_Hld" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_Hld" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Hld" />
     </row> 
 
     <row>
       <field col="name" val="latc_ARC_ACD_PHA" />
       <field col="description" val="ARC registers controlled by ACD_PHA" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_PHA" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_PHA" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_PHA" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_PHA" />
     </row> 
 
     <row>
       <field col="name" val="latc_AFE_ACD_Veto" />
       <field col="description" val="AFE registers controlled by ACD_Veto" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Veto" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_ACD_Veto" />
       <field col="description" 
              val="Broadcast values for registers controlled by ACD_Veto" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="ACD_Veto" />
     </row> 
 
     <row>
       <field col="name" val="latc_TEM_CAL_Mode" />
       <field col="description" val="TEM registers controlled by CAL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_CCC_CAL_Mode" />
       <field col="description" val="CCC registers controlled by CAL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_CRC_CAL_Mode" />
       <field col="description" val="CRC registers controlled by CAL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_CFE_CAL_Mode" />
       <field col="description" val="CFE registers controlled by CAL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_DFT_CAL_Mode" />
       <field col="description" val="DFT registers controlled by CAL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Mode" />
     </row> 
 
     <row>
       <field col="name" val="latc_TEM_CAL_Timing" />
       <field col="description" val="TEM registers controlled by CAL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Timing" />
     </row> 
     <row>
       <field col="name" val="latc_CCC_CAL_Timing" />
       <field col="description" val="CCC registers controlled by CAL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Timing" />
     </row> 
     <row>
       <field col="name" val="latc_CRC_CAL_Timing" />
       <field col="description" val="CRC registers controlled by CAL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Timing" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_CAL_Timing" />
       <field col="description" val="DFT registers controlled by CAL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_Timing" />
     </row> 
 
     <row>
       <field col="name" val="latc_CFE_CAL_LAC" />
       <field col="description" val="CFE registers controlled by CAL LAC" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_LAC" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_CAL_LAC" />
       <field col="description" val="DFT registers controlled by CAL LAC" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_LAC" />
     </row> 
 
     <row>
       <field col="name" val="latc_CFE_CAL_FLE" />
       <field col="description" val="CFE registers controlled by CAL FLE" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_FLE" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_CAL_FLE" />
       <field col="description" val="DFT registers controlled by CAL FLE" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_FLE" />
     </row> 
 
     <row>
       <field col="name" val="latc_CFE_CAL_FHE" />
       <field col="description" val="CFE registers controlled by CAL FHE" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_FHE" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_CAL_FHE" />
       <field col="description" val="DFT registers controlled by CAL FHE" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_FHE" />
     </row> 
 
     <row>
       <field col="name" val="latc_CFE_CAL_ULD" />
       <field col="description" val="CFE registers controlled by CAL ULD" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_ULD" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_CAL_ULD" />
       <field col="description" val="DFT registers controlled by CAL ULD" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="CAL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="CAL_ULD" />
     </row> 
 
     <row>
       <field col="name" val="latc_SPT_TKR_Mode" />
       <field col="description" val="SPT registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TFE_TKR_Mode" />
       <field col="description" val="TFE registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TDC_TKR_Mode" />
       <field col="description" val="TDC registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TCC_TKR_Mode" />
       <field col="description" val="TCC registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TRC_TKR_Mode" />
       <field col="description" val="TRC registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_TKR_Mode" />
       <field col="description" val="DFT registers controlled by TKR Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Mode" />
     </row> 
 
     <row>
-      <field col="name" val="latc_TDC_TKR_Threshold" />
+      <field col="name" val="latc_TDC_TKR_Thresh" />
       <field col="description" 
-             val="TDC registers controlled by TKR Threshold" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+             val="TDC registers controlled by TKR Thresh" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Thresh" />
     </row> 
     <row>
-      <field col="name" val="latc_DFT_TKR_Threshold" />
+      <field col="name" val="latc_DFT_TKR_Thresh" />
       <field col="description" 
-             val="DFT registers controlled by TKR Threshold" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+             val="DFT registers controlled by TKR Thresh" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Thresh" />
     </row> 
 
     <row>
       <field col="name" val="latc_TCC_TKR_Timing" />
       <field col="description" 
              val="TCC registers controlled by TKR Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Timing" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_TKR_Timing" />
       <field col="description" 
              val="DFT registers controlled by TKR Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Timing" />
     </row> 
 
     <row>
       <field col="name" val="latc_TFE_TKR_Strips" />
       <field col="description" 
              val="TFE registers controlled by TKR Strips" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Strips" />
     </row> 
     <row>
       <field col="name" val="latc_DFT_TKR_Strips" />
       <field col="description" 
              val="DFT registers controlled by TKR Strips" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TKR_Strips" />
     </row> 
 
-<!--       leave out for now 
     <row>
       <field col="name" val="latc_GEM_TRG_GEM" />
       <field col="description" 
              val="GEM registers controlled by TRG GEM (non-ROI) " />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TRG" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TRG_GEM" />
     </row> 
 
     <row>
       <field col="name" val="latc_GEM_TRG_ROI" />
       <field col="description" 
              val="GEM registers controlled by TRG ROI" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TRG" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TRG_ROI" />
     </row> 
--->
+
 
     <row>
       <field col="name" val="latc_AEM_GNL_Mode" />
       <field col="description" 
              val="AEM registers controlled by GNL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TEM_GNL_Mode" />
       <field col="description" 
              val="TEM registers controlled by GNL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Mode" />
     </row> 
     <row>
       <field col="name" val="latc_TIC_GNL_Mode" />
       <field col="description" 
              val="TIC registers controlled by GNL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Mode" />
     </row> 
      <row>
       <field col="name" val="latc_DFT_GNL_Mode" />
       <field col="description" 
              val="DFT registers controlled by GNL Mode" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Mode" />
     </row> 
 
      <row>
       <field col="name" val="latc_AEM_GNL_Timing" />
       <field col="description" 
              val="AEM registers controlled by GNL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Timing" />
     </row> 
      <row>
       <field col="name" val="latc_TEM_GNL_Timing" />
       <field col="description" 
              val="TEM registers controlled by GNL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Timing" />
     </row> 
      <row>
       <field col="name" val="latc_DFT_GNL_Timing" />
       <field col="description" 
              val="DFT registers controlled by GNL Timing" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="GNL" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Timing" />
     </row> 
 
   </table>
@@ -833,22 +832,58 @@
     </row>
 
     <row>
-      <field col="name" val="TKR_HotStripsCalibration" />
-      <field col="description" 
-             val="TKR calibration file" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
-    </row>
-
-    <row>
-      <field col="name" val="TKR_ThresholdSettings" />
+      <field col="name" val="TKR_Thresh_Settings" />
       <field col="description" 
              val="TKR settings" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TKR" />
     </row>
 
-<!--   not so sure about this name ... leave out for now
+
+    <row>
+      <field col="name" val="CAL_trg_alignment" />
+      <field col="description" 
+             val="For CAL_Timing precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_TACK_delay" />
+      <field col="description" 
+             val="For CAL_Timing precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_Ped" />
+      <field col="description" 
+             val="CAL Pedestals" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+<!-- May be changing this name since there is already a precinct called CAL_LAC
+    <row>
+      <field col="name" val="CAL_LAC" />
+      <field col="description" 
+             val="CAL Pedestals" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+ -->
+
+
+    <row>
+      <field col="name" val="TKR_Thresh_Settings" />
+      <field col="description" 
+             val="TKR settings" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+<!--   Looks like we won't be needing these after all
     <row>
       <field col="name" val="GEM_Configuration" />
       <field col="description" 
@@ -856,7 +891,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TRG" />
     </row>
--->
+
     <row>
       <field col="name" val="ROI_Configuration" />
       <field col="description" 
@@ -864,7 +899,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TRG" />
     </row>
-
+-->
 
   </table>
 
