@@ -658,8 +658,8 @@ namespace MOOT {
   }
 
   unsigned MootQuery::resolveAncAlias(const std::string& alias, 
-                                      const std::string& ancClass,
-                                      int tower) {
+                                      const std::string& ancClass) {
+    //                                      ,int tower) {
     // First translate anc class name to key
     std::string where(" WHERE name='");
     where += ancClass + std::string("'");
@@ -670,25 +670,55 @@ namespace MOOT {
                                                      where, false);
 
     if (!ancClassKey.size()) return 0;
-    std::string towerStr;
-    facilities::Util::itoa(tower, towerStr);
+    //    std::string towerStr;
+    //    facilities::Util::itoa(tower, towerStr);
 
-    where = std::string(" WHERE name='");
+    return resolveAncAliasByKey(alias, ancClassKey);
+  }
+
+  /// Private.  Don't expect external clients to specify by key
+  unsigned MootQuery::resolveAncAliasByKey(const std::string& alias, 
+                                           const std::string& ancClassKey) {
+
+    std::string where = std::string(" WHERE name='");
     where += alias + std::string("' and aclass_fk='") + ancClassKey
-      + std::string("' and tower='") + towerStr + std::string("'");
+      /*  + std::string("' and tower='") + towerStr */ + std::string("'");
     std::vector<unsigned> keys;  // can only be one returned
 
     unsigned nKey = DbUtil::getKeys(keys, m_rdb, "Ancillary_aliases",
-                                    "ancillary_aliases_key", where);
+                                    "ancillary_fk", where);
     return (nKey > 0) ? keys[0] : 0;
   }
 
-
-  // ***TODO***
-  unsigned MootQuery::resolveAncAliases(std::vector<unsigned>& ancKeys,
+  unsigned MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         unsigned voteKey) {
+    std::string voteKeyStr;
+    facilities::Util::utoa(voteKey, voteKeyStr);
+    std::string where(" WHERE vote_fk='");
+    where += voteKeyStr + std::string("'");
+    std::vector<std::string> aclassKeys;
+    std::vector<std::string> aAliases;
 
-    return 0;
+    // Maybe there is some clever way to do this with a sub-select
+
+    int n = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "aclass_fk",
+                                where, aclassKeys);
+    if (n <= 0 ) return n;
+    DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "a_alias",
+                                where, aAliases);
+
+    // Now look each one up in anc alias table
+    for (unsigned i = 0; i < n; i++) {
+      where = std::string(" WHERE aclass_fk ='") + aclassKeys[i] +
+        std::string("' and name='") + aAliases[i] + std::string("'");
+      std::string ancKey = 
+        DbUtil::getColumnWhere(m_rdb, "Anciallary_aliases", "ancillary_fk",
+                               where);
+      ancKeys.push_back(ancKey);
+
+    }
+
+    return n;
   }
 
 
