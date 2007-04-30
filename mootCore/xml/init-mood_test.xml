@@ -864,16 +864,26 @@
        refVal="CAL" />
     </row>
 
-<!-- May be changing this name since there is already a precinct called CAL_LAC
+<!-- Still under discussion with CAL. Expect to have analogously
+     named anc. files for CAL_FLE, CAL_FHE, CAL_ULD
+
     <row>
-      <field col="name" val="CAL_LAC" />
+      <field col="name" val="CAL_LAC_Settings" />
       <field col="description" 
-             val="CAL Pedestals" />
+             val="Log accept setting" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="CAL" />
     </row>
- -->
 
+    <row>
+      <field col="name" val="CAL_LAC_2_ADC" />
+      <field col="description" 
+             val="Log accept conversion" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+-->
+    
 
     <row>
       <field col="name" val="TKR_Thresh_Settings" />
