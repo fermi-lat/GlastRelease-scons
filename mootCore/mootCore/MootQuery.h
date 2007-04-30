@@ -201,15 +201,18 @@ namespace MOOT {
                             const std::string& instr="LAT");
                             
     /// Returns key of file registered in Ancillary if there is one; else 0.
+    /// @a ancClass is ancillary class name.
     unsigned resolveAncAlias(const std::string& alias, 
-                             const std::string& ancClass,
-                             int tower=-1);
+                             const std::string& ancClass);
+
+
+    // int tower=-1);
 
     /** 
         Return number of ancillary file keys found or negative value for 
         error (e.g., no such voteKey) 
      */
-    unsigned resolveAncAliases(std::vector<unsigned>& ancKeys,
+    unsigned resolveAncAliases(std::vector<std::string>& ancKeys,
                                unsigned voteKey);
 
     /// Returns key of file registered in Votes if there is one; else 0
@@ -217,6 +220,11 @@ namespace MOOT {
                               const std::string& precinct);
 
   private:
+    /// Returns key of file registered in Ancillary if there is one; else 0.
+    /// @a ancClassKey is ancillary class key as string
+    unsigned resolveAncAliasByKey(const std::string& alias, 
+                             const std::string& ancClassKey);
+
     rdbModel::Rdb* m_rdb;
     MoodConnection* m_mood;
     bool            m_ownConnection; // if true, will need to delete 
