@@ -745,6 +745,26 @@ namespace MOOT {
     return (nKey > 0) ? keys[0] : 0;
   }
 
+  bool MootQuery::voteIsUpToDate(unsigned voteKey) {
+    std::vector<std::string> ancKeys;
+    
+    unsigned nAnc = resolveAncAliases(ancKeys, voteKey);
 
+    // Get parameter classes associated with this vote.
+    // Maybe have additional entries in Vote_PClass_AClass with null
+    // for AClass to make it easy to retrieve PClasses??
+
+    // Find Parameter file *instances* associated with this vote
+    // Must be at least one per class.
+
+    // For each class, consider all instances of it associated with
+    // this vote.  Try to find one such that all entries in
+    // Parameters_to_Ancillary involving this param. have 
+    // ancillary_fk's in the resolved list above.  
+
+    // If such exists for each parameter class, success.
+
+    return true;
+  }
 
 }

@@ -209,8 +209,8 @@ namespace MOOT {
     // int tower=-1);
 
     /** 
-        Return number of ancillary file keys found or negative value for 
-        error (e.g., no such voteKey) 
+        Return number of ancillary file keys found.  Should throw exception
+        for error (e.g., no such voteKey) (TODO??) 
      */
     unsigned resolveAncAliases(std::vector<std::string>& ancKeys,
                                unsigned voteKey);
@@ -218,6 +218,8 @@ namespace MOOT {
     /// Returns key of file registered in Votes if there is one; else 0
     unsigned resolveVoteAlias(const std::string& alias,
                               const std::string& precinct);
+
+    bool voteIsUpToDate(unsigned voteKey);
 
   private:
     /// Returns key of file registered in Ancillary if there is one; else 0.
