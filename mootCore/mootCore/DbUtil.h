@@ -47,8 +47,9 @@ namespace MOOT {
                                       bool onlyOne=true,
                                       bool forUpdate=false);
 
-    /// Utility to get a single column value from possibly multiple
-    /// rows.  Return value is number of rows found, or -1 for error.
+    /// Utility to get a single column value (ascending order) 
+    /// from possibly multiple
+    /// rows.   Return value is number of rows found, or -1 for error.
     /// This function will append results to vals vector
     static int getAllWhere(rdbModel::Rdb* rdb,
                             const std::string& table,
