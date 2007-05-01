@@ -221,7 +221,7 @@ NOTE
 <tr><td> EvtTkrEdgeAngle 
 <td>F<td>   Obsolete; replaced by Tkr1TwrGap 
 <tr><td> EvtLogEnergy 
-<td>F<td>   log10 of EvtEnergySumOpt, pegged between log10(20) and log10(50,000). Was EvtLogESum 
+<td>F<td>   log10 of EvtEnergyCorr, pegged between log10(20) and log10(50,000). Was EvtLogESum 
 <tr><td> EvtTkr1EFrac 
 <td>F<td>   Tkr1ConE/EvtEnergyCorr, roughly, fraction of energy carried by best track 
 <tr><td> EvtVtxKin 
