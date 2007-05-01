@@ -752,6 +752,7 @@ namespace MOOT {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
+    // Might get rid of this call; maybe not so useful in this form..
     unsigned nAnc = resolveAncAliases(ancKeys, voteKey);
 
     // Get parameter classes associated with this vote.
@@ -770,21 +771,61 @@ namespace MOOT {
     // Currently don't have one associated with a MootQuery object.
     for (int iPclass=0; iPclass < nPclass; iPclass++) {
       where = std::string(" WHERE vote_fk ='") + voteKeyStr +
-        std::string("' and classe_fk='") + pclassKeyStr[iPclass] + goodParm;
+        std::string("' and class_fk='") + pclassKeyStr[iPclass] + goodParm;
 
-      std::string parm_key = 
-        DbUtil::getColumnWhere(m_rdb, "Parameters", "parm_key", where,
-                               false);
-      if (!parm_key.size()) return false;
-    }           
+      std::vector<std::string> parmKeys;
+      int nParm = 
+        DbUtil::getAllWhere(m_rdb, "Parameters", "parm_key", where, parmKeys);
+      if (nParm < 0) throw std::runtime_error("VoteIsUpToDate db error");
+      else if (nParm == 0) return false;
 
-    // For each parm class, consider all instances of it associated with
-    // this vote.  Try to find one such that all entries in
-    // Parameters_to_Ancillary involving this param. have 
-    // ancillary_fk's in the resolved list above.  
+      std::vector<std::string> ancClasses;
+      where = std::string(" WHERE vote_fk ='") + voteKeyStr +
+        std::string("' and pclass_fk='") + pclassKeyStr[iPclass] + 
+        std::string("'");
+      
+      //    From Vote_PClass_AClass retrieve anc classes the pclass depends
+      //    on.  If none, we're done (successfully) with this parm class.
+      int nAncClass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
+                                     "aclass_fk", where, ancClasses);
+      if (nAncClass < 0) { 
+        throw std::runtime_error("VoteIsUpToDate db error");
+      }
+      else if (nAncClass == 0) continue; // no dependencies for this parm
+      bool parmClassOk = false;
 
-    // If such exists for each parameter class, success.
-
+      // Otherwise, consider all "good" instances of parm class associated
+      // with this vote, fetched above.  More likely to succeed with 
+      // most recent, so start there
+      unsigned iP = parmKeys.size();
+      while (iP--) {               // look at collection of parameter instances
+        std::string pkey = parmKeys[iP];
+        bool goodParmInstance = true;
+        //  fetch anc keys from rows in Parameters_to_Ancillary with
+        //  parm key = the one we're examining.
+        std::vector<std::string> inputAncKeys;
+        where = std::string(" WHERE Parameter_fk='") + pkey + std::string("'");
+        int nAnc = DbUtil::getAllWhere(m_rdb, "Parameters_to_Ancillary",
+                                       "Ancillary_fk", where, inputAncKeys);
+        // Param should be associated with nAncClass anc files *and* they
+        // should be of the correct classes.  **TODO** add this check
+        if (nAnc != nAncClass) continue; 
+        for (int iAnc = 0; iAnc < nAnc; iAnc++) {
+          if (find(ancKeys.begin(), ancKeys.end(), inputAncKeys[iAnc]) 
+              == ancKeys.end() ) {
+            goodParmInstance = false;
+            break;   // try another 
+          }
+        }
+        if (goodParmInstance) {
+          parmClassOk = true;
+          break;
+        }
+      //      If all anc keys are among set of resolved aliases, we're
+      //      done (successfully) with this pclass
+      }     // end 'look' at a collection of instances for a param. class
+      if (!parmClassOk) return false;
+    }  // got through all parm classes successfully
     return true;
   }
 
