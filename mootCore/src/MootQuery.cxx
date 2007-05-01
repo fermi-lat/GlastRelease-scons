@@ -747,17 +747,38 @@ namespace MOOT {
 
   bool MootQuery::voteIsUpToDate(unsigned voteKey) {
     std::vector<std::string> ancKeys;
-    
+
+    static std::string goodParm("' AND status='CREATED' AND quality='PROD'");    
+    std::string voteKeyStr;
+    facilities::Util::utoa(voteKey, voteKeyStr);
+
     unsigned nAnc = resolveAncAliases(ancKeys, voteKey);
 
     // Get parameter classes associated with this vote.
-    // Maybe have additional entries in Vote_PClass_AClass with null
-    // for AClass to make it easy to retrieve PClasses??
+    std::vector<std::string> pclassKeyStr;
+
+
+    std::string where(" WHERE vote_fk ='");
+    where += voteKeyStr + std::string("' and aclass_fk is null");
+    int nPclass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
+                                      "pclass_fk", where, pclassKeyStr);
 
     // Find Parameter file *instances* associated with this vote
     // Must be at least one per class.
+    // What about instrument?  Should we be checking that too?
+    // If so caller will have to pass it in.
+    // Currently don't have one associated with a MootQuery object.
+    for (int iPclass=0; iPclass < nPclass; iPclass++) {
+      where = std::string(" WHERE vote_fk ='") + voteKeyStr +
+        std::string("' and classe_fk='") + pclassKeyStr[iPclass] + goodParm;
 
-    // For each class, consider all instances of it associated with
+      std::string parm_key = 
+        DbUtil::getColumnWhere(m_rdb, "Parameters", "parm_key", where,
+                               false);
+      if (!parm_key.size()) return false;
+    }           
+
+    // For each parm class, consider all instances of it associated with
     // this vote.  Try to find one such that all entries in
     // Parameters_to_Ancillary involving this param. have 
     // ancillary_fk's in the resolved list above.  
