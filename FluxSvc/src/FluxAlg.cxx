@@ -354,7 +354,7 @@ StatusCode FluxAlg::execute()
             setFilterPassed( false );
             return sc;
         }
-        if( m_avoidSAA){
+        if(m_insideSAA && m_avoidSAA.value() ){
             if( GPS::instance()->time() > m_fluxSvc->endruntime()){
                 log << MSG::INFO << "Ran out of time while in SAA"<< endreq;
                 setFilterPassed( false );
