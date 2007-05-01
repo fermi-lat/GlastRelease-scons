@@ -81,6 +81,7 @@ source createOffline_to_Ancillary.sql;
 
 ###source createPClass_to_AClass.sql; 
 source createVote_PClass_to_AClass.sql; 
+source createContainer_Precinct.sql;
 source createOClass_to_AClass.sql; 
 
 # Alias tables
