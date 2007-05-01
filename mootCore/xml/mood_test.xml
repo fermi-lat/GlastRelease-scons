@@ -2518,6 +2518,105 @@ version="v1r0" >
 
   </table>
 
+
+<!-- 8888888  -->
+  <table name="Container_Precinct" gui_readonly="true" version="v1r0"
+    comment="Relate container vote file to individual precincts
+             it references">
+     <col name="prim_key" >
+       <src null="false">
+         <from agent="auto_increment" />
+       </src>
+       <type typename="int" unsigned ="true" >
+         <restriction>          
+           <nonnegative />   
+         </restriction>
+       </type>
+       <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+    <col name="ctn_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes for a container vote</comment>
+    </col>
+
+
+    <col name="precinct_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>Refers to row in Precincts for non-container precinct</comment>
+    </col>
+
+
+    <col name="v_alias" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Alias name appearing in vote file for this class</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="TEST" />
+      </src>
+      <type typename="enum">
+        <restriction>
+          <enum use="require" values="ACTIVE TEST INACTIVE" />
+        </restriction>
+      </type>
+      <comment>Relation may become inactive if procedure to produce
+               Parameter file changes
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+
+  </table>
+
+
+<!-- 8888888  -->
+
   <table name="Instrument" gui_readonly="true" version="v1r0"
     comment="describe tower configuration for an instrument">
 
