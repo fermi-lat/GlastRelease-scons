@@ -5,7 +5,7 @@ create table Vote_PClass_AClass
     COMMENT 'refers to row in Votes table',
   pclass_fk INT UNSIGNED NOT NULL
     COMMENT 'refers to row in Parameter_class table',
-  aclass_fk INT UNSIGNED NOT NULL
+  aclass_fk INT UNSIGNED 
     COMMENT 'refers to row in Ancillary_class table',
   a_alias   VARCHAR(32) NOT NULL
     COMMENT 'alias name for ancillary file',
