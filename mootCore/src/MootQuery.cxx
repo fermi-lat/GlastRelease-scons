@@ -694,6 +694,10 @@ namespace MOOT {
                                         unsigned voteKey) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
+    return resolveAncAliases(ancKeys, voteKeyStr);
+  }
+  unsigned MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
+                                        const std::string& voteKeyStr) {
     std::string where(" WHERE vote_fk='");
     where += voteKeyStr + std::string("'");
     std::vector<std::string> aclassKeys;
@@ -708,7 +712,7 @@ namespace MOOT {
                                 where, aAliases);
 
     // Now look each one up in anc alias table
-    for (unsigned i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       where = std::string(" WHERE aclass_fk ='") + aclassKeys[i] +
         std::string("' and name='") + aAliases[i] + std::string("'");
       std::string ancKey = 
@@ -746,14 +750,18 @@ namespace MOOT {
   }
 
   bool MootQuery::voteIsUpToDate(unsigned voteKey) {
-    std::vector<std::string> ancKeys;
-
-    static std::string goodParm("' AND status='CREATED' AND quality='PROD'");    
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
-    // Might get rid of this call; maybe not so useful in this form..
-    unsigned nAnc = resolveAncAliases(ancKeys, voteKey);
+    return voteIsUpToDate(voteKeyStr);
+  }
+
+  bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr) {
+    std::vector<std::string> ancKeys;
+
+    static std::string goodParm("' AND status='CREATED' AND quality='PROD'");
+
+    unsigned nAncTotal = resolveAncAliases(ancKeys, voteKeyStr);
 
     // Get parameter classes associated with this vote.
     std::vector<std::string> pclassKeyStr;
