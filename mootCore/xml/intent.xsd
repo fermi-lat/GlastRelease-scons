@@ -1588,7 +1588,7 @@
 
   </xs:element> 
 
-<!-- Stuff for global intent: a list of vote file aliases for all
+<!-- Stuff for global latc intent: a list of vote file aliases for all
      precincts -->
 
 <!-- attribute group to be used by votes file elements -->
@@ -1605,7 +1605,7 @@
     </xs:simpleContent>
   </xs:complexType>
 
- <xs:element name="LAT_GLOBAL_INTENT">
+ <xs:element name="LATC_GLOBAL_INTENT">
     <xs:annotation>
       <xs:documentation> Root element for fully specifying
          LAT configuration intent
