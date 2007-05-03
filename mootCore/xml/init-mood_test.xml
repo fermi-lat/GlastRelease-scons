@@ -1271,11 +1271,6 @@
       <ref col="pclass_fk" table="Parameter_class" refCol="name" 
            refVal="latc_TRC_backup" />
     </row>
-    <row>
-      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="latc_TRC" />
-      <ref col="pclass_fk" table="Parameter_class" refCol="name" 
-           refVal="latc_TRC_backup" />
-    </row>
   </table>
 
 <!-- more tables to init:

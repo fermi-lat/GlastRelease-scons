@@ -2709,7 +2709,7 @@ version="v1r0" >
       </comment>
     </col>
     <primary col="prim_key" /> 
-
+    <index name="uniqueness" cols="FSW_fk pclass_fk" />
   </table>
 
 
