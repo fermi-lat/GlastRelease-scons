@@ -176,7 +176,7 @@
     </row>
 
     <row>
-      <field col="name" val="TKR_Threshold" />
+      <field col="name" val="TKR_Thresh" />
       <field col="description" 
        val="Controls tfe_dac registers " />
       <ref col="delegate_fk" table="Delegates" refCol="name"
@@ -1096,15 +1096,6 @@
     </row>
 
     <row>
-      <field col="name" val="TKR_Thresh_Settings" />
-      <field col="description" 
-             val="TKR settings" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TKR" />
-    </row>
-
-
-    <row>
       <field col="name" val="CAL_trg_alignment" />
       <field col="description" 
              val="For CAL_Timing precinct" />
@@ -1148,6 +1139,13 @@
     </row>
 -->
     
+    <row>
+      <field col="name" val="TKR_Strips_Settings" />
+      <field col="description" 
+             val="TKR settings" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
 
     <row>
       <field col="name" val="TKR_Thresh_Settings" />
@@ -1156,6 +1154,23 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TKR" />
     </row>
+
+    <row>
+      <field col="name" val="TKR_trg_alignment" />
+      <field col="description" 
+             val="For TKR_Timing precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_TACK_delay" />
+      <field col="description" 
+             val="For TKR_Timing precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
 
 <!--   Looks like we won't be needing these after all
     <row>
