@@ -17,7 +17,8 @@ create table LATC_Backup
 
   FOREIGN KEY(pclass_fk) REFERENCES Parameter_class (Parameter_class_key)
   ON DELETE CASCADE
-  ON UPDATE CASCADE
+  ON UPDATE CASCADE,
+  UNIQUE INDEX (FSW_fk,pclass_fk)
  ) TYPE=InnoDB COMMENT= 
 'Relate latc component to corresponding backup source class';
 
