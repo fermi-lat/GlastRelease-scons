@@ -1025,6 +1025,659 @@
        refVal="generic" />
     </row>
   </table>
+<!-- 8888  -->
+  <table name="FClass_to_PClass" mode="add" >
+    <forAll col="status" val="ACTIVE" />
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_GEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_GEM" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AEM" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TIC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TIC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CCC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CCC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CRC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CRC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TCC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TCC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TRC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TRC" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_SPT" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_SPT" />
+      <field col="one_to_one" val="1" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TFE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TFE" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TDC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TDC" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_ACD" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_ACD" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_CAL" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_CAL" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="lci_TKR" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="lci_TKR" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_C" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_C" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_F" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_F" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="ltc_T" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="ltc_T" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ignore" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ignore" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AEM_ACD_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC_ACD_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE_ACD_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC_ACD_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE_ACD_Bias" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_Bias" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE_ACD_Hld" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_Hld" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC_ACD_PHA" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_PHA" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE_ACD_Veto" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_ACD_Veto" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM_CAL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CCC_CAL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CCC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CRC_CAL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CRC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_CAL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM_CAL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CCC_CAL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CCC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CRC_CAL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CRC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_CAL_LAC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_LAC" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_CAL_FLE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_FLE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_CAL_FHE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_FHE" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_CAL_ULD" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_CAL_ULD" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_SPT_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_SPT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TFE_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TDC_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TDC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TCC_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TCC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TRC_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TRC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TKR_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TDC_TKR_Thresh" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TDC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TKR_Thresh" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TCC_TKR_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TCC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TKR_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TFE_TKR_Strips" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TFE" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TKR_Strips" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_GEM_TRG_GEM" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_GEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_GEM_TRG_ROI" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_GEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AEM_GNL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM_GNL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TIC_GNL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TIC" />
+      <field col="one_to_one" val="0" />
+    </row> 
+     <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_GNL_Mode" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+     <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AEM_GNL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+     <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM_GNL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="0" />
+    </row> 
+     <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_GNL_Timing" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+<!-- new "backup" parameter files -->
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_ARC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ARC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_AFE_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_AFE" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TEM_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TEM" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TIC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TIC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CCC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CCC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CRC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CRC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_CFE_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_CFE" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TCC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TCC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TRC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TRC" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_SPT_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_SPT" />
+      <field col="one_to_one" val="0" />
+    </row>
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TFE_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TFE" />
+      <field col="one_to_one" val="0" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_TDC_backup" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_TDC" />
+      <field col="one_to_one" val="0" />
+    </row>
+
+  </table>
+<!-- 8888  -->
 
   <table name="Ancillary_class" mode="add" >
     <row>
