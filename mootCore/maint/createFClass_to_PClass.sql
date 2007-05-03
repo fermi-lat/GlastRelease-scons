@@ -1,6 +1,6 @@
 create table FClass_to_PClass
  (prim_key    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  PClass_fk INT UNSIGNED NOT NULL
+  PClass_fk INT UNSIGNED NOT NULL UNIQUE
     COMMENT 'refers to row in Parameter_class table',
   FClass_fk INT UNSIGNED NOT NULL
     COMMENT 'refers to row in FSW_class table',
