@@ -64,6 +64,18 @@
         </comment>
     </col>
 
+    <col name="vote_fk" >
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes describing intent of this Config</comment>
+    </col>
 
     <col name="mode" >
       <src null="false">
@@ -2457,7 +2469,7 @@ version="v1r0" >
     </col>
     <col name="aclass_fk" >
       <src null="true" >
-        <from agent="enduser" />
+        <default  />
       </src>
       <type typename="int" unsigned="true" >
         <restriction>
@@ -2519,7 +2531,6 @@ version="v1r0" >
   </table>
 
 
-<!-- 8888888  -->
   <table name="Container_Precinct" gui_readonly="true" version="v1r0"
     comment="Relate container vote file to individual precincts
              it references">
@@ -2615,7 +2626,93 @@ version="v1r0" >
   </table>
 
 
-<!-- 8888888  -->
+  <table name="LATC_Backup" gui_readonly="true" version="v1r0"
+    comment="Relate latc component to so-called backup Parameter_class.
+             A file of this class will be automatically generated to
+             fill in holes in submitted source files for the component" >
+     <col name="prim_key" >
+       <src null="false">
+         <from agent="auto_increment" />
+       </src>
+       <type typename="int" unsigned ="true" >
+         <restriction>          
+           <nonnegative />   
+         </restriction>
+       </type>
+       <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+    <col name="FSW_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="FSW_class" keyCol="FSW_class_key" />
+      <comment>Refers FSW class corresponding to latc component </comment>
+    </col>
+
+
+    <col name="pclass_fk" >
+      <src null="true" >
+        <default />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
+      <comment>key for corresponding backup Parameter class</comment>
+    </col>
+
+
+    <col name="active_state" >
+      <src null="false" >
+        <default value="ACTIVE" />
+      </src>
+      <type typename="enum">
+        <restriction>
+          <enum use="require" values="ACTIVE INACTIVE" />
+        </restriction>
+      </type>
+      <comment>Allow for possible schema change at some future date.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+
+  </table>
+
+
 
   <table name="Instrument" gui_readonly="true" version="v1r0"
     comment="describe tower configuration for an instrument">
