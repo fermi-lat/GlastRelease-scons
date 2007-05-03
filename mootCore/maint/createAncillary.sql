@@ -12,7 +12,7 @@ create table Ancillary
   source_fmt             VARCHAR(32) NOT NULL
      COMMENT 'could be, e.g. xml',
 
-  GMT_creation_time         DATETIME 
+  GMT_create_time         DATETIME 
   COMMENT 'When file this row refers to was created',
 
   creation_time         DATETIME 
