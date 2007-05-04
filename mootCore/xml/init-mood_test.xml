@@ -1924,6 +1924,31 @@
       <ref col="pclass_fk" table="Parameter_class" refCol="name" 
            refVal="latc_TRC_backup" />
     </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="lci_ACD" />
+    </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="lci_CAL" />
+    </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="lci_TKR" />
+    </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="ltc_C" />
+    </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="ltc_F" />
+    </row>
+
+    <row>
+      <ref col="FSW_fk" table="FSW_class" refCol="name" refVal="ltc_T" />
+    </row>
+
   </table>
 
 <!-- more tables to init:
