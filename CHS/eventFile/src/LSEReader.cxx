@@ -63,27 +63,6 @@ namespace eventFile {
     }
   }
 
-  // convenience method to get an container of all the event data
-  // only accessible from the SWIG'ged python interface for now
-  const EventPtr LSEReader::nextEvent()
-  {
-    eventFile::LSE_Context        ctx;
-    eventFile::EBF_Data           ebf;
-    eventFile::LSE_Info::InfoType itype;
-    eventFile::LPA_Info           pinfo;
-    eventFile::LCI_ACD_Info       ainfo;
-    eventFile::LCI_CAL_Info       cinfo;
-    eventFile::LCI_TKR_Info       tinfo;
-    eventFile::LSE_Keys::KeysType ktype;
-    eventFile::LPA_Keys           pakeys;
-    eventFile::LCI_Keys           cikeys;
-    if ( read( ctx, ebf, itype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys ) ) {
-      return EventPtr( new eventFile::LSE_Event( ctx, ebf, itype, pinfo, ainfo, cinfo, tinfo, ktype, pakeys, cikeys ) );
-    } else {
-      return EventPtr();
-    }
-  }
-
 #ifdef _FILE_OFFSET_BITS
   void LSEReader::readHeader()
   {

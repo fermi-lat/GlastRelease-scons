@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v3r3   05-May-2007 RBL Moved SWIG wrapper to separate CHS/pyeventFile package.
  * v3r3   27-Apr-2007 RBL Added SWIG wrapper for using LSEReader from Python.
  * v3r2   20-Apr-2007 RBL Renamed LPA_Keys.LPA_DB to CDM_keys to better reflect content.
  * v3r1   18-Apr-2007 RBL Added LsfKeys to lsfData and populate.
