@@ -33,8 +33,8 @@ private:
     int m_offset;         // Offset into ixb event desriptor block for this information
     bool m_passThrough;   // Running filter in pass through mode
 
-    int m_vetoBits[16];   //array to count # of times each veto bit was set
-    int m_statusBits[16]; //array to count # of times each veto bit was set
+    int m_vetoBits[17];   //array to count # of times each veto bit was set
+    int m_statusBits[15]; //array to count # of times each veto bit was set
 };
 
 #endif // __ObfInterface_H
