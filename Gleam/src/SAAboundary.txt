@@ -1,0 +1,5 @@
+// The SAA boundary from Rob Cameron on 2 May 07
+// $Header$
+
+FluxSvc.SAAPolyLat={-30.0,-26.0,-20.0,-13.0, -6.0,  1.0,   2.0, -2.0 ,-8.0,-12.0,-19.0,-30.0 };
+FluxSvc.SAAPolyLon={ 50.0, 45.0, 30.0,  9.0,-12.0,-36.0 ,-46.0,-62.0,-79.0,-85.0,-89.0,-87.0 }; 
