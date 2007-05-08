@@ -20,10 +20,13 @@ MeritAlg.generated = 1000;
 
 // test using the trigger engine
 TriggerAlg.engine  ="default";  // overrides masking logic, uses default engine
-OnboardFilter.mask = -1;      // enable OBF
+OnboardFilter.RejectEvents = true;      // enable OBF
 //TriggerAlg.OutputLevel=2;
 
 #include "$GLEAMROOT/src/calibration.txt"
+
+// test saa boundary mechanism
+//#include "$FLUXSVCROOT/src/SAAboundary.txt"
 
 //==============================================================
 //
