@@ -4,7 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
-* v6r28   THB 08-May-07  Start using OnboardFilter.RejectEvents
+* v6r28p1 THB 08-May-07  Start using OnboardFilter.RejectEvents
 * v6r27p4 THB 19-Apr-07  Rename the flavor for calibration
 * v6r27   THB 16-Apr-07  MC version of calibration: test program runs it
 * v6r26p1 THB 12-Apr-07  New calibration; test program runs trigger engines; 
