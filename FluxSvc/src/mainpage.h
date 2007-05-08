@@ -32,6 +32,8 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxSvc.SampleInterval [1.0] Governs the minimum time that must elapse before a the GPS observers
     are notified to update pointing and attitude information.
     @param FluxSvc.OrbitInclination [25.3] Orbit inclination angle, in degrees for default orbit
+    @param FluxSvc.SAApolyLat  [{}] list of latitudes defining the SAA exclusion polygon
+    @param FluxSvc.SAApolyLon  [{}] longitudes
 
   @section fluxalg_jobOptions FluxAlg jobOptions
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
