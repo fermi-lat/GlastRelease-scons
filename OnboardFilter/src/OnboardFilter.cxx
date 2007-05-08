@@ -276,7 +276,7 @@ StatusCode OnboardFilter::initialize()
     // Check that the mask was set?
     if (m_mask)
     {
-        log << "Found mask set to " << std::hex << m_mask << "!!" << endreq;
+        log << "Found mask set to " << std::hex << m_mask << std::dec << "!!" << endreq;
         log << "mask is no longer used, setting RejectEvents flag to true" << endreq;
 
         m_rejectEvents = true;
