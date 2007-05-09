@@ -699,7 +699,7 @@ namespace MOOT {
   unsigned MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         const std::string& voteKeyStr) {
     std::string where(" WHERE vote_fk='");
-    where += voteKeyStr + std::string("'");
+    where += voteKeyStr + std::string("' AND aclass_fk IS NOT NULL");
     std::vector<std::string> aclassKeys;
     std::vector<std::string> aAliases;
 
@@ -716,7 +716,7 @@ namespace MOOT {
       where = std::string(" WHERE aclass_fk ='") + aclassKeys[i] +
         std::string("' and name='") + aAliases[i] + std::string("'");
       std::string ancKey = 
-        DbUtil::getColumnWhere(m_rdb, "Anciallary_aliases", "ancillary_fk",
+        DbUtil::getColumnWhere(m_rdb, "Ancillary_aliases", "ancillary_fk",
                                where);
       ancKeys.push_back(ancKey);
 
@@ -768,7 +768,7 @@ namespace MOOT {
 
 
     std::string where(" WHERE vote_fk ='");
-    where += voteKeyStr + std::string("' and aclass_fk is null");
+    where += voteKeyStr + std::string("' AND aclass_fk IS NULL");
     int nPclass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
                                       "pclass_fk", where, pclassKeyStr);
 
@@ -790,7 +790,7 @@ namespace MOOT {
       std::vector<std::string> ancClasses;
       where = std::string(" WHERE vote_fk ='") + voteKeyStr +
         std::string("' and pclass_fk='") + pclassKeyStr[iPclass] + 
-        std::string("'");
+        std::string("' AND aclass_fk IS NOT NULL");
       
       //    From Vote_PClass_AClass retrieve anc classes the pclass depends
       //    on.  If none, we're done (successfully) with this parm class.
