@@ -82,9 +82,8 @@ private:
     StringArrayProperty m_fileList;
     /// name of the Monte Carlo TTree stored in the ROOT file
     std::string m_treeName;
+    /// Branch name for events
     std::string m_branchName;
-    /// Number of Events in the input ROOT TTree
-    Long64_t m_numEvents;
     /// Option string which will be passed to McEvent::Clear
     std::string m_clearOption;
 
