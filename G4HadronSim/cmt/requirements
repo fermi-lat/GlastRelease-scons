@@ -13,7 +13,7 @@ apply_pattern package_include
 apply_pattern package_linkopts
 apply_pattern package_stamps
 
-set G4tableDir	            ${GLAST_EXT}/G4HadronSim/v8r1p1
+set G4tableDir	            ${Geant4_DIR}/tables
 set G4LEVELGAMMADATA	      ${G4tableDir}/PhotonEvaporation2.0
 set NeutronHPCrossSections	${G4tableDir}/G4NDL3.9
 set G4RADIOACTIVEDATA         ${G4tableDir}/RadiativeDecay3.0
