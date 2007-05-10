@@ -277,33 +277,12 @@ int main(int nargs, char**)    {
   std::cout << "For first config: " << std::endl;
 
   writeInfo(pInfo, std::cout);
-  /*
-  std::cout << "Key = " << pInfo->getKey() << std::endl;
-  std::cout << "Name = " << pInfo->getName() << std::endl;
-  std::cout << "Alg. = " << pInfo->getAlg() << std::endl;
-  std::cout << "Step = " << pInfo->getStep() << std::endl;
-  std::cout << "Description = " << pInfo->getDescrip() << std::endl;
-  std::cout << "Status = " << pInfo->getStatus() << std::endl;
-  std::cout << "active_state = " << pInfo->getActive() << std::endl;
-  std::cout << "Mode = " << pInfo->getMode() << std::endl;
-  std::cout << "Creation time = " << pInfo->getCreationTime() 
-            << std::endl << std::endl;
-  */
+
   pInfo = &cInfo[nConfigs - 1];
 
   std::cout << "For last config: " << std::endl;
   writeInfo(pInfo, std::cout);
-  /*
-  std::cout << "Key = " << pInfo->getKey() << std::endl;
-  std::cout << "Name = " << pInfo->getName() << std::endl;
-  std::cout << "Alg. = " << pInfo->getAlg() << std::endl;
-  std::cout << "Step = " << pInfo->getStep() << std::endl;
-  std::cout << "Description = " << pInfo->getDescrip() << std::endl;
-  std::cout << "Status = " << pInfo->getStatus() << std::endl;
-  std::cout << "Mode = " << pInfo->getMode() << std::endl;
-  std::cout << "Creation time = " << pInfo->getCreationTime() 
-            << std::endl  << std::endl;
-  */
+
   cInfo.clear();
   nConfigs = q.getConfigInfo(cInfo, "", "");
   std::cout << "Using no cuts at all, found " << nConfigs << " configs" 
@@ -392,6 +371,96 @@ int main(int nargs, char**)    {
               << std::endl << std::endl;
   }
 
+  std::cout << "***** New queries (10 May 2007) *******" << std::endl;
+
+  keys.clear();
+  q.listAncillaryAliasKeys(keys);
+
+  std::cout << "listAncillaryAliasKeys(keys) returned " << keys.size() 
+            << " key(s)" << std::endl;
+
+  keys.clear();
+  q.listAncillaryAliasKeys(keys, "ACD_PedestalCalibration");
+
+  std::cout << 
+    "listAncillaryAliasKeys(keys,'ACD_PedestalCalibration') returned " 
+            << keys.size() 
+            << " key(s)" << std::endl;
+
+  keys.clear();
+  q.listAncillaryAliasKeys(keys, "ACD_HldCalibration");
+
+  std::cout << 
+    "listAncillaryAliasKeys(keys,'ACD_HldCalibration') returned " 
+            << keys.size() 
+            << " key(s)" << std::endl;
+
+  keys.clear();
+  try {
+    q.listAncillaryAliasKeys(keys, "bad_class_name");
+    std::cout << 
+      "listAncillaryAliasKeys(keys,'bad_class_name') returned " 
+              << keys.size() 
+              << " key(s)" << std::endl;
+  }
+  catch (std::exception ex) {
+    std::cerr << 
+      "listAncillaryAliasKeys(keys,'bad_class_name') threw an exception " 
+              << std::endl;
+  }
+
+  keys.clear();
+  q.listVoteKeys(keys);
+
+  std::cout << "listVote(keys) returned " << keys.size() 
+            << " key(s)" << std::endl;
+
+  keys.clear();
+  q.listVoteKeys(keys, "generic");
+
+  std::cout << "listVote(keys, 'generic') returned " << keys.size() 
+            << "keys" << std::endl;
+
+  keys.clear();
+  q.listVoteKeys(keys, "ACD_PHA");
+
+  std::cout << "listVote(keys, 'ACD_PHA') returned " << keys.size() 
+            << "keys" << std::endl;
+
+  keys.clear();
+  q.listVoteKeys(keys, "ACD_PHA", "*");
+
+  std::cout << "listVote(keys, 'ACD_PHA', '*') returned " << keys.size() 
+            << " key(s)" << std::endl;
+
+  keys.clear();
+  q.listVoteKeys(keys, "ACD_PHA", "INVALID");
+
+  std::cout << "listVote(keys, 'ACD_PHA', 'INVALID') returned " << keys.size() 
+            << " key(s)" << std::endl;
+
+  std::vector<std::string> names;
+
+  names.clear();
+  q.getPrecincts(names); 
+
+  std::cout << names.size() << " precinct names found.  They are:" 
+            << std::endl;
+  for (unsigned ix = 0; ix < names.size(); ix++) {
+    std::cout << names[ix] << " ";
+    if ((ix % 6) == 5) std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
+  names.clear();
+  q.getAncillaryClasses(names); 
+
+  std::cout << names.size() << " anc. class names found.  They are:" << std::endl;
+  for (unsigned ix = 0; ix < names.size(); ix++) {
+    std::cout << names[ix] << " ";
+    if ((ix % 3) == 2) std::cout << std::endl;
+  }
+  std::cout << std::endl;
 
   return 0;
 }
