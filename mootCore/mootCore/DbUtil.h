@@ -62,6 +62,7 @@ namespace MOOT {
        rows satisfying condition in where.  By default return in descending
        order, so newest is always returned. May specify ascending, 
        however.
+       @return number of keys satisfying the condition
      */
     static unsigned getKeys(std::vector<unsigned>& keys,
                             rdbModel::Rdb* rdb, const std::string& table,

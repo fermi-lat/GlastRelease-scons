@@ -51,6 +51,16 @@ namespace MOOT {
       return classStr("FSW_class", key);
     }
 
+    unsigned getAncillaryClasses(std::vector<std::string>& names);
+
+    // **TODO**
+    // unsigned getAncillaryInfo(unsigned key, AncillaryInfo& info);
+    // unsigend getAncillaryAliasInfo(unsigned key, AncillaryAliasInfo& info);
+    // unsigned getParamInfo(unsigned key, ParamInfo& info);
+    // unsigned getVoteInfo(unsigned key, VoteInfo& info);
+    // unsigend getVoteAliasInfo(unsigned key, VoteAliasInfo& info);
+
+
     /**
        Given a config key, return associated list of fmx relative
        file paths.  Such a file path is what fmx upload expects
@@ -188,7 +198,25 @@ namespace MOOT {
     // Fill supplied argument with parameter class names. Return count
     unsigned getParameterClasses(std::vector<std::string>& names);
 
+    unsigned getPrecincts(std::vector<std::string>& names);
 
+    /**
+       Return ancillary alias keys satisfying specified conditions on fields
+       in Ancillary_alias table.  "*" means "don't cut on this condition"
+     */
+    unsigned listAncillaryAliasKeys(std::vector<unsigned>& keys,
+                                    const std::string& aClass="*",
+                                    const std::string& aliasName="*");
+
+    /**
+       Return ancillary keys satisfying specified conditions on fields
+       in Ancillary table.  "*" means "don't cut on this condition"
+     */
+    unsigned listAncillaryKeys(std::vector<unsigned>& keys,
+                               const std::string& aClass="*",
+                               const std::string status="CREATED",
+                               const std::string quality="PROD",
+                               const std::string& instr="LAT");
 
     /**
        Return list of keys for all good Configs (by default) or all
@@ -199,7 +227,25 @@ namespace MOOT {
     unsigned listConfigKeys(std::vector<unsigned>& keys, 
                             const std::string& status="CREATED",
                             const std::string& instr="LAT");
-                            
+                  
+    /**
+       Return vote alias keys satisfying specified conditions on fields
+       in Vote_aliases table.  "*" means "don't cut on this condition"
+     */
+    unsigned listVoteAliasKeys(std::vector<unsigned>& keys,
+                               const std::string& precinct="*",
+                               const std::string& aliasName="*");
+          
+    /**
+       Return vote keys satisfying specified conditions on fields
+       in Votes table.  "*" means "don't cut on this condition"
+     */
+    unsigned listVoteKeys(std::vector<unsigned>& keys,
+                          const std::string& precinct="*",
+                          const std::string& status="CREATED",
+                          const std::string& instr="LAT");
+
+
     /// Returns key of file registered in Ancillary if there is one; else 0.
     /// @a ancClass is ancillary class name.
     unsigned resolveAncAlias(const std::string& alias, 
