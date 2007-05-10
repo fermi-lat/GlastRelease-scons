@@ -64,6 +64,29 @@
 %include ../mootCore/MootQuery.h
 
 %extend MOOT::MootQuery {
+  std::vector<std::string> ancillaryClassNames() {
+    std::vector<std::string> my_names;
+    self->getAncillaryClasses(my_names);
+    return my_names;
+  }
+
+  std::vector<unsigned> ancillaryAliasKeys(const std::string& aClass="*",
+                                           const std::string& aName="*") {
+    std::vector<unsigned> my_keys;
+    self->listAncillaryAliasKeys(my_keys, aClass, aName);
+    return my_keys;
+  }
+    
+
+  std::vector<unsigned> ancillaryKeys(const std::string& aClass="*",
+                                      const std::string& status="CREATED",
+                                      const std::string& quality="PROD",
+                                      const std::string& instr="LAT") {
+    std::vector<unsigned> my_keys;
+    self->listAncillaryKeys(my_keys, aClass, status, quality, instr);
+    return my_keys;
+  }
+    
   std::vector<std::string> configInputs(unsigned i) {
     std::vector<std::string> my_values;
     self->getConfigInputs(i, my_values);
@@ -211,6 +234,29 @@
     self->getParameterClasses(names);
     return names;
   }
+
+  std::vector<std::string> precinctNames() {
+    std::vector<std::string> my_names;
+    self->getPrecincts(my_names);
+    return my_names;
+  }
+
+  std::vector<unsigned> voteAliasKeys(const std::string& precinct="*",
+                                      const std::string& aName="*") {
+    std::vector<unsigned> my_keys;
+    self->listVoteAliasKeys(my_keys, precinct, aName);
+    return my_keys;
+  }
+    
+
+  std::vector<unsigned> voteKeys(const std::string& precinct="*",
+                                 const std::string& status="CREATED",
+                                 const std::string& instr="LAT") {
+    std::vector<unsigned> my_keys;
+    self->listVoteKeys(my_keys, precinct, status, instr);
+    return my_keys;
+  }
+    
 
 }
 

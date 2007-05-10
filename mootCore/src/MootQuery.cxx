@@ -81,6 +81,14 @@ namespace MOOT {
     }
   }
 
+  unsigned MootQuery::getAncillaryClasses(std::vector<std::string>& names) {
+    std::string where("");
+    names.clear();
+    int n = DbUtil::getAllWhere(m_rdb, "Ancillary_class", "name", where,
+                                names);
+    return (n >= 0) ? 1 : 0;
+  }
+
   bool MootQuery::getConfigFmxPaths(unsigned configKey,
                                     std::vector<std::string>& paths) {
     std::string keyStr;
@@ -508,7 +516,7 @@ namespace MOOT {
       std::string where(" WHERE FSW_fk='");
       where += inputKeys[i] + "'";
       // get all parameter keys assoc. with it in ascending order 
-      unsigned nRet = DbUtil::getKeys(parameterKeys, m_rdb, 
+      DbUtil::getKeys(parameterKeys, m_rdb, 
                                       "FSW_to_Parameters",
                                       "Parameter_fk", where, 0,
                                       true);
@@ -637,6 +645,84 @@ namespace MOOT {
     return nRet;
   }
 
+  unsigned MootQuery::getPrecincts(std::vector<std::string>& names) {
+    std::string where("");
+    names.clear();
+    int n = DbUtil::getAllWhere(m_rdb, "Precincts", "name", where,
+                                names);
+    return (n >= 0) ? 1 : 0;
+  }
+
+  unsigned MootQuery::listAncillaryAliasKeys(std::vector<unsigned>& keys,
+                                             const std::string& aClass,
+                                             const std::string& aliasName) {
+    std::string where("");
+    static std::string star("*");
+    if (aClass != star) {
+      where += 
+        std::string(" WHERE aclass_fk=(SELECT Ancillary_class_key from Ancillary_class where name='") 
+        + aClass + std::string("') ");
+    }
+    if (aliasName != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" name='") + aliasName + std::string("'");
+    }
+    try {
+      DbUtil::getKeys(keys, m_rdb, "Ancillary_aliases", 
+                      "ancillary_aliases_key", where, 0,
+                      true);
+    }
+    catch (std::exception ex) {
+      std::cerr << "Unable to fetch Ancillary alias keys for class=" << aClass
+                << ", alias name=" << aliasName << std::endl;
+      throw ex;
+    }
+    return 1;  
+
+  }
+
+  unsigned MootQuery::listAncillaryKeys(std::vector<unsigned>& keys,
+                                        const std::string& aClass,
+                                        const std::string status,
+                                        const std::string quality,
+                                        const std::string& instr) {
+    std::string where("");
+    static std::string star("*");
+    if (aClass != star) {
+      where += 
+        std::string(" WHERE class_fk=(SELECT Ancillary_class_key from Ancillary_class where name='") 
+        + aClass + std::string("') ");
+    }
+    if (status != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" status='") + status + std::string("'");
+    }
+    if (quality != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" quality='") + quality + std::string("'");
+    }
+    if (instr != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" instrument='") + instr + std::string("'");
+    }
+    try {
+      DbUtil::getKeys(keys, m_rdb, "Ancillary", "Ancillary_key", where, 0,
+                      true);
+    }
+    catch (std::exception ex) {
+      std::cerr << "Unable to fetch Ancillary keys for class=" << aClass
+                << ", status=" << status << ", quality=" << quality
+                << ", instr=" << instr << std::endl;
+      throw ex;
+    }
+    return 1;  
+  }
+
+
 
   unsigned MootQuery::listConfigKeys(std::vector<unsigned>& keys, 
                                      const std::string& status,
@@ -656,6 +742,73 @@ namespace MOOT {
     return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where, 
                            0, true);
   }
+
+  unsigned MootQuery::listVoteAliasKeys(std::vector<unsigned>& keys,
+                                        const std::string& precinct,
+                                        const std::string& aliasName) {
+    std::string where("");
+    static std::string star("*");
+    if (precinct != star) {
+      where += 
+        std::string(" WHERE precinct_fk=(SELECT precinct_key from Precincts where name='") 
+        + precinct + std::string("') ");
+    }
+    if (aliasName != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" name='") + aliasName + std::string("'");
+    }
+    try {
+      DbUtil::getKeys(keys, m_rdb, "Vote_aliases", "vote_aliases_key", 
+                      where, 0, true);
+    }
+    catch (std::exception ex) {
+      std::cerr << "Unable to fetch Vote_aliases keys for precinct=" 
+                << precinct << ", alias name=" << aliasName << std::endl;
+      throw ex;
+    }
+    return 1;  
+  }
+          
+
+
+  unsigned MootQuery::listVoteKeys(std::vector<unsigned>& keys,
+                                   const std::string& precinct,
+                                   const std::string& status,
+                                   const std::string& instr) {
+    std::string where("");
+    static std::string star("*");
+    if (precinct != star) {
+      where += 
+        std::string(" WHERE precinct_fk=(SELECT precinct_key from Precincts where name='") 
+        + precinct + std::string("') ");
+    }
+    if (status != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" status='") + status + std::string("'");
+    }
+    /*
+    if (instr != star) {
+      if (where.size() > 0) where += std::string(" AND ");
+      else where += std::string(" WHERE ");
+      where += std::string(" instrument='") + instr + std::string("'");
+    }
+    */
+    try {
+      DbUtil::getKeys(keys, m_rdb, "Votes", "vote_key", where, 0,
+                      true);
+    }
+    catch (std::exception ex) {
+      std::cerr << "Unable to fetch Vote keys for precinct=" << precinct
+                << ", status=" << status 
+                << ", instr=" << instr << std::endl;
+      throw ex;
+    }
+    return 1;  
+  }
+
+
 
   unsigned MootQuery::resolveAncAlias(const std::string& alias, 
                                       const std::string& ancClass) {
@@ -761,7 +914,7 @@ namespace MOOT {
 
     static std::string goodParm("' AND status='CREATED' AND quality='PROD'");
 
-    unsigned nAncTotal = resolveAncAliases(ancKeys, voteKeyStr);
+    resolveAncAliases(ancKeys, voteKeyStr);
 
     // Get parameter classes associated with this vote.
     std::vector<std::string> pclassKeyStr;
