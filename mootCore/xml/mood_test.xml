@@ -389,6 +389,14 @@ version="v1r0" >
       </comment>
     </col>
 
+    <col name="instrument">
+      <src null="false">
+        <default value="LAT" />
+      </src>
+      <type typename="varchar" size="16" />
+      <comment>Instrument to which this vote applies </comment>
+    </col>
+
 
 
     <col name="description" >

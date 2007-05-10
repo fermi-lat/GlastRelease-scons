@@ -9,6 +9,9 @@ create table Votes
                             NOT NULL DEFAULT 'STARTED'
   COMMENT 'refers to status of entry.  Not usable until it's been
            parsed, copied and has minimally sensible contents',
+  instrument  varchar(16) not null default 'LAT'
+     COMMENT 'e.g. LAT, EM2  ',
+
 description           VARCHAR(255) NOT NULL
   COMMENT 'a place to mention anything special about the Vote',
  creation_time DATETIME
