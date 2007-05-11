@@ -9,10 +9,6 @@
 #include "RootInputDesc.h"
 #include "TROOT.h"
 
-#ifdef WIN32
-#include "TSystem.h" // To get TreePlayer loaded
-#endif
-
 RootInputDesc::RootInputDesc(const StringArrayProperty& fileList, 
                        const std::string&         tree, 
                        const std::string&         branch) : 
@@ -20,11 +16,6 @@ RootInputDesc::RootInputDesc(const StringArrayProperty& fileList,
 {
     // Set up the input file list
     m_numEvents = setFileList(fileList);
-  
-#ifdef WIN32
-	gSystem->Load("libTreePlayer.dll");
-#endif  
- 
 }
     
 RootInputDesc::~RootInputDesc() 
