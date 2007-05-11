@@ -136,7 +136,7 @@ const IAlgFactory& reconRootReaderAlgFactory = Factory;
 
 
 reconRootReaderAlg::reconRootReaderAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
-Algorithm(name, pSvcLocator), m_reconEvt(0), m_branchName("ReconEvent")
+Algorithm(name, pSvcLocator), m_reconEvt(0)
 {
     // Input pararmeters that may be set via the jobOptions file
     // Input ROOT file name
@@ -149,6 +149,7 @@ Algorithm(name, pSvcLocator), m_reconEvt(0), m_branchName("ReconEvent")
     initVec.clear();
     // Input TTree name
     declareProperty("reconTreeName", m_treeName="Recon");
+    declareProperty("reconBranchName", m_branchName="ReconEvent");
     declareProperty("clearOption", m_clearOption="");
     
 }

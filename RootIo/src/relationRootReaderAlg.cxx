@@ -140,7 +140,8 @@ Algorithm(name, pSvcLocator), m_relTab(0), m_branchName("RelTable")
     declareProperty("relationRootFileList", m_fileList=initList);
     initVec.clear();
     // Input TTree name
-    declareProperty("treeName", m_treeName="Relations");
+    declareProperty("relTreeName", m_treeName="Relations");
+    declareProperty("relBranchName", m_branchName="RelTable");
     declareProperty("clearOption", m_clearOption="");
 
     m_mcPartToTrajList    = 0;
