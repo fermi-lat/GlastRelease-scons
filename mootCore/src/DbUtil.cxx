@@ -148,7 +148,8 @@ namespace MOOT {
                           const std::string& table,
                           const std::string& col,
                           const std::string& where,
-                          std::vector<std::string>& vals) {
+                          std::vector<std::string>& vals,
+                          bool atLeastOne) {
     if (!connected(rdb)) return -1;
 
     rdbModel::StringVector getCols;
@@ -175,6 +176,10 @@ namespace MOOT {
       }
     }
     delete res;
+
+    if (( res <= 0) && atLeastOne)
+      throw DbUtilException("DbUtil::getColumnValue: no valid match");
+
     return nFetched;
   }
 

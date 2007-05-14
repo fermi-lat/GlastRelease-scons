@@ -843,13 +843,13 @@ namespace MOOT {
     return (nKey > 0) ? keys[0] : 0;
   }
 
-  unsigned MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
+  void MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         unsigned voteKey) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
     return resolveAncAliases(ancKeys, voteKeyStr);
   }
-  unsigned MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
+  void MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         const std::string& voteKeyStr) {
     std::string where(" WHERE vote_fk='");
     where += voteKeyStr + std::string("' AND aclass_fk IS NOT NULL");
@@ -860,7 +860,10 @@ namespace MOOT {
 
     int n = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "aclass_fk",
                                 where, aclassKeys);
-    if (n <= 0 ) return n;
+    if (n < 0 ) 
+      throw DbUtilException("MootQuery::resolveAncAliases failed getAllWhere call");
+    else if (n == 0) return;
+
     DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "a_alias",
                                 where, aAliases);
 
@@ -875,7 +878,7 @@ namespace MOOT {
 
     }
 
-    return n;
+    return;
   }
 
 
@@ -902,6 +905,7 @@ namespace MOOT {
     return (nKey > 0) ? keys[0] : 0;
   }
 
+
   bool MootQuery::voteIsUpToDate(unsigned voteKey) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
@@ -909,12 +913,29 @@ namespace MOOT {
     return voteIsUpToDate(voteKeyStr);
   }
 
+  /**
+     A vote is up to date if
+        - for each parameter class controlled by the vote, there is
+          a registered parameter file instance (row in Parameters table)
+          of suitable quality which references this vote with its 
+          vote_fk field
+        - if the vote file specifies that a parameter class depends on
+          one or more ancillary classes, there must be an instance of
+          the class 
+           * which references the vote with its vote_fk field, as above
+           * whose key appears in  Parameters_to_Ancillary exactly once
+             for each ancillary class it should depend on, according
+             to the vote file.  The corresponding Ancillary_fk entries
+             in those rows must refer to the same ancillary files one
+             would get by resolving the ancillary aliases mentioned
+             in the vote file
+   */
   bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr) {
-    std::vector<std::string> ancKeys;
+    std::vector<std::string> aliasedAncKeys;
 
     static std::string goodParm("' AND status='CREATED' AND quality='PROD'");
 
-    resolveAncAliases(ancKeys, voteKeyStr);
+    resolveAncAliases(aliasedAncKeys, voteKeyStr);
 
     // Get parameter classes associated with this vote.
     std::vector<std::string> pclassKeyStr;
@@ -969,11 +990,17 @@ namespace MOOT {
         int nAnc = DbUtil::getAllWhere(m_rdb, "Parameters_to_Ancillary",
                                        "Ancillary_fk", where, inputAncKeys);
         // Param should be associated with nAncClass anc files *and* they
-        // should be of the correct classes.  **TODO** add this check
+        // should be of the correct classes as specified in the vote file
+        // (equivalently, in table Vote_PClass_AClass)
+        // **TODO** add this check.    So far, just checking that the
+        // count is correct.  nAncClass is the number of ancillaries the
+        // vote file says the parameter should depend on; nAnc is the 
+        // number this particular parameter file does depend on.
         if (nAnc != nAncClass) continue; 
         for (int iAnc = 0; iAnc < nAnc; iAnc++) {
-          if (find(ancKeys.begin(), ancKeys.end(), inputAncKeys[iAnc]) 
-              == ancKeys.end() ) {
+          if (find(aliasedAncKeys.begin(), aliasedAncKeys.end(), 
+                   inputAncKeys[iAnc]) 
+              == aliasedAncKeys.end() ) {
             goodParmInstance = false;
             break;   // try another 
           }
