@@ -251,14 +251,11 @@ namespace MOOT {
     unsigned resolveAncAlias(const std::string& alias, 
                              const std::string& ancClass);
 
-
-    // int tower=-1);
-
     /** 
-        Return number of ancillary file keys found.  Should throw exception
-        for error (e.g., no such voteKey) (TODO??) 
+        Return number of ancillary file keys found.  Throw exception
+        for error (e.g., no such voteKey; no ancillary found for an alias) 
      */
-    unsigned resolveAncAliases(std::vector<std::string>& ancKeys,
+    void resolveAncAliases(std::vector<std::string>& ancKeys,
                                unsigned voteKey);
 
     /// Returns key of file registered in Votes if there is one; else 0
@@ -275,7 +272,9 @@ namespace MOOT {
     unsigned resolveAncAliasByKey(const std::string& alias, 
                              const std::string& ancClassKey);
 
-    unsigned resolveAncAliases(std::vector<std::string>& ancKeys,
+    /// Throw RdbException for error (e.g., no such voteKey, no ancillary
+    /// found for one alias)
+    void resolveAncAliases(std::vector<std::string>& ancKeys,
                                const std::string& voteKeyStr);
 
     bool voteIsUpToDate(const std::string& voteKeyStr);

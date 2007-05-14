@@ -55,7 +55,8 @@ namespace MOOT {
                             const std::string& table,
                             const std::string& col,
                             const std::string& where,
-                            std::vector<std::string>& vals);
+                            std::vector<std::string>& vals,
+                            bool atLeastOne = false);
 
     /**
        return keys (up to value of limit if limit > 0)  for all 
