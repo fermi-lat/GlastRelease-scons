@@ -20,7 +20,9 @@ library configData \
         gem/*.cxx base/*.cxx db/*.cxx *.cxx
 
 
-#application ConfigXml2Root ../apps/ConfigXml2Root.cxx
+application ConfigXml2Root ../apps/ConfigXml2Root.cxx
+
+application RootConfigCompare ../apps/RootConfigCompare.cxx
 
 application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 application testdb ../apps/testdb.cxx

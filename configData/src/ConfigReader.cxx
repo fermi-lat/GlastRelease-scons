@@ -11,6 +11,71 @@
 using namespace xmlBase;
 
 
+Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath ) {
+  XmlParser parser( true );
+  DOMDocument* doc(0);
+  try {
+    doc = parser.parse( fileName.c_str() );
+  } 
+  catch (ParseException ex) {
+    std::cout << "caught exception with message " << std::endl;
+    std::cout << ex.getMsg() << std::endl;
+    return kFALSE;
+  }
+  DOMElement* topElt = doc->getDocumentElement();
+  std::vector<DOMElement*> eltList;
+
+  std::vector<std::string> bcastFiles;
+  std::vector<std::string> latcFiles;
+
+  Dom::getDescendantsByTagName( topElt, "latcFile", eltList );
+
+  std::vector<DOMElement*> latcNodeList;
+  Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
+
+  for ( std::vector<DOMElement*>::iterator itrLatc = latcNodeList.begin();
+	itrLatc != latcNodeList.end(); ++itrLatc ) {
+    Dom::getDescendantsByTagName(*itrLatc,"latcFile", eltList , false);
+    Dom::getDescendantsByTagName(*itrLatc,"TFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"TDC",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"TEM",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"CFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"AFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"ARC",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"SPT",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"bcast",eltList,false);    
+  }
+
+  std::vector<DOMElement*>::iterator itr = eltList.begin();  
+
+  for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
+    std::string latcFileBase = Dom::getTextContent(*itr);
+    std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
+    if ( latcFileBase.find("bcast") == 0 ) {
+      bcastFiles.push_back(latcFileFull);
+    } else if ( latcFileBase.find("latc") == 0 ) {
+      latcFiles.push_back(latcFileFull);
+    } else {
+      std::cout << "What is " << latcFileFull << std::endl;
+    }
+  }
+    
+  std::vector<std::string>::const_iterator itrF = bcastFiles.begin();
+  for (  itrF = bcastFiles.begin(); itrF != bcastFiles.end(); itrF++ ) {
+    if ( ! read(*itrF) ) {
+      std::cout << "Failed to read " << *itrF << std::endl;
+    }
+  }
+  for (  itrF = latcFiles.begin(); itrF != latcFiles.end(); itrF++ ) {
+    if ( ! read(*itrF) ) {
+      std::cout << "Failed to read " << *itrF << std::endl;
+    }
+  }
+    
+  return kTRUE;
+
+}
+
 Bool_t ConfigReader::read(const std::string& fileName) {
   XmlParser parser( true );
   DOMDocument* doc(0);
@@ -25,9 +90,10 @@ Bool_t ConfigReader::read(const std::string& fileName) {
   DOMElement* topElt = doc->getDocumentElement();
   
   std::vector<DOMElement*> eltList;
-  std::vector<DOMElement*>::iterator itr = eltList.begin();  
 
   Dom::getChildrenByTagName( topElt, "AEM", eltList );
+  std::vector<DOMElement*>::iterator itr = eltList.begin();  
+
   for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {
     if ( read_AEM(**itr) == kFALSE ) return kFALSE;    
   }
@@ -74,7 +140,7 @@ Bool_t ConfigReader::read_ARC(DOMElement& elem) {
     }  else if ( Dom::getTagName(*itr).find(pha) == ! std::string::npos ) {
       Int_t idx = getIndex(**itr,pha);
       ChannelKey keyPha(_iARC,idx);
-      if ( ! readUShort(**itr,keyPha,pha.c_str()) ) {
+      if ( ! readUShort_pha(**itr,keyPha,pha.c_str()) ) {
 	continue;
       }
     } else {
@@ -219,8 +285,9 @@ Bool_t ConfigReader::read_TDC(DOMElement& elem){
   ChannelKey key(_iTEM,_iSPT,_iTFE);
   DOMElement* tfe_dac = Dom::findFirstChildByName( &elem, "tfe_dac");
   std::vector<DOMElement*> eltList;  
+  //std::cout << Dom::getTagName(&elem) << std::endl;  
+  if ( tfe_dac == 0 ) return kTRUE;
   Dom::getChildrenByTagName( tfe_dac, "*", eltList );
-  //std::cout << Dom::getTagName(&elem) << std::endl;
   for ( std::vector<DOMElement*>::iterator itr = eltList.begin(); itr != eltList.end(); itr++ ) {
     if ( ! readUInt(**itr,key) ) {
       continue;
@@ -234,8 +301,8 @@ Bool_t ConfigReader::read_TCC(DOMElement& elem){
   ChannelKey key(_iTEM,_iTCC);  
   const std::string TRC("TRC");  
   std::vector<DOMElement*> eltList;
-  Dom::getChildrenByTagName( &elem, "*", eltList );
   //std::cout << Dom::getTagName(&elem) << std::endl;
+  Dom::getChildrenByTagName( &elem, "*", eltList );
   for ( std::vector<DOMElement*>::iterator itr = eltList.begin(); itr != eltList.end(); itr++ ) {
     if ( Dom::checkTagName(*itr,TRC) ) {
       if ( read_TRC(**itr) == kFALSE ) return kFALSE;    
@@ -284,7 +351,7 @@ Bool_t ConfigReader::getUShort(DOMElement& elem, UShort_t& val) {
   char** nullPtr(0);
   std::string str = Dom::getTextContent( &elem );
   // should add check
-  val = (UShort_t)(strtol(str.c_str(),nullPtr,0));
+  val = (UShort_t)(strtoul(str.c_str(),nullPtr,0));
   return kTRUE;
 }
 
@@ -292,7 +359,7 @@ Bool_t ConfigReader::getUInt(DOMElement& elem, UInt_t& val) {
   char** nullPtr(0);
   std::string str = Dom::getTextContent(&elem);
   // should add check
-  val = (UInt_t)strtol(str.c_str(),nullPtr,0);
+  val = (UInt_t)strtoul(str.c_str(),nullPtr,0);
   return kTRUE;
 }
 
@@ -300,7 +367,7 @@ Bool_t ConfigReader::getULong(DOMElement& elem, ULong64_t& val) {
   char** nullPtr(0);
   std::string str = Dom::getTextContent(&elem);
   // should add check
-  val = strtol(str.c_str(),nullPtr,0);
+  val = (ULong64_t)strtoull(str.c_str(),nullPtr,0);
   return kTRUE;
 }
 
@@ -314,6 +381,24 @@ Bool_t ConfigReader::readUShort(DOMElement& elem, const ChannelKey& key, const c
   }
   if (key.hasBCAST()) {
     reg->setAll(val);
+  } else {
+    reg->setVal(key,val);
+  }
+  return kTRUE;
+}
+
+Bool_t ConfigReader::readUShort_pha(DOMElement& elem, const ChannelKey& key, const char* bName) {  
+  const std::string tagName = bName == 0 ? Dom::getTagName(&elem) : bName;
+  ConfigBranchImpl<UShort_t>* reg = static_cast<ConfigBranchImpl<UShort_t>*>(m_config->branch(tagName));
+  UShort_t val(0);
+  if ( reg == 0 or ! getUShort(elem,val) ) {
+    return kFALSE;
+  }
+  if (key.hasBCAST()) {
+    for ( UInt_t garc(0); garc < 12; garc++ ) {
+      ChannelKey bcastkey(garc,key.index1());
+      reg->setVal(bcastkey,val);
+    }
   } else {
     reg->setVal(key,val);
   }
@@ -368,15 +453,15 @@ Bool_t ConfigReader::getSptId(DOMElement& elem, Int_t& id) {
   }
   static std::map<std::string,int> sptMap;
   if ( sptMap.size() == 0 ) {
-    sptMap["-x0"] = 0; sptMap["+x0"] = 9; sptMap["-y0"] = 18; sptMap["-y0"] = 27;
-    sptMap["-x1"] = 1; sptMap["+x0"] = 10; sptMap["-y0"] = 19; sptMap["-y0"] = 28;
-    sptMap["-x2"] = 2; sptMap["+x0"] = 11; sptMap["-y0"] = 20; sptMap["-y0"] = 29;
-    sptMap["-x3"] = 3; sptMap["+x0"] = 12; sptMap["-y0"] = 21; sptMap["-y0"] = 30;
-    sptMap["-x4"] = 4; sptMap["+x0"] = 13; sptMap["-y0"] = 22; sptMap["-y0"] = 31;
-    sptMap["-x5"] = 5; sptMap["+x0"] = 14; sptMap["-y0"] = 23; sptMap["-y0"] = 32;
-    sptMap["-x6"] = 6; sptMap["+x0"] = 15; sptMap["-y0"] = 24; sptMap["-y0"] = 33;
-    sptMap["-x7"] = 7; sptMap["+x0"] = 16; sptMap["-y0"] = 25; sptMap["-y0"] = 34;
-    sptMap["-x8"] = 8; sptMap["+x0"] = 17; sptMap["-y0"] = 26; sptMap["-y0"] = 35;
+    sptMap["+x0"] = 0; sptMap["+y0"] = 9; sptMap["-y0"] = 18; sptMap["-x0"] = 27;
+    sptMap["+x1"] = 1; sptMap["+y1"] = 10; sptMap["-y1"] = 19; sptMap["-x1"] = 28;
+    sptMap["+x2"] = 2; sptMap["+y2"] = 11; sptMap["-y2"] = 20; sptMap["-x2"] = 29;
+    sptMap["+x3"] = 3; sptMap["+y3"] = 12; sptMap["-y3"] = 21; sptMap["-x3"] = 30;
+    sptMap["+x4"] = 4; sptMap["+y4"] = 13; sptMap["-y4"] = 22; sptMap["-x4"] = 31;
+    sptMap["+x5"] = 5; sptMap["+y5"] = 14; sptMap["-y5"] = 23; sptMap["-x5"] = 32;
+    sptMap["+x6"] = 6; sptMap["+y6"] = 15; sptMap["-y6"] = 24; sptMap["-x6"] = 33;
+    sptMap["+x7"] = 7; sptMap["+y7"] = 16; sptMap["-y7"] = 25; sptMap["-x7"] = 34;
+    sptMap["+x8"] = 8; sptMap["+y8"] = 17; sptMap["-y8"] = 26; sptMap["-x8"] = 35;
   }
   id = sptMap[spt]; 
   return kTRUE;

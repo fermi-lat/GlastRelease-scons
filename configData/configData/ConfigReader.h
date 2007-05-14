@@ -48,6 +48,9 @@ public :
   virtual ~ConfigReader(){    
   }
 
+  
+  Bool_t readTopLvl(const std::string& fileName, const std::string& latcPath );
+
   Bool_t read(const std::string& fileName);
 
 protected:
@@ -72,6 +75,7 @@ protected:
   Bool_t getULong(DOMElement& elem, ULong64_t& val);
 
   Bool_t readUShort(DOMElement& elem, const ChannelKey& key, const char* bName = 0);
+  Bool_t readUShort_pha(DOMElement& elem, const ChannelKey& key, const char* bName = 0);
   Bool_t readUInt(DOMElement& elem, const ChannelKey& key, const char* bName = 0);
   Bool_t readULong(DOMElement& elem, const ChannelKey& key, const char* bName = 0);
 

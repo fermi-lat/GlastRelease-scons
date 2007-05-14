@@ -30,8 +30,8 @@ void LatConfig::initConfig() {
   ChannelKey temSize(16,1,1,1);
   ChannelKey sptSize(16,36,1,1);
   ChannelKey tfeSize(16,36,24,1);
-  ChannelKey tccSize(16,9,1,1);
-  ChannelKey trcSize(16,9,8,1);
+  ChannelKey tccSize(16,8,1,1);
+  ChannelKey trcSize(16,8,9,1);
 
   ChannelKey cccSize(16,4,1,1);
   ChannelKey crcSize(16,4,4,1);
