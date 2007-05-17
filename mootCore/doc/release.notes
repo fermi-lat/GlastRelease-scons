@@ -6,6 +6,9 @@
 
    *  EOH  *
 
+   v1r3   17-May-2007  jrb Add a pile of new services in support of use of
+                           intent files and tracking all the way back to
+                           ancillary files.
    v1r2   9-Feb-2007  jrb 1. Add query to fetch Config info by key
                           2. Several changes to mood*.xml to eliminate
                              mention of unused fields in Parameters and
