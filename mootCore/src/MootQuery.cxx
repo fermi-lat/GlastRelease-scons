@@ -81,12 +81,111 @@ namespace MOOT {
     }
   }
 
-  unsigned MootQuery::getAncillaryClasses(std::vector<std::string>& names) {
+  AncAliasInfo* MootQuery::getAncAliasInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE ancillary_aliases_key='");
+    where += keyStr + std::string("'");
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(5);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("name");
+    getCols.push_back("aclass_fk");
+    getCols.push_back("ancillary_fk");
+    getCols.push_back("last_modified_time");
+    getCols.push_back("last_modifier");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Ancillary_aliases", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getAncAliasInfo, key = " << key
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    // translate anc class key to anc class name
+    std::string ancClassName =
+      DbUtil::getColumnValue(m_rdb, "Ancillary_class", "name", 
+                             "Ancillary_class_key", fields[1]);
+    return new AncAliasInfo(keyStr, fields[0], ancClassName, fields[1],
+                            fields[2],fields[3],fields[4]);
+  }
+
+
+  unsigned MootQuery::getAncClasses(std::vector<std::string>& names) {
     std::string where("");
     names.clear();
     int n = DbUtil::getAllWhere(m_rdb, "Ancillary_class", "name", where,
                                 names);
     return (n >= 0) ? 1 : 0;
+  }
+
+  AncInfo* MootQuery::getAncInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE Ancillary_key='");
+    where += keyStr + std::string("'");
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(10);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("class_fk");
+    getCols.push_back("instrument");
+    getCols.push_back("source");
+    getCols.push_back("source_fmt");
+    getCols.push_back("GMT_create_time");
+    getCols.push_back("creation_time");
+    getCols.push_back("creator");
+    getCols.push_back("quality");
+    getCols.push_back("description");
+    getCols.push_back("status");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Ancillary", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getAncInfo, key = " << key
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    // translate anc class key to anc class name
+    std::string ancClassName =
+      DbUtil::getColumnValue(m_rdb, "Ancillary_class", "name", 
+                             "Ancillary_class_key", fields[0]);
+    return new AncInfo(keyStr, ancClassName, fields[0], fields[1],
+                       fields[2],fields[3],fields[4], fields[5],
+                       fields[6],fields[7], fields[8],fields[9]);
   }
 
   bool MootQuery::getConfigFmxPaths(unsigned configKey,
@@ -640,9 +739,64 @@ namespace MOOT {
   }
 
   unsigned MootQuery::getParameterClasses(std::vector<std::string>& names) {
+    return getParmClasses(names);
+  }
+  unsigned MootQuery::getParmClasses(std::vector<std::string>& names) {
     int nRet = DbUtil::getAllWhere(m_rdb, "Parameter_class", "name",
                                    "", names);
     return nRet;
+  }
+
+  ParmInfo* MootQuery::getParmInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE parm_key='");
+    where += keyStr + std::string("'");
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(10);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("class_fk");
+    getCols.push_back("vote_fk");
+    getCols.push_back("instrument");
+    getCols.push_back("source");
+    getCols.push_back("source_fmt");
+    getCols.push_back("creation_time");
+    getCols.push_back("creator");
+    getCols.push_back("quality");
+    getCols.push_back("description");
+    getCols.push_back("status");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Parameters", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getParmInfo, key = " << key
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    // translate parm class key to parm class name
+    std::string parmClassName =
+      DbUtil::getColumnValue(m_rdb, "Parameter_class", "name", 
+                             "Parameter_class_key", fields[0]);
+    return new ParmInfo(keyStr, parmClassName, fields[0], fields[1],
+                       fields[2],fields[3],fields[4], fields[5],
+                       fields[6],fields[7], fields[8],fields[9]);
   }
 
   unsigned MootQuery::getPrecincts(std::vector<std::string>& names) {
@@ -653,9 +807,103 @@ namespace MOOT {
     return (n >= 0) ? 1 : 0;
   }
 
-  unsigned MootQuery::listAncillaryAliasKeys(std::vector<unsigned>& keys,
-                                             const std::string& aClass,
-                                             const std::string& aliasName) {
+  VoteAliasInfo* MootQuery::getVoteAliasInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE vote_aliases_key='");
+    where += keyStr + std::string("'");
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(5);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("name");
+    getCols.push_back("precinct_fk");
+    getCols.push_back("vote_fk");
+    getCols.push_back("last_modified_time");
+    getCols.push_back("last_modifier");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Vote_aliases", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getVoteAliasInfo, key = " << key
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    // translate precinct key to precinct name
+    std::string precinctName =
+      DbUtil::getColumnValue(m_rdb, "Precincts", "name", 
+                             "precinct_key", fields[1]);
+    return new VoteAliasInfo(keyStr, fields[0], precinctName, fields[1],
+                            fields[2],fields[3],fields[4]);
+  }
+
+  VoteInfo* MootQuery::getVoteInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE vote_key='");
+    where += keyStr + std::string("'");
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(7);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("precinct_fk");
+    getCols.push_back("instr");
+    getCols.push_back("source");
+    getCols.push_back("creation_time");
+    getCols.push_back("creator");
+    getCols.push_back("description");
+    getCols.push_back("status");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Votes", getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getVoteInfo, key = " << key
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    // translate precinct key to precinct name
+    std::string precinctName =
+      DbUtil::getColumnValue(m_rdb, "Precincts", "name", 
+                             "Precicnt_key", fields[0]);
+    return new VoteInfo(keyStr, precinctName, fields[0], fields[1],
+                       fields[2],fields[3],fields[4], fields[5],
+                        fields[6]);
+  }
+
+  unsigned MootQuery::listAncAliasKeys(std::vector<unsigned>& keys,
+                                       const std::string& aClass,
+                                       const std::string& aliasName) {
     std::string where("");
     static std::string star("*");
     if (aClass != star) {
@@ -682,11 +930,11 @@ namespace MOOT {
 
   }
 
-  unsigned MootQuery::listAncillaryKeys(std::vector<unsigned>& keys,
-                                        const std::string& aClass,
-                                        const std::string status,
-                                        const std::string quality,
-                                        const std::string& instr) {
+  unsigned MootQuery::listAncKeys(std::vector<unsigned>& keys,
+                                  const std::string& aClass,
+                                  const std::string status,
+                                  const std::string quality,
+                                  const std::string& instr) {
     std::string where("");
     static std::string star("*");
     if (aClass != star) {
@@ -875,9 +1123,7 @@ namespace MOOT {
         DbUtil::getColumnWhere(m_rdb, "Ancillary_aliases", "ancillary_fk",
                                where);
       ancKeys.push_back(ancKey);
-
     }
-
     return;
   }
 
