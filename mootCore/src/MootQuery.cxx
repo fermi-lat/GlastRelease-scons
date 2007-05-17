@@ -8,6 +8,7 @@
 #include "mootCore/MoodConnection.h"
 #include "mootCore/DbUtil.h"
 #include "rdbModel/Rdb.h"
+#include "rdbModel/Tables/Table.h"
 #include "rdbModel/Db/Connection.h"
 #include "rdbModel/Db/ResultHandle.h"
 #include "facilities/Util.h"
@@ -53,7 +54,8 @@ namespace MOOT {
   }
 
   int MootQuery::classKey(const std::string& table, const std::string& name) {
-    std::string getCol = table + "_key";
+    //    std::string getCol = table + "_key";
+    std::string getCol = m_rdb->getTable(table)->getPrimaryKeyCol();
     std::string keyStr;
     try {
       keyStr = DbUtil::getColumnValue(m_rdb, table, getCol, "name", name);
@@ -70,7 +72,8 @@ namespace MOOT {
   std::string MootQuery::classStr(const std::string& table, unsigned key) {
     std::string keyStr;
     facilities::Util::utoa(key, keyStr);
-    std::string keyCol = table + "_key";
+    //    std::string keyCol = table + "_key";
+    std::string keyCol = m_rdb->getTable(table)->getPrimaryKeyCol();
     try {
       return DbUtil::getColumnValue(m_rdb, table, "name", keyCol, keyStr);
     }
