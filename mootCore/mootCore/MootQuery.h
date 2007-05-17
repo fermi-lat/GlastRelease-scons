@@ -51,14 +51,23 @@ namespace MOOT {
       return classStr("FSW_class", key);
     }
 
-    unsigned getAncillaryClasses(std::vector<std::string>& names);
+    /** Store everything of interest about this row in AncillaryAlias
+        table in AncAliasInfo structure.
+        @return 0 if no row exists with this key;  otherwise ptr
+         to filled structure.  Caller is responsible for deleting.
+     */
+    AncAliasInfo* getAncAliasInfo(unsigned key);
+
+    unsigned getAncClasses(std::vector<std::string>& names);
+
+    /** Store everything of interest about this row in Ancillary
+        table in AncInfo structure.
+        @return 0 if no row exists with this key; otherwise ptr
+         to filled structure.  Caller is responsible for deleting.
+     */
+    AncInfo* getAncInfo(unsigned key);
 
     // **TODO**
-    // unsigned getAncillaryInfo(unsigned key, AncillaryInfo& info);
-    // unsigend getAncillaryAliasInfo(unsigned key, AncillaryAliasInfo& info);
-    // unsigned getParamInfo(unsigned key, ParamInfo& info);
-    // unsigned getVoteInfo(unsigned key, VoteInfo& info);
-    // unsigend getVoteAliasInfo(unsigned key, VoteAliasInfo& info);
 
 
     /**
@@ -193,30 +202,42 @@ namespace MOOT {
     bool getLatcSrc(unsigned latcMasterKey,
                     std::vector<FileDescrip>& sources);
 
+    /** Store everything of interest about this row in Parameters
+        table in Info structure.
+        @return 0 if no row exists with this key; 1 otherwise
+     */
+    ParmInfo* getParmInfo(unsigned key);
 
 
-    // Fill supplied argument with parameter class names. Return count
+    /// Fill supplied argument with parameter class names. Return count
+    unsigned getParmClasses(std::vector<std::string>& names);
+
+    /// Old name for getParmClassees
     unsigned getParameterClasses(std::vector<std::string>& names);
 
     unsigned getPrecincts(std::vector<std::string>& names);
+
+    VoteAliasInfo* getVoteAliasInfo(unsigned key);
+
+    VoteInfo* getVoteInfo(unsigned key);
 
     /**
        Return ancillary alias keys satisfying specified conditions on fields
        in Ancillary_alias table.  "*" means "don't cut on this condition"
      */
-    unsigned listAncillaryAliasKeys(std::vector<unsigned>& keys,
-                                    const std::string& aClass="*",
-                                    const std::string& aliasName="*");
+    unsigned listAncAliasKeys(std::vector<unsigned>& keys,
+                              const std::string& aClass="*",
+                              const std::string& aliasName="*");
 
     /**
        Return ancillary keys satisfying specified conditions on fields
        in Ancillary table.  "*" means "don't cut on this condition"
      */
-    unsigned listAncillaryKeys(std::vector<unsigned>& keys,
-                               const std::string& aClass="*",
-                               const std::string status="CREATED",
-                               const std::string quality="PROD",
-                               const std::string& instr="LAT");
+    unsigned listAncKeys(std::vector<unsigned>& keys,
+                         const std::string& aClass="*",
+                         const std::string status="CREATED",
+                         const std::string quality="PROD",
+                         const std::string& instr="LAT");
 
     /**
        Return list of keys for all good Configs (by default) or all
