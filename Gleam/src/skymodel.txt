@@ -2,10 +2,11 @@
 // Define the Sky
 // *** SKY MODEL SOURCE LIST ***
 //
-//
+//  $Header$
 // assembled by TG on 11 Jan 2007 from obssim2 (Nicola)
 // /afs/slac.stanford.edu/g/glast/ground/PipelineConfig/SC/skymodel/SC2_20070319
 //    adapted from source_names.txt & xml_files.txt
+//  update for SC2_20070404
 
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/blazars/SC_faint_BLLacs.xml"};
 FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/blazars/SC_faint_FSRQs.xml"};
@@ -51,30 +52,30 @@ FluxSvc.source_lib    += {"$(SKYMODEL_DIR)/mq/mq-obssim2.xml"};
 
 
 // BLLAC:
-FluxAlg.sources   += {"all_BLLacs"};
-FluxAlg.sources   += {"all_weak_bllacs"};
+FluxAlg.sources       += {"all_BLLacs"};
+FluxAlg.sources       += {"all_weak_bllacs"};
 
 // Flat Spectrum Radio Quasars (FSRQ):
-FluxAlg.sources   += {"all_FSRQs"};
-FluxAlg.sources   += {"all_weak_fsrqs"};
+FluxAlg.sources       += {"all_FSRQs"};
+FluxAlg.sources       += {"all_weak_fsrqs"};
 
 // EGRET BLAZARS:
-FluxAlg.sources   += {"all_blazars"};
+FluxAlg.sources       += {"all_blazars"};
 
 // BLAZARS POPULATION:
-FluxAlg.sources   += {"SC_blazar_population"};
+FluxAlg.sources       += {"SC_blazar_population"};
 
 // High Latitude Clouds:
-FluxAlg.sources   += {"SC2_HighLatClouds"};
+FluxAlg.sources       += {"SC2_HighLatClouds"};
 
 // Clusters of galaxies: (Coma, Ophiuchus (Oph), Perseus, Virgo)
-FluxAlg.sources   += {"All_cluster"};
+FluxAlg.sources       += {"All_cluster"};
 
 // Dark Matter:
-//FluxAlg.sources   += {"lcc2_GC"};
-FluxAlg.sources   += {"lcc2_halo"};
-FluxAlg.sources   += {"generic_extragalactic"};
-FluxAlg.sources   += {"satellites"};
+FluxAlg.sources       += {"lcc2_GC"};
+FluxAlg.sources       += {"lcc2_halo"};
+FluxAlg.sources       += {"generic_extragalactic"};
+FluxAlg.sources       += {"satellites"};
 
 // IMBH
 FluxAlg.sources   += {"imbh_all"};
