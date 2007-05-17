@@ -374,38 +374,38 @@ int main(int nargs, char**)    {
   std::cout << "***** New queries (10 May 2007) *******" << std::endl;
 
   keys.clear();
-  q.listAncillaryAliasKeys(keys);
+  q.listAncAliasKeys(keys);
 
-  std::cout << "listAncillaryAliasKeys(keys) returned " << keys.size() 
+  std::cout << "listAncAliasKeys(keys) returned " << keys.size() 
             << " key(s)" << std::endl;
 
   keys.clear();
-  q.listAncillaryAliasKeys(keys, "ACD_PedestalCalibration");
+  q.listAncAliasKeys(keys, "ACD_PedestalCalibration");
 
   std::cout << 
-    "listAncillaryAliasKeys(keys,'ACD_PedestalCalibration') returned " 
+    "listAncAliasKeys(keys,'ACD_PedestalCalibration') returned " 
             << keys.size() 
             << " key(s)" << std::endl;
 
   keys.clear();
-  q.listAncillaryAliasKeys(keys, "ACD_HldCalibration");
+  q.listAncAliasKeys(keys, "ACD_HldCalibration");
 
   std::cout << 
-    "listAncillaryAliasKeys(keys,'ACD_HldCalibration') returned " 
+    "listAncAliasKeys(keys,'ACD_HldCalibration') returned " 
             << keys.size() 
             << " key(s)" << std::endl;
 
   keys.clear();
   try {
-    q.listAncillaryAliasKeys(keys, "bad_class_name");
+    q.listAncAliasKeys(keys, "bad_class_name");
     std::cout << 
-      "listAncillaryAliasKeys(keys,'bad_class_name') returned " 
+      "listAncAliasKeys(keys,'bad_class_name') returned " 
               << keys.size() 
               << " key(s)" << std::endl;
   }
   catch (std::exception ex) {
     std::cerr << 
-      "listAncillaryAliasKeys(keys,'bad_class_name') threw an exception " 
+      "listAncAliasKeys(keys,'bad_class_name') threw an exception " 
               << std::endl;
   }
 
@@ -453,7 +453,7 @@ int main(int nargs, char**)    {
   std::cout << std::endl;
 
   names.clear();
-  q.getAncillaryClasses(names); 
+  q.getAncClasses(names); 
 
   std::cout << names.size() << " anc. class names found.  They are:" << std::endl;
   for (unsigned ix = 0; ix < names.size(); ix++) {
