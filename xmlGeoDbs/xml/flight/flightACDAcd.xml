@@ -201,14 +201,14 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR0EdgeLesser" 
      XREF="sideTileTransLesserOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight0"
+     ZREF="sideTileHeight0Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 <box name="sideTileR0Mid" 
      XREF="sideTileTransMidOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight0"
+     ZREF="sideTileHeight0Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -218,18 +218,19 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR0EdgeGreater" 
      XREF="sideTileTransGreaterOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight0"
+     ZREF="sideTileHeight0Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
 
 
+<!--  will become     XREF="sideTileR1TransLesserOp"   -->
 <!-- 3 boxes for side row 1 -->
 <box name="sideTileR1EdgeLesser" 
-     XREF="sideTileTransLesserOp"
+     XREF="sideTileR1TransLesserOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight1"
+     ZREF="sideTileHeight1Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -239,7 +240,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR1Mid" 
      XREF="sideTileTransMidOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight1"
+     ZREF="sideTileHeight1Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -249,7 +250,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR1EdgeGreater" 
      XREF="sideTileTransGreaterOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight1"
+     ZREF="sideTileHeight1Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -259,7 +260,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR2EdgeLesser" 
      XREF="sideTileTransLesserOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight2"
+     ZREF="sideTileHeight2Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -268,7 +269,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR2Mid" 
      XREF="sideTileTransMidOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight2"
+     ZREF="sideTileHeight2Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
@@ -277,13 +278,15 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <box name="sideTileR2EdgeGreater" 
      XREF="sideTileTransGreaterOp"
      YREF="tileThicknessOp"
-     ZREF="sideTileHeight2"
+     ZREF="sideTileHeight2Op"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
+<!-- will become sideTileR3TransOp  -->
+<!-- was XREF="ACDTotalTransSideOp" -->
 <box name="sideTileR3" 
-     XREF="ACDTotalTransSideOp"
+     XREF="sideTileR3TransOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight3Op"
      materialREF="tileMat"
@@ -469,33 +472,41 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 </stackX>
 
 <!-- Stack up the rows in Z for face 2 -->
+
+<!-- instead, position each row independently in flightSection.  Ugh -->
 <stackZ name="TileFace2or3" >
-  <axisPos volume="sideTileRowR3">
+  <axisPos volume="sideTileRowR3" dYREF="ACDSideRow_dtn" >
     <idField name="fRow" value="3" />
   </axisPos>
-  <axisPos volume="sideTileRow2Face2" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow2Face2"  dYREF="ACDSideRow_dt" 
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="2" />
   </axisPos>
-  <axisPos volume="sideTileRow1Face2" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow1Face2" dYREF="ACDSideRow_dtn"  
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="1" />
   </axisPos>
-  <axisPos volume="sideTileRow0Face2" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow0Face2"  dYREF="ACDSideRow_dt"
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="0" />
   </axisPos>
 </stackZ>
 
 <!-- Same for faces 4 and 1 -->
 <stackZ name="TileFace4or1" >
-  <axisPos volume="sideTileRowR3">
+  <axisPos volume="sideTileRowR3" dYREF="ACDSideRow_dt">
     <idField name="fRow" value="3" />
   </axisPos>
-  <axisPos volume="sideTileRow2Face4" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow2Face4" dYREF="ACDSideRow_dtn" 
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="2" />
   </axisPos>
-  <axisPos volume="sideTileRow1Face4" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow1Face4" dYREF="ACDSideRow_dt" 
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="1" />
   </axisPos>
-  <axisPos volume="sideTileRow0Face4" gapREF="sideVerticalGap" >
+  <axisPos volume="sideTileRow0Face4" dYREF="ACDSideRow_dtn" 
+           gapREF="sideVerticalGap">
     <idField name="fRow" value="0" />
   </axisPos>
 </stackZ>

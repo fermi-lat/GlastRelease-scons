@@ -342,6 +342,77 @@
           </minus>
         </const>
 
+<!-- compute Z displacement for each side tile row independently -->
+        <const name="tileSideR0_dz">
+          <notes>displacement of top row of side tiles rel. to Ritz origin.
+            Compute relative to ACDTop_d.  Find coordinate of top of
+            ACD side, then subtract half R0 height
+          </notes>
+          <minus>
+            <add>
+              <refer refTo="ACDTop_d" />
+              <refer refTo="sideOverlap"/>
+              <half>
+                <refer refTo="ACDTop_z"/>
+              </half>
+            </add>               
+            <half>
+               <refer refTo="sideTileHeight0" />
+            </half>
+          </minus>
+        </const>
+
+        <const name="tileSideR1_dz">
+          <notes>Compute from displacement of R0</notes>
+          <minus>
+            <refer refTo="tileSideR0_dz" />
+            <add>
+              <half>
+                <add>
+                  <refer refTo="sideTileHeight0" />
+                  <refer refTo="sideTileHeight1" />
+                </add>
+              </half>
+              <refer refTo="sideVerticalGap" />
+            </add>
+          </minus>
+        </const>
+
+        <const name="tileSideR2_dz">
+          <notes>Compute from displacement of R1</notes>
+          <minus>
+            <refer refTo="tileSideR1_dz" />
+            <add>
+              <half>
+                <add>
+                  <refer refTo="sideTileHeight1" />
+                  <refer refTo="sideTileHeight2" />
+                </add>
+              </half>
+              <refer refTo="sideVerticalGap" />
+            </add>
+          </minus>
+        </const>
+
+        <const name="tileSideR3_dz">
+          <notes>Compute from displacement of R2</notes>
+          <minus>
+            <refer refTo="tileSideR2_dz" />
+            <add>
+              <half>
+                <add>
+                  <refer refTo="sideTileHeight2" />
+                  <refer refTo="sideTileHeight3" />
+                </add>
+              </half>
+              <refer refTo="sideVerticalGap" />
+            </add>
+          </minus>
+        </const>
+
+
+
+
 
         <const name="ribbonsSide_dz">
           <notes>displacement in z of side ribbons rel. to Ritz origin.
@@ -361,12 +432,14 @@
         <const name="ribbonsSide_dt">
           <notes>Transverse displacement from origin of a side's worth
                of ribbons.  Place them in an idealized position right
-               next to side tiles </notes>
+               next to side tiles.  Use variable 'tileSideThickness'
+               to compute.  Thickness of side is not necessarily
+               equal to thickness of a single tile </notes>
           <minus>
             <refer refTo="tileSide_dt" />
             <half>
               <add>
-                <refer refTo="tileThickness" />
+                <refer refTo="tileSideThickness" />
                 <refer refTo="ribbonThickness" />
               </add>
             </half>

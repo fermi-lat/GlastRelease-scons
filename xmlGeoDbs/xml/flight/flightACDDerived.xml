@@ -10,6 +10,16 @@
     <refer refTo="topTileXEdge_l" />
   </const>
 
+  <const name="sideTileR1TransLesser">
+    <notes>Side rows 1 and 3 are wider </notes>
+    <add>
+      <refer refTo="sideTileTransLesser" />
+      <refer refTo="tileThickness" />
+      <refer refTo="tileThickness" />
+      <refer refTo="sideTileOverlapClearance" />
+    </add>
+  </const>
+
   <const name="sideTileTransGreater">
     <notes>Transverse dimension of one edge side tile tile per side: 
            column 0 for -X and +Y side (faces 1 and 4); column 4 for 
@@ -26,6 +36,24 @@
     <notes>Transverse dimension of side tiles in columns 1,2 and 3. </notes>
     <refer refTo="topTileXCentral_l" />
   </const>  
+
+  <const name="tileSideThickness" >
+    <notes>Thickness of ACD side depends on configuration of tiles.
+           For now (May 2007) it's just double thickness of a single side
+           tile
+    </notes>
+    <add>
+      <refer refTo="tileThickness" />
+      <refer refTo="tileThickness" />
+    </add>
+  </const>
+
+  <const name="tileThickness_n" >
+    <notes>May need to displace by neg. tile thickness</notes>
+    <uminus>
+      <refer refTo="tileThickness" />
+    </uminus>
+  </const>
 
   <const name="ACDSideSupportThick">
     <notes>Thickness of core + face sheets for side support</notes>
@@ -101,6 +129,17 @@
     </add>
   </const>
 
+  <const name="sideTileR3Trans" >
+    <notes>Modeled Row 3 (like Row 1) is extra long since it's further 
+           from center than it should be</notes>
+    <add>
+      <refer refTo="ACDTotalTransSide" />
+      <refer refTo="tileThickness" />
+      <refer refTo="tileThickness" />
+      <refer refTo="sideTileOverlapClearance" />
+    </add>
+  </const>
+
 <!-- Scaled version of above for operating temp. -->
   <const name="ACDTotalTransSideOp">
     <notes>Scaled for operating temperature 
@@ -110,6 +149,17 @@
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
+
+  <const name="sideTileR3TransOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR3Trans" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+
 
 
 <!-- Scale tile thicknesses for operating temperature -->
@@ -142,6 +192,38 @@
       <refer refTo="tileThickness" />
     </minus>
   </const>
+
+  <const name="ACDSideTileFace_dt">
+    <notes>This is invented to go along with simplified model of shingling.
+           Row 0 is at correct displacement.  Row 2 also uses it.  But rows
+          1 and 3 are further out by value of tile thickness. Hence 
+          displacement of box containing sides is greater than sideTileR0_dt
+          by 1/2 tile thickness
+     </notes>
+     <add>
+       <refer refTo="sideTileR0_dt" />
+       <half>
+         <refer refTo="tileThickness" />
+       </half>
+     </add>
+  </const>
+
+  <const name="ACDSideRow_dt" >
+    <notes>Side tile rows 1 and 3 are displaced outwards relative to 
+           box containing all side tiles.  For +Y, +X sides use
+           pos disp. for rows 1 and 3, neg. for rows 0 and 2</notes>
+    <half>
+      <refer refTo="tileThickness" />
+    </half>
+  </const>    
+
+  <const name="ACDSideRow_dtn" >
+    <notes>Side tile rows 0 and 2 are displaced inwards relative to 
+           box containing all side tiles</notes>
+    <uminus>
+      <refer refTo="ACDSideRow_dt" />
+    </uminus>
+  </const>    
 
   <const name="ACDTopTransverse" >
     <notes>Transverse dimension of envelope which will contain
@@ -281,6 +363,15 @@
     </notes>
     <mul>
       <refer refTo="sideTileTransLesser" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+  <const name="sideTileR1TransLesserOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR1TransLesser" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
@@ -564,12 +655,13 @@
   </const>
  
 <!-- For current approximate model, transverse displacement of a
-      side ACD face = transverse displacement of row 0. -->
+      side ACD face = transverse displacement of outer edge of row 0. -->
   <const name="tileSide_dt">
     <notes>Transverse (perpendicular to plane of face) displacement
            of side face of ACD</notes>
-    <refer refTo="sideTileR0_dt" />
+    <refer refTo="ACDSideTileFace_dt" />
   </const>
+
 
   <const name="tileSide_dtn">
     <notes>Transverse (perpendicular to plane of face) displacement
@@ -579,6 +671,52 @@
     </uminus>
   </const>
 
+<!-- Use above displacement for rows 0 and 2. 
+   For 1 and 3 add on tile thickness and the standard gap between
+   overlapped tiles -->
+  <const name="tileSideR1R3_dt">
+    <notes>Transverse (perpendicular to plane of face) displacement
+           of rows 1 and 3 of side face of ACD</notes>
+    <add>
+      <refer refTo="tileSide_dt" />
+      <refer refTo="tileThickness" />
+      <refer refTo="sideTileOverlapClearance" />
+    </add>
+  </const>
+
+  <const name="tileSideR1R3_dtn">
+    <notes>Transverse (perpendicular to plane of face) displacement
+           of rows 1 and 3 of side face of ACD, neg sides.</notes>
+    <uminus>
+      <refer refTo="tileSideR1R3_dt" />
+    </uminus>
+  </const>
+
+  <const name="ACDSideR1R3Dovetail_d" >
+    <notes>Side shift is different for tile rows 1 and 3 since 
+           they have an extra 2*tileThickness length. Extra length
+           tends to shift back towards center. Use this for
+           faces 2 and 3.</notes>
+    <minus>
+      <refer refTo="ACDSideDovetail_d" />
+      <add>
+        <refer refTo="tileThickness" />
+        <half>
+          <refer refTo="sideTileOverlapClearance" />
+        </half>
+      </add>
+    </minus>
+  </const>
+
+  <const name="ACDSideR1R3Dovetail_dn" >
+    <notes>Side shift is different for tile rows 1 and 3 since 
+           they have an extra 2*tileThickness length. Extra length
+           tends to shift back towards center. Use this for
+           faces 1 and 4</notes>
+    <uminus>
+      <refer refTo="ACDSideR1R3Dovetail_d" />
+    </uminus>
+  </const>
 <!-- 
     screws in bottom side tiles come in groups of 4, the vertices of
     squares 5 cm on a side.  The squares are evenly spaced across

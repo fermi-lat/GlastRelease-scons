@@ -52,32 +52,42 @@ Last revised Nov. 2005 (swap col for row; value now 2.6)</prim>
   <prim name="topTileInnerZGap" value="2.6">Gap in Z between top tile
 in row. 3  and its neighbor in rows. 2 and 4. 
 Last revised Nov. 2005 (swap col for row; value now 2.6)</prim>
-
-  <prim name="sideTileR0_dt" value="839.97">Transverse displacement
-   of top row of side tiles, last revised Nov 2005 from new 3-d model</prim>
+  <prim name="sideTileOverlapClearance" value="2.6" >Standard
+   overlap clearance, now (May, 2007)used for side tiles </prim>
 
 <prim name="topTileBentZ" value="50.0">Z dimension for extra box stuck onto
  the bottom of top tiles in rows 0 and 4 to simulate a bent tile. </prim>
  
 <!-- side tile stuff -->
+<!-- use old sideVerticalGap variable instead
+  <prim name="sideTileZOverlap" value="20.0"> Overlap projected onto Z
+     axis of side tiles in adjacent rows.  Real tiles are slanted and
+     overlap in direction of slant is greater.  Simulated tiles are vertical
+  </prim>
+-->
+  <prim name="sideTileR0_dt" value="839.97">Transverse displacement
+   of top row of side tiles, last revised Nov 2005 from new 3-d model</prim>
   <prim name="sideTileHeight0" value="366">Height of top row 
 of side tiles.  From 3-d model (6-23-03)</prim>
-  <prim name="sideTileHeight1" value="199.46">Height of 2nd row 
-of side tiles as simulated (no slant; no gaps or overlaps between
-rows).</prim>
-  <prim name="sideTileHeight2" value="150.0">Height of 3rd row 
-of side tiles as simulated (no slant; no gaps or overlaps between rows. </prim>
-  <prim name="sideTileHeight3" value="135.35">Height of 4th row 
-of side tiles as simulated (no overlaps or gaps). True height from
-3-d model 6-23-03 would be 155 </prim>
+  <prim name="sideTileHeight1" value="220.0">Height of 2nd row 
+of side tiles as simulated (no slant.  As of 10 May 2007
+ adjacent rows have different transverse displacements and overlap.
+(old value was 199.24)</prim>
+  <prim name="sideTileHeight2" value="175.0">Height of 3rd row 
+of side tiles as simulated (no slant; as of 10 May overlaps between rows. 
+</prim>
+  <prim name="sideTileHeight3" value="154.0">Height of 4th row 
+of side tiles as simulated (no slant). This is approximate  height from
+3-d model of 6-23-03  </prim>
 
   <prim name="sideOverlap" value="30.0">Distance side tiles
 extend above topACD tile surface --- used for positioning.
 (7/28/03) 3-d model 6-23-03 essentially agrees with this.
 (11/2205) So does latest 3-d model</prim>
 
-  <prim name="sideVerticalGap" value="0.0">Vertical gap
-between (rows of?) side tiles</prim>
+<prim name="sideVerticalGap" value="-20.0">Vertical gap
+between (rows of?) side tiles.  As of 10 May 2007, this is an
+overlap, hence negative</prim> 
   <prim name="sideHorizontalGap" value="2.0">Horizontal
 gap at the corners between adjacent columns of side tiles  (July 03; revised
 according to 3-d model 6-23-03, from old value of 3.0)
