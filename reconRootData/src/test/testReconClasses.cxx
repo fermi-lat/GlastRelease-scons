@@ -54,7 +54,7 @@ int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
 }
 
 /// Read in the ROOT file just generated via the write method
-int read(char* fileName, int numEvents) {
+int read(const char* fileName, int numEvents) {
     
     TFile *f = new TFile(fileName, "READ");
 
@@ -158,7 +158,7 @@ int read(char* fileName, int numEvents) {
 }
 
 /// Create a new ROOT file
-int write(char* fileName, int numEvents) {
+int write(const char* fileName, int numEvents) {
     
     Int_t buffer = 64000 ;
     Int_t splitLevel = 1 ;
@@ -224,7 +224,7 @@ int main(int argc, char **argv) {
     std::string fileStr("$(TESTDATAROOT)/recon-v9r11-v5r10.root");
     facilities::Util::expandEnvVar(&fileStr);
     //char * fileName = "recon-v9r11-v5r10.root" ;
-    char *fileName = fileStr.c_str();
+    const char *fileName = fileStr.c_str();
     int numEvents = 10 ;
     
     TString writeString("write") ;

@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r13p2   19-May-07  : HMK patch for windows test program
 v9r13p1   15-Apr-07  : HMK patch to use env variable to find test file
 v9r13     21-Mar-07  ; DC  review test strategy so to check schema evolution
                            and better handle random numbers.
