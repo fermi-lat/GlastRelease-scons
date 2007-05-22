@@ -15,9 +15,11 @@ class TrgConfigDB:public TrgConfig{
  public:
   /// Constructor with the DB interface implementation as the argument
   TrgConfigDB(LatcDB* lc);
+  /// Virtual destructor
+  virtual ~TrgConfigDB(){}
   /// Check if we need to parse a new object, parse it if necessary
-  int updateKey(unsigned key);
- private:
+  bool updateKey(const unsigned int key);
+ protected:
   LatcDB* m_lc;
   unsigned m_key;
 };

@@ -4,13 +4,14 @@
 
 TrgConfigDB::TrgConfigDB(LatcDB* lc):m_lc(lc),m_key(0){}
 
-int TrgConfigDB::updateKey(unsigned key){
-  int retval=0;
+bool TrgConfigDB::updateKey(const unsigned int key){
+  int retval=false;
   if (key!=m_key){
+    retval=true;
     std::string bcast=m_lc->getFilename("latc_DFT",key);
     TrgConfigParser p;
-    retval=p.parse(this,bcast.c_str());
-    assert(retval==0);
+    int error=p.parse(this,bcast.c_str());
+    assert(error==0);
     m_key=key;
   }
   return retval;

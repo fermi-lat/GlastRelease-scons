@@ -5,6 +5,9 @@ author M. Kocian <kocian@slac.stanford.edu>
 
 branches configData cmt doc src
 
+use GlastSvc
+use lsfData
+use LdfEvent
 use GlastPolicy v*
 use commonRootData v*
 use xmlBase v* 
@@ -18,7 +21,7 @@ apply_pattern package_headers
 
 library configData \
         gem/*.cxx base/*.cxx db/*.cxx *.cxx
-
+#macro_append ROOT_linkopts " -L/u/ec/kocian/data/glnew/external/ROOT/v5.14.00d/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -pthread -lm -ldl -rdynamic "
 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 

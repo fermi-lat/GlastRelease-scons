@@ -37,20 +37,24 @@ class TrgConfig{
 public:
   /// Default constructor
   TrgConfig();
+  /// Virtual destructor
+  virtual ~TrgConfig(){}
   /// Return the window parameter object
-  TrgWindowParams* windowParams(){return &_twp;}
+  const TrgWindowParams* windowParams() const {return &_twp;}
   /// Return the periodic trigger object
-  TrgPeriodicTrigger* periodicTrigger(){return &_tpt;}
+  const TrgPeriodicTrigger* periodicTrigger() const {return &_tpt;}
   /// Return the lookup table object
-  TrgConfLUT* lut(){return &_lut;}
+  const TrgConfLUT* lut() const {return &_lut;}
   /// Return the trigger engine object
-  TrgEngine* trgEngine() {return &_tev;}
+  const TrgEngine* trgEngine() const  {return &_tev;}
   /// Return the object that holds the information about input disables
-  TrgDisabledChannels* disabledChannels(){return &_tdv;}
+  const TrgDisabledChannels* disabledChannels() const {return &_tdv;}
   /// Return the information contained in the configuration register
-  TrgConfiguration* configuration(){return &_configuration;}
+  const TrgConfiguration* configuration() const {return &_configuration;}
   /// Return the object that holds the ROI configuration
-  TrgRoi* roi(){return &_roi;}
+  const TrgRoi* roi() const {return &_roi;}
+  /// Print LUT in contrigurator format
+  virtual void printContrigurator() const;
 
   /// Reset the cached and output values
   void reset();
@@ -66,6 +70,8 @@ private:
   TrgDisabledChannels _tdv;
   TrgConfiguration _configuration;
   TrgRoi _roi;
+
+  friend class TrgConfigParser;
 };
 
 /// printout function  

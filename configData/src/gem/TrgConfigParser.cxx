@@ -94,31 +94,31 @@ int TrgConfigParser::parse(TrgConfig* tcf){
       if (nm=="periodic_rate"){
 	ous=removeWhitespace(Dom::getTextContent(currentElement));
 	unsigned long per_rate=strtoul(ous.c_str(),0,0);
-	if(per_rate&0x80000000)tcf->periodicTrigger()->setOnePPS(true);
-	else tcf->periodicTrigger()->setOnePPS(false);
-	tcf->periodicTrigger()->setPrescale(per_rate&0xffffff);
+	if(per_rate&0x80000000)tcf->_tpt.setOnePPS(true);
+	else tcf->_tpt.setOnePPS(false);
+	tcf->_tpt.setPrescale(per_rate&0xffffff);
       }
       if (nm=="configuration"){
 	ous=removeWhitespace(Dom::getTextContent(currentElement));
 	unsigned long config=strtoul(ous.c_str(),0,0);
-	tcf->configuration()->setConfiguration(config);
+	tcf->_configuration.setConfiguration(config);
       }
       if (nm=="WIN"){
 	unsigned long win_width=content(currentElement,"window_width");
-	tcf->windowParams()->setWindowWidth(win_width);
+	tcf->_twp.setWindowWidth(win_width);
       }
       if (nm=="AOC"){
 	unsigned long window_open_mask=content(currentElement,"window_open_mask");
-	tcf->windowParams()->setWindowMask(window_open_mask);
+	tcf->_twp.setWindowMask(window_open_mask);
 	unsigned long periodic_limit=content(currentElement,"periodic_limit");
-	tcf->periodicTrigger()->setLimit(periodic_limit);
+	tcf->_tpt.setLimit(periodic_limit);
       }
       if (nm=="SCH"){
 	char condname[128];
 	for (int i=0;i<32;i++){
 	  sprintf(condname,"conditions_%02X_%02X",i*8,i*8+7);
 	  unsigned long condreg=content(currentElement,condname);
-	  tcf->lut()->setRegister(i,condreg);
+	  tcf->_lut.setRegister(i,condreg);
 	}
       }
       if (nm=="TAM"){
@@ -126,53 +126,53 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	for (int i=0;i<16;i++){
 	  sprintf(engname,"engine_%x",i);
 	  unsigned long engine=content(currentElement,engname);
-	  tcf->trgEngine()->setEngine(i,engine);
+	  tcf->_tev.setEngine(i,engine);
 	}
       }
       if (nm=="TIE"){
 	unsigned long reg;
 	reg=content(currentElement,"towers_0_3");	
-	tcf->disabledChannels()->setTowerRegister(0,reg);
+	tcf->_tdv.setTowerRegister(0,reg);
 	reg=content(currentElement,"towers_4_7");	
-	tcf->disabledChannels()->setTowerRegister(1,reg);
+	tcf->_tdv.setTowerRegister(1,reg);
 	reg=content(currentElement,"towers_8_b");	
-	tcf->disabledChannels()->setTowerRegister(2,reg);
+	tcf->_tdv.setTowerRegister(2,reg);
 	reg=content(currentElement,"towers_c_f");	
-	tcf->disabledChannels()->setTowerRegister(3,reg);
+	tcf->_tdv.setTowerRegister(3,reg);
 
 	reg=content(currentElement,"tiles_000_013");	
-	tcf->disabledChannels()->setTileRegister(0,reg);
+	tcf->_tdv.setTileRegister(0,reg);
 	reg=content(currentElement,"tiles_014_032");	
-	tcf->disabledChannels()->setTileRegister(1,reg);
+	tcf->_tdv.setTileRegister(1,reg);
 	reg=content(currentElement,"tiles_033_NA3");	
-	tcf->disabledChannels()->setTileRegister(2,reg);
+	tcf->_tdv.setTileRegister(2,reg);
 	reg=content(currentElement,"tiles_100_113");	
-	tcf->disabledChannels()->setTileRegister(3,reg);
+	tcf->_tdv.setTileRegister(3,reg);
 	reg=content(currentElement,"tiles_114_NA5");	
-	tcf->disabledChannels()->setTileRegister(4,reg);
+	tcf->_tdv.setTileRegister(4,reg);
 	reg=content(currentElement,"tiles_200_213");	
-	tcf->disabledChannels()->setTileRegister(5,reg);
+	tcf->_tdv.setTileRegister(5,reg);
 	reg=content(currentElement,"tiles_214_NA7");	
-	tcf->disabledChannels()->setTileRegister(6,reg);
+	tcf->_tdv.setTileRegister(6,reg);
 	reg=content(currentElement,"tiles_300_313");	
-	tcf->disabledChannels()->setTileRegister(7,reg);
+	tcf->_tdv.setTileRegister(7,reg);
 	reg=content(currentElement,"tiles_314_NA9");	
-	tcf->disabledChannels()->setTileRegister(8,reg);
+	tcf->_tdv.setTileRegister(8,reg);
 	reg=content(currentElement,"tiles_400_413");	
-	tcf->disabledChannels()->setTileRegister(9,reg);
+	tcf->_tdv.setTileRegister(9,reg);
 	reg=content(currentElement,"tiles_414_NA1");	
-	tcf->disabledChannels()->setTileRegister(10,reg);
+	tcf->_tdv.setTileRegister(10,reg);
 	reg=content(currentElement,"tiles_500_NA10");	
-	tcf->disabledChannels()->setTileRegister(11,reg);
+	tcf->_tdv.setTileRegister(11,reg);
 	  
 	reg=content(currentElement,"acd_cno");	
-	tcf->disabledChannels()->setCnoRegister(reg);
+	tcf->_tdv.setCnoRegister(reg);
 	
 	reg=content(currentElement,"tower_busy");	
-	tcf->disabledChannels()->setBusyRegister(reg);
+	tcf->_tdv.setBusyRegister(reg);
 
 	reg=content(currentElement,"external");	
-	tcf->disabledChannels()->setExternal(reg);
+	tcf->_tdv.setExternal(reg);
       }
       if (nm=="ROI"){
 	unsigned long reg;
@@ -185,7 +185,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 		    "r_430", "r_500", "r_501_502", "r_503_600", "r_601_602", "r_603"};                                       
 	for (int i=0;i<54;i++){
 	  reg=content(currentElement,regname[i]);	
-	  tcf->roi()->setRoiRegister(i,reg);
+	  tcf->_roi.setRoiRegister(i,reg);
 	}
       }
     }

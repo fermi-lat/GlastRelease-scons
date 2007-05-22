@@ -16,9 +16,65 @@
 //
 //---------------------------------------------------------------------------
 #include "configData/gem/TrgConfig.h"
+#include <iomanip>
+#include <iostream>
+#include <string>
 
 
 TrgConfig::TrgConfig(){}
+
+void TrgConfig::printContrigurator() const{
+  int width[]={7,9,10,9,4,7,7,4,4,10,7,9,7,8};
+  std::cout<<setiosflags(std::ios::left);
+  std::cout<<std::setfill(' ')<<std::setw(width[0])<<"Engine";
+  std::cout<<std::setfill(' ')<<std::setw(width[1])<<"External";
+  std::cout<<std::setfill(' ')<<std::setw(width[2])<<"Solicited";
+  std::cout<<std::setfill(' ')<<std::setw(width[3])<<"Periodic";
+  std::cout<<std::setfill(' ')<<std::setw(width[4])<<"CNO";
+  std::cout<<std::setfill(' ')<<std::setw(width[5])<<"CAL-HI";
+  std::cout<<std::setfill(' ')<<std::setw(width[6])<<"CAL-LO";
+  std::cout<<std::setfill(' ')<<std::setw(width[7])<<"TKR";
+  std::cout<<std::setfill(' ')<<std::setw(width[8])<<"ROI";
+  std::cout<<std::setfill(' ')<<std::setw(width[9])<<"Zero-supp";
+  std::cout<<std::setfill(' ')<<std::setw(width[10])<<"Ranges";
+  std::cout<<std::setfill(' ')<<std::setw(width[11])<<"Prescale";
+  std::cout<<std::setfill(' ')<<std::setw(width[12])<<"Marker";
+  std::cout<<std::setfill(' ')<<std::setw(width[13])<<"Inhibit";
+  std::cout<<std::endl;
+  for (int i=0;i<16;i++){
+    std::cout<<std::setfill(' ')<<std::setw(width[0])<<i;
+    std::vector<unsigned long> condvec=lut()->conditionsInEngine(i);
+    for (int cond=7;cond>=0;cond--){
+      bool zero=false;
+      bool one=false;
+      for (unsigned j=0;j<condvec.size();j++){
+	if(condvec[j]&(1<<cond))one=true;
+	else zero=true;
+      }
+      char en=' ';
+      if (zero&&one)en='x';
+      else if (zero)en='0';
+      else if (one)en='1';
+      std::cout<<std::setfill(' ')<<std::setw(width[8-cond])<<en;
+    }
+    std::string zs;
+    if (trgEngine()->zeroSuppression(i))zs="enabled";
+    else zs="disabled";
+    std::cout<<std::setfill(' ')<<std::setw(width[9])<<zs;
+    if (trgEngine()->fourRangeReadout(i))zs="4-rgn";
+    else zs="1-rng";
+    std::cout<<std::setfill(' ')<<std::setw(width[10])<<zs;
+    int prescale=trgEngine()->prescale(i);
+    std::cout<<std::setfill(' ')<<std::setw(width[11])<<prescale;
+    int marker=trgEngine()->marker(i);
+    std::cout<<std::setfill(' ')<<std::setw(width[11])<<marker;
+    if (trgEngine()->inhibited(i))zs="inhibit";
+    else zs="no";
+    std::cout<<std::setfill(' ')<<std::setw(width[10])<<zs;
+    std::cout<<std::endl;
+  }
+}
+
 
 // Reset the cached and output values
 void TrgConfig::reset() {

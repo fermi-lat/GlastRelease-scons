@@ -58,6 +58,8 @@ void TrgConfLUT::reset() {
   }
 }
 
+
+
 // Attach this value to a TTree
 void TrgConfLUT::makeBranch(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
@@ -70,7 +72,6 @@ void TrgConfLUT::attach(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
   tree.SetBranchAddress(branchName.c_str(),(void*)(_lut));
 }
-
 
 std::ostream& operator <<(std::ostream& os, const TrgConfLUT& tc){
   os<<"Lookup-table registers:"<<std::endl;
