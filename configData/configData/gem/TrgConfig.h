@@ -54,7 +54,7 @@ public:
   /// Return the object that holds the ROI configuration
   const TrgRoi* roi() const {return &_roi;}
   /// Print LUT in contrigurator format
-  virtual void printContrigurator() const;
+  virtual void printContrigurator(std::ostream& out) const;
 
   /// Reset the cached and output values
   void reset();
