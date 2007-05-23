@@ -1,5 +1,5 @@
 package G4Generator
-version v5r18p3
+version v5r18p4
 
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
@@ -19,6 +19,9 @@ use GlastSvc  v*
 use geometry  v3*
 use geomrep   v4r*
 
+# Use this publicly since it exports symbols that will be needed
+use G4HadronSim v*
+
 # for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v3r* IExternal
 
@@ -29,7 +32,6 @@ use Geant4   v3r8* IExternal
 
 # special code to replace the standared multiple scattering 
 use GlastMS
-use G4HadronSim
 
 # only needed by test program 
 use FluxSvc v*
