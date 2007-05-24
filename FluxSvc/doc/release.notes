@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   24-may-07  v6r43   THB  Add option to specify a filter cone, in celestial coordinates
    24-apr-07  v6r42   THB  Allow specification of SAA polygon; provide default from Rob
    01-apr-07  v6r41p6 HMK  explicitly include IFluxSvc.h in IRegisterSource.h for rhel4
    27-mar-07  v6r41p5 THB  Protect against sources modifying the GPS time during initialization
