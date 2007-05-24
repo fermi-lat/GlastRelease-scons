@@ -106,6 +106,8 @@ public:
     virtual void setAlignmentRotation(double phi, double theta, double psi)=0;
 
     virtual double endruntime() = 0; ///< access end of run time
+
+    virtual void setFilterCone(std::vector<double> cone)=0; ///< set filter cone parameters (ra, dec, radius)
 };
 
 #endif  // _H_IFluxSvc

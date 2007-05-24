@@ -49,6 +49,7 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.AvoidSAA     [false] set true to skip events during SAA interval
     @param FluxAlg.zenithTheta  [-99] if overridden, set to this angle in local zenith frame
     @param FluxAlg.PointingHistory [{}] Doublet, file name and offset, the latter default to none.
+    @param FluxAlg.filterCone   [{}] Triplet: ra, dec, radius of cone to apply to celestial sources
 
   @section exposurealg_jobOptions ExposureAlg jobOptions
     @param ExposureAlg.root_tree ["pointing_history"] name for the root tree to be filled if there are clock ticks
