@@ -4,7 +4,6 @@
 #include <string>
 #include <fstream>
 #include <getopt.h>
-
 //
 // ROOT-io
 #include "TFile.h"

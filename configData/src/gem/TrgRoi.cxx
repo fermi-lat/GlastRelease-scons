@@ -20,6 +20,7 @@
 #include <iomanip>
 #include "commonRootData/idents/AcdId.h"
 #include "TTree.h"
+#include <algorithm> 
 
 TrgRoi::TrgRoi()
   :ConfigBranch("r",'i',ChannelKey(54)){  

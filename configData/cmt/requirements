@@ -1,5 +1,5 @@
 package configData
-version v0r0
+version v0r2p2
 
 author M. Kocian <kocian@slac.stanford.edu>
 
@@ -16,11 +16,18 @@ use xmlBase v*
 apply_pattern shared_library
 
 private
-macro_append cppflags "-Wno-unused-parameter -g"
+macro_append cppflags "-Wno-unused-parameter -g" WIN32 ""
 apply_pattern package_headers
 
+macro source "*.cxx" WIN32 "*.h *.cxx"
 library configData \
-        gem/*.cxx base/*.cxx db/*.cxx *.cxx
+ -s=../src $(source)\
+ -s=gem $(source)\
+ -s=base $(source)\
+ -s=db $(source) 
+
+#        gem/*.cxx base/*.cxx db/*.cxx *.cxx
+
 #macro_append ROOT_linkopts " -L/u/ec/kocian/data/glnew/external/ROOT/v5.14.00d/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -pthread -lm -ldl -rdynamic "
 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx

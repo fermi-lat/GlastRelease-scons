@@ -9,7 +9,13 @@
 #include <xercesc/dom/DOMNode.hpp>
 
 using namespace xmlBase;
+#ifdef WIN32 // this is ugly, apparently gcc has such a define.
+# define or ||
+#endif
 
+namespace{
+    char ** nullPtr = 0;
+}
 
 Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath ) {
   XmlParser parser( true );
@@ -348,7 +354,6 @@ Bool_t ConfigReader::getId(DOMElement& elem, Int_t& id) {
 }
 
 Bool_t ConfigReader::getUShort(DOMElement& elem, UShort_t& val) {
-  char** nullPtr(0);
   std::string str = Dom::getTextContent( &elem );
   // should add check
   val = (UShort_t)(strtoul(str.c_str(),nullPtr,0));
@@ -356,7 +361,6 @@ Bool_t ConfigReader::getUShort(DOMElement& elem, UShort_t& val) {
 }
 
 Bool_t ConfigReader::getUInt(DOMElement& elem, UInt_t& val) {
-  char** nullPtr(0);
   std::string str = Dom::getTextContent(&elem);
   // should add check
   val = (UInt_t)strtoul(str.c_str(),nullPtr,0);
@@ -364,10 +368,9 @@ Bool_t ConfigReader::getUInt(DOMElement& elem, UInt_t& val) {
 }
 
 Bool_t ConfigReader::getULong(DOMElement& elem, ULong64_t& val) {
-  char** nullPtr(0);
   std::string str = Dom::getTextContent(&elem);
   // should add check
-  val = (ULong64_t)strtoull(str.c_str(),nullPtr,0);
+  val = (ULong64_t)strtoul(str.c_str(),nullPtr,0);
   return kTRUE;
 }
 
@@ -438,7 +441,6 @@ Bool_t ConfigReader::readULong(DOMElement& elem, const ChannelKey& key, const ch
 Int_t ConfigReader::getIndex(DOMElement& elem, const std::string& rootName) {
   std::string fullName = Dom::getTagName(&elem);
   std::string endName(fullName,rootName.length()+1);
-  char** nullPtr(0);
   return strtol(endName.c_str(),nullPtr,10);
 }
 

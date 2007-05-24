@@ -1,6 +1,7 @@
 
 #include "configData/db/TrgConfigDB.h"
 #include "configData/gem/TrgConfigParser.h"
+#include <cassert>
 
 TrgConfigDB::TrgConfigDB(LatcDB* lc):m_lc(lc),m_key(0){}
 

@@ -19,6 +19,7 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 #include "configData/gem/TrgConfigParser.h"
 
