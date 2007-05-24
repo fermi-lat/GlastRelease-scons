@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r41   24-May-2007 jrb  Fix top X ribbons: adjust lengths of old pieces and
+                            add 4 new little connecting pieces to each of the
+                            4 X ribbons
    v1r40   18-May-2007 jrb  Side tile shingling (ribbons not yet adjusted)
    v1r39p3 17-Apr-2007 jrb  Move propellant and tank up somewhat to avoid
                             colliding with batteries
