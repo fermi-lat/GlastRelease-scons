@@ -133,7 +133,8 @@
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<!-- X ribbons (perp. to x-axis) have 5 segments of 3 distinct lengths -->
+<!-- X ribbons (perp. to x-axis) have 5 segments extending in Y of 3
+    distinct lengths and 4 little vertical segments of 2 different lengths-->
 
 <box name="xRibbonTopEdge"
      XREF="ribbonWidth"
@@ -155,6 +156,22 @@
      XREF="ribbonWidth"
      YREF="xRibbonTopCent_l"
      ZREF="ribbonThickness"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="xRibbonTopVertNear"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="xRibbonTopVertNear_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="xRibbonTopVertFar"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="xRibbonTopVertFar_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />

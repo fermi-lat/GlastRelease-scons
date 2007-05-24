@@ -228,6 +228,10 @@ appears to be about 1.5 or 2 mm</prim>
      tile edge of tile it's under. (This is a figment of the simulated
 model.  Real ribbons don't come in disconnected segments.)</prim>
 
+  <prim name="ribbonExtend" value="50.0">Where tiles overlap, distance 
+    over which a ribbon has displacement appropriate to near tile even 
+    though it is behind outer of the two overlapping tiles.</prim>
+
   <prim name="xRibbonOuter_dx" value="501.8">X displacement of outer
    X-ribbon (contained in YZ plane): ribbon #3 (Nov 05)</prim>
   <prim name="xRibbonInner_dx" value="166">X displacement for X-ribbon

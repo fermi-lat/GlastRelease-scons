@@ -114,7 +114,7 @@
     </field>
 
     <field name="fRibbonSegment" >
-      <vMinMax min="0" max="6" />
+      <vMinMax min="0" max="12" />
     </field>
 
     <field name="fRow" >

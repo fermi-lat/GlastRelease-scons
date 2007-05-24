@@ -484,8 +484,10 @@ Assemble as
 
 <!-- X ribbon segments.  They're || Y-axis, so "measure" x. Do them by
      ribbon number (0 to 3, with 0 having most neg. X displacment)
-     and within ribbon by segment, in order of icreasing Y-displ.
-     There are 4 ribbons, each divided into 5 segements. -->
+     and within ribbon by segment, in order of increasing Y-displ. for
+     X-extending ribbons, followed by the little vert. segments, in order
+     of increasing Y displacement     
+     There are 4 ribbons, each divided into 5 horiz.  + 4 vert. segements. -->
   <!-- Ribbon 0 -->
   <posXYZ volume="xRibbonTopEdge"
           XREF="xRibbonOuter_dxn"
@@ -541,6 +543,56 @@ Assemble as
         <idField name="fRibbon"  value="0" />
         <idField name="fRibbonSegment" value="5" />    
   </posXYZ>
+
+<!-- ***** -->
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonOuter_dxn"
+          YREF="topVertFarXRibbon_dyn"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="0" />
+        <idField name="fRibbonSegment" value="8" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonOuter_dxn"
+          YREF="topVertNearXRibbon_dyn"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="0" />
+        <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonOuter_dxn"
+          YREF="topVertNearXRibbon_dy"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="0" />
+        <idField name="fRibbonSegment" value="10" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonOuter_dxn"
+          YREF="topVertFarXRibbon_dy"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="0" />
+        <idField name="fRibbonSegment" value="11" />    
+  </posXYZ>
+
 
 <!-- Ribbon 1 -->
 
@@ -599,6 +651,55 @@ Assemble as
         <idField name="fRibbonSegment" value="5" />    
   </posXYZ>
 
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonInner_dxn"
+          YREF="topVertFarXRibbon_dyn"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="1" />
+        <idField name="fRibbonSegment" value="8" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonInner_dxn"
+          YREF="topVertNearXRibbon_dyn"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="1" />
+        <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonInner_dxn"
+          YREF="topVertNearXRibbon_dy"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="1" />
+        <idField name="fRibbonSegment" value="10" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonInner_dxn"
+          YREF="topVertFarXRibbon_dy"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="1" />
+        <idField name="fRibbonSegment" value="11" />    
+  </posXYZ>
+
+
 <!-- Ribbon 2 -->
 
   <posXYZ volume="xRibbonTopEdge"
@@ -656,6 +757,54 @@ Assemble as
         <idField name="fRibbonSegment" value="5" />    
   </posXYZ>
 
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonInner_dx"
+          YREF="topVertFarXRibbon_dyn"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="2" />
+        <idField name="fRibbonSegment" value="8" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonInner_dx"
+          YREF="topVertNearXRibbon_dyn"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="2" />
+        <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonInner_dx"
+          YREF="topVertNearXRibbon_dy"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="2" />
+        <idField name="fRibbonSegment" value="10" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonInner_dx"
+          YREF="topVertFarXRibbon_dy"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="2" />
+        <idField name="fRibbonSegment" value="11" />    
+  </posXYZ>
+
 <!-- Ribbon 3 -->    
 
   <posXYZ volume="xRibbonTopEdge"
@@ -711,6 +860,55 @@ Assemble as
         <idField name="fMeasure" valueREF="eMeasureX" />
         <idField name="fRibbon"  value="3" />
         <idField name="fRibbonSegment" value="5" />    
+  </posXYZ>
+
+
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonOuter_dx"
+          YREF="topVertFarXRibbon_dyn"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="3" />
+        <idField name="fRibbonSegment" value="8" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonOuter_dx"
+          YREF="topVertNearXRibbon_dyn"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="3" />
+        <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertNear"
+          XREF="xRibbonOuter_dx"
+          YREF="topVertNearXRibbon_dy"
+          ZREF="topVertNearXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="3" />
+        <idField name="fRibbonSegment" value="10" />    
+  </posXYZ>
+
+  <posXYZ volume="xRibbonTopVertFar"
+          XREF="xRibbonOuter_dx"
+          YREF="topVertFarXRibbon_dy"
+          ZREF="topVertFarXRibbon_dz" >
+        <idField name="fLATObjects" valueREF="eLATACD" />
+        <idField name="fACDFace" valueREF="eACDTopFace" />
+        <idField name="fACDCmp" valueREF="eACDRibbon" />
+        <idField name="fMeasure" valueREF="eMeasureX" />
+        <idField name="fRibbon"  value="3" />
+        <idField name="fRibbonSegment" value="11" />    
   </posXYZ>
 
 <!-- Place 8 little pieces of ribbon behind (toward origin, relative to) bent

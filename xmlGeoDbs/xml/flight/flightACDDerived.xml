@@ -1131,38 +1131,38 @@
 
   <const name="xRibbonTopCent_l">
     <notes>length of ribbon segments running under the central row
-      of tiles</notes>
+      of tiles. Redo to include short vertical pieces May 07.</notes>
     <add>
       <refer refTo="topTileYCentral_l" />
-      <refer refTo="ribbonOverlap" />
-      <refer refTo="ribbonOverlap" />
+      <refer refTo="ribbonThickness" />
+      <refer refTo="ribbonThickness" />
+      <refer refTo="ribbonExtend" />
+      <refer refTo="ribbonExtend" />
     </add>
   </const>
 
   <const name="xRibbonTopMid_l">
     <notes>length of ribbon segments running under rows 1,3
-      of top tiles</notes>
+      of top tiles. Redo to include short vertical pieces May 07.</notes>
     <minus>
       <add>
         <refer refTo="topTileYMid_l" />
-        <refer refTo="ribbonOverlap" />
+        <refer refTo="ribbonThickness" />
       </add>
-      <add>
-        <refer refTo="topOverlap" />
-        <refer refTo="ribbonGap" />
-      </add>
+      <refer refTo="topOverlap" />
     </minus>
   </const>
 
   <const name="xRibbonTopEdge_l">
     <notes>length of ribbon segments running under rows 0,4
-      of top tiles.  Shorten up to avoid bent tile pieces (Jan '06)</notes>
+      of top tiles.  Redo to include short vertical pieces May 07.</notes>
     <minus>
-      <refer refTo="topTileYEdge_lOp" />
+      <refer refTo="topTileYEdge_l" />
       <add>
         <refer refTo="topOverlap" />
+        <refer refTo="ribbonExtend" />
         <refer refTo="ribbonGap" />
-        <refer refTo="tileThicknessOp" />
+        <refer refTo="tileThickness" />
       </add>
     </minus>
   </const>            
@@ -1340,12 +1340,12 @@
     </minus>
   </const>
 
-  <!-- go to edge of central tile, add ribbon gap and half our length -->
+  <!-- go to edge of central tile, add ribbon extend and half our length -->
 
   <const name="topXRibbonMid_dy" >
-    <notes>y-displacement of segment 4 </notes>
+    <notes>y-displacement of segment 4 (updated May 07) </notes>
     <add>
-      <refer refTo="ribbonGap" />
+      <refer refTo="ribbonExtend" />
       <half>
         <add>
           <refer refTo="topTileYCentral_l" />
@@ -1363,7 +1363,7 @@
   </const>
 
   <!-- go to center of mid tile, add half tile length (to get
-     to edge) half our length and finally ribbon gap -->
+     to edge) half our length and finally ribbonExtend -->
 
 
   <const name="topXRibbonEdge_dy" >
@@ -1376,7 +1376,7 @@
           <refer refTo="xRibbonTopEdge_l" />
         </add>
       </half>
-      <refer refTo="ribbonGap" />
+      <refer refTo="ribbonExtend" />
     </add>
   </const>
 
@@ -1384,6 +1384,102 @@
     <notes>y-displacement of segment 1 </notes>
     <uminus>
       <refer refTo="topXRibbonEdge_dy" />
+    </uminus>
+  </const>
+
+
+
+  <!-- Compute stuff needed for little vertical connecting top x ribbons -->
+  <const name="xRibbonTopVertNear_l" >
+    <notes>Height of vert. piece connecting mid and central 
+           top X ribbons</notes>
+    <minus>
+      <refer refTo="topXRibbonMid_dz" />
+      <add>
+        <refer refTo="topXRibbonCent_dz" />
+        <refer refTo="ribbonThickness" />
+      </add>
+    </minus>
+  </const>
+
+  <const name="topVertNearXRibbon_dz" >
+    <notes>Z location of vert. piece connecting mid and central top X ribbons
+    </notes>
+    <add>
+      <refer refTo="topXRibbonCent_dz" />
+      <half>
+        <add>
+          <refer refTo="xRibbonTopVertNear_l" />
+          <refer refTo="ribbonThickness" />
+        </add>
+      </half>
+    </add>
+  </const>
+
+  <const name="topVertNearXRibbon_dy" >
+    <notes>Y location of vert. piece connecting mid and central top X ribbons
+       (+Y version)
+    </notes>
+    <half>
+      <minus>
+        <refer refTo="xRibbonTopCent_l" />
+        <refer refTo="ribbonThickness" />
+      </minus>
+    </half>
+  </const>
+
+  <const name="topVertNearXRibbon_dyn" >
+    <notes>Y location of vert. piece connecting mid and central top X ribbons
+      (-Y version) </notes>
+    <uminus>
+      <refer refTo="topVertNearXRibbon_dy" />
+    </uminus>
+  </const>
+ 
+  <const name="xRibbonTopVertFar_l" >
+    <notes>Height of vert. piece connecting edge and mid top X ribbons</notes>
+    <minus>
+      <refer refTo="topXRibbonEdge_dz" />
+      <add>
+        <refer refTo="topXRibbonMid_dz" />
+        <refer refTo="ribbonThickness" />
+      </add>
+    </minus>
+  </const>
+
+  <const name="topVertFarXRibbon_dz" >
+    <notes>Z location of vert. piece connecting mid and edge top X ribbons
+    </notes>
+    <add>
+      <refer refTo="topXRibbonMid_dz" />
+      <half>
+        <add>
+          <refer refTo="xRibbonTopVertFar_l" />
+          <refer refTo="ribbonThickness" />
+        </add>
+      </half>
+    </add>
+  </const>
+ 
+  <const name="topVertFarXRibbon_dy" >
+    <notes>Y location of vert. piece connecting mid and edge top X ribbons
+       (+Y version)
+    </notes>
+    <add>
+      <refer refTo="topVertNearXRibbon_dy" />
+      <refer refTo="xRibbonTopMid_l" />
+      <uminus>
+        <refer refTo="ribbonThickness" />
+      </uminus>
+    </add>
+  </const>   
+
+
+  <const name="topVertFarXRibbon_dyn" >
+    <notes>Y location of vert. piece connecting mid and edge top X ribbons
+      (-Y version) </notes>
+    <uminus>
+      <refer refTo="topVertFarXRibbon_dy" />
     </uminus>
   </const>
 
