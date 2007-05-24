@@ -4,9 +4,10 @@
  * package manager:M. Kocian
  *
  *
- * v0r2p2 25-May-07 THB Fix for WIN32
- * v0r0   19-Mar-07 Initial version
+ * v0r2p3 24-May-07 EAC switch or to ||
+ * v0r2p2 24-May-07 THB Fix for WIN32
  * v0r2p0 24-May-07 Non-MOOT version for Gleam
  * v0r2p1 25-May-07 Added test executable test_configData
+ * v0r0   19-Mar-07 Initial version
 @endverbatim
 */
