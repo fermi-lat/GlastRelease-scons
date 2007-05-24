@@ -3,7 +3,7 @@
 // stl
 #include <string>
 #include <fstream>
-#include <getopt.h>
+#include <unistd.h>
 //
 // ROOT-io
 #include "TFile.h"

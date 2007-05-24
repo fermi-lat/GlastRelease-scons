@@ -3,7 +3,7 @@
 // stl
 #include <string>
 #include <iostream>
-#include <getopt.h>
+#include <unistd.h>
 
 //
 // ROOT-io

@@ -379,7 +379,7 @@ Bool_t ConfigReader::readUShort(DOMElement& elem, const ChannelKey& key, const c
   const std::string tagName = bName == 0 ? Dom::getTagName(&elem) : bName;
   ConfigBranchImpl<UShort_t>* reg = static_cast<ConfigBranchImpl<UShort_t>*>(m_config->branch(tagName));
   UShort_t val(0);
-  if ( reg == 0 or ! getUShort(elem,val) ) {
+  if ( reg == 0 || ! getUShort(elem,val) ) {
     return kFALSE;
   }
   if (key.hasBCAST()) {
@@ -394,7 +394,7 @@ Bool_t ConfigReader::readUShort_pha(DOMElement& elem, const ChannelKey& key, con
   const std::string tagName = bName == 0 ? Dom::getTagName(&elem) : bName;
   ConfigBranchImpl<UShort_t>* reg = static_cast<ConfigBranchImpl<UShort_t>*>(m_config->branch(tagName));
   UShort_t val(0);
-  if ( reg == 0 or ! getUShort(elem,val) ) {
+  if ( reg == 0 || ! getUShort(elem,val) ) {
     return kFALSE;
   }
   if (key.hasBCAST()) {
@@ -412,7 +412,7 @@ Bool_t ConfigReader::readUInt(DOMElement& elem, const ChannelKey& key, const cha
   const std::string tagName =  bName == 0 ? Dom::getTagName(&elem) : bName;
   ConfigBranchImpl<UInt_t>* reg = static_cast<ConfigBranchImpl<UInt_t>*>(m_config->branch(tagName));
   UInt_t val(0);
-  if ( reg == 0 or ! getUInt(elem,val) ) {
+  if ( reg == 0 || ! getUInt(elem,val) ) {
     return kFALSE;
   }
   if (key.hasBCAST()) {
@@ -427,7 +427,7 @@ Bool_t ConfigReader::readULong(DOMElement& elem, const ChannelKey& key, const ch
   const std::string tagName =  bName == 0 ? Dom::getTagName(&elem) : bName;
   ConfigBranchImpl<ULong64_t>* reg = static_cast<ConfigBranchImpl<ULong64_t>*>(m_config->branch(tagName));
   ULong64_t val(0);
-  if ( reg == 0 or ! getULong(elem,val) ) {
+  if ( reg == 0 || ! getULong(elem,val) ) {
     return kFALSE;
   }
   if (key.hasBCAST()) {
