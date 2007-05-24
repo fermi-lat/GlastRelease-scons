@@ -156,27 +156,27 @@ const bool TrgDisabledChannels::tileEnabledByName(unsigned tile, TrgConditions::
 void TrgDisabledChannels::makeBranch(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
   
-  std::string branchNameTower = branchName; branchNameTower += "tower";
+  std::string branchNameTower = branchName; branchNameTower += "towers";
   std::string leafNameTower = branchNameTower;
   leafNameTower += "[4]/i";
   tree.Branch(branchNameTower.c_str(),(void*)(_towers),leafNameTower.c_str());
 
-  std::string branchNameTile = branchName; branchNameTile += "tile";
+  std::string branchNameTile = branchName; branchNameTile += "tiles";
   std::string leafNameTile = branchNameTile;
   leafNameTile += "[12]/i";
   tree.Branch(branchNameTile.c_str(),(void*)(_tiles),leafNameTile.c_str());
 
-  std::string branchNameCno = branchName; branchNameCno += "tile";
+  std::string branchNameCno = branchName; branchNameCno += "acd_cno";
   std::string leafNameCno = branchNameCno;
   leafNameCno += "/i";
   tree.Branch(branchNameCno.c_str(),(void*)(&_cno),leafNameCno.c_str());
 
-  std::string branchNameBusy = branchName; branchNameBusy += "busy";
+  std::string branchNameBusy = branchName; branchNameBusy += "tower_busy";
   std::string leafNameBusy = branchNameBusy;
   leafNameBusy += "/i";
   tree.Branch(branchNameBusy.c_str(),(void*)(&_busy),leafNameBusy.c_str());
 
-  std::string branchNameExt = branchName; branchNameExt += "ext";
+  std::string branchNameExt = branchName; branchNameExt += "external";
   std::string leafNameExt = branchNameExt;
   leafNameExt += "/B";
   tree.Branch(branchNameExt.c_str(),(void*)(&_external),leafNameExt.c_str());
@@ -186,19 +186,19 @@ void TrgDisabledChannels::makeBranch(TTree& tree, const std::string& prefix) con
 void TrgDisabledChannels::attach(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
   
-  std::string branchNameTower = branchName; branchNameTower += "tower";
+  std::string branchNameTower = branchName; branchNameTower += "towers";
   tree.SetBranchAddress(branchNameTower.c_str(),(void*)(_towers));
 
-  std::string branchNameTile = branchName; branchNameTile += "tile";
+  std::string branchNameTile = branchName; branchNameTile += "tiles";
   tree.SetBranchAddress(branchNameTile.c_str(),(void*)(_tiles));
 
-  std::string branchNameCno = branchName; branchNameCno += "tile";
+  std::string branchNameCno = branchName; branchNameCno += "acd_cno";
   tree.SetBranchAddress(branchNameCno.c_str(),(void*)(&_cno));
 
-  std::string branchNameBusy = branchName; branchNameBusy += "busy";
+  std::string branchNameBusy = branchName; branchNameBusy += "tower_busy";
   tree.SetBranchAddress(branchNameBusy.c_str(),(void*)(&_busy));
 
-  std::string branchNameExt = branchName; branchNameExt += "ext";
+  std::string branchNameExt = branchName; branchNameExt += "external";
   tree.SetBranchAddress(branchNameExt.c_str(),(void*)(&_external));
 }
 
