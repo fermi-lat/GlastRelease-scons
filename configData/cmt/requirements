@@ -35,8 +35,5 @@ application RootConfigCompare ../apps/RootConfigCompare.cxx
 # simple test program
 # use this when we want to make a Gaudi test program apply_pattern package_test
 
-#application test_Event    test/testmain.cxx
+application test_configData    test/test_configData.cxx
 
-#application test_Tables   test/test_RelTabs.cxx
-
-#application test_TkrRecon test/test_TkrRecon.cxx
