@@ -197,9 +197,9 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
   // get readout range number for both crystal faces
   for (FaceNum face; face.isValid();  face++) {
     // get adc range
-    m_dat.rng[face] = (*ro).getRange(face); 
+    m_dat.rng[face] = RngNum((*ro).getRange(face)); 
     // get adc values 
-    m_dat.adc[face] = (*ro).getAdc(face);   
+    m_dat.adc[face] = RngNum((*ro).getAdc(face));   
   }
 
   ///////////////////////////////////////
@@ -441,9 +441,9 @@ void XtalRecTool::pos2Point(float pos, Point &pXtal) {
   segm0Id.append(m_dat.twr.getRow());
   segm0Id.append(m_dat.twr.getCol());
   segm0Id.append(m_eTowerCAL);
-  segm0Id.append(m_dat.lyr);
-  segm0Id.append(m_dat.lyr.getDir()); 
-  segm0Id.append(m_dat.col);
+  segm0Id.append(m_dat.lyr.val());
+  segm0Id.append(m_dat.lyr.getDir().val()); 
+  segm0Id.append(m_dat.col.val());
   segm0Id.append(m_eXtal);
 
   // copy over shared info
@@ -502,7 +502,7 @@ StatusCode XtalRecTool::retrieveCalib() {
     m_dat.lacThresh[face] = tholdCI->getLAC()->getVal();
 
     //-- RETRIEVE HEX1 ULD --//
-    m_dat.h1Limit[face] = tholdCI->getULD(HEX1)->getVal();
+    m_dat.h1Limit[face] = tholdCI->getULD(HEX1.val())->getVal();
   }  
 
   return StatusCode::SUCCESS;

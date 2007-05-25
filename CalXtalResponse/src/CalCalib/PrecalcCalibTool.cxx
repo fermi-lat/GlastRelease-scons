@@ -131,7 +131,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
     // are past hardware range.
     DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
     m_trigADC[diodeIdx] = tholdCI->getFLE()->getVal();
-    m_trigRng[diodeIdx] = (m_trigADC[diodeIdx] > tholdCI->getULD(LEX8)->getVal()) ?
+    m_trigRng[diodeIdx] = (m_trigADC[diodeIdx] > tholdCI->getULD(LEX8.val())->getVal()) ?
       LEX1 : LEX8;
     RngIdx rngIdx(faceIdx, m_trigRng[diodeIdx]);
     
@@ -163,7 +163,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
     // are past hardware range.
     diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
     m_trigADC[diodeIdx] = tholdCI->getFHE()->getVal();
-    m_trigRng[diodeIdx] = (m_trigADC[diodeIdx] > tholdCI->getULD(HEX8)->getVal()) ?
+    m_trigRng[diodeIdx] = (m_trigADC[diodeIdx] > tholdCI->getULD(HEX8.val())->getVal()) ?
       HEX1 : HEX8;
     rngIdx = RngIdx(faceIdx, m_trigRng[diodeIdx]);
     
@@ -287,7 +287,7 @@ StatusCode PrecalcCalibTool::lex8_to_lex1(FaceIdx faceIdx, float l8adc, float &l
   if (!tholdCI) return StatusCode::SUCCESS;
   
   // use this point to generate LEX8/LEX1 ratio
-  float x8tmp = tholdCI->getULD(LEX8)->getVal();
+  float x8tmp = tholdCI->getULD(LEX8.val())->getVal();
 
   // 1st convert to cidac
   sc = m_calCalibSvc->evalCIDAC(RngIdx(faceIdx, LEX8),
@@ -318,7 +318,7 @@ StatusCode PrecalcCalibTool::hex8_to_hex1(FaceIdx faceIdx, float h8adc, float &h
   if (!tholdCI) return StatusCode::SUCCESS;
 
   // use this point to generate HEX8/HEX1 ratio
-  float x8tmp = tholdCI->getULD(HEX8)->getVal();
+  float x8tmp = tholdCI->getULD(HEX8.val())->getVal();
 
   // 1st convert to cidac
   sc = m_calCalibSvc->evalCIDAC(RngIdx(faceIdx, HEX8),

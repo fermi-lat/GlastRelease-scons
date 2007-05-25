@@ -64,7 +64,7 @@ float rel_diff(float a, float b) {
 /// \param measured test result
 /// \param margin threhold to ignore if signal is close to margin. (in same units as threshold)
 
-bool trig_test_margin(float signal, float thresh, bool result, double margin) {
+bool trig_test_margin(const float signal, const float thresh, const bool result, const double margin) {
   // return false if the trigger should have gone high, but it didn't
   if (signal >= thresh + margin && !result) return false;
   // return true if it should have gone low but fired anyway
@@ -108,7 +108,7 @@ private:
   /// used for constants & conversion routines.
   IGlastDetSvc* m_detSvc;
 
-  void pos2Point(XtalIdx xtalIdx, float xtalPos, Point &pXtal);
+  void pos2Point(const XtalIdx xtalIdx, const float xtalPos, Point &pXtal);
 
   /// create single Mc hit & run it through full digi & recon
   /// check for expected output & accurate recon.
@@ -149,9 +149,9 @@ private:
 
 
   /// fill mcIntegrating hit w/ given xtal position & energy
-  void fillMcHit(XtalIdx xtalIdx,
-                 float xtalPos,
-                 float meV,
+  void fillMcHit(const XtalIdx xtalIdx,
+                 const float xtalPos,
+                 const float meV,
                  Event::McIntegratingHit &hit);
 
   /// test CalFailureModeSvc
@@ -210,7 +210,7 @@ private:
       N_CALIB_SRC
     };
 
-    void setCalibSrc(CalibSrc src);
+    void setCalibSrc(const CalibSrc src);
     CalibSrc getCalibSrc() const {return calibSrc;}
     ICalCalibSvc  *getCalCalibSvc() const {return calCalibSvc;}
     IXtalDigiTool *getDigiTool() const {return (noiseOn) ? 
@@ -366,7 +366,7 @@ void test_CalXtalResponse::CurrentTest::reset() {
   setCalibSrc(PARTIAL_LAT);
 }
 
-void test_CalXtalResponse::CurrentTest::setCalibSrc(CalibSrc src) {
+void test_CalXtalResponse::CurrentTest::setCalibSrc(const CalibSrc src) {
   calibSrc = src;
   switch (src) {
   case PARTIAL_LAT:
@@ -618,9 +618,9 @@ StatusCode test_CalXtalResponse::initialize(){
   m_testTwrs.insert(15); // last
 
   // -- loop every test on each of these layers
-  m_testLyrs.insert(0);  // 1st
-  m_testLyrs.insert(4);  // somewhere in middle
-  m_testLyrs.insert(7); // las
+  m_testLyrs.insert(LyrNum(0));  // 1st
+  m_testLyrs.insert(LyrNum(4));  // somewhere in middle
+  m_testLyrs.insert(LyrNum(7)); // las
 
   // -- loop every test on each of these columns
   m_testCols.insert(0);  // 1st
@@ -682,7 +682,7 @@ StatusCode test_CalXtalResponse::execute()
         } else {// _SHOULD_ FAIL
           if (!sc.isFailure()) {
             msglog << MSG::ERROR << "TESTFAIL, BAD PARTIAL LAT, "
-                   << curTest->xtalIdx.getTwr() << ", , "
+                   << curTest->xtalIdx.getTwr().val() << ", , "
                    << curTest->testDesc << endreq;
             return sc;
           }
@@ -699,7 +699,7 @@ StatusCode test_CalXtalResponse::execute()
       if (sc.isFailure()) return sc;
 
       for (vector<float>::const_iterator mevIt = testMeV.begin(); mevIt != testMeV.end(); mevIt++) {
-        float meV = *mevIt;
+        const float meV = *mevIt;
         for (int posIdx = 0; posIdx < nXtalPos; posIdx++) {
 
           //-- SHARED SETUP --//
@@ -802,7 +802,7 @@ StatusCode test_CalXtalResponse::finalize(){
 \param pXtal ouput position vector
 \param xtalPos input longitudinal position in mm from center of xtal
 */
-void test_CalXtalResponse::pos2Point(XtalIdx xtalIdx, float xtalPos, Point &pXtal) {
+void test_CalXtalResponse::pos2Point(const XtalIdx xtalIdx, float xtalPos, Point &pXtal) {
   //-- CONSTRUCT GEOMETRY VECTORS FOR XTAL --//
 
   // create Volume Identifier for segments 0 & 11 of this crystal
@@ -811,18 +811,18 @@ void test_CalXtalResponse::pos2Point(XtalIdx xtalIdx, float xtalPos, Point &pXta
   // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
   idents::VolumeIdentifier segm0Id, segm11Id;
 
-  TwrNum twr = xtalIdx.getTwr();
-  LyrNum lyr = xtalIdx.getLyr();
-  ColNum col = xtalIdx.getCol();
+  const TwrNum twr = xtalIdx.getTwr();
+  const LyrNum lyr = xtalIdx.getLyr();
+  const ColNum col = xtalIdx.getCol();
   
   // init seg0 w/ info shared by both.
   segm0Id.append(m_eLATTowers);
   segm0Id.append(twr.getRow());
   segm0Id.append(twr.getCol());
   segm0Id.append(m_eTowerCAL);
-  segm0Id.append(lyr);
-  segm0Id.append(lyr.getDir()); 
-  segm0Id.append(col);
+  segm0Id.append(lyr.val());
+  segm0Id.append(lyr.getDir().val()); 
+  segm0Id.append(col.val());
   segm0Id.append(m_eXtal);
 
   // copy over shared info
@@ -959,7 +959,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
     pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
     curTest->posDiff = Vector(testPoint - recData.getPosition()).magnitude();
     curTest->recEne  = recData.getEnergy();
-    float eneDiff = rel_diff(curTest->meV, curTest->recEne);
+    const float eneDiff = rel_diff(curTest->meV, curTest->recEne);
 
     //--------- REPORT RESULT --------------------------//
     ostringstream tmp;
@@ -1002,7 +1002,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
   MsgStream msglog(msgSvc(), name()); 
       
   //-- DIGI VERIFICTION: N READOUTS --//
-  short nRO = calDigi.getReadoutCol().size();
+  const short nRO = calDigi.getReadoutCol().size();
 
   //-- QUICK CHECK FOR ZERO SUPPRESSION (Exit early if need be) --//
   if (curTest->zeroSuppress) {
@@ -1019,7 +1019,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
       return StatusCode::SUCCESS;
   }
 
-  CalXtalId::CalTrigMode trigMode = calDigi.getMode();
+  const CalXtalId::CalTrigMode trigMode = calDigi.getMode();
   if ((trigMode == CalXtalId::BESTRANGE && nRO != 1) ||
       (trigMode == CalXtalId::ALLRANGE && nRO != 4)) {
     msglog << MSG::ERROR << "TESTFAIL, BAD N READOUTS, "
@@ -1040,8 +1040,8 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
 
   //-- DIGI VERIFICATION: --//
   for (FaceNum face; face.isValid(); face++) {
-    RngNum rng = ro->getRange(face);
-    XtalRng xRng(face,rng);
+    const RngNum rng(ro->getRange(face));
+    const XtalRng xRng(face,rng);
 
     //////////////
     // LAC test //
@@ -1076,13 +1076,13 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi,
     if (rng > LEX8) {
       if (!curTest->noiseOn) //noise can mess up this test b/c it differs per channel
         if (!trig_test_margin(curTest->fsignl[xRng], 
-                              curCalib.uldMeV[XtalRng(face,rng.val()-1)], 
+                              curCalib.uldMeV[XtalRng(face, RngNum(rng.val()-1))], 
                               true, 
                               // xtra 1% margin for possible variation in faceSignal per channel
                               curCalib.mevPerADC[xRng] + .01*curTest->fsignl[xRng])) {
           msglog << MSG::ERROR << "TESTFAIL, BAD ULD, "
                  << curTest->fsignl[xRng] << ", "
-                 << curCalib.uldMeV[XtalRng(face,rng.val()-1)] << ", "
+                 << curCalib.uldMeV[XtalRng(face, RngNum(rng.val()-1))] << ", "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
         }
@@ -1129,10 +1129,10 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
 
 
   for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(curTest->xtalIdx, face);
+    const FaceIdx faceIdx(curTest->xtalIdx, face);
 
-    RngNum rng = ro->getRange(face);
-    XtalRng xRng(face,rng);
+    const RngNum rng(ro->getRange(face));
+    const XtalRng xRng(face,rng);
           
                                     
     //////////////
@@ -1235,10 +1235,10 @@ StatusCode test_CalXtalResponse::preprocXtalDigi(const Event::CalDigi &calDigi) 
 
   for (int nRO = 0; nRO < nReadouts; nRO++) {
     for (FaceNum face; face.isValid(); face++) {
-      float adc = calDigi.getAdc(nRO, face);
-      RngNum rng = calDigi.getRange(nRO, face);
-      RngIdx rngIdx(curTest->xtalIdx, face, rng);
-      XtalRng xRng(face,rng);
+      const float adc = calDigi.getAdc(nRO, face);
+      const RngNum rng(calDigi.getRange(nRO, face));
+      const RngIdx rngIdx(curTest->xtalIdx, face, rng);
+      const XtalRng xRng(face,rng);
       
       curTest->adcPed[xRng] = adc - curCalib.ped[xRng];
 
@@ -1342,7 +1342,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
 
   //-- INTNONLIN && THOLDCI--//
   for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(curTest->xtalIdx, face);
+    const FaceIdx faceIdx(curTest->xtalIdx, face);
 
     const CalTholdCI *tholdCI = curTest->getCalCalibSvc()->getTholdCI(faceIdx);
     if (!tholdCI) return StatusCode::FAILURE;
@@ -1352,8 +1352,8 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
         
     
     for (RngNum rng; rng.isValid(); rng++) {
-      XtalRng xRng(face,rng);
-      RngIdx rngIdx(curTest->xtalIdx, xRng);
+      const XtalRng xRng(face,rng);
+      const RngIdx rngIdx(curTest->xtalIdx, xRng);
 
       // load up new calibs
       curCalib.uldThresh[xRng] = tholdCI->getULD(rng.val())->getVal();
@@ -1412,7 +1412,7 @@ StatusCode test_CalXtalResponse::preprocCalCalib() {
   
   for (FaceNum face; face.isValid(); face++) {
     // lacMeV
-    FaceIdx faceIdx(curTest->xtalIdx, face);
+    const FaceIdx faceIdx(curTest->xtalIdx, face);
     sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(faceIdx,LEX8),
                                                    curCalib.lacThresh[face],
                                                    curCalib.lacMeV[face]);
@@ -1420,8 +1420,8 @@ StatusCode test_CalXtalResponse::preprocCalCalib() {
 
     // FLE & FHE MeV
     for (DiodeNum diode; diode.isValid(); diode++) {
-      XtalDiode xDiode(face, diode);
-      DiodeIdx diodeIdx(faceIdx, diode);
+      const XtalDiode xDiode(face, diode);
+      const DiodeIdx diodeIdx(faceIdx, diode);
                                                    
       sc = curTest->getPrecalcCalib()->getTrigMeV(diodeIdx,
                                                   curCalib.trigMeV[xDiode]);
@@ -1429,8 +1429,8 @@ StatusCode test_CalXtalResponse::preprocCalCalib() {
     }
                                                   
     for (RngNum rng; rng.isValid(); rng++) {
-      RngIdx rngIdx(faceIdx,rng);
-      XtalRng xRng(face, rng);
+      const RngIdx rngIdx(faceIdx,rng);
+      const XtalRng xRng(face, rng);
       
       sc = curTest->getCalCalibSvc()->evalFaceSignal(rngIdx,
                                                      curCalib.uldThresh[xRng],
@@ -1478,7 +1478,7 @@ StatusCode test_CalXtalResponse::testTholds() {
     if (sc.isFailure()) return sc;
 
     for (DiodeNum diode; diode.isValid(); diode++) {
-      XtalDiode xDiode(face,diode);
+      const XtalDiode xDiode(face,diode);
       //-- FLE/FHE --//
       curTest->meV = curCalib.trigMeV[xDiode]*.95;
       sc = testSingleHit();
@@ -1492,7 +1492,7 @@ StatusCode test_CalXtalResponse::testTholds() {
 
     //- HEX1 ULD is not a ULD, it's a saturation point.
     for (RngNum rng; rng < HEX1; rng++) {
-      XtalRng xRng(face,rng);
+      const XtalRng xRng(face,rng);
       //-- ULD --//
       curTest->meV = curCalib.uldMeV[xRng]*.95;
       sc = testSingleHit();
@@ -1514,17 +1514,17 @@ void test_CalXtalResponse::fillMcHit(XtalIdx xtalIdx,
                                      Event::McIntegratingHit &hit) {
 
   //-- Create Volume Id (snagged from XtalRecTool::pos2Point()
-  TwrNum twr = xtalIdx.getTwr();
-  LyrNum lyr = xtalIdx.getLyr();
-  ColNum col = xtalIdx.getCol();
+  const TwrNum twr = xtalIdx.getTwr();
+  const LyrNum lyr = xtalIdx.getLyr();
+  const ColNum col = xtalIdx.getCol();
   idents::VolumeIdentifier segmId;
   segmId.append(m_eLATTowers);
   segmId.append(twr.getRow());
   segmId.append(twr.getCol());
   segmId.append(m_eTowerCAL);
-  segmId.append(lyr);
-  segmId.append(lyr.getDir()); 
-  segmId.append(col);
+  segmId.append(lyr.val());
+  segmId.append(lyr.getDir().val()); 
+  segmId.append(col.val());
   segmId.append(m_eXtal);
 
   //-- calculate xtal segment #
@@ -1540,11 +1540,11 @@ void test_CalXtalResponse::fillMcHit(XtalIdx xtalIdx,
   segmId.append(nSeg);
 
   //-- calc 1st moment (distance from segment ctr)
-  float segCtr = (((float)nSeg+.5) // range 0.5 -> 11.5
+  const float segCtr = (((float)nSeg+.5) // range 0.5 -> 11.5
                   / m_nCsISeg)     // range 0 -> 1
     * m_csiLength;   // range 0 -> csiLen
             
-  float xDiff = xtalPos + m_csiLength/2 - segCtr;
+  const float xDiff = xtalPos + m_csiLength/2 - segCtr;
 
   HepPoint3D mom1(xDiff,0,0);
 
@@ -1635,9 +1635,9 @@ StatusCode test_CalXtalResponse::testNoise() {
     // nor too low, as clipping may bias results
     if (adcNoNoise[xRng] < curCalib.pedSig[xRng]*3) continue;
     
-    float adcMean = adcSum[xRng]/curTest->nHits;
-    float meanSq  = adcSumSq[xRng]/curTest->nHits;
-    float adcRMS  = sqrt(meanSq - pow(adcMean,2));
+    const float adcMean = adcSum[xRng]/curTest->nHits;
+    const float meanSq  = adcSumSq[xRng]/curTest->nHits;
+    const float adcRMS  = sqrt(meanSq - pow(adcMean,2));
 
     if (abs(adcRMS-curCalib.pedSig[xRng]) > 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits)) {
       msglog << MSG::WARNING << "TESTFAIL, BAD NOISE SIGMA, "
@@ -1647,8 +1647,8 @@ StatusCode test_CalXtalResponse::testNoise() {
       //return StatusCode::FAILURE;
     }
 
-    float thresh = 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits);
-    float diff =  abs(adcMean-adcNoNoise[xRng]);
+    const float thresh = 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits);
+    const float diff =  abs(adcMean-adcNoNoise[xRng]);
     if ( diff > thresh) {
       msglog << MSG::WARNING << "TESTFAIL, BAD NOISE MEAN, "
              << adcMean << ", "
@@ -1687,7 +1687,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
 
   // create individual hits
   for (int nHit = 0; nHit < curTest->nHits; nHit++) {
-    float xtalPos = m_csiLength*nHit/(curTest->nHits-1) - m_csiLength/2;
+    const float xtalPos = m_csiLength*nHit/(curTest->nHits-1) - m_csiLength/2;
     Event::McIntegratingHit hit;
     fillMcHit(curTest->xtalIdx, 
               xtalPos, 
@@ -1763,7 +1763,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
     pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
     curTest->posDiff = Vector(testPoint - recData.getPosition()).magnitude();
     curTest->recEne  = recData.getEnergy();
-    float eneDiff = rel_diff(curTest->meV, curTest->recEne);
+    const float eneDiff = rel_diff(curTest->meV, curTest->recEne);
         
     //--------- REPORT RESULT --------------------------//
     ostringstream tmp;

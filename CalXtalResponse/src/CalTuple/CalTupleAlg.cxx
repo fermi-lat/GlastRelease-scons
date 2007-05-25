@@ -284,7 +284,7 @@ StatusCode CalTupleAlg::execute() {
         RngIdx rngIdx(xtalIdx, face, rng);
 
         // adc range
-        m_tupleEntry.m_calXtalAdcRng[twr][lyr][col][face.val()] = rng.val();
+        m_tupleEntry.m_calXtalAdcRng[twr.val()][lyr.val()][col.val()][face.val()] = rng.val();
 
         // get pedestals
         // pedestals
@@ -310,14 +310,14 @@ StatusCode CalTupleAlg::execute() {
           }
                   
           faceSignal = max<float>(0,faceSignal);
-          m_tupleEntry.m_calXtalFaceSignal[twr][lyr][col][face.val()] = faceSignal;
-          m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
+          m_tupleEntry.m_calXtalFaceSignal[twr.val()][lyr.val()][col.val()][face.val()] = faceSignal;
+          m_tupleEntry.m_calXtalFaceSignalAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = faceSignal;
         }
 
 
         // fill in 1st readout for both bestrange and allrange arrays
-        m_tupleEntry.m_calXtalAdcPed[twr][lyr][col][face.val()] = adcPed;
-        m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
+        m_tupleEntry.m_calXtalAdcPed[twr.val()][lyr.val()][col.val()][face.val()] = adcPed;
+        m_tupleEntry.m_calXtalAdcPedAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = adcPed;
 
         // loop through remaining 3 readouts
         for (unsigned char nRO = 1; nRO < 4; nRO++) {
@@ -326,7 +326,7 @@ StatusCode CalTupleAlg::execute() {
           const CalDigi::CalXtalReadout *ro = (*digiIter)->getXtalReadout(nRO);
           if (!ro) continue;
 
-          RngNum rng = ro->getRange(face);
+          RngNum rng(ro->getRange(face));
           short adc = ro->getAdc(face);
             
           // get pedestals
@@ -338,7 +338,7 @@ StatusCode CalTupleAlg::execute() {
           // ped subtracted ADC
           float adcPed = adc - ped->getAvr();
             
-          m_tupleEntry.m_calXtalAdcPedAllRange[twr][lyr][col][face.val()][rng.val()] = adcPed;
+          m_tupleEntry.m_calXtalAdcPedAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = adcPed;
 
           //-- FACE SIGNAL --//
           if (adcPed > 0) {
@@ -356,7 +356,7 @@ StatusCode CalTupleAlg::execute() {
             }
 
             faceSignal = max<float>(0,faceSignal);
-            m_tupleEntry.m_calXtalFaceSignalAllRange[twr][lyr][col][face.val()][rng.val()] = faceSignal;
+            m_tupleEntry.m_calXtalFaceSignalAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = faceSignal;
           }
         }
       }

@@ -550,7 +550,7 @@ StatusCode XtalDigiTool::rangeSelect() {
 
     // BEST RANGE
     RngNum rng;
-    for (rng=0; rng.isValid(); rng++) {
+    for (rng=LEX8; rng.isValid(); rng++) {
       // get ULD threshold
       XtalRng xRng(face,rng);
       m_dat.uldTholdADC[xRng] = tholdCI->getULD(rng.val())->getVal();
@@ -575,7 +575,7 @@ StatusCode XtalDigiTool::rangeSelect() {
     }
     
     // assign range selection
-    m_dat.rng[face] = (CalXtalId::AdcRange)rng;
+    m_dat.rng[face] = rng;
   }  // per face, range selection
 
   return StatusCode::SUCCESS;
@@ -605,7 +605,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   for (int nRo=0; nRo < roLimit; nRo++) {
     for (FaceNum face; face.isValid(); face++) {
       // represents ranges used for current readout in loop
-      roRange[face] = (m_dat.rng[face].val() + nRo) % RngNum::N_VALS; 
+      roRange[face] = RngNum((m_dat.rng[face].val() + nRo) % RngNum::N_VALS); 
 
       XtalRng xRng(face,roRange[face]);
       RngIdx rngIdx(m_dat.xtalIdx, face, roRange[face]);
