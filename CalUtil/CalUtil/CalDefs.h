@@ -98,7 +98,7 @@ namespace CalUtil {
   class LyrNum : public SimpleId {
   public:
     LyrNum() : SimpleId() {}
-    explicit LyrNum(const unsigned short val) : SimpleId(val) {}
+    LyrNum(const unsigned short val) : SimpleId(val) {}
     inline LyrNum(const DirNum dir, const GCRCNum gcrc);
     
     static const unsigned short N_VALS=8;
@@ -158,6 +158,7 @@ namespace CalUtil {
   public:
     FaceNum() : SimpleId() {}
 	explicit FaceNum(const idents::CalXtalId::XtalFace face) : SimpleId(face) {}
+    FaceNum(unsigned short val) : SimpleId(val) {}
     
     static const vector<string> MNEM;
     static const unsigned short N_VALS=2;    
@@ -222,7 +223,7 @@ namespace CalUtil {
   /// index class for GLAST Cal ADC range (LEX8 -> HEX1)
   class RngNum : public SimpleId {
   public:
-    explicit RngNum(const unsigned short val) : SimpleId(val) {}
+    RngNum(const unsigned short val) : SimpleId(val) {}
     RngNum(DiodeNum diode, THXNum thx) :
       SimpleId(diode.val()*2 + thx.val()) {}
     RngNum() : SimpleId() {}
