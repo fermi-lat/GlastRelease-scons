@@ -33,6 +33,8 @@ namespace CalUtil {
     protected:
     typedef vector<val_type> parent_type;
     typedef size_t size_type;
+    
+    public:
     typedef typename parent_type::reference reference;
     typedef typename parent_type::const_reference const_reference;
     typedef typename parent_type::iterator iterator;
@@ -40,8 +42,8 @@ namespace CalUtil {
 
     public:
     CalVec() : parent_type() {};
-    CalVec(size_type sz) : parent_type(sz) {}
-    CalVec(size_type sz, const val_type &val) : parent_type(sz,val) {}
+    CalVec(const size_type sz) : parent_type(sz) {}
+    CalVec(const size_type sz, const val_type &val) : parent_type(sz,val) {}
 
     reference operator[] (const idx_type &idx) {
       return parent_type::operator[](idx.val());
@@ -57,11 +59,11 @@ namespace CalUtil {
       return parent_type::at(idx.val());
     }
 
-    void resize(size_type sz) {
+    void resize(const size_type sz) {
       parent_type::resize(sz);
     }
 
-    void resize(size_type sz, const val_type &val) {
+    void resize(const size_type sz, const val_type &val) {
       parent_type::resize(sz, val);
     }
     

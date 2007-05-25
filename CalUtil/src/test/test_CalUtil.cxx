@@ -94,20 +94,22 @@ bool testCalDefs(){
   for (short tRow=0; tRow < 4 ; tRow++)
     for (short tCol=0; tCol < 4; tCol++) {
 
-      TwrNum twr(tRow, tCol);
+      const TwrNum twr(tRow, tCol);
       if (tRow != twr.getRow()) return false;
       if (tCol != twr.getCol()) return false;
       
       for (DirNum dir; dir.isValid(); dir++)
         for (GCRCNum gcrc; gcrc.isValid(); gcrc++) {
 
-          LyrNum lyr(dir, gcrc);
+          const LyrNum lyr(dir, gcrc);
           if (dir != lyr.getDir()) return false;
 
           for (ColNum col; col.isValid(); col++) {
-            CalXtalId xtalId(twr,lyr,col);
+            const CalXtalId xtalId(twr.val(),
+                                   lyr.val(),
+                                   col.val());
 
-            XtalIdx xtalIdx(twr,lyr,col);
+            const XtalIdx xtalIdx(twr,lyr,col);
             if (xtalId != xtalIdx.getCalXtalId()) return false;
             if (twr != xtalIdx.getTwr()) return false;
             if (lyr != xtalIdx.getLyr()) return false;
@@ -117,8 +119,12 @@ bool testCalDefs(){
             if (XtalIdx(xtalId) != xtalIdx) return false;
 
             for (FaceNum face; face.isValid(); face++) {
-              FaceIdx faceIdx(twr,lyr,col,face);
-              CalXtalId faceId(twr,lyr,col,(CalXtalId::XtalFace)face);
+              const FaceIdx faceIdx(twr,lyr,col,face);
+              const CalXtalId faceId(twr.val(),
+                                     lyr.val(),
+                                     col.val(),
+                                     (CalXtalId::XtalFace)face.val());
+
               if (faceId != faceIdx.getCalXtalId()) return false;
               if (twr != faceIdx.getTwr()) return false;
               if (lyr != faceIdx.getLyr()) return false;
@@ -135,11 +141,11 @@ bool testCalDefs(){
                 if (RngNum(diode,THX8).val() != diode.getX8Rng().val()) return false;
                 if (RngNum(diode,THX1) != diode.getX1Rng()) return false;
 
-                XtalDiode xDiode(face,diode);
+                const XtalDiode xDiode(face,diode);
                 if (diode != xDiode.getDiode()) return false;
                 if (face  != xDiode.getFace()) return false;
 
-                DiodeIdx diodeIdx(twr,lyr,col,face,diode);
+                const DiodeIdx diodeIdx(twr,lyr,col,face,diode);
                 if (twr != diodeIdx.getTwr()) return false;
                 if (lyr != diodeIdx.getLyr()) return false;
                 if (col != diodeIdx.getCol()) return false;
@@ -157,16 +163,20 @@ bool testCalDefs(){
                 
                 for (THXNum thx; thx.isValid(); thx++) {
 
-                  RngNum rng(diode,thx);
+                  const RngNum rng(diode,thx);
                   if (diode != rng.getDiode()) return false;
 
-                  XtalRng xRng(face, rng);
+                  const XtalRng xRng(face, rng);
                   if (face != xRng.getFace()) return false;
                   if (rng != xRng.getRng()) return false;
                   if (xDiode != xRng.getXtalDiode()) return false;
 
-                  RngIdx rngIdx(twr,lyr,col,face,rng);
-                  CalXtalId rngId(twr, lyr, col, face.val(), rng.val());
+                  const RngIdx rngIdx(twr,lyr,col,face,rng);
+                  const CalXtalId rngId(twr.val(), 
+                                        lyr.val(), 
+                                        col.val(), 
+                                        face.val(), 
+                                        rng.val());
                   if (twr != rngIdx.getTwr()) return false;
                   if (lyr != rngIdx.getLyr()) return false;
                   if (col != rngIdx.getCol()) return false;
