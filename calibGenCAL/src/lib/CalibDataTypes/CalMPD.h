@@ -18,53 +18,56 @@
 
 // STD INCLUDES
 
-class CalAsym;
-class CIDAC2ADC;
+namespace calibGenCAL {
 
-/** \brief Represents GLAST Cal Optical gain calibration constants
-    (MeV <-> CIDAC)
+  class CalAsym;
+  class CIDAC2ADC;
 
-    contains read & write methods to various file formats
+  /** \brief Represents GLAST Cal Optical gain calibration constants
+      (MeV <-> CIDAC)
 
-    @author Zachary Fewtrell
-*/
-class CalMPD {
- public:
-  CalMPD();
+      contains read & write methods to various file formats
 
-  void writeTXT(const std::string &filename) const;
+      @author Zachary Fewtrell
+  */
+  class CalMPD {
+  public:
+    CalMPD();
 
-  void readTXT(const std::string &filename);
+    void writeTXT(const std::string &filename) const;
 
-  float getMPD(CalUtil::XtalIdx xtalIdx,
-               CalUtil::DiodeNum diode) const {
-    return m_mpd[diode][xtalIdx];
-  }
+    void readTXT(const std::string &filename);
 
-  float getMPDErr(CalUtil::XtalIdx xtalIdx,
-                  CalUtil::DiodeNum diode) const {
-    return m_mpdErr[diode][xtalIdx];
-  }
+    float getMPD(const CalUtil::XtalIdx xtalIdx,
+                 const CalUtil::DiodeNum diode) const {
+      return m_mpd[diode][xtalIdx];
+    }
 
-  void setMPD(CalUtil::XtalIdx xtalIdx,
-              CalUtil::DiodeNum diode,
-              float val) {
-    m_mpd[diode][xtalIdx] = val;
-  }
+    float getMPDErr(const CalUtil::XtalIdx xtalIdx,
+                    const CalUtil::DiodeNum diode) const {
+      return m_mpdErr[diode][xtalIdx];
+    }
 
-  void setMPDErr(CalUtil::XtalIdx xtalIdx,
-                 CalUtil::DiodeNum diode,
-                 float val) {
-    m_mpdErr[diode][xtalIdx] = val;
-  }
+    void setMPD(const CalUtil::XtalIdx xtalIdx,
+                const CalUtil::DiodeNum diode,
+                float val) {
+      m_mpd[diode][xtalIdx] = val;
+    }
 
-  static const short INVALID_MPD;
+    void setMPDErr(const CalUtil::XtalIdx xtalIdx,
+                   const CalUtil::DiodeNum diode,
+                   const float val) {
+      m_mpdErr[diode][xtalIdx] = val;
+    }
 
- private:
-  /// 2d vector N_MPD_PTS lograt mpdvals per xtal/mpdType
-  CalUtil::CalVec<CalUtil::DiodeNum, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_mpd;
-  /// corresponding error value
-  CalUtil::CalVec<CalUtil::DiodeNum, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_mpdErr;
-};
+    static const short INVALID_MPD;
 
+  private:
+    /// 2d vector N_MPD_PTS lograt mpdvals per xtal/mpdType
+    CalUtil::CalVec<CalUtil::DiodeNum, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_mpd;
+    /// corresponding error value
+    CalUtil::CalVec<CalUtil::DiodeNum, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_mpdErr;
+  };
+
+}; // namespace calibGenCAL
 #endif

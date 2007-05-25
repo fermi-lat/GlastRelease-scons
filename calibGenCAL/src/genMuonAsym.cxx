@@ -26,6 +26,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace calibGenCAL;
 using namespace CGCUtil;
 using namespace CfgMgr;
 

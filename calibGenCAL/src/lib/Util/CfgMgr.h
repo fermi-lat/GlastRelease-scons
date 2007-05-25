@@ -25,6 +25,7 @@
 
 */
 
+
 namespace CfgMgr {
   template <typename _T>
   std::string toStr(const _T &val) {
@@ -234,8 +235,8 @@ namespace CfgMgr {
            ) :
       name(name),
       help(help),
-      val(defVal),
-      isOpt(isOpt)
+      isOpt(isOpt),
+      val(defVal)
     {
     }
 

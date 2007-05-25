@@ -23,6 +23,7 @@
 
 using namespace std;
 using namespace CGCUtil;
+using namespace calibGenCAL;
 
 int main(int argc,
          char **argv) {
@@ -93,7 +94,7 @@ int main(int argc,
     // trigger configuration A :  Even Rows Even Columns
     unsigned nEvents      = cfgFile. getVal<unsigned>("MU_TRIG",
                                                       "N_EVENTS",
-                                                      ULONG_MAX);                                                                             // process all events by default.
+                                                      ULONG_MAX); // process all events by default.
 
     bool     calLOEnabled = cfgFile. getVal<bool>("MU_TRIG",
                                                   "CAL_LO_ENABLED",

@@ -16,47 +16,50 @@
 
 // STD INCLUDES
 
-/** \brief \brief Represents GLAST Cal ADC pedestal calibrations
+namespace calibGenCAL {
 
-contains read & write methods to various file formats
+  /** \brief Represents GLAST Cal ADC pedestal calibrations
 
-@author Zachary Fewtrell
-*/
-class CalPed {
- public:
-  CalPed();
+  contains read & write methods to various file formats
 
-  /// write pedestals to columnar TXTfile
-  void writeTXT(const std::string &filename) const;
+  @author Zachary Fewtrell
+  */
+  class CalPed {
+  public:
+    CalPed();
 
-  /// read pedestals from columnar TXTfile
-  void readTXT(const std::string &filename);
+    /// write pedestals to columnar TXTfile
+    void writeTXT(const std::string &filename) const;
 
-  float getPed(CalUtil::RngIdx rngIdx) const {
-    return m_peds[rngIdx];
-  }
+    /// read pedestals from columnar TXTfile
+    void readTXT(const std::string &filename);
 
-  float getPedSig(CalUtil::RngIdx rngIdx) const {
-    return m_pedSig[rngIdx];
-  }
+    float getPed(const CalUtil::RngIdx rngIdx) const {
+      return m_peds[rngIdx];
+    }
 
-  void setPed(CalUtil::RngIdx rngIdx,
-              float val) {
-    m_peds[rngIdx] = val;
-  }
+    float getPedSig(const CalUtil::RngIdx rngIdx) const {
+      return m_pedSig[rngIdx];
+    }
 
-  void setPedSig(CalUtil::RngIdx rngIdx,
-                 float val) {
-    m_pedSig[rngIdx] = val;
-  }
+    void setPed(const CalUtil::RngIdx rngIdx,
+                const float val) {
+      m_peds[rngIdx] = val;
+    }
 
-  static const short INVALID_PED;
+    void setPedSig(const CalUtil::RngIdx rngIdx,
+                   const float val) {
+      m_pedSig[rngIdx] = val;
+    }
 
- private:
-  /// output pedestal data.
-  CalUtil::CalVec<CalUtil::RngIdx, float> m_peds;
-  /// corresponding err values for m_calCalPed
-  CalUtil::CalVec<CalUtil::RngIdx, float> m_pedSig;
-};
+    static const short INVALID_PED;
 
+  private:
+    /// output pedestal data.
+    CalUtil::CalVec<CalUtil::RngIdx, float> m_peds;
+    /// corresponding err values for m_calCalPed
+    CalUtil::CalVec<CalUtil::RngIdx, float> m_pedSig;
+  };
+
+}; // namespace calibGenCAL
 #endif

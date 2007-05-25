@@ -89,7 +89,7 @@ SimpleIniFile::SimpleIniFile(const string &filename)
   if (!openIniFile(filename)) {
     ostringstream tmp;
     tmp << __FILE__ << ":" << __LINE__ <<
-      ": Cannot open cfg file: " << filename;
+      ": Cannot open cfg file: '" << filename << "'";
     throw std::runtime_error(tmp.str());
   }
 }

@@ -21,6 +21,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace calibGenCAL;
 using namespace CalUtil;
 using namespace CGCUtil;
 using namespace CfgMgr;
@@ -118,7 +119,7 @@ int main(int argc,
     CIDAC2ADC    cidac2adc;
     IntNonlinAlg inlAlg;
 
-    string       adcMeanFile(cfg.outputBasename.getVal() + ".adcmean.txt");
+    const string       adcMeanFile(cfg.outputBasename.getVal() + ".adcmean.txt");
 
     if (cfg.rootFileLE.getVal().length()) {
       LogStream::get() << __FILE__ << ": reading LE calibGen event file: " << cfg.rootFileLE.getVal() << endl;

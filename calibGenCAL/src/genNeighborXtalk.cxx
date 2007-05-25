@@ -22,6 +22,7 @@
 #include <stdexcept>
 
 using namespace std;
+using namespace calibGenCAL;
 using namespace CalUtil;
 using namespace CGCUtil;
 using namespace CfgMgr;
