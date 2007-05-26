@@ -105,9 +105,9 @@ namespace AcdMap {
   inline AcdTilePmt* _initTbl();
   inline unsigned* _initGemTbl();
   inline unsigned* _initIndexTbl();
-  const std::map<AcdTilePmt,AcdGarcGafe> _initMap();
-  const std::map<unsigned,unsigned> _initGemMap();
-  const std::map<unsigned,unsigned> _initIndexMap();
+  const std::map<AcdTilePmt,AcdGarcGafe>& _initMap();
+  const std::map<unsigned,unsigned>& _initGemMap();
+  const std::map<unsigned,unsigned>& _initIndexMap();
 
   const AcdTilePmt* toTilePmt(unsigned  cable, unsigned  channel) {
     if (channel >= 18 || cable >= 12 ) return 0;
@@ -361,7 +361,7 @@ namespace AcdMap {
     return a;
   };
   
-  const std::map<AcdTilePmt,AcdGarcGafe> _initMap() {
+  const std::map<AcdTilePmt,AcdGarcGafe>& _initMap() {
     static std::map<AcdTilePmt,AcdGarcGafe> theMap;
     if ( theMap.size() == 0 ) {
       for ( unsigned garc(0); garc < 12; garc++ ) {
@@ -374,7 +374,7 @@ namespace AcdMap {
     return theMap;
   };
   
-  const std::map<unsigned,unsigned> _initGemMap() {   
+  const std::map<unsigned,unsigned>& _initGemMap() {   
     static std::map<unsigned,unsigned> theMap;
     if ( theMap.size() == 0 ) {
       for ( unsigned idx(0); idx < 128; idx++ ) {
@@ -386,7 +386,7 @@ namespace AcdMap {
     }
     return theMap;
   };
-  const std::map<unsigned,unsigned> _initIndexMap() {   
+  const std::map<unsigned,unsigned>& _initIndexMap() {   
     static std::map<unsigned,unsigned> theMap;
     if ( theMap.size() == 0 ) {
       for ( unsigned idx(0); idx < 108; idx++ ) {
