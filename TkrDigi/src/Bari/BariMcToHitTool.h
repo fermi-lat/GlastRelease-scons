@@ -19,6 +19,7 @@
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "TkrUtil/ITkrToTSvc.h"
 #include "../GaudiAlg/TkrDigiAlg.h"
 #include <string>
 
@@ -45,7 +46,8 @@ private:
     InitCurrent       m_openCurr;
     /// pointer to geometry svc
     ITkrGeometrySvc* m_tkrGeom;
-
+    /// pointer to ToT svc
+    ITkrToTSvc* pToTSvc;
     std::string m_type;
     /// Pointers to the sub algorithms
     TkrDigiAlg* m_BamcToHitAlg;
