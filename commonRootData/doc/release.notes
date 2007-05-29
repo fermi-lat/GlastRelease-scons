@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r15p1 29-May-2007 MK  Improvement to AcdMap for eff. by returning reference
 v2r15   30-Mar-2007 HMK fixes for rhel4 and tagging some other changes from
         David and Martin
 v2r14   12-Mar-2007 TU  Some modifications to handling of relational tables
