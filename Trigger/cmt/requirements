@@ -23,6 +23,7 @@ apply_pattern package_include
 private
 #needed only for the test app
 use CalibSvc *
+use configData *
 
 use Event *
 use GlastSvc *
