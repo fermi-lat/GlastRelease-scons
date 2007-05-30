@@ -224,9 +224,6 @@ As of new 3-d model 6-23-03 old value of 2.5 caused overlap.  With
 no official blessing, try something smaller.  According to (old) model there
 is no gap between ribbon and topmost tiles. As of Nov. 05, gap
 appears to be about 1.5 or 2 mm</prim>
-  <prim name="ribbonOverlap" value="15.0">Amount X ribbon segment overshoots
-     tile edge of tile it's under. (This is a figment of the simulated
-model.  Real ribbons don't come in disconnected segments.)</prim>
 
   <prim name="ribbonExtend" value="50.0">Where tiles overlap, distance 
     over which a ribbon has displacement appropriate to near tile even 

@@ -40,11 +40,12 @@
   <const name="tileSideThickness" >
     <notes>Thickness of ACD side depends on configuration of tiles.
            For now (May 2007) it's just double thickness of a single side
-           tile
+           tile + clearance
     </notes>
     <add>
       <refer refTo="tileThickness" />
       <refer refTo="tileThickness" />
+      <refer refTo="sideTileOverlapClearance" />
     </add>
   </const>
 
@@ -78,7 +79,9 @@
      ACD top tiles and ribbons (1 nov 2002)
      As of July, '03, simply use information from 3-d model
      about location of top of topmost tiles and top of 
-     support structure to compute this.</notes>
+     support structure to compute this. As of 2005, top tiles and
+     ribbons are no longer contained in an envelope, but this is
+     still a convenient number to compute.</notes>
     <minus>
       <refer refTo="ACDTileMaxZ" />
       <refer refTo="ACDTopSupportMaxZ" />
@@ -112,8 +115,8 @@
   <const name="ACDTotalTransSide" >
     <notes>transverse length of collection of ACD side tiles,
         e.g those alone -X side of instrument. Could be
-        used for envelope volume. Is also equal to transverse
-        dimension of the single tile in the bottom  row.
+        used for envelope volume with old, simple, pre-May '07 model
+        when it was the dimension of the single tile in the bottom  row.
         (1 nov 2002).  July '03.  Now compute as sum of tranverse
         dimensions of tiles in R0, columns 0-5, plus gaps</notes>
     <add>
@@ -207,23 +210,6 @@
        </half>
      </add>
   </const>
-
-  <const name="ACDSideRow_dt" >
-    <notes>Side tile rows 1 and 3 are displaced outwards relative to 
-           box containing all side tiles.  For +Y, +X sides use
-           pos disp. for rows 1 and 3, neg. for rows 0 and 2</notes>
-    <half>
-      <refer refTo="tileThickness" />
-    </half>
-  </const>    
-
-  <const name="ACDSideRow_dtn" >
-    <notes>Side tile rows 0 and 2 are displaced inwards relative to 
-           box containing all side tiles</notes>
-    <uminus>
-      <refer refTo="ACDSideRow_dt" />
-    </uminus>
-  </const>    
 
   <const name="ACDTopTransverse" >
     <notes>Transverse dimension of envelope which will contain

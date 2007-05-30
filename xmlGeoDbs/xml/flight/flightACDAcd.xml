@@ -180,30 +180,12 @@
      running parallel to X-axis and 4 (X-)ribbons, each broken into
      5 segments, running parallel to Y-axis. First make
      an envelope volume             -->
-<!-- don't need this anymore
-<box name="ACDTopEnv" 
-     XREF="ACDTopTransverse"
-     YREF="ACDTopTransverse"
-     ZREF="ACDTop_z"
-     materialREF="vacuumMat"
-     />
--->
 <!-- Done except for completing definition of ACDTop.
-
 However, new scheme does not include a composition: just locate
 components directly in LATInner.  See guts of this in flightACDTop.xml
 -->
 
 
-<!-- Now for ACD sides (tiles and ribbons) 
-     
-     Next upgrade may be to revise this very simple (no slant, no
-     tile overlap) model for something a little closer to the truth:
-     top row is left alone, remaining rows are moved out by approx.
-     tile thickness and top row is overlapped in Z by next row down.
-
-     But not this round (28 Nov, 05) 
--->
 
 <!-- different box needed for each of the 4 rows of side tiles on X sides 
      and Y sides (X and Y sides have same tile dimensions.  Unfortunately,
@@ -488,55 +470,8 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
   </axisPos>
 </stackX>
 
-<!-- Stack up the rows in Z for face 2 -->
 
-<!-- instead, position each row independently in flightSection.  Ugh -->
-<stackZ name="TileFace2or3" >
-  <axisPos volume="sideTileRowR3" dYREF="ACDSideRow_dtn" >
-    <idField name="fRow" value="3" />
-  </axisPos>
-  <axisPos volume="sideTileRow2Face2"  dYREF="ACDSideRow_dt" 
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="2" />
-  </axisPos>
-  <axisPos volume="sideTileRow1Face2" dYREF="ACDSideRow_dtn"  
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="1" />
-  </axisPos>
-  <axisPos volume="sideTileRow0Face2"  dYREF="ACDSideRow_dt"
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="0" />
-  </axisPos>
-</stackZ>
-
-<!-- Same for faces 4 and 1 -->
-<stackZ name="TileFace4or1" >
-  <axisPos volume="sideTileRowR3" dYREF="ACDSideRow_dt">
-    <idField name="fRow" value="3" />
-  </axisPos>
-  <axisPos volume="sideTileRow2Face4" dYREF="ACDSideRow_dtn" 
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="2" />
-  </axisPos>
-  <axisPos volume="sideTileRow1Face4" dYREF="ACDSideRow_dt" 
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="1" />
-  </axisPos>
-  <axisPos volume="sideTileRow0Face4" dYREF="ACDSideRow_dtn" 
-           gapREF="sideVerticalGap">
-    <idField name="fRow" value="0" />
-  </axisPos>
-</stackZ>
-
-<!-- Make the envelope for a Y side of tiles, even though
-     currently not using it -->
-<box name="TileYSideEnv"
-     XREF="ACDTotalTransSide"
-     YREF="tileThickness"
-     ZREF="ACDSide_z" 
-     materialREF="vacuumMat"
-     />
-
+<!-- Each row will be positioned independently in flightSection.  Ugh -->
 
 <!-- Make envelope for side of ribbons.  Has X as long dimension
      so will contain ribbons measuring X.  Can rotate for Y-ribbons -->

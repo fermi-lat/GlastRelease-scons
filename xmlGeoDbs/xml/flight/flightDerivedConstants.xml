@@ -350,11 +350,8 @@
           </notes>
           <minus>
             <add>
-              <refer refTo="ACDTop_d" />
+              <refer refTo="ACDTileMaxZ" />
               <refer refTo="sideOverlap"/>
-              <half>
-                <refer refTo="ACDTop_z"/>
-              </half>
             </add>               
             <half>
                <refer refTo="sideTileHeight0" />
