@@ -272,13 +272,6 @@
 &ACDSides;
 
       <!-- Finally position blanket pieces -->
-<!--
-      <posXYZ volume="blanketTop"
-              ZREF="NADBlanketTop_dz" >
-        <idField name="fLATObjects" valueREF="eLATBlanket" />
-        <idField name="fBorderCmp" valueREF="eCenter" />
-      </posXYZ>
--->
       <posXYZ volume="NADBlanketTopTop"
               ZREF="NADBlanketTopTop_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
@@ -473,13 +466,6 @@
       <posXYZ volume="propellant"
                ZREF="tank_dz" />
 
-<!-- old spacecraft
-      <posXYZ volume="spacecraft"
-              ZREF="spacecraft_dz">
-        <idField name="fLATObjects" valueREF="eLATSpacecraft" />
-      </posXYZ>
--->
-
 <!-- Optical bench -->
       <posXYZ volume="opticalBench"
               XREF="opticalBench_dx"
@@ -521,6 +507,4 @@
               ZREF="globalOffset_dz" >
       </posXYZ>
     </composition>
-
-   
   </section>
