@@ -2,6 +2,14 @@
 <derCategory name="derACD" save="true" >
   <overview>Derived constants specific to the ACD</overview>
 
+  <const name="sideVerticalGap" >
+    <notes>Vertical gap between (rows of?) side tiles.  
+     As of 10 May 2007, this is an overlap, hence negative</notes> 
+    <uminus>
+      <refer refTo="sideVerticalOverlap" />
+    </uminus>
+  </const>
+
   <const name="sideTileTransLesser">
     <notes>Transverse  dimension of one edge side tile tile per side: 
            column 4 for -X and +Y side (faces 1 and 4); column 0 for +X 
@@ -385,6 +393,7 @@
      there are two thicknesses of tiles, need two more constants for the
      sticking-out parts
  -->
+<!--
   <const name="screwExtLen" >
     <notes>Length of screw part sticking out of normal-thickness tile
     </notes>
@@ -402,8 +411,9 @@
       <refer refTo="tileCenterThickness" />
     </minus>
   </const>
-      
+    -->  
 <!-- X-displacements for screws within top tiles (5 cm from edges) -->
+<!--
   <const name="topScrewXEdge_dx">
     <notes>x-displacement for screws on +x side of X-edge tiles
     </notes>
@@ -460,8 +470,9 @@
       <refer refTo="topScrewXCentral_dx" />
     </uminus>
   </const>
-
+-->
 <!-- Y-displacements for screws within top tiles (5 cm from edges) -->
+<!--
   <const name="topScrewYEdge_dy">
     <notes>y-displacement for screws on +y side of Y-edge tiles
     </notes>
@@ -518,10 +529,11 @@
       <refer refTo="topScrewYCentral_dy" />
     </uminus>
   </const>
-
+-->
 <!-- displacements for screws in side tiles (other than bottom row) -->
 
 <!-- Z-displacement for screws in side tiles (5 cm from edges) -->
+<!--
   <const name="side0Screw_dz">
     <notes>z-displacement for screws on +z side of top row (0) side tiles
     </notes>
@@ -578,8 +590,9 @@
       <refer refTo="side2Screw_dz" />
     </uminus>
   </const>
-
+-->
 <!-- transverse displacement for screws in side tiles (5 cm from edges) -->
+<!--
   <const name="sideLesserScrew_dt">
     <notes>Transverse (x or y) displacement for screws on some narrower
            side tiles (col 0 for sides 2 or 3; col 4 for
@@ -639,7 +652,7 @@
       <refer refTo="sideMidScrew_dt" />
     </uminus>
   </const>
- 
+ -->
 <!-- For current approximate model, transverse displacement of a
       side ACD face = transverse displacement of outer edge of row 0. -->
   <const name="tileSide_dt">
@@ -708,6 +721,7 @@
     squares 5 cm on a side.  The squares are evenly spaced across
     the tile
   -->
+<!--
    <const name="ACDScrewSqSide" >
      <notes>Total length of side of a minimal square containing a group
         of 4 screws </notes>
@@ -731,9 +745,10 @@
        </quo>
      </half>
    </const>
-
+-->
 <!-- transverse displacements for the 6 screw squares are multiples of
      the above -->
+<!--
    <const name="ACDScrewSqMin_dn">
      <notes>Smallest neg. displacement of a screw square</notes>
      <uminus>
@@ -785,7 +800,7 @@
        <refer refTo="screwInSq_d" />
      </uminus>
    </const>
-
+-->
   <const name="ACDSide_z" >
     <notes>Total height of an ACD side of tiles 
         (tiles plus gaps)</notes>
@@ -812,65 +827,6 @@
     </half>
   </const>
 
-<!-- heights of tiles on both X and Y sides are the same: -->
-  <const name="sideTileRow0_d">
-    <notes>Z-Displacement for top row (row 0) of side tiles (X and Y),
-          relative to the center of a box containing the side</notes>
-    <half>
-      <minus>
-        <refer refTo="ACDSide_z" />
-        <refer refTo="sideTileHeight0" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="sideTileRow1_d">
-    <notes>Displacement for row 1 side tiles (X and Y)</notes>
-    <minus>
-      <refer refTo="sideTileRow0_d" />
-      <add>
-        <refer refTo="sideVerticalGap" />
-        <half>
-          <add>
-            <refer refTo="sideTileHeight1" />
-            <refer refTo="sideTileHeight0" />
-          </add>
-        </half>
-      </add>
-    </minus>
-  </const>
-
-  <const name="sideTileRow2_d">
-    <notes>Displacement for row 2 side tiles (X and Y)</notes>
-    <minus>
-      <refer refTo="sideTileRow1_d" />
-      <add>
-        <refer refTo="sideVerticalGap" />
-        <half>
-          <add>
-            <refer refTo="sideTileHeight2" />
-            <refer refTo="sideTileHeight1" />
-          </add>
-        </half>
-      </add>
-    </minus>
-  </const>
-
-  <const name="sideTileRow3_d">
-    <notes>Displacement for row 3 side tiles (X and Y)</notes>
-    <minus>
-      <refer refTo="sideTileRow2_d" />
-      <add>
-        <refer refTo="sideVerticalGap" />
-        <half>
-          <add>
-            <refer refTo="sideTileHeight3" />
-            <refer refTo="sideTileHeight2" />
-          </add>
-        </half>
-      </add>
-    </minus>
-  </const>
 
   <const name="ACDSideDovetail_d" >
     <notes>Side tiles  on sides parallel to X-axis (sides 2 and 4)
@@ -1074,22 +1030,15 @@
     </uminus>
   </const>
 
-
+<!-- Ribbon stuff -->
 
   <const name="topYRibbon_dz" >
-    <notes>Z displacement rel. to containing envelope 
+    <notes>(Absolute) Z displacement
           for long ribbon segments running || to
           X-axis along top.</notes>
     <refer refTo="yRibbonTopAbs_dz" />
-<!--
-    <minus>
-      <refer refTo="yRibbonTopAbs_dz" />
-      <refer refTo="ACDTop_d" />
-    </minus>
--->
   </const>
 
-<!-- Ribbon stuff -->
   <const name="ribbonHalfThickness" >
     <notes>for convenience</notes>
     <half>
@@ -1099,8 +1048,9 @@
           
 <!-- Ribbon dimensions.   An xRibbon is one more or less contained in
       a plane of constant x (perp. to x axis) and similarly for yRibbon. 
-      In current (nov 2005) model xRibbons are divided into 5 segments
-      along top; yRibbons have only a single top segment
+      In current (may 2007) model xRibbons are divided into 9 segments
+      (5 longish horizontal pieces, 4 small vertical ones) along top; 
+      yRibbons have only a single top segment
   -->
          
   <const name="yRibbonTop_l">
@@ -1109,7 +1059,8 @@
     <refer refTo="ACDTopTransverse" />
   </const>
 
-  <!-- There are 3 different possible lengths for bits of X ribbon:
+  <!-- There are 3 different possible lengths for bits of X ribbon running
+       horizontally along the top:
        one for ribbon segments under the central row of tiles, one for 
        ribbon segments under "mid" tiles (rows 1 and 3) and one
        for ribbon segments under the outer rows (0 and 4).     -->
@@ -1216,6 +1167,7 @@
   </const>
 
 <!-- Length of little extra pieces of X-ribbon behind bent tiles -->
+<!--
   <const name="ribbonBentZ">
     <notes>Length (Z) of pieces of ribbon behind extra bent tile pieces
     </notes>
@@ -1227,12 +1179,13 @@
       </add>
     </minus>
   </const>
-
-<!-- z displacements for the different segments of the X ribbons. Make
-     them a fixed distance (ribbonGap) underneath the corresponding top
+-->
+<!-- z displacements for the different horizontal segments of the X ribbons. 
+     Make them a fixed distance (ribbonGap) underneath the corresponding top
      tile.
 
-     Each of the 4 X ribbons is divided into 5 segments. There are
+     Each of the 4 X ribbons is divided into 5 horiz segments (and 4 little
+     vertical segments). For the horizontal segments there are
        * 3 different Z displacements, computed from top tile Z displacements
        * 2 X displacments and their negatives, handled above already
            as xRibbonInner_dx, xRibbonOuter_dx
@@ -1468,6 +1421,351 @@
       <refer refTo="topVertFarXRibbon_dy" />
     </uminus>
   </const>
+
+<!-- Stuff for new, more realistic model of side ribbons -->
+
+  <const name="ribbonBentZ" > 
+    <notes>Part of side X ribbon running behind bent piece of top tile
+           and part of side tile row 0.  Revised May '07 for
+           more realistic side ribbon description.</notes>
+    <minus>
+      <add>
+        <refer refTo="topTileBentZ" />
+        <refer refTo="ribbonExtend" />
+      </add>
+      <refer refTo="ribbonGap" />
+    </minus>
+  </const>
+
+  <const name="sideRibbonTrans_l" >
+    <notes>Length of "standard" little horizontal-running bits of side ribbons,
+           same for both x- and y-measuring</notes>
+    <minus>
+      <add>
+        <refer refTo="tileThickness" />
+        <refer refTo="sideTileOverlapClearance" />
+      </add>
+      <refer refTo="ribbonThickness" />
+    </minus>
+  </const>
+
+  <!-- Side sections of Y-measuring ribbons have 4 vertical pieces and
+       3 transverse of lenth sideRibbonTrans_l.  
+       Side sections of X-measuring ribbons have 5 vertical pieces
+       and 4 transverse.  Of the transverse, 3 are of standard length
+       but the one at greatest Z-displacement is longer.
+       Of the vertical pieces, bottom 3 are identical for X-measuring
+       and Y-measuring. -->
+   
+  <const name="sideRibbonTrans0_l" >
+    <notes>Length of horizontal running bit of X-measuring ribbons with
+           greatest dz. Compute length as position of more distant end
+           minus distance of near end (but some terms cancel)</notes>
+    <minus>
+      <refer refTo="tileSide_dt" />
+      <add>
+        <refer refTo="ribbonThickness" />
+        <refer refTo="topTileBentR4_dy" />
+      </add>
+    </minus>
+  </const>
+
+<!-- lengths of vertical pieces of side ribbons.  Call the ones common
+     to X- and Y-measuring ribbons sideRibbonVert1, sideRibbonVert2,
+     sideRibbonVert3 (behind rows 1,2,3, resp.) . 
+ -->
+  <const name="sideRibbonVert1_l" >
+    <notes>Shortish piece of side ribbon behind Row 1</notes>
+    <minus>
+      <refer refTo="sideTileHeight1" />
+      <add>
+        <refer refTo="ribbonExtend" />
+        <refer refTo="ribbonExtend" />
+        <refer refTo="sideVerticalOverlap" />           
+        <refer refTo="sideVerticalOverlap" />           
+      </add>
+    </minus>
+  </const>
+
+  <const name="sideRibbonVert2_l" >
+    <notes>Longish piece of side ribbon behind Row 2</notes>
+    <add>
+      <refer refTo="sideTileHeight2" />
+      <refer refTo="ribbonExtend" />
+      <refer refTo="ribbonExtend" />
+      <refer refTo="ribbonThickness" />
+      <refer refTo="ribbonThickness" />
+    </add>
+  </const>
+
+  <const name="sideRibbonVert3_l" > 
+    <notes>Shortish piece of side ribbon behind Row 3</notes>
+    <minus>
+      <refer refTo="sideTileHeight3" />
+      <add>
+        <refer refTo="ribbonExtend" />
+        <refer refTo="sideVerticalOverlap" />           
+      </add>
+    </minus>
+  </const>
+
+  <!-- Vert0 is different for X-measuring and Y-measuring; ribbonBent only
+       exists for X-measuring ribbons  -->
+  
+  <const name="sideYRibbonVert0_l" > 
+    <notes> Max Z for this piece is = max Z for top Y-ribbons.
+            Min Z is ribbonExtend + ribbonThickness below bottom
+            of side tile row 0 </notes>
+    <minus>
+      <add>
+        <refer refTo="yRibbonTopAbs_dz" />
+        <half>
+          <refer refTo="ribbonThickness" />
+        </half>
+      </add>
+      <minus>
+        <refer refTo="tileSideR0_dz" />
+        <add>
+          <half>
+            <refer refTo="sideTileHeight0" />
+          </half>
+          <refer refTo="ribbonExtend" />
+          <refer refTo="ribbonThickness" />
+        </add>
+      </minus>
+    </minus>
+  </const>
+
+  <const name="sideXRibbonVert0_l" > 
+    <notes>Part of side X ribbon running behind bottom part of
+           side tile row 0</notes>
+    <minus>
+      <add>
+        <refer refTo="sideTileHeight0" />
+        <refer refTo="ribbonThickness" />
+      </add>
+      <add>
+        <refer refTo="topTileBentZ" />
+        <refer refTo="tileThickness" />
+        <refer refTo="sideOverlap" />
+      </add>
+    </minus>
+  </const>
+
+
+   <!-- Done defining dimensions.  Still need to define displacements
+        for sideXRibbonVert0, sideYRibbonVert0, sideRibbonVert1,
+        sideRibbonVert2, sideRibbonVert3, sideRibbonTrans0,
+        and sideRibbonTrans.  The last has 3 different Z displacements.
+
+        Think of all pieces as if they were part of X-ribbons; when used
+        for Y-ribbons they will be rotated.  dx is unchanged from simpler
+        design, but for each of the new pieces have to compute
+        dy and dz. -->
+
+  <!-- Z-displacements first -->
+  <const name="sideRibbonVert0MinZ" >
+    <notes>Bottom of side ribbon piece behind row 0 for both X and Y
+           ribbons
+    </notes>
+    <minus>
+      <refer refTo="tileSideR0_dz" />
+      <add>
+        <half>
+           <refer refTo="sideTileHeight0" />
+        </half>
+        <refer refTo="ribbonExtend" />
+        <refer refTo="ribbonThickness" />
+      </add>
+    </minus>
+  </const>
+
+  <const name="sideYRibbonVert0_dz">
+    <notes>z-displacement of piece of side Y-ribbon behind bottom of row0
+    </notes>
+    <add>
+      <refer refTo="sideRibbonVert0MinZ" />
+      <half>
+        <refer refTo="sideYRibbonVert0_l" />
+      </half>
+    </add>
+   </const>        
+
+  <const name="sideXRibbonVert0_dz">
+    <notes>z-displacement of piece of side X-ribbon behind bottom of row0
+    </notes>
+    <add>
+      <refer refTo="sideRibbonVert0MinZ" />
+      <half>
+        <refer refTo="sideXRibbonVert0_l" />
+      </half>
+    </add>
+   </const>        
+
+  <const name="sideRibbonVert1_dz">
+    <notes>z-displacement of piece of side ribbon behind row 1..
+           same as tile row
+    </notes>
+    <refer refTo="tileSideR1_dz" />
+  </const>
+
+  <const name="sideRibbonVert2_dz">
+    <notes>z-displacement of piece of side ribbon behind row 2..
+           same as tile row
+    </notes>
+    <refer refTo="tileSideR2_dz" />
+  </const>
+
+  <const name="sideRibbonVert3_dz">
+    <notes>z-displacement of piece of side ribbon behind row 3. 
+          For this model, bottom of ribbon is even with bottom of
+          (unshrunk) tile - not the case for real instrument, for
+          which ribbons don't go down that far, but
+          more or less irrelevant for simulation.
+    </notes>
+    <add>
+      <refer refTo="tileSideR3_dz" />
+      <half>
+        <minus>
+          <refer refTo="sideRibbonVert3_l" />
+          <refer refTo="sideTileHeight3" />
+        </minus>
+      </half>
+    </add>
+  </const>
+
+  <const name="sideRibbonTrans0_dz" >
+    <notes>Z-displacement for upper horizontal piece of X-measuring
+           side ribbons</notes>
+    <minus>
+      <refer refTo="ribbonBent_dz" />
+      <half>
+        <minus>
+          <refer refTo="ribbonBentZ" />
+          <refer refTo="ribbonThickness" />
+        </minus>
+       </half>
+     </minus>
+   </const>
+
+  <const name="sideRibbonTransUpper_dz" >
+    <notes>Z-displacement for upper horizontal piece of length 
+             sideRibbonTrans_l</notes>
+    <add>
+      <refer refTo="sideRibbonVert1_dz" />
+      <half>
+        <minus>
+          <refer refTo="sideRibbonVert1_l" />
+          <refer refTo="ribbonThickness" />
+        </minus>
+      </half>
+    </add>
+  </const>
+
+  <const name="sideRibbonTransMid_dz" >
+    <notes>Z-displacement for middle horizontal piece of length 
+             sideRibbonTrans_l</notes>
+    <minus>
+      <refer refTo="sideRibbonVert1_dz" />
+      <half>
+        <minus>
+          <refer refTo="sideRibbonVert1_l" />
+          <refer refTo="ribbonThickness" />
+        </minus>
+      </half>
+    </minus>
+  </const>
+
+  <const name="sideRibbonTransLower_dz" >
+    <notes>Z-displacement for bottom horizontal piece of length 
+             sideRibbonTrans_l</notes>
+    <minus>
+      <refer refTo="sideRibbonVert2_dz" />
+      <half>
+        <minus>
+          <refer refTo="sideRibbonVert2_l" />
+          <refer refTo="ribbonThickness" />
+        </minus>
+      </half>
+    </minus>
+  </const>
+
+  <!-- Now for transverse displacements.  Always define negatives as well -->
+  <const name="sideRibbonVert0_2_dt" >
+    <notes> Transverse displacement for vert0 and vert2 bits of side ribbons
+    </notes>
+    <add>
+      <refer refTo="ribbonBentR4_dy" />
+      <refer refTo="sideRibbonTrans0_l" />
+      <refer refTo="ribbonThickness" />
+    </add>
+  </const>
+
+  <const name="sideRibbonVert1_3_dt" >
+    <notes> Transverse displacement for vert0 and vert2 bits of side ribbons
+    </notes>
+    <add>
+      <refer refTo="sideRibbonVert0_2_dt" />
+      <refer refTo="sideRibbonTrans_l" />
+      <refer refTo="ribbonThickness" />
+    </add>
+  </const>
+          
+  <const name="sideRibbonTrans_dt" >
+    <notes> Transverse displacement for "standard" horizontal bits of 
+      side ribbons. They're halfway between vertical pieces    </notes>
+    <half>
+      <add>
+        <refer refTo="sideRibbonVert0_2_dt" />
+        <refer refTo="sideRibbonVert1_3_dt" />
+      </add >
+    </half>
+  </const>
+
+  <const name="sideRibbonTrans0_dt" >
+    <notes> Transverse displacement for X-ribbon only horizontal bit:
+      halfway between inner vertical pieces and ribbonBent piece    </notes>
+    <half>
+      <add>
+        <refer refTo="sideRibbonVert0_2_dt" />
+        <refer refTo="ribbonBentR4_dy" />
+      </add>
+    </half>
+  </const>
+
+  <!-- negatives of all of above -->
+  <const name="sideRibbonVert0_2_dtn" >
+    <notes> Neg. transverse displacement for vert0 and vert2 bits of 
+         side ribbons    </notes>
+    <uminus>
+      <refer refTo="sideRibbonVert0_2_dt" />     
+    </uminus>
+  </const>
+
+  <const name="sideRibbonVert1_3_dtn" >
+    <notes> Neg. transverse displacement for vert1 and vert3 bits of 
+         side ribbons    </notes>
+    <uminus>
+      <refer refTo="sideRibbonVert1_3_dt" />     
+    </uminus>
+  </const>
+
+  <const name="sideRibbonTrans0_dtn" >
+    <notes> Neg. transverse displacement for X-ribbon only horix. bit</notes>
+    <uminus>
+      <refer refTo="sideRibbonTrans0_dt" />     
+    </uminus>
+  </const>
+
+  <const name="sideRibbonTrans_dtn" >
+    <notes> Neg. transverse displacement for "standard" horizontal bits</notes>
+    <uminus>
+      <refer refTo="sideRibbonTrans_dt" />     
+    </uminus>
+  </const>
+
+<!-- End stuff for new, more realistic model of side ribbons -->
+ 
 
   <const name="ACDSideSupport_dDovetailn">
     <notes>Negative dovetail distance for those sides 

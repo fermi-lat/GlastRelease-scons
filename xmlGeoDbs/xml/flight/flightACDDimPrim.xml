@@ -85,9 +85,8 @@ extend above topACD tile surface --- used for positioning.
 (7/28/03) 3-d model 6-23-03 essentially agrees with this.
 (11/2205) So does latest 3-d model</prim>
 
-<prim name="sideVerticalGap" value="-20.0">Vertical gap
-between (rows of?) side tiles.  As of 10 May 2007, this is an
-overlap, hence negative</prim> 
+<prim name="sideVerticalOverlap" value="20.0">Overlap of side tiles</prim>
+
   <prim name="sideHorizontalGap" value="2.0">Horizontal
 gap at the corners between adjacent columns of side tiles  (July 03; revised
 according to 3-d model 6-23-03, from old value of 3.0)

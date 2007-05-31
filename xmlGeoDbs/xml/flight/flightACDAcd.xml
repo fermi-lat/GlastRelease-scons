@@ -292,7 +292,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile" />
 
-<!-- Side ribbons are all congruent.  Define one with width in x,
+<!-- Side ribbons used to all be congruent.  Define one with width in x,
      thickness in y.  Rotate for the opposite. 
      Well, actually they're not.  X ribbons are longer than
      Y ribbons.  And neither goes all the way to the bottom of the
@@ -315,6 +315,74 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
+
+<!-- May '07 Define all the new pieces of vertical ribbons as if they were
+     X-measuring ribbons.  Some are used on all sides, some really are 
+     only used in X-measuring ribbons and one, sideYRibbonVert1, only
+     occurs in Y-ribbons so will always be rotated. -->
+
+<box name="sideXRibbonVert0" 
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="sideXRibbonVert0_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+     
+<box name="sideYRibbonVert0" 
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="sideXRibbonVert0_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="sideRibbonVert1" 
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="sideRibbonVert1_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+     
+<box name="sideRibbonVert2" 
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="sideRibbonVert2_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="sideRibbonVert3" 
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="sideRibbonVert3_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<!-- Transverse bits in Y-measuring ribbons are all congruent. X-measuring
+     ribbons have this kind as well as a longer transverse piece under
+     bent tiles.  Define both as if they were part of X-measuring ribbons.
+     That is, ribbon width is in X-dimension, length in y, thickness in Z 
+     sideRibbonTrans0 is the special X-only one; sideRibbonTrans is the
+     standard kind used in all side ribbons. -->
+<box name="sideRibbonTrans0" 
+     XREF="ribbonWidth"
+     YREF="sideRibbonTrans0_l"
+     ZREF="ribbonThickness"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="sideRibbonTrans" 
+     XREF="ribbonWidth"
+     YREF="sideRibbonTrans_l"
+     ZREF="ribbonThickness"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
 
 <!-- Make rows for faces (2 & 3) with lesser trans. dimension first.
      Side 2 rotated +90 about Z is isomorphic to side 3.
