@@ -72,6 +72,17 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     Event::McParticle* primary    = pcol->front();
     HepPoint3D         primVtxPos = primary->initialPosition();
 
+    // Look for sources with energy over the limit
+    double maxAllowedEnergy = 1000000.; // Temporary until I remember how to extract this from G4!
+    if (primary->initialFourMomentum().e() > maxAllowedEnergy)
+    {
+        std::stringstream errorStr(" ");
+        errorStr << "PrimaryGeneratorAction found energy over maximum allowed: " 
+            << primary->initialFourMomentum().e() << ", source: "  
+            << primary->getProcess() << std::endl;
+        throw G4GenException(errorStr.str());
+    }
+
     // Adjust by the delta z input
     primVtxPos = CLHEP::Hep3Vector(primVtxPos.x(), primVtxPos.y(), primVtxPos.z() + dz);
 
