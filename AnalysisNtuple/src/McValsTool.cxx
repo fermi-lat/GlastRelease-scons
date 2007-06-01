@@ -12,6 +12,7 @@ $Header$
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartDataLocator.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -268,11 +269,16 @@ StatusCode McValsTool::calculate()
     SmartDataPtr<Event::TkrVertexCol>       pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);
     // Recover MC Pointer
     SmartDataPtr<Event::McParticleCol> pMcParticle(m_pEventSvc, EventModel::MC::McParticleCol);
-    SmartDataPtr<Event::MCEvent> pMcEvent(m_pEventSvc, EventModel::MC::Event);
-    
+    // this is avoid creating the object as a side effect!!
+    SmartDataLocator<Event::MCEvent> pMcEvent(m_pEventSvc, EventModel::MC::Event);
+
+    if(!pMcParticle) return sc;
+
     if(pMcEvent) {
+        char temp[2] = "_";
         MC_SourceId = pMcEvent->getSourceId();
         strncpy(MC_SourceName, pMcEvent->getSourceName().c_str(),80);
+        if (MC_SourceName=="") strncpy(MC_SourceName, temp, 80);
     }
     
     MC_Energy = -1;
