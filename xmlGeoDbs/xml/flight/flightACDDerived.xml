@@ -1437,7 +1437,7 @@
     </minus>
   </const>
 
-  <const name="sideRibbonTrans_l" >
+  <const name="ribbonSideTrans_l" >
     <notes>Length of "standard" little horizontal-running bits of side ribbons,
            same for both x- and y-measuring</notes>
     <minus>
@@ -1450,14 +1450,14 @@
   </const>
 
   <!-- Side sections of Y-measuring ribbons have 4 vertical pieces and
-       3 transverse of lenth sideRibbonTrans_l.  
+       3 transverse of lenth ribbonSideTrans_l.  
        Side sections of X-measuring ribbons have 5 vertical pieces
        and 4 transverse.  Of the transverse, 3 are of standard length
        but the one at greatest Z-displacement is longer.
        Of the vertical pieces, bottom 3 are identical for X-measuring
        and Y-measuring. -->
    
-  <const name="sideRibbonTrans0_l" >
+  <const name="ribbonSideTrans0_l" >
     <notes>Length of horizontal running bit of X-measuring ribbons with
            greatest dz. Compute length as position of more distant end
            minus distance of near end (but some terms cancel)</notes>
@@ -1471,10 +1471,10 @@
   </const>
 
 <!-- lengths of vertical pieces of side ribbons.  Call the ones common
-     to X- and Y-measuring ribbons sideRibbonVert1, sideRibbonVert2,
-     sideRibbonVert3 (behind rows 1,2,3, resp.) . 
+     to X- and Y-measuring ribbons ribbonSideVert1, ribbonSideVert2,
+     ribbonSideVert3 (behind rows 1,2,3, resp.) . 
  -->
-  <const name="sideRibbonVert1_l" >
+  <const name="ribbonSideVert1_l" >
     <notes>Shortish piece of side ribbon behind Row 1</notes>
     <minus>
       <refer refTo="sideTileHeight1" />
@@ -1487,7 +1487,7 @@
     </minus>
   </const>
 
-  <const name="sideRibbonVert2_l" >
+  <const name="ribbonSideVert2_l" >
     <notes>Longish piece of side ribbon behind Row 2</notes>
     <add>
       <refer refTo="sideTileHeight2" />
@@ -1498,7 +1498,7 @@
     </add>
   </const>
 
-  <const name="sideRibbonVert3_l" > 
+  <const name="ribbonSideVert3_l" > 
     <notes>Shortish piece of side ribbon behind Row 3</notes>
     <minus>
       <refer refTo="sideTileHeight3" />
@@ -1512,7 +1512,7 @@
   <!-- Vert0 is different for X-measuring and Y-measuring; ribbonBent only
        exists for X-measuring ribbons  -->
   
-  <const name="sideYRibbonVert0_l" > 
+  <const name="yRibbonSideVert0_l" > 
     <notes> Max Z for this piece is = max Z for top Y-ribbons.
             Min Z is ribbonExtend + ribbonThickness below bottom
             of side tile row 0 </notes>
@@ -1536,7 +1536,7 @@
     </minus>
   </const>
 
-  <const name="sideXRibbonVert0_l" > 
+  <const name="xRibbonSideVert0_l" > 
     <notes>Part of side X ribbon running behind bottom part of
            side tile row 0</notes>
     <minus>
@@ -1554,9 +1554,9 @@
 
 
    <!-- Done defining dimensions.  Still need to define displacements
-        for sideXRibbonVert0, sideYRibbonVert0, sideRibbonVert1,
-        sideRibbonVert2, sideRibbonVert3, sideRibbonTrans0,
-        and sideRibbonTrans.  The last has 3 different Z displacements.
+        for xRibbonSideVert0, yRibbonSideVert0, ribbonSideVert1,
+        ribbonSideVert2, ribbonSideVert3, ribbonSideTrans0,
+        and ribbonSideTrans.  The last has 3 different Z displacements.
 
         Think of all pieces as if they were part of X-ribbons; when used
         for Y-ribbons they will be rotated.  dx is unchanged from simpler
@@ -1564,7 +1564,7 @@
         dy and dz. -->
 
   <!-- Z-displacements first -->
-  <const name="sideRibbonVert0MinZ" >
+  <const name="ribbonSideVert0MinZ" >
     <notes>Bottom of side ribbon piece behind row 0 for both X and Y
            ribbons
     </notes>
@@ -1580,43 +1580,43 @@
     </minus>
   </const>
 
-  <const name="sideYRibbonVert0_dz">
+  <const name="yRibbonSideVert0_dz">
     <notes>z-displacement of piece of side Y-ribbon behind bottom of row0
     </notes>
     <add>
-      <refer refTo="sideRibbonVert0MinZ" />
+      <refer refTo="ribbonSideVert0MinZ" />
       <half>
-        <refer refTo="sideYRibbonVert0_l" />
+        <refer refTo="yRibbonSideVert0_l" />
       </half>
     </add>
    </const>        
 
-  <const name="sideXRibbonVert0_dz">
+  <const name="xRibbonSideVert0_dz">
     <notes>z-displacement of piece of side X-ribbon behind bottom of row0
     </notes>
     <add>
-      <refer refTo="sideRibbonVert0MinZ" />
+      <refer refTo="ribbonSideVert0MinZ" />
       <half>
-        <refer refTo="sideXRibbonVert0_l" />
+        <refer refTo="xRibbonSideVert0_l" />
       </half>
     </add>
    </const>        
 
-  <const name="sideRibbonVert1_dz">
+  <const name="ribbonSideVert1_dz">
     <notes>z-displacement of piece of side ribbon behind row 1..
            same as tile row
     </notes>
     <refer refTo="tileSideR1_dz" />
   </const>
 
-  <const name="sideRibbonVert2_dz">
+  <const name="ribbonSideVert2_dz">
     <notes>z-displacement of piece of side ribbon behind row 2..
            same as tile row
     </notes>
     <refer refTo="tileSideR2_dz" />
   </const>
 
-  <const name="sideRibbonVert3_dz">
+  <const name="ribbonSideVert3_dz">
     <notes>z-displacement of piece of side ribbon behind row 3. 
           For this model, bottom of ribbon is even with bottom of
           (unshrunk) tile - not the case for real instrument, for
@@ -1627,14 +1627,14 @@
       <refer refTo="tileSideR3_dz" />
       <half>
         <minus>
-          <refer refTo="sideRibbonVert3_l" />
+          <refer refTo="ribbonSideVert3_l" />
           <refer refTo="sideTileHeight3" />
         </minus>
       </half>
     </add>
   </const>
 
-  <const name="sideRibbonTrans0_dz" >
+  <const name="ribbonSideTrans0_dz" >
     <notes>Z-displacement for upper horizontal piece of X-measuring
            side ribbons</notes>
     <minus>
@@ -1648,42 +1648,42 @@
      </minus>
    </const>
 
-  <const name="sideRibbonTransUpper_dz" >
+  <const name="ribbonSideTransUpper_dz" >
     <notes>Z-displacement for upper horizontal piece of length 
-             sideRibbonTrans_l</notes>
+             ribbonSideTrans_l</notes>
     <add>
-      <refer refTo="sideRibbonVert1_dz" />
+      <refer refTo="ribbonSideVert1_dz" />
       <half>
         <minus>
-          <refer refTo="sideRibbonVert1_l" />
+          <refer refTo="ribbonSideVert1_l" />
           <refer refTo="ribbonThickness" />
         </minus>
       </half>
     </add>
   </const>
 
-  <const name="sideRibbonTransMid_dz" >
+  <const name="ribbonSideTransMid_dz" >
     <notes>Z-displacement for middle horizontal piece of length 
-             sideRibbonTrans_l</notes>
+             ribbonSideTrans_l</notes>
     <minus>
-      <refer refTo="sideRibbonVert1_dz" />
+      <refer refTo="ribbonSideVert1_dz" />
       <half>
         <minus>
-          <refer refTo="sideRibbonVert1_l" />
+          <refer refTo="ribbonSideVert1_l" />
           <refer refTo="ribbonThickness" />
         </minus>
       </half>
     </minus>
   </const>
 
-  <const name="sideRibbonTransLower_dz" >
+  <const name="ribbonSideTransLower_dz" >
     <notes>Z-displacement for bottom horizontal piece of length 
-             sideRibbonTrans_l</notes>
+             ribbonSideTrans_l</notes>
     <minus>
-      <refer refTo="sideRibbonVert2_dz" />
+      <refer refTo="ribbonSideVert2_dz" />
       <half>
         <minus>
-          <refer refTo="sideRibbonVert2_l" />
+          <refer refTo="ribbonSideVert2_l" />
           <refer refTo="ribbonThickness" />
         </minus>
       </half>
@@ -1691,76 +1691,76 @@
   </const>
 
   <!-- Now for transverse displacements.  Always define negatives as well -->
-  <const name="sideRibbonVert0_2_dt" >
+  <const name="ribbonSideVert0_2_dt" >
     <notes> Transverse displacement for vert0 and vert2 bits of side ribbons
     </notes>
     <add>
       <refer refTo="ribbonBentR4_dy" />
-      <refer refTo="sideRibbonTrans0_l" />
+      <refer refTo="ribbonSideTrans0_l" />
       <refer refTo="ribbonThickness" />
     </add>
   </const>
 
-  <const name="sideRibbonVert1_3_dt" >
+  <const name="ribbonSideVert1_3_dt" >
     <notes> Transverse displacement for vert0 and vert2 bits of side ribbons
     </notes>
     <add>
-      <refer refTo="sideRibbonVert0_2_dt" />
-      <refer refTo="sideRibbonTrans_l" />
+      <refer refTo="ribbonSideVert0_2_dt" />
+      <refer refTo="ribbonSideTrans_l" />
       <refer refTo="ribbonThickness" />
     </add>
   </const>
           
-  <const name="sideRibbonTrans_dt" >
+  <const name="ribbonSideTrans_dt" >
     <notes> Transverse displacement for "standard" horizontal bits of 
       side ribbons. They're halfway between vertical pieces    </notes>
     <half>
       <add>
-        <refer refTo="sideRibbonVert0_2_dt" />
-        <refer refTo="sideRibbonVert1_3_dt" />
+        <refer refTo="ribbonSideVert0_2_dt" />
+        <refer refTo="ribbonSideVert1_3_dt" />
       </add >
     </half>
   </const>
 
-  <const name="sideRibbonTrans0_dt" >
+  <const name="ribbonSideTrans0_dt" >
     <notes> Transverse displacement for X-ribbon only horizontal bit:
       halfway between inner vertical pieces and ribbonBent piece    </notes>
     <half>
       <add>
-        <refer refTo="sideRibbonVert0_2_dt" />
+        <refer refTo="ribbonSideVert0_2_dt" />
         <refer refTo="ribbonBentR4_dy" />
       </add>
     </half>
   </const>
 
   <!-- negatives of all of above -->
-  <const name="sideRibbonVert0_2_dtn" >
+  <const name="ribbonSideVert0_2_dtn" >
     <notes> Neg. transverse displacement for vert0 and vert2 bits of 
          side ribbons    </notes>
     <uminus>
-      <refer refTo="sideRibbonVert0_2_dt" />     
+      <refer refTo="ribbonSideVert0_2_dt" />     
     </uminus>
   </const>
 
-  <const name="sideRibbonVert1_3_dtn" >
+  <const name="ribbonSideVert1_3_dtn" >
     <notes> Neg. transverse displacement for vert1 and vert3 bits of 
          side ribbons    </notes>
     <uminus>
-      <refer refTo="sideRibbonVert1_3_dt" />     
+      <refer refTo="ribbonSideVert1_3_dt" />     
     </uminus>
   </const>
 
-  <const name="sideRibbonTrans0_dtn" >
+  <const name="ribbonSideTrans0_dtn" >
     <notes> Neg. transverse displacement for X-ribbon only horix. bit</notes>
     <uminus>
-      <refer refTo="sideRibbonTrans0_dt" />     
+      <refer refTo="ribbonSideTrans0_dt" />     
     </uminus>
   </const>
 
-  <const name="sideRibbonTrans_dtn" >
+  <const name="ribbonSideTrans_dtn" >
     <notes> Neg. transverse displacement for "standard" horizontal bits</notes>
     <uminus>
-      <refer refTo="sideRibbonTrans_dt" />     
+      <refer refTo="ribbonSideTrans_dt" />     
     </uminus>
   </const>
 

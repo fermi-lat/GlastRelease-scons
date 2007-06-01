@@ -318,45 +318,69 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <!-- May '07 Define all the new pieces of vertical ribbons as if they were
      X-measuring ribbons.  Some are used on all sides, some really are 
-     only used in X-measuring ribbons and one, sideYRibbonVert1, only
+     only used in X-measuring ribbons and one, yRibbonSideVert1, only
      occurs in Y-ribbons so will always be rotated. -->
 
-<box name="sideXRibbonVert0" 
+<box name="xRibbonSideVert0" 
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="sideXRibbonVert0_l"
+     ZREF="xRibbonSideVert0_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
      
-<box name="sideYRibbonVert0" 
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="sideXRibbonVert0_l"
+<box name="yRibbonSideVert0" 
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="yRibbonSideVert0_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<box name="sideRibbonVert1" 
+<box name="xRibbonSideVert1" 
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="sideRibbonVert1_l"
+     ZREF="ribbonSideVert1_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
      
-<box name="sideRibbonVert2" 
+<box name="yRibbonSideVert1" 
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribbonSideVert1_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+     
+<box name="xRibbonSideVert2" 
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="sideRibbonVert2_l"
+     ZREF="ribbonSideVert2_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<box name="sideRibbonVert3" 
+<box name="yRibbonSideVert2" 
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribbonSideVert2_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="xRibbonSideVert3" 
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="sideRibbonVert3_l"
+     ZREF="ribbonSideVert3_l"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="yRibbonSideVert3" 
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribbonSideVert3_l"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
@@ -365,19 +389,27 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      ribbons have this kind as well as a longer transverse piece under
      bent tiles.  Define both as if they were part of X-measuring ribbons.
      That is, ribbon width is in X-dimension, length in y, thickness in Z 
-     sideRibbonTrans0 is the special X-only one; sideRibbonTrans is the
+     ribbonSideTrans0 is the special X-only one; ribbonSideTrans is the
      standard kind used in all side ribbons. -->
-<box name="sideRibbonTrans0" 
+<box name="xRibbonSideTrans0" 
      XREF="ribbonWidth"
-     YREF="sideRibbonTrans0_l"
+     YREF="ribbonSideTrans0_l"
      ZREF="ribbonThickness"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<box name="sideRibbonTrans" 
+<box name="xRibbonSideTrans" 
      XREF="ribbonWidth"
-     YREF="sideRibbonTrans_l"
+     YREF="ribbonSideTrans_l"
+     ZREF="ribbonThickness"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="yRibbonSideTrans" 
+     XREF="ribbonSideTrans_l"
+     YREF="ribbonWidth"
      ZREF="ribbonThickness"
      materialREF="ribbonMat"
      sensitive="posHit"
