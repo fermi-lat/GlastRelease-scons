@@ -30,7 +30,7 @@ namespace Event {
 class MCEvent : public DataObject                                              {
     
 public:
-    MCEvent( ) {}
+    MCEvent( ): m_run(0), m_sourceId(-1), m_sequence(0), m_sourceName("_") {}
     
     virtual ~MCEvent()  { }
     
@@ -50,7 +50,7 @@ public:
     const std::string& getSourceName()const{return m_sourceName;}
 
     /// initialize
-    void initialize(int run, int source, long int seq, TimeStamp time, std::string name="") {
+    void initialize(int run, int source, long int seq, TimeStamp time, std::string name="_") {
         m_run = run; m_sourceId = source; m_sequence = seq; m_time=time; m_sourceName = name;}
 
     void setSourceName(const std::string& name){m_sourceName=name;}
