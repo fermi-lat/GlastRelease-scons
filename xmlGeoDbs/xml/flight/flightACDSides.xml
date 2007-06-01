@@ -200,42 +200,621 @@
         <idField name="fRow" value="3" />
       </posXYZ>
 
+<!-- Ribbons in bits.  Start with Y neg face. Ribbons 0 - 3 in order.
+     Long vertical pieces, followed by short transverse pieces -->
+      <!-- Ribbon 0 -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideXRibbonVert0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert1_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideRibbonVert2_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert3_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans0_dtn"
+              ZREF="sideRibbonTrans0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransUpper_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransMid_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransLower_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 1, Y neg face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideXRibbonVert0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert1_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideRibbonVert2_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert3_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans0_dtn"
+              ZREF="sideRibbonTrans0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransUpper_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransMid_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransLower_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 2, Y neg face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideXRibbonVert0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert1_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideRibbonVert2_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert3_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans0_dtn"
+              ZREF="sideRibbonTrans0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransUpper_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransMid_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransLower_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 3, Y neg face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideXRibbonVert0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert1_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert0_2_dtn"
+              ZREF="sideRibbonVert2_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert1_3_dtn"
+              ZREF="sideRibbonVert3_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans0_dtn"
+              ZREF="sideRibbonTrans0_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransUpper_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransMid_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dtn"
+              ZREF="sideRibbonTransLower_dz">
+              &YNegFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+
+<!-- Same for YPos face. -->
+      <!-- Ribbon 0 -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideXRibbonVert0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert1_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideRibbonVert2_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert3_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans0_dt"
+              ZREF="sideRibbonTrans0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransUpper_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransMid_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransLower_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="0" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 1, Y pos face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideXRibbonVert0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert1_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideRibbonVert2_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert3_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans0_dt"
+              ZREF="sideRibbonTrans0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransUpper_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransMid_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dxn"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransLower_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="1" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 2, Y pos face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideXRibbonVert0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert1_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideRibbonVert2_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert3_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans0_dt"
+              ZREF="sideRibbonTrans0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransUpper_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransMid_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonInner_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransLower_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="2" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- Ribbon 3, Y pos face -->
+      <posXYZ volume="sideXRibbonVert0"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideXRibbonVert0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="1" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert1"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert1_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="2" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert2"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert0_2_dt"
+              ZREF="sideRibbonVert2_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="3" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonVert3"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonVert1_3_dt"
+              ZREF="sideRibbonVert3_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="4" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans0"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans0_dt"
+              ZREF="sideRibbonTrans0_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="5" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransUpper_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="6" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransMid_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="7" />
+      </posXYZ>
+
+      <posXYZ volume="sideRibbonTrans"
+              XREF="xRibbonOuter_dx"
+              YREF="sideRibbonTrans_dt"
+              ZREF="sideRibbonTransLower_dz">
+              &YPosFaceRibbon;
+              <idField name="fRibbon" value="3" />
+              <idField name="fRibbonSegment" value="8" />
+      </posXYZ>
+
+<!-- End YPos face -->
+<!--
 
       <posXYZ volume="sideRibbons" 
               YREF="ribbonsSide_dtn"
               ZREF="ribbonsSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDYNegFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureX" />
+              &YNegFaceRibbon;
       </posXYZ>
+
 
       <posXYZ volume="sideRibbons" 
               YREF="ribbonsSide_dt"
               ZREF="ribbonsSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDYPosFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureX" />
+             &YPosFaceRibbon;
       </posXYZ>
-
+   -->
       <posXYZ volume="sideRibbons" 
               zrot="90"
               XREF="ribbonsSide_dtn"
               ZREF="ribbonsSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDXNegFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureY" />
+             &XNegFaceRibbon;
       </posXYZ>
 
       <posXYZ volume="sideRibbons" 
               zrot="90"
               XREF="ribbonsSide_dt"
               ZREF="ribbonsSide_dz">
-         <idField name="fLATObjects" valueREF="eLATACD" />
-         <idField name="fACDFace" valueREF="eACDXPosFace" />
-         <idField name="fACDCmp" valueREF="eACDRibbon" />
-         <idField name="fMeasure" valueREF="eMeasureY" />
+             &XPosFaceRibbon;
       </posXYZ>
 

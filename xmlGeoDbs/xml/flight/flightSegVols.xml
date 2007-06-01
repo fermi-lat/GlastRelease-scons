@@ -57,6 +57,30 @@
 
     <!ENTITY Materials      SYSTEM "../materials.xml">
     <!ENTITY extraMaterials SYSTEM "../empty.xml" >
+    <!ENTITY YPosFaceRibbon 
+         '<idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDYPosFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureX" />' >
+
+    <!ENTITY YNegFaceRibbon 
+         '<idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDYNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureX" />' >
+
+    <!ENTITY XPosFaceRibbon 
+         '<idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXPosFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />' >
+
+    <!ENTITY XNegFaceRibbon 
+         '<idField name="fLATObjects" valueREF="eLATACD" />
+         <idField name="fACDFace" valueREF="eACDXNegFace" />
+         <idField name="fACDCmp" valueREF="eACDRibbon" />
+         <idField name="fMeasure" valueREF="eMeasureY" />' >
+
   ]
 >
 <gdd CVSid="$Id$" 
