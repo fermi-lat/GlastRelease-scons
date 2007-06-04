@@ -44,6 +44,7 @@ TriggerAlg.mask             = 26;   // TKR(2) + HICAL(8) + CNO(16)
 TriggerAlg.throttle         = true; // ignore if TKR + Throttle
 OnboardFilter.RejectEvents  = true; // set the filter to reject events, 
                                     // turn on all bits (only low 16 count)
+OnboardFilter.FailNoEbfData = true; // if no EBF data (error anyway) reject the event
 // --------------------------------------------
 //         calibration
 #include "$GLEAMROOT/src/calibration.txt"
