@@ -1,6 +1,7 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
+ v5r18p5  4-Jun-07 TU  Throw an exception if primary particle energy over limit
  v5r18p4 23-May-07 TU  Make use of G4HadronSim public so it will export symbols it defines
  v5r18p3  4-Apr-07 TU  Fix bug with resetting particle pointer in mcpositionhits when clearing rel tables
  v5r18p2 18-Mar-07 TU  Fill McPositionHit "packed flags" with G4 track ID
