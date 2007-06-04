@@ -448,7 +448,7 @@ StatusCode FluxAlg::execute()
     // so initial momentum and final one are the same
     parent->initialize(parent, partID, 
         Event::McParticle::PRIMARY,
-        pin,p);
+        pin,p, m_flux->name());
     parent->finalize(pin, p);
 
     // get the event header to set the time
