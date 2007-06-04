@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r17     04-Jun-2007 HMK Merge in GlastReleasev9r13 branch with Moot Keys
 v9r16p2   15-Apr-2007 HMK add TimeTone::earlyEvent to address JIRA ROOT-28
 v9r16p1   30-Mar-2007 HMK Patch unit test to handle trigger word more
           robustly
@@ -21,6 +22,14 @@ v9r13     26-Jul-2006 HMK updates for hopefully final adf recon
 v9r12     19-Jul-2006 HMK Add in ScalerHit
 v9r11     13-Jul-2006 HMK Forgot to commit some fixes
 v9r10     11-Jul-2006 HMK Update QdcHit to match TDS
+======= GlastReleasev9r13 branch
+v9r9gr5   01-Jun-2007 HMK Moot Keys in LsfKeys
+v9r9gr4   15-Apr-2007 HMK Add TimeTone::earlyEvent method address JIRA ROOT-28
+v9r9gr3   26-Oct-2006 HMK updated comment for DigiEvent/getLiveTime( )
+v9r9gr2   25-Oct-2006 HMK Updated comment in LsfTime.h
+v9r9gr1   13-Oct-2006 HMK Add LDF Warning flag - currently would be set only
+          for reading non-zero bytes beyond end of TEM
+======
 v9r9      07-Jul-2006 HMK Really remove QdcHit and TaggerHit from this package
 v9r8      06-Jul-2006 HMK Moved TaggerHit and QdcHit to commonRootData
 v9r7      20-Jun-2006 HMK Ancillary Digi data from beamtest

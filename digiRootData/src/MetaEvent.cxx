@@ -21,17 +21,7 @@ void MetaEvent::Print(Option_t* /*option*/) const {
        << ")\nLSE_Info:  ";
        m_time.timeHack().Print("");
        cout << std::endl;
-/*
-      if (m_config) {
-          const LpaConfiguration* lpa = m_config->castToLpaConfig();
-          if (lpa) {
-              cout << "LPA_Info: softwareKey = 0x" << std::hex
-                   << lpa->softwareKey() << std::endl
-                   << "LPA_Info: hardwareKey = 0x" << lpa->hardwareKey()
-                   << std::dec << std::endl;
-          }
-      }
-*/
+
       if (lpaConfiguration())
          lpaConfiguration()->Print("");
       if (lciAcdConfiguration())
@@ -40,6 +30,11 @@ void MetaEvent::Print(Option_t* /*option*/) const {
          lciCalConfiguration()->Print("");
       if (lciTkrConfiguration())
          lciTkrConfiguration()->Print("");
+
+      if (lpaKeys())
+          lpaKeys()->Print("");
+      if (lciKeys())
+          lciKeys()->Print("");
 }
 
 void MetaEvent::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */ ) {

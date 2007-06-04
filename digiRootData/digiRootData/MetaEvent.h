@@ -9,6 +9,7 @@
 #include "DatagramInfo.h"
 #include "GemScalers.h"
 #include "Configuration.h"
+#include "LsfKeys.h"
 
 /** @class MetaEvent
 * @brief Encapsulate information about the State of the LAT when a particular event was captured.
@@ -21,6 +22,7 @@
 *               during a run information about the elapsed time and deadtime 
 * - LsfTime various time markers associated with the event 
 * - Configuration configuration keys and charge injection parameters
+* - LsfKeys either LPA or LCI
 *
 * $Header$
 */
@@ -33,23 +35,24 @@ public:
   MetaEvent()
     :m_config(0),
      m_type(enums::Lsf::NoRunType),m_lpaConfig(0),m_lciAcdConfig(0),
-     m_lciCalConfig(0),m_lciTkrConfig(0){
+     m_lciCalConfig(0),m_lciTkrConfig(0),
+     m_ktype(enums::Lsf::NoKeysType), m_lpaKeys(0), m_lciKeys(0) {
      Clear("");
   }
   
-  /// Standard c'tor.  Takes input values for all fields
+  /// Standard c'tor.  Takes input values for all fields except Config and Keys
   MetaEvent( const RunInfo& run, const DatagramInfo& datagram, 
 	     const GemScalers& scalers,
 	     const LsfTime& time,
-	     const Configuration& configuration )
+	     const Configuration& configuration,
+             const LsfKeys& keys )
     :m_run(run),m_datagram(datagram),
      m_scalers(scalers),
      m_time(time),
      m_config(0),m_type(enums::Lsf::NoRunType),
      m_lpaConfig(0),m_lciAcdConfig(0),m_lciCalConfig(0),
-     m_lciTkrConfig(0) {
-     //m_config(configuration.clone()),
-     //m_type(configuration.runType()){
+     m_lciTkrConfig(0),
+     m_ktype(enums::Lsf::NoKeysType),m_lpaKeys(0),m_lciKeys(0) {
   }
  
   /// Copy c'tor.  Just copy all values.  
@@ -62,20 +65,9 @@ public:
 	 m_config(0),
      m_type(other.runType()),
      m_lpaConfig(0), m_lciAcdConfig(0),
-     m_lciCalConfig(0), m_lciTkrConfig(0) {
-
-		 /*
-     if (m_config) delete m_config;
-     m_config = 0;
-     if (m_lpaConfig) delete m_lpaConfig;
-     m_lpaConfig = 0;
-     if (m_lciAcdConfig) delete m_lciAcdConfig;
-     m_lciAcdConfig = 0;
-     if (m_lciCalConfig) delete m_lciCalConfig;
-     m_lciCalConfig = 0;
-     if (m_lciTkrConfig) delete m_lciTkrConfig;
-     m_lciTkrConfig = 0;
-	 */
+     m_lciCalConfig(0), m_lciTkrConfig(0),
+     m_ktype(other.keyType()),
+     m_lpaKeys(0),m_lciKeys(0) {
 
      if (other.configuration())
         setConfiguration(*(other.configuration()));
@@ -89,11 +81,10 @@ public:
          setLciTkrConfiguration(*(other.lciTkrConfiguration()));
 
 
-    //if ( other.configuration() != 0 ) {
-    //  setConfiguration(*(other.configuration()));
-      //m_config = other.configuration()->clone();
-      //m_type = other.configuration()->runType();
-    //}
+    if (other.lpaKeys())
+        setLpaKeys(*(other.lpaKeys()));
+    if (other.lciKeys())
+        setLciKeys(*(other.lciKeys()));
   }
 
   /// D'tor.  Delete the configuration, which had been deep-copied
@@ -131,6 +122,18 @@ public:
          setLciCalConfiguration(*(other.lciCalConfiguration()));
      if (other.lciTkrConfiguration())
          setLciTkrConfiguration(*(other.lciTkrConfiguration()));
+
+
+     if (m_lpaKeys) delete m_lpaKeys;
+     m_lpaKeys = 0;
+     if (m_lciKeys) delete m_lciKeys;
+     m_lciKeys = 0;
+
+     if (other.lpaKeys())
+        setLpaKeys(*(other.lpaKeys()));
+     if (other.lciKeys())
+        setLciKeys(*(other.lciKeys())); 
+
      return *this;
   }
   
@@ -164,7 +167,19 @@ public:
   /// Which type of run was this, particle data or charge injection 
   inline enums::Lsf::RunType runType() const { return m_type; }
   
-  /// set everything at once
+  inline const LsfKeys* keys() const { 
+      if (keyType() == enums::Lsf::LpaKeys)
+          return m_lpaKeys; 
+      else if (keyType() == enums::Lsf::LciKeys)
+          return m_lciKeys;
+       return 0;
+   }
+  inline const LpaKeys* lpaKeys() const { return m_lpaKeys; }
+  inline const LciKeys* lciKeys() const { return m_lciKeys; }
+
+  inline enums::Lsf::KeysType keyType() const { return m_ktype; }
+
+  /// set everything at once except Configuration
   inline void initialize(const RunInfo& run, const DatagramInfo& datagram, 
 			 const GemScalers& scalers,
 			 const LsfTime& time,
@@ -206,17 +221,6 @@ public:
   inline void setLciAcdConfiguration( const LciAcdConfiguration& config) {
       if (m_lciAcdConfig) delete m_lciAcdConfig;
       m_lciAcdConfig = new LciAcdConfiguration(config);
-/*
-      m_lciAcdConfig = new LciAcdConfiguration();
-      m_lciAcdConfig->initialize(
-         config.injected(),
-         config.threshold(),
-         config.biasDac(), 
-         config.holdDelay(), 
-         config.trigger(),
-         config.channel()); 
-*/
-      
   }
 
   inline void setLciCalConfiguration( const LciCalConfiguration& config) {
@@ -229,12 +233,23 @@ public:
       m_lciTkrConfig = new LciTkrConfiguration(config);
   }
 
+  inline void setLpaKeys( const LpaKeys& keys) {
+      if (m_lpaKeys) delete m_lpaKeys;
+      m_lpaKeys = new LpaKeys(keys);
+  }
+
+  inline void setLciKeys( const LciKeys& keys) {
+      if (m_lciKeys) delete m_lciKeys;
+      m_lciKeys = new LciKeys(keys);
+  }
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
     m_run.Clear("");
     m_datagram.Clear("");
     m_scalers.Clear("");
     m_time.Clear("");
+
     if (m_config) delete m_config;
     m_config = 0;
     if (m_lpaConfig) delete m_lpaConfig;
@@ -246,6 +261,12 @@ public:
     if (m_lciTkrConfig) delete m_lciTkrConfig;
     m_lciTkrConfig = 0;
     m_type = enums::Lsf::NoRunType;
+
+    if (m_lpaKeys) delete m_lpaKeys;
+    m_lpaKeys = 0;
+    if (m_lciKeys) delete m_lciKeys;
+    m_lciKeys = 0;
+    m_ktype = enums::Lsf::NoKeysType;
   }
 
   /// ROOT print function
@@ -284,8 +305,13 @@ private:
   LciCalConfiguration *m_lciCalConfig;
 
   LciTkrConfiguration *m_lciTkrConfig;
+
+  enums::Lsf::KeysType m_ktype;
+
+  LpaKeys *m_lpaKeys;
+  LciKeys *m_lciKeys;
   
-  ClassDef(MetaEvent,2) // information about the State of the LAT when a particular event was captured
+  ClassDef(MetaEvent,3) // information about the State of the LAT when a particular event was captured
 
 };
 

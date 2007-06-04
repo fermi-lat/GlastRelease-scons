@@ -127,9 +127,9 @@ int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
 int checkL1T(const L1T &level1) {
 
     UInt_t l1Word = 0;
-        l1Word |= enums::b_ACDL;
-        l1Word |= enums::b_Track;
-        l1Word |= enums::b_ACDH;
+    l1Word |= enums::b_ACDL;
+    l1Word |= enums::b_Track;
+    l1Word |= enums::b_ACDH;
 
     if (level1.getTriggerWord() != l1Word) {
         std::cout << "Trigger Word is wrong: " << level1.getTriggerWord() 
@@ -527,6 +527,12 @@ int read(char* fileName, int numEvents) {
 
         MetaEvent meta = evt->getMetaEvent();
         const LciAcdConfiguration *acd = meta.lciAcdConfiguration();
+        const LpaKeys *keys = meta.lpaKeys();
+        if (!keys) return -1;
+        LpaKeys keysRef;
+        keysRef.Fake(ievent, randNum);
+        if(!keys->CompareInRange(keysRef)) return -1;
+        keys->Print();
 
         FilterStatus fs = evt->getFilterStatus();
         FilterStatus fsRef;
@@ -573,6 +579,7 @@ int write(char* fileName, int numEvents) {
         l1Word |= enums::b_ACDH;
 
         L1T level1(l1Word, digiTriRowBits,trgReqTriRowBits);
+
         EventSummaryData summary(0);
         summary.initEventFlags(1);
         ev->initialize(ievent, runNum, randNum*ievent, randNum*ievent, level1, summary, fromMc);
@@ -654,6 +661,9 @@ int write(char* fileName, int numEvents) {
         Channel ch(4,true,false);
         LciAcdConfiguration acdConfig(1,2,3,4,acdTrig,ch);
         meta.setLciAcdConfiguration(acdConfig);
+        LpaKeys keys;
+        keys.Fake(ievent, randNum);
+        meta.setLpaKeys(keys);
         meta.Print("");
         ev->setMetaEvent(meta);
 

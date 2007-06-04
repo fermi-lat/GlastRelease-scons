@@ -37,6 +37,9 @@
 #pragma link C++ class LciTkrConfiguration+;
 #pragma link C++ class LciAcdConfiguration::AcdTrigger+;
 #pragma link C++ class LciCalConfiguration::CalTrigger+;
+#pragma link C++ class LsfKeys+;
+#pragma link C++ class LpaKeys+;
+#pragma link C++ class LciKeys+;
 #pragma link C++ class MetaEvent+;
 #pragma link C++ class Ccsds+;
 
