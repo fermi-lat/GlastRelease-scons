@@ -180,6 +180,12 @@ bool CompareInRange(
     const std::string & name ) {
     return StdCollectionCompareInRange(col1,col2,name) ;
 }
+bool CompareInRange(
+    const std::vector<UInt_t> & col1,
+    const std::vector<UInt_t> & col2,
+    const std::string & name ) {
+    return StdCollectionCompareInRange(col1,col2,name) ;
+}
 
 bool CompareInRange(
     const std::vector<AcdId> & col1,

@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v2r15p2 04-Jun-2007 HMK Merge in GlastReleasev9r13 branch, v2r9em1 tag
 v2r15p1 29-May-2007 MK  Improvement to AcdMap for eff. by returning reference
 v2r15   30-Mar-2007 HMK fixes for rhel4 and tagging some other changes from
         David and Martin
@@ -14,6 +15,7 @@ v2r13   26-Jul-2006 HMK seemingly final version of adf recon
 v2r12   20-Jul-2006 HMK store pulseHeights in Ancillary Data as double32
 v2r11   19-Jul-2006 HMK Add ScalerHit
 v2r10   12-Jul-2006 HMK Update QdcHit to match TDS
+v2r9em1 01-Jun-2007 HMK Add CompareInRange for vector<unsigned int>
 v2r9    06-Jul-2006 HMK Moved Beamtest TaggerHit and QdcHit here from 
         digiRootData since it is reused in reconRootData
 v2r8    30-Apr-2006 EAC Added AcdMap to convert back to electronics space

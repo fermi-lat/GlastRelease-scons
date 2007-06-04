@@ -64,6 +64,10 @@ namespace rootdatautil {
       const std::vector<Double_t> &,
       const std::string & name ="unknown std::vector<Double_t>" ) ;
     bool CompareInRange(
+      const std::vector<UInt_t> &,
+      const std::vector<UInt_t> &,
+      const std::string & name ="unknown std::vector<UInt_t>" ) ;
+    bool CompareInRange(
       const std::vector<AcdId> &,
       const std::vector<AcdId> &,
       const std::string & name ="unknown std::vector<AcdId>" ) ;
