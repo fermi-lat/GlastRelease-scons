@@ -1,6 +1,6 @@
 package Gleam
 
-version v6r28p3
+version v6r28p4
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -87,28 +87,28 @@ branches data
 #                    WIN32 "f:\glast\calibrations"
 
 # the pointing history file. !!!
-set POINTING_HISTORY_FILE  "F:\glast\data\SC2\orbit_files\FT2_orbit9_v2.fits"
+#set POINTING_HISTORY_FILE  "F:\glast\data\SC2\orbit_files\FT2_orbit9_v2.fits"
 
-set GLEAM_CHDIR "../output_interleave"
-set runName 2
-set startTime  "100,10.0"
-set mcRootFileName "mc.root"
-set digiRootFileName "digi.root"
-set reconRootFileName "recon.root"
-set meritRootFileName "tuple.root"
-set interleaveRootFileName "interleave.root"
-set relationRootFileName "relation.root"
+#set GLEAM_CHDIR "../output_interleave"
+#set runName 2
+#set startTime  "100,10.0"
+#set mcRootFileName "mc.root"
+#set digiRootFileName "digi.root"
+#set reconRootFileName "recon.root"
+#set meritRootFileName "tuple.root"
+#set interleaveRootFileName "interleave.root"
+#et relationRootFileName "relation.root"
 
 # this is set to the correct place for SLAC and glast-ts
-set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
-                    WIN32 "f:\glast\calibrations"
+#set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
+#                    WIN32 "f:\glast\calibrations"
 
-macro interleave_data "F:\glast\data\interleave"
-set INTERLEAVEPATH "$(interleave_data)"
-set MAGLATROOT "$(interleave_data)\maglat"
-set EARTHALBEDOROOT "$(interleave_data)\earthalbedo"
+#macro interleave_data "F:\glast\data\interleave"
+#set INTERLEAVEPATH "$(interleave_data)"
+#set MAGLATROOT "$(interleave_data)\maglat"
+#set EARTHALBEDOROOT "$(interleave_data)\earthalbedo"
 
-macro skymodel "F:\glast\data\SC2\skymodel\SC2_20070404"
-set SKYMODEL_DIR $(skymodel)
-set PULSARDATA "$(skymodel)\pulsars"
+#macro skymodel "F:\glast\data\SC2\skymodel\SC2_20070404"
+#set SKYMODEL_DIR $(skymodel)
+#set PULSARDATA "$(skymodel)\pulsars"
 
