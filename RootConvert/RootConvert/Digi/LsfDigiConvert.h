@@ -13,6 +13,7 @@
 #include <digiRootData/Configuration.h>
 #include <digiRootData/MetaEvent.h>
 #include "digiRootData/Ccsds.h"
+#include "digiRootData/LsfKeys.h"
 
 namespace RootPersistence {
 
@@ -67,17 +68,29 @@ namespace RootPersistence {
   /// Fill transient verison of LciCalConfiguration
   void convert ( const LciCalConfiguration*, lsfData::LciCalConfiguration*&);
 
-  /// Fill persitent verison of LciTkrConfiguration
+  /// Fill persistent verison of LciTkrConfiguration
   void convert( const lsfData::LciTkrConfiguration*, LciTkrConfiguration&);
   /// Fill transient verison of LciTkrConfiguration
   void convert ( const LciTkrConfiguration*, lsfData::LciTkrConfiguration*&);
 
-  /// Fill persitent verison of MetaEvent
+
+  /// Fill persistent verison of LpaKeys
+  void convert( const lsfData::LpaKeys*, LpaKeys&);
+  /// Fill transient verison of LpaKeys
+  void convert ( const LpaKeys*, lsfData::LpaKeys*&);
+
+  /// Fill persistent verison of LciKeys
+  void convert( const lsfData::LciKeys*, LciKeys&);
+  /// Fill transient verison of LciKeys
+  void convert ( const LciKeys*, lsfData::LciKeys*&);
+
+  /// Fill persistent verison of MetaEvent
   void convert( const LsfEvent::MetaEvent&, MetaEvent& ) ;
+
   /// Fill transient verison of MetaEvent
   void convert( const MetaEvent&, LsfEvent::MetaEvent& ) ;
 
-  /// Fill persitent verison of Ccsds 
+  /// Fill persistent verison of Ccsds 
   void convert (const LsfEvent::LsfCcsds&, Ccsds&);
   /// Fill transient verison of Ccsds 
   void convert(const Ccsds&, LsfEvent::LsfCcsds&);

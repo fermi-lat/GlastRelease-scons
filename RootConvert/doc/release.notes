@@ -4,6 +4,7 @@
  @verbatim
 
  
+ v1r25   04-Jun-2007 HMK merge GlastReleasev9r13 branch with moot keys
  v1r24   12-Mar-2007 TU  Include converters for McTkrStrips and McTrajectories
  v1r23p1 13-Dec-2006 HMK patch to remove commented out lines
  v1r23   20-Nov-2006 CL  Updates for GCR
@@ -21,6 +22,7 @@
  v1r15p1 25-Jul-2006 HMK make use of AncillaryDataEvent public
  v1r15  19-Jul-2006 HMK Add ScalerHit
  v1r14  12-Jul-2006 HMK Ancillary beamtest data recon
+ v1r13em1 01-Jun-2007 HMK Moot Keys
  v1r13  06-Jul-2006 HMK Add TaggerHit and QdcHit to commonRootdata
  v1r10  23-Jun-2006 HMK turn off OBF handling for now
  v1r9   22-Jun-2006 EAC Added AcdSplashVars

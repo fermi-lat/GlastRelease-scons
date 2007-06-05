@@ -5,6 +5,7 @@
 #include <RootConvert/Recon/CalXtalRecDataConvert.h>
 #include <RootConvert/Recon/AcdReconConvert.h>
 #include <RootConvert/Digi/OnboardFilterConvert.h>
+#include <RootConvert/Digi/LsfDigiConvert.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TRandom.h"
 #include <iostream>
@@ -33,6 +34,35 @@ bool checkTopObject( Float_t randNum ) {
       <<"RootConvert test succeeded for "
       <<rootObj1.ClassName()
       <<std::endl ;
+    return true ;
+}
+
+template <class TdsClass, class RootClass>
+bool checkTopObjectPtr( Float_t randNum ) {
+    TdsClass *tdsObj = new TdsClass;
+    RootClass rootObj1, rootObj2 ;
+    Int_t ievent ;
+    for ( ievent=0 ; ievent<2 ; ++ievent ) {
+    
+            rootObj1.Fake(ievent,randNum) ;
+            RootPersistence::convert(&rootObj1,tdsObj) ;
+            RootPersistence::convert(tdsObj,rootObj2) ;
+            Bool_t theSame = rootObj1.CompareInRange(rootObj2) ;
+            if (!theSame) {
+                std::cout
+                  <<"RootConvert test FAILED for "
+                  <<rootObj1.ClassName()
+                  <<std::endl ;
+                delete tdsObj;
+                return false ;
+            }
+
+    }
+    std::cout
+      <<"RootConvert test succeeded for "
+      <<rootObj1.ClassName()
+      <<std::endl ;
+    delete tdsObj;
     return true ;
 }
 
@@ -76,6 +106,9 @@ int main( int /* argc */, char ** /* argv */ ) {
     result = result && checkElements<Event::CalEventEnergy,CalEventEnergy>(randNum) ;
     result = result && checkElements<Event::CalXtalRecData,CalXtalRecData>(randNum) ;
     result = result && checkTopObject<Event::AcdRecon,AcdRecon>(randNum) ;
+
+    result = result && checkTopObjectPtr<lsfData::LpaKeys,LpaKeys>(randNum);
+    result = result && checkTopObjectPtr<lsfData::LciKeys,LciKeys>(randNum);
     
     result = result && checkTopObject<OnboardFilterTds::FilterStatus, FilterStatus>(randNum);
 

@@ -229,6 +229,38 @@ namespace RootPersistence {
       tdsObj->setFlags(rootObj->flags());
   };
 
+  void convert( const LpaKeys* rootObj,
+                lsfData::LpaKeys*& tdsObj){
+
+    tdsObj->setCDM_keys(rootObj->CDM_keys());
+    tdsObj->setLATC_master(rootObj->LATC_master());
+    tdsObj->setLATC_ignore(rootObj->LATC_ignore());
+
+  };
+
+  void convert( const lsfData::LpaKeys* tdsObj,
+                LpaKeys& rootObj) {
+
+    rootObj.setCDM_keys(tdsObj->CDM_keys());
+    rootObj.setLATC_master(tdsObj->LATC_master());
+    rootObj.setLATC_ignore(tdsObj->LATC_ignore());
+  };
+
+  void convert( const LciKeys* rootObj,
+                lsfData::LciKeys*& tdsObj){
+    tdsObj->setLCI_script(rootObj->LCI_script());
+    tdsObj->setLATC_master(rootObj->LATC_master());
+    tdsObj->setLATC_ignore(rootObj->LATC_ignore());
+  };
+
+  void convert( const lsfData::LciKeys* tdsObj,
+                LciKeys& rootObj) {
+
+    rootObj.setLCI_script(tdsObj->LCI_script());
+    rootObj.setLATC_master(tdsObj->LATC_master());
+    rootObj.setLATC_ignore(tdsObj->LATC_ignore());
+  };
+
   void convert( const LsfEvent::MetaEvent& tdsObj, MetaEvent& rootObj) {
     RunInfo run;
     DatagramInfo datagram;
@@ -266,6 +298,19 @@ namespace RootPersistence {
     }
 
     if (config) delete config;
+
+    if (tdsObj.keyType() == enums::Lsf::LpaKeys) {
+      const lsfData::LpaKeys *lpaKeysTds = tdsObj.keys()->castToLpaKeys();
+      LpaKeys lpaKeysRoot;
+      convert(lpaKeysTds, lpaKeysRoot);
+      rootObj.setLpaKeys(lpaKeysRoot);
+    } else if (tdsObj.keyType() == enums::Lsf::LciKeys) {
+      const lsfData::LciKeys *lciKeysTds = tdsObj.keys()->castToLciKeys();
+      LciKeys lciKeysRoot;
+      convert(lciKeysTds, lciKeysRoot);
+      rootObj.setLciKeys(lciKeysRoot);
+    }
+
   };
 
   void convert( const MetaEvent& rootObj, LsfEvent::MetaEvent& tdsObj) {
@@ -274,12 +319,11 @@ namespace RootPersistence {
     lsfData::GemScalers scalers;
     lsfData::Time time;
     lsfData::Configuration* config(0);
+    lsfData::LsfKeys* keys(0);
     convert(rootObj.run(),run);
     convert(rootObj.datagram(),datagram);
     convert(rootObj.scalers(),scalers);
     convert(rootObj.time(),time);
-    //convert(rootObj.configuration(),config);
-    //tdsObj.set(run,datagram,scalers,time,*config);
 
     if ( rootObj.runType() == enums::Lsf::LPA ) {
         const LpaConfiguration* lpaRoot = rootObj.lpaConfiguration();
@@ -307,10 +351,26 @@ namespace RootPersistence {
         delete tkrTds;
     }
 
+    if( rootObj.keyType() == enums::Lsf::LpaKeys) {
+      const LpaKeys *lpaKeysRoot = rootObj.lpaKeys();
+      lsfData::LpaKeys *lpaKeysTds = new lsfData::LpaKeys;
+      convert(lpaKeysRoot,lpaKeysTds);
+      keys = lpaKeysTds;
+    } else if (rootObj.keyType() == enums::Lsf::LciKeys) {
+      const LciKeys *lciKeysRoot = rootObj.lciKeys();
+      lsfData::LciKeys *lciKeysTds = new lsfData::LciKeys;
+      convert(lciKeysRoot, lciKeysTds);
+      keys = lciKeysTds;
+    }
+
     tdsObj.set(run,datagram,scalers,time);
     if(config) {
         tdsObj.setConfiguration(*config);
         delete config;
+    }
+    if (keys) {
+        tdsObj.setKeys(*keys);
+        delete keys;
     }
   };
 
