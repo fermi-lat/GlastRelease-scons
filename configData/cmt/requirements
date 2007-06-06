@@ -1,5 +1,5 @@
 package configData
-version v0r2p3
+version v0r2p4
 
 author M. Kocian <kocian@slac.stanford.edu>
 
@@ -30,9 +30,12 @@ library configData \
 
 #macro_append ROOT_linkopts " -L/u/ec/kocian/data/glnew/external/ROOT/v5.14.00d/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -pthread -lm -ldl -rdynamic "
 
-application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 
-application RootConfigCompare ../apps/RootConfigCompare.cxx
+# Only build these if needed.
+# to build these need 
+#  gmake Linux 
+application ConfigXml2Root -group=Linux ../apps/ConfigXml2Root.cxx
+application RootConfigCompare -group=Linux ../apps/RootConfigCompare.cxx
 
 #application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 #application testdb ../apps/testdb.cxx
