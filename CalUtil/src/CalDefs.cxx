@@ -14,6 +14,34 @@
 // STD INCLUDES
 #include <string>
 #include <sstream>
+#include <vector>
+#include <algorithm>
+
+namespace {
+  vector<string> tokenize_str(const string & str,
+                              const string & delims)
+  {
+    // Skip delims at beginning.
+    string::size_type lastPos = str.find_first_not_of(delims, 0);
+    // Find first "non-delimiter".
+    string::size_type pos     = str.find_first_of(delims, lastPos);
+
+    vector<string> tokens;
+
+    while (string::npos != pos || string::npos != lastPos)
+      {
+        // Found a token, add it to the vector.
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        // Skip delims.  Note the "not_of"
+        lastPos = str.find_first_not_of(delims, pos);
+        // Find next "non-delimiter"
+        pos     = str.find_first_of(delims, lastPos);
+      }
+
+    return tokens;
+  }
+
+}
 
 namespace CalUtil {
   using namespace std;
@@ -23,7 +51,7 @@ namespace CalUtil {
     "Y"
   };
 
-  const std::string &DirNum::toStr() const {
+  const string &DirNum::toStr() const {
     return DIR_MNEM[m_data];
   }
 
@@ -33,7 +61,7 @@ namespace CalUtil {
     "NEG"
   };
 
-  const std::string &FaceNum::toStr() const {
+  const string &FaceNum::toStr() const {
     return FACE_MNEM[m_data];
   }
 
@@ -42,9 +70,24 @@ namespace CalUtil {
     "SM"
   };
 
-  const std::string &DiodeNum::toStr() const {
+  const string &DiodeNum::toStr() const {
     return DIODE_MNEM[m_data];
   }
+  
+  DiodeNum::DiodeNum(const std::string &str) {
+    /// find string in list of mnemonics
+    static const string *const first = DIODE_MNEM;
+    static const string *const last = DIODE_MNEM + DiodeNum::N_VALS;
+    const string *const pos = find(DIODE_MNEM,
+                                   last,
+                                   str);
+    if (pos == last)
+      throw runtime_error(str + " is inavlid DiodeNum string repr");
+    
+    /// set internal index value
+    m_data = pos - first;
+  }
+
 
 
   const string THX_MNEM[] = {
@@ -52,7 +95,7 @@ namespace CalUtil {
     "X1"
   };
 
-  const std::string &THXNum::toStr() const {
+  const string &THXNum::toStr() const {
     return THX_MNEM[m_data];
   }
 
@@ -64,7 +107,7 @@ namespace CalUtil {
     "HEX1"
   };
 
-  const std::string &RngNum::toStr() const {
+  const string &RngNum::toStr() const {
     return RNG_MNEM[m_data];
   }
 
@@ -77,36 +120,36 @@ namespace CalUtil {
   };
 
 
-  /// generic type2string converter
-  template <typename _T>
-  string toString(const _T &val) {
-    ostringstream tmp;
-    tmp << val;
-    return tmp.str();
-  }
-
-  const std::string &AsymType::toStr() const {
+  const string &AsymType::toStr() const {
     return ASYM_MNEM[m_data];
   }
 
 
-  std::string XtalIdx::toStr() const {
+  string XtalIdx::toStr() const {
     return "T" + toString(getTwr().val()) +
       "L" + toString(getLyr().val()) +
       "C" + toString(getCol().val());
       
   }
 
-  std::string FaceIdx::toStr() const {
+  XtalIdx::XtalIdx(const std::string &str) {
+    /// extract individual fields from string
+    vector<string> parts(tokenize_str(str,"TLC"));
+
+    if (parts.size() != N_FIELDS)
+      throw std::runtime_error("Invalid MeanDACZId string repr: " + str);
+ 
+  }
+
+  string FaceIdx::toStr() const {
     return getXtalIdx().toStr() + "F" + toString(getFace().val());
   }
 
-  std::string DiodeIdx::toStr() const {
+  string DiodeIdx::toStr() const {
     return getFaceIdx().toStr() + "D" + toString(getDiode().val());
   }
 
-  std::string RngIdx::toStr() const {
+  string RngIdx::toStr() const {
     return getFaceIdx().toStr() + "R" + toString(getRng().val());
   }
-
 };

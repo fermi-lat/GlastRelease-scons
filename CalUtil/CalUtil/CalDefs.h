@@ -13,6 +13,7 @@
 #include <vector>
 #include <ostream>
 #include <stdexcept>
+#include <sstream>
 
 using namespace std;
 
@@ -25,6 +26,15 @@ namespace CalUtil {
   // forward declarations (sometimes needed)
   class DirNum;
   class RngNum;
+
+    
+  /// generic type2string converter
+  template <typename _T>
+      std::string toString(const _T &val) {
+    std::ostringstream tmp;
+    tmp << val;
+    return tmp.str();
+  }
 
   /** \brief Atomic (simple) Cal Geometry Id's
 
@@ -46,6 +56,8 @@ namespace CalUtil {
     }
 
     unsigned short val() const {return m_data;}
+
+    std::string toStr() const {return toString(m_data);}
   protected:
     explicit SimpleId(const unsigned short val) : m_data(val) {}
     SimpleId() : m_data(0) {}
@@ -75,6 +87,7 @@ namespace CalUtil {
     bool operator<=(const TwrNum that) const {return m_data <= that.m_data;}
     bool operator>(const TwrNum that) const {return m_data > that.m_data;}
     bool operator<(const TwrNum that) const {return m_data < that.m_data;}
+
   };
 
   /// index class for GLAST Cal GCRC (layer 0-3 on a single cal front end board).
@@ -129,7 +142,7 @@ namespace CalUtil {
     bool operator==(const DirNum that) const {return m_data == that.m_data;}
     bool operator!=(const DirNum that) const {return m_data != that.m_data;}
 
-	const std::string &toStr() const;
+    const std::string &toStr() const;
 
   };
   const DirNum X_DIR(0);
@@ -157,13 +170,13 @@ namespace CalUtil {
   class FaceNum : public SimpleId {
   public:
     FaceNum() : SimpleId() {}
-	explicit FaceNum(const idents::CalXtalId::XtalFace face) : SimpleId(face) {}
+    explicit FaceNum(const idents::CalXtalId::XtalFace face) : SimpleId(face) {}
     FaceNum(unsigned short val) : SimpleId(val) {}
     
     static const vector<string> MNEM;
     static const unsigned short N_VALS=2;    
     bool isValid() const {return m_data < N_VALS;}
-	const std::string &toStr() const;
+    const std::string &toStr() const;
     
     /// allow quick conversion to idents::CalXtalId::XtalFace since internal
     /// storage is the same
@@ -173,8 +186,8 @@ namespace CalUtil {
 
     bool operator==(const FaceNum that) const {return m_data == that.m_data;}
     bool operator!=(const FaceNum that) const {return m_data != that.m_data;}
-
   };
+
   const FaceNum POS_FACE(idents::CalXtalId::POS);
   const FaceNum NEG_FACE(idents::CalXtalId::NEG);
 
@@ -183,6 +196,7 @@ namespace CalUtil {
   class DiodeNum : public SimpleId {
   public:
     explicit DiodeNum(const unsigned short val) : SimpleId(val) {}
+    explicit DiodeNum(const std::string &str);
     DiodeNum() : SimpleId() {}
     
     inline RngNum getX8Rng() const;
@@ -192,7 +206,7 @@ namespace CalUtil {
     static const unsigned short N_VALS = 2; 
     bool isValid() const {return m_data < N_VALS;}
 
-	const std::string &toStr() const;
+    const std::string &toStr() const;
 
     bool operator==(const DiodeNum that) const {return m_data == that.m_data;}
     bool operator!=(const DiodeNum that) const {return m_data != that.m_data;}
@@ -211,7 +225,7 @@ namespace CalUtil {
 
     bool isValid() const {return m_data < N_VALS;}
     static const unsigned short N_VALS=2;
-	const std::string &toStr() const;
+    const std::string &toStr() const;
 
     bool operator==(const THXNum that) const {return m_data == that.m_data;}
     bool operator!=(const THXNum that) const {return m_data != that.m_data;}
@@ -230,7 +244,7 @@ namespace CalUtil {
 
     static const vector<string> MNEM;
     static const unsigned short N_VALS=4;
-	const std::string &toStr() const;
+    const std::string &toStr() const;
     
     DiodeNum getDiode() const {
       using idents::CalXtalId;
@@ -242,7 +256,7 @@ namespace CalUtil {
       return (idents::CalXtalId::AdcRange)m_data;
     }
 
-	THXNum getTHX() const {return THXNum(m_data%2);}
+    THXNum getTHX() const {return THXNum(m_data%2);}
 
     bool operator==(const RngNum that) const {return m_data == that.m_data;}
     bool operator!=(const RngNum that) const {return m_data != that.m_data;}
@@ -304,7 +318,7 @@ namespace CalUtil {
     XtalDiode() : XtalWideIndex() {}
 
     DiodeNum getDiode() const {return DiodeNum(m_data%FACE_BASE);}
-	FaceNum getFace()  const {return FaceNum((idents::CalXtalId::XtalFace)(m_data/FACE_BASE));}
+    FaceNum getFace()  const {return FaceNum((idents::CalXtalId::XtalFace)(m_data/FACE_BASE));}
 
     static const unsigned short N_VALS = FaceNum::N_VALS*DiodeNum::N_VALS;
     bool isValid() const {return m_data < N_VALS;}
@@ -319,7 +333,7 @@ namespace CalUtil {
       XtalWideIndex(face.val()*FACE_BASE + rng.val()) {};
     XtalRng() : XtalWideIndex() {}
 
-	FaceNum getFace() const {return FaceNum(idents::CalXtalId::XtalFace(m_data/FACE_BASE));}
+    FaceNum getFace() const {return FaceNum(idents::CalXtalId::XtalFace(m_data/FACE_BASE));}
     RngNum  getRng() const {return RngNum(m_data%FACE_BASE);}
 
     XtalDiode getXtalDiode() const {
@@ -417,7 +431,7 @@ namespace CalUtil {
                            
       m_data = calc(LyrNum(xtalId.getLayer()),
                     xtalId.getColumn(),
-					FaceNum((idents::CalXtalId::XtalFace)xtalId.getFace()));
+                    FaceNum((idents::CalXtalId::XtalFace)xtalId.getFace()));
     }
      
     tFaceIdx(const LyrNum lyr,const  ColNum col, const FaceNum face) :
@@ -440,7 +454,7 @@ namespace CalUtil {
                
     LyrNum getLyr()  const {return LyrNum((m_data)/LYR_BASE);}
     ColNum getCol()  const {return (m_data%LYR_BASE)/COL_BASE;}
-	FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)(m_data%COL_BASE));}
+    FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)(m_data%COL_BASE));}
                                          
     bool isValid() const {return m_data < N_VALS;}
   private:
@@ -460,7 +474,7 @@ namespace CalUtil {
                            
       m_data = calc(LyrNum(xtalId.getLayer()),
                     xtalId.getColumn(),
-					FaceNum((idents::CalXtalId::XtalFace)(xtalId.getFace())), 
+                    FaceNum((idents::CalXtalId::XtalFace)(xtalId.getFace())), 
                     diode);
     }
    
@@ -483,7 +497,7 @@ namespace CalUtil {
                
     LyrNum getLyr()   const {return LyrNum((m_data)/LYR_BASE);}
     ColNum getCol()   const {return (m_data%LYR_BASE)/COL_BASE;}
-	FaceNum getFace()  const {return FaceNum((idents::CalXtalId::XtalFace)((m_data%COL_BASE)/FACE_BASE));}
+    FaceNum getFace()  const {return FaceNum((idents::CalXtalId::XtalFace)((m_data%COL_BASE)/FACE_BASE));}
     DiodeNum getDiode() const {return DiodeNum(m_data%FACE_BASE);}
                        
                          
@@ -495,9 +509,9 @@ namespace CalUtil {
                                                   getFace());}
 
     tDiodeIdx getTDiodeIdx() const {return tDiodeIdx(getLyr(),
-                                                    getCol(),
-                                                    getFace(),
-                                                    getDiode());}
+                                                     getCol(),
+                                                     getFace(),
+                                                     getDiode());}
                              
                              
     bool isValid() const {return m_data < N_VALS;}
@@ -517,14 +531,14 @@ namespace CalUtil {
       if (!xtalId.validFace() || ! xtalId.validRange())
         throw invalid_argument("tRngIdx requires valid face and range info in xtalId.  Programmer error");
       m_data = calc(LyrNum(xtalId.getLayer()),
-		            xtalId.getColumn(),
-					FaceNum((idents::CalXtalId::XtalFace)xtalId.getFace()), 
-		            RngNum(xtalId.getRange()));
+                    xtalId.getColumn(),
+                    FaceNum((idents::CalXtalId::XtalFace)xtalId.getFace()), 
+                    RngNum(xtalId.getRange()));
     }
    
     tRngIdx(const LyrNum lyr, const ColNum col, const FaceNum face, const RngNum rng) :
       TwrWideIndex(calc(lyr,col,face,rng)) 
-      {}
+    {}
      
     tRngIdx(const tXtalIdx xtal, const FaceNum face, const RngNum rng) :
       TwrWideIndex(calc(xtal.getLyr(),xtal.getCol(),face,rng)) {}
@@ -547,7 +561,7 @@ namespace CalUtil {
                
     LyrNum getLyr()  const {return LyrNum((m_data)/LYR_BASE);}
     ColNum getCol()  const {return (m_data%LYR_BASE)/COL_BASE;}
-	FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)((m_data%COL_BASE)/FACE_BASE));}
+    FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)((m_data%COL_BASE)/FACE_BASE));}
     RngNum getRng()  const {return RngNum(m_data%FACE_BASE);}
                        
     static const unsigned N_VALS = tFaceIdx::N_VALS*RngNum::N_VALS;
@@ -592,19 +606,22 @@ namespace CalUtil {
     
     unsigned val() const {return m_data;}
 
-	bool operator==(const LATWideIndex that) const {
+    bool operator==(const LATWideIndex that) const {
       return m_data == that.m_data;
     }
+    
     bool operator<=(const LATWideIndex that) const {
       return m_data <= that.m_data;
     }
+    
     bool operator!=(const LATWideIndex that) const {
       return m_data != that.m_data;
     }
+    
     bool operator< (const LATWideIndex that) const {
       return m_data <  that.m_data;
     }
-
+    
   protected:
     LATWideIndex(const unsigned val) : m_data(val) {}
     LATWideIndex() : m_data(0) {}
@@ -622,7 +639,7 @@ namespace CalUtil {
     LyrIdx() : LATWideIndex() {}
 
     static const unsigned N_VALS  = 
-      TwrNum::N_VALS*LyrNum::N_VALS;
+    TwrNum::N_VALS*LyrNum::N_VALS;
 
     TwrNum getTwr() const {return m_data/TWR_BASE;}
     LyrNum getLyr() const {return LyrNum(m_data%TWR_BASE);}
@@ -646,10 +663,11 @@ namespace CalUtil {
 
     /// \param val should be the result of XtalIdx::val() method to ensure proper encoding.
     explicit XtalIdx(int val) : LATWideIndex(val) {}
+
+    explicit XtalIdx(const std::string &str);
     
     XtalIdx(const TwrNum twr, const LyrNum lyr, const ColNum col) :
       LATWideIndex(calc(twr,lyr,col)) {}
-    
     
     XtalIdx() : LATWideIndex() {}
 
@@ -665,7 +683,7 @@ namespace CalUtil {
     }
 
     static const unsigned N_VALS  = 
-      TwrNum::N_VALS*LyrNum::N_VALS*ColNum::N_VALS;
+    TwrNum::N_VALS*LyrNum::N_VALS*ColNum::N_VALS;
 
     TwrNum getTwr() const {return m_data/TWR_BASE;}
     LyrNum getLyr() const {return LyrNum((m_data%TWR_BASE)/LYR_BASE);}
@@ -673,20 +691,22 @@ namespace CalUtil {
 
     bool isValid() const {return m_data < N_VALS;}
 
-	std::string toStr() const;
-    
+    std::string toStr() const;
+
   private:
     static unsigned calc(const TwrNum twr, const LyrNum lyr, const ColNum col) {
       return twr.val()*TWR_BASE + lyr.val()*LYR_BASE + col.val();
     }
     static const unsigned LYR_BASE  = ColNum::N_VALS;
     static const unsigned TWR_BASE  = LYR_BASE*LyrNum::N_VALS;
+    static const unsigned short N_FIELDS = 3;
   };
   
   /// index class for all Cal xtal faces in GLAST LAT
   class FaceIdx : public LATWideIndex {
   public:
     FaceIdx() : LATWideIndex() {}
+
     explicit FaceIdx(const idents::CalXtalId &faceId) {
       if (!faceId.validFace())
         throw invalid_argument("FaceIdx requires valid face info in xtalId"
@@ -696,13 +716,13 @@ namespace CalUtil {
       m_data = calc(faceId.getTower(), 
                     LyrNum(faceId.getLayer()),
                     faceId.getColumn(),
-					FaceNum((idents::CalXtalId::XtalFace)faceId.getFace()));
+                    FaceNum((idents::CalXtalId::XtalFace)faceId.getFace()));
     }
 
     FaceIdx(const TwrNum twr, const LyrNum lyr, const ColNum col, const FaceNum face) :
       LATWideIndex(calc(twr,lyr,col,face)) {}
     
-	FaceIdx(const XtalIdx xtal, const FaceNum face) {
+    FaceIdx(const XtalIdx xtal, const FaceNum face) {
       m_data = xtal.val()*COL_BASE + face.val();    
     }
 
@@ -722,12 +742,13 @@ namespace CalUtil {
     TwrNum getTwr()  const {return m_data/TWR_BASE;}
     LyrNum getLyr()  const {return LyrNum((m_data%TWR_BASE)/LYR_BASE);}
     ColNum getCol()  const {return (m_data%LYR_BASE)/COL_BASE;}
-	FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)(m_data%COL_BASE));}
+    FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)(m_data%COL_BASE));}
 
     
     bool isValid() const {return m_data < N_VALS;}
 
-	std::string toStr() const;
+    std::string toStr() const;
+
   private:
     static unsigned calc(const TwrNum twr, const LyrNum lyr, const ColNum col, const FaceNum face) {
       return twr.val()*TWR_BASE + lyr.val()*LYR_BASE + col.val()*COL_BASE + face.val();
@@ -783,7 +804,7 @@ namespace CalUtil {
     
     bool isValid() const {return m_data < N_VALS;}
 
-	std::string toStr() const;
+    std::string toStr() const;
 
     /// set internal raw value
     /// \warning (make sure you are using correctly encoded integer)
@@ -805,7 +826,7 @@ namespace CalUtil {
   public:
     RngIdx(const TwrNum twr, const LyrNum lyr, const ColNum col, const FaceNum face, const RngNum rng) :
       LATWideIndex(calc(twr,lyr,col,face,rng)) 
-      {}
+    {}
     
     RngIdx(const XtalIdx xtal,const  FaceNum face, const RngNum rng) {
       m_data = xtal.val()*COL_BASE + face.val()*FACE_BASE + rng.val();
@@ -847,15 +868,16 @@ namespace CalUtil {
                                                getCol(),
                                                getFace());}
 
-	DiodeIdx getDiodeIdx() const {return DiodeIdx(getTwr(),
-		                                          getLyr(),
-												  getCol(),
-												  getFace(),
-												  getRng().getDiode());}
+    DiodeIdx getDiodeIdx() const {return DiodeIdx(getTwr(),
+                                                  getLyr(),
+                                                  getCol(),
+                                                  getFace(),
+                                                  getRng().getDiode());}
 
     bool isValid() const {return m_data < N_VALS;}
 
-	std::string toStr() const;
+    std::string toStr() const;
+
   private:
     static unsigned calc(const TwrNum twr, const LyrNum lyr, const ColNum col, const FaceNum face, const RngNum rng) {
       return twr.val()*TWR_BASE + lyr.val()*LYR_BASE + col.val()*COL_BASE + face.val()*FACE_BASE + rng.val();
@@ -906,7 +928,7 @@ namespace CalUtil {
       switch ((idents::CalXtalId::XtalFace)face.val()) {
       case idents::CalXtalId::POS:
         return DiodeNum(m_data/2);
-	  case idents::CalXtalId::NEG:
+      case idents::CalXtalId::NEG:
         return DiodeNum(m_data%2);
       default:
         throw invalid_argument("Bad FaceNum value. Programmer error");
@@ -917,7 +939,7 @@ namespace CalUtil {
 
     bool isValid() const {return m_data < N_VALS;}
 
-	const std::string &toStr() const;
+    const std::string &toStr() const;
 
 
     bool operator==(const AsymType that) const {return m_data == that.m_data;}
