@@ -3,7 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
-
+v3r8    07-Jun-2007 HMK Merge GlastReleasev9r13 branch
 v3r7    05-Oct-2006 HMK Continue processing even if there are missing ranges
         in CAL digi data
 v3r6p1  09-Aug-2006 HMK put a limit on sweep event warnings
@@ -14,6 +14,10 @@ v3r4p1  31-Jul-2006 HMK check that ADF data exists before processing create
 v3r4    27-Jul-2006 HMK Handle beamtest06 acd remapping
 v3r3    25-Jul-2006 HMK check for ADF Hdr or Tlr
 v3r2    24-Jul-2006 HMK Converters for beamtest ancilary data
+=== GlastReleasev9r13 branch 
+v3r1gr2 26-Oct-2006 HMK Do not set /Event/livetime on the TDS 
+v3r1gr1
+=== GlastReleasev9r13 branch
 v3r1    31-May-2006 HMK Fix releaseContext and clean up
 v3r0    15-May-2006 HMK Updated for new Gaudi v18r1
 v2r6    14-Apr-2006 HMK Check event count against CHS/eventFile's header

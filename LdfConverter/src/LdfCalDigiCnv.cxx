@@ -74,8 +74,8 @@ StatusCode LdfCalDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
                         if (!readout) {
                             //printf("LdfCalDigiCnv:  Faen!  In ALLRANGE mode but not all range readouts are populated!\n");
                             //exit(1);
-                            // I&T requests we continue processing even if 
-                            // range(s) are missing
+                            //I&T requests that we continue to process this data
+                            // even if ranges are missing
                             continue;
                         }
                         char rangeP = readout->getRange(ldfReader::CalDigi::POS);
