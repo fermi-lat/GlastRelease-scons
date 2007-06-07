@@ -73,6 +73,23 @@ TkrHitValsTool::TkrHitValsTool(const std::string& type,
     declareInterface<IValsTool>(this); 
 }
 
+/** @page anatup_vars_optional 
+    @section tkrhitvalstool TkrHitValsTool Variables
+
+<table>
+<tr><th> Variable <th> Type  <th> Description					
+<tr><td> TkrNumHits 	
+<td>F<td>   Total number of TKR clusters 
+<tr><td> TkrFirstLayer
+<td>F<td>   First layer containing a cluster 
+<tr><td> TkrNumLayersHit
+<td>F<td>   Total number of hit layers 
+<tr><td> TkrHitsInLyrNN, NN=(00,17)   
+<td>F<td>   Number of clusters in (bi)layer NN 
+           (numbered from the bottom of the tracker) 
+</table>
+*/
+
 StatusCode TkrHitValsTool::initialize()
 {
     StatusCode sc = StatusCode::SUCCESS;
@@ -96,22 +113,6 @@ StatusCode TkrHitValsTool::initialize()
     
     // load up the map
 
-/** @page anatup_vars_optional 
-    @section tkrhitvalstool TkrHitValsTool Variables
-
-<table>
-<tr><th> Variable <th> Type  <th> Description					
-<tr><td> TkrNumHits 	
-<td>F<td>   Total number of TKR clusters 
-<tr><td> TkrFirstLayer
-<td>F<td>   First layer containing a cluster 
-<tr><td> TkrNumLayersHit
-<td>F<td>   Total number of hit layers 
-<tr><td> TkrHitsInLyrNN, NN=(00,17)   
-<td>F<td>   Number of clusters in (bi)layer NN 
-           (numbered from the bottom of the tracker) 
-</table>
-*/
     addItem("TkrNumHits",            &Tkr_Cnv_Lyr_Hits);       
     addItem("TkrFirstLayer",         &Tkr_Fst_Cnv_Lyr);        
     addItem("TkrNumLayersHit",       &Tkr_NCnv_Lyrs_Hit);      

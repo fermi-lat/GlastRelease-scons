@@ -126,6 +126,20 @@ StatusCode ObfCoordsAlg::finalize()
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+/** @page anatup_vars 
+
+@section ObfCoords  Celestial Coordinates of the Best OnboardFilter Track
+
+<table>
+<tr><th> Variable <th> Type <th> Description
+<tr><td> FilterRa, FilterDec 
+<td>F<td>  (deg) reconstructed direction in equatorial coordinates       
+<tr><td> FilterL, FilterB 
+<td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
+</table> 
+*/
+
+
 ObfCworker::ObfCworker()
 // initialize pointers to current items
 : FilterXDir("FilterXDir")
@@ -135,18 +149,6 @@ ObfCworker::ObfCworker()
 //, FilterYhits("FilterYhits")
 {
     //now create new items 
-    /** @page anatup_vars 
-
-    @section ObfCoords  Celestial Coordinates of the Best OnboardFilter Track
-
-    <table>
-    <tr><th> Variable <th> Type <th> Description
-    <tr><td> FilterRa, FilterDec 
-    <td>F<td>  (deg) reconstructed direction in equatorial coordinates       
-    <tr><td> FilterL, FilterB 
-    <td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
-    </table> 
-    */
 
     addItem( "FilterRa",            m_obfRa);
     addItem( "FilterDec",           m_obfDec);

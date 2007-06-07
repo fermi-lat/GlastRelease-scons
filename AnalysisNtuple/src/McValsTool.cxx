@@ -6,7 +6,6 @@ $Header$
 */
 // Include files
 
-
 #include "ValBase.h"
 
 #include "GaudiKernel/MsgStream.h"
@@ -136,32 +135,8 @@ McValsTool::McValsTool(const std::string& type,
     declareInterface<IValsTool>(this); 
 }
 
-StatusCode McValsTool::initialize()
-{
-    StatusCode sc = StatusCode::SUCCESS;
-    
-    MsgStream log(msgSvc(), name());
-
-    if( ValBase::initialize().isFailure()) return StatusCode::FAILURE;
-  
-    // get the services    
-    if ( service("FluxSvc", m_fluxSvc, true).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
-   
-    if( serviceLocator() ) {
-        if( service("ParticlePropertySvc", m_ppsvc, true).isFailure() ) {
-            log << MSG::ERROR << "Service [ParticlePropertySvc] not found" << endreq;
-        }
-    } else {
-        return StatusCode::FAILURE;
-    }
-    
-    // load up the map
-
-    /** @page anatup_vars 
-    @section mcvalstool McValsTool Variables
+/** @page anatup_vars 
+@section mcvalstool McValsTool Variables
 
 <table>
 <tr><th> Variable <th> Type <th> Description
@@ -213,8 +188,32 @@ StatusCode McValsTool::initialize()
 <tr><td> McAcdActDistTileEnergy
 <td>F<td>   Energy deposited in tile with the largest active distance
 </table>
-    */
+*/
 
+
+StatusCode McValsTool::initialize()
+{
+    StatusCode sc = StatusCode::SUCCESS;
+    
+    MsgStream log(msgSvc(), name());
+
+    if( ValBase::initialize().isFailure()) return StatusCode::FAILURE;
+  
+    // get the services    
+    if ( service("FluxSvc", m_fluxSvc, true).isFailure() ){
+        log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
+   
+    if( serviceLocator() ) {
+        if( service("ParticlePropertySvc", m_ppsvc, true).isFailure() ) {
+            log << MSG::ERROR << "Service [ParticlePropertySvc] not found" << endreq;
+        }
+    } else {
+        return StatusCode::FAILURE;
+    }
+    
+    // load up the map
 
     addItem("McSourceId",     &MC_SourceId);
     addItem("McSourceName",    MC_SourceName);

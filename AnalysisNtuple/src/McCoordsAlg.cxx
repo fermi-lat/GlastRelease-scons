@@ -124,8 +124,22 @@ StatusCode McCoordsAlg::finalize()
     return StatusCode::SUCCESS;
 }
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/** @page anatup_vars 
+
+@section McCoords  Celestial Coordinates of the Primary MC Particle
+
+<table>
+<tr><th> Variable <th> Type <th> Description
+<tr><td> McRa, McDec 
+<td>F<td>  (deg) reconstructed direction in equatorial coordinates       
+<tr><td> McZenithTheta, McEarthAzimuth 
+<td>F<td>  (deg) reconstucted direction with respect to local zenith system
+<tr><td> McL, McB 
+<td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
+</table> 
+*/
 
 McCworker::McCworker()
 // initialize pointers to current items
@@ -134,20 +148,6 @@ McCworker::McCworker()
 , McZDir("McZDir")
 {
     //now create new items 
-    /** @page anatup_vars 
-
-    @section McCoords  Celestial Coordinates of the Primary MC Particle
-
-    <table>
-    <tr><th> Variable <th> Type <th> Description
-    <tr><td> McRa, McDec 
-    <td>F<td>  (deg) reconstructed direction in equatorial coordinates       
-    <tr><td> McZenithTheta, McEarthAzimuth 
-    <td>F<td>  (deg) reconstucted direction with respect to local zenith system
-    <tr><td> McL, McB 
-    <td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
-    </table> 
-    */
 
     addItem( "McRa",            m_mcRa);
     addItem( "McDec",           m_mcDec);
@@ -156,7 +156,6 @@ McCworker::McCworker()
     addItem( "McZenithTheta",   m_mcZen);
     addItem( "McEarthAzimuth",  m_mcAzim);
 }
-
 
 void McCworker::evaluate()
 {
