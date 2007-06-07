@@ -80,7 +80,7 @@ namespace calibGenCAL {
 
       const float adc = calDigi.getAdcSelectedRange(rng.val(), (CalXtalId::XtalFace)face.val());   // raw adc
       if (adc < 0)
-        //       LogStream::get() << "Couldn't get adc val for face=" << face.val()
+        //       LogStrm::get() << "Couldn't get adc val for face=" << face.val()
         //               << " rng=" << rng.val() << endl;
         //    return;
         continue;

@@ -157,7 +157,7 @@ namespace calibGenCAL {
 
       float retVal = par[PARM_LAN_AREA]*step*sum*invsq2pi/real_gau + bkgnd;
 
-      /*         LogStream::get() << x[0] << " "
+      /*         LogStrm::get() << x[0] << " "
                  << str_join(par, par+N_PARMS)
                  << real_lan << " "
                  << real_gau << " "

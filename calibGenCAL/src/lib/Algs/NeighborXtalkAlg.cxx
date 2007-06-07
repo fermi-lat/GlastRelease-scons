@@ -82,13 +82,13 @@ namespace calibGenCAL {
       throw runtime_error(tmp.str());
     }
 
-    LogStream::get() << __FILE__ << ": Processing: " << nEvents << " events." << endl;
+    LogStrm::get() << __FILE__ << ": Processing: " << nEvents << " events." << endl;
 
     // BEGINNING OF EVENT LOOP
     for (eventData.eventNum = 0 ; eventData.eventNum < nEvents; eventData.eventNum++) {
       if (eventData.eventNum%1000 == 0) {
-        LogStream::get() << " event " << eventData.eventNum << '\n';
-        LogStream::get().flush();
+        LogStrm::get() << " event " << eventData.eventNum << '\n';
+        LogStrm::get().flush();
       }
 
       rootFile.getEvent(eventData.eventNum);
@@ -141,7 +141,7 @@ namespace calibGenCAL {
       }                                 // foreach xtal
     }
     else
-      LogStream::get() << " event " << eventData.eventNum << " contains "
+      LogStrm::get() << " event " << eventData.eventNum << " contains "
                        << nDigis << " digis - skipped" << endl;
   }
 

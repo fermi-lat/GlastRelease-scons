@@ -55,7 +55,7 @@ namespace calibGenCAL {
     rootFile.getDigiChain()->SetBranchStatus("m_summary");
 
     const unsigned nEvents = rootFile.getEntries();
-    LogStream::get() << __FILE__ << ": Processing: " << nEvents << " events." << endl;
+    LogStrm::get() << __FILE__ << ": Processing: " << nEvents << " events." << endl;
 
     ///////////////////////////////////////////
     // DIGI Event Loop - Fill Twr Hodoscopes //
@@ -67,20 +67,20 @@ namespace calibGenCAL {
         // quit if we have enough entries in each histogram
         const unsigned currentMin = m_mpdHists.getMinEntries();
         if (currentMin >= nEntries) break;
-        LogStream::get() << "Event: " << eventData.eventNum
+        LogStrm::get() << "Event: " << eventData.eventNum
                          << " min entries per histogram: " << currentMin
                          << endl;
-        LogStream::get().flush();
+        LogStrm::get().flush();
       }
 
       if (!rootFile.getEvent(eventData.eventNum)) {
-        LogStream::get() << "Warning, event " << eventData.eventNum << " not read." << endl;
+        LogStrm::get() << "Warning, event " << eventData.eventNum << " not read." << endl;
         continue;
       }
 
       DigiEvent *digiEvent = rootFile.getDigiEvent();
       if (!digiEvent) {
-        LogStream::get() << __FILE__ << ": Unable to read DigiEvent " << eventData.eventNum  << endl;
+        LogStrm::get() << __FILE__ << ": Unable to read DigiEvent " << eventData.eventNum  << endl;
         continue;
       }
 
@@ -129,7 +129,7 @@ namespace calibGenCAL {
 
 
     if (!calDigiCol) {
-      LogStream::get() << "no calDigiCol found for event#" << eventData.eventNum << endl;
+      LogStrm::get() << "no calDigiCol found for event#" << eventData.eventNum << endl;
       return;
     }
 
