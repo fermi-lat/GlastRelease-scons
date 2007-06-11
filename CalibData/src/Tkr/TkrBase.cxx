@@ -2,6 +2,7 @@
 
 #include "CalibData/Tkr/UniBase.h" 
 #include "CalibData/Tkr/TkrBase.h"
+#include  "CalibData/Tkr/TkrFinder.h"
 #include "GaudiKernel/MsgStream.h"
 
 namespace CalibData {
