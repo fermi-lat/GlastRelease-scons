@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "CalibData/CalibBase.h"
-#include "CalibData/Tkr/TkrFinder.h"
+// #include "CalibData/Tkr/TkrFinder.h"
 #include "idents/TkrId.h"
 
 #define TKRBASE_MAXROW 4
@@ -18,7 +18,7 @@ class RootTkrBaseCnv;
 
 namespace CalibData {
   class UniBase;
-
+  class TkrFinder;
   /**
      Each derived, completely implemented tkr calibration class should
      register a suitable factory object which will produce the right
