@@ -28,7 +28,7 @@ namespace Event
 template <class T1, class T2> class RelTable 
 {    
 public: 
-    RelTable() : m_relations(0), m_ownRelationList(true), m_ownMaps(true), m_firstMMap(0), m_secondMMap(0) {}
+    RelTable() : m_relations(0), m_ownRelationList(true), m_firstMMap(0), m_secondMMap(0), m_ownMaps(true) {}
     RelTable(ObjectList < Relation<T1,T2> >* rels);
     RelTable(const RelTable<T1,T2>& table);
 
@@ -125,7 +125,8 @@ private:
 };
   
 template <class T1, class T2> inline RelTable<T1,T2>::RelTable(ObjectList < Relation<T1,T2> >* rels) :
-                              m_relations(0), m_ownRelationList(false), m_ownMaps(true), m_firstMMap(0), m_secondMMap(0)
+                              m_relations(0), m_ownRelationList(false), 
+                                  m_firstMMap(0), m_secondMMap(0), m_ownMaps(true)
 {
 //    init();
     // We are given a RelationList to work with

@@ -133,9 +133,12 @@ Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::ParamType
         case REVFIT:    return m_hitRevFit;
         case SMOOTHED:  return m_hitSmooth;
         case QMATERIAL: return m_Qmaterial;
-
-        // If here then something is wrong
-        throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+        case UNKNOWN:
+        default:
+            {
+                // If here then something is wrong
+                throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
+            }
     }
 
     return m_hitMeas;
@@ -184,6 +187,8 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
             access.setParams(&m_Qmaterial);
             statusBits = HASMATERIAL;
         }
+        case UNKNOWN:
+        default: {}
     }
 
     m_statusBits |= statusBits;

@@ -45,7 +45,8 @@ void Event::GcrXtal::getReadableXedFaces(int xedFaces, int& inFace, int& outFace
         XFACE_YRIGHT
     } XFACE_BITPOS;
 
-   int n,m,subXedFaces;
+   int n, subXedFaces;
+   // int m;
    std::string faceIn, faceOut;
    
    float mGuess;

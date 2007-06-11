@@ -11,7 +11,7 @@
 #include "Event/TopLevel/Definitions.h"
 #include "Event/Utilities/TimeStamp.h"
 
-static const CLID& CLID_McEvent = InterfaceID("McEvent", 1, 0);
+static const CLID& CLID_McEvent = InterfaceID("McEvent", 1, 1);
 
 namespace Event {
 
@@ -30,7 +30,7 @@ namespace Event {
 class MCEvent : public DataObject                                              {
     
 public:
-    MCEvent( ): m_run(0), m_sourceId(-1), m_sequence(0), m_sourceName("_") {}
+    MCEvent( ):  m_sourceId(-1), m_run(0), m_sequence(0), m_sourceName("_") {}
     
     virtual ~MCEvent()  { }
     
