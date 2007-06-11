@@ -2,6 +2,9 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v1r21   11-Jun-2007 HMK Update detector search for xmlGeoDbs v1r42
+         We must ust this tag with xmlGeoDbs >= v1r42 due to name changes for
+         volumes
  v1r20   24-Apr-2007 LR  Luis' updaet for poisson fluctuations
  v1r19   20-Apr-2007 HMK Store true MC energy depositions in AcdDigi TDS obj
  v1r18p2 15-Jan-2007 THB set veto threshold to 0.45 MIP
