@@ -31,19 +31,20 @@ AcdDetectorList::pushShape(ShapeType s, const UintVector& idvec,
         }
         this->push_back(getId());
         return AbortSubtree;
-    } else if (name.substr(0,10) == "sideRibbon" ) {
-        if (name.substr(0,11) == "sideRibbons" ) return More;
-        // ignore top ribbons - we just want a count of whole ribbons not the segments
-        // since there are 2 SideRibbons per ribbon - 
-        // will need to check to see if we found this guy already
-
-        // Also check to see if the ribbons are position detectors or not
-        if (sense == posSensitive) this->push_back(getId());
+    } else if (name.substr(1,9) == "RibbonTop" ) {
+        // y top ribbons are not segmented - so we'll just pick up all yRibbonTop
+        // all x ribbons top and side are segmented - we'd like to just pick up one instance
+        // so we'll use xRibbonTopCent which seem to occur once for each X ribbon
+        if (name.substr(0,10) == "yRibbonTop" ) {
+            this->push_back(getId());
+            return AbortSubtree;
+        }
+        if (name.substr(0,14) == "xRibbonTopCent") {
+            this->push_back(getId());
+            return AbortSubtree;
+        }
         return AbortSubtree;
-    } else if (name.substr(0,10) == "ribbonBent" ) {
-        // pick up the extra bits of ribbon added for the curved tiles
-        if (sense == posSensitive) this->push_back(getId());
-    }
+    } 
 
     // otherwise continue
     return More;
