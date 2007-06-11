@@ -137,7 +137,7 @@ StatusCode AcdDigiAlg::initialize() {
     }
 
     log << MSG::INFO << "Located  " << m_acdId_volCount.size() 
-        << " ACD detectors" << endreq;
+        << " ACD detectors (includes bent tile volumes)" << endreq;
 
     return StatusCode::SUCCESS;
 }
