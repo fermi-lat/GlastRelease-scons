@@ -3,7 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *   
- * v11r19p1 11-Jun-07 LSR Cleanup of RM warnings... don't think the interface changes
+ * v11r19p2 11-Jun-07 LSR Cleanup of RM warnings... don't think the interface changes
  * v11r19   01-Jun-07 LSR Fix to McEvent to properly initialize McSourceName
  * v11r18p2 30-Mar-07 JRB Minor mod to RelationTable.h for RHEL4 compiler 
  * v11r18p1 18-Mar-07 TU  Add get/set methods to McPositionHits
