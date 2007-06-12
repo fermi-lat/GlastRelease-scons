@@ -58,6 +58,7 @@ namespace CalUtil {
     unsigned short val() const {return m_data;}
 
     std::string toStr() const {return toString(m_data);}
+
   protected:
     explicit SimpleId(const unsigned short val) : m_data(val) {}
     SimpleId() : m_data(0) {}
@@ -208,12 +209,17 @@ namespace CalUtil {
 
     const std::string &toStr() const;
 
+    friend ostream &operator<<(ostream &stream, const DiodeNum &id);
+
     bool operator==(const DiodeNum that) const {return m_data == that.m_data;}
     bool operator!=(const DiodeNum that) const {return m_data != that.m_data;}
+
 
   };
   const DiodeNum LRG_DIODE(idents::CalXtalId::LARGE);
   const DiodeNum SM_DIODE (idents::CalXtalId::SMALL);
+
+  ostream &operator<<(ostream &stream, const DiodeNum &id);
 
   /// THX (Track & Hold Multiplier) can be either X8 or X1
   class THXNum : public SimpleId {
@@ -950,6 +956,8 @@ namespace CalUtil {
   const AsymType ASYM_LS(LRG_DIODE, SM_DIODE);
   const AsymType ASYM_SL(SM_DIODE, LRG_DIODE);
   const AsymType ASYM_SS(SM_DIODE, SM_DIODE);
+
+  
 
 }; // namespace CalUtil
 

@@ -73,6 +73,12 @@ namespace CalUtil {
   const string &DiodeNum::toStr() const {
     return DIODE_MNEM[m_data];
   }
+
+  ostream &operator<<(ostream &stream, const DiodeNum &id) {
+      stream << id.toStr();
+      
+      return stream;
+  }
   
   DiodeNum::DiodeNum(const std::string &str) {
     /// find string in list of mnemonics
