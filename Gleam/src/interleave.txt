@@ -8,7 +8,7 @@ ApplicationMgr.DLLs   += { "Interleave" };
 // force initialization of these before InterleaveAlg 
 // by putting these onto a phantom branch (kluge!)
 
-Digitization.BranchMembers = {"AnalysisNtupleAlg", "ClassifyAlg", "FT1Alg"}; 
+Digitization.BranchMembers = {"AnalysisNtupleAlg", "ClassifyAlg", "FT1Alg", "McCoordsAlg", "ObfCoordsAlg"}; }; 
 
 
 // TriggerTest is defined in basicOptions but needs to be told
@@ -16,7 +16,9 @@ TriggerTest.BranchMembers = { "TriggerAlg"   // trigger this branch
                          , "InterleaveAlg"   // process if interleave, dump otherwise
                          , "Count/interleave"// keep track of how many on this branch
                          , "ClassifyAlg"     // recalculate classification (which may be different)
-                         , "FT1Alg"          // add FT1 stuff if an interleave  
+                         , "FT1Alg"          // add FT1 stuff if an interleave 
+                         , "McCoordsAlg"     // Recalculations...
+                         , "ObfCoordsAlg"    // Recalculations... 
                          };
 //  the (pseudo) sources: get definitions, and add them to the list of sources
 FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
