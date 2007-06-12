@@ -11,6 +11,7 @@
 #include "lib/Util/CfgMgr.h"
 #include "lib/Util/CGCUtil.h"
 #include "lib/CalibDataTypes/CalMPD.h"
+#include "lib/Hists/GCRFit.h"
 
 // GLAST INCLUDES
 
@@ -117,7 +118,7 @@ int main(const int argc,
     
     CalMPD calMPD;
     LogStrm::get() << __FILE__ << ": fitting histograms" << endl;
-    gcrHists.fitHists(calMPD);
+    GCRFit::fitHists(gcrHists, calMPD, &outputROOTFile);
 
     // output txt file name
     //const string   outputTXTFile(cfg.outputBasename.getVal()+".txt");

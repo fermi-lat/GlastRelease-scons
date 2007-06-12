@@ -221,12 +221,12 @@ namespace calibGenCAL {
       return;
     }
 
-    const GcrSelectVals *gcrSelectVals = dynamic_cast<const GcrSelectVals*>(gcrSelect->getGcrSelectVals());
+    const GcrSelectVals *const gcrSelectVals = dynamic_cast<const GcrSelectVals*>(gcrSelect->getGcrSelectVals());
     if (gcrSelectVals)
       eventData.inferredZ = max(0,gcrSelectVals->getInferedZ());
   
 
-    const TObjArray *      gcrSelectedXtalCol = gcrSelect->getGcrSelectedXtalCol();
+    const TObjArray *const      gcrSelectedXtalCol = gcrSelect->getGcrSelectedXtalCol();
     if (!gcrSelectedXtalCol) {
       LogStrm::get() << __FILE__ << ": No GcrSelectedXtalCol found: " << eventData.eventNum  << endl;
       return;

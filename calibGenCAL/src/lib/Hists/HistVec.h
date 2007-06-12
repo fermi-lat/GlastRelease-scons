@@ -41,6 +41,9 @@ namespace calibGenCAL {
             typename HistType> 
   class HistVec {
   public:
+    typedef IdxType IdxType;
+    typedef HistType HistType;
+
     /// \param histBasename all histograms will be created w/ name histBasename+idx.toStr()
     /// \param writeDir (if non-zero) all new histograms will be written out to this directory opun class destruction.
     /// \param readDir (if non-zero) any associated histograms will be read from this directory upon construction 
