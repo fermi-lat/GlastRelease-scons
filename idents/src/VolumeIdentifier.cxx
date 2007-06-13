@@ -17,12 +17,9 @@
 
 #include "idents/VolumeIdentifier.h"
 
-#ifndef WIN32  
-#include <strstream>
-#else
 #include <sstream>
-#endif
 #include <cassert>
+#include <stdexcept>
 
 using namespace idents;
 
@@ -39,29 +36,26 @@ void VolumeIdentifier::init(int64 value, unsigned int size)
 // ids separated by a '/' character
 std::string VolumeIdentifier::name(const char* delimiter) const
 {
-#ifndef WIN32    
-    std::strstream s;
-#else
     std::stringstream s;
-#endif
     
     unsigned int bufIds = 0;
-    static unsigned int mask = 0x3f; // 6 bits for final mask
+    static unsigned int mask = (1 << s_bitsPer) - 1; //  6 bits for final mask
    
     int64 copyValue = m_value;
     
     int i;
     s << delimiter;
+
+    // Fields are written out starting with one located in most significant
+    // bits.  Since 64 is not evenly divisible by s_bitsPer (6) this field
+    // is located in bits 54-59.  Top 4 bits are unused.
     for (i = 0; i < m_size; i++)
     {
-        bufIds = (copyValue ) >> 54 & mask;
+        bufIds = ((copyValue ) >> s_maxShift) & mask;
         s << bufIds << delimiter;
-        copyValue = copyValue << 6;
+        copyValue = copyValue << s_bitsPer;
     }
     
-#ifndef WIN32
-    s << '\0';
-#endif
     std::string tmp=s.str();
     return tmp.substr(0,tmp.size()-1);
 }
@@ -69,38 +63,49 @@ std::string VolumeIdentifier::name(const char* delimiter) const
 
 unsigned int VolumeIdentifier::operator[](unsigned int index)
 {
-    static int64 mask2 = 63;
-    int64 copyShifted = m_value >> (54 - 6*index);
+    static int64 mask2 = (1 << s_bitsPer) - 1;            /* 63 */
+    int64 copyShifted = m_value >> (s_maxShift - s_bitsPer*index);
     return (copyShifted & mask2);
 }
 
 unsigned int VolumeIdentifier::operator[](unsigned int index) const
 {
-    static int64 mask2 = 63;
-    int64 copyShifted = m_value >> (54 - 6*index);
+  static int64 mask2 = (1 << s_bitsPer) -1 ; // 63;
+    int64 copyShifted = m_value >> (s_maxShift - s_bitsPer*index);
     return (copyShifted & mask2);
 }
 
 
 void VolumeIdentifier::prepend( const VolumeIdentifier& id)
 {
-    m_value = (m_value >> (6*id.size())) | id.getValue();
+    m_value = (m_value >> (s_bitsPer*id.size())) | id.getValue();
     m_size += id.size();
 }
 
 void VolumeIdentifier::append( const VolumeIdentifier& id)
 {
-    m_value = m_value | (id.getValue() >> (6*m_size));
+    m_value = m_value | (id.getValue() >> (s_bitsPer*m_size));
     m_size += id.size();
 }
 
 void VolumeIdentifier::append( unsigned int id)
 {
-    // the first id appended becomes the most significant digit in the internal
-    // rappresentation. In this way I can obtain an equivalent of the lexicographic order
-    // between volume identifiers
-    int64 t = id;
-    t = t << 54;
-    m_value = m_value | (t >> 6*m_size);
-    m_size++;
+  // the first id appended becomes the most significant digit in the internal
+  // rappresentation. In this way I can obtain an equivalent of the lexicographic order
+  // between volume identifiers
+  if (m_size >= s_maxSize) {
+    std::string 
+      errtxt("VolumeIdentifier::append: id is already of maximum size");
+    throw std::range_error(errtxt);
+  }
+  else if (id > s_maxFieldValue) {
+    std::string 
+      errtxt("VolumeIdentifier::append: new field value is too large");
+    throw std::range_error(errtxt);
+  }
+  int64 t = id;
+  t &= (1 << s_bitsPer) - 1;    // only use s_bitsPer bits from id.
+  t = t << s_maxShift;
+  m_value = m_value | (t >> s_bitsPer*m_size);
+  m_size++;
 }
