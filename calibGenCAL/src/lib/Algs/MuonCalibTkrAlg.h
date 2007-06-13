@@ -7,7 +7,6 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/CGCUtil.h"
 #include "../Specs/CalGeom.h"
 #include "../Util/CalHodoscope.h"
 

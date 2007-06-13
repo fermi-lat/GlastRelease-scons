@@ -12,11 +12,11 @@
 #include "../CalibDataTypes/CalPed.h"
 #include "../CalibDataTypes/CalAsym.h"
 #include "../CalibDataTypes/CalMPD.h"
-#include "../Util/CGCUtil.h"
 #include "../Util/SimpleIniFile.h"
 #include "../Util/CalHodoscope.h"
 #include "../Hists/AsymHists.h"
 #include "../Hists/MPDHists.h"
+#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "digiRootData/DigiEvent.h"
@@ -40,7 +40,6 @@ using namespace CalUtil;
 namespace calibGenCAL {
 
   using namespace CalGeom;
-  using namespace CGCUtil;
 
   MuonCalibTkrAlg::MuonCalibTkrAlg(const CalPed &ped,
                                    const CIDAC2ADC &dac2adc,

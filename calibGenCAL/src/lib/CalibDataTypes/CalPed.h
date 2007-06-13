@@ -8,7 +8,6 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"

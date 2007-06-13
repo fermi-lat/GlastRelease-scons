@@ -6,10 +6,11 @@
 
 // LOCAL INCLUDES
 #include "IntNonlinAlg.h"
-#include "../Util/RootFileAnalysis.h"
 #include "../CalibDataTypes/CIDAC2ADC.h"
 #include "../CalibDataTypes/CalPed.h"
 #include "../Specs/singlex16.h"
+#include "../Util/RootFileAnalysis.h"
+#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
@@ -26,7 +27,6 @@
 
 namespace calibGenCAL {
 
-  using namespace CGCUtil;
   using namespace CalUtil;
   using namespace std;
   using namespace singlex16;

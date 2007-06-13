@@ -8,7 +8,6 @@
 
 // LOCAL INCLUDES
 #include "../Specs/CalGeom.h"
-#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"

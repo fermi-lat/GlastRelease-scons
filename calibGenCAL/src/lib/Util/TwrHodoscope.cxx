@@ -6,9 +6,9 @@
 
 // LOCAL INCLUDES
 #include "TwrHodoscope.h"
-#include "CGCUtil.h"
 #include "../CalibDataTypes/CalPed.h"
 #include "../CalibDataTypes/CIDAC2ADC.h"
+#include "stl_util.h"
 
 // GLAST INCLUDES
 #include "digiRootData/CalDigi.h"
@@ -21,7 +21,6 @@
 
 namespace calibGenCAL {
   using namespace CalUtil;
-  using namespace CGCUtil;
 
 
   void TwrHodoscope::clear() {

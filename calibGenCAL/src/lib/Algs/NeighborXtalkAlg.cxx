@@ -10,8 +10,8 @@
 #include "../CalibDataTypes/NeighborXtalk.h"
 #include "../CalibDataTypes/CalPed.h"
 #include "../Specs/singlex16.h"
-#include "../Util/CGCUtil.h"
 #include "../Util/SplineUtil.h"
+#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
@@ -28,7 +28,6 @@ namespace calibGenCAL {
   using namespace std;
   using namespace CalUtil;
   using namespace singlex16;
-  using namespace CGCUtil;
   using namespace SplineUtil;
 
   NeighborXtalkAlg::NeighborXtalkAlg()

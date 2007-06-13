@@ -7,8 +7,9 @@
 // LOCAL INCLUDES
 #include "lib/Algs/IntNonlinAlg.h"
 #include "lib/CalibDataTypes/CIDAC2ADC.h"
-#include "lib/Util/CGCUtil.h"
 #include "lib/Util/CfgMgr.h"
+#include "lib/Util/CGCUtil.h"
+#include "lib/Util/string_util.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
@@ -23,7 +24,6 @@
 using namespace std;
 using namespace calibGenCAL;
 using namespace CalUtil;
-using namespace CGCUtil;
 using namespace CfgMgr;
 
 class AppCfg {

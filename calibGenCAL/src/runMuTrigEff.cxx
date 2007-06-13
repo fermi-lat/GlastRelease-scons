@@ -9,7 +9,6 @@
 #include "lib/Algs/MuTrigAlg.h"
 #include "lib/CalibDataTypes/CIDAC2ADC.h"
 #include "lib/Util/SimpleIniFile.h"
-#include "lib/Util/CGCUtil.h"
 
 // GLAST INCLUDES
 
@@ -22,7 +21,6 @@
 #include <fstream>
 
 using namespace std;
-using namespace CGCUtil;
 using namespace calibGenCAL;
 
 int main(int argc,

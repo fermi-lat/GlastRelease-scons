@@ -6,7 +6,6 @@
 
 // LOCAL INCLUDES
 #include "CalPed.h"
-#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 
@@ -16,11 +15,10 @@
 #include <fstream>
 #include <sstream>
 
-namespace calibGenCAL {
+using namespace CalUtil;
+using namespace std;
 
-  using namespace CGCUtil;
-  using namespace CalUtil;
-  using namespace std;
+namespace calibGenCAL {
 
   const short CalPed::INVALID_PED = -5000;
 

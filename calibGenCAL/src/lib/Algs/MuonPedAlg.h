@@ -19,6 +19,7 @@
 class TH1S;
 class DigiEvent;
 class CalDigi;
+class TDirectory;
 
 namespace calibGenCAL {
   class CalPed;
@@ -58,7 +59,7 @@ namespace calibGenCAL {
     void     fitHists(CalPed &peds);
 
     /// skip evenmt processing and load histograms from previous run
-    void     loadHists(const TFile &histFile);
+    void     loadHists(const TDirectory &readDir);
 
     /// delete empty histograms
     /// \note useful for data w/ < 16 Cal modules.

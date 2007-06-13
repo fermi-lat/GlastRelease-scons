@@ -8,7 +8,6 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/CGCUtil.h"
 
 
 // GLAST INCLUDES
@@ -128,7 +127,7 @@ namespace calibGenCAL {
           continue;
         
         /// try to retrieve obj from dir
-        HistType *const hist_ptr = CGCUtil::retrieveROOTObj<HistType>(*histdir, 
+        HistType *const hist_ptr = retrieveROOTObj<HistType>(*histdir, 
                                                                       histname.c_str());
         /// skip if histogram doesn't exit
         if (hist_ptr == 0)

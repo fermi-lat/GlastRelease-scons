@@ -5,7 +5,7 @@
 */
 // LOCAL INCLUDES
 #include "LangauFun.h"
-#include "CGCUtil.h"
+#include "string_util.h"
 
 // GLAST INCLUDES
 
@@ -20,7 +20,6 @@
 
 namespace calibGenCAL {
   using namespace std;
-  using namespace CGCUtil;
   using namespace CalUtil;
 
   namespace {

@@ -8,7 +8,6 @@
 
 // LOCAL INCLUDES
 #include "../CalibDataTypes/NeighborXtalk.h"
-#include "../Util/CGCUtil.h"
 
 
 // GLAST INCLUDES

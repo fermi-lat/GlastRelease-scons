@@ -7,7 +7,6 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/CGCUtil.h"
 #include "../Util/TwrHodoscope.h"
 
 // GLAST INCLUDES

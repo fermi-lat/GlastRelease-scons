@@ -13,12 +13,13 @@
 #include "lib/Hists/GCRHists.h"
 #include "lib/Algs/GCRCalibAlg.h"
 #include "lib/Util/SimpleIniFile.h"
-#include "lib/Util/CGCUtil.h"
 #include "lib/Util/CfgMgr.h"
+#include "lib/Util/CGCUtil.h"
 
 // GLAST INCLUDES
 
 // EXTLIB INCLUDES
+#include "TFile.h"
 
 // STD INCLUDES
 #include <iostream>
@@ -28,7 +29,6 @@
 
 using namespace std;
 using namespace calibGenCAL;
-using namespace CGCUtil;
 using namespace CfgMgr;
 
 class AppCfg {

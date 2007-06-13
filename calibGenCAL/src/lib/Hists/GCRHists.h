@@ -9,7 +9,6 @@
 // LOCAL INCLUDES
 #include "HistIdx.h"
 #include "HistVec.h"
-#include "../Util/CGCUtil.h"
 #include "../Specs/singlex16.h"
 #include "HistMap.h"
 
@@ -21,7 +20,6 @@
 // EXTLIB INCLUDES
 #include "TProfile.h"
 #include "TH1S.h"
-#include "TFile.h"
 
 // STD INCLUDES
 #include <string>

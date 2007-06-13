@@ -8,7 +8,6 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 
@@ -23,6 +22,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include <cassert>
 
 /** @file template class represents a collection  of 1D ROOT histograms 
     mapped to some index class
@@ -132,7 +132,7 @@ namespace calibGenCAL {
 
     /// load all associated histograms from histogram file
     void loadHists(TDirectory &readDir) {
-      std::vector<HistType*> histList(CGCUtil::harvestROOTObjs<HistType>(readDir, m_histBasename));
+      std::vector<HistType*> histList(harvestROOTObjs<HistType>(readDir, m_histBasename));
       
       std::for_each(histList.begin(),
                     histList.end(),
@@ -171,7 +171,7 @@ namespace calibGenCAL {
                                         m_loBinLimit,
                                         m_hiBinLimit));
 
-      TDirectory *const histdir(CGCUtil::deliverROOTDir(m_writeDir, subdir));
+      TDirectory *const histdir(deliverROOTDir(m_writeDir, subdir));
       hist->SetDirectory(histdir);
 
       return hist;

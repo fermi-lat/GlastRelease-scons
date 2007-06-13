@@ -7,12 +7,14 @@
 // LOCAL INCLUDES
 #include "lib/CalibDataTypes/CalPed.h"
 #include "lib/Algs/MuonPedAlg.h"
-#include "lib/Util/CGCUtil.h"
 #include "lib/Util/CfgMgr.h"
+#include "lib/Util/CGCUtil.h"
+#include "lib/Util/string_util.h"
 
 // GLAST INCLUDES
 
 // EXTLIB INCLUDES
+#include "TFile.h"
 
 // STD INCLUDES
 #include <iostream>
@@ -21,7 +23,6 @@
 
 using namespace std;
 using namespace calibGenCAL;
-using namespace CGCUtil;
 using namespace CfgMgr;
 
 class AppCfg {

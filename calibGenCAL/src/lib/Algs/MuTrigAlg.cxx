@@ -5,11 +5,11 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/RootFileAnalysis.h"
 #include "MuTrigAlg.h"
 #include "../CalibDataTypes/CalPed.h"
-#include "../Util/CGCUtil.h"
 #include "../Specs/singlex16.h"
+#include "../Util/RootFileAnalysis.h"
+#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalArray.h"
@@ -28,7 +28,6 @@ namespace calibGenCAL {
 
   using namespace std;
   using namespace CalUtil;
-  using namespace CGCUtil;
   using namespace singlex16;
 
   static const unsigned short N_MUADC_BINS     = 100;

@@ -16,7 +16,6 @@
 
 // EXTLIB INCLUDES
 #include "TChainElement.h"
-#include "TFile.h"
 
 // STD INCLUDES
 #include <vector>
@@ -26,7 +25,6 @@
 namespace calibGenCAL {
 
   using namespace std;
-  using namespace CGCUtil;
 
   RootFileAnalysis::RootFileAnalysis(const vector<string> *mcFilenames,
                                      const vector<string> *digiFilenames,

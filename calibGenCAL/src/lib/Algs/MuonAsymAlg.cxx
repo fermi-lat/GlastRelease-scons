@@ -9,8 +9,8 @@
 #include "../Util/RootFileAnalysis.h"
 #include "../Util/TwrHodoscope.h"
 #include "../CalibDataTypes/CalAsym.h"
-#include "../Util/CGCUtil.h"
 #include "../Hists/AsymHists.h"
+#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "digiRootData/DigiEvent.h"
@@ -25,7 +25,6 @@ namespace calibGenCAL {
 
   using namespace std;
   using namespace CalUtil;
-  using namespace CGCUtil;
 
   MuonAsymAlg::MuonAsymAlg(const CalPed &ped,
                            const CIDAC2ADC &dac2adc,

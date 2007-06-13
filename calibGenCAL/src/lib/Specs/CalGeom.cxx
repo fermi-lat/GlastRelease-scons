@@ -9,7 +9,6 @@ $Header$
 
 // LOCAL INCLUDES
 #include "CalGeom.h"
-#include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 
@@ -17,10 +16,9 @@ $Header$
 
 // STD INCLUDES
 
-namespace calibGenCAL {
+using namespace CalUtil;
 
-  using namespace CalUtil;
-  using namespace CGCUtil;
+namespace calibGenCAL {
 
   namespace CalGeom {
     CalUtil::XtalIdx pos2Xtal(const Vec3D &pos) {
