@@ -27,6 +27,7 @@ namespace detModel{
   class IDmapBuilder : public SectionsVisitor {
     
   public:
+    enum axisDir{xDir, yDir, zDir};
     /**
      * The constructor has a string parameter; it is the name of the
      * root volume in GDD to represent along with all the volumes
@@ -100,6 +101,19 @@ namespace detModel{
     const PositionedVolume* getPositionedVolumeByID(idents::VolumeIdentifier) 
       const;
     typedef std::map<idents::VolumeIdentifier, const PositionedVolume*> PVmap;
+
+    /**
+      Given a sample identifier and specification of fields which may be
+      wildcarded,  append identifiers which match, ordered by coordinate
+      (X, Y, or Z) and sign (increasing or decreasing) specified, to
+      caller-supplied vector.  This routine does not clear the vector
+      first.
+     */
+    unsigned orderSensitive(std::vector<idents::VolumeIdentifier>& vols,
+                            const idents::VolumeIdentifier& sample,
+                            const std::vector<bool> wild,
+                            axisDir coord, 
+                            bool increasing = true) const;
 
     //! make a summary on the stream
     void summary(std::ostream& );
