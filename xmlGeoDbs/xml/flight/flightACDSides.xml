@@ -1303,6 +1303,7 @@
       </posXYZ>
 
 
+
 <!--
       <posXYZ volume="sideRibbons" 
               zrot="90"
@@ -1312,3 +1313,105 @@
       </posXYZ>
 
 -->
+<!-- Place 8 little pieces of ribbon behind (toward origin, relative to) bent
+     tiles.  X displacements are identical to side ribbons and top x ribbons.
+     They get id field = 9.
+     Start with ribbon 0, row 0, then ribbon 1, row 0,... (all with
+     fRibbonSegment=6) then do row 4. 
+  -->
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dxn"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dxn"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dx"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dx"
+          YREF="ribbonBentR0_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYNegFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+<!-- now for YPosFace ribbon bits  -->
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dxn"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dxn"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonInner_dx"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
+
+  <posXYZ volume="ribbonBent"
+          XREF="xRibbonOuter_dx"
+          YREF="ribbonBentR4_dy"
+          ZREF="ribbonBent_dz" >
+    <idField name="fLATObjects" valueREF="eLATACD" />
+    <idField name="fACDFace" valueREF="eACDYPosFace" />
+    <idField name="fACDCmp" valueREF="eACDRibbon" />
+    <idField name="fMeasure" valueREF="eMeasureX" />
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="9" />    
+  </posXYZ>
