@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r42p1 14-Jun-2007 jrb  Change segment # of little vertical bits of ribbon 
+                            behind bent tiles to avoid collision.
    v1r42   1-Jun-2007  jrb  Enhanced side ribbons, following contour of 
                             fake-shingled side tiles
    v1r41   24-May-2007 jrb  Fix top X ribbons: adjust lengths of old pieces and
