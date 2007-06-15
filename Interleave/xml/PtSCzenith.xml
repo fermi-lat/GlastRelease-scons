@@ -8,7 +8,7 @@ $Header$
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:schemaLocation='http://xml.netbeans.org/examples/targetNS file:/./backgroundInterleave.xsd'>
 
-   <source name="earthsLimb" type="PtSCzenith" rangeUnits="degrees" rangeMin="-180" rangeMax="180.0">
+   <source name="sampled_EarthAlbedo" type="PtSCzenith" rangeUnits="degrees" rangeMin="-180" rangeMax="180.0">
       <bin min="-180" max="89." triggerRate="100.0" downlinkRate="0.1">
          <fileList>
             <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>

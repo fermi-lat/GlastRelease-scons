@@ -9,7 +9,7 @@
   xsi:schemaLocation='http://xml.netbeans.org/examples/targetNS file:/./backgroundInterleave.xsd'>
 
 
-   <source name="diffuse" type="PtMagLat" rangeUnits="degrees" rangeMin="-45" rangeMax="45.0">
+   <source name="sampled_background" type="PtMagLat" rangeUnits="degrees" rangeMin="-45" rangeMax="45.0">
       <bin min="-45." max="45.0" triggerRate="3000.0" downlinkRate="0.2">
          <fileList>
          <!-- two copies -->
