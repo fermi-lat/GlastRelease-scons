@@ -24,6 +24,7 @@
 #include "detModel/Gdd.h"
 #include "idents/VolumeIdentifier.h"
 #include "idents/AcdId.h"
+#include "xmlUtil/id/IdDict.h"
 
 /* This basic test needs two argument; the xml file to use and the volume 
    name to use as the mother volume (for example oneCAL). If only the filename
@@ -41,7 +42,7 @@
 // 
 void orderSegments(std::vector<idents::VolumeIdentifier>& segs, 
                    short face, short ribNum, bool xOrient, bool increasing,
-                   detModel::IDmapBuilder& idMap);
+                   detModel::IDmapBuilder& idMap, detModel::Manager* man);
 
 int main(int argc, char* argv[]) {
 
@@ -93,48 +94,51 @@ int main(int argc, char* argv[]) {
   // Retrieve the materials, generate the colors and set some 
   // transparency values
 
+  /*
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
   mats->setMaterialTransparency("Vacuum",0.7);
-
+  */
   // We start the HTMLConstantsVisitor to build the html file with the
   // constants tables. Colors and layout are stolen from Joanne ones.
 
   manager->startVisitor(new detModel::HtmlConstantsVisitor());
-  
+
   // We set a mode for choices
   //  manager->setMode("propagate");
   // We start the vrml visitor
               /*   Comment out for now
                manager->startVisitor(visitor);
-                 */
-  manager->startVisitor(new detModel::CountMaterial(volName));
 
+                              */ 
+/*
+  manager->startVisitor(new detModel::CountMaterial(volName));
+*/
   detModel::IDmapBuilder idMap(volName);
   manager->startVisitor(&idMap);
 
   idMap.summary(std::cout);
   
   std::vector<idents::VolumeIdentifier> segments;
-  orderSegments(segments, 1, 1, true, true, idMap);
+  orderSegments(segments, 1, 1, true, true, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 1, 3, false, true, idMap);
+  orderSegments(segments, 1, 3, false, true, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 1, 1, true, false, idMap);
+  orderSegments(segments, 1, 1, true, false, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 2, 1, true, true, idMap);
+  orderSegments(segments, 2, 1, true, true, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 2, 1, false, true, idMap);
+  orderSegments(segments, 2, 1, false, true, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 0, 1, true, true, idMap);
+  orderSegments(segments, 0, 1, true, true, idMap, manager);
   segments.clear();
 
-  orderSegments(segments, 0, 1, false, true, idMap);
+  orderSegments(segments, 0, 1, false, true, idMap, manager);
   segments.clear();
 
 
@@ -160,9 +164,45 @@ int main(int argc, char* argv[]) {
 // Something like this will be added to GlastSvc
 void orderSegments(std::vector<idents::VolumeIdentifier>& segs,
                    short face, short ribNum, bool xOrient, bool increasing,
-                   detModel::IDmapBuilder& idMap) {
+                   detModel::IDmapBuilder& idMap, detModel::Manager* man) {
 
   using detModel::IDmapBuilder;
+
+  static bool init = false;
+  static int eLATACD;  //
+  static int eACDRibbon; 
+  static int eMeasureX;
+  static int eMeasureY;
+
+  if (!init) {
+    bool ok = man->getNumericConstByName("eLATACD", &eLATACD);
+    if (ok) ok = man->getNumericConstByName("eACDRibbon", &eACDRibbon);
+    if (ok) ok = man->getNumericConstByName("eMeasureX", &eMeasureX);
+    if (ok) ok = man->getNumericConstByName("eMeasureY", &eMeasureY);
+    if (!ok) {
+      std::cerr 
+        << "FATAL: Ribbon volume identifier field values not found" 
+        << std::endl;
+      exit(1);
+    }
+    // Check that fields are what we think they should be
+    xmlUtil::IdDict* dict = man->getGdd()->getIdDictionary();
+    xmlUtil::NamedId ribId(6);
+
+    ribId.addField("fLATObjects", eLATACD);
+    ribId.addField("fACDFace", 0);
+    ribId.addField("fACDCmp", 41);
+    ribId.addField("fMeasure", eMeasureX);
+    ribId.addField("fRibbon", 1);
+    ribId.addField("fRibbonSegment", 1);
+
+    if (!dict->idOk(ribId)) {
+      std::cerr 
+        << "FATAL: Ribbon volume identifier structure not as expected!"
+        << std::endl;
+      exit(1);
+    }
+  }
 
   // Make a volume identifier for a ribbon
   idents::VolumeIdentifier sample;
