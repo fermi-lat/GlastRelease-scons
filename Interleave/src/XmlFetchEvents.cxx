@@ -59,6 +59,7 @@ XmlFetchEvents::XmlFetchEvents(const std::string& xmlFile, const std::string& pa
         std::string typeAttr = xmlBase::Dom::getAttribute(*domElemIt, "type");
         if (typeAttr == m_param) {
             // found one save it
+            m_name = xmlBase::Dom::getAttribute(*domElemIt, "name");
             m_paramChildren.push_back(*domElemIt);
             double minval(facilities::Util::stringToDouble(xmlBase::Dom::getAttribute(*domElemIt, "rangeMin"))),
                 maxval(facilities::Util::stringToDouble(xmlBase::Dom::getAttribute(*domElemIt, "rangeMax")));

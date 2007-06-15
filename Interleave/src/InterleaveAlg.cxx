@@ -54,7 +54,10 @@ namespace {
 }
 
 
-void InterleaveAlg::defineSource(const std::string& name){ sourcenames.push_back(name);}
+void InterleaveAlg::defineSource(const std::string& name)
+{ 
+    sourcenames.push_back(name);
+}
 
 void InterleaveAlg::currentSource(const std::string& name)
 {
@@ -102,10 +105,11 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     if( instance!=0 ) throw std::invalid_argument("InterleaveAlg: only one instance allowed!");
 
     // declare properties with setProperties calls
-    declareProperty("FilePath",     m_filePath="");
-    declareProperty("TreeName",     m_treeName="MeritTuple");
-    declareProperty("DisableList",  m_disableList);
-    declareProperty("MapName",      m_mapName="interleave_map");
+    declareProperty("FilePath",       m_filePath="");
+    declareProperty("TreeName",       m_treeName="MeritTuple");
+    declareProperty("DisableList",    m_disableList);
+    declareProperty("MapName",        m_mapName="interleave_map");
+    declareProperty("SourceIdOffset", m_idOffset = 1000000);  // Offset to apply to mcsourceid
 
     // initialize the disable list, which can be added to, or replaced in the JO
     std::vector<std::string> tlist;
@@ -114,6 +118,8 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     tlist.push_back("Pt*");   // use current position, etc.
     tlist.push_back("FT1*");  // will recalculate
     m_disableList = tlist;
+
+    m_bkgndMap.clear();
 
 }
 //------------------------------------------------------------------------
@@ -163,7 +169,9 @@ StatusCode InterleaveAlg::initialize(){
             for( std::vector<std::string>::const_iterator it(sourcenames.begin()); it!=sourcenames.end();++it){
                 const std::string& name=*it;
                 log << MSG::INFO << "setting up tuple key "<<  name <<endreq;    
-                selectormap[name]= new BackgroundSelection(name, filepath+"/"+name+".xml", m_disableList, m_meritTuple);
+                BackgroundSelection* background = new BackgroundSelection(name, filepath+"/"+name+".xml", m_disableList, m_meritTuple);
+                selectormap[name]= background;
+                m_bkgndMap[background->sourceName()] = background;
                 log <<MSG::INFO << "\tinitial trigger, downlink rates: " << selectormap[name]->triggerRate() 
                     <<", " << selectormap[name]->downlinkRate() << endreq;
             }
@@ -230,10 +238,14 @@ StatusCode InterleaveAlg::execute()
     }
     ++m_count;
 
+    // Retrieve the source name from the MC Header
+    SmartDataPtr<Event::MCEvent>  mcHeader(eventSvc(), EventModel::MC::Event );
+
+    std::string sourceName = mcHeader->getSourceName();
+    m_selector = m_bkgndMap[sourceName];
+
     // ask for a tree corresponding to our current position: it will set all the tuple
     m_selector->selectEvent();
-    // overwrite the event info
-    copyEventInfo();
 
     // let the livetime service know about the current trigger rate,
     // and set the current accumulated live time in the header
@@ -244,6 +256,9 @@ StatusCode InterleaveAlg::execute()
     m_LivetimeSvc->setTriggerRate(triggerRate());
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
+
+    // overwrite the event info
+    copyEventInfo();
     
     // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
@@ -270,8 +285,26 @@ namespace {
     template <typename  Type> 
         void setLeafValue(TLeaf* leaf, Type newvalue)
     {
-        Type& rval = *static_cast<Type*>(leaf->GetValuePointer());
-        rval = newvalue;
+        const char* cLeafType = leaf->GetTypeName();
+        std::string leafType(cLeafType);
+        void*       leafPtr   = leaf->GetValuePointer();
+
+        if (leafType == "UInt_t")
+        {
+            *(reinterpret_cast<UInt_t*>(leafPtr)) = newvalue;
+        }
+        else if (leafType == "Float_t")
+        {
+            *(reinterpret_cast<Float_t*>(leafPtr)) = newvalue;
+        }
+        else if (leafType == "Double_t")
+        {
+            *(reinterpret_cast<Double_t*>(leafPtr)) = newvalue;
+        }
+        else
+        {
+            *(reinterpret_cast<Type*>(leafPtr)) = newvalue;
+        }
     }
 
 }
@@ -301,16 +334,21 @@ void InterleaveAlg::copyEventInfo()
     m_value =  m_selector->value();
     strncpy(m_type, m_selector->name().c_str(),sizeof(m_type));
 
-    m_rootTupleSvc->saveRow(m_mapName.value());
+//    m_rootTupleSvc->saveRow(m_mapName.value());
 
     // these have to be done here, since there is no algorithm 
     setLeafValue(m_runLeaf,     EvtRun);
     setLeafValue(m_eventLeaf,   EvtEventId);
     setLeafValue(timeLeaf,      EvtElapsedTime);
     setLeafValue(liveLeaf,      EvtLiveTime);
-    SmartDataPtr<Event::MCEvent>   mcheader(eventSvc(),    EventModel::MC::Event );
-    float sourceid(mcheader->getSourceId());
-    setLeafValue(mcidLeaf, sourceid);
+
+    //SmartDataPtr<Event::MCEvent>   mcheader(eventSvc(),    EventModel::MC::Event );
+    //int sourceid = mcheader->getSourceId();
+
+    int sourceId = static_cast<int>(mcidLeaf->GetValue()) + m_idOffset;
+    setLeafValue(mcidLeaf, sourceId);
+
+    m_rootTupleSvc->saveRow(m_mapName.value());
 }
 
 

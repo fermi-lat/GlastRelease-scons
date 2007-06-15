@@ -44,6 +44,8 @@ public:
     virtual double minVal()const{return -1e30; }///< return minimum value in current range
     virtual double maxVal()const{return +1e30; }///< return maximum value in current range
 
+    virtual const std::string& name() const = 0;
+
     /// test if value is valid in current range
     virtual bool isCurrent(double val)const{return val>=minVal() && val< maxVal();}
     virtual bool isValid(double val)const{return val>=minValFullRange() && val< maxValFullRange();}

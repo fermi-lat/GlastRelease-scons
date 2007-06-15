@@ -78,6 +78,11 @@ void BackgroundSelection::notify()
     setLeafPointers();
 }
 
+const std::string& BackgroundSelection::sourceName() const 
+{
+    return m_fetch->name();
+}
+
 //------------------------------------------------------------------------
 double BackgroundSelection::value()const
 {

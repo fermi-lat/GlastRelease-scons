@@ -45,6 +45,8 @@ public:
     virtual double minVal()const{return m_lastBinMin;}///< return minimum value in current range
     virtual double maxVal()const{return m_lastBinMax;}///< return maximum value in current range
 
+    virtual const std::string& name() const {return m_name;}
+
     static double m_badVal;
 
 private:
@@ -66,6 +68,7 @@ private:
     double m_lastBinMin, m_lastBinMax;
 
     double m_minval, m_maxval;
+    std::string m_name;
 
 };
 

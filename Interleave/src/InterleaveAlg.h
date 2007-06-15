@@ -5,6 +5,7 @@
 $Header$
 
 */
+
 #ifndef InterleaveAlg_h
 #define InterleaveAlg_h
 
@@ -21,6 +22,8 @@ class SampledBackground;
 class TTree;
 class TFile;
 class TLeaf;
+
+
 
 
 /** @class InterleaveAlg
@@ -63,27 +66,30 @@ private:
 
 
     /// access the ntupleWriter service to write out to ROOT ntuples
-    INTupleWriterSvc * m_rootTupleSvc;
+    INTupleWriterSvc *   m_rootTupleSvc;
 
-    ILivetimeSvc * m_LivetimeSvc;
+    ILivetimeSvc *       m_LivetimeSvc;
 
-    StringProperty m_treeName; ///< name of the tree to process
-    StringProperty m_filePath; ///< path to files containing info for each variable
-    StringArrayProperty m_disableList;
-    StringProperty m_mapName;  ///< name of the map tree
-    int m_count;   ///< number of processed events
+    StringProperty       m_treeName;    ///< name of the tree to process
+    StringProperty       m_filePath;    ///< path to files containing info for each variable
+    StringArrayProperty  m_disableList;
+    StringProperty       m_mapName;     ///< name of the map tree
+    int                  m_count;       ///< number of processed events
+    int                  m_idOffset;    ///< offset to add to source ids
 
     // following for the interleave info tuple
-    int m_run, m_event;   ///< current run, event
-    int m_irun, m_ievent; ///< interleaved run, event
-    char  m_type[40];    ///< background type
-    float m_value;        ///< value used
+    int                  m_run, m_event;   ///< current run, event
+    int                  m_irun, m_ievent; ///< interleaved run, event
+    char                 m_type[40];    ///< background type
+    float                m_value;        ///< value used
 
-    TTree * m_meritTuple;
+    TTree*               m_meritTuple;
 
-    TLeaf * m_runLeaf;
-    TLeaf * m_eventLeaf;
+    TLeaf*               m_runLeaf;
+    TLeaf*               m_eventLeaf;
 
+    // Map for relating the source name to the code to read in the event
+    std::map<std::string, BackgroundSelection*> m_bkgndMap;
 
 };
 

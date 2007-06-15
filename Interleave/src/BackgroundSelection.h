@@ -62,6 +62,7 @@ public:
     */
     double downlinkRate()const{return m_downlinkRate;}
 
+    const std::string& sourceName() const;
     const std::string& name()const{return m_varname;}
 
 private:
@@ -77,8 +78,8 @@ private:
     */
     void setCurrentTree(double val);
 
-    std::string m_varname; ///< name of the variable that we use to key the rates
-    TLeaf* m_varleaf;      ///< corresponding TLeaf for access to current value
+    std::string m_varname;    ///< name of the variable that we use to key the rates
+    TLeaf* m_varleaf;         ///< corresponding TLeaf for access to current value
 
     unsigned int m_event, m_eventOffset;
    
