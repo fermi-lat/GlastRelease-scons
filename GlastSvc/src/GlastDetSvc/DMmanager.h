@@ -64,6 +64,10 @@ public:
                       std::string*, 
                       std::vector<double>* params);
 
+    void orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
+                             unsigned face, unsigned ribbonNumber, 
+                             bool xOrient, bool increasing=true);
+
     /// access to name of selected top volume
     std::string topvol() const;
 

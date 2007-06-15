@@ -11,6 +11,8 @@
 #include "detModel/Management/XercesBuilder.h"
 #include "detModel/Sections/Volume.h"
 #include "detModel/Management/MaterialsVisitor.h"
+#include "detModel/Gdd.h"
+#include "xmlUtil/id/IdDict.h"
 
 #include "idents/VolumeIdentifier.h"
 
@@ -19,6 +21,7 @@
 #include <string>
 #include <cassert>
 #include <iomanip>
+#include <stdexcept>
 
 DMmanager::DMmanager( )
 :m_dm(detModel::Manager::getPointer())
@@ -107,3 +110,85 @@ bool DMmanager::getShapeByID(idents::VolumeIdentifier id,
   return m_idMap->getShapeByID(id,s,params);
 }
      
+void
+DMmanager::orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
+                               unsigned face, unsigned ribNum,
+                               bool xOrient, bool increasing) {
+
+  using detModel::IDmapBuilder;
+
+// get some enum values for VolumeIdentifier fields
+  static bool init = false;  
+  static int eLATACD;  //
+  static int eACDRibbon; 
+  static int eMeasureX;
+  static int eMeasureY;
+
+  idents::VolumeIdentifier sample;
+
+  if (!init) {
+    bool ok = m_dm->getNumericConstByName("eLATACD", &eLATACD);
+    if (ok) ok = m_dm->getNumericConstByName("eACDRibbon", &eACDRibbon);
+    if (ok) ok = m_dm->getNumericConstByName("eMeasureX", &eMeasureX);
+    if (ok) ok = m_dm->getNumericConstByName("eMeasureY", &eMeasureY);
+    if (!ok) {
+      std::cerr 
+        << "FATAL: Ribbon volume identifier field values not found" 
+        << std::endl;
+      exit(1);
+    }
+    // Check that fields are what we think they should be
+    xmlUtil::IdDict* dict = m_dm->getGdd()->getIdDictionary();
+
+    xmlUtil::NamedId ribId(6);
+
+    ribId.addField("fLATObjects", eLATACD);
+    ribId.addField("fACDFace", 0);
+    ribId.addField("fACDCmp", 41);
+    ribId.addField("fMeasure", eMeasureX);
+    ribId.addField("fRibbon", 1);
+    ribId.addField("fRibbonSegment", 1);
+
+    if (!dict->idOk(ribId)) {
+      std::cerr 
+        << "FATAL: Ribbon volume identifier structure not as expected!"
+        << std::endl;
+      exit(1);
+    }
+
+    init = true;
+  }
+  // Make a volume identifier for a ribbon
+
+  IDmapBuilder::axisDir dir = IDmapBuilder::zDir; // for face != 0
+
+  sample.append(eLATACD);           // ACD
+  sample.append(face);
+  sample.append(eACDRibbon);   // ribbon
+
+  if (xOrient) {
+    sample.append(eMeasureY);  // measures Y
+    if (face==0) dir = IDmapBuilder::xDir;
+  }
+  else {
+    sample.append(eMeasureX);  // measures X
+    if (face==0) dir = IDmapBuilder::yDir;
+  }
+ 
+  sample.append(ribNum);
+  sample.append(0);    
+
+  // segment # doesn't matter; will be masked off
+
+  std::vector<bool> wild;
+  wild.reserve(6);
+  wild.push_back(false);
+  wild.push_back(false);
+  wild.push_back(false);
+  wild.push_back(false);
+  wild.push_back(false);
+  wild.push_back(true);
+
+  m_idMap->orderSensitive(segs, sample, wild, dir, increasing);
+
+}

@@ -128,12 +128,16 @@ const InterfaceID&  GlastDetSvc::type () const {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GlastDetSvc::accept(IGeometry& geom)
 {
-    m_dm->accept(&GeometryVisitor(geom, m_visitorMode));
+  GeometryVisitor gv(geom, m_visitorMode);
+  m_dm->accept(&gv);
+    //    m_dm->accept(&GeometryVisitor(geom, m_visitorMode));
 }
 
 void GlastDetSvc::accept(IMedia& media)
 {
-  m_dm->accept(&MediaVisitor(media));
+  MediaVisitor mv(media);
+  m_dm->accept(&mv);
+  //  m_dm->accept(&MediaVisitor(media));
 }
 
 StatusCode GlastDetSvc::getNumericConstByName(std::string name, double* res)
@@ -176,6 +180,15 @@ StatusCode  GlastDetSvc::getShapeByID(idents::VolumeIdentifier id,
     return StatusCode::SUCCESS;
   else return StatusCode::FAILURE;
 }
+
+void 
+GlastDetSvc::orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
+                                 unsigned face, unsigned ribbonNumber, 
+                                 bool xOrient, bool increasing) 
+{
+  m_dm->orderRibbonSegments(segs, face, ribbonNumber, xOrient, increasing);
+}
+
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -151,6 +151,15 @@ StatusCode CreateEvent::initialize() {
         log << "Prefix translation (x, y, z) is" << endreq;
         log << " (" << vec.x() << ", "
             << vec.y() << ", " << vec.z() << ")" << endreq;
+
+        std::vector<idents::VolumeIdentifier> segs;
+        m_detSvc->orderRibbonSegments(segs, 0, 1, false);
+        log << "Top ribbon segments for ribbon 1, major axis in Y direction"
+            << " (X-measuring) in order of increasing Y are:" << endreq;
+        for (unsigned ix = 0; ix < segs.size(); ix++) {
+          log <<  segs[ix].name() << endreq;
+        }
+        log << endreq;
         
     }else {
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;

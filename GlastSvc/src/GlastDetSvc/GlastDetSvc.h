@@ -77,6 +77,13 @@ public:
         std::string*, 
         std::vector<double>*);
 
+    /// Get all ribbon segments belonging to specified ribbon on specified
+    /// face. Return in order along relevant axis direction.
+    virtual void 
+    orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
+                        unsigned face, unsigned ribbonNumber, 
+                        bool xOrient, bool increasing=true);
+
     /// retrieve the name of the top volume
     virtual std::string getTopVolume() {return m_topvol;}
     
