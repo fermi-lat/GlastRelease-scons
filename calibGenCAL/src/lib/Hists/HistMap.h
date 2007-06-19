@@ -8,6 +8,7 @@
 */
 
 // LOCAL INCLUDES
+#include "../Util/ROOTUtil.h"
 
 // GLAST INCLUDES
 
@@ -45,8 +46,8 @@ namespace calibGenCAL {
 
   public:
     typedef std::map<IdxType,HistType*> MapType;
-    typedef IdxType IdxType;
-    typedef HistType HistType;
+    typedef IdxType index_type;
+    typedef HistType histogram_type;
     
     /// \param m_histBasename all histograms will be created _as_ needed w/ name m_histBasename+idx.toStr()
     /// \param writeDir (if non-zero) all histograms will be written out to this directory opun class destruction.
@@ -84,7 +85,7 @@ namespace calibGenCAL {
 
     /// set directory for all contained histograms
     void setDirectory(TDirectory *const dir) {
-      for (MapType::iterator it(m_map.begin());
+      for (typename MapType::iterator it(m_map.begin());
            it != m_map.end();
            it++) {
         IdxType idx(it->first);

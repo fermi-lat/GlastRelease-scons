@@ -71,8 +71,8 @@ namespace calibGenCAL {
       };
 
 
-      static ostream& operator<< (ostream &stream,
-                                  const TupleData &td) {
+      ostream& operator<< (ostream &stream,
+                           const TupleData &td) {
         stream << "fit_result: diode: " << DiodeNum(td.diode)
                << " z: "                << (unsigned)td.inferredZ
                << " peak: "             << td.peak 
@@ -137,7 +137,7 @@ namespace calibGenCAL {
              it++) {
       
           TH1S &hist(*(it->second));
-          GCRHists::MeanDACHistCol::IdxType idx(it->first);
+          GCRHists::MeanDACHistCol::index_type idx(it->first);
           const unsigned int z = idx.getInferredZ();
           /// skip unidentified particles
           if (z == 0)
@@ -159,7 +159,7 @@ namespace calibGenCAL {
            it++) {      
       
         TH1S &hist(*(it->second));
-        const GCRHists::MeanDACSumHistCol::IdxType &idx(it->first);
+        const GCRHists::MeanDACSumHistCol::index_type &idx(it->first);
         const unsigned char z(idx.getInferredZ());
         /// skip unidentified particles
         if (z == 0)
@@ -174,7 +174,7 @@ namespace calibGenCAL {
         tupleData.diode     = it->first.getDiode().val();
         tupleData.peak      = hist.GetFunction(funcName.c_str())->GetParameter(1);
         tupleData.width     = hist.GetFunction(funcName.c_str())->GetParameter(2);
-        tupleData.nEntries  = hist.GetEntries();
+        tupleData.nEntries  = (unsigned)hist.GetEntries();
         tupleData.mevPerDAC = evalMevPerDAC(it->first.getInferredZ(), tupleData.peak);
 
         LogStrm::get() << hist.GetName() << " "

@@ -17,6 +17,7 @@
 #include "TKey.h"
 #include "TDirectory.h"
 #include "TClass.h"
+#include "TF1.h"
 
 // LOCAL INCLUDES
 #include "stl_util.h"
