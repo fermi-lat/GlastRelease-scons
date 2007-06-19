@@ -7,6 +7,10 @@
      for the most part elements and datatypes are defined before
      they're referenced.
  -->
+  <!-- alias names in text -->
+  <xs:simpleType name="simpleAliasType">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
 
   <!-- register values may be expressed in decimal or in hex -->
   <xs:simpleType name="regValueType">
@@ -283,7 +287,16 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="ACD_Mode-anc" type="emptyBaseType" />
+  <!-- xs:element name="ACD_Mode-anc" type="emptyBaseType" / -->
+  <xs:element name="ACD_Mode-anc" >
+    <xs:complexType>
+      <xs:all minOccurs="0" >
+        <xs:element name="ACD_Mask" type="ancFileType" />
+      </xs:all>  
+    </xs:complexType>
+  </xs:element>
+
+
   <xs:element name="ACD_Mode-constants" type="emptyBaseType" />
 
   <xs:element name="ACD_Mode-offline" type="noOutfilesType" />
@@ -318,7 +331,7 @@
   <xs:element name="ACD_Bias-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="ACD_BiasDacCalibration" type="ancFileType" 
+        <xs:element name="ACD_BiasSettings" type="ancFileType" 
 	minOccurs="0" 	/>
       </xs:all>
     </xs:complexType>
@@ -367,7 +380,7 @@
   <xs:element name="ACD_Hld-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="ACD_HldCalibration" type="ancFileType" 
+        <xs:element name="ACD_HldSettings" type="ancFileType" 
                     minOccurs="0"/>
       </xs:all>
     </xs:complexType>
@@ -476,12 +489,12 @@
                     minOccurs="0" />
         <xs:element name="ACD_MIPCalibration" type="ancFileType" 
                     minOccurs="0"/>
-        <xs:element name="ACD_ElectronicsCalibration" type="ancFileType"
+        <xs:element name="ACD_VetoElectronicsCalibration" type="ancFileType"
+                    minOccurs="0" />
+        <xs:element name="ACD_VetoSettings" type="ancFileType"
                     minOccurs="0" />
       </xs:all>
     </xs:complexType>
-
-
   </xs:element>
 
   <xs:element name="ACD_Veto-param" >
@@ -535,7 +548,7 @@
         <xs:element name="ARC_hitmap_width" type="registerType" />
         <xs:element name="ARC_hitmap_delay" type="registerType" />
         <xs:element name="ARC_hitmap_deadtime" type="registerType" />
-        <xs:element name="ARC_acd_tacq" type="registerType" />
+        <xs:element name="ARC_adc_tacq" type="registerType" />
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -582,8 +595,10 @@
         <xs:element name="CCC_ccc_configuration" type="registerType" />
         <xs:element name="CCC_layer_mask" type="registerType" />
         <xs:element name="CRC_crc_dac" type="registerType" />
-        <xs:element name="CRC_config" type="registerType" />
-        <xs:element name="CFE_config" type="registerType" />
+<!--        <xs:element name="CRC_config" type="registerType" />   -->
+<!--        <xs:element name="CFE_config" type="registerType" />    -->
+        <xs:element name="CFE_config_0" type="registerType" />
+        <xs:element name="CFE_config_1" type="registerType" />
         <xs:element name="CFE_ref_dac" type="registerType" />
       </xs:all>
     </xs:complexType>
@@ -592,7 +607,7 @@
   <xs:element name="CAL_Mode-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_TEM_CAL_Mode" type="paramFileType" />
+<!--        <xs:element name="latc_TEM_CAL_Mode" type="paramFileType" /> -->
         <xs:element name="latc_CCC_CAL_Mode" type="paramFileType" />
         <xs:element name="latc_CRC_CAL_Mode" type="paramFileType" />
         <xs:element name="latc_CFE_CAL_Mode" type="paramFileType" />
@@ -602,7 +617,14 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="CAL_Mode-anc" type="emptyBaseType" />
+  <!-- xs:element name="CAL_Mode-anc" type="emptyBaseType" /  -->
+  <xs:element name="CAL_Mode-anc" >
+    <xs:complexType>
+      <xs:all minOccurs="0" >
+        <xs:element name="CAL_Mask" type="ancFileType"/>
+      </xs:all>  
+    </xs:complexType>
+  </xs:element>
   <xs:element name="CAL_Mode-constants" type="emptyBaseType" />
 
   <xs:element name="CAL_Mode-offline" type="noOutfilesType" />
@@ -630,9 +652,11 @@
   <xs:element name="CAL_Timing-registers" >
     <xs:complexType>
       <xs:all >
-        <xs:element name="TEM_caltrgseq" type="registerType" />
+<!--        <xs:element name="TEM_caltrgseq" type="registerType" />  -->
         <xs:element name="CCC_ccc_trg_alignment" type="registerType" />
-        <xs:element name="CRC_delay" type="registerType" />
+        <xs:element name="CRC_delay_1" type="registerType" />
+        <xs:element name="CRC_delay_2" type="registerType" />
+        <xs:element name="CRC_delay_3" type="registerType" />
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -651,7 +675,7 @@
   <xs:element name="CAL_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TEM_CAL_Timing" type="paramFileType" />
+<!--        <xs:element name="latc_TEM_CAL_Timing" type="paramFileType" /> -->
         <xs:element name="latc_CCC_CAL_Timing" type="paramFileType" />
         <xs:element name="latc_CRC_CAL_Timing" type="paramFileType" />
         <xs:element name="latc_DFT_CAL_Timing" type="paramFileType" />
@@ -700,7 +724,11 @@
                          minOccurs="0" />
         <xs:element name="CAL_LAC_2_ADC" type="ancFileType"
                          minOccurs="0" />
-      </xs:all>
+         <xs:element name="CAL_LACSettings" type="ancFileType"
+                         minOccurs="0" />
+        <xs:element name="CAL_LACCalib" type="emptyBaseType"
+                         minOccurs="0" />
+     </xs:all>
     </xs:complexType>
   </xs:element>
        
@@ -714,7 +742,16 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="CAL_LAC-constants" type="emptyBaseType" />
+<!--   <xs:element name="CAL_LAC-constants" type="emptyBaseType" />  -->
+
+  <xs:element name="CAL_LAC-constants" >
+    <xs:complexType >
+      <xs:all minOccurs="0" >
+        <xs:element name="LAC_MeV" type="nonnegFloat" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
 
   <xs:element name="CAL_LAC-offline" type="noOutfilesType" />
 
@@ -756,6 +793,8 @@
         <xs:element name="CAL_FLE_BIAS" type="ancFileType"
                          minOccurs="0" />
         <xs:element name="CAL_FLE_2_ADC" type="ancFileType"
+                         minOccurs="0" />
+        <xs:element name="CAL_FLESettings" type="ancFileType"
                          minOccurs="0" />
       </xs:all>
     </xs:complexType>
@@ -811,6 +850,8 @@
                          minOccurs="0" />
         <xs:element name="CAL_FHE_2_ADC" type="ancFileType"
                          minOccurs="0" />
+        <xs:element name="CAL_FHESettings" type="ancFileType"
+                         minOccurs="0" />
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -865,7 +906,9 @@
                          minOccurs="0" />
         <xs:element name="CAL_ULD_2_ADC" type="ancFileType"
                          minOccurs="0" />
-      </xs:all>
+        <xs:element name="CAL_ULDSettings" type="ancFileType"
+                         minOccurs="0" />
+     </xs:all>
     </xs:complexType>
   </xs:element>
        
@@ -1019,7 +1062,9 @@
   <xs:element name="TKR_Strips-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="TKR_Strips_Settings" type="ancFileType"
+<!--        <xs:element name="TKR_Strips_Settings" type="ancFileType"
+                         minOccurs="0" />  -->
+        <xs:element name="TKR_HotStripsCalibration" type="ancFileType"
                          minOccurs="0" />
       </xs:all>
     </xs:complexType >
@@ -1069,8 +1114,10 @@
   <xs:element name="TKR_Thresh-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="TKR_Thresh_Settings" type="ancFileType"
+        <xs:element name="TKR_ThresholdSettings" type="ancFileType"
                           minOccurs="0" />
+<!--        <xs:element name="TKR_Thresh_Settings" type="ancFileType" -->
+<!--                          minOccurs="0" />    -->
       </xs:all>
     </xs:complexType >
   </xs:element>
@@ -1132,10 +1179,18 @@
 
   <xs:complexType name="GEM_tilesType">
     <xs:all minOccurs="0">
-      <xs:element name="enableAll">        
+      <xs:element name="enableAll" minOccurs="0">        
       </xs:element>
-      <xs:element name="exceptTileList">
+      <xs:element name="exceptTileList" minOccurs="0">
       </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="GEM_towersType">
+    <xs:all minOccurs="1">
+      <xs:element name="tkr_tower_mask" type="regValueType"/>        
+      <xs:element name="clo_tower_mask" type="regValueType"/>
+      <xs:element name="chi_tower_mask" type="regValueType"/>
     </xs:all>
   </xs:complexType>
 
@@ -1157,10 +1212,11 @@
         <xs:element name="GEM_window_width" type="registerType" minOccurs="0"/>
          <xs:element name="GEM_acd_cno" type="registerType" minOccurs="0"/>
         <xs:element name="GEM_external" type="registerType" minOccurs="0"/>
-        <xs:element name="GEM_tie_tower_busy" type="registerType" 
+        <xs:element name="GEM_tower_busy" type="registerType" 
                     minOccurs="0"/>
         <xs:element name="GEM_engine" type="GEM_engineType" minOccurs="0"/>
         <xs:element name="GEM_tiles" type="GEM_tilesType" minOccurs="0"/>
+        <xs:element name="GEM_towers" type="GEM_towersType" minOccurs="0"/>
      </xs:all>
     </xs:complexType>
   </xs:element>
@@ -1300,7 +1356,7 @@
     <xs:complexType>
       <xs:all >
         <xs:element name="AEM_trgseq" type="registerType" />
-        <xs:element name="TEM_cal_trg_seq" type="registerType" />
+        <xs:element name="TEM_cal_trgseq" type="registerType" />
         <xs:element name="TEM_tkr_trgseq" type="registerType" />
       </xs:all>
     </xs:complexType>
@@ -1349,7 +1405,7 @@
   <!-- end GNL_Timing -->
 
 
- <xs:element name="LAT_INTENT">
+ <xs:element name="PRECINCT_INTENT">
     <xs:annotation>
       <xs:documentation> Root element for specifying
          LAT configuration intent for a precinct
@@ -1588,61 +1644,67 @@
 
   </xs:element> 
 
-<!-- Stuff for global latc intent: a list of vote file aliases for all
-     precincts -->
+<!-- Stuff for global (container) intent: a list of vote file aliases for all
+     precincts.  These come in two flavors:  LPA_INTENT and LCI_INTENT
+     (content of LCI_INTENT comes in 3 varieties).
+
+     LPA_INTENT only includes references to LATC precincts.  Each kind of
+     global lci intent is identical but also includes a reference to exactly 
+     one of the three precincts used to describe lci scripts for a particular
+     subsystem: <ACD_LCI>, <CAL_LCI> and <TKR_LCI>. The corresponding 
+     LCI-related precincts  for these three varieties of votes with
+     root element <LCI_INTENT>
+     are LCI_GLOBAL_ACD, LCI_GLOBAL_CAL and LCI_GLOBAL_TKR.  -->
 
 <!-- attribute group to be used by votes file elements -->
   <xs:attributeGroup name="voteAttributes" >
-    <xs:attribute name="comment" type="xs:Name"/>
+    <xs:attribute name="comment" type="xs:string"/>
   </xs:attributeGroup>
 
 <!-- base type for votes file elements.  Content is alias name -->
   <xs:complexType name="voteFileType"  >
     <xs:simpleContent >
-      <xs:extension base ="xs:Name" >
+      <xs:extension base ="xs:string" >
       <xs:attributeGroup ref="voteAttributes" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
 
- <xs:element name="LATC_GLOBAL_INTENT">
+
+
+  <xs:element name="LPA_INTENT" >
     <xs:annotation>
       <xs:documentation> Root element for fully specifying
          LAT configuration intent
       </xs:documentation>
-    </xs:annotation>
+    </xs:annotation> 
     <xs:complexType>
       <xs:all>
-        <xs:element name="description" type="xs:string" minOccurs="0" />
-
-        <xs:element name="ACD_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Bias-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Hld-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_PHA-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Veto-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="ACD_Timing-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="CAL_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_Timing-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_LAC-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_FLE-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="CAL_FHE-vote" type="voteFileType" minOccurs="0" />    
-        <xs:element name="CAL_ULD-vote" type="voteFileType" minOccurs="0" /> 
-
-        <xs:element name="TKR_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Timing-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Strips-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TKR_Thresh-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="TRG_GEM-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="TRG_ROI-vote" type="voteFileType" minOccurs="0" />
-
-        <xs:element name="GNL_Mode-vote" type="voteFileType" minOccurs="0" />
-        <xs:element name="GNL_Timing-vote" type="voteFileType" minOccurs="0" />
-
-
+        <xs:element name="description" type="xs:string" minOccurs="0"  />
+        <xs:element ref="method"    minOccurs="0"   />
+        <xs:element name="ACD_Mode-vote" type="voteFileType"  />
+        <xs:element name="ACD_Timing-vote" type="voteFileType" />
+        <xs:element name="ACD_Bias-vote" type="voteFileType" />
+        <xs:element name="ACD_PHA-vote" type="voteFileType"  />
+        <xs:element name="ACD_Hld-vote" type="voteFileType"  />
+        <xs:element name="ACD_Veto-vote" type="voteFileType"  />
+        <xs:element name="CAL_Mode-vote" type="voteFileType"  />
+        <xs:element name="CAL_Timing-vote" type="voteFileType" />
+        <xs:element name="CAL_LAC-vote" type="voteFileType"  />
+        <xs:element name="CAL_FLE-vote" type="voteFileType"  />
+        <xs:element name="CAL_FHE-vote" type="voteFileType" />    
+        <xs:element name="CAL_ULD-vote" type="voteFileType" /> 
+        <xs:element name="TKR_Mode-vote" type="voteFileType" />
+        <xs:element name="TKR_Timing-vote" type="voteFileType" />
+        <xs:element name="TKR_Thresh-vote" type="voteFileType" />
+        <xs:element name="TKR_Strips-vote" type="voteFileType" />
+        <xs:element name="TRG_GEM-vote" type="voteFileType"  />
+        <xs:element name="TRG_ROI-vote" type="voteFileType"  />
+        <xs:element name="GNL_Mode-vote" type="voteFileType"  />
+        <xs:element name="GNL_Timing-vote" type="voteFileType" />
       </xs:all>
     </xs:complexType>
   </xs:element>
+
 
 </xs:schema>

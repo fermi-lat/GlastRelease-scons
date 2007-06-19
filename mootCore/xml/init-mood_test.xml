@@ -214,7 +214,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
            refVal="TRG" />
     </row>
-
+<!--
     <row>
       <field col="name" val="LATC_all" />
       <field col="description" 
@@ -223,6 +223,69 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
            refVal="generic" />
     </row>
+-->
+    <row>
+      <field col="name" val="ACD_LCI" />
+      <field col="description" 
+       val="Precinct for specifying ACD charge calibrations" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_LCI" />
+      <field col="description" 
+       val="Precinct for specifying CAL charge calibrations" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_LCI" />
+      <field col="description" 
+       val="Precinct for specifying TKR charge calibrations" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="LPA" />
+      <field col="description" 
+       val=
+"Pseudo-precinct (physics running) 
+used for container vote files which reference regular votes by alias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+    </row>
+
+    <row>
+      <field col="name" val="LCI_GLOBAL_ACD" />
+      <field col="description" 
+       val=
+"Pseudo-precinct used for container vote files for ACD ci calibrations which reference regular votes by alias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+    </row>
+
+    <row>
+      <field col="name" val="LCI_GLOBAL_CAL" />
+      <field col="description" 
+       val=
+"Pseudo-precinct used for container vote files for CAL ci calibrations which reference regular votes by alias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+    </row>
+
+
+    <row>
+      <field col="name" val="LCI_GLOBAL_TKR" />
+      <field col="description" 
+       val=
+"Pseudo-precinct used for container vote files for TKR ci calibrations which reference regular votes by alias" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="generic" />
+    </row>
+
 
   </table>
 
@@ -1690,17 +1753,41 @@
     </row>
 
     <row>
-      <field col="name" val="ACD_BiasDacCalibration" />
+      <field col="name" val="ACD_BiasSettings" />
       <field col="description" 
-             val="ACD calibration file" />
+             val="ACD Bias calibration file" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="ACD" />
     </row>
 
     <row>
-      <field col="name" val="ACD_HldCalibration" />
+      <field col="name" val="ACD_BiasDacCalibration" />
       <field col="description" 
-             val="ACD calibration file" />
+             val="ACD Bias DACcalibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_HldSettings" />
+      <field col="description" 
+             val="ACD High level Discriminator calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_HldDacCalibration" />
+      <field col="description" 
+             val="ACD HLD DAC calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_MIPCalibration" />
+      <field col="description" 
+             val="ACD MIP calibration file" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="ACD" />
     </row>
@@ -1714,28 +1801,17 @@
     </row>
 
     <row>
-      <field col="name" val="ACD_MIPCalibration" />
-      <field col="description" 
-             val="ACD calibration file" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="ACD" />
-    </row>
-
-
-<!--  Comment out until we get final word on this name
-    <row>
       <field col="name" val="ACD_VetoElectronicsCalibration" />
       <field col="description" 
-             val="ACD calibration file" />
+             val="ACD Veto Electronics calibration file" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="ACD" />
     </row>
--->
 
     <row>
       <field col="name" val="ACD_VetoInMipConfiguration" />
       <field col="description" 
-             val="ACD config file" />
+             val="ACD Veto in terms of MIP" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="ACD" />
     </row>
@@ -1743,11 +1819,86 @@
     <row>
       <field col="name" val="ACD_VetoInPhaConfiguration" />
       <field col="description" 
-             val="ACD config file" />
+             val="ACD Veto in terms of PHA" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="ACD" />
     </row>
 
+    <row>
+      <field col="name" val="ACD_VetoSettings" />
+      <field col="description" 
+             val="ACD Veto config file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_veto_dict" />
+      <field col="description" 
+             val="ACD charge injection veto calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_Mask" />
+      <field col="description" 
+             val="ACD Mask configuration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_FLESettings" />
+      <field col="description" 
+             val="Settings for CAL_FLE precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_FHESettings" />
+      <field col="description" 
+             val="Settings for CAL_FHE precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_LACSettings" />
+      <field col="description" 
+             val="Settings for CAL_LAC precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_LACCalib" />
+      <field col="description" 
+             val="Calibration for CAL_LAC precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_ULDSettings" />
+      <field col="description" 
+             val="Settings for CAL_ULD precinct" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_Mask" />
+      <field col="description" 
+             val="CAL Mask configuration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+
+
+<!--  Latest arrangement of votes doesn't use any of these
     <row>
       <field col="name" val="CAL_trg_alignment" />
       <field col="description" 
@@ -1771,6 +1922,7 @@
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="CAL" />
     </row>
+-->
 
 <!-- Still under discussion with CAL. Expect to have analogously
      named anc. files for CAL_FLE, CAL_FHE, CAL_ULD
@@ -1793,15 +1945,33 @@
 -->
     
     <row>
-      <field col="name" val="TKR_Strips_Settings" />
+      <field col="name" val="TKR_ThresholdSettings" />
       <field col="description" 
-             val="TKR settings" />
+             val="TKR Threshold settings" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TKR" />
     </row>
 
     <row>
-      <field col="name" val="TKR_Thresh_Settings" />
+      <field col="name" val="TKR_HotStripsCalibration" />
+      <field col="description" 
+             val="TKR Hot Strips calibration" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_Mask" />
+      <field col="description" 
+             val="TKR Mask configuration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+
+<!-- unused with latest (June 2007) votes definitions
+    <row>
+      <field col="name" val="TKR_Strips_Settings" />
       <field col="description" 
              val="TKR settings" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
@@ -1822,24 +1992,6 @@
              val="For TKR_Timing precinct" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TKR" />
-    </row>
-
-
-<!--   Looks like we won't be needing these after all
-    <row>
-      <field col="name" val="GEM_Configuration" />
-      <field col="description" 
-             val="GEM config. exclusive of ROI" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TRG" />
-    </row>
-
-    <row>
-      <field col="name" val="ROI_Configuration" />
-      <field col="description" 
-             val="GEM config. for ROI registers" />
-      <ref col="delegate_fk" table="Delegates" refCol="name"
-       refVal="TRG" />
     </row>
 -->
 
