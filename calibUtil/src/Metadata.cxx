@@ -511,94 +511,10 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
                                const std::string& completion,
                                const std::string& input_start,
                                const std::string& input_end) {
-    using namespace rdbModel;
 
-    eRet ret;
-
-    if (vend < vstart) {
-      std::cout << 
-        "Metadata::registerCalib: Error in metadata. vend < vstart " <<
-        std::endl;
-      return 0;
-    }
-    if (!m_writeCxt) {
-      connectWrite(ret);
-      if (ret != RETOk) return 0; // we or connectWrite should throw exception
-    }
-    StringVector cols;
-    StringVector vals;
-    StringVector nullCols;
-
-    cols.reserve(24);
-    vals.reserve(24);
-    nullCols.reserve(16);
-
-    if (inst.size() * calib_type.size() * flavor.size() * data_fmt.size() 
-        * data_ident.size() * proc_level.size() * completion.size() 
-        * locale.size() == 0) {   // something is null that shouldn't be
-      return 0;      // should perhaps throw exception
-    }
-    cols.push_back("instrument"); vals.push_back(inst);
-    cols.push_back("calib_type"); vals.push_back(calib_type);
-    cols.push_back("flavor"); vals.push_back(flavor);
-    cols.push_back("data_fmt"); vals.push_back(data_fmt);
-    cols.push_back("data_ident"); vals.push_back(data_ident);
-    cols.push_back("vstart"); vals.push_back(vstart.getString());
-    cols.push_back("vend"); vals.push_back(vend.getString());
-    cols.push_back("proc_level"); vals.push_back(proc_level);
-    cols.push_back("completion"); vals.push_back(completion);
-    cols.push_back("locale"); vals.push_back(locale);
-
-    //  These, however, may be null
-    if (input_desc.size() > 0 ) {
-      cols.push_back("input_desc"); vals.push_back(input_desc); 
-    }  else nullCols.push_back("input_desc");
-
-    if (notes.size() > 0 ) {
-      cols.push_back("notes"); vals.push_back(notes);
-    }    else nullCols.push_back("notes");
-
-    if (fmt_version.size() > 0 )
-    {
-      cols.push_back("fmt_version"); 
-      vals.push_back(fmt_version);
-    } 
-    //    else nullCols.push_back("fmt_version");
-
-    if (input_start.size() > 0) {
-      cols.push_back("input_start"); vals.push_back(input_start);
-    }    else nullCols.push_back("input_start");
-    
-    if (input_end.size() > 0) {
-      cols.push_back("input_end"); vals.push_back(input_end);
-    }    else nullCols.push_back("input_end");
-
-    // The service -- that's us -- is responsible for creator, uid, enter_time
-    cols.push_back("creator"); vals.push_back("Metadata::registerCalib");
-    std::string uid;
-    fetchUser(uid);
-    cols.push_back("uid"); vals.push_back(uid);
-    facilities::Timestamp curTime;
-    cols.push_back("enter_time");vals.push_back(curTime.getString());
-    // update_time is set automatically by MySQL, but MySQL uses
-    // local timezone rather than gmt, so we have set it explicitly
-    cols.push_back("update_time");vals.push_back(curTime.getString());
-
-
-    if (m_rdb) {
-      bool ok = checkValues(cols, vals);
-      if (ok) checkNulls(nullCols);
-      if (!ok) return 0;
-    }
-
-    // ser_no gets set automatically by MySQL
-    int ser_no;
-    if (!(m_writeCxt->insertRow(m_table, cols, vals, &ser_no, &nullCols)) ) {
-      return 0;
-    }    else {
-      adjustVend(ser_no);
-      return ser_no;
-    }
+    std::cerr << "Metadata::registerCalib: Service is not available from Gleam"
+              << std::endl;
+    return 0;
   }
 
   Metadata::eRet Metadata::compareSchema(rdbModel::Connection* conn,
@@ -681,99 +597,9 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
 
 
   unsigned Metadata::adjustVend(int newSer) {
-    using namespace rdbModel;
-
-    StringVector getCols;
-    StringVector orderBy;
-
-    orderBy.clear();
-    getCols.reserve(7);
-
-    std::string serString;
-    facilities::Util::itoa(newSer, serString);
-
-    getCols.push_back("flavor");
-    getCols.push_back("calib_type");
-    getCols.push_back("completion");
-    getCols.push_back("instrument");
-    getCols.push_back("proc_level");
-    getCols.push_back("vstart");
-
-    ResultHandle* results = 0;
-    eRet err;
-    Assertion* where = 0;
-    try {
-      if (!m_writeCxt) {
-        if (!connectWrite(err)) return 0;
-      }
-
-      Assertion::Operator* serOp = 
-        new Assertion::Operator(OPTYPEequal, "ser_no", serString, 
-                                FIELDTYPEold, FIELDTYPElit);
-                                //false, true);
-    
-      where = new Assertion(serOp);
-
-      // Fetch information for new row: vstart, flavor, completion,
-      // proc_level, calib_type, flavor
-      results = m_writeCxt->select(m_table, getCols, orderBy, where);
-      delete where;
-      where = 0;
-    }
-    catch (RdbException ex) {
-      std::cout << ex.getMsg();
-      delete where;         // return heap memory
-      return 0;
-    }
-    if (!results) { // This is an error. Should be non-null even if no rows
-      std::cout << "MySQL failure in SELECT" << std::endl;
-      return 0;  // nothing to fix
-    }
-    if (results->getNRows() != 1) { // also a problem
-      std::cout << "Look-up of serial# " << serString << " failed"
-                << std::endl;
-      return 0;
-    }
-    std::vector<std::string> fields;
-    results->getRow(fields);
-    if (fields[2] != "OK") return 0;  // don't bother fixing in this case
-
-    // Now do an update on rows satisfying
-    // ((flavor="f") && (calib_type = "c") && (completion= "OK") && 
-    // (instrument = "i") &&  (proc_level = "p") && 
-    //  (vstart < "new-start" (vend > "new-vstart") );
-    std::vector<Assertion::Operator *> conditions;
-    conditions.reserve(7);
-    for (unsigned ix = 0; ix < 5; ix++) {
-      conditions.push_back(new Assertion::Operator(OPTYPEequal, getCols[ix],
-                                                   fields[ix], 
-                                                   FIELDTYPEold, FIELDTYPElit));
-                                                   // false, true));
-    }
-    conditions.push_back(new Assertion::Operator(OPTYPElessThan, "vstart",
-                                                 fields[5], 
-                                                 FIELDTYPEold, FIELDTYPElit));
-    //false, true));
-    conditions.push_back(new Assertion::Operator(OPTYPEgreaterThan, "vend",
-                                                 fields[5], 
-                                                 FIELDTYPEold, FIELDTYPElit));
-                                                 // false, true));
-                                            
-    Assertion::Operator* andOp = 
-      new Assertion::Operator(OPTYPEand, conditions);
-    where = new Assertion(andOp);
-    
-    StringVector toUpdate;
-    toUpdate.push_back("vend");
-    StringVector newVal;
-    newVal.push_back(fields[5]);
-    // also update update_time. If we leave it to MySQL, won't be GMT
-    facilities::Timestamp curTime;
-    toUpdate.push_back("update_time");newVal.push_back(curTime.getString());
-
-    unsigned nModified = m_writeCxt->update(m_table, toUpdate, newVal, where);
-    delete where;
-    return nModified;
+    std::cerr << "Metadata::adjustVend: Service is not available from Gleam"
+              << std::endl;
+    return 0;
   }
 
 }
