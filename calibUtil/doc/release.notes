@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r8   18-Jun-2007 jrb Remove obsolete functionality, unused by Gleam
    v1r7   30-Jun-2006 jrb Add dtds, sample files for ancillary detector calibs.
    v1r6   11-Apr-2006 jrb Add new dtd for Acd calibs & a couple sample files
    v1r5p4 15-Feb-2006 jrb Use alias glastCalibDB for MySQL host rather than
