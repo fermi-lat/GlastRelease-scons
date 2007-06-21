@@ -13,12 +13,12 @@ apply_pattern package_include
 apply_pattern package_linkopts
 apply_pattern package_stamps
 
-set G4tableDir	            ${Geant4_DIR}/tables
-set G4LEVELGAMMADATA	      ${G4tableDir}/PhotonEvaporation2.0
-set NeutronHPCrossSections	${G4tableDir}/G4NDL3.9
-set G4RADIOACTIVEDATA         ${G4tableDir}/RadiativeDecay3.0
-set G4LEDATA                  ${G4tableDir}/G4EMLOW4.0
-set G4ELASTICDATA             ${G4tableDir}/G4ELASTIC1.1
+set G4tableDir                "${Geant4Runtime_DIR}/tables"
+set G4LEVELGAMMADATA	      "${G4tableDir}/PhotonEvaporation2.0"
+set NeutronHPCrossSections    "${G4tableDir}/G4NDL3.9"
+set G4RADIOACTIVEDATA         "${G4tableDir}/RadiativeDecay3.0"
+set G4LEDATA                  "${G4tableDir}/G4EMLOW4.0"
+set G4ELASTICDATA             "${G4tableDir}/G4ELASTIC1.1"
 
 # path to the combined include folder
 macro G4HadronSimSrcDir "${G4HADRONSIMROOT}/src"
