@@ -471,4 +471,116 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     return sc;
 }
 
+bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSideRays, std::vector<Ray>& topRays,
+                                    std::vector<Ray>& plusSideRays, bool increasing)
+{
+    // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
+    //    associated with AcdId id.  
+
+    typedef enum {
+        ribbonX = 5,
+        ribbonY = 6
+    } ribbonOrient;
+
+    unsigned int faceArr[6] = {0, 1, 3, 0, 2, 4}; // x Faces 0, 1 (-X), 3 (+X), y Faces 0, 2 (-y), 4(+y)
+    // do top faces first too add segments 6 and 7 to the right end of the minus and plus vectors
+    // when increasing, it means we can just push_back the rays as normal, and when decreasing we can also use push_back
+
+    bool retVal = true;
+    if (!id.ribbon()) return false;
+
+    unsigned int ribbonNum = id.ribbonNum();
+    unsigned int ribbonOrientation = id.ribbonOrientation();
+
+    // Use orientation of ribbon to determine xOrient and the starting index into our array of face ids
+    bool xOrient;
+    unsigned int startInd = 0;
+    if (ribbonOrientation == ribbonX) 
+        xOrient = true;
+    else {
+        startInd = 3;
+        xOrient = false;
+    }
+
+    // Loops over set of faces
+    unsigned int iFace;
+    for (iFace = startInd; iFace < (startInd+3); iFace++) {
+
+        // Get the ribbon segments from the glastDetSvc
+        std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
+        m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
+            faceArr[iFace], ribbonNum, xOrient, increasing);
+
+        // Determine the dimension to use to contruct the rays
+        std::vector<idents::VolumeIdentifier>::const_iterator it;
+
+        if ( ribbonSegmentVolIds.size() == 0 ) {
+            MsgStream   log( msgSvc(), name() );
+            log << MSG::INFO << "No ribbon segments found for AcdId: " << id.id() << " with xOrientation "
+                << xOrient << " Face: " << faceArr[iFace] << endreq;
+        }
+    
+        // Iterate over ribbon segments and construct rays
+        for (it = ribbonSegmentVolIds.begin(); it != ribbonSegmentVolIds.end(); it++) {
+            std::vector<double> dims;
+            HepPoint3D center;
+            unsigned int dimInd;
+
+            if ( ( faceArr[iFace] == 0 ) && ( (*it)[5] <= 5) )  // check segment number too
+                dimInd = (xOrient) ? 0 : 1; 
+            else 
+                dimInd = 2;
+
+            if ( (*it)[5] > 7 ) // ribbon segments beyond #7, refer to small connector segments we wish to ignore
+                continue;
+            else if ( (*it)[5] > 5) {  // we do wish to retain top ribbon segments 6 and 7 for x oriented ribbons
+                if (faceArr[iFace] != 0)  // if not a top face ribbon
+                    continue;
+                else if (!xOrient)  // if not x oriented
+                    continue;
+            }
+
+
+            // is there any rotation for ribbon segments?
+            getDimensions(*it, dims, center); 
+            double cen[3] = {center.x(), center.y(), center.z()};
+            Point startPos(cen[0], cen[1], cen[2]);
+            Point endPos(cen[0], cen[1], cen[2]);
+            if (increasing) {
+               startPos(dimInd) = cen[dimInd] - dims[dimInd]/2.;
+               endPos(dimInd) = cen[dimInd] + dims[dimInd]/2.;
+            } else {
+                startPos(dimInd) = cen[dimInd] + dims[dimInd]/2.;
+                endPos(dimInd) = cen[dimInd] - dims[dimInd]/2.;
+            }
+
+            // Construct Rays, forming vector from end and starting position along ribbon segment
+            Vector rayVec = endPos - startPos;
+            Ray r(startPos, rayVec);
+            r.setArcLength(rayVec.mag());
+            MsgStream   log( msgSvc(), name() );
+            log << MSG::DEBUG << "dimInd: " << dimInd << endreq;
+            log << MSG::DEBUG << "cen: ( " << cen[0] << ", " << cen[1] << ", " << cen[2] << ")" << endreq;
+            log << MSG::DEBUG << "dims: " << dims[0] << ", " << dims[1] << ", " << dims[2] << endreq;
+            log << MSG::DEBUG << "startPos: (" << startPos.x() << ", " << startPos.y() << ", " << startPos.z() << ")" 
+                << " endPos: ( " << endPos.x() << ", " << endPos.y() << ", " << endPos.z() << ")" << endreq;
+ 
+            if ( (faceArr[iFace] == 0) && ( (*it)[5] <= 5) )             // Face 0, segment# <= 5
+                topRays.push_back(r);
+            else if ( faceArr[iFace] == 0) {
+                if ( (*it)[5] == 6)
+                    minusSideRays.push_back(r);
+                if ( (*it)[5] == 7)
+                    plusSideRays.push_back(r);
+            } else if ((faceArr[iFace] == 1) || (faceArr[iFace] == 2))  // Faces 1, 2
+                minusSideRays.push_back(r);
+            else                                                        // Faces 3,4
+                plusSideRays.push_back(r);
+    
+        } // end ribbonSegment for
+
+    } // end face for
+
+    return retVal;
+}
 

@@ -25,6 +25,7 @@ typedef HepGeom::Point3D<double> HepPoint3D;
 
 #include <string>
 #include <map>
+#include <vector>
 
 /** 
  * @class IAcdGeometrySvc
@@ -69,6 +70,13 @@ public:
 
     virtual StatusCode findCornerGaps() = 0;
     virtual const Ray getCornerGapRay(unsigned int i) const = 0;
+
+    /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
+    virtual bool fillRibbonRays(idents::AcdId& id,
+                 std::vector<Ray>& minusSideRays,
+                 std::vector<Ray>& topRays,
+                 std::vector<Ray>& plusSideRays, bool increasing = true) = 0;
+
 
 };
 
