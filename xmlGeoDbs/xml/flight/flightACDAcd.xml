@@ -123,6 +123,710 @@
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
+<!-- Definition of screw and screw hole volumes -->
+<!-- screw stuff -->
+<!-- Make 4 little composition volumes: each is a vacuum cylinder with a part
+     of a screw in it.
+          * part of screw embedded in normal-thickness tile
+          * part of screw embedded in thick tile
+          * part of screw sticking out of normal-thickness tile
+          * part of screw sticking out of thick tile
+ -->
+     <tubs name="ACDScrewNormal" ROutREF="ACDScrewRad" ZREF="tileThicknessOp"
+           materialREF="ACDScrewMat" />
+
+     <tubs name="ACDScrewNormalEnv" ROutREF="ACDHoleRad" ZREF="tileThicknessOp"
+           materialREF="vacuumMat" />
+
+     <composition name="ACDScrewNormalVol" envelope="ACDScrewNormalEnv" >
+        <posXYZ volume="ACDScrewNormal" />
+     </composition>
+
+     <tubs name="ACDScrewThick" ROutREF="ACDScrewRad" 
+           ZREF="tileCenterThicknessOp"
+           materialREF="ACDScrewMat" />
+
+     <tubs name="ACDScrewThickEnv" ROutREF="ACDHoleRad" 
+           ZREF="tileCenterThicknessOp"
+           materialREF="vacuumMat" />
+
+     <composition name="ACDScrewThickVol" envelope="ACDScrewThickEnv" >
+        <posXYZ volume="ACDScrewThick" />
+     </composition>
+
+<!--   extra pieces of screw extending beyond tile, not used yet (June 07) 
+       Need to define derived constants screwExtLen, screwExtThickLen first
+-->
+<!--  
+     <tubs name="ACDScrewExt" ROutREF="ACDScrewRad" ZREF="screwExtLen"
+           materialREF="ACDScrewMat" />
+
+     <tubs name="ACDScrewExtEnv" ROutREF="ACDHoleRad" ZREF="screwExtLen"
+           materialREF="vacuumMat" />
+
+     <composition name="ACDScrewExtVol" envelope="ACDScrewExtEnv" >
+        <posXYZ volume="ACDScrewExt" />
+     </composition>
+
+     <tubs name="ACDScrewExtThick" ROutREF="ACDScrewRad" 
+           ZREF="screwExtThickLen"
+           materialREF="ACDScrewMat" />
+
+     <tubs name="ACDScrewExtThickEnv" ROutREF="ACDHoleRad" 
+           ZREF="screwExtThickLen"
+           materialREF="vacuumMat" />
+
+     <composition name="ACDScrewExtThickVol" envelope="ACDScrewExtThickEnv" >
+        <posXYZ volume="ACDScrewExtThick" />
+     </composition>
+-->
+
+<!-- Now define some top tiles with screws -->
+    <!-- e.g. row 0, col 0 -->
+    <composition name="tile_f0r0c0" envelope="topTileRedgeCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c0ul_dx"
+              YREF="screw_f0r0c0ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c0ur_dx"
+              YREF="screw_f0r0c0ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c0dl_dx"
+              YREF="screw_f0r0c0dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c0ul_dx"
+              YREF="screw_f0r0c0ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+    <!-- Row 0, col 1 -->
+    <composition name="tile_f0r0c1" envelope="topTileRedgeCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c1ul_dx"
+              YREF="screw_f0r0c1ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c1ur_dx"
+              YREF="screw_f0r0c1ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c1dl_dx"
+              YREF="screw_f0r0c1dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c1ul_dx"
+              YREF="screw_f0r0c1ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+    <!-- Row 0, col 2 -->
+    <composition name="tile_f0r0c2" envelope="topTileRedgeCcent">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c2ul_dx"
+              YREF="screw_f0r0c2ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c2ur_dx"
+              YREF="screw_f0r0c2ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c2dl_dx"
+              YREF="screw_f0r0c2dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c2ul_dx"
+              YREF="screw_f0r0c2ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+
+    <!-- Row 0, col 3 -->
+    <composition name="tile_f0r0c3" envelope="topTileRedgeCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c3ul_dx"
+              YREF="screw_f0r0c3ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c3ur_dx"
+              YREF="screw_f0r0c3ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c3dl_dx"
+              YREF="screw_f0r0c3dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c3ul_dx"
+              YREF="screw_f0r0c3ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 0, col 4 -->
+    <composition name="tile_f0r0c4" envelope="topTileRedgeCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c4ul_dx"
+              YREF="screw_f0r0c4ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c4ur_dx"
+              YREF="screw_f0r0c4ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c4dl_dx"
+              YREF="screw_f0r0c4dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r0c4ul_dx"
+              YREF="screw_f0r0c4ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 1 col 0 -->
+    <composition name="tile_f0r1c0" envelope="topTileRmidCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c0ul_dx"
+              YREF="screw_f0r1c0ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c0ur_dx"
+              YREF="screw_f0r1c0ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c0dl_dx"
+              YREF="screw_f0r1c0dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c0ul_dx"
+              YREF="screw_f0r1c0ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 1 col 1 -->
+    <composition name="tile_f0r1c1" envelope="topTileRmidCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c1ul_dx"
+              YREF="screw_f0r1c1ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c1ur_dx"
+              YREF="screw_f0r1c1ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c1dl_dx"
+              YREF="screw_f0r1c1dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c1ul_dx"
+              YREF="screw_f0r1c1ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 1 col 2 -->
+    <composition name="tile_f0r1c2" envelope="topTileRmidCcent">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c2ul_dx"
+              YREF="screw_f0r1c2ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c2ur_dx"
+              YREF="screw_f0r1c2ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c2dl_dx"
+              YREF="screw_f0r1c2dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c2ul_dx"
+              YREF="screw_f0r1c2ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 1 col 3 -->
+    <composition name="tile_f0r1c3" envelope="topTileRmidCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c3ul_dx"
+              YREF="screw_f0r1c3ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c3ur_dx"
+              YREF="screw_f0r1c3ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c3dl_dx"
+              YREF="screw_f0r1c3dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c3ul_dx"
+              YREF="screw_f0r1c3ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+
+<!-- row 1 col 4 -->
+    <composition name="tile_f0r1c4" envelope="topTileRmidCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c4ul_dx"
+              YREF="screw_f0r1c4ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c4ur_dx"
+              YREF="screw_f0r1c4ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c4dl_dx"
+              YREF="screw_f0r1c4dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r1c4ul_dx"
+              YREF="screw_f0r1c4ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 2 col 0 -->
+    <composition name="tile_f0r2c0" envelope="topTileRcentCedge">
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c0ul_dx"
+              YREF="screw_f0r2c0ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c0ur_dx"
+              YREF="screw_f0r2c0ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c0dl_dx"
+              YREF="screw_f0r2c0dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c0ul_dx"
+              YREF="screw_f0r2c0ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 2 col 1 -->
+    <composition name="tile_f0r2c1" envelope="topTileRcentCmid">
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c1ul_dx"
+              YREF="screw_f0r2c1ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c1ur_dx"
+              YREF="screw_f0r2c1ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c1dl_dx"
+              YREF="screw_f0r2c1dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c1ul_dx"
+              YREF="screw_f0r2c1ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+
+<!-- row 2 col 2 -->
+    <composition name="tile_f0r2c2" envelope="topTileRcentCcent">
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c2ul_dx"
+              YREF="screw_f0r2c2ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c2ur_dx"
+              YREF="screw_f0r2c2ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c2dl_dx"
+              YREF="screw_f0r2c2dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c2ul_dx"
+              YREF="screw_f0r2c2ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 2 col 3 -->
+    <composition name="tile_f0r2c3" envelope="topTileRcentCmid">
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c3ul_dx"
+              YREF="screw_f0r2c3ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c3ur_dx"
+              YREF="screw_f0r2c3ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c3dl_dx"
+              YREF="screw_f0r2c3dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c3ul_dx"
+              YREF="screw_f0r2c3ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 2 col 4 -->
+    <composition name="tile_f0r2c4" envelope="topTileRcentCedge">
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c4ul_dx"
+              YREF="screw_f0r2c4ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c4ur_dx"
+              YREF="screw_f0r2c4ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c4dl_dx"
+              YREF="screw_f0r2c4dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewThick" 
+              XREF="screw_f0r2c4ul_dx"
+              YREF="screw_f0r2c4ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 3 col 0 -->
+    <composition name="tile_f0r3c0" envelope="topTileRmidCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c0ul_dx"
+              YREF="screw_f0r3c0ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c0ur_dx"
+              YREF="screw_f0r3c0ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c0dl_dx"
+              YREF="screw_f0r3c0dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c0ul_dx"
+              YREF="screw_f0r3c0ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 3 col 1 -->
+    <composition name="tile_f0r3c1" envelope="topTileRmidCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c1ul_dx"
+              YREF="screw_f0r3c1ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c1ur_dx"
+              YREF="screw_f0r3c1ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c1dl_dx"
+              YREF="screw_f0r3c1dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c1ul_dx"
+              YREF="screw_f0r3c1ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 3 col 2 -->
+    <composition name="tile_f0r3c2" envelope="topTileRmidCcent">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c2ul_dx"
+              YREF="screw_f0r3c2ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c2ur_dx"
+              YREF="screw_f0r3c2ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c2dl_dx"
+              YREF="screw_f0r3c2dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c2ul_dx"
+              YREF="screw_f0r3c2ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+
+<!-- row 3 col 3 -->
+    <composition name="tile_f0r3c3" envelope="topTileRmidCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c3ul_dx"
+              YREF="screw_f0r3c3ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c3ur_dx"
+              YREF="screw_f0r3c3ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c3dl_dx"
+              YREF="screw_f0r3c3dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c3ul_dx"
+              YREF="screw_f0r3c3ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 3 col 4 -->
+    <composition name="tile_f0r3c4" envelope="topTileRmidCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c4ul_dx"
+              YREF="screw_f0r3c4ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c4ur_dx"
+              YREF="screw_f0r3c4ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c4dl_dx"
+              YREF="screw_f0r3c4dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r3c4ul_dx"
+              YREF="screw_f0r3c4ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 4 col 0 -->
+    <composition name="tile_f0r4c0" envelope="topTileRedgeCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c0ul_dx"
+              YREF="screw_f0r4c0ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c0ur_dx"
+              YREF="screw_f0r4c0ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c0dl_dx"
+              YREF="screw_f0r4c0dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c0ul_dx"
+              YREF="screw_f0r4c0ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+
+<!-- row 4 col 1 -->
+    <composition name="tile_f0r4c1" envelope="topTileRedgeCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c1ul_dx"
+              YREF="screw_f0r4c1ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c1ur_dx"
+              YREF="screw_f0r4c1ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c1dl_dx"
+              YREF="screw_f0r4c1dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c1ul_dx"
+              YREF="screw_f0r4c1ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 4 col 2 -->
+    <composition name="tile_f0r4c2" envelope="topTileRedgeCcent">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c2ul_dx"
+              YREF="screw_f0r4c2ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c2ur_dx"
+              YREF="screw_f0r4c2ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c2dl_dx"
+              YREF="screw_f0r4c2dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c2ul_dx"
+              YREF="screw_f0r4c2ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+<!-- row 4 col 3 -->
+    <composition name="tile_f0r4c3" envelope="topTileRedgeCmid">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c3ul_dx"
+              YREF="screw_f0r4c3ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c3ur_dx"
+              YREF="screw_f0r4c3ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c3dl_dx"
+              YREF="screw_f0r4c3dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c3ul_dx"
+              YREF="screw_f0r4c3ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+    </composition>
+
+
+<!-- row 4 col 4 -->
+    <composition name="tile_f0r4c4" envelope="topTileRedgeCedge">
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c4ul_dx"
+              YREF="screw_f0r4c4ul_dy">
+        <idField name="fACDScrewOrInset" value="0" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c4ur_dx"
+              YREF="screw_f0r4c4ur_dy">
+        <idField name="fACDScrewOrInset" value="1" />
+      </posXYZ>
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c4dl_dx"
+              YREF="screw_f0r4c4dl_dy">
+        <idField name="fACDScrewOrInset" value="2" />
+      </posXYZ>
+      
+      <posXYZ volume="ACDScrewNormal" 
+              XREF="screw_f0r4c4ul_dx"
+              YREF="screw_f0r4c4ul_dy">
+        <idField name="fACDScrewOrInset" value="3" />
+      </posXYZ>
+       
+    </composition>
+       
 
 <!-- Boxes for top ribbons. Y ribbons just have one top piece -->
 <box name="yRibbonTop"

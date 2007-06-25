@@ -12,7 +12,7 @@ Assemble as
 -->
   <!-- Row 0. Has largest negative y displacement.  It takes two
     volumes to make each tile in row 0-->
-  <posXYZ volume="topTileRedgeCedge"
+  <posXYZ volume="tile_f0r0c0"
           XREF="topTileEdge_dxn"
           YREF="topTileEdge_dyn"
           ZREF="topTileEdge_dz" >
@@ -37,7 +37,7 @@ Assemble as
     <idField name="fTileSeg" value="1" />
   </posXYZ>
 
-  <posXYZ volume="topTileRedgeCmid"
+  <posXYZ volume="tile_f0r0c1"
           XREF="topTileMid_dxn"
           YREF="topTileEdge_dyn"
           ZREF="topTileEdge_dz" >
@@ -62,7 +62,7 @@ Assemble as
     <idField name="fTileSeg" value="1" />
   </posXYZ>
 
-  <posXYZ volume="topTileRedgeCcent"
+  <posXYZ volume="tile_f0r0c2"
           YREF="topTileEdge_dyn"
           ZREF="topTileEdge_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -86,7 +86,7 @@ Assemble as
   </posXYZ>
 
 
-  <posXYZ volume="topTileRedgeCmid"
+  <posXYZ volume="tile_f0r0c3"
           XREF="topTileMid_dx"
           YREF="topTileEdge_dyn"
           ZREF="topTileEdge_dz" >
@@ -112,7 +112,7 @@ Assemble as
   </posXYZ>
 
 
-  <posXYZ volume="topTileRedgeCedge"
+  <posXYZ volume="tile_f0r0c4"
           XREF="topTileEdge_dx"
           YREF="topTileEdge_dyn"
           ZREF="topTileEdge_dz" >
@@ -138,7 +138,7 @@ Assemble as
   </posXYZ>
 
   <!-- row 1. Y displacement is topTileMid_dyn   child #5 -->
-  <posXYZ volume="topTileRmidCedge"
+  <posXYZ volume="tile_f0r1c0"
           XREF="topTileEdge_dxn"
           YREF="topTileMid_dyn"
           ZREF="topTileMid_dz" >
@@ -150,7 +150,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCmid"
+  <posXYZ volume="tile_f0r1c1"
           XREF="topTileMid_dxn"
           YREF="topTileMid_dyn"
           ZREF="topTileMid_dz" >
@@ -162,7 +162,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCcent"
+  <posXYZ volume="tile_f0r1c2"
           YREF="topTileMid_dyn"
           ZREF="topTileMid_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -173,7 +173,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCmid"
+  <posXYZ volume="tile_f0r1c3"
           XREF="topTileMid_dx"
           YREF="topTileMid_dyn"
           ZREF="topTileMid_dz" >
@@ -185,7 +185,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCedge"
+  <posXYZ volume="tile_f0r1c4"
           XREF="topTileEdge_dx"
           YREF="topTileMid_dyn"
           ZREF="topTileMid_dz" >
@@ -199,7 +199,7 @@ Assemble as
 
 
   <!-- Middle row (2) of tiles. No Y displacement -->
-  <posXYZ volume="topTileRcentCedge"
+  <posXYZ volume="tile_f0r2c0"
           XREF="topTileEdge_dxn"
           ZREF="topTileCent_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -210,7 +210,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRcentCmid"
+  <posXYZ volume="tile_f0r2c1"
           XREF="topTileMid_dxn"
           ZREF="topTileCent_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -221,7 +221,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRcentCcent"
+  <posXYZ volume="tile_f0r2c2"
           ZREF="topTileCent_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
     <idField name="fACDFace" valueREF="eACDTopFace" />
@@ -231,7 +231,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRcentCmid"
+  <posXYZ volume="tile_f0r2c3"
           XREF="topTileMid_dx"
           ZREF="topTileCent_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -242,7 +242,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRcentCedge"
+  <posXYZ volume="tile_f0r2c4"
           XREF="topTileEdge_dx"
           ZREF="topTileCent_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -254,7 +254,7 @@ Assemble as
   </posXYZ>
 
   <!-- row 3. Y displacement is topTileMid_dy -->
-  <posXYZ volume="topTileRmidCedge"
+  <posXYZ volume="tile_f0r3c0"
           XREF="topTileEdge_dxn"
           YREF="topTileMid_dy"
           ZREF="topTileMid_dz" >
@@ -266,7 +266,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCmid"
+  <posXYZ volume="tile_f0r3c1"
           XREF="topTileMid_dxn"
           YREF="topTileMid_dy"
           ZREF="topTileMid_dz" >
@@ -278,7 +278,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCcent"
+  <posXYZ volume="tile_f0r3c2"
           YREF="topTileMid_dy"
           ZREF="topTileMid_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -289,7 +289,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCmid"
+  <posXYZ volume="tile_f0r3c3"
           XREF="topTileMid_dx"
           YREF="topTileMid_dy"
           ZREF="topTileMid_dz" >
@@ -301,7 +301,7 @@ Assemble as
     <idField name="fTileSeg" value="0" />
   </posXYZ>
 
-  <posXYZ volume="topTileRmidCedge"
+  <posXYZ volume="tile_f0r3c4"
           XREF="topTileEdge_dx"
           YREF="topTileMid_dy"
           ZREF="topTileMid_dz" >
@@ -314,7 +314,7 @@ Assemble as
   </posXYZ>
 
   <!-- Row 4.  y displacement is topTileEdge_dy -->
-  <posXYZ volume="topTileRedgeCedge"
+  <posXYZ volume="tile_f0r4c0"
           XREF="topTileEdge_dxn"
           YREF="topTileEdge_dy"
           ZREF="topTileEdge_dz" >
@@ -339,7 +339,7 @@ Assemble as
     <idField name="fTileSeg" value="1" />
   </posXYZ>
 
-  <posXYZ volume="topTileRedgeCmid"
+  <posXYZ volume="tile_f0r4c1"
           XREF="topTileMid_dxn"
           YREF="topTileEdge_dy"
           ZREF="topTileEdge_dz" >
@@ -365,7 +365,7 @@ Assemble as
   </posXYZ>
 
 
-  <posXYZ volume="topTileRedgeCcent"
+  <posXYZ volume="tile_f0r4c2"
           YREF="topTileEdge_dy"
           ZREF="topTileEdge_dz" >
     <idField name="fLATObjects" valueREF="eLATACD" />
@@ -387,7 +387,7 @@ Assemble as
     <idField name="fTileSeg" value="1" />
   </posXYZ>
 
-  <posXYZ volume="topTileRedgeCmid"
+  <posXYZ volume="tile_f0r4c3"
           XREF="topTileMid_dx"
           YREF="topTileEdge_dy"
           ZREF="topTileEdge_dz" >
@@ -412,7 +412,7 @@ Assemble as
   </posXYZ>
 
 
-  <posXYZ volume="topTileRedgeCedge"
+  <posXYZ volume="tile_f0r4c4"
           XREF="topTileEdge_dx"
           YREF="topTileEdge_dy"
           ZREF="topTileEdge_dz" >
