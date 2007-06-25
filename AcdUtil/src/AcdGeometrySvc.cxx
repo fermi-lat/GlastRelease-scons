@@ -477,6 +477,10 @@ bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSi
     // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
     //    associated with AcdId id.  
 
+    minusSideRays.clear();
+    topRays.clear();
+    plusSideRays.clear();
+
     typedef enum {
         ribbonX = 5,
         ribbonY = 6
@@ -520,9 +524,10 @@ bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSi
                 << xOrient << " Face: " << faceArr[iFace] << endreq;
         }
     
+        std::vector<double> dims;
         // Iterate over ribbon segments and construct rays
         for (it = ribbonSegmentVolIds.begin(); it != ribbonSegmentVolIds.end(); it++) {
-            std::vector<double> dims;
+            dims.clear();
             HepPoint3D center;
             unsigned int dimInd;
 

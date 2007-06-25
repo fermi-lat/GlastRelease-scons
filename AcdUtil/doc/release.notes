@@ -3,7 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
- v1r5     23-Jum-2007 HMK add new acdGeomtrySvc::fillRibbonRays for
+ v1r5p1   25-Jun-2007 HMK clean ups fillRibbonRays a little
+ v1r5     23-Jun-2007 HMK add new acdGeomtrySvc::fillRibbonRays for
           use with xmlGeoDbs >= v1r42 which includes segmented ribbons along sides
  v1r4p1   15-mar-2007 HMK patch requirements for windows
  v1r4     05-Mar-2007 EAC Updated to AcdTileDim and adding AcdTileFuncs to handle screw holes
