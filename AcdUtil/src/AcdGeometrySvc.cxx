@@ -531,22 +531,18 @@ bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSi
             HepPoint3D center;
             unsigned int dimInd;
 
-            if ( ( faceArr[iFace] == 0 ) && ( (*it)[5] <= 5) )  // check segment number too
-                dimInd = (xOrient) ? 0 : 1; 
-            else 
-                dimInd = 2;
-
-            if ( (*it)[5] > 7 ) // ribbon segments beyond #7, refer to small connector segments we wish to ignore
-                continue;
-            else if ( (*it)[5] > 5) {  // we do wish to retain top ribbon segments 6 and 7 for x oriented ribbons
-                if (faceArr[iFace] != 0)  // if not a top face ribbon
+            if ( faceArr[iFace] == 0 ) { // On the top, interested in segments 1,2,3,4,5
+                if ( (*it)[5] <= 5 ) {
+                    dimInd = (xOrient) ? 0 : 1;
+                } else
                     continue;
-                else if (!xOrient)  // if not x oriented
+            } else {
+                dimInd = 2;
+                if ( ( (*it)[5] > 4) && ( (*it)[5] != 9) ) // On the sides we are interested in segments 1,2,3,4,9
                     continue;
             }
 
-
-            // is there any rotation for ribbon segments?
+            
             getDimensions(*it, dims, center); 
             double cen[3] = {center.x(), center.y(), center.z()};
             Point startPos(cen[0], cen[1], cen[2]);
@@ -570,13 +566,8 @@ bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSi
             log << MSG::DEBUG << "startPos: (" << startPos.x() << ", " << startPos.y() << ", " << startPos.z() << ")" 
                 << " endPos: ( " << endPos.x() << ", " << endPos.y() << ", " << endPos.z() << ")" << endreq;
  
-            if ( (faceArr[iFace] == 0) && ( (*it)[5] <= 5) )             // Face 0, segment# <= 5
+            if (faceArr[iFace] == 0) {             // Face 0, segment# <= 5
                 topRays.push_back(r);
-            else if ( faceArr[iFace] == 0) {
-                if ( (*it)[5] == 6)
-                    minusSideRays.push_back(r);
-                if ( (*it)[5] == 7)
-                    plusSideRays.push_back(r);
             } else if ((faceArr[iFace] == 1) || (faceArr[iFace] == 2))  // Faces 1, 2
                 minusSideRays.push_back(r);
             else                                                        // Faces 3,4
