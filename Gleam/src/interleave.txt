@@ -26,7 +26,8 @@ FluxAlg.sources       += {"sampled_background"};
 FluxAlg.sources       += {"sampled_EarthAlbedo"};
 
 // do not want to override these
-InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime"};
+// this is the default disable list
+//InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime", "Pt*", "FT1*"};
 
 // the path to the xml files with pointers to the data and rate information 
 InterleaveAlg.FilePath = "$(INTERLEAVEPATH)";

@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p1 THB 26-jun-07  restore default Interleave disable list
 * v6r29   THB 12-jun-07  modify interleave.txt to include new algs
 * v6r28p4 THB 04-jun-07  Add OBF option to full_source_simulation
 * v6r28p2 THB 17-May-07  Correct skymodel.txt to correspond with current SkyModel
