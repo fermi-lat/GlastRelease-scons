@@ -109,7 +109,6 @@ InterleaveAlg::InterleaveAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("TreeName",       m_treeName="MeritTuple");
     declareProperty("DisableList",    m_disableList);
     declareProperty("MapName",        m_mapName="interleave_map");
-    declareProperty("SourceIdOffset", m_idOffset = 1000000);  // Offset to apply to mcsourceid
 
     // initialize the disable list, which can be added to, or replaced in the JO
     std::vector<std::string> tlist;
@@ -233,7 +232,7 @@ StatusCode InterleaveAlg::execute()
 
     if( ke>1. ){
         // not an interleave particle
-        setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
+        //setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
         return sc; // not a flagged sampled_background 
     }
     ++m_count;
@@ -262,6 +261,9 @@ StatusCode InterleaveAlg::execute()
     
     // finally flag that we want to add this event to the output tuple
     m_rootTupleSvc->storeRowFlag( m_treeName.value(), true);
+
+    // We have read the event in, want to now proceed down the interleave branch
+    setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
     return sc;
 }
@@ -334,18 +336,13 @@ void InterleaveAlg::copyEventInfo()
     m_value =  m_selector->value();
     strncpy(m_type, m_selector->name().c_str(),sizeof(m_type));
 
-//    m_rootTupleSvc->saveRow(m_mapName.value());
-
     // these have to be done here, since there is no algorithm 
     setLeafValue(m_runLeaf,     EvtRun);
     setLeafValue(m_eventLeaf,   EvtEventId);
     setLeafValue(timeLeaf,      EvtElapsedTime);
     setLeafValue(liveLeaf,      EvtLiveTime);
 
-    //SmartDataPtr<Event::MCEvent>   mcheader(eventSvc(),    EventModel::MC::Event );
-    //int sourceid = mcheader->getSourceId();
-
-    int sourceId = static_cast<int>(mcidLeaf->GetValue()) + m_idOffset;
+    int sourceId = -static_cast<int>(mcidLeaf->GetValue()); 
     setLeafValue(mcidLeaf, sourceId);
 
     m_rootTupleSvc->saveRow(m_mapName.value());

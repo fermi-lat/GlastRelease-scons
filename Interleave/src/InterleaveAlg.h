@@ -75,7 +75,6 @@ private:
     StringArrayProperty  m_disableList;
     StringProperty       m_mapName;     ///< name of the map tree
     int                  m_count;       ///< number of processed events
-    int                  m_idOffset;    ///< offset to add to source ids
 
     // following for the interleave info tuple
     int                  m_run, m_event;   ///< current run, event
