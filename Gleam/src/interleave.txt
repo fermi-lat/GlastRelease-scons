@@ -8,26 +8,49 @@ ApplicationMgr.DLLs   += { "Interleave" };
 // force initialization of these before InterleaveAlg 
 // by putting these onto a phantom branch (kluge!)
 
-Digitization.BranchMembers = {"AnalysisNtupleAlg", "ClassifyAlg", "FT1Alg", "McCoordsAlg", "ObfCoordsAlg"}; }; 
+Dummy.BranchMembers = {"AnalysisNtupleAlg", "ClassifyAlg", "FT1Alg", "McCoordsAlg", "ObfCoordsAlg"}; 
 
+// Override the main event sequencer
+Generation.Members = {
+    "Sequencer/Dummy",
+    "Sequencer/GenerateEvent",
+    "Sequencer/SimulateEvent"
+};
 
-// TriggerTest is defined in basicOptions but needs to be told
-TriggerTest.BranchMembers = { "TriggerAlg"   // trigger this branch
-                         , "InterleaveAlg"   // process if interleave, dump otherwise
-                         , "Count/interleave"// keep track of how many on this branch
-                         , "ClassifyAlg"     // recalculate classification (which may be different)
-                         , "FT1Alg"          // add FT1 stuff if an interleave 
-                         , "McCoordsAlg"     // Recalculations...
-                         , "ObfCoordsAlg"    // Recalculations... 
-                         };
+// Event sequencer can now fail for several reasons so null out its failure branch
+Event.BranchMembers = {};
+
+// Define the event generation
+GenerateEvent.Members = {
+    "FluxAlg", 
+    "CurrentEventAlg",
+    "PointInfoAlg"};
+
+// Define the action when the Generation sequencer fails    
+GenerateEvent.BranchMembers = {"FluxAlg", "ExposureAlg/GenEventExpAlg", "FilterFailAlg/GenEventFailAlg"};
+
+// Define the event simulation
+SimulateEvent.Members = {
+    "InterleaveAlg",
+    "G4Generator"};
+
+// Define what happens when the simulation branch fails (because an interleave event was read in)
+SimulateEvent.BranchMembers = {"InterleaveAlg"                 // process if interleave, dump otherwise
+                             , "Count/interleave"              // keep track of how many on this branch
+                             , "ClassifyAlg"                   // recalculate classification (which may be different)
+                             , "FT1Alg"                        // add FT1 stuff if an interleave 
+                             , "McCoordsAlg"                   // Recalculations...
+                             , "ObfCoordsAlg"                  // Recalculations...
+                             , "FilterFailAlg/SimEvent"        // Sets the FilterFail for this branch
+                              };
+                               
 //  the (pseudo) sources: get definitions, and add them to the list of sources
 FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 FluxAlg.sources       += {"sampled_background"};
 FluxAlg.sources       += {"sampled_EarthAlbedo"};
 
 // do not want to override these
-// this is the default disable list
-//InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime", "Pt*", "FT1*"};
+InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*","FT1*"};
 
 // the path to the xml files with pointers to the data and rate information 
 InterleaveAlg.FilePath = "$(INTERLEAVEPATH)";
