@@ -11,6 +11,8 @@
 #include "geometry/CoordTransform.h"
 #include "geometry/Vector.h"
 #include "geometry/Tube.h"
+//#include "geometry/Sphere.h"
+//#include "geometry/Sphe.h"
 
 // gismo 
 #include "World.h"
@@ -21,6 +23,7 @@
 #include "gui/DisplayRep.h"
 #include "geomrep/TubeRep.h"
 #include "geomrep/BoxRep.h"
+//#include "geomrep/SpheRep.h"
 #include <typeinfo>
 #include <iomanip>
 
@@ -56,6 +59,7 @@ public:
         v.setColor(m_sensitive? "cyan" : "grey" );
         if( t==typeid(Box) )    v.append(BoxRep(volume() ));
         else if (t==typeid(Tube) )v.append(TubeRep(volume() ));
+        //else if (t==typeid(Sphe) )v.append(SpheRep(volume() ));
         else {
         }
     }
@@ -120,8 +124,17 @@ bool DisplayGeometry::shape(ShapeType shape_type, std::string name, std::string 
         double dz=params[0], rmin=params[1], rmax=params[2];
         s = new ::Tube(dz, rmin, rmax);
         volume= M_PI*rmax*rmax*dz;
+    } /*else if(shape_type==Sphere) {
+        double r=params[0];
+        s = new ::Sphe(0,r);
+        volume = 1.3333*M_PI*(r*r*r);
+    }*/ 
+    else{
+        s = new ::Box(1.0, 1.0, 1.0);
+        volume = 1.0;
+        abort = true;
     }
-    assert(s);
+    //assert(s);
 
 
     // check to see if mother vol has material to be reduced.
