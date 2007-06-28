@@ -1873,6 +1873,31 @@ used for container vote files which reference regular votes by alias" />
     </row>
 
     <row>
+      <field col="name" val="CAL_FLECalib" />
+      <field col="description" 
+             val="Calib data set used by CAL_FLE config." />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_FHECalib" />
+      <field col="description" 
+             val="Calib data set used by CAL_FHE config." />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_ULDCalib" />
+      <field col="description" 
+             val="Calib data set used by CAL_ULD config." />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+
+    <row>
       <field col="name" val="CAL_LACCalib" />
       <field col="description" 
              val="Calibration for CAL_LAC precinct" />

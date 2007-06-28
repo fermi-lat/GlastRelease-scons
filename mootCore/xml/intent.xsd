@@ -230,6 +230,7 @@
     </xs:simpleContent>
   </xs:complexType>
 
+
 <!-- Base type for elements with no content and no attributes.
      It's convenient to be able to refer to this for many of the
      containers which, depending on precinct, may always be empty
@@ -796,6 +797,8 @@
                          minOccurs="0" />
         <xs:element name="CAL_FLESettings" type="ancFileType"
                          minOccurs="0" />
+        <xs:element name="CAL_FLECalib" type="ancFileType"
+                         minOccurs="0" />
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -810,7 +813,14 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="CAL_FLE-constants" type="emptyBaseType" />
+  <xs:element name="CAL_FLE-constants">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="FLE_MeV" type="nonnegFloat" default="100" 
+                    minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="CAL_FLE-offline" type="noOutfilesType" />
 
@@ -852,6 +862,8 @@
                          minOccurs="0" />
         <xs:element name="CAL_FHESettings" type="ancFileType"
                          minOccurs="0" />
+        <xs:element name="CAL_FHECalib" type="ancFileType"
+                         minOccurs="0" />
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -866,7 +878,14 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="CAL_FHE-constants" type="emptyBaseType" />
+  <xs:element name="CAL_FHE-constants">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="FHE_MeV" type="nonnegFloat" default="1000" 
+                    minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="CAL_FHE-offline" type="noOutfilesType" />
 
@@ -908,6 +927,8 @@
                          minOccurs="0" />
         <xs:element name="CAL_ULDSettings" type="ancFileType"
                          minOccurs="0" />
+        <xs:element name="CAL_ULDCalib" type="ancFileType"
+                         minOccurs="0" />
      </xs:all>
     </xs:complexType>
   </xs:element>
@@ -922,7 +943,16 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="CAL_ULD-constants" type="emptyBaseType" />
+
+  <xs:element name="CAL_ULD-constants">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ULD_Margin" type="nonnegFloat" default="1.5" 
+                    minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
 
   <xs:element name="CAL_ULD-offline" type="noOutfilesType" />
 
@@ -1405,6 +1435,305 @@
   <!-- end GNL_Timing -->
 
 
+
+<!-- Generic stuff for the lci precincts: ACD_LCI, CAL_LCI, TKR_LCI -->
+   <xs:element name="script" type="xs:Name" />
+
+   <xs:simpleType name="iterableType" >
+     <xs:restriction base="xs:string">
+       <xs:pattern value="LATC" />
+       <xs:pattern value="ALL" />
+       <xs:pattern value="FOREACH" />
+       <xs:pattern value="OFF" />
+       <xs:pattern value="[1-9][0-9]*" />
+       <xs:pattern value="0" />
+     </xs:restriction>
+   </xs:simpleType>
+
+   <!-- or try this: -->
+   <xs:simpleType name="iterType" >
+     <xs:union memberTypes="xs:nonNegativeInteger">
+       <xs:simpleType>
+         <xs:restriction base="xs:Name" >
+           <xs:enumeration value="LATC" />
+           <xs:enumeration value="ALL" />
+           <xs:enumeration value="OFF" />
+           <xs:enumeration value="FOREACH" />
+         </xs:restriction>
+       </xs:simpleType>
+     </xs:union>
+   </xs:simpleType>
+
+  <xs:simpleType name="on_off" >
+    <xs:restriction base="xs:Name" >
+      <xs:enumeration value="OFF" />
+      <xs:enumeration value="ON" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="lci_parameters" >
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="emptyBaseType">
+          <xs:attribute name="number" use="required" 
+                        type="xs:nonNegativeInteger" />
+          <xs:attribute name="period" use="required" 
+                        type="xs:nonNegativeInteger" />
+          <xs:attribute name="latc_delay" use="required" 
+                        type="xs:nonNegativeInteger" />
+          <xs:attribute name="delay" use="required" 
+                        type="xs:nonNegativeInteger" />
+          <xs:attribute name="strobe" use="required" type="on_off" />
+          <xs:attribute name="zero_suppress" use="required" type="on_off" />
+        </xs:extension>
+       </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+<!-- ci dictionaries are a special kind of ancillary file -->
+  <xs:complexType name="ciDictType" >
+    <xs:complexContent >
+      <xs:extension base="ancFileType" >
+        <xs:attribute name="dict_key" type="xs:Name" use="required" />
+        <xs:attribute name="step_size" 
+                      type="xs:positiveInteger" default="1"  />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+<!--
+   <xs:simpleType name="listLoopField" >
+     <xs:restriction base="xs:string" >
+       <xs:pattern value="LATC" />
+       <xs:pattern value="[1-9][0-9]*" />
+       <xs:pattern value="0" />
+     </xs:restriction>
+   </xs:simpleType>
+-->
+  <!-- arbitrary number of fields (at least 1) separated by ":" Contents
+       of field may be either the string LATC or a non-negative integer -->
+
+  <xs:simpleType name="listLoopType" >
+    <xs:restriction base="xs:token" >
+      <xs:pattern 
+        value="([1-9][0-9]*|0|LATC)(:(LATC|[1-9][0-9]*|0))*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+<!-- Three fields separated by : First two are nonneg. integer; third
+     may be any integer -->
+  <xs:simpleType name="rangeLoopType" >
+    <xs:restriction base = "xs:token" >
+      <xs:pattern value="(([1-9][0-9]*|0):){2}(-?[1-9][0-9]*|0)" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ACD_iterableName">
+    <xs:restriction base="xs:Name" >
+      <xs:enumeration value="ACD_inject" />
+      <xs:enumeration value="ACD_pha" />
+      <xs:enumeration value="ACD_veto" />
+      <xs:enumeration value="ACD_bias" />
+      <xs:enumeration value="ACD_hold_delay" />
+      <xs:enumeration value="ACD_hitmap_delay" />
+      <xs:enumeration value="ACD_read_range" />
+      <xs:enumeration value="ACD_veto_vernier" />
+      <xs:enumeration value="ACD_hld" />
+      <xs:enumeration value="ACD_channel" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="ACD_listLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="listLoopType" >
+          <xs:attribute name="param" use="required" type="ACD_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_rangeLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="rangeLoopType" >
+          <xs:attribute name="param" use="required" type="ACD_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="CAL_iterableName">
+    <xs:restriction base="xs:Name" >
+      <xs:enumeration value="CAL_auto_range" />
+      <xs:enumeration value="CAL_first_range" />
+      <xs:enumeration value="CAL_column" />
+      <xs:enumeration value="CAL_trigger.low" />
+      <xs:enumeration value="CAL_trigger.high" />
+      <xs:enumeration value="CAL_tack" />
+      <xs:enumeration value="CAL_gain.low" />
+      <xs:enumeration value="CAL_gain.high" />
+      <xs:enumeration value="CAL_range_enab.low" />
+      <xs:enumeration value="CAL_range_enab.high" />
+      <xs:enumeration value="CAL_trig_enab.low" />
+      <xs:enumeration value="CAL_trig_enab.high" />
+      <xs:enumeration value="CAL_calib_enab.low" />
+      <xs:enumeration value="CAL_calib_enab.high" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="CAL_listLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="listLoopType" >
+          <xs:attribute name="param" use="required" type="CAL_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CAL_rangeLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="rangeLoopType" >
+          <xs:attribute name="param" use="required" type="CAL_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="TKR_iterableName">
+    <xs:restriction base="xs:Name" >
+      <xs:enumeration value="TKR_channel" />
+      <xs:enumeration value="TKR_threshold" />
+      <xs:enumeration value="TKR_inject" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="TKR_listLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="listLoopType" >
+          <xs:attribute name="param" use="required" type="TKR_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="TKR_rangeLoop">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="rangeLoopType" >
+          <xs:attribute name="param" use="required" type="TKR_iterableName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_iterables" >
+    <xs:complexType >
+      <xs:sequence>
+        <xs:element name="ACD_inject" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="ACD_pha" type="iterableType" default="LATC" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_veto" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="ACD_bias" type="iterableType" default="LATC" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_hold_delay" type="iterableType" default="LATC" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_hitmap_delay" type="iterableType" 
+                    default="LATC" minOccurs="0"/>
+        <xs:element name="ACD_read_range" type="iterableType" 
+                    default="LATC" minOccurs="0"/>
+        <xs:element name="ACD_veto_vernier" type="iterableType" 
+                    default="LATC" minOccurs="0"/>
+        <xs:element name="ACD_hld" type="iterableType" 
+                    default="LATC" minOccurs="0"/>
+        <xs:element name="ACD_channel" type="iterableType" 
+                    default="LATC" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_rangeDict" >
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:Name">
+          <xs:attribute name='param' use='required' type='ACD_iterableName' />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CAL_rangeDict" >
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:Name">
+          <xs:attribute name='param' use='required' type='CAL_iterableName' />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="TKR_rangeDict" >
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:Name">
+          <xs:attribute name='param' use='required' type='TKR_iterableName' />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="ACD_LCI" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="script" />
+        <xs:element ref="ACD_iterables" />
+        <xs:element ref="ACD_LCI-anc" />
+        <xs:element ref="ACD_lci_loop" maxOccurs="unbounded" />
+        <xs:element ref="ACD_LCI-param" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_LCI-anc" >
+    <xs:complexType>
+      <xs:sequence minOccurs="0" >
+        <xs:element name="acd_ACD_veto_dict" type="ciDictType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_LCI-param" >
+    <xs:complexType>
+      <xs:all minOccurs="0" >
+        <xs:element name="lci_ACD" type="paramFileType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ACD_lci_loop" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ACD_rangeLoop"  minOccurs="0" />
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="ACD_lci_loop" />
+          <xs:element ref="ACD_listLoop" />
+        </xs:choice>
+        <xs:element ref="ACD_rangeDict" minOccurs="0"/>
+        <xs:element ref="lci_parameters" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="loop_id" type="xs:Name" use="required" />
+    </xs:complexType>
+  </xs:element>
+    
+
+
  <xs:element name="PRECINCT_INTENT">
     <xs:annotation>
       <xs:documentation> Root element for specifying
@@ -1414,11 +1743,11 @@
     <xs:complexType>
       <xs:choice>
         <xs:element ref="ACD_Mode"  />
+        <xs:element ref="ACD_Timing"  />
         <xs:element ref="ACD_Bias"  />
         <xs:element ref="ACD_Hld"  />
         <xs:element ref="ACD_PHA"  />
         <xs:element ref="ACD_Veto"  />
-        <xs:element ref="ACD_Timing"  />
 
         <xs:element ref="CAL_Mode"  />
         <xs:element ref="CAL_Timing"  />
@@ -1438,60 +1767,61 @@
         <xs:element ref="GNL_Mode"  />
         <xs:element ref="GNL_Timing"  />
 
+        <xs:element ref="ACD_LCI" />
       </xs:choice>
     </xs:complexType>
 
-  <xs:unique name="ACD_Mode-anc-key" >
-    <xs:selector xpath="ACD_Mode/*/*" /> 
-    <xs:field xpath="@nickname" />
-  </xs:unique>
+    <xs:unique name="ACD_Mode-anc-key" >
+      <xs:selector xpath="ACD_Mode/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
 
-  <xs:keyref name="ACD_Mode-anc-keyref" refer="ACD_Mode-anc-key" >
-    <xs:selector xpath="ACD_Mode/ACD_Mode-param/*/ancRef" />
-    <xs:field   xpath="@refTo" />
-  </xs:keyref>
+    <xs:keyref name="ACD_Mode-anc-keyref" refer="ACD_Mode-anc-key" >
+      <xs:selector xpath="ACD_Mode/ACD_Mode-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
 
-  <xs:unique name="ACD_Bias-anc-key" >
-    <xs:selector xpath="ACD_Bias/*/*" /> 
-    <xs:field xpath="@nickname" />
-  </xs:unique>
+    <xs:unique name="ACD_Bias-anc-key" >
+      <xs:selector xpath="ACD_Bias/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
 
-  <xs:keyref name="ACD_Bias-anc-keyref" refer="ACD_Bias-anc-key" >
-    <xs:selector xpath="ACD_Bias/ACD_Bias-param/*/ancRef" />
-    <xs:field   xpath="@refTo" />
-  </xs:keyref>
+    <xs:keyref name="ACD_Bias-anc-keyref" refer="ACD_Bias-anc-key" >
+      <xs:selector xpath="ACD_Bias/ACD_Bias-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
 
-  <xs:unique name="ACD_Hld-anc-key" >
-    <xs:selector xpath="ACD_Hld/*/*" /> 
-    <xs:field xpath="@nickname" />
-  </xs:unique>
+    <xs:unique name="ACD_Hld-anc-key" >
+      <xs:selector xpath="ACD_Hld/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
 
-  <xs:keyref name="ACD_Hld-anc-keyref" refer="ACD_Hld-anc-key" >
-    <xs:selector xpath="ACD_Hld/ACD_Hld-param/*/ancRef" />
-    <xs:field   xpath="@refTo" />
-  </xs:keyref>
+    <xs:keyref name="ACD_Hld-anc-keyref" refer="ACD_Hld-anc-key" >
+      <xs:selector xpath="ACD_Hld/ACD_Hld-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
 
-  <xs:unique name="ACD_PHA-anc-key" >
-    <xs:selector xpath="ACD_PHA/*/*" /> 
-    <xs:field xpath="@nickname" />
-  </xs:unique>
+    <xs:unique name="ACD_PHA-anc-key" >
+      <xs:selector xpath="ACD_PHA/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
 
-  <xs:keyref name="ACD_PHA-anc-keyref" refer="ACD_PHA-anc-key" >
-    <xs:selector xpath="ACD_PHA/ACD_PHA-param/*/ancRef" />
-    <xs:field   xpath="@refTo" />
-  </xs:keyref>
+    <xs:keyref name="ACD_PHA-anc-keyref" refer="ACD_PHA-anc-key" >
+      <xs:selector xpath="ACD_PHA/ACD_PHA-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
 
-  <xs:unique name="ACD_Veto-anc-key" >
-    <xs:selector xpath="ACD_Veto/*/*" /> 
-    <xs:field xpath="@nickname" />
-  </xs:unique>
+    <xs:unique name="ACD_Veto-anc-key" >
+      <xs:selector xpath="ACD_Veto/*/*" /> 
+      <xs:field xpath="@nickname" />
+    </xs:unique>
 
-  <xs:keyref name="ACD_Veto-anc-keyref" refer="ACD_Veto-anc-key" >
-    <xs:selector xpath="ACD_Veto/ACD_Veto-param/*/ancRef" />
-    <xs:field   xpath="@refTo" />
-  </xs:keyref>
+    <xs:keyref name="ACD_Veto-anc-keyref" refer="ACD_Veto-anc-key" >
+      <xs:selector xpath="ACD_Veto/ACD_Veto-param/*/ancRef" />
+      <xs:field   xpath="@refTo" />
+    </xs:keyref>
 
-   <xs:unique name="ACD_Timing-anc-key" >
+    <xs:unique name="ACD_Timing-anc-key" >
       <xs:selector xpath="ACD_Timing/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1502,7 +1832,7 @@
     </xs:keyref>
 
 
-   <xs:unique name="CAL_Mode-anc-key" >
+    <xs:unique name="CAL_Mode-anc-key" >
       <xs:selector xpath="CAL_Mode/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1512,7 +1842,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="CAL_Timing-anc-key" >
+    <xs:unique name="CAL_Timing-anc-key" >
       <xs:selector xpath="CAL_Timing/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1522,7 +1852,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="CAL_LAC-anc-key" >
+    <xs:unique name="CAL_LAC-anc-key" >
       <xs:selector xpath="CAL_LAC/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1532,7 +1862,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="CAL_FLE-anc-key" >
+    <xs:unique name="CAL_FLE-anc-key" >
       <xs:selector xpath="CAL_FLE/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1542,7 +1872,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="CAL_FHE-anc-key" >
+    <xs:unique name="CAL_FHE-anc-key" >
       <xs:selector xpath="CAL_FHE/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1552,7 +1882,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="CAL_ULD-anc-key" >
+    <xs:unique name="CAL_ULD-anc-key" >
       <xs:selector xpath="CAL_ULD/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1562,7 +1892,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TKR_Mode-anc-key" >
+    <xs:unique name="TKR_Mode-anc-key" >
       <xs:selector xpath="TKR_Mode/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1572,7 +1902,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TKR_Timing-anc-key" >
+    <xs:unique name="TKR_Timing-anc-key" >
       <xs:selector xpath="TKR_Timing/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1582,7 +1912,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TKR_Strips-anc-key" >
+    <xs:unique name="TKR_Strips-anc-key" >
       <xs:selector xpath="TKR_Strips/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1592,7 +1922,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TKR_Thresh-anc-key" >
+    <xs:unique name="TKR_Thresh-anc-key" >
       <xs:selector xpath="TKR_Thresh/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1602,7 +1932,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TRG_GEM-anc-key" >
+    <xs:unique name="TRG_GEM-anc-key" >
       <xs:selector xpath="TRG_GEM/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1612,7 +1942,7 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-   <xs:unique name="TRG_ROI-anc-key" >
+    <xs:unique name="TRG_ROI-anc-key" >
       <xs:selector xpath="TRG_ROI/*/*" /> 
       <xs:field xpath="@nickname" />
     </xs:unique>
@@ -1642,7 +1972,22 @@
       <xs:field   xpath="@refTo" />
     </xs:keyref>
 
-  </xs:element> 
+    <xs:key name="ACD_LCI_dict-key" >
+      <xs:selector xpath="ACD_LCI/ACD_LCI-anc/*" />
+      <xs:field xpath="@nickname" />
+    </xs:key>
+
+    <xs:key name="ACD_loop_id-key" >
+      <xs:selector xpath=".//ACD_lci_loop" />
+      <xs:field xpath="@loop_id" />
+    </xs:key>
+
+    <xs:keyref name="ACD_LCI_dictRange-keyref" refer="ACD_LCI_dict-key" >
+      <xs:selector xpath=".//ACD_lci_loop" />
+      <xs:field xpath="ACD_rangeDict" />
+    </xs:keyref>
+
+  </xs:element>
 
 <!-- Stuff for global (container) intent: a list of vote file aliases for all
      precincts.  These come in two flavors:  LPA_INTENT and LCI_INTENT
@@ -1675,13 +2020,16 @@
   <xs:element name="LPA_INTENT" >
     <xs:annotation>
       <xs:documentation> Root element for fully specifying
-         LAT configuration intent
+         LAT configuration intent for physics running.
       </xs:documentation>
     </xs:annotation> 
     <xs:complexType>
-      <xs:all>
-        <xs:element name="description" type="xs:string" minOccurs="0"  />
-        <xs:element ref="method"    minOccurs="0"   />
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="description" type="xs:string"   />
+          <xs:element ref="method"   />
+        </xs:choice>
+  
         <xs:element name="ACD_Mode-vote" type="voteFileType"  />
         <xs:element name="ACD_Timing-vote" type="voteFileType" />
         <xs:element name="ACD_Bias-vote" type="voteFileType" />
@@ -1702,9 +2050,60 @@
         <xs:element name="TRG_ROI-vote" type="voteFileType"  />
         <xs:element name="GNL_Mode-vote" type="voteFileType"  />
         <xs:element name="GNL_Timing-vote" type="voteFileType" />
-      </xs:all>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="LCI_INTENT" >
+    <xs:annotation>
+      <xs:documentation> Root element for fully specifying
+         LAT configuration intent for a charge calibration run
+      </xs:documentation>
+    </xs:annotation> 
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="description" type="xs:string"   />
+          <xs:element ref="method"   />
+        </xs:choice>
+        <xs:choice>
+          <xs:element name="ACD_LCI-vote" type="voteFileType"  />
+          <xs:element name="CAL_LCI-vote" type="voteFileType"  />
+          <xs:element name="TKR_LCI-vote" type="voteFileType"  />
+        </xs:choice>
+        <xs:element name="ACD_Mode-vote" type="voteFileType"  />
+        <xs:element name="ACD_Timing-vote" type="voteFileType" />
+        <xs:element name="ACD_Bias-vote" type="voteFileType" />
+        <xs:element name="ACD_PHA-vote" type="voteFileType"  />
+        <xs:element name="ACD_Hld-vote" type="voteFileType"  />
+        <xs:element name="ACD_Veto-vote" type="voteFileType"  />
+        <xs:element name="CAL_Mode-vote" type="voteFileType"  />
+        <xs:element name="CAL_Timing-vote" type="voteFileType" />
+        <xs:element name="CAL_LAC-vote" type="voteFileType"  />
+        <xs:element name="CAL_FLE-vote" type="voteFileType"  />
+        <xs:element name="CAL_FHE-vote" type="voteFileType" />    
+        <xs:element name="CAL_ULD-vote" type="voteFileType" /> 
+        <xs:element name="TKR_Mode-vote" type="voteFileType" />
+        <xs:element name="TKR_Timing-vote" type="voteFileType" />
+        <xs:element name="TKR_Thresh-vote" type="voteFileType" />
+        <xs:element name="TKR_Strips-vote" type="voteFileType" />
+        <xs:element name="TRG_GEM-vote" type="voteFileType"  />
+        <xs:element name="TRG_ROI-vote" type="voteFileType"  />
+        <xs:element name="GNL_Mode-vote" type="voteFileType"  />
+        <xs:element name="GNL_Timing-vote" type="voteFileType" />
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
 
 
+
+<!-- Still to do:  
+     lci_loop, -anc and -param containters for for CAL and TKR
+     top level elements CAL_LCI, TKR_LCI  (did ACD)
+
+     Constraints on ancRef children of ..-param, referring to dict nickname
+     for CAL, TKR
+
+     definition of global LCI (container) elements
+ -->
 </xs:schema>
