@@ -114,9 +114,12 @@ void BackgroundSelection::selectEvent()
     // grab the next event, cycling if needed
     //Long64_t code = m_inputTree->LoadTree(m_eventOffset++);
     int code = m_inputTree->GetEntry(m_eventOffset++);
-    if( code<0){ m_eventOffset = 0; 
+    if( code <= 0)
+    { 
+        m_eventOffset = 0; 
         code = m_inputTree->LoadTree(m_eventOffset++);
-        if( code < 0 ){
+        if( code <= 0 )
+        {
             throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
         }
     }
