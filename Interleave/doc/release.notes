@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+28-Jun-07 v1r4p1 TU  Change test on GetEntry return code
 27-Jun-07 v1r4   TU  Change job options strategy with this release for interleave
 15-Jun-07 v1r3p1 TU  Forgot to modify xml files... source "name" must match that in source_library.xml
 15-Jun-07 v1r3   TU  Modifications to read source selected by FluxAlg and add offset to input source id
