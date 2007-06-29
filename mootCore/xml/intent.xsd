@@ -1501,18 +1501,8 @@
     </xs:complexContent>
   </xs:complexType>
 
-<!--
-   <xs:simpleType name="listLoopField" >
-     <xs:restriction base="xs:string" >
-       <xs:pattern value="LATC" />
-       <xs:pattern value="[1-9][0-9]*" />
-       <xs:pattern value="0" />
-     </xs:restriction>
-   </xs:simpleType>
--->
   <!-- arbitrary number of fields (at least 1) separated by ":" Contents
        of field may be either the string LATC or a non-negative integer -->
-
   <xs:simpleType name="listLoopType" >
     <xs:restriction base="xs:token" >
       <xs:pattern 
@@ -1580,6 +1570,7 @@
       <xs:enumeration value="CAL_trig_enab.high" />
       <xs:enumeration value="CAL_calib_enab.low" />
       <xs:enumeration value="CAL_calib_enab.high" />
+      <xs:enumeration value="CAL_inject" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -1658,6 +1649,56 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="CAL_iterables" >
+    <xs:complexType >
+      <xs:sequence>
+        <xs:element name="CAL_auto_range" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_first_range" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_column" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_trigger.low" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_trigger.high" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_tack" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_gain.low" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_gain.high" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+        <xs:element name="CAL_range_enab.low" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_range_enab.high" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_trig_enab.low" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_trig_enab.high" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_calib_enab.low" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_calib_enab.high" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="CAL_inject" type="iterableType" default="LATC" 
+                    minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="TKR_iterables" >
+    <xs:complexType >
+      <xs:sequence>
+        <xs:element name="TKR_channel" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="TKR_threshold" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+        <xs:element name="TKR_inject" type="iterableType" 
+                    default="LATC" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="ACD_rangeDict" >
     <xs:complexType>
       <xs:simpleContent>
@@ -1701,6 +1742,31 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="CAL_LCI" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="script" />
+        <xs:element ref="CAL_iterables" />
+        <xs:element ref="CAL_LCI-anc" />
+        <xs:element ref="CAL_lci_loop" maxOccurs="unbounded" />
+        <xs:element ref="CAL_LCI-param" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="TKR_LCI" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="script" />
+        <xs:element ref="TKR_iterables" />
+        <xs:element ref="TKR_LCI-anc" />
+        <xs:element ref="TKR_lci_loop" maxOccurs="unbounded" />
+        <xs:element ref="TKR_LCI-param" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
   <xs:element name="ACD_LCI-anc" >
     <xs:complexType>
       <xs:sequence minOccurs="0" >
@@ -1709,6 +1775,10 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="CAL_LCI-anc" type="emptyBaseType" />
+
+  <xs:element name="TKR_LCI-anc" type="emptyBaseType" />
+
   <xs:element name="ACD_LCI-param" >
     <xs:complexType>
       <xs:all minOccurs="0" >
@@ -1716,6 +1786,23 @@
       </xs:all>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="CAL_LCI-param" >
+    <xs:complexType>
+      <xs:all minOccurs="0" >
+        <xs:element name="lci_CAL" type="paramFileType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="TKR_LCI-param" >
+    <xs:complexType>
+      <xs:all minOccurs="0" >
+        <xs:element name="lci_TKR" type="paramFileType" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
 
   <xs:element name="ACD_lci_loop" >
     <xs:complexType>
@@ -1726,6 +1813,36 @@
           <xs:element ref="ACD_listLoop" />
         </xs:choice>
         <xs:element ref="ACD_rangeDict" minOccurs="0"/>
+        <xs:element ref="lci_parameters" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="loop_id" type="xs:Name" use="required" />
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="CAL_lci_loop" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAL_rangeLoop"  minOccurs="0" />
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="CAL_lci_loop" />
+          <xs:element ref="CAL_listLoop" />
+        </xs:choice>
+        <xs:element ref="CAL_rangeDict" minOccurs="0"/>
+        <xs:element ref="lci_parameters" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="loop_id" type="xs:Name" use="required" />
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="TKR_lci_loop" >
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TKR_rangeLoop"  minOccurs="0" />
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="TKR_lci_loop" />
+          <xs:element ref="TKR_listLoop" />
+        </xs:choice>
+        <xs:element ref="TKR_rangeDict" minOccurs="0"/>
         <xs:element ref="lci_parameters" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="loop_id" type="xs:Name" use="required" />
@@ -1768,6 +1885,8 @@
         <xs:element ref="GNL_Timing"  />
 
         <xs:element ref="ACD_LCI" />
+        <xs:element ref="CAL_LCI" />
+        <xs:element ref="TKR_LCI" />
       </xs:choice>
     </xs:complexType>
 
@@ -1977,15 +2096,27 @@
       <xs:field xpath="@nickname" />
     </xs:key>
 
-    <xs:key name="ACD_loop_id-key" >
-      <xs:selector xpath=".//ACD_lci_loop" />
-      <xs:field xpath="@loop_id" />
-    </xs:key>
 
     <xs:keyref name="ACD_LCI_dictRange-keyref" refer="ACD_LCI_dict-key" >
       <xs:selector xpath=".//ACD_lci_loop" />
       <xs:field xpath="ACD_rangeDict" />
     </xs:keyref>
+
+    <xs:key name="ACD_loop_id-key" >
+      <xs:selector xpath=".//ACD_lci_loop" />
+      <xs:field xpath="@loop_id" />
+    </xs:key>
+
+    <xs:key name="CAL_loop_id-key" >
+      <xs:selector xpath=".//CAL_lci_loop" />
+      <xs:field xpath="@loop_id" />
+    </xs:key>
+
+    <xs:key name="TKR_loop_id-key" >
+      <xs:selector xpath=".//TKR_lci_loop" />
+      <xs:field xpath="@loop_id" />
+    </xs:key>
+
 
   </xs:element>
 
