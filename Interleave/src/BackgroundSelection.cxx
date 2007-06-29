@@ -117,7 +117,7 @@ void BackgroundSelection::selectEvent()
     if( code <= 0)
     { 
         m_eventOffset = 0; 
-        code = m_inputTree->LoadTree(m_eventOffset++);
+        code = m_inputTree->GetEntry(m_eventOffset++);
         if( code <= 0 )
         {
             throw std::runtime_error("BackgroundSelection::selectEvent -- could not read file");
