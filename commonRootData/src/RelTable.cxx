@@ -32,6 +32,9 @@ RelTable::~RelTable() {
 
 void RelTable::initialize(UInt_t nEvent, UInt_t nRun)
 {
+    Clear();
+    m_table = new TObjArray();
+
     m_eventId = nEvent;
     m_runId   = nRun;
 }
