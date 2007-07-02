@@ -24,6 +24,8 @@ create table Configs
     COMMENT 'which step if part of multi-step algorithm', 
   description            VARCHAR(255) NOT NULL,
   FOREIGN KEY(vote_fk) REFERENCES Votes (vote_key)
+  ON DELETE SET NULL
+  ON UPDATE CASCADE
  ) TYPE=InnoDB 
 COMMENT='A row corresponds to a particular LAT configuration';
 
