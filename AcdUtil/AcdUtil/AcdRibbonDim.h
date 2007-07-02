@@ -4,18 +4,12 @@
 #include <vector>
 
 #include "GaudiKernel/StatusCode.h"
-#include "CLHEP/Geometry/Point3D.h"
 #include "idents/AcdId.h"
-#include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
+#include "geometry/Ray.h"
 
-class IGlastDetSvc;
-
-#ifndef HepPoint3D
-typedef HepGeom::Point3D<double> HepPoint3D;
-#endif
 
 /**
 *  @class AcdRibbonDim
@@ -30,40 +24,38 @@ typedef HepGeom::Point3D<double> HepPoint3D;
 */
 
 class AcdRibbonDim {
-
-public:
-    
-  /// This function gets information about the ribbons from the detector service
-  StatusCode getDetectorDimensions( int isegment, 
-				    const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc,
-				    std::vector<double>& dim, HepPoint3D& center);
   
 public:
     
   /// Constructor: takes the tile id, the volume id, and the detector service
-  AcdRibbonDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc);
+  AcdRibbonDim(const idents::AcdId& acdId, IAcdGeometrySvc& acdGeomSvc);
   
   /// trivial destructor  
   ~AcdRibbonDim() {;}
 
   /// update (ie, when we get a new event)
-  StatusCode update(IGlastDetSvc &detSvc) {
-    m_detSvc = detSvc;
-    m_sc = getVals();
+  StatusCode update(IAcdGeometrySvc& acdGeomSvc) {
+    bool newVals(true);
+    m_acdGeomSvc = acdGeomSvc;
+    if ( newVals ) {
+      m_sc = getVals();
+    }
     return m_sc;
   }
 
   /// direct access functions
-  inline IGlastDetSvc& detSvc() const { return m_detSvc; }
+  inline IAcdGeometrySvc& acdGeomSvc() const { return m_acdGeomSvc; }
   inline const idents::AcdId& acdId() const { return m_acdId; }
-  inline const idents::VolumeIdentifier& volId() const { return m_volId; }
-  inline const idents::VolumeIdentifier* segId() const { return m_segId; }
-  inline const HepPoint3D* ribbonStart() const { return m_start; }
-  inline const HepPoint3D* ribbonEnd() const { return m_end; }
-  inline const double* halfWidth() const { return m_halfWidth; }
-  inline StatusCode statusCode() const { return m_sc; }
 
-  void toLocal(const HepPoint3D& global, int segment, HepPoint3D& local);
+  inline double halfWidth() const { return m_halfWidth; }
+  inline StatusCode statusCode() const { return m_sc; }
+  inline const std::vector<Ray>& minusSideRays() const { return m_minusSideRays; }     
+  inline const std::vector<Ray>& topRays() const { return m_topRays; }      
+  inline const std::vector<Ray>& plusSideRays() const { return m_plusSideRays; }        
+
+  inline bool setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) const;
+
+  void toLocal(const HepPoint3D& global, int segment, HepPoint3D& local) const;
 
 protected:
 
@@ -73,32 +65,27 @@ protected:
 private:  
 
   /// The tile id
-  const idents::AcdId             m_acdId;
+  const idents::AcdId       m_acdId;
 
-  /// The volume id -> this is the key for the detector service
-  const idents::VolumeIdentifier  m_volId;
-
-  /// The detector service
-  IGlastDetSvc&             m_detSvc;
+  /// ACD Geom Service      
+  IAcdGeometrySvc&          m_acdGeomSvc;
 
   /// This show the status of the access to the detector service, should be checked before using data
   StatusCode                m_sc;
 
-  /// The volume ids for the segments -> these are more keys for the detector service
-  idents::VolumeIdentifier  m_segId[3];
-
-  /// the start points of the segments (in global coordinates)
-  HepPoint3D                m_start[3];
-  
-  /// the end points of the segments (in global coordinates)
-  HepPoint3D                m_end[3];
-
   /// the transformations to local coords
-  HepTransform3D            m_transform[3];
+  HepTransform3D            m_minusSideTransform;  
+  HepTransform3D            m_topTransform;
+  HepTransform3D            m_plusSideTransform;
 
   /// size of the ribbons
-  double                    m_halfWidth[3];
-
+  double                    m_halfWidth;
+  
+  /// The various rays
+  std::vector<Ray>          m_minusSideRays;
+  std::vector<Ray>          m_topRays;
+  std::vector<Ray>          m_plusSideRays;         
+ 
 };
    
 

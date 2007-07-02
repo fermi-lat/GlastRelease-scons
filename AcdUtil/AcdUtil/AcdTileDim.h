@@ -9,7 +9,7 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
 /**
@@ -38,29 +38,23 @@ public:
 public:
     
   /// Constructor: takes the tile id, the volume id, and the detector service
-  AcdTileDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volId, IGlastDetSvc &detSvc);
-
-  /// Constructor: takes the tile id, both volume id, and the detector service
-  AcdTileDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volIdMain, const idents::VolumeIdentifier& volIdOther, IGlastDetSvc &detSvc);
+  AcdTileDim(const idents::AcdId& acdId, IAcdGeometrySvc& acdGeomSvc);
   
   /// trivial destructor
   ~AcdTileDim() {;}
 
   /// update (ie, when we get a new event)
-  StatusCode update(IGlastDetSvc &detSvc) {
-    m_detSvc = detSvc;
+  StatusCode update(IAcdGeometrySvc& acdGeomSvc) {
+    m_acdGeomSvc = acdGeomSvc;
     m_sc = getVals();
     return m_sc;
   }
 
   /// direct access functions
-  inline IGlastDetSvc& detSvc() const { return m_detSvc; }
-  inline int nVol() const { return m_nVol; }
+  inline IAcdGeometrySvc& acdGeomSvc() const { return m_acdGeomSvc; }
   inline const idents::AcdId& acdId() const { return m_acdId; }
-  inline const idents::VolumeIdentifier& volId(int idx = 0) const { 
-    assert(idx < m_nVol);
-    return m_volId[idx]; 
-  }
+  inline StatusCode statusCode() const { return m_sc; }
+  inline int nVol() const { return m_nVol; }
   inline const std::vector<double>& dim(int idx = 0) const { 
     assert(idx < m_nVol);
     return m_dim[idx]; 
@@ -73,7 +67,6 @@ public:
     assert(idx < m_nVol);
     return m_corners[idx]; 
   }
-  inline StatusCode statusCode() const { return m_sc; }
 
   inline int sharedEdge(int idx) const { 
     assert(idx < m_nVol);
@@ -87,7 +80,7 @@ public:
 
   inline int face(int idx) const {
     assert(idx < m_nVol);
-    return (m_volId[idx])[1];    
+    return m_face[idx];    
   }
 
   inline const std::vector< HepPoint3D > screwHoles() const {
@@ -104,20 +97,17 @@ protected:
 private:  
 
   /// The tile id
-  const idents::AcdId             m_acdId;
+  const idents::AcdId       m_acdId;
 
-  /// The number of volumes in this tile
-  const int                 m_nVol;
-
-  /// The volume id -> this is the key for the detector service
-  idents::VolumeIdentifier  m_volId[2];
-  
-  /// The detector service
-  IGlastDetSvc&             m_detSvc;
+  /// ACD Geom Service
+  IAcdGeometrySvc&          m_acdGeomSvc;
 
   /// This show the status of the access to the detector service, should be checked before using data
   StatusCode                m_sc;
 
+  /// The number of volumes in this tile
+  int                       m_nVol;
+  
   /// the tile dimensions
   std::vector<double>       m_dim[2];
 
@@ -133,6 +123,9 @@ private:
   /// which (if any) edges are shared between tiles:
   int                       m_shared[2];
   
+  /// which face is the volume on
+  int                       m_face[2];
+
   /// width extra of extra volume in curved tiles
   float                     m_sharedWidth[2];
 

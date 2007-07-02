@@ -77,10 +77,37 @@ public:
     const Ray getCornerGapRay(unsigned int index) const;
 
     /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
-    bool fillRibbonRays(idents::AcdId& id,
+    bool fillRibbonRays(const idents::AcdId& id,
                  std::vector<Ray>& minusSideRays,
                  std::vector<Ray>& topRays,
                  std::vector<Ray>& plusSideRays, bool increasing = true);
+
+    /// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
+    virtual bool fillRibbonTransform(int face,
+				     const Ray& ribbon,
+				     HepTransform3D& transform);
+
+    virtual double ribbonHalfWidth() const;
+
+    /// Given an AcdId, provide the tile size, center and corners
+    virtual bool fillTileData(const idents::AcdId& id, int iVol,
+			      std::vector<double>& dim, 
+			      HepPoint3D& center,
+			      HepPoint3D* corner);
+
+    /// Given an AcdId, provide transform to tile frame
+    virtual bool fillTileTransform(const idents::AcdId& id, int iVol,
+				   HepTransform3D& transform);
+
+    /// Given an AcdId, provide positions of screw holes in local frame
+    virtual bool fillScrewHoleData(const idents::AcdId& id, std::vector< HepPoint3D >& screwHoles);
+
+    /// Given an AcdId, provide information about which volume edges are shared
+    virtual bool fillTileSharedEdgeData(const idents::AcdId& id, 
+					const std::vector<double>& dim1, const std::vector<double>& dim1,
+					int& sharedEdge1, int& sharedEdge2,
+					float& sharedWidth1, float& sharedWidth2);
+
 
 private:
 

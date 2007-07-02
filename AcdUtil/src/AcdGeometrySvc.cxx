@@ -471,7 +471,7 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     return sc;
 }
 
-bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSideRays, std::vector<Ray>& topRays,
+bool AcdGeometrySvc::fillRibbonRays(const idents::AcdId& id, std::vector<Ray>& minusSideRays, std::vector<Ray>& topRays,
                                     std::vector<Ray>& plusSideRays, bool increasing)
 {
     // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
@@ -578,5 +578,91 @@ bool AcdGeometrySvc::fillRibbonRays(idents::AcdId& id, std::vector<Ray>& minusSi
     } // end face for
 
     return retVal;
+}
+
+
+/// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
+bool AcdGeometrySvc::fillRibbonTransform(int /* face */,
+					 const Ray& /* ribbon */,
+					 HepTransform3D& transform)
+{
+  transform.setIdentity();  
+  return true;
+}
+
+double AcdGeometrySvc::ribbonHalfWidth() const 
+{
+  // FIXME (do this right)
+  return 3.0;
+}
+
+/// Given an AcdId, provide the tile size, center and corners
+bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
+				  std::vector<double>& dim, 
+				  HepPoint3D& center,
+				  HepPoint3D* corner)
+{
+  idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
+  idents::VolumeIdentifier volId = ncid.volId(iVol==1);
+  StatusCode sc = getDimensions(volId,dim,center);
+  if (sc.isFailure() ) {
+    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+    return false;
+  } 
+  sc = getCorners(dim,center,corner);
+  if (sc.isFailure() ) {
+    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+    return false;
+  } 
+  return true;
+}
+
+/// Given an AcdId, provide transform to tile frame
+bool AcdGeometrySvc::fillTileTransform(const idents::AcdId& id, int iVol,
+				       HepTransform3D& transform)
+{
+  idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
+  idents::VolumeIdentifier volId = ncid.volId(iVol==1);
+  StatusCode sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+  if (sc.isFailure() ) {
+    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+    return false;
+  } 
+}
+
+/// Given an AcdId, provide positions of screw holes in local frame
+bool AcdGeometrySvc::fillScrewHoleData(const idents::AcdId& /* id */, 
+				       std::vector< HepPoint3D >& /* screwHoles */) 
+{
+  // FIXME (do something)
+  return true;
+}
+
+/// Given an AcdId, provide information about which volume edges are shared
+bool AcdGeometrySvc::fillTileSharedEdgeData(const idents::AcdId& id, 
+					    const std::vector<double>& dim1, const std::vector<double>& dim2,
+					    int& sharedEdge1, int& sharedEdge2,
+					    float& sharedWidth1, float& sharedWidth2)
+{
+  
+  sharedEdge1 = sharedEdge2 = -1;
+  sharedWidth1 = sharedWidth2 = 0.;
+  switch (id.id()) {
+  case 0: case 1: case 2: case 3: case 4:
+    sharedEdge1 = 3;
+    sharedEdge2 = 1;
+    sharedWidth1 = dim2[2];
+    sharedWidth2 = dim1[1];
+    break;
+  case 40: case 41: case 42: case 43: case 44:
+    sharedEdge1 = 1;
+    sharedEdge2 = 1;
+    sharedWidth1 = dim2[2];
+    sharedWidth2 = dim1[1];
+    break;
+  default:
+    ;
+  }
+  return true;
 }
 

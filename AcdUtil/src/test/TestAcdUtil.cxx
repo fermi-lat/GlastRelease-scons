@@ -137,15 +137,16 @@ StatusCode TestAcdUtil::execute() {
 
         if (acdId.ribbon()) {
             // Test Creation of RibbonDim
-            AcdRibbonDim ribbonDim(acdId, volid, *m_glastDetSvc);
-            const HepPoint3D* start = ribbonDim.ribbonStart();
-            const HepPoint3D* end = ribbonDim.ribbonEnd();
-            const double* halfWidth = ribbonDim.halfWidth();
+	    AcdRibbonDim ribbonDim(acdId,*m_acdGeoSvc);
+            //const HepPoint3D* start = ribbonDim.ribbonStart();
+            //const HepPoint3D* end = ribbonDim.ribbonEnd();
+            //const double* halfWidth = ribbonDim.halfWidth();
      
-            log << MSG::DEBUG << "ID: " << acdId.id() << " start:(" 
-                << start[1].x() << "," << start[1].y() << "," << start[1].z()
-                << ") end:(" << end[1].x() << "," << end[1].y() << ","
-                << end[1].z() << ") halfWid: " << halfWidth[1] << std::endl;
+            log << MSG::DEBUG << "ID: " << acdId.id() << std::endl;
+	      //<< " start:(" 
+              //  << start[1].x() << "," << start[1].y() << "," << start[1].z()
+              //  << ") end:(" << end[1].x() << "," << end[1].y() << ","
+              //  << end[1].z() << ") halfWid: " << halfWidth[1] << std::endl;
 
             std::vector<Ray> minusSideRays, topRays, plusSideRays;
             m_acdGeoSvc->fillRibbonRays(acdId, minusSideRays, topRays, plusSideRays, true);

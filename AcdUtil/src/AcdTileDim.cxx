@@ -15,31 +15,52 @@
 #include "CLHEP/Geometry/Transform3D.h"
 
 /// Constructor: takes the tile id, the volume id, and the detector service
-AcdTileDim::AcdTileDim(const idents::AcdId& acdId, const idents::VolumeIdentifier& volId, 
-		       IGlastDetSvc &detSvc) 
+AcdTileDim::AcdTileDim(const idents::AcdId& acdId,  
+		       IAcdGeometrySvc& acdGeomSvc)
   :m_acdId(acdId),
-   m_nVol(1),
-   m_detSvc(detSvc) {
-  m_volId[0] = volId;
-  m_volId[1] = idents::VolumeIdentifier();
+   m_acdGeomSvc(acdGeomSvc){
   m_sc = getVals();
 }  
 
-AcdTileDim::AcdTileDim(const idents::AcdId& acdId, 
-		       const idents::VolumeIdentifier& volIdMain, 
-		       const idents::VolumeIdentifier& volIdOther, IGlastDetSvc &detSvc)
-  :m_acdId(acdId),
-   m_nVol(2),
-   m_detSvc(detSvc){
-  m_volId[0] = volIdMain;
-  m_volId[1] = volIdOther;
-  m_sc = getVals();
-}
 
 /// this function access the detector service to get the geometry information
 StatusCode AcdTileDim::getVals() {
   
-  /// get the tile dimensions
+  std::map<idents::AcdId, int>::const_iterator itrFind = m_acdGeomSvc.getAcdIdVolCountCol().find(m_acdId);
+  if ( itrFind == m_acdGeomSvc.getAcdIdVolCountCol().end() ) {
+    return StatusCode::FAILURE;
+  }
+  m_nVol = itrFind->second;
+
+  bool isOk = m_acdGeomSvc.fillScrewHoleData(m_acdId,m_screwHoles);
+  if ( ! isOk ) return StatusCode::FAILURE;
+
+  for ( int iVol(0); iVol < m_nVol; iVol++ ) {
+    isOk = m_acdGeomSvc.fillTileData(m_acdId,iVol,m_dim[iVol],m_tileCenter[iVol],m_corners[iVol]);
+    if ( ! isOk ) return StatusCode::FAILURE;
+    isOk = m_acdGeomSvc.fillTileTransform(m_acdId,iVol,m_transform[iVol]);
+    if ( ! isOk ) return StatusCode::FAILURE;
+  }
+  isOk = m_acdGeomSvc.fillTileSharedEdgeData(m_acdId,m_dim[0],m_dim[1],
+					     m_shared[0],m_shared[1],m_sharedWidth[0],m_sharedWidth[1]);
+  if ( ! isOk ) return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AcdTileDim::toLocalCoords(const AcdTileDim& dim, 
+				     int region, const double& activeX, const double& activeY,
+				     double& localX, double& localY){
+  localX = localY = 0.;
+  return StatusCode::SUCCESS;
+}
+
+void AcdTileDim::toLocal(const HepPoint3D& global, HepPoint3D& local, int idx) {
+  assert(idx < m_nVol);
+  local = m_transform[idx] * global;
+}
+
+
+/*
   std::string str;
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -104,8 +125,10 @@ StatusCode AcdTileDim::getVals() {
 
   return sc;
 }
+*/
 
 
+/*
 StatusCode AcdTileDim::getCorners(const std::vector<double> &dim, const HepPoint3D &center, HepPoint3D *corner) {
 
   // fill corner with the 4 corner points of this tile
@@ -142,16 +165,5 @@ StatusCode AcdTileDim::getCorners(const std::vector<double> &dim, const HepPoint
 
   return sc;
 } 
+*/
 
-
-StatusCode AcdTileDim::toLocalCoords(const AcdTileDim& dim, 
-				     int region, const double& activeX, const double& activeY,
-				     double& localX, double& localY){
-  localX = localY = 0.;
-  return StatusCode::SUCCESS;
-}
-
-void AcdTileDim::toLocal(const HepPoint3D& global, HepPoint3D& local, int idx) {
-  assert(idx < m_nVol);
-  local = m_transform[idx] * global;
-}
