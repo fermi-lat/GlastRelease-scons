@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+ 1-Jul-07 v1r4p3 TU  Fix test on zero kinetic energy for interleave sources
 28-Jun-07 v1r4p2 TU  Fix LoadTree vs GetEntry issue
 28-Jun-07 v1r4p1 TU  Change test on GetEntry return code
 27-Jun-07 v1r4   TU  Change job options strategy with this release for interleave
