@@ -63,8 +63,21 @@
          (name, alg, step, instr) as preferred (or not)
         </comment>
     </col>
-
-
+<!--   This column is in the dbs, but unused by code.  No need to
+        make it accessible
+    <col name="vote_fk" >
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes describing intent of this Config</comment>
+    </col>
+-->
     <col name="mode" >
       <src null="false">
         <from agent="enduser" />
@@ -317,7 +330,7 @@ version="v1r0" >
 <!-- end Precincts -->
 
 
-<!-- Instance tables: OfflineCalib, Parameters, FSW_inputs, Ancillary  -->
+<!-- Instance tables Votes, OfflineCalib, Parameters, FSW_inputs, Ancillary -->
   <table name="Votes"
      comment="Smallest interesting unit for intent" version="v1r0" >
     <col name="vote_key" >
@@ -425,6 +438,7 @@ version="v1r0" >
 
   </table>
 
+  <!--  -->
   <table name="OfflineCalib" 
     comment="metadata table for LAT calibrations" version="v2r1">
     <!-- define columns -->
@@ -1021,9 +1035,25 @@ version="v1r0" >
       <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
 
       <comment>Refers to primary key in Parameter_class table.
-          See foreign key definition below.
       </comment>
     </col>
+
+    <col name="vote_fk" >
+      <src null="false" >
+        <default value="1" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+
+      <comment>Refers to primary key in Votes table.
+      </comment>
+    </col>
+
+
 
     <col name="instrument">
       <src null="false">
@@ -1391,6 +1421,20 @@ version="v1r0" >
       <comment>XML or other form of text are likely values</comment>
     </col>
 
+    <col name="GMT_create_time" >
+      <src null="true" >
+        <from agent="enduser" /> 
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when file described by this row was created, to be
+      specified by end user.
+      </comment>
+    </col>
 
     <col name="quality" >
       <src null="false" stickyInsert="true">
@@ -1454,8 +1498,7 @@ version="v1r0" >
              it and put it in this field.
       </comment>
     </col>
-<!--
-    <col name="tower" >
+<!--    <col name="tower" >
       <src null="false" >
         <default value="-1" />
       </src>
@@ -1508,6 +1551,34 @@ version="v1r0" >
       </comment>
     </col>
 
+    <col name="active_state" >
+      <src null="false">
+        <default value="ACTIVE" />
+      </src>
+      <type typename="enum" >
+        <restriction>
+          <enum use="require" values="ACTIVE INACTIVE" />
+        </restriction>
+      </type>
+      <comment>Allows for changes in collection of usable
+             Parameter classes.
+        </comment>
+    </col>
+
+    <col name="precinct_fk">
+      <src null="true">
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>Precinct responsible for generating parameter files
+               of this class </comment>
+    </col>
+<!-- deprecated
     <col name="delegate_fk">
       <src null="true">
         <from agent="enduser" />
@@ -1520,6 +1591,7 @@ version="v1r0" >
       <fk tableName="Delegates" keyCol="delegate_key" />
       <comment>Delegate which manages this kind of Parameter</comment>
     </col>
+-->
 
     <primary col="Parameter_class_key" />
 
@@ -1621,6 +1693,19 @@ version="v1r0" >
     </comment>
   </col>
 
+    <col name="delegate_fk">
+      <src null="true">
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <fk tableName="Delegates" keyCol="delegate_key" />
+      <comment>Delegate which owns this kind of Ancillary file</comment>
+    </col>
+
   <primary col="Ancillary_class_key" />
 
   <index name="classname_unique_index" cols="name" />
@@ -1679,6 +1764,166 @@ version="v1r0" >
   <index name="classname_unique_index" cols="name" />
 </table>
 <!-- end Offline_class -->
+
+
+<!-- alias tables -->
+<table name="Ancillary_aliases" version="v1r0"
+    comment="Place to keep track of currently-favored anc. files">
+      <col name="ancillary_aliases_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>E.g. nominal</comment>
+    </col>
+
+    <col name="tower" >
+      <src null="false">
+        <default value="-1" />
+      </src>
+      <type typename="tinyint" >
+        <restriction>
+          <interval min="-1" max="15" />
+        </restriction>
+      </type>
+      <comment> Tower to which anc file applies.
+         Special value -1 signifies all or irrelevant
+      </comment>
+    </col>
+
+    <col name="aclass_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
+      <comment>Class of the ancillary file getting an alias</comment>
+    </col>
+
+    <col name="ancillary_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Ancillary" keyCol="Ancillary_key" />
+      <comment>Key for the ancillary file getting an alias</comment>
+    </col>
+
+    <col name="last_modified_time" >
+      <src null="true">
+        <from agent="service" contents="update_time" />         
+      </src>
+      <type typename="datetime" size="14" />
+      <comment>Time of last modification to row. Equal to time it was entered
+      if there were no subsequent mods.  End user is not allowed to set it
+      </comment>
+    </col>
+
+    <col name="last_modifier" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id of
+             whoever creates or modifies this row.
+      </comment>
+    </col>
+    <primary col="ancillary_aliases_key"  />
+    <index name="uniqueness" cols="name aclass_fk tower" />
+</table>
+
+<table name="Vote_aliases" version="v1r0"
+    comment="Place to keep track of currently-favored vote files">
+      <col name="vote_aliases_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="name" >
+      <src null="false">
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>E.g. nominal</comment>
+    </col>
+
+    <col name="precinct_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>Precinct of the file getting an alias</comment>
+    </col>
+
+    <col name="vote_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Key for the vote file getting an alias</comment>
+    </col>
+
+    <col name="last_modified_time" >
+      <src null="true">
+        <from agent="service" contents="update_time" />         
+      </src>
+      <type typename="datetime" size="14" />
+      <comment>Time of last modification to row. Equal to time it was entered
+      if there were no subsequent mods.  End user is not allowed to set it
+      </comment>
+    </col>
+
+    <col name="last_modifier" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id of
+             whoever creates or modifies this row.
+      </comment>
+    </col>
+    <primary col="vote_aliases_key"  />
+    <index name="uniqueness" cols="name precinct_fk" />
+</table>
 
 <table name="FSW_to_Parameters" gui_readonly="true" version="v1r0"
     comment="relate Flight Software input files to the Parameter files
@@ -2086,7 +2331,8 @@ version="v1r0" >
         </restriction>
       </type>
       <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
-      <comment>Refers to row in Parameters</comment>
+      <comment>Refers to row in Parameters.  Unique: a parameter class
+          always is used to create the same binary.</comment>
     </col>
     <col name="FClass_fk" >
       <src null="false" >
@@ -2126,6 +2372,8 @@ version="v1r0" >
     </col>
 
     <primary col="prim_key" /> 
+    <index name="pclass_fk_unique_index" cols="PClass_fk" />
+
   </table>
 
 
@@ -2189,10 +2437,10 @@ version="v1r0" >
   </table>
 
 
-<!-- this isn't used.  Will be replaced by Vote_PClass_AClass
-  <table name="PClass_to_AClass" gui_readonly="true" version="v1r0"
-    comment="relate Parameter file classes to Ancillary file classes
-    which are their sources">
+
+  <table name="Vote_PClass_AClass" gui_readonly="true" version="v1r0"
+    comment="For a vote file, relate Parameter file classes to 
+              Ancillary file classes which are their sources">
      <col name="prim_key" >
        <src null="false">
          <from agent="auto_increment" />
@@ -2206,7 +2454,20 @@ version="v1r0" >
          row is inserted.</comment>
      </col>
 
-    <col name="PClass_fk" >
+    <col name="vote_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes</comment>
+    </col>
+
+    <col name="pclass_fk" >
       <src null="false" >
         <from agent="enduser" />
       </src>
@@ -2218,9 +2479,9 @@ version="v1r0" >
       <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
       <comment>Refers to row in Parameter_class</comment>
     </col>
-    <col name="AClass_fk" >
-      <src null="false" >
-        <from agent="enduser" />
+    <col name="aclass_fk" >
+      <src null="true" >
+        <default  />
       </src>
       <type typename="int" unsigned="true" >
         <restriction>
@@ -2229,6 +2490,14 @@ version="v1r0" >
       </type>
       <fk tableName="Ancillary_class" keyCol="Ancillary_class_key" />
       <comment>Refers to row in Ancillary_class</comment>
+    </col>
+
+    <col name="a_alias" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Alias name appearing in vote file for this class</comment>
     </col>
 
     <col name="status" >
@@ -2244,10 +2513,218 @@ version="v1r0" >
                Parameter file changes
       </comment>
     </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
     <primary col="prim_key" /> 
 
   </table>
--->
+
+
+  <table name="Container_Precinct" gui_readonly="true" version="v1r0"
+    comment="Relate container vote file to individual precincts
+             it references">
+     <col name="prim_key" >
+       <src null="false">
+         <from agent="auto_increment" />
+       </src>
+       <type typename="int" unsigned ="true" >
+         <restriction>          
+           <nonnegative />   
+         </restriction>
+       </type>
+       <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+    <col name="ctn_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Votes" keyCol="vote_key" />
+      <comment>Refers to row in Votes for a container vote</comment>
+    </col>
+
+
+    <col name="precinct_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Precincts" keyCol="precinct_key" />
+      <comment>Refers to row in Precincts for non-container precinct</comment>
+    </col>
+
+
+    <col name="v_alias" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Alias name appearing in vote file for this class</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="TEST" />
+      </src>
+      <type typename="enum">
+        <restriction>
+          <enum use="require" values="ACTIVE TEST INACTIVE" />
+        </restriction>
+      </type>
+      <comment>Relation may become inactive if procedure to produce
+               Parameter file changes
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+
+  </table>
+
+
+  <table name="LATC_Backup" gui_readonly="true" version="v1r0"
+    comment="Relate latc component to so-called backup Parameter_class.
+             A file of this class will be automatically generated to
+             fill in holes in submitted source files for the component" >
+     <col name="prim_key" >
+       <src null="false">
+         <from agent="auto_increment" />
+       </src>
+       <type typename="int" unsigned ="true" >
+         <restriction>          
+           <nonnegative />   
+         </restriction>
+       </type>
+       <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+    <col name="FSW_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="FSW_class" keyCol="FSW_class_key" />
+      <comment>Refers FSW class corresponding to latc component </comment>
+    </col>
+
+
+    <col name="pclass_fk" >
+      <src null="true" >
+        <default />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Parameter_class" keyCol="Parameter_class_key" />
+      <comment>key for corresponding backup Parameter class</comment>
+    </col>
+
+
+    <col name="active_state" >
+      <src null="false" >
+        <default value="ACTIVE" />
+      </src>
+      <type typename="enum">
+        <restriction>
+          <enum use="require" values="ACTIVE INACTIVE" />
+        </restriction>
+      </type>
+      <comment>Allow for possible schema change at some future date.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+    <index name="uniqueness" cols="FSW_fk" />
+  </table>
+
+
 
   <table name="Instrument" gui_readonly="true" version="v1r0"
     comment="describe tower configuration for an instrument">
