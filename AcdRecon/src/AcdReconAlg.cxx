@@ -856,7 +856,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
     AcdRecon::PocaData& pocaData = pocaMap[acdId];
     if (acdId.na()) continue;
     if (acdId.tile()) {      
-      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_glastDetSvc);
+      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_acdGeoSvc);
       sc = tileDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
@@ -872,7 +872,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
 	return sc;
       }
     } else if ( acdId.ribbon() ) {
-      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,*m_glastDetSvc);
+      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,*m_acdGeoSvc);
       sc = ribbonDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
@@ -1223,7 +1223,7 @@ StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& digiCol, Event::Ac
       if (acdId.na()) continue;
       if (acdId.ribbon()) continue;
       if (acdId.tile()) {      
-	const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_glastDetSvc);
+	const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_acdGeoSvc);
 	sc = tileDim->statusCode();
 	if ( sc.isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 

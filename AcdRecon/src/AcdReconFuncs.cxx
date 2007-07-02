@@ -76,18 +76,52 @@ namespace AcdRecon {
     edgeLen = dir.magnitude();
   }
 
+  void rayDoca_withCorner(const AcdRecon::TrackData& track, const Ray& ray,
+			  double& arcLength, double& dist, Point& x, Vector& v, int& region) {
+    const HepPoint3D& x0 = track.m_point;
+    const HepVector3D& t0 = track.m_dir;    
+    Point trackPos(x0.x(), x0.y(), x0.z());
+    Vector trackDir(t0.x(), t0.y(), t0.z());
+    Ray trackRay(trackPos, trackDir);
+    RayDoca raydoca(trackRay,ray);
+    double alongRay = raydoca.arcLenRay2();
+    if ( alongRay < 0 ) {
+      HepPoint3D corner(ray.position().x(),ray.position().y(),ray.position().z());
+      HepPoint3D poca;
+      AcdRecon::pointPoca(track,corner,arcLength,dist,poca);
+      x.set(poca.x(),poca.y(),poca.z());
+      HepVector3D pocaVect = poca - corner;
+      v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+      region = -1;
+    } else if ( alongRay > ray.getArcLength() ) {
+      Point end = ray.position( ray.getArcLength() );
+      HepPoint3D corner(end.x(),end.y(),end.z());
+      HepPoint3D poca;
+      AcdRecon::pointPoca(track,corner,arcLength,dist,poca);
+      x.set(poca.x(),poca.y(),poca.z());
+      HepVector3D pocaVect = poca - corner;
+      v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+      region = 1;
+    } else {
+      arcLength = raydoca.arcLenRay1();
+      dist = raydoca.docaRay1Ray2();
+      x = raydoca.docaPointRay1();
+      v = x - raydoca.docaPointRay2();
+      region = 0;
+    }       
+  }
+
   void tilePlane(const AcdRecon::TrackData& track, const AcdTileDim& tile,
 		 double& arcLength, double& localX, double& localY, 
 		 double& activeX, double& activeY, double& active2D, HepPoint3D& hitPoint) {
 
     // loop over volumes of tile
-    for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
+    for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {      
       
-      
-      double testActiveX(-2000.);
-      double testActiveY(-2000.);
-      double testLocalX(2000.);
-      double testLocalY(2000.);
+      double testActiveX(-maxDocaValue);
+      double testActiveY(-maxDocaValue);
+      double testLocalX(maxDocaValue);
+      double testLocalY(maxDocaValue);
       double testArcLength(-1.);
       HepPoint3D testHitPoint;
       
@@ -163,7 +197,7 @@ namespace AcdRecon {
     //       doing the full monte does not use much more cpu
 
     
-    dist = 2000.;
+    dist = maxDocaValue;
     region = -1;
     
     // loop over volumes of tile
@@ -221,7 +255,7 @@ namespace AcdRecon {
     // tile thickness.
     
     region = -1;
-    dist = 2000;
+    dist = maxDocaValue;
     
     // loop over volumes of tile
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
@@ -267,40 +301,40 @@ namespace AcdRecon {
     // get the ribbon id
     const idents::AcdId& acdId = ribbon.acdId();  
     
-    // to distiguish X and y ribbons
-    static const int ribbonX = 5;
-
     // this is the value we want to beat
-    double best_dist = -2000.;
+    double best_dist = -maxDocaValue;
 
     // loop over segments
     for ( int segment = 0; segment < 3; segment++ ) {
 
+      HepPoint3D sideCenter;
+      const HepPoint3D origin;
+      ribbon.toLocal(origin,segment,sideCenter);
+
       // check orientation to determine which segment corresponds to which face
-      int face(-1);
+      int face(-1);      
       switch ( segment ) {
       case 1: face = 0; break;
       case 0: face = acdId.ribbonOrientation() == ribbonX ? 1 : 2; break;
       case 2: face = acdId.ribbonOrientation() == ribbonX ? 3 : 4; break;
       }
-
-      // Get the beginning and ending points for a line segment
-      // that defines a ribbon
-      const HepPoint3D& ribbonStartPos = ribbon.ribbonStart()[segment];
-      const HepPoint3D& ribbonEndPos = ribbon.ribbonEnd()[segment];
       
       // where does this track cross the plane of the tile 
       HepPoint3D x_isec;
+      HepPoint3D ribbonStartPos;
+      HepVector3D ribbonVec;
       double test_arc(-1.);
       double localX(0.); double localY(0.);
-      AcdRecon::crossesPlane(aTrack,ribbonStartPos,face,test_arc,localX,localY,x_isec);
+      AcdRecon::crossesPlane(aTrack,sideCenter,face,test_arc,localX,localY,x_isec);
       if (test_arc < 0) continue;
     
+      bool isOk = ribbon.setEdgeRay(segment,ribbonStartPos,ribbonVec);
+      if ( !isOk ) continue;
+      
       // Form vector between the beginning of the ribbon and the point where the
       // track intersects the plane of the ribbon
       HepVector3D delta = x_isec - ribbonStartPos;
       // Form a vector for the ribbon
-      HepVector3D ribbonVec = ribbonEndPos - ribbonStartPos;
       double prod = delta * ribbonVec.unit();
       // check that the projection of the point to the ribbon occurs within the
       // length of the ribbon segment
@@ -309,7 +343,7 @@ namespace AcdRecon {
       double test_dist = sqrt(delta.mag2() - prod*prod);
 
       // Make this an Active Distance calculation 
-      test_dist = ribbon.halfWidth()[segment] - test_dist;
+      test_dist = ribbon.halfWidth() - test_dist;
 
       // test against the best value
       if ( test_dist > best_dist ) {
@@ -321,49 +355,76 @@ namespace AcdRecon {
     }
   }
 
-  void ribbonPoca(const AcdRecon::TrackData& aTrack, const AcdRibbonDim& ribbon, 
+
+  void ribbonPoca(const AcdRecon::TrackData& track, const AcdRibbonDim& ribbon,
 		  double& arcLength, double& dist, Point& x, Vector& v, int& region) {
+   
+    // First, does this ribbon extend along x or y axix
+    static const int ribbonX = 5;
+    const idents::AcdId& acdId = ribbon.acdId();  
+    int dir = 0;
+    if ( acdId.ribbonOrientation() == ribbonX ) {
+      // extends along x.  Want to know if it is going towards +-Y sides  
+      dir = track.m_dir.y() > 0 ? 1 : -1;
+    } else {
+      // extends along y.  Want to know if it is going towards +-X sides  
+      dir = track.m_dir.x() > 0 ? 1 : -1;
+    }
 
-    // get the ribbon id
-    // const idents::AcdId& acdId = ribbon.acdId();  
+    dist = 2000.;
+    double arcLengthTest(0.);
+    double distTest(0.);
+    Point x_test;
+    Vector v_test;
+    int regionTest(0);
+    double dist_last(500000.);
+    std::vector<const Ray*> raysInOrder;
     
-    // this is the value we want to beat
-    double best_dist = -2000.;
+    
+    int iRay(0);
+    
+    // Now, look over the relevent rays.
+    if ( dir == 1 ) {
+      // Going to + side
+      for ( iRay = 0; iRay < ribbon.plusSideRays().size(); iRay++ ) {
+	const Ray& aRay = ribbon.plusSideRays()[iRay];
+	raysInOrder.push_back(&aRay);
+      }
+       for ( iRay = ribbon.topRays().size() -1; iRay >= 0; iRay-- ) {
+	const Ray& aRay = ribbon.topRays()[iRay];
+	raysInOrder.push_back(&aRay);
+      }
+    } else if ( dir == -1 ) {
+      // Going to - side
+       for ( iRay = 0; iRay < ribbon.minusSideRays().size(); iRay++ ) {
+	const Ray& aRay = ribbon.minusSideRays()[iRay];
+	raysInOrder.push_back(&aRay);
+      }
+       for ( iRay =0; iRay < ribbon.topRays().size(); iRay++ ) {
+	const Ray& aRay = ribbon.topRays()[iRay];
+	raysInOrder.push_back(&aRay);
+      }
+    } else {
+      return;
+    }
 
-    // loop over segments
-    for ( int segment = 0; segment < 3; segment++ ) {
-
-      // Get the beginning and ending points for a line segment
-      // that defines a ribbon
-      const HepPoint3D& c1 = ribbon.ribbonStart()[segment];
-      const HepPoint3D& c2 = ribbon.ribbonEnd()[segment];
-      
-      // Will need this to determine limit of the tile edge 
-      double edge_length(0.);
-      
-      // Compute DOCA and DOCA location between the track and edge
-      RayDoca raydoca;
-      AcdRecon::rayDoca(aTrack,c1,c2,raydoca,edge_length);
-      
-      // Check if x,y,z along edge falls within limits of tile edge.
-      double length_2_intersect = raydoca.arcLenRay2();
-      double test_arc = raydoca.arcLenRay1();
-      if (length_2_intersect > 0 && test_arc > 0 && length_2_intersect < edge_length) {
-	double test_dist = raydoca.docaRay1Ray2();
-	// make this an active dist calc
-	test_dist = ribbon.halfWidth()[segment] - test_dist;
-	if ( test_dist > best_dist ) {
-	  dist = test_dist;
-	  best_dist = test_dist;
-	  arcLength = test_arc;
-	  region = segment;
-	  x = raydoca.docaPointRay1();
-	  v = x - raydoca.docaPointRay2();
-	}
-      }    
-    }      
+    
+    for ( iRay = 0; iRay < raysInOrder.size(); iRay++ ) {
+      const Ray& aRay = *(raysInOrder[iRay]);
+      AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,distTest,x_test,v_test,regionTest);
+      if ( dist > dist_last ) {
+	// going wrong direction. stop
+	return;
+      }
+      if ( distTest < dist ) {
+	dist = distTest;
+	arcLength = arcLengthTest;
+	x = x_test;
+	v = v_test;
+	region = regionTest;
+      }
+    }
   }
-
 
   void projectToPlane(const AcdRecon::TrackData& track, const Event::TkrTrackParams& params, 
 		      int face, const HepPoint3D& plane,

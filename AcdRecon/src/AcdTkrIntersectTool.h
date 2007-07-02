@@ -13,6 +13,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
 #include "GlastSvc/Reco/IPropagator.h" 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
@@ -99,6 +100,7 @@ private:
   AcdIPocaTool*    m_pocaTool;
   IPropagator *    m_G4PropTool; 
   IGlastDetSvc*    m_detSvc; 
+  IAcdGeometrySvc* m_acdGeomSvc;
 
   // Define the fiducial volume of the LAT
   // FIXME -- this should come for some xml reading service

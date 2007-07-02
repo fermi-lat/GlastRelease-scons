@@ -57,6 +57,13 @@ StatusCode AcdTkrIntersectTool::initialize()
     log<< MSG::ERROR<<"GlastDetSvc not found"<<endreq ;
     return StatusCode::FAILURE ;
   } 
+\
+  // GlastDetSvc
+  sc = service("AcdGeometrySvc", m_acdGeomSvc);
+  if (sc.isFailure()) {
+    log<< MSG::ERROR<<"AcdGeometrySvc not found"<<endreq ;
+    return StatusCode::FAILURE ;
+  } 
   
   // G4Propagator
   if( ! toolSvc()->retrieveTool("G4PropagationTool", m_G4PropTool)) {
@@ -152,7 +159,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
       pocaData = &( ownedPocaData.back() );
       pocaData->m_id = acdId;
       if ( acdId.ribbon() ) { 	
-	const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,*m_detSvc);
+	const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,*m_acdGeomSvc);
 	if ( ribbon->statusCode().isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a ribbon " << acdId.id() << ' ' << volId.name() << endreq;
 	  return StatusCode::FAILURE;
@@ -164,7 +171,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 	AcdRecon::ribbonPoca(track,*ribbon,
 			     pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
       } else if ( acdId.tile() ) {
-	const AcdTileDim* tile = geomMap.getTile(acdId,*m_detSvc);
+	const AcdTileDim* tile = geomMap.getTile(acdId,*m_acdGeomSvc);
 	if ( tile->statusCode().isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() << ' ' << volId.name() << endreq;
 	  return StatusCode::FAILURE;
@@ -224,7 +231,9 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
   } else if ( tileDataForGap != 0 ) {
     gapPocaTile(track,data,*tileDataForGap,gapPocas);
   } else {
-    fallbackToNominal(track,data,gapPocas);
+    // should never happen anymore
+    assert(0);
+    //fallbackToNominal(track,data,gapPocas);
   } 
 
   return StatusCode::SUCCESS ;
