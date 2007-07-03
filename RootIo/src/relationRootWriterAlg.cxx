@@ -185,7 +185,7 @@ StatusCode relationRootWriterAlg::execute()
     UInt_t evtId = evt->event();
     UInt_t runId = evt->run();
 
-    m_relTable->initialize(runId, evtId);
+    m_relTable->initialize(evtId, runId);
 
 
     sc = writeTkrDigiRelations();
