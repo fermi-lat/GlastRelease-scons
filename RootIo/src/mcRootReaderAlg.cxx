@@ -76,8 +76,8 @@ private:
 
     /// Top-level Monte Carlo ROOT object
     McEvent *m_mcEvt;
-    /// name of the input ROOT file
-    std::string m_fileName;
+//    /// name of the input ROOT file
+//    std::string m_fileName;
     /// Array of file names for TChain
     StringArrayProperty m_fileList;
     /// name of the Monte Carlo TTree stored in the ROOT file
@@ -106,7 +106,7 @@ mcRootReaderAlg::mcRootReaderAlg(const std::string& name,
 {
     // Input pararmeters that may be set via the jobOptions file
     // Input ROOT file name
-    declareProperty("mcRootFile",m_fileName="");
+//    declareProperty("mcRootFile",m_fileName="");
     StringArrayProperty initList;
     std::vector<std::string> initVec;
     initVec.push_back("mc.root");
@@ -141,14 +141,12 @@ StatusCode mcRootReaderAlg::initialize()
         //return StatusCode::FAILURE;
     }   
 
-    facilities::Util::expandEnvVar(&m_fileName);
-    
     m_mcEvt = 0;
     m_common.m_mcEvt = m_mcEvt;
 
     // Set up new school system...
     std::string type = "MC";
-    m_rootIoSvc->registerIoAlgorithm(type, m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput(type, m_treeName, m_branchName, m_fileList);
      
     return sc;
     
@@ -162,6 +160,8 @@ StatusCode mcRootReaderAlg::execute()
     
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+    
+    log<<MSG::INFO<<"Begin mcRootReaderAlg::execute()"<<endreq ;
     
     if (m_mcEvt) m_mcEvt->Clear(m_clearOption.c_str());
     m_mcEvt = 0;

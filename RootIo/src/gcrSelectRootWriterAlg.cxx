@@ -151,7 +151,7 @@ StatusCode gcrSelectRootWriterAlg::initialize()
     // Save the current directory for the ntuple writer service
     TDirectory *saveDir = gDirectory;   
     // Create the new ROOT file
-    m_gcrSelectFile = new TFile(m_fileName.c_str(), "RECREATE");
+    m_gcrSelectFile = TFile::Open(m_fileName.c_str(), "RECREATE");
     if (!m_gcrSelectFile->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
             << " could not be opened for writing." << endreq;

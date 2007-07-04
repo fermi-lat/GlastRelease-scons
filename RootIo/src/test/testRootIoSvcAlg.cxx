@@ -56,10 +56,8 @@ StatusCode testRootIoSvcAlg::initialize()
 
 StatusCode testRootIoSvcAlg::execute()
 {
-
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
-
 
     static int flag = 0;
 	

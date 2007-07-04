@@ -84,7 +84,7 @@ StatusCode testReadAlg::initialize()
 StatusCode testReadAlg::execute()
 {
 
-    MsgStream log(msgSvc(), name());
+    MsgStream log(msgSvc(),name()) ;
     StatusCode sc = StatusCode::SUCCESS;
     sc = readEvtHeader();
 
@@ -101,6 +101,7 @@ StatusCode testReadAlg::execute()
 
     return sc;
 }
+
 StatusCode testReadAlg::readEvtHeader() {
     StatusCode sc = StatusCode::SUCCESS;
     SmartDataPtr<Event::EventHeader> evtTds(eventSvc(), EventModel::EventHeader);

@@ -10,49 +10,55 @@
 #ifndef RootInputDesc_h
 #define RootInputDesc_h
 
-#include <vector>
-#include <string>
-
 #include "GaudiKernel/Property.h"
-
 #include "TChain.h"
 #include "TFile.h"
 #include "TObject.h"
+#include <string>
 
 class RootInputDesc
-{
-public:
-    RootInputDesc(const StringArrayProperty& fileList, 
-               const std::string&         tree, 
-               const std::string&         branch);
-    ~RootInputDesc(); 
+ {
+  public :
+  
+    RootInputDesc
+     ( const StringArrayProperty & fileList, 
+       const std::string & treeName, 
+       const std::string & branchName ) ;
+    ~RootInputDesc() ; 
 
     // Methods to return information about the TTree/TChain being accessed
-    const StringArrayProperty& getFileList()   const {return m_fileList;}
-    const std::string&         getTreeName()   const {return m_tree;}
-    const std::string&         getBranchName() const {return m_branch;}
-    const int                  getNumEvents()  const {return m_numEvents;}
+    const StringArrayProperty & getFileList() const { return m_fileList ; }
+    const std::string & getTreeName() const { return m_tree ; }
+    const std::string & getBranchName() const { return m_branch ; }
+    const int getNumEvents() const { return m_numEvents ; }
 
-    TChain*                    getTChain()           {return m_chain;}
-    TObject*                   getTObject()          {return *m_dataObject;}
+    TChain * getTChain() { return m_chain ; }
+    TObject * getTObject() { return *m_dataObject ; }
 
     // Methods to handle reading and clearing events
-    TObject*                   getEvent(int index);
-    TObject*                   getEvent(int runNum, int evtNum);
-    void                       clearEvent();
+    TObject * getEvent( int index ) ;
+    TObject * getEvent( int runNum, int evtNum ) ;
+    void clearEvent() ;
 
     // Method to change the list of files in this TChain
-    int  setFileList(const StringArrayProperty& fileList);
+    int  setFileList( const StringArrayProperty & fileList ) ;
 
-private:
-    bool fileExists(const std::string& filename);
+  private :
 
-    StringArrayProperty m_fileList;        // A list of files (fully qualified) associated to this TChain
-    std::string         m_tree;            // The name of the tree being accessed
-    std::string         m_branch;          // Branch name for this tree
-    TChain*             m_chain;           // Pointer to the TChain
-    TObject**           m_dataObject;      // A pointer to the pointer to the data
-    int                 m_numEvents;       // Number of events in current TChain
-};
+    bool fileExists( const std::string & filename ) ;
+
+    StringArrayProperty m_fileList ; // A list of files (fully qualified) associated to this TChain
+    std::string m_tree ;             // The name of the tree being accessed
+    std::string m_branch ;           // Branch name for this tree
+    TChain * m_chain ;               // Pointer to the TChain
+    TObject * * m_dataObject ;       // A pointer to the pointer to the data
+    int m_numEvents ;                // Number of events in current TChain
+    
+ } ;
+
+
 
 #endif
+
+
+
