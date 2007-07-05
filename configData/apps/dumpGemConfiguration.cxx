@@ -18,7 +18,7 @@ int main(int argc, char **argv){
   std::cout<<"=================================="<<std::endl<<std::endl;
   LatcDBImplOld lc;
   TrgConfigDB tcf(&lc);
-  tcf.updateKey(1852);
-  tcf.printContrigurator();
+  tcf.updateKey(key);
+  tcf.printContrigurator(std::cout);
   //std::cout<<tcf<<std::endl;
 }
