@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v3r9    05-Jul-2007 HMK Fix up LdfEventSelector::FileExists mtd to use stat
+        rather than opening/closing file
 v3r8    07-Jun-2007 HMK Merge GlastReleasev9r13 branch
 v3r7    05-Oct-2006 HMK Continue processing even if there are missing ranges
         in CAL digi data

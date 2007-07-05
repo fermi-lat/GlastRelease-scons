@@ -25,6 +25,8 @@
 #include "ldfReader/SocketParser.h"
 #include "LdfSelectorContext.h"
 
+#include <sys/stat.h>
+
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 static const SvcFactory<LdfEventSelector> s_factory;
@@ -318,11 +320,20 @@ LdfEventSelector::~LdfEventSelector() {
 
 bool fileExists(const std::string &fileName) {
 
-    std::fstream checkFile;
-    checkFile.open(fileName.c_str(), std::fstream::in);
-    checkFile.close();
-    if (checkFile.fail()) return false;
+    struct stat checkFile;
+#ifdef WIN32
+    if (_stat(fileName.c_str(), &checkFile) == -1)
+#else
+    if (stat(fileName.c_str(), &checkFile) == -1)
+#endif
+      return false;
     return true;
+
+    //std::fstream checkFile;
+    //checkFile.open(fileName.c_str(), std::fstream::in);
+    //checkFile.close();
+    //if (checkFile.fail()) return false;
+    //return true;
 }
 
 /*
