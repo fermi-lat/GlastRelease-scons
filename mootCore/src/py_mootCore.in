@@ -64,26 +64,26 @@
 %include ../mootCore/MootQuery.h
 
 %extend MOOT::MootQuery {
-  std::vector<std::string> ancillaryClassNames() {
+  std::vector<std::string> ancClassNames() {
     std::vector<std::string> my_names;
-    self->getAncillaryClasses(my_names);
+    self->getAncClasses(my_names);
     return my_names;
   }
 
-  std::vector<unsigned> ancillaryAliasKeys(const std::string& aClass="*",
+  std::vector<unsigned> ancAliasKeys(const std::string& aClass="*",
                                            const std::string& aName="*") {
     std::vector<unsigned> my_keys;
-    self->listAncillaryAliasKeys(my_keys, aClass, aName);
+    self->listAncAliasKeys(my_keys, aClass, aName);
     return my_keys;
   }
     
 
-  std::vector<unsigned> ancillaryKeys(const std::string& aClass="*",
+  std::vector<unsigned> ancKeys(const std::string& aClass="*",
                                       const std::string& status="CREATED",
                                       const std::string& quality="PROD",
                                       const std::string& instr="LAT") {
     std::vector<unsigned> my_keys;
-    self->listAncillaryKeys(my_keys, aClass, status, quality, instr);
+    self->listAncKeys(my_keys, aClass, status, quality, instr);
     return my_keys;
   }
     
