@@ -6,6 +6,9 @@
 
    *  EOH  *
 
+   v1r4   5-Jul-2007  jrb  Further update of intent.xsd; bring mood_user.xml
+                           and mood.xml up to date. Properly reference new
+                           services in py interface file
    v1r3   17-May-2007  jrb Add a pile of new services in support of use of
                            intent files and tracking all the way back to
                            ancillary files.
