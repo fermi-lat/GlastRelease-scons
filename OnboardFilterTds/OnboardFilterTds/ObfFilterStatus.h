@@ -45,6 +45,8 @@ public:
     virtual unsigned int getStatusHi()                const = 0;
     virtual unsigned int getStatusLo()                const = 0;
     virtual unsigned int getStatus32()                const = 0;
+    virtual unsigned int getVetoMask()                const = 0;
+    virtual unsigned int getVetoBit()                 const = 0;
 
     // Output for to diagnostic stream 
     virtual std::ostream& fillStream(std::ostream& s) const = 0;

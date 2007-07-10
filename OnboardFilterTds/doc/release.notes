@@ -3,6 +3,7 @@
  Coordinator:R.Hughes
  @verbatim
 
+ v0r3p1 10-Jul-2007 HMK add getVetoBit and getVetoMask to IObfStatus
  v0r3   10-Apr-2007 TU  Change from "CNO" to "HFC" throughout
  v0r2p1 29-Jan-2007 TU  Slight mod to ObfFilterStatus
  v0r2p0 15-Dec-2006 TU  Converting to gsw v1r0 of fsw libraries
