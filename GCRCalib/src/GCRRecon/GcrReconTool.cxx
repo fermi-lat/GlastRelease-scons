@@ -368,7 +368,7 @@ bool GcrReconTool::OBF_HFCVetoExist(){
       // Pointer to our retrieved objects
       const OnboardFilterTds::IObfStatus* obfResult = 0;
 
-      obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::CNOFilter);
+      obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);
       
       if(obfResult){
 	unsigned int statusHFC32 = obfResult->getStatus32();
