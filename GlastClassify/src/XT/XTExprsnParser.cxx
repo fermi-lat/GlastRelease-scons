@@ -271,13 +271,8 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
 
             std::string argument = findFuncArgument(operand, startPos, endPos);
 
-            // First check to see if the operand is itself a function
-            // (e.g. acos(min(1.,angle))
-            if (!(operandNode1 = parseFunction(argument)))
-            {
-                // Otherwise it must be an expression
-                operandNode1 = parseNextExpression(argument);
-            }
+            // Parse the expression for the first operand
+            operandNode1 = parseNextExpression(argument);
 
             // Is there a second argument to deal with?
             if (endPos < lastPos)
@@ -286,12 +281,8 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
                 endPos       = lastPos;
                 argument     = findFuncArgument(operand, startPos, endPos);
 
-                // Is it a function?
-                if (!(operandNode2 = parseFunction(argument)))
-                {
-                    // Otherwise it is an expression
-                    operandNode2 = parseNextExpression(argument);
-                }
+                // Parse second operand
+                operandNode2 = parseNextExpression(argument);
             }
             else operandNode2 = new XTExprsnValue<REALNUM>("",0);
 
@@ -314,8 +305,27 @@ IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression)
 {
     // Assumption is that this is an ntuple variable which may or may not have been declared
     XTcolumnValBase* tupleVal = 0;
+
+    // First thing is to "regularize" the look up name to take care of those pesky 
+    // categorical variables
+    bool        categorical = false;
+    std::string keyValue    = expression;
+    int         firstQuote  = expression.find("\"", 0);
+
+    if (firstQuote == 0)
+    {
+        int stringLen  = expression.length();
+        int secndQuote = expression.find("\"", firstQuote+1);
+        
+        // Probably not necessary but make sure second quote encloses entire key value
+        if (secndQuote == stringLen-1) 
+        {
+            keyValue    = keyValue.substr(firstQuote+1,secndQuote-1);
+            categorical = true;
+        }
+    }
     
-    XTtupleMap::iterator dataIter = m_tuple.find(expression);
+    XTtupleMap::iterator dataIter = m_tuple.find(keyValue);
 
     // Was it already declared?
     if (dataIter != m_tuple.end())
@@ -325,16 +335,11 @@ IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression)
     // We declare it here
     else
     {
-        // Ok, last last possibility is that it is a string constant...
-        int stringLen  = expression.length();
-        int firstQuote = expression.find("\"", 0);
-        int secndQuote = expression.find("\"", firstQuote+1);
-
-        if (firstQuote == 0 && secndQuote == stringLen-1)
+        // If a categorical variable then handle differently
+        if (categorical)
         {
-            std::string dataValue = expression.substr(firstQuote+1,secndQuote-1);
-            XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(dataValue,"categorical");
-            newValue->setDataValue(dataValue);
+            XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(keyValue,"categorical");
+            newValue->setDataValue(keyValue);
             tupleVal = newValue;
         }
         else
@@ -342,7 +347,7 @@ IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression)
             tupleVal = new XTcolumnVal<REALNUM>(expression);
         }
 
-        m_tuple[expression] = tupleVal;
+        m_tuple[keyValue] = tupleVal;
     }
 
     IXTExprsnNode* pNode = 0;
@@ -536,21 +541,23 @@ std::string XTExprsnParser::findCategoricalVal(const std::string& expression, in
 
 std::string XTExprsnParser::findFuncArgument(const std::string& expression, int& startPos, int& endPos)
 {
-    // Look for enclosing parenthesis as a sign of an embedded function in our expression
-    // (which may have an embedded comma which can screw us up)
-    int leftParen  = startPos;
-    int rghtParen  = endPos;
-    findEnclosingParens(expression, leftParen, rghtParen);
+    // Find the first comma which acts as a separator of function arguments. Since a function argument
+    // can itself contain a comma, this needs to do a brute force search through the string to find the
+    // first comma at the same "level" as we start, where "level" is determined by enclosing parens
+    int firstComma = -1;
+    int parenDepth = 0;
+    int curPos     = startPos;
 
-    // Where is the comma in the expression?
-    int firstComma = expression.find(",", startPos);
-
-    // Use this loop to try to make sure we are not splitting at an embedded function
-    while (leftParen > -1 && firstComma > leftParen && firstComma < rghtParen)
+    while(curPos < endPos && firstComma < 1)
     {
-        firstComma = expression.find(",", rghtParen);
-        leftParen  = rghtParen;
-        findEnclosingParens(expression, leftParen, rghtParen);
+        std::string nextChar = expression.substr(curPos,1);
+
+        // Have we found the magic comma?
+        if      (nextChar == "," && parenDepth < 1) firstComma = curPos;
+        else if (nextChar == "(")                   parenDepth++;
+        else if (nextChar == ")")                   parenDepth--;
+
+        curPos++;
     }
 
     // If we have comma then set that as the end point

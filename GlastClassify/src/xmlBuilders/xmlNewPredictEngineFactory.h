@@ -47,6 +47,8 @@ private:
 
     IXTExprsnNode* parseNode(DOMElement* xmlElement);
 
+    std::string    getPredicateExpression(DOMElement* xmlElement);
+
     /// Find output variable name for given Classification Tree
     std::string getCTOutputName(const DOMElement* xmlActivityNode);
 

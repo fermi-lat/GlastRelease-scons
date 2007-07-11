@@ -353,21 +353,10 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
     // Otherwise we are at a branch point
     else
     {
-        std::string varname    = xmlBase::Dom::getAttribute(xmlPredicate, "field");
-        std::string valname    = xmlBase::Dom::getAttribute(xmlPredicate, "value");
-        //double      value      = xmlBase::Dom::getDoubleAttribute(xmlPredicate, "value");
-        std::string sOperator  = xmlBase::Dom::getAttribute(xmlPredicate, "operator");
-
-        // ugliness for now, figure out what to do here...
-        if (sOperator == "greaterOrEqual") sOperator = ">=";
-        else                               sOperator = "<";
-
-        //std::string expression = varname + " " + sOperator + " " + valname;
-        std::string expression(varname + sOperator + valname);
-
-        IXTExprsnNode* xprsnNode = XprsnParser().parseExpression(expression);
-        IXTExprsnNode* ifNode    = parseNode(xmlNodeVec[0]);
-        IXTExprsnNode* elseNode  = parseNode(xmlNodeVec[1]);
+        std::string    expression = getPredicateExpression(xmlPredicate);
+        IXTExprsnNode* xprsnNode  = XprsnParser().parseExpression(expression);
+        IXTExprsnNode* ifNode     = parseNode(xmlNodeVec[0]);
+        IXTExprsnNode* elseNode   = parseNode(xmlNodeVec[1]);
 
         //node = new XTIfElseNode<double>(sNodeId, *xprsnNode, *ifNode, *elseNode);
         node = new XTIfElseNode<CTOutPut>(sNodeId, *xprsnNode, *ifNode, *elseNode);
@@ -377,6 +366,56 @@ IXTExprsnNode* xmlNewPredictEngineFactory::parseNode(DOMElement* xmlElement)
 
     return node;
 }
+
+std::string xmlNewPredictEngineFactory::getPredicateExpression(DOMElement* xmlPredicate)
+{
+    std::string expression = "";
+
+    if (xmlBase::Dom::getTagName(xmlPredicate) == "CompoundPredicate")
+    {
+        std::string compoundOperator = xmlBase::Dom::getAttribute(xmlPredicate, "booleanOperator");
+
+        if      (compoundOperator == "or" ) compoundOperator = "|";
+        else if (compoundOperator == "and") compoundOperator = "&";
+        else
+        {
+            throw Exception("PredictEngineFactory found unrecognized compound expression: " + compoundOperator);
+        }
+
+        std::vector<DOMElement *> xmlPredicateVec;
+        xmlBase::Dom::getChildrenByTagName(xmlPredicate, "SimplePredicate", xmlPredicateVec);
+
+        if (xmlPredicateVec.size() > 2)
+        {
+            throw Exception("PredictEngineFactory found simple predicate vector > 2 elements");
+        }
+
+        expression = getPredicateExpression(xmlPredicateVec[0]) 
+                   + compoundOperator  
+                   + getPredicateExpression(xmlPredicateVec[1]);
+    }
+    else
+    {
+        std::string varname   = xmlBase::Dom::getAttribute(xmlPredicate, "field");
+        std::string valname   = xmlBase::Dom::getAttribute(xmlPredicate, "value");
+        std::string sOperator = xmlBase::Dom::getAttribute(xmlPredicate, "operator");
+
+        // ugliness for now, figure out what to do here...
+        if      (sOperator == "greaterOrEqual") sOperator = ">=";
+        else if (sOperator == "equal"         ) sOperator = "==";
+        else if (sOperator == "lessThan"      ) sOperator = "<";
+        else
+        {
+            throw Exception("PredictEngineFactory found unrecognized operator: " + sOperator);
+        }
+
+        //std::string expression = varname + " " + sOperator + " " + valname;
+        expression = varname + sOperator + valname;
+    }
+
+    return expression;
+}
+
 
 std::string xmlNewPredictEngineFactory::getCTOutputName(const DOMElement* xmlActivityNode)
 {

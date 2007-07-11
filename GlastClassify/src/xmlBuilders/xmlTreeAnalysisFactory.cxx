@@ -266,6 +266,17 @@ int GlastClassify::xmlTreeAnalysisFactory::linkActivityNodes(GlastClassify::Tree
 
         // Set the head node
         tree->setHeadNode(headNode);
+
+        // Leave this here for now to remind me that we may need to do something...
+        if (headVecSize > 1)
+        {
+            for(std::vector<IImActivityNode*>::iterator toNodeIter = m_iNodeVec.begin();
+                toNodeIter != m_iNodeVec.end(); toNodeIter++)
+            {
+                IImActivityNode* thisNode = *toNodeIter;
+                int j = 0;
+            }
+        }
     }
     else
     {

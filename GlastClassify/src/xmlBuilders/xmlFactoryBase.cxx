@@ -78,10 +78,12 @@ xmlFactoryBase::DOMEvector  xmlFactoryBase::getXTSubPropVec(const DOMElement* ac
 {
     DOMEvector elementVec;
 
+    elementVec.clear();
+
     DOMElement* xtProperty = getXTProperty(activityNode, property);
 
     // Now the vector of properties
-    xmlBase::Dom::getChildrenByTagName(xtProperty, "Property", elementVec);
+    if (xtProperty) xmlBase::Dom::getChildrenByTagName(xtProperty, "Property", elementVec);
 
     return elementVec;
 }

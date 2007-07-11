@@ -43,8 +43,9 @@ macro txt "" WIN32 " *.txt"
 # application classify -s=../src/classify $(source)
 
 set PRUNEROWS "false"
-set MERIT_INPUT_FILE "C:/Glast/DC2DataSets/v9r9/backgnd-GR-v9r9-pruned-merit.root"
+set MERIT_INPUT_FILE "C:/Glast/data/backgndSC-GR-v11r2-000000-merit.root"
 set MERIT_OUTPUT_FILE "test.root"
+set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/Pass5_v11r2_BkgRej_4.xml"
 
 application apply -s=../src/apply $(source)
 

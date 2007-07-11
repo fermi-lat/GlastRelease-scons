@@ -78,7 +78,7 @@ void TreeAnalysis::execute()
 
         // If the cross reference exists, set the local value
         //if (nTupleIter != m_nTupleMap.end()) valPtr->setDataValue(*(nTupleIter->second));
-        if (nTupleIter != m_nTupleMap.end() && varName.substr(0,3) != "CTB") 
+        if (nTupleIter != m_nTupleMap.end() ) // && varName.substr(0,3) != "CTB") 
         {
             // Test precision theory here
             double tempRes = *(nTupleIter->second);
