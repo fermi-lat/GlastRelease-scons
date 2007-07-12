@@ -10,6 +10,7 @@ $Header$
 #include <iostream>
 #include <cmath>
 #include "ImPrecision.h"
+#include "XTtupleVars.h"
 
 /** @class Exception 
     @brief hold a string
