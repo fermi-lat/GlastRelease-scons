@@ -206,6 +206,7 @@ bool AtwoodTrees::execute()
         {
             // Retrieve the energy classification results (needed below)
             m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+            float bestEnergy  = m_treeAnalysis->getTupleVal("CTBBestEnergy");
             m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
             m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
 
