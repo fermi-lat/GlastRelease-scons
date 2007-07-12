@@ -53,6 +53,8 @@
 #include "HadronPhysicsQGSP.hh"
 #include "HadronPhysicsQGSP_BIC.hh"
 #include "HadronPhysicsQGSP_BERT.hh"
+#include "HadronPhysicsQGSC.hh"
+#include "HadronPhysicsQGSC_LEAD.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
 #include "G4EmLowEnergyPhysics.hh"
@@ -136,7 +138,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      
       // Ion Physics
      RegisterPhysics( new LCIonPhysics("ion", msFactory));
-     }
+   }
  if (m_physicsChoice=="Space")
    {
      RegisterPhysics( new SEDecayPhysics("decay"));
@@ -156,7 +158,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
       // Ion Physics
      RegisterPhysics( new SEIonPhysics("ion",msFactory));
    }
-  if (m_physicsChoice=="LowEnergy")
+ if (m_physicsChoice=="LowEnergy")
    {
      G4int ver=1;
   
@@ -217,6 +219,12 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      if (m_physicsChoice=="QGSP_BIC")
        RegisterPhysics(  new HadronPhysicsQGSP_BIC("hadron"));
 
+     if ( m_physicsChoice == "QGSC" )
+         RegisterPhysics(new HadronPhysicsQGSC("hadron"));
+
+     if ( m_physicsChoice == "QGSC_LEAD" )
+         RegisterPhysics(new HadronPhysicsQGSC_LEAD("hadron"));
+
    }
 }
 PhysicsList::~PhysicsList()
@@ -261,17 +269,3 @@ void PhysicsList::SetCuts()
 	}
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
