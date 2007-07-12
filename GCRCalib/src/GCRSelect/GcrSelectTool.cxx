@@ -226,6 +226,8 @@ GcrSelectTool::GcrSelectTool(const std::string & type,
 StatusCode GcrSelectTool::initialize()
 {
   StatusCode sc = StatusCode::SUCCESS;
+ 
+  setProperties();
   
   m_debugging=false;
 

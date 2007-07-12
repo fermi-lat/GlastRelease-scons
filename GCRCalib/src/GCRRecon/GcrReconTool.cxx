@@ -224,6 +224,8 @@ StatusCode GcrReconTool::initialize()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
+  setProperties();
+
   //m_log << MSG::INFO << "GcrReconTool BEGIN initialize()" << endreq ;
   m_debugging=false;
    
