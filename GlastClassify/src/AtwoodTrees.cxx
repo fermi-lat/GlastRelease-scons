@@ -42,6 +42,8 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_eventId          = tuple.getItem("EvtEventId");
     m_run              = tuple.getItem("EvtRun");
 
+    m_CTBBestEnergy    = tuple.getItem("CTBBestEnergy");
+
     // Default values as of 4/5/2007 at request of Bill Atwood
     m_calEnergyCut     = 5.;
     m_csiRadLenCut     = 4.;
@@ -247,6 +249,14 @@ bool AtwoodTrees::execute()
 
     // Last step, always copy CTB back to ntuple
     m_treeAnalysis->storeCTvals();
+
+    float   bestEnergy  = m_treeAnalysis->getTupleVal("CTBBestEnergy");
+    double  beTuple     = *m_CTBBestEnergy;
+
+    if (bestEnergy != beTuple)
+    {
+        int k = 0;
+    }
 
     return writeTupleRow;
 }
