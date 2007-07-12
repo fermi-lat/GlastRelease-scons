@@ -1,5 +1,5 @@
 package G4Generator
-version v5r18p5
+version v5r18p6
 
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
@@ -49,5 +49,3 @@ library G4Generator -s=../src $(source) -s=../src/Utilities $(source) -s=Dll *.c
 # test program 
 public
 apply_pattern package_test
-
-
