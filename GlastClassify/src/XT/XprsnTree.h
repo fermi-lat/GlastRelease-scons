@@ -91,6 +91,8 @@ public:
                  IXTExprsnNode*     right) 
                   : m_name(name), m_value(new T1), m_left(left), m_right(right) 
     {
+        m_type = typeid(m_value).name();
+
         // Set the function pointer to the type of operation we define
         if      (name == "+")  mathOp = &XTExprsnNode<T1,T2>::operator+;  // Arithmetic addition
         else if (name == "-")  mathOp = &XTExprsnNode<T1,T2>::operator-;  // Arithmetic subraction
@@ -115,7 +117,7 @@ public:
     // Overide the generic "retrieve" operator from the base class
     virtual const void* operator()() const     {return (this->*mathOp)(m_right);}
     virtual const std::string& getName() const {return m_name;}
-    virtual const char* getTypeId() const {return typeid(m_value).name();}
+    virtual const char* getTypeId() const {return m_type.data();}
 
     // Provide mechanism for outputting to a standard stream
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -244,6 +246,7 @@ private:
 
     // Our name and value
     std::string m_name;     // The name assigned to this node
+    std::string m_type;     // The type returned when asked
     T1*         m_value;    // The "value" of this node 
 
     // The left and right branches beneath the node 
@@ -286,7 +289,16 @@ public:
                     m_condNode(condNode),
                     m_ifNode(ifNode), 
                     m_elseNode(elseNode) 
-    { }
+    { 
+        m_type = typeid(m_value).name();
+
+        // This nonsense to reset to categorical types
+        int idx = m_type.find("string",0);
+        if (idx > -1)
+        {
+            m_type = m_ifNode.getTypeId();
+        }
+    }
     virtual ~XTIfElseNode() {delete m_value;}
 
     // Overide the generic "retrieve" operator from the base class
@@ -299,7 +311,7 @@ public:
         return m_value;
     }
     virtual const std::string& getName() const {return m_name;}
-    virtual const char* getTypeId() const {return typeid(m_value).name();}
+    virtual const char* getTypeId() const {return m_type.data();}
 
     // Provide mechanism for outputting to a standard stream
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -330,6 +342,7 @@ private:
 
     // Our name and value
     std::string m_name;     // The name assigned to this node
+    std::string m_type;     // The type of this node
     T*          m_value;    // The "value" of this node 
 
     // The left and right branches beneath the node 
@@ -371,7 +384,17 @@ private:
 template <class T> class XTExprsnValue : virtual public IXTExprsnNode
 {
 public:
-    XTExprsnValue<T>(const std::string& name, T* value) : m_name(name), m_value(value) {}
+    XTExprsnValue<T>(const std::string& name, T* value) : m_name(name), m_value(value) 
+    {
+        m_type = typeid(m_value).name();
+
+        int idx = m_type.find("XTcolumnVal", 0);
+        if (idx > -1)
+        {
+            m_type = reinterpret_cast<XTcolumnValBase*>(m_value)->getType();
+        }
+        return;
+    }
     virtual ~XTExprsnValue() 
     {
         return;
@@ -383,7 +406,7 @@ public:
     // Return the value contained here (to be overidden at higher levels)
     virtual const void* operator()() const {return m_value;}
     virtual const std::string& getName() const {return m_name;}
-    virtual const char* getTypeId() const {return typeid(m_value).name();}
+    virtual const char* getTypeId() const {return m_type.data();}
     
     // Basic print to stream method
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -400,6 +423,7 @@ public:
 
 protected:
     std::string m_name;     // The name assigned to this node
+    std::string m_type;     // Data type to return when asked
     T*          m_value;    // The "value" of this node 
 
     // This is for making a fancy output... I'm not necessarily proud of it...
@@ -416,13 +440,26 @@ protected:
 template <class T> class XTExprsnTupleVal : virtual public IXTExprsnNode
 {
 public:
-    XTExprsnTupleVal<T>(const std::string& name, T* value) : m_name(name), m_value(value) {}
+    XTExprsnTupleVal<T>(const std::string& name, T* value) : m_name(name), m_value(value) 
+    {
+        m_type = typeid(m_value).name();
+
+        int idx = m_type.find("XTcolumnVal", 0);
+        if (idx > -1)
+        {
+            m_type = reinterpret_cast<XTcolumnValBase*>(m_value)->getType();
+        }
+        return;
+    }
     virtual ~XTExprsnTupleVal() {}
 
     // Return the value contained here (to be overidden at higher levels)
     virtual const void* operator()() const {return (*m_value)();}
     virtual const std::string& getName() const {return m_name;}
-    virtual const char* getTypeId() const {return typeid(m_value).name();}
+    virtual const char* getTypeId() const 
+    {
+        return m_type.data();
+    }
     
     // Basic print to stream method
     virtual void print(std::ostream& out=std::cout, bool first=true) const
@@ -440,6 +477,7 @@ public:
 
 protected:
     std::string m_name;     // The name assigned to this node
+    std::string m_type;     // Type of data to return when asked
     T*          m_value;    // The "value" of this node 
 };
 

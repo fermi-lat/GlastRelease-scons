@@ -42,11 +42,11 @@ private:
     std::string    trimTrailing(std::string& expression); 
 
     // Function to evaluate a string which represents a "value"
-    IXTExprsnNode* parseNextExpression(std::string& expression);
-    IXTExprsnNode* parseOperator(std::string& expression);
-    IXTExprsnNode* parseValue(std::string& expression);
-    IXTExprsnNode* parseVariable(std::string& expression);
-    IXTExprsnNode* parseFunction(std::string& expression);
+    IXTExprsnNode* parseNextExpression(std::string& expression, std::string type="");
+    IXTExprsnNode* parseOperator(std::string& expression, std::string type="");
+    IXTExprsnNode* parseValue(std::string& expression, std::string type="");
+    IXTExprsnNode* parseVariable(std::string& expression, std::string type="");
+    IXTExprsnNode* parseFunction(std::string& expression, std::string type="");
 
     XTtupleMap&   m_tuple;
 

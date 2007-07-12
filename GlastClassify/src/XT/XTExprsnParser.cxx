@@ -64,14 +64,14 @@ IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression)
 }
 
 
-IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression, std::string type)
 {
     // Declare the pointer we will create
     IXTExprsnNode* pNode = 0;
 
     // Go through the list of of possibilities for this expression
     // First is that it is an expression with an operator
-    if (pNode = parseOperator(expression)) return pNode;
+    if (pNode = parseOperator(expression, type)) return pNode;
 
     // Second is that there are parens
     int stringLen  = expression.length();
@@ -80,17 +80,17 @@ IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression)
         int         stringLen  = expression.length();
         std::string temp = expression.substr(1,stringLen-2);
 
-        return parseNextExpression(temp);
+        return parseNextExpression(temp, type);
     }
 
     // Third is that we have a function
-    if (pNode = parseFunction(expression)) return pNode;
+    if (pNode = parseFunction(expression, type)) return pNode;
 
     // Fourth is that it is a constant value
-    if (pNode = parseValue(expression)) return pNode;
+    if (pNode = parseValue(expression, type)) return pNode;
 
     // Fifth is that it is a variable
-    if (pNode = parseVariable(expression)) return pNode;
+    if (pNode = parseVariable(expression, type)) return pNode;
 
     // If here then we return a node which is set to zero
     pNode = new XTExprsnValue<REALNUM>("",0);
@@ -98,7 +98,7 @@ IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression)
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::string type)
 {
     // Declare the pointer we will create
     IXTExprsnNode* pNode = 0;
@@ -130,9 +130,11 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
             std::string temp = localString.substr(0, delimPos);
 
             // Parse it
-            pNodeL = parseNextExpression(temp);
+            pNodeL = parseNextExpression(temp, type);
 
             inputType = pNodeL->getTypeId();
+            int j = inputType.find("std::basic_string",0);
+            int k = 0;
         }
         //else pNodeL = new XTExprsnValue<REALNUM>("",0);
         
@@ -144,9 +146,10 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
             std::string temp = localString.erase(0, delimPos+fndDelim.length());
 
             // Parse it
-            pNodeR = parseNextExpression(temp);
+            pNodeR = parseNextExpression(temp, inputType);
 
-            inputType = pNodeR->getTypeId();
+            std::string rightType = pNodeR->getTypeId();
+            int j = 0;
         }
         //else pNodeR = new XTExprsnValue<REALNUM>("",0);
 
@@ -166,7 +169,7 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
             {
                 pNode = new XTExprsnNode<bool,bool>(fndDelim, pNodeL, pNodeR);
             }
-            else if ( (pos = inputType.find("string",0)) > -1)
+            else if ( (pos = inputType.find("categorical",0)) > -1)
             {
                 pNode = new XTExprsnNode<bool,std::string>(fndDelim, pNodeL, pNodeR);
             }
@@ -185,7 +188,7 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression)
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string type)
 {
     IXTExprsnNode* pNode = 0;
 
@@ -202,12 +205,29 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression)
     // Not a constant, ends up here
     catch(facilities::WrongType&)
     {
+        // Check here for string variables 
+        int firstQuote = expression.find("\"", 0);
+
+        if (firstQuote == 0)
+        {
+            int stringLen  = expression.length();
+            int secndQuote = expression.find("\"", firstQuote+1);
+        
+            // Probably not necessary but make sure second quote encloses entire key value
+            if (secndQuote == stringLen-1) 
+            {
+                std::string exprsnVal = expression.substr(firstQuote+1,secndQuote-1);
+                XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(exprsnVal,"categorical");
+                newValue->setDataValue(exprsnVal);
+                pNode = new XTExprsnTupleVal<XTcolumnVal<std::string> >(expression, newValue);
+            }
+        }
     }
 
     return pNode;
 }
     
-IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::string type)
 {
     IXTExprsnNode* pNode = 0;
 
@@ -245,13 +265,13 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             std::string elseResult    = findFuncArgument(operand,startPos,endPos);
 
             IXTExprsnNode* condNode = parseNextExpression(conExpression);
-            IXTExprsnNode* ifNode   = parseNextExpression(ifResult);
-            IXTExprsnNode* elseNode = parseNextExpression(elseResult);
+            IXTExprsnNode* ifNode   = parseNextExpression(ifResult, type);
+            IXTExprsnNode* elseNode = parseNextExpression(elseResult, type);
 
             // Output type of if else presumed same whether "if" or "else" taken
             std::string inputType = ifNode->getTypeId();
 
-            int stringPos = inputType.find("string",0);
+            int stringPos = inputType.find("categorical",0);
 
             if (stringPos > -1)
                 pNode = new XTIfElseNode<std::string>(funcCand,*condNode,*ifNode,*elseNode);
@@ -272,7 +292,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
             std::string argument = findFuncArgument(operand, startPos, endPos);
 
             // Parse the expression for the first operand
-            operandNode1 = parseNextExpression(argument);
+            operandNode1 = parseNextExpression(argument, type);
 
             // Is there a second argument to deal with?
             if (endPos < lastPos)
@@ -301,53 +321,34 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression)
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression, std::string type)
 {
     // Assumption is that this is an ntuple variable which may or may not have been declared
     XTcolumnValBase* tupleVal = 0;
 
-    // First thing is to "regularize" the look up name to take care of those pesky 
-    // categorical variables
-    bool        categorical = false;
-    std::string keyValue    = expression;
-    int         firstQuote  = expression.find("\"", 0);
-
-    if (firstQuote == 0)
+    // Are we looking for a result that is a categorical variable?
+    if (type == "categorical")
     {
-        int stringLen  = expression.length();
-        int secndQuote = expression.find("\"", firstQuote+1);
-        
-        // Probably not necessary but make sure second quote encloses entire key value
-        if (secndQuote == stringLen-1) 
-        {
-            keyValue    = keyValue.substr(firstQuote+1,secndQuote-1);
-            categorical = true;
-        }
+        XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(expression,"categorical");
+        newValue->setDataValue(expression);
+        tupleVal = newValue;
     }
-    
-    XTtupleMap::iterator dataIter = m_tuple.find(keyValue);
-
-    // Was it already declared?
-    if (dataIter != m_tuple.end())
-    {
-        tupleVal = dataIter->second;
-    }
-    // We declare it here
     else
     {
-        // If a categorical variable then handle differently
-        if (categorical)
+        XTtupleMap::iterator dataIter = m_tuple.find(expression);
+
+        // Was it already declared?
+        if (dataIter != m_tuple.end())
         {
-            XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(keyValue,"categorical");
-            newValue->setDataValue(keyValue);
-            tupleVal = newValue;
+            tupleVal = dataIter->second;
         }
+        // We declare it here
         else
         {
-            tupleVal = new XTcolumnVal<REALNUM>(expression);
+            tupleVal            = new XTcolumnVal<REALNUM>(expression);
+            m_tuple[expression] = tupleVal;
         }
 
-        m_tuple[keyValue] = tupleVal;
     }
 
     IXTExprsnNode* pNode = 0;
