@@ -2,6 +2,8 @@
     @brief package G4Generator 
 @verbatim
     $Id$
+
+ v1r1p6 12-Jul-07 MK  add src/QGSC and src/QGSC_LEAD to the include_dirs
  v1r1p5 21-Jun-07 TU  G4TableDir derives from G4Runtime_DIR instead of non-existent Geant4_DIR
  v1r1p4 14-May-07 TU  Navid updated req file to point to "correct" table directory
  v1r1p3 23-Jan-07 FL  new EM Low Energy processes

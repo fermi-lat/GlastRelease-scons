@@ -1,6 +1,6 @@
 package G4HadronSim
 
-version v1r1p5
+version v1r1p6
 
 author  Francesco Longo <Francesco.Longo@ts.infn.it>
 author  Tracy Usher <usher@slac.stanford.edu>
@@ -30,6 +30,8 @@ include_dirs "$(G4HadronSimSrcDir)/Packaging/include" \
              "$(G4HadronSimSrcDir)/QGSP/include"      \
              "$(G4HadronSimSrcDir)/QGSP_BERT/include" \
              "$(G4HadronSimSrcDir)/QGSP_BIC/include"  \
+             "$(G4HadronSimSrcDir)/QGSC/include"      \
+             "$(G4HadronSimSrcDir)/QGSC_LEAD/include" \
              "$(G4HadronSimSrcDir)/LC/include"        \
              "$(G4HadronSimSrcDir)/SE/include"
 
