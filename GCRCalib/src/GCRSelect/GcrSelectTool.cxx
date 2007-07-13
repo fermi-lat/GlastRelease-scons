@@ -227,8 +227,7 @@ StatusCode GcrSelectTool::initialize()
 {
   StatusCode sc = StatusCode::SUCCESS;
  
-  setProperties();
-  
+  m_log.setLevel(outputLevel());
   m_debugging=false;
 
   m_log << MSG::INFO << "GcrSelectTool BEGIN initialize()" << endreq ;
