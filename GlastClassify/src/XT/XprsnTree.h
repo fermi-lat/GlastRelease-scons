@@ -605,8 +605,6 @@ private:
     {
         REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         REALNUM temp = std::acos(left);
-        float  left2 = left;
-        float  temp2 = std::acos(left2);
         *m_value = temp;
         //*m_value = std::cos(*(reinterpret_cast<const double*>(arg())));
         return m_value;

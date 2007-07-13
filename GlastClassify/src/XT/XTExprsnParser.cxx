@@ -47,6 +47,8 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
 
 IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression)
 {
+    std::string type = "";
+
     expression = trimTrailing(expression);
     expression = trimCharacters(expression, ' ');
 
@@ -58,13 +60,13 @@ IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression)
     }
 
     //return parseNextExpression(parsedExpression, expression);
-    IXTExprsnNode* node = parseNextExpression(expression);
+    IXTExprsnNode* node = parseNextExpression(expression, type);
     //node->print();
     return node;
 }
 
 
-IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression, std::string type)
+IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression, std::string& type)
 {
     // Declare the pointer we will create
     IXTExprsnNode* pNode = 0;
@@ -98,7 +100,7 @@ IXTExprsnNode* XTExprsnParser::parseNextExpression(std::string& expression, std:
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::string type)
+IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::string& type)
 {
     // Declare the pointer we will create
     IXTExprsnNode* pNode = 0;
@@ -133,8 +135,6 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::strin
             pNodeL = parseNextExpression(temp, type);
 
             inputType = pNodeL->getTypeId();
-            int j = inputType.find("std::basic_string",0);
-            int k = 0;
         }
         //else pNodeL = new XTExprsnValue<REALNUM>("",0);
         
@@ -149,7 +149,6 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::strin
             pNodeR = parseNextExpression(temp, inputType);
 
             std::string rightType = pNodeR->getTypeId();
-            int j = 0;
         }
         //else pNodeR = new XTExprsnValue<REALNUM>("",0);
 
@@ -188,7 +187,7 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::strin
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string type)
+IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string& type)
 {
     IXTExprsnNode* pNode = 0;
 
@@ -227,7 +226,7 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string t
     return pNode;
 }
     
-IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::string type)
+IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::string& type)
 {
     IXTExprsnNode* pNode = 0;
 
@@ -244,8 +243,10 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
         // Special case of IM asking to retrieve data from tuple
         if (funcCand == "get" || funcCand == "\"Pr" || funcCand == "Pr")
         {
+            std::string funcType = "";
+
             expression = operand;
-            pNode = parseFunction(expression);
+            pNode = parseFunction(expression, funcType);
         }
         // Special case of an IM "ifelse" clause
         else if (funcCand == "ifelse")
@@ -255,6 +256,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
             int endPos   = operand.length();
 
             std::string conExpression = findFuncArgument(operand,startPos,endPos);
+            std::string conType       = "";
 
             startPos = endPos + 1;
             endPos   = operand.length();
@@ -264,7 +266,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
             endPos   = operand.length();
             std::string elseResult    = findFuncArgument(operand,startPos,endPos);
 
-            IXTExprsnNode* condNode = parseNextExpression(conExpression);
+            IXTExprsnNode* condNode = parseNextExpression(conExpression, conType);
             IXTExprsnNode* ifNode   = parseNextExpression(ifResult, type);
             IXTExprsnNode* elseNode = parseNextExpression(elseResult, type);
 
@@ -302,7 +304,9 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
                 argument     = findFuncArgument(operand, startPos, endPos);
 
                 // Parse second operand
-                operandNode2 = parseNextExpression(argument);
+                std::string argType = "";
+
+                operandNode2 = parseNextExpression(argument, argType);
             }
             else operandNode2 = new XTExprsnValue<REALNUM>("",0);
 
@@ -321,7 +325,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
     return pNode;
 }
 
-IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression, std::string type)
+IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression, std::string& type)
 {
     // Assumption is that this is an ntuple variable which may or may not have been declared
     XTcolumnValBase* tupleVal = 0;

@@ -20,7 +20,7 @@ $Header$
 template <class T> class GleamItem : public GlastClassify::Item {
 public:
     GleamItem<T>(const std::string& name, const std::string& type, T* data) :
-      m_name(name), m_type(type), m_pdata(data) {}
+      m_pdata(data), m_name(name), m_type(type) {}
     
     virtual ~GleamItem<T>() {}
 
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    T*   m_pdata;
+    T*          m_pdata;
     std::string m_name;
     std::string m_type;
 };
@@ -94,7 +94,7 @@ public:
         }
         else
         {
-            int j = 0;
+            throw std::invalid_argument("GleamTuple::getItem: attempting to set an unrecognized data type");
         }
 
         return item;
