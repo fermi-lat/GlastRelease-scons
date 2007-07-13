@@ -21,6 +21,7 @@ namespace GlastClassify{
     public:
         virtual ~Item(){};
         virtual operator double()const = 0;
+        virtual void setDataValue(void* data) = 0;
     protected:
         Item(){};
     };
