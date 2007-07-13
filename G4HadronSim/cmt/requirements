@@ -49,6 +49,7 @@ library  G4HadronSim -no_share  \
                        -s=$(G4HadronSimSrcDir)/QGSP      $(src) \
                        -s=$(G4HadronSimSrcDir)/QGSP_BERT $(src) \
                        -s=$(G4HadronSimSrcDir)/QGSP_BIC  $(src) \ 
+                       -s=$(G4HadronSimSrcDir)/QGSC      $(src) \
+                       -s=$(G4HadronSimSrcDir)/QGSC_LEAD $(src) \
                        -s=$(G4HadronSimSrcDir)/LC        $(src) \
                        -s=$(G4HadronSimSrcDir)/SE        $(src) 
-
