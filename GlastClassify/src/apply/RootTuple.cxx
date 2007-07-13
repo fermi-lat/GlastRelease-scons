@@ -71,11 +71,40 @@ TTree* getTree(TFile *f) {
 
 class RootItem : public GlastClassify::Item {
 public:
-    RootItem(TLeaf * leaf) : m_leaf(leaf){}
+    RootItem(TLeaf * leaf) : m_leaf(leaf)
+    {
+        m_type  = m_leaf->GetTypeName();
+        m_pdata = m_leaf->GetValuePointer();
+    }
     operator double() const { return m_leaf->GetValue();}
+    void setDataValue(void* data) 
+    {
+        if (m_type == "UInt_t")
+        {
+            *(reinterpret_cast<int*>(m_pdata)) = *(reinterpret_cast<int*>(data));
+        }
+        else if (m_type == "Float_t")
+        {
+            *(reinterpret_cast<float*>(m_pdata)) = *(reinterpret_cast<float*>(data));
+        }
+        else if (m_type == "Double_t")
+        {
+            *(reinterpret_cast<double*>(m_pdata)) = *(reinterpret_cast<double*>(data));
+        }
+        else if (m_type == "UChar_t")
+        {
+            *(reinterpret_cast<std::string*>(m_pdata)) = 
+                 *((reinterpret_cast<std::string*>(data))->data());
+        }
+        else
+        {
+            throw std::invalid_argument("ClassifyAlg::Item: attempting to set an unrecognized data type");
+        }
+    }
 private:
-    TLeaf* m_leaf;
-
+    std::string m_type;
+    void*       m_pdata;
+    TLeaf*      m_leaf;
 };
 
 } // anonymous namespace
@@ -123,6 +152,11 @@ RootTuple::~RootTuple()
 const Item* RootTuple::getItem(const std::string& name)const
 {
     TLeaf* leaf = m_tree->GetLeaf(name.c_str());
+
+    if (leaf == 0)
+    {
+        throw std::invalid_argument("RootTuple::getItem cannot find leaf " + name);
+    }
     return (leaf!=0) ? new RootItem(leaf) : 0;
 
 }    

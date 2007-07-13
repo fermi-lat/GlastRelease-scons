@@ -88,9 +88,6 @@ private:
     // This looks up the values in the output ntuple
     ITupleInterface&                   m_lookup;
 
-    // Vector to hold any CTB output variables
-    std::map<std::string, float*>      m_ctbVarMap;
-
     // Class needed to calcluate local variables used in CT's
     XTtupleMap    m_xtTupleMap;
 

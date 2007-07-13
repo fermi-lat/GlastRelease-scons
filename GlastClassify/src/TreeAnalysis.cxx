@@ -24,7 +24,6 @@ TreeAnalysis::TreeAnalysis(ITupleInterface& tuple)
     m_iNodeVec.clear();
     m_typeToINodeVecMap.clear();
     m_xtTupleMap.clear();
-    m_ctbVarMap.clear();
 
     return;
 }
@@ -54,11 +53,6 @@ double TreeAnalysis::getTupleVal(const std::string& name)
 void TreeAnalysis::execute()
 {
     // Initialize the output variables
-    //for(std::map<std::string, float*>::iterator iter = m_ctbVarMap.begin(); iter != m_ctbVarMap.end(); iter++)
-    //{
-    //    float* ctbVar = iter->second;
-    //    *ctbVar = 0;
-    //}
 
     // Transfer tuple variables to local tuple, if needed
     for(XTtupleMap::iterator dataIter = m_xtTupleMap.begin(); dataIter != m_xtTupleMap.end(); dataIter++)
@@ -156,9 +150,7 @@ void TreeAnalysis::storeCTvals()
 
                 if (colVal->dataIsValid()) result = *(*colVal)();
 
-                float* ctbVarAddr = m_ctbVarMap[dataIter->first];
-                
-                *ctbVarAddr = result;
+                const_cast<GlastClassify::Item*>(m_nTupleMap[dataIter->first])->setDataValue(&result);
 
                 int checkit = 0;
             }
@@ -185,26 +177,7 @@ void TreeAnalysis::crossRefNtupleVars()
     {
         const std::string& varName = dataIter->first;
 
-        // Our first task is to determine if this is going to be output to the tuple
-        // The convention for this to be true is that the variable name is prefixed
-        // by the letters "CTB"
-        if (varName.substr(0,3) == "CTB" && dataIter->second->getType() != "categorical")
-        {
-            // Create a new data object and add to the vector
-            float* newVar = new float;
-
-            // Initialize it to zero just to make sure
-            *newVar = 0.;
-
-            m_ctbVarMap[varName] = newVar;
-
-            // Add it to the ntuple
-            m_lookup.addItem(varName, *newVar);
-        }
-
-        // There seem to be two modes of return here, depending on whether we are
-        // using the "real" (ie merit) ntuple or the home brewed on
-        // Need a try/catch clause to keep from crashing
+        // Try to look up the variable in the input ntuple. If it exists then we are good to go.
         try
         {
             // Try to look up the variable
@@ -213,12 +186,24 @@ void TreeAnalysis::crossRefNtupleVars()
             // If it exists the add to the map
             if (item != 0) m_nTupleMap[varName] = item;
         }
-        // This happens when using "real" ntuple, if variable doesn't exist
-        // an exception is thrown
+        // If variable doesn't exist then an exception is thrown, we catch it here
         catch (std::invalid_argument& arg)
         {
-            // No need to do anything
-            continue;
+            // if this is a CTB variable then we want to add it to the ntuple
+            if (varName.substr(0,3) == "CTB" && dataIter->second->getType() != "categorical")
+            {
+                // Create a new data object and add to the vector
+                float* newVar = new float;
+
+                // Initialize it to zero just to make sure
+                *newVar = 0.;
+
+                // Add it to the ntuple
+                m_lookup.addItem(varName, *newVar);
+
+                // Now add it to the list
+                m_nTupleMap[varName] = m_lookup.getItem(varName);
+            }
         }
     }
 

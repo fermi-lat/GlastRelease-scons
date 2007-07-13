@@ -27,6 +27,30 @@ public:
     operator double()const {
         return (double)*m_pdata;
     }
+    void setDataValue(void* data) 
+    {
+        if (m_type == "UInt_t")
+        {
+            *m_pdata = *(reinterpret_cast<int*>(data));
+        }
+        else if (m_type == "Float_t")
+        {
+            *m_pdata = *(reinterpret_cast<float*>(data));
+        }
+        else if (m_type == "Double_t")
+        {
+            *m_pdata = *(reinterpret_cast<double*>(data));
+        }
+        else if (m_type == "UChar_t")
+        {
+            *m_pdata = *((reinterpret_cast<std::string*>(data))->data());
+        }
+        else
+        {
+            throw std::invalid_argument("ClassifyAlg::Item: attempting to set an unrecognized data type");
+        }
+    }
+
 private:
     T*   m_pdata;
     std::string m_name;

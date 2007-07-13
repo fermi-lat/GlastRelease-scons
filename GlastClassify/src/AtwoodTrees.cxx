@@ -250,13 +250,17 @@ bool AtwoodTrees::execute()
     // Last step, always copy CTB back to ntuple
     m_treeAnalysis->storeCTvals();
 
-    float   bestEnergy  = m_treeAnalysis->getTupleVal("CTBBestEnergy");
-    double  beTuple     = *m_CTBBestEnergy;
-
-    if (bestEnergy != beTuple)
+    try
     {
-        int k = 0;
+        float   bestEnergy  = m_treeAnalysis->getTupleVal("CTBBestEnergy");
+        double  beTuple     = *m_CTBBestEnergy;
+
+        if (bestEnergy != beTuple)
+        {
+            int k = 0;
+        }
     }
+    catch(...) {}
 
     return writeTupleRow;
 }
