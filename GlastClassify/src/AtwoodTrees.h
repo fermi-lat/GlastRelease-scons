@@ -48,8 +48,6 @@ private:
     const Item*   m_eventId;
     const Item*   m_run;
 
-    const Item*   m_CTBBestEnergy;
-
     // These are variables to be output to the ntuple 
     // (in alphabetical order)
     float         m_bestEnergyProb;

@@ -30,44 +30,6 @@
 #include <iostream>
 
 namespace {
-/*
-    // convenient utility from Heather
-TTree* getTree(TFile *f) {
-  // Create an iterator on the list of keys
-  TIter nextTopLevelKey(f->GetListOfKeys());
-  TKey *keyTopLevel, *curDirKey;
-  TTree* t=0; // return 
-
-  // loop on keys, and search for the TTree named "t1"
-  while  ( (keyTopLevel=(TKey*)nextTopLevelKey())!=0 ) {
-    // I'm assuming we know the name of the TTree is "t1"
-    TString name(keyTopLevel->GetName());
-    TString className(keyTopLevel->GetClassName());
-
-    if ((name.CompareTo("t1")==0) && (className.CompareTo("TTree")==0))  {
-      // Found It
-      t = (TTree*)f->Get(keyTopLevel->GetName());
-      return t;
-    }
-    // If we find a directory - then we search it as well
-    // Here I'm assuming that our directory structure only goes down one-level
-    if (className.CompareTo("TDirectory")==0) {
-      TDirectory *curDir = (TDirectory*)f->Get(name);
-      TIter dirKeys(curDir->GetListOfKeys());
-      while ( (curDirKey = (TKey*)dirKeys() ) ) {
-        TString name(curDirKey->GetName());
-        TString className(curDirKey->GetClassName());
-        if ( (name.CompareTo("t1")==0) && (className.CompareTo("TTree")==0) ) {
-          // Found it
-          t = (TTree*)curDir->Get(curDirKey->GetName());
-          return t;
-        }
-      }
-    }
-  }
-  return t;
-}
-*/
 
 class RootItem : public GlastClassify::Item {
 public:
@@ -153,6 +115,8 @@ const Item* RootTuple::getItem(const std::string& name)const
 {
     TLeaf* leaf = m_tree->GetLeaf(name.c_str());
 
+    // Emulate nTupleWriterSvc by throwing an exception if we don't find 
+    // a leaf for this variable
     if (leaf == 0)
     {
         throw std::invalid_argument("RootTuple::getItem cannot find leaf " + name);
