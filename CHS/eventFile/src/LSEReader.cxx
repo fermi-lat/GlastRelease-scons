@@ -195,6 +195,9 @@ namespace eventFile {
       throw std::runtime_error( ess.str() );
     }
 
+    // if no entries, we're done
+    if ( nDB == 0 ) return;
+
     // read the entries themselves
     pakeys.CDM_keys.clear();
     pakeys.CDM_keys.resize( nDB );
