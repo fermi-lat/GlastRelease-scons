@@ -24,7 +24,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/GcrReconClasses.h"
-#include "Event/Recon/TkrRecon/TkrTrack.h";
+#include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/TopLevel/Event.h"
 
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -337,7 +337,7 @@ bool GcrReconTool::TriggerEngine4ON(){
     // Trigger engine 4 (CNOTrigger here): 
     // Track, LoCal, ACDH("CNO"), THROTTLE ("ROI")
    
-    IDataProviderSvc* m_pEventSvc;
+    //    IDataProviderSvc* m_pEventSvc;
 
     // Recover EventHeader Pointer
     SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
@@ -360,7 +360,7 @@ bool GcrReconTool::TriggerEngine4ON(){
 
 bool GcrReconTool::OBF_HFCVetoExist(){
 
- bool debugging= true;
+    // bool debugging= true;
   //CL. 26/03/07:  Task #0: verify OBF status
  bool vetoExists=true;
  
@@ -1105,12 +1105,13 @@ void GcrReconTool::getCrossedFaces(int ilay, Point xtalCentralPoint, Point entry
       m_log << MSG::INFO << "@@@@@ middlePoint: " << endreq;
 
   Point middlePoint = Point(0.5*(entryPoint.x()+exitPoint.x()),0.5*(entryPoint.y()+exitPoint.y()),0.5*(entryPoint.z()+exitPoint.z()));
-  int facem = getClosestFace(ilay,xtalCentralPoint,middlePoint,dm);
+  /*int facem =*/ getClosestFace(ilay,xtalCentralPoint,middlePoint,dm);
   
   if(debugging)
       m_log << MSG::INFO << "face0,face1=" << face0 <<"," << face1 << endreq;
   
-  crossedFaces = std::pow(2.,double(face0)) + std::pow(2.,double(face1));
+  //  crossedFaces = std::pow(2.,double(face0)) + std::pow(2.,double(face1));
+  crossedFaces = static_cast<int>(std::pow(2.,face0) + std::pow(2.,face1));
 
   if(debugging)
       m_log << MSG::INFO << "crossedFaces=" << crossedFaces << endreq;
