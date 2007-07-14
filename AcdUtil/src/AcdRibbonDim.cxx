@@ -38,16 +38,8 @@ StatusCode AcdRibbonDim::getVals() {
   
   int minusFace = m_acdId.ribbonOrientation() == ribbonX ? 1 : 2;
   int plusFace = m_acdId.ribbonOrientation() == ribbonX ? 3 : 4;
-  
-  isOk = m_acdGeomSvc.fillRibbonTransform(minusFace,m_minusSideRays[0],m_minusSideTransform);
-  if ( ! isOk ) {
-    return StatusCode::FAILURE;
-  }
-  isOk = m_acdGeomSvc.fillRibbonTransform(plusFace,m_plusSideRays[0],m_plusSideTransform);
-  if ( ! isOk ) {
-    return StatusCode::FAILURE;
-  }
-  isOk = m_acdGeomSvc.fillRibbonTransform(0,m_topRays[0],m_topTransform);
+
+  isOk = m_acdGeomSvc.fillRibbonTransforms(m_acdId,m_minusSideTransform,m_topTransform,m_plusSideTransform);
   if ( ! isOk ) {
     return StatusCode::FAILURE;
   }

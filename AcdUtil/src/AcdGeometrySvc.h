@@ -83,14 +83,16 @@ public:
                  std::vector<Ray>& plusSideRays, bool increasing = true);
 
     /// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
-    virtual bool fillRibbonTransform(int face,
-				     const Ray& ribbon,
-				     HepTransform3D& transform);
+    virtual bool fillRibbonTransforms(const idents::AcdId& id,
+				      HepTransform3D& minusSideTransform,
+				      HepTransform3D& topTransform,
+				      HepTransform3D& plusTransform);	
 
     virtual double ribbonHalfWidth() const;
 
     /// Given an AcdId, provide the tile size, center and corners
     virtual bool fillTileData(const idents::AcdId& id, int iVol,
+			      int& face,
 			      std::vector<double>& dim, 
 			      HepPoint3D& center,
 			      HepPoint3D* corner);

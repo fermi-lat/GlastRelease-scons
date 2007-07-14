@@ -36,7 +36,9 @@ StatusCode AcdTileDim::getVals() {
   if ( ! isOk ) return StatusCode::FAILURE;
 
   for ( int iVol(0); iVol < m_nVol; iVol++ ) {
-    isOk = m_acdGeomSvc.fillTileData(m_acdId,iVol,m_dim[iVol],m_tileCenter[iVol],m_corners[iVol]);
+ 
+    m_dim[iVol].clear();
+    isOk = m_acdGeomSvc.fillTileData(m_acdId,iVol,m_face[iVol],m_dim[iVol],m_tileCenter[iVol],m_corners[iVol]);
     if ( ! isOk ) return StatusCode::FAILURE;
     isOk = m_acdGeomSvc.fillTileTransform(m_acdId,iVol,m_transform[iVol]);
     if ( ! isOk ) return StatusCode::FAILURE;

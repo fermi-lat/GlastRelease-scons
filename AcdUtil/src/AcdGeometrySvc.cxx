@@ -582,11 +582,82 @@ bool AcdGeometrySvc::fillRibbonRays(const idents::AcdId& id, std::vector<Ray>& m
 
 
 /// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
-bool AcdGeometrySvc::fillRibbonTransform(int /* face */,
-					 const Ray& /* ribbon */,
-					 HepTransform3D& transform)
-{
-  transform.setIdentity();  
+bool AcdGeometrySvc::fillRibbonTransforms(const idents::AcdId& id,
+					  HepTransform3D& minusSideTransform,
+					  HepTransform3D& topTransform,
+					  HepTransform3D& plusSideTransform){
+
+    typedef enum {
+        ribbonX = 5,
+        ribbonY = 6
+    } ribbonOrient;
+
+    unsigned int faceArr[6] = {0, 1, 3, 0, 2, 4}; // x Faces 0, 1 (-X), 3 (+X), y Faces 0, 2 (-y), 4(+y)
+    // do top faces first too add segments 6 and 7 to the right end of the minus and plus vectors
+    // when increasing, it means we can just push_back the rays as normal, and when decreasing we can also use push_back
+
+    bool retVal = true;
+    if (!id.ribbon()) return false;
+
+    unsigned int ribbonNum = id.ribbonNum();
+    unsigned int ribbonOrientation = id.ribbonOrientation();
+
+    // Use orientation of ribbon to determine xOrient and the starting index into our array of face ids
+    bool xOrient;
+    unsigned int startInd = 0;
+    if (ribbonOrientation == ribbonX) 
+        xOrient = true;
+    else {
+        startInd = 3;
+        xOrient = false;
+    }
+
+    // Loops over set of faces
+    unsigned int iFace;
+    for (iFace = startInd; iFace < (startInd+3); iFace++) {
+
+        // Get the ribbon segments from the glastDetSvc
+        std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
+        m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
+					   faceArr[iFace], ribbonNum, xOrient, true);
+
+        if ( ribbonSegmentVolIds.size() == 0 ) {
+            MsgStream   log( msgSvc(), name() );
+            log << MSG::INFO << "No ribbon segments found for AcdId: " << id.id() << " with xOrientation "
+                << xOrient << " Face: " << faceArr[iFace] << endreq;
+	    return false;
+        }
+ 
+	// figure out segment is the "middle" one
+	int toUse = (ribbonSegmentVolIds.size()-1) / 2;
+	const idents::VolumeIdentifier& volId = ribbonSegmentVolIds[toUse];
+	
+	StatusCode sc;
+	switch ( iFace ) {
+	case 0:
+	case 3:
+	  // top
+	  sc = m_glastDetSvc->getTransform3DByID(volId, &topTransform);
+	  break;
+	case 1:
+	case 4:
+	  // minus side
+	  sc = m_glastDetSvc->getTransform3DByID(volId, &minusSideTransform);
+	  break;
+	case 2:
+	case 5:
+	  // plus side
+	  sc = m_glastDetSvc->getTransform3DByID(volId, &plusSideTransform);
+	  break;
+	}
+	if (sc.isFailure() ) {
+	  MsgStream   log( msgSvc(), name() );
+	  log << MSG::WARNING << "Failed to get ribbon trasnformation" << endreq;
+	  return false;
+	} 
+    } // end face for
+
+
   return true;
 }
 
@@ -598,20 +669,22 @@ double AcdGeometrySvc::ribbonHalfWidth() const
 
 /// Given an AcdId, provide the tile size, center and corners
 bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
+				  int& face,
 				  std::vector<double>& dim, 
 				  HepPoint3D& center,
 				  HepPoint3D* corner)
 {
   idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
   idents::VolumeIdentifier volId = ncid.volId(iVol==1);
-  StatusCode sc = getDimensions(volId,dim,center);
+  StatusCode sc = getDetectorDimensions(volId,dim,center);
+  face = volId[1];
   if (sc.isFailure() ) {
-    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+    //log << MSG::WARNING << "Failed to get transformation" << endreq;
     return false;
   } 
   sc = getCorners(dim,center,corner);
   if (sc.isFailure() ) {
-    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+    //log << MSG::WARNING << "Failed to get transformation" << endreq;
     return false;
   } 
   return true;
@@ -628,6 +701,7 @@ bool AcdGeometrySvc::fillTileTransform(const idents::AcdId& id, int iVol,
     //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
     return false;
   } 
+  return true;
 }
 
 /// Given an AcdId, provide positions of screw holes in local frame
