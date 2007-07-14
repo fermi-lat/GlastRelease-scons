@@ -156,7 +156,7 @@ namespace AcdRecon {
 	}
       } else if(face == 1 || face == 3) {// X Side Tile
 	testActiveY = dZ/2  - fabs(testLocalY);
-	testActiveX = dX/2. - fabs(testLocalX);
+	testActiveX = dY/2. - fabs(testLocalX);
       } else if(face == 2 || face == 4) {// Y Side Tile
 	testActiveY = dZ/2. - fabs(testLocalY);
 	testActiveX = dX/2. - fabs(testLocalX);
@@ -170,6 +170,8 @@ namespace AcdRecon {
 	  }	  
 	}
       }
+
+     
 
       // check to see which active distance is more negative (ie, farther from the center of the tile)
       double testActive2D =  testActiveX < testActiveY ? testActiveX : testActiveY;
@@ -326,6 +328,7 @@ namespace AcdRecon {
       double test_arc(-1.);
       double localX(0.); double localY(0.);
       AcdRecon::crossesPlane(aTrack,sideCenter,face,test_arc,localX,localY,x_isec);
+	
       if (test_arc < 0) continue;
     
       bool isOk = ribbon.setEdgeRay(segment,ribbonStartPos,ribbonVec);
@@ -365,19 +368,19 @@ namespace AcdRecon {
     int dir = 0;
     if ( acdId.ribbonOrientation() == ribbonX ) {
       // extends along x.  Want to know if it is going towards +-Y sides  
-      dir = track.m_dir.y() > 0 ? 1 : -1;
+      dir = track.m_dir.x() > 0 ? 1 : -1;
     } else {
       // extends along y.  Want to know if it is going towards +-X sides  
-      dir = track.m_dir.x() > 0 ? 1 : -1;
+      dir = track.m_dir.y() > 0 ? 1 : -1;
     }
 
-    dist = 2000.;
+    dist = -2000.;
     double arcLengthTest(0.);
     double distTest(0.);
     Point x_test;
     Vector v_test;
     int regionTest(0);
-    double dist_last(500000.);
+    double dist_last(-500000.);
     std::vector<const Ray*> raysInOrder;
     
     
@@ -390,33 +393,44 @@ namespace AcdRecon {
 	const Ray& aRay = ribbon.plusSideRays()[iRay];
 	raysInOrder.push_back(&aRay);
       }
-       for ( iRay = ribbon.topRays().size() -1; iRay >= 0; iRay-- ) {
-	const Ray& aRay = ribbon.topRays()[iRay];
-	raysInOrder.push_back(&aRay);
+      if ( track.m_upward ) {
+	for ( iRay = ribbon.topRays().size() -1; iRay >= 0; iRay-- ) {
+	  const Ray& aRay = ribbon.topRays()[iRay];
+	  raysInOrder.push_back(&aRay);
+	}
       }
     } else if ( dir == -1 ) {
       // Going to - side
        for ( iRay = 0; iRay < ribbon.minusSideRays().size(); iRay++ ) {
 	const Ray& aRay = ribbon.minusSideRays()[iRay];
 	raysInOrder.push_back(&aRay);
-      }
-       for ( iRay =0; iRay < ribbon.topRays().size(); iRay++ ) {
-	const Ray& aRay = ribbon.topRays()[iRay];
-	raysInOrder.push_back(&aRay);
-      }
+       }
+       if ( track.m_upward ) {
+	 for ( iRay =0; iRay < ribbon.topRays().size(); iRay++ ) {
+	   const Ray& aRay = ribbon.topRays()[iRay];
+	   raysInOrder.push_back(&aRay);
+	 }
+       }
     } else {
       return;
     }
 
-    
     for ( iRay = 0; iRay < raysInOrder.size(); iRay++ ) {
       const Ray& aRay = *(raysInOrder[iRay]);
-      AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,distTest,x_test,v_test,regionTest);
-      if ( dist > dist_last ) {
+      AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,distTest,x_test,v_test,regionTest);      
+
+      
+
+      // Make this an Active Distance calculation 
+      distTest = ribbon.halfWidth() - distTest;
+
+      if ( distTest < dist_last ) {
 	// going wrong direction. stop
-	return;
+	//return;
+	continue;
       }
-      if ( distTest < dist ) {
+      dist_last = distTest;
+      if ( distTest >  dist ) {
 	dist = distTest;
 	arcLength = arcLengthTest;
 	x = x_test;

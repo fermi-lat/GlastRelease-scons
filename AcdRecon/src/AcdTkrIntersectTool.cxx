@@ -57,7 +57,7 @@ StatusCode AcdTkrIntersectTool::initialize()
     log<< MSG::ERROR<<"GlastDetSvc not found"<<endreq ;
     return StatusCode::FAILURE ;
   } 
-\
+  
   // GlastDetSvc
   sc = service("AcdGeometrySvc", m_acdGeomSvc);
   if (sc.isFailure()) {
@@ -231,9 +231,10 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
   } else if ( tileDataForGap != 0 ) {
     gapPocaTile(track,data,*tileDataForGap,gapPocas);
   } else {
-    // should never happen anymore
-    assert(0);
-    //fallbackToNominal(track,data,gapPocas);
+    // Didn't hit any tiles or ribbons
+    // Check to see if it exited bottom (data.m_face==5)
+    // Otherwise computed distance to nominal gap
+    if ( data.m_face != 5 ) fallbackToNominal(track,data,gapPocas);
   } 
 
   return StatusCode::SUCCESS ;
@@ -263,19 +264,19 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vec
   MsgStream log(msgSvc(),name()) ;   
 
   // hits -x or +x side ?
-  const double normToXIntersection =  initialDirection.x() > 0 ?  
+  const double normToXIntersection =  initialDirection.x() < 0 ?  
     -1.*s_side_distance - initialPosition.x() :    // hits -x side
     1.*s_side_distance - initialPosition.x();      // hits +x side  
   const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
-    -1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
+    1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
   const double sToXIntersection = normToXIntersection * slopeToXIntersection;
   
   // hits -y or +y side ?
-  const double normToYIntersection = initialDirection.y() > 0 ?  
+  const double normToYIntersection = initialDirection.y() < 0 ?  
     -1.*s_side_distance - initialPosition.y() :    // hits -y side
     1.*s_side_distance - initialPosition.y();      // hits +y side
   const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
-    -1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
+    1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
   const double sToYIntersection = normToYIntersection * slopeToYIntersection;
   
   // hits top or bottom
@@ -289,7 +290,7 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vec
     log << MSG::ERROR << "Downgoing track " << upward << ' ' << initialDirection.z()  << endreq;
   }
 
-  // pick the closest place
+  // pick the closest plane
   if ( sToXIntersection < sToYIntersection ) {
     if ( sToXIntersection < sToZIntersection ) {
       // hits X side
@@ -302,7 +303,7 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vec
     }     
   } else {
     if ( sToYIntersection < sToZIntersection ) {
-      // hits X side
+      // hits Y side
       data.m_arcLength = sToYIntersection;
       data.m_face = initialDirection.y() > 0 ? 2 : 4;
     } else {
@@ -319,7 +320,7 @@ StatusCode AcdTkrIntersectTool::exitsLAT(const Point& initialPosition, const Vec
   }
 
   // extrapolate to the i-sect
-  data.m_x = initialPosition - data.m_arcLength*initialDirection;
+  data.m_x = initialPosition + data.m_arcLength*initialDirection;
 
   // flip the sign of the arclength for downgoing side
   data.m_arcLength *= upward ? 1. : -1.;
@@ -428,7 +429,7 @@ StatusCode AcdTkrIntersectTool::fallbackToNominal(const AcdRecon::TrackData& tra
 
   if ( false ) {
     std::cout << "ToGap: [" << data.m_x.x() << ' ' <<  data.m_x.y() << ' ' <<  data.m_x.z() << "] " 
-	      << gapType << ' ' << data.m_face << ' ' << gapIndex << ' ' << maxDoca << std::endl;
+	      << gapType << ' ' << data.m_face << ' ' << gapIndex << ' ' << maxDoca << ' ' << data.m_arcLength << std::endl;
   }
 
   Event::AcdTkrGapPoca* poca(0);
@@ -450,8 +451,8 @@ StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, 
 					      const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas) {
 
   AcdRecon::AcdGapType gapType(AcdRecon::None);  
-  unsigned char face = (unsigned char)(data.m_face);
-  unsigned char gap = 0;
+  int face = data.m_face;
+  unsigned gap = 0;
   switch ( face ) {
   case 0:
     gapType = AcdRecon::Y_RibbonTop;
@@ -471,15 +472,16 @@ StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, 
     return StatusCode::SUCCESS;
   }
 
-  unsigned char col = (unsigned char) ( pocaData.m_id.ribbonNum() );
-  unsigned char row = 0;
+  unsigned col = pocaData.m_id.ribbonNum();
+  unsigned row = 0;
   
   idents::AcdGapId gapId(gapType,gap,face,row,col);
 
-  double distance = pocaData.m_active2D;
+  double distance = pocaData.m_active3D;
 
   Event::AcdTkrGapPoca* poca(0);
   StatusCode sc = makeGapPoca(gapId,track,pocaData,distance,poca);
+
   if ( sc.isFailure() ) return sc;
 
   gapPocas.push_back(poca);
