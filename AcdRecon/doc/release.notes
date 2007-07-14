@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r8      13-Jul-2007 EAC Use new version of AcdUtil/AcdGeomSvc and AcdTile/RibbonDim
 v3r7p2    20-Apr-2007 EAC Change arclength to use the arclength to the tile plane instead of arc length to tile edge POCA.
 v3r7p1    29-Mar-2007 EAC Switch code to prefer ribbon data over tile data for GAP calculation.
 v3r7      07-Dec-2006 EAC Add stuff to get active distance relative to MC particle
