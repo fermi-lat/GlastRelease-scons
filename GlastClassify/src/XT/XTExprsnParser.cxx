@@ -182,7 +182,7 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::strin
             {
                 pNode = new XTExprsnNode<bool,bool>(fndDelim, pNodeL, pNodeR);
             }
-            else if ( (pos = inputType.find("XTExprsnTypes::categoricalType",0)) > -1)
+            else if ( (pos = inputType.find(XTExprsnTypes::categoricalType,0)) > -1)
             {
                 pNode = new XTExprsnNode<bool,std::string>(fndDelim, pNodeL, pNodeR);
             }
