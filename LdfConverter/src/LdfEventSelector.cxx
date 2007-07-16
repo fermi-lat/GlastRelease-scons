@@ -320,10 +320,11 @@ LdfEventSelector::~LdfEventSelector() {
 
 bool fileExists(const std::string &fileName) {
 
-    struct stat checkFile;
 #ifdef WIN32
+    struct _stat checkFile;
     if (_stat(fileName.c_str(), &checkFile) == -1)
 #else
+    struct stat checkFile;
     if (stat(fileName.c_str(), &checkFile) == -1)
 #endif
       return false;

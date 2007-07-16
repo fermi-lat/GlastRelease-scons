@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v3r9p1  16-Jul-2007 HMK Patch for windows
 v3r9    05-Jul-2007 HMK Fix up LdfEventSelector::FileExists mtd to use stat
         rather than opening/closing file
 v3r8    07-Jun-2007 HMK Merge GlastReleasev9r13 branch
