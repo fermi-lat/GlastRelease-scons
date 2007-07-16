@@ -149,6 +149,7 @@ IXTExprsnNode* XTExprsnParser::parseOperator(std::string& expression, std::strin
             pNodeR = parseNextExpression(temp, inputType);
 
             std::string rightType = pNodeR->getTypeId();
+            if (inputType == "") inputType = rightType;
         }
         //else pNodeR = new XTExprsnValue<REALNUM>("",0);
 
@@ -236,7 +237,8 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
     std::string operand = findEnclosingParens(expression, leftPos, rightPos);
 
     // Is there a possible function here?
-    if (leftPos > 0 && rightPos > expression.size()-3)
+    int expSize = expression.size();
+    if (leftPos > 0 && rightPos > expSize-3)
     {
         std::string funcCand = expression.substr(0,leftPos);
 

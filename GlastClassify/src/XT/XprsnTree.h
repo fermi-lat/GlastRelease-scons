@@ -50,22 +50,28 @@ public:
 template <typename T1, typename T2> class XTfunctions
 {
 public:
-    static T1 xtnot(const T2* valuePtr)
-    {
-        T1 result = !(*valuePtr);
-        return result;
-    }
+    const T1 xtnot(const T2* valuePtr) const;
 };
+
+template <typename T1, typename T2> const T1 XTfunctions<T1,T2>::xtnot(const T2* valuePtr) const
+{
+    const T2 value = *valuePtr;
+    T1 result = !value;
+    return result;
+}
 
 // Override the above for the case there T2 is a string (and the ! operator is not defined)
 template <typename T1> class XTfunctions<T1, std::string>
 {
 public:
-    static T1 xtnot(const std::string* valuePtr)
-    {
-        return valuePtr->length() == 0;
-    }
+    const T1 xtnot(const std::string* valuePtr) const;
 };
+
+template <typename T1> const T1 XTfunctions<T1,std::string>::xtnot(const std::string* valuePtr) const
+{
+    const std::string& value = *valuePtr;
+    return value.length() == 0;
+}
 
 /** @class XTExprsnNode
 @brief A generic implementation of an "Expression Node". This class defines the 
@@ -229,9 +235,11 @@ private:
     }
     const T1* xtnot(IXTExprsnNode* rhs) const 
     {
-        // We need to do this because std::string does not define the operator !
-//        *m_value = ExprsnNodeNotFunc<T1,T2>(reinterpret_cast<const T2*>((*rhs)()));
-        *m_value = XTfunctions<T1,T2>::xtnot(reinterpret_cast<const T2*>((*rhs)()));
+        // We need to do this because std::string does not define the operator ! so we do a little
+        // template specialization magic to insert the "right" code 
+        XTfunctions<T1,T2> funcs;
+        *m_value = funcs.xtnot(reinterpret_cast<const T2*>((*rhs)()));
+
         return m_value;
     }
     const T1* pow(IXTExprsnNode* rhs) const 
