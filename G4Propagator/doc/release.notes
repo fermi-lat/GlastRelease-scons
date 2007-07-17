@@ -3,8 +3,10 @@
     $Id$
  @verbatim
 
- v2r2p5   17-Jul-07 LSR  Fixed bug in ParticleTransporter::getStepAtArclen()
-                          I don't think this code was ever called before
+ v2r2p7   17-Jul-07 LSR  Fix bug in ParticleTransporter::getStepAtArclen()
+                            I don't think this code was ever called before
+ v2r2p6   17-Jul-07 LSR  Oops again!
+ v2r2p5   17-Jul-07 LSR  Oops!
  v2r2p4   22-Aug-06 TU   I hate linux
  v2r2p3   22-Aug-06 TU   Fix compilation error on linux
  v2r2p2   12-Aug-06 TU   Updates to allow exception handling of G4 errors

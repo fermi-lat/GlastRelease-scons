@@ -770,14 +770,13 @@ ParticleTransporter::ConstStepPtr ParticleTransporter::getStepAtArcLen(double ar
   // Restrictions and Caveats: None
 
     ConstStepPtr stepPtr = stepInfo.begin();
+    double stepArcLen = 0.;
 
     // If arcLen is negative then want last step
     if (arcLen < 0.) stepPtr = stepInfo.end();
     // Otherwise, go through the steps until we pass the desired distance
     else
     {
-        double stepArcLen = 0.;
-
         while(stepPtr < stepInfo.end())
         {
             double stepDist = (*stepPtr).GetArcLen();
@@ -788,6 +787,8 @@ ParticleTransporter::ConstStepPtr ParticleTransporter::getStepAtArcLen(double ar
             stepPtr++;
         }
     }
+
+    if(stepPtr!=stepInfo.begin()) --stepPtr;
 
     return stepPtr;
 }
