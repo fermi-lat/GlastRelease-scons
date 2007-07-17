@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p3 LSR 17-jul-07  Update jO files readAndDisplay.txt and readDisplayAndWrite.txt
 * v6r29p2 TU  27-jun-07  Modify job options strategy for running interleave to 
                          try to avoid calling Trigger for events which are 
                          read in
