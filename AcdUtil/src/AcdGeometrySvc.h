@@ -106,7 +106,7 @@ public:
 
     /// Given an AcdId, provide information about which volume edges are shared
     virtual bool fillTileSharedEdgeData(const idents::AcdId& id, 
-					const std::vector<double>& dim1, const std::vector<double>& dim1,
+					const std::vector<double>& dim1, const std::vector<double>& dim2,
 					int& sharedEdge1, int& sharedEdge2,
 					float& sharedWidth1, float& sharedWidth2);
 
