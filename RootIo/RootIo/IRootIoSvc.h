@@ -77,6 +77,7 @@ class  IRootIoSvc : virtual public IInterface
     // file list
     virtual bool setFileList( const std::string & type, const StringArrayProperty & fileList ) = 0 ;
     virtual StringArrayProperty getFileList( const std::string & type) const = 0 ;
+    virtual bool appendFileList(StringArrayProperty &fileList, const std::string &fileName) = 0;
 
     virtual StatusCode prepareRootInput
      ( const std::string & type, 

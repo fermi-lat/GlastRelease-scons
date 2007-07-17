@@ -112,7 +112,7 @@ private:
     /// Top-level Monte Carlo ROOT object
     ReconEvent *m_reconEvt;
 //    /// name of the input ROOT file
-//    std::string m_fileName;
+    std::string m_fileName;
     /// List of input files
     StringArrayProperty m_fileList;
     /// name of the Recon TTree stored in the ROOT file
@@ -140,10 +140,10 @@ Algorithm(name, pSvcLocator), m_reconEvt(0)
 {
     // Input pararmeters that may be set via the jobOptions file
     // Input ROOT file name
-//    declareProperty("reconRootFile",m_fileName="");
+    declareProperty("reconRootFile",m_fileName="");
     StringArrayProperty initList;
     std::vector<std::string> initVec;
-    initVec.push_back("recon.root");
+//    initVec.push_back("recon.root");
     initList.setValue(initVec);
     declareProperty("reconRootFileList", m_fileList=initList);
     initVec.clear();
@@ -177,7 +177,14 @@ StatusCode reconRootReaderAlg::initialize()
         log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
         log << MSG::DEBUG << "Event loop will not terminate gracefully" << endreq;
         m_rootIoSvc = 0;
+        return StatusCode::FAILURE;
     }
+
+    if ( !m_fileName.empty() ) 
+        m_rootIoSvc->appendFileList(m_fileList, m_fileName);
+    else if (m_fileList.value().size() == 0)
+        m_rootIoSvc->appendFileList(m_fileList, "recon.root");
+
 
     // Set up new school system...
     std::string type = "RECON";

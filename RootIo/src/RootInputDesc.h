@@ -23,7 +23,7 @@ class RootInputDesc
     RootInputDesc
      ( const StringArrayProperty & fileList, 
        const std::string & treeName, 
-       const std::string & branchName ) ;
+       const std::string & branchName, bool verbose=false ) ;
     ~RootInputDesc() ; 
 
     // Methods to return information about the TTree/TChain being accessed
@@ -41,7 +41,7 @@ class RootInputDesc
     void clearEvent() ;
 
     // Method to change the list of files in this TChain
-    int  setFileList( const StringArrayProperty & fileList ) ;
+    int  setFileList( const StringArrayProperty & fileList, bool verbose = false ) ;
 
   private :
 
