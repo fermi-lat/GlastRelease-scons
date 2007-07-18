@@ -59,10 +59,11 @@ InterleaveAlg.FilePath = "$(INTERLEAVEROOT)/xml";
 
 // do not want to override these
 InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};
-// set these since test program does not define the tuples 
-InterleaveAlg.DisableList += {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*"};
 
-ApplicationMgr.EvtMax = 100; 
+// set these since test program does not define the tuples 
+InterleaveAlg.DisableList = {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*", "Obf*"};
+
+ApplicationMgr.EvtMax = 1000; 
 RoottupleSvc.filename = "tuple.root";
 FluxAlg.zenithTheta=30;
 
