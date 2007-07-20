@@ -1,6 +1,6 @@
 package Gleam
 
-version v6r29p3
+version v6r29p4
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -97,11 +97,7 @@ branches data
 #set reconRootFileName "recon.root"
 #set meritRootFileName "tuple.root"
 #set interleaveRootFileName "interleave.root"
-#et relationRootFileName "relation.root"
-
-# this is set to the correct place for SLAC and glast-ts
-#set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
-#                    WIN32 "f:\glast\calibrations"
+#set relationRootFileName "relation.root"
 
 #macro interleave_data "F:\glast\data\interleave"
 #set INTERLEAVEPATH "$(interleave_data)"
