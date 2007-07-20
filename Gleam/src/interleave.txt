@@ -27,7 +27,7 @@ GenerateEvent.Members = {
     "PointInfoAlg"};
 
 // Define the action when the Generation sequencer fails    
-GenerateEvent.BranchMembers = {"FluxAlg", "ExposureAlg/GenEventExpAlg", "FilterFailAlg/GenEventFailAlg"};
+GenerateEvent.BranchMembers = {"FluxAlg", "ExposureAlg", "FilterFailAlg/GenEventFailAlg"};
 
 // Define the event simulation
 SimulateEvent.Members = {
