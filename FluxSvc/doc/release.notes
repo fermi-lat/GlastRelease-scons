@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   20-jul-07  v6r44p1 THB  Have ExposureAlg set the filter failed, to end branch if any
    04-jun-07  v6r44   THB  Set process name to that of the source for parent particle
    24-may-07  v6r43   THB  Add option to specify a filter cone, in celestial coordinates
    24-apr-07  v6r42   THB  Allow specification of SAA polygon; provide default from Rob
