@@ -11,11 +11,11 @@ ApplicationMgr.DLLs+= {
     "FluxSvc",
     "ntupleWriterSvc",
     "Trigger",
-    "Interleave" };
+    "Interleave",
+    "AnalysisNtuple" };
 
 ApplicationMgr.ExtSvc = { 
     "GlastDetSvc", 
-//    "GlastEventSelector/EventSelector" , 
     "EventCnvSvc",
     "RootTupleSvc",
     "ParticlePropertySvc",
@@ -23,14 +23,11 @@ ApplicationMgr.ExtSvc = {
     "FluxSvc",
     "LivetimeSvc" };
 
-// These needed to define CalTrigTool for TriggerAlg. 
-ApplicationMgr.DLLs   += {"CalXtalResponse", "CalibSvc"}; 
-ApplicationMgr.ExtSvc += {"CalCalibSvc", "CalibDataSvc"};
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
     
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
+EventSelector.PrintFreq = -1;
+
 
 // controls the event loop
 ApplicationMgr.Runable= "FluxSvc";
@@ -39,20 +36,29 @@ ApplicationMgr.Runable= "FluxSvc";
 ApplicationMgr.TopAlg = {"Sequencer/Top" };
 
 //the top sequence loop
-Top.Members={"Sequencer/Generator"};
+Top.Members={"Sequencer/Dummy",
+             "Sequencer/Generator", 
+             "Sequencer/Simulator"};
+             
+// need more for this
+//Dummy.BranchMembers = { "AnalysisNtupleAlg", "FT1Alg", "McCoordsAlg"}; 
 
-Generator.Members     = {"FluxAlg", "PointInfoAlg", "Sequencer/Trigger"};
 
-Trigger.Members       = {"TriggerAlg"};
-Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
-    
+Generator.Members       = {"FluxAlg", "PointInfoAlg", "TestAlg", "Count/events"};
+Generator.BranchMembers = {"FluxAlg", "Count/clocks", "ExposureAlg"};
+
+Simulator.Members       = {"InterleaveAlg", "Count/simulated"}; 
+Simulator.BranchMembers = {"InterleaveAlg", "Count/interleaved", "FT1Alg", "FilterFailAlg/interleave"};   
 
 // -----------------------------------------------
 //          define sources, select the one(s) to generate
-FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+FluxSvc.source_lib =  {"$(FLUX_XML)/source_library.xml"};
+FluxAlg.sources =  {"clock"};
 
+FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
 FluxAlg.sources += {"sampled_background"};
 FluxAlg.sources += {"sampled_EarthAlbedo"};
+
 
 // the path to the xml files
 InterleaveAlg.FilePath = "$(INTERLEAVEROOT)/xml";
@@ -64,13 +70,23 @@ InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};
 InterleaveAlg.DisableList = {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*", "Obf*"};
 
 ApplicationMgr.EvtMax = 1000; 
+
+// adjust this for the orbit path-- if commented out, the SAA starts at 6670 or so with default orbit
+//FluxAlg.PointingHistory={"f:/glast/data/orbit/FT2_orbit12.fits", "2009-1-1 00:00:00", "true"}; // last field to force x-direction
+FluxAlg.AvoidSAA       =  true;                // turn off during SAA
+FluxSvc.StartDate      = "2009-1-1 00:00:00";  // simulated start 
+
+// 3780 corresponds to run 21; 6600 will overlap an SAA boundary with the default orbit
+FluxSvc.startTime= 6600; //3780;                       
+FluxSvc.deltaTime=  180;
+
 RoottupleSvc.filename = "tuple.root";
-FluxAlg.zenithTheta=30;
+ExposureAlg.PrintFrequency = 1; 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
 MessageSvc.OutputLevel      = 3;
-InterleaveAlg.OutputLevel   = 2; 
+InterleaveAlg.OutputLevel   = 3; 
 //==============================================================
 //
 // End of job options file

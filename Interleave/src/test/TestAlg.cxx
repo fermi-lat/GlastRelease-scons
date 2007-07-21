@@ -50,12 +50,24 @@ private:
     INTupleWriterSvc * m_rootTupleSvc;
 
     // event id stuff to set, since normally done in AnalysisNtuple.
-    float EvtRun;
-    float EvtEventId;
+    unsigned int   EvtRun;
+    unsigned int EvtEventId;
     double EvtElapsedTime;
     float EvtLiveTime;
 
     float McSourceId; // for testing
+
+    float EvtEnergyCorr
+        , TkrNumTracks
+        , VtxXDir, VtxYDir, VtxZDir
+        , VtxX0, VtxY0, VtxZ0
+        , Tkr1XDir, Tkr1YDir, Tkr1ZDir
+        , Tkr1X0, Tkr1Y0, Tkr1Z0
+        , Tkr1FirstLayer
+        , CTBBestEnergy
+        , CTBBestXDir, CTBBestYDir, CTBBestZDir
+        ;
+
 
 };
 
@@ -72,6 +84,10 @@ TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , EvtElapsedTime(0)
 , EvtLiveTime(0)
 , McSourceId(0)
+, TkrNumTracks(1.)
+, CTBBestEnergy(1000.)
+, Tkr1FirstLayer (6)
+, CTBBestXDir(0), CTBBestYDir(0), CTBBestZDir(1.)
 {
 
 }
@@ -106,8 +122,26 @@ StatusCode TestAlg::initialize() {
     m_rootTupleSvc->addItem(treename, "EvtElapsedTime", &EvtElapsedTime );
     m_rootTupleSvc->addItem(treename, "EvtLiveTime",    &EvtLiveTime );
     m_rootTupleSvc->addItem(treename, "McSourceId",     &McSourceId );
+    m_rootTupleSvc->addItem(treename, "EvtEnergyCorr" , &EvtEnergyCorr );
+    m_rootTupleSvc->addItem(treename, "TkrNumTracks",   &TkrNumTracks);
 
-
+    m_rootTupleSvc->addItem(treename,"VtxXDir",       &VtxXDir     );
+    m_rootTupleSvc->addItem(treename,"VtxYDir",       &VtxYDir     );    
+    m_rootTupleSvc->addItem(treename,"VtxZDir",       &VtxZDir     );
+    m_rootTupleSvc->addItem(treename,"VtxX0",         &VtxX0       );
+    m_rootTupleSvc->addItem(treename,"VtxY0",         &VtxY0       );
+    m_rootTupleSvc->addItem(treename,"VtxZ0",         &VtxZ0       );
+    m_rootTupleSvc->addItem(treename,"Tkr1XDir",      &Tkr1XDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1YDir",      &Tkr1YDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1ZDir",      &Tkr1ZDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1X0",        &Tkr1X0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1Y0",        &Tkr1Y0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1Z0",        &Tkr1Z0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1FirstLayer",&Tkr1FirstLayer);
+    m_rootTupleSvc->addItem(treename,"CTBBestEnergy", &CTBBestEnergy);
+    m_rootTupleSvc->addItem(treename,"CTBBestXDir",   &CTBBestXDir );  
+    m_rootTupleSvc->addItem(treename,"CTBBestYDir",   &CTBBestYDir );  
+    m_rootTupleSvc->addItem(treename,"CTBBestZDir",   &CTBBestZDir );
     return sc;
 }
 

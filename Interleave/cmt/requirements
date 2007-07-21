@@ -10,14 +10,14 @@ use CLHEP v* IExternal
 use ntupleWriterSvc *
 use Trigger *
 
-#for FT1Alg
-use merit * 
 
 apply_pattern packageShr
 
 #=============================================================
 
 private
+
+# for the test program?
 
 use Event *
 use Trigger *
@@ -29,6 +29,9 @@ use rootTestData *
 use astro *
 use flux *
 use facilities *
+use AnalysisNtuple *
+use OnboardFilterTds *
+
 
 use xmlBase v*
 
