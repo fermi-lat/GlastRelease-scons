@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   22-jul-07  v6r45   THB  Change documentation for East to be Horizontal: fix bug in event stats
    20-jul-07  v6r44p1 THB  Have ExposureAlg set the filter failed, to end branch if any
    04-jun-07  v6r44   THB  Set process name to that of the source for parent particle
    24-may-07  v6r43   THB  Add option to specify a filter cone, in celestial coordinates
