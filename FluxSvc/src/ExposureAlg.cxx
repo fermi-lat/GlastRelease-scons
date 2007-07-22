@@ -226,10 +226,11 @@ void ExposureAlg::createEntry()
             t   << "tick at " << std::setprecision(10)
                 << m_lasttime - m_initial_time << " sec"
                 << std::setprecision(3)
-                << ", lat, lon, magLat, SAA = " 
+                << ", lat, lon, magLat, zenithTheta, SAA = " 
                 << m_history.lat_geo << ", " 
                 << m_history.lon_geo << ", "
                 << m_history.lat_mag << ", " 
+                << m_history.zenith_scz << ", "
                 << m_history.in_saa;
             log << t.str();
         }

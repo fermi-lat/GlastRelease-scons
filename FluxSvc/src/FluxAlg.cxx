@@ -218,7 +218,7 @@ StatusCode FluxAlg::initialize(){
             std::string filename(m_pointingHistory.value()[0]);
             facilities::Util::expandEnvVar(&filename);
             double offset = 0;
-            bool eastflag(false);
+            bool horizontalflag(false);
             if( m_pointingHistory.value().size()>1){
                 std::string field(m_pointingHistory.value()[1]);
                 if(! field.empty() ) { // allow null string
@@ -229,15 +229,15 @@ StatusCode FluxAlg::initialize(){
 
             if( m_pointingHistory.value().size()>2){
                 std::string field(m_pointingHistory.value()[2]);
-                eastflag =! field.empty();
+                horizontalflag =! field.empty();
             }
             log << MSG::INFO << "Loading Pointing History File : " << filename 
                 << " with MET offset "<< offset <<  endreq;
-            if( eastflag){
-                log << MSG::INFO << "Will override x-direction to point east"<<endreq;
+            if( horizontalflag){
+                log << MSG::INFO << "Will override x-direction to be horizontal"<<endreq;
             }
 
-            gps->setPointingHistoryFile(filename, offset, eastflag);
+            gps->setPointingHistoryFile(filename, offset, horizontalflag);
         }
     }
     double current_time = gps->time(); // preserve time to protect against Pulsar, etc.
@@ -363,7 +363,9 @@ StatusCode FluxAlg::execute()
             return sc;
         }
         if(m_insideSAA && m_avoidSAA.value() ){
-            if( GPS::instance()->time() > m_fluxSvc->endruntime()){
+            double time(GPS::instance()->time()), 
+                endtime( m_fluxSvc->endruntime() );
+            if( time >endtime ){
                 log << MSG::INFO << "Ran out of time while in SAA"<< endreq;
                 setFilterPassed( false );
                 break;  //return sc;
@@ -502,7 +504,7 @@ StatusCode FluxAlg::finalize(){
     if( m_rootTupleSvc!=0 ){
         // create the jobinfo tuple: copy to statics
         run = m_run;
-        sequence=m_sequence+m_SAAreject;
+        sequence=m_sequence + (m_SAAreject>0? m_SAAreject: 0 );
         initialTime=m_initialTime;
         currentTime=m_currentTime;
         m_rootTupleSvc->addItem("jobinfo", "run", &run);

@@ -48,7 +48,10 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxAlg.pointingDirection [{}] Set (ra,dec) for pointed mode. Other rocking stuff ignored.
     @param FluxAlg.AvoidSAA     [false] set true to skip events during SAA interval
     @param FluxAlg.zenithTheta  [-99] if overridden, set to this angle in local zenith frame
-    @param FluxAlg.PointingHistory [{}] Doublet, file name and offset, the latter default to none.
+    @param FluxAlg.PointingHistory [{}] Up to three strings: 
+                                 (1) file name (text or FITS FT2),  
+                                 (2) date-time offset needed for text format, 
+                                 (3) any string, if present, will trigger the horizontal orientation
     @param FluxAlg.filterCone   [{}] Triplet: ra, dec, radius of cone to apply to celestial sources
 
   @section exposurealg_jobOptions ExposureAlg jobOptions
