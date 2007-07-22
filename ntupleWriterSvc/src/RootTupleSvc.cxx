@@ -262,7 +262,8 @@ StatusCode RootTupleSvc::initialize ()
     m_tree.clear();
     m_badMap.clear();
 
-    // -- set up the tuple ---
+    // -- create primary root file---
+    TDirectory* curdir = gDirectory; // will prevent unauthorized use
     TFile *tf   = new TFile( m_filename.value().c_str(), "RECREATE");
     if (!tf->IsOpen()) {
         log << MSG::ERROR 
@@ -271,6 +272,7 @@ StatusCode RootTupleSvc::initialize ()
         return StatusCode::FAILURE;
     }
     m_fileCol[m_filename.value()] = tf;
+    curdir->cd(); // restore previous directory
 
 
     // set up the check sum ofstream
