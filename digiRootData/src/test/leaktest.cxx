@@ -23,9 +23,6 @@
 
     gObjectTable->Print();
     
-    // HMK Linux seems to need both libraries loaded explicitly (starting with ROOT 3.04.02)
-    // Not sure if this is a problem in our compilation or setup
-    gSystem->Load("mcRootData.dll");
     gSystem->Load("digiRootData.dll");
 
     TFile *f =  new TFile("digi.root", "RECREATE");
@@ -44,8 +41,19 @@
 
     for (ievent = 0; ievent < numEvents; ievent++) {
 
-        L1T level1(13);
-        ev->initialize(ievent, runNum, rand*ievent, level1, true);
+        UInt_t l1Word = 0;
+        l1Word |= 64;
+        l1Word |= 2;
+        l1Word |= 16;
+        UInt_t digiTriRowBits[16] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+        UInt_t trgRegTriRowBits[16] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+        L1T level1(l1Word,digiTriRowBits,trgRegTriRowBits);
+
+        EventSummaryData summary(0);
+        summary.initEventFlags(1);
+
+        Double_t liveTime = 0.0;
+        ev->initialize(ievent, runNum, rand*ievent, liveTime, level1, summary, true);
 
         for (ixtal = 0; ixtal < numXtals; ixtal++) {
             CalDigi *cal = ev->addCalDigi();
