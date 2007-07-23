@@ -172,7 +172,8 @@ StatusCode InterleaveAlg::initialize(){
                 selectormap[name]= background;
                 m_bkgndMap[background->sourceName()] = background;
                 log <<MSG::INFO << "\tinitial trigger, downlink rates: " << selectormap[name]->triggerRate() 
-                    <<", " << selectormap[name]->downlinkRate() << endreq;
+                    <<", " << selectormap[name]->downlinkRate() 
+                    <<", for source name " << background->sourceName() <<  endreq;
             }
             // initialized, can use the statics now.
             instance = this;
@@ -241,6 +242,11 @@ StatusCode InterleaveAlg::execute()
     SmartDataPtr<Event::MCEvent>  mcHeader(eventSvc(), EventModel::MC::Event );
 
     std::string sourceName = mcHeader->getSourceName();
+    if( m_bkgndMap.find(sourceName)==m_bkgndMap.end() ){
+        log << MSG::ERROR << "Sourcename " << sourceName << " not found " << endreq;
+        return StatusCode::FAILURE;
+    }
+
     m_selector = m_bkgndMap[sourceName];
 
     // ask for a tree corresponding to our current position: it will set all the tuple
