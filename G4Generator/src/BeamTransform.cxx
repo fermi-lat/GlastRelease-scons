@@ -222,40 +222,31 @@ StatusCode BeamTransform::initialize(){
 }
 void BeamTransform::transform(Event::McParticle& mcp )
 {
-    // special treatment if it is a mother (code from Leon)
-    if(&mcp.mother()!=&mcp) {
-        const_cast<Event::McParticle*>(&mcp.mother())->removeDaughter(&mcp);
-    }
+    // get the positions and momenta
+    // "m" means momentum, "c" means coordinates
+    // "I" and "F" refer to initial and final quantities
 
-    // get the initial position and momentum
-    CLHEP::HepLorentzVector pbeam  = mcp.initialFourMomentum();
-    CLHEP::Hep3Vector rbeam  = mcp.initialPosition();
+    CLHEP::HepLorentzVector mBeamI = mcp.initialFourMomentum();
+    CLHEP::Hep3Vector       cBeamI = mcp.initialPosition();
     // ditto final
-    CLHEP::HepLorentzVector pbeam1 = mcp.finalFourMomentum();
-    CLHEP::Hep3Vector rbeam1 = mcp.finalPosition();
+    CLHEP::HepLorentzVector mBeamF = mcp.finalFourMomentum();
+    CLHEP::Hep3Vector       cBeamF = mcp.finalPosition();
 
     // translate in beam frame
-    rbeam  -= m_translation;
-    rbeam1 -= m_translation;
+    cBeamI -= m_translation;
+    cBeamF -= m_translation;
 
     // convert to unrotated instrument coordinates
-    CLHEP::Hep3Vector r (rbeam.y(),  -rbeam.z(), 
-        -rbeam.x()  + m_beam_plane + m_beam_plane_glast);
-    CLHEP::Hep3Vector r1(rbeam1.y(), -rbeam1.z(), 
-        -rbeam1.x() + m_beam_plane + m_beam_plane_glast);
+    CLHEP::Hep3Vector cI(cBeamI.y(), -cBeamI.z(), 
+        -cBeamI.x() + m_beam_plane + m_beam_plane_glast);
+    CLHEP::Hep3Vector cF(cBeamF.y(), -cBeamF.z(), 
+        -cBeamF.x() + m_beam_plane + m_beam_plane_glast);
 
-    CLHEP::HepLorentzVector p (pbeam.y(),  -pbeam.z(),  -pbeam.x(),  pbeam.e());
-    CLHEP::HepLorentzVector p1(pbeam1.y(), -pbeam1.z(), -pbeam1.x(), pbeam1.e());
+    CLHEP::HepLorentzVector mI(mBeamI.y(), -mBeamI.z(), -mBeamI.x(), mBeamI.e());
+    CLHEP::HepLorentzVector mF(mBeamF.y(), -mBeamF.z(), -mBeamF.x(), mBeamF.e());
 
-    mcp.initialize(const_cast<Event::McParticle*>( &mcp.mother()), 
-        mcp.particleProperty(), mcp.statusFlags(),
-        m_rot*p, 
-        m_rot*(r-m_pivot) + m_pivot, 
-        mcp.getProcess());
-
-    mcp.finalize(
-        m_rot*p1, 
-        m_rot*(r1-m_pivot) + m_pivot);
+    mcp.transform(m_rot*mI, m_rot*mF, 
+        m_rot*(cI-m_pivot)+m_pivot, m_rot*(cF-m_pivot)+m_pivot);
 }
 
 StatusCode BeamTransform::execute(){
