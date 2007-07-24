@@ -1,6 +1,6 @@
 package GlastClassify
 
-version v4r2
+version v4r3
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
@@ -45,7 +45,8 @@ macro txt "" WIN32 " *.txt"
 set PRUNEROWS "false"
 set MERIT_INPUT_FILE "C:/Glast/data/backgndSC-GR-v11r2-000000-merit.root"
 set MERIT_OUTPUT_FILE "test.root"
-set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/Pass5_v11r2_BkgRej_4.xml"
+set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/Pass5_Analysis_Complete_4.xml"
+#set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/ParticleSeparator.xml"
 
 application apply -s=../src/apply $(source)
 
