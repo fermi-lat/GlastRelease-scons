@@ -131,10 +131,10 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllOutputVars(GlastClassify::Tree
         }
 
         // Do we have the right node?
-        if (sNewType == "CreateColumnsEngineNode")
-        {
+//        if (sNewType == "CreateColumnsEngineNode")
+//        {
             numVars += varFinder(xmlActivityNode);
-        }
+//        }
     }
 
     //done

@@ -31,9 +31,30 @@ int xmlFindOutputVars::operator()(const DOMElement* xmlActivityNode)
 
     // Retrieve name and node id
     DOMElement* displayInfo = xmlBase::Dom::findFirstChildByName(xmlActivityNode, "DisplayInfo");
-    std::string sType       = "CreateColumnsEngineNode";
     std::string sName       = xmlBase::Dom::getAttribute(displayInfo, "labelText");
     std::string sId         = xmlBase::Dom::getAttribute(xmlActivityNode, "id");
+
+    std::string sType       = xmlBase::Dom::getAttribute(xmlActivityNode, "engineClass");
+
+    int idx = sType.find("CreateColumns");
+    if (idx > -1)
+    {
+        numVars = numCreateColumnsVars(xmlActivityNode);
+    }
+    else if ((idx = sType.find("PredictEngine")) > -1)
+    {
+        numVars = numPredictEngineVars(xmlActivityNode);
+    }
+
+    return numVars;
+}
+
+int xmlFindOutputVars::numCreateColumnsVars(const DOMElement* xmlActivityNode)
+{
+    // Searches input document for variables created by "CreateColumns" nodes
+    // Stores the found variables in the "local ntuple" list for access by 
+    // other nodes during processing 
+    int numVars = 0;
 
     // Need to find the list of variables...
     DOMEvector xmlColumnsVec = getXTSubPropVec(xmlActivityNode, "newColumns");
@@ -69,6 +90,68 @@ int xmlFindOutputVars::operator()(const DOMElement* xmlActivityNode)
             else                          xtColumnVal = new XTcolumnVal<std::string>(sVarName,"categorical");
 
             XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
+        }
+    }
+
+    return numVars;
+}
+
+int xmlFindOutputVars::numPredictEngineVars(const DOMElement* xmlActivityNode)
+{
+    // Searches the input document for output variables created by the "Predict" nodes
+    int numVars = 0;
+
+    // Create path to Argument output list in the node
+    std::vector<std::string> path2Arguments;
+    path2Arguments.push_back("ArgumentList");
+    path2Arguments.push_back("XTProps");
+
+    // Search for the output argument list, this to find the name of the output of this CT
+    const DOMElement* argumentList = findXPath(xmlActivityNode, path2Arguments);
+
+    // Obtain the list of properties
+    std::vector<DOMElement*> xmlArgListVec;
+    xmlBase::Dom::getChildrenByTagName(argumentList, "Property", xmlArgListVec);
+        
+    // Search through the list of properties for the "NewColumns" property 
+    // (which is probably the first property?)
+    for(std::vector<DOMElement*>::iterator xmlArgListVecItr = xmlArgListVec.begin();
+        xmlArgListVecItr != xmlArgListVec.end(); xmlArgListVecItr++)
+    {
+        DOMElement* xmlArgList = *xmlArgListVecItr;
+           
+        std::string argListTag  = xmlBase::Dom::getTagName(xmlArgList);
+        std::string argName     = xmlBase::Dom::getAttribute(xmlArgList, "name");
+
+        // "NewColumns"?
+        if (argName == "newColumns")
+        {
+            // Get this list of properties here
+            std::vector<DOMElement*> xmlPropListVec;
+            xmlBase::Dom::getChildrenByTagName(xmlArgList, "Property", xmlPropListVec);
+    
+            for(std::vector<DOMElement*>::iterator xmlPropListVecItr = xmlPropListVec.begin();
+                xmlPropListVecItr != xmlPropListVec.end(); xmlPropListVecItr++)
+            {
+                DOMElement* xmlProperty = *xmlPropListVecItr;
+           
+                std::string propertyTag  = xmlBase::Dom::getTagName(xmlProperty);
+                std::string propertyName = xmlBase::Dom::getAttribute(xmlProperty, "name");
+
+                // "NewColumns"?
+                if (propertyName == "specifiedCategory")
+                {
+                    std::string sName = xmlBase::Dom::getAttribute(xmlProperty, "value");
+
+                    XTcolumnValBase* xtColumnVal = new XTcolumnVal<REALNUM>(sName);
+
+                    XprsnParser().getXtTupleVars()[sName] = xtColumnVal;
+
+                    numVars++;
+                }
+            }
+
+            break;
         }
     }
 

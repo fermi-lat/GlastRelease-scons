@@ -35,6 +35,13 @@ public:
     virtual ~xmlFindOutputVars();
 
 private:
+    /** @brief finds variables defined in createColumnsEngineNodes
+    */
+    int numCreateColumnsVars(const DOMElement* element);
+
+    /** @brief finds variables output from predictEngineNodes
+    */
+    int numPredictEngineVars(const DOMElement* element);
 };
 
 
