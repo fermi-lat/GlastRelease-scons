@@ -56,6 +56,19 @@ void McParticle::finalize(const CLHEP::HepLorentzVector& finalMomentum,
 }
 
 
+void McParticle::transform(
+        const CLHEP::HepLorentzVector& initialMomentum,
+        const CLHEP::HepLorentzVector& finalMomentum,
+        const HepPoint3D& initialPosition,
+        const HepPoint3D& finalPosition)
+{
+    m_initialFourMomentum = initialMomentum;
+    m_initialPosition     = initialPosition;
+    m_finalFourMomentum   = finalMomentum;
+    m_finalPosition       = finalPosition;
+}
+
+
 void McParticle::setMother(const SmartRef<McParticle> m)
 {
   m_mother = m;
