@@ -3,7 +3,12 @@
 // stl
 #include <string>
 #include <fstream>
+
+#ifndef WIN32
 #include <unistd.h>
+#else
+#include "facilities/XGetopt.h"
+#endif
 //
 // ROOT-io
 #include "TFile.h"
@@ -20,7 +25,7 @@ void usage() {
 int main(int argn, char** argc) {
   
   // parse options
-  char* endPtr;  
+ // char* endPtr;  
   int opt;
 
   std::string outputPrefix;
@@ -29,7 +34,11 @@ int main(int argn, char** argc) {
   std::string appDir = "params";
   std::list<std::pair<std::string,std::string> > inAndOut;
 
+#ifdef WIN32
+  while ( (opt = facilities::getopt(argn, argc, "ho:p:a:")) != EOF ) {
+#else
   while ( (opt = getopt(argn, argc, "ho:p:a:")) != EOF ) {
+#endif
     switch (opt) {
     case 'h':   // help      
       usage();

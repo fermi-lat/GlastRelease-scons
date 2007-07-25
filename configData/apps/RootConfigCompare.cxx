@@ -3,8 +3,11 @@
 // stl
 #include <string>
 #include <iostream>
+#ifndef WIN32
 #include <unistd.h>
-
+#else
+#include "facilities/XGetopt.h"
+#endif
 //
 // ROOT-io
 #include "TFile.h"
@@ -22,8 +25,11 @@ int main(int argn, char** argc) {
   // parse options
   //char* endPtr;  
   int opt;
-
+#ifdef WIN32
+  while ( (opt = facilities::getopt(argn, argc, "h")) != EOF ) {
+#else
   while ( (opt = getopt(argn, argc, "h")) != EOF ) {
+#endif
     switch (opt) {
     case 'h':   // help      
       usage();

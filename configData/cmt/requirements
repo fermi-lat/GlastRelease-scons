@@ -1,30 +1,41 @@
 package configData
-version v0r2p4
+version v0r2p5
 
 author M. Kocian <kocian@slac.stanford.edu>
 
 branches configData cmt doc src
 
+use facilities v*
 use GlastSvc
 use lsfData
 use LdfEvent
-use GlastPolicy v*
 use commonRootData v*
-use xmlBase v* 
+use xmlBase v*
 #use mootCore v*
+use GlastPolicy v*
 
 apply_pattern shared_library
 
 private
-macro_append cppflags "-Wno-unused-parameter -g" WIN32 ""
+# takes care of undefined symbols while linking on Windows
+use xmlUtil v* 
+
+# Force extern variable to be found on windows
+apply_pattern use_facilities_symbols
+
+
+macro_append cppflags "-Wno-unused-parameter " WIN32 ""
+
 apply_pattern package_headers
 
 macro source "*.cxx" WIN32 "*.h *.cxx"
-library configData \
+
+library configData  \
  -s=../src $(source)\
  -s=gem $(source)\
  -s=base $(source)\
  -s=db $(source) 
+
 
 #        gem/*.cxx base/*.cxx db/*.cxx *.cxx
 
@@ -34,8 +45,8 @@ library configData \
 # Only build these if needed.
 # to build these need 
 #  gmake Linux 
-application ConfigXml2Root -group=Linux ../apps/ConfigXml2Root.cxx
-application RootConfigCompare -group=Linux ../apps/RootConfigCompare.cxx
+application ConfigXml2Root ../apps/ConfigXml2Root.cxx
+application RootConfigCompare  ../apps/RootConfigCompare.cxx
 
 #application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 #application testdb ../apps/testdb.cxx
