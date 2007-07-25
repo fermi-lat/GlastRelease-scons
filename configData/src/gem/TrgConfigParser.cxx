@@ -20,6 +20,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <assert.h>
 
 #include "configData/gem/TrgConfigParser.h"
 
@@ -84,11 +85,12 @@ int TrgConfigParser::parse(TrgConfig* tcf){
     
     m_topElt=defOutList[0];
   }
-  xercesc::DOMNodeList* childobjects;
-  childobjects=m_topElt->getChildNodes();
+  std::vector<DOMElement*> children;
   std::string nm,ous;
-  for (unsigned j=0;j<childobjects->getLength();j++){
-    DOMElement* currentElement = dynamic_cast< DOMElement* >( childobjects->item(j) );
+
+  Dom::getChildrenByTagName(m_topElt, "*", children);
+  for (unsigned j=0; j < children.size(); j++) {
+    DOMElement* currentElement = children[j];
     if (currentElement){
       nm=removeWhitespace(Dom::getTagName(currentElement));
       

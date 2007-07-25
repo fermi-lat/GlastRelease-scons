@@ -16,4 +16,6 @@ int main(int argc, char **argv){
   TrgConfigDB tcf(&lc);
   tcf.updateKey(1);
   tcf.printContrigurator(std::cout);
+  std::cout << std::endl << "Test program completed successfully" << std::endl;
+  exit(0);
 }
