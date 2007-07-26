@@ -98,7 +98,23 @@ class  IRootIoSvc : virtual public IInterface
     // For writers
     //====================
     
+    virtual TTree* prepareRootOutput
+        ( const std::string &type,
+        const std::string &fileName,
+        const std::string &treeName,
+        int compressionLevel,
+        const std::string &treeTitle) = 0;
+
+    virtual TTree* getTree(const std::string &type) = 0;
+
+    virtual StatusCode setupBranch(const std::string &type, const std::string &name, 
+        const std::string &classname, void *branchAddr, int bufSize=64000, int splitLevel=1) = 0;
+
+    virtual StatusCode fillTree(const std::string &type) = 0;
+
     virtual int getAutoSaveInterval() = 0 ;
+
+    virtual StatusCode closeFile(const std::string &type) = 0;
 
 
     //====================

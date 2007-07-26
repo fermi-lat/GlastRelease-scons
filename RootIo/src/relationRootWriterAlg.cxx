@@ -135,29 +135,35 @@ StatusCode relationRootWriterAlg::initialize()
 
     m_rootIoSvc = 0 ;
     if ( service("RootIoSvc", m_rootIoSvc, true).isFailure() ){
-        log << MSG::INFO << "Couldn't find the RootIoSvc!" << endreq;
-        log << MSG::INFO << "No Auto Saving" << endreq;
+        log << MSG::WARNING << "Couldn't find the RootIoSvc!" << endreq;
         m_rootIoSvc = 0;
-    } 
-    
-    facilities::Util::expandEnvVar(&m_fileName);
-
-    // Save the current directory for the ntuple writer service
-    TDirectory *saveDir = gDirectory;   
-    // Create the new ROOT file
-    m_relFile = new TFile(m_fileName.c_str(), "RECREATE");
-    if (!m_relFile->IsOpen()) {
-        log << MSG::ERROR << "ROOT file " << m_fileName 
-            << " could not be opened for writing." << endreq;
         return StatusCode::FAILURE;
     }
-    m_relFile->cd();
-    m_relFile->SetCompressionLevel(m_compressionLevel);
-    m_relTree = new TTree(m_treeName.c_str(), "GLAST Relational Table");
-    m_relTable = new RelTable();
-    m_relTree->Branch("RelTable","RelTable", &m_relTable, m_bufSize, m_splitMode);
+
+    m_relTree = m_rootIoSvc->prepareRootOutput("RELATION", m_fileName, m_treeName, 
+        m_compressionLevel, "GLAST Digitization Data");
+
     
-    saveDir->cd();
+  //  facilities::Util::expandEnvVar(&m_fileName);
+
+    // Save the current directory for the ntuple writer service
+ //   TDirectory *saveDir = gDirectory;   
+    // Create the new ROOT file
+ //   m_relFile = new TFile(m_fileName.c_str(), "RECREATE");
+ //   if (!m_relFile->IsOpen()) {
+ //       log << MSG::ERROR << "ROOT file " << m_fileName 
+ //           << " could not be opened for writing." << endreq;
+ //       return StatusCode::FAILURE;
+ //   }
+ //   m_relFile->cd();
+ //   m_relFile->SetCompressionLevel(m_compressionLevel);
+ //   m_relTree = new TTree(m_treeName.c_str(), "GLAST Relational Table");
+
+    m_relTable = new RelTable();
+    //m_relTree->Branch("RelTable","RelTable", &m_relTable, m_bufSize, m_splitMode);
+    m_rootIoSvc->setupBranch("RELATION", "RelTable", "RelTable", &m_relTable, m_bufSize, m_splitMode);
+    
+ //   saveDir->cd();
 
     return sc;
     
@@ -461,6 +467,9 @@ void relationRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the Relations data for this event in the ROOT
     //    tree.  The m_common object is cleared for the next event.
 
+    m_rootIoSvc->fillTree("RELATION");
+
+    /*
     static int eventCounter = 0;
  try {
     TDirectory *saveDir = gDirectory;
@@ -483,6 +492,7 @@ void relationRootWriterAlg::writeEvent()
       std::cerr.flush(); 
       exit(1); 
   } 
+  */
 
     return;
 }
@@ -495,6 +505,9 @@ void relationRootWriterAlg::close()
     //    since ROOT will periodically write to the ROOT file when the bufSize
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
+
+m_rootIoSvc->closeFile("RELATION");
+/*
 
  try {
     TDirectory *saveDir = gDirectory;
@@ -510,7 +523,7 @@ void relationRootWriterAlg::close()
     std::cerr.flush(); 
     exit(1); 
  } 
-
+*/
     return;
 }
 
