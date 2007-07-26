@@ -2,6 +2,8 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v1r21p1 26-Jul-2007 HMK Patch to catch new tile volume names introduced with
+         the  screws.  Will move to a more intelligent scheme in August
  v1r21   11-Jun-2007 HMK Update detector search for xmlGeoDbs v1r42
          We must ust this tag with xmlGeoDbs >= v1r42 due to name changes for
          volumes

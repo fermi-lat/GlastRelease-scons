@@ -18,9 +18,12 @@ AcdTileList::pushShape(ShapeType s, const UintVector& idvec,
     }
 
     // is this what we want? add to the list if so and abort
-    if (name.substr(0,7)=="topTile") {
+    if ( (name.substr(0,7)=="topTile") || (name.substr(0,7)=="tile_f0") ) {
         // Pick up all volumes labelled "topTile" including bent volumes, as they will be
         // checked during application of edge effects
+        this->push_back(getId());
+        return AbortSubtree;
+    } else if (name.substr(0,6)=="tile_f") {  // prepare for upcoming side tile name change for screws
         this->push_back(getId());
         return AbortSubtree;
     } else if (name.substr(0,8)=="sideTile" ) {
