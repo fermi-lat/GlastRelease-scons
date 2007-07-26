@@ -1,11 +1,11 @@
 """
-Convert CAL DAC setting XML file to txt.  the commadnline format is.
+Convert CAL DAC setting XML file to txt.  the commandline format is.
 
 The txt output format is:
 twr row xtal online_face dac
 
 The commandline is
-python dacDiff.py FLE|FHE|LAC <dac_xml_file> 
+python dacXML2TXT.py FLE|FHE|LAC <dac_xml_file> 
 
 where:
     FLE|FHE|LAC        = DAC dacType to validate

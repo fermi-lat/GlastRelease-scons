@@ -136,6 +136,11 @@ Convert offline xtal face indexing to online xtal face indexing  (they're revers
 """
 offline_face_to_online = {0:1,1:0}
 
+"""
+Convert face name to online face id
+"""
+name_to_online_face = {"POS":1,"NEG":0}
+
 OFFLINE_FACE_POS = 0
 OFFLINE_FACE_NEG = 1
 
