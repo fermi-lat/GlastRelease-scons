@@ -77,11 +77,10 @@ else:
 
 
 # read in dac xml files
-dacFile = calDacXML.calDacXML(inPath, dacType)
+dacFile = calDacXML.calSettingsXML(inPath, dacType)
 
 # get active towers
 dacTwrs = dacFile.getTowers()
-print dacTwrs
 
 # load up arrays
 dac = dacFile.read()
@@ -93,8 +92,8 @@ if overwriteFace:
         dac[twr,:,online_face,:] = int(val)
 
 # output new file
-outFile = calDacXML.calDacXML(outPath, dacType, calDacXML.MODE_CREATE)
-outFile.write(dac, filename=outPath,tems=dacTwrs)
+outFile = calDacXML.calSettingsXML(outPath, dacType, calDacXML.MODE_CREATE)
+outFile.write(dac, tems=dacTwrs)
 outFile.close()
 
 sys.exit(0)
