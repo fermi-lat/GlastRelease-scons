@@ -221,6 +221,25 @@ namespace MOOT {
 
     VoteInfo* getVoteInfo(unsigned key);
 
+    /* If there is a parameter file of specified &a parameterClass
+       which is up to date w.r.t. vote file specified by @a voteKey,
+       return its (parameter file) key; else return 0.
+
+       If parameter class doesn't "belong" to the vote file throw
+       an exception.
+     */
+    /*
+    unsigned getVoteParameter(unsigned voteKey, 
+                              const std::string& parameterClass);
+    */
+    /* If vote file specified by @a voteKey is up to date, put keys 
+       of parameter files of all relevant classes associated with the
+       vote file in the @a parmKeys vector and return true.  
+       Else return false and an empty list.
+     */
+    bool getVoteParameters(unsigned voteKey, 
+                           std::vector<unsigned>& parmKeys);
+
     /**
        Return ancillary alias keys satisfying specified conditions on fields
        in Ancillary_alias table.  "*" means "don't cut on this condition"
@@ -285,9 +304,15 @@ namespace MOOT {
 
     /// The "vote" referred to may concern a single precinct or may
     /// be container file, referring to several individual precinct files.
-    bool voteIsUpToDate(unsigned voteKey);
+    /// If optional arg. is supplied and vote is up to date, return
+    /// parm keys associated with the vote
+    bool voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* parmKeys=0);
 
   private:
+    /*
+    unsigned getVoteParmViaClassKey(const std::string& voteKeyStr,
+                                    const std::string& parameterClassKey);
+    */
     /// Returns key of file registered in Ancillary if there is one; else 0.
     /// @a ancClassKey is ancillary class key as string
     unsigned resolveAncAliasByKey(const std::string& alias, 
@@ -298,7 +323,8 @@ namespace MOOT {
     void resolveAncAliases(std::vector<std::string>& ancKeys,
                                const std::string& voteKeyStr);
 
-    bool voteIsUpToDate(const std::string& voteKeyStr);
+    bool voteIsUpToDate(const std::string& voteKeyStr, 
+                        std::vector<unsigned>* pk=0);
 
     bool containerIsUpToDate(const std::string& voteKeyStr);
 

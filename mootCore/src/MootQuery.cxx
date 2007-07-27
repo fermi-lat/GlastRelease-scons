@@ -903,6 +903,60 @@ namespace MOOT {
                        fields[2],fields[3],fields[4], fields[5],
                         fields[6]);
   }
+  /*
+  unsigned MootQuery::getVoteParameter(unsigned voteKey, 
+                                       const std::string& parameterClass) {
+    // Get string version of vote key
+    std::string voteKeyStr;
+    facilities::Util::utoa(voteKey, voteKeyStr);
+    return getVoteParameter(voteKeyStr, parameterClass);
+
+  }
+
+  unsigned MootQuery::getVoteParameter(const std::string& voteKeyStr, 
+                                       const std::string& parameterClass) {
+
+    // Get parameter class key as a string
+    std::string where(" WHERE name = '");
+    where += parameterClass + std::string("'");
+    std::string ourClassKey = 
+      DbUtil::getColumeWhere(m_rdb, "Parameter_class", "Parameter_class_key", 
+                             where);
+    return getVoteParmViaClassKey(voteKeyStr, ourClassKey);
+  }
+  */
+  bool MootQuery::getVoteParameters(unsigned voteKey, 
+                                    std::vector<unsigned>& parmKeys) {
+
+    // Get string version of vote key
+    std::string voteKeyStr;
+    facilities::Util::utoa(voteKey, voteKeyStr);
+
+    parmKeys.clear();
+    return voteIsUpToDate(voteKeyStr, &parmKeys);
+  }
+  /*
+  unsigned MootQuery::getVoteParmViaClassKey(const std::string& voteKeyStr, 
+                                             const std::string& 
+                                             parameterClassKey) {
+    // Get parameter classes associated with this vote.
+    std::vector<std::string> pclassKeyStr;
+
+
+    std::string where(" WHERE vote_fk ='");
+    where += voteKeyStr + std::string("' AND aclass_fk IS NULL");
+    int nPclass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
+                                      "pclass_fk", where, pclassKeyStr);
+
+    // Check requested class is among them. If not, throw exception
+    if (find(pclasskeyStr.begin(), pclassKeyStr.end(), ourClassKey)
+        == pclasskeyStr.end()) {
+      std::runtime_error("getVoteParameter: Bad parameterClass argument");
+    }
+
+
+  }
+  */
 
   unsigned MootQuery::listAncAliasKeys(std::vector<unsigned>& keys,
                                        const std::string& aClass,
@@ -1155,11 +1209,11 @@ namespace MOOT {
   }
 
 
-  bool MootQuery::voteIsUpToDate(unsigned voteKey) {
+  bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
-    return voteIsUpToDate(voteKeyStr);
+    return voteIsUpToDate(voteKeyStr, pk);
   }
 
   /**
@@ -1178,8 +1232,14 @@ namespace MOOT {
              in those rows must refer to the same ancillary files one
              would get by resolving the ancillary aliases mentioned
              in the vote file
+
+             If @a parmKeys is non-zero, fill the vector with the
+             parameter files (one per class) associated with the vote.
    */
-  bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr) {
+  bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr,
+                                 std::vector<unsigned>* pk) {
+    if (pk) pk->clear();
+
     std::vector<std::string> aliasedAncKeys;
 
     static std::string goodParm("' AND status='CREATED' AND quality='PROD'");
@@ -1222,7 +1282,14 @@ namespace MOOT {
       if (nAncClass < 0) { 
         throw std::runtime_error("VoteIsUpToDate db error");
       }
-      else if (nAncClass == 0) continue; // no dependencies for this parm
+      else if (nAncClass == 0) {
+        if (pk) {
+          unsigned lastKey = 
+            facilities::Util::stringToUnsigned(parmKeys.back());
+          pk->push_back(lastKey);
+        }
+        continue; // no dependencies for this parm
+      }
       bool parmClassOk = false;
 
       // Otherwise, consider all "good" instances of parm class associated
@@ -1245,7 +1312,10 @@ namespace MOOT {
         // count is correct.  nAncClass is the number of ancillaries the
         // vote file says the parameter should depend on; nAnc is the 
         // number this particular parameter file does depend on.
-        if (nAnc != nAncClass) continue; 
+        if (nAnc != nAncClass) {
+          goodParmInstance = false;
+          continue; 
+        }
         for (int iAnc = 0; iAnc < nAnc; iAnc++) {
           if (find(aliasedAncKeys.begin(), aliasedAncKeys.end(), 
                    inputAncKeys[iAnc]) 
@@ -1256,12 +1326,20 @@ namespace MOOT {
         }
         if (goodParmInstance) {
           parmClassOk = true;
+          if (pk) {   // save for caller
+            unsigned lastKey = 
+              facilities::Util::stringToUnsigned(pkey);
+            pk->push_back(lastKey);
+          }
           break;
         }
       //      If all anc keys are among set of resolved aliases, we're
       //      done (successfully) with this pclass
       }     // end 'look' at a collection of instances for a param. class
-      if (!parmClassOk) return false;
+      if (!parmClassOk) {
+        if (pk) pk->clear();
+        return false;
+      }
     }  // got through all parm classes successfully
     return true;
   }
