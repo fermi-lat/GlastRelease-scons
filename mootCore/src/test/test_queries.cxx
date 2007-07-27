@@ -462,6 +462,19 @@ int main(int nargs, char**)    {
   }
   std::cout << std::endl;
 
+  std::vector<unsigned> pkeys;
+  unsigned voteKey = 3;
+  bool isUpToDate = q.getVoteParameters(voteKey, pkeys);
+  if (isUpToDate) {
+    std::cout << "For vote with key=" << voteKey << " found " << pkeys.size()
+              << " parameter files with keys:" << std::endl;
+    for (unsigned ikey = 0; ikey < pkeys.size(); ikey++) {
+      std::cout << pkeys[ikey] << std::endl;
+    }
+  }
+  else std::cout << "Vote with key=" << voteKey << " was not up to date" 
+                 << std::endl;
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
