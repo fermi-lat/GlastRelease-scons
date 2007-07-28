@@ -41,7 +41,19 @@ int main(int nargs, char**)    {
   
   std::vector<std::string> inputKeys;
   //  bool gottem = q.getConfigInputsUn(4, inputKeys);
-  bool gottem = q.getConfigInputs(4, inputKeys);
+  bool gottem;
+  /*
+  try {
+    gottem = q.getConfigInputs(4, inputKeys);
+  }
+  catch (std::exception ex) {
+    std::cerr << "failed with exception" << std::endl;
+    gottem = false;
+  }
+  catch (MOOT::DbUtilException mex) {
+    std::cerr << "failed with MOOT::DbUtilException" << std::endl;
+    gottem = false;
+  }
     
   if (!gottem) {
     std::cout << "MootQuery::getConfigInputs  failed" << std::endl;
@@ -55,8 +67,9 @@ int main(int nargs, char**)    {
     std::cout << std::endl;
     std::cout.flush();
   }
-
+  */
   std::vector<std::string> paths;
+  /*
   gottem = q.getConfigFmxPaths(4, paths);
 
   
@@ -144,10 +157,13 @@ int main(int nargs, char**)    {
     std::cout << std::endl;
     std::cout.flush();
   }
-
+  */
+  /*
   std::cout << "***** New queries (8 Sept. 2006) *******" << std::endl;
-  std::vector<unsigned> keys;
+  */
 
+  std::vector<unsigned> keys;
+  /*
   std::string cname("secondConfig");
 
   std::string algname("emptyAlg");
@@ -290,8 +306,9 @@ int main(int nargs, char**)    {
   nConfigs = q.getConfigInfo(cInfo, "STARTED", "");  
  
   std::cout << "Found " << nConfigs << " with status = STARTED" << std::endl;
-
+  */
   // Exercise getConfigsRequested, getConfigsUsed
+  /*
   std::vector<unsigned> parmKeys;
   parmKeys.reserve(10);
 
@@ -370,7 +387,7 @@ int main(int nargs, char**)    {
     std::cout << "No info found for config #" << ckey 
               << std::endl << std::endl;
   }
-
+  */
   std::cout << "***** New queries (10 May 2007) *******" << std::endl;
 
   keys.clear();
@@ -463,18 +480,21 @@ int main(int nargs, char**)    {
   std::cout << std::endl;
 
   std::vector<unsigned> pkeys;
-  unsigned voteKey = 3;
-  bool isUpToDate = q.getVoteParameters(voteKey, pkeys);
-  if (isUpToDate) {
-    std::cout << "For vote with key=" << voteKey << " found " << pkeys.size()
-              << " parameter files with keys:" << std::endl;
-    for (unsigned ikey = 0; ikey < pkeys.size(); ikey++) {
-      std::cout << pkeys[ikey] << std::endl;
+  unsigned voteKey;
+  unsigned minKey = 15;
+  unsigned maxKey = 210;
+  for (voteKey = minKey; voteKey < maxKey; voteKey++) {
+    bool isUpToDate = q.getVoteParameters(voteKey, pkeys);
+    if (isUpToDate) {
+      std::cout << "For vote with key=" << voteKey << " found " << pkeys.size()
+                << " parameter files with keys:" << std::endl;
+      for (unsigned ikey = 0; ikey < pkeys.size(); ikey++) {
+        std::cout << pkeys[ikey] << std::endl;
+      }
     }
+    else std::cout << "Vote with key=" << voteKey << " was not up to date" 
+                   << std::endl;
   }
-  else std::cout << "Vote with key=" << voteKey << " was not up to date" 
-                 << std::endl;
-
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
