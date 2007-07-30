@@ -10,6 +10,7 @@ namespace AcdRecon {
 		 SideCornerEdge=4,
 		 TopCornerEdge=5,
 		 TileHole=6,
+		 CornerRay=7,
 		 NumGapTypes } AcdGapType;
 
   typedef enum { Top=0,
