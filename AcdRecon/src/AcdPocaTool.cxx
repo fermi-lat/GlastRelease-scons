@@ -117,7 +117,8 @@ StatusCode AcdPocaTool::ribbonDistances(const AcdRibbonDim& ribbon,
   data.m_inPlane.set(p.x(),p.y(),p.z());
 
   // Then do the 3d poca to the ribbon
-  AcdRecon::ribbonPoca(aTrack,ribbon,data.m_arcLength,data.m_active3D,data.m_poca,data.m_pocaVector,data.m_region);
+  AcdRecon::ribbonPoca(aTrack,ribbon,data.m_arcLength,data.m_activeY,
+		       data.m_active3D,data.m_poca,data.m_pocaVector,data.m_region);
 
   return sc;
 }
