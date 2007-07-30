@@ -88,10 +88,14 @@ protected:
 				   const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas);
   
   virtual StatusCode gapPocaTile(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
-				 const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas);
+				 const AcdRecon::PocaData& pocaData, AcdGeomMap& geomMap, Event::AcdTkrGapPocaCol& gapPocas);
+
+  virtual StatusCode gapPocaCorner(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
+				   Event::AcdTkrGapPocaCol& gapPocas);
 
   virtual StatusCode makeGapPoca(idents::AcdGapId& gapId, const AcdRecon::TrackData& track, const AcdRecon::PocaData& pocaData,
 				 double distance, Event::AcdTkrGapPoca*& poca);
+
 
   static bool checkVolId(idents::VolumeIdentifier& volId);
 

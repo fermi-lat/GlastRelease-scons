@@ -169,7 +169,8 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 			      pocaData->m_arcLengthPlane,pocaData->m_active2D,p);
 	pocaData->m_inPlane.set(p.x(),p.y(),p.z());
 	AcdRecon::ribbonPoca(track,*ribbon,
-			     pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
+			     pocaData->m_arcLength,pocaData->m_activeY,
+			     pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
       } else if ( acdId.tile() ) {
 	const AcdTileDim* tile = geomMap.getTile(acdId,*m_acdGeomSvc);
 	if ( tile->statusCode().isFailure() ) {
@@ -229,13 +230,15 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
   if ( ribbonDataForGap != 0 ) {
     gapPocaRibbon(track,data,*ribbonDataForGap,gapPocas);
   } else if ( tileDataForGap != 0 ) {
-    gapPocaTile(track,data,*tileDataForGap,gapPocas);
+    gapPocaTile(track,data,*tileDataForGap,geomMap,gapPocas);
   } else {
     // Didn't hit any tiles or ribbons
     // Check to see if it exited bottom (data.m_face==5)
     // Otherwise computed distance to nominal gap
     if ( data.m_face != 5 ) fallbackToNominal(track,data,gapPocas);
   } 
+  
+  gapPocaCorner(track,data,gapPocas);
 
   return StatusCode::SUCCESS ;
 }
@@ -490,7 +493,7 @@ StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, 
 }
   
 StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, const AcdRecon::ExitData& /* data */,
-					    const AcdRecon::PocaData& pocaData, Event::AcdTkrGapPocaCol& gapPocas) {
+					    const AcdRecon::PocaData& pocaData, AcdGeomMap& geomMap, Event::AcdTkrGapPocaCol& gapPocas) {
   
   signed char gapType = (unsigned char)(AcdRecon::None);
   unsigned char face = (unsigned char)(pocaData.m_id.face());
@@ -499,6 +502,8 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
   unsigned char gap = 0;
 
   double distance(0.);
+
+  AcdRecon::PocaData ribbonPocaData;
 
   // bottow side tile have gaps only at the ends
   if ( face != 0 && row == 3 ) {
@@ -516,28 +521,87 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
       break;
     case 1:
     case 3:    
-      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
       if ( pocaData.m_localX > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
     case 2:
     case 4:
-      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
       if ( pocaData.m_localX > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
     case 5:
       return StatusCode::SUCCESS;
     }
+
+    idents::AcdId whichRibbon;
+    if ( gapType == AcdRecon::Y_RibbonTop || gapType == AcdRecon::Y_RibbonSide ) {
+      whichRibbon = idents::AcdId(6,col-1);
+    } else if ( gapType == AcdRecon::X_RibbonSide ) {
+      whichRibbon = idents::AcdId(5,col-1);      
+    }
     if ( pocaData.m_localX > 0 ) { col--; }
     if ( pocaData.m_localY > 0 ) { row--; }
+
+    if ( whichRibbon.ribbon() ) {
+      const AcdRibbonDim* ribbon = geomMap.getRibbon(whichRibbon,*m_acdGeomSvc);      
+      AcdRecon::ribbonPoca(track,*ribbon,ribbonPocaData.m_arcLength,ribbonPocaData.m_activeY,
+			   ribbonPocaData.m_active3D,ribbonPocaData.m_poca,ribbonPocaData.m_pocaVector,ribbonPocaData.m_region);
+    }
+  }
+   
+  idents::AcdGapId gapId(gapType,gap,face,row,col);
+
+  Event::AcdTkrGapPoca* poca(0);
+  StatusCode sc = makeGapPoca(gapId,track,ribbonPocaData,distance,poca);
+  if ( sc.isFailure() ) return sc;
+
+  gapPocas.push_back(poca);
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AcdTkrIntersectTool::gapPocaCorner(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
+					      Event::AcdTkrGapPocaCol& gapPocas) {
+
+  // iterate over all corner gaps
+  double bestDist(2000.);
+  int whichCorner(-1);
+
+  AcdRecon::PocaData pocaData;
+
+  unsigned int iCorner(0);
+  for (iCorner=0; iCorner<4; iCorner++) {
+    const Ray& gapRay = m_acdGeomSvc->getCornerGapRay(iCorner);
+    // Compute DOCA between the track and gap ray 
+
+    double testArcLen(-1.);
+    double testRayLen(-1.);
+    double testDist(-2000.);
+    Point testPoint;
+    Vector testDir;
+    int testRegion(-1);
+
+    AcdRecon::rayDoca_withCorner(track,gapRay,testArcLen,testRayLen,testDist,testPoint,testDir,testRegion);
+
+    // only take forward intersections
+    if ( testArcLen < 0. ) continue;
+    if ( testDist < bestDist ) {
+      bestDist = testDist;
+      pocaData.m_arcLength = testArcLen;
+      float sign = ( (track.m_point.x() * track.m_dir.y()) - (track.m_point.y() * track.m_dir.x()) ) > 0 ? 1. : -1;
+      pocaData.m_active3D = testDist * sign;
+      pocaData.m_poca = testPoint;
+      pocaData.m_pocaVector = testDir;
+      pocaData.m_region = testRegion;
+      whichCorner = iCorner;
+    }
   }
 
- 
-  idents::AcdGapId gapId(gapType,gap,face,row,col);
- 
+  idents::AcdGapId gapId(AcdRecon::CornerRay,whichCorner,data.m_face,0,0);
+  
   Event::AcdTkrGapPoca* poca(0);
-  StatusCode sc = makeGapPoca(gapId,track,pocaData,distance,poca);
+  StatusCode sc = makeGapPoca(gapId,track,pocaData,pocaData.m_active3D,poca);
   if ( sc.isFailure() ) return sc;
 
   gapPocas.push_back(poca);
