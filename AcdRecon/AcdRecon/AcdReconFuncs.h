@@ -39,7 +39,7 @@ namespace AcdRecon {
   // POCA Between a track and a ray
   // returns DOCA to point at end of ray if DOCA occurs outside ray edges
   void rayDoca_withCorner(const AcdRecon::TrackData& track, const Ray& ray,
-			  double& arcLength, double& dist, Point& x, Vector& v, int& region);
+			  double& arcLength, double& rayLength, double& dist, Point& x, Vector& v, int& region);
 
   // POINT where a track crosses the plane of a tile
   void tilePlane(const AcdRecon::TrackData& track, const AcdTileDim& tile,
@@ -61,7 +61,7 @@ namespace AcdRecon {
   // POCA between a track and a ribbon 
   // (includes all the ribbon segments in the ribbon direction, but not the small perpindicular segements
   void ribbonPoca(const AcdRecon::TrackData& track, const AcdRibbonDim& ribbon,
-		  double& arcLength, double& dist, Point& x, Vector& v, int& region);  
+		  double& arcLength, double& rayLength, double& dist, Point& x, Vector& v, int& region);  
 
   // Point where a track g
   void projectToPlane(const AcdRecon::TrackData& trackData, const Event::TkrTrackParams& trackParam, 

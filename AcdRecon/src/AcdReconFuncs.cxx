@@ -77,7 +77,7 @@ namespace AcdRecon {
   }
 
   void rayDoca_withCorner(const AcdRecon::TrackData& track, const Ray& ray,
-			  double& arcLength, double& dist, Point& x, Vector& v, int& region) {
+			  double& arcLength, double& rayLength, double& dist, Point& x, Vector& v, int& region) {
     const HepPoint3D& x0 = track.m_point;
     const HepVector3D& t0 = track.m_dir;    
     Point trackPos(x0.x(), x0.y(), x0.z());
@@ -92,6 +92,7 @@ namespace AcdRecon {
       x.set(poca.x(),poca.y(),poca.z());
       HepVector3D pocaVect = poca - corner;
       v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+      rayLength = 0;
       region = -1;
     } else if ( alongRay > ray.getArcLength() ) {
       Point end = ray.position( ray.getArcLength() );
@@ -101,12 +102,14 @@ namespace AcdRecon {
       x.set(poca.x(),poca.y(),poca.z());
       HepVector3D pocaVect = poca - corner;
       v.set(pocaVect.x(),pocaVect.y(),pocaVect.z());
+      rayLength = ray.getArcLength();
       region = 1;
     } else {
       arcLength = raydoca.arcLenRay1();
       dist = raydoca.docaRay1Ray2();
       x = raydoca.docaPointRay1();
       v = x - raydoca.docaPointRay2();
+      rayLength = alongRay;
       region = 0;
     }       
   }
@@ -360,7 +363,7 @@ namespace AcdRecon {
 
 
   void ribbonPoca(const AcdRecon::TrackData& track, const AcdRibbonDim& ribbon,
-		  double& arcLength, double& dist, Point& x, Vector& v, int& region) {
+		  double& arcLength, double& ribbonLength, double& dist, Point& x, Vector& v, int& region) {
    
     // First, does this ribbon extend along x or y axix
     static const int ribbonX = 5;
@@ -415,11 +418,17 @@ namespace AcdRecon {
       return;
     }
 
+    double ribbonLen(0);
+    double rayLen(0);
+
     for ( iRay = 0; iRay < raysInOrder.size(); iRay++ ) {
       const Ray& aRay = *(raysInOrder[iRay]);
-      AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,distTest,x_test,v_test,regionTest);      
+      AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,rayLen,distTest,x_test,v_test,regionTest);      
 
-      
+      // flip the ray length to top rays and +x,+y going.
+      if ( dir == 1 && iRay >= ribbon.plusSideRays().size() ) {
+	rayLen = aRay.getArcLength() - rayLen;
+      }
 
       // Make this an Active Distance calculation 
       distTest = ribbon.halfWidth() - distTest;
@@ -433,10 +442,13 @@ namespace AcdRecon {
       if ( distTest >  dist ) {
 	dist = distTest;
 	arcLength = arcLengthTest;
+	ribbonLength = ribbon.halfLength() - (ribbonLen + rayLen  );
+	ribbonLength *= dir;
 	x = x_test;
 	v = v_test;
 	region = regionTest;
       }
+      ribbonLen += aRay.getArcLength();      
     }
   }
 
