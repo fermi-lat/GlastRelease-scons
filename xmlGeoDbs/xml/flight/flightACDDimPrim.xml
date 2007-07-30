@@ -439,7 +439,7 @@ appears to be about 1.5 or 2 mm</prim>
 <prim name="screw_f0r2c3ur_dy" value="126.59">Luis Reyes measurement</prim>
 
 <prim name="screw_f0r2c3dl_dx" value="-125.01">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c3dl_dy" value="83.23">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c3dl_dy" value="-83.23">Luis Reyes measurement</prim>
 
 <prim name="screw_f0r2c3dr_dx" value="124.47">Luis Reyes measurement</prim>
 <prim name="screw_f0r2c3dr_dy" value="-85.34">Luis Reyes measurement</prim>

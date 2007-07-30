@@ -201,8 +201,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r0c0ul_dx"
-              YREF="screw_f0r0c0ul_dy">
+              XREF="screw_f0r0c0dr_dx"
+              YREF="screw_f0r0c0dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -226,8 +226,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r0c1ul_dx"
-              YREF="screw_f0r0c1ul_dy">
+              XREF="screw_f0r0c1dr_dx"
+              YREF="screw_f0r0c1dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -252,8 +252,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r0c2ul_dx"
-              YREF="screw_f0r0c2ul_dy">
+              XREF="screw_f0r0c2dr_dx"
+              YREF="screw_f0r0c2dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -279,8 +279,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r0c3ul_dx"
-              YREF="screw_f0r0c3ul_dy">
+              XREF="screw_f0r0c3dr_dx"
+              YREF="screw_f0r0c3dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -305,8 +305,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r0c4ul_dx"
-              YREF="screw_f0r0c4ul_dy">
+              XREF="screw_f0r0c4dr_dx"
+              YREF="screw_f0r0c4dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -330,8 +330,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r1c0ul_dx"
-              YREF="screw_f0r1c0ul_dy">
+              XREF="screw_f0r1c0dr_dx"
+              YREF="screw_f0r1c0dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -356,8 +356,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r1c1ul_dx"
-              YREF="screw_f0r1c1ul_dy">
+              XREF="screw_f0r1c1dr_dx"
+              YREF="screw_f0r1c1dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -382,8 +382,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r1c2ul_dx"
-              YREF="screw_f0r1c2ul_dy">
+              XREF="screw_f0r1c2dr_dx"
+              YREF="screw_f0r1c2dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -408,8 +408,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r1c3ul_dx"
-              YREF="screw_f0r1c3ul_dy">
+              XREF="screw_f0r1c3dr_dx"
+              YREF="screw_f0r1c3dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -435,8 +435,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r1c4ul_dx"
-              YREF="screw_f0r1c4ul_dy">
+              XREF="screw_f0r1c4dr_dx"
+              YREF="screw_f0r1c4dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -461,8 +461,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewThick" 
-              XREF="screw_f0r2c0ul_dx"
-              YREF="screw_f0r2c0ul_dy">
+              XREF="screw_f0r2c0dr_dx"
+              YREF="screw_f0r2c0dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -487,8 +487,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewThick" 
-              XREF="screw_f0r2c1ul_dx"
-              YREF="screw_f0r2c1ul_dy">
+              XREF="screw_f0r2c1dr_dx"
+              YREF="screw_f0r2c1dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -514,8 +514,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewThick" 
-              XREF="screw_f0r2c2ul_dx"
-              YREF="screw_f0r2c2ul_dy">
+              XREF="screw_f0r2c2dr_dx"
+              YREF="screw_f0r2c2dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -540,8 +540,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewThick" 
-              XREF="screw_f0r2c3ul_dx"
-              YREF="screw_f0r2c3ul_dy">
+              XREF="screw_f0r2c3dr_dx"
+              YREF="screw_f0r2c3dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -566,8 +566,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewThick" 
-              XREF="screw_f0r2c4ul_dx"
-              YREF="screw_f0r2c4ul_dy">
+              XREF="screw_f0r2c4dr_dx"
+              YREF="screw_f0r2c4dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -592,8 +592,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r3c0ul_dx"
-              YREF="screw_f0r3c0ul_dy">
+              XREF="screw_f0r3c0dr_dx"
+              YREF="screw_f0r3c0dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -617,8 +617,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r3c1ul_dx"
-              YREF="screw_f0r3c1ul_dy">
+              XREF="screw_f0r3c1dr_dx"
+              YREF="screw_f0r3c1dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -642,8 +642,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r3c2ul_dx"
-              YREF="screw_f0r3c2ul_dy">
+              XREF="screw_f0r3c2dr_dx"
+              YREF="screw_f0r3c2dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -668,8 +668,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r3c3ul_dx"
-              YREF="screw_f0r3c3ul_dy">
+              XREF="screw_f0r3c3dr_dx"
+              YREF="screw_f0r3c3dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -693,8 +693,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r3c4ul_dx"
-              YREF="screw_f0r3c4ul_dy">
+              XREF="screw_f0r3c4dr_dx"
+              YREF="screw_f0r3c4dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -718,8 +718,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r4c0ul_dx"
-              YREF="screw_f0r4c0ul_dy">
+              XREF="screw_f0r4c0dr_dx"
+              YREF="screw_f0r4c0dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
@@ -744,8 +744,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r4c1ul_dx"
-              YREF="screw_f0r4c1ul_dy">
+              XREF="screw_f0r4c1dr_dx"
+              YREF="screw_f0r4c1dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -769,8 +769,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r4c2ul_dx"
-              YREF="screw_f0r4c2ul_dy">
+              XREF="screw_f0r4c2dr_dx"
+              YREF="screw_f0r4c2dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -794,8 +794,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r4c3ul_dx"
-              YREF="screw_f0r4c3ul_dy">
+              XREF="screw_f0r4c3dr_dx"
+              YREF="screw_f0r4c3dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
     </composition>
@@ -820,8 +820,8 @@
       </posXYZ>
       
       <posXYZ volume="ACDScrewNormal" 
-              XREF="screw_f0r4c4ul_dx"
-              YREF="screw_f0r4c4ul_dy">
+              XREF="screw_f0r4c4dr_dx"
+              YREF="screw_f0r4c4dr_dy">
         <idField name="fACDScrewOrInset" value="3" />
       </posXYZ>
        
