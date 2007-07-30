@@ -48,6 +48,7 @@ public:
   inline const idents::AcdId& acdId() const { return m_acdId; }
 
   inline double halfWidth() const { return m_halfWidth; }
+  inline double halfLength() const { return m_halfLength; }
   inline StatusCode statusCode() const { return m_sc; }
   inline const std::vector<Ray>& minusSideRays() const { return m_minusSideRays; }     
   inline const std::vector<Ray>& topRays() const { return m_topRays; }      
@@ -61,7 +62,10 @@ protected:
 
   /// this function access the detector service to get the geometry information
   StatusCode getVals();  
-  
+
+  /// this function adds up the length of the rays the old-fashioned way, cause that is safer
+  double calcRibbonLength();
+
 private:  
 
   /// The tile id
@@ -79,8 +83,9 @@ private:
   HepTransform3D            m_plusSideTransform;
 
   /// size of the ribbons
-  double                    m_halfWidth;
-  
+  double                    m_halfWidth;  
+  double                    m_halfLength;
+
   /// The various rays
   std::vector<Ray>          m_minusSideRays;
   std::vector<Ray>          m_topRays;

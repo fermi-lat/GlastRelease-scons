@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r7     30-Jul-2007 EAC Added methods to get total length of ribbons from AcdRibbonDim
  v1r6p2   26-Jul-2007 HMK Patch to find new volume names for top and side
           tiles associated with the screws.  A more intelligent scheme will
           be introduced in August.

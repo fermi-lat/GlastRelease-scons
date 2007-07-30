@@ -24,7 +24,6 @@ AcdRibbonDim::AcdRibbonDim(const idents::AcdId& acdId, IAcdGeometrySvc& acdGeomS
 StatusCode AcdRibbonDim::getVals() {
 
   StatusCode sc = StatusCode::SUCCESS;
-  static const int ribbonX = 5 /*, ribbonY = 6; */;
 
   // First we load up the rays
   m_minusSideRays.clear();
@@ -35,9 +34,11 @@ StatusCode AcdRibbonDim::getVals() {
   if ( ! isOk ) {
     return StatusCode::FAILURE;
   }
-  
-  int minusFace = m_acdId.ribbonOrientation() == ribbonX ? 1 : 2;
-  int plusFace = m_acdId.ribbonOrientation() == ribbonX ? 3 : 4;
+  double fullLength = calcRibbonLength();
+  if ( fullLength <= 0. ) {
+    return StatusCode::FAILURE;
+      }
+  m_halfLength = fullLength/2.;
 
   isOk = m_acdGeomSvc.fillRibbonTransforms(m_acdId,m_minusSideTransform,m_topTransform,m_plusSideTransform);
   if ( ! isOk ) {
@@ -93,4 +94,21 @@ bool AcdRibbonDim::setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) 
     break;    
   }
   return true;
+}
+
+
+double AcdRibbonDim::calcRibbonLength() {
+   double len(0);
+   std::vector<Ray>::const_iterator itr = m_minusSideRays.begin();
+   
+   for ( itr = m_minusSideRays.begin(); itr != m_minusSideRays.end(); itr++ ) {
+     len += itr->getArcLength();
+   }
+   for ( itr = m_topRays.begin(); itr != m_topRays.end(); itr++ ) {
+     len += itr->getArcLength();
+   }
+   for ( itr = m_plusSideRays.begin(); itr != m_plusSideRays.end(); itr++ ) {
+     len += itr->getArcLength();
+   }
+   return len;  
 }
