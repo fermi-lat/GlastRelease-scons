@@ -868,7 +868,7 @@ namespace MOOT {
     getCols.clear(); noCols.clear();
 
     getCols.push_back("precinct_fk");
-    getCols.push_back("instr");
+    getCols.push_back("instrument");
     getCols.push_back("source");
     getCols.push_back("creation_time");
     getCols.push_back("creator");
@@ -898,7 +898,7 @@ namespace MOOT {
     // translate precinct key to precinct name
     std::string precinctName =
       DbUtil::getColumnValue(m_rdb, "Precincts", "name", 
-                             "Precicnt_key", fields[0]);
+                             "precinct_key", fields[0]);
     return new VoteInfo(keyStr, precinctName, fields[0], fields[1],
                        fields[2],fields[3],fields[4], fields[5],
                         fields[6]);
@@ -976,7 +976,7 @@ namespace MOOT {
     try {
       DbUtil::getKeys(keys, m_rdb, "Ancillary_aliases", 
                       "ancillary_aliases_key", where, 0,
-                      true);
+                      false);
     }
     catch (std::exception ex) {
       std::cerr << "Unable to fetch Ancillary alias keys for class=" << aClass
