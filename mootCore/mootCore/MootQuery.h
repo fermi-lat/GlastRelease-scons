@@ -242,7 +242,8 @@ namespace MOOT {
 
     /**
        Return ancillary alias keys satisfying specified conditions on fields
-       in Ancillary_alias table.  "*" means "don't cut on this condition"
+       in Ancillary_alias table.  "*" means "don't cut on this condition".
+       Keys are returned in descending order.
      */
     unsigned listAncAliasKeys(std::vector<unsigned>& keys,
                               const std::string& aClass="*",
