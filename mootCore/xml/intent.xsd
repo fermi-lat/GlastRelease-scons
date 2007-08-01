@@ -12,6 +12,8 @@
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
+  <xs:element name="paramsNeeded" type="xs:string" />
+
   <!-- register values may be expressed in decimal or in hex -->
   <xs:simpleType name="regValueType">
     <xs:restriction base="xs:string">
@@ -280,8 +282,10 @@
     <xs:complexType>
       <xs:all minOccurs="1" >
         <xs:element name="latc_AEM_ACD_Mode" type="paramFileType" />
-        <xs:element name="latc_ARC_ACD_Mode" type="paramFileType" />
-        <xs:element name="latc_AFE_ACD_Mode" type="paramFileType" />
+        <xs:element name="latc_ARC_ACD_Mode" type="paramFileType" 
+                    minOccurs="0"/>
+        <xs:element name="latc_AFE_ACD_Mode" type="paramFileType" 
+                    minOccurs="0"/>
         <xs:element name="latc_DFT_ACD_Mode" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -313,7 +317,10 @@
         <xs:element ref="ACD_Mode-registers" />
         <xs:element ref="ACD_Mode-constants" />
         <xs:element ref="ACD_Mode-anc" />
-        <xs:element ref="ACD_Mode-param" />
+        <xs:choice >
+          <xs:element ref="ACD_Mode-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_Mode-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -341,7 +348,8 @@
   <xs:element name="ACD_Bias-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_AFE_ACD_Bias" type="paramFileType" />
+        <xs:element name="latc_AFE_ACD_Bias" type="paramFileType" 
+                    minOccurs="0"/>
         <xs:element name="latc_DFT_ACD_Bias" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -363,7 +371,10 @@
         <xs:element ref="ACD_Bias-registers" />
         <xs:element ref="ACD_Bias-constants" />
         <xs:element ref="ACD_Bias-anc" />
-        <xs:element ref="ACD_Bias-param" />
+        <xs:choice>
+          <xs:element ref="ACD_Bias-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_Bias-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -390,7 +401,8 @@
   <xs:element name="ACD_Hld-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_AFE_ACD_Hld" type="paramFileType" />
+        <xs:element name="latc_AFE_ACD_Hld" type="paramFileType" 
+                    minOccurs="0" />
         <xs:element name="latc_DFT_ACD_Hld" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -412,7 +424,10 @@
         <xs:element ref="ACD_Hld-registers" />
         <xs:element ref="ACD_Hld-constants" />
         <xs:element ref="ACD_Hld-anc" />
-        <xs:element ref="ACD_Hld-param" />
+        <xs:choice>
+          <xs:element ref="ACD_Hld-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_Hld-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -440,7 +455,8 @@
   <xs:element name="ACD_PHA-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_ARC_ACD_PHA" type="paramFileType" />
+        <xs:element name="latc_ARC_ACD_PHA" type="paramFileType"
+                    minOccurs="0" />
         <xs:element name="latc_DFT_ACD_PHA" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -468,7 +484,10 @@
         <xs:element ref="ACD_PHA-registers" />
         <xs:element ref="ACD_PHA-constants" />
         <xs:element ref="ACD_PHA-anc" />
-        <xs:element ref="ACD_PHA-param" />
+        <xs:choice>
+          <xs:element ref="ACD_PHA-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_PHA-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -501,7 +520,8 @@
   <xs:element name="ACD_Veto-param" >
     <xs:complexType>
       <xs:all  >
-        <xs:element name="latc_AFE_ACD_Veto" type="paramFileType" />
+        <xs:element name="latc_AFE_ACD_Veto" type="paramFileType" 
+                    minOccurs="0" />
         <xs:element name="latc_DFT_ACD_Veto" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -531,7 +551,10 @@
         <xs:element ref="ACD_Veto-registers" />
         <xs:element ref="ACD_Veto-constants" />
         <xs:element ref="ACD_Veto-anc" />
-        <xs:element ref="ACD_Veto-param" />
+        <xs:choice>
+          <xs:element ref="ACD_Veto-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_Veto-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -559,7 +582,8 @@
   <xs:element name="ACD_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_ARC_ACD_Timing" type="paramFileType" />
+        <xs:element name="latc_ARC_ACD_Timing" type="paramFileType" 
+                    minOccurs="0" />
         <xs:element name="latc_DFT_ACD_Timing" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -581,7 +605,10 @@
         <xs:element ref="ACD_Timing-registers" />
         <xs:element ref="ACD_Timing-constants" />
         <xs:element ref="ACD_Timing-anc" />
-        <xs:element ref="ACD_Timing-param" />
+        <xs:choice>
+          <xs:element ref="ACD_Timing-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="ACD_Timing-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -609,9 +636,12 @@
     <xs:complexType>
       <xs:all minOccurs="1" >
 <!--        <xs:element name="latc_TEM_CAL_Mode" type="paramFileType" /> -->
-        <xs:element name="latc_CCC_CAL_Mode" type="paramFileType" />
-        <xs:element name="latc_CRC_CAL_Mode" type="paramFileType" />
-        <xs:element name="latc_CFE_CAL_Mode" type="paramFileType" />
+        <xs:element name="latc_CCC_CAL_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_CRC_CAL_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_CFE_CAL_Mode" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_Mode" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -641,7 +671,10 @@
         <xs:element ref="CAL_Mode-registers" />
         <xs:element ref="CAL_Mode-constants" />
         <xs:element ref="CAL_Mode-anc" />
-        <xs:element ref="CAL_Mode-param" />
+        <xs:choice>
+          <xs:element ref="CAL_Mode-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_Mode-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -677,8 +710,10 @@
     <xs:complexType>
       <xs:all  minOccurs="0">
 <!--        <xs:element name="latc_TEM_CAL_Timing" type="paramFileType" /> -->
-        <xs:element name="latc_CCC_CAL_Timing" type="paramFileType" />
-        <xs:element name="latc_CRC_CAL_Timing" type="paramFileType" />
+        <xs:element name="latc_CCC_CAL_Timing" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_CRC_CAL_Timing" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_Timing" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -700,7 +735,10 @@
         <xs:element ref="CAL_Timing-registers" />
         <xs:element ref="CAL_Timing-constants" />
         <xs:element ref="CAL_Timing-anc" />
-        <xs:element ref="CAL_Timing-param" />
+        <xs:choice>
+          <xs:element ref="CAL_Timing-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_Timing-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -736,7 +774,8 @@
   <xs:element name="CAL_LAC-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_CFE_CAL_LAC" type="paramFileType" />
+        <xs:element name="latc_CFE_CAL_LAC" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_LAC" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -767,7 +806,10 @@
         <xs:element ref="CAL_LAC-registers" />
         <xs:element ref="CAL_LAC-constants" />
         <xs:element ref="CAL_LAC-anc" />
-        <xs:element ref="CAL_LAC-param" />
+        <xs:choice>
+          <xs:element ref="CAL_LAC-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_LAC-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -806,7 +848,8 @@
   <xs:element name="CAL_FLE-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_CFE_CAL_FLE" type="paramFileType" />
+        <xs:element name="latc_CFE_CAL_FLE" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_FLE" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -835,7 +878,10 @@
         <xs:element ref="CAL_FLE-registers" />
         <xs:element ref="CAL_FLE-constants" />
         <xs:element ref="CAL_FLE-anc" />
-        <xs:element ref="CAL_FLE-param" />
+        <xs:choice>
+          <xs:element ref="CAL_FLE-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_FLE-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -870,8 +916,9 @@
        
   <xs:element name="CAL_FHE-param" >
     <xs:complexType>
-      <xs:all  minOccurs="0">
-        <xs:element name="latc_CFE_CAL_FHE" type="paramFileType" />
+      <xs:all >
+        <xs:element name="latc_CFE_CAL_FHE" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_FHE" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -900,7 +947,10 @@
         <xs:element ref="CAL_FHE-registers" />
         <xs:element ref="CAL_FHE-constants" />
         <xs:element ref="CAL_FHE-anc" />
-        <xs:element ref="CAL_FHE-param" />
+        <xs:choice>
+          <xs:element ref="CAL_FHE-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_FHE-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -936,7 +986,8 @@
   <xs:element name="CAL_ULD-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_CFE_CAL_ULD" type="paramFileType" />
+        <xs:element name="latc_CFE_CAL_ULD" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_CAL_ULD" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -967,7 +1018,10 @@
         <xs:element ref="CAL_ULD-registers" />
         <xs:element ref="CAL_ULD-constants" />
         <xs:element ref="CAL_ULD-anc" />
-        <xs:element ref="CAL_ULD-param" />
+        <xs:choice>
+          <xs:element ref="CAL_ULD-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="CAL_ULD-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -993,18 +1047,31 @@
   <xs:element name="TKR_Mode-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_SPT_TKR_Mode" type="paramFileType" />
-        <xs:element name="latc_TFE_TKR_Mode" type="paramFileType" />
-        <xs:element name="latc_TDC_TKR_Mode" type="paramFileType" />
-        <xs:element name="latc_TCC_TKR_Mode" type="paramFileType" />
-        <xs:element name="latc_TRC_TKR_Mode" type="paramFileType" />
+        <xs:element name="latc_SPT_TKR_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_TFE_TKR_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_TDC_TKR_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_TCC_TKR_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_TRC_TKR_Mode" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_TKR_Mode" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="TKR_Mode-anc" type="emptyBaseType" />
+  <xs:element name="TKR_Mode-anc">
+      <xs:complexType >
+        <xs:all minOccurs="0" >
+          <xs:element name="TKR_ChargeScaleCalibration" type="ancFileType"
+                            minOccurs="0" />
+        </xs:all>
+      </xs:complexType >
+  </xs:element>
+
   <xs:element name="TKR_Mode-constants" type="emptyBaseType" />
 
   <xs:element name="TKR_Mode-offline" type="noOutfilesType" />
@@ -1020,7 +1087,10 @@
         <xs:element ref="TKR_Mode-registers" />
         <xs:element ref="TKR_Mode-constants" />
         <xs:element ref="TKR_Mode-anc" />
-        <xs:element ref="TKR_Mode-param" />
+        <xs:choice>
+          <xs:element ref="TKR_Mode-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TKR_Mode-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1050,7 +1120,8 @@
   <xs:element name="TKR_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TCC_TKR_Timing" type="paramFileType" />
+        <xs:element name="latc_TCC_TKR_Timing" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_TKR_Timing" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -1072,7 +1143,10 @@
         <xs:element ref="TKR_Timing-registers" />
         <xs:element ref="TKR_Timing-constants" />
         <xs:element ref="TKR_Timing-anc" />
-        <xs:element ref="TKR_Timing-param" />
+        <xs:choice>
+          <xs:element ref="TKR_Timing-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TKR_Timing-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1103,7 +1177,8 @@
   <xs:element name="TKR_Strips-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TFE_TKR_Strips" type="paramFileType" />
+        <xs:element name="latc_TFE_TKR_Strips" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_TKR_Strips" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -1125,7 +1200,10 @@
         <xs:element ref="TKR_Strips-registers" />
         <xs:element ref="TKR_Strips-constants" />
         <xs:element ref="TKR_Strips-anc" />
-        <xs:element ref="TKR_Strips-param" />
+        <xs:choice>
+          <xs:element ref="TKR_Strips-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TKR_Strips-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1155,7 +1233,8 @@
   <xs:element name="TKR_Thresh-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TDC_TKR_Thresh" type="paramFileType" />
+        <xs:element name="latc_TDC_TKR_Thresh" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_DFT_TKR_Thresh" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
@@ -1177,7 +1256,10 @@
         <xs:element ref="TKR_Thresh-registers" />
         <xs:element ref="TKR_Thresh-constants" />
         <xs:element ref="TKR_Thresh-anc" />
-        <xs:element ref="TKR_Thresh-param" />
+        <xs:choice>
+          <xs:element ref="TKR_Thresh-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TKR_Thresh-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1277,7 +1359,10 @@
         <xs:element ref="TRG_GEM-registers" />
         <xs:element ref="TRG_GEM-constants" />
         <xs:element ref="TRG_GEM-anc" />
-        <xs:element ref="TRG_GEM-param" />
+        <xs:choice>
+          <xs:element ref="TRG_GEM-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TRG_GEM-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1325,7 +1410,10 @@
         <xs:element ref="TRG_ROI-registers" />
         <xs:element ref="TRG_ROI-constants" />
         <xs:element ref="TRG_ROI-anc" />
-        <xs:element ref="TRG_ROI-param" />
+        <xs:choice>
+          <xs:element ref="TRG_ROI-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="TRG_ROI-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1350,8 +1438,10 @@
   <xs:element name="GNL_Mode-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
-        <xs:element name="latc_TIC_GNL_Mode" type="paramFileType" />
-        <xs:element name="latc_TEM_GNL_Mode" type="paramFileType" />
+        <xs:element name="latc_TIC_GNL_Mode" type="paramFileType"
+                          minOccurs="0" />
+        <xs:element name="latc_TEM_GNL_Mode" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_AEM_GNL_Mode" type="paramFileType" />
         <xs:element name="latc_DFT_GNL_Mode" type="paramFileType" />
       </xs:all>  
@@ -1374,7 +1464,10 @@
         <xs:element ref="GNL_Mode-registers" />
         <xs:element ref="GNL_Mode-constants" />
         <xs:element ref="GNL_Mode-anc" />
-        <xs:element ref="GNL_Mode-param" />
+        <xs:choice>
+          <xs:element ref="GNL_Mode-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="GNL_Mode-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1404,7 +1497,8 @@
   <xs:element name="GNL_Timing-param" >
     <xs:complexType>
       <xs:all  minOccurs="0">
-        <xs:element name="latc_TEM_GNL_Timing" type="paramFileType" />
+        <xs:element name="latc_TEM_GNL_Timing" type="paramFileType"
+                          minOccurs="0" />
         <xs:element name="latc_AEM_GNL_Timing" type="paramFileType" />
         <xs:element name="latc_DFT_GNL_Timing" type="paramFileType" />
       </xs:all>  
@@ -1427,7 +1521,10 @@
         <xs:element ref="GNL_Timing-registers" />
         <xs:element ref="GNL_Timing-constants" />
         <xs:element ref="GNL_Timing-anc" />
-        <xs:element ref="GNL_Timing-param" />
+        <xs:choice>
+          <xs:element ref="GNL_Timing-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
         <xs:element ref="GNL_Timing-offline" />
       </xs:sequence>
     </xs:complexType>
@@ -1768,7 +1865,11 @@
         <xs:element ref="ACD_iterables" />
         <xs:element ref="ACD_LCI-anc" />
         <xs:element ref="ACD_lci_loop" maxOccurs="unbounded" />
-        <xs:element ref="ACD_LCI-param" />
+        <xs:choice>
+          <xs:element ref="ACD_LCI-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
+
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -1780,7 +1881,10 @@
         <xs:element ref="CAL_iterables" />
         <xs:element ref="CAL_LCI-anc" />
         <xs:element ref="CAL_lci_loop" maxOccurs="unbounded" />
-        <xs:element ref="CAL_LCI-param" />
+        <xs:choice>
+          <xs:element ref="CAL_LCI-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -1792,7 +1896,10 @@
         <xs:element ref="TKR_iterables" />
         <xs:element ref="TKR_LCI-anc" />
         <xs:element ref="TKR_lci_loop" maxOccurs="unbounded" />
-        <xs:element ref="TKR_LCI-param" />
+        <xs:choice>
+          <xs:element ref="TKR_LCI-param" />
+          <xs:element ref="paramsNeeded" />
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -2297,15 +2404,4 @@
     </xs:complexType>
   </xs:element>
 
-
-
-<!-- Still to do:  
-     lci_loop, -anc and -param containters for for CAL and TKR
-     top level elements CAL_LCI, TKR_LCI  (did ACD)
-
-     Constraints on ancRef children of ..-param, referring to dict nickname
-     for CAL, TKR
-
-     definition of global LCI (container) elements
- -->
 </xs:schema>
