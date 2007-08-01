@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r25p3
+version v0r26p1
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -16,7 +16,7 @@ apply_pattern component_library library=CalibSvc
 # calibUtil, CalibData, calibRootData and astro
 ## use calibUtil v1r* -no_auto_imports
 use calibUtil v1r*
-use CalibData v0r* 
+use CalibData v0r17 
 use calibRootData v1r* -no_auto_imports
 use astro         v2r* -no_auto_imports
 
