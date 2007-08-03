@@ -481,8 +481,8 @@ int main(int nargs, char**)    {
 
   std::vector<unsigned> pkeys;
   unsigned voteKey;
-  unsigned minKey = 15;
-  unsigned maxKey = 210;
+  unsigned minKey = 1;
+  unsigned maxKey = 18;
   for (voteKey = minKey; voteKey < maxKey; voteKey++) {
     bool isUpToDate = q.getVoteParameters(voteKey, pkeys);
     if (isUpToDate) {
