@@ -1148,13 +1148,13 @@ namespace MOOT {
     return (nKey > 0) ? keys[0] : 0;
   }
 
-  void MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
+  bool MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         unsigned voteKey) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
     return resolveAncAliases(ancKeys, voteKeyStr);
   }
-  void MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
+  bool MootQuery::resolveAncAliases(std::vector<std::string>& ancKeys,
                                         const std::string& voteKeyStr) {
     std::string where(" WHERE vote_fk='");
     where += voteKeyStr + std::string("' AND aclass_fk IS NOT NULL");
@@ -1167,7 +1167,7 @@ namespace MOOT {
                                 where, aclassKeys);
     if (n < 0 ) 
       throw DbUtilException("MootQuery::resolveAncAliases failed getAllWhere call");
-    else if (n == 0) return;
+    else if (n == 0) return true;
 
     DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "a_alias",
                                 where, aAliases);
@@ -1178,10 +1178,18 @@ namespace MOOT {
         std::string("' and name='") + aAliases[i] + std::string("'");
       std::string ancKey = 
         DbUtil::getColumnWhere(m_rdb, "Ancillary_aliases", "ancillary_fk",
-                               where);
+                               where, false);
+      // If none found or its blank, failure
+      if (ancKey.size() == 0) {
+        std::cerr 
+          << "MootQuery::resolveAncAliases: Could not resolve all for vote "
+          << voteKeyStr << std::endl;
+        ancKeys.clear();
+        return false;
+      }
       ancKeys.push_back(ancKey);
     }
-    return;
+    return true;
   }
 
 
@@ -1208,6 +1216,49 @@ namespace MOOT {
     return (nKey > 0) ? keys[0] : 0;
   }
 
+
+  ////  begin resolveVoteAliases
+  bool MootQuery::resolveVoteAliases(std::vector<std::string>& voteKeys,
+                                     const std::string& ctnKeyStr) {
+    std::string where(" WHERE ctn_fk='");
+    where += ctnKeyStr + std::string("' AND precinct_fk IS NOT NULL");
+    std::vector<std::string> precinctKeys;
+    std::vector<std::string> vAliases;
+
+    // Maybe there is some clever way to do this with a sub-select
+
+    int n = DbUtil::getAllWhere(m_rdb, "Container_Precinct", "precinct_fk",
+                                where, precinctKeys);
+    if (n < 0 ) 
+      throw 
+        DbUtilException("MootQuery::resolveVoteAliases failed getAllWhere call");
+    else if (n == 0) return true;
+
+    DbUtil::getAllWhere(m_rdb, "Container_Precinct", "v_alias",
+                                where, vAliases);
+
+    // Now look each one up in vote alias table
+    for (int i = 0; i < n; i++) {
+      where = std::string(" WHERE precinct_fk ='") + precinctKeys[i] +
+        std::string("' and name='") + vAliases[i] + std::string("'");
+      std::string voteKey = 
+        DbUtil::getColumnWhere(m_rdb, "Vote_aliases", "vote_fk",
+                               where, false);
+      if (voteKey.size() == 0) { // no resolution
+        // output complaint?
+        std::cerr 
+          << "MootQuery::resolveVoteAliases: Could not resolve all for vote "
+          << ctnKeyStr << std::endl;
+        voteKeys.clear();
+        return false;
+      }
+      voteKeys.push_back(voteKey);
+    }
+    return true;
+  }
+
+
+  ////  end resolveVoteAliases
 
   bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk) {
     std::string voteKeyStr;
@@ -1238,23 +1289,66 @@ namespace MOOT {
    */
   bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr,
                                  std::vector<unsigned>* pk) {
+
+    // First be sure vote is registered and valid
+    std::string voteStatus = 
+      DbUtil::getColumnValue(m_rdb, "Votes", "status", "vote_key", voteKeyStr);
+    if (voteStatus != std::string("CREATED") ) {
+      std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
+                << " is not the key of a valid registered vote" << std::endl;
+      return false;
+    }
     if (pk) pk->clear();
+
+    // First find out whether we're dealing with a container or not
+    std::vector<unsigned> precinctKeys;
+    std::string where(" WHERE ctn_fk ='");
+    where += voteKeyStr + std::string("'");
+    unsigned nContained = 
+      DbUtil::getKeys(precinctKeys, m_rdb, "Container_Precinct",
+                      "precinct_fk", where);
+    if (nContained) {
+      std::vector<std::string> innerKeys;
+      std::vector<unsigned> parmKeys;
+
+      if (!resolveVoteAliases(innerKeys, voteKeyStr)) return false;
+      for (unsigned iVote = 0; iVote < nContained; iVote++) {
+        if (voteIsUpToDate(innerKeys[iVote], &parmKeys)) {
+          if (pk) pk->insert(pk->end(), parmKeys.begin(), parmKeys.end());
+        }
+        else {
+          std::cerr << "Container vote " << voteKeyStr 
+                    << "not up to date; failed for resolved vote "
+                    << innerKeys[iVote] << std::endl;
+          if (pk) pk->clear();
+          return false;
+        }
+      }
+      return true;
+    }
 
     std::vector<std::string> aliasedAncKeys;
 
     static std::string goodParm("' AND status='CREATED' AND quality='PROD'");
 
-    resolveAncAliases(aliasedAncKeys, voteKeyStr);
+    if (!resolveAncAliases(aliasedAncKeys, voteKeyStr) ) {
+      return false;
+    }
 
     // Get parameter classes associated with this vote.
     std::vector<std::string> pclassKeyStr;
 
 
-    std::string where(" WHERE vote_fk ='");
+    where = std::string(" WHERE vote_fk ='");
     where += voteKeyStr + std::string("' AND aclass_fk IS NULL");
     int nPclass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
                                       "pclass_fk", where, pclassKeyStr);
 
+    if (!nPclass) {
+      std::cerr << "Vote file "  << voteKeyStr << 
+        " has no associated parameter classes" << std::endl;
+      return false;
+    }
     // Find Parameter file *instances* associated with this vote
     // Must be at least one per class.
     // What about instrument?  Should we be checking that too?
