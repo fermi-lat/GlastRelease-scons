@@ -296,8 +296,8 @@ namespace MOOT {
         Return number of ancillary file keys found.  Throw exception
         for error (e.g., no such voteKey; no ancillary found for an alias) 
      */
-    void resolveAncAliases(std::vector<std::string>& ancKeys,
-                               unsigned voteKey);
+    bool resolveAncAliases(std::vector<std::string>& ancKeys,
+                           unsigned voteKey);
 
     /// Returns key of file registered in Votes if there is one; else 0
     unsigned resolveVoteAlias(const std::string& alias,
@@ -317,12 +317,17 @@ namespace MOOT {
     /// Returns key of file registered in Ancillary if there is one; else 0.
     /// @a ancClassKey is ancillary class key as string
     unsigned resolveAncAliasByKey(const std::string& alias, 
-                             const std::string& ancClassKey);
+                                  const std::string& ancClassKey);
 
     /// Throw RdbException for error (e.g., no such voteKey, no ancillary
     /// found for one alias)
-    void resolveAncAliases(std::vector<std::string>& ancKeys,
+    bool resolveAncAliases(std::vector<std::string>& ancKeys,
                                const std::string& voteKeyStr);
+
+    /// Given container vote file, return keys of vote files currently
+    /// associated with precinct aliases in the container.
+    bool resolveVoteAliases(std::vector<std::string>& voteKeys,
+                               const std::string& ctnKeyStr);
 
     bool voteIsUpToDate(const std::string& voteKeyStr, 
                         std::vector<unsigned>* pk=0);
