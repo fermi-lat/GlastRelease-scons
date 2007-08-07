@@ -44,11 +44,7 @@ use CalibSvc
 
 # Define some necessary macros for compilation 
 macro_append cppflags  "" \
-      WIN32Debug ' /D "WIN32" /D "__i386" '\
-      WIN32      ' /D "WIN32" /D "__i386" '\
-      vsnet        ' /DWIN32 /D__i386 ' 
-
-
+      WIN32      ' /D "__i386" '
 
 # sets up standard test executable and job options file
 # apply_pattern package_test
