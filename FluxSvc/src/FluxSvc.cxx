@@ -235,11 +235,16 @@ private:
             }
             m_start += offset;
 
+
             if( delta >0 && m_endTime==0 )  m_endTime=m_start+delta;
             // set the basic time here: it will be incremented by the flux object
             GPS::instance()->time(m_start);
             m_end = m_endTime;
             if( m_deltaTime>0) m_end=m_start+delta;
+
+	    log << MSG::INFO << "init: start time = " << std::setprecision(10)
+		<< m_start << " sec, end time = " << m_end << " sec, delta = " 
+		<< m_end-m_start << " sec" << endreq;
 
         }
         double convert(std::string date){
