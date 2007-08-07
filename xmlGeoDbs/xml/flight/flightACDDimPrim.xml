@@ -253,350 +253,340 @@ appears to be about 1.5 or 2 mm</prim>
 
 <!-- row 0 -->
 <!-- Tile 0 -->
-<prim name="screw_f0r0c0ul_dx" value="-64">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r0c0ul_dy" value="97">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r0c0ul_dx" value="-62.375">From drawings</prim>
+<prim name="screw_f0r0c0ul_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c0ur_dx" value="122.85">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c0ur_dy" value="99.05">Luis Reyes measurement</prim>
 
-<prim name="screw_f0r0c0dl_dx" value="-62.61">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c0dl_dy" value="-75.06">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c0ur_dx" value="122.625">From drawings</prim>
+<prim name="screw_f0r0c0ur_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c0dr_dx" value="123.67">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c0dr_dy" value="-75.72">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c0dl_dx" value="-62.375">From drawings</prim>
+<prim name="screw_f0r0c0dl_dy" value="-75.8">From drawings</prim>
+
+<prim name="screw_f0r0c0dr_dx" value="122.625">From drawings</prim>
+<prim name="screw_f0r0c0dr_dy" value="-75.8">From drawings</prim>
 
 <!-- Tile 1 -->
-<prim name="screw_f0r0c1ul_dx" value="-123.47">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c1ul_dy" value="98.97">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c1ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c1ul_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c1ur_dx" value="124.2">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c1ur_dy" value="98.24">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c1ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c1ur_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c1dl_dx" value="-123.13">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c1dl_dy" value="-76.03">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c1dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c1dl_dy" value="-75.8">From drawings</prim>
 
-<prim name="screw_f0r0c1dr_dx" value="125.55">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c1dr_dy" value="-76.43">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c1dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c1dr_dy" value="-75.8">From drawings</prim>
 
 <!-- Tile 2 -->
-<prim name="screw_f0r0c2ul_dx" value="-124.51">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c2ul_dy" value="97.66">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c2ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c2ul_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c2ur_dx" value="125.6">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c2ur_dy" value="98.25">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c2ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c2ur_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c2dl_dx" value="-127.4">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c2dl_dy" value="-76.94">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c2dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c2dl_dy" value="-75.8">From drawings</prim>
 
-<prim name="screw_f0r0c2dr_dx" value="124">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r0c2dr_dy" value="-77">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r0c2dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c2dr_dy" value="-75.8">From drawings</prim>
 
 <!-- Tile 3 -->
-<prim name="screw_f0r0c3ul_dx" value="-126.16">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c3ul_dy" value="98.15">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c3ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c3ul_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c3ur_dx" value="126.22">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c3ur_dy" value="99.05">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c3ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c3ur_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c3dl_dx" value="-125.82">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c3dl_dy" value="-76.35">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c3dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r0c3dl_dy" value="-75.8">From drawings</prim>
 
-<prim name="screw_f0r0c3dr_dx" value="123.35">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c3dr_dy" value="-78.41">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c3dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r0c3dr_dy" value="-75.8">From drawings</prim>
 
 <!-- Tile 4 -->
-<prim name="screw_f0r0c4ul_dx" value="-123.61">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c4ul_dy" value="97.59">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c4ul_dx" value="-122.635">From drawings</prim>
+<prim name="screw_f0r0c4ul_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c4ur_dx" value="64.14">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c4ur_dy" value="99.07">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c4ur_dx" value="62.365">From drawings</prim>
+<prim name="screw_f0r0c4ur_dy" value="98.8">From drawings</prim>
 
-<prim name="screw_f0r0c4dl_dx" value="-122.51">Luis Reyes measurement</prim>
-<prim name="screw_f0r0c4dl_dy" value="-75.7">Luis Reyes measurement</prim>
+<prim name="screw_f0r0c4dl_dx" value="-122.635">From drawings</prim>
+<prim name="screw_f0r0c4dl_dy" value="-75.8">From drawings</prim>
 
-<prim name="screw_f0r0c4dr_dx" value="62">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r0c4dr_dy" value="-77">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r0c4dr_dx" value="62.365">From drawings</prim>
+<prim name="screw_f0r0c4dr_dy" value="-75.8">From drawings</prim>
+
 
 <!-- row 1 -->
 <!-- Tile 0 -->
-<prim name="screw_f0r1c0ul_dx" value="-64.71">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c0ul_dy" value="84.7">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c0ul_dx" value="-62.635">From drawings</prim>
+<prim name="screw_f0r1c0ul_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c0ur_dx" value="122.05">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c0ur_dy" value="82.17">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c0ur_dx" value="122.365">From drawings</prim>
+<prim name="screw_f0r1c0ur_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c0dl_dx" value="-64.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c0dl_dy" value="-127.09">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c0dl_dx" value="-62.635">From drawings</prim>
+<prim name="screw_f0r1c0dl_dy" value="-126.93">From drawings</prim>
 
-<prim name="screw_f0r1c0dr_dx" value="120.71">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c0dr_dy" value="-126.32">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c0dr_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r1c0dr_dy" value="-126.93">From drawings</prim>
 
 <!-- Tile 1 -->
-<prim name="screw_f0r1c1ul_dx" value="-124.2">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c1ul_dy" value="84.96">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c1ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c1ul_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c1ur_dx" value="124.91">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c1ur_dy" value="83.95">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c1ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c1ur_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c1dl_dx" value="-124.9">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c1dl_dy" value="-125.43">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c1dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c1dl_dy" value="-126.93">From drawings</prim>
 
-<prim name="screw_f0r1c1dr_dx" value="123.31">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c1dr_dy" value="-127.23">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c1dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c1dr_dy" value="-126.93">From drawings</prim>
 
 <!-- Tile 2 -->
-<prim name="screw_f0r1c2ul_dx" value="-126.21">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c2ul_dy" value="85.24">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c2ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c2ul_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c2ur_dx" value="126.63">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c2ur_dy" value="85.35">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c2ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c2ur_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c2dl_dx" value="-124.38">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c2dl_dy" value="-126.65">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c2dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c2dl_dy" value="-126.93">From drawings</prim>
 
-<prim name="screw_f0r1c2dr_dx" value="124.63">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c2dr_dy" value="-126.6">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c2dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c2dr_dy" value="-126.93">From drawings</prim>
 
 <!-- Tile 3 -->
-<prim name="screw_f0r1c3ul_dx" value="-125.51">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c3ul_dy" value="85.16">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c3ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c3ul_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c3ur_dx" value="125.78">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c3ur_dy" value="83.9">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c3ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c3ur_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c3dl_dx" value="-124.23">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c3dl_dy" value="-126.43">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c3dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r1c3dl_dy" value="-126.93">From drawings</prim>
 
-<prim name="screw_f0r1c3dr_dx" value="125.91">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c3dr_dy" value="-127.69">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c3dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r1c3dr_dy" value="-126.93">From drawings</prim>
 
 <!-- Tile 4 -->
-<prim name="screw_f0r1c4ul_dx" value="-122.81">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c4ul_dy" value="83.99">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c4ul_dx" value="-122.635">From drawings</prim>
+<prim name="screw_f0r1c4ul_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c4ur_dx" value="62.31">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c4ur_dy" value="84.69">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c4ur_dx" value="62.365">From drawings</prim>
+<prim name="screw_f0r1c4ur_dy" value="84.37">From drawings</prim>
 
-<prim name="screw_f0r1c4dl_dx" value="-122.37">Luis Reyes measurement</prim>
-<prim name="screw_f0r1c4dl_dy" value="-126.99">Luis Reyes measurement</prim>
+<prim name="screw_f0r1c4dl_dx" value="-122.635">From drawings</prim>
+<prim name="screw_f0r1c4dl_dy" value="-126.93">From drawings</prim>
 
-<prim name="screw_f0r1c4dr_dx" value="62">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r1c4dr_dy" value="-127">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r1c4dr_dx" value="62.365">From drawings</prim>
+<prim name="screw_f0r1c4dr_dy" value="-126.93">From drawings</prim>
+
 
 <!-- row 2 -->
 <!-- Tile 0 -->
-<prim name="screw_f0r2c0ul_dx" value="-62.86">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c0ul_dy" value="84.66">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c0ul_dx" value="-62.635">From drawings</prim>
+<prim name="screw_f0r2c0ul_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c0ur_dx" value="122.29">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c0ur_dy" value="84.95">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c0ur_dx" value="122.365">From drawings</prim>
+<prim name="screw_f0r2c0ur_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c0dl_dx" value="-64.55">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c0dl_dy" value="-127.41">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c0dl_dx" value="-62.635">From drawings</prim>
+<prim name="screw_f0r2c0dl_dy" value="-127.11">From drawings</prim>
 
-<prim name="screw_f0r2c0dr_dx" value="123.25">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c0dr_dy" value="-126.99">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c0dr_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r2c0dr_dy" value="-127.11">From drawings</prim>
 
 <!-- Tile 1 -->
-<prim name="screw_f0r2c1ul_dx" value="-125.16">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c1ul_dy" value="84.27">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c1ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c1ul_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c1ur_dx" value="125.5">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c1ur_dy" value="84.9">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c1ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c1ur_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c1dl_dx" value="-125.71">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c1dl_dy" value="-127.66">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c1dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c1dl_dy" value="-127.11">From drawings</prim>
 
-<prim name="screw_f0r2c1dr_dx" value="126.6">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c1dr_dy" value="-126.61">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c1dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c1dr_dy" value="-127.11">From drawings</prim>
 
 <!-- Tile 2 -->
-<prim name="screw_f0r2c2ul_dx" value="-125.03">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c2ul_dy" value="85.38">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c2ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c2ul_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c2ur_dx" value="125.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c2ur_dy" value="85.35">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c2ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c2ur_dy" value="84.19">From drawings</prim>
 
-<prim name="screw_f0r2c2dl_dx" value="-124.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c2dl_dy" value="-127.68">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c2dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c2dl_dy" value="-127.11">From drawings</prim>
 
-<prim name="screw_f0r2c2dr_dx" value="124.38">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c2dr_dy" value="-127.32">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c2dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c2dr_dy" value="-127.11">From drawings</prim>
 
 <!-- Tile 3 -->
-<prim name="screw_f0r2c3ul_dx" value="-126.24">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c3ul_dy" value="127.64">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c3ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c3ul_dy" value="127.11">From drawings</prim>
 
-<prim name="screw_f0r2c3ur_dx" value="124.17">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c3ur_dy" value="126.59">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c3ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c3ur_dy" value="127.11">From drawings</prim>
 
-<prim name="screw_f0r2c3dl_dx" value="-125.01">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c3dl_dy" value="-83.23">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c3dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r2c3dl_dy" value="-84.19">From drawings</prim>
 
-<prim name="screw_f0r2c3dr_dx" value="124.47">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c3dr_dy" value="-85.34">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c3dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r2c3dr_dy" value="-84.19">From drawings</prim>
 
 <!-- Tile 4 -->
-<prim name="screw_f0r2c4ul_dx" value="-122.91">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c4ul_dy" value="128.29">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c4ul_dx" value="-122.365">From drawings</prim>
+<prim name="screw_f0r2c4ul_dy" value="128.29">From drawings</prim>
 
-<prim name="screw_f0r2c4ur_dx" value="62.87">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c4ur_dy" value="128.52">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c4ur_dx" value="62.635">From drawings</prim>
+<prim name="screw_f0r2c4ur_dy" value="127.11">From drawings</prim>
 
-<prim name="screw_f0r2c4dl_dx" value="-122.57">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c4dl_dy" value="-85.47">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c4dl_dx" value="-127.11">From drawings</prim>
+<prim name="screw_f0r2c4dl_dy" value="-84.19">From drawings</prim>
 
-<prim name="screw_f0r2c4dr_dx" value="64.63">Luis Reyes measurement</prim>
-<prim name="screw_f0r2c4dr_dy" value="-83.14">Luis Reyes measurement</prim>
+<prim name="screw_f0r2c4dr_dx" value="62.635">From drawings</prim>
+<prim name="screw_f0r2c4dr_dy" value="-84.19">From drawings</prim>
 
 <!-- row 3 -->
 <!-- Tile 0 -->
-<prim name="screw_f0r3c0ul_dx" value="-65.58">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c0ul_dy" value="125.98">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c0ul_dx" value="-62.365">From drawings</prim>
+<prim name="screw_f0r3c0ul_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c0ur_dx" value="121.24">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c0ur_dy" value="127.73">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c0ur_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r3c0ur_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c0dl_dx" value="-64.23">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c0dl_dy" value="-86.89">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c0dl_dx" value="-62.365">From drawings</prim>
+<prim name="screw_f0r3c0dl_dy" value="-84.37">From drawings</prim>
 
-<prim name="screw_f0r3c0dr_dx" value="121.78">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c0dr_dy" value="-84.17">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c0dr_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r3c0dr_dy" value="-84.37">From drawings</prim>
 
 <!-- Tile 1 -->
-<prim name="screw_f0r3c1ul_dx" value="-125.17">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c1ul_dy" value="127.26">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c1ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c1ul_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c1ur_dx" value="123.59">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c1ur_dy" value="127.04">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c1ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c1ur_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c1dl_dx" value="-124.7">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c1dl_dy" value="-83.97">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c1dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c1dl_dy" value="-84.37">From drawings</prim>
 
-<prim name="screw_f0r3c1dr_dx" value="124.46">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c1dr_dy" value="-83.51">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c1dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c1dr_dy" value="-84.37">From drawings</prim>
 
 <!-- Tile 2 -->
-<prim name="screw_f0r3c2ul_dx" value="-125.62">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c2ul_dy" value="126.48">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c2ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c2ul_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c2ur_dx" value="126.33">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c2ur_dy" value="127.32">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c2ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c2ur_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c2dl_dx" value="-123.5">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c2dl_dy" value="-84.19">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c2dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c2dl_dy" value="-84.37">From drawings</prim>
 
-<prim name="screw_f0r3c2dr_dx" value="124.14">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c2dr_dy" value="-83.43">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c2dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c2dr_dy" value="-84.37">From drawings</prim>
 
 <!-- Tile 3 -->
-<prim name="screw_f0r3c3ul_dx" value="-124.52">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c3ul_dy" value="128.19">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c3ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c3ul_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c3ur_dx" value="124.48">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c3ur_dy" value="128.03">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c3ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c3ur_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c3dl_dx" value="-125.59">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c3dl_dy" value="-82.66">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c3dl_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r3c3dl_dy" value="-84.37">From drawings</prim>
 
-<prim name="screw_f0r3c3dr_dx" value="124">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r3c3dr_dy" value="-83.5">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r3c3dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r3c3dr_dy" value="-84.37">From drawings</prim>
 
 <!-- Tile 4 -->
-<prim name="screw_f0r3c4ul_dx" value="-123.56">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c4ul_dy" value="127.07">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c4ul_dx" value="-122.365">From drawings</prim>
+<prim name="screw_f0r3c4ul_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c4ur_dx" value="63.85">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c4ur_dy" value="127.47">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c4ur_dx" value="62.635">From drawings</prim>
+<prim name="screw_f0r3c4ur_dy" value="126.93">From drawings</prim>
 
-<prim name="screw_f0r3c4dl_dx" value="-122.54">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c4dl_dy" value="-84.83">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c4dl_dx" value="-122.365">From drawings</prim>
+<prim name="screw_f0r3c4dl_dy" value="-84.37">From drawings</prim>
 
-<prim name="screw_f0r3c4dr_dx" value="59.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r3c4dr_dy" value="-83.82">Luis Reyes measurement</prim>
+<prim name="screw_f0r3c4dr_dx" value="62.635">From drawings</prim>
+<prim name="screw_f0r3c4dr_dy" value="-84.37">From drawings</prim>
 
 <!-- row 4 -->
 <!-- Tile 0 -->
-<prim name="screw_f0r4c0ul_dx" value="-64">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r4c0ul_dy" value="77">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r4c0ul_dx" value="-62.365">From drawings</prim>
+<prim name="screw_f0r4c0ul_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c0ur_dx" value="121.33">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c0ur_dy" value="76.95">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c0ur_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r4c0ur_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c0dl_dx" value="-63.81">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c0dl_dy" value="-96.84">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c0dl_dx" value="-62.365">From drawings</prim>
+<prim name="screw_f0r4c0dl_dy" value="-98.8">From drawings</prim>
 
-<prim name="screw_f0r4c0dr_dx" value="122.09">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c0dr_dy" value="-97.41">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c0dr_dx" value="122.635">From drawings</prim>
+<prim name="screw_f0r4c0dr_dy" value="-98.8">From drawings</prim>
 
 <!-- Tile 1 -->
-<prim name="screw_f0r4c1ul_dx" value="-124.98">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c1ul_dy" value="76.61">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c1ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r4c1ul_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c1ur_dx" value="123.57">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c1ur_dy" value="79.03">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c1ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c1ur_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c1dl_dx" value="-126">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r4c1dl_dy" value="-96">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r4c1dl_dx" value="-125">From drawings</prim>
+<prim name="screw_f0r4c1dl_dy" value="-98.8">From drawings</prim>
 
-<prim name="screw_f0r4c1dr_dx" value="123.74">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c1dr_dy" value="-98.41">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c1dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c1dr_dy" value="-98.8">From drawings</prim>
 
 <!-- Tile 2 -->
-<prim name="screw_f0r4c2ul_dx" value="-124.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c2ul_dy" value="77.87">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c2ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r4c2ul_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c2ur_dx" value="124">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r4c2ur_dy" value="78">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r4c2ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c2ur_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c2dl_dx" value="-126.03">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c2dl_dy" value="-96.14">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c2dl_dx" value="-125">From drawings</prim>
+<prim name="screw_f0r4c2dl_dy" value="-98.8">From drawings</prim>
 
-<prim name="screw_f0r4c2dr_dx" value="125.27">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c2dr_dy" value="-96.77">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c2dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c2dr_dy" value="-98.8">From drawings</prim>
 
 <!-- Tile 3 -->
-<prim name="screw_f0r4c3ul_dx" value="-125.58">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c3ul_dy" value="77.39">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c3ul_dx" value="-125.0">From drawings</prim>
+<prim name="screw_f0r4c3ul_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c3ur_dx" value="124.9">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c3ur_dy" value="77.61">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c3ur_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c3ur_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c3dl_dx" value="-125.66">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c3dl_dy" value="-97.39">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c3dl_dx" value="-125">From drawings</prim>
+<prim name="screw_f0r4c3dl_dy" value="-98.8">From drawings</prim>
 
-<prim name="screw_f0r4c3dr_dx" value="124">Made up; not enough data for
-  measured value</prim>
-<prim name="screw_f0r4c3dr_dy" value="-97">Made up; not enough data for
-  measured value</prim>
+<prim name="screw_f0r4c3dr_dx" value="125.0">From drawings</prim>
+<prim name="screw_f0r4c3dr_dy" value="-98.8">From drawings</prim>
 
 <!-- Tile 4 -->
-<prim name="screw_f0r4c4ul_dx" value="-123.0">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c4ul_dy" value="77.15">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c4ul_dx" value="-122.625">From drawings</prim>
+<prim name="screw_f0r4c4ul_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c4ur_dx" value="62.53">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c4ur_dy" value="76.15">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c4ur_dx" value="62.375">From drawings</prim>
+<prim name="screw_f0r4c4ur_dy" value="75.8">From drawings</prim>
 
-<prim name="screw_f0r4c4dl_dx" value="-121.52">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c4dl_dy" value="-96.87">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c4dl_dx" value="-122.625">From drawings</prim>
+<prim name="screw_f0r4c4dl_dy" value="-98.8">From drawings</prim>
 
-<prim name="screw_f0r4c4dr_dx" value="62.55">Luis Reyes measurement</prim>
-<prim name="screw_f0r4c4dr_dy" value="-95.37">Luis Reyes measurement</prim>
+<prim name="screw_f0r4c4dr_dx" value="62.375">From drawings</prim>
+<prim name="screw_f0r4c4dr_dy" value="-98.8">From drawings</prim>
 
+<!-- For side faces expect to use similar names except for row 3 tiles
+     which have 24 screws instead of 4.  If screws are in two rows
+     (which I think is the case) probably will use names where ul, 
+     ur, dl, dr are replaced by u0, u1, u2,...u11 and d0, d1, d2,...d11
+ -->
 </primCategory>
