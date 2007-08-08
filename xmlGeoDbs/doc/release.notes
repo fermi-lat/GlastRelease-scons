@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r43p2  7-Aug-2007 jrb  Adjust top screw positions. Use values from drawings
    v1r43p1 30-Jul-2007 jrb  Fix typos affecting screw locations
    v1r43   26-Jul-2007 jrb  Add screws (and screw holes) to top tiles.  Required
                             change of top tile volume names
