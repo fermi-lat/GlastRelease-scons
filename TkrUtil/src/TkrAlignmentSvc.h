@@ -151,7 +151,7 @@ public:
     
     /// moves the entry and exit of an MCPositionHit according to alignment consts
     void moveMCHit(idents::VolumeIdentifier id, 
-        HepPoint3D& entry, HepPoint3D &exit) const;
+        HepPoint3D& entry, HepPoint3D &exit, HepVector3D &dir) const;
     
     HepVector3D deltaReconPoint(const HepPoint3D& point, const HepVector3D& dir, 
         int layer, int view, alignTask task, const AlignmentConsts* consts) const;
