@@ -187,8 +187,8 @@ StatusCode reconRootReaderAlg::initialize()
 
 
     // Set up new school system...
-    std::string type = "RECON";
-    m_rootIoSvc->prepareRootInput(type, m_treeName, m_branchName, m_fileList);
+    //std::string type = "RECON";
+    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
 
     return sc;
     
@@ -210,7 +210,7 @@ StatusCode reconRootReaderAlg::execute()
      }
 
     // Try reading the event this way... 
-    std::string type = "RECON";
+    std::string type = m_treeName;
     m_reconEvt = dynamic_cast<ReconEvent*>(m_rootIoSvc->getNextEvent(type)) ;
 
     if (!m_reconEvt) return StatusCode::FAILURE;

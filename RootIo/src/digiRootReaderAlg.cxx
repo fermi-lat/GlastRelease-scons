@@ -189,8 +189,8 @@ StatusCode digiRootReaderAlg::initialize()
 
 
     // Set up new school system...
-    std::string type = "DIGI";
-    m_rootIoSvc->prepareRootInput(type, m_treeName, m_branchName, m_fileList);
+    //std::string type = "DIGI";
+    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
 
     return sc;
     
@@ -209,8 +209,8 @@ StatusCode digiRootReaderAlg::execute()
     m_digiEvt = 0;
 
     // Try reading the event this way... 
-    std::string type = "DIGI";
-    m_digiEvt = dynamic_cast<DigiEvent*>(m_rootIoSvc->getNextEvent(type));
+    //std::string type = "DIGI";
+    m_digiEvt = dynamic_cast<DigiEvent*>(m_rootIoSvc->getNextEvent(m_treeName));
 
     if (!m_digiEvt) return StatusCode::FAILURE;
 

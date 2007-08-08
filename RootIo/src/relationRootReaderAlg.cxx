@@ -179,7 +179,7 @@ StatusCode relationRootReaderAlg::initialize()
 
 
     // Set up new school system...
-    std::string type = "RELTAB";
+    std::string type = m_treeName;
     m_rootIoSvc->prepareRootInput(type, m_treeName, m_branchName, m_fileList);
 
     return sc;
@@ -200,7 +200,7 @@ StatusCode relationRootReaderAlg::execute()
     m_relTab = 0;
 
     // Try reading the event this way... 
-    std::string type = "RELTAB";
+    std::string type = m_treeName;
     m_relTab = dynamic_cast<RelTable*>(m_rootIoSvc->getNextEvent(type));
 
     if (!m_relTab) return StatusCode::FAILURE;

@@ -140,7 +140,7 @@ StatusCode relationRootWriterAlg::initialize()
         return StatusCode::FAILURE;
     }
 
-    m_relTree = m_rootIoSvc->prepareRootOutput("RELATION", m_fileName, m_treeName, 
+    m_relTree = m_rootIoSvc->prepareRootOutput(m_treeName, m_fileName, m_treeName, 
         m_compressionLevel, "GLAST Digitization Data");
 
     
@@ -161,7 +161,7 @@ StatusCode relationRootWriterAlg::initialize()
 
     m_relTable = new RelTable();
     //m_relTree->Branch("RelTable","RelTable", &m_relTable, m_bufSize, m_splitMode);
-    m_rootIoSvc->setupBranch("RELATION", "RelTable", "RelTable", &m_relTable, m_bufSize, m_splitMode);
+    m_rootIoSvc->setupBranch(m_treeName, "RelTable", "RelTable", &m_relTable, m_bufSize, m_splitMode);
     
  //   saveDir->cd();
 
@@ -467,7 +467,7 @@ void relationRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the Relations data for this event in the ROOT
     //    tree.  The m_common object is cleared for the next event.
 
-    m_rootIoSvc->fillTree("RELATION");
+    m_rootIoSvc->fillTree(m_treeName);
 
     /*
     static int eventCounter = 0;
@@ -506,7 +506,7 @@ void relationRootWriterAlg::close()
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
-m_rootIoSvc->closeFile("RELATION");
+m_rootIoSvc->closeFile(m_treeName);
 /*
 
  try {

@@ -20,7 +20,7 @@ RootOutputDesc::RootOutputDesc
    const std::string & tree, 
    int compressionLevel, const std::string& treeTitle, bool verbose )
  : m_fileName(outputFile), m_treeName(tree), m_compressionLevel(compressionLevel), m_tree(0), 
-   m_treeTitle(treeTitle), m_verbose(verbose), m_eventCounter(0)
+   m_treeTitle(treeTitle), m_verbose(verbose), m_eventCounter(0), m_updated(false)
  {
 	 openFile();
  }

@@ -193,7 +193,7 @@ StatusCode reconRootWriterAlg::initialize()
         return StatusCode::FAILURE;
     } 
 
-    m_reconTree = m_rootIoSvc->prepareRootOutput("RECON", m_fileName, m_treeName, 
+    m_reconTree = m_rootIoSvc->prepareRootOutput(m_treeName, m_fileName, m_treeName, 
         m_compressionLevel, "GLAST Reconstruction Data");
 
 //    facilities::Util::expandEnvVar(&m_fileName);
@@ -213,7 +213,7 @@ StatusCode reconRootWriterAlg::initialize()
 
     m_reconEvt = new ReconEvent();
     //m_reconTree->Branch("ReconEvent","ReconEvent", &m_reconEvt, m_bufSize, m_splitMode);
-    m_rootIoSvc->setupBranch("RECON", "ReconEvent", "ReconEvent", &m_reconEvt, m_bufSize, m_splitMode);
+    m_rootIoSvc->setupBranch(m_treeName, "ReconEvent", "ReconEvent", &m_reconEvt, m_bufSize, m_splitMode);
     m_common.m_reconEvt = m_reconEvt;
     
 //    saveDir->cd();
@@ -800,7 +800,7 @@ void reconRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the DigiEvent data for this event in the ROOT
     //    tree.  The m_reconEvt object is cleared for the next event.
     
-    m_rootIoSvc->fillTree("RECON");
+    m_rootIoSvc->fillTree(m_treeName);
 
   //  static int eventCounter = 0 ;
     
@@ -836,7 +836,7 @@ void reconRootWriterAlg::close()
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
-    m_rootIoSvc->closeFile("RECON");
+    m_rootIoSvc->closeFile(m_treeName);
     /*
     try {
         TDirectory *saveDir = gDirectory;

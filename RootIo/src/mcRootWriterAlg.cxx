@@ -194,7 +194,7 @@ StatusCode mcRootWriterAlg::initialize()
         return StatusCode::FAILURE;
     } 
 
-    m_mcTree = m_rootIoSvc->prepareRootOutput("MC", m_fileName, m_treeName, 
+    m_mcTree = m_rootIoSvc->prepareRootOutput(m_treeName, m_fileName, m_treeName, 
         m_compressionLevel, "GLAST Monte Carlo Data");
 
 
@@ -215,7 +215,7 @@ StatusCode mcRootWriterAlg::initialize()
     //m_mcTree = new TTree(m_treeName.c_str(), "GLAST Monte Carlo Data");
     m_mcEvt = new McEvent();
     //m_mcTree->Branch("McEvent","McEvent", &m_mcEvt, m_bufSize, m_splitMode);
-    m_rootIoSvc->setupBranch("MC", "McEvent", "McEvent", &m_mcEvt, m_bufSize, m_splitMode);
+    m_rootIoSvc->setupBranch(m_treeName, "McEvent", "McEvent", &m_mcEvt, m_bufSize, m_splitMode);
 
     m_common.m_mcEvt = m_mcEvt;
 
@@ -671,7 +671,7 @@ void mcRootWriterAlg::writeEvent()
 {
     // Purpose and Method:  Stores the McEvent data for this event in the ROOT
     //    tree.  The m_mcEvt object is cleared for the next event.
-    m_rootIoSvc->fillTree("MC");
+    m_rootIoSvc->fillTree(m_treeName);
 
 
     //static int eventCounter = 0;
@@ -706,7 +706,7 @@ void mcRootWriterAlg::close()
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
-    m_rootIoSvc->closeFile("MC");
+    m_rootIoSvc->closeFile(m_treeName);
 
 /*
 try {
