@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   07-aug-07  v6r46   THB  (For TG) INFO message from FluxSvc about times
    22-jul-07  v6r45p1 THB  Explicit GPS::synch to notify observers only after final set of GPS::time
    22-jul-07  v6r45   THB  Change documentation for East to be Horizontal: fix bug in event stats
    20-jul-07  v6r44p1 THB  Have ExposureAlg set the filter failed, to end branch if any

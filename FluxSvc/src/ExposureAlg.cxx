@@ -230,7 +230,7 @@ void ExposureAlg::createEntry()
                 << m_history.lat_geo << ", " 
                 << m_history.lon_geo << ", "
                 << m_history.lat_mag << ", " 
-                << m_history.zenith_scz << ", "
+                << ( fabs(m_history.zenith_scz)<1e-8? 0: m_history.zenith_scz) << ", "
                 << m_history.in_saa;
             log << t.str();
         }
