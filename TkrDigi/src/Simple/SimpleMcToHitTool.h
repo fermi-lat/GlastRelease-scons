@@ -42,7 +42,8 @@ class SimpleMcToHitTool : public AlgTool, virtual public IMcToHitTool {
      * @return a SiPlaneMap
      */
     SiPlaneMapContainer::SiPlaneMap createSiHits(const
-                                                 Event::McPositionHitVector&);
+                                                 Event::McPositionHitVector& pos,
+                                                 const HepVector3D& dir=HepVector3D(0., 0., 1.0));
 
  private:
 
@@ -56,7 +57,8 @@ class SimpleMcToHitTool : public AlgTool, virtual public IMcToHitTool {
     ITkrAlignmentSvc*   m_taSvc;
     /// flag to turn on test mode, deposits 0.155 MeV for every hit
     bool m_test;
-
+    /// flag to set alignment mode: 0 = original, 1 = single event axis
+    int  m_alignmentMode;
 };
 
 #endif
