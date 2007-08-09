@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <utility>
 #include <iostream>
 #include "xmlUtil/id/Identifier.h"
 
@@ -88,6 +89,9 @@ namespace xmlUtil {
 
     // Append fields in order from \a toAppend 
     //void append(const NamedId& toAppend);
+
+    // Return vector of pairs corresponding to contents of named id
+    std::vector<std::pair<std::string, unsigned> > fieldVector() const;
 
     friend class DictNode;
     friend class IdOperation;

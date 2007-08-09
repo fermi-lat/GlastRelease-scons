@@ -174,6 +174,31 @@ void testQuery(xmlUtil::IdDict* dict) {
   std::cout << "nIdOk is " <<  ( (valid) ? "VALID" : "INVALID" );
   std::cout << std::endl;
 
+
+  xmlUtil::NamedId ribId(6);
+  ribId.addField("fLATObjects", 1);
+  ribId.addField("fACDFace", 0);
+  ribId.addField("fACDCmp", 41);
+  ribId.addField("fMeasure", 0);
+  ribId.addField("fRibbon", 2);
+  ribId.addField("fRibbonSegment", 1);
+
+  valid = dict->idOk(ribId);
+  std::cout << "ribId is " <<  ( (valid) ? "VALID" : "INVALID" );
+  std::cout << std::endl;
+
+  if (valid) {
+    Identifier *ribStripped = ribId.stripNames();
+    std::cout << "..stripped: " << (*ribStripped);
+    std::cout << "..reconstitued: " << std::endl 
+            << (*(dict->getNamedId(*ribStripped)));
+
+    std::cout << std::endl << "Just the names from ribStripped: " 
+              << std::endl << 
+    dict->getNameSeqString(*ribStripped) << std::endl;
+
+  }
+
   std::cout << "Original named Id: " << nIdOk;
   Identifier *stripped = nIdOk.stripNames();
   std::cout << "..stripped: " << (*stripped);
