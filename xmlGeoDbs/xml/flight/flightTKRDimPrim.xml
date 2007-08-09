@@ -23,10 +23,18 @@
             core (or closeout) and something else (15oct01)</prim>
     <prim name="glueDefThick" value="0.100">Default glue thickness,
             when neither Si nor core is involved (15oct01)</prim>
-    <prim name="convThickReg" value="0.105">Thickness of conversion 
-            material in "regular" layers in mm</prim>
-    <prim name="convThickSup" value="0.723">Thickness of conversion 
-            material in super-GLAST trays in mm (as of 15 oct 2001)</prim>
+
+<!--    <prim name="convThickReg" value="0.105">Thickness of conversion 
+            material in "regular" layers in mm</prim> -->
+    <prim name="convThickReg" value="0.097">Thickness of conversion 
+            material in "regular" layers in mm (updated 27 nov 06)</prim>
+<!--    <prim name="convThickSup" value="0.723">Thickness of conversion 
+            material in super-GLAST trays in mm (as of 15 oct 2001)</prim> -->
+    <prim name="convThickSup" value="0.7205">Thickness of conversion 
+            material in super-GLAST trays in mm (as of 27 nov 06)
+Note: this is not the real thickness, which is closer to 0.7195 mm. Use
+this value to compensate for the not-quite-correct material definition.
+</prim>
     <prim name= "faceThick" value= "0.200">Face sheet thickness
             for all but super-glast tray and bottom tray (as of 15oct01)</prim>
     <prim name= "faceSupThick" value= "0.290">Face sheet thickness
@@ -37,10 +45,15 @@
             modified 21jun03</prim>
     <prim name="trayNoCnvGap" value="2.130">Gap above non-bottom
         no-converter trays</prim>
-    <prim name="traySuperGap" value="2.127">Gap above super-glast
-        trays</prim>
-    <prim name="trayRegGap" value="2.125">Gap above regular trays. Last
-        modified 2aug02</prim>
+    <prim name="traySuperGap" value="2.1295">Gap above super-glast
+        trays (modified 27 Nov 06 to compensate for thinner super-glast
+        conversion layer</prim>
+<!--    <prim name="traySuperGap" value="2.127">Gap above super-glast
+        trays</prim> -->
+<!--    <prim name="trayRegGap" value="2.125">Gap above regular trays. Last
+        modified 2aug02</prim> -->
+    <prim name="trayRegGap" value="2.133">Gap above regular trays. Last
+        modified 27 Nov 06 to compensate for thinner conversion layer</prim>
     <prim name="TKRTraysTotalZ" value="627.465">Height of a tracker tower.
         (From spreadsheet, 21jun03</prim>
     <prim name="TKRFootZ" value="4.5"> Height of foot between bottom of bottom tray 
