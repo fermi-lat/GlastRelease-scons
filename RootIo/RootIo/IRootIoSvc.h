@@ -91,8 +91,6 @@ class  IRootIoSvc : virtual public IInterface
     virtual Long64_t getEvtMax() = 0 ;
     virtual void setEvtMax( Long64_t max ) = 0 ;
 
-    //virtual void setActualIndex(Long64_t i) = 0 ;
-
 
     //====================
     // For writers

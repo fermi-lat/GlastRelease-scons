@@ -26,7 +26,7 @@ class RootInputDesc
        const std::string & branchName, bool verbose=false ) ;
 
     RootInputDesc
-     (  TTree *t,
+     (  TChain *t,
        const std::string & treename,
        const std::string & branchName, bool verbose=false);
 
@@ -39,7 +39,6 @@ class RootInputDesc
     const int getNumEvents() const { return m_numEvents ; }
 
     TChain * getTChain() { return m_chain ; }
-    TTree * getTTree() { return m_treePtr; }
     TObject * getTObject() { return *m_dataObject ; }
 
     /// Methods to handle reading and clearing events
@@ -51,7 +50,7 @@ class RootInputDesc
     Long64_t  setFileList( const StringArrayProperty & fileList, bool verbose = false ) ;
 
     /// Setup to read from an event collection
-    Long64_t RootInputDesc::setEventCollection( );
+    Long64_t setEventCollection( );
 
   private :
 
@@ -63,8 +62,9 @@ class RootInputDesc
     TChain * m_chain ;               // Pointer to the TChain
     TTree * m_treePtr ;              // For use with EventCollections
     TObject * * m_dataObject ;       // A pointer to the pointer to the data
-    Long64_t m_numEvents ;                // Number of events in current TChain
+    Long64_t m_numEvents ;           // Number of events in current TChain
     bool m_verbose;
+    TVirtualIndex *m_runEvtIndex;    /// Save the RunId/EventId Index in case other indices are in use such as PointerSkim
     
  } ;
 

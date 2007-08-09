@@ -14,6 +14,7 @@ use ROOT v* IExternal
 apply_pattern packageShr
 apply_pattern package_include
 
+# I believe these no_auto_imports are essentially overridden by the use of RootConvert
 use metaRootData v* -no_auto_imports
 use mcRootData v* -no_auto_imports
 use digiRootData v* -no_auto_imports
