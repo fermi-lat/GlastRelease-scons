@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *    EOH
 
+   v3r3   9-Aug-2007  jrb Add utility NamedId::fieldVector()
    v3r2   23-Feb-2007 jrb Add support for <sqrt> tag
    v3r1p2 26-Apr-2005 jrb Fix Windows compile problem; reinstate all test 
                             test programs since they now build on both systems
