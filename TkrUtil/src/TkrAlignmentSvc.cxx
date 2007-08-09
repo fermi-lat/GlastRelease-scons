@@ -870,7 +870,7 @@ const AlignmentConsts* TkrAlignmentSvc::getConsts(calibType type, int index) con
 
 void TkrAlignmentSvc::moveMCHit(idents::VolumeIdentifier id, HepPoint3D& entry,
                                 HepPoint3D& exit,
-                                HepVector3D& dir) const
+                                HepVector3D dir) const
 {
     // Purpose:     Move an McHit according to alignment constants
     // Inputs:      volId and entry and exit points
@@ -879,9 +879,12 @@ void TkrAlignmentSvc::moveMCHit(idents::VolumeIdentifier id, HepPoint3D& entry,
     //This is called "dir" but what I'm calculating is a direction normalized to dir.z() = 1;
     //  This yields the slopes in x and y as the x() and y() components.
     //HepVector3D dir = (exit-entry);
+
+    HepVector3D tempVec;
+    if(dir.mag()==0.0) {tempVec = exit - entry;}
+    else               {tempVec = dir;}
     double delz = dir.z();
 
-    HepVector3D tempVec = dir; // just being superstitious here
     if (delz!=0) { tempVec = tempVec/delz;}
     else         { tempVec = HepVector3D(0., 0., 1.);}    
 

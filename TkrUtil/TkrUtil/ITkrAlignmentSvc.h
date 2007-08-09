@@ -120,7 +120,7 @@ public:
     /// move the McHit by the alignment consts
     virtual void moveMCHit(idents::VolumeIdentifier id, 
         HepPoint3D& entry, HepPoint3D &exit, 
-        HepVector3D &dir=HepVector3D(0.,0.,1.0)) const = 0;
+        HepVector3D dir=HepVector3D(0.0, 0.0, 0.0)) const = 0;
     /// move the recon hit by the alignment consts
     virtual void moveReconPoint(HepPoint3D& point, const HepVector3D& dir, 
         int layer, int view, alignTask task = APPLYCONSTS, 
