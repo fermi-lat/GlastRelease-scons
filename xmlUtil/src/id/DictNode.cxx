@@ -3,7 +3,7 @@
 #include "xmlBase/Dom.h"
 #include "xmlUtil/id/DictNode.h"
 #include "xmlUtil/id/DictFieldMan.h"
-#include <assert.h>
+#include <stdexcept>
 
 namespace xmlUtil {
   XERCES_CPP_NAMESPACE_USE
@@ -25,7 +25,11 @@ namespace xmlUtil {
     std::string fName = Dom::getAttribute(elt, "fieldName");
     
     m_field = fieldMan->find(fName.c_str());
-    assert(m_field != 0);
+    //    assert(m_field != 0);
+    if (m_field == 0) {
+      throw 
+        xmlBase::DomException("xmlUtil::DictNode constructor: bad field name");
+    }
     // Do something if it doesn't exist?? Shouldn't be terribly
     // necessary by ID/IDREF mechanism
 
@@ -49,7 +53,7 @@ namespace xmlUtil {
       if (fromParent) {
         bool allowed = (fromParent->allowed(m_parConstraints));
         if (!allowed) {
-          assert(allowed);
+          throw xmlBase::DomException("Invalidly constructed id dictionary ");
         }
       }
       child = xmlBase::Dom::getSiblingElement(child);
@@ -71,7 +75,10 @@ namespace xmlUtil {
         // if any
         DictConstraints* fCon = m_field->getConstraints();
         if (fCon != 0) {
-          assert(fCon->allowed(m_myConstraints));
+          if (!fCon->allowed(m_myConstraints)) {
+            throw 
+              xmlBase::DomException("Invalidly constructed id dictionary ");
+          }
         }
         child = xmlBase::Dom::getSiblingElement(child);
       }
@@ -247,7 +254,9 @@ namespace xmlUtil {
       //associated with the field name;  copy them
       DictConstraints* fieldCon = (*start)->m_myConstraints = 
         new DictConstraints(*((*start)->m_field->getConstraints()));
-      assert(fieldCon != 0);
+      if (fieldCon == 0) {
+        throw std::invalid_argument("xmlUtil::DictNode::valuesDisjoint");
+      }
     }
 
     (*start)->m_myConstraints->insertValues(values);
@@ -262,7 +271,10 @@ namespace xmlUtil {
       //associated with the field name;  copy them
         DictConstraints*  fieldCon = (*pCurrentNode)->m_myConstraints = 
         new DictConstraints(*((*pCurrentNode)->m_field->getConstraints()));
-        assert(fieldCon != 0);
+        if (fieldCon == 0) {
+          throw std::invalid_argument("xmlUtil::DictNode::valuesDisjoint");
+        }
+
       }
 
       (*pCurrentNode)->m_myConstraints->insertValues(curValues);
