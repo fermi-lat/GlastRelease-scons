@@ -21,6 +21,7 @@
 #include "DMmanager.h"
 #include "MediaVisitor.h"
 #include "GeometryVisitor.h"
+#include "xmlUtil/id/IdDict.h"
 
 // define the class-id (unique) for the GlastDetSvc
 // moved to Kernel! const InterfaceID&  IID_IGlastDetSvc  =  401;   // Unique to GLAST 
@@ -179,6 +180,25 @@ StatusCode  GlastDetSvc::getShapeByID(idents::VolumeIdentifier id,
   if (m_dm->getShapeByID(id, st, dv))
     return StatusCode::SUCCESS;
   else return StatusCode::FAILURE;
+}
+
+IGlastDetSvc::NamedId 
+GlastDetSvc::getNamedId(const idents::VolumeIdentifier& vid) {
+  // first create an xmlUtil::Identifier - vector of unsigned - from
+  // the volume identifier.
+  xmlUtil::Identifier identifier;
+  unsigned iField;
+  for (iField = 0; iField < vid.size(); iField++) {
+    identifier.append(vid[iField]);
+  }
+
+  // then..
+
+  xmlUtil::IdDict* pDict = m_dm->getIdDictionary();
+  xmlUtil::NamedId *pId = pDict->getNamedId(identifier);
+  IGlastDetSvc::NamedId nid = pId->fieldVector();
+  delete pId;
+  return nid;
 }
 
 void 

@@ -9,6 +9,10 @@ namespace detModel{
     class IDmapBuilder;
 }
 
+namespace xmlUtil {
+  class IdDict;
+} 
+
 namespace idents{class VolumeIdentifier;}
 
 namespace HepGeom {class Transform3D;}
@@ -16,6 +20,7 @@ typedef HepGeom::Transform3D HepTransform3D;
 
 #include <string>
 #include "detModel/Management/IDmapBuilder.h"
+#include "xmlUtil/id/IdDict.h"
 
 /** @class DMmanager
 * @brief Wrapper class around detModel, to hide all the initialization 
@@ -67,6 +72,8 @@ public:
     void orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
                              unsigned face, unsigned ribbonNumber, 
                              bool xOrient, bool increasing=true);
+
+    xmlUtil::IdDict* getIdDictionary();
 
     /// access to name of selected top volume
     std::string topvol() const;

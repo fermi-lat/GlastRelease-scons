@@ -192,3 +192,7 @@ DMmanager::orderRibbonSegments(std::vector<idents::VolumeIdentifier>& segs,
   m_idMap->orderSensitive(segs, sample, wild, dir, increasing);
 
 }
+
+xmlUtil::IdDict* DMmanager::getIdDictionary() {
+  return m_dm->getGdd()->getIdDictionary();
+}

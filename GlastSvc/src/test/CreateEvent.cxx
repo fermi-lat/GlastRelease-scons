@@ -160,6 +160,13 @@ StatusCode CreateEvent::initialize() {
           log <<  segs[ix].name() << endreq;
         }
         log << endreq;
+        IGlastDetSvc::NamedId nid;
+        nid = m_detSvc->getNamedId(segs[0]);
+        log << "Named id corresponding to first segment is:" << endreq;
+        for (unsigned ifld = 0; ifld < nid.size(); ifld++) {
+          log << nid[ifld].first << "=" << nid[ifld].second << endreq;
+        }
+        log << endreq;
         
     }else {
         log << MSG::ERROR << "Couldn't find the GlastDetSvc!" << endreq;
