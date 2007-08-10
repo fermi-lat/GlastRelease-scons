@@ -2,12 +2,12 @@
 // Job Option file for readigi_runrecon:
 // Read in a digi Root file and run recon on it!
 //
-// $Header$
 
 //
 // Things to be changed by the user can 
 // be found at the end of the file!
 //
+
 
 
 //
@@ -22,16 +22,11 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 //
 // Set up basic event loop: 
 //
-ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" , 
-                         "EventCnvSvc"};
-
-
+ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+EventSelector.Input = "SVC='DbEvtSelector";
+EventSelector.PrintFreq = -1;
 
-
-EventSelector.Input = "SVC='DbEvtSelector'"; 
-EventSelector.PrintFreq = -1; 
 
 
 //
@@ -46,7 +41,8 @@ ApplicationMgr.TopAlg = {"Sequencer/Top"};
 Top.Members = {"Sequencer/Digitization",
                "Sequencer/Calibration",
                "Sequencer/Integrity",
-               "Sequencer/Output"};
+               "Sequencer/Output",
+               "Sequencer/NtupleMaker" };
 
 
 //
@@ -77,6 +73,7 @@ Calibration.Members = {"TkrCalibAlg"};
 //
 ApplicationMgr.DLLs += {"EventIntegrity"};
 Integrity.Members    = {"EventIntegrityAlg",
+                        "Sequencer/Filter",
                         "Sequencer/Reconstruction"};
 
 
@@ -103,14 +100,14 @@ ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
 // G4:
 //
 ApplicationMgr.DLLs   += {"G4Generator","G4Propagator"};
-ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
+//ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
 
 
 //
 // CAL Xtal respons::
 //
-ApplicationMgr.DLLs += {"CalUtil", "CalXtalResponse"};
-
+ApplicationMgr.DLLs += {"CalXtalResponse"};
+#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
 
 //
 // Propagator:
@@ -121,8 +118,7 @@ ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
 //
 // Reconstruction:
 //
-ApplicationMgr.DLLs += {"CalibSvc",
-                        "TkrUtil",
+ApplicationMgr.DLLs += { "TkrUtil",
                         "CalRecon",
                         "TkrRecon"};
 
@@ -138,7 +134,6 @@ Reconstruction.Members = {"Sequencer/Cal1",
 //
 Cal1.Members = {"CalXtalRecAlg",
                 "CalClustersAlg/first",
-                "CalMipFinderAlg",
                 "CalEventEnergyAlg/RawEnergy"};
 Cal2.Members = {"CalEventEnergyAlg/second"};
 
@@ -159,19 +154,33 @@ second.OutputLevel = 5;
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
+ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
+// EbfWriter can fail on test data - such as four tower data
+// OBF needs EBF - as of 06282007 mem leak if obf runs by itself
+//Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // this guy can cause rejection
+OnboardFilter.mask=0; // all bits off by default: no rejection
+Reconstruction.Members += {"FilterTracks", "FilterAlg" }; //study performance
+
+
+// Merit and AnalysisNtuple:
+ApplicationMgr.DLLs += {"FluxSvc"}; // fo McValsTool
+ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","merit",
+"GlastClassify"};
+ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+NtupleMaker.Members += {"AnalysisNtupleAlg"}; // AnaTup and Filter in tuple
+AnalysisNtupleAlg.tupleName = "MeritTuple";
+NtupleMaker.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner
+NtupleMaker.Members += {"FT1Alg"}; // generate stuff for FT1
+NtupleMaker.Members += {"meritAlg"}; // analysis for PSF
+NtupleMaker.Members += {"McCoordsAlg", "ObfCoordsAlg" };
 
 //
 // Define the output sequence:
 //
-Output.Members = {"AnalysisNtupleAlg"};
-AnalysisNtupleAlg.tupleName="MeritTuple";
-Output.Members += {"meritAlg"};
-Output.Members += {"FhSetAlg","reconRootWriterAlg"};
+Output.Members = {"FhSetAlg","reconRootWriterAlg"};
 Output.Members += {"CalTupleAlg"};
-Output.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner analysis
-Output.Members += {"FT1Alg"};
 
-//ClassifyAlg.xmlFileName="DC2_Analysis.xml";
+//ClassifyAlg.xmlFileName="DC2_Analysis.xml"; Do we still want to set this?
 
 //
 // Tracker geometry services:
@@ -179,6 +188,9 @@ Output.Members += {"FT1Alg"};
 ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
 ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 
+// this fixes a HE track pattern recognition problem
+// *** it should be done in TkrRecon ***
+TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 
 //
 // Calibrations:
@@ -193,11 +205,12 @@ ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 
 
 
+
 //
-// Merit and AnalysisNtuple:
+// Merit configuration: Disable IM variables
 //
-ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","merit"};
-ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+//MeritAlg.IM_filename = ""; 
+//MeritAlg.cuts        = "LnA";
 
 
 //
@@ -269,4 +282,3 @@ CalTupleAlg.tupleFilename = "caltuple.root";
 //
 // The Doors .....
 //
-

@@ -2,24 +2,12 @@
 // Job Option file containing calibration stuff 
 // to be included by recon and mc:
 //
-// $Header$
-//
-// Start up a CalibDataSvc: 
-//
-
-ApplicationMgr.ExtSvc += {"CalibDataSvc"};
-
-ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
-
-DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
-
+#include "$CALIBSVCROOT/src/defaultOptions.txt"
 
 //
 // Name of calibration database:
 //
 CalibMySQLCnvSvc.DbName = "calib";
-
-DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 
 
 //
@@ -42,12 +30,6 @@ ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 // Cal flavor:
 CalCalibSvc.DefaultFlavor = "vanilla";
 
-
-//
-// For TKR Root calibration files: 
-//
-ApplicationMgr.ExtSvc += {"CalibRootCnvSvc"};                            
-DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
 
 //
@@ -74,3 +56,7 @@ AcdCalibSvc.DefaultFlavor = "vanilla";
 //
 CalibDataSvc.CalibFlavorList = {"vanilla"};
 
+//
+// Only PROD! Default is PROD and DEV!
+//
+CalibMySQLCnvSvc.QualityList = {"PROD"};

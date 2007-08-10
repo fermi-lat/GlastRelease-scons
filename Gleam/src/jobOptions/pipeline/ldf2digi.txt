@@ -1,11 +1,6 @@
 //
 // Job Option file for fits2digi/ldf2digi: 
 //
-// $Header$
-
-//
-// Job Option file for fits2digi/ldf2digi: 
-//
 
 
 //
@@ -57,9 +52,8 @@ GlastDetSvc.visitorMode = "recon";
 //
 ApplicationMgr.DLLs += {"Trigger"};
 Trigger.Members      = {"TriggerAlg"};
-
-ApplicationMgr.ExtSvc += { "LivetimeSvc"};
-LivetimeSvc.Deadtime=0;  // default is now to disable this
+ApplicationMgr.ExtSvc += {"LivetimeSvc"};
+LivetimeSvc.Deadtime = 0; // default is now to disable this
 
 
 //
@@ -87,7 +81,6 @@ ApplicationMgr.ExtSvc += {"LdfEventSelector/EventSelector","LdfCnvSvc/EventCnvSv
 //
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
-EventSelector.PrintFreq = -1;
 
 //
 // Instrument:
@@ -103,8 +96,7 @@ EventSelector.GemZeroCheck = 1;
 //
 // For new CAL Trigger:
 //
-ApplicationMgr.DLLs += {"CalUtil","CalXtalResponse"};
-ApplicationMgr.DLLs += {"CalibSvc"};
+ApplicationMgr.DLLs += {"CalXtalResponse"};
 
 #include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
 
@@ -163,5 +155,3 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 //
 // The Doors .....
 //
-
-

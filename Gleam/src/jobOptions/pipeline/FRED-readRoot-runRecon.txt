@@ -4,10 +4,9 @@
 // and run reconstruction
 //
 //##############################################################
-// $Header$
 
 // Use pipeline jobOptions:
-#include "$LATINTEGRATIONROOT/src/jobOptions/pipeline/readigi_runrecon.txt"
+#include "$GLEAMROOT/src/jobOptions/pipeline/readigi_runrecon.txt"
 
 //
 // Need to add this:

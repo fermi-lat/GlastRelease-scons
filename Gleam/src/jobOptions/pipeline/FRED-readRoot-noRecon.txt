@@ -3,7 +3,7 @@
 // Job options file for Reading in ROOT files i.e. not rerun recon!
 //
 //##################################################################
-// $Header$
+
 
 //
 // Get the basic stuff:
@@ -11,12 +11,13 @@
 ApplicationMgr.DLLs    += {"GaudiAlg","FluxSvc","GlastSvc"};
 ApplicationMgr.DLLs    += {"HepRepSvc","HepRepXml","HepRepCorba"};
 ApplicationMgr.ExtSvc  += {"HepRepSvc"};
-ApplicationMgr.ExtSvc  += {"EventSelector/EventSelector","EventCnvSvc"};
+ApplicationMgr.ExtSvc  += {"EventSelector/EventSelector"};
 
 ApplicationMgr.Runable = "HepRepSvc";
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+EventSelector.Input = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq = -1;
 
 
 //

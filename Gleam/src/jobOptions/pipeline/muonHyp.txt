@@ -1,7 +1,6 @@
 //
 // Muon hypothesis for the new TkrRecon:
 //
-// $Header$
 
 //
 // Muon hypothesis in tracking, 
@@ -12,4 +11,3 @@ ToolSvc.ComboFindTrackTool.EnergyType = "User";
 ToolSvc.KalmanTrackFitTool.ParticleName  = "mu-";
 ToolSvc.KalmanTrackFitTool.HitEnergyType = "BetheBloch";
 //TkrInitSvc.TkrHitEnergyType = "MuRadLoss";
-

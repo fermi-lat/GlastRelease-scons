@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p6 AWB 10-AUG-07  Updated JO files in src/jobOptions/pipeline.
 * v6r29p5 THB 20-jul-07  Update interleave to fix name for ExposureAlg and assume it fails filter
 * v6r29p3 LSR 17-jul-07  Update jO files readAndDisplay.txt and readDisplayAndWrite.txt
 * v6r29p2 TU  27-jun-07  Modify job options strategy for running interleave to 
