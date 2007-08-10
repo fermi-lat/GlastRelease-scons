@@ -44,6 +44,8 @@ class RootInputDesc
     /// Methods to handle reading and clearing events
     TObject * getEvent( int index ) ;
     TObject * getEvent( int runNum, int evtNum ) ;
+    bool checkEventAvailability( Long64_t index );
+    bool checkEventAvailability( int runNum, int evtNum );
     void clearEvent() ;
 
     /// Method to change the list of files in this TChain

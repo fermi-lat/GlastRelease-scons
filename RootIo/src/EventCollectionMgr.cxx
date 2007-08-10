@@ -127,7 +127,8 @@ bool EventCollectionMgr::initRead(const std::string &fileName, bool verbose) {
 Long64_t EventCollectionMgr::getEventIndex(const std::string &treeName, Long64_t index) {
     // make sure the pointer skim index is the active TVirtualIndex
     setIndex();
-    m_masterChain->LoadTree(index);  // Causes all component TChains to be loaded correctly via PointerIndex
+    Long64_t retVal = m_masterChain->LoadTree(index);  // Causes all component TChains to be loaded correctly via PointerIndex
+    if (retVal < 0) return retVal;
     TChain *compChain = getChainByType(treeName);
     if (!compChain) return -1;
     return (compChain->GetReadEntry());

@@ -254,6 +254,25 @@ TObject * RootInputDesc::getEvent( int runNum, int evtNum )
   return dataPtr ;
  }
 
+ bool RootInputDesc::checkEventAvailability( Long64_t index ) {
+  TDirectory * saveDir = gDirectory ;	
+  if (!m_chain) return false;
+  if (index < 0) return false;
+  if (index > m_chain->GetEntries()) return false;
+  return true;
+ }
+
+ bool RootInputDesc::checkEventAvailability( int runNum, int evtNum ) {
+  TDirectory * saveDir = gDirectory ;	
+  if (!m_chain) return false;
+
+  if (m_runEvtIndex) m_chain->SetTreeIndex(m_runEvtIndex);
+  Long64_t readInd = m_chain->GetEntryNumberWithIndex(runNum,evtNum);
+  saveDir->cd();
+  if ((readInd<0)||(readInd>=m_chain->GetEntries())) return false;
+  return true;
+ }
+
 void RootInputDesc::clearEvent()
  {
   TObject * dataPtr = *m_dataObject ;
