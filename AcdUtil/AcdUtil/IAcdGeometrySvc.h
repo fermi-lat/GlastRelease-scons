@@ -104,7 +104,34 @@ public:
 					const std::vector<double>& dim1, const std::vector<double>& dim2,
 					int& sharedEdge1, int& sharedEdge2,
 					float& sharedWidth1, float& sharedWidth2) = 0;
-
+    typedef enum {
+      FRAME_NONE = 100000,   // can't find anything suitable
+      FRAME_FACE0 = 0,       // natural for top tiles, = LAT global frame
+      FRAME_TOP = 0,
+      FRAME_XMEAS = 0,       // also natural for x-meas ribbons on top
+      FRAME_FACE1 = 1,       // natural for face1 (-X face) tiles
+      FRAME_MINUSX =1,
+      FRAME_FACE2 = 2,       // natural for face2 (-Y face) tiles
+      FRAME_MINUSY = 2,
+      FRAME_FACE3 = 3,       // natural for face3 (+X face) tiles
+      FRAME_PLUSX = 3,
+      FRAME_FACE4 = 4,       // natural for face4 (+Y face) tiles
+      FRAME_PLUSY = 4,
+      FRAME_FACE1_YDWN = 5,  // like FACE1 but local +Y is global -Z
+      FRAME_MINUSX_YDWN = 5,
+      FRAME_FACE2_YDWN = 6,  // like FACE2 but local +Y is global -Z
+      FRAME_MINUSY_YDWN = 6,
+      FRAME_FACE3_YDWN = 7,  // like FACE3 but local +Y is global -Z
+      FRAME_PLUSX_YDWN = 7,
+      FRAME_FACE4_YDWN = 8,  // like FACE4 but local +Y is global -Z
+      FRAME_PLUSY_YDWN = 8,
+      FRAME_YMEAS = 9,       // natural for top segments of y-meas ribbons
+      FRAME_YMEAS_ZROT180 = 10,  // FRAME_YMEAS rotated 180 deg. about Z
+      FRAME_XMEAS_ZROT180 = 11   // FRAME_XMEAS rotated 180 deg. about Z
+    } AcdReferenceFrame;
+ 
+    virtual AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier 
+                                                &volId) = 0;
 };
 
 #endif

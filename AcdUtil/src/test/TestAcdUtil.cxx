@@ -42,17 +42,21 @@ public:
   StatusCode finalize();
 
 private:
+  MsgStream *m_log;
 
   IGlastDetSvc    *m_glastDetSvc;
   IAcdGeometrySvc *m_acdGeoSvc;
-
+  void writeTileFrame(unsigned face, unsigned row, unsigned col, 
+                      bool bent = false);
+  void writeRibbonFrame(unsigned face, unsigned orient, unsigned rib, 
+                        unsigned seg);
 };
 
 static const AlgFactory<TestAcdUtil>  Factory;
 const IAlgFactory& TestAcdUtilFactory = Factory;
 
 TestAcdUtil::TestAcdUtil(const std::string& name, ISvcLocator* pSvcLocator) :
-Algorithm(name, pSvcLocator) {
+Algorithm(name, pSvcLocator), m_log(0) {
     
 }
 
@@ -90,6 +94,7 @@ StatusCode TestAcdUtil::execute() {
 
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+    if (m_log == 0) m_log = new MsgStream(msgSvc(), name());
 
     log << MSG::INFO <<  "Number of Tiles: " << m_acdGeoSvc->numTiles()
         << " Number of Ribbons: " << m_acdGeoSvc->numRibbons() << endreq;
@@ -117,6 +122,7 @@ StatusCode TestAcdUtil::execute() {
                volid.name() << endreq;
            return sc;
         } 
+
         idents::AcdId acdId(volid);
         log << MSG::INFO << "AcdId: " << acdId.id() << " Dimensions: " 
             << dim[0] << ", " << dim[1] << ", " << dim[2] << endreq;
@@ -186,7 +192,63 @@ StatusCode TestAcdUtil::execute() {
 
     }
 
+
     log << MSG::INFO << "Number of Detectors:  " << acdDetectorCounter << endreq;
+    // Test getReferenceFrame for a few different cases
+    idents::VolumeIdentifier vid;
+    idents::AcdId aid(0,0,0,2);
+    vid = aid.volId();
+
+    writeTileFrame(0, 0, 0);
+    writeTileFrame(0, 0, 0, true);
+
+    writeTileFrame(2, 1, 2);
+    writeTileFrame(0, 4, 2);
+    writeTileFrame(0, 4, 2, true);
+
+    writeTileFrame(1, 4, 3);
+    writeTileFrame(4, 0, 3);
+
+    // Now try some ribbons
+    log << "Y-measuring ribbons: " << endreq;
+    writeRibbonFrame(0, 1, 2, 1);
+
+    writeRibbonFrame(1, 1, 2, 1);
+    writeRibbonFrame(1, 1, 3, 2);
+    writeRibbonFrame(1, 1, 2, 3);
+    writeRibbonFrame(1, 1, 3, 4);
+    writeRibbonFrame(1, 1, 2, 6);
+    writeRibbonFrame(1, 1, 3, 7);
+    writeRibbonFrame(1, 1, 0, 8);
+
+    writeRibbonFrame(3, 1, 3, 4);
+    writeRibbonFrame(3, 1, 2, 6);
+    writeRibbonFrame(3, 1, 3, 7);
+    writeRibbonFrame(3, 1, 0, 8);
+
+    log << "X-measuring top ribbons: " << endreq;
+    writeRibbonFrame(0, 0, 2, 1);
+    writeRibbonFrame(0, 0, 2, 2);
+    writeRibbonFrame(0, 0, 2, 3);
+    writeRibbonFrame(0, 0, 3, 4);
+    writeRibbonFrame(0, 0, 1, 8);
+    writeRibbonFrame(0, 0, 2, 9);
+    writeRibbonFrame(0, 0, 3, 10);
+
+    log << "X-measuring side ribbons: " << endreq;
+    writeRibbonFrame(2, 0, 1, 1);
+    writeRibbonFrame(2, 0, 1, 2);
+    writeRibbonFrame(2, 0, 1, 3);
+    writeRibbonFrame(2, 0, 1, 6);
+    writeRibbonFrame(2, 0, 1, 7);
+    writeRibbonFrame(2, 0, 1, 8);
+
+    writeRibbonFrame(4, 0, 1, 1);
+    writeRibbonFrame(4, 0, 1, 2);
+    writeRibbonFrame(4, 0, 1, 3);
+    writeRibbonFrame(4, 0, 1, 6);
+    writeRibbonFrame(4, 0, 1, 7);
+    writeRibbonFrame(4, 0, 1, 8);
 
     return sc;
 }
@@ -203,6 +265,34 @@ StatusCode TestAcdUtil::finalize() {
     return StatusCode::SUCCESS;
 }
 
+void TestAcdUtil::writeTileFrame(unsigned face, unsigned row, 
+                                 unsigned col, bool bent) {
+  idents::AcdId aid(0, face, row, col);
+  idents::VolumeIdentifier vid = aid.volId(bent);
+
+  IAcdGeometrySvc::AcdReferenceFrame frame =
+    m_acdGeoSvc->getReferenceFrame(vid);
+  (*m_log) << MSG::INFO << vid.name() << " has reference frame "
+           << frame << endreq;
+
+}
+// for orient, 0 = xmeas; 1 = ymeas
+void TestAcdUtil::writeRibbonFrame(unsigned face, unsigned orient, 
+                                   unsigned rib, unsigned seg) {
+  idents::VolumeIdentifier vid;
+
+  vid.append(1);   // ACD
+  vid.append(face);   // face
+  vid.append(41);  // ribbon
+  vid.append(orient);   // y-measuring
+  vid.append(rib);   // ribbon number.  
+  vid.append(seg);   // segment
+
+  IAcdGeometrySvc::AcdReferenceFrame frame 
+    =  m_acdGeoSvc->getReferenceFrame(vid);
+  (*m_log) << MSG::INFO << vid.name() << " has reference frame "
+           << frame << endreq;
+}
 
 
 

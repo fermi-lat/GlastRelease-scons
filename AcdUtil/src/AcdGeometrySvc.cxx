@@ -15,6 +15,24 @@
 static const SvcFactory<AcdGeometrySvc> s_factory;
 const ISvcFactory& AcdGeometrySvcFactory = s_factory;
 
+namespace {   // local utilities
+  // Given a NamedId (std::vector<std::pair<std::string>, unsigned) look
+  // for match with string field, store corresponding unsigned value.
+  // in arg.  Return false if not found
+  bool findFieldVal(const IGlastDetSvc::NamedId& nid, 
+                    const std::string& fieldName, unsigned& val) {
+    IGlastDetSvc::NamedId::const_iterator  it = nid.begin();
+    while (it != nid.end()) {
+      if (it->first == fieldName) {
+        val = it->second;
+        return true;
+      }
+      ++it;
+    }
+    return false;
+  }
+}
+
 //------------------------------------------------------------------------------
 /// Service parameters which can be set at run time must be declared.
 /// This should be done in the constructor.
@@ -94,11 +112,48 @@ const InterfaceID&  AcdGeometrySvc::type () const {
 StatusCode AcdGeometrySvc::getConstants()
 {
     StatusCode sc = StatusCode::SUCCESS;
-
-    if (m_glastDetSvc->getNumericConstByName("xNum", &m_numXtowers).isSuccess() &&
-        m_glastDetSvc->getNumericConstByName("yNum", &m_numYtowers).isSuccess()        ) 
+    int eLATACD, eACDTile, eACDRibbon, eMeasureX, eMeasureY;
+    int eACDTopFace, eACDXNegFace, eACDYNegFace, eACDXPosFace, eACDYPosFace;
+    double ribbonWidth;
+    if (m_glastDetSvc->getNumericConstByName("xNum", 
+                                             &m_numXtowers).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("yNum", 
+                                             &m_numYtowers).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eLATACD", 
+                                             &eLATACD).isSuccess()  &&
+        m_glastDetSvc->getNumericConstByName("eACDTile", 
+                                             &eACDTile).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDRibbon", 
+                                             &eACDRibbon).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eMeasureX", 
+                                             &eMeasureX).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eMeasureY", 
+                                             &eMeasureY).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDTopFace", 
+                                             &eACDTopFace).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDXNegFace", 
+                                             &eACDXNegFace).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDYNegFace", 
+                                             &eACDYNegFace).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDXPosFace", 
+                                             &eACDXPosFace).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("eACDYPosFace", 
+                                             &eACDYPosFace).isSuccess() &&
+        m_glastDetSvc->getNumericConstByName("ribbonWidth", 
+                                             &m_ribbonHalfWidth).isSuccess() )
      {
        sc = StatusCode::SUCCESS;
+       m_eLATACD = (unsigned) eLATACD;
+       m_eACDTile = (unsigned) eACDTile;
+       m_eACDRibbon = (unsigned) eACDRibbon;
+       m_eMeasureX = (unsigned) eMeasureX;
+       m_eMeasureY = (unsigned) eMeasureY;
+       m_eACDTopFace = (unsigned) eACDTopFace;
+       m_eACDXNegFace = (unsigned) eACDXNegFace;
+       m_eACDYNegFace = (unsigned) eACDYNegFace;
+       m_eACDXPosFace = (unsigned) eACDXPosFace;
+       m_eACDYPosFace = (unsigned) eACDYPosFace;
+       m_ribbonHalfWidth = ribbonWidth / 2;
      } else {
         MsgStream log(msgSvc(), name());
         log << MSG::ERROR << "Failed to get geometry constants" << endreq;
@@ -664,7 +719,8 @@ bool AcdGeometrySvc::fillRibbonTransforms(const idents::AcdId& id,
 double AcdGeometrySvc::ribbonHalfWidth() const 
 {
   // FIXME (do this right)
-  return 3.0;
+  return m_ribbonHalfWidth;
+  //  return 3.0;
 }
 
 /// Given an AcdId, provide the tile size, center and corners
@@ -733,10 +789,134 @@ bool AcdGeometrySvc::fillTileSharedEdgeData(const idents::AcdId& id,
     sharedEdge2 = 1;
     sharedWidth1 = dim2[2];
     sharedWidth2 = dim1[1];
-    break;
-  default:
+    break; 
+ default:
     ;
   }
   return true;
 }
 
+IAcdGeometrySvc::AcdReferenceFrame 
+AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier 
+                                  &volId) {
+
+    using idents::VolumeIdentifier;
+    IGlastDetSvc::NamedId nid = m_glastDetSvc->getNamedId(volId);
+
+    unsigned val;
+    unsigned face;
+    bool tile;
+
+    if (!findFieldVal(nid, "fLATObjects", val)) return FRAME_NONE;
+    if (val != m_eLATACD) return FRAME_NONE;
+    if (!findFieldVal(nid, "fACDFace", face)) return FRAME_NONE;
+    if (!findFieldVal(nid, "fACDCmp", val)) return FRAME_NONE;
+    tile = (val == m_eACDTile);
+
+    if (tile) {  // simple except for bent pieces
+        if (face ==  m_eACDXNegFace) return FRAME_MINUSX;
+        else if (face == m_eACDYNegFace) return FRAME_MINUSY;
+        else if (face == m_eACDXPosFace) return FRAME_PLUSX;
+        else if (face ==  m_eACDYPosFace) return FRAME_PLUSY;
+        else if (face == m_eACDTopFace)            {
+            if (!findFieldVal(nid, "fTileSeg", val)) return FRAME_NONE;
+            if (val == 0) return FRAME_TOP;   // main tile piece
+            if (!findFieldVal(nid, "fRow", val)) return FRAME_NONE;
+            if (val == 0) return FRAME_MINUSY;
+            else if (val == 4) return FRAME_PLUSY_YDWN;
+            else return FRAME_NONE;
+        }
+        else return FRAME_NONE;
+    }
+    else if (val != m_eACDRibbon) return FRAME_NONE;
+  
+    // Ribbons...eek!
+    if (!findFieldVal(nid, "fMeasure", val)) return FRAME_NONE;
+    unsigned ribbon, segNum;
+    if (!findFieldVal(nid, "fRibbon", ribbon)) return FRAME_NONE;
+    if (!findFieldVal(nid, "fRibbonSegment", segNum)) return FRAME_NONE;
+
+    bool increasing;
+    std::vector<double> dims;
+    HepPoint3D cm;
+    if (getDetectorDimensions(volId, dims, cm).isFailure()) return FRAME_NONE;
+
+    //    HepGeom::Transform3D transform;
+    //    m_glastDetSvc->getTransform3DByID(volId, &transform);
+    //    HepVector3D dimsTransformed(dims[0], dims[1], dims[2]);
+    //    dimsTransformed = transform * dimsTransformed;
+    // More generally might need to use transformed dimensions in 
+    //   following, but for actual geometry in use it isn't necessary
+    bool measY = true;
+
+    if (val == m_eMeasureX) {  // width is X dimension.  
+        measY = false;
+        if (face == m_eACDTopFace) {
+          //            if (dims[2] <= dims[1]) return FRAME_XMEAS;
+            if (dims[2] <= dims[1]) return FRAME_XMEAS;
+            increasing = true;
+        }
+        else if (face == m_eACDYNegFace) {
+          //  if (dims[2] >= dims[1]) return FRAME_MINUSY;  // vert
+          if (dims[2] >= dims[1]) return FRAME_MINUSY;  // it's vertical 
+            increasing = true;
+        }
+        else if (face == m_eACDYPosFace) {
+            if (dims[2] >= dims[1]) return FRAME_PLUSY_YDWN; // it's vertical
+            increasing = false;
+        }
+        else return FRAME_NONE;
+    }
+    else if (val = m_eMeasureY) {  // width is Y dimension
+
+        // Y-ribbons go straight across top
+        if (face == m_eACDTopFace) return FRAME_YMEAS; 
+        else if (face == m_eACDXNegFace) {
+            if (dims[2] >= dims[0]) return FRAME_MINUSX;  // it's vertical 
+            increasing = true;
+        }
+        //            break;
+        else if (face == m_eACDXPosFace) {
+            if (dims[2] >= dims[0]) return FRAME_PLUSX_YDWN; // it's vertical
+            increasing = false;
+        }
+        //            break;
+        else return FRAME_NONE;
+    }
+    // deal with short guys.
+    std::vector<VolumeIdentifier> segs;
+
+    m_glastDetSvc->orderRibbonSegments(segs, face, ribbon, measY, 
+                                       increasing);
+    VolIdIter ourIt = std::find(segs.begin(), segs.end(), volId);
+    // If our seg wasn't found, give up
+    if (ourIt == segs.end())  return FRAME_NONE;
+    // Our seg really shouldn't be first or last
+    if ((ourIt == segs.begin()) || ((ourIt + 1) == segs.end()) )
+        return FRAME_NONE; 
+
+    VolIdIter before = ourIt - 1;
+    VolIdIter after = ourIt + 1;
+
+    HepPoint3D xTbefore, xTafter;
+    if (getDimensions(*before, dims, xTbefore).isFailure()) return FRAME_NONE;
+    if (getDimensions(*after, dims, xTafter).isFailure()) return FRAME_NONE;
+
+    // Depending on face, compare x, y or z dimensions of cm
+    // to see if we're headed forwards or backward
+    // Y-measuring, side
+    if ((face ==  m_eACDXNegFace) || (face ==  m_eACDXPosFace)) {
+        if (xTbefore.x() <= xTafter.x()) return FRAME_YMEAS;
+        else return FRAME_YMEAS_ZROT180;
+    }
+
+    // X-measuring, side
+    else if ((face ==  m_eACDYNegFace) || (face == m_eACDYPosFace)) {
+        if (xTbefore.y() <= xTafter.y()) return FRAME_XMEAS;
+        else return FRAME_XMEAS_ZROT180;
+    }
+    else {   // must be top
+        if (xTbefore.z() <= xTafter.z()) return FRAME_MINUSY;
+        else return FRAME_PLUSY_YDWN;
+    }
+}

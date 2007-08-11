@@ -109,17 +109,29 @@ public:
 					const std::vector<double>& dim1, const std::vector<double>& dim2,
 					int& sharedEdge1, int& sharedEdge2,
 					float& sharedWidth1, float& sharedWidth2);
+    virtual AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier 
+                                                &volId);
 
 
 private:
 
     void clear();
+
+    typedef std::vector<idents::VolumeIdentifier>::const_iterator VolIdIter;
     
     /// pointer to the detector service
     IGlastDetSvc *m_glastDetSvc;
 
     int m_numTiles, m_numRibbons;
     int m_numXtowers, m_numYtowers;
+
+    unsigned m_eLATACD;
+    unsigned m_eACDTile,  m_eACDRibbon;
+    unsigned m_eMeasureX,  m_eMeasureY;
+    unsigned m_eACDTopFace, m_eACDXNegFace, m_eACDYNegFace;
+    unsigned m_eACDXPosFace, m_eACDYPosFace;
+
+    double m_ribbonHalfWidth;
 
     Point m_cornerGapStartPoint[4], m_cornerGapEndPoint[4];
     Vector m_cornerGapVec[4];
