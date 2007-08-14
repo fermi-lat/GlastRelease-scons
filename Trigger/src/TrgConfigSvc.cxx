@@ -21,7 +21,7 @@ $Header$
 #include "Event/TopLevel/Event.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include <stdlib.h>
-
+#include <assert.h>
 
 
 // declare the service factories for the TrgConfigSvc

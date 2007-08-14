@@ -5,6 +5,7 @@
 *  $Header$
 */
 #include "EnginePrescaleCounter.h"
+#include <assert.h>
 
 EnginePrescaleCounter::EnginePrescaleCounter(const std::vector<int>& prescales):m_prescales(prescales),m_useprescales(false){
   if (!m_prescales.empty())m_useprescales=true;

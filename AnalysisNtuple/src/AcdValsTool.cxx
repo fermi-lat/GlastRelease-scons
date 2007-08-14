@@ -559,7 +559,7 @@ StatusCode AcdValsTool::calculate()
 	  bool isCornerGap = false;
 
 	  // for now we ignore vertex and down going
-	  if ( isVertex or ! isUpGoing ) continue;
+	  if ( isVertex || (! isUpGoing) ) continue;
 
 	  // Classify gap type
 	  switch ( (*itrGap)->getId().gapType() ) {
