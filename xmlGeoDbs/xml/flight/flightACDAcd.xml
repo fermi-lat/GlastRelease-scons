@@ -1020,10 +1020,13 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<!-- May '07 Define all the new pieces of vertical ribbons as if they were
-     X-measuring ribbons.  Some are used on all sides, some really are 
-     only used in X-measuring ribbons and one, yRibbonSideVert1, only
-     occurs in Y-ribbons so will always be rotated. -->
+<!-- May '07 Define all the new pieces of vertical ribbons with dimensions
+     such that they do not require any 90-degree rotations to be
+     correct for the LAT global coordinate system.  Ribbon thickness
+     may be any of X, Y or Z for the box, depending which ribbon it's
+     for.  In some cases two volumes will be defined which differ
+     only by a rotation.
+-->
 
 <box name="xRibbonSideVert0" 
      XREF="ribbonWidth"

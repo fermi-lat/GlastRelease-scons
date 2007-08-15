@@ -830,6 +830,9 @@
                                 xrot       NMTOKEN    "0"
                                 yrot       NMTOKEN    "0"
                                 zrot       NMTOKEN    "0"
+                                xrotREF    IDREF      #IMPLIED
+                                yrotREF    IDREF      #IMPLIED
+                                zrotREF    IDREF      #IMPLIED
                                 %units; '>
            
 <!-- Change single X_Y_Z attribute to three separate attributes. 
@@ -918,7 +921,8 @@
 <!ATTLIST derCategory name ID #REQUIRED
           save        (true | false) "false" >
 
-<!ENTITY  % operator "mul | quo | add | minus | uminus | half | max | sqrt" >
+<!ENTITY  % operator 
+"mul | quo | add | minus | uminus | half | max | sqrt | sin | cos | tan | asin | acos | atan" >
 
 <!ELEMENT const (notes?, (refer | (%operator;)? )) >
 <!ATTLIST const name ID #IMPLIED
@@ -946,6 +950,12 @@
 <!ELEMENT uminus (%operand;)  >
 <!ELEMENT half (%operand;)  >
 <!ELEMENT sqrt (%operand;)  >
+<!ELEMENT sin (%operand;)  >
+<!ELEMENT cos (%operand;)  >
+<!ELEMENT tan (%operand;)  >
+<!ELEMENT asin (%operand;)  >
+<!ELEMENT acos (%operand;)  >
+<!ELEMENT atan (%operand;)  >
 
 <!--    ID DICTIONARY DEFINITONS
 
