@@ -97,7 +97,8 @@ StatusCode LivetimeSvc::initialize ()
     MsgStream log( msgSvc(), name() );
     
     m_efficiency = 1.0 - m_deadtime * m_triggerRate;
-    log << "Applying efficiency of " << m_efficiency*100 << "%" << endreq;
+    log << MSG::INFO 
+        << "Applying efficiency of " << m_efficiency*100 << "%" << endreq;
     return status;
 }
 
