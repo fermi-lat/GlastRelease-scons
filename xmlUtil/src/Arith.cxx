@@ -23,6 +23,10 @@ namespace xmlUtil {
   Arith::ptrString Arith::cmString = 0;
   Arith::ptrString Arith::mString = 0;
 
+  static double PI=3.14159265358978;
+  static double DEG_TO_RAD = PI/180.0;
+  static double RAD_TO_DEG = 180.0/PI;
+ 
  void Arith::init() {
     typeNames = new ptrString[ETAG_n];
 
@@ -36,7 +40,13 @@ namespace xmlUtil {
     typeNames[ETAG_max] = new std::string("max");
     typeNames[ETAG_half] = new std::string("half");
     typeNames[ETAG_sqrt] = new std::string("sqrt");
-
+    typeNames[ETAG_sin] = new std::string("sin");
+    typeNames[ETAG_cos] = new std::string("cos");
+    typeNames[ETAG_tan] = new std::string("tan");
+    typeNames[ETAG_asin] = new std::string("asin");
+    typeNames[ETAG_acos] = new std::string("acos");
+    typeNames[ETAG_atan] = new std::string("atan");
+    
     notesString = new (std::string) ("notes");
     lengthString = new std::string("length");
     refToString = new std::string("refTo");
@@ -146,6 +156,51 @@ namespace xmlUtil {
           throw XmlUtilException();
         }
         m_number = sqrt(sqrtArg);
+        break;
+      }
+
+      case ETAG_sin: {  // expects argument in degress
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double sinArg = (Arith(curElt).evaluate());
+        sinArg *= DEG_TO_RAD;
+        m_number = sin(sinArg);
+        break;
+      }
+
+      case ETAG_cos: {  // expects argument in degress
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double cosArg = (Arith(curElt).evaluate());
+        cosArg *= DEG_TO_RAD;
+        m_number = cos(cosArg);
+        break;
+      }
+
+      case ETAG_tan: {  // expects argument in degress
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double tanArg = (Arith(curElt).evaluate());
+        tanArg *= DEG_TO_RAD;
+        m_number = tan(tanArg);
+        break;
+      }
+
+      case ETAG_asin: {  // returns value in degrees
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double asinArg = (Arith(curElt).evaluate());
+        m_number = asin(asinArg) * RAD_TO_DEG;
+        break;
+      }
+
+      case ETAG_acos: {  // returns value in degrees
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double acosArg = (Arith(curElt).evaluate());
+        m_number = acos(acosArg) * RAD_TO_DEG;
+        break;
+      }
+
+      case ETAG_atan: {  // returns value in degrees
+        curElt = xmlBase::Dom::getFirstChildElement(m_elt);
+        double atanArg = (Arith(curElt).evaluate());
+        m_number = atan(atanArg) * RAD_TO_DEG;
         break;
       }
 

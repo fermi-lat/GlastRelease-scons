@@ -44,6 +44,12 @@ namespace xmlUtil {
       ETAG_max,
       ETAG_half,
       ETAG_sqrt,
+      ETAG_sin,
+      ETAG_cos,
+      ETAG_tan,
+      ETAG_asin,
+      ETAG_acos,
+      ETAG_atan,
       ETAG_n 
     } ;
 
@@ -62,6 +68,12 @@ namespace xmlUtil {
     double mul();       /*< evaluate a \b mul element */
     double quo();       /*< evalauate a \b quo element */
     double myMax();     /*< evaluate a \b max element */
+    double sinElt();    /*< evaluate a \b sin element */
+    double cosElt();    /*< evaluate a \b cos element */
+    double tanElt();    /*< evaluate a \b tan element */
+    double asinElt();    /*< evaluate an \b asin element */
+    double acosElt();    /*< evaluate an \b acos element */
+    double atanElt();    /*< evaluate an \b atan element */
     static void init();
 
     DOMElement*  m_elt; /*< element which may be evaluated */
