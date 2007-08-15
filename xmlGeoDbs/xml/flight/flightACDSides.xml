@@ -102,8 +102,7 @@
       <!-- Pos X face is face 3.  Rotate face 2 to get it. -->
 
       <!-- face 3, row 0 -->
-      <posXYZ volume="sideTileRow0Face2"
-              zrot="90"
+      <posXYZ volume="sideTileRow0Face3"
               XREF="tileSide_dt"
               YREF="ACDSideDovetail_d"
               ZREF="tileSideR0_dz" >
@@ -114,8 +113,7 @@
       </posXYZ>
 
       <!-- face 3, row 1 -->
-      <posXYZ volume="sideTileRow1Face2"
-              zrot="90"
+      <posXYZ volume="sideTileRow1Face3"
               XREF="tileSideR1R3_dt"
               YREF="ACDSideR1R3Dovetail_d"
               ZREF="tileSideR1_dz" >
@@ -126,8 +124,7 @@
       </posXYZ>
 
       <!-- face 3, row 2 -->
-      <posXYZ volume="sideTileRow2Face2"
-              zrot="90"
+      <posXYZ volume="sideTileRow2Face3"
               XREF="tileSide_dt"
               YREF="ACDSideDovetail_d"
               ZREF="tileSideR2_dz" >
@@ -138,8 +135,7 @@
       </posXYZ>
 
       <!-- face 3, row 3 -->
-      <posXYZ volume="sideTileRowR3"
-              zrot="90"
+      <posXYZ volume="sideTileRowR3XFace"
               XREF="tileSideR1R3_dt"
               YREF="ACDSideR1R3Dovetail_d"        
               ZREF="tileSideR3_dz" >
@@ -150,10 +146,9 @@
       </posXYZ>
 
 
-      <!-- Neg X face is face 1; rotate face 4 to get it --> 
+      <!-- Neg X face is face 1 -->
       <!-- face 1, row 0 -->
-      <posXYZ volume="sideTileRow0Face4"
-              zrot="90"
+      <posXYZ volume="sideTileRow0Face1"
               XREF="tileSide_dtn"
               YREF="ACDSideDovetail_dn"
               ZREF="tileSideR0_dz" >
@@ -165,8 +160,7 @@
          
       <!-- face 1, row 1. -->
 
-      <posXYZ volume="sideTileRow1Face4"
-              zrot="90"
+      <posXYZ volume="sideTileRow1Face1"
               XREF="tileSideR1R3_dtn"
               YREF="ACDSideR1R3Dovetail_dn"        
               ZREF="tileSideR1_dz" >
@@ -177,8 +171,7 @@
       </posXYZ>
 
       <!-- face 1, row 2 -->
-      <posXYZ volume="sideTileRow2Face4"
-              zrot="90"
+      <posXYZ volume="sideTileRow2Face1"
               XREF="tileSide_dtn"
               YREF="ACDSideDovetail_dn"
               ZREF="tileSideR2_dz" >
@@ -189,8 +182,7 @@
       </posXYZ>
          
       <!-- face 1, row 3. -->
-      <posXYZ volume="sideTileRowR3"
-              zrot="90"
+      <posXYZ volume="sideTileRowR3XFace"
               XREF="tileSideR1R3_dtn"
               YREF="ACDSideR1R3Dovetail_dn"        
               ZREF="tileSideR3_dz" >
