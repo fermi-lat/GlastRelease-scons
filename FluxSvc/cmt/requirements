@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r46
+version v6r47
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>

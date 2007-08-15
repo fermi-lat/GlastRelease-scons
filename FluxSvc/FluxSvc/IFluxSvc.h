@@ -18,7 +18,7 @@
 #include "astro/GPS.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IFluxSvc("FluxSvc", 6, 0); 
+static const InterfaceID IID_IFluxSvc("FluxSvc", 6, 1); 
 
 // forward declarations
 class IFlux;
@@ -102,8 +102,13 @@ public:
     virtual bool insideSAA()=0;
 
     /// set aligmnment for Glast. 
-    /// @param phi,theta,psi Euler angles (radians)
-    virtual void setAlignmentRotation(double phi, double theta, double psi)=0;
+    /// @param qx, qy, qz x, y, z rotation angles (radians) asssumed small
+    /// @param misalign [false] set true to apply as a misalignment
+    virtual void setAlignmentRotation(double qx, double qy, double qz, bool misalign=false)=0;
+
+    /// set the SAA boundary
+    /// @param boundard set of (lat, lon) pairs of the polygon
+    virtual void setSAABoundary(const std::vector<std::pair<double, double> > & boundary)=0;
 
     virtual double endruntime() = 0; ///< access end of run time
 
