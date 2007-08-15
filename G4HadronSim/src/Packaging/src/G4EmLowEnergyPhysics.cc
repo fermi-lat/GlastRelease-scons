@@ -49,6 +49,13 @@
 #include "G4LowEnergyIonisation.hh"
 #include "G4LowEnergyBremsstrahlung.hh"
 
+// std processes for e+
+
+#include "G4eIonisation.hh"
+#include "G4eBremsstrahlung.hh"
+
+
+
 #include "G4MultipleScattering.hh"
 #include "G4eplusAnnihilation.hh"
 
@@ -174,15 +181,17 @@ void G4EmLowEnergyPhysics::ConstructProcess()
 	pmanager->AddProcess(new G4eplusAnnihilation,   0,-1, 4);
       */
       G4VContinuousDiscreteProcess* thePositronMultipleScattering = m_msFactory();
-      //     G4VContinuousDiscreteProcess* thePositronIonisation         = 
-      //m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::IONIZATION);
-      //G4VContinuousDiscreteProcess* thePositronBremsStrahlung     = 
-      //	m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::BREMSSTRAHLUNG);
+      G4VContinuousDiscreteProcess* thePositronIonisation         = 
+	m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::IONIZATION);
+      G4VContinuousDiscreteProcess* thePositronBremsStrahlung     = 
+      	m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::BREMSSTRAHLUNG);
       G4eplusAnnihilation*          theAnnihilation               = new G4eplusAnnihilation();
       
       pmanager->AddProcess(thePositronMultipleScattering, -1,  1, 1);
-      pmanager->AddProcess(new G4LowEnergyIonisation,         -1,  2, 2);
-      pmanager->AddProcess(new G4LowEnergyBremsstrahlung,     -1,  3, 3);
+      pmanager->AddProcess(thePositronIonisation,         -1,           2, 2);
+      pmanager->AddProcess(thePositronBremsStrahlung,     -1,           3, 3);
+      //      pmanager->AddProcess(new G4LowEnergyIonisation,         -1,  2, 2);
+      //pmanager->AddProcess(new G4LowEnergyBremsstrahlung,     -1,  3, 3);
       pmanager->AddProcess(theAnnihilation,                0, -1, 4);
 
     } else if (particleName == "mu+")
