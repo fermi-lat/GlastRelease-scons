@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *    EOH
 
+   v3r4   15-Aug-2007 jrb Add support for trig functions
    v3r3p1 9-Aug-2007  jrb Throw exceptions instead of asserts
    v3r3   9-Aug-2007  jrb Add utility NamedId::fieldVector()
    v3r2   23-Feb-2007 jrb Add support for <sqrt> tag
