@@ -4,6 +4,10 @@
  *
  *                    **EOH**
 
+   v1r44p1 16-Aug-2007 jrb  Define 2 sets of volumes for side tiles - thickness
+                            in X and thickness in Y - so that no rotations about
+                            Z are required. Resulting model has volumes placed 
+                            identically with those in previous tag.
    v1r44   15-Aug-2007 jrb  Add support for trig functions
    v1r43p3  9-Aug-2007 jrb  Decrease conversion layer thicknesses
    v1r43p2  7-Aug-2007 jrb  Adjust top screw positions. Use values from drawings
