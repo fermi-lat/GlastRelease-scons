@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r47
+version v6r47p1
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -14,6 +14,7 @@ apply_pattern package_include
 use GaudiInterface * IExternal
 use CLHEP * IExternal
 use facilities *
+use astro *
 
 # for livetime
 use Trigger *

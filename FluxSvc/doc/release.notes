@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   16-aug-07  v6r47p1 THB  add use to bring in astro
    15-aug-07  v6r47   THB  Change FluxSvc interface to implement alignment and misalignments
    07-aug-07  v6r46   THB  (For TG) INFO message from FluxSvc about times
    22-jul-07  v6r45p1 THB  Explicit GPS::synch to notify observers only after final set of GPS::time
