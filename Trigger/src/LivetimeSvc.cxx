@@ -158,13 +158,15 @@ StatusCode LivetimeSvc::queryInterface(const InterfaceID& riid, void** ppvInterf
 StatusCode LivetimeSvc::finalize ()
 {
     MsgStream log( msgSvc(), name() );
-    log << MSG::INFO 
-        << "Processed " << m_total << " livetime requests, accepted "<< m_accepted 
-        << "\n\t\t\t  Invisible triggers generated: "<< m_invisible_trig 
-        << "\n\t\t\t                Total livetime: "<< m_livetime
-        << ", (" << int(100*m_livetime/m_totalTime+0.5) << "% of total)"
-        <<  endreq;
-    
+    if( m_total>0 && m_deadtime>0){
+        log << MSG::INFO 
+            << "Processed " << m_total << " livetime requests, accepted "<< m_accepted 
+            << "\n\t\t\t  Invisible triggers generated: "<< m_invisible_trig 
+            << "\n\t\t\t                Total livetime: "<< m_livetime
+            << ", (" << int(100*m_livetime/m_totalTime+0.5) << "% of total)"
+            <<  endreq;
+    }
+
 
     return StatusCode::SUCCESS;
 }
