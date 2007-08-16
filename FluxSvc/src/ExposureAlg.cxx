@@ -196,9 +196,8 @@ StatusCode ExposureAlg::execute()
 
     if(m_clockName.value() == name){
         createEntry();
+        setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
     } 
-    
-    setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
     return sc;
 }
