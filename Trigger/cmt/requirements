@@ -1,5 +1,5 @@
 package Trigger
-version v5r0p1
+version v5r0p2
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -16,6 +16,7 @@ use enums *
 
 apply_pattern packageShr
 use CalXtalResponse
+use configData *
 
 apply_pattern package_include
 
@@ -23,7 +24,6 @@ apply_pattern package_include
 private
 #needed only for the test app
 use CalibSvc *
-use configData *
 
 use Event *
 use GlastSvc *

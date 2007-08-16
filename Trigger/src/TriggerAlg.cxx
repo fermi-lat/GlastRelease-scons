@@ -228,7 +228,7 @@ StatusCode TriggerAlg::initialize()
 
     if(! m_table.value().empty()){
       if (m_table.value()=="TrgConfigSvc"){
-	sc = service("TrgConfigSvc", m_trgConfigSvc);
+	sc = service("TrgConfigSvc", m_trgConfigSvc, true);
 	if( sc.isFailure() ) {
 	  log << MSG::ERROR << "failed to get the TrgConfigSvc" << endreq;
 	  return sc;
