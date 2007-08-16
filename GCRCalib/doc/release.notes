@@ -1,3 +1,4 @@
+v1r2p4  16/08/07 hmk       retag v1r1r6 as v1r2p4
 v1r2p3  12/07/07 hmk       need to call MsgStream's setLevel in the tools, due
                            to the local member variable created during ctor
 v1r2p2  12/07/07 hmk       patch to call setProperties in tools to allow
