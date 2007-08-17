@@ -31,7 +31,7 @@ import ROOT
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
                   
 if __name__ == '__main__':
     usage = "usage: python inlDumpSlopes.py [-d delim] <input_xml_file>"

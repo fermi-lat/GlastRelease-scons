@@ -20,7 +20,7 @@ import sys,os
 import calCalibXML
 import calConstant
 import logging
-import zachUtil
+import cgc_util
 import array
 import Numeric
 

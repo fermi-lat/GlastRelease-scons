@@ -30,7 +30,7 @@ import getopt
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 # CONSTANTS #
 OPTYPE_DIFF    = 0

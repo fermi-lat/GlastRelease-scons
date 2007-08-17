@@ -23,7 +23,7 @@ import sys
 import calCalibXML
 import calConstant
 import logging
-import zachUtil
+import cgc_util
 import array
 import Numeric
 
@@ -115,8 +115,8 @@ for twr in asymTwrs1:
                     channel_str = "%d_%d_%d_%d_%d"%(twr,lyr,col,pdiode,ndiode)
 
                     ## CALC INDECES ##
-                    asymIdx = zachUtil.asymIdx[(pdiode,ndiode,False)]
-                    errIdx  = zachUtil.asymIdx[(pdiode,ndiode,True)]
+                    asymIdx = cgc_util.asymIdx[(pdiode,ndiode,False)]
+                    errIdx  = cgc_util.asymIdx[(pdiode,ndiode,True)]
 
                     ## GENERATE ARRAYS FOR THIS CHANNEL ##
                     channel1 = asym1[twr,row,col,asymIdx]

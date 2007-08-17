@@ -30,7 +30,7 @@ import math
 import ROOT
 import csv
 
-import zachUtil
+import cgc_util
 
 usage = "fitNeighborXtalk.py <neighborXtalk.txt> <outputROOTPath>"
 
@@ -71,7 +71,7 @@ for row in infile:
     (destChan, srcChan, srcDac, destDac) = row
 
     # skip le->le xtalk & keep only le->he xtalk
-    (twr,lyr,col,face,diode) = zachUtil.diodeIdx2tuple(destChan)
+    (twr,lyr,col,face,diode) = cgc_util.diodeIdx2tuple(destChan)
     if diode == 0:
         continue
 

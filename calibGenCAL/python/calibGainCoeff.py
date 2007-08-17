@@ -30,7 +30,7 @@ import ROOT
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 #######################################################################################
 if __name__ == '__main__':
@@ -64,8 +64,8 @@ if __name__ == '__main__':
     cgOffTwrSet = xmlOffFile.getTowers()
 
     log.info("Building inl splines")
-    cgOnSplines = zachUtil.build_inl_splines(cgOnData, cgOnTwrSet)
-    cgOffSplines = zachUtil.build_inl_splines(cgOffData, cgOffTwrSet)
+    cgOnSplines = cgc_util.build_inl_splines(cgOnData, cgOnTwrSet)
+    cgOffSplines = cgc_util.build_inl_splines(cgOffData, cgOffTwrSet)
 
     (adc2dacOn, dac2adcOn) = cgOnSplines
     (adc2dacOff, dac2adcOff) = cgOffSplines

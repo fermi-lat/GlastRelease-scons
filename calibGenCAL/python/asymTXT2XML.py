@@ -31,7 +31,7 @@ import array
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 #######################################################################################3
 
@@ -133,8 +133,8 @@ if __name__ == '__main__':
         row = calCalibXML.layerToRow(int(lyr))
 
         # calculate index for asym_type
-        valIdx = zachUtil.asymIdx[(pdiode,ndiode,False)]
-        sigIdx = zachUtil.asymIdx[(pdiode,ndiode,True)]
+        valIdx = cgc_util.asymIdx[(pdiode,ndiode,False)]
+        sigIdx = cgc_util.asymIdx[(pdiode,ndiode,True)]
 
         # set asym & sigma for each point alon xtal
         outData[twr, row, col, valIdx, nPt] = asym

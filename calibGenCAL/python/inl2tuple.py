@@ -24,7 +24,7 @@ import ROOT
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 #######################################################################################
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ import array
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 
 #######################################################################################
@@ -97,14 +97,14 @@ if __name__ == '__main__':
                                          calConstant.NUM_ROW,
                                          calConstant.NUM_END,
                                          calConstant.NUM_FE,
-                                         zachUtil.N_DAC_PTS),
+                                         cgc_util.N_DAC_PTS),
                                         Numeric.Float32))
 
         adcData.append(Numeric.zeros((calConstant.NUM_TEM,
                                          calConstant.NUM_ROW,
                                          calConstant.NUM_END,
                                          calConstant.NUM_FE,
-                                         zachUtil.N_DAC_PTS),
+                                         cgc_util.N_DAC_PTS),
                                         Numeric.Float32))
 
 

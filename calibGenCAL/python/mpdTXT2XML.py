@@ -29,7 +29,7 @@ import array
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 #######################################################################################
 
@@ -111,11 +111,11 @@ if __name__ == '__main__':
 
         row = calCalibXML.layerToRow(int(lyr))
 
-        valIdx = zachUtil.mpdBigValIdx
-        sigIdx = zachUtil.mpdBigSigIdx
+        valIdx = cgc_util.mpdBigValIdx
+        sigIdx = cgc_util.mpdBigSigIdx
         if (diode == calConstant.CDIODE_SM):
-            valIdx = zachUtil.mpdSmallValIdx
-            sigIdx = zachUtil.mpdSmallSigIdx
+            valIdx = cgc_util.mpdSmallValIdx
+            sigIdx = cgc_util.mpdSmallSigIdx
             
         outData[twr, row, col, valIdx] = mpd
         outData[twr, row, col, sigIdx] = sig

@@ -29,7 +29,7 @@ import Numeric
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
                   
 if __name__ == '__main__':
     usage = "usage: python pedXML2TXT.py [-d delim] <input_xml_file>"

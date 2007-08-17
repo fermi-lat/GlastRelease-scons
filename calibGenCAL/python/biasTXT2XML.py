@@ -28,7 +28,7 @@ import array
 import calDacXML
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 #######################################################################################
 

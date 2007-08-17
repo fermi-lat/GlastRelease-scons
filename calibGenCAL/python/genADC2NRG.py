@@ -32,7 +32,7 @@ import ROOT
 import calDacXML
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 # most probably mev of muon mip vertically through cal xtal
 MUON_PEAK_ENERGY = 11.2
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     towers = xmlFile.getTowers()
     xmlFile.close()
     log.info("Building inl splines")
-    inlSplines = zachUtil.build_inl_splines(inlData, towers)
+    inlSplines = cgc_util.build_inl_splines(inlData, towers)
     (adc2dac, dac2adc) = inlSplines
 
 
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         log.error("asym towers don't match inl towers")
         sys.exit(1)
     xmlFile.close()
-    asymSplines = zachUtil.build_asym_splines((xpos, asymData), towers)
+    asymSplines = cgc_util.build_asym_splines((xpos, asymData), towers)
     (pos2asym, asym2pos) = asymSplines
 
     # open and read XML MevPerDAC file

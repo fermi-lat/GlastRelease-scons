@@ -30,7 +30,7 @@ import Numeric
 
 import calCalibXML
 import calConstant
-import zachUtil
+import cgc_util
 
 if __name__ == '__main__':
     usage = "usage: python asymXML2TXT.py [-d delim] <input_xml_file>"
@@ -95,8 +95,8 @@ if __name__ == '__main__':
                         for pt in range (0,len(xpos)):
                             print delim.join([str(x) for x in twr, lyr, col,
                                               pdiode, ndiode,
-                                              asymData[twr][row][col][zachUtil.asymIdx[(pdiode,ndiode,False)]][pt], #asym val
-                                              asymData[twr][row][col][zachUtil.asymIdx[(pdiode,ndiode,True)]][pt]])   #sigma
+                                              asymData[twr][row][col][cgc_util.asymIdx[(pdiode,ndiode,False)]][pt], #asym val
+                                              asymData[twr][row][col][cgc_util.asymIdx[(pdiode,ndiode,True)]][pt]])   #sigma
 
 
 

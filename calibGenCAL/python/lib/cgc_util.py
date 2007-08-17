@@ -1,7 +1,7 @@
 import sys
 
 """
-collection of simple utilities shared throughout my code
+collection of simple utilities shared throughout code
 """
 
 __facility__  = "Offline"
@@ -304,3 +304,11 @@ def tuple2diodeIdx(tpl):
              (lyr + calConstant.NUM_LAYER*twr)))
                                       
            
+# test if object can be converted to a number
+# return true if yes, false if no
+def isNumber(v):
+    try:
+        float(v)
+        return True
+    except ValueError:
+        return False
