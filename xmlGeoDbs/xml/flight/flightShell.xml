@@ -26,7 +26,7 @@
 
     <!ENTITY ACDMatPrim     SYSTEM "flightACDMatPrim.xml">
     <!ENTITY ACDCountPrim   SYSTEM "flightACDCountPrim.xml">
-    <!ENTITY ACDDimPrim     SYSTEM "flightACDDimPrim.xml">
+    <!ENTITY ACDDimPrim     SYSTEM "flightACDDimPrimUnshrunk.xml">
     <!ENTITY ACDResponse    SYSTEM "flightACDResponse.xml">
     <!ENTITY ACDAcd         SYSTEM "flightACDAcd.xml">
     <!ENTITY ACDTop         SYSTEM "flightACDTop.xml">
@@ -47,8 +47,8 @@
     <!ENTITY ACDDerived     SYSTEM "flightACDDerived.xml">
     <!ENTITY NADDerived     SYSTEM "flightNADDerived.xml">
 <!--   extraDerived used to refer to flightSCDerived.xml. -->
-<!--    <!ENTITY extraDerived   SYSTEM "empty.xml">  -->
-    <!ENTITY extraDerived   SYSTEM "shellDerived.xml">
+    <!ENTITY extraDerived   SYSTEM "empty.xml"> 
+    <!--   !ENTITY extraDerived   SYSTEM "shellDerived.xml">  -->
     <!ENTITY Primary        SYSTEM "flightPrimaryConstants.xml">
 
     <!ENTITY idDict         SYSTEM "flightIdDict.xml">

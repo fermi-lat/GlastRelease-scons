@@ -903,7 +903,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 <!-- 3 boxes for side row 0 -->
 
 <box name="sideTileR0EdgeLesser" 
-     XREF="sideTileTransLesserOp"
+     XREF="sideTileR0TransLesserOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight0Op"
      materialREF="tileMat"
@@ -912,7 +912,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <box name="sideTileR0EdgeLesserXFace" 
      XREF="tileThicknessOp"
-     YREF="sideTileTransLesserOp"
+     YREF="sideTileR0TransLesserOp"
      ZREF="sideTileHeight0Op"
      materialREF="tileMat"
      sensitive="posHit" 
@@ -937,7 +937,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 
 <box name="sideTileR0EdgeGreater" 
-     XREF="sideTileTransGreaterOp"
+     XREF="sideTileR0TransGreaterOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight0Op"
      materialREF="tileMat"
@@ -946,7 +946,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <box name="sideTileR0EdgeGreaterXFace" 
      XREF="tileThicknessOp"
-     YREF="sideTileTransGreaterOp"
+     YREF="sideTileR0TransGreaterOp"
      ZREF="sideTileHeight0Op"
      materialREF="tileMat"
      sensitive="posHit" 
@@ -993,7 +993,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 
 <box name="sideTileR1EdgeGreater" 
-     XREF="sideTileTransGreaterOp"
+     XREF="sideTileR1TransGreaterOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight1Op"
      materialREF="tileMat"
@@ -1002,7 +1002,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <box name="sideTileR1EdgeGreaterXFace" 
      XREF="tileThicknessOp"
-     YREF="sideTileTransGreaterOp"
+     YREF="sideTileR1TransGreaterOp"
      ZREF="sideTileHeight1Op"
      materialREF="tileMat"
      sensitive="posHit" 
@@ -1011,7 +1011,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <!--       side row 2 -->
 <box name="sideTileR2EdgeLesser" 
-     XREF="sideTileTransLesserOp"
+     XREF="sideTileR2TransLesserOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight2Op"
      materialREF="tileMat"
@@ -1020,7 +1020,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <box name="sideTileR2EdgeLesserXFace" 
      XREF="tileThicknessOp"
-     YREF="sideTileTransLesserOp"
+     YREF="sideTileR2TransLesserOp"
      ZREF="sideTileHeight2Op"
      materialREF="tileMat"
      sensitive="posHit" 
@@ -1045,7 +1045,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 
 <box name="sideTileR2EdgeGreater" 
-     XREF="sideTileTransGreaterOp"
+     XREF="sideTileR2TransGreaterOp"
      YREF="tileThicknessOp"
      ZREF="sideTileHeight2Op"
      materialREF="tileMat"
@@ -1054,7 +1054,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <box name="sideTileR2EdgeGreaterXFace" 
      XREF="tileThicknessOp"
-     YREF="sideTileTransGreaterOp"
+     YREF="sideTileR2TransGreaterOp"
      ZREF="sideTileHeight2Op"
      materialREF="tileMat"
      sensitive="posHit" 
@@ -1086,14 +1086,6 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      -45.5 mm; ribbons go down to -15.67.
      Also (Jan 06) define extra side ribbon piece to go behind bent tiles.
 -->
-<box name="sideRibbon"
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="ribbonsSideZ"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
 <box name="ribbonBent"
      XREF="ribbonWidth"
      YREF="ribbonThickness"
@@ -1109,7 +1101,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      for.  In some cases two volumes will be defined which differ
      only by a rotation.
 -->
-
+   <!--  comment out ribbon stuff for now TEMP
 <box name="xRibbonSideVert0" 
      XREF="ribbonWidth"
      YREF="ribbonThickness"
@@ -1173,6 +1165,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
+-->
 
 <!-- Transverse bits in Y-measuring ribbons are all congruent. X-measuring
      ribbons have this kind as well as a longer transverse piece under
@@ -1180,6 +1173,8 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      That is, ribbon width is in X-dimension, length in y, thickness in Z 
      ribbonSideTrans0 is the special X-only one; ribbonSideTrans is the
      standard kind used in all side ribbons. -->
+
+   <!--  comment out ribbon stuff for now TEMP
 <box name="xRibbonSideTrans0" 
      XREF="ribbonWidth"
      YREF="ribbonSideTrans0_l"
@@ -1203,7 +1198,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
-
+-->
 
 <!-- Make rows for faces 2 & 3) with lesser trans. dimension first.
      Side 2 rotated +90 about Z is isomorphic to side 3, but we don't
@@ -1505,41 +1500,6 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 </stackY>
 
 <!-- Each row will be positioned independently in flightSection.  Ugh -->
-
-<!-- Make envelope for side of ribbons.  Has X as long dimension
-     so will contain ribbons measuring X.  Can rotate for Y-ribbons -->
-<box name="xRibbonsEnv"
-     XREF="ribbonsSideWidth"
-     YREF="ribbonThickness"
-     ZREF="ribbonsSideZ"
-     materialREF="vacuumMat"
- />
-
-<!-- Make a composition for one side's worth of ribbons -->
-<composition name="sideRibbons" envelope="xRibbonsEnv" >
-  <posXYZ volume="sideRibbon"
-          XREF="xRibbonOuter_dxn" >
-    <idField name="fRibbon" value="0" />
-    <idField name="fRibbonSegment" value="0" />    
-
-  </posXYZ>
-
-  <posXYZ volume="sideRibbon"
-          XREF="xRibbonInner_dxn" >
-    <idField name="fRibbon" value="1" />
-    <idField name="fRibbonSegment" value="0" />    
-  </posXYZ>
-  <posXYZ volume="sideRibbon"
-          XREF="xRibbonInner_dx" >
-    <idField name="fRibbon" value="2" />
-    <idField name="fRibbonSegment" value="0" />    
-  </posXYZ>
-  <posXYZ volume="sideRibbon"
-          XREF="xRibbonOuter_dx" >
-    <idField name="fRibbon" value="3" />
-    <idField name="fRibbonSegment" value="0" />    
-  </posXYZ>
-</composition>
 
 <!-- Make boxes for ACD supports.  Old scheme treated X- and Y- sides
      differently.  Now (July '03) we follow 3-d model and dovetail

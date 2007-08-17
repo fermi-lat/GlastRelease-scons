@@ -412,7 +412,7 @@
             <minus>
               <refer refTo="NADBlanketSide_dt" />
               <add>
-                <refer refTo="sideTileR0_dt" />
+                <refer refTo="tileSideR0_dt" />
                 <half>
                   <add>
                     <refer refTo="tileThickness" />

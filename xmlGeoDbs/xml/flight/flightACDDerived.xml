@@ -10,7 +10,7 @@
     </uminus>
   </const>
 
-  <const name="sideTileTransLesser">
+  <const name="sideTileR0TransLesser">
     <notes>Transverse  dimension of one edge side tile tile per side: 
            column 4 for -X and +Y side (faces 1 and 4); column 0 for +X 
            side and -Y side (faces 2 and 3).
@@ -18,23 +18,13 @@
     <refer refTo="topTileXEdge_l" />
   </const>
 
-  <const name="sideTileR1TransLesser">
-    <notes>Side rows 1 and 3 are wider </notes>
-    <add>
-      <refer refTo="sideTileTransLesser" />
-      <refer refTo="tileThickness" />
-      <refer refTo="tileThickness" />
-      <refer refTo="sideTileOverlapClearance" />
-    </add>
-  </const>
-
-  <const name="sideTileTransGreater">
+  <const name="sideTileR0TransGreater">
     <notes>Transverse dimension of one edge side tile tile per side: 
            column 0 for -X and +Y side (faces 1 and 4); column 4 for 
            +X side and -Y side (faces 2 and 3).
     </notes>
     <add>
-      <refer refTo="sideTileTransLesser" />
+      <refer refTo="sideTileR0TransLesser" />
       <refer refTo="tileThickness" />
       <refer refTo="dovetailGap" />
     </add>
@@ -120,16 +110,13 @@
     <refer refTo="tileThickness" />
   </const>
 
-  <const name="ACDTotalTransSide" >
+  <const name="ACDTotalR0TransSide" >
     <notes>transverse length of collection of ACD side tiles,
-        e.g those alone -X side of instrument. Could be
-        used for envelope volume with old, simple, pre-May '07 model
-        when it was the dimension of the single tile in the bottom  row.
-        (1 nov 2002).  July '03.  Now compute as sum of tranverse
+        e.g those alone -X side of instrument. Compute as sum of tranverse
         dimensions of tiles in R0, columns 0-5, plus gaps</notes>
     <add>
-      <refer refTo="sideTileTransLesser" />
-      <refer refTo="sideTileTransGreater" />
+      <refer refTo="sideTileR0TransLesser" />
+      <refer refTo="sideTileR0TransGreater" />
       <refer refTo="sideTileTransMid" />
       <refer refTo="sideTileTransMid" />
       <refer refTo="sideTileTransMid" />
@@ -140,26 +127,54 @@
     </add>
   </const>
 
-  <const name="sideTileR3Trans" >
-    <notes>Modeled Row 3 (like Row 1) is extra long since it's further 
-           from center than it should be</notes>
+
+  <const name="ACDTotalR1TransSide" >
+    <notes>transverse length of collection of ACD side tiles,
+        e.g those alone -X side of instrument.
+         Compute as sum of tranverse
+        dimensions of tiles in R1, columns 0-5, plus gaps</notes>
     <add>
-      <refer refTo="ACDTotalTransSide" />
-      <refer refTo="tileThickness" />
-      <refer refTo="tileThickness" />
-      <refer refTo="sideTileOverlapClearance" />
+      <refer refTo="sideTileR1TransLesser" />
+      <refer refTo="sideTileR1TransGreater" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <mul>
+        <const value="4" uType="count" />
+        <refer refTo="sideHorizontalGap" />
+      </mul>
     </add>
   </const>
 
-<!-- Scaled version of above for operating temp. -->
-  <const name="ACDTotalTransSideOp">
+  <const name="ACDTotalR2TransSide" >
+    <notes>transverse length of collection of ACD side tiles,
+        e.g those alone -X side of instrument.
+         Compute as sum of tranverse
+        dimensions of tiles in R1, columns 0-5, plus gaps</notes>
+    <add>
+      <refer refTo="sideTileR2TransLesser" />
+      <refer refTo="sideTileR2TransGreater" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <mul>
+        <const value="4" uType="count" />
+        <refer refTo="sideHorizontalGap" />
+      </mul>
+    </add>
+  </const>
+
+
+<!-- Scaled versions  for operating temp. -->
+  <const name="ACDTotalR0TransSideOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="ACDTotalTransSide" />
+      <refer refTo="ACDTotalR0TransSide" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
+
 
   <const name="sideTileR3TransOp">
     <notes>Scaled for operating temperature 
@@ -197,26 +212,55 @@
     </notes>
     <minus>
       <mul>
-        <refer refTo="sideTileR0_dt" />
+        <refer refTo="tileSideR0_dt" />
         <const value="2" uType="count" />
       </mul>
       <refer refTo="tileThickness" />
     </minus>
   </const>
 
-  <const name="ACDSideTileFace_dt">
-    <notes>This is invented to go along with simplified model of shingling.
-           Row 0 is at correct displacement.  Row 2 also uses it.  But rows
-          1 and 3 are further out by value of tile thickness. Hence 
-          displacement of box containing sides is greater than sideTileR0_dt
-          by 1/2 tile thickness
-     </notes>
-     <add>
-       <refer refTo="sideTileR0_dt" />
-       <half>
-         <refer refTo="tileThickness" />
-       </half>
-     </add>
+  <const name="tileSideR0_dtn" >
+    <notes>Transvere displacement for tiles on neg X and neg Y face</notes>
+    <uminus>
+      <refer refTo="tileSideR0_dt" />
+    </uminus>
+  </const>
+
+  <const name="tileSideR1_dtn" >
+    <notes>Transvere displacement for tiles on neg X and neg Y face</notes>
+    <uminus>
+      <refer refTo="tileSideR1_dt" />
+    </uminus>
+  </const>
+
+  <const name="tileSideR2_dtn" >
+    <notes>Transvere displacement for tiles on neg X and neg Y face</notes>
+    <uminus>
+      <refer refTo="tileSideR2_dt" />
+    </uminus>
+  </const>
+
+  <const name="tileSideR3_dtn" >
+    <notes>Transvere displacement for tiles on neg X and neg Y face</notes>
+    <uminus>
+      <refer refTo="tileSideR3_dt" />
+    </uminus>
+  </const>
+
+  <const name="sideTileR1Slant_n" >
+    <notes>Slant angle used for side tiles in row 1 in neg faces.
+    </notes>
+    <uminus>
+      <refer refTo="sideTileR1Slant" />
+    </uminus>
+  </const>
+
+  <const name="sideTileR2Slant_n" >
+    <notes>Slant angle used for side tiles in row 2 in neg faces.
+    </notes>
+    <uminus>
+      <refer refTo="sideTileR2Slant" />
+    </uminus>
   </const>
 
   <const name="ACDTopTransverse" >
@@ -352,11 +396,11 @@
   </const>
 
 
-  <const name="sideTileTransLesserOp">
+  <const name="sideTileR0TransLesserOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileTransLesser" />
+      <refer refTo="sideTileR0TransLesser" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
@@ -370,14 +414,42 @@
     </mul>
   </const>
 
-  <const name="sideTileTransGreaterOp">
+  <const name="sideTileR2TransLesserOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileTransGreater" />
+      <refer refTo="sideTileR2TransLesser" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
+
+  <const name="sideTileR0TransGreaterOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR0TransGreater" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+  <const name="sideTileR1TransGreaterOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR1TransGreater" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+  <const name="sideTileR2TransGreaterOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR2TransGreater" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
 
   <const name="sideTileTransMidOp">
     <notes>Scaled for operating temperature 
@@ -412,124 +484,6 @@
     </minus>
   </const>
     -->  
-<!-- X-displacements for screws within top tiles (5 cm from edges) -->
-<!--
-  <const name="topScrewXEdge_dx">
-    <notes>x-displacement for screws on +x side of X-edge tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileXEdge_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewXEdge_dxn">
-    <notes>x-displacement for screws on -x side of X-edge tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewXEdge_dx" />
-    </uminus>
-  </const>
-
-  <const name="topScrewXMid_dx">
-    <notes>x-displacement for screws on +x side of X-mid tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileXMid_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewXMid_dxn">
-    <notes>x-displacement for screws on -x side of X-mid tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewXMid_dx" />
-    </uminus>
-  </const>
-
-  <const name="topScrewXCentral_dx">
-    <notes>x-displacement for screws on +x side of X-central tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileXCentral_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewXCentral_dxn">
-    <notes>x-displacement for screws on -x side of X-edge tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewXCentral_dx" />
-    </uminus>
-  </const>
--->
-<!-- Y-displacements for screws within top tiles (5 cm from edges) -->
-<!--
-  <const name="topScrewYEdge_dy">
-    <notes>y-displacement for screws on +y side of Y-edge tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileYEdge_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewYEdge_dyn">
-    <notes>y-displacement for screws on -y side of Y-edge tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewYEdge_dy" />
-    </uminus>
-  </const>
-
-  <const name="topScrewYMid_dy">
-    <notes>y-displacement for screws on +y side of Y-mid tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileYMid_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewYMid_dyn">
-    <notes>y-displacement for screws on -y side of Y-mid tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewYMid_dy" />
-    </uminus>
-  </const>
-
-  <const name="topScrewYCentral_dy">
-    <notes>y-displacement for screws on +y side of Y-central tiles
-    </notes>
-    <half>
-      <minus>
-        <refer refTo="topTileYCentral_l" />
-        <refer refTo="ACDScrewFromEdge" />
-      </minus>
-    </half>
-  </const>
-
-  <const name="topScrewYCentral_dyn">
-    <notes>y-displacement for screws on -y side of Y-edge tiles
-    </notes>
-    <uminus>
-      <refer refTo="topScrewYCentral_dy" />
-    </uminus>
-  </const>
--->
 <!-- displacements for screws in side tiles (other than bottom row) -->
 
 <!-- Z-displacement for screws in side tiles (5 cm from edges) -->
@@ -653,69 +607,6 @@
     </uminus>
   </const>
  -->
-<!-- For current approximate model, transverse displacement of a
-      side ACD face = transverse displacement of outer edge of row 0. -->
-  <const name="tileSide_dt">
-    <notes>Transverse (perpendicular to plane of face) displacement
-           of side face of ACD</notes>
-    <refer refTo="ACDSideTileFace_dt" />
-  </const>
-
-
-  <const name="tileSide_dtn">
-    <notes>Transverse (perpendicular to plane of face) displacement
-           of side face of ACD for "negative" faces</notes>
-    <uminus>
-      <refer refTo="tileSide_dt" />
-    </uminus>
-  </const>
-
-<!-- Use above displacement for rows 0 and 2. 
-   For 1 and 3 add on tile thickness and the standard gap between
-   overlapped tiles -->
-  <const name="tileSideR1R3_dt">
-    <notes>Transverse (perpendicular to plane of face) displacement
-           of rows 1 and 3 of side face of ACD</notes>
-    <add>
-      <refer refTo="tileSide_dt" />
-      <refer refTo="tileThickness" />
-      <refer refTo="sideTileOverlapClearance" />
-    </add>
-  </const>
-
-  <const name="tileSideR1R3_dtn">
-    <notes>Transverse (perpendicular to plane of face) displacement
-           of rows 1 and 3 of side face of ACD, neg sides.</notes>
-    <uminus>
-      <refer refTo="tileSideR1R3_dt" />
-    </uminus>
-  </const>
-
-  <const name="ACDSideR1R3Dovetail_d" >
-    <notes>Side shift is different for tile rows 1 and 3 since 
-           they have an extra 2*tileThickness length. Extra length
-           tends to shift back towards center. Use this for
-           faces 2 and 3.</notes>
-    <minus>
-      <refer refTo="ACDSideDovetail_d" />
-      <add>
-        <refer refTo="tileThickness" />
-        <half>
-          <refer refTo="sideTileOverlapClearance" />
-        </half>
-      </add>
-    </minus>
-  </const>
-
-  <const name="ACDSideR1R3Dovetail_dn" >
-    <notes>Side shift is different for tile rows 1 and 3 since 
-           they have an extra 2*tileThickness length. Extra length
-           tends to shift back towards center. Use this for
-           faces 1 and 4</notes>
-    <uminus>
-      <refer refTo="ACDSideR1R3Dovetail_d" />
-    </uminus>
-  </const>
 <!-- 
     screws in bottom side tiles come in groups of 4, the vertices of
     squares 5 cm on a side.  The squares are evenly spaced across
@@ -1131,41 +1022,6 @@
       <refer refTo="yRibbonInner_dy" />
     </uminus>
   </const>
-
-   <const name="ribbonsSideWidth">
-     <notes>Width of envelope volume to contain 4 side
-            ribbons</notes>
-     <add>
-       <refer refTo="xRibbonOuter_dx" />
-       <refer refTo="xRibbonOuter_dx" />
-       <refer refTo="ribbonWidth" />
-     </add>
-   </const>
-
-   <const name="ribbonsSideZ">
-     <notes>Height of envelope volume to contain 4 side
-            ribbons. The envelope extends from bottom of 
-            ACDTop volume to back edge of side tiles.
-            But this isn't quite right!  They only go
-            down to a Z of -15.67 mm, whereas tiles go
-            down to -45.5.  Furthermore, the side parts
-            of X-ribbons should go higher:  nearly up to
-            underside of the top tiles.
-     </notes>
-     <minus>
-       <minus>
-         <refer refTo="ACDTop_d" />
-         <refer refTo="ACDTopZHalf" />
-       </minus>
-       <minus>
-         <refer refTo="tileSide_dz" />
-         <half>
-           <refer refTo="ACDSide_z" />
-         </half>
-       </minus>
-     </minus>
-  </const>
-
 <!-- Length of little extra pieces of X-ribbon behind bent tiles -->
 <!--
   <const name="ribbonBentZ">
@@ -1456,7 +1312,7 @@
        but the one at greatest Z-displacement is longer.
        Of the vertical pieces, bottom 3 are identical for X-measuring
        and Y-measuring. -->
-   
+   <!--  comment out ribbon stuff for now TEMP
   <const name="ribbonSideTrans0_l" >
     <notes>Length of horizontal running bit of X-measuring ribbons with
            greatest dz. Compute length as position of more distant end
@@ -1469,11 +1325,12 @@
       </add>
     </minus>
   </const>
-
+-->
 <!-- lengths of vertical pieces of side ribbons.  Call the ones common
      to X- and Y-measuring ribbons ribbonSideVert1, ribbonSideVert2,
      ribbonSideVert3 (behind rows 1,2,3, resp.) . 
  -->
+   <!--  comment out ribbon stuff for now TEMP
   <const name="ribbonSideVert1_l" >
     <notes>Shortish piece of side ribbon behind Row 1</notes>
     <minus>
@@ -1508,10 +1365,11 @@
       </add>
     </minus>
   </const>
-
+-->
   <!-- Vert0 is different for X-measuring and Y-measuring; ribbonBent only
        exists for X-measuring ribbons  -->
   
+   <!--  comment out ribbon stuff for now TEMP
   <const name="yRibbonSideVert0_l" > 
     <notes> Max Z for this piece is = max Z for top Y-ribbons.
             Min Z is ribbonExtend + ribbonThickness below bottom
@@ -1551,7 +1409,7 @@
       </add>
     </minus>
   </const>
-
+-->
 
    <!-- Done defining dimensions.  Still need to define displacements
         for xRibbonSideVert0, yRibbonSideVert0, ribbonSideVert1,
@@ -1564,6 +1422,8 @@
         dy and dz. -->
 
   <!-- Z-displacements first -->
+
+   <!--  comment out ribbon stuff for now TEMP
   <const name="ribbonSideVert0MinZ" >
     <notes>Bottom of side ribbon piece behind row 0 for both X and Y
            ribbons
@@ -1689,8 +1549,11 @@
       </half>
     </minus>
   </const>
+-->
 
   <!-- Now for transverse displacements.  Always define negatives as well -->
+
+   <!--  comment out ribbon stuff for now TEMP
   <const name="ribbonSideVert0_2_dt" >
     <notes> Transverse displacement for vert0 and vert2 bits of side ribbons
     </notes>
@@ -1732,8 +1595,9 @@
       </add>
     </half>
   </const>
-
+-->
   <!-- negatives of all of above -->
+   <!--  comment out ribbon stuff for now TEMP
   <const name="ribbonSideVert0_2_dtn" >
     <notes> Neg. transverse displacement for vert0 and vert2 bits of 
          side ribbons    </notes>
@@ -1763,7 +1627,7 @@
       <refer refTo="ribbonSideTrans_dt" />     
     </uminus>
   </const>
-
+-->
 <!-- End stuff for new, more realistic model of side ribbons -->
  
 

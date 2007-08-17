@@ -65,21 +65,29 @@ Last revised Nov. 2005 (swap col for row; value now 2.6)</prim>
      overlap in direction of slant is greater.  Simulated tiles are vertical
   </prim>
 -->
-  <prim name="sideTileR0_dt" value="839.97">Transverse displacement
-   of top row of side tiles, last revised Nov 2005 from new 3-d model</prim>
+  <prim name="sideTileR3Trans" value="1707.87">Tranvserse dimension of
+      single side tile in bottom row.  From CAD model (Aug 07) </prim>
+
   <prim name="sideTileHeight0" value="366">Height of top row 
 of side tiles.  From 3-d model (6-23-03)</prim>
-  <prim name="sideTileHeight1" value="220.0">Height of 2nd row 
-of side tiles as simulated (no slant.  As of 10 May 2007
- adjacent rows have different transverse displacements and overlap.
-(old value was 199.24)</prim>
-  <prim name="sideTileHeight2" value="175.0">Height of 3rd row 
-of side tiles as simulated (no slant; as of 10 May overlaps between rows. 
-</prim>
-  <prim name="sideTileHeight3" value="154.0">Height of 4th row 
-of side tiles as simulated (no slant). This is approximate  height from
-3-d model of 6-23-03  </prim>
+  <prim name="sideTileHeight1" value="219.0">Height of 2nd row (i.e. row 1) 
+of side tiles from CAD model (Aug 07).  This is the dimension of the tile, 
+not its Z extent.</prim>
 
+  <prim name="sideTileHeight2" value="170.0">Height of 3rd row  (i.e., row 2)
+of side tiles from CAD model.  
+This it the dimension of the tile in local coords, not its
+  Z extent in the global coord. system  (Aug 07)
+</prim>
+  <prim name="sideTileHeight3" value="154.5">Height of 4th row  (i.e., row 3)
+of side tiles from CAD model. (Aug 07) </prim>
+
+  <prim name="sideTileR1Slant" value="3.825658" uType="count">Approx. angle of
+  slant of side row 1, measured by SolidView CAD model. (Aug. 07) 
+</prim>
+  <prim name="sideTileR2Slant" value="3.8266" uType="count">Approx. angle of
+  slant of side row 2, measured by SolidView CAD model. (Aug. 07) 
+</prim>
   <prim name="sideOverlap" value="30.0">Distance side tiles
 extend above topACD tile surface --- used for positioning.
 (7/28/03) 3-d model 6-23-03 essentially agrees with this.
@@ -92,30 +100,51 @@ gap at the corners between adjacent columns of side tiles  (July 03; revised
 according to 3-d model 6-23-03, from old value of 3.0)
 (11/22/05) 2.0 still correct.</prim>
 
-<!-- replace these with definitions in Derived:
-sideTileTransLesser = topTileXEdge_l;
-sideTileTransGreater = sideTileTransLesser + tile thickness + dovetail gap.
-  <prim name="sideTileTransLesser" value="329.67">Transverse 
- dimension of one edge side tile tile per side: column 4 for
- sides 1 and 4; column 0 for sides 2 and 3. From 3-d model (6-23-03)
-top side row dimensions</prim>
-
-  <prim name="sideTileTransGreater" value="342.97">Transverse 
- dimension of one edge side tile tile per side: column 0 for
- sides 1 and 4; column 4 for sides 2 and 3. From 3-d model
-(6-23-03) top side row dimensions</prim>
--->
-<!--
-   Could be derived:  equal to topTileXCentral_l 
-<prim name="sideTileTransMid" value = "332.0">Transverse
-dimension of side tiles in columns 1,2 and 3.  From
-3-d model 6-23-03</prim>
-
--->
-
 <prim name="ACDTileScale" value = "0.9968" uType="none">Scale factor
 used to transform tile dimensions to operating temperature:
 5*10**(-5) by 40 degrees, from Alex.  Added July 2005</prim>
+<!--
+<prim name="ACDTileScale" value = "1.0" uType="none">Unshrunk tiles;
+good for checking for overlaps</prim>
+-->
+<!-- Dimensions across X (or Y) of leftmost and rightmost 
+     tiles in rows 1 and 2.  In reality these tiles are not boxes; they
+     have a trapezoidal face.  Use smallest dimension (bottom edge) to
+     make a box for now 
+-->
+<prim name="sideTileR1TransGreater" value="342.306">Transverse dimension
+  of one edge side tile per side in Row 1, the rightmost one as viewed
+  from outside the LAT: column 0 for -X and +Y faces
+  (faces 1 and 4); column 4 for the others.</prim>
+
+<prim name="sideTileR2TransGreater" value="344.433">Transverse dimension
+  of one edge side tile per side in Row 1, the rightmost one as viewed
+  from outside the LAT: column 0 for -X and +Y faces
+  (faces 1 and 4); column 4 for the others.</prim>
+
+
+<prim name="sideTileR1TransLesser" value="329.316">Transverse dimension
+  of one edge side tile per side in Row 1, the leftmost one as viewed
+  from outside the LAT: column 4 for -X and +Y faces
+  (faces 1 and 4); column 0 for the others.</prim>
+
+<prim name="sideTileR2TransLesser" value="331.894">Transverse dimension
+  of one edge side tile per side in Row 2, the leftmost one as viewed
+  from outside the LAT: column 4 for -X and +Y faces
+  (faces 1 and 4); column 0 for the others.</prim>
+
+<!-- Transverse displacements of side tiles.  Varies by row -->
+<prim name="tileSideR0_dt" value="839.97" >Transverse displacement
+of side tiles in top row from CAD model (Aug 07)</prim>
+
+<prim name="tileSideR1_dt" value="846.567" >Transverse displacement
+of side tiles in row 1 from CAD model (Aug 07)</prim>
+
+<prim name="tileSideR2_dt" value="847.511" >Transverse displacement
+of side tiles in row 2from CAD model (Aug 07)</prim>
+
+<prim name="tileSideR3_dt" value="855.74" >Transverse displacement
+of side tiles in bottom row from CAD model (Aug 07)</prim>
 
 <prim name="ACDHoleRad" value="1.59">Radius of hole in tile.
 Added July 2005 </prim>
@@ -131,24 +160,6 @@ Added July 2005</prim>
 Distance between centers of screws in a screw square (in bottom side
 tiles)
 </prim>
-
-<!--  
-  <prim name="sideTileTransMid" value="332.0">Transverse 
- dimension of side tiles neither in the middle nor central;
-  i.e., tiles in columns 1 or 3.  Revised July '03 to use value
-from 3-d model 6-23-03.</prim>
-
-
-<prim name="sideTileTransCentral" value="332.0">Transverse 
- dimension of central side tiles (column 2)
-  (Nov 1, 2002 remarks:  use to be computed as 308.0. Never has
-  been supplied as fundamental constant.  New computation for ACD side
-  length is ACDSidesGap + tileThickness - dovetailGap = 1690. Subtracting
-  lengths of other tiles and of horiz. gaps ==> 322)
-  July, 03.  Now obtained from 3-d model (6-23-03)
-</prim>
--->
-
 
 
 <!-- support dimensions -->
