@@ -1,44 +1,45 @@
+//##############################################################
+//
+// Job options file for Gleam job to run surface muons source for 10 events and store in rootTestData
 
-//==============================================================
-// Job options file gamma_5_gev_normal.txt
-// Aimed to produce a digis root file of few events.
-// Should be used within a Gleam package.
-//==============================================================
+//$Header$
 
-#include "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/common.txt"
+// start with the basic program defined in Gleam
+#include "$GLEAMROOT/src/basicOptions.txt"
 
-// flux svc
-ApplicationMgr.DLLs   += { "FluxSvc" } ; 
-ApplicationMgr.ExtSvc += { "FluxSvc" } ;
-ApplicationMgr.ExtSvc += { "ParticlePropertySvc" } ;
-FluxSvc.source_lib = { "$(FLUXROOT)/xml/source_library.xml" } ;
-FluxSvc.source_lib += { "$(G4GENERATORROOT)/src/test/test_sources.xml" } ;
+// following, if uncommented, will run the GUI
+//#include "$GLEAMROOT/src/guiOptions.txt"
+//#include "$GLEAMROOT/src/fredOptions.txt"
+
 FluxSvc.source_lib += { "$(ROOTTESTDATAROOT)/data/gamma_5_gev_normal/source_library.xml" } ;
-ApplicationMgr.Runable = "FluxSvc" ;
-
-// generation
-ApplicationMgr.ExtSvc += { "GlastRandomSvc" } ;
-//Simulation.Members += { "FluxAlg", "G4Generator", "ExposureAlg" } ;
-Simulation.Members += { "FluxAlg", "G4Generator" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
-G4Generator.defaultCutValue = 0.7 ; 
-G4Generator.defaultTkrCutValue = 0.1 ;
-G4Generator.defaultCalCutValue = 0.7 ;
 
-// digitization
-ApplicationMgr.Dlls += {"CalXtalResponse" } ;
-ApplicationMgr.ExtSvc += {"CalCalibSvc" } ;
-CalCalibSvc.DefaultFlavor  = "ideal" ;
-ApplicationMgr.DLLs += { "TkrDigi", "CalDigi", "AcdDigi" } ;
-Simulation.Members += { "TkrDigiAlg", "CalDigiAlg", "AcdDigiAlg" } ;
+//// set root output from merit with following
+MeritAlg.EventTreeName="MeritTuple";
+//DC: obsolete ?
+//MeritAlg.PointingTreeName="Exposure";
 
-// reconstruction first pass
-ApplicationMgr.DLLs += { "CalRecon", "TkrRecon" } ;
-ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg", "TkrReconAlg" } ;
+TriggerAlg.mask = 0; // accept events even if they don't trigger
 
-// output
-Reconstruction.Members += { "digiRootWriterAlg", "reconRootWriterAlg" } ;
-digiRootWriterAlg.digiRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/digi.root" ;
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/recon.root" ;
+mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/mc.root";
+relationRootWriterAlg.rootFile   = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/relations.root";
+digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/digi.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/merit.root";
+RootTupleSvc.rejectIfBad         = false;
 
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+CalClustersAlg.OutputLevel=4; // too much info
+
+// Number of events to process
+MeritAlg.generated = 10; // for estimation of Aeff
+ApplicationMgr.EvtMax = 10;
+
+MessageSvc.OutputLevel      =3;
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
