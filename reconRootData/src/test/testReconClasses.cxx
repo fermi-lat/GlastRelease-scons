@@ -12,17 +12,6 @@
 #include <string>
 #include "facilities/Util.h"
 
-#if ROOT_VERSION(5,14,0) <= ROOT_VERSION_CODE
-#include "TStreamerInfo.h"
-#include "TStreamerElement.h"
-#include <vector>
-void FixElement(TStreamerElement *el) {
-   if (el) {
-      el->SetTypeName("vector<double>");
-      el->Update(TClass::GetClass("vector<Double32_t>"),gROOT->GetClass("vector<double>"));
-   }
-}
-#endif
 
 /** @file testReconClasses.cxx
 * @brief This defines a test routine for the Reconstruction ROOT classes.
@@ -36,6 +25,7 @@ void FixElement(TStreamerElement *el) {
 *
 * $Header$
 */
+
 const UInt_t RUN_NUM = 1;
 
 int checkReconEvent(ReconEvent *evt, UInt_t ievent) {
@@ -58,25 +48,8 @@ int read(const char* fileName, int numEvents) {
     
     TFile *f = new TFile(fileName, "READ");
 
-#if ROOT_VERSION(5,14,0) <= ROOT_VERSION_CODE
-    TString root_release = ROOT_RELEASE ;   
-    if ( root_release.CompareTo("5.14/00c")!=0 &&
-         root_release.CompareTo("5.14/00b")!=0 &&
-         root_release.CompareTo("5.14/00a")!=0 &&
-         root_release.CompareTo("5.14/00")!=0 &&
-         f->GetVersion()<51200 )   
-     {
-      cout<<"Root release   : "<<root_release<<endl ;
-      cout<<"File release   : "<<f->GetVersion()<<endl ;
-      cout<<"Sizeof(double) : "<<sizeof(double)<<endl ;
-      TClass *cl = TClass::GetClass("AcdRecon");
-      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowDocaCol"));
-      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol"));
-      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol_down"));
-      FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_energyCol"));
-      cl->GetStreamerInfo(14)->Clear("build");
-     }
-#endif
+    AcdRecon::fixAcdStreamer(f->GetVersion()) ;
+
    
     TObjArray * randomNumbers = (TObjArray*)f->Get("randomNumbers") ;
    

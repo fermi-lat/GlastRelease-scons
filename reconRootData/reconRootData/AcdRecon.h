@@ -259,7 +259,7 @@ public:
     bool checkAcdRecon();   
 
 
-static bool fixAcdStreamer(int version=51000);
+    static bool fixAcdStreamer(int version=51000);
 
 
 private:

@@ -8,7 +8,6 @@ static const Double_t maxDoca = 2000.0;
 
 #if ROOT_VERSION(5,14,0) <=  ROOT_VERSION_CODE
 #include "TStreamerElement.h"
-
 void FixElement(TStreamerElement *el) {
    if (el) {
       el->SetTypeName("vector<double>");
@@ -17,20 +16,33 @@ void FixElement(TStreamerElement *el) {
 }
 #endif
 
-bool AcdRecon::fixAcdStreamer(int version) {
-#if ROOT_VERSION(5,14,0) <=  ROOT_VERSION_CODE
-    if (version<51200) {
-        TClass *cl = TClass::GetClass("AcdRecon");
-        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowDocaCol"));
-        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol"));
-        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_rowActDistCol_down"));
-        FixElement((TStreamerElement*)cl->GetStreamerInfo(14)->GetElements()->FindObject("m_energyCol"));
-        cl->GetStreamerInfo(14)->Clear("build");
-        return (true);
-    }
-#endif
-    return (false);
-}
+bool AcdRecon::fixAcdStreamer(int version)
+ {
+# if ROOT_VERSION(5,14,0) <=  ROOT_VERSION_CODE
+    TString root_release = ROOT_RELEASE ;   
+    if ( root_release.CompareTo("5.14/00c")!=0 &&
+         root_release.CompareTo("5.14/00b")!=0 &&
+         root_release.CompareTo("5.14/00a")!=0 &&
+         root_release.CompareTo("5.14/00")!=0 &&
+         version<51200 )
+     {
+      TClass * cl = TClass::GetClass("AcdRecon") ;
+      if (!cl) { return (false) ; }
+      TStreamerInfo * si = cl->GetStreamerInfo(14) ;
+      if (!si) { return (false) ; }
+      FixElement((TStreamerElement*)si->GetElements()->FindObject("m_rowDocaCol"));
+      FixElement((TStreamerElement*)si->GetElements()->FindObject("m_rowActDistCol"));
+      FixElement((TStreamerElement*)si->GetElements()->FindObject("m_rowActDistCol_down"));
+      FixElement((TStreamerElement*)si->GetElements()->FindObject("m_energyCol"));
+      si->Clear("build") ;
+      cout<<"Root release   : "<<root_release<<endl ;
+      cout<<"File release   : "<<version<<endl ;
+      cout<<"Sizeof(double) : "<<sizeof(double)<<endl ;
+      return (true) ;
+     }
+# endif
+  return (false) ;
+ }
 
 
 
