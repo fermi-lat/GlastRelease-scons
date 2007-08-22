@@ -1094,6 +1094,39 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
+<box name="ribSideToR0"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribSideToR0_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="ribYSideR0"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribYSideR0_z"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="ribYSideToR1"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribYSideToR1_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+
+<box name="ribYSideR1"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribYSideR1_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
 <!-- May '07 Define all the new pieces of vertical ribbons with dimensions
      such that they do not require any 90-degree rotations to be
      correct for the LAT global coordinate system.  Ribbon thickness

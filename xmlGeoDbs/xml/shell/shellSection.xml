@@ -209,6 +209,8 @@
 
 
 <!-- Add in the rest of the grid web and flange (outside the towers) -->
+
+<!--
       <posXYZ volume="LATGridFlangeLong" 
               YREF="LATGridFlange_dt"
               ZREF="NADGridFlange_dz" >
@@ -238,8 +240,9 @@
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="3" />
       </posXYZ>
-
+-->
 <!--  now for big web pieces -->
+<!--
       <posXYZ volume="LATGridWebLong" 
               YREF="LATGridWeb_dt"
               ZREF="NADGridWeb_dz" >
@@ -269,10 +272,12 @@
         <idField name="fLATObjects" valueREF="eLATGrid" />
         <idField name="fGridObjects" value="7" />
       </posXYZ>
-
+-->
 &ACDSides;
 
       <!-- Finally position blanket pieces -->
+
+<!--
       <posXYZ volume="NADBlanketTopTop"
               ZREF="NADBlanketTopTop_dz" >
         <idField name="fLATObjects" valueREF="eLATBlanket" />
@@ -316,7 +321,7 @@
         <idField name="fLATObjects" valueREF="eLATBlanket" />
         <idField name="fBorderCmp" valueREF="eBottom" />
       </posXYZ>
-
+-->
 <!-- LAT electronics in their envelope -->
 <!--
       <posXYZ volume="LATelect"

@@ -82,10 +82,10 @@ This it the dimension of the tile in local coords, not its
   <prim name="sideTileHeight3" value="154.5">Height of 4th row  (i.e., row 3)
 of side tiles from CAD model. (Aug 07) </prim>
 
-  <prim name="sideTileR1Slant" value="3.825658" uType="count">Approx. angle of
+  <prim name="sideTileR1_a" value="3.825658" uType="count">Approx. angle of
   slant of side row 1, measured by SolidView CAD model. (Aug. 07) 
 </prim>
-  <prim name="sideTileR2Slant" value="3.8266" uType="count">Approx. angle of
+  <prim name="sideTileR2_a" value="3.8266" uType="count">Approx. angle of
   slant of side row 2, measured by SolidView CAD model. (Aug. 07) 
 </prim>
   <prim name="sideOverlap" value="30.0">Distance side tiles
@@ -103,10 +103,12 @@ according to 3-d model 6-23-03, from old value of 3.0)
 <prim name="ACDTileScale" value = "0.9968" uType="none">Scale factor
 used to transform tile dimensions to operating temperature:
 5*10**(-5) by 40 degrees, from Alex.  Added July 2005</prim>
+
 <!--
 <prim name="ACDTileScale" value = "1.0" uType="none">Unshrunk tiles;
 good for checking for overlaps</prim>
 -->
+
 <!-- Dimensions across X (or Y) of leftmost and rightmost 
      tiles in rows 1 and 2.  In reality these tiles are not boxes; they
      have a trapezoidal face.  Use smallest dimension (bottom edge) to
@@ -238,6 +240,24 @@ appears to be about 1.5 or 2 mm</prim>
   <prim name="ribbonExtend" value="50.0">Where tiles overlap, distance 
     over which a ribbon has displacement appropriate to near tile even 
     though it is behind outer of the two overlapping tiles.</prim>
+
+  <prim name="ribbonExtendTop" value="45.0">Where top tiles overlap, 
+    distance over which a ribbon has displacement appropriate to near 
+    tile even  though it is behind outer of the two overlapping tiles.
+    (Estimate from CAD model)</prim>
+
+  <prim name="ribbonExtendSide" value="32.0">Where side tiles overlap, 
+    distance over which a ribbon has displacement appropriate to near tile 
+    even though it is behind outer of the two overlapping tiles.
+    (Estimate from CAD model)</prim>
+
+  <prim name="ribbonExtendAngleTop" value="40.0">Where top tiles overlap, 
+    distance over which ribbon angles over from one tile to the other.
+    (Estimate from CAD model)</prim>
+
+  <prim name="ribbonExtendAngleSide" value="36.0">Where side tiles overlap, 
+    distance over which a ribbon angles over from one tile to the other.
+    (Estimate from CAD model)</prim>
 
   <prim name="xRibbonOuter_dx" value="501.8">X displacement of outer
    X-ribbon (contained in YZ plane): ribbon #3 (Nov 05)</prim>
