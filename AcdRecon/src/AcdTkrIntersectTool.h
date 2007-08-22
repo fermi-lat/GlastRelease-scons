@@ -4,7 +4,7 @@
 
 #include "AcdITkrIntersectTool.h"
 #include "AcdIPocaTool.h"
-#include "AcdGeomMap.h"
+#include "AcdUtil/AcdGeomMap.h"
 
 #include "../AcdRecon/AcdReconStruct.h"
 
@@ -59,18 +59,6 @@ class AcdTkrIntersectTool : public AcdITkrIntersectTool,  public AlgTool {
 				       Event::AcdTkrIntersectionCol& intersections,
 				       Event::AcdTkrGapPocaCol& gapPocas);
 
-  // @brief calculate the arclength at which a track exits the tracking volume
-  virtual StatusCode exitsLAT(const Event::TkrTrack& track, bool forward,
-			      AcdRecon::ExitData& data);
-
-  // @brief calculate the arclength at which a ray exits the tracking volume
-  virtual StatusCode exitsLAT(const Point& x, const Vector& v, bool forward,
-			      AcdRecon::ExitData& data);
-
-  // @brief calculate the arclength at which a ray enters the tracking volume
-  virtual StatusCode entersLAT(const Point& x, const Vector& v, bool forward,
-			       AcdRecon::ExitData& data);
-
   // @brief make the TDS object that states where the track left the ACD
   virtual StatusCode makeTkrPoint(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
 				  const Event::TkrTrackParams& params, Event::AcdTkrPoint*& tkrPoint );
@@ -81,6 +69,10 @@ protected:
   virtual StatusCode fallbackToNominal(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
 				       Event::AcdTkrGapPocaCol& gapPocas);  
   
+  virtual StatusCode fillPocaData(const AcdRecon::TrackData& track, const idents::VolumeIdentifier& volId,
+				  const AcdRecon::PocaDataPtrMap& pocaMap, AcdGeomMap& geomMap,
+				  std::list<AcdRecon::PocaData>&, AcdRecon::PocaData*& pocaData);
+
   virtual StatusCode holePoca(const AcdRecon::TrackData& track, const AcdRecon::PocaData& pocaData, const AcdTileDim& tile,
 			      Event::AcdTkrGapPocaCol& gapPocas);  
   
@@ -105,18 +97,6 @@ private:
   IPropagator *    m_G4PropTool; 
   IGlastDetSvc*    m_detSvc; 
   IAcdGeometrySvc* m_acdGeomSvc;
-
-  // Define the fiducial volume of the LAT
-  // FIXME -- this should come for some xml reading service
-  //
-  // top is defined by planes at + 754.6 -> up to stacking of tiles
-  // sides are defined by planes at +-840.14
-  // the bottom of the ACD is at the z=-50 plane
-
-  // Later we add 10 cm to make sure that we catch everything
-  static const double s_top_distance; // = 754.6;     // center of tiles in cols 1 and 3
-  static const double s_side_distance; // = 840.14;   // center of tiles in sides
-  static const double s_bottom_distance; // = -50.; 
  
 } ;
 

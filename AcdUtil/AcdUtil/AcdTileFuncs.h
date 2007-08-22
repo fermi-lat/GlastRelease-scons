@@ -8,7 +8,8 @@
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 
-#include "idents/AcdId.h"
+//#include "idents/AcdId.h"
+#include "AcdUtil/AcdTileDim.h"
 
 namespace AcdTileUtil {
 
@@ -16,9 +17,9 @@ namespace AcdTileUtil {
   void planeErrorProjection(const double& activeX, const double& activeY, const double& covXX, const double& covYY,
 			    double& planeError);
  
-  void tileScrewHoleDoca(const idents::AcdId& tileId, const double& activeX, const double& activeY, 
+  void tileScrewHoleDoca(const AcdTileDim& tile, const double& activeX, const double& activeY, 
 			 const double& covXX, const double& covYY, const double& covXY,
-			 double& doca, double& docaErr, int& iHold );
+			 double& doca, double& docaErr, int& iHole );
  
 }
 

@@ -4,6 +4,7 @@
 #include "GaudiKernel/IToolSvc.h"
 
 #include "src/AcdGeometrySvc.h"
+#include "AcdUtil/AcdFrameUtil.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -41,6 +42,8 @@ AcdGeometrySvc::AcdGeometrySvc(const std::string& name,
                                ISvcLocator* pSvcLocator) 
                               : Service(name, pSvcLocator)
 {   
+
+    AcdFrameUtil::buildRotations();
     clear();
     return; 
 }
@@ -64,8 +67,23 @@ StatusCode AcdGeometrySvc::initialize()
     }
 
     sc = getConstants();
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to get AcdGeometrySvc constants" << endreq;
+        return sc;
+    }
 
     sc = getDetectorListFromGeometry();
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to get AcdGeometrySvc detector list" << endreq;
+        return sc;
+    }
+ 
+    sc = findCornerGaps();
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to find corner gaps in AcdGeometrySvc detector list" << endreq;
+	// this is ok if we have the BeamTest release
+        // return sc
+    }
 
     log << MSG::INFO << "AcdGeometrySvc successfully initialized" << endreq;
     return StatusCode::SUCCESS;
@@ -229,19 +247,14 @@ StatusCode AcdGeometrySvc::getDimensions(
     StatusCode sc = StatusCode::SUCCESS;
     sc = m_glastDetSvc->getShapeByID(volId, &str, &dims);
     if ( sc.isFailure() ) {
-        MsgStream   log( msgSvc(), name() );
+        MsgStream log(msgSvc(), name());
         log << MSG::WARNING << "Failed to retrieve Shape by Id: " 
             << volId.name() << endreq;
         return sc;
     }
     HepGeom::Transform3D transform;
     sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
-    if (sc.isFailure() ) {
-        MsgStream   log( msgSvc(), name() );
-        log << MSG::WARNING << "Failed to get transformation: " 
-            << volId.name() << endreq;
-        return sc;
-    }
+
     HepPoint3D center(0., 0., 0.);
     xT = transform * center;
     return sc;
@@ -269,45 +282,6 @@ StatusCode AcdGeometrySvc::getDetectorDimensions(
 }
 
 
-StatusCode AcdGeometrySvc::getCorners(const std::vector<double> &dim,
-                                const HepPoint3D &center, HepPoint3D *corner) {
-    StatusCode sc = StatusCode::SUCCESS;
-
-    unsigned int iCorner;
-    // Ignore short dimension - only interested in 4 corners
-
-    if ((dim[0] < dim[1]) && (dim[0] < dim[2])) { // X smallest -  X Face
-        for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setX(center.x());
-            corner[iCorner].setY(center.y() +
-                     ( (iCorner < 2) ? -1 : 1) * dim[1]*0.5);
-            corner[iCorner].setZ(center.z() +
-                     ( ((iCorner == 0) || (iCorner==3)) ? -1 : 1) * dim[2]*0.5);
-        }
-
-    } else if ((dim[1] < dim[0]) && (dim[1] < dim[2])) {
-        for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setY(center.y());
-            corner[iCorner].setX(center.x() +
-                     ( (iCorner < 2) ? -1 : 1) * dim[0]*0.5);
-            corner[iCorner].setZ(center.z() +
-                     ( ((iCorner == 0) || (iCorner==3)) ? -1 : 1) * dim[2]*0.5);
-        }
-
-    } else {
-        for(iCorner = 0; iCorner<4; iCorner++) {
-            corner[iCorner].setZ(center.z());
-            corner[iCorner].setX(center.x() +
-                     ( (iCorner < 2) ? -1 : 1) * dim[0]*0.5);
-            corner[iCorner].setY(center.y() +
-                     ( ((iCorner == 0) || (iCorner==3)) ? -1 : 1) * dim[1]*0.5);
-        }
-
-    }
-
-    return sc;
-}
-
 const Ray AcdGeometrySvc::getCornerGapRay(unsigned int index) const {
     if (index > 4) {
         MsgStream  log( msgSvc(), name() );
@@ -328,7 +302,6 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // Shameless hack..we know AcdIds for the corners:
     // 100, 200, 204, 300, 304, 404, 400, 104
 
-
     // Form the AcdIds of interest
     idents::AcdId id100(0, 1, 0, 0);
     idents::AcdId id104(0, 1, 0, 4);
@@ -343,29 +316,29 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     idents::AcdId id040(0, 0, 4, 0);
     idents::AcdId id430(0, 4, 3, 0);
 
-    // Now get the VolumeIds
-    idents::VolumeIdentifier volId100 = id100.volId();
-    idents::VolumeIdentifier volId104 = id104.volId();
-    idents::VolumeIdentifier volId200 = id200.volId();
-    idents::VolumeIdentifier volId204 = id204.volId();
-    idents::VolumeIdentifier volId300 = id300.volId();
-    idents::VolumeIdentifier volId304 = id304.volId();
-    idents::VolumeIdentifier volId400 = id400.volId();
-    idents::VolumeIdentifier volId404 = id404.volId();
-    idents::VolumeIdentifier volId040 = id040.volId();
-    idents::VolumeIdentifier volId430 = id430.volId();
+    // Now get the TileDims
+    const AcdTileDim* tile100 = m_geomMap.getTile(id100,*this);
+    const AcdTileDim* tile104 = m_geomMap.getTile(id104,*this);
+    const AcdTileDim* tile200 = m_geomMap.getTile(id200,*this);
+    const AcdTileDim* tile204 = m_geomMap.getTile(id204,*this);
+    const AcdTileDim* tile300 = m_geomMap.getTile(id300,*this);
+    const AcdTileDim* tile304 = m_geomMap.getTile(id304,*this);
+    const AcdTileDim* tile400 = m_geomMap.getTile(id400,*this);
+    const AcdTileDim* tile404 = m_geomMap.getTile(id404,*this);
+    const AcdTileDim* tile040 = m_geomMap.getTile(id040,*this);
+    const AcdTileDim* tile430 = m_geomMap.getTile(id430,*this);
 
-   // Check to see if these volIds exist in the geometry
-    if (!findDetector(volId100)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId104)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId200)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId204)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId300)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId304)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId400)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId404)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId040)) sc = StatusCode::FAILURE;
-    if (!findDetector(volId430)) sc = StatusCode::FAILURE;
+    // Check to see if these volIds exist in the geometry
+    if ( tile100 == 0 )  sc = StatusCode::FAILURE;
+    if ( tile104 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile200 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile204 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile300 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile304 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile400 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile404 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile040 == 0 ) sc = StatusCode::FAILURE;
+    if ( tile430 == 0 ) sc = StatusCode::FAILURE;
 
     // If we fail to find any of the tiles, we skip calculation of the corner
     // gap variable
@@ -377,73 +350,34 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
 
     // Determine the extent of all corner gap rays in Z, using the a top corner
     // tile and a bottom side row tile.
-    std::vector<double> dim040, dim430;
-    HepPoint3D centerZ, cornerZ[4];
-    // Using new function that automatically handles flipping X and Y for
-    // Faces 1 and 3
-    sc = getDetectorDimensions(volId040, dim040, centerZ);
-    getCorners(dim040, centerZ, cornerZ);
-    double zMax = cornerZ[0].z();
-    sc = getDetectorDimensions(volId430, dim430, centerZ);
-    getCorners(dim430, centerZ, cornerZ);
-    double zMin = cornerZ[0].z();
+    double zMax = tile040->tileCenter().z();
+    double zMin = tile430->corner()[0].z();    
 
-    // Construct Ray for 1st Corner Gap
-    std::vector<double> dim100, dim200;
-    HepPoint3D center100, center200;
-    HepPoint3D corner100[4], corner200[4];
-    sc = getDetectorDimensions(volId100, dim100, center100);
-    getCorners(dim100, center100, corner100);
-    // use corner with minX and maxZ which should be index 1
+    // Always use the top corner.  In local frame this is either -x,+y[1] or +x,+y[2]
 
-    sc = getDetectorDimensions(volId200, dim200, center200);
-    getCorners(dim200, center200, corner200);
-    // use corner with minX and maxZ which should be index 1
-    // Construct the Ray with the x and y position in the middle of the gap
-    double xDiff = fabs(corner200[1].x() - corner100[1].x())*0.5;
-    double yDiff = fabs(corner200[1].y() - corner100[1].y())*0.5;
+    // Construct Ray for 1st Corner Gap, -x,-y corner
+    // Use corners:  tile 100 +x,  tile 200 -x
+    HepPoint3D corner0ref;
 
-    // Create the start and end of the ray using the position half-way between
-    // the two corners of the adjacent tiles
-    double xMin = corner100[1].x();
-    double yMin = corner100[1].y();
-    if (corner200[1].x() < corner100[1].x()) xMin = corner200[1].x();
-    if (corner200[1].y() < corner100[1].y()) yMin = corner200[1].y();
-    m_cornerGapStartPoint[0] = Point(xMin + xDiff, yMin + yDiff, zMin);
-    m_cornerGapEndPoint[0] = Point(xMin + xDiff, yMin + yDiff, zMax);
+    AcdFrameUtil::getMidpoint(tile100->corner()[2],tile200->corner()[1],corner0ref);
+
+    m_cornerGapStartPoint[0] = Point(corner0ref.x(),corner0ref.y(),zMin);
+    m_cornerGapEndPoint[0] = Point(corner0ref.x(),corner0ref.y(),zMax);
     m_cornerGapVec[0] = Vector(m_cornerGapEndPoint[0] - m_cornerGapStartPoint[0]);
-    //m_cornerGapRay[0] = Ray(m_cornerGapStartPoint[0], cornerGapVec[0]);
+
     log << MSG::DEBUG << "Corner1Ray:  Pos:(" << m_cornerGapStartPoint[0].x() 
         << ", " << m_cornerGapStartPoint[0].y() << ", " 
         << m_cornerGapStartPoint[0].z() << ") Vec:( "
         << m_cornerGapVec[0].x() << ", " << m_cornerGapVec[0].y() << ", " 
         << m_cornerGapVec[0].z() << ") mag: " << m_cornerGapVec[0].mag() << endreq;
 
-    // Construct Ray for 2nd Corner Gap
-    std::vector<double> dim300, dim204;
-    HepPoint3D center300, center204;
-    HepPoint3D corner300[4], corner204[4];
-    // Using new function that automatically handles flipping X and Y for
-    // Faces 1 and 3
-    sc = getDetectorDimensions(volId300, dim300, center300);
-    getCorners(dim300, center300, corner300);
-    // use corner with minY and maxZ which should be index 1
+    // Construct Ray for 2nd Corner Gap, -x, +y corner
+    // Use corners:  tile 204 +x,  tile 300 -x
+    HepPoint3D corner1ref;
+    AcdFrameUtil::getMidpoint(tile204->corner()[2],tile300->corner()[1],corner1ref);
 
-    sc = getDetectorDimensions(volId204, dim204, center204);
-    getCorners(dim204, center204, corner204);
-    // use corner with maxX and maxZ which should be index 2
-    // Construct the Ray with the x and y position in the middle of the gap
-    xDiff = fabs(corner204[2].x() - corner300[1].x())*0.5;
-    yDiff = fabs(corner204[2].y() - corner300[1].y())*0.5;
-
-    // Create the start and end of the ray using the position half-way between
-    // the two corners of the adjacent tiles
-    xMin = corner300[1].x();
-    yMin = corner300[1].y();
-    if (corner204[2].x() < corner300[1].x()) xMin = corner204[2].x();
-    if (corner204[2].y() < corner300[1].y()) yMin = corner204[2].y();
-    m_cornerGapStartPoint[1] = Point(xMin + xDiff, yMin + yDiff, zMin);
-    m_cornerGapEndPoint[1] = Point(xMin + xDiff, yMin + yDiff, zMax);
+    m_cornerGapStartPoint[1] = Point(corner1ref.x(),corner1ref.y(),zMin);
+    m_cornerGapEndPoint[1] = Point(corner1ref.x(),corner1ref.y(),zMax);
     m_cornerGapVec[1] = Vector(m_cornerGapEndPoint[1] - m_cornerGapStartPoint[1]);
     log << MSG::DEBUG << "Corner2Ray:  Pos:(" << m_cornerGapStartPoint[1].x() 
         << ", " << m_cornerGapStartPoint[1].y() << ", " 
@@ -453,29 +387,13 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
         << m_cornerGapVec[1].mag() << endreq;
 
 
-   // Construct Ray for 3rd Corner Gap
-    std::vector<double> dim404, dim304;
-    HepPoint3D center404, center304;
-    HepPoint3D corner404[4], corner304[4];
-    sc = getDetectorDimensions(volId304, dim304, center304);
-    getCorners(dim304, center304, corner304);
-    // use corner with maxY and maxZ which should be index 2
+    // Construct Ray for 3rd Corner Gap. +x, +y
+    // Use corners:  tile 304 +x,  tile 404 -x
+    HepPoint3D corner2ref;
+    AcdFrameUtil::getMidpoint(tile304->corner()[2],tile404->corner()[1],corner2ref);
 
-    sc = getDetectorDimensions(volId404, dim404, center404);
-    getCorners(dim404, center404, corner404);
-    // use corner with maxX and maxZ which should be index 2
-    // Construct the Ray with the x and y position in the middle of the gap
-    xDiff = fabs(corner304[2].x() - corner404[2].x())*0.5;
-    yDiff = fabs(corner304[2].y() - corner404[2].y())*0.5;
-
-    // Create the start and end of the ray using the position half-way between
-    // the two corners of the adjacent tiles
-    xMin = corner404[2].x();
-    yMin = corner404[2].y();
-    if (corner304[2].x() < corner404[2].x()) xMin = corner304[2].x();
-    if (corner304[2].y() < corner404[2].y()) yMin = corner304[2].y();
-    m_cornerGapStartPoint[2] = Point(xMin + xDiff, yMin + yDiff, zMin);
-    m_cornerGapEndPoint[2] = Point(xMin + xDiff, yMin + yDiff, zMax);
+    m_cornerGapStartPoint[2] = Point(corner2ref.x(),corner2ref.y(),zMin);
+    m_cornerGapEndPoint[2] = Point(corner2ref.x(),corner2ref.y(),zMax);
     m_cornerGapVec[2] = Vector(m_cornerGapEndPoint[2] - m_cornerGapStartPoint[2]);
     log << MSG::DEBUG << "Corner3Ray:  Pos:(" << m_cornerGapStartPoint[2].x() 
         << ", " << m_cornerGapStartPoint[2].y() << ", " 
@@ -485,36 +403,13 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
         << m_cornerGapVec[2].mag() << endreq;
 
 
-   // Construct Ray for 4th Corner Gap
-    std::vector<double> dim104, dim400;
-    HepPoint3D center104, center400;
-    HepPoint3D corner104[4], corner400[4];
+    // Construct Ray for 4th Corner Gap, +x. -y
+    // Use corners:  tile 400 -x,  tile 104 +x
+    HepPoint3D corner3ref;
+    AcdFrameUtil::getMidpoint(tile400->corner()[2],tile104->corner()[1],corner3ref);
 
-    // Using new AcdGeometrySvc version to get dimensions
-    sc = getDetectorDimensions(volId104, dim104, center104);
-    // The corners are returned in order (-,-), (-,+), (+,+), (+,-)
-    // where third dimension is the one we ignore, since it is associated with
-    // tile thickness.
-    getCorners(dim104, center104, corner104);
-    // use corner with max Y and max Z, which should be index 2
-
-    sc = getDetectorDimensions(volId400, dim400, center400);
-    getCorners(dim400, center400, corner400);
-    // Use corner with min X and max Z which should be index 1
-
-    // Construct the Ray with the x and y position in the middle of the gap
-    xDiff = fabs(corner104[2].x() - corner400[1].x())*0.5;
-    yDiff = fabs(corner104[2].y() - corner400[1].y())*0.5;
-
-    // Create the start and end of the ray using the position half-way between
-    // the two corners of the adjacent tiles
-    xMin = corner104[2].x();
-    yMin = corner104[2].y();
-    if (corner400[1].x() < corner104[2].x()) xMin = corner400[1].x();
-    if (corner400[1].y() < corner104[2].y()) yMin = corner400[1].y();
-    m_cornerGapStartPoint[3] = Point(xMin + xDiff, yMin + yDiff, zMin);
-    m_cornerGapEndPoint[3] = Point(xMin + xDiff, yMin + yDiff, zMax);
-
+    m_cornerGapStartPoint[3] = Point(corner3ref.x(),corner3ref.y(),zMin);
+    m_cornerGapEndPoint[3] = Point(corner3ref.x(),corner3ref.y(),zMax);
     m_cornerGapVec[3] = Vector(m_cornerGapEndPoint[3] - m_cornerGapStartPoint[3]);
     log << MSG::DEBUG << "Corner4Ray:  Pos:(" << m_cornerGapStartPoint[3].x() 
         << ", " << m_cornerGapStartPoint[3].y() << ", " 
@@ -713,7 +608,7 @@ bool AcdGeometrySvc::fillRibbonTransforms(const idents::AcdId& id,
     } // end face for
 
 
-  return true;
+  return retVal;
 }
 
 double AcdGeometrySvc::ribbonHalfWidth() const 
@@ -725,38 +620,76 @@ double AcdGeometrySvc::ribbonHalfWidth() const
 
 /// Given an AcdId, provide the tile size, center and corners
 bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
-				  int& face,
+				  HepTransform3D& transformToLocal,
 				  std::vector<double>& dim, 
 				  HepPoint3D& center,
 				  HepPoint3D* corner)
 {
-  idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
-  idents::VolumeIdentifier volId = ncid.volId(iVol==1);
-  StatusCode sc = getDetectorDimensions(volId,dim,center);
-  face = volId[1];
-  if (sc.isFailure() ) {
-    //log << MSG::WARNING << "Failed to get transformation" << endreq;
-    return false;
-  } 
-  sc = getCorners(dim,center,corner);
-  if (sc.isFailure() ) {
-    //log << MSG::WARNING << "Failed to get transformation" << endreq;
-    return false;
-  } 
-  return true;
-}
 
-/// Given an AcdId, provide transform to tile frame
-bool AcdGeometrySvc::fillTileTransform(const idents::AcdId& id, int iVol,
-				       HepTransform3D& transform)
-{
+  MsgStream  log( msgSvc(), name() );
+
+  // Build the VolumeIdentifier for this tile section
   idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
   idents::VolumeIdentifier volId = ncid.volId(iVol==1);
-  StatusCode sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
-  if (sc.isFailure() ) {
-    //log << MSG::WARNING << "Failed to get trasnformation" << endreq;
+
+  // Get the reference frame enum
+  AcdFrameUtil::AcdReferenceFrame frameId = getReferenceFrame(volId);
+  if ( frameId == AcdFrameUtil::FRAME_NONE ) {
+    log << MSG::WARNING << "Failed to retrieve Frame by Id: " 
+	<< volId.name() << endreq;
+    return false;
+  }
+
+  // dimensions in global frame
+  std::vector<double> globalDim; 
+  std::string str;
+
+  // Now get the shape.
+  // Note that this is expressed in the "GEANT" frame, 
+  // which has only minimal rotations about X or Y axis for the side tiles
+  StatusCode sc = m_glastDetSvc->getShapeByID(volId, &str, &globalDim);
+  if ( sc.isFailure() ) {        
+    log << MSG::WARNING << "Failed to retrieve Shape by Id: " 
+	<< volId.name() << endreq;
     return false;
   } 
+  
+  // Make the dimension vector in the local frame;
+  AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
+
+  // Get the transform from GEANT frame to the GLOBAL frame.  
+  // Note that this includes the translation and is expressed in the global frame   
+  HepGeom::Transform3D geantToGlobal;
+  sc = m_glastDetSvc->getTransform3DByID(volId, &geantToGlobal);
+  if (sc.isFailure() ) {
+    log << MSG::WARNING << "Failed to get transformation: " 
+	<< volId.name() << endreq;
+    return false;
+  }
+
+  // Find the center of the tile, 
+  HepPoint3D origin;
+  center = geantToGlobal * origin;
+
+  HepGeom::Transform3D globalToGeant = geantToGlobal.inverse();
+
+  // Get the major rotations that flip axes around and all
+  const HepTransform3D& rotationToLocal = AcdFrameUtil::getRotationToLocal(frameId);
+  const HepTransform3D& rotationToGeant = AcdFrameUtil::getRotationToGeant(frameId);
+
+  transformToLocal = rotationToLocal * globalToGeant;
+  HepGeom::Transform3D transformToGlobal =  geantToGlobal * rotationToGeant;
+
+  HepGeom::Transform3D check = transformToLocal * transformToGlobal;
+
+  // Make the half-vectors (center to edge of tile)
+  const HepVector3D xVectorLocal(dim[0]/2.,0.,0.);
+  const HepVector3D yVectorLocal(0.,dim[1]/2.,0.);
+  const HepVector3D xVectorGlobal = transformToGlobal* xVectorLocal;
+  const HepVector3D yVectorGlobal = transformToGlobal* yVectorLocal;
+  
+  AcdFrameUtil::getCornersSquare(center,xVectorGlobal,yVectorGlobal,corner);
+
   return true;
 }
 
@@ -796,9 +729,8 @@ bool AcdGeometrySvc::fillTileSharedEdgeData(const idents::AcdId& id,
   return true;
 }
 
-IAcdGeometrySvc::AcdReferenceFrame 
-AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier 
-                                  &volId) {
+AcdFrameUtil::AcdReferenceFrame 
+AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) {
 
     using idents::VolumeIdentifier;
     IGlastDetSvc::NamedId nid = m_glastDetSvc->getNamedId(volId);
@@ -807,39 +739,39 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier
     unsigned face;
     bool tile;
 
-    if (!findFieldVal(nid, "fLATObjects", val)) return FRAME_NONE;
-    if (val != m_eLATACD) return FRAME_NONE;
-    if (!findFieldVal(nid, "fACDFace", face)) return FRAME_NONE;
-    if (!findFieldVal(nid, "fACDCmp", val)) return FRAME_NONE;
+    if (!findFieldVal(nid, "fLATObjects", val)) return AcdFrameUtil::FRAME_NONE;
+    if (val != m_eLATACD) return AcdFrameUtil::FRAME_NONE;
+    if (!findFieldVal(nid, "fACDFace", face)) return AcdFrameUtil::FRAME_NONE;
+    if (!findFieldVal(nid, "fACDCmp", val)) return AcdFrameUtil::FRAME_NONE;
     tile = (val == m_eACDTile);
 
     if (tile) {  // simple except for bent pieces
-        if (face ==  m_eACDXNegFace) return FRAME_MINUSX;
-        else if (face == m_eACDYNegFace) return FRAME_MINUSY;
-        else if (face == m_eACDXPosFace) return FRAME_PLUSX;
-        else if (face ==  m_eACDYPosFace) return FRAME_PLUSY;
+        if (face ==  m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;
+        else if (face == m_eACDYNegFace) return AcdFrameUtil::FRAME_MINUSY;
+        else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX;
+        else if (face ==  m_eACDYPosFace) return AcdFrameUtil::FRAME_PLUSY;
         else if (face == m_eACDTopFace)            {
-            if (!findFieldVal(nid, "fTileSeg", val)) return FRAME_NONE;
-            if (val == 0) return FRAME_TOP;   // main tile piece
-            if (!findFieldVal(nid, "fRow", val)) return FRAME_NONE;
-            if (val == 0) return FRAME_MINUSY;
-            else if (val == 4) return FRAME_PLUSY_YDWN;
-            else return FRAME_NONE;
+            if (!findFieldVal(nid, "fTileSeg", val)) return AcdFrameUtil::FRAME_NONE;
+            if (val == 0) return AcdFrameUtil::FRAME_TOP;   // main tile piece
+            if (!findFieldVal(nid, "fRow", val)) return AcdFrameUtil::FRAME_NONE;
+            if (val == 0) return AcdFrameUtil::FRAME_MINUSY;
+            else if (val == 4) return AcdFrameUtil::FRAME_PLUSY_YDWN;
+            else return AcdFrameUtil::FRAME_NONE;
         }
-        else return FRAME_NONE;
+        else return AcdFrameUtil::FRAME_NONE;
     }
-    else if (val != m_eACDRibbon) return FRAME_NONE;
+    else if (val != m_eACDRibbon) return AcdFrameUtil::FRAME_NONE;
   
     // Ribbons...eek!
-    if (!findFieldVal(nid, "fMeasure", val)) return FRAME_NONE;
+    if (!findFieldVal(nid, "fMeasure", val)) return AcdFrameUtil::FRAME_NONE;
     unsigned ribbon, segNum;
-    if (!findFieldVal(nid, "fRibbon", ribbon)) return FRAME_NONE;
-    if (!findFieldVal(nid, "fRibbonSegment", segNum)) return FRAME_NONE;
+    if (!findFieldVal(nid, "fRibbon", ribbon)) return AcdFrameUtil::FRAME_NONE;
+    if (!findFieldVal(nid, "fRibbonSegment", segNum)) return AcdFrameUtil::FRAME_NONE;
 
     bool increasing;
     std::vector<double> dims;
     HepPoint3D cm;
-    if (getDetectorDimensions(volId, dims, cm).isFailure()) return FRAME_NONE;
+    if (getDetectorDimensions(volId, dims, cm).isFailure()) return AcdFrameUtil::FRAME_NONE;
 
     //    HepGeom::Transform3D transform;
     //    m_glastDetSvc->getTransform3DByID(volId, &transform);
@@ -853,35 +785,35 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier
         measY = false;
         if (face == m_eACDTopFace) {
           //            if (dims[2] <= dims[1]) return FRAME_XMEAS;
-            if (dims[2] <= dims[1]) return FRAME_XMEAS;
+            if (dims[2] <= dims[1]) return AcdFrameUtil::FRAME_XMEAS;
             increasing = true;
         }
         else if (face == m_eACDYNegFace) {
           //  if (dims[2] >= dims[1]) return FRAME_MINUSY;  // vert
-          if (dims[2] >= dims[1]) return FRAME_MINUSY;  // it's vertical 
+          if (dims[2] >= dims[1]) return AcdFrameUtil::FRAME_MINUSY;  // it's vertical 
             increasing = true;
         }
         else if (face == m_eACDYPosFace) {
-            if (dims[2] >= dims[1]) return FRAME_PLUSY_YDWN; // it's vertical
+            if (dims[2] >= dims[1]) return AcdFrameUtil::FRAME_PLUSY_YDWN; // it's vertical
             increasing = false;
         }
-        else return FRAME_NONE;
+        else return AcdFrameUtil::FRAME_NONE;
     }
     else if (val = m_eMeasureY) {  // width is Y dimension
 
         // Y-ribbons go straight across top
-        if (face == m_eACDTopFace) return FRAME_YMEAS; 
+        if (face == m_eACDTopFace) return AcdFrameUtil::FRAME_YMEAS; 
         else if (face == m_eACDXNegFace) {
-            if (dims[2] >= dims[0]) return FRAME_MINUSX;  // it's vertical 
+            if (dims[2] >= dims[0]) return AcdFrameUtil::FRAME_MINUSX;  // it's vertical 
             increasing = true;
         }
         //            break;
         else if (face == m_eACDXPosFace) {
-            if (dims[2] >= dims[0]) return FRAME_PLUSX_YDWN; // it's vertical
+            if (dims[2] >= dims[0]) return AcdFrameUtil::FRAME_PLUSX_YDWN; // it's vertical
             increasing = false;
         }
         //            break;
-        else return FRAME_NONE;
+        else return AcdFrameUtil::FRAME_NONE;
     }
     // deal with short guys.
     std::vector<VolumeIdentifier> segs;
@@ -890,33 +822,33 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier
                                        increasing);
     VolIdIter ourIt = std::find(segs.begin(), segs.end(), volId);
     // If our seg wasn't found, give up
-    if (ourIt == segs.end())  return FRAME_NONE;
+    if (ourIt == segs.end())  return AcdFrameUtil::FRAME_NONE;
     // Our seg really shouldn't be first or last
     if ((ourIt == segs.begin()) || ((ourIt + 1) == segs.end()) )
-        return FRAME_NONE; 
+        return AcdFrameUtil::FRAME_NONE; 
 
     VolIdIter before = ourIt - 1;
     VolIdIter after = ourIt + 1;
 
     HepPoint3D xTbefore, xTafter;
-    if (getDimensions(*before, dims, xTbefore).isFailure()) return FRAME_NONE;
-    if (getDimensions(*after, dims, xTafter).isFailure()) return FRAME_NONE;
+    if (getDimensions(*before, dims, xTbefore).isFailure()) return AcdFrameUtil::FRAME_NONE;
+    if (getDimensions(*after, dims, xTafter).isFailure()) return AcdFrameUtil::FRAME_NONE;
 
     // Depending on face, compare x, y or z dimensions of cm
     // to see if we're headed forwards or backward
     // Y-measuring, side
     if ((face ==  m_eACDXNegFace) || (face ==  m_eACDXPosFace)) {
-        if (xTbefore.x() <= xTafter.x()) return FRAME_YMEAS;
-        else return FRAME_YMEAS_ZROT180;
+        if (xTbefore.x() <= xTafter.x()) return AcdFrameUtil::FRAME_YMEAS;
+        else return AcdFrameUtil::FRAME_YMEAS_ZROT180;
     }
 
     // X-measuring, side
     else if ((face ==  m_eACDYNegFace) || (face == m_eACDYPosFace)) {
-        if (xTbefore.y() <= xTafter.y()) return FRAME_XMEAS;
-        else return FRAME_XMEAS_ZROT180;
+        if (xTbefore.y() <= xTafter.y()) return AcdFrameUtil::FRAME_XMEAS;
+        else return AcdFrameUtil::FRAME_XMEAS_ZROT180;
     }
     else {   // must be top
-        if (xTbefore.z() <= xTafter.z()) return FRAME_MINUSY;
-        else return FRAME_PLUSY_YDWN;
+        if (xTbefore.z() <= xTafter.z()) return AcdFrameUtil::FRAME_MINUSY;
+        else return AcdFrameUtil::FRAME_PLUSY_YDWN;
     }
 }

@@ -15,7 +15,7 @@
 #include "AcdIPha2MipTool.h"
 #include "AcdIPocaTool.h"
 
-#include "AcdGeomMap.h"
+#include "AcdUtil/AcdGeomMap.h"
 
 #include "../AcdRecon/AcdReconStruct.h"
 
@@ -64,6 +64,7 @@ typedef HepGeom::Vector3D<double> HepVector3D;
  */
 class AcdReconAlg : public Algorithm
 {
+
   public:
       AcdReconAlg(const std::string& name, ISvcLocator* pSvcLocator); 
 
@@ -168,6 +169,7 @@ class AcdReconAlg : public Algorithm
       /// variables to store instrument parameters
       static double s_vetoThresholdMeV;
       static unsigned int s_numSideRows;
+      static AcdRecon::AcdVolume s_acdVolume;
 
       // record of the tile with the minimum Distance of Closest Approach
       idents::AcdId m_minDocaId, m_ribbon_act_dist_id, m_maxActDistId,  
@@ -207,7 +209,7 @@ class AcdReconAlg : public Algorithm
       AcdRecon::AcdHitMap m_hitMap;
 
       /// map to keep track to the tile and ribbon geoms
-      AcdGeomMap m_geomMap;
+      AcdGeomMap* m_geomMap;
 
 };
 

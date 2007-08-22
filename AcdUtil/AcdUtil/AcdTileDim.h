@@ -11,6 +11,7 @@
 #include "idents/VolumeIdentifier.h"
 #include "AcdUtil/IAcdGeometrySvc.h"
 #include "CLHEP/Geometry/Transform3D.h"
+#include "CLHEP/Matrix/Matrix.h"
 
 /**
 *  @class AcdTileDim
@@ -28,9 +29,6 @@ class AcdTileDim {
 
 public:
     
-  /// This function fills the corners using the information in the dimension vector and the center of the tile
-  static StatusCode getCorners(const std::vector<double> &dim, const HepPoint3D &center, HepPoint3D *corner);
-
   /// This function switches from active distance to local coords
   static StatusCode toLocalCoords(const AcdTileDim& dim, int region, const double& activeX, const double& activeY,
 				  double& localX, double& localY);
@@ -68,6 +66,12 @@ public:
     return m_corners[idx]; 
   }
 
+  /// Local frame vectors projected into global frame
+  inline const HepMatrix& localFrameVectors(int idx = 0) const {
+    assert(idx < m_nVol);
+    return m_localFrameVectors[idx];
+  }
+
   inline int sharedEdge(int idx) const { 
     assert(idx < m_nVol);
     return m_shared[idx]; 
@@ -78,16 +82,20 @@ public:
     return m_sharedWidth[idx]; 
   }
 
-  inline int face(int idx) const {
-    assert(idx < m_nVol);
-    return m_face[idx];    
-  }
+  //inline int face(int idx) const {
+  //  assert(idx < m_nVol);
+  //  return m_face[idx];    
+  //}
 
   inline const std::vector< HepPoint3D > screwHoles() const {
     return m_screwHoles;
   }
 
-  void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0);
+  void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0) const;
+
+  const HepTransform3D& transform(int iVol) const {
+    return m_transform[iVol];
+  }
 
 protected:
   
@@ -120,11 +128,14 @@ private:
   /// the transformations to local coords
   HepTransform3D            m_transform[2];
 
+  /// Local frame vectors projected into global frame
+  HepMatrix                 m_localFrameVectors[2];
+
   /// which (if any) edges are shared between tiles:
   int                       m_shared[2];
-  
+ 
   /// which face is the volume on
-  int                       m_face[2];
+  //int                       m_face[2];
 
   /// width extra of extra volume in curved tiles
   float                     m_sharedWidth[2];

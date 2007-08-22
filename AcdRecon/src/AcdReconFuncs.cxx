@@ -1,20 +1,22 @@
 #include "../AcdRecon/AcdReconFuncs.h"
+#include "../AcdRecon/AcdTkrParams.h"
 
 #include "CLHEP/Matrix/Matrix.h"
+#include "AcdUtil/AcdTileDim.h"
+#include "AcdUtil/AcdRibbonDim.h"
+#include "GlastSvc/Reco/IPropagator.h" 
 
 namespace AcdRecon {
 
   void pointPoca(const AcdRecon::TrackData& aTrack, const HepPoint3D& point,
 		 double& arcLength, double& doca, HepPoint3D& poca) {
+    // Poca to a point.  Done global frame
 
     // dX = vector from the Tile Center to the track start point
     HepVector3D dX = point - aTrack.m_point;
 
     // arclength to the poca = dot product between track and 
     arcLength = dX * aTrack.m_dir;
-
-    // If arcLength is negative... had to go backwards to hit plane... 
-    // if (  arcLength < 0. ) return;
 
     // now calculate the doca    
     doca = sqrt(dX.mag2() - arcLength*arcLength);
@@ -23,8 +25,11 @@ namespace AcdRecon {
   }
 
   void crossesPlane(const AcdRecon::TrackData& aTrack, const HepPoint3D& plane, int iFace, 
-		    double& arcLength, double& localX, double& localY, HepPoint3D& x_isec) {
- 
+		    double& arcLength, HepPoint3D& x_isec) {
+
+    /// This one is used for the intersection w/ the putative ACD volume
+
+    // get stuff from the track
     const HepPoint3D& x0 = aTrack.m_point;
     const HepVector3D& t0 = aTrack.m_dir;
 
@@ -41,26 +46,39 @@ namespace AcdRecon {
        
     // If arcLength is negative... had to go backwards to hit plane... 
     if( arcLength < 0.) return;
-
-    x_isec = aTrack.m_point + arcLength* aTrack.m_dir;
-    HepVector3D local_x0 = x_isec - plane;
     
-    if(iFace == 0) {// Top Tile
-      localX = local_x0.x();
-      localY = local_x0.y();
-      // Choose which is furthest away from edge (edge @ 0.)
-    } else if(iFace == 1 || iFace == 3) {// X Side Tile
-      localX = local_x0.y();
-      localY = local_x0.z();
-    } else if(iFace == 2 || iFace == 4) {// Y Side Tile
-      localX = local_x0.x();
-      localY = local_x0.z();
-    }
+    x_isec = aTrack.m_point + arcLength* aTrack.m_dir;
   }
-  
-  
+
+
+  void crossesPlane(const AcdRecon::TrackData& aTrack,  const HepTransform3D& plane, 
+		    double& arcLength, HepPoint3D& x_isec) {
+
+    // This one used the transformation to the plane
+ 
+    // This is done w.r.t. local Z
+    const HepPoint3D& x0 = aTrack.m_point;
+    const HepVector3D& t0 = aTrack.m_dir;
+
+    // get the point and vector in the plane
+    const HepPoint3D& x_p = plane*x0;
+    const HepVector3D& t_p = plane*t0;
+
+    // Figure out where the on the trajectory this track hits z = 0 plane
+    arcLength = -x_p.z()/t_p.z();
+
+    // If arcLength is negative... had to go backwards to hit plane... 
+    if ( arcLength < 0 ) return;    
+
+    // Propagate track along by arcLength to get GLOBAL intersection 
+    x_isec = x0 + arcLength * t0;
+  }
+
   void rayDoca(const AcdRecon::TrackData& aTrack, const HepPoint3D&  c1, const HepPoint3D& c2,
 	       RayDoca& rayDoca, double& edgeLen) {
+
+    // Doca between rays (defined by track and two points) done in global frame.
+    // Does not account for finite length of ray defined by two points
     const HepPoint3D& x0 = aTrack.m_point;
     const HepVector3D& t0 = aTrack.m_dir;
     Point trackPos(x0.x(), x0.y(), x0.z());
@@ -78,6 +96,9 @@ namespace AcdRecon {
 
   void rayDoca_withCorner(const AcdRecon::TrackData& track, const Ray& ray,
 			  double& arcLength, double& rayLength, double& dist, Point& x, Vector& v, int& region) {
+    // Doca between rays (defined by track and two points)  done in global frame
+    // Account for finite length of ray defined by two points.
+    // If poca occurs beyond end of that ray, returns poca to end point instead
     const HepPoint3D& x0 = track.m_point;
     const HepVector3D& t0 = track.m_dir;    
     Point trackPos(x0.x(), x0.y(), x0.z());
@@ -115,83 +136,76 @@ namespace AcdRecon {
   }
 
   void tilePlane(const AcdRecon::TrackData& track, const AcdTileDim& tile,
-		 double& arcLength, double& localX, double& localY, 
-		 double& activeX, double& activeY, double& active2D, HepPoint3D& hitPoint) {
+		 AcdRecon::PocaData& data) {
 
+    // Get all the relevent values for intersections with a tile
+
+    HepPoint3D testHitPoint, testLocal;
+    double testActiveX(0.),  testActiveY(0.);
+    
     // loop over volumes of tile
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {      
       
-      double testActiveX(-maxDocaValue);
-      double testActiveY(-maxDocaValue);
-      double testLocalX(maxDocaValue);
-      double testLocalY(maxDocaValue);
-      double testArcLength(-1.);
-      HepPoint3D testHitPoint;
-      
-      std::vector<double> dim = tile.dim(iVol);
-      // Beware: these dimensions are in some sort of local system and for
-      // iFace = 1 || 3  x<->y 
-      double dX = dim[0];
-      double dY = dim[1];
-      double dZ = dim[2];
-      
-      const HepPoint3D& center = tile.tileCenter(iVol);
+      double testArcLength(-1.);     
+      AcdRecon::crossesPlane(track,tile.transform(iVol),testArcLength, testHitPoint);      
 
-      // fix this
-      int face = tile.face(iVol);
-
-      crossesPlane(track,center,face,testArcLength,testLocalX,testLocalY,testHitPoint);
-
-      // int region(0);
- 
       // If arcLength is negative... had to go backwards to hit plane... 
       if ( testArcLength < 0 ) continue;
-      if(face == 0) {// Top Tile
-	testActiveX = dX/2. - fabs(testLocalX);
-	testActiveY = dY/2. - fabs(testLocalY);
-	// check to see if this is one of the top-side tiles
-	if ( tile.nVol() == 2 ) {
-	  if ( tile.sharedEdge(0) == 1 && testLocalY > 0 ) {
-	    testActiveY += fabs(tile.sharedWidth(0));
-	  } else if (  tile.sharedEdge(0) == 3 && testLocalY < 0 ) {
-	    testActiveY += fabs(tile.sharedWidth(0));
-	  }	  
-	}
-      } else if(face == 1 || face == 3) {// X Side Tile
-	testActiveY = dZ/2  - fabs(testLocalY);
-	testActiveX = dY/2. - fabs(testLocalX);
-      } else if(face == 2 || face == 4) {// Y Side Tile
-	testActiveY = dZ/2. - fabs(testLocalY);
-	testActiveX = dX/2. - fabs(testLocalX);
-	// check to see if this is one of the extra pieces of the side tiles
-	if ( tile.nVol() == 2 ) {
-	  if ( tile.sharedEdge(1) == 1 && testLocalY > 0 ) {
-	    // is a shared piece.  but this is a short side, so take the distance to the
-	    // other side of this volume
-	    testActiveY =  dZ - testActiveY;
-	    // testActiveY += fabs(tile.sharedWidth(1));
-	  }	  
-	}
-      }
-
-     
+      
+      AcdRecon::tilePlaneActiveDistance(tile,iVol,testHitPoint,testLocal,testActiveX,testActiveY);
 
       // check to see which active distance is more negative (ie, farther from the center of the tile)
       double testActive2D =  testActiveX < testActiveY ? testActiveX : testActiveY;
 
       // check to see if the track came closest to this volume
       // if it did, grab the values
-      if ( testActive2D > active2D ) {
-	active2D = testActive2D;
-	activeX = testActiveX;
-	activeY = testActiveY;
-	localX = testLocalX;
-	localY = testLocalY;
-	arcLength = testArcLength;
-	hitPoint = testHitPoint;
+      if ( testActive2D > data.m_active2D ) {
+	data.m_active2D = testActive2D;
+	data.m_activeX = testActiveX;
+	data.m_activeY = testActiveY;
+	data.m_arcLength = testArcLength;
+	data.m_hitsPlane.set(testHitPoint.x(),testHitPoint.y(),testHitPoint.z());
+	data.m_inPlane.set(testLocal.x(),testLocal.y(),testLocal.z());
+	data.m_volume = iVol;
       }
     }
   }
+
+  
+  void tilePlaneActiveDistance(const AcdTileDim& tile, int iVol, const HepPoint3D& globalPoint,
+			       HepPoint3D& localPoint, double& activeX, double& activeY) {
+
+    tile.toLocal(globalPoint,localPoint,iVol);
+    const std::vector<double>& dim = tile.dim(iVol);
+
+    activeX = (dim[0]/2.) - fabs(localPoint.x());
+    activeY = (dim[1]/2.) - fabs(localPoint.y());
+
+    if ( tile.nVol() == 2 ) {
+      int face = tile.acdId().face();
+      if ( face == 0 ) {
+	// top, check for hitting near bent tile
+	if ( iVol == 0 ) {
+	  if ( tile.sharedEdge(0) == 1 &&  localPoint.x() > 0 ) {
+	    activeY += fabs(tile.sharedWidth(0));
+	  } else if (  tile.sharedEdge(0) == 3 &&  localPoint.y() <  0 ) {
+	    activeY += fabs(tile.sharedWidth(0));
+	  }  
+	} else if ( iVol == 1 ) {
+	  if ( tile.sharedEdge(1) == 1 && localPoint.y() > 0 ) {
+	    // is a shared piece.  but this is a short side, so take the distance to the
+	    // other side of this volume
+	    activeY =  dim[1] - activeY;
+	  } else if ( tile.sharedEdge(3) == 1 && localPoint.y() < 0 ) {
+	    // is a shared piece.  but this is a short side, so take the distance to the
+	    // other side of this volume
+	    activeY =  dim[1] - activeY;
+	  }
+	} 
+      } 
+    }
+  }
+
 
   void tileEdgePoca(const AcdRecon::TrackData& aTrack, const AcdTileDim& tile, 
 		    double& arcLength, double& dist, Point& x, Vector& v, int& region) {
@@ -199,9 +213,9 @@ namespace AcdRecon {
     // the nearest corner participate.
     // For each pair of corners, make a ray and calculate doca from track
     // Note: this could be done at the end - if no edge solution was found however
-    //       doing the full monte does not use much more cpu
+    //       doing the full monte does not use much more cpu    
 
-    
+    // This is all done in the global frame
     dist = maxDocaValue;
     region = -1;
     
@@ -241,9 +255,9 @@ namespace AcdRecon {
 	  if ( test_dist < dist ) {
 	    dist = test_dist;
 	    arcLength = raydoca.arcLenRay1();
-	    region = iCorner + 10*iVol;
 	    x = raydoca.docaPointRay1();
 	    v = x - raydoca.docaPointRay2();
+	    region = iVol;
 	  }
 	}
       }          
@@ -258,7 +272,8 @@ namespace AcdRecon {
     // The corners are returned in order (-,-), (-,+), (+,+), (+,-)
     // where third dimension is the one we ignore, since it is associated with
     // tile thickness.
-    
+
+    // This is all done in the global frame
     region = -1;
     dist = maxDocaValue;
     
@@ -276,7 +291,7 @@ namespace AcdRecon {
 	AcdRecon::pointPoca(aTrack,corner[iCorner],arclen,test_dist,x_isec);
 	if ( test_dist < dist ) {
 	  dist = test_dist;
-	  region = iCorner+4 +(10*iVol);
+	  region = iVol;
 	  arcLength = arclen;
 	  x.set(x_isec.x(),x_isec.y(),x_isec.z());
 	  HepVector3D pocaVect = x_isec - corner[iCorner];
@@ -301,8 +316,10 @@ namespace AcdRecon {
   }
 
   void ribbonPlane(const AcdRecon::TrackData& aTrack, const AcdRibbonDim& ribbon,
-		  double& arcLength, double& dist, HepPoint3D& x) {
+		   AcdRecon::PocaData& data){
     
+    // FIXME, use the transformations instead
+
     // get the ribbon id
     const idents::AcdId& acdId = ribbon.acdId();  
     
@@ -329,8 +346,8 @@ namespace AcdRecon {
       HepPoint3D ribbonStartPos;
       HepVector3D ribbonVec;
       double test_arc(-1.);
-      double localX(0.); double localY(0.);
-      AcdRecon::crossesPlane(aTrack,sideCenter,face,test_arc,localX,localY,x_isec);
+
+      AcdRecon::crossesPlane(aTrack,sideCenter,face,test_arc,x_isec);
 	
       if (test_arc < 0) continue;
     
@@ -353,10 +370,11 @@ namespace AcdRecon {
 
       // test against the best value
       if ( test_dist > best_dist ) {
-	dist = test_dist;
+	data.m_active2D = test_dist;
 	best_dist = test_dist;
-	arcLength = test_arc;
-	x = x_isec;
+	data.m_arcLengthPlane = test_arc;
+	data.m_hitsPlane.set(x_isec.x(),x_isec.y(),x_isec.z());
+	data.m_volume = segment;
       }
     }
   }
@@ -364,6 +382,8 @@ namespace AcdRecon {
 
   void ribbonPoca(const AcdRecon::TrackData& track, const AcdRibbonDim& ribbon,
 		  double& arcLength, double& ribbonLength, double& dist, Point& x, Vector& v, int& region) {
+
+    // 
    
     // First, does this ribbon extend along x or y axix
     static const int ribbonX = 5;
@@ -384,15 +404,14 @@ namespace AcdRecon {
     Vector v_test;
     int regionTest(0);
     double dist_last(-500000.);
-    std::vector<const Ray*> raysInOrder;
-    
+    std::vector<const Ray*> raysInOrder;    
     
     int iRay(0);
     
     // Now, look over the relevent rays.
     if ( dir == 1 ) {
       // Going to + side
-      for ( iRay = 0; iRay < ribbon.plusSideRays().size(); iRay++ ) {
+      for ( iRay = 0; iRay < (int)ribbon.plusSideRays().size(); iRay++ ) {
 	const Ray& aRay = ribbon.plusSideRays()[iRay];
 	raysInOrder.push_back(&aRay);
       }
@@ -404,12 +423,12 @@ namespace AcdRecon {
       }
     } else if ( dir == -1 ) {
       // Going to - side
-       for ( iRay = 0; iRay < ribbon.minusSideRays().size(); iRay++ ) {
+       for ( iRay = 0; iRay < (int)ribbon.minusSideRays().size(); iRay++ ) {
 	const Ray& aRay = ribbon.minusSideRays()[iRay];
 	raysInOrder.push_back(&aRay);
        }
        if ( track.m_upward ) {
-	 for ( iRay =0; iRay < ribbon.topRays().size(); iRay++ ) {
+	 for ( iRay =0; iRay < (int)ribbon.topRays().size(); iRay++ ) {
 	   const Ray& aRay = ribbon.topRays()[iRay];
 	   raysInOrder.push_back(&aRay);
 	 }
@@ -421,12 +440,12 @@ namespace AcdRecon {
     double ribbonLen(0);
     double rayLen(0);
 
-    for ( iRay = 0; iRay < raysInOrder.size(); iRay++ ) {
+    for ( iRay = 0; iRay < (int)raysInOrder.size(); iRay++ ) {
       const Ray& aRay = *(raysInOrder[iRay]);
       AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,rayLen,distTest,x_test,v_test,regionTest);      
 
       // flip the ray length to top rays and +x,+y going.
-      if ( dir == 1 && iRay >= ribbon.plusSideRays().size() ) {
+      if ( dir == 1 && iRay >= (int)ribbon.plusSideRays().size() ) {
 	rayLen = aRay.getArcLength() - rayLen;
       }
 
@@ -452,198 +471,227 @@ namespace AcdRecon {
     }
   }
 
-  void projectToPlane(const AcdRecon::TrackData& track, const Event::TkrTrackParams& params, 
-		      int face, const HepPoint3D& plane,
-		      AcdRecon::PocaData& data) {
+  // initiliaze the kalman propagator
+  void startPropagator(IPropagator& prop, const Event::TkrTrack& aTrack, const AcdRecon::TrackData& trackData,
+		       const double& maxArcLength ) {
+
+    // Get the start point & direction of the track & the params & energy also
+    const unsigned int hitIndex = trackData.m_upward ? 0 : aTrack.getNumHits() - 1;
+    const Event::TkrTrackHit* theHit = aTrack[hitIndex];
+    const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+    const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
     
-    double delta(0.);
-    HepMatrix covAtPlane(2,2);
-    switch ( face ) {
-    case 0:
-      // top: x,y,z are same for local and global
-      delta = plane.z() - track.m_point.z();
-      data.m_cosTheta = track.m_dir.z();
-      AcdRecon::errorAtZPlane(delta,params,covAtPlane);
-    break;
-    case 1:
-    case 3:
-      // +-x sides: y -> local x, z -> local y
-      delta = plane.x() - track.m_point.x();
-      data.m_cosTheta = fabs(track.m_dir.x());
-      AcdRecon::errorAtXPlane(delta,params,covAtPlane);
-      break;
-    case 2:
-    case 4:
-      // +-y sides: x -> local x, z -> local y
-      delta = plane.y() - track.m_point.y();
-      data.m_cosTheta = fabs(track.m_dir.y());
-      AcdRecon::errorAtYPlane(delta,params,covAtPlane);
-      break;
-    } 
-    data.m_localCovXX = covAtPlane[0][0];
-    data.m_localCovYY = covAtPlane[1][1];
-    data.m_localCovXY = covAtPlane[0][1];
+    // setup the propagator
+    prop.setStepStart(trackPars,initialPosition.z(),trackData.m_upward); 
+    prop.step(maxArcLength);  
   }
 
-  
-  void errorAtXPlane(const double delta, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) {
-    
-    // get the tk params.  
-    // want the x and y and the normal to the plane
-    const double m_x = pars.getxSlope();
-    const double inv_m_x = fabs(m_x) > 1e-9 ? 1./ m_x : 1e9;
-    /* not used */ //const double m_y = pars.getySlope();
-    
-    // ok input the jacobian
-    //
-    //     The intersection occurs at:
-    //       I_y = y_0 - delta * m_y / m_x
-    //       I_z = z_0 - delta * 1. / m_x
-    //     where: 
-    //       delta = xPlane - x_0
-    //
-    //     The jacobian terms are defined as:
-    //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-    //  
-    HepMatrix jacobian(2,4);
-    //jacobian[0][0] = 0.;                           // dI_y / dx_0  = 0
-    //jacobian[0][1] = -delta * inv_m_x;             // dI_y / dm_x  = -d / m_x
-    //jacobian[0][2] = 1.;                           // dI_y / dy_0  = 1
-    //jacobian[0][3] = delta * m_y * inv_m_x;        // dI_y / dm_y  = -d * m_y / m_x
-    
-    //jacobian[1][0] = - inv_m_x;                    // dI_z / dx_0  = -1 / m_x
-    //jacobian[1][1] = delta * inv_m_x * inv_m_x;    // dI_z / dm_x  = -d / m_x * m_x
-    //jacobian[1][2] = 0.;                           // dI_z / dy_0  = 0
-    //jacobian[1][3] = 0.;                           // dI_z / dm_y  = 0
-    
-    jacobian[0][0] = 0.;                           // dI_y / dx_0  = 0
-    jacobian[0][1] = 0.;
-    jacobian[0][2] = 1.;                           // dI_y / dy_0  = 1
-    jacobian[0][3] = 0.;
-    
-    jacobian[1][0] = - inv_m_x;                    // dI_z / dx_0  = -1 / m_x
-    jacobian[1][1] = delta * inv_m_x * inv_m_x;    // dI_z / dm_x  = -d / m_x * m_x
-    jacobian[1][2] = 0.;                           // dI_z / dy_0  = 0
-    jacobian[1][3] = 0.;                           // dI_z / dm_y  = 0  
 
-    for ( unsigned int i(0);  i < 2; i++ ) {
-      for ( unsigned int j(0);  j < 2; j++ ) {
-	double currentSum = 0.;
-	for ( unsigned int k(1);  k < 5; k++ ) {
-	  for ( unsigned int l(1);  l < 5; l++ ) {
-	    currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
-	  }
-	}
-	covAtPlane[i][j] = currentSum;
-      }
-    }    
+  // run the propagtor out to a specified arclength
+  void propagateToArcLength(IPropagator& prop,
+			    const AcdRecon::TrackData& track, const double& arcLength,
+			    Event::TkrTrackParams& next_params,
+			    AcdTkrParams& paramsAtArcLength) {
+
+    Point x_step = prop.getPosition( arcLength );
+    next_params = prop.getTrackParams(arcLength,track.m_energy,true);
+    paramsAtArcLength.set(next_params,x_step.z(),track.m_upward);
   }
-  
-  void errorAtYPlane(const double delta, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) {
-    
-    // get the tk params.  
-    // want the x and y and the normal to the plane
-    /* not used */ //const double m_x = pars.getxSlope();
-    const double m_y = pars.getySlope();
-    const double inv_m_y = fabs(m_y) > 1e-9 ? 1./ m_y : 1e9;
-    
-    // ok input the jacobian
+
+
+  void projecErrorToPlane(const AcdTkrParams& paramsAtArcLength, const CLHEP::HepMatrix& localFrameVectors,
+			  CLHEP::HepSymMatrix& covAtPlane) {
+    //  U = A V A^T
     //
-    //     The intersection occurs at:
-    //       I_x = x_0 - delta * m_x / m_y
-    //       I_z = z_0 - delta * 1. / m_y
-    //     where:
-    //       delta = yPlane - y_0
-    //
-    //     The jacobian terms are defined as:
-    //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-    //  
-    HepMatrix jacobian(2,4);
-    //jacobian[0][0] = 1.;                           // dI_x / dx_0  = 1                        
-    //jacobian[0][1] = delta * m_x * inv_m_y;        // dI_x / dm_x  = d m_x / m_y
-    //jacobian[0][2] = 0.;                           // dI_x / dy_0  = 0
-    //jacobian[0][3] = -delta * inv_m_y;             // dI_x / dm_y  = -d / m_y
-    
-    //jacobian[1][0] = 0.;                           // dI_z / dx_0  = 0                    
-    //jacobian[1][1] = 0.;                           // dI_z / dm_x  = 0                    
-    //jacobian[1][2] = - inv_m_y;                    // dI_z / dy_0  = -1 / m_y
-    //jacobian[1][3] = delta * inv_m_y * inv_m_y;    // dI_z / dm_y  = d / m_y * m_y
-    
-    jacobian[0][0] = 1.;                           // dI_x / dx_0  = 1                        
-    jacobian[0][1] = 0.;
-    jacobian[0][2] = 0.;                           // dI_x / dy_0  = 0
-    jacobian[0][3] = 0.;
-    
-    jacobian[1][0] = 0.;                           // dI_z / dx_0  = 0                    
-    jacobian[1][1] = 0.;                           // dI_z / dm_x  = 0                    
-    jacobian[1][2] = - inv_m_y;                    // dI_z / dy_0  = -1 / m_y
-    jacobian[1][3] = delta * inv_m_y * inv_m_y;    // dI_z / dm_y  = d / m_y * m_y  
-    
-    for ( unsigned int i(0);  i < 2; i++ ) {
-      for ( unsigned int j(0);  j < 2; j++ ) {
+
+    for ( int i(1); i < 3; i++ ) {
+      for ( int j = i; j < 3; j++) {
 	double currentSum = 0.;
-	for ( unsigned int k(1);  k < 5; k++ ) {
-	  for ( unsigned int l(1);  l < 5; l++ ) {
-	    currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
+	for ( unsigned int k(1);  k < 4; k++ ) {
+	  for ( unsigned int l(1);  l < 4; l++ ) {
+	    currentSum += localFrameVectors(i,k) * paramsAtArcLength(k,l) * localFrameVectors(j,l);
 	  }
-	}
-	covAtPlane[i][j] = currentSum;
+	}	
+	covAtPlane(i,j) = currentSum;
       }
     }
   }
-  
-  void errorAtZPlane(const double /* delta */, const Event::TkrTrackParams& pars, HepMatrix& covAtPlane) {
-    
-    // ok input the jacobian
-    //
-    //     The intersection occurs at:
-    //       I_x = x_0 - delta * m_x
-    //       I_y = y_0 - delta * m_y
-    //     where:
-    //       delta = zPlane - z_0
-    //
-    //     The jacobian terms are defined as:
-    //        J[i][k] = d I_i / d param_k     where param = { x, y, m_x, m_y }
-    //  
-    HepMatrix jacobian(2,4);
-    
-    //jacobian[0][0] = 1.;            // dI_x / dx_0 = 1
-    //jacobian[0][1] = -delta;        // dI_x / dm_x = -d
-    //jacobian[0][2] = 0.;            // dI_x / dy_0 = 0
-    //jacobian[0][3] = 0.;            // dI_x / dm_y = 0
-    
-    //jacobian[1][0] = 0.;            // dI_y / dx_0 = 0
-    //jacobian[1][1] = 0.;            // dI_y / dm_x = 0
-    //jacobian[1][2] = 1.;            // dI_y / dy_0 = 1
-    //jacobian[1][3] = -delta;        // dI_y / dm_y = -d
-    
-    jacobian[0][0] = 1.;            // dI_x / dx_0 = 1
-    jacobian[0][1] = 0.;        // dI_x / dm_x = -d
-    jacobian[0][2] = 0.;            // dI_x / dy_0 = 0
-    jacobian[0][3] = 0.;            // dI_x / dm_y = 0
-    
-    jacobian[1][0] = 0.;            // dI_y / dx_0 = 0
-    jacobian[1][1] = 0.;            // dI_y / dm_x = 0
-    jacobian[1][2] = 1.;            // dI_y / dy_0 = 1
-    jacobian[1][3] = 0.;        // dI_y / dm_y = -d  
 
-    for ( unsigned int i(0);  i < 2; i++ ) {
-      for ( unsigned int j(0);  j < 2; j++ ) {
-	double currentSum = 0.;
-	for ( unsigned int k(1);  k < 5; k++ ) {
-	  for ( unsigned int l(1);  l < 5; l++ ) {
-	    currentSum += jacobian[i][k-1] * jacobian[j][l-1] * pars(k,l);
-	  }
-	}
-	covAtPlane[i][j] = currentSum;
+  
+  // Project error ellipse onto a line
+  void projectErrorToPocaVector(const AcdTkrParams& paramsAtArcLength, const Vector& pocaVector, 
+				double& pocaError) {
+    //  U = A V A^T
+    //
+    pocaError = 0.;
+    for ( unsigned int i(0);  i < 3; i++ ) {
+      for ( unsigned int j(0);  j < 3; j++ ) {
+	pocaError += pocaVector[i] * paramsAtArcLength(i+1,j+1) * pocaVector[j];	  
       }
     }
-  }  
-
-  void projectErrorAtPoca(const AcdRecon::TrackData& /* trackData */, const Event::TkrTrackParams& /* trackParams */,
-			  const Point& /* poca */, const Vector& /* pocaVector */, double& pocaError) {
-    pocaError = 1000.;
   }
+
+  bool exitsLat(const AcdRecon::TrackData& trackData,
+		const AcdRecon::AcdVolume& acdVol,
+		AcdRecon::ExitData& data) {
+
+    // grab the track data
+    const HepPoint3D& initialPosition = trackData.m_point;
+    const HepVector3D& initialDirection = trackData.m_dir;    
+
+    // sanity check
+    if ( (trackData.m_upward && initialDirection.z() < 0) || (!trackData.m_upward && initialDirection.z() > 0) ) {
+      return false;
+    }
+
+    // hits -x or +x side ?
+    const double normToXIntersection =  initialDirection.x() < 0 ?  
+      -1.*acdVol.m_sides - initialPosition.x() :    // hits -x side
+      1.*acdVol.m_sides - initialPosition.x();      // hits +x side  
+    const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
+      1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
+    const double sToXIntersection = normToXIntersection * slopeToXIntersection;
+    
+    // hits -y or +y side ?
+    const double normToYIntersection = initialDirection.y() < 0 ?  
+      -1.*acdVol.m_sides - initialPosition.y() :    // hits -y side
+      1.*acdVol.m_sides - initialPosition.y();      // hits +y side
+    const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
+      1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
+    const double sToYIntersection = normToYIntersection * slopeToYIntersection;
+    
+    // hits top or bottom
+    const double normToZIntersection =  trackData.m_upward ? 
+      acdVol.m_top - initialPosition.z() :
+      acdVol.m_bottom - initialPosition.z();
+    const double slopeToZIntersection = 1. / initialDirection.z();
+    const double sToZIntersection = normToZIntersection * slopeToZIntersection;    
+
+    // pick the closest plane
+    if ( sToXIntersection < sToYIntersection ) {
+      if ( sToXIntersection < sToZIntersection ) {
+	// hits X side
+	data.m_arcLength = sToXIntersection;
+	data.m_face = initialDirection.x() > 0 ? 1 : 3;
+      } else {
+	// hits Z side
+	data.m_arcLength = sToZIntersection;
+	data.m_face = trackData.m_upward ? 0 : 5;
+      }     
+    } else {
+      if ( sToYIntersection < sToZIntersection ) {
+	// hits Y side
+	data.m_arcLength = sToYIntersection;
+	data.m_face = initialDirection.y() > 0 ? 2 : 4;
+      } else {
+	// hits Z side
+	data.m_arcLength = sToZIntersection;
+	data.m_face =  trackData.m_upward ? 0 : 5;
+      }     
+    }
+    
+    // protect against negative arcLengths
+    if ( data.m_arcLength < 0. ) {
+      return false;
+    }
+    
+    // extrapolate to the i-sect
+    HepPoint3D iSect = initialPosition + data.m_arcLength*initialDirection;
+    data.m_x.set(iSect.x(),iSect.y(),iSect.z());
+    
+    // flip the sign of the arclength for downgoing side
+    data.m_arcLength *= trackData.m_upward ? 1. : -1.;
+    
+    return true;
+  }
+
+  bool entersLat(const AcdRecon::TrackData& trackData, 
+		 const AcdRecon::AcdVolume& acdVol,
+		 AcdRecon::ExitData& data) {
+    
+    // grab the track data
+    const HepPoint3D& initialPosition = trackData.m_point;
+    const HepVector3D& initialDirection = trackData.m_dir;    
+           
+    bool enters(false);
+
+    // where does the track start relative to +-X sides
+    // and how long before it hits one of the sides
+    // this evals to -1 if between sides
+    double sToXIntersection(-1.);
+    if ( fabs(initialPosition.x()) > acdVol.m_sides ) {
+      double normToXIntersection = initialPosition.x() < 0 ? 
+	-1.*acdVol.m_sides - initialPosition.x() :    // hits -x side first
+	1.*acdVol.m_sides - initialPosition.x();      // hits +x side frist
+      const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
+	1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
+      sToXIntersection = normToXIntersection * slopeToXIntersection;
+      // propagate to that point, make sure that other two values inside LAT also
+      if ( sToXIntersection > 0 ) {
+	HepPoint3D xPlaneInter = initialPosition;  xPlaneInter += sToXIntersection* initialDirection;
+	if (  fabs(xPlaneInter.y()) < acdVol.m_sides  &&
+	      xPlaneInter.z() > acdVol.m_bottom &&
+	      xPlaneInter.z() < acdVol.m_top ) {
+	  data.m_arcLength = sToXIntersection;
+	  data.m_x.set(xPlaneInter.x(),xPlaneInter.y(),xPlaneInter.z());
+	  data.m_face = initialPosition.x() < 0 ? 1 : 3;
+	  enters = true;
+	}
+      }
+    }  
+
+    // where does the track start relative to +-Y sides
+    // this evals to -1 if between sides
+    double sToYIntersection(-1.);
+    if ( fabs(initialPosition.y()) > acdVol.m_sides ) {
+      double normToYIntersection = initialPosition.y() < 0 ? 
+	-1.*acdVol.m_sides - initialPosition.y() :    // hits -y side first
+	1.*acdVol.m_sides - initialPosition.y();      // hits +y side frist
+      const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
+	1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9);
+      sToYIntersection = normToYIntersection * slopeToYIntersection;
+      if ( sToYIntersection > 0 && 
+	   ( sToYIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+	// propagate to that point, make sure that other two values inside LAT also
+	HepPoint3D yPlaneInter = initialPosition;  yPlaneInter += sToYIntersection* initialDirection;
+	if (  fabs(yPlaneInter.x()) < acdVol.m_sides  &&
+	      yPlaneInter.z() > acdVol.m_bottom &&
+	      yPlaneInter.z() < acdVol.m_top ) {
+	  data.m_arcLength = sToYIntersection;
+	  data.m_x.set(yPlaneInter.x(),yPlaneInter.y(),yPlaneInter.z());
+	  data.m_face = initialPosition.y() < 0 ? 2 : 4;
+	  enters = true;
+	}
+      }
+    }  
+
+    // where does the track start relative to +-Z sides
+    // this evals to -1 if between sides
+    double sToZIntersection(-1.);
+    if ( initialPosition.z() < acdVol.m_bottom ||
+	 initialPosition.z() > acdVol.m_top ) {
+      double normToZIntersection = initialPosition.z() < 0 ? 
+	acdVol.m_bottom - initialPosition.z() :    // hits -z side first
+	acdVol.m_top - initialPosition.z();      // hits +z side frist
+      const double slopeToZIntersection = fabs(initialDirection.z()) > 1e-9 ? 
+	1. / initialDirection.z() : (normToZIntersection > 0. ? 1e9 : -1e9);
+      sToZIntersection = normToZIntersection * slopeToZIntersection;
+      if ( sToZIntersection > 0 && 
+	   ( sToZIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+	// propagate to that point, make sure that other two values inside LAT also
+	HepPoint3D zPlaneInter = initialPosition;  zPlaneInter += sToZIntersection* initialDirection;
+	if (  fabs(zPlaneInter.x()) < acdVol.m_sides  &&
+	      fabs(zPlaneInter.y()) < acdVol.m_sides ) {
+	  data.m_arcLength = sToZIntersection;
+	  data.m_x.set(zPlaneInter.x(),zPlaneInter.y(),zPlaneInter.z());
+	  data.m_face = initialPosition.z() > acdVol.m_top ? 0 : 5;	
+	  enters = true;
+	}
+      }
+    }  
+    return enters;
+  }
+ 
 
   void entersCal(const AcdRecon::TrackData& aTrack, const double& calZDist, 
 		 Point& entryPoint, Vector& entryVector, int& region) {

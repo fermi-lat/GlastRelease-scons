@@ -43,10 +43,23 @@
 #include "geometry/Vector.h"
 #include "../AcdRecon/RayDoca.h"
 #include "../AcdRecon/AcdReconFuncs.h"
+#include "../AcdRecon/AcdTkrParams.h"
+
 
 #include <algorithm>
 #include <cstdio>
 #include <stdlib.h>
+
+
+// Define the fiducial volume of the LAT
+// FIXME -- this should come for some xml reading service
+//
+// top is defined by planes at + 754.6 -> up to stacking of tiles
+// sides are defined by planes at +-840.14
+// the bottom of the ACD is at the z=-50 plane
+
+// Later we add 10 cm to make sure that we catch everything
+AcdRecon::AcdVolume AcdReconAlg::s_acdVolume;
 
 double AcdReconAlg::s_vetoThresholdMeV;
 
@@ -103,17 +116,8 @@ StatusCode AcdReconAlg::initialize ( ) {
         return sc;
     }
   
-    // Determine the rays for corner gaps once and for all
-    m_calcCornerDoca = true;
-    sc = m_acdGeoSvc->findCornerGaps();
-    if (sc.isFailure()) {
-        MsgStream log(msgSvc(), name());
-        log << MSG::WARNING << "Could not construct corner gap rays,"
-            << " will not calculate AcdCornerDoca" << endreq;
-        m_calcCornerDoca = false;
-        sc = StatusCode::SUCCESS;
-    }
-    m_geomMap.setAcdGeomSvc(*m_acdGeoSvc);
+    m_geomMap = &m_acdGeoSvc->geomMap();
+    m_geomMap->setAcdGeomSvc(*m_acdGeoSvc);
 
 
     if (m_intersectionToolName == "") 
@@ -554,18 +558,14 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	downwardExtend.m_upward = false;
 
 	// get the LAT exit points
-	if ( m_intersectionTool != 0 ) {
-	  sc = m_intersectionTool->exitsLAT(*trackTds,true,upwardExit);
-	  if (sc.isFailure()) {
-	    log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
-	    return StatusCode::SUCCESS;
-	  }
-	  sc = m_intersectionTool->exitsLAT(*trackTds,false,downwardExit);
-	  if (sc.isFailure()) { 
-	    log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed "
-                << "on downward end - we'll bravely carry on" << endreq;
-	    return StatusCode::SUCCESS;
-	  }
+	if ( ! AcdRecon::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
+	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
+	  return StatusCode::SUCCESS;
+	}
+	
+	if ( ! AcdRecon::exitsLat(downwardExtend,s_acdVolume,downwardExit) ) {
+	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
+	  return StatusCode::SUCCESS;
 	}	  
 
 	// keep track of all the pocas to hit tiles
@@ -724,19 +724,16 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol,
     Vector downDir(downwardExtend.m_dir.x(),downwardExtend.m_dir.y(),downwardExtend.m_dir.z());
 
     // get the LAT exit points
-    if ( m_intersectionTool != 0 ) {
-      sc = m_intersectionTool->exitsLAT(upPoint,upDir,true,upwardExit);
-      if (sc.isFailure()) {
-	log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed on upward end for vertex- we'll bravely carry on" << endreq;
-	return StatusCode::SUCCESS;
-      }
-      sc = m_intersectionTool->exitsLAT(downPoint,downDir,false,downwardExit);
-      if (sc.isFailure()) { 
-	log << MSG::WARNING << "AcdIntersectionTool::exitsLat() failed "<< "on downward end for vertex- we'll bravely carry on" << endreq;
-	return StatusCode::SUCCESS;
-      }
-    }	  
+    if ( ! AcdRecon::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
+      log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
+      return StatusCode::SUCCESS;
+	}
     
+    if ( ! AcdRecon::exitsLat(downwardExtend,s_acdVolume,downwardExit) ) {
+      log << MSG::WARNING << "AcdRecon::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
+      return StatusCode::SUCCESS;
+    }	  
+
     // keep track of all the pocas to hit tiles
     AcdRecon::PocaDataMap upwardPocas;
     AcdRecon::PocaDataMap downwardPocas;
@@ -811,14 +808,11 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdDigiCol& digiCol,
     Vector dir(extend.m_dir.x(),extend.m_dir.y(),extend.m_dir.z());   
 
     // get the LAT exit points
-    if ( m_intersectionTool != 0 ) {
-      sc = m_intersectionTool->entersLAT(point,dir,extend.m_upward,enter);
-      if (sc.isFailure()) {
-	log << MSG::WARNING << "AcdIntersectionTool::entersLat() failed on MC track- we'll bravely carry on" << endreq;
-	return StatusCode::SUCCESS;
-      }
-    }	  
-    
+    if ( ! AcdRecon::entersLat(extend,s_acdVolume,enter) ) {
+      log << MSG::WARNING << "AcdIntersectionTool::entersLat() failed on MC track- we'll bravely carry on" << endreq;
+      return StatusCode::SUCCESS;
+    }
+
     // keep track of all the pocas to hit tiles
     AcdRecon::PocaDataMap pocas;
     
@@ -856,7 +850,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
     AcdRecon::PocaData& pocaData = pocaMap[acdId];
     if (acdId.na()) continue;
     if (acdId.tile()) {      
-      const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_acdGeoSvc);
+      const AcdTileDim* tileDim = m_geomMap->getTile(acdId,*m_acdGeoSvc);
       sc = tileDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
@@ -872,7 +866,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
 	return sc;
       }
     } else if ( acdId.ribbon() ) {
-      const AcdRibbonDim* ribbonDim = m_geomMap.getRibbon(acdId,*m_acdGeoSvc);
+      const AcdRibbonDim* ribbonDim = m_geomMap->getRibbon(acdId,*m_acdGeoSvc);
       sc = ribbonDim->statusCode();
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
@@ -1013,20 +1007,11 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   // run the propagator out to the right arclength
   if ( !forward ) maxArcLength *= -1.;
 
-  // Get the start point & direction of the track & the params & energy also
-  const unsigned int hitIndex = forward ? 0 : aTrack.getNumHits() - 1;
-  const Event::TkrTrackHit* theHit = aTrack[hitIndex];
-  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-  const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
-  double startEnergy = trackData.m_energy;
-
-  // setup the propagator
-  m_G4PropTool->setStepStart(trackPars,initialPosition.z(),forward); 
-  m_G4PropTool->step(maxArcLength);  
+  AcdRecon::startPropagator(*m_G4PropTool,aTrack,trackData,maxArcLength);
   
   // build all the intersections
   if ( m_intersectionTool != 0 ) {
-    sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackData,isectData,pocaDataMap,m_hitMap,m_geomMap,
+    sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackData,isectData,pocaDataMap,m_hitMap,*m_geomMap,
 					       acdIntersections,gapPocas);
   }
   if ( sc.isFailure() ) return sc;
@@ -1036,11 +1021,15 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   gapPocas.writeOut(log);
 
   // build all the pocas
+  AcdTkrParams paramsAtArcLength;
+  Event::TkrTrackParams next_params;
+
   for ( itr = pocaDataMap.begin(); itr != pocaDataMap.end(); itr++ ) {
     AcdRecon::PocaData& pocaData = *(itr->second);
     float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
-    Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(pocaArcLength,startEnergy,true);
-    AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_pocaVector,pocaData.m_active3DErr);
+    
+    AcdRecon::propagateToArcLength(*m_G4PropTool,trackData,pocaArcLength,next_params,paramsAtArcLength);
+    AcdRecon::projectErrorToPocaVector(paramsAtArcLength,pocaData.m_pocaVector,pocaData.m_active3DErr);
     Event::AcdTkrHitPoca* aPoca(0);
     if ( m_pocaTool != 0 ) {
       sc = m_pocaTool->makePoca(trackData,pocaData,aPoca);
@@ -1053,7 +1042,7 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   }
 
   // build the TrkPoint
-  Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(isectData.m_arcLength,startEnergy,true);
+  AcdRecon::propagateToArcLength(*m_G4PropTool,trackData,isectData.m_arcLength,next_params,paramsAtArcLength);
   Event::AcdTkrPoint* exitPoint(0);
   if ( m_intersectionTool != 0 ) {
     sc = m_intersectionTool->makeTkrPoint(trackData,isectData,next_params,exitPoint);
@@ -1069,10 +1058,10 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
 }
 
 StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
-					 const AcdRecon::PocaDataPtrMap& pocaDataMap,
-					 const AcdRecon::ExitData& isectData,
-					 Event::AcdPocaSet& pocaSet,
-					 Event::AcdTkrPointCol& points) {
+					  const AcdRecon::PocaDataPtrMap& pocaDataMap,
+					  const AcdRecon::ExitData& isectData,
+					  Event::AcdPocaSet& pocaSet,
+					  Event::AcdTkrPointCol& points) {
 
   MsgStream   log( msgSvc(), name() );
   StatusCode sc = StatusCode::SUCCESS;  
@@ -1223,7 +1212,7 @@ StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& digiCol, Event::Ac
       if (acdId.na()) continue;
       if (acdId.ribbon()) continue;
       if (acdId.tile()) {      
-	const AcdTileDim* tileDim = m_geomMap.getTile(acdId,*m_acdGeoSvc);
+	const AcdTileDim* tileDim = m_geomMap->getTile(acdId,*m_acdGeoSvc);
 	sc = tileDim->statusCode();
 	if ( sc.isFailure() ) {
 	  log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 

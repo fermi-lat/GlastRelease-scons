@@ -27,7 +27,7 @@ private
 
 apply_pattern use_CalibData_symbols
 
-library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx
+library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx AcdFrameUtil.cxx
 
 
 apply_pattern package_headers

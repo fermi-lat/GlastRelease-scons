@@ -27,6 +27,7 @@
 #include "geometry/Vector.h"
 
 #include "AcdUtil/AcdDetectorList.h"
+#include "AcdUtil/AcdGeomMap.h"
 #include <map>
 
 class AcdGeometrySvc : public Service,
@@ -40,66 +41,64 @@ public:
     StatusCode initialize();
     StatusCode finalize();
     
-    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
+    /// return the Interface ID
     static const InterfaceID& interfaceID() {
         return IAcdGeometrySvc::interfaceID(); 
     }
     /// return the service type
     const InterfaceID& type() const;
 
-    StatusCode getConstants();
-    StatusCode getDetectorListFromGeometry();
 
+    /// Return simple data
+
+    /// Simple constants
+    int numTiles() const { return m_numTiles; };
+    int numRibbons() const {return m_numRibbons; };
+   
+    /// query by name
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
+
+    /// get the list of detector elements 
     const AcdUtil::AcdDetectorList& getDetectorList() const { 
         return m_detectorCol; };
 
+    /// How many sub-elements for a given AcdId
     const std::map<idents::AcdId, int>& getAcdIdVolCountCol() const { 
         return m_acdId_volCount; };
 
+    /// Does a volume ID correspond to a known detector elemnt
     bool findDetector(const idents::VolumeIdentifier &volId) const;
 
-    int numTiles() const { return m_numTiles; };
-    int numRibbons() const {return m_numRibbons; };
-  
-    StatusCode getCorners(const std::vector<double> &dim,
-                          const HepPoint3D &center, HepPoint3D *corner);
+    /// map from AcdID to the represenations used in AcdRecon
+    AcdGeomMap& geomMap() {
+        return m_geomMap; }
 
-    StatusCode getDimensions(const idents::VolumeIdentifier &volIId, 
-                                    std::vector<double> &dims, 
-                                    HepPoint3D &xT) const;
-
-    StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, 
-                                    std::vector<double> &dims, 
-                                    HepPoint3D &xT) const;
-
-    StatusCode findCornerGaps();
+    /// Get a particular corner Ray
     const Ray getCornerGapRay(unsigned int index) const;
 
     /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
     bool fillRibbonRays(const idents::AcdId& id,
-                 std::vector<Ray>& minusSideRays,
-                 std::vector<Ray>& topRays,
-                 std::vector<Ray>& plusSideRays, bool increasing = true);
-
+			std::vector<Ray>& minusSideRays,
+			std::vector<Ray>& topRays,
+			std::vector<Ray>& plusSideRays, bool increasing = true);
+    
     /// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
     virtual bool fillRibbonTransforms(const idents::AcdId& id,
 				      HepTransform3D& minusSideTransform,
 				      HepTransform3D& topTransform,
 				      HepTransform3D& plusTransform);	
 
+    /// Return half ribbon width
     virtual double ribbonHalfWidth() const;
 
+ 
     /// Given an AcdId, provide the tile size, center and corners
     virtual bool fillTileData(const idents::AcdId& id, int iVol,
-			      int& face,
+			      HepTransform3D& transform,
 			      std::vector<double>& dim, 
 			      HepPoint3D& center,
 			      HepPoint3D* corner);
-
-    /// Given an AcdId, provide transform to tile frame
-    virtual bool fillTileTransform(const idents::AcdId& id, int iVol,
-				   HepTransform3D& transform);
 
     /// Given an AcdId, provide positions of screw holes in local frame
     virtual bool fillScrewHoleData(const idents::AcdId& id, std::vector< HepPoint3D >& screwHoles);
@@ -109,9 +108,25 @@ public:
 					const std::vector<double>& dim1, const std::vector<double>& dim2,
 					int& sharedEdge1, int& sharedEdge2,
 					float& sharedWidth1, float& sharedWidth2);
-    virtual AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier 
-                                                &volId);
 
+    AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId);
+
+protected:
+
+    /// Used in initializing 
+    StatusCode getConstants();
+    StatusCode getDetectorListFromGeometry();
+    StatusCode findCornerGaps();
+
+    // Utilities
+    StatusCode getDimensions(const idents::VolumeIdentifier &volIId, 
+			     std::vector<double> &dims, 
+			     HepPoint3D &xT) const;
+  
+    StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, 
+				     std::vector<double> &dims, 
+				     HepPoint3D &xT) const;
+  
 
 private:
 
@@ -121,6 +136,8 @@ private:
     
     /// pointer to the detector service
     IGlastDetSvc *m_glastDetSvc;
+
+    AcdGeomMap m_geomMap;
 
     int m_numTiles, m_numRibbons;
     int m_numXtowers, m_numYtowers;

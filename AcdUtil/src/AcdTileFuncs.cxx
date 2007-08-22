@@ -16,7 +16,7 @@ namespace AcdTileUtil {
     }
   }
 
-  void tileScrewHoleDoca(const idents::AcdId& tileId, const double& activeX, const double& activeY, 
+  void tileScrewHoleDoca(const AcdTileDim& tile, const double& activeX, const double& activeY, 
 			 const double& /*covXX*/, const double& /*covYY*/, const double& /*covXY*/,
 			 double& doca, double& docaErr, int& iHole) {
     

@@ -3,6 +3,7 @@
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Matrix/SymMatrix.h"
 #include "idents/AcdId.h"
 #include "idents/AcdGapId.h"
 #include "idents/VolumeIdentifier.h"
@@ -22,53 +23,48 @@ namespace AcdRecon {
     void reset(double maxDist) {
       m_id = idents::AcdId();
  
-      m_arcLengthCenter = 0.;
-      m_docaCenter = maxDist;
-      m_pocaCenter = Point(); 
-
       m_arcLengthPlane = 0.;
+      m_hitsPlane = Point();
+      m_inPlane = Point();
+      m_planeError = HepSymMatrix(2,1);
+      m_volume = -1;
+
+      m_cosTheta = 0.;
+      m_path = 0;
       m_activeX = -maxDist;
       m_activeY = -maxDist;
       m_active2D = -maxDist;
-      m_inPlane = Point();
-      m_localCovXX = 0;
-      m_localCovXY = 0;
-      m_localCovYY = 0;
-      m_cosTheta = 0.;
-      m_path = 0;
 
       m_arcLength = 0.;
-      m_active3D = -maxDist;
-      m_active3DErr = 0;
+      m_ribbonLength = 0.;
       m_poca = Point(); 
       m_pocaVector = Vector();
-
+      m_active3D = -maxDist;
+      m_active3DErr = 0;
       m_region = -1;
+
     }
-    idents::AcdId m_id;       // The AcdId of the hit element
+    idents::AcdId m_id;        // The AcdId of the hit element
 
-    double m_arcLengthCenter; // Length along the track to the POCA to the center of the tile
-    double m_docaCenter;      // The distance of closest aproach to the center of the tile
-    Point m_pocaCenter; 
+    double m_arcLengthPlane;   // Length along the track to the plane of the detector
+    Point m_hitsPlane;         // 3D point that track crosses detector plane, in global coordiantes
+    Point m_inPlane;           // 3D point that track crosses detector plane, in global coordiantes
+    HepSymMatrix m_planeError; // 2x2 covarience martix in the detector plane    
+    int m_volume;              // Which volume got hit
 
-    double m_arcLengthPlane;  // Length along the track to the plane of the detector
-    double m_activeX;         // 2D active distance local X
-    double m_activeY;         // 2D active distance local y
-    double m_active2D;        // The distance of closest aproach to the relevent edge in 2D
-    Point m_inPlane;          // 3D point that track crosses detector plane
-    double m_localX;          // The local coordinates
-    double m_localY; 
-    double m_localCovXX;      // The local covarience terms
-    double m_localCovXY;
-    double m_localCovYY;
     double m_cosTheta;        // angle between track and plane normal
     double m_path;            // pathlength of track in plane
+    double m_activeX;         // The distance of closest aproach to the relevent X edge in 2D
+    double m_activeY;         // The distance of closest aproach to the relevent Y edge in 2D (also, length along ribbon)
+    double m_active2D;        // The distance of closest aproach to the relevent edge in 2D
 
     double m_arcLength;       // Length along the track to the poca
-    double m_active3D;        // The distance of closest aproach to the relevent edge in 3D
-    double m_active3DErr;     // The error on distance of closest aproach to the relevent edge in 3D
+    double m_ribbonLength;    // Length along the ribbon to the poca
     Point m_poca;             // Point of closest approach
     Vector m_pocaVector;      // Vector from Track to POCA
+
+    double m_active3D;        // The distance of closest aproach to the relevent edge in 3D
+    double m_active3DErr;     // The error on distance of closest aproach to the relevent edge in 3D
 
     int m_region;             // One of the enums defined in Event/Recon/AcdRecon/AcdTkrPoca.h 
   };  
@@ -87,6 +83,18 @@ namespace AcdRecon {
     int    m_face;        // 0:top 1:-X 2:-Y 3:+X 4:+Y 5:bottom
     double m_arcLength;   // Length along the track to the m_x
     Point  m_x;           // Intersection Point
+  };
+
+  /// this strtuc stores the ACD fiducial volume,  (Should be filled from XML geom svc)
+  struct AcdVolume {
+  public:
+    AcdVolume():
+      m_top(754.6),m_sides(840.14),m_bottom(-50.){;}
+    AcdVolume(double top, double sides, double bottom):
+      m_top(top),m_sides(sides),m_bottom(bottom){;}
+    double     m_top;     // top is defined by planes at + 754.6 -> up to stacking of tiles
+    double     m_sides;   // sides are defined by planes at +-840.14
+    double     m_bottom;  // bottom of the ACD is at the z=-50 plane
   };
 
   /// this struct stores the track pointing data that we pass around
