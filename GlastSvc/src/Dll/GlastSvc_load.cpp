@@ -20,6 +20,7 @@ DECLARE_FACTORY_ENTRIES(GlastSvc) {
     DECLARE_CONVERTER( EventCnv );
     DECLARE_CONVERTER( MCEventCnv );
     DECLARE_ALGORITHM( CurrentEventAlg );
+    DECLARE_SERVICE( GlastHistorySvc );
 
        DECLARE_ALGORITHM( SetSeeds );    
 
