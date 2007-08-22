@@ -1494,7 +1494,7 @@
   </const>
 
   <const name="ribToR1MinZ">
-    <notes>bottom of ribbon segment behind R1 on +Y and -Y sides</notes>
+    <notes>bottom of ribbon segment behind R1 </notes>
     <minus>
       <refer refTo="ribToR1MaxZ" />
       <refer refTo="ribbonExtendAngleSide" />
@@ -1502,7 +1502,7 @@
   </const>
 
   <const name="ribToR1_dz" >
-    <notes>Z disp. of ribbon segment behind R1 on +Y and -Y sides</notes>
+    <notes>Z disp. of ribbon segment behind R1 </notes>
     <half>
       <add>
         <refer refTo="ribToR1MaxZ" />
@@ -1573,7 +1573,7 @@
   </const>
 
   <const name="ribToR1_an" uType="count" >
-    <notes> Angle for ribbon segment (-Y side)</notes>
+    <notes> Angle for ribbon segment (-Y  or -X side)</notes>
     <uminus>
       <refer refTo="ribToR1_a" />
     </uminus>
@@ -1593,7 +1593,7 @@
   </const>
  
   <const name="ribR1MaxZ" >
-    <notes>Ribbons behind row 1 side tiles on Y faces</notes>
+    <notes>Ribbons behind row 1 side tiles </notes>
     <refer refTo="ribToR1MinZ" />
   </const>
 
@@ -1603,7 +1603,7 @@
   </const>
 
   <const name="ribR1MinZ" >
-    <notes>Ribbons behind row 1 side tiles on Y faces extend
+    <notes>Ribbons behind row 1 side tiles extend
            a fixed amount beyond bottom of tile</notes>
     <minus>
       <refer refTo="tileSideR1_dz" />
@@ -1622,7 +1622,7 @@
 
 
   <const name="ribR1_dz" >
-    <notes>Ribbons behind row 1 side tiles on Y faces</notes>
+    <notes>Ribbons behind row 1 side tiles </notes>
     <half>
       <add>
         <refer refTo="ribR1MaxZ" />
@@ -1632,7 +1632,7 @@
   </const>
 
   <const name="ribR1_len" >
-    <notes>Ribbons behind row 1 side tiles on Y faces</notes>
+    <notes>Ribbons behind row 1 side tiles </notes>
     <quo>
       <minus>
         <refer refTo="ribR1MaxZ" />
@@ -1673,6 +1673,195 @@
       <refer refTo="ribR1_dt" />
     </uminus>
   </const>
+
+
+  <const name="ribToR2MaxZ">
+    <notes>top of ribbon segment behind R2</notes>
+    <refer refTo="ribR1MinZ" />
+  </const>
+
+  <const name="ribToR2MinZ">
+    <notes>bottom of ribbon segment behind R2 </notes>
+    <minus>
+      <refer refTo="ribToR2MaxZ" />
+      <refer refTo="ribbonExtendAngleSide" />
+    </minus>
+  </const>
+
+  <const name="ribToR2_dz" >
+    <notes>Z disp. of ribbon segment behind R2 </notes>
+    <half>
+      <add>
+        <refer refTo="ribToR2MaxZ" />
+        <refer refTo="ribToR2MinZ" />
+      </add>
+    </half>
+  </const>
+
+  <const name="ribToR2MinT">
+    <notes>innermost trans. location of ribbon segment behind R2 </notes>
+    <refer refTo="ribR1MinT" />
+  </const>
+
+
+  <const name="ribToR2MaxT">
+    <notes>(MaxT  + ribToTile , MinZ) is on the line through R2 tile.
+           Have a point on this line (cm of R2 tile) and its slope,
+           so can solve for MaxT:         tan(angle) = &lt;br /&gt;
+   (ToR2MaxT + ribToTile -sideTileR2_dt) / (toR2MinZ - sideTileR2_dz)
+    </notes>
+    <add>
+      <mul>
+        <tan>
+          <refer refTo="sideTileR2_an" />
+        </tan>
+        <minus>
+          <refer refTo="ribToR2MinZ" />
+          <refer refTo="tileSideR2_dz" />
+        </minus>
+      </mul>
+      <refer refTo="tileSideR2_dt" />
+      <uminus>
+        <refer refTo="ribToTile" />
+      </uminus>
+    </add>
+  </const>
+
+  <const name="ribToR2_dt" >
+    <notes>transverse displacement of ribbon segment </notes>
+    <half>
+      <add>
+        <refer refTo="ribToR2MinT" />  
+        <refer refTo="ribToR2MaxT" />  
+      </add>
+    </half>
+  </const>
+
+  <const name="ribToR2_dtn" >
+    <notes>transverse displacement of ribbon segment </notes>
+    <uminus>
+      <refer refTo="ribToR2_dt" />
+    </uminus>
+  </const>
+
+  <const name="ribToR2_a" uType="count" >
+    <notes> Angle for ribbon segment.  </notes>
+    <atan>
+      <quo>
+        <minus>
+          <refer refTo="ribToR2MaxT" />
+          <refer refTo="ribToR2MinT" />
+        </minus>
+        <minus>
+          <refer refTo="ribToR2MaxZ" />
+          <refer refTo="ribToR2MinZ" />
+        </minus>
+      </quo>
+    </atan>
+  </const>
+
+  <const name="ribToR2_an" uType="count" >
+    <notes> Angle for ribbon segment (-Y side)</notes>
+    <uminus>
+      <refer refTo="ribToR2_a" />
+    </uminus>
+  </const>
+  
+  <const name="ribToR2_len" >
+    <notes>Length of this ribbon segment.  </notes>
+    <quo>
+      <minus>
+        <refer refTo="ribToR2MaxZ" />
+        <refer refTo="ribToR2MinZ" />
+      </minus>
+      <cos>
+         <refer refTo="ribToR2_an" />
+      </cos>
+    </quo>
+  </const>
+
+  <const name="ribR2MaxZ" >
+    <notes>Ribbons behind row 2 side tiles </notes>
+    <refer refTo="ribToR2MinZ" />
+  </const>
+
+  <const name="ribR2MaxT" >
+    <notes>Ribbons behind row 2 side tiles </notes>
+    <refer refTo="ribToR2MaxT" />
+  </const>
+
+  <const name="ribR2MinZ" >
+    <notes>Ribbons behind row 2 side tiles extend
+           a fixed amount beyond bottom of tile</notes>
+    <minus>
+      <refer refTo="tileSideR2_dz" />
+      <add>
+        <mul>
+          <refer refTo="sideTileHeight1" />
+          <cos>
+            <refer refTo="sideTileR2_a" />
+          </cos>
+          <const uType="count" value="0.5" />
+        </mul>
+        <refer refTo="ribbonExtendSide" />
+      </add>
+    </minus>
+  </const>
+
+
+  <const name="ribR2_dz" >
+    <notes>Ribbons behind row 2 side tiles </notes>
+    <half>
+      <add>
+        <refer refTo="ribR2MaxZ" />
+        <refer refTo="ribR2MinZ" />
+      </add>
+    </half>
+  </const>
+
+  <const name="ribR2_len" >
+    <notes>Ribbons behind row 2 side tiles </notes>
+    <quo>
+      <minus>
+        <refer refTo="ribR2MaxZ" />
+        <refer refTo="ribR2MinZ" />
+      </minus>
+      <cos>
+        <refer refTo="sideTileR2_a" />
+      </cos>
+    </quo>
+  </const>
+
+  <const name="ribR2MinT" >
+    <notes>Ribbons behind row 2 side tiles </notes>
+    <minus>
+      <refer refTo="ribR2MaxT" />
+      <mul>
+        <refer refTo="ribR2_len" />
+        <sin>
+          <refer refTo="sideTileR2_a" />
+        </sin>
+      </mul>
+    </minus>
+  </const>
+
+  <const name="ribR2_dt" >
+    <notes>Y-disp for ribbons behind row 2 side tiles</notes>
+    <half>
+      <add>
+        <refer refTo="ribR2MaxT" />
+        <refer refTo="ribR2MinT" />
+      </add>
+    </half>
+  </const>
+ 
+  <const name="ribR2_dtn" >
+    <notes>Y-disp for ribbons behind row 2 side tiles </notes>
+    <uminus>
+      <refer refTo="ribR2_dt" />
+    </uminus>
+  </const>
+
 
    <!--  comment out original segmented side ribbon stuff for now 
          See noslantsideribbons.xml -->
