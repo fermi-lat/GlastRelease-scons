@@ -1399,18 +1399,6 @@
     </mul>
   </const>
 
-<!--
-  <const name="ribSideToR0MaxY" >
-    <notes>max Y for this (ToR0) side segment is min Y for the next one
-    </notes>
-    <add>
-      <refer refTo="ribSideToR0_dy" />
-      <half>
-        <refer refTo="ribSideToR0_y" />
-      </half>
-     </add>
-   </const>
--->
   <const name="ribSideToR0MinZ" >
     <notes>min Z for this (ToR0) side segment is maxZ for the next one
     </notes>
@@ -1426,6 +1414,7 @@
     <notes>Equals min Z of segment above</notes>
     <refer refTo="ribSideToR0MinZ" />
   </const>
+
 
   <const name="ribYSideR0MinZ" >
     <notes>Extends a known distance beyond min z of side tile R0</notes>
@@ -1463,18 +1452,18 @@
     </add>
   </const>
 
-  <const name="ribYSideR0_dy" >
-    <notes>Displacement on +Y side of ribbons behind tile 0</notes>
+  <const name="ribR0_dt" >
+    <notes>Trans displ of ribbons behind tile 0, +X and +Y sides</notes>
     <minus>
       <refer refTo="tileSideR0_dt" />
       <refer refTo="ribToTile" />
     </minus>
   </const>
 
-  <const name="ribYSideR0_dyn" >
-    <notes>Displacement on -Y side of ribbons behind tile 0</notes>
+  <const name="ribR0_dtn" >
+    <notes>Trans. displ of ribbons behind tile 0, -X and -Y sides</notes>
     <uminus>
-      <refer refTo="ribYSideR0_dy" />
+      <refer refTo="ribR0_dt" />
     </uminus>
   </const>
 
@@ -1487,6 +1476,46 @@
       </add>
     </half>
   </const>  
+
+
+<!-- Ribbon segments along X-sides are all congruent with ones along
+     Y-sides except for the ones behind Row 0 -->
+  <const name="ribXSideR0MaxZ" >
+    <notes>Equals min Z of Y-measuring ribbons across the top</notes>
+    <minus>
+      <refer refTo="yRibbonTopAbs_dz" />
+      <half>
+        <refer refTo="ribbonThickness" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="ribXSideR0MinZ" >
+    <notes>Extends a known distance beyond min z of side tile R0,
+           same as for YSide ribbons behind R0</notes>
+    <refer refTo="ribYSideR0MinZ" />
+  </const>
+
+  <const name="ribXSideR0_z" >
+    <notes> Z extent (=length) of ribbon segment on X-side behind 
+           tile row 0 </notes>
+    <minus>
+      <refer refTo="ribXSideR0MaxZ" />
+      <refer refTo="ribXSideR0MinZ" />
+    </minus>
+  </const>
+
+  <const name="ribXSideR0_dz" >
+    <notes>Z-displacement of ribbons behind side tile 0, +X and -X sides
+    </notes>
+    <half>
+      <add>
+        <refer refTo="ribXSideR0MaxZ" />
+        <refer refTo="ribXSideR0MinZ" />
+      </add>
+    </half>
+  </const>
+
 
   <const name="ribToR1MaxZ">
     <notes>top of ribbon segment behind R1 on +Y and -Y sides</notes>
@@ -1513,7 +1542,7 @@
 
   <const name="ribToR1MinT">
     <notes>innermost trans. location of ribbon segment behind R1 </notes>
-    <refer refTo="ribYSideR0_dy" />
+    <refer refTo="ribR0_dt" />
   </const>
 
   <const name="ribToR1MaxT">

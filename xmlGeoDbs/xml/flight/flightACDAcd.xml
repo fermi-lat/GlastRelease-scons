@@ -1143,6 +1143,52 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
+
+<!-- X-side ribbons -->
+<box name="ribXSideR0"
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribXSideR0_z"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<!-- Remaining XSide volumes are congruent to Y, just rotated 90 degrees -->
+<box name="ribXSideToR1"
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribToR1_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+
+<box name="ribXSideR1"
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribR1_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="ribXSideToR2"
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribToR2_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+<box name="ribXSideR2"
+     XREF="ribbonThickness"
+     YREF="ribbonWidth"
+     ZREF="ribR2_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+
+
+
 <!-- May '07 Define all the new pieces of vertical ribbons with dimensions
      such that they do not require any 90-degree rotations to be
      correct for the LAT global coordinate system.  Ribbon thickness
