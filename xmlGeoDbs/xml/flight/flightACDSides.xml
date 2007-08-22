@@ -1557,7 +1557,7 @@
 <!-- Angled segments of ribbon running from behind R0 to  R1 -->
   <posXYZ volume="ribToR1"
           XREF="xRibbonOuter_dxn"
-          YREF="ribToR1_dyn"
+          YREF="ribToR1_dtn"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_an" >
     &YNegFaceRibbon;
@@ -1567,7 +1567,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonInner_dxn"
-          YREF="ribToR1_dyn"
+          YREF="ribToR1_dtn"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_an" >
     &YNegFaceRibbon;
@@ -1577,7 +1577,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonInner_dx"
-          YREF="ribToR1_dyn"
+          YREF="ribToR1_dtn"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_an" >
     &YNegFaceRibbon;
@@ -1587,7 +1587,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonOuter_dx"
-          YREF="ribToR1_dyn"
+          YREF="ribToR1_dtn"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_an" >
     &YNegFaceRibbon;
@@ -1597,7 +1597,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonOuter_dxn"
-          YREF="ribToR1_dy"
+          YREF="ribToR1_dt"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_a" >
     &YPosFaceRibbon;
@@ -1607,7 +1607,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonInner_dxn"
-          YREF="ribToR1_dy"
+          YREF="ribToR1_dt"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_a" >
     &YNegFaceRibbon;
@@ -1617,7 +1617,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonInner_dx"
-          YREF="ribToR1_dy"
+          YREF="ribToR1_dt"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_a" >
     &YNegFaceRibbon;
@@ -1627,7 +1627,7 @@
 
   <posXYZ volume="ribToR1"
           XREF="xRibbonOuter_dx"
-          YREF="ribToR1_dy"
+          YREF="ribToR1_dt"
           ZREF="ribToR1_dz" 
           xrotREF="ribToR1_a" >
     &YNegFaceRibbon;
@@ -1640,7 +1640,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_a"
           XREF="xRibbonOuter_dxn"
-          YREF="ribR1_dyn"
+          YREF="ribR1_dtn"
           ZREF="ribR1_dz" >
     &YNegFaceRibbon;
     <idField name="fRibbon"  value="0" />
@@ -1650,7 +1650,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_a"
           XREF="xRibbonInner_dxn"
-          YREF="ribR1_dyn"
+          YREF="ribR1_dtn"
           ZREF="ribR1_dz" >
     &YNegFaceRibbon;
     <idField name="fRibbon"  value="1" />
@@ -1660,7 +1660,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_a"
           XREF="xRibbonInner_dx"
-          YREF="ribR1_dyn"
+          YREF="ribR1_dtn"
           ZREF="ribR1_dz" >
     &YNegFaceRibbon;
     <idField name="fRibbon"  value="2" />
@@ -1670,7 +1670,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_a"
           XREF="xRibbonOuter_dx"
-          YREF="ribR1_dyn"
+          YREF="ribR1_dtn"
           ZREF="ribR1_dz" >
     &YNegFaceRibbon;
     <idField name="fRibbon"  value="3" />
@@ -1681,7 +1681,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_an"
           XREF="xRibbonOuter_dxn"
-          YREF="ribR1_dy"
+          YREF="ribR1_dt"
           ZREF="ribR1_dz" >
     &YPosFaceRibbon;
     <idField name="fRibbon"  value="0" />
@@ -1691,7 +1691,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_an"
           XREF="xRibbonInner_dxn"
-          YREF="ribR1_dy"
+          YREF="ribR1_dt"
           ZREF="ribR1_dz" >
     &YPosFaceRibbon;
     <idField name="fRibbon"  value="1" />
@@ -1701,7 +1701,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_an"
           XREF="xRibbonInner_dx"
-          YREF="ribR1_dy"
+          YREF="ribR1_dt"
           ZREF="ribR1_dz" >
     &YPosFaceRibbon;
     <idField name="fRibbon"  value="2" />
@@ -1711,7 +1711,7 @@
   <posXYZ volume="ribR1"
           xrotREF="sideTileR1_an"
           XREF="xRibbonOuter_dx"
-          YREF="ribR1_dy"
+          YREF="ribR1_dt"
           ZREF="ribR1_dz" >
     &YPosFaceRibbon;
     <idField name="fRibbon"  value="3" />

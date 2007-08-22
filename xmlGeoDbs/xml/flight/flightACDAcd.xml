@@ -1126,7 +1126,15 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
-
+<!--
+<box name="ribToR2"
+     XREF="ribbonWidth"
+     YREF="ribbonThickness"
+     ZREF="ribToR2_len"
+     materialREF="ribbonMat"
+     sensitive="posHit"
+     detectorTypeREF="eDTypeACDRibbon" />
+-->
 <!-- May '07 Define all the new pieces of vertical ribbons with dimensions
      such that they do not require any 90-degree rotations to be
      correct for the LAT global coordinate system.  Ribbon thickness
@@ -1134,104 +1142,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      for.  In some cases two volumes will be defined which differ
      only by a rotation.
 -->
-   <!--  comment out ribbon stuff for now TEMP
-<box name="xRibbonSideVert0" 
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="xRibbonSideVert0_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-     
-<box name="yRibbonSideVert0" 
-     XREF="ribbonThickness"
-     YREF="ribbonWidth"
-     ZREF="yRibbonSideVert0_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
 
-<box name="xRibbonSideVert1" 
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="ribbonSideVert1_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-     
-<box name="yRibbonSideVert1" 
-     XREF="ribbonThickness"
-     YREF="ribbonWidth"
-     ZREF="ribbonSideVert1_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-     
-<box name="xRibbonSideVert2" 
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="ribbonSideVert2_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
-<box name="yRibbonSideVert2" 
-     XREF="ribbonThickness"
-     YREF="ribbonWidth"
-     ZREF="ribbonSideVert2_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
-<box name="xRibbonSideVert3" 
-     XREF="ribbonWidth"
-     YREF="ribbonThickness"
-     ZREF="ribbonSideVert3_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
-<box name="yRibbonSideVert3" 
-     XREF="ribbonThickness"
-     YREF="ribbonWidth"
-     ZREF="ribbonSideVert3_l"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
--->
-
-<!-- Transverse bits in Y-measuring ribbons are all congruent. X-measuring
-     ribbons have this kind as well as a longer transverse piece under
-     bent tiles.  Define both as if they were part of X-measuring ribbons.
-     That is, ribbon width is in X-dimension, length in y, thickness in Z 
-     ribbonSideTrans0 is the special X-only one; ribbonSideTrans is the
-     standard kind used in all side ribbons. -->
-
-   <!--  comment out ribbon stuff for now TEMP
-<box name="xRibbonSideTrans0" 
-     XREF="ribbonWidth"
-     YREF="ribbonSideTrans0_l"
-     ZREF="ribbonThickness"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
-<box name="xRibbonSideTrans" 
-     XREF="ribbonWidth"
-     YREF="ribbonSideTrans_l"
-     ZREF="ribbonThickness"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
-
-<box name="yRibbonSideTrans" 
-     XREF="ribbonSideTrans_l"
-     YREF="ribbonWidth"
-     ZREF="ribbonThickness"
-     materialREF="ribbonMat"
-     sensitive="posHit"
-     detectorTypeREF="eDTypeACDRibbon" />
--->
 
 <!-- Make rows for faces 2 & 3) with lesser trans. dimension first.
      Side 2 rotated +90 about Z is isomorphic to side 3, but we don't
