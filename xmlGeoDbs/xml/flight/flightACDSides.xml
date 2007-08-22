@@ -1015,3 +1015,167 @@
     <idField name="fRibbon"  value="3" />
     <idField name="fRibbonSegment" value="2" />    
   </posXYZ>
+
+<!-- Segments angling from R1 to R2 -->
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dtn"
+          YREF="xRibbonOuter_dxn"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_a" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dtn"
+          YREF="xRibbonInner_dxn"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_a" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dtn"
+          YREF="xRibbonInner_dx"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_a" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dtn"
+          YREF="xRibbonOuter_dx"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_a" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+<!-- +X side -->
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dt"
+          YREF="xRibbonOuter_dxn"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_an" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dt"
+          YREF="xRibbonInner_dxn"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_an" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dt"
+          YREF="xRibbonInner_dx"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_an" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideToR2"
+          XREF="ribToR2_dt"
+          YREF="xRibbonOuter_dx"
+          ZREF="ribToR2_dz" 
+          yrotREF="ribToR2_an" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="7" />    
+  </posXYZ>
+
+<!-- Segments behind row 2, +X and -X sides -->
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_an"
+          XREF="ribR2_dtn"
+          YREF="xRibbonOuter_dxn"
+          ZREF="ribR2_dz" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_an"
+          XREF="ribR2_dtn"
+          YREF="xRibbonInner_dxn"
+          ZREF="ribR2_dz" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_an"
+          XREF="ribR2_dtn"
+          YREF="xRibbonInner_dx"
+          ZREF="ribR2_dz" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_an"
+          XREF="ribR2_dtn"
+          YREF="xRibbonOuter_dx"
+          ZREF="ribR2_dz" >
+    &XNegFaceRibbon;
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+<!-- now for +X side -->
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_a"
+          XREF="ribR2_dt"
+          YREF="xRibbonOuter_dxn"
+          ZREF="ribR2_dz" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="0" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_a"
+          XREF="ribR2_dt"
+          YREF="xRibbonInner_dxn"
+          ZREF="ribR2_dz" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="1" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_a"
+          XREF="ribR2_dt"
+          YREF="xRibbonInner_dx"
+          ZREF="ribR2_dz" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="2" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
+
+  <posXYZ volume="ribXSideR2"
+          yrotREF="sideTileR2_a"
+          XREF="ribR2_dt"
+          YREF="xRibbonOuter_dx"
+          ZREF="ribR2_dz" >
+    &XPosFaceRibbon;
+    <idField name="fRibbon"  value="3" />
+    <idField name="fRibbonSegment" value="3" />    
+  </posXYZ>
