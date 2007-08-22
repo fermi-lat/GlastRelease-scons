@@ -1488,35 +1488,35 @@
     </half>
   </const>  
 
-  <const name="ribYSideToR1MaxZ">
+  <const name="ribToR1MaxZ">
     <notes>top of ribbon segment behind R1 on +Y and -Y sides</notes>
     <refer refTo="ribYSideR0MinZ" />
   </const>
 
-  <const name="ribYSideToR1MinZ">
+  <const name="ribToR1MinZ">
     <notes>bottom of ribbon segment behind R1 on +Y and -Y sides</notes>
     <minus>
-      <refer refTo="ribYSideToR1MaxZ" />
+      <refer refTo="ribToR1MaxZ" />
       <refer refTo="ribbonExtendAngleSide" />
     </minus>
   </const>
 
-  <const name="ribYSideToR1_dz" >
+  <const name="ribToR1_dz" >
     <notes>Z disp. of ribbon segment behind R1 on +Y and -Y sides</notes>
     <half>
       <add>
-        <refer refTo="ribYSideToR1MaxZ" />
-        <refer refTo="ribYSideToR1MinZ" />
+        <refer refTo="ribToR1MaxZ" />
+        <refer refTo="ribToR1MinZ" />
       </add>
     </half>
   </const>
 
-  <const name="ribYSideToR1MinY">
+  <const name="ribToR1MinY">
     <notes>innermost Y of ribbon segment behind R1 on +Y and -Y sides</notes>
     <refer refTo="ribYSideR0_dy" />
   </const>
 
-  <const name="ribYSideToR1MaxY">
+  <const name="ribToR1MaxY">
     <notes>(MaxY  + ribToTile , MinZ) is on the line through R1 tile.
            Have a point on this line (cm of R1 tile) and its slope,
            so can solve for MaxY:         tan(angle) = &lt;br /&gt;
@@ -1528,7 +1528,7 @@
           <refer refTo="sideTileR1_an" />
         </tan>
         <minus>
-          <refer refTo="ribYSideToR1MinZ" />
+          <refer refTo="ribToR1MinZ" />
           <refer refTo="tileSideR1_dz" />
         </minus>
       </mul>
@@ -1539,70 +1539,70 @@
     </add>
   </const>
 
-  <const name="ribYSideToR1_dy" >
+  <const name="ribToR1_dy" >
     <notes>transverse displacement of ribbon segment (+Y side)</notes>
     <half>
       <add>
-        <refer refTo="ribYSideToR1MinY" />  
-        <refer refTo="ribYSideToR1MaxY" />  
+        <refer refTo="ribToR1MinY" />  
+        <refer refTo="ribToR1MaxY" />  
       </add>
     </half>
   </const>
 
-  <const name="ribYSideToR1_dyn" >
+  <const name="ribToR1_dyn" >
     <notes>transverse displacement of ribbon segment (-Y side)</notes>
     <uminus>
-      <refer refTo="ribYSideToR1_dy" />
+      <refer refTo="ribToR1_dy" />
     </uminus>
   </const>
      
-  <const name="ribYSideToR1_a" uType="count" >
+  <const name="ribToR1_a" uType="count" >
     <notes> Angle for ribbon segment (+Y side).  </notes>
     <atan>
       <quo>
         <minus>
-          <refer refTo="ribYSideToR1MaxY" />
-          <refer refTo="ribYSideToR1MinY" />
+          <refer refTo="ribToR1MaxY" />
+          <refer refTo="ribToR1MinY" />
         </minus>
         <minus>
-          <refer refTo="ribYSideToR1MaxZ" />
-          <refer refTo="ribYSideToR1MinZ" />
+          <refer refTo="ribToR1MaxZ" />
+          <refer refTo="ribToR1MinZ" />
         </minus>
       </quo>
     </atan>
   </const>
 
-  <const name="ribYSideToR1_an" uType="count" >
+  <const name="ribToR1_an" uType="count" >
     <notes> Angle for ribbon segment (-Y side)</notes>
     <uminus>
-      <refer refTo="ribYSideToR1_a" />
+      <refer refTo="ribToR1_a" />
     </uminus>
   </const>
   
-  <const name="ribYSideToR1_len" >
+  <const name="ribToR1_len" >
     <notes>Length of this ribbon segment.  </notes>
     <quo>
       <minus>
-        <refer refTo="ribYSideToR1MaxZ" />
-        <refer refTo="ribYSideToR1MinZ" />
+        <refer refTo="ribToR1MaxZ" />
+        <refer refTo="ribToR1MinZ" />
       </minus>
       <cos>
-         <refer refTo="ribYSideToR1_an" />
+         <refer refTo="ribToR1_an" />
       </cos>
     </quo>
   </const>
  
-  <const name="ribYSideR1MaxZ" >
+  <const name="ribR1MaxZ" >
     <notes>Ribbons behind row 1 side tiles on Y faces</notes>
-    <refer refTo="ribYSideToR1MinZ" />
+    <refer refTo="ribToR1MinZ" />
   </const>
 
-  <const name="ribYSideR1MaxY" >
+  <const name="ribR1MaxY" >
     <notes>Ribbons behind row 1 side tiles on Y faces</notes>
-    <refer refTo="ribYSideToR1MaxY" />
+    <refer refTo="ribToR1MaxY" />
   </const>
 
-  <const name="ribYSideR1MinZ" >
+  <const name="ribR1MinZ" >
     <notes>Ribbons behind row 1 side tiles on Y faces extend
            a fixed amount beyond bottom of tile</notes>
     <minus>
@@ -1621,22 +1621,22 @@
   </const>
 
 
-  <const name="ribYSideR1_dz" >
+  <const name="ribR1_dz" >
     <notes>Ribbons behind row 1 side tiles on Y faces</notes>
     <half>
       <add>
-        <refer refTo="ribYSideR1MaxZ" />
-        <refer refTo="ribYSideR1MinZ" />
+        <refer refTo="ribR1MaxZ" />
+        <refer refTo="ribR1MinZ" />
       </add>
     </half>
   </const>
 
-  <const name="ribYSideR1_len" >
+  <const name="ribR1_len" >
     <notes>Ribbons behind row 1 side tiles on Y faces</notes>
     <quo>
       <minus>
-        <refer refTo="ribYSideR1MaxZ" />
-        <refer refTo="ribYSideR1MinZ" />
+        <refer refTo="ribR1MaxZ" />
+        <refer refTo="ribR1MinZ" />
       </minus>
       <cos>
         <refer refTo="sideTileR1_a" />
@@ -1644,12 +1644,12 @@
     </quo>
   </const>
 
-  <const name="ribYSideR1MinY" >
+  <const name="ribR1MinY" >
     <notes>Ribbons behind row 1 side tiles on Y faces</notes>
     <minus>
-      <refer refTo="ribYSideR1MaxY" />
+      <refer refTo="ribR1MaxY" />
       <mul>
-        <refer refTo="ribYSideR1_len" />
+        <refer refTo="ribR1_len" />
         <sin>
           <refer refTo="sideTileR1_a" />
         </sin>
@@ -1657,20 +1657,20 @@
     </minus>
   </const>
 
-  <const name="ribYSideR1_dy" >
+  <const name="ribR1_dy" >
     <notes>Y-disp for ribbons behind row 1 side tiles on +Y face</notes>
     <half>
       <add>
-        <refer refTo="ribYSideR1MaxY" />
-        <refer refTo="ribYSideR1MinY" />
+        <refer refTo="ribR1MaxY" />
+        <refer refTo="ribR1MinY" />
       </add>
     </half>
   </const>
  
-  <const name="ribYSideR1_dyn" >
+  <const name="ribR1_dyn" >
     <notes>Y-disp for ribbons behind row 1 side tiles on -Y face</notes>
     <uminus>
-      <refer refTo="ribYSideR1_dy" />
+      <refer refTo="ribR1_dy" />
     </uminus>
   </const>
 

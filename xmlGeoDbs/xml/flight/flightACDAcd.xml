@@ -1110,19 +1110,19 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
-<box name="ribYSideToR1"
+<box name="ribToR1"
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="ribYSideToR1_len"
+     ZREF="ribToR1_len"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
 
 
-<box name="ribYSideR1"
+<box name="ribR1"
      XREF="ribbonWidth"
      YREF="ribbonThickness"
-     ZREF="ribYSideR1_len"
+     ZREF="ribR1_len"
      materialREF="ribbonMat"
      sensitive="posHit"
      detectorTypeREF="eDTypeACDRibbon" />
