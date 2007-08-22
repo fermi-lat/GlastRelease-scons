@@ -6,6 +6,7 @@
 
 // List of required services
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" ,
+ "GlastHistorySvc",
  "EventSelector/EventSelector" };
  //"EventSelector/EventSelector" , "EventCnvSvc" };
  //  "GlastEventSelectorNew/EventSelector" , "EventCnvSvc" };
@@ -19,6 +20,8 @@ EventSelector.Input = "SVC='DbEvtSelector' ConversionSvc='EventCnvSvc' ";
 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc" };
+
+GlastHistorySvc.Dump = true;
 
 //--------------------------------------------------------------------------
 

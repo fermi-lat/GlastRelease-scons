@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r22
+version v9r23
 
 branches src cmt doc
 #$Id$
@@ -38,6 +38,8 @@ library GlastSvc  -import=detModel -import=CLHEP -import=xmlUtil \
      -s="../GlastSvc\MonteCarlo" $(headers)\
      -s="../GlastSvc\EventSelector" $(headers) \
      -s="CurrentEventAlg" *.cxx \
+     -s="../GlastSvc\HistorySvc" $(headers)\
+     -s="HistorySvc" $(headers) *.cxx \
      -s="EventSelector" $(headers) *.cpp 
             
 
