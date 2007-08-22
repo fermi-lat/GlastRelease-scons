@@ -67,7 +67,7 @@ GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/lat2TowerSegVols.xml";
 //
 // Name of the digi file we read in:
 // 
-digiRootReaderAlg.digiRootFile = "digi.root";
+digiRootReaderAlg.digiRootFileList = { "digi.root" } ;
 
 //
 // Output Merit file name:

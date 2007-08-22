@@ -28,10 +28,11 @@ Digitization.Members   = {"digiRootReaderAlg"};
 Reconstruction.Members = {"reconRootReaderAlg", "relationRootReaderAlg"};
 Filter.Members         = {};
 
-mcRootReaderAlg.mcRootFile       = "$(ROOTTESTDATAROOT)/data/default/mc.root";
-digiRootReaderAlg.digiRootFile   = "$(ROOTTESTDATAROOT)/data/default/digi.root";
-reconRootReaderAlg.reconRootFile = "$(ROOTTESTDATAROOT)/data/default/recon.root";
-relationRootReaderAlg.rootFile   = "$(ROOTTESTDATAROOT)/data/default/relations.root";
+mcRootReaderAlg.mcRootFileList       = { "$(ROOTTESTDATAROOT)/data/default/mc.root" } ;
+digiRootReaderAlg.digiRootFileList   = { "$(ROOTTESTDATAROOT)/data/default/digi.root" } ;
+reconRootReaderAlg.reconRootFileList = { "$(ROOTTESTDATAROOT)/data/default/recon.root" } ;
+relationRootReaderAlg.relationRootFileList = { "$(ROOTTESTDATAROOT)/data/default/relations.root" } ;
+
 ApplicationMgr.EvtMax = 5;
 
 //==============================================================

@@ -48,7 +48,8 @@ OutputEvent.Members = {
 // -------------------------------------------------
 //          input files
 
-digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
+digiRootReaderAlg.digiRootFileList = { "$(digiRootFileName)" } ;
+
 
 // ------------------------------------------------
 //          output

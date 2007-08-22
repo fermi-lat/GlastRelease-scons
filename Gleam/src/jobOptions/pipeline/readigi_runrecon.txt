@@ -259,7 +259,7 @@ GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
 //
 // Name of input digi Root file:
 //
-digiRootReaderAlg.digiRootFile = "digi.root";
+digiRootReaderAlg.digiRootFileList = { "digi.root" } ;
 
 
 //

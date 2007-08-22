@@ -4,7 +4,7 @@
 // 1) allows for recon output, and user defined names
 // 2) calls the EM geometry to actually read REAL data
 //
-// User should change the path of digiRootReaderAlg.digiRootFile to the correct
+// User should change the path of digiRootReaderAlg.digiRootFileList to the correct
 // digi file to be read, and can modify suitably the paths to the output files in
 // meritAlg.RootFilename and reconRootWriterAlg.reconRootFile
 //
@@ -34,7 +34,7 @@ GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
 Output.Members = {"reconRootWriterAlg"}; 
 
 // PUT YOUR DIGI FILE PATH HERE*******************************
-digiRootReaderAlg.digiRootFile="/home/cohen/Xin/ebf030507023417_digi.root"; 
+digiRootReaderAlg.digiRootFileList = { "/home/cohen/Xin/ebf030507023417_digi.root" } ; 
 
 //change the names as desired
 meritAlg.RootFilename            = "/home/cohen/Xin/ebf030507023417_merit.root"; 
