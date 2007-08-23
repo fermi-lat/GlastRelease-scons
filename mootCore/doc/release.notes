@@ -6,6 +6,9 @@
 
    *  EOH  *
 
+   v1r5   23-Aug-2007 jrb  Added queries; enhanced registerVote so that
+                           up-to-dateness can be verified realistically;
+                           more changes to intent.xsd.
    v1r4   5-Jul-2007  jrb  Further update of intent.xsd; bring mood_user.xml
                            and mood.xml up to date. Properly reference new
                            services in py interface file
