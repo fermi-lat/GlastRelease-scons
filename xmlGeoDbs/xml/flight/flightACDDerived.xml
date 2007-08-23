@@ -1308,10 +1308,11 @@
     </minus>
   </const>
 
-  <const name="ribSideToR0_len">
+  <const name="ribSideToR0_l">
     <notes>Length of angled ribbon pieces just below segments behind
-           bent tiles.  Will probably have to subtract a little
-           to avoid overlaps with adjacent ribbon segments.
+           bent tiles.  This calculation ignores finite thickness and
+           width of ribbon, so if used for volume there will be overlaps.  see
+           _len version below.
     </notes>
     <sqrt>
       <add>
@@ -1325,6 +1326,20 @@
         </mul>
       </add>
     </sqrt>
+  </const>
+
+  <const name="ribSideToR0_len">
+    <notes>  Subtract a little
+           to avoid overlaps with adjacent ribbon segments.</notes>
+    <minus>
+      <refer refTo="ribSideToR0_l" />
+      <mul>
+        <refer refTo="ribbonThickness" />
+        <sin>
+          <refer refTo="ribSideToR0_a" />
+        </sin>
+      </mul>
+    </minus>
   </const>
 
   <const name="ribSideToR0_dz" >
@@ -1390,9 +1405,9 @@
   </const>
 
   <const name="ribSideToR0_z" >
-    <notes>Z-extent is length * cos angle</notes>
+    <notes>Z-extent (of central axis) is length * cos angle</notes>
     <mul>
-      <refer refTo="ribSideToR0_len" />
+      <refer refTo="ribSideToR0_l" />
       <cos>
         <refer refTo="ribSideToR0_a" />
       </cos>
@@ -1608,8 +1623,9 @@
     </uminus>
   </const>
   
-  <const name="ribToR1_len" >
-    <notes>Length of this ribbon segment.  </notes>
+  <const name="ribToR1_l" >
+    <notes>Length this ribbon segment would be if it had no
+           thickness or width  </notes>
     <quo>
       <minus>
         <refer refTo="ribToR1MaxZ" />
@@ -1621,6 +1637,19 @@
     </quo>
   </const>
  
+  <const name="ribToR1_len" >
+    <notes>Adjust ribToR1_l to take into account finite thickness</notes>
+    <minus>
+      <refer refTo="ribToR1_l" />
+      <mul>
+        <refer refTo="ribbonThickness" />
+        <sin>
+          <refer refTo="ribToR1_a" />
+        </sin>
+      </mul>
+    </minus>
+  </const>
+
   <const name="ribR1MaxZ" >
     <notes>Ribbons behind row 1 side tiles </notes>
     <refer refTo="ribToR1MinZ" />
@@ -1660,8 +1689,8 @@
     </half>
   </const>
 
-  <const name="ribR1_len" >
-    <notes>Ribbons behind row 1 side tiles </notes>
+  <const name="ribR1_l" >
+    <notes>Ribbons behind row 1 side tiles (infinitesimal thickness)</notes>
     <quo>
       <minus>
         <refer refTo="ribR1MaxZ" />
@@ -1673,12 +1702,25 @@
     </quo>
   </const>
 
+  <const name="ribR1_len" >
+    <notes>Ribbons behind row 1 side tiles (real thing) </notes>
+    <minus>
+      <refer refTo="ribR1_l" />
+      <mul>
+        <refer refTo="ribbonThickness" />
+        <sin>
+          <refer refTo="sideTileR1_a" />
+        </sin>
+      </mul>
+    </minus>
+  </const>
+
   <const name="ribR1MinT" >
     <notes>Ribbons behind row 1 side tiles </notes>
     <minus>
       <refer refTo="ribR1MaxT" />
       <mul>
-        <refer refTo="ribR1_len" />
+        <refer refTo="ribR1_l" />
         <sin>
           <refer refTo="sideTileR1_a" />
         </sin>
@@ -1796,17 +1838,30 @@
     </uminus>
   </const>
   
-  <const name="ribToR2_len" >
-    <notes>Length of this ribbon segment.  </notes>
+  <const name="ribToR2_l" >
+    <notes>Length of this ribbon segment (infinitesimal thickness).  </notes>
     <quo>
       <minus>
         <refer refTo="ribToR2MaxZ" />
         <refer refTo="ribToR2MinZ" />
       </minus>
       <cos>
-         <refer refTo="ribToR2_an" />
+         <refer refTo="ribToR2_a" />
       </cos>
     </quo>
+  </const>
+
+  <const name="ribToR2_len" >
+    <notes>Adjust length of finite thickness ribbon to avoid overlaps</notes>
+    <minus>
+      <refer refTo="ribToR2_l" />
+      <mul>
+        <refer refTo="ribbonThickness" />
+        <sin>
+          <refer refTo="ribToR2_a" />
+        </sin>
+      </mul>
+    </minus>
   </const>
 
   <const name="ribR2MaxZ" >
@@ -1848,8 +1903,8 @@
     </half>
   </const>
 
-  <const name="ribR2_len" >
-    <notes>Ribbons behind row 2 side tiles </notes>
+  <const name="ribR2_l" >
+    <notes>Ribbons behind row 2 side tiles (inifinitesmimal thickness) </notes>
     <quo>
       <minus>
         <refer refTo="ribR2MaxZ" />
@@ -1861,12 +1916,25 @@
     </quo>
   </const>
 
+  <const name="ribR2_len" >
+    <notes>Ribbons behind row 2 side tiles (finite thickness) </notes>
+    <minus>
+      <refer refTo="ribR2_l" />
+      <mul>
+        <refer refTo="ribbonThickness" />
+        <sin>
+          <refer refTo="sideTileR2_a" />
+        </sin>
+      </mul>
+    </minus>
+  </const>
+
   <const name="ribR2MinT" >
     <notes>Ribbons behind row 2 side tiles </notes>
     <minus>
       <refer refTo="ribR2MaxT" />
       <mul>
-        <refer refTo="ribR2_len" />
+        <refer refTo="ribR2_l" />
         <sin>
           <refer refTo="sideTileR2_a" />
         </sin>

@@ -44,12 +44,14 @@
     <box name="LATShiftedEnv"
          XREF="bigXZDim" YREF="bigYDim" ZREF="biggerZDim" />
 
-
+<!--
 &CALOneCal;
 &TKROneTkr;
+-->
 &NADGeo;
+<!--
 &oneTower;
-
+-->
     <box name="allTowersEnv"
          XREF="towersTrans" YREF="towersTrans" ZREF="towersTotalZ" />
 <!--
