@@ -196,7 +196,7 @@ namespace AcdRecon {
 	    // is a shared piece.  but this is a short side, so take the distance to the
 	    // other side of this volume
 	    activeY =  dim[1] - activeY;
-	  } else if ( tile.sharedEdge(3) == 1 && localPoint.y() < 0 ) {
+	  } else if ( tile.sharedEdge(1) == 3 && localPoint.y() < 0 ) {
 	    // is a shared piece.  but this is a short side, so take the distance to the
 	    // other side of this volume
 	    activeY =  dim[1] - activeY;
@@ -499,7 +499,7 @@ namespace AcdRecon {
   }
 
 
-  void projecErrorToPlane(const AcdTkrParams& paramsAtArcLength, const CLHEP::HepMatrix& localFrameVectors,
+  void projectErrorToPlane(const AcdTkrParams& paramsAtArcLength, const CLHEP::HepMatrix& localFrameVectors,
 			  CLHEP::HepSymMatrix& covAtPlane) {
     //  U = A V A^T
     //

@@ -137,6 +137,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
       nPocaCrossed = pocaSorter.getPocasToArclength(arcLength,pocasCrossed);    
       StatusCode sc = fillPocaData(track,volId,pocaMap,geomMap,ownedPocaData,pocaData);
       if ( sc.isFailure() ) {
+	log << MSG::ERROR << "AcdTkrIntersectionTool::fillPocaData failed" << endreq;
 	return sc;
       }
       pocasCrossed.push_back(AcdPocaSorter::AcdPocaHolder(AcdPocaSorter::PlanePoca,pocaData));
@@ -345,9 +346,8 @@ StatusCode AcdTkrIntersectTool::fallbackToNominal(const AcdRecon::TrackData& tra
 
 StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, const idents::VolumeIdentifier& volId,
 					     const AcdRecon::PocaDataPtrMap& pocaMap, AcdGeomMap& geomMap,
-					     std::list<AcdRecon::PocaData>& ownedPocaData, AcdRecon::PocaData*& pocaData) {
+					     std::list<AcdRecon::PocaData>& ownedPocaData, AcdRecon::PocaData*& pocaData) {  
 
-  
   // Which ACD id is this?
   idents::AcdId acdId = idents::AcdId(volId);
   int face = volId[1];
@@ -365,6 +365,8 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
     if ( acdId.ribbon() ) { 	
       const AcdRibbonDim* ribbon = geomMap.getRibbon(acdId,*m_acdGeomSvc);
       if ( ribbon->statusCode().isFailure() ) {
+	MsgStream log(msgSvc(),name()) ;
+	log << MSG::ERROR << "Ribbon statusCode is failure" << endreq;
 	return StatusCode::FAILURE;
       }
       HepPoint3D p;
@@ -375,6 +377,8 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
       } else if ( acdId.tile() ) {
 	const AcdTileDim* tile = geomMap.getTile(acdId,*m_acdGeomSvc);
 	if ( tile->statusCode().isFailure() ) {
+	  MsgStream log(msgSvc(),name()) ;
+	  log << MSG::ERROR << "Tile statusCode is failure" << endreq;
 	  return StatusCode::FAILURE;
 	}
 	HepPoint3D p;
@@ -386,7 +390,7 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
       }
     }    
 
-
+  return StatusCode::SUCCESS;
 }
 
 StatusCode AcdTkrIntersectTool::holePoca(const AcdRecon::TrackData& /* track */, 
@@ -457,24 +461,32 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
     if ( pocaData.m_inPlane.x() > 0 ) { gap = 1; }    
     distance = -1.*pocaData.m_activeX;
   } else {
-    if ( pocaData.m_inPlane.x() > 0 ) { col++; }
     if ( pocaData.m_inPlane.y() > 0 ) { row++; }    
     switch ( face ) {
-    case 0:
+    case 0: // TOP, Normal col and row counting 
+      if ( pocaData.m_inPlane.x() > 0 ) { col++; }
       gapType = ( col == 0 || col == 5 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
       if ( pocaData.m_inPlane.y() > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
-    case 1:
-    case 3:    
-      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
-      if ( pocaData.m_inPlane.y() > 0 ) gap = 1;
+    case 1:  // -Y face, column go opposite of local x
+      if ( pocaData.m_inPlane.x() < 0 ) { col++; gap = 1; }
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;      
       distance = -1.*pocaData.m_activeX;
       break;
-    case 2:
-    case 4:
+    case 3:  // +Y face, column go with local x
+      if ( pocaData.m_inPlane.x() > 0 ) { col++; gap = 1; }
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::X_RibbonSide;
+      distance = -1.*pocaData.m_activeX;
+      break;
+    case 2:  // -X face, column go opposite of local x
+      if ( pocaData.m_inPlane.x() < 0 ) { col++; gap = 1; }
       gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
-      if ( pocaData.m_inPlane.y() > 0 ) gap = 1;
+      distance = -1.*pocaData.m_activeX;
+      break;
+    case 4:  // +X face, column go with local x
+      if ( pocaData.m_inPlane.x() > 0 ) { col++; gap = 1; }
+      gapType = ( col == 0 || col == 5 ) ? AcdRecon::SideCornerEdge : AcdRecon::Y_RibbonSide;
       distance = -1.*pocaData.m_activeX;
       break;
     case 5:
@@ -487,7 +499,19 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
     } else if ( gapType == AcdRecon::X_RibbonSide ) {
       whichRibbon = idents::AcdId(5,col-1);      
     }
-    if ( pocaData.m_inPlane.x() > 0 ) { col--; }
+    if ( pocaData.m_inPlane.x() > 0 ) { 
+      switch ( face ) {
+      case 0:
+      case 3:
+      case 4:
+	col--;
+	break;
+      case 1:
+      case 2:
+	col++;
+	break;
+      }
+    }
     if ( pocaData.m_inPlane.y() > 0 ) { row--; }
 
     if ( whichRibbon.ribbon() ) {

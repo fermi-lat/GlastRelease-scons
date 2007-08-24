@@ -19,6 +19,10 @@ AcdPha2MipTool::AcdPha2MipTool
  { 
    declareInterface<AcdIPha2MipTool>(this) ; 
    declareProperty("AcdCalibSvc",    m_calibSvcName = "AcdCalibSvc");
+   declareProperty("PHATileCut",    m_pha_tile_cut = 0.0);
+   declareProperty("MIPSTileCut",    m_mips_tile_cut = 0.0);
+   declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 0.0);
+   declareProperty("MIPSRibbonCut",    m_mips_ribbon_cut = 0.0);
  }
 
 AcdPha2MipTool::~AcdPha2MipTool()
@@ -45,6 +49,7 @@ StatusCode AcdPha2MipTool::initialize()
  }
 
 StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
+					bool periodicEvent, 
 					Event::AcdHitCol& hits,
 					AcdRecon::AcdHitMap& hitMap)
   //
@@ -62,10 +67,6 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     const Event::AcdDigi* aDigi = *it;
     // sanity check
     if ( aDigi == 0 ) return StatusCode::FAILURE ;
-
-    // get the calibrated values
-    float mipsPmtA(0.);
-    float mipsPmtB(0.);
     
     // get the hit mask bits
     unsigned int hitMask = 0;
@@ -78,7 +79,7 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     hitMap[aDigi->getId()] = hitMask;
     
     Event::AcdHit* newHit(0);
-    StatusCode sc = makeAcdHit(*aDigi,newHit);
+    StatusCode sc = makeAcdHit(*aDigi,periodicEvent,newHit);
 
     if ( sc.isFailure() ) return sc;
     if ( newHit != 0 ) {
@@ -89,16 +90,25 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
 }
 
 StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
+					bool periodicEvent, 
 					Event::AcdHit*& hit) {
   float mipsPmtA(0.);
   float mipsPmtB(0.);
-  bool ok = getCalibratedValues(digi,mipsPmtA,mipsPmtB);
+  bool acceptDigi(false);
+  bool ok = getCalibratedValues(digi,mipsPmtA,mipsPmtB,acceptDigi);
   if ( !ok ) return StatusCode::FAILURE;
-  hit = new Event::AcdHit(digi,mipsPmtA,mipsPmtB);
+  if ( acceptDigi ) {
+    hit = new Event::AcdHit(digi,mipsPmtA,mipsPmtB);
+  } else {
+    hit = 0;
+  }
   return StatusCode::SUCCESS;
 }
 
-bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB) const {
+bool acceptAcdDigi ( const Event::AcdDigi& digi, bool periodicEvent );
+
+
+bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB, bool& acceptDigi) const {
 
   static const unsigned short FullScale = 4095;
 
@@ -106,6 +116,8 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mips
   float pedValA(0.), pedValB(0.);
   float mipValA(0.), mipValB(0.);
 				 
+  acceptDigi = false;
+
   if ( ! getPeds(digi.getId(),pedValA,pedValB) ) {
     MsgStream log(msgSvc(), name());
     log << MSG::ERROR << "Failed to get pedestals." << endreq;
@@ -124,8 +136,9 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mips
   if ( phaA == 0 ) {
     mipsPmtA = 0.;
   } else {
-    float pedSubtracted_A = phaA -  pedValA;
+    float pedSubtracted_A = phaA -  pedValA;    
     mipsPmtA = pedSubtracted_A / mipValA;
+    acceptDigi |= accept(digi.getId(),pedSubtracted_A,mipsPmtA);
   }
 
   // do PMT B
@@ -137,6 +150,7 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mips
   } else {
     float pedSubtracted_B = phaB -  pedValB;
     mipsPmtB = pedSubtracted_B / mipValB;
+    acceptDigi |= accept(digi.getId(),pedSubtracted_B,mipsPmtB);
   } 
 
   return true;
@@ -181,5 +195,18 @@ bool AcdPha2MipTool::getMips(const idents::AcdId& id, float& valA, float& valB) 
   }
   valB = gain->getPeak();
   
+  return true;
+}
+
+bool AcdPha2MipTool::accept(const idents::AcdId& id, float pedSubtracted, float mips) const {
+  if ( id.tile() ) {
+    if ( pedSubtracted < m_pha_tile_cut ) return false;
+    if ( mips < m_mips_tile_cut ) return false;    
+  } else if ( id.ribbon() ) {
+    if ( pedSubtracted < m_pha_ribbon_cut ) return false;
+    if ( mips < m_mips_ribbon_cut ) return false;        
+  } else {
+    return false;
+  }
   return true;
 }

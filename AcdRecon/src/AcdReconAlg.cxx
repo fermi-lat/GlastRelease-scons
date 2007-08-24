@@ -181,6 +181,15 @@ StatusCode AcdReconAlg::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+
+    static bool firstEvent(true);
+    if ( firstEvent ) {
+      sc = m_acdGeoSvc->findCornerGaps();
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Failed to load ACD corner gap rays" << endreq;
+      }
+      firstEvent = false;
+    }
 	
     SmartDataPtr<Event::AcdDigiCol> acdDigiCol(eventSvc(), EventModel::Digi::AcdDigiCol);
     if (!acdDigiCol) {
@@ -194,10 +203,9 @@ StatusCode AcdReconAlg::execute() {
     // run the reconstruction
     sc = reconstruct(acdDigiCol);
     if ( sc.isFailure() ) {
+      log << MSG::ERROR << "AcdReconAlg::reconstruct failed" << endreq;
       return sc;
     }
-    
-    sc = doMC(acdDigiCol);
     return sc;
 }
 
@@ -291,10 +299,13 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 	
+    // is this a periodic trigger?
+    bool isPeriodicEvent(false);
+
     // make the hits (with MIP peak data) and fill the hitMap
     static Event::AcdHitCol acdHits;
     if (m_hitTool != 0) {
-      sc = m_hitTool->makeAcdHits(digiCol,acdHits,m_hitMap);
+      sc = m_hitTool->makeAcdHits(digiCol,isPeriodicEvent,acdHits,m_hitMap);
       if ( sc.isFailure() ) {
 	log << MSG::WARNING << "AcdHitTool Failed - we'll bravely carry on" 
             << endreq;
@@ -339,11 +350,17 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     static Event::AcdTkrPointCol acdPoints;
     static Event::AcdSplashVarsCol acdSplashVars;
 
-    sc = trackDistances(digiCol,acdPocaSet,acdIntersections,acdGapPocas,acdPoints);
-    if (sc.isFailure()) return sc;
-    
-    sc = vertexDistances(digiCol,acdPocaSet,acdPoints);
-    if (sc.isFailure()) return sc;
+    sc = trackDistances(acdHits,acdPocaSet,acdIntersections,acdGapPocas,acdPoints);
+    if (sc.isFailure()) {
+      log << MSG::ERROR << "AcdReconAlg::trackDistances failed" << endreq;
+      return sc;
+    }    
+
+    sc = vertexDistances(acdHits,acdPocaSet,acdPoints);
+    if (sc.isFailure()) {
+      log << MSG::ERROR << "AcdReconAlg::vertexDistances failed" << endreq;
+      return sc;
+    }
 
     static Event::AcdPocaMap acdPocaMap;
     for (  Event::AcdPocaSet::iterator itrPoca = acdPocaSet.begin(); 
@@ -357,7 +374,10 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 
     if ( m_doBackSplash ) {
       sc = doBacksplash(digiCol,acdSplashVars);
-      if (sc.isFailure()) return sc;    
+      if (sc.isFailure()) {
+	log << MSG::ERROR << "AcdReconAlg::doBacksplash failed" << endreq;
+	return sc;    
+      }
     }
 
     log << MSG::DEBUG;
@@ -405,25 +425,32 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 
         sc = eventSvc()->registerObject(EventModel::AcdRecon::Event, acdRecon);
         if (sc.isFailure()) {
-            log << "Failed to register AcdRecon" << endreq;
+            log << MSG::ERROR << "Failed to register AcdRecon" << endreq;
             return StatusCode::FAILURE;
         }
     }
+
     // ownership handed to TDS, clear local copies	
     acdIntersections.clear();
     acdPocas.clear();
     acdPocaMap.clear();
-    acdHits.clear();	
     acdGapPocas.clear();
     acdHitPocas.clear();
     acdPoints.clear();
     acdSplashVars.clear();
 
+    // Do the MC if needed
+    sc = doMC(acdHits);
+    if ( sc.isFailure() ) {
+      log << MSG::ERROR << "Failed to register AcdRecon" << endreq;
+    }
+    acdHits.clear();	
+
     return sc;
 }
 
 
-StatusCode AcdReconAlg::doMC (const Event::AcdDigiCol& digiCol) {
+StatusCode AcdReconAlg::doMC (const Event::AcdHitCol& acdHits) {
     // Purpose and Method:  Actually performs the ACD reconstruction.
     //        Counts the number of hit tiles and determines the total energy 
     //        deposited in the ACD.
@@ -442,7 +469,7 @@ StatusCode AcdReconAlg::doMC (const Event::AcdDigiCol& digiCol) {
     static Event::AcdTkrHitPocaCol acdHitPocas;
     static Event::AcdTkrPointCol acdPoints;
     
-    sc = mcDistances(digiCol,acdPocaSet,acdPoints);
+    sc = mcDistances(acdHits,acdPocaSet,acdPoints);
     if (sc.isFailure()) return sc;
 
     static Event::AcdPocaMap acdPocaMap;
@@ -499,7 +526,7 @@ StatusCode AcdReconAlg::doMC (const Event::AcdDigiCol& digiCol) {
     return sc;
 }
 
-StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol, 
+StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits, 
 				 Event::AcdPocaSet& pocaSet,
 				 Event::AcdTkrIntersectionCol& acdIntersections,
 				 Event::AcdTkrGapPocaCol& gapPocas,
@@ -573,26 +600,40 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	AcdRecon::PocaDataMap downwardPocas;
 
 	// calculate all the distances to the hit tiles at once
-	sc = hitDistances(upwardExtend,digiCol,upwardPocas);
-	if (sc.isFailure()) return sc;
+	sc = hitDistances(upwardExtend,acdHits,upwardPocas);
+	if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdReconAlg::hitDistances(up) failed" << endreq;
+	  return sc;
+	}
 
-	sc = hitDistances(downwardExtend,digiCol,downwardPocas);
-	if (sc.isFailure()) return sc;
+	sc = hitDistances(downwardExtend,acdHits,downwardPocas);
+	if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdReconAlg::hitDistances(down) failed" << endreq;
+	  return sc;
+	}
 
         // grab the best New Active Distance Calc (3D) values
         sc = tileActDist(upwardPocas, m_rowActDist3DCol, m_act_dist3D, 
                          m_maxActDist3DId);
-        if (sc.isFailure()) return sc;
+        if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdReconAlg::tileActDist(up) failed" << endreq;
+	  return sc;
+	}
 
         // Now calculate using downward Pocas
         sc = tileActDist(downwardPocas, m_rowActDist3DCol_down,
                          m_act_dist3D_down, m_maxActDist3DId_down);
-        if (sc.isFailure()) return sc;
-
+        if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdReconAlg::tileActDist(up) failed" << endreq;
+	  return sc;
+	}
 
 	// grab the best "Active Distance" from ribbons
         sc = hitRibbonDist(upwardPocas, m_ribbon_act_dist, m_ribbon_act_dist_id);
-        if (sc.isFailure()) return sc;
+        if (sc.isFailure()) {
+	   log << MSG::ERROR << "AcdReconAlg::hitRibbonDist(up) failed" << endreq;
+	  return sc;
+	}
 
 	// filter the lists for further procsessing
 	AcdRecon::PocaDataPtrMap upPocasCut;
@@ -600,10 +641,15 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 
 	if ( m_pocaTool != 0 ) {
 	  sc = m_pocaTool->filter(upwardPocas,upPocasCut);
-	  if (sc.isFailure()) return sc;
-	  
+	  if (sc.isFailure()) {
+	    log << MSG::ERROR << "AcdPocaTool::filter(up) failed" << endreq;
+	    return sc;	  
+	  }
 	  sc = m_pocaTool->filter(downwardPocas,downPocasCut);
-	  if (sc.isFailure()) return sc;
+	  if (sc.isFailure()) { 
+	    log << MSG::ERROR << "AcdPocaTool::filter(down) failed" << endreq;
+	    return sc;
+	  }
 	}
 
 	// Now extrapolate the track as far as needed, 
@@ -617,7 +663,10 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	// extrapolate the track upwards
 	sc = extrapolateTrack(*trackTds, upwardExtend, upPocasCut, upwardExit, 
 			      pocaSet, upwardIntersections, upGapPocas, exitPoints);
-	if (sc.isFailure()) return sc;
+	if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(up) failed" << endreq;
+	  return sc;
+	}
 	for ( Event::AcdTkrIntersectionCol::iterator itrU = upwardIntersections.begin(); 
 	      itrU != upwardIntersections.end(); ++itrU ) {
 	  acdIntersections.push_back(*itrU);
@@ -631,7 +680,10 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 	sc = extrapolateTrack(*trackTds, downwardExtend, downPocasCut, 
                               downwardExit, pocaSet, downwardIntersections, 
                               downGapPocas, exitPoints);
-	if (sc.isFailure()) return sc;
+	if (sc.isFailure()){
+	  log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(down) failed" << endreq;
+	  return sc;
+	}
 	for ( Event::AcdTkrIntersectionCol::iterator itrD = downwardIntersections.begin(); 
 	      itrD != downwardIntersections.end(); ++itrD ) {
 	  acdIntersections.push_back(*itrD);
@@ -664,7 +716,7 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdDigiCol& digiCol,
 
 
 
-StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol, 
+StatusCode AcdReconAlg::vertexDistances(const Event::AcdHitCol& acdHits, 
 					Event::AcdPocaSet& pocaSet,
 					Event::AcdTkrPointCol& exitPoints) {
 
@@ -739,10 +791,10 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol,
     AcdRecon::PocaDataMap downwardPocas;
     
     // calculate all the distances to the hit tiles at once
-    sc = hitDistances(upwardExtend,digiCol,upwardPocas);
+    sc = hitDistances(upwardExtend,acdHits,upwardPocas);
     if (sc.isFailure()) return sc;
 
-    sc = hitDistances(downwardExtend,digiCol,downwardPocas);
+    sc = hitDistances(downwardExtend,acdHits,downwardPocas);
     if (sc.isFailure()) return sc;
 
     // filter the lists for further procsessing
@@ -769,7 +821,7 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdDigiCol& digiCol,
 };
 
 
-StatusCode AcdReconAlg::mcDistances(const Event::AcdDigiCol& digiCol, 
+StatusCode AcdReconAlg::mcDistances(const Event::AcdHitCol& acdHits, 
 				    Event::AcdPocaSet& pocaSet,
 				    Event::AcdTkrPointCol& exitPoints) {
 
@@ -817,7 +869,7 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdDigiCol& digiCol,
     AcdRecon::PocaDataMap pocas;
     
     // calculate all the distances to the hit tiles at once
-    sc = hitDistances(extend,digiCol,pocas);
+    sc = hitDistances(extend,acdHits,pocas);
     if (sc.isFailure()) return sc;
 
     // filter the lists for further procsessing
@@ -836,7 +888,7 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdDigiCol& digiCol,
 }
 
 StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack, 
-                                     const Event::AcdDigiCol& digiCol,
+                                     const Event::AcdHitCol& acdHits, 
 				     AcdRecon::PocaDataMap& pocaMap) {
   /// get the all the distances to hit tiles for track in one direction
 
@@ -844,8 +896,8 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
 
   MsgStream   log( msgSvc(), name() );
 
-  for (Event::AcdDigiCol::const_iterator acdDigiIt = digiCol.begin(); acdDigiIt != digiCol.end(); acdDigiIt++) {
-    idents::AcdId acdId = (*acdDigiIt)->getId();
+  for (Event::AcdHitCol::const_iterator acdHitIt = acdHits.begin(); acdHitIt != acdHits.end(); acdHitIt++) {
+    idents::AcdId acdId = (*acdHitIt)->getAcdId();
     // get the data object to store all the computations
     AcdRecon::PocaData& pocaData = pocaMap[acdId];
     if (acdId.na()) continue;
@@ -1014,8 +1066,10 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
     sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackData,isectData,pocaDataMap,m_hitMap,*m_geomMap,
 					       acdIntersections,gapPocas);
   }
-  if ( sc.isFailure() ) return sc;
-
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "AcdTkrIntersectionTool::makeIntersections failed" << endreq;
+    return sc;
+  }
   
   acdIntersections.writeOut(log);
   gapPocas.writeOut(log);
@@ -1034,7 +1088,11 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
     if ( m_pocaTool != 0 ) {
       sc = m_pocaTool->makePoca(trackData,pocaData,aPoca);
     }
-    if ( sc.isFailure() ) return sc;
+    if ( sc.isFailure() ) {
+      log << MSG::ERROR << "AcdPocaTool::makePoca failed" << endreq;
+      return sc;
+    }
+    
     if ( aPoca != 0 ) {
       aPoca->writeOut(log);
       pocaSet.insert(aPoca);
@@ -1046,7 +1104,10 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   Event::AcdTkrPoint* exitPoint(0);
   if ( m_intersectionTool != 0 ) {
     sc = m_intersectionTool->makeTkrPoint(trackData,isectData,next_params,exitPoint);
-    if ( sc.isFailure() ) return sc;
+    if ( sc.isFailure() ){
+      log << MSG::ERROR << "AcdTkrIntersectionTool::makeTkrPoint failed" << endreq;
+      return sc;
+    }
     if ( exitPoint != 0 ) {
       exitPoint->writeOut(log);
       points.push_back(exitPoint);      

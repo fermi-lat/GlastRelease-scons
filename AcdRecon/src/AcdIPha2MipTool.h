@@ -42,12 +42,15 @@ public:
   
   /// @brief Make collection of hits and fill the hit map
   virtual StatusCode makeAcdHits ( const Event::AcdDigiCol&,
+				   bool periodicEvent, 
 				   Event::AcdHitCol&,
 				   AcdRecon::AcdHitMap&) = 0;
   
   /// @brief Make a single hit
   virtual StatusCode makeAcdHit ( const Event::AcdDigi&,
+				  bool periodicEvent, 
 				  Event::AcdHit*& ) = 0;
+ 
 
 } ;
 

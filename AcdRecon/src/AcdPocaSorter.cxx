@@ -73,21 +73,31 @@ unsigned AcdPocaSorter::getPocasToArclength(const double& stop, std::vector<AcdP
   pocas.clear();
   bool done(false);
   switch ( m_dir ) {
-  case Upward: done = m_cache == m_pocas.end();  break;    
-  case Downward: done = m_rcache == m_pocas.rend();  break;
+  case Upward: done = (m_cache == m_pocas.end() ? true : false);  break;    
+  case Downward: done = (m_rcache == m_pocas.rend() ? true : false);  break;
   }  
 
   while ( ! done ) {
     switch ( m_dir ) {
     case Upward: 
-      if ( m_cache->arclength() < stop ) pocas.push_back(*m_cache);
-      m_cache++;
-      done = m_cache == m_pocas.end(); 
+      if ( m_cache->arclength() < stop ) { 
+	pocas.push_back(*m_cache);
+	m_cache++;
+	done = (m_cache == m_pocas.end() ? true : false);
+      } else { 
+	done = true;
+      }
       break;
-    case Downward: done = m_rcache == m_pocas.rend();  break;
-      if ( m_cache->arclength() > stop ) pocas.push_back(*m_cache);
-      m_rcache--;
-      done = m_rcache == m_pocas.rend();
+    case Downward: 
+      if ( m_rcache->arclength() > stop ) {
+	pocas.push_back(*m_rcache);
+	m_rcache++;
+	done = (m_rcache == m_pocas.rend() ? true : false);
+      } else {
+	done = true;
+      }
+      break;
+    default:
       break;
     }
   }  

@@ -37,21 +37,30 @@ public:
   
   /// @brief Make collection of hits and fill the hit map
   virtual StatusCode makeAcdHits ( const Event::AcdDigiCol&,
+				   bool periodicEvent, 
 				   Event::AcdHitCol&,
 				   AcdRecon::AcdHitMap&);
   
   /// @brief Make a single hit
   virtual StatusCode makeAcdHit ( const Event::AcdDigi&,
+				  bool periodicEvent, 
 				  Event::AcdHit*& );
 
 protected:
   
-  bool getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB) const;
+  bool getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB, bool& acceptDigi) const;
 
   bool getPeds(const idents::AcdId& id, float& valA, float& valB) const;
   bool getMips(const idents::AcdId& id, float& valA, float& valB) const;
 
+  bool accept(const idents::AcdId& id, float pedSubtracted, float mips) const;
+
 private:
+
+  float m_pha_tile_cut;
+  float m_mips_tile_cut;
+  float m_pha_ribbon_cut;
+  float m_mips_ribbon_cut;
 
   Event::AcdHitCol* output;
 
