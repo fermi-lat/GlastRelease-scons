@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v3r9p2  22-Aug-2007 HMK Avoid creation of volids for NA ACDs to avoid 
+        throwing exception in VolumeIdentifier code
 v3r9p1  16-Jul-2007 HMK Patch for windows
 v3r9    05-Jul-2007 HMK Fix up LdfEventSelector::FileExists mtd to use stat
         rather than opening/closing file

@@ -36,6 +36,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
     MsgStream log(msgSvc(), "LdfAcdDigiCnv");
+    log << MSG::DEBUG << "Inside createObj" << endreq;
     Event::AcdDigiCol *digiCol = new Event::AcdDigiCol;
     refpObject = digiCol;
 
@@ -45,18 +46,28 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
     std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
     
+    log << MSG::DEBUG << "found acddigis: " << acdCol.size() << endreq;
+
     for (thisAcdDigi = acdCol.begin(); thisAcdDigi != acdCol.end(); thisAcdDigi++) {
         const char *tileName = thisAcdDigi->second->getTileName();
         int tileNumber = thisAcdDigi->second->getTileNumber();
         unsigned int tileId = thisAcdDigi->second->getTileId();
+        log << MSG::DEBUG << "tileId " << tileId << endreq;
         short layer, face, row, col;
         base10ToAcdId(tileId, layer, face, row, col);
         idents::AcdId identsId(layer, face, row, col);
+        // avoid volId creation for NA
+        idents::VolumeIdentifier volId;
         // Test for N/A
-        if ((tileId == 0) && (strcmp(tileName, "000") != 0) )
-            identsId.na(1); 
+        if ((tileId == 0) && (strcmp(tileName, "000") != 0) ) 
+            identsId.na(1);
+        if (!identsId.na())
+            volId = identsId.volId();
+
+        log << MSG::DEBUG << "idents id " << identsId.id() << endreq; 
 
         const std::vector<ldfReader::AcdDigi::AcdPmt> readoutCol = thisAcdDigi->second->getReadout();
+        log << MSG::DEBUG << "got readout col size " << readoutCol.size() << endreq;
         std::vector<ldfReader::AcdDigi::AcdPmt>::const_iterator curReadout;
         if (readoutCol.size() > 2) log << MSG::DEBUG << "Too many readouts associated with this tile " << tileName << endreq;
 
@@ -78,8 +89,9 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
             // set header Parity bit each PMT..since they're on different FREE boards
             error[index+2] = (curReadout->getHeaderParity() == ldfReader::AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
         }
-        Event::AcdDigi *newDigi = new Event::AcdDigi(
-            identsId, identsId.volId(), 0.0, pha, hitMapArr, acceptMapArr, cnoArr);
+        log << MSG::DEBUG << "Creating digi obj " << endreq;
+        Event::AcdDigi *newDigi = new Event::AcdDigi (
+            identsId, volId, 0.0, pha, hitMapArr, acceptMapArr, cnoArr);
 
 
         newDigi->initLdfParameters(tileName, tileNumber, range, error);
@@ -88,6 +100,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         
     }
 
+    log << MSG::DEBUG << "Returning" << endreq;
     return StatusCode::SUCCESS;
 }
 
