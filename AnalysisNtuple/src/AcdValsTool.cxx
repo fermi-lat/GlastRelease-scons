@@ -453,9 +453,9 @@ StatusCode AcdValsTool::calculate()
 	      if ( ACD_ActiveDist3D < -1999.99 ) {
 		if ( ! doneHole ) {
 		  doneHole = true;
-		  AcdTileUtil::tileScrewHoleDoca(aPoca->getId(),aPoca->getActiveX(),aPoca->getActiveY(),
-						 aPoca->getLocalXXCov(),aPoca->getLocalYYCov(),aPoca->getLocalXYCov(),
-						 holeDoca,holeDocaError,iHole);
+		  //AcdTileUtil::tileScrewHoleDoca(,aPoca->getActiveX(),aPoca->getActiveY(),
+		  //				 aPoca->getLocalXXCov(),aPoca->getLocalYYCov(),aPoca->getLocalXYCov(),
+		  //				 holeDoca,holeDocaError,iHole);
 		}
 		if ( ! donePlaneError ) {
 		  donePlaneError = true;
@@ -489,9 +489,9 @@ StatusCode AcdValsTool::calculate()
 		if ( ACD_Tkr1ActiveDist < -1999.99 ) {
 		  if ( ! doneHole ) {
 		    doneHole = true;
-		    AcdTileUtil::tileScrewHoleDoca(aPoca->getId(),aPoca->getActiveX(),aPoca->getActiveY(),
-						   aPoca->getLocalXXCov(),aPoca->getLocalYYCov(),aPoca->getLocalXYCov(),
-						   holeDoca,holeDocaError,iHole);
+		    //AcdTileUtil::tileScrewHoleDoca(aPoca->getId(),aPoca->getActiveX(),aPoca->getActiveY(),
+		    //				   aPoca->getLocalXXCov(),aPoca->getLocalYYCov(),aPoca->getLocalXYCov(),
+		    //				   holeDoca,holeDocaError,iHole);
 		  }
 		  if ( ! donePlaneError ) {
 		    donePlaneError = true;
