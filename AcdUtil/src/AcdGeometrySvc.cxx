@@ -78,13 +78,6 @@ StatusCode AcdGeometrySvc::initialize()
         return sc;
     }
  
-    sc = findCornerGaps();
-    if (sc.isFailure() ) {
-        log << MSG::ERROR << "  Unable to find corner gaps in AcdGeometrySvc detector list" << endreq;
-	// this is ok if we have the BeamTest release
-        // return sc
-    }
-
     log << MSG::INFO << "AcdGeometrySvc successfully initialized" << endreq;
     return StatusCode::SUCCESS;
 
@@ -345,7 +338,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     if (sc.isFailure()) {
         log << MSG::WARNING << "Non-flight ACD Geometry will not calculate"
             << " corner gap rays" << endreq;
-        return sc;
+	// this is ok if we have the BeamTest release
+	return StatusCode::SUCCESS;
     }
 
     // Determine the extent of all corner gap rays in Z, using the a top corner
@@ -630,7 +624,8 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
 
   // Build the VolumeIdentifier for this tile section
   idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
-  idents::VolumeIdentifier volId = ncid.volId(iVol==1);
+  bool bent = iVol==1 ? true : false;
+  const idents::VolumeIdentifier volId = ncid.volId(bent);
 
   // Get the reference frame enum
   AcdFrameUtil::AcdReferenceFrame frameId = getReferenceFrame(volId);
@@ -741,6 +736,7 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) {
 
     if (!findFieldVal(nid, "fLATObjects", val)) return AcdFrameUtil::FRAME_NONE;
     if (val != m_eLATACD) return AcdFrameUtil::FRAME_NONE;
+
     if (!findFieldVal(nid, "fACDFace", face)) return AcdFrameUtil::FRAME_NONE;
     if (!findFieldVal(nid, "fACDCmp", val)) return AcdFrameUtil::FRAME_NONE;
     tile = (val == m_eACDTile);

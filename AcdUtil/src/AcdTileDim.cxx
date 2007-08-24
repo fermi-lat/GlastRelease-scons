@@ -44,6 +44,7 @@ StatusCode AcdTileDim::getVals() {
     HepTransform3D inverseT = m_transform[iVol].inverse();
     HepVector3D xV(1.,0.,0.); HepVector3D yV(0.,1.,0.);
     xV = inverseT * xV; yV = inverseT * yV;
+    m_localFrameVectors[iVol] = HepMatrix(2,3);
     m_localFrameVectors[iVol](1,1) = xV.x(); m_localFrameVectors[iVol](1,2) = xV.y(); m_localFrameVectors[iVol](1,3) = xV.z(); 
     m_localFrameVectors[iVol](2,1) = yV.x(); m_localFrameVectors[iVol](2,2) = yV.y(); m_localFrameVectors[iVol](2,3) = yV.z(); 
   }

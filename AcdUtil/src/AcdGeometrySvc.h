@@ -111,12 +111,13 @@ public:
 
     AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId);
 
+    StatusCode findCornerGaps();
+
 protected:
 
     /// Used in initializing 
     StatusCode getConstants();
     StatusCode getDetectorListFromGeometry();
-    StatusCode findCornerGaps();
 
     // Utilities
     StatusCode getDimensions(const idents::VolumeIdentifier &volIId, 

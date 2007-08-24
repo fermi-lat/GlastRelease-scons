@@ -106,6 +106,9 @@ public:
 
     virtual AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId) = 0;
 
+    virtual StatusCode findCornerGaps() = 0;
+
+
 };
 
 #endif
