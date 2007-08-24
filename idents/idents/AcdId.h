@@ -205,6 +205,7 @@ inline const idents::VolumeIdentifier AcdId::volId(bool bent) {
 
     idents::VolumeIdentifier vId;
     vId.append(1); 
+    if (na()) return vId;
     vId.append(face()); 
     if (tile()) {
         vId.append(tileVolId);

@@ -2,6 +2,8 @@
 package manager:T.Burnett 
  *         EOH
 
+ * v2r19p1 23-Aug-2007  hmk Avoid VolId construction for NA ACDs, it will
+ *                       throw an exception
  * v2r19   15-Jun-2007  jrb VolumeIdentifier clean up & add one method returning
                             max field value
  * v2r18   10-May-06 hmk Updated AcdId::volId method to include bent parameter
