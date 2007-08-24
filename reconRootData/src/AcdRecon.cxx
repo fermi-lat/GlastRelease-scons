@@ -1,6 +1,7 @@
 #include "reconRootData/AcdRecon.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
+#include "TClass.h"
 
 ClassImp(AcdRecon)
 
