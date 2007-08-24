@@ -1,3 +1,4 @@
+v0r14p3 08/23/07 hmk       - Toss in include of map and std:: in XtalDigiTool
 v0r14p2 04/13/07 fewtrelll - fixed bug in CalTuple where xtalk was not applied to non-best range
 v0r14p1 04/02/07 fewtrell - NeighborXtalk correction had wrong sign
 v0r14   03/23/07 fewtrell - added NeighborXtalk to CalTuple - added MeV unit xtalk correction to NeighborXtalk - added MeVPERDAC per Diode to CalCalibSvc

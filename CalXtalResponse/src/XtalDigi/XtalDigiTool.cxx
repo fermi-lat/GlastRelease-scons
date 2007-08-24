@@ -25,6 +25,7 @@
 #include "CLHEP/Random/RandGauss.h"
 
 // STD
+#include <map>
 
 using namespace CalUtil;
 using namespace Event;
@@ -68,7 +69,7 @@ StatusCode XtalDigiTool::initialize() {
   StatusCode sc;
 
   double val;
-  typedef map<int*,string> PARAMAP;
+  typedef std::map<int*,string> PARAMAP;
 
   //-- jobOptions --//
   if ((sc = setProperties()).isFailure()) {
