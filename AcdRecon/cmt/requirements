@@ -17,7 +17,7 @@ use AcdUtil  v*
 
 apply_pattern  package_headers
 
-library AcdRecon  *.cxx  -s=Dll *.cxx ${AcdRecon_headers}
+library AcdRecon  *.cxx ${AcdRecon_headers}  -s=Dll *.cxx 
 
 apply_pattern component_library library=AcdRecon
 
