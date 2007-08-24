@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r10     24-Aug-2007 EAC First round of fixes to new AcdRecon re-organization.  Active Distance calc is broken/ disabled.
 v3r9      30-Jul-2007 EAC Add caclulations of length along ribbon where intersection occurs, improve Gap calculations
 v3r8      13-Jul-2007 EAC Use new version of AcdUtil/AcdGeomSvc and AcdTile/RibbonDim
 v3r7p2    20-Apr-2007 EAC Change arclength to use the arclength to the tile plane instead of arc length to tile edge POCA.
