@@ -18,6 +18,7 @@ namespace MOOT {
   MootQuery::MootQuery(MoodConnection* mood) : m_rdb(0), m_mood(mood), 
                                                m_ownConnection(false),
                                                m_archive("")  {
+    m_parmClasses.clear();
     if (!mood) {
       m_mood = new MoodConnection();
       if (!m_mood) {
@@ -793,6 +794,8 @@ namespace MOOT {
     
     std::vector<std::string>  fields;
     res->getRow(fields, 0);
+    delete res;
+
     // translate parm class key to parm class name
     std::string parmClassName =
       DbUtil::getColumnValue(m_rdb, "Parameter_class", "name", 
@@ -800,6 +803,112 @@ namespace MOOT {
     return new ParmInfo(keyStr, parmClassName, fields[0], fields[1],
                        fields[2],fields[3],fields[4], fields[5],
                        fields[6],fields[7], fields[8],fields[9]);
+  }
+
+  bool MootQuery::getParmsFromMaster(unsigned fmxMasterKey, 
+                                     std::vector<ParmOffline>& parms) {
+    using facilities::Util;
+    parms.clear();
+    std::string fmxMasterStr;
+    Util::utoa(fmxMasterKey, fmxMasterStr);
+
+    // search in FSW_inputs for  key with FSW_id = fmxMasterKey, status
+    // = "added"; return description field.
+    std::string where(" WHERE FSW_id= '");
+    where += fmxMasterStr + std::string("' AND status = 'added' ");
+
+    std::string masterDescrip = 
+      DbUtil::getColumnWhere(m_rdb, "FSW_inputs", "description", where, false);
+
+    if (!masterDescrip.size())       return false; // not found
+
+    // masterDescrip should be of form NN_MM_PP_  where NN, MM, etc. are 
+    // pos. integers which are themselves FSW_input keys.
+    std::vector<std::string> inputKeys;  // for moot keys in FSW_inputs table
+    Util::stringTokenize(masterDescrip, std::string("_"), inputKeys);
+
+    for (unsigned ix = 0; ix < inputKeys.size(); ix++) {
+      if (!getParmsFromInput(inputKeys[ix], parms)) return false;
+    }
+    return true;
+  }
+    
+  bool MootQuery::getParmsFromInput(const std::string& fswInputKey, 
+                                    std::vector<ParmOffline>& parms) {
+
+    using facilities::Util;
+
+    //  Description field, which will be of the form
+    //        pMMpNN..  (i.e., p is delimiter rather than _)
+    std::string descrip = 
+      DbUtil::getColumnValue(m_rdb, "FSW_inputs", "description", 
+                             "FSW_input_key", fswInputKey);
+
+    if (!descrip.size()) return false;
+    std::vector<std::string> parmKeys;
+
+    Util::stringTokenize(descrip, std::string("p"), parmKeys);
+    unsigned newSize = parms.size() + parmKeys.size();
+    parms.reserve(newSize);
+
+    // Make one long WHERE to fetch all the information we need at once
+    std::string where("WHERE parm_key = '");
+    where += parmKeys[0] + std::string("' ");
+
+    for (unsigned ix = 1; ix < parmKeys.size(); ix++) {
+      where += std::string(" OR parm_key = '") + 
+        parmKeys[ix] + std::string("' ");
+    }
+    std::vector<std::string> getCols;
+    getCols.reserve(5);
+    getCols.push_back("parm_key");
+    getCols.push_back("class_fk");
+    getCols.push_back("source");
+    getCols.push_back("source_fmt");
+    getCols.push_back("status");
+
+    rdbModel::ResultHandle* res = 0;
+    try {
+      res = m_rdb->getConnection()->select("Parameters", getCols, getCols,
+                                           where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getParmsFromInput" << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+
+    std::string errmsg("MootQuery::getParmsFromInput; wrong # of parameters for fsw key ");
+    errmsg += fswInputKey;
+    if ((unsigned) DbUtil::checkResults(res, errmsg, parmKeys.size()) 
+        != parmKeys.size())
+    {
+      delete res;
+      return false;
+    }
+    
+    for (unsigned i = 0; i < parmKeys.size(); i++) { // stash results
+      std::vector<std::string> fields;
+
+      res->getRow(fields, i);
+      unsigned pclassNum = Util::stringToUnsigned(fields[1]);
+
+      // Do we need to update cache of parm class names?
+      if (pclassNum >= m_parmClasses.size()) updateParmClassCache();
+      if (pclassNum >= m_parmClasses.size()) { // TILT!
+        // unknown parm class
+        delete res;
+        return false;  
+      }
+      // p(key, pclassname, pclassnum, src, srcFmt, status);
+      ParmOffline p(fields[0], m_parmClasses[pclassNum], fields[1], 
+                    fields[2], fields[3], fields[4]);
+
+      parms.push_back(p);
+    }
+    delete res;
+    return true;
   }
 
   unsigned MootQuery::getPrecincts(std::vector<std::string>& names) {
@@ -1260,6 +1369,46 @@ namespace MOOT {
 
   ////  end resolveVoteAliases
 
+
+  void MootQuery::updateParmClassCache() {
+    using facilities::Util;
+
+    std::vector<std::string> getCols;
+    getCols.push_back("Parameter_class_key");
+    getCols.push_back("name");
+
+    rdbModel::ResultHandle* res = 0;
+    try {
+      res = m_rdb->getConnection()->select("Parameter_class", getCols,
+                                           getCols);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::updateParmClassCache SQL error: " 
+                << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    
+    m_parmClasses.clear();
+
+    // find value of last key
+    // resize m_parmClasses accordingly.  Then store
+    // name values in vector spot corresponding to key number
+    unsigned nrows = res->getNRows();
+    std::vector<std::string> fields;
+    res->getRow(fields, nrows - 1);
+    unsigned lastKey = Util::stringToUnsigned(fields[0]);
+    m_parmClasses.resize(lastKey + 1);
+    
+    for (unsigned ix = 0; ix < nrows; ix++) {
+      res->getRow(fields, ix);
+      unsigned key = Util::stringToUnsigned(fields[0]);
+      m_parmClasses[key] = fields[1];
+    }
+
+    if (res) delete res;
+  }
   bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);

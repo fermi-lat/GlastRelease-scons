@@ -61,6 +61,7 @@
 %template(vectorOfFileDescrip) std::vector<MOOT::FileDescrip>;
 %template(vectorOfFswInfo) std::vector<MOOT::FswInfo>;
 %template(vectorOfConfigInfo) std::vector<MOOT::ConfigInfo>;
+%template(vectorOfParmOffline) std::vector<MOOT::ParmOffline>;
 %include ../mootCore/MootQuery.h
 
 %extend MOOT::MootQuery {
@@ -233,6 +234,12 @@
     std::vector<std::string> names;
     self->getParameterClasses(names);
     return names;
+  }
+
+  std::vector<MOOT::ParmOffline> parmsFromMaster(unsigned fmxMasterLogId) {
+    std::vector<MOOT::ParmOffline> parms;
+    self->getParmsFromMaster(fmxMasterLogId, parms);
+    return parms;
   }
 
   std::vector<std::string> precinctNames() {
