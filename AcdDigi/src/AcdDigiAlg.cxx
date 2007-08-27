@@ -562,11 +562,12 @@ void AcdDigiAlg::addNoise()  {
             util.calcMipsToFullScale(tileId, m_pmtA_phaMipsMap[tileId], 
                 pmtA_pe, pmtA_mipsToFullScale, m_pmtB_phaMipsMap[tileId], 
                 pmtB_pe, pmtB_mipsToFullScale);
+            m_pmtA_toFullScaleMap[tileId] = pmtA_mipsToFullScale;
+            m_pmtB_toFullScaleMap[tileId] = pmtB_mipsToFullScale;
+
         } else {
-            util.applyGains(tileId, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
+//            util.applyGains(tileId, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
-        m_pmtA_toFullScaleMap[tileId] = pmtA_mipsToFullScale;
-        m_pmtB_toFullScaleMap[tileId] = pmtB_mipsToFullScale;
 
         if (m_energyDepMap.find(tileId) == m_energyDepMap.end())
             m_energyDepMap[tileId] = 0.0;
