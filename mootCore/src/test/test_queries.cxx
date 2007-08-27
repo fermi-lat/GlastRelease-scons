@@ -10,6 +10,7 @@
 #include "mootCore/MootQuery.h"
 
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out);
+void writeParmOff(const std::vector<MOOT::ParmOffline>& parm);
 
 int main(int nargs, char**)    {
 
@@ -425,7 +426,7 @@ int main(int nargs, char**)    {
       "listAncAliasKeys(keys,'bad_class_name') threw an exception " 
               << std::endl;
   }
-
+  /*
   keys.clear();
   q.listVoteKeys(keys);
 
@@ -455,7 +456,7 @@ int main(int nargs, char**)    {
 
   std::cout << "listVote(keys, 'ACD_PHA', 'INVALID') returned " << keys.size() 
             << " key(s)" << std::endl;
-
+  */
   std::vector<std::string> names;
 
   names.clear();
@@ -481,7 +482,8 @@ int main(int nargs, char**)    {
 
   std::vector<unsigned> pkeys;
   unsigned voteKey;
-  unsigned minKey = 1;
+  //  unsigned minKey = 1;
+  unsigned minKey = 16;
   unsigned maxKey = 18;
   for (voteKey = minKey; voteKey < maxKey; voteKey++) {
     bool isUpToDate = q.getVoteParameters(voteKey, pkeys);
@@ -495,6 +497,27 @@ int main(int nargs, char**)    {
     else std::cout << "Vote with key=" << voteKey << " was not up to date" 
                    << std::endl;
   }
+
+  std::vector<MOOT::ParmOffline> parmOff;
+  unsigned fmxMasterId = 4617;
+
+  bool done = true;
+  do {
+    bool getStatus = q.getParmsFromMaster(fmxMasterId, parmOff);
+    done = true;
+
+    if (!getStatus) {
+      std::cout << "MootQuery::getParmsFromMaster failed for fmx logical id = "    
+                << fmxMasterId << std::endl;
+    }
+    else  {
+      std::cout << "MootQuery::getParmsFromMaster for fmx logical id = "    
+                << fmxMasterId << " returns info for " << parmOff.size()
+                << " parameter files:" << std::endl;
+      writeParmOff(parmOff);
+    }
+  } while (!done) ;
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -508,4 +531,17 @@ void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
   out << "Mode = " << pInfo->getMode() << std::endl;
   out << "Creation time = " << pInfo->getCreationTime() 
             << std::endl << std::endl;
+}
+
+void writeParmOff(const std::vector<MOOT::ParmOffline>& parm) {
+  for (unsigned ix = 0; ix < parm.size(); ix++) {
+    std::cout << "Parameter key = " << parm[ix].getKey() << std::endl;
+    std::cout << "Class key = " << parm[ix].getClassFk() 
+              <<  " with class name " << parm[ix].getClass()  << std::endl;
+    std::cout << "Relative file path: " << parm[ix].getSrc()  << std::endl;
+    std::cout << "Source format: " << parm[ix].getSrcFmt() 
+              << "   Status: " << parm[ix].getStatus()  
+              << std::endl << std::endl;
+  }
+
 }
