@@ -22,7 +22,8 @@
 * by each PMT.
 * - Optionally adds Gaussian Noise for each readout:  PHA, veto, and CNO 
 * discriminators.
-* - Finds a PHA based on the number of MIPs associated with each PMT.
+* - Finds a PHA based on the number of MIPs associated with each PMT, now
+* using the calibration service to obtain pedestals and gains.
 * - Determines how discriminator bits should be set on/off
 *
 *  @image html AcdDigiDiagram.gif
@@ -52,8 +53,12 @@
 * ACD digitization.
 * @param AcdDigiAlg.autoCalibrate
 * Boolean Flag that denotes whether or not to apply auto calibration
+* The default is false (0).
 * 1 (One) denotes true, so that auto calibration will be applied
-* 0 (zero) is false
+* 0 (zero) is false meaning the calibration service will be used to
+* obtain pedestals and gains for the PHA calculation.  If for some reason,
+* the calibration service is unavailable, we will go back to auto-calibrate
+* mode.  A message will be printed to the log to inform the user.
 * @param AcdDigiAlg.applyPoisson
 * Boolean Flag denoting whether or not to apply Poisson fluctuations to the number of 
 * photo electrons detected by a PMT.
