@@ -212,6 +212,13 @@ namespace MOOT {
     /// Fill supplied argument with parameter class names. Return count
     unsigned getParmClasses(std::vector<std::string>& names);
 
+    /// Given fmx logical id for a latc master, look up associated
+    /// parameter files (latc source) and return a little structure
+    /// of information about each.
+    bool getParmsFromMaster(unsigned fmxMasterKey, 
+                            std::vector<ParmOffline>& parms);
+
+
     /// Old name for getParmClassees
     unsigned getParameterClasses(std::vector<std::string>& names);
 
@@ -221,17 +228,6 @@ namespace MOOT {
 
     VoteInfo* getVoteInfo(unsigned key);
 
-    /* If there is a parameter file of specified &a parameterClass
-       which is up to date w.r.t. vote file specified by @a voteKey,
-       return its (parameter file) key; else return 0.
-
-       If parameter class doesn't "belong" to the vote file throw
-       an exception.
-     */
-    /*
-    unsigned getVoteParameter(unsigned voteKey, 
-                              const std::string& parameterClass);
-    */
     /* If vote file specified by @a voteKey is up to date, put keys 
        of parameter files of all relevant classes associated with the
        vote file in the @a parmKeys vector and return true.  
@@ -314,6 +310,13 @@ namespace MOOT {
     unsigned getVoteParmViaClassKey(const std::string& voteKeyStr,
                                     const std::string& parameterClassKey);
     */
+
+
+    // Get info about each parameter file which was input source for the
+    // specified entry in FSW_inputs.  Append to vector parms.
+    bool getParmsFromInput(const std::string& fswInputKey, 
+                           std::vector<ParmOffline>& parms);
+
     /// Returns key of file registered in Ancillary if there is one; else 0.
     /// @a ancClassKey is ancillary class key as string
     unsigned resolveAncAliasByKey(const std::string& alias, 
@@ -329,6 +332,11 @@ namespace MOOT {
     bool resolveVoteAliases(std::vector<std::string>& voteKeys,
                                const std::string& ctnKeyStr);
 
+
+    /// Update internal cache of parameter class names 
+    /// for use of getParmsFromInput
+    void updateParmClassCache(); 
+
     bool voteIsUpToDate(const std::string& voteKeyStr, 
                         std::vector<unsigned>* pk=0);
 
@@ -339,6 +347,7 @@ namespace MOOT {
     bool            m_ownConnection; // if true, will need to delete 
     std::string     m_archive;  // translation of MOOT_ARCHIVE env. var.
     bool            m_dbg;
+    std::vector<std::string> m_parmClasses; // cache them here
   };
 }
 
