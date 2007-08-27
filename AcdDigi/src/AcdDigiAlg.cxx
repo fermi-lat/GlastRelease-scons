@@ -43,13 +43,16 @@ Algorithm(name, pSvcLocator) {
     
     declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
 
-    declareProperty("autoCalibrate", m_auto_calibrate=true);
+    declareProperty("autoCalibrate", m_auto_calibrate=false);
 
     declareProperty("applyPoisson", m_apply_poisson=true);
 
     declareProperty("applyGaussianNoise", m_apply_noise=true);
 
     declareProperty("edgeEffect", m_edge_effect=true);
+
+    declareProperty("AcdCalibSvc",    m_calibSvcName = "AcdCalibSvc");
+
 }
 
 
@@ -72,6 +75,15 @@ StatusCode AcdDigiAlg::initialize() {
 
     // read in the parameters from our input XML file
     util.getParameters(m_xmlFile);
+
+  sc = service(m_calibSvcName, m_calibSvc, true);
+  if ( !sc.isSuccess() ) {
+    log << MSG::WARNING << "Could not get CalibDataSvc " << m_calibSvcName << endreq;
+    // If no calibSvc, auto calibrate like we used to
+    m_auto_calibrate = true;
+  } else {
+    log << MSG::INFO << "Got CalibDataSvc " << m_calibSvcName << endreq;
+  }
 
     m_glastDetSvc = 0;
     sc = service("GlastDetSvc", m_glastDetSvc, true);
@@ -276,12 +288,14 @@ StatusCode AcdDigiAlg::execute() {
         if (m_auto_calibrate) {
             util.calcMipsToFullScale(id, pmtA_mips, pmtA_pe, 
                 pmtA_mipsToFullScale, pmtB_mips, pmtB_pe, pmtB_mipsToFullScale);
+             m_pmtA_toFullScaleMap[id] = pmtA_mipsToFullScale;
+             m_pmtB_toFullScaleMap[id] = pmtB_mipsToFullScale;
         } else {
-            util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
+            //util.applyGains(id, pmtA_mipsToFullScale, pmtB_mipsToFullScale);
         }
         
-        m_pmtA_toFullScaleMap[id] = pmtA_mipsToFullScale;
-        m_pmtB_toFullScaleMap[id] = pmtB_mipsToFullScale;
+     //   m_pmtA_toFullScaleMap[id] = pmtA_mipsToFullScale;
+     //   m_pmtB_toFullScaleMap[id] = pmtB_mipsToFullScale;
 
         double pmtA_observedMips_pha = pmtA_mips;
         double pmtA_observedMips_veto = pmtA_mips;
@@ -339,7 +353,7 @@ StatusCode AcdDigiAlg::execute() {
         // PMT A. If not, we do not need add an AcdDigi in the TDS for this tile
         if (m_pmtA_phaMipsMap.find(tileId) == m_pmtA_phaMipsMap.end()) continue;
 
-        // Next check that the PHA values from both PMTs combined results is a i
+        // Next check that the PHA values from both PMTs combined results is a
         // value above low threshold
         bool lowThresh = true, vetoThresh = true, cnoThresh = true;
         if ((m_pmtA_phaMipsMap[tileId] < m_low_threshold_mips) && 
@@ -376,11 +390,34 @@ StatusCode AcdDigiAlg::execute() {
             highArr[1] = true;
 
         // Now convert MIPs into PHA values for each PMT
-
-        unsigned short pmtA_pha = util.convertMipsToPha(m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId],
+        unsigned short pmtA_pha, pmtB_pha;
+        if (m_auto_calibrate) {
+            pmtA_pha = util.convertMipsToPha(m_pmtA_phaMipsMap[tileId], m_pmtA_toFullScaleMap[tileId],
 							rangeArr[0]);
-        unsigned short pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId],
+            pmtB_pha = util.convertMipsToPha(m_pmtB_phaMipsMap[tileId], m_pmtB_toFullScaleMap[tileId],
 							rangeArr[1]);
+        } else { //use the calibration svc
+            float pedA, pedB, mipPeakA, mipPeakB;
+            bool stat;
+            stat = getPeds(tileId, pedA, pedB);
+            if (!stat)
+                log << MSG::WARNING << "Failed to retrieve pedestals for " << tileId.id() << endreq;
+            
+            stat = getMips(tileId, mipPeakA, mipPeakB);
+            if (!stat)
+                log << MSG::WARNING << "Failed to retrieve Mip Peaks for " << tileId.id() << endreq;
+
+            pmtA_pha = pedA + (m_pmtA_phaMipsMap[tileId] * mipPeakA);
+            if (pmtA_pha >= m_full_scale) {
+                pmtA_pha = m_full_scale;
+                rangeArr[0] = Event::AcdDigi::HIGH;
+            }
+            pmtB_pha = pedB + (m_pmtB_phaMipsMap[tileId] * mipPeakB);
+            if (pmtB_pha >= m_full_scale) {
+                pmtB_pha = m_full_scale;
+                rangeArr[1] = Event::AcdDigi::HIGH;
+            }
+        }
 
         unsigned short phaArr[2] = { pmtA_pha, pmtB_pha };
 
@@ -653,3 +690,45 @@ double AcdDigiAlg::edgeEffect(const Event::McPositionHit *hit)  {
     }
 }
 
+
+bool AcdDigiAlg::getPeds(const idents::AcdId& id, float& valA, float& valB) const {
+  if ( m_calibSvc == 0 ) return false;  
+  CalibData::AcdPed* ped(0);
+
+  StatusCode sc = m_calibSvc->getPedestal(id,Event::AcdDigi::A,ped);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  valA = ped->getMean();
+
+  sc = m_calibSvc->getPedestal(id,Event::AcdDigi::B,ped);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  valB = ped->getMean();
+  
+  return true;
+}
+
+
+
+
+bool AcdDigiAlg::getMips(const idents::AcdId& id, float& valA, float& valB) const {
+  if ( m_calibSvc == 0 ) return false;
+
+  CalibData::AcdGain* gain(0);
+
+  StatusCode sc = m_calibSvc->getMipPeak(id,Event::AcdDigi::A,gain);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  valA = gain->getPeak();
+  
+  sc = m_calibSvc->getMipPeak(id,Event::AcdDigi::B,gain);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  valB = gain->getPeak();
+  
+  return true;
+}

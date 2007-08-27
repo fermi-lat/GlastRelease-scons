@@ -1,5 +1,5 @@
 package AcdDigi
-version v1r21p1
+version v2r0
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -8,7 +8,9 @@ use Event v11r*
 
 use facilities v2r*
 
-use xmlBase v5r*         
+use xmlBase v5r*      
+
+use AcdUtil v*   
 
 apply_pattern packageShr
 

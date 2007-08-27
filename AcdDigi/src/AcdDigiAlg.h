@@ -14,6 +14,8 @@
 #include "facilities/Util.h"
 
 #include "AcdTileList.h"
+#include "AcdUtil/IAcdCalibSvc.h"
+
 
 #include <map>
 
@@ -49,6 +51,11 @@ private:
     /// Adjusts the deposited energy recorded in an ACD volume 
     /// based on the location of the hit
     double edgeEffect(const Event::McPositionHit *hit);
+
+    bool getPeds(const idents::AcdId& id, float& valA, float& valB) const;
+
+    bool getMips(const idents::AcdId& id, float& valA, float& valB) const;
+
     
     /// Default value read in from XML file
     double m_low_threshold_mips_xml;
@@ -109,6 +116,10 @@ private:
     double m_edge_slope;
     /// y-intercept of the linear function used to estimate the edge effect
     double m_edge_intercept;
+
+    std::string  m_calibSvcName;
+
+    AcdUtil::IAcdCalibSvc* m_calibSvc;
 
     std::map<idents::AcdId, double> m_energyDepMap;
     std::map<idents::AcdId, double> m_pmtA_toFullScaleMap;
