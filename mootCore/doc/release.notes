@@ -6,6 +6,9 @@
 
    *  EOH  *
 
+   v1r6   27-Aug-2007 jrb  Add MootQuery::getParmsFromMaster, to be used by
+                           to-be-written service to retrieve file paths for
+                           LATC source.
    v1r5   23-Aug-2007 jrb  Added queries; enhanced registerVote so that
                            up-to-dateness can be verified realistically;
                            more changes to intent.xsd.
