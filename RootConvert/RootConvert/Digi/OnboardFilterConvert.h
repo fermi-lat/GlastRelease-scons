@@ -2,7 +2,7 @@
 #define RootConvert_OnboardFilterConvert_H 1
 
 #include "OnboardFilterTds/FilterStatus.h"
-#include "EFC/TFC_projectionDef.h"
+#include "EFC/TFC_prjDef.h"
 
 #include "digiRootData/FilterStatus.h"
 
@@ -12,13 +12,22 @@ namespace RootPersistence {
   /// Fill transient verison of LogData 
   //void convert( const LogData*, OnboardFilterTds::LogData*& ) ;
 
-  void convert(const TFC_projectionDir &tdsObj, TfcProjectionDir& rootObj);
-  void convert(const TfcProjectionDir &rootObj, TFC_projectionDir& tdsObj);
+  void convert(const TFC_hit &tdsObj, TfcHit& rootObj);
+  void convert(const TfcHit &rootObj, TFC_hit& tdsObj);
+
+  void convert(const TFC_prjPrms &tdsObj, TfcPrjPrms& rootObj);
+  void convert(const TfcPrjPrms &rootObj, TFC_prjPrms& tdsObj);
+
+  void convert(const TFC_prjList &tdsObj, TfcPrjList& rootObj);
+  void convert(const TfcPrjList &rootObj, TFC_prjList& tdsObj);
+
+  void convert(const TFC_prjDir &tdsObj, TfcPrjDir& rootObj);
+  void convert(const TfcPrjDir &rootObj, TFC_prjDir& tdsObj);
 
   /// Fill persitent verison of TFC_projectionCol
-  void convert( const TFC_projections*, TfcProjectionCol&);
+  void convert( const TFC_prjs*, TfcProjectionCol&);
   /// Fill transient verison of TFC_projectionCol 
-  void convert( const TfcProjectionCol&, TFC_projections*&);
+  void convert( const TfcProjectionCol&, TFC_prjs*&);
 
   /// Fill persitent verison of tracks 
   void convert( const std::vector<OnboardFilterTds::track>&, TObjArray&);
