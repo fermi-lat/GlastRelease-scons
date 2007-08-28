@@ -5,8 +5,11 @@
 #include "Riostream.h"
 
 ClassImp(CalLogInfo)
-ClassImp(TfcProjection)
-ClassImp(TfcProjectionDir)
+ClassImp(TfcHit)
+ClassImp(TfcPrjList)
+ClassImp(TfcPrjPrms)
+ClassImp(TfcPrj)
+ClassImp(TfcPrjDir)
 ClassImp(TfcProjectionCol)
 ClassImp(ObfTrack)
 ClassImp(FilterStatus)
@@ -38,163 +41,199 @@ void CalLogInfo::Print(Option_t *option) const {
     cout << "CalLogInfo: " << endl;
 }
 
-
-
-TfcProjection::TfcProjection(Int_t intercept, Int_t slope, Int_t acdTopMask, 
-                               Int_t acdXMask, Int_t acdYMask, UInt_t layers, 
-                               Short_t* hits, UChar_t skirtMask, UChar_t min, 
-                               UChar_t max, UChar_t nhits)
+void TfcHit::Print(Option_t* option) const
 {
-    initialize(intercept, slope, acdTopMask, acdXMask, acdYMask, layers, hits, 
-               skirtMask, min, max, nhits);
 }
 
-TfcProjection::TfcProjection(const TfcProjection& other):TObject(other) {
-
-    initialize(other.m_intercept, other.m_slope, other.m_acdTopMask, 
-               other.m_acdXMask, other.m_acdYMask, other.m_layers, 
-               other.m_hits, other.m_skirtMask, other.m_min, other.m_max,  
-               other.m_nhits);
+void TfcPrjList::Print(Option_t *option) const
+{
 }
 
-TfcProjection& TfcProjection::operator=(const TfcProjection& other) {
-    initialize(other.m_intercept, other.m_slope, other.m_acdTopMask, 
-               other.m_acdXMask, other.m_acdYMask, other.m_layers, 
-               other.m_hits, other.m_skirtMask, other.m_min, other.m_max,  
-               other.m_nhits);
+void TfcPrjPrms::Print(Option_t *option) const
+{
+}
+
+TfcPrj::TfcPrj(TfcPrjPrms& top, 
+               TfcPrjPrms& bot, 
+               Int_t       acdTopMask, 
+               Int_t       acdXMask,
+               Int_t       acdYMask, 
+               UChar_t     skirtMask, 
+               UChar_t     min, 
+               UChar_t     max, 
+               UChar_t     nHits,
+               UInt_t      layers, 
+               TfcHit*     hits)
+{
+    initialize(top, bot, acdTopMask, acdXMask, acdYMask, skirtMask, min, max, nHits, layers, hits);
+}
+
+TfcPrj::TfcPrj(const TfcPrj& other):TObject(other) 
+{
+
+    initialize(other.m_top, other.m_bot, other.m_acdTopMask, 
+               other.m_acdXMask, other.m_acdYMask, other.m_skirtMask, other.m_min, other.m_max,  
+               other.m_nhits, other.m_layers, other.m_hits);
+}
+
+TfcPrj& TfcPrj::operator=(const TfcPrj& other) 
+{
+    initialize(other.m_top, other.m_bot, other.m_acdTopMask, 
+               other.m_acdXMask, other.m_acdYMask, other.m_skirtMask, other.m_min, other.m_max,  
+               other.m_nhits, other.m_layers, other.m_hits);
     return *this;
 }
 
-void TfcProjection::initialize(Int_t intercept, Int_t slope, Int_t acdTopMask,
-                                Int_t acdXMask, Int_t acdYMask, UInt_t layers,
-                                const Short_t* hits, UChar_t skirtMask, 
-                                UChar_t min, UChar_t max, UChar_t nhits) 
+void TfcPrj::initialize(const TfcPrjPrms& top, const TfcPrjPrms& bot, Int_t acdTopMask, 
+                        Int_t acdXMask, Int_t acdYMask, UChar_t skirtMask,
+                        UChar_t min, UChar_t max, UChar_t nhits, UInt_t layers,
+                        const TfcHit* hits) 
 {
-    m_intercept = intercept;
-    m_slope = slope;
+    m_top        = top;
+    m_bot        = bot;
     m_acdTopMask = acdTopMask;
-    m_acdXMask = acdXMask;
-    m_acdYMask = acdYMask;
-    m_layers = layers;
-    if (hits) {
+    m_acdXMask   = acdXMask;
+    m_acdYMask   = acdYMask;
+    m_skirtMask  = skirtMask;
+    m_min        = min;
+    m_max        = max;
+    m_nhits      = nhits;
+    m_layers     = layers;
+
+    if (hits) 
+    {
         UInt_t iHit;
-        for (iHit=0; iHit<18; iHit++) { 
+        for (iHit=0; iHit<18; iHit++) 
+        { 
             m_hits[iHit] = hits[iHit];
         }
     }
-    m_skirtMask = skirtMask;
-    m_min = min;
-    m_max = max;
-    m_nhits = nhits;
 }
 
-void TfcProjection::Clear(Option_t *option) {
-    m_intercept = 0;
-    m_slope = 0;
+void TfcPrj::Clear(Option_t *option) 
+{
+    m_top        = TfcPrjPrms();
+    m_bot        = TfcPrjPrms();
     m_acdTopMask = '0';
-    m_acdXMask = '0';
-    m_acdYMask = '0';
-    m_layers = 0;
+    m_acdXMask   = '0';
+    m_acdYMask   = '0';
+    m_layers     = 0;
+    m_skirtMask  = '0';
+    m_min        = 0;
+    m_max        = 0;
+    m_nhits      = 0;
+
     UInt_t iHit;
-    for (iHit=0; iHit<18; iHit++) { 
-        m_hits[iHit] = 0;
+    for (iHit=0; iHit<18; iHit++) 
+    { 
+        m_hits[iHit] = TfcHit();
     }
-    m_skirtMask = '0';
-    m_min = 0;
-    m_max = 0;
-    m_nhits = 0;
 }
 
-void TfcProjection::Print(Option_t *option) const {
+void TfcPrj::Print(Option_t *option) const 
+{
     using namespace std;
     TObject::Print(option);
-    cout << "Intercept: " << m_intercept << " Slope: " << m_slope 
-         << " layers: " << m_layers << endl;
+//    cout << "Top: " << m_top.Print(option) << " Bottom: " << m_bot.Print(option) 
+//         << " layers: " << m_layers << endl;
     cout << "Min: " << m_min << " Max: " << m_max << " nHits: " << m_nhits 
          << endl;
     cout << "acdTopMask " << m_acdTopMask << " AcdXMask " << m_acdXMask 
          << " AcdYMask: " << m_acdYMask 
          << " SkirtMask: " << m_skirtMask << endl;
     cout << "Hits: ";
-    UInt_t iHit;
-    for (iHit = 0; iHit<18; iHit++) cout << m_hits[iHit] << ":";
+//    UInt_t iHit;
+//    for (iHit = 0; iHit<18; iHit++) cout << m_hits[iHit].Print(option) << ":";
     cout << endl;
 }
 
-TfcProjectionDir::TfcProjectionDir(UShort_t idx, UChar_t x, UChar_t y) {
+TfcPrjDir::TfcPrjDir(UShort_t idx, UChar_t x, UChar_t y) {
     initialize(idx, x, y);
 }
 
-TfcProjectionDir::TfcProjectionDir(const TfcProjectionDir& other):TObject(other) {
+TfcPrjDir::TfcPrjDir(const TfcPrjDir& other):TObject(other) {
     initialize(other.m_idx, other.m_xCnt, other.m_yCnt);
 }
 
 
-TfcProjectionDir& TfcProjectionDir::operator=(const TfcProjectionDir& other) {
+TfcPrjDir& TfcPrjDir::operator=(const TfcPrjDir& other) {
     initialize(other.m_idx, other.m_xCnt, other.m_yCnt);
     return *this;
 }
 
 
-void TfcProjectionDir::initialize(UShort_t idx, UChar_t x, UChar_t y) {
+void TfcPrjDir::initialize(UShort_t idx, UChar_t x, UChar_t y) {
     m_idx = idx;
     m_xCnt = x;
     m_yCnt = y;
 }
 
-void TfcProjectionDir::Clear(Option_t *option) {
+void TfcPrjDir::Clear(Option_t *option) {
     m_idx = 0;
     m_xCnt = '0';
     m_yCnt = '0';
 }
 
-void TfcProjectionDir::Print(Option_t *option) const {
+void TfcPrjDir::Print(Option_t *option) const {
     using namespace std;
     TObject::Print(option);
     cout << "Idx: " << m_idx << " x: " << m_xCnt << " y: " << m_yCnt << endl;
 }
 
-TfcProjectionCol::TfcProjectionCol(Int_t maxCnt, UShort_t curCnt, 
-                                     UShort_t twrMsk, 
-                                     const TfcProjectionDir *dir, 
-                                     const TfcProjection* projectionCol) 
+TfcProjectionCol::TfcProjectionCol(UShort_t          maxCnt, 
+                                   UShort_t          curCnt, 
+                                   UShort_t          twrMask, 
+                                   const TfcPrjDir*  dir, 
+                                   const TfcPrjList* topDir, 
+                                   const TfcPrjList* botDir, 
+                                   const TfcPrj*     projectionCol) 
 {
-    initialize(maxCnt, curCnt, twrMsk, dir, projectionCol);
+    initialize(maxCnt, curCnt, twrMask, dir, topDir, botDir, projectionCol);
 }
 
-TfcProjectionCol::TfcProjectionCol(const TfcProjectionCol& copy):TObject(copy) {
-
+TfcProjectionCol::TfcProjectionCol(const TfcProjectionCol& copy):TObject(copy) 
+{
     initialize(copy.m_maxCnt, copy.m_curCnt, copy.m_twrMsk, copy.m_dir, 
-               copy.m_prjs);
+               copy.m_top, copy.m_bot, copy.m_prjs);
 }
 
 
-TfcProjectionCol& TfcProjectionCol::operator=(const TfcProjectionCol& copy) {
+TfcProjectionCol& TfcProjectionCol::operator=(const TfcProjectionCol& copy) 
+{
     initialize(copy.m_maxCnt, copy.m_curCnt, copy.m_twrMsk, copy.m_dir, 
-               copy.m_prjs);
+               copy.m_top, copy.m_bot, copy.m_prjs);
     return *this;
 }
 
-void TfcProjectionCol::initialize(Int_t maxCnt, UShort_t curCnt, 
-                                   UShort_t twrMsk, 
-                                   const TfcProjectionDir *dir, 
-                                   const TfcProjection* projectionCol)  
+void TfcProjectionCol::initialize(Int_t             maxCnt, 
+                                  UShort_t          curCnt, 
+                                  UShort_t          twrMask, 
+                                  const TfcPrjDir*  dir, 
+                                  const TfcPrjList* topDir, 
+                                  const TfcPrjList* botDir, 
+                                  const TfcPrj*     projectionCol)  
 {
     m_maxCnt = maxCnt;
     m_curCnt = curCnt;
-    m_twrMsk = twrMsk;
+    m_twrMsk = twrMask;
     UInt_t iDir;
-    for (iDir = 0; iDir < 16; iDir++) {
-        m_dir[iDir] = dir[iDir];
+    for (iDir = 0; iDir < 16; iDir++) 
+    {
+        m_dir[iDir]    = dir[iDir];
+        m_top[iDir]    = topDir[iDir];
+        m_top[iDir+16] = topDir[iDir+16];
+        m_bot[iDir]    = botDir[iDir];
+        m_bot[iDir+16] = botDir[iDir+16];
     }
-    if (projectionCol) {
-        m_prjs = new TfcProjection[m_curCnt];
+    if (projectionCol) 
+    {
+        m_prjs = new TfcPrj[m_curCnt];
         UInt_t iProj;
-        for (iProj=0; iProj<m_curCnt; iProj++) {
+        for (iProj=0; iProj<m_curCnt; iProj++) 
+        {
             m_prjs[iProj] = projectionCol[iProj];
         }
     } else {
-        m_prjs = 0;
         m_maxCnt = 0;
         m_curCnt = 0;
     }
@@ -242,13 +281,14 @@ void TfcProjectionCol::Fake( Int_t ievent, Float_t randNum ) {
         m_dir[iDir].initialize(6, '1', '2');
     }
     m_curCnt = 2;
-    m_prjs = new TfcProjection[m_curCnt];
+    m_prjs = new TfcPrj[m_curCnt];
     UInt_t iCnt;
-    const Short_t hits[18] = {10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27};
-    for (iCnt = 0; iCnt < m_curCnt; iCnt++) {
-
-        m_prjs[iCnt].initialize(1, 2, 3, 4, 5, 6, hits, '8', '9', '0', '1');
-
+    TfcHit hits[] = {TfcHit(1,0,0), TfcHit(2,0,0), TfcHit(3,0,0), TfcHit(4,0,0), TfcHit(5,0,0), TfcHit(6,0,0)};
+    for (iCnt = 0; iCnt < m_curCnt; iCnt++) 
+    {
+        TfcPrjPrms top(1,2,3,4,5);
+        TfcPrjPrms bot(6,7,8,9,10);
+        m_prjs[iCnt].initialize(top, bot, 0, 1, 2, '0', '1', '2', 6, 0, hits);
     }
 }
 

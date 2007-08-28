@@ -53,8 +53,11 @@
 
 // OBF
 #pragma link C++ class CalLogInfo+;
-#pragma link C++ class TfcProjection+;
-#pragma link C++ class TfcProjectionDir+;
+#pragma link C++ class TfcHit+;
+#pragma link C++ class TfcPrjList+;
+#pragma link C++ class TfcPrjPrms+;
+#pragma link C++ class TfcPrj+;
+#pragma link C++ class TfcPrjDir+;
 #pragma link C++ class TfcProjectionCol+;
 #pragma link C++ class ObfTrack+;
 #pragma link C++ class FilterStatus+;
