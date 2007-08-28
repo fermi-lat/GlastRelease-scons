@@ -14,9 +14,10 @@
 #include "Event/TopLevel/EventModel.h"
 
 //#include "TkrUtil/ITkrGeometrySvc.h"
-#include "EFC/TFC_projectionDef.h"
+#include "EDS/EBF_dir.h"
 #include "EDS/EDR_tkr.h"
 #include "EFC/GFC_status.h"
+#include "EFC/TFC_prjDef.h"
 #include "OnboardFilterTds/LogInfoDef.h"
 /**
  * @class FilterStatus
@@ -30,13 +31,15 @@ class OnboardFilter;
 
 namespace OnboardFilterTds
 {
-    class TowerHits : public DataObject{
+    
+class TowerHits : public DataObject
+{
 public:
     struct towerRecord{
         unsigned char lcnt[2];
-        int layerMaps[2];
+        int           layerMaps[2];
         unsigned char cnt[36];
-        short int *beg[36];
+        TFC_hit*      beg[36];
     };
     TowerHits() : DataObject() {
         for(int counter=0;counter<16;counter++){
@@ -65,9 +68,10 @@ public:
             m_hits[counter].layerMaps[1]=toCopy.m_hits[counter].layerMaps[1];
             for(int layerCounter=0;layerCounter<36;layerCounter++){
                 m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter];
-                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+//                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+                m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
                 memcpy(m_hits[counter].beg[layerCounter],
-                       toCopy.m_hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+                       toCopy.m_hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
             }
         }
     };
@@ -85,9 +89,10 @@ public:
                 if(m_hits[counter].beg[layerCounter]){
                     delete[] m_hits[counter].beg[layerCounter];
                 }
-                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+//                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+                m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
                 memcpy(m_hits[counter].beg[layerCounter],
-                       hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(short int));
+                       hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
             }
         }
     };
@@ -96,7 +101,8 @@ public:
 };
 
 
-class track{
+class track
+{
 public:
     inline track(){};
     inline track(const track &copy){
@@ -119,7 +125,8 @@ public:
 };
 
 
-class FilterStatus : public DataObject{
+class FilterStatus : public DataObject
+{
 public:
     FilterStatus() : DataObject() {
         m_status            = 0;
@@ -185,10 +192,13 @@ public:
         //****TEMP
 
         // Zero the EDR_tkr structure
-        memset(&m_tkr, 0, sizeof(EDR_tkr));
+        int sizeofedrtkr = sizeof(EDR_tkr);
+        m_tkr = (EDR_tkr*)(new char[sizeofedrtkr]);
+        memset(m_tkr, 0, sizeof(EDR_tkr));
+        //memset(&m_tkr, 0, sizeof(EDR_tkr));
 
-        // Zero the TFC_projections structure
-        memset(&m_prjs, 0, sizeof(TFC_projections));
+        // Zero the TFC_prjs structure
+        memset(&m_prjs, 0, sizeof(TFC_prjs));
 
         // zero log data
         memset(m_logData, 0, 16*8*12*sizeof(LogInfo));
@@ -238,7 +248,7 @@ public:
     inline const int *getLayers()const ;
     ///Return the projections for a specific tower
     //const projections *getProjection(int tower)const ;
-    inline TFC_projections *getProjections() ;
+    inline TFC_prjs *getProjections() ;
     inline EDR_tkr *getTkr() ;
     ///Return all available tracks
     inline std::vector<track> getTracks()const;
@@ -307,7 +317,7 @@ public:
     inline void setLayers(const int *layerCode);
     ///Set the projection of a specific tower
     //void setProjection(const int tower,const projections &projections);
-    inline void setProjections(const TFC_projections &projections);
+    inline void setProjections(const TFC_prjs &projections);
     inline void setTkr(const EDR_tkr &tkr);
     ///Add a new track to the list of tracks
     inline void setTrack(const track &newTrack);
@@ -441,8 +451,8 @@ private:
     int m_layers[16];
     ///Projections for the towers
     //projections m_prjs[16];
-    TFC_projections m_prjs;
-    EDR_tkr         m_tkr;
+    TFC_prjs m_prjs;
+    EDR_tkr*         m_tkr;
     ///Tracks found for this event
     std::vector<track> m_tracks;
     ///Angular separation between best track and incomming particle
@@ -536,11 +546,12 @@ private:
     return m_acdStatus;
   }
 
-  inline TFC_projections * FilterStatus::getProjections(){
+  inline TFC_prjs * FilterStatus::getProjections(){
     return &m_prjs;
   }
   inline EDR_tkr * FilterStatus::getTkr(){
-    return &m_tkr;
+//    return &m_tkr;
+    return m_tkr;
   }
   inline float FilterStatus::getCalEnergy() const{
     return (float)((m_stageEnergy & GFC_STAGE_M_ENERGY)/4.0);
@@ -694,12 +705,13 @@ private:
       m_layers[counter]=layerCode[counter];
   }
 
-  inline void FilterStatus::setProjections(const TFC_projections &prjs){
+  inline void FilterStatus::setProjections(const TFC_prjs &prjs){
     memcpy(&m_prjs, &prjs,sizeof(prjs));
   }
 
   inline void FilterStatus::setTkr(const EDR_tkr &tkr){
-    memcpy(&m_tkr, &tkr,sizeof(tkr));
+//    memcpy(&m_tkr, &tkr,sizeof(tkr));
+    memcpy(m_tkr, &tkr,sizeof(tkr));
   }
 
   inline void FilterStatus::setSeparation(const double sep){
