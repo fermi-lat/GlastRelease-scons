@@ -16,7 +16,7 @@ apply_pattern component_library library=CalibSvc
 # calibUtil, CalibData, calibRootData and astro
 ## use calibUtil v1r* -no_auto_imports
 use calibUtil v1r*
-use CalibData v0r17 
+use CalibData v0r*
 use calibRootData v1r* -no_auto_imports
 use astro         v2r* -no_auto_imports
 
