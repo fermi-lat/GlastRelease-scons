@@ -19,7 +19,7 @@ ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; 
 
 // test using the trigger engine
-TriggerAlg.engine  ="default";  // overrides masking logic, uses default engine
+//TriggerAlg.engine  ="default";  // overrides masking logic, uses default engine
 OnboardFilter.RejectEvents = true;      // enable OBF
 //TriggerAlg.OutputLevel=2;
 
