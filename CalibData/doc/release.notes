@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r17   29-Aug-2007  jrb  (for Markus) Add SAA boundary calibration 
    v0r16   11-Jun-2007  jrb  Move TkrFinder.h out of public area; modify 
                              constructor slightly to avoid unused arg. warning.
    v0r15p1 18-Apr-2007  jrb  Bug fix in bad strips handling (thanks, Leon!)
