@@ -16,7 +16,11 @@ namespace enums {
         number_of_trigger_bits = 7, ///> for size of table
 
         GEM_offset = 8,             ///> offset to the GEM bits
-        GEM_mask   = 0xff           ///> mask for GEM bits (use for trigger bits too!)
+        GEM_mask   = 0xff,           ///> mask for GEM bits (use for trigger bits too!)
+
+		ENGINE_offset = 5,          /// number of bits assigned for engine numbers
+		ENGINE_mask = 0x1f,         /// mask for engine numbers
+		ENGINE_unset = 16          /// Signifies that the engine is unset, they are normally in the range [0,15]
 
     } TriggerBits;
 }
