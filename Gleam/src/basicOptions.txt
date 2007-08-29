@@ -165,6 +165,11 @@ digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi.root";
 reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon.root";
 relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relations.root";
 
+// Sets up the meta (event collection) file
+// Note, that if we eliminate all the RootWriterAlgs, we will not write
+// this file - because it is the algorithms that start up the RootIoSvc
+RootIoSvc.MetaRootFileWrite = "$(GLEAMROOT)/data/meta.root";
+
 // ----------------------------
 // ntuple generation 
 
