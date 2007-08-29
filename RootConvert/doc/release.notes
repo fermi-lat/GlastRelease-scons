@@ -3,7 +3,7 @@
  author David Chamont 
  @verbatim
 
- 
+ v1r26   29-Aug-2007  TU Updates to convert TDS/root FilterStatus 
  v1r25   04-Jun-2007 HMK merge GlastReleasev9r13 branch with moot keys
  v1r24   12-Mar-2007 TU  Include converters for McTkrStrips and McTrajectories
  v1r23p1 13-Dec-2006 HMK patch to remove commented out lines
