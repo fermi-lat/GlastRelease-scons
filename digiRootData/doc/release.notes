@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r18     29-Aug-2007  TU New FSW tracking structures in FilterStatus.h
 v9r17     04-Jun-2007 HMK Merge in GlastReleasev9r13 branch with Moot Keys
 v9r16p2   15-Apr-2007 HMK add TimeTone::earlyEvent to address JIRA ROOT-28
 v9r16p1   30-Mar-2007 HMK Patch unit test to handle trigger word more
