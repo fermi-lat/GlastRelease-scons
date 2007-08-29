@@ -20,6 +20,7 @@ public:
     virtual ~L1T();
 
     void initialize(UInt_t trigger, UInt_t *digiTriRowBits, UInt_t *trgReqTriRowBits);
+    void setTriggerWordTwo(UInt_t val) { m_triggerWordTwo = val; };
     void setDigiTriRowBits(UInt_t tower, UInt_t bits);
     void setDigiTriRowBits(UInt_t *triRowBits);
     void setTrgReqTriRowBits(UInt_t tower, UInt_t bits);
@@ -33,6 +34,10 @@ public:
     /*@{*/
     /// Returns full trigger word
     UInt_t getTriggerWord() const { return m_trigger; };
+    
+    /// Returns the full second word associated with the trigger
+    /// Contains the GLT and GEM Engine Numbers
+    UInt_t getTriggerWordTwo() const { return m_triggerWordTwo; };
 
     /// kTRUE indicates that ACD LOW occurred
     bool getAcdLow() const { return (m_trigger & enums::b_ACDL)!=0;};
@@ -48,6 +53,18 @@ public:
     bool getThrottle() const { return (m_trigger & enums::b_THROTTLE)!=0; };
 	/*@}*/
 
+    /// Corresponds to the GltWord in merit - calculated from digis in TriggerAlg
+    UInt_t getGltWord() const { return(m_trigger & 31); };
+    /// Corresponds to the GltGemSummary in merit - obtained from GemSummary if real data
+    UInt_t getGltGemSummary() const { return ((m_trigger >> enums::GEM_offset) & enums::GEM_mask); };
+
+    /// Corresponds to the GltEngine in merit - the engine number associated with the trigger bits calculated from digis
+    Int_t getGltEngine() const { return (m_triggerWordTwo & enums::ENGINE_mask); };
+    /// Corresponds to the GltGemEngine in merit - the engine number associated with the GEM summary word
+    Int_t getGemEngine() const { return ((m_triggerWordTwo >> enums::ENGINE_offset) & enums::ENGINE_mask); };
+    /// Returns kTrue if engine is unset
+    bool getEngineUnsetStatus(Int_t engineNum) const { return (engineNum == enums::ENGINE_unset); }
+
      UInt_t getDigiTriRowBits(const Int_t tower) const;
      UInt_t getTrgReqTriRowBits(const Int_t tower) const;
 
@@ -61,8 +78,12 @@ private:
     UInt_t m_digiTriRowBits[16];
     UInt_t m_trgReqTriRowBits[16];
 
+    /// packed word containing trigger engine numbers for gem and glt
+    /// first 5 bits for glt, mask == 0x1f, second 5 bits for gem, mask == 0x3e00
+    UInt_t m_triggerWordTwo;
 
-    ClassDef(L1T,6) // Level 1 Trigger information
+
+    ClassDef(L1T,7) // Level 1 Trigger information
 };
 
 #endif
