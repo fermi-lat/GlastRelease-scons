@@ -31,7 +31,8 @@ class EventHeader : public DataObject                                           
 public:
     /// default constructor: flag all fields invalic
     EventHeader()
-        : DataObject(), m_event(0), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1) { }
+        : DataObject(), m_event(0), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1),
+        m_triggerWordTwo((unsigned int)-1) { }
     
     virtual ~EventHeader() { }
     
@@ -54,10 +55,15 @@ public:
     /// Update reference to event time stamp
     void setTime (const TimeStamp& value)                      { m_time = value; }
 
-    /// Retrive trigger word
+    /// Retrieve trigger word
     unsigned int trigger()const                                { return m_trigger;}
     /// update trigger word
     void setTrigger(unsigned int value)                         {m_trigger = value;}
+
+    /// Retrieve second trigger word
+    unsigned int triggerWordTwo() const                         {return m_triggerWordTwo; }
+    /// update second trigger word
+    void setTriggerWordTwo(unsigned int value)                  { m_triggerWordTwo = value; }
     
  
     /// Retrieve live time
@@ -86,6 +92,8 @@ private:
     TimeStamp           m_time;
     /// trigger word: note that a class is available to use for this (THB: do we need this?)
     unsigned int        m_trigger;
+    /// store additional bits, now that we're saving the trigger engines for both GEM and GLT
+    unsigned int        m_triggerWordTwo;
 
     /// live time
     double              m_livetime;
@@ -130,7 +138,8 @@ inline std::ostream& EventHeader::fillStream( std::ostream& s ) const           
         << EventField( EventFormat::field12 )
         << m_run
         << "\n    Time         = " << m_time
-        << std::setbase(16) << "\n    Trigger      = " << m_trigger;
+        << std::setbase(16) << "\n    Trigger      = " << m_trigger
+        << "\n    TriggerWordTwo      = " << m_triggerWordTwo;
 }
 } // namespace Event
 #endif    // Event_EVENT_H

@@ -2,7 +2,9 @@
  * @brief package Event
 @verbatim
  * package manager:T.Burnett
- *   
+ *
+ * v11r21   28-Aug-07 HMK Add additional trigger word in Event header to
+ *          store engine numbers
  * v11r20   27-Jul-07 LSR McParticle now allows to set positions and directions
  * v11r19p2 11-Jun-07 LSR Cleanup of RM warnings... don't think the interface changes
  * v11r19   01-Jun-07 LSR Fix to McEvent to properly initialize McSourceName
