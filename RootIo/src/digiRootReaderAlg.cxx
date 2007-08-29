@@ -348,6 +348,7 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
     evt->setLivetime(m_digiEvt->getLiveTime());
 
     evt->setTrigger(m_digiEvt->getL1T().getTriggerWord());
+    evt->setTriggerWordTwo(m_digiEvt->getL1T().getTriggerWordTwo());
 
     Event::DigiEvent* digiEventTds = 
         SmartDataPtr<Event::DigiEvent>(eventSvc(), EventModel::Digi::Event);
