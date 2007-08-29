@@ -404,7 +404,7 @@ StatusCode TriggerAlg::execute()
     
     unsigned int triggerWordTwo = 0;
     triggerWordTwo |= gltengine;
-    triggerWordTwo |= gemengine << 5; // also the GEM engine number (if set)
+    triggerWordTwo |= gemengine << enums::ENGINE_offset; // also the GEM engine number (if set)
 
     if( static_cast<int>(h.trigger())==-1 
         || h.trigger()==0  // this seems to happen when reading back from incoming??
