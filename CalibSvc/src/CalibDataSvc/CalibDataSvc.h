@@ -147,6 +147,7 @@ public:
       other about it.
   */
   bool  m_useEventTime;
+  bool  m_useEventLATCMaster;
 
 
   /// Private utility, called from initialize()
@@ -198,6 +199,8 @@ public:
 
   /// Absolute time spacing between events (milliseconds)
   long m_delayTime;
+
+  unsigned m_LATCMaster;
   
 };
 

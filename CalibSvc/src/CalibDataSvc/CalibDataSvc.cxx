@@ -41,6 +41,7 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibFlavorList", m_flavorList);
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
   declareProperty("UseEventTime", m_useEventTime = true);
+  declareProperty("UseEventMasterKey", m_useEventLATCMaster = true);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
   m_rootName = "/" + m_calibRootName;
