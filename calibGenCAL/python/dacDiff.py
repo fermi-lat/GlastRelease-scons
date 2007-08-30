@@ -82,8 +82,8 @@ else:
 
 
 # read in dac xml files
-dacFile1 = calDacXML.calDacXML(dacPath1, dacType)
-dacFile2 = calDacXML.calDacXML(dacPath2, dacType)
+dacFile1 = calDacXML.calSettingsXML(dacPath1, dacType)
+dacFile2 = calDacXML.calSettingsXML(dacPath2, dacType)
 
 # check that towers are the same (ok if they are, just print warning)
 dacTwrs1 = set(dacFile1.getTowers())

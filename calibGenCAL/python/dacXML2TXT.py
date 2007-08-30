@@ -50,7 +50,7 @@ else:
 
 
 # read in dac xml files
-dacFile = calDacXML.calDacXML(dacPath, dacType)
+dacFile = calDacXML.calSettingsXML(dacPath, dacType)
 
 # check that towers are the same (ok if they are, just print warning)
 dacTwrs = dacFile.getTowers()

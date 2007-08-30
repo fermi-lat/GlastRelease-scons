@@ -286,7 +286,7 @@ if __name__ == '__main__':
     # read DAC settings file
 
     log.info('Reading file %s', dacName)
-    fio = calDacXML.calDacXML(dacName, ftype)
+    fio = calDacXML.calSettingsXML(dacName, ftype)
     twrs = set(fio.getTowers())
     if not twrs.issubset(towers):
         log.error("%s data not found in file %s", twrs, dacName)

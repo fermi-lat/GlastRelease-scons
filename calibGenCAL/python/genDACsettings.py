@@ -145,9 +145,8 @@ if __name__ == '__main__':
         hegain = None
         
     log.info("Creating file %s", outName)
-    fio = calDacXML.calDacXML(outName, DAC_MAP[dacType], calDacXML.MODE_CREATE)
-    fio.write(settings, filename = outName, leGain = legain, heGain = hegain, energy = energy, 
-        engfilename = dacSlopesName, adcmargin = adcmargin, tems = towers)
+    fio = calDacXML.calSettingsXML(outName, DAC_MAP[dacType], calDacXML.MODE_CREATE)
+    fio.write(settings, tems = towers)
     fio.close() 
   
     log.debug("%s DAC\n%s", dacType, settings[0,...])  
