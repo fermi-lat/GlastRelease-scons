@@ -6,10 +6,10 @@ Additional masks are ANDed together to select some region of ca.
 
 
 The commandline is
-python dacBlockSet.py  [-f POS|NEG] FLE|FHE|LAC <val_src> <input_xml> <output_xml>
+python dacBlockSet.py  [-f POS|NEG] FLE|FHE|LAC|ULD <val_src> <input_xml> <output_xml>
 
 where:
-    FLE|FHE|LAC       = DAC data type
+    FLE|FHE|LAC|ULD   = DAC data type
     -f <face>         = face = mask only POS or NEG xtal face
     <input_xml>       = input dac settings xml
     <output_xml>      = output dac settings xml
@@ -34,7 +34,7 @@ import getopt
 import cgc_util
 import Numeric
 
-usage = "python dacBlockSet.py  [-f POS|NEG] FLE|FHE|LAC <val_src> <input_xml> <output_xml>"
+usage = "python dacBlockSet.py  [-f POS|NEG] FLE|FHE|LAC|ULD <val_src> <input_xml> <output_xml>"
 
 # setup logger
 
