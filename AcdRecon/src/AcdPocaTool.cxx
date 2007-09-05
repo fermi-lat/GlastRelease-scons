@@ -66,7 +66,10 @@ StatusCode AcdPocaTool::tileDistances (const AcdTileDim& tile,
 
   MsgStream log(msgSvc(), name());
   
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) { 
+    log << MSG::ERROR << "Tile Geometry data " << tile.acdId().id() << " is not ready." << endreq;
+    return sc;
+  }
   
   if ( log.level() <= MSG::DEBUG ) {
     log << MSG::DEBUG << "AcdHitPoca for track " << aTrack.m_index << ", tile " << tile.acdId().id() << endreq;  
@@ -121,7 +124,10 @@ StatusCode AcdPocaTool::ribbonDistances(const AcdRibbonDim& ribbon,
     log << MSG::DEBUG << "AcdHitPoca for track " << aTrack.m_index << ", ribbon  " << ribbon.acdId().id() << endreq;
   } 
 
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) {
+    log << MSG::ERROR << "Ribbon Geometry data " << ribbon.acdId().id() << " is not ready." << endreq;
+    return sc;
+  }
 
   // latch the tile id
   data.m_id = ribbon.acdId();

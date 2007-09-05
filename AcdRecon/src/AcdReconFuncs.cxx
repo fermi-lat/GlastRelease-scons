@@ -250,8 +250,7 @@ namespace AcdRecon {
 	
 	if (length_2_intersect > 0 && length_2_intersect < edge_length) {
 	  double test_dist = raydoca.docaRay1Ray2();
-
-	  // check to see if this is a shared edge of a curved tile
+	  
 	  if ( test_dist < dist ) {
 	    dist = test_dist;
 	    arcLength = raydoca.arcLenRay1();
@@ -311,7 +310,7 @@ namespace AcdRecon {
 	v = vEdge;
       }
     }
-    // Make this an Active Distance calculation 
+    // Make this an Active Distance calculation (we know that we are outside the tile)
     dist *= -1.;
   }
 

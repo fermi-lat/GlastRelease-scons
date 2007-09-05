@@ -983,7 +983,7 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
       const AcdRibbonDim* ribbonDim = m_geomMap->getRibbon(acdId,*m_acdGeoSvc);
       sc = ribbonDim->statusCode();
       if ( sc.isFailure() ) {
-	log << MSG::ERROR << "Failed to get geom for a tile " << acdId.id() 
+	log << MSG::ERROR << "Failed to get geom for a ribbon " << acdId.id() 
             << endreq;
 	return sc;
       }
