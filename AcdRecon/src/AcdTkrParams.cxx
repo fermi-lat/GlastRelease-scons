@@ -27,9 +27,9 @@ bool AcdTkrParams::convertToAcdRep(const Event::TkrTrackParams& params, const do
   const double sinSqThetaZ = 1. - sinSqThetaX - sinSqThetaY;
 
   // take some square roots
-  double xDir = sqrt(sinSqThetaX);  
-  double yDir = sqrt(sinSqThetaY);
-  double zDir = sqrt(sinSqThetaZ);
+  double xDir = sinSqThetaX > 0 ? sqrt(sinSqThetaX) : 0.;  
+  double yDir = sinSqThetaY > 0 ? sqrt(sinSqThetaY) : 0.;
+  double zDir = sinSqThetaZ > 0 ? sqrt(sinSqThetaZ) : 0.;
   
   // if this is downgoing flip the direction
   if ( !up) {
@@ -51,8 +51,8 @@ bool AcdTkrParams::convertToAcdRep(const Event::TkrTrackParams& params, const do
   
 
   double Vxx = cov(1,1);
-  double Vxy = cov(1,1);
-  double Vyy = cov(1,2);
+  double Vxy = cov(1,2);
+  double Vyy = cov(2,2);
     
   double one_over_Mx = fabs(Mx) > 1e-6 ? 1./ Mx : 1e-6;
   double one_over_My = fabs(My) > 1e-6 ? 1./ My : 1e-6;

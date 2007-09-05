@@ -138,6 +138,9 @@ class AcdReconAlg : public Algorithm
 				   Event::AcdPocaSet& pocaSet,
 				   Event::AcdTkrPointCol& points);
 
+      /// Write an exit point object
+      void writeExitPoint(std::ostream& os, 
+			  const AcdRecon::TrackData& trackData, const AcdRecon::ExitData& isectData);			  
 
       StatusCode calcCornerDoca(const HepPoint3D &x0, const HepVector3D &dir,
                                 double &dist);

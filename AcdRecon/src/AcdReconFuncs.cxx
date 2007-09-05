@@ -163,7 +163,7 @@ namespace AcdRecon {
 	data.m_active2D = testActive2D;
 	data.m_activeX = testActiveX;
 	data.m_activeY = testActiveY;
-	data.m_arcLength = testArcLength;
+	data.m_arcLengthPlane = testArcLength;
 	data.m_hitsPlane.set(testHitPoint.x(),testHitPoint.y(),testHitPoint.z());
 	data.m_inPlane.set(testLocal.x(),testLocal.y(),testLocal.z());
 	data.m_volume = iVol;
@@ -455,7 +455,7 @@ namespace AcdRecon {
       if ( distTest < dist_last ) {
 	// going wrong direction. stop
 	//return;
-	continue;
+	;
       }
       dist_last = distTest;
       if ( distTest >  dist ) {
@@ -508,7 +508,7 @@ namespace AcdRecon {
       for ( int j = i; j < 3; j++) {
 	double currentSum = 0.;
 	for ( unsigned int k(1);  k < 4; k++ ) {
-	  for ( unsigned int l(1);  l < 4; l++ ) {
+	  for ( unsigned int l(1); l < 4; l++ ) {
 	    currentSum += localFrameVectors(i,k) * paramsAtArcLength(k,l) * localFrameVectors(j,l);
 	  }
 	}	

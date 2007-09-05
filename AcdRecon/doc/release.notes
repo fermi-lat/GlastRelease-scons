@@ -4,6 +4,8 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r10p1   04-Aug-2007 EAC Second round of fixes to new AcdRecon re-organization.  Added lots of debugging printouts.  
+                          All merit variables are being filled, but still need to perform some more validation/ checks
 v3r10     24-Aug-2007 EAC First round of fixes to new AcdRecon re-organization.  Active Distance calc is broken/ disabled.
 v3r9      30-Jul-2007 EAC Add caclulations of length along ribbon where intersection occurs, improve Gap calculations
 v3r8      13-Jul-2007 EAC Use new version of AcdUtil/AcdGeomSvc and AcdTile/RibbonDim

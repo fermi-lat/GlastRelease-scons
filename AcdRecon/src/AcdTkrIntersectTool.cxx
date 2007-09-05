@@ -167,7 +167,7 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 	const AcdTileDim* tile = geomMap.getTile(nextPoca->m_id,*m_acdGeomSvc);
 	// propgate the postion and error matrix to the intersection
 	AcdRecon::propagateToArcLength(prop,track,arcLength,next_params,paramsAtISect);	
-	AcdRecon::projectErrorToPlane(paramsAtISect,tile->localFrameVectors(nextPoca->m_region),nextPoca->m_planeError);
+	AcdRecon::projectErrorToPlane(paramsAtISect,tile->localFrameVectors(nextPoca->m_volume),nextPoca->m_planeError);
 	AcdRecon::projectErrorToPocaVector(paramsAtISect,nextPoca->m_pocaVector,nextPoca->m_active3DErr);	
       }    
     }
@@ -350,7 +350,7 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
 
   // Which ACD id is this?
   idents::AcdId acdId = idents::AcdId(volId);
-  int face = volId[1];
+  /* int face = volId[1]; */
   
   AcdRecon::PocaDataPtrMap::const_iterator itrFind = pocaMap.find(acdId);
   if ( itrFind != pocaMap.end() ) {
@@ -516,7 +516,7 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
 
     if ( whichRibbon.ribbon() ) {
       const AcdRibbonDim* ribbon = geomMap.getRibbon(whichRibbon,*m_acdGeomSvc);      
-      AcdRecon::ribbonPoca(track,*ribbon,ribbonPocaData.m_arcLength,ribbonPocaData.m_activeY,
+      AcdRecon::ribbonPoca(track,*ribbon,ribbonPocaData.m_arcLength,ribbonPocaData.m_ribbonLength,
 			   ribbonPocaData.m_active3D,ribbonPocaData.m_poca,ribbonPocaData.m_pocaVector,ribbonPocaData.m_region);
     }
   }
@@ -568,7 +568,7 @@ StatusCode AcdTkrIntersectTool::gapPocaCorner(const AcdRecon::TrackData& track, 
     }
   }
 
-  idents::AcdGapId gapId(AcdRecon::CornerRay,whichCorner,data.m_face,0,0);
+  idents::AcdGapId gapId(AcdRecon::CornerRay,whichCorner+4,data.m_face,0,0);
   
   Event::AcdTkrGapPoca* poca(0);
   StatusCode sc = makeGapPoca(gapId,track,pocaData,pocaData.m_active3D,poca);
@@ -585,8 +585,19 @@ StatusCode AcdTkrIntersectTool::makeGapPoca(idents::AcdGapId& gapId, const AcdRe
   double arcLength = track.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     
   float local[2];
-  local[0] = pocaData.m_inPlane.x();
-  local[1] = pocaData.m_inPlane.y();
+  switch ( gapId.gapType() ) {
+  case AcdRecon::X_RibbonSide:
+  case AcdRecon::Y_RibbonSide: 
+  case AcdRecon::Y_RibbonTop: 
+    // this gap has been calculated from a ribbon
+    local[0] = pocaData.m_active3D;
+    local[1] = pocaData.m_ribbonLength;
+    break;
+  default:
+    // this gap has been calculated from a tile or a corner ray
+    local[0] = pocaData.m_activeX;
+    local[1] = pocaData.m_activeY;
+  }
 
   // temp storage
   static Event::AcdTkrLocalCoords localCoords;

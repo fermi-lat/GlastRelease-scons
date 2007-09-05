@@ -59,15 +59,22 @@ StatusCode AcdPocaTool::initialize()
 StatusCode AcdPocaTool::tileDistances (const AcdTileDim& tile,
 				       const AcdRecon::TrackData& aTrack, 
 				       AcdRecon::PocaData& data) {
-  
+
   // initialize and sanity check
   data.reset(MaxDoca);
   StatusCode sc = tile.statusCode();
+
+  MsgStream log(msgSvc(), name());
+  
   if (sc.isFailure()) return sc;
+  
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdHitPoca for track " << aTrack.m_index << ", tile " << tile.acdId().id() << endreq;  
+  }
 
   // latch the tile id
   data.m_id = tile.acdId();
-
+  
   // First, project track to plane of the tile
   HepPoint3D p;
   AcdRecon::tilePlane(aTrack,tile,data);
@@ -82,9 +89,17 @@ StatusCode AcdPocaTool::tileDistances (const AcdTileDim& tile,
     // get the distance to the closest edge or corner
     AcdRecon::tileEdgeCornerPoca(aTrack,tile,data.m_arcLength,data.m_active3D,data.m_poca,data.m_pocaVector,data.m_region);
   }
-
   
-
+  if ( log.level() <= MSG::DEBUG ) {    
+    log << MSG::DEBUG << "AcdTilePlane.\n\t" 
+	<< "s= " << data.m_arcLengthPlane 
+	<< "; X_g=" << data.m_hitsPlane << "; X_l=" << data.m_inPlane << "; vol= " << data.m_volume << std::endl
+	<< "\tcos(th)= " << data.m_cosTheta << "; l= " << data.m_path 
+	<< "; active= (" << data.m_activeX << ',' << data.m_activeY << '|' << data.m_active2D << ')' << endreq;
+    log << MSG::DEBUG << "AcdTilePoca.\n\t" 
+	<< "s= " << data.m_arcLength << "; P= " << data.m_poca << "; V= " << data.m_pocaVector 
+	<< "; active3D= " << data.m_active3D << "; region= " << data.m_region << endreq;
+  }
   return sc;
 }
 
@@ -100,6 +115,12 @@ StatusCode AcdPocaTool::ribbonDistances(const AcdRibbonDim& ribbon,
   // initialize and sanity check
   data.reset(MaxDoca);  // this is an active dist caculation, want to pick larger numbers
   StatusCode sc = ribbon.statusCode();
+
+  MsgStream log(msgSvc(), name());  
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdHitPoca for track " << aTrack.m_index << ", ribbon  " << ribbon.acdId().id() << endreq;
+  } 
+
   if (sc.isFailure()) return sc;
 
   // latch the tile id
@@ -113,6 +134,17 @@ StatusCode AcdPocaTool::ribbonDistances(const AcdRibbonDim& ribbon,
   AcdRecon::ribbonPoca(aTrack,ribbon,data.m_arcLength,data.m_ribbonLength,
 		       data.m_active3D,data.m_poca,data.m_pocaVector,data.m_region);
 
+  if ( log.level() <= MSG::DEBUG ) {    
+    log << MSG::DEBUG << "AcdRibbonPlane.\n\t"
+	<< "s= " << data.m_arcLengthPlane 
+	<< "; X_g=" << data.m_hitsPlane << "; X_l=" << data.m_inPlane << "; vol= " << data.m_volume << std::endl
+	<< "\tcos(th)= " << data.m_cosTheta << "; l= " << data.m_path 
+	<< "; active= (" << data.m_activeX << ',' << data.m_activeY << '|' << data.m_active2D << ')' << endreq;  
+    log << MSG::DEBUG << "AcdRibbonPoca.\n\t"
+	<< "s= " << data.m_arcLength << "; R= " << data.m_ribbonLength 
+	<< "; P=" << data.m_poca << "; V=" << data.m_pocaVector 
+	<< "; active= " << data.m_active3D << "; region= " << data.m_region << endreq;
+  }
   return sc;
 }
 
@@ -120,22 +152,43 @@ StatusCode AcdPocaTool::ribbonDistances(const AcdRibbonDim& ribbon,
 StatusCode AcdPocaTool::makePoca(const AcdRecon::TrackData& aTrack, 
 				 const AcdRecon::PocaData& pocaData,				 
 				 Event::AcdTkrHitPoca*& poca) {
-  poca = 0;
-  
-  idents::AcdId acdId = pocaData.m_id;
+  poca = 0;  
+  const idents::AcdId& acdId = pocaData.m_id;
 
-  float local[2];
-  local[0] = pocaData.m_inPlane.x();
-  local[1] = pocaData.m_inPlane.y();
-  float distance = pocaData.m_active2D > 0 ? pocaData.m_active2D : pocaData.m_active3D;
-  // This should probably be the same as the active distance (either 2D or 3D depending if it hit
-  // the tile or not), except that there are pathological cases where the 3D cases is negative, because
-  // it occurs behind the first point
-  // Safer just to use the 2D one for now
-  //   
-  //double arcLength3D = aTrack.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
-  double arcLengthPlane = aTrack.m_upward ? pocaData.m_arcLengthPlane : -1* pocaData.m_arcLengthPlane;
-  float arcLength = arcLengthPlane;
+  float local[2], distance(0.), arcLength(0.);
+  if ( acdId.tile() ) {
+    // for tile local data is just active distances in X and Y, 
+    // doca is active2D if in plane, otherwise active3D
+    local[0] = pocaData.m_activeX;
+    local[1] = pocaData.m_activeY;
+    distance = pocaData.m_active2D > 0 ? pocaData.m_active2D : pocaData.m_active3D;
+    // This should probably be the same as the active distance (either 2D or 3D depending if it hit
+    // the tile or not), except that there are pathological cases where the 3D cases is negative, because
+    // it occurs behind the first point
+    // Safer just to use the 2D one for now
+    //   
+    //double arcLength3D = aTrack.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+    double arcLengthPlane = aTrack.m_upward ? pocaData.m_arcLengthPlane : -1* pocaData.m_arcLengthPlane;
+    arcLength = arcLengthPlane;
+  } else if ( acdId.ribbon() ) {    
+    // for ribbon local data is just active distances in local X (across ribbon) and 
+    // total length along the ribbon
+    // doca is active3D always
+    local[0] = pocaData.m_active2D;
+    local[1] = pocaData.m_ribbonLength;
+    // This should probably be the same as the active distance (either 2D or 3D depending if it hit
+    // the tile or not), except that there are pathological cases where the 3D cases is negative, because
+    // it occurs behind the first point
+    // Safer just to use the 2D one for now
+    //   
+    //double arcLength3D = aTrack.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
+    double arcLengthPlane = aTrack.m_upward ? pocaData.m_arcLengthPlane : -1* pocaData.m_arcLengthPlane;
+    arcLength = arcLengthPlane;
+    distance = pocaData.m_active3D;    
+  } else {
+    // NA channel, do nothing
+    return StatusCode::SUCCESS;
+  }
 
   // temp storage
   static Event::AcdTkrLocalCoords localCoords;

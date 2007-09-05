@@ -333,14 +333,14 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 	  m_energyRibbonCol.push_back((*acdDigiIt)->getEnergy());
         }
     }
-	
-    log << MSG::DEBUG;
-    if ( log.isActive()) 
-      log.stream() << "num Tiles = " << m_tileCount 
-            << " total energy = " << m_totEnergy
-            << "  numRibbons = " << m_ribbonCount
-            << " total Ribbon energy = " << m_totRibbonEnergy;
-    log << endreq;
+	    
+    if ( log.level() <= MSG::DEBUG ) {         
+      log << MSG::DEBUG << "AcdReconAlg::reconstruct()." << std::endl
+	  << "\tnTiles = " << m_tileCount 
+	  << ", total energy = " << m_totEnergy
+	  << ", numRibbons = " << m_ribbonCount
+	  << ", total Ribbon energy = " << m_totRibbonEnergy << std::endl << endreq;
+    }
 
     Event::AcdPocaSet acdPocaSet;
     static Event::AcdTkrIntersectionCol acdIntersections;
@@ -380,10 +380,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
       }
     }
 
-    log << MSG::DEBUG;
-    if (log.isActive()) log.stream() << "DOCA: " << m_doca << " "
-        << "ActDist: " << m_act_dist;
-    log << endreq;
+    if ( log.level() <= MSG::DEBUG ) {      
+      log << MSG::DEBUG << "AcdActiveDistance: " << m_act_dist << std::endl << endreq;
+    }
 
     SmartDataPtr<Event::AcdRecon> checkAcdRecTds(eventSvc(), 
                  EventModel::AcdRecon::Event);  
@@ -446,6 +445,9 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
     }
     acdHits.clear();	
 
+    if ( log.level() <= MSG::DEBUG ) {         
+      log << MSG::DEBUG << "AcdReconAlg::reconstruct() finished" << std::endl << std::endl << endreq;
+    }
     return sc;
 }
 
@@ -545,11 +547,13 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
                                           EventModel::TkrRecon::TkrTrackCol);
 	
     if (!tracksTds) {
-        log << MSG::DEBUG << "No reconstructed tracks found on the TDS" 
+      log << MSG::DEBUG << "No reconstructed tracks found on the TDS" << std::endl
             << endreq;
         return StatusCode::SUCCESS;
-    }
-	
+    } else {
+      log << MSG::DEBUG << "AcdReconAlg::trackDistances using " << tracksTds->size() << " tracks." << endreq;
+    }	
+
     bool firstPassDone = false;
 
     // Places to store the track endpoint and direction
@@ -588,13 +592,25 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
 	if ( ! AcdRecon::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
 	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
 	  return StatusCode::SUCCESS;
+	} else {
+	  if ( log.level() <= MSG::DEBUG ) {
+	    log << MSG::DEBUG << "  Acd Track exit(up).  ";
+	    writeExitPoint(log.stream(),upwardExtend,upwardExit);
+	    log << endreq;
+	  }
 	}
 	
 	if ( ! AcdRecon::exitsLat(downwardExtend,s_acdVolume,downwardExit) ) {
 	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
 	  return StatusCode::SUCCESS;
+	} else {
+	  if ( log.level() <= MSG::DEBUG ) {
+	    log << MSG::DEBUG << "  Acd Track exit(down).  ";
+	    writeExitPoint(log.stream(),downwardExtend,downwardExit);
+	    log << std::endl << endreq;
+	  }
 	}	  
-
+	
 	// keep track of all the pocas to hit tiles
 	AcdRecon::PocaDataMap upwardPocas;
 	AcdRecon::PocaDataMap downwardPocas;
@@ -613,8 +629,8 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
 	}
 
         // grab the best New Active Distance Calc (3D) values
-        sc = tileActDist(upwardPocas, m_rowActDist3DCol, m_act_dist3D, 
-                         m_maxActDist3DId);
+        sc = tileActDist(upwardPocas, m_rowActDist3DCol, m_act_dist3D, m_maxActDist3DId);
+
         if (sc.isFailure()) {
 	  log << MSG::ERROR << "AcdReconAlg::tileActDist(up) failed" << endreq;
 	  return sc;
@@ -631,14 +647,14 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
 	// grab the best "Active Distance" from ribbons
         sc = hitRibbonDist(upwardPocas, m_ribbon_act_dist, m_ribbon_act_dist_id);
         if (sc.isFailure()) {
-	   log << MSG::ERROR << "AcdReconAlg::hitRibbonDist(up) failed" << endreq;
+	  log << MSG::ERROR << "AcdReconAlg::hitRibbonDist(up) failed" << endreq;
 	  return sc;
 	}
-
+	
 	// filter the lists for further procsessing
 	AcdRecon::PocaDataPtrMap upPocasCut;
 	AcdRecon::PocaDataPtrMap downPocasCut;
-
+	
 	if ( m_pocaTool != 0 ) {
 	  sc = m_pocaTool->filter(upwardPocas,upPocasCut);
 	  if (sc.isFailure()) {
@@ -651,7 +667,11 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
 	    return sc;
 	  }
 	}
-
+	
+	if ( log.level() <= MSG::DEBUG ) {
+	  log << MSG::DEBUG << "AcdReconAlg::trackDistances(" << iTrack << ") poca calculations finished." << std::endl << endreq;
+	}
+	
 	// Now extrapolate the track as far as needed, 
 	// this makes the AcdTkrPoca and AcdTkrIntersection objects
 	Event::AcdTkrIntersectionCol upwardIntersections;
@@ -706,12 +726,14 @@ StatusCode AcdReconAlg::trackDistances(const Event::AcdHitCol& acdHits,
             // First track in the list, is the reconstructed gamma
             firstPassDone = true;
 	    //std::cout << "CornerDoca: " << m_cornerDoca << std::endl;
-            log << MSG::DEBUG << "AcdCornerDoca = " << m_cornerDoca << endreq;
         }
     }
-	
+    
+    if ( log.level() <= MSG::DEBUG ) {
+      log << MSG::DEBUG << "AcdCornerDoca = " << m_cornerDoca << std::endl << endreq;
+    }
     return sc;
-	
+    
 }
 
 
@@ -735,6 +757,8 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdHitCol& acdHits,
       log << MSG::DEBUG << "No reconstructed vertex collection found on the TDS" 
 	  << endreq;
         return StatusCode::SUCCESS;
+    } else {
+      log << MSG::DEBUG << "AcdReconAlg::vertexDistances using " << vertexTds->size() << " vertices." << endreq;
     }
 	
     int nVtx = vertexTds->size();
@@ -779,12 +803,24 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdHitCol& acdHits,
     if ( ! AcdRecon::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
       log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
       return StatusCode::SUCCESS;
-	}
+    } else {
+      if ( log.level() <= MSG::DEBUG ) {
+	log << MSG::DEBUG << "  Acd Vertex exit(up).  ";
+	writeExitPoint(log.stream(),upwardExtend,upwardExit);      
+	log << endreq;
+      }
+    }
     
     if ( ! AcdRecon::exitsLat(downwardExtend,s_acdVolume,downwardExit) ) {
       log << MSG::WARNING << "AcdRecon::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
       return StatusCode::SUCCESS;
-    }	  
+    } else {
+      if ( log.level() <= MSG::DEBUG ) {
+	log << MSG::DEBUG << "  Acd Vertex exit(down).  ";
+	writeExitPoint(log.stream(),downwardExtend,downwardExit);	
+	log << endreq;
+      }
+    }
 
     // keep track of all the pocas to hit tiles
     AcdRecon::PocaDataMap upwardPocas;
@@ -808,6 +844,10 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdHitCol& acdHits,
       if (sc.isFailure()) return sc;
     }
 
+    if ( log.level() <= MSG::DEBUG ) {
+      log << MSG::DEBUG << "AcdReconAlg::vertexDistances() poca calculations finished." << std::endl << endreq;
+    }
+
     // extrapolate the track upwards
     sc = extrapolateVertex(upwardExtend, upPocasCut, upwardExit, pocaSet, exitPoints);
     if (sc.isFailure()) return sc;
@@ -815,6 +855,10 @@ StatusCode AcdReconAlg::vertexDistances(const Event::AcdHitCol& acdHits,
     // extrapolate the track downwards
     sc = extrapolateVertex(downwardExtend, downPocasCut, downwardExit, pocaSet, exitPoints);
     if (sc.isFailure()) return sc;
+
+    if ( log.level() <= MSG::DEBUG ) {
+      log << MSG::DEBUG << "AcdReconAlg::vertexDistances() finished" << std::endl << endreq;
+    }
 
     return sc;
 	
@@ -837,7 +881,9 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdHitCol& acdHits,
     SmartDataPtr<Event::McParticleCol> pMcParticle(eventSvc(), EventModel::MC::McParticleCol);
     if (pMcParticle == 0) {
       return StatusCode::SUCCESS;
-    }    
+    } else {
+      log << MSG::DEBUG << "AcdReconAlg::mcDistances()" << endreq;
+    }
     Event::McParticleCol::const_iterator mcFirst = pMcParticle->begin();
     Event::McParticle* mcPart = *mcFirst;
     if ( mcPart == 0 ) {
@@ -861,8 +907,14 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdHitCol& acdHits,
 
     // get the LAT exit points
     if ( ! AcdRecon::entersLat(extend,s_acdVolume,enter) ) {
-      log << MSG::WARNING << "AcdIntersectionTool::entersLat() failed on MC track- we'll bravely carry on" << endreq;
+      log << MSG::INFO << "AcdRecon::entersLat() failed on MC track- we'll bravely carry on" << endreq;
       return StatusCode::SUCCESS;
+    } else {
+      if ( log.level() <= MSG::DEBUG ) {
+	log << MSG::DEBUG << "  Acd MC entry().  ";
+	writeExitPoint(log.stream(),extend,enter);
+	log << endreq;
+      }
     }
 
     // keep track of all the pocas to hit tiles
@@ -883,7 +935,9 @@ StatusCode AcdReconAlg::mcDistances(const Event::AcdHitCol& acdHits,
     // extrapolate the track upwards
     sc = extrapolateVertex(extend, pocasCut, enter, pocaSet, exitPoints);
     if (sc.isFailure()) return sc;
-    
+
+    log << MSG::DEBUG << "AcdReconAlg::mcDistances() finished" << endreq;
+
     return sc;	
 }
 
@@ -895,13 +949,18 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
   StatusCode sc = StatusCode::SUCCESS;
 
   MsgStream   log( msgSvc(), name() );
+  log << MSG::DEBUG << "AcdReconAlg::hitDistances for track " << aTrack.m_index 
+      << " going " << (aTrack.m_upward ? "up" : "down" ) <<  " with " << acdHits.size() << " hits." << endreq;
 
   for (Event::AcdHitCol::const_iterator acdHitIt = acdHits.begin(); acdHitIt != acdHits.end(); acdHitIt++) {
     idents::AcdId acdId = (*acdHitIt)->getAcdId();
     // get the data object to store all the computations
     AcdRecon::PocaData& pocaData = pocaMap[acdId];
-    if (acdId.na()) continue;
-    if (acdId.tile()) {      
+
+    if (acdId.na()) { 
+      log << MSG::ERROR << "Skipping NA hit" << endreq;
+      continue;
+    } else if (acdId.tile()) {      
       const AcdTileDim* tileDim = m_geomMap->getTile(acdId,*m_acdGeoSvc);
       sc = tileDim->statusCode();
       if ( sc.isFailure() ) {
@@ -911,6 +970,9 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
       }
       if ( m_pocaTool != 0 ) {
 	sc = m_pocaTool->tileDistances(*tileDim,aTrack,pocaData);
+      } else {
+	log << MSG::ERROR << "No Poca Tool" << endreq;
+	return StatusCode::FAILURE;
       }
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get hit distances for a tile" 
@@ -927,12 +989,17 @@ StatusCode AcdReconAlg::hitDistances(const AcdRecon::TrackData& aTrack,
       }
       if ( m_pocaTool != 0 ) {
 	sc = m_pocaTool->ribbonDistances(*ribbonDim,aTrack,pocaData);
+      } else {
+	return StatusCode::FAILURE;
       }
       if ( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to get hit distances for a ribbon" 
             << acdId.id() << endreq;
 	return sc;
       }
+    } else {
+      log << MSG::ERROR << "Neither NA, nor tile, nor ribbon" << endreq;
+      return StatusCode::FAILURE;
     }
   }
   return sc;
@@ -1022,6 +1089,11 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   MsgStream   log( msgSvc(), name() );
   StatusCode sc = StatusCode::SUCCESS;  
 
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdReconAlg::extrapolateTrack(" 
+	<< trackData.m_index << ',' << (trackData.m_upward ? "up" : "down" ) << ')' << endreq;
+  }
+
   // first figure out how far to extrapolate track
   double maxArcLength(0.);
 
@@ -1071,8 +1143,9 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
     return sc;
   }
   
-  acdIntersections.writeOut(log);
-  gapPocas.writeOut(log);
+  if ( log.level() <= MSG::DEBUG ) {    
+    gapPocas.writeOut(log);
+  }
 
   // build all the pocas
   AcdTkrParams paramsAtArcLength;
@@ -1093,8 +1166,10 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
       return sc;
     }
     
-    if ( aPoca != 0 ) {
-      aPoca->writeOut(log);
+    if ( aPoca != 0 ) {      
+      if ( log.level() <= MSG::DEBUG ) {    
+	aPoca->writeOut(log);
+      }
       pocaSet.insert(aPoca);
     }
   }
@@ -1109,9 +1184,15 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
       return sc;
     }
     if ( exitPoint != 0 ) {
-      exitPoint->writeOut(log);
+      if ( log.level() <= MSG::DEBUG ) {    
+	exitPoint->writeOut(log);
+      }
       points.push_back(exitPoint);      
     }
+  }
+
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdReconAlg::extrapolateTrack() finished" << std::endl << endreq;
   }
 
   return sc;
@@ -1126,6 +1207,12 @@ StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
 
   MsgStream   log( msgSvc(), name() );
   StatusCode sc = StatusCode::SUCCESS;  
+ 
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdReconAlg::extrapolateVertex(" 
+	<< (trackData.m_upward ? "up" : "down" ) << ')' << endreq;
+  }
+
 
   // first figure out how far to extrapolate track
   double maxArcLength(0.);
@@ -1164,6 +1251,10 @@ StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
       exitPoint->writeOut(log);
       points.push_back(exitPoint);      
     }
+  }
+
+  if ( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "AcdReconAlg::extrapolateTrack() finished" << std::endl << endreq;
   }
 
   return sc;
@@ -1294,4 +1385,10 @@ StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& digiCol, Event::Ac
     }	
   }
   return sc;
+}
+
+void AcdReconAlg::writeExitPoint(std::ostream& os, 
+				 const AcdRecon::TrackData& trackData, const AcdRecon::ExitData& isectData) {
+  os << "Tk: " 
+     << trackData.m_index << " s= " << isectData.m_arcLength << "; P=" << isectData.m_x << "; face=" << isectData.m_face;
 }
