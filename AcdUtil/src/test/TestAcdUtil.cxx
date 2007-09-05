@@ -193,6 +193,7 @@ StatusCode TestAcdUtil::execute() {
     writeTileFrame(0, 0, 0, true);
 
     writeTileFrame(2, 1, 2);
+    writeTileFrame(0, 2, 2);
     writeTileFrame(0, 4, 2);
     writeTileFrame(0, 4, 2, true);
 

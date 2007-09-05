@@ -241,12 +241,18 @@ StatusCode AcdGeometrySvc::getDimensions(
     sc = m_glastDetSvc->getShapeByID(volId, &str, &dims);
     if ( sc.isFailure() ) {
         MsgStream log(msgSvc(), name());
-        log << MSG::WARNING << "Failed to retrieve Shape by Id: " 
+        log << MSG::ERROR << "Failed to retrieve Shape by Id: " 
             << volId.name() << endreq;
         return sc;
     }
     HepGeom::Transform3D transform;
     sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
+    if ( sc.isFailure() ) {
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Failed to retrieve transform by Id: " 
+            << volId.name() << endreq;
+        return sc;
+    }
 
     HepPoint3D center(0., 0., 0.);
     xT = transform * center;
@@ -630,7 +636,7 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   // Get the reference frame enum
   AcdFrameUtil::AcdReferenceFrame frameId = getReferenceFrame(volId);
   if ( frameId == AcdFrameUtil::FRAME_NONE ) {
-    log << MSG::WARNING << "Failed to retrieve Frame by Id: " 
+    log << MSG::ERROR << "Failed to retrieve Frame by Id: " 
 	<< volId.name() << endreq;
     return false;
   }
@@ -644,7 +650,7 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   // which has only minimal rotations about X or Y axis for the side tiles
   StatusCode sc = m_glastDetSvc->getShapeByID(volId, &str, &globalDim);
   if ( sc.isFailure() ) {        
-    log << MSG::WARNING << "Failed to retrieve Shape by Id: " 
+    log << MSG::ERROR << "Failed to retrieve shape by Id: " 
 	<< volId.name() << endreq;
     return false;
   } 
@@ -657,7 +663,7 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   HepGeom::Transform3D geantToGlobal;
   sc = m_glastDetSvc->getTransform3DByID(volId, &geantToGlobal);
   if (sc.isFailure() ) {
-    log << MSG::WARNING << "Failed to get transformation: " 
+    log << MSG::ERROR << "Failed to get transformation: " 
 	<< volId.name() << endreq;
     return false;
   }
@@ -734,27 +740,35 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) {
     unsigned face;
     bool tile;
 
+    // Make sure it is part of the ACD
     if (!findFieldVal(nid, "fLATObjects", val)) return AcdFrameUtil::FRAME_NONE;
     if (val != m_eLATACD) return AcdFrameUtil::FRAME_NONE;
 
+    // Check the face and make if it is a tile or ribbon
     if (!findFieldVal(nid, "fACDFace", face)) return AcdFrameUtil::FRAME_NONE;
     if (!findFieldVal(nid, "fACDCmp", val)) return AcdFrameUtil::FRAME_NONE;
     tile = (val == m_eACDTile);
 
     if (tile) {  // simple except for bent pieces
-        if (face ==  m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;
-        else if (face == m_eACDYNegFace) return AcdFrameUtil::FRAME_MINUSY;
-        else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX;
-        else if (face ==  m_eACDYPosFace) return AcdFrameUtil::FRAME_PLUSY;
-        else if (face == m_eACDTopFace)            {
-            if (!findFieldVal(nid, "fTileSeg", val)) return AcdFrameUtil::FRAME_NONE;
-            if (val == 0) return AcdFrameUtil::FRAME_TOP;   // main tile piece
-            if (!findFieldVal(nid, "fRow", val)) return AcdFrameUtil::FRAME_NONE;
-            if (val == 0) return AcdFrameUtil::FRAME_MINUSY;
-            else if (val == 4) return AcdFrameUtil::FRAME_PLUSY_YDWN;
-            else return AcdFrameUtil::FRAME_NONE;
-        }
-        else return AcdFrameUtil::FRAME_NONE;
+      // Everything but the top just depends on the face
+      if (face ==  m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;
+      else if (face == m_eACDYNegFace) return AcdFrameUtil::FRAME_MINUSY;
+      else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX;
+      else if (face ==  m_eACDYPosFace) return AcdFrameUtil::FRAME_PLUSY;
+      // For the to check to see if it is a bent piece
+      else if (face == m_eACDTopFace) {
+	if (!findFieldVal(nid, "fTileSeg", val)) return AcdFrameUtil::FRAME_NONE;
+	// Is main tile piece, return FRAME_TOP
+	if (val == 0) return AcdFrameUtil::FRAME_TOP;   
+	// It is the bent piece, return the frame that is an extension of the rest of the tile
+	if (!findFieldVal(nid, "fRow", val)) return AcdFrameUtil::FRAME_NONE;
+	// Row 0 has X going up the side
+	if (val == 0) return AcdFrameUtil::FRAME_MINUSY;
+	// Row 4 has X going down the side
+	else if (val == 4) return AcdFrameUtil::FRAME_PLUSY_YDWN;
+	else return AcdFrameUtil::FRAME_NONE;
+      }
+      else return AcdFrameUtil::FRAME_NONE;
     }
     else if (val != m_eACDRibbon) return AcdFrameUtil::FRAME_NONE;
   
