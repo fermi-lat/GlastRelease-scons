@@ -16,7 +16,7 @@
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 
 
-static const CLID& CLID_TkrVertex = InterfaceID("TkrVertex", 1, 0);
+static const CLID& CLID_TkrVertex = InterfaceID("TkrVertex", 1, 1);
 
 namespace Event { //Namespace
 
@@ -60,13 +60,14 @@ namespace Event { //Namespace
         //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
         //                                             [Track Topology ] [Track composition]
         enum StatusBits {
-            ONETKRVTX = 0x0001,  //Set if single track vertex
-            TWOTKRVTX = 0x0002,  //Set if 2 track vertex
-            MULTKRVTX = 0x0004,  //Set if >2 track vertex
-            DOCAVTX   = 0x0010,  //Set if vertex location set by DOCA point
-            FIRSTHIT  = 0x0020,  //Set if two tracks share first hit
-            STAGVTX   = 0x0040,  //Set if tracks don't start in same plane (staggered)
-            CROSSTKR  = 0x0080}; //Set if DOCA location lies inside track hits
+            ONETKRVTX  = 0x0001,  //Set if single track vertex
+            TWOTKRVTX  = 0x0002,  //Set if 2 track vertex
+            MULTKRVTX  = 0x0004,  //Set if >2 track vertex
+            NEUTRALVTX = 0x0008,  //Set if vertex includes neutral energy vector
+            DOCAVTX    = 0x0010,  //Set if vertex location set by DOCA point
+            FIRSTHIT   = 0x0020,  //Set if two tracks share first hit
+            STAGVTX    = 0x0040,  //Set if tracks don't start in same plane (staggered)
+            CROSSTKR   = 0x0080}; //Set if DOCA location lies inside track hits
 
         /// Utility 
         std::ostream& fillStream( std::ostream& s ) const;
