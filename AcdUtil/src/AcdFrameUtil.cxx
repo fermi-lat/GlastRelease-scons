@@ -124,21 +124,24 @@ namespace AcdFrameUtil {
     // 11 is top. rotated by 180 for X-ribbons in opposite direction (not used)
     _toLocal[11] = _rz_pi;
     _toGeant[11] = _rz_pi;
+    
+    /*
+    //for ( int i(0); i < 12; i++ ) {
+    //std::cout << i << std::endl;
+    //std::cout << (int)_toLocal[i](0,0) << ' ' << (int)_toLocal[i](0,1) << ' ' << (int)_toLocal[i](0,2 )<< std::endl;
+    //std::cout << (int)_toLocal[i](1,0) << ' ' << (int)_toLocal[i](1,1) << ' ' << (int)_toLocal[i](1,2 )<< std::endl;
+    //std::cout << (int)_toLocal[i](2,0) << ' ' << (int)_toLocal[i](2,1) << ' ' << (int)_toLocal[i](2,2 )<< std::endl;
+    //std::cout << std::endl;
+    //std::cout << (int)_toGeant[i](0,0) << ' ' << (int)_toGeant[i](0,1) << ' ' << (int)_toGeant[i](0,2 )<< std::endl;
+    //std::cout << (int)_toGeant[i](1,0) << ' ' << (int)_toGeant[i](1,1) << ' ' << (int)_toGeant[i](1,2 )<< std::endl;
+    //std::cout << (int)_toGeant[i](2,0) << ' ' << (int)_toGeant[i](2,1) << ' ' << (int)_toGeant[i](2,2 )<< std::endl;
+    //std::cout << std::endl;
+    //HepGeom::Transform3D check = _toGeant[i]*_toLocal[i];
+    //std::cout << check(0,0) << ' ' << check(0,1) << ' ' << check(0,2 )<< std::endl;
+    //std::cout << check(1,0) << ' ' << check(1,1) << ' ' << check(1,2 )<< std::endl;
+    //std::cout << check(2,0) << ' ' << check(2,1) << ' ' << check(2,2 )<< std::endl;
+    //} 
+    */
 
-    for ( int i(0); i < 12; i++ ) {
-      std::cout << i << std::endl;
-      std::cout << (int)_toLocal[i](0,0) << ' ' << (int)_toLocal[i](0,1) << ' ' << (int)_toLocal[i](0,2 )<< std::endl;
-      std::cout << (int)_toLocal[i](1,0) << ' ' << (int)_toLocal[i](1,1) << ' ' << (int)_toLocal[i](1,2 )<< std::endl;
-      std::cout << (int)_toLocal[i](2,0) << ' ' << (int)_toLocal[i](2,1) << ' ' << (int)_toLocal[i](2,2 )<< std::endl;
-      std::cout << std::endl;
-      std::cout << (int)_toGeant[i](0,0) << ' ' << (int)_toGeant[i](0,1) << ' ' << (int)_toGeant[i](0,2 )<< std::endl;
-      std::cout << (int)_toGeant[i](1,0) << ' ' << (int)_toGeant[i](1,1) << ' ' << (int)_toGeant[i](1,2 )<< std::endl;
-      std::cout << (int)_toGeant[i](2,0) << ' ' << (int)_toGeant[i](2,1) << ' ' << (int)_toGeant[i](2,2 )<< std::endl;
-      std::cout << std::endl;
-      HepGeom::Transform3D check = _toGeant[i]*_toLocal[i];
-      std::cout << check(0,0) << ' ' << check(0,1) << ' ' << check(0,2 )<< std::endl;
-      std::cout << check(1,0) << ' ' << check(1,1) << ' ' << check(1,2 )<< std::endl;
-      std::cout << check(2,0) << ' ' << check(2,1) << ' ' << check(2,2 )<< std::endl;
-    }
   }
 }
