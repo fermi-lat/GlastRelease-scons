@@ -21,7 +21,9 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_TOOL(    TkrEnergyTool       );
 
     DECLARE_ALGORITHM ( TkrCalibAlg      );
- } 
+
+    DECLARE_TOOL(    TkrFlagHitsTool     );
+} 
 
 
 
