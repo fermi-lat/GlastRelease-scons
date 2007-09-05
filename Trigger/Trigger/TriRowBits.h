@@ -15,6 +15,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "Event/TopLevel/Definitions.h"
 #include "Event/TopLevel/EventModel.h"
@@ -26,7 +27,9 @@
 * author Luis C. Reyes   lreyes@milkyway.gsfc.nasa.gov
 */
  
-#define NUM_TWRS 16
+//#define NUM_TWRS 16
+static const NUM_TWRS=16;
+
 static const CLID& CLID_TriRowBitsTds = InterfaceID("TriRowBitsTds", 1, 0);
 
 
