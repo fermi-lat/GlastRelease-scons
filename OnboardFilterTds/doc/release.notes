@@ -3,6 +3,7 @@
  Coordinator:R.Hughes
  @verbatim
 
+ v0r4p1  6-Sep-2007  TU Fix possible memory leak in FilterStatus
  v0r4   29-Aug-2007  TU Modifications for FSW B1-0-1 release
  v0r3p1 10-Jul-2007 HMK add getVetoBit and getVetoMask to IObfStatus
  v0r3   10-Apr-2007 TU  Change from "CNO" to "HFC" throughout
