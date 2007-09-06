@@ -55,7 +55,8 @@ public:
         for(int counter=0;counter<16;counter++){
             for(int layerCounter=0;layerCounter<36;layerCounter++){
                 if(m_hits[counter].beg[layerCounter]){
-                    delete[] m_hits[counter].beg[layerCounter];
+//                    delete[] m_hits[counter].beg[layerCounter];
+                    free(m_hits[counter].beg[layerCounter]);
                 }
             }
         }
@@ -66,12 +67,16 @@ public:
             m_hits[counter].lcnt[1]=toCopy.m_hits[counter].lcnt[1];
             m_hits[counter].layerMaps[0]=toCopy.m_hits[counter].layerMaps[0];
             m_hits[counter].layerMaps[1]=toCopy.m_hits[counter].layerMaps[1];
-            for(int layerCounter=0;layerCounter<36;layerCounter++){
-                m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter];
-//                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
-                m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
-                memcpy(m_hits[counter].beg[layerCounter],
+            for(int layerCounter=0;layerCounter<36;layerCounter++)
+            {
+                if (m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter] > 0)
+                {
+//                    m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+//                    m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
+                    m_hits[counter].beg[layerCounter]= (TFC_hit*)malloc(m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
+                    memcpy(m_hits[counter].beg[layerCounter],
                        toCopy.m_hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
+                }
             }
         }
     };
@@ -84,15 +89,20 @@ public:
             m_hits[counter].lcnt[1]=hits[counter].lcnt[1];
             m_hits[counter].layerMaps[0]=hits[counter].layerMaps[0];
             m_hits[counter].layerMaps[1]=hits[counter].layerMaps[1];
-            for(int layerCounter=0;layerCounter<36;layerCounter++){
-                m_hits[counter].cnt[layerCounter]=hits[counter].cnt[layerCounter];
-                if(m_hits[counter].beg[layerCounter]){
-                    delete[] m_hits[counter].beg[layerCounter];
+            for(int layerCounter=0;layerCounter<36;layerCounter++)
+            {
+                if ((m_hits[counter].cnt[layerCounter] = hits[counter].cnt[layerCounter]) > 0)
+                {
+                    if(m_hits[counter].beg[layerCounter])
+                    {
+//                    delete[] m_hits[counter].beg[layerCounter];
+                        free(m_hits[counter].beg[layerCounter]);
+                    }
+//                    m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
+                    m_hits[counter].beg[layerCounter]=(TFC_hit*)malloc(m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
+                    memcpy(m_hits[counter].beg[layerCounter],
+                         hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
                 }
-//                m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
-                m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
-                memcpy(m_hits[counter].beg[layerCounter],
-                       hits[counter].beg[layerCounter],m_hits[counter].cnt[layerCounter]*sizeof(TFC_hit));
             }
         }
     };
