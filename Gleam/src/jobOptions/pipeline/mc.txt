@@ -259,7 +259,7 @@ FluxSvc.source_lib  += {"$(CRFLUXROOT)/xml/source_library.xml"};
 //
 // VDG sources:
 //
-FluxSvc.source_lib += {"$(GLEAMROOT)/xml/source_library.xml"};
+FluxSvc.source_lib += {"$(CRFLUXROOT)/xml/test_sources.xml"};
 
 FluxAlg.source_name="default";
 
