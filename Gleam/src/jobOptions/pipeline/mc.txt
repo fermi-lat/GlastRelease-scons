@@ -15,218 +15,243 @@
 // $Header: /home/cvs/SLAC/Gleam/src/basicOptions.txt,v 1.103 2007/03/28
 // 17:01:03 lsrea Exp $
 
-// primary DLLs, including auditor 
-
-ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
-ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
-AuditorSvc.Auditors = {"ChronoAuditor"};
-
-// ----------------------------
-// setup basic event loop stuff
 //
-ApplicationMgr.ExtSvc = { "EventSelector/EventSelector" };
+// Primary DLLs, including auditor: 
+//
+ApplicationMgr.DLLs   += {"GaudiAlg","GaudiAud"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+AuditorSvc.Auditors    = {"ChronoAuditor"};
+
+//
+// Setup basic event loop stuff:
+//
+ApplicationMgr.ExtSvc = {"EventSelector/EventSelector"};
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "SVC='DbEvtSelector'";
-EventSelector.PrintFreq = -1;
+EventSelector.Input             = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq         = -1;
 
 
-// ----------------------------
-//  a structure for the topalg, using sequencer steps
+// 
+// A structure for the topalg, using sequencer steps:
+//
+ApplicationMgr.TopAlg = {"Sequencer/Top" };
 
-ApplicationMgr.TopAlg = {
-      "Sequencer/Top" };
 
-//the top sequence loop
-Top.Members={
-    "Sequencer/Event"};
+//
+// The top sequence loop:
+//
+Top.Members = {"Sequencer/Event"};
 
-Event.Members = {
-    "Sequencer/Generation",
-    "Sequencer/CalibrationUpdate",
-    "Sequencer/Digitization",
-    "Sequencer/TriggerTest",   // can reject events, set TriggerAlg.mask = 0 to pass all
-    "Sequencer/Triggered" 
-};
+Event.Members = {"Sequencer/Generation",
+                 "Sequencer/CalibrationUpdate",
+                 "Sequencer/Digitization",
+                 "Sequencer/TriggerTest",   // Can reject events, set TriggerAlg.mask = 0 to pass all!
+                 "Sequencer/Triggered"};
 
+// 
 // FluxAlg branch for "TimeTicks" 
 // (note that if you override Members, this must be too)
-
+//
 Event.BranchMembers = {"Generation", "ExposureAlg"};
 
-// can substitute mcRootReaderAlg here!
 
-Generation.Members = {
-    "FluxAlg", 
-    "PointInfoAlg", 
-    "G4Generator" };
+//
+// Can substitute mcRootReaderAlg here!
+//
+Generation.Members = {"FluxAlg", 
+                      "PointInfoAlg", 
+                      "G4Generator" };
   
 
-// These algorithms run before digitization or reconstruction
-// Currently, only TKR is handled this way
-
-CalibrationUpdate.Members={
-    "TkrCalibAlg"     // found in TkrUtil
-    };
-
-// ----------------------------
-//  Digitization
+// 
+// These algorithms run before digitization or reconstruction.
+// Currently, only TKR is handled this way.
 //
-ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
-Digitization.Members = { 
-    "TkrDigiAlg", 
-    "CalDigiAlg", 
-    "AcdDigiAlg"
-    };
+CalibrationUpdate.Members = {"TkrCalibAlg"};     // Found in TkrUtil
+    
 
-// this sequence contains the trigger test
+// 
+// Digitization:
+//
+ApplicationMgr.DLLs += {"TkrDigi","CalDigi","AcdDigi" };
+
+Digitization.Members = {"TkrDigiAlg", 
+                        "CalDigiAlg", 
+                        "AcdDigiAlg"};
+
+// 
+// This sequence contains the trigger test:
+//
 TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
 
 
-// this sequence runs if the event passes the trigger
+// 
+// This sequence runs if the event passes the trigger:
+//
+Triggered.Members = {"Sequencer/Filter",  // can also cause rejection
+                     "Sequencer/ReconCalibrationUpdate",
+                     "Sequencer/Reconstruction",
+                     "Sequencer/FilterPerformance",
+                     "Sequencer/EventDisplay",
+                     "Sequencer/Output",
+                     "Sequencer/NtupleMaker"};
 
-Triggered.Members={
-    "Sequencer/Filter", // can also cause rejection
-    "Sequencer/ReconCalibrationUpdate",
-    "Sequencer/Reconstruction",
-    "Sequencer/FilterPerformance",
-    "Sequencer/EventDisplay",
-    "Sequencer/Output",
-    "Sequencer/NtupleMaker"
- };
+//
+// Trigger and livetime:
+// 
+ApplicationMgr.DLLs   += {"Trigger"};
+ApplicationMgr.ExtSvc += {"LivetimeSvc"}; 
 
-// ----------------------------
-//  Trigger and livetime
-
-ApplicationMgr.DLLs +={ "Trigger"};
-ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
-LivetimeSvc.Deadtime=0;  // default is now to disable this
-TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
-
-
-// ----------------------------
-//  onboard filter 
-
-ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
-Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // this guy can cause rejection
-OnboardFilter.mask=0; // all bits off by default: no rejection
+LivetimeSvc.Deadtime = 0;  // Default is now to disable this.
+TriggerAlg.mask      = -1; // All bits on by default: reject if none set (e.g., missed)
 
 
-// to specify a different set of calibrations for recon (TKR only)
+// 
+// Onboard filter:
+//
+ApplicationMgr.DLLs  += {"EbfWriter","OnboardFilter"};
+Filter.Members       += {"EbfWriter","OnboardFilter","Count/downlink"};  // This guy can cause rejection.
+OnboardFilter.mask    = 0; // All bits off by default: no rejection.
 
+
+// 
+// To specify a different set of calibrations for recon (TKR only):
+//
 ReconCalibrationUpdate.Members = {};
 
-// ----------------------------
-// Reconstruction
-
-ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
-
-ApplicationMgr.DLLs +={ 
-    "CalRecon", 
-    "TkrRecon", "TkrUtil"
-    };
-Reconstruction.Members={ 
-    "Sequencer/Cal1", 
-    "Sequencer/Tkr",
-    "Sequencer/Cal2",
-    "Sequencer/TkrIter",
-    "Sequencer/Acd"
-    };
 
 
-// Analyzes the performance of the filter (not ordinarily invoked)
+// 
+// Reconstruction:
+//
+ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
 
-FilterPerformance.Members = {"FilterTracks", "FilterAlg"}; // for study of performance
+ApplicationMgr.DLLs += {"CalRecon", 
+                        "TkrRecon", "TkrUtil"};
+
+Reconstruction.Members = {"Sequencer/Cal1", 
+                          "Sequencer/Tkr",
+                          "Sequencer/Cal2",
+                          "Sequencer/TkrIter",
+                          "Sequencer/Acd"};
+
+//
+// Analyzes the performance of the filter (not ordinarily invoked):
+//
+FilterPerformance.Members = {"FilterTracks", "FilterAlg"}; // For study of performance.
 //FilterPerformance.Members = {};
 
+
+//
 // Members are set in guiOptions, if enabled
 // the display routines have a null execute() method, but
 // need to be in the Gaudi sequence so it will initialize
-
+//
 EventDisplay.Members = {};
  
-// ----------------------------
-// Output
 
-ApplicationMgr.DLLs +={"RootIo"}; 
-Output.Members = {     
-    "FhSetAlg",
-    "mcRootWriterAlg", 
-    "digiRootWriterAlg", 
-    "reconRootWriterAlg",
-    "relationRootWriterAlg"};
 
-// default output to GLEAMROOT/data
+// 
+// Output:
+//
+ApplicationMgr.DLLs += {"RootIo"}; 
+
+Output.Members = {"FhSetAlg",
+                  "mcRootWriterAlg", 
+                  "digiRootWriterAlg", 
+                  "reconRootWriterAlg",
+                  "relationRootWriterAlg"};
+
+// 
+// Default output to GLEAMROOT/data:
+//
 mcRootWriterAlg.mcRootFile       = "mc.root";
 digiRootWriterAlg.digiRootFile   = "digi.root";
 reconRootWriterAlg.reconRootFile = "reccon.root";
 relationRootWriterAlg.rootFile   = "relations.root";
 
-// ----------------------------
-// ntuple generation 
 
-ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
-NtupleMaker.Members = {
-    "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
-    "ClassifyAlg",       // Atwood's Insightful Miner analysis
-    "FT1Alg",            // generate stuff to go into FT1  version from AnaTup
-    "meritAlg",          // some analysis for PSF
-    "McCoordsAlg",       // now in AnaTup
-    "ObfCoordsAlg"       // now in AnaTup
- };
+// 
+// Ntuple generation :
+//
+ApplicationMgr.DLLs += {"AnalysisNtuple","ntupleWriterSvc","merit","GlastClassify" };
+
+NtupleMaker.Members = {"AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple.
+                       "ClassifyAlg",       // Atwood's Insightful Miner analysis.
+                       "FT1Alg",            // Generate stuff to go into FT1  version from AnaTup.
+                       "meritAlg",          // Some analysis for PSF.
+                       "McCoordsAlg",       // Now in AnaTup.
+                       "ObfCoordsAlg"       // Now in AnaTup.
+                       };
 
 AnalysisNtupleAlg.tupleName = "MeritTuple";
-// default output to GLEAMROOT/data
-RootTupleSvc.filename            = "merit.root";
+
+//
+// Default output to GLEAMROOT/data:
+//
+RootTupleSvc.filename    = "merit.root";
 RootTupleSvc.RejectIfBad = false;
 
 
-// ----------------------------
-// Reconstruction sequence details
 
-// First pass of Cal Recon - full recon...
-Cal1.Members = { 
-    "CalXtalRecAlg",
-    "CalClustersAlg/first",
-    "CalEventEnergyAlg/RawEnergy"
-    };
-
-// First pass of Tkr Recon
-Tkr.Members = {
-    "TkrReconAlg/FirstPass"
-    };
-
-// Second pass of Cal Recon - energy corrections only
-Cal2.Members = {
-    "CalEventEnergyAlg/second"
-    };
-TkrIter.Members = {
-    "TkrReconAlg/Iteration"
-    };
-
-// ----------------------------
-//   ACD recon
-
-ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members = {"AcdReconAlg"};
-
-
-// ----------------------------
-//  Geometry definition
-
-ApplicationMgr.DLLs += {"GlastSvc"};
-ApplicationMgr.ExtSvc += { "GlastDetSvc"};
-GlastDetSvc.topVolume="LAT"; 
-GlastDetSvc.visitorMode="recon";
-
-//  Randoms definition
-
-ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
-
-// ----------------------------
-//  Generation and simulation
+// 
+// Reconstruction sequence details:
 //
-//  get the parameters for simulation -- misnamed the file :-(
+
+//
+// First pass of Cal Recon - full recon...
+//
+Cal1.Members = {"CalXtalRecAlg",
+                "CalClustersAlg/first",
+                "CalEventEnergyAlg/RawEnergy"};
+
+//
+// First pass of Tkr Recon:
+//
+Tkr.Members = {"TkrReconAlg/FirstPass"};
+
+
+//
+// Second pass of Cal Recon - energy corrections only:
+//
+Cal2.Members = {"CalEventEnergyAlg/second"};
+
+TkrIter.Members = {"TkrReconAlg/Iteration"};
+
+
+// 
+// ACD recon:
+//
+ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
+Acd.Members          = {"AcdReconAlg"};
+
+
+
+// 
+// Geometry definition:
+//
+ApplicationMgr.DLLs    += {"GlastSvc"};
+ApplicationMgr.ExtSvc  += {"GlastDetSvc"};
+
+GlastDetSvc.topVolume   = "LAT"; 
+GlastDetSvc.visitorMode = "recon";
+
+
+//
+// Randoms definition:
+//
+ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
+
+
+
+// 
+//  Generation and simulation:
+//
+
+//
+// Get the parameters for simulation -- misnamed the file :-(
+//
 #include "$G4GENERATORROOT/src/basicOptions.txt"
 ApplicationMgr.DLLs +={ "G4Propagator"};
 
@@ -257,58 +282,63 @@ ApplicationMgr.DLLs += {"CRflux"};
 FluxSvc.source_lib  += {"$(CRFLUXROOT)/xml/source_library.xml"};
 
 //
-// VDG sources:
+// VDG sources: NB! test_sources.xml is incompatible with source_library.xml!
 //
-FluxSvc.source_lib += {"$(CRFLUXROOT)/xml/test_sources.xml"};
+//FluxSvc.source_lib += {"$(FLUXROOT)/xml/test_sources.xml"};
 
-FluxAlg.source_name="default";
+FluxAlg.source_name = "default";
 
 
-// -------------------------------------------
-//          tracker services
+// 
+// Tracker services:
 //
-ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
-ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
+ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
+ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 
-// this fixes a HE track pattern recognition problem
+
+// 
+// This fixes a HE track pattern recognition problem:
 // *** it should be done in TkrRecon ***
-TkrFilterFirst.FilterToolName="TkrCalFilterTool";
-
-// -------------------------------------------
-//  Calibration sevices
 //
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
+TkrFilterFirst.FilterToolName = "TkrCalFilterTool";
 
-// -------------------------------------------
-//  Calorimeter services
+
+// 
+// Calorimeter services:
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
 
-// -------------------------------------------
 
-// add this service last since it may pick up  
-// details from other services
+//
+// Add this service last since it may pick up  
+// details from other services:
+//
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
-// output levels, including suppression to allow debug, info
-mcRootWriterAlg.OutputLevel=3;
-digiRootWriterAlg.OutputLevel=3;
-reconRootWriterAlg.OutputLevel=3;
-ToolSvc.OutputLevel=3;    // too verbose in debug
-CalClustersAlg.OutputLevel=4; // too much info
-TkrClusFirst.OutputLevel=4;
-CalDigiAlg.OutputLevel=4;
-TkrAlignmentSvc.OutputLevel=4;
-TkrGeometrySvc.OutputLevel=4;
-EbfWriter.OutputLevel=4;
-ToolSvc.LastLayerCorrTool.OutputLevel=4; 
-ToolSvc.OutputLevel=4;
-CalXtalRecAlg.OutputLevel=4;
-AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
-    
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+
+//
+// Output levels, including suppression to allow debug, info:
+//
+mcRootWriterAlg.OutputLevel           = 3;
+digiRootWriterAlg.OutputLevel         = 3;
+reconRootWriterAlg.OutputLevel        = 3;
+ToolSvc.OutputLevel                   = 3; // too verbose in debug
+CalClustersAlg.OutputLevel            = 4; // too much info
+TkrClusFirst.OutputLevel              = 4;
+CalDigiAlg.OutputLevel                = 4;
+TkrAlignmentSvc.OutputLevel           = 4;
+TkrGeometrySvc.OutputLevel            = 4;
+EbfWriter.OutputLevel                 = 4;
+ToolSvc.LastLayerCorrTool.OutputLevel = 4; 
+ToolSvc.OutputLevel                   = 4;
+CalXtalRecAlg.OutputLevel             = 4;
+AcdReconAlg.OutputLevel               = 4; // suppress INFO complaint about no tracks
+
+//     
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL):
+// 
 MessageSvc.OutputLevel = 3;
+
 
 //==============================================================
 //
@@ -318,13 +348,18 @@ MessageSvc.OutputLevel = 3;
 
 
 
-// Generator cuts:
+//
+// More stuff:
+//
+
+
+
+//
+// Generator cuts from G4 basic options:
 //
 G4Generator.defaultCutValue    = 0.7; 
 G4Generator.defaultTkrCutValue = 0.1;
 G4Generator.defaultCalCutValue = 0.7;
-
-
 
 
 //
@@ -339,11 +374,6 @@ ToolSvc.GeneralNoiseTool.occupancy = 4.e-7;
 //
 #include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
 
-//
-// Add 'ideal' for ACD simulations (for now):
-//
-CalibDataSvc.CalibFlavorList = {"vanilla","ideal"};
-AcdCalibSvc.DefaultFlavor    = "ideal";
 
 //
 // Start up a CalFailureModeSvc:
@@ -358,6 +388,9 @@ ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 FluxSvc.startDate = "2007-1-10 23:59:59";
 
 
+//
+// Run Caltuple:
+//
 Output.Members += {"CalTupleAlg"};
 
 
@@ -377,8 +410,11 @@ EbfWriter.OutputLevel                 = 4;
 ToolSvc.LastLayerCorrTool.OutputLevel = 4; 
 ToolSvc.OutputLevel                   = 4;
 CalXtalRecAlg.OutputLevel             = 4;
-second.OutputLevel = 5;
+second.OutputLevel                    = 5;
     
+
+
+
 
 //
 // The following things can be changed by the user:
@@ -445,8 +481,8 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 //
 // Output Merit tuple:
 //
-RootTupleSvc.TreeName     = "MeritTuple"; 
-RootTupleSvc.filename     = "merit.root";
+RootTupleSvc.TreeName  = "MeritTuple"; 
+RootTupleSvc.filename  = "merit.root";
 
 
 //
