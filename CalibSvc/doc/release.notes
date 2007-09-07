@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r27   7-Sep-2007   jrb  Add ICalibPathSvc to get TDS path strings
    v0r26   29-Aug-2007  jrb  (for Markus) Support for SAA boundary calib.
    v0r25p1  6-Nov-2006  jrb  Keep up with benign astro interface change (use v2r*)
    v0r25   30-Jun-2006  jrb  Converters, test program for anc. detector calibs
