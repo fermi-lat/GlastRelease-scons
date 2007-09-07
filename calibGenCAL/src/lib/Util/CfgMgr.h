@@ -20,6 +20,19 @@
    \note this package attempts to follow the definitions stated in python optparse documentation
    here: http://docs.python.org/lib/optparse-terminology.html
 
+   Currently supports the following types of commandline parameters :
+   
+   Switch - optional, position independnent, takes no argument
+          - has short name (-s), long name (--switch)
+          - defaults to false
+
+   OptVar  - optional, position independent, takes an argument
+           - has short name (-s val), long name (--switch=val)
+
+   Arg     - required, position dependent
+           - no variable name on commandline, value only
+          
+
    Example Usage:
 
 
