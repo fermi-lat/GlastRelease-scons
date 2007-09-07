@@ -1,4 +1,7 @@
 #include "./AcdPocaSorter.h"
+#include <cassert>
+#include <algorithm>
+
 
 double AcdPocaSorter::AcdPocaHolder::arclength() const {
   if ( m_poca == 0 ) return 0.;
@@ -113,7 +116,7 @@ void AcdPocaSorter::resetArcCache() {
 
 
 void AcdPocaSorter::sort() {
-  std::sort(m_pocas.begin(),m_pocas.end());
+    std::sort(m_pocas.begin(),m_pocas.end());
   resetArcCache();
 }
 

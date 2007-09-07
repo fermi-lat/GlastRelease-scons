@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v3r10p3   07-Sep-2007 HMK Patch for windows
 v3r10p2   04-Sep-2007 EAC Fix up some comments  
 v3r10p1   04-Sep-2007 EAC Second round of fixes to new AcdRecon re-organization.  Added lots of debugging printouts.  
                           All merit variables are being filled, but still need to perform some more validation/ checks
