@@ -26,7 +26,7 @@ apply_pattern package_headers
 # for includes from flux (for now)
 macro CRflux_cppflags '$(ppcmd)"$(FLUXROOT)"'
 
-library CRflux *.cxx \
+library CRflux *.cxx psb97/*.cxx \
  Dll/*.cxx\
 $(CRflux_headers)
 
