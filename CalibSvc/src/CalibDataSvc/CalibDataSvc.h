@@ -8,12 +8,13 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 #include "CalibSvc/IInstrumentName.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/CalibTime.h"
-
 // Forward declarations
 class ITime;
 class StatusCode;
 class IDataProviderSvc;
+class MsgStream;
 
 /** @class CalibDataSvc
 
@@ -35,7 +36,8 @@ class MsgStream;
 class CalibDataSvc  : public DataSvc,
                       virtual public IDetDataSvc,
                       virtual public IIncidentListener,
-                      virtual public IInstrumentName
+                      virtual public IInstrumentName,
+                      virtual public ICalibPathSvc
 {    
 
   friend class SvcFactory<CalibDataSvc>;
@@ -97,7 +99,13 @@ public:
   /// Set the instrument name
   virtual void setInstrumentName(const std::string& name);
 
+  // Implementation of ICalibPathSvc interface
 public:
+
+  virtual const std::string
+  getCalibPath(const ICalibPathSvc::CalibItem item, 
+               const std::string& flavor="") const;
+
   
   // Implementation of the IIncidentListener interface
 
@@ -151,8 +159,7 @@ public:
 
 
   /// Private utility, called from initialize()
-  StatusCode makeFlavorNodes(IAddressCreator*  calibCreator, 
-                             MsgStream* log );
+  StatusCode makeFlavorNodes(IAddressCreator*  calibCreator);
 
   /// Private utility to check if internal timestamp has been updated for
   /// the event; if not do it.
@@ -190,6 +197,9 @@ public:
   /// Fetch time from fake clock, using parameters below
   StatusCode fetchFakeClockTime();
 
+  /// Initialize path arrays
+  void initPathArrays();
+
   /// Absolute time of first event (yyyy-mm-dd_hh:mm, trailing fields
   /// optional)
   std::string m_startTimeAsc;
@@ -201,7 +211,13 @@ public:
   long m_delayTime;
 
   unsigned m_LATCMaster;
-  
+  MsgStream *m_log;
+
+  /// Make it easy to retrieve path (not including flavor) from enum
+  /// Might later include config paths here, or they might have their
+  /// own vector
+  std::vector<CLID>    m_calibCLIDs;
+  std::vector<std::string> m_calibPaths;
 };
 
 #endif //  CalibDataSvc_h

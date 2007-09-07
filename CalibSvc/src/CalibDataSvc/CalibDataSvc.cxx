@@ -1,6 +1,7 @@
 // $Header$
 
 // Include files
+#include <algorithm>
 #include "CalibDataSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
@@ -18,9 +19,10 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/TopLevel/Event.h"
-#include "astro/JulianDate.h"
+// #include "astro/JulianDate.h"
 
 #include "CalibData/CalibModelSvc.h"
+#include "CalibData/CalibModel.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -65,6 +67,7 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
 
   declareProperty( "delayTime",  m_delayTime = 2000);
 
+
 }
 
 /// Standard Destructor
@@ -82,31 +85,33 @@ StatusCode CalibDataSvc::initialize()   {
   if (sc.isFailure() )  return sc;
 
   // Set up MsgSvc, Data Loader
-  MsgStream log(msgSvc(), name());
+  m_log = new MsgStream(msgSvc(), name());
+  //  MsgStream log(msgSvc(), name());
   IConversionSvc* cnv_svc;
   sc = serviceLocator()->service("DetectorPersistencySvc", cnv_svc, true);
   if (sc .isFailure() ) {
-    log << MSG::ERROR << "Unable to find DetectorPersistencySvc " << endreq;
+    (*m_log) << MSG::ERROR << "Unable to find DetectorPersistencySvc " 
+             << endreq;
     return sc;
   }
 
   // Need event data service for timestamp stuff
   sc = serviceLocator()->service("EventDataSvc", m_eventSvc, true);
   if (sc .isFailure() ) {
-    log << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
+    (*m_log) << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
     return sc;
   }
 
 
   sc = setDataLoader(cnv_svc);
   if (sc.isFailure() ) {
-    log << MSG::ERROR << "Unable to set data loader " << endreq;
+    (*m_log) << MSG::ERROR << "Unable to set data loader " << endreq;
     return sc;
   }
   sc = setProperties();   
 
   // Initialize the calibration data transient store
-  log << MSG::DEBUG << "Storage type used is: " 
+  (*m_log) << MSG::DEBUG << "Storage type used is: " 
       << m_calibStorageType << endreq;
 
   IAddressCreator*     calibCreator = 0;
@@ -116,7 +121,8 @@ StatusCode CalibDataSvc::initialize()   {
   sc = serviceLocator()->service("DetectorPersistencySvc", calibCreator);
   
   if( sc.isFailure() ) {
-    log << MSG::ERROR << "Unable to locate DetectorPersistencySvc." << endreq;
+    (*m_log) << MSG::ERROR << "Unable to locate DetectorPersistencySvc." 
+             << endreq;
     return StatusCode::FAILURE; 
   }
   
@@ -124,7 +130,7 @@ StatusCode CalibDataSvc::initialize()   {
   DataObject* rootObj = new DataObject();
   sc = setRoot(m_rootName, rootObj);
   if (!sc.isSuccess() ) {
-    log << MSG::ERROR << "Unable to set calib data store root." << endreq;
+    (*m_log) << MSG::ERROR << "Unable to set calib data store root." << endreq;
     delete rootObj;
     return sc;
   }
@@ -152,7 +158,7 @@ StatusCode CalibDataSvc::initialize()   {
 
     }
     else {
-      log << MSG::WARNING << "Unsupported time source " << m_timeSource 
+      (*m_log) << MSG::WARNING << "Unsupported time source " << m_timeSource 
           << " will be set to  'none' " << endreq;
       m_timeSource = std::string("none");
     }
@@ -164,12 +170,58 @@ StatusCode CalibDataSvc::initialize()   {
       incSvc->addListener(this, "BeginEvent", priority);
     }
     else {
-      log << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
+      (*m_log) << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
       return sc;
     }
   }
+
+  initPathArrays();  // filling of names occurs in makeFlavorNodes
   // Make flavor nodes in the calibration TDS
-  return makeFlavorNodes(calibCreator, &log);
+  return makeFlavorNodes(calibCreator);
+}
+
+void CalibDataSvc::initPathArrays() {
+  // We know how big the vector m_calibPaths needs to be
+  m_calibPaths.resize(ICalibPathSvc::Calib_COUNT, std::string(""));
+  m_calibCLIDs.resize(ICalibPathSvc::Calib_COUNT, 0);
+
+  m_calibCLIDs[Calib_TKR_HotChan] = CLID_Calib_TKR_HotChan;
+
+  m_calibCLIDs[Calib_TKR_DeadChan] =  CLID_Calib_TKR_DeadChan;
+  m_calibCLIDs[Calib_TKR_BadChan] = CLID_Calib_TKR_BadChan;
+  m_calibCLIDs[Calib_TKR_TOTSignal] = CLID_Calib_TKR_TOTSignal;
+  m_calibCLIDs[Calib_TKR_TOTDist] = CLID_Calib_TKR_TOTDist;
+  m_calibCLIDs[Calib_TKR_MIPEff] = CLID_Calib_TKR_MIPEff;
+  m_calibCLIDs[Calib_TKR_Splits] = CLID_Calib_TKR_Splits;
+  m_calibCLIDs[Calib_TKR_ChargeScale] = CLID_Calib_TKR_ChargeScale;
+  m_calibCLIDs[Calib_TKR_TrgThresh ] = CLID_Calib_TKR_TrgThresh ;
+  m_calibCLIDs[Calib_TKR_DataThresh] = CLID_Calib_TKR_DataThresh;
+  m_calibCLIDs[Calib_CAL_LightAtt] = CLID_Calib_CAL_LightAtt;
+  m_calibCLIDs[Calib_CAL_LightAsym] = CLID_Calib_CAL_LightAsym;
+  m_calibCLIDs[Calib_CAL_LightYield] = CLID_Calib_CAL_LightYield;
+  m_calibCLIDs[Calib_CAL_Ped] = CLID_Calib_CAL_Ped;
+  m_calibCLIDs[Calib_CAL_ElecGain] = CLID_Calib_CAL_ElecGain;
+  m_calibCLIDs[Calib_CAL_IntNonlin] = CLID_Calib_CAL_IntNonlin;
+  m_calibCLIDs[Calib_CAL_DiffNonlin] = CLID_Calib_CAL_DiffNonlin;
+  m_calibCLIDs[Calib_CAL_HotChan] = CLID_Calib_CAL_HotChan;
+  m_calibCLIDs[Calib_CAL_DeadChan] = CLID_Calib_CAL_DeadChan;
+  m_calibCLIDs[Calib_CAL_MuSlope] = CLID_Calib_CAL_MuSlope;
+  m_calibCLIDs[Calib_CAL_MevPerDac] = CLID_Calib_CAL_MevPerDac;
+  m_calibCLIDs[Calib_CAL_TholdCI] = CLID_Calib_CAL_TholdCI;
+  m_calibCLIDs[Calib_CAL_TholdMuon] = CLID_Calib_CAL_TholdMuon;
+  m_calibCLIDs[Calib_CAL_Asym] = CLID_Calib_CAL_Asym;
+  m_calibCLIDs[Calib_ACD_Eff] = CLID_Calib_ACD_Eff;
+  m_calibCLIDs[Calib_ACD_ThreshHigh] = CLID_Calib_ACD_ThreshHigh;
+  m_calibCLIDs[Calib_ACD_ThreshVeto] = CLID_Calib_ACD_ThreshVeto;
+  m_calibCLIDs[Calib_ACD_Ped] = CLID_Calib_ACD_Ped;
+  m_calibCLIDs[Calib_ACD_ElecGain] = CLID_Calib_ACD_ElecGain;
+  m_calibCLIDs[Calib_CalibTest1] = CLID_Calib_CalibTest1;
+  m_calibCLIDs[Calib_NAS_TowerCfg] = CLID_Calib_NAS_TowerCfg;
+  m_calibCLIDs[Calib_NAS_SAABoundary] = CLID_Calib_NAS_SAABoundary;
+  m_calibCLIDs[Calib_ANC_TaggerPed] = CLID_Calib_ANC_TaggerPed;
+  m_calibCLIDs[Calib_ANC_TaggerGain] = CLID_Calib_ANC_TaggerGain;
+  m_calibCLIDs[Calib_ANC_QdcPed] = CLID_Calib_ANC_QdcPed;
+
 }
 
 // Create and register the next level of nodes.
@@ -177,8 +229,8 @@ StatusCode CalibDataSvc::initialize()   {
 // derived from DataObject, CalibCLIDNode.  Only additional 
 // information is CLID of child nodes.  List comes from CalibData 
 // namespace
-StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
-                                         MsgStream* log) {
+//  Also fill in m_calibPaths.
+StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator) {
   typedef std::vector<CalibData::CalibModelSvc::CalibPair>::const_iterator 
     PairIt;
   PairIt  pairIt;
@@ -192,6 +244,22 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
 
     std::string calibTypePath(pairIt->first);
     sc = registerObject(calibTypePath, node);
+
+    bool found = false;
+
+    // Find CLID (pairIt->second) in m_calibCLIDs, save ix (our enum)
+    for (unsigned ix = 0; ix < m_calibCLIDs.size(); ix ++) {
+      if (m_calibCLIDs[ix] == pairIt->second) {
+        m_calibPaths[ix] = pairIt->first;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      (*m_log) << MSG::WARNING << "Unknown calib TDS class id " 
+               << pairIt->second
+               << " with corresponding TDS path " << pairIt->first << endreq;
+    }
 
     // Still have to figure out what to do about args, iargs
     unsigned long iargs[]={0, 0};
@@ -220,7 +288,7 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
                                      pairIt->second,   // class id
                                      args, iargs, pAddress); 
     if (!sc.isSuccess()) {
-      (*log) << MSG::ERROR 
+      (*m_log) << MSG::ERROR 
           << "Unable to create Calib address with path " << fullpath << endreq;
     }
 
@@ -228,7 +296,7 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
     // node for which an object was registered above.
     sc = registerAddress(fullpath, pAddress);
     if (!sc.isSuccess()) {
-      (*log) << MSG::ERROR << "Unable to register Calib address with path" 
+      (*m_log) << MSG::ERROR << "Unable to register Calib address with path" 
           << fullpath << endreq;
     }
     // Now do the same for any requested flavors
@@ -244,13 +312,13 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
       sc = calibCreator->createAddress(m_calibStorageType, 
                                        pairIt->second, args, iargs, pAddress); 
       if (!sc.isSuccess()) {
-        (*log) << MSG::ERROR << "Unable to create Calib address with path " 
+        (*m_log) << MSG::ERROR << "Unable to create Calib address with path " 
             << fullpath << endreq;
       }
       sc = registerAddress(fullpath, pAddress);
       if (!sc.isSuccess()) {
-        (*log) << MSG::ERROR << "Unable to register Calib address with path " 
-            << fullpath << endreq;
+        (*m_log) << MSG::ERROR << "Unable to register Calib address with path "
+                 << fullpath << endreq;
       }
     }    // end flavor loop 
 
@@ -261,8 +329,7 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator,
 /// Finalize the service.
 StatusCode CalibDataSvc::finalize()
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Finalizing" << endreq;
+  (*m_log) << MSG::DEBUG << "Finalizing" << endreq;
 
   // Delete the associated event time
   if( 0 != m_eventTime ) delete m_eventTime; 
@@ -272,7 +339,8 @@ StatusCode CalibDataSvc::finalize()
   return DataSvc::finalize();
 }
 
-StatusCode CalibDataSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)
+StatusCode CalibDataSvc::queryInterface(const InterfaceID& riid, 
+                                        void** ppvInterface)
 {
   // With the highest priority return the specific interfaces
   // If interfaces are not directly available, try out a base class
@@ -282,6 +350,8 @@ StatusCode CalibDataSvc::queryInterface(const InterfaceID& riid, void** ppvInter
     *ppvInterface = (IInstrumentName*) this;
   } else if ( IID_IIncidentListener.versionMatch(riid) ) {
     *ppvInterface = (IIncidentListener*)this;
+  } else if (IID_ICalibPathSvc.versionMatch(riid) ) {
+    *ppvInterface = (ICalibPathSvc*)this;
   } else {
     return DataSvc::queryInterface(riid, ppvInterface);
   }
@@ -306,10 +376,8 @@ void CalibDataSvc::setEventTime(const ITime& time) {
   m_eventTime = pTime;
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-    MsgStream log(msgSvc(), name() );
-    log << MSG::DEBUG 
-        << "Event Time set to " 
-        << pTime->getString() << endreq;
+    (*m_log) << MSG::DEBUG << "Event Time set to " 
+             << pTime->getString() << endreq;
   }
 
 }
@@ -339,10 +407,9 @@ void CalibDataSvc::handle ( const Incident& inc ) {
        (m_timeSourceEnum == TIMESOURCEdigi) ||
        (m_timeSourceEnum == TIMESOURCEclock) ) ) {
     if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-      MsgStream log( msgSvc(), name() );
-      log << MSG::DEBUG << "New incident received" << endreq;
-      log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
-      log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
+      (*m_log) << MSG::DEBUG << "New incident received" << endreq;
+      (*m_log) << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
+      (*m_log) << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
     }
     
     m_nEvent++;
@@ -367,10 +434,9 @@ void CalibDataSvc::setInstrumentName(const std::string& name) {
 
 StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
 
-  MsgStream log( msgSvc(), name() );
   // Check that object to update exists
   if ( 0 == toUpdate ) { 
-    log << MSG::ERROR
+    (*m_log) << MSG::ERROR
 	<< "There is no DataObject to update" << endreq;
     return INVALID_OBJECT; 
   }
@@ -381,7 +447,7 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   // Retrieve IValidity interface of object to update
   IValidity* condition = dynamic_cast<IValidity*>( toUpdate );
   if ( 0 == condition ) {
-    log << MSG::WARNING
+    (*m_log) << MSG::WARNING
 	<< "Cannot update DataObject: DataObject does not implement IValidity"
 	<< endreq;
     return StatusCode::SUCCESS;
@@ -390,7 +456,7 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   if (m_useEventTime) {
     // Check that the event time has been defined
     if ( !validEventTime() ) {
-      log << MSG::WARNING
+      (*m_log) << MSG::WARNING
           << "Cannot update DataObject: event time undefined"
           << endreq; 
       return StatusCode::SUCCESS;
@@ -399,12 +465,12 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
     // No need to update if condition is valid
     if ( condition->isValid( eventTime() ) ) {
       if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-        log << MSG::DEBUG 
+        (*m_log) << MSG::DEBUG 
             << "DataObject is valid: no need to update" << endreq;
       }
       return StatusCode::SUCCESS;
     } else {
-      log << MSG::DEBUG 
+      (*m_log) << MSG::DEBUG 
           << "DataObject is invalid: update it" << endreq;
     }
   }
@@ -414,10 +480,10 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   // Now delegate update to the conversion service by calling the base class
   StatusCode status = DataSvc::updateObject(toUpdate);
   if ( !status.isSuccess() ) {
-    log << MSG::ERROR 
+    (*m_log) << MSG::ERROR 
 	<< "Could not update DataObject" << endreq; 
     if ( status == NO_DATA_LOADER )
-      log << MSG::ERROR << "There is no data loader" << endreq; 
+      (*m_log) << MSG::ERROR << "There is no data loader" << endreq; 
     return status;
   } 
 
@@ -427,14 +493,14 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   // Now cross-check that the new condition is valid
   condition = dynamic_cast<IValidity*>(toUpdate);
   if ( 0 == condition ) {
-    log << MSG::ERROR
+    (*m_log) << MSG::ERROR
 	<< "Updated DataObject does not implement IValidity" << endreq;
     return StatusCode::FAILURE;
   }
   if ( !condition->isValid( eventTime() ) ) {
-    log << MSG::ERROR
+    (*m_log) << MSG::ERROR
 	<< "Updated DataObject is not valid" << endreq;
-    log << MSG::ERROR
+    (*m_log) << MSG::ERROR
 	<< "Are you sure the conversion service has updated it?" << endreq;
     return StatusCode::FAILURE;
   } 
@@ -507,17 +573,15 @@ StatusCode  CalibDataSvc::updateTime() {
 
 StatusCode CalibDataSvc::fetchEventTime() {
 
-  MsgStream log(msgSvc(), name());
-
   static const facilities::Timestamp missionStart("2001-1-1 00:00");
   static const unsigned missionSec = (unsigned) missionStart.getClibTime();
-  static const int missionNano = missionStart.getNano();
+  static const int missionNano = (int) missionStart.getNano();
 
   SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
   
   if (!eventHeader) {
-    log << MSG::ERROR << "Unable to retrieve event timestamp for digis" 
-        << endreq;
+    (*m_log) << MSG::ERROR << "Unable to retrieve event timestamp for digis" 
+             << endreq;
     return StatusCode::FAILURE;
   }
   double fromMissionStart = (eventHeader->time()).time();
@@ -526,7 +590,7 @@ StatusCode CalibDataSvc::fetchEventTime() {
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
 
-    log << MSG::DEBUG << "event time in seconds/nano from mission start: " 
+    (*m_log) << MSG::DEBUG << "event time in seconds/nano from mission start: " 
         << fromSec 
         << "/" << fromNano << endreq;
   }
@@ -539,19 +603,18 @@ StatusCode CalibDataSvc::fetchEventTime() {
 
 StatusCode CalibDataSvc::fetchMcTime() {
 
-  MsgStream log(msgSvc(), name());
-
-  //  static const facilities::Timestamp missionStart("2001-1-1 00:00");
-  static const astro::JulianDate 
-    julianStart = astro::JulianDate::missionStart();
-  static const facilities::Timestamp missionStart(julianStart);
+  // static const astro::JulianDate 
+  //    julianStart = astro::JulianDate::missionStart();
+    //  static const facilities::Timestamp missionStart(julianStart);
+  static const facilities::Timestamp missionStart("2001-1-1 00:00");
 
   static const unsigned missionSec = (unsigned) missionStart.getClibTime();
-  static const int missionNano = missionStart.getNano();
+  static const int missionNano = (int) missionStart.getNano();
 
   SmartDataPtr<Event::MCEvent> mcHeader(m_eventSvc, "/Event/MC");
   if (!mcHeader) {
-    log << MSG::ERROR << "Unable to retrieve mc event timestamp " << endreq;
+    (*m_log) << MSG::ERROR << "Unable to retrieve mc event timestamp " 
+             << endreq;
 
     return StatusCode::FAILURE;
   }
@@ -560,8 +623,8 @@ StatusCode CalibDataSvc::fetchMcTime() {
   unsigned fromNano = (unsigned) ((fromMissionStart - fromSec) * 1000000000);
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-    log << MSG::DEBUG << "(mc) seconds/nano from mission start: " << fromSec 
-        << "/" << fromNano << endreq;
+    (*m_log) << MSG::DEBUG << "(mc) seconds/nano from mission start: " 
+             << fromSec << "/" << fromNano << endreq;
   }
 
   facilities::Timestamp absTime(missionSec + fromSec, missionNano + fromNano);
@@ -606,15 +669,38 @@ StatusCode CalibDataSvc::fetchFakeClockTime() {
   }
 
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << "Fake Clock Event number: " 
-        << eventNumber << endreq;
-    log << MSG::DEBUG << "Event time: "
-        << timestring
-        << endreq; 
-    log << MSG::DEBUG << "Event time (hours) " << m_time.hours() << endreq;
+    (*m_log) << MSG::DEBUG << "Fake Clock Event number: " 
+             << eventNumber << endreq;
+    (*m_log) << MSG::DEBUG << "Event time: "
+             << timestring
+             << endreq; 
+    (*m_log) << MSG::DEBUG << "Event time (hours) " << m_time.hours() 
+             << endreq;
   }
   eventNumber++;
 
   return StatusCode::SUCCESS; 
+}
+
+const std::string CalibDataSvc::getCalibPath(const 
+                                              ICalibPathSvc::CalibItem item, 
+                                              const std::string& flavor) const
+{
+  std::string path("");
+  if (item >= ICalibPathSvc::Calib_COUNT) {
+    (*m_log) << MSG::FATAL << "Calibration item number " << item 
+             << " out of range, >= " << ICalibPathSvc::Calib_COUNT << endreq;
+    return path;
+  }
+
+  path = m_calibPaths[item];
+  if (path.size() == 0) {
+    (*m_log) << MSG::FATAL << "Unknown calibration item number " 
+             << item << endreq;
+    return path;
+  }
+  if (flavor.size() > 0) {
+    path += std::string("/") + flavor;
+  }
+  return path;
 }
