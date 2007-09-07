@@ -34,6 +34,8 @@
 #include "RootIo/FhTool.h"
 
 // low level converters
+#include "RootConvert/Recon/TkrTruncationInfoConvert.h"
+
 #include "RootConvert/Recon/CalClusterConvert.h"
 #include "RootConvert/Recon/CalXtalRecDataConvert.h"   
 #include "RootConvert/Recon/CalEventEnergyConvert.h"
@@ -79,6 +81,7 @@ private:
     
     /// These are the methods specific to filling the pieces of the TkrRecon stuff
     void fillTkrClusterCol( TkrRecon* recon, Event::TkrClusterCol* clusterColTds);
+    void fillTruncationInfo(TkrRecon* recon, Event::TkrTruncationInfo* truncationInfoTds);
     void fillFitTracks( TkrRecon* recon, Event::TkrTrackCol* tracksTds);
     void fillVertices( TkrRecon* recon, Event::TkrVertexCol*   verticesTds, Event::TkrTrackCol* tracksTds);
     
@@ -287,7 +290,10 @@ StatusCode reconRootWriterAlg::writeTkrRecon() {
     
     SmartDataPtr<Event::TkrClusterCol> clusterColTds(eventSvc(), EventModel::TkrRecon::TkrClusterCol);
     if (clusterColTds) fillTkrClusterCol(recon, clusterColTds);
-    
+
+    SmartDataPtr<Event::TkrTruncationInfo> truncationInfoTds(eventSvc(), EventModel::TkrRecon::TkrTruncationInfo);
+    if (truncationInfoTds &&  truncationInfoTds->isTruncated() ) fillTruncationInfo(recon, truncationInfoTds);
+
     // Retrieve the information on fit tracks
     SmartDataPtr<Event::TkrTrackCol> tracksTds(eventSvc(), EventModel::TkrRecon::TkrTrackCol);
     
@@ -358,6 +364,19 @@ void reconRootWriterAlg::fillTkrClusterCol(TkrRecon* recon, Event::TkrClusterCol
         TRef ref = clusterRoot;
         m_common.m_tkrClusterMap[clusterTds] = ref;
     }
+}
+
+void reconRootWriterAlg::fillTruncationInfo(TkrRecon* recon, Event::TkrTruncationInfo* truncationInfoTds)
+{
+//Purpose and Method : fill ROOT persistent version of the truncation info with the TDS class.
+  Event::TkrTruncationInfo::TkrTruncationMap* truncMap = truncationInfoTds->getTruncationMap();
+  Event::TkrTruncationInfo::TkrTruncationMap::const_iterator iter = truncMap->begin();
+  for(; iter!=truncMap->end(); ++iter) {
+    TkrTruncationData* truncationDataRoot = new TkrTruncationData();
+    RootPersistence::convert(*iter, *truncationDataRoot);
+    recon->addTruncationData(truncationDataRoot);
+
+  }
 }
 
 void reconRootWriterAlg::fillFitTracks(TkrRecon* recon, Event::TkrTrackCol* tracksTds)
