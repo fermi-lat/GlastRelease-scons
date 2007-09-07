@@ -49,7 +49,7 @@ namespace CfgMgr {
     virtual bool                getVal() const = 0;
   };
 
-  /// \brief Abstract Interface Class for Optional position independent commandline which takes an argument
+  /// \brief Abstract Interface Class for Optional position independent commandline variable which takes an argument
   /// \note truly 'virtual' class has no data members, suitable for virtual/multiple inheritance
   class ICmdOptVar {
   public:
