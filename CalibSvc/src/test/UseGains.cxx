@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibSvc/ICalibRootSvc.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Cal/CalCalibGain.h"
 #include "idents/CalXtalId.h"                // shouldn't be necessary
 
@@ -40,9 +40,12 @@ private:
   void processNew(CalibData::CalCalibGain* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
   ICalibRootSvc*    m_pRootSvc;
   int               m_ser;
   int               m_serR;
+  std::string       m_path;
+  std::string       m_pathR;
   bool              m_didWrite;
   std::string       m_outName;
   bool              m_doWrite;
@@ -81,6 +84,23 @@ StatusCode UseGains::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_ElecGain,
+                                  std::string("ideal") );
+
+  m_pathR = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_ElecGain,
+                                  std::string("RootBeer") );
+
   sc = service("CalibRootCnvSvc", m_pRootSvc, true);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
@@ -107,10 +127,10 @@ StatusCode UseGains::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_ElecGain/ideal";
+  //  std::string fullPath = "/Calib/CAL_ElecGain/ideal";
   DataObject *pObject;
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::CalCalibGain* pGains = 0;
   pGains = dynamic_cast<CalibData::CalCalibGain *> (pObject);
@@ -124,10 +144,10 @@ StatusCode UseGains::execute( ) {
     log << MSG::INFO << "Processing new gains after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pGains, fullPath);
+    processNew(pGains, m_path);
     if (!m_didWrite) {
       StatusCode writeStatus = 
-        m_pRootSvc->writeToRoot(m_outName, fullPath);
+        m_pRootSvc->writeToRoot(m_outName, m_path);
       log << "Status returned from writing " << m_outName << " is " 
           << writeStatus << endreq;
       m_didWrite = true;
@@ -135,9 +155,9 @@ StatusCode UseGains::execute( ) {
       
   }
   // Same thing with RootBeer
-  std::string fullPathR = "/Calib/CAL_ElecGain/RootBeer";
+  //  std::string fullPathR = "/Calib/CAL_ElecGain/RootBeer";
   DataObject *pObjectR;
-  m_pCalibDataSvc->retrieveObject(fullPathR, pObjectR);
+  m_pCalibDataSvc->retrieveObject(m_pathR, pObjectR);
 
   CalibData::CalCalibGain* pGainsR = 0;
   pGainsR = dynamic_cast<CalibData::CalCalibGain *> (pObjectR);
@@ -152,7 +172,7 @@ StatusCode UseGains::execute( ) {
     log << MSG::INFO << "Processing new RootBeer gains after retrieveObject" 
         << endreq;
     m_serR = newSerNoR;
-    processNew(pGainsR, fullPathR);
+    processNew(pGainsR, m_pathR);
   }
 
 
@@ -175,10 +195,10 @@ StatusCode UseGains::execute( ) {
     log << MSG::INFO << "Processing new gains after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pGains, fullPath);
+    processNew(pGains, m_path);
     if (!m_didWrite) {
       StatusCode writeStatus = 
-        m_pRootSvc->writeToRoot(m_outName, fullPath);
+        m_pRootSvc->writeToRoot(m_outName, m_path);
       log << "Status returned from writing " << m_outName << " is " 
           << writeStatus << endreq;
       m_didWrite = true;

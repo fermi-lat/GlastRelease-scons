@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibSvc/ICalibRootSvc.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Tkr/TkrScale.h"
 
 /**
@@ -42,8 +42,11 @@ private:
 
   IDataProviderSvc* m_pCalibDataSvc;
   ICalibRootSvc*    m_pRootSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
+  std::string       m_pathR;  // unused currently
   int               m_ser;
-  int               m_serR;
+  int               m_serR;   // unused currently
 };
 
 
@@ -85,6 +88,19 @@ StatusCode UseScale::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get IDataProviderSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_TKR_ChargeScale,
+                                  std::string("RootBeer") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
 
@@ -98,10 +114,10 @@ StatusCode UseScale::execute( ) {
   using CalibData::TkrScaleCol;
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/TKR_ChargeScale/RootBeer";
+  //  std::string fullPath = "/Calib/TKR_ChargeScale/RootBeer";
   DataObject *pObject;
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   TkrScaleCol* pScaleCol = 0;
   pScaleCol = dynamic_cast<TkrScaleCol *> (pObject);
@@ -116,7 +132,7 @@ StatusCode UseScale::execute( ) {
     log << MSG::INFO << "Processing new TKR_ChargeScale after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pScaleCol, fullPath);
+    processNew(pScaleCol, m_path);
       
   }
 
@@ -137,7 +153,7 @@ StatusCode UseScale::execute( ) {
     log << MSG::INFO << "Processing new Scale collection after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pScaleCol, fullPath);
+    processNew(pScaleCol, m_path);
   }
 
   return StatusCode::SUCCESS;

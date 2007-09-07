@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibSvc/ICalibRootSvc.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Tkr/TkrTot.h"
 
 /**
@@ -39,6 +39,8 @@ private:
 
   IDataProviderSvc* m_pCalibDataSvc;
   ICalibRootSvc*    m_pRootSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
   int               m_serR;
 };
@@ -82,9 +84,20 @@ StatusCode UseTot::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_TKR_TOTSignal,
+                                  std::string("RootBeer") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
-
   return StatusCode::SUCCESS;
 
 }
@@ -95,10 +108,10 @@ StatusCode UseTot::execute( ) {
   using CalibData::TkrTotCol;
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/TKR_TOTSignal/RootBeer";
+  //  std::string fullPath = "/Calib/TKR_TOTSignal/RootBeer";
   DataObject *pObject;
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   TkrTotCol* pTotCol = 0;
   pTotCol = dynamic_cast<TkrTotCol *> (pObject);
@@ -113,7 +126,7 @@ StatusCode UseTot::execute( ) {
     log << MSG::INFO << "Processing new TKR_TOTSignal after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTotCol, fullPath);
+    processNew(pTotCol, m_path);
       
   }
 
@@ -134,7 +147,7 @@ StatusCode UseTot::execute( ) {
     log << MSG::INFO << "Processing new ToT collection after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTotCol, fullPath);
+    processNew(pTotCol, m_path);
   }
 
   return StatusCode::SUCCESS;

@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibTest1.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 
 /// Simple algorithm to test functioning of "the other" TDS
 class UseCalib : public Algorithm {
@@ -23,7 +23,9 @@ public:
 
 private:
   IDataProviderSvc* m_pCalibDataSvc;
-  // Maybe something to say which kind of data to look up?
+  ICalibPathSvc*    m_pCalibPathSvc;
+
+  std::string       m_path;      // will hold path string for TDS
 
 };
 
@@ -63,6 +65,19 @@ StatusCode UseCalib::initialize() {
 	<< endreq;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CalibTest1,
+                                  std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -74,11 +89,9 @@ StatusCode UseCalib::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  // Cheat for now since Windows is having trouble finding definition
-  // of Calibdata::Test_t
-  std::string fullPath = "/Calib/Test_1/vanilla";
+  //  std::string fullPath = "/Calib/Test_1/vanilla";
 
-  SmartDataPtr<CalibData::CalibTest1> test1Copy(m_pCalibDataSvc, fullPath);
+  SmartDataPtr<CalibData::CalibTest1> test1Copy(m_pCalibDataSvc, m_path);
 
   if (!test1Copy) {
     log << MSG::ERROR << "Failed access to CalibTest1 via smart ptr" << endreq;

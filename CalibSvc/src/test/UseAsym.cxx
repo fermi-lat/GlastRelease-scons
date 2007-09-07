@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Cal/CalAsym.h"
 #include "CalibData/Cal/Xpos.h"
 #include "idents/CalXtalId.h"   
@@ -41,6 +41,8 @@ private:
                     std::string title);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
 };
 
@@ -78,6 +80,19 @@ StatusCode UseAsym::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_Asym,
+                                  std::string("test") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -88,11 +103,11 @@ StatusCode UseAsym::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_Asym/test";
+  //  std::string fullPath = "/Calib/CAL_Asym/test";
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::CalAsymCol* pAsym = 0;
   pAsym = dynamic_cast<CalibData::CalAsymCol *> (pObject);
@@ -107,7 +122,7 @@ StatusCode UseAsym::execute( ) {
         << "Processing new Asym calibration after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pAsym, fullPath);
+    processNew(pAsym, m_path);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -125,7 +140,7 @@ StatusCode UseAsym::execute( ) {
     log << MSG::INFO << "Processing new Asym after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pAsym, fullPath);
+    processNew(pAsym, m_path);
   }
 
   return StatusCode::SUCCESS;

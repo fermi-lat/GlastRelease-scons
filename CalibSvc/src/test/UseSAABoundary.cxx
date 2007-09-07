@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/CalibSAABoundary.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 
 /// Simple algorithm to test functioning of "the other" TDS
 class UseSAABoundary : public Algorithm {
@@ -23,6 +23,8 @@ public:
 
 private:
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   // Maybe something to say which kind of data to look up?
 
 };
@@ -63,6 +65,19 @@ StatusCode UseSAABoundary::initialize() {
 	<< endreq;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_NAS_SAABoundary,
+                                  std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -76,9 +91,9 @@ StatusCode UseSAABoundary::execute( ) {
 
   // Cheat for now since Windows is having trouble finding definition
   // of Calibdata::Test_t
-  std::string fullPath = "/Calib/NAS_SAABoundary/vanilla";
+  //  std::string fullPath = "/Calib/NAS_SAABoundary/vanilla";
 
-  SmartDataPtr<CalibData::CalibSAABoundary> test1Copy(m_pCalibDataSvc, fullPath);
+  SmartDataPtr<CalibData::CalibSAABoundary> test1Copy(m_pCalibDataSvc, m_path);
 
   if (!test1Copy) {
     log << MSG::ERROR << "Failed access to CalibSAABoundary via smart ptr" << endreq;

@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Tkr/BadStrips.h"
 
 
@@ -70,6 +70,9 @@ private:
   void processNew(CalibData::BadStrips* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_hotPath;
+  std::string       m_deadPath;
   int               m_serHot;
   int               m_serDead;
   BadVisitor*       m_visitor;
@@ -109,6 +112,23 @@ StatusCode UseBadStrips::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_deadPath = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_TKR_DeadChan,
+                                  std::string("vanilla") );
+
+  m_hotPath = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_TKR_HotChan,
+                                  std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -121,11 +141,11 @@ StatusCode UseBadStrips::execute( ) {
   MsgStream log(msgSvc(), name());
   m_visitor->setLog(&log);
 
-  std::string fullDeadPath = "/Calib/TKR_DeadChan/vanilla";
+  //  std::string fullDeadPath = "/Calib/TKR_DeadChan/vanilla";
   DataObject *pDeadObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullDeadPath, pDeadObject);
+  m_pCalibDataSvc->retrieveObject(m_deadPath, pDeadObject);
 
   CalibData::BadStrips* pDead = 0;
   pDead = dynamic_cast<CalibData::BadStrips *> (pDeadObject);
@@ -139,7 +159,7 @@ StatusCode UseBadStrips::execute( ) {
     log << MSG::INFO << "Processing new dead strips after retrieveObject" 
         << endreq;
     m_serDead = newSerNo;
-    processNew(pDead, fullDeadPath);
+    processNew(pDead, m_deadPath);
   }
   m_pCalibDataSvc->updateObject(pDeadObject);
 
@@ -157,15 +177,15 @@ StatusCode UseBadStrips::execute( ) {
     log << MSG::INFO << "Processing new dead strips after update" 
         << endreq;
     m_serDead = newSerNo;
-    processNew(pDead, fullDeadPath);
+    processNew(pDead, m_deadPath);
   }
 
 
   // Now same for hot
-  std::string fullHotPath = "/Calib/TKR_HotChan/vanilla";
+  //  std::string fullHotPath = "/Calib/TKR_HotChan/vanilla";
   DataObject *pHotObject;
 
-  m_pCalibDataSvc->retrieveObject(fullHotPath, pHotObject);
+  m_pCalibDataSvc->retrieveObject(m_hotPath, pHotObject);
 
   CalibData::BadStrips* pHot = 0;
   pHot = dynamic_cast<CalibData::BadStrips *> (pHotObject);
@@ -179,7 +199,7 @@ StatusCode UseBadStrips::execute( ) {
     log << MSG::INFO << "Processing new hot strips after retrieveObject" 
         << endreq;
     m_serHot = newSerNo;
-    processNew(pHot, fullHotPath);
+    processNew(pHot, m_hotPath);
   }
   m_pCalibDataSvc->updateObject(pHotObject);
 
@@ -195,7 +215,7 @@ StatusCode UseBadStrips::execute( ) {
     log << MSG::INFO << "Processing new hot strips after update" 
         << endreq;
     m_serHot = newSerNo;
-    processNew(pHot, fullHotPath);
+    processNew(pHot, m_hotPath);
   }
 
   return StatusCode::SUCCESS;

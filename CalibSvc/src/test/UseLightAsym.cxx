@@ -6,13 +6,16 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Cal/CalCalibLightAsym.h"
 #include "idents/CalXtalId.h"   
 
 /**
    @file UseLightAsym.cxx
    Simple algorithm to test functioning of "the other" TDS, Cal light asym data
+
+   NOTE:  this is currently (Sept. 2007) failing because there are no
+   calibrations of type CAL_LightAsym in the database
 */
 
   /** 
@@ -37,6 +40,8 @@ private:
   void processNew(CalibData::CalCalibLightAsym* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
 };
 
@@ -74,6 +79,19 @@ StatusCode UseLightAsym::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_LightAsym,
+                                  std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -85,11 +103,11 @@ StatusCode UseLightAsym::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_LightAsym/test";
+  //  std::string fullPath = "/Calib/CAL_LightAsym/test";
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::CalCalibLightAsym* pLightAsym = 0;
   pLightAsym = dynamic_cast<CalibData::CalCalibLightAsym *> (pObject);
@@ -104,7 +122,7 @@ StatusCode UseLightAsym::execute( ) {
         << "Processing new light asym. calibration after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pLightAsym, fullPath);
+    processNew(pLightAsym, m_path);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -122,7 +140,7 @@ StatusCode UseLightAsym::execute( ) {
     log << MSG::INFO << "Processing new pedestals after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pLightAsym, fullPath);
+    processNew(pLightAsym, m_path);
   }
 
   return StatusCode::SUCCESS;

@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Cal/CalTholdMuon.h"
 #include "CalibData/Cal/Xpos.h"
 #include "idents/CalXtalId.h"   
@@ -43,6 +43,8 @@ private:
   void printValSig(MsgStream* log, const CalibData::ValSig* v, 
                    std::string title);
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
 };
 
@@ -80,6 +82,19 @@ StatusCode UseTholdMuon::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_TholdMuon,
+                                  std::string("test") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -90,11 +105,11 @@ StatusCode UseTholdMuon::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_TholdMuon/test";
+  //  std::string fullPath = "/Calib/CAL_TholdMuon/test";
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::CalTholdMuonCol* pTholdMuon = 0;
   pTholdMuon = dynamic_cast<CalibData::CalTholdMuonCol *> (pObject);
@@ -109,7 +124,7 @@ StatusCode UseTholdMuon::execute( ) {
         << "Processing new TholdMuon calibration after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTholdMuon, fullPath);
+    processNew(pTholdMuon, m_path);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -127,7 +142,7 @@ StatusCode UseTholdMuon::execute( ) {
     log << MSG::INFO << "Processing new TholdMuon after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pTholdMuon, fullPath);
+    processNew(pTholdMuon, m_path);
   }
 
   return StatusCode::SUCCESS;

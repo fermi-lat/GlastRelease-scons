@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Cal/CalCalibIntNonlin.h"
 #include "CalibData/DacCol.h"
 #include "idents/CalXtalId.h"   
@@ -41,6 +41,8 @@ private:
   void processNew(CalibData::CalCalibIntNonlin* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
 };
 
@@ -78,6 +80,19 @@ StatusCode UseIntNonlin::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_IntNonlin,
+                                  std::string("test") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -89,11 +104,11 @@ StatusCode UseIntNonlin::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/CAL_IntNonlin/test";
+  //  std::string fullpath = "/Calib/CAL_IntNonlin/test";
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::CalCalibIntNonlin* pIntNonlin = 0;
   pIntNonlin = dynamic_cast<CalibData::CalCalibIntNonlin *> (pObject);
@@ -108,7 +123,7 @@ StatusCode UseIntNonlin::execute( ) {
         << "Processing new integral nonlinearity calibration after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pIntNonlin, fullPath);
+    processNew(pIntNonlin, m_path);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -126,7 +141,7 @@ StatusCode UseIntNonlin::execute( ) {
     log << MSG::INFO << "Processing new int. nonlin. after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pIntNonlin, fullPath);
+    processNew(pIntNonlin, m_path);
   }
 
   return StatusCode::SUCCESS;

@@ -6,7 +6,6 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-// #include "CalibData/CalibModel.h"
 #include "CalibData/Cal/CalCalibPed.h"
 #include "CalibData/CalibTime.h"
 #include "idents/CalXtalId.h"                // shouldn't be necessary
@@ -42,6 +41,7 @@ private:
 
   IDataProviderSvc* m_pCalibDataSvc;
   ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_fullPath;
   int               m_ser;
 };
 
@@ -88,6 +88,10 @@ StatusCode UsePeds::initialize() {
     return sc;
   }
 
+  m_fullPath = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_Ped,
+                                  std::string("ideal") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -111,13 +115,10 @@ StatusCode UsePeds::execute( ) {
   //  to requirements (it's a no-op for Linux)
   //  std::string fullPath = CalibData::CAL_Ped + "/ideal";
 
-  std::string fullPath = 
-    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_CAL_Ped,
-                                  std::string("ideal") );
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_fullPath, pObject);
 
   CalibData::CalCalibPed* pPeds = 0;
   pPeds = dynamic_cast<CalibData::CalCalibPed *> (pObject);
@@ -131,7 +132,7 @@ StatusCode UsePeds::execute( ) {
     log << MSG::INFO << "Processing new pedestals after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pPeds, m_fullPath);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -149,7 +150,7 @@ StatusCode UsePeds::execute( ) {
     log << MSG::INFO << "Processing new pedestals after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pPeds, fullPath);
+    processNew(pPeds, m_fullPath);
   }
 
   return StatusCode::SUCCESS;

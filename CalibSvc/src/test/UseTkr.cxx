@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Tkr/TkrSplitsCalib.h"
 #include "CalibData/CalibTime.h"
 #include "idents/TkrId.h"
@@ -41,6 +41,8 @@ private:
   void processNew(CalibData::TkrSplitsCalib* pNew, const std::string& path);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   int               m_ser;
 };
 
@@ -78,6 +80,19 @@ StatusCode UseTkr::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_TKR_Splits,
+                                  std::string("test") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -89,21 +104,12 @@ StatusCode UseTkr::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  //  SmartDataPtr<CalibData::CalibTest1> test1(m_pCalibDataSvc,
-  //                                        CalibData::Test_Gen);
-  //  CalibData::CalibTest1* test1 = 
-  //    SmartDataPtr<CalibData::CalibTest1>(m_pCalibDataSvc, CalibData::Test_Gen);
-  
-  // For the following to work on Windows, must add 
-  //     apply_pattern use_CalibData_symbols 
-  //  to requirements (it's a no-op for Linux)
-  //  std::string fullPath = CalibData::TKR_Splits + "/test";
 
-  std::string fullPath = "/Calib/TKR_Splits/test";
+  // std::string fullPath = "/Calib/TKR_Splits/test";
   DataObject *pObject;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPath, pObject);
+  m_pCalibDataSvc->retrieveObject(m_path, pObject);
 
   CalibData::TkrSplitsCalib* pSplits = 0;
   pSplits = dynamic_cast<CalibData::TkrSplitsCalib *> (pObject);
@@ -117,7 +123,7 @@ StatusCode UseTkr::execute( ) {
     log << MSG::INFO << "Processing new splitss after retrieveObject" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pSplits, fullPath);
+    processNew(pSplits, m_path);
   }
   m_pCalibDataSvc->updateObject(pObject);
 
@@ -135,7 +141,7 @@ StatusCode UseTkr::execute( ) {
     log << MSG::INFO << "Processing new splits after update" 
         << endreq;
     m_ser = newSerNo;
-    processNew(pSplits, fullPath);
+    processNew(pSplits, m_path);
   }
 
   return StatusCode::SUCCESS;

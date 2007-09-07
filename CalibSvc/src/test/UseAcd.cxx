@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Acd/AcdCalibGain.h"
 #include "CalibData/Acd/AcdCalibPed.h"
 #include "idents/AcdId.h"
@@ -44,6 +44,9 @@ private:
                   const std::string& pathPed);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_pedPath;
+  std::string       m_gainPath;
   int               m_serGain;
   int               m_serPed;
 };
@@ -82,6 +85,20 @@ StatusCode UseAcd::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_pedPath = m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ACD_Ped,
+                                            std::string("vanilla") );
+  m_gainPath = m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ACD_ElecGain,
+                                             std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -93,14 +110,14 @@ StatusCode UseAcd::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPathGain = "/Calib/ACD_ElecGain/vanilla";
-  std::string fullPathPed = "/Calib/ACD_Ped/vanilla";
+  //  std::string fullPathGain = "/Calib/ACD_ElecGain/vanilla";
+  //  std::string fullPathPed = "/Calib/ACD_Ped/vanilla";
   DataObject *pObjectGain;
   DataObject *pObjectPed;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPathGain, pObjectGain);
-  m_pCalibDataSvc->retrieveObject(fullPathPed, pObjectPed);
+  m_pCalibDataSvc->retrieveObject(m_gainPath, pObjectGain);
+  m_pCalibDataSvc->retrieveObject(m_pedPath, pObjectPed);
 
   CalibData::AcdCalibGain* pGains = 0;
   CalibData::AcdCalibPed* pPeds = 0;
@@ -124,7 +141,7 @@ StatusCode UseAcd::execute( ) {
         << endreq;
     m_serGain = newSerNoGain;
     m_serPed = newSerNoPed;
-    processNew(pGains, fullPathGain, pPeds, fullPathPed);
+    processNew(pGains, m_gainPath, pPeds, m_pedPath);
   }
   m_pCalibDataSvc->updateObject(pObjectGain);
   m_pCalibDataSvc->updateObject(pObjectPed);
@@ -150,7 +167,7 @@ StatusCode UseAcd::execute( ) {
         << endreq;
     m_serGain = newSerNoGain;
     m_serPed = newSerNoPed;
-    processNew(pGains, fullPathGain, pPeds, fullPathPed);
+    processNew(pGains, m_gainPath, pPeds, m_pedPath);
   }
 
   return StatusCode::SUCCESS;

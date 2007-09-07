@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Anc/AncCalibTaggerGain.h"
 #include "CalibData/Anc/AncCalibTaggerPed.h"
 #include "CalibData/Anc/AncCalibQdcPed.h"
@@ -44,6 +44,10 @@ private:
                   const std::string& pathQdc);
 
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_taggerPedPath;
+  std::string       m_qdcPedPath;
+  std::string       m_taggerGainPath;
   int               m_serTaggerPed;
   int               m_serTaggerGain;   // unused for now
   int               m_serQdcPed;
@@ -83,6 +87,27 @@ StatusCode UseAnc::initialize() {
     return sc;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_taggerPedPath = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ANC_TaggerPed,
+                                  std::string("vanilla") );
+  m_taggerGainPath =
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ANC_TaggerGain,
+                                  std::string("vanilla") );
+
+  m_qdcPedPath = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ANC_QdcPed,
+                                  std::string("vanilla") );
+
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -94,14 +119,14 @@ StatusCode UseAnc::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPathTaggerPed = "/Calib/ANC_TaggerPed/vanilla";
-  std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
+  //  std::string fullPathTaggerPed = "/Calib/ANC_TaggerPed/vanilla";
+  //  std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
   DataObject *pObjectTagger;
   DataObject *pObjectQdc;
   
 
-  m_pCalibDataSvc->retrieveObject(fullPathTaggerPed, pObjectTagger);
-  m_pCalibDataSvc->retrieveObject(fullPathQdcPed, pObjectQdc);
+  m_pCalibDataSvc->retrieveObject(m_taggerPedPath, pObjectTagger);
+  m_pCalibDataSvc->retrieveObject(m_qdcPedPath, pObjectQdc);
 
   CalibData::AncCalibTaggerPed* pTaggerPeds = 0;
   CalibData::AncCalibQdcPed* pQdcPeds = 0;
@@ -126,7 +151,7 @@ StatusCode UseAnc::execute( ) {
         << endreq;
     m_serTaggerPed = newSerNoTagger;
     m_serQdcPed = newSerNoQdc;
-    processNew(pTaggerPeds, fullPathTaggerPed, pQdcPeds, fullPathQdcPed);
+    processNew(pTaggerPeds, m_taggerPedPath, pQdcPeds, m_qdcPedPath);
   }
   m_pCalibDataSvc->updateObject(pObjectTagger);
   m_pCalibDataSvc->updateObject(pObjectQdc);
@@ -154,7 +179,7 @@ StatusCode UseAnc::execute( ) {
         << endreq;
     m_serTaggerPed = newSerNoTagger;
     m_serQdcPed = newSerNoQdc;
-    processNew(pTaggerPeds, fullPathTaggerPed, pQdcPeds, fullPathQdcPed);
+    processNew(pTaggerPeds, m_taggerPedPath, pQdcPeds, m_qdcPedPath);
   }
 
   return StatusCode::SUCCESS;
