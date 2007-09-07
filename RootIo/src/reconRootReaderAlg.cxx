@@ -184,7 +184,7 @@ StatusCode reconRootReaderAlg::initialize()
         return StatusCode::FAILURE;
     }
 
-    if ( !m_fileName.empty() ) 
+    if ( (m_fileList.value().size() == 0) && ( !m_fileName.empty() ) )
         m_rootIoSvc->appendFileList(m_fileList, m_fileName);
     else if (m_fileList.value().size() == 0)
         m_rootIoSvc->appendFileList(m_fileList, "recon.root");
