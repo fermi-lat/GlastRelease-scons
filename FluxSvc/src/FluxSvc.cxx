@@ -36,6 +36,7 @@
 #include "flux/ISpectrumFactory.h"
 #include "flux/Spectrum.h"
 
+#include <cassert>
 #include <algorithm>
 #include <iterator>
 #include <sstream>
