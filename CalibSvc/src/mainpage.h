@@ -18,6 +18,9 @@
   CalibDataSvc::initialize() sets up the non-leaf nodes for the calibration
   TDS and registers addresses (but not objects) for the leaf nodes.
 
+  CalibDataSvc supports the ICalibPathSvc interface so that TDS paths may
+  be looked up by an enumeration defined in ICalibPathSvc.h
+
   CalibMySQLCnvSvc is a conversion service for the metadata (i.e., satisfies
   the ICalibMetaCnvSvc abstract interface defined in this package) when
   the metadata has persistent form as a row in a MySQL table.  The service
