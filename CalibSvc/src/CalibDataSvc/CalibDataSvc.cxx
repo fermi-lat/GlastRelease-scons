@@ -185,9 +185,9 @@ void CalibDataSvc::initPathArrays() {
   m_calibPaths.resize(ICalibPathSvc::Calib_COUNT, std::string(""));
   m_calibCLIDs.resize(ICalibPathSvc::Calib_COUNT, 0);
 
-  m_calibCLIDs[Calib_TKR_HotChan] = CLID_Calib_TKR_HotChan;
+  m_calibCLIDs[Calib_TKR_HotChan] = CLID_Calib_TKR_BadChan;
 
-  m_calibCLIDs[Calib_TKR_DeadChan] =  CLID_Calib_TKR_DeadChan;
+  m_calibCLIDs[Calib_TKR_DeadChan] =  CLID_Calib_TKR_BadChan;
   m_calibCLIDs[Calib_TKR_BadChan] = CLID_Calib_TKR_BadChan;
   m_calibCLIDs[Calib_TKR_TOTSignal] = CLID_Calib_TKR_TOTSignal;
   m_calibCLIDs[Calib_TKR_TOTDist] = CLID_Calib_TKR_TOTDist;
@@ -250,11 +250,16 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator) {
     // Find CLID (pairIt->second) in m_calibCLIDs, save ix (our enum)
     for (unsigned ix = 0; ix < m_calibCLIDs.size(); ix ++) {
       if (m_calibCLIDs[ix] == pairIt->second) {
+
+        // Note this works for all but TKR DeadChan, TKR HotChan and
+        // TKR BadChan because they all have the same CLID.  Fix this
+        // afterwards
         m_calibPaths[ix] = pairIt->first;
         found = true;
         break;
       }
     }
+    
     if (!found) {
       (*m_log) << MSG::WARNING << "Unknown calib TDS class id " 
                << pairIt->second
@@ -323,6 +328,15 @@ StatusCode CalibDataSvc::makeFlavorNodes(IAddressCreator*  calibCreator) {
     }    // end flavor loop 
 
   }      // end calibType loop
+
+  // Fix up strings for calib types with CLID = CLID_TKR_BadChan by hand
+  // for the time being
+  m_calibPaths[ICalibPathSvc::Calib_TKR_HotChan] = 
+    std::string("/Calib/TKR_HotChan");
+  m_calibPaths[ICalibPathSvc::Calib_TKR_DeadChan] = 
+    std::string("/Calib/TKR_DeadChan");
+  m_calibPaths[ICalibPathSvc::Calib_TKR_BadChan] = 
+    std::string("/Calib/TKR_BadChan");
   return StatusCode::SUCCESS;
 }
 
