@@ -35,6 +35,7 @@ apply_pattern root_package headers="\
  ../reconRootData/TkrTrackParams.h\
  ../reconRootData/TkrRecon.h\
  ../reconRootData/TkrVertex.h\
+ ../reconRootData/TkrTruncationData.h\
  ../reconRootData/TkrDiagnostics.h\
  ../reconRootData/TaggerCluster.h\
  ../reconRootData/AdfRecon.h\

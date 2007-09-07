@@ -10,13 +10,16 @@ const Int_t maxCluster = 16384;
 TkrCluster *TkrRecon::keepCluster[maxCluster];
 TkrTrack *TkrRecon::keepTrack[nd];
 TkrVertex *TkrRecon::keepVertex[nd];
-Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, TkrRecon::indVertex=0;
+TkrTruncationData *TkrRecon::keepTruncationData[nd];
+Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, 
+  TkrRecon::indVertex=0, TkrRecon::indTruncationData=0;
 
 TkrRecon::TkrRecon() {
     m_clusterCol  = 0;
     m_trackCol    = 0;
     m_vertexCol   = 0;
     m_diagnostics = 0;
+    m_truncationDataCol = 0;
 }
 
 TkrRecon::~TkrRecon() {
@@ -27,6 +30,8 @@ TkrRecon::~TkrRecon() {
     m_trackCol = 0;
     if (m_vertexCol) delete m_vertexCol;
     m_vertexCol = 0;
+    if (m_truncationDataCol) delete m_truncationDataCol;
+    m_truncationDataCol = 0;
     if (m_diagnostics) delete m_diagnostics;
     m_diagnostics = 0;
 }
@@ -35,6 +40,7 @@ void TkrRecon::initialize() {
     if (!m_clusterCol) m_clusterCol = new TObjArray();
     if (!m_trackCol) m_trackCol = new TObjArray();
     if (!m_vertexCol) m_vertexCol = new TObjArray();
+    if (!m_truncationDataCol) m_truncationDataCol = new TObjArray();
 }
 
 void TkrRecon::Clear(Option_t* /*option*/) {
@@ -43,6 +49,7 @@ void TkrRecon::Clear(Option_t* /*option*/) {
     static Int_t limitCluster = 100;
     static Int_t limitTrack = 100;
     static Int_t limitVertex = 100;
+    static Int_t limitTruncationData = 100;
 
 //    if (m_clusterCol) m_clusterCol->Delete();
 //    if (m_trackCol) m_trackCol->Delete();
@@ -116,6 +123,26 @@ void TkrRecon::Clear(Option_t* /*option*/) {
         m_vertexCol->Clear();
     }
 
+    // Emulate what the TClonesArray is doing as introduced in DigiEvent
+    if (m_truncationDataCol) {
+        n = m_truncationDataCol->GetEntries();
+        if (n > limitTruncationData) {
+            limitTruncationData = n + 10;
+            if (limitTruncationData > nd)  
+                std::cout << "!!!Warning: limit for TkrTruncationData Array is greater than " 
+                   << nd << std::endl;
+            for (j = 0; j<indTruncationData; j++) delete keepTruncationData[j];
+            indTruncationData = 0;
+        }
+        for (i=0;i<n;i++) keepTruncationData[indTruncationData+i] = (TkrTruncationData*)m_truncationDataCol->At(i);
+        indTruncationData +=n;
+        if (indTruncationData > nd-limitTruncationData) {
+            for (j = 0; j<indTruncationData;j++) delete keepTruncationData[j];
+            indTruncationData = 0;
+        }
+        m_truncationDataCol->Clear();
+    }
+
 }
 
 void TkrRecon::CleanUp() {
@@ -123,6 +150,7 @@ void TkrRecon::CleanUp() {
     for (i=0;i<indCluster;i++) delete keepCluster[i];
     for (i=0;i<indTrack;i++) delete keepTrack[i];
     for (i=0;i<indVertex;i++) delete keepVertex[i];
+    for (i=0;i<indTruncationData;i++) delete keepTruncationData[i];
     indCluster = 0; indTrack = 0; indVertex = 0;
 
 }
@@ -133,6 +161,7 @@ void TkrRecon::Print(Option_t *option) const {
     cout << "Number of TkrClusters: " << m_clusterCol->GetEntries() << endl;
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
     cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
+    cout << "Number of TruncationData: " << m_truncationDataCol->GetEntries() << endl;
 }
 
 
