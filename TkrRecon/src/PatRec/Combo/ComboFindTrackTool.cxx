@@ -345,7 +345,8 @@ StatusCode ComboFindTrackTool::findTracks()
     m_calDir = unit;
 
     //If clusters, then retrieve estimate for the energy & centroid
-    if (tkrEventParams) 
+    // if (tkrEventParams)  - WBA - what's this line for - I've commented it out for now....
+
     //If Cal information available, then retrieve estimate for the energy & centroid
     if (tkrEventParams != 0 && tkrEventParams->getStatusBits() & Event::TkrEventParams::CALPARAMS) 
     {
