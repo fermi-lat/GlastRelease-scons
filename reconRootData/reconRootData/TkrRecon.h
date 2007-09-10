@@ -86,7 +86,7 @@ private:
     static TkrTruncationData *keepTruncationData[10000]; //!
     static Int_t indCluster, indTrack, indVertex, indTruncationData; //!
 
-    ClassDef(TkrRecon,6)
+    ClassDef(TkrRecon,7)
 };
 
 #endif

@@ -161,7 +161,10 @@ void TkrRecon::Print(Option_t *option) const {
     cout << "Number of TkrClusters: " << m_clusterCol->GetEntries() << endl;
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
     cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
-    cout << "Number of TruncationData: " << m_truncationDataCol->GetEntries() << endl;
+    if(m_truncationDataCol)
+      cout << "Number of TruncationData: " << m_truncationDataCol->GetEntries() << endl;
+    else
+      cout<<"No Truncation collection!"<<endl;
 }
 
 
@@ -176,6 +179,7 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
     const UInt_t NUM_CLUSTERS = 20;
     const UInt_t NUM_TRACKS = 15;
     const UInt_t NUM_VERTICES = 11;
+    const UInt_t NUM_TRUNCATION = 1;
 
     UInt_t icluster;
     for ( icluster = 0 ; icluster < NUM_CLUSTERS ; icluster++ ) 
@@ -202,6 +206,14 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
         addVertex(vertex);
     }
 
+    UInt_t itrunc;
+    TkrTruncationData *trunc;
+    for(itrunc=0;itrunc< NUM_TRUNCATION;itrunc++) {
+       trunc = new TkrTruncationData();
+	trunc->Fake(ievent,itrunc,randNum);
+	addTruncationData(trunc);	
+    }
+
     TkrDiagnostics * diag = new TkrDiagnostics ;
     diag->Fake(ievent,ivertex,randNum) ;
     addDiagnostics(diag) ;
@@ -217,6 +229,7 @@ Bool_t TkrRecon::CompareInRange( TkrRecon & ref, const std::string & name ) {
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrCluster,getClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getTrackCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrVertex,getVertexCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
     result = rootdatautil::CompareInRange(*getDiagnostics(),*ref.getDiagnostics(),"Diagnostics") && result ;
 
     if (!result) {

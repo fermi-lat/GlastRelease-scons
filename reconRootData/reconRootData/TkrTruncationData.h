@@ -11,8 +11,8 @@ using std::vector;
 using namespace std;
 #endif
 #endif
-typedef std::vector<int>   intVector;
-typedef std::vector<float> floatVector;
+typedef std::vector<UInt_t>   intVector;
+typedef std::vector<Float_t> floatVector;
 
 /** @class TkrTruncationData
  * This ROOT class is the flattened version of the TDS 
@@ -47,6 +47,8 @@ class TkrTruncationData : public TObject
   void setView(int view) { m_view = view; }
 
   void Clear( Option_t * option ="" ) ;
+  void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; 
+  Bool_t CompareInRange( const TkrTruncationData & ref, const std::string & name = "" ) const ;
   void Print( Option_t * option ="" ) const ;
 
  private:
