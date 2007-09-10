@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r15p1   10-Sep-07  : JCT Add ROOT classes for TruncationData
 v9r15     23-Aug-07  : DC  clean up of FixStreamer handling and add in TClass.h
 v9r14     04-Jun-07  : HMK revert to vector<Double_t> in AcdRecon
 v9r13p2   19-May-07  : HMK patch for windows test program
