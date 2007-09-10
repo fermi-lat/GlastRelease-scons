@@ -232,7 +232,13 @@
 
   std::vector<std::string> parameterClassNames( ) {
     std::vector<std::string> names;
-    self->getParameterClasses(names);
+    self->getParmClasses(names);
+    return names;
+  }
+
+  std::vector<std::string> parmClassNames(const std::string& precinct="*" ) {
+    std::vector<std::string> names;
+    self->getParmClasses(names, precinct);
     return names;
   }
 

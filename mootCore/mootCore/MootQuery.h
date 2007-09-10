@@ -210,7 +210,8 @@ namespace MOOT {
 
 
     /// Fill supplied argument with parameter class names. Return count
-    unsigned getParmClasses(std::vector<std::string>& names);
+    unsigned getParmClasses(std::vector<std::string>& names, 
+                            const std::string& precinct="*");
 
     /// Given fmx logical id for a latc master, look up associated
     /// parameter files (latc source) and return a little structure
