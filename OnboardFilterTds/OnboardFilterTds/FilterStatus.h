@@ -203,7 +203,8 @@ public:
 
         // Zero the EDR_tkr structure
         int sizeofedrtkr = sizeof(EDR_tkr);
-        m_tkr = (EDR_tkr*)(new char[sizeofedrtkr]);
+//        m_tkr = (EDR_tkr*)(new char[sizeofedrtkr]);
+        m_tkr = (EDR_tkr*)malloc(sizeofedrtkr);
         memset(m_tkr, 0, sizeof(EDR_tkr));
         //memset(&m_tkr, 0, sizeof(EDR_tkr));
 
@@ -230,7 +231,10 @@ public:
         }
     }
 
-    virtual ~FilterStatus() { };
+    virtual ~FilterStatus() 
+    {
+        if (m_tkr) free(m_tkr);
+    };
 
     virtual const CLID& clID() const { return FilterStatus::classID(); }
     static const CLID& classID() { return CLID_FilterStatus; }
@@ -448,7 +452,7 @@ private:
    double m_intYZ;
 
 
-   int m_numLogsHit;
+    int m_numLogsHit;
     ///ACD hit map
     int m_acd_xz;
     int m_acd_yz;
