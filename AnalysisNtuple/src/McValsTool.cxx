@@ -181,7 +181,7 @@ McValsTool::McValsTool(const std::string& type,
 <tr><td> McTkr[1/2]DirErr 
 <td>F<td>   Angle between direction of [best/second] track and Mc direction (radians) 
 <tr><td> McDirErrN
-<tr>F<td>   Angle between direction of neutral "vertex" and Mc direction (radians)
+<td>F<td>   Angle between direction of neutral "vertex" and Mc direction (radians)
 <tr><td> McAcd[X/Y/Z]Enter
 <td>F<td>   Position where MC particle enters volume surrounded by ACD
 <tr><td> McAcdActiveDist3D
