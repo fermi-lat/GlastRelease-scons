@@ -371,7 +371,14 @@ void EbfAcdData::fill (const Event::AcdDigiCol &tiles)
 //               printf("EbfAcd Hit Face %i Ribbon Orientation %i Ribbon Number %i\n",face,id.ribbonOrientation(),id.ribbonNum(),channel);
                channel = id.ribbonNum();
            } else {
-              printf("WARNING: ACD PMT that is not a Tile or Ribbon\n");
+               // Suppress these warnings after 5 times.  Real data, actually does contain "data" from N/A's
+               // we are not particularly interested in this message in that case.
+               static int warnCount=0;
+               if (warnCount < 5)
+                   printf("WARNING: ACD PMT that is not a Tile or Ribbon\n");
+               else if (warnCount == 5)
+                   printf("WARNING: ACD PMT is not Tile or Ribbon messages will be suppressed from this point\n");
+               ++warnCount;
            }
 
            /*
