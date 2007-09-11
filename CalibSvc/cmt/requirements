@@ -12,13 +12,14 @@ use GlastPolicy v*
 
 apply_pattern component_library library=CalibSvc
 
+
+apply_pattern package_include
 # the runtime public interface to this package must expose sharables from 
-# calibUtil, CalibData, calibRootData and astro
-## use calibUtil v1r* -no_auto_imports
+# calibUtil, CalibData, and calibRootData 
 use calibUtil v1r*
 use CalibData v0r*
+##  use mootCore v1r*          coming soon
 use calibRootData v1r* -no_auto_imports
-use astro         v2r* -no_auto_imports
 
 #because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
 # to protect windows builds. this really needs fixing!
@@ -38,21 +39,22 @@ use MYSQLEXT * IExternal v*
 
 use GlastSvc v9r* -no_auto_imports
 use RootIo v* -no_auto_imports
-use LdfEvent v* -no_auto_imports
+## Following use is commented out; suspect it isn't necessary
+## use LdfEvent v* -no_auto_imports 
 use Event v11r* -no_auto_imports
 use rootTestData v* -no_auto_imports
 
 
-apply_pattern package_include
 apply_pattern package_headers
 
 macro_append includes ' $(ppcmd)"$(calibUtil_root)" $(ppcmd)"$(CalibData_root)" $(ppcmd)"$(calibRootData_root)" $(ppcmd)"$(commonRootData_root)"  '
-macro_append includes ' $(ppcmd)"$(idents_root)" $(ppcmd)"$(LdfEvent_root)"' 
+
+## macro_append includes ' $(ppcmd)"$(idents_root)" $(ppcmd)"$(LdfEvent_root)"'
+
+macro_append includes ' $(ppcmd)"$(idents_root)"'
 macro_append includes ' $(ppcmd)"$(Event_root)" ' 
-macro_append includes ' $(ppcmd)"$(astro_root)" ' 
 
-
-library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData -import=astro *.cxx\
+library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData  *.cxx\
                         CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
