@@ -93,7 +93,9 @@ LivetimeSvc.Deadtime=0;  // default is now to disable this
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // The following is for the new Trigger Configuration Service
-//TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+//TriggerAlg.applyPrescales=true; //only use TrgConfigSvc to determine trigger engine
+//TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word
 
 //TrgConfigSvc.useDefaultConfiguration=true; // use default configuration from file src/defaultTrgConfig.xml in the trigger package
 
