@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r27p2 11-Sep-2007  jrb  make public include files public!
+                             eliminate unnecessary use of astro, LdfEvent
    v0r27p1 7-Sep-2007   jrb  Bug fix for handling of TKR bad channel calibs
    v0r27   7-Sep-2007   jrb  Add ICalibPathSvc to get TDS path strings
    v0r26   29-Aug-2007  jrb  (for Markus) Support for SAA boundary calib.
