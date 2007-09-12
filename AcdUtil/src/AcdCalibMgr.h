@@ -7,6 +7,8 @@
 // GLAST
 #include "CalibData/RangeBase.h"
 #include "CalibData/Acd/AcdCalibBase.h"
+#include "CalibSvc/ICalibPathSvc.h"
+
 
 // EXTLIB
 #include "GaudiKernel/IService.h"
@@ -29,8 +31,11 @@ class AcdCalibSvc;
 */
 class AcdCalibMgr {
 public:
-  AcdCalibMgr(const std::string &calibTypePath)
-    :m_calibTypePath(calibTypePath),
+  //AcdCalibMgr(const std::string &calibTypePath)
+  //  :m_calibTypePath(calibTypePath),
+    AcdCalibMgr(ICalibPathSvc::CalibItem calibItem)
+    :m_calibTypePath(""),
+     m_calibItem(calibItem),
      m_ideal(false),
      owner(0),     
      m_isValid(false),
@@ -67,6 +72,7 @@ protected:
 
   /// TDS path to calib data for my calib_type and path
   std::string                  m_calibPath;
+  ICalibPathSvc::CalibItem     m_calibItem;
 
   /// TDS location for root of my calib_type and path
   CalibData::AcdCalibBase     *m_calibBase;

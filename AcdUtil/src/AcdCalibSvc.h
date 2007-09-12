@@ -8,6 +8,8 @@
 
 // GLAST 
 #include "AcdUtil/IAcdCalibSvc.h"
+#include "CalibSvc/ICalibPathSvc.h"
+
 
 // EXTLIB
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -48,6 +50,8 @@ public:
   /// return the service type
   const InterfaceID&  AcdCalibSvc::type () const {return IID_IAcdCalibSvc;}
 
+  const std::string getCalibPath(const ICalibPathSvc::CalibItem item, const std::string& flavor="") const;
+
   /// get pedestal vals for given channel
   StatusCode getPedestal(idents::AcdId id, unsigned pmt,
 			 CalibData::AcdPed*& pedestal){
@@ -79,11 +83,12 @@ private:
 
   // GAUDI RESOURCES
   /// pointer to CalibDataSvc
-  IService         *m_calibDataSvc;     
+  IService         *m_calibDataSvc;   
+
+  ICalibPathSvc    *m_calibPathSvc;
 
   /// pointer to IDataProviderSvc interface of CalibDataSvc
-  IDataProviderSvc *m_dataProviderSvc;  
- 
+  IDataProviderSvc *m_dataProviderSvc;   
 
   /// The pedestal manager
   AcdPedCalibMgr    m_pedMgr;

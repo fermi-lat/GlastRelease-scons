@@ -1,5 +1,5 @@
 package AcdUtil
-version v1r9p2
+version v1r10
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
 # $Id$
@@ -13,6 +13,7 @@ use geometry v*
 use xmlBase v*         
 
 use CalibData v*
+use CalibSvc v*
 
 use GlastPolicy v*
 
@@ -25,7 +26,7 @@ apply_pattern library_Llinkopts library=AcdUtilCommon
 #=============================================================
 private
 
-apply_pattern use_CalibData_symbols
+#apply_pattern use_CalibData_symbols
 
 library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx AcdFrameUtil.cxx
 

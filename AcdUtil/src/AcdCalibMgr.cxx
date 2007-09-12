@@ -24,7 +24,9 @@ StatusCode AcdCalibMgr::initialize(const std::string &flavor, const AcdCalibSvc 
   
   m_flavor = flavor;
 
-  m_calibPath = m_calibTypePath + '/' + flavor;
+  //m_calibPath = m_calibTypePath + '/' + flavor;
+   m_calibPath =  owner->getCalibPath(m_calibItem, m_flavor);
+
 
   static std::string idealName("ideal");
   if ( flavor == idealName ) {

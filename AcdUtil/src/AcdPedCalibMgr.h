@@ -6,7 +6,9 @@
 
 // GLAST
 #include "CalibData/Acd/AcdPed.h"
-#include "CalibData/CalibModel.h"
+//#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
+
 
 // EXTLIB
 // STD
@@ -23,7 +25,8 @@ class AcdCalibSvc;
 class AcdPedCalibMgr : public AcdCalibMgr {
 public:
   AcdPedCalibMgr() : 
-    AcdCalibMgr(CalibData::ACD_Ped)
+      AcdCalibMgr(ICalibPathSvc::CalibItem::Calib_ACD_Ped)
+//    AcdCalibMgr(CalibData::ACD_Ped)
   {};
   
   /// get pedestal vals for given channel
@@ -56,7 +59,7 @@ public:
   }
   
 private:
-  
+
 };
 
 #endif

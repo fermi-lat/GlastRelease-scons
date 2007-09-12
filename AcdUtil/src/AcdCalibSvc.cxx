@@ -75,6 +75,12 @@ StatusCode AcdCalibSvc::initialize ()
     msglog << MSG::ERROR << "Could not get CalibDataSvc" << endreq;
     return sc;
   }
+  
+  sc = service("CalibDataSvc", m_calibPathSvc, true);
+  if ( !sc.isSuccess() ) {
+    msglog << MSG::ERROR << "Could not get CalibPathSvc" << endreq;
+    return sc;
+  }
 
   // Query the IDataProvider interface of the CalibDataService
   sc = m_calibDataSvc->queryInterface(IID_IDataProviderSvc, 
@@ -102,6 +108,10 @@ StatusCode AcdCalibSvc::initialize ()
   }
 
   return StatusCode::SUCCESS;
+}
+
+const std::string AcdCalibSvc::getCalibPath(const ICalibPathSvc::CalibItem item, const std::string& flavor) const {
+    return m_calibPathSvc->getCalibPath(item, flavor);
 }
 
 /// Inform that a new incident has occured

@@ -6,7 +6,10 @@
 
 // GLAST
 #include "CalibData/Acd/AcdGain.h"
-#include "CalibData/CalibModel.h"
+//#include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
+
+
 
 // EXTLIB
 // STD
@@ -22,7 +25,8 @@ class AcdCalibSvc;
 class AcdGainCalibMgr : public AcdCalibMgr {
 public:
   AcdGainCalibMgr() : 
-    AcdCalibMgr(CalibData::ACD_ElecGain)
+      AcdCalibMgr(ICalibPathSvc::CalibItem::Calib_ACD_ElecGain)
+//    AcdCalibMgr(CalibData::ACD_ElecGain)
   {};
   
   /// get mip peak vals for given channel
