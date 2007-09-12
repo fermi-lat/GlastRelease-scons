@@ -1,23 +1,30 @@
 package rootUtil
-version v0r0
+version v0r1
+author David Chamont <chamont@poly.in2p3.fr>
 
 use GlastPolicy v*
+use RootcintPolicy v* GlastPolicy
 
-apply_pattern package_headers
-apply_pattern package_include
-apply_pattern package_linkopts
-apply_pattern ld_library_path
+apply_pattern root_package headers="\
+  ../rootUtil/BranchGroup.h\
+  ../rootUtil/Component.h\
+  ../rootUtil/DataHandleBase.h\
+  ../rootUtil/DataHandle.h\
+  ../rootUtil/EventPointer.h\
+  ../rootUtil/PointerIndex.h\
+  ../rootUtil/PointerSkim.h\
+  ../rootUtil/PointerUtil.h\
+  ../rootUtil/TreeRefHandle.h"
 
 private
+
 use facilities v*
-use RootPolicy v2r*
+macro_append ROOT_libs " -lHist " WIN32 " libHist.lib "
+application testRootInterface ../apps/testRootInterface.cxx
 
-apply_pattern package_shlibflags
+macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
+application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
+application printSkim ../apps/printSkim.cxx $(getoptSource)
+application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)
 
-library rootUtil *.cxx ${rootUtil_headers}
 
-macro_append cppflags "" \
-       Win32Debug ' /D "VISUAL_CPLUSPLUS" ' \
-       Win32      ' /D "VISUAL_CPLUSPLUS" '
-
-application test_rootUtil test/*.cxx
