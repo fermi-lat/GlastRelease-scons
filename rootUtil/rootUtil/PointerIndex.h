@@ -25,11 +25,11 @@
 
 // forward declares
 class TTree;
-class Component;
-class PointerSkim;
+class EventComponent;
+class CompositeEventList;
 
 //
-// PointerIndex is a sub-class of TVirtualIndex.  It is using a PointerSkim as an index in to the component trees.
+// PointerIndex is a sub-class of TVirtualIndex.  It is using a CompositeEventList as an index in to the component trees.
 //
 // The whole point of this class is to override the method
 //   Int_t TVirtualIndex::GetEntryNumberFriend(const TTree* tree);  
@@ -55,7 +55,7 @@ class PointerIndex : public TVirtualIndex {
 public:
   
   // Build and return a pointer index from a pointer skim
-  static PointerIndex* buildIndex(PointerSkim& skim, const std::string& compontent, TTree* t, Long64_t offset=0);
+  static PointerIndex* buildIndex(CompositeEventList& skim, const std::string& compontent, TTree* t, Long64_t offset=0);
 
 public:
   
@@ -63,12 +63,12 @@ public:
   // Default c'tor.  Needed for ROOT
   PointerIndex();
   // Standard c'tor, sets up the index
-  PointerIndex(PointerSkim& skim, const std::string& component, TTree* tree, Long64_t offset = 0);
+  PointerIndex(CompositeEventList& skim, const std::string& component, TTree* tree, Long64_t offset = 0);
   // D'tor
   virtual ~PointerIndex();
 
   // Methods and functions
-  // Get the Entry Number in the Component Tree
+  // Get the Entry Number in the EventComponent Tree
   virtual Int_t	GetEntryNumberFriend(const TTree* tree);  
   // Get the total number of Events in the index
   virtual Long64_t GetN() const;
@@ -106,10 +106,10 @@ private:
 
   // Data
   Long64_t     _offset;              //! Global offset (used when Index picks up in the middle of a chain)
-  PointerSkim* _skim;                //! Pointer to skim that does the actual storing
-  Component*   _component;           //! Pointer to relevent component of the skim
+  CompositeEventList* _skim;                //! Pointer to skim that does the actual storing
+  EventComponent*   _component;           //! Pointer to relevent component of the skim
 
-  ClassDef(PointerIndex,0)           // Sub-class of TVirtualIndex implemented using PointerSkim
+  ClassDef(PointerIndex,0)           // Sub-class of TVirtualIndex implemented using CompositeEventList
 
 };
 

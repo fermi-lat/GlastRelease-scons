@@ -1,4 +1,4 @@
-#include "rootUtil/PointerSkim.h"
+#include "rootUtil/CompositeEventList.h"
 #include <TFile.h>
 #include <TTree.h>
 #include "TSystem.h"
@@ -90,7 +90,7 @@ int main(int argn, char** argc) {
     return 3;
   }
 
-  PointerSkim p;
+  CompositeEventList p;
 
   for ( int idx = optind; idx < argn; idx++ ) {
     const char* fileName = argc[idx];

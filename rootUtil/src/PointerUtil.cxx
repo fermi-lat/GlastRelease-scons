@@ -28,12 +28,12 @@
 #include <TObjArray.h>
 
 // Other headers from this package
-#include "rootUtil/Component.h"
-#include "rootUtil/PointerSkim.h"
+#include "rootUtil/EventComponent.h"
+#include "rootUtil/CompositeEventList.h"
 #include "rootUtil/FileUtil.h"
 
 
-PointerSkim* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, const char* fileName, const char* option) {
+CompositeEventList* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, const char* fileName, const char* option) {
   // Merge a Collection of input files into a single pointer skim
 
   TList skims;
@@ -47,7 +47,7 @@ PointerSkim* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, const char
     }
 
     // Open the skim
-    PointerSkim* nextSkim = new PointerSkim;
+    CompositeEventList* nextSkim = new CompositeEventList;
     TFile* check = nextSkim->openFile(aFile->GetName());
     if ( check == 0 ) {
       std::cerr << "Failed to open skim file " << aFile->GetName() << std::endl;
@@ -61,7 +61,7 @@ PointerSkim* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, const char
 }
 
 
-PointerSkim* PointerUtil::mergeSkims(TCollection& skims, const char* fileName, const char* option) {
+CompositeEventList* PointerUtil::mergeSkims(TCollection& skims, const char* fileName, const char* option) {
   // Merge a Collection of pointer skims
 
 
@@ -93,9 +93,9 @@ PointerSkim* PointerUtil::mergeSkims(TCollection& skims, const char* fileName, c
   TIterator* itr = skims.MakeIterator();
   TObject* aSkimObj(0);
   while ( (aSkimObj = itr->Next()) != 0 ) {
-    PointerSkim* aSkim = dynamic_cast<PointerSkim*>(aSkimObj);
+    CompositeEventList* aSkim = dynamic_cast<CompositeEventList*>(aSkimObj);
     if ( 0 == aSkim ) {
-      std::cerr << "Input object not a PointerSkim " << aSkimObj->GetName() << std::endl;
+      std::cerr << "Input object not a CompositeEventList " << aSkimObj->GetName() << std::endl;
       return 0;
     }    
     
@@ -149,7 +149,7 @@ PointerSkim* PointerUtil::mergeSkims(TCollection& skims, const char* fileName, c
   TTree* fileTree = TTree::MergeTrees(&fileTreeList);
 
   // Build the Pointer Skim Object
-  PointerSkim* theSkim = new PointerSkim(*eventTree,*linkTreeOut,*fileTree);
+  CompositeEventList* theSkim = new CompositeEventList(*eventTree,*linkTreeOut,*fileTree);
 
   // Write the Merged File, if requested
   if ( outFile != 0 ) {

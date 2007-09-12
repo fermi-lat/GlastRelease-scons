@@ -7,18 +7,17 @@ use RootcintPolicy v* GlastPolicy
 
 apply_pattern root_package headers="\
   ../rootUtil/BranchGroup.h\
-  ../rootUtil/Component.h\
+  ../rootUtil/EventComponent.h\
   ../rootUtil/DataHandleBase.h\
   ../rootUtil/DataHandle.h\
   ../rootUtil/EventPointer.h\
   ../rootUtil/PointerIndex.h\
-  ../rootUtil/PointerSkim.h\
+  ../rootUtil/CompositeEventList.h\
   ../rootUtil/PointerUtil.h\
   ../rootUtil/TreeRefHandle.h"
 
 private
 
-use facilities v*
 macro_append ROOT_libs " -lHist " WIN32 " libHist.lib "
 application testRootInterface ../apps/testRootInterface.cxx
 

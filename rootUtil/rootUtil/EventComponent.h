@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef Component_h
-#define Component_h
+#ifndef EventComponent_h
+#define EventComponent_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -30,28 +30,28 @@ class TChain;
 class TEventList;
 
 //
-// Component stores all the information needed to point to a part of an event
+// EventComponent stores all the information needed to point to a part of an event
 // that is located in another TTree.
 //
 // This for a single event this information is stored on two TTrees. 
 //   The event information: index and tree key is stored on one tree
 //   The collection information: lists of trees is stored on the other tree
 //
-// The information to navigate between these two tree is stored by the PointerSkim class
+// The information to navigate between these two tree is stored by the CompositeEventList class
 // since it is shared by all the components in a skim.
 //
 
-class Component {
+class EventComponent {
 
 public:
 
   // ctor's and d'tor
   // Default c'tor.  Needed for ROOT
-  Component(); 
+  EventComponent(); 
   // Standard c'tor, stores the name of the component 
-  Component(const std::string& componentName);
+  EventComponent(const std::string& componentName);
   // D'tor
-  virtual ~Component();
+  virtual ~EventComponent();
 
   // Methods and functions
   // set the current event
@@ -89,15 +89,15 @@ protected:
 private:
   
   //disable copying and assignment
-  Component(const Component& other);
-  Component& operator=(const Component& other);
+  EventComponent(const EventComponent& other);
+  EventComponent& operator=(const EventComponent& other);
   
   // Data
   std::string   _componentName;    //! Name of this component
   EventPointer  _event;            //! Interface with the per-event data
   TreeRefHandle _tree;             //! Interface with the file reference data
 
-  ClassDef(Component,0)            // Class to handle references to a single Event component
+  ClassDef(EventComponent,0)            // Class to handle references to a single Event component
 
 };
 

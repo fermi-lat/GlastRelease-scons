@@ -103,7 +103,7 @@ int main(int argn, char** argc) {
     inputFileList.AddLast(f);
   }
   
-  PointerSkim* s = optval_f ? 
+  CompositeEventList* s = optval_f ? 
     PointerUtil::mergeSkimsFromFiles(inputFileList,outFile.c_str(),"RECREATE") :
     PointerUtil::mergeSkimsFromFiles(inputFileList,outFile.c_str());
 

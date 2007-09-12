@@ -27,8 +27,8 @@
 
 #pragma link C++ class EventPointer;
 #pragma link C++ class TreeRefHandle;
-#pragma link C++ class Component;
-#pragma link C++ class PointerSkim;
+#pragma link C++ class EventComponent;
+#pragma link C++ class CompositeEventList;
 #pragma link C++ class PointerIndex;
 
 #pragma link C++ namespace PointerUtil;

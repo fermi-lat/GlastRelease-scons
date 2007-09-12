@@ -26,7 +26,7 @@ int main(int argn, char** argc)
   else
    { filename = "../apps/testRootInterface.root" ; }
  
-  if (gSystem->ExpandPathName(filename)==kFALSE)
+  if (gSystem->ExpandPathName(filename)==kTRUE)
    {
     std::cout << "Failed to expand env variable in filename" << std::endl;
     return -1 ;

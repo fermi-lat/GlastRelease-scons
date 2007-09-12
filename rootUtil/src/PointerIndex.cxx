@@ -20,7 +20,7 @@
 // PointerIndex
 //
 //
-// PointerIndex is a sub-class of TVirtualIndex.  It is uses a PointerSkim as an index in to the component trees.
+// PointerIndex is a sub-class of TVirtualIndex.  It is uses a CompositeEventList as an index in to the component trees.
 //
 // The whole point of this class is to override the method
 //   Int_t TVirtualIndex::GetEntryNumberFriend(const TTree* tree);  
@@ -50,13 +50,13 @@
 #include <TTree.h>
 
 // Other headers from this package
-#include "rootUtil/PointerSkim.h"
-#include "rootUtil/Component.h"
+#include "rootUtil/CompositeEventList.h"
+#include "rootUtil/EventComponent.h"
 
 
 ClassImp(PointerIndex);
 
-PointerIndex* PointerIndex::buildIndex(PointerSkim& skim, const std::string& component,TTree* tree,Long64_t offset){
+PointerIndex* PointerIndex::buildIndex(CompositeEventList& skim, const std::string& component,TTree* tree,Long64_t offset){
   // Build and return pointer index from a pointer skim
   PointerIndex* pIdx = new PointerIndex(skim,component,tree,offset);
   tree->SetTreeIndex(pIdx);
@@ -72,7 +72,7 @@ PointerIndex::PointerIndex():
   SetTree(0);
 }
 
-PointerIndex::PointerIndex(PointerSkim& skim, const std::string& compontent, TTree* tree, Long64_t offset):
+PointerIndex::PointerIndex(CompositeEventList& skim, const std::string& compontent, TTree* tree, Long64_t offset):
   TVirtualIndex(),
   _offset(offset),
   _skim(&skim),
@@ -93,7 +93,8 @@ Int_t PointerIndex::GetEntryNumberFriend(const TTree* tree){
   if ( 0 == _skim || 0 == _component ) return -1;
 
   // Read master tree 
-  Long64_t check = _skim->readEventAddress(tree->GetReadEntry());
+  Long64_t check ;
+  check = _skim->readEventAddress(tree->GetReadEntry());
 
   // Get the Event index
   Long64_t evtIdx = _offset + _skim->metaOffset();

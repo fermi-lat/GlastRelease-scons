@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef PointerSkim_cxx
-#define PointerSkim_cxx
+#ifndef CompositeEventList_cxx
+#define CompositeEventList_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 // This Class's header
-#include "rootUtil/PointerSkim.h"
+#include "rootUtil/CompositeEventList.h"
 
 // c++/stl headers
 #include <iostream>
@@ -30,15 +30,15 @@
 
 // Other headers from this package
 #include "rootUtil/TreeRefHandle.h"
-#include "rootUtil/Component.h"
+#include "rootUtil/EventComponent.h"
 #include "rootUtil/PointerIndex.h"
 #include "rootUtil/FileUtil.h"
 
 
-ClassImp(PointerSkim);
+ClassImp(CompositeEventList);
 
 
-PointerSkim::PointerSkim():
+CompositeEventList::CompositeEventList():
   BranchGroup(),
   TObject(),
   _eventTree(0),
@@ -50,7 +50,7 @@ PointerSkim::PointerSkim():
   // Default c'tor.  
 }
 	    
-PointerSkim::PointerSkim(TTree& eventTree, TTree& linkTree, TTree& fileTree):
+CompositeEventList::CompositeEventList(TTree& eventTree, TTree& linkTree, TTree& fileTree):
   BranchGroup(),
   TObject(),
   _eventTree(&eventTree),
@@ -63,13 +63,13 @@ PointerSkim::PointerSkim(TTree& eventTree, TTree& linkTree, TTree& fileTree):
   attachToTree(eventTree,linkTree,fileTree);
 }
 
-PointerSkim::~PointerSkim(){
-  // Standard c'tor.  Component Name is set
+CompositeEventList::~CompositeEventList(){
+  // Standard c'tor.  EventComponent Name is set
   cleanup();
 }
 
 
-TFile* PointerSkim::makeFile(const Char_t* fileName, const Char_t* options) {
+TFile* CompositeEventList::makeFile(const Char_t* fileName, const Char_t* options) {
   // Make a new file.  Will also delare TTree for storing the pointers
   //
   // This makes two TTrees in the new file.
@@ -98,7 +98,7 @@ TFile* PointerSkim::makeFile(const Char_t* fileName, const Char_t* options) {
   return newFile;
 }
 
-TFile* PointerSkim::openFile(const Char_t* fileName){
+TFile* CompositeEventList::openFile(const Char_t* fileName){
   // Open an existing file which contains a pointer skim
   //
   // This will warn and return NULL if 
@@ -130,11 +130,11 @@ TFile* PointerSkim::openFile(const Char_t* fileName){
   return newFile;
 }
 
-UInt_t PointerSkim::addComponent(const std::string& name){
+UInt_t CompositeEventList::addComponent(const std::string& name){
   // Add a component by name.  This is only need when writing.  On read these are discovered.
   //
   // Returns the component index value
-  Component* comp = new Component(name);
+  EventComponent* comp = new EventComponent(name);
   TTree* t(0);
   TreeAndComponent tc(t,comp);
   // David: below, it should rather be _compList, no ?
@@ -146,7 +146,7 @@ UInt_t PointerSkim::addComponent(const std::string& name){
   return retValue;
 }
 
-Long64_t PointerSkim::fillEvent(TObjArray& trees) {
+Long64_t CompositeEventList::fillEvent(TObjArray& trees) {
   // Set up an event.  Grab the status of a set of TTrees
   //
   // Returns the entry number of the event that has just been written
@@ -160,7 +160,7 @@ Long64_t PointerSkim::fillEvent(TObjArray& trees) {
   return fillEvent(v);
 }
 
-Long64_t PointerSkim::fillEvent(std::vector<TTree*>& trees) {
+Long64_t CompositeEventList::fillEvent(std::vector<TTree*>& trees) {
   // Set up an event.  Grab the status of a set of TTrees
   //
   // Returns the entry number of the event that has just been written  
@@ -172,7 +172,7 @@ Long64_t PointerSkim::fillEvent(std::vector<TTree*>& trees) {
   return _eventIndex;
 }
 
-Long64_t PointerSkim::fillMeta() {
+Long64_t CompositeEventList::fillMeta() {
   // Store up the List of TTrees that have been used so far
   //
   // Returns the entry number of the entry that has just been written    
@@ -185,7 +185,7 @@ Long64_t PointerSkim::fillMeta() {
 }
 
 
-Int_t PointerSkim::read(Long64_t iEvt) {
+Int_t CompositeEventList::read(Long64_t iEvt) {
   // Read an event by Index
   // 
   // If successful, returns the number of bytes read
@@ -201,7 +201,7 @@ Int_t PointerSkim::read(Long64_t iEvt) {
 
   for ( std::vector< TreeAndComponent >::iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    Component* comp = itr->second;
+    EventComponent* comp = itr->second;
     if ( comp == 0 ) return -5;
     Int_t nRead = comp->read();
     if ( nRead < 0 ) return -6;
@@ -213,7 +213,7 @@ Int_t PointerSkim::read(Long64_t iEvt) {
 }
 
 
-Int_t PointerSkim::readEventAddress(Long64_t iEvt) {
+Int_t CompositeEventList::readEventAddress(Long64_t iEvt) {
   // read only the event tree data
   //
   // If successful, returns the number of bytes read
@@ -253,13 +253,13 @@ Int_t PointerSkim::readEventAddress(Long64_t iEvt) {
 }
 
 
-TChain* PointerSkim::buildChain(UInt_t index) {
+TChain* CompositeEventList::buildChain(UInt_t index) {
   // Build the TChain for a component. 
   if ( ! checkDataFiles() ) {
     std::cerr << "No Data Files" << std::endl;
     return 0;
   }
-  Component* comp = getComponent(index);
+  EventComponent* comp = getComponent(index);
   if ( 0 == comp ) {
     std::cerr << "No component with index " << index << std::endl;
     return 0;
@@ -284,7 +284,7 @@ TChain* PointerSkim::buildChain(UInt_t index) {
   return chain;
 }
 
-TVirtualIndex* PointerSkim::buildEventIndex(UInt_t index, Long64_t& offset, TTree* tree) {
+TVirtualIndex* CompositeEventList::buildEventIndex(UInt_t index, Long64_t& offset, TTree* tree) {
   // Build the TChain for a component. 
   if ( ! checkDataFiles() ) {
     // FIXME: Warn?
@@ -294,7 +294,7 @@ TVirtualIndex* PointerSkim::buildEventIndex(UInt_t index, Long64_t& offset, TTre
   return vIdx;
 }
 
-TChain* PointerSkim::buildLinks(TObjArray* chainList, Bool_t setFriends){
+TChain* CompositeEventList::buildLinks(TObjArray* chainList, Bool_t setFriends){
   // Build the event chain
 
   if ( 0 == _eventTree ) return 0;
@@ -334,12 +334,12 @@ TChain* PointerSkim::buildLinks(TObjArray* chainList, Bool_t setFriends){
 }
 
 
-Long64_t PointerSkim::entries() const { 
+Long64_t CompositeEventList::entries() const { 
   // return the number of entries
   return _eventTree != 0 ? _eventTree->GetEntries() : 0;
 }
 
-void PointerSkim::printout(const char* options, UInt_t nEvent, UInt_t startEvent){
+void CompositeEventList::printout(const char* options, UInt_t nEvent, UInt_t startEvent){
   // Dump a set of event component pointers and the list of TTree where they live
   //
   // One line per event
@@ -354,7 +354,7 @@ void PointerSkim::printout(const char* options, UInt_t nEvent, UInt_t startEvent
   listTrees(options);
 }
 
-void PointerSkim::dumpEvent(const char* options){
+void CompositeEventList::dumpEvent(const char* options){
   // Dump a single event on one line
   // 
   // The format is:
@@ -362,7 +362,7 @@ void PointerSkim::dumpEvent(const char* options){
   std::cout << "Event " << _eventIndex << ":\t";
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const Component* comp = itr->second;
+    const EventComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << ' ';
     comp->dumpEvent(options);
@@ -371,14 +371,14 @@ void PointerSkim::dumpEvent(const char* options){
   std::cout << std::endl;
 }
 
-void PointerSkim::listTrees(const char* options){
+void CompositeEventList::listTrees(const char* options){
   // Dump the list of TTree where our events live
   //
   // One tree per line, the format is:
   //   File Tree
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const Component* comp = itr->second;
+    const EventComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << std::endl;
     comp->listTrees(options);
@@ -387,7 +387,7 @@ void PointerSkim::listTrees(const char* options){
 
 
 
-Int_t PointerSkim::buildComponents(TTree& tree){
+Int_t CompositeEventList::buildComponents(TTree& tree){
   // Uses the input event tree to discover the list of components
   //
   // Called by openFile()
@@ -404,7 +404,7 @@ Int_t PointerSkim::buildComponents(TTree& tree){
 }
 
 
-Bool_t PointerSkim::set(std::vector<TTree*>& trees) {
+Bool_t CompositeEventList::set(std::vector<TTree*>& trees) {
   // Latch the values in a set of TTree
   //
   // Called by fillEvent()
@@ -418,7 +418,7 @@ Bool_t PointerSkim::set(std::vector<TTree*>& trees) {
   UInt_t idx(0);  
   for ( std::vector< TTree* >::iterator itr = trees.begin();
 	itr != trees.end(); itr++ ) {  
-    Component* comp = getComponent(idx);
+    EventComponent* comp = getComponent(idx);
     assert ( 0 != comp );
     comp->set(**itr);
     idx++;
@@ -427,7 +427,7 @@ Bool_t PointerSkim::set(std::vector<TTree*>& trees) {
 }
 
 
-Int_t PointerSkim::makeBranches(TTree& eventTree, TTree& linkTree,  TTree& fileTree, Int_t bufsize) const {
+Int_t CompositeEventList::makeBranches(TTree& eventTree, TTree& linkTree,  TTree& fileTree, Int_t bufsize) const {
   // Make the Branches we store everything on
   // 
   // Called by makeFile()
@@ -435,7 +435,7 @@ Int_t PointerSkim::makeBranches(TTree& eventTree, TTree& linkTree,  TTree& fileT
   if ( total < 0 ) return total;
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const Component* comp = itr->second;
+    const EventComponent* comp = itr->second;
     if ( comp == 0 ) return -1;
     Int_t nMake = comp->makeBranches(eventTree,fileTree,bufsize);
     if ( nMake < 0 ) return nMake;
@@ -446,7 +446,7 @@ Int_t PointerSkim::makeBranches(TTree& eventTree, TTree& linkTree,  TTree& fileT
 
 
 
-Int_t PointerSkim::attachToTree(TTree& eventTree, TTree& linkTree,  TTree& fileTree) {
+Int_t CompositeEventList::attachToTree(TTree& eventTree, TTree& linkTree,  TTree& fileTree) {
   // Attach to the branches where all the infomation is stored
   // 
   // Called by openFile()
@@ -458,7 +458,7 @@ Int_t PointerSkim::attachToTree(TTree& eventTree, TTree& linkTree,  TTree& fileT
   UInt_t idx(0);
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    Component* comp = itr->second;
+    EventComponent* comp = itr->second;
     if ( comp == 0 ) { 
       std::cerr << "Failed to get component " << idx << std::endl;
       return -1;
@@ -475,14 +475,14 @@ Int_t PointerSkim::attachToTree(TTree& eventTree, TTree& linkTree,  TTree& fileT
   return total;
 }
 
-void PointerSkim::cleanup() {
+void CompositeEventList::cleanup() {
   // cleanup in case there were problems with files
   delete _eventTree; _eventTree = 0;
   delete _linkTree; _linkTree = 0;
   delete _fileTree; _fileTree = 0;
 }
 
-Bool_t PointerSkim::checkDataFiles() {
+Bool_t CompositeEventList::checkDataFiles() {
   // make sure that files exist.  pre-requisite for processing
   if ( 0 == _eventTree ) return kFALSE;
   if ( 0 == _linkTree ) return kFALSE;  

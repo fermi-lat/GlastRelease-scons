@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef Component_cxx
-#define Component_cxx
+#ifndef EventComponent_cxx
+#define EventComponent_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,20 +16,20 @@
 */
 
 //
-// Component stores all the information needed to point to a part of an event
+// EventComponent stores all the information needed to point to a part of an event
 // that is located in another TTree.
 //
 // This for a single event this information is stored on two TTees. 
 //   The event information: index and tree key is stored on one tree
 //   The collection information: lists of trees is stored on the other tree
 //
-// The information to navigate between these two tree is stored by the PointerSkim class
+// The information to navigate between these two tree is stored by the CompositeEventList class
 // since in is shared by all the components in a skim.
 //
 
 
 // This Class's header
-#include "rootUtil/Component.h"
+#include "rootUtil/EventComponent.h"
 
 // c++/stl headers
 #include <iostream>
@@ -45,46 +45,46 @@
 #include "rootUtil/DataHandle.h"
 #include "rootUtil/TreeRefHandle.h"
 
-ClassImp(Component);
+ClassImp(EventComponent);
 
 
-Component::Component():
+EventComponent::EventComponent():
   _componentName("NULL"),
   _event(),
   _tree(){
   // Default c'tor.  Needed for ROOT
 }
 	      
-Component::Component(const std::string& componentName):
+EventComponent::EventComponent(const std::string& componentName):
   _componentName(componentName),
   _event(componentName),
   _tree(componentName){
   // Standard c'tor, stores the name of the component 
 }	      
 
-Component::~Component(){
+EventComponent::~EventComponent(){
   // D'tor
   ;
 }
 
 
-void Component::set(TTree& tree) {
+void EventComponent::set(TTree& tree) {
   // set the current event
   _event.set(tree,_tree);
 }
 
-Int_t Component::read() {
+Int_t EventComponent::read() {
   // read an event
   return _event.read(_tree);
 }
 
-TTree* Component::getTree() const {
+TTree* EventComponent::getTree() const {
   // Get the Tree that is being read
   return _event.getTree(_tree);
 }
 
 
-Int_t Component::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) const {
+Int_t EventComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) const {
   Int_t n_e = _event.makeBranches(eventTree,_componentName.c_str(),bufsize);
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.makeBranches(fileTree,_componentName.c_str(),bufsize);
@@ -92,7 +92,7 @@ Int_t Component::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) 
   return n_e + n_f;
 }
 
-Int_t Component::attachToTree(TTree& eventTree, TTree& fileTree) {
+Int_t EventComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
   Int_t n_e = _event.attachToTree(eventTree,_componentName.c_str());
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.attachToTree(fileTree,_componentName.c_str());
@@ -101,7 +101,7 @@ Int_t Component::attachToTree(TTree& eventTree, TTree& fileTree) {
 }
 
 
-Bool_t Component::addToChain(TChain*& chain) {
+Bool_t EventComponent::addToChain(TChain*& chain) {
   // Building a TChain
   for ( UShort_t iT(0); iT < _tree.size(); iT++ ) {
     TTree* t = _tree.getTree(iT);
@@ -117,13 +117,13 @@ Bool_t Component::addToChain(TChain*& chain) {
 } 
 
 
-Long64_t Component::getLocalOffset() const {
+Long64_t EventComponent::getLocalOffset() const {
   // Get the offset to the first event
   Long64_t localOffset = _tree.getOffset(_event.treeKey());
   return localOffset;
 }
 
-Long64_t Component::getIndexInLocalChain() const {
+Long64_t EventComponent::getIndexInLocalChain() const {
   // Get the index of the event the local chain (ie, in this meta event)
   Long64_t evtIdx = getLocalOffset();
   evtIdx += _event.eventIndex();
@@ -131,14 +131,14 @@ Long64_t Component::getIndexInLocalChain() const {
 }
 
 
-void Component::dumpEvent(const char* options) const {
+void EventComponent::dumpEvent(const char* options) const {
   if ( OptUtil::has_option(options,'v') ) {
     _tree.printTreeInfo(_event.treeKey(),options);
   }  
   _event.printEventInfo(options);
 }
 
-void Component::listTrees(const char* options) const {
+void EventComponent::listTrees(const char* options) const {
   _tree.show(options);
 }
 

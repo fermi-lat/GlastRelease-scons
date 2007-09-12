@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef PointerSkim_h
-#define PointerSkim_h
+#ifndef CompositeEventList_h
+#define CompositeEventList_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -32,11 +32,11 @@ class TFile;
 class TChain;
 class TVirtualIndex;
 class TCollection;
-class Component;
+class EventComponent;
 class TObjArray;
 
 //
-// PointerSkim associates infomation about events that is stored in several trees.
+// CompositeEventList associates infomation about events that is stored in several trees.
 // 
 // Unlike using friend trees in root, this can include sparse collections without 
 // requiring you to build a lookup index.
@@ -60,21 +60,21 @@ class TObjArray;
 //      Link_MetaOffset  -> Offset in events for this entry in the File Tree
 // 
 
-class PointerSkim : public BranchGroup, public TObject {
+class CompositeEventList : public BranchGroup, public TObject {
 
 protected:
 
-  typedef std::pair<TTree*,Component*> TreeAndComponent;
+  typedef std::pair<TTree*,EventComponent*> TreeAndComponent;
 
 public:
 
   // ctor's and d'tor
   // Default c'tor.
-  PointerSkim(); 
+  CompositeEventList(); 
   // Build a pointer skim from the three trees
-  PointerSkim(TTree& eventTree, TTree& linkTree, TTree& fileTree);
+  CompositeEventList(TTree& eventTree, TTree& linkTree, TTree& fileTree);
   // D'tor
-  virtual ~PointerSkim();
+  virtual ~CompositeEventList();
 
   // Methods and functions
   // Make a new file.  Will also delare TTree for storing the pointers
@@ -128,7 +128,7 @@ public:
     return (index < _compList.size()) ? _compList[index].first : 0;
   }
   // Get an event Compnent that is being read
-  Component* getComponent(UInt_t index) const{
+  EventComponent* getComponent(UInt_t index) const{
     return (index < _compList.size()) ? _compList[index].second : 0;
   }
 
@@ -161,8 +161,8 @@ protected:
 private:
   
   //disable copying and assignment
-  PointerSkim(const PointerSkim& other);
-  PointerSkim& operator=(const PointerSkim& other);
+  CompositeEventList(const CompositeEventList& other);
+  CompositeEventList& operator=(const CompositeEventList& other);
 
   // Data
   TTree*                                  _eventTree;  //! where the event data is
@@ -177,7 +177,7 @@ private:
   std::vector<std::string >               _compNames;  //! names of components
   std::map<std::string,UInt_t>            _compMap;    //! components lookup map to get the index in the list above from the name
 
-  ClassDef(PointerSkim,0) // Base class for templates for handling simple types
+  ClassDef(CompositeEventList,0) // Base class for templates for handling simple types
 };
 
 

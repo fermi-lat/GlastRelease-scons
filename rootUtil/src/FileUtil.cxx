@@ -61,7 +61,7 @@ TFile* FileUtil::getFile(TTree& tree) {
 	      << " does not have an associated file." << std::endl
 	      << "You have to associated TTree with TFiles before you can persist "  << std::endl
 	      << "pointers to the event components they contain" << std::endl
-	      << "If you are making the PointerSkim in the same job as the TTree it " << std::endl
+	      << "If you are making the CompositeEventList in the same job as the TTree it " << std::endl
 	      << "points to you need to do one of two things" << std::endl
 	      << "\t1)Use TFile::cd() to switch to a directory before making the TTree" << std::endl
 	      << "\t2)Use TTree::SetDirectory(aTFile) to set the TTree's directory" << std::endl;

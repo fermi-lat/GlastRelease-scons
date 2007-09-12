@@ -64,7 +64,7 @@ TreeRefHandle::TreeRefHandle():
   _componentName(),
   _size(0,*this,"size"),
   _entries(0,*this,"entries"){
-  // Default c'tor.  Component Name is not set
+  // Default c'tor.  EventComponent Name is not set
   _treeNameList = new TObjArray;
   _fileNameList = new TObjArray;  
   _treeOffsets = new TArrayL64;
@@ -75,7 +75,7 @@ TreeRefHandle::TreeRefHandle(const std::string& componentName):
   _componentName(componentName),
   _size(0,*this,"size"),
   _entries(0,*this,"entries"){
-  // Standard c'tor.  Component Name is set
+  // Standard c'tor.  EventComponent Name is set
   _treeNameList = new TObjArray;
   _fileNameList = new TObjArray;  
   _treeOffsets = new TArrayL64;

@@ -1,4 +1,4 @@
-#include "rootUtil/PointerSkim.h"
+#include "rootUtil/CompositeEventList.h"
 #include <TFile.h>
 #include <TTree.h>
 #include <TRandom.h>
@@ -123,7 +123,7 @@ int main(int argn, char** argc) {
   // First file only
   std::vector<TTree*> trees;
 
-  PointerSkim p;
+  CompositeEventList p;
 
   Long64_t nEvt(0);
   if ( digiFiles.size() > 0 ) {
