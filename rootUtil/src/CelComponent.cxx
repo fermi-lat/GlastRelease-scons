@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef EventComponent_cxx
-#define EventComponent_cxx
+#ifndef CelComponent_cxx
+#define CelComponent_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 //
-// EventComponent stores all the information needed to point to a part of an event
+// CelComponent stores all the information needed to point to a part of an event
 // that is located in another TTree.
 //
 // This for a single event this information is stored on two TTees. 
@@ -29,7 +29,7 @@
 
 
 // This Class's header
-#include "rootUtil/EventComponent.h"
+#include "rootUtil/CelComponent.h"
 
 // c++/stl headers
 #include <iostream>
@@ -45,46 +45,46 @@
 #include "rootUtil/DataHandle.h"
 #include "rootUtil/TreeRefHandle.h"
 
-ClassImp(EventComponent);
+ClassImp(CelComponent);
 
 
-EventComponent::EventComponent():
+CelComponent::CelComponent():
   _componentName("NULL"),
   _event(),
   _tree(){
   // Default c'tor.  Needed for ROOT
 }
 	      
-EventComponent::EventComponent(const std::string& componentName):
+CelComponent::CelComponent(const std::string& componentName):
   _componentName(componentName),
   _event(componentName),
   _tree(componentName){
   // Standard c'tor, stores the name of the component 
 }	      
 
-EventComponent::~EventComponent(){
+CelComponent::~CelComponent(){
   // D'tor
   ;
 }
 
 
-void EventComponent::set(TTree& tree) {
+void CelComponent::set(TTree& tree) {
   // set the current event
   _event.set(tree,_tree);
 }
 
-Int_t EventComponent::read() {
+Int_t CelComponent::read() {
   // read an event
   return _event.read(_tree);
 }
 
-TTree* EventComponent::getTree() const {
+TTree* CelComponent::getTree() const {
   // Get the Tree that is being read
   return _event.getTree(_tree);
 }
 
 
-Int_t EventComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) const {
+Int_t CelComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) const {
   Int_t n_e = _event.makeBranches(eventTree,_componentName.c_str(),bufsize);
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.makeBranches(fileTree,_componentName.c_str(),bufsize);
@@ -92,7 +92,7 @@ Int_t EventComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufs
   return n_e + n_f;
 }
 
-Int_t EventComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
+Int_t CelComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
   Int_t n_e = _event.attachToTree(eventTree,_componentName.c_str());
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.attachToTree(fileTree,_componentName.c_str());
@@ -101,7 +101,7 @@ Int_t EventComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
 }
 
 
-Bool_t EventComponent::addToChain(TChain*& chain) {
+Bool_t CelComponent::addToChain(TChain*& chain) {
   // Building a TChain
   for ( UShort_t iT(0); iT < _tree.size(); iT++ ) {
     TTree* t = _tree.getTree(iT);
@@ -117,13 +117,13 @@ Bool_t EventComponent::addToChain(TChain*& chain) {
 } 
 
 
-Long64_t EventComponent::getLocalOffset() const {
+Long64_t CelComponent::getLocalOffset() const {
   // Get the offset to the first event
   Long64_t localOffset = _tree.getOffset(_event.treeKey());
   return localOffset;
 }
 
-Long64_t EventComponent::getIndexInLocalChain() const {
+Long64_t CelComponent::getIndexInLocalChain() const {
   // Get the index of the event the local chain (ie, in this meta event)
   Long64_t evtIdx = getLocalOffset();
   evtIdx += _event.eventIndex();
@@ -131,14 +131,14 @@ Long64_t EventComponent::getIndexInLocalChain() const {
 }
 
 
-void EventComponent::dumpEvent(const char* options) const {
+void CelComponent::dumpEvent(const char* options) const {
   if ( OptUtil::has_option(options,'v') ) {
     _tree.printTreeInfo(_event.treeKey(),options);
   }  
   _event.printEventInfo(options);
 }
 
-void EventComponent::listTrees(const char* options) const {
+void CelComponent::listTrees(const char* options) const {
   _tree.show(options);
 }
 

@@ -30,8 +30,8 @@
 
 // Other headers from this package
 #include "rootUtil/TreeRefHandle.h"
-#include "rootUtil/EventComponent.h"
-#include "rootUtil/PointerIndex.h"
+#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelIndex.h"
 #include "rootUtil/FileUtil.h"
 
 
@@ -64,7 +64,7 @@ CompositeEventList::CompositeEventList(TTree& eventTree, TTree& linkTree, TTree&
 }
 
 CompositeEventList::~CompositeEventList(){
-  // Standard c'tor.  EventComponent Name is set
+  // Standard c'tor.  CelComponent Name is set
   cleanup();
 }
 
@@ -134,7 +134,7 @@ UInt_t CompositeEventList::addComponent(const std::string& name){
   // Add a component by name.  This is only need when writing.  On read these are discovered.
   //
   // Returns the component index value
-  EventComponent* comp = new EventComponent(name);
+  CelComponent* comp = new CelComponent(name);
   TTree* t(0);
   TreeAndComponent tc(t,comp);
   // David: below, it should rather be _compList, no ?
@@ -201,7 +201,7 @@ Int_t CompositeEventList::read(Long64_t iEvt) {
 
   for ( std::vector< TreeAndComponent >::iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    EventComponent* comp = itr->second;
+    CelComponent* comp = itr->second;
     if ( comp == 0 ) return -5;
     Int_t nRead = comp->read();
     if ( nRead < 0 ) return -6;
@@ -259,7 +259,7 @@ TChain* CompositeEventList::buildChain(UInt_t index) {
     std::cerr << "No Data Files" << std::endl;
     return 0;
   }
-  EventComponent* comp = getComponent(index);
+  CelComponent* comp = getComponent(index);
   if ( 0 == comp ) {
     std::cerr << "No component with index " << index << std::endl;
     return 0;
@@ -290,7 +290,7 @@ TVirtualIndex* CompositeEventList::buildEventIndex(UInt_t index, Long64_t& offse
     // FIXME: Warn?
     return 0;
   }
-  TVirtualIndex* vIdx = PointerIndex::buildIndex(*this,_compNames[index],tree,offset);
+  TVirtualIndex* vIdx = CelIndex::buildIndex(*this,_compNames[index],tree,offset);
   return vIdx;
 }
 
@@ -362,7 +362,7 @@ void CompositeEventList::dumpEvent(const char* options){
   std::cout << "Event " << _eventIndex << ":\t";
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const EventComponent* comp = itr->second;
+    const CelComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << ' ';
     comp->dumpEvent(options);
@@ -378,7 +378,7 @@ void CompositeEventList::listTrees(const char* options){
   //   File Tree
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const EventComponent* comp = itr->second;
+    const CelComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << std::endl;
     comp->listTrees(options);
@@ -418,7 +418,7 @@ Bool_t CompositeEventList::set(std::vector<TTree*>& trees) {
   UInt_t idx(0);  
   for ( std::vector< TTree* >::iterator itr = trees.begin();
 	itr != trees.end(); itr++ ) {  
-    EventComponent* comp = getComponent(idx);
+    CelComponent* comp = getComponent(idx);
     assert ( 0 != comp );
     comp->set(**itr);
     idx++;
@@ -435,7 +435,7 @@ Int_t CompositeEventList::makeBranches(TTree& eventTree, TTree& linkTree,  TTree
   if ( total < 0 ) return total;
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const EventComponent* comp = itr->second;
+    const CelComponent* comp = itr->second;
     if ( comp == 0 ) return -1;
     Int_t nMake = comp->makeBranches(eventTree,fileTree,bufsize);
     if ( nMake < 0 ) return nMake;
@@ -458,7 +458,7 @@ Int_t CompositeEventList::attachToTree(TTree& eventTree, TTree& linkTree,  TTree
   UInt_t idx(0);
   for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    EventComponent* comp = itr->second;
+    CelComponent* comp = itr->second;
     if ( comp == 0 ) { 
       std::cerr << "Failed to get component " << idx << std::endl;
       return -1;

@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef PointerUtil_cxx
-#define PointerUtil_cxx
+#ifndef CelUtil_cxx
+#define CelUtil_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 // This Class's header
-#include "rootUtil/PointerUtil.h"
+#include "rootUtil/CelUtil.h"
 
 // c++/stl headers
 #include <iostream>
@@ -28,12 +28,12 @@
 #include <TObjArray.h>
 
 // Other headers from this package
-#include "rootUtil/EventComponent.h"
+#include "rootUtil/CelComponent.h"
 #include "rootUtil/CompositeEventList.h"
 #include "rootUtil/FileUtil.h"
 
 
-CompositeEventList* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, const char* fileName, const char* option) {
+CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* fileName, const char* option) {
   // Merge a Collection of input files into a single pointer skim
 
   TList skims;
@@ -57,11 +57,11 @@ CompositeEventList* PointerUtil::mergeSkimsFromFiles(TCollection& skimFiles, con
     skims.AddLast(nextSkim);
   }
   // Call the other mergre method
-  return mergeSkims(skims,fileName,option);
+  return mergeCompositeEventLists(skims,fileName,option);
 }
 
 
-CompositeEventList* PointerUtil::mergeSkims(TCollection& skims, const char* fileName, const char* option) {
+CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const char* fileName, const char* option) {
   // Merge a Collection of pointer skims
 
 

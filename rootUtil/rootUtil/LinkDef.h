@@ -27,10 +27,10 @@
 
 #pragma link C++ class EventPointer;
 #pragma link C++ class TreeRefHandle;
-#pragma link C++ class EventComponent;
+#pragma link C++ class CelComponent;
 #pragma link C++ class CompositeEventList;
-#pragma link C++ class PointerIndex;
+#pragma link C++ class CelIndex;
 
-#pragma link C++ namespace PointerUtil;
+#pragma link C++ namespace CelUtil;
 
 #endif

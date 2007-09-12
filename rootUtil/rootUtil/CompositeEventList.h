@@ -32,7 +32,7 @@ class TFile;
 class TChain;
 class TVirtualIndex;
 class TCollection;
-class EventComponent;
+class CelComponent;
 class TObjArray;
 
 //
@@ -64,7 +64,7 @@ class CompositeEventList : public BranchGroup, public TObject {
 
 protected:
 
-  typedef std::pair<TTree*,EventComponent*> TreeAndComponent;
+  typedef std::pair<TTree*,CelComponent*> TreeAndComponent;
 
 public:
 
@@ -128,7 +128,7 @@ public:
     return (index < _compList.size()) ? _compList[index].first : 0;
   }
   // Get an event Compnent that is being read
-  EventComponent* getComponent(UInt_t index) const{
+  CelComponent* getComponent(UInt_t index) const{
     return (index < _compList.size()) ? _compList[index].second : 0;
   }
 

@@ -1,4 +1,4 @@
-#include "rootUtil/PointerUtil.h"
+#include "rootUtil/CelUtil.h"
 
 #include <TFile.h>
 #include <TTree.h>
@@ -104,8 +104,8 @@ int main(int argn, char** argc) {
   }
   
   CompositeEventList* s = optval_f ? 
-    PointerUtil::mergeSkimsFromFiles(inputFileList,outFile.c_str(),"RECREATE") :
-    PointerUtil::mergeSkimsFromFiles(inputFileList,outFile.c_str());
+    CelUtil::mergeCelFiles(inputFileList,outFile.c_str(),"RECREATE") :
+    CelUtil::mergeCelFiles(inputFileList,outFile.c_str());
 
   if ( 0 == s ) return 6;
 

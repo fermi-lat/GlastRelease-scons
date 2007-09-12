@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef PointerIndex_cxx
-#define PointerIndex_cxx
+#ifndef CelIndex_cxx
+#define CelIndex_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -17,17 +17,17 @@
 
 
 //
-// PointerIndex
+// CelIndex
 //
 //
-// PointerIndex is a sub-class of TVirtualIndex.  It is uses a CompositeEventList as an index in to the component trees.
+// CelIndex is a sub-class of TVirtualIndex.  It is uses a CompositeEventList as an index in to the component trees.
 //
 // The whole point of this class is to override the method
 //   Int_t TVirtualIndex::GetEntryNumberFriend(const TTree* tree);  
 //
 // Which is called in TTree::LoadTreeFriend(Long64_t entry, TTree* masterTree) to load the friend tree.
 // 
-// PointerIndex::GetEntryNumberFriend(const TTree* tree) goes into the master tree and finds the correct event index
+// CelIndex::GetEntryNumberFriend(const TTree* tree) goes into the master tree and finds the correct event index
 // in the TChain of the component tree.  
 //
 // The Index in the component tree is
@@ -41,7 +41,7 @@
 // 
 
 // This Class's header
-#include "rootUtil/PointerIndex.h"
+#include "rootUtil/CelIndex.h"
 
 // c++/stl headers
 #include <iostream>
@@ -51,19 +51,19 @@
 
 // Other headers from this package
 #include "rootUtil/CompositeEventList.h"
-#include "rootUtil/EventComponent.h"
+#include "rootUtil/CelComponent.h"
 
 
-ClassImp(PointerIndex);
+ClassImp(CelIndex);
 
-PointerIndex* PointerIndex::buildIndex(CompositeEventList& skim, const std::string& component,TTree* tree,Long64_t offset){
+CelIndex* CelIndex::buildIndex(CompositeEventList& skim, const std::string& component,TTree* tree,Long64_t offset){
   // Build and return pointer index from a pointer skim
-  PointerIndex* pIdx = new PointerIndex(skim,component,tree,offset);
+  CelIndex* pIdx = new CelIndex(skim,component,tree,offset);
   tree->SetTreeIndex(pIdx);
   return pIdx;
 }
 
-PointerIndex::PointerIndex():
+CelIndex::CelIndex():
   TVirtualIndex(),
   _offset(0),
   _skim(0),
@@ -72,7 +72,7 @@ PointerIndex::PointerIndex():
   SetTree(0);
 }
 
-PointerIndex::PointerIndex(CompositeEventList& skim, const std::string& compontent, TTree* tree, Long64_t offset):
+CelIndex::CelIndex(CompositeEventList& skim, const std::string& compontent, TTree* tree, Long64_t offset):
   TVirtualIndex(),
   _offset(offset),
   _skim(&skim),
@@ -81,12 +81,12 @@ PointerIndex::PointerIndex(CompositeEventList& skim, const std::string& componte
   SetTree(tree);
 }
 
-PointerIndex::~PointerIndex(){
+CelIndex::~CelIndex(){
   // Delete stuff
 }
 
 
-Int_t PointerIndex::GetEntryNumberFriend(const TTree* tree){
+Int_t CelIndex::GetEntryNumberFriend(const TTree* tree){
   // return the index into the component tree for the current event in the master tree
 
   // Sanity check
@@ -99,11 +99,11 @@ Int_t PointerIndex::GetEntryNumberFriend(const TTree* tree){
   // Get the Event index
   Long64_t evtIdx = _offset + _skim->metaOffset();
   evtIdx += _component->getIndexInLocalChain();
-  // std::cout << "PointerIndex::GetEntryNumberFriend(" << _skim->eventIndex() << ':' << evtIdx << ')' << std::endl;
+  // std::cout << "CelIndex::GetEntryNumberFriend(" << _skim->eventIndex() << ':' << evtIdx << ')' << std::endl;
   return evtIdx;  
 }
 
-Long64_t PointerIndex::GetN() const {
+Long64_t CelIndex::GetN() const {
   // Get the total number of Events in the index
   if ( 0 == _skim || 0 == _component ) return 0;
   return _skim->entries();

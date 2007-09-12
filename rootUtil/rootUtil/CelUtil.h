@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef PointerUtil_h
-#define PointerUtil_h
+#ifndef CelUtil_h
+#define CelUtil_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -22,13 +22,13 @@
 class TCollection;
 class CompositeEventList;
 
-namespace PointerUtil {
+namespace CelUtil {
   
   // Merge a Collection of input files into a single pointer skim
-  CompositeEventList* mergeSkimsFromFiles(TCollection& skimFiles, const char* fileName=0, const char* option = "CREATE");  
+  CompositeEventList* mergeCelFiles(TCollection&, const char* ouputfileName=0, const char* option = "CREATE");  
   
   // Merge a Collection of pointer skims
-  CompositeEventList* mergeSkims(TCollection& skims, const char* fileName=0, const char* option = "CREATE");
+  CompositeEventList* mergeCompositeEventLists(TCollection&, const char* outputfileName=0, const char* option = "CREATE");
 
 }
 
