@@ -16,6 +16,7 @@
 #include "Gem.h"
 #include "Tem.h"
 #include "FilterStatus.h"
+#include "ObfFilterStatus.h"
 
 #include "MetaEvent.h"
 #include "Ccsds.h"
@@ -204,6 +205,9 @@ public:
     const FilterStatus& getFilterStatus() const { return m_obf; };
     void setFilterStatus(const FilterStatus& obf) { m_obf = obf; };
 
+    const ObfFilterStatus& getObfFilterStatus() const { return m_obfFilterStatus; };
+    void setObfFilterStatus(const ObfFilterStatus& obf) { m_obfFilterStatus = obf; };
+
     /// clear the whole array (necessary because of the consts-s)
     void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
     /// Add a TkrDigi into the TKR data collection
@@ -298,6 +302,7 @@ private:
     Ccsds m_ccsds;
  
     FilterStatus m_obf;
+    ObfFilterStatus m_obfFilterStatus;
    
     AdfDigi m_adfDigi;
 

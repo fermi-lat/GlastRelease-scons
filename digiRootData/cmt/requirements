@@ -35,6 +35,7 @@ apply_pattern root_package headers="\
  ../digiRootData/ErrorData.h\
  ../digiRootData/Tem.h\
  ../digiRootData/FilterStatus.h\
+ ../digiRootData/ObfFilterStatus.h\
  ../digiRootData/AdfDigi.h\
  ../digiRootData/EventSummaryData.h"\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
