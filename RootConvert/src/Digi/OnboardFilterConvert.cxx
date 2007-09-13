@@ -286,5 +286,79 @@ void convert( const FilterStatus& rootObj,
     tdsObj.setTmsk(rootObj.getTmsk());
 };
 
+/// Fill persitent verison of ObfFilterStatus 
+void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& rootObj)
+{
+    // Initialize
+    rootObj.initialize();
+
+    // Now step through and initialize the status objects one by one
+    const OnboardFilterTds::IObfStatus* tdsStatus = 0;
+
+    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter))
+    {
+        ObfGammaStatus* rootStatus = new ObfGammaStatus();
+        convert(*tdsStatus, *rootStatus);
+        rootObj.addFilterStatus(ObfFilterStatus::GammaFilter, rootStatus);
+    }
+
+    return;
+}
+
+/// Fill transient verison of ObfFilterStatus 
+void convert( const ObfFilterStatus& rootObf, OnboardFilterTds::ObfFilterStatus& tdsObj) 
+{
+    //tdsObj = rootObj;
+    return;
+}
+
+/// Fill persistent verison of ObfGammaStatus 
+void convert( const OnboardFilterTds::IObfStatus&, ObfGammaStatus& )
+{
+    return;
+}
+
+/// Fill transient verison of ObfGammaStatus 
+void convert( const IObfStatus&, OnboardFilterTds::ObfGammaStatus& ) 
+{
+    return;
+}
+
+/// Fill persistent verison of ObfHFCStatus 
+void convert( const OnboardFilterTds::IObfStatus&, ObfHFCStatus& )
+{
+    return;
+}
+
+/// Fill transient verison of ObfHFCStatus 
+void convert( const IObfStatus&, OnboardFilterTds::ObfHFCStatus& ) 
+{
+    return;
+}
+
+/// Fill persistent verison of ObfMipStatus 
+void convert( const OnboardFilterTds::IObfStatus&, ObfMipStatus& )
+{
+    return;
+}
+
+/// Fill transient verison of ObfMipStatus 
+void convert( const IObfStatus&, OnboardFilterTds::ObfMipStatus& ) 
+{
+    return;
+}
+
+/// Fill persistent verison of ObfDFCStatus 
+void convert( const OnboardFilterTds::IObfStatus&, ObfDFCStatus& )
+{
+    return;
+}
+
+/// Fill transient verison of ObfDFCStatus 
+void convert( const IObfStatus&, OnboardFilterTds::ObfDFCStatus& ) 
+{
+    return;
+}
+
 
 }

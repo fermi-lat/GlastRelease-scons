@@ -2,9 +2,11 @@
 #define RootConvert_OnboardFilterConvert_H 1
 
 #include "OnboardFilterTds/FilterStatus.h"
+#include "OnboardFilterTds/ObfFilterStatus.h"
 #include "EFC/TFC_prjDef.h"
 
 #include "digiRootData/FilterStatus.h"
+#include "digiRootData/ObfFilterStatus.h"
 
 namespace RootPersistence {
 
@@ -39,7 +41,31 @@ namespace RootPersistence {
   /// Fill transient verison of FilterStatus 
   void convert( const FilterStatus&, OnboardFilterTds::FilterStatus& ) ;
 
+  /// New ObfFilterStatus conversion routines begin here
+  /// Fill persistent verison of ObfFilterStatus 
+  void convert( const OnboardFilterTds::ObfFilterStatus&, ObfFilterStatus& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const ObfFilterStatus&, OnboardFilterTds::ObfFilterStatus& ) ;
 
+  /// Fill persistent verison of ObfGammaStatus 
+  void convert( const OnboardFilterTds::IObfStatus&, ObfGammaStatus& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const IObfStatus&, OnboardFilterTds::ObfGammaStatus& ) ;
+
+  /// Fill persistent verison of ObfHFCStatus 
+  void convert( const OnboardFilterTds::IObfStatus&, ObfHFCStatus& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const IObfStatus&, OnboardFilterTds::ObfHFCStatus& ) ;
+
+  /// Fill persistent verison of ObfMipStatus 
+  void convert( const OnboardFilterTds::IObfStatus&, ObfMipStatus& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const IObfStatus&, OnboardFilterTds::ObfMipStatus& ) ;
+
+  /// Fill persistent verison of ObfDFCStatus 
+  void convert( const OnboardFilterTds::IObfStatus&, ObfDFCStatus& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const IObfStatus&, OnboardFilterTds::ObfDFCStatus& ) ;
 
 }
 
