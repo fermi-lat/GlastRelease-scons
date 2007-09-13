@@ -143,6 +143,11 @@
   This tool can be used as a pre-processor for other tools which require
   clean characterization tables to work well (e.g. genXXXsettings).
 
+  - <tt> dacBlockSet  [-t twr] [-l lyr] [-c col] [-f POS|NEG][-R pct] FLE|FHE|LAC|ULD <input_xml> <val_src> <output_xml> </tt>
+
+  <p> dacBlockSet script will overwrite a given dac settings file with single value or values from another input file.  It allows for 
+      several masking options which overwrite only a subset of the settings.  You may mask by tower, layer, column, face or random mask.
+
   <h5> calibGain scripts </h5>
   - <tt> calibGainCoeff </tt> : extract ratio of calibGain setting On/Off for HE
   channels from 2 intNonlin xml files.
