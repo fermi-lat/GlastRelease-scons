@@ -643,6 +643,16 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
     RootPersistence::convert(*obfTds,obfRoot);
     m_digiEvt->setFilterStatus(obfRoot);
 
+    SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfFilterStatusTds(eventSvc(), "/Event/Filter/ObfFilterStatus");
+    if (!obfFilterStatusTds) {
+        log << MSG::DEBUG << "No OBF ObfFilterStatus" << endreq;
+        return sc;
+     }
+
+    ObfFilterStatus obfFilterStatusRoot;
+    RootPersistence::convert(*obfFilterStatusTds,obfFilterStatusRoot);
+    m_digiEvt->setFilterStatus(obfRoot);
+
     return sc;
 }
 

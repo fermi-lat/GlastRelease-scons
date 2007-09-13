@@ -694,7 +694,6 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
 
     const FilterStatus& filterStatusRoot = m_digiEvt->getFilterStatus();
 
-
     // create TDS location
     DataObject *pObj = new DataObject();
     sc = eventSvc()->registerObject("/Event/Filter", pObj);
@@ -712,6 +711,19 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
     }
 
     RootPersistence::convert(filterStatusRoot, *obfTds);
+
+    // Now do the new style obf filter status class
+    const ObfFilterStatus& obfFilterStatusRoot = m_digiEvt->getObfFilterStatus();
+
+    OnboardFilterTds::ObfFilterStatus *obfFilterStatusTds = new OnboardFilterTds::ObfFilterStatus;
+
+    sc = eventSvc()->registerObject("/Event/Filter/ObfFilterStatus", obfFilterStatusTds);
+    if (sc.isFailure()) {
+        log << MSG::INFO << "Failed to register ObfFilterStatus" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    RootPersistence::convert(obfFilterStatusRoot, *obfFilterStatusTds);
 
     return sc;
 
