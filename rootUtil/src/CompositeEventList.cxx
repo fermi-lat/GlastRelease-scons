@@ -29,7 +29,7 @@
 #include <TObjArray.h>
 
 // Other headers from this package
-#include "rootUtil/TreeRefHandle.h"
+#include "rootUtil/CelFileTreeNames.h"
 #include "rootUtil/CelComponent.h"
 #include "rootUtil/CelIndex.h"
 #include "rootUtil/FileUtil.h"
@@ -83,7 +83,7 @@ TFile* CompositeEventList::makeFile(const Char_t* fileName, const Char_t* option
     return 0;
   }
   newFile->cd();
-  _eventTree = new TTree("Events","Events");
+  _eventTree = new TTree("Entries","Entries");
   _linkTree = new TTree("Links","Links");
   _fileTree = new TTree("Files","Files");
   oldDir->cd();
@@ -108,7 +108,7 @@ TFile* CompositeEventList::openFile(const Char_t* fileName){
   TFile* newFile = TFile::Open(fileName);
   if ( 0 == newFile ) return 0;
   newFile->cd();
-  _eventTree = dynamic_cast<TTree*>(newFile->Get("Events"));
+  _eventTree = dynamic_cast<TTree*>(newFile->Get("Entries"));
   _linkTree = dynamic_cast<TTree*>(newFile->Get("Links"));
   _fileTree = dynamic_cast<TTree*>(newFile->Get("Files"));
   if  ( _eventTree == 0 || _linkTree == 0 || _fileTree == 0 ) {
@@ -301,7 +301,7 @@ TChain* CompositeEventList::buildLinks(TObjArray* chainList, Bool_t setFriends){
   TFile* f = FileUtil::getFile(*_eventTree);
   if ( 0 == f ) return 0;
     
-  TChain* newChain = new TChain("Events");  
+  TChain* newChain = new TChain("Entries");  
   Int_t check = newChain->Add(f->GetName());
   if ( check < 0 ) {
     delete newChain;
@@ -395,7 +395,7 @@ Int_t CompositeEventList::buildComponents(TTree& tree){
   for ( Int_t i(0); i < array->GetEntries(); i++ ) {
     TObject* obj = array->UncheckedAt(i);
     std::string name(obj->GetName());    
-    std::string::size_type find =  name.find("EvtIndex");
+    std::string::size_type find =  name.find("EntryIndex");
     if ( find == name.npos ) continue;
     std::string compName(name,0,find);
     addComponent(compName);

@@ -44,7 +44,7 @@ class TObjArray;
 // The information is stored on 3 trees
 // 
 //   Events:  Tree with 2 Branches per input component, one entry per event
-//      Comp_EvtIndex/L  -> Index of Event in the Tree it lives on
+//      Comp_EntryIndex/L  -> Index of Event in the Tree it lives on
 //      Comp_TreeIndex/s -> Index of Tree in the Associated vector of trees
 //   
 //   Files:   Tree with 5 Branches per input component, one entry per input collection

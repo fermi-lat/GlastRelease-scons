@@ -43,7 +43,7 @@
 // Other headers from this package
 #include "rootUtil/OptUtil.h"
 #include "rootUtil/DataHandle.h"
-#include "rootUtil/TreeRefHandle.h"
+#include "rootUtil/CelFileTreeNames.h"
 
 ClassImp(CelComponent);
 
@@ -119,21 +119,21 @@ Bool_t CelComponent::addToChain(TChain*& chain) {
 
 Long64_t CelComponent::getLocalOffset() const {
   // Get the offset to the first event
-  Long64_t localOffset = _tree.getOffset(_event.treeKey());
+  Long64_t localOffset = _tree.getOffset(_event.treeIndex());
   return localOffset;
 }
 
 Long64_t CelComponent::getIndexInLocalChain() const {
   // Get the index of the event the local chain (ie, in this meta event)
   Long64_t evtIdx = getLocalOffset();
-  evtIdx += _event.eventIndex();
+  evtIdx += _event.entryIndex();
   return evtIdx;
 }
 
 
 void CelComponent::dumpEvent(const char* options) const {
   if ( OptUtil::has_option(options,'v') ) {
-    _tree.printTreeInfo(_event.treeKey(),options);
+    _tree.printTreeInfo(_event.treeIndex(),options);
   }  
   _event.printEventInfo(options);
 }

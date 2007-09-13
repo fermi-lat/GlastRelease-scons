@@ -7,14 +7,15 @@ use RootcintPolicy v* GlastPolicy
 
 apply_pattern root_package headers="\
   ../rootUtil/BranchGroup.h\
-  ../rootUtil/CelComponent.h\
   ../rootUtil/DataHandleBase.h\
   ../rootUtil/DataHandle.h\
-  ../rootUtil/EventPointer.h\
-  ../rootUtil/CelIndex.h\
   ../rootUtil/CompositeEventList.h\
-  ../rootUtil/CelUtil.h\
-  ../rootUtil/TreeRefHandle.h"
+  ../rootUtil/CelComponent.h\
+  ../rootUtil/CelEntryIndex.h\
+  ../rootUtil/CelFileTreeNames.h\
+  ../rootUtil/CelLink.h\
+  ../rootUtil/CelIndex.h\
+  ../rootUtil/CelUtil.h"
 
 private
 

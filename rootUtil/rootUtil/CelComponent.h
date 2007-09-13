@@ -22,8 +22,8 @@
 #include <string>
 
 // Headers of Data Members
-#include "TreeRefHandle.h"
-#include "EventPointer.h"
+#include "CelFileTreeNames.h"
+#include "CelEntryIndex.h"
 
 // Forward Declares
 class TChain;
@@ -71,8 +71,8 @@ public:
   Long64_t getIndexInLocalChain() const;
 
   // Access
-  const EventPointer& eventPointer() const { return _event; }
-  const TreeRefHandle& treePointer() const { return _tree; }
+  const CelEntryIndex& eventPointer() const { return _event; }
+  const CelFileTreeNames& treePointer() const { return _tree; }
   inline const std::string& componentName() const { return _componentName; }
 
   // Printing Functions
@@ -94,8 +94,8 @@ private:
   
   // Data
   std::string   _componentName;    //! Name of this component
-  EventPointer  _event;            //! Interface with the per-event data
-  TreeRefHandle _tree;             //! Interface with the file reference data
+  CelEntryIndex  _event;            //! Interface with the per-event data
+  CelFileTreeNames _tree;             //! Interface with the file reference data
 
   ClassDef(CelComponent,0)            // Class to handle references to a single Event component
 

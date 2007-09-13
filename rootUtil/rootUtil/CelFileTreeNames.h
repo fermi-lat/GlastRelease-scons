@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef TreeRefHandle_h
-#define TreeRefHandle_h
+#ifndef CelFileTreeNames_h
+#define CelFileTreeNames_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -33,36 +33,36 @@ class TObjArray;
 class TArrayL64;
 
 //
-// TreeRefHandle stores information needed to point to a part of an event
+// CelFileTreeNames stores information needed to point to a part of an event
 // that is located in another TTree.
 //
-// TreeRefHandle keep track of the TTrees where the event components live.
+// CelFileTreeNames keep track of the TTrees where the event components live.
 //
 // Lists of files and tree names are stored persistently on a TTree by 
-// TreeRefHandle.  These are:
+// CelFileTreeNames.  These are:
 //
 //  _fileNameList (goes to branch XXX_Files) is the vector of file names
 //  _treeNameList (goes to branch XXX_Trees) is the vector of tree names
 // 
-// At any given time a TreeRefHandle may be keeping track of any number of TTree
+// At any given time a CelFileTreeNames may be keeping track of any number of TTree
 //   
 // Access to the TTree is by key
 //  TTree* getTree(UShort_t key) const ;
 //
-// The keys are assigned when TTree are first associated with the TreeRefHandle
+// The keys are assigned when TTree are first associated with the CelFileTreeNames
 // 
 
-class TreeRefHandle  : public BranchGroup {
+class CelFileTreeNames  : public BranchGroup {
 
 public:
 
   // c'tors & d'tor
   // Default c'tor.  Needed for ROOT
-  TreeRefHandle();
+  CelFileTreeNames();
   // Standard c'tor, stores the name of the component 
-  TreeRefHandle(const std::string& componentName);
+  CelFileTreeNames(const std::string& componentName);
   // D'tor
-  virtual ~TreeRefHandle();
+  virtual ~CelFileTreeNames();
 
   // Methods and functions
   // Reset this object and clear caches
@@ -99,14 +99,14 @@ protected:
 private:
 
   //disable copying and assignment
-  TreeRefHandle(const TreeRefHandle& other);
-  TreeRefHandle& operator=(const TreeRefHandle& other);
+  CelFileTreeNames(const CelFileTreeNames& other);
+  CelFileTreeNames& operator=(const CelFileTreeNames& other);
 
   // data
   std::string            _componentName;   //! Name of the component this object is storing information about
-  DataHandle<UShort_t>   _size;            //! Number of trees stored by this TreeRefHandle
-  DataHandle<Long64_t>   _entries;         //! Number of events on the trees stored by this TreeRefHandle
-  TObjArray*             _treeNameList;    //! Names of trees stored by this TreeRefHandle
+  DataHandle<UShort_t>   _size;            //! Number of trees stored by this CelFileTreeNames
+  DataHandle<Long64_t>   _entries;         //! Number of events on the trees stored by this CelFileTreeNames
+  TObjArray*             _treeNameList;    //! Names of trees stored by this CelFileTreeNames
   TObjArray*             _fileNameList;    //! Names of files where the TTree live
   TArrayL64*             _treeOffsets;     //! Number of entries in TTrees
 
@@ -114,7 +114,7 @@ private:
   mutable std::map<UShort_t,TTree*> _cache;  //! Maps key -> tree
   mutable std::map<TTree*,UShort_t> _lookup; //! Reverse map, for making sure we don't screw up
 
-  ClassDef(TreeRefHandle,0) // For handling referenece to trees
+  ClassDef(CelFileTreeNames,0) // For handling referenece to trees
 };
 
 
