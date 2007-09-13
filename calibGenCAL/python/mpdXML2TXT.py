@@ -63,7 +63,7 @@ if __name__ == '__main__':
     xmlFile.close()
 
     # print out header as comment
-    print "; twr lyr col diode mevPerDAC sigma"
+    print ";twr lyr col diode mevPerDAC sigma"
 
     # print out txt file.
     for twr in towers:

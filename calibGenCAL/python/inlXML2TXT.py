@@ -65,7 +65,7 @@ if __name__ == '__main__':
     xmlFile.close()
 
     # print out header as comment
-    print "; twr lyr col face range cidac adc"
+    print ";twr lyr col face range cidac adc"
 
     # print out txt file.
     # print out txt file.

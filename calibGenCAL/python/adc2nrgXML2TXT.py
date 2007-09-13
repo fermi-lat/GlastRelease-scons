@@ -64,7 +64,7 @@ if __name__ == '__main__':
     xmlFile.close()
 
     # print header as comment
-    print "; twr lyr col face diode adc2nrg"
+    print ";twr lyr col face diode adc2nrg"
 
     # print out txt file.
     for twr in towers:

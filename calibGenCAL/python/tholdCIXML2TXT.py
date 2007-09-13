@@ -64,7 +64,7 @@ if __name__ == '__main__':
     xmlFile.close()
 
     # print out header as comment
-    print "; twr lyr col face lac fle fhe uld0 uld1 uld2 uld3 ped0 ped1 ped2 ped3"
+    print ";twr lyr col face lac fle fhe uld0 uld1 uld2 uld3 ped0 ped1 ped2 ped3"
 
     # print out txt file.
     for twr in towers:

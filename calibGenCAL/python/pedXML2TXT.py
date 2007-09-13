@@ -63,7 +63,7 @@ if __name__ == '__main__':
     xmlFile.close()
     
     # print header as comment
-    print "; twr lyr col face range pedestal sigma"
+    print ";twr lyr col face range pedestal sigma"
     
     # print out txt file.
     for twr in towers:

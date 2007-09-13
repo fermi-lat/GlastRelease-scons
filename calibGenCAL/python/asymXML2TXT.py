@@ -82,7 +82,7 @@ if __name__ == '__main__':
     #     7 = PsmallNbigSigs value
 
     # print header as comment
-    print "; twr lyr col face pos_face_diode neg_face_diode asym sig"
+    print ";twr lyr col face pos_face_diode neg_face_diode asym sig"
 
     # print out txt file.
     for twr in towers:
