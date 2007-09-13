@@ -167,7 +167,7 @@ void G4EmLowEnergyPhysics::ConstructProcess()
 	      
       pmanager->AddProcess(theElectronMultipleScattering, -1, 1, 1);
       pmanager->AddProcess(new G4LowEnergyIonisation,         -1, 2, 2);
-      pmanager->AddProcess(new G4LowEnergyBremsstrahlung,     -1, 3, 3);
+      pmanager->AddProcess(new G4LowEnergyBremsstrahlung,     -1, -1, 3);
       
       
     } else if (particleName == "e+") {
