@@ -123,5 +123,7 @@ void PointingInfo::setPtTuple(INTupleWriterSvc* tuple, const std::string& tname)
     tuple->addItem(tname, "PtRax",    &ra_scx);
     tuple->addItem(tname, "PtDecx",   &dec_scx);
     tuple->addItem(tname, "PtSCzenith", &zenith_scz);
+    tuple->addItem(tname, "PtMcIlwainB", &B);
+    tuple->addItem(tname, "PtMcIlwainL", &L);
 
 }

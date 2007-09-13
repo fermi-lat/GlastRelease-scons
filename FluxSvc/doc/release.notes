@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   13-sep-07  v6r48   THB  Add Pt tuple variables for McIlwain L and B to each event.
    07-sep-07  v6r47p2 HMK  add cassert include for Tracy
    16-aug-07  v6r47p1 THB  add use to bring in astro
    15-aug-07  v6r47   THB  Change FluxSvc interface to implement alignment and misalignments
