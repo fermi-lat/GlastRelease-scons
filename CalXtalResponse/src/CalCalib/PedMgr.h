@@ -5,16 +5,12 @@
 #include "CalibItemMgr.h"
 
 // GLAST
-#include "CalibData/Cal/Ped.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
+#include "CalibData/Cal/Ped.h"
 
 // EXTLIB
 // STD
-
-using namespace CalUtil;
-using namespace idents;
-using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -27,17 +23,18 @@ class CalCalibSvc;
 class PedMgr : public CalibItemMgr {
  public:
   PedMgr(CalCalibShared &ccsShared) : 
-    CalibItemMgr(CAL_Ped, ccsShared)
+    CalibItemMgr(ICalibPathSvc::Calib_CAL_Ped, 
+                 ccsShared)
     {};
 
   /// get pedestal vals for given xtal/face/rng
-  const Ped *getPed(RngIdx rngIdx);
+  const CalibData::Ped *getPed(CalUtil::RngIdx rngIdx);
  private:
   StatusCode loadIdealVals();
 
-  bool validateRangeBase(Ped *ped);
+  bool validateRangeBase(CalibData::Ped *ped);
   
-  CalArray<RngNum, Ped> m_idealPeds;
+  CalUtil::CalArray<CalUtil::RngNum, CalibData::Ped> m_idealPeds;
 
   StatusCode genLocalStore();
 };

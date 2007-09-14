@@ -22,11 +22,6 @@
 #include <string>
 #include <algorithm>
 
-using namespace std;
-using namespace CalUtil;
-using namespace idents;
-using namespace CalibData;
-
 class CalCalibSvc;
 
 /** @class CalibItemMgr
@@ -40,11 +35,12 @@ class CalCalibSvc;
     - support for optional spline functions & other local data store.
 */
 class CalibItemMgr {
- public:
-  CalibItemMgr(const string &calibTypePath,
+public:
+  CalibItemMgr(const ICalibPathSvc::CalibItem calibItem,
                CalCalibShared &ccsShared,
-               int nSplineTypes=0) : 
-    m_calibTypePath(calibTypePath),
+               const int nSplineTypes=0) : 
+    m_calibItem(calibItem),
+    m_calibBase(0),
     m_ccsShared(ccsShared),
     m_idealMode(false),
     m_splineLists(nSplineTypes),
@@ -52,14 +48,14 @@ class CalibItemMgr {
     m_splineXMax(nSplineTypes),
     m_isValid(false),
     m_serNo(SERNO_NODATA)
-    {}
+  {}
 
   virtual ~CalibItemMgr() {};
 
   /// \brief initialization code which must be done during Gaudi init() period
   /// 
   /// some data is not available at construction time
-  virtual StatusCode initialize(const string &flavor);
+  virtual StatusCode initialize(const std::string &flavor);
 
   /// data should be invalidated at beginning of each event.
   /// just in case there is a change in validity period
@@ -69,7 +65,7 @@ class CalibItemMgr {
   /// return calibration data serial number from CalibSvc, or SERNO_IDEAL, SERNO_NODATA
   int getSerNo() {return m_serNo;}
 
- protected:
+protected:
   /** \brief check calib validity period, (re)build local store if necessary
 
   needs to be called once per event (_before_ processing calibration data ;).
@@ -86,20 +82,26 @@ class CalibItemMgr {
   virtual StatusCode genLocalStore() = 0;
 
   /// generic spline evaluation f() works for any calib_type
-  StatusCode evalSpline(int calibType, LATWideIndex idx, float x, float &y);
+  StatusCode evalSpline(const int calibType, 
+                        const CalUtil::LATWideIndex idx, 
+                        const float x, 
+                        float &y);
 
   /// generate new spline from 2 STL vecs & insert into appropriate splineList
-  StatusCode genSpline(int calibType, LATWideIndex idx, const string &name,
-                       const vector<float> &x, const vector<float> &y);
-
-  /// TDS path to calib data for my calib_type
-  string m_calibTypePath;
+  StatusCode genSpline(const int calibType, 
+                       const CalUtil::LATWideIndex idx, 
+                       const std::string &name,
+                       const std::vector<float> &x, 
+                       const std::vector<float> &y);
+  
+  /// used for generate calib path
+  const ICalibPathSvc::CalibItem m_calibItem;
 
   /// TDS path to calib data for my calib_type and path
-  string m_calibPath;
+  std::string m_calibPath;
 
   /// TDS location for root of my calib_type and path
-  CalCalibBase *m_calibBase;
+  CalibData::CalCalibBase *m_calibBase;
 
   /// ref to data shared by all classes used by CalibDataSvc
   CalCalibShared &m_ccsShared;
@@ -108,19 +110,19 @@ class CalibItemMgr {
   bool m_idealMode;
 
   /// 2d vector of all (optional) splines in local data store
-  vector<CalVec<LATWideIndex, TSpline3* > >    m_splineLists;
+  std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, TSpline3* > >    m_splineLists;
   /// min X val for each (optional) spline in local data store
-  vector<CalVec<LATWideIndex, float> >         m_splineXMin;
+  std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineXMin;
   /// max X val for each (optional) spline in local data store
-  vector<CalVec<LATWideIndex, float> >         m_splineXMax;
+  std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineXMax;
 
   /// pointers to each data member for my calib_type                                                                                                                                                       
-  CalVec<LATWideIndex, RangeBase* > m_rngBases;
+  CalUtil::CalVec<CalUtil::LATWideIndex, CalibData::RangeBase* > m_rngBases;
 
   /** retrieve spec'd rangeBase object, update if necessary
       \return NULL if there is no data 
   */
-  RangeBase *getRangeBase(CalXtalId xtalId) {
+  CalibData::RangeBase *getRangeBase(idents::CalXtalId xtalId) {
     return m_calibBase->getRange(xtalId);
   }
     
@@ -129,11 +131,11 @@ class CalibItemMgr {
   /// m_serNo has this value when ideal mode data has been loaded
   static const int SERNO_IDEAL  = 1;
   
- private:
+private:
   /// wipe out locally stored data (e.g. splines)
   void clearLocalStore();      
   /// calib flavor
-  string            m_flavor;     
+  std::string            m_flavor;     
   /// validity state of CalibItemMgr data
   bool              m_isValid;    
 

@@ -15,13 +15,13 @@ using namespace CalUtil;
 using namespace idents;
 
 /// get threshold calibration constants as measured w/ charnge injection
-const CalTholdCI *TholdCIMgr::getTholdCI(FaceIdx faceIdx) {
+const CalibData::CalTholdCI *TholdCIMgr::getTholdCI(const FaceIdx faceIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
   if (sc.isFailure()) return NULL;
 
-  return (CalTholdCI*)m_rngBases[faceIdx];
+  return (CalibData::CalTholdCI*)m_rngBases[faceIdx];
 }
 
 StatusCode TholdCIMgr::loadIdealVals() {
@@ -40,8 +40,8 @@ StatusCode TholdCIMgr::loadIdealVals() {
     return StatusCode::FAILURE;;
   }
 
-  ValSig FLE, FHE, LAC;
-  vector<ValSig> ULD(4), Ped(4);
+  CalibData::ValSig FLE, FHE, LAC;
+  std::vector<CalibData::ValSig> ULD(4), Ped(4);
 
   FLE.m_val = m_ccsShared.m_idealCalib.ciFLE;
   FLE.m_sig = m_ccsShared.m_idealCalib.ciFLE *
@@ -65,12 +65,12 @@ StatusCode TholdCIMgr::loadIdealVals() {
       m_ccsShared.m_idealCalib.ciSigPct;
   }
 
-  m_idealTholdCI.reset(new CalTholdCI(&ULD, &FLE, &FHE, &LAC, &Ped));
+  m_idealTholdCI.reset(new CalibData::CalTholdCI(&ULD, &FLE, &FHE, &LAC, &Ped));
 
   return StatusCode::SUCCESS;
 }
 
-bool TholdCIMgr::validateRangeBase(CalTholdCI *tholdCI) {
+bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
   if (!tholdCI) return false;
 
   if (!tholdCI->getFLE()) {
@@ -90,8 +90,8 @@ bool TholdCIMgr::validateRangeBase(CalTholdCI *tholdCI) {
     return false;
   }
 
-  const vector<ValSig> *peds = tholdCI->getPeds();
-  const vector<ValSig> *ulds = tholdCI->getULDs();
+  const vector<CalibData::ValSig> *peds = tholdCI->getPeds();
+  const vector<CalibData::ValSig> *ulds = tholdCI->getULDs();
   if (!peds || !ulds) {
     // no msg, b/c sometimes CalibSvc returns 'empty' TholdCI
     return false;
@@ -114,7 +114,7 @@ StatusCode  TholdCIMgr::genLocalStore() {
 
   for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
     if (!m_idealMode) {
-      CalTholdCI *tholdCI = (CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
+      CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
       if (!tholdCI) continue;
       if (!validateRangeBase(tholdCI)) continue;
       

@@ -16,9 +16,6 @@
 
 // STD INCLUDES
 
-using namespace CalibData;
-using namespace CalUtil;
-
 /// \brief save time w/ certain pre-calculated values.
 /// \note have to keep in sync w/ CalibDataSvc.
 /// \note modeled after CalibItemMgr class
@@ -39,23 +36,23 @@ class PrecalcCalibTool : public AlgTool,
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
   /// return pedestal sigma converted to CIDAC scale
-  StatusCode getPedSigCIDAC(RngIdx rngIdx, float &cidac);
+  StatusCode getPedSigCIDAC(CalUtil::RngIdx rngIdx, float &cidac);
 
   /// return trigger threshold in CIDAC scale
-  StatusCode getTrigCIDAC(DiodeIdx diodeIdx, float &cidac);
+  StatusCode getTrigCIDAC(CalUtil::DiodeIdx diodeIdx, float &cidac);
 
   /// return trigger threshold in faceSignal (MeV) scale
-  StatusCode getTrigMeV(DiodeIdx diodeIdx, float &mev);
+  StatusCode getTrigMeV(CalUtil::DiodeIdx diodeIdx, float &mev);
 
   /// \brief return trigger threshold in proper adc range w/ associated range 
   /// & adc value
   ///
   /// this is needed bc trigger thresholds are often measured past the 
   /// saturation point of x8 range
-  StatusCode getTrigRngADC(DiodeIdx diodeIdx, RngNum &rng, float &adc);
+  StatusCode getTrigRngADC(CalUtil::DiodeIdx diodeIdx, CalUtil::RngNum &rng, float &adc);
   
   /// return lac threshold in CIDAC scale
-  StatusCode getLacCIDAC(FaceIdx faceIdx, float &lacCIDAC);
+  StatusCode getLacCIDAC(CalUtil::FaceIdx faceIdx, float &lacCIDAC);
 
 
  private:
@@ -82,24 +79,24 @@ class PrecalcCalibTool : public AlgTool,
   bool m_isValid;
 
   /// trigger threholds in CIDAC scale
-  CalArray<DiodeIdx, float> m_trigCIDAC;
+  CalUtil::CalArray<CalUtil::DiodeIdx, float> m_trigCIDAC;
 
   /// \brief trigger threholds in ADC scale (converted to proper x1 or x8 range)
   ///
   /// this is needed bc trigger thresholds are often measured past the 
   /// saturation point of x8 range
-  CalArray<DiodeIdx, float> m_trigADC;
+  CalUtil::CalArray<CalUtil::DiodeIdx, float> m_trigADC;
 
   /// \brief adc range for trigger threshold adc value
-  CalArray<DiodeIdx, RngNum> m_trigRng;
+  CalUtil::CalArray<CalUtil::DiodeIdx, CalUtil::RngNum> m_trigRng;
 
   /// trigger threhold in faceSignal MeV
-  CalArray<DiodeIdx, float> m_trigMeV;
+  CalUtil::CalArray<CalUtil::DiodeIdx, float> m_trigMeV;
 
   /// lac thresholds converted to CIDAC scale.
-  CalArray<FaceIdx, float> m_lacCIDAC;
+  CalUtil::CalArray<CalUtil::FaceIdx, float> m_lacCIDAC;
   /// pedestal noise sigma converted to CIDAC scale
-  CalArray<RngIdx, float> m_pedSigCIDAC;
+  CalUtil::CalArray<CalUtil::RngIdx, float> m_pedSigCIDAC;
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
@@ -117,14 +114,14 @@ class PrecalcCalibTool : public AlgTool,
   /// \note support LEX8 values > 4095 via extrapolation
   /// \param uldTholdX8 is needed for the calculation.  i know you already
   /// have it, so there's no sense in me retrieving it again.
-  StatusCode lex8_to_lex1(FaceIdx faceIdx, 
+  StatusCode lex8_to_lex1(CalUtil::FaceIdx faceIdx, 
                           float l8adc, float &l1adc);
 
   /// \brief Convert HEX8 adc value to HEX1 scale for given xtal face
   /// \note support HEX8 values > 4095 via extrapolation
   /// \param uldTholdX8 is needed for the calculation.  i know you already
   /// have it, so there's no sense in me retrieving it again.
-  StatusCode hex8_to_hex1(FaceIdx faceIdx, 
+  StatusCode hex8_to_hex1(CalUtil::FaceIdx faceIdx, 
                           float h8adc, float &h1adc);
 };
 

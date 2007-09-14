@@ -21,7 +21,7 @@ using namespace CalibData;
 const float BAD_FLOAT = -99999.9F;
 
 AsymMgr::AsymMgr(CalCalibShared &ccsShared) : 
-  CalibItemMgr(CAL_Asym,
+  CalibItemMgr(ICalibPathSvc::Calib_CAL_Asym,
                ccsShared,
                N_SPLINE_TYPES) 
 {

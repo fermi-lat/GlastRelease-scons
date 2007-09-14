@@ -11,6 +11,7 @@
 
 using namespace CalUtil;
 using namespace idents;
+using namespace CalibData;
 
 /// get pedestal vals for given xtal/face/rng
 const Ped *PedMgr::getPed(RngIdx rngIdx) {

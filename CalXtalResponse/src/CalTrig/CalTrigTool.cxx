@@ -285,7 +285,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
 */
 
 StatusCode CalTrigTool::calcGlobalTrig(const CalDigiCol& calDigiCol,
-                                       CalArray<DiodeNum, bool> &trigBits,
+                                       CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
                                        Event::GltDigi *glt) {
   StatusCode sc;
 

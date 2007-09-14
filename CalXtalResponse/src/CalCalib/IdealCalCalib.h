@@ -13,7 +13,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
 
 /** @class IdealCalCalib
     @author Zachary Fewtrell
@@ -27,17 +26,17 @@ class IdealCalCalib {
   IdealCalCalib();
 
   /// read in calibration values from IFile XML file
-  StatusCode readCfgFile(const string &path);
+  StatusCode readCfgFile(const std::string &path);
 
   //////////////////
   //// PEDS ///
   //////////////////
   /// 1 pedestal value per range
-  vector<double> pedVals;       
+  std::vector<double> pedVals;       
   /// associated correlated pedestal cosines
-  vector<double> pedCos;        
+  std::vector<double> pedCos;        
   /// sigma/val for all pedestal calibrations
-  vector<double> pedSigs;       
+  std::vector<double> pedSigs;       
 
   //////////////////
   //// ASYMMETRY ///
@@ -88,11 +87,11 @@ class IdealCalCalib {
   /// LAC threshold 
   float ciLAC;                 
   /// 1 ULD threshold per ADC range
-  vector<double> ciULD;         
+  std::vector<double> ciULD;         
   /// sigma/val for all vals in THOLD_CI group
   float ciSigPct;              
   /// 1 pedestal value per ADC range           
-  vector<double> ciPeds;        
+  std::vector<double> ciPeds;        
   
 
   ///////////////////
@@ -105,25 +104,25 @@ class IdealCalCalib {
   /// sigma/val for all vals in THOLD_MUON group 
   float muonSigPct;            
   /// 1 pedestal value per ADC range      
-  vector<double> muonPeds;      
+  std::vector<double> muonPeds;      
 
   ///////////////////
   //// INT_NONLIN ///
   ///////////////////
   /// ADC/DAC for each ADC range 
-  vector<double> inlADCPerCIDAC;          
+  std::vector<double> inlADCPerCIDAC;          
   /// sigma/val for all vals in INT_NONLIN group
   float inlSigPct;             
 
  private:
 
   //-- SECTION DECRIPTION STRINGS --//
-  static const string PEDS;
-  static const string ASYM;
-  static const string THOLD_CI;
-  static const string THOLD_MUON;
-  static const string INL;
-  static const string MPD;
+  static const std::string PEDS;
+  static const std::string ASYM;
+  static const std::string THOLD_CI;
+  static const std::string THOLD_MUON;
+  static const std::string INL;
+  static const std::string MPD;
 };
 
 

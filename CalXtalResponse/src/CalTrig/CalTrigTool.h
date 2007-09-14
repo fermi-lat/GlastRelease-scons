@@ -38,30 +38,30 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
 
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
-  StatusCode calcXtalTrig(XtalIdx xtalIdx,
-                          const CalArray<XtalRng, float> &adcPed,
-                          CalArray<XtalDiode, bool> &trigBits,
+  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
+                          const CalUtil::CalArray<CalUtil::XtalRng, float> &adcPed,
+                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                           Event::GltDigi *glt);
 
   StatusCode calcXtalTrig(const Event::CalDigi& calDigi,
-                          CalArray<XtalDiode, bool> &trigBits,
+                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                           Event::GltDigi *glt);
 
 
-  StatusCode calcXtalTrig(XtalIdx xtalIdx,
+  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
                           const Event::CalDigi::CalXtalReadout &ro,
-                          CalArray<XtalDiode, bool> &trigBits,
+                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                           Event::GltDigi *glt);
 
-  StatusCode calcXtalTrig(XtalIdx xtalIdx,
-                          const CalArray<XtalDiode, float> &cidac,
-                          CalArray<XtalDiode, bool> &trigBits,
+  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
+                          const CalUtil::CalArray<CalUtil::XtalDiode, float> &cidac,
+                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                           Event::GltDigi *glt
                           );
 
 
   StatusCode calcGlobalTrig(const Event::CalDigiCol& calDigiCol,
-                            CalArray<DiodeNum,bool> &trigBits,
+                            CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
                             Event::GltDigi *glt);
 
 

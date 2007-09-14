@@ -21,9 +21,6 @@
 
 // STD
 
-using namespace CalUtil;
-
-
 /** @class CalCalibSvc
     @author Zachary Fewtrell
     * \brief Instatiates ICalCalibSvc interface, gets data from CalibDataSvc
@@ -58,41 +55,41 @@ class CalCalibSvc : public Service, virtual public ICalCalibSvc,
   /// return the service type
   const InterfaceID&  CalCalibSvc::type () const {return IID_ICalCalibSvc;}
 
-  const CalMevPerDac *getMPD(XtalIdx xtalIdx) {return m_mpdMgr.getMPD(xtalIdx);}
+  const CalibData::CalMevPerDac *getMPD(CalUtil::XtalIdx xtalIdx) {return m_mpdMgr.getMPD(xtalIdx);}
 
-  const vector<float> *getInlAdc(CalUtil::RngIdx rngIdx) {
+  const std::vector<float> *getInlAdc(CalUtil::RngIdx rngIdx) {
     return m_inlMgr.getInlAdc(rngIdx);}
 
-  const vector<float> *getInlCIDAC(CalUtil::RngIdx rngIdx) {
+  const std::vector<float> *getInlCIDAC(CalUtil::RngIdx rngIdx) {
     return m_inlMgr.getInlCIDAC(rngIdx);}
 
-  const Ped *getPed(RngIdx rngIdx) {return m_pedMgr.getPed(rngIdx);}
+  const CalibData::Ped *getPed(CalUtil::RngIdx rngIdx) {return m_pedMgr.getPed(rngIdx);}
 
-  const CalAsym *getAsym(XtalIdx xtalIdx) {return m_asymMgr.getAsym(xtalIdx);}
+  const CalibData::CalAsym *getAsym(CalUtil::XtalIdx xtalIdx) {return m_asymMgr.getAsym(xtalIdx);}
   
-  const Xpos *getAsymXpos() {return m_asymMgr.getXpos();}
+  const CalibData::Xpos *getAsymXpos() {return m_asymMgr.getXpos();}
 
-  const CalTholdCI *getTholdCI(FaceIdx faceIdx) {return m_tholdCIMgr.getTholdCI(faceIdx);}
+  const CalibData::CalTholdCI *getTholdCI(CalUtil::FaceIdx faceIdx) {return m_tholdCIMgr.getTholdCI(faceIdx);}
 
-  StatusCode evalCIDAC (RngIdx rngIdx, float adc,   float &cidac) {
+  StatusCode evalCIDAC (CalUtil::RngIdx rngIdx, float adc,   float &cidac) {
     return m_inlMgr.evalCIDAC(rngIdx, adc, cidac);
   }
 
-  StatusCode evalADC (RngIdx rngIdx, float cidac,   float &adc) {
+  StatusCode evalADC (CalUtil::RngIdx rngIdx, float cidac,   float &adc) {
     return m_inlMgr.evalADC(rngIdx, cidac, adc);
   }
 
-  StatusCode evalAsym(XtalIdx xtalIdx, AsymType asymType, 
+  StatusCode evalAsym(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType, 
                       float pos,   float &asym) {
     return m_asymMgr.evalAsym(xtalIdx, asymType, pos, asym);
   }
 
-  StatusCode evalPos (XtalIdx xtalIdx, AsymType asymType, 
+  StatusCode evalPos (CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType, 
                       float asym,  float &pos) {
     return m_asymMgr.evalPos(xtalIdx, asymType, asym, pos);
   }
 
-  StatusCode evalFaceSignal(RngIdx rngIdx, float adc, float &ene);
+  StatusCode evalFaceSignal(CalUtil::RngIdx rngIdx, float adc, float &ene);
 
   StatusCode getMPDDiode(CalUtil::DiodeIdx diodeIdx, float &mpdDiode);
 

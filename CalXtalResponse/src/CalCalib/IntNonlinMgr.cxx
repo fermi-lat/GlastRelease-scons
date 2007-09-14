@@ -17,7 +17,7 @@ using namespace CalUtil;
 using namespace idents;
 
 IntNonlinMgr::IntNonlinMgr(CalCalibShared &ccsShared) : 
-  CalibItemMgr(CAL_IntNonlin, 
+  CalibItemMgr(ICalibPathSvc::Calib_CAL_IntNonlin, 
                ccsShared,
                N_SPLINE_TYPES)
 {
@@ -29,13 +29,13 @@ IntNonlinMgr::IntNonlinMgr(CalCalibShared &ccsShared) :
   }
 }
 
-const vector<float> *IntNonlinMgr::getInlAdc(CalUtil::RngIdx rngIdx) {
+const vector<float> *IntNonlinMgr::getInlAdc(const CalUtil::RngIdx rngIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
   if (sc.isFailure()) return NULL;
 
-  const IntNonlin *inl = (IntNonlin*)m_rngBases[rngIdx];
+  const CalibData::IntNonlin *inl = (CalibData::IntNonlin*)m_rngBases[rngIdx];
 
   if (!inl) return NULL;
 
@@ -84,8 +84,8 @@ StatusCode IntNonlinMgr::genLocalStore() {
     
     //-- NORMAL (NON-IDEAL) MODE -//
     else {
-      IntNonlin *intNonlin 
-        = (IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
+      CalibData::IntNonlin *intNonlin 
+        = (CalibData::IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
       // support partial LAT
       if (!intNonlin) continue;
       if (!validateRangeBase(intNonlin)) continue;
@@ -109,7 +109,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
       //-- 2nd choise, fall back to global 'DacCol' info
       else {
         //get collection of associated DAC vals
-        DacCol *intNonlinDacCol = 
+        CalibData::DacCol *intNonlinDacCol = 
           m_calibBase->getDacCol((CalXtalId::AdcRange)rng);
         
         const vector<unsigned> *globalCIDACs;
@@ -202,14 +202,14 @@ StatusCode IntNonlinMgr::loadIdealVals() {
     idealCIDACs[1] = 
       (unsigned int)(maxADC / m_ccsShared.m_idealCalib.inlADCPerCIDAC[rng.val()]);
 
-    m_idealINL[rng].reset(new IntNonlin(&idealADCs, 0, &idealCIDACs));
+    m_idealINL[rng].reset(new CalibData::IntNonlin(&idealADCs, 0, &idealCIDACs));
   }
 
   return StatusCode::SUCCESS;
 }
 
 
-bool IntNonlinMgr::validateRangeBase(IntNonlin *intNonlin) {
+bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
   if (!intNonlin) return false;
 
   //get vector of vals

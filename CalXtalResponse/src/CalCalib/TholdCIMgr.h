@@ -5,17 +5,14 @@
 #include "CalibItemMgr.h"
 
 // GLAST
-#include "CalibData/Cal/CalTholdCI.h"
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalibData/Cal/CalTholdCI.h"
 
 // EXTLIB
+
 // STD
+#include <memory>
 
-using namespace CalUtil;
-using namespace idents;
-
-using namespace CalibData;
 
 class CalCalibSvc;
 
@@ -28,10 +25,10 @@ class CalCalibSvc;
 class TholdCIMgr : public CalibItemMgr {
  public:
   TholdCIMgr(CalCalibShared &ccsShared) 
-    : CalibItemMgr(CAL_TholdCI, ccsShared)
+    : CalibItemMgr(ICalibPathSvc::Calib_CAL_TholdCI, ccsShared)
     {};
 
-  const CalTholdCI *getTholdCI(FaceIdx faceIdx);
+  const CalibData::CalTholdCI *getTholdCI(CalUtil::FaceIdx faceIdx);
 
  private:
   StatusCode loadIdealVals();
@@ -40,9 +37,9 @@ class TholdCIMgr : public CalibItemMgr {
   StatusCode genLocalStore();
   
   /// Validate TDS data entry (for empty ptrs & fun stuff like that)
-  bool validateRangeBase(CalTholdCI *tholdCI);
+  bool validateRangeBase(CalibData::CalTholdCI *tholdCI);
 
-  auto_ptr<CalTholdCI> m_idealTholdCI;
+  std::auto_ptr<CalibData::CalTholdCI> m_idealTholdCI;
   
 };
 

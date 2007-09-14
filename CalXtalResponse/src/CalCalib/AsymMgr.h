@@ -7,16 +7,13 @@
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalibData/Cal/CalAsym.h"
 #include "CalibData/Cal/Xpos.h"
+#include "CalibData/Cal/CalAsym.h"
 
 // EXTLIB
 
 // STD
-
-using namespace CalUtil;
-using namespace idents;
-using namespace CalibData;
+#include <memory>
 
 class CalCalibSvc;
 
@@ -33,22 +30,22 @@ class AsymMgr : public CalibItemMgr {
   StatusCode initialize(const string &flavor);
 
   /// get Asymmetry calibration information for one xtal
-  CalAsym *getAsym(XtalIdx xtalIdx);
+  CalibData::CalAsym *getAsym(CalUtil::XtalIdx xtalIdx);
 
-  Xpos *getXpos();
+  CalibData::Xpos *getXpos();
 
-  StatusCode evalAsym(XtalIdx xtalIdx, AsymType asymType,
+  StatusCode evalAsym(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType,
                       float Xpos, float &asym){
     return evalSpline(splineIdx(asymType, POS2ASYM), xtalIdx, Xpos, asym);
   }
 
-  StatusCode evalPos(XtalIdx xtalIdx, AsymType asymType,
+  StatusCode evalPos(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType,
                      float asym, float &Xpos) {
     return evalSpline(splineIdx(asymType, ASYM2POS), xtalIdx, asym, Xpos);
   }
 
-  StatusCode getAsymCtr(XtalIdx xtalIdx, 
-                        AsymType asymType, 
+  StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, 
+                        CalUtil::AsymType asymType, 
                         float &asymCtr);
 
 
@@ -59,9 +56,9 @@ class AsymMgr : public CalibItemMgr {
       N_ASYM_DIR
     } ASYM_DIR;
 
-    static const unsigned short N_SPLINE_TYPES = N_ASYM_DIR*AsymType::N_VALS;
+    static const unsigned short N_SPLINE_TYPES = N_ASYM_DIR*CalUtil::AsymType::N_VALS;
 
-    unsigned short splineIdx(AsymType asymType, ASYM_DIR asymDir) {
+    unsigned short splineIdx(CalUtil::AsymType asymType, ASYM_DIR asymDir) {
       return asymType.val()*N_ASYM_DIR + asymDir;
     }
 
@@ -71,17 +68,17 @@ class AsymMgr : public CalibItemMgr {
   StatusCode loadIdealVals();
 
   /// store ideal asymmetry splines (same for every xtal)
-  auto_ptr<CalAsym> m_idealAsym;
+  std::auto_ptr<CalibData::CalAsym> m_idealAsym;
 
   /// store position values for ideal asym splines.
-  auto_ptr<Xpos> m_idealXpos;
+  std::auto_ptr<CalibData::Xpos> m_idealXpos;
 
   /// store precalcuated asymmetry for deposits @ ctr of xtal.
   /// measures 'overall' optical asymmetry
-  CalArray<AsymType, CalArray<XtalIdx, float> > m_asymCtr;
+  CalUtil::CalArray<CalUtil::AsymType, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_asymCtr;
   
   /// validate data ptr from TDS
-  bool validateRangeBase(CalAsym *asym);
+  bool validateRangeBase(CalibData::CalAsym *asym);
 
   /// geometry constant
   float m_csiLength;

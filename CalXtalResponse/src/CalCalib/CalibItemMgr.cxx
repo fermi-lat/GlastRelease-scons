@@ -21,15 +21,6 @@ using namespace CalUtil;
 
 using namespace std;
 ///////////////// GENERIC UTILITIES //////////////////////////////////
-template<typename T> const T& max_val(const vector<T> &vec) {
-  return *(max_element(vec.begin(),vec.end()));
-}
-
-template<typename T> const T& min_val(const vector<T> &vec) {
-  return *(min_element(vec.begin(),vec.end()));
-}
-
-
 /**
    functional class deletes a pointer
    fun to use w/ for_each template
@@ -62,8 +53,8 @@ StatusCode CalibItemMgr::initialize(const string &flavor) {
 
   m_flavor = flavor;
 
-  m_calibPath = m_calibTypePath + '/' + flavor;
-    
+  m_calibPath = m_ccsShared.m_calibPathSvc->getCalibPath(m_calibItem, flavor);
+  
   sc = loadIdealVals();
   if (sc.isFailure()) return sc;
 
@@ -104,7 +95,7 @@ StatusCode CalibItemMgr::updateCalib() {
   DataObject *pObject;
   sc = m_ccsShared.m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
   if (!sc.isFailure())
-    m_calibBase = (CalCalibBase *)(pObject);
+    m_calibBase = (CalibData::CalCalibBase *)(pObject);
   else {
     // create MsgStream only when needed (for performance)
     MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 

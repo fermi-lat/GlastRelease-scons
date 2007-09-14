@@ -37,6 +37,13 @@ StatusCode CalCalibShared::initialize(Service &service) {
     return sc;
   }
 
+  // grab pointer to DataPathSvc
+  sc = m_service->service(m_calibDataSvcName, m_calibPathSvc, true);
+  if ( !sc.isSuccess() ) {
+    MsgStream msglog(m_service->msgSvc(), m_service->name());
+    msglog << MSG::ERROR << "Could not get CalibDataSvc" << endreq;
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
   
