@@ -1,5 +1,5 @@
 package eventFile
-version v3r4p1
+version v3r4p2
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -13,11 +13,16 @@ use enums v*
 apply_pattern package_include
 apply_pattern package_headers
 apply_pattern package_linkopts
-
+apply_pattern package_stamps
 apply_pattern shared_library
+apply_pattern ld_library_path
+
+set LDFROOT ${ldfExt_DIR}
+
+private
 
 macro_append cppflags "-D_FILE_OFFSET_BITS=64 -DHAVE_FACILITIES " \
-	WIN32	" /D __i386 /D HAVE_FACILITIES "
+	WIN32	" /D __i386 /D HAVE_FACILITIES /Zp4 "
 
 library eventFile ${eventFile_headers} \
 	EBF_Data.cxx \
@@ -29,12 +34,6 @@ library eventFile ${eventFile_headers} \
 	LSFReader.cxx \
 	LSEWriter.cxx \
 	LSE_Keys.cxx
-
-set LDFROOT ${ldfExt_DIR}
-
-apply_pattern package_stamps
-
-apply_pattern ld_library_path
 
 application writeMerge writeMerge.cxx
 

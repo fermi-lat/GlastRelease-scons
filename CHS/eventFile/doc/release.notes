@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v3r4p1 14-Sep-2007 RBL add compiler-alignment directive for WIN32
  * v3r4p1 13-Jul-2007 RBL handle 0-length CDM_keys lists correctly.
  * v3r3   05-May-2007 RBL Moved SWIG wrapper to separate CHS/pyeventFile package.
  * v3r3   27-Apr-2007 RBL Added SWIG wrapper for using LSEReader from Python.
