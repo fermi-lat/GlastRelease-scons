@@ -13,7 +13,6 @@ $Header$
 #include "GaudiKernel/IInterface.h"
 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "CalibData/CalibModel.h"
 #include "CalibData/Tkr/BadStrips.h"
 
 

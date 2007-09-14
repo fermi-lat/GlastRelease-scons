@@ -11,7 +11,6 @@ $Header$
 // Include files
 #include "GaudiKernel/IInterface.h"
 
-#include "CalibData/CalibModel.h"
 #include "CalibData/Tkr/TkrSplitsCalib.h"
 #include "Event/Digi/TkrDigi.h"
 

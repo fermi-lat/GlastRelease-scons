@@ -13,7 +13,6 @@ $Header$
 #include "idents/VolumeIdentifier.h"
 #include "idents/TkrId.h"
 
-#include "CalibData/CalibModel.h"
 #include "CalibData/Tkr/TkrTot.h"
 #include "CalibData/Tkr/TkrScale.h"
 

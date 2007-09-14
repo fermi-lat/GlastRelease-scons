@@ -10,7 +10,6 @@
 #include "GaudiKernel/IDetDataSvc.h"
 
 #include "CalibData/CalibTime.h"
-#include "CalibData/CalibModel.h"
 #include "CalibSvc/ICalibRootSvc.h"
 #include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Tkr/BadStrips.h"
@@ -227,7 +226,7 @@ StatusCode TkrCalibAlg::execute( ) {
     CalibData::BadStrips* pDead = 0;
 
     if(m_deadStripsFlavor!="ideal" && m_deadStripsFlavor!="") {
-        //fullPath = "/Calib/TKR_DeadChan/"+m_deadStripsFlavor;
+
         fullPath = m_pCalibPathSvc->getCalibPath(
             ICalibPathSvc::Calib_TKR_DeadChan, m_deadStripsFlavor );
         pDead = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, fullPath);
@@ -251,7 +250,6 @@ StatusCode TkrCalibAlg::execute( ) {
 
     if(m_hotStripsFlavor!="ideal" && m_hotStripsFlavor!="") {
 
-        //fullPath = "/Calib/TKR_HotChan/"+m_hotStripsFlavor;
         fullPath = m_pCalibPathSvc->getCalibPath(
             ICalibPathSvc::Calib_TKR_HotChan, m_hotStripsFlavor );
         pHot = SmartDataPtr<CalibData::BadStrips>(m_pCalibDataSvc, fullPath);
@@ -277,7 +275,6 @@ StatusCode TkrCalibAlg::execute( ) {
 
     if(m_splitsFlavor!="ideal" && m_splitsFlavor!="") {
 
-        //fullPath = CalibData::TKR_Splits + "/" + m_splitsFlavor;
         fullPath = m_pCalibPathSvc->getCalibPath(
             ICalibPathSvc::Calib_TKR_Splits, m_splitsFlavor );
         m_pCalibDataSvc->retrieveObject(fullPath, pObject);
@@ -302,7 +299,6 @@ StatusCode TkrCalibAlg::execute( ) {
 
     if(m_injectionFlavor!="ideal" && m_injectionFlavor!="") {
 
-        //fullPath = CalibData::TKR_TOTSignal + "/" + m_injectionFlavor;
         fullPath = m_pCalibPathSvc->getCalibPath(
             ICalibPathSvc::Calib_TKR_TOTSignal, m_injectionFlavor );
         m_pCalibDataSvc->retrieveObject(fullPath, pObject);
@@ -327,7 +323,6 @@ StatusCode TkrCalibAlg::execute( ) {
 
     if(m_muonFlavor!="ideal" && m_muonFlavor!="") {
 
-        //fullPath = CalibData::TKR_ChargeScale + "/" + m_muonFlavor;
         fullPath = m_pCalibPathSvc->getCalibPath(
             ICalibPathSvc::Calib_TKR_ChargeScale, m_muonFlavor );
         m_pCalibDataSvc->retrieveObject(fullPath, pObject);

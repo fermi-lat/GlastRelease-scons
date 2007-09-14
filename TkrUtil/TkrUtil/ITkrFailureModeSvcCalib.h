@@ -15,7 +15,6 @@ $Header$
 
 #include "TkrUtil/ITkrFailureModeSvc.h"
 
-#include "CalibData/CalibModel.h"
 #include "CalibData/Tkr/BadStrips.h"
 
 #include <map>

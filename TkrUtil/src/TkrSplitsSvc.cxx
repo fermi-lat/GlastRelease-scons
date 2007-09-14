@@ -14,8 +14,6 @@ $Header$
 #include "GaudiKernel/SvcFactory.h"
 
 #include "GaudiKernel/SmartDataPtr.h"
-//#include "CalibData/CalibModel.h"
-//#include "CalibData/Tkr/TkrSplitsCalib.h"
 
 #include "idents/TowerId.h"
 #include "idents/TkrId.h"
