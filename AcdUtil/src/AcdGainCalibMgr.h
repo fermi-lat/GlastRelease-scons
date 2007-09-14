@@ -25,7 +25,7 @@ class AcdCalibSvc;
 class AcdGainCalibMgr : public AcdCalibMgr {
 public:
   AcdGainCalibMgr() : 
-      AcdCalibMgr(ICalibPathSvc::CalibItem::Calib_ACD_ElecGain)
+      AcdCalibMgr(ICalibPathSvc::Calib_ACD_ElecGain)
 //    AcdCalibMgr(CalibData::ACD_ElecGain)
   {};
   

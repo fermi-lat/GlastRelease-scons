@@ -25,7 +25,7 @@ class AcdCalibSvc;
 class AcdPedCalibMgr : public AcdCalibMgr {
 public:
   AcdPedCalibMgr() : 
-      AcdCalibMgr(ICalibPathSvc::CalibItem::Calib_ACD_Ped)
+      AcdCalibMgr(ICalibPathSvc::Calib_ACD_Ped)
 //    AcdCalibMgr(CalibData::ACD_Ped)
   {};
   
