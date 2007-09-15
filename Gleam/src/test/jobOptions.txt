@@ -18,13 +18,12 @@ FluxAlg.sources={"gamma_1_gev_normal","clock"};
 TriggerAlg.applyPrescales=true;
 
 // Number of events to process
-ApplicationMgr.EvtMax = 10000;
+ApplicationMgr.EvtMax = 1000;
 MeritAlg.generated = 1000; 
 
 // test using the trigger engine
 
 OnboardFilter.RejectEvents = true;      // enable OBF
-//TriggerAlg.OutputLevel=2;
 
 #include "$GLEAMROOT/src/calibration.txt"
 
