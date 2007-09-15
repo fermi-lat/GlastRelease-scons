@@ -392,8 +392,9 @@ StatusCode FluxAlg::execute()
     double ke = m_flux->energy(); // kinetic energy in MeV
 
     //here's where we get the particleID and mass for later.
-    // Note that the Gaudi particle table now only has p+: 
+    // Note that the Gaudi particle table now only has p+ and n0 for proton and neutron: 
     if( particleName=="p" || particleName=="proton") particleName="p+";
+    if( particleName=="neutron") particleName="n0";
     ParticleProperty* prop = m_partSvc->find(particleName);
 
 //    if( prop==0 && particleName=="He" ){
