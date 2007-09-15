@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p13 THB 15-Sep-07 Fix test program JO to enable trigger
+* ??? p11,12 not documented
 * v6r29p10 AWB 06-Sep-07 Updated JO pipeline/mc.txt.
 * v6r29p9 AWB 06-Sep-07  Updated JO pipeline/mc.txt with new location of VDG sources.
 * v6r29p8
