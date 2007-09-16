@@ -344,6 +344,12 @@ StatusCode TriggerAlg::execute()
             tcf->printContrigurator(log.stream());
             log<<endreq;
             m_printtables=false;
+            if(! m_applyPrescales ) {
+                log << MSG::INFO << 
+                    "TrgConfigSvc selected, but is disabled since the prescale and inhibits are not active:\n"
+                    "\t\tset 'applyPrescales' to actually have a trigger. "
+                    << endreq;
+            }
         }
         if(m_trgConfigSvc->configChanged()){
             log<<MSG::INFO<<"Trigger configuration changed.";
