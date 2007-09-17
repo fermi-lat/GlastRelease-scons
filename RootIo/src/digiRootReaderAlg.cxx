@@ -717,6 +717,8 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
 
     OnboardFilterTds::ObfFilterStatus *obfFilterStatusTds = new OnboardFilterTds::ObfFilterStatus;
 
+    RootPersistence::convert(obfFilterStatusRoot, *obfFilterStatusTds);
+
     sc = eventSvc()->registerObject("/Event/Filter/ObfFilterStatus", obfFilterStatusTds);
     if (sc.isFailure()) {
         log << MSG::INFO << "Failed to register ObfFilterStatus" << endreq;

@@ -651,7 +651,7 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
 
     ObfFilterStatus obfFilterStatusRoot;
     RootPersistence::convert(*obfFilterStatusTds,obfFilterStatusRoot);
-    m_digiEvt->setFilterStatus(obfRoot);
+    m_digiEvt->setObfFilterStatus(obfFilterStatusRoot);
 
     return sc;
 }
