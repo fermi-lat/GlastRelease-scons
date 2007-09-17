@@ -67,7 +67,7 @@ public:
     void addFilterStatus(FilterKeys key, IObfStatus* status);
 
     // Return results method
-    const IObfStatus* getFilterStatus(FilterKeys key);
+    const IObfStatus* getFilterStatus(FilterKeys key) const;
 
 private:
     /// An array of points defining the trajectory
@@ -81,7 +81,10 @@ class ObfGammaStatus : virtual public IObfStatus
 public:
     ObfGammaStatus()              : m_status(0)      {}
     ObfGammaStatus(UInt_t status) : m_status(status) {}
-    virtual ~ObfGammaStatus() {}
+    virtual ~ObfGammaStatus() 
+    {
+        return;
+    }
 
     // This for backward compatibility...
     UInt_t getStatusHi() const; 
@@ -117,6 +120,7 @@ public:
     UInt_t getVetoMask() const;
     UInt_t getVetoBit()  const;
     
+    void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
@@ -141,6 +145,7 @@ public:
     UInt_t getVetoMask() const;
     UInt_t getVetoBit()  const;
     
+    void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
@@ -165,6 +170,7 @@ public:
     UInt_t getVetoMask() const;
     UInt_t getVetoBit()  const;
     
+    void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:

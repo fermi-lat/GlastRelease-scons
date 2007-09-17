@@ -41,6 +41,8 @@ ObfFilterStatus& ObfFilterStatus::operator =(const ObfFilterStatus& rhs)
     m_obfStatusCol[MipFilter]   = rhs.m_obfStatusCol[MipFilter];
     m_obfStatusCol[DFCFilter]   = rhs.m_obfStatusCol[DFCFilter];
 
+    m_obfStatusCol.SetOwner(kTRUE);
+
     return *this;
 }
 
@@ -115,9 +117,10 @@ void ObfFilterStatus::addFilterStatus(FilterKeys key, IObfStatus* status)
 }
 
 // Return results method
-const IObfStatus* ObfFilterStatus::getFilterStatus(FilterKeys key)
+const IObfStatus* ObfFilterStatus::getFilterStatus(FilterKeys key) const
 {
-    IObfStatus* status = 0;
+    IObfStatus* status  = 0;
+    TObject*    statObj = m_obfStatusCol[key];
     if (m_obfStatusCol[key]) status = dynamic_cast<IObfStatus*>(m_obfStatusCol[key]);
 
     return status;
@@ -165,6 +168,12 @@ UInt_t ObfHFCStatus::getStatusLo() const {return m_status & 0xFFFF;}
 UInt_t ObfHFCStatus::getStatus32() const {return m_status;}
 UInt_t ObfHFCStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
 UInt_t ObfHFCStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
+// root Clear...
+void ObfHFCStatus::Clear(Option_t *option)
+{
+    m_status = 0;
+    return;
+}
 
 // root print...
 void ObfHFCStatus::Print(Option_t* option) const 
@@ -187,6 +196,12 @@ UInt_t ObfMipStatus::getStatusLo() const {return m_status & 0xFFFF;}
 UInt_t ObfMipStatus::getStatus32() const {return m_status;}
 UInt_t ObfMipStatus::getVetoMask() const {return enums::MFC_STATUS_M_VETO_DEF;}
 UInt_t ObfMipStatus::getVetoBit()  const {return enums::MFC_STATUS_M_VETOED;}
+// root Clear...
+void ObfMipStatus::Clear(Option_t *option)
+{
+    m_status = 0;
+    return;
+}
 
 // root print...
 void ObfMipStatus::Print(Option_t* option) const 
@@ -211,6 +226,12 @@ UInt_t ObfDFCStatus::getStatusLo() const {return m_status & 0xFFFF;}
 UInt_t ObfDFCStatus::getStatus32() const {return m_status;}
 UInt_t ObfDFCStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
 UInt_t ObfDFCStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
+// root Clear...
+void ObfDFCStatus::Clear(Option_t *option)
+{
+    m_status = 0;
+    return;
+}
 
 // root print...
 void ObfDFCStatus::Print(Option_t* option) const 
