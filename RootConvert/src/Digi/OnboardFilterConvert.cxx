@@ -295,12 +295,37 @@ void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& 
     // Now step through and initialize the status objects one by one
     const OnboardFilterTds::IObfStatus* tdsStatus = 0;
 
+    // We do this one by one explicitly for now. Start with the results of the gamma filter
+    ObfGammaStatus* gammaStatus = new ObfGammaStatus();
     if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter))
     {
-        ObfGammaStatus* rootStatus = new ObfGammaStatus();
-        convert(*tdsStatus, *rootStatus);
-        rootObj.addFilterStatus(ObfFilterStatus::GammaFilter, rootStatus);
+        convert(*tdsStatus, *gammaStatus);
     }
+    rootObj.addFilterStatus(ObfFilterStatus::GammaFilter, gammaStatus);
+
+    // HFC Filter is next
+    ObfHFCStatus* hfcStatus = new ObfHFCStatus();
+    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter))
+    {
+        convert(*tdsStatus, *hfcStatus);
+    }
+    rootObj.addFilterStatus(ObfFilterStatus::HFCFilter, hfcStatus);
+
+    // MIP Filter is next
+    ObfMipStatus* mipStatus = new ObfMipStatus();
+    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter))
+    {
+        convert(*tdsStatus, *mipStatus);
+    }
+    rootObj.addFilterStatus(ObfFilterStatus::MipFilter, mipStatus);
+
+    // DFC Filter is next
+    ObfDFCStatus* dfcStatus = new ObfDFCStatus();
+    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter))
+    {
+        convert(*tdsStatus, *dfcStatus);
+    }
+    rootObj.addFilterStatus(ObfFilterStatus::DFCFilter, dfcStatus);
 
     return;
 }
@@ -313,10 +338,30 @@ void convert( const ObfFilterStatus& rootObj, OnboardFilterTds::ObfFilterStatus&
 
     if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::GammaFilter))
     {
-        unsigned int nobits = 0;
-        OnboardFilterTds::ObfGammaStatus* tdsStatus = new OnboardFilterTds::ObfGammaStatus(nobits);
+        OnboardFilterTds::ObfGammaStatus* tdsStatus = new OnboardFilterTds::ObfGammaStatus(0);
         convert(*rootStatus, *tdsStatus);
         tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter, tdsStatus);
+    }
+
+    if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::HFCFilter))
+    {
+        OnboardFilterTds::ObfHFCStatus* tdsStatus = new OnboardFilterTds::ObfHFCStatus(0);
+        convert(*rootStatus, *tdsStatus);
+        tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter, tdsStatus);
+    }
+
+    if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::MipFilter))
+    {
+        OnboardFilterTds::ObfMipStatus* tdsStatus = new OnboardFilterTds::ObfMipStatus(0);
+        convert(*rootStatus, *tdsStatus);
+        tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter, tdsStatus);
+    }
+
+    if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::DFCFilter))
+    {
+        OnboardFilterTds::ObfDFCStatus* tdsStatus = new OnboardFilterTds::ObfDFCStatus(0);
+        convert(*rootStatus, *tdsStatus);
+        tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter, tdsStatus);
     }
 
     return;
