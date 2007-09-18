@@ -25,10 +25,10 @@ ObfFilterStatus::~ObfFilterStatus()
 void ObfFilterStatus::initialize() 
 {
     m_obfStatusCol.Clear();
-    m_obfStatusCol[GammaFilter] = 0;
-    m_obfStatusCol[HFCFilter]   = 0;
-    m_obfStatusCol[MipFilter]   = 0;
-    m_obfStatusCol[DFCFilter]   = 0;
+    m_obfStatusCol.AddAt(0,GammaFilter);
+    m_obfStatusCol.AddAt(0,HFCFilter);
+    m_obfStatusCol.AddAt(0,MipFilter);
+    m_obfStatusCol.AddAt(0,DFCFilter);
 
     return;
 }
@@ -109,7 +109,8 @@ void ObfFilterStatus::Print(Option_t* option) const
 }
 
 // Add results method
-void ObfFilterStatus::addFilterStatus(FilterKeys key, IObfStatus* status)
+//void ObfFilterStatus::addFilterStatus(FilterKeys key, IObfStatus* status)
+void ObfFilterStatus::addFilterStatus(FilterKeys key, TObject* status)
 {
     m_obfStatusCol[key] = status;
 

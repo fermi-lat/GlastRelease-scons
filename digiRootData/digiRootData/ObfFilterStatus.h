@@ -11,7 +11,7 @@
 *        entirely with the status bits
 *
 */
-class IObfStatus : public TObject
+class IObfStatus
 {
 public:
     virtual ~IObfStatus() {}
@@ -64,7 +64,8 @@ public:
     void initialize();
 
     // Add results method
-    void addFilterStatus(FilterKeys key, IObfStatus* status);
+//    void addFilterStatus(FilterKeys key, IObfStatus* status);
+    void addFilterStatus(FilterKeys key, TObject* status);
 
     // Return results method
     const IObfStatus* getFilterStatus(FilterKeys key) const;
@@ -76,7 +77,7 @@ private:
     ClassDef(ObfFilterStatus,1) // Onboard Filter container class
 };
 
-class ObfGammaStatus : virtual public IObfStatus
+class ObfGammaStatus : virtual public IObfStatus, public TObject
 {
 public:
     ObfGammaStatus()              : m_status(0)      {}
@@ -104,7 +105,7 @@ private:
     ClassDef(ObfGammaStatus,1) // Gamma Filter output
 };
 
-class ObfHFCStatus : virtual public IObfStatus
+class ObfHFCStatus : virtual public IObfStatus, public TObject
 {
 public:
     ObfHFCStatus()              : m_status(0)      {}
@@ -129,7 +130,7 @@ private:
     ClassDef(ObfHFCStatus,1) // HFC output
 };
 
-class ObfMipStatus : virtual public IObfStatus
+class ObfMipStatus : virtual public IObfStatus, public TObject
 {
 public:
     ObfMipStatus()              : m_status(0)      {}
@@ -154,7 +155,7 @@ private:
     ClassDef(ObfMipStatus,1) // MIP filter output
 };
 
-class ObfDFCStatus : virtual public IObfStatus
+class ObfDFCStatus : virtual public IObfStatus, public TObject
 {
 public:
     ObfDFCStatus()              : m_status(0)      {}
