@@ -36,7 +36,7 @@
 #include "LCIonPhysics.hh"
 #include "LCLeptonPhysics.hh"
 
-// LC 
+// Space
 
 #include "SEBosonPhysics.hh"
 #include "SEDecayPhysics.hh"
@@ -60,6 +60,7 @@
 #include "G4EmLowEnergyPhysics.hh"
 #include "G4DecayPhysics.hh"
 #include "G4IonPhysics.hh"
+#include "EpaxIonPhysics.h"
 
 
 #include <cstdlib>
@@ -172,7 +173,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      
      // Ion Physics
      
-     RegisterPhysics( new G4IonPhysics("ion"));
+     RegisterPhysics( new G4IonPhysics("ion")); // to be updated
 
      
      RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron")); // to be updated
@@ -196,8 +197,11 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      RegisterPhysics( new G4DecayPhysics("decay",ver) );
      
      // Ion Physics
+     //RegisterPhysics( new G4IonPhysics("ion"));
+
+     // Full Ion Physics
      
-     RegisterPhysics( new G4IonPhysics("ion"));
+     RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice, msFactory));
 
 
      if (m_physicsChoice=="LHEP")
@@ -211,7 +215,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
        RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron"));
 
      if (m_physicsChoice=="QGSP")
-       RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron"));
+       RegisterPhysics(  new HadronPhysicsQGSP("hadron"));
 
      if (m_physicsChoice=="QGSP_BERT")
        RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
