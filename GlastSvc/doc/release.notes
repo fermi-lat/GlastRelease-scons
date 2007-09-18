@@ -5,6 +5,8 @@
  package manager:T.Burnett
            EOH
 
+ v9r23    18-Sep-2007  hmk  Add GlastHistorySvc which requires Gaudi's 
+                            HistorySvc
  v9r22    10-Aug-2007  jrb  Add IGlastDetSvc::getNamedId 
  v9r21    15-Jun-2007  jrb  Add IGlastDetSvc::orderRibbonSegments
  v9r20    02-Apr-2007  HMK  Modify the behavior of CurrentEventAlg's fileName parameter to take a default of ""
