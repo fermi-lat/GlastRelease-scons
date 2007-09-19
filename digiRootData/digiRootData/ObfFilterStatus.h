@@ -82,10 +82,7 @@ class ObfGammaStatus : virtual public IObfStatus, public TObject
 public:
     ObfGammaStatus()              : m_status(0)      {}
     ObfGammaStatus(UInt_t status) : m_status(status) {}
-    virtual ~ObfGammaStatus() 
-    {
-        return;
-    }
+    virtual ~ObfGammaStatus() {}
 
     // This for backward compatibility...
     UInt_t getStatusHi() const; 
