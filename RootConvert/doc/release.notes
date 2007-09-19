@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r27p1 19-Sep-2007 HMK Warning patches
  v1r27   18-Sep-2007  TU ObfFilterStatus plus move to use namespace for
                          intVector and floatVector in TruncationData convert
  v1r26p1 10-Sep-2007 JCT TruncationData conversion

@@ -297,7 +297,7 @@ void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& 
 
     // We do this one by one explicitly for now. Start with the results of the gamma filter
     ObfGammaStatus* gammaStatus = new ObfGammaStatus();
-    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter))
+    if ((tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter)))
     {
         convert(*tdsStatus, *gammaStatus);
     }
@@ -305,7 +305,7 @@ void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& 
 
     // HFC Filter is next
     ObfHFCStatus* hfcStatus = new ObfHFCStatus();
-    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter))
+    if ((tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter)))
     {
         convert(*tdsStatus, *hfcStatus);
     }
@@ -313,7 +313,7 @@ void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& 
 
     // MIP Filter is next
     ObfMipStatus* mipStatus = new ObfMipStatus();
-    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter))
+    if ((tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter)))
     {
         convert(*tdsStatus, *mipStatus);
     }
@@ -321,7 +321,7 @@ void convert( const OnboardFilterTds::ObfFilterStatus& tdsObj, ObfFilterStatus& 
 
     // DFC Filter is next
     ObfDFCStatus* dfcStatus = new ObfDFCStatus();
-    if (tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter))
+    if ((tdsStatus = tdsObj.getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter)))
     {
         convert(*tdsStatus, *dfcStatus);
     }

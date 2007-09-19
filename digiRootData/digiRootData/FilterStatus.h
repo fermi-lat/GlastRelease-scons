@@ -63,7 +63,7 @@ public:
                m_strip(strip), m_tower(tower), m_idx(idx) 
                { }
 
-    TfcHit(const TfcHit& copy)
+               TfcHit(const TfcHit& copy) : TObject(copy)
     {
         m_strip = copy.m_strip;
         m_tower = copy.m_tower;
@@ -120,7 +120,7 @@ public:
                m_flnk(flnk), m_blnk(blnk)
                { }
 
-    TfcPrjList(const TfcPrjList& copy)
+               TfcPrjList(const TfcPrjList& copy) : TObject(copy)
     {
         m_flnk = copy.m_flnk;
         m_blnk = copy.m_blnk;
@@ -173,7 +173,7 @@ public:
                m_xy0(xy0), m_dxy(dxy), m_dz(dz), m_tower(tower), m_layer(layer) 
                { }
 
-    TfcPrjPrms(const TfcPrjPrms& copy)
+               TfcPrjPrms(const TfcPrjPrms& copy) : TObject(copy)
     {
         m_xy0   = copy.m_xy0;
         m_dxy   = copy.m_dxy;
