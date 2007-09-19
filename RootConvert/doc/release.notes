@@ -3,6 +3,8 @@
  author David Chamont 
  @verbatim
 
+ v1r27   18-Sep-2007  TU ObfFilterStatus plus move to use namespace for
+                         intVector and floatVector in TruncationData convert
  v1r26p1 10-Sep-2007 JCT TruncationData conversion
  v1r26   29-Aug-2007  TU Updates to convert TDS/root FilterStatus 
  v1r25   04-Jun-2007 HMK merge GlastReleasev9r13 branch with moot keys
