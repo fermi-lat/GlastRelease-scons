@@ -3,6 +3,8 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r22   18-Sep-07 HMK Move intVector and floatVector in TkrTruncatedPlane
+ *                        into namespace
  * v11r21p1 05-Sep-07 LSR Up the CLID for EventHeader and add an enum to TkrVertex.h
  * v11r21   28-Aug-07 HMK Add additional trigger word in Event header to
  *          store engine numbers

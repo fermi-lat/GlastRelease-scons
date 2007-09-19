@@ -13,10 +13,14 @@
 static const CLID& CLID_TkrTruncatedPlane = InterfaceID("TkrTruncatedPlane",  0, 0);
 
 
+//typedef std::vector<int>   intVector;
+//typedef std::vector<float> floatVector;
+
+namespace Event {
+
 typedef std::vector<int>   intVector;
 typedef std::vector<float> floatVector;
 
-namespace Event {
 /**
 * @class TkrTruncatedPlane
 *
