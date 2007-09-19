@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef CelFileTreeNames_h
-#define CelFileTreeNames_h
+#ifndef CelFileAndTreeNames_h
+#define CelFileAndTreeNames_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -33,36 +33,36 @@ class TObjArray;
 class TArrayL64;
 
 //
-// CelFileTreeNames stores information needed to point to a part of an event
+// CelFileAndTreeNames stores information needed to point to a part of an event
 // that is located in another TTree.
 //
-// CelFileTreeNames keep track of the TTrees where the event components live.
+// CelFileAndTreeNames keep track of the TTrees where the event components live.
 //
 // Lists of files and tree names are stored persistently on a TTree by 
-// CelFileTreeNames.  These are:
+// CelFileAndTreeNames.  These are:
 //
-//  _fileNameList (goes to branch XXX_Files) is the vector of file names
-//  _treeNameList (goes to branch XXX_Trees) is the vector of tree names
+//  _fileNames (goes to branch XXX_FileNames) is the vector of file names
+//  _treeNames (goes to branch XXX_TreeNames) is the vector of tree names
 // 
-// At any given time a CelFileTreeNames may be keeping track of any number of TTree
+// At any given time a CelFileAndTreeNames may be keeping track of any number of TTree
 //   
 // Access to the TTree is by key
 //  TTree* getTree(UShort_t key) const ;
 //
-// The keys are assigned when TTree are first associated with the CelFileTreeNames
+// The keys are assigned when TTree are first associated with the CelFileAndTreeNames
 // 
 
-class CelFileTreeNames  : public BranchGroup {
+class CelFileAndTreeNames  : public BranchGroup {
 
 public:
 
   // c'tors & d'tor
   // Default c'tor.  Needed for ROOT
-  CelFileTreeNames();
+  CelFileAndTreeNames();
   // Standard c'tor, stores the name of the component 
-  CelFileTreeNames(const std::string& componentName);
+  CelFileAndTreeNames(const std::string& componentName);
   // D'tor
-  virtual ~CelFileTreeNames();
+  virtual ~CelFileAndTreeNames();
 
   // Methods and functions
   // Reset this object and clear caches
@@ -81,8 +81,8 @@ public:
   virtual Int_t attachToTree(TTree& tree, const char* prefix = 0);
 
   // Access
-  inline UShort_t size() const { return _size; }
-  inline Long64_t entries() const { return _entries; }
+  inline UShort_t size() const { return _setSize; }
+  inline Long64_t entries() const { return _treesSize; }
   inline const std::string& componentName() const { return _componentName; }
 
   // Printing
@@ -99,22 +99,24 @@ protected:
 private:
 
   //disable copying and assignment
-  CelFileTreeNames(const CelFileTreeNames& other);
-  CelFileTreeNames& operator=(const CelFileTreeNames& other);
+  CelFileAndTreeNames(const CelFileAndTreeNames& other);
+  CelFileAndTreeNames& operator=(const CelFileAndTreeNames& other);
 
   // data
   std::string            _componentName;   //! Name of the component this object is storing information about
-  DataHandle<UShort_t>   _size;            //! Number of trees stored by this CelFileTreeNames
-  DataHandle<Long64_t>   _entries;         //! Number of events on the trees stored by this CelFileTreeNames
-  TObjArray*             _treeNameList;    //! Names of trees stored by this CelFileTreeNames
-  TObjArray*             _fileNameList;    //! Names of files where the TTree live
-  TArrayL64*             _treeOffsets;     //! Number of entries in TTrees
+
+  // data on the associated tree
+  DataHandle<UShort_t>   _setSize;            //! Number of trees stored by this CelFileAndTreeNames
+  TObjArray*             _fileNames;       //! Names of files where the TTree live
+  TObjArray*             _treeNames;       //! Names of trees stored by this CelFileAndTreeNames
+  DataHandle<Long64_t>   _treesSize;       //! Number of entries on the trees stored by this CelFileAndTreeNames
+  TArrayL64*             _treeOffsets;    //! Number of entries in TTrees
 
   // Cache for fast lookup
   mutable std::map<UShort_t,TTree*> _cache;  //! Maps key -> tree
   mutable std::map<TTree*,UShort_t> _lookup; //! Reverse map, for making sure we don't screw up
 
-  ClassDef(CelFileTreeNames,0) // For handling referenece to trees
+  ClassDef(CelFileAndTreeNames,0) // For handling referenece to trees
 };
 
 

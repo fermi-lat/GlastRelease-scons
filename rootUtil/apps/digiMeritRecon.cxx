@@ -26,7 +26,7 @@ void usage() {
 
   cout << endl
        << "digiMeritRecon.exe" << endl
-       << "Makes a pointer skim for digi, merit and recon files" << endl
+       << "Makes a composite event list for digi, merit and recon files" << endl
        << endl;
   
   cout << "Usage:" << endl
@@ -177,7 +177,7 @@ int main(int argn, char** argc) {
     }
     p.fillEvent(trees);
   }
-  p.fillMeta();
+  p.fillFileAndTreeSet();
   fout->Write();
 
   return 0;

@@ -57,7 +57,7 @@
 ClassImp(CelIndex);
 
 CelIndex* CelIndex::buildIndex(CompositeEventList& skim, const std::string& component,TTree* tree,Long64_t offset){
-  // Build and return pointer index from a pointer skim
+  // Build and return an index from a composite event list
   CelIndex* pIdx = new CelIndex(skim,component,tree,offset);
   tree->SetTreeIndex(pIdx);
   return pIdx;
@@ -97,7 +97,7 @@ Int_t CelIndex::GetEntryNumberFriend(const TTree* tree){
   check = _skim->readEventAddress(tree->GetReadEntry());
 
   // Get the Event index
-  Long64_t evtIdx = _offset + _skim->metaOffset();
+  Long64_t evtIdx = _offset + _skim->setOffset();
   evtIdx += _component->getIndexInLocalChain();
   // std::cout << "CelIndex::GetEntryNumberFriend(" << _skim->eventIndex() << ':' << evtIdx << ')' << std::endl;
   return evtIdx;  

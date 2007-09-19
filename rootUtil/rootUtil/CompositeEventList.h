@@ -1,12 +1,14 @@
-// -*- Mode: c++ -*-
+
 #ifndef CompositeEventList_h
 #define CompositeEventList_h
+
 /*
 * Project: GLAST
 * Package: rootUtil
 *    File: $Id$
 * Authors:
 *   EC, Eric Charles,    SLAC              echarles@slac.stanford.edu
+*   DC, David Chamont,   LLR-IN2P3-CNRS    chamont@poly.in2p3.fr
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
@@ -15,25 +17,21 @@
 *
 */
 
-// Base class headers
-#include "BranchGroup.h"
-#include <TObject.h>
-
-// Headers for associated classes
+#include "CelLink.h"
 #include "DataHandle.h"
+class CelComponent;
 
-// c++ and stl headers
-#include <map>
-#include <vector>
-
-// forward declares
+#include <TObject.h>
 class TTree;
 class TFile;
 class TChain;
 class TVirtualIndex;
 class TCollection;
-class CelComponent;
 class TObjArray;
+class TString ;
+
+#include <map>
+#include <vector>
 
 //
 // CompositeEventList associates infomation about events that is stored in several trees.
@@ -43,24 +41,24 @@ class TObjArray;
 // 
 // The information is stored on 3 trees
 // 
-//   Events:  Tree with 2 Branches per input component, one entry per event
-//      Comp_EntryIndex/L  -> Index of Event in the Tree it lives on
-//      Comp_TreeIndex/s -> Index of Tree in the Associated vector of trees
-//   
-//   Files:   Tree with 5 Branches per input component, one entry per input collection
-//      Comp_size/s      -> Number of Trees referenced in current entry in File Tree.
-//      Comp_entries/L   -> Number of Entries in all trees references in current entry in File Tree
-//      Comp_Tree        -> TClonesArray<TObjString> with the tree names (should all be the same)
-//      Comp_File        -> TClonesArray<TObjString> with the file names
-//      Comp_Offset      -> TArrayL64 with the offsets for each of the Trees in the current entry in File Tree
-//
 //   Links:  Tree with 3 Branches total, one entry per event
-//      Link_EventIndex  -> Absolute index of this event
-//      Link_MetaIndex   -> Index of the related entry in the File Tree
-//      Link_MetaOffset  -> Offset in events for this entry in the File Tree
+//      Link_EventIndex/L  -> Absolute index of this composite event
+//      Link_SetIndex/L   -> Index of the associated set of files and trees
+//      Link_SetOffset/L  -> Number of events in previous sets
 // 
+//   FileAndTreeSets: Tree with 5 Branches per input component, one entry per set
+//      Comp_SetSize/s    -> Number of Files and Trees referenced in current set
+//      Comp_FileNames    -> TClonesArray<TObjString> with the file names
+//      Comp_TreeNames    -> TClonesArray<TObjString> with the tree names (should all be the same ?)
+//      Comp_TreesSize/L  -> Number of Entries in all trees references in current set
+//      Comp_TreeOffsets  -> TArrayL64 with the offsets for each Tree in the current set
+//
+//   ComponentEntries:  Tree with 2 Branches per input component, one entry per event
+//      Comp_EntryIndex/L  -> Index of the entry in the tree it lives on
+//      Comp_TreeIndex/s -> Index of the tree in the associated set of files and trees
+//   
 
-class CompositeEventList : public BranchGroup, public TObject {
+class CompositeEventList : public TObject {
 
 protected:
 
@@ -68,27 +66,23 @@ protected:
 
 public:
 
-  // ctor's and d'tor
-  // Default c'tor.
-  CompositeEventList(); 
-  // Build a pointer skim from the three trees
-  CompositeEventList(TTree& eventTree, TTree& linkTree, TTree& fileTree);
-  // D'tor
-  virtual ~CompositeEventList();
+  // constructors
+  CompositeEventList() ; 
+  CompositeEventList( TTree & eventTree, TTree & linkTree, TTree & fileTree ) ;
+  virtual ~CompositeEventList() ;
 
   // Methods and functions
   // Make a new file.  Will also delare TTree for storing the pointers
-  TFile* makeFile(const Char_t* fileName, const Char_t* options);
-  // Open an existing file which contains a pointer skim
-  TFile* openFile(const Char_t* fileName);
+  TFile * makeFile( const TString & fileName, const Char_t* options);
+  // Open an existing file which contains a composite event list
+  TFile* openFile( const TString & fileName ) ;
 
   // Add a component by name.  This is only need when writing.  On read these are discovered.
   UInt_t addComponent(const std::string& name);
   // Set up an event.  Grab the status of a set of TTrees
   Long64_t fillEvent(TObjArray& trees);
   Long64_t fillEvent(std::vector<TTree*>& trees);
-  // Store up the List of TTrees that have been used so far
-  Long64_t fillMeta();
+  Long64_t fillFileAndTreeSet();
   // read an event
   Int_t read(Long64_t iEvt);
   // read only the event tree data
@@ -105,16 +99,16 @@ public:
   // Number of entries in this skim
   Long64_t entries() const;
   // Get the index of the current entry in the event tree
-  Long64_t eventIndex() const { return _eventIndex; }
+  Long64_t eventIndex() const { return _linkEntry.eventIndex() ; }
   // Get the index of the current entry in the file tree
-  Long64_t metaIndex() const { return _metaIndex; }
+  Long64_t setIndex() const { return _linkEntry.setIndex() ; }
   // Get the offset of the current entry in the file tree
-  Long64_t metaOffset() const { return _metaOffset; }
+  Long64_t setOffset() const { return _linkEntry.setOffset() ; }
   // Return the tree with the Event component entries
-  TTree* eventTree() { return _eventTree; }
+  TTree* eventTree() { return _entryTree; }
   // Return the tree with the links between events and meta data
   TTree* linkTree() { return _linkTree; }
-  // Return the tree with the meta data
+  // Return the tree with the names of data files
   TTree* fileTree() { return _fileTree; }
   // Get the number of components
   UInt_t nComponent() const { return _compList.size(); }
@@ -165,20 +159,22 @@ private:
   CompositeEventList& operator=(const CompositeEventList& other);
 
   // Data
-  TTree*                                  _eventTree;  //! where the event data is
-  TTree*                                  _linkTree;   //! where the links between event and meta data are
-  TTree*                                  _fileTree;   //! where the list of files is
+  TTree * _linkTree ; 
+  TTree * _entryTree ;
+  TTree * _fileTree ; 
   
-  DataHandle<Long64_t>                    _eventIndex; //! index of the current event in the _eventTree
-  DataHandle<Long64_t>                    _metaIndex;  //! index of the current entry in the _fileTree
-  DataHandle<Long64_t>                    _metaOffset; //! index of the first event with the current entry in _fileTree
-
-  std::vector<TreeAndComponent>           _compList;   //! vector of components and associated TTrees
-  std::vector<std::string >               _compNames;  //! names of components
-  std::map<std::string,UInt_t>            _compMap;    //! components lookup map to get the index in the list above from the name
+//  DataHandle<Long64_t>                    _eventIndex ; 
+//  DataHandle<Long64_t>                    _setIndex ; 
+//  DataHandle<Long64_t>                    _setOffset ;
+//
+  CelLink                        _linkEntry ; //! current link : event index, file-tree-name index
+  std::vector<TreeAndComponent>  _compList;   //! vector of components and associated TTrees
+  std::vector<std::string >      _compNames;  //! names of components
+  std::map<std::string,UInt_t>   _compMap;    //! components lookup map to get the index in the list above from the name
 
   ClassDef(CompositeEventList,0) // Base class for templates for handling simple types
-};
+
+ } ;
 
 
 #endif

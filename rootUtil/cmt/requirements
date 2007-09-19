@@ -12,7 +12,7 @@ apply_pattern root_package headers="\
   ../rootUtil/CompositeEventList.h\
   ../rootUtil/CelComponent.h\
   ../rootUtil/CelEntryIndex.h\
-  ../rootUtil/CelFileTreeNames.h\
+  ../rootUtil/CelFileAndTreeNames.h\
   ../rootUtil/CelLink.h\
   ../rootUtil/CelIndex.h\
   ../rootUtil/CelUtil.h"

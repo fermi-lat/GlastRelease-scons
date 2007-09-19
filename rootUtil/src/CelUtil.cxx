@@ -34,7 +34,7 @@
 
 
 CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* fileName, const char* option) {
-  // Merge a Collection of input files into a single pointer skim
+  // Merge a Collection of input files into a single composite event list
 
   TList skims;
   TIterator* itr = skimFiles.MakeIterator();
@@ -62,7 +62,7 @@ CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* f
 
 
 CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const char* fileName, const char* option) {
-  // Merge a Collection of pointer skims
+  // Merge a Collection of composite event lists
 
 
   TList eventTreeList;
@@ -82,12 +82,12 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
 
   // The Link Tree has to be re-done
   Long64_t* eventIndex = new Long64_t(-1);
-  Long64_t* metaIndexOut  = new Long64_t(-1);
-  Long64_t* metaOffset = new Long64_t(0);
+  Long64_t* setIndexOut  = new Long64_t(-1);
+  Long64_t* setOffset = new Long64_t(0);
   TTree* linkTreeOut = new TTree("Links","Links");
   linkTreeOut->Branch("Link_EventIndex",(void*)eventIndex,"Link_EventIndex/L");
-  linkTreeOut->Branch("Link_MetaIndex",(void*)metaIndexOut,"Link_MetaIndex/L");
-  linkTreeOut->Branch("Link_MetaOffset",(void*)metaOffset,"Link_MetaOffset/L");
+  linkTreeOut->Branch("Link_SetIndex",(void*)setIndexOut,"Link_SetIndex/L");
+  linkTreeOut->Branch("Link_SetOffset",(void*)setOffset,"Link_SetOffset/L");
 
   // Loop on skims
   TIterator* itr = skims.MakeIterator();
@@ -103,10 +103,10 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
     eventTreeList.AddLast(aSkim->eventTree());
     fileTreeList.AddLast(aSkim->fileTree());    
 
-    Long64_t metaIndexIn(0);
-    Long64_t metaIndexSave(-1);
+    Long64_t setIndexIn(0);
+    Long64_t setIndexSave(-1);
     TTree* linkTree = aSkim->linkTree();
-    linkTree->SetBranchAddress("Link_MetaIndex",&metaIndexIn);
+    linkTree->SetBranchAddress("Link_SetIndex",&setIndexIn);
 
     // Redo the data in the Link tree
     Long64_t nEvtCurrent = linkTree->GetEntries();
@@ -120,19 +120,19 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
 	  delete outFile;
 	}
 	delete eventIndex;
-	delete metaIndexOut;
-	delete metaOffset;
+	delete setIndexOut;
+	delete setOffset;
 	delete itr;
 	delete linkTree;
 	return 0;
       }
       // Event Counter goes up by one
       *eventIndex += 1;
-      if ( metaIndexIn != metaIndexSave ) {
+      if ( setIndexIn != setIndexSave ) {
 	// new meta data entry, latch values
-	metaIndexSave = metaIndexIn;
-	*metaIndexOut += 1;
-	*metaOffset = *eventIndex;
+	setIndexSave = setIndexIn;
+	*setIndexOut += 1;
+	*setOffset = *eventIndex;
       }
       // Fill this entry in the link tree
       linkTreeOut->Fill();
@@ -141,8 +141,8 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
   }
   delete itr;
   delete eventIndex;
-  delete metaIndexOut;
-  delete metaOffset;
+  delete setIndexOut;
+  delete setOffset;
 
   // Just Merge the Event and File trees the Normal way
   TTree* eventTree = TTree::MergeTrees(&eventTreeList);

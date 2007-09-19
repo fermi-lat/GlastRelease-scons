@@ -26,7 +26,7 @@
 #pragma link C++ class DataHandle<Double_t>;
 
 #pragma link C++ class CelEntryIndex;
-#pragma link C++ class CelFileTreeNames;
+#pragma link C++ class CelFileAndTreeNames;
 #pragma link C++ class CelLink;
 #pragma link C++ class CelComponent;
 #pragma link C++ class CompositeEventList;

@@ -26,15 +26,15 @@ ClassImp(CelLink) ;
 CelLink::CelLink()
  : BranchGroup(),
    _eventIndex(-1,*this,"EventIndex"),
-   _metaIndex(0,*this,"MetaIndex"),
-   _metaOffset(0,*this,"MetaOffset")
+   _setIndex(0,*this,"SetIndex"),
+   _setOffset(0,*this,"SetOffset")
  { DataHandleInstance::init() ; }
 
 CelLink::CelLink( const CelLink & other )
  : BranchGroup(),
    _eventIndex(other._eventIndex,*this,"EventIndex"),
-   _metaIndex(other._metaIndex,*this,"MetaIndex"),
-   _metaOffset(other._metaOffset,*this,"MetaOffset")
+   _setIndex(other._setIndex,*this,"SetIndex"),
+   _setOffset(other._setOffset,*this,"SetOffset")
  { DataHandleInstance::init() ; }	      
 
 CelLink::~CelLink()
@@ -44,16 +44,16 @@ CelLink & CelLink::operator=( const CelLink & other )
  {
   if ( this == &other ) return *this ;
   _eventIndex = other._eventIndex ;
-  _metaIndex  = other._metaIndex ;
-  _metaOffset = other._metaOffset ;
+  _setIndex  = other._setIndex ;
+  _setOffset = other._setOffset ;
   return *this ;
  }
 
 // Print the information about the current event to cout
 // 
-// The print format is eventIndex:metaIndex:metaOffset
+// The print format is eventIndex:setIndex:setOffset
 void CelLink::printEventInfo( const char * /* options */ ) const
  {
-  std::cout << _eventIndex << ':' << _metaIndex << ':' << _metaOffset ;
+  std::cout << _eventIndex << ':' << _setIndex << ':' << _setOffset ;
  }
 

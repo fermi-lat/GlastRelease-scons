@@ -24,10 +24,10 @@ class CompositeEventList;
 
 namespace CelUtil {
   
-  // Merge a Collection of input files into a single pointer skim
+  // Merge a Collection of input files into a single composite event list
   CompositeEventList* mergeCelFiles(TCollection&, const char* ouputfileName=0, const char* option = "CREATE");  
   
-  // Merge a Collection of pointer skims
+  // Merge a Collection of composite event lists
   CompositeEventList* mergeCompositeEventLists(TCollection&, const char* outputfileName=0, const char* option = "CREATE");
 
 }

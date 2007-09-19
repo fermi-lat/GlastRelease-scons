@@ -26,7 +26,7 @@ void usage() {
 
   std::cout << std::endl
        << theApp << std::endl
-       << "Merges pointer skims" << std::endl
+       << "Merges composite event lists" << std::endl
        << std::endl;
   
   std::cout << "Usage:" << std::endl

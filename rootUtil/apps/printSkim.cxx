@@ -25,7 +25,7 @@ void usage() {
 
   cout << endl
        << m_theApp << endl
-       << "Prints information about a pointer skim file" << endl
+       << "Prints information about a ROOT composite event list" << endl
        << endl;
   
   cout << "Usage:" << endl

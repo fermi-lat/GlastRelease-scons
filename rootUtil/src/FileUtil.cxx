@@ -44,7 +44,7 @@ TFile* FileUtil::getFile(TTree& tree) {
   // Get the TFile associated to a TTree.  Return NULL if failed
   //
   // This can fail if the TTree has not yet been associated with a TFile.
-  // For example if you are making a pointer skim at the same tile as the 
+  // For example if you are making a composite event list at the same tile as the 
   // files it points to.
   //
   // There are two ways to solve that:
@@ -52,7 +52,7 @@ TFile* FileUtil::getFile(TTree& tree) {
   //   Use TTree::SetDirectory(aTFile) to set the TTree's directory
   //
   // Either case implies that you have to select and open the output file with the 
-  // event component before trying to make a pointer skim.
+  // event component before trying to make a composite event list.
   TFile* f = tree.GetCurrentFile();
   if ( 0 == f ) {
     // Tree doesn't have an associated file yet.  

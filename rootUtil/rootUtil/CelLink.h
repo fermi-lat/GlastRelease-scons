@@ -30,12 +30,12 @@ class TObjArray ;
 //
 // CelLink is made for reading/writing entries of the
 // link tree. It associates a given composite event with
-// a given entry in the file/tree tree, and also store the
+// a given entry in the file-tree-names tree, and also store the
 // corresponding offset. The branches are :
 // 
 // Link_EventIndex  -> Absolute index of current composite event
-// Link_MetaIndex   -> Index of the associated entry in the File Tree
-// Link_MetaOffset  -> Offset in events for this entry in the File Tree
+// Link_SetIndex   -> Index of the associated entry in the file-tree-names Tree
+// Link_SetOffset  -> Offset in events for this entry in the file-tree-names Tree
 // 
 
 class CelLink : public BranchGroup
@@ -50,11 +50,17 @@ class CelLink : public BranchGroup
 
     // Operators
     CelLink & operator=( const CelLink & ) ;
-
-    // Access
+    
+    // Accessors
     Long64_t eventIndex() const { return _eventIndex ; }
-    Long64_t metaIndex() const { return _metaIndex ; }
-    Long64_t metaOffset() const { return _metaOffset ; }
+    Long64_t setIndex() const { return _setIndex ; }
+    Long64_t setOffset() const { return _setOffset ; }
+    void setEventIndex( Long64_t index )
+     { _eventIndex = index ; }
+    void incrementEventIndex()
+     { _eventIndex = _eventIndex+1 ; }
+    void incrementSetIndex()
+     { _setOffset = _eventIndex ; _setIndex= _setIndex+1 ; }
 
     // print the info about the current event
     void printEventInfo( const char * options ) const ;  
@@ -62,8 +68,8 @@ class CelLink : public BranchGroup
   private :
   
     DataHandle<Long64_t> _eventIndex ; //! Absolute index of current composite event
-    DataHandle<Long64_t> _metaIndex ;  //! Index of the associated entry in the File Tree
-    DataHandle<Long64_t> _metaOffset ; //! Offset in events for this entry in the File Tree
+    DataHandle<Long64_t> _setIndex ;  //! Index of the associated entry in the File Tree
+    DataHandle<Long64_t> _setOffset ; //! Offset in events for this entry in the File Tree
 
     ClassDef(CelLink,0)
  } ;

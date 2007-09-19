@@ -16,18 +16,18 @@
 
 #include "BranchGroup.h"
 #include "DataHandle.h"
-class CelFileTreeNames ;
+class CelFileAndTreeNames ;
 
 //
 // CelEntryIndex stores information needed to point to a part of an event
 // that is located in another TTree.
 //
-// CelEntryIndex uses CelFileTreeNames to associated TTrees with UShort_t keys.
+// CelEntryIndex uses CelFileAndTreeNames to associated TTrees with UShort_t keys.
 //
 // CelEntryIndex stores two pieces of information for each event.
 //
 //  _entryIndex (goes to branch XXX_EntryIndex)  is the index of the event component in the TTree
-//  _treeIndex    (goes to branch XXX_TreeIndex) is the index of the TTree in the associated CelFileTreeNames
+//  _treeIndex (goes to branch XXX_TreeIndex) is the index of the TTree in the associated CelFileAndTreeNames
 //
 
 
@@ -52,11 +52,11 @@ class CelEntryIndex : public BranchGroup
 
     // Methods and functions
     // set the current event
-    void set( TTree & tree, CelFileTreeNames & handle) ;
+    void set( TTree & tree, CelFileAndTreeNames & handle) ;
     // read an event
-    Int_t read( const CelFileTreeNames & handle ) ;
+    Int_t read( const CelFileAndTreeNames & handle ) ;
     // get the tree that is being read
-    TTree * getTree( const CelFileTreeNames & handle ) const ;
+    TTree * getTree( const CelFileAndTreeNames & handle ) const ;
 
     // print the info about the current event
     void printEventInfo( const char * options ) const ;  
@@ -66,7 +66,7 @@ class CelEntryIndex : public BranchGroup
     // Data
     std::string            _componentName ;  //! Name of the component this object is storing information about
     DataHandle<Long64_t>   _entryIndex ;     //! Index of the current entry in the current TTree
-    DataHandle<UShort_t>   _treeIndex ;      //! Index of the current TTree in the associated CelFileTreeNames
+    DataHandle<UShort_t>   _treeIndex ;      //! Index of the current TTree in the associated CelFileAndTreeNames
   
     ClassDef(CelEntryIndex,0)               // Handles Event Level Information to point to Event Components
 

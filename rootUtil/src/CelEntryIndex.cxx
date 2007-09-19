@@ -14,7 +14,7 @@
 #include "rootUtil/CelEntryIndex.h"
 #include "rootUtil/FileUtil.h"
 #include "rootUtil/DataHandle.h"
-#include "rootUtil/CelFileTreeNames.h"
+#include "rootUtil/CelFileAndTreeNames.h"
 
 #include <TTree.h>
 
@@ -64,7 +64,7 @@ CelEntryIndex & CelEntryIndex::operator=( const CelEntryIndex & other )
 //
 // The event index is set from tree.GetReadEntry();
 // The tree index is looked up in handle
-void CelEntryIndex::set( TTree & tree, CelFileTreeNames & handle )
+void CelEntryIndex::set( TTree & tree, CelFileAndTreeNames & handle )
  {
   _entryIndex = tree.GetReadEntry() ;
   UShort_t tIdx = handle.getKey(&tree) ;
@@ -77,7 +77,7 @@ void CelEntryIndex::set( TTree & tree, CelFileTreeNames & handle )
 //
 // The tree lookup uses _treeIndex to get the tree from 'handle'
 // Then the Entry _entryIndex is loaded using LoadTree(_entryIndex);
-Int_t CelEntryIndex::read( const CelFileTreeNames & handle )
+Int_t CelEntryIndex::read( const CelFileAndTreeNames & handle )
  {
   TTree * t = handle.getTree(_treeIndex) ;
   if ( 0 == t ) return -1 ;
@@ -87,7 +87,7 @@ Int_t CelEntryIndex::read( const CelFileTreeNames & handle )
 // Use 'handle' to look up a tree 
 //
 // The tree lookup uses _treeIndex to get the tree from 'handle'
-TTree * CelEntryIndex::getTree( const CelFileTreeNames & handle ) const
+TTree * CelEntryIndex::getTree( const CelFileAndTreeNames & handle ) const
  {
   return handle.getTree(_treeIndex) ;
  }

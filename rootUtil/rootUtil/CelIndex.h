@@ -54,7 +54,7 @@ class CelIndex : public TVirtualIndex {
 
 public:
   
-  // Build and return a pointer index from a pointer skim
+  // Build and return a pointer index from a CEL
   static CelIndex* buildIndex(CompositeEventList& skim, const std::string& compontent, TTree* t, Long64_t offset=0);
 
 public:

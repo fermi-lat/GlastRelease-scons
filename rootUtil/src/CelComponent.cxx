@@ -43,7 +43,7 @@
 // Other headers from this package
 #include "rootUtil/OptUtil.h"
 #include "rootUtil/DataHandle.h"
-#include "rootUtil/CelFileTreeNames.h"
+#include "rootUtil/CelFileAndTreeNames.h"
 
 ClassImp(CelComponent);
 
