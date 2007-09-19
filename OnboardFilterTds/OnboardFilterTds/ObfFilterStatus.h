@@ -86,7 +86,7 @@ public:
     void addFilterStatus(FilterKeys key, IObfStatus* status);
 
     // Return results method
-    const IObfStatus* getFilterStatus(FilterKeys key);
+    const IObfStatus* getFilterStatus(FilterKeys key) const;
         
     /// writes out the information of the cluster if msglevel is set to debug
     std::ostream& fillStream( std::ostream& s ) const;

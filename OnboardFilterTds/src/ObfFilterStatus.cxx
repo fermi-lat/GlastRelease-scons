@@ -31,7 +31,7 @@ void ObfFilterStatus::addFilterStatus(FilterKeys key, IObfStatus* status)
 }
 
 // Return results method
-const IObfStatus* ObfFilterStatus::getFilterStatus(FilterKeys key)
+const IObfStatus* ObfFilterStatus::getFilterStatus(FilterKeys key) const
 {
     const IObfStatus* result = 0;
 

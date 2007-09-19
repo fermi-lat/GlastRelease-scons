@@ -3,6 +3,7 @@
  Coordinator:R.Hughes
  @verbatim
 
+ v0r4p3 19-Sep-2007 HMK Patch for const correctness
  v0r4p2 10-Sep-2007  TU Fix definite memory leak in FilterStatus.h
  v0r4p1  6-Sep-2007  TU Fix possible memory leak in FilterStatus
  v0r4   29-Aug-2007  TU Modifications for FSW B1-0-1 release
