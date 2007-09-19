@@ -62,11 +62,12 @@
 #pragma link C++ class ObfTrack+;
 #pragma link C++ class FilterStatus+;
 
-#pragma link C++ class ObfFilterStatus;
-#pragma link C++ class ObfGammaStatus;
-#pragma link C++ class ObfHFCStatus;
-#pragma link C++ class ObfMipStatus;
-#pragma link C++ class ObfDFCStatus;
+#pragma link C++ class IObfStatus+;
+#pragma link C++ class ObfFilterStatus+;
+#pragma link C++ class ObfGammaStatus+;
+#pragma link C++ class ObfHFCStatus+;
+#pragma link C++ class ObfMipStatus+;
+#pragma link C++ class ObfDFCStatus+;
 
 // Beamtest Ancillary Data 2006
 #pragma link C++ class AdfDigi+;
