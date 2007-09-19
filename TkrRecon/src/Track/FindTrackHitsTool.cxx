@@ -648,7 +648,7 @@ TkrTrackHit* FindTrackHitsTool::findNextHit(TkrTrackHit* last_hit, bool reverse)
                 double xError = rError*m_rej_sigma;
 
                 double localX = (view == idents::TkrId::eMeasureX ? xTower : yTower);
-                const floatVector stripLocalX = item.getLocalX();
+                const Event::floatVector stripLocalX = item.getLocalX();
                 if(lowSet)    { lowPos  = stripLocalX[0];}
                 if(RCHighSet) { highPos = stripLocalX[1];}
                 bool truncBit = false;
