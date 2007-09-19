@@ -171,7 +171,13 @@ StatusCode relationRootReaderAlg::initialize()
         return StatusCode::FAILURE;
     }
 
-    if ( (m_fileList.value().size() == 0) && ( !m_fileName.empty() ) )
+    if ( (m_fileList.value().size() > 0) && ( !m_fileName.empty() )) {
+        log << MSG::WARNING << "Both relationRootFile and relationRootFileList "
+            << " have been specified, relationRootFile is deprecated, "
+            << "please use "
+            << "relationRootFileList" << endreq;
+         return StatusCode::FAILURE;
+    } else if ( (m_fileList.value().size() == 0) && ( !m_fileName.empty() ) )
         m_rootIoSvc->appendFileList(m_fileList, m_fileName);
     else if (m_fileList.value().size() == 0)
         m_rootIoSvc->appendFileList(m_fileList, "relations.root");

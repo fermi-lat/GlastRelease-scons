@@ -146,7 +146,12 @@ StatusCode mcRootReaderAlg::initialize()
         return StatusCode::FAILURE;
     }   
 
-    if ( (m_fileList.value().size() == 0) && ( !m_fileName.empty() ) )
+    if ( (m_fileList.value().size() > 0) && ( !m_fileName.empty() )) {
+        log << MSG::WARNING << "Both mcRootFile and mcRootFileList have "
+            << "been specified, mcRootFile is deprecated, please use "
+            << "mcRootFileList" << endreq;
+         return StatusCode::FAILURE;
+    } else if ( (m_fileList.value().size() == 0) && ( !m_fileName.empty() ) )
         m_rootIoSvc->appendFileList(m_fileList, m_fileName);
     else if (m_fileList.value().size() == 0)
         m_rootIoSvc->appendFileList(m_fileList, "mc.root");
