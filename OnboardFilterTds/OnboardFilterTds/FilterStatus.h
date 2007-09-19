@@ -61,7 +61,7 @@ public:
             }
         }
     };
-    TowerHits(const TowerHits &toCopy){
+    TowerHits(const TowerHits &toCopy) : DataObject(toCopy) {
         for(int counter=0;counter<16;counter++){
             m_hits[counter].lcnt[0]=toCopy.m_hits[counter].lcnt[0];
             m_hits[counter].lcnt[1]=toCopy.m_hits[counter].lcnt[1];
@@ -69,7 +69,7 @@ public:
             m_hits[counter].layerMaps[1]=toCopy.m_hits[counter].layerMaps[1];
             for(int layerCounter=0;layerCounter<36;layerCounter++)
             {
-                if (m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter] > 0)
+                if ((m_hits[counter].cnt[layerCounter]=toCopy.m_hits[counter].cnt[layerCounter]) > 0)
                 {
 //                    m_hits[counter].beg[layerCounter]=new short int[m_hits[counter].cnt[layerCounter]];
 //                    m_hits[counter].beg[layerCounter]=new TFC_hit[m_hits[counter].cnt[layerCounter]];
