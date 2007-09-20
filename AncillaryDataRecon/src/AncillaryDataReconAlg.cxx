@@ -16,7 +16,8 @@
 
 #include "AncillaryDataUtil/AncillaryGeometry.h"
 
-#include "CalibData/CalibModel.h"
+// #include "CalibData/CalibModel.h"
+#include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/Anc/AncCalibTaggerGain.h"
 #include "CalibData/Anc/AncCalibTaggerPed.h"
 #include "CalibData/Anc/AncCalibQdcPed.h"
@@ -50,6 +51,10 @@ public:
 private:
   IDataProviderSvc    *m_dataSvc;
   IDataProviderSvc    *m_pCalibDataSvc;
+
+  std::string          m_qdcPedPath;
+  std::string          m_taggerPedPath;
+
   AncillaryData::AncillaryGeometry   *m_geometry;
   bool m_SubtractPedestals;
   std::string m_geometryFilePath;
@@ -88,6 +93,7 @@ StatusCode AncillaryDataReconAlg::initialize()
   
   //DEFAULT ARGS:
   
+
   sc = service("CalibDataSvc", m_pCalibDataSvc, true);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
@@ -95,6 +101,24 @@ StatusCode AncillaryDataReconAlg::initialize()
 	<< endreq;
     return sc;  
   }
+
+  ICalibPathSvc       *pCalibPathSvc;
+  // get the two paths we're interested in
+  sc = service("CalibDataSvc", pCalibPathSvc, true);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;  
+  }
+  std::string flavor("vanilla");
+  m_qdcPedPath = 
+    pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ANC_QdcPed, flavor);
+
+  m_taggerPedPath = 
+    pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_ANC_TaggerPed, flavor);
+
+  
   facilities::Util::expandEnvVar(&m_geometryFilePath);
   facilities::Util::expandEnvVar(&m_rcReportFilePath);
 
@@ -223,7 +247,8 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   //////////////////////////////////////////////////
   std::string fullPathTaggerPed = "/Calib/ANC_TaggerPed/vanilla";
   DataObject *pObjectTagger;
-  m_pCalibDataSvc->retrieveObject(fullPathTaggerPed, pObjectTagger);
+  //  m_pCalibDataSvc->retrieveObject(fullPathTaggerPed, pObjectTagger);
+  m_pCalibDataSvc->retrieveObject(m_taggerPedPath, pObjectTagger);
   CalibData::AncCalibTaggerPed* pTaggerPeds = 0;
   pTaggerPeds = dynamic_cast<CalibData::AncCalibTaggerPed *> (pObjectTagger);
   if (!pTaggerPeds) {
@@ -268,9 +293,11 @@ StatusCode AncillaryDataReconAlg::SubtractPedestal(AncillaryData::Digi *digiEven
   
   //////////////////////////////////////////////////
   // QDC
-  std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
+  //  std::string fullPathQdcPed = "/Calib/ANC_QdcPed/vanilla";
+
   DataObject *pObjectQdc;
-  m_pCalibDataSvc->retrieveObject(fullPathQdcPed, pObjectQdc);
+  //  m_pCalibDataSvc->retrieveObject(fullPathQdcPed, pObjectQdc);
+  m_pCalibDataSvc->retrieveObject(m_qdcPedPath, pObjectQdc);
   CalibData::AncCalibQdcPed* pQdcPeds = 0;
   pQdcPeds = dynamic_cast<CalibData::AncCalibQdcPed *> (pObjectQdc);
   if (!pQdcPeds) {
