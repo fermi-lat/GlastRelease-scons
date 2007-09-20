@@ -2,6 +2,7 @@
     @brief package G4Generator 
 @verbatim
 
+ v5r19p0 20-Sep-07 MK  Ion Physics for QGSP_BERT
  v5r19   27-Jul-07 LSR BeamTransform: modify particle properties without re-creating
  v5r18p6 12-Jul-07 MK  add QGSC and QGSC_LEAD physics choices
  v5r18p5  4-Jun-07 TU  Throw an exception if primary particle energy over limit
