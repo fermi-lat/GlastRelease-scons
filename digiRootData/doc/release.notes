@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r19p2   20-Sep-2007  TU Patch to return from virtual dtor
 v9r19p1   19-Sep-2007 HMK Patch warnings concerning init base in copy ctor
 v9r19     18-Sep-2007  TU News classes including ObfFilterStatus
 v9r18     29-Aug-2007  TU New FSW tracking structures in FilterStatus.h
