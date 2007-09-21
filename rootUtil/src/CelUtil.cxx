@@ -28,7 +28,7 @@
 #include <TObjArray.h>
 
 // Other headers from this package
-#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelEventComponent.h"
 #include "rootUtil/CompositeEventList.h"
 #include "rootUtil/FileUtil.h"
 
@@ -149,7 +149,7 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
   TTree* fileTree = TTree::MergeTrees(&fileTreeList);
 
   // Build the Pointer Skim Object
-  CompositeEventList* theSkim = new CompositeEventList(*eventTree,*linkTreeOut,*fileTree);
+  CompositeEventList* theSkim = new CompositeEventList(*linkTreeOut,*fileTree,*eventTree);
 
   // Write the Merged File, if requested
   if ( outFile != 0 ) {

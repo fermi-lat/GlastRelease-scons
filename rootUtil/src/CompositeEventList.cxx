@@ -29,8 +29,8 @@
 #include <TObjArray.h>
 
 // Other headers from this package
-#include "rootUtil/CelFileAndTreeNames.h"
-#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelFileAndTreeSet.h"
+#include "rootUtil/CelEventComponent.h"
 #include "rootUtil/CelIndex.h"
 #include "rootUtil/FileUtil.h"
 
@@ -38,16 +38,16 @@ ClassImp(CompositeEventList);
 
 CompositeEventList::CompositeEventList()
  : TObject(),
-   _linkTree(0), _entryTree(0), _fileTree(0),
+   _linkTree(0), _fileTree(0), _entryTree(0),
    _linkEntry()
  {}
 	    
 CompositeEventList::CompositeEventList
- ( TTree & entryTree, TTree & linkTree, TTree & fileTree )
+ ( TTree & linkTree, TTree & fileTree, TTree & entryTree )
  : TObject(),
-   _linkTree(&linkTree), _entryTree(&entryTree), _fileTree(&fileTree),
+   _linkTree(&linkTree), _fileTree(&fileTree), _entryTree(&entryTree),
    _linkEntry()
- { attachToTree(entryTree,linkTree,fileTree) ; }
+ { attachToTree(linkTree,fileTree,entryTree) ; }
 
 CompositeEventList::~CompositeEventList()
  { cleanup() ; }
@@ -70,10 +70,10 @@ TFile * CompositeEventList::makeFile
   }
   newFile->cd();
   _linkTree = new TTree("Links","Links");
-  _entryTree = new TTree("ComponentEntries","ComponentEntries");
   _fileTree = new TTree("FileAndTreeSets","FileAndTreeSets");
+  _entryTree = new TTree("ComponentEntries","ComponentEntries");
   oldDir->cd() ;
-  Int_t check = makeBranches(*_entryTree,*_linkTree,*_fileTree,32000);
+  Int_t check = makeBranches(*_linkTree,*_fileTree,*_entryTree,32000);
   if ( check < 0 ) {
     // Failed to make branches for some reason.  
     // Already warned.  clean up and return NULL
@@ -108,7 +108,7 @@ TFile * CompositeEventList::openFile( const TString & fileName )
     buildComponents(*_entryTree);
   }
   oldDir->cd();
-  Int_t check = attachToTree(*_entryTree,*_linkTree,*_fileTree);
+  Int_t check = attachToTree(*_linkTree,*_fileTree,*_entryTree);
   if ( check < 0 ) {
     std::cerr << "File is not a valid skim" << std::endl;
     cleanup();
@@ -122,9 +122,9 @@ UInt_t CompositeEventList::addComponent(const std::string& name){
   // Add a component by name.  This is only need when writing.  On read these are discovered.
   //
   // Returns the component index value
-  CelComponent* comp = new CelComponent(name);
+  CelEventComponent* comp = new CelEventComponent(name);
   TTree* t(0);
-  TreeAndComponent tc(t,comp);
+  CelTreeAndComponent tc(t,comp);
   // David: below, it should rather be _compList, no ?
   // (besides, it works this way, lucky guys)
   UInt_t retValue = _compMap.size();
@@ -187,9 +187,9 @@ Int_t CompositeEventList::read( Long64_t iEvt )
   Int_t total = readEventAddress(iEvt) ;
   if ( total < 0 ) return total ;
 
-  std::vector< TreeAndComponent >::iterator itr ;
+  std::vector< CelTreeAndComponent >::iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ ) {
-    CelComponent* comp = itr->second;
+    CelEventComponent* comp = itr->second;
     if ( comp == 0 ) return -5;
     Int_t nRead = comp->read();
     if ( nRead < 0 ) return -6;
@@ -247,7 +247,7 @@ TChain* CompositeEventList::buildChain(UInt_t index) {
     std::cerr << "No Data Files" << std::endl;
     return 0;
   }
-  CelComponent* comp = getComponent(index);
+  CelEventComponent* comp = getComponent(index);
   if ( 0 == comp ) {
     std::cerr << "No component with index " << index << std::endl;
     return 0;
@@ -348,9 +348,9 @@ void CompositeEventList::dumpEvent(const char* options){
   // The format is:
   //  Event:     comp1 tree0:event0   comp1 tree1:event1 ... 
   std::cout << "Event " << _linkEntry.eventIndex() << ":\t";
-  for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
+  for ( std::vector< CelTreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const CelComponent* comp = itr->second;
+    const CelEventComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << ' ';
     comp->dumpEvent(options);
@@ -364,9 +364,9 @@ void CompositeEventList::listTrees(const char* options){
   //
   // One tree per line, the format is:
   //   File Tree
-  for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
+  for ( std::vector< CelTreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const CelComponent* comp = itr->second;
+    const CelEventComponent* comp = itr->second;
     if ( comp == 0 ) return;
     std::cout << comp->componentName() << std::endl;
     comp->listTrees(options);
@@ -406,7 +406,7 @@ Bool_t CompositeEventList::set(std::vector<TTree*>& trees) {
   UInt_t idx(0);  
   for ( std::vector< TTree* >::iterator itr = trees.begin();
 	itr != trees.end(); itr++ ) {  
-    CelComponent* comp = getComponent(idx);
+    CelEventComponent* comp = getComponent(idx);
     assert ( 0 != comp );
     comp->set(**itr);
     idx++;
@@ -415,17 +415,17 @@ Bool_t CompositeEventList::set(std::vector<TTree*>& trees) {
 }
 
 
-Int_t CompositeEventList::makeBranches(TTree& eventTree, TTree& linkTree,  TTree& fileTree, Int_t bufsize) const {
+Int_t CompositeEventList::makeBranches( TTree & linkTree,  TTree & fileTree, TTree & eventTree, Int_t bufsize) const {
   // Make the Branches we store everything on
   // 
   // Called by makeFile()
   Int_t total = _linkEntry.makeBranches(linkTree,"Link_",bufsize);
   if ( total < 0 ) return total;
-  for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
+  for ( std::vector< CelTreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    const CelComponent* comp = itr->second;
+    const CelEventComponent* comp = itr->second;
     if ( comp == 0 ) return -1;
-    Int_t nMake = comp->makeBranches(eventTree,fileTree,bufsize);
+    Int_t nMake = comp->makeBranches(fileTree,eventTree,bufsize);
     if ( nMake < 0 ) return nMake;
     total += nMake;
   }
@@ -434,7 +434,8 @@ Int_t CompositeEventList::makeBranches(TTree& eventTree, TTree& linkTree,  TTree
 
 
 
-Int_t CompositeEventList::attachToTree(TTree& eventTree, TTree& linkTree,  TTree& fileTree) {
+Int_t CompositeEventList::attachToTree( TTree & linkTree,  TTree & fileTree, TTree & eventTree )
+ {
   // Attach to the branches where all the infomation is stored
   // 
   // Called by openFile()
@@ -444,9 +445,9 @@ Int_t CompositeEventList::attachToTree(TTree& eventTree, TTree& linkTree,  TTree
     return total;
   }
   UInt_t idx(0);
-  for ( std::vector< TreeAndComponent >::const_iterator itr = _compList.begin();
+  for ( std::vector< CelTreeAndComponent >::const_iterator itr = _compList.begin();
 	itr != _compList.end(); itr++ ) {
-    CelComponent* comp = itr->second;
+    CelEventComponent* comp = itr->second;
     if ( comp == 0 ) { 
       std::cerr << "Failed to get component " << idx << std::endl;
       return -1;

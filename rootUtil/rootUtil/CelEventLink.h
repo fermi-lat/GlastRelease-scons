@@ -1,6 +1,6 @@
 
-#ifndef CelLink_h
-#define CelLink_h
+#ifndef CelEventLink_h
+#define CelEventLink_h
 
 /*
 * Project: GLAST
@@ -24,11 +24,11 @@ class TFile ;
 class TChain ;
 class TVirtualIndex ;
 class TCollection ;
-class CelComponent ;
+class CelEventComponent ;
 class TObjArray ;
 
 //
-// CelLink is made for reading/writing entries of the
+// CelEventLink is made for reading/writing entries of the
 // link tree. It associates a given composite event with
 // a given entry in the file-tree-names tree, and also store the
 // corresponding offset. The branches are :
@@ -38,18 +38,18 @@ class TObjArray ;
 // Link_SetOffset  -> Offset in events for this entry in the file-tree-names Tree
 // 
 
-class CelLink : public BranchGroup
+class CelEventLink : public BranchGroup
  {
 
   public :
 
     // ctor's and d'tor
-    CelLink() ; 
-    CelLink( const CelLink & ) ;
-    ~CelLink() ;
+    CelEventLink() ; 
+    CelEventLink( const CelEventLink & ) ;
+    ~CelEventLink() ;
 
     // Operators
-    CelLink & operator=( const CelLink & ) ;
+    CelEventLink & operator=( const CelEventLink & ) ;
     
     // Accessors
     Long64_t eventIndex() const { return _eventIndex ; }
@@ -71,7 +71,7 @@ class CelLink : public BranchGroup
     DataHandle<Long64_t> _setIndex ;  //! Index of the associated entry in the File Tree
     DataHandle<Long64_t> _setOffset ; //! Offset in events for this entry in the File Tree
 
-    ClassDef(CelLink,0)
+    ClassDef(CelEventLink,0)
  } ;
  
 #endif

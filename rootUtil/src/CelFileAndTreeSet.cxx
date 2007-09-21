@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef CelFileAndTreeNames_cxx
-#define CelFileAndTreeNames_cxx
+#ifndef CelFileAndTreeSet_cxx
+#define CelFileAndTreeSet_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 
-#include "rootUtil/CelFileAndTreeNames.h"
+#include "rootUtil/CelFileAndTreeSet.h"
 
 // c++/stl headers
 #include <iostream>
@@ -35,20 +35,20 @@
 #include "rootUtil/OptUtil.h"
 
 
-ClassImp(CelFileAndTreeNames);
+ClassImp(CelFileAndTreeSet);
 
-CelFileAndTreeNames::CelFileAndTreeNames():
+CelFileAndTreeSet::CelFileAndTreeSet():
   BranchGroup(),
   _componentName(),
   _setSize(0,*this,"SetSize"),
   _treesSize(0,*this,"TreesSize"){
-  // Default c'tor.  CelComponent Name is not set
+  // Default c'tor.  CelEventComponent Name is not set
   _treeNames = new TObjArray;
   _fileNames = new TObjArray;  
   _treeOffsets = new TArrayL64;
 }
 
-CelFileAndTreeNames::CelFileAndTreeNames(const std::string& componentName)
+CelFileAndTreeSet::CelFileAndTreeSet(const std::string& componentName)
  : BranchGroup(),
    _componentName(componentName),
    _setSize(0,*this,"SetSize"),
@@ -59,14 +59,14 @@ CelFileAndTreeNames::CelFileAndTreeNames(const std::string& componentName)
   _treeOffsets = new TArrayL64 ;
  }
 
-CelFileAndTreeNames::~CelFileAndTreeNames()
+CelFileAndTreeSet::~CelFileAndTreeSet()
  {
   delete _fileNames;
   delete _treeNames;
   delete _treeOffsets;
  }
 
-void CelFileAndTreeNames::reset() {
+void CelFileAndTreeSet::reset() {
   // Clear the lists
   //
   // Should be called when switch to new input collection
@@ -77,7 +77,7 @@ void CelFileAndTreeNames::reset() {
   _lookup.clear();
 }
 
-UShort_t CelFileAndTreeNames::addTree(TTree& tree) {
+UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
   // Add a new tree to the set of trees this object is looking after
   // 
   const char* tName = tree.GetName();
@@ -102,7 +102,7 @@ UShort_t CelFileAndTreeNames::addTree(TTree& tree) {
   return retVal;
 }
 
-TTree* CelFileAndTreeNames::getTree(UShort_t key) const {
+TTree* CelFileAndTreeSet::getTree(UShort_t key) const {
   // Get a given tree using persistent KEY
   //
   // Return NULL silently if key == FileUtil::NOKEY
@@ -117,7 +117,7 @@ TTree* CelFileAndTreeNames::getTree(UShort_t key) const {
   return tree;
 }
 
-UShort_t CelFileAndTreeNames::getKey(TTree* tree) const {
+UShort_t CelFileAndTreeSet::getKey(TTree* tree) const {
   // Get the persistent KEY for a given tree
   //
   // Return FileUtil::NOKEY if 'tree' is NULL
@@ -131,7 +131,7 @@ UShort_t CelFileAndTreeNames::getKey(TTree* tree) const {
   return itrFind->second;
 }
 
-Long64_t CelFileAndTreeNames::getOffset(UShort_t key) const {
+Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
   // Get the Event offset using persistent KEY
   //
   // Return 0 if "key" is FileUtil::NOKEY
@@ -141,7 +141,7 @@ Long64_t CelFileAndTreeNames::getOffset(UShort_t key) const {
   return _treeOffsets->At(key);
 }
 
-Int_t CelFileAndTreeNames::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) const {
+Int_t CelFileAndTreeSet::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) const {
   // Builds branches on 'tree'
   //
   // The branches will be:
@@ -173,7 +173,7 @@ Int_t CelFileAndTreeNames::makeBranches(TTree& tree, const char* prefix, Int_t b
   return bVal;
 }
 
-Int_t CelFileAndTreeNames::attachToTree(TTree& tree, const char* prefix) {
+Int_t CelFileAndTreeSet::attachToTree(TTree& tree, const char* prefix) {
   // Attachs to branches on 'tree'
   //
   // The branches will be:
@@ -210,7 +210,7 @@ Int_t CelFileAndTreeNames::attachToTree(TTree& tree, const char* prefix) {
   return bVal;
 }
 
-void CelFileAndTreeNames::show(const char* options) const {
+void CelFileAndTreeSet::show(const char* options) const {
   // Print the list of trees, one per line
   //
   // if "options" includes 'f' this will print the file names
@@ -223,7 +223,7 @@ void CelFileAndTreeNames::show(const char* options) const {
   }
 }
 
-void CelFileAndTreeNames::printTreeInfo(UShort_t key, const char* options) const {  
+void CelFileAndTreeSet::printTreeInfo(UShort_t key, const char* options) const {  
   // Print information about tree with "key" on one line
   //
   // if "options" includes 'f' this will print the file name
@@ -240,7 +240,7 @@ void CelFileAndTreeNames::printTreeInfo(UShort_t key, const char* options) const
   }
 }
 
-TTree* CelFileAndTreeNames::fetchTree(UShort_t key) const {
+TTree* CelFileAndTreeSet::fetchTree(UShort_t key) const {
   // Utility function to actually go and get a tree out of a file
   //
   // Return NULL silently if key == FileUtil::NOKEY

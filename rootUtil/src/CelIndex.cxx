@@ -51,7 +51,7 @@
 
 // Other headers from this package
 #include "rootUtil/CompositeEventList.h"
-#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelEventComponent.h"
 
 
 ClassImp(CelIndex);

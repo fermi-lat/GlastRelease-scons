@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef CelComponent_h
-#define CelComponent_h
+#ifndef CelEventComponent_h
+#define CelEventComponent_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -22,7 +22,7 @@
 #include <string>
 
 // Headers of Data Members
-#include "CelFileAndTreeNames.h"
+#include "CelFileAndTreeSet.h"
 #include "CelEntryIndex.h"
 
 // Forward Declares
@@ -30,7 +30,7 @@ class TChain;
 class TEventList;
 
 //
-// CelComponent stores all the information needed to point to a part of an event
+// CelEventComponent stores all the information needed to point to a part of an event
 // that is located in another TTree.
 //
 // This for a single event this information is stored on two TTrees. 
@@ -41,17 +41,17 @@ class TEventList;
 // since it is shared by all the components in a skim.
 //
 
-class CelComponent {
+class CelEventComponent {
 
 public:
 
   // ctor's and d'tor
   // Default c'tor.  Needed for ROOT
-  CelComponent(); 
+  CelEventComponent(); 
   // Standard c'tor, stores the name of the component 
-  CelComponent(const std::string& componentName);
+  CelEventComponent(const std::string& componentName);
   // D'tor
-  virtual ~CelComponent();
+  virtual ~CelEventComponent();
 
   // Methods and functions
   // set the current event
@@ -61,8 +61,8 @@ public:
   // Get the Tree that is being read
   TTree* getTree() const;
   // Tree Manipulation
-  Int_t makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize = 32000) const;
-  Int_t attachToTree(TTree& eventTree, TTree& fileTree);
+  Int_t makeBranches( TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
+  Int_t attachToTree( TTree & fileTree, TTree & eventTree ) ;
   // Building a TChain
   Bool_t addToChain(TChain*& chain);  
   // Get the offset to the first event
@@ -72,7 +72,7 @@ public:
 
   // Access
   const CelEntryIndex& eventPointer() const { return _event; }
-  const CelFileAndTreeNames& treePointer() const { return _tree; }
+  const CelFileAndTreeSet& treePointer() const { return _tree; }
   inline const std::string& componentName() const { return _componentName; }
 
   // Printing Functions
@@ -89,15 +89,15 @@ protected:
 private:
   
   //disable copying and assignment
-  CelComponent(const CelComponent& other);
-  CelComponent& operator=(const CelComponent& other);
+  CelEventComponent(const CelEventComponent& other);
+  CelEventComponent& operator=(const CelEventComponent& other);
   
   // Data
   std::string   _componentName;    //! Name of this component
   CelEntryIndex  _event;            //! Interface with the per-event data
-  CelFileAndTreeNames _tree;             //! Interface with the file reference data
+  CelFileAndTreeSet _tree;             //! Interface with the file reference data
 
-  ClassDef(CelComponent,0)            // Class to handle references to a single Event component
+  ClassDef(CelEventComponent,0)            // Class to handle references to a single Event component
 
 };
 

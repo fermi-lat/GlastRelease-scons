@@ -10,10 +10,10 @@ apply_pattern root_package headers="\
   ../rootUtil/DataHandleBase.h\
   ../rootUtil/DataHandle.h\
   ../rootUtil/CompositeEventList.h\
-  ../rootUtil/CelComponent.h\
+  ../rootUtil/CelEventComponent.h\
   ../rootUtil/CelEntryIndex.h\
-  ../rootUtil/CelFileAndTreeNames.h\
-  ../rootUtil/CelLink.h\
+  ../rootUtil/CelFileAndTreeSet.h\
+  ../rootUtil/CelEventLink.h\
   ../rootUtil/CelIndex.h\
   ../rootUtil/CelUtil.h"
 

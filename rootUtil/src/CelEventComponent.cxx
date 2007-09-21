@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef CelComponent_cxx
-#define CelComponent_cxx
+#ifndef CelEventComponent_cxx
+#define CelEventComponent_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 //
-// CelComponent stores all the information needed to point to a part of an event
+// CelEventComponent stores all the information needed to point to a part of an event
 // that is located in another TTree.
 //
 // This for a single event this information is stored on two TTees. 
@@ -29,7 +29,7 @@
 
 
 // This Class's header
-#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelEventComponent.h"
 
 // c++/stl headers
 #include <iostream>
@@ -43,48 +43,48 @@
 // Other headers from this package
 #include "rootUtil/OptUtil.h"
 #include "rootUtil/DataHandle.h"
-#include "rootUtil/CelFileAndTreeNames.h"
+#include "rootUtil/CelFileAndTreeSet.h"
 
-ClassImp(CelComponent);
+ClassImp(CelEventComponent);
 
 
-CelComponent::CelComponent():
+CelEventComponent::CelEventComponent():
   _componentName("NULL"),
   _event(),
   _tree(){
   // Default c'tor.  Needed for ROOT
 }
 	      
-CelComponent::CelComponent(const std::string& componentName):
+CelEventComponent::CelEventComponent(const std::string& componentName):
   _componentName(componentName),
   _event(componentName),
   _tree(componentName){
   // Standard c'tor, stores the name of the component 
 }	      
 
-CelComponent::~CelComponent(){
+CelEventComponent::~CelEventComponent(){
   // D'tor
   ;
 }
 
 
-void CelComponent::set(TTree& tree) {
+void CelEventComponent::set(TTree& tree) {
   // set the current event
   _event.set(tree,_tree);
 }
 
-Int_t CelComponent::read() {
+Int_t CelEventComponent::read() {
   // read an event
   return _event.read(_tree);
 }
 
-TTree* CelComponent::getTree() const {
+TTree* CelEventComponent::getTree() const {
   // Get the Tree that is being read
   return _event.getTree(_tree);
 }
 
 
-Int_t CelComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsize) const {
+Int_t CelEventComponent::makeBranches( TTree & fileTree, TTree & eventTree, Int_t bufsize) const {
   Int_t n_e = _event.makeBranches(eventTree,_componentName.c_str(),bufsize);
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.makeBranches(fileTree,_componentName.c_str(),bufsize);
@@ -92,7 +92,7 @@ Int_t CelComponent::makeBranches(TTree& eventTree, TTree& fileTree, Int_t bufsiz
   return n_e + n_f;
 }
 
-Int_t CelComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
+Int_t CelEventComponent::attachToTree(TTree& fileTree, TTree& eventTree ) {
   Int_t n_e = _event.attachToTree(eventTree,_componentName.c_str());
   if ( n_e < 0 ) return n_e;
   Int_t n_f = _tree.attachToTree(fileTree,_componentName.c_str());
@@ -101,7 +101,7 @@ Int_t CelComponent::attachToTree(TTree& eventTree, TTree& fileTree) {
 }
 
 
-Bool_t CelComponent::addToChain(TChain*& chain) {
+Bool_t CelEventComponent::addToChain(TChain*& chain) {
   // Building a TChain
   for ( UShort_t iT(0); iT < _tree.size(); iT++ ) {
     TTree* t = _tree.getTree(iT);
@@ -117,13 +117,13 @@ Bool_t CelComponent::addToChain(TChain*& chain) {
 } 
 
 
-Long64_t CelComponent::getLocalOffset() const {
+Long64_t CelEventComponent::getLocalOffset() const {
   // Get the offset to the first event
   Long64_t localOffset = _tree.getOffset(_event.treeIndex());
   return localOffset;
 }
 
-Long64_t CelComponent::getIndexInLocalChain() const {
+Long64_t CelEventComponent::getIndexInLocalChain() const {
   // Get the index of the event the local chain (ie, in this meta event)
   Long64_t evtIdx = getLocalOffset();
   evtIdx += _event.entryIndex();
@@ -131,14 +131,14 @@ Long64_t CelComponent::getIndexInLocalChain() const {
 }
 
 
-void CelComponent::dumpEvent(const char* options) const {
+void CelEventComponent::dumpEvent(const char* options) const {
   if ( OptUtil::has_option(options,'v') ) {
     _tree.printTreeInfo(_event.treeIndex(),options);
   }  
   _event.printEventInfo(options);
 }
 
-void CelComponent::listTrees(const char* options) const {
+void CelEventComponent::listTrees(const char* options) const {
   _tree.show(options);
 }
 

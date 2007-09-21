@@ -9,7 +9,7 @@
 #define CelManager_cxx
 
 #include "rootUtil/CelManager.h"
-#include "rootUtil/CelComponent.h"
+#include "rootUtil/CelEventComponent.h"
 #include "TSystem.h"
 #include <iostream>
 

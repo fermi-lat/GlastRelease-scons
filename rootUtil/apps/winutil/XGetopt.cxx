@@ -87,7 +87,7 @@
 //       non-option argument), getopt returns EOF, optarg will point
 //       to the argument, and optind will be set to the argv index of
 //       the argument.  If there are no non-option arguments, optarg
-//       will be set to NULL.
+//       will be set to 0.
 //
 //       The special option "--" may be used to delimit the end of the
 //       options;  EOF will be returned, and "--" (and everything after it)

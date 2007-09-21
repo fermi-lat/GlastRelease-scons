@@ -13,7 +13,7 @@
 *
 */
 
-#include "rootUtil/CelLink.h"
+#include "rootUtil/CelEventLink.h"
 #include <TTree.h>
 #include <TChain.h>
 #include <TFile.h>
@@ -21,26 +21,26 @@
 #include <iostream>
 #include <assert.h>
 
-ClassImp(CelLink) ;
+ClassImp(CelEventLink) ;
 
-CelLink::CelLink()
+CelEventLink::CelEventLink()
  : BranchGroup(),
    _eventIndex(-1,*this,"EventIndex"),
    _setIndex(0,*this,"SetIndex"),
    _setOffset(0,*this,"SetOffset")
  { DataHandleInstance::init() ; }
 
-CelLink::CelLink( const CelLink & other )
+CelEventLink::CelEventLink( const CelEventLink & other )
  : BranchGroup(),
    _eventIndex(other._eventIndex,*this,"EventIndex"),
    _setIndex(other._setIndex,*this,"SetIndex"),
    _setOffset(other._setOffset,*this,"SetOffset")
  { DataHandleInstance::init() ; }	      
 
-CelLink::~CelLink()
+CelEventLink::~CelEventLink()
  {}
 
-CelLink & CelLink::operator=( const CelLink & other )
+CelEventLink & CelEventLink::operator=( const CelEventLink & other )
  {
   if ( this == &other ) return *this ;
   _eventIndex = other._eventIndex ;
@@ -52,7 +52,7 @@ CelLink & CelLink::operator=( const CelLink & other )
 // Print the information about the current event to cout
 // 
 // The print format is eventIndex:setIndex:setOffset
-void CelLink::printEventInfo( const char * /* options */ ) const
+void CelEventLink::printEventInfo( const char * /* options */ ) const
  {
   std::cout << _eventIndex << ':' << _setIndex << ':' << _setOffset ;
  }
