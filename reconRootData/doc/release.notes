@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r17     20-Sep-07  : HMK Turn off TkrTruncationData for now
 v9r16     18-Sep-07  : HMK Avoid use of intVector and floatVector typedefs
 v9r15p1   10-Sep-07  : JCT Add ROOT classes for TruncationData
 v9r15     23-Aug-07  : DC  clean up of FixStreamer handling and add in TClass.h

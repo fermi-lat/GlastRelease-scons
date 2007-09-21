@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r28   20-Sep-2007 HMK Turn off TkrTruncationData for now
  v1r27p1 19-Sep-2007 HMK Warning patches
  v1r27   18-Sep-2007  TU ObfFilterStatus plus move to use namespace for
                          intVector and floatVector in TruncationData convert

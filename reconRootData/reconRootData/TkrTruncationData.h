@@ -1,6 +1,6 @@
 #ifndef ROOT_TKRTRUNCATIONDATA_H
 #define ROOT_TKRTRUNCATIONDATA_H
-
+/* HMK-v12r7
 #include "TObject.h"
 
 #include <vector>
@@ -15,12 +15,15 @@ using namespace std;
 //typedef std::vector<UInt_t>   intVector;
 //typedef std::vector<Float_t> floatVector;
 
+*/
+
 /** @class TkrTruncationData
  * This ROOT class is the flattened version of the TDS 
  *  TkrTruncationPlane class, with the sortId info 
  *  from the TkrTruncationInfo added
  * $Header$
  */
+/* HMK-v12r7
 class TkrTruncationData : public TObject
 {
  public:
@@ -67,4 +70,5 @@ class TkrTruncationData : public TObject
 
   ClassDef(TkrTruncationData,1) 
 };
+*/
 #endif

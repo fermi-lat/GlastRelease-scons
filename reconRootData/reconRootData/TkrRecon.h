@@ -7,7 +7,7 @@
 #include "TkrCluster.h"
 #include "TkrTrack.h"
 #include "TkrVertex.h"
-#include "TkrTruncationData.h"
+// HMK-v12r7 #include "TkrTruncationData.h"
 #include "TkrDiagnostics.h"
 /** 
  * @class TkrRecon
@@ -50,8 +50,10 @@ public:
     TObjArray *getVertexCol() { return m_vertexCol; };
     void addVertex(TkrVertex* vertex) { m_vertexCol->Add(vertex); };
 
+    /* HMK-v12r7
     TObjArray *getTruncationDataCol() { return m_truncationDataCol; };
     void addTruncationData(TkrTruncationData* trdata) { m_truncationDataCol->Add(trdata); };
+    */
 
     // Added for macros & interactive access - EAC
     Int_t nCluster() const { return m_clusterCol->GetEntries() ; }    
@@ -62,7 +64,7 @@ public:
     TkrCluster* getCluster(Int_t i) { return i < nCluster() ? dynamic_cast<TkrCluster*>(m_clusterCol->At(i)) : 0; };
     TkrTrack* getTrack(Int_t i) { return i < nTrack() ? dynamic_cast<TkrTrack*>(m_trackCol->At(i)) : 0; };
     TkrVertex* getVertex(Int_t i) { return i < nVertex() ? dynamic_cast<TkrVertex*>(m_vertexCol->At(i)) : 0; };
-    TkrTruncationData* getTruncationData(Int_t i) { return i < nTruncationData() ? dynamic_cast<TkrTruncationData*>(m_truncationDataCol->At(i)) : 0; };
+    // HMK-v12r7 TkrTruncationData* getTruncationData(Int_t i) { return i < nTruncationData() ? dynamic_cast<TkrTruncationData*>(m_truncationDataCol->At(i)) : 0; };
     
 
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
@@ -75,16 +77,18 @@ private:
     TObjArray *m_trackCol;
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
-    /// collection of TkrTruncationData
-    TObjArray *m_truncationDataCol;
      /// Diagnostics
     TkrDiagnostics*   m_diagnostics;
+    /// collection of TkrTruncationData
+    TObjArray *m_truncationDataCol;
+
 
     static TkrCluster *keepCluster[16384]; //!
     static TkrTrack *keepTrack[10000]; //!
     static TkrVertex *keepVertex[10000]; //!
-    static TkrTruncationData *keepTruncationData[10000]; //!
-    static Int_t indCluster, indTrack, indVertex, indTruncationData; //!
+    // HMK-v12r7 static TkrTruncationData *keepTruncationData[10000]; //!
+    static Int_t indCluster, indTrack, indVertex; //!        
+    //, indTruncationData; 
 
     ClassDef(TkrRecon,7)
 };

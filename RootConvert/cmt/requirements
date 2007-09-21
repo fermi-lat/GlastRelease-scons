@@ -1,5 +1,5 @@
 package RootConvert
-version v1r27p1
+version v1r28
 
 author David Chamont <chamont@poly.in2p3.fr>
 author Heather Kelly <heather@slac.stanford.edu>
@@ -30,14 +30,20 @@ macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Utilities/*.h \
         ../RootConvert/MonteCarlo/*.h \
         ../RootConvert/Digi/*.h \
-        ../RootConvert/Recon/*.h \
+        ../RootConvert/Recon/Cal*.h \
+        ../RootConvert/Recon/Acd*.h \
+        ../RootConvert/Recon/Adf*.h \
+        ../RootConvert/Recon/Gcr*.h \
         ../RootConvert/GcrSelect/*.h"
  
 library RootConvert  \
         Utilities/*.cxx \
         MonteCarlo/*.cxx \
         Digi/*.cxx \
-        Recon/*.cxx \
+        Recon/Acd*.cxx \
+        Recon/Adf*.cxx \
+        Recon/Cal*.cxx \
+        Recon/Gcr*.cxx \
         GcrSelect/*.cxx \
         ${RootConvert_headers}
 

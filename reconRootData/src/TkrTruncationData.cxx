@@ -1,10 +1,12 @@
+/*
 #include "reconRootData/TkrTruncationData.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
 ClassImp(TkrTruncationData)
-
-void TkrTruncationData::Clear(Option_t* /* option */) 
+*/
+//void TkrTruncationData::Clear(Option_t* /* option */) 
+/*
 {
   m_status=0;
   m_stripCount.clear();
@@ -69,3 +71,4 @@ Bool_t TkrTruncationData::CompareInRange( const TkrTruncationData & ref, const s
 
 }
 
+*/

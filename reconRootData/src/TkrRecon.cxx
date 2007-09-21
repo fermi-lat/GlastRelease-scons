@@ -10,9 +10,9 @@ const Int_t maxCluster = 16384;
 TkrCluster *TkrRecon::keepCluster[maxCluster];
 TkrTrack *TkrRecon::keepTrack[nd];
 TkrVertex *TkrRecon::keepVertex[nd];
-TkrTruncationData *TkrRecon::keepTruncationData[nd];
+// HMK-v12r7 TkrTruncationData *TkrRecon::keepTruncationData[nd];
 Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, 
-  TkrRecon::indVertex=0, TkrRecon::indTruncationData=0;
+  TkrRecon::indVertex=0; //, TkrRecon::indTruncationData=0;
 
 TkrRecon::TkrRecon() {
     m_clusterCol  = 0;
@@ -124,6 +124,7 @@ void TkrRecon::Clear(Option_t* /*option*/) {
     }
 
     // Emulate what the TClonesArray is doing as introduced in DigiEvent
+    /* HMK-v12r7
     if (m_truncationDataCol) {
         n = m_truncationDataCol->GetEntries();
         if (n > limitTruncationData) {
@@ -142,6 +143,7 @@ void TkrRecon::Clear(Option_t* /*option*/) {
         }
         m_truncationDataCol->Clear();
     }
+    */
 
 }
 
@@ -150,7 +152,7 @@ void TkrRecon::CleanUp() {
     for (i=0;i<indCluster;i++) delete keepCluster[i];
     for (i=0;i<indTrack;i++) delete keepTrack[i];
     for (i=0;i<indVertex;i++) delete keepVertex[i];
-    for (i=0;i<indTruncationData;i++) delete keepTruncationData[i];
+    // HMK-v12r7 for (i=0;i<indTruncationData;i++) delete keepTruncationData[i];
     indCluster = 0; indTrack = 0; indVertex = 0;
 
 }
@@ -205,6 +207,7 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
         vertex->Fake(ievent,ivertex,randNum) ;
         addVertex(vertex);
     }
+/* HMK-v12r7
 
     UInt_t itrunc;
     TkrTruncationData *trunc;
@@ -213,6 +216,7 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
 	trunc->Fake(ievent,itrunc,randNum);
 	addTruncationData(trunc);	
     }
+    */
 
     TkrDiagnostics * diag = new TkrDiagnostics ;
     diag->Fake(ievent,ivertex,randNum) ;
@@ -229,7 +233,7 @@ Bool_t TkrRecon::CompareInRange( TkrRecon & ref, const std::string & name ) {
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrCluster,getClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getTrackCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrVertex,getVertexCol()) && result ;
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
+// HMK-v12r7    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
     result = rootdatautil::CompareInRange(*getDiagnostics(),*ref.getDiagnostics(),"Diagnostics") && result ;
 
     if (!result) {
