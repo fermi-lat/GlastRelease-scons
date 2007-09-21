@@ -289,7 +289,8 @@ namespace MOOT {
              const std::string& src="", const std::string& ts="", 
              const std::string& creator="",
              const std::string& descrip="", const std::string& status="") :
-      m_key(key), m_precinct(precinct), m_precinctFk(precinct), m_instr(instr),
+      m_key(key), m_precinct(precinct), m_precinctFk(precinctFk), 
+      m_instr(instr),
       m_src(src), m_ts(ts), m_creator(creator),
       m_descrip(descrip), m_status(status)  {};
     std::string getKey() const {return m_key;}
