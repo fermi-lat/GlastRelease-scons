@@ -30,7 +30,8 @@ StatusCode AcdRibbonDim::getVals() {
   m_topRays.clear();
   m_plusSideRays.clear();
   m_halfWidth = m_acdGeomSvc.ribbonHalfWidth();
-  bool isOk = m_acdGeomSvc.fillRibbonRays(m_acdId,m_minusSideRays,m_topRays,m_plusSideRays);
+  bool isOk = m_acdGeomSvc.fillRibbonData(m_acdId,m_minusSideRays,m_topRays,m_plusSideRays,
+					  m_minusSideTransform,m_topTransform,m_plusSideTransform);
   if ( ! isOk ) {
     return StatusCode::FAILURE;
   }
@@ -39,11 +40,6 @@ StatusCode AcdRibbonDim::getVals() {
     return StatusCode::FAILURE;
       }
   m_halfLength = fullLength/2.;
-
-  isOk = m_acdGeomSvc.fillRibbonTransforms(m_acdId,m_minusSideTransform,m_topTransform,m_plusSideTransform);
-  if ( ! isOk ) {
-    return StatusCode::FAILURE;
-  }
   return sc;
 }
 

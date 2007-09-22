@@ -151,7 +151,7 @@ StatusCode AcdGeometrySvc::getConstants()
         m_glastDetSvc->getNumericConstByName("eACDYPosFace", 
                                              &eACDYPosFace).isSuccess() &&
         m_glastDetSvc->getNumericConstByName("ribbonWidth", 
-                                             &m_ribbonHalfWidth).isSuccess() )
+                                             &ribbonWidth).isSuccess() )
      {
        sc = StatusCode::SUCCESS;
        m_eLATACD = (unsigned) eLATACD;
@@ -421,195 +421,171 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     return sc;
 }
 
-bool AcdGeometrySvc::fillRibbonRays(const idents::AcdId& id, std::vector<Ray>& minusSideRays, std::vector<Ray>& topRays,
-                                    std::vector<Ray>& plusSideRays, bool increasing)
-{
-    // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
-    //    associated with AcdId id.  
 
-    minusSideRays.clear();
-    topRays.clear();
-    plusSideRays.clear();
+bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
+				    std::vector<Ray>& minusSideRays,
+				    std::vector<Ray>& topRays,
+				    std::vector<Ray>& plusSideRays, 
+				    HepTransform3D& minusSideTransform,
+				    HepTransform3D& topTransform,
+				    HepTransform3D& plusTransform) {
+  // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
+  //    associated with AcdId id.  
+  MsgStream   log( msgSvc(), name() );
+  
+  log << MSG::INFO << "Filling data from ribbon " << id.id() << endreq;
 
-    typedef enum {
-        ribbonX = 5,
-        ribbonY = 6
-    } ribbonOrient;
+  minusSideRays.clear();
+  topRays.clear();
+  plusSideRays.clear();
 
-    unsigned int faceArr[6] = {0, 1, 3, 0, 2, 4}; // x Faces 0, 1 (-X), 3 (+X), y Faces 0, 2 (-y), 4(+y)
-    // do top faces first too add segments 6 and 7 to the right end of the minus and plus vectors
-    // when increasing, it means we can just push_back the rays as normal, and when decreasing we can also use push_back
+  typedef enum {
+    ribbonX = 5,
+    ribbonY = 6
+  } ribbonOrient;
 
-    bool retVal = true;
-    if (!id.ribbon()) return false;
+  bool retVal = true;
+  if (!id.ribbon()) return false;
+  
+  unsigned int ribbonNum = id.ribbonNum();
+  unsigned int ribbonOrientation = id.ribbonOrientation();
+  
+  static const unsigned int nRibbonXSideSegsUsed(5);
+  static const unsigned int nRibbonXTopSegsUsed(1);
+  
+  static const unsigned int nRibbonYSideSegsUsed(7);
+  static const unsigned int nRibbonYTopSegsUsed(5);
+  
+  // These numberings are in terms of the geometrical order of the segments, 
+  // not their segement field in the volume identifier  
+  static const unsigned int ribbonXSideSegs[nRibbonXSideSegsUsed] = { 0,1,2,3,4 };     // use all the segments
+  static const unsigned int ribbonXTopSegs[nRibbonXTopSegsUsed] = { 0 };               // only one segment
 
-    unsigned int ribbonNum = id.ribbonNum();
-    unsigned int ribbonOrientation = id.ribbonOrientation();
+  static const unsigned int ribbonYSideSegs[nRibbonYSideSegsUsed] = { 0,1,2,3,4,5,6 }; // use all the segments
+  static const unsigned int ribbonYTopSegs[nRibbonYTopSegsUsed] = { 0,2,4,6,8 };       // use only the long segments
+  
+  static const unsigned int xFaces[3] = { 1,0,3 }; // which faces of the detector the segment lie along
+  static const unsigned int yFaces[3] = { 2,0,4 };
 
-    // Use orientation of ribbon to determine xOrient and the starting index into our array of face ids
-    bool xOrient;
-    unsigned int startInd = 0;
-    if (ribbonOrientation == ribbonX) 
-        xOrient = true;
-    else {
-        startInd = 3;
-        xOrient = false;
-    }
+  static const unsigned int xRefSeg[3] = { 4,0,0 }; // reference segements for "ribbon frame"
+  static const unsigned int yRefSeg[3] = { 4,2,2 }; 
 
-    // Loops over set of faces
-    unsigned int iFace;
-    for (iFace = startInd; iFace < (startInd+3); iFace++) {
+  // orientation of ribbon 
+  bool xOrient = ribbonOrientation == ribbonX ? true : false;
 
-        // Get the ribbon segments from the glastDetSvc
-        std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
-        m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
-            faceArr[iFace], ribbonNum, xOrient, increasing);
+  static const Point nullPoint;
+  static const Vector nullVector;
+  static const Ray nullRay(nullPoint,nullVector);
+ 
+  if ( xOrient ) {
+    minusSideRays.resize(nRibbonXSideSegsUsed,nullRay);
+    topRays.resize(nRibbonXTopSegsUsed,nullRay);
+    plusSideRays.resize(nRibbonXSideSegsUsed,nullRay);
+  } else {
+    minusSideRays.resize(nRibbonYSideSegsUsed,nullRay);
+    topRays.resize(nRibbonYTopSegsUsed,nullRay);
+    plusSideRays.resize(nRibbonYSideSegsUsed,nullRay);
+  }
 
-        // Determine the dimension to use to contruct the rays
-        std::vector<idents::VolumeIdentifier>::const_iterator it;
+  // Loops over set of faces
+  for (unsigned iFace = 0; iFace < 3; iFace++) {
+      
+    // Get the ribbon segments from the glastDetSvc
+    std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
+    m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
+				       xOrient ? xFaces[iFace] : yFaces[iFace], ribbonNum, xOrient, true);
 
-        if ( ribbonSegmentVolIds.size() == 0 ) {
-            MsgStream   log( msgSvc(), name() );
-            log << MSG::INFO << "No ribbon segments found for AcdId: " << id.id() << " with xOrientation "
-                << xOrient << " Face: " << faceArr[iFace] << endreq;
-        }
     
-        std::vector<double> dims;
-        // Iterate over ribbon segments and construct rays
-        for (it = ribbonSegmentVolIds.begin(); it != ribbonSegmentVolIds.end(); it++) {
-            dims.clear();
-            HepPoint3D center;
-            unsigned int dimInd;
+    // OK, now loop over the relevent segments, first we need to figure out which they are
+    const unsigned int* segmentIndex = xOrient ? 
+      ( iFace == 1 ? ribbonXTopSegs : ribbonXSideSegs ) :
+      ( iFace == 1 ? ribbonYTopSegs : ribbonYSideSegs );
+    unsigned int nSegment = xOrient ? 
+      ( iFace == 1 ? nRibbonXTopSegsUsed : nRibbonXSideSegsUsed ) :
+      ( iFace == 1 ? nRibbonYTopSegsUsed : nRibbonYSideSegsUsed );
 
-            if ( faceArr[iFace] == 0 ) { // On the top, interested in segments 1,2,3,4,5
-                if ( (*it)[5] <= 5 ) {
-                    dimInd = (xOrient) ? 0 : 1;
-                } else
-                    continue;
-            } else {
-                dimInd = 2;
-                if ( ( (*it)[5] > 4) && ( (*it)[5] != 9) ) // On the sides we are interested in segments 1,2,3,4,9
-                    continue;
-            }
+    unsigned int checkRefSegment = xOrient ? xRefSeg[iFace] : yRefSeg[iFace];
 
+    for ( unsigned int iSeg(0); iSeg < nSegment; iSeg++ ) {
+
+      const idents::VolumeIdentifier& volId = ribbonSegmentVolIds[  segmentIndex[iSeg]  ];
             
-            getDimensions(*it, dims, center); 
-            double cen[3] = {center.x(), center.y(), center.z()};
-            Point startPos(cen[0], cen[1], cen[2]);
-            Point endPos(cen[0], cen[1], cen[2]);
-            if (increasing) {
-               startPos(dimInd) = cen[dimInd] - dims[dimInd]/2.;
-               endPos(dimInd) = cen[dimInd] + dims[dimInd]/2.;
-            } else {
-                startPos(dimInd) = cen[dimInd] + dims[dimInd]/2.;
-                endPos(dimInd) = cen[dimInd] - dims[dimInd]/2.;
-            }
+      // Make the dimension vector in the local frame;
+      std::vector<double> dim;
+      HepGeom::Transform3D transformToLocal;
+      HepPoint3D center;
+      HepVector3D xVectorGlobal;
+      HepVector3D yVectorGlobal;
+      
+      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,yVectorGlobal);
 
-            // Construct Rays, forming vector from end and starting position along ribbon segment
-            Vector rayVec = endPos - startPos;
-            Ray r(startPos, rayVec);
-            r.setArcLength(rayVec.mag());
-            MsgStream   log( msgSvc(), name() );
-            log << MSG::DEBUG << "dimInd: " << dimInd << endreq;
-            log << MSG::DEBUG << "cen: ( " << cen[0] << ", " << cen[1] << ", " << cen[2] << ")" << endreq;
-            log << MSG::DEBUG << "dims: " << dims[0] << ", " << dims[1] << ", " << dims[2] << endreq;
-            log << MSG::DEBUG << "startPos: (" << startPos.x() << ", " << startPos.y() << ", " << startPos.z() << ")" 
-                << " endPos: ( " << endPos.x() << ", " << endPos.y() << ", " << endPos.z() << ")" << endreq;
- 
-            if (faceArr[iFace] == 0) {             // Face 0, segment# <= 5
-                topRays.push_back(r);
-            } else if ((faceArr[iFace] == 1) || (faceArr[iFace] == 2))  // Faces 1, 2
-                minusSideRays.push_back(r);
-            else                                                        // Faces 3,4
-                plusSideRays.push_back(r);
-    
-        } // end ribbonSegment for
+      if ( sc.isFailure() ) {        
+	log << MSG::ERROR << "Failed to handle transformations for ribbon volume: " 
+	    << volId.name() << endreq;
+	return sc;
+      } 
 
-    } // end face for
+      HepPoint3D start = center - yVectorGlobal;
+      HepPoint3D end = center + yVectorGlobal;
+      HepVector3D vect = 2 * yVectorGlobal;
 
-    return retVal;
-}
+      Point startPoint(start.x(),start.y(),start.z());
+      Vector rayVector(vect.x(),vect.y(),vect.z());
 
-
-/// Given an AcdId for a ribbon, provide the transformation to the center of each set of ribbon segments
-bool AcdGeometrySvc::fillRibbonTransforms(const idents::AcdId& id,
-					  HepTransform3D& minusSideTransform,
-					  HepTransform3D& topTransform,
-					  HepTransform3D& plusSideTransform){
-
-    typedef enum {
-        ribbonX = 5,
-        ribbonY = 6
-    } ribbonOrient;
-
-    unsigned int faceArr[6] = {0, 1, 3, 0, 2, 4}; // x Faces 0, 1 (-X), 3 (+X), y Faces 0, 2 (-y), 4(+y)
-    // do top faces first too add segments 6 and 7 to the right end of the minus and plus vectors
-    // when increasing, it means we can just push_back the rays as normal, and when decreasing we can also use push_back
-
-    bool retVal = true;
-    if (!id.ribbon()) return false;
-
-    unsigned int ribbonNum = id.ribbonNum();
-    unsigned int ribbonOrientation = id.ribbonOrientation();
-
-    // Use orientation of ribbon to determine xOrient and the starting index into our array of face ids
-    bool xOrient;
-    unsigned int startInd = 0;
-    if (ribbonOrientation == ribbonX) 
-        xOrient = true;
-    else {
-        startInd = 3;
-        xOrient = false;
-    }
-
-    // Loops over set of faces
-    unsigned int iFace;
-    for (iFace = startInd; iFace < (startInd+3); iFace++) {
-
-        // Get the ribbon segments from the glastDetSvc
-        std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
-        m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
-					   faceArr[iFace], ribbonNum, xOrient, true);
-
-        if ( ribbonSegmentVolIds.size() == 0 ) {
-            MsgStream   log( msgSvc(), name() );
-            log << MSG::INFO << "No ribbon segments found for AcdId: " << id.id() << " with xOrientation "
-                << xOrient << " Face: " << faceArr[iFace] << endreq;
-	    return false;
-        }
- 
-	// figure out segment is the "middle" one
-	int toUse = (ribbonSegmentVolIds.size()-1) / 2;
-	const idents::VolumeIdentifier& volId = ribbonSegmentVolIds[toUse];
-	
-	StatusCode sc;
-	switch ( iFace ) {
+      unsigned rayIndex(0);
+      switch (iFace) {
+      case 0: 
+	rayIndex = iSeg;
+	minusSideRays[rayIndex] = Ray(startPoint,rayVector);
+	minusSideRays[rayIndex].setArcLength(rayVector.mag());
+	break;
+      case 1: 
+	rayIndex = iSeg;
+	topRays[rayIndex] = Ray(startPoint,rayVector);
+	topRays[rayIndex].setArcLength(rayVector.mag());
+	break;
+      case 2: 
+	rayIndex = nSegment - (iSeg+1);
+	plusSideRays[rayIndex] = Ray(startPoint,rayVector);
+	plusSideRays[rayIndex].setArcLength(rayVector.mag());
+	break;
+      default:
+	return false;
+      }
+     
+      if ( iSeg == checkRefSegment ) {
+	switch (iFace) {
 	case 0:
-	case 3:
-	  // top
-	  sc = m_glastDetSvc->getTransform3DByID(volId, &topTransform);
+	  minusSideTransform = transformToLocal;
 	  break;
 	case 1:
-	case 4:
-	  // minus side
-	  sc = m_glastDetSvc->getTransform3DByID(volId, &minusSideTransform);
+	  topTransform = transformToLocal;
 	  break;
 	case 2:
-	case 5:
-	  // plus side
-	  sc = m_glastDetSvc->getTransform3DByID(volId, &plusSideTransform);
+	  plusTransform = transformToLocal;
 	  break;
+	default:
+	  return false;	  
 	}
-	if (sc.isFailure() ) {
-	  MsgStream   log( msgSvc(), name() );
-	  log << MSG::WARNING << "Failed to get ribbon trasnformation" << endreq;
-	  return false;
-	} 
-    } // end face for
+      }
+      
+      log << MSG::INFO << volId.name() << ' ' << (xOrient ? xFaces[iFace] : yFaces[iFace]) << ' ' << iSeg << ' ' << (xOrient ? 'X' : 'Y') 
+	  << ' ' << ribbonNum << ' ' << (iSeg == checkRefSegment ? "REF" : "") << std::endl
+	  << "cen: " << center << ", " << std::endl
+	  << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << std::endl
+	  << "startPos: (" << startPoint.x() << ", " << startPoint.y() << ", " << startPoint.z() << ")" 
+	  << " endPos: ( " << end.x() << ", " << end.y() << ", " << end.z() << ")" << endreq;
+      
 
+    }
+
+  }
 
   return retVal;
 }
+
+
+
 
 double AcdGeometrySvc::ribbonHalfWidth() const 
 {
@@ -633,66 +609,21 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   bool bent = iVol==1 ? true : false;
   const idents::VolumeIdentifier volId = ncid.volId(bent);
 
-  // Get the reference frame enum
-  AcdFrameUtil::AcdReferenceFrame frameId = getReferenceFrame(volId);
-  if ( frameId == AcdFrameUtil::FRAME_NONE ) {
-    log << MSG::ERROR << "Failed to retrieve Frame by Id: " 
-	<< volId.name() << endreq;
-    return false;
-  }
+  HepVector3D xVectorGlobal;
+  HepVector3D yVectorGlobal;
+  
+  StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,yVectorGlobal);  
 
-  // dimensions in global frame
-  std::vector<double> globalDim; 
-  std::string str;
-
-  // Now get the shape.
-  // Note that this is expressed in the "GEANT" frame, 
-  // which has only minimal rotations about X or Y axis for the side tiles
-  StatusCode sc = m_glastDetSvc->getShapeByID(volId, &str, &globalDim);
   if ( sc.isFailure() ) {        
-    log << MSG::ERROR << "Failed to retrieve shape by Id: " 
-	<< volId.name() << endreq;
-    return false;
+    log << MSG::ERROR << "Failed to handle transformations for tile volume: " 
+      	<< volId.name() << endreq;
+    return sc;
   } 
-  
-  // Make the dimension vector in the local frame;
-  AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
 
-  // Get the transform from GEANT frame to the GLOBAL frame.  
-  // Note that this includes the translation and is expressed in the global frame   
-  HepGeom::Transform3D geantToGlobal;
-  sc = m_glastDetSvc->getTransform3DByID(volId, &geantToGlobal);
-  if (sc.isFailure() ) {
-    log << MSG::ERROR << "Failed to get transformation: " 
-	<< volId.name() << endreq;
-    return false;
-  }
-
-  // Find the center of the tile, 
-  HepPoint3D origin;
-  center = geantToGlobal * origin;
-
-  HepGeom::Transform3D globalToGeant = geantToGlobal.inverse();
-
-  // Get the major rotations that flip axes around and all
-  const HepTransform3D& rotationToLocal = AcdFrameUtil::getRotationToLocal(frameId);
-  const HepTransform3D& rotationToGeant = AcdFrameUtil::getRotationToGeant(frameId);
-
-  transformToLocal = rotationToLocal * globalToGeant;
-  HepGeom::Transform3D transformToGlobal =  geantToGlobal * rotationToGeant;
-
-  HepGeom::Transform3D check = transformToLocal * transformToGlobal;
-
-  // Make the half-vectors (center to edge of tile)
-  const HepVector3D xVectorLocal(dim[0]/2.,0.,0.);
-  const HepVector3D yVectorLocal(0.,dim[1]/2.,0.);
-  const HepVector3D xVectorGlobal = transformToGlobal* xVectorLocal;
-  const HepVector3D yVectorGlobal = transformToGlobal* yVectorLocal;
-  
   AcdFrameUtil::getCornersSquare(center,xVectorGlobal,yVectorGlobal,corner);
-
   return true;
 }
+
 
 /// Given an AcdId, provide positions of screw holes in local frame
 bool AcdGeometrySvc::fillScrewHoleData(const idents::AcdId& /* id */, 
@@ -730,8 +661,8 @@ bool AcdGeometrySvc::fillTileSharedEdgeData(const idents::AcdId& id,
   return true;
 }
 
-AcdFrameUtil::AcdReferenceFrame 
-AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) {
+ AcdFrameUtil::AcdReferenceFrame
+AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) const {
 
     using idents::VolumeIdentifier;
     IGlastDetSvc::NamedId nid = m_glastDetSvc->getNamedId(volId);
@@ -774,91 +705,105 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) {
   
     // Ribbons...eek!
     if (!findFieldVal(nid, "fMeasure", val)) return AcdFrameUtil::FRAME_NONE;
-    unsigned ribbon, segNum;
-    if (!findFieldVal(nid, "fRibbon", ribbon)) return AcdFrameUtil::FRAME_NONE;
+    unsigned segNum;
     if (!findFieldVal(nid, "fRibbonSegment", segNum)) return AcdFrameUtil::FRAME_NONE;
 
-    bool increasing;
-    std::vector<double> dims;
-    HepPoint3D cm;
-    if (getDetectorDimensions(volId, dims, cm).isFailure()) return AcdFrameUtil::FRAME_NONE;
+    static const AcdFrameUtil::AcdReferenceFrame 
+      xTopFrames[12] = { AcdFrameUtil::FRAME_NONE,
+			 AcdFrameUtil::FRAME_XMEAS,AcdFrameUtil::FRAME_XMEAS,AcdFrameUtil::FRAME_XMEAS,
+			 AcdFrameUtil::FRAME_XMEAS,AcdFrameUtil::FRAME_XMEAS,
+			 AcdFrameUtil::FRAME_NONE,AcdFrameUtil::FRAME_NONE,
+			 AcdFrameUtil::FRAME_PLUSY_YDWN,AcdFrameUtil::FRAME_PLUSY_YDWN, 
+			 AcdFrameUtil::FRAME_MINUSY,AcdFrameUtil::FRAME_MINUSY };
 
-    //    HepGeom::Transform3D transform;
-    //    m_glastDetSvc->getTransform3DByID(volId, &transform);
-    //    HepVector3D dimsTransformed(dims[0], dims[1], dims[2]);
-    //    dimsTransformed = transform * dimsTransformed;
-    // More generally might need to use transformed dimensions in 
-    //   following, but for actual geometry in use it isn't necessary
-    bool measY = true;
+    if ( val == m_eMeasureX ) {
+      if ( face == m_eACDTopFace ) return xTopFrames[segNum];
+      else if ( face == m_eACDYNegFace ) return AcdFrameUtil::FRAME_MINUSY;
+      else if ( face == m_eACDYPosFace ) return AcdFrameUtil::FRAME_PLUSY_YDWN;
+      else return AcdFrameUtil::FRAME_NONE;
+    } else if ( val == m_eMeasureY ) {
+      if ( face == m_eACDTopFace) return AcdFrameUtil::FRAME_YMEAS; 
+      else if (face == m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;  
+      else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX_YDWN; 
+      else return AcdFrameUtil::FRAME_NONE;
+    }  
+    return AcdFrameUtil::FRAME_NONE;
 
-    if (val == m_eMeasureX) {  // width is X dimension.  
-        measY = false;
-        if (face == m_eACDTopFace) {
-          //            if (dims[2] <= dims[1]) return FRAME_XMEAS;
-            if (dims[2] <= dims[1]) return AcdFrameUtil::FRAME_XMEAS;
-            increasing = true;
-        }
-        else if (face == m_eACDYNegFace) {
-          //  if (dims[2] >= dims[1]) return FRAME_MINUSY;  // vert
-          if (dims[2] >= dims[1]) return AcdFrameUtil::FRAME_MINUSY;  // it's vertical 
-            increasing = true;
-        }
-        else if (face == m_eACDYPosFace) {
-            if (dims[2] >= dims[1]) return AcdFrameUtil::FRAME_PLUSY_YDWN; // it's vertical
-            increasing = false;
-        }
-        else return AcdFrameUtil::FRAME_NONE;
-    }
-    else if (val = m_eMeasureY) {  // width is Y dimension
-
-        // Y-ribbons go straight across top
-        if (face == m_eACDTopFace) return AcdFrameUtil::FRAME_YMEAS; 
-        else if (face == m_eACDXNegFace) {
-            if (dims[2] >= dims[0]) return AcdFrameUtil::FRAME_MINUSX;  // it's vertical 
-            increasing = true;
-        }
-        //            break;
-        else if (face == m_eACDXPosFace) {
-            if (dims[2] >= dims[0]) return AcdFrameUtil::FRAME_PLUSX_YDWN; // it's vertical
-            increasing = false;
-        }
-        //            break;
-        else return AcdFrameUtil::FRAME_NONE;
-    }
-    // deal with short guys.
-    std::vector<VolumeIdentifier> segs;
-
-    m_glastDetSvc->orderRibbonSegments(segs, face, ribbon, measY, 
-                                       increasing);
-    VolIdIter ourIt = std::find(segs.begin(), segs.end(), volId);
-    // If our seg wasn't found, give up
-    if (ourIt == segs.end())  return AcdFrameUtil::FRAME_NONE;
-    // Our seg really shouldn't be first or last
-    if ((ourIt == segs.begin()) || ((ourIt + 1) == segs.end()) )
-        return AcdFrameUtil::FRAME_NONE; 
-
-    VolIdIter before = ourIt - 1;
-    VolIdIter after = ourIt + 1;
-
-    HepPoint3D xTbefore, xTafter;
-    if (getDimensions(*before, dims, xTbefore).isFailure()) return AcdFrameUtil::FRAME_NONE;
-    if (getDimensions(*after, dims, xTafter).isFailure()) return AcdFrameUtil::FRAME_NONE;
-
-    // Depending on face, compare x, y or z dimensions of cm
-    // to see if we're headed forwards or backward
-    // Y-measuring, side
-    if ((face ==  m_eACDXNegFace) || (face ==  m_eACDXPosFace)) {
-        if (xTbefore.x() <= xTafter.x()) return AcdFrameUtil::FRAME_YMEAS;
-        else return AcdFrameUtil::FRAME_YMEAS_ZROT180;
-    }
-
-    // X-measuring, side
-    else if ((face ==  m_eACDYNegFace) || (face == m_eACDYPosFace)) {
-        if (xTbefore.y() <= xTafter.y()) return AcdFrameUtil::FRAME_XMEAS;
-        else return AcdFrameUtil::FRAME_XMEAS_ZROT180;
-    }
-    else {   // must be top
-        if (xTbefore.z() <= xTafter.z()) return AcdFrameUtil::FRAME_MINUSY;
-        else return AcdFrameUtil::FRAME_PLUSY_YDWN;
-    }
 }
+
+
+StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdentifier &volId,
+						       std::vector<double>& dim,
+						       HepGeom::Transform3D& transformToLocal,
+						       HepPoint3D& center,
+						       HepVector3D& xVectorGlobal,
+						       HepVector3D& yVectorGlobal) const {
+
+  MsgStream  log( msgSvc(), name() );
+
+  // dimensions in global frame
+  std::vector<double> globalDim; 
+  std::string str;
+
+  // Now get the shape.
+  // Note that this is expressed in the "GEANT" frame, 
+  // which has only minimal rotations about X or Y axis for the side tiles
+  StatusCode sc = m_glastDetSvc->getShapeByID(volId, &str, &globalDim);
+  if ( sc.isFailure() ) {        
+    log << MSG::ERROR << "Failed to retrieve shape by Id: " 
+	<< volId.name() << endreq;
+    return sc;
+  } 
+
+  // Get the reference frame enum
+  AcdFrameUtil::AcdReferenceFrame frameId = getReferenceFrame(volId);
+  if ( frameId == AcdFrameUtil::FRAME_NONE ) {
+    log << MSG::ERROR << "Failed to retrieve Frame by Id: " 
+	<< volId.name() << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // Make the dimension vector in the local frame;
+  AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
+
+  // Get the transform from GEANT frame to the GLOBAL frame.  
+  // Note that this includes the translation and is expressed in the global frame   
+  HepGeom::Transform3D geantToGlobal;
+  sc = m_glastDetSvc->getTransform3DByID(volId, &geantToGlobal);
+  if (sc.isFailure() ) {
+    log << MSG::ERROR << "Failed to get transformation: " 
+	<< volId.name() << endreq;
+    return sc;
+  }
+
+  // Find the center of the volume, 
+  HepPoint3D origin;
+  center = geantToGlobal * origin;
+
+
+  // Build up the transformation to the local frame
+  // Get the minor rotations and offsets that take the global frame to the geant reference
+  HepGeom::Transform3D globalToGeant = geantToGlobal.inverse();
+  // Get the major rotations that flip axes around and all
+  const HepTransform3D& rotationToLocal = AcdFrameUtil::getRotationToLocal(frameId);  
+  transformToLocal = rotationToLocal * globalToGeant;
+
+  // Build up the transformation to the global frame
+  // Get the major rotations that flip axes around and all
+  const HepTransform3D& rotationToGeant = AcdFrameUtil::getRotationToGeant(frameId);
+  HepGeom::Transform3D transformToGlobal =  geantToGlobal * rotationToGeant;
+
+  // This is just here as a sanity check should be identity
+  //HepGeom::Transform3D check = transformToLocal * transformToGlobal;
+
+  // Make the half-vectors (center to edge of volume)
+  const HepVector3D xVectorLocal(dim[0]/2.,0.,0.);
+  const HepVector3D yVectorLocal(0.,dim[1]/2.,0.);
+  xVectorGlobal = transformToGlobal* xVectorLocal;
+  yVectorGlobal = transformToGlobal* yVectorLocal;
+
+  // done, return
+  return sc;
+  
+}
+			    

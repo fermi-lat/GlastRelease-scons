@@ -145,7 +145,8 @@ StatusCode TestAcdUtil::execute() {
               //  << end[1].z() << ") halfWid: " << halfWidth[1] << std::endl;
 
             std::vector<Ray> minusSideRays, topRays, plusSideRays;
-            m_acdGeoSvc->fillRibbonRays(acdId, minusSideRays, topRays, plusSideRays, true);
+	    HepTransform3D minusSideTransform, topTransform, plusSideTransform;
+            m_acdGeoSvc->fillRibbonData(acdId, minusSideRays, topRays, plusSideRays, minusSideTransform, topTransform, plusSideTransform);
             std::vector<Ray>::const_iterator rayIt;
             Point pos;
             Vector dir;
