@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v1r11    21-Sep-2007 EAC Fix problem with ribbon numbering and switch to using 
+	                  data statments to define ribbon segment types
  v1r10p1  13-Sep-2007 HMK patch use of enums
  v1r10    12-Sep-2007 HMK Use new interface ICalibPathSvc
  v1r9p2   05-Sep-2007 EAC Fix up unit test, add some comments

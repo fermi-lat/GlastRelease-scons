@@ -433,7 +433,7 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
   //    associated with AcdId id.  
   MsgStream   log( msgSvc(), name() );
   
-  log << MSG::INFO << "Filling data from ribbon " << id.id() << endreq;
+  log << MSG::DEBUG << "Filling data from ribbon " << id.id() << endreq;
 
   minusSideRays.clear();
   topRays.clear();
@@ -569,7 +569,7 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
 	}
       }
       
-      log << MSG::INFO << volId.name() << ' ' << (xOrient ? xFaces[iFace] : yFaces[iFace]) << ' ' << iSeg << ' ' << (xOrient ? 'X' : 'Y') 
+      log << MSG::DEBUG << volId.name() << ' ' << (xOrient ? xFaces[iFace] : yFaces[iFace]) << ' ' << iSeg << ' ' << (xOrient ? 'X' : 'Y') 
 	  << ' ' << ribbonNum << ' ' << (iSeg == checkRefSegment ? "REF" : "") << std::endl
 	  << "cen: " << center << ", " << std::endl
 	  << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << std::endl
