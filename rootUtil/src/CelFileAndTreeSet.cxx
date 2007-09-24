@@ -37,20 +37,18 @@
 
 ClassImp(CelFileAndTreeSet);
 
-CelFileAndTreeSet::CelFileAndTreeSet():
-  BranchGroup(),
-  _componentName(),
-  _setSize(0,*this,"SetSize"),
-  _treesSize(0,*this,"TreesSize"){
-  // Default c'tor.  CelEventComponent Name is not set
-  _treeNames = new TObjArray;
-  _fileNames = new TObjArray;  
-  _treeOffsets = new TArrayL64;
-}
+CelFileAndTreeSet::CelFileAndTreeSet()
+ : _componentName(),
+   _setSize(0,*this,"SetSize"),
+   _treesSize(0,*this,"TreesSize")
+ {
+  _treeNames = new TObjArray ;
+  _fileNames = new TObjArray ;  
+  _treeOffsets = new TArrayL64 ;
+ }
 
-CelFileAndTreeSet::CelFileAndTreeSet(const std::string& componentName)
- : BranchGroup(),
-   _componentName(componentName),
+CelFileAndTreeSet::CelFileAndTreeSet(const TString & componentName )
+ : _componentName(componentName),
    _setSize(0,*this,"SetSize"),
    _treesSize(0,*this,"TreesSize")
  {
@@ -61,20 +59,20 @@ CelFileAndTreeSet::CelFileAndTreeSet(const std::string& componentName)
 
 CelFileAndTreeSet::~CelFileAndTreeSet()
  {
-  delete _fileNames;
-  delete _treeNames;
-  delete _treeOffsets;
+  delete _fileNames ;
+  delete _treeNames ;
+  delete _treeOffsets ;
  }
 
-void CelFileAndTreeSet::reset() {
+void CelFileAndTreeSet::reset()
+ {
   // Clear the lists
-  //
   // Should be called when switch to new input collection
-  _setSize = 0;
-  _fileNames->Clear();
-  _treeNames->Clear();
-  _cache.clear();
-  _lookup.clear();
+  _setSize = 0 ;
+  _fileNames->Clear() ;
+  _treeNames->Clear() ;
+  _cache.clear() ;
+  _lookup.clear() ;
 }
 
 UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
@@ -182,7 +180,7 @@ Int_t CelFileAndTreeSet::attachToTree(TTree& tree, const char* prefix) {
   //   <prefix>FileNames  -> TObjArray of TObjString with the names files where the TTrees live
 
   // get rid of old stuff
-  reset();
+  reset() ;
   // First the base class
   Int_t bVal = BranchGroup::attachToTree(tree,prefix);
   if ( bVal < 0 ) return bVal;  

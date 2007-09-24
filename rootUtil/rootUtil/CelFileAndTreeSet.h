@@ -1,6 +1,7 @@
-// -*- Mode: c++ -*-
+
 #ifndef CelFileAndTreeSet_h
 #define CelFileAndTreeSet_h
+
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -11,26 +12,20 @@
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
 *
-*
-*
 */
 
 
 
-// Base class headers
 #include "BranchGroup.h"
-
-// Headers for associated classes
 #include "DataHandle.h"
 
-// c++ and stl headers
-#include <map>
+#include <TString.h>
+class TTree ;
+class TFile ;
+class TObjArray ;
+class TArrayL64 ;
 
-// forward declares
-class TTree;
-class TFile;
-class TObjArray;
-class TArrayL64;
+#include <map>
 
 //
 // CelFileAndTreeSet stores information needed to point to a part of an event
@@ -52,17 +47,15 @@ class TArrayL64;
 // The keys are assigned when TTree are first associated with the CelFileAndTreeSet
 // 
 
-class CelFileAndTreeSet  : public BranchGroup {
+class CelFileAndTreeSet  : public BranchGroup
+ {
 
-public:
+  public :
 
-  // c'tors & d'tor
-  // Default c'tor.  Needed for ROOT
-  CelFileAndTreeSet();
-  // Standard c'tor, stores the name of the component 
-  CelFileAndTreeSet(const std::string& componentName);
-  // D'tor
-  virtual ~CelFileAndTreeSet();
+    // construction
+    CelFileAndTreeSet() ; // Needed for ROOT
+    CelFileAndTreeSet( const TString & componentName ) ;
+    virtual ~CelFileAndTreeSet() ;
 
   // Methods and functions
   // Reset this object and clear caches
@@ -76,14 +69,14 @@ public:
   // Get the Event offset using persistent KEY
   Long64_t getOffset(UShort_t key) const ;
 
-  // Override the methods in BranchGroup.  
-  virtual Int_t makeBranches(TTree& tree, const char* prefix = 0, Int_t bufsize = 32000) const;
-  virtual Int_t attachToTree(TTree& tree, const char* prefix = 0);
+    // Override the methods in BranchGroup.  
+    virtual Int_t makeBranches( TTree & celTree, const char * prefix = 0, Int_t bufsize = 32000) const ;
+    virtual Int_t attachToTree( TTree & celTree, const char * prefix = 0) ;
 
-  // Access
-  inline UShort_t size() const { return _setSize; }
-  inline Long64_t entries() const { return _treesSize; }
-  inline const std::string& componentName() const { return _componentName; }
+    // Access
+    inline UShort_t size() const { return _setSize ; }
+    inline Long64_t entries() const { return _treesSize ; }
+    inline const TString & componentName() const { return _componentName ; }
 
   // Printing
   // Print the list of trees
@@ -91,33 +84,34 @@ public:
   // Print information about a single tree
   void printTreeInfo(UShort_t key, const char* options = "tf") const;
 
-protected:
+  protected :
 
-  // Utility function to actually go and get a tree out of a file
-  TTree* fetchTree(UShort_t key) const;
+    // Utility function to actually go and get a tree out of a file
+    TTree * fetchTree( UShort_t key ) const ;
 
-private:
+  private :
 
-  //disable copying and assignment
-  CelFileAndTreeSet(const CelFileAndTreeSet& other);
-  CelFileAndTreeSet& operator=(const CelFileAndTreeSet& other);
+    //disable copying and assignment
+    CelFileAndTreeSet( const CelFileAndTreeSet & ) ;
+    CelFileAndTreeSet & operator=( const CelFileAndTreeSet & ) ;
 
-  // data
-  std::string            _componentName;   //! Name of the component this object is storing information about
+    // data
+    TString _componentName ;
 
-  // data on the associated tree
-  DataHandle<UShort_t>   _setSize;            //! Number of trees stored by this CelFileAndTreeSet
-  TObjArray*             _fileNames;       //! Names of files where the TTree live
-  TObjArray*             _treeNames;       //! Names of trees stored by this CelFileAndTreeSet
-  DataHandle<Long64_t>   _treesSize;       //! Number of entries on the trees stored by this CelFileAndTreeSet
-  TArrayL64*             _treeOffsets;    //! Number of entries in TTrees
+    // data on branches
+    DataHandle<UShort_t>  _setSize ;     //! Number of trees stored by this CelFileAndTreeSet
+    TObjArray*            _fileNames ;   //! Names of files where the TTree live
+    TObjArray*            _treeNames ;   //! Names of trees stored by this CelFileAndTreeSet
+    DataHandle<Long64_t>  _treesSize ;   //! Number of entries on the trees stored by this CelFileAndTreeSet
+    TArrayL64*            _treeOffsets ; //! Number of entries in TTrees
 
-  // Cache for fast lookup
-  mutable std::map<UShort_t,TTree*> _cache;  //! Maps key -> tree
-  mutable std::map<TTree*,UShort_t> _lookup; //! Reverse map, for making sure we don't screw up
+    // Cache for fast lookup
+    mutable std::map<UShort_t,TTree*> _cache ;  //! Maps key -> tree
+    mutable std::map<TTree*,UShort_t> _lookup ; //! Reverse map, for making sure we don't screw up
 
-  ClassDef(CelFileAndTreeSet,0) // For handling referenece to trees
-};
+    ClassDef(CelFileAndTreeSet,0) // For handling referenece to trees
+ } ;
 
 
 #endif
+

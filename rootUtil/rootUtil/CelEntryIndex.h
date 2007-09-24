@@ -16,6 +16,7 @@
 
 #include "BranchGroup.h"
 #include "DataHandle.h"
+#include <TString.h>
 class CelFileAndTreeSet ;
 
 //
@@ -38,15 +39,13 @@ class CelEntryIndex : public BranchGroup
 
     // c'tors & d'tor
     CelEntryIndex() ; // Needed for ROOT
-    CelEntryIndex( const std::string & componentName ) ;
+    CelEntryIndex( const TString & componentName ) ;
     CelEntryIndex( const CelEntryIndex & ) ;
+    CelEntryIndex & operator=( const CelEntryIndex & ) ;
     ~CelEntryIndex() ;
 
-    // Operators
-    CelEntryIndex & operator=( const CelEntryIndex & ) ;
-
     // Access
-    inline const std::string & componentName() const { return _componentName ; }
+    inline const TString & componentName() const { return _componentName ; }
     inline Long64_t entryIndex() const { return _entryIndex ; }
     inline UShort_t treeIndex() const { return _treeIndex ; }
 
@@ -64,11 +63,11 @@ class CelEntryIndex : public BranchGroup
   private :
   
     // Data
-    std::string            _componentName ;  //! Name of the component this object is storing information about
-    DataHandle<Long64_t>   _entryIndex ;     //! Index of the current entry in the current TTree
-    DataHandle<UShort_t>   _treeIndex ;      //! Index of the current TTree in the associated CelFileAndTreeSet
+	TString _componentName ;
+    DataHandle<Long64_t> _entryIndex ; //! Index of the current entry in the current data TTree
+    DataHandle<UShort_t> _treeIndex ;  //! Index of the current data TTree in the associated CelFileAndTreeSet
   
-    ClassDef(CelEntryIndex,0)               // Handles Event Level Information to point to Event Components
+    ClassDef(CelEntryIndex,0)
 
  } ;
 

@@ -19,15 +19,15 @@
 
 #include "CelEventLink.h"
 #include "DataHandle.h"
-class CelEventComponent;
+class CelEventComponent ;
 
 #include <TObject.h>
-class TTree;
-class TFile;
-class TChain;
-class TVirtualIndex;
-class TCollection;
-class TObjArray;
+class TTree ;
+class TFile ;
+class TChain ;
+class TVirtualIndex ;
+class TCollection ;
+class TObjArray ;
 class TString ;
 
 #include <map>
@@ -45,7 +45,7 @@ class TString ;
 // written to a ROOT file. The information is stored on 3 trees
 // 
 //   Links: 3 branches total, 1 entry per event
-//      Link_EventIndex/L  -> Index of current composite event
+//      Link_EventIndex/L  -> Index of the current composite event
 //      Link_SetIndex/L   -> Index of the associated set of files and trees
 //      Link_SetOffset/L  -> Number of events in previous sets
 // 
@@ -71,14 +71,18 @@ class CompositeEventList : public TObject
     CompositeEventList( TTree & linkTree, TTree & fileTree, TTree & entryTree ) ;
     virtual ~CompositeEventList() ;
 
-  // Methods and functions
-  // Make a new file.  Will also delare TTree for storing the pointers
-  TFile * makeFile( const TString & fileName, const Char_t* options);
-  // Open an existing file which contains a composite event list
-  TFile* openFile( const TString & fileName ) ;
+    // Add a component by name.  This is only needed when writing.  On read these are discovered.
+    UInt_t addComponent( const std::string & name) ;
+    // Make a new CEL ROOT file and its trees
+    TFile * makeFile( const TString & fileName, const Char_t * options) ;
+    
+    // Open an existing CEL ROOT file
+    TFile * openFile( const TString & fileName ) ;
 
-  // Add a component by name.  This is only need when writing.  On read these are discovered.
-  UInt_t addComponent(const std::string& name);
+    
+    
+    
+  
   // Set up an event.  Grab the status of a set of TTrees
   Long64_t fillEvent(TObjArray& trees);
   Long64_t fillEvent(std::vector<TTree*>& trees);
@@ -134,37 +138,34 @@ class CompositeEventList : public TObject
   // Dump the list of TTree where our events live
   void listTrees(const char* options);
 
-protected:
+  
+  protected :
 
-  // Uses the input event tree to discover the list of components
-  Int_t buildComponents(TTree& eventTree);
+    // Uses the input event tree to discover the list of components
+    Int_t buildComponents(TTree& eventTree);
 
-  // Latch the values in a set of TTree
-  Bool_t set(std::vector<TTree*>& trees);
+    // Latch the values in a set of TTree
+    Bool_t set(std::vector<TTree*>& dataTrees) ;
  
-  // Tree manipulation, called by openFile and makeFile
-  Int_t makeBranches( TTree & linkTree, TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
-  Int_t attachToTree( TTree & linkTree, TTree & fileTree, TTree & eventTree ) ;
+    // Manipulation of cel internal trees
+    void deleteCelTrees() ;
+    Bool_t checkCelTrees() ;
+    Int_t makeBranches( TTree & linkTree, TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
+    Int_t attachToTree( TTree & linkTree, TTree & fileTree, TTree & eventTree ) ;
 
-  // cleanup in case there were problems with files
-  void cleanup();
-
-  // make sure that files exist.  pre-requisite for processing
-  Bool_t checkDataFiles();
 
   private :
   
 	typedef std::pair<TTree*,CelEventComponent*> CelTreeAndComponent ;
 
-    //disable copying and assignment
-    CompositeEventList(const CompositeEventList& other);
-    CompositeEventList& operator=(const CompositeEventList& other);
+    // disable copying and assignment
+    CompositeEventList( const CompositeEventList & ) ;
+    CompositeEventList & operator=( const CompositeEventList & ) ;
 
-    // Data
+    // data
     TTree * _linkTree ; 
     TTree * _fileTree ; 
-    TTree * _entryTree ;
-  
+    TTree * _entryTree ;  
     CelEventLink _linkEntry ;                      //! current link : event index, file-tree-name index
     std::vector<CelTreeAndComponent>  _compList;   //! vector of components and associated TTrees
     std::vector<std::string >         _compNames;  //! names of components

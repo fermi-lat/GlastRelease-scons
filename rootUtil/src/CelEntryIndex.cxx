@@ -17,28 +17,29 @@
 #include "rootUtil/CelFileAndTreeSet.h"
 
 #include <TTree.h>
+#include <Riostream.h>
 
-#include <iostream>
+
+
+//====================================================================
+// 
+//====================================================================
+
 
 ClassImp(CelEntryIndex) ;
 
-// Default c'tor. Component Name is not set
 CelEntryIndex::CelEntryIndex()
- : BranchGroup(),
-   _componentName(),
+ : _componentName(),
    _entryIndex(-1,*this,"EntryIndex"),  
    _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
  { DataHandleInstance::init() ; }
 	      
-// Standard c'tor.  Component Name is set
-CelEntryIndex::CelEntryIndex( const std::string & componentName )
- : BranchGroup(),
-   _componentName(componentName),
+CelEntryIndex::CelEntryIndex( const TString & componentName )
+ : _componentName(componentName),
    _entryIndex(-1,*this,"EntryIndex"),  
    _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
  { DataHandleInstance::init() ; }	      
 	      
-// Copy c'tor.  CelEventComponent Name is copied
 CelEntryIndex::CelEntryIndex( const CelEntryIndex & other)
  : BranchGroup(),
    _componentName(other._componentName),
@@ -59,6 +60,13 @@ CelEntryIndex & CelEntryIndex::operator=( const CelEntryIndex & other )
   _treeIndex = other.treeIndex() ;
   return *this ;
  }
+
+
+
+//====================================================================
+// 
+//====================================================================
+
 
 // Grab the current status from 'tree'
 //
