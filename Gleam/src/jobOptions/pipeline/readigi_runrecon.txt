@@ -23,10 +23,11 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 // Set up basic event loop: 
 //
 ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" };
-EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "SVC='DbEvtSelector";
-EventSelector.PrintFreq = -1;
 
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+
+EventSelector.Input     = "SVC='DbEvtSelector";
+EventSelector.PrintFreq = -1;
 
 
 //
@@ -52,18 +53,29 @@ Top.StopOverride = true;
 
 
 //
-// Digitization sequence: Read in digis from a ROOT file
+// Digitization sequence: Read in digis from a ROOT file!
+// PointInfoAlg is needed so Gleam can read in FT2.
 //
-Digitization.Members = {"digiRootReaderAlg"};
+Digitization.Members = {"PointInfoAlg","digiRootReaderAlg"};
+
+//
+// We need this fake branch to initialize FluxAlg and read in the FT2 file!
+//
+Digitization/DingDong.Members = {"FluxAlg"};
+
+
+//
+// FT2 file for Gleam:
+//
+FluxAlg.PointingHistory = {"FT2.fits", "", "true"};
 
 
 //
 // This needs to run after having read in the digis 
-// so we can get the event time form them!
+// so we can get the event time from them!
 // Note: this is the opposite of what is needed for the MC!
 //
 Calibration.Members = {"TkrCalibAlg"};
-
 
 
 //
@@ -72,6 +84,7 @@ Calibration.Members = {"TkrCalibAlg"};
 //     If EventIntegrityAlg is BAD, skip recon but output to file.
 //
 ApplicationMgr.DLLs += {"EventIntegrity"};
+
 Integrity.Members    = {"EventIntegrityAlg",
                         "Sequencer/Filter",
                         "Sequencer/Reconstruction"};
@@ -100,14 +113,13 @@ ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
 // G4:
 //
 ApplicationMgr.DLLs   += {"G4Generator","G4Propagator"};
-//ApplicationMgr.ExtSvc += {"G4GeometrySvc"};
 
 
 //
 // CAL Xtal respons::
 //
 ApplicationMgr.DLLs += {"CalXtalResponse"};
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+
 
 //
 // Propagator:
@@ -118,7 +130,7 @@ ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
 //
 // Reconstruction:
 //
-ApplicationMgr.DLLs += { "TkrUtil",
+ApplicationMgr.DLLs += {"TkrUtil",
                         "CalRecon",
                         "TkrRecon"};
 
@@ -126,7 +138,8 @@ Reconstruction.Members = {"Sequencer/Cal1",
                           "Sequencer/Tkr",
                           "Sequencer/Cal2",
                           "Sequencer/TkrIter",
-                          "Sequencer/Acd"};
+                          "Sequencer/Acd",
+                          "Sequencer/Cal3"};
 
 
 //
@@ -136,10 +149,18 @@ Cal1.Members = {"CalXtalRecAlg",
                 "CalClustersAlg/first",
                 "CalEventEnergyAlg/RawEnergy"};
 Cal2.Members = {"CalEventEnergyAlg/second"};
-
+Cal3.Members = {"GcrReconAlg","GcrSelectAlg"};
 
 Tkr.Members     = {"TkrReconAlg/FirstPass"};
 TkrIter.Members = {"TkrReconAlg/Iteration"};
+
+
+//
+// GCR:
+//
+ApplicationMgr.DLLs += {"GCRCalib"};
+
+GcrReconAlg.UseMcDir = false;
 
 
 //
@@ -148,39 +169,48 @@ TkrIter.Members = {"TkrReconAlg/Iteration"};
 second.OutputLevel = 5;  
 
 
+
 //
 // ACD recon:
 //
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members = {"AcdReconAlg"};
-
-ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
-// EbfWriter can fail on test data - such as four tower data
-// OBF needs EBF - as of 06282007 mem leak if obf runs by itself
-//Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // this guy can cause rejection
-OnboardFilter.mask=0; // all bits off by default: no rejection
-Reconstruction.Members += {"FilterTracks", "FilterAlg" }; //study performance
+Acd.Members          = {"AcdReconAlg"};
 
 
+//
+// OBF: Do we still need this?
+//
+//ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
+//
+//OnboardFilter.mask = 0; // all bits off by default: no rejection
+//
+//Reconstruction.Members += {"FilterTracks", "FilterAlg" }; //study performance
+
+
+//
 // Merit and AnalysisNtuple:
-ApplicationMgr.DLLs += {"FluxSvc"}; // fo McValsTool
-ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","merit",
-"GlastClassify"};
+//
+ApplicationMgr.DLLs  += {"FluxSvc"}; 
+ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","merit","GlastClassify"};
+
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
-NtupleMaker.Members += {"AnalysisNtupleAlg"}; // AnaTup and Filter in tuple
+
+NtupleMaker.Members += {"AnalysisNtupleAlg"}; 
+
 AnalysisNtupleAlg.tupleName = "MeritTuple";
-NtupleMaker.Members += {"ClassifyAlg"}; // Atwood's Insightful Miner
-NtupleMaker.Members += {"FT1Alg"}; // generate stuff for FT1
-NtupleMaker.Members += {"meritAlg"}; // analysis for PSF
-NtupleMaker.Members += {"McCoordsAlg", "ObfCoordsAlg" };
+
+NtupleMaker.Members += {"ClassifyAlg"}; 
+NtupleMaker.Members += {"FT1Alg"}; 
+NtupleMaker.Members += {"meritAlg"}; 
+NtupleMaker.Members += {"McCoordsAlg","ObfCoordsAlg" };
 
 //
 // Define the output sequence:
 //
 Output.Members = {"FhSetAlg","reconRootWriterAlg"};
 Output.Members += {"CalTupleAlg"};
+Output.Members += {"gcrSelectRootWriterAlg"};
 
-//ClassifyAlg.xmlFileName="DC2_Analysis.xml"; Do we still want to set this?
 
 //
 // Tracker geometry services:
@@ -188,9 +218,12 @@ Output.Members += {"CalTupleAlg"};
 ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
 ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 
-// this fixes a HE track pattern recognition problem
+//
+// This fixes a HE track pattern recognition problem
 // *** it should be done in TkrRecon ***
-TkrFilterFirst.FilterToolName="TkrCalFilterTool";
+//
+TkrFilterFirst.FilterToolName = "TkrCalFilterTool";
+
 
 //
 // Calibrations:
@@ -202,15 +235,6 @@ TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 // Start up a CalFailureModeSvc:
 //
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
-
-
-
-
-//
-// Merit configuration: Disable IM variables
-//
-//MeritAlg.IM_filename = ""; 
-//MeritAlg.cuts        = "LnA";
 
 
 //
@@ -232,6 +256,7 @@ ApplicationMgr.ExtSvc += {"RootIoSvc"};
 ApplicationMgr.Runable = "RootIoSvc"; 
  
 
+
 //
 // The following things can be changed by the user:
 //
@@ -244,6 +269,23 @@ ApplicationMgr.Runable = "RootIoSvc";
 MessageSvc.OutputLevel = 3;
 
 
+//
+// TKR output:
+//
+TkrAlignmentSvc.OutputLevel = 4;
+TkrGeometrySvc.OutputLevel  = 4;
+TkrBadStripsSvc.OutputLevel = 4;
+
+//
+// GCR Output level:
+//
+GcrReconAlg.OutputLevel           = 4;
+GcrReconSelect.OutputLevel        = 4;
+GcrSelectAlg.OutputLevel          = 4;
+ToolSvc.GcrReconTool.OutputLevel  = 4; 
+ToolSvc.GcrSelectTool.OutputLevel = 4; 
+
+
 // 
 // Number of events:
 //
@@ -251,15 +293,15 @@ ApplicationMgr.EvtMax = 10000000000;
 
 
 //
-// Geometry:
+// Geometry: Use flight geometry!
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 
 
 //
 // Name of input digi Root file:
 //
-digiRootReaderAlg.digiRootFileList = { "digi.root" } ;
+digiRootReaderAlg.digiRootFileList = {"digi.root"};
 
 
 //
@@ -278,6 +320,13 @@ reconRootWriterAlg.reconRootFile = "recon.root";
 // Name of output CAL ntuple:
 //
 CalTupleAlg.tupleFilename = "caltuple.root";
+
+
+//
+// Name of GCR Root file:
+//
+gcrSelectRootWriterAlg.gcrSelectRootFile = "gcr.root";
+
 
 //
 // The Doors .....

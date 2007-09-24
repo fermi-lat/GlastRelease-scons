@@ -19,8 +19,7 @@ AuditorSvc.Auditors    = {"ChronoAuditor"};
 
 
 //
-// A structure for the topalg, 
-// using sequencer steps:
+// A structure for the topalg, using sequencer steps:
 //
 ApplicationMgr.TopAlg = {"Sequencer/Top"};
 
@@ -41,8 +40,9 @@ Triggered.Members = {"Sequencer/Trigger",
 //
 // Services:
 //
-ApplicationMgr.DLLs    += {"GlastSvc"};
-ApplicationMgr.ExtSvc  += {"GlastDetSvc"};
+ApplicationMgr.DLLs   += {"GlastSvc"};
+ApplicationMgr.ExtSvc += {"GlastDetSvc"};
+
 GlastDetSvc.topVolume   = "LAT"; 
 GlastDetSvc.visitorMode = "recon";
 
@@ -50,10 +50,10 @@ GlastDetSvc.visitorMode = "recon";
 //
 // Define the Trigger sequence:
 //
-ApplicationMgr.DLLs += {"Trigger"};
-Trigger.Members      = {"TriggerAlg"};
+ApplicationMgr.DLLs   += {"Trigger"};
+Trigger.Members        = {"TriggerAlg"};
 ApplicationMgr.ExtSvc += {"LivetimeSvc"};
-LivetimeSvc.Deadtime = 0; // default is now to disable this
+LivetimeSvc.Deadtime   = 0; // disable this for real data!
 
 
 //
@@ -63,14 +63,19 @@ TriggerAlg.mask = 0;
 
 
 //
+// Trigger engines: Not applying any prescales for real data!
+//
+TriggerAlg.engine = "TrgConfigSvc";
+
+
+//
 // Define the Output sequence:
 //
 ApplicationMgr.DLLs += {"RootIo"}; 
 Output.Members       = {"FhSetAlg","digiRootWriterAlg"};
 
 //
-// Use the LDF converter service 
-// to read in LDF files:
+// Use the LDF converter service to read in LDF files:
 //
 ApplicationMgr.DLLs   += {"LdfConverter"};
 ApplicationMgr.ExtSvc += {"LdfEventSelector/EventSelector","LdfCnvSvc/EventCnvSvc"};
@@ -105,6 +110,12 @@ ApplicationMgr.DLLs += {"CalXtalResponse"};
 //
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 
+//
+// OBF:
+//
+ApplicationMgr.DLLs  += {"EbfWriter","OnboardFilter"};
+Trigger.Members      += {"EbfWriter","OnboardFilter"};
+OnboardFilter.mask    = 0; // Keep all events!                    
 
 
 //
@@ -126,9 +137,10 @@ ApplicationMgr.EvtMax = 1000000000;
 
 
 //
-// Geometry:
+// Geometry: Use flight geometry!
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
 
 
 //
@@ -148,8 +160,6 @@ EventSelector.FileName = "file.fits";
 // Output ROOT digi file:
 //
 digiRootWriterAlg.digiRootFile = "digi.root";
-
-
 
 
 //
