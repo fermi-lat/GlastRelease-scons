@@ -372,6 +372,15 @@ StatusCode EbfWriter::execute()
 //        getPointingInfo();
 
 
+    // Check if another copy of EbfWriter previously stored the EBF data
+    // to the TDS.  If so, we want to use the sequence number associated
+    // with this initial instance, so we decrement the sequence number
+    // by one, since the format call will increment it again
+    SmartDataPtr<EbfWriterTds::Ebf> orgEbf(eventSvc(), "/Event/Filter/Ebf");
+    if (orgEbf)
+        m_output.setNumEvtsOut(orgEbf->getSequence()-1);
+
+
        //
        // Put the contributor's data into EBF format and write it out 
        //
@@ -402,6 +411,7 @@ StatusCode EbfWriter::execute()
 
 // Put the object on the Tds
          newEbf->set((char *)TdsBuffer,length);
+         newEbf->setSequence(m_output.numEvtsOut());
        }
 
 

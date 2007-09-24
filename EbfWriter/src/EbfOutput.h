@@ -48,6 +48,7 @@ class EbfOutput
    }
            
    
+   inline void setNumEvtsOut(unsigned int n) { m_numEvtsOut = n; }
    inline unsigned int numEvtsOut () const { return m_numEvtsOut; }
    inline unsigned int numEvtsIn  () const { return m_numEvtsIn;  }   
    

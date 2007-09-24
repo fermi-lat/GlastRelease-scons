@@ -2,6 +2,10 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r3   24-Sep-2007 HMK Patch to check for /Event/Filter/Ebf on the TDS
+ *        in case we run EbfWriter twice in the same job.  This allows one
+ *        to set the GEM sequence number appropriately for the second output
+ *        evt file
  * v1r2p1 11-Sep-2007 HMK Patch to limit the number of times ACD PMT N/A
  *        is reported.  We do see N/A in real data, which EbfWriter is 
  *        now processing at times
