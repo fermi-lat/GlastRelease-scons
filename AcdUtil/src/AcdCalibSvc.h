@@ -5,6 +5,11 @@
 // LOCAL 
 #include "AcdPedCalibMgr.h"
 #include "AcdGainCalibMgr.h"
+#include "AcdVetoCalibMgr.h"
+#include "AcdCnoCalibMgr.h"
+#include "AcdRangeCalibMgr.h"
+#include "AcdHighRangeCalibMgr.h"
+#include "AcdCoherentNoiseCalibMgr.h"
 
 // GLAST 
 #include "AcdUtil/IAcdCalibSvc.h"
@@ -64,6 +69,37 @@ public:
     return m_gainMgr.getMipPeak(id,pmt,mipPeak);
   }
 
+  /// get the veto vals for a given channel
+  StatusCode getVeto(idents::AcdId id, unsigned pmt,
+			CalibData::AcdVeto*& veto) {
+    return m_vetoMgr.getVeto(id,pmt,veto);
+  }
+
+  /// get the cno vals for a given channel
+  StatusCode getCno(idents::AcdId id, unsigned pmt,
+			CalibData::AcdCno*& cno) {
+    return m_cnoMgr.getCno(id,pmt,cno);
+  }
+
+  /// get the range crossover vals for a given channel
+  StatusCode getRange(idents::AcdId id, unsigned pmt,
+			CalibData::AcdRange*& range) {
+    return m_rangeMgr.getRange(id,pmt,range);
+  }
+
+  /// get the high range vals for a given channel
+  StatusCode geHighRange(idents::AcdId id, unsigned pmt,
+			CalibData::AcdHighRange*& highRange) {
+    return m_highRangeMgr.getHighRange(id,pmt,highRange);
+  }
+
+  /// get the high range vals for a given channel
+  StatusCode getCoherentNoise(idents::AcdId id, unsigned pmt,
+			      CalibData::AcdCoherentNoise*& calib) {
+    return m_coherentNoiseMgr.getCoherentNoise(id,pmt,calib);
+  }
+
+
 private:
   ////////////////////////////////////////////////
   ////// PARAMETER MANAGEMENT ////////////////////
@@ -95,7 +131,23 @@ private:
 
   /// The gain (aka MIP peak) manager
   AcdGainCalibMgr   m_gainMgr;
-  
+
+  /// The veto manager
+  AcdVetoCalibMgr   m_vetoMgr;
+
+  /// The cno manager
+  AcdCnoCalibMgr   m_cnoMgr;
+
+  /// The range (aka xover from low-high range) manager
+  AcdRangeCalibMgr   m_rangeMgr;
+
+  /// The high range manager
+  AcdHighRangeCalibMgr   m_highRangeMgr;
+
+  /// The coherent noise manager
+  AcdCoherentNoiseCalibMgr   m_coherentNoiseMgr;
+
+
   /// hook the BeginEvent so that we can check our validity once per event.
   void handle ( const Incident& inc );
 

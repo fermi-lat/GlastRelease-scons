@@ -95,6 +95,12 @@ StatusCode AcdCalibSvc::initialize ()
   // Initialize individual CalibItemMgr members.
   m_pedMgr.initialize(m_flavorPed,             *this);
   m_gainMgr.initialize(m_flavorMipPeak,        *this);
+  m_vetoMgr.initialize(m_defaultFlavor,        *this);
+  m_cnoMgr.initialize(m_defaultFlavor,        *this);
+  m_rangeMgr.initialize(m_defaultFlavor,        *this);
+  m_highRangeMgr.initialize(m_defaultFlavor,        *this);
+  m_coherentNoiseMgr.initialize(m_defaultFlavor,        *this);
+
 
   // Get ready to listen for BeginEvent
   IIncidentSvc* incSvc;
@@ -119,6 +125,11 @@ void AcdCalibSvc::handle ( const Incident& inc ) {
   if ((inc.type() == "BeginEvent")) {
     m_pedMgr.invalidate();
     m_gainMgr.invalidate();
+    m_vetoMgr.invalidate();
+    m_cnoMgr.invalidate();
+    m_rangeMgr.invalidate();
+    m_highRangeMgr.invalidate();
+    m_coherentNoiseMgr.invalidate();
   }
   return; 
 }
