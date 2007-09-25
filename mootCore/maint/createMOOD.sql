@@ -65,6 +65,7 @@ source createParameters.sql;
 source createFSW_inputs.sql;
 source createAncillary.sql;   
 source createOfflineCalib.sql;  
+source createLATC_Backup.sql;
 
 ## collections
 source createConfigs.sql;
@@ -80,7 +81,7 @@ source createParameters_to_Ancillary.sql;
 source createOffline_to_Ancillary.sql;
 
 ###source createPClass_to_AClass.sql; 
-source createVote_PClass_to_AClass.sql; 
+source createVote_PClass_AClass.sql; 
 source createContainer_Precinct.sql;
 source createOClass_to_AClass.sql; 
 
