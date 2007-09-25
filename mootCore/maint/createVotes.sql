@@ -7,7 +7,7 @@ create table Votes
      COMMENT 'path to file in Moot archive, relative to root',
   status                 ENUM('STARTED', 'ABORT', 'CREATED', 'INVALID')
                             NOT NULL DEFAULT 'STARTED'
-  COMMENT 'refers to status of entry.  Not usable until it's been
+  COMMENT 'refers to status of entry.  Not usable until it has been
            parsed, copied and has minimally sensible contents',
   instrument  varchar(16) not null default 'LAT'
      COMMENT 'e.g. LAT, EM2  ',
