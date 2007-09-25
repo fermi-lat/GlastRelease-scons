@@ -43,7 +43,7 @@ class CelManager
 
     /// Reading
     bool initRead(const std::string &fileName="cel.root", bool verbose=false);
-    Long64_t getNumEntries() { return (m_celRead.nbEvents()); };
+    Long64_t getNumEvents() { return (m_celRead.numEvents()); };
     Long64_t getEventIndex(const std::string &treeName, Long64_t index);
     TChain* getChainByType(const std::string &treeName);
     int setIndex();

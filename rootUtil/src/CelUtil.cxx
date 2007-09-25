@@ -36,7 +36,7 @@
 CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* fileName, const char* option) {
   // Merge a Collection of input files into a single composite event list
 
-  TList skims;
+  TList cels;
   TIterator* itr = skimFiles.MakeIterator();
   TObject* aFileObj(0);
   while ( (aFileObj = itr->Next()) != 0 ) {
@@ -53,20 +53,21 @@ CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* f
       std::cerr << "Failed to open skim file " << aFile->GetName() << std::endl;
       return 0;
     }
-    // Append it to the list of skims
-    skims.AddLast(nextSkim);
+    // Append it to the list of cels
+    cels.AddLast(nextSkim);
   }
   // Call the other mergre method
-  return mergeCompositeEventLists(skims,fileName,option);
+  return mergeCompositeEventLists(cels,fileName,option);
 }
 
 
-CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const char* fileName, const char* option) {
-  // Merge a Collection of composite event lists
+// Merge a Collection of composite event lists
+CompositeEventList* CelUtil::mergeCompositeEventLists
+ ( TCollection & cels, const char* fileName, const char* option)
+ {
 
-
-  TList eventTreeList;
-  TList fileTreeList;
+  TList entryTreeList ;
+  TList fileTreeList ;
 
   // Create the output File if requested
   TFile* outFile(0);
@@ -80,17 +81,17 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
     }
   }
 
-  // The Link Tree has to be re-done
+  // The Event Tree has to be re-done
   Long64_t* eventIndex = new Long64_t(-1);
-  Long64_t* setIndexOut  = new Long64_t(-1);
-  Long64_t* setOffset = new Long64_t(0);
-  TTree* linkTreeOut = new TTree("Links","Links");
-  linkTreeOut->Branch("Link_EventIndex",(void*)eventIndex,"Link_EventIndex/L");
-  linkTreeOut->Branch("Link_SetIndex",(void*)setIndexOut,"Link_SetIndex/L");
-  linkTreeOut->Branch("Link_SetOffset",(void*)setOffset,"Link_SetOffset/L");
+  Long64_t* fileSetIndexOut  = new Long64_t(-1);
+  Long64_t* fileSetOffset = new Long64_t(0);
+  TTree* eventTreeOut = new TTree("CompositeEvents","CompositeEvents");
+  eventTreeOut->Branch("Event_Index",(void*)eventIndex,"Event_Index/L");
+  eventTreeOut->Branch("Event_FileSetIndex",(void*)fileSetIndexOut,"Event_FileSetIndex/L");
+  eventTreeOut->Branch("Event_FileSetOffset",(void*)fileSetOffset,"Event_FileSetOffset/L");
 
-  // Loop on skims
-  TIterator* itr = skims.MakeIterator();
+  // Loop on cels
+  TIterator* itr = cels.MakeIterator();
   TObject* aSkimObj(0);
   while ( (aSkimObj = itr->Next()) != 0 ) {
     CompositeEventList* aSkim = dynamic_cast<CompositeEventList*>(aSkimObj);
@@ -100,18 +101,18 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
     }    
     
     // Add the event & file trees to their respective lists
-    eventTreeList.AddLast(aSkim->eventTree());
+    entryTreeList.AddLast(aSkim->entryTree());
     fileTreeList.AddLast(aSkim->fileTree());    
 
-    Long64_t setIndexIn(0);
-    Long64_t setIndexSave(-1);
-    TTree* linkTree = aSkim->linkTree();
-    linkTree->SetBranchAddress("Link_SetIndex",&setIndexIn);
+    Long64_t fileSetIndexIn(0);
+    Long64_t fileSetIndexSave(-1);
+    TTree* eventTree = aSkim->linkTree();
+    eventTree->SetBranchAddress("Event_FileSetIndex",&fileSetIndexIn);
 
-    // Redo the data in the Link tree
-    Long64_t nEvtCurrent = linkTree->GetEntries();
+    // Redo the data in the Event tree
+    Long64_t nEvtCurrent = eventTree->GetEntries();
     for ( Long64_t iEvt(0); iEvt < nEvtCurrent; iEvt++ ) {
-      Int_t nB = linkTree->GetEntry(iEvt);
+      Int_t nB = eventTree->GetEntry(iEvt);
       if ( nB < 0 ) {
 	// There was a problem, clean up
 	std::cerr << "Failed to read entry in input link tree " << std::endl;
@@ -120,44 +121,45 @@ CompositeEventList* CelUtil::mergeCompositeEventLists(TCollection& skims, const 
 	  delete outFile;
 	}
 	delete eventIndex;
-	delete setIndexOut;
-	delete setOffset;
+	delete fileSetIndexOut;
+	delete fileSetOffset;
 	delete itr;
-	delete linkTree;
+	delete eventTree;
 	return 0;
       }
       // Event Counter goes up by one
       *eventIndex += 1;
-      if ( setIndexIn != setIndexSave ) {
+      if ( fileSetIndexIn != fileSetIndexSave ) {
 	// new meta data entry, latch values
-	setIndexSave = setIndexIn;
-	*setIndexOut += 1;
-	*setOffset = *eventIndex;
+	fileSetIndexSave = fileSetIndexIn;
+	*fileSetIndexOut += 1;
+	*fileSetOffset = *eventIndex;
       }
       // Fill this entry in the link tree
-      linkTreeOut->Fill();
+      eventTreeOut->Fill();
     }
 
   }
   delete itr;
   delete eventIndex;
-  delete setIndexOut;
-  delete setOffset;
+  delete fileSetIndexOut;
+  delete fileSetOffset;
 
   // Just Merge the Event and File trees the Normal way
-  TTree* eventTree = TTree::MergeTrees(&eventTreeList);
+  TTree* entryTree = TTree::MergeTrees(&entryTreeList);
   TTree* fileTree = TTree::MergeTrees(&fileTreeList);
 
   // Build the Pointer Skim Object
-  CompositeEventList* theSkim = new CompositeEventList(*linkTreeOut,*fileTree,*eventTree);
+  CompositeEventList * theCel = new CompositeEventList(*eventTreeOut,*fileTree,*entryTree) ;
 
   // Write the Merged File, if requested
-  if ( outFile != 0 ) {
+  if ( outFile != 0 )
+   {
     outFile->Write();
     outFile->Close();
-  }
-  return theSkim;  
-}
+   }
+  return theCel ;  
+ }
 
 
 #endif

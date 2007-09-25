@@ -15,7 +15,7 @@
 *
 */
 
-#include "CelEventLink.h"
+#include "CelEventInfo.h"
 #include "DataHandle.h"
 class CelEventComponent ;
 
@@ -42,10 +42,12 @@ class TObjArray ;
 // An instance of CompositeEventList can be read from and/or
 // written to a ROOT file. The information is stored on 3 trees
 // 
-//   Links: 3 branches total, 1 entry per event
-//      Link_EventIndex/L  -> Index of the current composite event
-//      Link_SetIndex/L   -> Index of the associated set of files and trees
-//      Link_SetOffset/L  -> Number of events in previous sets
+//   Events: 5 branches total, 1 entry per event
+//      Event_Index/L     -> Index of the current composite event
+//      Event_RunId/L     -> Unique? id of the corresponding run
+//      Event_EventId/L   -> Unique? id of the corresponding event
+//      Event_FileSetIndex/L  -> Index of the associated set of files and trees
+//      Event_FileSetOffset/L -> Number of events in previous sets
 // 
 //   FileAndTreeSets: 5 Branches per input component, 1 entry per set
 //      Comp_SetSize/s    -> Number of Files and Trees in the current set
@@ -66,7 +68,7 @@ class CompositeEventList : public TObject
 
     // constructors
     CompositeEventList() ; 
-    CompositeEventList( TTree & linkTree, TTree & fileTree, TTree & entryTree ) ;
+    CompositeEventList( TTree & eventTree, TTree & fileTree, TTree & entryTree ) ;
     virtual ~CompositeEventList() ;
 
     // Add a component by name.  This is only mandatory when writing.
@@ -101,21 +103,21 @@ class CompositeEventList : public TObject
 
     // Access
     // Number of components
-    UInt_t nbComponents() const { return _compList.size() ; }
+    UInt_t numComponents() const { return _compList.size() ; }
     // Number of events in this cel
-    Long64_t nbEvents() const;
+    Long64_t numEvents() const;
     // Get the index of the current event
-    Long64_t eventIndex() const { return _linkEntry.eventIndex() ; }
+    Long64_t eventIndex() const { return _currentEvent.eventIndex() ; }
     
     /// USEFUL IN PUBLIC ???
     // Get the index of the current entry in the file tree
-    Long64_t setIndex() const { return _linkEntry.setIndex() ; }
+    Long64_t fileSetIndex() const { return _currentEvent.fileSetIndex() ; }
     // Get the offset of the current entry in the file tree
-    Long64_t setOffset() const { return _linkEntry.setOffset() ; }
+    Long64_t fileSetOffset() const { return _currentEvent.fileSetOffset() ; }
     // Return the tree with the Event component entries
-    TTree* eventTree() { return _entryTree; }
+    TTree* entryTree() { return _entryTree; }
     // Return the tree with the links between events and meta data
-    TTree* linkTree() { return _linkTree; }
+    TTree* linkTree() { return _eventTree; }
     // Return the tree with the names of data files
     TTree* fileTree() { return _fileTree; }
     // Get the index of a component by name.  Returns 0xFFFFFFFF if no
@@ -154,8 +156,8 @@ class CompositeEventList : public TObject
     // Manipulation of cel internal trees
     void deleteCelTrees() ;
     Bool_t checkCelTrees() ;
-    Int_t makeBranches( TTree & linkTree, TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
-    Int_t attachToTree( TTree & linkTree, TTree & fileTree, TTree & eventTree ) ;
+    Int_t makeBranches( TTree & eventTree, TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
+    Int_t attachToTree( TTree & eventTree, TTree & fileTree, TTree & eventTree ) ;
 
 
   private :
@@ -167,10 +169,10 @@ class CompositeEventList : public TObject
     CompositeEventList & operator=( const CompositeEventList & ) ;
 
     // data
-    TTree * _linkTree ; 
+    TTree * _eventTree ; 
     TTree * _fileTree ; 
     TTree * _entryTree ;  
-    CelEventLink _linkEntry ;                      //! current link : event index, file-tree-name index
+    CelEventInfo _currentEvent ;                      //! current link : event index, file-tree-name index
     std::vector<CelTreeAndComponent> _compList ;   //! vector of components and associated TTrees
     std::vector<TString>             _compNames ;  //! names of components
     std::map<TString,UInt_t>         _compMap ;    //! components lookup map to get the index in the list above from the name

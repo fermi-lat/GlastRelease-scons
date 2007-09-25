@@ -13,7 +13,7 @@ apply_pattern root_package headers="\
   ../rootUtil/CelEventComponent.h\
   ../rootUtil/CelEntryIndex.h\
   ../rootUtil/CelFileAndTreeSet.h\
-  ../rootUtil/CelEventLink.h\
+  ../rootUtil/CelEventInfo.h\
   ../rootUtil/CelIndex.h\
   ../rootUtil/CelUtil.h"
 
