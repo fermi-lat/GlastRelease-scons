@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r7   25-Sep-2007 jrb  Use facilities::commonUtilities to find xml dir.
    v1r6p2 21-Sep-2007 jrb  Fix typo in FileDescrip.h
    v1r6p1 17-Sep-2007 jrb  Add optional precinct arg to getParmClasses 
    v1r6   27-Aug-2007 jrb  Add MootQuery::getParmsFromMaster, to be used by
