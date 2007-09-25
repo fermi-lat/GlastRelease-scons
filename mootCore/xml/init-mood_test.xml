@@ -1921,6 +1921,29 @@ used for container vote files which reference regular votes by alias" />
        refVal="CAL" />
     </row>
 
+    <row>
+      <field col="name" val="CAL_rng_dict" />
+      <field col="description" 
+             val="CAL Range dictionary" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_trg_dict" />
+      <field col="description" 
+             val="CAL Trigger threshold dictionary" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
+
+    <row>
+      <field col="name" val="CAL_supp_dict" />
+      <field col="description" 
+             val="CAL Supporting dictionary" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="CAL" />
+    </row>
 
 
 <!--  Latest arrangement of votes doesn't use any of these
@@ -1989,6 +2012,14 @@ used for container vote files which reference regular votes by alias" />
       <field col="name" val="TKR_Mask" />
       <field col="description" 
              val="TKR Mask configuration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="TKR" />
+    </row>
+
+    <row>
+      <field col="name" val="TKR_ChargeScaleCalibration" />
+      <field col="description" 
+             val="TKR Charge scale calibration" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="TKR" />
     </row>
