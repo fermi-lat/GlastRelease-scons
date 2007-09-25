@@ -5,7 +5,7 @@
 /*
 * Project: GLAST
 * Package: rootUtil
-*    File: $Id$
+* File: $Id$
 * Authors:
 *   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
 *   DC, David Chamont, LLR , chamont@poly.in2p3.fr
@@ -40,7 +40,12 @@ class TObjArray ;
 // collections without requiring you to build a lookup index.
 //
 // An instance of CompositeEventList can be read from and/or
-// written to a ROOT file. The information is stored on 3 trees
+// written to a ROOT file. We should also consider the construction
+// of a CompositeEventList on-the-fly, so to support the good old
+// way to read/write events as was done by former RootIo writers
+// and readers.
+//
+// The information is stored on 3 trees
 // 
 //   Events: 5 branches total, 1 entry per event
 //      Event_Index/L     -> Index of the current composite event

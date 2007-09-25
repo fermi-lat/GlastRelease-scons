@@ -1,19 +1,22 @@
-/** 
-* @file CelManager.h
-* @brief The class CelManager is used to set up and handle the composite event list (cel) root files
-*
-*  $Header$
-*  Original author: Heather Kelly heather@lheapop.gsfc.nasa.gov
-*/
 
 #ifndef CelManager_h
 #define CelManager_h
 
-#include "rootUtil/CompositeEventList.h"
-#include "TTree.h"
-#include "TChain.h"
-#include "TFile.h"
-#include <string>
+/** 
+* @file CelManager.h
+* @brief The class CelManager is used to set up and handle the composite event list (cel) root files
+*
+* File: $Header$
+* Authors:
+*   HK, Heather Kelly, heather@lheapop.gsfc.nasa.gov
+*   DC, David Chamont, LLR, chamont@poly.in2p3.fr
+*/
+
+#include "CompositeEventList.h"
+#include <TTree.h>
+#include <TChain.h>
+#include <TFile.h>
+#include <TString.h>
 #include <vector>
 #include <map>
 
@@ -22,46 +25,45 @@ class CelManager
  {
   public :
   
-      CelManager() : m_fileNameWrite(""),m_fileNameRead(""),
-          m_fileWrite(0),m_fileRead(0),m_verbose(false), m_eventCounter(0),
-          m_compChainCol(0), m_masterChain(0)  
-      { };
+    CelManager() ;
+    ~CelManager() ; 
 
-      ~CelManager() ; 
-
-      /// Writing 
-      bool initWrite(const std::string &fileName="cel.root",
-          const std::string &options="RECREATE", bool verbose=false);
-
-      bool initOutputFile();
-
-    UInt_t addComponent(const std::string &compName, TTree *t);
-
-	bool fillEvent(); 
-    
-    bool fillFileAndTreeSet();
+    /// Writing 
+    Bool_t initWrite( const TString & fileName ="cel.root",
+        const TString & options ="RECREATE", Bool_t verbose =false ) ;
+    Bool_t initOutputFile() ;
+    UInt_t addComponent( const TString & compName, TTree * t ) ;
+    Bool_t fillEvent() ; 
+    Bool_t fillFileAndTreeSet() ;
 
     /// Reading
-    bool initRead(const std::string &fileName="cel.root", bool verbose=false);
-    Long64_t getNumEvents() { return (m_celRead.numEvents()); };
-    Long64_t getEventIndex(const std::string &treeName, Long64_t index);
-    TChain* getChainByType(const std::string &treeName);
-    int setIndex();
+    Bool_t initRead( const TString & fileName ="cel.root", Bool_t verbose =false ) ;
+    Long64_t getNumEvents() { return (m_celRead.numEvents()) ; }
+    Long64_t getEventIndex( const TString & treeName, Long64_t index) ;
+    TChain * getChainByType( const TString & treeName ) ;
+    int setIndex() ;
 
 
   private :
 
-	TString m_fileNameWrite ; /// The name of the original output file opened for writing
-	TString m_fileNameRead;
-    std::string m_outputOptions;
-    TFile *m_fileWrite, *m_fileRead;
-    CompositeEventList m_celWrite, m_celRead;
-    std::vector<TTree*> m_treeCol;
-	bool m_verbose;  /// set the chattiness for debug statements
-    Long64_t m_eventCounter;  // Count number of events filled to the TTree so far
-    TObjArray *m_compChainCol; // List of component TChains for reading
-    TChain *m_masterChain;  // Master TChain for reading
-    std::map<std::string, TVirtualIndex*> m_chainIndexCol;
+	/// utility data
+	Bool_t m_verbose ;  /// set the chattiness for debug statements
+	  
+	/// writing data
+	TString m_fileNameWrite ;
+	TString m_outputOptions ;
+    TFile * m_fileWrite ;
+    CompositeEventList m_celWrite ;
+    Long64_t m_eventCounter ;  // Count number of events filled to the TTree so far
+    std::vector<TTree*> m_treeCol ;
+
+    /// reading data
+	TString m_fileNameRead ;
+	TFile * m_fileRead ;
+    CompositeEventList m_celRead ;
+    TObjArray * m_compChainCol ; // List of component TChains for reading
+    TChain * m_masterChain ;  // Master TChain for reading
+    std::map<TString, TVirtualIndex*> m_chainIndexCol ;
     
  } ;
 
