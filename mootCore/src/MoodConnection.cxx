@@ -20,6 +20,7 @@
 #include "xmlBase/XmlParser.h"
 #include "xmlBase/Dom.h"
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 
@@ -155,8 +156,11 @@ namespace MOOT {
     // directory holding xml file and schema. Then full path of
     // xml file that expandEnvVar expects should be string 
     //  "$(MOOT_XML)/" + dbname + ".xml"
-    std::string dbSchema("$(MOOT_XML)/");
-    dbSchema += dbname + ".xml";
+    //    std::string dbSchema("$(MOOT_XML)/");
+
+    // Use Navid's new stuff instead. All we need is our own xml dir.
+    std::string dbSchema = facilities::commonUtilities::getXmlPath("mootCore");
+    dbSchema += std::string("/") + dbname + ".xml";
 
     // expandEnvVar throws Untranslatable exception if 
     try {
