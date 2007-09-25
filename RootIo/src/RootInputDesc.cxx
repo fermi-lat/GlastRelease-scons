@@ -26,7 +26,7 @@ RootInputDesc::RootInputDesc
  }
 
  // ctor for Event Collections
- // Set up the TChain* as we will retrieve a TChain* from the PointerSkim via the EventCollectionMgr
+ // Set up the TChain* as we will retrieve a TChain* from the CompositeEventList via the CelManager
  RootInputDesc::RootInputDesc
      ( TChain *t,
      const std::string & treeName,

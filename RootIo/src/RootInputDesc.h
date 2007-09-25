@@ -66,7 +66,7 @@ class RootInputDesc
     TObject * * m_dataObject ;       // A pointer to the pointer to the data
     Long64_t m_numEvents ;           // Number of events in current TChain
     bool m_verbose;
-    TVirtualIndex *m_runEvtIndex;    /// Save the RunId/EventId Index in case other indices are in use such as PointerSkim
+    TVirtualIndex *m_runEvtIndex;    /// Save the RunId/EventId Index in case other indices are in use such as CompositeEventList
     
  } ;
 
