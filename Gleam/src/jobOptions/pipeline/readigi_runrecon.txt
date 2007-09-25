@@ -67,7 +67,7 @@ Digitization/DingDong.Members = {"FluxAlg"};
 //
 // FT2 file for Gleam:
 //
-FluxAlg.PointingHistory = {"FT2.fits", "", "true"};
+FluxAlg.PointingHistory = {"FT2.fits"};
 
 
 //

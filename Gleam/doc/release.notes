@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p17 AWB 24-Sep-07 Updated FT2 pipeline JO.
 * v6r29p16 AWB 24-Sep-07 Updated pipeline JO with OBF, GCR and FT2.
 * v6r29p15 THB 15-Sep-07 Fix test program JO to enable trigger
 * v6r29p10 AWB 06-Sep-07 Updated JO pipeline/mc.txt.
