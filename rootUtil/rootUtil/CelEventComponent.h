@@ -40,7 +40,7 @@ class CelEventComponent
 
     // construction
     CelEventComponent() ; // needed for ROOT
-    CelEventComponent( const TString & componentName) ;
+    CelEventComponent( const TString & componentName ) ;
     virtual ~CelEventComponent() ;
 
   // Methods and functions

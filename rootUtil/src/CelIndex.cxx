@@ -1,6 +1,4 @@
-// -*- Mode: c++ -*-
-#ifndef CelIndex_cxx
-#define CelIndex_cxx
+
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -11,10 +9,7 @@
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
 *
-*
-*
 */
-
 
 //
 // CelIndex
@@ -40,73 +35,62 @@
 //     EventIndex is the Index of the event in the tree that it actually lives on.
 // 
 
-// This Class's header
 #include "rootUtil/CelIndex.h"
-
-// c++/stl headers
-#include <iostream>
-
-// ROOT Headers
-#include <TTree.h>
-
-// Other headers from this package
 #include "rootUtil/CompositeEventList.h"
 #include "rootUtil/CelEventComponent.h"
+#include <TTree.h>
+#include <Riostream.h>
 
+ClassImp(CelIndex) ;
 
-ClassImp(CelIndex);
+CelIndex * CelIndex::buildIndex
+ ( CompositeEventList & cel,
+   const TString & componentName, TTree * tree, Long64_t offset )
+ {
+  CelIndex * pIdx = new CelIndex(cel,componentName,tree,offset) ;
+  tree->SetTreeIndex(pIdx) ;
+  return pIdx ;
+ }
 
-CelIndex* CelIndex::buildIndex(CompositeEventList& skim, const std::string& component,TTree* tree,Long64_t offset){
-  // Build and return an index from a composite event list
-  CelIndex* pIdx = new CelIndex(skim,component,tree,offset);
-  tree->SetTreeIndex(pIdx);
-  return pIdx;
-}
+CelIndex::CelIndex()
+ : TVirtualIndex(),
+   _offset(0), _cel(0), _component(0)
+ { SetTree(0) ; }
 
-CelIndex::CelIndex():
-  TVirtualIndex(),
-  _offset(0),
-  _skim(0),
-  _component(0){
-  // Default c'tor.  Does nothing
-  SetTree(0);
-}
+CelIndex::CelIndex
+ ( CompositeEventList & cel,
+   const TString & componentName,
+   TTree * tree, Long64_t offset )
+ : TVirtualIndex(),
+   _offset(offset), _cel(&cel),
+   _component(cel.getComponent(cel.componentIndex(componentName)))
+ { SetTree(tree) ; }
 
-CelIndex::CelIndex(CompositeEventList& skim, const std::string& compontent, TTree* tree, Long64_t offset):
-  TVirtualIndex(),
-  _offset(offset),
-  _skim(&skim),
-  _component(skim.getComponent(skim.componentIndex(compontent))){
-  // Standard c'tor.
-  SetTree(tree);
-}
-
-CelIndex::~CelIndex(){
-  // Delete stuff
-}
+CelIndex::~CelIndex()
+ {}
 
 
 Int_t CelIndex::GetEntryNumberFriend(const TTree* tree){
   // return the index into the component tree for the current event in the master tree
 
   // Sanity check
-  if ( 0 == _skim || 0 == _component ) return -1;
+  if ( 0 == _cel || 0 == _component ) return -1;
 
   // Read master tree 
   Long64_t check ;
-  check = _skim->readEventAddress(tree->GetReadEntry());
+  check = _cel->readEventAddress(tree->GetReadEntry());
 
   // Get the Event index
-  Long64_t evtIdx = _offset + _skim->setOffset();
+  Long64_t evtIdx = _offset + _cel->setOffset();
   evtIdx += _component->getIndexInLocalChain();
-  // std::cout << "CelIndex::GetEntryNumberFriend(" << _skim->eventIndex() << ':' << evtIdx << ')' << std::endl;
+  // std::cout << "CelIndex::GetEntryNumberFriend(" << _cel->eventIndex() << ':' << evtIdx << ')' << std::endl;
   return evtIdx;  
 }
 
 Long64_t CelIndex::GetN() const {
   // Get the total number of Events in the index
-  if ( 0 == _skim || 0 == _component ) return 0;
-  return _skim->entries();
+  if ( 0 == _cel || 0 == _component ) return 0;
+  return _cel->nbEvents();
 }
 
-#endif
+

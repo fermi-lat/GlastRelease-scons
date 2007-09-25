@@ -15,18 +15,13 @@
 *
 */
 
-// Base class headers
 #include <TVirtualIndex.h>
 
-// Headers for associated classes
-
-// c++ and stl headers
-#include <string>
-
-// forward declares
 class TTree;
 class CelEventComponent;
 class CompositeEventList;
+
+#include <string>
 
 //
 // CelIndex is a sub-class of TVirtualIndex.  It is using a CompositeEventList as an index in to the component trees.
@@ -50,22 +45,20 @@ class CompositeEventList;
 // 
 
 
-class CelIndex : public TVirtualIndex {
-
-public:
+class CelIndex : public TVirtualIndex
+ {
+  public :
   
-  // Build and return a pointer index from a CEL
-  static CelIndex* buildIndex(CompositeEventList& skim, const std::string& compontent, TTree* t, Long64_t offset=0);
+    // Build and return a pointer index from a CEL
+    static CelIndex * buildIndex( CompositeEventList &, const TString & componentName, TTree *, Long64_t offset=0 ) ;
 
-public:
-  
   // ctor's and d'tor
   // Default c'tor.  Needed for ROOT
   CelIndex();
   // Standard c'tor, sets up the index
-  CelIndex(CompositeEventList& skim, const std::string& component, TTree* tree, Long64_t offset = 0);
+  CelIndex( CompositeEventList &, const TString & componentName, TTree * tree, Long64_t offset = 0) ;
   // D'tor
-  virtual ~CelIndex();
+  virtual ~CelIndex() ;
 
   // Methods and functions
   // Get the Entry Number in the CelEventComponent Tree
@@ -98,20 +91,20 @@ protected:
     MayNotUse("GetMinorName"); return 0; 
   };
 
-private:
+  private :
   
-  //disable copying and assignment
-  CelIndex(const CelIndex& other);
-  CelIndex& operator=(const CelIndex& other);
+    //disable copying and assignment
+    CelIndex( const CelIndex & ) ;
+    CelIndex & operator=( const CelIndex & ) ;
 
-  // Data
-  Long64_t     _offset;              //! Global offset (used when Index picks up in the middle of a chain)
-  CompositeEventList* _skim;                //! Pointer to skim that does the actual storing
-  CelEventComponent*   _component;           //! Pointer to relevent component of the skim
+    // Data
+    Long64_t _offset ;               //! Global offset (used when Index picks up in the middle of a chain)
+    CompositeEventList * _cel ;     //! Pointer to skim that does the actual storing
+    CelEventComponent * _component ; //! Pointer to relevent component of the cel
 
-  ClassDef(CelIndex,0)           // Sub-class of TVirtualIndex implemented using CompositeEventList
+  ClassDef(CelIndex,0)
 
-};
+ } ;
 
 
 #endif

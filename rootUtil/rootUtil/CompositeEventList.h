@@ -7,13 +7,11 @@
 * Package: rootUtil
 *    File: $Id$
 * Authors:
-*   EC, Eric Charles,    SLAC              echarles@slac.stanford.edu
-*   DC, David Chamont,   LLR-IN2P3-CNRS    chamont@poly.in2p3.fr
+*   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
+*   DC, David Chamont, LLR , chamont@poly.in2p3.fr
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
-*
-*
 *
 */
 
@@ -22,13 +20,13 @@
 class CelEventComponent ;
 
 #include <TObject.h>
+#include <TString.h>
 class TTree ;
 class TFile ;
 class TChain ;
 class TVirtualIndex ;
 class TCollection ;
 class TObjArray ;
-class TString ;
 
 #include <map>
 #include <vector>
@@ -71,8 +69,10 @@ class CompositeEventList : public TObject
     CompositeEventList( TTree & linkTree, TTree & fileTree, TTree & entryTree ) ;
     virtual ~CompositeEventList() ;
 
-    // Add a component by name.  This is only needed when writing.  On read these are discovered.
-    UInt_t addComponent( const std::string & name) ;
+    // Add a component by name.  This is only mandatory when writing.
+    // On read these are discovered if not predeclared.
+    UInt_t addComponent( const TString & name) ;
+    
     // Make a new CEL ROOT file and its trees
     TFile * makeFile( const TString & fileName, const Char_t * options) ;
     
@@ -99,37 +99,41 @@ class CompositeEventList : public TObject
   TChain* buildLinks(TObjArray* chainList = 0, Bool_t setFriends = kTRUE);
 
 
-  // Access
-  // Number of entries in this skim
-  Long64_t entries() const;
-  // Get the index of the current entry in the event tree
-  Long64_t eventIndex() const { return _linkEntry.eventIndex() ; }
-  // Get the index of the current entry in the file tree
-  Long64_t setIndex() const { return _linkEntry.setIndex() ; }
-  // Get the offset of the current entry in the file tree
-  Long64_t setOffset() const { return _linkEntry.setOffset() ; }
-  // Return the tree with the Event component entries
-  TTree* eventTree() { return _entryTree; }
-  // Return the tree with the links between events and meta data
-  TTree* linkTree() { return _linkTree; }
-  // Return the tree with the names of data files
-  TTree* fileTree() { return _fileTree; }
-  // Get the number of components
-  UInt_t nComponent() const { return _compList.size(); }
-  // Get the index of a component by name.  Returns 0xFFFFFFFF if nonesuch component exists
-  UInt_t componentIndex(const std::string& name) {
-    std::map<std::string,UInt_t>::const_iterator itrFind = _compMap.find(name);
-    return itrFind != _compMap.end() ? itrFind->second : 0xFFFFFFFF;
-  }
-  // Get a Tree that is being read
-  TTree* getTree(UInt_t index) const {
-    return (index < _compList.size()) ? _compList[index].first : 0;
-  }
-  // Get an event Compnent that is being read
-  CelEventComponent* getComponent(UInt_t index) const{
-    return (index < _compList.size()) ? _compList[index].second : 0;
-  }
+    // Access
+    // Number of components
+    UInt_t nbComponents() const { return _compList.size() ; }
+    // Number of events in this cel
+    Long64_t nbEvents() const;
+    // Get the index of the current event
+    Long64_t eventIndex() const { return _linkEntry.eventIndex() ; }
+    
+    /// USEFUL IN PUBLIC ???
+    // Get the index of the current entry in the file tree
+    Long64_t setIndex() const { return _linkEntry.setIndex() ; }
+    // Get the offset of the current entry in the file tree
+    Long64_t setOffset() const { return _linkEntry.setOffset() ; }
+    // Return the tree with the Event component entries
+    TTree* eventTree() { return _entryTree; }
+    // Return the tree with the links between events and meta data
+    TTree* linkTree() { return _linkTree; }
+    // Return the tree with the names of data files
+    TTree* fileTree() { return _fileTree; }
+    // Get the index of a component by name.  Returns 0xFFFFFFFF if no
+    // such component exists
+    UInt_t componentIndex( const TString & name )
+     {
+      std::map<TString,UInt_t>::const_iterator itrFind = _compMap.find(name) ;
+      return itrFind != _compMap.end() ? itrFind->second : 0xFFFFFFFF ;
+     } 
+    // Get a Tree that is being read
+    TTree * getTree(UInt_t index) const
+     { return (index < _compList.size()) ? _compList[index].first : 0 ;  }
+    // Get an event Component that is being read
+    CelEventComponent * getComponent(UInt_t index) const
+     { return (index < _compList.size()) ? _compList[index].second : 0 ; }
 
+    
+    
   // Printing
   // Dump a set of event component pointers and the list of TTree where they live
   void printout(const char* options, UInt_t nEvent=10, UInt_t startEvent=0);
@@ -141,8 +145,8 @@ class CompositeEventList : public TObject
   
   protected :
 
-    // Uses the input event tree to discover the list of components
-    Int_t buildComponents(TTree& eventTree);
+    // Uses the input tree to discover the list of components
+    Int_t buildComponents( TTree & entryTree ) ;
 
     // Latch the values in a set of TTree
     Bool_t set(std::vector<TTree*>& dataTrees) ;
@@ -167,9 +171,9 @@ class CompositeEventList : public TObject
     TTree * _fileTree ; 
     TTree * _entryTree ;  
     CelEventLink _linkEntry ;                      //! current link : event index, file-tree-name index
-    std::vector<CelTreeAndComponent>  _compList;   //! vector of components and associated TTrees
-    std::vector<std::string >         _compNames;  //! names of components
-    std::map<std::string,UInt_t>     _compMap;    //! components lookup map to get the index in the list above from the name
+    std::vector<CelTreeAndComponent> _compList ;   //! vector of components and associated TTrees
+    std::vector<TString>             _compNames ;  //! names of components
+    std::map<TString,UInt_t>         _compMap ;    //! components lookup map to get the index in the list above from the name
 
     ClassDef(CompositeEventList,0)
 
