@@ -160,6 +160,9 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 
       AcdRecon::PocaData* nextPoca = itrPoca->poca();
 
+      // protect against poorly estimated volumes
+      if ( nextPoca->m_volume < 0 ) continue;
+
       if ( nextPoca->m_id.ribbon() ) {
 	;
       } else if ( nextPoca->m_id.tile() ) {	
