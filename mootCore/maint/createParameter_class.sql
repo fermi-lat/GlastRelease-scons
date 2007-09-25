@@ -11,7 +11,7 @@ create table Parameter_class
    'who manages this parameter class',
   FOREIGN KEY(precinct_fk) REFERENCES Precincts (precinct_key)
   ON DELETE CASCADE
-  ON UPDATE CASCADE
+  ON UPDATE CASCADE,
 
   delegate_fk INT UNSIGNED  COMMENT 
    'who manages this parameter class',
