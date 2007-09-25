@@ -63,7 +63,18 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
   @section PointInfoAlg_jobOptions PointInfoAlg jobOptions
     @param PointInfoAlg.pointing_info_tree_name ["MeritTuple"]If set, copy "Pt" values to it. See point_info for definitions.
     aparam PointInfoAlg.save_pointing_info  [false] Set true to save all entries in the pointing tuple. Normally saved by merit.
-    
+
+  @section OrbitSvc_jobOptions OrbitSvc jobOptions
+    @param OrbitSvc.zenithTheta  [-99] if overridden, set to this angle in local zenith frame
+    @param OrbitSvc.pointingDirection [{}] Set (ra,dec) for pointed mode. Other rocking stuff ignored.
+    @param OrbitSvc.PointingHistory [{}] Up to three strings: 
+                                 (1) file name (text or FITS FT2),  
+                                 (2) date-time offset needed for text format, 
+                                 (3) any string, if present, will trigger the horizontal orientation
+    @param OrbitSvc.rocking_angle [0 deg] Rotation angle for Glast, about E-W axis. If set, say to 35 degress, and 
+    there is no pointing history file, the mode will be to use the interal orbit description, with 
+    rocking on alternate orbits. 
+
     <hr>
   @section Basic_XML_Sources Sources
 
