@@ -21,7 +21,7 @@ apply_pattern shared_library
 use SwigPolicy v*
 
 
-set MOOT_XML  $(MOOTCOREROOT)/xml
+## set MOOT_XML  $(MOOTCOREROOT)/xml
 
 ## Another environment variable that should be set somewhere else someday
 set MOOT_ARCHIVE /afs/slac/g/glast/moot/srcArchive-test/
