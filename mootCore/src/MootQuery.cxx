@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 #include "mootCore/MootQuery.h"
 #include "mootCore/MoodConnection.h"
 #include "mootCore/DbUtil.h"
