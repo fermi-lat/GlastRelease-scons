@@ -12,7 +12,7 @@ namespace MOOT {
 
   bool MootSys::computeCRC(const std::string& fname, 
                            std::string &crc, std::string &sz) {
-#ifndef _WIN32
+#ifndef WIN32
     std::string cmd("cksum ");
     cmd = cmd + fname;
 
@@ -53,7 +53,7 @@ namespace MOOT {
 
   bool MootSys::sysCmd(const std::string& cmd, std::string& out, 
                        int& status, bool clear) {
-#ifndef _WIN32
+#ifndef WIN32
     FILE *stream;
 
     status = -1;   // initialized for failure
@@ -95,7 +95,7 @@ namespace MOOT {
 
   // Return true if file exists and is a directory; else false
   bool MootSys::isDir(const std::string& path) {
-#ifndef _WIN32
+#ifndef WIN32
     struct stat buf;
 
     int ret = stat(path.c_str(), &buf);
@@ -117,7 +117,7 @@ namespace MOOT {
     // maybe change owner so that original owner can't delete it.
 
     // First see if it already exists.  If so, just return true.
-#ifndef _WIN32
+#ifndef WIN32
     std::string path = parent + std::string("/") + dirname;
     if (isDir(path)) return true;
 
@@ -139,7 +139,7 @@ namespace MOOT {
 
   void MootSys::basename(const std::string& fullPath, std::string& base)
   {
-#ifndef _WIN32
+#ifndef WIN32
     unsigned slashPos = fullPath.rfind('/');
 #else
     unsigned slashPos = fullPath.rfind('\\');
