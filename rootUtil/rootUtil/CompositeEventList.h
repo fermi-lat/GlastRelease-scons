@@ -64,6 +64,10 @@ class TObjArray ;
 //   ComponentEntries:  2 Branches per input component, 1 entry per event
 //      Comp_EntryIndex/L  -> Index of the entry in the tree it lives on
 //      Comp_TreeIndex/s -> Index of the tree in the associated set of files and trees
+//
+// Note : the couple (run_id/event_id) is expected to be unique for GLAST real data. For
+// what concerns the simulation data, the triplet {task_name,run_id,event_id} should be
+// unique.
 //   
 
 class CompositeEventList : public TObject

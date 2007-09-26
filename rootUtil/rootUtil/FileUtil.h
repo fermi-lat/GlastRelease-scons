@@ -29,10 +29,10 @@ namespace FileUtil {
   const UShort_t NOKEY(0xFFFF); 
 
   // Open a file.  Return 0 if failed
-  TFile* openFile(const char* fileName);
+  TFile * openFile( const char * fileName ) ;
 
   // Get the TFile associated to a TTree.  Return 0 if failed
-  TFile* getFile(TTree& tree);
+  TFile* getFile( TTree & tree ) ;
   
 }
 

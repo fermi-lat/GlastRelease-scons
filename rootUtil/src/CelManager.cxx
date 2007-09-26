@@ -15,8 +15,17 @@
 #include <Riostream.h>
 
 
-CelManager::CelManager()
- : m_verbose(false), 
+
+
+//========================================================================
+//
+// Construction
+//
+//========================================================================
+
+
+CelManager::CelManager( Bool_t verbose )
+ : m_verbose(verbose), 
    m_fileNameWrite(""), m_fileWrite(0), m_eventCounter(0),
    m_fileNameRead(""),  m_fileRead(0), m_compChainCol(0), m_masterChain(0)  
  {}
@@ -28,19 +37,25 @@ CelManager::~CelManager()
   if (m_masterChain) delete m_masterChain ;
  }
 
-// Writing Methods 
 
-Bool_t CelManager::initWrite( const TString & fileName, const TString & options, bool verbose)
+
+//========================================================================
+//
+// Writing Methods
+//
+//========================================================================
+
+
+Bool_t CelManager::initWrite( const TString & celFileName, const TString & options )
  {
   Bool_t stat = kTRUE ;
-  m_fileNameWrite = fileName ;
+  m_fileNameWrite = celFileName ;
   if (gSystem->ExpandPathName(m_fileNameWrite)==kTRUE)
    {
     std::cout << "Failed to expand env variable in filename" << std::endl;
     return kFALSE ;
    }
   m_outputOptions = options ;
-  m_verbose = verbose ;
   return stat;
  }
 
@@ -117,23 +132,27 @@ Bool_t CelManager::fillFileAndTreeSet()
 
 
 
-/// Reading Methods
+//========================================================================
+//
+// Reading Methods
+//
+//========================================================================
 
-Bool_t CelManager::initRead( const TString & fileName, Bool_t verbose )
+
+Bool_t CelManager::initRead( const TString & celFileName )
  {
   Bool_t stat = kTRUE ;
-  m_fileNameRead = fileName ;
-  if (gSystem->ExpandPathName(m_fileNameRead)==kTRUE)
-   {
-    std::cout << "Failed to expand env variable in filename" << std::endl ;
-    return kFALSE ;
-   }
-  m_verbose = verbose ;
+  
+  // opening
+  m_fileNameRead = celFileName ;
   m_fileRead = m_celRead.openFile(m_fileNameRead) ;
-  if (!m_fileRead->IsOpen())
+  if (m_fileRead==0)
    {
+    std::cerr
+     << "[CelManager::initRead] "
+     << "Error while opening "
+     << m_fileNameRead << std::endl ;
     stat = kFALSE ;
-    std::cout << "CelManager Error opening ROOT file " << m_fileNameRead << std::endl ;
     return stat ;
    }
 
@@ -149,6 +168,9 @@ Bool_t CelManager::initRead( const TString & fileName, Bool_t verbose )
    }
   return stat ;
  }
+
+Long64_t CelManager::getNumEvents()
+ { return (m_celRead.numEvents()) ; }
 
 Long64_t CelManager::getEventIndex( const TString & treeName, Long64_t index)
  {

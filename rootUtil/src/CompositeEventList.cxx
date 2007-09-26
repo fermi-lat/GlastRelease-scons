@@ -21,8 +21,9 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TObjArray.h>
+#include <TSystem.h>
+#include <Riostream.h>
 
-#include <iostream>
 #include <assert.h>
 
 
@@ -164,45 +165,74 @@ Int_t CompositeEventList::makeBranches
 //====================================================================
 
 
-TFile * CompositeEventList::openFile( const TString & fileName )
+TFile * CompositeEventList::openFile( const TString & celFileName )
  {
   // Open an existing file which contains a composite event list
-  // This will warn and return NULL if 
-  //   a) the file doesn't exist
-  //   b) the file doesn't contain a composite event list
+  // This will warn and return 0 if 
+  //   *) there is a failure when expanding the name
+  //   *) there is a failure when opening the file
+  //   *) the file doesn't contain all elements of composite event list
   // The component are discovered on the fly IF THEY
   // HAVE NOT BEEN PREDECLARED
 	
+  // expand
+  TString fileName = celFileName ;
+  if (gSystem->ExpandPathName(fileName)==kTRUE)
+   {
+    std::cerr
+      << "[CompositeEventList::openFile] "
+      << "Failed to expand some variable in filename : "
+      << celFileName
+      << std::endl ;
+	return 0 ;
+   }
+
+  // open
   TDirectory * oldDir = gDirectory ;
   TFile * newFile = TFile::Open(fileName) ;
-  if (newFile==0) return 0 ;
+  if ((newFile==0)||(!newFile->IsOpen()))
+   {
+	std::cerr
+	  << "[CompositeEventList::openFile] "
+      << "Failed to open file : "
+      << fileName
+      << std::endl ;
+	return 0 ;
+   }
+  
+  // explore
   newFile->cd() ;
   _eventTree = dynamic_cast<TTree*>(newFile->Get("CompositeEvents")) ;
   _fileTree = dynamic_cast<TTree*>(newFile->Get("FileAndTreeSets")) ;
   _entryTree = dynamic_cast<TTree*>(newFile->Get("ComponentEntries")) ;
   if  ( _eventTree==0 || _fileTree==0 || _entryTree==0 )
    {
-    std::cerr<<"No cel trees"<<std::endl ;
+    std::cerr
+	  << "[CompositeEventList::openFile] "
+      << "Lacking cel tree(s)"
+      << std::endl ;
     deleteCelTrees() ;
     delete newFile ;
     return 0 ;
    }
+  oldDir->cd() ;
   
   // attach
   if (_compList.size()==0)
-   { buildComponents(*_entryTree) ; }
-  
-  oldDir->cd() ;
-  
+   { buildComponents(*_entryTree) ; } 
   Int_t check = attachToTree(*_eventTree,*_fileTree,*_entryTree) ;
-  
-  if ( check < 0 )
+  if (check<0)
    {
-    std::cerr<<"File is not a valid composite event list"<<std::endl ;
+    std::cerr
+	  << "[CompositeEventList::openFile] "
+      << "File is not a valid composite event list"
+      << std::endl ;
     deleteCelTrees() ;
     delete newFile ;   
     return 0 ;
    }
+  
+  // everything finally OK
   return newFile ;
  }
 
