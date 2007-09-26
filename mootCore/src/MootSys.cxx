@@ -12,7 +12,7 @@ namespace MOOT {
 
   bool MootSys::computeCRC(const std::string& fname, 
                            std::string &crc, std::string &sz) {
-
+#ifndef _WIN32
     std::string cmd("cksum ");
     cmd = cmd + fname;
 
@@ -46,10 +46,14 @@ namespace MOOT {
     crc = tokens[0];
     sz = tokens[1];
     return true;
+#else
+    return false;           // shouldn't call from Windows
+#endif
   }
 
   bool MootSys::sysCmd(const std::string& cmd, std::string& out, 
                        int& status, bool clear) {
+#ifndef _WIN32
     FILE *stream;
 
     status = -1;   // initialized for failure
@@ -84,16 +88,23 @@ namespace MOOT {
     }
     status = pclose(stream);
     return (status == 0);
+#else
+    return false;         // shouldn't call from Windows
+#endif
   }
 
   // Return true if file exists and is a directory; else false
   bool MootSys::isDir(const std::string& path) {
+#ifndef _WIN32
     struct stat buf;
 
     int ret = stat(path.c_str(), &buf);
     if (ret != 0) return false;           // couldn't stat the file
 
     return S_ISDIR(buf.st_mode);
+#else
+    return false;     // shouldn't call from Windows. Put out error??
+#endif
   }
 
   bool MootSys::makeDir(const std::string& parent, 
@@ -106,6 +117,7 @@ namespace MOOT {
     // maybe change owner so that original owner can't delete it.
 
     // First see if it already exists.  If so, just return true.
+#ifndef _WIN32
     std::string path = parent + std::string("/") + dirname;
     if (isDir(path)) return true;
 
@@ -120,12 +132,18 @@ namespace MOOT {
                 << errCode << std::endl;
     }
     return (ret == 0);
-
+#else
+    return false;      // shouldn't call from Windows
+#endif
   }
 
   void MootSys::basename(const std::string& fullPath, std::string& base)
   {
+#ifndef _WIN32
     unsigned slashPos = fullPath.rfind('/');
+#else
+    unsigned slashPos = fullPath.rfind('\\');
+#endif
     base += fullPath.substr(slashPos + 1);
     return;
   }

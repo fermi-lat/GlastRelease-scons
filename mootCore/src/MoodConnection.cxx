@@ -7,7 +7,6 @@
 #include <fstream>
 #include <stdexcept>
 #include "mootCore/MoodConnection.h"
-#include "mootCore/MootSys.h"
 #include "rdbModel/Db/Connection.h"
 #include "rdbModel/Db/MysqlConnection.h"
 #include "rdbModel/Db/ResultHandle.h"
