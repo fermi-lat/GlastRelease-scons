@@ -675,6 +675,7 @@ StatusCode FluxSvc::run(){
     GPS::instance()->notifyObservers(); // make sure all are in the
 
     // loop: will quit if either limit is set, and exceeded
+    bool first(true);
     while( (m_evtMax==0  || m_evtMax>0 &&  eventNumber < m_evtMax)
         && (m_times.end()==0 || m_times.end()>0 && m_times.current() < m_times.end()) ) {
 
@@ -684,9 +685,14 @@ StatusCode FluxSvc::run(){
             int percent_complete= static_cast<int>(  std::max( efrac, tfrac)  );
             if( percent_complete!=last_fraction){
                 last_fraction=percent_complete;
-                if( percent_complete<10 || percent_complete%10 ==0){
-                    log << MSG::INFO <<   percent_complete << "% complete: "
-                        << " event "<< eventNumber<<",  time=launch+ "<< (m_times.current()-m_times.launch()) << endreq;
+                if( percent_complete<10 || percent_complete%10 ==0 || first){
+                    first = false;
+                    log << MSG::INFO 
+                        <<  std::setprecision(12)<< std::resetiosflags(4096) // scientific??
+                        << percent_complete << "% complete: "
+                        << " event "<< eventNumber<<",  time= " 
+                        <<  m_times.current() << "= launch+ "
+                        << (m_times.current()-m_times.launch()) << endreq;
                 }
 
             }
