@@ -50,23 +50,25 @@ Bool_t CelManager::initWrite( const TString & celFileName, const TString & optio
  {
   Bool_t stat = kTRUE ;
   m_fileNameWrite = celFileName ;
-  if (gSystem->ExpandPathName(m_fileNameWrite)==kTRUE)
-   {
-    std::cout << "Failed to expand env variable in filename" << std::endl;
-    return kFALSE ;
-   }
   m_outputOptions = options ;
-  return stat;
+  // real work is delayed until we are sure
+  // all the components have been declared
+  return stat ;
  }
 
-Bool_t CelManager::initOutputFile()
+Bool_t CelManager::delayedInitWrite()
  {
+  // the creation of the output file has been delayed until
+  // we are sure all the components have been declared.
   Bool_t stat = kTRUE ;
-  m_fileWrite = m_celWrite.makeFile(m_fileNameWrite,m_outputOptions.Data()) ;
-  if (!m_fileWrite->IsOpen())
+  m_fileWrite = m_celWrite.makeCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
+  if (m_fileWrite==0)
    {
+    std::cerr
+     << "[CelManager::delayedInitWrite] "
+     << "Error while making "
+     << m_fileNameWrite << std::endl ;
     stat = kFALSE ;
-    std::cout << "CelManager Error opening ROOT file " << m_fileNameWrite << std::endl;
     return stat ;
    }
   return stat ;
@@ -87,7 +89,7 @@ Bool_t CelManager::fillEvent()
    {
     TDirectory * saveDir = gDirectory ;
     // Need to call CompositeEventList::makeFile after the AddComponent calls
-    if ((!m_fileWrite)&&(!initOutputFile()))
+    if ((!m_fileWrite)&&(!delayedInitWrite()))
      { throw ; }
     if (m_fileWrite->TestBits(TFile::kWriteError))
      { throw ; }
@@ -145,7 +147,7 @@ Bool_t CelManager::initRead( const TString & celFileName )
   
   // opening
   m_fileNameRead = celFileName ;
-  m_fileRead = m_celRead.openFile(m_fileNameRead) ;
+  m_fileRead = m_celRead.openCelFile(m_fileNameRead) ;
   if (m_fileRead==0)
    {
     std::cerr
@@ -157,10 +159,10 @@ Bool_t CelManager::initRead( const TString & celFileName )
    }
 
   // Set up our master TChain and the component TChains
-  if (!m_compChainCol) m_compChainCol = new TObjArray();
-  m_masterChain = m_celRead.buildLinks(m_compChainCol);
-  TIter itr(m_compChainCol);
-  TChain *curChain;
+  if (!m_compChainCol) m_compChainCol = new TObjArray() ;
+  m_masterChain = m_celRead.buildAllChains(m_compChainCol) ;
+  TIter itr(m_compChainCol) ;
+  TChain * curChain ;
   while ( (curChain = (TChain*)itr.Next()) )
    {
     curChain->SetBranchStatus("*", 1) ;

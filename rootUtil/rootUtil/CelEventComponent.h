@@ -54,7 +54,7 @@ class CelEventComponent
   Int_t makeBranches( TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
   Int_t attachToTree( TTree & fileTree, TTree & eventTree ) ;
   // Building a TChain
-  Bool_t addToChain(TChain*& chain);  
+  Bool_t addToChain( TChain * & chain ) ;  
   // Get the offset to the first event
   Long64_t getLocalOffset() const;
   // Get the index of the event the local chain (ie, in this meta event)

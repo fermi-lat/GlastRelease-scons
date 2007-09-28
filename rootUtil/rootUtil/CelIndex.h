@@ -52,57 +52,47 @@ class CelIndex : public TVirtualIndex
     // Build and return a pointer index from a CEL
     static CelIndex * buildIndex( CompositeEventList &, const TString & componentName, TTree *, Long64_t offset=0 ) ;
 
-  // ctor's and d'tor
-  // Default c'tor.  Needed for ROOT
-  CelIndex();
-  // Standard c'tor, sets up the index
-  CelIndex( CompositeEventList &, const TString & componentName, TTree * tree, Long64_t offset = 0) ;
-  // D'tor
-  virtual ~CelIndex() ;
+    // ctor's and d'tor
+    CelIndex() ; // Needed for ROOT
+    CelIndex( CompositeEventList &, const TString & componentName, TTree * tree, Long64_t offset = 0) ;
+    virtual ~CelIndex() ;
 
-  // Methods and functions
-  // Get the Entry Number in the CelEventComponent Tree
-  virtual Int_t	GetEntryNumberFriend(const TTree* tree);  
-  // Get the total number of Events in the index
-  virtual Long64_t GetN() const;
+    // Get the Entry Number in the CelEventComponent Tree
+    virtual Int_t GetEntryNumberFriend( const TTree * tree ) ;  
+    // Get the total number of Events in the index
+    virtual Long64_t GetN() const ;
+    // Return the offset of the first event
+    Long64_t offset() const { return _offset ; }
 
-  // Return the offset of the first event
-  Long64_t offset() const {
-    return _offset;
-  }
+  protected :
 
-protected:
-
-  // Pre-Empt or implement stuff from abtract base-class
-  virtual void	UpdateFormulaLeaves() { return; }
-  virtual void SetTree(const TTree *tree) {
-    fTree = const_cast<TTree*>(tree);
-  }
-  virtual Long64_t	GetEntryNumberWithBestIndex(Int_t /* major */, Int_t /* minor */) const { 
-    MayNotUse("GetEntryNumberWithBestIndex"); return 0; 
-  };
-  virtual Long64_t	GetEntryNumberWithIndex(Int_t /* major */, Int_t /* minor */) const { 
-    MayNotUse("GetEntryNumberWithIndex"); return 0; 
-  };
-  virtual const char*	GetMajorName() const { 
-    MayNotUse("GetMajorName"); return 0; 
-  };
-  virtual const char*	GetMinorName() const { 
-    MayNotUse("GetMinorName"); return 0; 
-  };
+    // Pre-Empt or implement stuff from abtract base-class
+    virtual void UpdateFormulaLeaves() { return ; }
+    virtual void SetTree( const TTree * tree)
+     { fTree = const_cast<TTree*>(tree) ; }
+  
+    // Unsupported TVirtualIndex methods
+    virtual Long64_t GetEntryNumberWithBestIndex( Int_t, Int_t ) const
+     { MayNotUse("GetEntryNumberWithBestIndex") ; return 0 ; }
+    virtual Long64_t GetEntryNumberWithIndex( Int_t, Int_t ) const
+     { MayNotUse("GetEntryNumberWithIndex") ; return 0; }
+    virtual const char * GetMajorName() const
+     { MayNotUse("GetMajorName") ; return 0 ; }
+    virtual const char *	GetMinorName() const
+     { MayNotUse("GetMinorName") ; return 0 ; }
 
   private :
   
-    //disable copying and assignment
+    // disable copying and assignment
     CelIndex( const CelIndex & ) ;
     CelIndex & operator=( const CelIndex & ) ;
 
     // Data
     Long64_t _offset ;               //! Global offset (used when Index picks up in the middle of a chain)
-    CompositeEventList * _cel ;     //! Pointer to skim that does the actual storing
-    CelEventComponent * _component ; //! Pointer to relevent component of the cel
+    CompositeEventList * _cel ;      //! Pointer to the CEL that does the actual storing
+    CelEventComponent * _component ; //! Pointer to the relevant component of the cel
 
-  ClassDef(CelIndex,0)
+    ClassDef(CelIndex,0)
 
  } ;
 

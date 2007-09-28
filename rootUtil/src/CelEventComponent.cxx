@@ -93,21 +93,22 @@ Int_t CelEventComponent::attachToTree(TTree& fileTree, TTree& eventTree ) {
   return n_e + n_f; 
 }
 
-
-Bool_t CelEventComponent::addToChain(TChain*& chain) {
-  // Building a TChain
-  for ( UShort_t iT(0); iT < _currentSet.size(); iT++ ) {
-    TTree* t = _currentSet.getTree(iT);
-    if ( 0 == t ) {
-      return kFALSE;
-    }
-    if ( chain == 0 ) {
-      chain = new TChain(t->GetName(),"Working on the Chain Gain");      
-    }
-    chain->Add(t->GetCurrentFile()->GetName());
-  }
-  return kTRUE;
-} 
+// Building a TChain
+Bool_t CelEventComponent::addToChain( TChain * & chain )
+ {
+  // TO REVIEW WITH ERIC : DO WE REALLY NEED TO GET THE REAL TREE
+  // RATHER THAN PLAY ONLY WITH NAMES ??
+  UShort_t iT ;
+  for ( iT=0 ; iT<_currentSet.size() ; iT++ )
+   {
+    TTree * t = _currentSet.getTree(iT) ;
+    if (t==0) { return kFALSE ; }
+    if (chain==0)
+     { chain = new TChain(t->GetName(),"Cel Component Chain") ; }
+    chain->Add(t->GetCurrentFile()->GetName()) ;
+   }
+  return kTRUE ;
+ } 
 
 
 Long64_t CelEventComponent::getLocalOffset() const {
@@ -123,16 +124,14 @@ Long64_t CelEventComponent::getIndexInLocalChain() const {
   return evtIdx;
 }
 
+void CelEventComponent::dumpEvent( const char * options ) const
+ {
+  if ( OptUtil::has_option(options,'v') )
+   { _currentSet.printTreeInfo(_currentEntryIndex.treeIndex(),options) ; }  
+  _currentEntryIndex.printEventInfo(options) ;
+ }
 
-void CelEventComponent::dumpEvent(const char* options) const {
-  if ( OptUtil::has_option(options,'v') ) {
-    _currentSet.printTreeInfo(_currentEntryIndex.treeIndex(),options);
-  }  
-  _currentEntryIndex.printEventInfo(options);
-}
-
-void CelEventComponent::listTrees(const char* options) const {
-  _currentSet.show(options);
-}
+void CelEventComponent::listTrees( const char * options ) const
+ { _currentSet.show(options) ; }
 
 

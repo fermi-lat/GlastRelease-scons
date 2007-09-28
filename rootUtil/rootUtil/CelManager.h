@@ -6,6 +6,10 @@
 * @file CelManager.h
 * @brief The class CelManager is used to set up and handle the composite event list (cel) root files
 *
+* Originally made to connect the CEL world to the needs of RootIoSvc.
+* Meant to disappear, once we have understood what is lacking in CompositeEventList,
+* and what shoudl return to RootIoSvc.
+* 
 * File: $Header$
 * Authors:
 *   HK, Heather Kelly, heather@lheapop.gsfc.nasa.gov
@@ -28,11 +32,10 @@ class CelManager
     CelManager( Bool_t verbose =false ) ;
     ~CelManager() ; 
 
-    /// Writing 
+    /// Writing
     Bool_t initWrite
      ( const TString & celFileName ="cel.root",
        const TString & options ="RECREATE" ) ;
-    Bool_t initOutputFile() ;
     UInt_t addComponent( const TString & compName, TTree * t ) ;
     Bool_t fillEvent() ; 
     Bool_t fillFileAndTreeSet() ;
@@ -46,6 +49,8 @@ class CelManager
 
 
   private :
+
+	Bool_t delayedInitWrite() ;
 
 	/// utility data
 	Bool_t m_verbose ;  /// set the chattiness for debug statements

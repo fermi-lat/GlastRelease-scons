@@ -61,13 +61,13 @@ class CelFileAndTreeSet  : public BranchGroup
   // Reset this object and clear caches
   void reset();
   // Add a tree to the list refered to by this object
-  UShort_t addTree(TTree& tree);
+  UShort_t addTree( TTree & tree) ;
   // Get the persistent KEY for a given tree
-  UShort_t getKey(TTree* tree) const;
+  UShort_t getKey( TTree * tree) const ;
   // Get a given tree using persistent KEY
-  TTree* getTree(UShort_t key) const ;
+  TTree * getTree( UShort_t key ) const ;
   // Get the Event offset using persistent KEY
-  Long64_t getOffset(UShort_t key) const ;
+  Long64_t getOffset( UShort_t key ) const ;
 
     // Override the methods in BranchGroup.  
     virtual Int_t makeBranches( TTree & celTree, const char * prefix = 0, Int_t bufsize = 32000) const ;

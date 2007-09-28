@@ -95,7 +95,7 @@ int main(int argn, char** argc) {
   for ( int idx = optind; idx < argn; idx++ ) {
     const char* fileName = argc[idx];
     cout << fileName << endl;
-    TFile* f = p.openFile(fileName);
+    TFile* f = p.openCelFile(fileName);
     if ( 0 == f ) {
       cerr << "Can't open file " << fileName << endl;
       return 4;

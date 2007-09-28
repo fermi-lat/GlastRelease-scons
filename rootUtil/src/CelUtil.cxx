@@ -48,7 +48,7 @@ CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* f
 
     // Open the skim
     CompositeEventList* nextSkim = new CompositeEventList;
-    TFile* check = nextSkim->openFile(aFile->GetName());
+    TFile* check = nextSkim->openCelFile(aFile->GetName());
     if ( check == 0 ) {
       std::cerr << "Failed to open skim file " << aFile->GetName() << std::endl;
       return 0;
@@ -92,21 +92,21 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
 
   // Loop on cels
   TIterator* itr = cels.MakeIterator();
-  TObject* aSkimObj(0);
-  while ( (aSkimObj = itr->Next()) != 0 ) {
-    CompositeEventList* aSkim = dynamic_cast<CompositeEventList*>(aSkimObj);
-    if ( 0 == aSkim ) {
-      std::cerr << "Input object not a CompositeEventList " << aSkimObj->GetName() << std::endl;
+  TObject* aCelObj(0);
+  while ( (aCelObj = itr->Next()) != 0 ) {
+    CompositeEventList* aCel = dynamic_cast<CompositeEventList*>(aCelObj);
+    if ( 0 == aCel ) {
+      std::cerr << "Input object not a CompositeEventList " << aCelObj->GetName() << std::endl;
       return 0;
     }    
     
     // Add the event & file trees to their respective lists
-    entryTreeList.AddLast(aSkim->entryTree());
-    fileTreeList.AddLast(aSkim->fileTree());    
+    entryTreeList.AddLast(aCel->entryTree());
+    fileTreeList.AddLast(aCel->fileTree());    
 
     Long64_t fileSetIndexIn(0);
     Long64_t fileSetIndexSave(-1);
-    TTree* eventTree = aSkim->linkTree();
+    TTree* eventTree = aCel->linkTree();
     eventTree->SetBranchAddress("Event_FileSetIndex",&fileSetIndexIn);
 
     // Redo the data in the Event tree

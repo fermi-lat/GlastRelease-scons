@@ -1,6 +1,4 @@
-// -*- Mode: c++ -*-
-#ifndef CelFileAndTreeSet_cxx
-#define CelFileAndTreeSet_cxx
+
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -10,8 +8,6 @@
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
-*
-*
 *
 */
 
@@ -208,65 +204,68 @@ Int_t CelFileAndTreeSet::attachToTree(TTree& tree, const char* prefix) {
   return bVal;
 }
 
-void CelFileAndTreeSet::show(const char* options) const {
-  // Print the list of trees, one per line
-  //
-  // if "options" includes 'f' this will print the file names
-  // if "options" includes 't' this will print the tree names
-  // if "options" includes 'o' this will print the offset in events
-  for (UShort_t i(0); i < _setSize; i++ ) {
-    std::cout << "Tree " << i << ":\t";
-    printTreeInfo(i,options);    
-    std::cout << std::endl;    
+// Print the list of trees, one per line
+void CelFileAndTreeSet::show(const char* options) const
+ {
+  UShort_t i ;
+  for ( i=0 ; i<_setSize; i++ )
+   {
+    std::cout << "Tree " << i << ":\t" ;
+    printTreeInfo(i,options) ;    
+    std::cout << std::endl ;    
   }
-}
+ }
 
-void CelFileAndTreeSet::printTreeInfo(UShort_t key, const char* options) const {  
-  // Print information about tree with "key" on one line
-  //
-  // if "options" includes 'f' this will print the file name
-  // if "options" includes 't' this will print the tree name
-  // if "options" includes 'o' this will print the offset in events
-  if (OptUtil::has_option(options,'f')) {
-    std::cout <<  _fileNames->UncheckedAt(key)->GetName() << ' ';
-  }
-  if (OptUtil::has_option(options,'t')) {
-    std::cout << _treeNames->UncheckedAt(key)->GetName() << ' ';
-  }
-  if (OptUtil::has_option(options,'o')) {
-    std::cout << _treeOffsets->At(key) << ' ';
-  }
-}
+// Print information about tree i
+// if "options" includes 'f' this will print the file name
+// if "options" includes 't' this will print the tree name
+// if "options" includes 'o' this will print the offset in events
+void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options ) const
+ {  
+  if (OptUtil::has_option(options,'f'))
+   { std::cout <<  _fileNames->UncheckedAt(treeIndex)->GetName() << ' '; }
+  if (OptUtil::has_option(options,'t'))
+   { std::cout << _treeNames->UncheckedAt(treeIndex)->GetName() << ' '; }
+  // why not "Unchecked" below ??
+  if (OptUtil::has_option(options,'o'))
+   { std::cout << _treeOffsets->At(treeIndex) << ' '; }
+ }
 
-TTree* CelFileAndTreeSet::fetchTree(UShort_t key) const {
-  // Utility function to actually go and get a tree out of a file
-  //
-  // Return NULL silently if key == FileUtil::NOKEY
-  // Warns and returns NULL if tree is not found
-  if ( key == FileUtil::NOKEY ) return 0;
-  assert( key < _setSize );
-  const char* fName = _fileNames->UncheckedAt(key)->GetName();
-
-  TFile* f = FileUtil::openFile(fName);
-  if ( 0 == f ) { 
-    // ROOT has already warned.  Just exit.
-    return 0;
-  }
-
-  const char* tName = _treeNames->UncheckedAt(key)->GetName();
-  TObject* obj = f->Get(tName);
+// Utility function to actually go and get a tree out of a file
+// Return 0 silently if treeIndex == FileUtil::NOKEY
+// Warns and returns 0 if tree is not found
+TTree * CelFileAndTreeSet::fetchTree( UShort_t treeIndex ) const
+ {
+  if ( treeIndex == FileUtil::NOKEY ) return 0 ;
+  assert( treeIndex < _setSize ) ;
   
-  TTree* tree = dynamic_cast<TTree*>(obj);  
-  if ( 0 == tree ) { 
-    std::cerr << "Could not find TTree called " << tName << " in file " << fName << std::endl;
-    return 0;
-  }
+  // open file
+  const char * fName = _fileNames->UncheckedAt(treeIndex)->GetName() ;
+  TFile * f = FileUtil::openFile(fName) ;
+  if ( 0 == f )
+   { 
+    // ROOT has already warned.  Just exit.
+    return 0 ;
+   }
 
-  _lookup[tree] = key;
-  _cache[key] = tree;
-  return tree;
-}
+  // get tree
+  const char * tName = _treeNames->UncheckedAt(treeIndex)->GetName() ;
+  TObject * obj = f->Get(tName) ;
+  TTree * tree = dynamic_cast<TTree*>(obj) ;  
+  if ( 0 == tree )
+   { 
+    std::cerr
+      << "[CelFileAndTreeSet::fetchTree] "
+      << "Could not find TTree called " << tName
+      << " in file " << fName
+      << std::endl ;
+    return 0 ;
+   }
+
+  _lookup[tree] = treeIndex ;
+  _cache[treeIndex] = tree ;
+  return tree ;
+ }
 
 
 
-#endif

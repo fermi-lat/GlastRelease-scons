@@ -163,7 +163,7 @@ int main(int argn, char** argc) {
     usage();
     return 2;
   }
-  TFile* fout = p.makeFile(outFile.c_str(),"RECREATE");
+  TFile* fout = p.makeCelFile(outFile.c_str(),"RECREATE");
   TRandom r;
 
   for ( Long64_t iEvt(0); iEvt < nEvt; iEvt++ ) {
