@@ -152,13 +152,6 @@ namespace MOOT {
     m_rdb = new rdbModel::Rdb;
     m_rdb->setConnection(conn);
     // look for xml file describing db
-    // For now, assume there is an environment variable MOOT_XML for
-    // directory holding xml file and schema. Then full path of
-    // xml file that expandEnvVar expects should be string 
-    //  "$(MOOT_XML)/" + dbname + ".xml"
-    //    std::string dbSchema("$(MOOT_XML)/");
-
-    // Use Navid's new stuff instead. 
     // If MOOT_XML has a value, use it.  Otherwise, all we need is our 
     // own xml dir.
     std::string dbSchema = commonUtilities::getEnvironment("MOOT_XML");

@@ -56,7 +56,6 @@ namespace MOOT {
   }
 
   int MootQuery::classKey(const std::string& table, const std::string& name) {
-    //    std::string getCol = table + "_key";
     std::string getCol = m_rdb->getTable(table)->getPrimaryKeyCol();
     std::string keyStr;
     try {
@@ -74,7 +73,6 @@ namespace MOOT {
   std::string MootQuery::classStr(const std::string& table, unsigned key) {
     std::string keyStr;
     facilities::Util::utoa(key, keyStr);
-    //    std::string keyCol = table + "_key";
     std::string keyCol = m_rdb->getTable(table)->getPrimaryKeyCol();
     try {
       return DbUtil::getColumnValue(m_rdb, table, "name", keyCol, keyStr);
@@ -1023,28 +1021,6 @@ namespace MOOT {
                        fields[2],fields[3],fields[4], fields[5],
                         fields[6]);
   }
-  /*
-  unsigned MootQuery::getVoteParameter(unsigned voteKey, 
-                                       const std::string& parameterClass) {
-    // Get string version of vote key
-    std::string voteKeyStr;
-    facilities::Util::utoa(voteKey, voteKeyStr);
-    return getVoteParameter(voteKeyStr, parameterClass);
-
-  }
-
-  unsigned MootQuery::getVoteParameter(const std::string& voteKeyStr, 
-                                       const std::string& parameterClass) {
-
-    // Get parameter class key as a string
-    std::string where(" WHERE name = '");
-    where += parameterClass + std::string("'");
-    std::string ourClassKey = 
-      DbUtil::getColumeWhere(m_rdb, "Parameter_class", "Parameter_class_key", 
-                             where);
-    return getVoteParmViaClassKey(voteKeyStr, ourClassKey);
-  }
-  */
   bool MootQuery::getVoteParameters(unsigned voteKey, 
                                     std::vector<unsigned>& parmKeys) {
 
@@ -1055,28 +1031,6 @@ namespace MOOT {
     parmKeys.clear();
     return voteIsUpToDate(voteKeyStr, &parmKeys);
   }
-  /*
-  unsigned MootQuery::getVoteParmViaClassKey(const std::string& voteKeyStr, 
-                                             const std::string& 
-                                             parameterClassKey) {
-    // Get parameter classes associated with this vote.
-    std::vector<std::string> pclassKeyStr;
-
-
-    std::string where(" WHERE vote_fk ='");
-    where += voteKeyStr + std::string("' AND aclass_fk IS NULL");
-    int nPclass = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass",
-                                      "pclass_fk", where, pclassKeyStr);
-
-    // Check requested class is among them. If not, throw exception
-    if (find(pclasskeyStr.begin(), pclassKeyStr.end(), ourClassKey)
-        == pclasskeyStr.end()) {
-      std::runtime_error("getVoteParameter: Bad parameterClass argument");
-    }
-
-
-  }
-  */
 
   unsigned MootQuery::listAncAliasKeys(std::vector<unsigned>& keys,
                                        const std::string& aClass,
@@ -1213,13 +1167,6 @@ namespace MOOT {
       else where += std::string(" WHERE ");
       where += std::string(" status='") + status + std::string("'");
     }
-    /*
-    if (instr != star) {
-      if (where.size() > 0) where += std::string(" AND ");
-      else where += std::string(" WHERE ");
-      where += std::string(" instrument='") + instr + std::string("'");
-    }
-    */
     try {
       DbUtil::getKeys(keys, m_rdb, "Votes", "vote_key", where, 0,
                       true);
@@ -1248,8 +1195,6 @@ namespace MOOT {
                                                      where, false);
 
     if (!ancClassKey.size()) return 0;
-    //    std::string towerStr;
-    //    facilities::Util::itoa(tower, towerStr);
 
     return resolveAncAliasByKey(alias, ancClassKey);
   }
@@ -1260,7 +1205,7 @@ namespace MOOT {
 
     std::string where = std::string(" WHERE name='");
     where += alias + std::string("' and aclass_fk='") + ancClassKey
-      /*  + std::string("' and tower='") + towerStr */ + std::string("'");
+      + std::string("'");
     std::vector<unsigned> keys;  // can only be one returned
 
     unsigned nKey = DbUtil::getKeys(keys, m_rdb, "Ancillary_aliases",
@@ -1295,17 +1240,6 @@ namespace MOOT {
       return -1;
     }
 
-    /*
-    std::vector<std::string> aclassKeys;
-    std::vector<std::string> aAliases;
-    // Maybe there is some clever way to do this with a sub-select
-    int n = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "aclass_fk",
-                                where, aclassKeys);
-    if (n < 0 )       throw 
-       DbUtilException("MootQuery::resolveAncAliases failed getAllWhere call");
-    else if (n == 0) return true;
-    DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass","a_alias",where, aAliases);
-    */
     unsigned nRows = res->getNRows();
 
     std::vector<std::string> fields;
@@ -1364,20 +1298,6 @@ namespace MOOT {
     std::string where(" WHERE ctn_fk='");
     where += ctnKeyStr + std::string("' AND precinct_fk IS NOT NULL");
 
-    /*
-     // Can't use this method.  Results may not be ordered identically
-    std::vector<std::string> precinctKeys;
-    std::vector<std::string> vAliases;
-    int n = DbUtil::getAllWhere(m_rdb, "Container_Precinct", "precinct_fk",
-                                where, precinctKeys);
-    if (n < 0 ) 
-      throw 
-      DbUtilException("MootQuery::resolveVoteAliases failed getAllWhere call");
-    else if (n == 0) return true;
-    DbUtil::getAllWhere(m_rdb, "Container_Precinct", "v_alias",
-                                where, vAliases);
-    */
-
     rdbModel::StringVector getCols;
     getCols.push_back(std::string("precinct_fk"));
     getCols.push_back(std::string("v_alias"));
@@ -1423,8 +1343,6 @@ namespace MOOT {
     delete res;
     return true;
   }
-
-
   ////  end resolveVoteAliases
 
 
