@@ -1345,22 +1345,46 @@ namespace MOOT {
     std::vector<std::string> precinctKeys;
     std::vector<std::string> vAliases;
 
-    // Maybe there is some clever way to do this with a sub-select
-
+    /*
+     // Can't use this method.  Results may not be ordered identically
     int n = DbUtil::getAllWhere(m_rdb, "Container_Precinct", "precinct_fk",
                                 where, precinctKeys);
     if (n < 0 ) 
       throw 
-        DbUtilException("MootQuery::resolveVoteAliases failed getAllWhere call");
+      DbUtilException("MootQuery::resolveVoteAliases failed getAllWhere call");
     else if (n == 0) return true;
-
     DbUtil::getAllWhere(m_rdb, "Container_Precinct", "v_alias",
                                 where, vAliases);
+    */
 
+    rdbModel::StringVector getCols;
+    getCols.push_back(std::string("precinct_fk"));
+    getCols.push_back(std::string("v_alias"));
+
+    rdbModel::ResultHandle* res = 0;
+    try {
+      res = m_rdb->getConnection()->select("Container_Precinct", getCols, 
+                                           getCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::resolveVoteAliases " << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      return -1;
+    }
+
+    unsigned nRows = res->getNRows();
+
+    std::vector<std::string> fields;
+    fields.reserve(2);    // will hold precinct_fk followed by v_alias
     // Now look each one up in vote alias table
-    for (int i = 0; i < n; i++) {
-      where = std::string(" WHERE precinct_fk ='") + precinctKeys[i] +
-        std::string("' and name='") + vAliases[i] + std::string("'");
+    for (int i = 0; i < nRows; i++) {
+      res->getRow(fields, i);
+
+      where = std::string(" WHERE precinct_fk ='") + 
+        /* precinctKeys[i] */ fields[0] +
+        std::string("' and name='") + /*vAliases[i]*/ fields[1] + 
+        std::string("'");
       std::string voteKey = 
         DbUtil::getColumnWhere(m_rdb, "Vote_aliases", "vote_fk",
                                where, false);
@@ -1370,10 +1394,12 @@ namespace MOOT {
           << "MootQuery::resolveVoteAliases: Could not resolve all for vote "
           << ctnKeyStr << std::endl;
         voteKeys.clear();
+        delete res;
         return false;
       }
       voteKeys.push_back(voteKey);
     }
+    delete res;
     return true;
   }
 
