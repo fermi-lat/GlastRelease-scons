@@ -1278,24 +1278,45 @@ namespace MOOT {
                                         const std::string& voteKeyStr) {
     std::string where(" WHERE vote_fk='");
     where += voteKeyStr + std::string("' AND aclass_fk IS NOT NULL");
+
+    rdbModel::StringVector getCols;
+    getCols.push_back(std::string("aclass_fk"));
+    getCols.push_back(std::string("a_alias"));
+
+    rdbModel::ResultHandle* res = 0;
+    try {
+      res = m_rdb->getConnection()->select("Vote_PClass_AClass", getCols, 
+                                           getCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::resolveAncAliases " << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      return -1;
+    }
+
+    /*
     std::vector<std::string> aclassKeys;
     std::vector<std::string> aAliases;
-
     // Maybe there is some clever way to do this with a sub-select
-
     int n = DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "aclass_fk",
                                 where, aclassKeys);
-    if (n < 0 ) 
-      throw DbUtilException("MootQuery::resolveAncAliases failed getAllWhere call");
+    if (n < 0 )       throw 
+       DbUtilException("MootQuery::resolveAncAliases failed getAllWhere call");
     else if (n == 0) return true;
+    DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass","a_alias",where, aAliases);
+    */
+    unsigned nRows = res->getNRows();
 
-    DbUtil::getAllWhere(m_rdb, "Vote_PClass_AClass", "a_alias",
-                                where, aAliases);
+    std::vector<std::string> fields;
+    fields.reserve(2);    // will hold aclass_fk followed by a_alias
 
     // Now look each one up in anc alias table
-    for (int i = 0; i < n; i++) {
-      where = std::string(" WHERE aclass_fk ='") + aclassKeys[i] +
-        std::string("' and name='") + aAliases[i] + std::string("'");
+    for (int i = 0; i < nRows; i++) {
+      res->getRow(fields, i);
+      where = std::string(" WHERE aclass_fk ='") + /*aclassKeys[i]*/ fields[0]
+        + std::string("' and name='") 
+        + /*aAliases[i]*/ fields[1] + std::string("'");
       std::string ancKey = 
         DbUtil::getColumnWhere(m_rdb, "Ancillary_aliases", "ancillary_fk",
                                where, false);
@@ -1342,11 +1363,11 @@ namespace MOOT {
                                      const std::string& ctnKeyStr) {
     std::string where(" WHERE ctn_fk='");
     where += ctnKeyStr + std::string("' AND precinct_fk IS NOT NULL");
-    std::vector<std::string> precinctKeys;
-    std::vector<std::string> vAliases;
 
     /*
      // Can't use this method.  Results may not be ordered identically
+    std::vector<std::string> precinctKeys;
+    std::vector<std::string> vAliases;
     int n = DbUtil::getAllWhere(m_rdb, "Container_Precinct", "precinct_fk",
                                 where, precinctKeys);
     if (n < 0 ) 
