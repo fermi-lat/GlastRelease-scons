@@ -3,6 +3,7 @@
 #define ROOT_QdcHit_H
 
 #include "TObject.h"
+#include <string>
 
 /** @class QdcHit
  * @brief The digitization ancillary data for beamtest 2006  

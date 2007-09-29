@@ -3,6 +3,7 @@
 #define ROOT_TaggerHit_H
 
 #include "TObject.h"
+#include <string>
 
 /** @class TaggerHit
  * @brief The digitization ancillary data for beamtest 2006  

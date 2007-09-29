@@ -3,6 +3,7 @@
 #define ROOT_ScalerHit_H
 
 #include "TObject.h"
+#include <string>
 
 /** @class ScalerHit
  * @brief The digitization ancillary data for beamtest 2006  
