@@ -1,7 +1,9 @@
 #include "reconRootData/AcdRecon.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
+#include "TROOT.h"
 #include "TClass.h"
+#include "TStreamerInfo.h"
 
 ClassImp(AcdRecon)
 
@@ -29,7 +31,7 @@ bool AcdRecon::fixAcdStreamer(int version)
      {
       TClass * cl = TClass::GetClass("AcdRecon") ;
       if (!cl) { return (false) ; }
-      TStreamerInfo * si = cl->GetStreamerInfo(14) ;
+      TStreamerInfo * si = dynamic_cast<TStreamerInfo*>(cl->GetStreamerInfo(14)) ;
       if (!si) { return (false) ; }
       FixElement((TStreamerElement*)si->GetElements()->FindObject("m_rowDocaCol"));
       FixElement((TStreamerElement*)si->GetElements()->FindObject("m_rowActDistCol"));
