@@ -18,6 +18,8 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
+#include <cmath>
+
 // STD
 
 using namespace CalUtil;
