@@ -166,6 +166,9 @@ void ObfCworker::evaluate()
 
     // convert to (ra, dec)
 
+    if( ! fluxSvc ){
+        return;
+    }
     // The GPS singleton has current time and orientation
     static astro::GPS* gps = fluxSvc->GPSinstance();
     double time = gps->time();

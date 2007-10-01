@@ -14,6 +14,7 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_ALGORITHM( FT1Alg            );
     DECLARE_ALGORITHM( McCoordsAlg       );
     DECLARE_ALGORITHM( ObfCoordsAlg      );
+    DECLARE_ALGORITHM( PtValsAlg         );
 
     DECLARE_TOOL(      TkrValsTool      );
     DECLARE_TOOL(      CalValsTool      );
@@ -33,6 +34,5 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     //@@@ CL 06/26/06
     //DECLARE_TOOL(      GcrSelectValsTool  );
     //DECLARE_TOOL(      GcrReconValsTool   );
-
 
 } 
