@@ -82,6 +82,15 @@ int main( int argc, char* argv[] )
     maxEvents = atoi( argv[4] );
   }
 
+  // add support for overriding translated LATC master key
+  unsigned long overrideLATC = 0xffffffff;
+  if ( argc >= 6 ) {
+    overrideLATC = strtoul( argv[5], NULL, 0 );
+    std::cout << "writeMerge: overriding LATC key to " << overrideLATC << std::endl;
+  } else {
+    std::cout << "writeMerge: no LATC key override" << std::endl;
+  }
+
   // declare the file-output object pointer
   int eventsOut = 0;
   eventFile::LSEWriter* pLSEW = NULL;
@@ -167,6 +176,9 @@ int main( int argc, char* argv[] )
     try {
       switch( infotype ) {
       case eventFile::LSE_Info::LPA:
+	if ( overrideLATC != 0xffffffff ) {
+	  pakeys.LATC_master = overrideLATC;
+	}
 	pLSEW->write( ctx, ebf, pinfo, pakeys );
 	break;
       case eventFile::LSE_Info::LCI_ACD:
