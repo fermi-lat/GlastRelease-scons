@@ -38,8 +38,8 @@ $Header$
 
 // to get current position
 //flux
-#include "FluxSvc/IFluxSvc.h"
-#include "astro/GPS.h"
+//#include "FluxSvc/IFluxSvc.h"
+//#include "astro/GPS.h"
 /*! @class McValsTool
 @brief calculates Monte Carlo values
 
@@ -67,7 +67,7 @@ private:
 
     //Function to parse the stuff we get from AcdReconAlg
     void getAcdReconVars();
-    IFluxSvc*   m_fluxSvc;
+    //IFluxSvc*   m_fluxSvc;
    
     //Pure MC Tuple Items
     float MC_SourceId;
@@ -203,10 +203,10 @@ StatusCode McValsTool::initialize()
     if( ValBase::initialize().isFailure()) return StatusCode::FAILURE;
   
     // get the services    
-    if ( service("FluxSvc", m_fluxSvc, true).isFailure() ){
-        log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
-        return StatusCode::FAILURE;
-    }
+    //if ( service("FluxSvc", m_fluxSvc, true).isFailure() ){
+    //    log << MSG::ERROR << "Couldn't find the FluxSvc!" << endreq;
+    //    return StatusCode::FAILURE;
+    //}
    
     if( serviceLocator() ) {
         if( service("ParticlePropertySvc", m_ppsvc, true).isFailure() ) {
