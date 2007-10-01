@@ -86,6 +86,9 @@ class G4Generator : public Algorithm {
   BooleanProperty m_mscatOption;
   BooleanProperty m_eLossCurrent;
 
+  /// for material printout
+  BooleanProperty m_printRadLen;
+
 };
 
 #endif

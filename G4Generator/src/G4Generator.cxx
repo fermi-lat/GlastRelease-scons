@@ -20,6 +20,8 @@
 #include "G4UImanager.hh"
 #include "G4ParticleDefinition.hh"
 
+#include "G4Material.hh"
+
 #include "RunManager.h"
 #include "PrimaryGeneratorAction.h"
 #include "McParticleManager.h"
@@ -57,6 +59,9 @@
 // Error stuff
 #include "G4Generator/IG4GenErrorSvc.h"
 #include "G4Generator/G4GenException.h"
+
+// General
+#include <iomanip>
 
 static const AlgFactory<G4Generator>  Factory;
 const IAlgFactory& G4GeneratorFactory = Factory;
@@ -97,6 +102,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
 
   declareProperty("mscatOption",  m_mscatOption  = true); 
   declareProperty("eLossCurrent", m_eLossCurrent = true);  // default is to use the current, not 5.2.
+
+  declareProperty("printRadLen",  m_printRadLen  = true);
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -192,7 +199,7 @@ StatusCode G4Generator::initialize()
   log << MSG::INFO << "Using the " << (!m_eLossCurrent? "Old 5.2" : "current G4") 
       << " version of Energy Loss" << endreq;
   
-  log << MSG::INFO << "Initializing run manager...\n";
+  log << MSG::INFO << "Initializing run manager... ";
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
@@ -207,7 +214,7 @@ StatusCode G4Generator::initialize()
                                     eLossFactory,
 									geosv);
 
-      log << "\n done." << endreq;
+      log << "done." << endreq;
     }
 
   // Initialize Geant4
@@ -232,10 +239,38 @@ StatusCode G4Generator::initialize()
       McParticleManager::getPointer()->setMode(McParticleManager::MINIMAL_TREE);
       McParticleManager::getPointer()->setCutOffEnergy(m_lowEnergy);
   }
- 
-  log << endreq;
-  return StatusCode::SUCCESS;
+  log << MSG::INFO << endreq  
+      << "List of materials and radiation lengths" 
+      << endreq;
 
+  if(m_printRadLen) {
+      std::cout << std::endl << std::left 
+          << std::setw(20) << "Name" 
+          << std::setw(9) << "Density" 
+          << std::setw(15) << "RadLength (cm)" 
+          << std::setw(8) << "(g/cm3)" << std::endl << std::endl;
+
+      int size = G4Material::GetNumberOfMaterials(); 
+      int i;
+      for(i=0;i<size;++i) {
+          G4Material* mat = (*G4Material::GetMaterialTable())[i];
+          double density = mat->GetDensity()/(g/cm3);
+          double radlen  = mat->GetRadlen()/cm;
+          double radlenG = radlen*density;
+          std::cout << std::left << std::setprecision(4) 
+              << std::setw(20) << mat->GetName() 
+              << std::setw(12) << density
+              << std::setw(13) << radlen
+              << std::setw(8) << radlenG << std::endl;
+      } 
+      std::cout << std::endl;
+  } else {
+      log << "... Not requested" << endreq;
+  }
+      //std::cout << "\n\n\n";
+      //std::cout << *(G4Material::GetMaterialTable()) << std::endl;
+
+  return StatusCode::SUCCESS;
 }
 
 
