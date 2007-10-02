@@ -20,6 +20,7 @@ ApplicationMgr.EvtMax  = 1000;
 
 // turn off output
 Output.Members = {};
+RootIoSvc.MetaRootFileWrite="";
 
 //==============================================================
 //
