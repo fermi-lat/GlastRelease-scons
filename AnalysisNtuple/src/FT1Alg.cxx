@@ -138,16 +138,12 @@ StatusCode FT1Alg::execute()
     Event::ExposureCol* elist = 0;
     eventSvc()->retrieveObject("/Event/MC/ExposureCol",(DataObject *&)elist);
     if ( elist==0 ) {
-#if 1
-
-#else
         if(m_count<6) {
             log << MSG::INFO << "No ExposureCol found" << endreq;
         }
         else if (m_count==6) {
             log << MSG::INFO << "Message suppressed after 5 events" << endreq;
         }
-#endif
     }else {
         exp = *(*elist).begin();
     }
