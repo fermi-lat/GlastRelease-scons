@@ -54,21 +54,8 @@ Top.StopOverride = true;
 
 //
 // Digitization sequence: Read in digis from a ROOT file!
-// PointInfoAlg is needed so Gleam can read in FT2.
 //
-Digitization.Members = {"PointInfoAlg","digiRootReaderAlg"};
-
-//
-// We need this fake branch to initialize FluxAlg and read in the FT2 file!
-//
-Digitization/DingDong.Members = {"FluxAlg"};
-
-
-//
-// FT2 file for Gleam:
-//
-FluxAlg.PointingHistory = {"FT2.fits"};
-
+Digitization.Members +={"digiRootReaderAlg"};
 
 //
 // This needs to run after having read in the digis 
@@ -190,19 +177,30 @@ Acd.Members          = {"AcdReconAlg"};
 //
 // Merit and AnalysisNtuple:
 //
-ApplicationMgr.DLLs  += {"FluxSvc"}; 
-ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","merit","GlastClassify"};
-
+//THB ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","merit","GlastClassify"};  
+ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","GlastClassify"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+
+//
+// FT2:
+//
+NtupleMaker.Members += {"PtValsAlg"}; 
+
+PtValsAlg.PointingHistory = {"FT2_Gleam.fits", "", ""};
+
 
 NtupleMaker.Members += {"AnalysisNtupleAlg"}; 
 
+//
+// Name of ntuple:
+//
 AnalysisNtupleAlg.tupleName = "MeritTuple";
 
 NtupleMaker.Members += {"ClassifyAlg"}; 
 NtupleMaker.Members += {"FT1Alg"}; 
-NtupleMaker.Members += {"meritAlg"}; 
-NtupleMaker.Members += {"McCoordsAlg","ObfCoordsAlg" };
+//thb NtupleMaker.Members += {"meritAlg"}; 
+//THB NtupleMaker.Members += {"McCoordsAlg"};
+NtupleMaker.Members += {"ObfCoordsAlg"};
 
 //
 // Define the output sequence:

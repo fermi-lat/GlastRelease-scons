@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r29p19 AWB 02-Oct-07 Updated pipeline JO to correctly read in FT2.
 * v6r29p18 HMK 01-Oct-07 Updated basicOptions to shut off meta ROOT by defaultd
 * v6r29p17 AWB 24-Sep-07 Updated FT2 pipeline JO.
 * v6r29p16 AWB 24-Sep-07 Updated pipeline JO with OBF, GCR and FT2.
