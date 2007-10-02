@@ -1246,7 +1246,7 @@ namespace MOOT {
     fields.reserve(2);    // will hold aclass_fk followed by a_alias
 
     // Now look each one up in anc alias table
-    for (int i = 0; i < nRows; i++) {
+    for (unsigned i = 0; i < nRows; i++) {
       res->getRow(fields, i);
       where = std::string(" WHERE aclass_fk ='") + /*aclassKeys[i]*/ fields[0]
         + std::string("' and name='") 
@@ -1416,8 +1416,17 @@ namespace MOOT {
                                  std::vector<unsigned>* pk) {
 
     // First be sure vote is registered and valid
-    std::string voteStatus = 
-      DbUtil::getColumnValue(m_rdb, "Votes", "status", "vote_key", voteKeyStr);
+    std::string voteStatus;
+    try {
+      voteStatus = 
+        DbUtil::getColumnValue(m_rdb, "Votes", "status", "vote_key", 
+                               voteKeyStr); 
+    }
+    catch (DbUtilNoDataException ex) {
+      std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
+                << " is not the key of a valid registered vote" << std::endl;
+      return false;
+    }
     if (voteStatus != std::string("CREATED") ) {
       std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
                 << " is not the key of a valid registered vote" << std::endl;

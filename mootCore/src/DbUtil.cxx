@@ -121,12 +121,13 @@ namespace MOOT {
       //      return std::string("");
     }
     int nRows = checkResults(res, "MootBuild,getColumnValue ", 0);
-    if ((nRows == 0) & (!onlyOne)) {
-      return std::string("");
+    if (nRows == 0) {
+      if (!onlyOne) return std::string("");
+      else throw DbUtilNoDataException("DbUtil::getcolumnWhere: no data ");
     }
-    else if (nRows <= 0) 
+    else if (nRows < 0) 
     {
-      throw DbUtilException("DbUtil::getColumnWhere:  none found ");
+      throw DbUtilException("DbUtil::getColumnWhere:  query failed ");
     }
     if ((nRows > 1) && onlyOne ) {
       std::cerr << "DbUtil::getColumnWhere: too many rows satisfy "
@@ -134,7 +135,7 @@ namespace MOOT {
       std::cerr.flush();
       delete res;
       //      return std::string("");
-      throw DbUtilException("DbUtil::getColumnWhere: too many found");
+      throw DbUtilNotUniqueException("DbUtil::getColumnWhere: too many found");
     }
     std::vector<std::string>selFields;
 
