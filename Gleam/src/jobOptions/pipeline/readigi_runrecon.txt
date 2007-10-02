@@ -99,7 +99,7 @@ ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
 //
 // G4:
 //
-ApplicationMgr.DLLs   += {"G4Generator","G4Propagator"};
+ApplicationMgr.DLLs += {"G4Generator","G4Propagator"};
 
 
 //
@@ -156,7 +156,6 @@ GcrReconAlg.UseMcDir = false;
 second.OutputLevel = 5;  
 
 
-
 //
 // ACD recon:
 //
@@ -177,9 +176,14 @@ Acd.Members          = {"AcdReconAlg"};
 //
 // Merit and AnalysisNtuple:
 //
-//THB ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","merit","GlastClassify"};  
-ApplicationMgr.DLLs  += {"AnalysisNtuple","ntupleWriterSvc","GlastClassify"};
+ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","GlastClassify"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
+
+//
+// For dealing with non-MC data:
+//
+AnalysisNtupleAlg.toolList = {"McKludge","Glt","Tkr","Vtx","Cal","Acd","Evt","CalMip","Obf"};
+
 
 //
 // FT2:
@@ -189,6 +193,9 @@ NtupleMaker.Members += {"PtValsAlg"};
 PtValsAlg.PointingHistory = {"FT2_Gleam.fits", "", ""};
 
 
+//
+// Make ntuple:
+//
 NtupleMaker.Members += {"AnalysisNtupleAlg"}; 
 
 //
@@ -196,16 +203,17 @@ NtupleMaker.Members += {"AnalysisNtupleAlg"};
 //
 AnalysisNtupleAlg.tupleName = "MeritTuple";
 
+//
+// Other members of ntuple:
+//
 NtupleMaker.Members += {"ClassifyAlg"}; 
 NtupleMaker.Members += {"FT1Alg"}; 
-//thb NtupleMaker.Members += {"meritAlg"}; 
-//THB NtupleMaker.Members += {"McCoordsAlg"};
 NtupleMaker.Members += {"ObfCoordsAlg"};
 
 //
 // Define the output sequence:
 //
-Output.Members = {"FhSetAlg","reconRootWriterAlg"};
+Output.Members  = {"FhSetAlg","reconRootWriterAlg"};
 Output.Members += {"CalTupleAlg"};
 Output.Members += {"gcrSelectRootWriterAlg"};
 
