@@ -20,6 +20,7 @@
 #include "DataHandle.h"
 
 #include <TString.h>
+class TChain ;
 class TTree ;
 class TFile ;
 class TObjArray ;
@@ -57,9 +58,11 @@ class CelFileAndTreeSet  : public BranchGroup
     CelFileAndTreeSet( const TString & componentName ) ;
     virtual ~CelFileAndTreeSet() ;
 
-  // Methods and functions
-  // Reset this object and clear caches
-  void reset();
+    // Methods and functions
+    // Reset this object and clear caches
+    void reset() ;
+
+    
   // Add a tree to the list refered to by this object
   UShort_t addTree( TTree & tree) ;
   // Get the persistent KEY for a given tree
@@ -69,6 +72,11 @@ class CelFileAndTreeSet  : public BranchGroup
   // Get the Event offset using persistent KEY
   Long64_t getOffset( UShort_t key ) const ;
 
+  
+  
+    // reading interface
+    Bool_t addToChain( TChain * & chain ) ;  
+  
     // Override the methods in BranchGroup.  
     virtual Int_t makeBranches( TTree & celTree, const char * prefix = 0, Int_t bufsize = 32000) const ;
     virtual Int_t attachToTree( TTree & celTree, const char * prefix = 0) ;
@@ -78,22 +86,20 @@ class CelFileAndTreeSet  : public BranchGroup
     inline Long64_t entries() const { return _treesSize ; }
     inline const TString & componentName() const { return _componentName ; }
 
-  // Printing
-  // Print the list of trees
-  void show(const char* options = "tf") const;
-  // Print information about a single tree
-  void printTreeInfo(UShort_t key, const char* options = "tf") const;
-
-  protected :
-
-    // Utility function to actually go and get a tree out of a file
-    TTree * fetchTree( UShort_t key ) const ;
+    // Printing
+    // Print the list of trees
+    void show(const char* options = "tf") const ;
+    // Print information about a single tree
+    void printTreeInfo( UShort_t key, const char * options = "tf" ) const ;
 
   private :
 
     //disable copying and assignment
     CelFileAndTreeSet( const CelFileAndTreeSet & ) ;
     CelFileAndTreeSet & operator=( const CelFileAndTreeSet & ) ;
+
+    // Utility function to actually go and get a tree out of a file
+    TTree * fetchTree( UShort_t key ) const ;
 
     // data
     TString _componentName ;

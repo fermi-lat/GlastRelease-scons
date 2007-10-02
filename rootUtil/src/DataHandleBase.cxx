@@ -49,7 +49,7 @@ DataHandleBase::~DataHandleBase(){
   ;
 }
 
-TBranch* DataHandleBase::makeBranch(TTree& tree, const char* name, Int_t bufsize) const {
+TBranch * DataHandleBase::makeBranch( TTree & tree, const char * name, Int_t /* bufsize */ ) const {
   // Build a branch with 'name' on 'tree'
   // returns the newly built branch
   TString leafName(name);

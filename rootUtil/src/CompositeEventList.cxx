@@ -289,37 +289,39 @@ TFile * CompositeEventList::openCelFile( const TString & celFileName )
   return newFile ;
  }
 
-
-
 Int_t CompositeEventList::attachToTree( TTree & eventTree,  TTree & fileTree, TTree & entryTree )
  {
   // Attach to the branches where all the infomation is stored
   // 
   // Called by openFile()
-  Int_t total = _currentEvent.attachToTree(eventTree,"Event_");
-  if ( total < 0 ) {
-    std::cerr << "Failed to open Event Tree" << std::endl;    
-    return total;
-  }
-  UInt_t idx(0);
-  for ( std::vector< CelTreeAndComponent >::const_iterator itr = _compList.begin();
-	itr != _compList.end(); itr++ ) {
-    CelEventComponent* comp = itr->second;
-    if ( comp == 0 ) { 
-      std::cerr << "Failed to get component " << idx << std::endl;
-      return -1;
-    }
-    Int_t nB = comp->attachToTree(entryTree,fileTree);
-    if ( nB < 0 ) {
+  Int_t total = _currentEvent.attachToTree(eventTree,"Event_") ;
+  if ( total < 0 )
+   {
+    std::cerr << "Failed to open Event Tree" << std::endl ;    
+    return total ;
+   }
+  UInt_t idx = 0 ;
+  CelTreesAndComponents::const_iterator itr ;
+  for ( itr = _compList.begin() ; itr != _compList.end(); itr++ )
+   {
+    CelEventComponent * comp = itr->second ;
+    if ( comp == 0 )
+     { 
+      std::cerr << "Failed to get component " << idx << std::endl ;
+      return -1 ;
+     }
+    Int_t nB = comp->attachToTree(entryTree,fileTree) ;
+    if ( nB < 0 )
+     {
       std::cerr << "Failed to attached component " << comp->componentName() << " to trees " 
-		<< entryTree.GetName() << ' ' << fileTree.GetName() << std::endl;
+		<< entryTree.GetName() << ' ' << fileTree.GetName() << std::endl ;
       return nB;
-    }
-    total += nB;
+     }
+    total += nB ;
     idx++;
-  }
-  return total;
-}
+   }
+  return total ;
+ }
 
 // If successful, returns the number of bytes read
 // Failure codes:
@@ -403,7 +405,7 @@ TChain * CompositeEventList::buildChain( UInt_t componentIndex )
     if (nB<0)
      {
       std::cerr
-        << "Could not read Tree entry " << i
+        << "Could not read _fileTree set " << i
         << " for component " << _compNames[i]
         << std::endl ;
       delete chain ;
@@ -424,47 +426,41 @@ TChain * CompositeEventList::buildChain( UInt_t componentIndex )
   return chain ;
  }
 
-TVirtualIndex * CompositeEventList::buildEventIndex
- ( UInt_t index, Long64_t & offset, TTree * tree )
- {
-  if (!checkCelTrees()) { return 0 ; }
-  TVirtualIndex * vIdx = CelIndex::buildIndex(*this,_compNames[index],tree,offset) ;
-  return vIdx ;
- }
-
 // Build event and data chains
 TChain * CompositeEventList::buildAllChains( TObjArray * chainList, Bool_t setFriends )
  {
-  // build master chain
-  if (_entryTree==0) return 0 ;
+  // preconditions
+  if (!checkCelTrees()) { return 0 ; }
+  
+  // build main chain
   TFile * f = FileUtil::getFile(*_entryTree) ;
   if (f==0) return 0 ;    
-  TChain * masterChain = new TChain("CompositeEvents") ;  
-  Int_t check = masterChain->Add(f->GetName()) ;
+  TChain * mainChain = new TChain("CompositeEvents") ;  
+  Int_t check = mainChain->Add(f->GetName()) ;
   if ( check < 0 )
    {
-    delete masterChain ;
+    delete mainChain ;
     return 0 ;
    }
 
   // build components chains
-  Long64_t offset = 0 ;
   UInt_t i ;
   for ( i=0 ; i<numComponents() ; i++ )
    {
-    std::cout<<"Building links for "<<_compNames[i]<<std::endl ;
+    std::cout<<"Building chain for "<<_compNames[i]<<std::endl ;
     TChain * c = buildChain(i) ;
     if (c==0) { return 0 ; }
-    c->SetBranchStatus("*",0) ;
-    TVirtualIndex * vIdx = buildEventIndex(i,offset,c) ;
+    c->SetBranchStatus("*",0) ; // ???
+    TVirtualIndex * vIdx = new CelIndex(*this,_compNames[i],c) ;
     if (vIdx==0) { return 0 ; }     
+    c->SetTreeIndex(vIdx) ;
     if (chainList!=0) { chainList->AddLast(c) ; }
     if ( setFriends )
-     { masterChain->AddFriend(c,_compNames[i].Data()) ; }
+     { mainChain->AddFriend(c,_compNames[i].Data()) ; }
   }
   
   // end
-  return masterChain ;
+  return mainChain ;
  }
 
 

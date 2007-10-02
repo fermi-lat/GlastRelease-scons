@@ -19,6 +19,7 @@
 #include <assert.h>
 
 // ROOT Headers
+#include <TChain.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <TObjString.h>
@@ -111,19 +112,20 @@ TTree* CelFileAndTreeSet::getTree(UShort_t key) const {
   return tree;
 }
 
-UShort_t CelFileAndTreeSet::getKey(TTree* tree) const {
+UShort_t CelFileAndTreeSet::getKey( TTree * tree) const
+ {
   // Get the persistent KEY for a given tree
-  //
   // Return FileUtil::NOKEY if 'tree' is NULL
   // Warns and returns FileUtil::NOKEY if tree is not found in lookup table
   if ( 0 == tree ) return FileUtil::NOKEY;
-  std::map<TTree*,UShort_t>::iterator itrFind = _lookup.find(tree); 
-  if ( itrFind == _lookup.end() ) {
+  std::map<TTree*,UShort_t>::iterator itrFind = _lookup.find(tree) ; 
+  if ( itrFind == _lookup.end() )
+   {
     // No found, warn?
-    return FileUtil::NOKEY;
-  }
-  return itrFind->second;
-}
+    return FileUtil::NOKEY ;
+   }
+  return itrFind->second ;
+ }
 
 Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
   // Get the Event offset using persistent KEY
@@ -134,6 +136,14 @@ Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
   if ( key >= _setSize ) return -1;
   return _treeOffsets->At(key);
 }
+
+
+//======================================================================================
+//
+// BranchGroup methods
+//
+//======================================================================================
+
 
 Int_t CelFileAndTreeSet::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) const {
   // Builds branches on 'tree'
@@ -204,6 +214,38 @@ Int_t CelFileAndTreeSet::attachToTree(TTree& tree, const char* prefix) {
   return bVal;
 }
 
+
+
+//======================================================================================
+//
+// Reading Interface
+//
+//======================================================================================
+
+
+Bool_t CelFileAndTreeSet::addToChain( TChain * & chain )
+ {
+  UShort_t treeIndex ;
+  for ( treeIndex=0 ; treeIndex<_setSize ; treeIndex++ )
+   {
+	const char * tName = _treeNames->UncheckedAt(treeIndex)->GetName() ;
+	if (chain==0)
+     { chain = new TChain(tName,"Cel Component Chain") ; }
+    const char * fName = _fileNames->UncheckedAt(treeIndex)->GetName() ;
+    chain->AddFile(fName,-1,tName) ;
+   }
+  return kTRUE ;
+ }
+
+
+
+//======================================================================================
+//
+// Printing & debugging
+//
+//======================================================================================
+
+
 // Print the list of trees, one per line
 void CelFileAndTreeSet::show(const char* options) const
  {
@@ -213,7 +255,7 @@ void CelFileAndTreeSet::show(const char* options) const
     std::cout << "Tree " << i << ":\t" ;
     printTreeInfo(i,options) ;    
     std::cout << std::endl ;    
-  }
+   }
  }
 
 // Print information about tree i
@@ -230,6 +272,15 @@ void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options 
   if (OptUtil::has_option(options,'o'))
    { std::cout << _treeOffsets->At(treeIndex) << ' '; }
  }
+
+
+
+//======================================================================================
+//
+// Utilities
+//
+//======================================================================================
+
 
 // Utility function to actually go and get a tree out of a file
 // Return 0 silently if treeIndex == FileUtil::NOKEY

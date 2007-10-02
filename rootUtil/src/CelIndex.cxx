@@ -4,7 +4,8 @@
 * Package: rootUtil
 *    File: $Id$
 * Authors:
-*   EC, Eric Charles,    SLAC              echarles@slac.stanford.edu
+*   EC, Eric Charles, SLAC, echarles@slac.stanford.edu
+*   DC, David Chamont, LLR, chamont@llr.in2p3.fr
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
@@ -19,55 +20,35 @@
 
 ClassImp(CelIndex) ;
 
-CelIndex * CelIndex::buildIndex
- ( CompositeEventList & cel,
-   const TString & componentName, TTree * tree, Long64_t offset )
- {
-  CelIndex * pIdx = new CelIndex(cel,componentName,tree,offset) ;
-  tree->SetTreeIndex(pIdx) ;
-  return pIdx ;
- }
-
 CelIndex::CelIndex()
- : TVirtualIndex(),
-   _offset(0), _cel(0), _component(0)
+ : TVirtualIndex(), _cel(0), _component(0)
  { SetTree(0) ; }
 
 CelIndex::CelIndex
  ( CompositeEventList & cel,
    const TString & componentName,
-   TTree * tree, Long64_t offset )
- : TVirtualIndex(),
-   _offset(offset), _cel(&cel),
+   TChain * componentChain )
+ : TVirtualIndex(), _cel(&cel),
    _component(cel.getComponent(componentName))
- { SetTree(tree) ; }
+ { SetTree((TTree*)componentChain) ; }
 
 CelIndex::~CelIndex()
  {}
-
-
-Int_t CelIndex::GetEntryNumberFriend( const TTree * tree )
- {
-  // return the index into the component tree for the current event in the master tree
-
-  // Sanity check
-  if (_cel==0||_component==0) { return -1 ; }
-
-  // Read entry in cel trees
-  Long64_t check ;
-  check = _cel->shallowRead(tree->GetReadEntry()) ;
-
-  // Get the Event index
-  Long64_t evtIdx = _offset + _cel->fileSetOffset() ;
-  evtIdx += _component->getIndexInLocalChain() ;
-  // std::cout << "CelIndex::GetEntryNumberFriend(" << _cel->currentEventIndex() << ':' << evtIdx << ')' << std::endl;
-  return evtIdx ;  
- }
 
 Long64_t CelIndex::GetN() const
  {
   if (_cel==0||_component==0) { return 0 ; }
   return _cel->numEvents() ;
+ }
+
+Int_t CelIndex::GetEntryNumberFriend( const TTree * celCompositeEvents )
+ {
+  if (_cel==0||_component==0) { return -1 ; }
+  _cel->shallowRead(celCompositeEvents->GetReadEntry()) ;
+  Long64_t evtIdx = _cel->fileSetOffset() ;
+  evtIdx += _component->indexInCurrentSet() ;
+  // std::cout << "CelIndex::GetEntryNumberFriend(" << _cel->currentEventIndex() << ':' << evtIdx << ')' << std::endl;
+  return evtIdx ;  
  }
 
 

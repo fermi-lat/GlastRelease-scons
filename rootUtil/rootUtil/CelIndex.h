@@ -1,47 +1,44 @@
-// -*- Mode: c++ -*-
+
 #ifndef CelIndex_h
 #define CelIndex_h
+
 /*
 * Project: GLAST
 * Package: rootUtil
 *    File: $Id$
 * Authors:
-*   EC, Eric Charles,    SLAC              echarles@slac.stanford.edu
+*   EC, Eric Charles, SLAC, echarles@slac.stanford.edu
+*   DC, David Chamont, LLR, chamont@llr.in2p3.fr
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
 *
-*
-*
 */
 
 #include <TVirtualIndex.h>
-
-class TTree;
-class CelEventComponent;
-class CompositeEventList;
-
+class TTree ;
+class TChain ;
+class CompositeEventList ;
+class CelEventComponent ;
 #include <string>
 
 //
-// CelIndex is a sub-class of TVirtualIndex.  It is using a CompositeEventList as an index in to the component trees.
+// A way to read the events described in a CEL is :
+// 1) make a main TChain from the CEL internal "CompositeEvents" tree
+// 2) for each component, make a friend TChain with all corresponding input files added
+// 3) in each friend TChain, add an instance oif TVirtualIndex, able to say,
+//    for a given entry in the main TChain, what the corresponding entry
+//    in the current friend TChain
 //
+// CelIndex is the subclass of TVirtualIndex which makes the scenario above possible.
 // The whole point of this class is to override the method
-//   Int_t TVirtualIndex::GetEntryNumberFriend(const TTree* tree);  
+// TVirtualIndex::GetEntryNumberFriend(), whiwch receive the master TChain as input,
+// and must compute the corresponding index in the current friend TChain.
 //
-// Which is called in TTree::LoadTreeFriend(Long64_t entry, TTree* masterTree) to load the friend tree.
-// 
-// CelIndex::GetEntryNumberFriend(const TTree* tree) goes into the master tree and finds the correct event index
-// in the TChain of the component tree.  
-//
-// The Index in the component tree is
-//
-//     GlobalOffset + MetaEventOffset + LocalOffset + EventIndex
-//
-//     GlobalOffset is the offset from starting in the middle of the chain.  Except in special cases it is 0.
-//     MetaEventOffset is the offset from all the previous entries in the FileTree
-//     LocalOffset is the offset form all the previous TTrees in the current entry in the FileTree
-//     EventIndex is the Index of the event in the tree that it actually lives on.
+// Actually, this index is "PreviousSetsOffset + PreviousTreesOffset + EventIndex"
+// * PreviousSetsOffset is the offset from all the previous set of files and trees
+// * PreviousTreesOffset is the offset from all the previous TTrees in the current set
+// * EventIndex is the Index of the event in the tree that it actually lives on.
 // 
 
 
@@ -49,36 +46,26 @@ class CelIndex : public TVirtualIndex
  {
   public :
   
-    // Build and return a pointer index from a CEL
-    static CelIndex * buildIndex( CompositeEventList &, const TString & componentName, TTree *, Long64_t offset=0 ) ;
-
-    // ctor's and d'tor
-    CelIndex() ; // Needed for ROOT
-    CelIndex( CompositeEventList &, const TString & componentName, TTree * tree, Long64_t offset = 0) ;
+    // The real useful stuff
+    CelIndex( CompositeEventList &, const TString & componentName, TChain * componentChain ) ;
     virtual ~CelIndex() ;
+    virtual Int_t GetEntryNumberFriend( const TTree * celCompositeEvents ) ; // the main method
+    virtual Long64_t GetN() const ; // total number of Events in the index
 
-    // Get the Entry Number in the CelEventComponent Tree
-    virtual Int_t GetEntryNumberFriend( const TTree * tree ) ;  
-    // Get the total number of Events in the index
-    virtual Long64_t GetN() const ;
-    // Return the offset of the first event
-    Long64_t offset() const { return _offset ; }
-
-  protected :
-
-    // Pre-Empt or implement stuff from abtract base-class
+    // Dummy implementation
+    CelIndex() ; // Needed for ROOT
     virtual void UpdateFormulaLeaves() { return ; }
-    virtual void SetTree( const TTree * tree)
+    virtual void SetTree( const TTree * tree )
      { fTree = const_cast<TTree*>(tree) ; }
   
-    // Unsupported TVirtualIndex methods
+    // Unsupported part of the TVirtualIndex interface
     virtual Long64_t GetEntryNumberWithBestIndex( Int_t, Int_t ) const
      { MayNotUse("GetEntryNumberWithBestIndex") ; return 0 ; }
     virtual Long64_t GetEntryNumberWithIndex( Int_t, Int_t ) const
      { MayNotUse("GetEntryNumberWithIndex") ; return 0; }
     virtual const char * GetMajorName() const
      { MayNotUse("GetMajorName") ; return 0 ; }
-    virtual const char *	GetMinorName() const
+    virtual const char * GetMinorName() const
      { MayNotUse("GetMinorName") ; return 0 ; }
 
   private :
@@ -88,9 +75,8 @@ class CelIndex : public TVirtualIndex
     CelIndex & operator=( const CelIndex & ) ;
 
     // Data
-    Long64_t _offset ;               //! Global offset (used when Index picks up in the middle of a chain)
-    CompositeEventList * _cel ;      //! Pointer to the CEL that does the actual storing
-    CelEventComponent * _component ; //! Pointer to the relevant component of the cel
+    CompositeEventList * _cel ;      //! Pointer to the CEL
+    CelEventComponent * _component ; //! Pointer to the component associated to the current index
 
     ClassDef(CelIndex,0)
 
@@ -98,3 +84,5 @@ class CelIndex : public TVirtualIndex
 
 
 #endif
+
+ 

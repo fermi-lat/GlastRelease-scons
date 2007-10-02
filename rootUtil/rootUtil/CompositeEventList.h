@@ -8,7 +8,7 @@
 * File: $Id$
 * Authors:
 *   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
-*   DC, David Chamont, LLR , chamont@poly.in2p3.fr
+*   DC, David Chamont, LLR, chamont@llr.in2p3.fr
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
@@ -93,26 +93,19 @@ class CompositeEventList : public TObject
     TFile * openCelFile( const TString & celFileName ) ;
     // read the event information
     Int_t shallowRead( Long64_t eventIndex ) ;
-    // UNUSED read the event information and data (data trees made on the fly ??)
+    // UNUSED ? read the event information and data (data trees made on the fly ??)
     Int_t deepRead( Long64_t eventIndex ) ;   
-    // UNUSED Get a Tree that is being read by a deepRead
+    // UNUSED ? Get a Tree that is being read by a deepRead
     TTree * getTree(UInt_t index) const
      { return (index < _compList.size()) ? _compList[index].first : 0 ;  }
-    // Build all the Chains for all the components
+    // USED ? Build all the Chains for all the components
     TChain * buildAllChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
 
-    // Build the TEventList for a component. 
-    TVirtualIndex * buildEventIndex( UInt_t index, Long64_t & offset, TTree * tree) ;
-    
-    
-  
+ 
   // Grab the status of a set of TTrees
   Long64_t fillEvent( TObjArray & trees ) ;
   Long64_t fillEvent( std::vector<TTree*> & trees) ;
   Long64_t fillFileAndTreeSet() ;
-  
-  
-
 
     // Access
     // Number of events in this cel
@@ -120,7 +113,6 @@ class CompositeEventList : public TObject
     // Get the index of the current event
     Long64_t currentEventIndex() const { return _currentEvent.eventIndex() ; }
     
-
     
     /// PRINTING
     // Dump a set of event component pointers and the list of TTree where they live
