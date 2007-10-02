@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r7p3  1-Oct-2007 jrb  Define and use a couple more specific DbUtil 
+                           exception types
    v1r7p2 28-Sep-2007 jrb  Bug fixes in MoodConnection, MootQuery
    v1r7p1 26-Sep-2007 jrb  Aim for  Windows-tolerance
    v1r7   25-Sep-2007 jrb  Use facilities::commonUtilities to find xml dir.
