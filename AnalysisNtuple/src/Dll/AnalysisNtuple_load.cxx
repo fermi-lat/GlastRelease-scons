@@ -34,5 +34,8 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     //@@@ CL 06/26/06
     //DECLARE_TOOL(      GcrSelectValsTool  );
     //DECLARE_TOOL(      GcrReconValsTool   );
+    // Kludge for OktoberTest LSR 2-Oct-07
+    DECLARE_TOOL(      McKludgeValsTool );
+    
 
 } 
