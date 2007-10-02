@@ -5,7 +5,7 @@
 
 namespace MOOT {
 
-  class DbUtilException : std::exception {
+  class DbUtilException : public std::exception {
   public:
     DbUtilException(const std::string& extraInfo = "", int code=0) : 
       std::exception(),
@@ -23,6 +23,24 @@ namespace MOOT {
   private:
     std::string m_extra;
     int         m_code;
+  };
+
+  class DbUtilNoDataException : public DbUtilException {
+  public:
+    DbUtilNoDataException(const std::string& extraInfo = "", int code=0) : 
+      DbUtilException(extraInfo, code)  { 
+      m_name = std::string("DbUtilNoDataException");
+    }
+    virtual ~DbUtilNoDataException() throw()  {}
+  };
+
+  class DbUtilNotUniqueException : public DbUtilException {
+  public:
+    DbUtilNotUniqueException(const std::string& extraInfo = "", int code=0) : 
+      DbUtilException(extraInfo, code) {
+      m_name = std::string("DbUtilNotUniqueException");
+    }
+    virtual ~DbUtilNotUniqueException() throw() {}
   };
 
 }
