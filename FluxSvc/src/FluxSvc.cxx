@@ -41,6 +41,8 @@
 #include <iterator>
 #include <sstream>
 #include <iomanip>
+#include <cstdlib>
+
 using astro::GPS;
 /** 
 * \class FluxSvc
@@ -194,6 +196,7 @@ private:
     std::string m_dtd_file;
     /// the "current" flux object
     IFlux* m_currentFlux;
+
 
     /// Reference to application manager UI
     IAppMgrUI*    m_appMgrUI;
@@ -687,7 +690,12 @@ StatusCode FluxSvc::run(){
                 last_fraction=percent_complete;
                 if( percent_complete<10 || percent_complete%10 ==0 || first){
                     first = false;
+
+                /// time stamp for progress messages
+		    facilities::Timestamp tstamp;
+		    
                     log << MSG::INFO 
+		        << " [" << tstamp.getString() << "]  "
                         <<  std::setprecision(12)<< std::resetiosflags(4096) // scientific??
                         << percent_complete << "% complete: "
                         << " event "<< eventNumber<<",  time= " 
