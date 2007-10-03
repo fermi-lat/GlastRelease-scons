@@ -1,5 +1,5 @@
 package LdfConverter
-version v3r9p2
+version v3r9p3
 
 author Heather Kelly <heather@lheapop.gsfc.nasa.gov>
 author Tracy Usher   <usher@slac.stanford.edu>
@@ -17,6 +17,10 @@ apply_pattern package_include
 apply_pattern ld_library_path
 
 private
+
+macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
+                WIN32 ""
+
 use astro v*
 use facilities v*
 apply_pattern package_Cshlibflags

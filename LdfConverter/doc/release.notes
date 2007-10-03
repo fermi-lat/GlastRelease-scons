@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v3r9p3  02-Oct-2007 HMK Add FILE_OFFSET_BITS to cppflags
 v3r9p2  22-Aug-2007 HMK Avoid creation of volids for NA ACDs to avoid 
         throwing exception in VolumeIdentifier code
 v3r9p1  16-Jul-2007 HMK Patch for windows
