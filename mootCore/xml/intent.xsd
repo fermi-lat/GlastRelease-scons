@@ -1085,7 +1085,7 @@
         <xs:element name="TRC_buffers" maxOccurs="1">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="trc_config" maxOccurs="9" >   
+              <xs:element name="trc_config" minOccurs="0" maxOccurs="9" >   
                 <xs:complexType>     
                   <xs:attributeGroup ref="trcGroup" />
                 </xs:complexType>
