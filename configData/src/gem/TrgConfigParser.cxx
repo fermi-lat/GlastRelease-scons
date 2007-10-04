@@ -80,7 +80,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
       std::cout<<"More than one GEM tag found. Exiting"<<std::endl;
       assert(0);
     }  else{
-      // std::cout<<"found GEM"<<std::endl;
+      //std::cout<<"found GEM"<<std::endl;
     }
     
     m_topElt=defOutList[0];
@@ -95,16 +95,22 @@ int TrgConfigParser::parse(TrgConfig* tcf){
       nm=removeWhitespace(Dom::getTagName(currentElement));
       
       if (nm=="periodic_rate"){
-	ous=removeWhitespace(Dom::getTextContent(currentElement));
-	unsigned long per_rate=strtoul(ous.c_str(),0,0);
+	//	ous=removeWhitespace(Dom::getTextContent(currentElement));
+		//unsigned long per_rate=strtoul(ous.c_str(),0,0);
+	unsigned long per_rate=content(m_topElt,"periodic_rate");
 	if(per_rate&0x80000000)tcf->_tpt.setOnePPS(true);
 	else tcf->_tpt.setOnePPS(false);
 	tcf->_tpt.setPrescale(per_rate&0xffffff);
       }
       if (nm=="configuration"){
-	ous=removeWhitespace(Dom::getTextContent(currentElement));
-	unsigned long config=strtoul(ous.c_str(),0,0);
+	//ous=removeWhitespace(Dom::getTextContent(currentElement));
+	//unsigned long config=strtoul(ous.c_str(),0,0);
+	unsigned long config=content(m_topElt,"configuration");
 	tcf->_configuration.setConfiguration(config);
+      }
+      if (nm=="periodic_mode"){
+	unsigned long mode=content(m_topElt,"periodic_mode");
+	tcf->_tpt.setFreeRunning(mode);
       }
       if (nm=="WIN"){
 	unsigned long win_width=content(currentElement,"window_width");
@@ -173,8 +179,11 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	
 	reg=content(currentElement,"tower_busy");	
 	tcf->_tdv.setBusyRegister(reg);
-
-	reg=content(currentElement,"external");	
+	// different versions of the xml file have different names for external 
+	std::vector<DOMElement*> rList;
+	Dom::getChildrenByTagName( currentElement, "external", rList );
+	if(rList.size()==1) reg=content(currentElement,"external");	
+	else reg=content(currentElement,"external_trg");	
 	tcf->_tdv.setExternal(reg);
       }
       if (nm=="ROI"){
@@ -187,7 +196,28 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 		    "r_400", "r_401_402", "r_403_404", "r_410_411", "r_412_413", "r_414_420", "r_421_422", "r_423_424", 	 
 		    "r_430", "r_500", "r_501_502", "r_503_600", "r_601_602", "r_603"};                                       
 	for (int i=0;i<54;i++){
-	  reg=content(currentElement,regname[i]);	
+	  std::vector<DOMElement*> rList;
+	  Dom::getChildrenByTagName( currentElement, regname[i], rList );	  
+	  if(rList.empty()){
+	    std::cout<<"Non-existant tag "<<regname[i]<<std::endl;
+	    assert (0);
+	  }
+	  std::vector<DOMElement*> sList;
+	  Dom::getChildrenByTagName( rList[0], "*", sList );	
+	  if(sList.size()<2){
+	    reg=content(currentElement,regname[i]);	
+	  }else if(sList.size()==2){
+	    std::string tag1=maketag(regname[i],1);
+	    std::string tag2=maketag(regname[i],2);
+	    // bug in xml file
+	    if (std::string(regname[i])=="r_312_313" && Dom::getTagName(sList[1])=="t_314")tag2="t_314";
+	    unsigned long c1=content(rList[0],tag1.c_str());
+	    unsigned long c2=content(rList[0],tag2.c_str());
+	    reg=c1|(c2<<16);
+	  }else{
+	    std::cout<<"Bad definition of ROI in xml file"<<std::endl;
+	    assert (0);
+	  }
 	  tcf->_roi.setRoiRegister(i,reg);
 	}
       }
@@ -218,8 +248,27 @@ unsigned long TrgConfigParser::content(DOMElement* el, const char* tag){
     assert(0);
   }
   if (removeWhitespace(Dom::getTagName(subList[0]))==tag){
-    ous=removeWhitespace(Dom::getTextContent(subList[0]));
+    std::vector<DOMElement*> rList;
+    Dom::getChildrenByTagName( subList[0], "register", rList );
+    if(rList.empty()){
+      ous=removeWhitespace(Dom::getTextContent(subList[0]));
+    }else{
+      ous=removeWhitespace(Dom::getTextContent(rList[0]));
+    }
     res=strtoul(ous.c_str(),0,0);
-  }else res=0;
+  }else {
+    res=0;
+  }
   return res;
 }
+const std::string TrgConfigParser::maketag(const char* fulltag,const int index)const{
+  std::string retstr;
+  if (index==1)retstr=std::string("t_")+std::string(fulltag).substr(2,3);
+  else if (index==2)retstr=std::string("t_")+std::string(fulltag).substr(6,3);
+  else {
+    std::cout<<"maketag index has to be 1 or 2"<<std::endl;
+    assert(0);
+  }
+  return retstr;
+}
+    

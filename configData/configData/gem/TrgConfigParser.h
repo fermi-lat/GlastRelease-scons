@@ -35,6 +35,8 @@ class TrgConfigParser{
   const std::string removeWhitespace(const std::string) const;
   /// return the text content of tag tag in DOMElement el
   unsigned long content(DOMElement* el,const char* tag);
+  /// split the tag for ROI into individual tile tags
+  const std::string maketag(const char*,const int)const;
   DOMElement* m_topElt;
   bool m_allowMissing;
 };

@@ -10,6 +10,7 @@ bool TrgConfigDB::updateKey(const unsigned int key){
   if (key!=m_key){
     retval=true;
     std::string bcast=m_lc->getFilename("latc_DFT",key);
+    std::cout<<bcast<<std::endl;
     TrgConfigParser p;
     int error=p.parse(this,bcast.c_str());
     assert(error==0);

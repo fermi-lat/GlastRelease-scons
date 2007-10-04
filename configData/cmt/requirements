@@ -11,7 +11,7 @@ use lsfData
 use LdfEvent
 use commonRootData v*
 use xmlBase v*
-#use mootCore v*
+use mootCore v*
 use GlastPolicy v*
 
 apply_pattern shared_library
@@ -48,7 +48,8 @@ library configData  \
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 application RootConfigCompare  ../apps/RootConfigCompare.cxx
 
-#application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
+application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
+#application getIntent ../apps/getIntent.cxx
 #application testdb ../apps/testdb.cxx
 ###  non-standard definition -- why is it needed?
 #macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"

@@ -7,7 +7,7 @@
 LatcDBImplFile::LatcDBImplFile():m_filename(""){ }
 
 const std::string LatcDBImplFile::getFilename(const char* type, unsigned key){
-  std::cout<<m_filename<<std::endl;
+  //  std::cout<<m_filename<<std::endl;
   return m_filename;
 }
 
