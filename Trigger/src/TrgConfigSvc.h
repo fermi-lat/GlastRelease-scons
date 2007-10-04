@@ -55,12 +55,10 @@ public:
 private:
     IDataProviderSvc*       eventSvc()       const {return m_eventSvc;}
     TrgConfigDB* m_trgconfig;
-    BooleanProperty m_configureFromFile;
+    StringProperty m_configureFrom;
     StringProperty m_xmlFile;
-    BooleanProperty m_configureFromMoot;
     BooleanProperty m_useKeyFromData;
     UnsignedIntegerProperty m_fixedKey;
-    BooleanProperty m_useDefaultConfiguration;
     IDataProviderSvc * m_eventSvc ;
     bool m_eventread;
     bool m_configchanged;
