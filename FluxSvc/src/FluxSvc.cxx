@@ -251,7 +251,7 @@ private:
             m_end = m_endTime;
             if( m_deltaTime>0) m_end=m_start+delta;
 
-	    log << MSG::INFO << "init: start time = " << std::setprecision(10)
+	    log << MSG::INFO << "init: start time = " << std::setprecision(12)
 		<< m_start << " sec, end time = " << m_end << " sec, delta = " 
 		<< m_end-m_start << " sec" << endreq;
 
