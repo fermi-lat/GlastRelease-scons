@@ -208,6 +208,13 @@
     <xs:attribute name="tkr" type="triState" />
     <xs:attribute name="roi" type="triState" />
   </xs:attributeGroup>
+ 
+  <xs:attributeGroup name="trcGroup">
+    <xs:attribute name="ID" type="xs:unsignedByte" />
+    <xs:attribute name="buffer_size" type="xs:unsignedByte" />
+    <xs:attribute name="or_stretch" type="xs:unsignedByte" />
+    <xs:attribute name="split_point" type="xs:unsignedByte" />
+  </xs:attributeGroup>
 
 
   <!-- Make a type for empty output file container elements
@@ -765,7 +772,7 @@
                          minOccurs="0" />
          <xs:element name="CAL_LACSettings" type="ancFileType"
                          minOccurs="0" />
-        <xs:element name="CAL_LACCalib" type="emptyBaseType"
+        <xs:element name="CAL_LACCalib" type="ancFileType"
                          minOccurs="0" />
      </xs:all>
     </xs:complexType>
@@ -1072,7 +1079,23 @@
       </xs:complexType >
   </xs:element>
 
-  <xs:element name="TKR_Mode-constants" type="emptyBaseType" />
+  <xs:element name="TKR_Mode-constants">
+    <xs:complexType>
+      <xs:all minOccurs="0">
+        <xs:element name="TRC_buffers" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="trc_config" maxOccurs="9" >   
+                <xs:complexType>     
+                  <xs:attributeGroup ref="trcGroup" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>          
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>  
+  </xs:element>
 
   <xs:element name="TKR_Mode-offline" type="noOutfilesType" />
 
@@ -1704,6 +1727,7 @@
     <xs:restriction base="xs:Name" >
       <xs:enumeration value="TKR_split.low" />
       <xs:enumeration value="TKR_split.high" />
+      <xs:enumeration value="TKR_tack" />
       <xs:enumeration value="TKR_channel" />
       <xs:enumeration value="TKR_threshold" />
       <xs:enumeration value="TKR_inject" />
@@ -1807,6 +1831,8 @@
                     default="LATC" minOccurs="0"/>
         <xs:element name="TKR_split.high" type="iterableType" 
                     default="LATC" minOccurs="0"/>
+        <xs:element name="TKR_tack" type="iterableType" 
+                    default="LATC" minOccurs="0" />
         <xs:element name="TKR_channel" type="iterableType" 
                     default="LATC" minOccurs="0" />
         <xs:element name="TKR_threshold" type="iterableType" 
@@ -2338,7 +2364,8 @@
           <xs:element name="description" type="xs:string"   />
           <xs:element ref="method"   />
         </xs:choice>
-  
+        <xs:element name="TRG_GEM-vote" type="voteFileType"  />
+        <xs:element name="TRG_ROI-vote" type="voteFileType"  />
         <xs:element name="ACD_Mode-vote" type="voteFileType"  />
         <xs:element name="ACD_Timing-vote" type="voteFileType" />
         <xs:element name="ACD_Bias-vote" type="voteFileType" />
@@ -2355,8 +2382,6 @@
         <xs:element name="TKR_Timing-vote" type="voteFileType" />
         <xs:element name="TKR_Thresh-vote" type="voteFileType" />
         <xs:element name="TKR_Strips-vote" type="voteFileType" />
-        <xs:element name="TRG_GEM-vote" type="voteFileType"  />
-        <xs:element name="TRG_ROI-vote" type="voteFileType"  />
         <xs:element name="GNL_Mode-vote" type="voteFileType"  />
         <xs:element name="GNL_Timing-vote" type="voteFileType" />
       </xs:sequence>
