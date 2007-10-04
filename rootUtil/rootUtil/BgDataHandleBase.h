@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef DataHandleBase_h
-#define DataHandleBase_h
+#ifndef BgDataHandleBase_h
+#define BgDataHandleBase_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -23,30 +23,30 @@ class TBranch;
 class TTree;
 
 //
-// DataHandleBase is an abstract base class for associating simple data types with 
+// BgDataHandleBase is an abstract base class for associating simple data types with 
 // root trees.
 //
-// For example, the sub-classes DataHandle<T> manages a datum of type T, and gets it on and off
+// For example, the sub-classes BgDataHandle<T> manages a datum of type T, and gets it on and off
 // TTrees while allowing us to treat the Handle as thought it were of type T itself.
 //
 // To declare new branches on a TTree
 //   makeBranch(TTree& tree, const char* name, Int_t bufsize = 32000) const;
 //
-// To use a BranchGroup to attach DataHandles to branches on an existing TTree
+// To use a BranchGroup to attach BgDataHandles to branches on an existing TTree
 //   attachToTree(TTree& tree, const char* prefix = 0);
 //
 
 
-class DataHandleBase {
+class BgDataHandleBase {
 public:
 
   // C'tors and D'tor
   // Default c'tor
-  DataHandleBase(){;}
+  BgDataHandleBase(){;}
   // Copy c'tor
-  DataHandleBase(const DataHandleBase& other){;}
+  BgDataHandleBase(const BgDataHandleBase& other){;}
   // D'tor
-  virtual ~DataHandleBase();
+  virtual ~BgDataHandleBase();
 
   // Methods & functions
   // Tree Interactions
@@ -61,7 +61,7 @@ protected:
   // The address of the memory where the data is located.  This is passes to Root.
   virtual void* void_ptr() const = 0;
 
-  ClassDef(DataHandleBase,0) // Base class for associating simple data types with TTrees
+  ClassDef(BgDataHandleBase,0) // Base class for associating simple data types with TTrees
 };
 
 

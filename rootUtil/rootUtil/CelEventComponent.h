@@ -15,7 +15,7 @@
 */
 
 #include "CelFileAndTreeSet.h"
-#include "CelEntryIndex.h"
+#include "CelEventEntry.h"
 
 #include <Rtypes.h>
 #include <TString.h>
@@ -61,7 +61,7 @@ class CelEventComponent
     Long64_t indexInCurrentSet() const ;
 
     // USEFUL ? Access
-    const CelEntryIndex & currentEntryIndex() const { return _currentEntryIndex ; }
+    const CelEventEntry & currentEntryIndex() const { return _currentEntryIndex ; }
     const CelFileAndTreeSet & currentFileSet() const { return _currentSet ; }
     inline const TString & componentName() const { return _componentName ; }
 
@@ -81,7 +81,7 @@ class CelEventComponent
   
      // data
      TString _componentName ;
-     CelEntryIndex _currentEntryIndex ;
+     CelEventEntry _currentEntryIndex ;
      CelFileAndTreeSet _currentSet ;
 
      ClassDef(CelEventComponent,0)

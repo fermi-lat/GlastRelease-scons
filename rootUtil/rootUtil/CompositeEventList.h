@@ -15,7 +15,7 @@
 *
 */
 
-#include "CelEventInfo.h"
+#include "CelEventLink.h"
 class CelEventComponent ;
 class CelIndex ;
 
@@ -47,23 +47,23 @@ class TObjArray ;
 //
 // The information is stored on 3 trees
 // 
-//   CompositeEvents: 5 branches total, 1 entry per event
+//   CompositeEvents: 5 branches plus 1 per component, 1 entry per event
 //      Event_Index/L     -> Index of the current composite event
 //      Event_RunId/L     -> Unique? id of the corresponding run
 //      Event_EventId/L   -> Unique? id of the corresponding event
 //      Event_FileSetIndex/L  -> Index of the associated set of files and trees
 //      Event_FileSetOffset/L -> Number of events in previous sets
 // 
-//   FileAndTreeSets: 5 Branches per input component, 1 entry per set
-//      Comp_SetSize/s    -> Number of Files and Trees in the current set
-//      Comp_FileNames    -> TClonesArray<TObjString> with the file names
-//      Comp_TreeNames    -> TClonesArray<TObjString> with the tree names (should all be the same ?)
-//      Comp_TreesSize/L  -> Total number of entries in all trees from the current set
-//      Comp_TreeOffsets  -> TArrayL64 with the offsets for each Tree in the current set
+//   FileAndTreeSets: 5 Branches per component, 1 entry per set
+//      <Comp>_SetSize/s    -> Number of Files and Trees in the current set
+//      <Comp>_FileNames    -> TClonesArray<TObjString> with the file names
+//      <Comp>_TreeNames    -> TClonesArray<TObjString> with the tree names (should all be the same ?)
+//      <Comp>_TreesSize/L  -> Total number of entries in all trees from the current set
+//      <Comp>_TreeOffsets  -> TArrayL64 with the offsets for each Tree in the current set
 //
-//   ComponentEntries:  2 Branches per input component, 1 entry per event
-//      Comp_EntryIndex/L  -> Index of the entry in the tree it lives on
-//      Comp_TreeIndex/s -> Index of the tree in the associated set of files and trees
+//   ComponentEntries:  2 Branches per component, 1 entry per event
+//      <Comp>_EntryIndex/L  -> Index of the entry in the tree it lives on
+//      <Comp>_TreeIndex/s -> Index of the tree in the associated set of files and trees
 //
 // Note : the couple (run_id/event_id) is expected to be unique for GLAST real data. For
 // what concerns the simulation data, the triplet {task_name,run_id,event_id} should be
@@ -164,7 +164,7 @@ class CompositeEventList : public TObject
     TTree * _entryTree ; 
     
     // current event info
-    CelEventInfo _currentEvent ;
+    CelEventLink _currentEvent ;
 
     // components stuff
     CelTreesAndComponents _compList ;   //! vector of components and associated TTrees

@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef DataHandleBase_cxx
-#define DataHandleBase_cxx
+#ifndef BgDataHandleBase_cxx
+#define BgDataHandleBase_cxx
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,24 +16,24 @@
 */
 
 //
-// DataHandleBase
+// BgDataHandleBase
 //
-// DataHandleBase is an abstract base class for associating simple data types with 
+// BgDataHandleBase is an abstract base class for associating simple data types with 
 // root trees.
 //
-// For example, the sub-classes DataHandle<T> manages a datum of type T, and gets it on and off
+// For example, the sub-classes BgDataHandle<T> manages a datum of type T, and gets it on and off
 // TTrees while allowing us to treat the Handle as thought it were of type T itself.
 //
 // To declare new branches on a TTree
 //   makeBranch(TTree& tree, const char* name, Int_t bufsize = 32000) const;
 //   attachToTree(TTree& tree, const char* name) const;
 //
-// To use a BranchGroup to attach DataHandles to branches on an existing TTree
+// To use a BranchGroup to attach BgDataHandles to branches on an existing TTree
 //   attachToTree(TTree& tree, const char* prefix = 0);
 //
 
 // This Class's header
-#include "rootUtil/DataHandleBase.h"
+#include "rootUtil/BgDataHandleBase.h"
 
 // ROOT Headers
 #include <TTree.h>
@@ -42,14 +42,14 @@
 // c++/stl headers
 #include <iostream>
 
-ClassImp(DataHandleBase);
+ClassImp(BgDataHandleBase);
 
-DataHandleBase::~DataHandleBase(){
+BgDataHandleBase::~BgDataHandleBase(){
   // D'tor is a no-op
   ;
 }
 
-TBranch * DataHandleBase::makeBranch( TTree & tree, const char * name, Int_t /* bufsize */ ) const {
+TBranch * BgDataHandleBase::makeBranch( TTree & tree, const char * name, Int_t /* bufsize */ ) const {
   // Build a branch with 'name' on 'tree'
   // returns the newly built branch
   TString leafName(name);
@@ -58,7 +58,7 @@ TBranch * DataHandleBase::makeBranch( TTree & tree, const char * name, Int_t /* 
   return tree.Branch(name,void_ptr(),leafName);
 }
 
-Bool_t DataHandleBase::attachToTree(TTree& tree, const char* name) const {
+Bool_t BgDataHandleBase::attachToTree(TTree& tree, const char* name) const {
   // Attach to the branch with 'name' on 'tree'
   // returns kTRUE is successful 
   TBranch* b = tree.GetBranch(name);

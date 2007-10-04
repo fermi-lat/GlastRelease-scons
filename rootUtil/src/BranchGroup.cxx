@@ -20,13 +20,13 @@
 // BranchGroup is a abstract class to manage a group set of values that
 // get written to a TTree
 //
-// Any class that uses DataHandle to interact with TTree should inherit 
+// Any class that uses BgDataHandle to interact with TTree should inherit 
 // from BranchGroup
 //
 // To use a BranchGroup to declare new branches on a TTree
 //   makeBranches(TTree& tree, const char* prefix = 0, Int_t bufsize = 32000) 
 //
-// To use a BranchGroup to attach DataHandles to branches on an existing TTree
+// To use a BranchGroup to attach BgDataHandles to branches on an existing TTree
 //   attachToTree(TTree& tree, const char* prefix = 0);
 //
 // In either case the branches will have names "<prefix><branchName>"
@@ -40,7 +40,7 @@
 #include <assert.h>
 
 // Other headers from this package
-#include "rootUtil/DataHandle.h"
+#include "rootUtil/BgDataHandle.h"
 
 ClassImp(BranchGroup);
 
@@ -57,7 +57,7 @@ Int_t BranchGroup::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) 
   Int_t nb(0);
   for ( std::list<std::string>::const_iterator itr = _branchNameList.begin();
 	itr != _branchNameList.end(); itr++ ) {
-    DataHandleBase* branch = _branchMap.find(*itr)->second;
+    BgDataHandleBase* branch = _branchMap.find(*itr)->second;
     assert( 0 != branch );
     std::string fullName;
     if ( prefix != 0 ) fullName += prefix;
@@ -74,7 +74,7 @@ Int_t BranchGroup::attachToTree(TTree& tree, const char* prefix) const {
   Int_t nb(0);
   for ( std::list<std::string>::const_iterator itr = _branchNameList.begin();
 	itr != _branchNameList.end(); itr++ ) {
-    DataHandleBase* branch = _branchMap.find(*itr)->second;
+    BgDataHandleBase* branch = _branchMap.find(*itr)->second;
     assert( 0 != branch );
     std::string fullName;
     if ( prefix != 0 ) fullName += prefix;
@@ -89,10 +89,10 @@ Int_t BranchGroup::attachToTree(TTree& tree, const char* prefix) const {
 
 
 
-Bool_t BranchGroup::addBranch(const char* name, DataHandleBase& branch) {
+Bool_t BranchGroup::addBranch(const char* name, BgDataHandleBase& branch) {
   // Add a branch to this group.  The branch will be stored under the 'name'
   std::string theName(name);
-  std::map<std::string,DataHandleBase*>::iterator itrFind = _branchMap.find(theName);
+  std::map<std::string,BgDataHandleBase*>::iterator itrFind = _branchMap.find(theName);
   if ( itrFind != _branchMap.end() ) {
     return kFALSE;
   }
@@ -102,10 +102,10 @@ Bool_t BranchGroup::addBranch(const char* name, DataHandleBase& branch) {
 }
 
 
-DataHandleBase* BranchGroup::getBranch(const char* name) {
+BgDataHandleBase* BranchGroup::getBranch(const char* name) {
   // Get a branch by name
   std::string theName(name);
-  std::map<std::string,DataHandleBase*>::iterator itrFind = _branchMap.find(theName);
+  std::map<std::string,BgDataHandleBase*>::iterator itrFind = _branchMap.find(theName);
   return itrFind == _branchMap.end() ? 0 : itrFind->second;
 }
 

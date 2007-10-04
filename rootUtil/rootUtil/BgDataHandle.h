@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef DataHandle_h
-#define DataHandle_h
+#ifndef BgDataHandle_h
+#define BgDataHandle_h
 /*
 * Project: GLAST
 * Package: rootUtil
@@ -16,7 +16,7 @@
 */
 
 // Base class headers
-#include "DataHandleBase.h"
+#include "BgDataHandleBase.h"
 
 #include <assert.h>
 
@@ -29,20 +29,20 @@ class TTree;
 
 
 //
-// DataHandle<T> is a template for associated built-in types with 
+// BgDataHandle<T> is a template for associated built-in types with 
 // branches on root TTrees.  It is mainly a wrapper around an datum of a built-in type which
 // function like the underlying datum
 //
-// Specifically, DataHandle<T> implements the casting operator and assignement operators
-//  DataHandle<T>::operator T()
-//  DataHandle<T>
+// Specifically, BgDataHandle<T> implements the casting operator and assignement operators
+//  BgDataHandle<T>::operator T()
+//  BgDataHandle<T>
 //
-// Any class that uses DataHandle to interact with TTree should inherit 
+// Any class that uses BgDataHandle to interact with TTree should inherit 
 // from BranchGroup
 //  
-// In the BranchGroup sub-class you build a DataHandle by with a reference to the BranchGroup.  
+// In the BranchGroup sub-class you build a BgDataHandle by with a reference to the BranchGroup.  
 // For example:
-//   DataHandle<Int_t> x;    in the header file
+//   BgDataHandle<Int_t> x;    in the header file
 //   x(0,*this,"xvar";       in the source file
 // Will cause an Int_t branch called "xvar" to be associated with any TTree that BranchGroup 
 // is linked with.
@@ -51,24 +51,24 @@ class TTree;
 
 
 template <class T>
-class DataHandle : public DataHandleBase {
+class BgDataHandle : public BgDataHandleBase {
 
 public:
   
   // c'tors & d'tor
   // Default c'tor.  Needed for ROOT
-  DataHandle():DataHandleBase(){;}
+  BgDataHandle():BgDataHandleBase(){;}
   // Standard c'tor.  Used to add this to a BranchGroup
-  DataHandle(const T& val, BranchGroup& group, const char* name):DataHandleBase(),_value(val){
+  BgDataHandle(const T& val, BranchGroup& group, const char* name):BgDataHandleBase(),_value(val){
     Bool_t ok = group.addBranch(name,*this);
     assert(ok);
   }
   // D'tor
-  virtual ~DataHandle();
+  virtual ~BgDataHandle();
   
   // Operators
   // Assignment from T
-  DataHandle<T>& operator=(const T& other) { _value = other; return *this; }
+  BgDataHandle<T>& operator=(const T& other) { _value = other; return *this; }
   
   // Cast to T
   //operator const T() const { return _value; }
@@ -88,27 +88,27 @@ protected:
 private:
 
   //disable copying
-  DataHandle(const DataHandle<T>& other);
+  BgDataHandle(const BgDataHandle<T>& other);
 
   // Data 
   T _value;                  // The Datum being managed
 
-  ClassDefT(DataHandle<T>,0) // Type-safe template for handling simple types
+  ClassDefT(BgDataHandle<T>,0) // Type-safe template for handling simple types
 };
 
 // Even more special ROOT declarations for template classes:
-ClassDefT2(DataHandle,T) ;
+ClassDefT2(BgDataHandle,T) ;
 
 #ifndef __CINT__
 #ifdef GLAST_COMP_INST
-#include "rootUtil/../DataHandle.cc"
+#include "rootUtil/../BgDataHandle.cc"
 #endif // GLAST_COMP_INST
 #endif // __CINT__
 
 
 //
 // This is here to force template loading
-namespace DataHandleInstance {
+namespace BgDataHandleInstance {
   void init();
 }
 

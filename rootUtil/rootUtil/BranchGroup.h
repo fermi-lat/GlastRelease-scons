@@ -26,19 +26,19 @@
 // forward declares
 class TBranch;
 class TTree;
-class DataHandleBase;
+class BgDataHandleBase;
 
 //
 // Branch Group is a abstract class to manage a group set of values that
 // get written to a TTree
 //
-// Any class that uses DataHandle to interact with TTree should inherit 
+// Any class that uses BgDataHandle to interact with TTree should inherit 
 // from BranchGroup
 //
 // To use a BranchGroup to declare new branches on a TTree
 //   makeBranches(TTree& tree, const char* prefix = 0, Int_t bufsize = 32000) 
 //
-// To use a BranchGroup to attach DataHandles to branches on an existing TTree
+// To use a BranchGroup to attach BgDataHandles to branches on an existing TTree
 //   attachToTree(TTree& tree, const char* prefix = 0);
 //
 // In either case the branches will have names "<prefix><branchName>"
@@ -61,10 +61,10 @@ public:
 
   // Access and setting
   // Get a branch by name
-  DataHandleBase* getBranch(const char* name);
+  BgDataHandleBase* getBranch(const char* name);
 
   // Add a branch to this group
-  Bool_t addBranch(const char* name, DataHandleBase& branch);
+  Bool_t addBranch(const char* name, BgDataHandleBase& branch);
 
 protected:
 
@@ -76,9 +76,9 @@ private:
 
   // Data
   std::list<std::string>                _branchNameList;  //! list of branch names, here for maintaining ordering
-  std::map<std::string,DataHandleBase*> _branchMap;       //! map from branch names to handles, here for lookup
+  std::map<std::string,BgDataHandleBase*> _branchMap;       //! map from branch names to handles, here for lookup
 
-  ClassDef(BranchGroup,0)   // Abstract Base class for objects associating DataHandle with TTrees
+  ClassDef(BranchGroup,0)   // Abstract Base class for objects associating BgDataHandle with TTrees
 };
 
 

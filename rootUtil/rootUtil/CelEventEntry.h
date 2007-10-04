@@ -1,6 +1,6 @@
 
-#ifndef CelEntryIndex_h
-#define CelEntryIndex_h
+#ifndef CelEventEntry_h
+#define CelEventEntry_h
 
 /*
 * Project: GLAST
@@ -15,34 +15,34 @@
 */
 
 #include "BranchGroup.h"
-#include "DataHandle.h"
+#include "BgDataHandle.h"
 #include <TString.h>
 class CelFileAndTreeSet ;
 
 //
-// CelEntryIndex stores information needed to point to a part of an event
+// CelEventEntry stores information needed to point to a part of an event
 // that is located in another TTree.
 //
-// CelEntryIndex uses CelFileAndTreeSet to associated TTrees with UShort_t keys.
+// CelEventEntry uses CelFileAndTreeSet to associated TTrees with UShort_t keys.
 //
-// CelEntryIndex stores two pieces of information for each event.
+// CelEventEntry stores two pieces of information for each event.
 //
 //  _entryIndex (goes to branch XXX_EntryIndex)  is the index of the event component in the TTree
 //  _treeIndex (goes to branch XXX_TreeIndex) is the index of the TTree in the associated CelFileAndTreeSet
 //
 
 
-class CelEntryIndex : public BranchGroup
+class CelEventEntry : public BranchGroup
  {
 	
   public:
 
     // c'tors & d'tor
-    CelEntryIndex() ; // Needed for ROOT
-    CelEntryIndex( const TString & componentName ) ;
-    CelEntryIndex( const CelEntryIndex & ) ;
-    CelEntryIndex & operator=( const CelEntryIndex & ) ;
-    ~CelEntryIndex() ;
+    CelEventEntry() ; // Needed for ROOT
+    CelEventEntry( const TString & componentName ) ;
+    CelEventEntry( const CelEventEntry & ) ;
+    CelEventEntry & operator=( const CelEventEntry & ) ;
+    ~CelEventEntry() ;
 
     // Access
     inline const TString & componentName() const { return _componentName ; }
@@ -64,10 +64,10 @@ class CelEntryIndex : public BranchGroup
   
     // Data
 	TString _componentName ;
-    DataHandle<Long64_t> _entryIndex ; //! Index of the current entry in the current data TTree
-    DataHandle<UShort_t> _treeIndex ;  //! Index of the current data TTree in the associated CelFileAndTreeSet
+    BgDataHandle<Long64_t> _entryIndex ; //! Index of the current entry in the current data TTree
+    BgDataHandle<UShort_t> _treeIndex ;  //! Index of the current data TTree in the associated CelFileAndTreeSet
   
-    ClassDef(CelEntryIndex,0)
+    ClassDef(CelEventEntry,0)
 
  } ;
 

@@ -11,9 +11,9 @@
 *
 */
 
-#include "rootUtil/CelEntryIndex.h"
+#include "rootUtil/CelEventEntry.h"
 #include "rootUtil/FileUtil.h"
-#include "rootUtil/DataHandle.h"
+#include "rootUtil/BgDataHandle.h"
 #include "rootUtil/CelFileAndTreeSet.h"
 
 #include <TTree.h>
@@ -26,33 +26,33 @@
 //====================================================================
 
 
-ClassImp(CelEntryIndex) ;
+ClassImp(CelEventEntry) ;
 
-CelEntryIndex::CelEntryIndex()
+CelEventEntry::CelEventEntry()
  : _componentName(),
    _entryIndex(-1,*this,"EntryIndex"),  
    _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
- { DataHandleInstance::init() ; }
+ { BgDataHandleInstance::init() ; }
 	      
-CelEntryIndex::CelEntryIndex( const TString & componentName )
+CelEventEntry::CelEventEntry( const TString & componentName )
  : _componentName(componentName),
    _entryIndex(-1,*this,"EntryIndex"),  
    _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
- { DataHandleInstance::init() ; }	      
+ { BgDataHandleInstance::init() ; }	      
 	      
-CelEntryIndex::CelEntryIndex( const CelEntryIndex & other)
+CelEventEntry::CelEventEntry( const CelEventEntry & other)
  : BranchGroup(),
    _componentName(other._componentName),
    _entryIndex(other._entryIndex,*this,"EntryIndex"),  
    _treeIndex(other._treeIndex,*this,"TreeIndex")
- { DataHandleInstance::init() ; }	      
+ { BgDataHandleInstance::init() ; }	      
 
 // D'tor is a no-op
-CelEntryIndex::~CelEntryIndex()
+CelEventEntry::~CelEventEntry()
  {}
 
 // Assignment operator
-CelEntryIndex & CelEntryIndex::operator=( const CelEntryIndex & other )
+CelEventEntry & CelEventEntry::operator=( const CelEventEntry & other )
  {
   if ( this == &other ) return *this ;
   _componentName = other.componentName() ;
@@ -72,7 +72,7 @@ CelEntryIndex & CelEntryIndex::operator=( const CelEntryIndex & other )
 //
 // The event index is set from tree.GetReadEntry();
 // The tree index is looked up in handle
-void CelEntryIndex::set( TTree & tree, CelFileAndTreeSet & handle )
+void CelEventEntry::set( TTree & tree, CelFileAndTreeSet & handle )
  {
   _entryIndex = tree.GetReadEntry() ;
   UShort_t tIdx = handle.getKey(&tree) ;
@@ -85,7 +85,7 @@ void CelEntryIndex::set( TTree & tree, CelFileAndTreeSet & handle )
 //
 // The tree lookup uses _treeIndex to get the tree from 'handle'
 // Then the Entry _entryIndex is loaded using LoadTree(_entryIndex);
-Int_t CelEntryIndex::read( const CelFileAndTreeSet & handle )
+Int_t CelEventEntry::read( const CelFileAndTreeSet & handle )
  {
   TTree * t = handle.getTree(_treeIndex) ;
   if ( 0 == t ) return -1 ;
@@ -95,7 +95,7 @@ Int_t CelEntryIndex::read( const CelFileAndTreeSet & handle )
 // Use 'handle' to look up a tree 
 //
 // The tree lookup uses _treeIndex to get the tree from 'handle'
-TTree * CelEntryIndex::getTree( const CelFileAndTreeSet & handle ) const
+TTree * CelEventEntry::getTree( const CelFileAndTreeSet & handle ) const
  {
   return handle.getTree(_treeIndex) ;
  }
@@ -103,7 +103,7 @@ TTree * CelEntryIndex::getTree( const CelFileAndTreeSet & handle ) const
 // Print the information about the current event to cout
 // 
 // The print format is treeIndex:entryIndex
-void CelEntryIndex::printEventInfo( const char * /* options */ ) const
+void CelEventEntry::printEventInfo( const char * /* options */ ) const
  {
   std::cout << _treeIndex << ':' << _entryIndex ;
  }
