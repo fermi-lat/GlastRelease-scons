@@ -3,6 +3,7 @@
 // Include files
 #include <algorithm>
 #include "CalibDataSvc.h"
+#include "../MootSvc/MootSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/IAddressCreator.h"
@@ -19,7 +20,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/TopLevel/Event.h"
-// #include "astro/JulianDate.h"
+#include "LdfEvent/LsfMetaEvent.h" //includes everything we need for fsw keys
 
 #include "CalibData/CalibModelSvc.h"
 #include "CalibData/CalibModel.h"
@@ -33,8 +34,9 @@ const ISvcFactory& CalibDataSvcFactory = s_factory;
 CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   DataSvc(name,svc), m_useEventTime(true), m_timeSourceEnum(TIMESOURCEnone) {
   // might also support alternative for no-network case
+
   declareProperty("CalibStorageType",  
-                  m_calibStorageType = MYSQL_StorageType );
+                  m_calibStorageType = MYSQL_StorageType);
 
   // declare a property which is a list of known calibrations.
   // Have default list in one of the standard options files.  
@@ -43,7 +45,9 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibFlavorList", m_flavorList);
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
   declareProperty("UseEventTime", m_useEventTime = true);
-  declareProperty("UseEventMasterKey", m_useEventLATCMaster = true);
+  //  declareProperty("UseEventKeys", m_useEventKeys = true);
+  declareProperty("UseEventKeys", m_useEventKeys = false);
+  declareProperty("UseMoot", m_useMoot = 0);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
   m_rootName = "/" + m_calibRootName;
@@ -95,7 +99,7 @@ StatusCode CalibDataSvc::initialize()   {
     return sc;
   }
 
-  // Need event data service for timestamp stuff
+  // Need event data service for timestamp stuff and for fsw keys
   sc = serviceLocator()->service("EventDataSvc", m_eventSvc, true);
   if (sc .isFailure() ) {
     (*m_log) << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
@@ -177,7 +181,22 @@ StatusCode CalibDataSvc::initialize()   {
 
   initPathArrays();  // filling of names occurs in makeFlavorNodes
   // Make flavor nodes in the calibration TDS
-  return makeFlavorNodes(calibCreator);
+  sc =  makeFlavorNodes(calibCreator);
+  if (!sc.isSuccess()) return sc;
+
+  // Moot stuff. First make sure service is up and running
+  if (m_useMoot) {
+    IMootSvc* iMootSvc;
+
+    sc = service("MootSvc", iMootSvc, true);
+    if (!sc.isSuccess()) return sc;
+
+    MootSvc* mootSvc = dynamic_cast<MootSvc * > (iMootSvc);
+    std::string rootNode("/");
+    rootNode += m_calibRootName;
+    return mootSvc->makeMootNodes(rootNode);
+  }
+  else return sc;
 }
 
 void CalibDataSvc::initPathArrays() {
@@ -458,6 +477,10 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   // Update timestamp if necessary
   updateTime();
 
+  // and configuration (if necessary)
+  updateFswKeys();
+
+
   // Retrieve IValidity interface of object to update
   IValidity* condition = dynamic_cast<IValidity*>( toUpdate );
   if ( 0 == condition ) {
@@ -527,10 +550,49 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
                                     IRegistry* pRegistry) {
   if (m_newEvent) {
     updateTime();
+    updateFswKeys();
+
     m_newEvent = false;
   }
   return DataSvc::loadObject(pLoader, pRegistry);
 
+}
+
+StatusCode  CalibDataSvc::updateFswKeys() {
+  // For now either we update from event or we don't update at all
+  if (!m_useEventKeys) return StatusCode::SUCCESS;
+  using enums::Lsf;
+
+  SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
+
+  unsigned int newMasterKey;
+
+  switch (metaEvt->keyType()) {
+  case Lsf::LpaKeys: {
+    const lsfData::LpaKeys *lpaKeysTds = metaEvt->keys()->castToLpaKeys();
+    newMasterKey = lpaKeysTds->LATC_master();
+    break;
+  }
+
+  case Lsf::LciKeys: {
+    const lsfData::LciKeys *lciKeysTds = metaEvt->keys()->castToLciKeys();
+    newMasterKey = lciKeysTds->LATC_master();
+    break;
+  }
+  default: 
+   // tilt!
+    return StatusCode::FAILURE;
+  }
+  if (newMasterKey)     m_LATCMaster = newMasterKey;
+  return StatusCode::SUCCESS;
+   
+  /*   Leave it to conversion service to update info related to keys as
+       needed.  Our job is just to get the key(s) out of the event
+  */
+  /*
+  if (newMasterKey == m_LATCMaster) return StatusCode::SUCCESS;
+  else return updateLATCConfig(newMasterKey);
+  */
 }
 
 // For timeSource = "data", "mc", "digi" or "clock"
@@ -718,3 +780,4 @@ const std::string CalibDataSvc::getCalibPath(const
   }
   return path;
 }
+

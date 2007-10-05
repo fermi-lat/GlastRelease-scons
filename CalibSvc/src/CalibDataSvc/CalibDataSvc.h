@@ -117,8 +117,9 @@ public:
     m_useEventTime = useEventTime;}
  private:
   //properties
-  /// Calibration Data Persistency Storage type
+  /// Calibration Data Persistency Storage type 
   long int              m_calibStorageType;
+
 
   /// Name of the root node of the calib store
   std::string      m_calibRootName;
@@ -155,7 +156,7 @@ public:
       other about it.
   */
   bool  m_useEventTime;
-  bool  m_useEventLATCMaster;
+  bool  m_useEventKeys;
 
 
   /// Private utility, called from initialize()
@@ -164,6 +165,10 @@ public:
   /// Private utility to check if internal timestamp has been updated for
   /// the event; if not do it.
   StatusCode updateTime();
+
+  /// Private utility to check if fsw keys needs updating
+  /// for this event.  To start with just look at LATC master
+  StatusCode updateFswKeys();
 
   /*
   /// Typedef for ptr to function which will attempt to fetch 
@@ -209,6 +214,8 @@ public:
 
   /// Absolute time spacing between events (milliseconds)
   long m_delayTime;
+
+  int m_useMoot;     // default to 0 (== 'no') for now
 
   unsigned m_LATCMaster;
   MsgStream *m_log;
