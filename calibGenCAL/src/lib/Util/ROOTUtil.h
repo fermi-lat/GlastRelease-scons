@@ -22,6 +22,9 @@
 // LOCAL INCLUDES
 #include "stl_util.h"
 
+// STD INCLUDES
+#include <cassert>
+
 
 namespace calibGenCAL {
   /// use this method to retrieve a histogram of given
