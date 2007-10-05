@@ -38,8 +38,7 @@ XERCES_CPP_NAMESPACE_USE
     
 XmlBaseCnv::~XmlBaseCnv() {}
 
-// static CnvFactory<XmlBaseCnv> s_factory;
-// const ICnvFactory& XmlBaseCnvFactory = s_factory;
+
 XmlBaseCnv::XmlBaseCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
   m_xmlSvc (0), m_metaSvc(0), m_vstart(0), m_vend(0) /*,

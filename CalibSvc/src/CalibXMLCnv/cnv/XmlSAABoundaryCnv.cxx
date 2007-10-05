@@ -1,7 +1,9 @@
 // $Header$
 
 #include <string>
-#include "XmlSAABoundaryCnv.h"
+#include <vector>
+#include "XmlBaseCnv.h"
+// #include "XmlSAABoundaryCnv.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
@@ -20,6 +22,29 @@
 
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
+
+template <class TYPE> class CnvFactory;
+
+class XmlSAABoundaryCnv : public XmlBaseCnv {
+
+  /// Friend needed for instantiation
+  friend class CnvFactory<XmlSAABoundaryCnv>;
+public:
+  const CLID& objType() const;
+  static const CLID& classID();
+protected:
+
+  XmlSAABoundaryCnv(ISvcLocator* svcs);
+
+  virtual ~XmlSAABoundaryCnv() {}       // most likely nothing to do 
+
+  virtual StatusCode i_createObj(const DOMElement* element,
+                                 DataObject*& refpObject);
+  
+  std::vector<double> m_lat;
+  std::vector<double> m_lon;
+   
+};
 
 static CnvFactory<XmlSAABoundaryCnv> s_factory;
 const  ICnvFactory& XmlSAABoundaryCnvFactory = s_factory;
