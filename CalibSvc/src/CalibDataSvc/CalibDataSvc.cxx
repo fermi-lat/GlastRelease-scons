@@ -561,7 +561,7 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
 StatusCode  CalibDataSvc::updateFswKeys() {
   // For now either we update from event or we don't update at all
   if (!m_useEventKeys) return StatusCode::SUCCESS;
-  using enums::Lsf;
+  using namespace enums;
 
   SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
 
