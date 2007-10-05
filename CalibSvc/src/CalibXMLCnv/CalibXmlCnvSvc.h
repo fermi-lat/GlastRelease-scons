@@ -108,20 +108,9 @@ class CalibXmlCnvSvc : public ConversionSvc, virtual public ICalibXmlSvc
   virtual StatusCode updateRepRefs ( IOpaqueAddress* pAddress, 
 				     DataObject* pObject );
   */
-
-
   
- public:
-
-  // Probably don't need this.  meta conversion service should
-  // already have fetched and stored everything we need.
-  //  calibUtil::Metadata* getMeta();
-
  private:
 
-  //Probably don't need this
-  // /// Handle for metadata access
-  // calibUtil::Metadata*    m_meta;
 
   // Not sure we need this
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
