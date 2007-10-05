@@ -1,18 +1,31 @@
 // $Header$
 
-// Include files
-// Gaudi system includes
-#include "idents/CalXtalId.h"
+/** @file 
+    @author Zach Fewtrell
+    
+    CalUtil test app. 
+    Simple non-gaudi main() method runs test method for each CalUtil module
+    
+    @return non-zero to os on failure
+ */
 
+// LOCAL INLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
 #include "CalUtil/CalArray.h"
 
+// GLAST INCLUDES
+#include "idents/CalXtalId.h"
+
+// EXTLIB INCLUDES
+
+// STD INCLUDES
 #include <vector>
 
 using namespace CalUtil;
 using namespace idents;
 
+/// test CalVec class
 bool testCalVec(){
   cout << "testCalVec" << endl;
 
@@ -25,24 +38,16 @@ bool testCalVec(){
   if (testVec.size() != (unsigned)XtalRng::N_VALS)
     return false;
 
-  for (XtalRng idx; idx.isValid(); idx++) {
+  /// set each value to value of index
+  for (XtalRng idx; idx.isValid(); idx++)
     testVec[idx] = idx.val();
-  }
+
 
   for (XtalRng idx; idx.isValid(); idx++) {
     if (testVec[idx] != idx.val())
       return false;
-    
-    if (testVec.find(idx.val()) - testVec.begin() 
-        != (int)idx.val())
-      return false;
   }
 
-  testVec.fill(3);
-  for (XtalRng idx; idx.isValid(); idx++) {
-    if (testVec[idx] != 3)
-      return false;
-  }
 
   testVec.clear();
   if (testVec.size() != (unsigned)0) 
@@ -51,6 +56,7 @@ bool testCalVec(){
   return true;
 }
 
+/// test CalArray class
 bool testCalArray(){
 
   cout << "testCalArray" << endl;
@@ -70,20 +76,14 @@ bool testCalArray(){
     if (testArr[idx] != idx.val())
       return false;
     
-    if ((testArr.find(idx.val()) - testArr.begin()) 
-        != (int)idx.val())
-      return false;
-  }
-
-  testArr.fill(3);
-  for (XtalRng idx; idx.isValid(); idx++) {
-    if (testArr[idx] != 3)
-      return false;
   }
 
   return true;
 }
 
+/// \brief test suite of CalDefs classes
+///
+/// Basically loop through all Cal components & check constructors & converters over all types and all crystals
 bool testCalDefs(){
 
   cout << "testCalDefs" << endl;
@@ -201,6 +201,8 @@ bool testCalDefs(){
   return true;
 }
 
+/// main method tests each CalUtil component in sequence
+/// \return non-zero to OS on failure
 int main()
 {
   bool status = true;
@@ -210,7 +212,7 @@ int main()
   if (!testCalArray()) status = false;
   
   if (!status) {
-    cout << "You are a failure!" << endl;
+    cout << "CalUtil unit test failed!" << endl;
     return -1;
   }
   

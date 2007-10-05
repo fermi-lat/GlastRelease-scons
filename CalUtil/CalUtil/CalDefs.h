@@ -1,3 +1,4 @@
+// $Header$
 #ifndef CalDefs_H
 #define CalDefs_H
 
@@ -20,7 +21,24 @@ using namespace std;
 /** @file CalDefs.h
     \author Zachary Fewtrell
 
-    \brief enums & array index types for use throughout GLAST Cal software.
+    \brief enums & array index types for use throughout GLAST Cal software.  
+    Required mainly because idents::CalXtalid is non-contiguous bitfield structure which
+    can't (reasonably) be used as an array index.
+
+    All classes have the following properties:
+
+    - Internal integer representation is contiguous, so they are suitable for array
+    indexing.
+    
+    - Iteration operators defined for use in loops.  
+    
+    - Full set of conversion routines defined for converting between related indices.
+    
+    - All classes are wrappers for simple integers, can efficiently be placed on function stack.
+    
+    - Classes exist for indexing components within a single crystal or througout
+    the entire LAT.  Appropriate conversion routines are provided.
+
 */
 namespace CalUtil {
   // forward declarations (sometimes needed)

@@ -1,6 +1,6 @@
 // $Header $
 
-/** @file
+/** @file implement CalDigi.h
     @author fewtrell
 */
 
@@ -16,6 +16,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+
+using namespace std;
 
 namespace {
   vector<string> tokenize_str(const string & str,

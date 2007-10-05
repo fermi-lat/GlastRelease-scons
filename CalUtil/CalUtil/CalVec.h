@@ -1,3 +1,4 @@
+// $Header$
 #ifndef CalVec_h
 #define CalVec_h
 
@@ -10,7 +11,6 @@
 
 // STD INCLUDES
 #include <vector>
-#include <algorithm>
 
 namespace CalUtil {
   
@@ -29,18 +29,18 @@ namespace CalUtil {
 
 
   template <typename idx_type, typename val_type >
-    class CalVec : private vector<val_type > {
-    protected:
+  class CalVec : private vector<val_type > {
+  protected:
     typedef vector<val_type> parent_type;
     typedef size_t size_type;
     
-    public:
+  public:
     typedef typename parent_type::reference reference;
     typedef typename parent_type::const_reference const_reference;
     typedef typename parent_type::iterator iterator;
     typedef typename parent_type::const_iterator const_iterator;
 
-    public:
+  public:
     CalVec() : parent_type() {};
     CalVec(const size_type sz) : parent_type(sz) {}
     CalVec(const size_type sz, const val_type &val) : parent_type(sz,val) {}
@@ -80,30 +80,6 @@ namespace CalUtil {
 
     const_iterator end() const {return parent_type::end();}
     iterator end() {return parent_type::end();}
-
-    /// just like std::fill() from <algorithm>, fills entire vector
-    void fill(const val_type &val) {
-      std::fill(parent_type::begin(),
-                parent_type::end(),
-                val);
-    }
-
-    /// just like std::find() from <algorithm>, searches entire vector
-    /// \return iterator to 1st matching val, or end() if no match
-    iterator find(const val_type &val) {
-      return std::find(parent_type::begin(),
-                       parent_type::end(),
-                       val);
-    }
-
-    /// just like std::find() from <algorithm>, searches entire vector
-    /// \return iterator to 1st matching val, or end() if no match
-    const_iterator find(const val_type &val) const {
-      return std::find(parent_type::begin(),
-                       parent_type::end(),
-                       val);
-    }
-    
   };
 };
 

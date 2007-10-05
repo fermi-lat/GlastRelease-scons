@@ -1,3 +1,4 @@
+// $Header$
 #ifndef CalArray_h
 #define CalArray_h
 
@@ -9,7 +10,6 @@
 // EXTLIB INCLUDES
 
 // STD INCLUDES
-#include <algorithm>
 
 namespace CalUtil {
   /** \brief Standard C array wrapper restricts array indexing to specified type.
@@ -29,13 +29,25 @@ namespace CalUtil {
   \param val_type array value type.
   */
   template <typename idx_type, typename val_type >
-    class CalArray {
-    public:
+  class CalArray {
+  public:
     val_type& operator[](const idx_type &idx) {
       return m_dat[idx.val()];}
 
     const val_type& operator[](const idx_type &idx) const {
       return m_dat[idx.val()];
+    }
+
+    /// element wise += operation with all values on rhs
+    CalArray<idx_type,val_type> operator+=(const CalArray<idx_type,val_type> &rhs) {
+      val_type *lh(begin());
+      const val_type *rh(rhs.begin());
+      while (lh != end()) {
+        *lh += *rh;
+        lh++; rh++;
+      }
+      
+      return *this;
     }
       
     /// return size of array
@@ -49,32 +61,9 @@ namespace CalUtil {
     /// return pointer to 1 val past end of array.  god for use w/ STL algs
     val_type *end() {return m_dat + size();}
     /// return const pointer to 1 val past end of array.  god for use w/ STL algs
-    const val_type *end() const {return m_dat + size;}
+    const val_type *end() const {return m_dat + size();}
 
-    /// just like std::fill() from <algorithm>, fills entire array
-    void fill(const val_type &val) {
-      std::fill(begin(),
-                end(),
-                val);
-    }
-
-    /// just like std::find() from <algorithm>, searches entire array
-    /// \return iterator to 1st matching val, or end() if no match
-    val_type* find(const val_type &val) {
-      return std::find(begin(),
-                       end(),
-                       val);
-    }
-
-    /// just like std::find() from <algorithm>, searches entire array
-    /// \return iterator to 1st matching val, or end() if no match
-    const val_type* find(const val_type &val) const {
-      return std::find(begin(),
-                       end(),
-                       val);
-    }
-
-    private:
+  private:
     /// internal array data
     val_type m_dat[idx_type::N_VALS];
       
