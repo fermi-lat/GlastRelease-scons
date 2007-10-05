@@ -48,11 +48,17 @@ ApplicationMgr.ExtSvc += {"CalibDataSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
 ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
+ApplicationMgr.ExtSvc += {"MootSvc"};
 
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"MootSvc"};
 
+MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
+
+
+CalibDataSvc.UseEventKeys = "true";
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
