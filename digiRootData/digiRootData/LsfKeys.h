@@ -83,7 +83,7 @@ class LsfKeys : public TObject {
 
     LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_CDM_keys( other.CDM_keys() ) {};
 
-    virtual ~LpaKeys() {};
+    virtual ~LpaKeys() { m_CDM_keys.clear(); };
 
     void Print(Option_t* option="" ) const;
     void Fake(Int_t ievent, Float_t randNum);

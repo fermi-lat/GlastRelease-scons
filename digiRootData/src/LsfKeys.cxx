@@ -33,9 +33,16 @@ Bool_t LsfKeys::CompareInRange( const LsfKeys& ref,
 void LpaKeys::Print(Option_t* /*option*/) const {
   /// FIXME
   using namespace std;
+  cout << "LpaKeys: " << endl;
   cout << " Master = 0x" << std::hex << std::setfill('0')
        << m_LATC_master << "\n"
        << " Ignore = 0x" << m_LATC_ignore << std::endl;
+  std::vector<UInt_t>::const_iterator it;
+  unsigned int i = 0;
+  for(it = m_CDM_keys.begin(); it != m_CDM_keys.end(); it++) {
+    cout << std::dec << "CDM key " << i << " " << m_CDM_keys[i] << endl;
+    ++i;
+  }
 }
 
 void LpaKeys::Fake( Int_t ievent, Float_t randNum ) {
@@ -60,9 +67,11 @@ Bool_t LpaKeys::CompareInRange( const LpaKeys& ref,
 void LciKeys::Print(Option_t* /*option*/) const {
   /// FIXME
   using namespace std;
+  cout << "LciKeys: " <<  endl;
   cout << "Master = 0x" << std::hex << std::setfill('0')
        << m_LATC_master << endl
-       << "Ignore: " << m_LATC_ignore << endl;
+       << "Ignore: " << m_LATC_ignore << endl
+       << "LCI_Script: " << m_LCI_script << endl;
 }
 
 void LciKeys::Fake( Int_t ievent, Float_t randNum ) {

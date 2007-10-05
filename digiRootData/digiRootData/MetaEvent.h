@@ -270,7 +270,7 @@ public:
   }
 
   /// ROOT print function
-  void Print(Option_t* /* option="" */) const;
+  void Print(Option_t* option="" ) const;
   
   /// Create a fake for tests
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
