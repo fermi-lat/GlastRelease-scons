@@ -104,7 +104,7 @@ namespace calibGenCAL {
         nHitsXface       = 0;
         nHitsAngle       = 0;
         nHitsPos         = 0;
-        nFills.fill(0);
+        fill(nFills.begin(), nFills.end(), 0);
         calPed           = 0;
         dac2adc          = 0;
       }

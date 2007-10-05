@@ -103,8 +103,8 @@ namespace calibGenCAL {
     m_p2aSplines.resize(DiodeNum::N_VALS);
 
     for (DiodeNum diode; diode.isValid(); diode++) {
-      m_a2pSplines[diode].fill(0);
-      m_p2aSplines[diode].fill(0);
+      fill(m_a2pSplines[diode].begin(), m_a2pSplines[diode].end(), 0);
+      fill(m_p2aSplines[diode].begin(), m_p2aSplines[diode].end(), 0);
     }
 
     // create position (Y-axis) array

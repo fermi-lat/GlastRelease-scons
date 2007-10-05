@@ -28,7 +28,7 @@ namespace calibGenCAL {
     fill(adc_ped.begin(), adc_ped.end(), CIDAC2ADC::INVALID_ADC);
     fill(dac.begin(), dac.end(), CIDAC2ADC::INVALID_ADC);
     fill_zero(perLyr);
-    bestRng.fill(LEX8);
+    fill(bestRng.begin(), bestRng.end(), LEX8);
 
     // empty hit lists
     hitList.clear();

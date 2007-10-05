@@ -339,9 +339,9 @@ namespace calibGenCAL {
       CalArray<XtalRng, float> adcPed;
       CalArray<DiodeNum, float> meanDAC;
       CalArray<XtalDiode, float> dac;
-      adcPed.fill(CIDAC2ADC::INVALID_ADC);
-      meanDAC.fill(CIDAC2ADC::INVALID_ADC);
-      dac.fill(CIDAC2ADC::INVALID_ADC);
+      fill(adcPed.begin(), adcPed.end(), CIDAC2ADC::INVALID_ADC);
+      fill(meanDAC.begin(), meanDAC.end(), CIDAC2ADC::INVALID_ADC);
+      fill(dac.begin(), dac.end(), CIDAC2ADC::INVALID_ADC);
 
       for (RngNum rng(maxBestRng); rng.isValid(); rng++) {
         const DiodeNum diode(rng.getDiode());

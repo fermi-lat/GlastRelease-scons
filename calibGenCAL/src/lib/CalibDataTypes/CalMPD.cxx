@@ -27,7 +27,7 @@ namespace calibGenCAL {
     m_mpdErr(DiodeNum::N_VALS)
   {
     for (DiodeNum diode; diode.isValid(); diode++)
-      m_mpd[diode].fill(INVALID_MPD);
+      fill(m_mpd[diode].begin(), m_mpd[diode].end(), INVALID_MPD);
   }
 
   void CalMPD::writeTXT(const string &filename) const {
