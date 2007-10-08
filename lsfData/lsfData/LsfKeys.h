@@ -54,6 +54,20 @@ namespace lsfData {
     void setLATC_master( unsigned int value ) { m_LATC_master = value; };
     void setLATC_ignore( unsigned int value ) { m_LATC_ignore = value; };
 
+    /// Output operator (ASCII)
+    friend std::ostream& operator<< ( std::ostream& s, const LsfKeys& obj )    {
+      return obj.fillStream(s);
+    }
+
+    /// Fill the output stream (ASCII)
+    std::ostream& fillStream( std::ostream& s ) const
+ {
+      s << " LATC_master = 0x" << std::setw(8) << std::setfill('0') << std::hex << m_LATC_master << std::endl;
+      s << " LATC_ignore = 0x" << std::setw(8) << std::setfill('0') << std::hex << m_LATC_ignore << std::endl;
+      return s;
+    }
+
+
     virtual void print( const std::string& str="" ) const {
       std::cout << str << " LATC_master = 0x" << std::setw(8) << std::setfill('0') << std::hex << m_LATC_master << std::endl;
       std::cout << str << " LATC_ignore = 0x" << std::setw(8) << std::setfill('0') << std::hex << m_LATC_ignore << std::endl;
@@ -96,6 +110,23 @@ namespace lsfData {
       m_CDM_keys.insert( m_CDM_keys.begin(), value.begin(), value.end() );
     };
 
+
+   /// Output operator (ASCII)
+    friend std::ostream& operator<< ( std::ostream& s, const LpaKeys& obj )    {
+      return obj.fillStream(s);
+    }
+
+    /// Fill the output stream (ASCII)
+    std::ostream& fillStream( std::ostream& s ) const
+ {
+      LsfKeys::fillStream(s); 
+      std::vector<unsigned int>::const_iterator itr = m_CDM_keys.begin();
+      for ( int i=0; itr != m_CDM_keys.end(); ++itr, ++i ) {
+	s << " CDM_key[" << i << "] = 0x" << std::setw(8) << std::setfill('0') << std::hex << *itr << std::endl;
+      }
+      return s;
+    }
+
     virtual void print( const std::string& str="" ) const {
       LsfKeys::print( str );
       std::vector<unsigned int>::const_iterator itr = m_CDM_keys.begin();
@@ -135,6 +166,20 @@ namespace lsfData {
     unsigned int LCI_script() const { return m_LCI_script; };
 
     void setLCI_script( unsigned int value ) { m_LCI_script = value; };
+
+
+    /// Output operator (ASCII)
+    friend std::ostream& operator<< ( std::ostream& s, const LciKeys& obj )    {
+      return obj.fillStream(s);
+    }
+
+    /// Fill the output stream (ASCII)
+    std::ostream& fillStream( std::ostream& s ) const
+ {
+      LsfKeys::fillStream(s);
+      s << " LCI_script = 0x" << std::setw(8) << std::setfill('0') << std::hex << m_LCI_script << std::endl;
+      return s;
+    }
 
     virtual void print( const std::string& str="" ) const {
       LsfKeys::print( str );
