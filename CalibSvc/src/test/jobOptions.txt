@@ -19,8 +19,8 @@ ApplicationMgr.Runable= "RootIoSvc";
 // There are several other possibilities for test algroithm, including
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
-// digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
-digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-v12r4/digi_077015344.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
+// digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-v12r4/digi_077015344.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
