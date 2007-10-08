@@ -233,14 +233,18 @@ public:
       m_lciTkrConfig = new LciTkrConfiguration(config);
   }
 
+  inline void setKeyType( const enums::Lsf::KeysType& type) { m_ktype = type; }
+
   inline void setLpaKeys( const LpaKeys& keys) {
       if (m_lpaKeys) delete m_lpaKeys;
       m_lpaKeys = new LpaKeys(keys);
+      m_ktype = enums::Lsf::LpaKeys;
   }
 
   inline void setLciKeys( const LciKeys& keys) {
       if (m_lciKeys) delete m_lciKeys;
       m_lciKeys = new LciKeys(keys);
+      m_ktype = enums::Lsf::LciKeys;
   }
 
   /// Reset function
